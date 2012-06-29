@@ -54,7 +54,7 @@ public class TileEntityCondenser extends TileEntityMachine implements IWaterProd
 		return rejectedElectricity;	
 	}
 	@Override
-	public boolean canRecieveElectricity(byte side) {
+	public boolean canReceiveElectricity(byte side) {
 		// TODO Auto-generated method stub
 		return true;
 	}
@@ -73,6 +73,17 @@ public class TileEntityCondenser extends TileEntityMachine implements IWaterProd
 		// TODO Auto-generated method stub
 		return 240;
 	}
+	@Override
+	public void onDisable(int duration) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public boolean isDisabled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
 
 	
 

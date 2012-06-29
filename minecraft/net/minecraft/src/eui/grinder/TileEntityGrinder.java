@@ -372,7 +372,7 @@ public class TileEntityGrinder extends TileEntityMachine implements IInventory, 
 		}
 
 		@Override
-		public boolean canRecieveElectricity(byte side) {
+		public boolean canReceiveElectricity(byte side) {
 			// TODO Auto-generated method stub
 			return true;
 		}
@@ -380,6 +380,18 @@ public class TileEntityGrinder extends TileEntityMachine implements IInventory, 
 		public int getVolts() {
 			// TODO Auto-generated method stub
 			return 120;
+		}
+
+		@Override
+		public void onDisable(int duration) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public boolean isDisabled() {
+			// TODO Auto-generated method stub
+			return false;
 		}
 
 		

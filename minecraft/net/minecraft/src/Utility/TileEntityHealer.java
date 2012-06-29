@@ -1,4 +1,4 @@
-package net.minecraft.src.eui.turbine;
+package net.minecraft.src.Utility;
 import net.minecraft.src.eui.TileEntityMachine;
 import net.minecraft.src.eui.api.*;
 import net.minecraft.src.forge.ForgeHooks;
@@ -6,41 +6,21 @@ import net.minecraft.src.*;
 import net.minecraft.src.universalelectricity.*;
 import net.minecraft.src.forge.ISidedInventory;
 
-public class TileEntityGenerator extends TileEntityMachine implements UEIProducer,ISteamConsumer,IWaterProducer, IInventory, ISidedInventory
+public class TileEntityHealer extends TileEntityTotum implements UEIConsumer, IInventory, ISidedInventory
 {
 	//Maximum possible generation rate of watts in SECONDS
-	public int maxGenerateRate = 1000;
-	public int waterStored = 0;
-	public int steamStored = 0;
-	public int steamConsumed = 0;
-	//Current generation rate based on hull heat. In TICKS.
-	public float generateRate = 0;
 	public UETileEntityConductor connectedWire = null;
 	 /**
      * The number of ticks that a fresh copy of the currently-burning item would keep the furnace burning for
      */
     public int itemCookTime = 0;
+    public int eStored = 0;
+    public int hStored = 0;
+    public int tCount = 0;
 	 /**
      * The ItemStacks that hold the items currently being used in the battery box
      */
     private ItemStack[] containingItems = new ItemStack[1];
-    
-    @Override
-	public int onProduceElectricity(int maxWatts, int voltage, byte side)
-    {
-		//Only produce electricity on the back side.
-    	if(canProduceElectricity(side) && maxWatts > 0)
-		{
-	        return Math.min(maxWatts, (int)generateRate);
-		}
-    	return 0;
-	}
-    
-    @Override
-    public boolean canProduceElectricity(byte side)
-    {
-    	return true;
-    }
     
     /**
      * Allows the entity to update its state. Overridden in most subclasses, e.g. the mob spawner uses this to count
@@ -48,69 +28,28 @@ public class TileEntityGenerator extends TileEntityMachine implements UEIProduce
      */
     public void updateEntity()
     {
-    	//Check nearby blocks and see if the conductor is full. If so, then it is connected
-    	TileEntity tileEntity = UEBlockConductor.getUEUnit(this.worldObj, this.xCoord, this.yCoord, this.zCoord, UniversalElectricity.getOrientationFromSide(this.getDirection(), (byte)2));
-    	
-    	if(tileEntity instanceof UETileEntityConductor)
+    	if(eStored >= 1000 && hStored < 100)
     	{
-    		if(((UETileEntityConductor)tileEntity).closestConsumer != null)
+    		eStored -= 1000;
+    		hStored += 1;
+    	}
+    	if(hStored > 0 && tCount > 40)
+    	{
+    		EntityPlayer player = this.worldObj.getClosestPlayer(xCoord, yCoord, zCoord, 4.0F);
+    		if(player != null){
+    		
+    		if(player.getHealth() < player.heartsHalvesLife)
     		{
-    			this.connectedWire = (UETileEntityConductor)tileEntity;
+    			System.out.println("hearts"+ player.getHealth());
+    		System.out.println("heartsMax"+ player.heartsHalvesLife);
+    			player.heal(1);
+    			hStored -= 1;
+    			tCount = 0;
     		}
-    		else
-        	{
-        		this.connectedWire = null;
-        	}
-    	}
-    	else
-    	{
-    		this.connectedWire = null;
-    	}
-    	
-    	if (!this.worldObj.isRemote)
-        {
-	    	//The top slot is for recharging items. Check if the item is a electric item. If so, recharge it.
-	    	if (this.containingItems[0] != null)
-	        {
-	            if(this.containingItems[0].getItem().shiftedIndex == Item.bucketEmpty.shiftedIndex)
-	            {
-	               if(this.waterStored > 0)
-	               {
-	            		this.containingItems[0] = new ItemStack(Item.bucketWater,1);
-	            		--waterStored;
-	            	}
-	            }
-	        }
-        }
-    	//Starts generating electricity if the device is heated up
-    	if (this.itemCookTime > 0)
-        {
-            this.itemCookTime --;
-            
-            if(this.connectedWire != null && this.connectedWire.getStoredElectricity() < this.connectedWire.getElectricityCapacity())
-            {
-            	this.generateRate = (float)Math.min(this.generateRate+Math.min((this.generateRate)*0.01+0.015, 0.05F), this.maxGenerateRate/20);
-            }
-        }
-    	else
-    	{
-    		if(steamStored > 0)
-    		{
-    			--steamStored;
-    			++steamConsumed;
-    			if(steamConsumed == mod_EUIndustry.steamOutBoiler)
-    			{
-    			++waterStored;
-    			steamConsumed = 0;
-    			}
-    		itemCookTime = itemCookTime + 65;
     		}
+    		
     	}
-
-    	if(this.connectedWire == null || this.itemCookTime <= 0)
-    	{
-        	this.generateRate = (float)Math.max(this.generateRate-0.05, 0);
-        }
+    	tCount++;
     }
     /**
      * Reads a tile entity from NBT.
@@ -119,10 +58,8 @@ public class TileEntityGenerator extends TileEntityMachine implements UEIProduce
     {
     	super.readFromNBT(par1NBTTagCompound);
     	this.itemCookTime = par1NBTTagCompound.getInteger("itemCookTime");
-    	this.waterStored = par1NBTTagCompound.getInteger("waterStored");
-    	this.steamConsumed = par1NBTTagCompound.getInteger("steamConsumed");
-    	this.steamStored = par1NBTTagCompound.getInteger("steamStored");
-    	this.generateRate = par1NBTTagCompound.getFloat("generateRate");
+    	this.eStored = par1NBTTagCompound.getInteger("EU");
+    	this.hStored = par1NBTTagCompound.getInteger("HP");
     	NBTTagList var2 = par1NBTTagCompound.getTagList("Items");
         this.containingItems = new ItemStack[this.getSizeInventory()];
         for (int var3 = 0; var3 < var2.tagCount(); ++var3)
@@ -142,10 +79,8 @@ public class TileEntityGenerator extends TileEntityMachine implements UEIProduce
     {
     	super.writeToNBT(par1NBTTagCompound);
     	par1NBTTagCompound.setInteger("itemCookTime", (int)this.itemCookTime);
-    	par1NBTTagCompound.setInteger("waterStored", (int)this.waterStored);
-    	par1NBTTagCompound.setInteger("steamConsumed", (int)this.steamConsumed);
-    	par1NBTTagCompound.setInteger("steamStored", (int)this.steamStored);
-    	par1NBTTagCompound.setFloat("generateRate", (int)this.generateRate);
+    	par1NBTTagCompound.setInteger("EU", (int)this.eStored);
+    	par1NBTTagCompound.setInteger("HP", (int)this.hStored);
     	NBTTagList var2 = new NBTTagList();
         for (int var3 = 0; var3 < this.containingItems.length; ++var3)
         {
@@ -248,67 +183,43 @@ public class TileEntityGenerator extends TileEntityMachine implements UEIProduce
 	public void closeChest() { }
 	
 
-	@Override
-	public int onReceiveSteam(int vol, byte side) {
-		
-		
-			if(steamStored + vol <= 100)
-			{
-			steamStored = steamStored + vol;
-			return 0;
-			}
-		return vol;
-		
-	}
-
-	@Override
-	public boolean canRecieveSteam(byte side) {
-		
-		return true;
-	}
-
-	@Override
-	public int getStoredSteam() {
-		
-		return this.steamStored;		
-	}
-
-	@Override
-	public int getSteamCapacity() {
-		return 100;
-	}
-
-	@Override
-	public int onProduceWater(int maxVol, int side) {
-		
-			if(this.waterStored > 0)
-			{
-				--waterStored;
-				return 1;
-			}
-		
-		return 0;
-	}
-
-	@Override
-	public boolean canProduceWater(byte side) {
-		
-			return true;
-	}
-
 	
 	@Override
 	public int getVolts() {
 		// TODO Auto-generated method stub
-		return 120;
+		return 12000;
 	}
-
+	@Override
+	public int onReceiveElectricity(int watts, int voltage, byte side) {
+		if(this.eStored < this.getElectricityCapacity())
+		{
+	    	int rejectedElectricity = Math.max((this.eStored + watts) - this.getElectricityCapacity(), 0);
+			this.eStored += watts - rejectedElectricity;
+			return rejectedElectricity;
+		}
+    	return watts;
+	}
+	@Override
+	public boolean canReceiveElectricity(byte side) {
+		if(side == 0)
+		{
+			return true;
+		}
+		return false;
+	}
+	@Override
+	public int getStoredElectricity() {
+		return eStored;
+	}
+	@Override
+	public int getElectricityCapacity() {
+		return 1000;
+	}
 	@Override
 	public void onDisable(int duration) {
 		// TODO Auto-generated method stub
 		
 	}
-
 	@Override
 	public boolean isDisabled() {
 		// TODO Auto-generated method stub

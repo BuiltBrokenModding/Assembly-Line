@@ -11,7 +11,7 @@ public class TileEntityNuller extends TileEntityMachine implements UEIConsumer {
 	}
 
 	@Override
-	public boolean canRecieveElectricity(byte side) {
+	public boolean canReceiveElectricity(byte side) {
 		// TODO Auto-generated method stub
 		return true;
 	}
@@ -32,6 +32,18 @@ public class TileEntityNuller extends TileEntityMachine implements UEIConsumer {
 	public int getVolts() {
 		// TODO Auto-generated method stub
 		return 100000000;
+	}
+
+	@Override
+	public void onDisable(int duration) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isDisabled() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

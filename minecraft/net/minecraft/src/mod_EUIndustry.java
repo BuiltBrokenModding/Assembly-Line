@@ -53,7 +53,7 @@ public class mod_EUIndustry extends NetworkMod {
 	@Override
 	public void load() {
 		//register
-		UniversalElectricity.registerAddon(this, "0.2.0");
+		UniversalElectricity.registerAddon(this, "0.3.1");
    	    MinecraftForgeClient.preloadTexture("/eui/Blocks.png");
    	    MinecraftForgeClient.preloadTexture("/eui/Items.png");
 		//Blocks
