@@ -11,7 +11,7 @@ public class TileEntityMachine extends TileEntity implements ITextureProvider, U
 	 
 	public TileEntity getSteamMachine(int i)
 	{	
-		int x = this.xCoord;
+			int x = this.xCoord;
 	    	int y = this.yCoord;
 	    	int z = this.zCoord; 
 	    	
