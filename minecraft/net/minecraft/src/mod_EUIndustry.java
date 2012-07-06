@@ -1,8 +1,6 @@
 package net.minecraft.src;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.eui.*;
-import net.minecraft.src.eui.steam.RenderPipe;
-import net.minecraft.src.eui.steam.RenderPipeWater;
 import net.minecraft.src.forge.*;
 import net.minecraft.src.universalelectricity.*;
 import net.minecraft.src.universalelectricity.components.UniversalComponents;
@@ -24,11 +22,7 @@ public class mod_EUIndustry extends NetworkMod {
 	public static int boilerHeat;
 	public static int fireOutput;
 	public static Block machine = new net.minecraft.src.eui.BlockMachine(BlockID).setBlockName("machine");
-	public static Block pipe = new net.minecraft.src.eui.steam.BlockPipe(pipeBlockID).setBlockName("pipe");
-	public static Block pipeW = new net.minecraft.src.eui.steam.BlockPipeWater(pipeBlockID2).setBlockName("pipeW");
 	public static Item coalNugget = new net.minecraft.src.eui.ItemCoalFuel(coalID);
-	public static Item pipeItem = new net.minecraft.src.eui.steam.ItemPipe(pipeID);
-	public static Item parts = new net.minecraft.src.eui.ItemParts(partID);
 	@Override
 	public String getVersion() {
 		// TODO change version on each update ;/
@@ -59,11 +53,7 @@ public class mod_EUIndustry extends NetworkMod {
 		//Blocks
    	    //gen
 		//machine
-		ModLoader.registerBlock(machine,net.minecraft.src.eui.ItemMachine.class);
-		ModLoader.registerBlock(pipe);
-		ModLoader.registerBlock(pipeW);
-		ModLoader.addName((new ItemStack(pipeItem, 1, 0)), "SteamPipe");
-		ModLoader.addName((new ItemStack(pipeItem, 1, 1)), "WaterPipe");
+		ModLoader.registerBlock(machine, net.minecraft.src.eui.ItemMachine.class);
 		ModLoader.addName((new ItemStack(machine, 1, 0)), "CoalRefiner");
 		ModLoader.addName((new ItemStack(machine, 1, 1)), "Boiler");
 		ModLoader.addName((new ItemStack(machine, 1, 2)), "FireBox");
@@ -76,20 +66,11 @@ public class mod_EUIndustry extends NetworkMod {
 		ModLoader.registerTileEntity(net.minecraft.src.eui.turbine.TileEntityGenerator.class, "generator",new UEBlockRenderer());
 		ModLoader.registerTileEntity(net.minecraft.src.eui.TileEntityCondenser.class, "waterPump",new UEBlockRenderer());
 		ModLoader.registerTileEntity(net.minecraft.src.eui.TileEntityNuller.class, "EUNuller",new UEBlockRenderer());
-		ModLoader.registerTileEntity(net.minecraft.src.eui.steam.TileEntityPipe.class, "pipe", new RenderPipe());
-		ModLoader.registerTileEntity(net.minecraft.src.eui.steam.TileEntityPipeWater.class, "pipeW", new RenderPipeWater());
 		//Items
 		ModLoader.addName((new ItemStack(coalNugget, 1, 0)), "CoalNuggets");
 		ModLoader.addName((new ItemStack(coalNugget, 1, 1)), "CoalPellets");
 		ModLoader.addName((new ItemStack(coalNugget, 1, 2)), "CoalDust");
-		ModLoader.addName((new ItemStack(parts, 1, 1)), "Tank");
-		ModLoader.addName((new ItemStack(parts, 1, 3)), "Valve");
-		ModLoader.addName((new ItemStack(parts, 1, 4)), "Tube");
-		ModLoader.addName((new ItemStack(parts, 1, 5)), "Seal");
-		ModLoader.addName((new ItemStack(parts, 1, 6)), "Rivits");
-		ModLoader.addName(pipeItem, "SteamPipe");
 		//fuels
-		ModLoader.addAllFuel((new ItemStack(coalNugget, 1, 0).itemID), 1000);
 		//Crafting
 
 		ModLoader.addRecipe(new ItemStack(machine, 1, 0), new Object [] {"@S@", "SCW", "@S@",
@@ -97,7 +78,7 @@ public class mod_EUIndustry extends NetworkMod {
 			'@',new ItemStack(UniversalComponents.ItemSteelPlate),
 			'C',new ItemStack(UniversalComponents.ItemCircuit,1,1),
 			'W',UniversalComponents.ItemCopperWire});
-		ModLoader.addRecipe(new ItemStack(machine, 1, 1), new Object [] {"@T@", "OVO", "@T@",
+		/**ModLoader.addRecipe(new ItemStack(machine, 1, 1), new Object [] {"@T@", "OVO", "@T@",
 			'T',new ItemStack(parts, 1,1),
 			'@',new ItemStack(UniversalComponents.ItemSteelPlate),
 			'O',new ItemStack(parts, 1,4),
@@ -109,20 +90,7 @@ public class mod_EUIndustry extends NetworkMod {
 			'T',new ItemStack(parts, 1,4),
 			'@',new ItemStack(UniversalComponents.ItemSteelPlate),
 			'P',Block.pistonBase,
-			'M',new ItemStack(UniversalComponents.ItemMotor)});
-		ModLoader.addShapelessRecipe(new ItemStack(pipeItem, 4), new Object[] { new ItemStack(parts, 1,6),new ItemStack(parts, 1,4),new ItemStack(UniversalComponents.ItemCopperIngot, 1)});
-		ModLoader.addShapelessRecipe(new ItemStack(pipeItem, 4), new Object[] { new ItemStack(parts, 1,4),new ItemStack(Block.glass, 1),new ItemStack(UniversalComponents.ItemCopperIngot, 1)});
-	       //crafting parts
-		ModLoader.addShapelessRecipe(new ItemStack(parts, 2,1), new Object[] { new ItemStack(UniversalComponents.ItemCopperIngot, 1),
-			new ItemStack(UniversalComponents.ItemCopperIngot, 1),new ItemStack(UniversalComponents.ItemCopperIngot, 1),
-			new ItemStack(UniversalComponents.ItemCopperIngot, 1), new ItemStack(parts,1,6)});
-		ModLoader.addRecipe(new ItemStack(parts, 2, 3), new Object [] {" S ", "TTT", "   ", 'T',
-			new ItemStack(parts, 8, 4),'S',UniversalComponents.ItemSteelIngot});
-		ModLoader.addRecipe(new ItemStack(parts, 8, 4), new Object [] {"@@@", "   ", "@@@", '@',
-			UniversalComponents.ItemBronzeIngot});
-		ModLoader.addRecipe(new ItemStack(parts, 8, 5), new Object [] {"@@@", "@ @", "@@@", '@',
-			Item.leather});
-		ModLoader.addShapelessRecipe(new ItemStack(parts, 4,6), new Object[] { new ItemStack(UniversalComponents.ItemCopperIngot, 1)});
+			'M',new ItemStack(UniversalComponents.ItemMotor)});**/
 		
 		//smelting
 		

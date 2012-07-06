@@ -1,5 +1,4 @@
 package net.minecraft.src;
-import net.minecraft.src.eui.steam.RenderPipeWater;
 import net.minecraft.src.forge.*;
 import net.minecraft.src.universalelectricity.UEBlockRenderer;
 import net.minecraft.src.universalelectricity.UniversalElectricity;

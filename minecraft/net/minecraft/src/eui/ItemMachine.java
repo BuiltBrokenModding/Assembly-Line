@@ -10,20 +10,17 @@ public class ItemMachine extends ItemBlock {
                 setMaxDamage(0);
                 setHasSubtypes(true);
         }
+        @Override
         public int getMetadata(int metadata)
         {
             return metadata;
         }
-        
+        @Override
         public String getItemName()
         {
             return "Machine";
         }
-        
-        public int getPlacedBlockMetadata(int damage) {
-                return damage;
-        }
-
+        @Override
         public String getItemNameIS(ItemStack par1ItemStack)
         {
    	   int var3 = par1ItemStack.getItemDamage();
@@ -37,6 +34,7 @@ public class ItemMachine extends ItemBlock {
    	   }
             return this.getItemName();
         }
+        @Override
         public void addCreativeItems(ArrayList itemList)     {       
             
             itemList.add(new ItemStack(this, 1,0));

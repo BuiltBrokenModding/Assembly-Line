@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Random;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
-import net.minecraft.src.eui.api.ISteamConsumer;
-import net.minecraft.src.eui.api.ISteamProducer;
 import net.minecraft.src.eui.boiler.*;
 import net.minecraft.src.eui.burner.GUIFireBox;
 import net.minecraft.src.eui.burner.TileEntityFireBox;

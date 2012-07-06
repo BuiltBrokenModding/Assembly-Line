@@ -1,22 +1,22 @@
 package net.minecraft.src.eui;
 
 import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.eui.api.IWaterProducer;
+import net.minecraft.src.eui.pipes.api.ILiquidProducer;
 import net.minecraft.src.universalelectricity.UEIConsumer;
 
-public class TileEntityCondenser extends TileEntityMachine implements IWaterProducer,UEIConsumer {
+public class TileEntityCondenser extends TileEntityMachine implements ILiquidProducer,UEIConsumer {
 	int tickCount = 0;
 	int waterStored = 0;
 	int energyStored = 0;
 	@Override
-	public int onProduceWater(int maxVol, int side) {
-		if( maxVol > 0)
+	public int onProduceLiquid(int type,int maxVol, int side) {
+		/**if(type == 1)
 		{
 			int tradeW = Math.min(maxVol, waterStored);
 			waterStored -= tradeW;
 	        return tradeW;
-		}
-    	return 0;
+		}**/
+    	return 5;
 	}
 	public void writeToNBT(NBTTagCompound par1NBTTagCompound)
     {
@@ -32,7 +32,7 @@ public class TileEntityCondenser extends TileEntityMachine implements IWaterProd
         this.waterStored = par1NBTTagCompound.getInteger("waterStored");
     }
     public void updateEntity()
-	{
+	{    	
 	if(energyStored > 100 && tickCount > 200 && waterStored < 10)
 	{
 		energyStored -= 100;
@@ -40,12 +40,6 @@ public class TileEntityCondenser extends TileEntityMachine implements IWaterProd
 		tickCount = 0;
 	}
 	tickCount++;
-	}
-
-	@Override
-	public boolean canProduceWater(byte side) {
-		// TODO Auto-generated method stub
-		return true;
 	}
 	@Override
 	public int onReceiveElectricity(int watts, int voltage, byte side) {
@@ -81,6 +75,14 @@ public class TileEntityCondenser extends TileEntityMachine implements IWaterProd
 	@Override
 	public boolean isDisabled() {
 		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean canProduceLiquid(int type, byte side) {
+		if(type == 1)
+		{
+			return true;
+		}
 		return false;
 	}
 	

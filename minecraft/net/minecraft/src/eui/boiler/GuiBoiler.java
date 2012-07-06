@@ -45,7 +45,7 @@ public class GuiBoiler extends GuiContainer
         int var10;
         if (this.boilerInventory.waterStored > 0)
         {
-            var7 = boilerInventory.getStoredWater()*4 + 1;
+            var7 = boilerInventory.getStoredLiquid(1)*4 + 1;
             this.drawTexturedModalRect(var5 + 29, var6 + 72 - var7, 176, 148 - var7, 23, var7);
         }
         if (this.boilerInventory.steamStored > 0)

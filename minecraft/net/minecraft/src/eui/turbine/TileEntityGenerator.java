@@ -1,12 +1,14 @@
 package net.minecraft.src.eui.turbine;
 import net.minecraft.src.eui.TileEntityMachine;
 import net.minecraft.src.eui.api.*;
+import net.minecraft.src.eui.pipes.api.ILiquidConsumer;
+import net.minecraft.src.eui.pipes.api.ILiquidProducer;
 import net.minecraft.src.forge.ForgeHooks;
 import net.minecraft.src.*;
 import net.minecraft.src.universalelectricity.*;
 import net.minecraft.src.forge.ISidedInventory;
 
-public class TileEntityGenerator extends TileEntityMachine implements UEIProducer,ISteamConsumer,IWaterProducer, IInventory, ISidedInventory
+public class TileEntityGenerator extends TileEntityMachine implements UEIProducer,ILiquidConsumer,ILiquidProducer, IInventory, ISidedInventory
 {
 	//Maximum possible generation rate of watts in SECONDS
 	public int maxGenerateRate = 1000;
@@ -246,57 +248,6 @@ public class TileEntityGenerator extends TileEntityMachine implements UEIProduce
 	public void openChest() { }
 	@Override
 	public void closeChest() { }
-	
-
-	@Override
-	public int onReceiveSteam(int vol, byte side) {
-		
-		
-			if(steamStored + vol <= 100)
-			{
-			steamStored = steamStored + vol;
-			return 0;
-			}
-		return vol;
-		
-	}
-
-	@Override
-	public boolean canRecieveSteam(byte side) {
-		
-		return true;
-	}
-
-	@Override
-	public int getStoredSteam() {
-		
-		return this.steamStored;		
-	}
-
-	@Override
-	public int getSteamCapacity() {
-		return 100;
-	}
-
-	@Override
-	public int onProduceWater(int maxVol, int side) {
-		
-			if(this.waterStored > 0)
-			{
-				--waterStored;
-				return 1;
-			}
-		
-		return 0;
-	}
-
-	@Override
-	public boolean canProduceWater(byte side) {
-		
-			return true;
-	}
-
-	
 	@Override
 	public int getVolts() {
 		// TODO Auto-generated method stub
@@ -313,5 +264,65 @@ public class TileEntityGenerator extends TileEntityMachine implements UEIProduce
 	public boolean isDisabled() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public int onProduceLiquid(int type, int maxVol, int side) {
+		if(type == 1)
+		{
+			if(this.waterStored > 0)
+			{
+				--waterStored;
+				return 1;
+			}
+		}
+		return 0;
+	}
+
+	@Override
+	public boolean canProduceLiquid(int type, byte side) {
+		if(type == 1)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public int onReceiveLiquid(int type, int vol, byte side) {
+		if(type == 0)
+		{
+		int rejectedSteam = Math.max((this.steamStored + vol) - 100, 0);
+		 this.steamStored = vol - rejectedSteam;		 
+		return rejectedSteam;
+		}
+		return vol;
+	}
+
+	@Override
+	public boolean canRecieveLiquid(int type, byte side) {
+		if(type == 0)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public int getStoredLiquid(int type) {
+		if(type == 0)
+		{
+		return this.steamStored;
+		}
+		return 0;
+	}
+
+	@Override
+	public int getLiquidCapacity(int type) {
+		if(type == 0)
+		{
+		return 100;
+		}
+		return 0;
 	}
 }

@@ -4,12 +4,13 @@ import net.minecraft.src.eui.BlockMachine;
 import net.minecraft.src.eui.TileEntityMachine;
 import net.minecraft.src.eui.api.*;
 import net.minecraft.src.eui.burner.TileEntityFireBox;
-import net.minecraft.src.eui.steam.TileEntityPipe;
+import net.minecraft.src.eui.pipes.api.ILiquidConsumer;
+import net.minecraft.src.eui.pipes.api.ILiquidProducer;
 import net.minecraft.src.forge.ForgeHooks;
 import net.minecraft.src.forge.ISidedInventory;
 import net.minecraft.src.universalelectricity.UniversalElectricity;
 
-public class TileEntityBoiler extends TileEntityMachine implements IInventory, ISidedInventory,ISteamProducer, IWaterConsumer
+public class TileEntityBoiler extends TileEntityMachine implements IInventory, ISidedInventory,ILiquidProducer, ILiquidConsumer
 {
 	
 	    /**
@@ -372,7 +373,7 @@ public class TileEntityBoiler extends TileEntityMachine implements IInventory, I
 					boolean canTradeWater;
 					if( i ==1)
 					{
-						if(this.waterStored == this.getWaterCapacity())
+						if(this.waterStored == this.getLiquidCapacity(1))
 						{
 							canTradeWater = true;
 						}
@@ -388,11 +389,11 @@ public class TileEntityBoiler extends TileEntityMachine implements IInventory, I
 					if(canTradeWater)
 					{					
 						int WSum = (this.waterStored + connectedConsumer.waterStored)/2;
-						if(i == 0 && this.waterStored > 0 && connectedConsumer.waterStored < connectedConsumer.getWaterCapacity())
+						if(i == 0 && this.waterStored > 0 && connectedConsumer.waterStored < connectedConsumer.getLiquidCapacity(1))
 						{														
 							
 								int rejectedW = connectedConsumer.addwater(1);
-								this.waterStored = Math.max(Math.min(this.waterStored - 1 + rejectedW, this.getWaterCapacity()), 0);
+								this.waterStored = Math.max(Math.min(this.waterStored - 1 + rejectedW, this.getLiquidCapacity(1)), 0);
 						}
 						if(this.waterStored > connectedConsumer.waterStored)
 						{														
@@ -400,7 +401,7 @@ public class TileEntityBoiler extends TileEntityMachine implements IInventory, I
 							if(transferW > 0)
 							{
 								int rejectedW = connectedConsumer.addwater(transferW);
-								this.waterStored = Math.max(Math.min(this.waterStored - transferW + rejectedW, this.getWaterCapacity()), 0);
+								this.waterStored = Math.max(Math.min(this.waterStored - transferW + rejectedW, this.getLiquidCapacity(1)), 0);
 							}
 						}
 						
@@ -479,7 +480,7 @@ public class TileEntityBoiler extends TileEntityMachine implements IInventory, I
 			return rejectedElectricity;			
 		}
 	    public int addwater(int watt) {
-			int rejectedElectricity = Math.max((this.waterStored + watt) - this.getWaterCapacity(), 0);
+			int rejectedElectricity = Math.max((this.waterStored + watt) - this.getLiquidCapacity(1), 0);
 			this.waterStored += watt - rejectedElectricity;
 			return rejectedElectricity;				
 		}
@@ -500,7 +501,7 @@ public class TileEntityBoiler extends TileEntityMachine implements IInventory, I
             {
                 if(this.furnaceItemStacks[0].isItemEqual(new ItemStack(Item.bucketWater,1)))
                 {
-                	if((int)waterStored < getWaterCapacity())
+                	if((int)waterStored < getLiquidCapacity(1))
                 	{                		
                 		++waterStored;
                 	this.furnaceItemStacks[0] = new ItemStack(Item.bucketEmpty,1);
@@ -536,28 +537,6 @@ public class TileEntityBoiler extends TileEntityMachine implements IInventory, I
 	    {
 	        return 1;
 	    }
-		@Override
-		public int onReceiveWater(int vol, byte side) {
-			
-			if(waterStored + vol < getWaterCapacity()){
-				waterStored = waterStored + (int)vol;
-			return 0;
-			}
-			return vol;
-			
-		}
-
-		@Override
-		public int getStoredWater() {
-			
-				return this.waterStored;
-			
-		}
-		@Override
-		public int getWaterCapacity() {			
-			return 14;
-		}
-
 		public int precentHeated() {
 			int var1;
 			if(hullHeat < 100)
@@ -570,32 +549,70 @@ public class TileEntityBoiler extends TileEntityMachine implements IInventory, I
 			}
 			return var1;
 		}
-
-		
 		@Override
-		public boolean canRecieveWater(byte side) {
-			
-			return true;
-		}
-
-		@Override
-		public int onProduceSteam(float maxVol, int side) {
-			
-			if(steamStored > 0)
+		public int onReceiveLiquid(int type, int vol, byte side) {
+			if(type == 1)
 			{
-				--steamStored;
-				return 1;
+			int rejectedElectricity = Math.max((this.waterStored + vol) - 14, 0);
+			 this.waterStored = vol - rejectedElectricity;
+			return rejectedElectricity;
 			}
-			
-			return 0;
-			
+			return vol;
 		}
 
 		@Override
-		public boolean canProduceSteam(byte side) {
-			
-			return true;
-			
+		public boolean canRecieveLiquid(int type, byte side) {
+			if(type == 1)
+			{
+				return true;
+			}
+			return false;
+		}
+
+		@Override
+		public int getStoredLiquid(int type) {
+			if(type == 1)
+			{
+				return this.waterStored;
+			}
+			if(type == 0)
+			{
+				return this.steamStored;
+			}
+			return 0;
+		}
+
+		@Override
+		public int getLiquidCapacity(int type) {
+			if(type ==1)
+			{
+				return 14;
+			}
+			return 0;
+		}
+		@Override
+		public int onProduceLiquid(int type, int maxVol, int side) {
+			if(count == 10 || count == 20)
+			{
+			if(type == 0)
+			{
+				if(steamStored > maxVol)
+				{
+					this.steamStored -= maxVol;
+					return maxVol;
+				}
+			}
+			}
+			return 0;
+		}
+
+		@Override
+		public boolean canProduceLiquid(int type, byte side) {
+			if(type == 0)
+			{
+				return true;
+			}
+			return false;
 		}
 
 	}
