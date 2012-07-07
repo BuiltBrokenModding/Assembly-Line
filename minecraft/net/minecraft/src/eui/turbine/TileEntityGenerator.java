@@ -293,7 +293,7 @@ public class TileEntityGenerator extends TileEntityMachine implements UEIProduce
 		if(type == 0)
 		{
 		int rejectedSteam = Math.max((this.steamStored + vol) - 100, 0);
-		 this.steamStored = vol - rejectedSteam;		 
+		 this.steamStored += vol - rejectedSteam;		 
 		return rejectedSteam;
 		}
 		return vol;

@@ -554,7 +554,7 @@ public class TileEntityBoiler extends TileEntityMachine implements IInventory, I
 			if(type == 1)
 			{
 			int rejectedElectricity = Math.max((this.waterStored + vol) - 14, 0);
-			 this.waterStored = vol - rejectedElectricity;
+			 this.waterStored += vol - rejectedElectricity;
 			return rejectedElectricity;
 			}
 			return vol;
