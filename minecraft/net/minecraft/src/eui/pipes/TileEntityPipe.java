@@ -25,7 +25,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 	 * The tile entity of the closest electric consumer. Null if none. Use this to detect if electricity
 	 * should transfer
 	 */
-	public TileEntity closestConsumer = null;
+	
 	
 	/**
 	 * This function adds a connection between this conductor and the UE unit
@@ -79,8 +79,8 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 	}
 	@Override
 	public void updateEntity()
-	{
-		BlockPipe.updateConductorTileEntity(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+	{	
+		((BlockPipe)this.getBlockType()).updateConductorTileEntity(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
 		
 		//Find the connected unit with the least amount of electricity and give more to them
 		if(!this.worldObj.isRemote)
@@ -89,7 +89,6 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 			byte connectedUnits = 0;
 			byte connectedConductors = 1;
 			int averageElectricity = this.liquidStored;
-			this.closestConsumer = null;
 			
 			Vector3 currentPosition = new Vector3(this.xCoord, this.yCoord, this.zCoord);
 			
@@ -101,27 +100,12 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 					{
 						connectedUnits ++;
 						
-						if(connectedBlocks[i].getClass() == this.getClass())
+						if(connectedBlocks[i] instanceof TileEntityPipe)
 						{
 							averageElectricity += ((TileEntityPipe)connectedBlocks[i]).liquidStored;
-							
-							TileEntity tileEntity = ((TileEntityPipe)connectedBlocks[i]).closestConsumer;
-							
-							if(tileEntity != null)
-							{
-								this.closestConsumer = tileEntity;
-							}
 						
 							connectedConductors ++;
 						}	
-						else if(connectedBlocks[i] instanceof ILiquidConsumer)
-						{
-							if(((ILiquidConsumer)connectedBlocks[i]).canRecieveLiquid(this.type,UniversalElectricity.getOrientationFromSide(i, (byte)2)))
-							{
-								this.closestConsumer = connectedBlocks[i];
-							}
-						}
-							
 					}
 				}
 	        }
@@ -141,7 +125,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 								int transferElectricityAmount  = 0;
 								ILiquidConsumer connectedConsumer = ((ILiquidConsumer)connectedBlocks[i]);
 								
-								if(connectedBlocks[i].getClass() == this.getClass() && this.liquidStored > ((TileEntityPipe)connectedConsumer).liquidStored)
+								if(connectedBlocks[i] instanceof TileEntityPipe && this.liquidStored > ((TileEntityPipe)connectedConsumer).liquidStored)
 								{
 									transferElectricityAmount = Math.max(Math.min(averageElectricity - ((TileEntityPipe)connectedConsumer).liquidStored, this.liquidStored), 0);
 								}
@@ -175,11 +159,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
     @Override
 	public int getStoredLiquid(int type)
     {
-    	if(type == this.type)
-    	{
     		return this.liquidStored;
-    	}
-    	return 0;
     }
     
     
