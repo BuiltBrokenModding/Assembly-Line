@@ -11,6 +11,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 {
 	//The amount stored in the conductor
 	protected int liquidStored = 0;
+	//the current set type of the pipe 0-5
 	protected int type = 0;
 	//The maximum amount of electricity this conductor can take
 	protected int capacity = 5;
@@ -28,7 +29,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 	
 	
 	/**
-	 * This function adds a connection between this conductor and the UE unit
+	 * This function adds a connection between this pipe and other blocks
 	 * @param tileEntity - Must be either a producer, consumer or a conductor
 	 * @param side - side in which the connection is coming from
 	 */	
@@ -54,10 +55,10 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 	
 	
 	/**
-	 * onRecieveElectricity is called whenever a Universal Electric conductor sends a packet of electricity to the consumer (which is this block).
-	 * @param vols - The amount of vol this block recieved
-	 * @param side - The side of the block in which the electricity came from
-	 * @return vol - The amount of rejected power to be sent back into the conductor
+	 * onRecieveLiquid is called whenever a something sends a volume to the pipe (which is this block).
+	 * @param vols - The amount of vol source is trying to give to this pipe
+	 * @param side - The side of the block in which the liquid came from
+	 * @return vol - The amount of rejected liquid that can't enter the pipe
 	 */
 	@Override
 	public int onReceiveLiquid(int type,int vol, byte side)
@@ -73,12 +74,13 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 	@Override
 	public void updateEntity()
 	{	
+		//cause the block to update itself every tick needs to be change to .5 seconds to reduce load
 		((BlockPipe)this.getBlockType()).updateConductorTileEntity(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
 		
-		//Find the connected unit with the least amount of electricity and give more to them
+		
 		if(!this.worldObj.isRemote)
         {
-			//Spread the electricity to neighboring blocks
+			
 			byte connectedUnits = 0;
 			byte connectedConductors = 1;
 			int averageVolume = this.liquidStored;
@@ -102,7 +104,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 					}
 				}
 	        }
-			
+			//average volume used to control volume spread to pipes. Prevent one pipe getting all liquid when another is empty
 			averageVolume = Math.max(averageVolume/connectedConductors,0);
 			if(connectedUnits > 0)
 			{
@@ -110,12 +112,12 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 		        {
 					if(connectedBlocks[i] != null)
 					{
-						//Spread the electricity among the different blocks
+						//Spread the liquid among the different blocks
 						if(connectedBlocks[i] instanceof ILiquidConsumer && this.liquidStored > 0)
 						{						
 							if(((ILiquidConsumer)connectedBlocks[i]).canRecieveLiquid(this.type,UniversalElectricity.getOrientationFromSide(i, (byte)2)))
 							{
-								int transferVolumeAmount  = 0;
+								int transferVolumeAmount  = 0; //amount to be moved
 								ILiquidConsumer connectedConsumer = ((ILiquidConsumer)connectedBlocks[i]);
 								
 								if(connectedBlocks[i] instanceof TileEntityPipe && this.liquidStored > ((TileEntityPipe)connectedConsumer).liquidStored)
@@ -147,7 +149,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 	}
 	
 	/**
-	 * @return Return the stored electricity in this consumer. Called by conductors to spread electricity to this unit.
+	 * @return Return the stored volume in this pipe.
 	 */
     @Override
 	public int getStoredLiquid(int type)
@@ -181,7 +183,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
     	par1NBTTagCompound.setInteger("liquid", this.liquidStored);
     	par1NBTTagCompound.setInteger("type", this.type);
     }
-
+//find wether or not this side of X block can recieve X liquid type. Also use to determine connection of a pipe
 	@Override
 	public boolean canRecieveLiquid(int type, byte side) {
 		if(type == this.type)
@@ -190,11 +192,12 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 		}
 		return false;
 	}
+	//returns liquid type
 	public int getType() {		
 		return this.type;
 	}
 
-
+	//used by the item to set the liquid type on spawn
 	public void setType(int rType) {
 		this.type = rType;
 		
