@@ -47,12 +47,9 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 		}
 		else
 		{
-		if(tileEntity instanceof ILiquidProducer)
+		if(tileEntity instanceof ILiquidConsumer || tileEntity instanceof ILiquidProducer)
 		{
-			if(((ILiquidProducer) tileEntity).canConnectFromTypeAndSide(this.getType(), side)) this.connectedBlocks[side] = tileEntity;
-		}else if(tileEntity instanceof ILiquidConsumer)
-		{
-			if(((ILiquidConsumer) tileEntity).canConnectFromTypeAndSide(this.getType(), side)) this.connectedBlocks[side] = tileEntity;
+			this.connectedBlocks[side] = tileEntity;
 		}
 		else
 		{
@@ -65,20 +62,20 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 	
 	/**
 	 * onRecieveElectricity is called whenever a Universal Electric conductor sends a packet of electricity to the consumer (which is this block).
-	 * @param watts - The amount of watt this block recieved
+	 * @param vols - The amount of vol this block recieved
 	 * @param side - The side of the block in which the electricity came from
-	 * @return watt - The amount of rejected power to be sent back into the conductor
+	 * @return vol - The amount of rejected power to be sent back into the conductor
 	 */
 	@Override
-	public int onReceiveLiquid(int type,int amt, byte side)
+	public int onReceiveLiquid(int type,int vol, byte side)
 	{
 		if(type == this.type)
 		{
-		int rejectedLiquid = Math.max((this.getStoredLiquid(type) + amt) - this.capacity, 0);
-		 this.liquidStored += watt - rejectedElectricity;
-		return rejectedLiquid;
+		int rejectedVolume = Math.max((this.getStoredLiquid(type) + vol) - this.capacity, 0);
+		 this.liquidStored = vol - rejectedVolume;
+		return rejectedVolume;
 		}
-		return watt;
+		return vol;
 	}
 	@Override
 	public void updateEntity()
@@ -91,7 +88,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 			//Spread the electricity to neighboring blocks
 			byte connectedUnits = 0;
 			byte connectedConductors = 1;
-			int averageElectricity = this.liquidStored;
+			int averageVolume = this.liquidStored;
 			
 			Vector3 currentPosition = new Vector3(this.xCoord, this.yCoord, this.zCoord);
 			
@@ -105,7 +102,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 						
 						if(connectedBlocks[i] instanceof TileEntityPipe)
 						{
-							averageElectricity += ((TileEntityPipe)connectedBlocks[i]).liquidStored;
+							averageVolume += ((TileEntityPipe)connectedBlocks[i]).liquidStored;
 						
 							connectedConductors ++;
 						}	
@@ -113,7 +110,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 				}
 	        }
 			
-			averageElectricity = Math.max(averageElectricity/connectedConductors,0);
+			averageVolume = Math.max(averageVolume/connectedConductors,0);
 			if(connectedUnits > 0)
 			{
 				for(byte i = 0; i < 6; i++)
@@ -125,20 +122,20 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 						{						
 							if(((ILiquidConsumer)connectedBlocks[i]).canRecieveLiquid(this.type,UniversalElectricity.getOrientationFromSide(i, (byte)2)))
 							{
-								int transferElectricityAmount  = 0;
+								int transferVolumeAmount  = 0;
 								ILiquidConsumer connectedConsumer = ((ILiquidConsumer)connectedBlocks[i]);
 								
 								if(connectedBlocks[i] instanceof TileEntityPipe && this.liquidStored > ((TileEntityPipe)connectedConsumer).liquidStored)
 								{
-									transferElectricityAmount = Math.max(Math.min(averageElectricity - ((TileEntityPipe)connectedConsumer).liquidStored, this.liquidStored), 0);
+									transferVolumeAmount = Math.max(Math.min(averageVolume - ((TileEntityPipe)connectedConsumer).liquidStored, this.liquidStored), 0);
 								}
 								else if(!(connectedConsumer instanceof TileEntityPipe))
 								{
-									transferElectricityAmount = this.liquidStored;
+									transferVolumeAmount = this.liquidStored;
 								}
 								
-								int rejectedElectricity = connectedConsumer.onReceiveLiquid(this.type,transferElectricityAmount, UniversalElectricity.getOrientationFromSide(i, (byte)2));
-								this.liquidStored = Math.max(Math.min(this.liquidStored - transferElectricityAmount + rejectedElectricity, 5), 0);
+								int rejectedVolume = connectedConsumer.onReceiveLiquid(this.type,transferVolumeAmount, UniversalElectricity.getOrientationFromSide(i, (byte)2));
+								this.liquidStored = Math.max(Math.min(this.liquidStored - transferVolumeAmount + rejectedVolume, 5), 0);
 							}
 						}
 						
@@ -146,8 +143,8 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 						{
 							if(((ILiquidProducer)connectedBlocks[i]).canProduceLiquid(this.type,UniversalElectricity.getOrientationFromSide(i, (byte)2)))
 							{
-								int gainedElectricity = ((ILiquidProducer)connectedBlocks[i]).onProduceLiquid(this.type,5-this.liquidStored,  UniversalElectricity.getOrientationFromSide(i, (byte)2));
-								this.onReceiveLiquid(this.type, gainedElectricity, i);
+								int gainedVolume = ((ILiquidProducer)connectedBlocks[i]).onProduceLiquid(this.type,5-this.liquidStored,  UniversalElectricity.getOrientationFromSide(i, (byte)2));
+								this.onReceiveLiquid(this.type, gainedVolume, i);
 							}
 						}
 					}
@@ -157,7 +154,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 	}
 	
 	/**
-	 * @return Return the stored liquid in this consumer. Called by conductors to spread electricity to this unit.
+	 * @return Return the stored electricity in this consumer. Called by conductors to spread electricity to this unit.
 	 */
     @Override
 	public int getStoredLiquid(int type)
