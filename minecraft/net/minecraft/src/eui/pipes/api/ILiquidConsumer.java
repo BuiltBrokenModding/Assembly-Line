@@ -27,6 +27,5 @@ public interface ILiquidConsumer
 	 * @return Return the maximum amount of stored liquid this consumer can get.
 	 */
 	public int getLiquidCapacity(int type);
-	public int canConnectFromTypeAndSide(int type, byte side);
 	
 }
