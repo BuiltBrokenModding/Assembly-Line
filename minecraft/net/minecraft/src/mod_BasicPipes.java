@@ -16,6 +16,7 @@ public class mod_BasicPipes extends NetworkMod {
 	public static Block pipe = new net.minecraft.src.eui.pipes.BlockPipe(pipeID).setBlockName("pipe");
 	public static Item parts = new net.minecraft.src.eui.pipes.ItemParts(partID);
 	public static Item itemPipes = new net.minecraft.src.eui.pipes.ItemPipe(ppipeID);
+	public static Item gauge = new net.minecraft.src.eui.pipes.ItemGuage(ppipeID+1);
 	@Override
 	public String getVersion() {
 		// TODO change version on each update ;/
@@ -38,15 +39,15 @@ public class mod_BasicPipes extends NetworkMod {
    	    ModLoader.registerBlock(pipe);
 		ModLoader.registerTileEntity(net.minecraft.src.eui.pipes.TileEntityPipe.class, "pipe", new RenderPipe());
    	    //Names
-
-		ModLoader.addName((new ItemStack(itemPipes, 1, 0)), "Steam");
-		ModLoader.addName((new ItemStack(itemPipes, 1, 1)), "Water");
-		ModLoader.addName((new ItemStack(itemPipes, 1, 2)), "Lava");
-		ModLoader.addName((new ItemStack(itemPipes, 1, 3)), "Oil");
-		ModLoader.addName((new ItemStack(itemPipes, 1, 4)), "Fuel");
-		ModLoader.addName((new ItemStack(itemPipes, 1, 5)), "Air");
+		ModLoader.addName((new ItemStack(gauge, 1, 0)), "guage");
+		ModLoader.addName((new ItemStack(itemPipes, 1, 0)), "SteamPipe");
+		ModLoader.addName((new ItemStack(itemPipes, 1, 1)), "WaterPipe");
+		ModLoader.addName((new ItemStack(itemPipes, 1, 2)), "LavaPipe");
+		ModLoader.addName((new ItemStack(itemPipes, 1, 3)), "OilPipe");
+		ModLoader.addName((new ItemStack(itemPipes, 1, 4)), "FuelPipe");
+		ModLoader.addName((new ItemStack(itemPipes, 1, 5)), "AirPipe");
 		ModLoader.addName((new ItemStack(parts, 1, 0)), "BronzeTube");
-		ModLoader.addName((new ItemStack(parts, 1, 1)), "ObbyTube");
+		ModLoader.addName((new ItemStack(parts, 1, 1)), "IronTube");
 		ModLoader.addName((new ItemStack(parts, 1, 2)), "LeatherSeal");
 		ModLoader.addName((new ItemStack(parts, 1, 3)), "ObsidianTube");
 		ModLoader.addName((new ItemStack(parts, 1, 4)), "SlimeSeal");

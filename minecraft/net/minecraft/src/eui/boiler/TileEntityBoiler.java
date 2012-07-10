@@ -553,7 +553,7 @@ public class TileEntityBoiler extends TileEntityMachine implements IInventory, I
 		public int onReceiveLiquid(int type, int vol, byte side) {
 			if(type == 1)
 			{
-			int rejectedElectricity = Math.max((this.waterStored + vol) - 14, 0);
+			int rejectedElectricity = Math.max((this.waterStored + vol) - this.getLiquidCapacity(1), 0);
 			 this.waterStored += vol - rejectedElectricity;
 			return rejectedElectricity;
 			}
@@ -591,9 +591,7 @@ public class TileEntityBoiler extends TileEntityMachine implements IInventory, I
 			return 0;
 		}
 		@Override
-		public int onProduceLiquid(int type, int maxVol, int side) {
-			if(count == 10 || count == 20)
-			{
+		public int onProduceLiquid(int type, int maxVol, int side) {			
 			if(type == 0)
 			{
 				if(steamStored > maxVol)
@@ -601,7 +599,6 @@ public class TileEntityBoiler extends TileEntityMachine implements IInventory, I
 					this.steamStored -= maxVol;
 					return maxVol;
 				}
-			}
 			}
 			return 0;
 		}

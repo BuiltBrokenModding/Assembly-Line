@@ -22,11 +22,11 @@ public class RenderPipe extends TileEntitySpecialRenderer
 		{
 		case 0: bindTextureByName("/eui/SteamPipe.png");break;
 		case 1: bindTextureByName("/eui/WaterPipe.png");break;
-		case 2: bindTextureByName("/eui/lavaPipe.png");break;
-		case 3: bindTextureByName("/eui/oilPipe.png");break;
-		case 4: bindTextureByName("/eui/fuelPipe.png");break;
-		case 5: bindTextureByName("/eui/airPipe.png");break;
-		default: break;
+		//case 2: bindTextureByName("/eui/lavaPipe.png");break;
+		//case 3: bindTextureByName("/eui/oilPipe.png");break;
+		//case 4: bindTextureByName("/eui/fuelPipe.png");break;
+		//case 5: bindTextureByName("/eui/airPipe.png");break;
+		default:bindTextureByName("/eui/DefaultPipe.png"); break;
 		}
         
 		GL11.glPushMatrix();

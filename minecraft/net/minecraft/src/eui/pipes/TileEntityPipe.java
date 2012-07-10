@@ -113,7 +113,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 				}
 	        }
 			
-			averageElectricity = averageElectricity/connectedConductors;
+			averageElectricity = Math.max(averageElectricity/connectedConductors,0);
 			if(connectedUnits > 0)
 			{
 				for(byte i = 0; i < 6; i++)

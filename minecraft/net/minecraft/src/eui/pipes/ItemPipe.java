@@ -110,14 +110,14 @@ public class ItemPipe extends Item implements ITextureProvider
 	   int var3 = par1ItemStack.getItemDamage();
 	   switch(var3)
 	   {
-	   case 1: return "waterPipe";
 	   case 0: return "steamPipe";
-	   case 2: return "22";
-	   case 3: return "22";
-	   case 4: return "22";
-	   case 5: return "22";
+	   case 1: return "waterPipe";	   
+	   case 2: return "lavaPipe";
+	   case 3: return "oilPipe";
+	   case 4: return "fuelPipe";
+	   case 5: return "airPipe";
+	   default: return "Pipe";
 	   }
-        return this.getItemName();
     }
 	@Override
 	public String getTextureFile() {
