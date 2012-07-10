@@ -21,13 +21,6 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 
 	//Checks if this is the first the tile entity updates
 	protected boolean firstUpdate = true;
-	
-	/**
-	 * The tile entity of the closest electric consumer. Null if none. Use this to detect if electricity
-	 * should transfer
-	 */
-	
-	
 	/**
 	 * This function adds a connection between this pipe and other blocks
 	 * @param tileEntity - Must be either a producer, consumer or a conductor
