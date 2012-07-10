@@ -34,27 +34,20 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 	 */	
 	public void addConnection(TileEntity tileEntity, byte side)
 	{
-		if(tileEntity instanceof TileEntityPipe)
+		this.connectedBlocks[side] = null;
+		if(tileEntity instanceof ILiquidConsumer)
 		{
-			if(((TileEntityPipe)tileEntity).getType() == this.getType())
+			if(((ILiquidConsumer)tileEntity).canRecieveLiquid(this.type, side))
 			{
 				this.connectedBlocks[side] = tileEntity;
 			}
-			else
+		}
+		if(tileEntity instanceof ILiquidProducer)
+		{
+			if(((ILiquidProducer)tileEntity).canProduceLiquid(this.type, side))
 			{
-				this.connectedBlocks[side] = null;
-			}
-		}
-		else
-		{
-		if(tileEntity instanceof ILiquidConsumer || tileEntity instanceof ILiquidProducer)
-		{
 			this.connectedBlocks[side] = tileEntity;
-		}
-		else
-		{
-			this.connectedBlocks[side] = null;
-		}
+			}
 		}
 	}
 	
