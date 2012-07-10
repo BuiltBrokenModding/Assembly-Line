@@ -26,7 +26,7 @@ public class mod_EUIndustry extends NetworkMod {
 	@Override
 	public String getVersion() {
 		// TODO change version on each update ;/
-		return "0.0.5";
+		return "0.0.6";
 	}
 	 public static int configurationProperties()
      {
