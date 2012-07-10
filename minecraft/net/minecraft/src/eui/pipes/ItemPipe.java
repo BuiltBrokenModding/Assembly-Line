@@ -24,10 +24,10 @@ public class ItemPipe extends Item implements ITextureProvider
     	{
     	case 0: return 11;
     	case 1: return 10;
-    	case 2: return 11;
-    	case 3: return 10;
-    	case 4: return 11;
-    	case 5: return 10;
+    	case 2: return 14;
+    	case 3: return 12;
+    	case 4: return 13;
+    	case 5: return 15;
     	}
         return this.iconIndex;
     }
