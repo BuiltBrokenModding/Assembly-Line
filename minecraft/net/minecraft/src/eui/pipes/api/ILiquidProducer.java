@@ -18,4 +18,6 @@ public interface ILiquidProducer
 	public int onProduceLiquid(int type, int maxVol, int side);
 	
 	public boolean canProduceLiquid(int type, byte side);
+	
+	public boolean canConnectFromTypeAndSide(int type, byte side);
 }

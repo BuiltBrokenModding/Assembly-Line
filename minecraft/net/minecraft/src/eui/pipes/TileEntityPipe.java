@@ -47,9 +47,12 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 		}
 		else
 		{
-		if(tileEntity instanceof ILiquidConsumer || tileEntity instanceof ILiquidProducer)
+		if(tileEntity instanceof ILiquidProducer)
 		{
-			this.connectedBlocks[side] = tileEntity;
+			if(((ILiquidProducer) tileEntity).canConnectFromTypeAndSide(this.getType(), side)) this.connectedBlocks[side] = tileEntity;
+		}else if(tileEntity instanceof ILiquidConsumer)
+		{
+			if(((ILiquidConsumer) tileEntity).canConnectFromTypeAndSide(this.getType(), side)) this.connectedBlocks[side] = tileEntity;
 		}
 		else
 		{
@@ -67,13 +70,13 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 	 * @return watt - The amount of rejected power to be sent back into the conductor
 	 */
 	@Override
-	public int onReceiveLiquid(int type,int watt, byte side)
+	public int onReceiveLiquid(int type,int amt, byte side)
 	{
 		if(type == this.type)
 		{
-		int rejectedElectricity = Math.max((this.getStoredLiquid(type) + watt) - this.capacity, 0);
-		 this.liquidStored = watt - rejectedElectricity;
-		return rejectedElectricity;
+		int rejectedLiquid = Math.max((this.getStoredLiquid(type) + amt) - this.capacity, 0);
+		 this.liquidStored += watt - rejectedElectricity;
+		return rejectedLiquid;
 		}
 		return watt;
 	}
@@ -154,7 +157,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 	}
 	
 	/**
-	 * @return Return the stored electricity in this consumer. Called by conductors to spread electricity to this unit.
+	 * @return Return the stored liquid in this consumer. Called by conductors to spread electricity to this unit.
 	 */
     @Override
 	public int getStoredLiquid(int type)
