@@ -59,7 +59,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer
 		if(type == this.type)
 		{
 		int rejectedVolume = Math.max((this.getStoredLiquid(type) + vol) - this.capacity, 0);
-		 this.liquidStored = vol - rejectedVolume;
+		 this.liquidStored += vol - rejectedVolume;
 		return rejectedVolume;
 		}
 		return vol;
