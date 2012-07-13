@@ -1,9 +1,9 @@
 package net.minecraft.src;
 import net.minecraft.client.Minecraft;
+import net.minecraft.src.basiccomponents.BasicComponents;
 import net.minecraft.src.eui.*;
 import net.minecraft.src.forge.*;
 import net.minecraft.src.universalelectricity.*;
-import net.minecraft.src.universalelectricity.components.UniversalComponents;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -47,7 +47,7 @@ public class mod_EUIndustry extends NetworkMod {
 	@Override
 	public void load() {
 		//register
-		UniversalElectricity.registerAddon(this, "0.3.1");
+		UniversalElectricity.registerAddon(this, "0.4.3");
    	    MinecraftForgeClient.preloadTexture("/eui/Blocks.png");
    	    MinecraftForgeClient.preloadTexture("/eui/Items.png");
 		//Blocks
@@ -60,12 +60,12 @@ public class mod_EUIndustry extends NetworkMod {
 		ModLoader.addName((new ItemStack(machine, 1, 3)), "SteamGen");
 		ModLoader.addName((new ItemStack(machine, 1, 14)), "WaterCondenser");
 		ModLoader.addName((new ItemStack(machine, 1, 15)), "EUVampire");
-		ModLoader.registerTileEntity(net.minecraft.src.eui.grinder.TileEntityGrinder.class, "grinder",new UEBlockRenderer());
-		ModLoader.registerTileEntity(net.minecraft.src.eui.boiler.TileEntityBoiler.class, "boiler",new UEBlockRenderer());
-		ModLoader.registerTileEntity(net.minecraft.src.eui.burner.TileEntityFireBox.class, "fireBox",new UEBlockRenderer());
-		ModLoader.registerTileEntity(net.minecraft.src.eui.turbine.TileEntityGenerator.class, "generator",new UEBlockRenderer());
-		ModLoader.registerTileEntity(net.minecraft.src.eui.TileEntityCondenser.class, "waterPump",new UEBlockRenderer());
-		ModLoader.registerTileEntity(net.minecraft.src.eui.TileEntityNuller.class, "EUNuller",new UEBlockRenderer());
+		ModLoader.registerTileEntity(net.minecraft.src.eui.grinder.TileEntityGrinder.class, "grinder");
+		ModLoader.registerTileEntity(net.minecraft.src.eui.boiler.TileEntityBoiler.class, "boiler");
+		ModLoader.registerTileEntity(net.minecraft.src.eui.burner.TileEntityFireBox.class, "fireBox");
+		ModLoader.registerTileEntity(net.minecraft.src.eui.turbine.TileEntityGenerator.class, "generator");
+		ModLoader.registerTileEntity(net.minecraft.src.eui.TileEntityCondenser.class, "waterPump");
+		ModLoader.registerTileEntity(net.minecraft.src.eui.TileEntityNuller.class, "EUNuller");
 		//Items
 		ModLoader.addName((new ItemStack(coalNugget, 1, 0)), "CoalNuggets");
 		ModLoader.addName((new ItemStack(coalNugget, 1, 1)), "CoalPellets");
@@ -74,10 +74,10 @@ public class mod_EUIndustry extends NetworkMod {
 		//Crafting
 
 		ModLoader.addRecipe(new ItemStack(machine, 1, 0), new Object [] {"@S@", "SCW", "@S@",
-			'S',UniversalComponents.ItemSteelIngot,
-			'@',new ItemStack(UniversalComponents.ItemSteelPlate),
-			'C',new ItemStack(UniversalComponents.ItemCircuit,1,1),
-			'W',UniversalComponents.ItemCopperWire});
+			'S',BasicComponents.ItemSteelIngot,
+			'@',new ItemStack(BasicComponents.ItemSteelPlate),
+			'C',new ItemStack(BasicComponents.ItemCircuit,1,1),
+			'W',BasicComponents.ItemCopperWire});
 		/**ModLoader.addRecipe(new ItemStack(machine, 1, 1), new Object [] {"@T@", "OVO", "@T@",
 			'T',new ItemStack(parts, 1,1),
 			'@',new ItemStack(UniversalComponents.ItemSteelPlate),

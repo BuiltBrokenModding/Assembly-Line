@@ -4,10 +4,10 @@ import net.minecraft.src.eui.BlockMachine;
 import net.minecraft.src.eui.TileEntityMachine;
 import net.minecraft.src.eui.api.*;
 import net.minecraft.src.eui.burner.TileEntityFireBox;
-import net.minecraft.src.eui.pipes.api.ILiquidConsumer;
-import net.minecraft.src.eui.pipes.api.ILiquidProducer;
 import net.minecraft.src.forge.ForgeHooks;
 import net.minecraft.src.forge.ISidedInventory;
+import net.minecraft.src.pipes.api.ILiquidConsumer;
+import net.minecraft.src.pipes.api.ILiquidProducer;
 import net.minecraft.src.universalelectricity.UniversalElectricity;
 
 public class TileEntityBoiler extends TileEntityMachine implements IInventory, ISidedInventory,ILiquidProducer, ILiquidConsumer

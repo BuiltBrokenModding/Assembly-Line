@@ -5,8 +5,6 @@ import java.math.*;
 import java.lang.Integer;
 import net.minecraft.src.*;
 import net.minecraft.src.universalelectricity.UniversalElectricity;
-import net.minecraft.src.universalelectricity.components.ContainerCoalGenerator;
-import net.minecraft.src.universalelectricity.components.TileEntityCoalGenerator;
 
 	public class GUIGenerator extends GuiContainer
 	{
@@ -31,7 +29,7 @@ import net.minecraft.src.universalelectricity.components.TileEntityCoalGenerator
 	        String displayText = "";
 	        String displayText2 = "";
 	        String displayText3 = "";
-	        if(tileEntity.connectedWire == null)
+	        if(tileEntity.connectedElectricUnit == null)
 	        {
 	        	displayText = "Not Connected";
 	        }

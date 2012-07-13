@@ -1,11 +1,11 @@
 package net.minecraft.src.eui.grinder;
 import net.minecraft.src.*;
-import net.minecraft.src.universalelectricity.UEIConsumer;
+import net.minecraft.src.universalelectricity.electricity.IElectricUnit;
 import net.minecraft.src.eui.TileEntityMachine;
 import net.minecraft.src.forge.ForgeHooks;
 import net.minecraft.src.forge.ISidedInventory;
 
-public class TileEntityGrinder extends TileEntityMachine implements IInventory, ISidedInventory, UEIConsumer
+public class TileEntityGrinder extends TileEntityMachine implements IElectricUnit, IInventory
 {
 	
 	    /**
@@ -324,60 +324,14 @@ public class TileEntityGrinder extends TileEntityMachine implements IInventory, 
 	    public void openChest() {}
 
 	    public void closeChest() {}
-
-	    @Override
-	    public int getStartInventorySide(int side) 
-	    {
-	        if (side == 0) return 1;
-	        if (side == 1) return 0;
-	        return 2;
-	    }
-
-	    @Override
-	    public int getSizeInventorySide(int side) 
-	    {
-	        return 1;
-	    }
-
+		
 		@Override
-		public int onReceiveElectricity(int watts, int voltage, byte side) {
-			//can store 1 min of energy too do work
-			if(this.energyStore <= 1000)
-			{
-				if(!(this.energyStore + watts > 1000))
-				{
-				this.energyStore = this.energyStore + watts;
-				return 0;
-				}
-				else
-				{
-					int varB = watts - this.energyStore;
-					int eGain = (varB * varB) / 2;
-					this.energyStore = this.energyStore + eGain;
-					return (watts - eGain);
-				}
-			}
-			return watts;
-		}
-
-		@Override
-		public int getStoredElectricity() {
-			// TODO what is acutal returned 
-			return this.energyStore;
-		}
-		@Override
-		public int getElectricityCapacity() {
-			// TODO Auto-generated method stub
-			return 1000;
-		}
-
-		@Override
-		public boolean canReceiveElectricity(byte side) {
+		public boolean canReceiveFromSide(byte side) {
 			// TODO Auto-generated method stub
 			return true;
 		}
 		@Override
-		public int getVolts() {
+		public float getVoltage() {
 			// TODO Auto-generated method stub
 			return 120;
 		}
@@ -392,6 +346,11 @@ public class TileEntityGrinder extends TileEntityMachine implements IInventory, 
 		public boolean isDisabled() {
 			// TODO Auto-generated method stub
 			return false;
+		}
+		public float electricityRequest()
+		{
+			return Math.max(this.energyStore - 100,0);
+			
 		}
 
 		

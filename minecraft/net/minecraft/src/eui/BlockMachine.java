@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
+import net.minecraft.src.basiccomponents.*;
 import net.minecraft.src.eui.boiler.*;
 import net.minecraft.src.eui.burner.GUIFireBox;
 import net.minecraft.src.eui.burner.TileEntityFireBox;
@@ -11,14 +12,9 @@ import net.minecraft.src.eui.grinder.*;
 import net.minecraft.src.eui.turbine.GUIGenerator;
 import net.minecraft.src.eui.turbine.TileEntityGenerator;
 import net.minecraft.src.forge.*;
-import net.minecraft.src.universalelectricity.UEBlockMachine;
-import net.minecraft.src.universalelectricity.UEElectricItem;
-import net.minecraft.src.universalelectricity.UERenderBlocks;
-import net.minecraft.src.universalelectricity.UniversalElectricity;
-import net.minecraft.src.universalelectricity.components.TileEntityCoalGenerator;
-import net.minecraft.src.universalelectricity.components.UniversalComponents;
+import net.minecraft.src.universalelectricity.*;
 
-public class BlockMachine extends UEBlockMachine implements ITextureProvider
+public class BlockMachine extends net.minecraft.src.universalelectricity.extend.BlockMachine implements ITextureProvider
 {
     
     private Random furnaceRand = new Random();  
@@ -178,7 +174,7 @@ public class BlockMachine extends UEBlockMachine implements ITextureProvider
     	 */
     	if(par5EntityPlayer.inventory.getCurrentItem() != null)
     	{
-    		if(par5EntityPlayer.inventory.getCurrentItem().itemID == UniversalComponents.ItemWrench.shiftedIndex)
+    		if(par5EntityPlayer.inventory.getCurrentItem().itemID == BasicComponents.ItemWrench.shiftedIndex)
         	{
     			if(onUseWrench(par1World, par2, par3, par4, par5EntityPlayer))
     			{
@@ -186,7 +182,7 @@ public class BlockMachine extends UEBlockMachine implements ITextureProvider
     				return true;
     			}
         	}
-    		else if(par5EntityPlayer.inventory.getCurrentItem().getItem() instanceof UEElectricItem)
+    		else if(par5EntityPlayer.inventory.getCurrentItem().getItem() instanceof net.minecraft.src.universalelectricity.extend.ItemElectric)
     		{
     			if(onUseElectricItem(par1World, par2, par3, par4, par5EntityPlayer))
     			{
@@ -370,10 +366,10 @@ public class BlockMachine extends UEBlockMachine implements ITextureProvider
     {
         return false;
     }
-	    public int getRenderType()
-	    {
-	    	return UniversalComponents.MachineRenderType;
-	    }
+	public int getRenderType()
+	{
+	   return 0;
+	}
 public void addCreativeItems(ArrayList itemList)     {       
         
         itemList.add(new ItemStack(this, 1,0));

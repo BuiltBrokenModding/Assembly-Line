@@ -2,10 +2,10 @@ package net.minecraft.src.eui;
 
 import net.minecraft.src.*;
 import net.minecraft.src.forge.ITextureProvider;
-import net.minecraft.src.universalelectricity.UEIRotatable;
-import net.minecraft.src.universalelectricity.components.UniversalComponents;
+import net.minecraft.src.universalelectricity.electricity.TileEntityElectricUnit;
+import net.minecraft.src.universalelectricity.extend.IRotatable;
 
-public class TileEntityMachine extends TileEntity implements ITextureProvider, UEIRotatable
+public class TileEntityMachine extends TileEntityElectricUnit implements ITextureProvider, IRotatable
 {
 	private byte facing;
 	 
@@ -61,5 +61,17 @@ public class TileEntityMachine extends TileEntity implements ITextureProvider, U
 	{
 	        super.readFromNBT(par1NBTTagCompound);
 	        this.facing = par1NBTTagCompound.getByte("facing");
+	}
+
+	@Override
+	public float electricityRequest() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean canReceiveFromSide(byte side) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

@@ -1,49 +1,28 @@
 package net.minecraft.src.eui;
 
-import net.minecraft.src.universalelectricity.UEIConsumer;
+import net.minecraft.src.universalelectricity.electricity.IElectricUnit;
 
-public class TileEntityNuller extends TileEntityMachine implements UEIConsumer {
 
-	@Override
-	public int onReceiveElectricity(int watts, int voltage, byte side) {
-		// TODO Auto-generated method stub
-		return 0;
+public class TileEntityNuller extends TileEntityMachine implements IElectricUnit {
+
+	public float electricityRequest()
+	{
+		return 100;
 	}
-
-	@Override
-	public boolean canReceiveElectricity(byte side) {
-		// TODO Auto-generated method stub
+	public boolean canReceiveFromSide(byte side)
+	{
 		return true;
 	}
-
-	@Override
-	public int getStoredElectricity() {
-		// TODO Auto-generated method stub
-		return 0;
+	public float getVoltage()
+	{
+		return 1000;
 	}
-
-	@Override
-	public int getElectricityCapacity() {
-		// TODO Auto-generated method stub
-		return 100000;
+	public int getTickInterval()
+	{
+		return 1;
 	}
-
-	@Override
-	public int getVolts() {
-		// TODO Auto-generated method stub
-		return 100000000;
+	public boolean canConnect(byte side)
+	{
+		return true;
 	}
-
-	@Override
-	public void onDisable(int duration) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean isDisabled() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 }

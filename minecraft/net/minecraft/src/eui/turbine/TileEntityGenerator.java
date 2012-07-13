@@ -1,14 +1,18 @@
 package net.minecraft.src.eui.turbine;
 import net.minecraft.src.eui.TileEntityMachine;
 import net.minecraft.src.eui.api.*;
-import net.minecraft.src.eui.pipes.api.ILiquidConsumer;
-import net.minecraft.src.eui.pipes.api.ILiquidProducer;
 import net.minecraft.src.forge.ForgeHooks;
 import net.minecraft.src.*;
+import net.minecraft.src.pipes.api.ILiquidConsumer;
+import net.minecraft.src.pipes.api.ILiquidProducer;
 import net.minecraft.src.universalelectricity.*;
+import net.minecraft.src.universalelectricity.electricity.ElectricityManager;
+import net.minecraft.src.universalelectricity.electricity.IElectricUnit;
+import net.minecraft.src.universalelectricity.extend.BlockConductor;
+import net.minecraft.src.universalelectricity.extend.TileEntityConductor;
 import net.minecraft.src.forge.ISidedInventory;
 
-public class TileEntityGenerator extends TileEntityMachine implements UEIProducer,ILiquidConsumer,ILiquidProducer, IInventory, ISidedInventory
+public class TileEntityGenerator extends TileEntityMachine implements IElectricUnit,ILiquidConsumer,ILiquidProducer, IInventory, ISidedInventory
 {
 	//Maximum possible generation rate of watts in SECONDS
 	public int maxGenerateRate = 1000;
@@ -17,7 +21,7 @@ public class TileEntityGenerator extends TileEntityMachine implements UEIProduce
 	public int steamConsumed = 0;
 	//Current generation rate based on hull heat. In TICKS.
 	public float generateRate = 0;
-	public UETileEntityConductor connectedWire = null;
+	//public TileEntityConductor connectedWire = null;
 	 /**
      * The number of ticks that a fresh copy of the currently-burning item would keep the furnace burning for
      */
@@ -26,20 +30,9 @@ public class TileEntityGenerator extends TileEntityMachine implements UEIProduce
      * The ItemStacks that hold the items currently being used in the battery box
      */
     private ItemStack[] containingItems = new ItemStack[1];
-    
+    public TileEntityConductor connectedElectricUnit = null;    
     @Override
-	public int onProduceElectricity(int maxWatts, int voltage, byte side)
-    {
-		//Only produce electricity on the back side.
-    	if(canProduceElectricity(side) && maxWatts > 0)
-		{
-	        return Math.min(maxWatts, (int)generateRate);
-		}
-    	return 0;
-	}
-    
-    @Override
-    public boolean canProduceElectricity(byte side)
+    public boolean canConnect(byte side)
     {
     	return true;
     }
@@ -48,30 +41,50 @@ public class TileEntityGenerator extends TileEntityMachine implements UEIProduce
      * Allows the entity to update its state. Overridden in most subclasses, e.g. the mob spawner uses this to count
      * ticks and creates a new spawn inside its implementation.
      */
-    public void updateEntity()
+    public void onUpdate(float watts, float voltage, byte side)
+	{ if(!this.worldObj.isRemote)
     {
-    	//Check nearby blocks and see if the conductor is full. If so, then it is connected
-    	TileEntity tileEntity = UEBlockConductor.getUEUnit(this.worldObj, this.xCoord, this.yCoord, this.zCoord, UniversalElectricity.getOrientationFromSide(this.getDirection(), (byte)2));
+    	super.onUpdate(watts, voltage, side);
     	
-    	if(tileEntity instanceof UETileEntityConductor)
+    	//Check nearby blocks and see if the conductor is full. If so, then it is connected
+    	TileEntity tileEntity = UniversalElectricity.getUEUnitFromSide(this.worldObj, new Vector3(this.xCoord, this.yCoord, this.zCoord), UniversalElectricity.getOrientationFromSide((byte)this.getBlockMetadata(), (byte)3));
+    	
+    	if(tileEntity instanceof TileEntityConductor)
     	{
-    		if(((UETileEntityConductor)tileEntity).closestConsumer != null)
+    		if(ElectricityManager.electricityRequired(((TileEntityConductor)tileEntity).connectionID) > 0)
     		{
-    			this.connectedWire = (UETileEntityConductor)tileEntity;
+    			this.connectedElectricUnit = (TileEntityConductor)tileEntity;
     		}
     		else
-        	{
-        		this.connectedWire = null;
-        	}
+    		{
+    			this.connectedElectricUnit = null;
+    		}
     	}
     	else
     	{
-    		this.connectedWire = null;
+    		this.connectedElectricUnit = null;
     	}
     	
-    	if (!this.worldObj.isRemote)
-        {
-	    	//The top slot is for recharging items. Check if the item is a electric item. If so, recharge it.
+    	
+    	if(!this.isDisabled())
+    	{	
+    		//Adds time to runTime by consuming steam	    	
+	                if(this.itemCookTime <= 0)
+	                {
+	                	if(steamStored > 0)
+	            		{
+	            			--steamStored;
+	            			++steamConsumed;
+	            			if(steamConsumed == mod_EUIndustry.steamOutBoiler)
+	            			{
+	            			++waterStored;
+	            			steamConsumed = 0;
+	            			}
+	            		itemCookTime += 65;
+	            		}
+	            	}
+	          
+	    	//Empties water from tank to buckets
 	    	if (this.containingItems[0] != null)
 	        {
 	            if(this.containingItems[0].getItem().shiftedIndex == Item.bucketEmpty.shiftedIndex)
@@ -83,36 +96,29 @@ public class TileEntityGenerator extends TileEntityMachine implements UEIProduce
 	            	}
 	            }
 	        }
-        }
-    	//Starts generating electricity if the device is heated up
-    	if (this.itemCookTime > 0)
-        {
-            this.itemCookTime --;
-            
-            if(this.connectedWire != null && this.connectedWire.getStoredElectricity() < this.connectedWire.getElectricityCapacity())
-            {
-            	this.generateRate = (float)Math.min(this.generateRate+Math.min((this.generateRate)*0.01+0.015, 0.05F), this.maxGenerateRate/20);
-            }
-        }
-    	else
-    	{
-    		if(steamStored > 0)
-    		{
-    			--steamStored;
-    			++steamConsumed;
-    			if(steamConsumed == mod_EUIndustry.steamOutBoiler)
-    			{
-    			++waterStored;
-    			steamConsumed = 0;
-    			}
-    		itemCookTime = itemCookTime + 65;
-    		}
+    	
+	    	//Starts generating electricity if the device is heated up
+	    	if (this.itemCookTime > 0)
+	        {
+	            this.itemCookTime --;
+	            
+	            if(this.connectedElectricUnit != null)
+	            {
+	            	this.generateRate = (float)Math.min(this.generateRate+Math.min((this.generateRate)*0.001+0.0015, 0.05F), this.maxGenerateRate/20);
+	            }
+	        }
+	
+	    	if(this.connectedElectricUnit == null || this.itemCookTime <= 0)
+	    	{
+	        	this.generateRate = (float)Math.max(this.generateRate-0.05, 0);
+	        }
+	    	
+	    	if(this.generateRate > 1)
+	    	{
+	    		ElectricityManager.produceElectricity(this.connectedElectricUnit, this.generateRate*this.getTickInterval(), this.getVoltage());
+	    	}
     	}
-
-    	if(this.connectedWire == null || this.itemCookTime <= 0)
-    	{
-        	this.generateRate = (float)Math.max(this.generateRate-0.05, 0);
-        }
+    }    	
     }
     /**
      * Reads a tile entity from NBT.
@@ -248,11 +254,6 @@ public class TileEntityGenerator extends TileEntityMachine implements UEIProduce
 	public void openChest() { }
 	@Override
 	public void closeChest() { }
-	@Override
-	public int getVolts() {
-		// TODO Auto-generated method stub
-		return 120;
-	}
 
 	@Override
 	public void onDisable(int duration) {
