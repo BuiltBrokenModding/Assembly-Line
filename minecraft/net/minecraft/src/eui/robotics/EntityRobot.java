@@ -1,28 +1,32 @@
 package net.minecraft.src.eui.robotics;
 import net.minecraft.src.*;
 
-public class EntityRobot extends Entity {
-
+public class EntityRobot extends EntityCreature {
+	protected int attackStrength = 0;
 	public EntityRobot(World par1World) {
 		super(par1World);
 	}
-	public boolean isActive()
-	{
-		return false;
-	}
+	public boolean isAIEnabled()
+	 {
+	    return false;
+	 }
+	 protected boolean canDespawn()
+	    {
+	        return false;
+	    }
 	@Override
-	protected void entityInit() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound)
+    {
+        super.writeEntityToNBT(par1NBTTagCompound);
+    }
+
+ public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound)
+    {
+        super.readEntityFromNBT(par1NBTTagCompound);
+    }
 	@Override
-	protected void readEntityFromNBT(NBTTagCompound var1) {
+	public int getMaxHealth() {
 		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	protected void writeEntityToNBT(NBTTagCompound var1) {
-		// TODO Auto-generated method stub
-		
+		return 0;
 	}
 }
