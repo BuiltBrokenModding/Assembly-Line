@@ -2,6 +2,10 @@ package net.minecraft.src;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.basiccomponents.BasicComponents;
 import net.minecraft.src.eui.*;
+import net.minecraft.src.eui.boiler.TileEntityBoiler;
+import net.minecraft.src.eui.burner.TileEntityFireBox;
+import net.minecraft.src.eui.grinder.TileEntityGrinder;
+import net.minecraft.src.eui.turbine.TileEntityGenerator;
 import net.minecraft.src.forge.*;
 import net.minecraft.src.universalelectricity.*;
 
@@ -26,7 +30,7 @@ public class mod_EUIndustry extends NetworkMod {
 	@Override
 	public String getVersion() {
 		// TODO change version on each update ;/
-		return "0.0.6";
+		return "0.0.7";
 	}
 	 public static int configurationProperties()
      {
@@ -44,55 +48,52 @@ public class mod_EUIndustry extends NetworkMod {
              config.save();
              return coalID;
      }
+	 @Override
+	 public void modsLoaded()
+	    {
+	    UniversalElectricity.registerAddon(this, "0.4.5");
+	    }
 	@Override
 	public void load() {
 		//register
-		UniversalElectricity.registerAddon(this, "0.4.3");
+		ModLoader.registerBlock(machine, net.minecraft.src.eui.ItemMachine.class);
    	    MinecraftForgeClient.preloadTexture("/eui/Blocks.png");
    	    MinecraftForgeClient.preloadTexture("/eui/Items.png");
-		//Blocks
-   	    //gen
-		//machine
-		ModLoader.registerBlock(machine, net.minecraft.src.eui.ItemMachine.class);
-		ModLoader.addName((new ItemStack(machine, 1, 0)), "CoalRefiner");
-		ModLoader.addName((new ItemStack(machine, 1, 1)), "Boiler");
-		ModLoader.addName((new ItemStack(machine, 1, 2)), "FireBox");
-		ModLoader.addName((new ItemStack(machine, 1, 3)), "SteamGen");
-		ModLoader.addName((new ItemStack(machine, 1, 14)), "WaterCondenser");
-		ModLoader.addName((new ItemStack(machine, 1, 15)), "EUVampire");
-		ModLoader.registerTileEntity(net.minecraft.src.eui.grinder.TileEntityGrinder.class, "grinder");
+		//TileEntities..................................
 		ModLoader.registerTileEntity(net.minecraft.src.eui.boiler.TileEntityBoiler.class, "boiler");
 		ModLoader.registerTileEntity(net.minecraft.src.eui.burner.TileEntityFireBox.class, "fireBox");
 		ModLoader.registerTileEntity(net.minecraft.src.eui.turbine.TileEntityGenerator.class, "generator");
-		ModLoader.registerTileEntity(net.minecraft.src.eui.TileEntityCondenser.class, "waterPump");
 		ModLoader.registerTileEntity(net.minecraft.src.eui.TileEntityNuller.class, "EUNuller");
-		//Items
+		//Names...............
+		ModLoader.addName((new ItemStack(machine, 1, 1)), "Boiler");
+		ModLoader.addName((new ItemStack(machine, 1, 2)), "FireBox");
+		ModLoader.addName((new ItemStack(machine, 1, 3)), "SteamGen");
+		ModLoader.addName((new ItemStack(machine, 1, 15)), "EUVampire");
 		ModLoader.addName((new ItemStack(coalNugget, 1, 0)), "CoalNuggets");
 		ModLoader.addName((new ItemStack(coalNugget, 1, 1)), "CoalPellets");
 		ModLoader.addName((new ItemStack(coalNugget, 1, 2)), "CoalDust");
-		//fuels
 		//Crafting
-
-		ModLoader.addRecipe(new ItemStack(machine, 1, 0), new Object [] {"@S@", "SCW", "@S@",
-			'S',BasicComponents.ItemSteelIngot,
+/**
+ *  	case 0: return new TileEntityGrinder(); <-Removed
+        case 1: return new TileEntityBoiler();
+        case 2: return new TileEntityFireBox();
+        case 3: return new TileEntityGenerator();
+        case 14: return new TileEntityCondenser();<-Removed
+        case 15: return new TileEntityNuller();<-Just for testing Not craftable
+ */
+		ModLoader.addRecipe(new ItemStack(machine, 1, 1), new Object [] {"@T@", "OVO", "@T@",
+			'T',new ItemStack(mod_BasicPipes.parts, 1,5),
 			'@',new ItemStack(BasicComponents.ItemSteelPlate),
-			'C',new ItemStack(BasicComponents.ItemCircuit,1,1),
-			'W',BasicComponents.ItemCopperWire});
-		/**ModLoader.addRecipe(new ItemStack(machine, 1, 1), new Object [] {"@T@", "OVO", "@T@",
-			'T',new ItemStack(parts, 1,1),
-			'@',new ItemStack(UniversalComponents.ItemSteelPlate),
-			'O',new ItemStack(parts, 1,4),
-			'V',new ItemStack(parts, 1,3)});
+			'O',new ItemStack(mod_BasicPipes.parts, 1,1),
+			'V',new ItemStack(mod_BasicPipes.parts, 1,6)});
 		ModLoader.addRecipe(new ItemStack(machine, 1, 2), new Object [] { "@", "F",
 			'F',Block.stoneOvenIdle,
-			'@',new ItemStack(UniversalComponents.ItemSteelPlate)});
+			'@',new ItemStack(BasicComponents.ItemSteelPlate)});
 		ModLoader.addRecipe(new ItemStack(machine, 1, 3), new Object [] {"@T@", "PMP", "@T@",
-			'T',new ItemStack(parts, 1,4),
-			'@',new ItemStack(UniversalComponents.ItemSteelPlate),
+			'T',new ItemStack(mod_BasicPipes.parts, 1,0),
+			'@',new ItemStack(BasicComponents.ItemSteelPlate),
 			'P',Block.pistonBase,
-			'M',new ItemStack(UniversalComponents.ItemMotor)});**/
-		
-		//smelting
+			'M',new ItemStack(BasicComponents.ItemMotor)});
 		
 	}
 	

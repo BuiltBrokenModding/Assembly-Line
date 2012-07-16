@@ -263,7 +263,6 @@ public class BlockMachine extends net.minecraft.src.universalelectricity.extend.
         case 1: return new TileEntityBoiler();
         case 2: return new TileEntityFireBox();
         case 3: return new TileEntityGenerator();
-        case 14: return new TileEntityCondenser();
         case 15: return new TileEntityNuller();
         }
 		return null;
