@@ -14,6 +14,8 @@ public class mod_automation extends NetworkMod {
 	static Configuration config = new Configuration((new File(Minecraft.getMinecraftDir(), "config/EUIndustry/SteamPower.cfg")));
 	public static int spawnItemId = configurationProperties();
 	public static Item spawnItem = (new net.minecraft.src.eui.robotics.ItemSpawn(spawnItemId)).setItemName("Bot");
+	private static int BlockID = 3454;
+	public static Block machine = new net.minecraft.src.eui.robotics.BlockComp(BlockID).setBlockName("machine");
 	@Override
 	public String getVersion() {
 		// TODO change version on each update ;/
@@ -27,14 +29,19 @@ public class mod_automation extends NetworkMod {
              return spawnItemId;
      }
 	@Override
-	public void load() {
-		//register
-		UniversalElectricity.registerAddon(this, "0.4.5");
+	public void load() {		
    	    MinecraftForgeClient.preloadTexture("/eui/Blocks.png");
    	    MinecraftForgeClient.preloadTexture("/eui/Items.png");
+   	    //register
+		UniversalElectricity.registerAddon(this, "0.4.5");
+   	    ModLoader.registerBlock(machine, net.minecraft.src.eui.robotics.ItemMachine.class);
+   	    //names................................................
 		ModLoader.addName((new ItemStack(spawnItem, 1, 0)), "Bot");
-		//...........
-		ModLoader.registerEntityID(net.minecraft.src.eui.robotics.EntityShoeBot.class, "Bot", 101);
+		ModLoader.addName((new ItemStack(machine, 1, 0)), "Controler");
+		//TileEntities..................................
+		ModLoader.registerTileEntity(net.minecraft.src.eui.robotics.TileEntityComp.class, "controler");
+		//Entities...................
+		ModLoader.registerEntityID(net.minecraft.src.eui.robotics.EntityShoeBot.class, "Bot", 101);//collector
 		
 	}
 	@Override
