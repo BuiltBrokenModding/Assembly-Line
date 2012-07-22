@@ -16,7 +16,7 @@ public class TileEntityBoiler extends TileEntityMachine implements IInventory, I
 	    /**
 	     * The ItemStacks that hold the items currently being used in the furnace
 	     */
-	    private ItemStack[] furnaceItemStacks = new ItemStack[3];
+	    private ItemStack[] furnaceItemStacks = new ItemStack[1];
 
 	    /** The number of ticks that the boiler will keep burning */
 	    public int RunTime = 0;
@@ -33,8 +33,9 @@ public class TileEntityBoiler extends TileEntityMachine implements IInventory, I
 	    public int hullHeat = 0;
 	    public int hullHeatMax = 10000;
 	    private int heatTick = 0;
-	    public TileEntity[] connectedBlocks = {null, null, null, null, null, null};
-	    public TileEntity[] connectedFaces = {null, null, null, null, null, null, null, null};
+	    int count = 0;
+	    boolean hullHeated = false;
+	    TileEntity[] connectedBlocks = {null, null, null, null, null, null};
 	    int steamMax = 140;
 	    public boolean isBeingHeated = false;
 	    /**
@@ -52,11 +53,7 @@ public class TileEntityBoiler extends TileEntityMachine implements IInventory, I
 	    {
 	        return this.furnaceItemStacks[par1];
 	    }
-
-	    /**
-	     * Decrease the size of the stack in slot (first int arg) by the amount of the second int arg. Returns the new
-	     * stack.
-	     */
+	   
 	    public ItemStack decrStackSize(int par1, int par2)
 	    {
 	        if (this.furnaceItemStacks[par1] != null)
@@ -205,48 +202,19 @@ public class TileEntityBoiler extends TileEntityMachine implements IInventory, I
 	    	{
 	    		return false;
 	    	}
-		}
-	    private int getTextureFront() {
-	    	
-			return 0;
-		}	
-	    public TileEntity getFacingBoilers(int i)
-		{	
-			
-				int x = this.xCoord;
-		    	int y = this.yCoord;
-		    	int z = this.zCoord; 
-	    		switch(i){
-				case 0: y = y - 1;break;
-				case 1: y = y + 1;break;
-				case 2: z = z + 1;break;
-				case 3: z = z - 1;break;
-				case 4: x = x + 1;break;
-				case 5: x = x - 1;break;
-	    		}
-			TileEntity aEntity = worldObj.getBlockTileEntity(x, y, z);			
-			if(aEntity instanceof TileEntityBoiler)
-			{
-				return aEntity;
-			}
-			
-			return null;
-		}
-	    int count = 0;
+		}	    
+	   @Override
 	    public void updateEntity(){
-	    	if(count == 20){
-	    	isBeingHeated = getIsHeated();
-			addConnection();
-			shareResources();
+	    	count++;
+	    	if(count >= 20){
+	    	isBeingHeated = getIsHeated();	    	
+	        addWater();//adds water from container slot
+			shareWater();
 			count = 0;
 	    	}
-	    	else
-	    	{
-	    		count++;
-	    	}
-	    	boolean hullHeated = false;
+	    	
 	    	//changed hullHeat max depending on contents of boiler
-	    	if(waterStored>0)
+	    	if(waterStored > 0)
 	    	{
 	    		hullHeatMax = 4700;
 	    		if(hullHeat > hullHeatMax)
@@ -280,8 +248,7 @@ public class TileEntityBoiler extends TileEntityMachine implements IInventory, I
 					heatTick += 1;
 				}
 			}
-			//adds water from container slot
-	        addWater();
+			
 	        
 	        int heatNeeded = mod_EUIndustry.boilerHeat; // kilo joules	
 	        //if hull heated do work
@@ -312,190 +279,118 @@ public class TileEntityBoiler extends TileEntityMachine implements IInventory, I
 				}
 			}
 			
-	    }	  
-	    	int transferW  = 0;
-			int transferS  = 0;
-			int transferH  = 0;
-	    public void shareResources()
-	    {
-	    	
-	    	for(int i = 0; i<6; i++)
+	    }
+	    public void shareWater()	
+		{
+			int wSum = getStoredLiquid(1); //pre-sets the sum to the first tanks current volume
+			int tankCount = 1; //amount of tanks around this tank, used to get avarage liquid ammount
+			boolean bottom = false; // whether or not this tanks need to worry about what is bellow it
+			TileEntity entityBellow = worldObj.getBlockTileEntity(this.xCoord,this.yCoord-1, this.zCoord);
+			TileEntity entityAbove = worldObj.getBlockTileEntity(this.xCoord,this.yCoord+1, this.zCoord);
+			//checks wether or not the block bellow it is a tank to move liquid too
+			if(entityBellow instanceof TileEntityBoiler)
 			{
-			if(connectedBlocks[i] instanceof TileEntityBoiler)
-			{			
-			TileEntityBoiler connectedConsumer = (TileEntityBoiler)connectedBlocks[i];	
-								//add steam to other boiler if less
-			boolean canTradeSteam;
-			if( i ==0)
-			{
-				if(this.steamStored == this.steamMax)
+				int bWater = ((TileEntityBoiler) entityBellow).getStoredLiquid(1);
+				int bMax = ((TileEntityBoiler) entityBellow).getLiquidCapacity(1);
+				//checks if that tank has room to get liquid.
+				
+					if(bWater < bMax)
+					{
+						int emptyVol = Math.max( bMax - bWater,0);
+						int tradeVol = Math.min(emptyVol, waterStored);
+						int rejected = ((TileEntityBoiler) entityBellow).onReceiveLiquid(1, tradeVol, (byte) 1);
+						waterStored = Math.max(waterStored - rejected,0);
+						wSum -= rejected;
+					}
+				else 
 				{
-					canTradeSteam = true;
-				}
-				else
-				{
-					canTradeSteam = false;	
+					bottom = true;
 				}
 			}
 			else
 			{
-			canTradeSteam = true;
-			}
-			if(canTradeSteam)
+				//there was no tank bellow this tank
+				bottom = true;
+			}			
+			//if this is the bottom tank or bottom tank is full then trade liquid with tanks around it.
+			if(bottom)
 			{
-				if( this.steamStored > 0)
+			//get average water around center tank
+			for(int i = 0; i<4;i++)
+			{
+				int x = this.xCoord;
+				int z = this.zCoord;
+				//switch to check each side TODO rewrite for side values 
+				switch(i)	
 				{
-						int SSum = (this.steamStored + connectedConsumer.steamStored)/2;
-						if(i == 1 && connectedConsumer.steamStored < connectedConsumer.steamMax && this.steamStored > 0){
-						if(this.steamStored >= 10 )
-						{														
-							
-								int rejectedW = connectedConsumer.addSteam(10);
-								this.steamStored = Math.max(Math.min(this.steamStored - 10 + rejectedW, this.steamMax), 0);
-						}
-						else
-						{
-							int rejectedW = connectedConsumer.addSteam(this.steamStored);
-							this.steamStored = Math.max(Math.min(this.steamStored - this.steamStored + rejectedW, this.steamMax), 0);
-						}
-						}
-						if(this.steamStored > connectedConsumer.steamStored)
-						{														
-							transferS = SSum - connectedConsumer.steamStored;
-							int rejectedS = connectedConsumer.addSteam(transferS);
-						    this.steamStored = Math.max(Math.min(this.steamStored - transferS + rejectedS, 140), 0);							
-						}
+				case 0: --x;
+				case 1: ++x;
+				case 2: --z;
+				case 3: ++z;
 				}
-			}
-				//add water to other boiler if less
-				if( this.waterStored > 0)
-				{	
-					boolean canTradeWater;
-					if( i ==1)
-					{
-						if(this.waterStored == this.getLiquidCapacity(1))
-						{
-							canTradeWater = true;
-						}
-						else
-						{
-							canTradeWater = false;	
-						}
-					}
-					else
-					{
-					canTradeWater = true;
-					}
-					if(canTradeWater)
-					{					
-						int WSum = (this.waterStored + connectedConsumer.waterStored)/2;
-						if(i == 0 && this.waterStored > 0 && connectedConsumer.waterStored < connectedConsumer.getLiquidCapacity(1))
-						{														
-							
-								int rejectedW = connectedConsumer.addwater(1);
-								this.waterStored = Math.max(Math.min(this.waterStored - 1 + rejectedW, this.getLiquidCapacity(1)), 0);
-						}
-						if(this.waterStored > connectedConsumer.waterStored)
-						{														
-							transferW =Math.round(WSum - connectedConsumer.waterStored);
-							if(transferW > 0)
-							{
-								int rejectedW = connectedConsumer.addwater(transferW);
-								this.waterStored = Math.max(Math.min(this.waterStored - transferW + rejectedW, this.getLiquidCapacity(1)), 0);
-							}
-						}
-						
-						
-						}
-						
-					}
-				
-				
-				//add heat to other boiler if less
-				boolean canTradeHeat;
-				
-					if(this.heatStored == heatMax  || !isBeingHeated)
-					{
-						canTradeHeat = true;
-					}
-					else
-					{						
-						canTradeHeat = false;							
-					}
-				
-				if(canTradeHeat)
+				TileEntity entity = worldObj.getBlockTileEntity(x,this.yCoord, z);
+				if(entity instanceof TileEntityBoiler)
 				{
-					if( this.heatStored > 0)
-					{					
-							
-							if(this.heatStored > connectedConsumer.heatStored )
-							{
-								int HSum = (this.heatStored + connectedConsumer.heatStored)/2;							
-								 transferH = HSum - connectedConsumer.heatStored;
-								int rejectedH = connectedConsumer.onReceiveHeat(transferH);
-								this.heatStored = Math.max(Math.min(this.waterStored - transferW + rejectedH, heatMax), 0);
-							}	
-							
-						
-					}
+					//if is a tank add to the sum
+					wSum += ((TileEntityBoiler) entity).getStoredLiquid(1);
+					tankCount += 1;
 				}
 			}
 			}
-			
-			
-		  }		
-			
-	    
-		private int onProduceWater(int t, int i) {
-			if(waterStored - t > 0)
+			//transfers water
+			for(int i = 0; i<4;i++)
 			{
-				waterStored = waterStored - t;
-				return t;
+				int average = wSum / tankCount;// takes the sum and makes it an average
+				int x2 = this.xCoord;
+				int z2 = this.zCoord;
+				int tradeSum = 0;
+				//switch to check each side TODO rewrite for side values 
+				switch(i)	
+				{
+				case 0: --x2;
+				case 1: ++x2;
+				case 2: --z2;
+				case 3: ++z2;
+				}
+				TileEntity entity = worldObj.getBlockTileEntity(x2,this.yCoord, z2);
+				if(entity instanceof TileEntityBoiler)
+				{
+					int targetW = ((TileEntityBoiler) entity).getStoredLiquid(1);
+					if(targetW < average)
+					{
+						tradeSum = Math.min(average, waterStored); //gets the ammount to give to the target tank
+						int rejectedAm = ((TileEntityBoiler) entity).onReceiveLiquid(1, tradeSum, (byte) i); //send that ammount with safty incase some comes back
+						waterStored =rejectedAm + waterStored - tradeSum; //counts up current water sum after trade
+					}
+				}
+			}
+			if(entityAbove instanceof TileEntityBoiler)
+			{
+				int bWater = ((TileEntityBoiler) entityAbove).getStoredLiquid(1);
+				int bMax = ((TileEntityBoiler) entityAbove).getLiquidCapacity(1);
+				if(bottom && waterStored > 0)
+				{
+					if(bWater < bMax)
+					{
+						int emptyVolS = Math.max( bMax - bWater,0);
+						int tradeVolS = Math.min(emptyVolS, steamStored);
+						int rejectedS = ((TileEntityBoiler) entityAbove).addSteam(tradeVolS);
+						waterStored = Math.max(waterStored - rejectedS,0);
+						wSum -= rejectedS;
+					}				
+				}
 			}
 			
-			return 0;
-			
-		}	
-		public void addConnection()
-		{			
-			for(int i = 0; i<6; i++)
-			{				
-	    		
-			TileEntity aEntity = getSteamMachine(i);			
-			if(aEntity instanceof TileEntityBoiler)
-			{
-				this.connectedBlocks[i] = aEntity;
-			}
-			else
-			{
-				this.connectedBlocks[i] = null;
-			}
-			}
-			}
-		
-	    
+									
+					
+					
+					
+		}
 	    public int addSteam(int watt) {
 	    	int rejectedElectricity = Math.max((this.steamStored + watt) - steamMax, 0);
 			this.steamStored += watt - rejectedElectricity;
 			return rejectedElectricity;			
 		}
-	    public int addwater(int watt) {
-			int rejectedElectricity = Math.max((this.waterStored + watt) - this.getLiquidCapacity(1), 0);
-			this.waterStored += watt - rejectedElectricity;
-			return rejectedElectricity;				
-		}
-	    public int onReceiveHeat(int watt) {
-	    	if(heatStored < heatMax)
-	    	{
-	    	int rejectedElectricity = Math.max((this.heatStored + watt) - heatMax, 0);
-			this.heatStored += watt - rejectedElectricity;
-			return rejectedElectricity;
-	    	}
-	    	return watt;
-		}
-		/**
-	     * adds water too the system
-	     */
 	    private void addWater() {
 	    	if (this.furnaceItemStacks[0] != null)
             {
@@ -527,9 +422,7 @@ public class TileEntityBoiler extends TileEntityMachine implements IInventory, I
 	    @Override
 	    public int getStartInventorySide(int side) 
 	    {
-	        if (side == 0) return 1;
-	        if (side == 1) return 0;
-	        return 2;
+	        return 0;
 	    }
 
 	    @Override
@@ -588,16 +481,20 @@ public class TileEntityBoiler extends TileEntityMachine implements IInventory, I
 			{
 				return 14;
 			}
+			if(type == 0)
+			{
+				return steamMax;
+			}
 			return 0;
 		}
 		@Override
 		public int onProduceLiquid(int type, int maxVol, int side) {			
 			if(type == 0)
 			{
-				if(steamStored > maxVol)
+				if(steamStored > 1)
 				{
-					this.steamStored -= maxVol;
-					return maxVol;
+					this.steamStored -= 1;
+					return 1;
 				}
 			}
 			return 0;

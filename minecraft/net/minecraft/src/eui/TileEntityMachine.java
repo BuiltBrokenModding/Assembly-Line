@@ -1,13 +1,14 @@
 package net.minecraft.src.eui;
 
 import net.minecraft.src.*;
+import net.minecraft.src.eui.boiler.TileEntityBoiler;
 import net.minecraft.src.forge.ITextureProvider;
 import net.minecraft.src.universalelectricity.electricity.TileEntityElectricUnit;
 import net.minecraft.src.universalelectricity.extend.IRotatable;
 
 public class TileEntityMachine extends TileEntityElectricUnit implements ITextureProvider, IRotatable
 {
-	private byte facing;
+	private byte facing = 0;
 	 
 	public TileEntity getSteamMachine(int i)
 	{	
@@ -74,4 +75,20 @@ public class TileEntityMachine extends TileEntityElectricUnit implements ITextur
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+
+	public int getSizeInventory() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public ItemStack getStackInSlot(int var6) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+    public boolean canUpdate()
+    {
+        return true;
+    }
 }

@@ -8,7 +8,6 @@ import net.minecraft.src.basiccomponents.*;
 import net.minecraft.src.eui.boiler.*;
 import net.minecraft.src.eui.burner.GUIFireBox;
 import net.minecraft.src.eui.burner.TileEntityFireBox;
-import net.minecraft.src.eui.grinder.*;
 import net.minecraft.src.eui.turbine.GUIGenerator;
 import net.minecraft.src.eui.turbine.TileEntityGenerator;
 import net.minecraft.src.forge.*;
@@ -74,48 +73,37 @@ public class BlockMachine extends net.minecraft.src.universalelectricity.extend.
     {
     	TileEntity tileEntity = par1iBlockAccess.getBlockTileEntity(x, y, z);
     	int metadata = par1iBlockAccess.getBlockMetadata(x, y, z);
-    	
+    	if(metadata > -1 && tileEntity != null)
+    	{
     	if (side == 1)
         {
     		switch(metadata)
     		{
-    			case 0: return 1;
-    			case 1: return 3;
-    			case 2: return 18;
-    			case 3: return 5;
+    			case 0: return 6;
+    			case 1: return 4;
+    			case 2: return 7;
+    			case 3: return 4;
     		}
         }
-        
-        	//If it is the front side
-        	if(side == ((TileEntityMachine)tileEntity).getDirection())
-        	{
-        		switch(metadata)
-        		{
-        			
-        			case 1: return 3;
-        			case 3: return 3;
-        		}
-        	}
         	//If it is the back side
         	else if(side == UniversalElectricity.getOrientationFromSide(((TileEntityMachine)tileEntity).getDirection(), (byte)2))
         	{
         		switch(metadata)
         		{
-        			case 0: return 19;
-        			case 1: return 6;
-        			case 2: return 17;
-        			case 3: return 3;
+        			case 0: return 5;
+        			case 2: return 8;
+        			case 3: return 4;
         		}
         	}
 
             
             switch(metadata)
             {
-            case 1: return 4;
-            case 2: return 16;
-            case 3: return 2;
+            case 1: return 0;
+            case 2: return 2;
             }
-            return 0;
+    	}
+            return 1;
         
     	
 	}
@@ -126,10 +114,10 @@ public class BlockMachine extends net.minecraft.src.universalelectricity.extend.
         {
     		switch(metadata)
     		{
-    			case 0: return 1;
-    			case 1: return 3;
-    			case 2: return 18;
-    			case 3: return 5;
+    			case 0: return 6;
+    			case 1: return 4;
+    			case 2: return 7;
+    			case 3: return 0;
     		}
         }
         else
@@ -139,10 +127,10 @@ public class BlockMachine extends net.minecraft.src.universalelectricity.extend.
         	{
         		switch(metadata)
         		{
-        			case 0: return 19;
-        			case 1: return 6;
-        			case 2: return 17;
-        			case 3: return 3;
+        			case 0: return 5;
+        			case 1: return 0;
+        			case 2: return 8;
+        			case 3: return 4;
         		}
         	}
         	//If it is the back side
@@ -158,12 +146,12 @@ public class BlockMachine extends net.minecraft.src.universalelectricity.extend.
 
         	switch(metadata)
             {
-            case 1: return 4;
-            case 2: return 16;
-            case 3: return 2;
+            case 1: return 0;
+            case 2: return 2;
+            case 3: return 0;
             }
         }
-		return 0;
+		return 1;
         }
     public boolean blockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer)
     {
@@ -229,11 +217,7 @@ public class BlockMachine extends net.minecraft.src.universalelectricity.extend.
 
             if (blockEntity != null)
             {
-            	if(blockEntity instanceof TileEntityGrinder)
-            	{
-            	TileEntity var6 = (TileEntityGrinder)par1World.getBlockTileEntity(x, y, z);
-            	ModLoader.openGUI(par5EntityPlayer, new GuiGrinder(par5EntityPlayer.inventory, (TileEntityGrinder) var6 )); ;
-            	}
+            	
             	if(blockEntity instanceof TileEntityBoiler)
             	{
             	TileEntity var6 = (TileEntityBoiler)par1World.getBlockTileEntity(x, y, z);
@@ -258,8 +242,7 @@ public class BlockMachine extends net.minecraft.src.universalelectricity.extend.
     public TileEntity getBlockEntity(int meta)
     {
         switch(meta)
-        {    
-        case 0: return new TileEntityGrinder();
+        {  
         case 1: return new TileEntityBoiler();
         case 2: return new TileEntityFireBox();
         case 3: return new TileEntityGenerator();
@@ -306,8 +289,16 @@ public class BlockMachine extends net.minecraft.src.universalelectricity.extend.
     {
         if (!keepFurnaceInventory)
         {
-            TileEntityGrinder var5 = (TileEntityGrinder)par1World.getBlockTileEntity(par2, par3, par4);
-
+        	TileEntityMachine var5 = null;
+            TileEntity entityBox = par1World.getBlockTileEntity(par2, par3, par4);
+if(entityBox instanceof TileEntityFireBox)
+{
+	var5 = (TileEntityFireBox)entityBox;
+}
+else if(entityBox instanceof TileEntityBoiler)
+{
+	var5 = (TileEntityBoiler)entityBox;
+}
             if (var5 != null)
             {
                 for (int var6 = 0; var6 < var5.getSizeInventory(); ++var6)
@@ -369,13 +360,10 @@ public class BlockMachine extends net.minecraft.src.universalelectricity.extend.
 	{
 	   return 0;
 	}
-public void addCreativeItems(ArrayList itemList)     {       
-        
-        itemList.add(new ItemStack(this, 1,0));
-        itemList.add(new ItemStack(this, 1,1));
-        itemList.add(new ItemStack(this, 1,2));
-        itemList.add(new ItemStack(this, 1,3));
-        itemList.add(new ItemStack(this, 1,14));
-        itemList.add(new ItemStack(this, 1,15));
+public void addCreativeItems(ArrayList itemList)     { 
+        itemList.add(new ItemStack(this, 1,1));//boiler
+        itemList.add(new ItemStack(this, 1,2));//firebox
+        itemList.add(new ItemStack(this, 1,3));//generator
+        itemList.add(new ItemStack(this, 1,15));//eu vamp
 }
 }
