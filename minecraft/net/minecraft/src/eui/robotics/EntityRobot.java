@@ -27,6 +27,7 @@ public class EntityRobot extends EntityCreature {
 	@Override
 	public int getMaxHealth() {
 		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
+
 }
