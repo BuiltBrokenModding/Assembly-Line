@@ -1,5 +1,178 @@
 package net.minecraft.src.eui.robotics;
 
-public class TileEntityComp {
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.src.AxisAlignedBB;
+import net.minecraft.src.Block;
+import net.minecraft.src.EntityItem;
+import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.Material;
+import net.minecraft.src.ModLoader;
+import net.minecraft.src.TileEntity;
+import net.minecraft.src.universalelectricity.Vector3;
+import net.minecraft.src.universalelectricity.electricity.TileEntityElectricUnit;
+
+public class TileEntityComp extends TileEntityElectricUnit {
+	public EntityRobot[] BotList = {null,null,null,null};
+	
+	int updateCount = 0;
+	int scanCount = 0;
+	boolean hasScanned = false;
+	int lastScanXDif=0;
+	int lastScanYDif=0;
+	int lastScanZDif=0;
+	public void onUpdate(float watts, float voltage, byte side)
+    { 
+		++updateCount;
+		
+		
+		if(updateCount >= 100 && worldObj.checkChunksExist(xCoord, yCoord, zCoord, xCoord+1, yCoord+1, zCoord+1))
+		{
+			++scanCount;
+			if(scanCount < 10){hasScanned = true;}else{scanCount = 0;}
+			Vector3 thisBlock = new Vector3(this.xCoord,this.yCoord,this.zCoord);
+			updateCount = 0;
+       Vector3 targetVec = findBlock(thisBlock,Block.leaves,2,hasScanned);
+        if(targetVec == null)
+        { 
+        	targetVec = findBlock(thisBlock,Block.wood,2,hasScanned);        
+        }
+        if(targetVec != null)
+        {
+        	int Targetx = targetVec.intX();
+    		int Targety = targetVec.intY();
+    		int Targetz = targetVec.intZ();
+    		ModLoader.getMinecraftInstance().thePlayer.addChatMessage("rb:"+Targetx+"X:"+Targety+"Y:"+Targetz+"Z");
+    		int blockTargetc = worldObj.getBlockId(Targetx, Targety, Targetz);
+        	worldObj.setBlock(Targetx, Targety, Targetz, 0);
+        	
+        	if(blockTargetc > 0)
+        	{
+        	EntityItem dropedItem = new EntityItem(worldObj, Targetx, Targety - 0.3D, Targetz, new ItemStack(blockTargetc,1,1));
+        	worldObj.spawnEntityInWorld(dropedItem);
+        	}
+        }
+        else
+        {
+        	ModLoader.getMinecraftInstance().thePlayer.addChatMessage("N/A");//nothing found froms scan
+        	scanCount = 0;
+        }
+        
+        //resets scan to zero location every 10 scans
+        
+		}
+    }
+/**
+ * 
+ * @param startSpot - center of the scan radius
+ * @param block - block being looked for
+ * @param range - block count from center to scan
+ * @param resume - whether or not to resume scan from returned block
+ * @return location vector3 of the block equaling scan args
+ */
+	public Vector3 findBlock(Vector3 startSpot,Block block,int range,boolean resume)
+	{
+		
+		
+		int Startx = startSpot.intX();
+		int Starty = startSpot.intY();
+		int Startz = startSpot.intZ();
+		int distanceX = (range * 2) + 1;
+		int distanceZ = (range * 2) + 1;
+		int distanceY = (range * 2) + 1;
+		Boolean negX = Startx < 0;
+		Boolean negZ = Startz < 0;
+		int xChange = -1;
+		int zChange = -1;
+		int yChange = -1;
+		Startx += range;
+		Startz += range;
+		Starty += range;			
+		int pauseCount = 0;		
+		ModLoader.getMinecraftInstance().thePlayer.addChatMessage("starting Scan For " + block.getBlockName());		
+		int y = Starty;
+		for(int iY=0;iY < (distanceY*2);iY++)
+		{
+			
+			pauseCount++;
+			if(pauseCount >= 2)
+			{
+			int x = Startx;
+			int z = Startz;
+			
+			for(int iX=0;iX < distanceY;iX++)
+			{				
+				for(int iZ=0;iZ < distanceZ;iZ++)
+				{				
+										
+					int blockTargetID = worldObj.getBlockId(x, y, z);
+					System.out.println("BlockAt:"+x+"x:"+y+"y:"+z+"z:"+blockTargetID+"ID");
+					if(blockTargetID == block.blockID)
+					{
+						Vector3 targetBlock = new Vector3(x,y,z);
+						ModLoader.getMinecraftInstance().thePlayer.addChatMessage("Target Block Found");
+						return targetBlock;
+					}
+					
+					z += zChange;
+				}
+				x += xChange;
+				z = Startz;	
+			}
+			pauseCount =0;
+			y += yChange;
+			}
+			
+				
+		}
+		return null;
+		
+	}
+	public EntityRobot[] getControlList()
+	{
+		return BotList;
+		
+	}
+	public void addBot(EntityRobot bot)
+	{
+		
+	}
+	/**will be used to update the bot list on restart or reload of the world. 
+		This way entity ids that are not bots are not stored in the list. 
+		Generally the bots themselves will send the controller there ids when they load 
+		into the world. The controller will then tell the bot its linked to the controller.
+		**/
+	public void cleanList()
+	{
+		for(int i = 0;i<4;i++)
+		{
+			if(BotList[i] instanceof EntityRobot)
+			{
+				
+			}
+			else
+			{
+				BotList[i] = null;
+			}
+		}
+		
+	}
+	@Override
+	public float electricityRequest() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	@Override
+	public boolean canReceiveFromSide(byte side) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	public boolean canUpdate()
+    {
+        return true;
+    }
 }
