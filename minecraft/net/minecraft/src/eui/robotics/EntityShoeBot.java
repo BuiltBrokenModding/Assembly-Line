@@ -16,10 +16,11 @@ public class EntityShoeBot extends EntityRobot {
 	public void botUpdate()
     {
 		super.botUpdate();
-		ModLoader.getMinecraftInstance().thePlayer.addChatMessage("CC");
+		EntityPlayer person = Modloader.getMinecraftInstance().thePlayer;
+		person.addChatMessage("CC");
 		if(hasTask)
 		{
-			ModLoader.getMinecraftInstance().thePlayer.addChatMessage("resuming task");
+			person.addChatMessage("resuming task");
 			if(this.currentTask == this.getTaskType() && this.taskLocation != null)
 			{
 				boolean harDone = harvest(this.taskLocation);
@@ -50,7 +51,7 @@ public class EntityShoeBot extends EntityRobot {
 
 	public String getRenderedName() {
 		// TODO Auto-generated method stub
-		return "BlockEater";
+		return "Harvester Bot";
 	}
 	public String getTaskType() {
 		return "harvest";
