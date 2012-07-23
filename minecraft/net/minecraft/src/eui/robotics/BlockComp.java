@@ -11,8 +11,9 @@ import net.minecraft.src.eui.boiler.TileEntityBoiler;
 import net.minecraft.src.eui.burner.TileEntityFireBox;
 import net.minecraft.src.eui.turbine.TileEntityGenerator;
 import net.minecraft.src.universalelectricity.Vector3;
+import net.minecraft.src.universalelectricity.extend.*;
 
-public class BlockComp extends net.minecraft.src.universalelectricity.extend.BlockMachine {
+public class BlockComp extends BlockMachine {
 
 	public BlockComp(int par1) {
 		super("RobotMachine", par1, Material.iron);

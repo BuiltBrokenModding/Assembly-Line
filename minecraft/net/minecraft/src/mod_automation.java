@@ -37,9 +37,9 @@ public class mod_automation extends NetworkMod {
    	    ModLoader.registerBlock(machine, net.minecraft.src.eui.robotics.ItemMachine.class);
    	    //names................................................
 		ModLoader.addName((new ItemStack(spawnItem, 1, 0)), "Bot");
-		ModLoader.addName((new ItemStack(machine, 1, 0)), "Controler");
+		ModLoader.addName((new ItemStack(machine, 1, 0)), "Controller");
 		//TileEntities..................................
-		ModLoader.registerTileEntity(net.minecraft.src.eui.robotics.TileEntityComp.class, "controler");
+		ModLoader.registerTileEntity(net.minecraft.src.eui.robotics.TileEntityComp.class, "controller");
 		//Entities...................
 		ModLoader.registerEntityID(net.minecraft.src.eui.robotics.EntityShoeBot.class, "Bot", 101);//collector
 		
