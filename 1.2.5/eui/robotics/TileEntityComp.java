@@ -2,6 +2,7 @@ package net.minecraft.src.eui.robotics;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
@@ -27,8 +28,11 @@ public class TileEntityComp extends TileEntityElectricUnit {
 	int lastScanXDif=0;
 	int lastScanYDif=0;
 	int lastScanZDif=0;
+	Vector3[] harvestList={null,null,null,null,null,null,null,null,null,null};
 	public void onUpdate(float watts, float voltage, byte side)
     { 
+		if(!worldObj.isRemote)
+		{
 		++updateCount;
 		cleanList();
 		for(int b =0;b<4;b++)
@@ -46,16 +50,16 @@ public class TileEntityComp extends TileEntityElectricUnit {
 	        	BotList[b]=bot;
 			}
 		}
-		if(updateCount >= 100 && worldObj.checkChunksExist(xCoord, yCoord, zCoord, xCoord+1, yCoord+1, zCoord+1))
+		if(updateCount >= 50 && worldObj.checkChunksExist(xCoord, yCoord, zCoord, xCoord+1, yCoord+1, zCoord+1))
 		{
 			++scanCount;
 			if(scanCount < 10){hasScanned = true;}else{scanCount = 0;hasScanned=false;}
 			Vector3 thisBlock = new Vector3(this.xCoord,this.yCoord,this.zCoord);
 			updateCount = 0;
-       Vector3 targetVec = findBlock(thisBlock,Block.leaves,2,hasScanned);
+       Vector3 targetVec = findBlock(thisBlock,Block.leaves,20,hasScanned);
         if(targetVec == null)
         { 
-        	targetVec = findBlock(thisBlock,Block.wood,2,hasScanned);        
+        	targetVec = findBlock(thisBlock,Block.wood,20,hasScanned);        
         }
         if(targetVec != null)
         {
@@ -79,7 +83,7 @@ public class TileEntityComp extends TileEntityElectricUnit {
         	ModLoader.getMinecraftInstance().thePlayer.addChatMessage("N/A");//nothing found from scan
         	scanCount = 0;
         }        
-        
+		}
 		}
     }
 	/**
@@ -155,8 +159,16 @@ public class TileEntityComp extends TileEntityElectricUnit {
 					if(blockTargetID == block.blockID)
 					{
 						Vector3 targetBlock = new Vector3(x,y,z);
+						if(!onHarvestList(targetBlock))
+						{
 						//ModLoader.getMinecraftInstance().thePlayer.addChatMessage("Target Block Found");
-						return targetBlock;
+							boolean taskAdded = addHarvest(targetBlock);
+							if(taskAdded)
+							{
+								return targetBlock;
+							}
+						}
+						
 					}
 					
 					z += zChange;
@@ -173,6 +185,43 @@ public class TileEntityComp extends TileEntityElectricUnit {
 		return null;
 		
 	}
+	private boolean addHarvest(Vector3 targetBlock) {
+		for(int i = 0;i < 10;i++)
+		{
+			if(harvestList[i] != targetBlock)
+			{
+				harvestList[i]=targetBlock;
+						return true;
+			}
+		}
+	return false;
+	
+}
+	private boolean onHarvestList(Vector3 targetBlock) {
+		for(int i = 0;i < 10;i++)
+		{
+			if(harvestList[i] == targetBlock)
+			{
+				return true;
+			}
+		}
+	return false;
+	}
+	public boolean ClearFromList(Vector3 targetBlock) {
+		for(int i = 0;i < 10;i++)
+		{
+			if(harvestList[i] == targetBlock)
+			{
+				harvestList[i] = null;
+				return true;
+			}
+				
+		}
+		return false;
+		}
+	
+	
+
 	public EntityRobot[] getControlList()
 	{
 		return BotList;

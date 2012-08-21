@@ -22,12 +22,15 @@ public class EntityRobot extends EntityCreature {
 	@Override
 	public void onEntityUpdate()
     {
+		super.onEntityUpdate();
+		if(!worldObj.isRemote)
+		{
 		updateCount++;
 		//used for emping of bot or empty battery
 		isDisabled = true;
 		if(disabled <=0)
 		{
-			super.onEntityUpdate();
+			
 			isDisabled = false;
 		}
 		if(!isDisabled && updateCount >= 10)
@@ -36,6 +39,7 @@ public class EntityRobot extends EntityCreature {
 			battery += 2; //TODO remove after testing
 			--battery;
 			botUpdate();
+		}
 		}
 		
     }
@@ -82,7 +86,7 @@ public class EntityRobot extends EntityCreature {
 			}
 			else
 			{
-				this.isLinked = false;
+				this.isLinked = true;
 			}
 		}
 	}
@@ -216,20 +220,37 @@ public boolean harvest(Vector3 BlockLoc)
     if(PathToItem != null){
 	    this.setPathToEntity(PathToItem);
 	    this.moveSpeed = 1.0F;
-	    if(thisBot.distanceTo(BlockLoc) < 2)
+	    if(thisBot.distanceTo(BlockLoc) < 4)
 	    {
 	    	int blockTargetc = worldObj.getBlockId(x, y, z);
         	boolean harvested = worldObj.setBlock(x, y, z, 0);
+        	if(blockTargetc ==0)
+        	{
+        		harvested = true;
+        	}
         	ModLoader.getMinecraftInstance().thePlayer.addChatMessage("Harvesting Block "+blockTargetc);
-        	if(blockTargetc > 0)
+        	if(blockTargetc > 0 && harvested)
         	{
         	EntityItem dropedItem = new EntityItem(worldObj, x, y - 0.3D, z, new ItemStack(blockTargetc,1,1));
         	worldObj.spawnEntityInWorld(dropedItem);
+        	if(getController() != null)
+        	{
+        	getController().ClearFromList(BlockLoc);
+        	}
         	}
         	return harvested;
 	    }				 
     }
 	return false;
+}
+public TileEntityComp getController()
+{
+	TileEntity comp = worldObj.getBlockTileEntity(this.linkFrq[0], this.linkFrq[1], this.linkFrq[2]);
+	if(comp instanceof TileEntityComp)
+	{
+		return (TileEntityComp) comp;
+	}
+	return null;
 }
 public EntityItem findClosestItem(double par1, double par3, double par5, double par7)
 {

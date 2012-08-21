@@ -351,14 +351,20 @@ else if(entityBox instanceof TileEntityBoiler)
 		// TODO Auto-generated method stub
 		return "/eui/blocks.png";
 	}
-	    @Override
+	@Override
     public boolean isOpaqueCube()
     {
         return false;
     }
+	@Override
+	public boolean renderAsNormalBlock()
+	{
+	    return false;
+	}
+	@Override
 	public int getRenderType()
 	{
-	   return 0;
+	   return -1;
 	}
 public void addCreativeItems(ArrayList itemList)     { 
         itemList.add(new ItemStack(this, 1,1));//boiler

@@ -2,8 +2,12 @@ package net.minecraft.src;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.basiccomponents.BasicComponents;
 import net.minecraft.src.eui.*;
+import net.minecraft.src.eui.boiler.RenderBoiler;
 import net.minecraft.src.eui.boiler.TileEntityBoiler;
+import net.minecraft.src.eui.burner.RenderFurnace;
 import net.minecraft.src.eui.burner.TileEntityFireBox;
+import net.minecraft.src.eui.turbine.EngineSmallModel;
+import net.minecraft.src.eui.turbine.RenderSteamEngine;
 import net.minecraft.src.eui.turbine.TileEntityGenerator;
 import net.minecraft.src.forge.*;
 import net.minecraft.src.universalelectricity.*;
@@ -48,9 +52,9 @@ public class mod_EUIndustry extends NetworkMod {
    	    MinecraftForgeClient.preloadTexture("/eui/Blocks.png");
    	    MinecraftForgeClient.preloadTexture("/eui/Items.png");
 		//TileEntities..................................
-		ModLoader.registerTileEntity(net.minecraft.src.eui.boiler.TileEntityBoiler.class, "boiler");
-		ModLoader.registerTileEntity(net.minecraft.src.eui.burner.TileEntityFireBox.class, "fireBox");
-		ModLoader.registerTileEntity(net.minecraft.src.eui.turbine.TileEntityGenerator.class, "generator");
+		ModLoader.registerTileEntity(net.minecraft.src.eui.boiler.TileEntityBoiler.class, "boiler", new RenderBoiler());
+		ModLoader.registerTileEntity(net.minecraft.src.eui.burner.TileEntityFireBox.class, "fireBox", new RenderFurnace());
+		ModLoader.registerTileEntity(net.minecraft.src.eui.turbine.TileEntityGenerator.class, "generator", new RenderSteamEngine());
 		ModLoader.registerTileEntity(net.minecraft.src.eui.TileEntityNuller.class, "EUNuller");
 		//Names...............
 		ModLoader.addName((new ItemStack(machine, 1, 1)), "Boiler");
