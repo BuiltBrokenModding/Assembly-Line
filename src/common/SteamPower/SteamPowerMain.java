@@ -1,7 +1,8 @@
 package SteamPower;
 import java.io.File;
 
-import SteamPower.turbine.BlockEngine;
+import SteamPower.turbine.BlockGenerator;
+import SteamPower.turbine.BlockSteamPiston;
 import SteamPower.turbine.ItemEngine;
 import SteamPower.turbine.TileEntitytopGen;
 
@@ -35,6 +36,7 @@ public class SteamPowerMain{
 	private static int BlockID= configurationProperties();
 	public static int EngineItemID;
 	public static int EngineID;
+	public static int genID;
 	public static int genOutput;
 	public static int steamOutBoiler;
 	public static int pipeLoss;
@@ -42,7 +44,8 @@ public class SteamPowerMain{
 	public static int fireOutput;
 	public static final String channel = "SPpack";
 	public static Block machine = new BlockMachine(BlockID).setBlockName("machine");
-	public static Block engine = new BlockEngine(EngineID).setBlockName("SteamEngien");
+	public static Block engine = new BlockSteamPiston(EngineID).setBlockName("SteamEngien");
+	public static Block gen = new BlockGenerator(genID).setBlockName("ElecGen");
 	public static Item itemEngine = new ItemEngine(EngineItemID).setItemName("SteamEngine");
 	@Instance
     public static SteamPowerMain instance;
@@ -55,7 +58,8 @@ public class SteamPowerMain{
              config.load(); 
              BlockID = Integer.parseInt(config.getOrCreateIntProperty("MachinesID", Configuration.CATEGORY_BLOCK, 3030).value);
              EngineItemID = Integer.parseInt(config.getOrCreateIntProperty("EngineItem", Configuration.CATEGORY_ITEM, 30308).value);
-             EngineID = Integer.parseInt(config.getOrCreateIntProperty("SteamEngineID", Configuration.CATEGORY_BLOCK, 3031).value);             
+             EngineID = Integer.parseInt(config.getOrCreateIntProperty("SteamEngineID", Configuration.CATEGORY_BLOCK, 3031).value);  
+             genID = Integer.parseInt(config.getOrCreateIntProperty("ElecGenID", Configuration.CATEGORY_BLOCK, 3032).value); 
              genOutput = Integer.parseInt(config.getOrCreateIntProperty("genOutputWattsmax", Configuration.CATEGORY_GENERAL, 1000).value);
              steamOutBoiler = Integer.parseInt(config.getOrCreateIntProperty("steamOutPerCycle", Configuration.CATEGORY_GENERAL, 10).value);
              boilerHeat = Integer.parseInt(config.getOrCreateIntProperty("boilerInKJNeed", Configuration.CATEGORY_GENERAL, 4500).value);
@@ -71,6 +75,7 @@ public class SteamPowerMain{
 		  proxy.preInit();
 		  GameRegistry.registerBlock(machine, ItemMachine.class);
 		  GameRegistry.registerBlock(engine);
+		  GameRegistry.registerBlock(gen);
 		}
 	 @Init
 		public void load(FMLInitializationEvent evt)
@@ -80,6 +85,7 @@ public class SteamPowerMain{
 		 GameRegistry.registerTileEntity(TileEntitytopGen.class, "gentop");
 		//Names...............
 		LanguageRegistry.addName((new ItemStack(machine, 1, 1)), "Boiler");
+		LanguageRegistry.addName((new ItemStack(gen, 1, 0)), "Generator");
 		LanguageRegistry.addName((new ItemStack(machine, 1, 2)), "FireBox");
 		LanguageRegistry.addName((new ItemStack(itemEngine, 1, 0)), "SteamPiston");
 		LanguageRegistry.addName((new ItemStack(machine, 1, 15)), "EUVampire");

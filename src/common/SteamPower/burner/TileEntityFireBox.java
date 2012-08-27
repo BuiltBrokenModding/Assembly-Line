@@ -175,7 +175,7 @@ public class TileEntityFireBox extends TileEntityMachine implements IPacketRecei
 	}
 	public float onProduceHeat(float jouls, int side) {
 		// TODO Auto-generated method stub
-		return Math.min(generateRate,jouls);
+		return Math.min(generateRate*getTickInterval(),jouls);
 	}
 	@Override
 	public Object[] getSendData()

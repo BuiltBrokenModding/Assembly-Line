@@ -33,7 +33,7 @@ public class ItemParts extends Item{
 	@Override
 	public String getTextureFile() {
 		// TODO Auto-generated method stub
-		return "/eui/Items.png";
+		return "/EUIClient/Textures/Items.png";
 	}
 	 public String getItemName()
      {

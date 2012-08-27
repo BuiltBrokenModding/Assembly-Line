@@ -38,7 +38,7 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 	    public int heatMax = 10000;
 	    /** The ammount of heat stored */
 	    public int hullHeat = 0;
-	    public int hullHeatMax = 10000;
+	    public int hullHeatMax = 4700;
 	    private int heatTick = 0;
 	    public int tankCount = 0;
 	    private int heatNeeded = SteamPowerMain.boilerHeat; // kilo joules	
@@ -61,19 +61,20 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 		public void handlePacketData(NetworkManager network,
 				Packet250CustomPayload packet, EntityPlayer player,
 				ByteArrayDataInput dataStream) {
-			try{
-			facing  = dataStream.readInt();
-			RunTime = dataStream.readInt();
-			energyStore = dataStream.readInt();
-			waterStored = dataStream.readInt();
-			steamStored = dataStream.readInt();
-			heatStored = dataStream.readInt();
-			hullHeat = dataStream.readInt();
-			heatTick  = dataStream.readInt();
+			try
+			{
+				facing  = dataStream.readInt();
+				RunTime = dataStream.readInt();
+				energyStore = dataStream.readInt();
+				waterStored = dataStream.readInt();
+				steamStored = dataStream.readInt();
+				heatStored = dataStream.readInt();
+				hullHeat = dataStream.readInt();
+				heatTick  = dataStream.readInt();
 			}
 			catch(Exception e)
 			{
-			e.printStackTrace();	
+				e.printStackTrace();	
 			}
 			
 		}
@@ -105,19 +106,6 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 	        par1NBTTagCompound.setInteger("hullHeat", (int)this.hullHeat);
 	        
 	    }
-
-	    
-	    private boolean getIsHeated() {
-	    	TileEntity blockEntity =  worldObj.getBlockTileEntity(this.xCoord, this.yCoord - 1, this.zCoord);
-	    	if(blockEntity instanceof TileEntityFireBox)
-	    	{
-	    		return true;
-	    	}
-	    	else
-	    	{
-	    		return false;
-	    	}
-		}	
 	    /**
 	     * Allows the entity to update its state. Overridden in most subclasses, e.g. the mob spawner uses this to count
 	     * ticks and creates a new spawn inside its implementation.
@@ -125,23 +113,18 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 	   @Override
 	   public void onUpdate(float watts, float voltage, ForgeDirection side)
 	    {
-		   super.onUpdate(watts, voltage, side);
-		   //update connection list
+		   
+		   //update/resets connection list
 		   TileEntity[] entityList = TradeHelper.getSourounding(this);
 		   tankCount = 0;
 		   for(int c = 0; c< 6; c++)
 		   {
-			   
 			   if(entityList[c] instanceof TileEntityBoiler)
 			   {
-			   connectedBlocks[c] = entityList[c];
-				   if(entityList[c] == connectedBlocks[0] || entityList[c] == connectedBlocks[1])
+				   connectedBlocks[c] = entityList[c];
+				   if(c != 0 && c != 1)
 				   {
-				  
-				   }
-				   else
-				   {
-					    tankCount++;
+					   tankCount++;
 				   }
 			   }
 			   else
@@ -149,89 +132,42 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 				   connectedBlocks[c] = null;
 			   }
 		   }
-		   isBeingHeated = getIsHeated();
+		   
+		   	hullHeated = false;
+			if(hullHeat >= hullHeatMax)
+	    	{
+				hullHeated = true;
+			}
+	    	else
+	    	{
+	    		if(!worldObj.isRemote)
+	    		{
+	    			hullHeat = Math.min(hullHeat + heatStored, hullHeatMax);
+	    		}
+	    	}
 		   if(!worldObj.isRemote)
 		   {
-			    addWater();//adds water from container slot
+			    emptyBuckets();//adds water from container slot
 				this.waterStored = TradeHelper.shareLiquid(this, 1, false);
 				this.steamStored = TradeHelper.shareLiquid(this, 0, true);
-	    	
-		    	//changed hullHeat max depending on contents of boiler
-		    	if(waterStored > 0)
-		    	{
-		    		hullHeatMax = 4700;
-		    		if(hullHeat > hullHeatMax)
-		    		{
-		    			hullHeat = 4700;
-		    		}
-		    	}
-		    	else
-		    	{
-		    		hullHeatMax = 10000;	    		
-		    	}
-		    	
-		    	//Checks if the hull is heated
-				if(hullHeat >= hullHeatMax)
-		    	{
-					hullHeated = true;
-				}
-		    	else
-		    	{
-		    		hullHeat = Math.min(hullHeat + heatStored, hullHeatMax);
-		    	}
-				
-				//checks if heat level hit max
-				if(hullHeat >= 10000)
+				if(waterStored > 0 && hullHeated && heatStored > heatNeeded)
 				{
-					if(heatTick >= 1200)
-					{
-						// TODO remove block and set fire
-						heatTick = 0;
-					}
-					else
-					{
-						heatTick += 1;
-					}
-				}
-				
-		        
-		        
-		        //hull heated ? (do work) : move on
-				if(hullHeated)
-				{
-						if(heatStored > SteamPowerMain.fireOutput)
-						{					
-							if(waterStored >= 1){
-								if(heatStored >= heatNeeded)
-								{
-									heatStored = Math.max(heatStored - heatNeeded, 0);
-									--waterStored;
-									steamStored = Math.min(steamStored + SteamPowerMain.steamOutBoiler,this.steamMax);	
-								}						
-							}
-							else
-							{
-								heatStored = 0;
-							}
-						}
+					heatStored = Math.max(heatStored - heatNeeded, 0);
+					--waterStored;
+					steamStored = Math.min(steamStored + SteamPowerMain.steamOutBoiler,this.steamMax);
 				}
 				TileEntity blockE = worldObj.getBlockTileEntity(xCoord, yCoord -1, zCoord);
+				this.isBeingHeated = false;
 				if(blockE instanceof TileEntityFireBox)
 				{
-					if(!hullHeated || waterStored > 0)
-					{
-						heatStored = (int) Math.min((heatStored + ((TileEntityFireBox)blockE).onProduceHeat(SteamPowerMain.fireOutput, 1)), heatMax);
-					}
+					this.isBeingHeated = true;
+					heatStored = (int) Math.min((heatStored + ((TileEntityFireBox)blockE).onProduceHeat(SteamPowerMain.fireOutput*getTickInterval(), 1)), heatMax);
 				}
 		   }
+		   super.onUpdate(watts, voltage, side);
 	    }
-	   
-	    public int addSteam(int watt) {
-	    	int rejectedElectricity = Math.max((this.steamStored + watt) - steamMax, 0);
-			this.steamStored += watt - rejectedElectricity;
-			return rejectedElectricity;			
-		}
-	    private void addWater() {
+	    private void emptyBuckets() 
+	    {
 	    	if (storedItems[0] != null)
             {
                 if(storedItems[0].isItemEqual(new ItemStack(Item.bucketWater,1)))
@@ -239,18 +175,18 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
                 	if((int)waterStored < getLiquidCapacity(1))
                 	{                		
                 		++waterStored;
-                	this.storedItems[0] = new ItemStack(Item.bucketEmpty,1);
-                	this.onInventoryChanged();
+                		this.storedItems[0] = new ItemStack(Item.bucketEmpty,1);
+                		this.onInventoryChanged();
                 	}
                 }
             }
 			
 		}
 		public int precentHeated() {
-			int var1;
+			int var1 = 0;
 			if(hullHeat < 100)
 			{
-				var1 = (int)(100 *(hullHeat/100));
+				var1 = (int)(100 *(hullHeat/hullHeatMax));
 			}
 			else
 			{
@@ -260,11 +196,17 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 		}
 		@Override
 		public int onReceiveLiquid(int type, int vol, ForgeDirection side) {
+			if(type == 0)
+			{
+				int rejectedSteam = Math.max((this.steamStored + vol) - this.getLiquidCapacity(0), 0);
+				this.steamStored += vol - rejectedSteam;
+				return rejectedSteam;
+			}
 			if(type == 1)
 			{
-			int rejectedElectricity = Math.max((this.waterStored + vol) - this.getLiquidCapacity(1), 0);
-			 this.waterStored += vol - rejectedElectricity;
-			return rejectedElectricity;
+				int rejectedWater = Math.max((this.waterStored + vol) - this.getLiquidCapacity(1), 0);
+				this.waterStored += vol - rejectedWater;
+				return rejectedWater;
 			}
 			return vol;
 		}

@@ -16,7 +16,7 @@ public class TileEntityMachine extends TileEntityElectricUnit implements  IInven
 	public ItemStack[] storedItems = new ItemStack[this.getInvSize()];
 	 public int getTickInterval()
 	    {
-			return 10;
+			return 5;
 	    	
 	    }
 	private int getInvSize() {
@@ -128,14 +128,11 @@ public class TileEntityMachine extends TileEntityElectricUnit implements  IInven
 	public void onUpdate(float watts, float voltage, ForgeDirection side)
     {
 		super.onUpdate(watts, voltage, side);
-		count++;
 		
 			if(!worldObj.isRemote)
 			{
-			PacketManager.sendTileEntityPacket(this, SteamPowerMain.channel, getSendData());
+				PacketManager.sendTileEntityPacket(this, SteamPowerMain.channel, getSendData());
 			}
-			count =  0;
-		
     }
 	
 	

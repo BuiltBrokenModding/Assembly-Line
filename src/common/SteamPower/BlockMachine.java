@@ -15,7 +15,7 @@ import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
 import SteamPower.boiler.TileEntityBoiler;
 import SteamPower.burner.TileEntityFireBox;
-import SteamPower.turbine.TileEntityGenerator;
+import SteamPower.turbine.TileEntitySteamPiston;
 
 public class BlockMachine extends universalelectricity.extend.BlockMachine
 {
@@ -29,14 +29,6 @@ public class BlockMachine extends universalelectricity.extend.BlockMachine
         this.setRequiresSelfNotify();
         this.setCreativeTab(CreativeTabs.tabBlock);
         
-    }    
-    @Override
-    public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
-    {
-    	
-    		par3List.add(new ItemStack(this, 1, 1));
-    		par3List.add(new ItemStack(this, 1, 2));
-    		par3List.add(new ItemStack(this, 1, 15));
     }
     @Override
     protected int damageDropped(int metadata)

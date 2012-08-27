@@ -17,16 +17,16 @@ import BasicPipes.pipes.api.ILiquidProducer;
 import SteamPower.TileEntityMachine;
 
 public class TileEntitytopGen extends TileEntityMachine implements IElectricUnit,ILiquidConsumer,ILiquidProducer {
-public TileEntityGenerator genB = null;
+public TileEntitySteamPiston genB = null;
 	public void onUpdate(float watts, float voltage, ForgeDirection side)
 	{ 
 		if(!this.worldObj.isRemote)
 		{
 			super.onUpdate(watts, voltage, side);
 			TileEntity ent = worldObj.getBlockTileEntity(xCoord, yCoord-1, xCoord);
-			if(ent instanceof TileEntityGenerator)
+			if(ent instanceof TileEntitySteamPiston)
 			{
-				genB = (TileEntityGenerator)ent;
+				genB = (TileEntitySteamPiston)ent;
 			}
 		}
 	}

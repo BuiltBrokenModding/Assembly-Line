@@ -20,7 +20,7 @@ public class TileEntityNuller extends TileEntityMachine implements IElectricUnit
 	}
 	public int getTickInterval()
 	{
-		return 1;
+		return 10;
 	}
 	public boolean canConnect(ForgeDirection side)
 	{

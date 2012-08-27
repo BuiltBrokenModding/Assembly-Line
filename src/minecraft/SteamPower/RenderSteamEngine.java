@@ -5,7 +5,7 @@ import net.minecraft.src.TileEntitySpecialRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import SteamPower.turbine.TileEntityGenerator;
+import SteamPower.turbine.TileEntitySteamPiston;
 
 public class RenderSteamEngine extends TileEntitySpecialRenderer
 {
@@ -25,8 +25,8 @@ public class RenderSteamEngine extends TileEntitySpecialRenderer
 		GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
 		
-		float p = ((TileEntityGenerator)tileEntity).position;
-		boolean cc = ((TileEntityGenerator)tileEntity).isConnected;
+		float p = ((TileEntitySteamPiston)tileEntity).position;
+		boolean cc = ((TileEntitySteamPiston)tileEntity).isConnected;
 		int meta = ((TileEntityMachine) tileEntity).getDirection();
 		switch(meta)
 		{

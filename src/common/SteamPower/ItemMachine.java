@@ -10,6 +10,7 @@ public class ItemMachine extends ItemBlock {
                 super(id);
                 setMaxDamage(0);
                 setHasSubtypes(true);
+                this.setIconIndex(21);
                 this.setTabToDisplayOn(CreativeTabs.tabBlock);
         }
         @Override
@@ -18,8 +19,23 @@ public class ItemMachine extends ItemBlock {
         	
         		par3List.add(new ItemStack(this, 1, 1));
         		par3List.add(new ItemStack(this, 1, 2));
-        		par3List.add(new ItemStack(this, 1, 3));
         		par3List.add(new ItemStack(this, 1, 15));
+        }
+        @Override
+    	public String getTextureFile() {
+    		// TODO Auto-generated method stub
+    		return "/EUIClient/Textures/Items.png";
+    	}
+        @Override
+        public int getIconFromDamage(int par1)
+        {
+        	switch(par1)
+        	{
+        	case 1: return 23;
+        	case 2: return 22;
+        	case 15: return 22;
+        	}
+            return this.iconIndex+par1;
         }
         @Override
         public int getMetadata(int metadata)

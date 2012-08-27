@@ -4,9 +4,9 @@ import net.minecraft.src.*;
 
 public class ContainerGenerator extends Container
 {
-	private TileEntityGenerator tileEntity;
+	private TileEntitySteamPiston tileEntity;
 
-    public ContainerGenerator(InventoryPlayer par1InventoryPlayer, TileEntityGenerator tileEntity)
+    public ContainerGenerator(InventoryPlayer par1InventoryPlayer, TileEntitySteamPiston tileEntity)
     {
         this.tileEntity = tileEntity;
         this.addSlotToContainer(new Slot(tileEntity, 0, 33, 34));

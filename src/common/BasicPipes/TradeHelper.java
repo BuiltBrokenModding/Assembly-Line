@@ -3,8 +3,6 @@ package BasicPipes;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import BasicPipes.pipes.api.ILiquidConsumer;
-import SteamPower.TileEntityMachine;
-import SteamPower.boiler.TileEntityBoiler;
 
 public class TradeHelper {
 /**
@@ -39,7 +37,7 @@ public class TradeHelper {
 		return list;
 	}
 	/**
-	 * 
+	 * Only works for steam Power's boiler. Still needs recode to work for all things
 	 * @param blockEntity - tile entity trading the liquid
 	 * @param type - liquid type see chart for info
 	 * @param rise - does the liquid rise up like a gas
@@ -66,17 +64,18 @@ public class TradeHelper {
 				secondEntity = connectedBlocks[1];
 			}
 			//checks wether or not the block bellow it is a tank to move liquid too
-			if(firstEntity instanceof TileEntityBoiler)
+			if(firstEntity instanceof ILiquidConsumer)
 			{
-				int bWater = ((TileEntityBoiler) firstEntity).getStoredLiquid(1);
-				int bMax = ((TileEntityBoiler) firstEntity).getLiquidCapacity(1);
+				int bWater = ((ILiquidConsumer) firstEntity).getStoredLiquid(type);
+				int bMax = ((ILiquidConsumer) firstEntity).getLiquidCapacity(type);
 				//checks if that tank has room to get liquid.
 				
 					if(bWater < bMax)
 					{
+						int tradeVol = 0;
 						int emptyVol = Math.max( bMax - bWater,0);
-						int tradeVol = Math.min(emptyVol, ammountStored);
-						int rejected = ((TileEntityBoiler) firstEntity).onReceiveLiquid(1, tradeVol, ForgeDirection.getOrientation(1));
+						tradeVol = Math.min(emptyVol, ammountStored);
+						int rejected = ((ILiquidConsumer) firstEntity).onReceiveLiquid(type, tradeVol, ForgeDirection.getOrientation(1));
 						ammountStored = ammountStored + rejected - tradeVol;
 						wSum -= tradeVol;
 					}
@@ -97,45 +96,47 @@ public class TradeHelper {
 				for(int i = 2; i<6;i++)
 				{
 					TileEntity entityA = connectedBlocks[i];
-					if(entityA instanceof TileEntityBoiler)
+					if(entityA instanceof ILiquidConsumer)
 					{
 						//if is a tank add to the sum
-						wSum += ((TileEntityBoiler) entityA).getStoredLiquid(1);
+						wSum += ((ILiquidConsumer) entityA).getStoredLiquid(type);
 						tankCount += 1;
 					}
 				}
-			}
-			//if this is the bottom tank or bottom tank is full then trade liquid with tanks around it.
-			for(int i = 2; i<6;i++)
-			{
-				int average = wSum / tankCount;// takes the sum and makes it an average
-				int tradeSum = 0;
-				TileEntity entity = connectedBlocks[i];
-				if(entity instanceof TileEntityBoiler)
+			
+				//if this is the bottom tank or bottom tank is full then trade liquid with tanks around it.
+				for(int i = 2; i<6;i++)
 				{
-					int targetW = ((TileEntityBoiler) entity).getStoredLiquid(1);
-					if(targetW < average)
+					int average = Math.round((float)wSum / (float)tankCount);// takes the sum and makes it an average
+					int tradeSum = 0;
+					TileEntity entity = connectedBlocks[i];
+					if(entity instanceof ILiquidConsumer)
 					{
-						tradeSum = Math.min(average, ammountStored); //gets the ammount to give to the target tank
-						int rejectedAm = ((TileEntityBoiler) entity).onReceiveLiquid(1, tradeSum, ForgeDirection.getOrientation(i)); //send that ammount with safty incase some comes back
-						ammountStored =rejectedAm + ammountStored - tradeSum; //counts up current water sum after trade
+						int targetW = ((ILiquidConsumer) entity).getStoredLiquid(type);
+						if(targetW < average)
+						{
+							tradeSum = Math.min(average, ammountStored); //gets the ammount to give to the target tank
+							int rejectedAm = ((ILiquidConsumer) entity).onReceiveLiquid(type, tradeSum, ForgeDirection.getOrientation(i)); //send that ammount with safty incase some comes back
+							ammountStored =rejectedAm + ammountStored - tradeSum; //counts up current water sum after trade
+						}
 					}
 				}
-			}
-			if(secondEntity instanceof TileEntityBoiler)
-			{
-				int bWater = ((TileEntityBoiler) secondEntity).getStoredLiquid(1);
-				int bMax = ((TileEntityBoiler) secondEntity).getLiquidCapacity(1);
-				if(bottom && ammountStored > 0)
+			
+				if(secondEntity instanceof ILiquidConsumer)
 				{
-					if(bWater < bMax)
+					int bWater = ((ILiquidConsumer) secondEntity).getStoredLiquid(type);
+					int bMax = ((ILiquidConsumer) secondEntity).getLiquidCapacity(type);
+					if(bottom && ammountStored > 0)
 					{
-						int emptyVolS = Math.max( bMax - bWater,0);
-						int tradeVolS = Math.min(emptyVolS, ammountStored);
-						int rejectedS = ((TileEntityBoiler) secondEntity).addSteam(tradeVolS);
-						ammountStored =rejectedS + ammountStored - tradeVolS;
-						wSum -= tradeVolS;
-					}				
+						if(bWater < bMax)
+						{
+							int emptyVolS = Math.max( bMax - bWater,0);
+							int tradeVolS = Math.min(emptyVolS, ammountStored);
+							int rejectedS = ((ILiquidConsumer) secondEntity).onReceiveLiquid(type, tradeVolS, ForgeDirection.getOrientation(0));;
+							ammountStored =rejectedS + ammountStored - tradeVolS;
+							wSum -= tradeVolS;
+						}				
+					}
 				}
 			}
 			return ammountStored;

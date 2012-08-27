@@ -7,16 +7,16 @@ import net.minecraft.src.StatCollector;
 import org.lwjgl.opengl.GL11;
 
 import SteamPower.turbine.ContainerGenerator;
-import SteamPower.turbine.TileEntityGenerator;
+import SteamPower.turbine.TileEntitySteamPiston;
 
 	public class GUIGenerator extends GuiContainer
 	{
-	    private TileEntityGenerator tileEntity;
+	    private TileEntitySteamPiston tileEntity;
 
 	    private int containerWidth;
 	    private int containerHeight;
 
-	    public GUIGenerator(InventoryPlayer par1InventoryPlayer, TileEntityGenerator tileEntity)
+	    public GUIGenerator(InventoryPlayer par1InventoryPlayer, TileEntitySteamPiston tileEntity)
 	    {
 	        super(new ContainerGenerator(par1InventoryPlayer, tileEntity));
 	        this.tileEntity = tileEntity;
