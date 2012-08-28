@@ -35,7 +35,7 @@ public class BasicPipesMain{
     
     @SidedProxy(clientSide = "BasicPipes.PipeClientProxy", serverSide = "BasicPipes.PipeProxy")
 	public static PipeProxy proxy;
-	static Configuration config = new Configuration((new File(Minecraft.getMinecraftDir(), "config/EUIndustry/BasicPipes.cfg")));
+	static Configuration config = new Configuration((new File(cpw.mods.fml.common.Loader.instance().getConfigDir(), "/EUIndustry/BasicPipes.cfg")));
 	public static int pipeID = configurationProperties();
 	private static int partID;
 	private static int ppipeID;

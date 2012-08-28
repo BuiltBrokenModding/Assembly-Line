@@ -32,7 +32,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 @NetworkMod(channels = { "SPpack" }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
 
 public class SteamPowerMain{	 
-	static Configuration config = new Configuration((new File(Minecraft.getMinecraftDir(), "config/EUIndustry/SteamPower.cfg")));
+	static Configuration config = new Configuration((new File(cpw.mods.fml.common.Loader.instance().getConfigDir(), "/EUIndustry/SteamPower.cfg")));
 	private static int BlockID= configurationProperties();
 	public static int EngineItemID;
 	public static int EngineID;
