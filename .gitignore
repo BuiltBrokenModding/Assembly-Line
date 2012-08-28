@@ -31,7 +31,16 @@ LICENSE
 /src/common/universalelectricity/*
 /src/common/basiccomponents/*
 /src/common/buildcraft/*
-/src/common/BasicPipes/*
+/src/common/BasicPipes/BasicPipesMain.java
+/src/common/BasicPipes/PipeProxy.java
+/src/common/BasicPipes/pipes/BlockPipe.java
+/src/common/BasicPipes/pipes/BlockPump.java
+/src/common/BasicPipes/pipes/ItemGuage.java
+/src/common/BasicPipes/pipes/ItemParts.java
+/src/common/BasicPipes/pipes/ItemPipe.java
+/src/common/BasicPipes/pipes/TileEntityCondenser.java
+/src/common/BasicPipes/pipes/TileEntityPipe.java
+/src/common/BasicPipes/pipes/TileEntityPump.java
 /bin/
 /conf/
 /docs/

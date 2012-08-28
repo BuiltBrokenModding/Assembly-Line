@@ -6,7 +6,6 @@ import net.minecraft.src.TileEntitySpecialRenderer;
 import org.lwjgl.opengl.GL11;
 
 import steampower.boiler.TileEntityBoiler;
-import basicpipes.TradeHelper;
 
 public class RenderBoiler extends TileEntitySpecialRenderer
 {

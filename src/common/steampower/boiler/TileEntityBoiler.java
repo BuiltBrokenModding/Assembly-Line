@@ -9,9 +9,9 @@ import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import steampower.SteamPowerMain;
 import steampower.TileEntityMachine;
+import steampower.TradeHelper;
 import steampower.burner.TileEntityFireBox;
 import universalelectricity.network.IPacketReceiver;
-import basicpipes.TradeHelper;
 import basicpipes.pipes.api.ILiquidConsumer;
 import basicpipes.pipes.api.ILiquidProducer;
 

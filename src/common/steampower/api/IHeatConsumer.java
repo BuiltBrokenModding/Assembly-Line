@@ -1,4 +1,4 @@
-package steampower.ap;
+package steampower.api;
 
 /**
  * The IHeatConsumer interface is an interface that must be applied to all tile entities that can receive heat joules.
