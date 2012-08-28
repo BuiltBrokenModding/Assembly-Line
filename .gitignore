@@ -6,7 +6,6 @@
 *.ear
 *.bat
 *.sh
-*.txt
 *.cfg
 CHANGELOG
 LICENSE
@@ -20,6 +19,7 @@ LICENSE
 /src/minecraft/universalelectricity/*
 /src/minecraft/basiccomponents/*
 /src/minecraft/buildcraft/*
+/src/minecraft/EUIClient/*
 /src/common/cpw/*
 /src/common/net/*
 /src/common/org/*
