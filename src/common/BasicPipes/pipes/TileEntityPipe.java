@@ -109,7 +109,7 @@ if(side == ForgeDirection.EAST)
 	public void updateEntity()
 	{	
 		//cause the block to update itself every tick needs to be change to .5 seconds to reduce load
-		((BlockPipe)this.getBlockType()).updateConductorTileEntity(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+		BlockPipe.updateConductorTileEntity(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
 		count++;
 		if(count >= 30 || intiUpdate)
 		{
