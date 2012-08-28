@@ -20,6 +20,7 @@ LICENSE
 /src/minecraft/basiccomponents/*
 /src/minecraft/buildcraft/*
 /src/minecraft/EUIClient/*
+/src/minecraft/BasicPipes/*
 /src/common/cpw/*
 /src/common/net/*
 /src/common/org/*
@@ -30,6 +31,7 @@ LICENSE
 /src/common/universalelectricity/*
 /src/common/basiccomponents/*
 /src/common/buildcraft/*
+/src/common/BasicPipes/*
 /bin/
 /conf/
 /docs/
