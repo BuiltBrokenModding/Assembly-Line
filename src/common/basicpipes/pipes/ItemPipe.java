@@ -47,7 +47,7 @@ public class ItemPipe extends Item
         }
     }
     public String getTextureFile() {
-		return "/EUIClient/Textures/Items.png";
+		return BasicPipesMain.textureFile+"/Items.png";
 	}
     @Override
 	 public String getItemName()

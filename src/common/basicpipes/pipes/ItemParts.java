@@ -3,6 +3,8 @@ package basicpipes.pipes;
 import java.util.ArrayList;
 import java.util.List;
 
+import basicpipes.BasicPipesMain;
+
 import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
@@ -42,7 +44,7 @@ public class ItemParts extends Item{
         }
     }
     public String getTextureFile() {
-		return "/EUIClient/Textures/Items.png";
+		return BasicPipesMain.textureFile+"/Items.png";
 	}
 	@Override
 	 public String getItemName()

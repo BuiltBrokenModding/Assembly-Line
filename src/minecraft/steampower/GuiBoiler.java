@@ -26,9 +26,10 @@ public class GuiBoiler extends GuiContainer
     protected void drawGuiContainerForegroundLayer()
     {
         this.fontRenderer.drawString("Boiler", 60, 6, 4210752);
-        this.fontRenderer.drawString("Inventory", 8, this.ySize - 96 + 2, 4210752); if(boilerInventory.hullHeat >=10000)
+        this.fontRenderer.drawString("Inventory", 8, this.ySize - 96 + 2, 4210752); 
+        if(boilerInventory.hullHeat >=10000)
         {
-        this.fontRenderer.drawString("Heat Danger", (int)(105), 50, 4210752);
+        	//this.fontRenderer.drawString("Heat Danger", (int)(105), 50, 4210752);
         }
         this.fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
     }

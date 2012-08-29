@@ -1,4 +1,5 @@
 package steampower.boiler;
+import net.minecraft.src.Block;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
@@ -145,17 +146,27 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 	    			hullHeat = Math.min(hullHeat + heatStored, hullHeatMax);
 	    		}
 	    	}
+			
 		   if(!worldObj.isRemote)
 		   {
-			    emptyBuckets();//adds water from container slot
-				this.waterStored = TradeHelper.shareLiquid(this, 1, false);
-				this.steamStored = TradeHelper.shareLiquid(this, 0, true);
+			    
+			    count++;
+			    emptyBuckets();
+			    if(count >= 16)
+			    {
+			    	//adds water from container slot
+			    	this.waterStored = TradeHelper.shareLiquid(this, 1, false);
+			    	this.steamStored = TradeHelper.shareLiquid(this, 0, true);
+			    	count = 0;
+			    }
+			    
 				if(waterStored > 0 && hullHeated && heatStored > heatNeeded)
 				{
 					heatStored = Math.max(heatStored - heatNeeded, 0);
 					--waterStored;
 					steamStored = Math.min(steamStored + SteamPowerMain.steamOutBoiler,this.steamMax);
 				}
+				
 				TileEntity blockE = worldObj.getBlockTileEntity(xCoord, yCoord -1, zCoord);
 				this.isBeingHeated = false;
 				if(blockE instanceof TileEntityFireBox)
@@ -176,6 +187,24 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
                 	{                		
                 		++waterStored;
                 		this.storedItems[0] = new ItemStack(Item.bucketEmpty,1);
+                		this.onInventoryChanged();
+                	}
+                }
+                if(storedItems[0].isItemEqual(new ItemStack(Block.ice,1)))
+                {
+                	if((int)waterStored < getLiquidCapacity(1) && this.heatStored > 100)
+                	{                		
+                		++waterStored;
+                		int stacksize = this.storedItems[0].stackSize;
+                		if(stacksize > 1)
+                		{
+                			this.storedItems[0] = new ItemStack(Block.ice,stacksize -1);
+                		}
+                		if(stacksize == 1)
+                		{
+                			this.storedItems[0] = null;
+                		}
+                		this.heatStored-=100;
                 		this.onInventoryChanged();
                 	}
                 }

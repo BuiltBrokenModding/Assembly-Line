@@ -12,10 +12,12 @@ public class RenderPipe extends TileEntitySpecialRenderer
 {
 	int type = 0;
 	private ModelPipe model;
+	private ModelPipe model2;
 	
 	public RenderPipe()
 	{
 		model = new ModelPipe();
+		model2 = new ModelPipe();
 	}
 
 	public void renderAModelAt(TileEntityPipe tileEntity, double d, double d1, double d2, float f)
@@ -25,13 +27,9 @@ public class RenderPipe extends TileEntitySpecialRenderer
 		type = tileEntity.getType();
 		switch(type)
 		{
-		case 0: bindTextureByName("/EUIClient/Textures/SteamPipe.png");break;
-		case 1: bindTextureByName("/EUIClient/Textures/WaterPipe.png");break;
-		//case 2: bindTextureByName("/eui/lavaPipe.png");break;
-		//case 3: bindTextureByName("/eui/oilPipe.png");break;
-		//case 4: bindTextureByName("/eui/fuelPipe.png");break;
-		//case 5: bindTextureByName("/eui/airPipe.png");break;
-		default:bindTextureByName("/EUIClient/Textures/DefaultPipe.png"); break;
+		case 0: bindTextureByName(BasicPipesMain.textureFile+"/pipes/SteamPipe.png");break;
+		case 1: bindTextureByName(BasicPipesMain.textureFile+"/pipes/WaterPipe.png");break;
+		default:bindTextureByName(BasicPipesMain.textureFile+"/pipes/DefaultPipe.png"); break;
 		}
         
 		GL11.glPushMatrix();

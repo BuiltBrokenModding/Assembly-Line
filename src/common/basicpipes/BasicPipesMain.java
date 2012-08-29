@@ -34,9 +34,9 @@ public class BasicPipesMain{
 	@Instance
     public static BasicPipesMain instance;
     
-    @SidedProxy(clientSide = "BasicPipes.PipeClientProxy", serverSide = "BasicPipes.PipeProxy")
+    @SidedProxy(clientSide = "basicpipes.PipeClientProxy", serverSide = "basicpipes.PipeProxy")
 	public static PipeProxy proxy;
-	static Configuration config = new Configuration((new File(cpw.mods.fml.common.Loader.instance().getConfigDir(), "/EUIndustry/BasicPipes.cfg")));
+	static Configuration config = new Configuration((new File(cpw.mods.fml.common.Loader.instance().getConfigDir(), "/UniversalElectricity/BasicPipes.cfg")));
 	public static int pipeID = configurationProperties();
 	private static int partID;
 	private static int ppipeID;
@@ -48,6 +48,7 @@ public class BasicPipesMain{
 	public static Item gauge = new ItemGuage(ppipeID+1);
 
 	public static String channel = "Pipes";
+	public static String textureFile = "/textures";
 	
 	 public static int configurationProperties()
      {

@@ -1,6 +1,8 @@
 package steampower;
 import java.io.File;
 
+import basicpipes.BasicPipesMain;
+
 import net.minecraft.src.Block;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
@@ -11,7 +13,6 @@ import steampower.turbine.ItemEngine;
 import steampower.turbine.TileEntitytopGen;
 import universalelectricity.basiccomponents.BasicComponents;
 import universalelectricity.network.PacketManager;
-import basicpipes.BasicPipesMain;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
@@ -29,7 +30,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 @NetworkMod(channels = { "SPpack" }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
 
 public class SteamPowerMain{	 
-	static Configuration config = new Configuration((new File(cpw.mods.fml.common.Loader.instance().getConfigDir(), "/EUIndustry/SteamPower.cfg")));
+	static Configuration config = new Configuration((new File(cpw.mods.fml.common.Loader.instance().getConfigDir(), "/UniversalElectricity/SteamPower.cfg")));
 	private static int BlockID= configurationProperties();
 	public static int EngineItemID;
 	public static int EngineID;
@@ -47,9 +48,9 @@ public class SteamPowerMain{
 	@Instance
     public static SteamPowerMain instance;
     
-    @SidedProxy(clientSide = "SteamPower.SteamClientProxy", serverSide = "SteamPower.SteamProxy")
+    @SidedProxy(clientSide = "steampower.SteamClientProxy", serverSide = "steampower.SteamProxy")
     public static SteamProxy proxy;
-	public static String textureFile = "/EUIClient/Textures/";
+	public static String textureFile = "/textures/";
 	 public static int configurationProperties()
      {
              config.load(); 
