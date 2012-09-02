@@ -113,7 +113,7 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
         		ForgeDirection.getOrientation(i));
         if (tileEntity instanceof TileEntityConductor)
         {
-            if (ElectricityManager.electricityRequired(((TileEntityConductor)tileEntity).connectionID) > 0)
+            if (ElectricityManager.instance.electricityRequired(((TileEntityConductor)tileEntity).connectionID) > 0)
             {
                 this.connectedElectricUnit = (TileEntityConductor)tileEntity;
             }
@@ -173,7 +173,7 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	    	
 	    	if(this.generateRate > 1)
 	    	{
-	    		ElectricityManager.produceElectricity(this.connectedElectricUnit, this.generateRate*this.getTickInterval(), this.getVoltage());
+	    		ElectricityManager.instance.produceElectricity(this.connectedElectricUnit, this.generateRate*this.getTickInterval(), this.getVoltage());
 	    	}
     	}
     }    	

@@ -24,7 +24,7 @@ public class ItemMachine extends ItemBlock {
         @Override
     	public String getTextureFile() {
     		// TODO Auto-generated method stub
-    		return SteamPowerMain.textureFile+"/Items.png";
+    		return SteamPowerMain.textureFile+"Items.png";
     	}
         @Override
         public int getIconFromDamage(int par1)

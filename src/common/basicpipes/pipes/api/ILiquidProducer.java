@@ -3,8 +3,8 @@ package basicpipes.pipes.api;
 import net.minecraftforge.common.ForgeDirection;
 
 /**
- * The UEIProducer interface is an interface that must be applied to all tile entities that can produce electricity.
- * @author Calclavia
+ * Based off of Calclavia's old wire API
+ * @author DarkGuardsman
  *
  */
 public interface ILiquidProducer

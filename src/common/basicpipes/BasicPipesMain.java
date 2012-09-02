@@ -2,7 +2,7 @@ package basicpipes;
 import java.io.File;
 
 import basicpipes.pipes.BlockPipe;
-import basicpipes.pipes.BlockPump;
+import basicpipes.pipes.BlockMachine;
 import basicpipes.pipes.ItemGuage;
 import basicpipes.pipes.ItemParts;
 import basicpipes.pipes.ItemPipe;
@@ -32,7 +32,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 
 public class BasicPipesMain{	
 	@Instance
-    public static BasicPipesMain instance;
+    public BasicPipesMain instance;
     
     @SidedProxy(clientSide = "basicpipes.PipeClientProxy", serverSide = "basicpipes.PipeProxy")
 	public static PipeProxy proxy;
@@ -41,11 +41,12 @@ public class BasicPipesMain{
 	private static int partID;
 	private static int ppipeID;
 	private static int machineID;
+	private static int toolID;
 	public static Block pipe = new BlockPipe(pipeID).setBlockName("pipe");
-	public static Block machine = new BlockPump(machineID).setBlockName("pump");
+	public static Block machine = new BlockMachine(machineID).setBlockName("pump");
 	public static Item parts = new ItemParts(partID);
 	public static Item itemPipes = new ItemPipe(ppipeID);
-	public static Item gauge = new ItemGuage(ppipeID+1);
+	public static Item gauge = new ItemGuage(toolID);
 
 	public static String channel = "Pipes";
 	public static String textureFile = "/textures";
@@ -57,6 +58,7 @@ public class BasicPipesMain{
              machineID = Integer.parseInt(config.getOrCreateIntProperty("machineBlock", Configuration.CATEGORY_BLOCK, 156).value);
              partID = Integer.parseInt(config.getOrCreateIntProperty("parts", Configuration.CATEGORY_ITEM, 23022).value);
              ppipeID = Integer.parseInt(config.getOrCreateIntProperty("pipes", Configuration.CATEGORY_ITEM, 23023).value);
+             toolID = Integer.parseInt(config.getOrCreateIntProperty("ToolID", Configuration.CATEGORY_ITEM, 23024).value);
              config.save();
              return pipeID;
      }
@@ -65,7 +67,7 @@ public class BasicPipesMain{
 	{
 	  proxy.preInit();  
 	  GameRegistry.registerBlock(pipe);
-	  GameRegistry.registerBlock(machine);
+	  GameRegistry.registerBlock(machine,basicpipes.pipes.ItemMachine.class);
 	}
 	@Init
 	public void load(FMLInitializationEvent evt)
@@ -74,7 +76,7 @@ public class BasicPipesMain{
 		proxy.init();
 		GameRegistry.registerTileEntity(TileEntityPump.class, "pump");
    	    //Names
-		LanguageRegistry.addName((new ItemStack(gauge, 1, 0)), "guage");
+		LanguageRegistry.addName((new ItemStack(gauge, 1, 0)), "PipeGuage");
 		LanguageRegistry.addName((new ItemStack(itemPipes, 1, 0)), "SteamPipe");
 		LanguageRegistry.addName((new ItemStack(itemPipes, 1, 1)), "WaterPipe");
 		LanguageRegistry.addName((new ItemStack(itemPipes, 1, 2)), "LavaPipe");

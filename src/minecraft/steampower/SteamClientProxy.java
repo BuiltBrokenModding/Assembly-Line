@@ -12,8 +12,8 @@ public class SteamClientProxy extends SteamProxy{
 
 	public void preInit()
 	{ 
-		 MinecraftForgeClient.preloadTexture("/EUIClient/textures/blocks.png");
-	   	 MinecraftForgeClient.preloadTexture("/EUIClient/textures/Items.png");
+		 MinecraftForgeClient.preloadTexture(SteamPowerMain.textureFile+"blocks.png");
+	   	 MinecraftForgeClient.preloadTexture(SteamPowerMain.textureFile+"Items.png");
 	}
 	@Override
 	public void init()

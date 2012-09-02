@@ -26,7 +26,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
-@Mod(modid = "SteamPower", name = "Steam Power", version = "V9")
+@Mod(modid = "SteamPower", name = "Steam Power", version = "0.0.10")
 @NetworkMod(channels = { "SPpack" }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
 
 public class SteamPowerMain{	 
@@ -105,14 +105,14 @@ public class SteamPowerMain{
 		        case 15: return new TileEntityNuller();<-Just for testing Not craftable
 		 */
 		GameRegistry.addRecipe(new ItemStack(machine, 1, 1), new Object [] {"@T@", "OVO", "@T@",
-			'T',new ItemStack(BasicPipesMain.parts, 1,5),
+			'T',new ItemStack(BasicPipesMain.parts, 1,6),
 			'@',new ItemStack(BasicComponents.itemSteelPlate),
-			'O',new ItemStack(BasicPipesMain.parts, 1,1),
-			'V',new ItemStack(BasicPipesMain.parts, 1,6)});
+			'O',new ItemStack(BasicPipesMain.parts, 1,0),
+			'V',new ItemStack(BasicPipesMain.parts, 1,7)});
 		GameRegistry.addRecipe(new ItemStack(machine, 1, 2), new Object [] { "@", "F",
 			'F',Block.stoneOvenIdle,
 			'@',new ItemStack(BasicComponents.itemSteelPlate)});
-		GameRegistry.addRecipe(new ItemStack(itemEngine, 1, 0), new Object [] {"@T@", "PMP", "@T@",
+		GameRegistry.addRecipe(new ItemStack(itemEngine, 1,0), new Object [] {"@T@", "PMP", "@T@",
 			'T',new ItemStack(BasicPipesMain.parts, 1,0),
 			'@',new ItemStack(BasicComponents.itemSteelPlate),
 			'P',Block.pistonBase,

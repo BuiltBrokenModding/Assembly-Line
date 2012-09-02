@@ -6,8 +6,10 @@ import java.util.List;
 import basicpipes.BasicPipesMain;
 
 import net.minecraft.src.CreativeTabs;
+import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
+import net.minecraft.src.World;
 
 public class ItemParts extends Item{
 	String[] names = new String[]{"BronzeTube","IronTube","ObbyTube","NetherTube","Seal","StickSeal","BronzeTank","Valve",};
@@ -42,6 +44,11 @@ public class ItemParts extends Item{
         {
     		par3List.add(new ItemStack(this, 1, i));
         }
+    }
+    public boolean tryPlaceIntoWorld(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
+    {
+    	//TODO add block place event for some items like valves,tanks
+    	return false;
     }
     public String getTextureFile() {
 		return BasicPipesMain.textureFile+"/Items.png";

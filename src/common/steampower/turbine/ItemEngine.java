@@ -27,7 +27,7 @@ public class ItemEngine extends Item
     @Override
 	public String getTextureFile() {
 		// TODO Auto-generated method stub
-		return SteamPowerMain.textureFile+"/Items.png";
+		return SteamPowerMain.textureFile+"Items.png";
 	}
     @Override
     public boolean tryPlaceIntoWorld(ItemStack par1ItemStack, EntityPlayer ePlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)

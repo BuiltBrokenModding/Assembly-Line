@@ -1,7 +1,11 @@
 package basicpipes.pipes.api;
 
 import net.minecraftforge.common.ForgeDirection;
-
+/**
+ * Based off of Calclavia's old wire API
+ * @author DarkGuardsman
+ *
+ */
 
 public interface ILiquidConsumer
 {
@@ -16,9 +20,9 @@ public interface ILiquidConsumer
 	
 	/**
 	 * You can use this to check if a pipe can connect to this liquid consumer to properly render the graphics
-	 * @param forgeDirection - The side in which the electricity is coming from.
+	 * @param forgeDirection - The side in which the volume is coming from.
 	 * @parm type - The type of liquid 
-	 * @return Returns true or false if this consumer can receive electricity at this given tick or moment.
+	 * @return Returns true or false if this consumer can receive a volume at this given tick or moment.
 	 */
 	public boolean canRecieveLiquid(int type, ForgeDirection forgeDirection);
 	

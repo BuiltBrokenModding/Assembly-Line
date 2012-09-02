@@ -1,5 +1,6 @@
 package basicpipes;
 
+import steampower.SteamPowerMain;
 import basicpipes.PipeProxy;
 import basicpipes.pipes.TileEntityPipe;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -11,8 +12,8 @@ public class PipeClientProxy extends PipeProxy
 	public void preInit()
 	{
 		//Preload textures
-		MinecraftForgeClient.preloadTexture("/EUIClient/Textures/Items.png");
-   	    MinecraftForgeClient.preloadTexture("/EUIClient/Textures/blocks.png");
+		MinecraftForgeClient.preloadTexture(BasicPipesMain.textureFile+"/Items.png");
+   	    MinecraftForgeClient.preloadTexture(BasicPipesMain.textureFile+"/blocks.png");
 	}
 	
 	@Override

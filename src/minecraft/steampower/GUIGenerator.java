@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 
 import steampower.turbine.ContainerGenerator;
 import steampower.turbine.TileEntitySteamPiston;
+import universalelectricity.electricity.ElectricUnit;
 
 	public class GUIGenerator extends GuiContainer
 	{
@@ -55,7 +56,7 @@ import steampower.turbine.TileEntitySteamPiston;
 	        }
 	        else
 	        {
-	        	displayText = universalelectricity.UniversalElectricity.getWattDisplay((int)(tileEntity.generateRate*20));
+	        	displayText = ElectricUnit.getWattDisplay((int)(tileEntity.generateRate*20));
 	        }
 	        	displayText2 = "water" + "-" + tileEntity.waterStored;
 	        	displayText3 = "steam" + "-" + tileEntity.steamStored;
