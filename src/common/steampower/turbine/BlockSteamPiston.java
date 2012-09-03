@@ -18,7 +18,7 @@ public class BlockSteamPiston extends universalelectricity.extend.BlockMachine{
 		
 	}
 	@Override
-	public boolean onUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer)
+	public boolean onMachineActivated(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer)
     {
 		if (par1World.isRemote)
         {

@@ -25,33 +25,33 @@ public class ModelFurnace extends ModelBase
   
   public ModelFurnace()
   {
-    textureWidth = 256;
-    textureHeight = 256;
-    
-      Body = new ModelRenderer(this, 0, 0);
-      Body.addBox(-8F, -8F, -8F, 14, 14, 12);
-      Body.setRotationPoint(1F, 18F, 1F);
-      Body.setTextureSize(256, 256);
-      Body.mirror = true;
-      setRotation(Body, 0F, 0F, 0F);
-      top = new ModelRenderer(this, 80, 20);
-      top.addBox(-8F, 0F, -8F, 16, 2, 16);
-      top.setRotationPoint(0F, 8F, 0F);
-      top.setTextureSize(256, 256);
-      top.mirror = true;
-      setRotation(top, 0F, 0F, 0F);
-      bottom = new ModelRenderer(this, 80, 0);
-      bottom.addBox(-8F, 22F, -8F, 16, 2, 16);
-      bottom.setRotationPoint(0F, 0F, 0F);
-      bottom.setTextureSize(256, 256);
-      bottom.mirror = true;
-      setRotation(bottom, 0F, 0F, 0F);
-      Shape1 = new ModelRenderer(this, 0, 0);
-      Shape1.addBox(-4F, -4F, 0F, 10, 8, 1);
-      Shape1.setRotationPoint(-1F, 16F, 5F);
-      Shape1.setTextureSize(256, 256);
-      Shape1.mirror = true;
-      setRotation(Shape1, 0F, 0F, 0F);
+	  textureWidth = 256;
+	    textureHeight = 256;
+	    
+	      Body = new ModelRenderer(this, 0, 0);
+	      Body.addBox(-8F, -8F, -8F, 14, 14, 12);
+	      Body.setRotationPoint(1F, 18F, 1F);
+	      Body.setTextureSize(64, 32);
+	      Body.mirror = true;
+	      setRotation(Body, 0F, 0F, 0F);
+	      top = new ModelRenderer(this, 80, 20);
+	      top.addBox(-8F, 0F, -8F, 16, 2, 16);
+	      top.setRotationPoint(0F, 8F, 0F);
+	      top.setTextureSize(64, 32);
+	      top.mirror = true;
+	      setRotation(top, 0F, 0F, 0F);
+	      bottom = new ModelRenderer(this, 80, 0);
+	      bottom.addBox(-8F, 22F, -8F, 16, 2, 16);
+	      bottom.setRotationPoint(0F, 0F, 0F);
+	      bottom.setTextureSize(64, 32);
+	      bottom.mirror = true;
+	      setRotation(bottom, 0F, 0F, 0F);
+	      Shape1 = new ModelRenderer(this, 0, 27);
+	      Shape1.addBox(-4F, -4F, 0F, 10, 8, 1);
+	      Shape1.setRotationPoint(-1F, 16F, 5F);
+	      Shape1.setTextureSize(64, 32);
+	      Shape1.mirror = true;
+	      setRotation(Shape1, 0F, 0F, 0F);
   }
   
   public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
