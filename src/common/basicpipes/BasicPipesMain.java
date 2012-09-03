@@ -67,7 +67,7 @@ public class BasicPipesMain{
 	{
 	  proxy.preInit();  
 	  GameRegistry.registerBlock(pipe);
-	  GameRegistry.registerBlock(machine,basicpipes.pipes.ItemMachine.class);
+	  GameRegistry.registerBlock(machine);
 	}
 	@Init
 	public void load(FMLInitializationEvent evt)
@@ -132,8 +132,8 @@ public class BasicPipesMain{
 			, 'B',new ItemStack(parts, 1,7)
 			, 'P',new ItemStack(Block.pistonBase)
 			, 'C',BasicComponents.blockCopperWire
-			, 'V',new ItemStack(parts, 2,1)
-			});//bronze tube
+			, 'T',new ItemStack(parts, 1,6)
+			});
 	}
 
 }
