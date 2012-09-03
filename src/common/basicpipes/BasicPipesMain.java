@@ -74,8 +74,9 @@ public class BasicPipesMain{
     {
 		//register
 		proxy.init();
-		GameRegistry.registerTileEntity(TileEntityPump.class, "pump");
+		
    	    //Names
+		LanguageRegistry.addName((new ItemStack(machine, 1, 0)), "WaterPump");
 		LanguageRegistry.addName((new ItemStack(gauge, 1, 0)), "PipeGuage");
 		LanguageRegistry.addName((new ItemStack(itemPipes, 1, 0)), "SteamPipe");
 		LanguageRegistry.addName((new ItemStack(itemPipes, 1, 1)), "WaterPipe");
@@ -124,6 +125,15 @@ public class BasicPipesMain{
 		//fuel
 		GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1,4), new Object[] { new ItemStack(parts, 1,1),new ItemStack(parts, 1,4),new ItemStack(Item.dyePowder, 1,11)});
 		
+		//pump
+		GameRegistry.addRecipe(new ItemStack(machine, 1,0), new Object[] { "@T@","BPB","@M@"
+			, '@',BasicComponents.itemSteelPlate
+			, 'M',BasicComponents.itemMotor
+			, 'B',new ItemStack(parts, 1,7)
+			, 'P',new ItemStack(Block.pistonBase)
+			, 'C',BasicComponents.blockCopperWire
+			, 'V',new ItemStack(parts, 2,1)
+			});//bronze tube
 	}
 
 }

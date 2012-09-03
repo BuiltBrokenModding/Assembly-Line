@@ -14,7 +14,7 @@ public class BlockMachine extends BlockContainer
 		this.setBlockName("Machine");
 		this.setCreativeTab(CreativeTabs.tabBlock);
 		this.setRequiresSelfNotify();
-        this.blockIndexInTexture = 19;
+        this.blockIndexInTexture = 26;
 	}
 	
     public boolean isOpaqueCube()
@@ -33,7 +33,7 @@ public class BlockMachine extends BlockContainer
     */
     public int getRenderType()
     {
-        return 0;
+        return -1;
     }
 	
 	/**

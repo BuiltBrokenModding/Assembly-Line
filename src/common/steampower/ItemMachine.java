@@ -33,7 +33,7 @@ public class ItemMachine extends ItemBlock {
         	{
         	case 1: return 23;
         	case 2: return 22;
-        	case 15: return 22;
+        	case 15: return 25;
         	}
             return this.iconIndex+par1;
         }
