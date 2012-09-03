@@ -131,9 +131,13 @@ public class BlockPipe extends BlockContainer
 		for(byte i = 0; i < 6; i++)
         {
             //Update the tile entity on neighboring blocks
-        	TileEntityPipe conductorTileEntity = (TileEntityPipe)world.getBlockTileEntity(x, y, z);
-        	int type = conductorTileEntity.getType();
-        	conductorTileEntity.addConnection(getUEUnit(world, x, y, z, i, type), ForgeDirection.getOrientation(i));;
+        	TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+        	if(tileEntity instanceof TileEntityPipe)
+        	{
+        		TileEntityPipe conductorTileEntity = (TileEntityPipe) tileEntity;
+        		int type = conductorTileEntity.getType();
+        		conductorTileEntity.addConnection(getUEUnit(world, x, y, z, i, type), ForgeDirection.getOrientation(i));
+        	}
         }
 	}
 
