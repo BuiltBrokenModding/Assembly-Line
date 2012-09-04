@@ -133,7 +133,7 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	            		{
 	            			--steamStored;
 	            			++steamConsumed;
-	            			if(steamConsumed >= SteamPowerMain.steamOutBoiler)
+	            			if(steamConsumed >= 10)
 	            			{
 	            			++waterStored;
 	            			steamConsumed = 0;
@@ -321,11 +321,10 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	public int onProduceLiquid(int type, int Vol, ForgeDirection side) {
 		if(type == 1)
 		{
-			if(this.waterStored > 0)
-			{
-				int rejectedSteam = Math.max(Math.max((this.waterStored - Vol), 0),waterStored);
-				 this.waterStored += waterStored - rejectedSteam;		 
-				return rejectedSteam;
+			if(this.waterStored >= 1)
+			{	 
+				this.waterStored--;
+				return 1;
 			}
 		}
 		return 0;
@@ -344,9 +343,9 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	public int onReceiveLiquid(int type, int vol, ForgeDirection side) {
 		if(type == 0)
 		{
-		int rejectedSteam = Math.max((this.steamStored + vol) - 100, 0);
-		 this.steamStored += vol - rejectedSteam;		 
-		return rejectedSteam;
+			int rejectedSteam = Math.max((this.steamStored + vol) - 100, 0);
+			this.steamStored += vol - rejectedSteam;		 
+			return rejectedSteam;
 		}
 		return vol;
 	}
@@ -364,7 +363,11 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	public int getStoredLiquid(int type) {
 		if(type == 0)
 		{
-		return this.steamStored;
+			return this.steamStored;
+		}
+		if(type == 1)
+		{
+			return this.waterStored;
 		}
 		return 0;
 	}
@@ -373,7 +376,7 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	public int getLiquidCapacity(int type) {
 		if(type == 0)
 		{
-		return 100;
+			return 100;
 		}
 		return 0;
 	}

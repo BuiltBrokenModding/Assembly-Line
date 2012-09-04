@@ -44,30 +44,32 @@ public class ItemGuage extends Item
     }
     public boolean tryPlaceIntoWorld(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
     {
-    	if(par1ItemStack.getItemDamage() == 0)
+    	if(!par3World.isRemote)
     	{
-                    TileEntity blockEntity = par3World.getBlockTileEntity(par4, par5, par6);
-                    if(blockEntity instanceof TileEntityPipe)
-                    {
-                    	TileEntityPipe pipeEntity = (TileEntityPipe) blockEntity;                    	
-                    	int type = pipeEntity.getType();
-                    	int steam = pipeEntity.getStoredLiquid(type);
-                    	String typeName = getType(type);
-                    	String print = "Error";
-                    	if(steam < 0)
-                    	{
-                    		print = "No pressure or Volume";
-                    	}
-                    	else
-                    	{
-                    		print = typeName +" " + steam + 1*Math.random() +" @ 16PSI";
-                    	}
-                    	par2EntityPlayer.addChatMessage(print);
-                    	return true;
-                    }
-    	}
+	    	if(par1ItemStack.getItemDamage() == 0)
+	    	{
+	                    TileEntity blockEntity = par3World.getBlockTileEntity(par4, par5, par6);
+	                    if(blockEntity instanceof TileEntityPipe)
+	                    {
+	                    	TileEntityPipe pipeEntity = (TileEntityPipe) blockEntity;                    	
+	                    	int type = pipeEntity.getType();
+	                    	int steam = pipeEntity.getStoredLiquid(type);
+	                    	String typeName = getType(type);
+	                    	String print = "Error";
+	                    	if(steam <= 0)
+	                    	{
+	                    		print = "No pressure or Volume";
+	                    	}
+	                    	else
+	                    	{
+	                    		print = typeName +" " + steam +" @ 16PSI";
+	                    	}
+	                    	par2EntityPlayer.addChatMessage(print);
+	                    	return true;
+	                    }
+	    	}
                
-         
+    	}
 
         return false;
     }

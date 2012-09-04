@@ -54,32 +54,33 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer,IPacke
 	
 	
 	
-	private int getNumSide(ForgeDirection side) {
+	private int getNumSide(ForgeDirection side) 
+	{
 
-if(side == ForgeDirection.DOWN)
-{
-	return 0;
-}
-if(side == ForgeDirection.UP)
-{
-	return 1;
-}
-if(side == ForgeDirection.NORTH)
-{
-	return 2;
-}
-if(side == ForgeDirection.SOUTH)
-{
- return 3;	
-}
-if(side == ForgeDirection.WEST)
-{
-	return 4;
-}
-if(side == ForgeDirection.EAST)
-{
-	return 5;
-}
+			if(side == ForgeDirection.DOWN)
+			{
+				return 0;
+			}
+			if(side == ForgeDirection.UP)
+			{
+				return 1;
+			}
+			if(side == ForgeDirection.NORTH)
+			{
+				return 2;
+			}
+			if(side == ForgeDirection.SOUTH)
+			{
+			 return 3;	
+			}
+			if(side == ForgeDirection.WEST)
+			{
+				return 4;
+			}
+			if(side == ForgeDirection.EAST)
+			{
+				return 5;
+			}
 
 
 		return 0;
@@ -98,9 +99,9 @@ if(side == ForgeDirection.EAST)
 	{
 		if(type == this.type)
 		{
-		int rejectedVolume = Math.max((this.getStoredLiquid(type) + vol) - this.capacity, 0);
-		 this.liquidStored += vol - rejectedVolume;
-		return rejectedVolume;
+			int rejectedVolume = Math.max((this.getStoredLiquid(type) + vol) - this.capacity, 0);
+			this.liquidStored = Math.min(Math.max((liquidStored + vol - rejectedVolume),0),this.capacity);
+			return rejectedVolume;
 		}
 		return vol;
 	}
@@ -175,7 +176,7 @@ if(side == ForgeDirection.EAST)
 						{
 							if(((ILiquidProducer)connectedBlocks[i]).canProduceLiquid(this.type,ForgeDirection.getOrientation(i)))
 							{
-								int gainedVolume = ((ILiquidProducer)connectedBlocks[i]).onProduceLiquid(this.type,5-this.liquidStored,  ForgeDirection.getOrientation(i));
+								int gainedVolume = ((ILiquidProducer)connectedBlocks[i]).onProduceLiquid(this.type,this.capacity-this.liquidStored,  ForgeDirection.getOrientation(i));
 								this.onReceiveLiquid(this.type, gainedVolume, ForgeDirection.getOrientation(i));
 							}
 						}
@@ -191,14 +192,22 @@ if(side == ForgeDirection.EAST)
     @Override
 	public int getStoredLiquid(int type)
     {
+    	if(type == this.type)
+    	{
     		return this.liquidStored;
+    	}
+		return 0;
     }
     
     
     @Override
     public int getLiquidCapacity(int type)
 	{
-		return 5;
+    	if(type == this.type)
+    	{
+    		return 5;
+    	}
+    	return 0;
 	}
 	
 	/**
