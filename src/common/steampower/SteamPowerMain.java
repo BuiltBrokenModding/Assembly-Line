@@ -45,7 +45,7 @@ public class SteamPowerMain{
 	public static Block engine = new BlockSteamPiston(EngineID).setBlockName("SteamEngien");
 	public static Block gen = new BlockGenerator(genID).setBlockName("ElecGen");
 	public static Item itemEngine = new ItemEngine(EngineItemID).setItemName("SteamEngine");
-	@Instance
+	
     public static SteamPowerMain instance;
     
     @SidedProxy(clientSide = "steampower.SteamClientProxy", serverSide = "steampower.SteamProxy")

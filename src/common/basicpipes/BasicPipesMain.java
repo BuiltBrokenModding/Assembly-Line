@@ -31,7 +31,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 @NetworkMod(channels = { "Pipes" }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
 
 public class BasicPipesMain{	
-	@Instance
+	
     public BasicPipesMain instance;
     
     @SidedProxy(clientSide = "basicpipes.PipeClientProxy", serverSide = "basicpipes.PipeProxy")

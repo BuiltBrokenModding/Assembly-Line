@@ -5,6 +5,8 @@ import net.minecraft.src.*;
 
 import java.util.Random;
 
+import basicpipes.BasicPipesMain;
+
 public class BlockMachine extends BlockContainer
 {	
 	
@@ -74,10 +76,9 @@ public class BlockMachine extends BlockContainer
 		return null;
 	}
 	  @Override
-	    public String getTextureFile()
-	    {
-	        return basicpipes.BasicPipesMain.textureFile + "/items.png";
-	    }
+	  public String getTextureFile() {
+			return BasicPipesMain.textureFile+"/Items.png";
+		}
  }
 
 
