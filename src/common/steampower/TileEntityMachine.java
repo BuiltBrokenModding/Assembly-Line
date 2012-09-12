@@ -77,7 +77,7 @@ public class TileEntityMachine extends TileEntityElectricUnit implements  IInven
 	}
 
 	@Override
-	public float electricityRequest() {
+	public float ampRequest() {
 		// TODO Auto-generated method stub
 		return 0;
 	}

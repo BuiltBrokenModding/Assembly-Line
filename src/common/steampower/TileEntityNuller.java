@@ -4,8 +4,8 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.extend.IElectricUnit;
 
 public class TileEntityNuller extends TileEntityMachine implements IElectricUnit {
-
-	public float electricityRequest()
+	@Override
+	public float ampRequest()
 	{
 		return 100;
 	}
@@ -14,14 +14,17 @@ public class TileEntityNuller extends TileEntityMachine implements IElectricUnit
 	{
 		return true;
 	}
+	@Override
 	public float getVoltage()
 	{
 		return 1000;
 	}
+	@Override
 	public int getTickInterval()
 	{
 		return 10;
 	}
+	@Override
 	public boolean canConnect(ForgeDirection side)
 	{
 		return true;

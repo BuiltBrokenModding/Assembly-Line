@@ -67,7 +67,7 @@ public class TileEntityCondenser extends TileEntity implements ILiquidProducer, 
 		
 	}
 	@Override
-	public float electricityRequest() {
+	public float ampRequest() {
 		// TODO Auto-generated method stub
 		return 0;
 	}

@@ -37,7 +37,7 @@ public class TileEntityPump extends TileEntityElectricUnit implements ILiquidPro
 		if(!worldObj.isRemote)
 		{
 			count++;
-			if (electricityRequest() > 0 && canConnect(side))
+			if (ampRequest() > 0 && canConnect(side))
 	        {
 	            float rejectedElectricity = (float) Math.max((this.eStored + watts) - this.eMax, 0.0);
 	            this.eStored = (float) Math.max(this.eStored + watts - rejectedElectricity, 0.0);
@@ -55,7 +55,7 @@ public class TileEntityPump extends TileEntityElectricUnit implements ILiquidPro
 	}
 
 	@Override
-	public float electricityRequest() {
+	public float ampRequest() {
 		return Math.max(eMax - eStored,0);
 	}
 	@Override
