@@ -7,6 +7,7 @@ import basicpipes.pipes.ItemGuage;
 import basicpipes.pipes.ItemParts;
 import basicpipes.pipes.ItemPipe;
 import basicpipes.pipes.TileEntityPump;
+import basicpipes.pipes.api.Liquid;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.Block;
@@ -74,30 +75,25 @@ public class BasicPipesMain{
     {
 		//register
 		proxy.init();
-		
-   	    //Names
-		LanguageRegistry.addName((new ItemStack(machine, 1, 0)), "WaterPump");
-		LanguageRegistry.addName((new ItemStack(gauge, 1, 0)), "PipeGuage");
-		LanguageRegistry.addName((new ItemStack(itemPipes, 1, 0)), "SteamPipe");
-		LanguageRegistry.addName((new ItemStack(itemPipes, 1, 1)), "WaterPipe");
-		LanguageRegistry.addName((new ItemStack(itemPipes, 1, 2)), "LavaPipe");
-		LanguageRegistry.addName((new ItemStack(itemPipes, 1, 3)), "OilPipe");
-		LanguageRegistry.addName((new ItemStack(itemPipes, 1, 4)), "FuelPipe");
-		LanguageRegistry.addName((new ItemStack(itemPipes, 1, 5)), "AirPipe");
-		LanguageRegistry.addName((new ItemStack(itemPipes, 1, 6)), "MethainPipe");
-		LanguageRegistry.addName((new ItemStack(itemPipes, 1, 7)), "BioFuelPipe");
-		LanguageRegistry.addName((new ItemStack(itemPipes, 1, 8)), "coolentPipe");
-		LanguageRegistry.addName((new ItemStack(itemPipes, 1, 9)), "NukeWastePipe");
-		LanguageRegistry.addName((new ItemStack(itemPipes, 1, 10)), "Pipe");
-		LanguageRegistry.addName((new ItemStack(parts, 1, 0)), "BronzeTube");
-		LanguageRegistry.addName((new ItemStack(parts, 1, 1)), "IronTube");		
-		LanguageRegistry.addName((new ItemStack(parts, 1, 2)), "ObsidianTube");
-		LanguageRegistry.addName((new ItemStack(parts, 1, 3)), "NetherTube");
-		LanguageRegistry.addName((new ItemStack(parts, 1, 4)), "LeatherSeal");
-		LanguageRegistry.addName((new ItemStack(parts, 1, 5)), "SlimeSeal");
-		LanguageRegistry.addName((new ItemStack(parts, 1, 6)), "BronzeTank");
-		LanguageRegistry.addName((new ItemStack(parts, 1, 7)), "Valve");
-		//crafting parts
+		//Names and lang stuff
+			//Pipe Names
+			for(int i =0; i < Liquid.values().length;i++)
+			{
+				LanguageRegistry.addName((new ItemStack(itemPipes, 1, i)), Liquid.getLiquid(i).lName+" Pipe");
+			}
+	   	    //Pump
+			LanguageRegistry.addName((new ItemStack(machine, 1, 0)), "WaterPump");
+			//Tools
+			LanguageRegistry.addName((new ItemStack(gauge, 1, 0)), "PipeGuage");
+			//Parts
+			LanguageRegistry.addName((new ItemStack(parts, 1, 0)), "BronzeTube");
+			LanguageRegistry.addName((new ItemStack(parts, 1, 1)), "IronTube");		
+			LanguageRegistry.addName((new ItemStack(parts, 1, 2)), "ObsidianTube");
+			LanguageRegistry.addName((new ItemStack(parts, 1, 3)), "NetherTube");
+			LanguageRegistry.addName((new ItemStack(parts, 1, 4)), "LeatherSeal");
+			LanguageRegistry.addName((new ItemStack(parts, 1, 5)), "SlimeSeal");
+			LanguageRegistry.addName((new ItemStack(parts, 1, 6)), "BronzeTank");
+			LanguageRegistry.addName((new ItemStack(parts, 1, 7)), "Valve");
 	}
 	@PostInit
 	public void postInit(FMLPostInitializationEvent event)

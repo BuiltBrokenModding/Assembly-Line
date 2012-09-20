@@ -7,7 +7,7 @@ public class TileEntityNuller extends TileEntityMachine implements IElectricUnit
 	@Override
 	public float ampRequest()
 	{
-		return 100;
+		return 200;
 	}
 	@Override
 	public boolean canReceiveFromSide(ForgeDirection side)
@@ -22,7 +22,7 @@ public class TileEntityNuller extends TileEntityMachine implements IElectricUnit
 	@Override
 	public int getTickInterval()
 	{
-		return 10;
+		return 20;
 	}
 	@Override
 	public boolean canConnect(ForgeDirection side)

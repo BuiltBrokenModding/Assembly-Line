@@ -10,6 +10,7 @@ import universalelectricity.network.IPacketReceiver;
 import universalelectricity.network.PacketManager;
 import basicpipes.pipes.api.ILiquidConsumer;
 import basicpipes.pipes.api.ILiquidProducer;
+import basicpipes.pipes.api.Liquid;
 
 import com.google.common.io.ByteArrayDataInput;
 public class TileEntityPipe extends TileEntity implements ILiquidConsumer,IPacketReceiver
@@ -17,7 +18,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer,IPacke
 	//The amount stored in the conductor
 	protected int liquidStored = 0;
 	//the current set type of the pipe 0-5
-	protected int type = 0;
+	protected Liquid type = Liquid.DEFUALT;
 	//The maximum amount of electricity this conductor can take
 	protected int capacity = 5;
 	private int count = 0;
@@ -95,7 +96,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer,IPacke
 	 * @return vol - The amount of rejected liquid that can't enter the pipe
 	 */
 	@Override
-	public int onReceiveLiquid(int type,int vol, ForgeDirection side)
+	public int onReceiveLiquid(Liquid type,int vol, ForgeDirection side)
 	{
 		if(type == this.type)
 		{
@@ -190,7 +191,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer,IPacke
 	 * @return Return the stored volume in this pipe.
 	 */
     @Override
-	public int getStoredLiquid(int type)
+	public int getStoredLiquid(Liquid type)
     {
     	if(type == this.type)
     	{
@@ -201,7 +202,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer,IPacke
     
     
     @Override
-    public int getLiquidCapacity(int type)
+    public int getLiquidCapacity(Liquid type)
 	{
     	if(type == this.type)
     	{
@@ -217,7 +218,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer,IPacke
     {
         super.readFromNBT(par1NBTTagCompound);
         this.liquidStored = par1NBTTagCompound.getInteger("liquid");
-        this.type = par1NBTTagCompound.getInteger("type");
+        this.type = Liquid.getLiquid(par1NBTTagCompound.getInteger("type"));
     }
 
     /**
@@ -227,11 +228,11 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer,IPacke
     {
     	super.writeToNBT(par1NBTTagCompound);
     	par1NBTTagCompound.setInteger("liquid", this.liquidStored);
-    	par1NBTTagCompound.setInteger("type", this.type);
+    	par1NBTTagCompound.setInteger("type", this.type.ordinal());
     }
 //find wether or not this side of X block can recieve X liquid type. Also use to determine connection of a pipe
 	@Override
-	public boolean canRecieveLiquid(int type, ForgeDirection side) {
+	public boolean canRecieveLiquid(Liquid type, ForgeDirection side) {
 		if(type == this.type)
 		{
 			return true;
@@ -239,12 +240,12 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer,IPacke
 		return false;
 	}
 	//returns liquid type
-	public int getType() {		
+	public Liquid getType() {		
 		return this.type;
 	}
 
 	//used by the item to set the liquid type on spawn
-	public void setType(int rType) {
+	public void setType(Liquid rType) {
 		this.type = rType;
 		
 	}
@@ -260,7 +261,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer,IPacke
         int type = data.readInt();
 		if(worldObj.isRemote)
 		{
-			this.type = type;
+			this.type = Liquid.getLiquid(type);
 		}
         }
         catch(Exception e)
@@ -269,6 +270,13 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer,IPacke
         }
 		
 		
+	}
+
+
+
+	public int getSize() {
+		// TODO Auto-generated method stub
+		return 6;
 	}
 	
 }

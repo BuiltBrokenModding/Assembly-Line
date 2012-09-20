@@ -17,7 +17,7 @@ public interface ILiquidProducer
 	 * @param side - The side 
 	 * @return vol - Return a vol of liquid type that is produced
 	 */
-	public int onProduceLiquid(int type, int maxVol, ForgeDirection side);
+	public int onProduceLiquid(Liquid type, int maxVol, ForgeDirection side);
 	/**
 	 * canProduceLiquid  
 	 * block.
@@ -26,5 +26,5 @@ public interface ILiquidProducer
 	 * @return boolean - True if can, false if can't produce liquid of type or on that side
 	 * Also used for connection rules of pipes'
 	 */
-	public boolean canProduceLiquid(int type, ForgeDirection side);
+	public boolean canProduceLiquid(Liquid type, ForgeDirection side);
 }

@@ -20,6 +20,7 @@ import universalelectricity.extend.TileEntityConductor;
 import universalelectricity.network.IPacketReceiver;
 import basicpipes.pipes.api.ILiquidConsumer;
 import basicpipes.pipes.api.ILiquidProducer;
+import basicpipes.pipes.api.Liquid;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -318,8 +319,8 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	}
 
 	@Override
-	public int onProduceLiquid(int type, int Vol, ForgeDirection side) {
-		if(type == 1)
+	public int onProduceLiquid(Liquid type, int Vol, ForgeDirection side) {
+		if(type == Liquid.WATER)
 		{
 			if(this.waterStored >= 1)
 			{	 
@@ -331,8 +332,8 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	}
 
 	@Override
-	public boolean canProduceLiquid(int type, ForgeDirection side) {
-		if(type == 1)
+	public boolean canProduceLiquid(Liquid type, ForgeDirection side) {
+		if(type == Liquid.WATER)
 		{
 			return true;
 		}
@@ -340,8 +341,8 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	}
 
 	@Override
-	public int onReceiveLiquid(int type, int vol, ForgeDirection side) {
-		if(type == 0)
+	public int onReceiveLiquid(Liquid type, int vol, ForgeDirection side) {
+		if(type == Liquid.STEAM)
 		{
 			int rejectedSteam = Math.max((this.steamStored + vol) - 100, 0);
 			this.steamStored += vol - rejectedSteam;		 
@@ -351,8 +352,8 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	}
 
 	@Override
-	public boolean canRecieveLiquid(int type, ForgeDirection side) {
-		if(type == 0)
+	public boolean canRecieveLiquid(Liquid type, ForgeDirection side) {
+		if(type == Liquid.STEAM)
 		{
 			return true;
 		}
@@ -360,12 +361,12 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	}
 
 	@Override
-	public int getStoredLiquid(int type) {
-		if(type == 0)
+	public int getStoredLiquid(Liquid type) {
+		if(type == Liquid.STEAM)
 		{
 			return this.steamStored;
 		}
-		if(type == 1)
+		if(type == Liquid.WATER)
 		{
 			return this.waterStored;
 		}
@@ -373,8 +374,8 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	}
 
 	@Override
-	public int getLiquidCapacity(int type) {
-		if(type == 0)
+	public int getLiquidCapacity(Liquid type) {
+		if(type == Liquid.STEAM)
 		{
 			return 100;
 		}

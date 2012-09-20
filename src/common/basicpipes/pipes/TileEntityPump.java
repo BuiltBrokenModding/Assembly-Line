@@ -2,6 +2,7 @@ package basicpipes.pipes;
 
 import basicpipes.TradeHelper;
 import basicpipes.pipes.api.ILiquidProducer;
+import basicpipes.pipes.api.Liquid;
 import net.minecraft.src.Block;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -78,8 +79,8 @@ public class TileEntityPump extends TileEntityElectricUnit implements ILiquidPro
 	}
 
 	@Override
-	public int onProduceLiquid(int type, int maxVol, ForgeDirection side) {
-		if(type == 1 && wStored > 0)
+	public int onProduceLiquid(Liquid type, int maxVol, ForgeDirection side) {
+		if(type == Liquid.WATER && wStored > 0)
 		{
 			int tradeW = Math.min(maxVol, wStored);
 			wStored -= tradeW;
@@ -89,8 +90,8 @@ public class TileEntityPump extends TileEntityElectricUnit implements ILiquidPro
 	}
 
 	@Override
-	public boolean canProduceLiquid(int type, ForgeDirection side) {
-		if(type == 1 && side != ForgeDirection.DOWN)
+	public boolean canProduceLiquid(Liquid type, ForgeDirection side) {
+		if(type == Liquid.WATER && side != ForgeDirection.DOWN)
 		{
 			return true;
 		}

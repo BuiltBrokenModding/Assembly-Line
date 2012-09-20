@@ -15,6 +15,7 @@ import steampower.burner.TileEntityFireBox;
 import universalelectricity.network.IPacketReceiver;
 import basicpipes.pipes.api.ILiquidConsumer;
 import basicpipes.pipes.api.ILiquidProducer;
+import basicpipes.pipes.api.Liquid;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -155,8 +156,8 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 			    if(count >= 16)
 			    {
 			    	//adds water from container slot
-			    	this.waterStored = TradeHelper.shareLiquid(this, 1, false);
-			    	this.steamStored = TradeHelper.shareLiquid(this, 0, true);
+			    	this.waterStored = TradeHelper.shareLiquid(this, Liquid.WATER, false);
+			    	this.steamStored = TradeHelper.shareLiquid(this, Liquid.STEAM, true);
 			    	count = 0;
 			    }
 			    
@@ -183,7 +184,7 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
             {
                 if(storedItems[0].isItemEqual(new ItemStack(Item.bucketWater,1)))
                 {
-                	if((int)waterStored < getLiquidCapacity(1))
+                	if((int)waterStored < getLiquidCapacity(Liquid.WATER))
                 	{                		
                 		++waterStored;
                 		this.storedItems[0] = new ItemStack(Item.bucketEmpty,1);
@@ -192,7 +193,7 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
                 }
                 if(storedItems[0].isItemEqual(new ItemStack(Block.ice,1)))
                 {
-                	if((int)waterStored < getLiquidCapacity(1) && this.heatStored > 100)
+                	if((int)waterStored < getLiquidCapacity(Liquid.WATER) && this.heatStored > 100)
                 	{                		
                 		++waterStored;
                 		int stacksize = this.storedItems[0].stackSize;
@@ -224,16 +225,16 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 			return var1;
 		}
 		@Override
-		public int onReceiveLiquid(int type, int vol, ForgeDirection side) {
-			if(type == 0)
+		public int onReceiveLiquid(Liquid type, int vol, ForgeDirection side) {
+			if(type == Liquid.STEAM)
 			{
-				int rejectedSteam = Math.max((this.steamStored + vol) - this.getLiquidCapacity(0), 0);
+				int rejectedSteam = Math.max((this.steamStored + vol) - this.getLiquidCapacity(Liquid.STEAM), 0);
 				this.steamStored += vol - rejectedSteam;
 				return rejectedSteam;
 			}
-			if(type == 1)
+			if(type == Liquid.WATER)
 			{
-				int rejectedWater = Math.max((this.waterStored + vol) - this.getLiquidCapacity(1), 0);
+				int rejectedWater = Math.max((this.waterStored + vol) - this.getLiquidCapacity(Liquid.WATER), 0);
 				this.waterStored += vol - rejectedWater;
 				return rejectedWater;
 			}
@@ -241,8 +242,8 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 		}
 
 		@Override
-		public boolean canRecieveLiquid(int type,ForgeDirection side) {
-			if(type == 1)
+		public boolean canRecieveLiquid(Liquid type,ForgeDirection side) {
+			if(type == Liquid.WATER)
 			{
 				return true;
 			}
@@ -250,12 +251,12 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 		}
 
 		@Override
-		public int getStoredLiquid(int type) {
-			if(type == 1)
+		public int getStoredLiquid(Liquid type) {
+			if(type == Liquid.WATER)
 			{
 				return this.waterStored;
 			}
-			if(type == 0)
+			if(type == Liquid.STEAM)
 			{
 				return this.steamStored;
 			}
@@ -263,20 +264,20 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 		}
 
 		@Override
-		public int getLiquidCapacity(int type) {
-			if(type ==1)
+		public int getLiquidCapacity(Liquid type) {
+			if(type ==Liquid.WATER)
 			{
 				return 14;
 			}
-			if(type == 0)
+			if(type == Liquid.STEAM)
 			{
 				return steamMax;
 			}
 			return 0;
 		}
 		@Override
-		public int onProduceLiquid(int type, int maxVol, ForgeDirection side) {			
-			if(type == 0)
+		public int onProduceLiquid(Liquid type, int maxVol, ForgeDirection side) {			
+			if(type == Liquid.STEAM)
 			{
 				if(steamStored > 1)
 				{
@@ -288,8 +289,8 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 		}
 
 		@Override
-		public boolean canProduceLiquid(int type, ForgeDirection side) {
-			if(type == 0)
+		public boolean canProduceLiquid(Liquid type, ForgeDirection side) {
+			if(type == Liquid.STEAM)
 			{
 				return true;
 			}

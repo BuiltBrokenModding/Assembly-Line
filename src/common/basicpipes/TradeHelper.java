@@ -1,6 +1,7 @@
 package basicpipes;
 
 import basicpipes.pipes.api.ILiquidConsumer;
+import basicpipes.pipes.api.Liquid;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 
@@ -43,7 +44,7 @@ public class TradeHelper {
 	 * @param rise - does the liquid rise up like a gas
 	 * @return the remaining untraded liquid
 	 */
-	 public static int shareLiquid(TileEntity blockEntity,int type,boolean rise)	
+	 public static int shareLiquid(TileEntity blockEntity,Liquid type,boolean rise)	
 		{
 		 	TileEntity[] connectedBlocks = getSourounding(blockEntity);	    	
 	    	ILiquidConsumer blockMachine = (ILiquidConsumer) blockEntity;

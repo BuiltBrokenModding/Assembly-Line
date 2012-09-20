@@ -3,6 +3,7 @@ package basicpipes.pipes;
 import java.util.List;
 
 import basicpipes.BasicPipesMain;
+import basicpipes.pipes.api.Liquid;
 
 import net.minecraft.src.Block;
 import net.minecraft.src.CreativeTabs;
@@ -16,7 +17,6 @@ import net.minecraft.src.World;
 public class ItemPipe extends Item
 {
 	int index = 32;//32 + 4 rows alloted to pipes
-	String[] names = new String[]{"Steam","Water","Lava","Oil","Fuel","Air","Methain","BioFuel","coolent","NukeWaste"};
     private int spawnID;
 
     public ItemPipe(int id)
@@ -37,12 +37,12 @@ public class ItemPipe extends Item
     @Override
     public String getItemNameIS(ItemStack itemstack)
     {
-        return itemstack.getItemDamage() < names.length ? names[itemstack.getItemDamage()] +" Pipe2" :  "EmptyPipe";
+        return itemstack.getItemDamage() < Liquid.values().length ? Liquid.getLiquid(itemstack.getItemDamage()).lName+" Pipe" :  "Empty Pipe";
     }
     @Override
     public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {
-    	for(int i = 0; i < names.length; i++)
+    	for(int i = 0; i < Liquid.values().length; i++)
         {
     		par3List.add(new ItemStack(this, 1, i));
         }
@@ -112,7 +112,7 @@ public class ItemPipe extends Item
                     if(blockEntity instanceof TileEntityPipe)
                     {
                     	TileEntityPipe pipeEntity = (TileEntityPipe) blockEntity;                    	
-                    	int dm = par1ItemStack.getItemDamage(); 	
+                    	Liquid dm = Liquid.getLiquid(par1ItemStack.getItemDamage()); 	
                     	pipeEntity.setType(dm);
                     }
                 }

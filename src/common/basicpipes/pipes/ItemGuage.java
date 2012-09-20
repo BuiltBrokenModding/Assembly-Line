@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import basicpipes.BasicPipesMain;
+import basicpipes.pipes.api.Liquid;
 
 import net.minecraft.src.*;
 
@@ -52,9 +53,9 @@ public class ItemGuage extends Item
 	                    if(blockEntity instanceof TileEntityPipe)
 	                    {
 	                    	TileEntityPipe pipeEntity = (TileEntityPipe) blockEntity;                    	
-	                    	int type = pipeEntity.getType();
+	                    	Liquid type = pipeEntity.getType();
 	                    	int steam = pipeEntity.getStoredLiquid(type);
-	                    	String typeName = getType(type);
+	                    	String typeName = type.lName;
 	                    	String print = "Error";
 	                    	if(steam <= 0)
 	                    	{

@@ -1,6 +1,7 @@
 package basicpipes.pipes;
 
 import basicpipes.pipes.api.ILiquidProducer;
+import basicpipes.pipes.api.Liquid;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -11,8 +12,8 @@ public class TileEntityCondenser extends TileEntity implements ILiquidProducer, 
 	int waterStored = 0;
 	int energyStored = 0;
 	@Override
-	public int onProduceLiquid(int type,int maxVol, ForgeDirection side) {
-		if(type == 1)
+	public int onProduceLiquid(Liquid type,int maxVol, ForgeDirection side) {
+		if(type == Liquid.WATER)
 		{
 			int tradeW = Math.min(maxVol, waterStored);
 			waterStored -= tradeW;
@@ -44,8 +45,8 @@ public class TileEntityCondenser extends TileEntity implements ILiquidProducer, 
 	tickCount++;
 	}
 	@Override
-	public boolean canProduceLiquid(int type, ForgeDirection side) {
-		if(type == 1)
+	public boolean canProduceLiquid(Liquid type, ForgeDirection side) {
+		if(type == Liquid.WATER)
 		{
 			return true;
 		}

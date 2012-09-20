@@ -16,7 +16,7 @@ public interface ILiquidConsumer
 	 * @parm type - The type of liquid being received
 	 * @return vol - The amount liquid that can't be recieved
 	 */
-	public int onReceiveLiquid(int type, int vol, ForgeDirection side);
+	public int onReceiveLiquid(Liquid type, int vol, ForgeDirection side);
 	
 	/**
 	 * You can use this to check if a pipe can connect to this liquid consumer to properly render the graphics
@@ -24,16 +24,16 @@ public interface ILiquidConsumer
 	 * @parm type - The type of liquid 
 	 * @return Returns true or false if this consumer can receive a volume at this given tick or moment.
 	 */
-	public boolean canRecieveLiquid(int type, ForgeDirection forgeDirection);
+	public boolean canRecieveLiquid(Liquid type, ForgeDirection forgeDirection);
 	
 	/**
 	 * @return Return the stored liquid of type in this consumer.
 	 */
-	public int getStoredLiquid(int type);
+	public int getStoredLiquid(Liquid type);
 	
 	/**
 	 * @return Return the maximum amount of stored liquid this consumer can get.
 	 */
-	public int getLiquidCapacity(int type);
+	public int getLiquidCapacity(Liquid type);
 	
 }

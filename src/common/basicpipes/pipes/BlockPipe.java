@@ -4,6 +4,7 @@ import java.util.Random;
 
 import basicpipes.pipes.api.ILiquidConsumer;
 import basicpipes.pipes.api.ILiquidProducer;
+import basicpipes.pipes.api.Liquid;
 
 import net.minecraft.src.BlockContainer;
 import net.minecraft.src.Material;
@@ -70,7 +71,7 @@ public class BlockPipe extends BlockContainer
         
         this.updateConductorTileEntity(world, x, y, z);
     }
-	public static TileEntity getUEUnit(World world, int x, int y, int z, byte side,int type)
+	public static TileEntity getUEUnit(World world, int x, int y, int z, byte side,Liquid type)
 	{
 		switch(side)
 		{
@@ -135,7 +136,7 @@ public class BlockPipe extends BlockContainer
         	if(tileEntity instanceof TileEntityPipe)
         	{
         		TileEntityPipe conductorTileEntity = (TileEntityPipe) tileEntity;
-        		int type = conductorTileEntity.getType();
+        		Liquid type = conductorTileEntity.getType();
         		conductorTileEntity.addConnection(getUEUnit(world, x, y, z, i, type), ForgeDirection.getOrientation(i));
         	}
         }
