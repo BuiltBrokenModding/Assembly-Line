@@ -114,7 +114,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer,IPacke
 		count++;
 		if(count >= 30 || intiUpdate)
 		{
-		PacketManager.sendTileEntityPacket(this, "Pipes", new Object[]{this.type});
+		PacketManager.sendTileEntityPacket(this, "Pipes", new Object[]{this.type.ordinal()});
 		count = 0;
 		intiUpdate = false;
 		}
