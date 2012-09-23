@@ -1,7 +1,7 @@
 package basicpipes;
 
 import basicpipes.pipes.TileEntityPipe;
-import basicpipes.pipes.TileEntityPump;
+import basicpipes.pumps.TileEntityPump;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;

@@ -6,7 +6,7 @@ import net.minecraft.src.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import basicpipes.BasicPipesMain;
 import basicpipes.pipes.TileEntityPipe;
-import basicpipes.pipes.TileEntityPump;
+import basicpipes.pumps.TileEntityPump;
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
 import cpw.mods.fml.common.network.IGuiHandler;

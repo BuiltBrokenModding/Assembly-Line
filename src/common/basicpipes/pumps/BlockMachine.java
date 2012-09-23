@@ -1,4 +1,4 @@
-package basicpipes.pipes;
+package basicpipes.pumps;
 
 import java.util.ArrayList;
 import net.minecraft.src.*;
@@ -48,14 +48,8 @@ public class BlockMachine extends BlockContainer
 	//Per tick
 	public int conductorCapacity()
 	{
-		return 10;
+		return 1;
 	}	
-	public void addCreativeItems(ArrayList itemList)     
-	 {       
-           
-           itemList.add(new ItemStack(this, 1,0));
-	 }
-
 	@Override
 	public TileEntity createNewTileEntity(World var1,int meta) {
 		// TODO Auto-generated method stub

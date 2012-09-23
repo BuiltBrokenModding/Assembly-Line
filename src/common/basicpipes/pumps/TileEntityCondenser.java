@@ -1,4 +1,4 @@
-package basicpipes.pipes;
+package basicpipes.pumps;
 
 import basicpipes.pipes.api.ILiquidProducer;
 import basicpipes.pipes.api.Liquid;

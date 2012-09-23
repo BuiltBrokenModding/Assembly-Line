@@ -57,6 +57,9 @@ public class RenderPipe extends TileEntitySpecialRenderer
 			switch(type.ordinal())
 			{
 				case 0: bindTextureByName(BasicPipesMain.textureFile+"/pipes/SixSteamPipe.png");break;
+				case 1: bindTextureByName(BasicPipesMain.textureFile+"/pipes/SixWaterPipe.png");break;
+				case 2: bindTextureByName(BasicPipesMain.textureFile+"/pipes/SixLavaPipe.png");break;
+				case 3: bindTextureByName(BasicPipesMain.textureFile+"/pipes/SixOilPipe.png");break;
 				default:bindTextureByName(BasicPipesMain.textureFile+"/pipes/DefaultPipe.png"); break;
 			}
 			if(tileEntity.connectedBlocks[0] != null) SixPipe.renderBottom();

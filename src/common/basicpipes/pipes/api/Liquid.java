@@ -1,5 +1,6 @@
 package basicpipes.pipes.api;
 
+
 import universalelectricity.basiccomponents.BasicComponents;
 import net.minecraft.src.Block;
 import net.minecraftforge.common.ForgeDirection;
@@ -48,4 +49,15 @@ private Liquid(String name,boolean flame,boolean gas,int block, int Moving)
 	        }
 	        return DEFUALT;
 	    }
+public static Liquid getLiquidByBlock(int bBlock) {
+	for(int i = 0; i < Liquid.values().length;i++)
+	{
+		Liquid selected = Liquid.getLiquid(i);
+		if(bBlock == selected.Still)
+		{
+			return selected;
+		}
+	}
+	return Liquid.DEFUALT;
+}
 }

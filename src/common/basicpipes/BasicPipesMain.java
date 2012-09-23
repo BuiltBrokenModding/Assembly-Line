@@ -2,12 +2,12 @@ package basicpipes;
 import java.io.File;
 
 import basicpipes.pipes.BlockPipe;
-import basicpipes.pipes.BlockMachine;
 import basicpipes.pipes.ItemGuage;
 import basicpipes.pipes.ItemParts;
 import basicpipes.pipes.ItemPipe;
-import basicpipes.pipes.TileEntityPump;
 import basicpipes.pipes.api.Liquid;
+import basicpipes.pumps.BlockMachine;
+import basicpipes.pumps.TileEntityPump;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.Block;
@@ -41,7 +41,7 @@ public class BasicPipesMain{
 	public static int pipeID = configurationProperties();
 	private static int partID;
 	private static int ppipeID;
-	private static int machineID;
+	public static int machineID;
 	private static int toolID;
 	public static Block pipe = new BlockPipe(pipeID).setBlockName("pipe");
 	public static Block machine = new BlockMachine(machineID).setBlockName("pump");
@@ -68,7 +68,7 @@ public class BasicPipesMain{
 	{
 	  proxy.preInit();  
 	  GameRegistry.registerBlock(pipe);
-	  GameRegistry.registerBlock(machine);
+	  GameRegistry.registerBlock(machine,basicpipes.pumps.ItemMachine.class);
 	}
 	@Init
 	public void load(FMLInitializationEvent evt)
