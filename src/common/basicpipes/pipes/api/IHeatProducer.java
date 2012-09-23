@@ -1,4 +1,4 @@
-package steampower.api;
+package basicpipes.pipes.api;
 
 
 public interface IHeatProducer

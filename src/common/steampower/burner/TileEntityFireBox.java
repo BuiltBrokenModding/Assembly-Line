@@ -13,9 +13,10 @@ import net.minecraftforge.common.ISidedInventory;
 import steampower.SteamPowerMain;
 import steampower.TileEntityMachine;
 import steampower.TradeHelper;
-import steampower.api.IHeatProducer;
 import steampower.boiler.TileEntityBoiler;
 import universalelectricity.network.IPacketReceiver;
+
+import basicpipes.pipes.api.IHeatProducer;
 
 import com.google.common.io.ByteArrayDataInput;
 

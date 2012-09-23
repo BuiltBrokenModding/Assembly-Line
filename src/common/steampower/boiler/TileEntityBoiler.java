@@ -1,4 +1,6 @@
 package steampower.boiler;
+import java.util.Random;
+
 import net.minecraft.src.Block;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Item;
@@ -13,6 +15,7 @@ import steampower.TileEntityMachine;
 import steampower.TradeHelper;
 import steampower.burner.TileEntityFireBox;
 import universalelectricity.network.IPacketReceiver;
+import basicpipes.pipes.api.IHeatProducer;
 import basicpipes.pipes.api.ILiquidConsumer;
 import basicpipes.pipes.api.ILiquidProducer;
 import basicpipes.pipes.api.Liquid;
@@ -49,13 +52,14 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 	    public TileEntity[] connectedBlocks = {null, null, null, null, null, null};
 	    int steamMax = 140;
 	    public boolean isBeingHeated = false;
+	    private Random random = new Random();
 	    public String getInvName()
 	    {
 	        return "container.boiler";
 	    }
 	    public Object[] getSendData()
 		{
-			return new Object[]{(int)facing,(int)RunTime,(int)energyStore,(int)waterStored,
+			return new Object[]{(int)RunTime,(int)energyStore,(int)waterStored,
 					(int)steamStored,(int)heatStored,(int)hullHeat,(int)heatTick};
 		}
 		
@@ -65,7 +69,7 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 				ByteArrayDataInput dataStream) {
 			try
 			{
-				facing  = dataStream.readInt();
+				
 				RunTime = dataStream.readInt();
 				energyStore = dataStream.readInt();
 				waterStored = dataStream.readInt();
@@ -170,10 +174,14 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 				
 				TileEntity blockE = worldObj.getBlockTileEntity(xCoord, yCoord -1, zCoord);
 				this.isBeingHeated = false;
-				if(blockE instanceof TileEntityFireBox)
+				if(blockE instanceof IHeatProducer)
 				{
 					this.isBeingHeated = true;
-					heatStored = (int) Math.min((heatStored + ((TileEntityFireBox)blockE).onProduceHeat(SteamPowerMain.fireOutput*getTickInterval(), 1)), heatMax);
+					heatStored = (int) Math.min((heatStored + ((IHeatProducer)blockE).onProduceHeat(SteamPowerMain.fireOutput*getTickInterval(), 1)), heatMax);
+				}
+				else if(worldObj.getBlockId(xCoord, yCoord-1, zCoord) == Block.lavaStill.blockID)
+				{
+					heatStored += (int) Math.min((int)(random.nextDouble()*10)*getTickInterval(), heatMax);
 				}
 		   }
 		   super.onUpdate(watts, voltage, side);
