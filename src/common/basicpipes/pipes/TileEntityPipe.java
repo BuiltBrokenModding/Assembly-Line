@@ -20,14 +20,15 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer,IPacke
 	//the current set type of the pipe 0-5
 	protected Liquid type = Liquid.DEFUALT;
 	//The maximum amount of electricity this conductor can take
-	protected int capacity = 5;
+	public int capacity = 2;
+	public int hPressure = this.presure;
 	private int count = 0;
 	private boolean intiUpdate = true;
 	//Stores information on all connected blocks around this tile entity
 	public TileEntity[] connectedBlocks = {null, null, null, null, null, null};
-
 	//Checks if this is the first the tile entity updates
 	protected boolean firstUpdate = true;
+	public int presure = 0;
 	/**
 	 * This function adds a connection between this pipe and other blocks
 	 * @param tileEntity - Must be either a producer, consumer or a conductor
@@ -35,60 +36,22 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer,IPacke
 	 */	
 	public void addConnection(TileEntity tileEntity, ForgeDirection side)
 	{
-		int sideN = getNumSide(side);
-		this.connectedBlocks[sideN] = null;
+		this.connectedBlocks[side.ordinal()] = null;
 		if(tileEntity instanceof ILiquidConsumer)
 		{
 			if(((ILiquidConsumer)tileEntity).canRecieveLiquid(this.type, side))
 			{
-				this.connectedBlocks[sideN] = tileEntity;
+				this.connectedBlocks[side.ordinal()] = tileEntity;
 			}
 		}
 		if(tileEntity instanceof ILiquidProducer)
 		{
 			if(((ILiquidProducer)tileEntity).canProduceLiquid(this.type, side))
 			{
-			this.connectedBlocks[sideN] = tileEntity;
+			this.connectedBlocks[side.ordinal()] = tileEntity;
 			}
 		}
 	}
-	
-	
-	
-	private int getNumSide(ForgeDirection side) 
-	{
-
-			if(side == ForgeDirection.DOWN)
-			{
-				return 0;
-			}
-			if(side == ForgeDirection.UP)
-			{
-				return 1;
-			}
-			if(side == ForgeDirection.NORTH)
-			{
-				return 2;
-			}
-			if(side == ForgeDirection.SOUTH)
-			{
-			 return 3;	
-			}
-			if(side == ForgeDirection.WEST)
-			{
-				return 4;
-			}
-			if(side == ForgeDirection.EAST)
-			{
-				return 5;
-			}
-
-
-		return 0;
-	}
-
-
-
 	/**
 	 * onRecieveLiquid is called whenever a something sends a volume to the pipe (which is this block).
 	 * @param vols - The amount of vol source is trying to give to this pipe
@@ -112,40 +75,73 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer,IPacke
 		//cause the block to update itself every tick needs to be change to .5 seconds to reduce load
 		BlockPipe.updateConductorTileEntity(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
 		count++;
-		if(count >= 30 || intiUpdate)
+		if(count >= 10 || intiUpdate && !this.worldObj.isRemote)
 		{
 		PacketManager.sendTileEntityPacket(this, "Pipes", new Object[]{this.type.ordinal()});
 		count = 0;
 		intiUpdate = false;
-		}
-		if(!this.worldObj.isRemote)
-        {			
-			byte connectedUnits = 0;
-			byte connectedConductors = 1;
-			int averageVolume = this.liquidStored;
+		
+					
+			int connectedUnits = 0;
+			int pipes = 1;
+			int producers = 0;
+			int averageVolume = this.liquidStored;			
+			int averagePresure2 = 0;
 			
-			Vector3 currentPosition = new Vector3(this.xCoord, this.yCoord, this.zCoord);
-			
-			for(byte i = 0; i < 6; i++)
+			for(int i = 0; i < 6; i++)
 	        {
-				if(connectedBlocks[i] != null)
-				{
 					if(connectedBlocks[i] instanceof ILiquidConsumer || connectedBlocks[i] instanceof ILiquidProducer)
 					{
 						connectedUnits ++;
-						
+						if(connectedBlocks[i] instanceof ILiquidProducer)
+						{
+							if(((ILiquidProducer)connectedBlocks[i]).canProducePresure(this.type, ForgeDirection.getOrientation(i)))
+							{
+							averagePresure2 += ((ILiquidProducer)connectedBlocks[i]).presureOutput(this.type,ForgeDirection.getOrientation(i));
+							producers++;
+							}
+						}else
 						if(connectedBlocks[i] instanceof TileEntityPipe)
 						{
+							pipes ++;
+							//add pipes volume to average collection value
 							averageVolume += ((TileEntityPipe)connectedBlocks[i]).liquidStored;
-						
-							connectedConductors ++;
-						}	
+							//get the current pipes pressure
+							int pPressure =  ((TileEntityPipe)connectedBlocks[i]).presure ;
+							if(pPressure > hPressure)
+							{
+								this.hPressure = pPressure;
+							}							
+						}else
+						if(connectedBlocks[i] instanceof ILiquidConsumer)
+						{
+							if(this.presure <= 1)
+							{
+								this.hPressure = 0;
+							}		
+						}
 					}
-				}
-	        }
-			//average volume used to control volume spread to pipes. Prevent one pipe getting all liquid when another is empty
-			averageVolume = Math.max(averageVolume/connectedConductors,0);
+				}	        
+			//turn average collection into actual average pipe volume
+			averageVolume = Math.max(averageVolume/pipes,0);
+			
+			
+			//sets the pressure of the pipe to the producer pressure or to the highest pipe pressure -1
+			if(producers > 0)
+			{
+				averagePresure2 = Math.max(averagePresure2/producers,0);
+				this.presure = averagePresure2;
+			}
+			else
 			if(connectedUnits > 0)
+			{
+				this.presure = hPressure - 1;
+			}else
+			{
+				this.presure = 1;
+			}
+			//only trade liquid if there is more than one thing connect and its pressure is higher than 1
+			if(connectedUnits > 0 && this.presure > 0)
 			{
 				for(byte i = 0; i < 6; i++)
 		        {
@@ -159,14 +155,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer,IPacke
 								int transferVolumeAmount  = 0; //amount to be moved
 								ILiquidConsumer connectedConsumer = ((ILiquidConsumer)connectedBlocks[i]);
 								
-								if(connectedBlocks[i] instanceof TileEntityPipe && this.liquidStored > ((TileEntityPipe)connectedConsumer).liquidStored)
-								{
-									transferVolumeAmount = Math.max(Math.min(averageVolume - ((TileEntityPipe)connectedConsumer).liquidStored, this.liquidStored), 0);
-								}
-								else if(!(connectedConsumer instanceof TileEntityPipe))
-								{
-									transferVolumeAmount = this.liquidStored;
-								}
+								transferVolumeAmount = this.liquidStored;								
 								
 								int rejectedVolume = connectedConsumer.onReceiveLiquid(this.type,transferVolumeAmount, ForgeDirection.getOrientation(i));
 								this.liquidStored = Math.max(Math.min(this.liquidStored - transferVolumeAmount + rejectedVolume, 5), 0);
@@ -184,6 +173,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer,IPacke
 					}
 		        }
 			}
+			
         }
 	}
 	

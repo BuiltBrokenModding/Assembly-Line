@@ -406,4 +406,21 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 		}
 		
 	}
+	@Override
+	public int presureOutput(Liquid type, ForgeDirection side) {
+		if(type == Liquid.WATER)
+		{
+			return 32;
+		}
+		return 0;
+	}
+	@Override
+	public boolean canProducePresure(Liquid type, ForgeDirection side)
+	{
+		if(type == Liquid.WATER)
+		{
+			return true;
+		}
+		return false;
+	}
 }

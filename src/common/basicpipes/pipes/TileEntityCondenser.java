@@ -36,13 +36,7 @@ public class TileEntityCondenser extends TileEntity implements ILiquidProducer, 
     }
     public void updateEntity()
 	{    	
-	if(energyStored > 100 && tickCount > 200 && waterStored < 10)
-	{
-		energyStored -= 100;
-		waterStored += 1;
-		tickCount = 0;
-	}
-	tickCount++;
+	
 	}
 	@Override
 	public boolean canProduceLiquid(Liquid type, ForgeDirection side) {
@@ -65,7 +59,11 @@ public class TileEntityCondenser extends TileEntity implements ILiquidProducer, 
 	@Override
 	public void onUpdate(float amps, float voltage, ForgeDirection side) {
 		// TODO Auto-generated method stub
-		
+		if(energyStored > 100 && waterStored < 10)
+		{
+			energyStored -= 100;
+			waterStored += 1;
+		}
 	}
 	@Override
 	public float ampRequest() {
@@ -90,7 +88,23 @@ public class TileEntityCondenser extends TileEntity implements ILiquidProducer, 
 	@Override
 	public int getTickInterval() {
 		// TODO Auto-generated method stub
+		return 20;
+	}
+	@Override
+	public int presureOutput(Liquid type, ForgeDirection side) {
+		if(type == Liquid.WATER)
+		{
+			return 32;
+		}
 		return 0;
+	}
+	@Override
+	public boolean canProducePresure(Liquid type, ForgeDirection side) {
+		if(type == Liquid.WATER)
+		{
+			return true;
+		}
+		return false;
 	}
 	
 

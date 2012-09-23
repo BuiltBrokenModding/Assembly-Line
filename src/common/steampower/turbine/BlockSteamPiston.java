@@ -106,7 +106,7 @@ public class BlockSteamPiston extends universalelectricity.extend.BlockMachine{
 		@Override
 		public TileEntity createNewTileEntity(World world, int metadata)
 	    {
-			if(metadata < 4)
+			if(metadata >= 0 && metadata < 4)
 			{	
 				return new TileEntitySteamPiston();
 			}
@@ -119,13 +119,11 @@ public class BlockSteamPiston extends universalelectricity.extend.BlockMachine{
 		 public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
 		    {
 		        int meta = par1World.getBlockMetadata(par2, par3, par4);
-		        boolean var7 = false;
 		        if (meta == 1)
 		        {
 		            if (par1World.getBlockId(par2, par3 + 1, par4) != this.blockID)
 		            {
 		                par1World.setBlockWithNotify(par2, par3, par4, 0);
-		                var7 = true;
 		            }
 		        }
 		        else
@@ -135,13 +133,6 @@ public class BlockSteamPiston extends universalelectricity.extend.BlockMachine{
 		                par1World.setBlockWithNotify(par2, par3, par4, 0);
 		            }
 		        } 
-		        if (var7)
-		            {
-		                if (!par1World.isRemote)
-		                {
-		                    this.dropBlockAsItem(par1World, par2, par3, par4, 0, 0);
-		                }
-		            }
 		    }
 		 @Override
 		 public int idDropped(int par1, Random par2Random, int par3)

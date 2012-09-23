@@ -50,7 +50,6 @@ public class ItemEngine extends Item
                 	par3World.notifyBlocksOfNeighborChange(par4, par5, par6, var11.blockID);
                 	par3World.setBlockAndMetadataWithNotify(par4, par5+1, par6, var11.blockID, 14);
                 	par3World.notifyBlocksOfNeighborChange(par4, par5, par6, var11.blockID);
-                	ePlayer.sendChatToPlayer(""+par3World.getBlockMetadata(par4, par5, par6));
                 	par3World.editingBlocks = false;
                     --par1ItemStack.stackSize;
                     return true;

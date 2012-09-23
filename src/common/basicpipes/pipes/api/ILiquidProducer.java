@@ -27,4 +27,12 @@ public interface ILiquidProducer
 	 * Also used for connection rules of pipes'
 	 */
 	public boolean canProduceLiquid(Liquid type, ForgeDirection side);
+	public boolean canProducePresure(Liquid type, ForgeDirection side);
+	/**
+	 * 
+	 * @param type - liquid type
+	 * @param side - side this of presure
+	 * @return pressure that is used to output liquid on
+	 */
+	public int presureOutput(Liquid type, ForgeDirection side);
 }

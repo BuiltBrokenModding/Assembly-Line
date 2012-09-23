@@ -296,6 +296,29 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 			}
 			return false;
 		}
-		
+		@Override
+		public int presureOutput(Liquid type, ForgeDirection side) {
+			if(type == Liquid.STEAM)
+			{
+				if(side == ForgeDirection.UP)
+				{
+					return 100;
+				}
+				else
+				{
+					return 80;
+				}
 
+			}
+			return 0;
+		}
+		@Override
+		public boolean canProducePresure(Liquid type, ForgeDirection side)
+		{
+			if(type == Liquid.STEAM)
+			{
+				return true;
+			}
+			return false;
+		}
 	}

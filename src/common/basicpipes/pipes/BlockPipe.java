@@ -71,7 +71,7 @@ public class BlockPipe extends BlockContainer
         
         this.updateConductorTileEntity(world, x, y, z);
     }
-	public static TileEntity getUEUnit(World world, int x, int y, int z, byte side,Liquid type)
+	public static TileEntity getUEUnit(World world, int x, int y, int z, int side,Liquid type)
 	{
 		switch(side)
 		{
@@ -129,7 +129,7 @@ public class BlockPipe extends BlockContainer
 	public static void updateConductorTileEntity(World world, int x, int y, int z)
 	{
 		
-		for(byte i = 0; i < 6; i++)
+		for(int i = 0; i < 6; i++)
         {
             //Update the tile entity on neighboring blocks
         	TileEntity tileEntity = world.getBlockTileEntity(x, y, z);

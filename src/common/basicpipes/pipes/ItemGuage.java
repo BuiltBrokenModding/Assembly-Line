@@ -55,16 +55,12 @@ public class ItemGuage extends Item
 	                    	TileEntityPipe pipeEntity = (TileEntityPipe) blockEntity;                    	
 	                    	Liquid type = pipeEntity.getType();
 	                    	int steam = pipeEntity.getStoredLiquid(type);
+	                    	int pressure = pipeEntity.presure;
 	                    	String typeName = type.lName;
 	                    	String print = "Error";
-	                    	if(steam <= 0)
-	                    	{
-	                    		print = "No pressure or Volume";
-	                    	}
-	                    	else
-	                    	{
-	                    		print = typeName +" " + steam +" @ 16PSI";
-	                    	}
+	                    	
+	                    		print = typeName +" " + steam +" @ "+pressure+"PSI";
+	                    	
 	                    	par2EntityPlayer.addChatMessage(print);
 	                    	return true;
 	                    }
