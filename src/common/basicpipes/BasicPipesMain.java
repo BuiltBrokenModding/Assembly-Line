@@ -7,6 +7,7 @@ import basicpipes.pipes.ItemParts;
 import basicpipes.pipes.ItemPipe;
 import basicpipes.pipes.api.Liquid;
 import basicpipes.pumps.BlockMachine;
+import basicpipes.pumps.BlockValve;
 import basicpipes.pumps.TileEntityPump;
 
 import net.minecraft.client.Minecraft;
@@ -43,20 +44,25 @@ public class BasicPipesMain{
 	private static int ppipeID;
 	public static int machineID;
 	private static int toolID;
+	public static int valveID;
 	public static Block pipe = new BlockPipe(pipeID).setBlockName("pipe");
 	public static Block machine = new BlockMachine(machineID).setBlockName("pump");
+	public static Block valve = new BlockValve(valveID).setBlockName("valve");
 	public static Item parts = new ItemParts(partID);
 	public static Item itemPipes = new ItemPipe(ppipeID);
 	public static Item gauge = new ItemGuage(toolID);
 
 	public static String channel = "Pipes";
 	public static String textureFile = "/textures";
+
+	
 	
 	 public static int configurationProperties()
      {
              config.load();             
              pipeID = Integer.parseInt(config.getOrCreateIntProperty("PipeBlock", Configuration.CATEGORY_BLOCK, 155).value);
              machineID = Integer.parseInt(config.getOrCreateIntProperty("machineBlock", Configuration.CATEGORY_BLOCK, 156).value);
+             valveID = Integer.parseInt(config.getOrCreateIntProperty("machineBlock", Configuration.CATEGORY_BLOCK, 157).value);
              partID = Integer.parseInt(config.getOrCreateIntProperty("parts", Configuration.CATEGORY_ITEM, 23022).value);
              ppipeID = Integer.parseInt(config.getOrCreateIntProperty("pipes", Configuration.CATEGORY_ITEM, 23023).value);
              toolID = Integer.parseInt(config.getOrCreateIntProperty("ToolID", Configuration.CATEGORY_ITEM, 23024).value);

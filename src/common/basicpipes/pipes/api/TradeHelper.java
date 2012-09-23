@@ -1,7 +1,5 @@
-package basicpipes;
+package basicpipes.pipes.api;
 
-import basicpipes.pipes.api.ILiquidConsumer;
-import basicpipes.pipes.api.Liquid;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 

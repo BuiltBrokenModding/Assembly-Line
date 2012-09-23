@@ -1,8 +1,8 @@
 package basicpipes.pumps;
 
-import basicpipes.TradeHelper;
 import basicpipes.pipes.api.ILiquidProducer;
 import basicpipes.pipes.api.Liquid;
+import basicpipes.pipes.api.TradeHelper;
 import net.minecraft.src.Block;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;

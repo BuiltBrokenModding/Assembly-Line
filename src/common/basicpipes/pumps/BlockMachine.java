@@ -26,8 +26,7 @@ public class BlockMachine extends BlockContainer
     
     public boolean renderAsNormalBlock()
     {
-    	//TODO change later when custom models are added
-        return true;
+        return false;
     }
     
     /**
@@ -43,6 +42,18 @@ public class BlockMachine extends BlockContainer
      */
     public int idDropped(int par1, Random par2Random, int par3)
     {
+        return this.blockID;
+    }
+    protected int damageDropped(int meta)
+    {
+    	if(meta < 4)
+    	{
+    		return 0;
+    	}
+    	if(meta > 3 && meta < 8)
+    	{
+    		return 4;
+    	}
         return 0;
     }
 	//Per tick
@@ -60,6 +71,10 @@ public class BlockMachine extends BlockContainer
 		if(meta > 3 && meta < 8)
 	    {    
 			return new TileEntityCondenser();
+	    }
+		if(meta > 7 && meta < 12)
+	    {    
+			return new TileEntityValve();
 	    }
 		return null;
 	}
