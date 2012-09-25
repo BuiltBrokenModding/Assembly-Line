@@ -1,10 +1,12 @@
 package basicpipes.pumps;
 
-import java.util.ArrayList;
-import net.minecraft.src.*;
-
 import java.util.Random;
 
+import net.minecraft.src.BlockContainer;
+import net.minecraft.src.CreativeTabs;
+import net.minecraft.src.Material;
+import net.minecraft.src.TileEntity;
+import net.minecraft.src.World;
 import basicpipes.BasicPipesMain;
 
 public class BlockMachine extends BlockContainer

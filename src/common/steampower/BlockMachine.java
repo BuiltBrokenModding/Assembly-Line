@@ -15,7 +15,7 @@ import net.minecraft.src.World;
 import steampower.boiler.TileEntityBoiler;
 import steampower.burner.TileEntityFireBox;
 
-public class BlockMachine extends universalelectricity.extend.BlockMachine
+public class BlockMachine extends universalelectricity.prefab.BlockMachine
 {
     
     private Random furnaceRand = new Random();  

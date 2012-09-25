@@ -5,12 +5,11 @@ import net.minecraft.src.NetworkManager;
 import net.minecraft.src.Packet250CustomPayload;
 import net.minecraftforge.common.ForgeDirection;
 import steampower.TileEntityMachine;
-import universalelectricity.extend.IElectricUnit;
 import universalelectricity.network.IPacketReceiver;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityGen extends TileEntityMachine implements IPacketReceiver,IElectricUnit
+public class TileEntityGen extends TileEntityMachine implements IPacketReceiver
 {
 
 	@Override
@@ -20,14 +19,7 @@ public class TileEntityGen extends TileEntityMachine implements IPacketReceiver,
 		// TODO Auto-generated method stub
 		
 	}
-	public void onUpdate(float watts, float voltage, ForgeDirection side)
-	{
-		super.onUpdate(watts, voltage, side);
-		if(!worldObj.isRemote)
-		{
-			
-		}
-	}
+	
 
  
     public float electricityRequest()
@@ -49,7 +41,7 @@ public class TileEntityGen extends TileEntityMachine implements IPacketReceiver,
     {    	
 		return false;    	
     }
-    public float getVoltage()
+    public double getVoltage()
     {
     	return 120;
     }

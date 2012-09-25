@@ -117,9 +117,10 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 	     * ticks and creates a new spawn inside its implementation.
 	     */    
 	   @Override
-	   public void onUpdate(float watts, float voltage, ForgeDirection side)
+	   public void updateEntity()
 	    {
-		   
+		   if(count++ >=20){
+			   count = 0;
 		   //update/resets connection list
 		   TileEntity[] entityList = TradeHelper.getSourounding(this);
 		   tankCount = 0;
@@ -155,15 +156,13 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 		   if(!worldObj.isRemote)
 		   {
 			    
-			    count++;
+			    
 			    emptyBuckets();
-			    if(count >= 16)
-			    {
+			    
 			    	//adds water from container slot
 			    	this.waterStored = TradeHelper.shareLiquid(this, Liquid.WATER, false);
 			    	this.steamStored = TradeHelper.shareLiquid(this, Liquid.STEAM, true);
-			    	count = 0;
-			    }
+			    
 			    
 				if(waterStored > 0 && hullHeated && heatStored > heatNeeded)
 				{
@@ -184,7 +183,8 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 					heatStored += (int) Math.min((int)(random.nextDouble()*10)*getTickInterval(), heatMax);
 				}
 		   }
-		   super.onUpdate(watts, voltage, side);
+		   super.updateEntity();
+	    }
 	    }
 	    private void emptyBuckets() 
 	    {

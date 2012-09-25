@@ -1,8 +1,6 @@
 package steampower;
 import java.io.File;
 
-import basicpipes.BasicPipesMain;
-
 import net.minecraft.src.Block;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
@@ -11,11 +9,11 @@ import steampower.turbine.BlockGenerator;
 import steampower.turbine.BlockSteamPiston;
 import steampower.turbine.ItemEngine;
 import steampower.turbine.TileEntitytopGen;
-import universalelectricity.basiccomponents.BasicComponents;
+import universalelectricity.BasicComponents;
 import universalelectricity.network.PacketManager;
+import basicpipes.BasicPipesMain;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
-import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.PostInit;
 import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.SidedProxy;
@@ -96,14 +94,15 @@ public class SteamPowerMain{
 		 
 		 proxy.postInit();
 		 //Crafting
-		/**
-		 *  	case 0: return new TileEntityGrinder(); <-Removed
+		try{
+			/**
+		  		case 0: return new TileEntityGrinder(); <-Removed
 		        case 1: return new TileEntityBoiler();
 		        case 2: return new TileEntityFireBox();
 		        case 3: return new TileEntityGenerator();
 		        case 14: return new TileEntityCondenser();<-Removed
-		        case 15: return new TileEntityNuller();<-Just for testing Not craftable
-		 */
+		        case 15: return new TileEntityNuller();<-Just for testing Not craftable*/
+		 
 		GameRegistry.addRecipe(new ItemStack(machine, 1, 1), new Object [] {"@T@", "OVO", "@T@",
 			'T',new ItemStack(BasicPipesMain.parts, 1,6),
 			'@',new ItemStack(BasicComponents.itemSteelPlate),
@@ -116,7 +115,12 @@ public class SteamPowerMain{
 			'T',new ItemStack(BasicPipesMain.parts, 1,0),
 			'@',new ItemStack(BasicComponents.itemSteelPlate),
 			'P',Block.pistonBase,
-			'M',new ItemStack(BasicComponents.itemMotor)});
+			'M',new ItemStack(BasicComponents.itemMotor)});}
+	catch(Exception e)
+	{
+	 e.printStackTrace();
+	 System.out.print("UE based recipes not loaded");
+	}
 		}
 
 }

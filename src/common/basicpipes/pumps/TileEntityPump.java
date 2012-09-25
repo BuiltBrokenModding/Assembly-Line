@@ -1,15 +1,14 @@
 package basicpipes.pumps;
 
+import net.minecraft.src.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.implement.IElectricityReceiver;
+import universalelectricity.prefab.TileEntityElectricityReceiver;
 import basicpipes.pipes.api.ILiquidProducer;
 import basicpipes.pipes.api.Liquid;
 import basicpipes.pipes.api.TradeHelper;
-import net.minecraft.src.Block;
-import net.minecraft.src.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.electricity.TileEntityElectricUnit;
-import universalelectricity.extend.IElectricUnit;
 
-public class TileEntityPump extends TileEntityElectricUnit implements ILiquidProducer,IElectricUnit {
+public class TileEntityPump extends TileEntityElectricityReceiver implements ILiquidProducer,IElectricityReceiver {
  int dCount = 0;
  float eStored = 0;
  float eMax = 2000;
@@ -33,8 +32,8 @@ public class TileEntityPump extends TileEntityElectricUnit implements ILiquidPro
 	}
 
 	@Override
-	public void onUpdate(float watts, float voltage, ForgeDirection side) {
-		super.onUpdate(watts, voltage, side);
+	public void updateEntity() {
+		super.updateEntity();
 		sList = TradeHelper.getSourounding(this);
 		int bBlock = worldObj.getBlockId(xCoord, yCoord -1, zCoord);
 		Liquid bellow = Liquid.getLiquidByBlock(bBlock);
@@ -45,13 +44,9 @@ public class TileEntityPump extends TileEntityElectricUnit implements ILiquidPro
 		if(!worldObj.isRemote)
 		{
 			count++;
-			if (ampRequest() > 0 && canConnect(side))
-	        {
-	            float rejectedElectricity = (float) Math.max((this.eStored + watts) - this.eMax, 0.0);
-	            this.eStored = (float) Math.max(this.eStored + watts - rejectedElectricity, 0.0);
-	        }
 			
-			if(bBlock == type.Still && this.eStored > 200 && this.lStored < this.wMax && count>=2)
+			
+			if(bBlock == type.Still && this.eStored > 200 && this.lStored < this.wMax && count>=20)
 			{
 				eStored -= 200;
 				lStored += 1;
@@ -63,10 +58,6 @@ public class TileEntityPump extends TileEntityElectricUnit implements ILiquidPro
 	}
 
 	@Override
-	public float ampRequest() {
-		return Math.max(eMax - eStored,0);
-	}
-	@Override
 	public boolean canReceiveFromSide(ForgeDirection side) {
 		if(side != ForgeDirection.DOWN)
 		{
@@ -74,17 +65,6 @@ public class TileEntityPump extends TileEntityElectricUnit implements ILiquidPro
 		}
 		return false;
 	}
-
-	@Override
-	public float getVoltage() {
-		return 240;
-	}
-
-	@Override
-	public int getTickInterval() {
-		return 10;
-	}
-
 	@Override
 	public int onProduceLiquid(Liquid type, int maxVol, ForgeDirection side) {
 		if(type == this.type && lStored > 0)
@@ -139,5 +119,21 @@ public class TileEntityPump extends TileEntityElectricUnit implements ILiquidPro
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public void onReceive(TileEntity sender, double watts, double voltage,
+			ForgeDirection side) {
+		if (wattRequest() > 0 && canConnect(side))
+        {
+            float rejectedElectricity = (float) Math.max((this.eStored + watts) - this.eMax, 0.0);
+            this.eStored = (float) Math.max(this.eStored + watts - rejectedElectricity, 0.0);
+        }
+		
+	}
+
+	@Override
+	public double wattRequest() {
+		return Math.max(eMax - eStored,0);
 	}
 }

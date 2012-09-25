@@ -1,15 +1,16 @@
 package steampower;
 
-import com.google.common.io.ByteArrayDataInput;
-
-import universalelectricity.electricity.TileEntityElectricUnit;
-import universalelectricity.extend.IRotatable;
-import universalelectricity.network.IPacketReceiver;
-import universalelectricity.network.PacketManager;
-import net.minecraft.src.*;
+import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.IInventory;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.NBTTagCompound;
+import net.minecraft.src.NBTTagList;
+import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
-public class TileEntityMachine extends TileEntityElectricUnit implements  IInventory, ISidedInventory
+import universalelectricity.network.PacketManager;
+import universalelectricity.prefab.TileEntityElectricityReceiver;
+public class TileEntityMachine extends TileEntityElectricityReceiver implements  IInventory, ISidedInventory
 {
 	public int facing = 0;
 	private int count = 0;
@@ -75,13 +76,6 @@ public class TileEntityMachine extends TileEntityElectricUnit implements  IInven
         //vars
 	        this.facing = par1NBTTagCompound.getInteger("facing");
 	}
-
-	@Override
-	public float ampRequest() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 	@Override
 	public boolean canReceiveFromSide(ForgeDirection side) {
 		// TODO Auto-generated method stub
@@ -125,9 +119,9 @@ public class TileEntityMachine extends TileEntityElectricUnit implements  IInven
 		return 0;
 	}
 	
-	public void onUpdate(float watts, float voltage, ForgeDirection side)
+	public void updateEntity()
     {
-		super.onUpdate(watts, voltage, side);
+		super.updateEntity();
 		
 			if(!worldObj.isRemote)
 			{
@@ -254,5 +248,16 @@ public class TileEntityMachine extends TileEntityElectricUnit implements  IInven
 	public void closeChest() {
 		// TODO Auto-generated method stub
 		
+	}
+	@Override
+	public void onReceive(TileEntity sender, double amps, double voltage,
+			ForgeDirection side) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public double wattRequest() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

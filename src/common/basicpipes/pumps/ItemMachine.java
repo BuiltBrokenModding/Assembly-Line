@@ -2,17 +2,15 @@ package basicpipes.pumps;
 
 import java.util.List;
 
-import basicpipes.BasicPipesMain;
-
 import net.minecraft.src.Block;
 import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.Item;
 import net.minecraft.src.ItemBlock;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.MathHelper;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
+import basicpipes.BasicPipesMain;
 
 public class ItemMachine extends ItemBlock
 {
@@ -26,7 +24,7 @@ public class ItemMachine extends ItemBlock
         this.setHasSubtypes(true);
         this.setIconIndex(10);
         this.setItemName("Machine");
-        this.setTabToDisplayOn(CreativeTabs.tabRedstone);
+        this.setCreativeTab(CreativeTabs.tabRedstone);
     }
     @Override
     public int getIconFromDamage(int par1)
@@ -56,7 +54,7 @@ public class ItemMachine extends ItemBlock
         return "Machines";
     }
     @Override
-    public boolean tryPlaceIntoWorld(ItemStack itemStack, EntityPlayer player, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
+    public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
     {
     	int blockID = par3World.getBlockId(par4, par5, par6);    	
     	spawnID = BasicPipesMain.machineID;

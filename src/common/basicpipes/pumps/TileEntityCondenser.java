@@ -1,13 +1,13 @@
 package basicpipes.pumps;
 
-import basicpipes.pipes.api.ILiquidProducer;
-import basicpipes.pipes.api.Liquid;
+import universalelectricity.implement.IElectricityReceiver;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.extend.IElectricUnit;
+import basicpipes.pipes.api.ILiquidProducer;
+import basicpipes.pipes.api.Liquid;
 
-public class TileEntityCondenser extends TileEntity implements ILiquidProducer, IElectricUnit {
+public class TileEntityCondenser extends TileEntity implements ILiquidProducer, IElectricityReceiver {
 	int tickCount = 0;
 	int waterStored = 0;
 	int energyStored = 0;
@@ -36,7 +36,11 @@ public class TileEntityCondenser extends TileEntity implements ILiquidProducer, 
     }
     public void updateEntity()
 	{    	
-	
+    	if(energyStored > 100 && waterStored < 3)
+		{
+			energyStored -= 100;
+			waterStored += 1;
+		}
 	}
 	@Override
 	public boolean canProduceLiquid(Liquid type, ForgeDirection side) {
@@ -57,38 +61,15 @@ public class TileEntityCondenser extends TileEntity implements ILiquidProducer, 
 		return false;
 	}
 	@Override
-	public void onUpdate(float amps, float voltage, ForgeDirection side) {
-		// TODO Auto-generated method stub
-		if(energyStored > 100 && waterStored < 10)
-		{
-			energyStored -= 100;
-			waterStored += 1;
-		}
-	}
-	@Override
-	public float ampRequest() {
+	public double wattRequest() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	@Override
-	public boolean canConnect(ForgeDirection side) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	
 	@Override
 	public boolean canReceiveFromSide(ForgeDirection side) {
 		// TODO Auto-generated method stub
 		return false;
-	}
-	@Override
-	public float getVoltage() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	@Override
-	public int getTickInterval() {
-		// TODO Auto-generated method stub
-		return 20;
 	}
 	@Override
 	public int presureOutput(Liquid type, ForgeDirection side) {
@@ -105,6 +86,22 @@ public class TileEntityCondenser extends TileEntity implements ILiquidProducer, 
 			return true;
 		}
 		return false;
+	}
+	@Override
+	public boolean canConnect(ForgeDirection side) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public double getVoltage() {
+		// TODO Auto-generated method stub
+		return 120;
+	}
+	@Override
+	public void onReceive(TileEntity sender, double amps, double voltage,
+			ForgeDirection side) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 

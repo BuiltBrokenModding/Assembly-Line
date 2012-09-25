@@ -11,7 +11,7 @@ import net.minecraft.src.World;
 import steampower.SteamPowerMain;
 import steampower.TileEntityMachine;
 
-public class BlockSteamPiston extends universalelectricity.extend.BlockMachine{
+public class BlockSteamPiston extends universalelectricity.prefab.BlockMachine{
 
 	public BlockSteamPiston(int par1) {
 		super("SteamEngine", par1, Material.iron);

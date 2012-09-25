@@ -11,7 +11,7 @@ public class ItemMachine extends ItemBlock {
                 setMaxDamage(0);
                 setHasSubtypes(true);
                 this.setIconIndex(21);
-                this.setTabToDisplayOn(CreativeTabs.tabBlock);
+                this.setCreativeTab(CreativeTabs.tabBlock);
         }
         @Override
         public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)

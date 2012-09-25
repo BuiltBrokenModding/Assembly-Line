@@ -9,7 +9,7 @@ import universalelectricity.UniversalElectricity;
 
 import basicpipes.BasicPipesMain;
 
-public class BlockValve extends universalelectricity.extend.BlockMachine
+public class BlockValve extends universalelectricity.prefab.BlockMachine
 {	
 	
 	public BlockValve(int id)

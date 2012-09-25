@@ -1,9 +1,7 @@
 package basicpipes.pipes.api;
 
 
-import universalelectricity.basiccomponents.BasicComponents;
 import net.minecraft.src.Block;
-import net.minecraftforge.common.ForgeDirection;
 /**
  * System too easily reference a liquid type and its info
  * @author Rseifert
@@ -14,7 +12,7 @@ public enum Liquid {
 	STEAM("Steam",false,true,-1,-1),
 	WATER("Water",false,false,Block.waterStill.blockID,Block.waterMoving.blockID),	
 	LAVA("Lava",false,false,Block.lavaStill.blockID,Block.lavaMoving.blockID),
-	OIL("Oil",true,false,BasicComponents.oilStill.blockID,BasicComponents.oilMoving.blockID),
+	OIL("Oil",true,false,-1,-1),//BasicComponents.oilStill.blockID,BasicComponents.oilMoving.blockID),
 	Fuel("Fuel",true,false,-1,-1),	
 	Air("Air",false,true,0,-1),	
 	Methain("Methain",true,true,-1,-1),

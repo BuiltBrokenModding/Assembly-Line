@@ -1,12 +1,11 @@
 package basicpipes.pumps;
 
-import universalelectricity.Vector3;
-import basicpipes.pipes.api.ILiquidConsumer;
-import basicpipes.pipes.api.Liquid;
-import basicpipes.pipes.api.TradeHelper;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import basicpipes.pipes.TileEntityPipe;
+import basicpipes.pipes.api.ILiquidConsumer;
+import basicpipes.pipes.api.Liquid;
+import basicpipes.pipes.api.TradeHelper;
 
 public class TileEntityValve extends TileEntity implements ILiquidConsumer {
 Liquid type = Liquid.DEFUALT;

@@ -11,20 +11,18 @@ import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
-import steampower.SteamPowerMain;
 import steampower.TileEntityMachine;
-import universalelectricity.Vector3;
 import universalelectricity.electricity.ElectricityManager;
-import universalelectricity.extend.IElectricUnit;
-import universalelectricity.extend.TileEntityConductor;
 import universalelectricity.network.IPacketReceiver;
+import universalelectricity.prefab.TileEntityConductor;
+import universalelectricity.prefab.Vector3;
 import basicpipes.pipes.api.ILiquidConsumer;
 import basicpipes.pipes.api.ILiquidProducer;
 import basicpipes.pipes.api.Liquid;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntitySteamPiston extends TileEntityMachine implements IPacketReceiver, IElectricUnit,ILiquidConsumer,ILiquidProducer, IInventory, ISidedInventory
+public class TileEntitySteamPiston extends TileEntityMachine implements IPacketReceiver,ILiquidConsumer,ILiquidProducer, IInventory, ISidedInventory
 {
 	//Maximum possible generation rate of watts in SECONDS
 	public int maxGenerateRate = 1000;
@@ -61,10 +59,12 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
      * Allows the entity to update its state. Overridden in most subclasses, e.g. the mob spawner uses this to count
      * ticks and creates a new spawn inside its implementation.
      */
-    public void onUpdate(float watts, float voltage, ForgeDirection side)
+    public void updateEntity()
 	{ 
-    	super.onUpdate(watts, voltage, side);
-    	count++;
+    	super.updateEntity();
+    	if(count++ >= 10){
+    		count = 0;
+    	
     	float cPercent = (generateRate/10);
     	int cCount = 1;
     	if(cPercent > 25f)
@@ -98,7 +98,6 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
     		{
     			posT = true;
     		}
-    		count =0;
     	}
     	TileEntity ent = worldObj.getBlockTileEntity(xCoord, yCoord+1, zCoord);
     	if(ent instanceof TileEntitytopGen)
@@ -110,11 +109,11 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
     	//Check nearby blocks and see if the conductor is full. If so, then it is connected
     	for(int i = 0;i<6;i++)
     	{
-        TileEntity tileEntity = Vector3.getUEUnitFromSide(this.worldObj, new Vector3(this.xCoord, this.yCoord, this.zCoord), 
+        TileEntity tileEntity = Vector3.getConnectorFromSide(this.worldObj, new Vector3(this.xCoord, this.yCoord, this.zCoord), 
         		ForgeDirection.getOrientation(i));
         if (tileEntity instanceof TileEntityConductor)
         {
-            if (ElectricityManager.instance.electricityRequired(((TileEntityConductor)tileEntity).connectionID) > 0)
+            if (ElectricityManager.instance.getElectricityRequired(((TileEntityConductor)tileEntity).getConnectionID()) > 0)
             {
                 this.connectedElectricUnit = (TileEntityConductor)tileEntity;
             }
@@ -174,10 +173,11 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	    	
 	    	if(this.generateRate > 1)
 	    	{
-	    		ElectricityManager.instance.produceElectricity(this.connectedElectricUnit, this.generateRate*this.getTickInterval(), this.getVoltage());
+	    		ElectricityManager.instance.produceElectricity(this, connectedElectricUnit, this.generateRate*this.getTickInterval(), this.getVoltage());
 	    	}
     	}
-    }    	
+    }   
+    	}
     }
     /**
      * Reads a tile entity from NBT.

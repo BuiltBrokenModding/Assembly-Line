@@ -16,7 +16,7 @@ public class ItemEngine extends Item
     {
         super(par1);
         this.maxStackSize = 5;
-        this.setTabToDisplayOn(CreativeTabs.tabBlock);
+        this.setCreativeTab(CreativeTabs.tabBlock);
         this.setIconIndex(21);
     }
     @Override
@@ -30,7 +30,7 @@ public class ItemEngine extends Item
 		return SteamPowerMain.textureFile+"Items.png";
 	}
     @Override
-    public boolean tryPlaceIntoWorld(ItemStack par1ItemStack, EntityPlayer ePlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
+    public boolean onItemUse(ItemStack itemStack, EntityPlayer ePlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
     {
     	if (par3World.isRemote)
         {
@@ -51,7 +51,7 @@ public class ItemEngine extends Item
                 	par3World.setBlockAndMetadataWithNotify(par4, par5+1, par6, var11.blockID, 14);
                 	par3World.notifyBlocksOfNeighborChange(par4, par5, par6, var11.blockID);
                 	par3World.editingBlocks = false;
-                    --par1ItemStack.stackSize;
+                    --itemStack.stackSize;
                     return true;
                 }
             }

@@ -40,9 +40,12 @@ public class TileEntityFireBox extends TileEntityMachine implements IPacketRecei
 		return 5;
     	
     }
-    public void onUpdate(float watts, float voltage, ForgeDirection side)
+    public void updateEntity()
     {
-    	super.onUpdate(watts, voltage, side);
+    	super.updateEntity();
+    	if(count++ >= 10)
+    	{
+    		count = 0;
     	addConnection();
     	if(!worldObj.isRemote)
     	{
@@ -90,6 +93,7 @@ public class TileEntityFireBox extends TileEntityMachine implements IPacketRecei
         {
         	this.generateRate =  Math.max(this.generateRate-5, 0);
         }
+    	}
     }
     
 	//gets all connected fireBoxes and shares its supply of coal

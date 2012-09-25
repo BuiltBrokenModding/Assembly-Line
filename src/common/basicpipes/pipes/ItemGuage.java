@@ -19,7 +19,7 @@ public class ItemGuage extends Item
         this.setHasSubtypes(true);
         this.setIconIndex(10);
         this.setItemName("guage");
-        this.setTabToDisplayOn(CreativeTabs.tabTools);
+        this.setCreativeTab(CreativeTabs.tabTools);
     }
     @Override
     public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
@@ -43,11 +43,12 @@ public class ItemGuage extends Item
     {
         return "guage";
     }
-    public boolean tryPlaceIntoWorld(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
+    @Override
+    public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
     {
     	if(!par3World.isRemote)
     	{
-	    	if(par1ItemStack.getItemDamage() == 0)
+	    	if(itemStack.getItemDamage() == 0)
 	    	{
 	                    TileEntity blockEntity = par3World.getBlockTileEntity(par4, par5, par6);
 	                    if(blockEntity instanceof TileEntityPipe)
@@ -61,7 +62,7 @@ public class ItemGuage extends Item
 	                    	
 	                    		print = typeName +" " + steam +" @ "+pressure+"PSI";
 	                    	
-	                    	par2EntityPlayer.addChatMessage(print);
+	                    	player.addChatMessage(print);
 	                    	return true;
 	                    }
 	    	}

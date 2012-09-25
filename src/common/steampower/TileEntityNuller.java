@@ -1,21 +1,21 @@
 package steampower;
 
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.extend.IElectricUnit;
+import universalelectricity.implement.IElectricityReceiver;
 
-public class TileEntityNuller extends TileEntityMachine implements IElectricUnit {
-	@Override
-	public float ampRequest()
-	{
-		return 200;
-	}
+public class TileEntityNuller extends TileEntityMachine implements IElectricityReceiver {
+	
 	@Override
 	public boolean canReceiveFromSide(ForgeDirection side)
 	{
 		return true;
 	}
+	public double wattRequest()
+	{
+		return 400;
+	}
 	@Override
-	public float getVoltage()
+	public double getVoltage()
 	{
 		return 1000;
 	}

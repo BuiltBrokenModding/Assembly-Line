@@ -3,18 +3,17 @@ package steampower.turbine;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import steampower.TileEntityMachine;
-import universalelectricity.extend.IElectricUnit;
 import basicpipes.pipes.api.ILiquidConsumer;
 import basicpipes.pipes.api.ILiquidProducer;
 import basicpipes.pipes.api.Liquid;
 
-public class TileEntitytopGen extends TileEntityMachine implements IElectricUnit,ILiquidConsumer,ILiquidProducer {
+public class TileEntitytopGen extends TileEntityMachine implements ILiquidConsumer,ILiquidProducer {
 public TileEntitySteamPiston genB = null;
-	public void onUpdate(float watts, float voltage, ForgeDirection side)
+	public void updateEntity()
 	{ 
 		if(!this.worldObj.isRemote)
 		{
-			super.onUpdate(watts, voltage, side);
+			super.updateEntity();
 			TileEntity ent = worldObj.getBlockTileEntity(xCoord, yCoord-1, xCoord);
 			if(ent instanceof TileEntitySteamPiston)
 			{

@@ -1,6 +1,12 @@
 package basicpipes;
 import java.io.File;
 
+import net.minecraft.src.Block;
+import net.minecraft.src.Item;
+import net.minecraft.src.ItemStack;
+import net.minecraftforge.common.Configuration;
+import universalelectricity.BasicComponents;
+import universalelectricity.network.PacketManager;
 import basicpipes.pipes.BlockPipe;
 import basicpipes.pipes.ItemGuage;
 import basicpipes.pipes.ItemParts;
@@ -8,18 +14,8 @@ import basicpipes.pipes.ItemPipe;
 import basicpipes.pipes.api.Liquid;
 import basicpipes.pumps.BlockMachine;
 import basicpipes.pumps.BlockValve;
-import basicpipes.pumps.TileEntityPump;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.src.Block;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemStack;
-import net.minecraftforge.common.Configuration;
-import universalelectricity.basiccomponents.BasicComponents;
-import universalelectricity.network.PacketManager;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
-import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.PostInit;
 import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.SidedProxy;
@@ -105,14 +101,11 @@ public class BasicPipesMain{
 	public void postInit(FMLPostInitializationEvent event)
 	{
 		proxy.postInit();
-		GameRegistry.addRecipe(new ItemStack(parts, 2,0), new Object[] { "@@@", '@',BasicComponents.itemBronzeIngot});//bronze tube
 		GameRegistry.addRecipe(new ItemStack(parts, 2,1), new Object[] { "@@@", '@',Item.ingotIron});//iron tube
 		GameRegistry.addRecipe(new ItemStack(parts, 2,2), new Object[] { "@@@", '@',Block.obsidian});//obby Tube
 		GameRegistry.addRecipe(new ItemStack(parts, 2,3), new Object[] { "N@N", 'N',Block.netherrack,'@',new ItemStack(parts, 2,2)});//nether tube
 		GameRegistry.addRecipe(new ItemStack(parts, 2,4), new Object[] { "@@","@@", '@',Item.leather});//seal		
 		GameRegistry.addShapelessRecipe(new ItemStack(parts, 1,5), new Object[] { new ItemStack(parts, 1,4),new ItemStack(Item.slimeBall, 1)});//stick seal
-		GameRegistry.addRecipe(new ItemStack(parts, 1,6), new Object[] { " @ ","@ @"," @ ", '@',BasicComponents.itemBronzeIngot});//tank
-		GameRegistry.addRecipe(new ItemStack(parts, 1,7), new Object[] { "T@T", 'T',new ItemStack(parts,1,0),'@',Block.lever});//valve
 		//crafting pipes	
 		//{"black", "red", "green", "brown", "blue", "purple", "cyan", 
 		//"silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"};
@@ -126,6 +119,12 @@ public class BasicPipesMain{
 		GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1,3), new Object[] { new ItemStack(parts, 1,1),new ItemStack(parts, 1,4),new ItemStack(Item.dyePowder, 1,0)});
 		//fuel
 		GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1,4), new Object[] { new ItemStack(parts, 1,1),new ItemStack(parts, 1,4),new ItemStack(Item.dyePowder, 1,11)});
+		GameRegistry.addRecipe(new ItemStack(parts, 1,7), new Object[] { "T@T", 'T',new ItemStack(parts,1,0),'@',Block.lever});//valve
+			
+		try{
+		GameRegistry.addRecipe(new ItemStack(parts, 2,0), new Object[] { "@@@", '@',BasicComponents.itemBronzeIngot});//bronze tube
+	
+		GameRegistry.addRecipe(new ItemStack(parts, 1,6), new Object[] { " @ ","@ @"," @ ", '@',BasicComponents.itemBronzeIngot});//tank
 		
 		//pump
 		GameRegistry.addRecipe(new ItemStack(machine, 1,0), new Object[] { "@T@","BPB","@M@"
@@ -136,6 +135,12 @@ public class BasicPipesMain{
 			, 'C',BasicComponents.blockCopperWire
 			, 'T',new ItemStack(parts, 1,6)
 			});
+	}
+	catch(Exception e)
+	{
+	 e.printStackTrace();
+	 System.out.print("UE based recipes not loaded");
+	}
 	}
 
 }

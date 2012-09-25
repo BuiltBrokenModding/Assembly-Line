@@ -8,7 +8,7 @@ import net.minecraft.src.Material;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
 
-public class BlockGenerator extends universalelectricity.extend.BlockMachine {
+public class BlockGenerator extends universalelectricity.prefab.BlockMachine {
 
 	public BlockGenerator(int id) {
 		super("Generator", id, Material.iron);

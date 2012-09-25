@@ -21,7 +21,7 @@ public class ItemParts extends Item{
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
         this.setMaxStackSize(64);
-        this.setTabToDisplayOn(CreativeTabs.tabMaterials);
+        this.setCreativeTab(CreativeTabs.tabMaterials);
     }
     @Override
     public int getIconFromDamage(int par1)
@@ -44,11 +44,6 @@ public class ItemParts extends Item{
         {
     		par3List.add(new ItemStack(this, 1, i));
         }
-    }
-    public boolean tryPlaceIntoWorld(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
-    {
-    	//TODO add block place event for some items like valves,tanks
-    	return false;
     }
     public String getTextureFile() {
 		return BasicPipesMain.textureFile+"/Items.png";
