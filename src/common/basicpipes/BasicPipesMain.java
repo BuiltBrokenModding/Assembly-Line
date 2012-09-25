@@ -62,7 +62,7 @@ public class BasicPipesMain{
              config.load();             
              pipeID = Integer.parseInt(config.getOrCreateIntProperty("PipeBlock", Configuration.CATEGORY_BLOCK, 155).value);
              machineID = Integer.parseInt(config.getOrCreateIntProperty("machineBlock", Configuration.CATEGORY_BLOCK, 156).value);
-             valveID = Integer.parseInt(config.getOrCreateIntProperty("machineBlock", Configuration.CATEGORY_BLOCK, 157).value);
+             valveID = Integer.parseInt(config.getOrCreateIntProperty("ValveBlock", Configuration.CATEGORY_BLOCK, 157).value);
              partID = Integer.parseInt(config.getOrCreateIntProperty("parts", Configuration.CATEGORY_ITEM, 23022).value);
              ppipeID = Integer.parseInt(config.getOrCreateIntProperty("pipes", Configuration.CATEGORY_ITEM, 23023).value);
              toolID = Integer.parseInt(config.getOrCreateIntProperty("ToolID", Configuration.CATEGORY_ITEM, 23024).value);
