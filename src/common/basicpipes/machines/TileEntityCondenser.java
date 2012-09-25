@@ -1,4 +1,4 @@
-package basicpipes.pumps;
+package basicpipes.machines;
 
 import universalelectricity.implement.IElectricityReceiver;
 import net.minecraft.src.NBTTagCompound;

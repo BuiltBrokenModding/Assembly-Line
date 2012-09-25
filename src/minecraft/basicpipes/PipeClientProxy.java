@@ -2,8 +2,8 @@ package basicpipes;
 
 import steampower.SteamPowerMain;
 import basicpipes.PipeProxy;
-import basicpipes.pipes.TileEntityPipe;
-import basicpipes.pumps.TileEntityPump;
+import basicpipes.conductors.TileEntityPipe;
+import basicpipes.machines.TileEntityPump;
 import net.minecraftforge.client.MinecraftForgeClient;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;

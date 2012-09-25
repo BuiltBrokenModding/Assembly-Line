@@ -1,4 +1,4 @@
-package basicpipes.pipes;
+package basicpipes.conductors;
 
 import java.util.ArrayList;
 import java.util.List;

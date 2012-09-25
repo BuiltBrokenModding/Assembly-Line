@@ -17,8 +17,9 @@ public enum Liquid {
 	Air("Air",false,true,0,-1),	
 	Methain("Methain",true,true,-1,-1),
 	BioFuel("BioFuel",true,false,-1,-1),
-	Coolent("Coolent",true,false,-1,-1),
-	NukeWaste("NukeWaste",true,false,-1,-1),
+	Coolent("Coolent",false,false,-1,-1),
+	NukeWaste("NukeWaste",false,false,-1,-1),
+	Ether("Ether",false,false,-1,-1),
 	DEFUALT("Empty",false,false,-1,-1);
  	public final boolean flamable;//can it catch on fire, not used but might be
     public final boolean isGas;//is it a gas, used to find if it floats

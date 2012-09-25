@@ -1,23 +1,25 @@
-package basicpipes.pumps;
+package basicpipes.machines;
 
 import java.util.List;
+
+import basicpipes.BasicPipesMain;
 
 import net.minecraft.src.Block;
 import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.Item;
 import net.minecraft.src.ItemBlock;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.MathHelper;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
-import basicpipes.BasicPipesMain;
 
-public class ItemMachine extends ItemBlock
+public class ItemValve extends ItemBlock
 {
 	int index = 26;
     private int spawnID;
 
-    public ItemMachine(int id)
+    public ItemValve(int id)
     {
         super(id);
         this.setMaxDamage(0);
@@ -57,7 +59,7 @@ public class ItemMachine extends ItemBlock
     public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
     {
     	int blockID = par3World.getBlockId(par4, par5, par6);    	
-    	spawnID = BasicPipesMain.machineID;
+    	spawnID = BasicPipesMain.valveID;
     	if (blockID == Block.snow.blockID)
         {
             par7 = 1;

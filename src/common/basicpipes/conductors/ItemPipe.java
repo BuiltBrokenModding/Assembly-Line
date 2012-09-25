@@ -1,8 +1,9 @@
-package basicpipes.pumps;
+package basicpipes.conductors;
 
 import java.util.List;
 
 import basicpipes.BasicPipesMain;
+import basicpipes.pipes.api.Liquid;
 
 import net.minecraft.src.Block;
 import net.minecraft.src.CreativeTabs;
@@ -10,22 +11,21 @@ import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemBlock;
 import net.minecraft.src.ItemStack;
-import net.minecraft.src.MathHelper;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
 
-public class ItemValve extends ItemBlock
+public class ItemPipe extends Item
 {
-	int index = 26;
+	int index = 32;//32 + 4 rows alloted to pipes
     private int spawnID;
 
-    public ItemValve(int id)
+    public ItemPipe(int id)
     {
         super(id);
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
         this.setIconIndex(10);
-        this.setItemName("Machine");
+        this.setItemName("pipe");
         this.setCreativeTab(CreativeTabs.tabRedstone);
     }
     @Override
@@ -37,15 +37,15 @@ public class ItemValve extends ItemBlock
     @Override
     public String getItemNameIS(ItemStack itemstack)
     {
-        return itemstack.getItemDamage() == 0 ? "Pump" :"Conderser";//itemstack.getItemDamage() == 4 ? "Condenser":"Unknown";
+        return itemstack.getItemDamage() < Liquid.values().length ? Liquid.getLiquid(itemstack.getItemDamage()).lName+" Pipe" :  "Empty Pipe";
     }
     @Override
     public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {
-    	
-    		par3List.add(new ItemStack(this, 1, 0));
-    		par3List.add(new ItemStack(this, 1, 4));
-        
+    	for(int i = 0; i < Liquid.values().length; i++)
+        {
+    		par3List.add(new ItemStack(this, 1, i));
+        }
     }
     public String getTextureFile() {
 		return BasicPipesMain.textureFile+"/Items.png";
@@ -53,13 +53,13 @@ public class ItemValve extends ItemBlock
     @Override
 	 public String getItemName()
     {
-        return "Machines";
+        return "Pipes";
     }
     @Override
-    public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
+    public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
     {
     	int blockID = par3World.getBlockId(par4, par5, par6);    	
-    	spawnID = BasicPipesMain.valveID;
+    	spawnID = BasicPipesMain.pipeID;
     	if (blockID == Block.snow.blockID)
         {
             par7 = 1;
@@ -101,19 +101,23 @@ public class ItemValve extends ItemBlock
         {
             Block var9 = Block.blocksList[this.spawnID];
             par3World.editingBlocks = true;
-            int angle = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-            if (par3World.setBlockAndMetadataWithNotify(par4, par5, par6, var9.blockID,angle+itemStack.getItemDamage()))
+            if (par3World.setBlockWithNotify(par4, par5, par6, var9.blockID))
             {
                 if (par3World.getBlockId(par4, par5, par6) == var9.blockID)
                 {
                 	
                     Block.blocksList[this.spawnID].onBlockAdded(par3World, par4, par5, par6);
-                    Block.blocksList[this.spawnID].onBlockPlacedBy(par3World, par4, par5, par6, player);
+                    Block.blocksList[this.spawnID].onBlockPlacedBy(par3World, par4, par5, par6, par2EntityPlayer);
                     TileEntity blockEntity = par3World.getBlockTileEntity(par4, par5, par6);
-                    
+                    if(blockEntity instanceof TileEntityPipe)
+                    {
+                    	TileEntityPipe pipeEntity = (TileEntityPipe) blockEntity;                    	
+                    	Liquid dm = Liquid.getLiquid(par1ItemStack.getItemDamage()); 	
+                    	pipeEntity.setType(dm);
+                    }
                 }
 
-                --itemStack.stackSize;
+                --par1ItemStack.stackSize;
                 par3World.editingBlocks = false;
                 return true;
             }

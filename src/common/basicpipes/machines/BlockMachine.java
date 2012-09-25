@@ -1,4 +1,4 @@
-package basicpipes.pumps;
+package basicpipes.machines;
 
 import java.util.Random;
 

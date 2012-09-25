@@ -175,8 +175,8 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	    	{
 	    		ElectricityManager.instance.produceElectricity(this, connectedElectricUnit, this.generateRate*this.getTickInterval(), this.getVoltage());
 	    	}
-    	}
-    }   
+    		}
+    	}   
     	}
     }
     /**

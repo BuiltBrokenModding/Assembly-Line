@@ -1,4 +1,4 @@
-package basicpipes.pumps;
+package basicpipes.machines;
 
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;

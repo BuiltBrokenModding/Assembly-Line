@@ -1,4 +1,4 @@
-package basicpipes.pipes;
+package basicpipes.conductors;
 
 import java.util.Random;
 

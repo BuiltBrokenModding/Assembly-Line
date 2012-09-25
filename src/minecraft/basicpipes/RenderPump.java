@@ -5,9 +5,9 @@ import net.minecraft.src.TileEntitySpecialRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import basicpipes.pipes.TileEntityPipe;
+import basicpipes.conductors.TileEntityPipe;
+import basicpipes.machines.TileEntityPump;
 import basicpipes.pipes.api.Liquid;
-import basicpipes.pumps.TileEntityPump;
 
 
 public class RenderPump extends TileEntitySpecialRenderer

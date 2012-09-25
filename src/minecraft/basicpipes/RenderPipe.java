@@ -6,7 +6,7 @@ import net.minecraft.src.TileEntitySpecialRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import basicpipes.pipes.TileEntityPipe;
+import basicpipes.conductors.TileEntityPipe;
 import basicpipes.pipes.api.Liquid;
 
 

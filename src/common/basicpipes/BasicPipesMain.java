@@ -7,13 +7,13 @@ import net.minecraft.src.ItemStack;
 import net.minecraftforge.common.Configuration;
 import universalelectricity.BasicComponents;
 import universalelectricity.network.PacketManager;
-import basicpipes.pipes.BlockPipe;
-import basicpipes.pipes.ItemGuage;
-import basicpipes.pipes.ItemParts;
-import basicpipes.pipes.ItemPipe;
+import basicpipes.conductors.BlockPipe;
+import basicpipes.conductors.ItemGuage;
+import basicpipes.conductors.ItemParts;
+import basicpipes.conductors.ItemPipe;
+import basicpipes.machines.BlockMachine;
+import basicpipes.machines.BlockValve;
 import basicpipes.pipes.api.Liquid;
-import basicpipes.pumps.BlockMachine;
-import basicpipes.pumps.BlockValve;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.PostInit;
@@ -70,7 +70,7 @@ public class BasicPipesMain{
 	{
 	  proxy.preInit();  
 	  GameRegistry.registerBlock(pipe);
-	  GameRegistry.registerBlock(machine,basicpipes.pumps.ItemMachine.class);
+	  GameRegistry.registerBlock(machine,basicpipes.machines.ItemMachine.class);
 	}
 	@Init
 	public void load(FMLInitializationEvent evt)
