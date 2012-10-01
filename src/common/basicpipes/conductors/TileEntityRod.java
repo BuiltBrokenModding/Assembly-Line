@@ -16,7 +16,7 @@ import basicpipes.pipes.api.Liquid;
 
 public class TileEntityRod extends TileEntity implements IPacketReceiver,IMechenical {
 private int count = 0;
-private float rotation = 0;
+public float rotation = 0;
 public int rpm = 0;//rpm received from producer
 public int loadRPM = 0; //rpm lost to the load
 public int currentRPM = 0;
@@ -70,11 +70,14 @@ ForgeDirection backD;
 				if(back != null && front != null)
 				{
 					this.rpm = ((IMechenical) back).getRPM(backD);
-					this.loadRPM = ((IMechenical) front).useRPM(rpm)+10;
-					this.currentRPM = rpm-loadRPM-10;//minus 10 is what it take to over come the rods friction
-					if(currentRPM < 0)
+					if(rpm > 0)
 					{
-						//TODO add stress to rod and break if left stressed too long
+						this.loadRPM = ((IMechenical) front).useRPM(rpm)+10;
+						this.currentRPM = rpm-loadRPM-10;//minus 10 is what it take to over come the rods friction
+						if(currentRPM < 0)
+						{
+							//TODO add stress to rod and break if left stressed too long
+						}
 					}
 				}else
 				{
@@ -97,10 +100,13 @@ ForgeDirection backD;
 				PacketManager.sendTileEntityPacketWithRange(this, BasicPipesMain.channel, 20, this.data());
 				
 			}
-			this.rotation = currentRPM * 240;
-			if(back != null && back instanceof TileEntityRod)
+			if(currentRPM > 0) 
 			{
-				this.rotation = ((TileEntityRod)front).rotation;
+				this.rotation = currentRPM * 240;
+				if(back != null && back instanceof TileEntityRod)
+				{
+					this.rotation = ((TileEntityRod)back).getRPM(backD) * 240;
+				}
 			}
 		}
 	}
@@ -126,7 +132,7 @@ ForgeDirection backD;
 	}
 	@Override
 	public int useRPM(int RPM) {
-		// TODO Auto-generated method stub
+		//rpm * T / 5252
 		return 10+loadRPM;
 	}
 

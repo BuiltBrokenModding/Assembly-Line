@@ -12,17 +12,15 @@ import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 import steampower.TileEntityMachine;
-import universalelectricity.electricity.ElectricityManager;
 import universalelectricity.network.IPacketReceiver;
-import universalelectricity.prefab.TileEntityConductor;
-import universalelectricity.prefab.Vector3;
 import basicpipes.pipes.api.ILiquidConsumer;
 import basicpipes.pipes.api.ILiquidProducer;
+import basicpipes.pipes.api.IMechenical;
 import basicpipes.pipes.api.Liquid;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntitySteamPiston extends TileEntityMachine implements IPacketReceiver,ILiquidConsumer,ILiquidProducer, IInventory, ISidedInventory
+public class TileEntitySteamPiston extends TileEntityMachine implements IPacketReceiver,ILiquidConsumer,ILiquidProducer, IInventory, ISidedInventory,IMechenical
 {
 	//Maximum possible generation rate of watts in SECONDS
 	public int maxGenerateRate = 1000;
@@ -42,19 +40,8 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
      * The ItemStacks that hold the items currently being used in the battery box
      */
     private ItemStack[] containingItems = new ItemStack[1];
-    public TileEntityConductor connectedElectricUnit = null;  
     public boolean isConnected = false;
 	private boolean posT = true;
-    @Override
-    public boolean canConnect(ForgeDirection side)
-    {
-    	return true;
-    }
-    public int getTickInterval()
-    {
-		return 10;
-    	
-    }
     /**
      * Allows the entity to update its state. Overridden in most subclasses, e.g. the mob spawner uses this to count
      * ticks and creates a new spawn inside its implementation.
@@ -104,28 +91,11 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
     	{
     		isConnected = true;
     	}
-    	
-    	this.connectedElectricUnit = null;
-    	//Check nearby blocks and see if the conductor is full. If so, then it is connected
-    	for(int i = 0;i<6;i++)
-    	{
-        TileEntity tileEntity = Vector3.getConnectorFromSide(this.worldObj, new Vector3(this.xCoord, this.yCoord, this.zCoord), 
-        		ForgeDirection.getOrientation(i));
-        if (tileEntity instanceof TileEntityConductor)
-        {
-            if (ElectricityManager.instance.getElectricityRequired(((TileEntityConductor)tileEntity).getConnectionID()) > 0)
-            {
-                this.connectedElectricUnit = (TileEntityConductor)tileEntity;
-            }
-        }
-    	}
-    	
     	if(!this.worldObj.isRemote)
     	{
     	
     	
-    	if(!this.isDisabled())
-    	{	
+    	
     		//Adds time to runTime by consuming steam	    	
 	                if(this.genTime <= 0)
 	                {
@@ -160,25 +130,19 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	        {
 	            this.genTime --;
 	            
-	            if(this.connectedElectricUnit != null)
-	            {
+	            
 	            	this.generateRate = (float)Math.min(this.generateRate+Math.min((this.generateRate)*0.01+0.015, 0.05F), this.maxGenerateRate/20);
-	            }
+	            
 	        }
 	
-	    	if(this.connectedElectricUnit == null || this.genTime <= 0)
+	    	if(this.genTime <= 0)
 	    	{
 	        	this.generateRate = (float)Math.max(this.generateRate-0.05, 0);
 	        }
-	    	
-	    	if(this.generateRate > 1)
-	    	{
-	    		ElectricityManager.instance.produceElectricity(this, connectedElectricUnit, this.generateRate*this.getTickInterval(), this.getVoltage());
-	    	}
     		}
     	}   
     	}
-    }
+    
     /**
      * Reads a tile entity from NBT.
      */
@@ -307,18 +271,6 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	public void closeChest() { }
 
 	@Override
-	public void onDisable(int duration) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean isDisabled() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public int onProduceLiquid(Liquid type, int Vol, ForgeDirection side) {
 		if(type == Liquid.WATER)
 		{
@@ -384,7 +336,7 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	@Override
 	public Object[] getSendData()
 	{
-		return new Object[]{(int)facing,(int)waterStored,(int)steamStored,(int)steamConsumed,(float)generateRate,(int)genTime};
+		return new Object[]{(int)waterStored,(int)steamStored,(int)steamConsumed,(float)generateRate,(int)genTime};
 	}
 	
 	@Override
@@ -393,7 +345,6 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 			ByteArrayDataInput dataStream) {
 		try
 		{
-		facing = dataStream.readInt();
 		waterStored = dataStream.readInt();
 		steamStored = dataStream.readInt();
 		steamConsumed = dataStream.readInt();
@@ -422,5 +373,25 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 			return true;
 		}
 		return false;
+	}
+	@Override
+	public int getRPM(ForgeDirection side) {
+		// TODO Auto-generated method stub
+		return 100;
+	}
+	@Override
+	public boolean canOutputSide(ForgeDirection side) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public boolean canInputSide(ForgeDirection side) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public int useRPM(int RPM) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

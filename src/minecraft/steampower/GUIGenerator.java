@@ -34,11 +34,12 @@ import universalelectricity.electricity.ElectricInfo.ElectricUnit;
 	        String displayText = "";
 	        String displayText2 = "";
 	        String displayText3 = "";
+	        /**
 	        if(tileEntity.connectedElectricUnit == null)
 	        {
 	        displayText = "Not Connected";
 	        }
-	        else
+	        else*/
 	        if(tileEntity.generateRate*20 <= 0)
 	        {
 	        	if(tileEntity.steamStored> 0)

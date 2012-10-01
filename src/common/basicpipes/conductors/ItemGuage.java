@@ -7,6 +7,7 @@ import basicpipes.BasicPipesMain;
 import basicpipes.pipes.api.Liquid;
 
 import net.minecraft.src.*;
+import net.minecraftforge.common.ForgeDirection;
 
 public class ItemGuage extends Item
 {
@@ -61,6 +62,18 @@ public class ItemGuage extends Item
 	                    	String print = "Error";
 	                    	
 	                    		print = typeName +" " + steam +" @ "+pressure+"PSI";
+	                    	
+	                    	player.addChatMessage(print);
+	                    	return true;
+	                    }
+	                    if(blockEntity instanceof TileEntityRod)
+	                    {
+	                    	TileEntityRod rod = (TileEntityRod) blockEntity; 
+	                    	int steam = rod.loadRPM;
+	                    	int pressure = rod.getRPM(ForgeDirection.getOrientation(par7));
+	                    	String print = "Error";
+	                    	
+	                    		print = " " + steam +"Load "+pressure+"RPM";
 	                    	
 	                    	player.addChatMessage(print);
 	                    	return true;

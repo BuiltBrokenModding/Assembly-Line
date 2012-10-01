@@ -24,7 +24,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
-@Mod(modid = "SteamPower", name = "Steam Power", version = "0.0.10")
+@Mod(modid = "SteamPower", name = "Steam Power", version = "1.7",dependencies = "after:basicPipes")
 @NetworkMod(channels = { "SPpack" }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
 
 public class SteamPowerMain{	 

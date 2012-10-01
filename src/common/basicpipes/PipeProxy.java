@@ -1,6 +1,7 @@
 package basicpipes;
 
 import basicpipes.conductors.TileEntityPipe;
+import basicpipes.conductors.TileEntityRod;
 import basicpipes.machines.TileEntityPump;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.TileEntity;
@@ -19,6 +20,7 @@ public class PipeProxy implements IGuiHandler
 	{
 		GameRegistry.registerTileEntity(TileEntityPipe.class, "pipe");
 		GameRegistry.registerTileEntity(TileEntityPump.class, "pump");
+		GameRegistry.registerTileEntity(TileEntityRod.class, "rod");
 	}
 	public void postInit()
 	{

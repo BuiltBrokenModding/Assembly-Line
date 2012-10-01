@@ -8,6 +8,7 @@ import net.minecraftforge.common.Configuration;
 import universalelectricity.BasicComponents;
 import universalelectricity.network.PacketManager;
 import basicpipes.conductors.BlockPipe;
+import basicpipes.conductors.BlockRod;
 import basicpipes.conductors.ItemGuage;
 import basicpipes.conductors.ItemParts;
 import basicpipes.conductors.ItemPipe;
@@ -25,7 +26,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
-@Mod(modid = "basicPipes", name = "Basic Pipes", version = "V4")
+@Mod(modid = "basicPipes", name = "Basic Pipes", version = "1.7",dependencies = "after:UniversalElectricity")
 @NetworkMod(channels = { "Pipes" }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
 
 public class BasicPipesMain{	
@@ -44,6 +45,7 @@ public class BasicPipesMain{
 	public static Block pipe = new BlockPipe(pipeID).setBlockName("pipe");
 	public static Block machine = new BlockMachine(machineID).setBlockName("pump");
 	public static Block valve = new BlockValve(valveID).setBlockName("valve");
+	public static Block rod = new BlockRod(valveID+1);
 	public static Item parts = new ItemParts(partID);
 	public static Item itemPipes = new ItemPipe(ppipeID);
 	public static Item gauge = new ItemGuage(toolID);
@@ -70,6 +72,7 @@ public class BasicPipesMain{
 	{
 	  proxy.preInit();  
 	  GameRegistry.registerBlock(pipe);
+	  GameRegistry.registerBlock(rod);
 	  GameRegistry.registerBlock(machine,basicpipes.machines.ItemMachine.class);
 	}
 	@Init

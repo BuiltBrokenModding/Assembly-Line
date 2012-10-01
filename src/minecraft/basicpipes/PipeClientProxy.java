@@ -3,6 +3,7 @@ package basicpipes;
 import steampower.SteamPowerMain;
 import basicpipes.PipeProxy;
 import basicpipes.conductors.TileEntityPipe;
+import basicpipes.conductors.TileEntityRod;
 import basicpipes.machines.TileEntityPump;
 import net.minecraftforge.client.MinecraftForgeClient;
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -23,5 +24,6 @@ public class PipeClientProxy extends PipeProxy
 	{
 		ClientRegistry.registerTileEntity(TileEntityPipe.class, "pipe", new RenderPipe());
 		ClientRegistry.registerTileEntity(TileEntityPump.class, "pump", new RenderPump());
+		ClientRegistry.registerTileEntity(TileEntityRod.class, "rod", new RenderGearRod());
 	}
 }
