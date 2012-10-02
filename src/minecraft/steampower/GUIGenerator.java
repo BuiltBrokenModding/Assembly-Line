@@ -40,29 +40,24 @@ import universalelectricity.electricity.ElectricInfo.ElectricUnit;
 	        displayText = "Not Connected";
 	        }
 	        else*/
-	        if(tileEntity.generateRate*20 <= 0)
+	        if(!tileEntity.running)
 	        {
-	        	if(tileEntity.steamStored> 0)
+	        	if(tileEntity.steam> 0)
 	        	{
-	        	displayText = "Power Full";
+	        	displayText = "OutPut Full";
 	        	}
-	        	if(tileEntity.steamStored<= 0)
+	        	if(tileEntity.steam<= 0)
 	        	{
 	        	displayText = "No Steam";
 	        	}
 	        }
-	        
-	        else if(tileEntity.generateRate*20 < 20)
-	        {
-	        	displayText = "Warming UP: "+(int)(tileEntity.generateRate*100)+"%";
-	        }
 	        else
 	        {
 	        	//displayText = ElectricUnit.getWattDisplay((int)(tileEntity.generateRate*20));
-	        	displayText =  ElectricInfo.getDisplay(ElectricInfo.getWatts(tileEntity.generateRate*20, tileEntity.getVoltage()), ElectricUnit.WATT);
+	        	displayText =  "Force: "+tileEntity.force+"N";
 	        }
-	        	displayText2 = "water" + "-" + tileEntity.waterStored;
-	        	displayText3 = "steam" + "-" + tileEntity.steamStored;
+	        	displayText2 = "water" + "-" + tileEntity.water;
+	        	displayText3 = "steam" + "-" + tileEntity.steam;
 	        this.fontRenderer.drawString(displayText, (int)(105-displayText.length()*1), 45, 4210752);
 	        this.fontRenderer.drawString(displayText2, (int)(105-displayText.length()*1), 55, 4210752);
 	        this.fontRenderer.drawString(displayText3, (int)(105-displayText.length()*1), 65, 4210752);

@@ -9,6 +9,7 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.MathHelper;
 import net.minecraft.src.World;
 import steampower.SteamPowerMain;
+import steampower.TileEntityMachine;
 
 public class ItemEngine extends Item
 {
@@ -30,9 +31,9 @@ public class ItemEngine extends Item
 		return SteamPowerMain.textureFile+"Items.png";
 	}
     @Override
-    public boolean onItemUse(ItemStack itemStack, EntityPlayer ePlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
+    public boolean onItemUse(ItemStack itemStack, EntityPlayer ePlayer, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
     {
-    	if (par3World.isRemote)
+    	if (world.isRemote)
         {
             return false;
         }
@@ -40,17 +41,26 @@ public class ItemEngine extends Item
     	Block var11 = SteamPowerMain.engine;
     	int angle = MathHelper.floor_double((ePlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3; 
     	
-        	if (ePlayer.canPlayerEdit(par4, par5, par6))
+        	if (ePlayer.canPlayerEdit(x, y, z))
         	{
-            ++par5;
-                if (var11.canPlaceBlockAt(par3World, par4, par5, par6))
+            ++y;
+                if (var11.canPlaceBlockAt(world, x, y, z))
                 {
-                	par3World.editingBlocks = true;
-                	par3World.setBlockAndMetadataWithNotify(par4, par5, par6, var11.blockID, 1);
-                	par3World.notifyBlocksOfNeighborChange(par4, par5, par6, var11.blockID);
-                	par3World.setBlockAndMetadataWithNotify(par4, par5+1, par6, var11.blockID, 14);
-                	par3World.notifyBlocksOfNeighborChange(par4, par5, par6, var11.blockID);
-                	par3World.editingBlocks = false;
+                	world.editingBlocks = true;
+                     
+             	        switch (angle)
+             	        {
+             	        	case 0: world.setBlockAndMetadata(x, y, z, var11.blockID, 0); break;
+             	        	case 1: world.setBlockAndMetadata(x, y, z, var11.blockID, 1); break;
+             	        	case 2: world.setBlockAndMetadata(x, y, z, var11.blockID, 2); break;
+             	        	case 3: world.setBlockAndMetadata(x, y, z, var11.blockID, 3); break;
+             	        }
+             	        int meta = world.getBlockMetadata(x, y, z);
+             	        //ePlayer.sendChatToPlayer("A:"+angle+" M:"+meta);
+                	world.notifyBlocksOfNeighborChange(x, y, z, var11.blockID);
+                	world.setBlockAndMetadataWithNotify(x, y+1, z, var11.blockID, 14);
+                	world.notifyBlocksOfNeighborChange(x, y, z, var11.blockID);
+                	world.editingBlocks = false;
                     --itemStack.stackSize;
                     return true;
                 }

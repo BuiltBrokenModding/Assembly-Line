@@ -65,19 +65,19 @@ public class ItemGuage extends Item
 	                    	
 	                    	player.addChatMessage(print);
 	                    	return true;
-	                    }
+	                    }/**
 	                    if(blockEntity instanceof TileEntityRod)
 	                    {
 	                    	TileEntityRod rod = (TileEntityRod) blockEntity; 
-	                    	int steam = rod.loadRPM;
-	                    	int pressure = rod.getRPM(ForgeDirection.getOrientation(par7));
+	                    	double steam = rod.loadRPM;
+	                    	double pressure = rod.getForce(ForgeDirection.getOrientation(par7));
 	                    	String print = "Error";
 	                    	
 	                    		print = " " + steam +"Load "+pressure+"RPM";
 	                    	
 	                    	player.addChatMessage(print);
 	                    	return true;
-	                    }
+	                    }*/
 	    	}
                
     	}

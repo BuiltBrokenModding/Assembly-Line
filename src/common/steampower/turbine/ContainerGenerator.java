@@ -13,7 +13,7 @@ public class ContainerGenerator extends Container
     public ContainerGenerator(InventoryPlayer par1InventoryPlayer, TileEntitySteamPiston tileEntity)
     {
         this.tileEntity = tileEntity;
-        this.addSlotToContainer(new Slot(tileEntity, 0, 33, 34));
+       // this.addSlotToContainer(new Slot(tileEntity, 0, 33, 34));
         int var3;
 
         for (var3 = 0; var3 < 3; ++var3)

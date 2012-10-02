@@ -44,20 +44,20 @@ public class BlockSteamPiston extends universalelectricity.prefab.BlockMachine{
         }
     }
 	@Override
-    public void onBlockPlacedBy(World par1World, int x, int y, int z, EntityLiving par5EntityLiving)
-    {
-        int angle = MathHelper.floor_double((par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-        int metadata = par1World.getBlockMetadata(x, y, z);
-        TileEntityMachine tileEntity = (TileEntityMachine)par1World.getBlockTileEntity(x, y, z);
-        
-	        switch (angle)
+	 public boolean onUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer)
+	    {
+		 int angle = MathHelper.floor_double((par5EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+	        int metadata = par1World.getBlockMetadata(x, y, z);
+	        if(metadata < 3)
 	        {
-	        	case 0: tileEntity.setDirection(1); break;
-	        	case 1: tileEntity.setDirection(2); break;
-	        	case 2: tileEntity.setDirection(3); break;
-	        	case 3: tileEntity.setDirection(4); break;
+	        	par1World.setBlockAndMetadata(x, y, z, blockID, metadata+angle);
 	        }
-    }
+	        else
+	        {
+	        	par1World.setBlockAndMetadata(x, y, z, blockID, 0);
+	        }
+		        return true;
+	    }
 	  public TileEntity createNewTileEntity(World var1)
 	    {
 		  return null;
@@ -119,7 +119,7 @@ public class BlockSteamPiston extends universalelectricity.prefab.BlockMachine{
 		 public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
 		    {
 		        int meta = par1World.getBlockMetadata(par2, par3, par4);
-		        if (meta == 1)
+		        if (meta < 4)
 		        {
 		            if (par1World.getBlockId(par2, par3 + 1, par4) != this.blockID)
 		            {

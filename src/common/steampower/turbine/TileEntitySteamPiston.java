@@ -13,270 +13,129 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 import steampower.TileEntityMachine;
 import universalelectricity.network.IPacketReceiver;
+import basicpipes.conductors.TileEntityRod;
 import basicpipes.pipes.api.ILiquidConsumer;
 import basicpipes.pipes.api.ILiquidProducer;
 import basicpipes.pipes.api.IMechenical;
 import basicpipes.pipes.api.Liquid;
+import basicpipes.conductors.*;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntitySteamPiston extends TileEntityMachine implements IPacketReceiver,ILiquidConsumer,ILiquidProducer, IInventory, ISidedInventory,IMechenical
+public class TileEntitySteamPiston extends TileEntityMachine implements IPacketReceiver,ILiquidConsumer,ILiquidProducer,IMechenical
 {
-	//Maximum possible generation rate of watts in SECONDS
-	public int maxGenerateRate = 1000;
-	public int waterStored = 0;
-	public int steamStored = 0;
-	public int steamConsumed = 0;
-	public float position = 0;
-	public int count = 0;
-	//Current generation rate based on hull heat. In TICKS.
-	public float generateRate = 0;
-	//public TileEntityConductor connectedWire = null;
-	 /**
-     * The number of ticks that a fresh copy of the currently-burning item would keep the furnace burning for
-     */
-    public int genTime = 0;
-	 /**
-     * The ItemStacks that hold the items currently being used in the battery box
-     */
-    private ItemStack[] containingItems = new ItemStack[1];
-    public boolean isConnected = false;
-	private boolean posT = true;
-    /**
-     * Allows the entity to update its state. Overridden in most subclasses, e.g. the mob spawner uses this to count
-     * ticks and creates a new spawn inside its implementation.
-     */
-    public void updateEntity()
-	{ 
-    	super.updateEntity();
-    	if(count++ >= 10){
-    		count = 0;
-    	
-    	float cPercent = (generateRate/10);
-    	int cCount = 1;
-    	if(cPercent > 25f)
-    	{
-    		cCount = 2;
-    	}
-    	if(cPercent > 50f)
-    	{
-    		cCount = 3;
-    	}
-    	if(cPercent > 75f)
-    	{
-    		cCount = 4;
-    	}
-    	if(generateRate > 0)
-    	{
-    		
-    		if(position < 9f && posT )
-    		{
-    		position+= cCount;
-    		}
-    		else
-    		{
-    			posT = false;
-    		}
-    		if(position > 1f && !posT )
-    		{
-    		position-= cCount;
-    		}
-    		else
-    		{
-    			posT = true;
-    		}
-    	}
-    	TileEntity ent = worldObj.getBlockTileEntity(xCoord, yCoord+1, zCoord);
-    	if(ent instanceof TileEntitytopGen)
-    	{
-    		isConnected = true;
-    	}
-    	if(!this.worldObj.isRemote)
-    	{
-    	
-    	
-    	
-    		//Adds time to runTime by consuming steam	    	
-	                if(this.genTime <= 0)
-	                {
-	                	if(steamStored > 0)
-	            		{
-	            			--steamStored;
-	            			++steamConsumed;
-	            			if(steamConsumed >= 10)
-	            			{
-	            			++waterStored;
-	            			steamConsumed = 0;
-	            			}
-	            		genTime += 65;
-	            		}
-	            	}
-	          
-	    	//Empties water from tank to buckets
-	    	if (this.containingItems[0] != null)
-	        {
-	            if(this.containingItems[0].getItem().shiftedIndex == Item.bucketEmpty.shiftedIndex)
-	            {
-	               if(this.waterStored > 0)
-	               {
-	            		this.containingItems[0] = new ItemStack(Item.bucketWater,1);
-	            		--waterStored;
-	            	}
-	            }
-	        }
-    	
-	    	//Starts generating electricity if the device is heated up
-	    	if (this.genTime > 0)
-	        {
-	            this.genTime --;
-	            
-	            
-	            	this.generateRate = (float)Math.min(this.generateRate+Math.min((this.generateRate)*0.01+0.015, 0.05F), this.maxGenerateRate/20);
-	            
-	        }
+	public int force = 0;
+	public int aForce = 0;
+	private int frictionLoad = 10;
+	public int steam = 0;
+	public int water = 0;
+	public int maxWater = 1;
+	public int maxSteam = 10;
+	public int pos = 0; //max at 7
+	private int tickCount = 0;
+	private int runTime = 0;
 	
-	    	if(this.genTime <= 0)
-	    	{
-	        	this.generateRate = (float)Math.max(this.generateRate-0.05, 0);
-	        }
-    		}
-    	}   
-    	}
-    
-    /**
-     * Reads a tile entity from NBT.
-     */
-    public void readFromNBT(NBTTagCompound par1NBTTagCompound)
-    {
-    	super.readFromNBT(par1NBTTagCompound);
-    	this.genTime = par1NBTTagCompound.getInteger("itemCookTime");
-    	this.waterStored = par1NBTTagCompound.getInteger("waterStored");
-    	this.steamConsumed = par1NBTTagCompound.getInteger("steamConsumed");
-    	this.steamStored = par1NBTTagCompound.getInteger("steamStored");
-    	this.generateRate = par1NBTTagCompound.getFloat("generateRate");
-    	NBTTagList var2 = par1NBTTagCompound.getTagList("Items");
-        this.containingItems = new ItemStack[this.getSizeInventory()];
-        for (int var3 = 0; var3 < var2.tagCount(); ++var3)
-        {
-            NBTTagCompound var4 = (NBTTagCompound)var2.tagAt(var3);
-            byte var5 = var4.getByte("Slot");
-            if (var5 >= 0 && var5 < this.containingItems.length)
-            {
-                this.containingItems[var5] = ItemStack.loadItemStackFromNBT(var4);
-            }
-        }
-    }
-    /**
-     * Writes a tile entity to NBT.
-     */
-    public void writeToNBT(NBTTagCompound par1NBTTagCompound)
-    {
-    	super.writeToNBT(par1NBTTagCompound);
-    	par1NBTTagCompound.setInteger("itemCookTime", (int)this.genTime);
-    	par1NBTTagCompound.setInteger("waterStored", (int)this.waterStored);
-    	par1NBTTagCompound.setInteger("steamConsumed", (int)this.steamConsumed);
-    	par1NBTTagCompound.setInteger("steamStored", (int)this.steamStored);
-    	par1NBTTagCompound.setFloat("generateRate", (int)this.generateRate);
-    	NBTTagList var2 = new NBTTagList();
-        for (int var3 = 0; var3 < this.containingItems.length; ++var3)
-        {
-            if (this.containingItems[var3] != null)
-            {
-                NBTTagCompound var4 = new NBTTagCompound();
-                var4.setByte("Slot", (byte)var3);
-                this.containingItems[var3].writeToNBT(var4);
-                var2.appendTag(var4);
-            }
-        }
-        par1NBTTagCompound.setTag("Items", var2);
-    }
+	private ForgeDirection frontDir;
+	private ForgeDirection backDir;
+	
+	public boolean running= false;
+	
 	@Override
-	public int getStartInventorySide(ForgeDirection side)
+	public void updateEntity()
 	{
-		return 0;
+		if(tickCount++ >=10)
+		{
+			int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+			int nMeta = 0;
+			switch(meta)
+			{
+				case 0: nMeta = 2;break;
+				case 1: nMeta = 4;break;
+				case 2: nMeta = 3;break;
+				case 3: nMeta = 5;break;
+			}
+			frontDir = ForgeDirection.getOrientation(nMeta);
+			backDir = ForgeDirection.getOrientation(nMeta).getOpposite();
+			if(!worldObj.isRemote)
+			{
+				if(this.runTime < 0 && this.steam > 0)
+				{
+					this.steam--;
+					this.runTime+=60;
+				}else
+				if(this.runTime > 0)
+				{
+					this.running = true;
+					this.runTime-=1;
+				}else
+				{
+					this.running = false;
+				}
+				TileEntity ff = worldObj.getBlockTileEntity(xCoord+frontDir.offsetX, yCoord+1, zCoord+frontDir.offsetZ);
+				TileEntity bb = worldObj.getBlockTileEntity(xCoord+backDir.offsetX, yCoord+1, zCoord+backDir.offsetZ);
+				if(ff instanceof IMechenical)
+				{
+					((IMechenical) ff).applyForce(this.aForce);
+				}
+				if(bb instanceof TileEntitySteamPiston)
+				{
+					this.pos = ((TileEntitySteamPiston) bb).pos + 1;
+					if(this.pos > 7)
+					{
+						pos = 0;
+					}
+				}else
+				if(this.running)
+				{
+					this.pos += 1;
+					if(this.pos > 7)
+					{
+						pos = 0;
+					}
+				}
+			}
+		}
 	}
+	
+	
+	//-------------------
+	//Liquid and mechanical stuff
+	//----------------
 	@Override
-	public int getSizeInventorySide(ForgeDirection side) { return 0; }
-	@Override
-	public int getSizeInventory() { return this.containingItems.length; }
-	@Override
-	public ItemStack getStackInSlot(int par1) { return this.containingItems[par1]; }
-	@Override
-	public ItemStack decrStackSize(int par1, int par2)
-	{
-		if (this.containingItems[par1] != null)
-        {
-            ItemStack var3;
-            if (this.containingItems[par1].stackSize <= par2)
-            {
-                var3 = this.containingItems[par1];
-                this.containingItems[par1] = null;
-                return var3;
-            }
-            else
-            {
-                var3 = this.containingItems[par1].splitStack(par2);
-                if (this.containingItems[par1].stackSize == 0)
-                {
-                    this.containingItems[par1] = null;
-                }
-                return var3;
-            }
-        }
-        else
-        {
-            return null;
-        }
+	public double getForce(ForgeDirection side) {
+		return aForce;
 	}
-	@Override
-	public ItemStack getStackInSlotOnClosing(int par1)
-	{
-		if (this.containingItems[par1] != null)
-        {
-            ItemStack var2 = this.containingItems[par1];
-            this.containingItems[par1] = null;
-            return var2;
-        }
-        else
-        {
-            return null;
-        }
-	}
-	@Override
-	public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
-	{
-		this.containingItems[par1] = par2ItemStack;
-        if (par2ItemStack != null && par2ItemStack.stackSize > this.getInventoryStackLimit())
-        {
-            par2ItemStack.stackSize = this.getInventoryStackLimit();
-        }
-	}
-	@Override
-	public String getInvName() {
-		return "SteamGen";
-	}
-	@Override
-	public int getInventoryStackLimit()
-	{
-		return 64;
-	}
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer par1EntityPlayer)
-	{
-        return this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord) != this ? false : par1EntityPlayer.getDistanceSq((double)this.xCoord + 0.5D, (double)this.yCoord + 0.5D, (double)this.zCoord + 0.5D) <= 64.0D;
-	}
-	@Override
-	public void openChest() { }
-	@Override
-	public void closeChest() { }
 
 	@Override
-	public int onProduceLiquid(Liquid type, int Vol, ForgeDirection side) {
+	public boolean canOutputSide(ForgeDirection side) {
+		if(frontDir == side)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean canInputSide(ForgeDirection side) {
+		if(backDir == side)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public double applyForce(int force) {
+		return aForce;
+	}
+
+	@Override
+	public int onProduceLiquid(Liquid type, int vol, ForgeDirection side) {
 		if(type == Liquid.WATER)
 		{
-			if(this.waterStored >= 1)
-			{	 
-				this.waterStored--;
+			if(this.water > 0)
+			{
+				this.water -= 1;
 				return 1;
 			}
 		}
@@ -293,18 +152,36 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	}
 
 	@Override
-	public int onReceiveLiquid(Liquid type, int vol, ForgeDirection side) {
-		if(type == Liquid.STEAM)
+	public boolean canProducePresure(Liquid type, ForgeDirection side) {
+		if(type == Liquid.WATER)
 		{
-			int rejectedSteam = Math.max((this.steamStored + vol) - 100, 0);
-			this.steamStored += vol - rejectedSteam;		 
-			return rejectedSteam;
+			return true;
 		}
-		return vol;
+		return false;
 	}
 
 	@Override
-	public boolean canRecieveLiquid(Liquid type, ForgeDirection side) {
+	public int presureOutput(Liquid type, ForgeDirection side) {
+		if(type == Liquid.WATER)
+		{
+			return 32;
+		}
+		return 0;
+	}
+
+	@Override
+	public int onReceiveLiquid(Liquid type, int vol, ForgeDirection side) {
+		if(type == Liquid.STEAM)
+		{
+			int rejectedSteam = Math.max((this.steam + vol) - this.getLiquidCapacity(Liquid.STEAM), 0);
+			this.steam += vol - rejectedSteam;
+			return rejectedSteam;
+		}
+		return 0;
+	}
+
+	@Override
+	public boolean canRecieveLiquid(Liquid type, ForgeDirection forgeDirection) {
 		if(type == Liquid.STEAM)
 		{
 			return true;
@@ -314,84 +191,71 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 
 	@Override
 	public int getStoredLiquid(Liquid type) {
-		if(type == Liquid.STEAM)
-		{
-			return this.steamStored;
-		}
 		if(type == Liquid.WATER)
 		{
-			return this.waterStored;
+			return this.water;
+		}else
+		if(type == Liquid.STEAM)
+		{
+			return this.steam;
 		}
 		return 0;
 	}
 
 	@Override
 	public int getLiquidCapacity(Liquid type) {
+		if(type == Liquid.WATER)
+		{
+			return this.maxWater;
+		}else
 		if(type == Liquid.STEAM)
 		{
-			return 100;
+			return this.maxSteam;
 		}
 		return 0;
 	}
-	@Override
+	//-------------------
+	//Data
+	//----------------
 	public Object[] getSendData()
 	{
-		return new Object[]{(int)waterStored,(int)steamStored,(int)steamConsumed,(float)generateRate,(int)genTime};
+		return new Object[]{steam,water,force,aForce,pos};
 	}
-	
 	@Override
-	public void handlePacketData(NetworkManager network,
-			Packet250CustomPayload packet, EntityPlayer player,
-			ByteArrayDataInput dataStream) {
+	public void handlePacketData(NetworkManager network,Packet250CustomPayload packet, EntityPlayer player,ByteArrayDataInput dataStream) {
 		try
 		{
-		waterStored = dataStream.readInt();
-		steamStored = dataStream.readInt();
-		steamConsumed = dataStream.readInt();
-		generateRate = dataStream.readFloat();
-		genTime = dataStream.readInt();
+			this.steam = dataStream.readInt();
+			this.water = dataStream.readInt();
+			this.force = dataStream.readInt();
+			this.aForce = dataStream.readInt();
+			this.pos = dataStream.readInt();
 		}
 		catch(Exception e)
 		{
+			System.out.print("SteamPistonDataFail");
 			e.printStackTrace();
 		}
 		
 	}
-	@Override
-	public int presureOutput(Liquid type, ForgeDirection side) {
-		if(type == Liquid.WATER)
-		{
-			return 32;
-		}
-		return 0;
-	}
-	@Override
-	public boolean canProducePresure(Liquid type, ForgeDirection side)
-	{
-		if(type == Liquid.WATER)
-		{
-			return true;
-		}
-		return false;
-	}
-	@Override
-	public int getRPM(ForgeDirection side) {
-		// TODO Auto-generated method stub
-		return 100;
-	}
-	@Override
-	public boolean canOutputSide(ForgeDirection side) {
-		// TODO Auto-generated method stub
-		return true;
-	}
-	@Override
-	public boolean canInputSide(ForgeDirection side) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	@Override
-	public int useRPM(int RPM) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	public void readFromNBT(NBTTagCompound par1NBTTagCompound)
+    {	     
+    	super.readFromNBT(par1NBTTagCompound);
+        this.runTime = par1NBTTagCompound.getShort("time");
+        this.steam = par1NBTTagCompound.getInteger("steam");
+        this.water = par1NBTTagCompound.getInteger("water");
+    }
+
+    /**
+     * Writes a tile entity to NBT.
+     */
+    public void writeToNBT(NBTTagCompound par1NBTTagCompound)
+    {
+        super.writeToNBT(par1NBTTagCompound);
+        par1NBTTagCompound.setShort("time", (short)this.runTime);
+        par1NBTTagCompound.setInteger("steam", (int)this.steam);
+        par1NBTTagCompound.setInteger("water", (int)this.water);
+        
+    }
+	
 }

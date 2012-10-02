@@ -25,8 +25,8 @@ public class RenderSteamEngine extends TileEntitySpecialRenderer
 		GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
 		
-		float p = ((TileEntitySteamPiston)tileEntity).position;
-		boolean cc = ((TileEntitySteamPiston)tileEntity).isConnected;
+		float p = ((TileEntitySteamPiston)tileEntity).pos;
+		//boolean cc = ((TileEntitySteamPiston)tileEntity).isConnected;
 		int meta = ((TileEntityMachine) tileEntity).getDirection();
 		switch(meta)
 		{
@@ -35,11 +35,10 @@ public class RenderSteamEngine extends TileEntitySpecialRenderer
 			case 3:GL11.glRotatef(180f, 0f, 1f, 0f);break;
 			case 4:GL11.glRotatef(270f, 0f, 1f, 0f);break;
 		}
-		if(cc)
-		{
+		
 			model.renderTop(0.0625F);
 			model.renderMid(0.0625F,p);
-		}
+		
 			model.renderBot(0.0625F);
 			
 		

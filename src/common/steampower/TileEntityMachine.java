@@ -90,35 +90,6 @@ public class TileEntityMachine extends TileEntityElectricityReceiver implements 
 	{
 		return new Object[]{};
 	}
-	public int getNumSide(ForgeDirection side) 
-	{
-		if(side == ForgeDirection.DOWN)
-		{
-			return 0;
-		}
-		if(side == ForgeDirection.UP)
-		{
-			return 1;
-		}
-		if(side == ForgeDirection.NORTH)
-		{
-			return 2;
-		}
-		if(side == ForgeDirection.SOUTH)
-		{
-		 return 3;	
-		}
-		if(side == ForgeDirection.WEST)
-		{
-			return 4;
-		}
-		if(side == ForgeDirection.EAST)
-		{
-			return 5;
-		}
-		return 0;
-	}
-	
 	public void updateEntity()
     {
 		super.updateEntity();

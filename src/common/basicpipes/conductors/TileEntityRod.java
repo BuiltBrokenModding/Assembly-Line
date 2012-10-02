@@ -4,136 +4,51 @@ import com.google.common.io.ByteArrayDataInput;
 
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.NetworkManager;
+import net.minecraft.src.Packet;
 import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.TileEntity;
+import net.minecraft.src.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.network.IPacketReceiver;
 import universalelectricity.network.PacketManager;
+import universalelectricity.prefab.Vector3;
 import basicpipes.BasicPipesMain;
 import basicpipes.pipes.api.ILiquidConsumer;
 import basicpipes.pipes.api.IMechenical;
 import basicpipes.pipes.api.Liquid;
 
 public class TileEntityRod extends TileEntity implements IPacketReceiver,IMechenical {
-private int count = 0;
-public float rotation = 0;
-public int rpm = 0;//rpm received from producer
-public int loadRPM = 0; //rpm lost to the load
-public int currentRPM = 0;
-public TileEntity front = null;
-public TileEntity back = null; 
-ForgeDirection frontD;
-ForgeDirection backD;
+
+	public int pos = 0;
+
+	@Override
+	public double getForce(ForgeDirection side) {
+		return 0;
+	}
+
+	@Override
+	public boolean canOutputSide(ForgeDirection side) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean canInputSide(ForgeDirection side) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public double applyForce(int force) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 	@Override
 	public void handlePacketData(NetworkManager network,
 			Packet250CustomPayload packet, EntityPlayer player,
 			ByteArrayDataInput dataStream) {
-		try{
-			this.rpm = dataStream.readInt();
-			this.loadRPM = dataStream.readInt();
-			this.currentRPM = dataStream.readInt();
-		}catch(Exception e)
-		{
-			
-		}
+		// TODO Auto-generated method stub
 		
 	}
-	public Object[] data()
-	{
-		return new Object[]{rpm,loadRPM,currentRPM};
-	}
-	@Override
-	public void updateEntity()
-	{
-		if(count++ >= 5)
-		{
-			int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-			frontD = ForgeDirection.getOrientation(meta);
-			backD = ForgeDirection.getOrientation(meta).getOpposite();
-			count = 0;
-			if(!worldObj.isRemote)
-			{
-				
-				
-				back = worldObj.getBlockTileEntity(xCoord+backD.offsetX, yCoord+backD.offsetY, zCoord+backD.offsetZ);
-				front = worldObj.getBlockTileEntity(xCoord+frontD.offsetX, yCoord+frontD.offsetY, zCoord+frontD.offsetZ);
-				
-				if(!(back instanceof IMechenical))
-				{
-					back = null;
-				}
-				if(!(front instanceof IMechenical))
-				{
-					front = null;
-				}
-				
-				if(back != null && front != null)
-				{
-					this.rpm = ((IMechenical) back).getRPM(backD);
-					if(rpm > 0)
-					{
-						this.loadRPM = ((IMechenical) front).useRPM(rpm)+10;
-						this.currentRPM = rpm-loadRPM-10;//minus 10 is what it take to over come the rods friction
-						if(currentRPM < 0)
-						{
-							//TODO add stress to rod and break if left stressed too long
-						}
-					}
-				}else
-				{
-					if(currentRPM > 0)
-					{
-						currentRPM-=10;
-						if(currentRPM < 0)
-						{
-							currentRPM = 0;
-						}
-						
-					}
-				}
-				
-				
-				
-				
-				
-				
-				PacketManager.sendTileEntityPacketWithRange(this, BasicPipesMain.channel, 20, this.data());
-				
-			}
-			if(currentRPM > 0) 
-			{
-				this.rotation = currentRPM * 240;
-				if(back != null && back instanceof TileEntityRod)
-				{
-					this.rotation = ((TileEntityRod)back).getRPM(backD) * 240;
-				}
-			}
-		}
-	}
-	@Override
-	public int getRPM(ForgeDirection side) {
-		return this.currentRPM;
-	}
-	@Override
-	public boolean canOutputSide(ForgeDirection side) {
-		if(frontD != null && side == frontD)
-		{
-			return true;
-		}
-		return false;
-	}
-	@Override
-	public boolean canInputSide(ForgeDirection side) {
-		if(backD != null && side == backD)
-		{
-			return true;
-		}
-		return false;
-	}
-	@Override
-	public int useRPM(int RPM) {
-		//rpm * T / 5252
-		return 10+loadRPM;
-	}
-
 }

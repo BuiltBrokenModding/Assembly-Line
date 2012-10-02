@@ -8,7 +8,7 @@ public interface IMechenical {
  * @param side the rpm is coming from
  * @return rpm that the block is running at
  */
-	public int getRPM(ForgeDirection side);
+	public double getForce(ForgeDirection side);
 	/**
 	 * 
 	 * @param side
@@ -26,5 +26,5 @@ public interface IMechenical {
 	 * @param RPM being applied to this machine
 	 * @return the rpm after the load has been applied
 	 */
-	public int useRPM(int RPM);//will change later to include force of rotation
+	public double applyForce(int force);
 }
