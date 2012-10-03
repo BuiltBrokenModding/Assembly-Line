@@ -46,7 +46,7 @@ import universalelectricity.electricity.ElectricInfo.ElectricUnit;
 	        {
 	        	if(tileEntity.steam> 0)
 	        	{
-	        	displayText = "OutPut Full";
+	        	displayText = "No Load";
 	        	}
 	        	if(tileEntity.steam<= 0)
 	        	{
@@ -56,17 +56,18 @@ import universalelectricity.electricity.ElectricInfo.ElectricUnit;
 	        else
 	        {
 	        	//displayText = ElectricUnit.getWattDisplay((int)(tileEntity.generateRate*20));
-	        	displayText =  "ForceOut: "+tileEntity.aForce+"N";
+	        	displayText =  "ForceOut: "+tileEntity.force+"N";
 	        }
 	        	displayText2 = "water" + "-" + tileEntity.water;
 	        	displayText3 = "steam" + "-" + tileEntity.steam;
-	        	if(tileEntity.bb != null){displayText4 = "Debug:bb" + "=" + tileEntity.bb.toString();}
-	        	if(tileEntity.ff != null){displayText5 = "Debugff" + "=" + tileEntity.ff.toString();}
+	        	
+	        		displayText4 = "Debug:Time" + "=" + tileEntity.tCount;
+	        		
 	        this.fontRenderer.drawString(displayText, (int)(105-displayText.length()*1), 45, 4210752);
 	        this.fontRenderer.drawString(displayText2, (int)(105-displayText.length()*1), 55, 4210752);
 	        this.fontRenderer.drawString(displayText3, (int)(105-displayText.length()*1), 65, 4210752);
-	       // this.fontRenderer.drawString(displayText4, (int)(105-displayText.length()*1), 75, 4210752);
-	       // this.fontRenderer.drawString(displayText5, (int)(105-displayText.length()*1), 85, 4210752);
+	       this.fontRenderer.drawString(displayText4, (int)(105-displayText.length()*1), 75, 4210752);
+	       this.fontRenderer.drawString(displayText5, (int)(105-displayText.length()*1), 85, 4210752);
 	        this.fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
 	    }
 

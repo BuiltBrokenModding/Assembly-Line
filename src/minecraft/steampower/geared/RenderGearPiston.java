@@ -10,7 +10,6 @@ import steampower.turbine.TileEntitySteamPiston;
 
 public class RenderGearPiston extends TileEntitySpecialRenderer
 {
-	int type = 0;
 	private ModelGearPiston model;
 	
 	public RenderGearPiston()

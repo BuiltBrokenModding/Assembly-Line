@@ -16,15 +16,15 @@ import universalelectricity.network.IPacketReceiver;
 import basicpipes.conductors.TileEntityRod;
 import basicpipes.pipes.api.ILiquidConsumer;
 import basicpipes.pipes.api.ILiquidProducer;
-import basicpipes.pipes.api.IMechenical;
+import basicpipes.pipes.api.IMechanical;
 import basicpipes.pipes.api.Liquid;
 import basicpipes.conductors.*;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntitySteamPiston extends TileEntityMachine implements IPacketReceiver,ILiquidConsumer,ILiquidProducer,IMechenical
+public class TileEntitySteamPiston extends TileEntityMachine implements IPacketReceiver,ILiquidConsumer,ILiquidProducer,IMechanical
 {
-	private int force = 0;
+	public int force = 0;
 	public int aForce = 0;
 	private int frictionLoad = 10;
 	public int steam = 0;
@@ -36,6 +36,7 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	private int runTime = 0;
 	private int genRate = 0;//max 100
 	private int posCount = 0;
+	public int tCount = 0;
 	private ForgeDirection frontDir;
 	private ForgeDirection backDir;
 	public TileEntity bb;
@@ -48,11 +49,13 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	{
 		super.updateEntity();
 		if(tickCount++ >=10)
-		{
-			//++runTime;
-			//pos += 1;if(pos > 7){pos =0;} //for testing
+		{tickCount = 0;
+		
+			++tCount;if(tCount > 120){tCount = 0;}
+			
 			int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 			int nMeta = 0;
+			
 			switch(meta)
 			{
 				case 0: nMeta = 2;break;
@@ -82,32 +85,37 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 			}
 			if(bb instanceof TileEntitySteamPiston)
 			{
-				this.pos = ((TileEntitySteamPiston) bb).pos + 1;
+				this.pos = ((TileEntitySteamPiston) bb).getAnimationPos() + 1;
 				if(this.pos > 7){pos = 0;}
 			}
 			if(!worldObj.isRemote)
 			{
-				if(this.runTime <= 0 && this.steam > 0)
+				if(this.runTime < 1 && this.steam > 0)
 				{
 					this.steam--;
-					this.runTime+=30;
-				}else
+					this.runTime=60;
+				}
 				if(this.runTime > 0)
 				{
+					genRate=Math.min(genRate + 1, 100);
 					this.runTime-=1;
-					this.force = genRate * 10;
+					this.force = Math.min(genRate * 10,1000);
+					this.aForce = Math.max(force - this.frictionLoad,0);
 				}
-				if(ff instanceof IMechenical)
+				if(runTime == 0 && this.steam == 0)
 				{
-					((IMechenical) ff).applyForce(this.aForce);
+					genRate = Math.max(genRate--, 0);
+					force= Math.max(force-=10, 0);;
 				}
-				if(genRate <=0 && runTime > 0)
+				
+				if(ff instanceof IMechanical)
 				{
-					genRate++;
-				}else
-				{
-					genRate--;
+					if(((IMechanical) ff).canInputSide(backDir))
+					{
+						((IMechanical) ff).applyForce(this.aForce);
+					}
 				}
+				
 				
 				
 			}
@@ -119,7 +127,7 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	//Liquid and mechanical stuff
 	//----------------
 	@Override
-	public double getForce(ForgeDirection side) {
+	public int getForceSide(ForgeDirection side) {
 		return aForce;
 	}
 
@@ -142,7 +150,7 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	}
 
 	@Override
-	public double applyForce(int force) {
+	public int applyForce(int force) {
 		this.aForce = this.force + force- frictionLoad;
 		return aForce;
 	}
@@ -261,7 +269,8 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound)
     {	     
     	super.readFromNBT(par1NBTTagCompound);
-        this.runTime = par1NBTTagCompound.getShort("time");
+        this.runTime = par1NBTTagCompound.getInteger("time");
+        this.genRate = par1NBTTagCompound.getInteger("gen");
         this.steam = par1NBTTagCompound.getInteger("steam");
         this.water = par1NBTTagCompound.getInteger("water");
     }
@@ -272,10 +281,25 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
     public void writeToNBT(NBTTagCompound par1NBTTagCompound)
     {
         super.writeToNBT(par1NBTTagCompound);
-        par1NBTTagCompound.setShort("time", (short)this.runTime);
+        par1NBTTagCompound.setInteger("time", (int)this.runTime);
+        par1NBTTagCompound.setInteger("gen", (int)this.genRate);
         par1NBTTagCompound.setInteger("steam", (int)this.steam);
         par1NBTTagCompound.setInteger("water", (int)this.water);
         
     }
+
+
+	@Override
+	public int getAnimationPos() {
+		// TODO Auto-generated method stub
+		return this.pos;
+	}
+
+
+	@Override
+	public int getForce() {
+		// TODO Auto-generated method stub
+		return this.force;
+	}
 	
 }

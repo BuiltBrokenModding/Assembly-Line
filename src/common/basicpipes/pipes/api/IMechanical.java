@@ -2,13 +2,14 @@ package basicpipes.pipes.api;
 
 import net.minecraftforge.common.ForgeDirection;
 // mechanical 
-public interface IMechenical {
+public interface IMechanical {
 /**
  * 
  * @param side the rpm is coming from
  * @return rpm that the block is running at
  */
-	public double getForce(ForgeDirection side);
+	public int getForceSide(ForgeDirection side);
+	public int getForce();
 	/**
 	 * 
 	 * @param side
@@ -26,5 +27,10 @@ public interface IMechenical {
 	 * @param RPM being applied to this machine
 	 * @return the rpm after the load has been applied
 	 */
-	public double applyForce(int force);
+	public int applyForce(int force);
+	/**
+	 * not required but is handy to get animation position of some mechanical block
+	 * @return int between 0 -7
+	 */
+	public int getAnimationPos();
 }

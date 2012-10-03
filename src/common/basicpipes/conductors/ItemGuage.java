@@ -3,7 +3,10 @@ package basicpipes.conductors;
 import java.util.ArrayList;
 import java.util.List;
 
+import steampower.turbine.TileEntitySteamPiston;
+
 import basicpipes.BasicPipesMain;
+import basicpipes.pipes.api.IMechanical;
 import basicpipes.pipes.api.Liquid;
 
 import net.minecraft.src.*;
@@ -65,19 +68,19 @@ public class ItemGuage extends Item
 	                    	
 	                    	player.addChatMessage(print);
 	                    	return true;
-	                    }/**
-	                    if(blockEntity instanceof TileEntityRod)
+	                    }
+	                    if(blockEntity instanceof IMechanical)
 	                    {
-	                    	TileEntityRod rod = (TileEntityRod) blockEntity; 
-	                    	double steam = rod.loadRPM;
-	                    	double pressure = rod.getForce(ForgeDirection.getOrientation(par7));
+	                    	IMechanical rod = (IMechanical) blockEntity; 
+	                    	int steam = rod.getForce();
+	                    	int pressure = rod.getAnimationPos();
 	                    	String print = "Error";
 	                    	
-	                    		print = " " + steam +"Load "+pressure+"RPM";
+	                    		print = " " + steam +"N "+pressure*45+"degrees";
 	                    	
 	                    	player.addChatMessage(print);
 	                    	return true;
-	                    }*/
+	                    }
 	    	}
                
     	}

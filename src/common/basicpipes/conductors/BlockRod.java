@@ -28,14 +28,18 @@ public class BlockRod extends universalelectricity.prefab.BlockMachine {
 		int angle= MathHelper.floor_double((player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		int meta = 0;
 		ForgeDirection idr;
+		int dZ = 0;
+		int dX = 0;
 		switch(angle)
 		{
-			case 0: meta = 2;break;
-			case 1: meta = 5;break;
-			case 2: meta = 3;break;
-			case 3: meta = 4;break;
+			case 0: meta = 2;dZ--;break;
+			case 1: meta = 5;dX--;break;
+			case 2: meta = 3;dZ++;break;
+			case 3: meta = 4;dX++;break;
 		}
-         world.setBlockAndMetadataWithUpdate(i, j, k,blockID, meta, true);
+		//ForgeDirection dir = ForgeDirection.getOrientation(meta);
+		world.setBlockAndMetadataWithUpdate(i, j, k,blockID, meta, true);
+        // world.setBlockAndMetadataWithUpdate(i+dir.offsetX, j, k+dir.offsetZ,blockID, meta, true);
 	}
 	@Override
 	public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer par5EntityPlayer)

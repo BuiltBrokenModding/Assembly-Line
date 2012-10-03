@@ -109,12 +109,13 @@ public class ModelGearRod extends ModelBase
       Rod2.mirror = true;
       setRotation(Rod2, 0F, 0F, 0.7853982F);
   }
-  public void render(float f5,float r)
+  public void render(float f5,int r)
   {
+	
+	Rod.rotateAngleZ= 45 * r;
+	Rod2.rotateAngleZ= Rod.rotateAngleZ + 45;
 	Rod.render(f5);
 	Rod2.render(f5);
-	Rod.rotateAngleZ+= (r)*45;
-	Rod2.rotateAngleZ+= (r)*45;
 	//TODO add rotation to rods
     front.render(f5);
     back.render(f5);

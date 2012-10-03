@@ -12,8 +12,11 @@ import basicpipes.conductors.BlockRod;
 import basicpipes.conductors.ItemGuage;
 import basicpipes.conductors.ItemParts;
 import basicpipes.conductors.ItemPipe;
+import basicpipes.conductors.TileEntityPipe;
+import basicpipes.conductors.TileEntityRod;
 import basicpipes.machines.BlockMachine;
 import basicpipes.machines.BlockValve;
+import basicpipes.machines.TileEntityPump;
 import basicpipes.pipes.api.Liquid;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -82,6 +85,9 @@ public class BasicPipesMain{
     {
 		//register
 		proxy.init();
+		GameRegistry.registerTileEntity(TileEntityPipe.class, "pipe");
+		GameRegistry.registerTileEntity(TileEntityPump.class, "pump");
+		GameRegistry.registerTileEntity(TileEntityRod.class, "rod");
 		//Names and lang stuff
 			//Pipe Names
 			for(int i =0; i < Liquid.values().length;i++)

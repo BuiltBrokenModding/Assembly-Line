@@ -5,6 +5,8 @@ import net.minecraft.src.TileEntitySpecialRenderer;
 
 import org.lwjgl.opengl.GL11;
 
+import steampower.geared.ModelGearPiston;
+
 import basicpipes.conductors.TileEntityPipe;
 import basicpipes.conductors.TileEntityRod;
 import basicpipes.machines.TileEntityPump;
@@ -13,23 +15,18 @@ import basicpipes.pipes.api.Liquid;
 
 public class RenderGearRod extends TileEntitySpecialRenderer
 {
-	int type = 0;
 	private ModelGearRod model;
-	
 	public RenderGearRod()
 	{
 		model = new ModelGearRod();
 	}
-
 	public void renderAModelAt(TileEntityRod tileEntity, double d, double d1, double d2, float f)
 	{
-       
-       int meta = tileEntity.worldObj.getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
         bindTextureByName("/textures/GearRod.png");
-       
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
+		int meta = tileEntity.worldObj.getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
 		switch(meta)
 		{
 			case 0: GL11.glRotatef(90f, 1f, 0f, 0f);break;

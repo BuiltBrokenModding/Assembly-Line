@@ -22,8 +22,8 @@ public class PipeClientProxy extends PipeProxy
 	@Override
 	public void init()
 	{
-		ClientRegistry.registerTileEntity(TileEntityPipe.class, "pipe", new RenderPipe());
-		ClientRegistry.registerTileEntity(TileEntityPump.class, "pump", new RenderPump());
-		ClientRegistry.registerTileEntity(TileEntityRod.class, "rod", new RenderGearRod());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPipe.class, new RenderPipe());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPump.class, new RenderPump());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRod.class, new RenderGearRod());
 	}
 }

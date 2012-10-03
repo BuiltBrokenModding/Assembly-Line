@@ -18,9 +18,7 @@ public class PipeProxy implements IGuiHandler
 	}
 	public void init()
 	{
-		GameRegistry.registerTileEntity(TileEntityPipe.class, "pipe");
-		GameRegistry.registerTileEntity(TileEntityPump.class, "pump");
-		GameRegistry.registerTileEntity(TileEntityRod.class, "rod");
+		
 	}
 	public void postInit()
 	{
