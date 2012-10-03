@@ -45,7 +45,7 @@ public class ModelGearPiston extends ModelBase
     ModelRenderer RigthF1;
     ModelRenderer RigthGCC;
     ModelRenderer RightSlide;
-    ModelRenderer LeftSlide;
+    ModelRenderer midRod;
     ModelRenderer RightRod2;
     ModelRenderer LeftGCC;
     ModelRenderer LeftRod2;
@@ -242,12 +242,12 @@ public class ModelGearPiston extends ModelBase
       LeftRod2.setTextureSize(128, 128);
       LeftRod2.mirror = true;
       setRotation(LeftRod2, 0F, 0F, 0F);
-      LeftSlide = new ModelRenderer(this, 0, 32);
-      LeftSlide.addBox(-1F, -2F, -2F, 1, 7, 4);
-      LeftSlide.setRotationPoint(4F, 0F, 0F);
-      LeftSlide.setTextureSize(128, 128);
-      LeftSlide.mirror = true;
-      setRotation(LeftSlide, 0F, 0F, 0F);
+      midRod = new ModelRenderer(this, 0, 32);
+      midRod.addBox(-1F, -2F, -2F, 1, 7, 4);
+      midRod.setRotationPoint(4F, 0F, 0F);
+      midRod.setTextureSize(128, 128);
+      midRod.mirror = true;
+      setRotation(midRod, 0F, 0F, 0F);
   }
   public void renderBody(float f5)
   { 
@@ -271,16 +271,78 @@ public class ModelGearPiston extends ModelBase
   }
   public void renderR(float f5,int pos)
   {
-	  int change = pos/2;
-	  
+	  switch(pos)
+	  {
+	  	case 0:
+	  		RSpiston.setRotationPoint(1F, 3F, 0F);
+	  	     LSpiston.setRotationPoint(2F, 3F, 0F);
+	  	     RodPiston.setRotationPoint(0F, 8F, 0F);
+	  	     setRotation(RSpiston, 0F, 0F, 0F);
+	  	     setRotation(LSpiston, 0F, 0F, 0F);
+	  	     break;
+	  	case 1: 
+	  		 RodPiston.setRotationPoint(0F, 6F, 0F);
+	  	    LSpiston.setRotationPoint(2F, 2F, 2F);
+	  	    RSpiston.setRotationPoint(1F, 2F, 2F);
+	  	    setRotation(LSpiston, -0.5235988F, 0F, 0F);
+	  	    setRotation(RSpiston, -0.5235988F, 0F, 0F);
+	  	    break;
+	  	case 2:
+	  		LSpiston.setRotationPoint(2F, 0F, 3F);
+	  	     RSpiston.setRotationPoint(1F, 0F, 3F);
+	  	    RodPiston.setRotationPoint(0F, 3F, 0F);
+	  	    setRotation(RSpiston, -1.047198F, 0F, 0F);
+	  	    setRotation(LSpiston, -1.047198F, 0F, 0F);
+	  	    break;
+	  	case 3:
+	  		LSpiston.setRotationPoint(2F, -2F, 2F);
+	        RSpiston.setRotationPoint(1F, -2F, 2F);
+	       RodPiston.setRotationPoint(0F, 1F, 0F);
+	       setRotation(LSpiston, -0.7853982F, 0F, 0F);
+	       setRotation(RSpiston, -0.7853982F, 0F, 0F);
+	       break;
+	  	case 4:
+	  		LSpiston.setRotationPoint(2F, -3F, 0F);
+	  		RSpiston.setRotationPoint(1F, -3F, 0F); 
+	  		RodPiston.setRotationPoint(0F, 1F, 0F);
+	  		setRotation(LSpiston, 0F, 0F, 0F);
+	  		setRotation(RSpiston, 0F, 0F, 0F);
+	  		break;
+	  	case 5:
+	  		LSpiston.setRotationPoint(2F, -2F, -2F);
+	  	    RSpiston.setRotationPoint(1F, -2F, -2F);
+	  	    RodPiston.setRotationPoint(0F, 1F, 0F); 
+	  	    setRotation(LSpiston, 0.7853982F, 0F, 0F);
+	  	    setRotation(RSpiston, 0.7853982F, 0F, 0F);
+	       break;
+	  	case 6:
+	  		RSpiston.setRotationPoint(1F, 0F, -3F);
+	  	    LSpiston.setRotationPoint(2F, 0F, -3F);
+	  	    RodPiston.setRotationPoint(0F, 2F, 0F);
+	  	    setRotation(RSpiston, 1.047198F, 0F, 0F); 
+	  	    setRotation(LSpiston, 1.047198F, 0F, 0F);
+	  	    break;
+	  	case 7: 
+	  		 RodPiston.setRotationPoint(0F, 6F, 0F);
+	  	    LSpiston.setRotationPoint(2F, 2F, -2F);
+	  	    RSpiston.setRotationPoint(1F, 2F, -2F);
+	  	    setRotation(LSpiston, 0.5235988F, 0F, 0F);
+	  	    setRotation(RSpiston, 0.5235988F, 0F, 0F);
+	  	    break;	  		
+	  }
 	//Piston Arm
 	RSpiston.render(f5);
 	LSpiston.render(f5);
 	RodPiston.render(f5);
-	RodPiston.setRotationPoint(0, 8f-change, 0);
 	//GearShaft
+	RightSlide.rotateAngleX = 0.7853982F * pos;
+	midRod.rotateAngleX = 0.7853982F * pos;
+	midRod.rotateAngleX = 0.7853982F * pos;
+	RightRod2.rotateAngleX = 0.7853982F * pos;
+	LeftRod2.rotateAngleX = 0.7853982F * pos;
+	LeftSlide2.rotateAngleX = 0.7853982F * pos;
 	RightSlide.render(f5);
-    LeftSlide.render(f5);
+    midRod.render(f5);
     RightRod2.render(f5);    
     LeftRod2.render(f5);
     LeftSlide2.render(f5);

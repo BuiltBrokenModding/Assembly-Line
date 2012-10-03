@@ -77,14 +77,12 @@ public class SteamPowerMain{
 		public void load(FMLInitializationEvent evt)
 	    {
 		 proxy.init();
-		 GameRegistry.registerTileEntity(TileEntityNuller.class, "EUNuller");
 		 GameRegistry.registerTileEntity(TileEntitytopGen.class, "gentop");
 		//Names...............
 		LanguageRegistry.addName((new ItemStack(machine, 1, 1)), "Boiler");
 		LanguageRegistry.addName((new ItemStack(gen, 1, 0)), "Generator");
 		LanguageRegistry.addName((new ItemStack(machine, 1, 2)), "FireBox");
 		LanguageRegistry.addName((new ItemStack(itemEngine, 1, 0)), "SteamPiston");
-		LanguageRegistry.addName((new ItemStack(machine, 1, 15)), "EUVampire");
 	
 		
 	}
@@ -96,12 +94,9 @@ public class SteamPowerMain{
 		 //Crafting
 		try{
 			/**
-		  		case 0: return new TileEntityGrinder(); <-Removed
-		        case 1: return new TileEntityBoiler();
-		        case 2: return new TileEntityFireBox();
-		        case 3: return new TileEntityGenerator();
-		        case 14: return new TileEntityCondenser();<-Removed
-		        case 15: return new TileEntityNuller();<-Just for testing Not craftable*/
+		        TileEntityBoiler();<- metadata 1
+		        TileEntityFireBox();<-metadata 2-5
+		        */
 		 
 		GameRegistry.addRecipe(new ItemStack(machine, 1, 1), new Object [] {"@T@", "OVO", "@T@",
 			'T',new ItemStack(BasicPipesMain.parts, 1,6),

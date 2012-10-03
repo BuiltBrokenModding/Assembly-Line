@@ -5,21 +5,18 @@ import net.minecraft.src.IInventory;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.NBTTagList;
+import net.minecraft.src.Packet;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 import universalelectricity.network.PacketManager;
 import universalelectricity.prefab.TileEntityElectricityReceiver;
-public class TileEntityMachine extends TileEntityElectricityReceiver implements  IInventory, ISidedInventory
+import universalelectricity.prefab.Vector3;
+public class TileEntityMachine extends TileEntity implements  IInventory, ISidedInventory
 {
 	public int facing = 0;
 	private int count = 0;
 	public ItemStack[] storedItems = new ItemStack[this.getInvSize()];
-	 public int getTickInterval()
-	    {
-			return 5;
-	    	
-	    }
 	private int getInvSize() {
 		return 1;
 	}
@@ -77,11 +74,6 @@ public class TileEntityMachine extends TileEntityElectricityReceiver implements 
 	        this.facing = par1NBTTagCompound.getInteger("facing");
 	}
 	@Override
-	public boolean canReceiveFromSide(ForgeDirection side) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	@Override
     public boolean canUpdate()
     {
         return true;
@@ -94,9 +86,10 @@ public class TileEntityMachine extends TileEntityElectricityReceiver implements 
     {
 		super.updateEntity();
 		
-			if(!worldObj.isRemote)
+			if(count ++ >= 10 && !worldObj.isRemote)
 			{
-				PacketManager.sendTileEntityPacket(this, SteamPowerMain.channel, getSendData());
+				Packet packet = PacketManager.getPacket(SteamPowerMain.channel,this,  getSendData());
+				PacketManager.sendPacketToClients(packet, worldObj, Vector3.get(this), 40);
 			}
     }
 	
@@ -219,16 +212,5 @@ public class TileEntityMachine extends TileEntityElectricityReceiver implements 
 	public void closeChest() {
 		// TODO Auto-generated method stub
 		
-	}
-	@Override
-	public void onReceive(TileEntity sender, double amps, double voltage,
-			ForgeDirection side) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public double wattRequest() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 }

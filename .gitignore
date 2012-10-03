@@ -30,6 +30,7 @@ LICENSE
 /src/common/universalelectricity/*
 /src/common/basiccomponents/*
 /src/common/buildcraft/*
+/src/common/aa/*
 /bin/
 /conf/
 /docs/

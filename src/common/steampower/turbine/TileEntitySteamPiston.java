@@ -24,27 +24,33 @@ import com.google.common.io.ByteArrayDataInput;
 
 public class TileEntitySteamPiston extends TileEntityMachine implements IPacketReceiver,ILiquidConsumer,ILiquidProducer,IMechenical
 {
-	public int force = 0;
+	private int force = 0;
 	public int aForce = 0;
 	private int frictionLoad = 10;
 	public int steam = 0;
 	public int water = 0;
-	public int maxWater = 1;
+	public int maxWater = 2;
 	public int maxSteam = 10;
 	public int pos = 0; //max at 7
 	private int tickCount = 0;
 	private int runTime = 0;
-	
+	private int genRate = 0;//max 100
+	private int posCount = 0;
 	private ForgeDirection frontDir;
 	private ForgeDirection backDir;
+	public TileEntity bb;
+	public TileEntity ff;
 	
 	public boolean running= false;
 	
 	@Override
 	public void updateEntity()
 	{
+		super.updateEntity();
 		if(tickCount++ >=10)
 		{
+			//++runTime;
+			//pos += 1;if(pos > 7){pos =0;} //for testing
 			int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 			int nMeta = 0;
 			switch(meta)
@@ -56,43 +62,54 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 			}
 			frontDir = ForgeDirection.getOrientation(nMeta);
 			backDir = ForgeDirection.getOrientation(nMeta).getOpposite();
+			bb = worldObj.getBlockTileEntity(xCoord+backDir.offsetX, yCoord+1, zCoord+backDir.offsetZ);
+			ff = worldObj.getBlockTileEntity(xCoord+frontDir.offsetX, yCoord+1, zCoord+frontDir.offsetZ);
+			if(this.runTime > 0)
+			{
+				this.running = true;
+			}else
+			{
+				this.running = false;
+			}
+			if(this.running)
+			{
+				int countA = 10 - (genRate/10);
+				if(posCount++ >=countA)
+				{
+					posCount = 0;
+					pos += 1;if(pos > 7){pos =0;}
+				}
+			}
+			if(bb instanceof TileEntitySteamPiston)
+			{
+				this.pos = ((TileEntitySteamPiston) bb).pos + 1;
+				if(this.pos > 7){pos = 0;}
+			}
 			if(!worldObj.isRemote)
 			{
-				if(this.runTime < 0 && this.steam > 0)
+				if(this.runTime <= 0 && this.steam > 0)
 				{
 					this.steam--;
-					this.runTime+=60;
+					this.runTime+=30;
 				}else
 				if(this.runTime > 0)
 				{
-					this.running = true;
 					this.runTime-=1;
-				}else
-				{
-					this.running = false;
+					this.force = genRate * 10;
 				}
-				TileEntity ff = worldObj.getBlockTileEntity(xCoord+frontDir.offsetX, yCoord+1, zCoord+frontDir.offsetZ);
-				TileEntity bb = worldObj.getBlockTileEntity(xCoord+backDir.offsetX, yCoord+1, zCoord+backDir.offsetZ);
 				if(ff instanceof IMechenical)
 				{
 					((IMechenical) ff).applyForce(this.aForce);
 				}
-				if(bb instanceof TileEntitySteamPiston)
+				if(genRate <=0 && runTime > 0)
 				{
-					this.pos = ((TileEntitySteamPiston) bb).pos + 1;
-					if(this.pos > 7)
-					{
-						pos = 0;
-					}
+					genRate++;
 				}else
-				if(this.running)
 				{
-					this.pos += 1;
-					if(this.pos > 7)
-					{
-						pos = 0;
-					}
+					genRate--;
 				}
+				
+				
 			}
 		}
 	}
@@ -126,6 +143,7 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 
 	@Override
 	public double applyForce(int force) {
+		this.aForce = this.force + force- frictionLoad;
 		return aForce;
 	}
 
@@ -173,7 +191,7 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	public int onReceiveLiquid(Liquid type, int vol, ForgeDirection side) {
 		if(type == Liquid.STEAM)
 		{
-			int rejectedSteam = Math.max((this.steam + vol) - this.getLiquidCapacity(Liquid.STEAM), 0);
+			int rejectedSteam = Math.max((this.steam + vol) - this.maxSteam, 0);
 			this.steam += vol - rejectedSteam;
 			return rejectedSteam;
 		}
@@ -219,7 +237,7 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	//----------------
 	public Object[] getSendData()
 	{
-		return new Object[]{steam,water,force,aForce,pos};
+		return new Object[]{steam,water,force,aForce,genRate,runTime};
 	}
 	@Override
 	public void handlePacketData(NetworkManager network,Packet250CustomPayload packet, EntityPlayer player,ByteArrayDataInput dataStream) {
@@ -229,7 +247,9 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 			this.water = dataStream.readInt();
 			this.force = dataStream.readInt();
 			this.aForce = dataStream.readInt();
-			this.pos = dataStream.readInt();
+			this.genRate= dataStream.readInt();
+			this.runTime = dataStream.readInt();
+			//System.out.print("Packet \n");
 		}
 		catch(Exception e)
 		{

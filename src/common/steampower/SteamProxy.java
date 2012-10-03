@@ -42,7 +42,7 @@ public class SteamProxy implements IGuiHandler{
 			{
 			case 0: return new GUIFireBox(player.inventory, ((TileEntityFireBox)tileEntity));
 			case 1: return new GuiBoiler(player.inventory, ((TileEntityBoiler)tileEntity));
-			case 2: return new GUIGenerator(player.inventory, ((TileEntitySteamPiston)tileEntity));
+			case 2: return new GUISteamPiston(player.inventory, ((TileEntitySteamPiston)tileEntity));
 			}
         }
 		

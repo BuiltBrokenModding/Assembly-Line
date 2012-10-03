@@ -42,17 +42,18 @@ public class BasicPipesMain{
 	public static int machineID;
 	private static int toolID;
 	public static int valveID;
+	public static int rodID;
 	public static Block pipe = new BlockPipe(pipeID).setBlockName("pipe");
 	public static Block machine = new BlockMachine(machineID).setBlockName("pump");
 	public static Block valve = new BlockValve(valveID).setBlockName("valve");
-	public static Block rod = new BlockRod(valveID+1);
+	public static Block rod = new BlockRod(rodID);
 	public static Item parts = new ItemParts(partID);
 	public static Item itemPipes = new ItemPipe(ppipeID);
 	public static Item gauge = new ItemGuage(toolID);
 
 	public static String channel = "Pipes";
 	public static String textureFile = "/textures";
-
+	public static boolean ueLoaded = false;
 	
 	
 	 public static int configurationProperties()
@@ -61,6 +62,7 @@ public class BasicPipesMain{
              pipeID = Integer.parseInt(config.getOrCreateIntProperty("PipeBlock", Configuration.CATEGORY_BLOCK, 155).value);
              machineID = Integer.parseInt(config.getOrCreateIntProperty("machineBlock", Configuration.CATEGORY_BLOCK, 156).value);
              valveID = Integer.parseInt(config.getOrCreateIntProperty("ValveBlock", Configuration.CATEGORY_BLOCK, 157).value);
+             rodID = Integer.parseInt(config.getOrCreateIntProperty("gearBlock", Configuration.CATEGORY_BLOCK, 158).value);
              partID = Integer.parseInt(config.getOrCreateIntProperty("parts", Configuration.CATEGORY_ITEM, 23022).value);
              ppipeID = Integer.parseInt(config.getOrCreateIntProperty("pipes", Configuration.CATEGORY_ITEM, 23023).value);
              toolID = Integer.parseInt(config.getOrCreateIntProperty("ToolID", Configuration.CATEGORY_ITEM, 23024).value);
@@ -112,8 +114,7 @@ public class BasicPipesMain{
 		//crafting pipes	
 		//{"black", "red", "green", "brown", "blue", "purple", "cyan", 
 		//"silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"};
-		//steam
-		GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1,0), new Object[] { new ItemStack(parts, 1,0),new ItemStack(parts, 1,4)});
+		
 		//water
 		GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1,1), new Object[] { new ItemStack(parts, 1,1),new ItemStack(parts, 1,4),new ItemStack(Item.dyePowder, 1,4)});
 		//lava  TODO change to use obby pipe and nether items
@@ -126,7 +127,8 @@ public class BasicPipesMain{
 			
 		try{
 		GameRegistry.addRecipe(new ItemStack(parts, 2,0), new Object[] { "@@@", '@',BasicComponents.itemBronzeIngot});//bronze tube
-	
+		//steam
+		GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1,0), new Object[] { new ItemStack(parts, 1,0),new ItemStack(parts, 1,4)});
 		GameRegistry.addRecipe(new ItemStack(parts, 1,6), new Object[] { " @ ","@ @"," @ ", '@',BasicComponents.itemBronzeIngot});//tank
 		
 		//pump
@@ -138,12 +140,16 @@ public class BasicPipesMain{
 			, 'C',BasicComponents.blockCopperWire
 			, 'T',new ItemStack(parts, 1,6)
 			});
-	}
-	catch(Exception e)
-	{
-	 e.printStackTrace();
-	 System.out.print("UE based recipes not loaded");
-	}
+		this.ueLoaded = true;
+		}
+		catch(Exception e)
+		{
+			System.out.print("UE based recipes not loaded");
+			//secondary boiler tank
+			GameRegistry.addRecipe(new ItemStack(parts, 1,6), new Object[] { " @ ","@ @"," @ ", '@',Item.ingotIron});//tank
+			//steam
+			GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1,0), new Object[] { new ItemStack(parts, 1,1),new ItemStack(parts, 1,4)});
+		}
 	}
 
 }

@@ -176,11 +176,11 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 				if(blockE instanceof IHeatProducer)
 				{
 					this.isBeingHeated = true;
-					heatStored = (int) Math.min((heatStored + ((IHeatProducer)blockE).onProduceHeat(SteamPowerMain.fireOutput*getTickInterval(), 1)), heatMax);
+					heatStored = (int) Math.min((heatStored + ((IHeatProducer)blockE).onProduceHeat(SteamPowerMain.fireOutput, 1)), heatMax);
 				}
 				else if(worldObj.getBlockId(xCoord, yCoord-1, zCoord) == Block.lavaStill.blockID)
 				{
-					heatStored += (int) Math.min((int)(random.nextDouble()*10)*getTickInterval(), heatMax);
+					heatStored += (int) Math.min((int)(random.nextDouble()*10), heatMax);
 				}
 		   }
 		   super.updateEntity();

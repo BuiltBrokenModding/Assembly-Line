@@ -127,9 +127,11 @@ public class BlockMachine extends universalelectricity.prefab.BlockMachine
     {
         switch(meta)
         {  
-        case 1: return new TileEntityBoiler();
-        case 2: return new TileEntityFireBox();
-        case 15: return new TileEntityNuller();
+	        case 1: return new TileEntityBoiler();
+	        case 2: return new TileEntityFireBox();
+	        case 3: return new TileEntityFireBox();
+	        case 4: return new TileEntityFireBox();
+	        case 5: return new TileEntityFireBox();
         }
 		return null;
     }
