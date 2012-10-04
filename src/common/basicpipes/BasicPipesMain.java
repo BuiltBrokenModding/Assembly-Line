@@ -96,6 +96,7 @@ public class BasicPipesMain{
 			}
 	   	    //Pump
 			LanguageRegistry.addName((new ItemStack(machine, 1, 0)), "WaterPump");
+			LanguageRegistry.addName((new ItemStack(rod, 1)), "MechRod");
 			//Tools
 			LanguageRegistry.addName((new ItemStack(gauge, 1, 0)), "PipeGuage");
 			//Parts
@@ -120,7 +121,7 @@ public class BasicPipesMain{
 		//crafting pipes	
 		//{"black", "red", "green", "brown", "blue", "purple", "cyan", 
 		//"silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"};
-		
+		GameRegistry.addRecipe(new ItemStack(rod, 1), new Object[] { "I@I", 'I',Item.ingotIron,'@',new ItemStack(parts, 1,1)});
 		//water
 		GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1,1), new Object[] { new ItemStack(parts, 1,1),new ItemStack(parts, 1,4),new ItemStack(Item.dyePowder, 1,4)});
 		//lava  TODO change to use obby pipe and nether items

@@ -97,7 +97,11 @@ public class SteamPowerMain{
 		        TileEntityBoiler();<- metadata 1
 		        TileEntityFireBox();<-metadata 2-5
 		        */
-		 
+			GameRegistry.addRecipe(new ItemStack(gen, 1), new Object [] {"@T@", "OVO", "@T@",
+				'T',new ItemStack(BasicPipesMain.rod, 1),
+				'@',new ItemStack(BasicComponents.itemSteelPlate),
+				'O',new ItemStack(BasicComponents.itemCircuit,1,0),
+				'V',new ItemStack(BasicComponents.itemMotor)});
 		GameRegistry.addRecipe(new ItemStack(machine, 1, 1), new Object [] {"@T@", "OVO", "@T@",
 			'T',new ItemStack(BasicPipesMain.parts, 1,6),
 			'@',new ItemStack(BasicComponents.itemSteelPlate),
