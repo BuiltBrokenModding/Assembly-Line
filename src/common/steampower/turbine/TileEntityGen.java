@@ -50,7 +50,7 @@ public class TileEntityGen extends TileEntityMachine implements IPacketReceiver,
 		facing = ForgeDirection.getOrientation(nMeta).getOpposite();
 		if(genAmmount > 0)
 		{
-			worldObj.setBlock(xCoord, yCoord+1, zCoord, 1);
+			//worldObj.setBlock(xCoord, yCoord+1, zCoord, 1);
 		}
 		for(int i = 0; i < 6; i++)
 		{
