@@ -1,5 +1,6 @@
 package basicpipes.conductors;
 
+import basicpipes.ItemRenderHelper;
 import steampower.TileEntityMachine;
 import net.minecraft.src.Block;
 import net.minecraft.src.CreativeTabs;
@@ -37,9 +38,7 @@ public class BlockRod extends universalelectricity.prefab.BlockMachine {
 			case 2: meta = 3;dZ++;break;
 			case 3: meta = 4;dX++;break;
 		}
-		//ForgeDirection dir = ForgeDirection.getOrientation(meta);
 		world.setBlockAndMetadataWithUpdate(i, j, k,blockID, meta, true);
-        // world.setBlockAndMetadataWithUpdate(i+dir.offsetX, j, k+dir.offsetZ,blockID, meta, true);
 	}
 	@Override
 	public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer par5EntityPlayer)
@@ -78,7 +77,7 @@ public class BlockRod extends universalelectricity.prefab.BlockMachine {
 	    */
 	    public int getRenderType()
 	    {
-	        return -1;
+	        return ItemRenderHelper.renderID;
 	    }
 
 }

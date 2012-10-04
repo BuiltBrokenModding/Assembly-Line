@@ -2,6 +2,7 @@ package steampower.turbine;
 
 import java.util.ArrayList;
 
+import steampower.ItemRenderHelperS;
 import steampower.TileEntityMachine;
 
 import net.minecraft.src.CreativeTabs;
@@ -58,7 +59,7 @@ public class BlockGenerator extends universalelectricity.prefab.BlockMachine {
 		@Override
 		public int getRenderType()
 		{
-		   return -1;
+		   return ItemRenderHelperS.renderID;
 		}
 		@Override
 		public TileEntity createNewTileEntity(World world)

@@ -8,6 +8,7 @@ import steampower.geared.RenderGearPiston;
 import steampower.turbine.TileEntityGen;
 import steampower.turbine.TileEntitySteamPiston;
 import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 
 public class SteamClientProxy extends SteamProxy{
 
@@ -15,6 +16,7 @@ public class SteamClientProxy extends SteamProxy{
 	{ 
 		 MinecraftForgeClient.preloadTexture(SteamPowerMain.textureFile+"blocks.png");
 	   	 MinecraftForgeClient.preloadTexture(SteamPowerMain.textureFile+"Items.png");
+	   	 RenderingRegistry.registerBlockHandler(new ItemRenderHelperS());
 	}
 	@Override
 	public void init()

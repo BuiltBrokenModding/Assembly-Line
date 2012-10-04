@@ -8,6 +8,7 @@ import net.minecraft.src.Material;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
 import basicpipes.BasicPipesMain;
+import basicpipes.ItemRenderHelper;
 
 public class BlockMachine extends BlockContainer
 {	
@@ -36,7 +37,7 @@ public class BlockMachine extends BlockContainer
     */
     public int getRenderType()
     {
-        return -1;
+        return  ItemRenderHelper.renderID;
     }
 	
 	/**
@@ -58,11 +59,6 @@ public class BlockMachine extends BlockContainer
     	}
         return 0;
     }
-	//Per tick
-	public int conductorCapacity()
-	{
-		return 1;
-	}	
 	@Override
 	public TileEntity createNewTileEntity(World var1,int meta) {
 		// TODO Auto-generated method stub

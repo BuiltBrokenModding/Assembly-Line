@@ -26,6 +26,7 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 {
 	public int force = 0;
 	public int aForce = 0;
+	public int bForce = 0;
 	private int frictionLoad = 10;
 	public int steam = 0;
 	public int water = 0;
@@ -38,9 +39,8 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	private int posCount = 0;
 	public int tCount = 0;
 	private ForgeDirection frontDir;
-	private ForgeDirection backDir;
-	public TileEntity bb;
 	public TileEntity ff;
+	public TileEntity bb;
 	
 	public boolean running= false;
 	
@@ -59,14 +59,13 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 			switch(meta)
 			{
 				case 0: nMeta = 2;break;
-				case 1: nMeta = 4;break;
+				case 1: nMeta = 5;break;
 				case 2: nMeta = 3;break;
-				case 3: nMeta = 5;break;
+				case 3: nMeta = 4;break;
 			}
 			frontDir = ForgeDirection.getOrientation(nMeta);
-			backDir = ForgeDirection.getOrientation(nMeta).getOpposite();
-			bb = worldObj.getBlockTileEntity(xCoord+backDir.offsetX, yCoord+1, zCoord+backDir.offsetZ);
 			ff = worldObj.getBlockTileEntity(xCoord+frontDir.offsetX, yCoord+1, zCoord+frontDir.offsetZ);
+			bb = worldObj.getBlockTileEntity(xCoord+frontDir.getOpposite().offsetX, yCoord+1, zCoord+frontDir.getOpposite().offsetZ);
 			if(this.runTime > 0)
 			{
 				this.running = true;
@@ -83,11 +82,6 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 					pos += 1;if(pos > 7){pos =0;}
 				}
 			}
-			if(bb instanceof TileEntitySteamPiston)
-			{
-				this.pos = ((TileEntitySteamPiston) bb).getAnimationPos() + 1;
-				if(this.pos > 7){pos = 0;}
-			}
 			if(!worldObj.isRemote)
 			{
 				if(this.runTime < 1 && this.steam > 0)
@@ -95,12 +89,30 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 					this.steam--;
 					this.runTime=60;
 				}
+				if(bb instanceof IMechanical)
+				{
+					if(((IMechanical) bb).canOutputSide(frontDir))
+					{
+						this.bForce = ((IMechanical) bb).getForce();
+					}else
+					if( bb instanceof TileEntitySteamPiston)
+					{
+						if(((TileEntitySteamPiston) bb).getMeta() == this.getMeta())
+						{
+							this.bForce = ((TileEntitySteamPiston) bb).getForce();
+						}
+					}
+					else
+					{
+						this.bForce = 0;
+					}
+				}
 				if(this.runTime > 0)
 				{
 					genRate=Math.min(genRate + 1, 100);
 					this.runTime-=1;
 					this.force = Math.min(genRate * 10,1000);
-					this.aForce = Math.max(force - this.frictionLoad,0);
+					this.aForce = Math.max(force - this.frictionLoad+bForce,0);
 				}
 				if(runTime == 0 && this.steam == 0)
 				{
@@ -110,9 +122,12 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 				
 				if(ff instanceof IMechanical)
 				{
-					if(((IMechanical) ff).canInputSide(backDir))
+					if(((IMechanical) ff).canInputSide(frontDir.getOpposite()))
 					{
 						((IMechanical) ff).applyForce(this.aForce);
+					}else
+					{
+						
 					}
 				}
 				
@@ -133,7 +148,7 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 
 	@Override
 	public boolean canOutputSide(ForgeDirection side) {
-		if(frontDir == side)
+		if(frontDir.getOpposite() == side)
 		{
 			return true;
 		}
@@ -142,7 +157,7 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 
 	@Override
 	public boolean canInputSide(ForgeDirection side) {
-		if(backDir == side)
+		if(frontDir == side)
 		{
 			return true;
 		}
@@ -151,7 +166,7 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 
 	@Override
 	public int applyForce(int force) {
-		this.aForce = this.force + force- frictionLoad;
+		this.bForce = force;
 		return aForce;
 	}
 
@@ -245,7 +260,7 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	//----------------
 	public Object[] getSendData()
 	{
-		return new Object[]{steam,water,force,aForce,genRate,runTime};
+		return new Object[]{steam,water,force,aForce,bForce,genRate,runTime};
 	}
 	@Override
 	public void handlePacketData(NetworkManager network,Packet250CustomPayload packet, EntityPlayer player,ByteArrayDataInput dataStream) {
@@ -255,6 +270,7 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 			this.water = dataStream.readInt();
 			this.force = dataStream.readInt();
 			this.aForce = dataStream.readInt();
+			this.bForce = dataStream.readInt();
 			this.genRate= dataStream.readInt();
 			this.runTime = dataStream.readInt();
 			//System.out.print("Packet \n");
@@ -301,5 +317,7 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 		// TODO Auto-generated method stub
 		return this.force;
 	}
-	
+	public int getMeta() {		
+		return worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+	}
 }

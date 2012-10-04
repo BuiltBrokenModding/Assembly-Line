@@ -19,7 +19,7 @@ public class ItemMachine extends ItemBlock {
         	
         		par3List.add(new ItemStack(this, 1, 1));
         		par3List.add(new ItemStack(this, 1, 2));
-        		par3List.add(new ItemStack(this, 1, 15));
+        		
         }
         @Override
     	public String getTextureFile() {

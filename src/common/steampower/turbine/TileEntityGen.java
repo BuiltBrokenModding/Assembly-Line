@@ -17,7 +17,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 public class TileEntityGen extends TileEntityMachine implements IPacketReceiver, IMechanical,IElectricityProducer
 {
-	ForgeDirection facing;
+	ForgeDirection facing = ForgeDirection.DOWN;
 	
 	public int force = 0;
 	public int aForce = 0;
@@ -33,19 +33,17 @@ public class TileEntityGen extends TileEntityMachine implements IPacketReceiver,
 	public void updateEntity()
 	{
 		
-		if(tCount++ >= 10)
-		{tCount = 0;
-		super.updateEntity();
-		this.genAmmount = (force * 1.2)/this.getVoltage();
+		
+		this.genAmmount = force/this.getVoltage();
 		int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 		int nMeta = 0;
-		
+		int wireCount = 0;
 		switch(meta)
 		{
 			case 0: nMeta = 2;break;
-			case 1: nMeta = 4;break;
+			case 1: nMeta = 5;break;
 			case 2: nMeta = 3;break;
-			case 3: nMeta = 5;break;
+			case 3: nMeta = 4;break;
 		}
 		facing = ForgeDirection.getOrientation(nMeta).getOpposite();
 		if(genAmmount > 0)
@@ -73,7 +71,7 @@ public class TileEntityGen extends TileEntityMachine implements IPacketReceiver,
 		            if (ElectricityManager.instance.getElectricityRequired( ((IConductor)tileEntity).getConnectionID()) > 0)
 		            {
 		                this.wires[i] = (IConductor)tileEntity;
-		                ElectricityManager.instance.produceElectricity(this, this.wires[i],genAmmount, this.getVoltage());
+		                wireCount++;
 		            }
 		            else
 		            {
@@ -84,9 +82,18 @@ public class TileEntityGen extends TileEntityMachine implements IPacketReceiver,
 		        {
 		            this.wires[i] = null;
 		        }
-			}	
+			}
+			
 		}
+		for(int side =0; side < 6; side++)
+		{
+			if(wires[side] instanceof IConductor)
+			{
+				double max = wires[side].getMaxAmps();
+	            ElectricityManager.instance.produceElectricity(this, wires[side],Math.min(genAmmount/wireCount,max), this.getVoltage());
+			}
 		}
+		super.updateEntity();
 	}
 	@Override
 	public void handlePacketData(NetworkManager network,

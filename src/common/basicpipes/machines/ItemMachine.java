@@ -42,7 +42,7 @@ public class ItemMachine extends ItemBlock
     {
     	
     		par3List.add(new ItemStack(this, 1, 0));
-    		par3List.add(new ItemStack(this, 1, 4));
+    		//par3List.add(new ItemStack(this, 1, 4));
         
     }
     public String getTextureFile() {

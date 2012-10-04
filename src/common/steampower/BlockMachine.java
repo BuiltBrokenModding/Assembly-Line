@@ -232,7 +232,7 @@ public class BlockMachine extends universalelectricity.prefab.BlockMachine
 	@Override
 	public int getRenderType()
 	{
-	   return -1;
+	   return ItemRenderHelperS.renderID;
 	}
 	
 }
