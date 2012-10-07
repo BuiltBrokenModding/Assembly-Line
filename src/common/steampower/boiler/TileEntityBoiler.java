@@ -119,7 +119,8 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 	   @Override
 	   public void updateEntity()
 	    {
-		   if(count++ >=20){
+		   if(count++ >=20)
+		   {
 			   count = 0;
 		   //update/resets connection list
 		   TileEntity[] entityList = TradeHelper.getSourounding(this);
@@ -168,7 +169,7 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 				{
 					heatStored = Math.max(heatStored - heatNeeded, 0);
 					--waterStored;
-					steamStored = Math.min(steamStored + SteamPowerMain.steamOutBoiler,this.steamMax);
+					steamStored = Math.min(steamStored + 20,this.steamMax);
 				}
 				
 				TileEntity blockE = worldObj.getBlockTileEntity(xCoord, yCoord -1, zCoord);
@@ -176,11 +177,11 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 				if(blockE instanceof IHeatProducer)
 				{
 					this.isBeingHeated = true;
-					heatStored = (int) Math.min((heatStored + ((IHeatProducer)blockE).onProduceHeat(SteamPowerMain.fireOutput, 1)), heatMax);
+					heatStored = (int) Math.min((heatStored + ((IHeatProducer)blockE).onProduceHeat(250, 1)), heatMax);
 				}
 				else if(worldObj.getBlockId(xCoord, yCoord-1, zCoord) == Block.lavaStill.blockID)
 				{
-					heatStored += (int) Math.min((int)(random.nextDouble()*10), heatMax);
+					heatStored += (int) Math.min((int)(random.nextDouble()*100), heatMax);
 				}
 		   }
 		   super.updateEntity();

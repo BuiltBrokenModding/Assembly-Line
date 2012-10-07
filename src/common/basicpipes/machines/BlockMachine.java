@@ -20,8 +20,9 @@ public class BlockMachine extends BlockContainer
 		this.setCreativeTab(CreativeTabs.tabBlock);
 		this.setRequiresSelfNotify();
         this.blockIndexInTexture = 26;
+        this.setHardness(1f);
+		this.setResistance(3f);
 	}
-	
     public boolean isOpaqueCube()
     {
         return false;
@@ -38,14 +39,6 @@ public class BlockMachine extends BlockContainer
     public int getRenderType()
     {
         return  ItemRenderHelper.renderID;
-    }
-	
-	/**
-     * Returns the ID of the items to drop on destruction.
-     */
-    public int idDropped(int par1, Random par2Random, int par3)
-    {
-        return this.blockID;
     }
     protected int damageDropped(int meta)
     {

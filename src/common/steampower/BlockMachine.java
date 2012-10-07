@@ -18,7 +18,7 @@ import steampower.burner.TileEntityFireBox;
 public class BlockMachine extends universalelectricity.prefab.BlockMachine
 {
     
-    private Random furnaceRand = new Random();  
+    private Random mRandom = new Random();  
     private static boolean keepFurnaceInventory = true;
 
     public BlockMachine(int par1)
@@ -26,7 +26,8 @@ public class BlockMachine extends universalelectricity.prefab.BlockMachine
         super("machine", par1, Material.iron);
         this.setRequiresSelfNotify();
         this.setCreativeTab(CreativeTabs.tabBlock);
-        
+        this.setHardness(1f);
+		this.setResistance(3f);
     }
     @Override
     protected int damageDropped(int metadata)
@@ -179,13 +180,13 @@ public class BlockMachine extends universalelectricity.prefab.BlockMachine
 			
 			                    if (var7 != null)
 			                    {
-			                        float var8 = this.furnaceRand.nextFloat() * 0.8F + 0.1F;
-			                        float var9 = this.furnaceRand.nextFloat() * 0.8F + 0.1F;
-			                        float var10 = this.furnaceRand.nextFloat() * 0.8F + 0.1F;
+			                        float var8 = this.mRandom.nextFloat() * 0.8F + 0.1F;
+			                        float var9 = this.mRandom.nextFloat() * 0.8F + 0.1F;
+			                        float var10 = this.mRandom.nextFloat() * 0.8F + 0.1F;
 			
 			                        while (var7.stackSize > 0)
 			                        {
-			                            int var11 = this.furnaceRand.nextInt(21) + 10;
+			                            int var11 = this.mRandom.nextInt(21) + 10;
 			
 			                            if (var11 > var7.stackSize)
 			                            {
@@ -201,9 +202,9 @@ public class BlockMachine extends universalelectricity.prefab.BlockMachine
 			                            }
 			
 			                            float var13 = 0.05F;
-			                            var12.motionX = (double)((float)this.furnaceRand.nextGaussian() * var13);
-			                            var12.motionY = (double)((float)this.furnaceRand.nextGaussian() * var13 + 0.2F);
-			                            var12.motionZ = (double)((float)this.furnaceRand.nextGaussian() * var13);
+			                            var12.motionX = (double)((float)this.mRandom.nextGaussian() * var13);
+			                            var12.motionY = (double)((float)this.mRandom.nextGaussian() * var13 + 0.2F);
+			                            var12.motionZ = (double)((float)this.mRandom.nextGaussian() * var13);
 			                            par1World.spawnEntityInWorld(var12);
 			                        }
 			                    }

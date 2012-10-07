@@ -13,7 +13,6 @@ public class ContainerBoiler extends Container
         this.boiler = par2TileEntityboiler;
         this.addSlotToContainer(new Slot(par2TileEntityboiler, 0, 56, 17));
         int line;
-
         for (line = 0; line < 3; ++line)
         {
             for (int slot = 0; slot < 9; ++slot)

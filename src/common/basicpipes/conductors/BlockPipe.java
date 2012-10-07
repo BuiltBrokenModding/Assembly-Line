@@ -2,12 +2,16 @@ package basicpipes.conductors;
 
 import java.util.Random;
 
+import basicpipes.BasicPipesMain;
 import basicpipes.pipes.api.ILiquidConsumer;
 import basicpipes.pipes.api.ILiquidProducer;
 import basicpipes.pipes.api.Liquid;
 
 import net.minecraft.src.BlockContainer;
+import net.minecraft.src.EntityItem;
+import net.minecraft.src.ItemStack;
 import net.minecraft.src.Material;
+import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -20,71 +24,25 @@ public class BlockPipe extends BlockContainer
 		super(id, Material.iron);
 		this.setBlockName("Pipe");
 		this.setBlockBounds(0.30F, 0.30F, 0.30F, 0.70F, 0.70F, 0.70F);
+		this.setHardness(1f);
+		this.setResistance(3f);
 	}
-    
-    /**
-     * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
-     * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
-     */
-    public boolean isOpaqueCube()
-    {
-        return false;
-    }
-
-    /**
-     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
-     */
-    public boolean renderAsNormalBlock()
-    {
-        return false;
-    }
-    
-    /**
-     * The type of render function that is called for this block
-    */
-    public int getRenderType()
-    {
-        return -1;
-    }
-	
-	/**
-     * Returns the ID of the items to drop on destruction.
-     */
-    public int idDropped(int par1, Random par2Random, int par3)
-    {
-        return 0;
-    }
-	//Per tick
-	public int conductorCapacity()
-	{
-		return 5;
-	}
-	
-	
-	/**
-     * Called whenever the block is added into the world. Args: world, x, y, z
-     */
+    public boolean isOpaqueCube(){return false;}
+    public boolean renderAsNormalBlock(){return false;}
+    public int getRenderType(){return -1;}
+    public int idDropped(int par1, Random par2Random, int par3){return 0;}
 	@Override
     public void onBlockAdded(World world, int x, int y, int z)
     {
         super.onBlockAdded(world, x, y, z);
-        
         this.updateConductorTileEntity(world, x, y, z);
     }
-	public static TileEntity getUEUnit(World world, int x, int y, int z, int side,Liquid type)
+	public static TileEntity getLiquidUnit(World world, int x, int y, int z, int side,Liquid type)
 	{
-		switch(side)
-		{
-			case 0: y -= 1; break;
-			case 1: y += 1; break;
-			case 2: z += 1; break;
-			case 3: z -= 1; break;
-			case 4: x += 1; break;
-			case 5: x -= 1; break;
-		}
+		ForgeDirection dir = ForgeDirection.getOrientation(side);
 		
 		//Check if the designated block is a UE Unit - producer, consumer or a conductor
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		TileEntity tileEntity = world.getBlockTileEntity(x+dir.offsetX, y+dir.offsetY, z+dir.offsetZ);
 		TileEntity returnValue = null;		
 		
 		if(tileEntity instanceof ILiquidConsumer)
@@ -137,7 +95,7 @@ public class BlockPipe extends BlockContainer
         	{
         		TileEntityPipe conductorTileEntity = (TileEntityPipe) tileEntity;
         		Liquid type = conductorTileEntity.getType();
-        		conductorTileEntity.addConnection(getUEUnit(world, x, y, z, i, type), ForgeDirection.getOrientation(i));
+        		conductorTileEntity.addConnection(getLiquidUnit(world, x, y, z, i, type), ForgeDirection.getOrientation(i));
         	}
         }
 	}
@@ -147,6 +105,28 @@ public class BlockPipe extends BlockContainer
 		// TODO Auto-generated method stub
 		return new TileEntityPipe();
 	}
+	 @Override
+	public void breakBlock(World world, int x, int y, int z,int par5, int par6)
+	 {
+		 TileEntity ent = world.getBlockTileEntity(x, y, z);
+		 Random furnaceRand = new Random();
+		 if(ent instanceof TileEntityPipe)
+		 {
+			 TileEntityPipe pipe = (TileEntityPipe) ent;
+			 int meta = pipe.type.ordinal();
+			 float var8 = furnaceRand.nextFloat() * 0.8F + 0.1F;
+             float var9 = furnaceRand.nextFloat() * 0.8F + 0.1F;
+             float var10 = furnaceRand.nextFloat() * 0.8F + 0.1F;
+			 EntityItem var12 = new EntityItem(world, (double)((float)x + var8), (double)((float)y + var9), 
+					 (double)((float)z + var10), new ItemStack(BasicPipesMain.itemPipes, 1, meta));	
+             float var13 = 0.05F;
+             var12.motionX = (double)((float)furnaceRand.nextGaussian() * var13);
+             var12.motionY = (double)((float)furnaceRand.nextGaussian() * var13 + 0.2F);
+             var12.motionZ = (double)((float)furnaceRand.nextGaussian() * var13);
+             world.spawnEntityInWorld(var12);
+		 }
+	 }
+
  }
 
 

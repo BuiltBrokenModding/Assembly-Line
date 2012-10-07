@@ -49,7 +49,7 @@ public class TileEntityFireBox extends TileEntityMachine implements IPacketRecei
     	addConnection();
     	if(!worldObj.isRemote)
     	{
-    	sharCoal();
+    		sharCoal();
     	}    	
     	TileEntity blockEntity =  worldObj.getBlockTileEntity(this.xCoord, this.yCoord + 1, this.zCoord);
     	if(blockEntity instanceof TileEntityBoiler)
@@ -63,7 +63,7 @@ public class TileEntityFireBox extends TileEntityMachine implements IPacketRecei
     	if (!this.worldObj.isRemote){
     	
     	
-    	maxGenerateRate = SteamPowerMain.fireOutput + (connectedUnits*5);
+    	maxGenerateRate = SteamPowerMain.fireOutput + (connectedUnits*10);
     		
 	    	//The top slot is for recharging items. Check if the item is a electric item. If so, recharge it.
 	    	if (this.storedItems[0] != null && isConnected)
@@ -127,7 +127,7 @@ public class TileEntityFireBox extends TileEntityMachine implements IPacketRecei
     					}
     					else
 		    			{	
-		    				connectedConsumer.storedItems[0] = new ItemStack(this.storedItems[0].getItem());
+		    				connectedConsumer.storedItems[0] = new ItemStack(this.storedItems[0].getItem(),1,this.storedItems[0].getItemDamage());
 		    				this.storedItems[0].stackSize -= 1;
 		    			}
     				}
