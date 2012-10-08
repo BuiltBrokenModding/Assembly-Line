@@ -82,11 +82,15 @@ public class TileEntityMachine extends TileEntity implements  IInventory, ISided
 	{
 		return new Object[]{};
 	}
+	public boolean needUpdate()
+	{
+		return false;
+	}
 	public void updateEntity()
     {
 		super.updateEntity();
 		
-			if(count ++ >= 20 && !worldObj.isRemote)
+			if(count ++ >= 10 && !worldObj.isRemote && needUpdate())
 			{count = 0;
 				Packet packet = PacketManager.getPacket(SteamPowerMain.channel,this,  getSendData());
 				PacketManager.sendPacketToClients(packet, worldObj, Vector3.get(this), 40);

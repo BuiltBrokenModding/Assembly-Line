@@ -40,6 +40,10 @@ public class TileEntityFireBox extends TileEntityMachine implements IPacketRecei
 		return 5;
     	
     }
+    public boolean needUpdate()
+	{
+		return true;
+	}
     public void updateEntity()
     {
     	super.updateEntity();

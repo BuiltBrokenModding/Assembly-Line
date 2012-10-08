@@ -28,7 +28,10 @@ public class TileEntityGen extends TileEntityMachine implements IPacketReceiver,
 	public boolean empProf = false;
 	
 	IConductor[] wires = {null,null,null,null,null,null};
-	
+	public boolean needUpdate()
+	{
+		return false;
+	}
 	@Override
 	public void updateEntity()
 	{

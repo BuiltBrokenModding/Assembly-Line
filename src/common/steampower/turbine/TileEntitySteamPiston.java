@@ -41,7 +41,10 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	private ForgeDirection frontDir;
 	public TileEntity ff;
 	public TileEntity bb;
-	
+	private int pWater = 0;
+    private int pSteam = 0;
+    private int pForce = 0;
+    public int pCount = 0;
 	public boolean running= false;
 	
 	@Override
@@ -51,7 +54,7 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 		if(tickCount++ >=10)
 		{tickCount = 0;
 		
-			++tCount;if(tCount > 120){tCount = 0;}
+			//++tCount;if(tCount > 120){tCount = 0;}
 			
 			int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 			int nMeta = 0;
@@ -130,7 +133,9 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 						
 					}
 				}
-				
+				pWater = this.water;
+			    pSteam = this.steam;
+			    pForce = this.force;
 				
 				
 			}
@@ -260,7 +265,15 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 	//----------------
 	public Object[] getSendData()
 	{
-		return new Object[]{steam,water,force,aForce,bForce,genRate,runTime};
+		return new Object[]{steam,water,force,aForce,genRate,runTime};
+	}
+	public boolean needUpdate()
+	{
+		if(this.pForce != this.force || this.pWater != this.water || this.pSteam != this.steam)
+		{
+			return true;
+		}
+		return false;
 	}
 	@Override
 	public void handlePacketData(NetworkManager network,Packet250CustomPayload packet, EntityPlayer player,ByteArrayDataInput dataStream) {
@@ -270,10 +283,9 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 			this.water = dataStream.readInt();
 			this.force = dataStream.readInt();
 			this.aForce = dataStream.readInt();
-			this.bForce = dataStream.readInt();
 			this.genRate= dataStream.readInt();
 			this.runTime = dataStream.readInt();
-			//System.out.print("Packet \n");
+			++pCount;
 		}
 		catch(Exception e)
 		{

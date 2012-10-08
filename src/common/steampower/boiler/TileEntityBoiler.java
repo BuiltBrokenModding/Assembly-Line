@@ -32,8 +32,6 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 
 	    /** The number of ticks that the boiler will keep burning */
 	    public int RunTime = 0;
-	    /** The ammount of energy stored before being add to run Timer */
-	    public int energyStore = 0;
 	    /** The ammount of water stored */
 	    public int waterStored = 0;
 	    /** The ammount of steam stored */
@@ -53,13 +51,16 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 	    int steamMax = 140;
 	    public boolean isBeingHeated = false;
 	    private Random random = new Random();
+	    private int pWater = 0;
+	    private int pSteam = 0;
+	    private int pHullH = 0;
 	    public String getInvName()
 	    {
 	        return "container.boiler";
 	    }
 	    public Object[] getSendData()
 		{
-			return new Object[]{(int)RunTime,(int)energyStore,(int)waterStored,
+			return new Object[]{(int)RunTime,(int)waterStored,
 					(int)steamStored,(int)heatStored,(int)hullHeat,(int)heatTick};
 		}
 		
@@ -71,7 +72,6 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 			{
 				
 				RunTime = dataStream.readInt();
-				energyStore = dataStream.readInt();
 				waterStored = dataStream.readInt();
 				steamStored = dataStream.readInt();
 				heatStored = dataStream.readInt();
@@ -91,7 +91,6 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 	    {	     
 	    	super.readFromNBT(par1NBTTagCompound);
 	        this.RunTime = par1NBTTagCompound.getShort("BurnTime");
-	        this.energyStore = par1NBTTagCompound.getInteger("energyStore");
 	        this.steamStored = par1NBTTagCompound.getInteger("steamStore");
 	        this.heatStored = par1NBTTagCompound.getInteger("heatStore");
 	        this.waterStored = par1NBTTagCompound.getInteger("waterStore");
@@ -105,7 +104,6 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 	    {
 	        super.writeToNBT(par1NBTTagCompound);
 	        par1NBTTagCompound.setShort("BurnTime", (short)this.RunTime);
-	        par1NBTTagCompound.setInteger("energyStore", (int)this.energyStore);
 	        par1NBTTagCompound.setInteger("steamStore", (int)this.steamStored);
 	        par1NBTTagCompound.setInteger("heatStore", (int)this.heatStored);
 	        par1NBTTagCompound.setInteger("waterStore", (int)this.waterStored);
@@ -115,10 +113,19 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 	    /**
 	     * Allows the entity to update its state. Overridden in most subclasses, e.g. the mob spawner uses this to count
 	     * ticks and creates a new spawn inside its implementation.
-	     */    
+	     */ 
+	    public boolean needUpdate()
+		{
+	    	if(this.pWater != this.waterStored || this.pSteam != this.steamStored || this.pHullH != this.hullHeat)
+	    	{
+	    		return true;
+	    	}
+			return false;
+		}
 	   @Override
 	   public void updateEntity()
 	    {
+		   super.updateEntity();
 		   if(count++ >=20)
 		   {
 			   count = 0;
@@ -183,8 +190,12 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 				{
 					heatStored += (int) Math.min((int)(random.nextDouble()*100), heatMax);
 				}
+				//keeps track of what the previous measure were so packets stop sending after the machine doesn't change any
+				this.pWater = this.waterStored;
+				this.pSteam = this.steamStored;
+				this.pHullH = this.hullHeat;
 		   }
-		   super.updateEntity();
+		   
 	    }
 	    }
 	    private void emptyBuckets() 
@@ -309,15 +320,7 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 		public int presureOutput(Liquid type, ForgeDirection side) {
 			if(type == Liquid.STEAM)
 			{
-				if(side == ForgeDirection.UP)
-				{
-					return 100;
-				}
-				else
-				{
-					return 80;
-				}
-
+				return (this.steamStored/this.steamMax)*40 +60;
 			}
 			return 0;
 		}

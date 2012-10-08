@@ -66,7 +66,9 @@ public class ItemGuage extends Item
 	                    	
 	                    		print = typeName +" " + steam +" @ "+pressure+"PSI";
 	                    	
-	                    	player.addChatMessage(print);
+	                    	player.sendChatToPlayer(print);
+	                    	player.sendChatToPlayer("hPre: "+pipeEntity.hPressure+" hPPre:"+pipeEntity.hPProducer);
+	                    	player.sendChatToPlayer("cUnits: "+pipeEntity.connectedUnits);
 	                    	return true;
 	                    }
 	                    if(blockEntity instanceof IMechanical)
@@ -78,7 +80,7 @@ public class ItemGuage extends Item
 	                    	
 	                    		print = " " + steam +"N "+pressure*45+"degrees";
 	                    	
-	                    	player.addChatMessage(print);
+	                    	player.sendChatToPlayer(print);
 	                    	return true;
 	                    }
 	    	}

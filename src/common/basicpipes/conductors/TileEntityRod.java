@@ -18,6 +18,7 @@ public class TileEntityRod extends TileEntity implements IPacketReceiver,IMechan
 
 	public int pos = 0;
 	private int force = 0;
+	private int pForce = 0;
 	public int aForce = 0;
 	public int forceMax = 1000;
 	private int tickCount = 0;
@@ -72,8 +73,12 @@ public class TileEntityRod extends TileEntity implements IPacketReceiver,IMechan
 					this.force -=Math.max(force/10, 0);
 				}
 				aForce = Math.max(force - 10,0);
-				Packet packet = PacketManager.getPacket(SteamPowerMain.channel,this,  new Object[]{force,aForce});
-				PacketManager.sendPacketToClients(packet, worldObj, Vector3.get(this), 40);
+				if(this.force != this.pForce)
+				{
+					Packet packet = PacketManager.getPacket(SteamPowerMain.channel,this,  new Object[]{force});
+					PacketManager.sendPacketToClients(packet, worldObj, Vector3.get(this), 40);
+				}
+				this.pForce = this.force;
 			}
 		}
 	}
@@ -113,7 +118,6 @@ public class TileEntityRod extends TileEntity implements IPacketReceiver,IMechan
 		try
 		{
 			this.force = dataStream.readInt();
-			this.aForce = dataStream.readInt();
 		}catch(Exception e)
 		{
 			e.printStackTrace();

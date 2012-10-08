@@ -84,17 +84,13 @@ public class BlockPipe extends BlockContainer
 	}
 	public static void updateConductorTileEntity(World world, int x, int y, int z)
 	{
-		
 		for(int i = 0; i < 6; i++)
         {
-            //Update the tile entity on neighboring blocks
         	TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
         	if(tileEntity instanceof TileEntityPipe)
         	{
-        		TileEntityPipe conductorTileEntity = (TileEntityPipe) tileEntity;
-        		Liquid type = conductorTileEntity.getType();
-        		ForgeDirection side = ForgeDirection.getOrientation(i);
-        		conductorTileEntity.addConnection(getLiquidUnit(world, x, y, z, side, type), side);
+        		((TileEntityPipe) tileEntity).addConnection(getLiquidUnit(world, x, y, z, 
+        				ForgeDirection.getOrientation(i), ((TileEntityPipe) tileEntity).getType()), ForgeDirection.getOrientation(i));
         	}
         }
 	}
@@ -107,6 +103,7 @@ public class BlockPipe extends BlockContainer
 	 @Override
 	public void breakBlock(World world, int x, int y, int z,int par5, int par6)
 	 {
+		 super.breakBlock(world, x, y, z, par5, par6);
 		 TileEntity ent = world.getBlockTileEntity(x, y, z);
 		 Random furnaceRand = new Random();
 		 if(ent instanceof TileEntityPipe)
