@@ -34,27 +34,29 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements ILi
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		sList = TradeHelper.getSourounding(this);
-		int bBlock = worldObj.getBlockId(xCoord, yCoord -1, zCoord);
-		Liquid bellow = Liquid.getLiquidByBlock(bBlock);
-		if(bellow != null && this.lStored <= 0)
+		if(count++ >= 20)
 		{
-			this.type = bellow;
-		}
-		if(!worldObj.isRemote)
-		{
-			count++;
+			count = 0;
+			sList = TradeHelper.getSourounding(this);
+			int bBlock = worldObj.getBlockId(xCoord, yCoord -1, zCoord);
+			Liquid bellow = Liquid.getLiquidByBlock(bBlock);
 			
-			
-			if(bBlock == type.Still && this.eStored > 200 && this.lStored < this.wMax && count>=20)
+			if(bellow != null && this.lStored <= 0)
 			{
-				eStored -= 200;
-				lStored += 1;
-				worldObj.setBlockAndMetadataWithNotify(xCoord, yCoord-1, zCoord, 0, 0);
-				count = 0;
+				this.type = bellow;
 			}
-		}
-		 
+			
+			if(!worldObj.isRemote)
+			{
+				if(bBlock == type.Still && this.eStored > 200 && this.lStored < this.wMax)
+				{
+					eStored -= 200;
+					lStored += 1;
+					worldObj.setBlockAndMetadataWithNotify(xCoord, yCoord-1, zCoord, 0, 0);
+					
+				}
+			}
+		} 
 	}
 
 	@Override

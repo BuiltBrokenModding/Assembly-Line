@@ -52,7 +52,8 @@ public class TileEntityRod extends TileEntity implements IPacketReceiver,IMechan
 				this.pos = ((IMechanical)bb).getAnimationPos();
 			}
 			if(!worldObj.isRemote)
-			{				
+			{	
+				
 				if(ff instanceof IMechanical)
 				{
 					if(((IMechanical) ff).canInputSide(backDir))
@@ -62,17 +63,13 @@ public class TileEntityRod extends TileEntity implements IPacketReceiver,IMechan
 				}
 				if(bb instanceof IMechanical)
 				{
-					if(((IMechanical) bb).getForce() <= 0)
-					{
-						this.force = 0;
-					}
 					if(((IMechanical) bb).canOutputSide(frontDir))
 					{
 						this.force = ((IMechanical) bb).getForce();
 					}
 				}else
 				{
-					this.force = 0;
+					this.force -=Math.max(force/10, 0);
 				}
 				aForce = Math.max(force - 10,0);
 				Packet packet = PacketManager.getPacket(SteamPowerMain.channel,this,  new Object[]{force,aForce});

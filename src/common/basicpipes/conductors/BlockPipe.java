@@ -37,17 +37,15 @@ public class BlockPipe extends BlockContainer
         super.onBlockAdded(world, x, y, z);
         this.updateConductorTileEntity(world, x, y, z);
     }
-	public static TileEntity getLiquidUnit(World world, int x, int y, int z, int side,Liquid type)
+	public static TileEntity getLiquidUnit(World world, int x, int y, int z, ForgeDirection side,Liquid type)
 	{
-		ForgeDirection dir = ForgeDirection.getOrientation(side);
-		
 		//Check if the designated block is a UE Unit - producer, consumer or a conductor
-		TileEntity tileEntity = world.getBlockTileEntity(x+dir.offsetX, y+dir.offsetY, z+dir.offsetZ);
+		TileEntity tileEntity = world.getBlockTileEntity(x+side.offsetX, y+side.offsetY, z+side.offsetZ);
 		TileEntity returnValue = null;		
 		
 		if(tileEntity instanceof ILiquidConsumer)
 		{	
-			if(((ILiquidConsumer)tileEntity).canRecieveLiquid(type,ForgeDirection.getOrientation(side)))
+			if(((ILiquidConsumer)tileEntity).canRecieveLiquid(type,side))
 			{
 				returnValue = tileEntity;
 			}
@@ -55,7 +53,7 @@ public class BlockPipe extends BlockContainer
 		
 		if (tileEntity instanceof ILiquidProducer)
 		{			
-			if(((ILiquidProducer)tileEntity).canProduceLiquid(type,ForgeDirection.getOrientation(side)))
+			if(((ILiquidProducer)tileEntity).canProduceLiquid(type,side))
 			{
 				returnValue = tileEntity;
 			}
@@ -95,7 +93,8 @@ public class BlockPipe extends BlockContainer
         	{
         		TileEntityPipe conductorTileEntity = (TileEntityPipe) tileEntity;
         		Liquid type = conductorTileEntity.getType();
-        		conductorTileEntity.addConnection(getLiquidUnit(world, x, y, z, i, type), ForgeDirection.getOrientation(i));
+        		ForgeDirection side = ForgeDirection.getOrientation(i);
+        		conductorTileEntity.addConnection(getLiquidUnit(world, x, y, z, side, type), side);
         	}
         }
 	}
