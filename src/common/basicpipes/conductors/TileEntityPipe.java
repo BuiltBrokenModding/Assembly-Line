@@ -20,6 +20,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer,IPacke
 
 	public int capacity = 2;
 	private int count = 0;
+	private int count2 = 0;
 	public int presure = 0;
 	public int connectedUnits = 0;
 	public int hPressure = 0;
@@ -87,8 +88,9 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer,IPacke
 			BlockPipe.updateConductorTileEntity(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
 			if(!this.worldObj.isRemote)
 			{
-				if(firstUpdate)
-				{	firstUpdate = false;
+				if(firstUpdate || count2++ >= 10)
+				{	count2= 0;
+					firstUpdate = false;
 					Packet packet = PacketManager.getPacket("Pipes",this, new Object[]{this.type.ordinal()});
 					PacketManager.sendPacketToClients(packet, worldObj, Vector3.get(this), 60);
 				}
@@ -132,7 +134,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer,IPacke
 				}
 				
 				//only trade liquid if there is more than one thing connect and its pressure is higher than 1
-				if(this.connectedUnits > 0 && this.presure > 0 && this.liquidStored > 0)
+				if(this.connectedUnits > 0 && this.presure > 0)
 				{
 					for(int i = 0; i < 6; i++)
 			        {

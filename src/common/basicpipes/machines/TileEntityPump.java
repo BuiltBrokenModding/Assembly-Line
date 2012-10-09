@@ -6,7 +6,7 @@ import universalelectricity.implement.IElectricityReceiver;
 import universalelectricity.prefab.TileEntityElectricityReceiver;
 import basicpipes.pipes.api.ILiquidProducer;
 import basicpipes.pipes.api.Liquid;
-import basicpipes.pipes.api.TradeHelper;
+import basicpipes.pipes.api.MHelper;
 
 public class TileEntityPump extends TileEntityElectricityReceiver implements ILiquidProducer,IElectricityReceiver {
  int dCount = 0;
@@ -37,7 +37,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements ILi
 		if(count++ >= 20)
 		{
 			count = 0;
-			sList = TradeHelper.getSourounding(this);
+			sList = MHelper.getSourounding(this);
 			int bBlock = worldObj.getBlockId(xCoord, yCoord -1, zCoord);
 			Liquid bellow = Liquid.getLiquidByBlock(bBlock);
 			

@@ -34,8 +34,6 @@ import universalelectricity.electricity.ElectricInfo.ElectricUnit;
 	        String displayText = "";
 	        String displayText2 = "";
 	        String displayText3 = "";
-	        String displayText4 = "";
-	        String displayText5 = "";
 	        /**
 	        if(tileEntity.connectedElectricUnit == null)
 	        {
@@ -57,18 +55,13 @@ import universalelectricity.electricity.ElectricInfo.ElectricUnit;
 	        {
 	        	//displayText = ElectricUnit.getWattDisplay((int)(tileEntity.generateRate*20));
 	        	displayText =  "ForceOut: "+tileEntity.force+"N";
-	        }
 	        	displayText2 = "water" + "-" + tileEntity.water;
 	        	displayText3 = "steam" + "-" + tileEntity.steam;
-	        	
-	        	displayText4 = "Db:PacketsReceived " + "=" + tileEntity.pCount;
-	        	//displayText5 = "Debug:bforce" + "=" + tileEntity.bForce;
+	        }
 	        		
 	        this.fontRenderer.drawString(displayText, (int)(105-displayText.length()*1), 45, 4210752);
 	        this.fontRenderer.drawString(displayText2, (int)(105-displayText.length()*1), 55, 4210752);
 	        this.fontRenderer.drawString(displayText3, (int)(105-displayText.length()*1), 65, 4210752);
-	       this.fontRenderer.drawString(displayText4, (int)(105-displayText.length()*1), 75, 4210752);
-	      // this.fontRenderer.drawString(displayText5, (int)(105-displayText.length()*1), 85, 4210752);
 	        this.fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
 	    }
 

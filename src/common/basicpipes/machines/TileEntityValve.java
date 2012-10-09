@@ -5,7 +5,7 @@ import net.minecraftforge.common.ForgeDirection;
 import basicpipes.conductors.TileEntityPipe;
 import basicpipes.pipes.api.ILiquidConsumer;
 import basicpipes.pipes.api.Liquid;
-import basicpipes.pipes.api.TradeHelper;
+import basicpipes.pipes.api.MHelper;
 
 public class TileEntityValve extends TileEntity implements ILiquidConsumer {
 Liquid type = Liquid.DEFUALT;
@@ -55,7 +55,7 @@ boolean on = false;
 				 case 4: deltaX++;break;
 			 }
 			
-			 connected = TradeHelper.getSourounding(this);
+			 connected = MHelper.getSourounding(this);
 			 for(int i = 0;i<6;i++)
 			 {
 				 if(!(connected[i] instanceof TileEntityPipe))

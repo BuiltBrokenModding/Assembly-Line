@@ -12,13 +12,12 @@ import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import steampower.SteamPowerMain;
 import steampower.TileEntityMachine;
-import steampower.TradeHelper;
-import steampower.burner.TileEntityFireBox;
 import universalelectricity.network.IPacketReceiver;
 import basicpipes.pipes.api.IHeatProducer;
 import basicpipes.pipes.api.ILiquidConsumer;
 import basicpipes.pipes.api.ILiquidProducer;
 import basicpipes.pipes.api.Liquid;
+import basicpipes.pipes.api.MHelper;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -130,7 +129,7 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 		   {
 			   count = 0;
 		   //update/resets connection list
-		   TileEntity[] entityList = TradeHelper.getSourounding(this);
+		   TileEntity[] entityList = MHelper.getSourounding(this);
 		   tankCount = 0;
 		   for(int c = 0; c< 6; c++)
 		   {
@@ -168,8 +167,8 @@ public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiv
 			    emptyBuckets();
 			    
 			    	//adds water from container slot
-			    	this.waterStored = TradeHelper.shareLiquid(this, Liquid.WATER, false);
-			    	this.steamStored = TradeHelper.shareLiquid(this, Liquid.STEAM, true);
+			    	this.waterStored = MHelper.shareLiquid(this, Liquid.WATER, this.waterStored);
+			    	this.steamStored = MHelper.shareLiquid(this, Liquid.STEAM, this.steamStored);
 			    
 			    
 				if(waterStored > 0 && hullHeated && heatStored > heatNeeded)

@@ -8,15 +8,13 @@ import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.NetworkManager;
 import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 import steampower.SteamPowerMain;
 import steampower.TileEntityMachine;
-import steampower.TradeHelper;
 import steampower.boiler.TileEntityBoiler;
 import universalelectricity.network.IPacketReceiver;
-
 import basicpipes.pipes.api.IHeatProducer;
+import basicpipes.pipes.api.MHelper;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -144,7 +142,7 @@ public class TileEntityFireBox extends TileEntityMachine implements IPacketRecei
     public void addConnection()
 	{			
     	connectedUnits = 0;
-    	TileEntity[] aEntity = TradeHelper.getSourounding(this);
+    	TileEntity[] aEntity = MHelper.getSourounding(this);
 		for(int i = 0; i<6; i++)
 		{	
 			

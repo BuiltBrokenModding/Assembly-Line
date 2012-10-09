@@ -6,6 +6,7 @@ import net.minecraft.src.TileEntitySpecialRenderer;
 import org.lwjgl.opengl.GL11;
 
 import steampower.boiler.TileEntityBoiler;
+import basicpipes.pipes.api.MHelper;
 
 public class RenderBoiler extends TileEntitySpecialRenderer
 {
@@ -36,14 +37,14 @@ public class RenderBoiler extends TileEntitySpecialRenderer
 			model.generalRender(0.0625F);
 		}
 		else 
-		if(TradeHelper.corner(tileEntity) == 0 || ((TileEntityBoiler)tileEntity).tankCount > 2)
+		if(MHelper.corner(tileEntity) == 0 || ((TileEntityBoiler)tileEntity).tankCount > 2)
 		{
 			bindTextureByName(SteamPowerMain.textureFile+"tankBlock.png");
 			model2.renderBlock(0.0625F);
 		}
 		else
 		{
-				int corner =  TradeHelper.corner(tileEntity);
+				int corner =  MHelper.corner(tileEntity);
 				bindTextureByName(SteamPowerMain.textureFile+"CornerTank.png");
 				switch(corner)
 				{
