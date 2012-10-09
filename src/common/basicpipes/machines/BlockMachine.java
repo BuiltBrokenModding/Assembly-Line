@@ -9,6 +9,7 @@ import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
 import basicpipes.BasicPipesMain;
 import basicpipes.ItemRenderHelper;
+import basicpipes.LTanks.TileEntityLTank;
 
 public class BlockMachine extends BlockContainer
 {	
@@ -46,11 +47,7 @@ public class BlockMachine extends BlockContainer
     	{
     		return 0;
     	}
-    	if(meta > 3 && meta < 8)
-    	{
-    		return 4;
-    	}
-        return 0;
+        return meta;
     }
 	@Override
 	public TileEntity createNewTileEntity(World var1,int meta) {
@@ -59,13 +56,13 @@ public class BlockMachine extends BlockContainer
 	    {    
 			return new TileEntityPump();
 	    }
-		if(meta > 3 && meta < 8)
+		if(meta == 4)
 	    {    
 			return new TileEntityCondenser();
 	    }
-		if(meta > 7 && meta < 12)
+		if(meta == 5)
 	    {    
-			return new TileEntityValve();
+			return new TileEntityLTank();
 	    }
 		return null;
 	}

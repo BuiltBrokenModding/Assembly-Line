@@ -7,6 +7,8 @@ import net.minecraft.src.ItemStack;
 import net.minecraftforge.common.Configuration;
 import universalelectricity.BasicComponents;
 import universalelectricity.network.PacketManager;
+import basicpipes.LTanks.ItemTank;
+import basicpipes.LTanks.TileEntityLTank;
 import basicpipes.conductors.BlockPipe;
 import basicpipes.conductors.BlockRod;
 import basicpipes.conductors.ItemGuage;
@@ -44,6 +46,7 @@ public class BasicPipesMain{
 	private static int ppipeID;
 	public static int machineID;
 	private static int toolID;
+	private static int tankID;
 	public static int valveID;
 	public static int rodID;
 	public static Block pipe = new BlockPipe(pipeID).setBlockName("pipe");
@@ -52,6 +55,7 @@ public class BasicPipesMain{
 	public static Block rod = new BlockRod(rodID);
 	public static Item parts = new ItemParts(partID);
 	public static Item itemPipes = new ItemPipe(ppipeID);
+	public static Item itemTank = new ItemTank(tankID);
 	public static Item gauge = new ItemGuage(toolID);
 
 	public static String channel = "Pipes";
@@ -69,6 +73,7 @@ public class BasicPipesMain{
              partID = Integer.parseInt(config.getOrCreateIntProperty("parts", Configuration.CATEGORY_ITEM, 23022).value);
              ppipeID = Integer.parseInt(config.getOrCreateIntProperty("pipes", Configuration.CATEGORY_ITEM, 23023).value);
              toolID = Integer.parseInt(config.getOrCreateIntProperty("ToolID", Configuration.CATEGORY_ITEM, 23024).value);
+             tankID = Integer.parseInt(config.getOrCreateIntProperty("tankID", Configuration.CATEGORY_ITEM, 23025).value);
              config.save();
              return pipeID;
      }
@@ -88,14 +93,20 @@ public class BasicPipesMain{
 		GameRegistry.registerTileEntity(TileEntityPipe.class, "pipe");
 		GameRegistry.registerTileEntity(TileEntityPump.class, "pump");
 		GameRegistry.registerTileEntity(TileEntityRod.class, "rod");
+		GameRegistry.registerTileEntity(TileEntityLTank.class, "ltank");
 		//Names and lang stuff
 			//Pipe Names
 			for(int i =0; i < Liquid.values().length;i++)
 			{
 				LanguageRegistry.addName((new ItemStack(itemPipes, 1, i)), Liquid.getLiquid(i).lName+" Pipe");
 			}
+			for(int i =0; i < Liquid.values().length;i++)
+			{
+				LanguageRegistry.addName((new ItemStack(itemTank, 1, i)), Liquid.getLiquid(i).lName+" Tank");
+			}
 	   	    //Pump
 			LanguageRegistry.addName((new ItemStack(machine, 1, 0)), "WaterPump");
+			LanguageRegistry.addName((new ItemStack(machine, 1, 4)), "WaterCondensor");
 			LanguageRegistry.addName((new ItemStack(rod, 1)), "MechRod");
 			//Tools
 			LanguageRegistry.addName((new ItemStack(gauge, 1, 0)), "PipeGuage");

@@ -6,6 +6,7 @@ import java.util.List;
 import steampower.turbine.TileEntitySteamPiston;
 
 import basicpipes.BasicPipesMain;
+import basicpipes.LTanks.TileEntityLTank;
 import basicpipes.pipes.api.IMechanical;
 import basicpipes.pipes.api.Liquid;
 
@@ -65,6 +66,19 @@ public class ItemGuage extends Item
 	                    	String print = "Error";
 	                    	
 	                    		print = typeName +" " + steam +" @ "+pressure+"PSI";
+	                    	
+	                    	player.sendChatToPlayer(print);
+	                    	return true;
+	                    }
+	                    if(blockEntity instanceof TileEntityLTank)
+	                    {
+	                    	TileEntityLTank pipeEntity = (TileEntityLTank) blockEntity;                    	
+	                    	Liquid type = pipeEntity.getType();
+	                    	int steam = pipeEntity.getStoredLiquid(type);
+	                    	String typeName = type.lName;
+	                    	String print = "Error";
+	                    	
+	                    		print = typeName +" " + steam;
 	                    	
 	                    	player.sendChatToPlayer(print);
 	                    	return true;

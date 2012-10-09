@@ -194,4 +194,8 @@ public void handlePacketData(NetworkManager network,
 	}
 	
 }
+public void setType(Liquid dm) {
+	this.type = dm;
+	
+}
 }
