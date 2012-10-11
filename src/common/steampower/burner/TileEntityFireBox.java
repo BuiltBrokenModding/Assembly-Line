@@ -191,7 +191,7 @@ public class TileEntityFireBox extends TileEntityMachine implements IPacketRecei
 	}
 	
 	@Override
-	public void handlePacketData(NetworkManager network,
+	public void handlePacketData(NetworkManager network, int packetType,
 			Packet250CustomPayload packet, EntityPlayer player,
 			ByteArrayDataInput dataStream) {
 		try

@@ -180,13 +180,13 @@ public int presureOutput(Liquid type, ForgeDirection side) {
 
 
 @Override
-public void handlePacketData(NetworkManager network,
+public void handlePacketData(NetworkManager network, int packetType,
 		Packet250CustomPayload packet, EntityPlayer player,
-		ByteArrayDataInput dataStream) {
+		ByteArrayDataInput data) {
 	try
 	{
-		this.type = Liquid.getLiquid(dataStream.readInt());
-		this.LStored = dataStream.readInt();
+		this.type = Liquid.getLiquid(data.readInt());
+		this.LStored = data.readInt();
 	}catch(Exception e)
 	{
 		e.printStackTrace();

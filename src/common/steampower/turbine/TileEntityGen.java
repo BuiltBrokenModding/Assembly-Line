@@ -99,9 +99,9 @@ public class TileEntityGen extends TileEntityMachine implements IPacketReceiver,
 		super.updateEntity();
 	}
 	@Override
-	public void handlePacketData(NetworkManager network,
+	public void handlePacketData(NetworkManager network, int packetType,
 			Packet250CustomPayload packet, EntityPlayer player,
-			ByteArrayDataInput dataStream) {
+			ByteArrayDataInput data) {
 		// TODO Auto-generated method stub
 		
 	}

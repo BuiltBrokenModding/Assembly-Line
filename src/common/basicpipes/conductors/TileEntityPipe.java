@@ -245,7 +245,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer,IPacke
 
 
 	@Override
-	public void handlePacketData(NetworkManager network,
+	public void handlePacketData(NetworkManager network, int packetType,
 			Packet250CustomPayload packet, EntityPlayer player,
 			ByteArrayDataInput data) {
 		try

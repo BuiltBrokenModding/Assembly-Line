@@ -112,12 +112,12 @@ public class TileEntityRod extends TileEntity implements IPacketReceiver,IMechan
 	}
 
 	@Override
-	public void handlePacketData(NetworkManager network,
+	public void handlePacketData(NetworkManager network, int packetType,
 			Packet250CustomPayload packet, EntityPlayer player,
-			ByteArrayDataInput dataStream) {
+			ByteArrayDataInput data) {
 		try
 		{
-			this.force = dataStream.readInt();
+			this.force = data.readInt();
 		}catch(Exception e)
 		{
 			e.printStackTrace();
