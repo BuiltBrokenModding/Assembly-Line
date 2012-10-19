@@ -31,7 +31,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
-@Mod(modid = "basicPipes", name = "Basic Pipes", version = "1.7",dependencies = "after:UniversalElectricity")
+@Mod(modid = "basicPipes", name = "Basic Pipes", version = "1.9",dependencies = "after:UniversalElectricity")
 @NetworkMod(channels = { "Pipes" }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
 
 public class BasicPipesMain{	
@@ -142,7 +142,17 @@ public class BasicPipesMain{
 		//fuel
 		GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1,4), new Object[] { new ItemStack(parts, 1,1),new ItemStack(parts, 1,4),new ItemStack(Item.dyePowder, 1,11)});
 		GameRegistry.addRecipe(new ItemStack(parts, 1,7), new Object[] { "T@T", 'T',new ItemStack(parts,1,0),'@',Block.lever});//valve
-			
+		
+		GameRegistry.addRecipe(new ItemStack(parts, 1,6), new Object[] { " @ ","@ @"," @ ", '@',Item.ingotIron});//tank
+		GameRegistry.addShapelessRecipe(new ItemStack(itemTank, 1,0), new Object[] { new ItemStack(parts, 1,6),new ItemStack(parts, 1,4),new ItemStack(Item.dyePowder, 1,15)});
+		GameRegistry.addShapelessRecipe(new ItemStack(itemTank, 1,1), new Object[] { new ItemStack(parts, 1,6),new ItemStack(parts, 1,4),new ItemStack(Item.dyePowder, 1,4)});
+		//lava  TODO change to use obby pipe and nether items
+		GameRegistry.addShapelessRecipe(new ItemStack(itemTank, 1,2), new Object[] { new ItemStack(parts, 1,6),Block.obsidian,Block.obsidian,Block.obsidian,Block.obsidian});
+		//oil
+		GameRegistry.addShapelessRecipe(new ItemStack(itemTank, 1,3), new Object[] { new ItemStack(parts, 1,6),new ItemStack(parts, 1,4),new ItemStack(Item.dyePowder, 1,0)});
+		//fuel
+		GameRegistry.addShapelessRecipe(new ItemStack(itemTank, 1,4), new Object[] { new ItemStack(parts, 1,6),new ItemStack(parts, 1,4),new ItemStack(Item.dyePowder, 1,11)});
+		
 		try{
 		GameRegistry.addRecipe(new ItemStack(parts, 2,0), new Object[] { "@@@", '@',BasicComponents.itemBronzeIngot});//bronze tube
 		//steam
@@ -164,7 +174,7 @@ public class BasicPipesMain{
 		{
 			System.out.print("UE based recipes not loaded");
 			//secondary boiler tank
-			GameRegistry.addRecipe(new ItemStack(parts, 1,6), new Object[] { " @ ","@ @"," @ ", '@',Item.ingotIron});//tank
+			
 			//steam
 			GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1,0), new Object[] { new ItemStack(parts, 1,1),new ItemStack(parts, 1,4)});
 		}

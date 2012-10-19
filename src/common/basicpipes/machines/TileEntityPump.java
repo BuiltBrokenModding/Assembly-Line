@@ -34,10 +34,10 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements ILi
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		if(count++ >= 20)
+		if(count++ >= 40)
 		{
 			count = 0;
-			sList = MHelper.getSourounding(this);
+			sList = MHelper.getSourounding(worldObj,xCoord, yCoord, zCoord);
 			int bBlock = worldObj.getBlockId(xCoord, yCoord -1, zCoord);
 			Liquid bellow = Liquid.getLiquidByBlock(bBlock);
 			

@@ -35,32 +35,7 @@ public class BlockPipe extends BlockContainer
     public void onBlockAdded(World world, int x, int y, int z)
     {
         super.onBlockAdded(world, x, y, z);
-        this.updateConductorTileEntity(world, x, y, z);
     }
-	public static TileEntity getLiquidUnit(World world, int x, int y, int z, ForgeDirection side,Liquid type)
-	{
-		//Check if the designated block is a UE Unit - producer, consumer or a conductor
-		TileEntity tileEntity = world.getBlockTileEntity(x+side.offsetX, y+side.offsetY, z+side.offsetZ);
-		TileEntity returnValue = null;		
-		
-		if(tileEntity instanceof ILiquidConsumer)
-		{	
-			if(((ILiquidConsumer)tileEntity).canRecieveLiquid(type,side))
-			{
-				returnValue = tileEntity;
-			}
-		}
-		
-		if (tileEntity instanceof ILiquidProducer)
-		{			
-			if(((ILiquidProducer)tileEntity).canProduceLiquid(type,side))
-			{
-				returnValue = tileEntity;
-			}
-		}
-		
-		return returnValue;
-	}
     /**
      * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
      * their own) Args: x, y, z, neighbor blockID
@@ -69,7 +44,6 @@ public class BlockPipe extends BlockContainer
     public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
     {
     	super.onNeighborBlockChange(world, x, y, z, blockID);
-    	this.updateConductorTileEntity(world, x, y, z);
     }
 	@Override
 	public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)
@@ -81,18 +55,6 @@ public class BlockPipe extends BlockContainer
 	public boolean canPlaceBlockOnSide(World par1World, int par2, int par3, int par4, int par5)
     {
 		return true;
-	}
-	public static void updateConductorTileEntity(World world, int x, int y, int z)
-	{
-		for(int i = 0; i < 6; i++)
-        {
-        	TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-        	if(tileEntity instanceof TileEntityPipe)
-        	{
-        		((TileEntityPipe) tileEntity).addConnection(getLiquidUnit(world, x, y, z, 
-        				ForgeDirection.getOrientation(i), ((TileEntityPipe) tileEntity).getType()), ForgeDirection.getOrientation(i));
-        	}
-        }
 	}
 
 	@Override

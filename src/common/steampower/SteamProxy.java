@@ -1,13 +1,12 @@
 package steampower;
 
 import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.IInventory;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
-import steampower.boiler.ContainerBoiler;
 import steampower.boiler.TileEntityBoiler;
 import steampower.burner.ContainerFireBox;
 import steampower.burner.TileEntityFireBox;
-import steampower.turbine.ContainerGenerator;
 import steampower.turbine.TileEntityGen;
 import steampower.turbine.TileEntitySteamPiston;
 import cpw.mods.fml.common.network.IGuiHandler;
@@ -58,9 +57,8 @@ public class SteamProxy implements IGuiHandler{
         {
 			switch(ID)
 			{
-			case 0: return new ContainerFireBox(player.inventory, ((TileEntityFireBox)tileEntity));
-			case 1: return new ContainerBoiler(player.inventory, ((TileEntityBoiler)tileEntity));
-			case 2: return new ContainerGenerator(player.inventory, ((TileEntitySteamPiston)tileEntity));
+				case 0: return new ContainerFireBox(player.inventory, ((TileEntityFireBox)tileEntity));
+				default: return new ContainerFake(player.inventory, (IInventory) tileEntity);
 			}
         }
 		

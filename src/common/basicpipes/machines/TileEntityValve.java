@@ -55,7 +55,7 @@ boolean on = false;
 				 case 4: deltaX++;break;
 			 }
 			
-			 connected = MHelper.getSourounding(this);
+			 connected = MHelper.getSourounding(worldObj,xCoord, yCoord, zCoord);
 			 for(int i = 0;i<6;i++)
 			 {
 				 if(!(connected[i] instanceof TileEntityPipe))

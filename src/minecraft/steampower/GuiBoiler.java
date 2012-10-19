@@ -7,10 +7,8 @@ import net.minecraft.src.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
-import basicpipes.pipes.api.Liquid;
-
-import steampower.boiler.ContainerBoiler;
 import steampower.boiler.TileEntityBoiler;
+import basicpipes.pipes.api.Liquid;
 
 public class GuiBoiler extends GuiContainer
 {
@@ -18,7 +16,7 @@ public class GuiBoiler extends GuiContainer
 
     public GuiBoiler(InventoryPlayer par1InventoryPlayer, TileEntityBoiler par2TileEntityGrinder)
     {
-        super(new ContainerBoiler(par1InventoryPlayer, par2TileEntityGrinder));
+        super(new ContainerFake(par1InventoryPlayer, par2TileEntityGrinder));
         this.boilerInventory = par2TileEntityGrinder;
     }
 
@@ -51,23 +49,27 @@ public class GuiBoiler extends GuiContainer
         int var8;
         int var9;
         int var10;
-        if (this.boilerInventory.waterStored > 0)
+        if (this.boilerInventory.getStoredLiquid(Liquid.WATER)> 0)
         {
             var7 = boilerInventory.getStoredLiquid(Liquid.WATER)*4 + 1;
             this.drawTexturedModalRect(var5 + 29, var6 + 72 - var7, 176, 148 - var7, 23, var7);
         }
-        if (this.boilerInventory.steamStored > 0)
+        if (this.boilerInventory.getStoredLiquid(Liquid.STEAM) > 0)
         {
-            var8 = boilerInventory.steamStored/14*4 + 1;
+            var8 = boilerInventory.getStoredLiquid(Liquid.STEAM)/14*4 + 1;
             this.drawTexturedModalRect(var5 + 108, var6 + 72 - var8, 176, 90 - var8, 23, var8);
         }
        
         	float precentH = Math.min(boilerInventory.hullHeat/1000 + 1, 10);
             var9 = (int) Math.min(precentH*3.0F,30);
             this.drawTexturedModalRect(var5 + 59, var6 + 70 - var9, 199, 71 - var9, 9, var9);
-            float precentSH = this.boilerInventory.heatStored/1000;
+            float precentSH = this.boilerInventory.heat/1000;
             var10 = (int) Math.round(precentSH*5.33);
             this.drawTexturedModalRect(var5 + 78, var6 + 16, 176, 14, var10, 16);
+            //debug
+            this.fontRenderer.drawString("NonGraphic Debug", (int)(200), 90, 000000);
+            this.fontRenderer.drawString("Water:"+this.boilerInventory.water+"/14", (int)(200), 100, 000000);
+            this.fontRenderer.drawString("Steam:"+this.boilerInventory.steam+"/140", (int)(200), 110, 000000);
         
     }
     public static String getWattDisplay(int watts)

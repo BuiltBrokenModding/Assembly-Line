@@ -1,16 +1,18 @@
-package steampower.turbine;
+package steampower;
 
 import net.minecraft.src.Container;
 import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.IInventory;
 import net.minecraft.src.InventoryPlayer;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.Slot;
+import net.minecraft.src.TileEntity;
 
-public class ContainerGenerator extends Container
+public class ContainerFake extends Container
 {
-	private TileEntitySteamPiston tileEntity;
+	private IInventory tileEntity;
 
-    public ContainerGenerator(InventoryPlayer par1InventoryPlayer, TileEntitySteamPiston tileEntity)
+    public ContainerFake(InventoryPlayer par1InventoryPlayer, IInventory tileEntity)
     {
         this.tileEntity = tileEntity;
        // this.addSlotToContainer(new Slot(tileEntity, 0, 33, 34));

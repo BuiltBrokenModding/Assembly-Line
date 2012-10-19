@@ -8,6 +8,7 @@ import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.NetworkManager;
 import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 import steampower.SteamPowerMain;
 import steampower.TileEntityMachine;
@@ -87,7 +88,7 @@ public class TileEntityFireBox extends TileEntityMachine implements IPacketRecei
             this.itemCookTime --;
             if(isConnected)
             {
-            	this.generateRate = Math.min(this.generateRate+Math.min((this.generateRate)+1, 1), this.maxGenerateRate/20);
+            	this.generateRate = Math.min(this.generateRate+Math.min((this.generateRate)+1, 1), this.maxGenerateRate/10);
             }
         }
     	//Loose heat when the generator is not connected or if there is no coal in the inventory.
@@ -142,7 +143,7 @@ public class TileEntityFireBox extends TileEntityMachine implements IPacketRecei
     public void addConnection()
 	{			
     	connectedUnits = 0;
-    	TileEntity[] aEntity = MHelper.getSourounding(this);
+    	TileEntity[] aEntity = MHelper.getSourounding(worldObj,xCoord, yCoord, zCoord);
 		for(int i = 0; i<6; i++)
 		{	
 			
@@ -180,9 +181,12 @@ public class TileEntityFireBox extends TileEntityMachine implements IPacketRecei
 	public String getInvName() {
 		return "FireBox";
 	}
-	public float onProduceHeat(float jouls, int side) {
-		// TODO Auto-generated method stub
-		return Math.min(generateRate*getTickInterval(),jouls);
+	public float onProduceHeat(float jouls, ForgeDirection side) {
+		if(side == ForgeDirection.UP)
+		{
+			return Math.min(generateRate,jouls);
+		}
+		return 0;
 	}
 	@Override
 	public Object[] getSendData()

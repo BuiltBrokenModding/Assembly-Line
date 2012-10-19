@@ -84,8 +84,9 @@ public class TileEntityMachine extends TileEntity implements  IInventory, ISided
 	}
 	public boolean needUpdate()
 	{
-		return false;
+		return true;
 	}
+	@Override
 	public void updateEntity()
     {
 		super.updateEntity();

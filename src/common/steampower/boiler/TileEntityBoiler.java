@@ -6,6 +6,7 @@ import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
+import net.minecraft.src.NBTTagList;
 import net.minecraft.src.NetworkManager;
 import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.TileEntity;
@@ -13,323 +14,244 @@ import net.minecraftforge.common.ForgeDirection;
 import steampower.SteamPowerMain;
 import steampower.TileEntityMachine;
 import universalelectricity.network.IPacketReceiver;
+import basicpipes.conductors.TileEntityPipe;
 import basicpipes.pipes.api.IHeatProducer;
 import basicpipes.pipes.api.ILiquidConsumer;
 import basicpipes.pipes.api.ILiquidProducer;
+import basicpipes.pipes.api.IStorageTank;
 import basicpipes.pipes.api.Liquid;
 import basicpipes.pipes.api.MHelper;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiver,ILiquidProducer, ILiquidConsumer
+public class TileEntityBoiler extends TileEntityMachine implements IPacketReceiver,ILiquidProducer, IStorageTank
 {
+	public int steam = 0;
+	public int water = 0;
+	public int heat = 0;
+	public int hullHeat = 0;
+	public TileEntity[] connectedBlocks = {null,null,null,null,null,null};
+	public int tankCount = 0;
+	public int tickCount = 0;
 	
-	    /**
-	     * The ItemStacks that hold the items currently being used in the furnace
-	     */
-	    
-
-	    /** The number of ticks that the boiler will keep burning */
-	    public int RunTime = 0;
-	    /** The ammount of water stored */
-	    public int waterStored = 0;
-	    /** The ammount of steam stored */
-	    public int steamStored = 0;
-	    /** The ammount of heat stored */
-	    public int heatStored = 0;
-	    public int heatMax = 10000;
-	    /** The ammount of heat stored */
-	    public int hullHeat = 0;
-	    public int hullHeatMax = 4700;
-	    private int heatTick = 0;
-	    public int tankCount = 0;
-	    private int heatNeeded = SteamPowerMain.boilerHeat; // kilo joules	
-	    int count = 0;
-	    boolean hullHeated = false;
-	    public TileEntity[] connectedBlocks = {null, null, null, null, null, null};
-	    int steamMax = 140;
-	    public boolean isBeingHeated = false;
-	    private Random random = new Random();
-	    private int pWater = 0;
-	    private int pSteam = 0;
-	    private int pHullH = 0;
-	    public String getInvName()
-	    {
-	        return "container.boiler";
-	    }
-	    public Object[] getSendData()
+	//-----------------------------
+	//Update stuff
+	//-----------------------------
+	@Override
+	public void updateEntity()
+	{
+		//update connection list used for rendering
+		this.connectedBlocks = MHelper.getSourounding(worldObj,xCoord, yCoord, zCoord);
+		this.tankCount = 0;
+		for(int i =0; i < connectedBlocks.length; i++)
 		{
-			return new Object[]{(int)RunTime,(int)waterStored,
-					(int)steamStored,(int)heatStored,(int)hullHeat,(int)heatTick};
-		}
-		
-		@Override
-		public void handlePacketData(NetworkManager network, int packetType,
-				Packet250CustomPayload packet, EntityPlayer player,
-				ByteArrayDataInput dataStream) {
-			try
+			if(connectedBlocks[i] != null)
 			{
-				
-				RunTime = dataStream.readInt();
-				waterStored = dataStream.readInt();
-				steamStored = dataStream.readInt();
-				heatStored = dataStream.readInt();
-				hullHeat = dataStream.readInt();
-				heatTick  = dataStream.readInt();
+				tankCount++;
 			}
-			catch(Exception e)
-			{
-				e.printStackTrace();	
-			}
-			
-		}
-	    /**
-	     * Reads a tile entity from NBT.
-	     */
-	    public void readFromNBT(NBTTagCompound par1NBTTagCompound)
-	    {	     
-	    	super.readFromNBT(par1NBTTagCompound);
-	        this.RunTime = par1NBTTagCompound.getShort("BurnTime");
-	        this.steamStored = par1NBTTagCompound.getInteger("steamStore");
-	        this.heatStored = par1NBTTagCompound.getInteger("heatStore");
-	        this.waterStored = par1NBTTagCompound.getInteger("waterStore");
-	        this.hullHeat = par1NBTTagCompound.getInteger("hullHeat");
-	    }
-
-	    /**
-	     * Writes a tile entity to NBT.
-	     */
-	    public void writeToNBT(NBTTagCompound par1NBTTagCompound)
-	    {
-	        super.writeToNBT(par1NBTTagCompound);
-	        par1NBTTagCompound.setShort("BurnTime", (short)this.RunTime);
-	        par1NBTTagCompound.setInteger("steamStore", (int)this.steamStored);
-	        par1NBTTagCompound.setInteger("heatStore", (int)this.heatStored);
-	        par1NBTTagCompound.setInteger("waterStore", (int)this.waterStored);
-	        par1NBTTagCompound.setInteger("hullHeat", (int)this.hullHeat);
-	        
-	    }
-	    /**
-	     * Allows the entity to update its state. Overridden in most subclasses, e.g. the mob spawner uses this to count
-	     * ticks and creates a new spawn inside its implementation.
-	     */ 
-	    public boolean needUpdate()
+		}//end connection update
+		if(tickCount++ >= 10 && !worldObj.isRemote)
 		{
-	    	if(this.pWater != this.waterStored || this.pSteam != this.steamStored || this.pHullH != this.hullHeat)
-	    	{
-	    		return true;
-	    	}
-			return false;
-		}
-	   @Override
-	   public void updateEntity()
-	    {
-		   super.updateEntity();
-		   if(count++ >=20)
-		   {
-			   count = 0;
-		   //update/resets connection list
-		   TileEntity[] entityList = MHelper.getSourounding(this);
-		   tankCount = 0;
-		   for(int c = 0; c< 6; c++)
-		   {
-			   if(entityList[c] instanceof TileEntityBoiler)
-			   {
-				   connectedBlocks[c] = entityList[c];
-				   if(c != 0 && c != 1)
-				   {
-					   tankCount++;
-				   }
-			   }
-			   else
-			   {
-				   connectedBlocks[c] = null;
-			   }
-		   }
-		   
-		   	hullHeated = false;
-			if(hullHeat >= hullHeatMax)
-	    	{
-				hullHeated = true;
-			}
-	    	else
-	    	{
-	    		if(!worldObj.isRemote)
-	    		{
-	    			hullHeat = Math.min(hullHeat + heatStored, hullHeatMax);
-	    		}
-	    	}
+			tickCount = 0;
 			
-		   if(!worldObj.isRemote)
-		   {
-			    
-			    
-			    emptyBuckets();
-			    
-			    	//adds water from container slot
-			    	this.waterStored = MHelper.shareLiquid(this, Liquid.WATER, this.waterStored);
-			    	this.steamStored = MHelper.shareLiquid(this, Liquid.STEAM, this.steamStored);
-			    
-			    
-				if(waterStored > 0 && hullHeated && heatStored > heatNeeded)
-				{
-					heatStored = Math.max(heatStored - heatNeeded, 0);
-					--waterStored;
-					steamStored = Math.min(steamStored + 20,this.steamMax);
-				}
-				
-				TileEntity blockE = worldObj.getBlockTileEntity(xCoord, yCoord -1, zCoord);
-				this.isBeingHeated = false;
-				if(blockE instanceof IHeatProducer)
-				{
-					this.isBeingHeated = true;
-					heatStored = (int) Math.min((heatStored + ((IHeatProducer)blockE).onProduceHeat(250, 1)), heatMax);
-				}
-				else if(worldObj.getBlockId(xCoord, yCoord-1, zCoord) == Block.lavaStill.blockID)
-				{
-					heatStored += (int) Math.min((int)(random.nextDouble()*100), heatMax);
-				}
-				//keeps track of what the previous measure were so packets stop sending after the machine doesn't change any
-				this.pWater = this.waterStored;
-				this.pSteam = this.steamStored;
-				this.pHullH = this.hullHeat;
-		   }
-		   
-	    }
-	    }
-	    private void emptyBuckets() 
-	    {
-	    	if (storedItems[0] != null)
-            {
-                if(storedItems[0].isItemEqual(new ItemStack(Item.bucketWater,1)))
-                {
-                	if((int)waterStored < getLiquidCapacity(Liquid.WATER))
-                	{                		
-                		++waterStored;
-                		this.storedItems[0] = new ItemStack(Item.bucketEmpty,1);
-                		this.onInventoryChanged();
-                	}
-                }
-                if(storedItems[0].isItemEqual(new ItemStack(Block.ice,1)))
-                {
-                	if((int)waterStored < getLiquidCapacity(Liquid.WATER) && this.heatStored > 100)
-                	{                		
-                		++waterStored;
-                		int stacksize = this.storedItems[0].stackSize;
-                		if(stacksize > 1)
-                		{
-                			this.storedItems[0] = new ItemStack(Block.ice,stacksize -1);
-                		}
-                		if(stacksize == 1)
-                		{
-                			this.storedItems[0] = null;
-                		}
-                		this.heatStored-=100;
-                		this.onInventoryChanged();
-                	}
-                }
-            }
-			
-		}
-		public int precentHeated() {
-			int var1 = 0;
-			if(hullHeat < 100)
+			TileEntity ent = worldObj.getBlockTileEntity(xCoord, yCoord-1, zCoord);
+			if(ent instanceof IHeatProducer)
 			{
-				var1 = (int)(100 *(hullHeat/hullHeatMax));
+				this.heat = (int) Math.min(((IHeatProducer)ent).onProduceHeat(250, ForgeDirection.UP)+heat,2000);
+			}else
+			if(worldObj.getBlockId(xCoord, yCoord-1, zCoord) == Block.lavaStill.blockID)
+			{
+				this.heat = Math.min(90+heat,2000);
+			}
+			if(hullHeat < 10000)
+			{
+				int mHeat = 10000 - hullHeat;
+				int hHeat = mHeat - Math.max((mHeat - this.heat),0);
+				hullHeat = Math.min(hullHeat + hHeat,10000);
+				this.heat -=hHeat;
+			}else
+			{
+				if(heat >= 2000 && this.water >= 1 && this.steam < this.getLiquidCapacity(Liquid.STEAM))
+				{
+					this.water--;
+					this.steam = Math.min(this.steam +20,this.getLiquidCapacity(Liquid.STEAM));
+					this.heat -= 2000;
+				}
+				this.hullHeat-=5;
+			}
+			this.water = MHelper.shareLiquid(worldObj,xCoord, yCoord, zCoord,this.water,this.getLiquidCapacity(Liquid.WATER), Liquid.WATER);
+			this.steam = MHelper.shareLiquid(worldObj,xCoord, yCoord, zCoord,this.steam,this.getLiquidCapacity(Liquid.STEAM), Liquid.STEAM);
+		}
+		super.updateEntity();
+	}
+	//-----------------------------
+	//Liquid stuff
+	//-----------------------------
+	@Override
+	public int onReceiveLiquid(Liquid type, int vol, ForgeDirection side) 
+	{
+		if(type == Liquid.WATER)
+		{
+			if(this.water < this.getLiquidCapacity(Liquid.WATER))
+			{
+				int rej = Math.max((this.water + vol) - this.getLiquidCapacity(Liquid.WATER), 0);
+				this.water += vol - rej;
+				return rej;
 			}
 			else
 			{
-				var1 = 100;
-			}
-			return var1;
-		}
-		@Override
-		public int onReceiveLiquid(Liquid type, int vol, ForgeDirection side) {
-			if(type == Liquid.STEAM)
-			{
-				int rejectedSteam = Math.max((this.steamStored + vol) - this.getLiquidCapacity(Liquid.STEAM), 0);
-				this.steamStored += vol - rejectedSteam;
-				return rejectedSteam;
-			}
-			if(type == Liquid.WATER)
-			{
-				int rejectedWater = Math.max((this.waterStored + vol) - this.getLiquidCapacity(Liquid.WATER), 0);
-				this.waterStored += vol - rejectedWater;
-				return rejectedWater;
-			}
-			return vol;
-		}
-
-		@Override
-		public boolean canRecieveLiquid(Liquid type,ForgeDirection side) {
-			if(type == Liquid.WATER)
-			{
-				return true;
-			}
-			return false;
-		}
-
-		@Override
-		public int getStoredLiquid(Liquid type) {
-			if(type == Liquid.WATER)
-			{
-				return this.waterStored;
-			}
-			if(type == Liquid.STEAM)
-			{
-				return this.steamStored;
-			}
-			return 0;
-		}
-
-		@Override
-		public int getLiquidCapacity(Liquid type) {
-			if(type ==Liquid.WATER)
-			{
-				return 14;
-			}
-			if(type == Liquid.STEAM)
-			{
-				return steamMax;
-			}
-			return 0;
-		}
-		@Override
-		public int onProduceLiquid(Liquid type, int maxVol, ForgeDirection side) {			
-			if(type == Liquid.STEAM)
-			{
-				if(steamStored > 1)
+				TileEntity te = worldObj.getBlockTileEntity(xCoord, yCoord+1, zCoord);
+				if( te instanceof IStorageTank)
 				{
-					this.steamStored -= 1;
-					return 1;
+					return ((IStorageTank)te).onReceiveLiquid(type, vol, ForgeDirection.UNKNOWN);
 				}
 			}
-			return 0;
-		}
-
-		@Override
-		public boolean canProduceLiquid(Liquid type, ForgeDirection side) {
-			if(type == Liquid.STEAM)
-			{
-				return true;
-			}
-			return false;
-		}
-		@Override
-		public int presureOutput(Liquid type, ForgeDirection side) {
-			if(type == Liquid.STEAM)
-			{
-				return (this.steamStored/this.steamMax)*40 +60;
-			}
-			return 0;
-		}
-		@Override
-		public boolean canProducePresure(Liquid type, ForgeDirection side)
+		}else
+		if(type == Liquid.STEAM)
 		{
-			if(type == Liquid.STEAM)
+			if(this.steam < this.getLiquidCapacity(Liquid.STEAM))
 			{
-				return true;
+				int rej = Math.max((this.steam + vol) - this.getLiquidCapacity(Liquid.STEAM), 0);
+				this.steam += vol - rej;
+				return rej;
 			}
-			return false;
+			else
+			{
+				TileEntity te = worldObj.getBlockTileEntity(xCoord, yCoord-1, zCoord);
+				if( te instanceof IStorageTank)
+				{
+					return ((IStorageTank)te).onReceiveLiquid(type, vol, ForgeDirection.UNKNOWN);
+				}
+			}
 		}
+		return vol;
 	}
+
+	@Override
+	public boolean canRecieveLiquid(Liquid type, ForgeDirection s) {
+		if(type == Liquid.WATER)
+		{
+			return true;
+		}else
+		if(type == Liquid.STEAM && s == ForgeDirection.UNKNOWN)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public int getStoredLiquid(Liquid type) {
+		if(type == Liquid.WATER)
+		{
+			return this.water;
+		}else
+		if(type == Liquid.STEAM)
+		{
+			return this.steam;
+		}
+		return 0;
+	}
+
+	@Override
+	public int getLiquidCapacity(Liquid type) {
+		if(type == Liquid.WATER)
+		{
+			return 14;
+		}else
+		if(type == Liquid.STEAM)
+		{
+			return 140;
+		}
+		return 0;
+	}
+
+	@Override
+	public int onProduceLiquid(Liquid type, int vol, ForgeDirection side) {
+		if(type == Liquid.STEAM)
+		{
+			//TODO setup the actual math for this
+			if(vol < this.steam)
+			{
+				this.steam -= vol;
+				return vol;
+			}else
+				if(this.steam >= 1)
+			{
+				this.steam -= 1;
+				return 1;
+			}
+		}
+		return 0;
+	}
+
+	@Override
+	public boolean canProduceLiquid(Liquid type, ForgeDirection side) {
+		if(type == Liquid.STEAM)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean canProducePresure(Liquid type, ForgeDirection side) {
+		if(type == Liquid.STEAM)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public int presureOutput(Liquid type, ForgeDirection side) {
+		if(type == Liquid.STEAM)
+		{
+			return 100;
+		}
+		return 0;
+	}
+	//-----------------------------
+	//Data
+	//-----------------------------
+	public Object[] getSendData()
+	{
+		return new Object[]{this.water,this.steam,this.heat,this.hullHeat};
+	}
+	@Override
+	public void handlePacketData(NetworkManager network, int packetType,
+			Packet250CustomPayload packet, EntityPlayer player,
+			ByteArrayDataInput dataStream) {
+		try{		
+		this.water = dataStream.readInt();
+		this.steam = dataStream.readInt();
+		this.heat = dataStream.readInt();
+		this.hullHeat = dataStream.readInt();
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+	}
+	@Override
+	public void writeToNBT(NBTTagCompound par1NBTTagCompound)
+	{
+	        super.writeToNBT(par1NBTTagCompound);
+	        par1NBTTagCompound.setInteger("water", this.water);
+	        par1NBTTagCompound.setInteger("steam", this.steam);
+	        par1NBTTagCompound.setInteger("heat", this.heat);
+	        par1NBTTagCompound.setInteger("hullHeat", this.hullHeat);
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound par1NBTTagCompound)
+	{
+		super.readFromNBT(par1NBTTagCompound);
+	    this.water = par1NBTTagCompound.getInteger("water");
+	    this.steam = par1NBTTagCompound.getInteger("steam");
+	    this.heat = par1NBTTagCompound.getInteger("heat");
+	    this.hullHeat = par1NBTTagCompound.getInteger("hullHeat");
+	}
+	
+	  
+}

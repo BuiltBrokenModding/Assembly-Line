@@ -1,21 +1,23 @@
 package basicpipes.pipes.api;
 
 import net.minecraft.src.TileEntity;
+import net.minecraft.src.World;
 import net.minecraftforge.common.ForgeDirection;
 
 public class MHelper {
 /**
- * 
+ * you will have to tell your TileEntity to trade up if liquid or down if gas. I suggest having your onRecieveLiquid 
+ * pump liquid one block up if you block is full.
  * @param entity -  entity at center of search
  * @return an Array containing TileEntities around the TileEntity
  */
-	public static TileEntity[] getSourounding(TileEntity te)
+	public static TileEntity[] getSourounding(World world, int x, int y, int z)
 	{	
 		TileEntity[] list = new TileEntity[]{null,null,null,null,null,null};
 		for(int i =0; i< 6;i++)
 		{
 			ForgeDirection d = ForgeDirection.getOrientation(i);
-			TileEntity aEntity = te.worldObj.getBlockTileEntity(te.xCoord+d.offsetX, te.yCoord+d.offsetY, te.zCoord+d.offsetZ);			
+			TileEntity aEntity = world.getBlockTileEntity(x+d.offsetX, y+d.offsetY, z+d.offsetZ);			
 			if(aEntity instanceof TileEntity)
 			{
 				list[i] = aEntity;
@@ -30,37 +32,64 @@ public class MHelper {
 	 * @param vol - the volume to be traded
 	 * @return the remaining untraded liquid
 	 */
-	public static int shareLiquid(TileEntity te, Liquid type,int vol)
+	public static int shareLiquid(World world, int x, int y, int z,int vol,int max, Liquid type)
 	{
+		TileEntity ent = world.getBlockTileEntity(x, y, z);
 		int currentVol = vol;
+		
+		int tCount = 1;
 		boolean rise = type.isGas;
-		ForgeDirection st = ForgeDirection.getOrientation(rise ? 1 : 0);
-		TileEntity first = te.worldObj.getBlockTileEntity(te.xCoord+st.offsetX, te.yCoord+st.offsetX, te.zCoord+st.offsetX);
-		//trades to the first, bottom for liquid, top for gas
-		if(first instanceof ILiquidConsumer && ((ILiquidConsumer) first).getStoredLiquid(type) < ((ILiquidConsumer) first).getLiquidCapacity(type))
+		if(currentVol <= 0)
 		{
-			currentVol = ((ILiquidConsumer) first).onReceiveLiquid(type, vol, st);
+			return 0;
 		}
+		
+		
+		ForgeDirection st = ForgeDirection.getOrientation(rise ? 1 : 0);
+		TileEntity first = world.getBlockTileEntity(x+st.offsetX, y+st.offsetY, z+st.offsetZ);
+		//trades to the first, bottom for liquid, top for gas
+		if(first instanceof IStorageTank && currentVol > 0 && ((IStorageTank) first).getStoredLiquid(type) < ((IStorageTank) first).getLiquidCapacity(type))
+		{
+			currentVol = ((ILiquidConsumer) first).onReceiveLiquid(type, currentVol, st);
+		}
+		int vAve = currentVol;
+		TileEntity[] TeA = MHelper.getSourounding(world,x,y,z);
+		for(int i = 2; i < 6; i++)
+		{
+			if(TeA[i] instanceof IStorageTank)
+			{
+				vAve += ((IStorageTank)TeA[i]).getStoredLiquid(type);
+				tCount++;
+			}
+		}
+		vAve = (int)(vAve/tCount);
 		//trades to side if anything is left
 		for(int i = 2; i < 6;i++)
 		{
 			ForgeDirection side = ForgeDirection.getOrientation(i);
-			TileEntity sSide = te.worldObj.getBlockTileEntity(te.xCoord+side.offsetX, te.yCoord+side.offsetX, te.zCoord+side.offsetX);
-			if(sSide instanceof ILiquidConsumer && ((ILiquidConsumer) sSide).getStoredLiquid(type) < ((ILiquidConsumer) sSide).getLiquidCapacity(type)
-					&& currentVol > 0)
+			TileEntity sSide = world.getBlockTileEntity(x+side.offsetX, y+side.offsetY, z+side.offsetZ);
+			if(currentVol <= 0 || currentVol <= vAve)
 			{
-				currentVol = ((ILiquidConsumer) sSide).onReceiveLiquid(type, vol, st);
+				break;
+			}
+			if(sSide instanceof IStorageTank &&((IStorageTank) sSide).getStoredLiquid(type) < vAve)
+			{
+				int tA = vAve -Math.max((vAve - currentVol), 0);
+				currentVol = ((ILiquidConsumer) sSide).onReceiveLiquid(type, tA, st) -tA + currentVol;
 			}
 		}
 		//trades to the opposite of the first if anything is left
+		/**
+		 * need to find a way to solve it just trading back the ammount on next cycle
 		if(currentVol > 0)
 		{
-			TileEntity last = te.worldObj.getBlockTileEntity(te.xCoord+st.getOpposite().offsetX, te.yCoord+st.getOpposite().offsetX, te.zCoord+st.getOpposite().offsetX);
-			if(last instanceof ILiquidConsumer && ((ILiquidConsumer) last).getStoredLiquid(type) < ((ILiquidConsumer) last).getLiquidCapacity(type))
+			TileEntity last = world.getBlockTileEntity(x+st.getOpposite().offsetX, y+st.getOpposite().offsetY, z+st.getOpposite().offsetZ);
+			if(last instanceof IStorageTank && currentVol == max)
 			{
-				currentVol = ((ILiquidConsumer) last).onReceiveLiquid(type, vol, st);
+				currentVol = ((ILiquidConsumer) last).onReceiveLiquid(type, max/10, st.getOpposite()) + currentVol -(max/10);
 			}
 		}
+		*/
 		return Math.max(currentVol,0);	
 	}
 	 /**
@@ -72,7 +101,7 @@ public class MHelper {
 	  */
 	 public static int corner(TileEntity entity)
 	 {
-		 TileEntity[] en =  getSourounding(entity);
+		 TileEntity[] en =  getSourounding(entity.worldObj, entity.xCoord,entity.yCoord,entity.zCoord);
 		 if(en[4] != null && en[2] != null && en[5] == null && en[3] == null)
 		 {
 			return 3; 

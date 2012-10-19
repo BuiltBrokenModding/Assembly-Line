@@ -6,8 +6,10 @@ import universalelectricity.network.IPacketReceiver;
 import universalelectricity.network.PacketManager;
 import universalelectricity.prefab.Vector3;
 import basicpipes.BasicPipesMain;
+import basicpipes.conductors.TileEntityPipe;
 import basicpipes.pipes.api.ILiquidConsumer;
 import basicpipes.pipes.api.ILiquidProducer;
+import basicpipes.pipes.api.IStorageTank;
 import basicpipes.pipes.api.Liquid;
 import basicpipes.pipes.api.MHelper;
 import net.minecraft.src.EntityPlayer;
@@ -20,7 +22,7 @@ import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 
-public class TileEntityLTank extends TileEntity implements ILiquidConsumer,ILiquidProducer,IPacketReceiver{
+public class TileEntityLTank extends TileEntity implements IStorageTank,ILiquidProducer,IPacketReceiver{
 public TileEntity[] cc = {null,null,null,null,null,null};
 public Liquid type = Liquid.DEFUALT;
 public int LStored = 0;
@@ -31,13 +33,13 @@ private int count2 = 0;
 private boolean firstUpdate = true;
 public void updateEntity()
 {	
-	if(++count >= 10)
+	if(++count >= 5)
 	{ 
 		count = 0;	
-		this.cc = MHelper.getSourounding(this);
+		this.cc = MHelper.getSourounding(worldObj,xCoord, yCoord, zCoord);
 		if(!worldObj.isRemote)
 		{
-			MHelper.shareLiquid(this, type, LStored);
+			MHelper.shareLiquid(worldObj,xCoord, yCoord, zCoord,this.LStored,this.getLiquidCapacity(type), type);
 			if(firstUpdate ||(this.LStored != pLStored)|| count2 >= 100)
 			{
 				count2 = 0;
@@ -70,11 +72,29 @@ public void readFromNBT(NBTTagCompound nbt)
 @Override
 public int onReceiveLiquid(Liquid type, int vol, ForgeDirection side) 
 {
+	
 	if(type == this.type)
 	{
-		int rejectedVolume = Math.max((this.getStoredLiquid(type) + vol) - this.LMax, 0);
-		this.LStored = Math.min(Math.max((LStored + vol - rejectedVolume),0),this.LMax);
-		return rejectedVolume;
+		if(this.LStored < this.getLiquidCapacity(this.type))
+		{
+			int rejectedVolume = Math.max((this.getStoredLiquid(type) + vol) - this.LMax, 0);
+			this.LStored = Math.min(Math.max((LStored + vol - rejectedVolume),0),this.LMax);
+			return rejectedVolume;
+		}else
+		{
+			TileEntity te = null;
+			if(this.type.isGas)
+			{
+				worldObj.getBlockTileEntity(xCoord, yCoord+1, zCoord);
+			}else
+			{
+				worldObj.getBlockTileEntity(xCoord, yCoord-1, zCoord);
+			}
+			if( te instanceof IStorageTank)
+			{
+				return ((IStorageTank)te).onReceiveLiquid(type, vol, ForgeDirection.UNKNOWN);
+			}
+		}
 	}
 	return vol;
 }
@@ -121,11 +141,11 @@ public Liquid getType() {
 
 @Override
 public int onProduceLiquid(Liquid type, int vol, ForgeDirection side) {
-	if(type == this.type)
+	if(type == this.type && this.LStored > 1 && vol > 0)
 	{
-		int aVol = Math.max(((this.getStoredLiquid(type) - vol) + this.LMax)-vol, 0);
-		this.LStored = Math.min(Math.max((LStored - aVol),0),this.LMax);
-		return aVol;
+		//TODO correct / do math for
+		LStored--;
+		return 1;
 	}
 	return 0;
 }
@@ -150,11 +170,11 @@ public boolean canProduceLiquid(Liquid type, ForgeDirection side) {
 public boolean canProducePresure(Liquid type, ForgeDirection side) {
 	if(type == this.type)
 	{
-		if(this.type.isGas && side == ForgeDirection.UP)
+		if(this.type.isGas && side == ForgeDirection.DOWN)
 		{
 			return true;
 		}
-		if(!this.type.isGas && side == ForgeDirection.DOWN)
+		if(!this.type.isGas && side == ForgeDirection.UP)
 		{
 			return true;
 		}
@@ -166,14 +186,7 @@ public boolean canProducePresure(Liquid type, ForgeDirection side) {
 public int presureOutput(Liquid type, ForgeDirection side) {
 	if(type == this.type)
 	{
-		if(this.type.isGas && side == ForgeDirection.UP)
-		{
-			return this.type.defaultPresure;
-		}
-		if(!this.type.isGas && side == ForgeDirection.DOWN)
-		{
-			return this.type.defaultPresure;
-		}
+		return this.type.defaultPresure;
 	}
 	return 0;
 }

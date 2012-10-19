@@ -1,17 +1,17 @@
 package basicpipes.conductors;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import steampower.turbine.TileEntitySteamPiston;
-
+import net.minecraft.src.CreativeTabs;
+import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.Item;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.TileEntity;
+import net.minecraft.src.World;
 import basicpipes.BasicPipesMain;
 import basicpipes.LTanks.TileEntityLTank;
 import basicpipes.pipes.api.IMechanical;
 import basicpipes.pipes.api.Liquid;
-
-import net.minecraft.src.*;
-import net.minecraftforge.common.ForgeDirection;
 
 public class ItemGuage extends Item
 {

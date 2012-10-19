@@ -30,14 +30,11 @@ public class RenderPipe extends TileEntitySpecialRenderer
         //Texture file
 		
 		type = tileEntity.getType();
-		size = tileEntity.getSize();
 		
         
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
-		if(size == 6)
-		{
 			switch(type.ordinal())
 			{
 				case 0: bindTextureByName(BasicPipesMain.textureFile+"/pipes/SixSteamPipe.png");break;
@@ -53,7 +50,6 @@ public class RenderPipe extends TileEntitySpecialRenderer
 			if(tileEntity.connectedBlocks[5] != null) SixPipe.renderRight();
 			if(tileEntity.connectedBlocks[4] != null) SixPipe.renderLeft();		
 			SixPipe.renderMiddle();
-		}
 		GL11.glPopMatrix();
 	
 	}

@@ -6,7 +6,6 @@ import net.minecraft.src.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
-import steampower.turbine.ContainerGenerator;
 import steampower.turbine.TileEntitySteamPiston;
 import universalelectricity.electricity.ElectricInfo;
 import universalelectricity.electricity.ElectricInfo.ElectricUnit;
@@ -20,7 +19,7 @@ import universalelectricity.electricity.ElectricInfo.ElectricUnit;
 
 	    public GUISteamPiston(InventoryPlayer par1InventoryPlayer, TileEntitySteamPiston tileEntity)
 	    {
-	        super(new ContainerGenerator(par1InventoryPlayer, tileEntity));
+	        super(new ContainerFake(par1InventoryPlayer, tileEntity));
 	        this.tileEntity = tileEntity;
 	    }
 
