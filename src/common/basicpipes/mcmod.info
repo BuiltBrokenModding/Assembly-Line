@@ -2,8 +2,8 @@
 {
   "modid": "basicPipes",
   "name": "Basic Pipes",
-  "description": "Simple liquid transport system for UE based mods",
-  "version": "1.8",
+  "description": "Simple liquid pumping & storage system for UE based mods. Can pump several types of common liquids including water,lava,oil,and Fuel.",
+  "version": "1.9",
   "mcversion": "1.3.2",
   "url": "http://www.minecraftforge.net/forum/index.php/topic,604.0.html",
   "updateUrl": "",
