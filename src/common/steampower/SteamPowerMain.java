@@ -102,18 +102,18 @@ public class SteamPowerMain{
 				'@',new ItemStack(BasicComponents.itemSteelPlate),
 				'O',new ItemStack(BasicComponents.itemCircuit,1,0),
 				'V',new ItemStack(BasicComponents.itemMotor)});
-		GameRegistry.addRecipe(new ItemStack(machine, 1, 1), new Object [] {"@T@", "OVO", "@T@",
+		GameRegistry.addRecipe(new ItemStack(machine, 1, 1), new Object [] {"TT", "VV", "TT",
 			'T',new ItemStack(BasicPipesMain.parts, 1,6),
-			'@',new ItemStack(BasicComponents.itemSteelPlate),
-			'O',new ItemStack(BasicPipesMain.parts, 1,0),
 			'V',new ItemStack(BasicPipesMain.parts, 1,7)});
 		GameRegistry.addRecipe(new ItemStack(machine, 1, 2), new Object [] { "@", "F",
 			'F',Block.stoneOvenIdle,
 			'@',new ItemStack(BasicComponents.itemSteelPlate)});
-		GameRegistry.addRecipe(new ItemStack(itemEngine, 1,0), new Object [] {"@T@", "PMP", "@T@",
-			'T',new ItemStack(BasicPipesMain.parts, 1,0),
+		GameRegistry.addRecipe(new ItemStack(itemEngine, 1,0), new Object [] {"GGG", "VPV", "@T@",
+			'T',new ItemStack(BasicPipesMain.parts, 1,1),
+			'G',BasicPipesMain.rod,
 			'@',new ItemStack(BasicComponents.itemSteelPlate),
 			'P',Block.pistonBase,
+			'V',new ItemStack(BasicPipesMain.parts, 1,7),
 			'M',new ItemStack(BasicComponents.itemMotor)});}
 	catch(Exception e)
 	{

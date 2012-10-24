@@ -141,7 +141,7 @@ public class BasicPipesMain{
 		GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1,3), new Object[] { new ItemStack(parts, 1,1),new ItemStack(parts, 1,4),new ItemStack(Item.dyePowder, 1,0)});
 		//fuel
 		GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1,4), new Object[] { new ItemStack(parts, 1,1),new ItemStack(parts, 1,4),new ItemStack(Item.dyePowder, 1,11)});
-		GameRegistry.addRecipe(new ItemStack(parts, 1,7), new Object[] { "T@T", 'T',new ItemStack(parts,1,0),'@',Block.lever});//valve
+		GameRegistry.addRecipe(new ItemStack(parts, 1,7), new Object[] { "T@T", 'T',new ItemStack(parts,1,1),'@',Block.lever});//valve
 		
 		GameRegistry.addRecipe(new ItemStack(parts, 1,6), new Object[] { " @ ","@ @"," @ ", '@',Item.ingotIron});//tank
 		GameRegistry.addShapelessRecipe(new ItemStack(itemTank, 1,0), new Object[] { new ItemStack(parts, 1,6),new ItemStack(parts, 1,4),new ItemStack(Item.dyePowder, 1,15)});
