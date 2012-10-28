@@ -1,11 +1,13 @@
-package assemblyline;
+package assemblyline.render;
 
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.TileEntitySpecialRenderer;
 
 import org.lwjgl.opengl.GL11;
 
+import assemblyline.AssemblyLine;
 import assemblyline.interaction.TileEntityEjector;
+import assemblyline.model.ModelEjector;
 
 public class RenderEjector extends TileEntitySpecialRenderer
 {
@@ -17,7 +19,7 @@ public class RenderEjector extends TileEntitySpecialRenderer
 		int face = tileEntity.getDirection(tileEntity.worldObj.getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord));		
 		int pos = 0;
 		if(fire){pos = 8;}
-        bindTextureByName("/textures/Ejector.png");
+        bindTextureByName(AssemblyLine.TEXTURE_PATH+"ejector.png");
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);

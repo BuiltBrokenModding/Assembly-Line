@@ -7,26 +7,54 @@ import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
 import universalelectricity.prefab.BlockMachine;
 import assemblyline.AssemblyLine;
-import assemblyline.render.BeltRenderHelper;
+import assemblyline.render.RenderHelper;
 
+/**
+ * A metadata block containing a bunch of machines with direction.
+ * @author Darkguardsman
+ *
+ */
 public class BlockInteraction extends BlockMachine
 {
+	public static enum InteractMachineMetadata
+	{
+		EJECTOR("Ejector", 0), INJECTOR("Injector", 4);
+		
+		public String name;
+		public int metadata;
+		
+		InteractMachineMetadata(String name, int metadata)
+		{
+			this.name = name;
+			this.metadata = metadata;
+		}
+		
+		public static InteractMachineMetadata getBase(int metadata)
+		{
+			if (metadata >= 0 && metadata < 4) { return InteractMachineMetadata.values()[0]; }
+			else if (metadata >= 4 && metadata < 8) { return InteractMachineMetadata.values()[4]; }
+			else if (metadata >= 8 && metadata < 12) { return InteractMachineMetadata.values()[8]; }
+			else { return InteractMachineMetadata.values()[12]; }
+		}
+	}
+	
 	public BlockInteraction(int id)
 	{
 		super("Machine", id, Material.iron);
-		this.setCreativeTab(CreativeTabs.tabRedstone);
+		this.setCreativeTab(CreativeTabs.tabTransport);
 	}
 
 	public int damageDropped(int metadata)
 	{
-		if (metadata >= 0 && metadata < 4) { return 0; }
-		if (metadata >= 4 && metadata < 8) { return 4; }
-		if (metadata >= 8 && metadata < 12) { return 8; }
-		if (metadata >= 12 && metadata < 16) { return 12; }
-		return 0;
+		return InteractMachineMetadata.getBase(metadata).metadata;
 	}
 
 	public boolean onSneakUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer)
+	{
+		return this.onSneakMachineActivated(par1World, x, y, z, par5EntityPlayer);
+	}
+	
+	public boolean onSneakMachineActivated(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer)
 	{
 		if (!par1World.isRemote)
 		{
@@ -120,7 +148,7 @@ public class BlockInteraction extends BlockMachine
 	public TileEntity createNewTileEntity(World var1, int metadata)
 	{
 		if (metadata >= 0 && metadata < 4) { return new TileEntityEjector(); }
-		if (metadata >= 4 && metadata < 8) { return new TileEntityMachineInput(); }
+		if (metadata >= 4 && metadata < 8) { return new TileEntityInjector(); }
 		if (metadata >= 8 && metadata < 12) { return null; }
 		if (metadata >= 12 && metadata < 16) { return null; }
 		return null;
@@ -129,7 +157,7 @@ public class BlockInteraction extends BlockMachine
 	@Override
 	public int getRenderType()
 	{
-		return BeltRenderHelper.blockRenderId;
+		return RenderHelper.BLOCK_RENDER_ID;
 	}
 
 	@Override

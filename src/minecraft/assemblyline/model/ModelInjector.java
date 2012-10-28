@@ -1,10 +1,10 @@
-package assemblyline.render;
+package assemblyline.model;
 
 import net.minecraft.src.Entity;
 import net.minecraft.src.ModelBase;
 import net.minecraft.src.ModelRenderer;
 
-public class ModelMachineBelt extends ModelBase
+public class ModelInjector extends ModelBase
 {
 	// fields
 	ModelRenderer bBELTLong;
@@ -28,7 +28,7 @@ public class ModelMachineBelt extends ModelBase
 	ModelRenderer RCPanel;
 	ModelRenderer LCPanel;
 
-	public ModelMachineBelt()
+	public ModelInjector()
 	{
 		textureWidth = 128;
 		textureHeight = 128;
@@ -155,7 +155,7 @@ public class ModelMachineBelt extends ModelBase
 		setRotation(LCPanel, 0F, 0F, 0F);
 	}
 
-	public void render(float f5, boolean cc, int pos)
+	public void render(float f5, boolean isLongBelt, int radians)
 	{
 		// body panels
 		BacPanel.render(f5);
@@ -172,22 +172,20 @@ public class ModelMachineBelt extends ModelBase
 		BRL.render(f5);
 		BML.render(f5);
 		// rollers
-		MRoller.rotateAngleX = 0.7853982F * pos;
-		BRoller.rotateAngleX = 0.7853982F * pos;
-		FRoller.rotateAngleX = 0.7853982F * pos;
+		MRoller.rotateAngleX = radians;
+		BRoller.rotateAngleX = radians;
+		FRoller.rotateAngleX = radians;
 		MRoller.render(f5);
 		BRoller.render(f5);
 		FRoller.render(f5);
 
-		if (cc)
+		if (isLongBelt)
 		{
-			// long belt
 			tBELTLong.render(f5);
 			bBELTLong.render(f5);
 		}
 		else
 		{
-			// short belt
 			FBELT.render(f5);
 			tBELT.render(f5);
 			BBelt.render(f5);

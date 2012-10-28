@@ -8,13 +8,15 @@ import net.minecraft.src.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import universalelectricity.core.UEConfig;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.belts.BlockConveyorBelt;
 import assemblyline.belts.TileEntityConveyorBelt;
 import assemblyline.interaction.BlockInteraction;
-import assemblyline.interaction.ItemMachine;
+import assemblyline.interaction.BlockInteraction.InteractMachineMetadata;
+import assemblyline.interaction.ItemBlockInteraction;
 import assemblyline.interaction.TileEntityEjector;
-import assemblyline.interaction.TileEntityMachineInput;
+import assemblyline.interaction.TileEntityInjector;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -44,24 +46,13 @@ public class AssemblyLine
 	
 	public static final String CHANNEL = "AssemblyLine";
 	
-	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "UniversalElectricity/AssemblyLine.cfg"));
-	public static int machineID = configurationProperties();
-	public static int machine2ID;
-	public static int beltBlockID;
-	public static boolean animationOn;
-	public static final String TEXTURE_PATH = "/textures";
-	public static final Block blockConveyorBelt = new BlockConveyorBelt(beltBlockID);
-	public static final Block blockMachine = new BlockInteraction(machineID);
+	public static final String TEXTURE_PATH = "/assemblyline/textures/";
 
-	public static int configurationProperties()
-	{
-		CONFIGURATION.load();
-		beltBlockID = Integer.parseInt(CONFIGURATION.getBlock(Configuration.CATEGORY_BLOCK, "BeltBlockID", 3003).value);
-		machineID = Integer.parseInt(CONFIGURATION.getBlock(Configuration.CATEGORY_BLOCK, "MachineID", 3005).value);
-		animationOn = Boolean.parseBoolean(CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "BeltAnimationOn", true).value);
-		CONFIGURATION.save();
-		return machineID;
-	}
+	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "UniversalElectricity/AssemblyLine.cfg"));
+
+	public static final int BLOCK_ID_PREFIX = 3003;
+	public static final Block blockConveyorBelt = new BlockConveyorBelt(UEConfig.getBlockConfigID(CONFIGURATION, "Conveyor Belt", BLOCK_ID_PREFIX));
+	public static final Block blockInteraction = new BlockInteraction(UEConfig.getBlockConfigID(CONFIGURATION, "Machine", BLOCK_ID_PREFIX+1));
 
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event)
@@ -69,7 +60,7 @@ public class AssemblyLine
 		instance = this;
 		NetworkRegistry.instance().registerGuiHandler(this, this.proxy);
 		GameRegistry.registerBlock(blockConveyorBelt);
-		GameRegistry.registerBlock(blockMachine, ItemMachine.class);
+		GameRegistry.registerBlock(blockInteraction, ItemBlockInteraction.class);
 		proxy.preInit();
 	}
 
@@ -78,14 +69,14 @@ public class AssemblyLine
 	{
 		GameRegistry.registerTileEntity(TileEntityConveyorBelt.class, "belt");
 		GameRegistry.registerTileEntity(TileEntityEjector.class, "ejector");
-		GameRegistry.registerTileEntity(TileEntityMachineInput.class, "scop");
+		GameRegistry.registerTileEntity(TileEntityInjector.class, "scop");
 		proxy.init();
 		// Names
 		LanguageRegistry.addName(new ItemStack(blockConveyorBelt, 1), "Coneveyor Belt");
-		LanguageRegistry.addName(new ItemStack(blockMachine, 1, 0), "Ejector");
-		LanguageRegistry.addName(new ItemStack(blockMachine, 1, 4), "MachineInput");
-		LanguageRegistry.addName(new ItemStack(blockMachine, 1, 8), "FutureBlock");
-		LanguageRegistry.addName(new ItemStack(blockMachine, 1, 12), "FutureBlock");
+		LanguageRegistry.addName(new ItemStack(blockInteraction, 1, InteractMachineMetadata.EJECTOR.metadata), InteractMachineMetadata.EJECTOR.name);
+		LanguageRegistry.addName(new ItemStack(blockInteraction, 1, InteractMachineMetadata.INJECTOR.metadata), InteractMachineMetadata.EJECTOR.name);
+		LanguageRegistry.addName(new ItemStack(blockInteraction, 1, 8), "FutureBlock");
+		LanguageRegistry.addName(new ItemStack(blockInteraction, 1, 12), "FutureBlock");
 	}
 
 	@PostInit
@@ -96,11 +87,11 @@ public class AssemblyLine
 		{ "III", "MCM", 'I', Item.ingotIron, 'M', "motor", 'C', "basicCircuit" }));
 
 		// Rejector
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockMachine, 1, 0), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockInteraction, 1, 0), new Object[]
 		{ "WPW", "@R@", '@', "plateSteel", 'R', Item.redstone, 'P', Block.pistonBase, 'C', "basicCircuit", 'W', "copperWire" }));
 
 		// Retriever
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockMachine, 1, 4), new Object[]
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockInteraction, 1, 4), new Object[]
 		{ Block.dispenser, "basicCircuit" }));
 		proxy.postInit();
 	}

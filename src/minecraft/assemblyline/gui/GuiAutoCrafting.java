@@ -8,13 +8,15 @@ import net.minecraft.src.World;
 
 import org.lwjgl.opengl.GL11;
 
+import assemblyline.AssemblyLine;
+
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiCrafting extends GuiContainer
+public class GuiAutoCrafting extends GuiContainer
 {
-    public GuiCrafting(InventoryPlayer par1InventoryPlayer, World par2World, int par3, int par4, int par5)
+    public GuiAutoCrafting(InventoryPlayer par1InventoryPlayer, World par2World, int par3, int par4, int par5)
     {
         super(new ContainerWorkbench(par1InventoryPlayer, par2World, par3, par4, par5));
         //TODO on opening if the user is not the owner they can see the crafting recipes but if
@@ -36,7 +38,7 @@ public class GuiCrafting extends GuiContainer
      */
     protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
     {
-        int var4 = this.mc.renderEngine.getTexture("/gui/crafting.png");
+        int var4 = this.mc.renderEngine.getTexture(AssemblyLine.TEXTURE_PATH+"gui_crafting.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.renderEngine.bindTexture(var4);
         int var5 = (this.width - this.xSize) / 2;

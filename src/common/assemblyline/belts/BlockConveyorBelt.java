@@ -8,13 +8,11 @@ import net.minecraft.src.MathHelper;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
 import universalelectricity.prefab.BlockMachine;
-import assemblyline.render.BeltRenderHelper;
+import assemblyline.render.RenderHelper;
 
 /**
- * The block for the actual conveyor!
- * 
- * @Oldauthors Calclavia,Elusivehawk
- * @author DarkGuardsman
+ * The block for the actual conveyor belt!
+ * @author Calclavia, DarkGuardsman
  */
 public class BlockConveyorBelt extends BlockMachine
 {
@@ -24,7 +22,7 @@ public class BlockConveyorBelt extends BlockMachine
 		this.setBlockBounds(0, 0, 0, 1, 0.3f, 1);
 		this.setTextureFile("/textures/items.png");
 		this.blockIndexInTexture = 0;
-		this.setCreativeTab(CreativeTabs.tabRedstone);
+		this.setCreativeTab(CreativeTabs.tabTransport);
 	}
 	@Override
 	public void onBlockPlacedBy(World par1World, int x, int y, int z, EntityLiving par5EntityLiving)
@@ -71,7 +69,7 @@ public class BlockConveyorBelt extends BlockMachine
 	@Override
 	public int getRenderType()
 	{
-		return BeltRenderHelper.blockRenderId;
+		return RenderHelper.BLOCK_RENDER_ID;
 	}
     
 	@Override

@@ -176,18 +176,16 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 				e.printStackTrace();
 			}
 
-			if (AssemblyLine.animationOn)
+			if (flip == true)
 			{
-				if (flip == true)
-				{
-					flip = false;
-				}
-				else
-				{
-					flip = true;
-				}
-				this.wheelRotation -= this.speed;
+				flip = false;
 			}
+			else
+			{
+				flip = true;
+			}
+			
+			this.wheelRotation -= this.speed;
 		}
 	}
 

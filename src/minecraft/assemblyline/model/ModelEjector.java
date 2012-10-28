@@ -4,7 +4,7 @@
 // Keep in mind that you still need to fill in some blanks
 // - ZeuX
 
-package assemblyline;
+package assemblyline.model;
 
 import net.minecraft.src.Entity;
 import net.minecraft.src.ModelBase;

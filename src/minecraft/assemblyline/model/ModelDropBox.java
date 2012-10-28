@@ -1,4 +1,4 @@
-package assemblyline;
+package assemblyline.model;
 
 import net.minecraft.src.Entity;
 import net.minecraft.src.ModelBase;
