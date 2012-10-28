@@ -67,14 +67,14 @@ public class AssemblyLine
 	@Init
 	public void load(FMLInitializationEvent evt)
 	{
-		GameRegistry.registerTileEntity(TileEntityConveyorBelt.class, "belt");
-		GameRegistry.registerTileEntity(TileEntitySorter.class, "ejector");
-		GameRegistry.registerTileEntity(TileEntityManipulator.class, "scop");
+		GameRegistry.registerTileEntity(TileEntityConveyorBelt.class, "ConveyorBelt");
+		GameRegistry.registerTileEntity(TileEntitySorter.class, "Sorter");
+		GameRegistry.registerTileEntity(TileEntityManipulator.class, "Manipulator");
 		proxy.init();
 		// Names
-		LanguageRegistry.addName(new ItemStack(blockConveyorBelt, 1), "Coneveyor Belt");
+		LanguageRegistry.addName(new ItemStack(blockConveyorBelt, 1), "Conveyor Belt");
 		LanguageRegistry.addName(new ItemStack(blockInteraction, 1, MachineType.SORTER.metadata), MachineType.SORTER.name);
-		LanguageRegistry.addName(new ItemStack(blockInteraction, 1, MachineType.MANIPULATOR.metadata), MachineType.SORTER.name);
+		LanguageRegistry.addName(new ItemStack(blockInteraction, 1, MachineType.MANIPULATOR.metadata), MachineType.MANIPULATOR.name);
 		LanguageRegistry.addName(new ItemStack(blockInteraction, 1, 8), "FutureBlock");
 		LanguageRegistry.addName(new ItemStack(blockInteraction, 1, 12), "FutureBlock");
 	}

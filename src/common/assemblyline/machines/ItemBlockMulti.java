@@ -12,6 +12,7 @@ public class ItemBlockMulti extends ItemBlock
 		this.setHasSubtypes(true);
 	}
 
+	@Override
 	public String getItemNameIS(ItemStack itemstack)
 	{
 		return MachineType.get(itemstack.getItemDamage()).name;
