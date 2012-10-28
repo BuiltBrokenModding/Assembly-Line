@@ -31,7 +31,7 @@ public class ItemBlockInteraction extends ItemBlock
 
 	public String getItemNameIS(ItemStack itemstack)
 	{
-		return MachineType.getBase(itemstack.getItemDamage()).name;
+		return MachineType.get(itemstack.getItemDamage()).name;
 	}
 
 	@Override
