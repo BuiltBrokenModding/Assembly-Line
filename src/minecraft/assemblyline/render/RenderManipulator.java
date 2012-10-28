@@ -6,7 +6,6 @@ import net.minecraft.src.TileEntitySpecialRenderer;
 import org.lwjgl.opengl.GL11;
 
 import assemblyline.AssemblyLine;
-import assemblyline.belts.TileEntityConveyorBelt;
 import assemblyline.machines.TileEntityManipulator;
 import assemblyline.model.ModelManipulator;
 
@@ -16,16 +15,21 @@ public class RenderManipulator extends TileEntitySpecialRenderer
 
 	public void renderAModelAt(TileEntityManipulator tileEntity, double x, double y, double z, float f)
 	{
-		String flip = "";// if(tileEntity.flip){flip
-							// = "F";}
 		int face = tileEntity.getBeltDirection().ordinal();
 
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		GL11.glRotatef(180f, 0f, 0f, 1f);
 
-		this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "injector.png");
-
+		if(tileEntity.isOutput)
+		{
+			this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "manipulator1.png");
+		}
+		else
+		{
+			this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "manipulator2.png");
+		}
+		
 		if (face == 2)
 		{
 			GL11.glRotatef(0f, 0f, 1f, 0f);

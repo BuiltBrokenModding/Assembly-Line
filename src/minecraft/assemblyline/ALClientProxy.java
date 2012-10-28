@@ -1,15 +1,13 @@
 package assemblyline;
 
 import net.minecraftforge.client.MinecraftForgeClient;
-import assemblyline.AssemblyLine;
-import assemblyline.ALCommonProxy;
 import assemblyline.belts.TileEntityConveyorBelt;
 import assemblyline.machines.TileEntityManipulator;
 import assemblyline.machines.TileEntitySorter;
-import assemblyline.render.RenderSorter;
-import assemblyline.render.RenderHelper;
 import assemblyline.render.RenderConveyorBelt;
+import assemblyline.render.RenderHelper;
 import assemblyline.render.RenderManipulator;
+import assemblyline.render.RenderSorter;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 

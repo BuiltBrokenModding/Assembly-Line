@@ -7,10 +7,10 @@ import net.minecraft.src.RenderBlocks;
 import org.lwjgl.opengl.GL11;
 
 import assemblyline.AssemblyLine;
-import assemblyline.machines.BlockInteraction.MachineType;
+import assemblyline.machines.BlockMulti.MachineType;
 import assemblyline.model.ModelConveyorBelt;
-import assemblyline.model.ModelSorter;
 import assemblyline.model.ModelManipulator;
+import assemblyline.model.ModelSorter;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -39,7 +39,7 @@ public class RenderHelper implements ISimpleBlockRenderingHandler
 		{
 			if (metadata == MachineType.SORTER.metadata)
 			{
-				GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH + "ejector.png"));
+				GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH + "sorter.png"));
 				GL11.glPushMatrix();
 				GL11.glTranslatef((float) 0.6F, (float) 1.5F, (float) 0.6F);
 				GL11.glRotatef(180f, 0f, 0f, 1f);
@@ -50,7 +50,7 @@ public class RenderHelper implements ISimpleBlockRenderingHandler
 			}
 			else if (metadata == MachineType.MANIPULATOR.metadata)
 			{
-				GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH + "injector.png"));
+				GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH + "manipulator1.png"));
 				GL11.glPushMatrix();
 				GL11.glTranslatef((float) 0.6F, (float) 1.5F, (float) 0.6F);
 				GL11.glRotatef(180f, 0f, 0f, 1f);

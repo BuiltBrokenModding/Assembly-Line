@@ -12,11 +12,11 @@ import universalelectricity.core.UEConfig;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.belts.BlockConveyorBelt;
 import assemblyline.belts.TileEntityConveyorBelt;
-import assemblyline.machines.BlockInteraction;
-import assemblyline.machines.ItemBlockInteraction;
+import assemblyline.machines.BlockMulti;
+import assemblyline.machines.BlockMulti.MachineType;
+import assemblyline.machines.ItemBlockMulti;
 import assemblyline.machines.TileEntityManipulator;
 import assemblyline.machines.TileEntitySorter;
-import assemblyline.machines.BlockInteraction.MachineType;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -52,7 +52,7 @@ public class AssemblyLine
 
 	public static final int BLOCK_ID_PREFIX = 3003;
 	public static final Block blockConveyorBelt = new BlockConveyorBelt(UEConfig.getBlockConfigID(CONFIGURATION, "Conveyor Belt", BLOCK_ID_PREFIX));
-	public static final Block blockInteraction = new BlockInteraction(UEConfig.getBlockConfigID(CONFIGURATION, "Machine", BLOCK_ID_PREFIX+1));
+	public static final Block blockInteraction = new BlockMulti(UEConfig.getBlockConfigID(CONFIGURATION, "Machine", BLOCK_ID_PREFIX+1));
 
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event)
@@ -60,7 +60,7 @@ public class AssemblyLine
 		instance = this;
 		NetworkRegistry.instance().registerGuiHandler(this, this.proxy);
 		GameRegistry.registerBlock(blockConveyorBelt);
-		GameRegistry.registerBlock(blockInteraction, ItemBlockInteraction.class);
+		GameRegistry.registerBlock(blockInteraction, ItemBlockMulti.class);
 		proxy.preInit();
 	}
 

@@ -1,12 +1,19 @@
 package assemblyline.machines;
 
+import java.util.List;
+
+import cpw.mods.fml.common.network.PacketDispatcher;
+
 import net.minecraft.src.AxisAlignedBB;
 import net.minecraft.src.CreativeTabs;
+import net.minecraft.src.EntityLiving;
 import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.ItemStack;
 import net.minecraft.src.Material;
+import net.minecraft.src.MathHelper;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
-import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.implement.IRedstoneReceptor;
 import universalelectricity.prefab.BlockMachine;
 import assemblyline.AssemblyLine;
 import assemblyline.render.RenderHelper;
@@ -18,7 +25,7 @@ import assemblyline.render.RenderHelper;
  * @author Darkguardsman, Calclavia
  * 
  */
-public class BlockInteraction extends BlockMachine
+public class BlockMulti extends BlockMachine
 {
 	public static enum MachineType
 	{
@@ -91,17 +98,19 @@ public class BlockInteraction extends BlockMachine
 		}
 	}
 
-	public BlockInteraction(int id)
+	public BlockMulti(int id)
 	{
 		super("Interaction Machine", id, Material.iron);
 		this.setCreativeTab(CreativeTabs.tabTransport);
 	}
 
+	@Override
 	public int damageDropped(int metadata)
 	{
 		return MachineType.get(metadata).metadata;
 	}
 
+	@Override
 	public boolean onMachineActivated(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer)
 	{
 		if (!par1World.isRemote)
@@ -111,6 +120,30 @@ public class BlockInteraction extends BlockMachine
 			return true;
 		}
 		return true;
+	}
+
+	@Override
+	public void onBlockPlacedBy(World par1World, int x, int y, int z, EntityLiving par5EntityLiving)
+	{
+		int metadata = par1World.getBlockMetadata(x, y, z);
+
+		int angle = MathHelper.floor_double((par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+
+		switch (angle)
+		{
+			case 0:
+				par1World.setBlockMetadataWithNotify(x, y, z, metadata + 0);
+				break;
+			case 1:
+				par1World.setBlockMetadataWithNotify(x, y, z, metadata + 3);
+				break;
+			case 2:
+				par1World.setBlockMetadataWithNotify(x, y, z, metadata + 1);
+				break;
+			case 3:
+				par1World.setBlockMetadataWithNotify(x, y, z, metadata + 2);
+				break;
+		}
 	}
 
 	@Override
@@ -129,14 +162,36 @@ public class BlockInteraction extends BlockMachine
 
 		if (MachineType.get(metadata) == MachineType.MANIPULATOR)
 		{
-			((TileEntityManipulator) par1World.getBlockTileEntity(x, y, z)).isWrenchedToOutput = !((TileEntityManipulator) par1World.getBlockTileEntity(x, y, z)).isWrenchedToOutput;
+			TileEntityManipulator tileEntity = (TileEntityManipulator)par1World.getBlockTileEntity(x, y, z);
+			tileEntity.isOutput = !tileEntity.isOutput;
+			
 			if (!par1World.isRemote)
-				par5EntityPlayer.addChatMessage("Manipulator Output: " + ((TileEntityManipulator) par1World.getBlockTileEntity(x, y, z)).isWrenchedToOutput);
+			{
+				par5EntityPlayer.addChatMessage("Manipulator Output: " + tileEntity.isOutput);
+				
+				PacketDispatcher.sendPacketToAllPlayers(tileEntity.getDescriptionPacket());
+			}
 			return true;
 		}
 		else
 		{
 			return this.onUseWrench(par1World, x, y, z, par5EntityPlayer);
+		}
+	}
+
+	@Override
+	public void onNeighborBlockChange(World par1World, int x, int y, int z, int side)
+	{
+		super.onNeighborBlockChange(par1World, x, y, z, side);
+
+		TileEntity tileEntity = par1World.getBlockTileEntity(x, y, z);
+
+		if (tileEntity instanceof IRedstoneReceptor)
+		{
+			if (par1World.isBlockIndirectlyGettingPowered(x, y, z))
+			{
+				((IRedstoneReceptor) par1World.getBlockTileEntity(x, y, z)).onPowerOn();
+			}
 		}
 	}
 
@@ -188,5 +243,17 @@ public class BlockInteraction extends BlockMachine
 	public boolean renderAsNormalBlock()
 	{
 		return false;
+	}
+
+	@Override
+	public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
+	{
+		for (MachineType type : MachineType.values())
+		{
+			if (type.tileEntity != null)
+			{
+				par3List.add(new ItemStack(par1, 1, type.metadata));
+			}
+		}
 	}
 }

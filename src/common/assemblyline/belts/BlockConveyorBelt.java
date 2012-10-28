@@ -3,7 +3,6 @@ package assemblyline.belts;
 import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.EntityLiving;
 import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.Material;
 import net.minecraft.src.MathHelper;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
@@ -23,11 +22,20 @@ public class BlockConveyorBelt extends BlockMachine
 		this.setBlockBounds(0, 0, 0, 1, 0.3f, 1);
 		this.setCreativeTab(CreativeTabs.tabTransport);
 	}
+	
 	@Override
 	public void onBlockPlacedBy(World par1World, int x, int y, int z, EntityLiving par5EntityLiving)
 	{
 		int angle = MathHelper.floor_double((par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-		par1World.setBlockAndMetadataWithNotify(x, y, z, this.blockID, angle);
+		par1World.setBlockMetadataWithNotify(x, y, z, angle);
+		/*
+		switch (angle)
+        {
+            case 0: par1World.setBlockMetadataWithNotify(x, y, z, 0); break;
+            case 1: par1World.setBlockMetadataWithNotify(x, y, z, 3); break;
+            case 2: par1World.setBlockMetadataWithNotify(x, y, z, 1); break;
+            case 3: par1World.setBlockMetadataWithNotify(x, y, z, 2); break;
+        }	*/	
 	}
 	
 	@Override
@@ -37,7 +45,7 @@ public class BlockConveyorBelt extends BlockMachine
 		
 		if (metadata >= 0 && metadata < 4)
 		{
-			if (metadata == 3)
+			if (metadata >= 3)
 			{
 				par1World.setBlockAndMetadataWithNotify(x, y, z, this.blockID, 0);
 				return true;

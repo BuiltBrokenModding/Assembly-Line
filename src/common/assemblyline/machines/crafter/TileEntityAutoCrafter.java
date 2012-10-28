@@ -2,12 +2,9 @@ package assemblyline.machines.crafter;
 
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.INetworkManager;
-import net.minecraft.src.ItemStack;
 import net.minecraft.src.Packet250CustomPayload;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
-import universalelectricity.prefab.TileEntityAdvanced;
-
 import assemblyline.TileEntityBase;
 
 import com.google.common.io.ByteArrayDataInput;

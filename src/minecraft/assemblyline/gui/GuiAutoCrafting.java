@@ -9,7 +9,6 @@ import net.minecraft.src.World;
 import org.lwjgl.opengl.GL11;
 
 import assemblyline.AssemblyLine;
-
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
 

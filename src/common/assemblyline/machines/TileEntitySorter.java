@@ -2,8 +2,6 @@ package assemblyline.machines;
 
 import java.util.List;
 
-import com.google.common.io.ByteArrayDataInput;
-
 import net.minecraft.src.AxisAlignedBB;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityItem;
@@ -21,6 +19,9 @@ import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.TileEntityBase;
 import assemblyline.belts.TileEntityConveyorBelt;
+
+import com.google.common.io.ByteArrayDataInput;
+
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class TileEntitySorter extends TileEntityBase implements IElectricityReceiver, IPacketReceiver

@@ -2,21 +2,31 @@ package assemblyline.machines;
 
 import java.util.List;
 
+import com.google.common.io.ByteArrayDataInput;
+
 import net.minecraft.src.AxisAlignedBB;
 import net.minecraft.src.EntityItem;
+import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.IInventory;
+import net.minecraft.src.INetworkManager;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
+import net.minecraft.src.Packet;
+import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.TileEntityChest;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 import universalelectricity.core.Vector3;
 import universalelectricity.electricity.ElectricInfo;
+import universalelectricity.implement.IRedstoneReceptor;
 import universalelectricity.prefab.TileEntityElectricityReceiver;
-import assemblyline.machines.BlockInteraction.MachineType;
+import universalelectricity.prefab.network.IPacketReceiver;
+import universalelectricity.prefab.network.PacketManager;
+import assemblyline.AssemblyLine;
+import assemblyline.machines.BlockMulti.MachineType;
 
-public class TileEntityManipulator extends TileEntityElectricityReceiver
+public class TileEntityManipulator extends TileEntityElectricityReceiver implements IRedstoneReceptor, IPacketReceiver
 {
 	/**
 	 * Joules required to run this thing.
@@ -32,7 +42,9 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver
 	 * Is the manipulator wrenched to turn into
 	 * output mode?
 	 */
-	public boolean isWrenchedToOutput = false;
+	public boolean isOutput = false;
+
+	private boolean isPowered = false;
 
 	@Override
 	public double wattRequest()
@@ -47,9 +59,9 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver
 
 		if (!this.worldObj.isRemote)
 		{
-			if (!this.isDisabled())
+			if (!this.isDisabled() && this.wattsReceived >= this.JOULES_REQUIRED)
 			{
-				if (!this.isOutput())
+				if (!this.isOutput)
 				{
 					/**
 					 * Find items going into the
@@ -88,7 +100,33 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver
 					/**
 					 * Finds the connected inventory and outputs the items upon a redstone pulse.
 					 */
+					if(this.isPowered)
+					{
+						this.onPowerOff();
+						
+						Vector3 inputPosition = Vector3.get(this);
+						inputPosition.modifyPositionFromSide(this.getBeltDirection().getOpposite());
+
+						Vector3 outputPosition = Vector3.get(this);
+						outputPosition.modifyPositionFromSide(this.getBeltDirection());
+						
+						ItemStack itemStack = this.tryGrabFromPosition(inputPosition);
+						
+						if(itemStack != null)
+						{
+							if(itemStack.stackSize > 0)
+							{
+								EntityItem entityItem = new EntityItem(worldObj, outputPosition.x + 0.5, outputPosition.y + 0.8, outputPosition.z + 0.5, itemStack);
+								entityItem.motionX = 0;
+								entityItem.motionZ = 0;
+								entityItem.motionY /= 4;
+								worldObj.spawnEntityInWorld(entityItem);
+							}
+						}
+					}
 				}
+				
+				this.wattsReceived = 0;
 			}
 		}
 	}
@@ -189,20 +227,101 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver
 		
 		return itemStack;
 	}
-
+	
 	/**
-	 * If the manipulator is powered, it will
-	 * output items instead of input.
+	 * Tries to take a item from a inventory at a specific position.
+	 * @param position
+	 * @return
 	 */
-	public boolean isOutput()
+	private ItemStack tryGrabFromPosition(Vector3 position)
 	{
-		return this.isWrenchedToOutput;
+		TileEntity tileEntity = position.getTileEntity(this.worldObj);
+
+		if (tileEntity != null)
+		{
+			/**
+			 * Try to put items into a chest.
+			 */
+			if (tileEntity instanceof TileEntityChest)
+			{
+				TileEntityChest[] chests =
+				{ (TileEntityChest) tileEntity, null };
+
+				/**
+				 * Try to find a double chest.
+				 */
+				for (int i = 2; i < 6; i++)
+				{
+					ForgeDirection searchDirection = ForgeDirection.getOrientation(i);
+					Vector3 searchPosition = position.clone();
+					searchPosition.modifyPositionFromSide(searchDirection);
+
+					if (searchPosition.getTileEntity(this.worldObj).getClass() == chests[0].getClass())
+					{
+						chests[1] = (TileEntityChest) searchPosition.getTileEntity(this.worldObj);
+						break;
+					}
+				}
+
+				for (TileEntityChest chest : chests)
+				{
+					for (int i = 0; i < chest.getSizeInventory(); i++)
+					{
+						ItemStack itemStack = this.removeStackFromInventory(i, chest);
+						if(itemStack != null) return itemStack;
+					}
+				}
+			}
+			else if (tileEntity instanceof ISidedInventory)
+			{
+				ISidedInventory inventory = (ISidedInventory) tileEntity;
+
+				int startIndex = inventory.getStartInventorySide(this.getBeltDirection());
+
+				for (int i = startIndex; i < inventory.getSizeInventorySide(this.getBeltDirection()); i++)
+				{
+					ItemStack itemStack = this.removeStackFromInventory(i, inventory);
+					if(itemStack != null) return itemStack;
+				}
+			}
+			else if (tileEntity instanceof IInventory)
+			{
+				IInventory inventory = (IInventory) tileEntity;
+
+				for (int i = 0; i < inventory.getSizeInventory(); i++)
+				{
+					ItemStack itemStack = this.removeStackFromInventory(i, inventory);
+					if(itemStack != null) return itemStack;
+				}
+			}
+		}
+
+		return null;
+	}
+	
+	public ItemStack removeStackFromInventory(int slotIndex, IInventory inventory)
+	{
+		if(inventory.getStackInSlot(slotIndex) != null)
+		{
+			ItemStack itemStack = inventory.getStackInSlot(slotIndex).copy();
+			itemStack.stackSize = 1;
+			inventory.decrStackSize(slotIndex, 1);
+			return itemStack;
+		}
+		
+		return null;
 	}
 
 	public ForgeDirection getBeltDirection()
 	{
 		return ForgeDirection.getOrientation(MachineType.getDirection(this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord)) + 2);
 	}
+	
+	@Override
+	public Packet getDescriptionPacket()
+    {
+		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.isOutput);
+    }
 
 	@Override
 	public boolean canReceiveFromSide(ForgeDirection side)
@@ -220,7 +339,7 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		nbt.setBoolean("isWrenchedToOutput", this.isWrenchedToOutput);
+		this.isOutput = nbt.getBoolean("isWrenchedToOutput");
 	}
 
 	/**
@@ -230,6 +349,31 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		this.isWrenchedToOutput = nbt.getBoolean("isWrenchedToOutput");
+		nbt.setBoolean("isWrenchedToOutput", this.isOutput);
+	}
+
+	@Override
+	public void onPowerOn()
+	{
+		this.isPowered  = true;
+	}
+
+	@Override
+	public void onPowerOff()
+	{
+		this.isPowered = false;
+	}
+
+	@Override
+	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
+	{
+		try
+		{
+			this.isOutput = dataStream.readBoolean();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

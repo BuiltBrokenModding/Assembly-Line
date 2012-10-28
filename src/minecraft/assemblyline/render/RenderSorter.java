@@ -22,7 +22,7 @@ public class RenderSorter extends TileEntitySpecialRenderer
 		{
 			pos = 8;
 		}
-		bindTextureByName(AssemblyLine.TEXTURE_PATH + "ejector.png");
+		bindTextureByName(AssemblyLine.TEXTURE_PATH + "sorter.png");
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
