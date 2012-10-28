@@ -15,6 +15,7 @@ import assemblyline.interaction.BlockInteraction;
 import assemblyline.interaction.ItemMachine;
 import assemblyline.interaction.TileEntityEjector;
 import assemblyline.interaction.TileEntityMachineInput;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
@@ -43,7 +44,7 @@ public class AssemblyLine
 	
 	public static final String CHANNEL = "AssemblyLine";
 	
-	public static final Configuration config = new Configuration(new File(cpw.mods.fml.common.Loader.instance().getConfigDir(), "UniversalElectricity/ConveyorBelts.cfg"));
+	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "UniversalElectricity/AssemblyLine.cfg"));
 	public static int machineID = configurationProperties();
 	public static int machine2ID;
 	public static int beltBlockID;
@@ -54,11 +55,11 @@ public class AssemblyLine
 
 	public static int configurationProperties()
 	{
-		config.load();
-		beltBlockID = Integer.parseInt(config.getBlock(Configuration.CATEGORY_BLOCK, "BeltBlockID", 3003).value);
-		machineID = Integer.parseInt(config.getBlock(Configuration.CATEGORY_BLOCK, "MachineID", 3005).value);
-		animationOn = Boolean.parseBoolean(config.get(Configuration.CATEGORY_GENERAL, "BeltAnimationOn", true).value);
-		config.save();
+		CONFIGURATION.load();
+		beltBlockID = Integer.parseInt(CONFIGURATION.getBlock(Configuration.CATEGORY_BLOCK, "BeltBlockID", 3003).value);
+		machineID = Integer.parseInt(CONFIGURATION.getBlock(Configuration.CATEGORY_BLOCK, "MachineID", 3005).value);
+		animationOn = Boolean.parseBoolean(CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "BeltAnimationOn", true).value);
+		CONFIGURATION.save();
 		return machineID;
 	}
 
@@ -95,8 +96,8 @@ public class AssemblyLine
 		{ "III", "MCM", 'I', Item.ingotIron, 'M', "motor", 'C', "basicCircuit" }));
 
 		// Rejector
-		GameRegistry.addRecipe(new ItemStack(blockMachine, 1, 0), new Object[]
-		{ "WPW", "@R@", '@', "plateSteel", 'R', Item.redstone, 'P', Block.pistonBase, 'C', "basicCircuit", 'W', "copperWire" });
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockMachine, 1, 0), new Object[]
+		{ "WPW", "@R@", '@', "plateSteel", 'R', Item.redstone, 'P', Block.pistonBase, 'C', "basicCircuit", 'W', "copperWire" }));
 
 		// Retriever
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockMachine, 1, 4), new Object[]
