@@ -44,7 +44,6 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 
 	public int clearCount = 0;
 	public int range = 0;
-	public boolean connected = false;
 	public List<Entity> entityIgnoreList = new ArrayList<Entity>();
 
 	/**
@@ -92,13 +91,9 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 
 		if (this.ticks % 20 == 0)
 		{
-			if (worldObj.getBlockTileEntity(xCoord, yCoord - 1, zCoord) instanceof IConductor)
+			if (!worldObj.isRemote)
 			{
-				this.connected = true;
-			}
-			else
-			{
-				this.connected = false;
+				PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, Vector3.get(this), 15);
 			}
 
 			if (this.wattsReceived >= JOULES_REQUIRED)
@@ -111,7 +106,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 				this.range = 0;
 			}
 
-			if (!this.connected)
+			if (!(worldObj.getBlockTileEntity(xCoord, yCoord - 1, zCoord) instanceof IConductor))
 			{
 				searchNeighborBelts();
 			}
@@ -125,12 +120,8 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 				this.running = false;
 			}
 
-			if (!worldObj.isRemote)
-			{
-				PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, Vector3.get(this), 15);
-			}
-
 		}
+		
 		if (this.running)
 		{
 			AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1);
@@ -199,7 +190,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	@Override
 	public Packet getDescriptionPacket()
     {
-		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.running, this.range);
+		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.wattsReceived);
     }
 	
 	@Override
@@ -296,9 +287,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 		{
 			try
 			{
-				this.running = dataStream.readBoolean();
-				this.range = dataStream.readInt();
-
+				this.wattsReceived = dataStream.readDouble();
 			}
 			catch (Exception e)
 			{
