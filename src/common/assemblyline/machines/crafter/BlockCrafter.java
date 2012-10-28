@@ -1,4 +1,4 @@
-package assemblyline.crafting;
+package assemblyline.machines.crafter;
 
 import net.minecraft.src.BlockContainer;
 import net.minecraft.src.CreativeTabs;

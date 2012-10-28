@@ -3,9 +3,9 @@ package assemblyline;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
-import assemblyline.gui.GuiEjectorSettings;
-import assemblyline.interaction.ContainerEjector;
-import assemblyline.interaction.TileEntitySorter;
+import assemblyline.gui.GuiSorter;
+import assemblyline.machines.ContainerSorter;
+import assemblyline.machines.TileEntitySorter;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 public class ALCommonProxy implements IGuiHandler
@@ -32,7 +32,7 @@ public class ALCommonProxy implements IGuiHandler
         {
 			switch(ID)
 			{
-				case 0: return new GuiEjectorSettings(player.inventory, ((TileEntitySorter)tileEntity));
+				case 0: return new GuiSorter(player.inventory, ((TileEntitySorter)tileEntity));
 			}
         }
 		
@@ -48,7 +48,7 @@ public class ALCommonProxy implements IGuiHandler
         {
 			switch(ID)
 			{
-				case 0: return new ContainerEjector(player.inventory, ((TileEntitySorter)tileEntity));
+				case 0: return new ContainerSorter(player.inventory, ((TileEntitySorter)tileEntity));
 			}
         }
 		

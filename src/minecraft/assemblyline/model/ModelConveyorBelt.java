@@ -164,7 +164,7 @@ public class ModelConveyorBelt extends ModelBase
 		setRotation(c1, 0F, 0F, 0F);
 	}
 
-	public void render(float f5, int pos, boolean front, boolean back, boolean above)
+	public void render(float f5, float radians, boolean front, boolean back, boolean above)
 	{
 		boolean mid = front && back ? true : false;
 		boolean leftCap = !front && back ? true : false;
@@ -214,9 +214,9 @@ public class ModelConveyorBelt extends ModelBase
 		}
 
 		// rollers
-		MRoller.rotateAngleX = 0.7853982F * pos;
-		BRoller.rotateAngleX = 0.7853982F * pos;
-		FRoller.rotateAngleX = 0.7853982F * pos;
+		MRoller.rotateAngleX = radians;
+		BRoller.rotateAngleX = radians;
+		FRoller.rotateAngleX = radians;
 		MRoller.render(f5);
 		BRoller.render(f5);
 		FRoller.render(f5);

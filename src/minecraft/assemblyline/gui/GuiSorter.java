@@ -7,19 +7,19 @@ import net.minecraft.src.StatCollector;
 import org.lwjgl.opengl.GL11;
 
 import assemblyline.AssemblyLine;
-import assemblyline.interaction.ContainerEjector;
-import assemblyline.interaction.TileEntitySorter;
+import assemblyline.machines.ContainerSorter;
+import assemblyline.machines.TileEntitySorter;
 
-public class GuiEjectorSettings extends GuiContainer
+public class GuiSorter extends GuiContainer
 {
 	private TileEntitySorter tileEntity;
 
 	private int containerWidth;
 	private int containerHeight;
 
-	public GuiEjectorSettings(InventoryPlayer par1InventoryPlayer, TileEntitySorter tileEntity)
+	public GuiSorter(InventoryPlayer par1InventoryPlayer, TileEntitySorter tileEntity)
 	{
-		super(new ContainerEjector(par1InventoryPlayer, tileEntity));
+		super(new ContainerSorter(par1InventoryPlayer, tileEntity));
 		this.tileEntity = tileEntity;
 	}
 

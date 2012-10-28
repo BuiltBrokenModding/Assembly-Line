@@ -1,4 +1,4 @@
-package assemblyline.interaction;
+package assemblyline.machines;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.MathHelper;
 import net.minecraft.src.World;
 import assemblyline.AssemblyLine;
-import assemblyline.interaction.BlockInteraction.MachineType;
+import assemblyline.machines.BlockInteraction.MachineType;
 
 public class ItemBlockInteraction extends ItemBlock
 {

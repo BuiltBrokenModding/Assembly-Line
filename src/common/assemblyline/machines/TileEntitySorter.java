@@ -1,4 +1,4 @@
-package assemblyline.interaction;
+package assemblyline.machines;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package assemblyline.interaction;
+package assemblyline.machines;
 
 import net.minecraft.src.Container;
 import net.minecraft.src.EntityPlayer;
@@ -7,11 +7,11 @@ import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.Slot;
 
-public class ContainerEjector extends Container
+public class ContainerSorter extends Container
 {
     private TileEntitySorter tileEntity;
 
-    public ContainerEjector(InventoryPlayer par1InventoryPlayer, TileEntitySorter tileEntity)
+    public ContainerSorter(InventoryPlayer par1InventoryPlayer, TileEntitySorter tileEntity)
     {
         this.tileEntity = tileEntity;
         for(int i = 0; i < 4; i++)

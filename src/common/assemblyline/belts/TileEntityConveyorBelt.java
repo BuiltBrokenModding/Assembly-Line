@@ -35,7 +35,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	 */
 	public double wattsReceived = 0;
 
-	private float speed = -0.05F;
+	private float speed = -0.045F;
 	public float wheelRotation = 0;
 	public boolean running = false;
 	public boolean flip = false;
@@ -43,12 +43,11 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	{ null, null, null, null };
 
 	public int clearCount = 0;
-	public int range = 0;
+	public int powerTransferRange = 0;
 	public List<Entity> entityIgnoreList = new ArrayList<Entity>();
 
 	/**
-	 * Powers nearby conveyor belts.
-	 * 
+	 * Steal power from nearby belts.
 	 * @return
 	 */
 	public boolean searchNeighborBelts()
@@ -74,13 +73,14 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 			if (adjBelts[b] instanceof TileEntityConveyorBelt)
 			{
 				TileEntityConveyorBelt belt = (TileEntityConveyorBelt) adjBelts[b];
-				if (belt.range > rr)
+				if (belt.powerTransferRange > rr)
 				{
-					rr = belt.range;
+					rr = belt.powerTransferRange;
 				}
 			}
 		}
-		this.range = rr - 1;
+		
+		this.powerTransferRange = rr - 1;
 		return false;
 	}
 
@@ -98,12 +98,12 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 
 			if (this.wattsReceived >= JOULES_REQUIRED)
 			{
-				this.wattsReceived = Math.max(this.wattsReceived - JOULES_REQUIRED, 0);
-				this.range = 20;
+				this.wattsReceived = 0;
+				this.powerTransferRange = 20;
 			}
 			else
 			{
-				this.range = 0;
+				this.powerTransferRange = 0;
 			}
 
 			if (!(worldObj.getBlockTileEntity(xCoord, yCoord - 1, zCoord) instanceof IConductor))
@@ -111,7 +111,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 				searchNeighborBelts();
 			}
 
-			if (this.range > 0)
+			if (this.powerTransferRange > 0)
 			{
 				this.running = true;
 			}

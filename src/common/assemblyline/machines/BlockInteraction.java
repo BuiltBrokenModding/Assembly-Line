@@ -1,4 +1,4 @@
-package assemblyline.interaction;
+package assemblyline.machines;
 
 import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.EntityPlayer;
