@@ -9,7 +9,7 @@ import net.minecraft.src.ItemBlock;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.MathHelper;
 import net.minecraft.src.World;
-import assemblyline.AssembleLine;
+import assemblyline.AssemblyLine;
 
 public class ItemMachine extends ItemBlock {
 
@@ -19,11 +19,11 @@ public class ItemMachine extends ItemBlock {
 		this.setCreativeTab(CreativeTabs.tabRedstone);
 	}
 	private String[] names = new String[] {"Ejector", "ItemScooper", "FB","FB"};
-	int blockID = AssembleLine.machineID;
+	int blockID = AssemblyLine.machineID;
 	public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {
-		par3List.add(new ItemStack(AssembleLine.blockMachine,1,0));
-		par3List.add(new ItemStack(AssembleLine.blockMachine,1,4));
+		par3List.add(new ItemStack(AssemblyLine.blockMachine,1,0));
+		par3List.add(new ItemStack(AssemblyLine.blockMachine,1,4));
 		//par3List.add(new ItemStack(AssembleLine.blockMachine,1,8));
 		//par3List.add(new ItemStack(AssembleLine.blockMachine,1,12));
     }
@@ -59,7 +59,7 @@ public class ItemMachine extends ItemBlock {
 	@Override
 	public int getBlockID()
     {
-        return AssembleLine.machineID;
+        return AssemblyLine.machineID;
     }
 	@Override
 	 public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)

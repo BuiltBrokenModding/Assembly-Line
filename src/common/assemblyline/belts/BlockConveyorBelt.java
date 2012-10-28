@@ -8,7 +8,7 @@ import net.minecraft.src.MathHelper;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
 import universalelectricity.prefab.BlockMachine;
-import asmline.beltRenders.BeltRenderHelper;
+import assemblyline.render.BeltRenderHelper;
 
 /**
  * The block for the actual conveyor!

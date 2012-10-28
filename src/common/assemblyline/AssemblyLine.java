@@ -17,6 +17,7 @@ import assemblyline.interaction.TileEntityEjector;
 import assemblyline.interaction.TileEntityMachineInput;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
+import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.PostInit;
 import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.SidedProxy;
@@ -28,14 +29,20 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
-@Mod(modid = "asmLine", name = "Assemble Line", version = "V2.3", dependencies = "after:UniversalElectricity")
-@NetworkMod(channels =
-{ "asmLine" }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
-public class AssembleLine
+@Mod(modid = "AssemblyLine", name = "Assembly Line", version = AssemblyLine.VERSION, dependencies = "after:BasicComponents")
+@NetworkMod(channels = { AssemblyLine.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
+public class AssemblyLine
 {
-	@SidedProxy(clientSide = "asmline.asmClientProxy", serverSide = "asmline.asmProxy")
-	public static ALProxy proxy;
-	public static AssembleLine instance;
+	@SidedProxy(clientSide = "assemblyline.ALClientProxy", serverSide = "assemblyline.ALCommonProxy")
+	public static ALCommonProxy proxy;
+	
+	@Instance("AssemblyLine")
+	public static AssemblyLine instance;
+	
+	public static final String VERSION = "0.1.0";
+	
+	public static final String CHANNEL = "AssemblyLine";
+	
 	public static final Configuration config = new Configuration(new File(cpw.mods.fml.common.Loader.instance().getConfigDir(), "UniversalElectricity/ConveyorBelts.cfg"));
 	public static int machineID = configurationProperties();
 	public static int machine2ID;
@@ -83,17 +90,17 @@ public class AssembleLine
 	@PostInit
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		//Conveyor Belt
+		// Conveyor Belt
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt), new Object[]
 		{ "III", "MCM", 'I', Item.ingotIron, 'M', "motor", 'C', "basicCircuit" }));
-		
-		//Rejector
+
+		// Rejector
 		GameRegistry.addRecipe(new ItemStack(blockMachine, 1, 0), new Object[]
-		{ "WPW", "@R@", '@', "plateSteel", 'R', Item.redstone, 'P', Block.pistonBase, 'C', "basicCircuit", 'W', "copperWire"});
-		
-		//Retriever
+		{ "WPW", "@R@", '@', "plateSteel", 'R', Item.redstone, 'P', Block.pistonBase, 'C', "basicCircuit", 'W', "copperWire" });
+
+		// Retriever
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockMachine, 1, 4), new Object[]
-		{ Block.dispenser, "basicCircuit"}));
+		{ Block.dispenser, "basicCircuit" }));
 		proxy.postInit();
 	}
 

@@ -44,52 +44,52 @@ public class ContainerEjector extends Container
      * Called to transfer a stack from one inventory to the other eg. when shift clicking.
      */
     @Override
-    public ItemStack transferStackInSlot(int par1)
+    public ItemStack func_82846_b(EntityPlayer par1EntityPlayer, int par1)
     {
-        ItemStack var2 = null;
-        Slot var3 = (Slot)this.inventorySlots.get(par1);
+        ItemStack itemStack3 = null;
+        Slot itemStack = (Slot)this.inventorySlots.get(par1);
 
-        if (var3 != null && var3.getHasStack())
+        if (itemStack != null && itemStack.getHasStack())
         {
-            ItemStack var4 = var3.getStack();
-            var2 = var4.copy();
+            ItemStack itemStack2 = itemStack.getStack();
+            itemStack3 = itemStack2.copy();
 
             if (par1 != 0)
             {
-                if (var4.itemID == Item.coal.shiftedIndex)
+                if (itemStack2.itemID == Item.coal.shiftedIndex)
                 {
-                    if (!this.mergeItemStack(var4, 0, 1, false))
+                    if (!this.mergeItemStack(itemStack2, 0, 1, false))
                     {
                         return null;
                     }
                 }
-                else if (par1 >= 30 && par1 < 37 && !this.mergeItemStack(var4, 3, 30, false))
+                else if (par1 >= 30 && par1 < 37 && !this.mergeItemStack(itemStack2, 3, 30, false))
                 {
                     return null;
                 }
             }
-            else if (!this.mergeItemStack(var4, 3, 37, false))
+            else if (!this.mergeItemStack(itemStack2, 3, 37, false))
             {
                 return null;
             }
 
-            if (var4.stackSize == 0)
+            if (itemStack2.stackSize == 0)
             {
-                var3.putStack((ItemStack)null);
+                itemStack.putStack((ItemStack)null);
             }
             else
             {
-                var3.onSlotChanged();
+                itemStack.onSlotChanged();
             }
 
-            if (var4.stackSize == var2.stackSize)
+            if (itemStack2.stackSize == itemStack3.stackSize)
             {
                 return null;
             }
 
-            var3.onPickupFromSlot(var4);
+            itemStack.func_82870_a(par1EntityPlayer, itemStack2);
         }
 
-        return var2;
+        return itemStack3;
     }
 }

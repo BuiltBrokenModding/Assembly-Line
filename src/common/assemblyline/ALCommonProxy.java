@@ -3,12 +3,12 @@ package assemblyline;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
-import asmline.GUIEjectorSettings;
+import assemblyline.gui.GuiEjectorSettings;
 import assemblyline.interaction.ContainerEjector;
 import assemblyline.interaction.TileEntityEjector;
 import cpw.mods.fml.common.network.IGuiHandler;
 
-public class ALProxy implements IGuiHandler
+public class ALCommonProxy implements IGuiHandler
 {
 	
 	public void preInit()
@@ -32,7 +32,7 @@ public class ALProxy implements IGuiHandler
         {
 			switch(ID)
 			{
-				case 0: return new GUIEjectorSettings(player.inventory, ((TileEntityEjector)tileEntity));
+				case 0: return new GuiEjectorSettings(player.inventory, ((TileEntityEjector)tileEntity));
 			}
         }
 		

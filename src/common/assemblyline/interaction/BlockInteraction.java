@@ -6,8 +6,8 @@ import net.minecraft.src.Material;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
 import universalelectricity.prefab.BlockMachine;
-import asmline.beltRenders.BeltRenderHelper;
-import assemblyline.AssembleLine;
+import assemblyline.AssemblyLine;
+import assemblyline.render.BeltRenderHelper;
 
 public class BlockInteraction extends BlockMachine
 {
@@ -30,7 +30,7 @@ public class BlockInteraction extends BlockMachine
 	{
 		if (!par1World.isRemote)
 		{
-			par5EntityPlayer.openGui(AssembleLine.instance, 0, par1World, x, y, z);
+			par5EntityPlayer.openGui(AssemblyLine.instance, 0, par1World, x, y, z);
 			return true;
 		}
 		return true;

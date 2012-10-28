@@ -2,10 +2,13 @@ package assemblyline.interaction;
 
 import java.util.List;
 
+import com.google.common.io.ByteArrayDataInput;
+
 import net.minecraft.src.AxisAlignedBB;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityItem;
 import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.INetworkManager;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.Packet;
@@ -18,9 +21,6 @@ import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.TileEntityBase;
 import assemblyline.belts.TileEntityConveyorBelt;
-
-import com.google.common.io.ByteArrayDataInput;
-
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class TileEntityEjector extends TileEntityBase implements IElectricityReceiver, IPacketReceiver
@@ -330,5 +330,41 @@ public class TileEntityEjector extends TileEntityBase implements IElectricityRec
 	{
 		this.wattsReceived += (amps * voltage);
 
+	}
+
+	@Override
+	public void onDisable(int duration)
+	{
+		
+	}
+
+	@Override
+	public boolean isDisabled()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean canConnect(ForgeDirection side)
+	{
+		return true;
+	}
+
+	@Override
+	public double getVoltage()
+	{
+		return 120;
+	}
+
+	@Override
+	public int getSizeInventory()
+	{
+		return 10;
+	}
+
+	@Override
+	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
+	{
+		
 	}
 }

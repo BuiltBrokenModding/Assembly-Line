@@ -18,7 +18,7 @@ import universalelectricity.implement.IConductor;
 import universalelectricity.prefab.TileEntityElectricityReceiver;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
-import assemblyline.AssembleLine;
+import assemblyline.AssemblyLine;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -176,7 +176,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 				e.printStackTrace();
 			}
 
-			if (AssembleLine.animationOn)
+			if (AssemblyLine.animationOn)
 			{
 				if (flip == true)
 				{
