@@ -71,6 +71,12 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 					 */
 					Vector3 inputPosition = Vector3.get(this);
 
+					Vector3 outputUp = Vector3.get(this);
+					outputUp.modifyPositionFromSide(ForgeDirection.UP);
+
+					Vector3 outputDown = Vector3.get(this);
+					outputDown.modifyPositionFromSide(ForgeDirection.DOWN);
+
 					Vector3 outputPosition = Vector3.get(this);
 					outputPosition.modifyPositionFromSide(this.getBeltDirection().getOpposite());
 
@@ -79,7 +85,24 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 
 					for (EntityItem entity : itemsInBound)
 					{
-						ItemStack remainingStack = this.tryPlaceInPosition(entity.item.copy(), outputPosition);
+						/**
+						 * Try top first, then
+						 * bottom, then the sides
+						 * to see if it is
+						 * possible to insert the
+						 * item into a inventory.
+						 */
+						ItemStack remainingStack = this.tryPlaceInPosition(entity.item.copy(), outputUp, ForgeDirection.DOWN);
+
+						if (remainingStack != null)
+						{
+							remainingStack = this.tryPlaceInPosition(remainingStack, outputDown, ForgeDirection.UP);
+						}
+
+						if (remainingStack != null)
+						{
+							remainingStack = this.tryPlaceInPosition(remainingStack, outputPosition, this.getBeltDirection().getOpposite());
+						}
 
 						if (remainingStack != null)
 						{
@@ -88,6 +111,7 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 								EntityItem entityItem = new EntityItem(worldObj, outputPosition.x + 0.5, outputPosition.y + 0.8, outputPosition.z + 0.5, remainingStack);
 								entityItem.motionX = 0;
 								entityItem.motionZ = 0;
+								entityItem.motionY /= 5;
 								worldObj.spawnEntityInWorld(entityItem);
 							}
 						}
@@ -98,34 +122,53 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 				else
 				{
 					/**
-					 * Finds the connected inventory and outputs the items upon a redstone pulse.
+					 * Finds the connected
+					 * inventory and outputs the
+					 * items upon a redstone
+					 * pulse.
 					 */
-					if(this.isPowered)
+					if (this.isPowered)
 					{
 						this.onPowerOff();
-						
+
+						Vector3 inputUp = Vector3.get(this);
+						inputUp.modifyPositionFromSide(ForgeDirection.UP);
+
+						Vector3 inputDown = Vector3.get(this);
+						inputDown.modifyPositionFromSide(ForgeDirection.DOWN);
+
 						Vector3 inputPosition = Vector3.get(this);
 						inputPosition.modifyPositionFromSide(this.getBeltDirection().getOpposite());
 
 						Vector3 outputPosition = Vector3.get(this);
 						outputPosition.modifyPositionFromSide(this.getBeltDirection());
-						
-						ItemStack itemStack = this.tryGrabFromPosition(inputPosition);
-						
-						if(itemStack != null)
+
+						ItemStack itemStack = this.tryGrabFromPosition(inputUp, ForgeDirection.DOWN);
+
+						if (itemStack == null)
 						{
-							if(itemStack.stackSize > 0)
+							itemStack = this.tryGrabFromPosition(inputDown, ForgeDirection.UP);
+						}
+
+						if (itemStack == null)
+						{
+							itemStack = this.tryGrabFromPosition(inputPosition, this.getBeltDirection().getOpposite());
+						}
+
+						if (itemStack != null)
+						{
+							if (itemStack.stackSize > 0)
 							{
 								EntityItem entityItem = new EntityItem(worldObj, outputPosition.x + 0.5, outputPosition.y + 0.8, outputPosition.z + 0.5, itemStack);
 								entityItem.motionX = 0;
 								entityItem.motionZ = 0;
-								entityItem.motionY /= 4;
+								entityItem.motionY /= 5;
 								worldObj.spawnEntityInWorld(entityItem);
 							}
 						}
 					}
 				}
-				
+
 				this.wattsReceived = 0;
 			}
 		}
@@ -138,7 +181,7 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 	 * @return The ItemStack remained after place
 	 *         attempt
 	 */
-	private ItemStack tryPlaceInPosition(ItemStack itemStack, Vector3 position)
+	private ItemStack tryPlaceInPosition(ItemStack itemStack, Vector3 position, ForgeDirection direction)
 	{
 		TileEntity tileEntity = position.getTileEntity(this.worldObj);
 
@@ -161,10 +204,13 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 					Vector3 searchPosition = position.clone();
 					searchPosition.modifyPositionFromSide(searchDirection);
 
-					if (searchPosition.getTileEntity(this.worldObj) instanceof TileEntityChest)
+					if (searchPosition.getTileEntity(this.worldObj) != null)
 					{
-						chests[1] = (TileEntityChest) searchPosition.getTileEntity(this.worldObj);
-						break;
+						if (searchPosition.getTileEntity(this.worldObj).getClass() == chests[0].getClass())
+						{
+							chests[1] = (TileEntityChest) searchPosition.getTileEntity(this.worldObj);
+							break;
+						}
 					}
 				}
 
@@ -173,7 +219,8 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 					for (int i = 0; i < chest.getSizeInventory(); i++)
 					{
 						itemStack = this.addStackToInventory(i, chest, itemStack);
-						if(itemStack == null) return null;
+						if (itemStack == null)
+							return null;
 					}
 				}
 			}
@@ -181,12 +228,12 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 			{
 				ISidedInventory inventory = (ISidedInventory) tileEntity;
 
-				int startIndex = inventory.getStartInventorySide(this.getBeltDirection());
+				int startIndex = inventory.getStartInventorySide(direction);
 
-				for (int i = startIndex; i < inventory.getSizeInventorySide(this.getBeltDirection()); i++)
+				for (int i = startIndex; i < startIndex + inventory.getSizeInventorySide(direction); i++)
 				{
 					itemStack = this.addStackToInventory(startIndex, inventory, itemStack);
-					if(itemStack == null) return null;
+					if (itemStack == null) { return null; }
 				}
 			}
 			else if (tileEntity instanceof IInventory)
@@ -196,7 +243,7 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 				for (int i = 0; i < inventory.getSizeInventory(); i++)
 				{
 					itemStack = this.addStackToInventory(i, inventory, itemStack);
-					if(itemStack == null) return null;
+					if (itemStack == null) { return null; }
 				}
 			}
 		}
@@ -208,32 +255,38 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 
 	public ItemStack addStackToInventory(int slotIndex, IInventory inventory, ItemStack itemStack)
 	{
-		ItemStack stackInChest = inventory.getStackInSlot(slotIndex);
-
-		if (stackInChest == null)
+		if (inventory.getSizeInventory() > slotIndex)
 		{
-			inventory.setInventorySlotContents(slotIndex, itemStack);
-			return null;
-		}
-		else if (stackInChest.getItem().equals(itemStack.getItem()) && stackInChest.getItemDamage() == itemStack.getItemDamage())
-		{
-			int rejectedAmount = Math.max((stackInChest.stackSize + itemStack.stackSize) - stackInChest.getItem().getItemStackLimit(), 0);
-			stackInChest.stackSize = Math.min(Math.max((stackInChest.stackSize + itemStack.stackSize - rejectedAmount), 0), stackInChest.getItem().getItemStackLimit());
-			itemStack.stackSize = rejectedAmount;
-			inventory.setInventorySlotContents(slotIndex, stackInChest);
+			ItemStack stackInInventory = inventory.getStackInSlot(slotIndex);
 
-			if (itemStack.stackSize <= 0) { return null; }
+			if (stackInInventory == null)
+			{
+				inventory.setInventorySlotContents(slotIndex, itemStack);
+				return null;
+			}
+			else if (stackInInventory.isItemEqual(itemStack))
+			{
+				int rejectedAmount = Math.max((stackInInventory.stackSize + itemStack.stackSize) - stackInInventory.getItem().getItemStackLimit(), 0);
+				stackInInventory.stackSize = Math.min(Math.max((stackInInventory.stackSize + itemStack.stackSize - rejectedAmount), 0), stackInInventory.getItem().getItemStackLimit());
+				itemStack.stackSize = rejectedAmount;
+				inventory.setInventorySlotContents(slotIndex, stackInInventory);
+
+			}
 		}
-		
+
+		if (itemStack.stackSize <= 0) { return null; }
+
 		return itemStack;
 	}
-	
+
 	/**
-	 * Tries to take a item from a inventory at a specific position.
+	 * Tries to take a item from a inventory at a
+	 * specific position.
+	 * 
 	 * @param position
 	 * @return
 	 */
-	private ItemStack tryGrabFromPosition(Vector3 position)
+	private ItemStack tryGrabFromPosition(Vector3 position, ForgeDirection direction)
 	{
 		TileEntity tileEntity = position.getTileEntity(this.worldObj);
 
@@ -256,19 +309,26 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 					Vector3 searchPosition = position.clone();
 					searchPosition.modifyPositionFromSide(searchDirection);
 
-					if (searchPosition.getTileEntity(this.worldObj).getClass() == chests[0].getClass())
+					if (searchPosition.getTileEntity(this.worldObj) != null)
 					{
-						chests[1] = (TileEntityChest) searchPosition.getTileEntity(this.worldObj);
-						break;
+						if (searchPosition.getTileEntity(this.worldObj).getClass() == chests[0].getClass())
+						{
+							chests[1] = (TileEntityChest) searchPosition.getTileEntity(this.worldObj);
+							break;
+						}
 					}
 				}
 
 				for (TileEntityChest chest : chests)
 				{
-					for (int i = 0; i < chest.getSizeInventory(); i++)
+					if (chest != null)
 					{
-						ItemStack itemStack = this.removeStackFromInventory(i, chest);
-						if(itemStack != null) return itemStack;
+						for (int i = 0; i < chest.getSizeInventory(); i++)
+						{
+							ItemStack itemStack = this.removeStackFromInventory(i, chest);
+							if (itemStack != null)
+								return itemStack;
+						}
 					}
 				}
 			}
@@ -276,12 +336,13 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 			{
 				ISidedInventory inventory = (ISidedInventory) tileEntity;
 
-				int startIndex = inventory.getStartInventorySide(this.getBeltDirection());
+				int startIndex = inventory.getStartInventorySide(direction);
 
-				for (int i = startIndex; i < inventory.getSizeInventorySide(this.getBeltDirection()); i++)
+				for (int i = startIndex; i < startIndex + inventory.getSizeInventorySide(direction); i++)
 				{
 					ItemStack itemStack = this.removeStackFromInventory(i, inventory);
-					if(itemStack != null) return itemStack;
+					if (itemStack != null)
+						return itemStack;
 				}
 			}
 			else if (tileEntity instanceof IInventory)
@@ -291,24 +352,25 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 				for (int i = 0; i < inventory.getSizeInventory(); i++)
 				{
 					ItemStack itemStack = this.removeStackFromInventory(i, inventory);
-					if(itemStack != null) return itemStack;
+					if (itemStack != null)
+						return itemStack;
 				}
 			}
 		}
 
 		return null;
 	}
-	
+
 	public ItemStack removeStackFromInventory(int slotIndex, IInventory inventory)
 	{
-		if(inventory.getStackInSlot(slotIndex) != null)
+		if (inventory.getStackInSlot(slotIndex) != null)
 		{
 			ItemStack itemStack = inventory.getStackInSlot(slotIndex).copy();
 			itemStack.stackSize = 1;
 			inventory.decrStackSize(slotIndex, 1);
 			return itemStack;
 		}
-		
+
 		return null;
 	}
 
@@ -316,12 +378,12 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 	{
 		return ForgeDirection.getOrientation(MachineType.getDirection(this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord)) + 2);
 	}
-	
+
 	@Override
 	public Packet getDescriptionPacket()
-    {
+	{
 		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.isOutput);
-    }
+	}
 
 	@Override
 	public boolean canReceiveFromSide(ForgeDirection side)
@@ -355,7 +417,7 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 	@Override
 	public void onPowerOn()
 	{
-		this.isPowered  = true;
+		this.isPowered = true;
 	}
 
 	@Override
@@ -371,7 +433,7 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 		{
 			this.isOutput = dataStream.readBoolean();
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}

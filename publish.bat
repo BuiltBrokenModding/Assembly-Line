@@ -40,7 +40,7 @@ echo %PROMOTION% %FILE_NAME%>>info.txt
 ::GENERATE FTP Script
 echo open www.calclavia.com>ftpscript.txt
 echo al@calclavia.com>>ftpscript.txt
-echo f@Gwk%qFJ4kc>>ftpscript.txt
+echo VkE4laBa84R9>>ftpscript.txt
 echo binary>>ftpscript.txt
 echo put "builds\%FILE_NAME%">>ftpscript.txt
 ::echo put "builds\%API_NAME%">>ftpscript.txt

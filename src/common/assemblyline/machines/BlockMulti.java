@@ -166,9 +166,7 @@ public class BlockMulti extends BlockMachine
 			tileEntity.isOutput = !tileEntity.isOutput;
 			
 			if (!par1World.isRemote)
-			{
-				par5EntityPlayer.addChatMessage("Manipulator Output: " + tileEntity.isOutput);
-				
+			{				
 				PacketDispatcher.sendPacketToAllPlayers(tileEntity.getDescriptionPacket());
 			}
 			return true;
