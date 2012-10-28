@@ -4,12 +4,12 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import assemblyline.AssemblyLine;
 import assemblyline.ALCommonProxy;
 import assemblyline.belts.TileEntityConveyorBelt;
-import assemblyline.interaction.TileEntityEjector;
-import assemblyline.interaction.TileEntityInjector;
-import assemblyline.render.RenderEjector;
+import assemblyline.interaction.TileEntitySorter;
+import assemblyline.interaction.TileEntityManipulator;
+import assemblyline.render.RenderSorter;
 import assemblyline.render.RenderHelper;
 import assemblyline.render.RenderConveyorBelt;
-import assemblyline.render.RenderInjector;
+import assemblyline.render.RenderManipulator;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
@@ -28,8 +28,8 @@ public class ALClientProxy extends ALCommonProxy
 		// ClientRegistry.registerTileEntity(TileEntityConveyorBelt.class,
 		// "belt", new RenderConveyorBelt());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConveyorBelt.class, new RenderConveyorBelt());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEjector.class, new RenderEjector());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityInjector.class, new RenderInjector());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySorter.class, new RenderSorter());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityManipulator.class, new RenderManipulator());
 	}
 
 }

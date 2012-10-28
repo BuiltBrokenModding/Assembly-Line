@@ -14,6 +14,7 @@ import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.Vector3;
+import universalelectricity.electricity.ElectricInfo;
 import universalelectricity.implement.IConductor;
 import universalelectricity.prefab.TileEntityElectricityReceiver;
 import universalelectricity.prefab.network.IPacketReceiver;
@@ -24,9 +25,16 @@ import com.google.common.io.ByteArrayDataInput;
 
 public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implements IPacketReceiver
 {
-	public double electricityStored = 0;
-	public final double electricityRequired = 0.1f;
-	public final double energyMax = 10;
+	/**
+	 * Joules required to run this thing.
+	 */
+	public static final int JOULES_REQUIRED = 5;
+
+	/**
+	 * The amount of watts received.
+	 */
+	public double wattsReceived = 0;
+
 	private float speed = -0.05F;
 	public float wheelRotation = 0;
 	public boolean running = false;
@@ -39,23 +47,28 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	public boolean connected = false;
 	public List<Entity> entityIgnoreList = new ArrayList<Entity>();
 
-	// Checks Adjacent belt to see if there
-	// powered. Reduces need for wire per belt
-	public boolean powerNeighbor()
+	/**
+	 * Powers nearby conveyor belts.
+	 * 
+	 * @return
+	 */
+	public boolean searchNeighborBelts()
 	{
-		for (int n = 2; n < 6; n++)
+		for (int i = 2; i < 6; i++)
 		{
-			ForgeDirection d = ForgeDirection.getOrientation(n);
-			TileEntity ent = worldObj.getBlockTileEntity(xCoord - d.offsetX, yCoord, zCoord - d.offsetZ);
-			if (ent instanceof TileEntityConveyorBelt)
+			ForgeDirection direction = ForgeDirection.getOrientation(i);
+			TileEntity tileEntity = worldObj.getBlockTileEntity(xCoord - direction.offsetX, yCoord, zCoord - direction.offsetZ);
+
+			if (tileEntity instanceof TileEntityConveyorBelt)
 			{
-				adjBelts[n - 2] = (TileEntityConveyorBelt) ent;
+				adjBelts[i - 2] = (TileEntityConveyorBelt) tileEntity;
 			}
 			else
 			{
-				adjBelts[n - 2] = null;
+				adjBelts[i - 2] = null;
 			}
 		}
+
 		int rr = 0;
 		for (int b = 0; b < 4; b++)
 		{
@@ -64,7 +77,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 				TileEntityConveyorBelt belt = (TileEntityConveyorBelt) adjBelts[b];
 				if (belt.range > rr)
 				{
-					rr = belt.getRange();
+					rr = belt.range;
 				}
 			}
 		}
@@ -72,17 +85,12 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 		return false;
 	}
 
-	public int getRange()
-	{
-		return this.range;
-	}
-
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
-		
-		if (this.ticks % 10 == 0)
+
+		if (this.ticks % 20 == 0)
 		{
 			if (worldObj.getBlockTileEntity(xCoord, yCoord - 1, zCoord) instanceof IConductor)
 			{
@@ -92,20 +100,22 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 			{
 				this.connected = false;
 			}
-			
-			if (this.electricityStored >= this.electricityRequired)
+
+			if (this.wattsReceived >= JOULES_REQUIRED)
 			{
-				this.electricityStored = Math.max(this.electricityStored - this.electricityRequired, 0);
+				this.wattsReceived = Math.max(this.wattsReceived - JOULES_REQUIRED, 0);
 				this.range = 20;
 			}
 			else
 			{
 				this.range = 0;
 			}
+
 			if (!this.connected)
 			{
-				powerNeighbor();
+				searchNeighborBelts();
 			}
+
 			if (this.range > 0)
 			{
 				this.running = true;
@@ -117,10 +127,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 
 			if (!worldObj.isRemote)
 			{
-				Packet packet = PacketManager.getPacket("asmLine", this, new Object[]
-				{ running, range });
-				PacketManager.sendPacketToClients(packet, worldObj, new Vector3(xCoord, yCoord, zCoord), 40);
-
+				PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, Vector3.get(this), 15);
 			}
 
 		}
@@ -184,15 +191,27 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 			{
 				flip = true;
 			}
-			
+
 			this.wheelRotation -= this.speed;
 		}
 	}
 
 	@Override
+	public Packet getDescriptionPacket()
+    {
+		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.running, this.range);
+    }
+	
+	@Override
 	public double wattRequest()
 	{
-		return energyMax - electricityStored;
+		return JOULES_REQUIRED;
+	}
+
+	@Override
+	public void onReceive(TileEntity sender, double amps, double voltage, ForgeDirection side)
+	{
+		this.wattsReceived += ElectricInfo.getWatts(amps, voltage);
 	}
 
 	@Override
@@ -289,13 +308,6 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 
 	}
 
-	@Override
-	public void onReceive(TileEntity sender, double amps, double voltage, ForgeDirection side)
-	{
-		this.electricityStored += (amps * voltage);
-
-	}
-
 	/**
 	 * Used to tell the belt not to apply velocity
 	 * to some Entity in case they are being
@@ -304,29 +316,12 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	 * 
 	 * @param entity
 	 */
-	public void ignore(Entity entity)
+	public void ignoreEntity(Entity entity)
 	{
 		if (!this.entityIgnoreList.contains(entity))
 		{
 			this.entityIgnoreList.add(entity);
 		}
 
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
-		this.electricityStored = nbt.getDouble("energy");
-	}
-
-	/**
-	 * Writes a tile entity to NBT.
-	 */
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
-		nbt.setDouble("energy", this.electricityStored);
 	}
 }

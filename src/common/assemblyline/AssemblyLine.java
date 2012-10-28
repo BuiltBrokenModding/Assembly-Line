@@ -15,8 +15,8 @@ import assemblyline.belts.TileEntityConveyorBelt;
 import assemblyline.interaction.BlockInteraction;
 import assemblyline.interaction.BlockInteraction.MachineType;
 import assemblyline.interaction.ItemBlockInteraction;
-import assemblyline.interaction.TileEntityEjector;
-import assemblyline.interaction.TileEntityInjector;
+import assemblyline.interaction.TileEntitySorter;
+import assemblyline.interaction.TileEntityManipulator;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -68,13 +68,13 @@ public class AssemblyLine
 	public void load(FMLInitializationEvent evt)
 	{
 		GameRegistry.registerTileEntity(TileEntityConveyorBelt.class, "belt");
-		GameRegistry.registerTileEntity(TileEntityEjector.class, "ejector");
-		GameRegistry.registerTileEntity(TileEntityInjector.class, "scop");
+		GameRegistry.registerTileEntity(TileEntitySorter.class, "ejector");
+		GameRegistry.registerTileEntity(TileEntityManipulator.class, "scop");
 		proxy.init();
 		// Names
 		LanguageRegistry.addName(new ItemStack(blockConveyorBelt, 1), "Coneveyor Belt");
-		LanguageRegistry.addName(new ItemStack(blockInteraction, 1, MachineType.EJECTOR.metadata), MachineType.EJECTOR.name);
-		LanguageRegistry.addName(new ItemStack(blockInteraction, 1, MachineType.INJECTOR.metadata), MachineType.EJECTOR.name);
+		LanguageRegistry.addName(new ItemStack(blockInteraction, 1, MachineType.SORTER.metadata), MachineType.SORTER.name);
+		LanguageRegistry.addName(new ItemStack(blockInteraction, 1, MachineType.MANIPULATOR.metadata), MachineType.SORTER.name);
 		LanguageRegistry.addName(new ItemStack(blockInteraction, 1, 8), "FutureBlock");
 		LanguageRegistry.addName(new ItemStack(blockInteraction, 1, 12), "FutureBlock");
 	}

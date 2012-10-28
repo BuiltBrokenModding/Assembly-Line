@@ -7,6 +7,7 @@ import net.minecraft.src.Material;
 import net.minecraft.src.MathHelper;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
+import universalelectricity.core.UniversalElectricity;
 import universalelectricity.prefab.BlockMachine;
 import assemblyline.render.RenderHelper;
 
@@ -18,10 +19,8 @@ public class BlockConveyorBelt extends BlockMachine
 {
 	public BlockConveyorBelt(int id)
 	{
-		super("Conveyor Belt", id, Material.wood);
+		super("Conveyor Belt", id, UniversalElectricity.machine);
 		this.setBlockBounds(0, 0, 0, 1, 0.3f, 1);
-		this.setTextureFile("/textures/items.png");
-		this.blockIndexInTexture = 0;
 		this.setCreativeTab(CreativeTabs.tabTransport);
 	}
 	@Override
@@ -57,12 +56,13 @@ public class BlockConveyorBelt extends BlockMachine
 	 * Returns the TileEntity used by this block.
 	 */
 	@Override
-	public TileEntity createNewTileEntity(World var1,int meta)
+	public TileEntity createNewTileEntity(World var1, int metadata)
     {
-		if(meta >=0 && meta < 4)
+		if(metadata >=0 && metadata < 4)
 		{
-		return new TileEntityConveyorBelt();
+			return new TileEntityConveyorBelt();
 		}
+		
 		return null;
 	}
     
@@ -77,10 +77,10 @@ public class BlockConveyorBelt extends BlockMachine
 	{
 		return false;
 	}
+	
 	@Override
 	public boolean renderAsNormalBlock()
 	{
 		return false;
 	}
-	
 }

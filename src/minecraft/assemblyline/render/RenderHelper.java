@@ -9,8 +9,8 @@ import org.lwjgl.opengl.GL11;
 import assemblyline.AssemblyLine;
 import assemblyline.interaction.BlockInteraction.MachineType;
 import assemblyline.model.ModelConveyorBelt;
-import assemblyline.model.ModelEjector;
-import assemblyline.model.ModelInjector;
+import assemblyline.model.ModelSorter;
+import assemblyline.model.ModelManipulator;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -20,8 +20,8 @@ public class RenderHelper implements ISimpleBlockRenderingHandler
 	public static RenderHelper instance = new RenderHelper();
 	public static final int BLOCK_RENDER_ID = RenderingRegistry.getNextAvailableRenderId();
 	private ModelConveyorBelt modelConveyorBelt = new ModelConveyorBelt();
-	private ModelEjector modelEjector = new ModelEjector();
-	private ModelInjector modelInjector = new ModelInjector();
+	private ModelSorter modelEjector = new ModelSorter();
+	private ModelManipulator modelInjector = new ModelManipulator();
 
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
@@ -37,7 +37,7 @@ public class RenderHelper implements ISimpleBlockRenderingHandler
 		}
 		else if (block.blockID == AssemblyLine.blockInteraction.blockID)
 		{
-			if(metadata == MachineType.EJECTOR.metadata)
+			if(metadata == MachineType.SORTER.metadata)
 			{
 				GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH+"ejector.png"));
 				GL11.glPushMatrix();
@@ -48,7 +48,7 @@ public class RenderHelper implements ISimpleBlockRenderingHandler
 				modelEjector.renderPiston(0.0625F, 1);
 				GL11.glPopMatrix();
 			}
-			else if(metadata == MachineType.INJECTOR.metadata)
+			else if(metadata == MachineType.MANIPULATOR.metadata)
 			{
 				GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH+"injector.png"));
 				GL11.glPushMatrix();

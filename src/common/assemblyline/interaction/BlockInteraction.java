@@ -12,15 +12,15 @@ import assemblyline.render.RenderHelper;
 
 /**
  * A metadata block containing a bunch of machines with direction.
- * @author Darkguardsman
+ * @author Darkguardsman, Calclavia
  *
  */
 public class BlockInteraction extends BlockMachine
 {
 	public static enum MachineType
 	{
-		EJECTOR("Ejector", 0, TileEntityEjector.class),
-		INJECTOR("Injector", 4, TileEntityInjector.class),
+		SORTER("Sorter", 0, TileEntitySorter.class),
+		MANIPULATOR("Manipulator", 4, TileEntityManipulator.class),
 		INVALID_1("Invalid", 8, null),
 		INVALID_2("Invalid", 12, null);
 		
@@ -73,6 +73,9 @@ public class BlockInteraction extends BlockMachine
 			return currentDirection + this.metadata;
 		}
 		
+		/**
+		 * Creates a new TIleEntity.
+		 */
 		public TileEntity instantiateTileEntity()
 		{
 			try

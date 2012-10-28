@@ -4,7 +4,7 @@ import net.minecraft.src.Entity;
 import net.minecraft.src.ModelBase;
 import net.minecraft.src.ModelRenderer;
 
-public class ModelInjector extends ModelBase
+public class ModelManipulator extends ModelBase
 {
 	// fields
 	ModelRenderer bBELTLong;
@@ -28,7 +28,7 @@ public class ModelInjector extends ModelBase
 	ModelRenderer RCPanel;
 	ModelRenderer LCPanel;
 
-	public ModelInjector()
+	public ModelManipulator()
 	{
 		textureWidth = 128;
 		textureHeight = 128;

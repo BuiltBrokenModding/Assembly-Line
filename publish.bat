@@ -9,7 +9,7 @@ set /a BUILD_NUMBER=%CurrentBuild%+1
 echo %BUILD_NUMBER% >buildnumber.txt
 
 set FILE_NAME=AssemblyLine_v%MODVERSION%.%BUILD_NUMBER%.jar
-set API_NAME=AssemblyLine_v%MODVERSION%.%BUILD_NUMBER%_api.zip
+::set API_NAME=AssemblyLine_v%MODVERSION%.%BUILD_NUMBER%_api.zip
 set BACKUP_NAME=AssemblyLine_v%MODVERSION%.%BUILD_NUMBER%_backup.zip
 
 echo Starting to build %FILE_NAME%
@@ -27,14 +27,14 @@ cd ..\..\
 
 cd resources\
 "..\..\7za.exe" a "..\builds\%FILE_NAME%" "*"
-"..\..\7za.exe" a "..\builds\%BACKUP_NAME%" "*" -pcalclavia
+"..\..\7za.exe" a "..\builds\%BACKUP_NAME%" "*" -pdarkguardsman
 cd ..\
 cd src\
-"..\..\7za.exe" a "..\builds\%BACKUP_NAME%" "*\assemblyline\" -pcalclavia
+"..\..\7za.exe" a "..\builds\%BACKUP_NAME%" "*\assemblyline\" -pdarkguardsman
 ::"..\..\7za.exe" a "..\builds\%API_NAME%" "*\atomicscience\api\"
 cd ..\
 
-::UPDATE INFO FILE %API_NAME%
+::UPDATE INFO FILE
 echo %PROMOTION% %FILE_NAME%>>info.txt
 
 ::GENERATE FTP Script

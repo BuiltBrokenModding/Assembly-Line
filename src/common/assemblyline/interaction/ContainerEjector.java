@@ -9,9 +9,9 @@ import net.minecraft.src.Slot;
 
 public class ContainerEjector extends Container
 {
-    private TileEntityEjector tileEntity;
+    private TileEntitySorter tileEntity;
 
-    public ContainerEjector(InventoryPlayer par1InventoryPlayer, TileEntityEjector tileEntity)
+    public ContainerEjector(InventoryPlayer par1InventoryPlayer, TileEntitySorter tileEntity)
     {
         this.tileEntity = tileEntity;
         for(int i = 0; i < 4; i++)

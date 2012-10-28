@@ -8,16 +8,16 @@ import org.lwjgl.opengl.GL11;
 
 import assemblyline.AssemblyLine;
 import assemblyline.interaction.ContainerEjector;
-import assemblyline.interaction.TileEntityEjector;
+import assemblyline.interaction.TileEntitySorter;
 
 public class GuiEjectorSettings extends GuiContainer
 {
-	private TileEntityEjector tileEntity;
+	private TileEntitySorter tileEntity;
 
 	private int containerWidth;
 	private int containerHeight;
 
-	public GuiEjectorSettings(InventoryPlayer par1InventoryPlayer, TileEntityEjector tileEntity)
+	public GuiEjectorSettings(InventoryPlayer par1InventoryPlayer, TileEntitySorter tileEntity)
 	{
 		super(new ContainerEjector(par1InventoryPlayer, tileEntity));
 		this.tileEntity = tileEntity;

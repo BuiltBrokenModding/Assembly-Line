@@ -19,7 +19,7 @@ import universalelectricity.prefab.network.IPacketReceiver;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityInjector extends TileEntityElectricityReceiver implements IPacketReceiver, IInventory
+public class TileEntityManipulator extends TileEntityElectricityReceiver implements IPacketReceiver, IInventory
 {
 	public float energyReq = .1f;
 	public float energyMax = 10f;

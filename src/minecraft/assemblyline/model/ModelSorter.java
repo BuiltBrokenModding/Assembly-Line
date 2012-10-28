@@ -10,7 +10,7 @@ import net.minecraft.src.Entity;
 import net.minecraft.src.ModelBase;
 import net.minecraft.src.ModelRenderer;
 
-public class ModelEjector extends ModelBase
+public class ModelSorter extends ModelBase
 {
 	// fields
 	ModelRenderer Base;
@@ -24,7 +24,7 @@ public class ModelEjector extends ModelBase
 	ModelRenderer PistonShaft;
 	ModelRenderer PistonFace;
 
-	public ModelEjector()
+	public ModelSorter()
 	{
 		textureWidth = 128;
 		textureHeight = 128;

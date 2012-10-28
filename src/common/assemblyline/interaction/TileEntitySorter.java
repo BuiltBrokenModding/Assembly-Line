@@ -23,7 +23,7 @@ import assemblyline.TileEntityBase;
 import assemblyline.belts.TileEntityConveyorBelt;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
-public class TileEntityEjector extends TileEntityBase implements IElectricityReceiver, IPacketReceiver
+public class TileEntitySorter extends TileEntityBase implements IElectricityReceiver, IPacketReceiver
 {
 	/**
 	 * Joules required per tick.
@@ -107,7 +107,7 @@ public class TileEntityEjector extends TileEntityBase implements IElectricityRec
 		this.firePiston = true;
 		if (this.beltSide != null)
 		{
-			this.beltSide.ignore(entity);
+			this.beltSide.ignoreEntity(entity);
 
 		}
 		entity.motionX = (double) side.offsetX * 0.1;

@@ -7,14 +7,14 @@ import org.lwjgl.opengl.GL11;
 
 import assemblyline.AssemblyLine;
 import assemblyline.belts.TileEntityConveyorBelt;
-import assemblyline.interaction.TileEntityInjector;
-import assemblyline.model.ModelInjector;
+import assemblyline.interaction.TileEntityManipulator;
+import assemblyline.model.ModelManipulator;
 
-public class RenderInjector extends TileEntitySpecialRenderer
+public class RenderManipulator extends TileEntitySpecialRenderer
 {
-	private ModelInjector model = new ModelInjector();
+	private ModelManipulator model = new ModelManipulator();
 
-	public void renderAModelAt(TileEntityInjector tileEntity, double x, double y, double z, float f)
+	public void renderAModelAt(TileEntityManipulator tileEntity, double x, double y, double z, float f)
 	{
 		String flip = "";//if(tileEntity.flip){flip = "F";}
 		int face = tileEntity.getBeltDirection();
@@ -40,7 +40,7 @@ public class RenderInjector extends TileEntitySpecialRenderer
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double var2, double var4, double var6, float var8) 
 	{
-		this.renderAModelAt((TileEntityInjector)tileEntity, var2, var4, var6, var8);
+		this.renderAModelAt((TileEntityManipulator)tileEntity, var2, var4, var6, var8);
 	}
 
 }
