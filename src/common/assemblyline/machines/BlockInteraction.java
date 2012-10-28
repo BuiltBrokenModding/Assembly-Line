@@ -124,7 +124,17 @@ public class BlockInteraction extends BlockMachine
 	@Override
 	public boolean onSneakUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer)
 	{
-		return this.onUseWrench(par1World, x, y, z, par5EntityPlayer);
+		int metadata = par1World.getBlockMetadata(x, y, z);
+		
+		if(MachineType.getBase(metadata) == MachineType.MANIPULATOR)
+		{
+			((TileEntityManipulator)par1World.getBlockTileEntity(x, y, z)).isWrenchedToOutput = !((TileEntityManipulator)par1World.getBlockTileEntity(x, y, z)).isWrenchedToOutput;
+			return true;
+		}
+		else
+		{
+			return this.onUseWrench(par1World, x, y, z, par5EntityPlayer);
+		}
 	}
 
 	@Override

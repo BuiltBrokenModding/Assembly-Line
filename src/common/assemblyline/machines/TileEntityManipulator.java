@@ -8,11 +8,13 @@ import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.IInventory;
 import net.minecraft.src.INetworkManager;
 import net.minecraft.src.ItemStack;
+import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.TileEntityChest;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.Vector3;
+import universalelectricity.electricity.ElectricInfo;
 import universalelectricity.prefab.TileEntityElectricityReceiver;
 import universalelectricity.prefab.network.IPacketReceiver;
 
@@ -31,6 +33,11 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver
 	 * The amount of watts received.
 	 */
 	public double wattsReceived = 0;
+	
+	/**
+	 * Is the manipulator wrenched to turn into output mode?
+	 */
+	public boolean isWrenchedToOutput = false;
 
 	@Override
 	public double wattRequest()
@@ -162,7 +169,7 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver
 	 */
 	public boolean isOutput()
 	{
-		return this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord) || this.worldObj.isBlockGettingPowered(this.xCoord, this.yCoord, this.zCoord);
+		return this.isWrenchedToOutput || this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord) || this.worldObj.isBlockGettingPowered(this.xCoord, this.yCoord, this.zCoord);
 	}
 
 	public ForgeDirection getBeltDirection()
@@ -179,6 +186,23 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver
 	@Override
 	public void onReceive(TileEntity sender, double amps, double voltage, ForgeDirection side)
 	{
-		this.wattsReceived += (amps * voltage);
+		this.wattsReceived += ElectricInfo.getWatts(amps, voltage);
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		nbt.setBoolean("isWrenchedToOutput", this.isWrenchedToOutput);
+	}
+
+	/**
+	 * Writes a tile entity to NBT.
+	 */
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		this.isWrenchedToOutput = nbt.getBoolean("isWrenchedToOutput");
 	}
 }
