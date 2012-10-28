@@ -13,7 +13,7 @@ import universalelectricity.prefab.network.PacketManager;
 import assemblyline.belts.BlockConveyorBelt;
 import assemblyline.belts.TileEntityConveyorBelt;
 import assemblyline.interaction.BlockInteraction;
-import assemblyline.interaction.BlockInteraction.InteractMachineMetadata;
+import assemblyline.interaction.BlockInteraction.MachineType;
 import assemblyline.interaction.ItemBlockInteraction;
 import assemblyline.interaction.TileEntityEjector;
 import assemblyline.interaction.TileEntityInjector;
@@ -73,8 +73,8 @@ public class AssemblyLine
 		proxy.init();
 		// Names
 		LanguageRegistry.addName(new ItemStack(blockConveyorBelt, 1), "Coneveyor Belt");
-		LanguageRegistry.addName(new ItemStack(blockInteraction, 1, InteractMachineMetadata.EJECTOR.metadata), InteractMachineMetadata.EJECTOR.name);
-		LanguageRegistry.addName(new ItemStack(blockInteraction, 1, InteractMachineMetadata.INJECTOR.metadata), InteractMachineMetadata.EJECTOR.name);
+		LanguageRegistry.addName(new ItemStack(blockInteraction, 1, MachineType.EJECTOR.metadata), MachineType.EJECTOR.name);
+		LanguageRegistry.addName(new ItemStack(blockInteraction, 1, MachineType.INJECTOR.metadata), MachineType.EJECTOR.name);
 		LanguageRegistry.addName(new ItemStack(blockInteraction, 1, 8), "FutureBlock");
 		LanguageRegistry.addName(new ItemStack(blockInteraction, 1, 12), "FutureBlock");
 	}

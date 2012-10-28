@@ -7,7 +7,7 @@ import net.minecraft.src.RenderBlocks;
 import org.lwjgl.opengl.GL11;
 
 import assemblyline.AssemblyLine;
-import assemblyline.interaction.BlockInteraction.InteractMachineMetadata;
+import assemblyline.interaction.BlockInteraction.MachineType;
 import assemblyline.model.ModelConveyorBelt;
 import assemblyline.model.ModelEjector;
 import assemblyline.model.ModelInjector;
@@ -31,15 +31,15 @@ public class RenderHelper implements ISimpleBlockRenderingHandler
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float) 0.0F, (float) 1.5F, (float) 0.0F);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture("/textures/BeltTexture.png"));
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH+"BeltTexture.png"));
 			modelConveyorBelt.render(0.0625F, 0, false, false, false);
 			GL11.glPopMatrix();
 		}
 		else if (block.blockID == AssemblyLine.blockInteraction.blockID)
 		{
-			if(metadata == InteractMachineMetadata.EJECTOR.metadata)
+			if(metadata == MachineType.EJECTOR.metadata)
 			{
-				GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture("/textures/Ejector.png"));
+				GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH+"ejector.png"));
 				GL11.glPushMatrix();
 				GL11.glTranslatef((float) 0.6F, (float) 1.5F, (float) 0.6F);
 				GL11.glRotatef(180f, 0f, 0f, 1f);
@@ -48,9 +48,9 @@ public class RenderHelper implements ISimpleBlockRenderingHandler
 				modelEjector.renderPiston(0.0625F, 1);
 				GL11.glPopMatrix();
 			}
-			else if(metadata == InteractMachineMetadata.INJECTOR.metadata)
+			else if(metadata == MachineType.INJECTOR.metadata)
 			{
-				GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture("/textures/Ejector.png"));
+				GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH+"injector.png"));
 				GL11.glPushMatrix();
 				GL11.glTranslatef((float) 0.6F, (float) 1.5F, (float) 0.6F);
 				GL11.glRotatef(180f, 0f, 0f, 1f);

@@ -5,6 +5,7 @@ import net.minecraft.src.TileEntitySpecialRenderer;
 
 import org.lwjgl.opengl.GL11;
 
+import assemblyline.AssemblyLine;
 import assemblyline.belts.TileEntityConveyorBelt;
 import assemblyline.model.ModelConveyorBelt;
 
@@ -23,7 +24,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 		GL11.glRotatef(180f, 0f, 0f, 1f);
 		
 		int pos = 0;
-			bindTextureByName("/textures/BeltTexture"+flip+".png");
+			bindTextureByName(AssemblyLine.TEXTURE_PATH+"BeltTexture"+flip+".png");
 			if(face==2){ GL11.glRotatef(180f, 0f, 1f, 0f);}
 			if(face==3){ GL11.glRotatef(0f, 0f, 1f, 0f);}
 			if(face==4){ GL11.glRotatef(90f, 0f, 1f, 0f);}

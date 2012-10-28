@@ -5,6 +5,7 @@ import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Material;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
+import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.BlockMachine;
 import assemblyline.AssemblyLine;
 import assemblyline.render.RenderHelper;
@@ -16,142 +17,117 @@ import assemblyline.render.RenderHelper;
  */
 public class BlockInteraction extends BlockMachine
 {
-	public static enum InteractMachineMetadata
+	public static enum MachineType
 	{
-		EJECTOR("Ejector", 0), INJECTOR("Injector", 4);
+		EJECTOR("Ejector", 0, TileEntityEjector.class),
+		INJECTOR("Injector", 4, TileEntityInjector.class),
+		INVALID_1("Invalid", 8, null),
+		INVALID_2("Invalid", 12, null);
 		
 		public String name;
 		public int metadata;
+		public Class<? extends TileEntity> tileEntity;
 		
-		InteractMachineMetadata(String name, int metadata)
+		MachineType(String name, int metadata, Class<? extends TileEntity> tileEntity)
 		{
 			this.name = name;
 			this.metadata = metadata;
+			this.tileEntity = tileEntity;
 		}
 		
-		public static InteractMachineMetadata getBase(int metadata)
+		public static MachineType getBase(int metadata)
 		{
-			if (metadata >= 0 && metadata < 4) { return InteractMachineMetadata.values()[0]; }
-			else if (metadata >= 4 && metadata < 8) { return InteractMachineMetadata.values()[4]; }
-			else if (metadata >= 8 && metadata < 12) { return InteractMachineMetadata.values()[8]; }
-			else { return InteractMachineMetadata.values()[12]; }
+			for(MachineType value : MachineType.values())
+			{
+				if(metadata >= value.metadata && metadata < value.metadata + 4)
+				{
+					return value;
+				}
+			}
+			
+			return null;
+		}
+		
+		/**
+		 * Gets the direction based on the metadata
+		 * @return A direction value from 0 to 4.
+		 */
+		public static int getDirection(int metadata)
+		{
+			return metadata - MachineType.getBase(metadata).metadata;
+		}
+		
+		/**
+		 * @param currentDirection - An integer from 0 to 4.
+		 * @return The metadata this block should change into.
+		 */
+		public int getNextDirectionMeta(int currentDirection)
+		{
+			currentDirection ++;
+			
+			if(currentDirection >= 4)
+			{
+				currentDirection = 0;
+			}
+			
+			return currentDirection + this.metadata;
+		}
+		
+		public TileEntity instantiateTileEntity()
+		{
+			try
+			{
+				return this.tileEntity.newInstance();
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				return null;
+			}
 		}
 	}
 	
 	public BlockInteraction(int id)
 	{
-		super("Machine", id, Material.iron);
+		super("Interaction Machine", id, Material.iron);
 		this.setCreativeTab(CreativeTabs.tabTransport);
 	}
 
 	public int damageDropped(int metadata)
 	{
-		return InteractMachineMetadata.getBase(metadata).metadata;
+		return MachineType.getBase(metadata).metadata;
 	}
 
-	public boolean onSneakUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer)
-	{
-		return this.onSneakMachineActivated(par1World, x, y, z, par5EntityPlayer);
-	}
-	
-	public boolean onSneakMachineActivated(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer)
+	public boolean onMachineActivated(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer)
 	{
 		if (!par1World.isRemote)
 		{
-			par5EntityPlayer.openGui(AssemblyLine.instance, 0, par1World, x, y, z);
+			int metadata = par1World.getBlockMetadata(x, y, z);
+			par5EntityPlayer.openGui(AssemblyLine.instance, MachineType.getBase(metadata).metadata, par1World, x, y, z);
 			return true;
 		}
 		return true;
 	}
-
+	
 	@Override
 	public boolean onUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer)
-	{
+	{		
 		int metadata = par1World.getBlockMetadata(x, y, z);
-
-		if (metadata == 3)
-		{
-			par1World.setBlockAndMetadataWithNotify(x, y, z, this.blockID, 0);
-			return true;
-		}
-		else if (metadata == 7)
-		{
-			par1World.setBlockAndMetadataWithNotify(x, y, z, this.blockID, 4);
-			return true;
-		}
-		else if (metadata == 11)
-		{
-			par1World.setBlockAndMetadataWithNotify(x, y, z, this.blockID, 8);
-			return true;
-		}
-		else if (metadata == 15)
-		{
-			par1World.setBlockAndMetadataWithNotify(x, y, z, this.blockID, 12);
-			return true;
-		}
-		else
-		{
-			par1World.setBlockAndMetadataWithNotify(x, y, z, this.blockID, metadata + 1);
-			return true;
-		}
+		MachineType machineType = MachineType.getBase(metadata);
+		par1World.setBlockAndMetadataWithNotify(x, y, z, this.blockID, machineType.getNextDirectionMeta(MachineType.getDirection(metadata)));
+		return true;
 	}
-
-	/**
-	 * gets the correct facing direction from meta
-	 * data
-	 * 
-	 * @param meta
-	 * @return facing direction(int)
-	 */
-	public byte getDirection(int meta)
+	
+	@Override
+	public boolean onSneakUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer)
 	{
-
-		switch (meta)
-		{
-			case 0:
-				return 2;
-			case 1:
-				return 5;
-			case 2:
-				return 3;
-			case 3:
-				return 4;
-			case 4:
-				return 2;
-			case 5:
-				return 5;
-			case 6:
-				return 3;
-			case 7:
-				return 4;
-			case 8:
-				return 2;
-			case 9:
-				return 5;
-			case 10:
-				return 3;
-			case 11:
-				return 4;
-			case 12:
-				return 2;
-			case 13:
-				return 5;
-			case 14:
-				return 3;
-			case 15:
-				return 4;
-		}
-		return 0;
+		return this.onUseWrench(par1World, x, y, z, par5EntityPlayer);
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World var1, int metadata)
 	{
-		if (metadata >= 0 && metadata < 4) { return new TileEntityEjector(); }
-		if (metadata >= 4 && metadata < 8) { return new TileEntityInjector(); }
-		if (metadata >= 8 && metadata < 12) { return null; }
-		if (metadata >= 12 && metadata < 16) { return null; }
-		return null;
+		return MachineType.getBase(metadata).instantiateTileEntity();
 	}
 
 	@Override

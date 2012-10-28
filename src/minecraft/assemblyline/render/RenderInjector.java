@@ -33,7 +33,6 @@ public class RenderInjector extends TileEntitySpecialRenderer
 			int ent = tileEntity.worldObj.getBlockId(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
 			model.render(0.0625F, true, 0);
 			//TODO change the true part to check if there is a TE on the input side
-		System.out.println("RENDERING MACHINE BELT");
 		GL11.glPopMatrix();
 	
 	}

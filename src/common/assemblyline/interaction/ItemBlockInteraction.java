@@ -10,7 +10,7 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.MathHelper;
 import net.minecraft.src.World;
 import assemblyline.AssemblyLine;
-import assemblyline.interaction.BlockInteraction.InteractMachineMetadata;
+import assemblyline.interaction.BlockInteraction.MachineType;
 
 public class ItemBlockInteraction extends ItemBlock
 {
@@ -23,7 +23,7 @@ public class ItemBlockInteraction extends ItemBlock
 
 	public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
-		for (InteractMachineMetadata machine : InteractMachineMetadata.values())
+		for (MachineType machine : MachineType.values())
 		{
 			par3List.add(new ItemStack(AssemblyLine.blockInteraction, 1, machine.metadata));
 		}
@@ -31,7 +31,7 @@ public class ItemBlockInteraction extends ItemBlock
 
 	public String getItemNameIS(ItemStack itemstack)
 	{
-		return InteractMachineMetadata.getBase(itemstack.getItemDamage()).name;
+		return MachineType.getBase(itemstack.getItemDamage()).name;
 	}
 
 	@Override
