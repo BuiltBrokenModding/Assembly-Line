@@ -88,7 +88,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	{
 		super.updateEntity();
 
-		if (this.ticks % 20 == 0)
+		if (this.ticks % 10 == 0)
 		{
 			if (!worldObj.isRemote)
 			{
@@ -300,7 +300,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	 * Used to tell the belt not to apply velocity
 	 * to some Entity in case they are being
 	 * handled by another block. For example
-	 * ejector
+	 * Rejector
 	 * 
 	 * @param entity
 	 */

@@ -9,7 +9,7 @@ import assemblyline.TileEntityBase;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityAutoCrafter extends TileEntityBase implements ISidedInventory
+public class TileEntityAutoCrafter extends TileEntityBase
 {
 	@Override
 	public String getInvName()
@@ -27,17 +27,5 @@ public class TileEntityAutoCrafter extends TileEntityBase implements ISidedInven
 	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
 	{
 		
-	}
-
-	@Override
-	public int getStartInventorySide(ForgeDirection side)
-	{
-		return 0;
-	}
-
-	@Override
-	public int getSizeInventorySide(ForgeDirection side)
-	{
-		return 0;
 	}
 }

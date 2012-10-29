@@ -29,24 +29,6 @@ public abstract class TileEntityBase extends TileEntityAdvanced implements IPack
 	 * The owner of this tile entity.
 	 */
 	protected String owner = "";
-
-	/*
-	 *  { if (count++ >=
-	 * 10) { count = 0; if (!worldObj.isRemote &&
-	 * this.sendDataA() != null) { Packet packet =
-	 * PacketManager.getPacket("asmLine", this,
-	 * this.buildData(1));
-	 * PacketManager.sendPacketToClients(packet,
-	 * worldObj, Vector3.get(this), 40); } if
-	 * (!worldObj.isRemote && this.sendDataG() !=
-	 * null && this.isOpen) { Packet packet =
-	 * PacketManager.getPacket("asmLine", this,
-	 * this.buildData(0));
-	 * PacketManager.sendPacketToClients(packet,
-	 * worldObj, Vector3.get(this), 10); } } if
-	 * (ticks++ % tickRate() >= 0 &&
-	 * !isDisabled()) { this.tickedUpdate(); } }
-	 */
 	
 	/**
 	 * Inventory functions.
@@ -186,93 +168,5 @@ public abstract class TileEntityBase extends TileEntityAdvanced implements IPack
 		}
 		nbt.setTag("Items", var2);
 	}
-/*
-	@Override
-	public void handlePacketData(NetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
-	{
-		if (worldObj.isRemote)
-		{
-			try
-			{
-				int ID = dataStream.readInt();
-				if (ID == 0)
-				{
-					this.guiPacket(network, packetType, packet, player, dataStream);
-				}
-				else if (ID == 1)
-				{
-					this.animationPacket(network, packetType, packet, player, dataStream);
-				}
-				else
-				{
 
-				}
-
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-	}
-
-	/**
-	 * Used to read GUI only data sent to the TE
-	 
-	public abstract void guiPacket(NetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream);
-
-	/**
-	 * Used to read animation data for things that
-	 * can be seen on a TE
-	 
-	public abstract void animationPacket(NetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream);
-
-	/**
-	 * Used to read data for none animation or gui
-	 * server sent packets
-	 *
-	public abstract void otherPacket(NetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream);
-
-	public Object[] buildData(int packetID)
-	{
-		Object[] data = new Object[1];
-
-		if (packetID == 0)
-		{
-			data = new Object[this.sendDataG().length + 1];
-			data[0] = packetID;
-			for (int i = 0; i < this.sendDataG().length; i++)
-			{
-				data[i + 1] = this.sendDataG()[i];
-			}
-		}
-		else if (packetID == 1)
-		{
-			data = new Object[this.sendDataA().length + 1];
-			data[0] = packetID;
-			for (int i = 0; i < this.sendDataA().length; i++)
-			{
-				data[i + 1] = this.sendDataA()[i];
-			}
-		}
-		return data;
-	}
-
-	/**
-	 * Array of data too be sent for animation
-	 * updates
-	 * 
-	 * @return
-	 *
-	public abstract Object[] sendDataA();
-
-	/**
-	 * Array of data too be sent if the TE's GUI
-	 * is open at the time
-	 * 
-	 * @return
-	 *
-	public abstract Object[] sendDataG();
-	
-	*/
 }
