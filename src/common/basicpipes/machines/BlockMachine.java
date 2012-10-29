@@ -1,7 +1,5 @@
 package basicpipes.machines;
 
-import java.util.Random;
-
 import net.minecraft.src.BlockContainer;
 import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.Material;
@@ -41,7 +39,7 @@ public class BlockMachine extends BlockContainer
     {
         return  ItemRenderHelper.renderID;
     }
-    protected int damageDropped(int meta)
+    public int damageDropped(int meta)
     {
     	if(meta < 4)
     	{

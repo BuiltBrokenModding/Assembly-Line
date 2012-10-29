@@ -1,26 +1,22 @@
 package basicpipes.LTanks;
 
-import com.google.common.io.ByteArrayDataInput;
-
-import universalelectricity.network.IPacketReceiver;
-import universalelectricity.network.PacketManager;
-import universalelectricity.prefab.Vector3;
-import basicpipes.BasicPipesMain;
-import basicpipes.conductors.TileEntityPipe;
-import basicpipes.pipes.api.ILiquidConsumer;
-import basicpipes.pipes.api.ILiquidProducer;
-import basicpipes.pipes.api.IStorageTank;
-import basicpipes.pipes.api.Liquid;
-import basicpipes.pipes.api.MHelper;
 import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.ItemStack;
+import net.minecraft.src.INetworkManager;
 import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.NBTTagList;
-import net.minecraft.src.NetworkManager;
 import net.minecraft.src.Packet;
 import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.core.Vector3;
+import universalelectricity.prefab.network.IPacketReceiver;
+import universalelectricity.prefab.network.PacketManager;
+import basicpipes.BasicPipesMain;
+import basicpipes.pipes.api.ILiquidProducer;
+import basicpipes.pipes.api.IStorageTank;
+import basicpipes.pipes.api.Liquid;
+import basicpipes.pipes.api.MHelper;
+
+import com.google.common.io.ByteArrayDataInput;
 
 public class TileEntityLTank extends TileEntity implements IStorageTank,ILiquidProducer,IPacketReceiver{
 public TileEntity[] cc = {null,null,null,null,null,null};
@@ -193,7 +189,7 @@ public int presureOutput(Liquid type, ForgeDirection side) {
 
 
 @Override
-public void handlePacketData(NetworkManager network, int packetType,
+public void handlePacketData(INetworkManager network, int packetType,
 		Packet250CustomPayload packet, EntityPlayer player,
 		ByteArrayDataInput data) {
 	try

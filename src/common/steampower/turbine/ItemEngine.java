@@ -30,42 +30,87 @@ public class ItemEngine extends Item
 		// TODO Auto-generated method stub
 		return SteamPowerMain.textureFile+"Items.png";
 	}
-    @Override
-    public boolean onItemUse(ItemStack itemStack, EntityPlayer ePlayer, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
+   
+	public boolean onItemUse(ItemStack itemStack, EntityPlayer ePlayer,
+			World world, int x, int y, int z, int par7, float par8, float par9, float par10)
     {
-    	if (world.isRemote)
+        int var11 = world.getBlockId(x, y, z);
+        int BlockID = SteamPowerMain.EngineID;
+
+        if (var11 == Block.snow.blockID)
+        {
+            par7 = 1;
+        }
+        else if (var11 != Block.vine.blockID && var11 != Block.tallGrass.blockID && var11 != Block.deadBush.blockID
+                && (Block.blocksList[var11] == null || !Block.blocksList[var11].isBlockReplaceable(world, x, y, z)))
+        {
+            if (par7 == 0)
+            {
+                --y;
+            }
+
+            if (par7 == 1)
+            {
+                ++y;
+            }
+
+            if (par7 == 2)
+            {
+                --z;
+            }
+
+            if (par7 == 3)
+            {
+                ++z;
+            }
+
+            if (par7 == 4)
+            {
+                --x;
+            }
+
+            if (par7 == 5)
+            {
+                ++x;
+            }
+        }
+
+        if (itemStack.stackSize == 0)
         {
             return false;
         }
-    	
-    	Block var11 = SteamPowerMain.engine;
-    	int angle = MathHelper.floor_double((ePlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3; 
-    	
-        	if (ePlayer.canPlayerEdit(x, y, z))
-        	{
-            ++y;
-                if (var11.canPlaceBlockAt(world, x, y, z))
-                {
-                	world.editingBlocks = true;
-                     
-             	        switch (angle)
-             	        {
-             	        	case 0: world.setBlockAndMetadata(x, y, z, var11.blockID, 0); break;
-             	        	case 1: world.setBlockAndMetadata(x, y, z, var11.blockID, 1); break;
-             	        	case 2: world.setBlockAndMetadata(x, y, z, var11.blockID, 2); break;
-             	        	case 3: world.setBlockAndMetadata(x, y, z, var11.blockID, 3); break;
-             	        }
-             	        int meta = world.getBlockMetadata(x, y, z);
-             	        //ePlayer.sendChatToPlayer("A:"+angle+" M:"+meta);
-                	world.notifyBlocksOfNeighborChange(x, y, z, var11.blockID);
-                	world.setBlockAndMetadataWithNotify(x, y+1, z, var11.blockID, 14);
-                	world.notifyBlocksOfNeighborChange(x, y, z, var11.blockID);
-                	world.editingBlocks = false;
-                    --itemStack.stackSize;
-                    return true;
-                }
-            }
-        
-    	return false;
+        else if (!ePlayer.func_82247_a(x, y, z, par7, itemStack))
+        {
+            return false;
+        }
+        else if (y == 255 && Block.blocksList[BlockID].blockMaterial.isSolid())
+        {
+            return false;
+        }
+        else if (world.canPlaceEntityOnSide(BlockID, x, y, z, false, par7, ePlayer))
+        {
+            Block var12 = Block.blocksList[BlockID];
+            int angle = MathHelper.floor_double((ePlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3; 
+            switch (angle)
+ 	        {
+ 	        	case 0: world.setBlockAndMetadata(x, y, z, var12.blockID, 0); break;
+ 	        	case 1: world.setBlockAndMetadata(x, y, z, var12.blockID, 1); break;
+ 	        	case 2: world.setBlockAndMetadata(x, y, z, var12.blockID, 2); break;
+ 	        	case 3: world.setBlockAndMetadata(x, y, z, var12.blockID, 3); break;
+ 	        }
+ 	        int meta = world.getBlockMetadata(x, y, z);
+ 	        //ePlayer.sendChatToPlayer("A:"+angle+" M:"+meta);
+    	world.notifyBlocksOfNeighborChange(x, y, z, var12.blockID);
+    	world.setBlockAndMetadataWithNotify(x, y+1, z, var12.blockID, 14);
+    	world.notifyBlocksOfNeighborChange(x, y, z, var12.blockID);
+    	world.editingBlocks = false;
+        --itemStack.stackSize;
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

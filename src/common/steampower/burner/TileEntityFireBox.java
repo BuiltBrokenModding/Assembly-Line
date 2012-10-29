@@ -2,10 +2,10 @@ package steampower.burner;
 
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.IInventory;
+import net.minecraft.src.INetworkManager;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.NetworkManager;
 import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -13,7 +13,7 @@ import net.minecraftforge.common.ISidedInventory;
 import steampower.SteamPowerMain;
 import steampower.TileEntityMachine;
 import steampower.boiler.TileEntityBoiler;
-import universalelectricity.network.IPacketReceiver;
+import universalelectricity.prefab.network.IPacketReceiver;
 import basicpipes.pipes.api.IHeatProducer;
 import basicpipes.pipes.api.MHelper;
 
@@ -195,7 +195,7 @@ public class TileEntityFireBox extends TileEntityMachine implements IPacketRecei
 	}
 	
 	@Override
-	public void handlePacketData(NetworkManager network, int packetType,
+	public void handlePacketData(INetworkManager network, int packetType,
 			Packet250CustomPayload packet, EntityPlayer player,
 			ByteArrayDataInput dataStream) {
 		try

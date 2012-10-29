@@ -1,12 +1,12 @@
 package basicpipes.machines;
 
-import java.util.ArrayList;
-import net.minecraft.src.*;
-
 import java.util.Random;
 
-import universalelectricity.UniversalElectricity;
-
+import net.minecraft.src.CreativeTabs;
+import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.Material;
+import net.minecraft.src.TileEntity;
+import net.minecraft.src.World;
 import basicpipes.BasicPipesMain;
 
 public class BlockValve extends universalelectricity.prefab.BlockMachine
@@ -148,7 +148,7 @@ public class BlockValve extends universalelectricity.prefab.BlockMachine
     {
         return this.blockID;
     }
-    protected int damageDropped(int meta)
+    public int damageDropped(int meta)
     {
     	if(meta < 8)
     	{

@@ -9,9 +9,8 @@ import net.minecraft.src.Packet;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
-import universalelectricity.network.PacketManager;
-import universalelectricity.prefab.TileEntityElectricityReceiver;
-import universalelectricity.prefab.Vector3;
+import universalelectricity.core.Vector3;
+import universalelectricity.prefab.network.PacketManager;
 public class TileEntityMachine extends TileEntity implements  IInventory, ISidedInventory
 {
 	public int facing = 0;

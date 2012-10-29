@@ -19,7 +19,7 @@ public class BlockRod extends universalelectricity.prefab.BlockMachine {
 		this.setCreativeTab(CreativeTabs.tabRedstone);
 	}
 	@Override
-	protected int damageDropped(int metadata)
+	public int damageDropped(int metadata)
 	{
 		return 0;
 	}

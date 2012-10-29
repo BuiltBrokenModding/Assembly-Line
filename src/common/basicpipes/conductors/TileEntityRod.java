@@ -1,15 +1,15 @@
 package basicpipes.conductors;
 
 import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.NetworkManager;
+import net.minecraft.src.INetworkManager;
 import net.minecraft.src.Packet;
 import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import steampower.SteamPowerMain;
-import universalelectricity.network.IPacketReceiver;
-import universalelectricity.network.PacketManager;
-import universalelectricity.prefab.Vector3;
+import universalelectricity.core.Vector3;
+import universalelectricity.prefab.network.IPacketReceiver;
+import universalelectricity.prefab.network.PacketManager;
 import basicpipes.pipes.api.IMechanical;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -112,7 +112,7 @@ public class TileEntityRod extends TileEntity implements IPacketReceiver,IMechan
 	}
 
 	@Override
-	public void handlePacketData(NetworkManager network, int packetType,
+	public void handlePacketData(INetworkManager network, int packetType,
 			Packet250CustomPayload packet, EntityPlayer player,
 			ByteArrayDataInput data) {
 		try

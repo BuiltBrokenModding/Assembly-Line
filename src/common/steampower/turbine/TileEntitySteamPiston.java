@@ -1,24 +1,17 @@
 package steampower.turbine;
 
 import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.IInventory;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemStack;
+import net.minecraft.src.INetworkManager;
 import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.NBTTagList;
-import net.minecraft.src.NetworkManager;
 import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.common.ISidedInventory;
 import steampower.TileEntityMachine;
-import universalelectricity.network.IPacketReceiver;
-import basicpipes.conductors.TileEntityRod;
+import universalelectricity.prefab.network.IPacketReceiver;
 import basicpipes.pipes.api.ILiquidConsumer;
 import basicpipes.pipes.api.ILiquidProducer;
 import basicpipes.pipes.api.IMechanical;
 import basicpipes.pipes.api.Liquid;
-import basicpipes.conductors.*;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -276,7 +269,7 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 		return false;
 	}
 	@Override
-	public void handlePacketData(NetworkManager network, int packetType,
+	public void handlePacketData(INetworkManager network, int packetType,
 			Packet250CustomPayload packet, EntityPlayer player,
 			ByteArrayDataInput dataStream) {
 		try

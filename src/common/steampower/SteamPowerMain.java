@@ -2,15 +2,16 @@ package steampower;
 import java.io.File;
 
 import net.minecraft.src.Block;
+import net.minecraft.src.CraftingManager;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import steampower.turbine.BlockGenerator;
 import steampower.turbine.BlockSteamPiston;
 import steampower.turbine.ItemEngine;
 import steampower.turbine.TileEntitytopGen;
-import universalelectricity.BasicComponents;
-import universalelectricity.network.PacketManager;
+import universalelectricity.prefab.network.PacketManager;
 import basicpipes.BasicPipesMain;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -52,14 +53,14 @@ public class SteamPowerMain{
 	 public static int configurationProperties()
      {
              config.load(); 
-             BlockID = Integer.parseInt(config.getOrCreateIntProperty("MachinesID", Configuration.CATEGORY_BLOCK, 3030).value);
-             EngineItemID = Integer.parseInt(config.getOrCreateIntProperty("EngineItem", Configuration.CATEGORY_ITEM, 30308).value);
-             EngineID = Integer.parseInt(config.getOrCreateIntProperty("SteamEngineID", Configuration.CATEGORY_BLOCK, 3031).value);  
-             genID = Integer.parseInt(config.getOrCreateIntProperty("ElecGenID", Configuration.CATEGORY_BLOCK, 3032).value); 
-             genOutput = Integer.parseInt(config.getOrCreateIntProperty("genOutputWattsmax", Configuration.CATEGORY_GENERAL, 1000).value);
-             steamOutBoiler = Integer.parseInt(config.getOrCreateIntProperty("steamOutPerCycle", Configuration.CATEGORY_GENERAL, 10).value);
-             boilerHeat = Integer.parseInt(config.getOrCreateIntProperty("boilerInKJNeed", Configuration.CATEGORY_GENERAL, 4500).value);
-             fireOutput = Integer.parseInt(config.getOrCreateIntProperty("fireBoxOutKJMax", Configuration.CATEGORY_GENERAL,250).value);
+             BlockID = Integer.parseInt(config.get(Configuration.CATEGORY_BLOCK,"MachinesID",  3030).value);
+             EngineItemID = Integer.parseInt(config.get(Configuration.CATEGORY_ITEM,"EngineItem",  30308).value);
+             EngineID = Integer.parseInt(config.get(Configuration.CATEGORY_BLOCK,"SteamEngineID",  3031).value);  
+             genID = Integer.parseInt(config.get(Configuration.CATEGORY_BLOCK,"ElecGenID",  3032).value); 
+             genOutput = Integer.parseInt(config.get(Configuration.CATEGORY_GENERAL,"genOutputWattsmax",  1000).value);
+             steamOutBoiler = Integer.parseInt(config.get(Configuration.CATEGORY_GENERAL,"steamOutPerCycle",  10).value);
+             boilerHeat = Integer.parseInt(config.get(Configuration.CATEGORY_GENERAL,"boilerInKJNeed",  4500).value);
+             fireOutput = Integer.parseInt(config.get(Configuration.CATEGORY_GENERAL,"fireBoxOutKJMax", 250).value);
              config.save();
              return BlockID;
      }
@@ -93,28 +94,32 @@ public class SteamPowerMain{
 		 proxy.postInit();
 		 //Crafting
 		try{
+			CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(gen, 1), new Object [] {"@T@", "OVO", "@T@",
+				'T',new ItemStack(BasicPipesMain.rod, 1),
+				'@',"plateSteel",
+				'O',"basicCircuit",
+				'V',"motor"}));
 			/**
 		        TileEntityBoiler();<- metadata 1
 		        TileEntityFireBox();<-metadata 2-5
 		        */
-			GameRegistry.addRecipe(new ItemStack(gen, 1), new Object [] {"@T@", "OVO", "@T@",
-				'T',new ItemStack(BasicPipesMain.rod, 1),
-				'@',new ItemStack(BasicComponents.itemSteelPlate),
-				'O',new ItemStack(BasicComponents.itemCircuit,1,0),
-				'V',new ItemStack(BasicComponents.itemMotor)});
-		GameRegistry.addRecipe(new ItemStack(machine, 1, 1), new Object [] {"TT", "VV", "TT",
+			CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(
+					new ItemStack(machine, 1, 1), new Object [] {"TT", "VV", "TT",
 			'T',new ItemStack(BasicPipesMain.parts, 1,6),
-			'V',new ItemStack(BasicPipesMain.parts, 1,7)});
-		GameRegistry.addRecipe(new ItemStack(machine, 1, 2), new Object [] { "@", "F",
+			'V',new ItemStack(BasicPipesMain.parts, 1,7)}));
+			CraftingManager.getInstance().getRecipeList().add(
+					new ShapedOreRecipe(new ItemStack(machine, 1, 2), new Object [] { "@", "F",
 			'F',Block.stoneOvenIdle,
-			'@',new ItemStack(BasicComponents.itemSteelPlate)});
-		GameRegistry.addRecipe(new ItemStack(itemEngine, 1,0), new Object [] {"GGG", "VPV", "@T@",
+			'@',"plateSteel"}));
+			CraftingManager.getInstance().getRecipeList().add(
+					new ShapedOreRecipe(new ItemStack(itemEngine, 1,0), new Object [] {"GGG", "VPV", "@T@",
 			'T',new ItemStack(BasicPipesMain.parts, 1,1),
 			'G',BasicPipesMain.rod,
-			'@',new ItemStack(BasicComponents.itemSteelPlate),
+			'@',"plateSteel",
 			'P',Block.pistonBase,
 			'V',new ItemStack(BasicPipesMain.parts, 1,7),
-			'M',new ItemStack(BasicComponents.itemMotor)});}
+			'M',"motor"}));
+			}
 	catch(Exception e)
 	{
 	 e.printStackTrace();

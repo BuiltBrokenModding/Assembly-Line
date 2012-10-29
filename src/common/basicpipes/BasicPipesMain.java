@@ -5,8 +5,7 @@ import net.minecraft.src.Block;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraftforge.common.Configuration;
-import universalelectricity.BasicComponents;
-import universalelectricity.network.PacketManager;
+import universalelectricity.prefab.network.PacketManager;
 import basicpipes.LTanks.ItemTank;
 import basicpipes.LTanks.TileEntityLTank;
 import basicpipes.conductors.BlockPipe;
@@ -66,14 +65,14 @@ public class BasicPipesMain{
 	 public static int configurationProperties()
      {
              config.load();             
-             pipeID = Integer.parseInt(config.getOrCreateIntProperty("PipeBlock", Configuration.CATEGORY_BLOCK, 155).value);
-             machineID = Integer.parseInt(config.getOrCreateIntProperty("machineBlock", Configuration.CATEGORY_BLOCK, 156).value);
-             valveID = Integer.parseInt(config.getOrCreateIntProperty("ValveBlock", Configuration.CATEGORY_BLOCK, 157).value);
-             rodID = Integer.parseInt(config.getOrCreateIntProperty("gearBlock", Configuration.CATEGORY_BLOCK, 158).value);
-             partID = Integer.parseInt(config.getOrCreateIntProperty("parts", Configuration.CATEGORY_ITEM, 23022).value);
-             ppipeID = Integer.parseInt(config.getOrCreateIntProperty("pipes", Configuration.CATEGORY_ITEM, 23023).value);
-             toolID = Integer.parseInt(config.getOrCreateIntProperty("ToolID", Configuration.CATEGORY_ITEM, 23024).value);
-             tankID = Integer.parseInt(config.getOrCreateIntProperty("tankID", Configuration.CATEGORY_ITEM, 23025).value);
+             pipeID = Integer.parseInt(config.get(Configuration.CATEGORY_BLOCK,"PipeBlock",  155).value);
+             machineID = Integer.parseInt(config.get(Configuration.CATEGORY_BLOCK,"machineBlock",  156).value);
+             valveID = Integer.parseInt(config.get(Configuration.CATEGORY_BLOCK,"ValveBlock",  157).value);
+             rodID = Integer.parseInt(config.get(Configuration.CATEGORY_BLOCK,"gearBlock",  158).value);
+             partID = Integer.parseInt(config.get(Configuration.CATEGORY_ITEM,"parts",  23022).value);
+             ppipeID = Integer.parseInt(config.get(Configuration.CATEGORY_ITEM,"pipes",  23023).value);
+             toolID = Integer.parseInt(config.get(Configuration.CATEGORY_ITEM,"ToolID",  23024).value);
+             tankID = Integer.parseInt(config.get(Configuration.CATEGORY_ITEM,"tankID",  23025).value);
              config.save();
              return pipeID;
      }
@@ -152,32 +151,14 @@ public class BasicPipesMain{
 		GameRegistry.addShapelessRecipe(new ItemStack(itemTank, 1,3), new Object[] { new ItemStack(parts, 1,6),new ItemStack(parts, 1,4),new ItemStack(Item.dyePowder, 1,0)});
 		//fuel
 		GameRegistry.addShapelessRecipe(new ItemStack(itemTank, 1,4), new Object[] { new ItemStack(parts, 1,6),new ItemStack(parts, 1,4),new ItemStack(Item.dyePowder, 1,11)});
-		
-		try{
-		GameRegistry.addRecipe(new ItemStack(parts, 2,0), new Object[] { "@@@", '@',BasicComponents.itemBronzeIngot});//bronze tube
-		//steam
-		GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1,0), new Object[] { new ItemStack(parts, 1,0),new ItemStack(parts, 1,4)});
-		GameRegistry.addRecipe(new ItemStack(parts, 1,6), new Object[] { " @ ","@ @"," @ ", '@',BasicComponents.itemBronzeIngot});//tank
-		
-		//pump
-		GameRegistry.addRecipe(new ItemStack(machine, 1,0), new Object[] { "@T@","BPB","@M@"
-			, '@',BasicComponents.itemSteelPlate
-			, 'M',BasicComponents.itemMotor
+		GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1,0), new Object[] { new ItemStack(parts, 1,1),new ItemStack(parts, 1,4)});
+		GameRegistry.addRecipe(new ItemStack(machine, 1,0), new Object[] { "@T@","BPB","@P@"
+			, '@',new ItemStack(Item.ingotIron,2)
 			, 'B',new ItemStack(parts, 1,7)
 			, 'P',new ItemStack(Block.pistonBase)
-			, 'C',BasicComponents.blockCopperWire
 			, 'T',new ItemStack(parts, 1,6)
 			});
-		this.ueLoaded = true;
-		}
-		catch(Exception e)
-		{
-			System.out.print("UE based recipes not loaded");
-			//secondary boiler tank
-			
-			//steam
-			GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1,0), new Object[] { new ItemStack(parts, 1,1),new ItemStack(parts, 1,4)});
-		}
+		
 	}
 
 }

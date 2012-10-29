@@ -1,7 +1,7 @@
 package steampower.turbine;
 
 import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.NetworkManager;
+import net.minecraft.src.INetworkManager;
 import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -9,8 +9,7 @@ import steampower.TileEntityMachine;
 import universalelectricity.electricity.ElectricityManager;
 import universalelectricity.implement.IConductor;
 import universalelectricity.implement.IElectricityProducer;
-import universalelectricity.network.IPacketReceiver;
-
+import universalelectricity.prefab.network.IPacketReceiver;
 import basicpipes.pipes.api.IMechanical;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -71,7 +70,7 @@ public class TileEntityGen extends TileEntityMachine implements IPacketReceiver,
 		
 		        if (tileEntity instanceof IConductor)
 		        {
-		            if (ElectricityManager.instance.getElectricityRequired( ((IConductor)tileEntity).getConnectionID()) > 0)
+		            if (ElectricityManager.instance.getElectricityRequired(((IConductor)tileEntity).getNetwork()) > 0)
 		            {
 		                this.wires[i] = (IConductor)tileEntity;
 		                wireCount++;
@@ -99,7 +98,7 @@ public class TileEntityGen extends TileEntityMachine implements IPacketReceiver,
 		super.updateEntity();
 	}
 	@Override
-	public void handlePacketData(NetworkManager network, int packetType,
+	public void handlePacketData(INetworkManager network, int packetType,
 			Packet250CustomPayload packet, EntityPlayer player,
 			ByteArrayDataInput data) {
 		// TODO Auto-generated method stub

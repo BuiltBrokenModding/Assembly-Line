@@ -30,7 +30,7 @@ public class BlockMachine extends universalelectricity.prefab.BlockMachine
 		this.setResistance(3f);
     }
     @Override
-    protected int damageDropped(int metadata)
+	public int damageDropped(int metadata)
     {
         return metadata;
     }
