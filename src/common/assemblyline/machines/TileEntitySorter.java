@@ -46,7 +46,7 @@ public class TileEntitySorter extends TileEntityBase implements
 	/**
 	 * on/off value for the GUI buttons
 	 */
-	public boolean[] onOff = new boolean[5];
+	public boolean[] onOff = new boolean[]{true,true,true,true,true};
 	/**
 	 * the belt found in the search area 
 	 */
@@ -131,6 +131,7 @@ public class TileEntitySorter extends TileEntityBase implements
 			this.beltSide.ignoreEntity(entity);
 
 		}
+		System.out.print(" \n fire ");
 		entity.motionX = (double) side.offsetX * 0.1;
 		entity.motionY += 0.10000000298023224D;
 		entity.motionZ = (double) side.offsetZ * 0.1;
@@ -202,16 +203,14 @@ public class TileEntitySorter extends TileEntityBase implements
 		if (i >= this.onOff.length) {
 			return;
 		}
-		boolean cc = this.onOff[i];
-		if (cc) {
-			cc = false;
+		if (this.onOff[i]) {
+			this.onOff[i] = false;
 		} else {
-			cc = true;
+			this.onOff[i] = true;
 		}
-		this.onOff[i] = cc;
 		if (worldObj.isRemote) {
 			Packet packet = PacketManager.getPacket("asmLine", this,
-					new Object[] { tPacketID.SETTINGON, i });
+					 tPacketID.SETTINGON.ordinal(), i );
 			PacketDispatcher.sendPacketToServer(packet);
 		}
 	}
@@ -261,17 +260,18 @@ public class TileEntitySorter extends TileEntityBase implements
 		try{
 				int id = dataStream.readInt();
 				tPacketID pID = tPacketID.values()[id];
+				System.out.print("\n id:"+id+" ");
 				if(pID == tPacketID.ANIMATION)
 				{
 					this.firePiston = dataStream.readBoolean();
-				}
+				}else
 				if(pID == tPacketID.GUI)
 				{
 					for(int i =0; i < this.onOff.length; i++)
 					{
 						this.onOff[i] = dataStream.readBoolean();
 					}
-				}
+				}else
 				if(pID == tPacketID.SETTINGON)
 				{
 					int num = dataStream.readInt();
