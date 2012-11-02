@@ -48,7 +48,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements ILi
 			
 			if(!worldObj.isRemote)
 			{
-				if(bBlock == type.Still && this.eStored > 200 && this.lStored < this.wMax)
+				if(bBlock == type.Still && this.eStored >= 200 && this.lStored < this.wMax)
 				{
 					eStored -= 200;
 					lStored += 1;
@@ -71,9 +71,8 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements ILi
 	public int onProduceLiquid(Liquid type, int maxVol, ForgeDirection side) {
 		if(type == this.type && lStored > 0)
 		{
-			int tradeW = Math.min(maxVol, lStored);
-			lStored -= tradeW;
-	        return tradeW;
+			lStored -= 1;
+	        return 1;
 		}
 		return 0;
 	}

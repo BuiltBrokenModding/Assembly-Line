@@ -25,6 +25,7 @@ public class ItemGuage extends Item
         this.setIconIndex(10);
         this.setItemName("guage");
         this.setCreativeTab(CreativeTabs.tabTools);
+        this.setMaxStackSize(1);
     }
     @Override
     public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
