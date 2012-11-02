@@ -3,9 +3,12 @@ package assemblyline.machines.crafter;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.INetworkManager;
 import net.minecraft.src.Packet250CustomPayload;
+import net.minecraft.src.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
+import assemblyline.AssemblyLine;
 import assemblyline.TileEntityBase;
+import assemblyline.machines.BlockMulti.MachineType;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -28,4 +31,5 @@ public class TileEntityAutoCrafter extends TileEntityBase
 	{
 		
 	}
+	
 }
