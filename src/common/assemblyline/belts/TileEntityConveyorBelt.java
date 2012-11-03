@@ -19,10 +19,11 @@ import universalelectricity.prefab.TileEntityElectricityReceiver;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.AssemblyLine;
+import assemblyline.api.IBelt;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implements IPacketReceiver
+public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implements IPacketReceiver, IBelt
 {
 	/**
 	 * Joules required to run this thing.
@@ -124,10 +125,10 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 
 		if (this.running)
 		{
-			AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1);
+			
 			try
 			{
-				List<Entity> entityOnTop = worldObj.getEntitiesWithinAABB(Entity.class, bounds);
+				List<Entity> entityOnTop = this.getEntityAbove();
 
 				for (Entity entity : entityOnTop)
 				{
@@ -297,14 +298,6 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 
 	}
 
-	/**
-	 * Used to tell the belt not to apply velocity
-	 * to some Entity in case they are being
-	 * handled by another block. For example
-	 * Rejector
-	 * 
-	 * @param entity
-	 */
 	public void ignoreEntity(Entity entity)
 	{
 		if (!this.entityIgnoreList.contains(entity))
@@ -312,5 +305,17 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 			this.entityIgnoreList.add(entity);
 		}
 
+	}
+
+	@Override
+	public ForgeDirection getFacing() {
+		
+		return ForgeDirection.getOrientation(this.getBeltDirection());
+	}
+	
+	public List<Entity> getEntityAbove()
+	{
+		AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1);
+		return worldObj.getEntitiesWithinAABB(Entity.class, bounds);
 	}
 }
