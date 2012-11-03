@@ -4,3 +4,4 @@
 * AssemblyLine_v0.0.6.5.jar
 @ AssemblyLine_v0.0.6.6.jar
 @ AssemblyLine_v0.0.6.7.jar
+@ AssemblyLine_v0.0.6.8.jar AssemblyLine_v0.0.6.8_api.zip
