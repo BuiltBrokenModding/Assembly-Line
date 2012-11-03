@@ -21,11 +21,6 @@ public class ALCommonProxy implements IGuiHandler
 
 	}
 
-	public void postInit()
-	{
-
-	}
-
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{

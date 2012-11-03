@@ -46,7 +46,7 @@ public class ContainerCrafter extends Container
 	@Override
 	public boolean canInteractWith(EntityPlayer par1EntityPlayer)
 	{
-		return this.tileEntity.isUseableByPlayer(par1EntityPlayer);
+		return true;
 	}
 
 	/**

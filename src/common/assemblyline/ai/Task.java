@@ -14,39 +14,37 @@ public abstract class Task
 	protected int ticks;
 
 	/**
-	 * The TileEntity that is doing this task.
-	 */
-	public TileEntity handler;
-
-	private boolean shouldExecute = true;
-
-	public Task(TileEntity handler)
-	{
-		this.handler = handler;
-	}
-
-	/**
 	 * Called when a task is being done.
 	 * 
 	 * @param ticks
-	 *            - The amount of ticks this task
+	 *            The amount of ticks this task
 	 *            has been elapsed for.
+	 * @return Return true if the task is not
+	 *         finished and false if it is.
 	 */
-	protected void doTask()
+	protected boolean doTask()
 	{
 		this.ticks++;
+		return true;
 	}
 
-	public void resetTask()
+	public void onTaskStart()
+	{
+
+	}
+
+	public void onTaskEnd()
 	{
 	}
+	
+	public abstract void setTileEntity(TileEntity tileEntity);
 
 	/**
-	 * @return Whether the task should keep
-	 *         executing.
+	 * @return The tick interval of this task.
+	 *         Return 0 for no ticks.
 	 */
-	public boolean shouldExecute()
+	public int getTickInterval()
 	{
-		return this.shouldExecute;
+		return 1;
 	}
 }

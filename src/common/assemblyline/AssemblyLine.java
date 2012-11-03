@@ -68,33 +68,30 @@ public class AssemblyLine
 	@Init
 	public void load(FMLInitializationEvent evt)
 	{
+		proxy.init();
+
 		GameRegistry.registerTileEntity(TileEntityConveyorBelt.class, "ConveyorBelt");
 		GameRegistry.registerTileEntity(TileEntitySorter.class, "Sorter");
 		GameRegistry.registerTileEntity(TileEntityManipulator.class, "Manipulator");
-		proxy.init();
-		// Names
-		LanguageRegistry.addName(new ItemStack(blockConveyorBelt, 1), "Conveyor Belt");
-		LanguageRegistry.addName(new ItemStack(blockInteraction, 1, MachineType.SORTER.metadata), MachineType.SORTER.name);
-		LanguageRegistry.addName(new ItemStack(blockInteraction, 1, MachineType.MANIPULATOR.metadata), MachineType.MANIPULATOR.name);
-		LanguageRegistry.addName(new ItemStack(blockInteraction, 1, 8), "FutureBlock");
-		LanguageRegistry.addName(new ItemStack(blockInteraction, 1, 12), "FutureBlock");
-	}
 
-	@PostInit
-	public void postInit(FMLPostInitializationEvent event)
-	{
+		// Add Names
+		LanguageRegistry.addName(new ItemStack(blockConveyorBelt, 1), "Conveyor Belt");
+		
+		for(MachineType type : MachineType.values())
+		{
+			LanguageRegistry.addName(new ItemStack(blockInteraction, 1, type.metadata), type.name);
+		}
+
 		// Conveyor Belt
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt), new Object[]
-		{ "III", "MCM", 'I', Item.ingotIron, 'M', "motor", 'C', "basicCircuit" }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 2), new Object[]
+		{ "III", "WMW", 'I', "ingotSteel", 'W', Block.wood, 'M', "motor" }));
 
 		// Rejector
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockInteraction, 1, 0), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockInteraction, 1, MachineType.SORTER.metadata), new Object[]
 		{ "WPW", "@R@", '@', "plateSteel", 'R', Item.redstone, 'P', Block.pistonBase, 'C', "basicCircuit", 'W', "copperWire" }));
 
 		// Retriever
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockInteraction, 1, 4), new Object[]
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockInteraction, 1, MachineType.MANIPULATOR.metadata), new Object[]
 		{ Block.dispenser, "basicCircuit" }));
-		proxy.postInit();
 	}
-
 }
