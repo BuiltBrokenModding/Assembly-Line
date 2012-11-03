@@ -31,7 +31,7 @@ public class GuiSorter extends GuiContainer {
 		int wid = (this.width - this.xSize) / 2;
 		int hig = (this.height - this.ySize) / 2;
 		this.controlList.add(new GuiButton(0, wid + 112, hig + 32, 44,19, "Toggle"));
-		for(int i = 1; i < this.tileEntity.onOff.length; i++)
+		for(int i = 1; i < this.tileEntity.guiButtons.length; i++)
 		{
 			this.controlList.add(new GuiButtonImage(i, wid + 17 + i*18, hig + 17, 0));
 		}
@@ -72,7 +72,7 @@ public class GuiSorter extends GuiContainer {
 	 */
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-		this.fontRenderer.drawString("Ejector Settings", 55, 6, 4210752);
+		this.fontRenderer.drawString(this.tileEntity.getInvName(), 55, 6, 4210752);
 		this.fontRenderer.drawString(
 				"Voltage: " + (int) this.tileEntity.getVoltage(), 95, 60,
 				4210752);
@@ -98,12 +98,12 @@ public class GuiSorter extends GuiContainer {
 				this.xSize, this.ySize);
 		
 		//GUI button changes
-		for(int i = 1; i < this.tileEntity.onOff.length; i++)
+		for(int i = 1; i < this.tileEntity.guiButtons.length; i++)
 		{
-			this.drawTexturedModalRect(containerWidth+17+i*18, containerHeight+17, 176, +(tileEntity.onOff[i] ? 12 : 0), 12, 12);
+			this.drawTexturedModalRect(containerWidth+17+i*18, containerHeight+17, 176, +(tileEntity.guiButtons[i] ? 12 : 0), 12, 12);
 		}
 		this.fontRenderer.drawString(
-				"Reject: "+(tileEntity.onOff[0] ? "Inv" : "Other"), containerWidth + 108,
+				"Reject: "+(tileEntity.guiButtons[0] ? "Inv" : "Other"), containerWidth + 108,
 				containerHeight +22, 4210752);
 	}
 }

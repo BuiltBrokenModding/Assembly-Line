@@ -6,31 +6,37 @@ import net.minecraft.src.AxisAlignedBB;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityItem;
 import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.IInventory;
 import net.minecraft.src.INetworkManager;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
+import net.minecraft.src.NBTTagList;
 import net.minecraft.src.Packet;
 import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.Vector3;
-import universalelectricity.implement.IElectricityReceiver;
+import universalelectricity.prefab.TileEntityElectricityReceiver;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.AssemblyLine;
-import assemblyline.TileEntityBase;
 import assemblyline.belts.TileEntityConveyorBelt;
 
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 
-public class TileEntitySorter extends TileEntityBase implements IElectricityReceiver, IPacketReceiver
+public class TileEntitySorter extends TileEntityElectricityReceiver implements IPacketReceiver, IInventory
 {
+	/**
+	 * The items this container contains.
+	 */
+	protected ItemStack[] containingItems = new ItemStack[this.getSizeInventory()];
+
 	/**
 	 * Used to id the packet types
 	 */
-	private enum tPacketID
+	private enum PacketTypes
 	{
 		ANIMATION, GUI, SETTINGON
 	}
@@ -38,7 +44,8 @@ public class TileEntitySorter extends TileEntityBase implements IElectricityRece
 	/**
 	 * Joules required per tick.
 	 */
-	public static final int WATTS_REQUIRED = 10;
+	public static final int JOULES_REQUIRED = 10;
+
 	/**
 	 * Stored energy
 	 */
@@ -50,20 +57,25 @@ public class TileEntitySorter extends TileEntityBase implements IElectricityRece
 	/**
 	 * on/off value for the GUI buttons
 	 */
-	public boolean[] onOff = new boolean[]
+	public boolean[] guiButtons = new boolean[]
 	{ true, true, true, true, true };
 	/**
 	 * the belt found in the search area
 	 */
 	public TileEntityConveyorBelt beltSide = null;
 
+	private int playerUsing = 0;
+
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
-		// has to update a bit faster than a
-		// conveyer belt
-		if (this.ticks % 5 == 0)
+
+		/**
+		 * Has to update a bit faster than a
+		 * conveyer belt
+		 */
+		if (this.ticks % 5 == 0 && !this.isDisabled())
 		{
 
 			int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
@@ -92,7 +104,7 @@ public class TileEntitySorter extends TileEntityBase implements IElectricityRece
 
 				boolean flag = false;
 
-				if (itemsBehind.size() > 0 && this.wattsReceived > this.WATTS_REQUIRED)
+				if (itemsBehind.size() > 0 && this.wattsReceived > this.JOULES_REQUIRED)
 				{
 					// for every item found check
 					// if can be thrown then throw
@@ -111,7 +123,7 @@ public class TileEntitySorter extends TileEntityBase implements IElectricityRece
 				// the area
 				if (!worldObj.isRemote && flag)
 				{
-					Packet packet = PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.data(tPacketID.ANIMATION));
+					Packet packet = PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.data(PacketTypes.ANIMATION));
 					PacketManager.sendPacketToClients(packet, worldObj, Vector3.get(this), 30);
 				}
 
@@ -122,7 +134,7 @@ public class TileEntitySorter extends TileEntityBase implements IElectricityRece
 			}
 			if (!worldObj.isRemote && this.playerUsing > 0)
 			{
-				Packet packet = PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.data(tPacketID.GUI));
+				Packet packet = PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.data(PacketTypes.GUI));
 				PacketManager.sendPacketToClients(packet, worldObj, Vector3.get(this), 10);
 			}
 		}
@@ -148,7 +160,7 @@ public class TileEntitySorter extends TileEntityBase implements IElectricityRece
 		entity.motionX = (double) side.offsetX * 0.1;
 		entity.motionY += 0.10000000298023224D;
 		entity.motionZ = (double) side.offsetZ * 0.1;
-		this.wattsReceived -= this.WATTS_REQUIRED;
+		this.wattsReceived -= this.JOULES_REQUIRED;
 	}
 
 	public boolean canItemBeThrow(Entity entity)
@@ -159,13 +171,13 @@ public class TileEntitySorter extends TileEntityBase implements IElectricityRece
 			EntityItem itemE = (EntityItem) entity;
 			ItemStack item = itemE.item;
 
-			if (this.onOff[4])
+			if (this.guiButtons[4])
 			{
 
 				// reject matching items
 				for (int i = 0; i < this.containingItems.length; i++)
 				{
-					if (containingItems[i] != null && onOff[i])
+					if (containingItems[i] != null && guiButtons[i])
 					{
 						if (containingItems[i].itemID == item.itemID && containingItems[i].getItemDamage() == item.getItemDamage()) { return true; }
 					}
@@ -173,12 +185,12 @@ public class TileEntitySorter extends TileEntityBase implements IElectricityRece
 				return false;
 
 			}
-			else if (!this.onOff[4])
+			else if (!this.guiButtons[4])
 			{
 				// reject all but matching items
 				for (int i = 0; i < this.containingItems.length; i++)
 				{
-					if (containingItems[i] != null && onOff[i])
+					if (containingItems[i] != null && guiButtons[i])
 					{
 						if (containingItems[i].itemID == item.itemID && containingItems[i].getItemDamage() == item.getItemDamage()) { return false; }
 					}
@@ -222,56 +234,33 @@ public class TileEntitySorter extends TileEntityBase implements IElectricityRece
 	 */
 	public void changeOnOff(int i)
 	{
-		if (i >= this.onOff.length) { return; }
-		if (this.onOff[i])
+		if (i >= this.guiButtons.length) { return; }
+		if (this.guiButtons[i])
 		{
-			this.onOff[i] = false;
+			this.guiButtons[i] = false;
 		}
 		else
 		{
-			this.onOff[i] = true;
+			this.guiButtons[i] = true;
 		}
 		if (worldObj.isRemote)
 		{
-			Packet packet = PacketManager.getPacket("asmLine", this, tPacketID.SETTINGON.ordinal(), i);
+			Packet packet = PacketManager.getPacket("asmLine", this, PacketTypes.SETTINGON.ordinal(), i);
 			PacketDispatcher.sendPacketToServer(packet);
 		}
 	}
 
-	/**
-	 * Data methods
-	 */
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
+	public Object[] data(PacketTypes id)
 	{
-		super.readFromNBT(nbt);
-		for (int i = 0; i < this.onOff.length; i++)
-		{
-			this.onOff[i] = nbt.getBoolean("onOff" + i);
-		}
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
-		for (int i = 0; i < this.onOff.length; i++)
-		{
-			nbt.setBoolean("onOff" + i, this.onOff[i]);
-		}
-	}
-
-	public Object[] data(tPacketID id)
-	{
-		if (id == tPacketID.ANIMATION) { return new Object[]
+		if (id == PacketTypes.ANIMATION) { return new Object[]
 		{ id.ordinal(), this.firePiston }; }
-		if (id == tPacketID.GUI)
+		if (id == PacketTypes.GUI)
 		{
-			Object[] da = new Object[this.onOff.length];
+			Object[] da = new Object[this.guiButtons.length];
 			da[0] = id.ordinal();
-			for (int i = 0; i < this.onOff.length; i++)
+			for (int i = 0; i < this.guiButtons.length; i++)
 			{
-				da[i + 1] = onOff[i];
+				da[i + 1] = guiButtons[i];
 			}
 			return da;
 		}
@@ -285,20 +274,20 @@ public class TileEntitySorter extends TileEntityBase implements IElectricityRece
 		try
 		{
 			int id = dataStream.readInt();
-			tPacketID pID = tPacketID.values()[id];
+			PacketTypes pID = PacketTypes.values()[id];
 			System.out.print("\n id:" + id + " ");
-			if (pID == tPacketID.ANIMATION)
+			if (pID == PacketTypes.ANIMATION)
 			{
 				this.firePiston = dataStream.readBoolean();
 			}
-			else if (pID == tPacketID.GUI)
+			else if (pID == PacketTypes.GUI)
 			{
-				for (int i = 0; i < this.onOff.length; i++)
+				for (int i = 0; i < this.guiButtons.length; i++)
 				{
-					this.onOff[i] = dataStream.readBoolean();
+					this.guiButtons[i] = dataStream.readBoolean();
 				}
 			}
-			else if (pID == tPacketID.SETTINGON)
+			else if (pID == PacketTypes.SETTINGON)
 			{
 				int num = dataStream.readInt();
 				this.changeOnOff(num);
@@ -317,34 +306,13 @@ public class TileEntitySorter extends TileEntityBase implements IElectricityRece
 	@Override
 	public String getInvName()
 	{
-		return "Rejector";
-	}
-
-	@Override
-	public int getInventoryStackLimit()
-	{
-		return 1;
+		return "Sorter";
 	}
 
 	@Override
 	public int getSizeInventory()
 	{
 		return 4;
-	}
-
-	/**
-	 * disabling methods
-	 */
-	@Override
-	public void onDisable(int duration)
-	{
-
-	}
-
-	@Override
-	public boolean isDisabled()
-	{
-		return false;
 	}
 
 	@Override
@@ -365,7 +333,7 @@ public class TileEntitySorter extends TileEntityBase implements IElectricityRece
 	@Override
 	public double wattRequest()
 	{
-		return WATTS_REQUIRED;
+		return JOULES_REQUIRED;
 	}
 
 	@Override
@@ -375,4 +343,148 @@ public class TileEntitySorter extends TileEntityBase implements IElectricityRece
 
 	}
 
+	/**
+	 * Inventory functions.
+	 */
+	@Override
+	public ItemStack getStackInSlot(int par1)
+	{
+		return this.containingItems[par1];
+	}
+
+	@Override
+	public ItemStack decrStackSize(int par1, int par2)
+	{
+		if (this.containingItems[par1] != null)
+		{
+			ItemStack var3;
+
+			if (this.containingItems[par1].stackSize <= par2)
+			{
+				var3 = this.containingItems[par1];
+				this.containingItems[par1] = null;
+				return var3;
+			}
+			else
+			{
+				var3 = this.containingItems[par1].splitStack(par2);
+
+				if (this.containingItems[par1].stackSize == 0)
+				{
+					this.containingItems[par1] = null;
+				}
+
+				return var3;
+			}
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	@Override
+	public ItemStack getStackInSlotOnClosing(int par1)
+	{
+		if (this.containingItems[par1] != null)
+		{
+			ItemStack var2 = this.containingItems[par1];
+			this.containingItems[par1] = null;
+			return var2;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	@Override
+	public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
+	{
+		this.containingItems[par1] = par2ItemStack;
+
+		if (par2ItemStack != null && par2ItemStack.stackSize > this.getInventoryStackLimit())
+		{
+			par2ItemStack.stackSize = this.getInventoryStackLimit();
+		}
+	}
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer par1EntityPlayer)
+	{
+		return this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord) != this ? false : par1EntityPlayer.getDistanceSq(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D) <= 64.0D;
+	}
+
+	@Override
+	public void openChest()
+	{
+		this.playerUsing++;
+	}
+
+	@Override
+	public void closeChest()
+	{
+		this.playerUsing--;
+	}
+
+	/**
+	 * NBT Data
+	 */
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+
+		for (int i = 0; i < this.guiButtons.length; i++)
+		{
+			this.guiButtons[i] = nbt.getBoolean("guiButton" + i);
+		}
+
+		NBTTagList var2 = nbt.getTagList("Items");
+		this.containingItems = new ItemStack[this.getSizeInventory()];
+
+		for (int var3 = 0; var3 < var2.tagCount(); ++var3)
+		{
+			NBTTagCompound var4 = (NBTTagCompound) var2.tagAt(var3);
+			byte var5 = var4.getByte("Slot");
+
+			if (var5 >= 0 && var5 < this.containingItems.length)
+			{
+				this.containingItems[var5] = ItemStack.loadItemStackFromNBT(var4);
+			}
+		}
+	}
+
+	/**
+	 * Writes a tile entity to NBT.
+	 */
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+
+		for (int i = 0; i < this.guiButtons.length; i++)
+		{
+			nbt.setBoolean("guiButton" + i, this.guiButtons[i]);
+		}
+
+		NBTTagList var2 = new NBTTagList();
+		for (int var3 = 0; var3 < this.containingItems.length; ++var3)
+		{
+			if (this.containingItems[var3] != null)
+			{
+				NBTTagCompound var4 = new NBTTagCompound();
+				var4.setByte("Slot", (byte) var3);
+				this.containingItems[var3].writeToNBT(var4);
+				var2.appendTag(var4);
+			}
+		}
+		nbt.setTag("Items", var2);
+	}
+
+	@Override
+	public int getInventoryStackLimit()
+	{
+		return 1;
+	}
 }
