@@ -106,6 +106,6 @@ public class GuiSorter extends GuiContainer
 		{
 			this.drawTexturedModalRect(containerWidth + 17 + i * 18, containerHeight + 17, 176, +(tileEntity.guiButtons[i] ? 12 : 0), 12, 12);
 		}
-		this.fontRenderer.drawString("Reject: " + (tileEntity.guiButtons[0] ? "Inv" : "Other"), containerWidth + 108, containerHeight + 22, 4210752);
+		this.fontRenderer.drawString((tileEntity.guiButtons[0] ? "Inv" : "Other"), containerWidth + 108, containerHeight + 22, 4210752);
 	}
 }

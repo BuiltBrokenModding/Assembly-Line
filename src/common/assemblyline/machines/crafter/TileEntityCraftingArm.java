@@ -11,6 +11,7 @@ import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.TileEntityElectricityReceiver;
 import universalelectricity.prefab.network.IPacketReceiver;
+import assemblyline.ai.TaskManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -21,11 +22,8 @@ public class TileEntityCraftingArm extends TileEntityElectricityReceiver impleme
 	 */
 	protected ItemStack[] containingItems = new ItemStack[this.getSizeInventory()];
 	
-	public enum armTasks
-	{
-		NONE, COLLECT, MINE, PLACE, SORT, CRAFT
-	}
-
+	private TaskManager taskManager = new TaskManager();
+	
 	/**
 	 * Entity robotic arm to be used with this
 	 * tileEntity
@@ -41,16 +39,14 @@ public class TileEntityCraftingArm extends TileEntityElectricityReceiver impleme
 	 * does this arm have a task to do
 	 */
 	public boolean hasTask = true;
-	/**
-	 * what kind of task this arm should do
-	 */
-	public armTasks task = armTasks.NONE;
 
 	private int playerUsing = 0;
 
 	public void updateEntity()
 	{
 		super.updateEntity();
+		
+		taskManager.onUpdate();
 		
 		if (this.ticks % 5 == 0 && !this.isDisabled() && this.hasTask && EntityArm != null)
 		{
@@ -110,7 +106,6 @@ public class TileEntityCraftingArm extends TileEntityElectricityReceiver impleme
 	@Override
 	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
 	{
-		// TODO Auto-generated method stub
 
 	}
 
