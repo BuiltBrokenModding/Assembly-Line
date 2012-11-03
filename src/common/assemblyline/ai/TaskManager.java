@@ -3,19 +3,15 @@ package assemblyline.ai;
 import java.util.ArrayList;
 import java.util.List;
 
-
+import net.minecraft.src.TileEntity;
 import cpw.mods.fml.common.FMLLog;
 
-import universalelectricity.prefab.TileEntityAdvanced;
-
-public class TileEntityAI extends TileEntityAdvanced
+public class TaskManager
 {
 	private final List<Task> tasks = new ArrayList<Task>();
 
-	public void updateEntity()
+	public void onUpdate()
 	{
-		super.updateEntity();
-
 		/**
 		 * Loop through each task and do them.
 		 */
@@ -43,9 +39,9 @@ public class TileEntityAI extends TileEntityAdvanced
 		}
 	}
 	
-	public void addTask(Task task)
+	public void addTask(TileEntity tileEntity, Task task)
 	{
-		task.setTileEntity(this);
+		task.setTileEntity(tileEntity);
 		task.onTaskStart();
 		tasks.add(task);
 	}

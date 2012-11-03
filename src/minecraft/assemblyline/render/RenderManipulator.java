@@ -21,7 +21,7 @@ public class RenderManipulator extends TileEntitySpecialRenderer
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		GL11.glRotatef(180f, 0f, 0f, 1f);
 
-		if(tileEntity.isOutput)
+		if (tileEntity.isOutput)
 		{
 			this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "manipulator1.png");
 		}
@@ -29,7 +29,7 @@ public class RenderManipulator extends TileEntitySpecialRenderer
 		{
 			this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "manipulator2.png");
 		}
-		
+
 		if (face == 2)
 		{
 			GL11.glRotatef(0f, 0f, 1f, 0f);
