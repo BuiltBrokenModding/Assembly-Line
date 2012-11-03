@@ -47,6 +47,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 
 	/**
 	 * Steal power from nearby belts.
+	 * 
 	 * @return
 	 */
 	public boolean searchNeighborBelts()
@@ -78,7 +79,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 				}
 			}
 		}
-		
+
 		this.powerTransferRange = rr - 1;
 		return false;
 	}
@@ -120,7 +121,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 			}
 
 		}
-		
+
 		if (this.running)
 		{
 			AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1);
@@ -188,10 +189,10 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 
 	@Override
 	public Packet getDescriptionPacket()
-    {
+	{
 		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.wattsReceived);
-    }
-	
+	}
+
 	@Override
 	public double wattRequest()
 	{

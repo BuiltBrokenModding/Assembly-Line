@@ -14,9 +14,10 @@ public abstract class TileEntityBase extends TileEntityAdvanced implements IPack
 	 * The items this container contains.
 	 */
 	protected ItemStack[] containingItems = new ItemStack[this.getSizeInventory()];
-	
+
 	/**
-	 * The amount of players using this tile entity.
+	 * The amount of players using this tile
+	 * entity.
 	 */
 	protected int playerUsing = 0;
 
@@ -24,12 +25,12 @@ public abstract class TileEntityBase extends TileEntityAdvanced implements IPack
 	 * Is this tile entity locked?
 	 */
 	protected boolean locked = false;
-	
+
 	/**
 	 * The owner of this tile entity.
 	 */
 	protected String owner = "";
-	
+
 	/**
 	 * Inventory functions.
 	 */

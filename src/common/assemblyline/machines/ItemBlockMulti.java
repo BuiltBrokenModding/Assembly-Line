@@ -17,10 +17,10 @@ public class ItemBlockMulti extends ItemBlock
 	{
 		return MachineType.get(itemstack.getItemDamage()).name;
 	}
-	
+
 	@Override
 	public int getMetadata(int par1)
-    {
+	{
 		return MachineType.get(par1).metadata;
-    }
+	}
 }

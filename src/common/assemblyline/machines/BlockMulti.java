@@ -29,14 +29,14 @@ public class BlockMulti extends BlockMachine
 {
 	public static enum MachineType
 	{
-		SORTER("Sorter", 0,0, TileEntitySorter.class), MANIPULATOR("Manipulator", 4,-1, TileEntityManipulator.class), INVALID_1("Invalid", 8,-1, null), INVALID_2("Invalid", 12,-1, null);
+		SORTER("Sorter", 0, 0, TileEntitySorter.class), MANIPULATOR("Manipulator", 4, -1, TileEntityManipulator.class), INVALID_1("Invalid", 8, -1, null), INVALID_2("Invalid", 12, -1, null);
 
 		public String name;
 		public int metadata;
 		public int guiID;
 		public Class<? extends TileEntity> tileEntity;
 
-		MachineType(String name, int metadata,int guiID, Class<? extends TileEntity> tileEntity)
+		MachineType(String name, int metadata, int guiID, Class<? extends TileEntity> tileEntity)
 		{
 			this.name = name;
 			this.metadata = metadata;
@@ -119,8 +119,9 @@ public class BlockMulti extends BlockMachine
 		{
 			int metadata = par1World.getBlockMetadata(x, y, z);
 			int guiID = MachineType.get(metadata).metadata;
-			if(guiID == -1) return false;
-			par5EntityPlayer.openGui(AssemblyLine.instance,guiID , par1World, x, y, z);
+			if (guiID == -1)
+				return false;
+			par5EntityPlayer.openGui(AssemblyLine.instance, guiID, par1World, x, y, z);
 			return true;
 		}
 		return true;
@@ -166,11 +167,11 @@ public class BlockMulti extends BlockMachine
 
 		if (MachineType.get(metadata) == MachineType.MANIPULATOR)
 		{
-			TileEntityManipulator tileEntity = (TileEntityManipulator)par1World.getBlockTileEntity(x, y, z);
+			TileEntityManipulator tileEntity = (TileEntityManipulator) par1World.getBlockTileEntity(x, y, z);
 			tileEntity.isOutput = !tileEntity.isOutput;
-			
+
 			if (!par1World.isRemote)
-			{				
+			{
 				PacketDispatcher.sendPacketToAllPlayers(tileEntity.getDescriptionPacket());
 			}
 			return true;
@@ -258,5 +259,5 @@ public class BlockMulti extends BlockMachine
 			}
 		}
 	}
-	
+
 }

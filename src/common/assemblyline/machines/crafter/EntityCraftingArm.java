@@ -7,14 +7,16 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.World;
 
-public class EntityCraftingArm extends Entity {
+public class EntityCraftingArm extends Entity
+{
 	/**
 	 * Used to ID the type of arm
 	 */
 	static enum armType
 	{
-		ARM,SOLDER,DRILL,BREAKER
+		ARM, SOLDER, DRILL, BREAKER
 	}
+
 	/**
 	 * type of arm this robotic arm currently is
 	 */
@@ -31,37 +33,40 @@ public class EntityCraftingArm extends Entity {
 	 * position that the arms claw should be at
 	 */
 	public Vector3 clawPos = new Vector3();
-	
+
 	public boolean isWorking = false;
-	
-	public EntityCraftingArm(World par1World) {
+
+	public EntityCraftingArm(World par1World)
+	{
 		super(par1World);
 	}
 
 	@Override
-	protected void entityInit() 
+	protected void entityInit()
 	{
-		
+
 	}
 
 	@Override
-	protected void readEntityFromNBT(NBTTagCompound nbt) {
+	protected void readEntityFromNBT(NBTTagCompound nbt)
+	{
 		this.arm = armType.values()[nbt.getInteger("type")];
-		
+
 	}
 
 	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbt) {
+	protected void writeEntityToNBT(NBTTagCompound nbt)
+	{
 		nbt.setInteger("type", arm.ordinal());
-		
 	}
-	
+
 	public boolean grabItem(EntityItem item)
 	{
-		if(this.stack == null)
+		if (this.stack == null)
 		{
-			//TODO set current stack to item as soon as it reaches coords
+			// TODO set current stack to item as
+			// soon as it reaches coords
 		}
-		return false;		
+		return false;
 	}
 }

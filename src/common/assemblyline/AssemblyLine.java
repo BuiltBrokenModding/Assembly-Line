@@ -33,26 +33,27 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
 @Mod(modid = "AssemblyLine", name = "Assembly Line", version = AssemblyLine.VERSION, dependencies = "after:BasicComponents")
-@NetworkMod(channels = { AssemblyLine.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
+@NetworkMod(channels =
+{ AssemblyLine.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
 public class AssemblyLine
 {
 	@SidedProxy(clientSide = "assemblyline.ALClientProxy", serverSide = "assemblyline.ALCommonProxy")
 	public static ALCommonProxy proxy;
-	
+
 	@Instance("AssemblyLine")
 	public static AssemblyLine instance;
-	
+
 	public static final String VERSION = "0.1.0";
-	
+
 	public static final String CHANNEL = "AssemblyLine";
-	
+
 	public static final String TEXTURE_PATH = "/assemblyline/textures/";
 
 	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "UniversalElectricity/AssemblyLine.cfg"));
 
 	public static final int BLOCK_ID_PREFIX = 3003;
 	public static final Block blockConveyorBelt = new BlockConveyorBelt(UEConfig.getBlockConfigID(CONFIGURATION, "Conveyor Belt", BLOCK_ID_PREFIX));
-	public static final Block blockInteraction = new BlockMulti(UEConfig.getBlockConfigID(CONFIGURATION, "Machine", BLOCK_ID_PREFIX+1));
+	public static final Block blockInteraction = new BlockMulti(UEConfig.getBlockConfigID(CONFIGURATION, "Machine", BLOCK_ID_PREFIX + 1));
 
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event)

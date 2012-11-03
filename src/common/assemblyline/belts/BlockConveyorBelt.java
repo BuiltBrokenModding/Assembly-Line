@@ -12,6 +12,7 @@ import assemblyline.render.RenderHelper;
 
 /**
  * The block for the actual conveyor belt!
+ * 
  * @author Calclavia, DarkGuardsman
  */
 public class BlockConveyorBelt extends BlockMachine
@@ -22,27 +23,30 @@ public class BlockConveyorBelt extends BlockMachine
 		this.setBlockBounds(0, 0, 0, 1, 0.3f, 1);
 		this.setCreativeTab(CreativeTabs.tabTransport);
 	}
-	
+
 	@Override
 	public void onBlockPlacedBy(World par1World, int x, int y, int z, EntityLiving par5EntityLiving)
 	{
 		int angle = MathHelper.floor_double((par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		par1World.setBlockMetadataWithNotify(x, y, z, angle);
 		/*
-		switch (angle)
-        {
-            case 0: par1World.setBlockMetadataWithNotify(x, y, z, 0); break;
-            case 1: par1World.setBlockMetadataWithNotify(x, y, z, 3); break;
-            case 2: par1World.setBlockMetadataWithNotify(x, y, z, 1); break;
-            case 3: par1World.setBlockMetadataWithNotify(x, y, z, 2); break;
-        }	*/	
+		 * switch (angle) { case 0:
+		 * par1World.setBlockMetadataWithNotify(x,
+		 * y, z, 0); break; case 1:
+		 * par1World.setBlockMetadataWithNotify(x,
+		 * y, z, 3); break; case 2:
+		 * par1World.setBlockMetadataWithNotify(x,
+		 * y, z, 1); break; case 3:
+		 * par1World.setBlockMetadataWithNotify(x,
+		 * y, z, 2); break; }
+		 */
 	}
-	
+
 	@Override
 	public boolean onUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer)
 	{
 		int metadata = par1World.getBlockMetadata(x, y, z);
-		
+
 		if (metadata >= 0 && metadata < 4)
 		{
 			if (metadata >= 3)
@@ -52,40 +56,37 @@ public class BlockConveyorBelt extends BlockMachine
 			}
 			else
 			{
-				par1World.setBlockAndMetadataWithNotify(x, y, z, this.blockID, metadata + 1); 
+				par1World.setBlockAndMetadataWithNotify(x, y, z, this.blockID, metadata + 1);
 				return true;
 			}
 		}
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Returns the TileEntity used by this block.
 	 */
 	@Override
 	public TileEntity createNewTileEntity(World var1, int metadata)
-    {
-		if(metadata >=0 && metadata < 4)
-		{
-			return new TileEntityConveyorBelt();
-		}
-		
+	{
+		if (metadata >= 0 && metadata < 4) { return new TileEntityConveyorBelt(); }
+
 		return null;
 	}
-    
+
 	@Override
 	public int getRenderType()
 	{
 		return RenderHelper.BLOCK_RENDER_ID;
 	}
-    
+
 	@Override
 	public boolean isOpaqueCube()
 	{
 		return false;
 	}
-	
+
 	@Override
 	public boolean renderAsNormalBlock()
 	{
