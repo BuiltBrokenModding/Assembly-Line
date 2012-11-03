@@ -4,7 +4,7 @@ import net.minecraft.src.TileEntity;
 
 /**
  * An AI Task that is used by TileEntities with
- * simple AI.
+ * AI.
  * 
  * @author Calclavia
  * 
@@ -32,9 +32,13 @@ public abstract class Task
 	 *            - The amount of ticks this task
 	 *            has been elapsed for.
 	 */
-	protected void onDoTask()
+	protected void doTask()
 	{
 		this.ticks++;
+	}
+
+	public void resetTask()
+	{
 	}
 
 	/**
