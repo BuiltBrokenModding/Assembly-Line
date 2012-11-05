@@ -1,4 +1,4 @@
-package assemblyline.machines.crafter;
+package assemblyline.ai;
 
 import java.util.List;
 

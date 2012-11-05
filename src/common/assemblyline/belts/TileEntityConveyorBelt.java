@@ -38,7 +38,8 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	private float speed = -0.045F;
 	public float wheelRotation = 0;
 	public boolean running = false;
-	public boolean flip = false;
+	public boolean textureFlip = false;
+	public boolean slantedBelt = false;
 	public TileEntityConveyorBelt[] adjBelts =
 	{ null, null, null, null };
 
@@ -125,15 +126,35 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 
 		if (this.running)
 		{
-			
-			try
-			{
-				List<Entity> entityOnTop = this.getEntityAbove();
+			this.textureFlip = textureFlip ? false : true;
+			this.wheelRotation -= this.speed;
+			this.doBeltAction();
+		}
+	}
+	/**
+	 * almost unneeded but is change for each different belt type
+	 */
+	public void doBeltAction()
+	{
+		this.conveyItemsHorizontal(true,false);
+	}
+	/**
+	 * Causes all items to be moved above the belt
+	 * @param extendLife - increases the items life
+	 * @param preventPickUp - prevent a player from picking the item up
+	 */
+	public void conveyItemsHorizontal(boolean extendLife, boolean preventPickUp )
+	{
+		try
+		{
+			List<Entity> entityOnTop = this.getEntityAbove();
 
-				for (Entity entity : entityOnTop)
+			for (Entity entity : entityOnTop)
+			{
+				int direction = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+				if (!this.entityIgnoreList.contains(entity))
 				{
-					int direction = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-					if (!this.entityIgnoreList.contains(entity))
+					if(!(entity instanceof EntityPlayer && ((EntityPlayer)entity).isSneaking()))
 					{
 						if (direction == 0)
 						{
@@ -152,42 +173,33 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 							entity.motionX -= 1 * this.speed;
 						}
 					}
-					if (this.clearCount++ >= 4)
+				}
+				if (this.clearCount++ >= 4)
+				{
+					// clear the temp ignore
+					// list every 2 second
+					this.entityIgnoreList.clear();
+				}
+				if (entity instanceof EntityItem)
+				{
+					EntityItem entityItem = (EntityItem) entity;
+					
+					if (extendLife && entityItem.age >= 1000)
 					{
-						// clear the temp ignore
-						// list every 2 second
-						this.entityIgnoreList.clear();
+						entityItem.age = 0;
 					}
-					if (entity instanceof EntityItem)
+					if (preventPickUp && entityItem.delayBeforeCanPickup <= 1)
 					{
-						EntityItem entityItem = (EntityItem) entity;
-						// Make sure the item
-						// doesn't decay/disappear
-						if (entityItem.age >= 1000)
-						{
-							entityItem.age = 0;
-						}
+						entityItem.delayBeforeCanPickup += 10;
 					}
 				}
 			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-
-			if (flip == true)
-			{
-				flip = false;
-			}
-			else
-			{
-				flip = true;
-			}
-
-			this.wheelRotation -= this.speed;
 		}
-	}
-
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}	
 	@Override
 	public Packet getDescriptionPacket()
 	{

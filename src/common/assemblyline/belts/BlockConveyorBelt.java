@@ -25,21 +25,11 @@ public class BlockConveyorBelt extends BlockMachine
 	}
 
 	@Override
-	public void onBlockPlacedBy(World par1World, int x, int y, int z, EntityLiving par5EntityLiving)
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving par5EntityLiving)
 	{
+		int meta = world.getBlockMetadata(x, y, z);
 		int angle = MathHelper.floor_double((par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-		par1World.setBlockMetadataWithNotify(x, y, z, angle);
-		/*
-		 * switch (angle) { case 0:
-		 * par1World.setBlockMetadataWithNotify(x,
-		 * y, z, 0); break; case 1:
-		 * par1World.setBlockMetadataWithNotify(x,
-		 * y, z, 3); break; case 2:
-		 * par1World.setBlockMetadataWithNotify(x,
-		 * y, z, 1); break; case 3:
-		 * par1World.setBlockMetadataWithNotify(x,
-		 * y, z, 2); break; }
-		 */
+		world.setBlockMetadataWithNotify(x, y, z, meta + angle);
 	}
 
 	@Override
@@ -47,11 +37,17 @@ public class BlockConveyorBelt extends BlockMachine
 	{
 		int metadata = par1World.getBlockMetadata(x, y, z);
 
-		if (metadata >= 0 && metadata < 4)
+		if (metadata >= 0 && metadata < 8)
 		{
 			if (metadata >= 3)
 			{
 				par1World.setBlockAndMetadataWithNotify(x, y, z, this.blockID, 0);
+				return true;
+			}
+			else
+			if (metadata >= 7)
+			{
+				par1World.setBlockAndMetadataWithNotify(x, y, z, this.blockID, 4);
 				return true;
 			}
 			else
@@ -71,6 +67,9 @@ public class BlockConveyorBelt extends BlockMachine
 	public TileEntity createNewTileEntity(World var1, int metadata)
 	{
 		if (metadata >= 0 && metadata < 4) { return new TileEntityConveyorBelt(); }
+		if (metadata >= 4 && metadata < 8) { return new TileEntityCoveredBelt(); }
+		//if (metadata >= 8 && metadata < 12) { //TODO vertical Belt }
+		//if (metadata >= 12 && metadata < 16) { //TODO IDK}
 
 		return null;
 	}
