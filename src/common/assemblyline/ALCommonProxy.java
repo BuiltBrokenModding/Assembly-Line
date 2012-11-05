@@ -5,7 +5,7 @@ import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
 import assemblyline.gui.GuiSorter;
 import assemblyline.machines.ContainerSorter;
-import assemblyline.machines.TileEntitySorter;
+import assemblyline.machines.TileEntityRejector;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 public class ALCommonProxy implements IGuiHandler
@@ -31,7 +31,7 @@ public class ALCommonProxy implements IGuiHandler
 			switch (ID)
 			{
 				case 0:
-					return new GuiSorter(player.inventory, ((TileEntitySorter) tileEntity));
+					return new GuiSorter(player.inventory, ((TileEntityRejector) tileEntity));
 			}
 		}
 
@@ -48,7 +48,7 @@ public class ALCommonProxy implements IGuiHandler
 			switch (ID)
 			{
 				case 0:
-					return new ContainerSorter(player.inventory, ((TileEntitySorter) tileEntity));
+					return new ContainerSorter(player.inventory, ((TileEntityRejector) tileEntity));
 			}
 		}
 

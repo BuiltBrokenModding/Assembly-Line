@@ -3,7 +3,7 @@ package assemblyline;
 import net.minecraftforge.client.MinecraftForgeClient;
 import assemblyline.belts.TileEntityConveyorBelt;
 import assemblyline.machines.TileEntityManipulator;
-import assemblyline.machines.TileEntitySorter;
+import assemblyline.machines.TileEntityRejector;
 import assemblyline.render.RenderConveyorBelt;
 import assemblyline.render.RenderHelper;
 import assemblyline.render.RenderManipulator;
@@ -26,7 +26,7 @@ public class ALClientProxy extends ALCommonProxy
 		// ClientRegistry.registerTileEntity(TileEntityConveyorBelt.class,
 		// "belt", new RenderConveyorBelt());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConveyorBelt.class, new RenderConveyorBelt());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySorter.class, new RenderSorter());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRejector.class, new RenderSorter());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityManipulator.class, new RenderManipulator());
 	}
 

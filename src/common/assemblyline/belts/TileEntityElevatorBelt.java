@@ -23,7 +23,7 @@ public class TileEntityElevatorBelt extends TileEntityConveyorBelt
 	 * and to prevent items from falling
 	 * @return
 	 */
-	public boolean isBlockBellowBelt()
+	public boolean isBellowABelt()	
 	{
 		TileEntity ent = worldObj.getBlockTileEntity(xCoord, xCoord-1, zCoord);
 		if(ent instanceof TileEntityElevatorBelt)

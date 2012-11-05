@@ -26,7 +26,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 
-public class TileEntitySorter extends TileEntityElectricityReceiver implements IPacketReceiver, IInventory
+public class TileEntityRejector extends TileEntityElectricityReceiver implements IPacketReceiver, IInventory
 {
 	/**
 	 * The items this container contains.
@@ -77,7 +77,8 @@ public class TileEntitySorter extends TileEntityElectricityReceiver implements I
 		 */
 		if (this.ticks % 5 == 0 && !this.isDisabled())
 		{
-
+			//TODO remove after testing
+			this.wattsReceived += 100;
 			int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 			this.firePiston = false;
 
@@ -156,10 +157,9 @@ public class TileEntitySorter extends TileEntityElectricityReceiver implements I
 			this.beltSide.ignoreEntity(entity);
 
 		}
-		System.out.print(" \n fire ");
-		entity.motionX = (double) side.offsetX * 0.1;
+		entity.motionX = (double) side.offsetX * 0.15;
 		entity.motionY += 0.10000000298023224D;
-		entity.motionZ = (double) side.offsetZ * 0.1;
+		entity.motionZ = (double) side.offsetZ * 0.15;
 		this.wattsReceived -= this.JOULES_REQUIRED;
 	}
 
@@ -243,10 +243,13 @@ public class TileEntitySorter extends TileEntityElectricityReceiver implements I
 		{
 			this.guiButtons[i] = true;
 		}
+		Packet packet = PacketManager.getPacket("asmLine", this, new Object[]{PacketTypes.SETTINGON.ordinal(), i});
 		if (worldObj.isRemote)
-		{
-			Packet packet = PacketManager.getPacket("asmLine", this, PacketTypes.SETTINGON.ordinal(), i);
+		{			
 			PacketDispatcher.sendPacketToServer(packet);
+		}else
+		{
+			PacketManager.sendPacketToClients(packet, worldObj, Vector3.get(this), 10);
 		}
 	}
 

@@ -10,16 +10,16 @@ import org.lwjgl.opengl.GL11;
 
 import assemblyline.AssemblyLine;
 import assemblyline.machines.ContainerSorter;
-import assemblyline.machines.TileEntitySorter;
+import assemblyline.machines.TileEntityRejector;
 
 public class GuiSorter extends GuiContainer
 {
-	private TileEntitySorter tileEntity;
+	private TileEntityRejector tileEntity;
 
 	private int containerWidth;
 	private int containerHeight;
 
-	public GuiSorter(InventoryPlayer par1InventoryPlayer, TileEntitySorter tileEntity)
+	public GuiSorter(InventoryPlayer par1InventoryPlayer, TileEntityRejector tileEntity)
 	{
 		super(new ContainerSorter(par1InventoryPlayer, tileEntity));
 		this.tileEntity = tileEntity;

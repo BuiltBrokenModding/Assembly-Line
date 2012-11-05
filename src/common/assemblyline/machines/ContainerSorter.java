@@ -9,9 +9,9 @@ import net.minecraft.src.Slot;
 
 public class ContainerSorter extends Container
 {
-	private TileEntitySorter tileEntity;
+	private TileEntityRejector tileEntity;
 
-	public ContainerSorter(InventoryPlayer par1InventoryPlayer, TileEntitySorter tileEntity)
+	public ContainerSorter(InventoryPlayer par1InventoryPlayer, TileEntityRejector tileEntity)
 	{
 		this.tileEntity = tileEntity;
 		for (int i = 0; i < 4; i++)

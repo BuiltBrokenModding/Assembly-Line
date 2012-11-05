@@ -29,7 +29,7 @@ public class BlockMulti extends BlockMachine
 {
 	public static enum MachineType
 	{
-		SORTER("Sorter", 0, 0, TileEntitySorter.class), MANIPULATOR("Manipulator", 4, -1, TileEntityManipulator.class), INVALID_1("Invalid", 8, -1, null), INVALID_2("Invalid", 12, -1, null);
+		SORTER("Sorter", 0, 0, TileEntityRejector.class), MANIPULATOR("Manipulator", 4, -1, TileEntityManipulator.class), INVALID_1("Invalid", 8, -1, null), INVALID_2("Invalid", 12, -1, null);
 
 		public String name;
 		public int metadata;

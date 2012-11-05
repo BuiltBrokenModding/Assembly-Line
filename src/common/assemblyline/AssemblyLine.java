@@ -16,7 +16,7 @@ import assemblyline.machines.BlockMulti;
 import assemblyline.machines.BlockMulti.MachineType;
 import assemblyline.machines.ItemBlockMulti;
 import assemblyline.machines.TileEntityManipulator;
-import assemblyline.machines.TileEntitySorter;
+import assemblyline.machines.TileEntityRejector;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -71,7 +71,7 @@ public class AssemblyLine
 		proxy.init();
 
 		GameRegistry.registerTileEntity(TileEntityConveyorBelt.class, "ConveyorBelt");
-		GameRegistry.registerTileEntity(TileEntitySorter.class, "Sorter");
+		GameRegistry.registerTileEntity(TileEntityRejector.class, "Sorter");
 		GameRegistry.registerTileEntity(TileEntityManipulator.class, "Manipulator");
 
 		// Add Names

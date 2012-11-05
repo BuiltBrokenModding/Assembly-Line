@@ -6,14 +6,14 @@ import net.minecraft.src.TileEntitySpecialRenderer;
 import org.lwjgl.opengl.GL11;
 
 import assemblyline.AssemblyLine;
-import assemblyline.machines.TileEntitySorter;
+import assemblyline.machines.TileEntityRejector;
 import assemblyline.model.ModelSorter;
 
 public class RenderSorter extends TileEntitySpecialRenderer
 {
 	private ModelSorter model = new ModelSorter();
 
-	public void renderAModelAt(TileEntitySorter tileEntity, double x, double y, double z, float f)
+	public void renderAModelAt(TileEntityRejector tileEntity, double x, double y, double z, float f)
 	{
 		boolean fire = tileEntity.firePiston;
 		int face = tileEntity.getDirection(tileEntity.worldObj.getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord));
@@ -51,7 +51,7 @@ public class RenderSorter extends TileEntitySpecialRenderer
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double var2, double var4, double var6, float var8)
 	{
-		this.renderAModelAt((TileEntitySorter) tileEntity, var2, var4, var6, var8);
+		this.renderAModelAt((TileEntityRejector) tileEntity, var2, var4, var6, var8);
 	}
 
 }
