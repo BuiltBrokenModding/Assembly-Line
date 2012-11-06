@@ -159,18 +159,22 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 						if (direction == 0)
 						{
 							entity.motionZ -= 1 * this.speed;
+							entity.posX = this.xCoord +0.5D;
 						}
 						if (direction == 1)
 						{
 							entity.motionX += 1 * this.speed;
+							entity.posZ = this.zCoord +0.5D;
 						}
 						if (direction == 2)
 						{
 							entity.motionZ += 1 * this.speed;
+							entity.posX = this.xCoord +0.5D;
 						}
 						if (direction == 3)
 						{
 							entity.motionX -= 1 * this.speed;
+							entity.posZ = this.zCoord +0.5D;
 						}
 					}
 				}

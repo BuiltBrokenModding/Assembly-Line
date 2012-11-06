@@ -10,6 +10,7 @@
 /reobf/*
 /runtime/*
 /temp/*
+/src/minecraft/assemblyline/textures/*
 CHANGELOG
 LICENSE.txt
 *.bat

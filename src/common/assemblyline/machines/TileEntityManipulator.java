@@ -24,9 +24,10 @@ import universalelectricity.prefab.TileEntityElectricityReceiver;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.AssemblyLine;
+import assemblyline.api.IManipulator;
 import assemblyline.machines.BlockMulti.MachineType;
 
-public class TileEntityManipulator extends TileEntityElectricityReceiver implements IRedstoneReceptor, IPacketReceiver
+public class TileEntityManipulator extends TileEntityElectricityReceiver implements IRedstoneReceptor, IPacketReceiver,IManipulator
 {
 	/**
 	 * Joules required to run this thing.
@@ -104,16 +105,9 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 							remainingStack = this.tryPlaceInPosition(remainingStack, outputPosition, this.getBeltDirection().getOpposite());
 						}
 
-						if (remainingStack != null)
+						if (remainingStack != null && remainingStack.stackSize > 0)
 						{
-							if (remainingStack.stackSize > 0)
-							{
-								EntityItem entityItem = new EntityItem(worldObj, outputPosition.x + 0.5, outputPosition.y + 0.8, outputPosition.z + 0.5, remainingStack);
-								entityItem.motionX = 0;
-								entityItem.motionZ = 0;
-								entityItem.motionY /= 5;
-								worldObj.spawnEntityInWorld(entityItem);
-							}
+								 this.rejectItem(outputPosition, remainingStack);
 						}
 
 						entity.setDead();
@@ -159,11 +153,7 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 						{
 							if (itemStack.stackSize > 0)
 							{
-								EntityItem entityItem = new EntityItem(worldObj, outputPosition.x + 0.5, outputPosition.y + 0.8, outputPosition.z + 0.5, itemStack);
-								entityItem.motionX = 0;
-								entityItem.motionZ = 0;
-								entityItem.motionY /= 5;
-								worldObj.spawnEntityInWorld(entityItem);
+								this.rejectItem(outputPosition, itemStack);
 							}
 						}
 					}
@@ -173,7 +163,19 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 			}
 		}
 	}
-
+	/**
+	 * Throws the items from the manipulator into the world
+	 * @param outputPosition
+	 * @param items
+	 */
+	public void rejectItem(Vector3 outputPosition, ItemStack items)
+	{
+		EntityItem entityItem = new EntityItem(worldObj, outputPosition.x + 0.5, outputPosition.y + 0.8, outputPosition.z + 0.5, items);
+		entityItem.motionX = 0;
+		entityItem.motionZ = 0;
+		entityItem.motionY /= 5;
+		worldObj.spawnEntityInWorld(entityItem);
+	}
 	/**
 	 * Tries to place an itemStack in a specific
 	 * position if it is an inventory.

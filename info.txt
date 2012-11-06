@@ -5,3 +5,4 @@
 @ AssemblyLine_v0.0.6.6.jar
 @ AssemblyLine_v0.0.6.7.jar
 @ AssemblyLine_v0.0.6.8.jar AssemblyLine_v0.0.6.8_api.zip
+stable AssemblyLine_v0.0.6.10.jar AssemblyLine_v0.0.6.10_api.zip

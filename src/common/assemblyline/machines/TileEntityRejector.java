@@ -78,7 +78,7 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 		if (this.ticks % 5 == 0 && !this.isDisabled())
 		{
 			//TODO remove after testing
-			this.wattsReceived += 100;
+			//this.wattsReceived += 100;
 			int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 			this.firePiston = false;
 
