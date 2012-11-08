@@ -1,9 +1,5 @@
 package assemblyline.machines;
 
-import assemblyline.belts.TileEntityConveyorBelt;
-
-import com.google.common.io.ByteArrayDataInput;
-
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.IInventory;
 import net.minecraft.src.INetworkManager;
@@ -15,8 +11,12 @@ import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.TileEntityElectricityReceiver;
 import universalelectricity.prefab.network.IPacketReceiver;
+import assemblyline.belts.TileEntityConveyorBelt;
 
-public class TileEntityRoboticSorter extends TileEntityElectricityReceiver implements IPacketReceiver, IInventory {
+import com.google.common.io.ByteArrayDataInput;
+
+public class TileEntityRoboticSorter extends TileEntityElectricityReceiver implements IPacketReceiver, IInventory
+{
 	/**
 	 * The items this container contains.
 	 */
@@ -50,6 +50,7 @@ public class TileEntityRoboticSorter extends TileEntityElectricityReceiver imple
 	public TileEntityConveyorBelt[] beltSide = new TileEntityConveyorBelt[6];
 
 	private int playerUsing = 0;
+
 	@Override
 	public String getInvName()
 	{
@@ -201,13 +202,14 @@ public class TileEntityRoboticSorter extends TileEntityElectricityReceiver imple
 			}
 		}
 	}
+
 	@Override
-	public void handlePacketData(INetworkManager network, int packetType,
-			Packet250CustomPayload packet, EntityPlayer player,
-			ByteArrayDataInput dataStream) {
+	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
+	{
 		// TODO Auto-generated method stub
-		
+
 	}
+
 	/**
 	 * Writes a tile entity to NBT.
 	 */
@@ -242,11 +244,10 @@ public class TileEntityRoboticSorter extends TileEntityElectricityReceiver imple
 	}
 
 	@Override
-	public boolean canReceiveFromSide(ForgeDirection side) {
+	public boolean canReceiveFromSide(ForgeDirection side)
+	{
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-	
 
 }

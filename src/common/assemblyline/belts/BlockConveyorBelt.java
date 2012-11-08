@@ -44,8 +44,7 @@ public class BlockConveyorBelt extends BlockMachine
 				par1World.setBlockAndMetadataWithNotify(x, y, z, this.blockID, 0);
 				return true;
 			}
-			else
-			if (metadata >= 7)
+			else if (metadata >= 7)
 			{
 				par1World.setBlockAndMetadataWithNotify(x, y, z, this.blockID, 4);
 				return true;
@@ -68,8 +67,10 @@ public class BlockConveyorBelt extends BlockMachine
 	{
 		if (metadata >= 0 && metadata < 4) { return new TileEntityConveyorBelt(); }
 		if (metadata >= 4 && metadata < 8) { return new TileEntityCoveredBelt(); }
-		//if (metadata >= 8 && metadata < 12) { //TODO vertical Belt }
-		//if (metadata >= 12 && metadata < 16) { //TODO IDK}
+		// if (metadata >= 8 && metadata < 12) {
+		// //TODO vertical Belt }
+		// if (metadata >= 12 && metadata < 16) {
+		// //TODO IDK}
 
 		return null;
 	}

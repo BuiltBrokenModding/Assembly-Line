@@ -2,8 +2,6 @@ package assemblyline.machines;
 
 import java.util.List;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-
 import net.minecraft.src.AxisAlignedBB;
 import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.EntityLiving;
@@ -17,6 +15,7 @@ import universalelectricity.implement.IRedstoneReceptor;
 import universalelectricity.prefab.BlockMachine;
 import assemblyline.AssemblyLine;
 import assemblyline.render.RenderHelper;
+import cpw.mods.fml.common.network.PacketDispatcher;
 
 /**
  * A metadata block containing a bunch of machines

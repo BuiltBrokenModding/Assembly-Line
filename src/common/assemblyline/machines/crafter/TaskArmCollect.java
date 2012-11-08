@@ -13,31 +13,29 @@ import assemblyline.ai.Task;
 public class TaskArmCollect extends Task
 {
 	private TileEntityCraftingArm tileEntity;
-	
+
 	/**
 	 * The item to be collected.
 	 */
 	private EntityItem entityItem;
-	
+
 	public TaskArmCollect(EntityItem entityItem)
 	{
 		this.entityItem = entityItem;
 	}
-	
+
 	@Override
 	protected boolean doTask()
 	{
 		super.doTask();
-		
-		if(entityItem == null)
-		{
-			return false;
-		}
-		
+
+		if (entityItem == null) { return false; }
+
 		/**
-		 * Slowly stretch down the arm's model and grab the item
+		 * Slowly stretch down the arm's model and
+		 * grab the item
 		 */
-		
+
 		return true;
 	}
 

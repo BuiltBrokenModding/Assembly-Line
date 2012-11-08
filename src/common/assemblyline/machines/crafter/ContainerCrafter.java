@@ -8,9 +8,11 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.Slot;
 
 /**
- * I am planning to make the crafter not use a GUI.
+ * I am planning to make the crafter not use a
+ * GUI.
+ * 
  * @author Calclavia
- *
+ * 
  */
 @Deprecated
 public class ContainerCrafter extends Container
@@ -24,7 +26,9 @@ public class ContainerCrafter extends Container
 		{
 			for (int i = 0; i < 3; i++)
 			{
-				//this.addSlotToContainer(new Slot(tileEntity, i + r * 3, 33 + i * 18, 34 + r * 18));
+				// this.addSlotToContainer(new
+				// Slot(tileEntity, i + r * 3, 33
+				// + i * 18, 34 + r * 18));
 			}
 		}
 		int var3;

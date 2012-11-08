@@ -77,8 +77,8 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 		 */
 		if (this.ticks % 5 == 0 && !this.isDisabled())
 		{
-			//TODO remove after testing
-			//this.wattsReceived += 100;
+			// TODO remove after testing
+			// this.wattsReceived += 100;
 			int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 			this.firePiston = false;
 
@@ -243,11 +243,13 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 		{
 			this.guiButtons[i] = true;
 		}
-		Packet packet = PacketManager.getPacket("asmLine", this, new Object[]{PacketTypes.SETTINGON.ordinal(), i});
+		Packet packet = PacketManager.getPacket("asmLine", this, new Object[]
+		{ PacketTypes.SETTINGON.ordinal(), i });
 		if (worldObj.isRemote)
-		{			
+		{
 			PacketDispatcher.sendPacketToServer(packet);
-		}else
+		}
+		else
 		{
 			PacketManager.sendPacketToClients(packet, worldObj, Vector3.get(this), 10);
 		}

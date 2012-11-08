@@ -2,11 +2,11 @@ package assemblyline.ai;
 
 import java.util.List;
 
-import universalelectricity.core.Vector3;
 import net.minecraft.src.AxisAlignedBB;
 import net.minecraft.src.EntityItem;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.World;
+import universalelectricity.core.Vector3;
 
 public class ArmHelper
 {

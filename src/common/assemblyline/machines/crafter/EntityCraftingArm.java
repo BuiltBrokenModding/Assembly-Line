@@ -1,11 +1,11 @@
 package assemblyline.machines.crafter;
 
-import universalelectricity.core.Vector3;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityItem;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.World;
+import universalelectricity.core.Vector3;
 
 public class EntityCraftingArm extends Entity
 {

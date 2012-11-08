@@ -36,7 +36,7 @@ public abstract class Task
 	public void onTaskEnd()
 	{
 	}
-	
+
 	public abstract void setTileEntity(TileEntity tileEntity);
 
 	/**

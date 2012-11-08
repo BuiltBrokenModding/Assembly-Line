@@ -21,11 +21,9 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Mod.PostInit;
 import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -76,8 +74,8 @@ public class AssemblyLine
 
 		// Add Names
 		LanguageRegistry.addName(new ItemStack(blockConveyorBelt, 1), "Conveyor Belt");
-		
-		for(MachineType type : MachineType.values())
+
+		for (MachineType type : MachineType.values())
 		{
 			LanguageRegistry.addName(new ItemStack(blockInteraction, 1, type.metadata), type.name);
 		}

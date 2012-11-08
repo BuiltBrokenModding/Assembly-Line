@@ -131,19 +131,26 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 			this.doBeltAction();
 		}
 	}
+
 	/**
-	 * almost unneeded but is change for each different belt type
+	 * almost unneeded but is change for each
+	 * different belt type
 	 */
 	public void doBeltAction()
 	{
-		this.conveyItemsHorizontal(true,false);
+		this.conveyItemsHorizontal(true, false);
 	}
+
 	/**
 	 * Causes all items to be moved above the belt
-	 * @param extendLife - increases the items life
-	 * @param preventPickUp - prevent a player from picking the item up
+	 * 
+	 * @param extendLife
+	 *            - increases the items life
+	 * @param preventPickUp
+	 *            - prevent a player from picking
+	 *            the item up
 	 */
-	public void conveyItemsHorizontal(boolean extendLife, boolean preventPickUp )
+	public void conveyItemsHorizontal(boolean extendLife, boolean preventPickUp)
 	{
 		try
 		{
@@ -154,27 +161,27 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 				int direction = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 				if (!this.entityIgnoreList.contains(entity))
 				{
-					if(!(entity instanceof EntityPlayer && ((EntityPlayer)entity).isSneaking()))
+					if (!(entity instanceof EntityPlayer && ((EntityPlayer) entity).isSneaking()))
 					{
 						if (direction == 0)
 						{
 							entity.motionZ -= 1 * this.speed;
-							entity.posX = this.xCoord +0.5D;
+							entity.posX = this.xCoord + 0.5D;
 						}
 						if (direction == 1)
 						{
 							entity.motionX += 1 * this.speed;
-							entity.posZ = this.zCoord +0.5D;
+							entity.posZ = this.zCoord + 0.5D;
 						}
 						if (direction == 2)
 						{
 							entity.motionZ += 1 * this.speed;
-							entity.posX = this.xCoord +0.5D;
+							entity.posX = this.xCoord + 0.5D;
 						}
 						if (direction == 3)
 						{
 							entity.motionX -= 1 * this.speed;
-							entity.posZ = this.zCoord +0.5D;
+							entity.posZ = this.zCoord + 0.5D;
 						}
 					}
 				}
@@ -187,7 +194,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 				if (entity instanceof EntityItem)
 				{
 					EntityItem entityItem = (EntityItem) entity;
-					
+
 					if (extendLife && entityItem.age >= 1000)
 					{
 						entityItem.age = 0;
@@ -203,7 +210,8 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 		{
 			e.printStackTrace();
 		}
-	}	
+	}
+
 	@Override
 	public Packet getDescriptionPacket()
 	{
@@ -324,11 +332,12 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	}
 
 	@Override
-	public ForgeDirection getFacing() {
-		
+	public ForgeDirection getFacing()
+	{
+
 		return ForgeDirection.getOrientation(this.getBeltDirection());
 	}
-	
+
 	public List<Entity> getEntityAbove()
 	{
 		AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1);

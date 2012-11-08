@@ -34,7 +34,7 @@ public class TaskArmSearch extends Task
 		this.radius = radius;
 		this.searchSpeed = searchSpeed;
 	}
-	
+
 	@Override
 	public void onTaskStart()
 	{
@@ -50,10 +50,10 @@ public class TaskArmSearch extends Task
 
 		/**
 		 * Move the robotic arm around and emulate
-		 * an item search. Then initiate a collect task.
+		 * an item search. Then initiate a collect
+		 * task.
 		 */
-		
-		
+
 		return true;
 	}
 

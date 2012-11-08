@@ -1,12 +1,11 @@
 package assemblyline.machines.crafter;
 
-import universalelectricity.prefab.BlockMachine;
-import net.minecraft.src.BlockContainer;
 import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Material;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
+import universalelectricity.prefab.BlockMachine;
 import assemblyline.AssemblyLine;
 
 public class BlockCrafter extends BlockMachine

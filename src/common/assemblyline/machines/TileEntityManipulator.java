@@ -2,8 +2,6 @@ package assemblyline.machines;
 
 import java.util.List;
 
-import com.google.common.io.ByteArrayDataInput;
-
 import net.minecraft.src.AxisAlignedBB;
 import net.minecraft.src.EntityItem;
 import net.minecraft.src.EntityPlayer;
@@ -27,7 +25,9 @@ import assemblyline.AssemblyLine;
 import assemblyline.api.IManipulator;
 import assemblyline.machines.BlockMulti.MachineType;
 
-public class TileEntityManipulator extends TileEntityElectricityReceiver implements IRedstoneReceptor, IPacketReceiver,IManipulator
+import com.google.common.io.ByteArrayDataInput;
+
+public class TileEntityManipulator extends TileEntityElectricityReceiver implements IRedstoneReceptor, IPacketReceiver, IManipulator
 {
 	/**
 	 * Joules required to run this thing.
@@ -107,7 +107,7 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 
 						if (remainingStack != null && remainingStack.stackSize > 0)
 						{
-								 this.rejectItem(outputPosition, remainingStack);
+							this.rejectItem(outputPosition, remainingStack);
 						}
 
 						entity.setDead();
@@ -163,8 +163,11 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 			}
 		}
 	}
+
 	/**
-	 * Throws the items from the manipulator into the world
+	 * Throws the items from the manipulator into
+	 * the world
+	 * 
 	 * @param outputPosition
 	 * @param items
 	 */
@@ -176,6 +179,7 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 		entityItem.motionY /= 5;
 		worldObj.spawnEntityInWorld(entityItem);
 	}
+
 	/**
 	 * Tries to place an itemStack in a specific
 	 * position if it is an inventory.

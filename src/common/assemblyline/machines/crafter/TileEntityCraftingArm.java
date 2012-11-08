@@ -21,9 +21,9 @@ public class TileEntityCraftingArm extends TileEntityElectricityReceiver impleme
 	 * The items this container contains.
 	 */
 	protected ItemStack[] containingItems = new ItemStack[this.getSizeInventory()];
-	
+
 	private TaskManager taskManager = new TaskManager();
-	
+
 	/**
 	 * Entity robotic arm to be used with this
 	 * tileEntity
@@ -45,9 +45,9 @@ public class TileEntityCraftingArm extends TileEntityElectricityReceiver impleme
 	public void updateEntity()
 	{
 		super.updateEntity();
-		
+
 		taskManager.onUpdate();
-		
+
 		if (this.ticks % 5 == 0 && !this.isDisabled() && this.hasTask && EntityArm != null)
 		{
 			this.jouleReceived -= this.wattUsed;
@@ -123,7 +123,7 @@ public class TileEntityCraftingArm extends TileEntityElectricityReceiver impleme
 	{
 		return "RoboticArm";
 	}
-	
+
 	/**
 	 * Inventory functions.
 	 */
@@ -205,7 +205,7 @@ public class TileEntityCraftingArm extends TileEntityElectricityReceiver impleme
 	@Override
 	public void openChest()
 	{
-		this.playerUsing ++;
+		this.playerUsing++;
 	}
 
 	@Override
