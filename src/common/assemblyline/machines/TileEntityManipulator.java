@@ -166,7 +166,7 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 
 	/**
 	 * Throws the items from the manipulator into
-	 * the world
+	 * the world.
 	 * 
 	 * @param outputPosition
 	 * @param items

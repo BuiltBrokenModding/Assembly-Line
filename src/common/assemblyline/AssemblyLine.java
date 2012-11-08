@@ -3,6 +3,7 @@ package assemblyline;
 import java.io.File;
 
 import net.minecraft.src.Block;
+import net.minecraft.src.BlockArchitectTable;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraftforge.common.Configuration;
@@ -41,7 +42,7 @@ public class AssemblyLine
 	@Instance("AssemblyLine")
 	public static AssemblyLine instance;
 
-	public static final String VERSION = "0.1.0";
+	public static final String VERSION = "0.1.1";
 
 	public static final String CHANNEL = "AssemblyLine";
 
@@ -52,6 +53,7 @@ public class AssemblyLine
 	public static final int BLOCK_ID_PREFIX = 3003;
 	public static final Block blockConveyorBelt = new BlockConveyorBelt(UEConfig.getBlockConfigID(CONFIGURATION, "Conveyor Belt", BLOCK_ID_PREFIX));
 	public static final Block blockInteraction = new BlockMulti(UEConfig.getBlockConfigID(CONFIGURATION, "Machine", BLOCK_ID_PREFIX + 1));
+	public static final Block blockArchitectTable = new BlockArchitectTable(UEConfig.getBlockConfigID(CONFIGURATION, "Architect's Table", BLOCK_ID_PREFIX + 2));
 
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event)
@@ -59,6 +61,7 @@ public class AssemblyLine
 		instance = this;
 		NetworkRegistry.instance().registerGuiHandler(this, this.proxy);
 		GameRegistry.registerBlock(blockConveyorBelt);
+		GameRegistry.registerBlock(blockArchitectTable);
 		GameRegistry.registerBlock(blockInteraction, ItemBlockMulti.class);
 		proxy.preInit();
 	}
@@ -74,6 +77,7 @@ public class AssemblyLine
 
 		// Add Names
 		LanguageRegistry.addName(new ItemStack(blockConveyorBelt, 1), "Conveyor Belt");
+		LanguageRegistry.addName(blockArchitectTable, "Architect's Table");
 
 		for (MachineType type : MachineType.values())
 		{
