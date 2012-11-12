@@ -46,7 +46,7 @@ public class TileEntitySteamPiston extends TileEntityMachine implements IPacketR
 		super.updateEntity();
 		if(tickCount++ >=10)
 		{tickCount = 0;
-		
+		//this.pos += 1; if(pos >= 8){pos = 0;}
 			//++tCount;if(tCount > 120){tCount = 0;}
 			
 			int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);

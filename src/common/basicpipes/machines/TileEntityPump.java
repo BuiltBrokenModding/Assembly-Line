@@ -45,7 +45,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements ILi
 			{
 				this.type = bellow;
 			}
-			
+			//eStored+=200;
 			if(!worldObj.isRemote)
 			{
 				if(bBlock == type.Still && this.eStored >= 200 && this.lStored < this.wMax)

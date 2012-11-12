@@ -102,19 +102,6 @@ public class ItemGuage extends Item
 
         return false;
     }
-    public String getType(int type)
-    {
-    	switch(type)
-    	{
-    	case 0: return "Steam";
-    	case 1: return "Water";
-    	case 2: return "Lava";
-    	case 3: return "Oil";
-    	case 4: return "Fuel";
-    	case 5: return "Air";
-    	default: return "???";
-    	}
-    }
 	public String getItemNameIS(ItemStack par1ItemStack)
     {
 	   int var3 = par1ItemStack.getItemDamage();
