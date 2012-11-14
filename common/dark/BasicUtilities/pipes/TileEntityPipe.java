@@ -47,37 +47,39 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer, IPack
         {
             count = 0;
             this.connectedBlocks = MHelper.getSourounding(worldObj, xCoord, yCoord, zCoord);
-            this.presure = this.updatePressure();
-            
+            this.updatePressure();
+
             if (!worldObj.isRemote)
             {
-                
                 if (firstUpdate || count2++ >= 5)
                 {
                     count2 = 0;
                     firstUpdate = false;
-                    Packet packet = PacketManager.getPacket(BasicUtilitiesMain.CHANNEL, this,  this.type.ordinal() );
+                    Packet packet = PacketManager.getPacket(BasicUtilitiesMain.CHANNEL, this, this.type.ordinal());
                     PacketManager.sendPacketToClients(packet, worldObj, Vector3.get(this), 60);
                 }
 
                 for (int i = 0; i < 6; i++)
                 {
 
-                    ForgeDirection dir = ForgeDirection.getOrientation(i).getOpposite();
+                    ForgeDirection dir = ForgeDirection.getOrientation(i);
 
-                    if (connectedBlocks[i] instanceof ILiquidProducer && ((ILiquidProducer) connectedBlocks[i]).canProduceLiquid(this.type, dir))
+                    if (connectedBlocks[i] instanceof ILiquidProducer)
                     {
                         int vol = ((ILiquidProducer) connectedBlocks[i]).onProduceLiquid(this.type, this.capacity - this.liquidStored, dir);
                         this.liquidStored = Math.min(this.liquidStored + vol,
                                 this.capacity);
                     }
-                    if (connectedBlocks[i] instanceof ILiquidConsumer && ((ILiquidConsumer) connectedBlocks[i]).canRecieveLiquid(this.type, dir) && this.liquidStored > 0 && this.presure > 0)
+                    if (connectedBlocks[i] instanceof ILiquidConsumer && this.liquidStored > 0 && this.presure > 0)
                     {
                         if (connectedBlocks[i] instanceof TileEntityPipe)
                         {
-                            this.liquidStored--;
-                            int vol = ((ILiquidConsumer) connectedBlocks[i]).onReceiveLiquid(this.type, Math.max(this.liquidStored, 1), dir);
-                            this.liquidStored += vol;
+                            if (((TileEntityPipe) connectedBlocks[i]).presure < this.presure)
+                            {
+                                this.liquidStored--;
+                                int vol = ((ILiquidConsumer) connectedBlocks[i]).onReceiveLiquid(this.type, Math.max(this.liquidStored, 1), dir);
+                                this.liquidStored += vol;
+                            }
                         }
                         else
                         {
@@ -90,19 +92,20 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer, IPack
     }
 
     /**
-     * used to cause the pipes presure to update depending on what is connected
+     * used to cause the pipes pressure to update depending on what is connected
      * to it
      * 
      * @return
      */
-    public int updatePressure()
+    public void updatePressure()
     {
         int highestPressure = 0;
         this.connectedUnits = 0;
+        this.presure = 0;
 
         for (int i = 0; i < 6; i++)
         {
-            ForgeDirection dir = ForgeDirection.getOrientation(i).getOpposite();
+            ForgeDirection dir = ForgeDirection.getOrientation(i);
 
             if (connectedBlocks[i] instanceof ILiquidConsumer && ((ILiquidConsumer) connectedBlocks[i]).canRecieveLiquid(this.type, dir))
             {
@@ -120,7 +123,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer, IPack
                 this.connectedUnits++;
                 if (((ILiquidProducer) connectedBlocks[i]).canProducePresure(this.type, dir) && ((ILiquidProducer) connectedBlocks[i]).presureOutput(this.type, dir) > highestPressure)
                 {
-                    highestPressure = ((ILiquidProducer) connectedBlocks[i]).presureOutput(this.type, ForgeDirection.getOrientation(i));
+                    highestPressure = ((ILiquidProducer) connectedBlocks[i]).presureOutput(this.type, dir);
                 }
             }
             else
@@ -128,7 +131,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer, IPack
                 connectedBlocks[i] = null;
             }
         }
-        return highestPressure - 1;
+        this.presure = highestPressure - 1;
     }
 
     // ---------------
@@ -141,7 +144,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer, IPack
         {
             int rejectedVolume = Math.max((this.getStoredLiquid(type) + vol) - this.capacity, 0);
             this.liquidStored = Math.min(Math.max((liquidStored + vol - rejectedVolume), 0), this.capacity);
-            return rejectedVolume;
+            return Math.abs(rejectedVolume);
         }
         return vol;
     }

@@ -104,7 +104,6 @@ public class BasicUtilitiesMain extends DummyModContainer
         GameRegistry.registerTileEntity(TileEntityPump.class, "pump");
         GameRegistry.registerTileEntity(TileEntityRod.class, "rod");
         GameRegistry.registerTileEntity(TileEntityLTank.class, "ltank");
-        // Names and lang stuff
         // Pipe Names
         for (int i = 0; i < Liquid.values().length; i++)
         {
