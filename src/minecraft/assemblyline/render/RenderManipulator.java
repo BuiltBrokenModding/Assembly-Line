@@ -6,7 +6,7 @@ import net.minecraft.src.TileEntitySpecialRenderer;
 import org.lwjgl.opengl.GL11;
 
 import assemblyline.AssemblyLine;
-import assemblyline.machines.TileEntityManipulator;
+import assemblyline.machine.TileEntityManipulator;
 import assemblyline.model.ModelManipulator;
 
 public class RenderManipulator extends TileEntitySpecialRenderer

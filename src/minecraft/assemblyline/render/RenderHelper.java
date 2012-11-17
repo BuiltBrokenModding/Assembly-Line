@@ -7,7 +7,7 @@ import net.minecraft.src.RenderBlocks;
 import org.lwjgl.opengl.GL11;
 
 import assemblyline.AssemblyLine;
-import assemblyline.machines.BlockMulti.MachineType;
+import assemblyline.machine.BlockMulti.MachineType;
 import assemblyline.model.ModelConveyorBelt;
 import assemblyline.model.ModelManipulator;
 import assemblyline.model.ModelSorter;

@@ -6,7 +6,7 @@ import net.minecraft.src.TileEntitySpecialRenderer;
 import org.lwjgl.opengl.GL11;
 
 import assemblyline.AssemblyLine;
-import assemblyline.machines.TileEntityRejector;
+import assemblyline.machine.TileEntityRejector;
 import assemblyline.model.ModelSorter;
 
 public class RenderSorter extends TileEntitySpecialRenderer

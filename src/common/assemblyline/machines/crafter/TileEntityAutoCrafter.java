@@ -3,7 +3,7 @@ package assemblyline.machines.crafter;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.INetworkManager;
 import net.minecraft.src.Packet250CustomPayload;
-import universalelectricity.prefab.TileEntityAdvanced;
+import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
 

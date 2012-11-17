@@ -59,7 +59,7 @@ public class ContainerCrafter extends Container
 	 * clicking.
 	 */
 	@Override
-	public ItemStack func_82846_b(EntityPlayer par1EntityPlayer, int par1)
+	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par1)
 	{
 		ItemStack itemStack3 = null;
 		Slot itemStack = (Slot) this.inventorySlots.get(par1);
@@ -90,7 +90,7 @@ public class ContainerCrafter extends Container
 
 			if (itemStack2.stackSize == itemStack3.stackSize) { return null; }
 
-			itemStack.func_82870_a(par1EntityPlayer, itemStack2);
+			itemStack.onPickupFromSlot(par1EntityPlayer, itemStack2);
 		}
 
 		return itemStack3;

@@ -1,21 +1,21 @@
 package assemblyline.machines.crafter;
 
-import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.Material;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
+import universalelectricity.core.UniversalElectricity;
 import universalelectricity.prefab.BlockMachine;
+import universalelectricity.prefab.UETab;
 import assemblyline.AssemblyLine;
 
 public class BlockCrafter extends BlockMachine
 {
-	protected BlockCrafter(int par1)
+	protected BlockCrafter(int id)
 	{
-		super("AutoCrafters", par1, Material.iron);
+		super("AutoCrafter", id, UniversalElectricity.machine);
 		this.setResistance(5.0f);
 		this.setHardness(5.0f);
-		this.setCreativeTab(CreativeTabs.tabTools);
+		this.setCreativeTab(UETab.INSTANCE);
 	}
 
 	public static enum CrafterType

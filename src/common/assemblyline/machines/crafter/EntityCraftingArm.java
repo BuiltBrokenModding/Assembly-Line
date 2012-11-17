@@ -5,7 +5,7 @@ import net.minecraft.src.EntityItem;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.World;
-import universalelectricity.core.Vector3;
+import universalelectricity.core.vector.Vector3;
 
 public class EntityCraftingArm extends Entity
 {

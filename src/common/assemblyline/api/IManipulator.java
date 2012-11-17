@@ -1,7 +1,7 @@
 package assemblyline.api;
 
 import net.minecraft.src.ItemStack;
-import universalelectricity.core.Vector3;
+import universalelectricity.core.vector.Vector3;
 
 public interface IManipulator
 {

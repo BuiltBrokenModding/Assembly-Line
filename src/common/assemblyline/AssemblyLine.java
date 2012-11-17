@@ -3,21 +3,23 @@ package assemblyline;
 import java.io.File;
 
 import net.minecraft.src.Block;
-import net.minecraft.src.BlockArchitectTable;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import universalelectricity.core.UEConfig;
+import universalelectricity.core.UniversalElectricity;
+import universalelectricity.prefab.UETab;
 import universalelectricity.prefab.network.PacketManager;
-import assemblyline.belts.BlockConveyorBelt;
-import assemblyline.belts.TileEntityConveyorBelt;
-import assemblyline.machines.BlockMulti;
-import assemblyline.machines.BlockMulti.MachineType;
-import assemblyline.machines.ItemBlockMulti;
-import assemblyline.machines.TileEntityManipulator;
-import assemblyline.machines.TileEntityRejector;
+import assemblyline.machine.BlockArchitectTable;
+import assemblyline.machine.BlockMulti;
+import assemblyline.machine.BlockMulti.MachineType;
+import assemblyline.machine.ItemBlockMulti;
+import assemblyline.machine.TileEntityManipulator;
+import assemblyline.machine.TileEntityRejector;
+import assemblyline.machine.belt.BlockConveyorBelt;
+import assemblyline.machine.belt.TileEntityConveyorBelt;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -42,7 +44,7 @@ public class AssemblyLine
 	@Instance("AssemblyLine")
 	public static AssemblyLine instance;
 
-	public static final String VERSION = "0.1.1";
+	public static final String VERSION = "0.1.2";
 
 	public static final String CHANNEL = "AssemblyLine";
 
@@ -58,6 +60,7 @@ public class AssemblyLine
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event)
 	{
+		UniversalElectricity.register(this, 1, 1, 1, false);
 		instance = this;
 		NetworkRegistry.instance().registerGuiHandler(this, this.proxy);
 		GameRegistry.registerBlock(blockConveyorBelt);
@@ -70,13 +73,13 @@ public class AssemblyLine
 	public void load(FMLInitializationEvent evt)
 	{
 		proxy.init();
-
+		
 		GameRegistry.registerTileEntity(TileEntityConveyorBelt.class, "ConveyorBelt");
 		GameRegistry.registerTileEntity(TileEntityRejector.class, "Sorter");
 		GameRegistry.registerTileEntity(TileEntityManipulator.class, "Manipulator");
 
 		// Add Names
-		LanguageRegistry.addName(new ItemStack(blockConveyorBelt, 1), "Conveyor Belt");
+		LanguageRegistry.addName(blockConveyorBelt, "Conveyor Belt");
 		LanguageRegistry.addName(blockArchitectTable, "Architect's Table");
 
 		for (MachineType type : MachineType.values())
@@ -95,5 +98,7 @@ public class AssemblyLine
 		// Retriever
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockInteraction, 1, MachineType.MANIPULATOR.metadata), new Object[]
 		{ Block.dispenser, "basicCircuit" }));
+		
+		UETab.setItemStack(new ItemStack(blockConveyorBelt));
 	}
 }

@@ -2,9 +2,9 @@
 {
   "modid": "AssemblyLine",
   "name": "Assembly Line",
-  "description": "A mod bringing a realistic conveyor belt transporting system to Minecraft.",
-  "version": "0.1.0",
-  "mcversion": "1.4.2",
+  "description": "A mod that brings conveyor belt transporting systems to Minecraft.",
+  "version": "0.1.2",
+  "mcversion": "1.4.4",
   "url": "http://calclavia.com/universalelectricity/?m=18",
   "updateUrl": "http://calclavia.com/universalelectricity/?m=18",
   "authors": [

@@ -6,7 +6,7 @@ import net.minecraft.src.TileEntitySpecialRenderer;
 import org.lwjgl.opengl.GL11;
 
 import assemblyline.AssemblyLine;
-import assemblyline.belts.TileEntityConveyorBelt;
+import assemblyline.machine.belt.TileEntityConveyorBelt;
 import assemblyline.model.ModelConveyorBelt;
 
 public class RenderConveyorBelt extends TileEntitySpecialRenderer

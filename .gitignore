@@ -22,13 +22,12 @@ LICENSE.txt
 /builds/
 
 !/src/*/assemblyline/
-!/src/*/dan200/
 !/src/*/buildcraft/
 !/src/*/universalelectricity/
 !/Include Resources.bat
 !/mcmod.info
-
-!/resources/*
+!/resources/
+!/models/
 !/modversion.txt
 !/publish.bat
 !/README

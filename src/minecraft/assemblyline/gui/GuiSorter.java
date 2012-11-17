@@ -9,8 +9,8 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import assemblyline.AssemblyLine;
-import assemblyline.machines.ContainerSorter;
-import assemblyline.machines.TileEntityRejector;
+import assemblyline.machine.ContainerSorter;
+import assemblyline.machine.TileEntityRejector;
 
 public class GuiSorter extends GuiContainer
 {

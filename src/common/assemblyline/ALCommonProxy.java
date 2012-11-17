@@ -3,15 +3,14 @@ package assemblyline;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
-import assemblyline.gui.GuiSorter;
-import assemblyline.machines.ContainerSorter;
-import assemblyline.machines.TileEntityRejector;
+import assemblyline.machine.ContainerSorter;
+import assemblyline.machine.TileEntityRejector;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 public class ALCommonProxy implements IGuiHandler
 {
 	public static final int GUI_ARCHITECHT_TABLE = 4;
-	
+
 	public void preInit()
 	{
 
