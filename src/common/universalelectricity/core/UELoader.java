@@ -12,8 +12,7 @@ import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.registry.TickRegistry;
 
 /**
- * A class used to load Universal Electricity and
- * make it work.
+ * A class used to load Universal Electricity and make it work.
  * 
  * @author Calclavia
  * 

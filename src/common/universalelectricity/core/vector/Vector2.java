@@ -3,11 +3,9 @@ package universalelectricity.core.vector;
 import net.minecraft.src.MathHelper;
 
 /**
- * Vector2 Class is used for defining objects in a
- * 2D space. Vector2 makes it easier to handle the
- * coordinates of objects. Instead of fumbling
- * with x and y variables, all x and y variables
- * are stored in one class. Vector3.x, Vector3.y.
+ * Vector2 Class is used for defining objects in a 2D space. Vector2 makes it easier to handle the
+ * coordinates of objects. Instead of fumbling with x and y variables, all x and y variables are
+ * stored in one class. Vector3.x, Vector3.y.
  * 
  * @author Calclavia
  */
@@ -46,8 +44,7 @@ public class Vector2 implements Cloneable
 	}
 
 	/**
-	 * Makes a new copy of this Vector. Prevents
-	 * variable referencing problems.
+	 * Makes a new copy of this Vector. Prevents variable referencing problems.
 	 */
 	@Override
 	public Vector2 clone()
@@ -80,7 +77,7 @@ public class Vector2 implements Cloneable
 		this.x += par1;
 		this.y += par1;
 	}
-	
+
 	public void substract(Vector2 par1)
 	{
 		this.x -= par1.x;
@@ -106,6 +103,6 @@ public class Vector2 implements Cloneable
 	@Override
 	public String toString()
 	{
-		return "Vector2: " + this.x + "," + this.y;
+		return "Vector2 [" + this.x + "," + this.y + "]";
 	}
 }

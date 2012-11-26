@@ -12,20 +12,14 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 
 /**
- * Instructions for using the Universal
- * Electricity API.
+ * Instructions for using the Universal Electricity API.
  * 
- * The less you include of the API, the more
- * compatible your mod will be for future releases
- * of Universal Electricity.
+ * The less you include of the API, the more compatible your mod will be for future releases of
+ * Universal Electricity.
  * 
- * REQUIRED PACKAGES: "universalelectricity"
- * "universalelectricity.electricity"
- * "universalelectricity.implements" - Some
- * interfaces can be removed if not needed.
+ * REQUIRED PACKAGE: "universalelectricity.core" OPTIONAL PACKAGE: "universalelectricity.prefab"
  * 
- * The rest of the classes should be removed if
- * you are not going to use them.
+ * All classes should be removed if you are not going to use them.
  * 
  * @author Calclavia
  * 
@@ -33,23 +27,20 @@ import cpw.mods.fml.common.Loader;
 public class UniversalElectricity
 {
 	/**
-	 * The version of the Universal Electricity
-	 * API.
+	 * The version of the Universal Electricity API.
 	 */
 	public static final int MAJOR_VERSION = 1;
 	public static final int MINOR_VERSION = 1;
-	public static final int REVISION_VERSION = 1;
+	public static final int REVISION_VERSION = 3;
 	public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + REVISION_VERSION;
 
 	/**
-	 * The Universal Electricity configuration
-	 * file.
+	 * The Universal Electricity configuration file.
 	 */
 	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "UniversalElectricity/UniversalElectricity.cfg"));
 
 	/**
-	 * Conversion ratios between Buildcraft and
-	 * Industrialcraft energy.
+	 * Conversion ratios between Buildcraft and Industrialcraft energy.
 	 */
 	// EU to Watts ratio
 	public static final float IC2_RATIO = (float) UEConfig.getConfigData(CONFIGURATION, "IndustrialCraft Conversion Ratio", 7);
@@ -59,16 +50,14 @@ public class UniversalElectricity
 	public static final float TO_BC_RATIO = 1 / BC3_RATIO;
 
 	/**
-	 * Use this material for all your machine
-	 * blocks. It can be breakable by hand.
+	 * Use this material for all your machine blocks. It can be breakable by hand.
 	 */
 	public static final Material machine = new Material(MapColor.ironColor);
 
 	public static final List<Object> mods = new ArrayList<Object>();
 
 	/**
-	 * You must register your mod with Universal
-	 * Electricity. Call this in your mod's
+	 * You must register your mod with Universal Electricity. Call this in your mod's
 	 * pre-initialization stage.
 	 */
 	public static void register(Object mod, int major, int minor, int revision, boolean strict)
@@ -97,8 +86,7 @@ public class UniversalElectricity
 	}
 
 	/**
-	 * A function that allows you to lock your mod
-	 * to a specific version of Forge.
+	 * A function that allows you to lock your mod to a specific version of Forge.
 	 */
 	public static void forgeLock(int major, int minor, int revision, boolean strict)
 	{

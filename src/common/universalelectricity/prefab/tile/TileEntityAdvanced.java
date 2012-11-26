@@ -4,8 +4,7 @@ import net.minecraft.src.Block;
 import net.minecraft.src.TileEntity;
 
 /**
- * A TileEntity with some pre-added
- * functionalities.
+ * A TileEntity with some pre-added functionalities.
  * 
  * @author Calclavia
  * 

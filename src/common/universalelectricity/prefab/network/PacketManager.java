@@ -21,20 +21,13 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
 /**
- * This class is used for sending and receiving
- * packets between the server and the client. You
- * can directly use this by registering this
- * packet manager with NetworkMod. Example:
+ * This class is used for sending and receiving packets between the server and the client. You can
+ * directly use this by registering this packet manager with NetworkMod. Example:
  * 
- * @NetworkMod(channels = { "BasicComponents" },
- *                      clientSideRequired = true,
- *                      serverSideRequired =
- *                      false, packetHandler =
- *                      PacketManager.class)
+ * @NetworkMod(channels = { "BasicComponents" }, clientSideRequired = true, serverSideRequired =
+ *                      false, packetHandler = PacketManager.class)
  * 
- *                      Check out
- *                      {@link #BasicComponents}
- *                      for better reference.
+ *                      Check out {@link #BasicComponents} for better reference.
  * 
  * @author Calclavia
  */
@@ -60,7 +53,6 @@ public class PacketManager implements IPacketHandler, IPacketReceiver
 		try
 		{
 			data.writeInt(id);
-
 			data = encodeDataStream(data, sendData);
 
 			Packet250CustomPayload packet = new Packet250CustomPayload();
@@ -121,10 +113,8 @@ public class PacketManager implements IPacketHandler, IPacketReceiver
 	}
 
 	/**
-	 * Sends packets to clients around a specific
-	 * coordinate. A wrapper using Vector3. See
-	 * {@PacketDispatcher} for
-	 * detailed information.
+	 * Sends packets to clients around a specific coordinate. A wrapper using Vector3. See
+	 * {@PacketDispatcher} for detailed information.
 	 */
 	public static void sendPacketToClients(Packet packet, World worldObj, Vector3 position, double range)
 	{
@@ -140,8 +130,7 @@ public class PacketManager implements IPacketHandler, IPacketReceiver
 	}
 
 	/**
-	 * Sends a packet to all the clients on this
-	 * server.
+	 * Sends a packet to all the clients on this server.
 	 */
 	public static void sendPacketToClients(Packet packet, World worldObj)
 	{

@@ -68,7 +68,7 @@ public class TileEntityCraftingArm extends TileEntityElectricityReceiver impleme
 	 * UE methods
 	 */
 	@Override
-	public void onReceive(TileEntity sender, double amps, double voltage, ForgeDirection side)
+	public void onReceive(Object sender, double amps, double voltage, ForgeDirection side)
 	{
 		this.jouleReceived = Math.max(jouleReceived + (amps * voltage), maxJoules);
 
@@ -258,4 +258,5 @@ public class TileEntityCraftingArm extends TileEntityElectricityReceiver impleme
 		nbt.setTag("Items", var2);
 	}
 
+    
 }

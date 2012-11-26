@@ -48,7 +48,6 @@ public class TaskManager
 
 	public void addTask(TileEntity tileEntity, Task task)
 	{
-		task.setTileEntity(tileEntity);
 		task.onTaskStart();
 		tasks.add(task);
 	}

@@ -16,8 +16,7 @@ import universalelectricity.prefab.network.IPacketReceiver;
 import com.google.common.io.ByteArrayDataInput;
 
 /**
- * This tile entity pre-fabricated for all
- * conductors.
+ * This tile entity pre-fabricated for all conductors.
  * 
  * @author Calclavia
  * 
@@ -27,8 +26,7 @@ public abstract class TileEntityConductor extends TileEntityAdvanced implements 
 	private ElectricityNetwork network;
 
 	/**
-	 * Stores information on the blocks that this
-	 * conductor is connected to
+	 * Stores information on the blocks that this conductor is connected to
 	 */
 	public TileEntity[] connectedBlocks =
 	{ null, null, null, null, null, null };
@@ -122,11 +120,9 @@ public abstract class TileEntityConductor extends TileEntityAdvanced implements 
 	}
 
 	/**
-	 * Determines if this TileEntity requires
-	 * update calls.
+	 * Determines if this TileEntity requires update calls.
 	 * 
-	 * @return True if you want updateEntity() to
-	 *         be called, false if not
+	 * @return True if you want updateEntity() to be called, false if not
 	 */
 	@Override
 	public boolean canUpdate()

@@ -14,8 +14,7 @@ import universalelectricity.prefab.network.PacketManager;
 import com.google.common.io.ByteArrayDataInput;
 
 /**
- * This is a multiblock to be used for blocks that
- * are bigger than one block.
+ * This is a multiblock to be used for blocks that are bigger than one block.
  * 
  * @author Calclavia
  * 
@@ -97,11 +96,9 @@ public class TileEntityMulti extends TileEntity implements IPacketReceiver
 	}
 
 	/**
-	 * Determines if this TileEntity requires
-	 * update calls.
+	 * Determines if this TileEntity requires update calls.
 	 * 
-	 * @return True if you want updateEntity() to
-	 *         be called, false if not
+	 * @return True if you want updateEntity() to be called, false if not
 	 */
 	public boolean canUpdate()
 	{

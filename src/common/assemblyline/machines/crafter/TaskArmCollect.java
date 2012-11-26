@@ -12,16 +12,17 @@ import assemblyline.ai.Task;
  */
 public class TaskArmCollect extends Task
 {
-	private TileEntityCraftingArm tileEntity;
+	
 
 	/**
 	 * The item to be collected.
 	 */
 	private EntityItem entityItem;
 
-	public TaskArmCollect(EntityItem entityItem)
+	public TaskArmCollect(TileEntityCraftingArm arm,EntityItem entityItem)
 	{
-		this.entityItem = entityItem;
+	    super(arm);
+		this.entityItem = entityItem;		
 	}
 
 	@Override
@@ -37,11 +38,5 @@ public class TaskArmCollect extends Task
 		 */
 
 		return true;
-	}
-
-	@Override
-	public void setTileEntity(TileEntity tileEntity)
-	{
-		this.tileEntity = (TileEntityCraftingArm) tileEntity;
 	}
 }

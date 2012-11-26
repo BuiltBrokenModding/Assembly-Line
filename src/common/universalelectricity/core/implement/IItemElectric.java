@@ -10,25 +10,21 @@ public interface IItemElectric extends IJouleStorage, IVoltage
 	public double onReceive(double amps, double voltage, ItemStack itemStack);
 
 	/**
-	 * Called when something requests electricity
-	 * from this item.
+	 * Called when something requests electricity from this item.
 	 * 
 	 * @return - The amount of given joules
 	 */
 	public double onUse(double joulesNeeded, ItemStack itemStack);
 
 	/**
-	 * @return Returns true or false if this
-	 *         consumer can receive electricity at
-	 *         this given tick or moment.
+	 * @return Returns true or false if this consumer can receive electricity at this given tick or
+	 *         moment.
 	 */
 	public boolean canReceiveElectricity();
 
 	/**
-	 * Can this item give out electricity when
-	 * placed in an tile entity? Electric items
-	 * like batteries should be able to produce
-	 * electricity (if they are rechargeable).
+	 * Can this item give out electricity when placed in an tile entity? Electric items like
+	 * batteries should be able to produce electricity (if they are rechargeable).
 	 * 
 	 * @return - True or False.
 	 */

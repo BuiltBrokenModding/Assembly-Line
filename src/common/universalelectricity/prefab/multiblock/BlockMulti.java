@@ -36,12 +36,9 @@ public class BlockMulti extends BlockContainer
 	}
 
 	/**
-	 * Called when the block is right clicked by
-	 * the player. This modified version detects
-	 * electric items and wrench actions on your
-	 * machine block. Do not override this
-	 * function. Use machineActivated instead! (It
-	 * does the same thing)
+	 * Called when the block is right clicked by the player. This modified version detects electric
+	 * items and wrench actions on your machine block. Do not override this function. Use
+	 * machineActivated instead! (It does the same thing)
 	 */
 	@Override
 	public boolean onBlockActivated(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
@@ -51,8 +48,7 @@ public class BlockMulti extends BlockContainer
 	}
 
 	/**
-	 * Returns the quantity of items to drop on
-	 * block destruction.
+	 * Returns the quantity of items to drop on block destruction.
 	 */
 	@Override
 	public int quantityDropped(Random par1Random)

@@ -1,8 +1,7 @@
 package universalelectricity.core.electricity;
 
 /**
- * An easy way to display information on
- * electricity.
+ * An easy way to display information on electricity.
  * 
  * @author Calclavia
  */
@@ -132,8 +131,7 @@ public class ElectricInfo
 	}
 
 	/**
-	 * Displays the unit as text. Works only for
-	 * positive numbers.
+	 * Displays the unit as text. Works only for positive numbers.
 	 */
 	public static String getDisplay(double value, ElectricUnit unit, int significantFigures, boolean isShort)
 	{
@@ -186,8 +184,7 @@ public class ElectricInfo
 	}
 
 	/**
-	 * Rounds a number to a specific number place
-	 * places
+	 * Rounds a number to a specific number place places
 	 * 
 	 * @param The
 	 *            number

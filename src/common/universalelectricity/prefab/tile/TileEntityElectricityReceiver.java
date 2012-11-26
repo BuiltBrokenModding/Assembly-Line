@@ -4,8 +4,7 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.implement.IElectricityReceiver;
 
 /**
- * An easier way to implement the methods from
- * IElectricityReceiver with default values set.
+ * An easier way to implement the methods from IElectricityReceiver with default values set.
  * 
  * @author Calclavia
  */

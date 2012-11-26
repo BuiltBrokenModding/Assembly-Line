@@ -3,9 +3,7 @@ package universalelectricity.prefab.tile;
 import universalelectricity.core.implement.IDisableable;
 
 /**
- * An easier way to implement the methods from
- * IElectricityDisableable with default values
- * set.
+ * An easier way to implement the methods from IElectricityDisableable with default values set.
  * 
  * @author Calclavia
  */
@@ -27,8 +25,7 @@ public abstract class TileEntityDisableable extends TileEntityAdvanced implement
 	}
 
 	/**
-	 * Called every tick while this tile entity is
-	 * disabled.
+	 * Called every tick while this tile entity is disabled.
 	 */
 	protected void whileDisable()
 	{

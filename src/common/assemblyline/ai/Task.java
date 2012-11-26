@@ -1,6 +1,7 @@
 package assemblyline.ai;
 
 import net.minecraft.src.TileEntity;
+import assemblyline.machines.crafter.TileEntityCraftingArm;
 
 /**
  * An AI Task that is used by TileEntities with
@@ -12,7 +13,11 @@ import net.minecraft.src.TileEntity;
 public abstract class Task
 {
 	protected int ticks;
-
+	protected TileEntityCraftingArm tileEntity;
+	public Task(TileEntityCraftingArm arm)
+	{
+	    this.tileEntity = arm;
+	}
 	/**
 	 * Called when a task is being done.
 	 * 
@@ -36,8 +41,6 @@ public abstract class Task
 	public void onTaskEnd()
 	{
 	}
-
-	public abstract void setTileEntity(TileEntity tileEntity);
 
 	/**
 	 * @return The tick interval of this task.

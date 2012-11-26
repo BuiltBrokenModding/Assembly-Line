@@ -3,8 +3,7 @@ package universalelectricity.prefab.implement;
 import net.minecraftforge.common.ForgeDirection;
 
 /**
- * This should be applied on tile entities that
- * can provide redstone power
+ * This should be applied on tile entities that can provide redstone power
  * 
  * @author Calclavia
  * 

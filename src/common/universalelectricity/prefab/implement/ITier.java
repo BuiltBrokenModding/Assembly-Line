@@ -1,8 +1,7 @@
 package universalelectricity.prefab.implement;
 
 /**
- * This interface should be applied to all things
- * that has a tier/level.
+ * This interface should be applied to all things that has a tier/level.
  * 
  * @author Calclavia
  * 

@@ -225,7 +225,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	}
 
 	@Override
-	public void onReceive(TileEntity sender, double amps, double voltage, ForgeDirection side)
+	public void onReceive(Object sender, double amps, double voltage, ForgeDirection side)
 	{
 		this.wattsReceived += ElectricInfo.getWatts(amps, voltage);
 	}

@@ -1,1 +1,1 @@
-A mod that brings realistic transportation systems into Minecraft.
+A mod that brings realistic factory style transportation systems into Minecraft.

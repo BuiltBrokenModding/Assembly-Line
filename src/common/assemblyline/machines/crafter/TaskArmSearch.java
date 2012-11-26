@@ -13,7 +13,6 @@ import assemblyline.ai.Task;
  */
 public class TaskArmSearch extends Task
 {
-	private TileEntityCraftingArm tileEntity;
 
 	/**
 	 * The item to be collected.
@@ -22,14 +21,13 @@ public class TaskArmSearch extends Task
 
 	private float searchSpeed;
 
-	private World worldObj;
-
 	private double radius;
 
 	private Entity foundEntity;
 
-	public TaskArmSearch(Class<? extends Entity> entityToInclude, double radius, float searchSpeed)
+	public TaskArmSearch(TileEntityCraftingArm arm,Class<? extends Entity> entityToInclude, double radius, float searchSpeed)
 	{
+	    super(arm);
 		this.entityToInclude = entityToInclude;
 		this.radius = radius;
 		this.searchSpeed = searchSpeed;
@@ -38,7 +36,7 @@ public class TaskArmSearch extends Task
 	@Override
 	public void onTaskStart()
 	{
-		this.foundEntity = (Entity) this.worldObj.getEntitiesWithinAABB(this.entityToInclude, AxisAlignedBB.getBoundingBox(this.tileEntity.xCoord - this.radius, this.tileEntity.yCoord - this.radius, this.tileEntity.zCoord - this.radius, this.tileEntity.xCoord + this.radius, this.tileEntity.yCoord + this.radius, this.tileEntity.zCoord + this.radius)).get(0);
+		this.foundEntity = (Entity) this.tileEntity.worldObj.getEntitiesWithinAABB(this.entityToInclude, AxisAlignedBB.getBoundingBox(this.tileEntity.xCoord - this.radius, this.tileEntity.yCoord - this.radius, this.tileEntity.zCoord - this.radius, this.tileEntity.xCoord + this.radius, this.tileEntity.yCoord + this.radius, this.tileEntity.zCoord + this.radius)).get(0);
 	}
 
 	@Override
@@ -55,12 +53,5 @@ public class TaskArmSearch extends Task
 		 */
 
 		return true;
-	}
-
-	@Override
-	public void setTileEntity(TileEntity tileEntity)
-	{
-		this.tileEntity = (TileEntityCraftingArm) tileEntity;
-		this.worldObj = this.tileEntity.worldObj;
 	}
 }
