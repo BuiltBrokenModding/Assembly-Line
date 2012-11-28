@@ -52,7 +52,7 @@ public class AssemblyLine
 
 	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "UniversalElectricity/AssemblyLine.cfg"));
 
-	public static final int BLOCK_ID_PREFIX = 3003;
+	public static final int BLOCK_ID_PREFIX = 3020;
 	public static final Block blockConveyorBelt = new BlockConveyorBelt(UEConfig.getBlockConfigID(CONFIGURATION, "Conveyor Belt", BLOCK_ID_PREFIX));
 	public static final Block blockInteraction = new BlockMulti(UEConfig.getBlockConfigID(CONFIGURATION, "Machine", BLOCK_ID_PREFIX + 1));
 	public static final Block blockArchitectTable = new BlockArchitectTable(UEConfig.getBlockConfigID(CONFIGURATION, "Architect's Table", BLOCK_ID_PREFIX + 2));
@@ -60,7 +60,7 @@ public class AssemblyLine
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		UniversalElectricity.register(this, 1, 1, 1, false);
+		UniversalElectricity.register(this, 1, 1, 3, false);
 		instance = this;
 		NetworkRegistry.instance().registerGuiHandler(this, this.proxy);
 		GameRegistry.registerBlock(blockConveyorBelt);

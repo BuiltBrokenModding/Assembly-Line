@@ -83,6 +83,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 		}
 
 		this.powerTransferRange = rr - 1;
+		
 		return false;
 	}
 
@@ -110,7 +111,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 
 			if (!(worldObj.getBlockTileEntity(xCoord, yCoord - 1, zCoord) instanceof IConductor))
 			{
-				searchNeighborBelts();
+				this.searchNeighborBelts();
 			}
 
 			if (this.powerTransferRange > 0)
@@ -165,22 +166,22 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 						if (direction == 0)
 						{
 							entity.motionZ -= 1 * this.speed;
-							entity.posX = this.xCoord + 0.5D;
+							//entity.posX = this.xCoord + 0.5D;
 						}
 						if (direction == 1)
 						{
 							entity.motionX += 1 * this.speed;
-							entity.posZ = this.zCoord + 0.5D;
+							//entity.posZ = this.zCoord + 0.5D;
 						}
 						if (direction == 2)
 						{
 							entity.motionZ += 1 * this.speed;
-							entity.posX = this.xCoord + 0.5D;
+							//entity.posX = this.xCoord + 0.5D;
 						}
 						if (direction == 3)
 						{
 							entity.motionX -= 1 * this.speed;
-							entity.posZ = this.zCoord + 0.5D;
+							//entity.posZ = this.zCoord + 0.5D;
 						}
 					}
 				}
