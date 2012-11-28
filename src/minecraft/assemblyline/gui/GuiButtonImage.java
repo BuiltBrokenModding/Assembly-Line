@@ -9,8 +9,7 @@ import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
 
 /**
- * Copied from GSM lib and modified for this mod
- * only
+ * Copied from GSM lib and modified for this mod only
  * 
  * @author Rseifert
  * 

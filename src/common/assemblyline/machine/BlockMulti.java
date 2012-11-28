@@ -19,8 +19,7 @@ import assemblyline.render.RenderHelper;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 /**
- * A metadata block containing a bunch of machines
- * with direction.
+ * A metadata block containing a bunch of machines with direction.
  * 
  * @author Darkguardsman, Calclavia
  * 
@@ -55,8 +54,7 @@ public class BlockMulti extends BlockMachine
 		}
 
 		/**
-		 * Gets the direction based on the
-		 * metadata
+		 * Gets the direction based on the metadata
 		 * 
 		 * @return A direction value from 0 to 4.
 		 */
@@ -68,8 +66,7 @@ public class BlockMulti extends BlockMachine
 		/**
 		 * @param currentDirection
 		 *            - An integer from 0 to 4.
-		 * @return The metadata this block should
-		 *         change into.
+		 * @return The metadata this block should change into.
 		 */
 		public int getNextDirectionMeta(int currentDirection)
 		{
@@ -199,8 +196,7 @@ public class BlockMulti extends BlockMachine
 	}
 
 	/**
-	 * Returns the bounding box of the wired
-	 * rectangular prism to render.
+	 * Returns the bounding box of the wired rectangular prism to render.
 	 */
 	@Override
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World par1World, int x, int y, int z)
@@ -209,10 +205,8 @@ public class BlockMulti extends BlockMachine
 	}
 
 	/**
-	 * Returns a bounding box from the pool of
-	 * bounding boxes (this means this box can
-	 * change after the pool has been cleared to
-	 * be reused)
+	 * Returns a bounding box from the pool of bounding boxes (this means this box can change after
+	 * the pool has been cleared to be reused)
 	 */
 	@Override
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int x, int y, int z)

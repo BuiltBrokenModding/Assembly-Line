@@ -133,8 +133,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	}
 
 	/**
-	 * almost unneeded but is change for each
-	 * different belt type
+	 * almost unneeded but is change for each different belt type
 	 */
 	public void doBeltAction()
 	{
@@ -147,8 +146,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	 * @param extendLife
 	 *            - increases the items life
 	 * @param preventPickUp
-	 *            - prevent a player from picking
-	 *            the item up
+	 *            - prevent a player from picking the item up
 	 */
 	public void conveyItemsHorizontal(boolean extendLife, boolean preventPickUp)
 	{
@@ -159,6 +157,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 			for (Entity entity : entityOnTop)
 			{
 				int direction = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+
 				if (!this.entityIgnoreList.contains(entity))
 				{
 					if (!(entity instanceof EntityPlayer && ((EntityPlayer) entity).isSneaking()))
@@ -185,6 +184,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 						}
 					}
 				}
+
 				if (this.clearCount++ >= 4)
 				{
 					// clear the temp ignore

@@ -72,8 +72,7 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 		super.updateEntity();
 
 		/**
-		 * Has to update a bit faster than a
-		 * conveyer belt
+		 * Has to update a bit faster than a conveyer belt
 		 */
 		if (this.ticks % 5 == 0 && !this.isDisabled())
 		{
@@ -225,10 +224,8 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 	}
 
 	/**
-	 * Used to change any one of the boolean value
-	 * of on/off array After changing the value if
-	 * it was changed client side it will send a
-	 * packet server side with the changes
+	 * Used to change any one of the boolean value of on/off array After changing the value if it
+	 * was changed client side it will send a packet server side with the changes
 	 * 
 	 * @param i
 	 */

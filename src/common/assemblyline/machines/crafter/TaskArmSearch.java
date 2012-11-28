@@ -2,8 +2,6 @@ package assemblyline.machines.crafter;
 
 import net.minecraft.src.AxisAlignedBB;
 import net.minecraft.src.Entity;
-import net.minecraft.src.TileEntity;
-import net.minecraft.src.World;
 import assemblyline.ai.Task;
 
 /**
@@ -25,9 +23,9 @@ public class TaskArmSearch extends Task
 
 	private Entity foundEntity;
 
-	public TaskArmSearch(TileEntityCraftingArm arm,Class<? extends Entity> entityToInclude, double radius, float searchSpeed)
+	public TaskArmSearch(TileEntityCraftingArm arm, Class<? extends Entity> entityToInclude, double radius, float searchSpeed)
 	{
-	    super(arm);
+		super(arm);
 		this.entityToInclude = entityToInclude;
 		this.radius = radius;
 		this.searchSpeed = searchSpeed;
@@ -47,9 +45,7 @@ public class TaskArmSearch extends Task
 		if (this.entityToInclude == null || this.foundEntity == null) { return false; }
 
 		/**
-		 * Move the robotic arm around and emulate
-		 * an item search. Then initiate a collect
-		 * task.
+		 * Move the robotic arm around and emulate an item search. Then initiate a collect task.
 		 */
 
 		return true;

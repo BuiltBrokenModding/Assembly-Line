@@ -7,7 +7,6 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.NBTTagList;
 import net.minecraft.src.Packet250CustomPayload;
-import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.tile.TileEntityElectricityReceiver;

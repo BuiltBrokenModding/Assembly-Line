@@ -17,8 +17,7 @@ public class BlockArchitectTable extends Block
 	}
 
 	/**
-	 * Returns the block texture based on the side
-	 * being looked at. Args: side
+	 * Returns the block texture based on the side being looked at. Args: side
 	 */
 	public int getBlockTextureFromSide(int par1)
 	{
@@ -26,8 +25,7 @@ public class BlockArchitectTable extends Block
 	}
 
 	/**
-	 * Called upon block activation (right click
-	 * on the block.)
+	 * Called upon block activation (right click on the block.)
 	 */
 	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
 	{

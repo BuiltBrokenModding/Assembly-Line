@@ -6,8 +6,7 @@ import universalelectricity.core.vector.Vector3;
 public interface IManipulator
 {
 	/**
-	 * Throws the items from the manipulator into
-	 * the world
+	 * Throws the items from the manipulator into the world
 	 * 
 	 * @param outputPosition
 	 * @param items

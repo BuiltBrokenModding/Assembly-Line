@@ -7,7 +7,6 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.NBTTagList;
 import net.minecraft.src.Packet250CustomPayload;
-import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.tile.TileEntityElectricityReceiver;
@@ -25,8 +24,7 @@ public class TileEntityCraftingArm extends TileEntityElectricityReceiver impleme
 	private TaskManager taskManager = new TaskManager();
 
 	/**
-	 * Entity robotic arm to be used with this
-	 * tileEntity
+	 * Entity robotic arm to be used with this tileEntity
 	 */
 	public EntityCraftingArm EntityArm = null;
 
@@ -56,8 +54,7 @@ public class TileEntityCraftingArm extends TileEntityElectricityReceiver impleme
 	}
 
 	/**
-	 * controls the robotic arm into doing a set
-	 * task
+	 * controls the robotic arm into doing a set task
 	 */
 	public void doWork()
 	{
@@ -258,5 +255,4 @@ public class TileEntityCraftingArm extends TileEntityElectricityReceiver impleme
 		nbt.setTag("Items", var2);
 	}
 
-    
 }

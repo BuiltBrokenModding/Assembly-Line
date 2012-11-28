@@ -46,8 +46,7 @@ public class BlockCrafter extends BlockMachine
 		}
 
 		/**
-		 * Gets the direction based on the
-		 * metadata
+		 * Gets the direction based on the metadata
 		 * 
 		 * @return A direction value from 0 to 4.
 		 */
@@ -59,8 +58,7 @@ public class BlockCrafter extends BlockMachine
 		/**
 		 * @param currentDirection
 		 *            - An integer from 0 to 4.
-		 * @return The metadata this block should
-		 *         change into.
+		 * @return The metadata this block should change into.
 		 */
 		public int getNextDirectionMeta(int currentDirection)
 		{

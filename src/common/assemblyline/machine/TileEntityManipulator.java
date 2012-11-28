@@ -40,8 +40,7 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 	public double wattsReceived = 0;
 
 	/**
-	 * Is the manipulator wrenched to turn into
-	 * output mode?
+	 * Is the manipulator wrenched to turn into output mode?
 	 */
 	public boolean isOutput = false;
 
@@ -65,9 +64,7 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 				if (!this.isOutput)
 				{
 					/**
-					 * Find items going into the
-					 * manipulator and input them
-					 * into an inventory behind
+					 * Find items going into the manipulator and input them into an inventory behind
 					 * this manipulator.
 					 */
 					Vector3 inputPosition = Vector3.get(this);
@@ -87,11 +84,8 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 					for (EntityItem entity : itemsInBound)
 					{
 						/**
-						 * Try top first, then
-						 * bottom, then the sides
-						 * to see if it is
-						 * possible to insert the
-						 * item into a inventory.
+						 * Try top first, then bottom, then the sides to see if it is possible to
+						 * insert the item into a inventory.
 						 */
 						ItemStack remainingStack = this.tryPlaceInPosition(entity.item.copy(), outputUp, ForgeDirection.DOWN);
 
@@ -116,10 +110,7 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 				else
 				{
 					/**
-					 * Finds the connected
-					 * inventory and outputs the
-					 * items upon a redstone
-					 * pulse.
+					 * Finds the connected inventory and outputs the items upon a redstone pulse.
 					 */
 					if (this.isPowered)
 					{
@@ -165,8 +156,7 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 	}
 
 	/**
-	 * Throws the items from the manipulator into
-	 * the world.
+	 * Throws the items from the manipulator into the world.
 	 * 
 	 * @param outputPosition
 	 * @param items
@@ -181,11 +171,9 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 	}
 
 	/**
-	 * Tries to place an itemStack in a specific
-	 * position if it is an inventory.
+	 * Tries to place an itemStack in a specific position if it is an inventory.
 	 * 
-	 * @return The ItemStack remained after place
-	 *         attempt
+	 * @return The ItemStack remained after place attempt
 	 */
 	private ItemStack tryPlaceInPosition(ItemStack itemStack, Vector3 position, ForgeDirection direction)
 	{
@@ -286,8 +274,7 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 	}
 
 	/**
-	 * Tries to take a item from a inventory at a
-	 * specific position.
+	 * Tries to take a item from a inventory at a specific position.
 	 * 
 	 * @param position
 	 * @return

@@ -20,8 +20,7 @@ public class TileEntityElevatorBelt extends TileEntityConveyorBelt
 	}
 
 	/**
-	 * Used to detect belt bellow for rendering
-	 * and to prevent items from falling
+	 * Used to detect belt bellow for rendering and to prevent items from falling
 	 * 
 	 * @return
 	 */
@@ -33,8 +32,7 @@ public class TileEntityElevatorBelt extends TileEntityConveyorBelt
 	}
 
 	/**
-	 * Same as conveyItemHorizontal but will pull,
-	 * or lower the items up/down the belt like an
+	 * Same as conveyItemHorizontal but will pull, or lower the items up/down the belt like an
 	 * elevator
 	 * 
 	 * @param extendLife

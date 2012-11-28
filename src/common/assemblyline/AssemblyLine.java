@@ -73,7 +73,7 @@ public class AssemblyLine
 	public void load(FMLInitializationEvent evt)
 	{
 		proxy.init();
-		
+
 		GameRegistry.registerTileEntity(TileEntityConveyorBelt.class, "ConveyorBelt");
 		GameRegistry.registerTileEntity(TileEntityRejector.class, "Sorter");
 		GameRegistry.registerTileEntity(TileEntityManipulator.class, "Manipulator");
@@ -98,7 +98,7 @@ public class AssemblyLine
 		// Retriever
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockInteraction, 1, MachineType.MANIPULATOR.metadata), new Object[]
 		{ Block.dispenser, "basicCircuit" }));
-		
+
 		UETab.setItemStack(new ItemStack(blockConveyorBelt));
 	}
 }

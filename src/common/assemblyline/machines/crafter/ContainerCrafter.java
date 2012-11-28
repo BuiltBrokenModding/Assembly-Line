@@ -8,8 +8,7 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.Slot;
 
 /**
- * I am planning to make the crafter not use a
- * GUI.
+ * I am planning to make the crafter not use a GUI.
  * 
  * @author Calclavia
  * 
@@ -54,9 +53,7 @@ public class ContainerCrafter extends Container
 	}
 
 	/**
-	 * Called to transfer a stack from one
-	 * inventory to the other eg. when shift
-	 * clicking.
+	 * Called to transfer a stack from one inventory to the other eg. when shift clicking.
 	 */
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par1)
