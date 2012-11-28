@@ -1,0 +1,19 @@
+[
+{
+  "modid" : "AssemblyLine",
+  "name" : "Assembly Line",
+  "version" : "0.1.3",
+  "url" : "http://calclavia.com/universalelectricity/?m=18",
+  "credits" : "",
+  "authors": [
+    "Calclavia",
+	"Darkguardsman"
+  ],
+  "description": "A mod that brings conveyor belt transporting systems to Minecraft.",
+  "logoFile" : "/al_logo.png",
+  "updateUrl" : "http://calclavia.com/universalelectricity/?m=18",
+  "parent" : "",
+  "screenshots": [
+  ]
+}
+]

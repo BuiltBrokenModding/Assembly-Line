@@ -5,5 +5,7 @@
 @ AssemblyLine_v0.0.6.6.jar
 @ AssemblyLine_v0.0.6.7.jar
 @ AssemblyLine_v0.0.6.8.jar AssemblyLine_v0.0.6.8_api.zip
-stable AssemblyLine_v0.0.6.10.jar AssemblyLine_v0.0.6.10_api.zip
+@ AssemblyLine_v0.0.6.10.jar AssemblyLine_v0.0.6.10_api.zip
+Minecraft 1.3.2
 * AssemblyLine_v0.1.2.10.jar AssemblyLine_v0.1.2.10_api.zip
+Minecraft 1.4.2

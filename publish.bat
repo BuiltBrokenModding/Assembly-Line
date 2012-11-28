@@ -1,6 +1,6 @@
 ::ASSEMBLY LINE BUILDER
 @echo off
-echo Promotion Type?
+echo Promotion Type? (Choose * for recommended, @ for stable and x for unstable)
 set /p PROMOTION=
 
 set /p MODVERSION=<modversion.txt
@@ -21,10 +21,7 @@ runtime\bin\python\python_mcp runtime\reobfuscate.py %*
 ::ZIP-UP
 cd reobf\minecraft\
 "..\..\..\7za.exe" a "..\..\builds\%FILE_NAME%" "*"
-
 cd ..\..\
-"..\7za.exe" a "builds\%FILE_NAME%" "mcmod.info"
-
 cd resources\
 "..\..\7za.exe" a "..\builds\%FILE_NAME%" "*"
 "..\..\7za.exe" a "..\builds\%BACKUP_NAME%" "*" -pdarkguardsman
