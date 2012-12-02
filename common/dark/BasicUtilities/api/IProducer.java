@@ -7,7 +7,7 @@ import net.minecraftforge.common.ForgeDirection;
  * @author DarkGuardsman
  *
  */
-public interface ILiquidProducer
+public interface IProducer
 {
 	/**
 	 * onProduceLiquid  

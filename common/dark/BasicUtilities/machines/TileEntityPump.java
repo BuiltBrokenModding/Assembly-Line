@@ -1,7 +1,5 @@
 package dark.BasicUtilities.machines;
 
-import com.google.common.io.ByteArrayDataInput;
-
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.INetworkManager;
 import net.minecraft.src.NBTTagCompound;
@@ -9,17 +7,20 @@ import net.minecraft.src.Packet;
 import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.Vector3;
-import universalelectricity.implement.IElectricityReceiver;
-import universalelectricity.prefab.TileEntityElectricityReceiver;
+import universalelectricity.core.implement.IElectricityReceiver;
+import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
+import universalelectricity.prefab.tile.TileEntityElectricityReceiver;
+
+import com.google.common.io.ByteArrayDataInput;
+
 import dark.BasicUtilities.BasicUtilitiesMain;
-import dark.BasicUtilities.api.ILiquidProducer;
+import dark.BasicUtilities.api.IProducer;
 import dark.BasicUtilities.api.Liquid;
 import dark.BasicUtilities.api.MHelper;
 
-public class TileEntityPump extends TileEntityElectricityReceiver implements ILiquidProducer, IElectricityReceiver, IPacketReceiver
+public class TileEntityPump extends TileEntityElectricityReceiver implements IProducer, IElectricityReceiver, IPacketReceiver
 {
     int dCount = 0;
     float eStored = 0;
@@ -181,10 +182,11 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements ILi
     }
 
     @Override
-    public void onReceive(TileEntity sender, double watts, double voltage, ForgeDirection side)
+    public void onReceive(Object sender, double amps, double voltage, ForgeDirection side)
     {
         if (wattRequest() > 0 && canConnect(side))
         {
+            double watts =(amps * voltage);
             float rejectedElectricity = (float) Math.max((this.eStored + watts) - this.eMax, 0.0);
             this.eStored = (float) Math.max(this.eStored + watts - rejectedElectricity, 0.0);
         }

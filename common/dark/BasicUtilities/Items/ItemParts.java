@@ -1,6 +1,8 @@
-package dark.BasicUtilities;
+package dark.BasicUtilities.Items;
 
 import java.util.List;
+
+import dark.BasicUtilities.BasicUtilitiesMain;
 
 import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.Item;

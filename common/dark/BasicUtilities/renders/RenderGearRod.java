@@ -5,6 +5,7 @@ import net.minecraft.src.TileEntitySpecialRenderer;
 
 import org.lwjgl.opengl.GL11;
 
+import dark.BasicUtilities.BasicUtilitiesMain;
 import dark.BasicUtilities.mechanical.TileEntityRod;
 
 
@@ -17,7 +18,7 @@ public class RenderGearRod extends TileEntitySpecialRenderer
 	}
 	public void renderAModelAt(TileEntityRod tileEntity, double d, double d1, double d2, float f)
 	{
-        bindTextureByName("/textures/GearRod.png");
+        bindTextureByName(BasicUtilitiesMain.textureFile+"GearRod.png");
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);

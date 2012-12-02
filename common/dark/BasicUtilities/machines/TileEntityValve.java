@@ -2,12 +2,12 @@ package dark.BasicUtilities.machines;
 
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import dark.BasicUtilities.api.ILiquidConsumer;
+import dark.BasicUtilities.api.IConsumer;
 import dark.BasicUtilities.api.Liquid;
 import dark.BasicUtilities.api.MHelper;
 import dark.BasicUtilities.pipes.TileEntityPipe;
 
-public class TileEntityValve extends TileEntity implements ILiquidConsumer {
+public class TileEntityValve extends TileEntity implements IConsumer {
 Liquid type = Liquid.DEFUALT;
 int liquidStored = 0;
 int lMax = 1;

@@ -3,11 +3,11 @@ package dark.BasicUtilities.machines;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.implement.IElectricityReceiver;
-import dark.BasicUtilities.api.ILiquidProducer;
+import universalelectricity.core.implement.IElectricityReceiver;
+import dark.BasicUtilities.api.IProducer;
 import dark.BasicUtilities.api.Liquid;
 
-public class TileEntityCondenser extends TileEntity implements ILiquidProducer, IElectricityReceiver {
+public class TileEntityCondenser extends TileEntity implements IProducer, IElectricityReceiver {
 	int tickCount = 0;
 	int waterStored = 0;
 	int energyStored = 0;
@@ -98,8 +98,8 @@ public class TileEntityCondenser extends TileEntity implements ILiquidProducer, 
 		return 120;
 	}
 	@Override
-	public void onReceive(TileEntity sender, double amps, double voltage,
-			ForgeDirection side) {
+	public void onReceive(Object sender, double amps, double voltage, ForgeDirection side)
+	{
 		// TODO Auto-generated method stub
 		
 	}

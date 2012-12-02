@@ -7,7 +7,7 @@ import net.minecraftforge.common.ForgeDirection;
  *
  */
 
-public interface ILiquidConsumer
+public interface IConsumer
 {
 	/**
 	 * onRecieveLiquid

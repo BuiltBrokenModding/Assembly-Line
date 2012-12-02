@@ -7,19 +7,19 @@ import net.minecraft.src.Packet;
 import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.Vector3;
+import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
 import dark.BasicUtilities.BasicUtilitiesMain;
-import dark.BasicUtilities.api.ILiquidConsumer;
-import dark.BasicUtilities.api.ILiquidProducer;
+import dark.BasicUtilities.api.IConsumer;
+import dark.BasicUtilities.api.IProducer;
 import dark.BasicUtilities.api.Liquid;
 import dark.BasicUtilities.api.MHelper;
 
-public class TileEntityPipe extends TileEntity implements ILiquidConsumer, IPacketReceiver
+public class TileEntityPipe extends TileEntity implements IConsumer, IPacketReceiver
 {
     protected Liquid type = Liquid.DEFUALT;
 
@@ -64,26 +64,26 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer, IPack
 
                     ForgeDirection dir = ForgeDirection.getOrientation(i);
 
-                    if (connectedBlocks[i] instanceof ILiquidProducer)
+                    if (connectedBlocks[i] instanceof IProducer)
                     {
-                        int vol = ((ILiquidProducer) connectedBlocks[i]).onProduceLiquid(this.type, this.capacity - this.liquidStored, dir);
+                        int vol = ((IProducer) connectedBlocks[i]).onProduceLiquid(this.type, this.capacity - this.liquidStored, dir);
                         this.liquidStored = Math.min(this.liquidStored + vol,
                                 this.capacity);
                     }
-                    if (connectedBlocks[i] instanceof ILiquidConsumer && this.liquidStored > 0 && this.presure > 0)
+                    if (connectedBlocks[i] instanceof IConsumer && this.liquidStored > 0 && this.presure > 0)
                     {
                         if (connectedBlocks[i] instanceof TileEntityPipe)
                         {
                             if (((TileEntityPipe) connectedBlocks[i]).presure < this.presure)
                             {
                                 this.liquidStored--;
-                                int vol = ((ILiquidConsumer) connectedBlocks[i]).onReceiveLiquid(this.type, Math.max(this.liquidStored, 1), dir);
+                                int vol = ((IConsumer) connectedBlocks[i]).onReceiveLiquid(this.type, Math.max(this.liquidStored, 1), dir);
                                 this.liquidStored += vol;
                             }
                         }
                         else
                         {
-                            this.liquidStored = ((ILiquidConsumer) connectedBlocks[i]).onReceiveLiquid(this.type, this.liquidStored, dir);
+                            this.liquidStored = ((IConsumer) connectedBlocks[i]).onReceiveLiquid(this.type, this.liquidStored, dir);
                         }
                     }
                 }
@@ -107,7 +107,7 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer, IPack
         {
             ForgeDirection dir = ForgeDirection.getOrientation(i);
 
-            if (connectedBlocks[i] instanceof ILiquidConsumer && ((ILiquidConsumer) connectedBlocks[i]).canRecieveLiquid(this.type, dir))
+            if (connectedBlocks[i] instanceof IConsumer && ((IConsumer) connectedBlocks[i]).canRecieveLiquid(this.type, dir))
             {
                 this.connectedUnits++;
                 if (connectedBlocks[i] instanceof TileEntityPipe)
@@ -118,12 +118,12 @@ public class TileEntityPipe extends TileEntity implements ILiquidConsumer, IPack
                     }
                 }
             }
-            else if (connectedBlocks[i] instanceof ILiquidProducer && ((ILiquidProducer) connectedBlocks[i]).canProduceLiquid(this.type, dir))
+            else if (connectedBlocks[i] instanceof IProducer && ((IProducer) connectedBlocks[i]).canProduceLiquid(this.type, dir))
             {
                 this.connectedUnits++;
-                if (((ILiquidProducer) connectedBlocks[i]).canProducePresure(this.type, dir) && ((ILiquidProducer) connectedBlocks[i]).presureOutput(this.type, dir) > highestPressure)
+                if (((IProducer) connectedBlocks[i]).canProducePresure(this.type, dir) && ((IProducer) connectedBlocks[i]).presureOutput(this.type, dir) > highestPressure)
                 {
-                    highestPressure = ((ILiquidProducer) connectedBlocks[i]).presureOutput(this.type, dir);
+                    highestPressure = ((IProducer) connectedBlocks[i]).presureOutput(this.type, dir);
                 }
             }
             else

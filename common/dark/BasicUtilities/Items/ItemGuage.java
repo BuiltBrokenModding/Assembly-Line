@@ -1,4 +1,4 @@
-package dark.BasicUtilities;
+package dark.BasicUtilities.Items;
 
 import java.util.List;
 
@@ -8,7 +8,8 @@ import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
-import dark.BasicUtilities.api.IMechanical;
+import dark.BasicUtilities.BasicUtilitiesMain;
+import dark.BasicUtilities.api.IForce;
 import dark.BasicUtilities.api.Liquid;
 import dark.BasicUtilities.pipes.TileEntityPipe;
 import dark.BasicUtilities.tanks.TileEntityLTank;
@@ -84,9 +85,9 @@ public class ItemGuage extends Item
 	                    	player.sendChatToPlayer(print);
 	                    	return true;
 	                    }
-	                    if(blockEntity instanceof IMechanical)
+	                    if(blockEntity instanceof IForce)
 	                    {
-	                    	IMechanical rod = (IMechanical) blockEntity; 
+	                    	IForce rod = (IForce) blockEntity; 
 	                    	int steam = rod.getForce();
 	                    	int pressure = rod.getAnimationPos();
 	                    	String print = "Error";

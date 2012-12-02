@@ -1,5 +1,5 @@
 package dark.BasicUtilities.api;
 
-public interface IStorageTank extends ILiquidConsumer {
+public interface IStorageTank extends IConsumer {
 
 }

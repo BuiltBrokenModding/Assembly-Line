@@ -3,9 +3,11 @@ package dark.BasicUtilities;
 import java.io.File;
 
 import net.minecraft.src.Block;
+import net.minecraft.src.CraftingManager;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import universalelectricity.core.UEConfig;
 import universalelectricity.prefab.network.PacketManager;
 import cpw.mods.fml.common.DummyModContainer;
@@ -21,13 +23,17 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
-import dark.BasicUtilities.ItemParts.basicParts;
+import dark.BasicUtilities.Items.ItemGuage;
+import dark.BasicUtilities.Items.ItemParts;
+import dark.BasicUtilities.Items.ItemParts.basicParts;
 import dark.BasicUtilities.api.Liquid;
 import dark.BasicUtilities.machines.BlockMachine;
 import dark.BasicUtilities.machines.BlockValve;
 import dark.BasicUtilities.machines.ItemMachine;
 import dark.BasicUtilities.machines.TileEntityPump;
+import dark.BasicUtilities.mechanical.BlockGenerator;
 import dark.BasicUtilities.mechanical.BlockRod;
+import dark.BasicUtilities.mechanical.TileEntityGen;
 import dark.BasicUtilities.mechanical.TileEntityRod;
 import dark.BasicUtilities.pipes.BlockPipe;
 import dark.BasicUtilities.pipes.ItemPipe;
@@ -61,23 +67,25 @@ public class BasicUtilitiesMain extends DummyModContainer
     public final static int ITEM_ID_PREFIX = 10056;
 
     public static Block pipe = new BlockPipe(UEConfig.getBlockConfigID(
-            CONFIGURATION, "block Pipe", BLOCK_ID_PREFIX)).setBlockName("pipe");
+            CONFIGURATION, "Pipe", BLOCK_ID_PREFIX)).setBlockName("pipe");
     public static Block machine = new BlockMachine(UEConfig.getBlockConfigID(
-            CONFIGURATION, "machine set", BLOCK_ID_PREFIX))
-            .setBlockName("pump");
+            CONFIGURATION, "MachineSetOne", BLOCK_ID_PREFIX))
+            .setBlockName("Pump");
     public static Block valve = new BlockValve(UEConfig.getBlockConfigID(
-            CONFIGURATION, "valve", BLOCK_ID_PREFIX + 2)).setBlockName("valve");
+            CONFIGURATION, "Valve", BLOCK_ID_PREFIX + 2)).setBlockName("valve");
     public static Block rod = new BlockRod(UEConfig.getBlockConfigID(
-            CONFIGURATION, "mechanical rod", BLOCK_ID_PREFIX + 3));
+            CONFIGURATION, "MechanicalRod", BLOCK_ID_PREFIX + 3));
+    public static Block generator = new BlockGenerator((UEConfig.getBlockConfigID(
+            CONFIGURATION, "UEGenerator", BLOCK_ID_PREFIX + 4)));
 
     public static Item parts = new ItemParts(UEConfig.getItemConfigID(
-            CONFIGURATION, "parts", ITEM_ID_PREFIX));
+            CONFIGURATION, "Parts", ITEM_ID_PREFIX));
     public static Item itemPipes = new ItemPipe(UEConfig.getItemConfigID(
-            CONFIGURATION, "item Pipe", ITEM_ID_PREFIX + 1));
+            CONFIGURATION, "PipeItem", ITEM_ID_PREFIX + 1));
     public static Item itemTank = new ItemTank(UEConfig.getItemConfigID(
-            CONFIGURATION, "item tank", ITEM_ID_PREFIX + 2));
+            CONFIGURATION, "TankItem", ITEM_ID_PREFIX + 2));
     public static Item gauge = new ItemGuage(UEConfig.getItemConfigID(
-            CONFIGURATION, "guage", ITEM_ID_PREFIX + 3));
+            CONFIGURATION, "PipeGuage", ITEM_ID_PREFIX + 3));
     // mod stuff
     @SidedProxy(clientSide = "dark.BasicUtilities.BPClientProxy", serverSide = "dark.BasicUtilities.BPCommonProxy")
     public static BPCommonProxy proxy;
@@ -91,6 +99,7 @@ public class BasicUtilitiesMain extends DummyModContainer
         proxy.preInit();
         GameRegistry.registerBlock(pipe);
         GameRegistry.registerBlock(rod);
+        GameRegistry.registerBlock(generator);
         GameRegistry.registerBlock(machine, ItemMachine.class);
 
     }
@@ -99,11 +108,12 @@ public class BasicUtilitiesMain extends DummyModContainer
     public void Init(FMLInitializationEvent event)
     {
         proxy.Init();
-        // register
-        GameRegistry.registerTileEntity(TileEntityPipe.class, "pipe");
+        // TileEntities
+        GameRegistry.registerTileEntity(TileEntityPipe.class, "Pipe");
         GameRegistry.registerTileEntity(TileEntityPump.class, "pump");
         GameRegistry.registerTileEntity(TileEntityRod.class, "rod");
         GameRegistry.registerTileEntity(TileEntityLTank.class, "ltank");
+        GameRegistry.registerTileEntity(TileEntityGen.class, "WattGenerator");
         // Pipe Names
         for (int i = 0; i < Liquid.values().length; i++)
         {
@@ -135,6 +145,15 @@ public class BasicUtilitiesMain extends DummyModContainer
     public void PostInit(FMLPostInitializationEvent event)
     {
         proxy.postInit();
+        CraftingManager
+                .getInstance()
+                .getRecipeList()
+                .add(new ShapedOreRecipe(new ItemStack(this.generator, 1),
+                        new Object[]
+                            { "@T@", "OVO", "@T@", 'T',
+                                    new ItemStack(BasicUtilitiesMain.rod, 1), '@',
+                                    "plateSteel", 'O', "basicCircuit", 'V',
+                                    "motor" }));
         GameRegistry.addRecipe(new ItemStack(this.gauge, 1, 0), new Object[]
             {
                     "TVT", " T ", 'V', new ItemStack(parts, 1, 7), 'T',

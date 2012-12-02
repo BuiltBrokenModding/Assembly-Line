@@ -6,16 +6,16 @@ import net.minecraft.src.Packet;
 import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.Vector3;
+import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
 import dark.BasicUtilities.BasicUtilitiesMain;
-import dark.BasicUtilities.api.IMechanical;
+import dark.BasicUtilities.api.IForce;
 
-public class TileEntityRod extends TileEntity implements IPacketReceiver,IMechanical {
+public class TileEntityRod extends TileEntity implements IPacketReceiver,IForce {
 
 	public int pos = 0;
 	private int force = 0;
@@ -51,23 +51,23 @@ public class TileEntityRod extends TileEntity implements IPacketReceiver,IMechan
 			}
 			if(bb instanceof TileEntityRod)
 			{
-				this.pos = ((IMechanical)bb).getAnimationPos();
+				this.pos = ((IForce)bb).getAnimationPos();
 			}
 			if(!worldObj.isRemote)
 			{	
 				
-				if(ff instanceof IMechanical)
+				if(ff instanceof IForce)
 				{
-					if(((IMechanical) ff).canInputSide(backDir))
+					if(((IForce) ff).canInputSide(backDir))
 					{
-						((IMechanical) ff).applyForce(aForce);
+						((IForce) ff).applyForce(aForce);
 					}
 				}
-				if(bb instanceof IMechanical)
+				if(bb instanceof IForce)
 				{
-					if(((IMechanical) bb).canOutputSide(frontDir))
+					if(((IForce) bb).canOutputSide(frontDir))
 					{
-						this.force = ((IMechanical) bb).getForce();
+						this.force = ((IForce) bb).getForce();
 					}
 				}else
 				{

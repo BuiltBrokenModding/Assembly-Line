@@ -2,14 +2,13 @@ package dark.BasicUtilities.pipes;
 
 import java.util.Random;
 
-import dark.BasicUtilities.BasicUtilitiesMain;
-
 import net.minecraft.src.BlockContainer;
 import net.minecraft.src.EntityItem;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.Material;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
+import dark.BasicUtilities.BasicUtilitiesMain;
 
 public class BlockPipe extends BlockContainer 
 {	
@@ -44,7 +43,7 @@ public class BlockPipe extends BlockContainer
 	public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)
     {
 		int var5 = par1World.getBlockId(par2, par3, par4);
-        return var5 == 0 || blocksList[var5].blockMaterial.isGroundCover();
+        return var5 == 0 || blocksList[var5].blockMaterial.isReplaceable();
     }
 	@Override
 	public boolean canPlaceBlockOnSide(World par1World, int par2, int par3, int par4, int par5)

@@ -14,7 +14,7 @@ import dark.BasicUtilities.api.Liquid;
 
 public class ItemTank extends Item
 {
-	int index = 64;//64 + 2 rows alloted to pipes
+    int index = 64;// 64 + 2 rows alloted to pipes
     private int spawnID;
 
     public ItemTank(int id)
@@ -26,39 +26,49 @@ public class ItemTank extends Item
         this.setItemName("tank");
         this.setCreativeTab(CreativeTabs.tabRedstone);
     }
+
     @Override
     public int getIconFromDamage(int par1)
     {
-    	
-    	return par1+index;
+
+        return par1 + index;
     }
+
     @Override
     public String getItemNameIS(ItemStack itemstack)
     {
-        return itemstack.getItemDamage() < Liquid.values().length ? Liquid.getLiquid(itemstack.getItemDamage()).lName+" Tank" :  "unknown";
+        return itemstack.getItemDamage() < Liquid.values().length ? Liquid.getLiquid(itemstack.getItemDamage()).lName + " Tank" : "unknown";
     }
+
     @Override
     public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {
-    	for(int i = 0; i < Liquid.values().length; i++)
+        for (int i = 0; i < Liquid.values().length; i++)
         {
-    		par3List.add(new ItemStack(this, 1, i));
+            if (Liquid.getLiquid(i).showMenu)
+            {
+                par3List.add(new ItemStack(this, 1, i));
+            }
         }
     }
-    public String getTextureFile() {
-		return BasicUtilitiesMain.ITEM_PNG;
-	}
+
+    public String getTextureFile()
+    {
+        return BasicUtilitiesMain.ITEM_PNG;
+    }
+
     @Override
-	 public String getItemName()
+    public String getItemName()
     {
         return "Pipes";
     }
+
     @Override
     public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
     {
-    	int blockID = par3World.getBlockId(par4, par5, par6);    	
-    	spawnID = BasicUtilitiesMain.machine.blockID;
-    	if (blockID == Block.snow.blockID)
+        int blockID = par3World.getBlockId(par4, par5, par6);
+        spawnID = BasicUtilitiesMain.machine.blockID;
+        if (blockID == Block.snow.blockID)
         {
             par7 = 1;
         }
@@ -94,24 +104,24 @@ public class ItemTank extends Item
                 ++par4;
             }
         }
-    	
-        if (BasicUtilitiesMain.pipe.canPlaceBlockAt(par3World,par4,par5,par6))
+
+        if (BasicUtilitiesMain.pipe.canPlaceBlockAt(par3World, par4, par5, par6))
         {
             Block var9 = Block.blocksList[this.spawnID];
             par3World.editingBlocks = true;
-            if (par3World.setBlockAndMetadataWithNotify(par4, par5, par6, var9.blockID,5))
+            if (par3World.setBlockAndMetadataWithNotify(par4, par5, par6, var9.blockID, 5))
             {
                 if (par3World.getBlockId(par4, par5, par6) == var9.blockID)
                 {
-                	
+
                     Block.blocksList[this.spawnID].onBlockAdded(par3World, par4, par5, par6);
                     Block.blocksList[this.spawnID].onBlockPlacedBy(par3World, par4, par5, par6, par2EntityPlayer);
                     TileEntity blockEntity = par3World.getBlockTileEntity(par4, par5, par6);
-                    if(blockEntity instanceof TileEntityLTank)
+                    if (blockEntity instanceof TileEntityLTank)
                     {
-                    	TileEntityLTank pipeEntity = (TileEntityLTank) blockEntity;                    	
-                    	Liquid dm = Liquid.getLiquid(par1ItemStack.getItemDamage()); 	
-                    	pipeEntity.setType(dm);
+                        TileEntityLTank pipeEntity = (TileEntityLTank) blockEntity;
+                        Liquid dm = Liquid.getLiquid(par1ItemStack.getItemDamage());
+                        pipeEntity.setType(dm);
                     }
                 }
 
@@ -122,7 +132,6 @@ public class ItemTank extends Item
         }
         par3World.editingBlocks = false;
         return false;
-    }	
-	
+    }
 
 }
