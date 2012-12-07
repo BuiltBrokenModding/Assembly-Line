@@ -22,22 +22,24 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import dark.BasicUtilities.BasicUtilitiesMain;
+import dark.SteamPower.boiler.BlockBoiler;
+import dark.SteamPower.firebox.BlockHeaters;
 import dark.SteamPower.steamengine.BlockSteamPiston;
 import dark.SteamPower.steamengine.ItemSteamPiston;
-import dark.SteamPower.steamengine.TileEntitytopGen;
 
-@Mod(modid = "SteamPower", name = "Steam Power", version = "1.9", dependencies = "after:basicPipes")
+@Mod(modid = "SteamPower", name = "Steam Power", version = "0.2.3", dependencies = "after:basicPipes")
 @NetworkMod(channels =
-    { "SPpack" }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
+    { SteamPowerMain.channel }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
 public class SteamPowerMain
 {
-    static Configuration config = new Configuration((new File(cpw.mods.fml.common.Loader.instance().getConfigDir(), "/UniversalElectricity/SteamPower.cfg")));
+    static Configuration config = new Configuration((new File(cpw.mods.fml.common.Loader.instance().getConfigDir(), "SteamPower.cfg")));
     public static final String channel = "SPpack";
     public static String textureFile = "/dark/SteamPower/textures/";
     // Blocks and items
-    public static Block machine = new SteamMachines(Integer.parseInt(config.get(Configuration.CATEGORY_BLOCK, "MachinesID", 3030).value)).setBlockName("machine");
-    public static Block engine = new BlockSteamPiston(Integer.parseInt(config.get(Configuration.CATEGORY_BLOCK, "SteamEngineID", 3031).value)).setBlockName("SteamEngien");
-    public static Item itemEngine = new ItemSteamPiston(Integer.parseInt(config.get(Configuration.CATEGORY_ITEM, "EngineItem", 30308).value)).setItemName("SteamEngine");
+    public static Block heaters = new BlockHeaters(Integer.parseInt(config.get(Configuration.CATEGORY_BLOCK, "Burners", 3030).value)).setBlockName("machine");
+    public static Block piston = new BlockSteamPiston(Integer.parseInt(config.get(Configuration.CATEGORY_BLOCK, "SteamPiston", 3031).value)).setBlockName("SteamEngien");
+    public static Block boilers = new BlockBoiler(Integer.parseInt(config.get(Configuration.CATEGORY_BLOCK, "Boilers", 3032).value)).setBlockName("machine");
+    public static Item itemEngine = new ItemSteamPiston(Integer.parseInt(config.get(Configuration.CATEGORY_ITEM, "SteamPistonItem", 30308).value)).setItemName("SteamEngine");
 
     public static SteamPowerMain instance;
 
@@ -53,20 +55,26 @@ public class SteamPowerMain
     {
         instance = this;
         NetworkRegistry.instance().registerGuiHandler(this, this.proxy);
+
         proxy.preInit();
-        GameRegistry.registerBlock(machine);
-        GameRegistry.registerBlock(engine);
+
+        GameRegistry.registerBlock(heaters);
+        GameRegistry.registerBlock(piston);
+        GameRegistry.registerBlock(boilers);
     }
 
     @Init
     public void load(FMLInitializationEvent evt)
     {
         proxy.init();
-        GameRegistry.registerTileEntity(TileEntitytopGen.class, "gentop");
-        // Names...............
-        LanguageRegistry.addName((new ItemStack(machine, 1, 4)), "Boiler");
-        LanguageRegistry.addName((new ItemStack(machine, 1, 0)), "FireBox");
-        LanguageRegistry.addName((new ItemStack(itemEngine, 1, 0)), "SteamPiston");
+
+        // Burner Names
+
+        LanguageRegistry.addName((new ItemStack(heaters, 1, 0)), BlockHeaters.Burners.values()[0].name);
+        // Boiler Names
+        LanguageRegistry.addName((new ItemStack(boilers, 1, 0)), BlockBoiler.Boilers.values()[0].name);
+        // Steam Piston Name
+        LanguageRegistry.addName((new ItemStack(itemEngine, 1, 0)), "Steam Piston");
 
     }
 
@@ -74,28 +82,22 @@ public class SteamPowerMain
     public void postInit(FMLPostInitializationEvent event)
     {
         proxy.postInit();
-        try
-        {
-            // Boiler
-            CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(machine, 1, 4), new Object[]
-                { "TT", "VV", "TT", 'T', new ItemStack(BasicUtilitiesMain.parts, 1, 6), 'V', new ItemStack(BasicUtilitiesMain.parts, 1, 7) }));
-            // Furnace
-            CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(machine, 1, 0), new Object[]
-                { "@", "F", 'F', Block.stoneOvenIdle, '@', "plateSteel" }));
-            // SteamPiston
-            CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(itemEngine, 1, 0), new Object[]
-                { "GGG", "VPV", "@T@",
-                        'T', new ItemStack(BasicUtilitiesMain.parts, 1, 1),
-                        'G', BasicUtilitiesMain.rod, '@', "plateSteel",
-                        'P', Block.pistonBase,
-                        'V', new ItemStack(BasicUtilitiesMain.parts, 1, 7),
-                        'M', "motor" }));
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            System.out.print("UE based recipes not loaded");
-        }
+
+        // Boiler basic
+        CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(boilers, 1, 0), new Object[]
+            { "TT", "VV", "TT", 'T', new ItemStack(BasicUtilitiesMain.parts, 1, 6), 'V', new ItemStack(BasicUtilitiesMain.parts, 1, 7) }));
+        // Burner Coal
+        CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(heaters, 1, 0), new Object[]
+            { "@", "F", 'F', Block.stoneOvenIdle, '@', "plateSteel" }));
+        // SteamPiston
+        CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(itemEngine, 1, 0), new Object[]
+            { "GGG", "VPV", "@T@",
+                    'T', new ItemStack(BasicUtilitiesMain.parts, 1, 1),
+                    'G', BasicUtilitiesMain.rod, '@', "plateSteel",
+                    'P', Block.pistonBase,
+                    'V', new ItemStack(BasicUtilitiesMain.parts, 1, 7),
+                    'M', "motor" }));
+
     }
 
 }

@@ -97,7 +97,7 @@ public class BlockSteamPiston extends universalelectricity.prefab.BlockMachine
     public TileEntity createNewTileEntity(World world, int metadata)
     {
         if (metadata >= 0 && metadata < 4) { return new TileEntitySteamPiston(); }
-        if (metadata == 14) { return new TileEntitytopGen(); }
+        if (metadata == 14) {}
         return null;
     }
 

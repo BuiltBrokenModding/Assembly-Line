@@ -30,7 +30,6 @@ public class TileEntityFireBox extends TileEntityMachine implements IPacketRecei
         { null, null, null, null, null, null };
     private int connectedUnits = 0;
     public static int maxGenerateRate = 250;
-    // Current generation rate based on hull heat. In TICKS.
     public int generateRate = 0;
     int count = 0;
     public int itemCookTime = 0;
@@ -243,14 +242,14 @@ public class TileEntityFireBox extends TileEntityMachine implements IPacketRecei
     @Override
     public int onProduceLiquid(Liquid type, int maxVol, ForgeDirection side)
     {
-        if(type == Liquid.HEAT){return Math.min(this.generateRate,maxVol);}
+        if (type == Liquid.HEAT) { return Math.min(this.generateRate, maxVol); }
         return 0;
     }
 
     @Override
     public boolean canProduceLiquid(Liquid type, ForgeDirection side)
     {
-        if(type == Liquid.HEAT){return true;}
+        if (type == Liquid.HEAT) { return true; }
         return false;
     }
 

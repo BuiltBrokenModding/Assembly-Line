@@ -22,7 +22,7 @@ public class ItemRenderHelperS implements ISimpleBlockRenderingHandler {
 	 private ModelFurnace modelFurnace = new ModelFurnace();
 	 @Override
 	 public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer) {
-		 if(block.blockID == SteamPowerMain.machine.blockID && metadata == 4)
+		 if(block.blockID == SteamPowerMain.heaters.blockID && metadata == 4)
 		 {
 			 	GL11.glPushMatrix();
 				GL11.glTranslatef((float) 0.0F, (float)1F, (float)0.0F);
@@ -31,7 +31,7 @@ public class ItemRenderHelperS implements ISimpleBlockRenderingHandler {
 				modelTank.generalRender(0.0625F);
 				GL11.glPopMatrix();
 		 }
-		 if(block.blockID == SteamPowerMain.machine.blockID && metadata >= 0 && metadata <= 3)
+		 if(block.blockID == SteamPowerMain.heaters.blockID && metadata >= 0 && metadata <= 3)
 		 {
 			 	GL11.glPushMatrix();
 				GL11.glTranslatef((float) 0.0F, (float)1F, (float)0.0F);

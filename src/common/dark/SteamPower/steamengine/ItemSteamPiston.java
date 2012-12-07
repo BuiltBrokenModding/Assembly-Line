@@ -41,7 +41,7 @@ public class ItemSteamPiston extends Item {
 	        else
 	        {
 	            ++y;
-	            Block piston = SteamPowerMain.engine;
+	            Block piston = SteamPowerMain.piston;
 
 	            if (player.canPlayerEdit(x, y, z, par7, stak) && player.canPlayerEdit(x, y + 1, z, par7, stak))
 	            {

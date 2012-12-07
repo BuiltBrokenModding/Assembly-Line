@@ -1,27 +1,48 @@
-package dark.SteamPower;
+package dark.SteamPower.boiler;
 
-import java.util.Random;
+import java.util.List;
 
 import net.minecraft.src.CreativeTabs;
-import net.minecraft.src.EntityItem;
 import net.minecraft.src.EntityLiving;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.Material;
 import net.minecraft.src.MathHelper;
-import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
+import universalelectricity.prefab.BlockMachine;
+import dark.Library.Util.MetaGroupingHelper;
 import dark.Library.prefab.TileEntityMachine;
-import dark.SteamPower.boiler.TileEntityBoiler;
-import dark.SteamPower.firebox.TileEntityFireBox;
+import dark.SteamPower.ItemRenderHelperS;
 
-public class SteamMachines extends universalelectricity.prefab.BlockMachine
+public class BlockBoiler extends BlockMachine
 {
 
-    public SteamMachines(int par1)
+    /**
+     * Quick enum to help sort out meta data info
+     */
+    public enum Boilers
     {
-        super("machine", par1, Material.iron);
+        Basic("Boiler", TileEntityBoiler.class, -1),
+        e("", null, -1),
+        ee("", null, -1),
+        eee("", null, -1);
+
+        public String name;
+        public Class<? extends TileEntity> ent;
+        public int gui;
+
+        private Boilers(String name, Class<? extends TileEntity> tileEntity, int gui)
+        {
+            this.name = name;
+            this.gui = gui;
+            this.ent = tileEntity;
+        }
+    }
+
+    public BlockBoiler(int par1)
+    {
+        super("Boilers", par1, Material.iron);
         this.setRequiresSelfNotify();
         this.setCreativeTab(CreativeTabs.tabBlock);
         this.setHardness(1f);
@@ -31,7 +52,7 @@ public class SteamMachines extends universalelectricity.prefab.BlockMachine
     @Override
     public int damageDropped(int metadata)
     {
-        return metadata;
+        return MetaGroupingHelper.getGroupStartMeta(MetaGroupingHelper.getGrouping(metadata));
     }
 
     /**
@@ -41,23 +62,21 @@ public class SteamMachines extends universalelectricity.prefab.BlockMachine
     @Override
     public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player)
     {
-        TileEntity blockEntity = (TileEntity) world.getBlockTileEntity(x, y, z);
-        if (!world.isRemote && !player.isSneaking() && blockEntity instanceof TileEntityFireBox)
-        {
-            TileEntity var6 = (TileEntityFireBox) world.getBlockTileEntity(x, y, z);
-            player.openGui(SteamPowerMain.instance, 0, world, x, y, z);
-            return true;
-        }
-
         return false;
     }
 
     @Override
     public TileEntity createNewTileEntity(World var1, int meta)
     {
-        if (meta < 4) { return new TileEntityFireBox();}
-        if (meta == 4){return new TileEntityBoiler();}
-        return null;
+        try
+        {
+            return Boilers.values()[MetaGroupingHelper.getGrouping(meta)].ent.newInstance();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
@@ -69,12 +88,9 @@ public class SteamMachines extends universalelectricity.prefab.BlockMachine
         int angle = MathHelper.floor_double((user.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
         int metadata = world.getBlockMetadata(x, y, z);
         TileEntityMachine ent = (TileEntityMachine) world.getBlockTileEntity(x, y, z);
-        
-        if(ent instanceof TileEntityFireBox)
-        {
-           world.setBlockMetadata(x, y, z, angle); 
-        }
+        // world.setBlockMetadata(x, y, z, angle);
     }
+
     @Override
     public boolean isOpaqueCube()
     {
@@ -93,4 +109,9 @@ public class SteamMachines extends universalelectricity.prefab.BlockMachine
         return ItemRenderHelperS.renderID;
     }
 
+    @Override
+    public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
+    {
+        par3List.add(new ItemStack(par1, 1, 0));
+    }
 }
