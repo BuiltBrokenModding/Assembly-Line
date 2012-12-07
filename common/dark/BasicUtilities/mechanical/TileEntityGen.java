@@ -14,10 +14,11 @@ import com.google.common.io.ByteArrayDataInput;
 
 import dark.BasicUtilities.BasicUtilitiesMain;
 import dark.BasicUtilities.api.IForce;
-import dark.Library.Util.MetaData;
+import dark.BasicUtilities.api.IReadOut;
+import dark.Library.Util.MetaGroupingHelper;
 import dark.Library.prefab.TileEntityMachine;
 
-public class TileEntityGen extends TileEntityMachine implements IPacketReceiver, IForce, IElectricityProducer
+public class TileEntityGen extends TileEntityMachine implements IPacketReceiver, IForce, IElectricityProducer,IReadOut
 {
     ForgeDirection facing = ForgeDirection.DOWN;
 
@@ -42,7 +43,7 @@ public class TileEntityGen extends TileEntityMachine implements IPacketReceiver,
         this.genAmmount = force / this.getVoltage();
         int wireCount = 0;
 
-        facing = ForgeDirection.getOrientation(MetaData.getMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord))).getOpposite();
+        facing = ForgeDirection.getOrientation(MetaGroupingHelper.getMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord))).getOpposite();
 
         if (!this.isDisabled())
         {
@@ -222,6 +223,12 @@ public class TileEntityGen extends TileEntityMachine implements IPacketReceiver,
     public int getSizeInventory()
     {
         return 0;
+    }
+
+    @Override
+    public String getMeterReading(EntityPlayer user, ForgeDirection side)
+    {
+        return this.force+"N Input "+this.genAmmount+"W output";
     }
 
 }

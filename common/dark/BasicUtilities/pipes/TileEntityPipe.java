@@ -16,10 +16,11 @@ import com.google.common.io.ByteArrayDataInput;
 import dark.BasicUtilities.BasicUtilitiesMain;
 import dark.BasicUtilities.api.IConsumer;
 import dark.BasicUtilities.api.IProducer;
+import dark.BasicUtilities.api.IReadOut;
 import dark.BasicUtilities.api.Liquid;
 import dark.BasicUtilities.api.MHelper;
 
-public class TileEntityPipe extends TileEntity implements IConsumer, IPacketReceiver
+public class TileEntityPipe extends TileEntity implements IConsumer, IPacketReceiver,IReadOut
 {
     protected Liquid type = Liquid.DEFUALT;
 
@@ -224,5 +225,11 @@ public class TileEntityPipe extends TileEntity implements IConsumer, IPacketRece
         super.writeToNBT(par1NBTTagCompound);
         par1NBTTagCompound.setInteger("liquid", this.liquidStored);
         par1NBTTagCompound.setInteger("type", this.type.ordinal());
+    }
+
+    @Override
+    public String getMeterReading(EntityPlayer user, ForgeDirection side)
+    {
+        return this.liquidStored+" "+this.type.name()+" @ "+this.presure+"PSI";
     }
 }

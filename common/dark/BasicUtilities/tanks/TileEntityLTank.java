@@ -15,11 +15,12 @@ import com.google.common.io.ByteArrayDataInput;
 
 import dark.BasicUtilities.BasicUtilitiesMain;
 import dark.BasicUtilities.api.IProducer;
+import dark.BasicUtilities.api.IReadOut;
 import dark.BasicUtilities.api.IStorageTank;
 import dark.BasicUtilities.api.Liquid;
 import dark.BasicUtilities.api.MHelper;
 
-public class TileEntityLTank extends TileEntity implements IStorageTank, IProducer, IPacketReceiver
+public class TileEntityLTank extends TileEntity implements IStorageTank, IProducer, IPacketReceiver,IReadOut
 {
     public TileEntity[] cc =
         { null, null, null, null, null, null };
@@ -195,5 +196,10 @@ public class TileEntityLTank extends TileEntity implements IStorageTank, IProduc
     {
         this.type = dm;
 
+    }
+    @Override
+    public String getMeterReading(EntityPlayer user, ForgeDirection side)
+    {
+        return this.LStored+" "+"/"+this.LMax+" "+this.type.name()+" Stored";
     }
 }
