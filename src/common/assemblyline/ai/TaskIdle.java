@@ -1,6 +1,6 @@
 package assemblyline.ai;
 
-import assemblyline.machines.crafter.TileEntityCraftingArm;
+import assemblyline.machine.crafter.TileEntityCraftingArm;
 
 public class TaskIdle extends Task
 {

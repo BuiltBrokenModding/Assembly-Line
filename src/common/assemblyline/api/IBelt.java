@@ -17,7 +17,7 @@ public interface IBelt
 
 	/**
 	 * Causes the belt to ignore the entity for a few updates help in cases where another machine
-	 * need to effect this entity without the belt doing so as well.
+	 * needs to affect this particular entity without the belt interfering
 	 * 
 	 * @param entity
 	 *            - entity being ignored
@@ -25,9 +25,9 @@ public interface IBelt
 	public void ignoreEntity(Entity entity);
 
 	/**
-	 * Used to get a list of entities above this belt
+	 * Used to get a list of entities the belt exerts an effect upon.
 	 * 
-	 * @return list of entities
+	 * @return list of entities in the belts are of effect
 	 */
-	public List<Entity> getEntityAbove();
+	public List<Entity> getAffectedEntities();
 }

@@ -13,11 +13,11 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 {
 	private ModelConveyorBelt model = new ModelConveyorBelt();
 
-	public void renderAModelAt(TileEntityConveyorBelt tileEntity, double x, double y, double z, float f)
+	private void renderAModelAt(TileEntityConveyorBelt tileEntity, double x, double y, double z, float f)
 	{
 		String flip = "";// if(tileEntity.flip){flip
 							// = "F";}
-		boolean mid = tileEntity.middleBelt();
+		boolean mid = tileEntity.getIsMiddleBelt();
 		int face = tileEntity.getBeltDirection();
 
 		GL11.glPushMatrix();
@@ -29,20 +29,20 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 		{
 			GL11.glRotatef(180f, 0f, 1f, 0f);
 		}
-		if (face == 3)
+		else if (face == 3)
 		{
 			GL11.glRotatef(0f, 0f, 1f, 0f);
 		}
-		if (face == 4)
+		else if (face == 4)
 		{
 			GL11.glRotatef(90f, 0f, 1f, 0f);
 		}
-		if (face == 5)
+		else if (face == 5)
 		{
 			GL11.glRotatef(270f, 0f, 1f, 0f);
 		}
 		int ent = tileEntity.worldObj.getBlockId(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
-		model.render(0.0625F, (float) Math.toRadians(tileEntity.wheelRotation), tileEntity.BackCap(), tileEntity.FrontCap(), false);
+		model.render(0.0625F, (float) Math.toRadians(tileEntity.wheelRotation), tileEntity.getIsBackCap(), tileEntity.getIsFrontCap(), false);
 
 		GL11.glPopMatrix();
 

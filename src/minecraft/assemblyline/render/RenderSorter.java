@@ -13,7 +13,7 @@ public class RenderSorter extends TileEntitySpecialRenderer
 {
 	private ModelSorter model = new ModelSorter();
 
-	public void renderAModelAt(TileEntityRejector tileEntity, double x, double y, double z, float f)
+	private void renderAModelAt(TileEntityRejector tileEntity, double x, double y, double z, float f)
 	{
 		boolean fire = tileEntity.firePiston;
 		int face = tileEntity.getDirection(tileEntity.worldObj.getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord));
@@ -34,11 +34,11 @@ public class RenderSorter extends TileEntitySpecialRenderer
 		{
 			GL11.glRotatef(0f, 0f, 1f, 0f);
 		}
-		if (face == 4)
+		else if (face == 4)
 		{
 			GL11.glRotatef(90f, 0f, 1f, 0f);
 		}
-		if (face == 5)
+		else if (face == 5)
 		{
 			GL11.glRotatef(270f, 0f, 1f, 0f);
 		}

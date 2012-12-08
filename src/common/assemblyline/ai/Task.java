@@ -1,6 +1,6 @@
 package assemblyline.ai;
 
-import assemblyline.machines.crafter.TileEntityCraftingArm;
+import assemblyline.machine.crafter.TileEntityCraftingArm;
 
 /**
  * An AI Task that is used by TileEntities with AI.
@@ -19,11 +19,11 @@ public abstract class Task
 	}
 
 	/**
-	 * Called when a task is being done.
+	 * Called by the TaskManager to propagate tick updates
 	 * 
 	 * @param ticks
-	 *            The amount of ticks this task has been elapsed for.
-	 * @return Return true if the task is not finished and false if it is.
+	 *            The amount of ticks this task has been running
+	 * @return false if the task is finished and can be removed, true otherwise
 	 */
 	protected boolean doTask()
 	{
@@ -33,7 +33,6 @@ public abstract class Task
 
 	public void onTaskStart()
 	{
-
 	}
 
 	public void onTaskEnd()
@@ -41,10 +40,10 @@ public abstract class Task
 	}
 
 	/**
-	 * @return The tick interval of this task. Return 0 for no ticks.
+	 * @return The tick interval of this task. 0 means it will receive no update ticks.
 	 */
 	public int getTickInterval()
 	{
-		return 1;
+		return 0;
 	}
 }
