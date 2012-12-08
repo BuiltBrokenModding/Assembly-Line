@@ -1,15 +1,16 @@
 package universalelectricity.prefab.tile;
 
+import java.util.EnumSet;
+
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.INetworkManager;
 import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.TileEntity;
-import net.minecraft.src.World;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.electricity.ElectricityManager;
+import universalelectricity.core.electricity.Electricity;
+import universalelectricity.core.electricity.ElectricityConnections;
 import universalelectricity.core.electricity.ElectricityNetwork;
 import universalelectricity.core.implement.IConductor;
-import universalelectricity.core.implement.IConnector;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 
@@ -33,6 +34,7 @@ public abstract class TileEntityConductor extends TileEntityAdvanced implements 
 
 	public TileEntityConductor()
 	{
+		ElectricityConnections.registerConnector(this, EnumSet.range(ForgeDirection.DOWN, ForgeDirection.EAST));
 		this.reset();
 	}
 
@@ -51,13 +53,7 @@ public abstract class TileEntityConductor extends TileEntityAdvanced implements 
 	@Override
 	public TileEntity[] getConnectedBlocks()
 	{
-		return connectedBlocks;
-	}
-
-	@Override
-	public void initiate()
-	{
-		this.refreshConnectedBlocks();
+		return this.connectedBlocks;
 	}
 
 	@Override
@@ -65,13 +61,13 @@ public abstract class TileEntityConductor extends TileEntityAdvanced implements 
 	{
 		if (tileEntity != null)
 		{
-			if (tileEntity instanceof IConnector)
+			if (ElectricityConnections.isConnector(tileEntity))
 			{
 				this.connectedBlocks[side.ordinal()] = tileEntity;
 
 				if (tileEntity.getClass() == this.getClass())
 				{
-					ElectricityManager.instance.mergeConnection(this.getNetwork(), ((TileEntityConductor) tileEntity).getNetwork());
+					Electricity.instance.mergeConnection(this.getNetwork(), ((TileEntityConductor) tileEntity).getNetwork());
 				}
 
 				return;
@@ -82,7 +78,7 @@ public abstract class TileEntityConductor extends TileEntityAdvanced implements 
 		{
 			if (this.connectedBlocks[side.ordinal()] instanceof IConductor)
 			{
-				ElectricityManager.instance.splitConnection(this, (IConductor) this.getConnectedBlocks()[side.ordinal()]);
+				Electricity.instance.splitConnection(this, (IConductor) this.getConnectedBlocks()[side.ordinal()]);
 			}
 		}
 
@@ -94,13 +90,13 @@ public abstract class TileEntityConductor extends TileEntityAdvanced implements 
 	{
 		if (tileEntity != null)
 		{
-			if (tileEntity instanceof IConnector)
+			if (ElectricityConnections.isConnector(tileEntity))
 			{
 				this.connectedBlocks[side.ordinal()] = tileEntity;
 
 				if (tileEntity.getClass() == this.getClass())
 				{
-					ElectricityManager.instance.mergeConnection(this.getNetwork(), ((TileEntityConductor) tileEntity).getNetwork());
+					Electricity.instance.mergeConnection(this.getNetwork(), ((TileEntityConductor) tileEntity).getNetwork());
 				}
 
 				return;
@@ -119,15 +115,10 @@ public abstract class TileEntityConductor extends TileEntityAdvanced implements 
 		}
 	}
 
-	/**
-	 * Determines if this TileEntity requires update calls.
-	 * 
-	 * @return True if you want updateEntity() to be called, false if not
-	 */
 	@Override
-	public boolean canUpdate()
+	public void initiate()
 	{
-		return false;
+		this.refreshConnectedBlocks();
 	}
 
 	@Override
@@ -135,9 +126,9 @@ public abstract class TileEntityConductor extends TileEntityAdvanced implements 
 	{
 		this.network = null;
 
-		if (ElectricityManager.instance != null)
+		if (Electricity.instance != null)
 		{
-			ElectricityManager.instance.registerConductor(this);
+			Electricity.instance.registerConductor(this);
 		}
 	}
 
@@ -151,17 +142,5 @@ public abstract class TileEntityConductor extends TileEntityAdvanced implements 
 				this.updateConnection(Vector3.getConnectorFromSide(this.worldObj, Vector3.get(this), ForgeDirection.getOrientation(i)), ForgeDirection.getOrientation(i));
 			}
 		}
-	}
-
-	@Override
-	public World getWorld()
-	{
-		return this.worldObj;
-	}
-
-	@Override
-	public boolean canConnect(ForgeDirection side)
-	{
-		return true;
 	}
 }

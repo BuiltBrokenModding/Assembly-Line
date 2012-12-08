@@ -39,6 +39,7 @@ echo open www.calclavia.com>ftpscript.txt
 echo al@calclavia.com>>ftpscript.txt
 echo VkE4laBa84R9>>ftpscript.txt
 echo binary>>ftpscript.txt
+echo put "modversion.txt">>ftpscript.txt
 echo put "builds\%FILE_NAME%">>ftpscript.txt
 echo put "builds\%API_NAME%">>ftpscript.txt
 echo put info.txt>>ftpscript.txt

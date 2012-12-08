@@ -30,8 +30,8 @@ public class UniversalElectricity
 	 * The version of the Universal Electricity API.
 	 */
 	public static final int MAJOR_VERSION = 1;
-	public static final int MINOR_VERSION = 1;
-	public static final int REVISION_VERSION = 3;
+	public static final int MINOR_VERSION = 2;
+	public static final int REVISION_VERSION = 0;
 	public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + REVISION_VERSION;
 
 	/**
@@ -43,11 +43,11 @@ public class UniversalElectricity
 	 * Conversion ratios between Buildcraft and Industrialcraft energy.
 	 */
 	// EU to Watts ratio
-	public static final float IC2_RATIO = (float) UEConfig.getConfigData(CONFIGURATION, "IndustrialCraft Conversion Ratio", 7);
+	public static int IC2_RATIO = 7;
 	// MJ to Watts ratio.
-	public static final float BC3_RATIO = (float) UEConfig.getConfigData(CONFIGURATION, "BuildCraft Conversion Ratio", 85);;
-	public static final float TO_IC2_RATIO = 1 / IC2_RATIO;
-	public static final float TO_BC_RATIO = 1 / BC3_RATIO;
+	public static int BC3_RATIO = 85;
+	public static int TO_IC2_RATIO = 1 / IC2_RATIO;
+	public static int TO_BC_RATIO = 1 / BC3_RATIO;
 
 	/**
 	 * Use this material for all your machine blocks. It can be breakable by hand.
@@ -62,19 +62,19 @@ public class UniversalElectricity
 	 */
 	public static void register(Object mod, int major, int minor, int revision, boolean strict)
 	{
-		if (MAJOR_VERSION != major) { throw new RuntimeException("Universal Electricity wrong version! Require v" + major + "." + minor + "." + revision); }
+		if (MAJOR_VERSION != major) { throw new RuntimeException("A Universal Electricity mod is way too old! Make sure it is update to v" + major + "." + minor + "." + revision); }
 
-		if (MINOR_VERSION < minor) { throw new RuntimeException("Universal Electricity minor version is too old! Require v" + major + "." + minor + "." + revision); }
+		if (MINOR_VERSION < minor) { throw new RuntimeException("A Universal Electricity mod is too old! Make sure it is update to v" + major + "." + minor + "." + revision); }
 
 		if (REVISION_VERSION < revision)
 		{
 			if (strict)
 			{
-				throw new RuntimeException("Universal Electricity is too old! Require v" + major + "." + minor + "." + revision);
+				throw new RuntimeException("A Universal Electricity mod is too old! Require v" + major + "." + minor + "." + revision);
 			}
 			else
 			{
-				FMLLog.warning("Universal Electricity is not the specified version. Odd things might happen. Recommend to have v" + major + "." + minor + "." + revision);
+				FMLLog.warning("The version of Universal Electricity detected is not the recommended version by the mod. Odd things might happen. Recommended to try v" + major + "." + minor + "." + revision);
 			}
 		}
 

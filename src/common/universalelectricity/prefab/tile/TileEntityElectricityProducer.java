@@ -12,9 +12,9 @@ import universalelectricity.core.implement.IVoltage;
  * 
  * @author Calclavia
  */
-public abstract class TileEntityElectricityReceiver extends TileEntityDisableable implements IVoltage
+public abstract class TileEntityElectricityProducer extends TileEntityDisableable implements IVoltage
 {
-	public TileEntityElectricityReceiver()
+	public TileEntityElectricityProducer()
 	{
 		super();
 		ElectricityConnections.registerConnector(this, EnumSet.range(ForgeDirection.DOWN, ForgeDirection.EAST));
@@ -25,7 +25,7 @@ public abstract class TileEntityElectricityReceiver extends TileEntityDisableabl
 	{
 		super.updateEntity();
 	}
-	
+
 	@Override
 	public double getVoltage()
 	{

@@ -7,7 +7,6 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.NBTTagList;
 import net.minecraft.src.Packet250CustomPayload;
-import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.tile.TileEntityElectricityReceiver;
 import assemblyline.machine.belt.TileEntityConveyorBelt;
@@ -32,7 +31,7 @@ public class TileEntityRoboticSorter extends TileEntityElectricityReceiver imple
 	/**
 	 * Joules required per tick.
 	 */
-	public static final int JOULES_REQUIRED = 10;
+	public static final int WATT_REQUEST = 10;
 
 	/**
 	 * Stored energy
@@ -41,8 +40,7 @@ public class TileEntityRoboticSorter extends TileEntityElectricityReceiver imple
 	/**
 	 * on/off value for the GUI buttons
 	 */
-	public boolean[] guiButtons = new boolean[]
-	{ true, true, true, true, true };
+	public boolean[] guiButtons = new boolean[] { true, true, true, true, true };
 	/**
 	 * the belt found in the search area
 	 */
@@ -63,31 +61,9 @@ public class TileEntityRoboticSorter extends TileEntityElectricityReceiver imple
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection side)
-	{
-		return true;
-	}
-
-	/**
-	 * UE methods
-	 */
-	@Override
 	public double getVoltage()
 	{
 		return 120;
-	}
-
-	@Override
-	public double wattRequest()
-	{
-		return JOULES_REQUIRED;
-	}
-
-	@Override
-	public void onReceive(Object sender, double amps, double voltage, ForgeDirection side)
-	{
-		this.wattsReceived += (amps * voltage);
-
 	}
 
 	/**
@@ -241,12 +217,4 @@ public class TileEntityRoboticSorter extends TileEntityElectricityReceiver imple
 	{
 		return 1;
 	}
-
-	@Override
-	public boolean canReceiveFromSide(ForgeDirection side)
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 }

@@ -18,7 +18,7 @@ public interface IItemElectric extends IJouleStorage, IVoltage
 
 	/**
 	 * @return Returns true or false if this consumer can receive electricity at this given tick or
-	 *         moment.
+	 * moment.
 	 */
 	public boolean canReceiveElectricity();
 

@@ -12,8 +12,7 @@ public interface IDisableable
 	/**
 	 * This is called when the tile entity is to be disabled.
 	 * 
-	 * @param duration
-	 *            - The duration of the disable in ticks.
+	 * @param duration - The duration of the disable in ticks.
 	 */
 	public void onDisable(int duration);
 

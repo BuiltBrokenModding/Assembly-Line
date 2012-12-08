@@ -56,8 +56,7 @@ public class BlockCrafter extends BlockMachine
 		}
 
 		/**
-		 * @param currentDirection
-		 *            - An integer from 0 to 4.
+		 * @param currentDirection - An integer from 0 to 4.
 		 * @return The metadata this block should change into.
 		 */
 		public int getNextDirectionMeta(int currentDirection)
@@ -103,7 +102,7 @@ public class BlockCrafter extends BlockMachine
 	}
 
 	@Override
-	public boolean onMachineActivated(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer)
+	public boolean onMachineActivated(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
 		if (!par1World.isRemote)
 		{
@@ -117,7 +116,8 @@ public class BlockCrafter extends BlockMachine
 		return true;
 	}
 
-	public boolean onSneakUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer)
+	@Override
+	public boolean onSneakUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
 		return false;
 	}

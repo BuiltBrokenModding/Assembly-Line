@@ -25,9 +25,9 @@ import cpw.mods.fml.common.network.Player;
  * directly use this by registering this packet manager with NetworkMod. Example:
  * 
  * @NetworkMod(channels = { "BasicComponents" }, clientSideRequired = true, serverSideRequired =
- *                      false, packetHandler = PacketManager.class)
+ * false, packetHandler = PacketManager.class)
  * 
- *                      Check out {@link #BasicComponents} for better reference.
+ * Check out {@link #BasicComponents} for better reference.
  * 
  * @author Calclavia
  */

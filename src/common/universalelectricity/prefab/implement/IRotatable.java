@@ -18,16 +18,15 @@ public interface IRotatable
 	 * entity.
 	 * 
 	 * @return The facing side from 0-5 The full list of which side the number represents is in the
-	 *         UniversalElectricity class.
+	 * UniversalElectricity class.
 	 */
 	public ForgeDirection getDirection();
 
 	/**
 	 * Sets the facing direction of the tile entity.
 	 * 
-	 * @param facingDirection
-	 *            - A direction from 0-5. The full list of which side the number represents is in
-	 *            the UniversalElectricity class.
+	 * @param facingDirection - A direction from 0-5. The full list of which side the number
+	 * represents is in the UniversalElectricity class.
 	 */
 	public void setDirection(ForgeDirection facingDirection);
 }

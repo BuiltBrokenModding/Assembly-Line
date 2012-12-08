@@ -110,8 +110,7 @@ public abstract class ItemElectric extends Item implements IItemElectric
 	 * This function sets the electriicty. Do not directly call this function. Try to use
 	 * onReceiveElectricity or onUseElectricity instead.
 	 * 
-	 * @param wattHours
-	 *            - The amount of electricity in joules
+	 * @param wattHours - The amount of electricity in joules
 	 */
 	@Override
 	public void setJoules(double wattHours, Object... data)

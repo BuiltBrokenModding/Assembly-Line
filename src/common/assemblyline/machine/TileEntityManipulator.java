@@ -16,6 +16,7 @@ import net.minecraft.src.TileEntityChest;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 import universalelectricity.core.electricity.ElectricInfo;
+import universalelectricity.core.implement.IConductor;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
 import universalelectricity.prefab.network.IPacketReceiver;
@@ -32,7 +33,7 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 	/**
 	 * Joules required to run this thing.
 	 */
-	public static final int JOULES_REQUIRED = 15;
+	public static final int WATT_REQUEST = 15;
 
 	/**
 	 * The amount of watts received.
@@ -47,19 +48,40 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 	private boolean isPowered = false;
 
 	@Override
-	public double wattRequest()
-	{
-		return JOULES_REQUIRED;
-	}
-
-	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
 
 		if (!this.worldObj.isRemote)
 		{
-			if (!this.isDisabled() && this.wattsReceived >= this.JOULES_REQUIRED)
+			for (int i = 0; i < 6; i++)
+			{
+				ForgeDirection inputDirection = ForgeDirection.getOrientation(i);
+
+				TileEntity inputTile = Vector3.getTileEntityFromSide(this.worldObj, Vector3.get(this), inputDirection);
+
+				if (inputTile != null)
+				{
+					if (inputTile instanceof IConductor)
+					{
+						if (this.wattsReceived >= this.WATT_REQUEST)
+						{
+							((IConductor) inputTile).getNetwork().stopRequesting(this);
+						}
+						else
+						{
+							((IConductor) inputTile).getNetwork().startRequesting(this, this.WATT_REQUEST / this.getVoltage(), this.getVoltage());
+							this.wattsReceived += ((IConductor) inputTile).getNetwork().consumeElectricity(this).getWatts();
+						}
+					}
+				}
+
+			}
+		}
+
+		if (!this.worldObj.isRemote)
+		{
+			if (!this.isDisabled() && this.wattsReceived >= this.WATT_REQUEST)
 			{
 				if (!this.isOutput)
 				{
@@ -186,8 +208,7 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 			 */
 			if (tileEntity instanceof TileEntityChest)
 			{
-				TileEntityChest[] chests =
-				{ (TileEntityChest) tileEntity, null };
+				TileEntityChest[] chests = { (TileEntityChest) tileEntity, null };
 
 				/**
 				 * Try to find a double chest.
@@ -290,8 +311,7 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 			 */
 			if (tileEntity instanceof TileEntityChest)
 			{
-				TileEntityChest[] chests =
-				{ (TileEntityChest) tileEntity, null };
+				TileEntityChest[] chests = { (TileEntityChest) tileEntity, null };
 
 				/**
 				 * Try to find a double chest.
@@ -376,18 +396,6 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 	public Packet getDescriptionPacket()
 	{
 		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.isOutput);
-	}
-
-	@Override
-	public boolean canReceiveFromSide(ForgeDirection side)
-	{
-		return true;
-	}
-
-	@Override
-	public void onReceive(Object sender, double amps, double voltage, ForgeDirection side)
-	{
-		this.wattsReceived += ElectricInfo.getWatts(amps, voltage);
 	}
 
 	@Override

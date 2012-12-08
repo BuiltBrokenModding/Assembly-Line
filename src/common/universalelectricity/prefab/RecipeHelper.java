@@ -8,7 +8,6 @@ import net.minecraft.src.CraftingManager;
 import net.minecraft.src.IRecipe;
 import net.minecraft.src.ItemStack;
 import net.minecraftforge.common.Configuration;
-import universalelectricity.core.UEConfig;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
@@ -132,7 +131,8 @@ public class RecipeHelper
 	}
 
 	/**
-	 * Removes all recipes found that has this output.
+	 * Removes all recipes found that has this output. You may use this with Forge Ore Dictionary to
+	 * remove all recipes with the FoD ID.
 	 * 
 	 * @return True if successful
 	 */
@@ -170,14 +170,18 @@ public class RecipeHelper
 	/**
 	 * Use this function if you want to check if the recipe is allowed in the configuration file.
 	 */
-	public static void addRecipe(IRecipe recipe, String name, Configuration config, boolean defaultBoolean)
+	public static void addRecipe(IRecipe recipe, String name, Configuration configuration, boolean defaultBoolean)
 	{
-		if (config != null)
+		if (configuration != null)
 		{
-			if (UEConfig.getConfigData(config, "Allow " + name + " Crafting", defaultBoolean))
+			configuration.load();
+
+			if (configuration.get("Crafting", "Allow " + name + " Crafting", defaultBoolean).getBoolean(defaultBoolean))
 			{
 				GameRegistry.addRecipe(recipe);
 			}
+
+			configuration.save();
 		}
 	}
 

@@ -28,7 +28,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	/**
 	 * Joules required to run this thing.
 	 */
-	public static final int JOULES_REQUIRED = 5;
+	public static final int WATT_REQUEST = 5;
 
 	/**
 	 * The amount of watts received.
@@ -40,8 +40,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	public boolean running = false;
 	public boolean textureFlip = false;
 	public boolean slantedBelt = false;
-	public TileEntityConveyorBelt[] adjBelts =
-	{ null, null, null, null };
+	public TileEntityConveyorBelt[] adjBelts = { null, null, null, null };
 
 	public int clearCount = 0;
 	public int powerTransferRange = 0;
@@ -83,7 +82,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 		}
 
 		this.powerTransferRange = rr - 1;
-		
+
 		return false;
 	}
 
@@ -92,6 +91,33 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	{
 		super.updateEntity();
 
+		if (!this.worldObj.isRemote)
+		{
+			for (int i = 0; i < 6; i++)
+			{
+				ForgeDirection inputDirection = ForgeDirection.getOrientation(i);
+
+				TileEntity inputTile = Vector3.getTileEntityFromSide(this.worldObj, Vector3.get(this), inputDirection);
+
+				if (inputTile != null)
+				{
+					if (inputTile instanceof IConductor)
+					{
+						if (this.wattsReceived >= this.WATT_REQUEST)
+						{
+							((IConductor) inputTile).getNetwork().stopRequesting(this);
+						}
+						else
+						{
+							((IConductor) inputTile).getNetwork().startRequesting(this, this.WATT_REQUEST / this.getVoltage(), this.getVoltage());
+							this.wattsReceived += ((IConductor) inputTile).getNetwork().consumeElectricity(this).getWatts();
+						}
+					}
+				}
+
+			}
+		}
+
 		if (this.ticks % 10 == 0)
 		{
 			if (!worldObj.isRemote)
@@ -99,7 +125,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 				PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, Vector3.get(this), 15);
 			}
 
-			if (this.wattsReceived >= JOULES_REQUIRED)
+			if (this.wattsReceived >= WATT_REQUEST)
 			{
 				this.wattsReceived = 0;
 				this.powerTransferRange = 20;
@@ -144,10 +170,8 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	/**
 	 * Causes all items to be moved above the belt
 	 * 
-	 * @param extendLife
-	 *            - increases the items life
-	 * @param preventPickUp
-	 *            - prevent a player from picking the item up
+	 * @param extendLife - increases the items life
+	 * @param preventPickUp - prevent a player from picking the item up
 	 */
 	public void conveyItemsHorizontal(boolean extendLife, boolean preventPickUp)
 	{
@@ -166,22 +190,22 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 						if (direction == 0)
 						{
 							entity.motionZ -= 1 * this.speed;
-							//entity.posX = this.xCoord + 0.5D;
+							// entity.posX = this.xCoord + 0.5D;
 						}
 						if (direction == 1)
 						{
 							entity.motionX += 1 * this.speed;
-							//entity.posZ = this.zCoord + 0.5D;
+							// entity.posZ = this.zCoord + 0.5D;
 						}
 						if (direction == 2)
 						{
 							entity.motionZ += 1 * this.speed;
-							//entity.posX = this.xCoord + 0.5D;
+							// entity.posX = this.xCoord + 0.5D;
 						}
 						if (direction == 3)
 						{
 							entity.motionX -= 1 * this.speed;
-							//entity.posZ = this.zCoord + 0.5D;
+							// entity.posZ = this.zCoord + 0.5D;
 						}
 					}
 				}
@@ -217,24 +241,6 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	public Packet getDescriptionPacket()
 	{
 		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.wattsReceived);
-	}
-
-	@Override
-	public double wattRequest()
-	{
-		return JOULES_REQUIRED;
-	}
-
-	@Override
-	public void onReceive(Object sender, double amps, double voltage, ForgeDirection side)
-	{
-		this.wattsReceived += ElectricInfo.getWatts(amps, voltage);
-	}
-
-	@Override
-	public boolean canReceiveFromSide(ForgeDirection side)
-	{
-		return side == ForgeDirection.DOWN;
 	}
 
 	public int getBeltDirection()

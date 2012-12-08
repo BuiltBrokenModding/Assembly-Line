@@ -1,5 +1,6 @@
 package assemblyline.machine;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import net.minecraft.src.AxisAlignedBB;
@@ -15,6 +16,8 @@ import net.minecraft.src.Packet;
 import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.core.electricity.ElectricityConnections;
+import universalelectricity.core.implement.IConductor;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
@@ -44,7 +47,7 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 	/**
 	 * Joules required per tick.
 	 */
-	public static final int JOULES_REQUIRED = 10;
+	public static final int WATT_REQUEST = 10;
 
 	/**
 	 * Stored energy
@@ -57,8 +60,7 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 	/**
 	 * on/off value for the GUI buttons
 	 */
-	public boolean[] guiButtons = new boolean[]
-	{ true, true, true, true, true };
+	public boolean[] guiButtons = new boolean[] { true, true, true, true, true };
 	/**
 	 * the belt found in the search area
 	 */
@@ -70,6 +72,33 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 	public void updateEntity()
 	{
 		super.updateEntity();
+
+		if (!this.worldObj.isRemote)
+		{
+			for (int i = 0; i < 6; i++)
+			{
+				ForgeDirection inputDirection = ForgeDirection.getOrientation(i);
+
+				TileEntity inputTile = Vector3.getTileEntityFromSide(this.worldObj, Vector3.get(this), inputDirection);
+
+				if (inputTile != null)
+				{
+					if (inputTile instanceof IConductor)
+					{
+						if (this.wattsReceived >= this.WATT_REQUEST)
+						{
+							((IConductor) inputTile).getNetwork().stopRequesting(this);
+						}
+						else
+						{
+							((IConductor) inputTile).getNetwork().startRequesting(this, this.WATT_REQUEST / this.getVoltage(), this.getVoltage());
+							this.wattsReceived += ((IConductor) inputTile).getNetwork().consumeElectricity(this).getWatts();
+						}
+					}
+				}
+
+			}
+		}
 
 		/**
 		 * Has to update a bit faster than a conveyer belt
@@ -104,7 +133,7 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 
 				boolean flag = false;
 
-				if (itemsBehind.size() > 0 && this.wattsReceived > this.JOULES_REQUIRED)
+				if (itemsBehind.size() > 0 && this.wattsReceived > this.WATT_REQUEST)
 				{
 					// for every item found check
 					// if can be thrown then throw
@@ -143,10 +172,8 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 	/**
 	 * Used to move after it has been rejected
 	 * 
-	 * @param side
-	 *            - used to do the offset
-	 * @param entity
-	 *            - Entity being thrown
+	 * @param side - used to do the offset
+	 * @param entity - Entity being thrown
 	 */
 	public void throwItem(ForgeDirection side, Entity entity)
 	{
@@ -159,12 +186,12 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 		entity.motionX = (double) side.offsetX * 0.15;
 		entity.motionY += 0.10000000298023224D;
 		entity.motionZ = (double) side.offsetZ * 0.15;
-		this.wattsReceived -= this.JOULES_REQUIRED;
+		this.wattsReceived -= this.WATT_REQUEST;
 	}
 
 	public boolean canItemBeThrow(Entity entity)
 	{
-		// TODO add other things than items
+		// TODO Add other things than items
 		if (entity instanceof EntityItem)
 		{
 			EntityItem itemE = (EntityItem) entity;
@@ -172,7 +199,6 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 
 			if (this.guiButtons[4])
 			{
-
 				// reject matching items
 				for (int i = 0; i < this.containingItems.length; i++)
 				{
@@ -217,12 +243,6 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 		return 0;
 	}
 
-	@Override
-	public boolean canReceiveFromSide(ForgeDirection side)
-	{
-		return side == ForgeDirection.DOWN;
-	}
-
 	/**
 	 * Used to change any one of the boolean value of on/off array After changing the value if it
 	 * was changed client side it will send a packet server side with the changes
@@ -240,8 +260,7 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 		{
 			this.guiButtons[i] = true;
 		}
-		Packet packet = PacketManager.getPacket("asmLine", this, new Object[]
-		{ PacketTypes.SETTINGON.ordinal(), i });
+		Packet packet = PacketManager.getPacket("asmLine", this, new Object[] { PacketTypes.SETTINGON.ordinal(), i });
 		if (worldObj.isRemote)
 		{
 			PacketDispatcher.sendPacketToServer(packet);
@@ -254,8 +273,7 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 
 	public Object[] data(PacketTypes id)
 	{
-		if (id == PacketTypes.ANIMATION) { return new Object[]
-		{ id.ordinal(), this.firePiston }; }
+		if (id == PacketTypes.ANIMATION) { return new Object[] { id.ordinal(), this.firePiston }; }
 		if (id == PacketTypes.GUI)
 		{
 			Object[] da = new Object[this.guiButtons.length];
@@ -266,8 +284,7 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 			}
 			return da;
 		}
-		return new Object[]
-		{ id.ordinal() };
+		return new Object[] { id.ordinal() };
 	}
 
 	@Override
@@ -317,12 +334,6 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 		return 4;
 	}
 
-	@Override
-	public boolean canConnect(ForgeDirection side)
-	{
-		return true;
-	}
-
 	/**
 	 * UE methods
 	 */
@@ -330,19 +341,6 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 	public double getVoltage()
 	{
 		return 120;
-	}
-
-	@Override
-	public double wattRequest()
-	{
-		return JOULES_REQUIRED;
-	}
-
-	@Override
-	public void onReceive(Object sender, double amps, double voltage, ForgeDirection side)
-	{
-		this.wattsReceived += (amps * voltage);
-
 	}
 
 	/**

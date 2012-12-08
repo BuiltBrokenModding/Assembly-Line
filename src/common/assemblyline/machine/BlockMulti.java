@@ -64,8 +64,7 @@ public class BlockMulti extends BlockMachine
 		}
 
 		/**
-		 * @param currentDirection
-		 *            - An integer from 0 to 4.
+		 * @param currentDirection - An integer from 0 to 4.
 		 * @return The metadata this block should change into.
 		 */
 		public int getNextDirectionMeta(int currentDirection)
@@ -110,7 +109,7 @@ public class BlockMulti extends BlockMachine
 	}
 
 	@Override
-	public boolean onMachineActivated(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer)
+	public boolean onMachineActivated(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
 		if (!par1World.isRemote)
 		{
@@ -149,7 +148,7 @@ public class BlockMulti extends BlockMachine
 	}
 
 	@Override
-	public boolean onUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer)
+	public boolean onUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
 		int metadata = par1World.getBlockMetadata(x, y, z);
 		MachineType machineType = MachineType.get(metadata);
@@ -158,7 +157,7 @@ public class BlockMulti extends BlockMachine
 	}
 
 	@Override
-	public boolean onSneakUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer)
+	public boolean onSneakUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
 		int metadata = par1World.getBlockMetadata(x, y, z);
 
@@ -175,7 +174,7 @@ public class BlockMulti extends BlockMachine
 		}
 		else
 		{
-			return this.onUseWrench(par1World, x, y, z, par5EntityPlayer);
+			return this.onUseWrench(par1World, x, y, z, par5EntityPlayer, side, hitX, hitY, hitZ);
 		}
 	}
 

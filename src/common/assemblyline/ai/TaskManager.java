@@ -51,4 +51,9 @@ public class TaskManager
 		task.onTaskStart();
 		tasks.add(task);
 	}
+
+	public boolean hasTask()
+	{
+		return this.tasks.size() > 0;
+	}
 }

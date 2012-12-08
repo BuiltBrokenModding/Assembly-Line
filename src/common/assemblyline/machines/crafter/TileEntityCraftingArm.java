@@ -1,5 +1,7 @@
 package assemblyline.machines.crafter;
 
+import java.util.EnumSet;
+
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.IInventory;
 import net.minecraft.src.INetworkManager;
@@ -7,14 +9,19 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.NBTTagList;
 import net.minecraft.src.Packet250CustomPayload;
+import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.core.electricity.ElectricityConnections;
+import universalelectricity.core.implement.IConductor;
+import universalelectricity.core.implement.IJouleStorage;
+import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.tile.TileEntityElectricityReceiver;
 import assemblyline.ai.TaskManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityCraftingArm extends TileEntityElectricityReceiver implements IInventory, IPacketReceiver
+public class TileEntityCraftingArm extends TileEntityElectricityReceiver implements IInventory, IPacketReceiver, IJouleStorage
 {
 	/**
 	 * The items this container contains.
@@ -28,27 +35,56 @@ public class TileEntityCraftingArm extends TileEntityElectricityReceiver impleme
 	 */
 	public EntityCraftingArm EntityArm = null;
 
-	public double wattUsed = 20;
+	public final double WATT_REQUEST = 20;
 
-	public double jouleReceived = 0;
-
-	public double maxJoules = 100;
-	/**
-	 * does this arm have a task to do
-	 */
-	public boolean hasTask = true;
+	public double wattsReceived = 0;
 
 	private int playerUsing = 0;
+
+	@Override
+	public void initiate()
+	{
+		ElectricityConnections.registerConnector(this, EnumSet.of(ForgeDirection.DOWN, ForgeDirection.SOUTH, ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.WEST));
+	}
 
 	public void updateEntity()
 	{
 		super.updateEntity();
 
+		if (!this.worldObj.isRemote)
+		{
+			for (int i = 0; i < 6; i++)
+			{
+				ForgeDirection inputDirection = ForgeDirection.getOrientation(i);
+
+				if (inputDirection != ForgeDirection.UP)
+				{
+					TileEntity inputTile = Vector3.getTileEntityFromSide(this.worldObj, Vector3.get(this), inputDirection);
+
+					if (inputTile != null)
+					{
+						if (inputTile instanceof IConductor)
+						{
+							if (this.getJoules() >= this.getMaxJoules())
+							{
+								((IConductor) inputTile).getNetwork().stopRequesting(this);
+							}
+							else
+							{
+								((IConductor) inputTile).getNetwork().startRequesting(this, this.WATT_REQUEST / this.getVoltage(), this.getVoltage());
+								this.setJoules(this.getJoules() + ((IConductor) inputTile).getNetwork().consumeElectricity(this).getWatts());
+							}
+						}
+					}
+				}
+			}
+		}
+
 		taskManager.onUpdate();
 
-		if (this.ticks % 5 == 0 && !this.isDisabled() && this.hasTask && EntityArm != null)
+		if (this.ticks % 5 == 0 && !this.isDisabled() && this.taskManager.hasTask() && EntityArm != null)
 		{
-			this.jouleReceived -= this.wattUsed;
+			this.wattsReceived -= this.WATT_REQUEST;
 			this.doWork();
 		}
 	}
@@ -59,36 +95,6 @@ public class TileEntityCraftingArm extends TileEntityElectricityReceiver impleme
 	public void doWork()
 	{
 
-	}
-
-	/**
-	 * UE methods
-	 */
-	@Override
-	public void onReceive(Object sender, double amps, double voltage, ForgeDirection side)
-	{
-		this.jouleReceived = Math.max(jouleReceived + (amps * voltage), maxJoules);
-
-	}
-
-	@Override
-	public double wattRequest()
-	{
-		return maxJoules - jouleReceived;
-	}
-
-	@Override
-	public boolean canReceiveFromSide(ForgeDirection side)
-	{
-		if (side != ForgeDirection.UP) { return true; }
-		return false;
-	}
-
-	@Override
-	public boolean canConnect(ForgeDirection side)
-	{
-		if (side != ForgeDirection.UP) { return true; }
-		return false;
 	}
 
 	@Override
@@ -253,6 +259,24 @@ public class TileEntityCraftingArm extends TileEntityElectricityReceiver impleme
 			}
 		}
 		nbt.setTag("Items", var2);
+	}
+
+	@Override
+	public double getJoules(Object... data)
+	{
+		return this.wattsReceived;
+	}
+
+	@Override
+	public void setJoules(double joules, Object... data)
+	{
+		this.wattsReceived = joules;
+	}
+
+	@Override
+	public double getMaxJoules(Object... data)
+	{
+		return 1000;
 	}
 
 }

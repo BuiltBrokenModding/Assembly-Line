@@ -1,7 +1,6 @@
 package universalelectricity.core.implement;
 
 import net.minecraft.src.TileEntity;
-import net.minecraft.src.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityNetwork;
 
@@ -11,7 +10,7 @@ import universalelectricity.core.electricity.ElectricityNetwork;
  * @author Calclavia
  * 
  */
-public interface IConductor extends IConnector
+public interface IConductor
 {
 	/**
 	 * The electrical network this conductor is on.
@@ -53,19 +52,16 @@ public interface IConductor extends IConnector
 	 */
 	public void reset();
 
-	public World getWorld();
+	public void refreshConnectedBlocks();
 
 	/**
 	 * Adds a connection between this conductor and a UE unit
 	 * 
-	 * @param tileEntity
-	 *            - Must be either a producer, consumer or a conductor
-	 * @param side
-	 *            - side in which the connection is coming from
+	 * @param tileEntity - Must be either a producer, consumer or a conductor
+	 * @param side - side in which the connection is coming from
 	 */
 	public void updateConnection(TileEntity tileEntity, ForgeDirection side);
 
 	public void updateConnectionWithoutSplit(TileEntity connectorFromSide, ForgeDirection orientation);
 
-	public void refreshConnectedBlocks();
 }
