@@ -1,4 +1,4 @@
-package assemblyline.machines.crafter;
+package assemblyline.machine.crafter;
 
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityItem;

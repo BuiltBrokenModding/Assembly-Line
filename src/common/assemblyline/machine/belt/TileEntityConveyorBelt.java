@@ -177,7 +177,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	{
 		try
 		{
-			List<Entity> entityOnTop = this.getEntityAbove();
+			List<Entity> entityOnTop = this.getAffectedEntities();
 
 			for (Entity entity : entityOnTop)
 			{
@@ -263,7 +263,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 		return 0;
 	}
 
-	public boolean middleBelt()
+	public boolean getIsMiddleBelt()
 	{
 
 		ForgeDirection front = ForgeDirection.getOrientation(getBeltDirection());
@@ -280,7 +280,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 		return false;
 	}
 
-	public boolean FrontCap()
+	public boolean getIsFrontCap()
 	{
 
 		ForgeDirection front = ForgeDirection.getOrientation(getBeltDirection());
@@ -296,7 +296,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 		return false;
 	}
 
-	public boolean BackCap()
+	public boolean getIsBackCap()
 	{
 
 		ForgeDirection front = ForgeDirection.getOrientation(getBeltDirection());
@@ -345,7 +345,8 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 		return ForgeDirection.getOrientation(this.getBeltDirection());
 	}
 
-	public List<Entity> getEntityAbove()
+	@Override
+	public List<Entity> getAffectedEntities()
 	{
 		AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1);
 		return worldObj.getEntitiesWithinAABB(Entity.class, bounds);

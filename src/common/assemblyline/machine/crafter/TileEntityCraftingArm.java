@@ -1,4 +1,4 @@
-package assemblyline.machines.crafter;
+package assemblyline.machine.crafter;
 
 import java.util.EnumSet;
 
@@ -82,7 +82,7 @@ public class TileEntityCraftingArm extends TileEntityElectricityReceiver impleme
 
 		taskManager.onUpdate();
 
-		if (this.ticks % 5 == 0 && !this.isDisabled() && this.taskManager.hasTask() && EntityArm != null)
+		if (this.ticks % 5 == 0 && !this.isDisabled() && this.taskManager.hasTasks() && EntityArm != null)
 		{
 			this.wattsReceived -= this.WATT_REQUEST;
 			this.doWork();

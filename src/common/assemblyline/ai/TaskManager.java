@@ -1,6 +1,7 @@
 package assemblyline.ai;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.src.TileEntity;
@@ -22,8 +23,11 @@ public class TaskManager
 		 */
 		try
 		{
-			for (Task task : this.tasks)
+		    Task task;
+		    Iterator<Task> iter = tasks.iterator();
+			while (iter.hasNext())
 			{
+			    task = iter.next();
 				if (task.getTickInterval() > 0)
 				{
 					if (this.ticks % task.getTickInterval() == 0)
@@ -31,7 +35,7 @@ public class TaskManager
 						if (!task.doTask())
 						{
 							task.onTaskEnd();
-							tasks.remove(task);
+							iter.remove();
 						}
 					}
 				}
@@ -46,14 +50,24 @@ public class TaskManager
 		this.ticks++;
 	}
 
+	/**
+	 * Used to register Tasks for a TileEntity, executes onTaskStart
+	 * for the Task after registering it
+	 * 
+	 * @param tileEntity TE instance to register the task for
+	 * @param task Task instance to register
+	 */
 	public void addTask(TileEntity tileEntity, Task task)
 	{
-		task.onTaskStart();
 		tasks.add(task);
+		task.onTaskStart();
 	}
 
-	public boolean hasTask()
+	/**
+	 * @return true when there are tasks registered, false otherwise
+	 */
+	public boolean hasTasks()
 	{
-		return this.tasks.size() > 0;
+		return !tasks.isEmpty();
 	}
 }

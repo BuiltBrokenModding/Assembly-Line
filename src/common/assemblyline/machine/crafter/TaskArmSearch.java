@@ -1,4 +1,6 @@
-package assemblyline.machines.crafter;
+package assemblyline.machine.crafter;
+
+import java.util.List;
 
 import net.minecraft.src.AxisAlignedBB;
 import net.minecraft.src.Entity;
@@ -31,11 +33,17 @@ public class TaskArmSearch extends Task
 		this.searchSpeed = searchSpeed;
 	}
 
-	@Override
-	public void onTaskStart()
-	{
-		this.foundEntity = (Entity) this.tileEntity.worldObj.getEntitiesWithinAABB(this.entityToInclude, AxisAlignedBB.getBoundingBox(this.tileEntity.xCoord - this.radius, this.tileEntity.yCoord - this.radius, this.tileEntity.zCoord - this.radius, this.tileEntity.xCoord + this.radius, this.tileEntity.yCoord + this.radius, this.tileEntity.zCoord + this.radius)).get(0);
-	}
+    @Override
+    public void onTaskStart()
+    {
+        List found = tileEntity.worldObj.getEntitiesWithinAABB(entityToInclude,
+                AxisAlignedBB.getBoundingBox(tileEntity.xCoord - radius, tileEntity.yCoord - radius, tileEntity.zCoord - radius,
+                tileEntity.xCoord + radius, tileEntity.yCoord + radius, tileEntity.zCoord + radius));
+        if (found != null && !found.isEmpty())
+        {
+            foundEntity = (Entity) found.get(0);
+        }
+    }
 
 	@Override
 	protected boolean doTask()
