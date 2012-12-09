@@ -1,6 +1,7 @@
 package assemblyline.machine.belt;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 import net.minecraft.src.AxisAlignedBB;
@@ -13,6 +14,7 @@ import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricInfo;
+import universalelectricity.core.electricity.ElectricityConnections;
 import universalelectricity.core.implement.IConductor;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
@@ -45,6 +47,12 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	public int clearCount = 0;
 	public int powerTransferRange = 0;
 	public List<Entity> entityIgnoreList = new ArrayList<Entity>();
+
+	public TileEntityConveyorBelt()
+	{
+		super();
+		ElectricityConnections.registerConnector(this, EnumSet.of(ForgeDirection.DOWN));
+	}
 
 	/**
 	 * Steal power from nearby belts.
