@@ -6,11 +6,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import assemblyline.client.gui.GuiSorter;
 import assemblyline.client.render.RenderConveyorBelt;
+import assemblyline.client.render.RenderCrate;
 import assemblyline.client.render.RenderHelper;
 import assemblyline.client.render.RenderManipulator;
 import assemblyline.client.render.RenderSorter;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.CommonProxy;
+import assemblyline.common.block.TileEntityCrate;
 import assemblyline.common.machine.TileEntityManipulator;
 import assemblyline.common.machine.TileEntityRejector;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt;
@@ -30,11 +32,10 @@ public class ClientProxy extends CommonProxy
 	public void init()
 	{
 		super.init();
-		// ClientRegistry.registerTileEntity(TileEntityConveyorBelt.class,
-		// "belt", new RenderConveyorBelt());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConveyorBelt.class, new RenderConveyorBelt());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRejector.class, new RenderSorter());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityManipulator.class, new RenderManipulator());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrate.class, new RenderCrate());
 	}
 
 	@Override

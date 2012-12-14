@@ -13,13 +13,12 @@ import universalelectricity.prefab.UETab;
 import universalelectricity.prefab.UpdateNotifier;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.block.BlockArchitectTable;
+import assemblyline.common.block.BlockCrate;
+import assemblyline.common.block.ItemBlockCrate;
 import assemblyline.common.machine.BlockMulti;
-import assemblyline.common.machine.ItemBlockMulti;
-import assemblyline.common.machine.TileEntityManipulator;
-import assemblyline.common.machine.TileEntityRejector;
 import assemblyline.common.machine.BlockMulti.MachineType;
+import assemblyline.common.machine.ItemBlockMulti;
 import assemblyline.common.machine.belt.BlockConveyorBelt;
-import assemblyline.common.machine.belt.TileEntityConveyorBelt;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -45,7 +44,7 @@ public class AssemblyLine
 
 	public static final String NAME = "Assembly Line";
 
-	public static final String VERSION = "0.1.4";
+	public static final String VERSION = "0.1.5";
 
 	public static final String CHANNEL = "AssemblyLine";
 
@@ -62,22 +61,25 @@ public class AssemblyLine
 	public static Block blockConveyorBelt;
 	public static Block blockInteraction;
 	public static Block blockArchitectTable;
+	public static Block blockCrate;
 
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		UniversalElectricity.register(this, 1, 1, 3, false);
+		UniversalElectricity.register(this, 1, 2, 0, false);
 		instance = this;
 
 		CONFIGURATION.load();
 		blockConveyorBelt = new BlockConveyorBelt(CONFIGURATION.getBlock("Conveyor Belt", BLOCK_ID_PREFIX).getInt());
 		blockInteraction = new BlockMulti(CONFIGURATION.getBlock("Machine", BLOCK_ID_PREFIX + 1).getInt());
 		blockArchitectTable = new BlockArchitectTable(CONFIGURATION.getBlock("Architect's Table", BLOCK_ID_PREFIX + 2).getInt());
+		blockCrate = new BlockCrate(CONFIGURATION.getBlock("Crate", BLOCK_ID_PREFIX + 3).getInt());
 		CONFIGURATION.save();
 
 		NetworkRegistry.instance().registerGuiHandler(this, this.proxy);
 		GameRegistry.registerBlock(blockConveyorBelt);
 		GameRegistry.registerBlock(blockArchitectTable);
+		GameRegistry.registerBlock(blockCrate, ItemBlockCrate.class);
 		GameRegistry.registerBlock(blockInteraction, ItemBlockMulti.class);
 
 		UpdateNotifier.INSTANCE.checkUpdate(NAME, VERSION, "http://calclavia.com/downloads/al/recommendedversion.txt");

@@ -3,6 +3,7 @@ package assemblyline.common;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import assemblyline.common.block.TileEntityCrate;
 import assemblyline.common.machine.ContainerSorter;
 import assemblyline.common.machine.TileEntityManipulator;
 import assemblyline.common.machine.TileEntityRejector;
@@ -21,9 +22,10 @@ public class CommonProxy implements IGuiHandler
 
 	public void init()
 	{
-		GameRegistry.registerTileEntity(TileEntityConveyorBelt.class, "ConveyorBelt");
-		GameRegistry.registerTileEntity(TileEntityRejector.class, "Sorter");
-		GameRegistry.registerTileEntity(TileEntityManipulator.class, "Manipulator");
+		GameRegistry.registerTileEntity(TileEntityConveyorBelt.class, "ALConveyorBelt");
+		GameRegistry.registerTileEntity(TileEntityRejector.class, "ALSorter");
+		GameRegistry.registerTileEntity(TileEntityManipulator.class, "ALManipulator");
+		GameRegistry.registerTileEntity(TileEntityCrate.class, "ALCrate");
 	}
 
 	@Override
