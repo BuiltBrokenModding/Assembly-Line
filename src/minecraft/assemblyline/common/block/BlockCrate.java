@@ -6,13 +6,19 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import universalelectricity.prefab.UETab;
 
-public class BlockArchitectTable extends Block
+/**
+ * A block that allows the placement of mass amount of a specific item within it.
+ * It will be allowed to go on Conveyor Belts
+ * @author Calclavia
+ *
+ */
+public class BlockCrate extends Block
 {
-	public BlockArchitectTable(int par1)
+	public BlockCrate(int par1)
 	{
-		super(par1, Material.wood);
+		super(par1, Material.iron);
 		this.blockIndexInTexture = 59;
-		this.setBlockName("architectTable");
+		this.setBlockName("create");
 		this.setCreativeTab(UETab.INSTANCE);
 	}
 

@@ -49,11 +49,16 @@ public class AssemblyLine
 
 	public static final String CHANNEL = "AssemblyLine";
 
-	public static final String TEXTURE_PATH = "/assemblyline/textures/";
+	public static final String RESOURCE_PATH = "/assemblyline/";
+	public static final String TEXTURE_PATH = RESOURCE_PATH + "textures/";
+	public static final String LANGUAGE_PATH = RESOURCE_PATH + "language/";
+
+	private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US" };
 
 	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "UniversalElectricity/AssemblyLine.cfg"));
 
 	public static final int BLOCK_ID_PREFIX = 3030;
+
 	public static Block blockConveyorBelt;
 	public static Block blockInteraction;
 	public static Block blockArchitectTable;
@@ -85,19 +90,49 @@ public class AssemblyLine
 	{
 		proxy.init();
 
-		// TODO Load language files and use those for block naming
+		int languages = 0;
+
+		/**
+		 * Load all languages.
+		 */
+		for (String language : LANGUAGES_SUPPORTED)
+		{
+			LanguageRegistry.instance().loadLocalization(LANGUAGE_PATH + language + ".properties", language, false);
+
+			if (LanguageRegistry.instance().getStringLocalization("children", language) != "")
+			{
+				try
+				{
+					String[] children = LanguageRegistry.instance().getStringLocalization("children", language).split(",");
+
+					for (String child : children)
+					{
+						if (child != "" || child != null)
+						{
+							LanguageRegistry.instance().loadLocalization(LANGUAGE_PATH + language + ".properties", child, false);
+							languages++;
+						}
+					}
+
+					languages++;
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+
+		System.out.println(NAME + ": Loaded " + languages + " languages.");
 
 		// Add Names
-		LanguageRegistry.addName(blockConveyorBelt, "Conveyor Belt");
-		LanguageRegistry.addName(blockArchitectTable, "Architect's Table");
-
 		for (MachineType type : MachineType.values())
 		{
 			LanguageRegistry.addName(new ItemStack(blockInteraction, 1, type.metadata), type.name);
 		}
 
 		// Conveyor Belt
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 2), new Object[] { "III", "WMW", 'I', "ingotSteel", 'W', Block.wood, 'M', "motor" }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 4), new Object[] { "III", "WMW", 'I', "ingotSteel", 'W', Block.wood, 'M', "motor" }));
 
 		// Rejector
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockInteraction, 1, MachineType.SORTER.metadata), new Object[] { "WPW", "@R@", '@', "plateSteel", 'R', Item.redstone, 'P', Block.pistonBase, 'C', "basicCircuit", 'W', "copperWire" }));

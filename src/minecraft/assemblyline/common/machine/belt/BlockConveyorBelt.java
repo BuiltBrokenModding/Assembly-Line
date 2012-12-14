@@ -20,7 +20,7 @@ public class BlockConveyorBelt extends BlockMachine
 {
 	public BlockConveyorBelt(int id)
 	{
-		super("Conveyor Belt", id, UniversalElectricity.machine);
+		super("conveyorBelt", id, UniversalElectricity.machine);
 		this.setBlockBounds(0, 0, 0, 1, 0.3f, 1);
 		this.setCreativeTab(UETab.INSTANCE);
 	}
