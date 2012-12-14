@@ -8,6 +8,10 @@ set /p CurrentBuild=<buildnumber.txt
 set /a BUILD_NUMBER=%CurrentBuild%+1
 echo %BUILD_NUMBER% >buildnumber.txt
 
+if %PROMOTION%==* (
+	echo %MODVERSION% >recommendedversion.txt
+)
+
 set FILE_NAME=AssemblyLine_v%MODVERSION%.%BUILD_NUMBER%.jar
 set API_NAME=AssemblyLine_v%MODVERSION%.%BUILD_NUMBER%_api.zip
 set BACKUP_NAME=AssemblyLine_v%MODVERSION%.%BUILD_NUMBER%_backup.zip
@@ -39,7 +43,7 @@ echo open www.calclavia.com>ftpscript.txt
 echo al@calclavia.com>>ftpscript.txt
 echo VkE4laBa84R9>>ftpscript.txt
 echo binary>>ftpscript.txt
-echo put "modversion.txt">>ftpscript.txt
+echo put "recommendedversion.txt">>ftpscript.txt
 echo put "builds\%FILE_NAME%">>ftpscript.txt
 echo put "builds\%API_NAME%">>ftpscript.txt
 echo put info.txt>>ftpscript.txt
