@@ -1,6 +1,5 @@
 package assemblyline.common.machine.belt;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -16,15 +15,17 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityConnections;
 import universalelectricity.core.implement.IConductor;
 import universalelectricity.core.vector.Vector3;
+import universalelectricity.prefab.implement.IRotatable;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.TileEntityElectricityReceiver;
+import assemblyline.api.ConveyorIgnore;
 import assemblyline.api.IBelt;
 import assemblyline.common.AssemblyLine;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implements IPacketReceiver, IBelt
+public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implements IPacketReceiver, IBelt, IRotatable
 {
 	/**
 	 * Joules required to run this thing.
@@ -36,15 +37,14 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	 */
 	public double wattsReceived = 0;
 
-	private float speed = -0.045F;
+	public float speed = 0.02f;
+
 	public float wheelRotation = 0;
 	public boolean running = false;
 	public boolean textureFlip = false;
 	public TileEntityConveyorBelt[] adjBelts = { null, null, null, null };
 
-	public int clearCount = 0;
 	public int powerTransferRange = 0;
-	public List<Entity> entityIgnoreList = new ArrayList<Entity>();
 
 	public TileEntityConveyorBelt()
 	{
@@ -189,7 +189,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 			{
 				int direction = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 
-				if (!this.entityIgnoreList.contains(entity))
+				if (!ConveyorIgnore.isIgnore(entity))
 				{
 					if (!(entity instanceof EntityPlayer && ((EntityPlayer) entity).isSneaking()))
 					{
@@ -216,12 +216,6 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 					}
 				}
 
-				if (this.clearCount++ >= 4)
-				{
-					// clear the temp ignore
-					// list every 2 second
-					this.entityIgnoreList.clear();
-				}
 				if (entity instanceof EntityItem)
 				{
 					EntityItem entityItem = (EntityItem) entity;
@@ -249,71 +243,61 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.wattsReceived);
 	}
 
-	public int getBeltDirection()
-	{
-		int meta = worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord);
-		if (meta >= 0 && meta < 4)
-		{
-			switch (meta)
-			{
-				case 0:
-					return 2;
-				case 1:
-					return 5;
-				case 2:
-					return 3;
-				case 3:
-					return 4;
-			}
-		}
-		return 0;
-	}
-
+	/**
+	 * Is this belt in the middile of two belts? Used for rendering.
+	 */
 	public boolean getIsMiddleBelt()
 	{
 
-		ForgeDirection front = ForgeDirection.getOrientation(getBeltDirection());
-		ForgeDirection back = ForgeDirection.getOrientation(getBeltDirection()).getOpposite();
+		ForgeDirection front = this.getDirection();
+		ForgeDirection back = this.getDirection().getOpposite();
 		TileEntity fBelt = worldObj.getBlockTileEntity(xCoord + front.offsetX, yCoord + front.offsetY, zCoord + front.offsetZ);
 		TileEntity BBelt = worldObj.getBlockTileEntity(xCoord + back.offsetX, yCoord + back.offsetY, zCoord + back.offsetZ);
 		if (fBelt instanceof TileEntityConveyorBelt && BBelt instanceof TileEntityConveyorBelt)
 		{
-			int fD = ((TileEntityConveyorBelt) fBelt).getBeltDirection();
-			int BD = ((TileEntityConveyorBelt) BBelt).getBeltDirection();
-			int TD = this.getBeltDirection();
-			if (fD == TD && BD == TD) { return true; }
+			ForgeDirection fD = ((TileEntityConveyorBelt) fBelt).getDirection();
+			ForgeDirection BD = ((TileEntityConveyorBelt) BBelt).getDirection();
+			ForgeDirection TD = this.getDirection();
+			return fD == TD && BD == TD;
 		}
 		return false;
 	}
 
+	/**
+	 * Is this belt in the front of a conveyor line? Used for rendering.
+	 */
 	public boolean getIsFrontCap()
 	{
 
-		ForgeDirection front = ForgeDirection.getOrientation(getBeltDirection());
-		ForgeDirection back = ForgeDirection.getOrientation(getBeltDirection()).getOpposite();
+		ForgeDirection front = this.getDirection();
+		ForgeDirection back = this.getDirection().getOpposite();
 		TileEntity fBelt = worldObj.getBlockTileEntity(xCoord + front.offsetX, yCoord + front.offsetY, zCoord + front.offsetZ);
 		TileEntity BBelt = worldObj.getBlockTileEntity(xCoord + back.offsetX, yCoord + back.offsetY, zCoord + back.offsetZ);
 		if (fBelt instanceof TileEntityConveyorBelt)
 		{
-			int fD = ((TileEntityConveyorBelt) fBelt).getBeltDirection();
-			int TD = this.getBeltDirection();
-			if (fD == TD) { return true; }
+			ForgeDirection fD = ((TileEntityConveyorBelt) fBelt).getDirection();
+			ForgeDirection TD = this.getDirection();
+			return fD == TD;
 		}
 		return false;
 	}
 
+	/**
+	 * Is this belt in the back of a conveyor line? Used for rendering.
+	 */
 	public boolean getIsBackCap()
 	{
 
-		ForgeDirection front = ForgeDirection.getOrientation(getBeltDirection());
-		ForgeDirection back = ForgeDirection.getOrientation(getBeltDirection()).getOpposite();
+		ForgeDirection front = this.getDirection();
+		ForgeDirection back = this.getDirection().getOpposite();
 		TileEntity fBelt = worldObj.getBlockTileEntity(xCoord + front.offsetX, yCoord + front.offsetY, zCoord + front.offsetZ);
 		TileEntity BBelt = worldObj.getBlockTileEntity(xCoord + back.offsetX, yCoord + back.offsetY, zCoord + back.offsetZ);
+
 		if (BBelt instanceof TileEntityConveyorBelt)
 		{
-			int BD = ((TileEntityConveyorBelt) BBelt).getBeltDirection();
-			int TD = this.getBeltDirection();
-			if (BD == TD) { return true; }
+			ForgeDirection BD = ((TileEntityConveyorBelt) BBelt).getDirection();
+			ForgeDirection TD = this.getDirection();
+			return BD == TD;
 		}
 		return false;
 	}
@@ -335,19 +319,16 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 
 	}
 
-	public void ignoreEntity(Entity entity)
+	@Override
+	public void setDirection(ForgeDirection facingDirection)
 	{
-		if (!this.entityIgnoreList.contains(entity))
-		{
-			this.entityIgnoreList.add(entity);
-		}
-
+		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, facingDirection.ordinal());
 	}
 
 	@Override
-	public ForgeDirection getFacing()
+	public ForgeDirection getDirection()
 	{
-		return ForgeDirection.getOrientation(this.getBeltDirection());
+		return ForgeDirection.getOrientation(this.getBlockMetadata());
 	}
 
 	@Override

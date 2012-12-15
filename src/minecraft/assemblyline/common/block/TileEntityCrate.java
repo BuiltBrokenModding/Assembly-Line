@@ -1,16 +1,63 @@
 package assemblyline.common.block;
 
+import assemblyline.common.AssemblyLine;
+
+import com.google.common.io.ByteArrayDataInput;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
+import universalelectricity.prefab.network.IPacketReceiver;
+import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 
-public class TileEntityCrate extends TileEntityAdvanced implements ISidedInventory
+public class TileEntityCrate extends TileEntityAdvanced implements ISidedInventory, IPacketReceiver
 {
 	public ItemStack[] containingItems = new ItemStack[1];
+
+	@Override
+	public boolean canUpdate()
+	{
+		return false;
+	}
+
+	@Override
+	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
+	{
+		if (this.worldObj.isRemote)
+		{
+			try
+			{
+				if (this.containingItems[0] == null)
+				{
+					this.containingItems[0] = new ItemStack(dataStream.readInt(), dataStream.readInt(), dataStream.readInt());
+				}
+				else
+				{
+					this.containingItems[0].itemID = dataStream.readInt();
+					this.containingItems[0].stackSize = dataStream.readInt();
+					this.containingItems[0].setItemDamage(dataStream.readInt());
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	public Packet getDescriptionPacket()
+	{
+		if (this.containingItems[0] != null) { return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.containingItems[0].itemID, this.containingItems[0].stackSize, this.containingItems[0].getItemDamage()); }
+		return null;
+	}
 
 	/**
 	 * Inventory functions.
@@ -75,6 +122,11 @@ public class TileEntityCrate extends TileEntityAdvanced implements ISidedInvento
 		if (par2ItemStack != null && par2ItemStack.stackSize > this.getInventoryStackLimit())
 		{
 			par2ItemStack.stackSize = this.getInventoryStackLimit();
+
+			if (!this.worldObj.isRemote)
+			{
+				PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj);
+			}
 		}
 	}
 
@@ -168,5 +220,4 @@ public class TileEntityCrate extends TileEntityAdvanced implements ISidedInvento
 	{
 		return 1;
 	}
-
 }

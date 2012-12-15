@@ -176,11 +176,12 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 	public void throwItem(ForgeDirection side, Entity entity)
 	{
 		this.firePiston = true;
+
 		if (this.beltSide != null)
 		{
-			this.beltSide.ignoreEntity(entity);
-
+			// this.beltSide.ignoreEntity(entity);
 		}
+
 		entity.motionX = (double) side.offsetX * 0.15;
 		entity.motionY += 0.10000000298023224D;
 		entity.motionZ = (double) side.offsetZ * 0.15;

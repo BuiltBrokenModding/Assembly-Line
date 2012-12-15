@@ -18,32 +18,23 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 
 	private void renderAModelAt(TileEntityConveyorBelt tileEntity, double x, double y, double z, float f)
 	{
-		String flip = "";// if(tileEntity.flip){flip
-							// = "F";}
+		String flip = "";
 		boolean mid = tileEntity.getIsMiddleBelt();
-		int face = tileEntity.getBeltDirection();
+		int face = tileEntity.getDirection().ordinal();
 
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		GL11.glRotatef(180f, 0f, 0f, 1f);
 
-		bindTextureByName(AssemblyLine.TEXTURE_PATH + "BeltTexture" + flip + ".png");
-		if (face == 2)
+		this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "BeltTexture" + flip + ".png");
+		switch(face)
 		{
-			GL11.glRotatef(180f, 0f, 1f, 0f);
+			case 2: GL11.glRotatef(0f, 0f, 1f, 0f);break;
+			case 3: GL11.glRotatef(180f, 0f, 1f, 0f);break;
+			case 4: GL11.glRotatef(-90f, 0f, 1f, 0f);break;
+			case 5: GL11.glRotatef(90f, 0f, 1f, 0f);break;
 		}
-		else if (face == 3)
-		{
-			GL11.glRotatef(0f, 0f, 1f, 0f);
-		}
-		else if (face == 4)
-		{
-			GL11.glRotatef(90f, 0f, 1f, 0f);
-		}
-		else if (face == 5)
-		{
-			GL11.glRotatef(270f, 0f, 1f, 0f);
-		}
+		
 		int ent = tileEntity.worldObj.getBlockId(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
 		model.render(0.0625F, (float) Math.toRadians(tileEntity.wheelRotation), tileEntity.getIsBackCap(), tileEntity.getIsFrontCap(), false);
 
