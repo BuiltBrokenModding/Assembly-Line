@@ -1,9 +1,5 @@
 package assemblyline.common.block;
 
-import assemblyline.common.AssemblyLine;
-
-import com.google.common.io.ByteArrayDataInput;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,6 +12,9 @@ import net.minecraftforge.common.ISidedInventory;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
+import assemblyline.common.AssemblyLine;
+
+import com.google.common.io.ByteArrayDataInput;
 
 public class TileEntityCrate extends TileEntityAdvanced implements ISidedInventory, IPacketReceiver
 {
@@ -203,7 +202,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ISidedInvento
 				var2.appendTag(var4);
 			}
 		}
-		
+
 		nbt.setTag("Items", var2);
 
 		if (this.containingItems[0] != null)

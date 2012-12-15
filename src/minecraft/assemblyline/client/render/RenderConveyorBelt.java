@@ -5,12 +5,10 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
-import universalelectricity.core.vector.Vector3;
 import assemblyline.client.model.ModelConveyorBelt;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.machine.belt.BlockConveyorBelt;
-import assemblyline.common.machine.belt.BlockConveyorBelt.SlantType;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt;
+import assemblyline.common.machine.belt.TileEntityConveyorBelt.SlantType;
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
 
@@ -23,7 +21,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 	{
 		String flip = "";
 		boolean mid = tileEntity.getIsMiddleBelt();
-		SlantType slantType = BlockConveyorBelt.getSlant(tileEntity.worldObj, new Vector3(tileEntity));
+		SlantType slantType = tileEntity.getSlant();
 		int face = tileEntity.getDirection().ordinal();
 
 		GL11.glPushMatrix();

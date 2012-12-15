@@ -2,13 +2,10 @@ package assemblyline.common.block;
 
 import java.util.List;
 
-import assemblyline.common.AssemblyLine;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 
 public class ItemBlockCrate extends ItemBlock

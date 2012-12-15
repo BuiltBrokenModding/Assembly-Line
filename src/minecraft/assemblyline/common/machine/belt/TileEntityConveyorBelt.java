@@ -4,8 +4,8 @@ import java.util.EnumSet;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
@@ -19,7 +19,6 @@ import universalelectricity.prefab.implement.IRotatable;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.TileEntityElectricityReceiver;
-import assemblyline.api.ConveyorIgnore;
 import assemblyline.api.IBelt;
 import assemblyline.common.AssemblyLine;
 
@@ -27,6 +26,11 @@ import com.google.common.io.ByteArrayDataInput;
 
 public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implements IPacketReceiver, IBelt, IRotatable
 {
+	public enum SlantType
+	{
+		NONE, UP, DOWN
+	}
+
 	/**
 	 * Joules required to run this thing.
 	 */
@@ -37,19 +41,37 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	 */
 	public double wattsReceived = 0;
 
-	public float speed = 0.02f;
+	public float acceleration = 0.01f;
+	public float maxSpeed = 0.2f;
 
 	public float wheelRotation = 0;
 	public boolean running = false;
 	public boolean textureFlip = false;
 	public TileEntityConveyorBelt[] adjBelts = { null, null, null, null };
-
 	public int powerTransferRange = 0;
+	private SlantType slantType = SlantType.NONE;
 
 	public TileEntityConveyorBelt()
 	{
 		super();
 		ElectricityConnections.registerConnector(this, EnumSet.of(ForgeDirection.DOWN));
+	}
+
+	public SlantType getSlant()
+	{
+		return slantType;
+	}
+
+	public void setSlant(SlantType slantType)
+	{
+		if (slantType == null)
+		{
+			slantType = SlantType.NONE;
+		}
+
+		this.slantType = slantType;
+
+		PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj);
 	}
 
 	/**
@@ -128,7 +150,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 		{
 			if (!worldObj.isRemote)
 			{
-				PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, Vector3.get(this), 15);
+				PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 15);
 			}
 
 			if (this.wattsReceived >= WATT_REQUEST)
@@ -160,87 +182,14 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 		if (this.running)
 		{
 			this.textureFlip = textureFlip ? false : true;
-			this.wheelRotation -= this.speed;
-			this.doBeltAction();
-		}
-	}
-
-	/**
-	 * almost unneeded but is change for each different belt type
-	 */
-	public void doBeltAction()
-	{
-		this.conveyItemsHorizontal(true, false);
-	}
-
-	/**
-	 * Causes all items to be moved above the belt
-	 * 
-	 * @param extendLife - increases the items life
-	 * @param preventPickUp - prevent a player from picking the item up
-	 */
-	public void conveyItemsHorizontal(boolean extendLife, boolean preventPickUp)
-	{
-		try
-		{
-			List<Entity> entityOnTop = this.getAffectedEntities();
-
-			for (Entity entity : entityOnTop)
-			{
-				int direction = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-
-				if (!ConveyorIgnore.isIgnore(entity))
-				{
-					if (!(entity instanceof EntityPlayer && ((EntityPlayer) entity).isSneaking()))
-					{
-						if (direction == 0)
-						{
-							entity.motionZ -= 1 * this.speed;
-							// entity.posX = this.xCoord + 0.5D;
-						}
-						if (direction == 1)
-						{
-							entity.motionX += 1 * this.speed;
-							// entity.posZ = this.zCoord + 0.5D;
-						}
-						if (direction == 2)
-						{
-							entity.motionZ += 1 * this.speed;
-							// entity.posX = this.xCoord + 0.5D;
-						}
-						if (direction == 3)
-						{
-							entity.motionX -= 1 * this.speed;
-							// entity.posZ = this.zCoord + 0.5D;
-						}
-					}
-				}
-
-				if (entity instanceof EntityItem)
-				{
-					EntityItem entityItem = (EntityItem) entity;
-
-					if (extendLife && entityItem.age >= 1000)
-					{
-						entityItem.age = 0;
-					}
-					if (preventPickUp && entityItem.delayBeforeCanPickup <= 1)
-					{
-						entityItem.delayBeforeCanPickup += 10;
-					}
-				}
-			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
+			this.wheelRotation -= this.maxSpeed;
 		}
 	}
 
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.wattsReceived);
+		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.wattsReceived, this.slantType.ordinal());
 	}
 
 	/**
@@ -310,6 +259,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 			try
 			{
 				this.wattsReceived = dataStream.readDouble();
+				this.slantType = SlantType.values()[dataStream.readInt()];
 			}
 			catch (Exception e)
 			{
@@ -336,5 +286,26 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	{
 		AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1);
 		return worldObj.getEntitiesWithinAABB(Entity.class, bounds);
+	}
+
+	/**
+	 * NBT Data
+	 */
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		this.slantType = SlantType.values()[nbt.getByte("slant")];
+	}
+
+	/**
+	 * Writes a tile entity to NBT.
+	 */
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+
+		nbt.setByte("slant", (byte) this.slantType.ordinal());
 	}
 }

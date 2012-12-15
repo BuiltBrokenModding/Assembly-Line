@@ -2,17 +2,17 @@ package assemblyline.common.machine.belt;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
-import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.BlockMachine;
 import universalelectricity.prefab.UETab;
 import assemblyline.client.render.RenderHelper;
-import assemblyline.common.AssemblyLine;
+import assemblyline.common.machine.belt.TileEntityConveyorBelt.SlantType;
 
 /**
  * The block for the actual conveyor belt!
@@ -21,47 +21,11 @@ import assemblyline.common.AssemblyLine;
  */
 public class BlockConveyorBelt extends BlockMachine
 {
-	public enum SlantType
-	{
-		UP, DOWN
-	}
-
 	public BlockConveyorBelt(int id)
 	{
 		super("conveyorBelt", id, UniversalElectricity.machine);
 		this.setBlockBounds(0, 0, 0, 1, 0.3f, 1);
 		this.setCreativeTab(UETab.INSTANCE);
-	}
-
-	/**
-	 * Checks the front and the back position to find any conveyor blocks either higher or lower
-	 * than this block to determine if it this conveyor block needs to slant.
-	 * 
-	 * @return Returns of this belt is slanting up or down. Returns null if not slanting.
-	 */
-	public static SlantType getSlant(World world, Vector3 position)
-	{
-		TileEntity t = position.getTileEntity(world);
-
-		if (t != null)
-		{
-			if (t instanceof TileEntityConveyorBelt)
-			{
-				TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) t;
-				Vector3 frontCheck = position.clone();
-				frontCheck.modifyPositionFromSide(tileEntity.getDirection());
-				Vector3 backCheck = position.clone();
-				backCheck.modifyPositionFromSide(tileEntity.getDirection().getOpposite());
-
-				if (Vector3.add(frontCheck, new Vector3(0, 1, 0)).getBlockID(world) == AssemblyLine.blockConveyorBelt.blockID && Vector3.add(backCheck, new Vector3(0, -1, 0)).getBlockID(world) == AssemblyLine.blockConveyorBelt.blockID)
-				{
-					return SlantType.UP;
-				}
-				else if (Vector3.add(frontCheck, new Vector3(0, -1, 0)).getBlockID(world) == AssemblyLine.blockConveyorBelt.blockID && Vector3.add(backCheck, new Vector3(0, 1, 0)).getBlockID(world) == AssemblyLine.blockConveyorBelt.blockID) { return SlantType.DOWN; }
-			}
-		}
-
-		return null;
 	}
 
 	@Override
@@ -116,10 +80,25 @@ public class BlockConveyorBelt extends BlockMachine
 		return true;
 	}
 
+	@Override
+	public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
+	{
+		TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) world.getBlockTileEntity(x, y, z);
+
+		int slantOrdinal = tileEntity.getSlant().ordinal() + 1;
+
+		if (slantOrdinal >= SlantType.values().length)
+		{
+			slantOrdinal = 0;
+		}
+
+		tileEntity.setSlant(SlantType.values()[slantOrdinal]);
+
+		return true;
+	}
+
 	/**
-	 * Function WIP.
-	 * 
-	 * @author AtomicStryker
+	 * Moves the entity if the conductor is powered.
 	 */
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
@@ -128,25 +107,42 @@ public class BlockConveyorBelt extends BlockMachine
 
 		if (tileEntity.running)
 		{
-			SlantType slantType = this.getSlant(world, new Vector3(x, y, z));
+			SlantType slantType = tileEntity.getSlant();
 			ForgeDirection direction = tileEntity.getDirection();
 
+			float modifier = 1;
+
+			if (entity instanceof EntityLiving)
+			{
+				modifier = 10;
+			}
+
 			// Move the entity based on the conveyor belt's direction.
-			entity.addVelocity(direction.offsetX * tileEntity.speed, 0, direction.offsetZ * tileEntity.speed);
+			entity.addVelocity(direction.offsetX * tileEntity.acceleration * modifier, 0, direction.offsetZ * tileEntity.acceleration * modifier);
+
+			if (direction.offsetX != 0 && Math.abs(entity.motionX) > Math.abs(direction.offsetX * tileEntity.maxSpeed))
+			{
+				entity.motionX = direction.offsetX * tileEntity.maxSpeed;
+			}
+
+			if (direction.offsetZ != 0 && Math.abs(entity.motionZ) > Math.abs(direction.offsetZ * tileEntity.maxSpeed))
+			{
+				entity.motionZ = direction.offsetZ * tileEntity.maxSpeed;
+			}
 
 			// Attempt to move entity to the center of the belt to prevent them from flying off.
 			if (direction.offsetX != 0)
 			{
 				double difference = (z + 0.5) - entity.posZ;
-				entity.motionZ += difference * 0.005;
+				entity.motionZ += difference * 0.01;
+				// entity.posZ = z + 0.5;
 			}
 			else if (direction.offsetZ != 0)
 			{
 				double difference = (x + 0.5) - entity.posX;
-				entity.motionX += difference * 0.005;
+				entity.motionX += difference * 0.01;
+				// entity.posX = z + 0.5;
 			}
-
-			entity.onGround = false;
 
 			if (slantType == SlantType.UP)
 			{
@@ -161,6 +157,13 @@ public class BlockConveyorBelt extends BlockMachine
 				{
 					entity.addVelocity(0, -0.1, 0);
 				}
+			}
+
+			if (entity instanceof EntityItem)
+			{
+				((EntityItem) entity).age++;
+				((EntityItem) entity).delayBeforeCanPickup = 2;
+				entity.onGround = false;
 			}
 		}
 	}
