@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
@@ -27,63 +28,56 @@ public class BlockCrate extends BlockMachine
 	}
 
 	/**
-	 * Called upon block activation (right click on the block.)
+	 * Placed the item the player is holding into the crate.
 	 */
 	@Override
 	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
 	{
-		if (world.getBlockTileEntity(x, y, z) != null)
+		if (!world.isRemote && world.getBlockTileEntity(x, y, z) != null)
 		{
 			TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
+			ItemStack containingStack = tileEntity.getStackInSlot(0);
 			ItemStack itemStack = par5EntityPlayer.getCurrentEquippedItem();
 
 			if (itemStack != null)
 			{
-				if (tileEntity.containingItems[0] != null)
+				if (itemStack.isStackable())
 				{
-					if (tileEntity.containingItems[0].isItemEqual(itemStack))
+					if (containingStack != null)
 					{
-						tileEntity.containingItems[0].stackSize += itemStack.stackSize;
-
-						if (tileEntity.containingItems[0].stackSize > tileEntity.getInventoryStackLimit())
+						if (containingStack.isStackable() && containingStack.isItemEqual(itemStack))
 						{
-							itemStack.stackSize = tileEntity.containingItems[0].stackSize - tileEntity.getInventoryStackLimit();
-						}
-						else
-						{
-							itemStack.stackSize = 0;
-						}
+							int newStackSize = containingStack.stackSize + itemStack.stackSize;
+							int overFlowAmount = newStackSize - tileEntity.getInventoryStackLimit();
 
-						return true;
+							if (overFlowAmount > 0)
+							{
+								itemStack.stackSize = overFlowAmount;
+							}
+							else
+							{
+								itemStack.stackSize = 0;
+							}
+
+							containingStack.stackSize = newStackSize;
+							tileEntity.setInventorySlotContents(0, containingStack);
+						}
 					}
-				}
-				else if (itemStack.isStackable())
-				{
-					tileEntity.containingItems[0] = itemStack;
-					itemStack.stackSize = 0;
-					return true;
-				}
+					else
+					{
+						tileEntity.setInventorySlotContents(0, itemStack.copy());
+						itemStack.stackSize = 0;
+					}
 
-				if (itemStack.stackSize <= 0)
-					par5EntityPlayer.inventory.setInventorySlotContents(par5EntityPlayer.inventory.currentItem, null);
-
-			}
-			else if (tileEntity.containingItems[0] != null)
-			{
-				int amountToTake = Math.min(tileEntity.containingItems[0].stackSize, 64);
-				ItemStack newStack = tileEntity.containingItems[0].copy();
-				newStack.stackSize = amountToTake;
-				par5EntityPlayer.inventory.setInventorySlotContents(par5EntityPlayer.inventory.currentItem, newStack);
-				tileEntity.containingItems[0].stackSize -= amountToTake;
-
-				if (tileEntity.containingItems[0].stackSize <= 0)
-				{
-					tileEntity.containingItems[0] = null;
+					if (itemStack.stackSize <= 0)
+					{
+						par5EntityPlayer.inventory.setInventorySlotContents(par5EntityPlayer.inventory.currentItem, null);
+					}
 				}
 			}
 		}
 
-		return false;
+		return true;
 	}
 
 	/**
@@ -92,28 +86,63 @@ public class BlockCrate extends BlockMachine
 	@Override
 	public boolean onSneakMachineActivated(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
-		if (world.getBlockTileEntity(x, y, z) != null)
+		if (!world.isRemote && world.getBlockTileEntity(x, y, z) != null)
 		{
 			TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
+			ItemStack containingStack = tileEntity.getStackInSlot(0);
 
-			if (tileEntity.containingItems[0] != null)
+			if (containingStack != null)
 			{
-				if (tileEntity.containingItems[0].stackSize > 0)
+				int amountToTake = Math.min(containingStack.stackSize, 64);
+				ItemStack dropStack = containingStack.copy();
+				dropStack.stackSize = amountToTake;
+
+				EntityItem entityItem = new EntityItem(world, par5EntityPlayer.posX, par5EntityPlayer.posY, par5EntityPlayer.posZ, dropStack);
+
+				float var13 = 0.05F;
+				entityItem.motionX = ((float) world.rand.nextGaussian() * var13);
+				entityItem.motionY = ((float) world.rand.nextGaussian() * var13 + 0.2F);
+				entityItem.motionZ = ((float) world.rand.nextGaussian() * var13);
+				entityItem.delayBeforeCanPickup = 0;
+				world.spawnEntityInWorld(entityItem);
+
+				containingStack.stackSize -= amountToTake;
+
+				if (containingStack.stackSize <= 0)
 				{
-					if (!world.isRemote)
-					{
-						float var6 = 0.7F;
-						double var7 = (double) (world.rand.nextFloat() * var6) + (double) (1.0F - var6) * 0.5D;
-						double var9 = (double) (world.rand.nextFloat() * var6) + (double) (1.0F - var6) * 0.5D;
-						double var11 = (double) (world.rand.nextFloat() * var6) + (double) (1.0F - var6) * 0.5D;
-						ItemStack dropStack = new ItemStack(this, 1);
-						ItemBlockCrate.setContainingItemStack(dropStack, tileEntity.containingItems[0]);
-						EntityItem var13 = new EntityItem(world, (double) x + var7, (double) y + var9, (double) z + var11, dropStack);
-						var13.delayBeforeCanPickup = 10;
-						world.spawnEntityInWorld(var13);
-						tileEntity.containingItems[0] = null;
-						world.setBlockWithNotify(x, y, z, 0);
-					}
+					containingStack = null;
+				}
+
+				tileEntity.setInventorySlotContents(0, containingStack);
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
+	{
+		if (!world.isRemote && world.getBlockTileEntity(x, y, z) != null)
+		{
+			TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
+			ItemStack containingStack = tileEntity.getStackInSlot(0);
+
+			if (containingStack != null)
+			{
+				if (containingStack.stackSize > 0)
+				{
+					float var6 = 0.7F;
+					double var7 = (double) (world.rand.nextFloat() * var6) + (double) (1.0F - var6) * 0.5D;
+					double var9 = (double) (world.rand.nextFloat() * var6) + (double) (1.0F - var6) * 0.5D;
+					double var11 = (double) (world.rand.nextFloat() * var6) + (double) (1.0F - var6) * 0.5D;
+					ItemStack dropStack = new ItemStack(this, 1);
+					ItemBlockCrate.setContainingItemStack(dropStack, containingStack);
+					EntityItem var13 = new EntityItem(world, (double) x + var7, (double) y + var9, (double) z + var11, dropStack);
+					var13.delayBeforeCanPickup = 10;
+					world.spawnEntityInWorld(var13);
+					tileEntity.setInventorySlotContents(0, null);
+					world.setBlockWithNotify(x, y, z, 0);
+
 					return true;
 				}
 			}

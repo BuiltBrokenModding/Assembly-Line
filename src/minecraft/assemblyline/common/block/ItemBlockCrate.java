@@ -2,10 +2,13 @@ package assemblyline.common.block;
 
 import java.util.List;
 
+import assemblyline.common.AssemblyLine;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 
 public class ItemBlockCrate extends ItemBlock
@@ -41,7 +44,15 @@ public class ItemBlockCrate extends ItemBlock
 			itemStack.setTagCompound(new NBTTagCompound());
 		}
 
-		containingStack.writeToNBT(itemStack.getTagCompound());
+		if (containingStack != null)
+		{
+			NBTTagCompound itemTagCompound = new NBTTagCompound();
+			containingStack.stackSize = Math.abs(containingStack.stackSize);
+			containingStack.writeToNBT(itemTagCompound);
+			itemStack.getTagCompound().setTag("Item", itemTagCompound);
+
+			itemStack.getTagCompound().setInteger("Count", containingStack.stackSize);
+		}
 	}
 
 	public static ItemStack getContainingItemStack(ItemStack itemStack)
@@ -49,9 +60,18 @@ public class ItemBlockCrate extends ItemBlock
 		if (itemStack.stackTagCompound == null)
 		{
 			itemStack.setTagCompound(new NBTTagCompound());
+			return null;
 		}
 
-		return ItemStack.loadItemStackFromNBT(itemStack.getTagCompound());
+		NBTTagCompound itemTagCompound = itemStack.getTagCompound().getCompoundTag("Item");
+		ItemStack containingStack = ItemStack.loadItemStackFromNBT(itemTagCompound);
+
+		if (containingStack != null)
+		{
+			containingStack.stackSize = itemStack.getTagCompound().getInteger("Count");
+		}
+
+		return containingStack;
 	}
 
 	@Override
@@ -66,7 +86,7 @@ public class ItemBlockCrate extends ItemBlock
 				if (containingItem.stackSize > 0)
 				{
 					TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
-					tileEntity.containingItems[0] = containingItem;
+					tileEntity.setInventorySlotContents(0, containingItem);
 				}
 			}
 		}

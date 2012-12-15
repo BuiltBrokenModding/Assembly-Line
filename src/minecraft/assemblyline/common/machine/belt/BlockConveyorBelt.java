@@ -12,6 +12,7 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.BlockMachine;
 import universalelectricity.prefab.UETab;
 import assemblyline.client.render.RenderHelper;
+import assemblyline.common.AssemblyLine;
 
 /**
  * The block for the actual conveyor belt!
@@ -20,6 +21,11 @@ import assemblyline.client.render.RenderHelper;
  */
 public class BlockConveyorBelt extends BlockMachine
 {
+	public enum SlantType
+	{
+		UP, DOWN
+	}
+
 	public BlockConveyorBelt(int id)
 	{
 		super("conveyorBelt", id, UniversalElectricity.machine);
@@ -28,12 +34,12 @@ public class BlockConveyorBelt extends BlockMachine
 	}
 
 	/**
-	 * Is this conveyor belt slanted towards a direction?
+	 * Checks the front and the back position to find any conveyor blocks either higher or lower
+	 * than this block to determine if it this conveyor block needs to slant.
 	 * 
-	 * @return The ForgeDirection in which this conveyor belt is slanting against. The direction
-	 * given is the high point of the slant. Return Unknown if not slanting.
+	 * @return Returns of this belt is slanting up or down. Returns null if not slanting.
 	 */
-	public ForgeDirection getSlant(World world, Vector3 position)
+	public static SlantType getSlant(World world, Vector3 position)
 	{
 		TileEntity t = position.getTileEntity(world);
 
@@ -42,12 +48,20 @@ public class BlockConveyorBelt extends BlockMachine
 			if (t instanceof TileEntityConveyorBelt)
 			{
 				TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) t;
-				Vector3 highCheck = position.clone();
-				highCheck.modifyPositionFromSide(tileEntity.getDirection());
+				Vector3 frontCheck = position.clone();
+				frontCheck.modifyPositionFromSide(tileEntity.getDirection());
+				Vector3 backCheck = position.clone();
+				backCheck.modifyPositionFromSide(tileEntity.getDirection().getOpposite());
+
+				if (Vector3.add(frontCheck, new Vector3(0, 1, 0)).getBlockID(world) == AssemblyLine.blockConveyorBelt.blockID && Vector3.add(backCheck, new Vector3(0, -1, 0)).getBlockID(world) == AssemblyLine.blockConveyorBelt.blockID)
+				{
+					return SlantType.UP;
+				}
+				else if (Vector3.add(frontCheck, new Vector3(0, -1, 0)).getBlockID(world) == AssemblyLine.blockConveyorBelt.blockID && Vector3.add(backCheck, new Vector3(0, 1, 0)).getBlockID(world) == AssemblyLine.blockConveyorBelt.blockID) { return SlantType.DOWN; }
 			}
 		}
 
-		return ForgeDirection.UNKNOWN;
+		return null;
 	}
 
 	@Override
@@ -112,43 +126,42 @@ public class BlockConveyorBelt extends BlockMachine
 	{
 		TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) world.getBlockTileEntity(x, y, z);
 
-		// if (tileEntity.running)
+		if (tileEntity.running)
 		{
+			SlantType slantType = this.getSlant(world, new Vector3(x, y, z));
 			ForgeDirection direction = tileEntity.getDirection();
 
-			entity.addVelocity(direction.offsetX * tileEntity.speed, direction.offsetY * tileEntity.speed, direction.offsetZ * tileEntity.speed);
-			entity.onGround = false;
-			/*
-			 * else if (metadata == 9) { entity.setVelocity(0.0D, 0.0D, 0.1D); entity.onGround =
-			 * false; } else if (metadata == 10) { entity.setVelocity(-0.1D, 0.0D, 0.0D);
-			 * entity.onGround = false; } else if (metadata == 11) { entity.setVelocity(0.0D, 0.0D,
-			 * -0.1D); entity.onGround = false; }
-			 */
+			// Move the entity based on the conveyor belt's direction.
+			entity.addVelocity(direction.offsetX * tileEntity.speed, 0, direction.offsetZ * tileEntity.speed);
 
-			/*
-			 * if (metadata == 4) { entity.setVelocity(0.1D, 0.2D, 0.0D); entity.onGround = false; }
-			 * else if (metadata == 5) { entity.setVelocity(0.0D, 0.2D, 0.1D); entity.onGround =
-			 * false; } else if (metadata == 6) { entity.setVelocity(-0.1D, 0.2D, 0.0D);
-			 * entity.onGround = false; } else if (metadata == 7) { entity.setVelocity(0.0D, 0.2D,
-			 * -0.1D); entity.onGround = false; } else if (metadata == 8) { entity.setVelocity(0.1D,
-			 * 0.0D, 0.0D); entity.onGround = false; } else if (metadata == 9) {
-			 * entity.setVelocity(0.0D, 0.0D, 0.1D); entity.onGround = false; } else if (metadata ==
-			 * 10) { entity.setVelocity(-0.1D, 0.0D, 0.0D); entity.onGround = false; } else if
-			 * (metadata == 11) { entity.setVelocity(0.0D, 0.0D, -0.1D); entity.onGround = false; }
-			 * else if (metadata == 0) { if (entity.posZ > (double) z + 0.55D) {
-			 * entity.setVelocity(0.05D, 0.0D, -0.05D); } else if (entity.posZ < (double) z + 0.45D)
-			 * { entity.setVelocity(0.05D, 0.0D, 0.05D); } else { entity.setVelocity(0.1D, 0.0D,
-			 * 0.0D); } } else if (metadata == 1) { if (entity.posX > (double) x + 0.55D) {
-			 * entity.setVelocity(-0.05D, 0.0D, 0.05D); } else if (entity.posX < (double) x + 0.45D)
-			 * { entity.setVelocity(0.05D, 0.0D, 0.05D); } else { entity.setVelocity(0.0D, 0.0D,
-			 * 0.1D); } } else if (metadata == 2) { if (entity.posZ > (double) z + 0.55D) {
-			 * entity.setVelocity(-0.05D, 0.0D, -0.05D); } else if (entity.posZ < (double) z +
-			 * 0.45D) { entity.setVelocity(-0.05D, 0.0D, 0.05D); } else { entity.setVelocity(-0.1D,
-			 * 0.0D, 0.0D); } } else if (metadata == 3) { if (entity.posX > (double) x + 0.55D) {
-			 * entity.setVelocity(-0.05D, 0.0D, -0.05D); } else if (entity.posX < (double) x +
-			 * 0.45D) { entity.setVelocity(0.05D, 0.0D, -0.05D); } else { entity.setVelocity(0.0D,
-			 * 0.0D, -0.1D); } }
-			 */
+			// Attempt to move entity to the center of the belt to prevent them from flying off.
+			if (direction.offsetX != 0)
+			{
+				double difference = (z + 0.5) - entity.posZ;
+				entity.motionZ += difference * 0.005;
+			}
+			else if (direction.offsetZ != 0)
+			{
+				double difference = (x + 0.5) - entity.posX;
+				entity.motionX += difference * 0.005;
+			}
+
+			entity.onGround = false;
+
+			if (slantType == SlantType.UP)
+			{
+				if (entity.motionY < 0.2)
+				{
+					entity.addVelocity(0, 0.2, 0);
+				}
+			}
+			else if (slantType == SlantType.DOWN)
+			{
+				if (entity.motionY > -0.1)
+				{
+					entity.addVelocity(0, -0.1, 0);
+				}
+			}
 		}
 	}
 

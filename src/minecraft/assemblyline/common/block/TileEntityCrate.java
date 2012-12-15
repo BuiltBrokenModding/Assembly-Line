@@ -19,7 +19,7 @@ import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 public class TileEntityCrate extends TileEntityAdvanced implements ISidedInventory, IPacketReceiver
 {
-	public ItemStack[] containingItems = new ItemStack[1];
+	private ItemStack[] containingItems = new ItemStack[1];
 
 	@Override
 	public boolean canUpdate()
@@ -34,15 +34,22 @@ public class TileEntityCrate extends TileEntityAdvanced implements ISidedInvento
 		{
 			try
 			{
-				if (this.containingItems[0] == null)
+				if (dataStream.readBoolean())
 				{
-					this.containingItems[0] = new ItemStack(dataStream.readInt(), dataStream.readInt(), dataStream.readInt());
+					if (this.containingItems[0] == null)
+					{
+						this.containingItems[0] = new ItemStack(dataStream.readInt(), dataStream.readInt(), dataStream.readInt());
+					}
+					else
+					{
+						this.containingItems[0].itemID = dataStream.readInt();
+						this.containingItems[0].stackSize = dataStream.readInt();
+						this.containingItems[0].setItemDamage(dataStream.readInt());
+					}
 				}
 				else
 				{
-					this.containingItems[0].itemID = dataStream.readInt();
-					this.containingItems[0].stackSize = dataStream.readInt();
-					this.containingItems[0].setItemDamage(dataStream.readInt());
+					this.containingItems[0] = null;
 				}
 			}
 			catch (Exception e)
@@ -55,8 +62,8 @@ public class TileEntityCrate extends TileEntityAdvanced implements ISidedInvento
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		if (this.containingItems[0] != null) { return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.containingItems[0].itemID, this.containingItems[0].stackSize, this.containingItems[0].getItemDamage()); }
-		return null;
+		if (this.containingItems[0] != null) { return PacketManager.getPacket(AssemblyLine.CHANNEL, this, true, this.containingItems[0].itemID, this.containingItems[0].stackSize, this.containingItems[0].getItemDamage()); }
+		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, false);
 	}
 
 	/**
@@ -122,11 +129,11 @@ public class TileEntityCrate extends TileEntityAdvanced implements ISidedInvento
 		if (par2ItemStack != null && par2ItemStack.stackSize > this.getInventoryStackLimit())
 		{
 			par2ItemStack.stackSize = this.getInventoryStackLimit();
+		}
 
-			if (!this.worldObj.isRemote)
-			{
-				PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj);
-			}
+		if (!this.worldObj.isRemote)
+		{
+			PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj);
 		}
 	}
 
@@ -155,6 +162,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ISidedInvento
 		super.readFromNBT(nbt);
 
 		NBTTagList var2 = nbt.getTagList("Items");
+
 		this.containingItems = new ItemStack[this.getSizeInventory()];
 
 		for (int var3 = 0; var3 < var2.tagCount(); ++var3)
@@ -167,6 +175,12 @@ public class TileEntityCrate extends TileEntityAdvanced implements ISidedInvento
 				this.containingItems[var5] = ItemStack.loadItemStackFromNBT(var4);
 			}
 		}
+
+		if (this.containingItems[0] != null)
+		{
+			this.containingItems[0].stackSize = nbt.getInteger("Count");
+		}
+
 	}
 
 	/**
@@ -178,6 +192,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ISidedInvento
 		super.writeToNBT(nbt);
 
 		NBTTagList var2 = new NBTTagList();
+
 		for (int var3 = 0; var3 < this.containingItems.length; ++var3)
 		{
 			if (this.containingItems[var3] != null)
@@ -188,13 +203,19 @@ public class TileEntityCrate extends TileEntityAdvanced implements ISidedInvento
 				var2.appendTag(var4);
 			}
 		}
+		
 		nbt.setTag("Items", var2);
+
+		if (this.containingItems[0] != null)
+		{
+			nbt.setInteger("Count", this.containingItems[0].stackSize);
+		}
 	}
 
 	@Override
 	public int getInventoryStackLimit()
 	{
-		return 2000;
+		return 4096;
 	}
 
 	@Override
