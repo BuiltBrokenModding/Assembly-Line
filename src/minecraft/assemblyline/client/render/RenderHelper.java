@@ -38,7 +38,7 @@ public class RenderHelper implements ISimpleBlockRenderingHandler
 			modelConveyorBelt.render(0.0625F, 0, false, false, false);
 			GL11.glPopMatrix();
 		}
-		else if (block.blockID == AssemblyLine.blockInteraction.blockID)
+		else if (block.blockID == AssemblyLine.blockMulti.blockID)
 		{
 			if (metadata == MachineType.SORTER.metadata)
 			{

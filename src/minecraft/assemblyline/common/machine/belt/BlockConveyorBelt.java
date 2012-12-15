@@ -63,7 +63,7 @@ public class BlockConveyorBelt extends BlockMachine
 	/**
 	 * @author AtomicStryker
 	 */
-	//@Override
+	// @Override
 	public void onEntityCollidedWithBlockTest(World world, int x, int y, int z, Entity entity)
 	{
 		TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) world.getBlockTileEntity(x, y, z);

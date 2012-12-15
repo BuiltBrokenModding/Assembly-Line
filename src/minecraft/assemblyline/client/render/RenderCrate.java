@@ -8,8 +8,6 @@ import org.lwjgl.opengl.GL11;
 
 import assemblyline.common.block.TileEntityCrate;
 
-import universalelectricity.core.vector.Vector3;
-
 public class RenderCrate extends TileEntitySpecialRenderer
 {
 

@@ -44,7 +44,7 @@ public class AssemblyLine
 
 	public static final String NAME = "Assembly Line";
 
-	public static final String VERSION = "0.1.5";
+	public static final String VERSION = "0.1.6";
 
 	public static final String CHANNEL = "AssemblyLine";
 
@@ -59,7 +59,7 @@ public class AssemblyLine
 	public static final int BLOCK_ID_PREFIX = 3030;
 
 	public static Block blockConveyorBelt;
-	public static Block blockInteraction;
+	public static Block blockMulti;
 	public static Block blockArchitectTable;
 	public static Block blockCrate;
 
@@ -71,7 +71,7 @@ public class AssemblyLine
 
 		CONFIGURATION.load();
 		blockConveyorBelt = new BlockConveyorBelt(CONFIGURATION.getBlock("Conveyor Belt", BLOCK_ID_PREFIX).getInt());
-		blockInteraction = new BlockMulti(CONFIGURATION.getBlock("Machine", BLOCK_ID_PREFIX + 1).getInt());
+		blockMulti = new BlockMulti(CONFIGURATION.getBlock("Machine", BLOCK_ID_PREFIX + 1).getInt());
 		blockArchitectTable = new BlockArchitectTable(CONFIGURATION.getBlock("Architect's Table", BLOCK_ID_PREFIX + 2).getInt());
 		blockCrate = new BlockCrate(CONFIGURATION.getBlock("Crate", BLOCK_ID_PREFIX + 3).getInt());
 		CONFIGURATION.save();
@@ -80,7 +80,7 @@ public class AssemblyLine
 		GameRegistry.registerBlock(blockConveyorBelt);
 		GameRegistry.registerBlock(blockArchitectTable);
 		GameRegistry.registerBlock(blockCrate, ItemBlockCrate.class);
-		GameRegistry.registerBlock(blockInteraction, ItemBlockMulti.class);
+		GameRegistry.registerBlock(blockMulti, ItemBlockMulti.class);
 
 		UpdateNotifier.INSTANCE.checkUpdate(NAME, VERSION, "http://calclavia.com/downloads/al/recommendedversion.txt");
 
@@ -130,17 +130,17 @@ public class AssemblyLine
 		// Add Names
 		for (MachineType type : MachineType.values())
 		{
-			LanguageRegistry.addName(new ItemStack(blockInteraction, 1, type.metadata), type.name);
+			LanguageRegistry.addName(new ItemStack(blockMulti, 1, type.metadata), type.name);
 		}
 
 		// Conveyor Belt
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 4), new Object[] { "III", "WMW", 'I', "ingotSteel", 'W', Block.wood, 'M', "motor" }));
 
 		// Rejector
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockInteraction, 1, MachineType.SORTER.metadata), new Object[] { "WPW", "@R@", '@', "plateSteel", 'R', Item.redstone, 'P', Block.pistonBase, 'C', "basicCircuit", 'W', "copperWire" }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockMulti, 1, MachineType.SORTER.metadata), new Object[] { "WPW", "@R@", '@', "plateSteel", 'R', Item.redstone, 'P', Block.pistonBase, 'C', "basicCircuit", 'W', "copperWire" }));
 
 		// Retriever
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockInteraction, 1, MachineType.MANIPULATOR.metadata), new Object[] { Block.dispenser, "basicCircuit" }));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockMulti, 1, MachineType.MANIPULATOR.metadata), new Object[] { Block.dispenser, "basicCircuit" }));
 
 		UETab.setItemStack(new ItemStack(blockConveyorBelt));
 	}

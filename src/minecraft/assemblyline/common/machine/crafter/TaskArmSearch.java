@@ -33,17 +33,15 @@ public class TaskArmSearch extends Task
 		this.searchSpeed = searchSpeed;
 	}
 
-    @Override
-    public void onTaskStart()
-    {
-        List found = tileEntity.worldObj.getEntitiesWithinAABB(entityToInclude,
-                AxisAlignedBB.getBoundingBox(tileEntity.xCoord - radius, tileEntity.yCoord - radius, tileEntity.zCoord - radius,
-                tileEntity.xCoord + radius, tileEntity.yCoord + radius, tileEntity.zCoord + radius));
-        if (found != null && !found.isEmpty())
-        {
-            foundEntity = (Entity) found.get(0);
-        }
-    }
+	@Override
+	public void onTaskStart()
+	{
+		List found = tileEntity.worldObj.getEntitiesWithinAABB(entityToInclude, AxisAlignedBB.getBoundingBox(tileEntity.xCoord - radius, tileEntity.yCoord - radius, tileEntity.zCoord - radius, tileEntity.xCoord + radius, tileEntity.yCoord + radius, tileEntity.zCoord + radius));
+		if (found != null && !found.isEmpty())
+		{
+			foundEntity = (Entity) found.get(0);
+		}
+	}
 
 	@Override
 	protected boolean doTask()

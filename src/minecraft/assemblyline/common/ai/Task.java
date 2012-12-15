@@ -21,8 +21,7 @@ public abstract class Task
 	/**
 	 * Called by the TaskManager to propagate tick updates
 	 * 
-	 * @param ticks
-	 *            The amount of ticks this task has been running
+	 * @param ticks The amount of ticks this task has been running
 	 * @return false if the task is finished and can be removed, true otherwise
 	 */
 	protected boolean doTask()

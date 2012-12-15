@@ -14,10 +14,8 @@ public class ArmHelper
 	/**
 	 * Used to locate items in an area
 	 * 
-	 * @param start
-	 *            - start xyz
-	 * @param End
-	 *            - end xyz
+	 * @param start - start xyz
+	 * @param End - end xyz
 	 * @return list of items
 	 */
 	public List<EntityItem> findItems(World world, Vector3 start, Vector3 end)

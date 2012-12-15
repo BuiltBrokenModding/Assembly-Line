@@ -5,12 +5,12 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.common.Side;
-import cpw.mods.fml.common.asm.SideOnly;
-
 import assemblyline.client.model.ModelConveyorBelt;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt;
+import cpw.mods.fml.common.Side;
+import cpw.mods.fml.common.asm.SideOnly;
+
 @SideOnly(Side.CLIENT)
 public class RenderConveyorBelt extends TileEntitySpecialRenderer
 {

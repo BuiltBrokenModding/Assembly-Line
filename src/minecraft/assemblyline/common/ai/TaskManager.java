@@ -23,11 +23,11 @@ public class TaskManager
 		 */
 		try
 		{
-		    Task task;
-		    Iterator<Task> iter = tasks.iterator();
+			Task task;
+			Iterator<Task> iter = tasks.iterator();
 			while (iter.hasNext())
 			{
-			    task = iter.next();
+				task = iter.next();
 				if (task.getTickInterval() > 0)
 				{
 					if (this.ticks % task.getTickInterval() == 0)
@@ -51,8 +51,8 @@ public class TaskManager
 	}
 
 	/**
-	 * Used to register Tasks for a TileEntity, executes onTaskStart
-	 * for the Task after registering it
+	 * Used to register Tasks for a TileEntity, executes onTaskStart for the Task after registering
+	 * it
 	 * 
 	 * @param tileEntity TE instance to register the task for
 	 * @param task Task instance to register
