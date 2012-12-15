@@ -123,11 +123,21 @@ public class TileEntityCrate extends TileEntityAdvanced implements ISidedInvento
 	@Override
 	public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
 	{
-		this.containingItems[par1] = par2ItemStack;
-
-		if (par2ItemStack != null && par2ItemStack.stackSize > this.getInventoryStackLimit())
+		if (par2ItemStack != null)
 		{
-			par2ItemStack.stackSize = this.getInventoryStackLimit();
+			if (par2ItemStack.isStackable())
+			{
+				this.containingItems[par1] = par2ItemStack;
+
+				if (par2ItemStack != null && par2ItemStack.stackSize > this.getInventoryStackLimit())
+				{
+					par2ItemStack.stackSize = this.getInventoryStackLimit();
+				}
+			}
+		}
+		else
+		{
+			this.containingItems[par1] = null;
 		}
 
 		if (!this.worldObj.isRemote)

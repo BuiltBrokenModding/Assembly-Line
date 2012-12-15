@@ -276,10 +276,13 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 			if (stackInInventory == null)
 			{
 				inventory.setInventorySlotContents(slotIndex, itemStack);
+				if (inventory.getStackInSlot(slotIndex) == null) { return itemStack; }
+
 				return null;
 			}
 			else if (stackInInventory.isItemEqual(itemStack))
 			{
+				stackInInventory = stackInInventory.copy();
 				int rejectedAmount = Math.max((stackInInventory.stackSize + itemStack.stackSize) - stackInInventory.getItem().getItemStackLimit(), 0);
 				stackInInventory.stackSize = Math.min(Math.max((stackInInventory.stackSize + itemStack.stackSize - rejectedAmount), 0), stackInInventory.getItem().getItemStackLimit());
 				itemStack.stackSize = rejectedAmount;

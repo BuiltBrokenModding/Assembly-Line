@@ -92,21 +92,24 @@ public class BlockCrate extends BlockMachine
 
 			if (containingStack != null)
 			{
-				int amountToTake = Math.min(containingStack.stackSize, 64);
-				ItemStack dropStack = containingStack.copy();
-				dropStack.stackSize = amountToTake;
+				if (containingStack.stackSize > 0)
+				{
+					int amountToTake = Math.min(containingStack.stackSize, 64);
+					ItemStack dropStack = containingStack.copy();
+					dropStack.stackSize = amountToTake;
 
-				EntityItem entityItem = new EntityItem(world, par5EntityPlayer.posX, par5EntityPlayer.posY, par5EntityPlayer.posZ, dropStack);
+					EntityItem entityItem = new EntityItem(world, par5EntityPlayer.posX, par5EntityPlayer.posY, par5EntityPlayer.posZ, dropStack);
 
-				float var13 = 0.05F;
-				entityItem.motionX = ((float) world.rand.nextGaussian() * var13);
-				entityItem.motionY = ((float) world.rand.nextGaussian() * var13 + 0.2F);
-				entityItem.motionZ = ((float) world.rand.nextGaussian() * var13);
-				entityItem.delayBeforeCanPickup = 0;
-				world.spawnEntityInWorld(entityItem);
+					float var13 = 0.05F;
+					entityItem.motionX = ((float) world.rand.nextGaussian() * var13);
+					entityItem.motionY = ((float) world.rand.nextGaussian() * var13 + 0.2F);
+					entityItem.motionZ = ((float) world.rand.nextGaussian() * var13);
+					entityItem.delayBeforeCanPickup = 0;
+					world.spawnEntityInWorld(entityItem);
 
-				containingStack.stackSize -= amountToTake;
-
+					containingStack.stackSize -= amountToTake;
+				}
+				
 				if (containingStack.stackSize <= 0)
 				{
 					containingStack = null;
