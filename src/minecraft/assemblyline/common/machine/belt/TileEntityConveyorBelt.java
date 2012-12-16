@@ -42,7 +42,7 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	public double wattsReceived = 0;
 
 	public float acceleration = 0.01f;
-	public float maxSpeed = 0.2f;
+	public float maxSpeed = 0.3f;
 
 	public float wheelRotation = 0;
 	public boolean running = false;

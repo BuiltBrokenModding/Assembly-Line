@@ -1,10 +1,13 @@
 package assemblyline.common.machine.belt;
 
+import java.util.List;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -134,13 +137,13 @@ public class BlockConveyorBelt extends BlockMachine
 			if (direction.offsetX != 0)
 			{
 				double difference = (z + 0.5) - entity.posZ;
-				entity.motionZ += difference * 0.01;
+				entity.motionZ += difference * 0.015;
 				// entity.posZ = z + 0.5;
 			}
 			else if (direction.offsetZ != 0)
 			{
 				double difference = (x + 0.5) - entity.posX;
-				entity.motionX += difference * 0.01;
+				entity.motionX += difference * 0.015;
 				// entity.posX = z + 0.5;
 			}
 

@@ -91,6 +91,9 @@ public abstract class TileEntityConductor extends TileEntityAdvanced implements 
 				{
 					Electricity.instance.splitConnection(this, (IConductor) this.getConnectedBlocks()[side.ordinal()]);
 				}
+
+				this.getNetwork().stopProducing(this.connectedBlocks[side.ordinal()]);
+				this.getNetwork().stopRequesting(this.connectedBlocks[side.ordinal()]);
 			}
 
 			this.connectedBlocks[side.ordinal()] = null;

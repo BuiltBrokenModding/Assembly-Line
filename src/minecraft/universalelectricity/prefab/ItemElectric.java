@@ -42,11 +42,11 @@ public abstract class ItemElectric extends Item implements IItemElectric
 		String color = "";
 		double joules = this.getJoules(par1ItemStack);
 
-		if (joules <= this.getMaxJoules() / 3)
+		if (joules <= this.getMaxJoules(par1ItemStack) / 3)
 		{
 			color = "\u00a74";
 		}
-		else if (joules > this.getMaxJoules() * 2 / 3)
+		else if (joules > this.getMaxJoules(par1ItemStack) * 2 / 3)
 		{
 			color = "\u00a72";
 		}
@@ -55,7 +55,7 @@ public abstract class ItemElectric extends Item implements IItemElectric
 			color = "\u00a76";
 		}
 
-		par3List.add(color + ElectricInfo.getDisplay(joules, ElectricUnit.JOULES) + " - " + Math.round((joules / this.getMaxJoules()) * 100) + "%");
+		par3List.add(color + ElectricInfo.getDisplay(joules, ElectricUnit.JOULES) + " - " + Math.round((joules / this.getMaxJoules(par1ItemStack)) * 100) + "%");
 	}
 
 	/**
@@ -68,6 +68,9 @@ public abstract class ItemElectric extends Item implements IItemElectric
 		// for this electric item!
 		ItemElectric item = ((ItemElectric) par1ItemStack.getItem());
 		item.setJoules(item.getJoules(par1ItemStack), par1ItemStack);
+		
+		// For items that can change electricity capacity
+		this.setMaxDamage((int) this.getMaxJoules(par1ItemStack));
 	}
 
 	/**
@@ -83,7 +86,7 @@ public abstract class ItemElectric extends Item implements IItemElectric
 	@Override
 	public double onReceive(double amps, double voltage, ItemStack itemStack)
 	{
-		double rejectedElectricity = Math.max((this.getJoules(itemStack) + ElectricInfo.getJoules(amps, voltage, 1)) - this.getMaxJoules(), 0);
+		double rejectedElectricity = Math.max((this.getJoules(itemStack) + ElectricInfo.getJoules(amps, voltage, 1)) - this.getMaxJoules(itemStack), 0);
 		this.setJoules(this.getJoules(itemStack) + ElectricInfo.getJoules(amps, voltage, 1) - rejectedElectricity, itemStack);
 		return rejectedElectricity;
 	}
@@ -126,7 +129,7 @@ public abstract class ItemElectric extends Item implements IItemElectric
 				itemStack.setTagCompound(new NBTTagCompound());
 			}
 
-			double electricityStored = Math.max(Math.min(wattHours, this.getMaxJoules()), 0);
+			double electricityStored = Math.max(Math.min(wattHours, this.getMaxJoules(itemStack)), 0);
 			itemStack.stackTagCompound.setDouble("electricity", electricityStored);
 			itemStack.setItemDamage((int) (getMaxJoules() - electricityStored));
 		}
@@ -154,7 +157,7 @@ public abstract class ItemElectric extends Item implements IItemElectric
 			{
 				electricityStored = itemStack.stackTagCompound.getDouble("electricity");
 			}
-			itemStack.setItemDamage((int) (getMaxJoules() - electricityStored));
+			itemStack.setItemDamage((int) (getMaxJoules(itemStack) - electricityStored));
 			return electricityStored;
 		}
 
@@ -171,7 +174,7 @@ public abstract class ItemElectric extends Item implements IItemElectric
 	public ItemStack getUncharged()
 	{
 		ItemStack chargedItem = new ItemStack(this);
-		chargedItem.setItemDamage((int) this.getMaxJoules());
+		chargedItem.setItemDamage((int) this.getMaxJoules(chargedItem));
 		return chargedItem;
 	}
 
@@ -180,7 +183,7 @@ public abstract class ItemElectric extends Item implements IItemElectric
 		if (itemStack.getItem() instanceof IItemElectric)
 		{
 			ItemStack chargedItem = itemStack.copy();
-			chargedItem.setItemDamage((int) ((IItemElectric) itemStack.getItem()).getMaxJoules());
+			chargedItem.setItemDamage((int) ((IItemElectric) itemStack.getItem()).getMaxJoules(chargedItem));
 			return chargedItem;
 		}
 
@@ -193,12 +196,12 @@ public abstract class ItemElectric extends Item implements IItemElectric
 		// Add an uncharged version of the
 		// electric item
 		ItemStack unchargedItem = new ItemStack(this, 1);
-		unchargedItem.setItemDamage((int) this.getMaxJoules());
+		unchargedItem.setItemDamage((int) this.getMaxJoules(unchargedItem));
 		par3List.add(unchargedItem);
 		// Add an electric item to the creative
 		// list that is fully charged
 		ItemStack chargedItem = new ItemStack(this, 1);
-		this.setJoules(((IItemElectric) chargedItem.getItem()).getMaxJoules(), chargedItem);
+		this.setJoules(((IItemElectric) chargedItem.getItem()).getMaxJoules(chargedItem), chargedItem);
 		par3List.add(chargedItem);
 	}
 }

@@ -44,7 +44,7 @@ public class AssemblyLine
 
 	public static final String NAME = "Assembly Line";
 
-	public static final String VERSION = "0.1.6";
+	public static final String VERSION = "0.1.7";
 
 	public static final String CHANNEL = "AssemblyLine";
 
@@ -133,13 +133,16 @@ public class AssemblyLine
 			LanguageRegistry.addName(new ItemStack(blockMulti, 1, type.metadata), type.name);
 		}
 
+		// Crate
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockCrate, new Object[] { "SPS", "P P", "SPS", 'P', "plateSteel", 'S', Item.stick }));
+
 		// Conveyor Belt
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 4), new Object[] { "III", "WMW", 'I', "ingotSteel", 'W', Block.wood, 'M', "motor" }));
 
 		// Rejector
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockMulti, 1, MachineType.SORTER.metadata), new Object[] { "WPW", "@R@", '@', "plateSteel", 'R', Item.redstone, 'P', Block.pistonBase, 'C', "basicCircuit", 'W', "copperWire" }));
 
-		// Retriever
+		// Manipulator
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockMulti, 1, MachineType.MANIPULATOR.metadata), new Object[] { Block.dispenser, "basicCircuit" }));
 
 		UETab.setItemStack(new ItemStack(blockConveyorBelt));

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.implement.IConductor;
 import cpw.mods.fml.common.FMLLog;
 
@@ -358,5 +359,30 @@ public class ElectricityNetwork
 			IConductor conductor = this.conductors.get(j);
 			conductor.refreshConnectedBlocks();
 		}
+	}
+
+	/**
+	 * Tries to find the electricity network based in a tile entity and checks to see if it is a
+	 * conductor. All machines should use this function to search for a connecting conductor around
+	 * it.
+	 * 
+	 * @param conductor - The TileEntity conductor
+	 * @param approachDirection - The direction you are approaching this wire from.
+	 * @return The ElectricityNetwork or null if not found.
+	 */
+	public static ElectricityNetwork getNetworkFromTileEntity(TileEntity tileEntity, ForgeDirection approachDirection)
+	{
+		if (tileEntity != null)
+		{
+			if (tileEntity instanceof IConductor)
+			{
+				if (ElectricityConnections.isConnector(tileEntity))
+				{
+					if (ElectricityConnections.canConnect(tileEntity, approachDirection.getOpposite())) { return ((IConductor) tileEntity).getNetwork(); }
+				}
+			}
+		}
+
+		return null;
 	}
 }
