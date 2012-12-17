@@ -1,13 +1,10 @@
 package assemblyline.common.machine.belt;
 
-import java.util.List;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -16,6 +13,8 @@ import universalelectricity.prefab.BlockMachine;
 import universalelectricity.prefab.UETab;
 import assemblyline.client.render.RenderHelper;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt.SlantType;
+import cpw.mods.fml.common.Side;
+import cpw.mods.fml.common.asm.SideOnly;
 
 /**
  * The block for the actual conveyor belt!
@@ -180,6 +179,7 @@ public class BlockConveyorBelt extends BlockMachine
 		return new TileEntityConveyorBelt();
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public int getRenderType()
 	{

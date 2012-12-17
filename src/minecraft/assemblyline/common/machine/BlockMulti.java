@@ -16,6 +16,8 @@ import universalelectricity.prefab.UETab;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
 import assemblyline.client.render.RenderHelper;
 import assemblyline.common.AssemblyLine;
+import cpw.mods.fml.common.Side;
+import cpw.mods.fml.common.asm.SideOnly;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 /**
@@ -223,6 +225,7 @@ public class BlockMulti extends BlockMachine
 		return MachineType.get(metadata).instantiateTileEntity();
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public int getRenderType()
 	{
