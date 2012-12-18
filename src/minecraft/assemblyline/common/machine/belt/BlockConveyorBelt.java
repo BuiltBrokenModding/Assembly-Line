@@ -106,8 +106,9 @@ public class BlockConveyorBelt extends BlockMachine
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
 		TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) world.getBlockTileEntity(x, y, z);
-
-		if (tileEntity.isBeingPowered())
+		tileEntity.updatePowerTransferRange();
+		
+		if (tileEntity.isRunning())
 		{
 			SlantType slantType = tileEntity.getSlant();
 			ForgeDirection direction = tileEntity.getDirection();

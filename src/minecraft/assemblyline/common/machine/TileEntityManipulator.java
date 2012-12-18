@@ -15,6 +15,7 @@ import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
+import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.implement.IConductor;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
@@ -24,63 +25,30 @@ import universalelectricity.prefab.tile.TileEntityElectricityReceiver;
 import assemblyline.api.IManipulator;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.BlockMulti.MachineType;
+import assemblyline.common.machine.belt.TileEntityConveyorBelt.SlantType;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityManipulator extends TileEntityElectricityReceiver implements IRedstoneReceptor, IPacketReceiver, IManipulator
+public class TileEntityManipulator extends TileEntityAssemblyNetwork implements IRedstoneReceptor, IPacketReceiver, IManipulator
 {
-	/**
-	 * Joules required to run this thing.
-	 */
-	public static final int WATT_REQUEST = 15;
-
-	/**
-	 * The amount of watts received.
-	 */
-	public double wattsReceived = 0;
-
 	/**
 	 * Is the manipulator wrenched to turn into output mode?
 	 */
 	public boolean isOutput = false;
 
-	private boolean isPowered = false;
+	private boolean isRedstonePowered = false;
 
 	@Override
-	public void updateEntity()
+	protected void onUpdate()
 	{
-		super.updateEntity();
-
 		if (!this.worldObj.isRemote)
 		{
-			for (int i = 0; i < 6; i++)
+			if (this.ticks % 20 == 0)
 			{
-				ForgeDirection inputDirection = ForgeDirection.getOrientation(i);
-
-				TileEntity inputTile = Vector3.getTileEntityFromSide(this.worldObj, Vector3.get(this), inputDirection);
-
-				if (inputTile != null)
-				{
-					if (inputTile instanceof IConductor)
-					{
-						if (this.wattsReceived >= this.WATT_REQUEST)
-						{
-							((IConductor) inputTile).getNetwork().stopRequesting(this);
-						}
-						else
-						{
-							((IConductor) inputTile).getNetwork().startRequesting(this, this.WATT_REQUEST / this.getVoltage(), this.getVoltage());
-							this.wattsReceived += ((IConductor) inputTile).getNetwork().consumeElectricity(this).getWatts();
-						}
-					}
-				}
-
+				PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 20);
 			}
-		}
 
-		if (!this.worldObj.isRemote)
-		{
-			if (!this.isDisabled() && this.wattsReceived >= this.WATT_REQUEST)
+			if (!this.isDisabled() && this.isRunning())
 			{
 				if (!this.isOutput)
 				{
@@ -133,7 +101,7 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 					/**
 					 * Finds the connected inventory and outputs the items upon a redstone pulse.
 					 */
-					if (this.isPowered)
+					if (this.isRedstonePowered)
 					{
 						this.onPowerOff();
 
@@ -170,8 +138,29 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 						}
 					}
 				}
+			}
+		}
+	}
 
-				this.wattsReceived = 0;
+	@Override
+	public Packet getDescriptionPacket()
+	{
+		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.isOutput, this.wattsReceived);
+	}
+
+	@Override
+	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
+	{
+		if (worldObj.isRemote)
+		{
+			try
+			{
+				this.isOutput = dataStream.readBoolean();
+				this.wattsReceived = dataStream.readDouble();
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
 			}
 		}
 	}
@@ -395,12 +384,6 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 	}
 
 	@Override
-	public Packet getDescriptionPacket()
-	{
-		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.isOutput);
-	}
-
-	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
@@ -420,25 +403,12 @@ public class TileEntityManipulator extends TileEntityElectricityReceiver impleme
 	@Override
 	public void onPowerOn()
 	{
-		this.isPowered = true;
+		this.isRedstonePowered = true;
 	}
 
 	@Override
 	public void onPowerOff()
 	{
-		this.isPowered = false;
-	}
-
-	@Override
-	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
-	{
-		try
-		{
-			this.isOutput = dataStream.readBoolean();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		this.isRedstonePowered = false;
 	}
 }

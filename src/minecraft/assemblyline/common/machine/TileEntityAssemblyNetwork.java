@@ -28,31 +28,35 @@ public abstract class TileEntityAssemblyNetwork extends TileEntityElectricityRec
 	 */
 	public int powerTransferRange = 0;
 
-	public boolean isBeingPowered()
+	public boolean isRunning()
 	{
-		if (this.wattsReceived > 0) { return true; }
+		return this.powerTransferRange > 0 || this.wattsReceived > this.getRequest().getWatts();
+	}
 
+	public void updatePowerTransferRange()
+	{
 		int maximumTransferRange = 0;
 
-		for (int i = 2; i < 6; i++)
+		for (int i = 0; i < 6; i++)
 		{
 			ForgeDirection direction = ForgeDirection.getOrientation(i);
-			TileEntity tileEntity = worldObj.getBlockTileEntity(xCoord - direction.offsetX, yCoord, zCoord - direction.offsetZ);
+			TileEntity tileEntity = worldObj.getBlockTileEntity(this.xCoord + direction.offsetX, this.yCoord + direction.offsetY, this.zCoord + direction.offsetZ);
 
-			if (tileEntity instanceof TileEntityConveyorBelt)
+			if (tileEntity != null)
 			{
-				TileEntityConveyorBelt belt = (TileEntityConveyorBelt) tileEntity;
-
-				if (belt.powerTransferRange > maximumTransferRange)
+				if (tileEntity instanceof TileEntityAssemblyNetwork)
 				{
-					maximumTransferRange = belt.powerTransferRange;
+					TileEntityAssemblyNetwork assemblyNetwork = (TileEntityAssemblyNetwork) tileEntity;
+
+					if (assemblyNetwork.powerTransferRange > maximumTransferRange)
+					{
+						maximumTransferRange = assemblyNetwork.powerTransferRange;
+					}
 				}
 			}
 		}
 
-		this.powerTransferRange = maximumTransferRange - 1;
-
-		return this.powerTransferRange > 0;
+		this.powerTransferRange = Math.max(maximumTransferRange - 1, 0);
 	}
 
 	@Override
@@ -80,14 +84,18 @@ public abstract class TileEntityAssemblyNetwork extends TileEntityElectricityRec
 						else
 						{
 							network.startRequesting(this, this.getRequest());
-							this.wattsReceived += network.consumeElectricity(this).getWatts();
+							this.wattsReceived += network.consumeElectricity(this).getWatts() * 2;
 						}
-
 					}
 				}
 
 			}
+		}
 
+		this.onUpdate();
+
+		if (this.ticks % 10 == 0)
+		{
 			if (this.wattsReceived >= this.getRequest().getWatts())
 			{
 				this.wattsReceived = 0;
@@ -96,12 +104,29 @@ public abstract class TileEntityAssemblyNetwork extends TileEntityElectricityRec
 			else
 			{
 				this.powerTransferRange = 0;
+				this.updatePowerTransferRange();
 			}
 		}
 	}
 
-	protected abstract ElectricityPack getRequest();
+	protected void onUpdate()
+	{
+		
+	}
+	
+	@Override
+	public double getVoltage()
+	{
+		return 20;
+	}
 
-	protected abstract int getMaxTransferRange();
+	protected ElectricityPack getRequest()
+	{
+		return new ElectricityPack(15, this.getVoltage());
+	}
 
+	protected int getMaxTransferRange()
+	{
+		return 20;
+	}
 }

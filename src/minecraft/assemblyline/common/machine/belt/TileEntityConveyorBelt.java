@@ -4,6 +4,8 @@ import java.util.EnumSet;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -49,19 +51,21 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	}
 
 	@Override
-	public void updateEntity()
+	public void onUpdate()
 	{
-		super.updateEntity();
-
-		if (!worldObj.isRemote && this.ticks % 10 == 0)
+		if (!worldObj.isRemote && this.ticks % 20 == 0)
 		{
-			PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 15);
+			PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 20);
 		}
 
-		if (this.isBeingPowered())
+		if (this.isRunning())
 		{
-			this.wheelRotation -= this.maxSpeed;
+			this.wheelRotation += 2;
+
+			if (this.wheelRotation > 360)
+				this.wheelRotation = 0;
 		}
+
 	}
 
 	@Override
@@ -167,7 +171,6 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 				e.printStackTrace();
 			}
 		}
-
 	}
 
 	@Override
@@ -208,11 +211,5 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 		super.writeToNBT(nbt);
 
 		nbt.setByte("slant", (byte) this.slantType.ordinal());
-	}
-
-	@Override
-	protected ElectricityPack getRequest()
-	{
-		return new ElectricityPack(10, this.getVoltage());
 	}
 }
