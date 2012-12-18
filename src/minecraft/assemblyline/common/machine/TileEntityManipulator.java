@@ -15,17 +15,13 @@ import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
-import universalelectricity.core.electricity.ElectricityPack;
-import universalelectricity.core.implement.IConductor;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
-import universalelectricity.prefab.tile.TileEntityElectricityReceiver;
 import assemblyline.api.IManipulator;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.BlockMulti.MachineType;
-import assemblyline.common.machine.belt.TileEntityConveyorBelt.SlantType;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -76,7 +72,7 @@ public class TileEntityManipulator extends TileEntityAssemblyNetwork implements 
 						 * Try top first, then bottom, then the sides to see if it is possible to
 						 * insert the item into a inventory.
 						 */
-						ItemStack remainingStack = this.tryPlaceInPosition(entity.item.copy(), outputUp, ForgeDirection.DOWN);
+						ItemStack remainingStack = this.tryPlaceInPosition(entity.func_92014_d().copy(), outputUp, ForgeDirection.DOWN);
 
 						if (remainingStack != null)
 						{

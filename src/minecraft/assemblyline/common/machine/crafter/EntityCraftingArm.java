@@ -244,7 +244,7 @@ public class EntityCraftingArm extends Entity
 	 */
 	private void grabItem()
 	{
-		itemStackBeingHeld = itemEntityTarget.item;
+		itemStackBeingHeld = itemEntityTarget.func_92014_d();
 		playGrabbingEffects(itemEntityTarget.posX, itemEntityTarget.posY, itemEntityTarget.posZ);
 		itemEntityTarget.setDead();
 		itemEntityTarget = null;

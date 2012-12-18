@@ -13,8 +13,8 @@ import universalelectricity.prefab.BlockMachine;
 import universalelectricity.prefab.UETab;
 import assemblyline.client.render.RenderHelper;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt.SlantType;
-import cpw.mods.fml.common.Side;
-import cpw.mods.fml.common.asm.SideOnly;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * The block for the actual conveyor belt!

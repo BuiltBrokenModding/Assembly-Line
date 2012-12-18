@@ -16,9 +16,9 @@ import universalelectricity.prefab.UETab;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
 import assemblyline.client.render.RenderHelper;
 import assemblyline.common.AssemblyLine;
-import cpw.mods.fml.common.Side;
-import cpw.mods.fml.common.asm.SideOnly;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * A metadata block containing a bunch of machines with direction.

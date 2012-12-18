@@ -9,8 +9,8 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import assemblyline.common.AssemblyLine;
-import cpw.mods.fml.common.Side;
-import cpw.mods.fml.common.asm.SideOnly;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiAutoCrafting extends GuiContainer

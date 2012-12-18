@@ -9,8 +9,8 @@ import assemblyline.client.model.ModelConveyorBelt;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt.SlantType;
-import cpw.mods.fml.common.Side;
-import cpw.mods.fml.common.asm.SideOnly;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderConveyorBelt extends TileEntitySpecialRenderer
@@ -19,7 +19,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 
 	private void renderAModelAt(TileEntityConveyorBelt tileEntity, double x, double y, double z, float f)
 	{
-		boolean mid = tileEntity.isMiddleBelt();
+		boolean mid = tileEntity.getIsMiddleBelt();
 		SlantType slantType = tileEntity.getSlant();
 		int face = tileEntity.getDirection().ordinal();
 
@@ -76,7 +76,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 		}
 
 		int ent = tileEntity.worldObj.getBlockId(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
-		model.render(0.0625F, (float) Math.toRadians(tileEntity.wheelRotation), tileEntity.isLastBelt(), tileEntity.isFirstBelt(), false);
+		model.render(0.0625F, (float) Math.toRadians(tileEntity.wheelRotation), tileEntity.getIsLastBelt(), tileEntity.getIsFirstBelt(), false);
 
 		GL11.glPopMatrix();
 

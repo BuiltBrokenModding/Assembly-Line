@@ -194,7 +194,7 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 		if (entity instanceof EntityItem)
 		{
 			EntityItem itemE = (EntityItem) entity;
-			ItemStack item = itemE.item;
+			ItemStack item = itemE.func_92014_d();
 
 			if (this.guiButtons[4])
 			{

@@ -100,7 +100,7 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	/**
 	 * Is this belt in the front of a conveyor line? Used for rendering.
 	 */
-	public boolean isFirstBelt()
+	public boolean getIsFirstBelt()
 	{
 
 		ForgeDirection front = this.getDirection();
@@ -119,7 +119,7 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	/**
 	 * Is this belt in the middile of two belts? Used for rendering.
 	 */
-	public boolean isMiddleBelt()
+	public boolean getIsMiddleBelt()
 	{
 
 		ForgeDirection front = this.getDirection();
@@ -139,7 +139,7 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	/**
 	 * Is this belt in the back of a conveyor line? Used for rendering.
 	 */
-	public boolean isLastBelt()
+	public boolean getIsLastBelt()
 	{
 
 		ForgeDirection front = this.getDirection();
