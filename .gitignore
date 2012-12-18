@@ -1,33 +1,17 @@
-/bin/*
-/conf/*
-/docs/*
-/eclipse/*
-/forge/*
-/jars/*
-/lib/*
-/logs/*
-/modsrc/*
-/reobf/*
-/runtime/*
-/temp/*
-/src/minecraft/assemblyline/textures/*
-CHANGELOG
-LICENSE.txt
 *.bat
 *.sh
+/*/
+LICENSE.txt
+CHANGELOG
 
+!/src/
 /src/minecraft/*
-/src/minecraft_server/*
-/src/common/*
-/builds/
 
-!/src/*/assemblyline/
-!/src/*/buildcraft/
-!/src/*/universalelectricity/
-!/Include Resources.bat
-!/mcmod.info
+!/src/minecraft/assemblyline/
+!/src/minecraft/universalelectricity/
 !/resources/
 !/models/
-!/modversion.txt
-!/publish.bat
+!info.txt
+!publish.bat
+!include.bat
 !/README
