@@ -68,7 +68,7 @@ public abstract class ItemElectric extends Item implements IItemElectric
 		// for this electric item!
 		ItemElectric item = ((ItemElectric) par1ItemStack.getItem());
 		item.setJoules(item.getJoules(par1ItemStack), par1ItemStack);
-		
+
 		// For items that can change electricity capacity
 		this.setMaxDamage((int) this.getMaxJoules(par1ItemStack));
 	}

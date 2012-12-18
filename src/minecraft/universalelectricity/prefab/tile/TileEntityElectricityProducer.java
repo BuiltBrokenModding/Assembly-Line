@@ -36,5 +36,7 @@ public abstract class TileEntityElectricityProducer extends TileEntityDisableabl
 	public void invalidate()
 	{
 		Electricity.instance.unregister(this);
+		super.invalidate();
+
 	}
 }

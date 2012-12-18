@@ -84,7 +84,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ISidedInvento
 			if (this.containingItems[par1].stackSize <= par2)
 			{
 				var3 = this.containingItems[par1];
-				this.containingItems[par1] = null;
+				this.setInventorySlotContents(par1, null);
 				return var3;
 			}
 			else
@@ -93,8 +93,10 @@ public class TileEntityCrate extends TileEntityAdvanced implements ISidedInvento
 
 				if (this.containingItems[par1].stackSize == 0)
 				{
-					this.containingItems[par1] = null;
+					this.setInventorySlotContents(par1, null);
 				}
+				
+				this.setInventorySlotContents(par1, this.containingItems[par1]);
 
 				return var3;
 			}
