@@ -40,7 +40,7 @@ public class RenderHelper implements ISimpleBlockRenderingHandler
 		}
 		else if (block.blockID == AssemblyLine.blockMulti.blockID)
 		{
-			if (metadata == MachineType.SORTER.metadata)
+			if (metadata == MachineType.REJECTOR.metadata)
 			{
 				GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH + "sorter.png"));
 				GL11.glPushMatrix();

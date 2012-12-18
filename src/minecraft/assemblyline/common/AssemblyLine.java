@@ -140,7 +140,7 @@ public class AssemblyLine
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 4), new Object[] { "III", "WMW", 'I', "ingotSteel", 'W', Block.wood, 'M', "motor" }));
 
 		// Rejector
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockMulti, 1, MachineType.SORTER.metadata), new Object[] { "WPW", "@R@", '@', "plateSteel", 'R', Item.redstone, 'P', Block.pistonBase, 'C', "basicCircuit", 'W', "copperWire" }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockMulti, 1, MachineType.REJECTOR.metadata), new Object[] { "WPW", "@R@", '@', "plateSteel", 'R', Item.redstone, 'P', Block.pistonBase, 'C', "basicCircuit", 'W', "copperWire" }));
 
 		// Manipulator
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockMulti, 1, MachineType.MANIPULATOR.metadata), new Object[] { Block.dispenser, "basicCircuit" }));

@@ -13,18 +13,20 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityConnections;
+import universalelectricity.core.electricity.ElectricityNetwork;
+import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.implement.IConductor;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.implement.IRotatable;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
-import universalelectricity.prefab.tile.TileEntityElectricityReceiver;
 import assemblyline.api.IBelt;
 import assemblyline.common.AssemblyLine;
+import assemblyline.common.machine.TileEntityAssemblyNetwork;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implements IPacketReceiver, IBelt, IRotatable
+public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements IPacketReceiver, IBelt, IRotatable
 {
 	public enum SlantType
 	{
@@ -34,27 +36,44 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	/**
 	 * Joules required to run this thing.
 	 */
-	public static final int WATT_REQUEST = 5;
-
-	/**
-	 * The amount of watts received.
-	 */
-	public double wattsReceived = 0;
-
 	public float acceleration = 0.01f;
 	public float maxSpeed = 0.3f;
 
 	public float wheelRotation = 0;
-	public boolean running = false;
-	public boolean textureFlip = false;
-	public TileEntityConveyorBelt[] adjBelts = { null, null, null, null };
-	public int powerTransferRange = 0;
 	private SlantType slantType = SlantType.NONE;
 
 	public TileEntityConveyorBelt()
 	{
 		super();
 		ElectricityConnections.registerConnector(this, EnumSet.of(ForgeDirection.DOWN));
+	}
+
+	@Override
+	public void updateEntity()
+	{
+		super.updateEntity();
+
+		if (!worldObj.isRemote && this.ticks % 10 == 0)
+		{
+			PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 15);
+		}
+
+		if (this.isBeingPowered())
+		{
+			this.wheelRotation -= this.maxSpeed;
+		}
+	}
+
+	@Override
+	protected int getMaxTransferRange()
+	{
+		return 20;
+	}
+
+	@Override
+	public Packet getDescriptionPacket()
+	{
+		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.wattsReceived, this.slantType.ordinal());
 	}
 
 	public SlantType getSlant()
@@ -75,127 +94,28 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	}
 
 	/**
-	 * Steal power from nearby belts.
-	 * 
-	 * @return
+	 * Is this belt in the front of a conveyor line? Used for rendering.
 	 */
-	public boolean searchNeighborBelts()
+	public boolean isFirstBelt()
 	{
-		for (int i = 2; i < 6; i++)
+
+		ForgeDirection front = this.getDirection();
+		ForgeDirection back = this.getDirection().getOpposite();
+		TileEntity fBelt = worldObj.getBlockTileEntity(xCoord + front.offsetX, yCoord + front.offsetY, zCoord + front.offsetZ);
+		TileEntity BBelt = worldObj.getBlockTileEntity(xCoord + back.offsetX, yCoord + back.offsetY, zCoord + back.offsetZ);
+		if (fBelt instanceof TileEntityConveyorBelt)
 		{
-			ForgeDirection direction = ForgeDirection.getOrientation(i);
-			TileEntity tileEntity = worldObj.getBlockTileEntity(xCoord - direction.offsetX, yCoord, zCoord - direction.offsetZ);
-
-			if (tileEntity instanceof TileEntityConveyorBelt)
-			{
-				adjBelts[i - 2] = (TileEntityConveyorBelt) tileEntity;
-			}
-			else
-			{
-				adjBelts[i - 2] = null;
-			}
+			ForgeDirection fD = ((TileEntityConveyorBelt) fBelt).getDirection();
+			ForgeDirection TD = this.getDirection();
+			return fD == TD;
 		}
-
-		int rr = 0;
-		for (int b = 0; b < 4; b++)
-		{
-			if (adjBelts[b] instanceof TileEntityConveyorBelt)
-			{
-				TileEntityConveyorBelt belt = (TileEntityConveyorBelt) adjBelts[b];
-				if (belt.powerTransferRange > rr)
-				{
-					rr = belt.powerTransferRange;
-				}
-			}
-		}
-
-		this.powerTransferRange = rr - 1;
-
 		return false;
-	}
-
-	@Override
-	public void updateEntity()
-	{
-		super.updateEntity();
-
-		if (!this.worldObj.isRemote)
-		{
-			for (int i = 0; i < 6; i++)
-			{
-				ForgeDirection inputDirection = ForgeDirection.getOrientation(i);
-
-				TileEntity inputTile = Vector3.getTileEntityFromSide(this.worldObj, Vector3.get(this), inputDirection);
-
-				if (inputTile != null)
-				{
-					if (inputTile instanceof IConductor)
-					{
-						if (this.wattsReceived >= this.WATT_REQUEST)
-						{
-							((IConductor) inputTile).getNetwork().stopRequesting(this);
-						}
-						else
-						{
-							((IConductor) inputTile).getNetwork().startRequesting(this, this.WATT_REQUEST / this.getVoltage(), this.getVoltage());
-							this.wattsReceived += ((IConductor) inputTile).getNetwork().consumeElectricity(this).getWatts();
-						}
-					}
-				}
-
-			}
-		}
-
-		if (this.ticks % 10 == 0)
-		{
-			if (!worldObj.isRemote)
-			{
-				PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 15);
-			}
-
-			if (this.wattsReceived >= WATT_REQUEST)
-			{
-				this.wattsReceived = 0;
-				this.powerTransferRange = 20;
-			}
-			else
-			{
-				this.powerTransferRange = 0;
-			}
-
-			if (!(worldObj.getBlockTileEntity(xCoord, yCoord - 1, zCoord) instanceof IConductor))
-			{
-				this.searchNeighborBelts();
-			}
-
-			if (this.powerTransferRange > 0)
-			{
-				this.running = true;
-			}
-			else
-			{
-				this.running = false;
-			}
-
-		}
-
-		if (this.running)
-		{
-			this.textureFlip = textureFlip ? false : true;
-			this.wheelRotation -= this.maxSpeed;
-		}
-	}
-
-	@Override
-	public Packet getDescriptionPacket()
-	{
-		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.wattsReceived, this.slantType.ordinal());
 	}
 
 	/**
 	 * Is this belt in the middile of two belts? Used for rendering.
 	 */
-	public boolean getIsMiddleBelt()
+	public boolean isMiddleBelt()
 	{
 
 		ForgeDirection front = this.getDirection();
@@ -213,28 +133,9 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 	}
 
 	/**
-	 * Is this belt in the front of a conveyor line? Used for rendering.
-	 */
-	public boolean getIsFrontCap()
-	{
-
-		ForgeDirection front = this.getDirection();
-		ForgeDirection back = this.getDirection().getOpposite();
-		TileEntity fBelt = worldObj.getBlockTileEntity(xCoord + front.offsetX, yCoord + front.offsetY, zCoord + front.offsetZ);
-		TileEntity BBelt = worldObj.getBlockTileEntity(xCoord + back.offsetX, yCoord + back.offsetY, zCoord + back.offsetZ);
-		if (fBelt instanceof TileEntityConveyorBelt)
-		{
-			ForgeDirection fD = ((TileEntityConveyorBelt) fBelt).getDirection();
-			ForgeDirection TD = this.getDirection();
-			return fD == TD;
-		}
-		return false;
-	}
-
-	/**
 	 * Is this belt in the back of a conveyor line? Used for rendering.
 	 */
-	public boolean getIsBackCap()
+	public boolean isLastBelt()
 	{
 
 		ForgeDirection front = this.getDirection();
@@ -307,5 +208,11 @@ public class TileEntityConveyorBelt extends TileEntityElectricityReceiver implem
 		super.writeToNBT(nbt);
 
 		nbt.setByte("slant", (byte) this.slantType.ordinal());
+	}
+
+	@Override
+	protected ElectricityPack getRequest()
+	{
+		return new ElectricityPack(10, this.getVoltage());
 	}
 }

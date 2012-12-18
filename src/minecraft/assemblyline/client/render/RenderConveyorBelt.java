@@ -19,8 +19,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 
 	private void renderAModelAt(TileEntityConveyorBelt tileEntity, double x, double y, double z, float f)
 	{
-		String flip = "";
-		boolean mid = tileEntity.getIsMiddleBelt();
+		boolean mid = tileEntity.isMiddleBelt();
 		SlantType slantType = tileEntity.getSlant();
 		int face = tileEntity.getDirection().ordinal();
 
@@ -28,7 +27,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		GL11.glRotatef(180f, 0f, 0f, 1f);
 
-		this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "BeltTexture" + flip + ".png");
+		this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "BeltTexture.png");
 
 		switch (face)
 		{
@@ -77,7 +76,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 		}
 
 		int ent = tileEntity.worldObj.getBlockId(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
-		model.render(0.0625F, (float) Math.toRadians(tileEntity.wheelRotation), tileEntity.getIsBackCap(), tileEntity.getIsFrontCap(), false);
+		model.render(0.0625F, (float) Math.toRadians(tileEntity.wheelRotation), tileEntity.isLastBelt(), tileEntity.isFirstBelt(), false);
 
 		GL11.glPopMatrix();
 
