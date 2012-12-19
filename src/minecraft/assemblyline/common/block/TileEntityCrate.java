@@ -95,7 +95,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ISidedInvento
 				{
 					this.containingItems[par1] = null;
 				}
-				
+
 				this.setInventorySlotContents(par1, this.containingItems[par1]);
 
 				return var3;

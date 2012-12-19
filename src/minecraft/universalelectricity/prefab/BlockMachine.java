@@ -22,11 +22,16 @@ import universalelectricity.prefab.implement.IToolConfigurator;
  */
 public abstract class BlockMachine extends BlockContainer
 {
+	public BlockMachine(int id, Material material)
+	{
+		super(id, material);
+		this.setHardness(0.5F);
+	}
+
 	public BlockMachine(String name, int id, Material material)
 	{
 		super(id, material);
 		this.setBlockName(name);
-		this.setHardness(0.5F);
 	}
 
 	public BlockMachine(String name, int id, Material material, CreativeTabs creativeTab)

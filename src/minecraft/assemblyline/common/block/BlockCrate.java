@@ -109,7 +109,7 @@ public class BlockCrate extends BlockMachine
 
 					containingStack.stackSize -= amountToTake;
 				}
-				
+
 				if (containingStack.stackSize <= 0)
 				{
 					containingStack = null;

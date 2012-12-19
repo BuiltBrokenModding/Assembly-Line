@@ -107,7 +107,7 @@ public class BlockConveyorBelt extends BlockMachine
 	{
 		TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) world.getBlockTileEntity(x, y, z);
 		tileEntity.updatePowerTransferRange();
-		
+
 		if (tileEntity.isRunning())
 		{
 			SlantType slantType = tileEntity.getSlant();
@@ -133,7 +133,8 @@ public class BlockConveyorBelt extends BlockMachine
 				entity.motionZ = direction.offsetZ * tileEntity.maxSpeed;
 			}
 
-			// Attempt to move entity to the center of the belt to prevent them from flying off.
+			// Attempt to move entity to the center of the belt to prevent them
+			// from flying off.
 			if (direction.offsetX != 0)
 			{
 				double difference = (z + 0.5) - entity.posZ;

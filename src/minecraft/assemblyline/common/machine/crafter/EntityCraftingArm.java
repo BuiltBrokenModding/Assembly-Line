@@ -193,7 +193,8 @@ public class EntityCraftingArm extends Entity
 					double diffX = posX - itemEntityTarget.posX;
 					double diffY = posY - itemEntityTarget.posY;
 					double diffZ = posZ - itemEntityTarget.posZ;
-					// TODO decide on how fast the claw should move toward the target, and move it
+					// TODO decide on how fast the claw should move toward the
+					// target, and move it
 				}
 			}
 		}

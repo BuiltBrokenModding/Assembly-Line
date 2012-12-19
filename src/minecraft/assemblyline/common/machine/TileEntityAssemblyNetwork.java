@@ -7,7 +7,6 @@ import universalelectricity.core.electricity.ElectricityNetwork;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.tile.TileEntityElectricityReceiver;
-import assemblyline.common.machine.belt.TileEntityConveyorBelt;
 
 /**
  * A class to be inherited by all machines on the assembly line. This will allow all machines to be
@@ -111,9 +110,9 @@ public abstract class TileEntityAssemblyNetwork extends TileEntityElectricityRec
 
 	protected void onUpdate()
 	{
-		
+
 	}
-	
+
 	@Override
 	public double getVoltage()
 	{
