@@ -44,7 +44,7 @@ public class AssemblyLine
 
 	public static final String NAME = "Assembly Line";
 
-	public static final String VERSION = "0.1.7";
+	public static final String VERSION = "0.1.8";
 
 	public static final String CHANNEL = "AssemblyLine";
 
@@ -66,7 +66,7 @@ public class AssemblyLine
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		UniversalElectricity.register(this, 1, 2, 0, false);
+		UniversalElectricity.register(this, 1, 2, 1, false);
 		instance = this;
 
 		CONFIGURATION.load();
@@ -77,10 +77,10 @@ public class AssemblyLine
 		CONFIGURATION.save();
 
 		NetworkRegistry.instance().registerGuiHandler(this, this.proxy);
-		GameRegistry.registerBlock(blockConveyorBelt);
-		GameRegistry.registerBlock(blockArchitectTable);
-		GameRegistry.registerBlock(blockCrate, ItemBlockCrate.class);
-		GameRegistry.registerBlock(blockMulti, ItemBlockMulti.class);
+		GameRegistry.registerBlock(blockConveyorBelt, "Conveyor Belt");
+		GameRegistry.registerBlock(blockArchitectTable, "Architect's Table");
+		GameRegistry.registerBlock(blockCrate, ItemBlockCrate.class, "Crate");
+		GameRegistry.registerBlock(blockMulti, ItemBlockMulti.class, "Machine");
 
 		UpdateNotifier.INSTANCE.checkUpdate(NAME, VERSION, "http://calclavia.com/downloads/al/recommendedversion.txt");
 

@@ -39,7 +39,7 @@ cd ..\
 echo %PROMOTION% %FILE_NAME% %API_NAME%>>info.txt
 
 ::GENERATE FTP Script
-echo open www.calclavia.com>ftpscript.txt
+echo open calclavia.com>ftpscript.txt
 echo al@calclavia.com>>ftpscript.txt
 echo VkE4laBa84R9>>ftpscript.txt
 echo binary>>ftpscript.txt

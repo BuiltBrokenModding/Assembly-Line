@@ -25,6 +25,11 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 
+/**
+ * 
+ * @author Darkguardsman
+ * 
+ */
 public class TileEntityRejector extends TileEntityAssemblyNetwork implements IPacketReceiver, IInventory
 {
 	/**
@@ -89,7 +94,7 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IPa
 
 				boolean flag = false;
 
-				if (itemsBehind.size() > 0 && this.wattsReceived > this.getRequest().getWatts())
+				if (itemsBehind.size() > 0 && this.isRunning())
 				{
 					// for every item found check
 					// if can be thrown then throw
@@ -233,8 +238,9 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IPa
 		if (id == PacketTypes.ANIMATION) { return new Object[] { id.ordinal(), this.firePiston }; }
 		if (id == PacketTypes.GUI)
 		{
-			Object[] da = new Object[this.guiButtons.length];
+			Object[] da = new Object[this.guiButtons.length + 1];
 			da[0] = id.ordinal();
+
 			for (int i = 0; i < this.guiButtons.length; i++)
 			{
 				da[i + 1] = guiButtons[i];
@@ -251,7 +257,7 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IPa
 		{
 			int id = dataStream.readInt();
 			PacketTypes pID = PacketTypes.values()[id];
-			System.out.print("\n id:" + id + " ");
+
 			if (pID == PacketTypes.ANIMATION)
 			{
 				this.firePiston = dataStream.readBoolean();
