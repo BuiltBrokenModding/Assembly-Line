@@ -27,7 +27,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 
-public class TileEntityRejector extends TileEntityElectricityReceiver implements IPacketReceiver, IInventory
+public class TileEntityRejector extends TileEntityAssemblyNetwork implements IPacketReceiver, IInventory
 {
 	/**
 	 * The items this container contains.
@@ -42,15 +42,6 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 		ANIMATION, GUI, SETTINGON
 	}
 
-	/**
-	 * Joules required per tick.
-	 */
-	public static final int WATT_REQUEST = 10;
-
-	/**
-	 * Stored energy
-	 */
-	public double wattsReceived = 0;
 	/**
 	 * should the piston fire, or be extended
 	 */
@@ -67,44 +58,13 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 	private int playerUsing = 0;
 
 	@Override
-	public void updateEntity()
+	public void onUpdate()
 	{
-		super.updateEntity();
-
-		if (!this.worldObj.isRemote)
-		{
-			for (int i = 0; i < 6; i++)
-			{
-				ForgeDirection inputDirection = ForgeDirection.getOrientation(i);
-
-				TileEntity inputTile = Vector3.getTileEntityFromSide(this.worldObj, Vector3.get(this), inputDirection);
-
-				if (inputTile != null)
-				{
-					if (inputTile instanceof IConductor)
-					{
-						if (this.wattsReceived >= this.WATT_REQUEST)
-						{
-							((IConductor) inputTile).getNetwork().stopRequesting(this);
-						}
-						else
-						{
-							((IConductor) inputTile).getNetwork().startRequesting(this, this.WATT_REQUEST / this.getVoltage(), this.getVoltage());
-							this.wattsReceived += ((IConductor) inputTile).getNetwork().consumeElectricity(this).getWatts();
-						}
-					}
-				}
-
-			}
-		}
-
 		/**
 		 * Has to update a bit faster than a conveyer belt
 		 */
 		if (this.ticks % 5 == 0 && !this.isDisabled())
 		{
-			// TODO remove after testing
-			// this.wattsReceived += 100;
 			int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 			this.firePiston = false;
 
@@ -131,7 +91,7 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 
 				boolean flag = false;
 
-				if (itemsBehind.size() > 0 && this.wattsReceived > this.WATT_REQUEST)
+				if (itemsBehind.size() > 0 && this.wattsReceived > this.getRequest().getWatts())
 				{
 					// for every item found check
 					// if can be thrown then throw
@@ -148,10 +108,10 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 				// send packet with animation data
 				// if an item was rejected from
 				// the area
-				if (!worldObj.isRemote && flag)
+				if (!this.worldObj.isRemote && flag)
 				{
-					Packet packet = PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.data(PacketTypes.ANIMATION));
-					PacketManager.sendPacketToClients(packet, worldObj, Vector3.get(this), 30);
+					Packet packet = PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.getPacketData(PacketTypes.ANIMATION));
+					PacketManager.sendPacketToClients(packet, this.worldObj, new Vector3(this), 30);
 				}
 
 			}
@@ -159,12 +119,18 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 			{
 				e.printStackTrace();
 			}
-			if (!worldObj.isRemote && this.playerUsing > 0)
+
+			if (!this.worldObj.isRemote && this.playerUsing > 0)
 			{
-				Packet packet = PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.data(PacketTypes.GUI));
-				PacketManager.sendPacketToClients(packet, worldObj, Vector3.get(this), 10);
+				PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 10);
 			}
 		}
+	}
+
+	@Override
+	public Packet getDescriptionPacket()
+	{
+		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.getPacketData(PacketTypes.GUI));
 	}
 
 	/**
@@ -177,15 +143,9 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 	{
 		this.firePiston = true;
 
-		if (this.beltSide != null)
-		{
-			// this.beltSide.ignoreEntity(entity);
-		}
-
 		entity.motionX = (double) side.offsetX * 0.15;
 		entity.motionY += 0.10000000298023224D;
 		entity.motionZ = (double) side.offsetZ * 0.15;
-		this.wattsReceived -= this.WATT_REQUEST;
 	}
 
 	public boolean canItemBeThrow(Entity entity)
@@ -270,7 +230,7 @@ public class TileEntityRejector extends TileEntityElectricityReceiver implements
 		}
 	}
 
-	public Object[] data(PacketTypes id)
+	public Object[] getPacketData(PacketTypes id)
 	{
 		if (id == PacketTypes.ANIMATION) { return new Object[] { id.ordinal(), this.firePiston }; }
 		if (id == PacketTypes.GUI)
