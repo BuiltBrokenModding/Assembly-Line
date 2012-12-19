@@ -1,1 +1,0 @@
-These 3D creations are created and copy righted by DarkGuardsman. They are to be used only for the Assembly Line mod.
