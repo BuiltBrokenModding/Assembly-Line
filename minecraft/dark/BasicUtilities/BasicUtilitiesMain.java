@@ -42,8 +42,11 @@ import dark.BasicUtilities.mechanical.BlockGenerator;
 import dark.BasicUtilities.mechanical.BlockRod;
 import dark.BasicUtilities.mechanical.TileEntityGen;
 import dark.BasicUtilities.mechanical.TileEntityRod;
+import dark.BasicUtilities.pipes.BlockEValve;
 import dark.BasicUtilities.pipes.BlockPipe;
+import dark.BasicUtilities.pipes.ItemEValve;
 import dark.BasicUtilities.pipes.ItemPipe;
+import dark.BasicUtilities.pipes.TileEntityEValve;
 import dark.BasicUtilities.pipes.TileEntityPipe;
 
 /**
@@ -54,7 +57,7 @@ import dark.BasicUtilities.pipes.TileEntityPipe;
  */
 @Mod(modid = BasicUtilitiesMain.NAME, name = BasicUtilitiesMain.NAME, version = BasicUtilitiesMain.VERSION, dependencies = "after:BasicComponents")
 @NetworkMod(channels =
-    { BasicUtilitiesMain.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
+{ BasicUtilitiesMain.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
 public class BasicUtilitiesMain extends DummyModContainer
 {
     // TODO need changed on release
@@ -77,6 +80,7 @@ public class BasicUtilitiesMain extends DummyModContainer
     public static Block valve = new BlockValve(UniversalElectricity.CONFIGURATION.getBlock("Valve", BLOCK_ID_PREFIX + 2).getInt());
     public static Block rod = new BlockRod(UniversalElectricity.CONFIGURATION.getBlock("MechanicalRod", BLOCK_ID_PREFIX + 3).getInt());
     public static Block generator = new BlockGenerator((UniversalElectricity.CONFIGURATION.getBlock("UEGenerator", BLOCK_ID_PREFIX + 4).getInt()));
+    public static Block eValve = new BlockEValve((UniversalElectricity.CONFIGURATION.getBlock("EValve", BLOCK_ID_PREFIX + 5).getInt()));
 
     public static Block SteamBlock = new BlockSteam(UniversalElectricity.CONFIGURATION.getBlock("SteamBlock", LIQUID_ID_PREFIX).getInt());
 
@@ -87,7 +91,10 @@ public class BasicUtilitiesMain extends DummyModContainer
 
     public static Item parts = new ItemParts(UniversalElectricity.CONFIGURATION.getItem("Parts", ITEM_ID_PREFIX).getInt());
     public static Item itemPipes = new ItemPipe(UniversalElectricity.CONFIGURATION.getItem("PipeItem", ITEM_ID_PREFIX + 1).getInt());
-   // public static Item itemTank = new ItemTank(UniversalElectricity.CONFIGURATION.getItem("TankItem", ITEM_ID_PREFIX + 2).getInt());
+    public static Item itemEValve = new ItemEValve(UniversalElectricity.CONFIGURATION.getItem("EValveItem", ITEM_ID_PREFIX + 2).getInt());
+    // public static Item itemTank = new
+    // ItemTank(UniversalElectricity.CONFIGURATION.getItem("TankItem",
+    // ITEM_ID_PREFIX + 2).getInt());
     public static Item gauge = new ItemGuage(UniversalElectricity.CONFIGURATION.getItem("PipeGuage", ITEM_ID_PREFIX + 3).getInt());
     public static Item itemOilBucket = new ItemOilBucket(UniversalElectricity.CONFIGURATION.getItem("Oil Bucket", ITEM_ID_PREFIX + 4).getInt(), 4);
     // mod stuff
@@ -102,10 +109,13 @@ public class BasicUtilitiesMain extends DummyModContainer
         instance = this;
         proxy.preInit();
         GameRegistry.registerBlock(pipe, "multi pipe");
+        GameRegistry.registerBlock(eValve, "eValve");
         GameRegistry.registerBlock(rod, "mech rod");
         GameRegistry.registerBlock(generator, "EU Generator");
         GameRegistry.registerBlock(machine, ItemMachine.class, "Machines");
         GameRegistry.registerBlock(SteamBlock, "steam");
+        GameRegistry.registerBlock(oilStill, "oil s");
+        GameRegistry.registerBlock(oilMoving, "oil m");
         LiquidContainerRegistry.registerLiquid(new LiquidContainerData(new LiquidStack(oilStill, LiquidContainerRegistry.BUCKET_VOLUME), new ItemStack(itemOilBucket), new ItemStack(Item.bucketEmpty)));
 
     }
@@ -118,29 +128,28 @@ public class BasicUtilitiesMain extends DummyModContainer
         GameRegistry.registerTileEntity(TileEntityPipe.class, "Pipe");
         GameRegistry.registerTileEntity(TileEntityPump.class, "pump");
         GameRegistry.registerTileEntity(TileEntityRod.class, "rod");
-       // GameRegistry.registerTileEntity(TileEntityLTank.class, "ltank");
+        GameRegistry.registerTileEntity(TileEntityEValve.class, "EValve");
+        // GameRegistry.registerTileEntity(TileEntityLTank.class, "ltank");
         GameRegistry.registerTileEntity(TileEntityGen.class, "WattGenerator");
         // Pipe Names
         for (int i = 0; i < Liquid.values().length; i++)
         {
             LanguageRegistry.addName((new ItemStack(itemPipes, 1, i)),
-                    Liquid.getLiquid(i).displayerName + " Pipe");
-        }
-        /** liquid tank names
-        for (int i = 0; i < Liquid.values().length; i++)
-        {
-            LanguageRegistry.addName((new ItemStack(itemTank, 1, i)),
-                    Liquid.getLiquid(i).displayerName + " Tank");
-        }*/
-        for (int i = 0; i < ItemParts.basicParts.values().length; i++)
-        {
+                    Liquid.getLiquid(i).displayerName + " Pipe"); 
             LanguageRegistry.addName((new ItemStack(parts, 1, i)),
                     ItemParts.basicParts.values()[i].name);
+            LanguageRegistry.addName((new ItemStack(eValve, 1, i)),
+                    Liquid.getLiquid(i).displayerName + "release Valve");
         }
+        /**
+         * liquid tank names for (int i = 0; i < Liquid.values().length; i++) {
+         * LanguageRegistry.addName((new ItemStack(itemTank, 1, i)),
+         * Liquid.getLiquid(i).displayerName + " Tank"); }
+         */
+        
         // machines
         LanguageRegistry.addName((new ItemStack(machine, 1, 0)), "WaterPump");
-        LanguageRegistry.addName((new ItemStack(machine, 1, 4)),
-                "WaterCondensor");
+        LanguageRegistry.addName((new ItemStack(machine, 1, 4)), "WaterCondensor");
         // mechanical rod
         LanguageRegistry.addName((new ItemStack(rod, 1)), "MechRod");
         // Tools
@@ -156,114 +165,101 @@ public class BasicUtilitiesMain extends DummyModContainer
                 .getRecipeList()
                 .add(new ShapedOreRecipe(new ItemStack(this.generator, 1),
                         new Object[]
-                            { "@T@", "OVO", "@T@", 'T',
-                                    new ItemStack(BasicUtilitiesMain.rod, 1), '@',
-                                    "plateSteel", 'O', "basicCircuit", 'V',
-                                    "motor" }));
+                        { "@T@", "OVO", "@T@", 'T',
+                                new ItemStack(BasicUtilitiesMain.rod, 1), '@',
+                                "plateSteel", 'O', "basicCircuit", 'V',
+                                "motor" }));
         GameRegistry.addRecipe(new ItemStack(this.gauge, 1, 0), new Object[]
-            {
-                    "TVT", " T ", 'V', new ItemStack(parts, 1, 7), 'T',
-                    new ItemStack(parts, 1, 1) });
+        {
+                "TVT", " T ", 'V', new ItemStack(parts, 1, 7), 'T',
+                new ItemStack(parts, 1, 1) });
         // iron tube
         GameRegistry.addRecipe(new ItemStack(parts, 2, 1), new Object[]
-            {
-                    "@@@", '@', Item.ingotIron });
+        {
+                "@@@", '@', Item.ingotIron });
         // obby tube
         GameRegistry.addRecipe(new ItemStack(parts, 2, 2), new Object[]
-            {
-                    "@@@", '@', Block.obsidian });
+        {
+                "@@@", '@', Block.obsidian });
         // nether tube
         GameRegistry
                 .addRecipe(new ItemStack(parts, 2, 3),
                         new Object[]
-                            { "N@N", 'N', Block.netherrack, '@',
-                                    new ItemStack(parts, 2, 2) });
+                        { "N@N", 'N', Block.netherrack, '@',
+                                new ItemStack(parts, 2, 2) });
         // seal
         GameRegistry.addRecipe(new ItemStack(parts, 2, 4), new Object[]
-            { "@@",
-                    "@@", '@', Item.leather });
+        { "@@",
+                "@@", '@', Item.leather });
         // slime steal
         GameRegistry.addShapelessRecipe(new ItemStack(parts, 1, 5),
                 new Object[]
-                    { new ItemStack(parts, 1, 4),
-                            new ItemStack(Item.slimeBall, 1) });// stick seal
+                { new ItemStack(parts, 1, 4),
+                        new ItemStack(Item.slimeBall, 1) });// stick seal
         // crafting pipes
         // {"black", "red", "green", "brown", "blue", "purple", "cyan",
         // "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta",
         // "orange", "white"};
         GameRegistry.addRecipe(new ItemStack(rod, 1), new Object[]
-            { "I@I",
-                    'I', Item.ingotIron, '@', new ItemStack(parts, 1, 1) });
+        { "I@I",
+                'I', Item.ingotIron, '@', new ItemStack(parts, 1, 1) });
         // water
         GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1, 1),
                 new Object[]
-                    { new ItemStack(parts, 1, 1),
-                            new ItemStack(parts, 1, 4),
-                            new ItemStack(Item.dyePowder, 1, 4) });
+                { new ItemStack(parts, 1, 1),
+                        new ItemStack(parts, 1, 4),
+                        new ItemStack(Item.dyePowder, 1, 4) });
         // lava TODO change to use obby pipe and nether items
         GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1, 2),
                 new Object[]
-                    { new ItemStack(parts, 1, 2),
-                            new ItemStack(Item.dyePowder, 1, 1) });
+                { new ItemStack(parts, 1, 2),
+                        new ItemStack(Item.dyePowder, 1, 1) });
         // oil
         GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1, 3),
                 new Object[]
-                    { new ItemStack(parts, 1, 1),
-                            new ItemStack(parts, 1, 4),
-                            new ItemStack(Item.dyePowder, 1, 0) });
+                { new ItemStack(parts, 1, 1),
+                        new ItemStack(parts, 1, 4),
+                        new ItemStack(Item.dyePowder, 1, 0) });
         // fuel
         GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1, 4),
                 new Object[]
-                    { new ItemStack(parts, 1, 1),
-                            new ItemStack(parts, 1, 4),
-                            new ItemStack(Item.dyePowder, 1, 11) });
+                { new ItemStack(parts, 1, 1),
+                        new ItemStack(parts, 1, 4),
+                        new ItemStack(Item.dyePowder, 1, 11) });
         GameRegistry.addRecipe(new ItemStack(parts, 1, 7), new Object[]
-            {
-                    "T@T", 'T', new ItemStack(parts, 1, 1), '@', Block.lever });// valve
+        {
+                "T@T", 'T', new ItemStack(parts, 1, 1), '@', Block.lever });// valve
 
         GameRegistry.addRecipe(new ItemStack(parts, 1, 6), new Object[]
-            {
-                    " @ ", "@ @", " @ ", '@', Item.ingotIron });// tank
+        {
+                " @ ", "@ @", " @ ", '@', Item.ingotIron });// tank
         /**
-        GameRegistry.addShapelessRecipe(new ItemStack(itemTank, 1, 0),
-                new Object[]
-                    { new ItemStack(parts, 1, 6),
-                            new ItemStack(parts, 1, 4),
-                            new ItemStack(Item.dyePowder, 1, 15) });
-        GameRegistry.addShapelessRecipe(new ItemStack(itemTank, 1, 1),
-                new Object[]
-                    { new ItemStack(parts, 1, 6),
-                            new ItemStack(parts, 1, 4),
-                            new ItemStack(Item.dyePowder, 1, 4) });
-        // lava TODO change to use obby pipe and nether items
-        GameRegistry.addShapelessRecipe(new ItemStack(itemTank, 1, 2),
-                new Object[]
-                    { new ItemStack(parts, 1, 6), Block.obsidian,
-                            Block.obsidian, Block.obsidian, Block.obsidian });
-        // oil
-        GameRegistry.addShapelessRecipe(new ItemStack(itemTank, 1, 3),
-                new Object[]
-                    { new ItemStack(parts, 1, 6),
-                            new ItemStack(parts, 1, 4),
-                            new ItemStack(Item.dyePowder, 1, 0) });
-        // fuel
-        GameRegistry.addShapelessRecipe(
-                new ItemStack(itemTank, 1, Liquid.Fuel.ordinal()),
-                new Object[]
-                    {
-                            new ItemStack(parts, 1, basicParts.Tank.ordinal()),
-                            new ItemStack(parts, 1, 4),
-                            new ItemStack(Item.dyePowder, 1, 11) });
-                            */
+         * GameRegistry.addShapelessRecipe(new ItemStack(itemTank, 1, 0), new
+         * Object[] { new ItemStack(parts, 1, 6), new ItemStack(parts, 1, 4),
+         * new ItemStack(Item.dyePowder, 1, 15) });
+         * GameRegistry.addShapelessRecipe(new ItemStack(itemTank, 1, 1), new
+         * Object[] { new ItemStack(parts, 1, 6), new ItemStack(parts, 1, 4),
+         * new ItemStack(Item.dyePowder, 1, 4) }); // lava TODO change to use
+         * obby pipe and nether items GameRegistry.addShapelessRecipe(new
+         * ItemStack(itemTank, 1, 2), new Object[] { new ItemStack(parts, 1, 6),
+         * Block.obsidian, Block.obsidian, Block.obsidian, Block.obsidian }); //
+         * oil GameRegistry.addShapelessRecipe(new ItemStack(itemTank, 1, 3),
+         * new Object[] { new ItemStack(parts, 1, 6), new ItemStack(parts, 1,
+         * 4), new ItemStack(Item.dyePowder, 1, 0) }); // fuel
+         * GameRegistry.addShapelessRecipe( new ItemStack(itemTank, 1,
+         * Liquid.Fuel.ordinal()), new Object[] { new ItemStack(parts, 1,
+         * basicParts.Tank.ordinal()), new ItemStack(parts, 1, 4), new
+         * ItemStack(Item.dyePowder, 1, 11) });
+         */
         GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1, 0),
                 new Object[]
-                    { new ItemStack(parts, 1, 1),
-                            new ItemStack(parts, 1, 4) });
+                { new ItemStack(parts, 1, 1),
+                        new ItemStack(parts, 1, 4) });
         GameRegistry.addRecipe(new ItemStack(machine, 1, 0), new Object[]
-            {
-                    "@T@", "BPB", "@P@", '@', new ItemStack(Item.ingotIron, 2),
-                    'B', new ItemStack(parts, 1, 7), 'P',
-                    new ItemStack(Block.pistonBase), 'T',
-                    new ItemStack(parts, 1, 6) });
+        {
+                "@T@", "BPB", "@P@", '@', new ItemStack(Item.ingotIron, 2),
+                'B', new ItemStack(parts, 1, 7), 'P',
+                new ItemStack(Block.pistonBase), 'T',
+                new ItemStack(parts, 1, 6) });
     }
 }

@@ -99,7 +99,6 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
                         // FMLLog.warning("Moved "+moved+ " "+ i);
                         if (stack.amount <= 0)
                         {
-                            FMLLog.warning("Empty");
                             break;
                         }
                     }
