@@ -6,6 +6,7 @@ import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 
 import dark.BasicUtilities.BasicUtilitiesMain;
+import dark.BasicUtilities.renders.models.ModelGenerator;
 
 public class RenderGenerator extends TileEntitySpecialRenderer
 {

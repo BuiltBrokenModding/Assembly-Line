@@ -7,8 +7,10 @@ import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 
 import dark.BasicUtilities.BasicUtilitiesMain;
+import dark.BasicUtilities.Tile.TileEntityPipe;
 import dark.BasicUtilities.api.Liquid;
-import dark.BasicUtilities.pipes.TileEntityPipe;
+import dark.BasicUtilities.renders.models.ModelLargePipe;
+import dark.BasicUtilities.renders.models.ModelPipe;
 
 
 public class RenderPipe extends TileEntitySpecialRenderer

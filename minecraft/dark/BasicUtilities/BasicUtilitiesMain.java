@@ -27,30 +27,30 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import dark.BasicUtilities.Blocks.BlockEValve;
+import dark.BasicUtilities.Blocks.BlockGenerator;
+import dark.BasicUtilities.Blocks.BlockMachine;
+import dark.BasicUtilities.Blocks.BlockOilFlowing;
+import dark.BasicUtilities.Blocks.BlockOilStill;
+import dark.BasicUtilities.Blocks.BlockPipe;
+import dark.BasicUtilities.Blocks.BlockRod;
+import dark.BasicUtilities.Blocks.BlockSteam;
+import dark.BasicUtilities.Blocks.BlockValve;
+import dark.BasicUtilities.Items.ItemEValve;
 import dark.BasicUtilities.Items.ItemGuage;
+import dark.BasicUtilities.Items.ItemMachine;
+import dark.BasicUtilities.Items.ItemOilBucket;
 import dark.BasicUtilities.Items.ItemParts;
+import dark.BasicUtilities.Items.ItemPipe;
+import dark.BasicUtilities.Items.ItemTank;
 import dark.BasicUtilities.Items.ItemParts.basicParts;
-import dark.BasicUtilities.Liquids.BlockOilFlowing;
-import dark.BasicUtilities.Liquids.BlockOilStill;
-import dark.BasicUtilities.Liquids.BlockSteam;
-import dark.BasicUtilities.Liquids.ItemOilBucket;
+import dark.BasicUtilities.Tile.TileEntityEValve;
+import dark.BasicUtilities.Tile.TileEntityGen;
+import dark.BasicUtilities.Tile.TileEntityTank;
+import dark.BasicUtilities.Tile.TileEntityPipe;
+import dark.BasicUtilities.Tile.TileEntityPump;
+import dark.BasicUtilities.Tile.TileEntityRod;
 import dark.BasicUtilities.api.Liquid;
-import dark.BasicUtilities.machines.BlockMachine;
-import dark.BasicUtilities.machines.BlockValve;
-import dark.BasicUtilities.machines.ItemMachine;
-import dark.BasicUtilities.machines.TileEntityPump;
-import dark.BasicUtilities.mechanical.BlockGenerator;
-import dark.BasicUtilities.mechanical.BlockRod;
-import dark.BasicUtilities.mechanical.TileEntityGen;
-import dark.BasicUtilities.mechanical.TileEntityRod;
-import dark.BasicUtilities.pipes.BlockEValve;
-import dark.BasicUtilities.pipes.BlockPipe;
-import dark.BasicUtilities.pipes.ItemEValve;
-import dark.BasicUtilities.pipes.ItemPipe;
-import dark.BasicUtilities.pipes.TileEntityEValve;
-import dark.BasicUtilities.pipes.TileEntityPipe;
-import dark.BasicUtilities.tanks.ItemTank;
-import dark.BasicUtilities.tanks.TileEntityLTank;
 
 /**
  * Used in the creation of a new mod class
@@ -68,8 +68,8 @@ public class BasicUtilitiesMain extends DummyModContainer
     // Constants
     public static final String NAME = "BasicUtilities";
     public static final String CHANNEL = "BPipes";
-    public static final String textureFile = "/dark/BasicUtilities/textures/";
-    public static final String BlOCK_PNG = "/dark/BasicUtilities/textures/blocks.png";
+    public static final String textureFile = "/dark/BasicUtilities/zResources/";
+    public static final String BlOCK_PNG = "/dark/BasicUtilities/zResources/blocks.png";
     public static final String ITEM_PNG = "/dark/generaltextures/Items.png";
     public static final Configuration CONFIGURATION = new Configuration(
             new File(Loader.instance().getConfigDir(), NAME + ".cfg"));
@@ -133,7 +133,7 @@ public class BasicUtilitiesMain extends DummyModContainer
         GameRegistry.registerTileEntity(TileEntityPump.class, "pump");
         GameRegistry.registerTileEntity(TileEntityRod.class, "rod");
         GameRegistry.registerTileEntity(TileEntityEValve.class, "EValve");
-        GameRegistry.registerTileEntity(TileEntityLTank.class, "ltank");
+        GameRegistry.registerTileEntity(TileEntityTank.class, "ltank");
         GameRegistry.registerTileEntity(TileEntityGen.class, "WattGenerator");
         // Liquid Item/Block common name writer
         for (int i = 0; i < Liquid.values().length; i++)
@@ -153,12 +153,12 @@ public class BasicUtilitiesMain extends DummyModContainer
                     ItemParts.basicParts.values()[i].name);
         }
         // machines
-        LanguageRegistry.addName((new ItemStack(machine, 1, 0)), "WaterPump");
+        LanguageRegistry.addName((new ItemStack(machine, 1, 0)), "Pump");
         LanguageRegistry.addName((new ItemStack(machine, 1, 4)), "WaterCondensor");
 
         LanguageRegistry.addName((new ItemStack(generator, 1)), "EU Generator");
         // mechanical rod
-        LanguageRegistry.addName((new ItemStack(rod, 1)), "MechRod");
+        LanguageRegistry.addName((new ItemStack(rod, 1)), "GearedRod");
         // Tools
         LanguageRegistry.addName((new ItemStack(gauge, 1, 0)), "PipeGuage");
     }
@@ -167,6 +167,7 @@ public class BasicUtilitiesMain extends DummyModContainer
     public void PostInit(FMLPostInitializationEvent event)
     {
         proxy.postInit();
+        PipeTab.setItemStack(new ItemStack(itemPipes, 1, Liquid.WATER.ordinal()));
         // generator
         CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(this.generator, 1), new Object[] {
                 "@T@", "OVO", "@T@",

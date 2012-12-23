@@ -6,8 +6,9 @@ import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 
 import dark.BasicUtilities.BasicUtilitiesMain;
+import dark.BasicUtilities.Tile.TileEntityPump;
 import dark.BasicUtilities.api.Liquid;
-import dark.BasicUtilities.machines.TileEntityPump;
+import dark.BasicUtilities.renders.models.ModelPump;
 
 
 public class RenderPump extends TileEntitySpecialRenderer

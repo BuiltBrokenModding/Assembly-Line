@@ -10,6 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import dark.BasicUtilities.BasicUtilitiesMain;
+import dark.BasicUtilities.PipeTab;
 import dark.BasicUtilities.api.IReadOut;
 
 public class ItemGuage extends Item
@@ -23,7 +24,7 @@ public class ItemGuage extends Item
         this.setHasSubtypes(true);
         this.setIconIndex(10);
         this.setItemName("guage");
-        this.setCreativeTab(CreativeTabs.tabTools);
+        this.setCreativeTab(PipeTab.INSTANCE);
         this.setMaxStackSize(1);
     }
 

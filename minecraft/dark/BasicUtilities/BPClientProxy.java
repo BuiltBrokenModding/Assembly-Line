@@ -2,14 +2,14 @@ package dark.BasicUtilities;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
-import dark.BasicUtilities.machines.TileEntityPump;
-import dark.BasicUtilities.mechanical.TileEntityRod;
-import dark.BasicUtilities.pipes.TileEntityPipe;
+import dark.BasicUtilities.Tile.TileEntityTank;
+import dark.BasicUtilities.Tile.TileEntityPipe;
+import dark.BasicUtilities.Tile.TileEntityPump;
+import dark.BasicUtilities.Tile.TileEntityRod;
 import dark.BasicUtilities.renders.RenderGearRod;
-import dark.BasicUtilities.renders.RenderLTank;
+import dark.BasicUtilities.renders.RenderTank;
 import dark.BasicUtilities.renders.RenderPipe;
 import dark.BasicUtilities.renders.RenderPump;
-import dark.BasicUtilities.tanks.TileEntityLTank;
 
 public class BPClientProxy extends BPCommonProxy
 {
@@ -25,7 +25,7 @@ public class BPClientProxy extends BPCommonProxy
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPipe.class, new RenderPipe());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPump.class, new RenderPump());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRod.class, new RenderGearRod());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLTank.class, new RenderLTank());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTank.class, new RenderTank());
         RenderingRegistry.registerBlockHandler(new ItemRenderHelper());
     }
 

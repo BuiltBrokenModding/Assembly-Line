@@ -9,9 +9,9 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
-import dark.BasicUtilities.renders.ModelGearRod;
-import dark.BasicUtilities.renders.ModelGenerator;
-import dark.BasicUtilities.renders.ModelPump;
+import dark.BasicUtilities.renders.models.ModelGearRod;
+import dark.BasicUtilities.renders.models.ModelGenerator;
+import dark.BasicUtilities.renders.models.ModelPump;
 
 public class ItemRenderHelper implements ISimpleBlockRenderingHandler {
 	public static ItemRenderHelper instance = new ItemRenderHelper();

@@ -6,6 +6,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import dark.BasicUtilities.BasicUtilitiesMain;
+import dark.BasicUtilities.PipeTab;
 
 public class ItemParts extends Item
 {
@@ -31,7 +32,7 @@ public class ItemParts extends Item
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
         this.setMaxStackSize(64);
-        this.setCreativeTab(CreativeTabs.tabMaterials);
+        this.setCreativeTab(PipeTab.INSTANCE);
     }
 
     @Override

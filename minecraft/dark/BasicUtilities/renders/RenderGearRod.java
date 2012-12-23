@@ -6,7 +6,8 @@ import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 
 import dark.BasicUtilities.BasicUtilitiesMain;
-import dark.BasicUtilities.mechanical.TileEntityRod;
+import dark.BasicUtilities.Tile.TileEntityRod;
+import dark.BasicUtilities.renders.models.ModelGearRod;
 
 
 public class RenderGearRod extends TileEntitySpecialRenderer
