@@ -3,6 +3,8 @@ package dark.BasicUtilities.api;
 import dark.BasicUtilities.BasicUtilitiesMain;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSand;
+import net.minecraftforge.liquids.ILiquid;
+import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
 
@@ -35,9 +37,24 @@ public enum Liquid
         this.defaultPresure = dPressure;
     }
 
+    /**
+     * creates a new liquid stack using basic liquid type and the volume needed
+     */
     public static LiquidStack getStack(Liquid type, int vol)
     {
         return new LiquidStack(type.liquid.itemID, vol, type.liquid.itemMeta);
+    }
+
+    /**
+     * gets a liquid type from a liquidStack
+     */
+    public static Liquid getLiquid(LiquidStack stack)
+    {
+        for (int i = 0; i < Liquid.values().length - 1; i++)
+        {
+            if (Liquid.isStackEqual(stack, Liquid.values()[i])) { return Liquid.values()[i]; }
+        }
+        return Liquid.DEFUALT;
     }
 
     /**
@@ -60,8 +77,10 @@ public enum Liquid
      * @param bBlock
      * @return
      */
-    public static Liquid getLiquidByBlock(int bBlock)
+    public static Liquid getLiquidTypeByBlock(int bBlock)
     {
+        if(bBlock == Block.waterMoving.blockID) return Liquid.DEFUALT;
+        if(bBlock == Block.lavaMoving.blockID) return Liquid.DEFUALT;
         for (int i = 0; i < Liquid.values().length - 1; i++)
         {
             Liquid selected = Liquid.getLiquid(i);
@@ -69,18 +88,38 @@ public enum Liquid
         }
         return Liquid.DEFUALT;
     }
+
+    public static LiquidStack getLiquidFromBlock(int blockId)
+    {
+        if (blockId == Block.waterStill.blockID) { return new LiquidStack(Block.waterStill.blockID, LiquidContainerRegistry.BUCKET_VOLUME, 0); }
+        if (blockId == Block.lavaStill.blockID) { return new LiquidStack(Block.lavaStill.blockID, LiquidContainerRegistry.BUCKET_VOLUME, 0); }
+        if (Block.blocksList[blockId] instanceof ILiquid)
+        {
+            ILiquid liquid = (ILiquid) Block.blocksList[blockId];
+            if (liquid.isMetaSensitive()) return new LiquidStack(liquid.stillLiquidId(), LiquidContainerRegistry.BUCKET_VOLUME, liquid.stillLiquidMeta());
+            else return new LiquidStack(liquid.stillLiquidId(), LiquidContainerRegistry.BUCKET_VOLUME, 0);
+        }
+        return null;
+    }
+
     /**
      * Used to compare a liquidStack to a liquid type
+     * 
      * @param stack
      * @param type
      * @return
      */
     public static boolean isStackEqual(LiquidStack stack, Liquid type)
     {
-        if(type.liquid.itemID == stack.itemID && type.liquid.itemMeta == stack.itemMeta)
-        {
-            return true;
-        }
+        if (stack == null) return false;
+        if (type.liquid.itemID == stack.itemID && type.liquid.itemMeta == stack.itemMeta) { return true; }
+        return false;
+    }
+
+    public static boolean isStackEqual(LiquidStack stack, LiquidStack type)
+    {
+        if (stack == null || type == null) return false;
+        if (type.itemID == stack.itemID && type.itemMeta == stack.itemMeta) { return true; }
         return false;
     }
 }

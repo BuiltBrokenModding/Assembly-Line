@@ -19,6 +19,8 @@ public class BlockValve extends universalelectricity.prefab.BlockMachine
 		this.setCreativeTab(CreativeTabs.tabRedstone);
 		this.setRequiresSelfNotify();
         this.blockIndexInTexture = 26;
+        this.setHardness(2f);
+        this.setResistance(5f);
 	}
 	 public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player)
 	    {

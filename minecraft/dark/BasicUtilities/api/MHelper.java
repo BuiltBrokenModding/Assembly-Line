@@ -1,20 +1,27 @@
 package dark.BasicUtilities.api;
 
+import universalelectricity.core.vector.Vector3;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.liquids.ILiquidTank;
+import net.minecraftforge.liquids.ITankContainer;
+import net.minecraftforge.liquids.LiquidStack;
+import net.minecraftforge.liquids.LiquidTank;
 
 public class MHelper
 {
-   /**
-    * Used to find all tileEntities sounding the location
-    * you will have to filter for selective tileEntities 
-    * @param world - the world being searched threw
-    * @param x
-    * @param y
-    * @param z
-    * @return an array of up to 6 tileEntities
-    */
+    /**
+     * Used to find all tileEntities sounding the location you will have to
+     * filter for selective tileEntities
+     * 
+     * @param world
+     *            - the world being searched threw
+     * @param x
+     * @param y
+     * @param z
+     * @return an array of up to 6 tileEntities
+     */
     public static TileEntity[] getSourounding(World world, int x, int y, int z)
     {
         TileEntity[] list = new TileEntity[] { null, null, null, null, null, null };
@@ -31,9 +38,9 @@ public class MHelper
     }
 
     /**
-     * Used to help trade liquid without having to do too much work
-     * will not trade to one side due to glitches, you will have
-     * to trade to this side using another method.
+     * Used to help trade liquid without having to do too much work will not
+     * trade to one side due to glitches, you will have to trade to this side
+     * using another method.
      * 
      * @param blockEntity
      *            - tile entity trading the liquid
@@ -48,8 +55,81 @@ public class MHelper
     @Deprecated
     public static int shareLiquid(World world, int x, int y, int z, int vol, int max, Liquid type)
     {
-        
+
         return vol;
+    }
+
+    /**
+     * 
+     * @param world
+     *            - world
+     * @param center
+     *            - location of center of trade
+     * @param tank
+     *            - liquid tank to be drained/filled
+     * @return ammount removed from tank
+     */
+    public static int shareLiquid(World world, Vector3 center, LiquidStack resource)
+    {
+
+        if (resource == null) return 0;
+        LiquidStack liquid = resource.copy();
+        TileEntity[] connected = MHelper.getSourounding(world, center.intX(), center.intY(), center.intZ());
+        Liquid type = Liquid.getLiquid(liquid);
+        ForgeDirection firstTrade = ForgeDirection.UP;
+        if (!type.doesFlaot) firstTrade = ForgeDirection.DOWN;
+        for (int i = 0; i < 6; i++)
+        {
+            ForgeDirection dir = ForgeDirection.getOrientation(i);
+
+            if (connected[i] instanceof ITankContainer)
+            {
+                ITankContainer cont = ((ITankContainer) connected[i]);
+                ILiquidTank[] tanks = cont.getTanks(dir);
+                boolean validTank = false;
+                for (int t = 0; t < tanks.length; t++)
+                {
+                    if (tanks[t].getLiquid() != null && Liquid.isStackEqual(tanks[t].getLiquid(), liquid))
+                    {
+                        validTank = true;
+                        break;
+                    }
+                }
+                if (!validTank) connected[i] = null;
+            }
+            else
+            {
+                connected[i] = null;
+            }
+
+        }
+        int filled = 0;
+        if (connected[firstTrade.ordinal()] instanceof ITankContainer && liquid != null && liquid.amount <= 0)
+        {
+            int f = ((ITankContainer) connected[firstTrade.ordinal()]).fill(firstTrade, liquid, true);
+            liquid.amount -= f;
+            filled += f;
+        }
+        if (connected[firstTrade.getOpposite().ordinal()] instanceof ITankContainer && liquid != null && liquid.amount <= 0)
+        {
+            int f = ((ITankContainer) connected[firstTrade.getOpposite().ordinal()]).fill(firstTrade, liquid, true);
+            liquid.amount -= f;
+            filled += f;
+        }
+        for (int i = 2; i < 6; i++)
+        {
+            ForgeDirection dir = ForgeDirection.getOrientation(i);
+            if (liquid == null || liquid.amount <= 0) break;
+            if (connected[i] instanceof ITankContainer)
+            {
+                int f = ((ITankContainer) connected[i]).fill(dir, liquid, true);
+                liquid.amount -= f;
+                filled += f;
+            }
+
+        }
+        return filled;
+
     }
 
     /**

@@ -2,6 +2,7 @@ package dark.BasicUtilities.machines;
 
 import java.util.EnumSet;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -9,6 +10,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.liquids.ILiquid;
 import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
@@ -22,6 +24,8 @@ import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.TileEntityElectricityReceiver;
 
 import com.google.common.io.ByteArrayDataInput;
+
+import cpw.mods.fml.common.FMLLog;
 
 import dark.BasicUtilities.BasicUtilitiesMain;
 import dark.BasicUtilities.api.IReadOut;
@@ -71,14 +75,15 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
             if (count-- <= 0)
             {
                 int bBlock = worldObj.getBlockId(xCoord, yCoord - 1, zCoord);
-                Liquid bellow = Liquid.getLiquidByBlock(bBlock);
+                Liquid bellow = Liquid.getLiquidTypeByBlock(bBlock);
                 if (bellow != null)
                 {
                     if (this.type != bellow && bellow != Liquid.DEFUALT)
                     {
                         this.tank.setLiquid(Liquid.getStack(bellow, 0));
+                        this.type = bellow;
                     }
-                    this.type = bellow;
+                    
                 }
                 count = 40;
             }
@@ -87,7 +92,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
 
             if (stack != null)
             {
-                
+
                 if (stack.amount >= 0)
                 {
                     for (int i = 0; i < 6; i++)
@@ -113,7 +118,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
 
             if (network != null)
             {
-                if (this.canPump())
+                if (this.canPump(xCoord,yCoord-1,zCoord))
                 {
                     network.startRequesting(this, WATTS_PER_TICK / this.getVoltage(), this.getVoltage());
                     this.joulesReceived = Math.max(Math.min(this.joulesReceived + network.consumeElectricity(this).getWatts(), WATTS_PER_TICK), 0);
@@ -123,14 +128,13 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
                     network.stopRequesting(this);
                 }
             }
-            if (this.joulesReceived >= this.WATTS_PER_TICK - 50 && this.canPump())
+            if (this.joulesReceived >= this.WATTS_PER_TICK - 50 && this.canPump(xCoord,yCoord-1,zCoord))
             {
 
                 joulesReceived -= this.WATTS_PER_TICK;
                 if (percentPumped++ == 20)
                 {
                     this.drainBlock(new Vector3(xCoord, yCoord - 1, zCoord));
-                    percentPumped = 0;
                 }
             }
         }
@@ -145,11 +149,12 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
         }
     }
 
-    public boolean canPump()
+    public boolean canPump(int x, int y, int z)
     {
-        //if (this.tank.getLiquid() == null) return false;
+        // if (this.tank.getLiquid() == null) return false;
         if (this.tank.getLiquid() != null && this.tank.getLiquid().amount >= this.wMax) return false;
         if (this.isDisabled()) return false;
+        if(!this.isValidLiquid(Block.blocksList[worldObj.getBlockId(x, y, z)])) return false;
         return true;
     }
 
@@ -162,11 +167,16 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
     public boolean drainBlock(Vector3 loc)
     {
         int bBlock = worldObj.getBlockId(loc.intX(), loc.intY(), loc.intZ());
-        Liquid bellow = Liquid.getLiquidByBlock(bBlock);
-        if (bBlock == type.liquid.itemID)
+        int meta = worldObj.getBlockMetadata(loc.intX(), loc.intY(), loc.intZ());
+        Liquid bellow = Liquid.getLiquidTypeByBlock(bBlock);
+        if(bBlock == Block.waterMoving.blockID ||(bBlock == Block.waterStill.blockID && meta != 0)) return false;
+        if(bBlock == Block.lavaMoving.blockID ||(bBlock == Block.lavaStill.blockID && meta != 0)) return false;
+        if (bBlock == type.liquid.itemID && this.isValidLiquid(Block.blocksList[bBlock]))
         {
+            FMLLog.info("pumping "+bellow.displayerName+" blockID:"+bBlock+" Meta:"+meta);
             int f = this.tank.fill(Liquid.getStack(this.type, LiquidContainerRegistry.BUCKET_VOLUME), true);
             if (f > 0) worldObj.setBlockWithNotify(loc.intX(), loc.intY(), loc.intZ(), 0);
+            percentPumped = 0;
             return true;
         }
         return false;
@@ -257,7 +267,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
     public ILiquidTank[] getTanks(ForgeDirection direction)
     {
         return new ILiquidTank[]
-            { tank };
+        { tank };
     }
 
     @Override
@@ -279,4 +289,12 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
         if (type == this.type) return true;
         return false;
     }
+
+    private boolean isValidLiquid(Block block)
+    {
+        if(block == null) return false;
+        return Liquid.getLiquidFromBlock(block.blockID) != null;
+    }
+
+   
 }

@@ -5,6 +5,7 @@ import cpw.mods.fml.common.FMLLog;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
@@ -22,38 +23,36 @@ public class TileEntityEValve extends TileEntity implements ITankOutputer, IRead
     public LiquidTank tank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
     public TileEntity[] connected = new TileEntity[6];
     private int count = 0;
-    private boolean isPowered = false;
+    public boolean isPowered = false;
 
     public void updateEntity()
     {
         super.updateEntity();
         this.connected = MHelper.getSourounding(worldObj, xCoord, yCoord, zCoord);
-        if (!this.worldObj.isRemote && count++ == 10 && !isPowered)
+        if (!this.worldObj.isRemote && count++ == 10)
         {
+            BlockEValve.checkForPower(worldObj,xCoord,yCoord,zCoord);
             if (tank.getLiquid() == null)
             {
                 tank.setLiquid(Liquid.getStack(this.type, 1));
             }
-            if (tank.getLiquid() != null && tank.getLiquid().amount < tank.getCapacity())
+            if (tank.getLiquid() != null && tank.getLiquid().amount < tank.getCapacity() && !isPowered)
             {
                 for (int i = 0; i < 6; i++)
                 {
                     ForgeDirection dir = ForgeDirection.getOrientation(i);
                     if (connected[i] instanceof ITankContainer && !(connected[i] instanceof TileEntityPipe))
                     {
-                       // FMLLog.warning("container");
                         ILiquidTank[] tanks = ((ITankContainer) connected[i]).getTanks(dir);
                         for (int t = 0; t < tanks.length; t++)
                         {
                             LiquidStack ll = tanks[t].getLiquid();
                             if (ll != null && Liquid.isStackEqual(ll, this.type))
                             {
-                               // FMLLog.warning("draining");
                                 int drainVol = this.tank.getCapacity();
-                                if (this.tank.getLiquid() != null) drainVol = tank.getCapacity() - tank.getLiquid().amount;
+                                if (this.tank.getLiquid() != null) drainVol = tank.getCapacity() - tank.getLiquid().amount - 1;
                                 LiquidStack drained = ((ITankContainer) connected[i]).drain(t, this.tank.getCapacity(), true);
                                 int f = this.tank.fill(drained, true);
-                                //FMLLog.warning("leftOver " + f);
                             }
                         }
                     }
@@ -61,13 +60,12 @@ public class TileEntityEValve extends TileEntity implements ITankOutputer, IRead
             }
             count = 0;
             LiquidStack stack = tank.getLiquid();
-            if (stack != null && this.canOutput())
+            if (stack != null && this.canOutput() && !isPowered)
                 for (int i = 0; i < 6; i++)
                 {
 
                     if (connected[i] instanceof TileEntityPipe)
                     {
-                        //FMLLog.warning("moving to pipe");
                         int ee = ((TileEntityPipe) connected[i]).fill(ForgeDirection.getOrientation(i), stack, true);
                         tank.drain(ee, true);
                     }
@@ -137,10 +135,10 @@ public class TileEntityEValve extends TileEntity implements ITankOutputer, IRead
     {
         String output = "";
         LiquidStack stack = tank.getLiquid();
-        if (stack != null) output += (stack.amount / LiquidContainerRegistry.BUCKET_VOLUME) + " " + this.type.displayerName+" on = "+!this.isPowered;
+        if (stack != null) output += (stack.amount / LiquidContainerRegistry.BUCKET_VOLUME) + " " + this.type.displayerName + " on = " + !this.isPowered;
         if (stack != null) return output;
 
-        return "0/0 " + this.type.displayerName+" on = "+!this.isPowered;
+        return "0/0 " + this.type.displayerName + " on = " + !this.isPowered;
     }
 
     @Override

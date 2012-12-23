@@ -5,7 +5,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 import dark.BasicUtilities.BasicUtilitiesMain;
 import dark.BasicUtilities.api.Liquid;
 
-public class ItemEValve extends Item
+public class ItemEValve extends ItemBlock
 {
     int index = 32;// 32 + 4 rows alloted to pipes
     private int spawnID;
@@ -23,16 +23,8 @@ public class ItemEValve extends Item
         super(id);
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
-        this.setIconIndex(10);
         this.setItemName("eValve");
         this.setCreativeTab(CreativeTabs.tabRedstone);
-    }
-
-    @Override
-    public int getIconFromDamage(int par1)
-    {
-
-        return par1 + index;
     }
 
     @Override
@@ -46,13 +38,14 @@ public class ItemEValve extends Item
     {
         for (int i = 0; i < Liquid.values().length; i++)
         {
-                par3List.add(new ItemStack(this, 1, i));
+            par3List.add(new ItemStack(this, 1, i));
         }
     }
 
+    @Override
     public String getTextureFile()
     {
-        return BasicUtilitiesMain.ITEM_PNG;
+        return BasicUtilitiesMain.BlOCK_PNG;
     }
 
     @Override
@@ -66,7 +59,7 @@ public class ItemEValve extends Item
     {
         int blockID = world.getBlockId(x, y, z);
         spawnID = BasicUtilitiesMain.eValve.blockID;
-        int angle= MathHelper.floor_double((player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+        int angle = MathHelper.floor_double((player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
         if (blockID == Block.snow.blockID)
         {
             side = 1;
@@ -122,6 +115,7 @@ public class ItemEValve extends Item
                         Liquid dm = Liquid.getLiquid(itemstack.getItemDamage());
                         pipeEntity.setType(dm);
                         pipeEntity.tank.setLiquid(Liquid.getStack(dm, 1));
+                        world.setBlockMetadata(x, y, z, dm.ordinal() & 15);
                     }
                 }
 
