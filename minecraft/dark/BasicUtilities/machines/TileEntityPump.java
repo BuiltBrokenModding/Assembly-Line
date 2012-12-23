@@ -132,7 +132,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
             {
 
                 joulesReceived -= this.WATTS_PER_TICK;
-                if (percentPumped++ == 20)
+                if (percentPumped++ >= 20)
                 {
                     this.drainBlock(new Vector3(xCoord, yCoord - 1, zCoord));
                 }

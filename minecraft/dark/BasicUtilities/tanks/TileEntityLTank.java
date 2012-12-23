@@ -6,8 +6,10 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
+import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.liquids.LiquidTank;
@@ -49,7 +51,8 @@ public class TileEntityLTank extends TileEntity implements IPacketReceiver, IRea
             this.cc = MHelper.getSourounding(worldObj, xCoord, yCoord, zCoord);
             if (!worldObj.isRemote)
             {
-                this.tank.drain(MHelper.shareLiquid(worldObj, new Vector3(this), liquid), true);
+                this.tradeDown();
+                this.tradeArround();
                 if (doUpdate || count2 >= 20)
                 {
                     this.doUpdate = false;
@@ -139,10 +142,24 @@ public class TileEntityLTank extends TileEntity implements IPacketReceiver, IRea
     public int fill(int tankIndex, LiquidStack resource, boolean doFill)
     {
         if (resource == null || tankIndex != 0) return 0;
-        return this.getTank(true).tank.fill(resource, doFill);
+        if (this.isFull())
+        {
+            int change = 1;
+            if (Liquid.getLiquid(resource).doesFlaot) change = -1;
+            TileEntity tank = worldObj.getBlockTileEntity(xCoord, yCoord + change, zCoord);
+            if (tank instanceof TileEntityLTank) { return ((TileEntityLTank) tank).tank.fill(resource, doFill); }
+        }
+        return this.tank.fill(resource, doFill);
     }
 
-    public TileEntityLTank getTank(boolean top)
+    public boolean isFull()
+    {
+        if (this.tank.getLiquid() == null) return false;
+        if (this.tank.getLiquid().amount > 0 && this.tank.getLiquid().amount < this.tank.getCapacity()) return false;
+        return true;
+    }
+
+    public TileEntityLTank getFillAbleTank(boolean top)
     {
         TileEntityLTank tank = this;
         boolean stop = false;
@@ -158,7 +175,7 @@ public class TileEntityLTank extends TileEntity implements IPacketReceiver, IRea
                 y -= 1;
             }
             TileEntity ent = tank.worldObj.getBlockTileEntity(xCoord, y, zCoord);
-            if (ent instanceof TileEntityLTank && ((TileEntityLTank) ent).getType() == this.type)
+            if (ent instanceof TileEntityLTank && ((TileEntityLTank) ent).getType() == this.type && !((TileEntityLTank) ent).isFull())
             {
                 tank = (TileEntityLTank) ent;
             }
@@ -179,8 +196,8 @@ public class TileEntityLTank extends TileEntity implements IPacketReceiver, IRea
     @Override
     public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
     {
-        if(tankIndex != 0)return null;        
-        return this.getTank(false).tank.getLiquid();
+        if (tankIndex != 0) return null;
+        return this.tank.getLiquid();
     }
 
     @Override
@@ -215,5 +232,31 @@ public class TileEntityLTank extends TileEntity implements IPacketReceiver, IRea
             if (!type.doesFlaot && dir == ForgeDirection.UP) return true;
         }
         return false;
+    }
+
+    public void tradeDown()
+    {
+        if (this.tank.getLiquid() == null || this.tank.getLiquid().amount <= 0) return;
+        TileEntity ent = worldObj.getBlockTileEntity(xCoord, yCoord - 1, zCoord);
+        if (ent instanceof TileEntityLTank && ((TileEntityLTank) ent).type == this.type && !((TileEntityLTank) ent).isFull())
+        {
+            int f = ((TileEntityLTank) ent).tank.fill(this.tank.getLiquid(), true);
+            this.tank.drain(f, true);
+        }
+    }
+
+    public void tradeArround()
+    {
+        if (this.tank.getLiquid() == null || this.tank.getLiquid().amount <= 0) return;
+        TileEntity[] ents = MHelper.getSourounding(worldObj, xCoord, yCoord, zCoord);
+        for (int i = 2; i < 6; i++)
+        {
+            if (ents[i] instanceof TileEntityLTank && ((TileEntityLTank) ents[i]).type == this.type && !((TileEntityLTank) ents[i]).isFull())
+            {
+                int f = ((TileEntityLTank) ents[i]).tank.fill(this.tank.getLiquid(), true);
+                this.tank.drain(f, true);
+            }
+            if (this.tank.getLiquid() == null || this.tank.getLiquid().amount <= 0) break;
+        }
     }
 }

@@ -21,7 +21,7 @@ public enum Liquid
     WATER("Water", LiquidDictionary.getOrCreateLiquid("water", new LiquidStack(Block.waterStill, 1)), false, 32),
     LAVA("Lava", LiquidDictionary.getOrCreateLiquid("lava", new LiquidStack(Block.lavaStill, 1)), false, 20),
     OIL("Oil", LiquidDictionary.getOrCreateLiquid("oil", new LiquidStack(BasicUtilitiesMain.oilStill, 1)), true, 32),
-    Fuel("Fuel", LiquidDictionary.getOrCreateLiquid("oil", new LiquidStack(BasicUtilitiesMain.oilStill, 1)), false, 40),
+    FUEL("Fuel", LiquidDictionary.getOrCreateLiquid("oil", new LiquidStack(BasicUtilitiesMain.oilStill, 1)), false, 40),
     DEFUALT("Empty", LiquidDictionary.getOrCreateLiquid("air", new LiquidStack(0, 1)), false, 0);
 
     public final boolean doesFlaot;
