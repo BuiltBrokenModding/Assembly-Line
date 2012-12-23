@@ -88,7 +88,7 @@ public class TileEntityRod extends TileEntity implements IPacketReceiver, IForce
                 {
                     Packet packet = PacketManager.getPacket(BasicUtilitiesMain.CHANNEL, this, new Object[]
                         { force });
-                    PacketManager.sendPacketToClients(packet, worldObj, Vector3.get(this), 40);
+                    PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 40);
                 }
                 this.pForce = this.force;
             }

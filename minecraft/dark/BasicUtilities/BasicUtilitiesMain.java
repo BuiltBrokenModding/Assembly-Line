@@ -71,36 +71,30 @@ public class BasicUtilitiesMain extends DummyModContainer
     public static final String textureFile = "/dark/BasicUtilities/zResources/";
     public static final String BlOCK_PNG = "/dark/BasicUtilities/zResources/blocks.png";
     public static final String ITEM_PNG = "/dark/generaltextures/Items.png";
-    public static final Configuration CONFIGURATION = new Configuration(
-            new File(Loader.instance().getConfigDir(), NAME + ".cfg"));
+    public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir() + "/UniversalElectricity/", NAME + ".cfg"));
     // Block and Item vars
-    public final static int BLOCK_ID_PREFIX = 3000;
+    public final static int BLOCK_ID_PREFIX = 3100;
     public final static int LIQUID_ID_PREFIX = 200;
-    public final static int ITEM_ID_PREFIX = 10056;
+    public final static int ITEM_ID_PREFIX = 13200;
 
-    public static Block pipe = new BlockPipe(UniversalElectricity.CONFIGURATION.getBlock("Pipe", BLOCK_ID_PREFIX).getInt());
-    public static Block machine = new BlockMachine(UniversalElectricity.CONFIGURATION.getBlock("MachineSetOne", BLOCK_ID_PREFIX + 1).getInt());
-    public static Block valve = new BlockValve(UniversalElectricity.CONFIGURATION.getBlock("Valve", BLOCK_ID_PREFIX + 2).getInt());
-    public static Block rod = new BlockRod(UniversalElectricity.CONFIGURATION.getBlock("MechanicalRod", BLOCK_ID_PREFIX + 3).getInt());
-    public static Block generator = new BlockGenerator((UniversalElectricity.CONFIGURATION.getBlock("UEGenerator", BLOCK_ID_PREFIX + 4).getInt()));
-    public static Block eValve = new BlockEValve((UniversalElectricity.CONFIGURATION.getBlock("EValve", BLOCK_ID_PREFIX + 5).getInt()));
+    public static Block pipe;
+    public static Block machine;
+    public static Block valve;
+    public static Block rod;
+    public static Block generator;
+    public static Block eValve;
+    public static Block SteamBlock;
+    public static Block oilMoving;
+    public static Block oilStill;
 
-    public static Block SteamBlock = new BlockSteam(UniversalElectricity.CONFIGURATION.getBlock("SteamBlock", LIQUID_ID_PREFIX).getInt());
+    public static LiquidStack Steam;
+    public static LiquidStack Oil;
 
-    public static Block oilMoving = new BlockOilFlowing(UniversalElectricity.CONFIGURATION.getBlock("Oil_FlowingBU", LIQUID_ID_PREFIX + 1).getInt());
-    public static Block oilStill = new BlockOilStill(UniversalElectricity.CONFIGURATION.getBlock("Oil_StillBU", LIQUID_ID_PREFIX + 2).getInt());
-
-    public static LiquidStack Steam = LiquidDictionary.getOrCreateLiquid("Steam", new LiquidStack(SteamBlock, LiquidContainerRegistry.BUCKET_VOLUME));
-
-    public static Item parts = new ItemParts(UniversalElectricity.CONFIGURATION.getItem("Parts", ITEM_ID_PREFIX).getInt());
-    public static Item itemPipes = new ItemPipe(UniversalElectricity.CONFIGURATION.getItem("PipeItem", ITEM_ID_PREFIX + 1).getInt());
-    // public static Item itemEValve = new
-    // ItemEValve(UniversalElectricity.CONFIGURATION.getItem("EValveItem",
-    // ITEM_ID_PREFIX + 2).getInt());
-
-    public static Item gauge = new ItemGuage(UniversalElectricity.CONFIGURATION.getItem("PipeGuage", ITEM_ID_PREFIX + 3).getInt());
-    public static Item itemOilBucket = new ItemOilBucket(UniversalElectricity.CONFIGURATION.getItem("Oil Bucket", ITEM_ID_PREFIX + 4).getInt(), 4);
-    public static Item itemTank = new ItemTank(UniversalElectricity.CONFIGURATION.getItem("TankItem", ITEM_ID_PREFIX + 5).getInt());
+    public static Item parts;
+    public static Item itemPipes;
+    public static Item gauge;
+    public static Item itemOilBucket;
+    public static Item itemTank;
     // mod stuff
     @SidedProxy(clientSide = "dark.BasicUtilities.BPClientProxy", serverSide = "dark.BasicUtilities.BPCommonProxy")
     public static BPCommonProxy proxy;
@@ -112,6 +106,9 @@ public class BasicUtilitiesMain extends DummyModContainer
     {
         instance = this;
         proxy.preInit();
+
+        this.loadConfig();
+        // block registry
         GameRegistry.registerBlock(pipe, "multi pipe");
         GameRegistry.registerBlock(eValve, ItemEValve.class, "eValve");
         GameRegistry.registerBlock(rod, "mech rod");
@@ -283,5 +280,34 @@ public class BasicUtilitiesMain extends DummyModContainer
                     'P', new ItemStack(itemPipes, 1, i),
                     'V', new ItemStack(parts, 1, basicParts.Valve.ordinal()), });
         }
+    }
+
+    public void loadConfig()
+    {
+        CONFIGURATION.load();
+        // blocks
+        pipe = new BlockPipe(this.CONFIGURATION.getBlock("Pipe", BLOCK_ID_PREFIX).getInt());
+        machine = new BlockMachine(this.CONFIGURATION.getBlock("MachineSetOne", BLOCK_ID_PREFIX + 1).getInt());
+        // valve = new BlockValve(this.CONFIGURATION.getBlock("Valve",
+        // BLOCK_ID_PREFIX + 2).getInt());
+        rod = new BlockRod(this.CONFIGURATION.getBlock("MechanicalRod", BLOCK_ID_PREFIX + 3).getInt());
+        generator = new BlockGenerator((this.CONFIGURATION.getBlock("UEGenerator", BLOCK_ID_PREFIX + 4).getInt()));
+        eValve = new BlockEValve((this.CONFIGURATION.getBlock("EValve", BLOCK_ID_PREFIX + 5).getInt()));
+
+        // Liquid Blocks
+        SteamBlock = new BlockSteam(this.CONFIGURATION.getBlock("SteamBlock", LIQUID_ID_PREFIX).getInt());
+        oilMoving = new BlockOilFlowing(this.CONFIGURATION.getBlock("Oil_FlowingBU", LIQUID_ID_PREFIX + 1).getInt());
+        oilStill = new BlockOilStill(this.CONFIGURATION.getBlock("Oil_StillBU", LIQUID_ID_PREFIX + 2).getInt());
+
+        // Items
+        parts = new ItemParts(this.CONFIGURATION.getItem("Parts", ITEM_ID_PREFIX).getInt());
+        itemPipes = new ItemPipe(this.CONFIGURATION.getItem("PipeItem", ITEM_ID_PREFIX + 1).getInt());
+        // +2 saved for Valve item
+        gauge = new ItemGuage(this.CONFIGURATION.getItem("PipeGuage", ITEM_ID_PREFIX + 3).getInt());
+        itemOilBucket = new ItemOilBucket(this.CONFIGURATION.getItem("Oil Bucket", ITEM_ID_PREFIX + 4).getInt(), 4);
+        itemTank = new ItemTank(this.CONFIGURATION.getItem("TankItem", ITEM_ID_PREFIX + 5).getInt());
+        // lqiuid registry
+        Steam = LiquidDictionary.getOrCreateLiquid("Steam", new LiquidStack(SteamBlock, LiquidContainerRegistry.BUCKET_VOLUME));
+        CONFIGURATION.save();
     }
 }

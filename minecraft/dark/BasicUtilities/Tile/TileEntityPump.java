@@ -31,6 +31,7 @@ import dark.BasicUtilities.BasicUtilitiesMain;
 import dark.BasicUtilities.api.IReadOut;
 import dark.BasicUtilities.api.ITankOutputer;
 import dark.BasicUtilities.api.Liquid;
+import dark.Library.Util.MetaGroupingHelper;
 
 public class TileEntityPump extends TileEntityElectricityReceiver implements IPacketReceiver, IReadOut, ITankOutputer
 {
@@ -48,8 +49,25 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
     @Override
     public void initiate()
     {
-        ElectricityConnections.registerConnector(this, EnumSet.of(ForgeDirection.getOrientation(this.getBlockMetadata() + 2)));
+        this.registerConnections();
         this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, BasicUtilitiesMain.machine.blockID);
+    }
+//ElectricityConnections.registerConnector(this, EnumSet.of(ForgeDirection.getOrientation(this.getBlockMetadata() - BlockBasicMachine.BATTERY_BOX_METADATA + 2), ForgeDirection.getOrientation(this.getBlockMetadata() - BlockBasicMachine.BATTERY_BOX_METADATA + 2).getOpposite()));
+    public void registerConnections()
+    {
+        int notchMeta = MetaGroupingHelper.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+        ForgeDirection facing = ForgeDirection.getOrientation(notchMeta).getOpposite();
+        ForgeDirection[] dirs = new ForgeDirection[]{ForgeDirection.UNKNOWN,ForgeDirection.UNKNOWN,ForgeDirection.UNKNOWN,ForgeDirection.UNKNOWN,ForgeDirection.UNKNOWN,ForgeDirection.UNKNOWN};
+        ElectricityConnections.registerConnector(this, EnumSet.of(facing.getOpposite()));
+        for(int i = 2; i<6;i++)
+        {
+            ForgeDirection dir = ForgeDirection.getOrientation(i);
+            if(dir != facing)
+            {
+               dirs[i] = dir; 
+            }
+        }
+        ElectricityConnections.registerConnector(this, EnumSet.of(dirs[0],dirs[1],dirs[2],dirs[3],dirs[4],dirs[5]));
     }
 
     @Override
@@ -83,7 +101,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
                         this.tank.setLiquid(Liquid.getStack(bellow, 0));
                         this.type = bellow;
                     }
-                    
+
                 }
                 count = 40;
             }
@@ -118,7 +136,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
 
             if (network != null)
             {
-                if (this.canPump(xCoord,yCoord-1,zCoord))
+                if (this.canPump(xCoord, yCoord - 1, zCoord))
                 {
                     network.startRequesting(this, WATTS_PER_TICK / this.getVoltage(), this.getVoltage());
                     this.joulesReceived = Math.max(Math.min(this.joulesReceived + network.consumeElectricity(this).getWatts(), WATTS_PER_TICK), 0);
@@ -128,7 +146,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
                     network.stopRequesting(this);
                 }
             }
-            if (this.joulesReceived >= this.WATTS_PER_TICK - 50 && this.canPump(xCoord,yCoord-1,zCoord))
+            if (this.joulesReceived >= this.WATTS_PER_TICK - 50 && this.canPump(xCoord, yCoord - 1, zCoord))
             {
 
                 joulesReceived -= this.WATTS_PER_TICK;
@@ -154,7 +172,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
         // if (this.tank.getLiquid() == null) return false;
         if (this.tank.getLiquid() != null && this.tank.getLiquid().amount >= this.wMax) return false;
         if (this.isDisabled()) return false;
-        if(!this.isValidLiquid(Block.blocksList[worldObj.getBlockId(x, y, z)])) return false;
+        if (!this.isValidLiquid(Block.blocksList[worldObj.getBlockId(x, y, z)])) return false;
         return true;
     }
 
@@ -169,11 +187,11 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
         int bBlock = worldObj.getBlockId(loc.intX(), loc.intY(), loc.intZ());
         int meta = worldObj.getBlockMetadata(loc.intX(), loc.intY(), loc.intZ());
         Liquid bellow = Liquid.getLiquidTypeByBlock(bBlock);
-        if(bBlock == Block.waterMoving.blockID ||(bBlock == Block.waterStill.blockID && meta != 0)) return false;
-        if(bBlock == Block.lavaMoving.blockID ||(bBlock == Block.lavaStill.blockID && meta != 0)) return false;
+        if (bBlock == Block.waterMoving.blockID || (bBlock == Block.waterStill.blockID && meta != 0)) return false;
+        if (bBlock == Block.lavaMoving.blockID || (bBlock == Block.lavaStill.blockID && meta != 0)) return false;
         if (bBlock == type.liquid.itemID && this.isValidLiquid(Block.blocksList[bBlock]))
         {
-            FMLLog.info("pumping "+bellow.displayerName+" blockID:"+bBlock+" Meta:"+meta);
+            FMLLog.info("pumping " + bellow.displayerName + " blockID:" + bBlock + " Meta:" + meta);
             int f = this.tank.fill(Liquid.getStack(this.type, LiquidContainerRegistry.BUCKET_VOLUME), true);
             if (f > 0) worldObj.setBlockWithNotify(loc.intX(), loc.intY(), loc.intZ(), 0);
             percentPumped = 0;
@@ -292,9 +310,8 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
 
     private boolean isValidLiquid(Block block)
     {
-        if(block == null) return false;
+        if (block == null) return false;
         return Liquid.getLiquidFromBlock(block.blockID) != null;
     }
 
-   
 }
