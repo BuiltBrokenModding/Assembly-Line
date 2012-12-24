@@ -59,7 +59,7 @@ public class TileEntityCraftingArm extends TileEntityElectricityReceiver impleme
 
 				if (inputDirection != ForgeDirection.UP)
 				{
-					TileEntity inputTile = Vector3.getTileEntityFromSide(this.worldObj, Vector3.get(this), inputDirection);
+					TileEntity inputTile = Vector3.getTileEntityFromSide(this.worldObj, new Vector3(this), inputDirection);
 
 					if (inputTile != null)
 					{

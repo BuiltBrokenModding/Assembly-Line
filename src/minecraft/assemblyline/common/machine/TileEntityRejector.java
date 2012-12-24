@@ -229,7 +229,7 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IPa
 		}
 		else
 		{
-			PacketManager.sendPacketToClients(packet, worldObj, Vector3.get(this), 10);
+			PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 10);
 		}
 	}
 

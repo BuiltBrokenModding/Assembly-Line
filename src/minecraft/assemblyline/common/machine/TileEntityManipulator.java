@@ -52,15 +52,15 @@ public class TileEntityManipulator extends TileEntityAssemblyNetwork implements 
 					 * Find items going into the manipulator and input them into an inventory behind
 					 * this manipulator.
 					 */
-					Vector3 inputPosition = Vector3.get(this);
+					Vector3 inputPosition = new Vector3(this);
 
-					Vector3 outputUp = Vector3.get(this);
+					Vector3 outputUp = new Vector3(this);
 					outputUp.modifyPositionFromSide(ForgeDirection.UP);
 
-					Vector3 outputDown = Vector3.get(this);
+					Vector3 outputDown = new Vector3(this);
 					outputDown.modifyPositionFromSide(ForgeDirection.DOWN);
 
-					Vector3 outputPosition = Vector3.get(this);
+					Vector3 outputPosition = new Vector3(this);
 					outputPosition.modifyPositionFromSide(this.getBeltDirection().getOpposite());
 
 					AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(inputPosition.x, inputPosition.y, inputPosition.z, inputPosition.x + 1, inputPosition.y + 1, inputPosition.z + 1);
@@ -101,16 +101,16 @@ public class TileEntityManipulator extends TileEntityAssemblyNetwork implements 
 					{
 						this.onPowerOff();
 
-						Vector3 inputUp = Vector3.get(this);
+						Vector3 inputUp = new Vector3(this);
 						inputUp.modifyPositionFromSide(ForgeDirection.UP);
 
-						Vector3 inputDown = Vector3.get(this);
+						Vector3 inputDown = new Vector3(this);
 						inputDown.modifyPositionFromSide(ForgeDirection.DOWN);
 
-						Vector3 inputPosition = Vector3.get(this);
+						Vector3 inputPosition = new Vector3(this);
 						inputPosition.modifyPositionFromSide(this.getBeltDirection().getOpposite());
 
-						Vector3 outputPosition = Vector3.get(this);
+						Vector3 outputPosition = new Vector3(this);
 						outputPosition.modifyPositionFromSide(this.getBeltDirection());
 
 						ItemStack itemStack = this.tryGrabFromPosition(inputUp, ForgeDirection.DOWN);
