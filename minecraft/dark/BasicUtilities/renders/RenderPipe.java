@@ -12,54 +12,70 @@ import dark.BasicUtilities.api.Liquid;
 import dark.BasicUtilities.renders.models.ModelLargePipe;
 import dark.BasicUtilities.renders.models.ModelPipe;
 
-
 public class RenderPipe extends TileEntitySpecialRenderer
 {
-	Liquid type;
-	int size = 6;
-	
-	private ModelPipe fourPipe;
-	private ModelLargePipe SixPipe;
-	private ModelBase model = fourPipe;
-	
-	public RenderPipe()
-	{
-		fourPipe = new ModelPipe();
-		SixPipe = new ModelLargePipe();
-	}
+    private Liquid type = Liquid.DEFUALT;
+    private ModelPipe fourPipe;
+    private ModelLargePipe SixPipe;
+    private TileEntity[] ents = new TileEntity[6];
 
-	public void renderAModelAt(TileEntityPipe tileEntity, double d, double d1, double d2, float f)
-	{
-        //Texture file
-		
-		type = tileEntity.getType();
-		
-        
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
-		GL11.glScalef(1.0F, -1F, -1F);
-			switch(type.ordinal())
-			{
-				case 0: bindTextureByName(BasicUtilitiesMain.textureFile+"pipes/SixSteamPipe.png");break;
-				case 1: bindTextureByName(BasicUtilitiesMain.textureFile+"pipes/SixWaterPipe.png");break;
-				case 2: bindTextureByName(BasicUtilitiesMain.textureFile+"pipes/SixLavaPipe.png");break;
-				case 3: bindTextureByName(BasicUtilitiesMain.textureFile+"pipes/SixOilPipe.png");break;
-				default:bindTextureByName(BasicUtilitiesMain.textureFile+"pipes/DefaultPipe.png"); break;
-			}
-			if(tileEntity.connectedBlocks[0] != null) SixPipe.renderBottom();
-			if(tileEntity.connectedBlocks[1] != null) SixPipe.renderTop();
-			if(tileEntity.connectedBlocks[3] != null) SixPipe.renderFront();
-			if(tileEntity.connectedBlocks[2] != null) SixPipe.renderBack();
-			if(tileEntity.connectedBlocks[5] != null) SixPipe.renderRight();
-			if(tileEntity.connectedBlocks[4] != null) SixPipe.renderLeft();		
-			SixPipe.renderMiddle();
-		GL11.glPopMatrix();
-	
-	}
+    public RenderPipe()
+    {
+        fourPipe = new ModelPipe();
+        SixPipe = new ModelLargePipe();
+    }
 
-	@Override
-	public void renderTileEntityAt(TileEntity tileEntity, double var2, double var4, double var6, float var8) {
-		this.renderAModelAt((TileEntityPipe)tileEntity, var2, var4, var6, var8);
-	}
+    public void renderAModelAt(TileEntity te, double d, double d1, double d2, float f)
+    {
+        // Texture file
+        GL11.glPushMatrix();
+        GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
+        GL11.glScalef(1.0F, -1F, -1F);
+        if (te instanceof TileEntityPipe)
+        {
+            type = ((TileEntityPipe) te).getType();
+            ents = ((TileEntityPipe) te).connectedBlocks;
+        }
+        this.render(type, ents);
+        GL11.glPopMatrix();
+
+    }
+
+    public void render(Liquid type, TileEntity[] ents)
+    {
+
+        switch (type.ordinal())
+        {
+            case 0:
+                bindTextureByName(BasicUtilitiesMain.textureFile + "pipes/SixSteamPipe.png");
+                break;
+            case 1:
+                bindTextureByName(BasicUtilitiesMain.textureFile + "pipes/SixWaterPipe.png");
+                break;
+            case 2:
+                bindTextureByName(BasicUtilitiesMain.textureFile + "pipes/SixLavaPipe.png");
+                break;
+            case 3:
+                bindTextureByName(BasicUtilitiesMain.textureFile + "pipes/SixOilPipe.png");
+                break;
+            default:
+                bindTextureByName(BasicUtilitiesMain.textureFile + "pipes/DefaultPipe.png");
+                break;
+        }
+        if (ents[0] != null) SixPipe.renderBottom();
+        if (ents[1] != null) SixPipe.renderTop();
+        if (ents[3] != null) SixPipe.renderFront();
+        if (ents[2] != null) SixPipe.renderBack();
+        if (ents[5] != null) SixPipe.renderRight();
+        if (ents[4] != null) SixPipe.renderLeft();
+        SixPipe.renderMiddle();
+
+    }
+
+    @Override
+    public void renderTileEntityAt(TileEntity tileEntity, double var2, double var4, double var6, float var8)
+    {
+        this.renderAModelAt((TileEntityPipe) tileEntity, var2, var4, var6, var8);
+    }
 
 }

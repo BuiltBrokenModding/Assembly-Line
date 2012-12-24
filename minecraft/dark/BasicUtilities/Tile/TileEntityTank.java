@@ -27,15 +27,14 @@ import dark.BasicUtilities.api.MHelper;
 
 public class TileEntityTank extends TileEntity implements IPacketReceiver, IReadOut, ITankOutputer
 {
-    public TileEntity[] cc =
-    { null, null, null, null, null, null };
+    public TileEntity[] cc = { null, null, null, null, null, null };
     public Liquid type = Liquid.DEFUALT;
-    public int LMax = 4;
+    public static final int LMax = 4;
     private int count = 0;
     private int count2 = 0;
 
     private boolean doUpdate = true;
-    public LiquidTank tank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME * 4);
+    public LiquidTank tank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME * LMax);
 
     public void updateEntity()
     {
@@ -53,7 +52,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
             {
                 this.tradeDown();
                 this.tradeArround();
-                
+
                 Packet packet = PacketManager.getPacket(BasicUtilitiesMain.CHANNEL, this, new Object[] { type.ordinal(), liquid.amount });
                 PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 20);
 

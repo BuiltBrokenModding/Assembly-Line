@@ -2,6 +2,8 @@ package dark.BasicUtilities.Blocks;
 
 import java.util.ArrayList;
 
+import universalelectricity.prefab.implement.IRedstoneReceptor;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
@@ -9,9 +11,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import dark.BasicUtilities.ItemRenderHelper;
+import dark.BasicUtilities.BasicUtilitiesMain;
+import dark.BasicUtilities.BlockRenderHelper;
 import dark.BasicUtilities.PipeTab;
+import dark.BasicUtilities.Tile.TileEntityEValve;
 import dark.BasicUtilities.Tile.TileEntityGen;
 
 public class BlockGenerator extends universalelectricity.prefab.BlockMachine {
@@ -27,7 +32,12 @@ public class BlockGenerator extends universalelectricity.prefab.BlockMachine {
 	public void addCreativeItems(ArrayList itemList) {
 		itemList.add(new ItemStack(this, 1, 0));
 	}
+	 @Override
+	    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+	    {
 
+	        return new ItemStack(BasicUtilitiesMain.generator,1);        
+	    }
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z,
 			EntityLiving par5EntityLiving) {
@@ -62,11 +72,37 @@ public class BlockGenerator extends universalelectricity.prefab.BlockMachine {
 
 	@Override
 	public int getRenderType() {
-		return ItemRenderHelper.renderID;
+		return BlockRenderHelper.renderID;
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World world) {
 		return new TileEntityGen();
 	}
+	
+	 @Override
+	    public void onNeighborBlockChange(World par1World, int x, int y, int z, int side)
+	    {
+	        super.onNeighborBlockChange(par1World, x, y, z, side);
+	        this.checkForPower(par1World, x, y, z);
+	        
+	    }
+	    public static void checkForPower(World world, int x, int y, int z)
+	    {
+	        TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+	        if (tileEntity instanceof TileEntityGen)
+	        {
+	            boolean powered = ((TileEntityGen) tileEntity).isPowered;
+	            boolean beingPowered = world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockGettingPowered(x, y, z);
+	            if (powered && !beingPowered)
+	            {
+	                ((IRedstoneReceptor) world.getBlockTileEntity(x, y, z)).onPowerOff();
+	            }
+	            else if (!powered && beingPowered)
+	            {
+	                ((IRedstoneReceptor) world.getBlockTileEntity(x, y, z)).onPowerOn();
+	            }
+	        }
+	    }
 }

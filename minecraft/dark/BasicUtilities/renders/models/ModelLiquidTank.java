@@ -8,6 +8,7 @@ package dark.BasicUtilities.renders.models;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.tileentity.TileEntity;
 import dark.BasicUtilities.Tile.TileEntityTank;
 import dark.BasicUtilities.Tile.TileEntityPipe;
 
@@ -332,8 +333,13 @@ public class ModelLiquidTank extends ModelBase
         setRotation(CCTop, 0F, 0F, 0F);
     }
 
-    public void renderMain(TileEntityTank te, float f5)
+    public void renderMain(TileEntity tee, float f5)
     {
+        TileEntity[] ents = new TileEntity[6];
+        if(tee instanceof TileEntityTank)
+        {
+            ents = ((TileEntityTank) tee).cc;
+        }
         // render regardless of sides
         Mid.render(f5);
         Corner.render(f5);
@@ -351,7 +357,7 @@ public class ModelLiquidTank extends ModelBase
         CCTop.render(f5);
         CCBottom.render(f5);
         // Front
-        if (te.cc[2] instanceof TileEntityPipe)
+        if (ents[2] instanceof TileEntityPipe)
         {
             CCFront.render(f5);
         }
@@ -365,7 +371,7 @@ public class ModelLiquidTank extends ModelBase
             GuageL.render(f5);
         }
         // back
-        if (te.cc[3] instanceof TileEntityPipe)
+        if (ents[3] instanceof TileEntityPipe)
         {
             CCBack.render(f5);
         }
@@ -379,7 +385,7 @@ public class ModelLiquidTank extends ModelBase
             GuageL3.render(f5);
         }
         // right
-        if (te.cc[4] instanceof TileEntityPipe)
+        if (ents[4] instanceof TileEntityPipe)
         {
             CCRight.render(f5);
         }
@@ -393,7 +399,7 @@ public class ModelLiquidTank extends ModelBase
             GuageL4.render(f5);
         }
         // left
-        if (te.cc[5] instanceof TileEntityPipe)
+        if (ents[5] instanceof TileEntityPipe)
         {
             CCLeft.render(f5);
         }

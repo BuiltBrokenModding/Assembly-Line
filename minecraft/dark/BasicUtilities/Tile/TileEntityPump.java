@@ -52,22 +52,22 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
         this.registerConnections();
         this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, BasicUtilitiesMain.machine.blockID);
     }
-//ElectricityConnections.registerConnector(this, EnumSet.of(ForgeDirection.getOrientation(this.getBlockMetadata() - BlockBasicMachine.BATTERY_BOX_METADATA + 2), ForgeDirection.getOrientation(this.getBlockMetadata() - BlockBasicMachine.BATTERY_BOX_METADATA + 2).getOpposite()));
+
     public void registerConnections()
     {
         int notchMeta = MetaGroupingHelper.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
         ForgeDirection facing = ForgeDirection.getOrientation(notchMeta).getOpposite();
-        ForgeDirection[] dirs = new ForgeDirection[]{ForgeDirection.UNKNOWN,ForgeDirection.UNKNOWN,ForgeDirection.UNKNOWN,ForgeDirection.UNKNOWN,ForgeDirection.UNKNOWN,ForgeDirection.UNKNOWN};
+        ForgeDirection[] dirs = new ForgeDirection[] { ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN };
         ElectricityConnections.registerConnector(this, EnumSet.of(facing.getOpposite()));
-        for(int i = 2; i<6;i++)
+        for (int i = 2; i < 6; i++)
         {
             ForgeDirection dir = ForgeDirection.getOrientation(i);
-            if(dir != facing)
+            if (dir != facing)
             {
-               dirs[i] = dir; 
+                dirs[i] = dir;
             }
         }
-        ElectricityConnections.registerConnector(this, EnumSet.of(dirs[0],dirs[1],dirs[2],dirs[3],dirs[4],dirs[5]));
+        ElectricityConnections.registerConnector(this, EnumSet.of(dirs[0], dirs[1], dirs[2], dirs[3], dirs[4], dirs[5]));
     }
 
     @Override
@@ -105,45 +105,52 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
                 }
                 count = 40;
             }
-
+            if (this.tank.getLiquid() == null)
+            {
+                this.tank.setLiquid(Liquid.getStack(this.type, 1));
+            }
             LiquidStack stack = tank.getLiquid();
 
             if (stack != null)
             {
-
-                if (stack.amount >= 0)
+                for (int i = 0; i < 6; i++)
                 {
-                    for (int i = 0; i < 6; i++)
-                    {
-                        ForgeDirection dir = ForgeDirection.getOrientation(i);
-                        TileEntity tile = worldObj.getBlockTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+                    ForgeDirection dir = ForgeDirection.getOrientation(i);
+                    TileEntity tile = worldObj.getBlockTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
 
-                        if (tile instanceof ITankContainer)
-                        {
-                            int moved = ((ITankContainer) tile).fill(dir.getOpposite(), stack, true);
-                            tank.drain(moved, true);
-                            if (stack.amount <= 0) break;
-                        }
+                    if (tile instanceof ITankContainer)
+                    {
+                        int moved = ((ITankContainer) tile).fill(dir.getOpposite(), stack, true);
+                        tank.drain(moved, true);
+                        if (stack.amount <= 0) break;
                     }
                 }
 
             }
 
-            ForgeDirection inputDirection = ForgeDirection.getOrientation(this.getBlockMetadata() + 2);
-            TileEntity inputTile = Vector3.getTileEntityFromSide(this.worldObj, new Vector3(this), inputDirection);
+            int notchMeta = MetaGroupingHelper.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+            ForgeDirection facing = ForgeDirection.getOrientation(notchMeta).getOpposite();
 
-            ElectricityNetwork network = ElectricityNetwork.getNetworkFromTileEntity(inputTile, inputDirection);
-
-            if (network != null)
+            for (int i = 2; i < 6; i++)
             {
-                if (this.canPump(xCoord, yCoord - 1, zCoord))
+                ForgeDirection dir = ForgeDirection.getOrientation(i);
+                if (dir != facing)
                 {
-                    network.startRequesting(this, WATTS_PER_TICK / this.getVoltage(), this.getVoltage());
-                    this.joulesReceived = Math.max(Math.min(this.joulesReceived + network.consumeElectricity(this).getWatts(), WATTS_PER_TICK), 0);
-                }
-                else
-                {
-                    network.stopRequesting(this);
+                    TileEntity inputTile = Vector3.getTileEntityFromSide(this.worldObj, new Vector3(this), dir);
+                    ElectricityNetwork network = ElectricityNetwork.getNetworkFromTileEntity(inputTile, dir);
+                    if (network != null)
+                    {
+
+                        if (this.canPump(xCoord, yCoord - 1, zCoord))
+                        {
+                            network.startRequesting(this, WATTS_PER_TICK / this.getVoltage(), this.getVoltage());
+                            this.joulesReceived = Math.max(Math.min(this.joulesReceived + network.consumeElectricity(this).getWatts(), WATTS_PER_TICK), 0);
+                        }
+                        else
+                        {
+                            network.stopRequesting(this);
+                        }
+                    }
                 }
             }
             if (this.joulesReceived >= this.WATTS_PER_TICK - 50 && this.canPump(xCoord, yCoord - 1, zCoord))
@@ -191,7 +198,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
         if (bBlock == Block.lavaMoving.blockID || (bBlock == Block.lavaStill.blockID && meta != 0)) return false;
         if (bBlock == type.liquid.itemID && this.isValidLiquid(Block.blocksList[bBlock]))
         {
-            FMLLog.info("pumping " + bellow.displayerName + " blockID:" + bBlock + " Meta:" + meta);
+            //FMLLog.info("pumping " + bellow.displayerName + " blockID:" + bBlock + " Meta:" + meta);
             int f = this.tank.fill(Liquid.getStack(this.type, LiquidContainerRegistry.BUCKET_VOLUME), true);
             if (f > 0) worldObj.setBlockWithNotify(loc.intX(), loc.intY(), loc.intZ(), 0);
             percentPumped = 0;

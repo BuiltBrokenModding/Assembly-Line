@@ -7,6 +7,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import dark.BasicUtilities.BasicUtilitiesMain;
 import dark.BasicUtilities.Tile.TileEntityPipe;
@@ -79,7 +80,17 @@ public class BlockPipe extends BlockContainer
         // TODO Auto-generated method stub
         return new TileEntityPipe();
     }
-
+    @Override
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+    {
+        TileEntity ent = world.getBlockTileEntity(x, y, z);
+        int meta = 0;
+        if(ent instanceof TileEntityPipe)
+        {
+            meta = ((TileEntityPipe)ent).type.ordinal();
+        }
+        return new ItemStack(BasicUtilitiesMain.itemPipes,1,0);        
+    }
     @Override
     public void breakBlock(World world, int x, int y, int z, int par5, int par6)
     {

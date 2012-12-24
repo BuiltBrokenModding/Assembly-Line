@@ -4,11 +4,14 @@ import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import dark.BasicUtilities.ItemRenderHelper;
+import dark.BasicUtilities.BasicUtilitiesMain;
+import dark.BasicUtilities.BlockRenderHelper;
 import dark.BasicUtilities.PipeTab;
 import dark.BasicUtilities.Tile.TileEntityRod;
 
@@ -84,7 +87,11 @@ public class BlockRod extends universalelectricity.prefab.BlockMachine
     {
         return false;
     }
-
+    @Override
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+    {
+        return new ItemStack(BasicUtilitiesMain.rod,1,0);        
+    }
     /**
      * If this block doesn't render as an ordinary block it will return False
      * (examples: signs, buttons, stairs, etc)
@@ -99,7 +106,7 @@ public class BlockRod extends universalelectricity.prefab.BlockMachine
      */
     public int getRenderType()
     {
-        return ItemRenderHelper.renderID;
+        return BlockRenderHelper.renderID;
     }
 
 }

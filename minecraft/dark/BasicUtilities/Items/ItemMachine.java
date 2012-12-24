@@ -12,6 +12,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import dark.BasicUtilities.BasicUtilitiesMain;
 import dark.BasicUtilities.PipeTab;
+import dark.BasicUtilities.Tile.TileEntityTank;
 
 public class ItemMachine extends ItemBlock
 {
@@ -28,6 +29,12 @@ public class ItemMachine extends ItemBlock
         this.setCreativeTab(PipeTab.INSTANCE);
     }
     @Override
+    public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List list, boolean flag)
+    {
+        if(itemstack.getItemDamage() == 5 ) list.add("Max Vol of "+ TileEntityTank.LMax);
+       
+    }
+    @Override
     public int getIconFromDamage(int par1)
     {
     	
@@ -37,14 +44,6 @@ public class ItemMachine extends ItemBlock
     public String getItemNameIS(ItemStack itemstack)
     {
         return itemstack.getItemDamage() == 0 ? "Pump" :"Conderser";//itemstack.getItemDamage() == 4 ? "Condenser":"Unknown";
-    }
-    @Override
-    public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
-    {
-    	
-    		par3List.add(new ItemStack(this, 1, 0));
-    		//par3List.add(new ItemStack(this, 1, 4));
-        
     }
     public String getTextureFile() {
 		return BasicUtilitiesMain.ITEM_PNG;

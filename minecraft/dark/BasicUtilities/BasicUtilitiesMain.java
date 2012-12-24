@@ -29,7 +29,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import dark.BasicUtilities.Blocks.BlockEValve;
 import dark.BasicUtilities.Blocks.BlockGenerator;
-import dark.BasicUtilities.Blocks.BlockMachine;
+import dark.BasicUtilities.Blocks.BlockPipeMachine;
 import dark.BasicUtilities.Blocks.BlockOilFlowing;
 import dark.BasicUtilities.Blocks.BlockOilStill;
 import dark.BasicUtilities.Blocks.BlockPipe;
@@ -64,7 +64,7 @@ import dark.BasicUtilities.api.Liquid;
 public class BasicUtilitiesMain extends DummyModContainer
 {
     // TODO need changed on release
-    public static final String VERSION = "0.2.0";
+    public static final String VERSION = "0.2.1";
     // Constants
     public static final String NAME = "BasicUtilities";
     public static final String CHANNEL = "BPipes";
@@ -153,7 +153,7 @@ public class BasicUtilitiesMain extends DummyModContainer
         LanguageRegistry.addName((new ItemStack(machine, 1, 0)), "Pump");
         LanguageRegistry.addName((new ItemStack(machine, 1, 4)), "WaterCondensor");
 
-        LanguageRegistry.addName((new ItemStack(generator, 1)), "EU Generator");
+        LanguageRegistry.addName((new ItemStack(generator, 1)), "ElectricGen");
         // mechanical rod
         LanguageRegistry.addName((new ItemStack(rod, 1)), "GearedRod");
         // Tools
@@ -287,7 +287,7 @@ public class BasicUtilitiesMain extends DummyModContainer
         CONFIGURATION.load();
         // blocks
         pipe = new BlockPipe(this.CONFIGURATION.getBlock("Pipe", BLOCK_ID_PREFIX).getInt());
-        machine = new BlockMachine(this.CONFIGURATION.getBlock("MachineSetOne", BLOCK_ID_PREFIX + 1).getInt());
+        machine = new BlockPipeMachine(this.CONFIGURATION.getBlock("MachineSetOne", BLOCK_ID_PREFIX + 1).getInt());
         // valve = new BlockValve(this.CONFIGURATION.getBlock("Valve",
         // BLOCK_ID_PREFIX + 2).getInt());
         rod = new BlockRod(this.CONFIGURATION.getBlock("MechanicalRod", BLOCK_ID_PREFIX + 3).getInt());

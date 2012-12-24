@@ -23,7 +23,7 @@ public class RenderGenerator extends TileEntitySpecialRenderer
 	public void renderTileEntityAt(TileEntity tileEntity, double d, double d1, double d2, float d3) {
 		bindTextureByName(BasicUtilitiesMain.textureFile+"mechanical/Generator.png");
 		GL11.glPushMatrix();
-		GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
+		GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.45F, (float) d2 + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
 		int meta = tileEntity.worldObj.getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
 		switch(meta)
@@ -33,7 +33,7 @@ public class RenderGenerator extends TileEntitySpecialRenderer
 			case 2:GL11.glRotatef(180f, 0f, 1f, 0f);break;
 			case 3:GL11.glRotatef(270f, 0f, 1f, 0f);break;
 		}
-		model.RenderMain(0.0625F);
+		model.render(tileEntity);
 		GL11.glPopMatrix();
 	}
 

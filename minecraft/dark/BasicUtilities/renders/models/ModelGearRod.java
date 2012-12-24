@@ -113,6 +113,7 @@ public class ModelGearRod extends ModelBase
 	
 	Rod.rotateAngleZ= 45 * r;
 	Rod2.rotateAngleZ= Rod.rotateAngleZ + 45;
+	
 	Rod.render(f5);
 	Rod2.render(f5);
 	//TODO add rotation to rods

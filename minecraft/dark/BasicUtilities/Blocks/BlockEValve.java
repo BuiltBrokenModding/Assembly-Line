@@ -9,6 +9,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
@@ -88,6 +89,12 @@ public class BlockEValve extends BlockContainer
         super.onNeighborBlockChange(par1World, x, y, z, side);
         this.checkForPower(par1World, x, y, z);
         
+    }
+    @Override
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+    {
+        int meta = world.getBlockMetadata(x, y, z);
+        return new ItemStack(BasicUtilitiesMain.eValve,1,meta);        
     }
     public static void checkForPower(World world, int x, int y, int z)
     {

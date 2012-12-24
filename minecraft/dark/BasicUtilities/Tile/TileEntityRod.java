@@ -20,18 +20,13 @@ public class TileEntityRod extends TileEntity implements IPacketReceiver, IForce
 {
 
     public int pos = 0;
-    private int force = 0;
-    private int pForce = 0;
-    public int aForce = 0;
-    public int forceMax = 1000;
+    private int currentForce = 0;// current force given to rod
+    private int pasteForce = 0;// last update force count
+    public int appliedForce = 0;// force this rod can apply to other things
     private int tickCount = 0;
-    private int posCount = 0;
+    private int posCount = 0;// animation position 0-8
 
-    private ForgeDirection frontDir;
-    private ForgeDirection backDir;
-
-    private TileEntity bb;
-    private TileEntity ff;
+    private ForgeDirection facing = ForgeDirection.UNKNOWN;
 
     @Override
     public void updateEntity()
@@ -41,56 +36,28 @@ public class TileEntityRod extends TileEntity implements IPacketReceiver, IForce
         {
             tickCount = 0;
             int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-            frontDir = ForgeDirection.getOrientation(meta);
-            backDir = ForgeDirection.getOrientation(meta).getOpposite();
-            bb = worldObj.getBlockTileEntity(xCoord + backDir.offsetX, yCoord, zCoord + backDir.offsetZ);
-            ff = worldObj.getBlockTileEntity(xCoord + frontDir.offsetX, yCoord, zCoord + frontDir.offsetZ);
-            if (force > 0)
+            facing = ForgeDirection.getOrientation(meta);
+            if (this.currentForce > 0)
             {
-                int posCountA = (forceMax / force) & 10;
-                if (posCount++ >= posCountA)
-                {
-                    pos++;
-                    if (pos > 7)
-                    {
-                        pos = 0;
-                    }
-                    ;
-                }
-            }
-            if (bb instanceof TileEntityRod)
-            {
-                this.pos = ((IForce) bb).getAnimationPos();
+                this.pos++;
+                if (pos >= 8) pos = 0;
             }
             if (!worldObj.isRemote)
             {
+                TileEntity ent = Vector3.getTileEntityFromSide(worldObj, new Vector3(this), facing);
+                appliedForce = Math.max(currentForce - 20, 0);
+                if (ent instanceof IForce && (((IForce) ent).canInputSide(facing)))
+                {
+                    ((IForce) ent).applyForce(appliedForce);
+                }
 
-                if (ff instanceof IForce)
-                {
-                    if (((IForce) ff).canInputSide(backDir))
-                    {
-                        ((IForce) ff).applyForce(aForce);
-                    }
-                }
-                if (bb instanceof IForce)
-                {
-                    if (((IForce) bb).canOutputSide(frontDir))
-                    {
-                        this.force = ((IForce) bb).getForce();
-                    }
-                }
-                else
-                {
-                    this.force -= Math.max(force / 10, 0);
-                }
-                aForce = Math.max(force - 10, 0);
-                if (this.force != this.pForce)
+                if (this.currentForce != this.pasteForce)
                 {
                     Packet packet = PacketManager.getPacket(BasicUtilitiesMain.CHANNEL, this, new Object[]
-                        { force });
+                    { currentForce });
                     PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 40);
                 }
-                this.pForce = this.force;
+                this.pasteForce = this.currentForce;
             }
         }
     }
@@ -98,27 +65,27 @@ public class TileEntityRod extends TileEntity implements IPacketReceiver, IForce
     @Override
     public int getForceSide(ForgeDirection side)
     {
-        return aForce;
+        return appliedForce;
     }
 
     @Override
     public boolean canOutputSide(ForgeDirection side)
     {
-        if (side == frontDir) { return true; }
+        if (side == facing || side == facing.getOpposite()) { return true; }
         return false;
     }
 
     @Override
     public boolean canInputSide(ForgeDirection side)
     {
-        if (side == backDir) { return true; }
+        if (side == facing || side == facing.getOpposite()) { return true; }
         return false;
     }
 
     @Override
     public int applyForce(int force)
     {
-        this.force = force;
+        this.currentForce = force;
         return force;
     }
 
@@ -129,7 +96,7 @@ public class TileEntityRod extends TileEntity implements IPacketReceiver, IForce
     {
         try
         {
-            this.force = data.readInt();
+            this.currentForce = data.readInt();
         }
         catch (Exception e)
         {
@@ -149,12 +116,12 @@ public class TileEntityRod extends TileEntity implements IPacketReceiver, IForce
     public int getForce()
     {
         // TODO Auto-generated method stub
-        return this.force;
+        return this.currentForce;
     }
 
     @Override
     public String getMeterReading(EntityPlayer user, ForgeDirection side)
     {
-        return this.aForce + "N Out " + this.force + "N In";
+        return this.appliedForce + "N Out " + this.currentForce + "N In";
     }
 }

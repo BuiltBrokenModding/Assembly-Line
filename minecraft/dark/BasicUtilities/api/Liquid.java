@@ -3,6 +3,7 @@ package dark.BasicUtilities.api;
 import dark.BasicUtilities.BasicUtilitiesMain;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSand;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.liquids.ILiquid;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidDictionary;
@@ -17,12 +18,12 @@ import net.minecraftforge.liquids.LiquidStack;
 public enum Liquid
 {
     // -1 == null || unused
-    STEAM("Steam", LiquidDictionary.getOrCreateLiquid("steam", new LiquidStack(BasicUtilitiesMain.SteamBlock, 1)), true, 100),
-    WATER("Water", LiquidDictionary.getOrCreateLiquid("water", new LiquidStack(Block.waterStill, 1)), false, 32),
-    LAVA("Lava", LiquidDictionary.getOrCreateLiquid("lava", new LiquidStack(Block.lavaStill, 1)), false, 20),
-    OIL("Oil", LiquidDictionary.getOrCreateLiquid("oil", new LiquidStack(BasicUtilitiesMain.oilStill, 1)), true, 32),
-    FUEL("Fuel", LiquidDictionary.getOrCreateLiquid("oil", new LiquidStack(BasicUtilitiesMain.oilStill, 1)), false, 40),
-    DEFUALT("Empty", LiquidDictionary.getOrCreateLiquid("air", new LiquidStack(0, 1)), false, 0);
+    STEAM("Steam", LiquidDictionary.getOrCreateLiquid("Steam", new LiquidStack(BasicUtilitiesMain.SteamBlock, 1)), true, 100),
+    WATER("Water", LiquidDictionary.getOrCreateLiquid("Water", new LiquidStack(Block.waterStill, 1)), false, 32),
+    LAVA("Lava", LiquidDictionary.getOrCreateLiquid("Lava", new LiquidStack(Block.lavaStill, 1)), false, 20),
+    OIL("Oil", LiquidDictionary.getOrCreateLiquid("Oil", new LiquidStack(BasicUtilitiesMain.oilStill, 1)), true, 32),
+    FUEL("Fuel", LiquidDictionary.getOrCreateLiquid("Fuel", new LiquidStack(BasicUtilitiesMain.oilStill, 1)), false, 40),
+    DEFUALT("Empty", LiquidDictionary.getOrCreateLiquid("Air", new LiquidStack(0, 1)), false, 0);
 
     public final boolean doesFlaot;
     public final String displayerName;
@@ -79,8 +80,8 @@ public enum Liquid
      */
     public static Liquid getLiquidTypeByBlock(int bBlock)
     {
-        if(bBlock == Block.waterMoving.blockID) return Liquid.DEFUALT;
-        if(bBlock == Block.lavaMoving.blockID) return Liquid.DEFUALT;
+        if (bBlock == Block.waterMoving.blockID) return Liquid.DEFUALT;
+        if (bBlock == Block.lavaMoving.blockID) return Liquid.DEFUALT;
         for (int i = 0; i < Liquid.values().length - 1; i++)
         {
             Liquid selected = Liquid.getLiquid(i);
@@ -121,5 +122,20 @@ public enum Liquid
         if (stack == null || type == null) return false;
         if (type.itemID == stack.itemID && type.itemMeta == stack.itemMeta) { return true; }
         return false;
+    }
+
+    public static ItemStack consumeItem(ItemStack stack)
+    {
+        if (stack.stackSize == 1)
+        {
+            if (stack.getItem().hasContainerItem()) return stack.getItem().getContainerItemStack(stack);
+            else return null;
+        }
+        else
+        {
+            stack.splitStack(1);
+
+            return stack;
+        }
     }
 }
