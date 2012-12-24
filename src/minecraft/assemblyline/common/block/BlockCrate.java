@@ -1,6 +1,5 @@
 package assemblyline.common.block;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -9,6 +8,7 @@ import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.prefab.BlockMachine;
 import universalelectricity.prefab.UETab;
+import assemblyline.common.AssemblyLine;
 
 /**
  * A block that allows the placement of mass amount of a specific item within it. It will be allowed
@@ -19,11 +19,12 @@ import universalelectricity.prefab.UETab;
  */
 public class BlockCrate extends BlockMachine
 {
-	public BlockCrate(int par1)
+	public BlockCrate(int id, int texture)
 	{
-		super("crate", par1, UniversalElectricity.machine);
-		this.blockIndexInTexture = Block.blockSteel.blockIndexInTexture;
+		super("crate", id, UniversalElectricity.machine);
+		this.blockIndexInTexture = texture;
 		this.setCreativeTab(UETab.INSTANCE);
+		this.setTextureFile(AssemblyLine.BLOCK_TEXTURE_PATH);
 	}
 
 	/**

@@ -6,13 +6,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import universalelectricity.prefab.UETab;
 
-public class BlockArchitectTable extends Block
+public class BlockEngineerTable extends Block
 {
-	public BlockArchitectTable(int par1)
+	public BlockEngineerTable(int par1)
 	{
 		super(par1, Material.wood);
 		this.blockIndexInTexture = 59;
-		this.setBlockName("architectTable");
+		this.setBlockName("engineerTable");
 		this.setCreativeTab(UETab.INSTANCE);
 	}
 

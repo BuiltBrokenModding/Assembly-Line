@@ -12,8 +12,8 @@ import universalelectricity.core.UniversalElectricity;
 import universalelectricity.prefab.UETab;
 import universalelectricity.prefab.UpdateNotifier;
 import universalelectricity.prefab.network.PacketManager;
-import assemblyline.common.block.BlockArchitectTable;
 import assemblyline.common.block.BlockCrate;
+import assemblyline.common.block.BlockEngineerTable;
 import assemblyline.common.block.ItemBlockCrate;
 import assemblyline.common.machine.BlockMulti;
 import assemblyline.common.machine.BlockMulti.MachineType;
@@ -51,6 +51,7 @@ public class AssemblyLine
 	public static final String RESOURCE_PATH = "/assemblyline/";
 	public static final String TEXTURE_PATH = RESOURCE_PATH + "textures/";
 	public static final String LANGUAGE_PATH = RESOURCE_PATH + "language/";
+	public static final String BLOCK_TEXTURE_PATH = TEXTURE_PATH + "blocks.png";
 
 	private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US" };
 
@@ -60,7 +61,7 @@ public class AssemblyLine
 
 	public static Block blockConveyorBelt;
 	public static Block blockMulti;
-	public static Block blockArchitectTable;
+	public static Block blockEngineerTable;
 	public static Block blockCrate;
 
 	@PreInit
@@ -72,15 +73,15 @@ public class AssemblyLine
 		CONFIGURATION.load();
 		blockConveyorBelt = new BlockConveyorBelt(CONFIGURATION.getBlock("Conveyor Belt", BLOCK_ID_PREFIX).getInt());
 		blockMulti = new BlockMulti(CONFIGURATION.getBlock("Machine", BLOCK_ID_PREFIX + 1).getInt());
-		blockArchitectTable = new BlockArchitectTable(CONFIGURATION.getBlock("Architect's Table", BLOCK_ID_PREFIX + 2).getInt());
-		blockCrate = new BlockCrate(CONFIGURATION.getBlock("Crate", BLOCK_ID_PREFIX + 3).getInt());
+		blockEngineerTable = new BlockEngineerTable(CONFIGURATION.getBlock("Architect's Table", BLOCK_ID_PREFIX + 2).getInt());
+		blockCrate = new BlockCrate(CONFIGURATION.getBlock("Crate", BLOCK_ID_PREFIX + 3).getInt(), 0);
 		CONFIGURATION.save();
 
 		NetworkRegistry.instance().registerGuiHandler(this, this.proxy);
 		GameRegistry.registerBlock(blockConveyorBelt, "Conveyor Belt");
-		GameRegistry.registerBlock(blockArchitectTable, "Architect's Table");
 		GameRegistry.registerBlock(blockCrate, ItemBlockCrate.class, "Crate");
 		GameRegistry.registerBlock(blockMulti, ItemBlockMulti.class, "Machine");
+		// GameRegistry.registerBlock(blockArchitectTable, "Engineer's Table");
 
 		UpdateNotifier.INSTANCE.checkUpdate(NAME, VERSION, "http://calclavia.com/downloads/al/recommendedversion.txt");
 

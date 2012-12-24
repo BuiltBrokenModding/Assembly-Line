@@ -72,7 +72,7 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 				}
 			}
 		}
-		
+
 		for (int d = 0; d <= 1; d++)
 		{
 			ForgeDirection direction = this.getDirection();
