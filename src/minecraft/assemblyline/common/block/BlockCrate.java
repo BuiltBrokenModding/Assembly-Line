@@ -31,53 +31,79 @@ public class BlockCrate extends BlockMachine
 	 * Placed the item the player is holding into the crate.
 	 */
 	@Override
-	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
+	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
 	{
-		if (!world.isRemote && world.getBlockTileEntity(x, y, z) != null)
+		if (world.getBlockTileEntity(x, y, z) instanceof TileEntityCrate)
 		{
 			TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
-			ItemStack containingStack = tileEntity.getStackInSlot(0);
-			ItemStack itemStack = par5EntityPlayer.getCurrentEquippedItem();
+			ItemStack requestStack = player.getCurrentEquippedItem();
 
-			if (itemStack != null)
+			if (requestStack != null)
 			{
-				if (itemStack.isStackable())
+				if (requestStack.isStackable())
 				{
-					if (containingStack != null)
+					for (int i = 0; i < player.inventory.getSizeInventory(); i++)
 					{
-						if (containingStack.isStackable() && containingStack.isItemEqual(itemStack))
+						ItemStack currentStack = player.inventory.getStackInSlot(i);
+
+						if (currentStack != null)
 						{
-							int newStackSize = containingStack.stackSize + itemStack.stackSize;
-							int overFlowAmount = newStackSize - tileEntity.getInventoryStackLimit();
-
-							if (overFlowAmount > 0)
+							if (requestStack != currentStack && requestStack.isItemEqual(currentStack))
 							{
-								itemStack.stackSize = overFlowAmount;
+								player.inventory.setInventorySlotContents(i, this.putIn(tileEntity, currentStack));
+								return true;
 							}
-							else
-							{
-								itemStack.stackSize = 0;
-							}
-
-							containingStack.stackSize = newStackSize;
-							tileEntity.setInventorySlotContents(0, containingStack);
 						}
 					}
-					else
-					{
-						tileEntity.setInventorySlotContents(0, itemStack.copy());
-						itemStack.stackSize = 0;
-					}
 
-					if (itemStack.stackSize <= 0)
-					{
-						par5EntityPlayer.inventory.setInventorySlotContents(par5EntityPlayer.inventory.currentItem, null);
-					}
+					player.inventory.setInventorySlotContents(player.inventory.currentItem, this.putIn(tileEntity, requestStack));
+					return true;
 				}
 			}
 		}
 
-		return true;
+		return false;
+	}
+
+	/**
+	 * Puts an itemStack into the crate.
+	 * 
+	 * @param tileEntity
+	 * @param itemStack
+	 */
+	private ItemStack putIn(TileEntityCrate tileEntity, ItemStack itemStack)
+	{
+		ItemStack containingStack = tileEntity.getStackInSlot(0);
+
+		if (containingStack != null)
+		{
+			if (containingStack.isStackable() && containingStack.isItemEqual(itemStack))
+			{
+				int newStackSize = containingStack.stackSize + itemStack.stackSize;
+				int overFlowAmount = newStackSize - tileEntity.getInventoryStackLimit();
+
+				if (overFlowAmount > 0)
+				{
+					itemStack.stackSize = overFlowAmount;
+				}
+				else
+				{
+					itemStack.stackSize = 0;
+				}
+
+				containingStack.stackSize = newStackSize;
+				tileEntity.setInventorySlotContents(0, containingStack);
+			}
+		}
+		else
+		{
+			tileEntity.setInventorySlotContents(0, itemStack.copy());
+			itemStack.stackSize = 0;
+		}
+
+		if (itemStack.stackSize <= 0) { return null; }
+
+		return itemStack;
 	}
 
 	/**
@@ -88,35 +114,38 @@ public class BlockCrate extends BlockMachine
 	{
 		if (!world.isRemote && world.getBlockTileEntity(x, y, z) != null)
 		{
-			TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
-			ItemStack containingStack = tileEntity.getStackInSlot(0);
-
-			if (containingStack != null)
+			if (par5EntityPlayer.getCurrentEquippedItem() == null)
 			{
-				if (containingStack.stackSize > 0)
+				TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
+				ItemStack containingStack = tileEntity.getStackInSlot(0);
+
+				if (containingStack != null)
 				{
-					int amountToTake = Math.min(containingStack.stackSize, 64);
-					ItemStack dropStack = containingStack.copy();
-					dropStack.stackSize = amountToTake;
+					if (containingStack.stackSize > 0)
+					{
+						int amountToTake = Math.min(containingStack.stackSize, 64);
+						ItemStack dropStack = containingStack.copy();
+						dropStack.stackSize = amountToTake;
 
-					EntityItem entityItem = new EntityItem(world, par5EntityPlayer.posX, par5EntityPlayer.posY, par5EntityPlayer.posZ, dropStack);
+						EntityItem entityItem = new EntityItem(world, par5EntityPlayer.posX, par5EntityPlayer.posY, par5EntityPlayer.posZ, dropStack);
 
-					float var13 = 0.05F;
-					entityItem.motionX = ((float) world.rand.nextGaussian() * var13);
-					entityItem.motionY = ((float) world.rand.nextGaussian() * var13 + 0.2F);
-					entityItem.motionZ = ((float) world.rand.nextGaussian() * var13);
-					entityItem.delayBeforeCanPickup = 0;
-					world.spawnEntityInWorld(entityItem);
+						float var13 = 0.05F;
+						entityItem.motionX = ((float) world.rand.nextGaussian() * var13);
+						entityItem.motionY = ((float) world.rand.nextGaussian() * var13 + 0.2F);
+						entityItem.motionZ = ((float) world.rand.nextGaussian() * var13);
+						entityItem.delayBeforeCanPickup = 0;
+						world.spawnEntityInWorld(entityItem);
 
-					containingStack.stackSize -= amountToTake;
+						containingStack.stackSize -= amountToTake;
+					}
+
+					if (containingStack.stackSize <= 0)
+					{
+						containingStack = null;
+					}
+
+					tileEntity.setInventorySlotContents(0, containingStack);
 				}
-
-				if (containingStack.stackSize <= 0)
-				{
-					containingStack = null;
-				}
-
-				tileEntity.setInventorySlotContents(0, containingStack);
 			}
 		}
 		return true;

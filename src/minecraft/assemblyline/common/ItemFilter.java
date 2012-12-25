@@ -3,9 +3,9 @@ package assemblyline.common;
 import universalelectricity.prefab.UETab;
 import net.minecraft.item.Item;
 
-public class ItemBlueprint extends Item
+public class ItemFilter extends Item
 {
-	public ItemBlueprint(int id)
+	public ItemFilter(int id)
 	{
 		super(id);
 		this.setIconIndex(Item.paper.getIconFromDamage(0));
