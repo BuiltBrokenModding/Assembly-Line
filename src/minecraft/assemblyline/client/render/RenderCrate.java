@@ -1,8 +1,19 @@
 package assemblyline.client.render;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.RenderEngine;
+import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
@@ -11,112 +22,170 @@ import assemblyline.common.block.TileEntityCrate;
 public class RenderCrate extends TileEntitySpecialRenderer
 {
 
+	private final RenderBlocks renderBlocks = new RenderBlocks();
+
 	@Override
 	public void renderTileEntityAt(TileEntity var1, double x, double y, double z, float var8)
 	{
-		TileEntityCrate tileEntity = (TileEntityCrate) var1;
-
-		for (int side = 2; side < 6; side++)
+		if (var1 instanceof TileEntityCrate)
 		{
-			GL11.glPushMatrix();
-			GL11.glPolygonOffset(-10, -10);
-			GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
+			TileEntityCrate tileEntity = (TileEntityCrate) var1;
 
-			float dx = 1F / 16;
-			float dz = 1F / 16;
-			float displayWidth = 1 - 2F / 16;
-			float displayHeight = 1 - 2F / 16;
-			GL11.glTranslatef((float) x, (float) y, (float) z);
-
-			switch (side)
-			{
-				case 1:
-					break;
-				case 0:
-					GL11.glTranslatef(1, 1, 0);
-					GL11.glRotatef(180, 1, 0, 0);
-					GL11.glRotatef(180, 0, 1, 0);
-
-					break;
-				case 3:
-					GL11.glTranslatef(0, 1, 0);
-					GL11.glRotatef(0, 0, 1, 0);
-					GL11.glRotatef(90, 1, 0, 0);
-
-					break;
-				case 2:
-					GL11.glTranslatef(1, 1, 1);
-					GL11.glRotatef(180, 0, 1, 0);
-					GL11.glRotatef(90, 1, 0, 0);
-
-					break;
-				case 5:
-					GL11.glTranslatef(0, 1, 1);
-					GL11.glRotatef(90, 0, 1, 0);
-					GL11.glRotatef(90, 1, 0, 0);
-
-					break;
-				case 4:
-					GL11.glTranslatef(1, 1, 0);
-					GL11.glRotatef(-90, 0, 1, 0);
-					GL11.glRotatef(90, 1, 0, 0);
-
-					break;
-			}
-
-			GL11.glTranslatef(dx + displayWidth / 2, 1F, dz + displayHeight / 2);
-			GL11.glRotatef(-90, 1, 0, 0);
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			FontRenderer fontRenderer = this.getFontRenderer();
-			int maxWidth = 1;
+			RenderItem renderItem = ((RenderItem) RenderManager.instance.getEntityClassRenderObject(EntityItem.class));
 
 			String itemName = "Empty";
 			String amount = "";
+			ItemStack itemStack = tileEntity.getStackInSlot(0);
 
-			if (tileEntity.getStackInSlot(0) != null)
+			if (itemStack != null)
 			{
-				itemName = tileEntity.getStackInSlot(0).getDisplayName();
-				amount = tileEntity.getStackInSlot(0).stackSize + "";
-
+				itemName = itemStack.getDisplayName();
+				amount = itemStack.stackSize + "";
 			}
 
-			maxWidth = Math.max(fontRenderer.getStringWidth(itemName), maxWidth);
-			maxWidth = Math.max(fontRenderer.getStringWidth(amount), maxWidth);
-			maxWidth += 4;
-			int lineHeight = fontRenderer.FONT_HEIGHT + 2;
-			int requiredHeight = lineHeight * 1;
-			float scaleX = displayWidth / maxWidth;
-			float scaleY = displayHeight / requiredHeight;
-			float scale = (float) (Math.min(scaleX, scaleY) * 0.8);
-			GL11.glScalef(scale, -scale, scale);
-			GL11.glDepthMask(false);
-
-			int offsetX;
-			int offsetY;
-			int realHeight = (int) Math.floor(displayHeight / scale);
-			int realWidth = (int) Math.floor(displayWidth / scale);
-
-			if (scaleX < scaleY)
+			for (int side = 2; side < 6; side++)
 			{
-				offsetX = 2 + 5;
-				offsetY = (realHeight - requiredHeight) / 2;
-			}
-			else
-			{
-				offsetX = (realWidth - maxWidth) / 2 + 2 + 5;
-				offsetY = 0;
-			}
+				ForgeDirection direction = ForgeDirection.getOrientation(side);
+				this.setupLight(tileEntity, direction.offsetX, direction.offsetZ);
 
-			GL11.glDisable(GL11.GL_LIGHTING);
-			fontRenderer.drawString(itemName, offsetX - realWidth / 2, 1 + offsetY - realHeight / 2 + 0 * lineHeight, 1);
-			fontRenderer.drawString(amount, offsetX - realWidth / 2, 1 + offsetY - realHeight / 2 + 1 * lineHeight, 1);
-			GL11.glEnable(GL11.GL_LIGHTING);
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			GL11.glDepthMask(true);
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
-			GL11.glPopMatrix();
+				if (itemStack != null)
+				{
+					GL11.glPushMatrix();
+
+					switch (side)
+					{
+						case 2:
+							GL11.glTranslated(x + 0.65, y + 0.9, z - 0.01);
+							break;
+						case 3:
+							GL11.glTranslated(x + 0.35, y + 0.9, z + 1.01);
+							GL11.glRotatef(180, 0, 1, 0);
+							break;
+						case 4:
+							GL11.glTranslated(x - 0.01, y + 0.9, z + 0.35);
+							GL11.glRotatef(90, 0, 1, 0);
+							break;
+						case 5:
+							GL11.glTranslated(x + 1.01, y + 0.9, z + 0.65);
+							GL11.glRotatef(-90, 0, 1, 0);
+							break;
+					}
+
+					float scale = 0.03125F;
+					GL11.glScalef(0.6f * scale, 0.6f * scale, 0);
+					GL11.glRotatef(180, 0, 0, 1);
+
+					RenderEngine renderEngine = Minecraft.getMinecraft().renderEngine;
+
+					if (!ForgeHooksClient.renderInventoryItem(this.renderBlocks, renderEngine, itemStack, true, 0.0F, 0.0F, 0.0F))
+					{
+						renderItem.renderItemIntoGUI(this.getFontRenderer(), renderEngine, itemStack, 0, 0);
+					}
+
+					GL11.glPopMatrix();
+				}
+
+				this.renderText(itemName, side, 0.02f, x, y - 0.35f, z);
+
+				if (amount != "")
+				{
+					this.renderText(amount, side, 0.02f, x, y - 0.15f, z);
+				}
+			}
 		}
 	}
 
+	private void setupLight(TileEntity tileEntity, int xDifference, int zDifference)
+	{
+		World world = tileEntity.worldObj;
+
+		if (world.isBlockOpaqueCube(tileEntity.xCoord + xDifference, tileEntity.yCoord, tileEntity.zCoord + zDifference)) { return; }
+
+		int br = world.getLightBrightnessForSkyBlocks(tileEntity.xCoord + xDifference, tileEntity.yCoord, tileEntity.zCoord + zDifference, 0);
+		int var11 = br % 65536;
+		int var12 = br / 65536;
+		float scale = 0.6F;
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, var11 * scale, var12 * scale);
+	}
+
+	private void renderText(String text, int side, float maxScale, double x, double y, double z)
+	{
+		GL11.glPushMatrix();
+
+		GL11.glPolygonOffset(-10, -10);
+		GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
+
+		float displayX = 1 / 16;
+		float displayY = 1 / 16;
+		float displayWidth = 1 - (2 / 16);
+		float displayHeight = 1 - (2 / 16);
+		GL11.glTranslated(x, y, z);
+
+		switch (side)
+		{
+			case 3:
+				GL11.glTranslatef(0, 1, 0);
+				GL11.glRotatef(0, 0, 1, 0);
+				GL11.glRotatef(90, 1, 0, 0);
+
+				break;
+			case 2:
+				GL11.glTranslatef(1, 1, 1);
+				GL11.glRotatef(180, 0, 1, 0);
+				GL11.glRotatef(90, 1, 0, 0);
+
+				break;
+			case 5:
+				GL11.glTranslatef(0, 1, 1);
+				GL11.glRotatef(90, 0, 1, 0);
+				GL11.glRotatef(90, 1, 0, 0);
+
+				break;
+			case 4:
+				GL11.glTranslatef(1, 1, 0);
+				GL11.glRotatef(-90, 0, 1, 0);
+				GL11.glRotatef(90, 1, 0, 0);
+				break;
+		}
+
+		// Find Center
+		GL11.glTranslatef(displayWidth / 2, 1F, displayHeight / 2);
+		GL11.glRotatef(-90, 1, 0, 0);
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		FontRenderer fontRenderer = this.getFontRenderer();
+
+		int requiredWidth = Math.max(fontRenderer.getStringWidth(text), 1);
+		int lineHeight = fontRenderer.FONT_HEIGHT + 2;
+		int requiredHeight = lineHeight * 1;
+		float scaler = 0.8f;
+		float scaleX = (displayWidth / requiredWidth);
+		float scaleY = (displayHeight / requiredHeight);
+		float scale = (float) scaleX * scaler;
+
+		if (maxScale > 0)
+		{
+			scale = Math.min(scale, maxScale);
+		}
+		
+		GL11.glScalef(scale, -scale, scale);
+		GL11.glDepthMask(false);
+
+		int offsetX;
+		int offsetY;
+		int realHeight = (int) Math.floor(displayHeight / scale);
+		int realWidth = (int) Math.floor(displayWidth / scale);
+
+		offsetX = (realWidth - requiredWidth) / 2;
+		offsetY = (realHeight - requiredHeight) / 2;
+
+		GL11.glDisable(GL11.GL_LIGHTING);
+		fontRenderer.drawString(text, offsetX - (realWidth / 2), 1 + offsetY - (realHeight / 2), 1);
+		GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GL11.glDepthMask(true);
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
+
+		GL11.glPopMatrix();
+	}
 }

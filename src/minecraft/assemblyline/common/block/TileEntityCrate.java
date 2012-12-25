@@ -18,6 +18,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 public class TileEntityCrate extends TileEntityAdvanced implements ISidedInventory, IPacketReceiver
 {
+	public static final int MAX_LIMIT = 2048;
 	private ItemStack[] containingItems = new ItemStack[1];
 
 	@Override
@@ -226,7 +227,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ISidedInvento
 	@Override
 	public int getInventoryStackLimit()
 	{
-		return 4096;
+		return MAX_LIMIT;
 	}
 
 	@Override

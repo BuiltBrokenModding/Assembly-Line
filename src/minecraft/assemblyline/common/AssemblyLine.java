@@ -3,6 +3,8 @@ package assemblyline.common;
 import java.io.File;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
@@ -19,6 +21,7 @@ import assemblyline.common.machine.BlockMulti;
 import assemblyline.common.machine.BlockMulti.MachineType;
 import assemblyline.common.machine.ItemBlockMulti;
 import assemblyline.common.machine.belt.BlockConveyorBelt;
+import cpw.mods.fml.common.ICraftingHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -85,6 +88,20 @@ public class AssemblyLine
 
 		UpdateNotifier.INSTANCE.checkUpdate(NAME, VERSION, "http://calclavia.com/downloads/al/recommendedversion.txt");
 
+		GameRegistry.registerCraftingHandler(new ICraftingHandler()
+		{
+			@Override
+			public void onCrafting(EntityPlayer player, ItemStack itemStack, IInventory craftMatrix)
+			{
+				System.out.println("TEST");
+			}
+
+			@Override
+			public void onSmelting(EntityPlayer player, ItemStack item)
+			{
+				
+			}
+		});
 		proxy.preInit();
 	}
 

@@ -2,10 +2,13 @@ package assemblyline.common.block;
 
 import java.util.List;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 
 public class ItemBlockCrate extends ItemBlock
@@ -30,7 +33,21 @@ public class ItemBlockCrate extends ItemBlock
 		else
 		{
 			par3List.add("Empty");
+		}
+	}
 
+	@Override
+	public void onUpdate(ItemStack itemStack, World par2World, Entity entity, int par4, boolean par5)
+	{
+		if (entity instanceof EntityPlayer)
+		{
+			EntityPlayer player = (EntityPlayer) entity;
+			ItemStack containingStack = getContainingItemStack(itemStack);
+
+			if (containingStack != null)
+			{
+				player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 5, (int)((float) containingStack.stackSize / (float) TileEntityCrate.MAX_LIMIT) *  5));
+			}
 		}
 	}
 
