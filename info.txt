@@ -22,6 +22,7 @@ x AssemblyLine_v0.1.6.23.jar AssemblyLine_v0.1.6.23_api.zip
 @ AssemblyLine_v0.1.7.25.jar AssemblyLine_v0.1.7.25_api.zip
 * AssemblyLine_v0.1.7.26.jar AssemblyLine_v0.1.7.26_api.zip
 * AssemblyLine_v0.1.7.27.jar AssemblyLine_v0.1.7.27_api.zip
+Minecraft 1.4.5
 @ AssemblyLine_v0.1.8.28.jar AssemblyLine_v0.1.8.28_api.zip
 @ AssemblyLine_v0.1.8.29.jar AssemblyLine_v0.1.8.29_api.zip
 * AssemblyLine_v0.1.8.30.jar AssemblyLine_v0.1.8.30_api.zip
