@@ -6,18 +6,26 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import universalelectricity.core.vector.Vector3;
 
-public class ContainerSorter extends Container
+public class ContainerStamper extends Container
 {
-	private TileEntityRejector tileEntity;
+	private World worldObj;
+	private Vector3 position;
 
-	public ContainerSorter(InventoryPlayer par1InventoryPlayer, TileEntityRejector tileEntity)
+	public ContainerStamper(InventoryPlayer par1InventoryPlayer, World worldObj, Vector3 position)
 	{
-		this.tileEntity = tileEntity;
-		for (int i = 0; i < 4; i++)
-		{
-			this.addSlotToContainer(new Slot(tileEntity, 0 + i, 33 + i * 18, 34));
-		}
+		this.worldObj = worldObj;
+		this.position = position;
+
+		// Paper Input
+		this.addSlotToContainer(new Slot(par1InventoryPlayer, 0, 33, 34));
+		// Item Stamp
+		this.addSlotToContainer(new Slot(par1InventoryPlayer, 1, 33 + 18, 34));
+		// Output Filter
+		this.addSlotToContainer(new Slot(par1InventoryPlayer, 2, 33 + 36, 34));
+
 		int var3;
 
 		for (var3 = 0; var3 < 3; ++var3)
@@ -35,9 +43,16 @@ public class ContainerSorter extends Container
 	}
 
 	@Override
+	public void updateCraftingResults()
+	{
+		super.updateCraftingResults();
+		System.out.println("WORK");
+	}
+
+	@Override
 	public boolean canInteractWith(EntityPlayer par1EntityPlayer)
 	{
-		return this.tileEntity.isUseableByPlayer(par1EntityPlayer);
+		return true;
 	}
 
 	/**

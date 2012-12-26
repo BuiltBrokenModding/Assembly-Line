@@ -9,19 +9,19 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.machine.ContainerSorter;
+import assemblyline.common.machine.ContainerRejector;
 import assemblyline.common.machine.TileEntityRejector;
 
-public class GuiSorter extends GuiContainer
+public class GuiRejector extends GuiContainer
 {
 	private TileEntityRejector tileEntity;
 
 	private int containerWidth;
 	private int containerHeight;
 
-	public GuiSorter(InventoryPlayer par1InventoryPlayer, TileEntityRejector tileEntity)
+	public GuiRejector(InventoryPlayer par1InventoryPlayer, TileEntityRejector tileEntity)
 	{
-		super(new ContainerSorter(par1InventoryPlayer, tileEntity));
+		super(new ContainerRejector(par1InventoryPlayer, tileEntity));
 		this.tileEntity = tileEntity;
 	}
 

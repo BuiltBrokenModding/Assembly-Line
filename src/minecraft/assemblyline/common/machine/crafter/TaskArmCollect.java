@@ -16,7 +16,7 @@ public class TaskArmCollect extends Task
 	 */
 	private EntityItem entityItem;
 
-	public TaskArmCollect(TileEntityCraftingArm arm, EntityItem entityItem)
+	public TaskArmCollect(TileEntityArmbot arm, EntityItem entityItem)
 	{
 		super(arm);
 		this.entityItem = entityItem;

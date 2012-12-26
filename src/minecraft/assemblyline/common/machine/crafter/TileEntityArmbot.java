@@ -21,7 +21,7 @@ import assemblyline.common.ai.TaskManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityCraftingArm extends TileEntityElectricityReceiver implements IInventory, IPacketReceiver, IJouleStorage
+public class TileEntityArmbot extends TileEntityElectricityReceiver implements IInventory, IPacketReceiver, IJouleStorage
 {
 	/**
 	 * The items this container contains.

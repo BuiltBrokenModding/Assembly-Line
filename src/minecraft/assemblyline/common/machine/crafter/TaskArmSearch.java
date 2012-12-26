@@ -25,7 +25,7 @@ public class TaskArmSearch extends Task
 
 	private Entity foundEntity;
 
-	public TaskArmSearch(TileEntityCraftingArm arm, Class<? extends Entity> entityToInclude, double radius, float searchSpeed)
+	public TaskArmSearch(TileEntityArmbot arm, Class<? extends Entity> entityToInclude, double radius, float searchSpeed)
 	{
 		super(arm);
 		this.entityToInclude = entityToInclude;

@@ -1,10 +1,10 @@
 package assemblyline.common.ai;
 
-import assemblyline.common.machine.crafter.TileEntityCraftingArm;
+import assemblyline.common.machine.crafter.TileEntityArmbot;
 
 public class TaskIdle extends Task
 {
-	public TaskIdle(TileEntityCraftingArm arm)
+	public TaskIdle(TileEntityArmbot arm)
 	{
 		super(arm);
 	}

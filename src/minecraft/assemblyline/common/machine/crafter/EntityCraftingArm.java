@@ -49,7 +49,7 @@ public class EntityCraftingArm extends Entity
 	/**
 	 * TileEntity this arm is originating from
 	 */
-	private TileEntityCraftingArm tileEntityCraftingArm;
+	private TileEntityArmbot tileEntityCraftingArm;
 
 	/**
 	 * position that the arms claw is at

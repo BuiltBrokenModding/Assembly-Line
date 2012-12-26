@@ -1,6 +1,6 @@
 package assemblyline.common.ai;
 
-import assemblyline.common.machine.crafter.TileEntityCraftingArm;
+import assemblyline.common.machine.crafter.TileEntityArmbot;
 
 /**
  * An AI Task that is used by TileEntities with AI.
@@ -11,9 +11,9 @@ import assemblyline.common.machine.crafter.TileEntityCraftingArm;
 public abstract class Task
 {
 	protected int ticks;
-	protected TileEntityCraftingArm tileEntity;
+	protected TileEntityArmbot tileEntity;
 
-	public Task(TileEntityCraftingArm arm)
+	public Task(TileEntityArmbot arm)
 	{
 		this.tileEntity = arm;
 	}

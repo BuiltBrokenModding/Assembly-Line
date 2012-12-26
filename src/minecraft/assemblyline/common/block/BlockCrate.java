@@ -1,5 +1,6 @@
 package assemblyline.common.block;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -31,37 +32,123 @@ public class BlockCrate extends BlockMachine
 	 * Placed the item the player is holding into the crate.
 	 */
 	@Override
-	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
+	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
 	{
 		if (world.getBlockTileEntity(x, y, z) instanceof TileEntityCrate)
 		{
 			TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
-			ItemStack requestStack = player.getCurrentEquippedItem();
 
-			if (requestStack != null)
+			if (side > 1 && hitY > 0.7)
 			{
-				if (requestStack.isStackable())
-				{
-					for (int i = 0; i < player.inventory.getSizeInventory(); i++)
-					{
-						ItemStack currentStack = player.inventory.getStackInSlot(i);
+				return this.insertAllItems(tileEntity, player);
+			}
+			else
+			{
+				return this.insertCurrentItem(tileEntity, player);
+			}
 
-						if (currentStack != null)
-						{
-							if (requestStack != currentStack && requestStack.isItemEqual(currentStack))
-							{
-								player.inventory.setInventorySlotContents(i, this.putIn(tileEntity, currentStack));
-								return true;
-							}
-						}
-					}
+		}
 
-					player.inventory.setInventorySlotContents(player.inventory.currentItem, this.putIn(tileEntity, requestStack));
-					return true;
-				}
+		return false;
+	}
+
+	/**
+	 * Inserts a the itemStack the player is holding into the crate.
+	 */
+	public boolean insertCurrentItem(TileEntityCrate tileEntity, EntityPlayer player)
+	{
+		ItemStack currentStack = player.getCurrentEquippedItem();
+
+		if (currentStack != null)
+		{
+			if (currentStack.isStackable())
+			{
+				player.inventory.setInventorySlotContents(player.inventory.currentItem, this.putIn(tileEntity, currentStack));
+				return true;
 			}
 		}
 
+		return false;
+	}
+
+	/**
+	 * Inserts all items of the same type this player has into the crate.
+	 * 
+	 * @return
+	 */
+	public boolean insertAllItems(TileEntityCrate tileEntity, EntityPlayer player)
+	{
+		ItemStack requestStack = player.getCurrentEquippedItem();
+
+		if (requestStack != null)
+		{
+			if (requestStack.isStackable())
+			{
+				for (int i = 0; i < player.inventory.getSizeInventory(); i++)
+				{
+					ItemStack currentStack = player.inventory.getStackInSlot(i);
+
+					if (currentStack != null)
+					{
+						if (requestStack.isItemEqual(currentStack))
+						{
+							player.inventory.setInventorySlotContents(i, this.putIn(tileEntity, currentStack));
+						}
+					}
+				}
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Ejects and item out of the crate and spawn it under the player entity.
+	 * 
+	 * @param tileEntity
+	 * @param player
+	 * @param maxStack - The maximum stack size to take out. Default should be 64.
+	 * @return True on success
+	 */
+	public boolean ejectItems(TileEntityCrate tileEntity, EntityPlayer player, int maxStack)
+	{
+		World world = tileEntity.worldObj;
+		ItemStack containingStack = tileEntity.getStackInSlot(0);
+
+		if (containingStack != null)
+		{
+			if (containingStack.stackSize > 0)
+			{
+				int amountToTake = Math.min(containingStack.stackSize, maxStack);
+				ItemStack dropStack = containingStack.copy();
+				dropStack.stackSize = amountToTake;
+
+				if (!world.isRemote)
+				{
+					EntityItem entityItem = new EntityItem(world, player.posX, player.posY, player.posZ, dropStack);
+
+					float var13 = 0.05F;
+					entityItem.motionX = ((float) world.rand.nextGaussian() * var13);
+					entityItem.motionY = ((float) world.rand.nextGaussian() * var13 + 0.2F);
+					entityItem.motionZ = ((float) world.rand.nextGaussian() * var13);
+					entityItem.delayBeforeCanPickup = 0;
+					world.spawnEntityInWorld(entityItem);
+				}
+
+				containingStack.stackSize -= amountToTake;
+			}
+
+			if (containingStack.stackSize <= 0)
+			{
+				containingStack = null;
+			}
+
+			tileEntity.setInventorySlotContents(0, containingStack);
+
+			return true;
+		}
 		return false;
 	}
 
@@ -110,45 +197,29 @@ public class BlockCrate extends BlockMachine
 	 * Drops the crate as a block that stores items within it.
 	 */
 	@Override
-	public boolean onSneakMachineActivated(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
+	public boolean onSneakMachineActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
 	{
-		if (!world.isRemote && world.getBlockTileEntity(x, y, z) != null)
+		if (world.getBlockTileEntity(x, y, z) != null)
 		{
-			if (par5EntityPlayer.getCurrentEquippedItem() == null)
+			TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
+
+			if (player.getCurrentEquippedItem() == null)
 			{
-				TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
-				ItemStack containingStack = tileEntity.getStackInSlot(0);
-
-				if (containingStack != null)
+				/**
+				 * Eject all items if clicked on the top 30% of the block.
+				 */
+				if (side > 1 && hitY > 0.7)
 				{
-					if (containingStack.stackSize > 0)
-					{
-						int amountToTake = Math.min(containingStack.stackSize, 64);
-						ItemStack dropStack = containingStack.copy();
-						dropStack.stackSize = amountToTake;
-
-						EntityItem entityItem = new EntityItem(world, par5EntityPlayer.posX, par5EntityPlayer.posY, par5EntityPlayer.posZ, dropStack);
-
-						float var13 = 0.05F;
-						entityItem.motionX = ((float) world.rand.nextGaussian() * var13);
-						entityItem.motionY = ((float) world.rand.nextGaussian() * var13 + 0.2F);
-						entityItem.motionZ = ((float) world.rand.nextGaussian() * var13);
-						entityItem.delayBeforeCanPickup = 0;
-						world.spawnEntityInWorld(entityItem);
-
-						containingStack.stackSize -= amountToTake;
-					}
-
-					if (containingStack.stackSize <= 0)
-					{
-						containingStack = null;
-					}
-
-					tileEntity.setInventorySlotContents(0, containingStack);
+					return this.ejectItems(tileEntity, player, TileEntityCrate.MAX_LIMIT);
+				}
+				else
+				{
+					return this.ejectItems(tileEntity, player, 64);
 				}
 			}
 		}
-		return true;
+
+		return false;
 	}
 
 	@Override

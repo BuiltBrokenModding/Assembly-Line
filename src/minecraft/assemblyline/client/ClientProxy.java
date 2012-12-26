@@ -1,10 +1,11 @@
 package assemblyline.client;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
-import assemblyline.client.gui.GuiSorter;
+import assemblyline.client.gui.GuiRejector;
 import assemblyline.client.render.RenderConveyorBelt;
 import assemblyline.client.render.RenderCrate;
 import assemblyline.client.render.RenderHelper;
@@ -47,14 +48,19 @@ public class ClientProxy extends CommonProxy
 		{
 			switch (ID)
 			{
-				case 0:
-					return new GuiSorter(player.inventory, ((TileEntityRejector) tileEntity));
-				case GUI_ARCHITECHT_TABLE:
-					return null;
+				case GUI_REJECTOR:
+					return new GuiRejector(player.inventory, ((TileEntityRejector) tileEntity));
+				case GUI_STAMPER:
+					return new GuiRejector(player.inventory, ((TileEntityRejector) tileEntity));
 			}
 		}
 
 		return null;
 	}
 
+	@Override
+	public boolean isCtrKeyDown()
+	{
+		return GuiScreen.isCtrlKeyDown();
+	}
 }

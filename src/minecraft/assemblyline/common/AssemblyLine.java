@@ -16,6 +16,7 @@ import universalelectricity.prefab.UpdateNotifier;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.block.BlockCrate;
 import assemblyline.common.block.BlockEngineerTable;
+import assemblyline.common.block.BlockStamper;
 import assemblyline.common.block.ItemBlockCrate;
 import assemblyline.common.machine.BlockMulti;
 import assemblyline.common.machine.BlockMulti.MachineType;
@@ -66,6 +67,10 @@ public class AssemblyLine
 	public static Block blockMulti;
 	public static Block blockEngineerTable;
 	public static Block blockCrate;
+	public static Block blockStamper;
+
+	public static final int ITEM_ID_PREFIX = 3030;
+	public static Item itemCrate;
 
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event)
@@ -78,13 +83,16 @@ public class AssemblyLine
 		blockMulti = new BlockMulti(CONFIGURATION.getBlock("Machine", BLOCK_ID_PREFIX + 1).getInt());
 		blockEngineerTable = new BlockEngineerTable(CONFIGURATION.getBlock("Architect's Table", BLOCK_ID_PREFIX + 2).getInt());
 		blockCrate = new BlockCrate(CONFIGURATION.getBlock("Crate", BLOCK_ID_PREFIX + 3).getInt(), 0);
+		blockStamper = new BlockStamper(CONFIGURATION.getBlock("Stamper", BLOCK_ID_PREFIX + 4).getInt(), 0);
+
+		itemCrate = new ItemFilter(CONFIGURATION.getBlock("Filter", ITEM_ID_PREFIX).getInt());
 		CONFIGURATION.save();
 
 		NetworkRegistry.instance().registerGuiHandler(this, this.proxy);
 		GameRegistry.registerBlock(blockConveyorBelt, "Conveyor Belt");
 		GameRegistry.registerBlock(blockCrate, ItemBlockCrate.class, "Crate");
 		GameRegistry.registerBlock(blockMulti, ItemBlockMulti.class, "Machine");
-		// GameRegistry.registerBlock(blockArchitectTable, "Engineer's Table");
+		GameRegistry.registerBlock(blockEngineerTable, "Engineer's Table");
 
 		UpdateNotifier.INSTANCE.checkUpdate(NAME, VERSION, "http://calclavia.com/downloads/al/recommendedversion.txt");
 
@@ -93,13 +101,13 @@ public class AssemblyLine
 			@Override
 			public void onCrafting(EntityPlayer player, ItemStack itemStack, IInventory craftMatrix)
 			{
-				System.out.println("TEST");
+				System.out.println("TEST: " + craftMatrix.getSizeInventory());
 			}
 
 			@Override
 			public void onSmelting(EntityPlayer player, ItemStack item)
 			{
-				
+
 			}
 		});
 		proxy.preInit();
@@ -164,5 +172,11 @@ public class AssemblyLine
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockMulti, 1, MachineType.MANIPULATOR.metadata), new Object[] { Block.dispenser, "basicCircuit" }));
 
 		UETab.setItemStack(new ItemStack(blockConveyorBelt));
+	}
+
+	public static String translateLocal(String string)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
