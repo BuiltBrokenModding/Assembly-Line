@@ -1,7 +1,5 @@
 package assemblyline.api;
 
-import net.minecraft.item.ItemStack;
-import universalelectricity.core.vector.Vector3;
 
 /**
  * Interface applied to the manipulator.

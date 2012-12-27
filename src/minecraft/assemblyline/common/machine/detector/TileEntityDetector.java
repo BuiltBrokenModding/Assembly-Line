@@ -2,11 +2,6 @@ package assemblyline.common.machine.detector;
 
 import java.util.ArrayList;
 
-import com.google.common.io.ByteArrayDataInput;
-
-import cpw.mods.fml.common.network.IPacketHandler;
-import cpw.mods.fml.common.network.Player;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,47 +11,55 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.network.packet.Packet250CustomPayload;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.implement.IRedstoneProvider;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
+import universalelectricity.prefab.tile.TileEntityAdvanced;
 import assemblyline.common.AssemblyLine;
+import assemblyline.common.machine.filter.ItemFilter;
 
-public class TileEntityDetector extends TileEntity implements IInventory, IRedstoneProvider, IPacketReceiver
+import com.google.common.io.ByteArrayDataInput;
+
+public class TileEntityDetector extends TileEntityAdvanced implements IInventory, IRedstoneProvider, IPacketReceiver
 {
 	private boolean powering = false;
 	private boolean isInverted = false;
-	private ItemStack[] containingItems = new ItemStack[27];
+	private ItemStack[] containingItems = new ItemStack[1];
 
 	@Override
 	public void updateEntity()
 	{
-		int metadata = this.worldObj.getBlockMetadata(xCoord, yCoord, zCoord) & 3;
-		AxisAlignedBB testArea = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord - 1, this.yCoord, this.xCoord + 1, this.yCoord, this.zCoord + 1);
+		super.updateEntity();
 
-		ArrayList<Entity> entities = (ArrayList<Entity>) this.worldObj.getEntitiesWithinAABB(EntityItem.class, testArea);
-		boolean powerCheck = false;
-		if (entities.size() > 0)
+		if (!this.worldObj.isRemote && this.ticks % 10 == 0)
 		{
-			if (hasItems())
-			{
-				for (int i = 0; i < entities.size(); i++)
-				{
-					EntityItem e = (EntityItem) entities.get(i);
-					ItemStack item = e.func_92014_d();
-					boolean tFound = false;
+			int metadata = this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord);
+			AxisAlignedBB testArea = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord - 1, this.yCoord, this.xCoord + 1, this.yCoord, this.zCoord + 1);
 
-					for (int ii = 0; ii < this.containingItems.length; ii++)
+			ArrayList<Entity> entities = (ArrayList<Entity>) this.worldObj.getEntitiesWithinAABB(EntityItem.class, testArea);
+			boolean powerCheck = false;
+
+			if (entities.size() > 0)
+			{
+				if (this.containingItems[0] != null)
+				{
+					for (int i = 0; i < entities.size(); i++)
 					{
-						ItemStack compare = this.containingItems[ii];
-						if (compare != null)
+						EntityItem e = (EntityItem) entities.get(i);
+						ItemStack item = e.func_92014_d();
+						boolean found = false;
+
+						ArrayList<ItemStack> checkStacks = ItemFilter.getFilters(this.containingItems[0]);
+
+						for (int ii = 0; ii < checkStacks.size(); ii++)
 						{
-							if (this.isInverted)
+							ItemStack compare = checkStacks.get(ii);
+
+							if (compare != null)
 							{
 								if (item.itemID == compare.itemID)
 								{
@@ -66,84 +69,65 @@ public class TileEntityDetector extends TileEntity implements IInventory, IRedst
 										{
 											if (item.getTagCompound().equals(compare.getTagCompound()))
 											{
-												tFound = true;
+												found = true;
 												break;
 											}
 										}
 										else
 										{
-											tFound = true;
-											break;
-										}
-									}
-								}
-							}
-							else
-							{
-								if (item.itemID == compare.itemID)
-								{
-									if (item.getItemDamage() == compare.getItemDamage())
-									{
-										if (item.hasTagCompound())
-										{
-											if (item.getTagCompound().equals(compare.getTagCompound()))
-											{
-												powerCheck = true;
-												break;
-											}
-										}
-										else
-										{
-											powerCheck = true;
+											found = true;
 											break;
 										}
 									}
 								}
 							}
 						}
-					}
-					if (this.isInverted)
-					{
-						if (!tFound)
+
+						if (this.isInverted)
+						{
+							if (!found)
+							{
+								powerCheck = true;
+								break;
+							}
+						}
+						else if (found)
 						{
 							powerCheck = true;
-							break;
 						}
 					}
+				}
+				else
+				{
+					powerCheck = true;
 				}
 			}
 			else
 			{
-				powerCheck = true;
+				powerCheck = false;
 			}
-		}
-		else
-		{
-			powerCheck = false;
-		}
-		if (powerCheck != this.powering)
-		{
-			this.powering = powerCheck;
-			this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, AssemblyLine.blockDetector.blockID);
-			this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord + 1, this.zCoord, AssemblyLine.blockDetector.blockID);
-			for (int x = this.xCoord - 1; x <= this.xCoord + 1; x++)
+
+			if (powerCheck != this.powering)
 			{
-				for (int z = this.zCoord - 1; z <= this.zCoord + 1; z++)
+				this.powering = powerCheck;
+				this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, AssemblyLine.blockDetector.blockID);
+				this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord + 1, this.zCoord, AssemblyLine.blockDetector.blockID);
+				for (int x = this.xCoord - 1; x <= this.xCoord + 1; x++)
 				{
-					this.worldObj.notifyBlocksOfNeighborChange(x, this.yCoord + 1, z, AssemblyLine.blockDetector.blockID);
+					for (int z = this.zCoord - 1; z <= this.zCoord + 1; z++)
+					{
+						this.worldObj.notifyBlocksOfNeighborChange(x, this.yCoord + 1, z, AssemblyLine.blockDetector.blockID);
+					}
 				}
 			}
 		}
 	}
 
-	public boolean hasItems()
+	@Override
+	public void invalidate()
 	{
-		for (int i = 0; i < this.containingItems.length; i++)
-		{
-			if (this.containingItems[i] != null) { return true; }
-		}
-
-		return false;
+		this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord + 1, this.zCoord, AssemblyLine.blockDetector.blockID);
+		super.invalidate();
 	}
 
 	public boolean isInverted()
@@ -233,7 +217,7 @@ public class TileEntityDetector extends TileEntity implements IInventory, IRedst
 	@Override
 	public int getSizeInventory()
 	{
-		return 27;
+		return this.containingItems.length;
 	}
 
 	@Override
@@ -312,7 +296,7 @@ public class TileEntityDetector extends TileEntity implements IInventory, IRedst
 	@Override
 	public int getInventoryStackLimit()
 	{
-		return 64;
+		return 1;
 	}
 
 	@Override

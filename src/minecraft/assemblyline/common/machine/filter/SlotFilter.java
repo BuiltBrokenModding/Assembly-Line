@@ -1,10 +1,9 @@
 package assemblyline.common.machine.filter;
 
-import assemblyline.common.AssemblyLine;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import assemblyline.common.AssemblyLine;
 
 public class SlotFilter extends Slot
 {

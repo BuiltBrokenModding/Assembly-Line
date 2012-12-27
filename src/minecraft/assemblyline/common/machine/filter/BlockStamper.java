@@ -1,6 +1,5 @@
 package assemblyline.common.machine.filter;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -14,9 +13,10 @@ public class BlockStamper extends BlockMachine
 	public BlockStamper(int id, int texture)
 	{
 		super(id, Material.wood);
-		this.blockIndexInTexture = 59;
+		this.blockIndexInTexture = 0;
 		this.setBlockName("stamper");
 		this.setCreativeTab(UETab.INSTANCE);
+		this.setTextureFile(AssemblyLine.BLOCK_TEXTURE_PATH);
 	}
 
 	/**
@@ -24,7 +24,7 @@ public class BlockStamper extends BlockMachine
 	 */
 	public int getBlockTextureFromSide(int par1)
 	{
-		return Block.blockSteel.blockIndexInTexture;
+		return this.blockIndexInTexture;
 	}
 
 	/**
