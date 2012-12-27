@@ -1,4 +1,4 @@
-package assemblyline.common.block;
+package assemblyline.common.machine.filter;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

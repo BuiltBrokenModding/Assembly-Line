@@ -11,7 +11,7 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.prefab.BlockMachine;
 import universalelectricity.prefab.UETab;
-import assemblyline.client.render.RenderHelper;
+import assemblyline.client.render.BlockRenderingHandler;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt.SlantType;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -185,7 +185,7 @@ public class BlockConveyorBelt extends BlockMachine
 	@Override
 	public int getRenderType()
 	{
-		return RenderHelper.BLOCK_RENDER_ID;
+		return BlockRenderingHandler.BLOCK_RENDER_ID;
 	}
 
 	@Override

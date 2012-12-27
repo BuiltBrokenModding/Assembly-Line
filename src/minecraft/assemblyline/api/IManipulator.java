@@ -3,18 +3,22 @@ package assemblyline.api;
 import net.minecraft.item.ItemStack;
 import universalelectricity.core.vector.Vector3;
 
+/**
+ * Interface applied to the manipulator.
+ * 
+ * @author Calclavia
+ * 
+ */
 public interface IManipulator
 {
 	/**
-	 * Throws the items from the manipulator into the world
-	 * 
-	 * @param outputPosition
-	 * @param items
+	 * Find items going into the manipulator and input them into an inventory behind this
+	 * manipulator.
 	 */
-	public void rejectItem(Vector3 outputPosition, ItemStack items);
+	public void eject();
 
-	// TODO add a few more methods here to access
-	// the functions the manipulator
-	// can do. For example storing items, and
-	// retrieving items, or power on/off
+	/**
+	 * Injects items
+	 */
+	public void inject();
 }

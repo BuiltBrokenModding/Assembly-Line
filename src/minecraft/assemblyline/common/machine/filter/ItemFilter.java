@@ -1,4 +1,4 @@
-package assemblyline.common;
+package assemblyline.common.machine.filter;
 
 import java.util.ArrayList;
 import java.util.List;

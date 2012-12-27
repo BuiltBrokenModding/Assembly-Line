@@ -1,4 +1,4 @@
-package assemblyline.common.machine;
+package assemblyline.common.machine.filter;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;

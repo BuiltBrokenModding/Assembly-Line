@@ -5,10 +5,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
+import assemblyline.client.gui.GuiDetector;
 import assemblyline.client.gui.GuiRejector;
+import assemblyline.client.render.BlockRenderingHandler;
 import assemblyline.client.render.RenderConveyorBelt;
 import assemblyline.client.render.RenderCrate;
-import assemblyline.client.render.RenderHelper;
+import assemblyline.client.render.RenderDetector;
 import assemblyline.client.render.RenderManipulator;
 import assemblyline.client.render.RenderSorter;
 import assemblyline.common.AssemblyLine;
@@ -17,6 +19,7 @@ import assemblyline.common.block.TileEntityCrate;
 import assemblyline.common.machine.TileEntityManipulator;
 import assemblyline.common.machine.TileEntityRejector;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt;
+import assemblyline.common.machine.detector.TileEntityDetector;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
@@ -27,7 +30,7 @@ public class ClientProxy extends CommonProxy
 	public void preInit()
 	{
 		MinecraftForgeClient.preloadTexture(AssemblyLine.BLOCK_TEXTURE_PATH);
-		RenderingRegistry.registerBlockHandler(new RenderHelper());
+		RenderingRegistry.registerBlockHandler(new BlockRenderingHandler());
 	}
 
 	@Override
@@ -38,6 +41,7 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRejector.class, new RenderSorter());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityManipulator.class, new RenderManipulator());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrate.class, new RenderCrate());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDetector.class, new RenderDetector());
 	}
 
 	@Override
@@ -53,6 +57,8 @@ public class ClientProxy extends CommonProxy
 					return new GuiRejector(player.inventory, ((TileEntityRejector) tileEntity));
 				case GUI_STAMPER:
 					return new GuiRejector(player.inventory, ((TileEntityRejector) tileEntity));
+				case GUI_DETECTOR:
+					return new GuiDetector(player.inventory, ((TileEntityDetector) tileEntity));
 			}
 		}
 

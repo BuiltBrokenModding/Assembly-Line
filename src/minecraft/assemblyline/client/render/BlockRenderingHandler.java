@@ -6,6 +6,7 @@ import net.minecraft.world.IBlockAccess;
 
 import org.lwjgl.opengl.GL11;
 
+import universalelectricity.core.vector.Vector3;
 import assemblyline.client.model.ModelConveyorBelt;
 import assemblyline.client.model.ModelManipulator;
 import assemblyline.client.model.ModelSorter;
@@ -18,9 +19,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderHelper implements ISimpleBlockRenderingHandler
+public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 {
-	public static RenderHelper instance = new RenderHelper();
+	public static BlockRenderingHandler instance = new BlockRenderingHandler();
 	public static final int BLOCK_RENDER_ID = RenderingRegistry.getNextAvailableRenderId();
 	private ModelConveyorBelt modelConveyorBelt = new ModelConveyorBelt();
 	private ModelSorter modelEjector = new ModelSorter();
@@ -37,6 +38,10 @@ public class RenderHelper implements ISimpleBlockRenderingHandler
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH + "BeltTexture.png"));
 			modelConveyorBelt.render(0.0625F, 0, false, false, false);
 			GL11.glPopMatrix();
+		}
+		if (block.blockID == AssemblyLine.blockDetector.blockID)
+		{
+			RenderDetector.render(false, new Vector3());
 		}
 		else if (block.blockID == AssemblyLine.blockMulti.blockID)
 		{

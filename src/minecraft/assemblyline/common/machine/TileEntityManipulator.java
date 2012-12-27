@@ -17,6 +17,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
+import universalelectricity.prefab.multiblock.IBlockActivate;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.api.IManipulator;
@@ -25,14 +26,38 @@ import assemblyline.common.machine.BlockMulti.MachineType;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityManipulator extends TileEntityAssemblyNetwork implements IRedstoneReceptor, IPacketReceiver, IManipulator
+import cpw.mods.fml.common.network.PacketDispatcher;
+
+public class TileEntityManipulator extends TileEntityAssemblyNetwork implements IRedstoneReceptor, IPacketReceiver, IManipulator, IBlockActivate
 {
+	public boolean selfPulse = false;
+
 	/**
 	 * Is the manipulator wrenched to turn into output mode?
 	 */
-	public boolean isOutput = false;
+	private boolean isOutput = false;
 
 	private boolean isRedstonePowered = false;
+
+	public boolean isOutput()
+	{
+		return this.isOutput;
+	}
+
+	public void setOutput(boolean isOutput)
+	{
+		this.isOutput = isOutput;
+
+		if (!this.worldObj.isRemote)
+		{
+			PacketDispatcher.sendPacketToAllPlayers(this.getDescriptionPacket());
+		}
+	}
+
+	public void toggleOutput()
+	{
+		this.setOutput(!this.isOutput());
+	}
 
 	@Override
 	protected void onUpdate()
@@ -48,92 +73,112 @@ public class TileEntityManipulator extends TileEntityAssemblyNetwork implements 
 			{
 				if (!this.isOutput)
 				{
-					/**
-					 * Find items going into the manipulator and input them into an inventory behind
-					 * this manipulator.
-					 */
-					Vector3 inputPosition = new Vector3(this);
-
-					Vector3 outputUp = new Vector3(this);
-					outputUp.modifyPositionFromSide(ForgeDirection.UP);
-
-					Vector3 outputDown = new Vector3(this);
-					outputDown.modifyPositionFromSide(ForgeDirection.DOWN);
-
-					Vector3 outputPosition = new Vector3(this);
-					outputPosition.modifyPositionFromSide(this.getBeltDirection().getOpposite());
-
-					AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(inputPosition.x, inputPosition.y, inputPosition.z, inputPosition.x + 1, inputPosition.y + 1, inputPosition.z + 1);
-					List<EntityItem> itemsInBound = this.worldObj.getEntitiesWithinAABB(EntityItem.class, bounds);
-
-					for (EntityItem entity : itemsInBound)
-					{
-						/**
-						 * Try top first, then bottom, then the sides to see if it is possible to
-						 * insert the item into a inventory.
-						 */
-						ItemStack remainingStack = this.tryPlaceInPosition(entity.func_92014_d().copy(), outputUp, ForgeDirection.DOWN);
-
-						if (remainingStack != null)
-						{
-							remainingStack = this.tryPlaceInPosition(remainingStack, outputDown, ForgeDirection.UP);
-						}
-
-						if (remainingStack != null)
-						{
-							remainingStack = this.tryPlaceInPosition(remainingStack, outputPosition, this.getBeltDirection().getOpposite());
-						}
-
-						if (remainingStack != null && remainingStack.stackSize > 0)
-						{
-							this.rejectItem(outputPosition, remainingStack);
-						}
-
-						entity.setDead();
-					}
+					this.inject();
 				}
 				else
 				{
+					if (this.selfPulse && this.ticks % 10 == 0)
+					{
+						this.isRedstonePowered = true;
+					}
+					
 					/**
 					 * Finds the connected inventory and outputs the items upon a redstone pulse.
 					 */
 					if (this.isRedstonePowered)
 					{
-						this.onPowerOff();
-
-						Vector3 inputUp = new Vector3(this);
-						inputUp.modifyPositionFromSide(ForgeDirection.UP);
-
-						Vector3 inputDown = new Vector3(this);
-						inputDown.modifyPositionFromSide(ForgeDirection.DOWN);
-
-						Vector3 inputPosition = new Vector3(this);
-						inputPosition.modifyPositionFromSide(this.getBeltDirection().getOpposite());
-
-						Vector3 outputPosition = new Vector3(this);
-						outputPosition.modifyPositionFromSide(this.getBeltDirection());
-
-						ItemStack itemStack = this.tryGrabFromPosition(inputUp, ForgeDirection.DOWN);
-
-						if (itemStack == null)
-						{
-							itemStack = this.tryGrabFromPosition(inputDown, ForgeDirection.UP);
-						}
-
-						if (itemStack == null)
-						{
-							itemStack = this.tryGrabFromPosition(inputPosition, this.getBeltDirection().getOpposite());
-						}
-
-						if (itemStack != null)
-						{
-							if (itemStack.stackSize > 0)
-							{
-								this.rejectItem(outputPosition, itemStack);
-							}
-						}
+						this.eject();
 					}
 				}
+			}
+		}
+	}
+
+	/**
+	 * Find items going into the manipulator and input them into an inventory behind this
+	 * manipulator.
+	 */
+	@Override
+	public void inject()
+	{
+		Vector3 inputPosition = new Vector3(this);
+
+		Vector3 outputUp = new Vector3(this);
+		outputUp.modifyPositionFromSide(ForgeDirection.UP);
+
+		Vector3 outputDown = new Vector3(this);
+		outputDown.modifyPositionFromSide(ForgeDirection.DOWN);
+
+		Vector3 outputPosition = new Vector3(this);
+		outputPosition.modifyPositionFromSide(this.getBeltDirection().getOpposite());
+
+		AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(inputPosition.x, inputPosition.y, inputPosition.z, inputPosition.x + 1, inputPosition.y + 1, inputPosition.z + 1);
+		List<EntityItem> itemsInBound = this.worldObj.getEntitiesWithinAABB(EntityItem.class, bounds);
+
+		for (EntityItem entity : itemsInBound)
+		{
+			/**
+			 * Try top first, then bottom, then the sides to see if it is possible to insert the
+			 * item into a inventory.
+			 */
+			ItemStack remainingStack = this.tryPlaceInPosition(entity.func_92014_d().copy(), outputUp, ForgeDirection.DOWN);
+
+			if (remainingStack != null)
+			{
+				remainingStack = this.tryPlaceInPosition(remainingStack, outputDown, ForgeDirection.UP);
+			}
+
+			if (remainingStack != null)
+			{
+				remainingStack = this.tryPlaceInPosition(remainingStack, outputPosition, this.getBeltDirection().getOpposite());
+			}
+
+			if (remainingStack != null && remainingStack.stackSize > 0)
+			{
+				this.throwItem(outputPosition, remainingStack);
+			}
+
+			entity.setDead();
+		}
+	}
+
+	/**
+	 * Injects items
+	 */
+	@Override
+	public void eject()
+	{
+		this.onPowerOff();
+
+		Vector3 inputUp = new Vector3(this);
+		inputUp.modifyPositionFromSide(ForgeDirection.UP);
+
+		Vector3 inputDown = new Vector3(this);
+		inputDown.modifyPositionFromSide(ForgeDirection.DOWN);
+
+		Vector3 inputPosition = new Vector3(this);
+		inputPosition.modifyPositionFromSide(this.getBeltDirection().getOpposite());
+
+		Vector3 outputPosition = new Vector3(this);
+		outputPosition.modifyPositionFromSide(this.getBeltDirection());
+
+		ItemStack itemStack = this.tryGrabFromPosition(inputUp, ForgeDirection.DOWN);
+
+		if (itemStack == null)
+		{
+			itemStack = this.tryGrabFromPosition(inputDown, ForgeDirection.UP);
+		}
+
+		if (itemStack == null)
+		{
+			itemStack = this.tryGrabFromPosition(inputPosition, this.getBeltDirection().getOpposite());
+		}
+
+		if (itemStack != null)
+		{
+			if (itemStack.stackSize > 0)
+			{
+				this.throwItem(outputPosition, itemStack);
 			}
 		}
 	}
@@ -167,7 +212,7 @@ public class TileEntityManipulator extends TileEntityAssemblyNetwork implements 
 	 * @param outputPosition
 	 * @param items
 	 */
-	public void rejectItem(Vector3 outputPosition, ItemStack items)
+	public void throwItem(Vector3 outputPosition, ItemStack items)
 	{
 		EntityItem entityItem = new EntityItem(worldObj, outputPosition.x + 0.5, outputPosition.y + 0.8, outputPosition.z + 0.5, items);
 		entityItem.motionX = 0;
@@ -406,5 +451,12 @@ public class TileEntityManipulator extends TileEntityAssemblyNetwork implements 
 	public void onPowerOff()
 	{
 		this.isRedstonePowered = false;
+	}
+
+	@Override
+	public boolean onActivated(EntityPlayer entityPlayer)
+	{
+		this.selfPulse = !this.selfPulse;
+		return true;
 	}
 }

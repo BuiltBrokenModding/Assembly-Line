@@ -14,9 +14,8 @@ import universalelectricity.core.UniversalElectricity;
 import universalelectricity.prefab.BlockMachine;
 import universalelectricity.prefab.UETab;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
-import assemblyline.client.render.RenderHelper;
-import assemblyline.common.AssemblyLine;
-import cpw.mods.fml.common.network.PacketDispatcher;
+import universalelectricity.prefab.multiblock.IBlockActivate;
+import assemblyline.client.render.BlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -111,18 +110,16 @@ public class BlockMulti extends BlockMachine
 	}
 
 	@Override
-	public boolean onMachineActivated(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
+	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
-		if (!par1World.isRemote)
+		if (!world.isRemote)
 		{
-			int metadata = par1World.getBlockMetadata(x, y, z);
-			int guiID = MachineType.get(metadata).metadata;
+			TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-			if (guiID == -1) { return false; }
-
-			par5EntityPlayer.openGui(AssemblyLine.instance, guiID, par1World, x, y, z);
-
-			return true;
+			if (tileEntity instanceof IBlockActivate)
+			{
+				((IBlockActivate) tileEntity).onActivated(entityPlayer);
+			}
 		}
 		return true;
 	}
@@ -168,12 +165,8 @@ public class BlockMulti extends BlockMachine
 		if (MachineType.get(metadata) == MachineType.MANIPULATOR)
 		{
 			TileEntityManipulator tileEntity = (TileEntityManipulator) par1World.getBlockTileEntity(x, y, z);
-			tileEntity.isOutput = !tileEntity.isOutput;
+			tileEntity.toggleOutput();
 
-			if (!par1World.isRemote)
-			{
-				PacketDispatcher.sendPacketToAllPlayers(tileEntity.getDescriptionPacket());
-			}
 			return true;
 		}
 		else
@@ -231,7 +224,7 @@ public class BlockMulti extends BlockMachine
 	@Override
 	public int getRenderType()
 	{
-		return RenderHelper.BLOCK_RENDER_ID;
+		return BlockRenderingHandler.BLOCK_RENDER_ID;
 	}
 
 	@Override

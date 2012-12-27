@@ -16,9 +16,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
+import universalelectricity.prefab.multiblock.IBlockActivate;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.AssemblyLine;
+import assemblyline.common.CommonProxy;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -30,7 +32,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
  * @author Darkguardsman
  * 
  */
-public class TileEntityRejector extends TileEntityAssemblyNetwork implements IPacketReceiver, IInventory
+public class TileEntityRejector extends TileEntityAssemblyNetwork implements IPacketReceiver, IInventory, IBlockActivate
 {
 	/**
 	 * The items this container contains.
@@ -449,5 +451,12 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IPa
 	public int getInventoryStackLimit()
 	{
 		return 1;
+	}
+
+	@Override
+	public boolean onActivated(EntityPlayer entityPlayer)
+	{
+		entityPlayer.openGui(AssemblyLine.instance, CommonProxy.GUI_REJECTOR, this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+		return true;
 	}
 }

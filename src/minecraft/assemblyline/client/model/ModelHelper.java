@@ -5,8 +5,8 @@ import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glVertex3d;
-import assemblyline.common.BlockSide;
 import net.minecraft.util.Vec3;
+import net.minecraftforge.common.ForgeDirection;
 
 public class ModelHelper
 {
@@ -21,16 +21,12 @@ public class ModelHelper
 
 	/**
 	 * 
-	 * @param v1
-	 *            Top Left
-	 * @param v2
-	 *            Top Right
-	 * @param v3
-	 *            Bottom Right
-	 * @param v4
-	 *            Bottom Left
+	 * @param v1 Top Left
+	 * @param v2 Top Right
+	 * @param v3 Bottom Right
+	 * @param v4 Bottom Left
 	 */
-	private static void drawQuadRaw(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, int side)
+	private static void drawQuadRaw(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, ForgeDirection side)
 	{
 		glBegin(GL_QUADS);
 
@@ -46,11 +42,9 @@ public class ModelHelper
 		float subSqWidth = 0.25f * ((float) sTexWidth / (float) gTexWidth); // constant for now
 		float subSqHeight = 0.5f * ((float) sTexHeight / (float) gTexHeight);
 
-		// System.out.println("SubWidth: " + subWidth);
-
 		switch (side)
 		{
-			case BlockSide.YPLUS: // top
+			case UP: // top
 			{
 				subSqX = 2f * subSqWidth;
 				subSqY = 0;
@@ -58,7 +52,7 @@ public class ModelHelper
 				quadHeight = (float) Math.abs(v4.zCoord - v1.zCoord);
 				break;
 			}
-			case BlockSide.YMINUS: // bottom
+			case DOWN: // bottom
 			{
 				subSqX = 1f * subSqWidth;
 				subSqY = 0;
@@ -66,7 +60,7 @@ public class ModelHelper
 				quadHeight = (float) Math.abs(v4.zCoord - v1.zCoord);
 				break;
 			}
-			case BlockSide.XPLUS: // right
+			case EAST: // right
 			{
 				subSqX = 0;
 				subSqY = subSqHeight;
@@ -74,7 +68,7 @@ public class ModelHelper
 				quadHeight = (float) Math.abs(v4.yCoord - v1.yCoord);
 				break;
 			}
-			case BlockSide.XMINUS: // left
+			case WEST: // left
 			{
 				subSqX = 2f * subSqWidth;
 				subSqY = subSqHeight;
@@ -82,7 +76,7 @@ public class ModelHelper
 				quadHeight = (float) Math.abs(v4.yCoord - v1.yCoord);
 				break;
 			}
-			case BlockSide.ZPLUS: // back
+			case SOUTH: // back
 			{
 				subSqX = subSqWidth;
 				subSqY = subSqHeight;
@@ -90,7 +84,7 @@ public class ModelHelper
 				quadHeight = (float) Math.abs(v4.yCoord - v1.yCoord);
 				break;
 			}
-			case BlockSide.ZMINUS: // front
+			case NORTH: // front
 			{
 				subSqX = 3f * subSqWidth;
 				subSqY = subSqHeight;
@@ -98,8 +92,10 @@ public class ModelHelper
 				quadHeight = (float) Math.abs(v4.yCoord - v1.yCoord);
 				break;
 			}
+			default:
+				break;
 		}
-		
+
 		float xMax, yMax;
 
 		xMin += subSqX;
@@ -118,8 +114,6 @@ public class ModelHelper
 			yMax = yMin + (subSqHeight);
 		}
 
-		
-
 		// System.out.println("xMin: " + xMin + "; xMax: " + xMax);
 
 		glTexCoord2f(xMin, yMin);
@@ -136,31 +130,23 @@ public class ModelHelper
 
 	/**
 	 * 
-	 * @param v1
-	 *            Top Left Back
-	 * @param v2
-	 *            Top Right Back
-	 * @param v3
-	 *            Top Right Front
-	 * @param v4
-	 *            Top Left Front
-	 * @param v5
-	 *            Bottom Left Front
-	 * @param v6
-	 *            Bottom Right Front
-	 * @param v7
-	 *            Bottom Right Back
-	 * @param v8
-	 *            Bottom Left Back
+	 * @param v1 Top Left Back
+	 * @param v2 Top Right Back
+	 * @param v3 Top Right Front
+	 * @param v4 Top Left Front
+	 * @param v5 Bottom Left Front
+	 * @param v6 Bottom Right Front
+	 * @param v7 Bottom Right Back
+	 * @param v8 Bottom Left Back
 	 */
 	private static void drawCuboidRaw(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, Vec3 v5, Vec3 v6, Vec3 v7, Vec3 v8)
 	{
-		drawQuadRaw(v1, v2, v3, v4, BlockSide.YPLUS); // top
-		drawQuadRaw(v7, v6, v3, v2, BlockSide.XPLUS); // right
-		drawQuadRaw(v5, v6, v7, v8, BlockSide.YMINUS); // bottom
-		drawQuadRaw(v5, v8, v1, v4, BlockSide.XMINUS); // left
-		drawQuadRaw(v6, v5, v4, v3, BlockSide.ZMINUS); // front
-		drawQuadRaw(v8, v7, v2, v1, BlockSide.ZPLUS); // back
+		drawQuadRaw(v1, v2, v3, v4, ForgeDirection.UP); // top
+		drawQuadRaw(v7, v6, v3, v2, ForgeDirection.EAST); // right
+		drawQuadRaw(v5, v6, v7, v8, ForgeDirection.DOWN); // bottom
+		drawQuadRaw(v5, v8, v1, v4, ForgeDirection.WEST); // left
+		drawQuadRaw(v6, v5, v4, v3, ForgeDirection.NORTH); // front
+		drawQuadRaw(v8, v7, v2, v1, ForgeDirection.SOUTH); // back
 	}
 
 	public static void drawCuboid(float xOffset, float yOffset, float zOffset, float xSize, float ySize, float zSize)
@@ -206,8 +192,8 @@ public class ModelHelper
 	/**
 	 * Sets whether or not to clip the texture.
 	 * 
-	 * @param clip
-	 *            If true, textures on blocks less than 1x1x1 will be clipped. If false, they will be scaled.
+	 * @param clip If true, textures on blocks less than 1x1x1 will be clipped. If false, they will
+	 * be scaled.
 	 */
 	public static void setTextureClip(boolean clip)
 	{
