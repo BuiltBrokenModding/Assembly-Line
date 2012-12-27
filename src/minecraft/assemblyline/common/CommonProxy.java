@@ -16,6 +16,9 @@ public class CommonProxy implements IGuiHandler
 	public static final int GUI_REJECTOR = 0;
 	public static final int GUI_STAMPER = 1;
 	public static final int GUI_ARCHITECHT_TABLE = 2;
+	public static final int GUI_SENSOR = 3;
+	
+	public static final int RENDER_SENSOR = 0;
 
 	public void preInit()
 	{
