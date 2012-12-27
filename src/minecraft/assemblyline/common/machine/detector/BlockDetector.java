@@ -27,10 +27,41 @@ public class BlockDetector extends BlockMachine
 {
 	private Random random = new Random();
 
-	public BlockDetector(int blockID)
+	public BlockDetector(int blockID, int texture)
 	{
 		super("detector", blockID, UniversalElectricity.machine, UETab.INSTANCE);
-		this.setBlockBounds(0.25f, 0, 0.25f, 0.75f, 0.75f, 0.75f);
+		this.blockIndexInTexture = texture;
+	}
+
+	@Override
+	public int getBlockTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side)
+	{
+		TileEntity tileEntity = iBlockAccess.getBlockTileEntity(x, y, z);
+		if (tileEntity instanceof TileEntityDetector)
+		{
+			if (side == ForgeDirection.DOWN.ordinal())
+			{
+				if (((TileEntityDetector) tileEntity).isInverted())
+				{
+					return this.blockIndexInTexture + 2;
+
+				}
+				else
+				{
+					return this.blockIndexInTexture + 1;
+				}
+			}
+		}
+
+		return this.blockIndexInTexture;
+	}
+
+	@Override
+	public int getBlockTextureFromSideAndMetadata(int side, int metadata)
+	{
+		if (side == ForgeDirection.DOWN.ordinal()) { return this.blockIndexInTexture + 1; }
+
+		return this.blockIndexInTexture;
 	}
 
 	@Override
@@ -65,14 +96,6 @@ public class BlockDetector extends BlockMachine
 
 		return true;
 	}
-
-	/*
-	 * @Override public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving entity)
-	 * { if (entity instanceof EntityPlayer) { world.notifyBlocksOfNeighborChange(x + 1, y, z,
-	 * blockID); world.notifyBlocksOfNeighborChange(x - 1, y, z, blockID);
-	 * world.notifyBlocksOfNeighborChange(x, y, z + 1, blockID);
-	 * world.notifyBlocksOfNeighborChange(x, y, z - 1, blockID); } }
-	 */
 
 	@Override
 	public void breakBlock(World world, int x, int y, int z, int int1, int int2)
@@ -130,41 +153,18 @@ public class BlockDetector extends BlockMachine
 	}
 
 	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess par1iBlockAccess, int par2, int par3, int par4)
-	{
-		setBlockBounds(0.25f, 0.25f, 0.25f, 0.75f, 0.75f, 0.75f);
-	}
-
-	@Override
 	public boolean isOpaqueCube()
 	{
 		return false;
 	}
 
-	@Override
-	public boolean isBlockSolidOnSide(World world, int x, int y, int z, ForgeDirection side)
-	{
-		return false;
-	}
-
-	@Override
-	public boolean renderAsNormalBlock()
-	{
-		return false;
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public int getRenderType()
-	{
-		return BlockRenderingHandler.BLOCK_RENDER_ID;
-	}
-
-	@Override
-	public void onEntityWalking(World world, int x, int y, int z, Entity entity)
-	{
-		onEntityCollidedWithBlock(world, x, y, z, entity);
-	}
+	/*
+	 * @Override public boolean renderAsNormalBlock() { return false; }
+	 * 
+	 * @SideOnly(Side.CLIENT)
+	 * 
+	 * @Override public int getRenderType() { return BlockRenderingHandler.BLOCK_RENDER_ID; }
+	 */
 
 	@Override
 	public boolean isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int direction)

@@ -5,8 +5,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
+import universalelectricity.core.vector.Vector3;
 import assemblyline.client.gui.GuiDetector;
 import assemblyline.client.gui.GuiRejector;
+import assemblyline.client.gui.GuiStamper;
 import assemblyline.client.render.BlockRenderingHandler;
 import assemblyline.client.render.RenderConveyorBelt;
 import assemblyline.client.render.RenderCrate;
@@ -41,7 +43,6 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRejector.class, new RenderSorter());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityManipulator.class, new RenderManipulator());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrate.class, new RenderCrate());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDetector.class, new RenderDetector());
 	}
 
 	@Override
@@ -49,17 +50,14 @@ public class ClientProxy extends CommonProxy
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tileEntity != null)
+		switch (ID)
 		{
-			switch (ID)
-			{
-				case GUI_REJECTOR:
-					return new GuiRejector(player.inventory, ((TileEntityRejector) tileEntity));
-				case GUI_STAMPER:
-					return new GuiRejector(player.inventory, ((TileEntityRejector) tileEntity));
-				case GUI_DETECTOR:
-					return new GuiDetector(player.inventory, ((TileEntityDetector) tileEntity));
-			}
+			case GUI_REJECTOR:
+				return new GuiRejector(player.inventory, ((TileEntityRejector) tileEntity));
+			case GUI_STAMPER:
+				return new GuiStamper(player.inventory, world, new Vector3(x, y, z));
+			case GUI_DETECTOR:
+				return new GuiDetector(player.inventory, ((TileEntityDetector) tileEntity));
 		}
 
 		return null;

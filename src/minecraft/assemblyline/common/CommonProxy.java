@@ -41,18 +41,15 @@ public class CommonProxy implements IGuiHandler
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tileEntity != null)
+		switch (ID)
 		{
-			switch (ID)
-			{
-				case GUI_REJECTOR:
-					return new ContainerRejector(player.inventory, ((TileEntityRejector) tileEntity));
-				case GUI_STAMPER:
-					return new ContainerStamper(player.inventory, world, new Vector3(x, y, z));
-				case GUI_DETECTOR:
-					return new ContainerDetector(player.inventory, ((TileEntityDetector) tileEntity));
+			case GUI_REJECTOR:
+				return new ContainerRejector(player.inventory, ((TileEntityRejector) tileEntity));
+			case GUI_STAMPER:
+				return new ContainerStamper(player.inventory, world, new Vector3(x, y, z));
+			case GUI_DETECTOR:
+				return new ContainerDetector(player.inventory, ((TileEntityDetector) tileEntity));
 
-			}
 		}
 
 		return null;

@@ -4,9 +4,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+import universalelectricity.prefab.BlockMachine;
 import universalelectricity.prefab.UETab;
+import assemblyline.common.AssemblyLine;
+import assemblyline.common.CommonProxy;
 
-public class BlockStamper extends Block
+public class BlockStamper extends BlockMachine
 {
 	public BlockStamper(int id, int texture)
 	{
@@ -27,17 +30,16 @@ public class BlockStamper extends Block
 	/**
 	 * Called upon block activation (right click on the block.)
 	 */
-	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
+	@Override
+	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
 	{
-		if (par1World.isRemote)
+		if (!world.isRemote)
 		{
-			return true;
+			entityPlayer.openGui(AssemblyLine.instance, CommonProxy.GUI_STAMPER, world, x, y, z);
 		}
-		else
-		{
-			par5EntityPlayer.displayGUIWorkbench(par2, par3, par4);
-			return true;
-		}
+
+		return true;
+
 	}
 
 }

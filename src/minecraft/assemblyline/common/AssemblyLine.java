@@ -88,7 +88,7 @@ public class AssemblyLine
 		blockEngineerTable = new BlockEngineerTable(CONFIGURATION.getBlock("Architect's Table", BLOCK_ID_PREFIX + 2).getInt());
 		blockCrate = new BlockCrate(CONFIGURATION.getBlock("Crate", BLOCK_ID_PREFIX + 3).getInt(), 0);
 		blockStamper = new BlockStamper(CONFIGURATION.getBlock("Stamper", BLOCK_ID_PREFIX + 4).getInt(), 0);
-		blockDetector = new BlockDetector(CONFIGURATION.getBlock("Detector", BLOCK_ID_PREFIX + 5).getInt());
+		blockDetector = new BlockDetector(CONFIGURATION.getBlock("Detector", BLOCK_ID_PREFIX + 5).getInt(), 1);
 
 		itemFilter = new ItemFilter(CONFIGURATION.getBlock("Filter", ITEM_ID_PREFIX).getInt());
 		CONFIGURATION.save();
@@ -134,6 +134,15 @@ public class AssemblyLine
 		{
 			LanguageRegistry.addName(new ItemStack(blockMulti, 1, type.metadata), type.name);
 		}
+
+		// Filter
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemFilter, new Object[] { "R", "P", "I", 'P', Item.paper, 'R', Item.redstone, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
+
+		// Stamper
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockStamper, new Object[] { "SIS", "SPS", "WWW", 'S', "ingotSteel", 'W', Block.wood, 'P', Block.pistonStickyBase, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
+
+		// Detector
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, new Object[] { "SES", "SCS", "SPS", 'S', "ingotSteel", 'C', "basicCircuit", 'E', Item.eyeOfEnder }));
 
 		// Crate
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockCrate, new Object[] { "SPS", "P P", "SPS", 'P', "plateSteel", 'S', Item.stick }));

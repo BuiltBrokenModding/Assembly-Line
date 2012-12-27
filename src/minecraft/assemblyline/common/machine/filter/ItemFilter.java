@@ -32,7 +32,7 @@ public class ItemFilter extends Item
 
 			for (ItemStack filterItem : filterItems)
 			{
-				list.add(filterItem.getItemName());
+				list.add(filterItem.getDisplayName());
 			}
 		}
 		else
@@ -44,7 +44,7 @@ public class ItemFilter extends Item
 	/**
 	 * Saves the list of items to filter out inside.
 	 */
-	public static void setFilters(ItemStack itemStack, List<ItemStack> filterStacks)
+	public static void setFilters(ItemStack itemStack, ArrayList<ItemStack> filterStacks)
 	{
 		if (itemStack.getTagCompound() == null)
 		{
@@ -67,9 +67,9 @@ public class ItemFilter extends Item
 		itemStack.getTagCompound().setTag("Items", nbt);
 	}
 
-	public static List<ItemStack> getFilters(ItemStack itemStack)
+	public static ArrayList<ItemStack> getFilters(ItemStack itemStack)
 	{
-		List<ItemStack> filterStacks = new ArrayList<ItemStack>();
+		ArrayList<ItemStack> filterStacks = new ArrayList<ItemStack>();
 
 		if (itemStack.getTagCompound() == null)
 		{
