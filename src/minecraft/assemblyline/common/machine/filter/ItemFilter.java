@@ -28,8 +28,6 @@ public class ItemFilter extends Item
 
 		if (filterItems.size() > 0)
 		{
-			list.add("Filters:");
-
 			for (ItemStack filterItem : filterItems)
 			{
 				list.add(filterItem.getDisplayName());
@@ -50,7 +48,7 @@ public class ItemFilter extends Item
 		{
 			itemStack.setTagCompound(new NBTTagCompound());
 		}
-		
+
 		NBTTagList nbt = new NBTTagList();
 
 		for (int i = 0; i < filterStacks.size(); ++i)

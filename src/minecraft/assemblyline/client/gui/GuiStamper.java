@@ -28,6 +28,7 @@ public class GuiStamper extends GuiContainer
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
 		this.fontRenderer.drawString(TranslationHelper.getLocal("tile.stamper.name"), 68, 6, 4210752);
+		this.fontRenderer.drawString(TranslationHelper.getLocal("assemblyline.gui.crafting")+":", 25, 55, 4210752);
 	}
 
 	/**
