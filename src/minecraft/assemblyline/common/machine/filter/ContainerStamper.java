@@ -71,41 +71,46 @@ public class ContainerStamper extends Container implements IInventory
 	 * Called to transfer a stack from one inventory to the other eg. when shift clicking.
 	 */
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par1)
+	public ItemStack transferStackInSlot(EntityPlayer player, int slot)
 	{
-		ItemStack itemStack3 = null;
-		Slot itemStack = (Slot) this.inventorySlots.get(par1);
+		ItemStack copyStack = null;
+		Slot slotObj = (Slot) this.inventorySlots.get(slot);
 
-		if (itemStack != null && itemStack.getHasStack())
+		if (slotObj != null && slotObj.getHasStack())
 		{
-			ItemStack itemStack2 = itemStack.getStack();
-			itemStack3 = itemStack2.copy();
-
-			if (par1 > 4)
+			ItemStack slotStack = slotObj.getStack();
+			copyStack = slotStack.copy();
+			
+			if (slot == 2)
 			{
-				if (this.getSlot(0).isItemValid(itemStack2))
-				{
-					if (!this.mergeItemStack(itemStack2, 0, 1, false)) { return null; }
-				}
-				else if (!this.mergeItemStack(itemStack2, 1, 2, false)) { return null; }
+				setInventorySlotContents(0, null); //prevent filter from being duplicated
 			}
-			else if (!this.mergeItemStack(itemStack2, this.containingItems.length, 37, false)) { return null; }
 
-			if (itemStack2.stackSize == 0)
+			if (slot > 4)
 			{
-				itemStack.putStack((ItemStack) null);
+				if (this.getSlot(0).isItemValid(slotStack))
+				{
+					if (!this.mergeItemStack(slotStack, 0, 1, false)) { return null; }
+				}
+				else if (!this.mergeItemStack(slotStack, 1, 2, false)) { return null; }
+			}
+			else if (!this.mergeItemStack(slotStack, this.containingItems.length, 37, false)) { return null; }
+
+			if (slotStack.stackSize == 0)
+			{
+				slotObj.putStack((ItemStack) null);
 			}
 			else
 			{
-				itemStack.onSlotChanged();
+				slotObj.onSlotChanged();
 			}
 
-			if (itemStack2.stackSize == itemStack3.stackSize) { return null; }
+			if (slotStack.stackSize == copyStack.stackSize) { return null; }
 
-			itemStack.onPickupFromSlot(par1EntityPlayer, itemStack2);
+			slotObj.onPickupFromSlot(player, slotStack);
 		}
 
-		return itemStack3;
+		return copyStack;
 	}
 
 	@Override

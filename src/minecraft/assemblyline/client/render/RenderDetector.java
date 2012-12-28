@@ -18,15 +18,16 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderDetector extends TileEntitySpecialRenderer
+public class RenderDetector extends RenderFilterable
 {
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)
 	{
 		if (tileEntity instanceof TileEntityDetector)
 		{
-			this.render(((TileEntityDetector) tileEntity).isInverted(), new Vector3(x, y, z));
+			//this.render(((TileEntityDetector) tileEntity).isInverted(), new Vector3(x, y, z));
 		}
+		super.renderTileEntityAt(tileEntity, x, y, z, var8);
 	}
 
 	public static void render(boolean isInverted, Vector3 position)

@@ -15,7 +15,7 @@ import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.TileEntityRejector;
 import assemblyline.common.machine.filter.ItemFilter;
 
-public class RenderSorter extends TileEntitySpecialRenderer
+public class RenderSorter extends RenderFilterable
 {
 	private ModelSorter model = new ModelSorter();
 
@@ -52,28 +52,13 @@ public class RenderSorter extends TileEntitySpecialRenderer
 		model.renderMain(0.0625F);
 		model.renderPiston(0.0625F, pos);
 		GL11.glPopMatrix();
-
-		EntityPlayer p = Minecraft.getMinecraft().thePlayer;
-		double dist = p.getDistance(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
-		System.out.println(dist);
-		if (dist < 5)
-		{
-			ItemStack filter = tileEntity.getFilter();
-			if (filter != null)
-			{
-				ArrayList<ItemStack> filters = ItemFilter.getFilters(filter);
-				for (int i = 0; i < filters.size(); i++)
-				{
-					RenderHelper.renderFloatingText(filters.get(i).getDisplayName(), (float) x + 0.5f, ((float) y + (i * 0.25f)) - 1f, (float) z + 0.5f);
-				}
-			}
-		}
 	}
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double var2, double var4, double var6, float var8)
 	{
 		this.renderAModelAt((TileEntityRejector) tileEntity, var2, var4, var6, var8);
+		super.renderTileEntityAt(tileEntity, var2, var4, var6, var8);		
 	}
 
 }

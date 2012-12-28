@@ -44,12 +44,8 @@ import cpw.mods.fml.relauncher.Side;
  * @author Darkguardsman
  * 
  */
-public class TileEntityRejector extends TileEntityAssemblyNetwork implements IRotatable, IFilterable, IPacketReceiver, IInventory
+public class TileEntityRejector extends TileEntityFilterable
 {
-	/**
-	 * The items this container contains.
-	 */
-	protected ItemStack[] containingItems = new ItemStack[1];
 
 	/**
 	 * Used to id the packet types
@@ -165,9 +161,9 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IRo
 			EntityItem entityItem = (EntityItem) entity;
 			ItemStack itemStack = entityItem.func_92014_d();
 
-			if (this.containingItems[0] != null)
+			if (getFilter() != null)
 			{
-				ArrayList<ItemStack> checkStacks = ItemFilter.getFilters(this.containingItems[0]);
+				ArrayList<ItemStack> checkStacks = ItemFilter.getFilters(getFilter());
 
 				// Reject matching items
 				for (int i = 0; i < checkStacks.size(); i++)
@@ -243,12 +239,6 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IRo
 		return TranslationHelper.getLocal("tile.rejector.name");
 	}
 
-	@Override
-	public int getSizeInventory()
-	{
-		return this.containingItems.length;
-	}
-
 	/**
 	 * UE methods
 	 */
@@ -259,118 +249,13 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IRo
 	}
 
 	/**
-	 * Inventory functions.
-	 */
-	@Override
-	public ItemStack getStackInSlot(int par1)
-	{
-		return this.containingItems[par1];
-	}
-
-	@Override
-	public ItemStack decrStackSize(int par1, int par2)
-	{
-		if (this.containingItems[par1] != null)
-		{
-			ItemStack var3;
-
-			if (this.containingItems[par1].stackSize <= par2)
-			{
-				var3 = this.containingItems[par1];
-				this.containingItems[par1] = null;
-				return var3;
-			}
-			else
-			{
-				var3 = this.containingItems[par1].splitStack(par2);
-
-				if (this.containingItems[par1].stackSize == 0)
-				{
-					this.containingItems[par1] = null;
-				}
-
-				return var3;
-			}
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	@Override
-	public ItemStack getStackInSlotOnClosing(int par1)
-	{
-		if (this.containingItems[par1] != null)
-		{
-			ItemStack var2 = this.containingItems[par1];
-			this.containingItems[par1] = null;
-			return var2;
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	@Override
-	public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
-	{
-		this.containingItems[par1] = par2ItemStack;
-
-		if (par2ItemStack != null && par2ItemStack.stackSize > this.getInventoryStackLimit())
-		{
-			par2ItemStack.stackSize = this.getInventoryStackLimit();
-		}
-	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer par1EntityPlayer)
-	{
-		return this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord) != this ? false : par1EntityPlayer.getDistanceSq(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D) <= 64.0D;
-	}
-
-	@Override
-	public void openChest()
-	{
-		this.playerUsing++;
-	}
-
-	@Override
-	public void closeChest()
-	{
-		this.playerUsing--;
-	}
-
-	/**
 	 * NBT Data
 	 */
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-
-		/*for (int i = 0; i < this.guiButtons.length; i++)
-		{
-			this.guiButtons[i] = nbt.getBoolean("guiButton" + i);
-		}
-
-		NBTTagList var2 = nbt.getTagList("Items");
-		this.containingItems = new ItemStack[this.getSizeInventory()];
-
-		for (int var3 = 0; var3 < var2.tagCount(); ++var3)
-		{
-			NBTTagCompound var4 = (NBTTagCompound) var2.tagAt(var3);
-			byte var5 = var4.getByte("Slot");
-
-			if (var5 >= 0 && var5 < this.containingItems.length)
-			{
-				this.containingItems[var5] = ItemStack.loadItemStackFromNBT(var4);
-			}
-		}*/
 		
-		NBTTagCompound filter = nbt.getCompoundTag("filter");
-		setInventorySlotContents(0, ItemStack.loadItemStackFromNBT(filter));
 		firePiston = nbt.getBoolean("piston");
 	}
 
@@ -381,107 +266,7 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IRo
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-
-		/*for (int i = 0; i < this.guiButtons.length; i++)
-		{
-			nbt.setBoolean("guiButton" + i, this.guiButtons[i]);
-		}
-
-		NBTTagList var2 = new NBTTagList();
-		for (int var3 = 0; var3 < this.containingItems.length; ++var3)
-		{
-			if (this.containingItems[var3] != null)
-			{
-				NBTTagCompound var4 = new NBTTagCompound();
-				var4.setByte("Slot", (byte) var3);
-				this.containingItems[var3].writeToNBT(var4);
-				var2.appendTag(var4);
-			}
-		}
-		nbt.setTag("Items", var2);*/
-		NBTTagCompound filter = new NBTTagCompound();
-		if (getStackInSlot(0) != null)
-			getStackInSlot(0).writeToNBT(filter);
-		nbt.setCompoundTag("filter", filter);
+		
 		nbt.setBoolean("piston", firePiston);
-	}
-
-	@Override
-	public int getInventoryStackLimit()
-	{
-		return 1;
-	}
-
-	@Override
-	public void setFilter(ItemStack filter)
-	{
-		this.setInventorySlotContents(0, filter);
-		PacketManager.sendPacketToClients(getDescriptionPacket());
-	}
-
-	@Override
-	public ItemStack getFilter()
-	{
-		return this.getStackInSlot(0);
-	}
-
-	@Override
-	public ForgeDirection getDirection()
-	{
-		return ForgeDirection.getOrientation(this.getBlockMetadata());
-	}
-
-	@Override
-	public void setDirection(ForgeDirection facingDirection)
-	{
-		this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, facingDirection.ordinal());
-	}
-
-	@Override
-	public Packet getDescriptionPacket()
-	{
-		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = AssemblyLine.CHANNEL;
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		DataOutputStream dos = new DataOutputStream(bos);
-		try
-		{
-			dos.writeInt(PacketType.TILEENTITY.ordinal());
-			dos.writeInt(xCoord);
-			dos.writeInt(yCoord);
-			dos.writeInt(zCoord);
-			NBTTagCompound tag = new NBTTagCompound();
-			writeToNBT(tag);
-			PacketManager.writeNBTTagCompound(tag, dos);
-			packet.data = bos.toByteArray();
-			packet.length = bos.size();
-			return packet;
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	@Override
-	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
-	{
-		ByteArrayInputStream bis = new ByteArrayInputStream(packet.data);
-		DataInputStream dis = new DataInputStream(bis);
-		int id, x, y, z;
-		try
-		{
-			id = dis.readInt();
-			x = dis.readInt();
-			y = dis.readInt();
-			z = dis.readInt();
-			NBTTagCompound tag = Packet.readNBTTagCompound(dis);
-			readFromNBT(tag);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
 	}
 }

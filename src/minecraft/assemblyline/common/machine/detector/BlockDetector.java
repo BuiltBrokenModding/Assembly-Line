@@ -85,6 +85,30 @@ public class BlockDetector extends BlockFilterable
 		return false;
 	}
 
+	@Override
+	public boolean isBlockNormalCube(World world, int x, int y, int z)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean isBlockSolid(IBlockAccess par1iBlockAccess, int par2, int par3, int par4, int par5)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean isBlockSolidOnSide(World world, int x, int y, int z, ForgeDirection side)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean renderAsNormalBlock()
+	{
+		return false;
+	}
+
 	/*
 	 * @Override public boolean renderAsNormalBlock() { return false; }
 	 * 
@@ -96,12 +120,12 @@ public class BlockDetector extends BlockFilterable
 	@Override
 	public boolean isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int direction)
 	{
-		if (direction == ForgeDirection.DOWN.ordinal())
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		if (tileEntity != null)
 		{
-			TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-			if (tileEntity != null)
+			if (tileEntity instanceof TileEntityDetector) 
 			{
-				if (tileEntity instanceof TileEntityDetector) { return ((TileEntityDetector) tileEntity).isPoweringTo(ForgeDirection.getOrientation(direction)); }
+				return ((TileEntityDetector) tileEntity).isPoweringTo(ForgeDirection.getOrientation(direction));
 			}
 		}
 
@@ -111,17 +135,17 @@ public class BlockDetector extends BlockFilterable
 	@Override
 	public boolean isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int direction)
 	{
-		if (direction != ForgeDirection.DOWN.ordinal() && direction != ForgeDirection.UP.ordinal())
-		{
-			TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-
-			if (tileEntity != null)
-			{
-				if (tileEntity instanceof TileEntityDetector) { return ((TileEntityDetector) tileEntity).isPoweringTo(ForgeDirection.getOrientation(direction)); }
-			}
-		}
-
-		return false;
+		return isProvidingStrongPower(world, x, y, z, direction);
+		/*
+		 * if (direction != ForgeDirection.DOWN.ordinal() && direction !=
+		 * ForgeDirection.UP.ordinal()) { TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		 * 
+		 * if (tileEntity != null) { if (tileEntity instanceof TileEntityDetector) { return
+		 * ((TileEntityDetector) tileEntity).isPoweringTo(ForgeDirection.getOrientation(direction));
+		 * } } }
+		 * 
+		 * return false;
+		 */
 	}
 
 	@Override

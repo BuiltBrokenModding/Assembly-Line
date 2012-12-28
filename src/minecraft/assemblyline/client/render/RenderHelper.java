@@ -31,7 +31,7 @@ public class RenderHelper
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		tessellator.startDrawingQuads();
 		int stringMiddle = fontRenderer.getStringWidth(text) / 2;
-		tessellator.setColorRGBA_F(0.0F, 0.0F, 0.0F, 0.25F);
+		tessellator.setColorRGBA_F(0.0F, 0.0F, 0.0F, 0.5F);
 		tessellator.addVertex((double) (-stringMiddle - 1), (double) (-1 + yOffset), 0.0D);
 		tessellator.addVertex((double) (-stringMiddle - 1), (double) (8 + yOffset), 0.0D);
 		tessellator.addVertex((double) (stringMiddle + 1), (double) (8 + yOffset), 0.0D);
