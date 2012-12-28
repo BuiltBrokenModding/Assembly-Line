@@ -34,7 +34,12 @@ public class TileEntityDetector extends TileEntityAdvanced implements IFilterabl
 	@Override
 	public void updateEntity()
 	{
+<<<<<<< Updated upstream
 		super.updateEntity();
+=======
+		int metadata = this.worldObj.getBlockMetadata(xCoord, yCoord, zCoord) & 3;
+		AxisAlignedBB testArea = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord - 1, this.zCoord, this.xCoord + 1, this.yCoord, this.zCoord + 1);
+>>>>>>> Stashed changes
 
 		if (!this.worldObj.isRemote && this.ticks % 10 == 0)
 		{
