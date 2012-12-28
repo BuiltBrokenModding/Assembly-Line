@@ -29,6 +29,8 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	{
 		NONE, UP, DOWN
 	}
+	
+	public static final int NUM_FRAMES = 13;
 
 	/**
 	 * Joules required to run this thing.
@@ -37,6 +39,7 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	public final float maxSpeed = 0.1f;
 
 	public float wheelRotation = 0;
+	public int animFrame = 0; //this is from 0 to 15
 	private SlantType slantType = SlantType.NONE;
 
 	public TileEntityConveyorBelt()
@@ -113,10 +116,15 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 
 		if (this.isRunning())
 		{
-			this.wheelRotation += 2;
+			this.wheelRotation += 40;
 
 			if (this.wheelRotation > 360)
 				this.wheelRotation = 0;
+			
+			float wheelRotPct = wheelRotation / 360f;
+			animFrame = (int) (wheelRotPct * NUM_FRAMES); //sync the animation
+			if (animFrame < 0) animFrame = 0;
+			if (animFrame > NUM_FRAMES) animFrame = NUM_FRAMES;
 		}
 
 	}
@@ -243,6 +251,20 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	{
 		AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1);
 		return worldObj.getEntitiesWithinAABB(Entity.class, bounds);
+	}
+	
+	public int getAnimationFrame()
+	{
+		TileEntity te = null;
+		te = worldObj.getBlockTileEntity(xCoord - 1, yCoord, zCoord);
+		if (te != null)
+			if (te instanceof TileEntityConveyorBelt)
+				return ((TileEntityConveyorBelt) te).getAnimationFrame();
+		te = worldObj.getBlockTileEntity(xCoord, yCoord, zCoord - 1);
+		if (te != null)
+			if (te instanceof TileEntityConveyorBelt)
+				return ((TileEntityConveyorBelt) te).getAnimationFrame();
+		return animFrame;
 	}
 
 	/**

@@ -26,8 +26,11 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		GL11.glRotatef(180f, 0f, 0f, 1f);
+		
+		int frame = tileEntity.getAnimationFrame();
 
-		this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "BeltTexture.png");
+		this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "belt/frame" + frame + ".png"); //belt/frame0.png through belt/frame13.png
+		//System.out.println(AssemblyLine.TEXTURE_PATH + "belt/frame" + frame + ".png");
 
 		switch (face)
 		{
