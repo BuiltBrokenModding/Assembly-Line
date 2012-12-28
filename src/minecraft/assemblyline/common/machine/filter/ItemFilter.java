@@ -16,7 +16,7 @@ public class ItemFilter extends Item
 	{
 		super(id);
 		this.setItemName("filter");
-		this.setIconIndex(Item.paper.getIconFromDamage(0));
+		this.setIconIndex(58);
 		this.setCreativeTab(UETab.INSTANCE);
 		this.setHasSubtypes(true);
 	}

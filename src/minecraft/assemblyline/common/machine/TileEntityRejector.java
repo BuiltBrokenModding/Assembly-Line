@@ -1,5 +1,6 @@
 package assemblyline.common.machine;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
@@ -16,12 +17,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.multiblock.IBlockActivate;
+import universalelectricity.prefab.TranslationHelper;
+import universalelectricity.prefab.implement.IRotatable;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
+import assemblyline.api.IFilterable;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.CommonProxy;
-import assemblyline.common.machine.belt.TileEntityConveyorBelt;
+import assemblyline.common.machine.filter.ItemFilter;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -32,12 +34,12 @@ import cpw.mods.fml.common.network.PacketDispatcher;
  * @author Darkguardsman
  * 
  */
-public class TileEntityRejector extends TileEntityAssemblyNetwork implements IPacketReceiver, IInventory, IBlockActivate
+public class TileEntityRejector extends TileEntityAssemblyNetwork implements IRotatable, IFilterable, IPacketReceiver, IInventory
 {
 	/**
 	 * The items this container contains.
 	 */
-	protected ItemStack[] containingItems = new ItemStack[this.getSizeInventory()];
+	protected ItemStack[] containingItems = new ItemStack[1];
 
 	/**
 	 * Used to id the packet types
@@ -55,10 +57,6 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IPa
 	 * on/off value for the GUI buttons
 	 */
 	public boolean[] guiButtons = new boolean[] { true, true, true, true, true };
-	/**
-	 * the belt found in the search area
-	 */
-	public TileEntityConveyorBelt beltSide = null;
 
 	private int playerUsing = 0;
 
@@ -74,45 +72,36 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IPa
 			this.firePiston = false;
 
 			// area to search for items
-			ForgeDirection searchPosition = Vector3.getOrientationFromSide(ForgeDirection.getOrientation(getDirection(meta)), ForgeDirection.SOUTH);
-			TileEntity tileEntity = worldObj.getBlockTileEntity(xCoord + searchPosition.offsetX, yCoord + searchPosition.offsetY, zCoord + searchPosition.offsetZ);
-
-			// find the belt in that search area
-			if (tileEntity instanceof TileEntityConveyorBelt)
-			{
-				this.beltSide = (TileEntityConveyorBelt) tileEntity;
-			}
-			else
-			{
-				this.beltSide = null;
-			}
+			Vector3 searchPosition = new Vector3(this);
+			searchPosition.modifyPositionFromSide(this.getDirection());
+			TileEntity tileEntity = searchPosition.getTileEntity(this.worldObj);
 
 			try
 			{
-				// search area bound box
-				AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(xCoord + searchPosition.offsetX, yCoord + searchPosition.offsetY, zCoord + searchPosition.offsetZ, xCoord + searchPosition.offsetX + 1, yCoord + searchPosition.offsetY + 1, zCoord + searchPosition.offsetZ + 1);
-				// EntityItem list
-				List<EntityItem> itemsBehind = worldObj.getEntitiesWithinAABB(EntityItem.class, bounds);
-
 				boolean flag = false;
 
-				if (itemsBehind.size() > 0 && this.isRunning())
+				if (this.isRunning())
 				{
-					// for every item found check
-					// if can be thrown then throw
-					// item off belt if it can
-					for (EntityItem entity : itemsBehind)
+					/**
+					 * Find all entities in the position in which this block is facing and attempt
+					 * to push it out of the way.
+					 */
+					AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(searchPosition.x, searchPosition.y, searchPosition.z, searchPosition.x + 1, searchPosition.y + 1, searchPosition.z + 1);
+					List<Entity> entitiesInFront = this.worldObj.getEntitiesWithinAABB(Entity.class, bounds);
+
+					for (Entity entity : entitiesInFront)
 					{
-						if (this.canItemBeThrow(entity))
+						if (this.canEntityBeThrow(entity))
 						{
-							this.throwItem(searchPosition, entity);
+							this.throwItem(this.getDirection(), entity);
 							flag = true;
 						}
 					}
 				}
-				// send packet with animation data
-				// if an item was rejected from
-				// the area
+
+				/**
+				 * If a push happened, send a packet to the client to notify it for an animation.
+				 */
 				if (!this.worldObj.isRemote && flag)
 				{
 					Packet packet = PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.getPacketData(PacketTypes.ANIMATION));
@@ -148,63 +137,35 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IPa
 	{
 		this.firePiston = true;
 
-		entity.motionX = (double) side.offsetX * 0.15;
+		entity.motionX = (double) side.offsetX * 0.1;
 		entity.motionY += 0.10000000298023224D;
-		entity.motionZ = (double) side.offsetZ * 0.15;
+		entity.motionZ = (double) side.offsetZ * 0.1;
 	}
 
-	public boolean canItemBeThrow(Entity entity)
+	public boolean canEntityBeThrow(Entity entity)
 	{
 		// TODO Add other things than items
 		if (entity instanceof EntityItem)
 		{
-			EntityItem itemE = (EntityItem) entity;
-			ItemStack item = itemE.func_92014_d();
+			EntityItem entityItem = (EntityItem) entity;
+			ItemStack itemStack = entityItem.func_92014_d();
 
-			if (this.guiButtons[4])
+			if (this.containingItems[0] != null)
 			{
-				// reject matching items
-				for (int i = 0; i < this.containingItems.length; i++)
+				ArrayList<ItemStack> checkStacks = ItemFilter.getFilters(this.containingItems[0]);
+
+				// Reject matching items
+				for (int i = 0; i < checkStacks.size(); i++)
 				{
-					if (containingItems[i] != null && guiButtons[i])
+					if (checkStacks.get(i) != null)
 					{
-						if (containingItems[i].itemID == item.itemID && containingItems[i].getItemDamage() == item.getItemDamage()) { return true; }
+						if (checkStacks.get(i).isItemEqual(itemStack)) { return true; }
 					}
 				}
-				return false;
-
-			}
-			else if (!this.guiButtons[4])
-			{
-				// reject all but matching items
-				for (int i = 0; i < this.containingItems.length; i++)
-				{
-					if (containingItems[i] != null && guiButtons[i])
-					{
-						if (containingItems[i].itemID == item.itemID && containingItems[i].getItemDamage() == item.getItemDamage()) { return false; }
-					}
-				}
-				return true;
 			}
 		}
+
 		return false;
-	}
-
-	public byte getDirection(int meta)
-	{
-
-		switch (meta)
-		{
-			case 0:
-				return 2;
-			case 1:
-				return 5;
-			case 2:
-				return 3;
-			case 3:
-				return 4;
-		}
-		return 0;
 	}
 
 	/**
@@ -290,13 +251,13 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IPa
 	@Override
 	public String getInvName()
 	{
-		return "Sorter";
+		return TranslationHelper.getLocal("tile.rejector.name");
 	}
 
 	@Override
 	public int getSizeInventory()
 	{
-		return 4;
+		return this.containingItems.length;
 	}
 
 	/**
@@ -454,9 +415,26 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IPa
 	}
 
 	@Override
-	public boolean onActivated(EntityPlayer entityPlayer)
+	public void setFilter(ItemStack filter)
 	{
-		entityPlayer.openGui(AssemblyLine.instance, CommonProxy.GUI_REJECTOR, this.worldObj, this.xCoord, this.yCoord, this.zCoord);
-		return true;
+		this.setInventorySlotContents(0, filter);
+	}
+
+	@Override
+	public ItemStack getFilter()
+	{
+		return this.getStackInSlot(0);
+	}
+
+	@Override
+	public ForgeDirection getDirection()
+	{
+		return ForgeDirection.getOrientation(this.getBlockMetadata());
+	}
+
+	@Override
+	public void setDirection(ForgeDirection facingDirection)
+	{
+		this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, facingDirection.ordinal());
 	}
 }

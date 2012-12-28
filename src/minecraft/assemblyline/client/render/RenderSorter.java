@@ -16,8 +16,9 @@ public class RenderSorter extends TileEntitySpecialRenderer
 	private void renderAModelAt(TileEntityRejector tileEntity, double x, double y, double z, float f)
 	{
 		boolean fire = tileEntity.firePiston;
-		int face = tileEntity.getDirection(tileEntity.worldObj.getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord));
+		int face = tileEntity.getDirection().ordinal();
 		int pos = 0;
+
 		if (fire)
 		{
 			pos = 8;

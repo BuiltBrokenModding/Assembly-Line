@@ -5,7 +5,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
 import assemblyline.common.block.TileEntityCrate;
-import assemblyline.common.machine.ContainerRejector;
 import assemblyline.common.machine.TileEntityManipulator;
 import assemblyline.common.machine.TileEntityRejector;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt;
@@ -16,7 +15,6 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class CommonProxy implements IGuiHandler
 {
-	public static final int GUI_REJECTOR = 0;
 	public static final int GUI_STAMPER = 1;
 	public static final int GUI_ARCHITECHT_TABLE = 2;
 
@@ -41,8 +39,6 @@ public class CommonProxy implements IGuiHandler
 
 		switch (ID)
 		{
-			case GUI_REJECTOR:
-				return new ContainerRejector(player.inventory, ((TileEntityRejector) tileEntity));
 			case GUI_STAMPER:
 				return new ContainerStamper(player.inventory, world, new Vector3(x, y, z));
 		}

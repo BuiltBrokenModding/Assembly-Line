@@ -33,13 +33,10 @@ public class SlotFilterResult extends Slot
 			}
 		}
 		/*
-		if (this.inventory.getStackInSlot(1) != null)
-		{
-			this.inventory.getStackInSlot(1).stackSize--;
-			if (this.inventory.getStackInSlot(1).stackSize <= 1)
-			{
-				this.inventory.setInventorySlotContents(1, null);
-			}
-		}*/
+		 * if (this.inventory.getStackInSlot(1) != null) {
+		 * this.inventory.getStackInSlot(1).stackSize--; if
+		 * (this.inventory.getStackInSlot(1).stackSize <= 1) {
+		 * this.inventory.setInventorySlotContents(1, null); } }
+		 */
 	}
 }

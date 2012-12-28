@@ -17,18 +17,16 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
-import universalelectricity.prefab.multiblock.IBlockActivate;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.api.IManipulator;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.machine.BlockMulti.MachineType;
 
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 
-public class TileEntityManipulator extends TileEntityAssemblyNetwork implements IRedstoneReceptor, IPacketReceiver, IManipulator, IBlockActivate
+public class TileEntityManipulator extends TileEntityAssemblyNetwork implements IRedstoneReceptor, IPacketReceiver, IManipulator
 {
 	public boolean selfPulse = false;
 
@@ -81,7 +79,7 @@ public class TileEntityManipulator extends TileEntityAssemblyNetwork implements 
 					{
 						this.isRedstonePowered = true;
 					}
-					
+
 					/**
 					 * Finds the connected inventory and outputs the items upon a redstone pulse.
 					 */
@@ -218,6 +216,7 @@ public class TileEntityManipulator extends TileEntityAssemblyNetwork implements 
 		entityItem.motionX = 0;
 		entityItem.motionZ = 0;
 		entityItem.motionY /= 5;
+		entityItem.delayBeforeCanPickup = 30;
 		worldObj.spawnEntityInWorld(entityItem);
 	}
 
@@ -421,7 +420,7 @@ public class TileEntityManipulator extends TileEntityAssemblyNetwork implements 
 
 	public ForgeDirection getBeltDirection()
 	{
-		return ForgeDirection.getOrientation(MachineType.getDirection(this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord)) + 2);
+		return ForgeDirection.getOrientation(this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
 	}
 
 	@Override
@@ -451,12 +450,5 @@ public class TileEntityManipulator extends TileEntityAssemblyNetwork implements 
 	public void onPowerOff()
 	{
 		this.isRedstonePowered = false;
-	}
-
-	@Override
-	public boolean onActivated(EntityPlayer entityPlayer)
-	{
-		this.selfPulse = !this.selfPulse;
-		return true;
 	}
 }

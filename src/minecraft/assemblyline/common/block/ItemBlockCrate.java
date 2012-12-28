@@ -46,7 +46,7 @@ public class ItemBlockCrate extends ItemBlock
 
 			if (containingStack != null)
 			{
-				player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 5, (int)((float) containingStack.stackSize / (float) TileEntityCrate.MAX_LIMIT) *  5));
+				player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 5, (int) ((float) containingStack.stackSize / (float) TileEntityCrate.MAX_LIMIT) * 5));
 			}
 		}
 	}

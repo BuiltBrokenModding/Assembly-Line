@@ -125,21 +125,6 @@ public class BlockDetector extends BlockFilterable
 	}
 
 	@Override
-	public boolean canBlockStay(World world, int x, int y, int z)
-	{
-		if (world.isBlockSolidOnSide(x, y + 1, z, ForgeDirection.DOWN))
-			return true;
-
-		return false;
-	}
-
-	@Override
-	public boolean canPlaceBlockAt(World world, int x, int y, int z)
-	{
-		return canBlockStay(world, x, y, z);
-	}
-
-	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
 		return new TileEntityDetector();

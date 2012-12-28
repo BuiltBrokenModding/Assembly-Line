@@ -1,6 +1,5 @@
 package assemblyline.api;
 
-
 /**
  * Interface applied to the manipulator.
  * 

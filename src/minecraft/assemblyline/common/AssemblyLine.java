@@ -3,8 +3,6 @@ package assemblyline.common;
 import java.io.File;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
@@ -18,14 +16,12 @@ import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.block.BlockCrate;
 import assemblyline.common.block.BlockEngineerTable;
 import assemblyline.common.block.ItemBlockCrate;
-import assemblyline.common.machine.BlockMulti;
-import assemblyline.common.machine.BlockMulti.MachineType;
-import assemblyline.common.machine.ItemBlockMulti;
+import assemblyline.common.machine.BlockManipulator;
 import assemblyline.common.machine.belt.BlockConveyorBelt;
 import assemblyline.common.machine.detector.BlockDetector;
 import assemblyline.common.machine.filter.BlockStamper;
 import assemblyline.common.machine.filter.ItemFilter;
-import cpw.mods.fml.common.ICraftingHandler;
+import assemblyline.common.machine.machine.BlockRejector;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -37,7 +33,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 
 @Mod(modid = AssemblyLine.CHANNEL, name = AssemblyLine.NAME, version = AssemblyLine.VERSION, dependencies = "required-after:BasicComponents")
 @NetworkMod(channels = { AssemblyLine.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
@@ -67,11 +62,12 @@ public class AssemblyLine
 	public static final int BLOCK_ID_PREFIX = 3030;
 
 	public static Block blockConveyorBelt;
-	public static Block blockMulti;
+	public static Block blockManipulator;
 	public static Block blockEngineerTable;
 	public static Block blockCrate;
 	public static Block blockStamper;
 	public static Block blockDetector;
+	public static Block blockRejector;
 
 	public static final int ITEM_ID_PREFIX = 3030;
 	public static Item itemFilter;
@@ -84,11 +80,12 @@ public class AssemblyLine
 
 		CONFIGURATION.load();
 		blockConveyorBelt = new BlockConveyorBelt(CONFIGURATION.getBlock("Conveyor Belt", BLOCK_ID_PREFIX).getInt());
-		blockMulti = new BlockMulti(CONFIGURATION.getBlock("Machine", BLOCK_ID_PREFIX + 1).getInt());
+		blockManipulator = new BlockManipulator(CONFIGURATION.getBlock("Manipulator", BLOCK_ID_PREFIX + 1).getInt());
 		blockEngineerTable = new BlockEngineerTable(CONFIGURATION.getBlock("Architect's Table", BLOCK_ID_PREFIX + 2).getInt());
 		blockCrate = new BlockCrate(CONFIGURATION.getBlock("Crate", BLOCK_ID_PREFIX + 3).getInt(), 0);
 		blockStamper = new BlockStamper(CONFIGURATION.getBlock("Stamper", BLOCK_ID_PREFIX + 4).getInt(), 0);
 		blockDetector = new BlockDetector(CONFIGURATION.getBlock("Detector", BLOCK_ID_PREFIX + 5).getInt(), 1);
+		blockRejector = new BlockRejector(CONFIGURATION.getBlock("Rejector", BLOCK_ID_PREFIX + 6).getInt());
 
 		itemFilter = new ItemFilter(CONFIGURATION.getBlock("Filter", ITEM_ID_PREFIX).getInt());
 		CONFIGURATION.save();
@@ -96,28 +93,13 @@ public class AssemblyLine
 		NetworkRegistry.instance().registerGuiHandler(this, this.proxy);
 		GameRegistry.registerBlock(blockConveyorBelt, "Conveyor Belt");
 		GameRegistry.registerBlock(blockCrate, ItemBlockCrate.class, "Crate");
-		GameRegistry.registerBlock(blockMulti, ItemBlockMulti.class, "Machine");
-		GameRegistry.registerBlock(blockEngineerTable, "Engineer's Table");
+		GameRegistry.registerBlock(blockManipulator, "Manipulator");
+		// GameRegistry.registerBlock(blockEngineerTable, "Engineer's Table");
 		GameRegistry.registerBlock(blockStamper, "Stamper");
 		GameRegistry.registerBlock(blockDetector, "Detector");
+		GameRegistry.registerBlock(blockRejector, "Rejector");
 
 		UpdateNotifier.INSTANCE.checkUpdate(NAME, VERSION, "http://calclavia.com/downloads/al/recommendedversion.txt");
-
-		GameRegistry.registerCraftingHandler(new ICraftingHandler()
-		{
-			@Override
-			public void onCrafting(EntityPlayer player, ItemStack itemStack, IInventory craftMatrix)
-			{
-				// TODO Make this work for the filter
-				System.out.println("TEST: " + craftMatrix.getSizeInventory());
-			}
-
-			@Override
-			public void onSmelting(EntityPlayer player, ItemStack item)
-			{
-
-			}
-		});
 
 		proxy.preInit();
 	}
@@ -128,12 +110,6 @@ public class AssemblyLine
 		proxy.init();
 
 		System.out.println(NAME + " Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
-
-		// Add Names
-		for (MachineType type : MachineType.values())
-		{
-			LanguageRegistry.addName(new ItemStack(blockMulti, 1, type.metadata), type.name);
-		}
 
 		// Filter
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemFilter, new Object[] { "R", "P", "I", 'P', Item.paper, 'R', Item.redstone, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
@@ -151,10 +127,10 @@ public class AssemblyLine
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 4), new Object[] { "III", "WMW", 'I', "ingotSteel", 'W', Block.wood, 'M', "motor" }));
 
 		// Rejector
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockMulti, 1, MachineType.REJECTOR.metadata), new Object[] { "WPW", "@R@", '@', "plateSteel", 'R', Item.redstone, 'P', Block.pistonBase, 'C', "basicCircuit", 'W', "copperWire" }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockRejector, new Object[] { "WPW", "@R@", '@', "plateSteel", 'R', Item.redstone, 'P', Block.pistonBase, 'C', "basicCircuit", 'W', "copperWire" }));
 
 		// Manipulator
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockMulti, 1, MachineType.MANIPULATOR.metadata), new Object[] { Block.dispenser, "basicCircuit" }));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(blockManipulator, new Object[] { Block.dispenser, "basicCircuit" }));
 
 		UETab.setItemStack(new ItemStack(blockConveyorBelt));
 	}

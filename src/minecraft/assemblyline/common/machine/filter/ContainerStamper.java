@@ -165,7 +165,10 @@ public class ContainerStamper extends Container implements IInventory
 	@Override
 	public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
 	{
-		this.containingItems[par1] = par2ItemStack;
+		if (par1 < this.containingItems.length)
+		{
+			this.containingItems[par1] = par2ItemStack;
+		}
 	}
 
 	@Override
@@ -221,36 +224,22 @@ public class ContainerStamper extends Container implements IInventory
 		}
 
 		/**
-		 * TODO WORK IN PROGRESS. Make filters able to autocraft into its item based on what is in the player's inventory
-
-		boolean didCraft = false;
-
-		if (this.getStackInSlot(3) != null)
-		{
-			if (this.getStackInSlot(3).getItem() instanceof ItemFilter)
-			{
-				ArrayList<ItemStack> filters = ItemFilter.getFilters(this.getStackInSlot(3));
-
-				if (filters.size() > 0)
-				{
-					ItemStack outputStack = filters.get(0);
-
-					if (outputStack != null)
-					{
-						if (this.getIdealRecipe(outputStack) != null)
-						{
-							this.setInventorySlotContents(4, outputStack);
-							didCraft = true;
-						}
-					}
-				}
-			}
-		}
-
-		if (!didCraft)
-		{
-			this.setInventorySlotContents(4, null);
-		} */
+		 * TODO WORK IN PROGRESS. Make filters able to autocraft into its item based on what is in
+		 * the player's inventory
+		 * 
+		 * boolean didCraft = false;
+		 * 
+		 * if (this.getStackInSlot(3) != null) { if (this.getStackInSlot(3).getItem() instanceof
+		 * ItemFilter) { ArrayList<ItemStack> filters =
+		 * ItemFilter.getFilters(this.getStackInSlot(3));
+		 * 
+		 * if (filters.size() > 0) { ItemStack outputStack = filters.get(0);
+		 * 
+		 * if (outputStack != null) { if (this.getIdealRecipe(outputStack) != null) {
+		 * this.setInventorySlotContents(4, outputStack); didCraft = true; } } } } }
+		 * 
+		 * if (!didCraft) { this.setInventorySlotContents(4, null); }
+		 */
 	}
 
 	/**

@@ -64,17 +64,18 @@ public class BlockConveyorBelt extends BlockMachine
 		switch (original)
 		{
 			case 2:
-				change = 5;
-				break;
-			case 5:
 				change = 4;
+				break;
+			case 3:
+				change = 5;
 				break;
 			case 4:
 				change = 3;
 				break;
-			case 3:
+			case 5:
 				change = 2;
 				break;
+
 		}
 
 		world.setBlockMetadataWithNotify(x, y, z, change);
@@ -123,29 +124,36 @@ public class BlockConveyorBelt extends BlockMachine
 			// Move the entity based on the conveyor belt's direction.
 			entity.addVelocity(direction.offsetX * tileEntity.acceleration * modifier, 0, direction.offsetZ * tileEntity.acceleration * modifier);
 
-			if (direction.offsetX != 0 && Math.abs(entity.motionX) > Math.abs(direction.offsetX * tileEntity.maxSpeed))
+			if (direction.offsetX != 0 && Math.abs(entity.motionX) > tileEntity.maxSpeed)
 			{
 				entity.motionX = direction.offsetX * tileEntity.maxSpeed;
+				entity.motionZ = 0;
 			}
 
-			if (direction.offsetZ != 0 && Math.abs(entity.motionZ) > Math.abs(direction.offsetZ * tileEntity.maxSpeed))
+			if (direction.offsetZ != 0 && Math.abs(entity.motionZ) > tileEntity.maxSpeed)
 			{
 				entity.motionZ = direction.offsetZ * tileEntity.maxSpeed;
+				entity.motionX = 0;
 			}
 
-			// Attempt to move entity to the center of the belt to prevent them
-			// from flying off.
-			if (direction.offsetX != 0)
+			if (entity instanceof EntityItem)
 			{
-				double difference = (z + 0.5) - entity.posZ;
-				entity.motionZ += difference * 0.015;
-				// entity.posZ = z + 0.5;
-			}
-			else if (direction.offsetZ != 0)
-			{
-				double difference = (x + 0.5) - entity.posX;
-				entity.motionX += difference * 0.015;
-				// entity.posX = z + 0.5;
+				if (direction.offsetX != 0)
+				{
+					double difference = (z + 0.5) - entity.posZ;
+					entity.motionZ += difference * 0.006;
+					// entity.posZ = z + 0.5;
+				}
+				else if (direction.offsetZ != 0)
+				{
+					double difference = (x + 0.5) - entity.posX;
+					entity.motionX += difference * 0.006;
+					// /entity.posX = x + 0.5;
+				}
+
+				((EntityItem) entity).age++;
+				((EntityItem) entity).delayBeforeCanPickup = 2;
+				entity.onGround = false;
 			}
 
 			if (slantType == SlantType.UP)
@@ -163,12 +171,6 @@ public class BlockConveyorBelt extends BlockMachine
 				}
 			}
 
-			if (entity instanceof EntityItem)
-			{
-				((EntityItem) entity).age++;
-				((EntityItem) entity).delayBeforeCanPickup = 2;
-				entity.onGround = false;
-			}
 		}
 	}
 

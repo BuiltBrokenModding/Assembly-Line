@@ -33,8 +33,8 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	/**
 	 * Joules required to run this thing.
 	 */
-	public float acceleration = 0.01f;
-	public float maxSpeed = 0.3f;
+	public final float acceleration = 0.01f;
+	public final float maxSpeed = 0.1f;
 
 	public float wheelRotation = 0;
 	private SlantType slantType = SlantType.NONE;

@@ -19,12 +19,13 @@ import universalelectricity.prefab.implement.IRedstoneProvider;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
+import assemblyline.api.IFilterable;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.filter.ItemFilter;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityDetector extends TileEntityAdvanced implements IInventory, IRedstoneProvider, IPacketReceiver
+public class TileEntityDetector extends TileEntityAdvanced implements IFilterable, IInventory, IRedstoneProvider, IPacketReceiver
 {
 	private boolean powering = false;
 	private boolean isInverted = false;
@@ -325,6 +326,18 @@ public class TileEntityDetector extends TileEntityAdvanced implements IInventory
 	public boolean isIndirectlyPoweringTo(ForgeDirection side)
 	{
 		return this.isPoweringTo(side);
+	}
+
+	@Override
+	public void setFilter(ItemStack filter)
+	{
+		this.setInventorySlotContents(0, filter);
+	}
+
+	@Override
+	public ItemStack getFilter()
+	{
+		return this.getStackInSlot(0);
 	}
 
 }
