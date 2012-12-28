@@ -5,6 +5,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
@@ -43,6 +45,23 @@ public class PacketManager implements IPacketHandler, IPacketReceiver
 			return UNSPECIFIED;
 		}
 	}
+	
+	/**
+     * Writes a compressed NBTTagCompound to the OutputStream
+     */
+    public static void writeNBTTagCompound(NBTTagCompound tag, DataOutputStream stream) throws IOException
+    {
+        if (tag == null)
+        {
+            stream.writeShort(-1);
+        }
+        else
+        {
+            byte[] var2 = CompressedStreamTools.compress(tag);
+            stream.writeShort((short)var2.length);
+            stream.write(var2);
+        }
+    }
 
 	@SuppressWarnings("resource")
 	public static Packet getPacketWithID(String channelName, int id, Object... sendData)

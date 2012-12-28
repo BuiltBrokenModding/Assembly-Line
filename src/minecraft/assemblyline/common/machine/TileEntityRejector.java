@@ -1,6 +1,10 @@
 package assemblyline.common.machine;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +14,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
@@ -23,13 +28,16 @@ import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.implement.IRotatable;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
+import universalelectricity.prefab.network.PacketManager.PacketType;
 import assemblyline.api.IFilterable;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.filter.ItemFilter;
 
 import com.google.common.io.ByteArrayDataInput;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.relauncher.Side;
 
 /**
  * 
@@ -106,8 +114,11 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IRo
 				 */
 				if (!this.worldObj.isRemote && flag)
 				{
-					Packet packet = PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.getPacketData(PacketTypes.ANIMATION));
-					PacketManager.sendPacketToClients(packet, this.worldObj, new Vector3(this), 30);
+					// Packet packet = PacketManager.getPacket(AssemblyLine.CHANNEL, this,
+					// this.getPacketData(PacketTypes.ANIMATION));
+					// PacketManager.sendPacketToClients(packet, this.worldObj, new Vector3(this),
+					// 30);
+					PacketManager.sendPacketToClients(getDescriptionPacket());
 				}
 
 			}
@@ -116,18 +127,18 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IRo
 				e.printStackTrace();
 			}
 
-			if (!this.worldObj.isRemote && this.playerUsing > 0)
+			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && this.playerUsing > 0)
 			{
 				PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 10);
 			}
 		}
 	}
 
-	@Override
-	public Packet getDescriptionPacket()
-	{
-		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.getPacketData(PacketTypes.INVENTORY));
-	}
+	/*
+	 * @Override public Packet getDescriptionPacket() { return
+	 * PacketManager.getPacket(AssemblyLine.CHANNEL, this,
+	 * this.getPacketData(PacketTypes.INVENTORY)); }
+	 */
 
 	/**
 	 * Used to move after it has been rejected
@@ -142,6 +153,8 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IRo
 		entity.motionX = (double) side.offsetX * 0.1;
 		entity.motionY += 0.10000000298023224D;
 		entity.motionZ = (double) side.offsetZ * 0.1;
+		
+		PacketManager.sendPacketToClients(getDescriptionPacket());
 	}
 
 	public boolean canEntityBeThrow(Entity entity)
@@ -198,55 +211,28 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IRo
 		}
 	}
 
-	public Object[] getPacketData(PacketTypes id)
-	{
-		if (id == PacketTypes.ANIMATION) { return new Object[] { id.ordinal(), this.firePiston }; }
-		if (id == PacketTypes.INVENTORY)
-		{
-			Object[] da = new Object[this.guiButtons.length + 1];
-			da[0] = id.ordinal();
+	/*
+	 * public Object[] getPacketData(PacketTypes id) { if (id == PacketTypes.ANIMATION) { return new
+	 * Object[] { id.ordinal(), this.firePiston }; } if (id == PacketTypes.INVENTORY) { Object[] da
+	 * = new Object[this.guiButtons.length + 1]; da[0] = id.ordinal();
+	 * 
+	 * for (int i = 0; i < this.guiButtons.length; i++) { da[i + 1] = guiButtons[i]; } return da; }
+	 * return new Object[] { id.ordinal() }; }
+	 */
 
-			for (int i = 0; i < this.guiButtons.length; i++)
-			{
-				da[i + 1] = guiButtons[i];
-			}
-			return da;
-		}
-		return new Object[] { id.ordinal() };
-	}
-
-	@Override
-	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
-	{
-		try
-		{
-			int id = dataStream.readInt();
-			PacketTypes pID = PacketTypes.values()[id];
-			DataInputStream inputStream = new DataInputStream((InputStream) dataStream);
-
-			if (pID == PacketTypes.ANIMATION)
-			{
-				this.firePiston = dataStream.readBoolean();
-			}
-			else if (pID == PacketTypes.INVENTORY)
-			{
-				for (int i = 0; i < this.guiButtons.length; i++)
-				{
-					this.guiButtons[i] = dataStream.readBoolean();
-				}
-			}
-			else if (pID == PacketTypes.SETTINGON)
-			{
-				int num = dataStream.readInt();
-				this.changeOnOff(num);
-			}
-
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
+	/*
+	 * @Override public void handlePacketData(INetworkManager network, int packetType,
+	 * Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream) { try {
+	 * int id = dataStream.readInt(); PacketTypes pID = PacketTypes.values()[id]; DataInputStream
+	 * inputStream = new DataInputStream((InputStream) dataStream);
+	 * 
+	 * if (pID == PacketTypes.ANIMATION) { this.firePiston = dataStream.readBoolean(); } else if
+	 * (pID == PacketTypes.INVENTORY) { for (int i = 0; i < this.guiButtons.length; i++) {
+	 * this.guiButtons[i] = dataStream.readBoolean(); } } else if (pID == PacketTypes.SETTINGON) {
+	 * int num = dataStream.readInt(); this.changeOnOff(num); }
+	 * 
+	 * } catch (Exception e) { e.printStackTrace(); } }
+	 */
 
 	/**
 	 * inventory methods
@@ -364,7 +350,7 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IRo
 	{
 		super.readFromNBT(nbt);
 
-		for (int i = 0; i < this.guiButtons.length; i++)
+		/*for (int i = 0; i < this.guiButtons.length; i++)
 		{
 			this.guiButtons[i] = nbt.getBoolean("guiButton" + i);
 		}
@@ -381,7 +367,11 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IRo
 			{
 				this.containingItems[var5] = ItemStack.loadItemStackFromNBT(var4);
 			}
-		}
+		}*/
+		
+		NBTTagCompound filter = nbt.getCompoundTag("filter");
+		setInventorySlotContents(0, ItemStack.loadItemStackFromNBT(filter));
+		firePiston = nbt.getBoolean("piston");
 	}
 
 	/**
@@ -392,7 +382,7 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IRo
 	{
 		super.writeToNBT(nbt);
 
-		for (int i = 0; i < this.guiButtons.length; i++)
+		/*for (int i = 0; i < this.guiButtons.length; i++)
 		{
 			nbt.setBoolean("guiButton" + i, this.guiButtons[i]);
 		}
@@ -408,7 +398,12 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IRo
 				var2.appendTag(var4);
 			}
 		}
-		nbt.setTag("Items", var2);
+		nbt.setTag("Items", var2);*/
+		NBTTagCompound filter = new NBTTagCompound();
+		if (getStackInSlot(0) != null)
+			getStackInSlot(0).writeToNBT(filter);
+		nbt.setCompoundTag("filter", filter);
+		nbt.setBoolean("piston", firePiston);
 	}
 
 	@Override
@@ -421,6 +416,7 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IRo
 	public void setFilter(ItemStack filter)
 	{
 		this.setInventorySlotContents(0, filter);
+		PacketManager.sendPacketToClients(getDescriptionPacket());
 	}
 
 	@Override
@@ -439,5 +435,53 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IRo
 	public void setDirection(ForgeDirection facingDirection)
 	{
 		this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, facingDirection.ordinal());
+	}
+
+	@Override
+	public Packet getDescriptionPacket()
+	{
+		Packet250CustomPayload packet = new Packet250CustomPayload();
+		packet.channel = AssemblyLine.CHANNEL;
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		DataOutputStream dos = new DataOutputStream(bos);
+		try
+		{
+			dos.writeInt(PacketType.TILEENTITY.ordinal());
+			dos.writeInt(xCoord);
+			dos.writeInt(yCoord);
+			dos.writeInt(zCoord);
+			NBTTagCompound tag = new NBTTagCompound();
+			writeToNBT(tag);
+			PacketManager.writeNBTTagCompound(tag, dos);
+			packet.data = bos.toByteArray();
+			packet.length = bos.size();
+			return packet;
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
+	{
+		ByteArrayInputStream bis = new ByteArrayInputStream(packet.data);
+		DataInputStream dis = new DataInputStream(bis);
+		int id, x, y, z;
+		try
+		{
+			id = dis.readInt();
+			x = dis.readInt();
+			y = dis.readInt();
+			z = dis.readInt();
+			NBTTagCompound tag = Packet.readNBTTagCompound(dis);
+			readFromNBT(tag);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

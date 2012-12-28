@@ -1,6 +1,10 @@
 package assemblyline.client.render;
 
+import java.util.ArrayList;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
@@ -48,14 +52,20 @@ public class RenderSorter extends TileEntitySpecialRenderer
 		model.renderMain(0.0625F);
 		model.renderPiston(0.0625F, pos);
 		GL11.glPopMatrix();
-		
-		ItemStack filter = tileEntity.getFilter();
-		if (filter != null)
+
+		EntityPlayer p = Minecraft.getMinecraft().thePlayer;
+		double dist = p.getDistance(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
+		System.out.println(dist);
+		if (dist < 5)
 		{
-			ItemStack filterItem = ItemFilter.getFilters(filter).get(0);
-			if (filterItem != null)
+			ItemStack filter = tileEntity.getFilter();
+			if (filter != null)
 			{
-				RenderHelper.renderFloatingText(filterItem.getDisplayName(), (float) x + 0.5f, (float) y, (float) z + 0.5f);
+				ArrayList<ItemStack> filters = ItemFilter.getFilters(filter);
+				for (int i = 0; i < filters.size(); i++)
+				{
+					RenderHelper.renderFloatingText(filters.get(i).getDisplayName(), (float) x + 0.5f, ((float) y + (i * 0.25f)) - 1f, (float) z + 0.5f);
+				}
 			}
 		}
 	}
