@@ -1,5 +1,7 @@
 package assemblyline.common.machine;
 
+import java.io.DataInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +48,7 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IRo
 	 */
 	private enum PacketTypes
 	{
-		ANIMATION, GUI, SETTINGON
+		ANIMATION, INVENTORY, SETTINGON
 	}
 
 	/**
@@ -124,7 +126,7 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IRo
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.getPacketData(PacketTypes.GUI));
+		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.getPacketData(PacketTypes.INVENTORY));
 	}
 
 	/**
@@ -199,7 +201,7 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IRo
 	public Object[] getPacketData(PacketTypes id)
 	{
 		if (id == PacketTypes.ANIMATION) { return new Object[] { id.ordinal(), this.firePiston }; }
-		if (id == PacketTypes.GUI)
+		if (id == PacketTypes.INVENTORY)
 		{
 			Object[] da = new Object[this.guiButtons.length + 1];
 			da[0] = id.ordinal();
@@ -220,12 +222,13 @@ public class TileEntityRejector extends TileEntityAssemblyNetwork implements IRo
 		{
 			int id = dataStream.readInt();
 			PacketTypes pID = PacketTypes.values()[id];
+			DataInputStream inputStream = new DataInputStream((InputStream) dataStream);
 
 			if (pID == PacketTypes.ANIMATION)
 			{
 				this.firePiston = dataStream.readBoolean();
 			}
-			else if (pID == PacketTypes.GUI)
+			else if (pID == PacketTypes.INVENTORY)
 			{
 				for (int i = 0; i < this.guiButtons.length; i++)
 				{

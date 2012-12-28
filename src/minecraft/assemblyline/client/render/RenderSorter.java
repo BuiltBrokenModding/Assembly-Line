@@ -1,6 +1,7 @@
 package assemblyline.client.render;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
@@ -8,6 +9,7 @@ import org.lwjgl.opengl.GL11;
 import assemblyline.client.model.ModelSorter;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.TileEntityRejector;
+import assemblyline.common.machine.filter.ItemFilter;
 
 public class RenderSorter extends TileEntitySpecialRenderer
 {
@@ -46,7 +48,16 @@ public class RenderSorter extends TileEntitySpecialRenderer
 		model.renderMain(0.0625F);
 		model.renderPiston(0.0625F, pos);
 		GL11.glPopMatrix();
-
+		
+		ItemStack filter = tileEntity.getFilter();
+		if (filter != null)
+		{
+			ItemStack filterItem = ItemFilter.getFilters(filter).get(0);
+			if (filterItem != null)
+			{
+				RenderHelper.renderFloatingText(filterItem.getDisplayName(), (float) x + 0.5f, (float) y, (float) z + 0.5f);
+			}
+		}
 	}
 
 	@Override
