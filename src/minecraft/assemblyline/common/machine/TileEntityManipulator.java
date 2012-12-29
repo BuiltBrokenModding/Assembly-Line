@@ -125,7 +125,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IReds
 			 */
 			ItemStack remainingStack = entity.func_92014_d().copy();
 
-			if (!this.isFiltering(remainingStack))
+			if (this.getFilter() == null || this.isFiltering(remainingStack))
 			{
 				remainingStack = this.tryPlaceInPosition(remainingStack, outputUp, ForgeDirection.DOWN);
 
@@ -390,6 +390,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IReds
 				for (int i = startIndex; i < startIndex + inventory.getSizeInventorySide(direction); i++)
 				{
 					ItemStack itemStack = this.removeStackFromInventory(i, inventory);
+
 					if (itemStack != null)
 					{
 						returnStack = itemStack;
@@ -413,8 +414,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IReds
 			}
 		}
 
-		if (!this.isFiltering(returnStack)) { return returnStack; }
-		return null;
+		return returnStack;
 	}
 
 	public ItemStack removeStackFromInventory(int slotIndex, IInventory inventory)
@@ -422,9 +422,13 @@ public class TileEntityManipulator extends TileEntityFilterable implements IReds
 		if (inventory.getStackInSlot(slotIndex) != null)
 		{
 			ItemStack itemStack = inventory.getStackInSlot(slotIndex).copy();
-			itemStack.stackSize = 1;
-			inventory.decrStackSize(slotIndex, 1);
-			return itemStack;
+
+			if (this.getFilter() == null || this.isFiltering(itemStack))
+			{
+				itemStack.stackSize = 1;
+				inventory.decrStackSize(slotIndex, 1);
+				return itemStack;
+			}
 		}
 
 		return null;
