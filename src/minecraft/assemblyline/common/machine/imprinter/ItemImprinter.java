@@ -1,4 +1,4 @@
-package assemblyline.common.machine.filter;
+package assemblyline.common.machine.imprinter;
 
 import java.util.ArrayList;
 import java.util.List;

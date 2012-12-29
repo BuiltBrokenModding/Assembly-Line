@@ -9,7 +9,7 @@ import assemblyline.common.machine.TileEntityManipulator;
 import assemblyline.common.machine.TileEntityRejector;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt;
 import assemblyline.common.machine.detector.TileEntityDetector;
-import assemblyline.common.machine.filter.ContainerImprinter;
+import assemblyline.common.machine.imprinter.ContainerImprinter;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 

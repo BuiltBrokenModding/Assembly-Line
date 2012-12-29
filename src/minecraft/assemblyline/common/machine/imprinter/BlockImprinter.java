@@ -1,4 +1,4 @@
-package assemblyline.common.machine.filter;
+package assemblyline.common.machine.imprinter;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;

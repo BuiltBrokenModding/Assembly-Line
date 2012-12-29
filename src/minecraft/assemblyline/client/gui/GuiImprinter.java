@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.machine.filter.ContainerImprinter;
+import assemblyline.common.machine.imprinter.ContainerImprinter;
 
 public class GuiImprinter extends GuiContainer
 {

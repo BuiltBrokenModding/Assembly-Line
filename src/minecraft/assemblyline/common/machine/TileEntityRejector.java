@@ -14,8 +14,8 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.network.PacketManager;
-import assemblyline.common.machine.filter.ItemImprinter;
-import assemblyline.common.machine.filter.TileEntityFilterable;
+import assemblyline.common.machine.imprinter.ItemImprinter;
+import assemblyline.common.machine.imprinter.TileEntityImprintable;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
@@ -25,7 +25,7 @@ import cpw.mods.fml.relauncher.Side;
  * @author Darkguardsman
  * 
  */
-public class TileEntityRejector extends TileEntityFilterable
+public class TileEntityRejector extends TileEntityImprintable
 {
 	/**
 	 * should the piston fire, or be extended

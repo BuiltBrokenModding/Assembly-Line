@@ -13,10 +13,15 @@ import org.lwjgl.opengl.GL11;
  */
 public class RenderHelper
 {
+	public static void renderFloatingText(String text, float x, float y, float z)
+	{
+		renderFloatingText(text, x, y, z, 0xFFFFFF);
+	}
+	
 	/**
 	 * Renders a floating text in a specific position.
 	 */
-	public static void renderFloatingText(String text, float x, float y, float z)
+	public static void renderFloatingText(String text, float x, float y, float z, int color)
 	{
 		RenderManager renderManager = RenderManager.instance;
 		FontRenderer fontRenderer = renderManager.getFontRenderer();
@@ -45,10 +50,10 @@ public class RenderHelper
 		tessellator.addVertex((double) (stringMiddle + 1), (double) (-1 + yOffset), 0.0D);
 		tessellator.draw();
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		fontRenderer.drawString(text, -fontRenderer.getStringWidth(text) / 2, yOffset, 553648127);
+		fontRenderer.drawString(text, -fontRenderer.getStringWidth(text) / 2, yOffset, color);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glDepthMask(true);
-		fontRenderer.drawString(text, -fontRenderer.getStringWidth(text) / 2, yOffset, -1);
+		fontRenderer.drawString(text, -fontRenderer.getStringWidth(text) / 2, yOffset, color);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

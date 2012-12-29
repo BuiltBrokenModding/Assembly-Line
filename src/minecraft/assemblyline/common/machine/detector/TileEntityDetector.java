@@ -10,13 +10,12 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.machine.filter.ItemImprinter;
-import assemblyline.common.machine.filter.TileEntityFilterable;
+import assemblyline.common.machine.imprinter.ItemImprinter;
+import assemblyline.common.machine.imprinter.TileEntityImprintable;
 
-public class TileEntityDetector extends TileEntityFilterable
+public class TileEntityDetector extends TileEntityImprintable
 {
 	private boolean powering = false;
-	private boolean isInverted = false;
 
 	@Override
 	public void updateEntity()
@@ -40,9 +39,9 @@ public class TileEntityDetector extends TileEntityFilterable
 						EntityItem e = (EntityItem) entities.get(i);
 						ItemStack itemStack = e.func_92014_d();
 
-						boolean found = this.isFiltering(itemStack);
+						powerCheck = this.isFiltering(itemStack);
 
-						if (this.isInverted)
+						/*if (this.isInverted)
 						{
 							if (!found)
 							{
@@ -57,7 +56,7 @@ public class TileEntityDetector extends TileEntityFilterable
 						{
 							powerCheck = true;
 							break;
-						}
+						}*/
 					}
 				}
 				else
@@ -96,32 +95,11 @@ public class TileEntityDetector extends TileEntityFilterable
 		super.invalidate();
 	}
 
-	public boolean isInverted()
-	{
-		return this.isInverted;
-	}
-
-	public void setInversion(boolean inverted)
-	{
-		this.isInverted = inverted;
-
-		if (this.worldObj.isRemote)
-		{
-			PacketManager.sendPacketToClients(this.getDescriptionPacket());
-		}
-	}
-
-	public void toggleInversion()
-	{
-		this.setInversion(!this.isInverted);
-	}
-
 	@Override
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
 
-		this.isInverted = tag.getBoolean("isInverted");
 		this.powering = tag.getBoolean("powering");
 	}
 
@@ -130,7 +108,6 @@ public class TileEntityDetector extends TileEntityFilterable
 	{
 		super.writeToNBT(tag);
 
-		tag.setBoolean("isInverted", this.isInverted);
 		tag.setBoolean("powering", this.powering);
 	}
 

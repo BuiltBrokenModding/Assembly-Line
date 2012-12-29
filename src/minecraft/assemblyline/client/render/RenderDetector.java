@@ -17,7 +17,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderDetector extends RenderFilterable
+public class RenderDetector extends RenderImprintable
 {
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)

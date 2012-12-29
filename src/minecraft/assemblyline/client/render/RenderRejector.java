@@ -8,7 +8,7 @@ import assemblyline.client.model.ModelRejector;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.TileEntityRejector;
 
-public class RenderRejector extends RenderFilterable
+public class RenderRejector extends RenderImprintable
 {
 	private ModelRejector model = new ModelRejector();
 
