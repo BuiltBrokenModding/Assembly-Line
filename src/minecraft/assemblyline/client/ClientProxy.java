@@ -6,7 +6,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import universalelectricity.core.vector.Vector3;
-import assemblyline.client.gui.GuiStamper;
+import assemblyline.client.gui.GuiImprinter;
 import assemblyline.client.render.BlockRenderingHandler;
 import assemblyline.client.render.RenderConveyorBelt;
 import assemblyline.client.render.RenderCrate;
@@ -52,7 +52,7 @@ public class ClientProxy extends CommonProxy
 		switch (ID)
 		{
 			case GUI_STAMPER:
-				return new GuiStamper(player.inventory, world, new Vector3(x, y, z));
+				return new GuiImprinter(player.inventory, world, new Vector3(x, y, z));
 		}
 
 		return null;

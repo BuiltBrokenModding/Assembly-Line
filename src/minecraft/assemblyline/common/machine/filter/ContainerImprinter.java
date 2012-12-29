@@ -85,7 +85,7 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 
 			if (slot == 2)
 			{
-				setInventorySlotContents(0, null); // prevent filter from being duplicated
+				setInventorySlotContents(0, null); // Prevents filter from being duplicated
 			}
 
 			if (slot > 4)
@@ -108,10 +108,10 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 			}
 
 			if (slotStack.stackSize == copyStack.stackSize) { return null; }
-			
+
 			slotObj.onPickupFromSlot(player, slotStack);
 		}
-		
+
 		onInventoryChanged();
 
 		return copyStack;
@@ -207,23 +207,26 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 				ItemStack outputStack = this.getStackInSlot(0).copy();
 				outputStack.stackSize = 1;
 				ArrayList<ItemStack> filters = ItemFilter.getFilters(outputStack);
-				boolean failedCheck = false;
+				boolean filteringItemExists = false;
 
 				for (ItemStack filteredStack : filters)
 				{
 					if (filteredStack.isItemEqual(this.getStackInSlot(1)))
 					{
-						failedCheck = true;
+						filters.remove(filteredStack);
+						filteringItemExists = true;
+						break;
 					}
 				}
 
-				if (!failedCheck)
+				if (!filteringItemExists)
 				{
 					filters.add(this.getStackInSlot(1));
-					ItemFilter.setFilters(outputStack, filters);
-					this.setInventorySlotContents(2, outputStack);
-					didStamp = true;
 				}
+
+				ItemFilter.setFilters(outputStack, filters);
+				this.setInventorySlotContents(2, outputStack);
+				didStamp = true;
 			}
 		}
 
@@ -233,7 +236,6 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 		}
 
 		// CRAFTING
-
 		boolean didCraft = false;
 
 		if (this.getStackInSlot(3) != null)
@@ -315,10 +317,7 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 										}
 									}
 								}
-								if (finalRecipe.size() == oreRecipeInput.length)
-								{
-									return finalRecipe.toArray(new ItemStack[1]);
-								}
+								if (finalRecipe.size() == oreRecipeInput.length) { return finalRecipe.toArray(new ItemStack[1]); }
 							}
 						}
 						else if (object instanceof ShapelessOreRecipe)
@@ -354,10 +353,7 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 										}
 									}
 								}
-								if (finalRecipe.size() == oreRecipeInput.size())
-								{
-									return finalRecipe.toArray(new ItemStack[1]);
-								}
+								if (finalRecipe.size() == oreRecipeInput.size()) { return finalRecipe.toArray(new ItemStack[1]); }
 							}
 						}
 					}

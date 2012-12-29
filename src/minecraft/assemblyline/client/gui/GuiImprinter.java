@@ -11,12 +11,12 @@ import universalelectricity.prefab.TranslationHelper;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.filter.ContainerImprinter;
 
-public class GuiStamper extends GuiContainer
+public class GuiImprinter extends GuiContainer
 {
 	private int containerWidth;
 	private int containerHeight;
 
-	public GuiStamper(InventoryPlayer par1InventoryPlayer, World worldObj, Vector3 position)
+	public GuiImprinter(InventoryPlayer par1InventoryPlayer, World worldObj, Vector3 position)
 	{
 		super(new ContainerImprinter(par1InventoryPlayer, worldObj, position));
 	}
@@ -27,7 +27,7 @@ public class GuiStamper extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
-		this.fontRenderer.drawString(TranslationHelper.getLocal("tile.stamper.name"), 68, 6, 4210752);
+		this.fontRenderer.drawString(TranslationHelper.getLocal("tile.imprinter.name"), 68, 6, 4210752);
 		this.fontRenderer.drawString(TranslationHelper.getLocal("assemblyline.gui.crafting") + ":", 25, 55, 4210752);
 	}
 
