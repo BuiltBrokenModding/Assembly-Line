@@ -10,8 +10,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import universalelectricity.core.vector.Vector3;
-import assemblyline.common.machine.TileEntityFilterable;
 import assemblyline.common.machine.filter.ItemFilter;
+import assemblyline.common.machine.filter.TileEntityFilterable;
 
 /**
  * @author Briman0094

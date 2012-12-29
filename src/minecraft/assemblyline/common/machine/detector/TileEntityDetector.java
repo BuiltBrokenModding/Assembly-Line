@@ -10,8 +10,8 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.machine.TileEntityFilterable;
 import assemblyline.common.machine.filter.ItemFilter;
+import assemblyline.common.machine.filter.TileEntityFilterable;
 
 public class TileEntityDetector extends TileEntityFilterable
 {

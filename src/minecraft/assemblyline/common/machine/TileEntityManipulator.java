@@ -1,5 +1,6 @@
 package assemblyline.common.machine;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.item.EntityItem;
@@ -8,7 +9,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
@@ -20,7 +20,7 @@ import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.api.IManipulator;
-import assemblyline.common.AssemblyLine;
+import assemblyline.common.machine.filter.TileEntityFilterable;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -182,9 +182,12 @@ public class TileEntityManipulator extends TileEntityFilterable implements IReds
 	}
 
 	@Override
-	public Packet getDescriptionPacket()
+	public ArrayList getPacketData()
 	{
-		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.isOutput, this.wattsReceived);
+		ArrayList list = super.getPacketData();
+		list.add(this.isOutput);
+		list.add(this.wattsReceived);
+		return list;
 	}
 
 	@Override
@@ -194,6 +197,8 @@ public class TileEntityManipulator extends TileEntityFilterable implements IReds
 		{
 			try
 			{
+				super.handlePacketData(network, packetType, packet, player, dataStream);
+				dataStream.readShort();
 				this.isOutput = dataStream.readBoolean();
 				this.wattsReceived = dataStream.readDouble();
 			}

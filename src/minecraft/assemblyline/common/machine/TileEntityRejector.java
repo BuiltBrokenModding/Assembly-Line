@@ -15,6 +15,7 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.machine.filter.ItemFilter;
+import assemblyline.common.machine.filter.TileEntityFilterable;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
@@ -26,15 +27,6 @@ import cpw.mods.fml.relauncher.Side;
  */
 public class TileEntityRejector extends TileEntityFilterable
 {
-
-	/**
-	 * Used to id the packet types
-	 */
-	private enum PacketTypes
-	{
-		ANIMATION, INVENTORY, SETTINGON
-	}
-
 	/**
 	 * should the piston fire, or be extended
 	 */
@@ -54,7 +46,7 @@ public class TileEntityRejector extends TileEntityFilterable
 		 */
 		if (this.ticks % 5 == 0 && !this.isDisabled())
 		{
-			int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+			int metadata = this.getBlockMetadata();
 			this.firePiston = false;
 
 			// area to search for items
@@ -110,12 +102,6 @@ public class TileEntityRejector extends TileEntityFilterable
 		}
 	}
 
-	/*
-	 * @Override public Packet getDescriptionPacket() { return
-	 * PacketManager.getPacket(AssemblyLine.CHANNEL, this,
-	 * this.getPacketData(PacketTypes.INVENTORY)); }
-	 */
-
 	/**
 	 * Used to move after it has been rejected
 	 * 
@@ -160,58 +146,7 @@ public class TileEntityRejector extends TileEntityFilterable
 	}
 
 	/**
-	 * Used to change any one of the boolean value of on/off array After changing the value if it
-	 * was changed client side it will send a packet server side with the changes
-	 * 
-	 * @param i
-	 */
-	public void changeOnOff(int i)
-	{
-		if (i >= this.guiButtons.length) { return; }
-		if (this.guiButtons[i])
-		{
-			this.guiButtons[i] = false;
-		}
-		else
-		{
-			this.guiButtons[i] = true;
-		}
-		Packet packet = PacketManager.getPacket("asmLine", this, new Object[] { PacketTypes.SETTINGON.ordinal(), i });
-		if (worldObj.isRemote)
-		{
-			PacketDispatcher.sendPacketToServer(packet);
-		}
-		else
-		{
-			PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 10);
-		}
-	}
-
-	/*
-	 * public Object[] getPacketData(PacketTypes id) { if (id == PacketTypes.ANIMATION) { return new
-	 * Object[] { id.ordinal(), this.firePiston }; } if (id == PacketTypes.INVENTORY) { Object[] da
-	 * = new Object[this.guiButtons.length + 1]; da[0] = id.ordinal();
-	 * 
-	 * for (int i = 0; i < this.guiButtons.length; i++) { da[i + 1] = guiButtons[i]; } return da; }
-	 * return new Object[] { id.ordinal() }; }
-	 */
-
-	/*
-	 * @Override public void handlePacketData(INetworkManager network, int packetType,
-	 * Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream) { try {
-	 * int id = dataStream.readInt(); PacketTypes pID = PacketTypes.values()[id]; DataInputStream
-	 * inputStream = new DataInputStream((InputStream) dataStream);
-	 * 
-	 * if (pID == PacketTypes.ANIMATION) { this.firePiston = dataStream.readBoolean(); } else if
-	 * (pID == PacketTypes.INVENTORY) { for (int i = 0; i < this.guiButtons.length; i++) {
-	 * this.guiButtons[i] = dataStream.readBoolean(); } } else if (pID == PacketTypes.SETTINGON) {
-	 * int num = dataStream.readInt(); this.changeOnOff(num); }
-	 * 
-	 * } catch (Exception e) { e.printStackTrace(); } }
-	 */
-
-	/**
-	 * inventory methods
+	 * Inventory Methods
 	 */
 	@Override
 	public String getInvName()

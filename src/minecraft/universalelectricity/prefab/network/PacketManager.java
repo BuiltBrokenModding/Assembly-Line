@@ -45,23 +45,23 @@ public class PacketManager implements IPacketHandler, IPacketReceiver
 			return UNSPECIFIED;
 		}
 	}
-	
+
 	/**
-     * Writes a compressed NBTTagCompound to the OutputStream
-     */
-    public static void writeNBTTagCompound(NBTTagCompound tag, DataOutputStream stream) throws IOException
-    {
-        if (tag == null)
-        {
-            stream.writeShort(-1);
-        }
-        else
-        {
-            byte[] var2 = CompressedStreamTools.compress(tag);
-            stream.writeShort((short)var2.length);
-            stream.write(var2);
-        }
-    }
+	 * Writes a compressed NBTTagCompound to the OutputStream
+	 */
+	public static void writeNBTTagCompound(NBTTagCompound tag, DataOutputStream stream) throws IOException
+	{
+		if (tag == null)
+		{
+			stream.writeShort(-1);
+		}
+		else
+		{
+			byte[] var2 = CompressedStreamTools.compress(tag);
+			stream.writeShort((short) var2.length);
+			stream.write(var2);
+		}
+	}
 
 	@SuppressWarnings("resource")
 	public static Packet getPacketWithID(String channelName, int id, Object... sendData)
@@ -168,10 +168,7 @@ public class PacketManager implements IPacketHandler, IPacketReceiver
 	{
 		try
 		{
-			if (FMLCommonHandler.instance().getMinecraftServerInstance() != null)
-			{
-				FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().sendPacketToAllPlayers(packet);
-			}
+			PacketDispatcher.sendPacketToAllPlayers(packet);
 		}
 		catch (Exception e)
 		{
@@ -217,6 +214,10 @@ public class PacketManager implements IPacketHandler, IPacketReceiver
 				else if (dataValue instanceof Long)
 				{
 					data.writeLong((Long) dataValue);
+				}
+				else if (dataValue instanceof NBTTagCompound)
+				{
+					writeNBTTagCompound((NBTTagCompound) dataValue, data);
 				}
 			}
 

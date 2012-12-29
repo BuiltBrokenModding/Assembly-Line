@@ -8,6 +8,7 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.prefab.UETab;
 import assemblyline.common.AssemblyLine;
+import assemblyline.common.machine.filter.BlockFilterable;
 
 /**
  * @author Briman0094

@@ -15,6 +15,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  */
 @SideOnly(Side.CLIENT)
+@Deprecated
 public class GuiButtonImage extends GuiButton
 {
 	private int type = 0;

@@ -1,4 +1,4 @@
-package assemblyline.common.machine.detector;
+package assemblyline.common.machine.filter;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -12,7 +12,6 @@ import net.minecraft.world.World;
 import universalelectricity.prefab.BlockMachine;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
 import assemblyline.api.IFilterable;
-import assemblyline.common.machine.filter.ItemFilter;
 
 /**
  * Extend this block class if a filter is allowed to be placed inside of this block.

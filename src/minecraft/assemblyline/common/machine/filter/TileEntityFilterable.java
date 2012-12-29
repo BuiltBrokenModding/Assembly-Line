@@ -1,10 +1,10 @@
-package assemblyline.common.machine;
+package assemblyline.common.machine.filter;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -17,9 +17,9 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.implement.IRotatable;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
-import universalelectricity.prefab.network.PacketManager.PacketType;
 import assemblyline.api.IFilterable;
 import assemblyline.common.AssemblyLine;
+import assemblyline.common.machine.TileEntityAssemblyNetwork;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -151,51 +151,45 @@ public abstract class TileEntityFilterable extends TileEntityAssemblyNetwork imp
 		return 1;
 	}
 
+	/**
+	 * Don't override this! Override getPackData() instead!
+	 */
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = AssemblyLine.CHANNEL;
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		DataOutputStream dos = new DataOutputStream(bos);
-		try
-		{
-			dos.writeInt(PacketType.TILEENTITY.ordinal());
-			dos.writeInt(this.xCoord);
-			dos.writeInt(this.yCoord);
-			dos.writeInt(this.zCoord);
-			NBTTagCompound tag = new NBTTagCompound();
-			writeToNBT(tag);
-			PacketManager.writeNBTTagCompound(tag, dos);
-			packet.data = bos.toByteArray();
-			packet.length = bos.size();
-			return packet;
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		return null;
+		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.getPacketData().toArray());
+	}
+
+	public ArrayList getPacketData()
+	{
+		ArrayList array = new ArrayList();
+		NBTTagCompound tag = new NBTTagCompound();
+		writeToNBT(tag);
+		array.add(tag);
+		return array;
 	}
 
 	@Override
 	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
 	{
-		ByteArrayInputStream bis = new ByteArrayInputStream(packet.data);
-		DataInputStream dis = new DataInputStream(bis);
-		int id, x, y, z;
-		try
+		if (worldObj.isRemote)
 		{
-			id = dis.readInt();
-			x = dis.readInt();
-			y = dis.readInt();
-			z = dis.readInt();
-			NBTTagCompound tag = Packet.readNBTTagCompound(dis);
-			readFromNBT(tag);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
+			ByteArrayInputStream bis = new ByteArrayInputStream(packet.data);
+			DataInputStream dis = new DataInputStream(bis);
+			int id, x, y, z;
+			try
+			{
+				id = dis.readInt();
+				x = dis.readInt();
+				y = dis.readInt();
+				z = dis.readInt();
+				NBTTagCompound tag = Packet.readNBTTagCompound(dis);
+				readFromNBT(tag);
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 
