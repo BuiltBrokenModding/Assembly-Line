@@ -95,7 +95,7 @@ public class AssemblyLine
 		GameRegistry.registerBlock(blockConveyorBelt, "Conveyor Belt");
 		GameRegistry.registerBlock(blockCrate, ItemBlockCrate.class, "Crate");
 		GameRegistry.registerBlock(blockManipulator, "Manipulator");
-		// GameRegistry.registerBlock(blockEngineerTable, "Encoder");
+		// GameRegistry.registerBlock(blockEncoder, "Encoder");
 		GameRegistry.registerBlock(blockImprinter, "Imprinter");
 		GameRegistry.registerBlock(blockDetector, "Detector");
 		GameRegistry.registerBlock(blockRejector, "Rejector");
@@ -112,10 +112,10 @@ public class AssemblyLine
 
 		System.out.println(NAME + " Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
 
-		// Filter
+		// Imprint
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemImprint, new Object[] { "R", "P", "I", 'P', Item.paper, 'R', Item.redstone, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
 
-		// Stamper
+		// Imprinter
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockImprinter, new Object[] { "SIS", "SPS", "WWW", 'S', "ingotSteel", 'W', Block.wood, 'P', Block.pistonStickyBase, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
 
 		// Detector
