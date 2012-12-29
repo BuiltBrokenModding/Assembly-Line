@@ -15,7 +15,7 @@ public class SlotFilter extends Slot
 
 	public boolean isItemValid(ItemStack itemStack)
 	{
-		return itemStack.itemID == AssemblyLine.itemFilter.shiftedIndex;
+		return itemStack.itemID == AssemblyLine.itemImprint.shiftedIndex;
 	}
 
 }

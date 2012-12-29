@@ -14,7 +14,7 @@ import universalelectricity.prefab.UETab;
 import universalelectricity.prefab.UpdateNotifier;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.block.BlockCrate;
-import assemblyline.common.block.BlockEngineerTable;
+import assemblyline.common.block.BlockEncoder;
 import assemblyline.common.block.ItemBlockCrate;
 import assemblyline.common.machine.BlockManipulator;
 import assemblyline.common.machine.belt.BlockConveyorBelt;
@@ -64,14 +64,14 @@ public class AssemblyLine
 
 	public static Block blockConveyorBelt;
 	public static Block blockManipulator;
-	public static Block blockEngineerTable;
+	public static Block blockEncoder;
 	public static Block blockCrate;
 	public static Block blockImprinter;
 	public static Block blockDetector;
 	public static Block blockRejector;
 
 	public static final int ITEM_ID_PREFIX = 3030;
-	public static Item itemFilter;
+	public static Item itemImprint;
 
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event)
@@ -82,20 +82,20 @@ public class AssemblyLine
 		CONFIGURATION.load();
 		blockConveyorBelt = new BlockConveyorBelt(CONFIGURATION.getBlock("Conveyor Belt", BLOCK_ID_PREFIX).getInt());
 		blockManipulator = new BlockManipulator(CONFIGURATION.getBlock("Manipulator", BLOCK_ID_PREFIX + 1).getInt());
-		blockEngineerTable = new BlockEngineerTable(CONFIGURATION.getBlock("Architect's Table", BLOCK_ID_PREFIX + 2).getInt());
+		blockEncoder = new BlockEncoder(CONFIGURATION.getBlock("Encoder", BLOCK_ID_PREFIX + 2).getInt());
 		blockCrate = new BlockCrate(CONFIGURATION.getBlock("Crate", BLOCK_ID_PREFIX + 3).getInt(), 0);
 		blockImprinter = new BlockImprinter(CONFIGURATION.getBlock("Imprinter", BLOCK_ID_PREFIX + 4).getInt(), 0);
 		blockDetector = new BlockDetector(CONFIGURATION.getBlock("Detector", BLOCK_ID_PREFIX + 5).getInt(), 1);
 		blockRejector = new BlockRejector(CONFIGURATION.getBlock("Rejector", BLOCK_ID_PREFIX + 6).getInt());
 
-		itemFilter = new ItemImprinter(CONFIGURATION.getBlock("Filter", ITEM_ID_PREFIX).getInt());
+		itemImprint = new ItemImprinter(CONFIGURATION.getBlock("Imprint", ITEM_ID_PREFIX).getInt());
 		CONFIGURATION.save();
 
 		NetworkRegistry.instance().registerGuiHandler(this, this.proxy);
 		GameRegistry.registerBlock(blockConveyorBelt, "Conveyor Belt");
 		GameRegistry.registerBlock(blockCrate, ItemBlockCrate.class, "Crate");
 		GameRegistry.registerBlock(blockManipulator, "Manipulator");
-		// GameRegistry.registerBlock(blockEngineerTable, "Engineer's Table");
+		// GameRegistry.registerBlock(blockEngineerTable, "Encoder");
 		GameRegistry.registerBlock(blockImprinter, "Imprinter");
 		GameRegistry.registerBlock(blockDetector, "Detector");
 		GameRegistry.registerBlock(blockRejector, "Rejector");
@@ -113,7 +113,7 @@ public class AssemblyLine
 		System.out.println(NAME + " Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
 
 		// Filter
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemFilter, new Object[] { "R", "P", "I", 'P', Item.paper, 'R', Item.redstone, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemImprint, new Object[] { "R", "P", "I", 'P', Item.paper, 'R', Item.redstone, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
 
 		// Stamper
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockImprinter, new Object[] { "SIS", "SPS", "WWW", 'S', "ingotSteel", 'W', Block.wood, 'P', Block.pistonStickyBase, 'I', new ItemStack(Item.dyePowder, 1, 0) }));

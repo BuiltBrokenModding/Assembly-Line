@@ -6,9 +6,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import universalelectricity.prefab.UETab;
 
-public class BlockEngineerTable extends Block
+public class BlockEncoder extends Block
 {
-	public BlockEngineerTable(int par1)
+	public BlockEncoder(int par1)
 	{
 		super(par1, Material.wood);
 		this.blockIndexInTexture = 59;

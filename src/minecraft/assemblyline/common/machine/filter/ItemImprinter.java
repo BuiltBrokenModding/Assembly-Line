@@ -3,14 +3,13 @@ package assemblyline.common.machine.filter;
 import java.util.ArrayList;
 import java.util.List;
 
-import assemblyline.common.AssemblyLine;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import universalelectricity.prefab.UETab;
+import assemblyline.common.AssemblyLine;
 
 public class ItemImprinter extends Item
 {
