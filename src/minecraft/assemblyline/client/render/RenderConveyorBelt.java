@@ -29,10 +29,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 
 		int frame = tileEntity.getAnimationFrame();
 
-		this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "belt/frame" + frame + ".png"); // belt/frame0.png
-																							// through
-																							// belt/frame13.png
-		// System.out.println(AssemblyLine.TEXTURE_PATH + "belt/frame" + frame + ".png");
+		this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "belt/frame" + frame + ".png");
 
 		switch (face)
 		{

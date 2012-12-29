@@ -7,6 +7,9 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import universalelectricity.core.vector.Vector3;
 import assemblyline.common.machine.TileEntityFilterable;
 import assemblyline.common.machine.filter.ItemFilter;
 
@@ -20,19 +23,24 @@ public abstract class RenderFilterable extends TileEntitySpecialRenderer
 	{
 		if (tileEntity instanceof TileEntityFilterable)
 		{
-			TileEntityFilterable filterable = (TileEntityFilterable) tileEntity;
-			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-			
-			double dist = player.getDistance(filterable.xCoord, filterable.yCoord, filterable.zCoord);
-			if (dist < 5)
+			TileEntityFilterable tileFilterable = (TileEntityFilterable) tileEntity;
+
+			ItemStack filter = tileFilterable.getFilter();
+
+			if (filter != null)
 			{
-				ItemStack filter = filterable.getFilter();
-				if (filter != null)
+				EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+				MovingObjectPosition objectPosition = player.rayTrace(5, 1);
+
+				if (objectPosition != null)
 				{
-					ArrayList<ItemStack> filters = ItemFilter.getFilters(filter);
-					for (int i = 0; i < filters.size(); i++)
+					if (objectPosition.blockX == tileFilterable.xCoord && objectPosition.blockY == tileFilterable.yCoord && objectPosition.blockZ == tileFilterable.zCoord)
 					{
-						RenderHelper.renderFloatingText(filters.get(i).getTooltip(player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips).get(0).toString(), (float) x + 0.5f, ((float) y + (i * 0.25f)) - 1f, (float) z + 0.5f);
+						ArrayList<ItemStack> filters = ItemFilter.getFilters(filter);
+						for (int i = 0; i < filters.size(); i++)
+						{
+							RenderHelper.renderFloatingText(filters.get(i).getTooltip(player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips).get(0).toString(), (float) x + 0.5f, ((float) y + (i * 0.25f)) - 1f, (float) z + 0.5f);
+						}
 					}
 				}
 			}
