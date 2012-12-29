@@ -27,6 +27,32 @@ public abstract class TileEntityFilterable extends TileEntityAssemblyNetwork imp
 {
 	private ItemStack filterItem;
 
+	/**
+	 * Looks through the things in the filter and finds out which item is being filtered.
+	 * 
+	 * @return Is this filterable block filtering this specific ItemStack?
+	 */
+	public boolean isFiltering(ItemStack itemStack)
+	{
+		if (this.getFilter() != null && itemStack != null)
+		{
+			ArrayList<ItemStack> checkStacks = ItemFilter.getFilters(getFilter());
+
+			if (checkStacks != null)
+			{
+				for (int i = 0; i < checkStacks.size(); i++)
+				{
+					if (checkStacks.get(i) != null)
+					{
+						if (checkStacks.get(i).isItemEqual(itemStack)) { return true; }
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
 	@Override
 	public int getSizeInventory()
 	{
@@ -121,7 +147,7 @@ public abstract class TileEntityFilterable extends TileEntityAssemblyNetwork imp
 	public void setFilter(ItemStack filter)
 	{
 		this.setInventorySlotContents(0, filter);
-		PacketManager.sendPacketToClients(getDescriptionPacket());
+		PacketManager.sendPacketToClients(this.getDescriptionPacket());
 	}
 
 	@Override
@@ -141,9 +167,6 @@ public abstract class TileEntityFilterable extends TileEntityAssemblyNetwork imp
 	{
 		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, facingDirection.ordinal());
 	}
-
-	@Override
-	public abstract String getInvName();
 
 	@Override
 	public int getInventoryStackLimit()

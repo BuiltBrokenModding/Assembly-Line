@@ -16,7 +16,7 @@ import assemblyline.common.machine.filter.TileEntityFilterable;
 public class TileEntityDetector extends TileEntityFilterable
 {
 	private boolean powering = false;
-	private boolean inverted = false;
+	private boolean isInverted = false;
 
 	@Override
 	public void updateEntity()
@@ -38,50 +38,25 @@ public class TileEntityDetector extends TileEntityFilterable
 					for (int i = 0; i < entities.size(); i++)
 					{
 						EntityItem e = (EntityItem) entities.get(i);
-						ItemStack item = e.func_92014_d();
-						boolean found = false;
+						ItemStack itemStack = e.func_92014_d();
 
-						ArrayList<ItemStack> checkStacks = ItemFilter.getFilters(getFilter());
+						boolean found = this.isFiltering(itemStack);
 
-						for (int ii = 0; ii < checkStacks.size(); ii++)
-						{
-							ItemStack compare = checkStacks.get(ii);
-
-							if (compare != null)
-							{
-								if (item.itemID == compare.itemID)
-								{
-									if (item.getItemDamage() == compare.getItemDamage())
-									{
-										if (item.hasTagCompound())
-										{
-											if (item.getTagCompound().equals(compare.getTagCompound()))
-											{
-												found = true;
-												break;
-											}
-										}
-										else
-										{
-											found = true;
-											break;
-										}
-									}
-								}
-							}
-						}
-
-						if (this.inverted)
+						if (this.isInverted)
 						{
 							if (!found)
 							{
 								powerCheck = true;
-								break;
+							}
+							else
+							{
+								powerCheck = false;
 							}
 						}
 						else if (found)
 						{
 							powerCheck = true;
+							break;
 						}
 					}
 				}
@@ -107,6 +82,7 @@ public class TileEntityDetector extends TileEntityFilterable
 						this.worldObj.notifyBlocksOfNeighborChange(x, this.yCoord + 1, z, AssemblyLine.blockDetector.blockID);
 					}
 				}
+
 				PacketManager.sendPacketToClients(getDescriptionPacket());
 			}
 		}
@@ -115,18 +91,19 @@ public class TileEntityDetector extends TileEntityFilterable
 	@Override
 	public void invalidate()
 	{
+		this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, AssemblyLine.blockDetector.blockID);
 		this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord + 1, this.zCoord, AssemblyLine.blockDetector.blockID);
 		super.invalidate();
 	}
 
 	public boolean isInverted()
 	{
-		return inverted;
+		return this.isInverted;
 	}
 
 	public void setInversion(boolean inverted)
 	{
-		this.inverted = inverted;
+		this.isInverted = inverted;
 
 		if (this.worldObj.isRemote)
 		{
@@ -136,7 +113,7 @@ public class TileEntityDetector extends TileEntityFilterable
 
 	public void toggleInversion()
 	{
-		this.setInversion(!this.inverted);
+		this.setInversion(!this.isInverted);
 	}
 
 	@Override
@@ -144,7 +121,7 @@ public class TileEntityDetector extends TileEntityFilterable
 	{
 		super.readFromNBT(tag);
 
-		this.inverted = tag.getBoolean("isInverted");
+		this.isInverted = tag.getBoolean("isInverted");
 		this.powering = tag.getBoolean("powering");
 	}
 
@@ -153,7 +130,7 @@ public class TileEntityDetector extends TileEntityFilterable
 	{
 		super.writeToNBT(tag);
 
-		tag.setBoolean("isInverted", this.inverted);
+		tag.setBoolean("isInverted", this.isInverted);
 		tag.setBoolean("powering", this.powering);
 	}
 

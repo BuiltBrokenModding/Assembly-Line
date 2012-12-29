@@ -110,19 +110,7 @@ public class TileEntityRejector extends TileEntityFilterable
 			EntityItem entityItem = (EntityItem) entity;
 			ItemStack itemStack = entityItem.func_92014_d();
 
-			if (getFilter() != null)
-			{
-				ArrayList<ItemStack> checkStacks = ItemFilter.getFilters(getFilter());
-
-				// Reject matching items
-				for (int i = 0; i < checkStacks.size(); i++)
-				{
-					if (checkStacks.get(i) != null)
-					{
-						if (checkStacks.get(i).isItemEqual(itemStack)) { return true; }
-					}
-				}
-			}
+			return this.isFiltering(itemStack);
 		}
 
 		return false;

@@ -123,24 +123,29 @@ public class TileEntityManipulator extends TileEntityFilterable implements IReds
 			 * Try top first, then bottom, then the sides to see if it is possible to insert the
 			 * item into a inventory.
 			 */
-			ItemStack remainingStack = this.tryPlaceInPosition(entity.func_92014_d().copy(), outputUp, ForgeDirection.DOWN);
+			ItemStack remainingStack = entity.func_92014_d().copy();
 
-			if (remainingStack != null)
+			if (!this.isFiltering(remainingStack))
 			{
-				remainingStack = this.tryPlaceInPosition(remainingStack, outputDown, ForgeDirection.UP);
-			}
+				remainingStack = this.tryPlaceInPosition(remainingStack, outputUp, ForgeDirection.DOWN);
 
-			if (remainingStack != null)
-			{
-				remainingStack = this.tryPlaceInPosition(remainingStack, outputPosition, this.getBeltDirection().getOpposite());
-			}
+				if (remainingStack != null)
+				{
+					remainingStack = this.tryPlaceInPosition(remainingStack, outputDown, ForgeDirection.UP);
+				}
 
-			if (remainingStack != null && remainingStack.stackSize > 0)
-			{
-				this.throwItem(outputPosition, remainingStack);
-			}
+				if (remainingStack != null)
+				{
+					remainingStack = this.tryPlaceInPosition(remainingStack, outputPosition, this.getBeltDirection().getOpposite());
+				}
 
-			entity.setDead();
+				if (remainingStack != null && remainingStack.stackSize > 0)
+				{
+					this.throwItem(outputPosition, remainingStack);
+				}
+
+				entity.setDead();
+			}
 		}
 	}
 
@@ -327,6 +332,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IReds
 	 */
 	private ItemStack tryGrabFromPosition(Vector3 position, ForgeDirection direction)
 	{
+		ItemStack returnStack = null;
 		TileEntity tileEntity = position.getTileEntity(this.worldObj);
 
 		if (tileEntity != null)
@@ -357,6 +363,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IReds
 					}
 				}
 
+				chestSearch:
 				for (TileEntityChest chest : chests)
 				{
 					if (chest != null)
@@ -364,8 +371,12 @@ public class TileEntityManipulator extends TileEntityFilterable implements IReds
 						for (int i = 0; i < chest.getSizeInventory(); i++)
 						{
 							ItemStack itemStack = this.removeStackFromInventory(i, chest);
+
 							if (itemStack != null)
-								return itemStack;
+							{
+								returnStack = itemStack;
+								break chestSearch;
+							}
 						}
 					}
 				}
@@ -380,7 +391,10 @@ public class TileEntityManipulator extends TileEntityFilterable implements IReds
 				{
 					ItemStack itemStack = this.removeStackFromInventory(i, inventory);
 					if (itemStack != null)
-						return itemStack;
+					{
+						returnStack = itemStack;
+						break;
+					}
 				}
 			}
 			else if (tileEntity instanceof IInventory)
@@ -391,11 +405,15 @@ public class TileEntityManipulator extends TileEntityFilterable implements IReds
 				{
 					ItemStack itemStack = this.removeStackFromInventory(i, inventory);
 					if (itemStack != null)
-						return itemStack;
+					{
+						returnStack = itemStack;
+						break;
+					}
 				}
 			}
 		}
 
+		if (!this.isFiltering(returnStack)) { return returnStack; }
 		return null;
 	}
 
