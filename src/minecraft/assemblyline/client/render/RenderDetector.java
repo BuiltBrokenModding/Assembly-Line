@@ -7,7 +7,6 @@ import static assemblyline.client.model.ModelHelper.setTextureSubResolution;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glTranslated;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.ForgeHooksClient;
 import universalelectricity.core.vector.Vector3;
@@ -25,7 +24,7 @@ public class RenderDetector extends RenderFilterable
 	{
 		if (tileEntity instanceof TileEntityDetector)
 		{
-			//this.render(((TileEntityDetector) tileEntity).isInverted(), new Vector3(x, y, z));
+			// this.render(((TileEntityDetector) tileEntity).isInverted(), new Vector3(x, y, z));
 		}
 		super.renderTileEntityAt(tileEntity, x, y, z, var8);
 	}

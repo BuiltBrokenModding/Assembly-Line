@@ -123,10 +123,7 @@ public class BlockDetector extends BlockFilterable
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 		if (tileEntity != null)
 		{
-			if (tileEntity instanceof TileEntityDetector) 
-			{
-				return ((TileEntityDetector) tileEntity).isPoweringTo(ForgeDirection.getOrientation(direction));
-			}
+			if (tileEntity instanceof TileEntityDetector) { return ((TileEntityDetector) tileEntity).isPoweringTo(ForgeDirection.getOrientation(direction)); }
 		}
 
 		return false;

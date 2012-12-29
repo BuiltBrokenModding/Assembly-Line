@@ -80,10 +80,10 @@ public class ContainerStamper extends Container implements IInventory
 		{
 			ItemStack slotStack = slotObj.getStack();
 			copyStack = slotStack.copy();
-			
+
 			if (slot == 2)
 			{
-				setInventorySlotContents(0, null); //prevent filter from being duplicated
+				setInventorySlotContents(0, null); // prevent filter from being duplicated
 			}
 
 			if (slot > 4)

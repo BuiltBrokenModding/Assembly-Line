@@ -1,40 +1,20 @@
 package assemblyline.common.machine;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
-import universalelectricity.prefab.implement.IRotatable;
-import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
-import universalelectricity.prefab.network.PacketManager.PacketType;
-import assemblyline.api.IFilterable;
-import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.filter.ItemFilter;
-
-import com.google.common.io.ByteArrayDataInput;
-
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
@@ -149,7 +129,7 @@ public class TileEntityRejector extends TileEntityFilterable
 		entity.motionX = (double) side.offsetX * 0.1;
 		entity.motionY += 0.10000000298023224D;
 		entity.motionZ = (double) side.offsetZ * 0.1;
-		
+
 		PacketManager.sendPacketToClients(getDescriptionPacket());
 	}
 
@@ -255,7 +235,7 @@ public class TileEntityRejector extends TileEntityFilterable
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		
+
 		firePiston = nbt.getBoolean("piston");
 	}
 
@@ -266,7 +246,7 @@ public class TileEntityRejector extends TileEntityFilterable
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		
+
 		nbt.setBoolean("piston", firePiston);
 	}
 }

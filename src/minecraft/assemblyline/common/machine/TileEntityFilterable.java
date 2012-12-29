@@ -6,8 +6,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import com.google.common.io.ByteArrayDataInput;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -23,10 +21,12 @@ import universalelectricity.prefab.network.PacketManager.PacketType;
 import assemblyline.api.IFilterable;
 import assemblyline.common.AssemblyLine;
 
+import com.google.common.io.ByteArrayDataInput;
+
 public abstract class TileEntityFilterable extends TileEntityAssemblyNetwork implements IRotatable, IFilterable, IPacketReceiver, IInventory
 {
 	private ItemStack filterItem;
-	
+
 	@Override
 	public int getSizeInventory()
 	{
@@ -108,15 +108,15 @@ public abstract class TileEntityFilterable extends TileEntityAssemblyNetwork imp
 	@Override
 	public void openChest()
 	{
-		
+
 	}
 
 	@Override
 	public void closeChest()
 	{
-		
+
 	}
-	
+
 	@Override
 	public void setFilter(ItemStack filter)
 	{
@@ -150,7 +150,7 @@ public abstract class TileEntityFilterable extends TileEntityAssemblyNetwork imp
 	{
 		return 1;
 	}
-	
+
 	@Override
 	public Packet getDescriptionPacket()
 	{
@@ -198,23 +198,23 @@ public abstract class TileEntityFilterable extends TileEntityAssemblyNetwork imp
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		
+
 		NBTTagCompound filter = new NBTTagCompound();
 		if (getFilter() != null)
 			getFilter().writeToNBT(filter);
 		nbt.setTag("filter", filter);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		
+
 		NBTTagCompound filter = nbt.getCompoundTag("filter");
 		setInventorySlotContents(0, ItemStack.loadItemStackFromNBT(filter));
 	}

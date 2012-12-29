@@ -1,14 +1,21 @@
 package assemblyline.client.render;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 
 import org.lwjgl.opengl.GL11;
 
+/**
+ * 
+ * @author Briman0094
+ *
+ */
 public class RenderHelper
 {
+	/**
+	 * Renders a floating text in a specific position.
+	 */
 	public static void renderFloatingText(String text, float x, float y, float z)
 	{
 		RenderManager renderManager = RenderManager.instance;

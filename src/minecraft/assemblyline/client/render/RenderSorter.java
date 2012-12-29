@@ -1,11 +1,5 @@
 package assemblyline.client.render;
 
-import java.util.ArrayList;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
@@ -13,7 +7,6 @@ import org.lwjgl.opengl.GL11;
 import assemblyline.client.model.ModelSorter;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.TileEntityRejector;
-import assemblyline.common.machine.filter.ItemFilter;
 
 public class RenderSorter extends RenderFilterable
 {
@@ -58,7 +51,7 @@ public class RenderSorter extends RenderFilterable
 	public void renderTileEntityAt(TileEntity tileEntity, double var2, double var4, double var6, float var8)
 	{
 		this.renderAModelAt((TileEntityRejector) tileEntity, var2, var4, var6, var8);
-		super.renderTileEntityAt(tileEntity, var2, var4, var6, var8);		
+		super.renderTileEntityAt(tileEntity, var2, var4, var6, var8);
 	}
 
 }
