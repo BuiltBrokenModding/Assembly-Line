@@ -1,4 +1,4 @@
-package assemblyline.common.machine.filter;
+package assemblyline.common.machine.imprinter;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -12,15 +12,16 @@ import net.minecraft.world.World;
 import universalelectricity.prefab.BlockMachine;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
 import assemblyline.api.IFilterable;
+import assemblyline.common.machine.detector.TileEntityDetector;
 
 /**
  * Extend this block class if a filter is allowed to be placed inside of this block.
  * 
  * @author Calclavia
  */
-public abstract class BlockFilterable extends BlockMachine
+public abstract class BlockImprintable extends BlockMachine
 {
-	public BlockFilterable(String name, int id, Material material, CreativeTabs creativeTab)
+	public BlockImprintable(String name, int id, Material material, CreativeTabs creativeTab)
 	{
 		super(name, id, material, creativeTab);
 	}
@@ -68,6 +69,23 @@ public abstract class BlockFilterable extends BlockMachine
 		}
 
 		return false;
+	}
+	
+	@Override
+	public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
+	{
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+		if (tileEntity != null)
+		{
+			if (tileEntity instanceof TileEntityImprintable)
+			{
+				((TileEntityImprintable) tileEntity).toggleInversion();
+				world.markBlockForRenderUpdate(x, y, z);
+			}
+		}
+
+		return true;
 	}
 
 	@Override

@@ -24,13 +24,13 @@ import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.api.IManipulator;
-import assemblyline.common.machine.filter.TileEntityFilterable;
+import assemblyline.common.machine.imprinter.TileEntityImprintable;
 
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 
-public class TileEntityManipulator extends TileEntityFilterable implements IRedstoneReceptor, IManipulator
+public class TileEntityManipulator extends TileEntityImprintable implements IRedstoneReceptor, IManipulator
 {
 	public boolean selfPulse = false;
 

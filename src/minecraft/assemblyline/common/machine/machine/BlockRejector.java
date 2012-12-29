@@ -6,11 +6,11 @@ import universalelectricity.core.UniversalElectricity;
 import universalelectricity.prefab.UETab;
 import assemblyline.client.render.BlockRenderingHandler;
 import assemblyline.common.machine.TileEntityRejector;
-import assemblyline.common.machine.filter.BlockFilterable;
+import assemblyline.common.machine.imprinter.BlockImprintable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockRejector extends BlockFilterable
+public class BlockRejector extends BlockImprintable
 {
 	public BlockRejector(int id)
 	{

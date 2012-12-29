@@ -1,4 +1,4 @@
-package assemblyline.common.machine.filter;
+package assemblyline.common.machine.imprinter;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -23,9 +23,13 @@ import assemblyline.common.machine.TileEntityAssemblyNetwork;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public abstract class TileEntityFilterable extends TileEntityAssemblyNetwork implements IRotatable, IFilterable, IPacketReceiver, IInventory
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+
+public abstract class TileEntityImprintable extends TileEntityAssemblyNetwork implements IRotatable, IFilterable, IPacketReceiver, IInventory
 {
 	private ItemStack filterItem;
+	private boolean inverted;
 
 	/**
 	 * Looks through the things in the filter and finds out which item is being filtered.
@@ -44,13 +48,13 @@ public abstract class TileEntityFilterable extends TileEntityAssemblyNetwork imp
 				{
 					if (checkStacks.get(i) != null)
 					{
-						if (checkStacks.get(i).isItemEqual(itemStack)) { return true; }
+						if (checkStacks.get(i).isItemEqual(itemStack)) { return !inverted; }
 					}
 				}
 			}
 		}
 
-		return false;
+		return inverted;
 	}
 
 	@Override
@@ -147,13 +151,36 @@ public abstract class TileEntityFilterable extends TileEntityAssemblyNetwork imp
 	public void setFilter(ItemStack filter)
 	{
 		this.setInventorySlotContents(0, filter);
-		PacketManager.sendPacketToClients(this.getDescriptionPacket());
+
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+		{
+			PacketManager.sendPacketToClients(this.getDescriptionPacket());
+		}
 	}
 
 	@Override
 	public ItemStack getFilter()
 	{
 		return this.getStackInSlot(0);
+	}
+
+	public void setInverted(boolean inverted)
+	{
+		this.inverted = inverted;
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+		{
+			PacketManager.sendPacketToClients(this.getDescriptionPacket());
+		}
+	}
+	
+	public boolean isInverted()
+	{
+		return this.inverted;
+	}
+	
+	public void toggleInversion()
+	{
+		setInverted(!isInverted());
 	}
 
 	@Override
@@ -225,6 +252,7 @@ public abstract class TileEntityFilterable extends TileEntityAssemblyNetwork imp
 		if (getFilter() != null)
 			getFilter().writeToNBT(filter);
 		nbt.setTag("filter", filter);
+		nbt.setBoolean("inverted", inverted);
 	}
 
 	@Override
@@ -232,6 +260,7 @@ public abstract class TileEntityFilterable extends TileEntityAssemblyNetwork imp
 	{
 		super.readFromNBT(nbt);
 
+		inverted = nbt.getBoolean("inverted");
 		NBTTagCompound filter = nbt.getCompoundTag("filter");
 		setInventorySlotContents(0, ItemStack.loadItemStackFromNBT(filter));
 	}

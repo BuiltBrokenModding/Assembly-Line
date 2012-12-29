@@ -9,7 +9,7 @@ import assemblyline.client.model.ModelManipulator;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.TileEntityManipulator;
 
-public class RenderManipulator extends RenderFilterable
+public class RenderManipulator extends RenderImprintable
 {
 	private ModelManipulator model = new ModelManipulator();
 

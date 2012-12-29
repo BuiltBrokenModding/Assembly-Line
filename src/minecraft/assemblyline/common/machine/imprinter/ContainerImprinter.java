@@ -1,4 +1,4 @@
-package assemblyline.common.machine.filter;
+package assemblyline.common.machine.imprinter;
 
 import java.util.ArrayList;
 
@@ -32,13 +32,13 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 		this.inventoryPlayer = inventoryPlayer;
 
 		// Paper Input
-		this.addSlotToContainer(new SlotFilter(this, 0, 42, 24));
+		this.addSlotToContainer(new SlotImprint(this, 0, 42, 24));
 		// Item Stamp
 		this.addSlotToContainer(new Slot(this, 1, 78, 24));
 		// Output Filter
-		this.addSlotToContainer(new SlotFilterResult(this, 2, 136, 24));
+		this.addSlotToContainer(new SlotImprintResult(this, 2, 136, 24));
 		// Crafting Slot
-		this.addSlotToContainer(new SlotFilter(this, 3, 78, 53));
+		this.addSlotToContainer(new SlotImprint(this, 3, 78, 53));
 		this.addSlotToContainer(new SlotCraftingResult(this, this, 4, 136, 53));
 
 		int var3;

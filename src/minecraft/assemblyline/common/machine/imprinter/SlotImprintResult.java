@@ -1,14 +1,14 @@
-package assemblyline.common.machine.filter;
+package assemblyline.common.machine.imprinter;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class SlotFilterResult extends Slot
+public class SlotImprintResult extends Slot
 {
 
-	public SlotFilterResult(IInventory par1iInventory, int par2, int par3, int par4)
+	public SlotImprintResult(IInventory par1iInventory, int par2, int par3, int par4)
 	{
 		super(par1iInventory, par2, par3, par4);
 	}

@@ -8,12 +8,12 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.prefab.UETab;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.machine.filter.BlockFilterable;
+import assemblyline.common.machine.imprinter.BlockImprintable;
 
 /**
  * @author Briman0094
  */
-public class BlockDetector extends BlockFilterable
+public class BlockDetector extends BlockImprintable
 {
 	public BlockDetector(int blockID, int texture)
 	{
@@ -51,23 +51,6 @@ public class BlockDetector extends BlockFilterable
 		if (side == ForgeDirection.DOWN.ordinal()) { return this.blockIndexInTexture + 1; }
 
 		return this.blockIndexInTexture;
-	}
-
-	@Override
-	public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
-	{
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-
-		if (tileEntity != null)
-		{
-			if (tileEntity instanceof TileEntityDetector)
-			{
-				((TileEntityDetector) tileEntity).toggleInversion();
-				world.markBlockForRenderUpdate(x, y, z);
-			}
-		}
-
-		return true;
 	}
 
 	@Override
