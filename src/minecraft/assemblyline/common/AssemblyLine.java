@@ -121,7 +121,7 @@ public class AssemblyLine
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, new Object[] { "SES", "SCS", "SPS", 'S', "ingotSteel", 'C', "basicCircuit", 'E', Item.eyeOfEnder }));
 
 		// Crate
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockCrate, new Object[] { "SPS", "P P", "SPS", 'P', "plateSteel", 'S', Item.stick }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockCrate, new Object[] { "TST", "S S", "TST", 'S', "ingotSteel", 'T', Item.stick }));
 
 		// Conveyor Belt
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 4), new Object[] { "III", "WMW", 'I', "ingotSteel", 'W', Block.wood, 'M', "motor" }));

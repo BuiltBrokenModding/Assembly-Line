@@ -1,5 +1,8 @@
 package assemblyline.common.machine;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +12,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
@@ -181,33 +185,18 @@ public class TileEntityManipulator extends TileEntityFilterable implements IReds
 		}
 	}
 
-	@Override
-	public ArrayList getPacketData()
-	{
-		ArrayList list = super.getPacketData();
-		list.add(this.isOutput);
-		list.add(this.wattsReceived);
-		return list;
-	}
-
-	@Override
-	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
-	{
-		if (worldObj.isRemote)
-		{
-			try
-			{
-				super.handlePacketData(network, packetType, packet, player, dataStream);
-				dataStream.readShort();
-				this.isOutput = dataStream.readBoolean();
-				this.wattsReceived = dataStream.readDouble();
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-	}
+	/*
+	 * @Override public ArrayList getPacketData() { ArrayList list = super.getPacketData();
+	 * list.add(this.isOutput); list.add(this.wattsReceived); return list; }
+	 * 
+	 * @Override public void handlePacketData(INetworkManager network, int packetType,
+	 * Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream) { if
+	 * (worldObj.isRemote) { ByteArrayInputStream bis = new ByteArrayInputStream(packet.data);
+	 * DataInputStream dis = new DataInputStream(bis); int id, x, y, z; try { id = dis.readInt(); x
+	 * = dis.readInt(); y = dis.readInt(); z = dis.readInt(); NBTTagCompound tag =
+	 * Packet.readNBTTagCompound(dis); readFromNBT(tag); this.wattsReceived = dis.readDouble();
+	 * this.isOutput = dis.readBoolean(); } catch (IOException e) { e.printStackTrace(); } } }
+	 */
 
 	/**
 	 * Throws the items from the manipulator into the world.
@@ -432,7 +421,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IReds
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		this.isOutput = nbt.getBoolean("isWrenchedToOutput");
+		this.isOutput = nbt.getBoolean("isOutput");
 	}
 
 	/**
@@ -442,7 +431,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IReds
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		nbt.setBoolean("isWrenchedToOutput", this.isOutput);
+		nbt.setBoolean("isOutput", this.isOutput);
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package assemblyline.common.machine;
 
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityConnections;
@@ -127,5 +129,19 @@ public abstract class TileEntityAssemblyNetwork extends TileEntityElectricityRec
 	protected int getMaxTransferRange()
 	{
 		return 20;
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		nbt.setDouble("wattsReceived", this.wattsReceived);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		this.wattsReceived = nbt.getDouble("wattsReceived");
 	}
 }

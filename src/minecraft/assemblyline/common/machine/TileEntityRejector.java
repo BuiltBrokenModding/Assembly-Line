@@ -31,12 +31,6 @@ public class TileEntityRejector extends TileEntityFilterable
 	 * should the piston fire, or be extended
 	 */
 	public boolean firePiston = false;
-	/**
-	 * on/off value for the GUI buttons
-	 */
-	public boolean[] guiButtons = new boolean[] { true, true, true, true, true };
-
-	private int playerUsing = 0;
 
 	@Override
 	public void onUpdate()
@@ -79,25 +73,14 @@ public class TileEntityRejector extends TileEntityFilterable
 
 				/**
 				 * If a push happened, send a packet to the client to notify it for an animation.
+				 * 
+				 * if (!this.worldObj.isRemote && flag) {
+				 * PacketManager.sendPacketToClients(this.getDescriptionPacket()); }
 				 */
-				if (!this.worldObj.isRemote && flag)
-				{
-					// Packet packet = PacketManager.getPacket(AssemblyLine.CHANNEL, this,
-					// this.getPacketData(PacketTypes.ANIMATION));
-					// PacketManager.sendPacketToClients(packet, this.worldObj, new Vector3(this),
-					// 30);
-					PacketManager.sendPacketToClients(getDescriptionPacket());
-				}
-
 			}
 			catch (Exception e)
 			{
 				e.printStackTrace();
-			}
-
-			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && this.playerUsing > 0)
-			{
-				PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 10);
 			}
 		}
 	}
@@ -170,8 +153,7 @@ public class TileEntityRejector extends TileEntityFilterable
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-
-		firePiston = nbt.getBoolean("piston");
+		this.firePiston = nbt.getBoolean("piston");
 	}
 
 	/**
@@ -181,7 +163,6 @@ public class TileEntityRejector extends TileEntityFilterable
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-
-		nbt.setBoolean("piston", firePiston);
+		nbt.setBoolean("piston", this.firePiston);
 	}
 }
