@@ -4,13 +4,13 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
-import assemblyline.client.model.ModelSorter;
+import assemblyline.client.model.ModelRejector;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.TileEntityRejector;
 
-public class RenderSorter extends RenderFilterable
+public class RenderRejector extends RenderFilterable
 {
-	private ModelSorter model = new ModelSorter();
+	private ModelRejector model = new ModelRejector();
 
 	private void renderAModelAt(TileEntityRejector tileEntity, double x, double y, double z, float f)
 	{

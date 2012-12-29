@@ -16,8 +16,8 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 import universalelectricity.core.vector.Vector3;
+import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
-import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.api.IManipulator;
 import assemblyline.common.AssemblyLine;
@@ -26,7 +26,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 
-public class TileEntityManipulator extends TileEntityAssemblyNetwork implements IRedstoneReceptor, IPacketReceiver, IManipulator
+public class TileEntityManipulator extends TileEntityFilterable implements IRedstoneReceptor, IManipulator
 {
 	public boolean selfPulse = false;
 
@@ -450,5 +450,11 @@ public class TileEntityManipulator extends TileEntityAssemblyNetwork implements 
 	public void onPowerOff()
 	{
 		this.isRedstonePowered = false;
+	}
+
+	@Override
+	public String getInvName()
+	{
+		return TranslationHelper.getLocal("tile.manipulator.name");
 	}
 }

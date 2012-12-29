@@ -9,7 +9,7 @@ import assemblyline.client.model.ModelManipulator;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.TileEntityManipulator;
 
-public class RenderManipulator extends TileEntitySpecialRenderer
+public class RenderManipulator extends RenderFilterable
 {
 	private ModelManipulator model = new ModelManipulator();
 
@@ -49,8 +49,6 @@ public class RenderManipulator extends TileEntitySpecialRenderer
 
 		model.render(0.0625F, true, 0);
 
-		// TODO change the true part to check if
-		// there is a TE on the input side
 		GL11.glPopMatrix();
 
 	}
@@ -59,6 +57,7 @@ public class RenderManipulator extends TileEntitySpecialRenderer
 	public void renderTileEntityAt(TileEntity tileEntity, double var2, double var4, double var6, float var8)
 	{
 		this.renderAModelAt((TileEntityManipulator) tileEntity, var2, var4, var6, var8);
+		super.renderTileEntityAt(tileEntity, var2, var4, var6, var8);
 	}
 
 }

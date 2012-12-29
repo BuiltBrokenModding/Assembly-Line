@@ -37,7 +37,7 @@ public abstract class TileEntityFilterable extends TileEntityAssemblyNetwork imp
 	public ItemStack getStackInSlot(int slot)
 	{
 		if (slot == 0)
-			return filterItem;
+			return this.filterItem;
 		else
 			return null;
 	}
@@ -45,23 +45,23 @@ public abstract class TileEntityFilterable extends TileEntityAssemblyNetwork imp
 	@Override
 	public ItemStack decrStackSize(int slot, int amount)
 	{
-		if (filterItem != null)
+		if (this.filterItem != null)
 		{
 			ItemStack stack;
 
-			if (filterItem.stackSize <= amount)
+			if (this.filterItem.stackSize <= amount)
 			{
-				stack = filterItem;
+				stack = this.filterItem;
 				filterItem = null;
 				return stack;
 			}
 			else
 			{
-				stack = filterItem.splitStack(amount);
+				stack = this.filterItem.splitStack(amount);
 
-				if (filterItem.stackSize == 0)
+				if (this.filterItem.stackSize == 0)
 				{
-					filterItem = null;
+					this.filterItem = null;
 				}
 
 				return stack;
@@ -76,9 +76,9 @@ public abstract class TileEntityFilterable extends TileEntityAssemblyNetwork imp
 	@Override
 	public ItemStack getStackInSlotOnClosing(int slot)
 	{
-		if (filterItem != null)
+		if (this.filterItem != null)
 		{
-			ItemStack stack = filterItem;
+			ItemStack stack = this.filterItem;
 			filterItem = null;
 			return stack;
 		}
@@ -91,7 +91,7 @@ public abstract class TileEntityFilterable extends TileEntityAssemblyNetwork imp
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack)
 	{
-		filterItem = stack;
+		this.filterItem = stack;
 
 		if (stack != null && stack.stackSize > this.getInventoryStackLimit())
 		{
@@ -139,7 +139,7 @@ public abstract class TileEntityFilterable extends TileEntityAssemblyNetwork imp
 	@Override
 	public void setDirection(ForgeDirection facingDirection)
 	{
-		this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, facingDirection.ordinal());
+		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, facingDirection.ordinal());
 	}
 
 	@Override
@@ -161,9 +161,9 @@ public abstract class TileEntityFilterable extends TileEntityAssemblyNetwork imp
 		try
 		{
 			dos.writeInt(PacketType.TILEENTITY.ordinal());
-			dos.writeInt(xCoord);
-			dos.writeInt(yCoord);
-			dos.writeInt(zCoord);
+			dos.writeInt(this.xCoord);
+			dos.writeInt(this.yCoord);
+			dos.writeInt(this.zCoord);
 			NBTTagCompound tag = new NBTTagCompound();
 			writeToNBT(tag);
 			PacketManager.writeNBTTagCompound(tag, dos);

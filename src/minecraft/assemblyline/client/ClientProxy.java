@@ -12,7 +12,7 @@ import assemblyline.client.render.RenderConveyorBelt;
 import assemblyline.client.render.RenderCrate;
 import assemblyline.client.render.RenderDetector;
 import assemblyline.client.render.RenderManipulator;
-import assemblyline.client.render.RenderSorter;
+import assemblyline.client.render.RenderRejector;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.CommonProxy;
 import assemblyline.common.block.TileEntityCrate;
@@ -38,7 +38,7 @@ public class ClientProxy extends CommonProxy
 	{
 		super.init();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConveyorBelt.class, new RenderConveyorBelt());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRejector.class, new RenderSorter());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRejector.class, new RenderRejector());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDetector.class, new RenderDetector());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityManipulator.class, new RenderManipulator());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrate.class, new RenderCrate());

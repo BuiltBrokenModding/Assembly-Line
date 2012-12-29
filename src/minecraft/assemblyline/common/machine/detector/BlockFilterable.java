@@ -72,6 +72,12 @@ public abstract class BlockFilterable extends BlockMachine
 	}
 
 	@Override
+	public boolean onSneakMachineActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+	{
+		return this.onMachineActivated(world, x, y, z, player, side, hitX, hitY, hitZ);
+	}
+
+	@Override
 	public void onNeighborBlockChange(World par1World, int x, int y, int z, int side)
 	{
 		super.onNeighborBlockChange(par1World, x, y, z, side);

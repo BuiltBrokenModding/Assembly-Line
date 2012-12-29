@@ -9,7 +9,7 @@ package assemblyline.client.model;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 
-public class ModelSorter extends ModelBase
+public class ModelRejector extends ModelBase
 {
 	// fields
 	ModelRenderer Base;
@@ -23,7 +23,7 @@ public class ModelSorter extends ModelBase
 	ModelRenderer PistonShaft;
 	ModelRenderer PistonFace;
 
-	public ModelSorter()
+	public ModelRejector()
 	{
 		textureWidth = 128;
 		textureHeight = 128;

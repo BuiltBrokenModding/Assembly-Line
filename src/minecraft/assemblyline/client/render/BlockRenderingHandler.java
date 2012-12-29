@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 import universalelectricity.core.vector.Vector3;
 import assemblyline.client.model.ModelConveyorBelt;
 import assemblyline.client.model.ModelManipulator;
-import assemblyline.client.model.ModelSorter;
+import assemblyline.client.model.ModelRejector;
 import assemblyline.common.AssemblyLine;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
@@ -23,7 +23,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 	public static BlockRenderingHandler instance = new BlockRenderingHandler();
 	public static final int BLOCK_RENDER_ID = RenderingRegistry.getNextAvailableRenderId();
 	private ModelConveyorBelt modelConveyorBelt = new ModelConveyorBelt();
-	private ModelSorter modelEjector = new ModelSorter();
+	private ModelRejector modelEjector = new ModelRejector();
 	private ModelManipulator modelInjector = new ModelManipulator();
 
 	@Override
