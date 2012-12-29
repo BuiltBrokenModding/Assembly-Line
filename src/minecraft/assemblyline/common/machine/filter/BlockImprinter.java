@@ -14,7 +14,7 @@ public class BlockImprinter extends BlockMachine
 	{
 		super(id, Material.wood);
 		this.blockIndexInTexture = 0;
-		this.setBlockName("stamper");
+		this.setBlockName("imprinter");
 		this.setCreativeTab(UETab.INSTANCE);
 		this.setTextureFile(AssemblyLine.BLOCK_TEXTURE_PATH);
 	}
