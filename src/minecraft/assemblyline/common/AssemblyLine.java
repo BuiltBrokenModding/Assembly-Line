@@ -20,7 +20,7 @@ import assemblyline.common.machine.BlockManipulator;
 import assemblyline.common.machine.belt.BlockConveyorBelt;
 import assemblyline.common.machine.detector.BlockDetector;
 import assemblyline.common.machine.filter.BlockImprinter;
-import assemblyline.common.machine.filter.ItemFilter;
+import assemblyline.common.machine.filter.ItemImprinter;
 import assemblyline.common.machine.machine.BlockRejector;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -54,6 +54,7 @@ public class AssemblyLine
 	public static final String TEXTURE_PATH = RESOURCE_PATH + "textures/";
 	public static final String LANGUAGE_PATH = RESOURCE_PATH + "language/";
 	public static final String BLOCK_TEXTURE_PATH = TEXTURE_PATH + "blocks.png";
+	public static final String ITEM_TEXTURE_PATH = TEXTURE_PATH + "items.png";
 
 	private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US" };
 
@@ -87,7 +88,7 @@ public class AssemblyLine
 		blockDetector = new BlockDetector(CONFIGURATION.getBlock("Detector", BLOCK_ID_PREFIX + 5).getInt(), 1);
 		blockRejector = new BlockRejector(CONFIGURATION.getBlock("Rejector", BLOCK_ID_PREFIX + 6).getInt());
 
-		itemFilter = new ItemFilter(CONFIGURATION.getBlock("Filter", ITEM_ID_PREFIX).getInt());
+		itemFilter = new ItemImprinter(CONFIGURATION.getBlock("Filter", ITEM_ID_PREFIX).getInt());
 		CONFIGURATION.save();
 
 		NetworkRegistry.instance().registerGuiHandler(this, this.proxy);

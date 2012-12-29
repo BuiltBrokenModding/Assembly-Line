@@ -3,6 +3,8 @@ package assemblyline.common.machine.filter;
 import java.util.ArrayList;
 import java.util.List;
 
+import assemblyline.common.AssemblyLine;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -10,15 +12,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import universalelectricity.prefab.UETab;
 
-public class ItemFilter extends Item
+public class ItemImprinter extends Item
 {
-	public ItemFilter(int id)
+	public ItemImprinter(int id)
 	{
 		super(id);
-		this.setItemName("filter");
-		this.setIconIndex(58);
+		this.setItemName("imprint");
+		this.setIconIndex(1);
 		this.setCreativeTab(UETab.INSTANCE);
 		this.setHasSubtypes(true);
+		this.setTextureFile(AssemblyLine.ITEM_TEXTURE_PATH);
 	}
 
 	@Override

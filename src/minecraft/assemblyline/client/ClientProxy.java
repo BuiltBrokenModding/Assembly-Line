@@ -30,6 +30,7 @@ public class ClientProxy extends CommonProxy
 	public void preInit()
 	{
 		MinecraftForgeClient.preloadTexture(AssemblyLine.BLOCK_TEXTURE_PATH);
+		MinecraftForgeClient.preloadTexture(AssemblyLine.ITEM_TEXTURE_PATH);
 		RenderingRegistry.registerBlockHandler(new BlockRenderingHandler());
 	}
 

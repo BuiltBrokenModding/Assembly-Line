@@ -14,7 +14,7 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.network.PacketManager;
-import assemblyline.common.machine.filter.ItemFilter;
+import assemblyline.common.machine.filter.ItemImprinter;
 import assemblyline.common.machine.filter.TileEntityFilterable;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;

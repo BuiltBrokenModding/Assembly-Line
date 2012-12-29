@@ -36,7 +36,7 @@ public abstract class TileEntityFilterable extends TileEntityAssemblyNetwork imp
 	{
 		if (this.getFilter() != null && itemStack != null)
 		{
-			ArrayList<ItemStack> checkStacks = ItemFilter.getFilters(getFilter());
+			ArrayList<ItemStack> checkStacks = ItemImprinter.getFilters(getFilter());
 
 			if (checkStacks != null)
 			{

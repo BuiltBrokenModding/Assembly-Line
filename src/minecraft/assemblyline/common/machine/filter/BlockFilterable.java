@@ -55,7 +55,7 @@ public abstract class BlockFilterable extends BlockMachine
 				{
 					if (player.getCurrentEquippedItem() != null)
 					{
-						if (player.getCurrentEquippedItem().getItem() instanceof ItemFilter)
+						if (player.getCurrentEquippedItem().getItem() instanceof ItemImprinter)
 						{
 							((IFilterable) tileEntity).setFilter(player.getCurrentEquippedItem());
 							player.inventory.setInventorySlotContents(player.inventory.currentItem, null);

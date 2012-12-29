@@ -13,7 +13,7 @@ public class BlockImprinter extends BlockMachine
 	public BlockImprinter(int id, int texture)
 	{
 		super(id, Material.wood);
-		this.blockIndexInTexture = 0;
+		this.blockIndexInTexture = 4;
 		this.setBlockName("imprinter");
 		this.setCreativeTab(UETab.INSTANCE);
 		this.setTextureFile(AssemblyLine.BLOCK_TEXTURE_PATH);
@@ -22,9 +22,18 @@ public class BlockImprinter extends BlockMachine
 	/**
 	 * Returns the block texture based on the side being looked at. Args: side
 	 */
-	public int getBlockTextureFromSide(int par1)
+	public int getBlockTextureFromSide(int side)
 	{
-		return this.blockIndexInTexture;
+		if (side == 0)
+		{
+			return this.blockIndexInTexture;
+
+		}
+		else if (side == 1) { return this.blockIndexInTexture + 1;
+
+		}
+
+		return this.blockIndexInTexture + 2;
 	}
 
 	/**

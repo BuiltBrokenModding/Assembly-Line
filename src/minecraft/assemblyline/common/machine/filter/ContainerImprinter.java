@@ -202,11 +202,11 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 
 		if (this.getStackInSlot(0) != null && this.getStackInSlot(1) != null)
 		{
-			if (this.getStackInSlot(0).getItem() instanceof ItemFilter)
+			if (this.getStackInSlot(0).getItem() instanceof ItemImprinter)
 			{
 				ItemStack outputStack = this.getStackInSlot(0).copy();
 				outputStack.stackSize = 1;
-				ArrayList<ItemStack> filters = ItemFilter.getFilters(outputStack);
+				ArrayList<ItemStack> filters = ItemImprinter.getFilters(outputStack);
 				boolean filteringItemExists = false;
 
 				for (ItemStack filteredStack : filters)
@@ -224,7 +224,7 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 					filters.add(this.getStackInSlot(1));
 				}
 
-				ItemFilter.setFilters(outputStack, filters);
+				ItemImprinter.setFilters(outputStack, filters);
 				this.setInventorySlotContents(2, outputStack);
 				didStamp = true;
 			}
@@ -240,9 +240,9 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 
 		if (this.getStackInSlot(3) != null)
 		{
-			if (this.getStackInSlot(3).getItem() instanceof ItemFilter)
+			if (this.getStackInSlot(3).getItem() instanceof ItemImprinter)
 			{
-				ArrayList<ItemStack> filters = ItemFilter.getFilters(this.getStackInSlot(3));
+				ArrayList<ItemStack> filters = ItemImprinter.getFilters(this.getStackInSlot(3));
 
 				if (filters.size() > 0)
 				{
