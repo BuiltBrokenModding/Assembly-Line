@@ -13,16 +13,19 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 import universalelectricity.core.vector.Vector3;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 
-public class ContainerStamper extends Container implements IInventory
+public class ContainerImprinter extends Container implements IInventory, ISlotWatcher
 {
 	private ItemStack[] containingItems = new ItemStack[5];
 	private World worldObj;
 	private Vector3 position;
 	private InventoryPlayer inventoryPlayer;
 
-	public ContainerStamper(InventoryPlayer inventoryPlayer, World worldObj, Vector3 position)
+	public ContainerImprinter(InventoryPlayer inventoryPlayer, World worldObj, Vector3 position)
 	{
 		this.worldObj = worldObj;
 		this.position = position;
@@ -44,13 +47,13 @@ public class ContainerStamper extends Container implements IInventory
 		{
 			for (int var4 = 0; var4 < 9; ++var4)
 			{
-				this.addSlotToContainer(new Slot(inventoryPlayer, var4 + var3 * 9 + 9, 8 + var4 * 18, 84 + var3 * 18));
+				this.addSlotToContainer(new WatchedSlot(inventoryPlayer, var4 + var3 * 9 + 9, 8 + var4 * 18, 84 + var3 * 18, this));
 			}
 		}
 
 		for (var3 = 0; var3 < 9; ++var3)
 		{
-			this.addSlotToContainer(new Slot(inventoryPlayer, var3, 8 + var3 * 18, 142));
+			this.addSlotToContainer(new WatchedSlot(inventoryPlayer, var3, 8 + var3 * 18, 142, this));
 		}
 	}
 
@@ -58,7 +61,6 @@ public class ContainerStamper extends Container implements IInventory
 	public void updateCraftingResults()
 	{
 		super.updateCraftingResults();
-
 	}
 
 	@Override
@@ -106,9 +108,11 @@ public class ContainerStamper extends Container implements IInventory
 			}
 
 			if (slotStack.stackSize == copyStack.stackSize) { return null; }
-
+			
 			slotObj.onPickupFromSlot(player, slotStack);
 		}
+		
+		onInventoryChanged();
 
 		return copyStack;
 	}
@@ -120,9 +124,9 @@ public class ContainerStamper extends Container implements IInventory
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int par1)
+	public ItemStack getStackInSlot(int slot)
 	{
-		return this.containingItems[par1];
+		return this.containingItems[slot];
 	}
 
 	/**
@@ -130,12 +134,12 @@ public class ContainerStamper extends Container implements IInventory
 	 * returns them in a new stack.
 	 */
 	@Override
-	public ItemStack decrStackSize(int par1, int par2)
+	public ItemStack decrStackSize(int slot, int amount)
 	{
-		if (this.containingItems[par1] != null)
+		if (this.containingItems[slot] != null)
 		{
-			ItemStack var3 = this.containingItems[par1];
-			this.containingItems[par1] = null;
+			ItemStack var3 = this.containingItems[slot];
+			this.containingItems[slot] = null;
 			return var3;
 		}
 		else
@@ -149,12 +153,12 @@ public class ContainerStamper extends Container implements IInventory
 	 * an EntityItem - like when you close a workbench GUI.
 	 */
 	@Override
-	public ItemStack getStackInSlotOnClosing(int par1)
+	public ItemStack getStackInSlotOnClosing(int slot)
 	{
-		if (this.containingItems[par1] != null && par1 != 2)
+		if (this.containingItems[slot] != null && slot != 2)
 		{
-			ItemStack var2 = this.containingItems[par1];
-			this.containingItems[par1] = null;
+			ItemStack var2 = this.containingItems[slot];
+			this.containingItems[slot] = null;
 			return var2;
 		}
 		else
@@ -228,23 +232,37 @@ public class ContainerStamper extends Container implements IInventory
 			this.setInventorySlotContents(2, null);
 		}
 
-		/**
-		 * TODO WORK IN PROGRESS. Make filters able to autocraft into its item based on what is in
-		 * the player's inventory
-		 * 
-		 * boolean didCraft = false;
-		 * 
-		 * if (this.getStackInSlot(3) != null) { if (this.getStackInSlot(3).getItem() instanceof
-		 * ItemFilter) { ArrayList<ItemStack> filters =
-		 * ItemFilter.getFilters(this.getStackInSlot(3));
-		 * 
-		 * if (filters.size() > 0) { ItemStack outputStack = filters.get(0);
-		 * 
-		 * if (outputStack != null) { if (this.getIdealRecipe(outputStack) != null) {
-		 * this.setInventorySlotContents(4, outputStack); didCraft = true; } } } } }
-		 * 
-		 * if (!didCraft) { this.setInventorySlotContents(4, null); }
-		 */
+		// CRAFTING
+
+		boolean didCraft = false;
+
+		if (this.getStackInSlot(3) != null)
+		{
+			if (this.getStackInSlot(3).getItem() instanceof ItemFilter)
+			{
+				ArrayList<ItemStack> filters = ItemFilter.getFilters(this.getStackInSlot(3));
+
+				if (filters.size() > 0)
+				{
+					ItemStack outputStack = filters.get(0);
+
+					if (outputStack != null)
+					{
+						if (this.getIdealRecipe(outputStack) != null)
+						{
+							this.setInventorySlotContents(4, outputStack);
+							didCraft = true;
+						}
+					}
+				}
+			}
+		}
+
+		if (!didCraft)
+		{
+			this.setInventorySlotContents(4, null);
+		}
+
 	}
 
 	/**
@@ -268,7 +286,79 @@ public class ContainerStamper extends Container implements IInventory
 						}
 						else if (object instanceof ShapelessRecipes)
 						{
-							if (this.doesMatch(((ShapelessRecipes) object).recipeItems.toArray(), outputItem)) { return (ItemStack[]) ((ShapelessRecipes) object).recipeItems.toArray(); }
+							if (this.doesMatch(((ShapelessRecipes) object).recipeItems.toArray(new ItemStack[1]), outputItem)) { return (ItemStack[]) ((ShapelessRecipes) object).recipeItems.toArray(new ItemStack[1]); }
+						}
+						else if (object instanceof ShapedOreRecipe)
+						{
+							ShapedOreRecipe oreRecipe = (ShapedOreRecipe) object;
+							Object[] oreRecipeInput = (Object[]) ReflectionHelper.getPrivateValue(ShapedOreRecipe.class, oreRecipe, "input");
+							if (doesMatch(oreRecipeInput, outputItem))
+							{
+								ArrayList<ItemStack> finalRecipe = new ArrayList<ItemStack>();
+								for (Object ingredientListObject : oreRecipeInput)
+								{
+									if (ingredientListObject != null)
+									{
+										if (ingredientListObject instanceof ArrayList)
+										{
+											ArrayList ingredientList = (ArrayList) ingredientListObject;
+											for (Object ingredient : ingredientList)
+											{
+												if (ingredient != null)
+												{
+													if (ingredient instanceof ItemStack)
+													{
+														finalRecipe.add((ItemStack) ingredient);
+													}
+												}
+											}
+										}
+									}
+								}
+								if (finalRecipe.size() == oreRecipeInput.length)
+								{
+									return finalRecipe.toArray(new ItemStack[1]);
+								}
+							}
+						}
+						else if (object instanceof ShapelessOreRecipe)
+						{
+							ShapelessOreRecipe oreRecipe = (ShapelessOreRecipe) object;
+							ArrayList oreRecipeInput = (ArrayList) ReflectionHelper.getPrivateValue(ShapelessOreRecipe.class, oreRecipe, "input");
+							if (doesMatch(oreRecipeInput.toArray(), outputItem))
+							{
+								ArrayList<ItemStack> finalRecipe = new ArrayList<ItemStack>();
+								for (Object ingredientListObject : oreRecipeInput)
+								{
+									if (ingredientListObject != null)
+									{
+										if (ingredientListObject instanceof ArrayList)
+										{
+											ArrayList ingredientList = (ArrayList) ingredientListObject;
+											for (Object ingredient : ingredientList)
+											{
+												if (ingredient != null)
+												{
+													if (ingredient instanceof ItemStack)
+													{
+														if (this.inventoryPlayer.hasItemStack((ItemStack) ingredient))
+															finalRecipe.add((ItemStack) ingredient);
+													}
+												}
+											}
+										}
+										else if (ingredientListObject instanceof ItemStack)
+										{
+											if (this.inventoryPlayer.hasItemStack((ItemStack) ingredientListObject))
+												finalRecipe.add((ItemStack) ingredientListObject);
+										}
+									}
+								}
+								if (finalRecipe.size() == oreRecipeInput.size())
+								{
+									return finalRecipe.toArray(new ItemStack[1]);
+								}
+							}
 						}
 					}
 				}
@@ -296,10 +386,42 @@ public class ContainerStamper extends Container implements IInventory
 
 						if (checkStack != null)
 						{
-							if (recipeItem.isItemEqual(checkStack))
+							if (SlotCraftingResult.isItemEqual(recipeItem, checkStack))
 							{
 								// TODO Do NBT CHecking
 								itemMatch++;
+							}
+						}
+					}
+				}
+			}
+			else if (obj instanceof ArrayList)
+			{
+				ArrayList ingredientsList = (ArrayList) obj;
+				Object[] ingredientsArray = ingredientsList.toArray();
+
+				optionsLoop:
+				for (int x = 0; x < ingredientsArray.length; x++)
+				{
+					if (ingredientsArray[x] != null && ingredientsArray[x] instanceof ItemStack)
+					{
+						ItemStack recipeItem = (ItemStack) ingredientsArray[x];
+
+						if (recipeItem != null)
+						{
+							for (int i = 0; i < this.inventoryPlayer.getSizeInventory(); i++)
+							{
+								ItemStack checkStack = this.inventoryPlayer.getStackInSlot(i);
+
+								if (checkStack != null)
+								{
+									if (SlotCraftingResult.isItemEqual(recipeItem, checkStack))
+									{
+										// TODO Do NBT CHecking
+										itemMatch++;
+										break optionsLoop;
+									}
+								}
 							}
 						}
 					}
@@ -311,7 +433,7 @@ public class ContainerStamper extends Container implements IInventory
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer var1)
+	public boolean isUseableByPlayer(EntityPlayer player)
 	{
 		return true;
 	}
@@ -327,21 +449,27 @@ public class ContainerStamper extends Container implements IInventory
 	}
 
 	@Override
-	public void onCraftGuiClosed(EntityPlayer par1EntityPlayer)
+	public void onCraftGuiClosed(EntityPlayer player)
 	{
-		super.onCraftGuiClosed(par1EntityPlayer);
+		super.onCraftGuiClosed(player);
 
 		if (!this.worldObj.isRemote)
 		{
-			for (int i = 0; i < this.getSizeInventory(); ++i)
+			for (int slot = 0; slot < this.getSizeInventory(); ++slot)
 			{
-				ItemStack itemStack = this.getStackInSlotOnClosing(i);
+				ItemStack itemStack = this.getStackInSlotOnClosing(slot);
 
-				if (itemStack != null)
+				if (itemStack != null && slot != 4)
 				{
-					par1EntityPlayer.dropPlayerItem(itemStack);
+					player.dropPlayerItem(itemStack);
 				}
 			}
 		}
+	}
+
+	@Override
+	public void slotContentsChanged()
+	{
+		onInventoryChanged();
 	}
 }

@@ -9,7 +9,7 @@ import assemblyline.common.machine.TileEntityManipulator;
 import assemblyline.common.machine.TileEntityRejector;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt;
 import assemblyline.common.machine.detector.TileEntityDetector;
-import assemblyline.common.machine.filter.ContainerStamper;
+import assemblyline.common.machine.filter.ContainerImprinter;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -40,7 +40,7 @@ public class CommonProxy implements IGuiHandler
 		switch (ID)
 		{
 			case GUI_STAMPER:
-				return new ContainerStamper(player.inventory, world, new Vector3(x, y, z));
+				return new ContainerImprinter(player.inventory, world, new Vector3(x, y, z));
 		}
 
 		return null;

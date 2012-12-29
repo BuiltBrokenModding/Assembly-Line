@@ -8,9 +8,9 @@ import universalelectricity.prefab.UETab;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.CommonProxy;
 
-public class BlockStamper extends BlockMachine
+public class BlockImprinter extends BlockMachine
 {
-	public BlockStamper(int id, int texture)
+	public BlockImprinter(int id, int texture)
 	{
 		super(id, Material.wood);
 		this.blockIndexInTexture = 0;

@@ -19,7 +19,7 @@ import assemblyline.common.block.ItemBlockCrate;
 import assemblyline.common.machine.BlockManipulator;
 import assemblyline.common.machine.belt.BlockConveyorBelt;
 import assemblyline.common.machine.detector.BlockDetector;
-import assemblyline.common.machine.filter.BlockStamper;
+import assemblyline.common.machine.filter.BlockImprinter;
 import assemblyline.common.machine.filter.ItemFilter;
 import assemblyline.common.machine.machine.BlockRejector;
 import cpw.mods.fml.common.Loader;
@@ -65,7 +65,7 @@ public class AssemblyLine
 	public static Block blockManipulator;
 	public static Block blockEngineerTable;
 	public static Block blockCrate;
-	public static Block blockStamper;
+	public static Block blockImprinter;
 	public static Block blockDetector;
 	public static Block blockRejector;
 
@@ -83,7 +83,7 @@ public class AssemblyLine
 		blockManipulator = new BlockManipulator(CONFIGURATION.getBlock("Manipulator", BLOCK_ID_PREFIX + 1).getInt());
 		blockEngineerTable = new BlockEngineerTable(CONFIGURATION.getBlock("Architect's Table", BLOCK_ID_PREFIX + 2).getInt());
 		blockCrate = new BlockCrate(CONFIGURATION.getBlock("Crate", BLOCK_ID_PREFIX + 3).getInt(), 0);
-		blockStamper = new BlockStamper(CONFIGURATION.getBlock("Stamper", BLOCK_ID_PREFIX + 4).getInt(), 0);
+		blockImprinter = new BlockImprinter(CONFIGURATION.getBlock("Imprinter", BLOCK_ID_PREFIX + 4).getInt(), 0);
 		blockDetector = new BlockDetector(CONFIGURATION.getBlock("Detector", BLOCK_ID_PREFIX + 5).getInt(), 1);
 		blockRejector = new BlockRejector(CONFIGURATION.getBlock("Rejector", BLOCK_ID_PREFIX + 6).getInt());
 
@@ -95,7 +95,7 @@ public class AssemblyLine
 		GameRegistry.registerBlock(blockCrate, ItemBlockCrate.class, "Crate");
 		GameRegistry.registerBlock(blockManipulator, "Manipulator");
 		// GameRegistry.registerBlock(blockEngineerTable, "Engineer's Table");
-		GameRegistry.registerBlock(blockStamper, "Stamper");
+		GameRegistry.registerBlock(blockImprinter, "Imprinter");
 		GameRegistry.registerBlock(blockDetector, "Detector");
 		GameRegistry.registerBlock(blockRejector, "Rejector");
 
@@ -115,7 +115,7 @@ public class AssemblyLine
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemFilter, new Object[] { "R", "P", "I", 'P', Item.paper, 'R', Item.redstone, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
 
 		// Stamper
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockStamper, new Object[] { "SIS", "SPS", "WWW", 'S', "ingotSteel", 'W', Block.wood, 'P', Block.pistonStickyBase, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockImprinter, new Object[] { "SIS", "SPS", "WWW", 'S', "ingotSteel", 'W', Block.wood, 'P', Block.pistonStickyBase, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
 
 		// Detector
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, new Object[] { "SES", "SCS", "SPS", 'S', "ingotSteel", 'C', "basicCircuit", 'E', Item.eyeOfEnder }));

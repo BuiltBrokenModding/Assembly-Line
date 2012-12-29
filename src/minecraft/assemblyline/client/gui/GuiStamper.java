@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.machine.filter.ContainerStamper;
+import assemblyline.common.machine.filter.ContainerImprinter;
 
 public class GuiStamper extends GuiContainer
 {
@@ -18,7 +18,7 @@ public class GuiStamper extends GuiContainer
 
 	public GuiStamper(InventoryPlayer par1InventoryPlayer, World worldObj, Vector3 position)
 	{
-		super(new ContainerStamper(par1InventoryPlayer, worldObj, position));
+		super(new ContainerImprinter(par1InventoryPlayer, worldObj, position));
 	}
 
 	/**
