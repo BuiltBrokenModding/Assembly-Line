@@ -467,10 +467,4 @@ public class TileEntityManipulator extends TileEntityImprintable implements IRed
 	{
 		this.isRedstonePowered = false;
 	}
-
-	@Override
-	public String getInvName()
-	{
-		return TranslationHelper.getLocal("tile.manipulator.name");
-	}
 }

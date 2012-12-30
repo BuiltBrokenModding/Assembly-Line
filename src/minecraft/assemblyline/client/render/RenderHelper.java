@@ -26,6 +26,7 @@ public class RenderHelper
 		RenderManager renderManager = RenderManager.instance;
 		FontRenderer fontRenderer = renderManager.getFontRenderer();
 		float scale = 0.027f;
+		GL11.glColor4f(1f, 1f, 1f, 0.5f);
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.0F, (float) y + 2.3F, (float) z);
 		GL11.glNormal3f(0.0F, 1.0F, 0.0F);
@@ -50,6 +51,7 @@ public class RenderHelper
 		tessellator.addVertex((double) (stringMiddle + 1), (double) (-1 + yOffset), 0.0D);
 		tessellator.draw();
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glColor4f(1f, 1f, 1f, 0.5f);
 		fontRenderer.drawString(text, -fontRenderer.getStringWidth(text) / 2, yOffset, color);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glDepthMask(true);

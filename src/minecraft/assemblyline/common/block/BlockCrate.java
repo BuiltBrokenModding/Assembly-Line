@@ -5,14 +5,16 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.prefab.BlockMachine;
 import universalelectricity.prefab.UETab;
+import assemblyline.api.IFilterable;
 import assemblyline.common.AssemblyLine;
+import assemblyline.common.machine.imprinter.ItemImprinter;
 
 /**
- * A block that allows the placement of mass amount of a specific item within it. It will be allowed
- * to go on Conveyor Belts
+ * A block that allows the placement of mass amount of a specific item within it. It will be allowed to go on Conveyor Belts
  * 
  * @author Calclavia
  * 
@@ -36,6 +38,43 @@ public class BlockCrate extends BlockMachine
 		if (world.getBlockTileEntity(x, y, z) instanceof TileEntityCrate)
 		{
 			TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
+
+			if (side == ForgeDirection.UP.ordinal())
+			{
+				if (tileEntity != null)
+				{
+					if (tileEntity instanceof IFilterable)
+					{
+						ItemStack containingStack = ((IFilterable) tileEntity).getFilter();
+
+						if (containingStack != null)
+						{
+							if (!world.isRemote)
+							{
+								EntityItem dropStack = new EntityItem(world, player.posX, player.posY, player.posZ, containingStack);
+								dropStack.delayBeforeCanPickup = 0;
+								world.spawnEntityInWorld(dropStack);
+							}
+
+							((IFilterable) tileEntity).setFilter(null);
+							return true;
+						}
+						else
+						{
+							if (player.getCurrentEquippedItem() != null)
+							{
+								if (player.getCurrentEquippedItem().getItem() instanceof ItemImprinter)
+								{
+									((IFilterable) tileEntity).setFilter(player.getCurrentEquippedItem());
+									player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+									return true;
+								}
+							}
+						}
+
+					}
+				}
+			}
 
 			if (side > 1 && hitY > 0.7)
 			{
@@ -163,7 +202,12 @@ public class BlockCrate extends BlockMachine
 
 		if (containingStack != null)
 		{
-			if (containingStack.isStackable() && containingStack.isItemEqual(itemStack))
+			boolean filterValid = true;
+			if (tileEntity.getFilter() != null)
+			{
+				filterValid = itemStack.isItemEqual(ItemImprinter.getFilters(tileEntity.getFilter()).get(0));
+			}
+			if (containingStack.isStackable() && containingStack.isItemEqual(itemStack) && filterValid)
 			{
 				int newStackSize = containingStack.stackSize + itemStack.stackSize;
 				int overFlowAmount = newStackSize - tileEntity.getInventoryStackLimit();
@@ -183,8 +227,16 @@ public class BlockCrate extends BlockMachine
 		}
 		else
 		{
-			tileEntity.setInventorySlotContents(0, itemStack.copy());
-			itemStack.stackSize = 0;
+			boolean filterValid = true;
+			if (tileEntity.getFilter() != null)
+			{
+				filterValid = itemStack.isItemEqual(ItemImprinter.getFilters(tileEntity.getFilter()).get(0));
+			}
+			if (filterValid)
+			{
+				tileEntity.setInventorySlotContents(0, itemStack.copy());
+				itemStack.stackSize = 0;
+			}
 		}
 
 		if (itemStack.stackSize <= 0) { return null; }
@@ -211,10 +263,7 @@ public class BlockCrate extends BlockMachine
 				{
 					return this.ejectItems(tileEntity, player, TileEntityCrate.MAX_LIMIT);
 				}
-				else
-				{
-					return this.ejectItems(tileEntity, player, 64);
-				}
+				else if (side != ForgeDirection.UP.ordinal()) { return this.ejectItems(tileEntity, player, 64); }
 			}
 		}
 

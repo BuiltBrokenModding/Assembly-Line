@@ -4,19 +4,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
-import universalelectricity.prefab.tile.TileEntityAdvanced;
-import assemblyline.common.AssemblyLine;
+import assemblyline.common.machine.imprinter.TileEntityImprintable;
 
-import com.google.common.io.ByteArrayDataInput;
-
-public class TileEntityCrate extends TileEntityAdvanced implements ISidedInventory, IPacketReceiver
+public class TileEntityCrate extends TileEntityImprintable implements ISidedInventory, IPacketReceiver
 {
 	public static final int MAX_LIMIT = 2048;
 	private ItemStack[] containingItems = new ItemStack[1];
@@ -27,7 +21,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ISidedInvento
 		return false;
 	}
 
-	@Override
+	/*@Override
 	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
 	{
 		if (this.worldObj.isRemote)
@@ -57,14 +51,14 @@ public class TileEntityCrate extends TileEntityAdvanced implements ISidedInvento
 				e.printStackTrace();
 			}
 		}
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public Packet getDescriptionPacket()
 	{
 		if (this.containingItems[0] != null) { return PacketManager.getPacket(AssemblyLine.CHANNEL, this, true, this.containingItems[0].itemID, this.containingItems[0].stackSize, this.containingItems[0].getItemDamage()); }
 		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, false);
-	}
+	}*/
 
 	/**
 	 * Inventory functions.
@@ -124,23 +118,23 @@ public class TileEntityCrate extends TileEntityAdvanced implements ISidedInvento
 	}
 
 	@Override
-	public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
+	public void setInventorySlotContents(int slot, ItemStack stack)
 	{
-		if (par2ItemStack != null)
+		if (stack != null)
 		{
-			if (par2ItemStack.isStackable())
+			if (stack.isStackable())
 			{
-				this.containingItems[par1] = par2ItemStack;
+				this.containingItems[slot] = stack;
 
-				if (par2ItemStack != null && par2ItemStack.stackSize > this.getInventoryStackLimit())
+				if (stack != null && stack.stackSize > this.getInventoryStackLimit())
 				{
-					par2ItemStack.stackSize = this.getInventoryStackLimit();
+					stack.stackSize = this.getInventoryStackLimit();
 				}
 			}
 		}
 		else
 		{
-			this.containingItems[par1] = null;
+			this.containingItems[slot] = null;
 		}
 
 		if (!this.worldObj.isRemote)

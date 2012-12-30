@@ -26,7 +26,7 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
-public abstract class TileEntityImprintable extends TileEntityAssemblyNetwork implements IRotatable, IFilterable, IPacketReceiver, IInventory
+public abstract class TileEntityImprintable extends TileEntityAssemblyNetwork implements IRotatable, IFilterable, IPacketReceiver
 {
 	private ItemStack filterItem;
 	private boolean inverted;
@@ -58,99 +58,9 @@ public abstract class TileEntityImprintable extends TileEntityAssemblyNetwork im
 	}
 
 	@Override
-	public int getSizeInventory()
-	{
-		return 1;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int slot)
-	{
-		if (slot == 0)
-			return this.filterItem;
-		else
-			return null;
-	}
-
-	@Override
-	public ItemStack decrStackSize(int slot, int amount)
-	{
-		if (this.filterItem != null)
-		{
-			ItemStack stack;
-
-			if (this.filterItem.stackSize <= amount)
-			{
-				stack = this.filterItem;
-				filterItem = null;
-				return stack;
-			}
-			else
-			{
-				stack = this.filterItem.splitStack(amount);
-
-				if (this.filterItem.stackSize == 0)
-				{
-					this.filterItem = null;
-				}
-
-				return stack;
-			}
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	@Override
-	public ItemStack getStackInSlotOnClosing(int slot)
-	{
-		if (this.filterItem != null)
-		{
-			ItemStack stack = this.filterItem;
-			filterItem = null;
-			return stack;
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack)
-	{
-		this.filterItem = stack;
-
-		if (stack != null && stack.stackSize > this.getInventoryStackLimit())
-		{
-			stack.stackSize = this.getInventoryStackLimit();
-		}
-	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer par1EntityPlayer)
-	{
-		return this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord) != this ? false : par1EntityPlayer.getDistanceSq(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D) <= 64.0D;
-	}
-
-	@Override
-	public void openChest()
-	{
-
-	}
-
-	@Override
-	public void closeChest()
-	{
-
-	}
-
-	@Override
 	public void setFilter(ItemStack filter)
 	{
-		this.setInventorySlotContents(0, filter);
+		this.filterItem = filter;
 
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 		{
@@ -161,7 +71,7 @@ public abstract class TileEntityImprintable extends TileEntityAssemblyNetwork im
 	@Override
 	public ItemStack getFilter()
 	{
-		return this.getStackInSlot(0);
+		return this.filterItem;
 	}
 
 	public void setInverted(boolean inverted)
@@ -193,12 +103,6 @@ public abstract class TileEntityImprintable extends TileEntityAssemblyNetwork im
 	public void setDirection(ForgeDirection facingDirection)
 	{
 		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, facingDirection.ordinal());
-	}
-
-	@Override
-	public int getInventoryStackLimit()
-	{
-		return 1;
 	}
 
 	/**
@@ -262,7 +166,7 @@ public abstract class TileEntityImprintable extends TileEntityAssemblyNetwork im
 
 		inverted = nbt.getBoolean("inverted");
 		NBTTagCompound filter = nbt.getCompoundTag("filter");
-		setInventorySlotContents(0, ItemStack.loadItemStackFromNBT(filter));
+		this.filterItem = ItemStack.loadItemStackFromNBT(filter);
 	}
 
 }

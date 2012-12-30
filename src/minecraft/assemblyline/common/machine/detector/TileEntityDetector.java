@@ -122,10 +122,4 @@ public class TileEntityDetector extends TileEntityImprintable
 	{
 		return this.isPoweringTo(side);
 	}
-
-	@Override
-	public String getInvName()
-	{
-		return "Detector";
-	}
 }

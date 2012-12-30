@@ -132,15 +132,6 @@ public class TileEntityRejector extends TileEntityImprintable
 	}
 
 	/**
-	 * Inventory Methods
-	 */
-	@Override
-	public String getInvName()
-	{
-		return TranslationHelper.getLocal("tile.rejector.name");
-	}
-
-	/**
 	 * UE methods
 	 */
 	@Override
