@@ -1,7 +1,9 @@
 package assemblyline.common.machine.detector;
 
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -21,6 +23,40 @@ public class BlockDetector extends BlockImprintable
 		this.blockIndexInTexture = texture;
 		this.setTextureFile(AssemblyLine.BLOCK_TEXTURE_PATH);
 	}
+	
+	@Override
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving entity)
+	{
+		int angle = MathHelper.floor_double((entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+		int change = 2;
+
+		switch (angle)
+		{
+			case 0:
+				change = ForgeDirection.NORTH.ordinal();
+				break;
+			case 1:
+				change = ForgeDirection.EAST.ordinal();
+				break;
+			case 2:
+				change = ForgeDirection.SOUTH.ordinal();
+				break;
+			case 3:
+				change = ForgeDirection.WEST.ordinal();
+				break;
+		}
+		
+		if (entity.rotationPitch < -70f) //up
+		{
+			change = ForgeDirection.DOWN.ordinal();
+		}
+		if (entity.rotationPitch > 70f) //down
+		{
+			change = ForgeDirection.UP.ordinal();
+		}
+		
+		world.setBlockMetadataWithNotify(x, y, z, change);
+	}
 
 	@Override
 	public int getBlockTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side)
@@ -28,7 +64,7 @@ public class BlockDetector extends BlockImprintable
 		TileEntity tileEntity = iBlockAccess.getBlockTileEntity(x, y, z);
 		if (tileEntity instanceof TileEntityDetector)
 		{
-			if (side == ForgeDirection.DOWN.ordinal())
+			if (side == ForgeDirection.getOrientation(iBlockAccess.getBlockMetadata(x, y, z)).ordinal())
 			{
 				if (((TileEntityDetector) tileEntity).isInverted())
 				{
@@ -43,6 +79,13 @@ public class BlockDetector extends BlockImprintable
 		}
 
 		return this.blockIndexInTexture;
+	}
+	
+	@Override
+	public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
+	{
+		world.setBlockMetadataWithNotify(x, y, z, side);
+		return true;
 	}
 
 	@Override

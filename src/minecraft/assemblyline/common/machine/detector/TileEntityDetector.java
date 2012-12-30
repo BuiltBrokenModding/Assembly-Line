@@ -25,7 +25,9 @@ public class TileEntityDetector extends TileEntityImprintable
 		if (!this.worldObj.isRemote && this.ticks % 10 == 0)
 		{
 			int metadata = this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord);
-			AxisAlignedBB testArea = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord - 1, this.zCoord, this.xCoord + 1, this.yCoord, this.zCoord + 1);
+			AxisAlignedBB testArea = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1);
+			ForgeDirection dir = ForgeDirection.getOrientation(metadata);
+			testArea.offset(dir.offsetX, dir.offsetY, dir.offsetZ);
 
 			ArrayList<Entity> entities = (ArrayList<Entity>) this.worldObj.getEntitiesWithinAABB(EntityItem.class, testArea);
 			boolean powerCheck = false;
