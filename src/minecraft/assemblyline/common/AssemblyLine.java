@@ -22,6 +22,8 @@ import assemblyline.common.machine.detector.BlockDetector;
 import assemblyline.common.machine.imprinter.BlockImprinter;
 import assemblyline.common.machine.imprinter.ItemImprinter;
 import assemblyline.common.machine.machine.BlockRejector;
+import assemblyline.common.machine.programmer.BlockProgrammer;
+import assemblyline.common.machine.programmer.ItemDisk;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -67,11 +69,13 @@ public class AssemblyLine
 	public static Block blockEncoder;
 	public static Block blockCrate;
 	public static Block blockImprinter;
+	public static Block blockProgrammer;
 	public static Block blockDetector;
 	public static Block blockRejector;
 
 	public static final int ITEM_ID_PREFIX = 3030;
 	public static Item itemImprint;
+	public static Item itemDisk;
 
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event)
@@ -87,8 +91,10 @@ public class AssemblyLine
 		blockImprinter = new BlockImprinter(CONFIGURATION.getBlock("Imprinter", BLOCK_ID_PREFIX + 4).getInt(), 0);
 		blockDetector = new BlockDetector(CONFIGURATION.getBlock("Detector", BLOCK_ID_PREFIX + 5).getInt(), 1);
 		blockRejector = new BlockRejector(CONFIGURATION.getBlock("Rejector", BLOCK_ID_PREFIX + 6).getInt());
+		blockProgrammer = new BlockProgrammer(CONFIGURATION.getBlock("Programmer", BLOCK_ID_PREFIX + 7).getInt(), 0);
 
 		itemImprint = new ItemImprinter(CONFIGURATION.getBlock("Imprint", ITEM_ID_PREFIX).getInt());
+		itemDisk = new ItemDisk(CONFIGURATION.getBlock("Disk", ITEM_ID_PREFIX + 1).getInt());
 		CONFIGURATION.save();
 
 		NetworkRegistry.instance().registerGuiHandler(this, this.proxy);
@@ -97,6 +103,7 @@ public class AssemblyLine
 		GameRegistry.registerBlock(blockManipulator, "Manipulator");
 		// GameRegistry.registerBlock(blockEncoder, "Encoder");
 		GameRegistry.registerBlock(blockImprinter, "Imprinter");
+		GameRegistry.registerBlock(blockProgrammer, "Programmer");
 		GameRegistry.registerBlock(blockDetector, "Detector");
 		GameRegistry.registerBlock(blockRejector, "Rejector");
 

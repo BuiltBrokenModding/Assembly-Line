@@ -10,6 +10,7 @@ import assemblyline.common.machine.TileEntityRejector;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt;
 import assemblyline.common.machine.detector.TileEntityDetector;
 import assemblyline.common.machine.imprinter.ContainerImprinter;
+import assemblyline.common.machine.programmer.ContainerProgrammer;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -17,6 +18,7 @@ public class CommonProxy implements IGuiHandler
 {
 	public static final int GUI_STAMPER = 1;
 	public static final int GUI_ARCHITECHT_TABLE = 2;
+	public static final int GUI_PROGRAMMER = 3;
 
 	public void preInit()
 	{
@@ -41,6 +43,8 @@ public class CommonProxy implements IGuiHandler
 		{
 			case GUI_STAMPER:
 				return new ContainerImprinter(player.inventory, world, new Vector3(x, y, z));
+			case GUI_PROGRAMMER:
+				return new ContainerProgrammer(player.inventory, world, new Vector3(x, y, z));
 		}
 
 		return null;

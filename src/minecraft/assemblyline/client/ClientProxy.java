@@ -7,6 +7,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import universalelectricity.core.vector.Vector3;
 import assemblyline.client.gui.GuiImprinter;
+import assemblyline.client.gui.GuiProgrammer;
 import assemblyline.client.render.BlockRenderingHandler;
 import assemblyline.client.render.RenderConveyorBelt;
 import assemblyline.client.render.RenderCrate;
@@ -54,6 +55,8 @@ public class ClientProxy extends CommonProxy
 		{
 			case GUI_STAMPER:
 				return new GuiImprinter(player.inventory, world, new Vector3(x, y, z));
+			case GUI_PROGRAMMER:
+				return new GuiProgrammer(player.inventory, world, new Vector3(x, y, z));
 		}
 
 		return null;
