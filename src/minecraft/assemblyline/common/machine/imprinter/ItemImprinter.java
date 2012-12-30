@@ -22,6 +22,12 @@ public class ItemImprinter extends Item
 		this.setHasSubtypes(true);
 		this.setTextureFile(AssemblyLine.ITEM_TEXTURE_PATH);
 	}
+	
+	@Override
+	public int getItemStackLimit()
+	{
+		return 1;
+	}
 
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List list, boolean par4)
