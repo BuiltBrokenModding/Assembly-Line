@@ -1,6 +1,5 @@
 package assemblyline.common.machine;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -8,7 +7,10 @@ import universalelectricity.core.electricity.ElectricityConnections;
 import universalelectricity.core.electricity.ElectricityNetwork;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
+import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.TileEntityElectricityReceiver;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 
 /**
  * A class to be inherited by all machines on the assembly line. This will allow all machines to be
@@ -65,7 +67,7 @@ public abstract class TileEntityAssemblyNetwork extends TileEntityElectricityRec
 	{
 		super.updateEntity();
 
-		if (!this.worldObj.isRemote)
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 		{
 			for (Object obj : ElectricityConnections.getDirections(this).toArray())
 			{
@@ -99,7 +101,8 @@ public abstract class TileEntityAssemblyNetwork extends TileEntityElectricityRec
 		{
 			if (this.wattsReceived >= this.getRequest().getWatts())
 			{
-				this.wattsReceived = 0;
+				this.wattsReceived -= getRequest().getWatts();
+				//this.wattsReceived = 0;
 				this.powerTransferRange = this.getMaxTransferRange();
 			}
 			else
@@ -107,12 +110,14 @@ public abstract class TileEntityAssemblyNetwork extends TileEntityElectricityRec
 				this.powerTransferRange = 0;
 				this.updatePowerTransferRange();
 			}
+			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+				PacketManager.sendPacketToClients(getDescriptionPacket());
 		}
 	}
 
 	protected void onUpdate()
 	{
-
+		
 	}
 
 	@Override

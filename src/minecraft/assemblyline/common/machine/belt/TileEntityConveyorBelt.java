@@ -23,6 +23,9 @@ import assemblyline.common.machine.TileEntityAssemblyNetwork;
 
 import com.google.common.io.ByteArrayDataInput;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+
 public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements IPacketReceiver, IBelt, IRotatable
 {
 	public enum SlantType
@@ -45,6 +48,7 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	public TileEntityConveyorBelt()
 	{
 		super();
+		//ElectricityConnections.registerConnector(this, EnumSet.of(ForgeDirection.DOWN, ForgeDirection.EAST, ForgeDirection.WEST, ForgeDirection.NORTH, ForgeDirection.SOUTH));
 		ElectricityConnections.registerConnector(this, EnumSet.of(ForgeDirection.DOWN));
 	}
 
@@ -80,7 +84,7 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 		{
 			ForgeDirection direction = this.getDirection();
 
-			if (d == 1)
+			//if (d == 1)
 			{
 				direction = direction.getOpposite();
 			}
@@ -109,13 +113,14 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	@Override
 	public void onUpdate()
 	{
-		if (!worldObj.isRemote && this.ticks % 20 == 0)
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && this.ticks % 20 == 0)
 		{
-			PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 20);
+			PacketManager.sendPacketToClients(this.getDescriptionPacket());
 		}
 
 		if (this.isRunning())
 		{
+			//System.out.println(FMLCommonHandler.instance().getEffectiveSide());
 			this.wheelRotation += 40;
 
 			if (this.wheelRotation > 360)
