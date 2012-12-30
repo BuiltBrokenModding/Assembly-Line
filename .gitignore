@@ -13,4 +13,5 @@ CHANGELOG
 !info.txt
 !publish.bat
 !include.bat
+!buildlocal.bat
 !/README
