@@ -51,8 +51,27 @@ public class BlockManipulator extends BlockImprintable
 
 		if (tileEntity instanceof TileEntityManipulator)
 		{
-			((TileEntityManipulator) tileEntity).toggleOutput();
-			return true;
+			TileEntityManipulator manip = (TileEntityManipulator) tileEntity;
+			boolean manipMode = manip.isOutput();
+			boolean inverted = manip.isInverted();
+			if (manipMode && !inverted)
+			{
+				manip.toggleInversion();
+			}
+			else if (manipMode && inverted)
+			{
+				manip.toggleOutput();
+				manip.toggleInversion();
+			}
+			else if (!manipMode && !inverted)
+			{
+				manip.toggleInversion();
+			}
+			else
+			{
+				manip.toggleOutput();
+				manip.toggleInversion();
+			}
 		}
 
 		return false;
