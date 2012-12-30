@@ -205,7 +205,10 @@ public class BlockCrate extends BlockMachine
 			boolean filterValid = true;
 			if (tileEntity.getFilter() != null)
 			{
-				filterValid = itemStack.isItemEqual(ItemImprinter.getFilters(tileEntity.getFilter()).get(0));
+				if (ItemImprinter.getFilters(tileEntity.getFilter()).size() > 0)
+				{
+					filterValid = itemStack.isItemEqual(ItemImprinter.getFilters(tileEntity.getFilter()).get(0));
+				}
 			}
 			if (containingStack.isStackable() && containingStack.isItemEqual(itemStack) && filterValid)
 			{
@@ -230,7 +233,10 @@ public class BlockCrate extends BlockMachine
 			boolean filterValid = true;
 			if (tileEntity.getFilter() != null)
 			{
-				filterValid = itemStack.isItemEqual(ItemImprinter.getFilters(tileEntity.getFilter()).get(0));
+				if (ItemImprinter.getFilters(tileEntity.getFilter()).size() > 0)
+				{
+					filterValid = itemStack.isItemEqual(ItemImprinter.getFilters(tileEntity.getFilter()).get(0));
+				}
 			}
 			if (filterValid)
 			{

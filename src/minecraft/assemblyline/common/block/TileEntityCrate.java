@@ -8,6 +8,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
+import assemblyline.common.machine.imprinter.ItemImprinter;
 import assemblyline.common.machine.imprinter.TileEntityImprintable;
 
 public class TileEntityCrate extends TileEntityImprintable implements ISidedInventory, IPacketReceiver
@@ -122,6 +123,14 @@ public class TileEntityCrate extends TileEntityImprintable implements ISidedInve
 	{
 		if (stack != null)
 		{
+			boolean filterValid = true;
+			if (getFilter() != null)
+			{
+				if (ItemImprinter.getFilters(getFilter()).size() > 0)
+				{
+					filterValid = stack.isItemEqual(ItemImprinter.getFilters(getFilter()).get(0));
+				}
+			}
 			if (stack.isStackable())
 			{
 				this.containingItems[slot] = stack;
