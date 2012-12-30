@@ -1,5 +1,7 @@
 package assemblyline.common.block;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -146,7 +148,7 @@ public class TileEntityCrate extends TileEntityImprintable implements ISidedInve
 			this.containingItems[slot] = null;
 		}
 
-		if (!this.worldObj.isRemote)
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 		{
 			PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj);
 		}
