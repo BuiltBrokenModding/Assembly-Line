@@ -84,12 +84,12 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 		{
 			ForgeDirection direction = this.getDirection();
 
-			//if (d == 1)
+			if (d == 1)
 			{
 				direction = direction.getOpposite();
 			}
 
-			for (int i = -1; i < 1; i++)
+			for (int i = -1; i <= 1; i++)
 			{
 				TileEntity tileEntity = worldObj.getBlockTileEntity(this.xCoord + direction.offsetX, this.yCoord + i, this.zCoord + direction.offsetZ);
 				if (tileEntity != null)
