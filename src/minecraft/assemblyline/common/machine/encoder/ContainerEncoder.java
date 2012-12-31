@@ -1,4 +1,4 @@
-package assemblyline.common.machine.programmer;
+package assemblyline.common.machine.encoder;
 
 import java.util.ArrayList;
 
@@ -18,25 +18,24 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
-public class ContainerProgrammer extends Container implements IInventory
+public class ContainerEncoder extends Container implements IInventory
 {
-	private ItemStack[] containingItems = new ItemStack[3];
+	private ItemStack[] containingItems = new ItemStack[1];
 	private World worldObj;
 	private Vector3 position;
 	private InventoryPlayer inventoryPlayer;
+	private IInventoryWatcher watcher;
 
-	public ContainerProgrammer(InventoryPlayer inventoryPlayer, World worldObj, Vector3 position)
+	public ContainerEncoder(InventoryPlayer inventoryPlayer, World worldObj, Vector3 position)
 	{
 		this.worldObj = worldObj;
 		this.position = position;
 		this.inventoryPlayer = inventoryPlayer;
-
-		// Paper Input
-		this.addSlotToContainer(new SlotDisk(this, 0, 42, 24));
-		// Item Stamp
-		this.addSlotToContainer(new Slot(this, 1, 78, 24));
-		// Output Filter
-		this.addSlotToContainer(new SlotDiskResult(this, 2, 136, 24));
+		
+		// Disk
+		this.addSlotToContainer(new Slot(this, 0, 80, 24));
+		// Output Disk
+		//this.addSlotToContainer(new SlotDiskResult(this, 2, 136, 24));
 
 		int var3;
 
@@ -44,14 +43,24 @@ public class ContainerProgrammer extends Container implements IInventory
 		{
 			for (int var4 = 0; var4 < 9; ++var4)
 			{
-				this.addSlotToContainer(new Slot(inventoryPlayer, var4 + var3 * 9 + 9, 8 + var4 * 18, 84 + var3 * 18));
+				this.addSlotToContainer(new Slot(inventoryPlayer, var4 + var3 * 9 + 9, 8 + var4 * 18, 170 + var3 * 18));
 			}
 		}
 
 		for (var3 = 0; var3 < 9; ++var3)
 		{
-			this.addSlotToContainer(new Slot(inventoryPlayer, var3, 8 + var3 * 18, 142));
+			this.addSlotToContainer(new Slot(inventoryPlayer, var3, 8 + var3 * 18, 228));
 		}
+	}
+	
+	public void setWatcher(IInventoryWatcher watcher)
+	{
+		this.watcher = watcher;
+	}
+	
+	public IInventoryWatcher getWatcher()
+	{
+		return this.watcher;
 	}
 
 	@Override
@@ -177,7 +186,7 @@ public class ContainerProgrammer extends Container implements IInventory
 	@Override
 	public String getInvName()
 	{
-		return "Programmer";
+		return "Encoder";
 	}
 
 	@Override

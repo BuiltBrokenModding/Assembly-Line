@@ -1,4 +1,4 @@
-package assemblyline.common.machine.programmer;
+package assemblyline.common.machine.encoder;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,13 +8,13 @@ import universalelectricity.prefab.UETab;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.CommonProxy;
 
-public class BlockProgrammer extends BlockMachine
+public class BlockEncoder extends BlockMachine
 {
-	public BlockProgrammer(int id, int texture)
+	public BlockEncoder(int id, int texture)
 	{
 		super(id, Material.wood);
 		this.blockIndexInTexture = 4;
-		this.setBlockName("programmer");
+		this.setBlockName("encoder");
 		this.setCreativeTab(UETab.INSTANCE);
 		this.setTextureFile(AssemblyLine.BLOCK_TEXTURE_PATH);
 	}
@@ -44,7 +44,7 @@ public class BlockProgrammer extends BlockMachine
 	{
 		if (!world.isRemote)
 		{
-			entityPlayer.openGui(AssemblyLine.instance, CommonProxy.GUI_PROGRAMMER, world, x, y, z);
+			entityPlayer.openGui(AssemblyLine.instance, CommonProxy.GUI_ENCODER, world, x, y, z);
 		}
 
 		return true;

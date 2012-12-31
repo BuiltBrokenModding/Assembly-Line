@@ -1,4 +1,4 @@
-package assemblyline.common.machine.programmer;
+package assemblyline.common.machine.encoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ public class ItemDisk extends Item
 	{
 		super(id);
 		this.setItemName("disk");
-		this.setIconIndex(1);
+		this.setIconIndex(0);
 		this.setCreativeTab(UETab.INSTANCE);
 		this.setHasSubtypes(true);
 		this.setTextureFile(AssemblyLine.ITEM_TEXTURE_PATH);

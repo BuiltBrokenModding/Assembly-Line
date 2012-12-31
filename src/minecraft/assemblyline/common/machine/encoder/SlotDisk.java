@@ -1,4 +1,4 @@
-package assemblyline.common.machine.programmer;
+package assemblyline.common.machine.encoder;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;

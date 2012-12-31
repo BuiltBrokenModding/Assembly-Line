@@ -14,16 +14,16 @@ import universalelectricity.prefab.UETab;
 import universalelectricity.prefab.UpdateNotifier;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.block.BlockCrate;
-import assemblyline.common.block.BlockEncoder;
+import assemblyline.common.block.BlockEncoder2;
 import assemblyline.common.block.ItemBlockCrate;
 import assemblyline.common.machine.BlockManipulator;
 import assemblyline.common.machine.belt.BlockConveyorBelt;
 import assemblyline.common.machine.detector.BlockDetector;
+import assemblyline.common.machine.encoder.BlockEncoder;
+import assemblyline.common.machine.encoder.ItemDisk;
 import assemblyline.common.machine.imprinter.BlockImprinter;
 import assemblyline.common.machine.imprinter.ItemImprinter;
 import assemblyline.common.machine.machine.BlockRejector;
-import assemblyline.common.machine.programmer.BlockProgrammer;
-import assemblyline.common.machine.programmer.ItemDisk;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -66,7 +66,7 @@ public class AssemblyLine
 
 	public static Block blockConveyorBelt;
 	public static Block blockManipulator;
-	public static Block blockEncoder;
+	//public static Block blockEncoder;
 	public static Block blockCrate;
 	public static Block blockImprinter;
 	public static Block blockProgrammer;
@@ -86,12 +86,12 @@ public class AssemblyLine
 		CONFIGURATION.load();
 		blockConveyorBelt = new BlockConveyorBelt(CONFIGURATION.getBlock("Conveyor Belt", BLOCK_ID_PREFIX).getInt());
 		blockManipulator = new BlockManipulator(CONFIGURATION.getBlock("Manipulator", BLOCK_ID_PREFIX + 1).getInt());
-		blockEncoder = new BlockEncoder(CONFIGURATION.getBlock("Encoder", BLOCK_ID_PREFIX + 2).getInt());
+		//blockEncoder = new BlockEncoder2(CONFIGURATION.getBlock("Encoder", BLOCK_ID_PREFIX + 2).getInt());
 		blockCrate = new BlockCrate(CONFIGURATION.getBlock("Crate", BLOCK_ID_PREFIX + 3).getInt(), 0);
 		blockImprinter = new BlockImprinter(CONFIGURATION.getBlock("Imprinter", BLOCK_ID_PREFIX + 4).getInt(), 0);
 		blockDetector = new BlockDetector(CONFIGURATION.getBlock("Detector", BLOCK_ID_PREFIX + 5).getInt(), 1);
 		blockRejector = new BlockRejector(CONFIGURATION.getBlock("Rejector", BLOCK_ID_PREFIX + 6).getInt());
-		blockProgrammer = new BlockProgrammer(CONFIGURATION.getBlock("Programmer", BLOCK_ID_PREFIX + 7).getInt(), 0);
+		blockProgrammer = new BlockEncoder(CONFIGURATION.getBlock("Programmer", BLOCK_ID_PREFIX + 7).getInt(), 0);
 
 		itemImprint = new ItemImprinter(CONFIGURATION.getBlock("Imprint", ITEM_ID_PREFIX).getInt());
 		itemDisk = new ItemDisk(CONFIGURATION.getBlock("Disk", ITEM_ID_PREFIX + 1).getInt());

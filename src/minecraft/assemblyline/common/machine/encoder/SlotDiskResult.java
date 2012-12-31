@@ -1,4 +1,4 @@
-package assemblyline.common.machine.programmer;
+package assemblyline.common.machine.encoder;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
