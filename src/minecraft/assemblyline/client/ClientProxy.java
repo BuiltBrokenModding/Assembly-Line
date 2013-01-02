@@ -6,8 +6,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import universalelectricity.core.vector.Vector3;
-import assemblyline.client.gui.GuiImprinter;
 import assemblyline.client.gui.GuiEncoder;
+import assemblyline.client.gui.GuiImprinter;
 import assemblyline.client.render.BlockRenderingHandler;
 import assemblyline.client.render.RenderConveyorBelt;
 import assemblyline.client.render.RenderCrate;
@@ -22,6 +22,7 @@ import assemblyline.common.machine.TileEntityRejector;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt;
 import assemblyline.common.machine.detector.TileEntityDetector;
 import assemblyline.common.machine.encoder.ContainerEncoder;
+import assemblyline.common.machine.encoder.TileEntityEncoder;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
@@ -57,7 +58,8 @@ public class ClientProxy extends CommonProxy
 			case GUI_STAMPER:
 				return new GuiImprinter(player.inventory, world, new Vector3(x, y, z));
 			case GUI_ENCODER:
-				return new GuiEncoder(player.inventory, world, new Vector3(x, y, z), (ContainerEncoder) getServerGuiElement(ID, player, world, x, y, z));
+				if (tileEntity != null && tileEntity instanceof TileEntityEncoder)
+					return new GuiEncoder(player.inventory, world, new Vector3(x, y, z), (TileEntityEncoder) tileEntity);
 		}
 
 		return null;

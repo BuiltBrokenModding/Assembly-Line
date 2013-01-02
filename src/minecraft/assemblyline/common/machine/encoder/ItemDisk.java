@@ -36,10 +36,7 @@ public class ItemDisk extends Item
 
 		if (commands.size() > 0)
 		{
-			for (String command : commands)
-			{
-				list.add(command);
-			}
+			list.add(commands.size() + " commands");
 		}
 		else
 		{

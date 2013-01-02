@@ -18,22 +18,23 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
-public class ContainerEncoder extends Container implements IInventory
+public class ContainerEncoder extends Container
 {
 	private ItemStack[] containingItems = new ItemStack[1];
 	private World worldObj;
 	private Vector3 position;
 	private InventoryPlayer inventoryPlayer;
-	private IInventoryWatcher watcher;
+	private TileEntityEncoder encoder;
 
-	public ContainerEncoder(InventoryPlayer inventoryPlayer, World worldObj, Vector3 position)
+	public ContainerEncoder(InventoryPlayer inventoryPlayer, World worldObj, Vector3 position, TileEntityEncoder encoder)
 	{
 		this.worldObj = worldObj;
 		this.position = position;
 		this.inventoryPlayer = inventoryPlayer;
+		this.encoder = encoder;
 		
 		// Disk
-		this.addSlotToContainer(new Slot(this, 0, 80, 24));
+		this.addSlotToContainer(new Slot(encoder, 0, 80, 24));
 		// Output Disk
 		//this.addSlotToContainer(new SlotDiskResult(this, 2, 136, 24));
 
@@ -52,16 +53,6 @@ public class ContainerEncoder extends Container implements IInventory
 			this.addSlotToContainer(new Slot(inventoryPlayer, var3, 8 + var3 * 18, 228));
 		}
 	}
-	
-	public void setWatcher(IInventoryWatcher watcher)
-	{
-		this.watcher = watcher;
-	}
-	
-	public IInventoryWatcher getWatcher()
-	{
-		return this.watcher;
-	}
 
 	@Override
 	public void updateCraftingResults()
@@ -72,7 +63,7 @@ public class ContainerEncoder extends Container implements IInventory
 	@Override
 	public boolean canInteractWith(EntityPlayer player)
 	{
-		return this.isUseableByPlayer(player);
+		return encoder.isUseableByPlayer(player);
 	}
 
 	/**
@@ -89,18 +80,12 @@ public class ContainerEncoder extends Container implements IInventory
 			ItemStack slotStack = slotObj.getStack();
 			copyStack = slotStack.copy();
 
-			if (slot == 2)
-			{
-				setInventorySlotContents(0, null); // Prevents disk from being duplicated
-			}
-
-			if (slot > 2)
+			if (slot > 1)
 			{
 				if (this.getSlot(0).isItemValid(slotStack))
 				{
 					if (!this.mergeItemStack(slotStack, 0, 1, false)) { return null; }
 				}
-				else if (!this.mergeItemStack(slotStack, 1, 2, false)) { return null; }
 			}
 			else if (!this.mergeItemStack(slotStack, this.containingItems.length, 37, false)) { return null; }
 
@@ -118,154 +103,6 @@ public class ContainerEncoder extends Container implements IInventory
 			slotObj.onPickupFromSlot(player, slotStack);
 		}
 
-		onInventoryChanged();
-
 		return copyStack;
-	}
-
-	@Override
-	public int getSizeInventory()
-	{
-		return this.containingItems.length;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int slot)
-	{
-		return this.containingItems[slot];
-	}
-
-	/**
-	 * Removes from an inventory slot (first arg) up to a specified number (second arg) of items and returns them in a new stack.
-	 */
-	@Override
-	public ItemStack decrStackSize(int slot, int amount)
-	{
-		if (this.containingItems[slot] != null)
-		{
-			ItemStack var3 = this.containingItems[slot];
-			this.containingItems[slot] = null;
-			return var3;
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	/**
-	 * When some containers are closed they call this on each slot, then drop whatever it returns as an EntityItem - like when you close a workbench GUI.
-	 */
-	@Override
-	public ItemStack getStackInSlotOnClosing(int slot)
-	{
-		if (this.containingItems[slot] != null && slot != 2)
-		{
-			ItemStack var2 = this.containingItems[slot];
-			this.containingItems[slot] = null;
-			return var2;
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	/**
-	 * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
-	 */
-	@Override
-	public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
-	{
-		if (par1 < this.containingItems.length)
-		{
-			this.containingItems[par1] = par2ItemStack;
-		}
-	}
-
-	@Override
-	public String getInvName()
-	{
-		return "Encoder";
-	}
-
-	@Override
-	public int getInventoryStackLimit()
-	{
-		return 1;
-	}
-
-	@Override
-	public void onInventoryChanged()
-	{
-		/**
-		 * Makes the stamping recipe for disks
-		 */
-		boolean didStamp = false;
-
-		if (this.getStackInSlot(0) != null && this.getStackInSlot(1) != null)
-		{
-			if (this.getStackInSlot(0).getItem() instanceof ItemDisk)
-			{
-				ItemStack outputStack = this.getStackInSlot(0).copy();
-				outputStack.stackSize = 1;
-				ArrayList<String> commands = ItemDisk.getCommands(outputStack);
-				boolean filteringItemExists = false;
-
-				for (String command : commands)
-				{
-					// remove commands
-				}
-
-				if (!filteringItemExists)
-				{
-					// add commands
-				}
-
-				ItemDisk.setCommands(outputStack, commands);
-				this.setInventorySlotContents(2, outputStack);
-				didStamp = true;
-			}
-		}
-
-		if (!didStamp)
-		{
-			this.setInventorySlotContents(2, null);
-		}
-	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer player)
-	{
-		return true;
-	}
-
-	@Override
-	public void openChest()
-	{
-	}
-
-	@Override
-	public void closeChest()
-	{
-	}
-
-	@Override
-	public void onCraftGuiClosed(EntityPlayer player)
-	{
-		super.onCraftGuiClosed(player);
-
-		if (!this.worldObj.isRemote)
-		{
-			for (int slot = 0; slot < this.getSizeInventory(); ++slot)
-			{
-				ItemStack itemStack = this.getStackInSlotOnClosing(slot);
-
-				if (itemStack != null && slot != 4)
-				{
-					player.dropPlayerItem(itemStack);
-				}
-			}
-		}
 	}
 }

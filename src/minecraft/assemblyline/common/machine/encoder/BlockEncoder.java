@@ -2,6 +2,7 @@ package assemblyline.common.machine.encoder;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.prefab.BlockMachine;
 import universalelectricity.prefab.UETab;
@@ -50,5 +51,16 @@ public class BlockEncoder extends BlockMachine
 		return true;
 
 	}
-
+	
+	@Override
+	public TileEntity createNewTileEntity(World world)
+	{
+		return createNewTileEntity(world, 0);
+	}
+	
+	@Override
+	public TileEntity createNewTileEntity(World world, int metadata)
+	{
+		return new TileEntityEncoder();
+	}
 }

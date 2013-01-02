@@ -10,6 +10,7 @@ import assemblyline.common.machine.TileEntityRejector;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt;
 import assemblyline.common.machine.detector.TileEntityDetector;
 import assemblyline.common.machine.encoder.ContainerEncoder;
+import assemblyline.common.machine.encoder.TileEntityEncoder;
 import assemblyline.common.machine.imprinter.ContainerImprinter;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -32,6 +33,7 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.registerTileEntity(TileEntityManipulator.class, "ALManipulator");
 		GameRegistry.registerTileEntity(TileEntityCrate.class, "ALCrate");
 		GameRegistry.registerTileEntity(TileEntityDetector.class, "ALDetector");
+		GameRegistry.registerTileEntity(TileEntityEncoder.class, "ALEncoder");
 	}
 
 	@Override
@@ -44,7 +46,10 @@ public class CommonProxy implements IGuiHandler
 			case GUI_STAMPER:
 				return new ContainerImprinter(player.inventory, world, new Vector3(x, y, z));
 			case GUI_ENCODER:
-				return new ContainerEncoder(player.inventory, world, new Vector3(x, y, z));
+			{
+				if (tileEntity != null && tileEntity instanceof TileEntityEncoder)
+					return new ContainerEncoder(player.inventory, world, new Vector3(x, y, z), (TileEntityEncoder) tileEntity);
+			}
 		}
 
 		return null;
