@@ -6,7 +6,8 @@ import liquidmechanics.api.IReadOut;
 import liquidmechanics.api.ITankOutputer;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.MetaGroupingHelper;
-import liquidmechanics.common.handlers.DefautlLiquids;
+import liquidmechanics.common.handlers.LiquidData;
+import liquidmechanics.common.handlers.LiquidHandler;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,302 +33,323 @@ import com.google.common.io.ByteArrayDataInput;
 
 public class TileEntityPump extends TileEntityElectricityReceiver implements IPacketReceiver, IReadOut, ITankOutputer
 {
-	public final double WATTS_PER_TICK = 400;
-	double percentPumped = 0.0;
-	double joulesReceived = 0;
-	int wMax = LiquidContainerRegistry.BUCKET_VOLUME * 2;
-	int disableTimer = 0;
-	int count = 0;
+    public final double WATTS_PER_TICK = 400;    
+    double percentPumped = 0.0;
+    double joulesReceived = 0;
+    
+    int wMax = LiquidContainerRegistry.BUCKET_VOLUME * 2;
+    int disableTimer = 0;
+    int count = 0;
+    
+    private boolean converted = false;
+    
+    public LiquidData type = LiquidHandler.air;
+    public LiquidTank tank = new LiquidTank(wMax);
 
-	public DefautlLiquids type = DefautlLiquids.DEFUALT;
-	public LiquidTank tank = new LiquidTank(wMax);
+    @Override
+    public void initiate()
+    {
+        this.registerConnections();
+        this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, LiquidMechanics.blockMachine.blockID);
+    }
 
-	@Override
-	public void initiate()
-	{
-		this.registerConnections();
-		this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, LiquidMechanics.blockMachine.blockID);
-	}
+    public void registerConnections()
+    {
+        int notchMeta = MetaGroupingHelper.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+        ForgeDirection facing = ForgeDirection.getOrientation(notchMeta).getOpposite();
+        ForgeDirection[] dirs = new ForgeDirection[] { ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN };
+        ElectricityConnections.registerConnector(this, EnumSet.of(facing.getOpposite()));
+        for (int i = 2; i < 6; i++)
+        {
+            ForgeDirection dir = ForgeDirection.getOrientation(i);
+            if (dir != facing)
+            {
+                dirs[i] = dir;
+            }
+        }
+        ElectricityConnections.registerConnector(this, EnumSet.of(dirs[0], dirs[1], dirs[2], dirs[3], dirs[4], dirs[5]));
+    }
 
-	public void registerConnections()
-	{
-		int notchMeta = MetaGroupingHelper.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
-		ForgeDirection facing = ForgeDirection.getOrientation(notchMeta).getOpposite();
-		ForgeDirection[] dirs = new ForgeDirection[] { ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN };
-		ElectricityConnections.registerConnector(this, EnumSet.of(facing.getOpposite()));
-		for (int i = 2; i < 6; i++)
-		{
-			ForgeDirection dir = ForgeDirection.getOrientation(i);
-			if (dir != facing)
-			{
-				dirs[i] = dir;
-			}
-		}
-		ElectricityConnections.registerConnector(this, EnumSet.of(dirs[0], dirs[1], dirs[2], dirs[3], dirs[4], dirs[5]));
-	}
+    @Override
+    public void onDisable(int duration)
+    {
+        disableTimer = duration;
+    }
 
-	@Override
-	public void onDisable(int duration)
-	{
-		disableTimer = duration;
-	}
+    @Override
+    public boolean isDisabled()
+    {
+        if (disableTimer <= 0) { return false; }
+        return true;
+    }
 
-	@Override
-	public boolean isDisabled()
-	{
-		if (disableTimer <= 0) { return false; }
-		return true;
-	}
+    @Override
+    public void updateEntity()
+    {
+        super.updateEntity();
 
-	@Override
-	public void updateEntity()
-	{
-		super.updateEntity();
+        if (!this.worldObj.isRemote)
+        {
+            if (count-- <= 0)
+            {
+                int bBlock = worldObj.getBlockId(xCoord, yCoord - 1, zCoord);
+                LiquidData bellow = LiquidHandler.getFromBlockID(bBlock);
+                if (bellow != null)
+                {
+                    if (this.type != bellow && bellow != LiquidHandler.air)
+                    {
+                        this.tank.setLiquid(LiquidHandler.getStack(bellow, 0));
+                        this.type = bellow;
+                    }
 
-		if (!this.worldObj.isRemote)
-		{
-			if (count-- <= 0)
-			{
-				int bBlock = worldObj.getBlockId(xCoord, yCoord - 1, zCoord);
-				DefautlLiquids bellow = DefautlLiquids.getLiquidTypeByBlock(bBlock);
-				if (bellow != null)
-				{
-					if (this.type != bellow && bellow != DefautlLiquids.DEFUALT)
-					{
-						this.tank.setLiquid(DefautlLiquids.getStack(bellow, 0));
-						this.type = bellow;
-					}
+                }
+                count = 40;
+            }
+            if (this.tank.getLiquid() == null)
+            {
+                this.tank.setLiquid(LiquidHandler.getStack(this.type, 1));
+            }
+            LiquidStack stack = tank.getLiquid();
 
-				}
-				count = 40;
-			}
-			if (this.tank.getLiquid() == null)
-			{
-				this.tank.setLiquid(DefautlLiquids.getStack(this.type, 1));
-			}
-			LiquidStack stack = tank.getLiquid();
+            if (stack != null)
+            {
+                for (int i = 0; i < 6; i++)
+                {
+                    ForgeDirection dir = ForgeDirection.getOrientation(i);
+                    TileEntity tile = worldObj.getBlockTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
 
-			if (stack != null)
-			{
-				for (int i = 0; i < 6; i++)
-				{
-					ForgeDirection dir = ForgeDirection.getOrientation(i);
-					TileEntity tile = worldObj.getBlockTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+                    if (tile instanceof ITankContainer)
+                    {
+                        int moved = ((ITankContainer) tile).fill(dir.getOpposite(), stack, true);
+                        tank.drain(moved, true);
+                        if (stack.amount <= 0)
+                            break;
+                    }
+                }
 
-					if (tile instanceof ITankContainer)
-					{
-						int moved = ((ITankContainer) tile).fill(dir.getOpposite(), stack, true);
-						tank.drain(moved, true);
-						if (stack.amount <= 0)
-							break;
-					}
-				}
+            }
 
-			}
+            int notchMeta = MetaGroupingHelper.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+            ForgeDirection facing = ForgeDirection.getOrientation(notchMeta).getOpposite();
 
-			int notchMeta = MetaGroupingHelper.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
-			ForgeDirection facing = ForgeDirection.getOrientation(notchMeta).getOpposite();
+            for (int i = 2; i < 6; i++)
+            {
+                ForgeDirection dir = ForgeDirection.getOrientation(i);
+                if (dir != facing)
+                {
+                    TileEntity inputTile = Vector3.getTileEntityFromSide(this.worldObj, new Vector3(this), dir);
+                    ElectricityNetwork network = ElectricityNetwork.getNetworkFromTileEntity(inputTile, dir);
+                    if (network != null)
+                    {
 
-			for (int i = 2; i < 6; i++)
-			{
-				ForgeDirection dir = ForgeDirection.getOrientation(i);
-				if (dir != facing)
-				{
-					TileEntity inputTile = Vector3.getTileEntityFromSide(this.worldObj, new Vector3(this), dir);
-					ElectricityNetwork network = ElectricityNetwork.getNetworkFromTileEntity(inputTile, dir);
-					if (network != null)
-					{
+                        if (this.canPump(xCoord, yCoord - 1, zCoord))
+                        {
+                            network.startRequesting(this, WATTS_PER_TICK / this.getVoltage(), this.getVoltage());
+                            this.joulesReceived = Math.max(Math.min(this.joulesReceived + network.consumeElectricity(this).getWatts(), WATTS_PER_TICK), 0);
+                        }
+                        else
+                        {
+                            network.stopRequesting(this);
+                        }
+                    }
+                }
+            }
+            if (this.joulesReceived >= this.WATTS_PER_TICK - 50 && this.canPump(xCoord, yCoord - 1, zCoord))
+            {
 
-						if (this.canPump(xCoord, yCoord - 1, zCoord))
-						{
-							network.startRequesting(this, WATTS_PER_TICK / this.getVoltage(), this.getVoltage());
-							this.joulesReceived = Math.max(Math.min(this.joulesReceived + network.consumeElectricity(this).getWatts(), WATTS_PER_TICK), 0);
-						}
-						else
-						{
-							network.stopRequesting(this);
-						}
-					}
-				}
-			}
-			if (this.joulesReceived >= this.WATTS_PER_TICK - 50 && this.canPump(xCoord, yCoord - 1, zCoord))
-			{
+                joulesReceived -= this.WATTS_PER_TICK;
+                if (percentPumped++ >= 20)
+                {
+                    this.drainBlock(new Vector3(xCoord, yCoord - 1, zCoord));
+                }
+            }
+        }
 
-				joulesReceived -= this.WATTS_PER_TICK;
-				if (percentPumped++ >= 20)
-				{
-					this.drainBlock(new Vector3(xCoord, yCoord - 1, zCoord));
-				}
-			}
-		}
+        if (!this.worldObj.isRemote)
+        {
+            if (this.ticks % 10 == 0)
+            {
+                Packet packet = PacketManager.getPacket(LiquidMechanics.CHANNEL, this, LiquidData.getName(type));
+                PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 60);
+            }
+        }
+    }
 
-		if (!this.worldObj.isRemote)
-		{
-			if (this.ticks % 10 == 0)
-			{
-				Packet packet = PacketManager.getPacket(LiquidMechanics.CHANNEL, this, this.type.ordinal());
-				PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 60);
-			}
-		}
-	}
+    public boolean canPump(int x, int y, int z)
+    {
+        // if (this.tank.getLiquid() == null) return false;
+        if (this.tank.getLiquid() != null && this.tank.getLiquid().amount >= this.wMax)
+            return false;
+        if (this.isDisabled())
+            return false;
+        if (!this.isValidLiquid(Block.blocksList[worldObj.getBlockId(x, y, z)]))
+            return false;
+        return true;
+    }
 
-	public boolean canPump(int x, int y, int z)
-	{
-		// if (this.tank.getLiquid() == null) return false;
-		if (this.tank.getLiquid() != null && this.tank.getLiquid().amount >= this.wMax)
-			return false;
-		if (this.isDisabled())
-			return false;
-		if (!this.isValidLiquid(Block.blocksList[worldObj.getBlockId(x, y, z)]))
-			return false;
-		return true;
-	}
+    /**
+     * drains the block or in other words removes it
+     * 
+     * @param loc
+     * @return true if the block was drained
+     */
+    public boolean drainBlock(Vector3 loc)
+    {
+        int bBlock = worldObj.getBlockId(loc.intX(), loc.intY(), loc.intZ());
+        int meta = worldObj.getBlockMetadata(loc.intX(), loc.intY(), loc.intZ());
+        LiquidData bellow = LiquidHandler.getFromBlockID(bBlock);
+        if (bBlock == Block.waterMoving.blockID || (bBlock == Block.waterStill.blockID && meta != 0))
+            return false;
+        if (bBlock == Block.lavaMoving.blockID || (bBlock == Block.lavaStill.blockID && meta != 0))
+            return false;
+        if (bBlock == LiquidData.getStack(type).itemID && this.isValidLiquid(Block.blocksList[bBlock]))
+        {
+            // FMLLog.info("pumping " + bellow.displayerName + " blockID:" +
+            // bBlock + " Meta:" +
+            // meta);
+            int f = this.tank.fill(LiquidHandler.getStack(this.type, LiquidContainerRegistry.BUCKET_VOLUME), true);
+            if (f > 0)
+                worldObj.setBlockWithNotify(loc.intX(), loc.intY(), loc.intZ(), 0);
+            percentPumped = 0;
+            return true;
+        }
+        return false;
+    }
 
-	/**
-	 * drains the block or in other words removes it
-	 * 
-	 * @param loc
-	 * @return true if the block was drained
-	 */
-	public boolean drainBlock(Vector3 loc)
-	{
-		int bBlock = worldObj.getBlockId(loc.intX(), loc.intY(), loc.intZ());
-		int meta = worldObj.getBlockMetadata(loc.intX(), loc.intY(), loc.intZ());
-		DefautlLiquids bellow = DefautlLiquids.getLiquidTypeByBlock(bBlock);
-		if (bBlock == Block.waterMoving.blockID || (bBlock == Block.waterStill.blockID && meta != 0))
-			return false;
-		if (bBlock == Block.lavaMoving.blockID || (bBlock == Block.lavaStill.blockID && meta != 0))
-			return false;
-		if (bBlock == type.liquid.itemID && this.isValidLiquid(Block.blocksList[bBlock]))
-		{
-			// FMLLog.info("pumping " + bellow.displayerName + " blockID:" + bBlock + " Meta:" +
-			// meta);
-			int f = this.tank.fill(DefautlLiquids.getStack(this.type, LiquidContainerRegistry.BUCKET_VOLUME), true);
-			if (f > 0)
-				worldObj.setBlockWithNotify(loc.intX(), loc.intY(), loc.intZ(), 0);
-			percentPumped = 0;
-			return true;
-		}
-		return false;
-	}
+    @Override
+    public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput data)
+    {
+        try
+        {
+            this.type = (LiquidHandler.get(data.readUTF()));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
-	@Override
-	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput data)
-	{
-		try
-		{
-			this.type = (DefautlLiquids.getLiquid(data.readInt()));
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+    }
 
-	}
+    /**
+     * Reads a tile entity from NBT.
+     */
+    @Override
+    public void readFromNBT(NBTTagCompound nbt)
+    {
+        super.readFromNBT(nbt);
 
-	/**
-	 * Reads a tile entity from NBT.
-	 */
-	@Override
-	public void readFromNBT(NBTTagCompound par1NBTTagCompound)
-	{
-		super.readFromNBT(par1NBTTagCompound);
-		int stored = par1NBTTagCompound.getInteger("liquid");
-		this.type = DefautlLiquids.getLiquid(par1NBTTagCompound.getInteger("type"));
-		this.tank.setLiquid(DefautlLiquids.getStack(this.type, stored));
-	}
+        this.converted = nbt.getBoolean("converted");
+        if (!converted)
+        {
+            int t = nbt.getInteger("type");
+            this.type = LiquidHandler.getFromMeta(t);
+            this.converted = true;
+        }
+        else
+        {
+            this.type = LiquidHandler.get(nbt.getString("name"));
+        }
+        if (this.type == null) type = LiquidHandler.air;
 
-	/**
-	 * Writes a tile entity to NBT.
-	 */
-	@Override
-	public void writeToNBT(NBTTagCompound par1NBTTagCompound)
-	{
-		super.writeToNBT(par1NBTTagCompound);
-		int s = 1;
-		if (this.tank.getLiquid() != null)
-			s = this.tank.getLiquid().amount;
-		par1NBTTagCompound.setInteger("liquid", s);
-		par1NBTTagCompound.setInteger("type", this.type.ordinal());
-	}
+        int stored = nbt.getInteger("liquid");
+        this.tank.setLiquid(LiquidHandler.getStack(this.type, stored));
+    }
 
-	@Override
-	public String getMeterReading(EntityPlayer user, ForgeDirection side)
-	{
-		int liquid = 0;
-		if (this.tank.getLiquid() != null)
-		{
-			liquid = (this.tank.getLiquid().amount / LiquidContainerRegistry.BUCKET_VOLUME);
-		}
-		else
-		{
-			liquid = 0;
-		}
-		return liquid + "" + type.displayerName + " " + this.joulesReceived + "W " + this.percentPumped + "/20";
-	}
+    /**
+     * Writes a tile entity to NBT.
+     */
+    @Override
+    public void writeToNBT(NBTTagCompound nbt)
+    {
+        super.writeToNBT(nbt);
+        nbt.setBoolean("converted", this.converted);
+        int s = 1;
+        if (this.tank.getLiquid() != null) s = this.tank.getLiquid().amount;
+        nbt.setInteger("liquid", s);
 
-	@Override
-	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
-	{
-		return 0;
-	}
+        nbt.setString("name", LiquidData.getName(type));
+    }
 
-	@Override
-	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
-	{
-		return 0;
-	}
+    @Override
+    public String getMeterReading(EntityPlayer user, ForgeDirection side)
+    {
+        if (type == null) return "Error: No Type";
+        int liquid = 0;
+        if (this.tank.getLiquid() != null)
+        {
+            liquid = (this.tank.getLiquid().amount / LiquidContainerRegistry.BUCKET_VOLUME);
+        }
+        else
+        {
+            liquid = 0;
+        }
+        return liquid + "" + LiquidData.getName(type) + " " + this.joulesReceived + "W " + this.percentPumped + "/20";
+    }
 
-	@Override
-	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
-	{
-		return drain(0, maxDrain, doDrain);
-	}
+    @Override
+    public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
+    {
+        return 0;
+    }
 
-	@Override
-	public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
-	{
-		if (tankIndex == 0)
-			return tank.drain(maxDrain, doDrain);
+    @Override
+    public int fill(int tankIndex, LiquidStack resource, boolean doFill)
+    {
+        return 0;
+    }
 
-		return null;
-	}
+    @Override
+    public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+    {
+        return drain(0, maxDrain, doDrain);
+    }
 
-	@Override
-	public ILiquidTank[] getTanks(ForgeDirection direction)
-	{
-		return new ILiquidTank[] { tank };
-	}
+    @Override
+    public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
+    {
+        if (tankIndex == 0)
+            return tank.drain(maxDrain, doDrain);
 
-	@Override
-	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
-	{
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public int presureOutput(DefautlLiquids type, ForgeDirection dir)
-	{
-		if (type == this.type)
-			return type.defaultPresure;
-		return 0;
-	}
+    @Override
+    public ILiquidTank[] getTanks(ForgeDirection direction)
+    {
+        return new ILiquidTank[] { tank };
+    }
 
-	@Override
-	public boolean canPressureToo(DefautlLiquids type, ForgeDirection dir)
-	{
-		if (type == this.type)
-			return true;
-		return false;
-	}
-	/**
-	 * Checks to see if the given block type is valid for pumping
-	 * @param block
-	 * @return
-	 */
-	private boolean isValidLiquid(Block block)
-	{
-		return DefautlLiquids.getLiquidFromBlock(block.blockID) != null;
-	}
+    @Override
+    public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
+    {
+        return null;
+    }
+
+    @Override
+    public int presureOutput(LiquidData type, ForgeDirection dir)
+    {
+        if (type == this.type)
+            return LiquidData.getPressure(type);
+        return 0;
+    }
+
+    @Override
+    public boolean canPressureToo(LiquidData type, ForgeDirection dir)
+    {
+        if (type == this.type)
+            return true;
+        return false;
+    }
+
+    /**
+     * Checks to see if the given block type is valid for pumping
+     * 
+     * @param block
+     * @return
+     */
+    private boolean isValidLiquid(Block block)
+    {
+        return LiquidHandler.getFromBlockID(block.blockID) != null;
+    }
 
 }

@@ -4,7 +4,8 @@ import liquidmechanics.api.IReadOut;
 import liquidmechanics.api.ITankOutputer;
 import liquidmechanics.api.helpers.TankHelper;
 import liquidmechanics.common.block.BlockReleaseValve;
-import liquidmechanics.common.handlers.DefautlLiquids;
+import liquidmechanics.common.handlers.LiquidData;
+import liquidmechanics.common.handlers.LiquidHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -18,11 +19,12 @@ import universalelectricity.prefab.implement.IRedstoneReceptor;
 
 public class TileEntityReleaseValve extends TileEntity implements ITankOutputer, IReadOut, IRedstoneReceptor
 {
-    public DefautlLiquids type = DefautlLiquids.DEFUALT;
+    public LiquidData type = LiquidHandler.air;
     public LiquidTank tank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
     public TileEntity[] connected = new TileEntity[6];
     private int count = 0;
     public boolean isPowered = false;
+    public boolean converted = false;
 
     @Override
     public void updateEntity()
@@ -34,7 +36,7 @@ public class TileEntityReleaseValve extends TileEntity implements ITankOutputer,
             BlockReleaseValve.checkForPower(worldObj, xCoord, yCoord, zCoord);
             if (tank.getLiquid() == null)
             {
-                tank.setLiquid(DefautlLiquids.getStack(this.type, 1));
+                tank.setLiquid(LiquidHandler.getStack(this.type, 1));
             }
             if (tank.getLiquid() != null && tank.getLiquid().amount < tank.getCapacity() && !isPowered)
             {
@@ -47,7 +49,7 @@ public class TileEntityReleaseValve extends TileEntity implements ITankOutputer,
                         for (int t = 0; t < tanks.length; t++)
                         {
                             LiquidStack ll = tanks[t].getLiquid();
-                            if (ll != null && DefautlLiquids.isStackEqual(ll, this.type))
+                            if (ll != null && LiquidHandler.isEqual(ll, this.type))
                             {
                                 int drainVol = tank.getCapacity() - tank.getLiquid().amount - 1;
                                 LiquidStack drained = ((ITankContainer) connected[i]).drain(t, drainVol, true);
@@ -112,14 +114,14 @@ public class TileEntityReleaseValve extends TileEntity implements ITankOutputer,
     }
 
     @Override
-    public int presureOutput(DefautlLiquids type, ForgeDirection dir)
+    public int presureOutput(LiquidData type, ForgeDirection dir)
     {
-        if (type == this.type) { return type.defaultPresure; }
+        if (type == this.type) { return LiquidData.getPressure(type); }
         return 0;
     }
 
     @Override
-    public boolean canPressureToo(DefautlLiquids type, ForgeDirection dir)
+    public boolean canPressureToo(LiquidData type, ForgeDirection dir)
     {
         if (type == this.type)
             return true;
@@ -129,41 +131,49 @@ public class TileEntityReleaseValve extends TileEntity implements ITankOutputer,
     @Override
     public String getMeterReading(EntityPlayer user, ForgeDirection side)
     {
+        if (type == null) return "Error: No Type";
         String output = "";
         LiquidStack stack = tank.getLiquid();
         if (stack != null)
-            output += (stack.amount / LiquidContainerRegistry.BUCKET_VOLUME) + " " + this.type.displayerName + " on = " + !this.isPowered;
+            output += (stack.amount / LiquidContainerRegistry.BUCKET_VOLUME) + " " + LiquidData.getName(type) + " on = " + !this.isPowered;
         if (stack != null)
             return output;
-
-        return "0/0 " + this.type.displayerName + " on = " + !this.isPowered;
+        return "0/0 " + LiquidData.getName(type) + " on = " + !this.isPowered;
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound par1NBTTagCompound)
+    public void readFromNBT(NBTTagCompound nbt)
     {
-        super.readFromNBT(par1NBTTagCompound);
-        this.type = DefautlLiquids.getLiquid(par1NBTTagCompound.getInteger("type"));
-        int vol = par1NBTTagCompound.getInteger("liquid");
-        this.tank.setLiquid(DefautlLiquids.getStack(type, vol));
+        super.readFromNBT(nbt);
+        this.type = LiquidHandler.get(nbt.getString("name"));
+        this.converted = nbt.getBoolean("converted");
+        if (!converted)
+        {
+            int t = nbt.getInteger("type");
+            this.type = LiquidHandler.getFromMeta(t);
+            this.converted = true;
+        }
+        if (this.type == null) type = LiquidHandler.air;
+        int vol = nbt.getInteger("liquid");
+        this.tank.setLiquid(LiquidHandler.getStack(type, vol));
     }
 
     /**
      * Writes a tile entity to NBT.
      */
     @Override
-    public void writeToNBT(NBTTagCompound par1NBTTagCompound)
+    public void writeToNBT(NBTTagCompound nbt)
     {
-        super.writeToNBT(par1NBTTagCompound);
+        super.writeToNBT(nbt);
+        nbt.setBoolean("converted", this.converted);
         int s = 0;
-        LiquidStack stack = this.tank.getLiquid();
-        if (stack != null)
-            s = stack.amount;
-        par1NBTTagCompound.setInteger("liquid", s);
-        par1NBTTagCompound.setInteger("type", this.type.ordinal());
+        if (tank.getLiquid() != null) s = tank.getLiquid().amount;
+        nbt.setInteger("liquid", s);
+
+        nbt.setString("name", LiquidData.getName(type));
     }
 
-    public void setType(DefautlLiquids dm)
+    public void setType(LiquidData dm)
     {
         this.type = dm;
 

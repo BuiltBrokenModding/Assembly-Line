@@ -4,7 +4,8 @@ import liquidmechanics.api.IReadOut;
 import liquidmechanics.api.ITankOutputer;
 import liquidmechanics.api.helpers.TankHelper;
 import liquidmechanics.common.LiquidMechanics;
-import liquidmechanics.common.handlers.DefautlLiquids;
+import liquidmechanics.common.handlers.LiquidData;
+import liquidmechanics.common.handlers.LiquidHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -25,10 +26,10 @@ import com.google.common.io.ByteArrayDataInput;
 
 public class TileEntityPipe extends TileEntity implements ITankContainer, IPacketReceiver, IReadOut
 {
-    public DefautlLiquids type = DefautlLiquids.DEFUALT;
+    public LiquidData type = LiquidHandler.air;
     private int count = 20;
     private int count2, presure = 0;
-
+    public boolean converted = false;
     protected boolean firstUpdate = true;
 
     public TileEntity[] connectedBlocks = { null, null, null, null, null, null };
@@ -64,7 +65,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
                 {
                     count2 = 5;
                     firstUpdate = false;
-                    Packet packet = PacketManager.getPacket(LiquidMechanics.CHANNEL, this, this.type.ordinal());
+                    Packet packet = PacketManager.getPacket(LiquidMechanics.CHANNEL, this, LiquidData.getName(type));
                     PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 60);
                 }
 
@@ -105,13 +106,13 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
     }
 
     // returns liquid type
-    public DefautlLiquids getType()
+    public LiquidData getType()
     {
         return this.type;
     }
 
     // used by the item to set the liquid type on spawn
-    public void setType(DefautlLiquids rType)
+    public void setType(LiquidData rType)
     {
         this.type = rType;
     }
@@ -124,7 +125,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
     {
         try
         {
-            this.setType(DefautlLiquids.getLiquid(data.readInt()));
+            this.setType(LiquidHandler.get(data.readUTF()));
         }
         catch (Exception e)
         {
@@ -137,37 +138,52 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
      * Reads a tile entity from NBT.
      */
     @Override
-    public void readFromNBT(NBTTagCompound par1NBTTagCompound)
+    public void readFromNBT(NBTTagCompound nbt)
     {
-        super.readFromNBT(par1NBTTagCompound);
-        this.type = DefautlLiquids.getLiquid(par1NBTTagCompound.getInteger("type"));
-        int vol = par1NBTTagCompound.getInteger("liquid");
-        this.stored.setLiquid(DefautlLiquids.getStack(type, vol));
+        super.readFromNBT(nbt);
+
+        this.converted = nbt.getBoolean("converted");
+        if (!converted)
+        {
+            int t = nbt.getInteger("type");
+            this.type = LiquidHandler.getFromMeta(t);
+           this.converted = true;
+        }
+        else
+        {
+            this.type = LiquidHandler.get(nbt.getString("name"));
+        }
+        if (this.type == null) type = LiquidHandler.air;
+        
+        int vol = nbt.getInteger("liquid");
+        this.stored.setLiquid(LiquidHandler.getStack(type, vol));
     }
 
     /**
      * Writes a tile entity to NBT.
      */
     @Override
-    public void writeToNBT(NBTTagCompound par1NBTTagCompound)
+    public void writeToNBT(NBTTagCompound nbt)
     {
-        super.writeToNBT(par1NBTTagCompound);
+        super.writeToNBT(nbt);
+        nbt.setBoolean("converted", this.converted);
         int s = 0;
-        LiquidStack stack = this.stored.getLiquid();
-        if (stack != null)
-            s = stack.amount;
-        par1NBTTagCompound.setInteger("liquid", s);
-        par1NBTTagCompound.setInteger("type", this.type.ordinal());
+        if (stored.getLiquid() != null) s = stored.getLiquid().amount;
+        nbt.setInteger("liquid", s);
+
+        nbt.setString("name", LiquidData.getName(type));
     }
 
     @Override
     public String getMeterReading(EntityPlayer user, ForgeDirection side)
     {
+        if (type == null) return "Error: No Type";
         String output = "";
         LiquidStack stack = stored.getLiquid();
         if (stack != null)
-            output += (stack.amount / LiquidContainerRegistry.BUCKET_VOLUME) + " " + this.type.displayerName;
+            output += (stack.amount / LiquidContainerRegistry.BUCKET_VOLUME) + " " + LiquidData.getName(type);
         output += " @" + this.presure + "psi";
+
         if (stack != null)
             return output;
 
@@ -178,8 +194,8 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
     public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
     {
         LiquidStack stack = stored.getLiquid();
-        if (stack == null) stored.setLiquid(DefautlLiquids.getStack(this.type, 1));
-        if (stack != null && DefautlLiquids.isStackEqual(resource, this.type)) return fill(0, resource, doFill);
+        if (stack == null) stored.setLiquid(LiquidHandler.getStack(this.type, 1));
+        if (stack != null && LiquidHandler.isEqual(resource, this.type)) return fill(0, resource, doFill);
 
         return 0;
     }
@@ -224,7 +240,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
     {
         if (entity instanceof TileEntityPipe)
         {
-            if (((TileEntityPipe) entity).type == this.type && this.type != DefautlLiquids.DEFUALT) { return true; }
+            if (((TileEntityPipe) entity).type == this.type) { return true; }
         }
         return false;
     }

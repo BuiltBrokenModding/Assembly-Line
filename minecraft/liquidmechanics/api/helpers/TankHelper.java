@@ -1,6 +1,7 @@
 package liquidmechanics.api.helpers;
 
-import liquidmechanics.common.handlers.DefautlLiquids;
+import liquidmechanics.common.handlers.LiquidData;
+import liquidmechanics.common.handlers.LiquidHandler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -49,9 +50,9 @@ public class TankHelper
 			return 0;
 		LiquidStack liquid = resource.copy();
 		TileEntity[] connected = TankHelper.getSourounding(world, center.intX(), center.intY(), center.intZ());
-		DefautlLiquids type = DefautlLiquids.getLiquid(liquid);
+		LiquidData type = LiquidHandler.get(liquid);
 		ForgeDirection firstTrade = ForgeDirection.UP;
-		if (!type.doesFlaot)
+		if (!LiquidData.getCanFloat(type))
 			firstTrade = ForgeDirection.DOWN;
 		for (int i = 0; i < 6; i++)
 		{
@@ -64,7 +65,7 @@ public class TankHelper
 				boolean validTank = false;
 				for (int t = 0; t < tanks.length; t++)
 				{
-					if (tanks[t].getLiquid() != null && DefautlLiquids.isStackEqual(tanks[t].getLiquid(), liquid))
+					if (tanks[t].getLiquid() != null && LiquidHandler.isEqual(tanks[t].getLiquid(), liquid))
 					{
 						validTank = true;
 						break;

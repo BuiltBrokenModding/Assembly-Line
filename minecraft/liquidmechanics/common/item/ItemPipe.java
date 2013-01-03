@@ -4,9 +4,8 @@ import java.util.List;
 
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.TabLiquidMechanics;
-import liquidmechanics.common.handlers.DefautlLiquids;
+import liquidmechanics.common.handlers.LiquidHandler;
 import liquidmechanics.common.tileentity.TileEntityPipe;
-
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,16 +39,16 @@ public class ItemPipe extends Item
 	@Override
 	public String getItemNameIS(ItemStack itemstack)
 	{
-		return itemstack.getItemDamage() < DefautlLiquids.values().length ? DefautlLiquids.getLiquid(itemstack.getItemDamage()).displayerName + " Pipe" : "Empty Pipe";
+		return "pipe";
 	}
 
 	@Override
 	public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
-		for (int i = 0; i < DefautlLiquids.values().length - 1; i++)
-		{
-			par3List.add(new ItemStack(this, 1, i));
-		}
+	    for (int i = 0; i < LiquidHandler.allowedLiquids.size() -1; i++)
+        {
+            par3List.add(new ItemStack(this, 1, i));
+        }
 	}
 
 	public String getTextureFile()
@@ -64,7 +63,7 @@ public class ItemPipe extends Item
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
+	public boolean onItemUse(ItemStack itemstack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
 	{
 		int blockID = par3World.getBlockId(par4, par5, par6);
 		spawnID = LiquidMechanics.blockPipe.blockID;
@@ -119,13 +118,13 @@ public class ItemPipe extends Item
 					TileEntity blockEntity = par3World.getBlockTileEntity(par4, par5, par6);
 					if (blockEntity instanceof TileEntityPipe)
 					{
-						TileEntityPipe pipeEntity = (TileEntityPipe) blockEntity;
-						DefautlLiquids dm = DefautlLiquids.getLiquid(par1ItemStack.getItemDamage());
-						pipeEntity.setType(dm);
+						TileEntityPipe pipeEntity = (TileEntityPipe) blockEntity;						
+						pipeEntity.setType(LiquidHandler.getFromMeta(itemstack.getItemDamage()));
+						pipeEntity.converted = true;
 					}
 				}
 
-				--par1ItemStack.stackSize;
+				--itemstack.stackSize;
 				par3World.editingBlocks = false;
 				return true;
 			}

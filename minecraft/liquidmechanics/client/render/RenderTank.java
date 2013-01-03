@@ -4,7 +4,8 @@ import liquidmechanics.api.helpers.TankHelper;
 import liquidmechanics.client.model.ModelLiquidTank;
 import liquidmechanics.client.model.ModelLiquidTankCorner;
 import liquidmechanics.common.LiquidMechanics;
-import liquidmechanics.common.handlers.DefautlLiquids;
+import liquidmechanics.common.handlers.LiquidData;
+import liquidmechanics.common.handlers.LiquidHandler;
 import liquidmechanics.common.tileentity.TileEntityTank;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -15,7 +16,7 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderTank extends TileEntitySpecialRenderer
 {
-	private DefautlLiquids type = DefautlLiquids.DEFUALT;
+	private LiquidData type = LiquidHandler.air;
 	private ModelLiquidTank model;
 	private ModelLiquidTankCorner modelC;
 	private int pos = 0;
@@ -57,7 +58,7 @@ public class RenderTank extends TileEntitySpecialRenderer
 		}
 		else
 		{
-			switch (type.ordinal())
+			switch (LiquidHandler.getMeta(type))
 			{
 			// case 0:
 			// bindTextureByName(BasicPipesMain.textureFile+"/pipes/SixSteamPipe.png");break;

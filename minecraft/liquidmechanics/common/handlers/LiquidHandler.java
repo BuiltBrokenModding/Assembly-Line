@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import liquidmechanics.common.LiquidMechanics;
+import liquidmechanics.common.tileentity.TileEntityPipe;
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
@@ -18,19 +20,23 @@ public class LiquidHandler
     public static LiquidData steam;
     public static LiquidData water;
     public static LiquidData lava;
-    //public static LiquidData oil; TODO add
-    //public static LiquidData fuel;
+    public static LiquidData air;
+
+    // public static LiquidData oil; TODO add
+    // public static LiquidData fuel;
     /**
      * Called to add the default liquids to the allowed list
      */
     public static void addDefaultLiquids()
     {
-        steam = new LiquidData(LiquidDictionary.getOrCreateLiquid("Steam", new LiquidStack(LiquidMechanics.blockSteamBlock, 1)), true, 100);
+        steam = new LiquidData("Steam", LiquidDictionary.getOrCreateLiquid("Steam", new LiquidStack(LiquidMechanics.blockSteamBlock, 1)), true, 100);
         allowedLiquids.add(steam);
-        water = new LiquidData(LiquidDictionary.getOrCreateLiquid("Water", new LiquidStack(Block.waterStill, 1)), false, 32);
+        water = new LiquidData("water", LiquidDictionary.getOrCreateLiquid("Water", new LiquidStack(Block.waterStill, 1)), false, 32);
         allowedLiquids.add(water);
-        lava = new LiquidData(LiquidDictionary.getOrCreateLiquid("Lava", new LiquidStack(Block.lavaStill, 1)), false, 20);
+        lava = new LiquidData("Lava", LiquidDictionary.getOrCreateLiquid("Lava", new LiquidStack(Block.lavaStill, 1)), false, 20);
         allowedLiquids.add(lava);
+        air = new LiquidData("Air", LiquidDictionary.getOrCreateLiquid("Air", new LiquidStack(0, 1)), false, 0);
+        allowedLiquids.add(air);
     }
 
     @ForgeSubscribe
@@ -38,16 +44,107 @@ public class LiquidHandler
     {
         // TODO use this to add new liquid types to the data list
         // or something along the lines of IDing liquids for use
-        boolean used = false;
-        for (LiquidData dta : allowedLiquids)
-        {
 
-        } 
-        LiquidData data = new LiquidData(event.Liquid, false, 32);
-        if (!used && !allowedLiquids.contains(data))
+    }
+
+    /**
+     * Gets the LiquidData linked to the liquid by name
+     * 
+     * @param name
+     *            - String name, not case sensitive
+     */
+    public static LiquidData get(String name)
+    {
+        for (LiquidData data : LiquidHandler.allowedLiquids)
         {
-           allowedLiquids.add(data);
+            if (LiquidData.getName(data).equalsIgnoreCase(name)) { return data; }
         }
+        return air;
+    }
 
+    public static LiquidData get(LiquidStack stack)
+    {
+        for (LiquidData data : LiquidHandler.allowedLiquids)
+        {
+            if (isEqual(stack, data)) { return data; }
+        }
+        return air;
+    }
+
+    /**
+     * gets a liquid stack of type & volume
+     */
+    public static LiquidStack getStack(LiquidData type, int vol)
+    {
+        if(type == null) return null;
+        return new LiquidStack(LiquidData.getStack(type).itemID, vol, LiquidData.getStack(type).itemMeta);
+    }
+
+    public static int getMeta(LiquidData type)
+    {
+        if (type == LiquidHandler.steam) return 0;
+        if (type == LiquidHandler.water) return 1;
+        if (type == LiquidHandler.lava) return 2;
+        return 20;
+    }
+
+    public static LiquidData getFromMeta(int meta)
+    {
+        switch (meta)
+        {
+            case 0:
+                return steam;
+            case 1:
+                return water;
+            case 2:
+                return lava;
+        }
+        return air;
+
+    }
+
+    public static LiquidData getFromBlockID(int id)
+    {
+        for (LiquidData data : allowedLiquids)
+        {
+            if (LiquidData.getStack(data).itemID == id) { return data; }
+        }
+        return air;
+    }
+
+    /**
+     * compare a stack with a liquid type to see if there the same
+     * 
+     * @param stack
+     * @param type
+     * @return
+     */
+    public static boolean isEqual(LiquidStack stack, LiquidData type)
+    {
+        if (stack == null || type == null)
+            return false;
+        if (LiquidData.getStack(type).itemID == stack.itemID && LiquidData.getStack(type).itemMeta == stack.itemMeta) { return true; }
+        return false;
+    }
+    public static boolean isEqual(LiquidStack stack, LiquidStack type)
+    {
+        if (stack == null || type == null)
+            return false;
+        if (type.itemID == stack.itemID && type.itemMeta == stack.itemMeta) { return true; }
+        return false;
+    }
+    public static ItemStack consumeItem(ItemStack stack)
+    {
+        if (stack.stackSize == 1)
+        {
+            if (stack.getItem().hasContainerItem()) return stack.getItem().getContainerItemStack(stack);
+            else return null;
+        }
+        else
+        {
+            stack.splitStack(1);
+
+            return stack;
+        }
     }
 }

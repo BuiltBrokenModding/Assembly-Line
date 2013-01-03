@@ -3,6 +3,7 @@ package liquidmechanics.common.block;
 import java.util.Random;
 
 import liquidmechanics.common.LiquidMechanics;
+import liquidmechanics.common.handlers.LiquidHandler;
 import liquidmechanics.common.tileentity.TileEntityPipe;
 
 import net.minecraft.block.BlockContainer;
@@ -93,7 +94,9 @@ public class BlockPipe extends BlockContainer
         int meta = 0;
         if (ent instanceof TileEntityPipe)
         {
-            meta = ((TileEntityPipe) ent).type.ordinal();
+            TileEntityPipe pipe = (TileEntityPipe) ent;
+            meta = LiquidHandler.getMeta(pipe.type);
+
         }
         return new ItemStack(LiquidMechanics.itemPipes, 1, 0);
     }
@@ -107,7 +110,7 @@ public class BlockPipe extends BlockContainer
         if (ent instanceof TileEntityPipe)
         {
             TileEntityPipe pipe = (TileEntityPipe) ent;
-            int meta = pipe.type.ordinal();
+            int meta = LiquidHandler.getMeta(pipe.type);
             float var8 = furnaceRand.nextFloat() * 0.8F + 0.1F;
             float var9 = furnaceRand.nextFloat() * 0.8F + 0.1F;
             float var10 = furnaceRand.nextFloat() * 0.8F + 0.1F;
@@ -119,5 +122,4 @@ public class BlockPipe extends BlockContainer
             world.spawnEntityInWorld(var12);
         }
     }
-
 }

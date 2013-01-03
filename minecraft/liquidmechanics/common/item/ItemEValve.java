@@ -3,9 +3,9 @@ package liquidmechanics.common.item;
 import java.util.List;
 
 import liquidmechanics.common.LiquidMechanics;
-import liquidmechanics.common.handlers.DefautlLiquids;
+import liquidmechanics.common.handlers.LiquidData;
+import liquidmechanics.common.handlers.LiquidHandler;
 import liquidmechanics.common.tileentity.TileEntityReleaseValve;
-
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,16 +32,16 @@ public class ItemEValve extends ItemBlock
 	@Override
 	public String getItemNameIS(ItemStack itemstack)
 	{
-		return "eValve";
+		return "release Valve";
 	}
 
 	@Override
 	public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
-		for (int i = 0; i < DefautlLiquids.values().length - 1; i++)
-		{
-			par3List.add(new ItemStack(this, 1, i));
-		}
+	    for (int i = 0; i < LiquidHandler.allowedLiquids.size() -1; i++)
+        {
+            par3List.add(new ItemStack(this, 1, i));
+        }
 	}
 
 	@Override
@@ -114,10 +114,10 @@ public class ItemEValve extends ItemBlock
 					if (blockEntity instanceof TileEntityReleaseValve)
 					{
 						TileEntityReleaseValve pipeEntity = (TileEntityReleaseValve) blockEntity;
-						DefautlLiquids dm = DefautlLiquids.getLiquid(itemstack.getItemDamage());
+						LiquidData dm = LiquidHandler.getFromMeta(itemstack.getItemDamage());
 						pipeEntity.setType(dm);
-						pipeEntity.tank.setLiquid(DefautlLiquids.getStack(dm, 1));
-						world.setBlockMetadata(x, y, z, dm.ordinal() & 15);
+						world.setBlockMetadata(x, y, z, itemstack.getItemDamage() & 15);
+						pipeEntity.converted = true;
 					}
 				}
 
