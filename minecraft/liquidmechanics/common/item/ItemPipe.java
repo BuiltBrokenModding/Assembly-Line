@@ -2,7 +2,7 @@ package liquidmechanics.common.item;
 
 import java.util.List;
 
-import liquidmechanics.api.helpers.LiquidHelper;
+import liquidmechanics.api.helpers.Liquid;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.TabLiquidMechanics;
 import liquidmechanics.common.tileentity.TileEntityPipe;
@@ -40,13 +40,13 @@ public class ItemPipe extends Item
 	@Override
 	public String getItemNameIS(ItemStack itemstack)
 	{
-		return itemstack.getItemDamage() < LiquidHelper.values().length ? LiquidHelper.getLiquid(itemstack.getItemDamage()).displayerName + " Pipe" : "Empty Pipe";
+		return itemstack.getItemDamage() < Liquid.values().length ? Liquid.getLiquid(itemstack.getItemDamage()).displayerName + " Pipe" : "Empty Pipe";
 	}
 
 	@Override
 	public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
-		for (int i = 0; i < LiquidHelper.values().length - 1; i++)
+		for (int i = 0; i < Liquid.values().length - 1; i++)
 		{
 			par3List.add(new ItemStack(this, 1, i));
 		}
@@ -120,7 +120,7 @@ public class ItemPipe extends Item
 					if (blockEntity instanceof TileEntityPipe)
 					{
 						TileEntityPipe pipeEntity = (TileEntityPipe) blockEntity;
-						LiquidHelper dm = LiquidHelper.getLiquid(par1ItemStack.getItemDamage());
+						Liquid dm = Liquid.getLiquid(par1ItemStack.getItemDamage());
 						pipeEntity.setType(dm);
 					}
 				}

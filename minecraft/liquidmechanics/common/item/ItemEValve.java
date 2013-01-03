@@ -2,7 +2,7 @@ package liquidmechanics.common.item;
 
 import java.util.List;
 
-import liquidmechanics.api.helpers.LiquidHelper;
+import liquidmechanics.api.helpers.Liquid;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.tileentity.TileEntityReleaseValve;
 
@@ -38,7 +38,7 @@ public class ItemEValve extends ItemBlock
 	@Override
 	public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
-		for (int i = 0; i < LiquidHelper.values().length - 1; i++)
+		for (int i = 0; i < Liquid.values().length - 1; i++)
 		{
 			par3List.add(new ItemStack(this, 1, i));
 		}
@@ -114,9 +114,9 @@ public class ItemEValve extends ItemBlock
 					if (blockEntity instanceof TileEntityReleaseValve)
 					{
 						TileEntityReleaseValve pipeEntity = (TileEntityReleaseValve) blockEntity;
-						LiquidHelper dm = LiquidHelper.getLiquid(itemstack.getItemDamage());
+						Liquid dm = Liquid.getLiquid(itemstack.getItemDamage());
 						pipeEntity.setType(dm);
-						pipeEntity.tank.setLiquid(LiquidHelper.getStack(dm, 1));
+						pipeEntity.tank.setLiquid(Liquid.getStack(dm, 1));
 						world.setBlockMetadata(x, y, z, dm.ordinal() & 15);
 					}
 				}

@@ -1,6 +1,6 @@
 package liquidmechanics.client.render;
 
-import liquidmechanics.api.helpers.LiquidHelper;
+import liquidmechanics.api.helpers.Liquid;
 import liquidmechanics.api.helpers.MHelper;
 import liquidmechanics.client.model.ModelLiquidTank;
 import liquidmechanics.client.model.ModelLiquidTankCorner;
@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderTank extends TileEntitySpecialRenderer
 {
-	private LiquidHelper type = LiquidHelper.DEFUALT;
+	private Liquid type = Liquid.DEFUALT;
 	private ModelLiquidTank model;
 	private ModelLiquidTankCorner modelC;
 	private int pos = 0;

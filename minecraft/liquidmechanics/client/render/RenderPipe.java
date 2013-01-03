@@ -1,6 +1,6 @@
 package liquidmechanics.client.render;
 
-import liquidmechanics.api.helpers.LiquidHelper;
+import liquidmechanics.api.helpers.Liquid;
 import liquidmechanics.client.model.ModelLargePipe;
 import liquidmechanics.client.model.ModelPipe;
 import liquidmechanics.common.LiquidMechanics;
@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderPipe extends TileEntitySpecialRenderer
 {
-	private LiquidHelper type = LiquidHelper.DEFUALT;
+	private Liquid type = Liquid.DEFUALT;
 	private ModelPipe fourPipe;
 	private ModelLargePipe SixPipe;
 	private TileEntity[] ents = new TileEntity[6];
@@ -40,7 +40,7 @@ public class RenderPipe extends TileEntitySpecialRenderer
 
 	}
 
-	public void render(LiquidHelper type, TileEntity[] ents)
+	public void render(Liquid type, TileEntity[] ents)
 	{
 
 		switch (type.ordinal())

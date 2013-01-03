@@ -48,7 +48,7 @@ public class MHelper
 			return 0;
 		LiquidStack liquid = resource.copy();
 		TileEntity[] connected = MHelper.getSourounding(world, center.intX(), center.intY(), center.intZ());
-		LiquidHelper type = LiquidHelper.getLiquid(liquid);
+		Liquid type = Liquid.getLiquid(liquid);
 		ForgeDirection firstTrade = ForgeDirection.UP;
 		if (!type.doesFlaot)
 			firstTrade = ForgeDirection.DOWN;
@@ -63,7 +63,7 @@ public class MHelper
 				boolean validTank = false;
 				for (int t = 0; t < tanks.length; t++)
 				{
-					if (tanks[t].getLiquid() != null && LiquidHelper.isStackEqual(tanks[t].getLiquid(), liquid))
+					if (tanks[t].getLiquid() != null && Liquid.isStackEqual(tanks[t].getLiquid(), liquid))
 					{
 						validTank = true;
 						break;

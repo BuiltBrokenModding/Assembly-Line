@@ -13,7 +13,7 @@ import net.minecraftforge.liquids.LiquidStack;
  * @author Rseifert
  * 
  */
-public enum LiquidHelper
+public enum Liquid
 {
     // -1 == null || unused
     STEAM("Steam", LiquidDictionary.getOrCreateLiquid("Steam", new LiquidStack(LiquidMechanics.blockSteamBlock, 1)), true, 100),
@@ -26,7 +26,7 @@ public enum LiquidHelper
     public final int defaultPresure;
     public final LiquidStack liquid;
 
-    private LiquidHelper(String name, LiquidStack stack, boolean gas, int dPressure)
+    private Liquid(String name, LiquidStack stack, boolean gas, int dPressure)
     {
         this.displayerName = name;
         this.liquid = stack;
@@ -37,7 +37,7 @@ public enum LiquidHelper
     /**
      * creates a new liquid stack using basic liquid type and the volume needed
      */
-    public static LiquidStack getStack(LiquidHelper type, int vol)
+    public static LiquidStack getStack(Liquid type, int vol)
     {
         return new LiquidStack(type.liquid.itemID, vol, type.liquid.itemMeta);
     }
@@ -45,13 +45,13 @@ public enum LiquidHelper
     /**
      * gets a liquid type from a liquidStack
      */
-    public static LiquidHelper getLiquid(LiquidStack stack)
+    public static Liquid getLiquid(LiquidStack stack)
     {
-        for (int i = 0; i < LiquidHelper.values().length - 1; i++)
+        for (int i = 0; i < Liquid.values().length - 1; i++)
         {
-            if (LiquidHelper.isStackEqual(stack, LiquidHelper.values()[i])) { return LiquidHelper.values()[i]; }
+            if (Liquid.isStackEqual(stack, Liquid.values()[i])) { return Liquid.values()[i]; }
         }
-        return LiquidHelper.DEFUALT;
+        return Liquid.DEFUALT;
     }
 
     /**
@@ -62,9 +62,9 @@ public enum LiquidHelper
      *            of liquid
      * @return Liquid Object
      */
-    public static LiquidHelper getLiquid(int id)
+    public static Liquid getLiquid(int id)
     {
-        if (id >= 0 && id < LiquidHelper.values().length) { return LiquidHelper.values()[id]; }
+        if (id >= 0 && id < Liquid.values().length) { return Liquid.values()[id]; }
         return DEFUALT;
     }
 
@@ -74,18 +74,18 @@ public enum LiquidHelper
      * @param bBlock
      * @return
      */
-    public static LiquidHelper getLiquidTypeByBlock(int bBlock)
+    public static Liquid getLiquidTypeByBlock(int bBlock)
     {
         if (bBlock == Block.waterMoving.blockID)
-            return LiquidHelper.DEFUALT;
+            return Liquid.DEFUALT;
         if (bBlock == Block.lavaMoving.blockID)
-            return LiquidHelper.DEFUALT;
-        for (int i = 0; i < LiquidHelper.values().length - 1; i++)
+            return Liquid.DEFUALT;
+        for (int i = 0; i < Liquid.values().length - 1; i++)
         {
-            LiquidHelper selected = LiquidHelper.getLiquid(i);
+            Liquid selected = Liquid.getLiquid(i);
             if (bBlock == selected.liquid.itemID) { return selected; }
         }
-        return LiquidHelper.DEFUALT;
+        return Liquid.DEFUALT;
     }
 
     public static LiquidStack getLiquidFromBlock(int blockId)
@@ -108,7 +108,7 @@ public enum LiquidHelper
      * @param type
      * @return
      */
-    public static boolean isStackEqual(LiquidStack stack, LiquidHelper type)
+    public static boolean isStackEqual(LiquidStack stack, Liquid type)
     {
         if (stack == null)
             return false;

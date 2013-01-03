@@ -2,7 +2,7 @@ package liquidmechanics.common.tileentity;
 
 import liquidmechanics.api.IReadOut;
 import liquidmechanics.api.ITankOutputer;
-import liquidmechanics.api.helpers.LiquidHelper;
+import liquidmechanics.api.helpers.Liquid;
 import liquidmechanics.api.helpers.MHelper;
 import liquidmechanics.common.LiquidMechanics;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,7 +26,7 @@ import com.google.common.io.ByteArrayDataInput;
 public class TileEntityTank extends TileEntity implements IPacketReceiver, IReadOut, ITankOutputer
 {
 	public TileEntity[] cc = { null, null, null, null, null, null };
-	public LiquidHelper type = LiquidHelper.DEFUALT;
+	public Liquid type = Liquid.DEFUALT;
 	public static final int LMax = 4;
 	private int count = 0;
 	private int count2 = 0;
@@ -38,7 +38,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 	{
 		if (tank.getLiquid() == null)
 		{
-			tank.setLiquid(LiquidHelper.getStack(this.type, 1));
+			tank.setLiquid(Liquid.getStack(this.type, 1));
 		}
 		LiquidStack liquid = tank.getLiquid();
 
@@ -68,21 +68,17 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 		if (stack != null)
 			return output;
 
-		return "0/0 " + this.type.displayerName;
+		return "0/4 " + this.type.displayerName;
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound)
 	{
 		super.readFromNBT(par1NBTTagCompound);
-		this.type = LiquidHelper.getLiquid(par1NBTTagCompound.getInteger("type"));
+		this.type = Liquid.getLiquid(par1NBTTagCompound.getInteger("type"));
 		int vol = par1NBTTagCompound.getInteger("liquid");
-		this.tank.setLiquid(LiquidHelper.getStack(type, vol));
+		this.tank.setLiquid(Liquid.getStack(type, vol));
 	}
-
-	/**
-	 * Writes a tile entity to NBT.
-	 */
 	@Override
 	public void writeToNBT(NBTTagCompound par1NBTTagCompound)
 	{
@@ -100,8 +96,8 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 	{
 		try
 		{
-			this.type = LiquidHelper.getLiquid(data.readInt());
-			this.tank.setLiquid(LiquidHelper.getStack(this.type, data.readInt()));
+			this.type = Liquid.getLiquid(data.readInt());
+			this.tank.setLiquid(Liquid.getStack(this.type, data.readInt()));
 		}
 		catch (Exception e)
 		{
@@ -114,13 +110,13 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 	// ----------------------------
 	// Liquid stuff
 	// ----------------------------
-	public void setType(LiquidHelper dm)
+	public void setType(Liquid dm)
 	{
 		this.type = dm;
 
 	}
 
-	public LiquidHelper getType()
+	public Liquid getType()
 	{
 		return this.type;
 	}
@@ -128,7 +124,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 	@Override
 	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
 	{
-		if (!LiquidHelper.isStackEqual(resource, type))
+		if (!Liquid.isStackEqual(resource, type))
 			return 0;
 		return this.fill(0, resource, doFill);
 	}
@@ -141,7 +137,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 		if (this.isFull())
 		{
 			int change = 1;
-			if (LiquidHelper.getLiquid(resource).doesFlaot)
+			if (Liquid.getLiquid(resource).doesFlaot)
 				change = -1;
 			TileEntity tank = worldObj.getBlockTileEntity(xCoord, yCoord + change, zCoord);
 			if (tank instanceof TileEntityTank) { return ((TileEntityTank) tank).tank.fill(resource, doFill); }
@@ -149,7 +145,10 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 		this.doUpdate = true;
 		return this.tank.fill(resource, doFill);
 	}
-
+	/**
+	 * find out if this tank is actual full or not
+	 * @return
+	 */
 	public boolean isFull()
 	{
 		if (this.tank.getLiquid() == null)
@@ -158,7 +157,11 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 			return false;
 		return true;
 	}
-
+	/**
+	 * finds the first fillable tank in either direction
+	 * @param top - search up 
+	 * @return
+	 */
 	public TileEntityTank getFillAbleTank(boolean top)
 	{
 		TileEntityTank tank = this;
@@ -196,10 +199,17 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 	@Override
 	public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
 	{
-		if (tankIndex != 0)
-			return null;
-		this.doUpdate = true;
-		return this.tank.getLiquid();
+		if (tankIndex != 0) {return null;}
+		LiquidStack stack = this.tank.getLiquid();
+		if(maxDrain <= this.tank.getLiquid().amount)
+		{
+		    stack =  Liquid.getStack(type, maxDrain);
+		}
+		if(doDrain)
+		{
+		    this.tank.drain(maxDrain, doDrain);
+		}
+		return stack;
 	}
 
 	@Override
@@ -215,7 +225,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 	}
 
 	@Override
-	public int presureOutput(LiquidHelper type, ForgeDirection dir)
+	public int presureOutput(Liquid type, ForgeDirection dir)
 	{
 		if (type == this.type)
 		{
@@ -228,7 +238,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 	}
 
 	@Override
-	public boolean canPressureToo(LiquidHelper type, ForgeDirection dir)
+	public boolean canPressureToo(Liquid type, ForgeDirection dir)
 	{
 		if (type == this.type)
 		{
@@ -239,7 +249,11 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 		}
 		return false;
 	}
-
+	/**
+	 * cause this TE to trade liquid down if
+	 * the liquid is in liquid state or up
+	 * if in gas state. 
+	 */
 	public void tradeDown()
 	{
 		if (this.tank.getLiquid() == null || this.tank.getLiquid().amount <= 0)
@@ -251,7 +265,10 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 			this.tank.drain(f, true);
 		}
 	}
-
+	/**
+	 * Cause this TE to trade liquid with
+	 * the Tanks around it to level off
+	 */
 	public void tradeArround()
 	{
 		if (this.tank.getLiquid() == null || this.tank.getLiquid().amount <= 0)
@@ -282,11 +299,11 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 				LiquidStack filling = this.tank.getLiquid();
 				if (stack == null)
 				{
-					filling = LiquidHelper.getStack(this.type, equalVol);
+					filling = Liquid.getStack(this.type, equalVol);
 				}
 				else if (stack.amount < equalVol)
 				{
-					filling = LiquidHelper.getStack(this.type, equalVol - stack.amount);
+					filling = Liquid.getStack(this.type, equalVol - stack.amount);
 				}
 				else
 				{
