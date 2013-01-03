@@ -1,5 +1,6 @@
 package liquidmechanics.api.helpers;
 
+import liquidmechanics.common.handlers.DefautlLiquids;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -8,7 +9,7 @@ import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.core.vector.Vector3;
 
-public class MHelper
+public class TankHelper
 {
 	/**
 	 * Used to find all tileEntities sounding the location you will have to filter for selective
@@ -47,8 +48,8 @@ public class MHelper
 		if (resource == null)
 			return 0;
 		LiquidStack liquid = resource.copy();
-		TileEntity[] connected = MHelper.getSourounding(world, center.intX(), center.intY(), center.intZ());
-		Liquid type = Liquid.getLiquid(liquid);
+		TileEntity[] connected = TankHelper.getSourounding(world, center.intX(), center.intY(), center.intZ());
+		DefautlLiquids type = DefautlLiquids.getLiquid(liquid);
 		ForgeDirection firstTrade = ForgeDirection.UP;
 		if (!type.doesFlaot)
 			firstTrade = ForgeDirection.DOWN;
@@ -63,7 +64,7 @@ public class MHelper
 				boolean validTank = false;
 				for (int t = 0; t < tanks.length; t++)
 				{
-					if (tanks[t].getLiquid() != null && Liquid.isStackEqual(tanks[t].getLiquid(), liquid))
+					if (tanks[t].getLiquid() != null && DefautlLiquids.isStackEqual(tanks[t].getLiquid(), liquid))
 					{
 						validTank = true;
 						break;

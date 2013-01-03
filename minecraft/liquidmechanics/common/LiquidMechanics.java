@@ -2,13 +2,13 @@ package liquidmechanics.common;
 
 import java.io.File;
 
-import liquidmechanics.api.helpers.Liquid;
 import liquidmechanics.common.block.BlockReleaseValve;
 import liquidmechanics.common.block.BlockGenerator;
 import liquidmechanics.common.block.BlockPipe;
 import liquidmechanics.common.block.BlockMachine;
 import liquidmechanics.common.block.BlockRod;
 import liquidmechanics.common.block.BlockSteam;
+import liquidmechanics.common.handlers.DefautlLiquids;
 import liquidmechanics.common.item.ItemEValve;
 import liquidmechanics.common.item.ItemGuage;
 import liquidmechanics.common.item.ItemMachine;
@@ -149,15 +149,15 @@ public class LiquidMechanics extends DummyModContainer
 		GameRegistry.registerTileEntity(TileEntityGenerator.class, "Generator");
 
 		// Liquid Item/Block common name writer
-		for (int i = 0; i < Liquid.values().length; i++)
+		for (int i = 0; i < DefautlLiquids.values().length; i++)
 		{
 			// eValves
-			LanguageRegistry.addName((new ItemStack(blockReleaseValve, 1, i)), Liquid.getLiquid(i).displayerName + " Release Valve");
+			LanguageRegistry.addName((new ItemStack(blockReleaseValve, 1, i)), DefautlLiquids.getLiquid(i).displayerName + " Release Valve");
 			// pipes
-			LanguageRegistry.addName((new ItemStack(itemPipes, 1, i)), Liquid.getLiquid(i).displayerName + " Pipe");
+			LanguageRegistry.addName((new ItemStack(itemPipes, 1, i)), DefautlLiquids.getLiquid(i).displayerName + " Pipe");
 
 			// Storage Tanks
-			LanguageRegistry.addName((new ItemStack(itemTank, 1, i)), Liquid.getLiquid(i).displayerName + " Tank");
+			LanguageRegistry.addName((new ItemStack(itemTank, 1, i)), DefautlLiquids.getLiquid(i).displayerName + " Tank");
 		}
 
 		for (int i = 0; i < ItemParts.Parts.values().length; i++)
@@ -181,7 +181,7 @@ public class LiquidMechanics extends DummyModContainer
 	public void PostInit(FMLPostInitializationEvent event)
 	{
 		proxy.postInit();
-		TabLiquidMechanics.setItemStack(new ItemStack(itemPipes, 1, Liquid.WATER.ordinal()));
+		TabLiquidMechanics.setItemStack(new ItemStack(itemPipes, 1, DefautlLiquids.WATER.ordinal()));
 		// generator
 		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(this.blockGenerator, 1), new Object[] { "@T@", "OVO", "@T@", 'T', new ItemStack(LiquidMechanics.blockRod, 1), '@', "plateSteel", 'O', "basicCircuit", 'V', "motor" }));
 		// pipe gauge
@@ -205,11 +205,11 @@ public class LiquidMechanics extends DummyModContainer
 		GameRegistry.addRecipe(new ItemStack(blockRod, 1), new Object[] { "I@I", 'I', Item.ingotIron, '@', new ItemStack(itemParts, 1, Parts.Iron.ordinal()) });
 
 		// steam pipe
-		GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1, Liquid.STEAM.ordinal()), new Object[] { new ItemStack(itemParts, 1, Parts.Iron.ordinal()), new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
+		GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1, DefautlLiquids.STEAM.ordinal()), new Object[] { new ItemStack(itemParts, 1, Parts.Iron.ordinal()), new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
 		// water pipe
-		GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1, Liquid.WATER.ordinal()), new Object[] { new ItemStack(itemParts, 1, Parts.Iron.ordinal()), new ItemStack(itemParts, 1, Parts.Seal.ordinal()), new ItemStack(Item.dyePowder, 1, 4) });
+		GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1, DefautlLiquids.WATER.ordinal()), new Object[] { new ItemStack(itemParts, 1, Parts.Iron.ordinal()), new ItemStack(itemParts, 1, Parts.Seal.ordinal()), new ItemStack(Item.dyePowder, 1, 4) });
 		// lava pipe
-		GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1, Liquid.LAVA.ordinal()), new Object[] { new ItemStack(itemParts, 1, Parts.Obby.ordinal()), new ItemStack(Item.dyePowder, 1, 1) });
+		GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1, DefautlLiquids.LAVA.ordinal()), new Object[] { new ItemStack(itemParts, 1, Parts.Obby.ordinal()), new ItemStack(Item.dyePowder, 1, 1) });
 		/*
 		 * GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1, Liquid.OIL.ordinal()), new
 		 * Object[] { new ItemStack(parts, 1, basicParts.Iron.ordinal()), new ItemStack(parts, 1,
@@ -219,11 +219,11 @@ public class LiquidMechanics extends DummyModContainer
 		 * basicParts.Seal.ordinal()), new ItemStack(Item.dyePowder, 1, 11) });
 		 */
 		// steam tank
-		GameRegistry.addShapelessRecipe(new ItemStack(itemTank, 1, Liquid.STEAM.ordinal()), new Object[] { new ItemStack(itemParts, 1, Parts.Tank.ordinal()), new ItemStack(itemParts, 1, Parts.Seal.ordinal()), new ItemStack(Item.dyePowder, 1, 15) });
+		GameRegistry.addShapelessRecipe(new ItemStack(itemTank, 1, DefautlLiquids.STEAM.ordinal()), new Object[] { new ItemStack(itemParts, 1, Parts.Tank.ordinal()), new ItemStack(itemParts, 1, Parts.Seal.ordinal()), new ItemStack(Item.dyePowder, 1, 15) });
 		// water tank
-		GameRegistry.addShapelessRecipe(new ItemStack(itemTank, 1, Liquid.WATER.ordinal()), new Object[] { new ItemStack(itemParts, 1, Parts.Tank.ordinal()), new ItemStack(itemParts, 1, Parts.Seal.ordinal()), new ItemStack(Item.dyePowder, 1, 4) });
+		GameRegistry.addShapelessRecipe(new ItemStack(itemTank, 1, DefautlLiquids.WATER.ordinal()), new Object[] { new ItemStack(itemParts, 1, Parts.Tank.ordinal()), new ItemStack(itemParts, 1, Parts.Seal.ordinal()), new ItemStack(Item.dyePowder, 1, 4) });
 		// lava tank
-		GameRegistry.addShapelessRecipe(new ItemStack(itemTank, 1, Liquid.LAVA.ordinal()), new Object[] { new ItemStack(itemParts, 1, Parts.Tank.ordinal()), Block.obsidian, Block.obsidian, Block.obsidian, Block.obsidian });
+		GameRegistry.addShapelessRecipe(new ItemStack(itemTank, 1, DefautlLiquids.LAVA.ordinal()), new Object[] { new ItemStack(itemParts, 1, Parts.Tank.ordinal()), Block.obsidian, Block.obsidian, Block.obsidian, Block.obsidian });
 		/*
 		 * GameRegistry.addShapelessRecipe(new ItemStack(itemTank, 1, Liquid.OIL.ordinal()), new
 		 * Object[] { new ItemStack(parts, 1, basicParts.Tank.ordinal()), new ItemStack(parts, 1,
@@ -237,7 +237,7 @@ public class LiquidMechanics extends DummyModContainer
 		GameRegistry.addRecipe(new ItemStack(blockMachine, 1, 0), new Object[] { "@T@", "BPB", "@P@", '@', new ItemStack(Item.ingotIron, 2), 'B', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 'P', new ItemStack(Block.pistonBase), 'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()) });
 
 		// eVavles
-		for (int i = 0; i < Liquid.values().length - 1; i++)
+		for (int i = 0; i < DefautlLiquids.values().length - 1; i++)
 		{
 			GameRegistry.addRecipe(new ItemStack(blockMachine, 1, i), new Object[] { " P ", "PVP", " P ", 'P', new ItemStack(itemPipes, 1, i), 'V', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), });
 		}

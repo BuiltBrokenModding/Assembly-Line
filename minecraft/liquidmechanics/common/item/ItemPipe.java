@@ -2,9 +2,9 @@ package liquidmechanics.common.item;
 
 import java.util.List;
 
-import liquidmechanics.api.helpers.Liquid;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.TabLiquidMechanics;
+import liquidmechanics.common.handlers.DefautlLiquids;
 import liquidmechanics.common.tileentity.TileEntityPipe;
 
 import net.minecraft.block.Block;
@@ -40,13 +40,13 @@ public class ItemPipe extends Item
 	@Override
 	public String getItemNameIS(ItemStack itemstack)
 	{
-		return itemstack.getItemDamage() < Liquid.values().length ? Liquid.getLiquid(itemstack.getItemDamage()).displayerName + " Pipe" : "Empty Pipe";
+		return itemstack.getItemDamage() < DefautlLiquids.values().length ? DefautlLiquids.getLiquid(itemstack.getItemDamage()).displayerName + " Pipe" : "Empty Pipe";
 	}
 
 	@Override
 	public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
-		for (int i = 0; i < Liquid.values().length - 1; i++)
+		for (int i = 0; i < DefautlLiquids.values().length - 1; i++)
 		{
 			par3List.add(new ItemStack(this, 1, i));
 		}
@@ -120,7 +120,7 @@ public class ItemPipe extends Item
 					if (blockEntity instanceof TileEntityPipe)
 					{
 						TileEntityPipe pipeEntity = (TileEntityPipe) blockEntity;
-						Liquid dm = Liquid.getLiquid(par1ItemStack.getItemDamage());
+						DefautlLiquids dm = DefautlLiquids.getLiquid(par1ItemStack.getItemDamage());
 						pipeEntity.setType(dm);
 					}
 				}

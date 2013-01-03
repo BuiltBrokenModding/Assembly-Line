@@ -4,9 +4,9 @@ import java.util.EnumSet;
 
 import liquidmechanics.api.IReadOut;
 import liquidmechanics.api.ITankOutputer;
-import liquidmechanics.api.helpers.Liquid;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.MetaGroupingHelper;
+import liquidmechanics.common.handlers.DefautlLiquids;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -39,7 +39,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
 	int disableTimer = 0;
 	int count = 0;
 
-	public Liquid type = Liquid.DEFUALT;
+	public DefautlLiquids type = DefautlLiquids.DEFUALT;
 	public LiquidTank tank = new LiquidTank(wMax);
 
 	@Override
@@ -89,12 +89,12 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
 			if (count-- <= 0)
 			{
 				int bBlock = worldObj.getBlockId(xCoord, yCoord - 1, zCoord);
-				Liquid bellow = Liquid.getLiquidTypeByBlock(bBlock);
+				DefautlLiquids bellow = DefautlLiquids.getLiquidTypeByBlock(bBlock);
 				if (bellow != null)
 				{
-					if (this.type != bellow && bellow != Liquid.DEFUALT)
+					if (this.type != bellow && bellow != DefautlLiquids.DEFUALT)
 					{
-						this.tank.setLiquid(Liquid.getStack(bellow, 0));
+						this.tank.setLiquid(DefautlLiquids.getStack(bellow, 0));
 						this.type = bellow;
 					}
 
@@ -103,7 +103,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
 			}
 			if (this.tank.getLiquid() == null)
 			{
-				this.tank.setLiquid(Liquid.getStack(this.type, 1));
+				this.tank.setLiquid(DefautlLiquids.getStack(this.type, 1));
 			}
 			LiquidStack stack = tank.getLiquid();
 
@@ -193,7 +193,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
 	{
 		int bBlock = worldObj.getBlockId(loc.intX(), loc.intY(), loc.intZ());
 		int meta = worldObj.getBlockMetadata(loc.intX(), loc.intY(), loc.intZ());
-		Liquid bellow = Liquid.getLiquidTypeByBlock(bBlock);
+		DefautlLiquids bellow = DefautlLiquids.getLiquidTypeByBlock(bBlock);
 		if (bBlock == Block.waterMoving.blockID || (bBlock == Block.waterStill.blockID && meta != 0))
 			return false;
 		if (bBlock == Block.lavaMoving.blockID || (bBlock == Block.lavaStill.blockID && meta != 0))
@@ -202,7 +202,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
 		{
 			// FMLLog.info("pumping " + bellow.displayerName + " blockID:" + bBlock + " Meta:" +
 			// meta);
-			int f = this.tank.fill(Liquid.getStack(this.type, LiquidContainerRegistry.BUCKET_VOLUME), true);
+			int f = this.tank.fill(DefautlLiquids.getStack(this.type, LiquidContainerRegistry.BUCKET_VOLUME), true);
 			if (f > 0)
 				worldObj.setBlockWithNotify(loc.intX(), loc.intY(), loc.intZ(), 0);
 			percentPumped = 0;
@@ -216,7 +216,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
 	{
 		try
 		{
-			this.type = (Liquid.getLiquid(data.readInt()));
+			this.type = (DefautlLiquids.getLiquid(data.readInt()));
 		}
 		catch (Exception e)
 		{
@@ -233,8 +233,8 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
 	{
 		super.readFromNBT(par1NBTTagCompound);
 		int stored = par1NBTTagCompound.getInteger("liquid");
-		this.type = Liquid.getLiquid(par1NBTTagCompound.getInteger("type"));
-		this.tank.setLiquid(Liquid.getStack(this.type, stored));
+		this.type = DefautlLiquids.getLiquid(par1NBTTagCompound.getInteger("type"));
+		this.tank.setLiquid(DefautlLiquids.getStack(this.type, stored));
 	}
 
 	/**
@@ -306,7 +306,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
 	}
 
 	@Override
-	public int presureOutput(Liquid type, ForgeDirection dir)
+	public int presureOutput(DefautlLiquids type, ForgeDirection dir)
 	{
 		if (type == this.type)
 			return type.defaultPresure;
@@ -314,7 +314,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
 	}
 
 	@Override
-	public boolean canPressureToo(Liquid type, ForgeDirection dir)
+	public boolean canPressureToo(DefautlLiquids type, ForgeDirection dir)
 	{
 		if (type == this.type)
 			return true;
@@ -327,7 +327,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
 	 */
 	private boolean isValidLiquid(Block block)
 	{
-		return Liquid.getLiquidFromBlock(block.blockID) != null;
+		return DefautlLiquids.getLiquidFromBlock(block.blockID) != null;
 	}
 
 }

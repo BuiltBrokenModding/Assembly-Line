@@ -1,10 +1,10 @@
 package liquidmechanics.client.render;
 
-import liquidmechanics.api.helpers.Liquid;
-import liquidmechanics.api.helpers.MHelper;
+import liquidmechanics.api.helpers.TankHelper;
 import liquidmechanics.client.model.ModelLiquidTank;
 import liquidmechanics.client.model.ModelLiquidTankCorner;
 import liquidmechanics.common.LiquidMechanics;
+import liquidmechanics.common.handlers.DefautlLiquids;
 import liquidmechanics.common.tileentity.TileEntityTank;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderTank extends TileEntitySpecialRenderer
 {
-	private Liquid type = Liquid.DEFUALT;
+	private DefautlLiquids type = DefautlLiquids.DEFUALT;
 	private ModelLiquidTank model;
 	private ModelLiquidTankCorner modelC;
 	private int pos = 0;
@@ -34,10 +34,10 @@ public class RenderTank extends TileEntitySpecialRenderer
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
-		if (MHelper.corner(te) > 0)
+		if (TankHelper.corner(te) > 0)
 		{
 			bindTextureByName(LiquidMechanics.RESOURCE_PATH + "tanks/LiquidTankCorner.png");
-			int corner = MHelper.corner(te);
+			int corner = TankHelper.corner(te);
 			switch (corner)
 			{
 				case 2:

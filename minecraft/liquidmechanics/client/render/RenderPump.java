@@ -1,8 +1,8 @@
 package liquidmechanics.client.render;
 
-import liquidmechanics.api.helpers.Liquid;
 import liquidmechanics.client.model.ModelPump;
 import liquidmechanics.common.LiquidMechanics;
+import liquidmechanics.common.handlers.DefautlLiquids;
 import liquidmechanics.common.tileentity.TileEntityPump;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -22,7 +22,7 @@ public class RenderPump extends TileEntitySpecialRenderer
 
 	public void renderAModelAt(TileEntityPump tileEntity, double d, double d1, double d2, float f)
 	{
-		Liquid type = tileEntity.type;
+		DefautlLiquids type = tileEntity.type;
 		int meta = tileEntity.worldObj.getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
 		switch (type.ordinal())
 		{

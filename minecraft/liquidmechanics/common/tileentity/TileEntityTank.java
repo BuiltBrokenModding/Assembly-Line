@@ -2,9 +2,9 @@ package liquidmechanics.common.tileentity;
 
 import liquidmechanics.api.IReadOut;
 import liquidmechanics.api.ITankOutputer;
-import liquidmechanics.api.helpers.Liquid;
-import liquidmechanics.api.helpers.MHelper;
+import liquidmechanics.api.helpers.TankHelper;
 import liquidmechanics.common.LiquidMechanics;
+import liquidmechanics.common.handlers.DefautlLiquids;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -26,7 +26,7 @@ import com.google.common.io.ByteArrayDataInput;
 public class TileEntityTank extends TileEntity implements IPacketReceiver, IReadOut, ITankOutputer
 {
 	public TileEntity[] cc = { null, null, null, null, null, null };
-	public Liquid type = Liquid.DEFUALT;
+	public DefautlLiquids type = DefautlLiquids.DEFUALT;
 	public static final int LMax = 4;
 	private int count = 0;
 	private int count2 = 0;
@@ -38,14 +38,14 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 	{
 		if (tank.getLiquid() == null)
 		{
-			tank.setLiquid(Liquid.getStack(this.type, 1));
+			tank.setLiquid(DefautlLiquids.getStack(this.type, 1));
 		}
 		LiquidStack liquid = tank.getLiquid();
 
 		if (++count >= 20 && liquid != null)
 		{
 			count = 0;
-			this.cc = MHelper.getSourounding(worldObj, xCoord, yCoord, zCoord);
+			this.cc = TankHelper.getSourounding(worldObj, xCoord, yCoord, zCoord);
 			if (!worldObj.isRemote)
 			{
 				this.tradeDown();
@@ -75,9 +75,9 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound)
 	{
 		super.readFromNBT(par1NBTTagCompound);
-		this.type = Liquid.getLiquid(par1NBTTagCompound.getInteger("type"));
+		this.type = DefautlLiquids.getLiquid(par1NBTTagCompound.getInteger("type"));
 		int vol = par1NBTTagCompound.getInteger("liquid");
-		this.tank.setLiquid(Liquid.getStack(type, vol));
+		this.tank.setLiquid(DefautlLiquids.getStack(type, vol));
 	}
 	@Override
 	public void writeToNBT(NBTTagCompound par1NBTTagCompound)
@@ -96,8 +96,8 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 	{
 		try
 		{
-			this.type = Liquid.getLiquid(data.readInt());
-			this.tank.setLiquid(Liquid.getStack(this.type, data.readInt()));
+			this.type = DefautlLiquids.getLiquid(data.readInt());
+			this.tank.setLiquid(DefautlLiquids.getStack(this.type, data.readInt()));
 		}
 		catch (Exception e)
 		{
@@ -110,13 +110,13 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 	// ----------------------------
 	// Liquid stuff
 	// ----------------------------
-	public void setType(Liquid dm)
+	public void setType(DefautlLiquids dm)
 	{
 		this.type = dm;
 
 	}
 
-	public Liquid getType()
+	public DefautlLiquids getType()
 	{
 		return this.type;
 	}
@@ -124,7 +124,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 	@Override
 	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
 	{
-		if (!Liquid.isStackEqual(resource, type))
+		if (!DefautlLiquids.isStackEqual(resource, type))
 			return 0;
 		return this.fill(0, resource, doFill);
 	}
@@ -137,7 +137,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 		if (this.isFull())
 		{
 			int change = 1;
-			if (Liquid.getLiquid(resource).doesFlaot)
+			if (DefautlLiquids.getLiquid(resource).doesFlaot)
 				change = -1;
 			TileEntity tank = worldObj.getBlockTileEntity(xCoord, yCoord + change, zCoord);
 			if (tank instanceof TileEntityTank) { return ((TileEntityTank) tank).tank.fill(resource, doFill); }
@@ -203,7 +203,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 		LiquidStack stack = this.tank.getLiquid();
 		if(maxDrain <= this.tank.getLiquid().amount)
 		{
-		    stack =  Liquid.getStack(type, maxDrain);
+		    stack =  DefautlLiquids.getStack(type, maxDrain);
 		}
 		if(doDrain)
 		{
@@ -225,7 +225,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 	}
 
 	@Override
-	public int presureOutput(Liquid type, ForgeDirection dir)
+	public int presureOutput(DefautlLiquids type, ForgeDirection dir)
 	{
 		if (type == this.type)
 		{
@@ -238,7 +238,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 	}
 
 	@Override
-	public boolean canPressureToo(Liquid type, ForgeDirection dir)
+	public boolean canPressureToo(DefautlLiquids type, ForgeDirection dir)
 	{
 		if (type == this.type)
 		{
@@ -273,7 +273,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 	{
 		if (this.tank.getLiquid() == null || this.tank.getLiquid().amount <= 0)
 			return;
-		TileEntity[] ents = MHelper.getSourounding(worldObj, xCoord, yCoord, zCoord);
+		TileEntity[] ents = TankHelper.getSourounding(worldObj, xCoord, yCoord, zCoord);
 		int commonVol = this.tank.getLiquid().amount;
 		int tanks = 1;
 		for (int i = 2; i < 6; i++)
@@ -299,11 +299,11 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 				LiquidStack filling = this.tank.getLiquid();
 				if (stack == null)
 				{
-					filling = Liquid.getStack(this.type, equalVol);
+					filling = DefautlLiquids.getStack(this.type, equalVol);
 				}
 				else if (stack.amount < equalVol)
 				{
-					filling = Liquid.getStack(this.type, equalVol - stack.amount);
+					filling = DefautlLiquids.getStack(this.type, equalVol - stack.amount);
 				}
 				else
 				{

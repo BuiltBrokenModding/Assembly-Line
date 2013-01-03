@@ -1,9 +1,9 @@
 package liquidmechanics.common.block;
 
-import liquidmechanics.api.helpers.Liquid;
 import liquidmechanics.client.render.BlockRenderHelper;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.TabLiquidMechanics;
+import liquidmechanics.common.handlers.DefautlLiquids;
 import liquidmechanics.common.tileentity.TileEntityPump;
 import liquidmechanics.common.tileentity.TileEntityTank;
 import net.minecraft.block.BlockContainer;
@@ -64,7 +64,7 @@ public class BlockMachine extends BlockContainer
 
 					if (filled != 0 && !entityplayer.capabilities.isCreativeMode)
 					{
-						entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, Liquid.consumeItem(current));
+						entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, DefautlLiquids.consumeItem(current));
 					}
 
 					return true;
@@ -91,12 +91,12 @@ public class BlockMachine extends BlockContainer
 										return false;
 									else
 									{
-										entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, Liquid.consumeItem(current));
+										entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, DefautlLiquids.consumeItem(current));
 									}
 								}
 								else
 								{
-									entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, Liquid.consumeItem(current));
+									entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, DefautlLiquids.consumeItem(current));
 									entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, liquidItem);
 								}
 							}
