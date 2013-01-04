@@ -437,6 +437,7 @@ public class TileEntityManipulator extends TileEntityImprintable implements IRed
 	{
 		super.readFromNBT(nbt);
 		this.isOutput = nbt.getBoolean("isOutput");
+		this.selfPulse = nbt.getBoolean("selfpulse");
 	}
 
 	/**
@@ -447,6 +448,7 @@ public class TileEntityManipulator extends TileEntityImprintable implements IRed
 	{
 		super.writeToNBT(nbt);
 		nbt.setBoolean("isOutput", this.isOutput);
+		nbt.setBoolean("selfpulse", this.selfPulse);
 	}
 
 	@Override
