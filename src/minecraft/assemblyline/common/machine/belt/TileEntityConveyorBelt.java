@@ -113,7 +113,7 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	@Override
 	public void onUpdate()
 	{
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && this.ticks % 20 == 0)
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && this.ticks % 10 == 0)
 		{
 			PacketManager.sendPacketToClients(this.getDescriptionPacket());
 		}
@@ -282,6 +282,8 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	{
 		super.readFromNBT(nbt);
 		this.slantType = SlantType.values()[nbt.getByte("slant")];
+		if (worldObj != null)
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, nbt.getInteger("rotation"));
 	}
 
 	/**
@@ -293,5 +295,7 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 		super.writeToNBT(nbt);
 
 		nbt.setByte("slant", (byte) this.slantType.ordinal());
+		if (worldObj != null)
+			nbt.setInteger("rotation", worldObj.getBlockMetadata(xCoord, yCoord, zCoord)); //for some reason the metadata is getting out of sync between client and server so we store it in the Tile Entity
 	}
 }
