@@ -7,9 +7,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
-import universalelectricity.core.vector.Vector3;
 import assemblyline.common.machine.imprinter.ItemImprinter;
 import assemblyline.common.machine.imprinter.TileEntityImprintable;
 

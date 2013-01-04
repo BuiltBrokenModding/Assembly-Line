@@ -10,7 +10,6 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.machine.imprinter.ItemImprinter;
 import assemblyline.common.machine.imprinter.TileEntityImprintable;
 
 public class TileEntityDetector extends TileEntityImprintable
@@ -43,22 +42,10 @@ public class TileEntityDetector extends TileEntityImprintable
 
 						powerCheck = this.isFiltering(itemStack);
 
-						/*if (this.isInverted)
-						{
-							if (!found)
-							{
-								powerCheck = true;
-							}
-							else
-							{
-								powerCheck = false;
-							}
-						}
-						else if (found)
-						{
-							powerCheck = true;
-							break;
-						}*/
+						/*
+						 * if (this.isInverted) { if (!found) { powerCheck = true; } else {
+						 * powerCheck = false; } } else if (found) { powerCheck = true; break; }
+						 */
 					}
 				}
 				else

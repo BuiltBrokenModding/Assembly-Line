@@ -12,7 +12,7 @@ public class WatchedSlot extends Slot
 		super(inventory, id, xPosition, yPosition);
 		this.slotWatcher = slotWatcher;
 	}
-	
+
 	@Override
 	public void onSlotChanged()
 	{

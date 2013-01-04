@@ -14,7 +14,8 @@ import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.imprinter.ItemImprinter;
 
 /**
- * A block that allows the placement of mass amount of a specific item within it. It will be allowed to go on Conveyor Belts
+ * A block that allows the placement of mass amount of a specific item within it. It will be allowed
+ * to go on Conveyor Belts
  * 
  * @author Calclavia
  * 

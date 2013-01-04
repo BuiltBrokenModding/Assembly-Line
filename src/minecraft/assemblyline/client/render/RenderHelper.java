@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 /**
  * 
  * @author Briman0094
- *
+ * 
  */
 public class RenderHelper
 {
@@ -17,7 +17,7 @@ public class RenderHelper
 	{
 		renderFloatingText(text, x, y, z, 0xFFFFFF);
 	}
-	
+
 	/**
 	 * Renders a floating text in a specific position.
 	 */

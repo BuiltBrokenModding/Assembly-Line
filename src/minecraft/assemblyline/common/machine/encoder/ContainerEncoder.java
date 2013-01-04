@@ -1,22 +1,12 @@
 package assemblyline.common.machine.encoder;
 
-import java.util.ArrayList;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.ShapedRecipes;
-import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.world.World;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
 import universalelectricity.core.vector.Vector3;
-import cpw.mods.fml.relauncher.ReflectionHelper;
 
 public class ContainerEncoder extends Container
 {
@@ -32,11 +22,11 @@ public class ContainerEncoder extends Container
 		this.position = position;
 		this.inventoryPlayer = inventoryPlayer;
 		this.encoder = encoder;
-		
+
 		// Disk
 		this.addSlotToContainer(new Slot(encoder, 0, 80, 24));
 		// Output Disk
-		//this.addSlotToContainer(new SlotDiskResult(this, 2, 136, 24));
+		// this.addSlotToContainer(new SlotDiskResult(this, 2, 136, 24));
 
 		int var3;
 

@@ -102,7 +102,7 @@ public abstract class TileEntityAssemblyNetwork extends TileEntityElectricityRec
 			if (this.wattsReceived >= this.getRequest().getWatts())
 			{
 				this.wattsReceived -= getRequest().getWatts();
-				//this.wattsReceived = 0;
+				// this.wattsReceived = 0;
 				this.powerTransferRange = this.getMaxTransferRange();
 			}
 			else
@@ -117,7 +117,7 @@ public abstract class TileEntityAssemblyNetwork extends TileEntityElectricityRec
 
 	protected void onUpdate()
 	{
-		
+
 	}
 
 	@Override

@@ -2,10 +2,11 @@ package assemblyline.client.gui;
 
 import java.util.ArrayList;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
+
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.client.GuiScrollingList;
 
 public class GuiCommandList extends GuiScrollingList

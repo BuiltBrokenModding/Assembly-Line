@@ -22,7 +22,7 @@ public class ItemDisk extends Item
 		this.setHasSubtypes(true);
 		this.setTextureFile(AssemblyLine.ITEM_TEXTURE_PATH);
 	}
-	
+
 	@Override
 	public int getItemStackLimit()
 	{

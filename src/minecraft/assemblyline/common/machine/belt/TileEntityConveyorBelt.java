@@ -13,7 +13,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityConnections;
-import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.implement.IRotatable;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
@@ -48,7 +47,8 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	public TileEntityConveyorBelt()
 	{
 		super();
-		//ElectricityConnections.registerConnector(this, EnumSet.of(ForgeDirection.DOWN, ForgeDirection.EAST, ForgeDirection.WEST, ForgeDirection.NORTH, ForgeDirection.SOUTH));
+		// ElectricityConnections.registerConnector(this, EnumSet.of(ForgeDirection.DOWN,
+		// ForgeDirection.EAST, ForgeDirection.WEST, ForgeDirection.NORTH, ForgeDirection.SOUTH));
 		ElectricityConnections.registerConnector(this, EnumSet.of(ForgeDirection.DOWN));
 	}
 
@@ -120,7 +120,7 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 
 		if (this.isRunning())
 		{
-			//System.out.println(FMLCommonHandler.instance().getEffectiveSide());
+			// System.out.println(FMLCommonHandler.instance().getEffectiveSide());
 			this.wheelRotation += 40;
 
 			if (this.wheelRotation > 360)

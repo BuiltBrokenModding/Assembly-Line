@@ -4,10 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -82,12 +80,12 @@ public abstract class TileEntityImprintable extends TileEntityAssemblyNetwork im
 			PacketManager.sendPacketToClients(this.getDescriptionPacket());
 		}
 	}
-	
+
 	public boolean isInverted()
 	{
 		return this.inverted;
 	}
-	
+
 	public void toggleInversion()
 	{
 		setInverted(!isInverted());

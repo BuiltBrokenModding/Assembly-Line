@@ -53,7 +53,7 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 		this.tileEntity = tileEntity;
 		if (tileEntity != null)
 		{
-			
+
 		}
 		this.x = position.intX();
 		this.y = position.intY();
@@ -103,7 +103,7 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 							tempCmds.add(commandField.getText());
 							ItemDisk.setCommands(disk, tempCmds);
 							tileEntity.setInventorySlotContents(0, disk);
-							//TODO: Make the client send the server the new command to be added
+							// TODO: Make the client send the server the new command to be added
 						}
 					}
 
@@ -162,7 +162,7 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 
 	private void drawCommand(String command, int x, int y)
 	{
-		
+
 	}
 
 	@Override

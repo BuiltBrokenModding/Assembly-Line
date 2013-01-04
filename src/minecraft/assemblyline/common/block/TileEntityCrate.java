@@ -1,7 +1,5 @@
 package assemblyline.common.block;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,6 +10,8 @@ import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.machine.imprinter.ItemImprinter;
 import assemblyline.common.machine.imprinter.TileEntityImprintable;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 
 public class TileEntityCrate extends TileEntityImprintable implements ISidedInventory, IPacketReceiver
 {
@@ -24,44 +24,24 @@ public class TileEntityCrate extends TileEntityImprintable implements ISidedInve
 		return false;
 	}
 
-	/*@Override
-	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
-	{
-		if (this.worldObj.isRemote)
-		{
-			try
-			{
-				if (dataStream.readBoolean())
-				{
-					if (this.containingItems[0] == null)
-					{
-						this.containingItems[0] = new ItemStack(dataStream.readInt(), dataStream.readInt(), dataStream.readInt());
-					}
-					else
-					{
-						this.containingItems[0].itemID = dataStream.readInt();
-						this.containingItems[0].stackSize = dataStream.readInt();
-						this.containingItems[0].setItemDamage(dataStream.readInt());
-					}
-				}
-				else
-				{
-					this.containingItems[0] = null;
-				}
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-	}*/
+	/*
+	 * @Override public void handlePacketData(INetworkManager network, int packetType,
+	 * Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream) { if
+	 * (this.worldObj.isRemote) { try { if (dataStream.readBoolean()) { if (this.containingItems[0]
+	 * == null) { this.containingItems[0] = new ItemStack(dataStream.readInt(),
+	 * dataStream.readInt(), dataStream.readInt()); } else { this.containingItems[0].itemID =
+	 * dataStream.readInt(); this.containingItems[0].stackSize = dataStream.readInt();
+	 * this.containingItems[0].setItemDamage(dataStream.readInt()); } } else {
+	 * this.containingItems[0] = null; } } catch (Exception e) { e.printStackTrace(); } } }
+	 */
 
-	/*@Override
-	public Packet getDescriptionPacket()
-	{
-		if (this.containingItems[0] != null) { return PacketManager.getPacket(AssemblyLine.CHANNEL, this, true, this.containingItems[0].itemID, this.containingItems[0].stackSize, this.containingItems[0].getItemDamage()); }
-		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, false);
-	}*/
+	/*
+	 * @Override public Packet getDescriptionPacket() { if (this.containingItems[0] != null) {
+	 * return PacketManager.getPacket(AssemblyLine.CHANNEL, this, true,
+	 * this.containingItems[0].itemID, this.containingItems[0].stackSize,
+	 * this.containingItems[0].getItemDamage()); } return
+	 * PacketManager.getPacket(AssemblyLine.CHANNEL, this, false); }
+	 */
 
 	/**
 	 * Inventory functions.
@@ -71,7 +51,7 @@ public class TileEntityCrate extends TileEntityImprintable implements ISidedInve
 	{
 		return this.containingItems[par1];
 	}
-	
+
 	@Override
 	public ItemStack decrStackSize(int par1, int par2)
 	{

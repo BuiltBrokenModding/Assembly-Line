@@ -12,7 +12,6 @@ import net.minecraft.world.World;
 import universalelectricity.prefab.BlockMachine;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
 import assemblyline.api.IFilterable;
-import assemblyline.common.machine.detector.TileEntityDetector;
 
 /**
  * Extend this block class if a filter is allowed to be placed inside of this block.
@@ -70,7 +69,7 @@ public abstract class BlockImprintable extends BlockMachine
 
 		return false;
 	}
-	
+
 	@Override
 	public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
 	{

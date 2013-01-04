@@ -51,13 +51,13 @@ public class BlockEncoder extends BlockMachine
 		return true;
 
 	}
-	
+
 	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
 		return createNewTileEntity(world, 0);
 	}
-	
+
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata)
 	{

@@ -1,26 +1,17 @@
 package assemblyline.common.machine;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.electricity.ElectricityConnections;
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.network.PacketManager;
-import assemblyline.common.machine.imprinter.ItemImprinter;
 import assemblyline.common.machine.imprinter.TileEntityImprintable;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.relauncher.Side;
 
 /**
  * 
@@ -33,13 +24,14 @@ public class TileEntityRejector extends TileEntityImprintable
 	 * should the piston fire, or be extended
 	 */
 	public boolean firePiston = false;
-	
+
 	public TileEntityRejector()
 	{
 		super();
-		//ElectricityConnections.registerConnector(this, EnumSet.of(ForgeDirection.DOWN, ForgeDirection.EAST, ForgeDirection.WEST, ForgeDirection.NORTH, ForgeDirection.SOUTH));
+		// ElectricityConnections.registerConnector(this, EnumSet.of(ForgeDirection.DOWN,
+		// ForgeDirection.EAST, ForgeDirection.WEST, ForgeDirection.NORTH, ForgeDirection.SOUTH));
 	}
-	
+
 	@Override
 	protected int getMaxTransferRange()
 	{

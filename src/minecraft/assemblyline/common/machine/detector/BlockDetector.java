@@ -23,7 +23,7 @@ public class BlockDetector extends BlockImprintable
 		this.blockIndexInTexture = texture;
 		this.setTextureFile(AssemblyLine.BLOCK_TEXTURE_PATH);
 	}
-	
+
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving entity)
 	{
@@ -45,16 +45,16 @@ public class BlockDetector extends BlockImprintable
 				change = ForgeDirection.WEST.ordinal();
 				break;
 		}
-		
-		if (entity.rotationPitch < -70f) //up
+
+		if (entity.rotationPitch < -70f) // up
 		{
 			change = ForgeDirection.DOWN.ordinal();
 		}
-		if (entity.rotationPitch > 70f) //down
+		if (entity.rotationPitch > 70f) // down
 		{
 			change = ForgeDirection.UP.ordinal();
 		}
-		
+
 		world.setBlockMetadataWithNotify(x, y, z, change);
 	}
 
@@ -80,7 +80,7 @@ public class BlockDetector extends BlockImprintable
 
 		return this.blockIndexInTexture;
 	}
-	
+
 	@Override
 	public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
 	{

@@ -43,7 +43,13 @@ public class RenderCrate extends RenderImprintable
 				{
 					if (ItemImprinter.getFilters(tileEntity.getFilter()).size() > 0)
 					{
-						itemStack = ItemImprinter.getFilters(tileEntity.getFilter()).get(0).splitStack(0); // see if it has a filter instead
+						itemStack = ItemImprinter.getFilters(tileEntity.getFilter()).get(0).splitStack(0); // see
+																											// if
+																											// it
+																											// has
+																											// a
+																											// filter
+																											// instead
 					}
 				}
 			}

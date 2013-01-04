@@ -25,7 +25,7 @@ public class SlotCraftingResult extends Slot
 	public boolean canTakeStack(EntityPlayer player)
 	{
 		return playerHasRequiredIngredients(player, getStack());
-		//return true;
+		// return true;
 	}
 
 	@Override
