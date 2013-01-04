@@ -16,7 +16,9 @@ import universalelectricity.prefab.implement.IRedstoneReceptor;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.api.IManipulator;
 import assemblyline.common.machine.imprinter.TileEntityImprintable;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.relauncher.Side;
 
 public class TileEntityManipulator extends TileEntityImprintable implements IRedstoneReceptor, IManipulator
 {
@@ -52,7 +54,7 @@ public class TileEntityManipulator extends TileEntityImprintable implements IRed
 	@Override
 	protected void onUpdate()
 	{
-		if (!this.worldObj.isRemote)
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 		{
 			if (this.ticks % 20 == 0)
 			{
@@ -107,6 +109,8 @@ public class TileEntityManipulator extends TileEntityImprintable implements IRed
 
 		for (EntityItem entity : itemsInBound)
 		{
+			if (entity.isDead)
+				continue;
 			/**
 			 * Try top first, then bottom, then the sides to see if it is possible to insert the
 			 * item into a inventory.
@@ -221,6 +225,7 @@ public class TileEntityManipulator extends TileEntityImprintable implements IRed
 			/**
 			 * Try to put items into a chest.
 			 */
+			//System.out.println(itemStack.hashCode() + " @ " + direction.toString());
 			if (tileEntity instanceof TileEntityChest)
 			{
 				TileEntityChest[] chests = { (TileEntityChest) tileEntity, null };
