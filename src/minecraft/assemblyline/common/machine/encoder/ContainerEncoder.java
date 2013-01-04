@@ -12,14 +12,12 @@ public class ContainerEncoder extends Container
 {
 	private ItemStack[] containingItems = new ItemStack[1];
 	private World worldObj;
-	private Vector3 position;
 	private InventoryPlayer inventoryPlayer;
 	private TileEntityEncoder encoder;
 
-	public ContainerEncoder(InventoryPlayer inventoryPlayer, World worldObj, Vector3 position, TileEntityEncoder encoder)
+	public ContainerEncoder(InventoryPlayer inventoryPlayer, World worldObj, TileEntityEncoder encoder)
 	{
 		this.worldObj = worldObj;
-		this.position = position;
 		this.inventoryPlayer = inventoryPlayer;
 		this.encoder = encoder;
 
@@ -42,12 +40,6 @@ public class ContainerEncoder extends Container
 		{
 			this.addSlotToContainer(new Slot(inventoryPlayer, var3, 8 + var3 * 18, 228));
 		}
-	}
-
-	@Override
-	public void updateCraftingResults()
-	{
-		super.updateCraftingResults();
 	}
 
 	@Override

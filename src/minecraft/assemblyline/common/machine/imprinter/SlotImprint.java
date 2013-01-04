@@ -15,7 +15,7 @@ public class SlotImprint extends Slot
 
 	public boolean isItemValid(ItemStack itemStack)
 	{
-		return itemStack.itemID == AssemblyLine.itemImprint.shiftedIndex;
+		return itemStack.itemID == AssemblyLine.itemImprint.itemID;
 	}
 
 }

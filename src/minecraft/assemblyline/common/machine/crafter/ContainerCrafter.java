@@ -68,7 +68,7 @@ public class ContainerCrafter extends Container
 
 			if (par1 != 0)
 			{
-				if (itemStack2.itemID == Item.coal.shiftedIndex)
+				if (itemStack2.itemID == Item.coal.itemID)
 				{
 					if (!this.mergeItemStack(itemStack2, 0, 1, false)) { return null; }
 				}

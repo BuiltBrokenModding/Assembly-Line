@@ -58,7 +58,7 @@ public class ClientProxy extends CommonProxy
 				return new GuiImprinter(player.inventory, world, new Vector3(x, y, z));
 			case GUI_ENCODER:
 				if (tileEntity != null && tileEntity instanceof TileEntityEncoder)
-					return new GuiEncoder(player.inventory, world, new Vector3(x, y, z), (TileEntityEncoder) tileEntity);
+					return new GuiEncoder(player.inventory, world, (TileEntityEncoder) tileEntity);
 		}
 
 		return null;

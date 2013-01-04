@@ -157,8 +157,12 @@ public class TileEntityEncoder extends TileEntityAdvanced implements IPacketRece
 	{
 		try
 		{
-			// TODO: Get this to work and add commands to the stack
+			/**
+			 * Only the server receives this from the client's button click action.
+			 */
+			
 			int newAddCommandID = dataStream.readInt();
+			
 		}
 		catch (Exception e)
 		{

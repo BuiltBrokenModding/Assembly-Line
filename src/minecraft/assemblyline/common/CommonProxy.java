@@ -50,7 +50,7 @@ public class CommonProxy implements IGuiHandler
 			case GUI_ENCODER:
 			{
 				if (tileEntity != null && tileEntity instanceof TileEntityEncoder)
-					return new ContainerEncoder(player.inventory, world, new Vector3(x, y, z), (TileEntityEncoder) tileEntity);
+					return new ContainerEncoder(player.inventory, world, (TileEntityEncoder) tileEntity);
 			}
 		}
 

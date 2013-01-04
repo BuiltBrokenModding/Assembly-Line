@@ -58,12 +58,6 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 	}
 
 	@Override
-	public void updateCraftingResults()
-	{
-		super.updateCraftingResults();
-	}
-
-	@Override
 	public boolean canInteractWith(EntityPlayer player)
 	{
 		return this.isUseableByPlayer(player);
@@ -85,7 +79,8 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 
 			if (slot == 2)
 			{
-				setInventorySlotContents(0, null); // Prevents filter from being duplicated
+				setInventorySlotContents(0, null); // Prevents filter from being
+													// duplicated
 			}
 
 			if (slot > 4)

@@ -15,7 +15,7 @@ public class SlotDisk extends Slot
 
 	public boolean isItemValid(ItemStack itemStack)
 	{
-		return itemStack.itemID == AssemblyLine.itemDisk.shiftedIndex;
+		return itemStack.itemID == AssemblyLine.itemDisk.itemID;
 	}
 
 }

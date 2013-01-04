@@ -37,7 +37,6 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 	private int containerWidth;
 	private int containerHeight;
 	private TileEntityEncoder tileEntity;
-	private int x, y, z;
 	private ArrayList<String> commands;
 
 	// list stuff
@@ -49,18 +48,11 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 	private GuiButton pDnButton;
 	private GuiTextField commandField;
 
-	public GuiEncoder(InventoryPlayer par1InventoryPlayer, World worldObj, Vector3 position, TileEntityEncoder tileEntity)
+	public GuiEncoder(InventoryPlayer par1InventoryPlayer, World worldObj, TileEntityEncoder tileEntity)
 	{
-		super(new ContainerEncoder(par1InventoryPlayer, worldObj, position, tileEntity));
+		super(new ContainerEncoder(par1InventoryPlayer, worldObj, tileEntity));
 		this.ySize = 256;
 		this.tileEntity = tileEntity;
-		if (tileEntity != null)
-		{
-
-		}
-		this.x = position.intX();
-		this.y = position.intY();
-		this.z = position.intZ();
 	}
 
 	@Override
@@ -268,6 +260,6 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 	@Override
 	public void inventoryChanged()
 	{
-		updateCommands();
+		this.updateCommands();
 	}
 }
