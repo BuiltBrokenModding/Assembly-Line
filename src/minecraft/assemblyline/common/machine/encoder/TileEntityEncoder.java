@@ -168,7 +168,16 @@ public class TileEntityEncoder extends TileEntityAdvanced implements IPacketRece
 			if (Command.getCommand(newCommand) != null && this.disk != null)
 			{
 				ArrayList<String> tempCmds = ItemDisk.getCommands(this.disk);
-				tempCmds.add(newCommand);
+
+				if (dataStream.readBoolean())
+				{
+					tempCmds.add(newCommand);
+				}
+				else
+				{
+					tempCmds.remove(newCommand);
+				}
+
 				ItemDisk.setCommands(this.disk, tempCmds);
 			}
 		}

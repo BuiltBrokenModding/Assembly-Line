@@ -60,7 +60,7 @@ public class ContainerEncoder extends Container
 			ItemStack slotStack = slotObj.getStack();
 			copyStack = slotStack.copy();
 
-			if (slot > 1)
+			if (slot >= 1)
 			{
 				if (this.getSlot(0).isItemValid(slotStack))
 				{

@@ -100,16 +100,35 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 							tempCmds.add(commandField.getText());
 							ItemDisk.setCommands(disk, tempCmds);
 							this.tileEntity.setInventorySlotContents(0, disk);
-							PacketDispatcher.sendPacketToServer(PacketManager.getPacket(AssemblyLine.CHANNEL, this.tileEntity, (String) this.commandField.getText()));
+							PacketDispatcher.sendPacketToServer(PacketManager.getPacket(AssemblyLine.CHANNEL, this.tileEntity, (String) this.commandField.getText(), true));
 						}
 					}
 
 					this.commandField.setText("");
 				}
+
 				break;
 			}
 			case 1: // subtract
 			{
+				if (!this.commandField.getText().equals(""))
+				{
+					if (this.tileEntity != null)
+					{
+						ItemStack disk = this.tileEntity.getStackInSlot(0);
+
+						if (disk != null && Command.getCommand(this.commandField.getText()) != null)
+						{
+							ArrayList<String> tempCmds = ItemDisk.getCommands(disk);
+							tempCmds.remove(commandField.getText());
+							ItemDisk.setCommands(disk, tempCmds);
+							this.tileEntity.setInventorySlotContents(0, disk);
+							PacketDispatcher.sendPacketToServer(PacketManager.getPacket(AssemblyLine.CHANNEL, this.tileEntity, (String) this.commandField.getText(), false));
+						}
+					}
+
+					this.commandField.setText("");
+				}
 
 				break;
 			}
