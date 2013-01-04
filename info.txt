@@ -36,3 +36,4 @@ Minecraft 1.4.5
 * AssemblyLine_v0.2.0.38.jar AssemblyLine_v0.2.0.38_api.zip
 @ AssemblyLine_v0.2.1.39.jar AssemblyLine_v0.2.1.39_api.zip
 * AssemblyLine_v0.2.1.40.jar AssemblyLine_v0.2.1.40_api.zip
+@ AssemblyLine_v0.2.2.41.jar AssemblyLine_v0.2.2.41_api.zip
