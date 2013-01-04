@@ -118,7 +118,7 @@ public class AssemblyLine
 		System.out.println(NAME + " Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
 
 		// Disk
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemDisk, new Object[] { "R", "P", "I", 'P', Item.paper, 'R', Item.redstone, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemDisk, new Object[] { "III", "ICI", "III", 'I', Item.ingotIron, 'C', "advancedCircuit" }));
 
 		// Encoder
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockEncoder, new Object[] { "S S", "SCS", "SSS", 'S', "ingotSteel", 'C', "eliteCircuit" }));
