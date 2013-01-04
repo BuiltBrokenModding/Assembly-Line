@@ -1,4 +1,4 @@
-package assemblyline.common.ai;
+package assemblyline.common.machine.armbot;
 
 import java.util.List;
 

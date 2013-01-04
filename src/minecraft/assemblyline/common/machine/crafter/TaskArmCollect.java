@@ -1,14 +1,14 @@
 package assemblyline.common.machine.crafter;
 
 import net.minecraft.entity.item.EntityItem;
-import assemblyline.common.ai.Task;
+import assemblyline.common.machine.armbot.Command;
 
 /**
  * Used by arms to collect items in a specific region.
  * 
  * @author Calclavia
  */
-public class TaskArmCollect extends Task
+public class TaskArmCollect extends Command
 {
 
 	/**

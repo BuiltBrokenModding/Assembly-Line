@@ -1,4 +1,4 @@
-package assemblyline.common.ai;
+package assemblyline.common.machine.armbot;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,9 +7,9 @@ import java.util.List;
 import net.minecraft.tileentity.TileEntity;
 import cpw.mods.fml.common.FMLLog;
 
-public class TaskManager
+public class CommandManager
 {
-	private final List<Task> tasks = new ArrayList<Task>();
+	private final List<Command> tasks = new ArrayList<Command>();
 
 	private int ticks = 0;
 
@@ -23,8 +23,8 @@ public class TaskManager
 		 */
 		try
 		{
-			Task task;
-			Iterator<Task> iter = tasks.iterator();
+			Command task;
+			Iterator<Command> iter = tasks.iterator();
 			while (iter.hasNext())
 			{
 				task = iter.next();
@@ -57,7 +57,7 @@ public class TaskManager
 	 * @param tileEntity TE instance to register the task for
 	 * @param task Task instance to register
 	 */
-	public void addTask(TileEntity tileEntity, Task task)
+	public void addTask(TileEntity tileEntity, Command task)
 	{
 		tasks.add(task);
 		task.onTaskStart();

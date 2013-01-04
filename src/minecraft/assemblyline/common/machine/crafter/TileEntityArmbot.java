@@ -17,7 +17,7 @@ import universalelectricity.core.implement.IJouleStorage;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.tile.TileEntityElectricityReceiver;
-import assemblyline.common.ai.TaskManager;
+import assemblyline.common.machine.armbot.CommandManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -28,7 +28,7 @@ public class TileEntityArmbot extends TileEntityElectricityReceiver implements I
 	 */
 	protected ItemStack[] containingItems = new ItemStack[this.getSizeInventory()];
 
-	private TaskManager taskManager = new TaskManager();
+	private CommandManager taskManager = new CommandManager();
 
 	/**
 	 * Entity robotic arm to be used with this tileEntity

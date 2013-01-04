@@ -1,4 +1,4 @@
-package assemblyline.common.ai;
+package assemblyline.common.machine.armbot;
 
 import assemblyline.common.machine.crafter.TileEntityArmbot;
 
@@ -8,12 +8,17 @@ import assemblyline.common.machine.crafter.TileEntityArmbot;
  * @author Calclavia
  * 
  */
-public abstract class Task
+public abstract class Command
 {
+	/**
+	 * A class of all available commands. Command IDs are the indexes of the array.
+	 */
+	public static Class[] COMMANDS = { CommandIdle.class };
+
 	protected int ticks;
 	protected TileEntityArmbot tileEntity;
 
-	public Task(TileEntityArmbot arm)
+	public Command(TileEntityArmbot arm)
 	{
 		this.tileEntity = arm;
 	}

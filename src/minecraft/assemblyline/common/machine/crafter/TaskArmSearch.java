@@ -4,14 +4,14 @@ import java.util.List;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.AxisAlignedBB;
-import assemblyline.common.ai.Task;
+import assemblyline.common.machine.armbot.Command;
 
 /**
  * Used by arms to search for entities in a region
  * 
  * @author Calclavia
  */
-public class TaskArmSearch extends Task
+public class TaskArmSearch extends Command
 {
 
 	/**

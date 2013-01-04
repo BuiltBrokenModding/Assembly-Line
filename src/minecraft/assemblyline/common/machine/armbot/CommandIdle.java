@@ -1,10 +1,10 @@
-package assemblyline.common.ai;
+package assemblyline.common.machine.armbot;
 
 import assemblyline.common.machine.crafter.TileEntityArmbot;
 
-public class TaskIdle extends Task
+public class CommandIdle extends Command
 {
-	public TaskIdle(TileEntityArmbot arm)
+	public CommandIdle(TileEntityArmbot arm)
 	{
 		super(arm);
 	}
