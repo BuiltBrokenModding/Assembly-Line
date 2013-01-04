@@ -21,8 +21,11 @@ import net.minecraft.world.World;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
+
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
+import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.encoder.ContainerEncoder;
 import assemblyline.common.machine.encoder.IInventoryWatcher;
@@ -92,22 +95,24 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 		{
 			case 0: // add
 			{
-				if (!commandField.getText().equals(""))
+				if (!this.commandField.getText().equals(""))
 				{
-					if (tileEntity != null)
+					if (this.tileEntity != null)
 					{
-						ItemStack disk = tileEntity.getStackInSlot(0);
+						ItemStack disk = this.tileEntity.getStackInSlot(0);
 						if (disk != null)
 						{
 							ArrayList<String> tempCmds = ItemDisk.getCommands(disk);
 							tempCmds.add(commandField.getText());
 							ItemDisk.setCommands(disk, tempCmds);
-							tileEntity.setInventorySlotContents(0, disk);
-							// TODO: Make the client send the server the new command to be added
+							this.tileEntity.setInventorySlotContents(0, disk);
+							// TODO: Change command ID to corresponding ones.
+							int commandID = 0;
+							PacketDispatcher.sendPacketToServer(PacketManager.getPacket(AssemblyLine.CHANNEL, this.tileEntity, (int) commandID));
 						}
 					}
 
-					commandField.setText("");
+					this.commandField.setText("");
 				}
 				break;
 			}

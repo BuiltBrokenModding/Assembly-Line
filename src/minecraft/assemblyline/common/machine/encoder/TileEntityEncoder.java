@@ -1,15 +1,19 @@
 package assemblyline.common.machine.encoder;
 
+import com.google.common.io.ByteArrayDataInput;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
+import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 
-public class TileEntityEncoder extends TileEntityAdvanced implements ISidedInventory
+public class TileEntityEncoder extends TileEntityAdvanced implements IPacketReceiver, ISidedInventory
 {
-
 	private ItemStack disk;
 	private IInventoryWatcher watcher;
 
@@ -127,9 +131,12 @@ public class TileEntityEncoder extends TileEntityAdvanced implements ISidedInven
 	{
 		super.writeToNBT(nbt);
 
-		NBTTagCompound diskNBT = new NBTTagCompound();
-		disk.writeToNBT(diskNBT);
-		nbt.setCompoundTag("disk", diskNBT);
+		if (this.disk != null)
+		{
+			NBTTagCompound diskNBT = new NBTTagCompound();
+			this.disk.writeToNBT(diskNBT);
+			nbt.setCompoundTag("disk", diskNBT);
+		}
 	}
 
 	@Override
@@ -138,9 +145,24 @@ public class TileEntityEncoder extends TileEntityAdvanced implements ISidedInven
 		super.readFromNBT(nbt);
 
 		NBTTagCompound diskNBT = nbt.getCompoundTag("disk");
+
 		if (diskNBT != null)
 		{
-			disk = ItemStack.loadItemStackFromNBT(diskNBT);
+			this.disk = ItemStack.loadItemStackFromNBT(diskNBT);
+		}
+	}
+
+	@Override
+	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
+	{
+		try
+		{
+			// TODO: Get this to work and add commands to the stack
+			int newAddCommandID = dataStream.readInt();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
 		}
 	}
 
