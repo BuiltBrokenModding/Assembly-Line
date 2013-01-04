@@ -1,5 +1,7 @@
 package assemblyline.common.machine.armbot;
 
+import java.util.HashMap;
+
 import assemblyline.common.machine.crafter.TileEntityArmbot;
 
 /**
@@ -11,9 +13,26 @@ import assemblyline.common.machine.crafter.TileEntityArmbot;
 public abstract class Command
 {
 	/**
-	 * A class of all available commands. Command IDs are the indexes of the array.
+	 * A class of all available commands.
+	 * 
+	 * String - Command name. Command - The actual command class.
 	 */
-	public static Class[] COMMANDS = { CommandIdle.class };
+	private static final HashMap<String, Class> COMMANDS = new HashMap<String, Class>();
+
+	static
+	{
+		registerCommand("idle", CommandIdle.class);
+	}
+
+	public static void registerCommand(String command, Class<? extends Command> commandClass)
+	{
+		COMMANDS.put(command, commandClass);
+	}
+
+	public static Class<? extends Command> getCommand(String command)
+	{
+		return COMMANDS.get(command);
+	}
 
 	protected int ticks;
 	protected TileEntityArmbot tileEntity;

@@ -27,6 +27,7 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.AssemblyLine;
+import assemblyline.common.machine.armbot.Command;
 import assemblyline.common.machine.encoder.ContainerEncoder;
 import assemblyline.common.machine.encoder.IInventoryWatcher;
 import assemblyline.common.machine.encoder.ItemDisk;
@@ -62,22 +63,22 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 
 		this.allowUserInput = true;
 
-		containerWidth = (this.width - this.xSize) / 2;
-		containerHeight = (this.height - this.ySize) / 2;
+		this.containerWidth = (this.width - this.xSize) / 2;
+		this.containerHeight = (this.height - this.ySize) / 2;
 
-		addButton = new GuiButton(0, containerWidth + (xSize - 25), containerHeight + 148, 18, 20, "+");
-		delButton = new GuiButton(1, containerWidth + (xSize - 43), containerHeight + 148, 18, 20, "-");
-		pUpButton = new GuiButton(2, containerWidth + (xSize - 25), containerHeight + 48, 18, 20, "");
-		pDnButton = new GuiButton(3, containerWidth + (xSize - 25), containerHeight + 128, 18, 20, "");
-		commandField = new GuiTextField(fontRenderer, 8, 149, xSize - 52, 18);
+		this.addButton = new GuiButton(0, containerWidth + (xSize - 25), containerHeight + 128, 18, 20, "+");
+		this.delButton = new GuiButton(1, containerWidth + (xSize - 43), containerHeight + 128, 18, 20, "-");
+		this.pUpButton = new GuiButton(2, containerWidth + (xSize - 25), containerHeight + 48, 18, 20, "");
+		this.pDnButton = new GuiButton(3, containerWidth + (xSize - 25), containerHeight + 108, 18, 20, "");
+		this.commandField = new GuiTextField(fontRenderer, 8, 129, xSize - 52, 18);
 		// commandList = new GuiCommandList(mc, xSize - 7, 128, 7, 120, 170, 20);
 
-		controlList.add(addButton);
-		controlList.add(delButton);
-		controlList.add(pUpButton);
-		controlList.add(pDnButton);
+		this.controlList.add(addButton);
+		this.controlList.add(delButton);
+		this.controlList.add(pUpButton);
+		this.controlList.add(pDnButton);
 
-		minCommand = 0;
+		this.minCommand = 0;
 	}
 
 	@Override
@@ -92,15 +93,14 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 					if (this.tileEntity != null)
 					{
 						ItemStack disk = this.tileEntity.getStackInSlot(0);
-						if (disk != null)
+
+						if (disk != null && Command.getCommand(this.commandField.getText()) != null)
 						{
 							ArrayList<String> tempCmds = ItemDisk.getCommands(disk);
 							tempCmds.add(commandField.getText());
 							ItemDisk.setCommands(disk, tempCmds);
 							this.tileEntity.setInventorySlotContents(0, disk);
-							// TODO: Change command ID to corresponding ones.
-							int commandID = 0;
-							PacketDispatcher.sendPacketToServer(PacketManager.getPacket(AssemblyLine.CHANNEL, this.tileEntity, (int) commandID));
+							PacketDispatcher.sendPacketToServer(PacketManager.getPacket(AssemblyLine.CHANNEL, this.tileEntity, (String) this.commandField.getText()));
 						}
 					}
 
@@ -193,7 +193,7 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 		this.mc.renderEngine.bindTexture(var4);
 
 		this.drawTexturedModalRect(containerWidth, containerHeight, 0, 0, this.xSize, this.ySize);
-		drawOutlineRect(containerWidth + 7, containerHeight + 48, containerWidth + (xSize - 25), containerHeight + 48 + 100, 0, 0, 0, 0.5f, 0.5f, 0.5f);
+		drawOutlineRect(containerWidth + 7, containerHeight + 48, containerWidth + (xSize - 25), containerHeight + 48 + 80, 0, 0, 0, 0.5f, 0.5f, 0.5f);
 	}
 
 	public static void drawOutlineRect(int x1, int y1, int x2, int y2, float rR, float rG, float rB, float lR, float lG, float lB)

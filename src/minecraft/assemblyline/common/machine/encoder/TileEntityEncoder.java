@@ -1,6 +1,6 @@
 package assemblyline.common.machine.encoder;
 
-import com.google.common.io.ByteArrayDataInput;
+import java.util.ArrayList;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -11,6 +11,9 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
+import assemblyline.common.machine.armbot.Command;
+
+import com.google.common.io.ByteArrayDataInput;
 
 public class TileEntityEncoder extends TileEntityAdvanced implements IPacketReceiver, ISidedInventory
 {
@@ -160,9 +163,14 @@ public class TileEntityEncoder extends TileEntityAdvanced implements IPacketRece
 			/**
 			 * Only the server receives this from the client's button click action.
 			 */
-			
-			int newAddCommandID = dataStream.readInt();
-			
+			String newCommand = dataStream.readUTF();
+
+			if (Command.getCommand(newCommand) != null && this.disk != null)
+			{
+				ArrayList<String> tempCmds = ItemDisk.getCommands(this.disk);
+				tempCmds.add(newCommand);
+				ItemDisk.setCommands(this.disk, tempCmds);
+			}
 		}
 		catch (Exception e)
 		{

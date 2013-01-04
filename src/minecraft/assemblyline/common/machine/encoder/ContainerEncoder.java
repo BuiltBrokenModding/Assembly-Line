@@ -22,23 +22,21 @@ public class ContainerEncoder extends Container
 		this.encoder = encoder;
 
 		// Disk
-		this.addSlotToContainer(new Slot(encoder, 0, 80, 24));
-		// Output Disk
-		// this.addSlotToContainer(new SlotDiskResult(this, 2, 136, 24));
-
+		this.addSlotToContainer(new Slot(encoder, 0, 80, 17));
+		
 		int var3;
 
 		for (var3 = 0; var3 < 3; ++var3)
 		{
 			for (int var4 = 0; var4 < 9; ++var4)
 			{
-				this.addSlotToContainer(new Slot(inventoryPlayer, var4 + var3 * 9 + 9, 8 + var4 * 18, 170 + var3 * 18));
+				this.addSlotToContainer(new Slot(inventoryPlayer, var4 + var3 * 9 + 9, 8 + var4 * 18, 155 + var3 * 18));
 			}
 		}
 
 		for (var3 = 0; var3 < 9; ++var3)
 		{
-			this.addSlotToContainer(new Slot(inventoryPlayer, var3, 8 + var3 * 18, 228));
+			this.addSlotToContainer(new Slot(inventoryPlayer, var3, 8 + var3 * 18, 213));
 		}
 	}
 
