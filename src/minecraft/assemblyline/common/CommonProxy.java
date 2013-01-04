@@ -40,6 +40,8 @@ public class CommonProxy implements IGuiHandler
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		
+		//System.out.println("Server GUI request for ID " + ID);
 
 		switch (ID)
 		{

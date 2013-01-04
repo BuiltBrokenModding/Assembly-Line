@@ -71,7 +71,7 @@ public class TileEntityCrate extends TileEntityImprintable implements ISidedInve
 	{
 		return this.containingItems[par1];
 	}
-
+	
 	@Override
 	public ItemStack decrStackSize(int par1, int par2)
 	{
