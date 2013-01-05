@@ -10,9 +10,9 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.machine.imprinter.TileEntityImprintable;
+import assemblyline.common.machine.imprinter.TileEntityFilterable;
 
-public class TileEntityDetector extends TileEntityImprintable
+public class TileEntityDetector extends TileEntityFilterable
 {
 	private boolean powering = false;
 

@@ -24,7 +24,7 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
-public abstract class TileEntityImprintable extends TileEntityAssemblyNetwork implements IRotatable, IFilterable, IPacketReceiver
+public abstract class TileEntityFilterable extends TileEntityAssemblyNetwork implements IRotatable, IFilterable, IPacketReceiver
 {
 	private ItemStack filterItem;
 	private boolean inverted;

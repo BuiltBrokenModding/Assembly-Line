@@ -5,22 +5,22 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
-import universalelectricity.core.vector.Vector3;
 
 public class ContainerEncoder extends Container
 {
+	public static final int Y_OFFSET = 9;
+
 	private ItemStack[] containingItems = new ItemStack[1];
 	private InventoryPlayer inventoryPlayer;
-	private TileEntityEncoder encoder;
+	private TileEntityEncoder tileEntity;
 
 	public ContainerEncoder(InventoryPlayer inventoryPlayer, TileEntityEncoder encoder)
 	{
 		this.inventoryPlayer = inventoryPlayer;
-		this.encoder = encoder;
+		this.tileEntity = encoder;
 
 		// Disk
-		this.addSlotToContainer(new Slot(encoder, 0, 80, 17));
+		this.addSlotToContainer(new Slot(encoder, 0, 80, 24 + Y_OFFSET));
 
 		int var3;
 
@@ -28,20 +28,20 @@ public class ContainerEncoder extends Container
 		{
 			for (int var4 = 0; var4 < 9; ++var4)
 			{
-				this.addSlotToContainer(new Slot(inventoryPlayer, var4 + var3 * 9 + 9, 8 + var4 * 18, 155 + var3 * 18));
+				this.addSlotToContainer(new Slot(inventoryPlayer, var4 + var3 * 9 + 9, 8 + var4 * 18, 155 + var3 * 18 + Y_OFFSET));
 			}
 		}
 
 		for (var3 = 0; var3 < 9; ++var3)
 		{
-			this.addSlotToContainer(new Slot(inventoryPlayer, var3, 8 + var3 * 18, 213));
+			this.addSlotToContainer(new Slot(inventoryPlayer, var3, 8 + var3 * 18, 213 + Y_OFFSET));
 		}
 	}
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player)
 	{
-		return encoder.isUseableByPlayer(player);
+		return this.tileEntity.isUseableByPlayer(player);
 	}
 
 	/**

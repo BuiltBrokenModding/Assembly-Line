@@ -77,9 +77,9 @@ public abstract class BlockImprintable extends BlockMachine
 
 		if (tileEntity != null)
 		{
-			if (tileEntity instanceof TileEntityImprintable)
+			if (tileEntity instanceof TileEntityFilterable)
 			{
-				((TileEntityImprintable) tileEntity).toggleInversion();
+				((TileEntityFilterable) tileEntity).toggleInversion();
 				world.markBlockForRenderUpdate(x, y, z);
 			}
 		}

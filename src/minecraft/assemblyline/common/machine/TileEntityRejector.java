@@ -11,14 +11,14 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.PacketManager;
-import assemblyline.common.machine.imprinter.TileEntityImprintable;
+import assemblyline.common.machine.imprinter.TileEntityFilterable;
 
 /**
  * 
  * @author Darkguardsman
  * 
  */
-public class TileEntityRejector extends TileEntityImprintable
+public class TileEntityRejector extends TileEntityFilterable
 {
 	/**
 	 * should the piston fire, or be extended

@@ -153,6 +153,7 @@ public class TileEntityEncoder extends TileEntityAdvanced implements IPacketRece
 		{
 			this.disk = ItemStack.loadItemStackFromNBT(diskNBT);
 		}
+
 	}
 
 	@Override
@@ -160,25 +161,28 @@ public class TileEntityEncoder extends TileEntityAdvanced implements IPacketRece
 	{
 		try
 		{
-			/**
-			 * Only the server receives this from the client's button click action.
-			 */
-			String newCommand = dataStream.readUTF();
-
-			if (Command.getCommand(newCommand) != null && this.disk != null)
+			if (!this.worldObj.isRemote)
 			{
-				ArrayList<String> tempCmds = ItemDisk.getCommands(this.disk);
+				/**
+				 * New command action
+				 */
+				String newCommand = dataStream.readUTF();
 
-				if (dataStream.readBoolean())
+				if (Command.getCommand(newCommand) != null && this.disk != null)
 				{
-					tempCmds.add(newCommand);
-				}
-				else
-				{
-					tempCmds.remove(newCommand);
-				}
+					ArrayList<String> tempCmds = ItemDisk.getCommands(this.disk);
 
-				ItemDisk.setCommands(this.disk, tempCmds);
+					if (dataStream.readBoolean())
+					{
+						tempCmds.add(newCommand);
+					}
+					else
+					{
+						tempCmds.remove(newCommand);
+					}
+
+					ItemDisk.setCommands(this.disk, tempCmds);
+				}
 			}
 		}
 		catch (Exception e)

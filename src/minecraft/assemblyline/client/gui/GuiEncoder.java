@@ -63,11 +63,11 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 		this.containerWidth = (this.width - this.xSize) / 2;
 		this.containerHeight = (this.height - this.ySize) / 2;
 
-		this.addButton = new GuiButton(0, containerWidth + (xSize - 25), containerHeight + 128, 18, 20, "+");
-		this.delButton = new GuiButton(1, containerWidth + (xSize - 43), containerHeight + 128, 18, 20, "-");
-		this.pUpButton = new GuiButton(2, containerWidth + (xSize - 25), containerHeight + 48, 18, 20, "");
-		this.pDnButton = new GuiButton(3, containerWidth + (xSize - 25), containerHeight + 108, 18, 20, "");
-		this.commandField = new GuiTextField(fontRenderer, 8, 129, xSize - 52, 18);
+		this.addButton = new GuiButton(0, containerWidth + (xSize - 25), containerHeight + 128 + ContainerEncoder.Y_OFFSET, 18, 20, "+");
+		this.delButton = new GuiButton(1, containerWidth + (xSize - 43), containerHeight + 128 + ContainerEncoder.Y_OFFSET, 18, 20, "-");
+		this.pUpButton = new GuiButton(2, containerWidth + (xSize - 25), containerHeight + 48 + ContainerEncoder.Y_OFFSET, 18, 20, "");
+		this.pDnButton = new GuiButton(3, containerWidth + (xSize - 25), containerHeight + 108 + ContainerEncoder.Y_OFFSET, 18, 20, "");
+		this.commandField = new GuiTextField(fontRenderer, 8, 129 + ContainerEncoder.Y_OFFSET, xSize - 52, 18);
 		// commandList = new GuiCommandList(mc, xSize - 7, 128, 7, 120, 170, 20);
 
 		this.controlList.add(addButton);
@@ -140,12 +140,12 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 	{
 		glColor4f(1, 1, 1, 1);
 		glDisable(GL_LIGHTING);
-		this.fontRenderer.drawString(TranslationHelper.getLocal("tile.encoder.name"), 68, 6, 4210752);
-		this.fontRenderer.drawString("Disk:", 56, 28, 4210752);
+		this.fontRenderer.drawString(TranslationHelper.getLocal("tile.encoder.name"), 68, 6 + ContainerEncoder.Y_OFFSET, 4210752);
+		this.fontRenderer.drawString("Disk:", 56, 28 + ContainerEncoder.Y_OFFSET, 4210752);
 
 		// render page up and page down buttons
 		glPushMatrix();
-		glTranslatef(pUpButton.xPosition - containerWidth + 6, pUpButton.yPosition - containerHeight + 7, 0);
+		glTranslatef(pUpButton.xPosition - containerWidth + 6, pUpButton.yPosition - containerHeight + 7 , 0);
 		this.fontRenderer.drawString("^", 1, 1, 0x444444);
 		this.fontRenderer.drawString("^", 0, 0, 0xFFFFFF);
 		glPopMatrix();
@@ -208,8 +208,8 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.mc.renderEngine.bindTexture(var4);
 
-		this.drawTexturedModalRect(containerWidth, containerHeight, 0, 0, this.xSize, this.ySize);
-		drawOutlineRect(containerWidth + 7, containerHeight + 48, containerWidth + (xSize - 25), containerHeight + 48 + 80, 0, 0, 0, 0.5f, 0.5f, 0.5f);
+		this.drawTexturedModalRect(containerWidth, containerHeight + ContainerEncoder.Y_OFFSET, 0, 0, this.xSize, this.ySize);
+		drawOutlineRect(containerWidth + 7, containerHeight + 48 + ContainerEncoder.Y_OFFSET, containerWidth + (xSize - 25), containerHeight + 48 + 80 + ContainerEncoder.Y_OFFSET, 0, 0, 0, 0.5f, 0.5f, 0.5f);
 	}
 
 	public static void drawOutlineRect(int x1, int y1, int x2, int y2, float rR, float rG, float rB, float lR, float lG, float lB)

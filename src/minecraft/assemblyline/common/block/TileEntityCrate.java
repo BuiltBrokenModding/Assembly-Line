@@ -13,7 +13,6 @@ import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.machine.imprinter.ItemImprinter;
 
 import com.google.common.io.ByteArrayDataInput;
 

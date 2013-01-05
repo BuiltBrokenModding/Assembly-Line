@@ -18,7 +18,6 @@ import net.minecraftforge.common.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import assemblyline.common.block.TileEntityCrate;
-import assemblyline.common.machine.imprinter.ItemImprinter;
 
 public class RenderCrate extends TileEntitySpecialRenderer
 {

@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import assemblyline.common.machine.imprinter.ItemImprinter;
-import assemblyline.common.machine.imprinter.TileEntityImprintable;
+import assemblyline.common.machine.imprinter.TileEntityFilterable;
 
 /**
  * @author Briman0094
@@ -21,9 +21,9 @@ public abstract class RenderImprintable extends TileEntitySpecialRenderer
 	{
 		if (tileEntity != null)
 		{
-			if (tileEntity instanceof TileEntityImprintable)
+			if (tileEntity instanceof TileEntityFilterable)
 			{
-				TileEntityImprintable tileFilterable = (TileEntityImprintable) tileEntity;
+				TileEntityFilterable tileFilterable = (TileEntityFilterable) tileEntity;
 
 				ItemStack filter = tileFilterable.getFilter();
 
@@ -39,7 +39,7 @@ public abstract class RenderImprintable extends TileEntitySpecialRenderer
 							ArrayList<ItemStack> filters = ItemImprinter.getFilters(filter);
 							for (int i = 0; i < filters.size(); i++)
 							{
-								if (((TileEntityImprintable) tileEntity).isInverted())
+								if (((TileEntityFilterable) tileEntity).isInverted())
 								{
 									RenderHelper.renderFloatingText(filters.get(i).getTooltip(player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips).get(0).toString(), (float) x + 0.5f, ((float) y + (i * 0.25f)) - 1f, (float) z + 0.5f, 0xFF8888);
 								}
