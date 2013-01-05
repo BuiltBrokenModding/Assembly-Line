@@ -8,8 +8,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import universalelectricity.prefab.UETab;
 import assemblyline.common.AssemblyLine;
+import assemblyline.common.TabAssemblyLine;
 
 public class ItemDisk extends Item
 {
@@ -18,7 +18,7 @@ public class ItemDisk extends Item
 		super(id);
 		this.setItemName("disk");
 		this.setIconIndex(0);
-		this.setCreativeTab(UETab.INSTANCE);
+		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 		this.setHasSubtypes(true);
 		this.setTextureFile(AssemblyLine.ITEM_TEXTURE_PATH);
 	}

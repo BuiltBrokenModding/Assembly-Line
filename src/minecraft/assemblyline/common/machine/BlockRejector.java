@@ -3,8 +3,8 @@ package assemblyline.common.machine;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
-import universalelectricity.prefab.UETab;
 import assemblyline.client.render.BlockRenderingHandler;
+import assemblyline.common.TabAssemblyLine;
 import assemblyline.common.machine.imprinter.BlockImprintable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -13,7 +13,7 @@ public class BlockRejector extends BlockImprintable
 {
 	public BlockRejector(int id)
 	{
-		super("rejector", id, UniversalElectricity.machine, UETab.INSTANCE);
+		super("rejector", id, UniversalElectricity.machine, TabAssemblyLine.INSTANCE);
 	}
 
 	@Override

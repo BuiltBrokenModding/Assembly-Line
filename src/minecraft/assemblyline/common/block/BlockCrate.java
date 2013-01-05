@@ -8,9 +8,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.prefab.BlockMachine;
-import universalelectricity.prefab.UETab;
 import assemblyline.api.IFilterable;
 import assemblyline.common.AssemblyLine;
+import assemblyline.common.TabAssemblyLine;
 import assemblyline.common.machine.imprinter.ItemImprinter;
 
 /**
@@ -26,7 +26,7 @@ public class BlockCrate extends BlockMachine
 	{
 		super("crate", id, UniversalElectricity.machine);
 		this.blockIndexInTexture = texture;
-		this.setCreativeTab(UETab.INSTANCE);
+		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 		this.setTextureFile(AssemblyLine.BLOCK_TEXTURE_PATH);
 	}
 

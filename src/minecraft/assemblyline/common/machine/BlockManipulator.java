@@ -5,8 +5,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
-import universalelectricity.prefab.UETab;
 import assemblyline.client.render.BlockRenderingHandler;
+import assemblyline.common.TabAssemblyLine;
 import assemblyline.common.machine.imprinter.BlockImprintable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -21,7 +21,7 @@ public class BlockManipulator extends BlockImprintable
 {
 	public BlockManipulator(int id)
 	{
-		super("manipulator", id, UniversalElectricity.machine, UETab.INSTANCE);
+		super("manipulator", id, UniversalElectricity.machine, TabAssemblyLine.INSTANCE);
 		this.setBlockBounds(0, 0, 0, 1, 0.3f, 1);
 	}
 

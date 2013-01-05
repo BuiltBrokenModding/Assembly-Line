@@ -8,8 +8,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
-import universalelectricity.prefab.UETab;
 import assemblyline.common.AssemblyLine;
+import assemblyline.common.TabAssemblyLine;
 import assemblyline.common.machine.imprinter.BlockImprintable;
 
 /**
@@ -19,7 +19,7 @@ public class BlockDetector extends BlockImprintable
 {
 	public BlockDetector(int blockID, int texture)
 	{
-		super("detector", blockID, UniversalElectricity.machine, UETab.INSTANCE);
+		super("detector", blockID, UniversalElectricity.machine, TabAssemblyLine.INSTANCE);
 		this.blockIndexInTexture = texture;
 		this.setTextureFile(AssemblyLine.BLOCK_TEXTURE_PATH);
 	}

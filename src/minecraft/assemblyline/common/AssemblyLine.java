@@ -103,6 +103,7 @@ public class AssemblyLine
 		GameRegistry.registerBlock(blockDetector, "Detector");
 		GameRegistry.registerBlock(blockRejector, "Rejector");
 
+		TabAssemblyLine.itemStack = new ItemStack(AssemblyLine.blockConveyorBelt);
 		UpdateNotifier.INSTANCE.checkUpdate(NAME, VERSION, "http://calclavia.com/downloads/al/recommendedversion.txt");
 
 		proxy.preInit();

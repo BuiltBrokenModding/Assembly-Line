@@ -4,9 +4,9 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import universalelectricity.prefab.BlockMachine;
-import universalelectricity.prefab.UETab;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.CommonProxy;
+import assemblyline.common.TabAssemblyLine;
 
 public class BlockImprinter extends BlockMachine
 {
@@ -15,7 +15,7 @@ public class BlockImprinter extends BlockMachine
 		super(id, Material.wood);
 		this.blockIndexInTexture = 4;
 		this.setBlockName("imprinter");
-		this.setCreativeTab(UETab.INSTANCE);
+		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 		this.setTextureFile(AssemblyLine.BLOCK_TEXTURE_PATH);
 	}
 

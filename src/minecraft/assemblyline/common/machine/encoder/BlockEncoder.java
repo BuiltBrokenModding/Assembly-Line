@@ -5,9 +5,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.prefab.BlockMachine;
-import universalelectricity.prefab.UETab;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.CommonProxy;
+import assemblyline.common.TabAssemblyLine;
 
 public class BlockEncoder extends BlockMachine
 {
@@ -16,7 +16,7 @@ public class BlockEncoder extends BlockMachine
 		super(id, Material.wood);
 		this.blockIndexInTexture = 4;
 		this.setBlockName("encoder");
-		this.setCreativeTab(UETab.INSTANCE);
+		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 		this.setTextureFile(AssemblyLine.BLOCK_TEXTURE_PATH);
 	}
 
