@@ -41,8 +41,6 @@ public class CommonProxy implements IGuiHandler
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		// System.out.println("Server GUI request for ID " + ID);
-
 		switch (ID)
 		{
 			case GUI_STAMPER:
@@ -50,7 +48,7 @@ public class CommonProxy implements IGuiHandler
 			case GUI_ENCODER:
 			{
 				if (tileEntity != null && tileEntity instanceof TileEntityEncoder)
-					return new ContainerEncoder(player.inventory, world, (TileEntityEncoder) tileEntity);
+					return new ContainerEncoder(player.inventory, (TileEntityEncoder) tileEntity);
 			}
 		}
 

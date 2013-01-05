@@ -11,19 +11,17 @@ import universalelectricity.core.vector.Vector3;
 public class ContainerEncoder extends Container
 {
 	private ItemStack[] containingItems = new ItemStack[1];
-	private World worldObj;
 	private InventoryPlayer inventoryPlayer;
 	private TileEntityEncoder encoder;
 
-	public ContainerEncoder(InventoryPlayer inventoryPlayer, World worldObj, TileEntityEncoder encoder)
+	public ContainerEncoder(InventoryPlayer inventoryPlayer, TileEntityEncoder encoder)
 	{
-		this.worldObj = worldObj;
 		this.inventoryPlayer = inventoryPlayer;
 		this.encoder = encoder;
 
 		// Disk
 		this.addSlotToContainer(new Slot(encoder, 0, 80, 17));
-		
+
 		int var3;
 
 		for (var3 = 0; var3 < 3; ++var3)

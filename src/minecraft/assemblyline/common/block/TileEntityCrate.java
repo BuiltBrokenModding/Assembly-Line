@@ -4,16 +4,23 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
+import universalelectricity.prefab.tile.TileEntityAdvanced;
+import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.imprinter.ItemImprinter;
-import assemblyline.common.machine.imprinter.TileEntityImprintable;
+
+import com.google.common.io.ByteArrayDataInput;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
-public class TileEntityCrate extends TileEntityImprintable implements ISidedInventory, IPacketReceiver
+public class TileEntityCrate extends TileEntityAdvanced implements ISidedInventory, IPacketReceiver
 {
 	public static final int MAX_LIMIT = 2048;
 	private ItemStack[] containingItems = new ItemStack[1];
@@ -24,24 +31,44 @@ public class TileEntityCrate extends TileEntityImprintable implements ISidedInve
 		return false;
 	}
 
-	/*
-	 * @Override public void handlePacketData(INetworkManager network, int packetType,
-	 * Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream) { if
-	 * (this.worldObj.isRemote) { try { if (dataStream.readBoolean()) { if (this.containingItems[0]
-	 * == null) { this.containingItems[0] = new ItemStack(dataStream.readInt(),
-	 * dataStream.readInt(), dataStream.readInt()); } else { this.containingItems[0].itemID =
-	 * dataStream.readInt(); this.containingItems[0].stackSize = dataStream.readInt();
-	 * this.containingItems[0].setItemDamage(dataStream.readInt()); } } else {
-	 * this.containingItems[0] = null; } } catch (Exception e) { e.printStackTrace(); } } }
-	 */
+	@Override
+	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
+	{
+		if (this.worldObj.isRemote)
+		{
+			try
+			{
+				if (dataStream.readBoolean())
+				{
+					if (this.containingItems[0] == null)
+					{
+						this.containingItems[0] = new ItemStack(dataStream.readInt(), dataStream.readInt(), dataStream.readInt());
+					}
+					else
+					{
+						this.containingItems[0].itemID = dataStream.readInt();
+						this.containingItems[0].stackSize = dataStream.readInt();
+						this.containingItems[0].setItemDamage(dataStream.readInt());
+					}
+				}
+				else
+				{
+					this.containingItems[0] = null;
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
 
-	/*
-	 * @Override public Packet getDescriptionPacket() { if (this.containingItems[0] != null) {
-	 * return PacketManager.getPacket(AssemblyLine.CHANNEL, this, true,
-	 * this.containingItems[0].itemID, this.containingItems[0].stackSize,
-	 * this.containingItems[0].getItemDamage()); } return
-	 * PacketManager.getPacket(AssemblyLine.CHANNEL, this, false); }
-	 */
+	@Override
+	public Packet getDescriptionPacket()
+	{
+		if (this.containingItems[0] != null) { return PacketManager.getPacket(AssemblyLine.CHANNEL, this, true, this.containingItems[0].itemID, this.containingItems[0].stackSize, this.containingItems[0].getItemDamage()); }
+		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, false);
+	}
 
 	/**
 	 * Inventory functions.
@@ -105,14 +132,6 @@ public class TileEntityCrate extends TileEntityImprintable implements ISidedInve
 	{
 		if (stack != null)
 		{
-			boolean filterValid = true;
-			if (getFilter() != null)
-			{
-				if (ItemImprinter.getFilters(getFilter()).size() > 0)
-				{
-					filterValid = stack.isItemEqual(ItemImprinter.getFilters(getFilter()).get(0));
-				}
-			}
 			if (stack.isStackable())
 			{
 				this.containingItems[slot] = stack;

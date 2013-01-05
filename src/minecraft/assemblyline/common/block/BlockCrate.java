@@ -203,15 +203,7 @@ public class BlockCrate extends BlockMachine
 
 		if (containingStack != null)
 		{
-			boolean filterValid = true;
-			if (tileEntity.getFilter() != null)
-			{
-				if (ItemImprinter.getFilters(tileEntity.getFilter()).size() > 0)
-				{
-					filterValid = itemStack.isItemEqual(ItemImprinter.getFilters(tileEntity.getFilter()).get(0));
-				}
-			}
-			if (containingStack.isStackable() && containingStack.isItemEqual(itemStack) && filterValid)
+			if (containingStack.isStackable() && containingStack.isItemEqual(itemStack))
 			{
 				int newStackSize = containingStack.stackSize + itemStack.stackSize;
 				int overFlowAmount = newStackSize - tileEntity.getInventoryStackLimit();
@@ -231,19 +223,8 @@ public class BlockCrate extends BlockMachine
 		}
 		else
 		{
-			boolean filterValid = true;
-			if (tileEntity.getFilter() != null)
-			{
-				if (ItemImprinter.getFilters(tileEntity.getFilter()).size() > 0)
-				{
-					filterValid = itemStack.isItemEqual(ItemImprinter.getFilters(tileEntity.getFilter()).get(0));
-				}
-			}
-			if (filterValid)
-			{
-				tileEntity.setInventorySlotContents(0, itemStack.copy());
-				itemStack.stackSize = 0;
-			}
+			tileEntity.setInventorySlotContents(0, itemStack.copy());
+			itemStack.stackSize = 0;
 		}
 
 		if (itemStack.stackSize <= 0) { return null; }

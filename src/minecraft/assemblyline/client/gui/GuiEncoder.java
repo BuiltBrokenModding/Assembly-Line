@@ -16,14 +16,10 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-
-import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.AssemblyLine;
@@ -32,6 +28,7 @@ import assemblyline.common.machine.encoder.ContainerEncoder;
 import assemblyline.common.machine.encoder.IInventoryWatcher;
 import assemblyline.common.machine.encoder.ItemDisk;
 import assemblyline.common.machine.encoder.TileEntityEncoder;
+import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 {
@@ -49,9 +46,9 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 	private GuiButton pDnButton;
 	private GuiTextField commandField;
 
-	public GuiEncoder(InventoryPlayer par1InventoryPlayer, World worldObj, TileEntityEncoder tileEntity)
+	public GuiEncoder(InventoryPlayer par1InventoryPlayer, TileEntityEncoder tileEntity)
 	{
-		super(new ContainerEncoder(par1InventoryPlayer, worldObj, tileEntity));
+		super(new ContainerEncoder(par1InventoryPlayer, tileEntity));
 		this.ySize = 256;
 		this.tileEntity = tileEntity;
 	}

@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.RenderEngine;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -19,9 +20,8 @@ import org.lwjgl.opengl.GL11;
 import assemblyline.common.block.TileEntityCrate;
 import assemblyline.common.machine.imprinter.ItemImprinter;
 
-public class RenderCrate extends RenderImprintable
+public class RenderCrate extends TileEntitySpecialRenderer
 {
-
 	private final RenderBlocks renderBlocks = new RenderBlocks();
 
 	@Override
@@ -36,23 +36,6 @@ public class RenderCrate extends RenderImprintable
 			String itemName = "Empty";
 			String amount = "";
 			ItemStack itemStack = tileEntity.getStackInSlot(0);
-
-			if (itemStack == null)
-			{
-				if (tileEntity.getFilter() != null)
-				{
-					if (ItemImprinter.getFilters(tileEntity.getFilter()).size() > 0)
-					{
-						itemStack = ItemImprinter.getFilters(tileEntity.getFilter()).get(0).splitStack(0); // see
-																											// if
-																											// it
-																											// has
-																											// a
-																											// filter
-																											// instead
-					}
-				}
-			}
 
 			if (itemStack != null)
 			{
