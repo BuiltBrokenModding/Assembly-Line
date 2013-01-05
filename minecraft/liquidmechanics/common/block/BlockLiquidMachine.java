@@ -28,11 +28,17 @@ public class BlockLiquidMachine extends BlockMachine
     public BlockLiquidMachine(int id)
     {
         super("lmMachines", id, Material.iron, TabLiquidMechanics.INSTANCE);
-        this.blockIndexInTexture = 26;
         this.setHardness(1f);
         this.setResistance(5f);
     }
-
+    public void onBlockAdded(World world, int x, int y, int z) 
+    {
+        int meta = world.getBlockMetadata(x, y, z);
+        if(MetaGroup.getGrouping(meta) == 1)
+        {
+            world.setBlockAndMetadata(x, y, z, LiquidMechanics.blockTank.blockID, 15);
+        }
+    }
     @Override
     public boolean isOpaqueCube()
     {
@@ -43,75 +49,6 @@ public class BlockLiquidMachine extends BlockMachine
     public boolean renderAsNormalBlock()
     {
         return false;
-    }
-
-    @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int side, float hitX, float hitY, float hitZ)
-    {
-        ItemStack current = entityplayer.inventory.getCurrentItem();
-        if (current != null)
-        {
-
-            LiquidStack liquid = LiquidContainerRegistry.getLiquidForFilledItem(current);
-
-            TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-
-            if (tileEntity instanceof TileEntityTank)
-            {
-                TileEntityTank tank = (TileEntityTank) tileEntity;
-
-                // Handle filled containers
-                if (liquid != null)
-                {
-                    int filled = tank.fill(ForgeDirection.UNKNOWN, liquid, true);
-
-                    if (filled != 0 && !entityplayer.capabilities.isCreativeMode)
-                    {
-                        entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, LiquidHandler.consumeItem(current));
-                    }
-
-                    return true;
-
-                    // Handle empty containers
-                }
-                else
-                {
-
-                    LiquidStack stack = tank.tank.getLiquid();
-                    if (stack != null)
-                    {
-                        ItemStack liquidItem = LiquidContainerRegistry.fillLiquidContainer(stack, current);
-
-                        liquid = LiquidContainerRegistry.getLiquidForFilledItem(liquidItem);
-
-                        if (liquid != null)
-                        {
-                            if (!entityplayer.capabilities.isCreativeMode)
-                            {
-                                if (current.stackSize > 1)
-                                {
-                                    if (!entityplayer.inventory.addItemStackToInventory(liquidItem)) return false;
-                                    else
-                                    {
-                                        entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, LiquidHandler.consumeItem(current));
-                                    }
-                                }
-                                else
-                                {
-                                    entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, LiquidHandler.consumeItem(current));
-                                    entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, liquidItem);
-                                }
-                            }
-                            tank.tank.drain(liquid.amount, true);
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-
-        return false;
-
     }
 
     @Override
@@ -137,7 +74,7 @@ public class BlockLiquidMachine extends BlockMachine
         {
             new ItemStack(LiquidMechanics.blockMachine, 1, 0);
         }
-        if (ent instanceof TileEntityTank) { return new ItemStack(LiquidMechanics.itemTank, 1, LiquidHandler.getMeta(((TileEntityTank) ent).type)); }
+       
         return null;
     }
 
@@ -147,10 +84,8 @@ public class BlockLiquidMachine extends BlockMachine
         int meta = world.getBlockMetadata(x, y, z);
         int angle = MathHelper.floor_double((par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
         TileEntity ent = world.getBlockTileEntity(x, y, z);
-        if (MetaGroup.getGrouping(meta) != 1)
-        {
-            world.setBlockMetadata(x, y, z, angle + MetaGroup.getGroupStartMeta(MetaGroup.getGrouping(meta)));
-        }
+
+        world.setBlockMetadata(x, y, z, angle + MetaGroup.getGroupStartMeta(MetaGroup.getGrouping(meta)));
         if (ent instanceof TileEntityAdvanced)
         {
             ((TileEntityAdvanced) world.getBlockTileEntity(x, y, z)).initiate();
@@ -171,7 +106,7 @@ public class BlockLiquidMachine extends BlockMachine
         }
         else if (meta >= 4)
         {
-            return new TileEntityTank();
+
         }
         else
         {

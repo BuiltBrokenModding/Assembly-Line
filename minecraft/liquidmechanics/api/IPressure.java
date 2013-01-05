@@ -21,8 +21,4 @@ public interface IPressure
 	 * @return
 	 */
 	public boolean canPressureToo(LiquidData type, ForgeDirection dir);
-	/**
-	 * gets the LiquidData linked to the TE
-	 */
-	public LiquidData getLiquidType();
 }

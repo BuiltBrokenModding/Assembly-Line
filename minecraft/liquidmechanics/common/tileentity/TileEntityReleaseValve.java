@@ -1,11 +1,14 @@
 package liquidmechanics.common.tileentity;
 
+import java.nio.channels.Pipe;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import liquidmechanics.api.IPressure;
 import liquidmechanics.api.IReadOut;
-import liquidmechanics.api.helpers.TankHelper;
+import liquidmechanics.api.helpers.PipeColor;
+import liquidmechanics.api.helpers.connectionHelper;
 import liquidmechanics.common.block.BlockReleaseValve;
 import liquidmechanics.common.handlers.LiquidData;
 import liquidmechanics.common.handlers.LiquidHandler;
@@ -25,8 +28,7 @@ import universalelectricity.prefab.implement.IRedstoneReceptor;
 
 public class TileEntityReleaseValve extends TileEntity implements IPressure, IReadOut, IRedstoneReceptor, IInventory
 {
-    public LiquidData type = LiquidHandler.air;
-
+    public boolean[] allowed = new boolean[PipeColor.values().length];
     public TileEntity[] connected = new TileEntity[6];
 
     private List<PipeInstance> output = new ArrayList<PipeInstance>();
@@ -36,7 +38,6 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
 
     public boolean isPowered = false;
     public boolean converted = false;
-    public boolean isRestricted = false;
 
     private ItemStack[] inventory = new ItemStack[0];
 
@@ -48,9 +49,79 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
         if (!this.worldObj.isRemote && ticks++ == 10)
         {
             BlockReleaseValve.checkForPower(worldObj, xCoord, yCoord, zCoord);
-
             validateNBuildList();
+            //start the draining process
+            if (this.input.size() > 0 && this.output.size() > 0)
+            {
+                Iterator itr = input.iterator();
+                // testing out Iterators :p
+                while (itr.hasNext())
+                {
+                    Object element = itr.next();
+                    if (element instanceof ILiquidTank)
+                    {
+                        ILiquidTank tank = (ILiquidTank) element;
+                        if (tank.getLiquid() != null && tank.getLiquid().amount < tank.getCapacity())
+                        {
+                            TileEntityPipe pipe = this.findValidPipe(tank.getLiquid());
+                            if (pipe != null)
+                            {
+                                int drain = pipe.stored.fill(tank.getLiquid(), true);
+                                tank.drain(drain, true);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
+    }
+
+    /**
+     * used to find a valid pipe for filling of the liquid type
+     */
+    public TileEntityPipe findValidPipe(LiquidStack stack)
+    {
+        LiquidData data = LiquidHandler.get(stack);
+        if (data != LiquidHandler.air)
+        {
+            for (PipeInstance pipe : output)
+            {
+                if (pipe.color == data.getColor() && (pipe.pipe.stored.getLiquid() == null || pipe.pipe.stored.getLiquid().amount < pipe.pipe.stored.getCapacity())) { return pipe.pipe; }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * sees if it can connect to a pipe of some color
+     */
+    public boolean canConnect(PipeColor cc)
+    {
+        for (int i = 0; i < this.allowed.length; i++)
+        {
+            if (allowed[i] && i == cc.ordinal()) { return true; }
+        }
+        return false;
+    }
+
+    /**
+     * if any of allowed list is true
+     * 
+     * @return true
+     */
+    public boolean isRestricted()
+    {
+        for (int i = 0; i < this.allowed.length; i++)
+        {
+            if (allowed[i]) { return true; }
+        }
+        return false;
+    }
+
+    public boolean canAcceptLiquid(LiquidStack stack)
+    {
+        return canConnect(PipeColor.get(LiquidHandler.get(stack)));
     }
 
     /**
@@ -60,7 +131,7 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
     public void validateNBuildList()
     {
         // cleanup
-        this.connected = TankHelper.getSurroundings(worldObj, xCoord, yCoord, zCoord);
+        this.connected = connectionHelper.getSurroundings(worldObj, xCoord, yCoord, zCoord);
         this.input.clear();
         this.output.clear();
         // read surroundings
@@ -71,7 +142,7 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
             if (ent instanceof TileEntityPipe)
             {
                 TileEntityPipe pipe = (TileEntityPipe) ent;
-                if (this.isRestricted && pipe.type != this.type)
+                if (this.isRestricted() && this.canConnect(pipe.getColor()))
                 {
                     connected[i] = null;
                 }
@@ -81,7 +152,7 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
                 }
                 else
                 {
-                    this.output.add(new PipeInstance(LiquidHandler.getMeta(pipe.type), pipe, pipe.isUniversal));
+                    this.output.add(new PipeInstance(pipe.getColor(), pipe));
                 }
             }
             else if (ent instanceof ITankContainer)
@@ -93,9 +164,9 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
                     if (ll != null && ll.amount > 0 && ll.amount < tanks[t].getCapacity())
                     {
                         // if restricted check for type match
-                        if (this.isRestricted)
+                        if (this.isRestricted())
                         {
-                            if (LiquidHandler.isEqual(ll, this.type))
+                            if (this.canAcceptLiquid(ll))
                             {
                                 this.input.add(tanks[t]);
                             }
@@ -114,45 +185,34 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
         }
     }
 
-    /**
-     * removes liquid from a tank and fills it to a pipe
-     * 
-     * @param pipe
-     *            - pipe being filled
-     * @param drainee
-     *            - LiquidTank being drained
-     */
-    public void drainTo(TileEntityPipe pipe, LiquidTank drainee)
-    {
-
-    }
-
     @Override
     public int presureOutput(LiquidData type, ForgeDirection dir)
     {
-        if (type == this.type) { return LiquidData.getPressure(type); }
+        if (type == null) return 0;
+        if (this.canConnect(type.getColor())) { return type.getPressure(); }
         return 0;
     }
 
     @Override
     public boolean canPressureToo(LiquidData type, ForgeDirection dir)
     {
-        if (type == this.type)
-            return true;
+        if (type == null) return false;
+        if (this.canConnect(type.getColor())) return true;
         return false;
     }
 
     @Override
     public String getMeterReading(EntityPlayer user, ForgeDirection side)
     {
-        if (type == null) return "Error: No Type";
+        // TODO maybe debug on # of connected units of input/output
         String output = "";
-        if (this.isRestricted)
+        if (this.isRestricted())
         {
-            output +="Outputting: "+ LiquidData.getName(type)+" ||";
-        }else
+            output += "Output: Restricted and";
+        }
+        else
         {
-            output += " Outputting: All ||";
+            output += " Output: UnRestricted and";
         }
         if (!this.isPowered)
         {
@@ -169,8 +229,10 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
     public void readFromNBT(NBTTagCompound nbt)
     {
         super.readFromNBT(nbt);
-        this.type = LiquidHandler.get(nbt.getString("name"));
-        this.isRestricted = nbt.getBoolean("restricted");
+        for (int i = 0; i < this.allowed.length; i++)
+        {
+            allowed[i] = nbt.getBoolean("allowed" + i);
+        }
     }
 
     /**
@@ -180,14 +242,10 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
     public void writeToNBT(NBTTagCompound nbt)
     {
         super.writeToNBT(nbt);
-        nbt.setBoolean("restricted", this.isRestricted);
-        nbt.setString("name", LiquidData.getName(type));
-    }
-
-    public void setType(LiquidData dm)
-    {
-        this.type = dm;
-
+        for (int i = 0; i < this.allowed.length; i++)
+        {
+            nbt.setBoolean("allowed" + i, allowed[i]);
+        }
     }
 
     @Override
@@ -313,12 +371,6 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
     public void closeChest()
     {
 
-    }
-
-    @Override
-    public LiquidData getLiquidType()
-    {
-        return this.type;
     }
 
 }

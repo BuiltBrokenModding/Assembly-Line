@@ -4,7 +4,7 @@ import java.util.EnumSet;
 
 import liquidmechanics.api.IForce;
 import liquidmechanics.api.IReadOut;
-import liquidmechanics.api.helpers.TankHelper;
+import liquidmechanics.api.helpers.connectionHelper;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.MetaGroup;
 import liquidmechanics.common.block.BlockGenerator;
@@ -76,7 +76,7 @@ public class TileEntityGenerator extends TileEntityElectricityProducer implement
 		this.genAmmount = Math.abs(force / this.getVoltage());
 		// wire count update
 		int wireCount = 0;
-		TileEntity[] ents = TankHelper.getSurroundings(worldObj, xCoord, yCoord, zCoord);
+		TileEntity[] ents = connectionHelper.getSurroundings(worldObj, xCoord, yCoord, zCoord);
 		this.wires = new IConductor[6];
 		for (int i = 0; i < ents.length; i++)
 		{

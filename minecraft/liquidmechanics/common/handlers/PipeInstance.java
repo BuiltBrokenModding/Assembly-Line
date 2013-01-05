@@ -1,19 +1,18 @@
 package liquidmechanics.common.handlers;
 
+import liquidmechanics.api.helpers.PipeColor;
 import liquidmechanics.common.tileentity.TileEntityPipe;
 /**
  * used to keep track of a pipe, its meta, and if Universal
  */
 public class PipeInstance
 {
-    public int color;
+    public PipeColor color;
     public TileEntityPipe pipe;
-    public boolean any;
-
-    public PipeInstance(int color, TileEntityPipe pipe, boolean any)
+    //colors
+    public PipeInstance(PipeColor cc, TileEntityPipe pipe)
     {
-        this.color = color;
+        this.color = cc;
         this.pipe = pipe;
-        this.any = any;
     }
 }

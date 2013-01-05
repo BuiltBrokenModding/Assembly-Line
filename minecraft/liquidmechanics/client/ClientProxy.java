@@ -1,7 +1,6 @@
 package liquidmechanics.client;
 
 import liquidmechanics.client.render.BlockRenderHelper;
-import liquidmechanics.client.render.ItemRenderHelper;
 import liquidmechanics.client.render.RenderGearRod;
 import liquidmechanics.client.render.RenderGenerator;
 import liquidmechanics.client.render.RenderPipe;
@@ -36,8 +35,6 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGenerator.class, new RenderGenerator());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTank.class, new RenderTank());
 		RenderingRegistry.registerBlockHandler(new BlockRenderHelper());
-		MinecraftForgeClient.registerItemRenderer(LiquidMechanics.itemPipes.shiftedIndex, new ItemRenderHelper());
-		MinecraftForgeClient.registerItemRenderer(LiquidMechanics.itemTank.shiftedIndex, new ItemRenderHelper());
 	}
 
 	@Override

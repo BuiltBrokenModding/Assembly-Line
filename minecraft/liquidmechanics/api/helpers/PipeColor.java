@@ -3,7 +3,7 @@ package liquidmechanics.api.helpers;
 import liquidmechanics.common.handlers.LiquidData;
 import liquidmechanics.common.handlers.LiquidHandler;
 
-public enum Colors
+public enum PipeColor
 {    
     BLACK, RED, GREEN, BROWN, BLUE, PURPLE, CYAN, SILVER, GREY, PINK, LIME, YELLOW, LIGHTBLUE, MAGENTA, ORANGE, NONE;   
     
@@ -24,7 +24,7 @@ public enum Colors
     /**
      * gets a color based on liquid Data
      */
-    public static Colors get(LiquidData data)
+    public static PipeColor get(LiquidData data)
     {
         if (data == LiquidHandler.lava) { return RED; }
         if (data == LiquidHandler.steam) { return ORANGE; }
@@ -34,11 +34,11 @@ public enum Colors
     /**
      * gets a color based on number(0-15)
      */
-    public static Colors get(int num)
+    public static PipeColor get(int num)
     {
-        if(num < Colors.values().length)
+        if(num < PipeColor.values().length)
         {
-            return Colors.values()[num];
+            return PipeColor.values()[num];
         }
         return NONE;
     }

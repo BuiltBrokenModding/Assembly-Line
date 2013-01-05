@@ -2,8 +2,8 @@ package liquidmechanics.common.tileentity;
 
 import liquidmechanics.api.IReadOut;
 import liquidmechanics.api.IPressure;
-import liquidmechanics.api.helpers.Colors;
-import liquidmechanics.api.helpers.TankHelper;
+import liquidmechanics.api.helpers.PipeColor;
+import liquidmechanics.api.helpers.connectionHelper;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.handlers.LiquidData;
 import liquidmechanics.common.handlers.LiquidHandler;
@@ -28,7 +28,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 public class TileEntityPipe extends TileEntity implements ITankContainer, IPacketReceiver, IReadOut
 {
-    private Colors color = Colors.NONE;
+    private PipeColor color = PipeColor.NONE;
 
     private int count = 40;
     private int count2, presure = 0;
@@ -47,7 +47,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
         {
             count = 0;
             this.validataConnections();
-            this.color = Colors.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+            this.color = PipeColor.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
             if (!worldObj.isRemote)
             {
                 this.updatePressure();
@@ -97,7 +97,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
     /**
      * gets the current color mark of the pipe
      */
-    public Colors getColor()
+    public PipeColor getColor()
     {
         return this.color;
     }
@@ -105,18 +105,19 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
     /**
      * sets the current color mark of the pipe
      */
-    public void setColor(Colors cc)
+    public void setColor(PipeColor cc)
     {
         this.color = cc;
     }
+
     /**
      * sets the current color mark of the pipe
      */
     public void setColor(int i)
     {
-        if (i < Colors.values().length)
+        if (i < PipeColor.values().length)
         {
-            this.color = Colors.values()[i];
+            this.color = PipeColor.values()[i];
         }
     }
 
@@ -145,7 +146,8 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
     {
         super.readFromNBT(nbt);
         UpdateConverter.convert(this, nbt);
-        LiquidStack stack = LiquidStack.loadLiquidStackFromNBT(nbt);
+        NBTTagCompound stored = nbt.getCompoundTag("stored");
+        LiquidStack stack = LiquidStack.loadLiquidStackFromNBT(stored);
         this.stored.setLiquid(stack);
     }
 
@@ -155,16 +157,16 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
     @Override
     public void writeToNBT(NBTTagCompound nbt)
     {
-        super.writeToNBT(nbt);        
+        super.writeToNBT(nbt);
         if (stored.getLiquid() != null)
         {
-            stored.getLiquid().writeToNBT(nbt);
+            nbt.setCompoundTag("stored", stored.getLiquid().writeToNBT(nbt));            
         }
     }
 
     @Override
     public String getMeterReading(EntityPlayer user, ForgeDirection side)
-    {      
+    {
         return "ReadOut not setup";
     }
 
@@ -216,20 +218,28 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
      */
     public void validataConnections()
     {
-        this.connectedBlocks = TankHelper.getSurroundings(worldObj, xCoord, yCoord, zCoord);
+        this.connectedBlocks = connectionHelper.getSurroundings(worldObj, xCoord, yCoord, zCoord);
         for (int i = 0; i < 6; i++)
         {
+            ForgeDirection dir = ForgeDirection.getOrientation(i);
             TileEntity ent = connectedBlocks[i];
             if (ent instanceof ITankContainer)
             {
-                if (ent instanceof TileEntityPipe)
+                if (ent instanceof TileEntityPipe && color != ((TileEntityPipe) ent).getColor())
                 {
-
+                    connectedBlocks[i] = null;
+                }
+                if(ent instanceof TileEntityTank && color != ((TileEntityTank)ent).getColor())
+                {
+                    connectedBlocks[i] = null;
                 }
             }
             else if (ent instanceof IPressure)
             {
-
+                if (!((IPressure) ent).canPressureToo(color.getLiquidData(), dir))
+                {
+                    connectedBlocks[i] = null;
+                }
             }
             else
             {

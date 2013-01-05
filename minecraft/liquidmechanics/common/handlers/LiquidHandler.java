@@ -3,7 +3,7 @@ package liquidmechanics.common.handlers;
 import java.util.ArrayList;
 import java.util.List;
 
-import liquidmechanics.api.helpers.Colors;
+import liquidmechanics.api.helpers.PipeColor;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.tileentity.TileEntityPipe;
 import net.minecraft.block.Block;
@@ -29,14 +29,12 @@ public class LiquidHandler
      * Called to add the default liquids to the allowed list
      */
     public static void addDefaultLiquids()
-    {
-        steam = new LiquidData("Steam", LiquidDictionary.getOrCreateLiquid("Steam", new LiquidStack(LiquidMechanics.blockSteamBlock, 1)),Colors.ORANGE, true, 100);
-        allowedLiquids.add(steam);
-        water = new LiquidData("water", LiquidDictionary.getOrCreateLiquid("Water", new LiquidStack(Block.waterStill, 1)),Colors.BLUE, false, 32);
+    {       
+        water = new LiquidData("water", LiquidDictionary.getOrCreateLiquid("Water", new LiquidStack(Block.waterStill, 1)), PipeColor.BLUE, false, 32);
         allowedLiquids.add(water);
-        lava = new LiquidData("Lava", LiquidDictionary.getOrCreateLiquid("Lava", new LiquidStack(Block.lavaStill, 1)),Colors.RED, false, 20);
+        lava = new LiquidData("Lava", LiquidDictionary.getOrCreateLiquid("Lava", new LiquidStack(Block.lavaStill, 1)), PipeColor.RED, false, 20);
         allowedLiquids.add(lava);
-        air = new LiquidData("Air", LiquidDictionary.getOrCreateLiquid("Air", new LiquidStack(0, 1)),Colors.NONE, false, 0);
+        air = new LiquidData("Air", LiquidDictionary.getOrCreateLiquid("Air", new LiquidStack(0, 1)), PipeColor.NONE, false, 0);
         allowedLiquids.add(air);
     }
 
@@ -45,7 +43,22 @@ public class LiquidHandler
     {
         // TODO use this to add new liquid types to the data list
         // or something along the lines of IDing liquids for use
-
+        if (event.Name.equalsIgnoreCase("methane"))
+        {
+            this.allowedLiquids.add(new LiquidData("methane", event.Liquid, PipeColor.LIME, true, 100));
+        }
+        else if (event.Name.equalsIgnoreCase("oil"))
+        {
+            this.allowedLiquids.add(new LiquidData("oil", event.Liquid, PipeColor.BLACK, true, 30));
+        }
+        else if (event.Name.equalsIgnoreCase("fuel"))
+        {
+            this.allowedLiquids.add(new LiquidData("fuel", event.Liquid, PipeColor.YELLOW, true, 50));
+        }
+        else if (event.Name.equalsIgnoreCase("steam"))
+        {
+            this.steam =new LiquidData("steam", event.Liquid, PipeColor.ORANGE, true, 100); 
+        }
     }
 
     /**
@@ -77,7 +90,7 @@ public class LiquidHandler
      */
     public static LiquidStack getStack(LiquidData type, int vol)
     {
-        if(type == null) return null;
+        if (type == null) return null;
         return new LiquidStack(type.getStack().itemID, vol, type.getStack().itemMeta);
     }
 
@@ -127,6 +140,7 @@ public class LiquidHandler
         if (type.getStack().itemID == stack.itemID && type.getStack().itemMeta == stack.itemMeta) { return true; }
         return false;
     }
+
     public static boolean isEqual(LiquidStack stack, LiquidStack type)
     {
         if (stack == null || type == null)
@@ -134,6 +148,7 @@ public class LiquidHandler
         if (type.itemID == stack.itemID && type.itemMeta == stack.itemMeta) { return true; }
         return false;
     }
+
     public static ItemStack consumeItem(ItemStack stack)
     {
         if (stack.stackSize == 1)

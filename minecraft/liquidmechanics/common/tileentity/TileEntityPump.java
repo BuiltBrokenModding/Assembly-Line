@@ -358,10 +358,4 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
         return false;
     }
 
-    @Override
-    public LiquidData getLiquidType()
-    {
-        return this.type;
-    }
-
 }

@@ -2,7 +2,11 @@ package liquidmechanics.common.block;
 
 import java.util.Random;
 
+import universalelectricity.prefab.BlockMachine;
+
+import liquidmechanics.client.render.BlockRenderHelper;
 import liquidmechanics.common.LiquidMechanics;
+import liquidmechanics.common.TabLiquidMechanics;
 import liquidmechanics.common.handlers.LiquidHandler;
 import liquidmechanics.common.tileentity.TileEntityPipe;
 
@@ -14,12 +18,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
-public class BlockPipe extends BlockContainer
+public class BlockPipe extends BlockMachine
 {   
     public BlockPipe(int id)
     {
-        super(id, Material.iron);
-        this.setBlockName("Pipe");
+        super("Pipe",id, Material.iron,TabLiquidMechanics.INSTANCE);
         this.setBlockBounds(0.30F, 0.30F, 0.30F, 0.70F, 0.70F, 0.70F);
         this.setHardness(1f);
         this.setResistance(3f);
@@ -40,19 +43,7 @@ public class BlockPipe extends BlockContainer
     @Override
     public int getRenderType()
     {
-        return -1;
-    }
-
-    @Override
-    public int idDropped(int par1, Random par2Random, int par3)
-    {
-        return 0;
-    }
-
-    @Override
-    public void onBlockAdded(World world, int x, int y, int z)
-    {
-        super.onBlockAdded(world, x, y, z);
+        return BlockRenderHelper.renderID;
     }
 
     /**
@@ -82,43 +73,13 @@ public class BlockPipe extends BlockContainer
     @Override
     public TileEntity createNewTileEntity(World var1)
     {
-        // TODO Auto-generated method stub
         return new TileEntityPipe();
     }
 
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
-        TileEntity ent = world.getBlockTileEntity(x, y, z);
-        int meta = 0;
-        if (ent instanceof TileEntityPipe)
-        {
-            TileEntityPipe pipe = (TileEntityPipe) ent;
-            meta = LiquidHandler.getMeta(pipe.type);
-
-        }
-        return new ItemStack(LiquidMechanics.itemPipes, 1, 0);
-    }
-
-    @Override
-    public void breakBlock(World world, int x, int y, int z, int par5, int par6)
-    {
-        super.breakBlock(world, x, y, z, par5, par6);
-        TileEntity ent = world.getBlockTileEntity(x, y, z);
-        Random furnaceRand = new Random();
-        if (ent instanceof TileEntityPipe)
-        {
-            TileEntityPipe pipe = (TileEntityPipe) ent;
-            int meta = LiquidHandler.getMeta(pipe.type);
-            float var8 = furnaceRand.nextFloat() * 0.8F + 0.1F;
-            float var9 = furnaceRand.nextFloat() * 0.8F + 0.1F;
-            float var10 = furnaceRand.nextFloat() * 0.8F + 0.1F;
-            EntityItem var12 = new EntityItem(world, (double) ((float) x + var8), (double) ((float) y + var9), (double) ((float) z + var10), new ItemStack(LiquidMechanics.itemPipes, 1, meta));
-            float var13 = 0.05F;
-            var12.motionX = (double) ((float) furnaceRand.nextGaussian() * var13);
-            var12.motionY = (double) ((float) furnaceRand.nextGaussian() * var13 + 0.2F);
-            var12.motionZ = (double) ((float) furnaceRand.nextGaussian() * var13);
-            world.spawnEntityInWorld(var12);
-        }
+        int meta = world.getBlockMetadata(x, y, z);
+        return new ItemStack(LiquidMechanics.blockPipe, 1, meta);
     }
 }

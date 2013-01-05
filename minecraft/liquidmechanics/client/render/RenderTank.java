@@ -1,6 +1,6 @@
 package liquidmechanics.client.render;
 
-import liquidmechanics.api.helpers.TankHelper;
+import liquidmechanics.api.helpers.connectionHelper;
 import liquidmechanics.client.model.ModelLiquidTank;
 import liquidmechanics.client.model.ModelLiquidTankCorner;
 import liquidmechanics.common.LiquidMechanics;
@@ -28,19 +28,17 @@ public class RenderTank extends TileEntitySpecialRenderer
 
     public void renderAModelAt(TileEntityTank te, double d, double d1, double d2, float f)
     {
-        type = te.getType();
-        if (te.tank.getLiquid() != null)
-            pos = Math.min((te.tank.getLiquid().amount / LiquidContainerRegistry.BUCKET_VOLUME), 4);
+        int meta = te.getBlockMetadata();
+        pos = Math.min((te.volume / LiquidContainerRegistry.BUCKET_VOLUME), 4);
+
         GL11.glPushMatrix();
         GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
         GL11.glScalef(1.0F, -1F, -1F);
-        if (TankHelper.corner(te) > 0)
+
+        if (connectionHelper.corner(te) > 0)
         {
-            if (type == LiquidHandler.water)
-            {
-                bindTextureByName(LiquidMechanics.RESOURCE_PATH + "tanks/LiquidTankCornerWater.png");
-            }
-            int corner = TankHelper.corner(te);
+            bindTextureByName(this.getCornerTexture(meta));
+            int corner = connectionHelper.corner(te);
             switch (corner)
             {
                 case 2:
@@ -60,17 +58,102 @@ public class RenderTank extends TileEntitySpecialRenderer
         }
         else
         {
-            switch (LiquidHandler.getMeta(type))
-            {
-            // case 0:
-            // bindTextureByName(BasicPipesMain.textureFile+"/pipes/SixSteamPipe.png");break;
-                default:bindTextureByName(LiquidMechanics.RESOURCE_PATH + "tanks/LiquidTank" + pos + ".png");break;
-                    
-            }
+            bindTextureByName(this.getTankTexture(meta));
             model.renderMain(0.0625F);
+            bindTextureByName(this.getGuageTexture(meta, pos));
             model.renderMeter(te, 0.0625F);
         }
         GL11.glPopMatrix();
+
+    }
+
+    public static String getTankTexture(int meta)
+    {
+        String type = "";
+        switch (meta)
+        {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:// default
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+            case 10:
+            case 11:
+            case 12:
+            case 13:
+            case 14:
+            case 15:
+            default:
+                type = "";
+                break;
+        }
+
+            return LiquidMechanics.RESOURCE_PATH + "tanks/" + type + "Tank.png";
+
+    }
+
+    public static String getGuageTexture(int meta, int pos)
+    {
+        String type = "";
+        switch (meta)
+        {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:// default
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+            case 10:
+            case 11:
+            case 12:
+            case 13:
+            case 14:
+            case 15:
+            default:
+                type = "";
+                break;
+        }
+
+        return LiquidMechanics.RESOURCE_PATH + "tanks/guage/" + pos + type + ".png";
+    }
+
+    public static String getCornerTexture(int meta)
+    {
+        String type = "";
+        switch (meta)
+        {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+                type = "Water";
+                break;
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+            case 10:
+            case 11:
+            case 12:
+            case 13:
+            case 14:
+            case 15:
+            default:
+                type = "";
+                break;
+        }
+        return LiquidMechanics.RESOURCE_PATH + "tanks/Corner" + type + "png";
 
     }
 
