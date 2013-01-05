@@ -111,28 +111,30 @@ public class BlockConveyorBelt extends BlockMachine
 
 		if (tileEntity.isRunning())
 		{
+			float acceleration = tileEntity.acceleration;
+			float maxSpeed = tileEntity.maxSpeed;
+
 			SlantType slantType = tileEntity.getSlant();
 			ForgeDirection direction = tileEntity.getDirection();
 
-			float modifier = 1;
-
 			if (entity instanceof EntityLiving)
 			{
-				modifier = 10;
+				acceleration *= 5;
+				maxSpeed *= 10;
 			}
 
 			// Move the entity based on the conveyor belt's direction.
-			entity.addVelocity(direction.offsetX * tileEntity.acceleration * modifier, 0, direction.offsetZ * tileEntity.acceleration * modifier);
+			entity.addVelocity(direction.offsetX * acceleration, 0, direction.offsetZ * acceleration);
 
-			if (direction.offsetX != 0 && Math.abs(entity.motionX) > tileEntity.maxSpeed)
+			if (direction.offsetX != 0 && Math.abs(entity.motionX) > maxSpeed)
 			{
-				entity.motionX = direction.offsetX * tileEntity.maxSpeed;
+				entity.motionX = direction.offsetX * maxSpeed;
 				entity.motionZ = 0;
 			}
 
-			if (direction.offsetZ != 0 && Math.abs(entity.motionZ) > tileEntity.maxSpeed)
+			if (direction.offsetZ != 0 && Math.abs(entity.motionZ) > maxSpeed)
 			{
-				entity.motionZ = direction.offsetZ * tileEntity.maxSpeed;
+				entity.motionZ = direction.offsetZ * maxSpeed;
 				entity.motionX = 0;
 			}
 

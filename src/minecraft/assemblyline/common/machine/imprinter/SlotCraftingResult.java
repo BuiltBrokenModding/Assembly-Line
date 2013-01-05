@@ -35,7 +35,7 @@ public class SlotCraftingResult extends Slot
 
 		if (this.getStack() != null)
 		{
-			ItemStack[] requiredItems = this.container.getIdealRecipe(this.getStack()).clone();
+			ItemStack[] requiredItems = this.container.getIdealRecipe(this.getStack()).getValue().clone();
 
 			if (requiredItems != null)
 			{
@@ -63,7 +63,7 @@ public class SlotCraftingResult extends Slot
 	{
 		if (this.getStack() != null)
 		{
-			ItemStack[] idealRecipe = this.container.getIdealRecipe(this.getStack());
+			ItemStack[] idealRecipe = this.container.getIdealRecipe(this.getStack()).getValue();
 			if (idealRecipe != null)
 			{
 				ItemStack[] requiredItems = idealRecipe.clone();

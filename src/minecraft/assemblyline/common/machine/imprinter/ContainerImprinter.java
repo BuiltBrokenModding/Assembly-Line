@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import universalelectricity.core.vector.Vector3;
+import assemblyline.common.Pair;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
 public class ContainerImprinter extends Container implements IInventory, ISlotWatcher
@@ -79,8 +80,8 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 
 			if (slot == 2)
 			{
-				setInventorySlotContents(0, null); // Prevents filter from being
-													// duplicated
+				// Prevents filter from being duplicated
+				this.setInventorySlotContents(0, null);
 			}
 
 			if (slot > 4)
@@ -245,9 +246,12 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 
 					if (outputStack != null)
 					{
-						if (this.getIdealRecipe(outputStack) != null)
+						Pair<ItemStack, ItemStack[]> idealRecipe = this.getIdealRecipe(outputStack);
+
+						if (idealRecipe != null)
 						{
-							this.setInventorySlotContents(4, outputStack);
+							System.out.println(idealRecipe.getKey().stackSize);
+							this.setInventorySlotContents(4, idealRecipe.getKey());
 							didCraft = true;
 						}
 					}
@@ -267,7 +271,7 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 	 * 
 	 * @return Required Items
 	 */
-	public ItemStack[] getIdealRecipe(ItemStack outputItem)
+	public Pair<ItemStack, ItemStack[]> getIdealRecipe(ItemStack outputItem)
 	{
 		for (Object object : CraftingManager.getInstance().getRecipeList())
 		{
@@ -279,17 +283,17 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 					{
 						if (object instanceof ShapedRecipes)
 						{
-							if (this.doesMatch(((ShapedRecipes) object).recipeItems, outputItem)) { return ((ShapedRecipes) object).recipeItems; }
+							if (this.hasResource(((ShapedRecipes) object).recipeItems)) { return new Pair<ItemStack, ItemStack[]>(((ShapedRecipes) object).getRecipeOutput().copy(), ((ShapedRecipes) object).recipeItems); }
 						}
 						else if (object instanceof ShapelessRecipes)
 						{
-							if (this.doesMatch(((ShapelessRecipes) object).recipeItems.toArray(new ItemStack[1]), outputItem)) { return (ItemStack[]) ((ShapelessRecipes) object).recipeItems.toArray(new ItemStack[1]); }
+							if (this.hasResource(((ShapelessRecipes) object).recipeItems.toArray(new ItemStack[1]))) { return new Pair<ItemStack, ItemStack[]>(((ShapedRecipes) object).getRecipeOutput().copy(), (ItemStack[]) ((ShapelessRecipes) object).recipeItems.toArray(new ItemStack[1])); }
 						}
 						else if (object instanceof ShapedOreRecipe)
 						{
 							ShapedOreRecipe oreRecipe = (ShapedOreRecipe) object;
 							Object[] oreRecipeInput = (Object[]) ReflectionHelper.getPrivateValue(ShapedOreRecipe.class, oreRecipe, "input");
-							if (doesMatch(oreRecipeInput, outputItem))
+							if (hasResource(oreRecipeInput))
 							{
 								ArrayList<ItemStack> finalRecipe = new ArrayList<ItemStack>();
 								for (Object ingredientListObject : oreRecipeInput)
@@ -312,14 +316,14 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 										}
 									}
 								}
-								if (finalRecipe.size() == oreRecipeInput.length) { return finalRecipe.toArray(new ItemStack[1]); }
+								if (finalRecipe.size() == oreRecipeInput.length) { return new Pair<ItemStack, ItemStack[]>(((ShapedRecipes) object).getRecipeOutput().copy(), finalRecipe.toArray(new ItemStack[1])); }
 							}
 						}
 						else if (object instanceof ShapelessOreRecipe)
 						{
 							ShapelessOreRecipe oreRecipe = (ShapelessOreRecipe) object;
 							ArrayList oreRecipeInput = (ArrayList) ReflectionHelper.getPrivateValue(ShapelessOreRecipe.class, oreRecipe, "input");
-							if (doesMatch(oreRecipeInput.toArray(), outputItem))
+							if (hasResource(oreRecipeInput.toArray()))
 							{
 								ArrayList<ItemStack> finalRecipe = new ArrayList<ItemStack>();
 								for (Object ingredientListObject : oreRecipeInput)
@@ -348,7 +352,7 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 										}
 									}
 								}
-								if (finalRecipe.size() == oreRecipeInput.size()) { return finalRecipe.toArray(new ItemStack[1]); }
+								if (finalRecipe.size() == oreRecipeInput.size()) { return new Pair<ItemStack, ItemStack[]>(((ShapedRecipes) object).getRecipeOutput().copy(), finalRecipe.toArray(new ItemStack[1])); }
 							}
 						}
 					}
@@ -359,7 +363,12 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 		return null;
 	}
 
-	private boolean doesMatch(Object[] recipeItems, ItemStack outputItem)
+	/**
+	 * Returns if players has the following resource required.
+	 * 
+	 * @param recipeItems - The items to be checked for the recipes.
+	 */
+	private boolean hasResource(Object[] recipeItems)
 	{
 		int itemMatch = 0;
 
@@ -381,6 +390,7 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 							{
 								// TODO Do NBT CHecking
 								itemMatch++;
+								break;
 							}
 						}
 					}
