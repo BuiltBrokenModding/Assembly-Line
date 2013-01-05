@@ -22,7 +22,7 @@ public class TankHelper
 	 * @param z
 	 * @return an array of up to 6 tileEntities
 	 */
-	public static TileEntity[] getSourounding(World world, int x, int y, int z)
+	public static TileEntity[] getSurroundings(World world, int x, int y, int z)
 	{
 		TileEntity[] list = new TileEntity[] { null, null, null, null, null, null };
 		for (int i = 0; i < 6; i++)
@@ -49,7 +49,7 @@ public class TankHelper
 		if (resource == null)
 			return 0;
 		LiquidStack liquid = resource.copy();
-		TileEntity[] connected = TankHelper.getSourounding(world, center.intX(), center.intY(), center.intZ());
+		TileEntity[] connected = TankHelper.getSurroundings(world, center.intX(), center.intY(), center.intZ());
 		LiquidData type = LiquidHandler.get(liquid);
 		ForgeDirection firstTrade = ForgeDirection.UP;
 		if (!LiquidData.getCanFloat(type))
@@ -118,7 +118,7 @@ public class TankHelper
 	 */
 	public static int corner(TileEntity entity)
 	{
-		TileEntity[] en = getSourounding(entity.worldObj, entity.xCoord, entity.yCoord, entity.zCoord);
+		TileEntity[] en = getSurroundings(entity.worldObj, entity.xCoord, entity.yCoord, entity.zCoord);
 		if (en[4] != null && en[2] != null && en[5] == null && en[3] == null) { return 3; }
 		if (en[2] != null && en[5] != null && en[3] == null && en[4] == null) { return 4; }
 		if (en[5] != null && en[3] != null && en[4] == null && en[2] == null) { return 1; }

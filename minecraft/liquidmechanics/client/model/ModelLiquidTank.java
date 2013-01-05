@@ -333,13 +333,9 @@ public class ModelLiquidTank extends ModelBase
 		setRotation(CCTop, 0F, 0F, 0F);
 	}
 
-	public void renderMain(TileEntity tee, float f5)
+	public void renderMain(float f5)
 	{
-		TileEntity[] ents = new TileEntity[6];
-		if (tee instanceof TileEntityTank)
-		{
-			ents = ((TileEntityTank) tee).cc;
-		}
+		
 		// render regardless of sides
 		Mid.render(f5);
 		Corner.render(f5);
@@ -356,63 +352,73 @@ public class ModelLiquidTank extends ModelBase
 		C2.render(f5);
 		CCTop.render(f5);
 		CCBottom.render(f5);
-		// Front
-		if (ents[2] instanceof TileEntityPipe)
-		{
-			CCFront.render(f5);
-		}
-		else
-		{
-			GuageT.render(f5);
-			GuageB.render(f5);
-			Guage.render(f5);
-			GuageR.render(f5);
-			// GuageGlass.render(f5);
-			GuageL.render(f5);
-		}
-		// back
-		if (ents[3] instanceof TileEntityPipe)
-		{
-			CCBack.render(f5);
-		}
-		else
-		{
-			GuageT3.render(f5);
-			Guage3.render(f5);
-			Guage3.render(f5);
-			GuageR3.render(f5);
-			// GuageGlass3.render(f5);
-			GuageL3.render(f5);
-		}
-		// right
-		if (ents[4] instanceof TileEntityPipe)
-		{
-			CCRight.render(f5);
-		}
-		else
-		{
-			GuageT4.render(f5);
-			Guage4.render(f5);
-			Guage4.render(f5);
-			GuageR4.render(f5);
-			// GuageGlass4.render(f5);
-			GuageL4.render(f5);
-		}
-		// left
-		if (ents[5] instanceof TileEntityPipe)
-		{
-			CCLeft.render(f5);
-		}
-		else
-		{
-			GuageT2.render(f5);
-			Guage2.render(f5);
-			Guage2.render(f5);
-			GuageR2.render(f5);
-			// GuageGlass2.render(f5);
-			GuageL2.render(f5);
+		
+	}
+	
+	public void renderMeter(TileEntity tee, float f5)
+	{
+	    TileEntity[] ents = new TileEntity[6];
+        if (tee instanceof TileEntityTank)
+        {
+            ents = ((TileEntityTank) tee).cc;
+        }
+	 // Front
+        if (ents[2] instanceof TileEntityPipe)
+        {
+            CCFront.render(f5);
+        }
+        else
+        {
+            GuageT.render(f5);
+            GuageB.render(f5);
+            Guage.render(f5);
+            GuageR.render(f5);
+            // GuageGlass.render(f5);
+            GuageL.render(f5);
+        }
+        // back
+        if (ents[3] instanceof TileEntityPipe)
+        {
+            CCBack.render(f5);
+        }
+        else
+        {
+            GuageT3.render(f5);
+            Guage3.render(f5);
+            Guage3.render(f5);
+            GuageR3.render(f5);
+            // GuageGlass3.render(f5);
+            GuageL3.render(f5);
+        }
+        // right
+        if (ents[4] instanceof TileEntityPipe)
+        {
+            CCRight.render(f5);
+        }
+        else
+        {
+            GuageT4.render(f5);
+            Guage4.render(f5);
+            Guage4.render(f5);
+            GuageR4.render(f5);
+            // GuageGlass4.render(f5);
+            GuageL4.render(f5);
+        }
+        // left
+        if (ents[5] instanceof TileEntityPipe)
+        {
+            CCLeft.render(f5);
+        }
+        else
+        {
+            GuageT2.render(f5);
+            Guage2.render(f5);
+            Guage2.render(f5);
+            GuageR2.render(f5);
+            // GuageGlass2.render(f5);
+            GuageL2.render(f5);
 
-		}
+        }
 	}
 
 	private void setRotation(ModelRenderer model, float x, float y, float z)

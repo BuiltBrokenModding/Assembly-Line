@@ -1,12 +1,18 @@
 package liquidmechanics.common.tileentity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import liquidmechanics.api.IPressure;
 import liquidmechanics.api.IReadOut;
-import liquidmechanics.api.ITankOutputer;
 import liquidmechanics.api.helpers.TankHelper;
 import liquidmechanics.common.block.BlockReleaseValve;
 import liquidmechanics.common.handlers.LiquidData;
 import liquidmechanics.common.handlers.LiquidHandler;
+import liquidmechanics.common.handlers.PipeInstance;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -17,100 +23,108 @@ import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.liquids.LiquidTank;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
 
-public class TileEntityReleaseValve extends TileEntity implements ITankOutputer, IReadOut, IRedstoneReceptor
+public class TileEntityReleaseValve extends TileEntity implements IPressure, IReadOut, IRedstoneReceptor, IInventory
 {
     public LiquidData type = LiquidHandler.air;
-    public LiquidTank tank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
+
     public TileEntity[] connected = new TileEntity[6];
-    private int count = 0;
+
+    private List<PipeInstance> output = new ArrayList<PipeInstance>();
+    private List<ILiquidTank> input = new ArrayList<ILiquidTank>();
+
+    private int ticks = 0;
+
     public boolean isPowered = false;
     public boolean converted = false;
+    public boolean isRestricted = false;
+
+    private ItemStack[] inventory = new ItemStack[0];
 
     @Override
     public void updateEntity()
     {
         super.updateEntity();
-        this.connected = TankHelper.getSourounding(worldObj, xCoord, yCoord, zCoord);
-        if (!this.worldObj.isRemote && count++ == 10)
+
+        if (!this.worldObj.isRemote && ticks++ == 10)
         {
             BlockReleaseValve.checkForPower(worldObj, xCoord, yCoord, zCoord);
-            if (tank.getLiquid() == null)
+
+            validateNBuildList();
+        }
+    }
+
+    /**
+     * Collects info about the surrounding 6 tiles and orders them into
+     * drain-able(ITankContainer) and fill-able(TileEntityPipes) instances
+     */
+    public void validateNBuildList()
+    {
+        // cleanup
+        this.connected = TankHelper.getSurroundings(worldObj, xCoord, yCoord, zCoord);
+        this.input.clear();
+        this.output.clear();
+        // read surroundings
+        for (int i = 0; i < 6; i++)
+        {
+            ForgeDirection dir = ForgeDirection.getOrientation(i);
+            TileEntity ent = connected[i];
+            if (ent instanceof TileEntityPipe)
             {
-                tank.setLiquid(LiquidHandler.getStack(this.type, 1));
-            }
-            if (tank.getLiquid() != null && tank.getLiquid().amount < tank.getCapacity() && !isPowered)
-            {
-                for (int i = 0; i < 6; i++)
+                TileEntityPipe pipe = (TileEntityPipe) ent;
+                if (this.isRestricted && pipe.type != this.type)
                 {
-                    ForgeDirection dir = ForgeDirection.getOrientation(i);
-                    if (connected[i] instanceof ITankContainer && !(connected[i] instanceof TileEntityPipe))
+                    connected[i] = null;
+                }
+                else if (pipe.stored.getLiquid() != null && pipe.stored.getLiquid().amount >= pipe.stored.getCapacity())
+                {
+                    connected[i] = null;
+                }
+                else
+                {
+                    this.output.add(new PipeInstance(LiquidHandler.getMeta(pipe.type), pipe, pipe.isUniversal));
+                }
+            }
+            else if (ent instanceof ITankContainer)
+            {
+                ILiquidTank[] tanks = ((ITankContainer) connected[i]).getTanks(dir);
+                for (int t = 0; t < tanks.length; t++)
+                {
+                    LiquidStack ll = tanks[t].getLiquid();
+                    if (ll != null && ll.amount > 0 && ll.amount < tanks[t].getCapacity())
                     {
-                        ILiquidTank[] tanks = ((ITankContainer) connected[i]).getTanks(dir);
-                        for (int t = 0; t < tanks.length; t++)
+                        // if restricted check for type match
+                        if (this.isRestricted)
                         {
-                            LiquidStack ll = tanks[t].getLiquid();
-                            if (ll != null && LiquidHandler.isEqual(ll, this.type))
+                            if (LiquidHandler.isEqual(ll, this.type))
                             {
-                                int drainVol = tank.getCapacity() - tank.getLiquid().amount - 1;
-                                LiquidStack drained = ((ITankContainer) connected[i]).drain(t, drainVol, true);
-                                int f = this.tank.fill(drained, true);
+                                this.input.add(tanks[t]);
                             }
+                        }
+                        else
+                        {
+                            this.input.add(tanks[t]);
                         }
                     }
                 }
             }
-            count = 0;
-            LiquidStack stack = tank.getLiquid();
-            if (stack != null && !isPowered)
-                for (int i = 0; i < 6; i++)
-                {
-
-                    if (connected[i] instanceof TileEntityPipe)
-                    {
-                        int ee = ((TileEntityPipe) connected[i]).fill(ForgeDirection.getOrientation(i), stack, true);
-                        this.tank.drain(ee, true);
-                    }
-
-                }
+            else
+            {
+                connected[i] = null;
+            }
         }
     }
 
-    @Override
-    public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
+    /**
+     * removes liquid from a tank and fills it to a pipe
+     * 
+     * @param pipe
+     *            - pipe being filled
+     * @param drainee
+     *            - LiquidTank being drained
+     */
+    public void drainTo(TileEntityPipe pipe, LiquidTank drainee)
     {
-        return 0;
-    }
 
-    @Override
-    public int fill(int tankIndex, LiquidStack resource, boolean doFill)
-    {
-        if (tankIndex != 0 || resource == null)
-            return 0;
-        return tank.fill(resource, doFill);
-    }
-
-    @Override
-    public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
-    {
-        return null;
-    }
-
-    @Override
-    public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
-    {
-        return null;
-    }
-
-    @Override
-    public ILiquidTank[] getTanks(ForgeDirection direction)
-    {
-        return new ILiquidTank[] { this.tank };
-    }
-
-    @Override
-    public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
-    {
-        return null;
     }
 
     @Override
@@ -133,12 +147,22 @@ public class TileEntityReleaseValve extends TileEntity implements ITankOutputer,
     {
         if (type == null) return "Error: No Type";
         String output = "";
-        LiquidStack stack = tank.getLiquid();
-        if (stack != null)
-            output += (stack.amount / LiquidContainerRegistry.BUCKET_VOLUME) + " " + LiquidData.getName(type) + " on = " + !this.isPowered;
-        if (stack != null)
-            return output;
-        return "0/0 " + LiquidData.getName(type) + " on = " + !this.isPowered;
+        if (this.isRestricted)
+        {
+            output +="Outputting: "+ LiquidData.getName(type)+" ||";
+        }else
+        {
+            output += " Outputting: All ||";
+        }
+        if (!this.isPowered)
+        {
+            output += " Running ";
+        }
+        else
+        {
+            output += " Offline ";
+        }
+        return output;
     }
 
     @Override
@@ -146,16 +170,7 @@ public class TileEntityReleaseValve extends TileEntity implements ITankOutputer,
     {
         super.readFromNBT(nbt);
         this.type = LiquidHandler.get(nbt.getString("name"));
-        this.converted = nbt.getBoolean("converted");
-        if (!converted)
-        {
-            int t = nbt.getInteger("type");
-            this.type = LiquidHandler.getFromMeta(t);
-            this.converted = true;
-        }
-        if (this.type == null) type = LiquidHandler.air;
-        int vol = nbt.getInteger("liquid");
-        this.tank.setLiquid(LiquidHandler.getStack(type, vol));
+        this.isRestricted = nbt.getBoolean("restricted");
     }
 
     /**
@@ -165,11 +180,7 @@ public class TileEntityReleaseValve extends TileEntity implements ITankOutputer,
     public void writeToNBT(NBTTagCompound nbt)
     {
         super.writeToNBT(nbt);
-        nbt.setBoolean("converted", this.converted);
-        int s = 0;
-        if (tank.getLiquid() != null) s = tank.getLiquid().amount;
-        nbt.setInteger("liquid", s);
-
+        nbt.setBoolean("restricted", this.isRestricted);
         nbt.setString("name", LiquidData.getName(type));
     }
 
@@ -191,6 +202,123 @@ public class TileEntityReleaseValve extends TileEntity implements ITankOutputer,
     {
         this.isPowered = false;
 
+    }
+
+    public int getSizeInventory()
+    {
+        return this.inventory.length;
+    }
+
+    /**
+     * Returns the stack in slot i
+     */
+    public ItemStack getStackInSlot(int par1)
+    {
+        return this.inventory[par1];
+    }
+
+    /**
+     * Removes from an inventory slot (first arg) up to a specified number
+     * (second arg) of items and returns them in a new stack.
+     */
+    public ItemStack decrStackSize(int par1, int par2)
+    {
+        if (this.inventory[par1] != null)
+        {
+            ItemStack var3;
+
+            if (this.inventory[par1].stackSize <= par2)
+            {
+                var3 = this.inventory[par1];
+                this.inventory[par1] = null;
+                return var3;
+            }
+            else
+            {
+                var3 = this.inventory[par1].splitStack(par2);
+
+                if (this.inventory[par1].stackSize == 0)
+                {
+                    this.inventory[par1] = null;
+                }
+
+                return var3;
+            }
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    /**
+     * When some containers are closed they call this on each slot, then drop
+     * whatever it returns as an EntityItem - like when you close a workbench
+     * GUI.
+     */
+    public ItemStack getStackInSlotOnClosing(int par1)
+    {
+        if (this.inventory[par1] != null)
+        {
+            ItemStack var2 = this.inventory[par1];
+            this.inventory[par1] = null;
+            return var2;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    /**
+     * Sets the given item stack to the specified slot in the inventory (can be
+     * crafting or armor sections).
+     */
+    public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
+    {
+        this.inventory[par1] = par2ItemStack;
+
+        if (par2ItemStack != null && par2ItemStack.stackSize > this.getInventoryStackLimit())
+        {
+            par2ItemStack.stackSize = this.getInventoryStackLimit();
+        }
+    }
+
+    @Override
+    public String getInvName()
+    {
+        return "Release Valve";
+    }
+
+    @Override
+    public int getInventoryStackLimit()
+    {
+        return 0;
+    }
+
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer var1)
+    {
+        return this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord) != this ? false : var1.getDistanceSq((double) this.xCoord + 0.5D, (double) this.yCoord + 0.5D, (double) this.zCoord + 0.5D) <= 64.0D;
+
+    }
+
+    @Override
+    public void openChest()
+    {
+
+    }
+
+    @Override
+    public void closeChest()
+    {
+
+    }
+
+    @Override
+    public LiquidData getLiquidType()
+    {
+        return this.type;
     }
 
 }

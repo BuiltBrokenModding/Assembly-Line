@@ -26,7 +26,7 @@ public class ItemTank extends Item
 		this.setMaxDamage(0);
 		this.setHasSubtypes(true);
 		this.setIconIndex(10);
-		this.setItemName("tank");
+		this.setItemName("itemTank");
 		this.setCreativeTab(TabLiquidMechanics.INSTANCE);
 	}
 

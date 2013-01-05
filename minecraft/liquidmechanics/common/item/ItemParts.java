@@ -18,8 +18,8 @@ import net.minecraft.item.ItemStack;
 public class ItemParts extends Item {
 	public enum Parts {
 		Bronze("Bronze Tube", 0), Iron("Iron Tube", 1), Obby("Obby Tube", 2), Nether(
-				"Nether Tube", 3), Seal("Seal", 16), SlimeSeal("Slime Seal", 17), Tank(
-				"Tank", 18), Valve("Valve", 19);
+				"Nether Tube", 3), Seal("Leather Seal", 16), SlimeSeal("Slime Seal", 17), Tank(
+				"Unfinished Tank", 18), Valve("Valve", 19);
 		public String name;
 		public int itemIndex;
 
@@ -31,7 +31,7 @@ public class ItemParts extends Item {
 
 	public ItemParts(int par1) {
 		super(par1);
-		this.setItemName("Parts");
+		this.setItemName("parts");
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);
 		this.setMaxStackSize(64);

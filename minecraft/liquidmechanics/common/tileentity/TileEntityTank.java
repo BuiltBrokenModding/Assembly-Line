@@ -1,7 +1,7 @@
 package liquidmechanics.common.tileentity;
 
 import liquidmechanics.api.IReadOut;
-import liquidmechanics.api.ITankOutputer;
+import liquidmechanics.api.IPressure;
 import liquidmechanics.api.helpers.TankHelper;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.handlers.LiquidData;
@@ -14,6 +14,7 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
+import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.liquids.LiquidTank;
@@ -23,7 +24,7 @@ import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityTank extends TileEntity implements IPacketReceiver, IReadOut, ITankOutputer
+public class TileEntityTank extends TileEntity implements IPacketReceiver, IReadOut, IPressure,ITankContainer
 {
     public TileEntity[] cc = { null, null, null, null, null, null };
     public LiquidData type = LiquidHandler.air;
@@ -46,7 +47,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
         if (++count >= 20 && liquid != null)
         {
             count = 0;
-            this.cc = TankHelper.getSourounding(worldObj, xCoord, yCoord, zCoord);
+            this.cc = TankHelper.getSurroundings(worldObj, xCoord, yCoord, zCoord);
             if (!worldObj.isRemote)
             {
                 this.tradeDown();
@@ -292,7 +293,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
     {
         if (this.tank.getLiquid() == null || this.tank.getLiquid().amount <= 0)
             return;
-        TileEntity[] ents = TankHelper.getSourounding(worldObj, xCoord, yCoord, zCoord);
+        TileEntity[] ents = TankHelper.getSurroundings(worldObj, xCoord, yCoord, zCoord);
         int commonVol = this.tank.getLiquid().amount;
         int tanks = 1;
         for (int i = 2; i < 6; i++)
@@ -333,5 +334,11 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
             }
 
         }
+    }
+
+    @Override
+    public LiquidData getLiquidType()
+    {
+        return this.type;
     }
 }

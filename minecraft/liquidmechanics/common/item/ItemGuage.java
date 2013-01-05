@@ -24,7 +24,7 @@ public class ItemGuage extends Item
 		this.setMaxDamage(0);
 		this.setHasSubtypes(true);
 		this.setIconIndex(10);
-		this.setItemName("guage");
+		this.setItemName("lmTool");
 		this.setCreativeTab(TabLiquidMechanics.INSTANCE);
 		this.setMaxStackSize(1);
 		this.setTextureFile(LiquidMechanics.ITEM_TEXTURE_FILE);

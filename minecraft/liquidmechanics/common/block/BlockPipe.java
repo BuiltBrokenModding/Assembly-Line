@@ -15,8 +15,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
 public class BlockPipe extends BlockContainer
-{
-
+{   
     public BlockPipe(int id)
     {
         super(id, Material.iron);

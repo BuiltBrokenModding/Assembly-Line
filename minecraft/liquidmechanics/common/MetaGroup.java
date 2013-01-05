@@ -1,6 +1,6 @@
 package liquidmechanics.common;
 
-public class MetaGroupingHelper
+public class MetaGroup
 
 {
     public static int getFacingMeta(int metaData)

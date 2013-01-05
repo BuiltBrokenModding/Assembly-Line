@@ -109,7 +109,8 @@ public class ItemRenderHelper implements IItemRenderer
 		{
 			GL11.glTranslatef(0.5F, -0.5F, 0.5F);
 		}
-		model.renderMain(null, 0.0625F);
+		model.renderMain(0.0625F);
+		model.renderMeter(null, 0.0625F);
 		GL11.glPopMatrix();
 	}
 }

@@ -4,7 +4,7 @@ import liquidmechanics.common.handlers.LiquidData;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ITankContainer;
 
-public interface ITankOutputer extends ITankContainer
+public interface IPressure
 {
 	/**
 	 * @param type - Liquid type
@@ -21,4 +21,8 @@ public interface ITankOutputer extends ITankContainer
 	 * @return
 	 */
 	public boolean canPressureToo(LiquidData type, ForgeDirection dir);
+	/**
+	 * gets the LiquidData linked to the TE
+	 */
+	public LiquidData getLiquidType();
 }

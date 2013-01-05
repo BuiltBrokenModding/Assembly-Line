@@ -6,7 +6,7 @@ import liquidmechanics.api.IForce;
 import liquidmechanics.api.IReadOut;
 import liquidmechanics.api.helpers.TankHelper;
 import liquidmechanics.common.LiquidMechanics;
-import liquidmechanics.common.MetaGroupingHelper;
+import liquidmechanics.common.MetaGroup;
 import liquidmechanics.common.block.BlockGenerator;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -55,7 +55,7 @@ public class TileEntityGenerator extends TileEntityElectricityProducer implement
 
 	public void registerConnections()
 	{
-		int notchMeta = MetaGroupingHelper.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+		int notchMeta = MetaGroup.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
 		ForgeDirection facing = ForgeDirection.getOrientation(notchMeta).getOpposite();
 		ForgeDirection[] dirs = new ForgeDirection[] { ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN };
 		ElectricityConnections.registerConnector(this, EnumSet.of(facing.getOpposite()));
@@ -76,7 +76,7 @@ public class TileEntityGenerator extends TileEntityElectricityProducer implement
 		this.genAmmount = Math.abs(force / this.getVoltage());
 		// wire count update
 		int wireCount = 0;
-		TileEntity[] ents = TankHelper.getSourounding(worldObj, xCoord, yCoord, zCoord);
+		TileEntity[] ents = TankHelper.getSurroundings(worldObj, xCoord, yCoord, zCoord);
 		this.wires = new IConductor[6];
 		for (int i = 0; i < ents.length; i++)
 		{
@@ -99,7 +99,7 @@ public class TileEntityGenerator extends TileEntityElectricityProducer implement
 					pos = 0;
 			}
 		}
-		int notchMeta = MetaGroupingHelper.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+		int notchMeta = MetaGroup.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
 		facing = ForgeDirection.getOrientation(notchMeta).getOpposite();
 		TileEntity ent = worldObj.getBlockTileEntity(xCoord + facing.offsetX, yCoord + facing.offsetY, zCoord + facing.offsetZ);
 

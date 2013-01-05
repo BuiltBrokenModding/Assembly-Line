@@ -3,9 +3,9 @@ package liquidmechanics.common.tileentity;
 import java.util.EnumSet;
 
 import liquidmechanics.api.IReadOut;
-import liquidmechanics.api.ITankOutputer;
+import liquidmechanics.api.IPressure;
 import liquidmechanics.common.LiquidMechanics;
-import liquidmechanics.common.MetaGroupingHelper;
+import liquidmechanics.common.MetaGroup;
 import liquidmechanics.common.handlers.LiquidData;
 import liquidmechanics.common.handlers.LiquidHandler;
 
@@ -31,18 +31,18 @@ import universalelectricity.prefab.tile.TileEntityElectricityReceiver;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityPump extends TileEntityElectricityReceiver implements IPacketReceiver, IReadOut, ITankOutputer
+public class TileEntityPump extends TileEntityElectricityReceiver implements IPacketReceiver, IReadOut, IPressure,ITankContainer
 {
-    public final double WATTS_PER_TICK = 400;    
+    public final double WATTS_PER_TICK = 400;
     double percentPumped = 0.0;
     double joulesReceived = 0;
-    
+
     int wMax = LiquidContainerRegistry.BUCKET_VOLUME * 2;
     int disableTimer = 0;
     int count = 0;
-    
+
     private boolean converted = false;
-    
+
     public LiquidData type = LiquidHandler.air;
     public LiquidTank tank = new LiquidTank(wMax);
 
@@ -55,7 +55,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
 
     public void registerConnections()
     {
-        int notchMeta = MetaGroupingHelper.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+        int notchMeta = MetaGroup.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
         ForgeDirection facing = ForgeDirection.getOrientation(notchMeta).getOpposite();
         ForgeDirection[] dirs = new ForgeDirection[] { ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN };
         ElectricityConnections.registerConnector(this, EnumSet.of(facing.getOpposite()));
@@ -105,55 +105,16 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
                 }
                 count = 40;
             }
+            
             if (this.tank.getLiquid() == null)
             {
                 this.tank.setLiquid(LiquidHandler.getStack(this.type, 1));
             }
-            LiquidStack stack = tank.getLiquid();
-
-            if (stack != null)
-            {
-                for (int i = 0; i < 6; i++)
-                {
-                    ForgeDirection dir = ForgeDirection.getOrientation(i);
-                    TileEntity tile = worldObj.getBlockTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
-
-                    if (tile instanceof ITankContainer)
-                    {
-                        int moved = ((ITankContainer) tile).fill(dir.getOpposite(), stack, true);
-                        tank.drain(moved, true);
-                        if (stack.amount <= 0)
-                            break;
-                    }
-                }
-
-            }
-
-            int notchMeta = MetaGroupingHelper.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
-            ForgeDirection facing = ForgeDirection.getOrientation(notchMeta).getOpposite();
-
-            for (int i = 2; i < 6; i++)
-            {
-                ForgeDirection dir = ForgeDirection.getOrientation(i);
-                if (dir != facing)
-                {
-                    TileEntity inputTile = Vector3.getTileEntityFromSide(this.worldObj, new Vector3(this), dir);
-                    ElectricityNetwork network = ElectricityNetwork.getNetworkFromTileEntity(inputTile, dir);
-                    if (network != null)
-                    {
-
-                        if (this.canPump(xCoord, yCoord - 1, zCoord))
-                        {
-                            network.startRequesting(this, WATTS_PER_TICK / this.getVoltage(), this.getVoltage());
-                            this.joulesReceived = Math.max(Math.min(this.joulesReceived + network.consumeElectricity(this).getWatts(), WATTS_PER_TICK), 0);
-                        }
-                        else
-                        {
-                            network.stopRequesting(this);
-                        }
-                    }
-                }
-            }
+            
+            //consume/give away stored units
+            this.fillSurroundings();
+            this.chargeUp();
+           
             if (this.joulesReceived >= this.WATTS_PER_TICK - 50 && this.canPump(xCoord, yCoord - 1, zCoord))
             {
 
@@ -174,7 +135,63 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
             }
         }
     }
+    /**
+     * Cause this to empty its internal tank to surrounding tanks
+     */
+    public void fillSurroundings()
+    {
+        LiquidStack stack = tank.getLiquid();
 
+        if (stack != null && stack.amount > 1)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                ForgeDirection dir = ForgeDirection.getOrientation(i);
+                TileEntity tile = worldObj.getBlockTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+
+                if (tile instanceof ITankContainer)
+                {
+                    int moved = ((ITankContainer) tile).fill(dir.getOpposite(), stack, true);
+                    tank.drain(moved, true);
+                    if (stack.amount <= 0)
+                        break;
+                }
+            }
+
+        }
+    }
+    /**
+     * causes this to request/drain energy from connected networks
+     */
+    public void chargeUp()
+    {
+        this.joulesReceived += this.WATTS_PER_TICK; //TODO remove after testing
+        int notchMeta = MetaGroup.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+        ForgeDirection facing = ForgeDirection.getOrientation(notchMeta).getOpposite();
+
+        for (int i = 2; i < 6; i++)
+        {
+            ForgeDirection dir = ForgeDirection.getOrientation(i);
+            if (dir != facing)
+            {
+                TileEntity inputTile = Vector3.getTileEntityFromSide(this.worldObj, new Vector3(this), dir);
+                ElectricityNetwork network = ElectricityNetwork.getNetworkFromTileEntity(inputTile, dir);
+                if (network != null)
+                {
+
+                    if (this.canPump(xCoord, yCoord - 1, zCoord))
+                    {
+                        network.startRequesting(this, WATTS_PER_TICK / this.getVoltage(), this.getVoltage());
+                        this.joulesReceived = Math.max(Math.min(this.joulesReceived + network.consumeElectricity(this).getWatts(), WATTS_PER_TICK), 0);
+                    }
+                    else
+                    {
+                        network.stopRequesting(this);
+                    }
+                }
+            }
+        }
+    }
     public boolean canPump(int x, int y, int z)
     {
         // if (this.tank.getLiquid() == null) return false;
@@ -182,7 +199,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
             return false;
         if (this.isDisabled())
             return false;
-        if (!this.isValidLiquid(Block.blocksList[worldObj.getBlockId(x, y, z)]))
+        if ((LiquidHandler.getFromBlockID(worldObj.getBlockId(x, y, z)) == null || LiquidHandler.getFromBlockID(worldObj.getBlockId(x, y, z)) == LiquidHandler.air))
             return false;
         return true;
     }
@@ -202,7 +219,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
             return false;
         if (bBlock == Block.lavaMoving.blockID || (bBlock == Block.lavaStill.blockID && meta != 0))
             return false;
-        if (bBlock == LiquidData.getStack(type).itemID && this.isValidLiquid(Block.blocksList[bBlock]))
+        if (bBlock == LiquidData.getStack(type).itemID)
         {
             // FMLLog.info("pumping " + bellow.displayerName + " blockID:" +
             // bBlock + " Meta:" +
@@ -341,15 +358,10 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
         return false;
     }
 
-    /**
-     * Checks to see if the given block type is valid for pumping
-     * 
-     * @param block
-     * @return
-     */
-    private boolean isValidLiquid(Block block)
+    @Override
+    public LiquidData getLiquidType()
     {
-        return LiquidHandler.getFromBlockID(block.blockID) != null;
+        return this.type;
     }
 
 }

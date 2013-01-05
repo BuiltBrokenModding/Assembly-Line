@@ -13,14 +13,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import universalelectricity.prefab.BlockMachine;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
 
-public class BlockReleaseValve extends BlockContainer
+public class BlockReleaseValve extends BlockMachine
 {
 	public BlockReleaseValve(int par1)
 	{
-		super(par1, Material.iron);
-		this.setCreativeTab(TabLiquidMechanics.INSTANCE);
+		super("eValve",par1, Material.iron,TabLiquidMechanics.INSTANCE);
 		this.setHardness(1f);
 		this.setResistance(5f);
 		this.setTextureFile(LiquidMechanics.BLOCK_TEXTURE_FILE);
@@ -53,7 +53,7 @@ public class BlockReleaseValve extends BlockContainer
 	@Override
 	public int getBlockTextureFromSideAndMetadata(int side, int meta)
 	{
-		return meta;
+		return 0;
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class BlockReleaseValve extends BlockContainer
 	@Override
 	public int damageDropped(int meta)
 	{
-		return meta;
+		return 0;
 	}
 
 	@Override
@@ -91,8 +91,7 @@ public class BlockReleaseValve extends BlockContainer
 	@Override
 	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
 	{
-		int meta = world.getBlockMetadata(x, y, z);
-		return new ItemStack(LiquidMechanics.blockReleaseValve, 1, meta);
+		return new ItemStack(LiquidMechanics.blockReleaseValve, 1, 0);
 	}
 
 	public static void checkForPower(World world, int x, int y, int z)

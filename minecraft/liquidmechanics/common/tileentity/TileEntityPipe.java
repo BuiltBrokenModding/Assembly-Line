@@ -1,7 +1,7 @@
 package liquidmechanics.common.tileentity;
 
 import liquidmechanics.api.IReadOut;
-import liquidmechanics.api.ITankOutputer;
+import liquidmechanics.api.IPressure;
 import liquidmechanics.api.helpers.TankHelper;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.handlers.LiquidData;
@@ -27,12 +27,16 @@ import com.google.common.io.ByteArrayDataInput;
 public class TileEntityPipe extends TileEntity implements ITankContainer, IPacketReceiver, IReadOut
 {
     public LiquidData type = LiquidHandler.air;
+    
     private int count = 20;
     private int count2, presure = 0;
+    
     public boolean converted = false;
     protected boolean firstUpdate = true;
+    public boolean isUniversal = false;
 
     public TileEntity[] connectedBlocks = { null, null, null, null, null, null };
+    
     public LiquidTank stored = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME * 3);
 
     @Override
@@ -41,10 +45,10 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
         if (++count >= 40)
         {
             count = 0;
-            this.connectedBlocks = TankHelper.getSourounding(worldObj, xCoord, yCoord, zCoord);
+            this.connectedBlocks = TankHelper.getSurroundings(worldObj, xCoord, yCoord, zCoord);
             for (int e = 0; e < 6; e++)
             {
-                if (connectedBlocks[e] instanceof ITankContainer)
+                if (connectedBlocks[e] instanceof ITankContainer || connectedBlocks[e] instanceof IPressure)
                 {
                     if (connectedBlocks[e] instanceof TileEntityPipe && ((TileEntityPipe) connectedBlocks[e]).type != this.type)
                     {
@@ -236,7 +240,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
     /**
      * Used to determan pipe connection rules
      */
-    public boolean canConntect(TileEntity entity)
+    public boolean canConnect(TileEntity entity)
     {
         if (entity instanceof TileEntityPipe)
         {
@@ -260,17 +264,17 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
         {
             ForgeDirection dir = ForgeDirection.getOrientation(i);
 
-            if (connectedBlocks[i] instanceof TileEntityPipe && ((TileEntityPipe) connectedBlocks[i]).canConntect(this))
+            if (connectedBlocks[i] instanceof TileEntityPipe && ((TileEntityPipe) connectedBlocks[i]).canConnect(this))
             {
                 if (((TileEntityPipe) connectedBlocks[i]).getPressure() > highestPressure)
                 {
                     highestPressure = ((TileEntityPipe) connectedBlocks[i]).getPressure();
                 }
             }
-            if (connectedBlocks[i] instanceof ITankOutputer && ((ITankOutputer) connectedBlocks[i]).canPressureToo(this.type, dir))
+            if (connectedBlocks[i] instanceof IPressure && ((IPressure) connectedBlocks[i]).canPressureToo(this.type, dir))
             {
 
-                int p = ((ITankOutputer) connectedBlocks[i]).presureOutput(this.type, dir);
+                int p = ((IPressure) connectedBlocks[i]).presureOutput(this.type, dir);
                 if (p > highestPressure)
                     highestPressure = p;
             }

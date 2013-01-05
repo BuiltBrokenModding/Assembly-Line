@@ -3,16 +3,13 @@ package liquidmechanics.common;
 import java.io.File;
 
 import liquidmechanics.common.block.BlockGenerator;
-import liquidmechanics.common.block.BlockMachine;
+import liquidmechanics.common.block.BlockLiquidMachine;
 import liquidmechanics.common.block.BlockPipe;
 import liquidmechanics.common.block.BlockReleaseValve;
 import liquidmechanics.common.block.BlockRod;
 import liquidmechanics.common.block.BlockSteam;
-import liquidmechanics.common.handlers.LiquidData;
 import liquidmechanics.common.handlers.LiquidHandler;
-import liquidmechanics.common.item.ItemEValve;
 import liquidmechanics.common.item.ItemGuage;
-import liquidmechanics.common.item.ItemMachine;
 import liquidmechanics.common.item.ItemParts;
 import liquidmechanics.common.item.ItemParts.Parts;
 import liquidmechanics.common.item.ItemPipe;
@@ -33,6 +30,7 @@ import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.network.PacketManager;
 import cpw.mods.fml.common.DummyModContainer;
 import cpw.mods.fml.common.Loader;
@@ -47,7 +45,6 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 
 /**
  * Used in the creation of a new mod class
@@ -60,7 +57,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 public class LiquidMechanics extends DummyModContainer
 {
     // TODO Change in Version Release
-    public static final String VERSION = "0.2.3";
+    public static final String VERSION = "0.2.4";
 
     // Constants
     public static final String NAME = "Liquid Mechanics";
@@ -70,6 +67,10 @@ public class LiquidMechanics extends DummyModContainer
     public static final String RESOURCE_PATH = PATH + "resource/";
     public static final String BLOCK_TEXTURE_FILE = RESOURCE_PATH + "blocks.png";
     public static final String ITEM_TEXTURE_FILE = RESOURCE_PATH + "items.png";
+    public static final String LANGUAGE_PATH = RESOURCE_PATH + "lang/";
+    
+    private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US"};
+
     public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir() + "/UniversalElectricity/", NAME + ".cfg"));
 
     public final static int BLOCK_ID_PREFIX = 3100;
@@ -106,7 +107,7 @@ public class LiquidMechanics extends DummyModContainer
 
         // Blocks
         blockPipe = new BlockPipe(this.CONFIGURATION.getBlock("Pipes", BLOCK_ID_PREFIX).getInt());
-        blockMachine = new BlockMachine(this.CONFIGURATION.getBlock("Machines", BLOCK_ID_PREFIX + 1).getInt());
+        blockMachine = new BlockLiquidMachine(this.CONFIGURATION.getBlock("Machines", BLOCK_ID_PREFIX + 1).getInt());
         blockRod = new BlockRod(this.CONFIGURATION.getBlock("Mechanical Rod", BLOCK_ID_PREFIX + 3).getInt());
         blockGenerator = new BlockGenerator((this.CONFIGURATION.getBlock("Generator", BLOCK_ID_PREFIX + 4).getInt()));
         blockReleaseValve = new BlockReleaseValve((this.CONFIGURATION.getBlock("Release Valve", BLOCK_ID_PREFIX + 5).getInt()));
@@ -130,10 +131,10 @@ public class LiquidMechanics extends DummyModContainer
 
         // block registry
         GameRegistry.registerBlock(blockPipe, "Pipe");
-        GameRegistry.registerBlock(blockReleaseValve, ItemEValve.class, "Electric Valve");
-        GameRegistry.registerBlock(blockRod, "Mechanical Rod");
+        GameRegistry.registerBlock(blockReleaseValve,"eValve");
+        GameRegistry.registerBlock(blockRod, "mechRod");
         GameRegistry.registerBlock(blockGenerator, "Generator");
-        GameRegistry.registerBlock(blockMachine, ItemMachine.class, "Machines");
+        GameRegistry.registerBlock(blockMachine, "lmMachines");
         GameRegistry.registerBlock(blockSteamBlock, "Steam");
     }
 
@@ -148,34 +149,9 @@ public class LiquidMechanics extends DummyModContainer
         GameRegistry.registerTileEntity(TileEntityReleaseValve.class, "Valve");
         GameRegistry.registerTileEntity(TileEntityTank.class, "Tank");
         GameRegistry.registerTileEntity(TileEntityGenerator.class, "Generator");
+        System.out.println("Fluid Mechanics Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
 
-        // Liquid Item/Block common name writer
-        for (int i = 0; i < LiquidHandler.allowedLiquids.size() - 1; i++)
-        {
-            // eValves
-            LanguageRegistry.addName((new ItemStack(blockReleaseValve, 1, i)),LiquidData.getName(LiquidHandler.getFromMeta(i)) + " Release Valve");
-            // pipes
-            LanguageRegistry.addName((new ItemStack(itemPipes, 1, i)), LiquidData.getName(LiquidHandler.getFromMeta(i)) + " Pipe");
-
-            // Storage Tanks
-            LanguageRegistry.addName((new ItemStack(itemTank, 1, i)), LiquidData.getName(LiquidHandler.getFromMeta(i)) + " Tank");
-        }
-
-        for (int i = 0; i < ItemParts.Parts.values().length; i++)
-        {
-            // parts
-            LanguageRegistry.addName((new ItemStack(itemParts, 1, i)), ItemParts.Parts.values()[i].name);
-        }
-
-        // machines
-        LanguageRegistry.addName((new ItemStack(blockMachine, 1, 0)), "Pump");
-        LanguageRegistry.addName((new ItemStack(blockMachine, 1, 4)), "Water Condensor");
-
-        LanguageRegistry.addName((new ItemStack(blockGenerator, 1)), "Generator");
-        // mechanical rod
-        LanguageRegistry.addName((new ItemStack(blockRod, 1)), "Geared Rod");
-        // Tools
-        LanguageRegistry.addName((new ItemStack(itemGauge, 1, 0)), "Pipe Gauge");
+      
     }
 
     @PostInit
@@ -285,6 +261,14 @@ public class LiquidMechanics extends DummyModContainer
         
         //reg ore directory for parts
         OreDictionary.registerOre("bronzeTube", new ItemStack(itemParts, 1, Parts.Bronze.ordinal()));
+        OreDictionary.registerOre("ironTube", new ItemStack(itemParts, 1, Parts.Iron.ordinal()));
+        OreDictionary.registerOre("netherTube", new ItemStack(itemParts, 1, Parts.Nether.ordinal()));
+        OreDictionary.registerOre("obbyTube", new ItemStack(itemParts, 1, Parts.Obby.ordinal()));
+        OreDictionary.registerOre("leatherSeal", new ItemStack(itemParts, 1, Parts.Seal.ordinal()));
+        OreDictionary.registerOre("leatherSlimeSeal", new ItemStack(itemParts, 1, Parts.SlimeSeal.ordinal()));
+        OreDictionary.registerOre("valvePart", new ItemStack(itemParts, 1, Parts.Valve.ordinal()));
+        OreDictionary.registerOre("bronzeTube", new ItemStack(itemParts, 1, Parts.Bronze.ordinal()));
+        OreDictionary.registerOre("unfinishedTank", new ItemStack(itemParts, 1, Parts.Tank.ordinal()));
         //add Default Liquids to current list, done last to let other mods use there liquid data first if used
         LiquidHandler.addDefaultLiquids();
     }
