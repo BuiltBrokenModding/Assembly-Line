@@ -28,8 +28,6 @@ public class TileEntityRejector extends TileEntityFilterable
 	public TileEntityRejector()
 	{
 		super();
-		// ElectricityConnections.registerConnector(this, EnumSet.of(ForgeDirection.DOWN,
-		// ForgeDirection.EAST, ForgeDirection.WEST, ForgeDirection.NORTH, ForgeDirection.SOUTH));
 	}
 
 	@Override

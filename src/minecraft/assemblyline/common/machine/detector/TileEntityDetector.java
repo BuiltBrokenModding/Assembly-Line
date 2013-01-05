@@ -41,11 +41,6 @@ public class TileEntityDetector extends TileEntityFilterable
 						ItemStack itemStack = e.func_92014_d();
 
 						powerCheck = this.isFiltering(itemStack);
-
-						/*
-						 * if (this.isInverted) { if (!found) { powerCheck = true; } else {
-						 * powerCheck = false; } } else if (found) { powerCheck = true; break; }
-						 */
 					}
 				}
 				else
