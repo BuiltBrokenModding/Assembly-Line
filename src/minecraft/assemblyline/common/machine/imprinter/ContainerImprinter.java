@@ -1,6 +1,7 @@
 package assemblyline.common.machine.imprinter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -250,7 +251,6 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 
 						if (idealRecipe != null)
 						{
-							System.out.println(idealRecipe.getKey().stackSize);
 							this.setInventorySlotContents(4, idealRecipe.getKey());
 							didCraft = true;
 						}
@@ -283,77 +283,29 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 					{
 						if (object instanceof ShapedRecipes)
 						{
-							if (this.hasResource(((ShapedRecipes) object).recipeItems)) { return new Pair<ItemStack, ItemStack[]>(((ShapedRecipes) object).getRecipeOutput().copy(), ((ShapedRecipes) object).recipeItems); }
+							if (this.hasResource(((ShapedRecipes) object).recipeItems) != null) { return new Pair<ItemStack, ItemStack[]>(((IRecipe) object).getRecipeOutput().copy(), ((ShapedRecipes) object).recipeItems); }
 						}
 						else if (object instanceof ShapelessRecipes)
 						{
-							if (this.hasResource(((ShapelessRecipes) object).recipeItems.toArray(new ItemStack[1]))) { return new Pair<ItemStack, ItemStack[]>(((ShapedRecipes) object).getRecipeOutput().copy(), (ItemStack[]) ((ShapelessRecipes) object).recipeItems.toArray(new ItemStack[1])); }
+							if (this.hasResource(((ShapelessRecipes) object).recipeItems.toArray(new ItemStack[1])) != null) { return new Pair<ItemStack, ItemStack[]>(((IRecipe) object).getRecipeOutput().copy(), (ItemStack[]) ((ShapelessRecipes) object).recipeItems.toArray(new ItemStack[1])); }
 						}
 						else if (object instanceof ShapedOreRecipe)
 						{
 							ShapedOreRecipe oreRecipe = (ShapedOreRecipe) object;
 							Object[] oreRecipeInput = (Object[]) ReflectionHelper.getPrivateValue(ShapedOreRecipe.class, oreRecipe, "input");
-							if (hasResource(oreRecipeInput))
-							{
-								ArrayList<ItemStack> finalRecipe = new ArrayList<ItemStack>();
-								for (Object ingredientListObject : oreRecipeInput)
-								{
-									if (ingredientListObject != null)
-									{
-										if (ingredientListObject instanceof ArrayList)
-										{
-											ArrayList ingredientList = (ArrayList) ingredientListObject;
-											for (Object ingredient : ingredientList)
-											{
-												if (ingredient != null)
-												{
-													if (ingredient instanceof ItemStack)
-													{
-														finalRecipe.add((ItemStack) ingredient);
-													}
-												}
-											}
-										}
-									}
-								}
-								if (finalRecipe.size() == oreRecipeInput.length) { return new Pair<ItemStack, ItemStack[]>(((ShapedRecipes) object).getRecipeOutput().copy(), finalRecipe.toArray(new ItemStack[1])); }
-							}
+
+							ArrayList<ItemStack> hasResources = this.hasResource(oreRecipeInput);
+
+							if (hasResources != null) { return new Pair<ItemStack, ItemStack[]>(((IRecipe) object).getRecipeOutput().copy(), hasResources.toArray(new ItemStack[1])); }
 						}
 						else if (object instanceof ShapelessOreRecipe)
 						{
 							ShapelessOreRecipe oreRecipe = (ShapelessOreRecipe) object;
 							ArrayList oreRecipeInput = (ArrayList) ReflectionHelper.getPrivateValue(ShapelessOreRecipe.class, oreRecipe, "input");
-							if (hasResource(oreRecipeInput.toArray()))
-							{
-								ArrayList<ItemStack> finalRecipe = new ArrayList<ItemStack>();
-								for (Object ingredientListObject : oreRecipeInput)
-								{
-									if (ingredientListObject != null)
-									{
-										if (ingredientListObject instanceof ArrayList)
-										{
-											ArrayList ingredientList = (ArrayList) ingredientListObject;
-											for (Object ingredient : ingredientList)
-											{
-												if (ingredient != null)
-												{
-													if (ingredient instanceof ItemStack)
-													{
-														if (this.inventoryPlayer.hasItemStack((ItemStack) ingredient))
-															finalRecipe.add((ItemStack) ingredient);
-													}
-												}
-											}
-										}
-										else if (ingredientListObject instanceof ItemStack)
-										{
-											if (this.inventoryPlayer.hasItemStack((ItemStack) ingredientListObject))
-												finalRecipe.add((ItemStack) ingredientListObject);
-										}
-									}
-								}
-								if (finalRecipe.size() == oreRecipeInput.size()) { return new Pair<ItemStack, ItemStack[]>(((ShapedRecipes) object).getRecipeOutput().copy(), finalRecipe.toArray(new ItemStack[1])); }
-							}
+
+							List<ItemStack> hasResources = this.hasResource(oreRecipeInput.toArray());
+
+							if (hasResources != null) { return new Pair<ItemStack, ItemStack[]>(((IRecipe) object).getRecipeOutput().copy(), hasResources.toArray(new ItemStack[1])); }
 						}
 					}
 				}
@@ -368,8 +320,12 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 	 * 
 	 * @param recipeItems - The items to be checked for the recipes.
 	 */
-	private boolean hasResource(Object[] recipeItems)
+	private ArrayList<ItemStack> hasResource(Object[] recipeItems)
 	{
+		/**
+		 * The actual amount of resource required. Each ItemStack will only have stacksize of 1.
+		 */
+		ArrayList<ItemStack> actualResources = new ArrayList<ItemStack>();
 		int itemMatch = 0;
 
 		for (Object obj : recipeItems)
@@ -377,6 +333,7 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 			if (obj instanceof ItemStack)
 			{
 				ItemStack recipeItem = (ItemStack) obj;
+				actualResources.add(recipeItem.copy());
 
 				if (recipeItem != null)
 				{
@@ -407,6 +364,7 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 					if (ingredientsArray[x] != null && ingredientsArray[x] instanceof ItemStack)
 					{
 						ItemStack recipeItem = (ItemStack) ingredientsArray[x];
+						actualResources.add(recipeItem.copy());
 
 						if (recipeItem != null)
 						{
@@ -430,7 +388,7 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 			}
 		}
 
-		return itemMatch >= recipeItems.length;
+		return itemMatch >= actualResources.size() ? actualResources : null;
 	}
 
 	@Override
