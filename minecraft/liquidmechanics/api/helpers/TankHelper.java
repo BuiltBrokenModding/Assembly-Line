@@ -52,7 +52,7 @@ public class TankHelper
 		TileEntity[] connected = TankHelper.getSurroundings(world, center.intX(), center.intY(), center.intZ());
 		LiquidData type = LiquidHandler.get(liquid);
 		ForgeDirection firstTrade = ForgeDirection.UP;
-		if (!LiquidData.getCanFloat(type))
+		if (!type.getCanFloat())
 			firstTrade = ForgeDirection.DOWN;
 		for (int i = 0; i < 6; i++)
 		{

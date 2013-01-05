@@ -2,10 +2,12 @@ package liquidmechanics.common.tileentity;
 
 import liquidmechanics.api.IReadOut;
 import liquidmechanics.api.IPressure;
+import liquidmechanics.api.helpers.Colors;
 import liquidmechanics.api.helpers.TankHelper;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.handlers.LiquidData;
 import liquidmechanics.common.handlers.LiquidHandler;
+import liquidmechanics.common.handlers.UpdateConverter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -26,18 +28,17 @@ import com.google.common.io.ByteArrayDataInput;
 
 public class TileEntityPipe extends TileEntity implements ITankContainer, IPacketReceiver, IReadOut
 {
-    public LiquidData type = LiquidHandler.air;
-    
-    private int count = 20;
+    private Colors color = Colors.NONE;
+
+    private int count = 40;
     private int count2, presure = 0;
-    
+
     public boolean converted = false;
-    protected boolean firstUpdate = true;
     public boolean isUniversal = false;
 
-    public TileEntity[] connectedBlocks = { null, null, null, null, null, null };
-    
-    public LiquidTank stored = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME * 3);
+    public TileEntity[] connectedBlocks = new TileEntity[6];
+
+    public LiquidTank stored = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME * 2);
 
     @Override
     public void updateEntity()
@@ -45,31 +46,15 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
         if (++count >= 40)
         {
             count = 0;
-            this.connectedBlocks = TankHelper.getSurroundings(worldObj, xCoord, yCoord, zCoord);
-            for (int e = 0; e < 6; e++)
-            {
-                if (connectedBlocks[e] instanceof ITankContainer || connectedBlocks[e] instanceof IPressure)
-                {
-                    if (connectedBlocks[e] instanceof TileEntityPipe && ((TileEntityPipe) connectedBlocks[e]).type != this.type)
-                    {
-                        connectedBlocks[e] = null;
-                    }
-                }
-                else
-                {
-                    connectedBlocks[e] = null;
-                }
-
-            }
-
+            this.validataConnections();
+            this.color = Colors.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
             if (!worldObj.isRemote)
             {
                 this.updatePressure();
                 if (count2-- <= 0)
                 {
                     count2 = 5;
-                    firstUpdate = false;
-                    Packet packet = PacketManager.getPacket(LiquidMechanics.CHANNEL, this, LiquidData.getName(type));
+                    Packet packet = PacketManager.getPacket(LiquidMechanics.CHANNEL, this, color.ordinal());
                     PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 60);
                 }
 
@@ -109,16 +94,30 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
 
     }
 
-    // returns liquid type
-    public LiquidData getType()
+    /**
+     * gets the current color mark of the pipe
+     */
+    public Colors getColor()
     {
-        return this.type;
+        return this.color;
     }
 
-    // used by the item to set the liquid type on spawn
-    public void setType(LiquidData rType)
+    /**
+     * sets the current color mark of the pipe
+     */
+    public void setColor(Colors cc)
     {
-        this.type = rType;
+        this.color = cc;
+    }
+    /**
+     * sets the current color mark of the pipe
+     */
+    public void setColor(int i)
+    {
+        if (i < Colors.values().length)
+        {
+            this.color = Colors.values()[i];
+        }
     }
 
     // ---------------------
@@ -129,7 +128,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
     {
         try
         {
-            this.setType(LiquidHandler.get(data.readUTF()));
+            this.setColor(data.readInt());
         }
         catch (Exception e)
         {
@@ -145,22 +144,9 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
     public void readFromNBT(NBTTagCompound nbt)
     {
         super.readFromNBT(nbt);
-
-        this.converted = nbt.getBoolean("converted");
-        if (!converted)
-        {
-            int t = nbt.getInteger("type");
-            this.type = LiquidHandler.getFromMeta(t);
-           this.converted = true;
-        }
-        else
-        {
-            this.type = LiquidHandler.get(nbt.getString("name"));
-        }
-        if (this.type == null) type = LiquidHandler.air;
-        
-        int vol = nbt.getInteger("liquid");
-        this.stored.setLiquid(LiquidHandler.getStack(type, vol));
+        UpdateConverter.convert(this, nbt);
+        LiquidStack stack = LiquidStack.loadLiquidStackFromNBT(nbt);
+        this.stored.setLiquid(stack);
     }
 
     /**
@@ -169,37 +155,25 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
     @Override
     public void writeToNBT(NBTTagCompound nbt)
     {
-        super.writeToNBT(nbt);
-        nbt.setBoolean("converted", this.converted);
-        int s = 0;
-        if (stored.getLiquid() != null) s = stored.getLiquid().amount;
-        nbt.setInteger("liquid", s);
-
-        nbt.setString("name", LiquidData.getName(type));
+        super.writeToNBT(nbt);        
+        if (stored.getLiquid() != null)
+        {
+            stored.getLiquid().writeToNBT(nbt);
+        }
     }
 
     @Override
     public String getMeterReading(EntityPlayer user, ForgeDirection side)
-    {
-        if (type == null) return "Error: No Type";
-        String output = "";
-        LiquidStack stack = stored.getLiquid();
-        if (stack != null)
-            output += (stack.amount / LiquidContainerRegistry.BUCKET_VOLUME) + " " + LiquidData.getName(type);
-        output += " @" + this.presure + "psi";
-
-        if (stack != null)
-            return output;
-
-        return "Error";
+    {      
+        return "ReadOut not setup";
     }
 
     @Override
     public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
     {
         LiquidStack stack = stored.getLiquid();
-        if (stack == null) stored.setLiquid(LiquidHandler.getStack(this.type, 1));
-        if (stack != null && LiquidHandler.isEqual(resource, this.type)) return fill(0, resource, doFill);
+        if (stack == null) stored.setLiquid(LiquidHandler.getStack(color.getLiquidData(), 1));
+        if (stack != null && LiquidHandler.isEqual(resource, color.getLiquidData())) return fill(0, resource, doFill);
 
         return 0;
     }
@@ -238,22 +212,34 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
     }
 
     /**
-     * Used to determan pipe connection rules
+     * collects and sorts the surrounding TE for valid connections
      */
-    public boolean canConnect(TileEntity entity)
+    public void validataConnections()
     {
-        if (entity instanceof TileEntityPipe)
+        this.connectedBlocks = TankHelper.getSurroundings(worldObj, xCoord, yCoord, zCoord);
+        for (int i = 0; i < 6; i++)
         {
-            if (((TileEntityPipe) entity).type == this.type) { return true; }
+            TileEntity ent = connectedBlocks[i];
+            if (ent instanceof ITankContainer)
+            {
+                if (ent instanceof TileEntityPipe)
+                {
+
+                }
+            }
+            else if (ent instanceof IPressure)
+            {
+
+            }
+            else
+            {
+                connectedBlocks[i] = null;
+            }
         }
-        return false;
     }
 
     /**
-     * used to cause the pipes pressure to update depending on what is connected
-     * to it
-     * 
-     * @return
+     * updates this units pressure level using the pipe/machines around it
      */
     public void updatePressure()
     {
@@ -264,17 +250,17 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
         {
             ForgeDirection dir = ForgeDirection.getOrientation(i);
 
-            if (connectedBlocks[i] instanceof TileEntityPipe && ((TileEntityPipe) connectedBlocks[i]).canConnect(this))
+            if (connectedBlocks[i] instanceof TileEntityPipe)
             {
                 if (((TileEntityPipe) connectedBlocks[i]).getPressure() > highestPressure)
                 {
                     highestPressure = ((TileEntityPipe) connectedBlocks[i]).getPressure();
                 }
             }
-            if (connectedBlocks[i] instanceof IPressure && ((IPressure) connectedBlocks[i]).canPressureToo(this.type, dir))
+            if (connectedBlocks[i] instanceof IPressure && ((IPressure) connectedBlocks[i]).canPressureToo(color.getLiquidData(), dir))
             {
 
-                int p = ((IPressure) connectedBlocks[i]).presureOutput(this.type, dir);
+                int p = ((IPressure) connectedBlocks[i]).presureOutput(color.getLiquidData(), dir);
                 if (p > highestPressure)
                     highestPressure = p;
             }

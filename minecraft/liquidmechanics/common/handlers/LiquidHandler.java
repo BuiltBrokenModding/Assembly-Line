@@ -3,6 +3,7 @@ package liquidmechanics.common.handlers;
 import java.util.ArrayList;
 import java.util.List;
 
+import liquidmechanics.api.helpers.Colors;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.tileentity.TileEntityPipe;
 import net.minecraft.block.Block;
@@ -29,13 +30,13 @@ public class LiquidHandler
      */
     public static void addDefaultLiquids()
     {
-        steam = new LiquidData("Steam", LiquidDictionary.getOrCreateLiquid("Steam", new LiquidStack(LiquidMechanics.blockSteamBlock, 1)), true, 100);
+        steam = new LiquidData("Steam", LiquidDictionary.getOrCreateLiquid("Steam", new LiquidStack(LiquidMechanics.blockSteamBlock, 1)),Colors.ORANGE, true, 100);
         allowedLiquids.add(steam);
-        water = new LiquidData("water", LiquidDictionary.getOrCreateLiquid("Water", new LiquidStack(Block.waterStill, 1)), false, 32);
+        water = new LiquidData("water", LiquidDictionary.getOrCreateLiquid("Water", new LiquidStack(Block.waterStill, 1)),Colors.BLUE, false, 32);
         allowedLiquids.add(water);
-        lava = new LiquidData("Lava", LiquidDictionary.getOrCreateLiquid("Lava", new LiquidStack(Block.lavaStill, 1)), false, 20);
+        lava = new LiquidData("Lava", LiquidDictionary.getOrCreateLiquid("Lava", new LiquidStack(Block.lavaStill, 1)),Colors.RED, false, 20);
         allowedLiquids.add(lava);
-        air = new LiquidData("Air", LiquidDictionary.getOrCreateLiquid("Air", new LiquidStack(0, 1)), false, 0);
+        air = new LiquidData("Air", LiquidDictionary.getOrCreateLiquid("Air", new LiquidStack(0, 1)),Colors.NONE, false, 0);
         allowedLiquids.add(air);
     }
 
@@ -57,7 +58,7 @@ public class LiquidHandler
     {
         for (LiquidData data : LiquidHandler.allowedLiquids)
         {
-            if (LiquidData.getName(data).equalsIgnoreCase(name)) { return data; }
+            if (data.getName().equalsIgnoreCase(name)) { return data; }
         }
         return air;
     }
@@ -77,7 +78,7 @@ public class LiquidHandler
     public static LiquidStack getStack(LiquidData type, int vol)
     {
         if(type == null) return null;
-        return new LiquidStack(LiquidData.getStack(type).itemID, vol, LiquidData.getStack(type).itemMeta);
+        return new LiquidStack(type.getStack().itemID, vol, type.getStack().itemMeta);
     }
 
     public static int getMeta(LiquidData type)
@@ -107,7 +108,7 @@ public class LiquidHandler
     {
         for (LiquidData data : allowedLiquids)
         {
-            if (LiquidData.getStack(data).itemID == id) { return data; }
+            if (data.getStack().itemID == id) { return data; }
         }
         return air;
     }
@@ -123,7 +124,7 @@ public class LiquidHandler
     {
         if (stack == null || type == null)
             return false;
-        if (LiquidData.getStack(type).itemID == stack.itemID && LiquidData.getStack(type).itemMeta == stack.itemMeta) { return true; }
+        if (type.getStack().itemID == stack.itemID && type.getStack().itemMeta == stack.itemMeta) { return true; }
         return false;
     }
     public static boolean isEqual(LiquidStack stack, LiquidStack type)

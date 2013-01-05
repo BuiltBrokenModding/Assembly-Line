@@ -1,10 +1,8 @@
 package liquidmechanics.common;
 
 public class MetaGroup
-
-{
+{    
     public static int getFacingMeta(int metaData)
-
     {
         int meta = metaData % 4;
         int newMeta = 0;
@@ -27,7 +25,6 @@ public class MetaGroup
     }
 
     public static int getGrouping(int meta)
-
     {
         if ((meta >= 0) && (meta <= 3))
             return 0;
@@ -41,7 +38,6 @@ public class MetaGroup
     }
 
     public static int getGroupStartMeta(int grouping)
-
     {
         return grouping * 4;
     }

@@ -130,12 +130,12 @@ public class LiquidMechanics extends DummyModContainer
         proxy.preInit();
 
         // block registry
-        GameRegistry.registerBlock(blockPipe, "Pipe");
+        GameRegistry.registerBlock(blockPipe, "lmPipe");
         GameRegistry.registerBlock(blockReleaseValve,"eValve");
         GameRegistry.registerBlock(blockRod, "mechRod");
-        GameRegistry.registerBlock(blockGenerator, "Generator");
+        GameRegistry.registerBlock(blockGenerator, "lmGen");
         GameRegistry.registerBlock(blockMachine, "lmMachines");
-        GameRegistry.registerBlock(blockSteamBlock, "Steam");
+        GameRegistry.registerBlock(blockSteamBlock, "lmSteam");
     }
 
     @Init
@@ -143,12 +143,12 @@ public class LiquidMechanics extends DummyModContainer
     {
         proxy.Init();
         // TileEntities
-        GameRegistry.registerTileEntity(TileEntityPipe.class, "Pipe");
-        GameRegistry.registerTileEntity(TileEntityPump.class, "Pump");
-        GameRegistry.registerTileEntity(TileEntityRod.class, "Rod");
-        GameRegistry.registerTileEntity(TileEntityReleaseValve.class, "Valve");
-        GameRegistry.registerTileEntity(TileEntityTank.class, "Tank");
-        GameRegistry.registerTileEntity(TileEntityGenerator.class, "Generator");
+        GameRegistry.registerTileEntity(TileEntityPipe.class, "lmPipeTile");
+        GameRegistry.registerTileEntity(TileEntityPump.class, "lmPumpTile");
+        GameRegistry.registerTileEntity(TileEntityRod.class, "lmRodTile");
+        GameRegistry.registerTileEntity(TileEntityReleaseValve.class, "lmeValve");
+        GameRegistry.registerTileEntity(TileEntityTank.class, "lmTank");
+        GameRegistry.registerTileEntity(TileEntityGenerator.class, "lmGen");
         System.out.println("Fluid Mechanics Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
 
       
@@ -212,33 +212,24 @@ public class LiquidMechanics extends DummyModContainer
             'I', Item.ingotIron, 
             '@', new ItemStack(itemParts, 1, Parts.Iron.ordinal()) });
 
-        // steam pipe
+        // Iron Pipe
         GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1, 0), new Object[] {
             new ItemStack(itemParts, 1, Parts.Iron.ordinal()), 
             new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
-        // water pipe
-        GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1, 1), new Object[] {
-            new ItemStack(itemParts, 1, Parts.Iron.ordinal()), 
-            new ItemStack(itemParts, 1, Parts.Seal.ordinal()), 
-            new ItemStack(Item.dyePowder, 1, 4) });
-        // lava pipe
-        GameRegistry.addShapelessRecipe(new ItemStack(itemPipes, 1, 2), new Object[] {
-            new ItemStack(itemParts, 1, Parts.Obby.ordinal()), 
-            new ItemStack(Item.dyePowder, 1, 1) });
+       
 
         // steam tank
         GameRegistry.addShapelessRecipe(new ItemStack(itemTank, 1, 0), new Object[] { 
             new ItemStack(itemParts, 1, Parts.Tank.ordinal()), 
             new ItemStack(itemParts, 1, Parts.Seal.ordinal()), 
             new ItemStack(Item.dyePowder, 1, 15) });
-        // water tank
-        GameRegistry.addShapelessRecipe(new ItemStack(itemTank, 1, 1), new Object[] { 
-            new ItemStack(itemParts, 1, Parts.Tank.ordinal()), 
-            new ItemStack(itemParts, 1, Parts.Seal.ordinal()), 
-            new ItemStack(Item.dyePowder, 1, 4) });
         // lava tank
         GameRegistry.addShapelessRecipe(new ItemStack(itemTank, 1, 2), new Object[] { 
-            new ItemStack(itemParts, 1, Parts.Tank.ordinal()), Block.obsidian, Block.obsidian, Block.obsidian, Block.obsidian });
+            new ItemStack(itemParts, 1, Parts.Tank.ordinal()), 
+            Block.obsidian, 
+            Block.obsidian, 
+            Block.obsidian, 
+            Block.obsidian });
 
         // pump
         GameRegistry.addRecipe(new ItemStack(blockMachine, 1, 0), new Object[] {

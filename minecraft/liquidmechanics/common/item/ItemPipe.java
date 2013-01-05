@@ -2,6 +2,7 @@ package liquidmechanics.common.item;
 
 import java.util.List;
 
+import liquidmechanics.api.helpers.Colors;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.TabLiquidMechanics;
 import liquidmechanics.common.handlers.LiquidHandler;
@@ -23,7 +24,6 @@ public class ItemPipe extends Item
     {
         super(id);
         this.setMaxDamage(0);
-        this.setHasSubtypes(true);
         this.setIconIndex(10);
         this.setItemName("itemPipe");
         this.setCreativeTab(TabLiquidMechanics.INSTANCE);
@@ -63,9 +63,9 @@ public class ItemPipe extends Item
     }
 
     @Override
-    public boolean onItemUse(ItemStack itemstack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
+    public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World par3World, int x, int y, int z, int par7, float par8, float par9, float par10)
     {
-        int blockID = par3World.getBlockId(par4, par5, par6);
+        int blockID = par3World.getBlockId(x, y, z);
         spawnID = LiquidMechanics.blockPipe.blockID;
         if (blockID == Block.snow.blockID)
         {
@@ -75,52 +75,51 @@ public class ItemPipe extends Item
         {
             if (par7 == 0)
             {
-                --par5;
+                --y;
             }
 
             if (par7 == 1)
             {
-                ++par5;
+                ++y;
             }
 
             if (par7 == 2)
             {
-                --par6;
+                --z;
             }
 
             if (par7 == 3)
             {
-                ++par6;
+                ++z;
             }
 
             if (par7 == 4)
             {
-                --par4;
+                --x;
             }
 
             if (par7 == 5)
             {
-                ++par4;
+                ++x;
             }
         }
 
-        if (LiquidMechanics.blockPipe.canPlaceBlockAt(par3World, par4, par5, par6))
+        if (LiquidMechanics.blockPipe.canPlaceBlockAt(par3World, x, y, z))
         {
             Block var9 = Block.blocksList[this.spawnID];
             par3World.editingBlocks = true;
-            if (par3World.setBlockWithNotify(par4, par5, par6, var9.blockID))
+            if (par3World.setBlockWithNotify(x, y, z, var9.blockID))
             {
-                if (par3World.getBlockId(par4, par5, par6) == var9.blockID)
+                if (par3World.getBlockId(x, y, z) == var9.blockID)
                 {
 
-                    Block.blocksList[this.spawnID].onBlockAdded(par3World, par4, par5, par6);
-                    Block.blocksList[this.spawnID].onBlockPlacedBy(par3World, par4, par5, par6, par2EntityPlayer);
-                    TileEntity blockEntity = par3World.getBlockTileEntity(par4, par5, par6);
+                    Block.blocksList[this.spawnID].onBlockAdded(par3World, x, y, z);
+                    Block.blocksList[this.spawnID].onBlockPlacedBy(par3World, x, y, z, player);
+                    TileEntity blockEntity = par3World.getBlockTileEntity(x, y, z);
                     if (blockEntity instanceof TileEntityPipe)
                     {
                         TileEntityPipe pipeEntity = (TileEntityPipe) blockEntity;
-                        pipeEntity.setType(LiquidHandler.getFromMeta(itemstack.getItemDamage()));
-                        pipeEntity.converted = true;
+                        par3World.setBlockMetadataWithNotify(x,y,z,Colors.NONE.ordinal());
                     }
                 }
 

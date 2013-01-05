@@ -1,40 +1,47 @@
 package liquidmechanics.common.handlers;
 
+import liquidmechanics.api.helpers.Colors;
 import net.minecraftforge.liquids.LiquidStack;
 
 public class LiquidData
 {
     private boolean isAGas;
-    private int defaultPresure;
+    private int defaultPressure;
     private LiquidStack sampleStack;
     private String name;
+    private Colors color;
 
-    public LiquidData(String name, LiquidStack stack, boolean gas, int dPressure)
+    public LiquidData(String name, LiquidStack stack,Colors color, boolean gas, int dPressure)
     {
         this.sampleStack = stack;
         this.isAGas = gas;
-        this.defaultPresure = dPressure;
+        this.defaultPressure = dPressure;
         this.name = name;
+        this.color = color;
     }
 
-    public static String getName(LiquidData type)
+    public String getName()
     {
-        if (type != null) { return type.name; }
+        if (name != null || !name.equalsIgnoreCase("")) { return name; }
         return "unknown";
     }
-    public static int getPressure(LiquidData type)
+    public int getPressure()
     {
-        if (type != null) { return type.defaultPresure; }
-        return 0;
+        return defaultPressure;
     }
-    public static LiquidStack getStack(LiquidData type)
+    public LiquidStack getStack()
     {
-        if (type != null) { return type.sampleStack; }
+        if (sampleStack != null) { return sampleStack; }
         return new LiquidStack(0,1);
     }
-    public static boolean getCanFloat(LiquidData type)
+    public boolean getCanFloat()
     {
-        if (type != null) { return type.isAGas; }
-        return false;
+        return isAGas;
     }
+    public Colors getColor()
+    {
+        if (color != null) { return color; }
+        return Colors.NONE;
+    }
+    
 }

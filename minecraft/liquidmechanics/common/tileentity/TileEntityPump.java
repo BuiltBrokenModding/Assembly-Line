@@ -130,7 +130,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
         {
             if (this.ticks % 10 == 0)
             {
-                Packet packet = PacketManager.getPacket(LiquidMechanics.CHANNEL, this, LiquidData.getName(type));
+                Packet packet = PacketManager.getPacket(LiquidMechanics.CHANNEL, this, type.getName());
                 PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 60);
             }
         }
@@ -219,7 +219,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
             return false;
         if (bBlock == Block.lavaMoving.blockID || (bBlock == Block.lavaStill.blockID && meta != 0))
             return false;
-        if (bBlock == LiquidData.getStack(type).itemID)
+        if (bBlock == type.getStack().itemID)
         {
             // FMLLog.info("pumping " + bellow.displayerName + " blockID:" +
             // bBlock + " Meta:" +
@@ -284,7 +284,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
         if (this.tank.getLiquid() != null) s = this.tank.getLiquid().amount;
         nbt.setInteger("liquid", s);
 
-        nbt.setString("name", LiquidData.getName(type));
+        nbt.setString("name", type.getName());
     }
 
     @Override
@@ -300,7 +300,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
         {
             liquid = 0;
         }
-        return liquid + "" + LiquidData.getName(type) + " " + this.joulesReceived + "W " + this.percentPumped + "/20";
+        return liquid + "" + type.getName() + " " + this.joulesReceived + "W " + this.percentPumped + "/20";
     }
 
     @Override
@@ -346,7 +346,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
     public int presureOutput(LiquidData type, ForgeDirection dir)
     {
         if (type == this.type)
-            return LiquidData.getPressure(type);
+            return type.getPressure();
         return 0;
     }
 
