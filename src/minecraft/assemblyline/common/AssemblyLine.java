@@ -85,10 +85,10 @@ public class AssemblyLine
 		blockConveyorBelt = new BlockConveyorBelt(CONFIGURATION.getBlock("Conveyor Belt", BLOCK_ID_PREFIX).getInt());
 		blockManipulator = new BlockManipulator(CONFIGURATION.getBlock("Manipulator", BLOCK_ID_PREFIX + 1).getInt());
 		blockCrate = new BlockCrate(CONFIGURATION.getBlock("Crate", BLOCK_ID_PREFIX + 3).getInt(), 0);
-		blockImprinter = new BlockImprinter(CONFIGURATION.getBlock("Imprinter", BLOCK_ID_PREFIX + 4).getInt(), 0);
+		blockImprinter = new BlockImprinter(CONFIGURATION.getBlock("Imprinter", BLOCK_ID_PREFIX + 4).getInt(), 4);
 		blockDetector = new BlockDetector(CONFIGURATION.getBlock("Detector", BLOCK_ID_PREFIX + 5).getInt(), 1);
 		blockRejector = new BlockRejector(CONFIGURATION.getBlock("Rejector", BLOCK_ID_PREFIX + 6).getInt());
-		blockEncoder = new BlockEncoder(CONFIGURATION.getBlock("Programmer", BLOCK_ID_PREFIX + 7).getInt(), 0);
+		blockEncoder = new BlockEncoder(CONFIGURATION.getBlock("Encoder", BLOCK_ID_PREFIX + 7).getInt(), 7);
 
 		itemImprint = new ItemImprinter(CONFIGURATION.getBlock("Imprint", ITEM_ID_PREFIX).getInt());
 		itemDisk = new ItemDisk(CONFIGURATION.getBlock("Disk", ITEM_ID_PREFIX + 1).getInt());

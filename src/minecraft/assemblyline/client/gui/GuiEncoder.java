@@ -140,7 +140,7 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 	{
 		glColor4f(1, 1, 1, 1);
 		glDisable(GL_LIGHTING);
-		this.fontRenderer.drawString(TranslationHelper.getLocal("tile.encoder.name"), 68, 6 + ContainerEncoder.Y_OFFSET, 4210752);
+		this.fontRenderer.drawString(TranslationHelper.getLocal("tile.encoder.name"), 68, 8 + ContainerEncoder.Y_OFFSET, 4210752);
 		this.fontRenderer.drawString("Disk:", 56, 28 + ContainerEncoder.Y_OFFSET, 4210752);
 
 		// render page up and page down buttons

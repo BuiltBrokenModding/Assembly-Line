@@ -14,7 +14,7 @@ public class BlockEncoder extends BlockMachine
 	public BlockEncoder(int id, int texture)
 	{
 		super(id, Material.wood);
-		this.blockIndexInTexture = 4;
+		this.blockIndexInTexture = texture;
 		this.setBlockName("encoder");
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 		this.setTextureFile(AssemblyLine.BLOCK_TEXTURE_PATH);

@@ -13,7 +13,7 @@ public class BlockImprinter extends BlockMachine
 	public BlockImprinter(int id, int texture)
 	{
 		super(id, Material.wood);
-		this.blockIndexInTexture = 4;
+		this.blockIndexInTexture = texture;
 		this.setBlockName("imprinter");
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 		this.setTextureFile(AssemblyLine.BLOCK_TEXTURE_PATH);
