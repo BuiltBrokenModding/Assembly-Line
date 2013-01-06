@@ -154,7 +154,7 @@ public class BlockConveyorBelt extends BlockMachine
 				}
 
 				((EntityItem) entity).age++;
-				((EntityItem) entity).delayBeforeCanPickup = 2;
+				((EntityItem) entity).delayBeforeCanPickup = 20;
 				entity.onGround = false;
 			}
 
@@ -202,5 +202,11 @@ public class BlockConveyorBelt extends BlockMachine
 	public boolean renderAsNormalBlock()
 	{
 		return false;
+	}
+
+	@Override
+	public int damageDropped(int par1)
+	{
+		return 0;
 	}
 }

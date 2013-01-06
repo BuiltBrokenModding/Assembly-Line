@@ -54,7 +54,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IReds
 	@Override
 	protected void onUpdate()
 	{
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+		if (!this.worldObj.isRemote)
 		{
 			if (this.ticks % 20 == 0)
 			{
@@ -225,7 +225,6 @@ public class TileEntityManipulator extends TileEntityFilterable implements IReds
 			/**
 			 * Try to put items into a chest.
 			 */
-			//System.out.println(itemStack.hashCode() + " @ " + direction.toString());
 			if (tileEntity instanceof TileEntityChest)
 			{
 				TileEntityChest[] chests = { (TileEntityChest) tileEntity, null };
