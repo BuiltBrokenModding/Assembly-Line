@@ -4,15 +4,19 @@ import java.io.File;
 
 import liquidmechanics.api.helpers.PipeColor;
 import liquidmechanics.common.block.BlockGenerator;
-import liquidmechanics.common.block.BlockLiquidMachine;
+import liquidmechanics.common.block.BlockPumpMachine;
 import liquidmechanics.common.block.BlockPipe;
 import liquidmechanics.common.block.BlockReleaseValve;
 import liquidmechanics.common.block.BlockRod;
 import liquidmechanics.common.block.BlockTank;
+import liquidmechanics.common.block.BlockWasteLiquid;
 import liquidmechanics.common.handlers.LiquidHandler;
 import liquidmechanics.common.item.ItemGuage;
+import liquidmechanics.common.item.ItemLiquidMachine;
 import liquidmechanics.common.item.ItemParts;
 import liquidmechanics.common.item.ItemParts.Parts;
+import liquidmechanics.common.item.ItemPipe;
+import liquidmechanics.common.item.ItemTank;
 import liquidmechanics.common.tileentity.TileEntityGenerator;
 import liquidmechanics.common.tileentity.TileEntityPipe;
 import liquidmechanics.common.tileentity.TileEntityPump;
@@ -80,6 +84,8 @@ public class LiquidMechanics extends DummyModContainer
     public static Block blockRod;
     public static Block blockGenerator;
     public static Block blockReleaseValve;
+    
+    public static Block blockWasteLiquid;
 
     public static LiquidStack liquidSteam;
 
@@ -102,11 +108,13 @@ public class LiquidMechanics extends DummyModContainer
 
         // Blocks
         blockPipe = new BlockPipe(this.CONFIGURATION.getBlock("Pipes", BLOCK_ID_PREFIX).getInt());
-        blockMachine = new BlockLiquidMachine(this.CONFIGURATION.getBlock("Machines", BLOCK_ID_PREFIX + 1).getInt());
+        blockMachine = new BlockPumpMachine(this.CONFIGURATION.getBlock("Machines", BLOCK_ID_PREFIX + 1).getInt());
         blockRod = new BlockRod(this.CONFIGURATION.getBlock("Mechanical Rod", BLOCK_ID_PREFIX + 3).getInt());
         blockGenerator = new BlockGenerator((this.CONFIGURATION.getBlock("Generator", BLOCK_ID_PREFIX + 4).getInt()));
         blockReleaseValve = new BlockReleaseValve((this.CONFIGURATION.getBlock("Release Valve", BLOCK_ID_PREFIX + 5).getInt()));
         blockTank = new BlockTank(this.CONFIGURATION.getBlock("Tank", BLOCK_ID_PREFIX + 6).getInt());
+        
+        
         // Items
         itemParts = new ItemParts(this.CONFIGURATION.getItem("Parts", ITEM_ID_PREFIX).getInt());
         // itemPipes = new ItemPipe(this.CONFIGURATION.getItem("PipeItem",
@@ -116,17 +124,18 @@ public class LiquidMechanics extends DummyModContainer
         itemGauge = new ItemGuage(this.CONFIGURATION.getItem("PipeGuage", ITEM_ID_PREFIX + 3).getInt());
 
         // Liquid Registry
+        blockWasteLiquid = new BlockWasteLiquid(this.CONFIGURATION.getBlock("WasteLiquid", LIQUID_ID_PREFIX).getInt());
         CONFIGURATION.save();
 
         proxy.preInit();
 
         // block registry
-        GameRegistry.registerBlock(blockPipe, "lmPipe");
+        GameRegistry.registerBlock(blockPipe, ItemPipe.class, "lmPipe");
         GameRegistry.registerBlock(blockReleaseValve, "eValve");
         GameRegistry.registerBlock(blockRod, "mechRod");
         GameRegistry.registerBlock(blockGenerator, "lmGen");
-        GameRegistry.registerBlock(blockMachine, "lmMachines");
-        GameRegistry.registerBlock(blockTank, "lmTank");
+        GameRegistry.registerBlock(blockMachine, ItemLiquidMachine.class, "lmMachines");
+        GameRegistry.registerBlock(blockTank,ItemTank.class, "lmTank");
     }
 
     @Init

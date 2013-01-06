@@ -1,5 +1,7 @@
 package liquidmechanics.common.block;
 
+import java.util.List;
+
 import universalelectricity.prefab.BlockMachine;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import liquidmechanics.client.render.BlockRenderHelper;
@@ -11,6 +13,7 @@ import liquidmechanics.common.tileentity.TileEntityPump;
 import liquidmechanics.common.tileentity.TileEntityTank;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -22,10 +25,10 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 
-public class BlockLiquidMachine extends BlockMachine
+public class BlockPumpMachine extends BlockMachine
 {
 
-    public BlockLiquidMachine(int id)
+    public BlockPumpMachine(int id)
     {
         super("lmMachines", id, Material.iron, TabLiquidMechanics.INSTANCE);
         this.setHardness(1f);
@@ -113,5 +116,10 @@ public class BlockLiquidMachine extends BlockMachine
             return new TileEntityPump();
         }
         return null;
+    }
+    @Override
+    public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
+    {
+        par3List.add(new ItemStack(par1, 1, 0));
     }
 }

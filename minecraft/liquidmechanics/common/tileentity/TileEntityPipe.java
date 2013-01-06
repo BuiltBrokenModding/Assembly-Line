@@ -8,6 +8,7 @@ import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.handlers.LiquidData;
 import liquidmechanics.common.handlers.LiquidHandler;
 import liquidmechanics.common.handlers.UpdateConverter;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -26,7 +27,7 @@ import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityPipe extends TileEntity implements ITankContainer, IPacketReceiver, IReadOut
+public class TileEntityPipe extends TileEntity implements ITankContainer, IReadOut
 {
     private PipeColor color = PipeColor.NONE;
 
@@ -43,50 +44,42 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
     @Override
     public void updateEntity()
     {
-        if (++count >= 40)
+
+        this.validataConnections();
+        this.color = PipeColor.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+        if (!worldObj.isRemote && ++count >= 40)
         {
             count = 0;
-            this.validataConnections();
-            this.color = PipeColor.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
-            if (!worldObj.isRemote)
+            this.updatePressure();
+
+            LiquidStack stack = stored.getLiquid();
+            if (stack != null && stack.amount >= 0)
             {
-                this.updatePressure();
-                if (count2-- <= 0)
-                {
-                    count2 = 5;
-                    Packet packet = PacketManager.getPacket(LiquidMechanics.CHANNEL, this, color.ordinal());
-                    PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 60);
-                }
 
-                LiquidStack stack = stored.getLiquid();
-                if (stack != null && stack.amount >= 0)
+                for (int i = 0; i < 6; i++)
                 {
-
-                    for (int i = 0; i < 6; i++)
+                    ForgeDirection dir = ForgeDirection.getOrientation(i);
+                    int moved = 0;
+                    if (connectedBlocks[i] instanceof ITankContainer)
                     {
-                        ForgeDirection dir = ForgeDirection.getOrientation(i);
-                        int moved = 0;
-                        if (connectedBlocks[i] instanceof ITankContainer)
+                        if (connectedBlocks[i] instanceof TileEntityPipe)
                         {
-                            if (connectedBlocks[i] instanceof TileEntityPipe)
+                            if (((TileEntityPipe) connectedBlocks[i]).presure < this.presure)
                             {
-                                if (((TileEntityPipe) connectedBlocks[i]).presure < this.presure)
-                                {
-                                    moved = ((TileEntityPipe) connectedBlocks[i]).stored.fill(stack, true);
-                                }
+                                moved = ((TileEntityPipe) connectedBlocks[i]).stored.fill(stack, true);
+                            }
 
-                            }
-                            else
-                            {
-                                moved = ((ITankContainer) connectedBlocks[i]).fill(dir.getOpposite(), stack, true);
-                            }
                         }
-                        stored.drain(moved, true);
-                        // FMLLog.warning("Moved "+moved+ " "+ i);
-                        if (stack.amount <= 0)
+                        else
                         {
-                            break;
+                            moved = ((ITankContainer) connectedBlocks[i]).fill(dir.getOpposite(), stack, true);
                         }
+                    }
+                    stored.drain(moved, true);
+                    // FMLLog.warning("Moved "+moved+ " "+ i);
+                    if (stack == null || stack.amount <= 0)
+                    {
+                        break;
                     }
                 }
             }
@@ -121,23 +114,6 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
         }
     }
 
-    // ---------------------
-    // data
-    // --------------------
-    @Override
-    public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput data)
-    {
-        try
-        {
-            this.setColor(data.readInt());
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-    }
-
     /**
      * Reads a tile entity from NBT.
      */
@@ -146,9 +122,9 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
     {
         super.readFromNBT(nbt);
         UpdateConverter.convert(this, nbt);
-        NBTTagCompound stored = nbt.getCompoundTag("stored");
-        LiquidStack stack = LiquidStack.loadLiquidStackFromNBT(stored);
-        this.stored.setLiquid(stack);
+        LiquidStack liquid = new LiquidStack(0, 0, 0);
+        liquid.readFromNBT(nbt.getCompoundTag("stored"));
+        stored.setLiquid(liquid);
     }
 
     /**
@@ -160,22 +136,47 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
         super.writeToNBT(nbt);
         if (stored.getLiquid() != null)
         {
-            nbt.setCompoundTag("stored", stored.getLiquid().writeToNBT(nbt));            
+            nbt.setTag("stored", stored.getLiquid().writeToNBT(new NBTTagCompound()));
         }
     }
 
     @Override
     public String getMeterReading(EntityPlayer user, ForgeDirection side)
     {
-        return "ReadOut not setup";
+        LiquidStack stack = this.stored.getLiquid();
+        if (stack != null) { return (stack.amount / LiquidContainerRegistry.BUCKET_VOLUME) + "/" + (this.stored.getCapacity() / LiquidContainerRegistry.BUCKET_VOLUME) + " " + LiquidHandler.get(stack).getName() + " @ " + this.presure + "p"; }
+
+        return "Empty";
     }
 
     @Override
     public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
     {
+        if (resource == null) { return 0; }
         LiquidStack stack = stored.getLiquid();
-        if (stack == null) stored.setLiquid(LiquidHandler.getStack(color.getLiquidData(), 1));
-        if (stack != null && LiquidHandler.isEqual(resource, color.getLiquidData())) return fill(0, resource, doFill);
+        if (color != PipeColor.NONE)
+        {
+            if (color != PipeColor.get(LiquidHandler.get(resource)) || !LiquidHandler.isEqual(stack, resource))
+            {
+                this.causeMix(stack, resource);
+            }
+            else
+            {
+                this.fill(0, resource, doFill);
+            }
+
+        }
+        else
+        {
+            if (stack != null && !LiquidHandler.isEqual(stack, resource))
+            {
+                this.causeMix(stack, resource);
+            }
+            else
+            {
+                this.fill(0, resource, doFill);
+            }
+        }
 
         return 0;
     }
@@ -189,16 +190,41 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
         return stored.fill(resource, doFill);
     }
 
+    public int causeMix(LiquidStack stored, LiquidStack fill)
+    {
+        if (stored == null || fill == null) { return 0; }
+        // water flowing into lava creates obby
+        if (LiquidHandler.isEqual(stored, LiquidHandler.lava) && LiquidHandler.isEqual(fill, LiquidHandler.water))
+        {
+            worldObj.setBlockWithNotify(xCoord, yCoord, zCoord, Block.obsidian.blockID);
+            return fill.amount;
+        }// lava flowing into water creates cobble
+        else if (LiquidHandler.isEqual(stored, LiquidHandler.water) && LiquidHandler.isEqual(fill, LiquidHandler.lava))
+        {
+            worldObj.setBlockWithNotify(xCoord, yCoord, zCoord, Block.cobblestone.blockID);
+            return fill.amount;
+        }
+        else
+        // anything else creates waste liquid
+        {
+            int f = this.stored.fill(new LiquidStack(stored.itemID, fill.amount, stored.itemMeta), true);
+            int s = this.stored.getLiquid().amount;
+            LiquidStack stack = LiquidHandler.getStack(LiquidHandler.waste, s);
+            this.stored.setLiquid(stack);
+            return f;
+        }
+    }
+
     @Override
     public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
     {
-        return drain(0, maxDrain, doDrain);
+        return null;
     }
 
     @Override
     public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
     {
-        return stored.drain(maxDrain, doDrain);
+        return null;
     }
 
     @Override
@@ -225,13 +251,16 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IPacke
             TileEntity ent = connectedBlocks[i];
             if (ent instanceof ITankContainer)
             {
-                if (ent instanceof TileEntityPipe && color != ((TileEntityPipe) ent).getColor())
+                if (this.color != PipeColor.NONE)
                 {
-                    connectedBlocks[i] = null;
-                }
-                if(ent instanceof TileEntityTank && color != ((TileEntityTank)ent).getColor())
-                {
-                    connectedBlocks[i] = null;
+                    if (ent instanceof TileEntityPipe && color != ((TileEntityPipe) ent).getColor())
+                    {
+                        connectedBlocks[i] = null;
+                    }
+                    else if (ent instanceof TileEntityTank && color != ((TileEntityTank) ent).getColor())
+                    {
+                        connectedBlocks[i] = null;
+                    }
                 }
             }
             else if (ent instanceof IPressure)

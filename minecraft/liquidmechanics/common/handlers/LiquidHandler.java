@@ -21,7 +21,8 @@ public class LiquidHandler
     public static LiquidData steam;
     public static LiquidData water;
     public static LiquidData lava;
-    public static LiquidData air;
+    public static LiquidData unkown;
+    public static LiquidData waste;
 
     // public static LiquidData oil; TODO add
     // public static LiquidData fuel;
@@ -29,13 +30,15 @@ public class LiquidHandler
      * Called to add the default liquids to the allowed list
      */
     public static void addDefaultLiquids()
-    {       
+    {
         water = new LiquidData("water", LiquidDictionary.getOrCreateLiquid("Water", new LiquidStack(Block.waterStill, 1)), PipeColor.BLUE, false, 32);
         allowedLiquids.add(water);
         lava = new LiquidData("Lava", LiquidDictionary.getOrCreateLiquid("Lava", new LiquidStack(Block.lavaStill, 1)), PipeColor.RED, false, 20);
         allowedLiquids.add(lava);
-        air = new LiquidData("Air", LiquidDictionary.getOrCreateLiquid("Air", new LiquidStack(0, 1)), PipeColor.NONE, false, 0);
-        allowedLiquids.add(air);
+        unkown = new LiquidData("Unknown", LiquidDictionary.getOrCreateLiquid("Unknown", new LiquidStack(20, 1)), PipeColor.NONE, false, 0);
+        allowedLiquids.add(unkown);
+        waste = new LiquidData("Waste", LiquidDictionary.getOrCreateLiquid("Waste", new LiquidStack(LiquidMechanics.blockWasteLiquid, 1)), PipeColor.BROWN, false, 40);
+        allowedLiquids.add(waste);
     }
 
     @ForgeSubscribe
@@ -49,7 +52,7 @@ public class LiquidHandler
         }
         else if (event.Name.equalsIgnoreCase("oil"))
         {
-            this.allowedLiquids.add(new LiquidData("oil", event.Liquid, PipeColor.BLACK, true, 30));
+            this.allowedLiquids.add(new LiquidData("oil", event.Liquid, PipeColor.BLACK, true, 50));
         }
         else if (event.Name.equalsIgnoreCase("fuel"))
         {
@@ -57,7 +60,7 @@ public class LiquidHandler
         }
         else if (event.Name.equalsIgnoreCase("steam"))
         {
-            this.steam =new LiquidData("steam", event.Liquid, PipeColor.ORANGE, true, 100); 
+            this.steam = new LiquidData("steam", event.Liquid, PipeColor.ORANGE, true, 100);
         }
     }
 
@@ -73,7 +76,7 @@ public class LiquidHandler
         {
             if (data.getName().equalsIgnoreCase(name)) { return data; }
         }
-        return air;
+        return unkown;
     }
 
     public static LiquidData get(LiquidStack stack)
@@ -82,7 +85,7 @@ public class LiquidHandler
         {
             if (isEqual(stack, data)) { return data; }
         }
-        return air;
+        return unkown;
     }
 
     /**
@@ -113,7 +116,7 @@ public class LiquidHandler
             case 2:
                 return lava;
         }
-        return air;
+        return unkown;
 
     }
 
@@ -123,7 +126,7 @@ public class LiquidHandler
         {
             if (data.getStack().itemID == id) { return data; }
         }
-        return air;
+        return unkown;
     }
 
     /**
@@ -135,17 +138,16 @@ public class LiquidHandler
      */
     public static boolean isEqual(LiquidStack stack, LiquidData type)
     {
-        if (stack == null || type == null)
-            return false;
+        if (stack == null || type == null) { return false; }
         if (type.getStack().itemID == stack.itemID && type.getStack().itemMeta == stack.itemMeta) { return true; }
         return false;
     }
 
-    public static boolean isEqual(LiquidStack stack, LiquidStack type)
+    public static boolean isEqual(LiquidStack stack, LiquidStack stack2)
     {
-        if (stack == null || type == null)
+        if (stack == null || stack2 == null)
             return false;
-        if (type.itemID == stack.itemID && type.itemMeta == stack.itemMeta) { return true; }
+        if (stack2.itemID == stack.itemID && stack2.itemMeta == stack.itemMeta) { return true; }
         return false;
     }
 

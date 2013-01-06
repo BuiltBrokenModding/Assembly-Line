@@ -83,7 +83,7 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
     public TileEntityPipe findValidPipe(LiquidStack stack)
     {
         LiquidData data = LiquidHandler.get(stack);
-        if (data != LiquidHandler.air)
+        if (data != LiquidHandler.unkown)
         {
             for (PipeInstance pipe : output)
             {

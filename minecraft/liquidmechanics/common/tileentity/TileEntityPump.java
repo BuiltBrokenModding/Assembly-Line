@@ -43,7 +43,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
 
     private boolean converted = false;
 
-    public LiquidData type = LiquidHandler.air;
+    public LiquidData type = LiquidHandler.unkown;
     public LiquidTank tank = new LiquidTank(wMax);
 
     @Override
@@ -96,7 +96,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
                 LiquidData bellow = LiquidHandler.getFromBlockID(bBlock);
                 if (bellow != null)
                 {
-                    if (this.type != bellow && bellow != LiquidHandler.air)
+                    if (this.type != bellow && bellow != LiquidHandler.unkown)
                     {
                         this.tank.setLiquid(LiquidHandler.getStack(bellow, 0));
                         this.type = bellow;
@@ -199,7 +199,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
             return false;
         if (this.isDisabled())
             return false;
-        if ((LiquidHandler.getFromBlockID(worldObj.getBlockId(x, y, z)) == null || LiquidHandler.getFromBlockID(worldObj.getBlockId(x, y, z)) == LiquidHandler.air))
+        if ((LiquidHandler.getFromBlockID(worldObj.getBlockId(x, y, z)) == null || LiquidHandler.getFromBlockID(worldObj.getBlockId(x, y, z)) == LiquidHandler.unkown))
             return false;
         return true;
     }
@@ -266,7 +266,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
         {
             this.type = LiquidHandler.get(nbt.getString("name"));
         }
-        if (this.type == null) type = LiquidHandler.air;
+        if (this.type == null) type = LiquidHandler.unkown;
 
         int stored = nbt.getInteger("liquid");
         this.tank.setLiquid(LiquidHandler.getStack(this.type, stored));
@@ -345,15 +345,15 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
     @Override
     public int presureOutput(LiquidData type, ForgeDirection dir)
     {
-        if (type == this.type)
-            return type.getPressure();
+        if (type == this.type || type == LiquidHandler.unkown)
+            return this.type.getPressure();
         return 0;
     }
 
     @Override
     public boolean canPressureToo(LiquidData type, ForgeDirection dir)
     {
-        if (type == this.type)
+        if (type == this.type || type == LiquidHandler.unkown)
             return true;
         return false;
     }

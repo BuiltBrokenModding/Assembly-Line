@@ -32,7 +32,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 {
     public TileEntity[] cc = { null, null, null, null, null, null };
 
-    public LiquidData type = LiquidHandler.air;
+    public LiquidData type = LiquidHandler.unkown;
 
     private PipeColor color = PipeColor.NONE;
 
@@ -41,20 +41,19 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 
     public int volume;
     public int pVolume = 0;
-
-    private boolean doUpdate = true;
+    
     public LiquidTank tank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME * LMax);
 
     public void updateEntity()
     {
-        if (tank.getLiquid() == null && type != LiquidHandler.air)
+        if (tank.getLiquid() == null && type != LiquidHandler.unkown)
         {
             tank.setLiquid(LiquidHandler.getStack(this.type, 1));
         }
 
         LiquidStack liquid = tank.getLiquid();
-
-        if (++count >= 20 && liquid != null)
+        this.color = PipeColor.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+        if (++count >= 40 && liquid != null)
         {
             count = 0;
             this.cc = connectionHelper.getSurroundings(worldObj, xCoord, yCoord, zCoord);
@@ -80,7 +79,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
     @Override
     public String getMeterReading(EntityPlayer user, ForgeDirection side)
     {
-        if (volume == 0) { return "empty"; }
+        if (volume == 0) { return "Empty"; }
         return (volume / LiquidContainerRegistry.BUCKET_VOLUME) + "/" + (tank.getCapacity() / LiquidContainerRegistry.BUCKET_VOLUME) + " " + type.getName();
     }
 
@@ -89,9 +88,9 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
     {
         super.readFromNBT(nbt);
         UpdateConverter.convert(this, nbt);
-        NBTTagCompound stored = nbt.getCompoundTag("stored");
-        LiquidStack stack = LiquidStack.loadLiquidStackFromNBT(stored);
-        this.tank.setLiquid(stack);
+        LiquidStack liquid = new LiquidStack(0, 0, 0);
+        liquid.readFromNBT(nbt.getCompoundTag("stored"));
+        tank.setLiquid(liquid);
     }
 
     @Override
@@ -100,7 +99,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
         super.writeToNBT(nbt);
         if (tank.getLiquid() != null)
         {
-            nbt.setCompoundTag("stored", tank.getLiquid().writeToNBT(nbt));
+            nbt.setTag("stored", tank.getLiquid().writeToNBT(new NBTTagCompound()));
         }
     }
 
@@ -136,8 +135,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
     @Override
     public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
     {
-        if (!LiquidHandler.isEqual(resource, type))
-            return 0;
+        if (resource == null || !LiquidHandler.isEqual(resource, type)) { return 0; }
         return this.fill(0, resource, doFill);
     }
 
@@ -150,11 +148,12 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
         {
             int change = 1;
             if (LiquidHandler.get(resource).getCanFloat())
+            {
                 change = -1;
+            }
             TileEntity tank = worldObj.getBlockTileEntity(xCoord, yCoord + change, zCoord);
-            if (tank instanceof TileEntityTank) { return ((TileEntityTank) tank).tank.fill(resource, doFill); }
+            if (tank instanceof TileEntityTank) { return ((TileEntityTank) tank).fill(0,resource, doFill); }
         }
-        this.doUpdate = true;
         return this.tank.fill(resource, doFill);
     }
 

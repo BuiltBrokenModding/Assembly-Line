@@ -1,30 +1,27 @@
 package liquidmechanics.common.block;
 
-import java.util.Random;
-
-import universalelectricity.prefab.BlockMachine;
+import java.util.List;
 
 import liquidmechanics.client.render.BlockRenderHelper;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.TabLiquidMechanics;
-import liquidmechanics.common.handlers.LiquidHandler;
 import liquidmechanics.common.tileentity.TileEntityPipe;
-
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.item.EntityItem;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import universalelectricity.prefab.BlockMachine;
 
 public class BlockPipe extends BlockMachine
-{   
+{
     public BlockPipe(int id)
     {
-        super("Pipe",id, Material.iron,TabLiquidMechanics.INSTANCE);
+        super("Pipe", id, Material.iron, TabLiquidMechanics.INSTANCE);
         this.setBlockBounds(0.30F, 0.30F, 0.30F, 0.70F, 0.70F, 0.70F);
         this.setHardness(1f);
+        this.setBlockName("lmPipe");
         this.setResistance(3f);
     }
 
@@ -81,5 +78,14 @@ public class BlockPipe extends BlockMachine
     {
         int meta = world.getBlockMetadata(x, y, z);
         return new ItemStack(LiquidMechanics.blockPipe, 1, meta);
+    }
+
+    @Override
+    public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
+    {
+        for (int i = 0; i < 16; i++)
+        {
+            par3List.add(new ItemStack(par1, 1, i));
+        }
     }
 }

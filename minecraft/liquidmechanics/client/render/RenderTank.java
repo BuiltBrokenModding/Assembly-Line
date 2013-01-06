@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderTank extends TileEntitySpecialRenderer
 {
-    private LiquidData type = LiquidHandler.air;
+    private LiquidData type = LiquidHandler.unkown;
     private ModelLiquidTank model;
     private ModelLiquidTankCorner modelC;
     private int pos = 0;
@@ -71,26 +71,10 @@ public class RenderTank extends TileEntitySpecialRenderer
     {
         String type = "";
         switch (meta)
-        {
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-            case 4:// default
-            case 5:
-            case 6:
-            case 7:
-            case 8:
-            case 9:
-            case 10:
-            case 11:
-            case 12:
-            case 13:
-            case 14:
-            case 15:
-            default:
-                type = "";
-                break;
+        {          
+            case 1:type = "Red";break;
+            case 14:type = "Orange";break;
+            default:type = "";break;
         }
 
             return LiquidMechanics.RESOURCE_PATH + "tanks/" + type + "Tank.png";
@@ -102,22 +86,8 @@ public class RenderTank extends TileEntitySpecialRenderer
         String type = "";
         switch (meta)
         {
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-            case 4:// default
-            case 5:
-            case 6:
-            case 7:
-            case 8:
-            case 9:
-            case 10:
-            case 11:
-            case 12:
-            case 13:
-            case 14:
-            case 15:
+            case 1:type = "Lava";break;
+            case 12:type = "Fuel";break;
             default:
                 type = "";
                 break;
@@ -131,24 +101,12 @@ public class RenderTank extends TileEntitySpecialRenderer
         String type = "";
         switch (meta)
         {
-            case 0:
             case 1:
-            case 2:
-            case 3:
+                type = "Red";
+                break;
             case 4:
                 type = "Water";
                 break;
-            case 5:
-            case 6:
-            case 7:
-            case 8:
-            case 9:
-            case 10:
-            case 11:
-            case 12:
-            case 13:
-            case 14:
-            case 15:
             default:
                 type = "";
                 break;

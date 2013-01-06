@@ -49,7 +49,7 @@ public class ItemGuage extends Item
 	@Override
 	public String getItemName()
 	{
-		return "guage";
+		return "lmTools";
 	}
 
 	@Override
@@ -75,14 +75,9 @@ public class ItemGuage extends Item
 		return false;
 	}
 
-	public String getItemNameIS(ItemStack par1ItemStack)
-	{
-		int var3 = par1ItemStack.getItemDamage();
-		switch (var3)
-		{
-			case 0:
-				return "PipeGuage";
-		}
-		return this.getItemName();
-	}
+	@Override
+    public String getItemNameIS(ItemStack itemstack) {
+        
+        return this.getItemName() + "." + itemstack.getItemDamage();
+    }
 }

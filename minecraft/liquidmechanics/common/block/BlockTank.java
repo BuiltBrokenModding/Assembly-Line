@@ -1,5 +1,7 @@
 package liquidmechanics.common.block;
 
+import java.util.List;
+
 import liquidmechanics.client.render.BlockRenderHelper;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.TabLiquidMechanics;
@@ -133,5 +135,12 @@ public class BlockTank extends BlockMachine
 
         return new ItemStack(this, 1, meta);
 
+    }
+    @Override
+    public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
+    {  
+        par3List.add(new ItemStack(par1, 1, 1));
+        par3List.add(new ItemStack(par1, 1, 4));
+        par3List.add(new ItemStack(par1, 1, 15));
     }
 }

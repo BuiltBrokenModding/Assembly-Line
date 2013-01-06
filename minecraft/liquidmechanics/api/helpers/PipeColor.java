@@ -4,23 +4,47 @@ import liquidmechanics.common.handlers.LiquidData;
 import liquidmechanics.common.handlers.LiquidHandler;
 
 public enum PipeColor
-{    
-    BLACK, RED, GREEN, BROWN, BLUE, PURPLE, CYAN, SILVER, GREY, PINK, LIME, YELLOW, LIGHTBLUE, MAGENTA, ORANGE, NONE;   
-    
-   /**
-    * get the liquidData linked with this color
-    */
+{
+    BLACK("Black"), 
+    RED("Red"), 
+    GREEN("Green"), 
+    BROWN("Brown"),
+    BLUE("Blue"), 
+    PURPLE("Purple"), 
+    CYAN("Cyan"), 
+    SILVER("Silver"),
+    GREY("Grey"), 
+    PINK("Pink"), 
+    LIME("Lime"), 
+    YELLOW("Yellow"),
+    LIGHTBLUE("LightBlue"), 
+    MAGENTA("Magenta"), 
+    ORANGE("Orange"), 
+    NONE("");
+    String name;
+
+    PipeColor(String name)
+    {
+        this.name = name;
+    }
+
+    public String getName()
+    {
+        return this.name;
+    }
+
+    /**
+     * get the liquidData linked with this color
+     */
     public LiquidData getLiquidData()
     {
-        for(LiquidData data: LiquidHandler.allowedLiquids)
+        for (LiquidData data : LiquidHandler.allowedLiquids)
         {
-            if(data.getColor() == this)
-            {
-                return data;
-            }
+            if (data.getColor() == this) { return data; }
         }
-        return LiquidHandler.air;
+        return LiquidHandler.unkown;
     }
+
     /**
      * gets a color based on liquid Data
      */
@@ -31,15 +55,13 @@ public enum PipeColor
         if (data == LiquidHandler.water) { return BLUE; }
         return NONE;
     }
+
     /**
      * gets a color based on number(0-15)
      */
     public static PipeColor get(int num)
     {
-        if(num < PipeColor.values().length)
-        {
-            return PipeColor.values()[num];
-        }
+        if (num < PipeColor.values().length) { return PipeColor.values()[num]; }
         return NONE;
     }
 }
