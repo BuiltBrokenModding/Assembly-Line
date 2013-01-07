@@ -55,7 +55,7 @@ public class GuiReleaseValve extends GuiContainer
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
         GL11.glDisable(GL11.GL_LIGHTING);
-        this.fontRenderer.drawString(StatCollector.translateToLocal("container.repair"), 60, 6, 4210752);
+        this.fontRenderer.drawString("Release Valve", 60, 6, 4210752);
 
         
 

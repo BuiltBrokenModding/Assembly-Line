@@ -17,6 +17,7 @@ import liquidmechanics.common.item.ItemLiquidMachine;
 import liquidmechanics.common.item.ItemParts;
 import liquidmechanics.common.item.ItemParts.Parts;
 import liquidmechanics.common.item.ItemPipe;
+import liquidmechanics.common.item.ItemReleaseValve;
 import liquidmechanics.common.item.ItemTank;
 import liquidmechanics.common.tileentity.TileEntityGenerator;
 import liquidmechanics.common.tileentity.TileEntityPipe;
@@ -133,7 +134,7 @@ public class LiquidMechanics extends DummyModContainer
 
         // block registry
         GameRegistry.registerBlock(blockPipe, ItemPipe.class, "lmPipe");
-        GameRegistry.registerBlock(blockReleaseValve, "eValve");
+        GameRegistry.registerBlock(blockReleaseValve,ItemReleaseValve.class, "eValve");
         GameRegistry.registerBlock(blockRod, "mechRod");
         GameRegistry.registerBlock(blockGenerator, "lmGen");
         GameRegistry.registerBlock(blockMachine, ItemLiquidMachine.class, "lmMachines");

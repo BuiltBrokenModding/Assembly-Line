@@ -45,7 +45,6 @@ public class RenderGearRod extends TileEntitySpecialRenderer
 			case 1:
 				GL11.glRotatef(-90f, 1f, 0f, 0f);
 				break;
-
 			case 2:
 				GL11.glRotatef(0f, 0f, 1f, 0f);
 				break;

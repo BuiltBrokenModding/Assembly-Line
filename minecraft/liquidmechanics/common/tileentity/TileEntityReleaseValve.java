@@ -7,6 +7,7 @@ import java.util.List;
 
 import cpw.mods.fml.common.FMLLog;
 
+import liquidmechanics.api.IColorCoded;
 import liquidmechanics.api.IPressure;
 import liquidmechanics.api.IReadOut;
 import liquidmechanics.api.helpers.LiquidData;
@@ -46,7 +47,21 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
     public void updateEntity()
     {
         super.updateEntity();
-
+        connected = connectionHelper.getSurroundingTileEntities(this);
+        for(int i =0; i < 6;i++)
+        {
+            if(connected[i] instanceof ITankContainer)
+            {
+                if(connected[i] instanceof IColorCoded && !this.canConnect(((IColorCoded) connected[i]).getColor()))
+                {
+                    connected[i] = null;
+                }
+            }else 
+            {
+                
+                connected[i] = null;
+            }
+        }
         if (!this.worldObj.isRemote && ticks++ >= 40)
         {
             ticks = 0;
@@ -60,12 +75,13 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
 
                     if (tank.getLiquid() != null && tank.getLiquid().amount > 0)
                     {
-                        FMLLog.warning("Tank: " + LiquidHandler.getName(tank.getLiquid()) + " Vol: " + tank.getLiquid().amount);
+                        //FMLLog.warning("Tank: " + LiquidHandler.getName(tank.getLiquid()) + " Vol: " + tank.getLiquid().amount);
                         TileEntityPipe pipe = this.findValidPipe(tank.getLiquid());
                         if (pipe != null)
                         {
-                            FMLLog.warning("Pipe: " + pipe.getColor() + " Vol: " + (pipe.stored.getLiquid() != null ? pipe.stored.getLiquid().amount : 0000));
-                            int drain = pipe.stored.fill(tank.getLiquid(), true);
+                            ILiquidTank tankP = pipe.getTanks(ForgeDirection.UNKNOWN)[0];
+                            //FMLLog.warning("Pipe: " + pipe.getColor() + " Vol: " + (tankP.getLiquid() != null ? tankP.getLiquid().amount : 0000));
+                            int drain = pipe.fill(ForgeDirection.UNKNOWN, tank.getLiquid(), true);
                             tank.drain(drain, true);
                         }
                     }
@@ -82,7 +98,8 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
             // find normal color selective pipe first
             for (TileEntityPipe pipe : output)
             {
-                if (LiquidHandler.isEqual(pipe.getColor().getLiquidData().getStack(),stack) && (pipe.stored.getLiquid() == null || pipe.stored.getLiquid().amount < pipe.stored.getCapacity()))
+                ILiquidTank tank = pipe.getTanks(ForgeDirection.UNKNOWN)[0];
+                if (LiquidHandler.isEqual(pipe.getColor().getLiquidData().getStack(),stack) && (tank.getLiquid() == null || tank.getLiquid().amount < tank.getCapacity()))
                 {
                     //
                     return pipe;
@@ -137,7 +154,7 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
     public void validateNBuildList()
     {
         // cleanup
-        this.connected = connectionHelper.getSurroundings(worldObj, xCoord, yCoord, zCoord);
+        this.connected = connectionHelper.getSurroundingTileEntities(worldObj, xCoord, yCoord, zCoord);
         this.input.clear();
         this.output.clear();
         // read surroundings
@@ -148,11 +165,12 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
             if (ent instanceof TileEntityPipe)
             {
                 TileEntityPipe pipe = (TileEntityPipe) ent;
+                ILiquidTank tank = pipe.getTanks(ForgeDirection.UNKNOWN)[0];
                 if (this.isRestricted() && this.canConnect(pipe.getColor()))
                 {
                     connected[i] = null;
                 }
-                else if (pipe.stored.getLiquid() != null && pipe.stored.getLiquid().amount >= pipe.stored.getCapacity())
+                else if (tank.getLiquid() != null && tank.getLiquid().amount >= tank.getCapacity())
                 {
                     connected[i] = null;
                 }

@@ -76,7 +76,7 @@ public class TileEntityGenerator extends TileEntityElectricityProducer implement
 		this.genAmmount = Math.abs(force / this.getVoltage());
 		// wire count update
 		int wireCount = 0;
-		TileEntity[] ents = connectionHelper.getSurroundings(worldObj, xCoord, yCoord, zCoord);
+		TileEntity[] ents = connectionHelper.getSurroundingTileEntities(worldObj, xCoord, yCoord, zCoord);
 		this.wires = new IConductor[6];
 		for (int i = 0; i < ents.length; i++)
 		{

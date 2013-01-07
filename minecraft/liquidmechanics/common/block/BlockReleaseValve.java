@@ -2,6 +2,7 @@ package liquidmechanics.common.block;
 
 import java.util.Random;
 
+import liquidmechanics.client.render.BlockRenderHelper;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.TabLiquidMechanics;
 import liquidmechanics.common.tileentity.TileEntityReleaseValve;
@@ -59,13 +60,13 @@ public class BlockReleaseValve extends BlockMachine
 	@Override
 	public boolean renderAsNormalBlock()
 	{
-		return true;
+		return false;
 	}
 
 	@Override
 	public int getRenderType()
 	{
-		return 0;
+		return -1;
 	}
 
 	@Override

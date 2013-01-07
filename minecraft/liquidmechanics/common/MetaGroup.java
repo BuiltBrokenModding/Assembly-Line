@@ -1,5 +1,7 @@
 package liquidmechanics.common;
 
+import net.minecraftforge.common.ForgeDirection;
+
 public class MetaGroup
 {    
     public static int getFacingMeta(int metaData)
@@ -41,5 +43,5 @@ public class MetaGroup
     {
         return grouping * 4;
     }
-
+   
 }

@@ -40,7 +40,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
 
     public TileEntity[] connectedBlocks = new TileEntity[6];
 
-    public LiquidTank stored = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME * 2);
+    private LiquidTank stored = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME * 2);
 
     @Override
     public void updateEntity()
@@ -67,7 +67,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
                         {
                             if (((TileEntityPipe) connectedBlocks[i]).presure < this.presure)
                             {
-                                stored.drain(((TileEntityPipe) connectedBlocks[i]).stored.fill(stack, true), true);
+                                stored.drain(((TileEntityPipe) connectedBlocks[i]).fill(dir, stack, true), true);
                             }
 
                         }
@@ -247,7 +247,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
      */
     public void validataConnections()
     {
-        this.connectedBlocks = connectionHelper.getSurroundings(worldObj, xCoord, yCoord, zCoord);
+        this.connectedBlocks = connectionHelper.getSurroundingTileEntities(worldObj, xCoord, yCoord, zCoord);
         for (int i = 0; i < 6; i++)
         {
             ForgeDirection dir = ForgeDirection.getOrientation(i);

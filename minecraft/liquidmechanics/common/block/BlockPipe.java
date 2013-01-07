@@ -40,7 +40,7 @@ public class BlockPipe extends BlockMachine
     @Override
     public int getRenderType()
     {
-        return BlockRenderHelper.renderID;
+        return -1;
     }
 
     /**

@@ -1,14 +1,18 @@
 package liquidmechanics.client.render;
 
+import liquidmechanics.api.helpers.connectionHelper;
 import liquidmechanics.client.model.ModelGearRod;
 import liquidmechanics.client.model.ModelGenerator;
 import liquidmechanics.client.model.ModelLargePipe;
 import liquidmechanics.client.model.ModelLiquidTank;
 import liquidmechanics.client.model.ModelPump;
+import liquidmechanics.client.model.ModelReleaseValve;
 import liquidmechanics.common.LiquidMechanics;
+import liquidmechanics.common.tileentity.TileEntityReleaseValve;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
@@ -25,6 +29,7 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
     private ModelGenerator modelGen = new ModelGenerator();
     private ModelLargePipe SixPipe = new ModelLargePipe();
     private ModelLiquidTank tank = new ModelLiquidTank();
+    private ModelReleaseValve valve = new ModelReleaseValve();
 
     @Override
     public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
@@ -41,17 +46,14 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
             modelPump.renderC3(0.0725F);
             GL11.glPopMatrix();
         }
-        if (block.blockID == LiquidMechanics.blockPipe.blockID)
-        {
-            this.renderPipeItem(renderer, metadata);
-        }
         if (block.blockID == LiquidMechanics.blockTank.blockID)
         {
             GL11.glPushMatrix();
             GL11.glTranslatef((float) 0.0F, (float) 1.1F, (float) 0.0F);
-            GL11.glRotatef(180f, 0f, 0f, 1f);
+            GL11.glRotatef(180f, 0f, 0f, 1f);            
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(RenderTank.getTankTexture(metadata)));
             tank.renderMain(0.0625F);
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(RenderTank.getGuageTexture(metadata,4)));
             tank.renderMeter(null, 0.0625F);
             GL11.glPopMatrix();
         }

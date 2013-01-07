@@ -45,19 +45,22 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
     public void updateEntity()
     {
 
-        LiquidStack liquid = tank.getLiquid();
+       
         this.color = ColorCode.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
-        if (++count >= 40 && liquid != null)
+        if (++count >= 40)
         {
             count = 0;
-            this.cc = connectionHelper.getSurroundings(worldObj, xCoord, yCoord, zCoord);
+            this.cc = connectionHelper.getSurroundingTileEntities(worldObj, xCoord, yCoord, zCoord);
             if (!worldObj.isRemote)
             {
                 this.tradeDown();
                 this.tradeArround();
                 this.fillPipe();
-                int volume = liquid.amount;
-
+                
+                int volume = 0; 
+                LiquidStack liquid = tank.getLiquid();
+                if(liquid != null){volume = liquid.amount;}
+                
                 if (volume != pVolume)
                 {
                     LiquidStack stack = new LiquidStack(0, 0, 0);
@@ -235,7 +238,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
     {
         if (this.tank.getLiquid() == null || this.tank.getLiquid().amount <= 0) { return; }
 
-        TileEntity[] ents = connectionHelper.getSurroundings(worldObj, xCoord, yCoord, zCoord);
+        TileEntity[] ents = connectionHelper.getSurroundingTileEntities(worldObj, xCoord, yCoord, zCoord);
 
         int commonVol = this.tank.getLiquid().amount;
         int tanks = 1;
