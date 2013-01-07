@@ -1,5 +1,6 @@
 package liquidmechanics.client.render;
 
+import liquidmechanics.api.helpers.PipeColor;
 import liquidmechanics.api.helpers.connectionHelper;
 import liquidmechanics.client.model.ModelLiquidTank;
 import liquidmechanics.client.model.ModelLiquidTankCorner;
@@ -29,7 +30,16 @@ public class RenderTank extends TileEntitySpecialRenderer
     public void renderAModelAt(TileEntityTank te, double d, double d1, double d2, float f)
     {
         int meta = te.getBlockMetadata();
-        pos = Math.min((te.volume / LiquidContainerRegistry.BUCKET_VOLUME), 4);
+        int guageMeta = meta;
+        if(te.tank.getLiquid() != null)
+        {
+            pos = Math.min((te.tank.getLiquid().amount / LiquidContainerRegistry.BUCKET_VOLUME), 4);
+            if(meta == PipeColor.NONE.ordinal())
+            {
+                guageMeta = PipeColor.get(te.tank.getLiquid()).ordinal();
+            }
+        }
+        
 
         GL11.glPushMatrix();
         GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
@@ -60,7 +70,7 @@ public class RenderTank extends TileEntitySpecialRenderer
         {
             bindTextureByName(this.getTankTexture(meta));
             model.renderMain(0.0625F);
-            bindTextureByName(this.getGuageTexture(meta, pos));
+            bindTextureByName(this.getGuageTexture(guageMeta, pos));
             model.renderMeter(te, 0.0625F);
         }
         GL11.glPopMatrix();
@@ -71,13 +81,22 @@ public class RenderTank extends TileEntitySpecialRenderer
     {
         String type = "";
         switch (meta)
-        {          
-            case 1:type = "Red";break;
-            case 14:type = "Orange";break;
-            default:type = "";break;
+        {
+            case 1:
+                type = "Lava";
+                break;
+            case 4:
+                type = "Water";
+                break;
+            case 14:
+                type = "Steam";
+                break;
+            default:
+                type = "";
+                break;
         }
 
-            return LiquidMechanics.RESOURCE_PATH + "tanks/" + type + "Tank.png";
+        return LiquidMechanics.RESOURCE_PATH + "tanks/" + type + "Tank.png";
 
     }
 
@@ -86,8 +105,12 @@ public class RenderTank extends TileEntitySpecialRenderer
         String type = "";
         switch (meta)
         {
-            case 1:type = "Lava";break;
-            case 12:type = "Fuel";break;
+            case 1:
+                type = "Lava";
+                break;
+            case 12:
+                type = "Fuel";
+                break;
             default:
                 type = "";
                 break;

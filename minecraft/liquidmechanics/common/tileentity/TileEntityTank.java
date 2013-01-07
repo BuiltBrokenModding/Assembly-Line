@@ -2,6 +2,7 @@ package liquidmechanics.common.tileentity;
 
 import javax.swing.colorchooser.ColorSelectionModel;
 
+import liquidmechanics.api.IColor;
 import liquidmechanics.api.IReadOut;
 import liquidmechanics.api.IPressure;
 import liquidmechanics.api.helpers.PipeColor;
@@ -28,28 +29,21 @@ import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityTank extends TileEntity implements IPacketReceiver, IReadOut, IPressure, ITankContainer
+public class TileEntityTank extends TileEntity implements IPacketReceiver, IReadOut, IPressure, ITankContainer, IColor
 {
     public TileEntity[] cc = { null, null, null, null, null, null };
-
-    public LiquidData type = LiquidHandler.unkown;
 
     private PipeColor color = PipeColor.NONE;
 
     public static final int LMax = 4;
     private int count, count2 = 0;
-
-    public int volume;
-    public int pVolume = 0;
     
+    public int pVolume = 0;
+
     public LiquidTank tank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME * LMax);
 
     public void updateEntity()
     {
-        if (tank.getLiquid() == null && type != LiquidHandler.unkown)
-        {
-            tank.setLiquid(LiquidHandler.getStack(this.type, 1));
-        }
 
         LiquidStack liquid = tank.getLiquid();
         this.color = PipeColor.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
@@ -59,15 +53,18 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
             this.cc = connectionHelper.getSurroundings(worldObj, xCoord, yCoord, zCoord);
             if (!worldObj.isRemote)
             {
-                this.type = color.getLiquidData();
-
                 this.tradeDown();
                 this.tradeArround();
-                volume = liquid.amount;
+                int volume = liquid.amount;
 
                 if (volume != pVolume)
                 {
-                    Packet packet = PacketManager.getPacket(LiquidMechanics.CHANNEL, this, new Object[] { volume });
+                    LiquidStack stack = new LiquidStack(0,0,0);
+                    if(this.tank.getLiquid() != null)
+                    {
+                        stack = this.tank.getLiquid();
+                    }
+                    Packet packet = PacketManager.getPacket(LiquidMechanics.CHANNEL, this, new Object[] {stack.itemID,stack.amount,stack.itemMeta});
                     PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 20);
                 }
                 pVolume = volume;
@@ -79,8 +76,9 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
     @Override
     public String getMeterReading(EntityPlayer user, ForgeDirection side)
     {
-        if (volume == 0) { return "Empty"; }
-        return (volume / LiquidContainerRegistry.BUCKET_VOLUME) + "/" + (tank.getCapacity() / LiquidContainerRegistry.BUCKET_VOLUME) + " " + type.getName();
+        if (tank.getLiquid() == null) { return "Empty"; }
+        return (tank.getLiquid().amount/ LiquidContainerRegistry.BUCKET_VOLUME) + "/" + (tank.getCapacity() / LiquidContainerRegistry.BUCKET_VOLUME)
+                + " " + LiquidHandler.get(tank.getLiquid()).getName();
     }
 
     @Override
@@ -88,6 +86,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
     {
         super.readFromNBT(nbt);
         UpdateConverter.convert(this, nbt);
+
         LiquidStack liquid = new LiquidStack(0, 0, 0);
         liquid.readFromNBT(nbt.getCompoundTag("stored"));
         tank.setLiquid(liquid);
@@ -108,7 +107,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
     {
         try
         {
-            this.volume = data.readInt();
+            this.tank.setLiquid(new LiquidStack(data.readInt(),data.readInt(),data.readInt()));
         }
         catch (Exception e)
         {
@@ -118,32 +117,18 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 
     }
 
-    // ----------------------------
-    // Liquid stuff
-    // ----------------------------
-    public void setType(LiquidData dm)
-    {
-        this.type = dm;
-
-    }
-
-    public LiquidData getType()
-    {
-        return this.type;
-    }
-
     @Override
     public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
     {
-        if (resource == null || !LiquidHandler.isEqual(resource, type)) { return 0; }
+        if (resource == null || (!LiquidHandler.isEqual(resource, color.getLiquidData().getStack())&& this.color != PipeColor.NONE)) { return 0; }
         return this.fill(0, resource, doFill);
     }
 
     @Override
     public int fill(int tankIndex, LiquidStack resource, boolean doFill)
     {
-        if (resource == null || tankIndex != 0)
-            return 0;
+        if (resource == null || tankIndex != 0) { return 0; }
+
         if (this.isFull())
         {
             int change = 1;
@@ -152,58 +137,19 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
                 change = -1;
             }
             TileEntity tank = worldObj.getBlockTileEntity(xCoord, yCoord + change, zCoord);
-            if (tank instanceof TileEntityTank) { return ((TileEntityTank) tank).fill(0,resource, doFill); }
+            if (tank instanceof TileEntityTank) { return ((TileEntityTank) tank).fill(0, resource, doFill); }
         }
         return this.tank.fill(resource, doFill);
     }
 
-    /**
-     * find out if this tank is actual full or not
+    /** find out if this tank is actual full or not
      * 
-     * @return
-     */
+     * @return */
     public boolean isFull()
     {
-        if (this.tank.getLiquid() == null)
-            return false;
-        if (this.tank.getLiquid().amount > 0 && this.tank.getLiquid().amount < this.tank.getCapacity())
-            return false;
+        if (this.tank.getLiquid() == null) { return false; }
+        if (this.tank.getLiquid().amount > 0 && this.tank.getLiquid().amount < this.tank.getCapacity()) { return false; }
         return true;
-    }
-
-    /**
-     * finds the first fillable tank in either direction
-     * 
-     * @param top
-     *            - search up
-     * @return
-     */
-    public TileEntityTank getFillAbleTank(boolean top)
-    {
-        TileEntityTank tank = this;
-        boolean stop = false;
-        int y = tank.yCoord;
-        while (y > 6 && y < 255)
-        {
-            if (top)
-            {
-                y += 1;
-            }
-            else
-            {
-                y -= 1;
-            }
-            TileEntity ent = tank.worldObj.getBlockTileEntity(xCoord, y, zCoord);
-            if (ent instanceof TileEntityTank && ((TileEntityTank) ent).getType() == this.type && !((TileEntityTank) ent).isFull())
-            {
-                tank = (TileEntityTank) ent;
-            }
-            else
-            {
-                break;
-            }
-        }
-        return tank;
     }
 
     @Override
@@ -215,11 +161,11 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
     @Override
     public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
     {
-        if (tankIndex != 0) { return null; }
+        if (tankIndex != 0 || this.tank.getLiquid() == null) { return null; }
         LiquidStack stack = this.tank.getLiquid();
-        if (maxDrain <= this.tank.getLiquid().amount)
+        if (maxDrain < this.tank.getLiquid().amount)
         {
-            stack = LiquidHandler.getStack(type, maxDrain);
+            stack = LiquidHandler.getStack(stack, maxDrain);
         }
         if (doDrain)
         {
@@ -243,7 +189,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
     @Override
     public int presureOutput(LiquidData type, ForgeDirection dir)
     {
-        if (type == this.type)
+        if (type == color.getLiquidData() || type == LiquidHandler.unkown)
         {
             if (type.getCanFloat() && dir == ForgeDirection.DOWN)
                 return type.getPressure();
@@ -256,7 +202,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
     @Override
     public boolean canPressureToo(LiquidData type, ForgeDirection dir)
     {
-        if (type == this.type)
+        if (type == color.getLiquidData() || type == LiquidHandler.unkown)
         {
             if (type.getCanFloat() && dir == ForgeDirection.DOWN)
                 return true;
@@ -266,32 +212,30 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
         return false;
     }
 
-    /**
-     * cause this TE to trade liquid down if the liquid is in liquid state or up
-     * if in gas state.
-     */
+    /** cause this TE to trade liquid down if the liquid is in liquid state or up
+     * if in gas state. */
     public void tradeDown()
     {
         if (this.tank.getLiquid() == null || this.tank.getLiquid().amount <= 0)
             return;
         TileEntity ent = worldObj.getBlockTileEntity(xCoord, yCoord - 1, zCoord);
-        if (ent instanceof TileEntityTank && ((TileEntityTank) ent).type == this.type && !((TileEntityTank) ent).isFull())
+        if (ent instanceof TileEntityTank && ((TileEntityTank) ent).getColor() == this.color && !((TileEntityTank) ent).isFull())
         {
             int f = ((TileEntityTank) ent).tank.fill(this.tank.getLiquid(), true);
             this.tank.drain(f, true);
         }
     }
 
-    /**
-     * Cause this TE to trade liquid with the Tanks around it to level off
-     */
+    /** Cause this TE to trade liquid with the Tanks around it to level off */
     public void tradeArround()
     {
-        if (this.tank.getLiquid() == null || this.tank.getLiquid().amount <= 0)
-            return;
+        if (this.tank.getLiquid() == null || this.tank.getLiquid().amount <= 0) { return; }
+
         TileEntity[] ents = connectionHelper.getSurroundings(worldObj, xCoord, yCoord, zCoord);
+
         int commonVol = this.tank.getLiquid().amount;
         int tanks = 1;
+
         for (int i = 2; i < 6; i++)
         {
             if (ents[i] instanceof TileEntityTank && ((TileEntityTank) ents[i]).color == this.color)
@@ -303,23 +247,28 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
                 }
             }
         }
+
         int equalVol = commonVol / tanks;
+
         for (int i = 2; i < 6; i++)
         {
             if (this.tank.getLiquid() == null || this.tank.getLiquid().amount <= equalVol)
+            {
                 break;
+            }
 
             if (ents[i] instanceof TileEntityTank && ((TileEntityTank) ents[i]).color == this.color && !((TileEntityTank) ents[i]).isFull())
             {
-                LiquidStack stack = ((TileEntityTank) ents[i]).tank.getLiquid();
+                LiquidStack target = ((TileEntityTank) ents[i]).tank.getLiquid();
                 LiquidStack filling = this.tank.getLiquid();
-                if (stack == null)
+
+                if (target == null)
                 {
-                    filling = LiquidHandler.getStack(this.type, equalVol);
+                    filling = LiquidHandler.getStack(this.tank.getLiquid(), equalVol);
                 }
-                else if (stack.amount < equalVol)
+                else if (target.amount < equalVol)
                 {
-                    filling = LiquidHandler.getStack(this.type, equalVol - stack.amount);
+                    filling = LiquidHandler.getStack(this.tank.getLiquid(), equalVol - target.amount);
                 }
                 else
                 {
@@ -332,12 +281,14 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
         }
     }
 
-    public void setColor(PipeColor pipeColor)
+    @Override
+    public void setColor(Object obj)
     {
-        this.color = pipeColor;
+        this.color = PipeColor.get(cc);
 
     }
 
+    @Override
     public PipeColor getColor()
     {
         return color;

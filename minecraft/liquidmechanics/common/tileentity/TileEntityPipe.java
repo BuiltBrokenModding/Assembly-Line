@@ -1,5 +1,6 @@
 package liquidmechanics.common.tileentity;
 
+import liquidmechanics.api.IColor;
 import liquidmechanics.api.IReadOut;
 import liquidmechanics.api.IPressure;
 import liquidmechanics.api.helpers.PipeColor;
@@ -27,7 +28,7 @@ import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityPipe extends TileEntity implements ITankContainer, IReadOut
+public class TileEntityPipe extends TileEntity implements ITankContainer, IReadOut,IColor
 {
     private PipeColor color = PipeColor.NONE;
 
@@ -59,24 +60,23 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
                 for (int i = 0; i < 6; i++)
                 {
                     ForgeDirection dir = ForgeDirection.getOrientation(i);
-                    int moved = 0;
+
                     if (connectedBlocks[i] instanceof ITankContainer)
                     {
                         if (connectedBlocks[i] instanceof TileEntityPipe)
                         {
                             if (((TileEntityPipe) connectedBlocks[i]).presure < this.presure)
                             {
-                                moved = ((TileEntityPipe) connectedBlocks[i]).stored.fill(stack, true);
+                                stored.drain(((TileEntityPipe) connectedBlocks[i]).stored.fill(stack, true), true);
                             }
 
                         }
                         else
                         {
-                            moved = ((ITankContainer) connectedBlocks[i]).fill(dir.getOpposite(), stack, true);
+                            stored.drain(((ITankContainer) connectedBlocks[i]).fill(dir.getOpposite(), stack, true), true);
                         }
                     }
-                    stored.drain(moved, true);
-                    // FMLLog.warning("Moved "+moved+ " "+ i);
+                    
                     if (stack == null || stack.amount <= 0)
                     {
                         break;
@@ -90,6 +90,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
     /**
      * gets the current color mark of the pipe
      */
+    @Override
     public PipeColor getColor()
     {
         return this.color;
@@ -98,9 +99,10 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
     /**
      * sets the current color mark of the pipe
      */
-    public void setColor(PipeColor cc)
+    @Override
+    public void setColor(Object cc)
     {
-        this.color = cc;
+        this.color = PipeColor.get(cc);
     }
 
     /**
@@ -122,6 +124,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
     {
         super.readFromNBT(nbt);
         UpdateConverter.convert(this, nbt);
+        
         LiquidStack liquid = new LiquidStack(0, 0, 0);
         liquid.readFromNBT(nbt.getCompoundTag("stored"));
         stored.setLiquid(liquid);
@@ -251,16 +254,14 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
             TileEntity ent = connectedBlocks[i];
             if (ent instanceof ITankContainer)
             {
-                if (this.color != PipeColor.NONE)
+                if (ent instanceof TileEntityPipe && color != ((TileEntityPipe) ent).getColor())
                 {
-                    if (ent instanceof TileEntityPipe && color != ((TileEntityPipe) ent).getColor())
-                    {
-                        connectedBlocks[i] = null;
-                    }
-                    else if (ent instanceof TileEntityTank && color != ((TileEntityTank) ent).getColor())
-                    {
-                        connectedBlocks[i] = null;
-                    }
+                    connectedBlocks[i] = null;
+                }
+
+                if (this.color != PipeColor.NONE && ent instanceof TileEntityTank && color != ((TileEntityTank) ent).getColor())
+                {
+                    connectedBlocks[i] = null;
                 }
             }
             else if (ent instanceof IPressure)

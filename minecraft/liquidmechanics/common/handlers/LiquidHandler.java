@@ -89,14 +89,21 @@ public class LiquidHandler
     }
 
     /**
-     * gets a liquid stack of type & volume
+     * creates a new LiquidStack using type and vol
      */
     public static LiquidStack getStack(LiquidData type, int vol)
     {
         if (type == null) return null;
         return new LiquidStack(type.getStack().itemID, vol, type.getStack().itemMeta);
     }
-
+    /**
+     * creates a new LiquidStack using a liquidStack and vol
+     */
+    public static LiquidStack getStack(LiquidStack stack, int vol)
+    {
+        if(stack == null){return null;}
+        return new LiquidStack(stack.itemID,vol,stack.itemMeta);
+    }
     public static int getMeta(LiquidData type)
     {
         if (type == LiquidHandler.steam) return 0;
