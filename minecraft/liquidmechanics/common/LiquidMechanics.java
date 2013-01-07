@@ -4,7 +4,7 @@ import java.io.File;
 
 import liquidmechanics.api.helpers.LiquidData;
 import liquidmechanics.api.helpers.LiquidHandler;
-import liquidmechanics.api.helpers.PipeColor;
+import liquidmechanics.api.helpers.ColorCode;
 import liquidmechanics.common.block.BlockGenerator;
 import liquidmechanics.common.block.BlockPumpMachine;
 import liquidmechanics.common.block.BlockPipe;
@@ -219,12 +219,12 @@ public class LiquidMechanics extends DummyModContainer
                 new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
 
         // steam tank
-        GameRegistry.addShapelessRecipe(new ItemStack(blockTank, 1, PipeColor.ORANGE.ordinal()), new Object[] {
+        GameRegistry.addShapelessRecipe(new ItemStack(blockTank, 1, ColorCode.ORANGE.ordinal()), new Object[] {
                 new ItemStack(itemParts, 1, Parts.Tank.ordinal()),
                 new ItemStack(itemParts, 1, Parts.Seal.ordinal()),
-                new ItemStack(Item.dyePowder, 1, PipeColor.ORANGE.ordinal()) });
+                new ItemStack(Item.dyePowder, 1, ColorCode.ORANGE.ordinal()) });
         // lava tank
-        GameRegistry.addRecipe(new ItemStack(blockTank, 1, PipeColor.RED.ordinal()), new Object[] {
+        GameRegistry.addRecipe(new ItemStack(blockTank, 1, ColorCode.RED.ordinal()), new Object[] {
                 " @ ", "@T@", " @ ",
                 'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()),
                 '@', Block.obsidian, });

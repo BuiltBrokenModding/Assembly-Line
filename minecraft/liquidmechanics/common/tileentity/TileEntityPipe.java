@@ -1,11 +1,11 @@
 package liquidmechanics.common.tileentity;
 
-import liquidmechanics.api.IColor;
+import liquidmechanics.api.IColorCoded;
 import liquidmechanics.api.IReadOut;
 import liquidmechanics.api.IPressure;
 import liquidmechanics.api.helpers.LiquidData;
 import liquidmechanics.api.helpers.LiquidHandler;
-import liquidmechanics.api.helpers.PipeColor;
+import liquidmechanics.api.helpers.ColorCode;
 import liquidmechanics.api.helpers.connectionHelper;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.handlers.UpdateConverter;
@@ -28,9 +28,9 @@ import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityPipe extends TileEntity implements ITankContainer, IReadOut,IColor
+public class TileEntityPipe extends TileEntity implements ITankContainer, IReadOut,IColorCoded
 {
-    private PipeColor color = PipeColor.NONE;
+    private ColorCode color = ColorCode.NONE;
 
     private int count = 40;
     private int count2, presure = 0;
@@ -47,7 +47,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
     {
 
         this.validataConnections();
-        this.color = PipeColor.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+        this.color = ColorCode.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
         if (!worldObj.isRemote && ++count >= 40)
         {
             count = 0;
@@ -91,7 +91,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
      * gets the current color mark of the pipe
      */
     @Override
-    public PipeColor getColor()
+    public ColorCode getColor()
     {
         return this.color;
     }
@@ -102,7 +102,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
     @Override
     public void setColor(Object cc)
     {
-        this.color = PipeColor.get(cc);
+        this.color = ColorCode.get(cc);
     }
 
     /**
@@ -110,9 +110,9 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
      */
     public void setColor(int i)
     {
-        if (i < PipeColor.values().length)
+        if (i < ColorCode.values().length)
         {
-            this.color = PipeColor.values()[i];
+            this.color = ColorCode.values()[i];
         }
     }
 
@@ -157,9 +157,9 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
     {
         if (resource == null) { return 0; }
         LiquidStack stack = stored.getLiquid();
-        if (color != PipeColor.NONE)
+        if (color != ColorCode.NONE)
         {
-            if (color != PipeColor.get(LiquidHandler.get(resource)) || !LiquidHandler.isEqual(stack, resource))
+            if (color != ColorCode.get(LiquidHandler.get(resource)) || !LiquidHandler.isEqual(stack, resource))
             {
                 this.causeMix(stack, resource);
             }
@@ -259,7 +259,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
                     connectedBlocks[i] = null;
                 }
 
-                if (this.color != PipeColor.NONE && ent instanceof TileEntityTank && color != ((TileEntityTank) ent).getColor())
+                if (this.color != ColorCode.NONE && ent instanceof TileEntityTank && color != ((TileEntityTank) ent).getColor())
                 {
                     connectedBlocks[i] = null;
                 }

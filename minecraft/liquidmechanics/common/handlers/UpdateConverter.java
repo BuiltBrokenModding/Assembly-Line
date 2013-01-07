@@ -2,7 +2,7 @@ package liquidmechanics.common.handlers;
 
 import net.minecraft.nbt.NBTTagCompound;
 import liquidmechanics.api.helpers.LiquidHandler;
-import liquidmechanics.api.helpers.PipeColor;
+import liquidmechanics.api.helpers.ColorCode;
 import liquidmechanics.common.tileentity.TileEntityPipe;
 import liquidmechanics.common.tileentity.TileEntityTank;
 
@@ -17,11 +17,11 @@ public class UpdateConverter
         Boolean converted25 = nbt.getBoolean("converted025");
         if (!converted24)
         {
-            pipe.setColor(PipeColor.get(LiquidHandler.getFromMeta(nbt.getInteger("type"))));
+            pipe.setColor(ColorCode.get(LiquidHandler.getFromMeta(nbt.getInteger("type"))));
         }
         else if (converted24 && !converted25)
         {
-            pipe.setColor(PipeColor.get(LiquidHandler.get(nbt.getString("name"))));
+            pipe.setColor(ColorCode.get(LiquidHandler.get(nbt.getString("name"))));
         }
         nbt.setBoolean("converted", true);
         nbt.setBoolean("converted025", true);
@@ -32,11 +32,11 @@ public class UpdateConverter
         Boolean converted25 = nbt.getBoolean("converted025");
         if (!converted24)
         {
-            pipe.setColor(PipeColor.get(LiquidHandler.getFromMeta(nbt.getInteger("type"))));
+            pipe.setColor(ColorCode.get(LiquidHandler.getFromMeta(nbt.getInteger("type"))));
         }
         else if (converted24 && !converted25)
         {
-            pipe.setColor(PipeColor.get(LiquidHandler.get(nbt.getString("name"))));
+            pipe.setColor(ColorCode.get(LiquidHandler.get(nbt.getString("name"))));
         }
         nbt.setBoolean("converted", true);
         nbt.setBoolean("converted025", true);

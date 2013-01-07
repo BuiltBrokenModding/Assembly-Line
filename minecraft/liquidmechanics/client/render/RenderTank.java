@@ -2,7 +2,7 @@ package liquidmechanics.client.render;
 
 import liquidmechanics.api.helpers.LiquidData;
 import liquidmechanics.api.helpers.LiquidHandler;
-import liquidmechanics.api.helpers.PipeColor;
+import liquidmechanics.api.helpers.ColorCode;
 import liquidmechanics.api.helpers.connectionHelper;
 import liquidmechanics.client.model.ModelLiquidTank;
 import liquidmechanics.client.model.ModelLiquidTankCorner;
@@ -11,15 +11,15 @@ import liquidmechanics.common.tileentity.TileEntityTank;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
+import net.minecraftforge.liquids.LiquidStack;
 
 import org.lwjgl.opengl.GL11;
 
 public class RenderTank extends TileEntitySpecialRenderer
 {
-    private LiquidData type = LiquidHandler.unkown;
     private ModelLiquidTank model;
     private ModelLiquidTankCorner modelC;
-    private int pos = 0;
+
 
     public RenderTank()
     {
@@ -31,12 +31,14 @@ public class RenderTank extends TileEntitySpecialRenderer
     {
         int meta = te.getBlockMetadata();
         int guageMeta = meta;
-        if(te.tank.getLiquid() != null)
+        LiquidStack stack = te.getStack();
+        int pos = 0;
+        if(stack != null)
         {
-            pos = Math.min((te.tank.getLiquid().amount / LiquidContainerRegistry.BUCKET_VOLUME), 4);
-            if(meta == PipeColor.NONE.ordinal())
+            pos = Math.min((stack.amount / LiquidContainerRegistry.BUCKET_VOLUME), 4);
+            if(meta == ColorCode.NONE.ordinal())
             {
-                guageMeta = PipeColor.get(te.tank.getLiquid()).ordinal();
+                guageMeta = ColorCode.get(stack).ordinal();
             }
         }
         

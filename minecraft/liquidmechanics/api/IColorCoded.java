@@ -1,13 +1,13 @@
 package liquidmechanics.api;
 
-import liquidmechanics.api.helpers.PipeColor;
+import liquidmechanics.api.helpers.ColorCode;
 
-public interface IColor
+public interface IColorCoded
 {
     /**
      * gets the pipeColor being used by this object
      */
-    public PipeColor getColor();
+    public ColorCode getColor();
     /**
      * sets the pipeColor to be used by this object     * 
      * @param obj-can be anything must be sorted

@@ -1,6 +1,6 @@
 package liquidmechanics.client.render;
 
-import liquidmechanics.api.helpers.PipeColor;
+import liquidmechanics.api.helpers.ColorCode;
 import liquidmechanics.client.model.ModelLargePipe;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.tileentity.TileEntityPipe;
@@ -37,7 +37,7 @@ public class RenderPipe extends TileEntitySpecialRenderer
     }
     public static String getPipeTexture(int meta)
     {
-        return LiquidMechanics.RESOURCE_PATH + "pipes/"+PipeColor.get(meta).getName()+"Pipe.png";
+        return LiquidMechanics.RESOURCE_PATH + "pipes/"+ColorCode.get(meta).getName()+"Pipe.png";
     }
     public void render(int meta, TileEntity[] ents)
     {

@@ -30,11 +30,11 @@ public class LiquidHandler
      */
     public static void addDefaultLiquids()
     {
-        water = new LiquidData("water", LiquidDictionary.getOrCreateLiquid("Water", new LiquidStack(Block.waterStill, 1)), PipeColor.BLUE, false, 32);
+        water = new LiquidData("water", LiquidDictionary.getOrCreateLiquid("Water", new LiquidStack(Block.waterStill, 1)), ColorCode.BLUE, false, 32);
         allowedLiquids.add(water);
-        lava = new LiquidData("Lava", LiquidDictionary.getOrCreateLiquid("Lava", new LiquidStack(Block.lavaStill, 1)), PipeColor.RED, false, 20);
+        lava = new LiquidData("Lava", LiquidDictionary.getOrCreateLiquid("Lava", new LiquidStack(Block.lavaStill, 1)), ColorCode.RED, false, 20);
         allowedLiquids.add(lava);
-        unkown = new LiquidData("Unknown", LiquidDictionary.getOrCreateLiquid("Unknown", new LiquidStack(20, 1)), PipeColor.NONE, false, 0);
+        unkown = new LiquidData("Unknown", LiquidDictionary.getOrCreateLiquid("Unknown", new LiquidStack(20, 1)), ColorCode.NONE, false, 32);
         allowedLiquids.add(unkown);
     }
 
@@ -45,22 +45,22 @@ public class LiquidHandler
         // or something along the lines of IDing liquids for use
         if (event.Name.equalsIgnoreCase("methane"))
         {
-            this.allowedLiquids.add(new LiquidData("methane", event.Liquid, PipeColor.LIME, true, 100));
+            this.allowedLiquids.add(new LiquidData("methane", event.Liquid, ColorCode.LIME, true, 100));
         }
         else if (event.Name.equalsIgnoreCase("oil"))
         {
-            this.allowedLiquids.add(new LiquidData("oil", event.Liquid, PipeColor.BLACK, true, 50));
+            this.allowedLiquids.add(new LiquidData("oil", event.Liquid, ColorCode.BLACK, true, 50));
         }
         else if (event.Name.equalsIgnoreCase("fuel"))
         {
-            this.allowedLiquids.add(new LiquidData("fuel", event.Liquid, PipeColor.YELLOW, true, 50));
+            this.allowedLiquids.add(new LiquidData("fuel", event.Liquid, ColorCode.YELLOW, true, 50));
         }
         else if (event.Name.equalsIgnoreCase("steam"))
         {
-            this.steam = new LiquidData("steam", event.Liquid, PipeColor.ORANGE, true, 100);
+            this.steam = new LiquidData("steam", event.Liquid, ColorCode.ORANGE, true, 100);
         }else if(event.Name.equalsIgnoreCase("Waste"))
         {
-            this.waste = new LiquidData("Waste", event.Liquid, PipeColor.BROWN, false, 40);
+            this.waste = new LiquidData("Waste", event.Liquid, ColorCode.BROWN, false, 40);
             this.allowedLiquids.add(waste);
         }
     }

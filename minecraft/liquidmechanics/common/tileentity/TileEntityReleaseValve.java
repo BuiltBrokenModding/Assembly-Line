@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import cpw.mods.fml.common.FMLLog;
+
 import liquidmechanics.api.IPressure;
 import liquidmechanics.api.IReadOut;
 import liquidmechanics.api.helpers.LiquidData;
 import liquidmechanics.api.helpers.LiquidHandler;
-import liquidmechanics.api.helpers.PipeColor;
+import liquidmechanics.api.helpers.ColorCode;
 import liquidmechanics.api.helpers.connectionHelper;
 import liquidmechanics.common.block.BlockReleaseValve;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,7 +29,7 @@ import universalelectricity.prefab.implement.IRedstoneReceptor;
 
 public class TileEntityReleaseValve extends TileEntity implements IPressure, IReadOut, IRedstoneReceptor, IInventory
 {
-    public boolean[] allowed = new boolean[PipeColor.values().length];
+    public boolean[] allowed = new boolean[ColorCode.values().length - 1];
     public TileEntity[] connected = new TileEntity[6];
 
     private List<TileEntityPipe> output = new ArrayList<TileEntityPipe>();
@@ -45,70 +47,72 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
     {
         super.updateEntity();
 
-        if (!this.worldObj.isRemote && ticks++ == 10)
+        if (!this.worldObj.isRemote && ticks++ >= 40)
         {
+            ticks = 0;
             BlockReleaseValve.checkForPower(worldObj, xCoord, yCoord, zCoord);
             validateNBuildList();
-            //start the draining process
+            // start the draining process
             if (this.input.size() > 0 && this.output.size() > 0)
             {
-                Iterator itr = input.iterator();
-                // testing out Iterators :p
-                while (itr.hasNext())
+                for (ILiquidTank tank : input)
                 {
-                    Object element = itr.next();
-                    if (element instanceof ILiquidTank)
+
+                    if (tank.getLiquid() != null && tank.getLiquid().amount > 0)
                     {
-                        ILiquidTank tank = (ILiquidTank) element;
-                        if (tank.getLiquid() != null && tank.getLiquid().amount < tank.getCapacity())
+                        FMLLog.warning("Tank: " + LiquidHandler.getName(tank.getLiquid()) + " Vol: " + tank.getLiquid().amount);
+                        TileEntityPipe pipe = this.findValidPipe(tank.getLiquid());
+                        if (pipe != null)
                         {
-                            TileEntityPipe pipe = this.findValidPipe(tank.getLiquid());
-                            if (pipe != null)
-                            {
-                                int drain = pipe.stored.fill(tank.getLiquid(), true);
-                                tank.drain(drain, true);
-                                break;
-                            }
+                            FMLLog.warning("Pipe: " + pipe.getColor() + " Vol: " + (pipe.stored.getLiquid() != null ? pipe.stored.getLiquid().amount : 0000));
+                            int drain = pipe.stored.fill(tank.getLiquid(), true);
+                            tank.drain(drain, true);
                         }
                     }
                 }
             }
+
         }
     }
 
-    /**
-     * used to find a valid pipe for filling of the liquid type
-     */
+    /** used to find a valid pipe for filling of the liquid type */
     public TileEntityPipe findValidPipe(LiquidStack stack)
     {
-        LiquidData data = LiquidHandler.get(stack);
-        if (data != LiquidHandler.unkown)
-        {
+      
+            // find normal color selective pipe first
             for (TileEntityPipe pipe : output)
             {
-                if (pipe.getColor() == data.getColor() && (pipe.stored.getLiquid() == null || pipe.stored.getLiquid().amount < pipe.stored.getCapacity())) { return pipe; }
+                if (LiquidHandler.isEqual(pipe.getColor().getLiquidData().getStack(),stack) && (pipe.stored.getLiquid() == null || pipe.stored.getLiquid().amount < pipe.stored.getCapacity()))
+                {
+                    //
+                    return pipe;
+                }
             }
-        }
+            // if no color selective pipe is found look for generic pipes
+            for (TileEntityPipe pipe : output)
+            {
+                if (pipe.getColor() == ColorCode.NONE) { return pipe; }
+            }
+        
         return null;
     }
 
-    /**
-     * sees if it can connect to a pipe of some color
-     */
-    public boolean canConnect(PipeColor cc)
+    /** sees if it can connect to a pipe of some color */
+    public boolean canConnect(ColorCode cc)
     {
-        for (int i = 0; i < this.allowed.length; i++)
+        if (this.isRestricted())
         {
-            if (allowed[i] && i == cc.ordinal()) { return true; }
+            for (int i = 0; i < this.allowed.length; i++)
+            {
+                if (i == cc.ordinal()) { return allowed[i]; }
+            }
         }
-        return false;
+        return true;
     }
 
-    /**
-     * if any of allowed list is true
+    /** if any of allowed list is true
      * 
-     * @return true
-     */
+     * @return true */
     public boolean isRestricted()
     {
         for (int i = 0; i < this.allowed.length; i++)
@@ -118,15 +122,18 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
         return false;
     }
 
+    /** checks a liquidstack against its color code
+     * 
+     * @param stack
+     * @return */
     public boolean canAcceptLiquid(LiquidStack stack)
     {
-        return canConnect(PipeColor.get(LiquidHandler.get(stack)));
+        if (!this.isRestricted()) { return true; }
+        return canConnect(ColorCode.get(LiquidHandler.get(stack)));
     }
 
-    /**
-     * Collects info about the surrounding 6 tiles and orders them into
-     * drain-able(ITankContainer) and fill-able(TileEntityPipes) instances
-     */
+    /** Collects info about the surrounding 6 tiles and orders them into
+     * drain-able(ITankContainer) and fill-able(TileEntityPipes) instances */
     public void validateNBuildList()
     {
         // cleanup
@@ -160,17 +167,9 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
                 for (int t = 0; t < tanks.length; t++)
                 {
                     LiquidStack ll = tanks[t].getLiquid();
-                    if (ll != null && ll.amount > 0 && ll.amount < tanks[t].getCapacity())
+                    if (ll != null && ll.amount > 0 && ll.amount > 0)
                     {
-                        // if restricted check for type match
-                        if (this.isRestricted())
-                        {
-                            if (this.canAcceptLiquid(ll))
-                            {
-                                this.input.add(tanks[t]);
-                            }
-                        }
-                        else
+                        if (this.canAcceptLiquid(ll))
                         {
                             this.input.add(tanks[t]);
                         }
@@ -234,9 +233,7 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
         }
     }
 
-    /**
-     * Writes a tile entity to NBT.
-     */
+    /** Writes a tile entity to NBT. */
     @Override
     public void writeToNBT(NBTTagCompound nbt)
     {
@@ -266,18 +263,14 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
         return this.inventory.length;
     }
 
-    /**
-     * Returns the stack in slot i
-     */
+    /** Returns the stack in slot i */
     public ItemStack getStackInSlot(int par1)
     {
         return this.inventory[par1];
     }
 
-    /**
-     * Removes from an inventory slot (first arg) up to a specified number
-     * (second arg) of items and returns them in a new stack.
-     */
+    /** Removes from an inventory slot (first arg) up to a specified number
+     * (second arg) of items and returns them in a new stack. */
     public ItemStack decrStackSize(int par1, int par2)
     {
         if (this.inventory[par1] != null)
@@ -308,11 +301,9 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
         }
     }
 
-    /**
-     * When some containers are closed they call this on each slot, then drop
+    /** When some containers are closed they call this on each slot, then drop
      * whatever it returns as an EntityItem - like when you close a workbench
-     * GUI.
-     */
+     * GUI. */
     public ItemStack getStackInSlotOnClosing(int par1)
     {
         if (this.inventory[par1] != null)
@@ -327,10 +318,8 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
         }
     }
 
-    /**
-     * Sets the given item stack to the specified slot in the inventory (can be
-     * crafting or armor sections).
-     */
+    /** Sets the given item stack to the specified slot in the inventory (can be
+     * crafting or armor sections). */
     public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
     {
         this.inventory[par1] = par2ItemStack;

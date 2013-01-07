@@ -85,7 +85,7 @@ public class BlockTank extends BlockMachine
                 else
                 {
 
-                    LiquidStack stack = tank.tank.getLiquid();
+                    LiquidStack stack = tank.getStack();
                     if (stack != null)
                     {
                         ItemStack liquidItem = LiquidContainerRegistry.fillLiquidContainer(stack, current);
@@ -110,7 +110,7 @@ public class BlockTank extends BlockMachine
                                     entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, liquidItem);
                                 }
                             }
-                            tank.tank.drain(liquid.amount, true);
+                            tank.drain(null, liquid.amount, true);
                             return true;
                         }
                     }

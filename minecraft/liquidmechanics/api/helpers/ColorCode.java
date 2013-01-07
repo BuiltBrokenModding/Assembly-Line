@@ -1,7 +1,7 @@
 package liquidmechanics.api.helpers;
 
 
-public enum PipeColor
+public enum ColorCode
 {
     BLACK("Black"),
     RED("Red"),
@@ -22,7 +22,7 @@ public enum PipeColor
     
     String name;
 
-    private PipeColor(String name)
+    private ColorCode(String name)
     {
         this.name = name;
     }
@@ -37,25 +37,25 @@ public enum PipeColor
      * @param obj
      *            - Integer,String,LiquidData,PipeColor
      * @return Color NONE if it can't find it */
-    public static PipeColor get(Object obj)
+    public static ColorCode get(Object obj)
     {
-        if (obj instanceof Integer && ((Integer) obj) < PipeColor.values().length)
+        if (obj instanceof Integer && ((Integer) obj) < ColorCode.values().length)
         {
-            return PipeColor.values()[((Integer) obj)];
+            return ColorCode.values()[((Integer) obj)];
         } else if (obj instanceof LiquidData)
         {
             LiquidData data = (LiquidData) obj;
             if (data == LiquidHandler.lava) { return RED; }
             if (data == LiquidHandler.steam) { return ORANGE; }
             if (data == LiquidHandler.water) { return BLUE; }
-        } else if (obj instanceof PipeColor)
+        } else if (obj instanceof ColorCode)
         {
-            return (PipeColor) obj;
+            return (ColorCode) obj;
         } else if (obj instanceof String)
         {
-            for (int i = 0; i < PipeColor.values().length; i++)
+            for (int i = 0; i < ColorCode.values().length; i++)
             {
-                if (((String) obj).equalsIgnoreCase(PipeColor.get(i).getName())) { return PipeColor.get(i); }
+                if (((String) obj).equalsIgnoreCase(ColorCode.get(i).getName())) { return ColorCode.get(i); }
             }
         }
         return NONE;

@@ -2,12 +2,12 @@ package liquidmechanics.common.tileentity;
 
 import javax.swing.colorchooser.ColorSelectionModel;
 
-import liquidmechanics.api.IColor;
+import liquidmechanics.api.IColorCoded;
 import liquidmechanics.api.IReadOut;
 import liquidmechanics.api.IPressure;
 import liquidmechanics.api.helpers.LiquidData;
 import liquidmechanics.api.helpers.LiquidHandler;
-import liquidmechanics.api.helpers.PipeColor;
+import liquidmechanics.api.helpers.ColorCode;
 import liquidmechanics.api.helpers.connectionHelper;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.handlers.UpdateConverter;
@@ -29,24 +29,24 @@ import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityTank extends TileEntity implements IPacketReceiver, IReadOut, IPressure, ITankContainer, IColor
+public class TileEntityTank extends TileEntity implements IPacketReceiver, IReadOut, IPressure, ITankContainer, IColorCoded
 {
     public TileEntity[] cc = { null, null, null, null, null, null };
 
-    private PipeColor color = PipeColor.NONE;
+    private ColorCode color = ColorCode.NONE;
 
     public static final int LMax = 4;
     private int count, count2 = 0;
 
     public int pVolume = 0;
 
-    public LiquidTank tank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME * LMax);
+    private LiquidTank tank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME * LMax);
 
     public void updateEntity()
     {
 
         LiquidStack liquid = tank.getLiquid();
-        this.color = PipeColor.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+        this.color = ColorCode.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
         if (++count >= 40 && liquid != null)
         {
             count = 0;
@@ -73,7 +73,10 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
             }
         }
     }
-
+    public LiquidStack getStack()
+    {
+        return tank.getLiquid();
+    }
     @Override
     public String getMeterReading(EntityPlayer user, ForgeDirection side)
     {
@@ -121,7 +124,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
     @Override
     public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
     {
-        if (resource == null || (!LiquidHandler.isEqual(resource, color.getLiquidData().getStack()) && this.color != PipeColor.NONE)) { return 0; }
+        if (resource == null || (!LiquidHandler.isEqual(resource, color.getLiquidData().getStack()) && this.color != ColorCode.NONE)) { return 0; }
         return this.fill(0, resource, doFill);
     }
 
@@ -298,8 +301,8 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
             TileEntity ent = worldObj.getBlockTileEntity(xCoord, yCoord + change, zCoord);
             if (ent instanceof TileEntityPipe)
             {
-                PipeColor c = ((TileEntityPipe) ent).getColor();
-                if (c == PipeColor.NONE || c == this.color)
+                ColorCode c = ((TileEntityPipe) ent).getColor();
+                if (c == ColorCode.NONE || c == this.color)
                 {
                     int vol = LiquidContainerRegistry.BUCKET_VOLUME;
                     if (this.tank.getLiquid().amount < vol)
@@ -316,12 +319,12 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
     @Override
     public void setColor(Object obj)
     {
-        this.color = PipeColor.get(cc);
+        this.color = ColorCode.get(cc);
 
     }
 
     @Override
-    public PipeColor getColor()
+    public ColorCode getColor()
     {
         return color;
     }

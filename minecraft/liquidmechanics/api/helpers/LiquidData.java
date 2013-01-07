@@ -8,9 +8,9 @@ public class LiquidData
     private int defaultPressure;
     private LiquidStack sampleStack;
     private String name;
-    private PipeColor color;
+    private ColorCode color;
 
-    public LiquidData(String name, LiquidStack stack,PipeColor color, boolean gas, int dPressure)
+    public LiquidData(String name, LiquidStack stack,ColorCode color, boolean gas, int dPressure)
     {
         this.sampleStack = stack;
         this.isAGas = gas;
@@ -37,10 +37,10 @@ public class LiquidData
     {
         return isAGas;
     }
-    public PipeColor getColor()
+    public ColorCode getColor()
     {
         if (color != null) { return color; }
-        return PipeColor.NONE;
+        return ColorCode.NONE;
     }
     
 }
