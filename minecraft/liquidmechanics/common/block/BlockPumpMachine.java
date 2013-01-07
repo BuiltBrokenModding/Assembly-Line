@@ -4,11 +4,11 @@ import java.util.List;
 
 import universalelectricity.prefab.BlockMachine;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
+import liquidmechanics.api.helpers.LiquidHandler;
 import liquidmechanics.client.render.BlockRenderHelper;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.MetaGroup;
 import liquidmechanics.common.TabLiquidMechanics;
-import liquidmechanics.common.handlers.LiquidHandler;
 import liquidmechanics.common.tileentity.TileEntityPump;
 import liquidmechanics.common.tileentity.TileEntityTank;
 import net.minecraft.block.BlockContainer;

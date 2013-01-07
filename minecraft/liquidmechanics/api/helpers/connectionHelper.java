@@ -1,7 +1,5 @@
 package liquidmechanics.api.helpers;
 
-import liquidmechanics.common.handlers.LiquidData;
-import liquidmechanics.common.handlers.LiquidHandler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;

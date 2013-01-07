@@ -1,9 +1,9 @@
 package liquidmechanics.client.render;
 
+import liquidmechanics.api.helpers.LiquidData;
+import liquidmechanics.api.helpers.LiquidHandler;
 import liquidmechanics.client.model.ModelPump;
 import liquidmechanics.common.LiquidMechanics;
-import liquidmechanics.common.handlers.LiquidData;
-import liquidmechanics.common.handlers.LiquidHandler;
 import liquidmechanics.common.tileentity.TileEntityPump;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;

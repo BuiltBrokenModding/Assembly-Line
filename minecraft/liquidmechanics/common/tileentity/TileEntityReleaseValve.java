@@ -7,12 +7,11 @@ import java.util.List;
 
 import liquidmechanics.api.IPressure;
 import liquidmechanics.api.IReadOut;
+import liquidmechanics.api.helpers.LiquidData;
+import liquidmechanics.api.helpers.LiquidHandler;
 import liquidmechanics.api.helpers.PipeColor;
 import liquidmechanics.api.helpers.connectionHelper;
 import liquidmechanics.common.block.BlockReleaseValve;
-import liquidmechanics.common.handlers.LiquidData;
-import liquidmechanics.common.handlers.LiquidHandler;
-import liquidmechanics.common.handlers.PipeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -31,7 +30,7 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
     public boolean[] allowed = new boolean[PipeColor.values().length];
     public TileEntity[] connected = new TileEntity[6];
 
-    private List<PipeInstance> output = new ArrayList<PipeInstance>();
+    private List<TileEntityPipe> output = new ArrayList<TileEntityPipe>();
     private List<ILiquidTank> input = new ArrayList<ILiquidTank>();
 
     private int ticks = 0;
@@ -85,9 +84,9 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
         LiquidData data = LiquidHandler.get(stack);
         if (data != LiquidHandler.unkown)
         {
-            for (PipeInstance pipe : output)
+            for (TileEntityPipe pipe : output)
             {
-                if (pipe.color == data.getColor() && (pipe.pipe.stored.getLiquid() == null || pipe.pipe.stored.getLiquid().amount < pipe.pipe.stored.getCapacity())) { return pipe.pipe; }
+                if (pipe.getColor() == data.getColor() && (pipe.stored.getLiquid() == null || pipe.stored.getLiquid().amount < pipe.stored.getCapacity())) { return pipe; }
             }
         }
         return null;
@@ -152,7 +151,7 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
                 }
                 else
                 {
-                    this.output.add(new PipeInstance(pipe.getColor(), pipe));
+                    this.output.add(pipe);
                 }
             }
             else if (ent instanceof ITankContainer)

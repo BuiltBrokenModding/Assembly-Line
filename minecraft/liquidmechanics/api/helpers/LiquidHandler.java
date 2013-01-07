@@ -1,11 +1,10 @@
-package liquidmechanics.common.handlers;
+package liquidmechanics.api.helpers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import liquidmechanics.api.helpers.PipeColor;
-import liquidmechanics.common.LiquidMechanics;
-import liquidmechanics.common.tileentity.TileEntityPipe;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.ForgeSubscribe;
@@ -37,8 +36,6 @@ public class LiquidHandler
         allowedLiquids.add(lava);
         unkown = new LiquidData("Unknown", LiquidDictionary.getOrCreateLiquid("Unknown", new LiquidStack(20, 1)), PipeColor.NONE, false, 0);
         allowedLiquids.add(unkown);
-        waste = new LiquidData("Waste", LiquidDictionary.getOrCreateLiquid("Waste", new LiquidStack(LiquidMechanics.blockWasteLiquid, 1)), PipeColor.BROWN, false, 40);
-        allowedLiquids.add(waste);
     }
 
     @ForgeSubscribe
@@ -61,6 +58,10 @@ public class LiquidHandler
         else if (event.Name.equalsIgnoreCase("steam"))
         {
             this.steam = new LiquidData("steam", event.Liquid, PipeColor.ORANGE, true, 100);
+        }else if(event.Name.equalsIgnoreCase("Waste"))
+        {
+            this.waste = new LiquidData("Waste", event.Liquid, PipeColor.BROWN, false, 40);
+            this.allowedLiquids.add(waste);
         }
     }
 
@@ -87,7 +88,29 @@ public class LiquidHandler
         }
         return unkown;
     }
-
+    /**
+     * gets the name of the liquidStack using either LiquidData or
+     * running threw the LiquidDirectory mapping
+     */
+    public static String getName(LiquidStack stack)
+    {
+        if(get(stack) != unkown)
+        {
+            return get(stack).getName();
+        }else
+        {
+            Map<String, LiquidStack> l = LiquidDictionary.getLiquids();
+            for(Entry<String, LiquidStack> liquid : l.entrySet())
+            {
+                LiquidStack t = liquid.getValue();
+                if(isEqual(t,stack))
+                {
+                    return liquid.getKey();
+                }
+            }
+        }
+        return "unkown";
+    }
     /**
      * creates a new LiquidStack using type and vol
      */

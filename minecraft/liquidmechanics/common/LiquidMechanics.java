@@ -2,6 +2,8 @@ package liquidmechanics.common;
 
 import java.io.File;
 
+import liquidmechanics.api.helpers.LiquidData;
+import liquidmechanics.api.helpers.LiquidHandler;
 import liquidmechanics.api.helpers.PipeColor;
 import liquidmechanics.common.block.BlockGenerator;
 import liquidmechanics.common.block.BlockPumpMachine;
@@ -10,7 +12,6 @@ import liquidmechanics.common.block.BlockReleaseValve;
 import liquidmechanics.common.block.BlockRod;
 import liquidmechanics.common.block.BlockTank;
 import liquidmechanics.common.block.BlockWasteLiquid;
-import liquidmechanics.common.handlers.LiquidHandler;
 import liquidmechanics.common.item.ItemGuage;
 import liquidmechanics.common.item.ItemLiquidMachine;
 import liquidmechanics.common.item.ItemParts;
@@ -28,6 +29,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -255,5 +257,6 @@ public class LiquidMechanics extends DummyModContainer
         // add Default Liquids to current list, done last to let other mods use
         // there liquid data first if used
         LiquidHandler.addDefaultLiquids();
+        LiquidStack waste = LiquidDictionary.getOrCreateLiquid("Waste", new LiquidStack(LiquidMechanics.blockWasteLiquid, 1));
     }
 }

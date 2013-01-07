@@ -4,10 +4,10 @@ import java.util.EnumSet;
 
 import liquidmechanics.api.IReadOut;
 import liquidmechanics.api.IPressure;
+import liquidmechanics.api.helpers.LiquidData;
+import liquidmechanics.api.helpers.LiquidHandler;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.MetaGroup;
-import liquidmechanics.common.handlers.LiquidData;
-import liquidmechanics.common.handlers.LiquidHandler;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;

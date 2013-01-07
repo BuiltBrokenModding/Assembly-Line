@@ -1,7 +1,5 @@
 package liquidmechanics.api.helpers;
 
-import liquidmechanics.common.handlers.LiquidData;
-import liquidmechanics.common.handlers.LiquidHandler;
 
 public enum PipeColor
 {

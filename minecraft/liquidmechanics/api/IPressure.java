@@ -1,6 +1,6 @@
 package liquidmechanics.api;
 
-import liquidmechanics.common.handlers.LiquidData;
+import liquidmechanics.api.helpers.LiquidData;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ITankContainer;
 

@@ -1,12 +1,12 @@
 package liquidmechanics.client.render;
 
+import liquidmechanics.api.helpers.LiquidData;
+import liquidmechanics.api.helpers.LiquidHandler;
 import liquidmechanics.api.helpers.PipeColor;
 import liquidmechanics.api.helpers.connectionHelper;
 import liquidmechanics.client.model.ModelLiquidTank;
 import liquidmechanics.client.model.ModelLiquidTankCorner;
 import liquidmechanics.common.LiquidMechanics;
-import liquidmechanics.common.handlers.LiquidData;
-import liquidmechanics.common.handlers.LiquidHandler;
 import liquidmechanics.common.tileentity.TileEntityTank;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
