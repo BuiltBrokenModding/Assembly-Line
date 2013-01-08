@@ -1,4 +1,4 @@
-package assemblyline.common.machine.crafter;
+package assemblyline.common.machine.armbot;
 
 import net.minecraft.item.Item;
 

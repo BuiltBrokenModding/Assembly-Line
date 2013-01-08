@@ -1,6 +1,5 @@
 package assemblyline.common.machine.armbot;
 
-import assemblyline.common.machine.crafter.TileEntityArmbot;
 
 public class CommandIdle extends Command
 {

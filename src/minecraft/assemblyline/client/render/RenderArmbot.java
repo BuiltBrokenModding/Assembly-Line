@@ -10,7 +10,7 @@ import assemblyline.common.AssemblyLine;
 
 public class RenderArmbot extends TileEntitySpecialRenderer
 {
-	public static final ModelArmbot MOEDL = new ModelArmbot();
+	public static final ModelArmbot MODEL = new ModelArmbot();
 	public static final String TEXTURE = "armbot.png";
 
 	@Override
@@ -20,7 +20,7 @@ public class RenderArmbot extends TileEntitySpecialRenderer
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
-		MOEDL.render(0.0625f);
+		MODEL.render(0.0625f);
 		GL11.glPopMatrix();
 	}
 

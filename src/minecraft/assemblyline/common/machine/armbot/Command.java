@@ -3,7 +3,6 @@ package assemblyline.common.machine.armbot;
 import java.util.HashMap;
 
 import net.minecraft.world.World;
-import assemblyline.common.machine.crafter.TileEntityArmbot;
 
 /**
  * An AI Commands that is used by TileEntities with AI.

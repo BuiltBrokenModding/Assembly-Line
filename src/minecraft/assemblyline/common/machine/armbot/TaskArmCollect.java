@@ -1,7 +1,6 @@
-package assemblyline.common.machine.crafter;
+package assemblyline.common.machine.armbot;
 
 import net.minecraft.entity.item.EntityItem;
-import assemblyline.common.machine.armbot.Command;
 
 /**
  * Used by arms to collect items in a specific region.

@@ -71,7 +71,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 			GL11.glScalef(0.7f, 0.7f, 0.7f);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
 			GL11.glRotatef(-90f, 0f, 1f, 0f);
-			RenderArmbot.MOEDL.render(0.0625F);
+			RenderArmbot.MODEL.render(0.0625F);
 			GL11.glPopMatrix();
 		}
 	}

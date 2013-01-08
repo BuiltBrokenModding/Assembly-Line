@@ -1,4 +1,4 @@
-package assemblyline.common.machine.crafter;
+package assemblyline.common.machine.armbot;
 
 import java.util.EnumSet;
 
@@ -20,8 +20,6 @@ import universalelectricity.prefab.multiblock.IMultiBlock;
 import universalelectricity.prefab.network.IPacketReceiver;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.TileEntityAssemblyNetwork;
-import assemblyline.common.machine.armbot.CommandIdle;
-import assemblyline.common.machine.armbot.CommandManager;
 import assemblyline.common.machine.encoder.ItemDisk;
 
 import com.google.common.io.ByteArrayDataInput;
