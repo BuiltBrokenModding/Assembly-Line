@@ -16,9 +16,7 @@ import universalelectricity.prefab.implement.IRedstoneReceptor;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.api.IManipulator;
 import assemblyline.common.machine.imprinter.TileEntityFilterable;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.relauncher.Side;
 
 public class TileEntityManipulator extends TileEntityFilterable implements IRedstoneReceptor, IManipulator
 {

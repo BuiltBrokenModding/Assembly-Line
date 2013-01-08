@@ -41,6 +41,12 @@ public class TileEntityArmbot extends TileEntityElectricityReceiver implements I
 
 	private int playerUsing = 0;
 
+	/**
+	 * The rotation of the arms.
+	 */
+	public float rotationPitch = 0;
+	public float rotationYaw = 0;
+
 	@Override
 	public void initiate()
 	{
@@ -80,7 +86,7 @@ public class TileEntityArmbot extends TileEntityElectricityReceiver implements I
 			}
 		}
 
-		taskManager.onUpdate();
+		this.taskManager.onUpdate();
 
 		if (this.ticks % 5 == 0 && !this.isDisabled() && this.taskManager.hasTasks() && EntityArm != null)
 		{

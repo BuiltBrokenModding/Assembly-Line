@@ -2,6 +2,7 @@ package assemblyline.common.machine.armbot;
 
 import java.util.HashMap;
 
+import net.minecraft.world.World;
 import assemblyline.common.machine.crafter.TileEntityArmbot;
 
 /**
@@ -35,11 +36,13 @@ public abstract class Command
 	}
 
 	protected int ticks;
+	protected World world;
 	protected TileEntityArmbot tileEntity;
 
 	public Command(TileEntityArmbot arm)
 	{
 		this.tileEntity = arm;
+		this.world = tileEntity.worldObj;
 	}
 
 	/**

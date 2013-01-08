@@ -1,0 +1,9 @@
+
+# Ignore all classes
+.class **
+
+# Except a specific class
+!class assemblyline/**
+
+.option Annotations
+.option Trim
