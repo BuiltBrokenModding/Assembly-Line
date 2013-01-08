@@ -18,7 +18,7 @@ public class ArmHelper
 	 * @param End - end xyz
 	 * @return list of items
 	 */
-	public List<EntityItem> findItems(World world, Vector3 start, Vector3 end)
+	public static List<EntityItem> findItems(World world, Vector3 start, Vector3 end)
 	{
 		AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(start.x, start.y, start.z, end.x, end.x, end.x);
 		// EntityItem list
@@ -35,7 +35,7 @@ public class ArmHelper
 	 * @param item
 	 * @return list of matching items
 	 */
-	public List<EntityItem> findItems(World world, Vector3 start, Vector3 end, ItemStack stack)
+	public static List<EntityItem> findItems(World world, Vector3 start, Vector3 end, ItemStack stack)
 	{
 		AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(start.x, start.y, start.z, end.x, end.x, end.x);
 		// EntityItem list
