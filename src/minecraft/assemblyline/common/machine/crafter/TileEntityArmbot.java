@@ -21,6 +21,7 @@ import universalelectricity.prefab.multiblock.IMultiBlock;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.tile.TileEntityElectricityReceiver;
 import assemblyline.common.AssemblyLine;
+import assemblyline.common.machine.armbot.CommandIdle;
 import assemblyline.common.machine.armbot.CommandManager;
 import assemblyline.common.machine.encoder.ItemDisk;
 
@@ -35,11 +36,6 @@ public class TileEntityArmbot extends TileEntityElectricityReceiver implements I
 
 	private CommandManager taskManager = new CommandManager();
 
-	/**
-	 * Entity robotic arm to be used with this tileEntity
-	 */
-	public EntityCraftingArm EntityArm = null;
-
 	public final double WATT_REQUEST = 20;
 
 	public double wattsReceived = 0;
@@ -49,8 +45,8 @@ public class TileEntityArmbot extends TileEntityElectricityReceiver implements I
 	/**
 	 * The rotation of the arms.
 	 */
-	public float rotationPitch = 0;
-	public float rotationYaw = 0;
+	public float rotationPitch = CommandIdle.IDLE_ROTATION_PITCH;
+	public float rotationYaw = CommandIdle.IDLE_ROTATION_YAW;
 
 	@Override
 	public void initiate()
@@ -327,15 +323,12 @@ public class TileEntityArmbot extends TileEntityElectricityReceiver implements I
 	public void onCreate(Vector3 placedPosition)
 	{
 		AssemblyLine.blockMulti.makeFakeBlock(this.worldObj, Vector3.add(placedPosition, new Vector3(0, 1, 0)), placedPosition);
-		AssemblyLine.blockMulti.makeFakeBlock(this.worldObj, Vector3.add(placedPosition, new Vector3(0, 2, 0)), placedPosition);
 	}
 
 	@Override
 	public void onDestroy(TileEntity callingBlock)
 	{
 		Vector3 destroyPosition = new Vector3(callingBlock);
-		destroyPosition.add(new Vector3(0, 1, 0));
-		destroyPosition.setBlockWithNotify(this.worldObj, 0);
 		destroyPosition.add(new Vector3(0, 1, 0));
 		destroyPosition.setBlockWithNotify(this.worldObj, 0);
 		this.worldObj.setBlockWithNotify(this.xCoord, this.yCoord, this.zCoord, 0);

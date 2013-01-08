@@ -8,7 +8,10 @@ import universalelectricity.core.UniversalElectricity;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.BlockMachine;
 import universalelectricity.prefab.multiblock.IMultiBlock;
+import assemblyline.client.render.BlockRenderingHandler;
 import assemblyline.common.TabAssemblyLine;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockArmbot extends BlockMachine
 {
@@ -62,10 +65,11 @@ public class BlockArmbot extends BlockMachine
 		return new TileEntityArmbot();
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public int getRenderType()
 	{
-		return -1;
+		return BlockRenderingHandler.BLOCK_RENDER_ID;
 	}
 
 	@Override
