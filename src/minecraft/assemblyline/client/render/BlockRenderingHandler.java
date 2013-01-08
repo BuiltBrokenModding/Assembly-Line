@@ -65,7 +65,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 		}
 		else if (block.blockID == AssemblyLine.blockArmbot.blockID)
 		{
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH + "armbot.png"));
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH + RenderArmbot.TEXTURE));
 			GL11.glPushMatrix();
 			GL11.glTranslatef(0.4f, 0.8f, 0f);
 			GL11.glScalef(0.7f, 0.7f, 0.7f);

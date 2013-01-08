@@ -113,8 +113,14 @@ public abstract class TileEntityAssemblyNetwork extends TileEntityElectricityRec
 				this.powerTransferRange = 0;
 				this.updatePowerTransferRange();
 			}
-			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-				PacketManager.sendPacketToClients(getDescriptionPacket());
+
+			if (!this.worldObj.isRemote)
+			{
+				if (this.getDescriptionPacket() != null)
+				{
+					PacketManager.sendPacketToClients(this.getDescriptionPacket());
+				}
+			}
 		}
 	}
 

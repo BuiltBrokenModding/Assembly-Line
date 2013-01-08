@@ -13,21 +13,20 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityConnections;
-import universalelectricity.core.implement.IConductor;
 import universalelectricity.core.implement.IJouleStorage;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.multiblock.IMultiBlock;
 import universalelectricity.prefab.network.IPacketReceiver;
-import universalelectricity.prefab.tile.TileEntityElectricityReceiver;
 import assemblyline.common.AssemblyLine;
+import assemblyline.common.machine.TileEntityAssemblyNetwork;
 import assemblyline.common.machine.armbot.CommandIdle;
 import assemblyline.common.machine.armbot.CommandManager;
 import assemblyline.common.machine.encoder.ItemDisk;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityArmbot extends TileEntityElectricityReceiver implements IMultiBlock, IInventory, IPacketReceiver, IJouleStorage
+public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMultiBlock, IInventory, IPacketReceiver, IJouleStorage
 {
 	/**
 	 * The items this container contains.
@@ -54,54 +53,12 @@ public class TileEntityArmbot extends TileEntityElectricityReceiver implements I
 		ElectricityConnections.registerConnector(this, EnumSet.of(ForgeDirection.DOWN, ForgeDirection.SOUTH, ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.WEST));
 	}
 
-	public void updateEntity()
+	public void onUpdate()
 	{
-		super.updateEntity();
-
-		if (!this.worldObj.isRemote)
+		if (this.isRunning())
 		{
-			for (int i = 0; i < 6; i++)
-			{
-				ForgeDirection inputDirection = ForgeDirection.getOrientation(i);
-
-				if (inputDirection != ForgeDirection.UP)
-				{
-					TileEntity inputTile = Vector3.getTileEntityFromSide(this.worldObj, new Vector3(this), inputDirection);
-
-					if (inputTile != null)
-					{
-						if (inputTile instanceof IConductor)
-						{
-							if (this.getJoules() >= this.getMaxJoules())
-							{
-								((IConductor) inputTile).getNetwork().stopRequesting(this);
-							}
-							else
-							{
-								((IConductor) inputTile).getNetwork().startRequesting(this, this.WATT_REQUEST / this.getVoltage(), this.getVoltage());
-								this.setJoules(this.getJoules() + ((IConductor) inputTile).getNetwork().consumeElectricity(this).getWatts());
-							}
-						}
-					}
-				}
-			}
+			this.taskManager.onUpdate();
 		}
-
-		this.taskManager.onUpdate();
-
-		if (this.ticks % 5 == 0 && !this.isDisabled() && this.taskManager.hasTasks() && EntityArm != null)
-		{
-			this.wattsReceived -= this.WATT_REQUEST;
-			this.doWork();
-		}
-	}
-
-	/**
-	 * controls the robotic arm into doing a set task
-	 */
-	public void doWork()
-	{
-
 	}
 
 	@Override
