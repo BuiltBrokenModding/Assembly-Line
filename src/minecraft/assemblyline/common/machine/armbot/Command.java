@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 import assemblyline.common.machine.crafter.TileEntityArmbot;
 
 /**
- * An AI Task that is used by TileEntities with AI.
+ * An AI Commands that is used by TileEntities with AI.
  * 
  * @author Calclavia
  * 
@@ -35,14 +35,24 @@ public abstract class Command
 		return COMMANDS.get(command);
 	}
 
+	/**
+	 * The amount of ticks this command has been running for.
+	 */
 	protected int ticks;
+
 	protected World world;
 	protected TileEntityArmbot tileEntity;
 
-	public Command(TileEntityArmbot arm)
+	/**
+	 * The parameters this command has, or the properties. Entered by the player in the disk.
+	 */
+	protected String[] parameters;
+
+	public Command(TileEntityArmbot arm, String... parameters)
 	{
 		this.tileEntity = arm;
 		this.world = tileEntity.worldObj;
+		this.parameters = parameters;
 	}
 
 	/**
