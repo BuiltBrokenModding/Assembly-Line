@@ -69,29 +69,32 @@ public abstract class TileEntityAssemblyNetwork extends TileEntityElectricityRec
 
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 		{
-			for (Object obj : ElectricityConnections.getDirections(this).toArray())
+			if (ElectricityConnections.getDirections(this) != null)
 			{
-				if (obj != null)
+				for (Object obj : ElectricityConnections.getDirections(this))
 				{
-					ForgeDirection inputDirection = (ForgeDirection) obj;
-					TileEntity inputTile = Vector3.getTileEntityFromSide(this.worldObj, new Vector3(this), inputDirection);
-
-					ElectricityNetwork network = ElectricityNetwork.getNetworkFromTileEntity(inputTile, inputDirection);
-
-					if (network != null)
+					if (obj != null)
 					{
-						if (this.wattsReceived >= this.getRequest().getWatts())
+						ForgeDirection inputDirection = (ForgeDirection) obj;
+						TileEntity inputTile = Vector3.getTileEntityFromSide(this.worldObj, new Vector3(this), inputDirection);
+
+						ElectricityNetwork network = ElectricityNetwork.getNetworkFromTileEntity(inputTile, inputDirection);
+
+						if (network != null)
 						{
-							network.stopRequesting(this);
-						}
-						else
-						{
-							network.startRequesting(this, this.getRequest());
-							this.wattsReceived += network.consumeElectricity(this).getWatts() * 2;
+							if (this.wattsReceived >= this.getRequest().getWatts())
+							{
+								network.stopRequesting(this);
+							}
+							else
+							{
+								network.startRequesting(this, this.getRequest());
+								this.wattsReceived += network.consumeElectricity(this).getWatts() * 2;
+							}
 						}
 					}
-				}
 
+				}
 			}
 		}
 
