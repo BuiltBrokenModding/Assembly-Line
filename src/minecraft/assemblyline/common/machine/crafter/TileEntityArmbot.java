@@ -2,6 +2,7 @@ package assemblyline.common.machine.crafter;
 
 import java.util.EnumSet;
 
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -15,13 +16,17 @@ import universalelectricity.core.electricity.ElectricityConnections;
 import universalelectricity.core.implement.IConductor;
 import universalelectricity.core.implement.IJouleStorage;
 import universalelectricity.core.vector.Vector3;
+import universalelectricity.prefab.TranslationHelper;
+import universalelectricity.prefab.multiblock.IMultiBlock;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.tile.TileEntityElectricityReceiver;
+import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.armbot.CommandManager;
+import assemblyline.common.machine.encoder.ItemDisk;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityArmbot extends TileEntityElectricityReceiver implements IInventory, IPacketReceiver, IJouleStorage
+public class TileEntityArmbot extends TileEntityElectricityReceiver implements IMultiBlock, IInventory, IPacketReceiver, IJouleStorage
 {
 	/**
 	 * The items this container contains.
@@ -119,7 +124,7 @@ public class TileEntityArmbot extends TileEntityElectricityReceiver implements I
 	}
 
 	/**
-	 * inventory
+	 * Inventory
 	 */
 	@Override
 	public int getSizeInventory()
@@ -130,7 +135,7 @@ public class TileEntityArmbot extends TileEntityElectricityReceiver implements I
 	@Override
 	public String getInvName()
 	{
-		return "RoboticArm";
+		return TranslationHelper.getLocal("tile.armbot.name");
 	}
 
 	/**
@@ -202,7 +207,7 @@ public class TileEntityArmbot extends TileEntityElectricityReceiver implements I
 	@Override
 	public int getInventoryStackLimit()
 	{
-		return 64;
+		return 1;
 	}
 
 	@Override
@@ -283,6 +288,57 @@ public class TileEntityArmbot extends TileEntityElectricityReceiver implements I
 	public double getMaxJoules(Object... data)
 	{
 		return 1000;
+	}
+
+	@Override
+	public boolean onActivated(EntityPlayer player)
+	{
+		ItemStack containingStack = this.getStackInSlot(0);
+
+		if (containingStack != null)
+		{
+			if (!this.worldObj.isRemote)
+			{
+				EntityItem dropStack = new EntityItem(this.worldObj, player.posX, player.posY, player.posZ, containingStack);
+				dropStack.delayBeforeCanPickup = 0;
+				this.worldObj.spawnEntityInWorld(dropStack);
+			}
+
+			this.setInventorySlotContents(0, null);
+			return true;
+		}
+		else
+		{
+			if (player.getCurrentEquippedItem() != null)
+			{
+				if (player.getCurrentEquippedItem().getItem() instanceof ItemDisk)
+				{
+					this.setInventorySlotContents(0, player.getCurrentEquippedItem());
+					player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	@Override
+	public void onCreate(Vector3 placedPosition)
+	{
+		AssemblyLine.blockMulti.makeFakeBlock(this.worldObj, Vector3.add(placedPosition, new Vector3(0, 1, 0)), placedPosition);
+		AssemblyLine.blockMulti.makeFakeBlock(this.worldObj, Vector3.add(placedPosition, new Vector3(0, 2, 0)), placedPosition);
+	}
+
+	@Override
+	public void onDestroy(TileEntity callingBlock)
+	{
+		Vector3 destroyPosition = new Vector3(callingBlock);
+		destroyPosition.add(new Vector3(0, 1, 0));
+		destroyPosition.setBlockWithNotify(this.worldObj, 0);
+		destroyPosition.add(new Vector3(0, 1, 0));
+		destroyPosition.setBlockWithNotify(this.worldObj, 0);
+		this.worldObj.setBlockWithNotify(this.xCoord, this.yCoord, this.zCoord, 0);
 	}
 
 }

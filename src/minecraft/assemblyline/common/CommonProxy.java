@@ -4,10 +4,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
+import universalelectricity.prefab.multiblock.TileEntityMulti;
 import assemblyline.common.block.TileEntityCrate;
 import assemblyline.common.machine.TileEntityManipulator;
 import assemblyline.common.machine.TileEntityRejector;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt;
+import assemblyline.common.machine.crafter.TileEntityArmbot;
 import assemblyline.common.machine.detector.TileEntityDetector;
 import assemblyline.common.machine.encoder.ContainerEncoder;
 import assemblyline.common.machine.encoder.TileEntityEncoder;
@@ -34,6 +36,8 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.registerTileEntity(TileEntityCrate.class, "ALCrate");
 		GameRegistry.registerTileEntity(TileEntityDetector.class, "ALDetector");
 		GameRegistry.registerTileEntity(TileEntityEncoder.class, "ALEncoder");
+		GameRegistry.registerTileEntity(TileEntityArmbot.class, "ALArmbot");
+		GameRegistry.registerTileEntity(TileEntityMulti.class, "ALMulti");
 	}
 
 	@Override

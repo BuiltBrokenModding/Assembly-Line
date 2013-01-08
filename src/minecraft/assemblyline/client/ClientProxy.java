@@ -9,6 +9,7 @@ import universalelectricity.core.vector.Vector3;
 import assemblyline.client.gui.GuiEncoder;
 import assemblyline.client.gui.GuiImprinter;
 import assemblyline.client.render.BlockRenderingHandler;
+import assemblyline.client.render.RenderArmbot;
 import assemblyline.client.render.RenderConveyorBelt;
 import assemblyline.client.render.RenderCrate;
 import assemblyline.client.render.RenderDetector;
@@ -20,6 +21,7 @@ import assemblyline.common.block.TileEntityCrate;
 import assemblyline.common.machine.TileEntityManipulator;
 import assemblyline.common.machine.TileEntityRejector;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt;
+import assemblyline.common.machine.crafter.TileEntityArmbot;
 import assemblyline.common.machine.detector.TileEntityDetector;
 import assemblyline.common.machine.encoder.TileEntityEncoder;
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -45,6 +47,7 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDetector.class, new RenderDetector());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityManipulator.class, new RenderManipulator());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrate.class, new RenderCrate());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmbot.class, new RenderArmbot());
 	}
 
 	@Override
