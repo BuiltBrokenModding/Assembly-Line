@@ -11,9 +11,12 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
-import assemblyline.common.machine.command.Command;
+import assemblyline.common.machine.armbot.Command;
 
 import com.google.common.io.ByteArrayDataInput;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 
 public class TileEntityEncoder extends TileEntityAdvanced implements IPacketReceiver, ISidedInventory
 {
@@ -51,7 +54,6 @@ public class TileEntityEncoder extends TileEntityAdvanced implements IPacketRece
 				return ret;
 			}
 		}
-		watcher.inventoryChanged();
 		return null;
 	}
 
@@ -75,6 +77,12 @@ public class TileEntityEncoder extends TileEntityAdvanced implements IPacketRece
 			}
 			disk = stack;
 		}
+	}
+
+	@Override
+	public void onInventoryChanged()
+	{
+		super.onInventoryChanged();
 		if (watcher != null)
 			watcher.inventoryChanged();
 	}
@@ -161,24 +169,22 @@ public class TileEntityEncoder extends TileEntityAdvanced implements IPacketRece
 	{
 		try
 		{
-			if (!this.worldObj.isRemote)
+			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 			{
-				/**
-				 * New command action
-				 */
-				String newCommand = dataStream.readUTF();
-
-				if (Command.getCommand(newCommand) != null && this.disk != null)
+				if (this.disk != null)
 				{
 					ArrayList<String> tempCmds = ItemDisk.getCommands(this.disk);
 
 					if (dataStream.readBoolean())
 					{
-						tempCmds.add(newCommand);
+						String newCommand = dataStream.readUTF();
+						if (Command.getCommand(newCommand) != null)
+							tempCmds.add(newCommand);
 					}
 					else
 					{
-						tempCmds.remove(newCommand);
+						int commandToRemove = dataStream.readInt();
+						tempCmds.remove(commandToRemove);
 					}
 
 					ItemDisk.setCommands(this.disk, tempCmds);

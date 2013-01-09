@@ -23,7 +23,7 @@ import org.lwjgl.opengl.GL11;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.machine.command.Command;
+import assemblyline.common.machine.armbot.Command;
 import assemblyline.common.machine.encoder.ContainerEncoder;
 import assemblyline.common.machine.encoder.IInventoryWatcher;
 import assemblyline.common.machine.encoder.ItemDisk;
@@ -32,6 +32,8 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 {
+	private static final int MAX_COMMANDS = 6;
+
 	private int containerWidth;
 	private int containerHeight;
 	private TileEntityEncoder tileEntity;
@@ -39,6 +41,7 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 
 	// list stuff
 	private int minCommand;
+	private int selCommand;
 
 	private GuiButton addButton;
 	private GuiButton delButton;
@@ -46,11 +49,12 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 	private GuiButton pDnButton;
 	private GuiTextField commandField;
 
-	public GuiEncoder(InventoryPlayer par1InventoryPlayer, TileEntityEncoder tileEntity)
+	public GuiEncoder(InventoryPlayer playerInventory, TileEntityEncoder tileEntity)
 	{
-		super(new ContainerEncoder(par1InventoryPlayer, tileEntity));
+		super(new ContainerEncoder(playerInventory, tileEntity));
 		this.ySize = 256;
 		this.tileEntity = tileEntity;
+		tileEntity.setWatcher(this);
 	}
 
 	@Override
@@ -65,8 +69,8 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 
 		this.addButton = new GuiButton(0, containerWidth + (xSize - 25), containerHeight + 128 + ContainerEncoder.Y_OFFSET, 18, 20, "+");
 		this.delButton = new GuiButton(1, containerWidth + (xSize - 43), containerHeight + 128 + ContainerEncoder.Y_OFFSET, 18, 20, "-");
-		this.pUpButton = new GuiButton(2, containerWidth + (xSize - 25), containerHeight + 48 + ContainerEncoder.Y_OFFSET, 18, 20, "");
-		this.pDnButton = new GuiButton(3, containerWidth + (xSize - 25), containerHeight + 108 + ContainerEncoder.Y_OFFSET, 18, 20, "");
+		this.pUpButton = new GuiButton(2, containerWidth + (xSize - 25), containerHeight + 46 + ContainerEncoder.Y_OFFSET, 18, 20, "");
+		this.pDnButton = new GuiButton(3, containerWidth + (xSize - 25), containerHeight + 106 + ContainerEncoder.Y_OFFSET, 18, 20, "");
 		this.commandField = new GuiTextField(fontRenderer, 8, 129 + ContainerEncoder.Y_OFFSET, xSize - 52, 18);
 		// commandList = new GuiCommandList(mc, xSize - 7, 128, 7, 120, 170, 20);
 
@@ -75,7 +79,9 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 		this.controlList.add(pUpButton);
 		this.controlList.add(pDnButton);
 
+		this.commands = new ArrayList<String>();
 		this.minCommand = 0;
+		this.selCommand = -1;
 	}
 
 	@Override
@@ -97,36 +103,49 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 							tempCmds.add(commandField.getText());
 							ItemDisk.setCommands(disk, tempCmds);
 							this.tileEntity.setInventorySlotContents(0, disk);
-							PacketDispatcher.sendPacketToServer(PacketManager.getPacket(AssemblyLine.CHANNEL, this.tileEntity, (String) this.commandField.getText(), true));
+							PacketDispatcher.sendPacketToServer(PacketManager.getPacket(AssemblyLine.CHANNEL, this.tileEntity, true, (String) this.commandField.getText()));
 						}
 					}
 
+					this.minCommand = this.commands.size() - MAX_COMMANDS + 1;
+					if (this.minCommand < 0)
+						this.minCommand = 0;
+					this.selCommand = -1;
 					this.commandField.setText("");
 				}
 
 				break;
 			}
-			case 1: // subtract
+			case 1: // remove
 			{
-				if (!this.commandField.getText().equals(""))
+				if (this.tileEntity != null)
 				{
-					if (this.tileEntity != null)
+					ItemStack disk = this.tileEntity.getStackInSlot(0);
+
+					if (disk != null && this.selCommand >= 0 && this.selCommand < this.commands.size())
 					{
-						ItemStack disk = this.tileEntity.getStackInSlot(0);
-
-						if (disk != null && Command.getCommand(this.commandField.getText()) != null)
-						{
-							ArrayList<String> tempCmds = ItemDisk.getCommands(disk);
-							tempCmds.remove(commandField.getText());
-							ItemDisk.setCommands(disk, tempCmds);
-							this.tileEntity.setInventorySlotContents(0, disk);
-							PacketDispatcher.sendPacketToServer(PacketManager.getPacket(AssemblyLine.CHANNEL, this.tileEntity, (String) this.commandField.getText(), false));
-						}
+						ArrayList<String> tempCmds = ItemDisk.getCommands(disk);
+						tempCmds.remove(this.selCommand);
+						ItemDisk.setCommands(disk, tempCmds);
+						this.tileEntity.setInventorySlotContents(0, disk);
+						PacketDispatcher.sendPacketToServer(PacketManager.getPacket(AssemblyLine.CHANNEL, this.tileEntity, false, this.selCommand));
 					}
-
-					this.commandField.setText("");
+					
+					this.selCommand = -1;
 				}
 
+				break;
+			}
+			case 2: // page up
+			{
+				if (minCommand > 0)
+					minCommand--;
+				break;
+			}
+			case 3: // page down
+			{
+				if (minCommand + MAX_COMMANDS < this.commands.size())
+					minCommand++;
 				break;
 			}
 		}
@@ -145,7 +164,7 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 
 		// render page up and page down buttons
 		glPushMatrix();
-		glTranslatef(pUpButton.xPosition - containerWidth + 6, pUpButton.yPosition - containerHeight + 7 , 0);
+		glTranslatef(pUpButton.xPosition - containerWidth + 6, pUpButton.yPosition - containerHeight + 7, 0);
 		this.fontRenderer.drawString("^", 1, 1, 0x444444);
 		this.fontRenderer.drawString("^", 0, 0, 0xFFFFFF);
 		glPopMatrix();
@@ -167,34 +186,126 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 
 	private void drawCommands()
 	{
-		for (int i = minCommand; i < minCommand + 8; i++)
+		int relativeCommand;
+		String command;
+		for (int i = minCommand; i < minCommand + MAX_COMMANDS; i++)
 		{
-
+			if (i >= 0 && i < this.commands.size())
+			{
+				relativeCommand = i - minCommand;
+				command = this.commands.get(i).toUpperCase();
+				drawCommand(command, 8, 56 + relativeCommand * (fontRenderer.FONT_HEIGHT + 4), this.selCommand == i);
+			}
 		}
 	}
 
-	private void drawCommand(String command, int x, int y)
+	private void drawCommand(String command, int x, int y, boolean selected)
 	{
-
+		if (selected)
+		{
+			drawOutlineRect(x, y, x + 142, y + fontRenderer.FONT_HEIGHT + 4, 0, 0, 0, 1f, 1f, 1f);
+		}
+		this.fontRenderer.drawString(command, x + 3, y + (fontRenderer.FONT_HEIGHT / 2) - 1, 0xFFFFFF, false);
 	}
 
 	@Override
 	protected void mouseClicked(int x, int y, int button)
 	{
 		super.mouseClicked(x, y, button);
-		commandField.mouseClicked(x - containerWidth, y - containerHeight, button);
+		this.commandField.mouseClicked(x - containerWidth, y - containerHeight, button);
+		if (button == 0)
+		{
+			if (x >= containerWidth + 8)
+			{
+				if (y >= containerHeight + 47 + ContainerEncoder.Y_OFFSET)
+				{
+					if (x <= containerWidth + (xSize - 25))
+					{
+						if (y <= containerHeight + 46 + 80 + ContainerEncoder.Y_OFFSET)
+						{
+							listClicked(x - (containerWidth + 8), y - (containerHeight + 47 + ContainerEncoder.Y_OFFSET));
+						}
+						else
+						{
+							selCommand = -1;
+						}
+					}
+					else
+					{
+						selCommand = -1;
+					}
+				}
+				else
+				{
+					selCommand = -1;
+				}
+			}
+			else
+			{
+				selCommand = -1;
+			}
+		}
+	}
+
+	private void listClicked(int relativeX, int relativeY)
+	{
+		int itemClicked = relativeY / 13;
+		this.selCommand = itemClicked + this.minCommand;
 	}
 
 	@Override
 	protected void keyTyped(char character, int keycode)
 	{
+		if (character != 'e' && character != 'E') // don't close GUI
+			super.keyTyped(character, keycode);
+		commandField.textboxKeyTyped(character, keycode);
+		// System.out.println(keycode);
 		if (keycode == Keyboard.KEY_ESCAPE)
 		{
-			mc.thePlayer.closeScreen();
+			this.mc.thePlayer.closeScreen();
 		}
-		else
+		else if (keycode == Keyboard.KEY_RETURN)
 		{
-			commandField.textboxKeyTyped(character, keycode);
+			if (this.commandField.isFocused())
+			{
+				actionPerformed(this.addButton);
+			}
+		}
+		else if (keycode == Keyboard.KEY_DELETE)
+		{
+			actionPerformed(this.delButton);
+		}
+		else if (keycode == 201) // PAGE UP (no constant)
+		{
+			actionPerformed(this.pUpButton);
+		}
+		else if (keycode == 209) // PAGE DOWN (no constant)
+		{
+			actionPerformed(this.pDnButton);
+		}
+		else if (keycode == Keyboard.KEY_UP)
+		{
+			this.selCommand--;
+			if (this.selCommand < -1)
+				this.selCommand = this.commands.size() - 1;
+			if (this.selCommand < minCommand)
+				if (this.selCommand >= 0)
+					this.minCommand = selCommand;
+			if (this.selCommand >= this.minCommand + MAX_COMMANDS)
+				if (this.selCommand < this.commands.size())
+					this.minCommand = this.selCommand - MAX_COMMANDS + 1;
+		}
+		else if (keycode == Keyboard.KEY_DOWN)
+		{
+			this.selCommand++;
+			if (this.selCommand >= this.commands.size())
+				this.selCommand = -1;
+			if (this.selCommand >= this.minCommand + MAX_COMMANDS)
+				if (this.selCommand < this.commands.size())
+					this.minCommand = this.selCommand - MAX_COMMANDS + 1;
+			if (this.selCommand < minCommand)
+				if (this.selCommand >= 0)
+					this.minCommand = selCommand;
 		}
 	}
 
@@ -209,7 +320,7 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 		this.mc.renderEngine.bindTexture(var4);
 
 		this.drawTexturedModalRect(containerWidth, containerHeight + ContainerEncoder.Y_OFFSET, 0, 0, this.xSize, this.ySize);
-		drawOutlineRect(containerWidth + 7, containerHeight + 48 + ContainerEncoder.Y_OFFSET, containerWidth + (xSize - 25), containerHeight + 48 + 80 + ContainerEncoder.Y_OFFSET, 0, 0, 0, 0.5f, 0.5f, 0.5f);
+		drawOutlineRect(containerWidth + 7, containerHeight + 46 + ContainerEncoder.Y_OFFSET, containerWidth + (xSize - 25), containerHeight + 46 + 80 + ContainerEncoder.Y_OFFSET, 0, 0, 0, 0.5f, 0.5f, 0.5f);
 	}
 
 	public static void drawOutlineRect(int x1, int y1, int x2, int y2, float rR, float rG, float rB, float lR, float lG, float lB)
@@ -262,15 +373,22 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 
 	private void updateCommands()
 	{
-		if (tileEntity != null)
+		if (commands != null)
 		{
-			ItemStack disk = tileEntity.getStackInSlot(0);
-			if (disk != null)
+			commands.clear();
+			if (tileEntity != null)
 			{
-				commands = ItemDisk.getCommands(disk);
+				ItemStack disk = tileEntity.getStackInSlot(0);
+				if (disk != null)
+				{
+					commands = ItemDisk.getCommands(disk);
+				}
 			}
+			if (this.minCommand + MAX_COMMANDS >= this.commands.size())
+				this.minCommand = this.commands.size() - MAX_COMMANDS;
+			if (this.minCommand < 0)
+				this.minCommand = 0;
 		}
-		minCommand = 0;
 	}
 
 	@Override
