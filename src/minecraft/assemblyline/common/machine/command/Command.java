@@ -2,9 +2,8 @@ package assemblyline.common.machine.command;
 
 import java.util.HashMap;
 
-import assemblyline.common.machine.armbot.TileEntityArmbot;
-
 import net.minecraft.world.World;
+import assemblyline.common.machine.armbot.TileEntityArmbot;
 
 /**
  * An AI Commands that is used by TileEntities with AI.
@@ -25,6 +24,7 @@ public abstract class Command
 	{
 		registerCommand("idle", CommandIdle.class);
 		registerCommand("grab", CommandGrab.class);
+		registerCommand("rotate", CommandRotate.class);
 	}
 
 	public static void registerCommand(String command, Class<? extends Command> commandClass)
