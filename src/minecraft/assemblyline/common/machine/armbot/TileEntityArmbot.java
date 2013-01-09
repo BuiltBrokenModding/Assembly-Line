@@ -1,7 +1,10 @@
 package assemblyline.common.machine.armbot;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -20,6 +23,8 @@ import universalelectricity.prefab.multiblock.IMultiBlock;
 import universalelectricity.prefab.network.IPacketReceiver;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.TileEntityAssemblyNetwork;
+import assemblyline.common.machine.command.CommandIdle;
+import assemblyline.common.machine.command.CommandManager;
 import assemblyline.common.machine.encoder.ItemDisk;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -45,6 +50,11 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	public float rotationPitch = CommandIdle.IDLE_ROTATION_PITCH;
 	public float rotationYaw = CommandIdle.IDLE_ROTATION_YAW;
 
+	/**
+	 * An entity that the armbot is grabbed onto.
+	 */
+	public final List<Entity> grabbedEntities = new ArrayList<Entity>();
+
 	@Override
 	public void initiate()
 	{
@@ -55,6 +65,13 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	{
 		if (this.isRunning())
 		{
+			for (Entity entity : this.grabbedEntities)
+			{
+				entity.motionX = 0;
+				entity.motionY = 0;
+				entity.motionZ = 0;
+			}
+
 			this.taskManager.onUpdate();
 		}
 	}

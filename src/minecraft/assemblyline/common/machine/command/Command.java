@@ -1,6 +1,8 @@
-package assemblyline.common.machine.armbot;
+package assemblyline.common.machine.command;
 
 import java.util.HashMap;
+
+import assemblyline.common.machine.armbot.TileEntityArmbot;
 
 import net.minecraft.world.World;
 
@@ -22,6 +24,7 @@ public abstract class Command
 	static
 	{
 		registerCommand("idle", CommandIdle.class);
+		registerCommand("grab", CommandGrab.class);
 	}
 
 	public static void registerCommand(String command, Class<? extends Command> commandClass)

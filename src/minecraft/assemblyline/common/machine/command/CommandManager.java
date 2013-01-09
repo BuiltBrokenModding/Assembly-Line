@@ -1,4 +1,4 @@
-package assemblyline.common.machine.armbot;
+package assemblyline.common.machine.command;
 
 import java.util.ArrayList;
 import java.util.Iterator;

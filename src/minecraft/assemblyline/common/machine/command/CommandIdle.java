@@ -1,4 +1,6 @@
-package assemblyline.common.machine.armbot;
+package assemblyline.common.machine.command;
+
+import assemblyline.common.machine.armbot.TileEntityArmbot;
 
 
 public class CommandIdle extends Command

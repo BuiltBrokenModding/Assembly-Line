@@ -23,7 +23,7 @@ import org.lwjgl.opengl.GL11;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.machine.armbot.Command;
+import assemblyline.common.machine.command.Command;
 import assemblyline.common.machine.encoder.ContainerEncoder;
 import assemblyline.common.machine.encoder.IInventoryWatcher;
 import assemblyline.common.machine.encoder.ItemDisk;
