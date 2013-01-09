@@ -282,8 +282,11 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	{
 		super.readFromNBT(nbt);
 		this.slantType = SlantType.values()[nbt.getByte("slant")];
+
 		if (worldObj != null)
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, nbt.getInteger("rotation"));
+		{
+			worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, nbt.getInteger("rotation"));
+		}
 	}
 
 	/**
@@ -293,9 +296,11 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-
 		nbt.setByte("slant", (byte) this.slantType.ordinal());
+
 		if (worldObj != null)
-			nbt.setInteger("rotation", worldObj.getBlockMetadata(xCoord, yCoord, zCoord)); //for some reason the metadata is getting out of sync between client and server so we store it in the Tile Entity
+		{
+			nbt.setInteger("rotation", worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
+		}
 	}
 }

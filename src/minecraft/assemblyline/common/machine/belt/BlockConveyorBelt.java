@@ -1,10 +1,13 @@
 package assemblyline.common.machine.belt;
 
+import java.util.List;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -28,6 +31,98 @@ public class BlockConveyorBelt extends BlockMachine
 		super("conveyorBelt", id, UniversalElectricity.machine);
 		this.setBlockBounds(0, 0, 0, 1, 0.3f, 1);
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
+	}
+
+	@Override
+	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z)
+	{
+		TileEntity t = world.getBlockTileEntity(x, y, z);
+
+		if (t != null && t instanceof TileEntityConveyorBelt)
+		{
+			TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) t;
+
+			if (tileEntity.getSlant() != SlantType.NONE) { return AxisAlignedBB.getAABBPool().addOrModifyAABBInPool((double) x + this.minX, (double) y + this.minY, (double) z + this.minZ, (double) x + 1, (double) y + 1, (double) z + 1); }
+		}
+
+		return AxisAlignedBB.getAABBPool().addOrModifyAABBInPool((double) x + this.minX, (double) y + this.minY, (double) z + this.minZ, (double) x + this.maxX, (double) y + this.maxY, (double) z + this.maxZ);
+	}
+
+	@Override
+	public void addCollidingBlockToList(World world, int x, int y, int z, AxisAlignedBB par5AxisAlignedBB, List par6List, Entity par7Entity)
+	{
+		TileEntity t = world.getBlockTileEntity(x, y, z);
+
+		if (t != null && t instanceof TileEntityConveyorBelt)
+		{
+			TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) t;
+
+			if (tileEntity.getSlant() != SlantType.NONE)
+			{
+				AxisAlignedBB boundBottom = AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(x, y, z, x + 1, y + 0.3, z + 1);
+				AxisAlignedBB boundTop = null;
+
+				ForgeDirection direction = tileEntity.getDirection();
+
+				if (tileEntity.getSlant() == SlantType.UP)
+				{
+					if (direction.offsetX > 0)
+					{
+						boundTop = AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(x + (float) direction.offsetX / 2, y, z, x + 1, y + 0.8, z + 1);
+					}
+					else if (direction.offsetX < 0)
+					{
+						boundTop = AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(x, y, z, x + (float) direction.offsetX / -2, y + 0.8, z + 1);
+					}
+					else if (direction.offsetZ > 0)
+					{
+						boundTop = AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(x, y, z + (float) direction.offsetZ / 2, x + 1, y + 0.8, z + 1);
+					}
+					else if (direction.offsetZ < 0)
+					{
+						boundTop = AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(x, y, z, x + 1, y + 0.8, z + (float) direction.offsetZ / -2);
+					}
+				}
+				else
+				{
+					if (direction.offsetX > 0)
+					{
+						boundTop = AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(x, y, z, x + (float) direction.offsetX / 2, y + 0.8, z + 1);
+					}
+					else if (direction.offsetX < 0)
+					{
+						boundTop = AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(x + (float) direction.offsetX / -2, y, z, x + 1, y + 0.8, z + 1);
+					}
+					else if (direction.offsetZ > 0)
+					{
+						boundTop = AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(x, y, z, x + 1, y + 0.8, z + (float) direction.offsetZ / 2);
+					}
+					else if (direction.offsetZ < 0)
+					{
+						boundTop = AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(x, y, z + (float) direction.offsetZ / -2, x + 1, y + 0.8, z + 1);
+					}
+				}
+
+				if (par5AxisAlignedBB.intersectsWith(boundBottom))
+				{
+					par6List.add(boundBottom);
+				}
+				if (boundTop != null && par5AxisAlignedBB.intersectsWith(boundTop))
+				{
+					par6List.add(boundTop);
+				}
+
+				return;
+			}
+
+		}
+
+		AxisAlignedBB newBounds = AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(x, y, z, x + 1, y + 0.3, z + 1);
+
+		if (newBounds != null && par5AxisAlignedBB.intersectsWith(newBounds))
+		{
+			par6List.add(newBounds);
+		}
 	}
 
 	@Override
