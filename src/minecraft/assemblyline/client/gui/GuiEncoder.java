@@ -23,7 +23,7 @@ import org.lwjgl.opengl.GL11;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.machine.armbot.Command;
+import assemblyline.common.machine.command.Command;
 import assemblyline.common.machine.encoder.ContainerEncoder;
 import assemblyline.common.machine.encoder.IInventoryWatcher;
 import assemblyline.common.machine.encoder.ItemDisk;
@@ -63,6 +63,7 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 		super.initGui();
 
 		this.allowUserInput = true;
+		Keyboard.enableRepeatEvents(true);
 
 		this.containerWidth = (this.width - this.xSize) / 2;
 		this.containerHeight = (this.height - this.ySize) / 2;
@@ -390,6 +391,14 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 				this.minCommand = 0;
 		}
 	}
+	
+	@Override
+	public void onGuiClosed()
+	{
+		super.onGuiClosed();
+		Keyboard.enableRepeatEvents(false);
+	}
+	
 
 	@Override
 	public void inventoryChanged()
