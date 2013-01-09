@@ -47,17 +47,22 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 				break;
 		}
 
-		if (slantType != null)
+		if (slantType != null && slantType != SlantType.NONE)
 		{
+			GL11.glTranslatef(0, -0.4f, 0);
+			GL11.glScalef(1f, 1.4f, 1f);
+
 			if (slantType == SlantType.UP)
 			{
 				if (face == 5 || face == 4)
 				{
+					GL11.glScalef(1.4f, 1f, 1f);
 					GL11.glTranslatef(0f, 0f, 1f);
 					GL11.glRotatef(-45f, 1f, 0f, 0f);
 				}
 				else if (face == 2 || face == 3)
 				{
+					GL11.glScalef(1f, 1f, 1.4f);
 					GL11.glTranslatef(0f, 0f, 1f);
 					GL11.glRotatef(-45f, 1f, 0f, 0f);
 				}
@@ -66,11 +71,13 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 			{
 				if (face == 5 || face == 4)
 				{
+					GL11.glScalef(1.4f, 1f, 1f);
 					GL11.glTranslatef(0f, 0f, -1f);
 					GL11.glRotatef(45f, 1f, 0f, 0f);
 				}
 				else if (face == 2 || face == 3)
 				{
+					GL11.glScalef(1f, 1f, 1.4f);
 					GL11.glTranslatef(0f, 0f, -1f);
 					GL11.glRotatef(45f, 1f, 0f, 0f);
 				}
