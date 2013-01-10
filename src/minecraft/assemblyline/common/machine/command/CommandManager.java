@@ -70,4 +70,9 @@ public class CommandManager
 	{
 		return !tasks.isEmpty();
 	}
+	
+	public List<Command> getCommands()
+	{
+		return tasks;
+	}
 }

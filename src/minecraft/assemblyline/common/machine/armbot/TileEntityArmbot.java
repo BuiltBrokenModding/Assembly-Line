@@ -12,6 +12,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -21,13 +23,18 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.multiblock.IMultiBlock;
 import universalelectricity.prefab.network.IPacketReceiver;
+import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.TileEntityAssemblyNetwork;
+import assemblyline.common.machine.command.Command;
 import assemblyline.common.machine.command.CommandIdle;
 import assemblyline.common.machine.command.CommandManager;
 import assemblyline.common.machine.encoder.ItemDisk;
 
 import com.google.common.io.ByteArrayDataInput;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 
 public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMultiBlock, IInventory, IPacketReceiver, IJouleStorage
 {
@@ -72,14 +79,48 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				entity.motionZ = 0;
 			}
 
-			this.taskManager.onUpdate();
+			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+				this.taskManager.onUpdate();
+			
+			if (!this.taskManager.hasTasks())
+			{
+				this.taskManager.addTask(this, new CommandIdle(this));
+			}
+			
+			if (rotationPitch < 0) rotationPitch += (float) (Math.PI * 2);
+			if (rotationPitch >= Math.PI * 2) rotationPitch -= (float) (Math.PI * 2);
+			if (rotationYaw < 0) rotationYaw += (float) (Math.PI * 2);
+			if (rotationYaw >= Math.PI * 2) rotationYaw -= (float) (Math.PI * 2);
 		}
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) //this makes it look smoother on the client, since the client seems to not be in-sync power-wise
+			this.taskManager.onUpdate();
 	}
 
 	@Override
 	public double getVoltage()
 	{
 		return 120;
+	}
+	
+	@Override
+	public Packet getDescriptionPacket()
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+		writeToNBT(nbt);
+		Packet132TileEntityData data = new Packet132TileEntityData(xCoord, yCoord, zCoord, 0, nbt);
+		return data;
+	}
+	
+	@Override
+	public void onDataPacket(INetworkManager netManager, Packet132TileEntityData packet)
+	{
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+		{
+			xCoord = packet.xPosition;
+			yCoord = packet.yPosition;
+			zCoord = packet.zPosition;
+			readFromNBT(packet.customParam1);
+		}
 	}
 
 	/**
@@ -88,7 +129,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	@Override
 	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
 	{
-
+		
 	}
 
 	/**
@@ -217,6 +258,9 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				this.containingItems[var5] = ItemStack.loadItemStackFromNBT(var4);
 			}
 		}
+
+		rotationYaw = nbt.getFloat("yaw");
+		rotationPitch = nbt.getFloat("pitch");
 	}
 
 	/**
@@ -238,6 +282,8 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			}
 		}
 		nbt.setTag("Items", var2);
+		nbt.setFloat("yaw", rotationYaw);
+		nbt.setFloat("pitch", rotationPitch);
 	}
 
 	@Override
@@ -265,7 +311,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 
 		if (containingStack != null)
 		{
-			if (!this.worldObj.isRemote)
+			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 			{
 				EntityItem dropStack = new EntityItem(this.worldObj, player.posX, player.posY, player.posZ, containingStack);
 				dropStack.delayBeforeCanPickup = 0;
@@ -273,6 +319,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			}
 
 			this.setInventorySlotContents(0, null);
+			onInventoryChanged();
 			return true;
 		}
 		else
@@ -282,6 +329,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				if (player.getCurrentEquippedItem().getItem() instanceof ItemDisk)
 				{
 					this.setInventorySlotContents(0, player.getCurrentEquippedItem());
+					onInventoryChanged();
 					player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
 					return true;
 				}
@@ -289,6 +337,34 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		}
 
 		return false;
+	}
+
+	@Override
+	public void onInventoryChanged()
+	{
+		super.onInventoryChanged();
+		ItemStack disk = this.getStackInSlot(0);
+		if (disk != null)
+		{
+			taskManager = new CommandManager();
+			for (String commandName : ItemDisk.getCommands(disk))
+			{
+				try
+				{
+					//TODO: HOW THE CRAP AM I SUPPOSED TO ADD A COMMAND?!
+					//taskManager.addTask(this, (Command) Command.getCommand(commandName).getConstructor(TileEntityArmbot.class, String[].class).newInstance(this, new String[] {}));
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+		else
+		{
+			taskManager = new CommandManager();
+			taskManager.addTask(this, new CommandIdle(this));
+		}
 	}
 
 	@Override

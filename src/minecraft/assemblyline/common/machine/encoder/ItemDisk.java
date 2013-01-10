@@ -36,7 +36,10 @@ public class ItemDisk extends Item
 
 		if (commands.size() > 0)
 		{
-			list.add(commands.size() + " command(s)");
+			if (commands.size() == 1)
+				list.add(commands.size() + " command");
+			else
+				list.add(commands.size() + " commands");
 		}
 		else
 		{

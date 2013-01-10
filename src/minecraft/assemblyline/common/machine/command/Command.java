@@ -34,7 +34,7 @@ public abstract class Command
 
 	public static Class<? extends Command> getCommand(String command)
 	{
-		return COMMANDS.get(command);
+		return COMMANDS.get(command.toLowerCase());
 	}
 
 	/**
@@ -82,6 +82,6 @@ public abstract class Command
 	 */
 	public int getTickInterval()
 	{
-		return 0;
+		return 1;
 	}
 }
