@@ -29,6 +29,7 @@ public class CommandManager
 			while (iter.hasNext())
 			{
 				task = iter.next();
+
 				if (task.getTickInterval() > 0)
 				{
 					if (this.ticks % task.getTickInterval() == 0)
@@ -38,6 +39,8 @@ public class CommandManager
 							task.onTaskEnd();
 							iter.remove();
 						}
+
+						break;
 					}
 				}
 			}
