@@ -31,40 +31,56 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 
         int frame = tileEntity.getAnimationFrame();
 
-        switch (face)
-        {
-            case 2:
-                GL11.glRotatef(0f, 0f, 1f, 0f);
-                break;
-            case 3:
-                GL11.glRotatef(180f, 0f, 1f, 0f);
-                break;
-            case 4:
-                GL11.glRotatef(-90f, 0f, 1f, 0f);
-                break;
-            case 5:
-                GL11.glRotatef(90f, 0f, 1f, 0f);
-                break;
-        }
-
         if (slantType != null && slantType != SlantType.NONE)
         {
-            this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "Grey64.png");
-            if (slantType == SlantType.UP)
+            
+            switch (face)
             {
-                GL11.glRotatef(180f, 0f, 1f, 0f);
+                case 2:
+                    GL11.glRotatef(180f, 0f, 1f, 0f);                    
+                    break;
+                case 3:
+                    GL11.glRotatef(0f, 0f, 1f, 0f);
+                    break;
+                case 4:
+                    GL11.glRotatef(90f, 0f, 1f, 0f);
+                    break;
+                case 5:
+                    GL11.glRotatef(-90f, 0f, 1f, 0f);
+                    break;
+            }
+            
+            if (slantType == SlantType.UP)
+            {                
+                this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "slantedbelt/Upframe0.png");
+                //GL11.glRotatef(-90f, 1f, 0f, 0f);
                 model2.render(0.0625F);
             }
             else if (slantType == SlantType.DOWN)
             {
-
-                
+                this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "slantedbelt/frame"+frame+".png");
+                GL11.glRotatef(180f, 0f, 1f, 0f);
                 model2.render(0.0625F);
 
             }
         }
         else
         {
+            switch (face)
+            {
+                case 2:
+                    GL11.glRotatef(0f, 0f, 1f, 0f);
+                    break;
+                case 3:
+                    GL11.glRotatef(180f, 0f, 1f, 0f);
+                    break;
+                case 4:
+                    GL11.glRotatef(-90f, 0f, 1f, 0f);
+                    break;
+                case 5:
+                    GL11.glRotatef(90f, 0f, 1f, 0f);
+                    break;
+            }
             this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "belt/frame" + frame + ".png");
             model.render(0.0625F, (float) Math.toRadians(tileEntity.wheelRotation), tileEntity.getIsLastBelt(), tileEntity.getIsFirstBelt(), false);
 
