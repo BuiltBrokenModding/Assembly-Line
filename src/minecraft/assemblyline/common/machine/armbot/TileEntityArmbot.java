@@ -65,7 +65,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	@Override
 	public void initiate()
 	{
-		ElectricityConnections.registerConnector(this, EnumSet.of(ForgeDirection.DOWN, ForgeDirection.SOUTH, ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.WEST));
+		ElectricityConnections.registerConnector(this, EnumSet.range(ForgeDirection.DOWN, ForgeDirection.EAST));
 	}
 
 	public void onUpdate()
@@ -81,19 +81,30 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 
 			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 				this.taskManager.onUpdate();
-			
+
 			if (!this.taskManager.hasTasks())
 			{
 				this.taskManager.addTask(this, new CommandIdle(this));
 			}
-			
-			if (rotationPitch < 0) rotationPitch += (float) (Math.PI * 2);
-			if (rotationPitch >= Math.PI * 2) rotationPitch -= (float) (Math.PI * 2);
-			if (rotationYaw < 0) rotationYaw += (float) (Math.PI * 2);
-			if (rotationYaw >= Math.PI * 2) rotationYaw -= (float) (Math.PI * 2);
+
+			System.out.println("RUNNNIN");
+
+			// Give some slight random movement to the armbot.
+			if (this.rotationPitch < 0)
+				this.rotationPitch += (float) (Math.PI * 2);
+			if (this.rotationPitch >= Math.PI * 2)
+				this.rotationPitch -= (float) (Math.PI * 2);
+			if (this.rotationYaw < 0)
+				this.rotationYaw += (float) (Math.PI * 2);
+			if (this.rotationYaw >= Math.PI * 2)
+				this.rotationYaw -= (float) (Math.PI * 2);
 		}
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) //this makes it look smoother on the client, since the client seems to not be in-sync power-wise
+
+		// Simulates smoothness on client side
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+		{
 			this.taskManager.onUpdate();
+		}
 	}
 
 	@Override
@@ -101,7 +112,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	{
 		return 120;
 	}
-	
+
 	@Override
 	public Packet getDescriptionPacket()
 	{
@@ -110,7 +121,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		Packet132TileEntityData data = new Packet132TileEntityData(xCoord, yCoord, zCoord, 0, nbt);
 		return data;
 	}
-	
+
 	@Override
 	public void onDataPacket(INetworkManager netManager, Packet132TileEntityData packet)
 	{
@@ -129,7 +140,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	@Override
 	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
 	{
-		
+
 	}
 
 	/**
@@ -344,26 +355,15 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	{
 		super.onInventoryChanged();
 		ItemStack disk = this.getStackInSlot(0);
+
 		if (disk != null)
 		{
-			taskManager = new CommandManager();
-			for (String commandName : ItemDisk.getCommands(disk))
-			{
-				try
-				{
-					//TODO: HOW THE CRAP AM I SUPPOSED TO ADD A COMMAND?!
-					//taskManager.addTask(this, (Command) Command.getCommand(commandName).getConstructor(TileEntityArmbot.class, String[].class).newInstance(this, new String[] {}));
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-				}
-			}
+			this.taskManager = new CommandManager();
 		}
 		else
 		{
-			taskManager = new CommandManager();
-			taskManager.addTask(this, new CommandIdle(this));
+			this.taskManager = new CommandManager();
+			this.taskManager.addTask(this, new CommandIdle(this));
 		}
 	}
 
