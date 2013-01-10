@@ -25,14 +25,6 @@ public class CommandGrab extends Command
 
 	private Entity foundEntity;
 
-	public CommandGrab(TileEntityArmbot arm, Class<? extends Entity> entityToInclude, double radius, float searchSpeed)
-	{
-		super(arm);
-		this.entityToInclude = entityToInclude;
-		this.radius = radius;
-		this.searchSpeed = searchSpeed;
-	}
-
 	@Override
 	protected boolean doTask()
 	{

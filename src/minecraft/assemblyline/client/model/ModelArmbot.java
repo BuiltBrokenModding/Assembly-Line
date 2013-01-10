@@ -100,81 +100,52 @@ public class ModelArmbot extends ModelBase
 	{
 		super.render(entity, f, f1, f2, f3, f4, f5);
 		this.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
-		this.render(f5, null);
+		this.render(f5, entity.rotationYaw, entity.rotationPitch);
 	}
 
-	public void render(float f5, TileEntityArmbot armBot)
+	public void render(float f5, float rotationYaw, float rotationPitch)
 	{
 
-		// set yaw from tileentity
-		if (armBot != null)
-		{
-			/*armMountRight.setRotationPoint(baseRotation.rotationPointX, armMountRight.rotationPointY, baseRotation.rotationPointX);
-			armMountLeft.setRotationPoint(baseRotation.rotationPointX, armMountLeft.rotationPointY, baseRotation.rotationPointX);
-			armLower.setRotationPoint(baseRotation.rotationPointX, armLower.rotationPointY, baseRotation.rotationPointX);
-			armUpper.setRotationPoint(baseRotation.rotationPointX, armUpper.rotationPointY, baseRotation.rotationPointX);
-			baseRotation.setRotationPoint(baseRotation.rotationPointX, baseRotation.rotationPointY, baseRotation.rotationPointX);
-			clampBody.setRotationPoint(baseRotation.rotationPointX, clampBody.rotationPointY, baseRotation.rotationPointX);
-			clampBody2.setRotationPoint(baseRotation.rotationPointX, clampBody2.rotationPointY, baseRotation.rotationPointX);
-			clampClawLower.setRotationPoint(baseRotation.rotationPointX, clampClawLower.rotationPointY, baseRotation.rotationPointX);
-			clampClawLower2.setRotationPoint(baseRotation.rotationPointX, clampClawLower2.rotationPointY, baseRotation.rotationPointX);
+		/*
+		 * armMountRight.setRotationPoint(baseRotation.rotationPointX, armMountRight.rotationPointY,
+		 * baseRotation.rotationPointX); armMountLeft.setRotationPoint(baseRotation.rotationPointX,
+		 * armMountLeft.rotationPointY, baseRotation.rotationPointX);
+		 * armLower.setRotationPoint(baseRotation.rotationPointX, armLower.rotationPointY,
+		 * baseRotation.rotationPointX); armUpper.setRotationPoint(baseRotation.rotationPointX,
+		 * armUpper.rotationPointY, baseRotation.rotationPointX);
+		 * baseRotation.setRotationPoint(baseRotation.rotationPointX, baseRotation.rotationPointY,
+		 * baseRotation.rotationPointX); clampBody.setRotationPoint(baseRotation.rotationPointX,
+		 * clampBody.rotationPointY, baseRotation.rotationPointX);
+		 * clampBody2.setRotationPoint(baseRotation.rotationPointX, clampBody2.rotationPointY,
+		 * baseRotation.rotationPointX);
+		 * clampClawLower.setRotationPoint(baseRotation.rotationPointX,
+		 * clampClawLower.rotationPointY, baseRotation.rotationPointX);
+		 * clampClawLower2.setRotationPoint(baseRotation.rotationPointX,
+		 * clampClawLower2.rotationPointY, baseRotation.rotationPointX);
+		 * 
+		 * armMountRight.rotateAngleY = armBot.rotationYaw; armMountLeft.rotateAngleY =
+		 * armBot.rotationYaw; armLower.rotateAngleY = armBot.rotationYaw; armUpper.rotateAngleY =
+		 * armBot.rotationYaw; baseRotation.rotateAngleY = armBot.rotationYaw;
+		 * clampBody.rotateAngleY = armBot.rotationYaw; clampBody2.rotateAngleY =
+		 * armBot.rotationYaw; clampClawLower.rotateAngleY = armBot.rotationYaw;
+		 * clampClawLower2.rotateAngleY = armBot.rotationYaw;
+		 */
 
-			armMountRight.rotateAngleY = armBot.rotationYaw;
-			armMountLeft.rotateAngleY = armBot.rotationYaw;
-			armLower.rotateAngleY = armBot.rotationYaw;
-			armUpper.rotateAngleY = armBot.rotationYaw;
-			baseRotation.rotateAngleY = armBot.rotationYaw;
-			clampBody.rotateAngleY = armBot.rotationYaw;
-			clampBody2.rotateAngleY = armBot.rotationYaw;
-			clampClawLower.rotateAngleY = armBot.rotationYaw;
-			clampClawLower2.rotateAngleY = armBot.rotationYaw;*/
-			BaseTop.render(f5);
-			Base.render(f5);
-			GL11.glPushMatrix();
-			GL11.glRotatef((float) (armBot.rotationYaw * (180f / Math.PI)), 0, 1, 0);
-			armMountRight.render(f5);
-			armMountLeft.render(f5);
-			armLower.render(f5);
-			armUpper.render(f5);
-			baseRotation.render(f5);
-			clampBody.render(f5);
-			clampBody2.render(f5);
-			clampClawLower.render(f5);
-			clampClawLower2.render(f5);
-			GL11.glPopMatrix();
-		}
-		else
-		{
-			/*armMountRight.setRotationPoint(0F, 17F, 0F);
-			setRotation(armMountRight, 0F, 0F, 0F);
-			armMountLeft.setRotationPoint(0F, 17F, 0F);
-			setRotation(armMountLeft, 0F, 0F, 0F);
-			armLower.setRotationPoint(0F, 14F, 0F);
-			setRotation(armLower, 0.5235988F, 0F, 0F);
-			armUpper.setRotationPoint(0F, 2F, -7F);
-			setRotation(armUpper, 2.007129F, 0F, 0F);
-			baseRotation.setRotationPoint(0F, 17F, 0F);
-			setRotation(baseRotation, 0F, 0F, 0F);
-			clampBody.setRotationPoint(0F, 2F, -7F);
-			setRotation(clampBody, 2.007129F, 0F, 0F);
-			clampBody2.setRotationPoint(0F, 2F, -7F);
-			setRotation(clampBody2, 2.007129F, 0F, 0F);
-			clampClawLower.setRotationPoint(0F, 10F, -23F);
-			setRotation(clampClawLower, 2.007129F, 0F, 0F);
-			clampClawLower2.setRotationPoint(0F, 10F, -23F);
-			setRotation(clampClawLower2, 2.007129F, 0F, 0F);*/
-			BaseTop.render(f5);
-			Base.render(f5);
-			armMountRight.render(f5);
-			armMountLeft.render(f5);
-			armLower.render(f5);
-			armUpper.render(f5);
-			baseRotation.render(f5);
-			clampBody.render(f5);
-			clampBody2.render(f5);
-			clampClawLower.render(f5);
-			clampClawLower2.render(f5);
-		}
+		BaseTop.render(f5);
+		Base.render(f5);
+		GL11.glPushMatrix();
+		GL11.glRotatef(rotationYaw, 0, 1, 0);
+		armMountRight.render(f5);
+		armMountLeft.render(f5);
+		armLower.render(f5);
+		armUpper.render(f5);
+		baseRotation.render(f5);
+		clampBody.render(f5);
+		clampBody2.render(f5);
+		clampClawLower.render(f5);
+		clampClawLower2.render(f5);
+		GL11.glPopMatrix();
+
 	}
 
 	private void setRotation(ModelRenderer model, float x, float y, float z)

@@ -40,22 +40,15 @@ public abstract class Command
 	/**
 	 * The amount of ticks this command has been running for.
 	 */
-	protected int ticks;
+	protected int ticks = 0;
 
-	protected World world;
-	protected TileEntityArmbot tileEntity;
+	public World world;
+	public TileEntityArmbot tileEntity;
 
 	/**
 	 * The parameters this command has, or the properties. Entered by the player in the disk.
 	 */
-	protected String[] parameters;
-
-	public Command(TileEntityArmbot arm, String... parameters)
-	{
-		this.tileEntity = arm;
-		this.world = tileEntity.worldObj;
-		this.parameters = parameters;
-	}
+	public String[] parameters;
 
 	/**
 	 * Called by the TaskManager to propagate tick updates

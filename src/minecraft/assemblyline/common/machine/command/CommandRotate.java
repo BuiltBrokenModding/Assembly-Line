@@ -13,12 +13,18 @@ import assemblyline.common.machine.armbot.TileEntityArmbot;
  */
 public class CommandRotate extends Command
 {
+	public static final float ROTATION_SPEED = 1f;
 	float targetRotation = 0;
 
-	public CommandRotate(TileEntityArmbot arm, String...parameters)
+	@Override
+	public void onTaskStart()
 	{
-		super(arm, parameters);
-		this.targetRotation = arm.rotationYaw + (float) (Math.PI / 2);
+		this.targetRotation = this.tileEntity.rotationYaw + 90;
+
+		while (this.targetRotation > 360)
+		{
+			this.targetRotation -= 360;
+		}
 	}
 
 	@Override
@@ -26,19 +32,17 @@ public class CommandRotate extends Command
 	{
 		super.doTask();
 
-		if (this.tileEntity.rotationYaw != this.targetRotation)
+		if (this.tileEntity.rotationYaw > this.targetRotation)
 		{
-			if (Math.abs(this.targetRotation - this.tileEntity.rotationYaw) > 0.125)
-				this.tileEntity.rotationYaw += (this.targetRotation - this.tileEntity.rotationYaw) * 0.05;
-			else
-				this.tileEntity.rotationYaw += Math.signum(this.targetRotation - this.tileEntity.rotationYaw) * (0.125 * 0.05);
-			if (Math.abs(this.tileEntity.rotationYaw - this.targetRotation) < 0.0125)
-				this.tileEntity.rotationYaw = this.targetRotation;
-			return true;
+			this.tileEntity.rotationYaw -= ROTATION_SPEED;
 		}
-		if (ticks < 80)
-			return true;
+		else
+		{
+			this.tileEntity.rotationYaw += ROTATION_SPEED;
+		}
 
-		return false;
+		if (Math.abs(this.targetRotation - this.tileEntity.rotationYaw) < 0.125) { return false; }
+
+		return true;
 	}
 }

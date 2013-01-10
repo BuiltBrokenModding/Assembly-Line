@@ -38,12 +38,12 @@ import cpw.mods.fml.relauncher.Side;
 
 public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMultiBlock, IInventory, IPacketReceiver, IJouleStorage
 {
+	private final CommandManager commandManager = new CommandManager();
+
 	/**
 	 * The items this container contains.
 	 */
-	protected ItemStack[] containingItems = new ItemStack[this.getSizeInventory()];
-
-	private CommandManager taskManager = new CommandManager();
+	protected ItemStack disk = null;
 
 	public final double WATT_REQUEST = 20;
 
@@ -52,10 +52,10 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	private int playerUsing = 0;
 
 	/**
-	 * The rotation of the arms.
+	 * The rotation of the arms. In Degrees.
 	 */
-	public float rotationPitch = CommandIdle.IDLE_ROTATION_PITCH;
-	public float rotationYaw = CommandIdle.IDLE_ROTATION_YAW;
+	public float rotationPitch = 0;
+	public float rotationYaw = 0;
 
 	/**
 	 * An entity that the armbot is grabbed onto.
@@ -80,30 +80,57 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			}
 
 			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-				this.taskManager.onUpdate();
-
-			if (!this.taskManager.hasTasks())
 			{
-				this.taskManager.addTask(this, new CommandIdle(this));
+				this.commandManager.onUpdate();
 			}
 
-			System.out.println("RUNNNIN");
+			if (this.disk != null)
+			{
+				try
+				{
+					if (!this.commandManager.hasTasks())
+					{
+						List<String> commands = ItemDisk.getCommands(this.disk);
 
-			// Give some slight random movement to the armbot.
-			if (this.rotationPitch < 0)
-				this.rotationPitch += (float) (Math.PI * 2);
-			if (this.rotationPitch >= Math.PI * 2)
-				this.rotationPitch -= (float) (Math.PI * 2);
-			if (this.rotationYaw < 0)
-				this.rotationYaw += (float) (Math.PI * 2);
-			if (this.rotationYaw >= Math.PI * 2)
-				this.rotationYaw -= (float) (Math.PI * 2);
+						for (String commandString : commands)
+						{
+							Class<? extends Command> command = Command.getCommand(commandString);
+
+							if (command != null)
+							{
+								Command newCommand = command.newInstance();
+								newCommand.world = this.worldObj;
+								newCommand.tileEntity = this;
+								newCommand.parameters = new String[5];
+								newCommand.onTaskStart();
+								this.commandManager.addTask(this, newCommand);
+							}
+						}
+					}
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+			else
+			{
+				this.commandManager.clearTasks();
+			}
+
+			// Give some slight random movement to the Armbot.
+			/*
+			 * if (this.rotationPitch < 0) this.rotationPitch += (float) (Math.PI * 2); if
+			 * (this.rotationPitch >= Math.PI * 2) this.rotationPitch -= (float) (Math.PI * 2); if
+			 * (this.rotationYaw < 0) this.rotationYaw += (float) (Math.PI * 2); if
+			 * (this.rotationYaw >= Math.PI * 2) this.rotationYaw -= (float) (Math.PI * 2);
+			 */
 		}
 
 		// Simulates smoothness on client side
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
 		{
-			this.taskManager.onUpdate();
+			this.commandManager.onUpdate();
 		}
 	}
 
@@ -164,29 +191,29 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	@Override
 	public ItemStack getStackInSlot(int par1)
 	{
-		return this.containingItems[par1];
+		return this.disk;
 	}
 
 	@Override
 	public ItemStack decrStackSize(int par1, int par2)
 	{
-		if (this.containingItems[par1] != null)
+		if (this.disk != null)
 		{
 			ItemStack var3;
 
-			if (this.containingItems[par1].stackSize <= par2)
+			if (this.disk.stackSize <= par2)
 			{
-				var3 = this.containingItems[par1];
-				this.containingItems[par1] = null;
+				var3 = this.disk;
+				this.disk = null;
 				return var3;
 			}
 			else
 			{
-				var3 = this.containingItems[par1].splitStack(par2);
+				var3 = this.disk.splitStack(par2);
 
-				if (this.containingItems[par1].stackSize == 0)
+				if (this.disk.stackSize == 0)
 				{
-					this.containingItems[par1] = null;
+					this.disk = null;
 				}
 
 				return var3;
@@ -201,10 +228,10 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	@Override
 	public ItemStack getStackInSlotOnClosing(int par1)
 	{
-		if (this.containingItems[par1] != null)
+		if (this.disk != null)
 		{
-			ItemStack var2 = this.containingItems[par1];
-			this.containingItems[par1] = null;
+			ItemStack var2 = this.disk;
+			this.disk = null;
 			return var2;
 		}
 		else
@@ -216,7 +243,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	@Override
 	public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
 	{
-		this.containingItems[par1] = par2ItemStack;
+		this.disk = par2ItemStack;
 
 		if (par2ItemStack != null && par2ItemStack.stackSize > this.getInventoryStackLimit())
 		{
@@ -257,21 +284,15 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		super.readFromNBT(nbt);
 
 		NBTTagList var2 = nbt.getTagList("Items");
-		this.containingItems = new ItemStack[this.getSizeInventory()];
 
 		for (int var3 = 0; var3 < var2.tagCount(); ++var3)
 		{
 			NBTTagCompound var4 = (NBTTagCompound) var2.tagAt(var3);
-			byte var5 = var4.getByte("Slot");
-
-			if (var5 >= 0 && var5 < this.containingItems.length)
-			{
-				this.containingItems[var5] = ItemStack.loadItemStackFromNBT(var4);
-			}
+			this.disk = ItemStack.loadItemStackFromNBT(var4);
 		}
 
-		rotationYaw = nbt.getFloat("yaw");
-		rotationPitch = nbt.getFloat("pitch");
+		this.rotationYaw = nbt.getFloat("yaw");
+		this.rotationPitch = nbt.getFloat("pitch");
 	}
 
 	/**
@@ -282,19 +303,17 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	{
 		super.writeToNBT(nbt);
 		NBTTagList var2 = new NBTTagList();
-		for (int var3 = 0; var3 < this.containingItems.length; ++var3)
+
+		if (this.disk != null)
 		{
-			if (this.containingItems[var3] != null)
-			{
-				NBTTagCompound var4 = new NBTTagCompound();
-				var4.setByte("Slot", (byte) var3);
-				this.containingItems[var3].writeToNBT(var4);
-				var2.appendTag(var4);
-			}
+			NBTTagCompound var4 = new NBTTagCompound();
+			this.disk.writeToNBT(var4);
+			var2.appendTag(var4);
 		}
+
 		nbt.setTag("Items", var2);
-		nbt.setFloat("yaw", rotationYaw);
-		nbt.setFloat("pitch", rotationPitch);
+		nbt.setFloat("yaw", this.rotationYaw);
+		nbt.setFloat("pitch", this.rotationPitch);
 	}
 
 	@Override
@@ -353,18 +372,6 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	@Override
 	public void onInventoryChanged()
 	{
-		super.onInventoryChanged();
-		ItemStack disk = this.getStackInSlot(0);
-
-		if (disk != null)
-		{
-			this.taskManager = new CommandManager();
-		}
-		else
-		{
-			this.taskManager = new CommandManager();
-			this.taskManager.addTask(this, new CommandIdle(this));
-		}
 	}
 
 	@Override

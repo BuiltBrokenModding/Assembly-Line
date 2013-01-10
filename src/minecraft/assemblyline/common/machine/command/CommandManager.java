@@ -25,6 +25,7 @@ public class CommandManager
 		{
 			Command task;
 			Iterator<Command> iter = tasks.iterator();
+
 			while (iter.hasNext())
 			{
 				task = iter.next();
@@ -70,9 +71,14 @@ public class CommandManager
 	{
 		return !tasks.isEmpty();
 	}
-	
+
 	public List<Command> getCommands()
 	{
 		return tasks;
+	}
+
+	public void clearTasks()
+	{
+		this.tasks.clear();
 	}
 }
