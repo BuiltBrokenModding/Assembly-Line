@@ -44,10 +44,7 @@ public enum ColorCode
             return ColorCode.values()[((Integer) obj)];
         } else if (obj instanceof LiquidData)
         {
-            LiquidData data = (LiquidData) obj;
-            if (data == LiquidHandler.lava) { return RED; }
-            if (data == LiquidHandler.steam) { return ORANGE; }
-            if (data == LiquidHandler.water) { return BLUE; }
+            return ((LiquidData) obj).getColor();
         } else if (obj instanceof ColorCode)
         {
             return (ColorCode) obj;

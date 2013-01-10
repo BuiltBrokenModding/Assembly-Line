@@ -9,25 +9,22 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-/**
- * A metadata item containing parts of various machines in Liquid Mechanics Mod.
+/** A metadata item containing parts of various machines in Liquid Mechanics Mod.
  * 
- * @author Rs
- * 
- */
+ * @author Rs */
 public class ItemParts extends Item
 {
     public enum Parts
     {
-        Bronze("Bronze Tube", 0),
-        Iron("Iron Tube", 1),
-        Obby("Obby Tube", 2),
-        Nether("Nether Tube", 3),
-        Seal("Leather Seal", 16),
-        SlimeSeal("Slime Seal", 17),
-        Tank("Unfinished Tank", 18),
+        Bronze("Bronze", 0),
+        Iron("Iron", 1),
+        Obby("Obby", 2),
+        Nether("Nether", 3),
+        Seal("Seal", 16),
+        SlimeSeal("Slime", 17),
+        Tank("Tank", 18),
         Valve("Valve", 19);
-        
+
         public String name;
         public int itemIndex;
 
@@ -41,12 +38,11 @@ public class ItemParts extends Item
     public ItemParts(int par1)
     {
         super(par1);
-        this.setItemName("lmParts");
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
         this.setMaxStackSize(64);
+        this.setItemName("lmPart");
         this.setCreativeTab(TabLiquidMechanics.INSTANCE);
-        this.setTextureFile(LiquidMechanics.ITEM_TEXTURE_FILE);
     }
 
     @Override
@@ -57,9 +53,22 @@ public class ItemParts extends Item
     }
 
     @Override
-    public String getItemNameIS(ItemStack itemstack)
+    public String getTextureFile()
     {
-        return this.getItemName()+"." + itemstack.getItemDamage();
+        return LiquidMechanics.ITEM_TEXTURE_FILE;
+    }
+
+    @Override
+    public String getItemNameIS(ItemStack i)
+    {
+        int j = i.getItemDamage();
+        return i.getItem().getItemName() + "." + j;
+    }
+
+    @Override
+    public int getMetadata(int meta)
+    {
+        return meta;
     }
 
     @Override
@@ -69,11 +78,5 @@ public class ItemParts extends Item
         {
             par3List.add(new ItemStack(this, 1, i));
         }
-    }
-
-    @Override
-    public String getItemName()
-    {
-        return "lmParts";
     }
 }

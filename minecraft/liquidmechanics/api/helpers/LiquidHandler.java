@@ -22,6 +22,7 @@ public class LiquidHandler
     public static LiquidData lava;
     public static LiquidData unkown;
     public static LiquidData waste;
+    public static LiquidData milk;
 
     // public static LiquidData oil; TODO add
     // public static LiquidData fuel;
@@ -30,12 +31,13 @@ public class LiquidHandler
      */
     public static void addDefaultLiquids()
     {
-        water = new LiquidData("water", LiquidDictionary.getOrCreateLiquid("Water", new LiquidStack(Block.waterStill, 1)), ColorCode.BLUE, false, 32);
+        water = new LiquidData("water", LiquidDictionary.getOrCreateLiquid("Water", new LiquidStack(Block.waterStill, 1)), ColorCode.BLUE, false, 60);
         allowedLiquids.add(water);
-        lava = new LiquidData("Lava", LiquidDictionary.getOrCreateLiquid("Lava", new LiquidStack(Block.lavaStill, 1)), ColorCode.RED, false, 20);
+        lava = new LiquidData("Lava", LiquidDictionary.getOrCreateLiquid("Lava", new LiquidStack(Block.lavaStill, 1)), ColorCode.RED, false, 40);
         allowedLiquids.add(lava);
         unkown = new LiquidData("Unknown", LiquidDictionary.getOrCreateLiquid("Unknown", new LiquidStack(20, 1)), ColorCode.NONE, false, 32);
         allowedLiquids.add(unkown);
+       
     }
 
     @ForgeSubscribe
@@ -62,6 +64,10 @@ public class LiquidHandler
         {
             this.waste = new LiquidData("Waste", event.Liquid, ColorCode.BROWN, false, 40);
             this.allowedLiquids.add(waste);
+        }else if(event.Name.equalsIgnoreCase("Milk"))
+        {
+            this.milk = new LiquidData("Milk", event.Liquid, ColorCode.WHITE, false, 50);
+            this.allowedLiquids.add(milk);
         }
     }
 
@@ -127,27 +133,18 @@ public class LiquidHandler
         if(stack == null){return null;}
         return new LiquidStack(stack.itemID,vol,stack.itemMeta);
     }
-    public static int getMeta(LiquidData type)
+    public static int getMeta(LiquidData stack)
     {
-        if (type == LiquidHandler.steam) return 0;
-        if (type == LiquidHandler.water) return 1;
-        if (type == LiquidHandler.lava) return 2;
-        return 20;
+        if(stack != null && stack != unkown)
+        {
+            return stack.getColor().ordinal();
+        }
+        return 15;
     }
 
     public static LiquidData getFromMeta(int meta)
-    {
-        switch (meta)
-        {
-            case 0:
-                return steam;
-            case 1:
-                return water;
-            case 2:
-                return lava;
-        }
-        return unkown;
-
+    {        
+        return ColorCode.get(meta).getLiquidData();
     }
 
     public static LiquidData getFromBlockID(int id)
