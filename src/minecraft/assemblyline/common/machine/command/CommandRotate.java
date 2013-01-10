@@ -1,10 +1,7 @@
 package assemblyline.common.machine.command;
 
-import java.util.List;
-
-import net.minecraft.entity.Entity;
-import net.minecraft.util.AxisAlignedBB;
-import assemblyline.common.machine.armbot.TileEntityArmbot;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 
 /**
  * Rotates the armbot to a specific direction. If not specified, it will turn right.
@@ -19,11 +16,27 @@ public class CommandRotate extends Command
 	@Override
 	public void onTaskStart()
 	{
-		this.targetRotation = this.tileEntity.rotationYaw + 90;
+		if (getArg(0) == null)
+			this.targetRotation = this.tileEntity.rotationYaw + 90;
+		else
+		{
+			try
+			{
+				this.targetRotation = this.tileEntity.rotationYaw + Integer.parseInt(getArg(0));
+			}
+			catch (Exception e)
+			{
+				this.targetRotation = this.tileEntity.rotationYaw + 90;
+			}
+		}
 
 		while (this.targetRotation > 360)
 		{
 			this.targetRotation -= 360;
+		}
+		while (this.targetRotation < -360)
+		{
+			this.targetRotation += 360;
 		}
 	}
 
@@ -32,17 +45,26 @@ public class CommandRotate extends Command
 	{
 		super.doTask();
 
-		if (this.tileEntity.rotationYaw > this.targetRotation)
+		if (Math.abs(this.targetRotation - this.tileEntity.rotationYaw) > 0.125)
 		{
-			this.tileEntity.rotationYaw -= ROTATION_SPEED;
-		}
-		else
-		{
-			this.tileEntity.rotationYaw += ROTATION_SPEED;
-		}
+			if (this.tileEntity.rotationYaw > this.targetRotation)
+			{
+				this.tileEntity.rotationYaw -= ROTATION_SPEED;
+			}
+			else
+			{
+				this.tileEntity.rotationYaw += ROTATION_SPEED;
+			}
+			System.out.println("[" + ((FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) ? "S" : "C") + "]" + "Target: " + this.targetRotation + "; current: " + this.tileEntity.rotationYaw);
+			if (Math.abs(this.tileEntity.rotationYaw - this.targetRotation) < 0.5)
+				this.tileEntity.rotationYaw = this.targetRotation;
+			
 
-		if (Math.abs(this.targetRotation - this.tileEntity.rotationYaw) < 0.125) { return false; }
+			return true;
+		}
+		if (ticks < 80) //wait for a few ticks after rotating
+			return true;
 
-		return true;
+		return false;
 	}
 }

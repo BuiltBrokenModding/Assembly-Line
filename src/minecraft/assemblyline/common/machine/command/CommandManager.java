@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import assemblyline.common.machine.armbot.TileEntityArmbot;
+
 import net.minecraft.tileentity.TileEntity;
 import cpw.mods.fml.common.FMLLog;
 
@@ -12,6 +14,8 @@ public class CommandManager
 	private final List<Command> tasks = new ArrayList<Command>();
 
 	private int ticks = 0;
+	private int curTask = 0;
+	private int lastTask = -1;
 
 	/**
 	 * Must be called every tick by a tileEntity.
@@ -24,24 +28,33 @@ public class CommandManager
 		try
 		{
 			Command task;
-			Iterator<Command> iter = tasks.iterator();
-
-			while (iter.hasNext())
+			/*
+			 * Iterator<Command> iter = tasks.iterator();
+			 * 
+			 * while (iter.hasNext()) { task = iter.next();
+			 * 
+			 * if (task.getTickInterval() > 0) { if (this.ticks % task.getTickInterval() == 0) { if (!task.doTask()) { task.onTaskEnd(); iter.remove(); }
+			 * 
+			 * break; } } }
+			 */
+			if (this.tasks != null && this.tasks.size() > 0)
 			{
-				task = iter.next();
+				if (this.curTask >= this.tasks.size())
+					this.curTask = 0;
+				if (this.curTask < 0)
+					this.curTask = 0;
 
-				if (task.getTickInterval() > 0)
+				task = this.tasks.get(this.curTask);
+				
+				if (this.curTask != this.lastTask)
 				{
-					if (this.ticks % task.getTickInterval() == 0)
-					{
-						if (!task.doTask())
-						{
-							task.onTaskEnd();
-							iter.remove();
-						}
-
-						break;
-					}
+					this.lastTask = this.curTask;
+					task.onTaskStart();
+				}
+				if (!task.doTask())
+				{
+					task.onTaskEnd();
+					curTask++;
 				}
 			}
 		}
@@ -55,14 +68,14 @@ public class CommandManager
 	}
 
 	/**
-	 * Used to register Tasks for a TileEntity, executes onTaskStart for the Task after registering
-	 * it
+	 * Used to register Tasks for a TileEntity, executes onTaskStart for the Task after registering it
 	 * 
 	 * @param tileEntity TE instance to register the task for
 	 * @param task Task instance to register
 	 */
-	public void addTask(TileEntity tileEntity, Command task)
+	public void addTask(TileEntityArmbot tileEntity, Command task)
 	{
+		task.tileEntity = tileEntity;
 		tasks.add(task);
 		task.onTaskStart();
 	}

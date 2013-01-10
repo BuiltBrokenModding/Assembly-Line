@@ -29,6 +29,7 @@ import assemblyline.common.machine.TileEntityAssemblyNetwork;
 import assemblyline.common.machine.command.Command;
 import assemblyline.common.machine.command.CommandIdle;
 import assemblyline.common.machine.command.CommandManager;
+import assemblyline.common.machine.command.CommandReturn;
 import assemblyline.common.machine.encoder.ItemDisk;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -39,6 +40,7 @@ import cpw.mods.fml.relauncher.Side;
 public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMultiBlock, IInventory, IPacketReceiver, IJouleStorage
 {
 	private final CommandManager commandManager = new CommandManager();
+	private static final int PACKET_COMMANDS = 128;
 
 	/**
 	 * The items this container contains.
@@ -70,6 +72,62 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 
 	public void onUpdate()
 	{
+		if (this.disk != null)
+		{
+			try
+			{
+				if (this.commandManager.hasTasks())
+				{
+					if (this.commandManager.getCommands().get(0) instanceof CommandReturn)
+					{
+						this.commandManager.clearTasks();
+					}
+				}
+				if (!this.commandManager.hasTasks())
+				{
+					List<String> commands = ItemDisk.getCommands(this.disk);
+
+					for (String commandString : commands)
+					{
+						String commandName = commandString.split(" ")[0];
+
+						Class<? extends Command> command = Command.getCommand(commandName);
+
+						if (command != null)
+						{
+							Command newCommand = command.newInstance();
+							newCommand.world = this.worldObj;
+							newCommand.tileEntity = this;
+
+							List<String> commandParameters = new ArrayList<String>();
+
+							for (String param : commandString.split(" "))
+							{
+								if (!param.equals(commandName))
+								{
+									commandParameters.add(param);
+								}
+							}
+
+							newCommand.setParameters(commandParameters.toArray(new String[0]));
+
+							newCommand.onTaskStart();
+							this.commandManager.addTask(this, newCommand);
+						}
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			this.commandManager.clearTasks();
+			this.commandManager.addTask(this, new CommandReturn());
+		}
+		
 		if (this.isRunning())
 		{
 			for (Entity entity : this.grabbedEntities)
@@ -84,61 +142,16 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				this.commandManager.onUpdate();
 			}
 
-			if (this.disk != null)
-			{
-				try
-				{
-					if (!this.commandManager.hasTasks())
-					{
-						List<String> commands = ItemDisk.getCommands(this.disk);
+			//keep it within [0, 360) so ROTATE commands work properly
+			if (this.rotationPitch <= -360)
+				this.rotationPitch += 360;
+			if (this.rotationPitch >= 360)
+				this.rotationPitch -= 360;
+			if (this.rotationYaw <= -360)
+				this.rotationYaw += 360;
+			if (this.rotationYaw >= 360)
+				this.rotationYaw -= 360;
 
-						for (String commandString : commands)
-						{
-							String commandName = commandString.split(" ")[0];
-
-							Class<? extends Command> command = Command.getCommand(commandName);
-
-							if (command != null)
-							{
-								Command newCommand = command.newInstance();
-								newCommand.world = this.worldObj;
-								newCommand.tileEntity = this;
-
-								List<String> commandParameters = new ArrayList<String>();
-
-								for (String param : commandString.split(" "))
-								{
-									if (!param.equals(commandName))
-									{
-										commandParameters.add(param);
-									}
-								}
-
-								newCommand.setParameters(commandParameters.toArray(new String[0]));
-
-								newCommand.onTaskStart();
-								this.commandManager.addTask(this, newCommand);
-							}
-						}
-					}
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-				}
-			}
-			else
-			{
-				this.commandManager.clearTasks();
-			}
-
-			// Give some slight random movement to the Armbot.
-			/*
-			 * if (this.rotationPitch < 0) this.rotationPitch += (float) (Math.PI * 2); if
-			 * (this.rotationPitch >= Math.PI * 2) this.rotationPitch -= (float) (Math.PI * 2); if
-			 * (this.rotationYaw < 0) this.rotationYaw += (float) (Math.PI * 2); if
-			 * (this.rotationYaw >= Math.PI * 2) this.rotationYaw -= (float) (Math.PI * 2);
-			 */
 		}
 
 		// Simulates smoothness on client side
@@ -181,7 +194,12 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	@Override
 	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
 	{
-
+		/*if (packetType == PACKET_COMMANDS)
+		{
+			String commandString = dataStream.readUTF();
+			String[] commands = commandString.split("|");
+			
+		}*/
 	}
 
 	/**
@@ -297,12 +315,10 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	{
 		super.readFromNBT(nbt);
 
-		NBTTagList var2 = nbt.getTagList("Items");
-
-		for (int var3 = 0; var3 < var2.tagCount(); ++var3)
+		NBTTagCompound diskNBT = nbt.getCompoundTag("disk");
+		if (diskNBT != null)
 		{
-			NBTTagCompound var4 = (NBTTagCompound) var2.tagAt(var3);
-			this.disk = ItemStack.loadItemStackFromNBT(var4);
+			disk = ItemStack.loadItemStackFromNBT(diskNBT);
 		}
 
 		this.rotationYaw = nbt.getFloat("yaw");
@@ -316,16 +332,15 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		NBTTagList var2 = new NBTTagList();
+		
+		NBTTagCompound diskNBT = new NBTTagCompound();
 
 		if (this.disk != null)
 		{
-			NBTTagCompound var4 = new NBTTagCompound();
-			this.disk.writeToNBT(var4);
-			var2.appendTag(var4);
+			this.disk.writeToNBT(diskNBT);
 		}
 
-		nbt.setTag("Items", var2);
+		nbt.setTag("disk", diskNBT);
 		nbt.setFloat("yaw", this.rotationYaw);
 		nbt.setFloat("pitch", this.rotationPitch);
 	}

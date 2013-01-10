@@ -24,6 +24,12 @@ public class CommandGrab extends Command
 	private double radius;
 
 	private Entity foundEntity;
+	
+	public CommandGrab()
+	{
+		super();
+		this.entityToInclude = Entity.class;
+	}
 
 	@Override
 	protected boolean doTask()

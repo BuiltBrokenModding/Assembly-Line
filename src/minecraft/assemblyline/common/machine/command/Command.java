@@ -25,6 +25,7 @@ public abstract class Command
 		registerCommand("idle", CommandIdle.class);
 		registerCommand("grab", CommandGrab.class);
 		registerCommand("rotate", CommandRotate.class);
+		registerCommand("return", CommandReturn.class);
 	}
 
 	public static void registerCommand(String command, Class<? extends Command> commandClass)
