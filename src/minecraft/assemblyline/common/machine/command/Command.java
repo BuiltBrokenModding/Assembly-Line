@@ -47,8 +47,9 @@ public abstract class Command
 
 	/**
 	 * The parameters this command has, or the properties. Entered by the player in the disk.
+	 * Parameters are entered like a Java function. idle(20) = Idles for 20 seconds.
 	 */
-	public String[] parameters;
+	private String[] parameters = new String[0];
 
 	/**
 	 * Called by the TaskManager to propagate tick updates
@@ -76,5 +77,37 @@ public abstract class Command
 	public int getTickInterval()
 	{
 		return 1;
+	}
+
+	public void setParameters(String[] strings)
+	{
+		this.parameters = strings;
+	}
+
+	/**
+	 * Some functions to help get parameter arguments.
+	 */
+	protected String getArg(int i)
+	{
+		if (i >= 0 && i < this.parameters.length) { return this.parameters[i]; }
+
+		return null;
+	}
+
+	protected int getIntArg(int i)
+	{
+		if (getArg(i) != null)
+		{
+			try
+			{
+				return Integer.parseInt(getArg(i));
+			}
+			catch (Exception e)
+			{
+
+			}
+		}
+
+		return 0;
 	}
 }

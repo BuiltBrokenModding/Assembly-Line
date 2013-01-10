@@ -178,7 +178,11 @@ public class TileEntityEncoder extends TileEntityAdvanced implements IPacketRece
 					if (dataStream.readBoolean())
 					{
 						String newCommand = dataStream.readUTF();
-						if (Command.getCommand(newCommand) != null)
+
+						// Split commands that contains parameters
+						String commandName = newCommand.split(" ")[0];
+
+						if (Command.getCommand(commandName) != null)
 							tempCmds.add(newCommand);
 					}
 					else

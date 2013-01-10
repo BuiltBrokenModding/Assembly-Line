@@ -9,6 +9,14 @@ public class CommandIdle extends Command
 	 */
 	public int idleTime = 80;
 
+	public void onTaskStart()
+	{
+		if (this.getIntArg(0) > 0)
+		{
+			this.idleTime = this.getIntArg(0);
+		}
+	}
+
 	protected boolean doTask()
 	{
 		/**
@@ -19,7 +27,6 @@ public class CommandIdle extends Command
 		if (this.idleTime > 0)
 		{
 			this.idleTime--;
-			System.out.println("RESTING");
 			return true;
 		}
 

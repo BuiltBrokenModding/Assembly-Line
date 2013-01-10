@@ -94,14 +94,28 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 
 						for (String commandString : commands)
 						{
-							Class<? extends Command> command = Command.getCommand(commandString);
+							String commandName = commandString.split(" ")[0];
+
+							Class<? extends Command> command = Command.getCommand(commandName);
 
 							if (command != null)
 							{
 								Command newCommand = command.newInstance();
 								newCommand.world = this.worldObj;
 								newCommand.tileEntity = this;
-								newCommand.parameters = new String[5];
+
+								List<String> commandParameters = new ArrayList<String>();
+
+								for (String param : commandString.split(" "))
+								{
+									if (!param.equals(commandName))
+									{
+										commandParameters.add(param);
+									}
+								}
+
+								newCommand.setParameters(commandParameters.toArray(new String[0]));
+
 								newCommand.onTaskStart();
 								this.commandManager.addTask(this, newCommand);
 							}

@@ -88,6 +88,8 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 	@Override
 	protected void actionPerformed(GuiButton button)
 	{
+		// TODO: Add insert command to allow commands to be inserted between two existing commands.
+
 		switch (button.id)
 		{
 			case 0: // add
@@ -98,12 +100,8 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 					{
 						ItemStack disk = this.tileEntity.getStackInSlot(0);
 
-						if (disk != null && Command.getCommand(this.commandField.getText()) != null)
+						if (disk != null)
 						{
-							ArrayList<String> tempCmds = ItemDisk.getCommands(disk);
-							tempCmds.add(commandField.getText());
-							ItemDisk.setCommands(disk, tempCmds);
-							this.tileEntity.setInventorySlotContents(0, disk);
 							PacketDispatcher.sendPacketToServer(PacketManager.getPacket(AssemblyLine.CHANNEL, this.tileEntity, true, (String) this.commandField.getText()));
 						}
 					}
@@ -125,13 +123,9 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 
 					if (disk != null && this.selCommand >= 0 && this.selCommand < this.commands.size())
 					{
-						ArrayList<String> tempCmds = ItemDisk.getCommands(disk);
-						tempCmds.remove(this.selCommand);
-						ItemDisk.setCommands(disk, tempCmds);
-						this.tileEntity.setInventorySlotContents(0, disk);
 						PacketDispatcher.sendPacketToServer(PacketManager.getPacket(AssemblyLine.CHANNEL, this.tileEntity, false, this.selCommand));
 					}
-					
+
 					this.selCommand = -1;
 				}
 
@@ -257,10 +251,10 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 	@Override
 	protected void keyTyped(char character, int keycode)
 	{
-		if (character != 'e' && character != 'E') // don't close GUI
+		if (character != 'e' && character != 'E') // Don't close GUI
 			super.keyTyped(character, keycode);
 		commandField.textboxKeyTyped(character, keycode);
-		// System.out.println(keycode);
+
 		if (keycode == Keyboard.KEY_ESCAPE)
 		{
 			this.mc.thePlayer.closeScreen();
@@ -391,14 +385,13 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 				this.minCommand = 0;
 		}
 	}
-	
+
 	@Override
 	public void onGuiClosed()
 	{
 		super.onGuiClosed();
 		Keyboard.enableRepeatEvents(false);
 	}
-	
 
 	@Override
 	public void inventoryChanged()
