@@ -12,6 +12,7 @@ CHANGELOG
 !/models/
 !info.txt
 !publish.bat
+!publish_obf.bat
 !include.bat
 !buildlocal.bat
 !/README

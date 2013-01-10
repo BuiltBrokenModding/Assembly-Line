@@ -32,7 +32,8 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 		NONE, UP, DOWN
 	}
 
-	public static final int NUM_FRAMES = 13;
+	public static final int MAX_FRAME = 13;
+	public static final int MAX_SLANT_FRAME = 23;
 
 	/**
 	 * Joules required to run this thing.
@@ -41,14 +42,12 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	public final float maxSpeed = 0.1f;
 
 	public float wheelRotation = 0;
-	public int animFrame = 0; // this is from 0 to 15
+	private int animFrame = 0; // this is from 0 to 15
 	private SlantType slantType = SlantType.NONE;
 
 	public TileEntityConveyorBelt()
 	{
 		super();
-		// ElectricityConnections.registerConnector(this, EnumSet.of(ForgeDirection.DOWN,
-		// ForgeDirection.EAST, ForgeDirection.WEST, ForgeDirection.NORTH, ForgeDirection.SOUTH));
 		ElectricityConnections.registerConnector(this, EnumSet.of(ForgeDirection.DOWN));
 	}
 
@@ -120,18 +119,30 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 
 		if (this.isRunning())
 		{
-			// System.out.println(FMLCommonHandler.instance().getEffectiveSide());
 			this.wheelRotation += 40;
 
 			if (this.wheelRotation > 360)
 				this.wheelRotation = 0;
 
 			float wheelRotPct = wheelRotation / 360f;
-			animFrame = (int) (wheelRotPct * NUM_FRAMES); // sync the animation
-			if (animFrame < 0)
-				animFrame = 0;
-			if (animFrame > NUM_FRAMES)
-				animFrame = NUM_FRAMES;
+
+			// Sync the animation. Slant belts are slower.
+			if (this.getSlant() == SlantType.NONE)
+			{
+				this.animFrame = (int) (wheelRotPct * MAX_FRAME);
+				if (this.animFrame < 0)
+					this.animFrame = 0;
+				if (this.animFrame > MAX_FRAME)
+					this.animFrame = MAX_FRAME;
+			}
+			else
+			{
+				this.animFrame = (int) (wheelRotPct * MAX_SLANT_FRAME);
+				if (this.animFrame < 0)
+					this.animFrame = 0;
+				if (this.animFrame > MAX_SLANT_FRAME)
+					this.animFrame = MAX_SLANT_FRAME;
+			}
 		}
 
 	}
@@ -263,15 +274,31 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	public int getAnimationFrame()
 	{
 		TileEntity te = null;
-		te = worldObj.getBlockTileEntity(xCoord - 1, yCoord, zCoord);
+		te = this.worldObj.getBlockTileEntity(this.xCoord - 1, this.yCoord, this.zCoord);
+
 		if (te != null)
+		{
 			if (te instanceof TileEntityConveyorBelt)
-				return ((TileEntityConveyorBelt) te).getAnimationFrame();
-		te = worldObj.getBlockTileEntity(xCoord, yCoord, zCoord - 1);
+			{
+				if (((TileEntityConveyorBelt) te).getSlant() == this.slantType)
+					return ((TileEntityConveyorBelt) te).getAnimationFrame();
+			}
+
+		}
+
+		te = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord - 1);
+
 		if (te != null)
+		{
 			if (te instanceof TileEntityConveyorBelt)
-				return ((TileEntityConveyorBelt) te).getAnimationFrame();
-		return animFrame;
+			{
+				if (((TileEntityConveyorBelt) te).getSlant() == this.slantType)
+					return ((TileEntityConveyorBelt) te).getAnimationFrame();
+			}
+
+		}
+
+		return this.animFrame;
 	}
 
 	/**
