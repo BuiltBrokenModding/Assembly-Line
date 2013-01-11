@@ -14,7 +14,7 @@ public class CommandManager
 	private final List<Command> tasks = new ArrayList<Command>();
 
 	private int ticks = 0;
-	private int curTask = 0;
+	private int currentTask = 0;
 	private int lastTask = -1;
 
 	/**
@@ -27,34 +27,35 @@ public class CommandManager
 		 */
 		try
 		{
-			Command task;
 			/*
 			 * Iterator<Command> iter = tasks.iterator();
 			 * 
 			 * while (iter.hasNext()) { task = iter.next();
 			 * 
-			 * if (task.getTickInterval() > 0) { if (this.ticks % task.getTickInterval() == 0) { if (!task.doTask()) { task.onTaskEnd(); iter.remove(); }
+			 * if (task.getTickInterval() > 0) { if (this.ticks % task.getTickInterval() == 0) { if
+			 * (!task.doTask()) { task.onTaskEnd(); iter.remove(); }
 			 * 
 			 * break; } } }
 			 */
 			if (this.tasks != null && this.tasks.size() > 0)
 			{
-				if (this.curTask >= this.tasks.size())
-					this.curTask = 0;
-				if (this.curTask < 0)
-					this.curTask = 0;
+				if (this.currentTask >= this.tasks.size())
+					this.currentTask = 0;
+				if (this.currentTask < 0)
+					this.currentTask = 0;
 
-				task = this.tasks.get(this.curTask);
-				
-				if (this.curTask != this.lastTask)
+				Command task = this.tasks.get(this.currentTask);
+
+				if (this.currentTask != this.lastTask)
 				{
-					this.lastTask = this.curTask;
+					this.lastTask = this.currentTask;
 					task.onTaskStart();
 				}
+
 				if (!task.doTask())
 				{
 					task.onTaskEnd();
-					curTask++;
+					this.currentTask++;
 				}
 			}
 		}
@@ -68,16 +69,25 @@ public class CommandManager
 	}
 
 	/**
-	 * Used to register Tasks for a TileEntity, executes onTaskStart for the Task after registering it
+	 * Used to register Tasks for a TileEntity, executes onTaskStart for the Task after registering
+	 * it
 	 * 
 	 * @param tileEntity TE instance to register the task for
 	 * @param task Task instance to register
 	 */
-	public void addTask(TileEntityArmbot tileEntity, Command task)
+	public void addTask(TileEntityArmbot tileEntity, Command task, String[] parameters)
 	{
+		task.world = tileEntity.worldObj;
 		task.tileEntity = tileEntity;
+		task.commandManager = this;
+		task.setParameters(parameters);
 		tasks.add(task);
 		task.onTaskStart();
+	}
+
+	public void addTask(TileEntityArmbot tileEntity, Command task)
+	{
+		this.addTask(tileEntity, task, new String[0]);
 	}
 
 	/**
@@ -96,5 +106,15 @@ public class CommandManager
 	public void clearTasks()
 	{
 		this.tasks.clear();
+	}
+
+	public void setCurrentTask(int i)
+	{
+		this.currentTask = Math.max(Math.min(i, this.tasks.size() - 1), 0);
+	}
+
+	public int getCurrentTask()
+	{
+		return this.currentTask;
 	}
 }

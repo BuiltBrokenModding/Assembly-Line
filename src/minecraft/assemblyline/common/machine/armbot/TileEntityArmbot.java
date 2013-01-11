@@ -10,7 +10,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
@@ -23,11 +22,10 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.multiblock.IMultiBlock;
 import universalelectricity.prefab.network.IPacketReceiver;
-import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.TileEntityAssemblyNetwork;
 import assemblyline.common.machine.command.Command;
-import assemblyline.common.machine.command.CommandIdle;
+import assemblyline.common.machine.command.CommandDrop;
 import assemblyline.common.machine.command.CommandManager;
 import assemblyline.common.machine.command.CommandReturn;
 import assemblyline.common.machine.encoder.ItemDisk;
@@ -70,6 +68,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		ElectricityConnections.registerConnector(this, EnumSet.range(ForgeDirection.DOWN, ForgeDirection.EAST));
 	}
 
+	@Override
 	public void onUpdate()
 	{
 		if (this.disk != null)
@@ -109,10 +108,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 								}
 							}
 
-							newCommand.setParameters(commandParameters.toArray(new String[0]));
-
-							newCommand.onTaskStart();
-							this.commandManager.addTask(this, newCommand);
+							this.commandManager.addTask(this, newCommand, commandParameters.toArray(new String[0]));
 						}
 					}
 				}
@@ -125,13 +121,24 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		else
 		{
 			this.commandManager.clearTasks();
-			this.commandManager.addTask(this, new CommandReturn());
+
+			if (this.grabbedEntities.size() > 0)
+			{
+				this.commandManager.addTask(this, new CommandDrop());
+			}
+			else
+			{
+				this.commandManager.addTask(this, new CommandReturn());
+			}
 		}
-		
+
 		if (this.isRunning())
 		{
+			Vector3 handPosition = this.getHandPosition();
+
 			for (Entity entity : this.grabbedEntities)
 			{
+				entity.setPosition(handPosition.x, handPosition.y, handPosition.z);
 				entity.motionX = 0;
 				entity.motionY = 0;
 				entity.motionZ = 0;
@@ -142,7 +149,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				this.commandManager.onUpdate();
 			}
 
-			//keep it within [0, 360) so ROTATE commands work properly
+			// keep it within [0, 360) so ROTATE commands work properly
 			if (this.rotationPitch <= -360)
 				this.rotationPitch += 360;
 			if (this.rotationPitch >= 360)
@@ -161,6 +168,29 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		}
 	}
 
+	/**
+	 * @return The current hand position of the armbot.
+	 */
+	public Vector3 getHandPosition()
+	{
+		Vector3 position = new Vector3(this);
+		position.add(0.5);
+		// The distance of the position relative to the main position.
+		double distance = 1.7f;
+		Vector3 delta = new Vector3();
+		// The delta Y of the hand.
+		delta.y = Math.sin(Math.toRadians(this.rotationPitch)) * distance;
+		// The horizontal delta of the hand.
+		double dH = Math.cos(Math.toRadians(this.rotationPitch)) * distance;
+		// The delta X and Z.
+		delta.x = Math.sin(Math.toRadians(-this.rotationYaw)) * dH;
+		delta.z = Math.cos(Math.toRadians(-this.rotationYaw)) * dH;
+		position.add(delta);
+
+		this.worldObj.spawnParticle("smoke", position.x, position.y, position.z, 0, 0, 0);
+		return position;
+	}
+
 	@Override
 	public double getVoltage()
 	{
@@ -172,7 +202,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		writeToNBT(nbt);
-		Packet132TileEntityData data = new Packet132TileEntityData(xCoord, yCoord, zCoord, 0, nbt);
+		Packet132TileEntityData data = new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 0, nbt);
 		return data;
 	}
 
@@ -181,9 +211,9 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	{
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
 		{
-			xCoord = packet.xPosition;
-			yCoord = packet.yPosition;
-			zCoord = packet.zPosition;
+			this.xCoord = packet.xPosition;
+			this.yCoord = packet.yPosition;
+			this.zCoord = packet.zPosition;
 			readFromNBT(packet.customParam1);
 		}
 	}
@@ -194,12 +224,12 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	@Override
 	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
 	{
-		/*if (packetType == PACKET_COMMANDS)
-		{
-			String commandString = dataStream.readUTF();
-			String[] commands = commandString.split("|");
-			
-		}*/
+		/*
+		 * if (packetType == PACKET_COMMANDS) { String commandString = dataStream.readUTF();
+		 * String[] commands = commandString.split("|");
+		 * 
+		 * }
+		 */
 	}
 
 	/**
@@ -316,9 +346,10 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		super.readFromNBT(nbt);
 
 		NBTTagCompound diskNBT = nbt.getCompoundTag("disk");
+
 		if (diskNBT != null)
 		{
-			disk = ItemStack.loadItemStackFromNBT(diskNBT);
+			this.disk = ItemStack.loadItemStackFromNBT(diskNBT);
 		}
 
 		this.rotationYaw = nbt.getFloat("yaw");
@@ -332,7 +363,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		
+
 		NBTTagCompound diskNBT = new NBTTagCompound();
 
 		if (this.disk != null)

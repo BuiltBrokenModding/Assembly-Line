@@ -24,8 +24,10 @@ public abstract class Command
 	{
 		registerCommand("idle", CommandIdle.class);
 		registerCommand("grab", CommandGrab.class);
+		registerCommand("drop", CommandDrop.class);
 		registerCommand("rotate", CommandRotate.class);
 		registerCommand("return", CommandReturn.class);
+		registerCommand("repeat", CommandRepeat.class);
 	}
 
 	public static void registerCommand(String command, Class<? extends Command> commandClass)
@@ -45,12 +47,13 @@ public abstract class Command
 
 	public World world;
 	public TileEntityArmbot tileEntity;
+	public CommandManager commandManager;
 
 	/**
 	 * The parameters this command has, or the properties. Entered by the player in the disk.
 	 * Parameters are entered like a Java function. idle(20) = Idles for 20 seconds.
 	 */
-	private String[] parameters = new String[0];
+	private String[] parameters;
 
 	/**
 	 * Called by the TaskManager to propagate tick updates

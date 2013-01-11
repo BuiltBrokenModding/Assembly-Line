@@ -14,17 +14,13 @@ import assemblyline.common.machine.armbot.TileEntityArmbot;
 public class CommandGrab extends Command
 {
 
+	public static final int radius = 1;
+
 	/**
 	 * The item to be collected.
 	 */
 	private Class<? extends Entity> entityToInclude;
 
-	private float searchSpeed;
-
-	private double radius;
-
-	private Entity foundEntity;
-	
 	public CommandGrab()
 	{
 		super();

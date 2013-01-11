@@ -7,6 +7,7 @@ public class CommandReturn extends Command
 	public static final float IDLE_ROTATION_PITCH = 0;
 	public static final float IDLE_ROTATION_YAW = 0;
 
+	@Override
 	protected boolean doTask()
 	{
 		/**

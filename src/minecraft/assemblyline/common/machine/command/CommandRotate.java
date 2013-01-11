@@ -16,18 +16,13 @@ public class CommandRotate extends Command
 	@Override
 	public void onTaskStart()
 	{
-		if (getArg(0) == null)
+		if (this.getArg(0) == null)
+		{
 			this.targetRotation = this.tileEntity.rotationYaw + 90;
+		}
 		else
 		{
-			try
-			{
-				this.targetRotation = this.tileEntity.rotationYaw + Integer.parseInt(getArg(0));
-			}
-			catch (Exception e)
-			{
-				this.targetRotation = this.tileEntity.rotationYaw + 90;
-			}
+			this.targetRotation = this.tileEntity.rotationYaw + this.getIntArg(0);
 		}
 
 		while (this.targetRotation > 360)
@@ -55,14 +50,17 @@ public class CommandRotate extends Command
 			{
 				this.tileEntity.rotationYaw += ROTATION_SPEED;
 			}
-			System.out.println("[" + ((FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) ? "S" : "C") + "]" + "Target: " + this.targetRotation + "; current: " + this.tileEntity.rotationYaw);
+
+			// System.out.println("[" + ((FMLCommonHandler.instance().getEffectiveSide() ==
+			// Side.SERVER) ? "S" : "C") + "]" + "Target: " + this.targetRotation + "; current: " +
+			// this.tileEntity.rotationYaw);
+
 			if (Math.abs(this.tileEntity.rotationYaw - this.targetRotation) < 0.5)
 				this.tileEntity.rotationYaw = this.targetRotation;
-			
 
 			return true;
 		}
-		if (ticks < 80) //wait for a few ticks after rotating
+		if (ticks < 80) // wait for a few ticks after rotating
 			return true;
 
 		return false;
