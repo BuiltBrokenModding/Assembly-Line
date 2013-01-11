@@ -14,7 +14,6 @@ public class CommandDrop extends Command
 
 		// TODO: Animate Armbot to move down and drop all items.
 		this.tileEntity.grabbedEntities.clear();
-
-		return true;
+		return false;
 	}
 }

@@ -4,7 +4,7 @@ import java.util.List;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.AxisAlignedBB;
-import assemblyline.common.machine.armbot.TileEntityArmbot;
+import universalelectricity.core.vector.Vector3;
 
 /**
  * Used by arms to search for entities in a region
@@ -14,7 +14,7 @@ import assemblyline.common.machine.armbot.TileEntityArmbot;
 public class CommandGrab extends Command
 {
 
-	public static final int radius = 1;
+	public static final float radius = 0.5f;
 
 	/**
 	 * The item to be collected.
@@ -32,7 +32,8 @@ public class CommandGrab extends Command
 	{
 		super.doTask();
 
-		List<Entity> found = this.tileEntity.worldObj.getEntitiesWithinAABB(entityToInclude, AxisAlignedBB.getBoundingBox(tileEntity.xCoord - radius, tileEntity.yCoord - radius, tileEntity.zCoord - radius, tileEntity.xCoord + radius, tileEntity.yCoord + radius, tileEntity.zCoord + radius));
+		Vector3 serachPosition = this.tileEntity.getHandPosition();
+		List<Entity> found = this.world.getEntitiesWithinAABB(this.entityToInclude, AxisAlignedBB.getBoundingBox(serachPosition.x - radius, serachPosition.y - radius, serachPosition.z - radius, serachPosition.x + radius, serachPosition.y + radius, serachPosition.z + radius));
 
 		if (found != null && found.size() > 0)
 		{

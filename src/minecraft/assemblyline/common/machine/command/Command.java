@@ -59,7 +59,7 @@ public abstract class Command
 	 * Called by the TaskManager to propagate tick updates
 	 * 
 	 * @param ticks The amount of ticks this task has been running
-	 * @return false if the task is finished and can be removed, true otherwise
+	 * @return false if the task is finished and can be continued, true otherwise
 	 */
 	protected boolean doTask()
 	{

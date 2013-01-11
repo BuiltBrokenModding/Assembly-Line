@@ -10,12 +10,12 @@ import cpw.mods.fml.relauncher.Side;
  */
 public class CommandRotate extends Command
 {
-	public static final float ROTATION_SPEED = 1f;
+	public static final float ROTATION_SPEED = 1.3f;
 	float targetRotation = 0;
 
 	@Override
 	public void onTaskStart()
-	{
+	{		
 		if (this.getArg(0) == null)
 		{
 			this.targetRotation = this.tileEntity.rotationYaw + 90;
@@ -39,8 +39,13 @@ public class CommandRotate extends Command
 	protected boolean doTask()
 	{
 		super.doTask();
+		float rotationalDifference = Math.abs(this.tileEntity.rotationYaw - this.targetRotation);
 
-		if (Math.abs(this.targetRotation - this.tileEntity.rotationYaw) > 0.125)
+		if (rotationalDifference < 0.8)
+		{
+			this.tileEntity.rotationYaw = this.targetRotation;
+		}
+		else
 		{
 			if (this.tileEntity.rotationYaw > this.targetRotation)
 			{
@@ -51,17 +56,10 @@ public class CommandRotate extends Command
 				this.tileEntity.rotationYaw += ROTATION_SPEED;
 			}
 
-			// System.out.println("[" + ((FMLCommonHandler.instance().getEffectiveSide() ==
-			// Side.SERVER) ? "S" : "C") + "]" + "Target: " + this.targetRotation + "; current: " +
-			// this.tileEntity.rotationYaw);
-
-			if (Math.abs(this.tileEntity.rotationYaw - this.targetRotation) < 0.5)
-				this.tileEntity.rotationYaw = this.targetRotation;
-
 			return true;
 		}
-		if (ticks < 80) // wait for a few ticks after rotating
-			return true;
+
+		if (this.ticks < 80) { return true; }
 
 		return false;
 	}

@@ -1,5 +1,8 @@
 package assemblyline.common.machine.armbot;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -12,7 +15,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -22,6 +24,7 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.multiblock.IMultiBlock;
 import universalelectricity.prefab.network.IPacketReceiver;
+import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.TileEntityAssemblyNetwork;
 import assemblyline.common.machine.command.Command;
@@ -33,6 +36,7 @@ import assemblyline.common.machine.encoder.ItemDisk;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 
 public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMultiBlock, IInventory, IPacketReceiver, IJouleStorage
@@ -82,6 +86,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 						this.commandManager.clearTasks();
 					}
 				}
+
 				if (!this.commandManager.hasTasks())
 				{
 					List<String> commands = ItemDisk.getCommands(this.disk);
@@ -130,6 +135,8 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			{
 				this.commandManager.addTask(this, new CommandReturn());
 			}
+			
+			this.commandManager.setCurrentTask(0);
 		}
 
 		if (this.isRunning())
@@ -142,14 +149,16 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				entity.motionX = 0;
 				entity.motionY = 0;
 				entity.motionZ = 0;
+
+				if (entity instanceof EntityItem)
+				{
+					((EntityItem) entity).delayBeforeCanPickup = 20;
+				}
 			}
 
-			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-			{
-				this.commandManager.onUpdate();
-			}
+			this.commandManager.onUpdate();
 
-			// keep it within [0, 360) so ROTATE commands work properly
+			// keep it within 0 - 360 degrees so ROTATE commands work properly
 			if (this.rotationPitch <= -360)
 				this.rotationPitch += 360;
 			if (this.rotationPitch >= 360)
@@ -161,10 +170,9 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 
 		}
 
-		// Simulates smoothness on client side
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && this.ticks % 5 == 0)
 		{
-			this.commandManager.onUpdate();
+			PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 20);
 		}
 	}
 
@@ -186,8 +194,9 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		delta.x = Math.sin(Math.toRadians(-this.rotationYaw)) * dH;
 		delta.z = Math.cos(Math.toRadians(-this.rotationYaw)) * dH;
 		position.add(delta);
-
-		this.worldObj.spawnParticle("smoke", position.x, position.y, position.z, 0, 0, 0);
+		// TODO: Use Smoke Spawning to Determine Hand Calculation Position. Delete when done
+		// developing this part.
+		// this.worldObj.spawnParticle("smoke", position.x, position.y, position.z, 0, 0, 0);
 		return position;
 	}
 
@@ -202,20 +211,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		writeToNBT(nbt);
-		Packet132TileEntityData data = new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 0, nbt);
-		return data;
-	}
-
-	@Override
-	public void onDataPacket(INetworkManager netManager, Packet132TileEntityData packet)
-	{
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
-		{
-			this.xCoord = packet.xPosition;
-			this.yCoord = packet.yPosition;
-			this.zCoord = packet.zPosition;
-			readFromNBT(packet.customParam1);
-		}
+		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.commandManager.getCurrentTask(), nbt);
 	}
 
 	/**
@@ -224,12 +220,29 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	@Override
 	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
 	{
-		/*
-		 * if (packetType == PACKET_COMMANDS) { String commandString = dataStream.readUTF();
-		 * String[] commands = commandString.split("|");
-		 * 
-		 * }
-		 */
+		if (this.worldObj.isRemote)
+		{
+			try
+			{
+				ByteArrayInputStream bis = new ByteArrayInputStream(packet.data);
+				DataInputStream dis = new DataInputStream(bis);
+				final int id, x, y, z;
+
+				id = dis.readInt();
+				x = dis.readInt();
+				y = dis.readInt();
+				z = dis.readInt();
+				this.commandManager.setCurrentTask(dis.readInt());
+
+				NBTTagCompound tag = Packet.readNBTTagCompound(dis);
+				readFromNBT(tag);
+			}
+			catch (IOException e)
+			{
+				FMLLog.severe("Failed to receive packet for Armbot");
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -351,9 +364,14 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		{
 			this.disk = ItemStack.loadItemStackFromNBT(diskNBT);
 		}
+		else
+		{
+			this.disk = null;
+		}
 
 		this.rotationYaw = nbt.getFloat("yaw");
 		this.rotationPitch = nbt.getFloat("pitch");
+		this.commandManager.setCurrentTask(nbt.getInteger("currentTask"));
 	}
 
 	/**
@@ -374,6 +392,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		nbt.setTag("disk", diskNBT);
 		nbt.setFloat("yaw", this.rotationYaw);
 		nbt.setFloat("pitch", this.rotationPitch);
+		nbt.setInteger("currentTask", this.commandManager.getCurrentTask());
 	}
 
 	@Override
@@ -432,6 +451,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	@Override
 	public void onInventoryChanged()
 	{
+		this.commandManager.setCurrentTask(0);
 	}
 
 	@Override

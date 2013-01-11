@@ -15,13 +15,21 @@ public class CommandRepeat extends Command
 
 	public void onTaskStart()
 	{
-		this.tasksToRepeat = this.getIntArg(0);
+		this.tasksToRepeat = Math.max(this.getIntArg(0), 0);
 	}
 
 	@Override
 	protected boolean doTask()
 	{
-		this.commandManager.setCurrentTask(this.commandManager.getCurrentTask() - this.tasksToRepeat);
+		if (this.tasksToRepeat > 0)
+		{
+			this.commandManager.setCurrentTask(this.commandManager.getCurrentTask() - this.tasksToRepeat);
+		}
+		else
+		{
+			this.commandManager.setCurrentTask(0);
+		}
+
 		return false;
 	}
 }

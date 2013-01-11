@@ -27,35 +27,28 @@ public class CommandManager
 		 */
 		try
 		{
-			/*
-			 * Iterator<Command> iter = tasks.iterator();
-			 * 
-			 * while (iter.hasNext()) { task = iter.next();
-			 * 
-			 * if (task.getTickInterval() > 0) { if (this.ticks % task.getTickInterval() == 0) { if
-			 * (!task.doTask()) { task.onTaskEnd(); iter.remove(); }
-			 * 
-			 * break; } } }
-			 */
-			if (this.tasks != null && this.tasks.size() > 0)
+			if (this.tasks.size() > 0)
 			{
-				if (this.currentTask >= this.tasks.size())
-					this.currentTask = 0;
-				if (this.currentTask < 0)
-					this.currentTask = 0;
-
-				Command task = this.tasks.get(this.currentTask);
-
-				if (this.currentTask != this.lastTask)
+				if (this.currentTask < this.tasks.size())
 				{
-					this.lastTask = this.currentTask;
-					task.onTaskStart();
-				}
+					if (this.currentTask < 0)
+					{
+						this.currentTask = 0;
+					}
 
-				if (!task.doTask())
-				{
-					task.onTaskEnd();
-					this.currentTask++;
+					Command task = this.tasks.get(this.currentTask);
+
+					if (this.currentTask != this.lastTask)
+					{
+						this.lastTask = this.currentTask;
+						task.onTaskStart();
+					}
+
+					if (!task.doTask())
+					{
+						task.onTaskEnd();
+						this.currentTask++;
+					}
 				}
 			}
 		}
@@ -81,7 +74,7 @@ public class CommandManager
 		task.tileEntity = tileEntity;
 		task.commandManager = this;
 		task.setParameters(parameters);
-		tasks.add(task);
+		this.tasks.add(task);
 		task.onTaskStart();
 	}
 
