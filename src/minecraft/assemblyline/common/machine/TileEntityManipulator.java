@@ -298,14 +298,13 @@ public class TileEntityManipulator extends TileEntityFilterable implements IReds
 
 				return null;
 			}
-			else if (stackInInventory.isItemEqual(itemStack))
+			else if (stackInInventory.isItemEqual(itemStack) && stackInInventory.isStackable())
 			{
 				stackInInventory = stackInInventory.copy();
 				int rejectedAmount = Math.max((stackInInventory.stackSize + itemStack.stackSize) - inventory.getInventoryStackLimit(), 0);
 				stackInInventory.stackSize = Math.min(Math.max((stackInInventory.stackSize + itemStack.stackSize - rejectedAmount), 0), inventory.getInventoryStackLimit());
 				itemStack.stackSize = rejectedAmount;
 				inventory.setInventorySlotContents(slotIndex, stackInInventory);
-
 			}
 		}
 
