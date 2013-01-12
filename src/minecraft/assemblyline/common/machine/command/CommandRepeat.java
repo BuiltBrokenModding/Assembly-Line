@@ -19,7 +19,7 @@ public class CommandRepeat extends Command
 	}
 
 	@Override
-	protected boolean doTask()
+	public void onTaskEnd()
 	{
 		if (this.tasksToRepeat > 0)
 		{
@@ -29,7 +29,5 @@ public class CommandRepeat extends Command
 		{
 			this.commandManager.setCurrentTask(0);
 		}
-
-		return false;
 	}
 }

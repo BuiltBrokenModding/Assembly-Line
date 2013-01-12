@@ -18,7 +18,7 @@ public class CommandRotate extends Command
 	public void onTaskStart()
 	{
 		super.onTaskStart();
-		this.ticks = 0;
+
 		if (this.getArg(0) == null)
 		{
 			this.targetRotation = this.tileEntity.rotationYaw + 90;
@@ -44,7 +44,7 @@ public class CommandRotate extends Command
 		super.doTask();
 		float rotationalDifference = Math.abs(this.tileEntity.rotationYaw - this.targetRotation);
 
-		if (rotationalDifference < 0.8)
+		if (rotationalDifference < 0.1)
 		{
 			this.tileEntity.rotationYaw = this.targetRotation;
 		}

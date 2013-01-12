@@ -42,7 +42,7 @@ public abstract class Command
 	{
 		return COMMANDS.get(command.toLowerCase());
 	}
-	
+
 	public static String getCommandName(Class<? extends Command> command)
 	{
 		return REVERSE_LOOKUP.get(command);
@@ -72,7 +72,7 @@ public abstract class Command
 	protected boolean doTask()
 	{
 		this.ticks++;
-		return true;
+		return false;
 	}
 
 	public void onTaskStart()
@@ -94,6 +94,11 @@ public abstract class Command
 	public void setParameters(String[] strings)
 	{
 		this.parameters = strings;
+	}
+
+	public String[] getArgs()
+	{
+		return this.parameters;
 	}
 
 	/**
@@ -125,6 +130,6 @@ public abstract class Command
 
 	public void writeToNBT(NBTTagCompound taskCompound)
 	{
-		
+
 	}
 }

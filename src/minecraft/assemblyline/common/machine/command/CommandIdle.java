@@ -11,10 +11,14 @@ public class CommandIdle extends Command
 
 	public void onTaskStart()
 	{
+		super.onTaskStart();
+
 		if (this.getIntArg(0) > 0)
 		{
 			this.idleTime = this.getIntArg(0);
 		}
+		
+		System.out.println("INITIATE");
 	}
 
 	protected boolean doTask()

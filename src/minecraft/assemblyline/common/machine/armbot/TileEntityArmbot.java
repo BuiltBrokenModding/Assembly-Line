@@ -76,122 +76,9 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		ElectricityConnections.registerConnector(this, EnumSet.range(ForgeDirection.DOWN, ForgeDirection.EAST));
 	}
 
-	private void updateCommands(boolean reset, int currentTask)
-	{
-		if (this.disk != null)
-		{
-			if (reset)
-			{
-				try
-				{
-					this.commandManager.clearTasks();
-					List<String> commands = ItemDisk.getCommands(this.disk);
-
-					for (String commandString : commands)
-					{
-						String commandName = commandString.split(" ")[0];
-
-						Class<? extends Command> command = Command.getCommand(commandName);
-
-						if (command != null)
-						{
-							Command newCommand = command.newInstance();
-							newCommand.world = this.worldObj;
-							newCommand.tileEntity = this;
-
-							List<String> commandParameters = new ArrayList<String>();
-
-							for (String param : commandString.split(" "))
-							{
-								if (!param.equals(commandName))
-								{
-									commandParameters.add(param);
-								}
-							}
-
-							this.commandManager.addTask(this, newCommand, commandParameters.toArray(new String[0]));
-						}
-					}
-
-					this.commandManager.setCurrentTask(currentTask);
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-				}
-			}
-			else
-			{
-				if (this.commandManager.hasTasks())
-				{
-					if (this.commandManager.getCommands().get(0) instanceof CommandReturn)
-					{
-						this.commandManager.clearTasks();
-					}
-				}
-
-				if (!this.commandManager.hasTasks())
-				{
-					try
-					{
-						List<String> commands = ItemDisk.getCommands(this.disk);
-
-						for (String commandString : commands)
-						{
-							String commandName = commandString.split(" ")[0];
-
-							Class<? extends Command> command = Command.getCommand(commandName);
-
-							if (command != null)
-							{
-								Command newCommand = command.newInstance();
-								newCommand.world = this.worldObj;
-								newCommand.tileEntity = this;
-
-								List<String> commandParameters = new ArrayList<String>();
-
-								for (String param : commandString.split(" "))
-								{
-									if (!param.equals(commandName))
-									{
-										commandParameters.add(param);
-									}
-								}
-
-								this.commandManager.addTask(this, newCommand, commandParameters.toArray(new String[0]));
-							}
-						}
-
-						this.commandManager.setCurrentTask(0);
-					}
-					catch (Exception e)
-					{
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-		else
-		{
-			this.commandManager.clearTasks();
-
-			if (this.grabbedEntities.size() > 0)
-			{
-				this.commandManager.addTask(this, new CommandDrop());
-			}
-			else
-			{
-				this.commandManager.addTask(this, new CommandReturn());
-			}
-
-			this.commandManager.setCurrentTask(0);
-		}
-	}
-
 	@Override
 	public void onUpdate()
 	{
-		updateCommands(false, -1);
 		if (this.isRunning())
 		{
 			Vector3 handPosition = this.getHandPosition();
@@ -208,6 +95,22 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 					((EntityItem) entity).delayBeforeCanPickup = 20;
 					((EntityItem) entity).age = 0;
 				}
+			}
+
+			if (this.disk == null)
+			{
+				this.commandManager.clear();
+
+				if (this.grabbedEntities.size() > 0)
+				{
+					this.commandManager.addCommand(this, CommandDrop.class);
+				}
+				else
+				{
+					this.commandManager.addCommand(this, CommandReturn.class);
+				}
+
+				this.commandManager.setCurrentTask(0);
 			}
 
 			this.commandManager.onUpdate();
@@ -233,7 +136,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && this.ticks % 20 == 0)
 		{
-			PacketManager.sendPacketToClients(this.getDescriptionPacket());// , this.worldObj, new Vector3(this), 20);
+			PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 50);
 		}
 	}
 
@@ -292,12 +195,9 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				x = dis.readInt();
 				y = dis.readInt();
 				z = dis.readInt();
-				int curTask = dis.readInt();
-
+				this.commandManager.setCurrentTask(dis.readInt());
 				NBTTagCompound tag = Packet.readNBTTagCompound(dis);
 				readFromNBT(tag);
-
-				updateCommands(true, curTask);
 			}
 			catch (IOException e)
 			{
@@ -381,11 +281,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
 	{
 		this.disk = par2ItemStack;
-
-		if (par2ItemStack != null && par2ItemStack.stackSize > this.getInventoryStackLimit())
-		{
-			par2ItemStack.stackSize = this.getInventoryStackLimit();
-		}
+		this.onInventoryChanged();
 	}
 
 	@Override
@@ -490,7 +386,6 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			}
 
 			this.setInventorySlotContents(0, null);
-			onInventoryChanged();
 			return true;
 		}
 		else
@@ -500,7 +395,6 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				if (player.getCurrentEquippedItem().getItem() instanceof ItemDisk)
 				{
 					this.setInventorySlotContents(0, player.getCurrentEquippedItem());
-					onInventoryChanged();
 					player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
 					return true;
 				}
@@ -513,7 +407,34 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	@Override
 	public void onInventoryChanged()
 	{
-		this.commandManager.setCurrentTask(0);
+		this.commandManager.clear();
+
+		if (this.disk != null)
+		{
+			List<String> commands = ItemDisk.getCommands(this.disk);
+
+			for (String commandString : commands)
+			{
+				String commandName = commandString.split(" ")[0];
+
+				Class<? extends Command> command = Command.getCommand(commandName);
+
+				if (command != null)
+				{
+					List<String> commandParameters = new ArrayList<String>();
+
+					for (String param : commandString.split(" "))
+					{
+						if (!param.equals(commandName))
+						{
+							commandParameters.add(param);
+						}
+					}
+
+					this.commandManager.addCommand(this, command, commandParameters.toArray(new String[0]));
+				}
+			}
+		}
 	}
 
 	@Override

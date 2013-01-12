@@ -31,7 +31,6 @@ public class CommandGrab extends Command
 	protected boolean doTask()
 	{
 		super.doTask();
-
 		Vector3 serachPosition = this.tileEntity.getHandPosition();
 		List<Entity> found = this.world.getEntitiesWithinAABB(this.entityToInclude, AxisAlignedBB.getBoundingBox(serachPosition.x - radius, serachPosition.y - radius, serachPosition.z - radius, serachPosition.x + radius, serachPosition.y + radius, serachPosition.z + radius));
 
