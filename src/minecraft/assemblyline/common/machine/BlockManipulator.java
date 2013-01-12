@@ -1,8 +1,11 @@
 package assemblyline.common.machine;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
 import assemblyline.client.render.BlockRenderingHandler;
@@ -100,5 +103,11 @@ public class BlockManipulator extends BlockImprintable
 	public boolean renderAsNormalBlock()
 	{
 		return false;
+	}
+
+	@Override
+	public int damageDropped(int par1)
+	{
+		return 0;
 	}
 }

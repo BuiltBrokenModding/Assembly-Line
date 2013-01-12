@@ -52,7 +52,7 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 	public GuiEncoder(InventoryPlayer playerInventory, TileEntityEncoder tileEntity)
 	{
 		super(new ContainerEncoder(playerInventory, tileEntity));
-		this.ySize = 256;
+		this.ySize = 237;
 		this.tileEntity = tileEntity;
 		tileEntity.setWatcher(this);
 	}
@@ -89,7 +89,6 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 	protected void actionPerformed(GuiButton button)
 	{
 		// TODO: Add insert command to allow commands to be inserted between two existing commands.
-
 		switch (button.id)
 		{
 			case 0: // add

@@ -22,12 +22,13 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
 
 public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInventory
 {
+	public static final int START_INVENTORY = 5;
+	public static final int INVENTORY_LENGTH = 9;
+
 	/**
 	 * Imprinter slots. 10 extra slots for storing imprints.
 	 */
-	private ItemStack[] containingItems = new ItemStack[5 + 10];
-
-	public static final int START_INVENTORY = 5;
+	private ItemStack[] containingItems = new ItemStack[5 + INVENTORY_LENGTH];
 
 	@Override
 	public boolean canUpdate()
@@ -39,13 +40,14 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	public int getStartInventorySide(ForgeDirection side)
 	{
 		if (side == ForgeDirection.UP || side == ForgeDirection.DOWN) { return 3; }
-		return 4;
+		return START_INVENTORY;
 	}
 
 	@Override
 	public int getSizeInventorySide(ForgeDirection side)
 	{
-		return 1;
+		if (side == ForgeDirection.UP || side == ForgeDirection.DOWN) { return 1; }
+		return INVENTORY_LENGTH;
 	}
 
 	@Override

@@ -18,6 +18,7 @@ public class GuiImprinter extends GuiContainer
 	public GuiImprinter(InventoryPlayer par1InventoryPlayer, TileEntityImprinter tileEntity)
 	{
 		super(new ContainerImprinter(par1InventoryPlayer, tileEntity));
+		this.ySize = 184;
 	}
 
 	/**
@@ -27,7 +28,7 @@ public class GuiImprinter extends GuiContainer
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
 		this.fontRenderer.drawString(TranslationHelper.getLocal("tile.imprinter.name"), 68, 6, 4210752);
-		this.fontRenderer.drawString(TranslationHelper.getLocal("assemblyline.gui.crafting") + ":", 25, 55, 4210752);
+		this.fontRenderer.drawString(TranslationHelper.getLocal("assemblyline.gui.crafting") + ":", 20, 54, 4210752);
 	}
 
 	/**
@@ -36,11 +37,11 @@ public class GuiImprinter extends GuiContainer
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
 	{
-		int var4 = this.mc.renderEngine.getTexture(AssemblyLine.TEXTURE_PATH + "gui_stamper.png");
+		int var4 = this.mc.renderEngine.getTexture(AssemblyLine.TEXTURE_PATH + "gui_imprinter.png");
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.mc.renderEngine.bindTexture(var4);
-		containerWidth = (this.width - this.xSize) / 2;
-		containerHeight = (this.height - this.ySize) / 2;
+		this.containerWidth = (this.width - this.xSize) / 2;
+		this.containerHeight = (this.height - this.ySize) / 2;
 		this.drawTexturedModalRect(containerWidth, containerHeight, 0, 0, this.xSize, this.ySize);
 	}
 }

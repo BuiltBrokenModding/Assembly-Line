@@ -10,7 +10,7 @@ import assemblyline.common.machine.imprinter.SlotCustom;
 
 public class ContainerEncoder extends Container
 {
-	public static final int Y_OFFSET = 9;
+	public static final int Y_OFFSET = 0;
 
 	private ItemStack[] containingItems = new ItemStack[1];
 	private InventoryPlayer inventoryPlayer;

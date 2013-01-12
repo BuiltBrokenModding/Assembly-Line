@@ -5,7 +5,7 @@ import net.minecraft.inventory.Slot;
 
 public class WatchedSlot extends Slot
 {
-	ISlotWatcher slotWatcher;
+	private ISlotWatcher slotWatcher;
 
 	public WatchedSlot(IInventory inventory, int id, int xPosition, int yPosition, ISlotWatcher slotWatcher)
 	{
@@ -16,9 +16,9 @@ public class WatchedSlot extends Slot
 	@Override
 	public void onSlotChanged()
 	{
-		if (slotWatcher != null)
+		if (this.slotWatcher != null)
 		{
-			slotWatcher.slotContentsChanged();
+			this.slotWatcher.slotContentsChanged();
 		}
 	}
 

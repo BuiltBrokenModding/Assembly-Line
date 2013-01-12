@@ -13,12 +13,13 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
+import universalelectricity.prefab.implement.IRotatable;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.api.IManipulator;
 import assemblyline.common.machine.imprinter.TileEntityFilterable;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
-public class TileEntityManipulator extends TileEntityFilterable implements IRedstoneReceptor, IManipulator
+public class TileEntityManipulator extends TileEntityFilterable implements IRotatable, IRedstoneReceptor, IManipulator
 {
 	public boolean selfPulse = false;
 
@@ -100,7 +101,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IReds
 		outputDown.modifyPositionFromSide(ForgeDirection.DOWN);
 
 		Vector3 outputPosition = new Vector3(this);
-		outputPosition.modifyPositionFromSide(this.getBeltDirection().getOpposite());
+		outputPosition.modifyPositionFromSide(this.getDirection().getOpposite());
 
 		AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(inputPosition.x, inputPosition.y, inputPosition.z, inputPosition.x + 1, inputPosition.y + 1, inputPosition.z + 1);
 		List<EntityItem> itemsInBound = this.worldObj.getEntitiesWithinAABB(EntityItem.class, bounds);
@@ -126,7 +127,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IReds
 
 				if (remainingStack != null)
 				{
-					remainingStack = this.tryPlaceInPosition(remainingStack, outputPosition, this.getBeltDirection().getOpposite());
+					remainingStack = this.tryPlaceInPosition(remainingStack, outputPosition, this.getDirection().getOpposite());
 				}
 
 				if (remainingStack != null && remainingStack.stackSize > 0)
@@ -154,10 +155,10 @@ public class TileEntityManipulator extends TileEntityFilterable implements IReds
 		inputDown.modifyPositionFromSide(ForgeDirection.DOWN);
 
 		Vector3 inputPosition = new Vector3(this);
-		inputPosition.modifyPositionFromSide(this.getBeltDirection().getOpposite());
+		inputPosition.modifyPositionFromSide(this.getDirection().getOpposite());
 
 		Vector3 outputPosition = new Vector3(this);
-		outputPosition.modifyPositionFromSide(this.getBeltDirection());
+		outputPosition.modifyPositionFromSide(this.getDirection());
 
 		ItemStack itemStack = this.tryGrabFromPosition(inputUp, ForgeDirection.DOWN);
 
@@ -168,7 +169,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IReds
 
 		if (itemStack == null)
 		{
-			itemStack = this.tryGrabFromPosition(inputPosition, this.getBeltDirection().getOpposite());
+			itemStack = this.tryGrabFromPosition(inputPosition, this.getDirection().getOpposite());
 		}
 
 		if (itemStack != null)
@@ -205,7 +206,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IReds
 		entityItem.motionX = 0;
 		entityItem.motionZ = 0;
 		entityItem.motionY /= 5;
-		entityItem.delayBeforeCanPickup = 30;
+		entityItem.delayBeforeCanPickup = 20;
 		worldObj.spawnEntityInWorld(entityItem);
 	}
 
@@ -421,11 +422,6 @@ public class TileEntityManipulator extends TileEntityFilterable implements IReds
 		}
 
 		return null;
-	}
-
-	public ForgeDirection getBeltDirection()
-	{
-		return ForgeDirection.getOrientation(this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
 	}
 
 	@Override
