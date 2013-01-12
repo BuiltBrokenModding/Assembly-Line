@@ -141,6 +141,9 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	{
 	}
 
+	/**
+	 * Updates all the output slots.
+	 */
 	@Override
 	public void onInventoryChanged()
 	{
@@ -203,8 +206,13 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
 						if (idealRecipe != null)
 						{
-							this.setInventorySlotContents(4, idealRecipe.getKey());
-							didCraft = true;
+							ItemStack recipeOutput = idealRecipe.getKey();
+
+							if (recipeOutput != null & recipeOutput.stackSize > 0)
+							{
+								this.setInventorySlotContents(4, recipeOutput);
+								didCraft = true;
+							}
 						}
 					}
 				}
@@ -294,7 +302,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
 						if (checkStack != null)
 						{
-							if (SlotCraftingResult.isItemEqual(recipeItem, checkStack))
+							if (recipeItem.isItemEqual(checkStack))
 							{
 								// TODO Do NBT CHecking
 								itemMatch++;
@@ -325,7 +333,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
 								if (checkStack != null)
 								{
-									if (SlotCraftingResult.isItemEqual(recipeItem, checkStack))
+									if (recipeItem.isItemEqual(checkStack))
 									{
 										// TODO Do NBT CHecking
 										itemMatch++;

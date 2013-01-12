@@ -47,7 +47,7 @@ public class SlotCraftingResult extends Slot
 
 						if (checkStack != null)
 						{
-							if (isItemEqual(searchStack, checkStack))
+							if (searchStack.isItemEqual(checkStack))
 							{
 								entityPlayer.inventory.decrStackSize(i, 1);
 								break;
@@ -79,7 +79,7 @@ public class SlotCraftingResult extends Slot
 
 							if (checkStack != null)
 							{
-								if (isItemEqual(searchStack, checkStack))
+								if (searchStack.isItemEqual(checkStack))
 								{
 									foundItems++;
 								}
@@ -93,26 +93,5 @@ public class SlotCraftingResult extends Slot
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Checks if items are equal for recipe comparison. If either ItemStack's metadata is less than
-	 * zero, meta automatically does not matter. This is because the Ore Dictionary puts "-1" onto a
-	 * recipe ingredient whose metadata doesn't matter.
-	 * 
-	 * @param original the original item stack to test against
-	 * @param test the item stack to test with
-	 * @return whether or not the two stacks are equal
-	 */
-	public static boolean isItemEqual(ItemStack original, ItemStack test)
-	{
-		if (original.getItemDamage() < 0 || test.getItemDamage() < 0)
-		{
-			return original.itemID == test.itemID;
-		}
-		else
-		{
-			return original.itemID == test.itemID && original.getItemDamage() == test.getItemDamage();
-		}
 	}
 }
