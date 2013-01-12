@@ -67,13 +67,29 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	 * returns them in a new stack.
 	 */
 	@Override
-	public ItemStack decrStackSize(int slot, int amount)
+	public ItemStack decrStackSize(int i, int amount)
 	{
-		if (this.containingItems[slot] != null)
+		if (this.containingItems[i] != null)
 		{
-			ItemStack var3 = this.containingItems[slot];
-			this.containingItems[slot] = null;
-			return var3;
+			ItemStack var3;
+
+			if (this.containingItems[i].stackSize <= amount)
+			{
+				var3 = this.containingItems[i];
+				this.containingItems[i] = null;
+				return var3;
+			}
+			else
+			{
+				var3 = this.containingItems[i].splitStack(amount);
+
+				if (this.containingItems[i].stackSize == 0)
+				{
+					this.containingItems[i] = null;
+				}
+
+				return var3;
+			}
 		}
 		else
 		{
@@ -196,10 +212,8 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 			{
 				ArrayList<ItemStack> filters = ItemImprinter.getFilters(this.getStackInSlot(3));
 
-				if (filters.size() > 0)
+				for (ItemStack outputStack : filters)
 				{
-					ItemStack outputStack = filters.get(0);
-
 					if (outputStack != null)
 					{
 						Pair<ItemStack, ItemStack[]> idealRecipe = this.getIdealRecipe(outputStack);
@@ -212,6 +226,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 							{
 								this.setInventorySlotContents(4, recipeOutput);
 								didCraft = true;
+								break;
 							}
 						}
 					}
@@ -275,11 +290,11 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	}
 
 	/**
-	 * Returns if players has the following resource required.
+	 * Returns if the following inventory has the following resource required.
 	 * 
 	 * @param recipeItems - The items to be checked for the recipes.
 	 */
-	private ArrayList<ItemStack> hasResource(Object[] recipeItems)
+	public ArrayList<ItemStack> hasResource(Object[] recipeItems)
 	{
 		/**
 		 * The actual amount of resource required. Each ItemStack will only have stacksize of 1.

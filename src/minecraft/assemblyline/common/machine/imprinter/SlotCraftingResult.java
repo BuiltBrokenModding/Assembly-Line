@@ -9,9 +9,9 @@ public class SlotCraftingResult extends Slot
 {
 	private ContainerImprinter container;
 
-	public SlotCraftingResult(ContainerImprinter container, IInventory par1iInventory, int par2, int par3, int par4)
+	public SlotCraftingResult(ContainerImprinter container, IInventory inventory, int par2, int par3, int par4)
 	{
-		super(par1iInventory, par2, par3, par4);
+		super(inventory, par2, par3, par4);
 		this.container = container;
 	}
 
@@ -24,8 +24,7 @@ public class SlotCraftingResult extends Slot
 	@Override
 	public boolean canTakeStack(EntityPlayer player)
 	{
-		return playerHasRequiredIngredients(player, getStack());
-		// return true;
+		return this.container.tileEntity.getIdealRecipe(this.getStack()) != null;
 	}
 
 	@Override
@@ -41,15 +40,15 @@ public class SlotCraftingResult extends Slot
 			{
 				for (ItemStack searchStack : requiredItems)
 				{
-					for (int i = 0; i < entityPlayer.inventory.getSizeInventory(); i++)
+					for (int i = 0; i < this.container.tileEntity.getSizeInventory(); i++)
 					{
-						ItemStack checkStack = entityPlayer.inventory.getStackInSlot(i);
+						ItemStack checkStack = this.container.tileEntity.getStackInSlot(i);
 
 						if (checkStack != null)
 						{
 							if (searchStack.isItemEqual(checkStack))
 							{
-								entityPlayer.inventory.decrStackSize(i, 1);
+								this.container.tileEntity.decrStackSize(i, 1);
 								break;
 							}
 						}
@@ -59,39 +58,18 @@ public class SlotCraftingResult extends Slot
 		}
 	}
 
-	private boolean playerHasRequiredIngredients(EntityPlayer player, ItemStack desiredItem)
-	{
-		if (this.getStack() != null)
-		{
-			ItemStack[] idealRecipe = this.container.tileEntity.getIdealRecipe(this.getStack()).getValue();
-			if (idealRecipe != null)
-			{
-				ItemStack[] requiredItems = idealRecipe.clone();
-				int foundItems = 0;
-
-				if (requiredItems != null)
-				{
-					for (ItemStack searchStack : requiredItems)
-					{
-						for (int i = 0; i < player.inventory.getSizeInventory(); i++)
-						{
-							ItemStack checkStack = player.inventory.getStackInSlot(i);
-
-							if (checkStack != null)
-							{
-								if (searchStack.isItemEqual(checkStack))
-								{
-									foundItems++;
-								}
-							}
-						}
-					}
-				}
-
-				if (foundItems >= requiredItems.length)
-					return true;
-			}
-		}
-		return false;
-	}
+	/*
+	 * private boolean playerHasRequiredIngredients(EntityPlayer player, ItemStack desiredItem) { if
+	 * (this.getStack() != null) { ItemStack[] idealRecipe =
+	 * this.container.tileEntity.getIdealRecipe(this.getStack()).getValue(); if (idealRecipe !=
+	 * null) { ItemStack[] requiredItems = idealRecipe.clone(); int foundItems = 0;
+	 * 
+	 * if (requiredItems != null) { for (ItemStack searchStack : requiredItems) { for (int i = 0; i
+	 * < player.inventory.getSizeInventory(); i++) { ItemStack checkStack =
+	 * player.inventory.getStackInSlot(i);
+	 * 
+	 * if (checkStack != null) { if (searchStack.isItemEqual(checkStack)) { foundItems++; } } } } }
+	 * 
+	 * if (foundItems >= requiredItems.length) return true; } } return false; }
+	 */
 }
