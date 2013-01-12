@@ -127,11 +127,14 @@ public class AssemblyLine
 
 		System.out.println(NAME + " Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
 
+		// Armbot
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockArmbot, new Object[] { "II ", " I ", "SCS", 'S', "plateSteel", 'C', "advancedCircuit", 'I', "ingotSteel" }));
+
 		// Disk
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemDisk, new Object[] { "III", "ICI", "III", 'I', Item.ingotIron, 'C', "advancedCircuit" }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemDisk, new Object[] { "III", "ICI", "III", 'I', itemImprint, 'C', "advancedCircuit" }));
 
 		// Encoder
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockEncoder, new Object[] { "S S", "SCS", "SSS", 'S', "ingotSteel", 'C', "eliteCircuit" }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockEncoder, new Object[] { "S S", "SCS", "SSS", 'S', "ingotSteel", 'C', "advancedCircuit" }));
 
 		// Imprint
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemImprint, new Object[] { "R", "P", "I", 'P', Item.paper, 'R', Item.redstone, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
@@ -156,7 +159,7 @@ public class AssemblyLine
 
 		UETab.setItemStack(new ItemStack(blockConveyorBelt));
 	}
-	
+
 	public static void printSidedData(String data)
 	{
 		System.out.print(FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT ? "[C]" : "[S]");

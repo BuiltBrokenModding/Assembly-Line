@@ -170,25 +170,26 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 		this.fontRenderer.drawString("^", 0, 0, 0xFFFFFF);
 		glPopMatrix();
 
-		if (commands != null)
+		if (this.commands != null)
 		{
-			drawCommands();
+			this.drawCommands();
 		}
 
-		commandField.drawTextBox();
+		this.commandField.drawTextBox();
 	}
 
 	private void drawCommands()
 	{
 		int relativeCommand;
 		String command;
+
 		for (int i = minCommand; i < minCommand + MAX_COMMANDS; i++)
 		{
 			if (i >= 0 && i < this.commands.size())
 			{
 				relativeCommand = i - minCommand;
 				command = this.commands.get(i).toUpperCase();
-				drawCommand(command, 8, 56 + relativeCommand * (fontRenderer.FONT_HEIGHT + 4), this.selCommand == i);
+				drawCommand(command, 8, 46 + relativeCommand * (fontRenderer.FONT_HEIGHT + 4), this.selCommand == i);
 			}
 		}
 	}
