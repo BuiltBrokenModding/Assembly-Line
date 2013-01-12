@@ -5,6 +5,8 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import assemblyline.common.AssemblyLine;
+import assemblyline.common.machine.imprinter.SlotCustom;
 
 public class ContainerEncoder extends Container
 {
@@ -20,7 +22,7 @@ public class ContainerEncoder extends Container
 		this.tileEntity = encoder;
 
 		// Disk
-		this.addSlotToContainer(new Slot(encoder, 0, 80, 24 + Y_OFFSET));
+		this.addSlotToContainer(new SlotCustom(encoder, 0, 80, 24 + Y_OFFSET, new ItemStack(AssemblyLine.itemDisk)));
 
 		int var3;
 

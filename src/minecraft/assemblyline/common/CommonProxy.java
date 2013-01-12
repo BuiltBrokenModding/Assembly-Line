@@ -3,7 +3,6 @@ package assemblyline.common;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.multiblock.TileEntityMulti;
 import assemblyline.common.block.TileEntityCrate;
 import assemblyline.common.machine.TileEntityManipulator;
@@ -14,14 +13,14 @@ import assemblyline.common.machine.detector.TileEntityDetector;
 import assemblyline.common.machine.encoder.ContainerEncoder;
 import assemblyline.common.machine.encoder.TileEntityEncoder;
 import assemblyline.common.machine.imprinter.ContainerImprinter;
+import assemblyline.common.machine.imprinter.TileEntityImprinter;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class CommonProxy implements IGuiHandler
 {
-	public static final int GUI_STAMPER = 1;
-	public static final int GUI_ARCHITECHT_TABLE = 2;
-	public static final int GUI_ENCODER = 3;
+	public static final int GUI_IMPRINTER = 1;
+	public static final int GUI_ENCODER = 2;
 
 	public void preInit()
 	{
@@ -37,6 +36,7 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.registerTileEntity(TileEntityDetector.class, "ALDetector");
 		GameRegistry.registerTileEntity(TileEntityEncoder.class, "ALEncoder");
 		GameRegistry.registerTileEntity(TileEntityArmbot.class, "ALArmbot");
+		GameRegistry.registerTileEntity(TileEntityImprinter.class, "ALImprinter");
 		GameRegistry.registerTileEntity(TileEntityMulti.class, "ALMulti");
 	}
 
@@ -47,8 +47,8 @@ public class CommonProxy implements IGuiHandler
 
 		switch (ID)
 		{
-			case GUI_STAMPER:
-				return new ContainerImprinter(player.inventory, world, new Vector3(x, y, z));
+			case GUI_IMPRINTER:
+				return new ContainerImprinter(player.inventory, (TileEntityImprinter) tileEntity);
 			case GUI_ENCODER:
 			{
 				if (tileEntity != null && tileEntity instanceof TileEntityEncoder)

@@ -2,23 +2,22 @@ package assemblyline.client.gui;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
-import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.imprinter.ContainerImprinter;
+import assemblyline.common.machine.imprinter.TileEntityImprinter;
 
 public class GuiImprinter extends GuiContainer
 {
 	private int containerWidth;
 	private int containerHeight;
 
-	public GuiImprinter(InventoryPlayer par1InventoryPlayer, World worldObj, Vector3 position)
+	public GuiImprinter(InventoryPlayer par1InventoryPlayer, TileEntityImprinter tileEntity)
 	{
-		super(new ContainerImprinter(par1InventoryPlayer, worldObj, position));
+		super(new ContainerImprinter(par1InventoryPlayer, tileEntity));
 	}
 
 	/**

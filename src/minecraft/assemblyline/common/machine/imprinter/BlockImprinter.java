@@ -2,6 +2,7 @@ package assemblyline.common.machine.imprinter;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.prefab.BlockMachine;
 import assemblyline.common.AssemblyLine;
@@ -44,11 +45,16 @@ public class BlockImprinter extends BlockMachine
 	{
 		if (!world.isRemote)
 		{
-			entityPlayer.openGui(AssemblyLine.instance, CommonProxy.GUI_STAMPER, world, x, y, z);
+			entityPlayer.openGui(AssemblyLine.instance, CommonProxy.GUI_IMPRINTER, world, x, y, z);
 		}
 
 		return true;
 
 	}
 
+	@Override
+	public TileEntity createNewTileEntity(World var1)
+	{
+		return new TileEntityImprinter();
+	}
 }
