@@ -74,6 +74,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	public void initiate()
 	{
 		ElectricityConnections.registerConnector(this, EnumSet.range(ForgeDirection.DOWN, ForgeDirection.EAST));
+		this.onInventoryChanged();
 	}
 
 	@Override
