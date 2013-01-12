@@ -2,6 +2,7 @@ package assemblyline.common.machine.command;
 
 import java.util.HashMap;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import assemblyline.common.machine.armbot.TileEntityArmbot;
 
@@ -19,6 +20,7 @@ public abstract class Command
 	 * String - Command name. Command - The actual command class.
 	 */
 	private static final HashMap<String, Class> COMMANDS = new HashMap<String, Class>();
+	private static final HashMap<Class, String> REVERSE_LOOKUP = new HashMap<Class, String>();
 
 	static
 	{
@@ -33,11 +35,17 @@ public abstract class Command
 	public static void registerCommand(String command, Class<? extends Command> commandClass)
 	{
 		COMMANDS.put(command, commandClass);
+		REVERSE_LOOKUP.put(commandClass, command);
 	}
 
 	public static Class<? extends Command> getCommand(String command)
 	{
 		return COMMANDS.get(command.toLowerCase());
+	}
+	
+	public static String getCommandName(Class<? extends Command> command)
+	{
+		return REVERSE_LOOKUP.get(command);
 	}
 
 	/**
@@ -113,5 +121,10 @@ public abstract class Command
 		}
 
 		return 0;
+	}
+
+	public void writeToNBT(NBTTagCompound taskCompound)
+	{
+		
 	}
 }

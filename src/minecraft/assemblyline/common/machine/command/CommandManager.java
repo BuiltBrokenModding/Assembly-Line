@@ -1,12 +1,11 @@
 package assemblyline.common.machine.command;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import assemblyline.common.machine.armbot.TileEntityArmbot;
-
-import net.minecraft.tileentity.TileEntity;
 import cpw.mods.fml.common.FMLLog;
 
 public class CommandManager
@@ -62,8 +61,7 @@ public class CommandManager
 	}
 
 	/**
-	 * Used to register Tasks for a TileEntity, executes onTaskStart for the Task after registering
-	 * it
+	 * Used to register Tasks for a TileEntity, executes onTaskStart for the Task after registering it
 	 * 
 	 * @param tileEntity TE instance to register the task for
 	 * @param task Task instance to register
@@ -109,5 +107,16 @@ public class CommandManager
 	public int getCurrentTask()
 	{
 		return this.currentTask;
+	}
+
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		NBTTagList taskList = new NBTTagList();
+		for (int i = 0; i < this.tasks.size(); i++)
+		{
+			NBTTagCompound taskCompound = new NBTTagCompound();
+			this.tasks.get(i).writeToNBT(taskCompound);
+			taskList.appendTag(taskCompound);
+		}
 	}
 }

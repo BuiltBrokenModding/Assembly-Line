@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -15,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -61,6 +63,8 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	public float rotationPitch = 0;
 	public float rotationYaw = 0;
 
+	private int ticksSincePower = 0;
+
 	/**
 	 * An entity that the armbot is grabbed onto.
 	 */
@@ -72,23 +76,15 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		ElectricityConnections.registerConnector(this, EnumSet.range(ForgeDirection.DOWN, ForgeDirection.EAST));
 	}
 
-	@Override
-	public void onUpdate()
+	private void updateCommands(boolean reset, int currentTask)
 	{
 		if (this.disk != null)
 		{
-			try
+			if (reset)
 			{
-				if (this.commandManager.hasTasks())
+				try
 				{
-					if (this.commandManager.getCommands().get(0) instanceof CommandReturn)
-					{
-						this.commandManager.clearTasks();
-					}
-				}
-
-				if (!this.commandManager.hasTasks())
-				{
+					this.commandManager.clearTasks();
 					List<String> commands = ItemDisk.getCommands(this.disk);
 
 					for (String commandString : commands)
@@ -116,11 +112,63 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 							this.commandManager.addTask(this, newCommand, commandParameters.toArray(new String[0]));
 						}
 					}
+
+					this.commandManager.setCurrentTask(currentTask);
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
 				}
 			}
-			catch (Exception e)
+			else
 			{
-				e.printStackTrace();
+				if (this.commandManager.hasTasks())
+				{
+					if (this.commandManager.getCommands().get(0) instanceof CommandReturn)
+					{
+						this.commandManager.clearTasks();
+					}
+				}
+
+				if (!this.commandManager.hasTasks())
+				{
+					try
+					{
+						List<String> commands = ItemDisk.getCommands(this.disk);
+
+						for (String commandString : commands)
+						{
+							String commandName = commandString.split(" ")[0];
+
+							Class<? extends Command> command = Command.getCommand(commandName);
+
+							if (command != null)
+							{
+								Command newCommand = command.newInstance();
+								newCommand.world = this.worldObj;
+								newCommand.tileEntity = this;
+
+								List<String> commandParameters = new ArrayList<String>();
+
+								for (String param : commandString.split(" "))
+								{
+									if (!param.equals(commandName))
+									{
+										commandParameters.add(param);
+									}
+								}
+
+								this.commandManager.addTask(this, newCommand, commandParameters.toArray(new String[0]));
+							}
+						}
+
+						this.commandManager.setCurrentTask(0);
+					}
+					catch (Exception e)
+					{
+						e.printStackTrace();
+					}
+				}
 			}
 		}
 		else
@@ -135,10 +183,15 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			{
 				this.commandManager.addTask(this, new CommandReturn());
 			}
-			
+
 			this.commandManager.setCurrentTask(0);
 		}
+	}
 
+	@Override
+	public void onUpdate()
+	{
+		updateCommands(false, -1);
 		if (this.isRunning())
 		{
 			Vector3 handPosition = this.getHandPosition();
@@ -153,6 +206,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				if (entity instanceof EntityItem)
 				{
 					((EntityItem) entity).delayBeforeCanPickup = 20;
+					((EntityItem) entity).age = 0;
 				}
 			}
 
@@ -168,11 +222,18 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			if (this.rotationYaw >= 360)
 				this.rotationYaw -= 360;
 
+			this.ticksSincePower = 0;
+		}
+		else
+		{
+			this.ticksSincePower++;
+			if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && ticksSincePower <= 20)
+				this.commandManager.onUpdate();
 		}
 
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && this.ticks % 5 == 0)
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && this.ticks % 20 == 0)
 		{
-			PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 20);
+			PacketManager.sendPacketToClients(this.getDescriptionPacket());// , this.worldObj, new Vector3(this), 20);
 		}
 	}
 
@@ -226,16 +287,17 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			{
 				ByteArrayInputStream bis = new ByteArrayInputStream(packet.data);
 				DataInputStream dis = new DataInputStream(bis);
-				final int id, x, y, z;
-
+				int id, x, y, z;
 				id = dis.readInt();
 				x = dis.readInt();
 				y = dis.readInt();
 				z = dis.readInt();
-				this.commandManager.setCurrentTask(dis.readInt());
+				int curTask = dis.readInt();
 
 				NBTTagCompound tag = Packet.readNBTTagCompound(dis);
 				readFromNBT(tag);
+
+				updateCommands(true, curTask);
 			}
 			catch (IOException e)
 			{

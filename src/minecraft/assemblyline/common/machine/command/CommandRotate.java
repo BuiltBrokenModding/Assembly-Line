@@ -1,5 +1,6 @@
 package assemblyline.common.machine.command;
 
+import assemblyline.common.AssemblyLine;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
@@ -15,7 +16,9 @@ public class CommandRotate extends Command
 
 	@Override
 	public void onTaskStart()
-	{		
+	{
+		super.onTaskStart();
+		this.ticks = 0;
 		if (this.getArg(0) == null)
 		{
 			this.targetRotation = this.tileEntity.rotationYaw + 90;
@@ -25,11 +28,11 @@ public class CommandRotate extends Command
 			this.targetRotation = this.tileEntity.rotationYaw + this.getIntArg(0);
 		}
 
-		while (this.targetRotation > 360)
+		while (this.targetRotation >= 360)
 		{
 			this.targetRotation -= 360;
 		}
-		while (this.targetRotation < -360)
+		while (this.targetRotation <= -360)
 		{
 			this.targetRotation += 360;
 		}
@@ -55,8 +58,6 @@ public class CommandRotate extends Command
 			{
 				this.tileEntity.rotationYaw += ROTATION_SPEED;
 			}
-
-			return true;
 		}
 
 		if (this.ticks < 80) { return true; }

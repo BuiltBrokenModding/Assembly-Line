@@ -25,6 +25,7 @@ import assemblyline.common.machine.encoder.BlockEncoder;
 import assemblyline.common.machine.encoder.ItemDisk;
 import assemblyline.common.machine.imprinter.BlockImprinter;
 import assemblyline.common.machine.imprinter.ItemImprinter;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -36,6 +37,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid = AssemblyLine.CHANNEL, name = AssemblyLine.NAME, version = AssemblyLine.VERSION, dependencies = "after:BasicComponents")
 @NetworkMod(channels = { AssemblyLine.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
@@ -153,5 +155,11 @@ public class AssemblyLine
 		GameRegistry.addRecipe(new ShapelessOreRecipe(blockManipulator, new Object[] { Block.dispenser, "basicCircuit" }));
 
 		UETab.setItemStack(new ItemStack(blockConveyorBelt));
+	}
+	
+	public static void printSidedData(String data)
+	{
+		System.out.print(FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT ? "[C]" : "[S]");
+		System.out.println(" " + data);
 	}
 }
