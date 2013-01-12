@@ -6,42 +6,37 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
-import net.minecraft.world.World;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
-import universalelectricity.core.vector.Vector3;
 import assemblyline.common.Pair;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
-public class ContainerImprinter extends Container implements IInventory, ISlotWatcher
+public class ContainerImprinter extends Container implements ISlotWatcher
 {
-	private ItemStack[] containingItems = new ItemStack[5];
-	private World worldObj;
-	private Vector3 position;
 	private InventoryPlayer inventoryPlayer;
+	private TileEntityImprinter tileEntity;
 
-	public ContainerImprinter(InventoryPlayer inventoryPlayer, World worldObj, Vector3 position)
+	public ContainerImprinter(InventoryPlayer inventoryPlayer, TileEntityImprinter tileEntity)
 	{
-		this.worldObj = worldObj;
-		this.position = position;
+		this.tileEntity = tileEntity;
 		this.inventoryPlayer = inventoryPlayer;
 
 		// Paper Input
-		this.addSlotToContainer(new SlotImprint(this, 0, 42, 24));
+		this.addSlotToContainer(new SlotImprint(this.tileEntity, 0, 42, 24));
 		// Item Stamp
-		this.addSlotToContainer(new Slot(this, 1, 78, 24));
+		this.addSlotToContainer(new Slot(this.tileEntity, 1, 78, 24));
 		// Output Filter
-		this.addSlotToContainer(new SlotImprintResult(this, 2, 136, 24));
+		this.addSlotToContainer(new SlotImprintResult(this.tileEntity, 2, 136, 24));
 		// Crafting Slot
-		this.addSlotToContainer(new SlotImprint(this, 3, 78, 53));
-		this.addSlotToContainer(new SlotCraftingResult(this, this, 4, 136, 53));
+		this.addSlotToContainer(new SlotImprint(this.tileEntity, 3, 78, 53));
+		// Crafting Output
+		this.addSlotToContainer(new SlotCraftingResult(this, this.tileEntity, 4, 136, 53));
 
 		int var3;
 
@@ -62,7 +57,7 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 	@Override
 	public boolean canInteractWith(EntityPlayer player)
 	{
-		return this.isUseableByPlayer(player);
+		return this.tileEntity.isUseableByPlayer(player);
 	}
 
 	/**
@@ -82,7 +77,7 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 			if (slot == 2)
 			{
 				// Prevents filter from being duplicated
-				this.setInventorySlotContents(0, null);
+				this.tileEntity.setInventorySlotContents(0, null);
 			}
 
 			if (slot > 4)
@@ -93,7 +88,7 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 				}
 				else if (!this.mergeItemStack(slotStack, 1, 2, false)) { return null; }
 			}
-			else if (!this.mergeItemStack(slotStack, this.containingItems.length, 37, false)) { return null; }
+			else if (!this.mergeItemStack(slotStack, this.tileEntity.getSizeInventory(), 37, false)) { return null; }
 
 			if (slotStack.stackSize == 0)
 			{
@@ -109,161 +104,9 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 			slotObj.onPickupFromSlot(player, slotStack);
 		}
 
-		onInventoryChanged();
+		this.slotContentsChanged();
 
 		return copyStack;
-	}
-
-	@Override
-	public int getSizeInventory()
-	{
-		return this.containingItems.length;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int slot)
-	{
-		return this.containingItems[slot];
-	}
-
-	/**
-	 * Removes from an inventory slot (first arg) up to a specified number (second arg) of items and
-	 * returns them in a new stack.
-	 */
-	@Override
-	public ItemStack decrStackSize(int slot, int amount)
-	{
-		if (this.containingItems[slot] != null)
-		{
-			ItemStack var3 = this.containingItems[slot];
-			this.containingItems[slot] = null;
-			return var3;
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	/**
-	 * When some containers are closed they call this on each slot, then drop whatever it returns as
-	 * an EntityItem - like when you close a workbench GUI.
-	 */
-	@Override
-	public ItemStack getStackInSlotOnClosing(int slot)
-	{
-		if (this.containingItems[slot] != null && slot != 2)
-		{
-			ItemStack var2 = this.containingItems[slot];
-			this.containingItems[slot] = null;
-			return var2;
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	/**
-	 * Sets the given item stack to the specified slot in the inventory (can be crafting or armor
-	 * sections).
-	 */
-	@Override
-	public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
-	{
-		if (par1 < this.containingItems.length)
-		{
-			this.containingItems[par1] = par2ItemStack;
-		}
-	}
-
-	@Override
-	public String getInvName()
-	{
-		return "Stamper";
-	}
-
-	@Override
-	public int getInventoryStackLimit()
-	{
-		return 64;
-	}
-
-	@Override
-	public void onInventoryChanged()
-	{
-		/**
-		 * Makes the stamping recipe for filters
-		 */
-		boolean didStamp = false;
-
-		if (this.getStackInSlot(0) != null && this.getStackInSlot(1) != null)
-		{
-			if (this.getStackInSlot(0).getItem() instanceof ItemImprinter)
-			{
-				ItemStack outputStack = this.getStackInSlot(0).copy();
-				outputStack.stackSize = 1;
-				ArrayList<ItemStack> filters = ItemImprinter.getFilters(outputStack);
-				boolean filteringItemExists = false;
-
-				for (ItemStack filteredStack : filters)
-				{
-					if (filteredStack.isItemEqual(this.getStackInSlot(1)))
-					{
-						filters.remove(filteredStack);
-						filteringItemExists = true;
-						break;
-					}
-				}
-
-				if (!filteringItemExists)
-				{
-					filters.add(this.getStackInSlot(1));
-				}
-
-				ItemImprinter.setFilters(outputStack, filters);
-				this.setInventorySlotContents(2, outputStack);
-				didStamp = true;
-			}
-		}
-
-		if (!didStamp)
-		{
-			this.setInventorySlotContents(2, null);
-		}
-
-		// CRAFTING
-		boolean didCraft = false;
-
-		if (this.getStackInSlot(3) != null)
-		{
-			if (this.getStackInSlot(3).getItem() instanceof ItemImprinter)
-			{
-				ArrayList<ItemStack> filters = ItemImprinter.getFilters(this.getStackInSlot(3));
-
-				if (filters.size() > 0)
-				{
-					ItemStack outputStack = filters.get(0);
-
-					if (outputStack != null)
-					{
-						Pair<ItemStack, ItemStack[]> idealRecipe = this.getIdealRecipe(outputStack);
-
-						if (idealRecipe != null)
-						{
-							this.setInventorySlotContents(4, idealRecipe.getKey());
-							didCraft = true;
-						}
-					}
-				}
-			}
-		}
-
-		if (!didCraft)
-		{
-			this.setInventorySlotContents(4, null);
-		}
-
 	}
 
 	/**
@@ -392,43 +235,78 @@ public class ContainerImprinter extends Container implements IInventory, ISlotWa
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player)
+	public void slotContentsChanged()
 	{
-		return true;
-	}
+		/**
+		 * Makes the stamping recipe for filters
+		 */
+		boolean didStamp = false;
 
-	@Override
-	public void openChest()
-	{
-	}
-
-	@Override
-	public void closeChest()
-	{
-	}
-
-	@Override
-	public void onCraftGuiClosed(EntityPlayer player)
-	{
-		super.onCraftGuiClosed(player);
-
-		if (!this.worldObj.isRemote)
+		if (this.tileEntity.getStackInSlot(0) != null && this.tileEntity.getStackInSlot(1) != null)
 		{
-			for (int slot = 0; slot < this.getSizeInventory(); ++slot)
+			if (this.tileEntity.getStackInSlot(0).getItem() instanceof ItemImprinter)
 			{
-				ItemStack itemStack = this.getStackInSlotOnClosing(slot);
+				ItemStack outputStack = this.tileEntity.getStackInSlot(0).copy();
+				outputStack.stackSize = 1;
+				ArrayList<ItemStack> filters = ItemImprinter.getFilters(outputStack);
+				boolean filteringItemExists = false;
 
-				if (itemStack != null && slot != 4)
+				for (ItemStack filteredStack : filters)
 				{
-					player.dropPlayerItem(itemStack);
+					if (filteredStack.isItemEqual(this.tileEntity.getStackInSlot(1)))
+					{
+						filters.remove(filteredStack);
+						filteringItemExists = true;
+						break;
+					}
+				}
+
+				if (!filteringItemExists)
+				{
+					filters.add(this.tileEntity.getStackInSlot(1));
+				}
+
+				ItemImprinter.setFilters(outputStack, filters);
+				this.tileEntity.setInventorySlotContents(2, outputStack);
+				didStamp = true;
+			}
+		}
+
+		if (!didStamp)
+		{
+			this.tileEntity.setInventorySlotContents(2, null);
+		}
+
+		// CRAFTING
+		boolean didCraft = false;
+
+		if (this.tileEntity.getStackInSlot(3) != null)
+		{
+			if (this.tileEntity.getStackInSlot(3).getItem() instanceof ItemImprinter)
+			{
+				ArrayList<ItemStack> filters = ItemImprinter.getFilters(this.tileEntity.getStackInSlot(3));
+
+				if (filters.size() > 0)
+				{
+					ItemStack outputStack = filters.get(0);
+
+					if (outputStack != null)
+					{
+						Pair<ItemStack, ItemStack[]> idealRecipe = this.getIdealRecipe(outputStack);
+
+						if (idealRecipe != null)
+						{
+							this.tileEntity.setInventorySlotContents(4, idealRecipe.getKey());
+							didCraft = true;
+						}
+					}
 				}
 			}
 		}
-	}
 
-	@Override
-	public void slotContentsChanged()
-	{
-		onInventoryChanged();
+		if (!didCraft)
+		{
+			this.tileEntity.setInventorySlotContents(4, null);
+		}
 	}
 }
