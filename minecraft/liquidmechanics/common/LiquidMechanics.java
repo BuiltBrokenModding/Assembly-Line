@@ -50,12 +50,9 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-/**
- * Used in the creation of a new mod class
+/** Used in the creation of a new mod class
  * 
- * @author Rseifert
- * 
- */
+ * @author Rseifert */
 @Mod(modid = LiquidMechanics.NAME, name = LiquidMechanics.NAME, version = LiquidMechanics.VERSION, dependencies = "after:BasicComponents")
 @NetworkMod(channels = { LiquidMechanics.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
 public class LiquidMechanics extends DummyModContainer
@@ -87,7 +84,7 @@ public class LiquidMechanics extends DummyModContainer
     public static Block blockRod;
     public static Block blockGenerator;
     public static Block blockReleaseValve;
-    
+
     public static Block blockWasteLiquid;
 
     public static LiquidStack liquidSteam;
@@ -116,8 +113,7 @@ public class LiquidMechanics extends DummyModContainer
         blockGenerator = new BlockGenerator((this.CONFIGURATION.getBlock("Generator", BLOCK_ID_PREFIX + 4).getInt()));
         blockReleaseValve = new BlockReleaseValve((this.CONFIGURATION.getBlock("Release Valve", BLOCK_ID_PREFIX + 5).getInt()));
         blockTank = new BlockTank(this.CONFIGURATION.getBlock("Tank", BLOCK_ID_PREFIX + 6).getInt());
-        
-        
+
         // Items
         itemParts = new ItemParts(this.CONFIGURATION.getItem("Parts", ITEM_ID_PREFIX).getInt());
         // itemPipes = new ItemPipe(this.CONFIGURATION.getItem("PipeItem",
@@ -134,11 +130,11 @@ public class LiquidMechanics extends DummyModContainer
 
         // block registry
         GameRegistry.registerBlock(blockPipe, ItemPipe.class, "lmPipe");
-        GameRegistry.registerBlock(blockReleaseValve,ItemReleaseValve.class, "eValve");
+        GameRegistry.registerBlock(blockReleaseValve, ItemReleaseValve.class, "eValve");
         GameRegistry.registerBlock(blockRod, "mechRod");
         GameRegistry.registerBlock(blockGenerator, "lmGen");
         GameRegistry.registerBlock(blockMachine, ItemLiquidMachine.class, "lmMachines");
-        GameRegistry.registerBlock(blockTank,ItemTank.class, "lmTank");
+        GameRegistry.registerBlock(blockTank, ItemTank.class, "lmTank");
     }
 
     @Init
@@ -174,24 +170,24 @@ public class LiquidMechanics extends DummyModContainer
                 'V', new ItemStack(itemParts, 1, 7),
                 'T', new ItemStack(itemParts, 1, Parts.Iron.ordinal()) });
         // iron tube
-        GameRegistry.addRecipe(new ItemStack(itemParts, 2, Parts.Iron.ordinal()), new Object[] {
+        GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Iron.ordinal()), new Object[] {
                 "@@@",
                 '@', Item.ingotIron });
         // bronze tube
-        CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(itemParts, 2, Parts.Bronze.ordinal()), new Object[] {
+        CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(itemParts, 4, Parts.Bronze.ordinal()), new Object[] {
                 "@@@",
                 '@', "ingotBronze" }));
         // obby tube
-        GameRegistry.addRecipe(new ItemStack(itemParts, 2, Parts.Obby.ordinal()), new Object[] {
+        GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Obby.ordinal()), new Object[] {
                 "@@@",
                 '@', Block.obsidian });
         // nether tube
-        GameRegistry.addRecipe(new ItemStack(itemParts, 2, Parts.Nether.ordinal()), new Object[] {
+        GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Nether.ordinal()), new Object[] {
                 "N@N",
                 'N', Block.netherrack,
                 '@', new ItemStack(itemParts, 2, Parts.Obby.ordinal()) });
         // seal
-        GameRegistry.addRecipe(new ItemStack(itemParts, 2, Parts.Seal.ordinal()), new Object[] {
+        GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Seal.ordinal()), new Object[] {
                 "@@", "@@",
                 '@', Item.leather });
         // slime steal
@@ -218,7 +214,27 @@ public class LiquidMechanics extends DummyModContainer
         GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 1, 15), new Object[] {
                 new ItemStack(itemParts, 1, Parts.Iron.ordinal()),
                 new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
-
+        for (int it = 0; it < 15; it++)
+        {
+            if (it != ColorCode.WHITE.ordinal() && it != ColorCode.ORANGE.ordinal())
+            {
+                GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, it), new Object[] {
+                        new ItemStack(blockPipe, 1, 15),
+                        new ItemStack(blockPipe, 1, 15),
+                        new ItemStack(blockPipe, 1, 15),
+                        new ItemStack(blockPipe, 1, 15),
+                        new ItemStack(Item.dyePowder, 1, it) });
+            }
+        }
+        GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 1, ColorCode.ORANGE.ordinal()), new Object[] {
+            new ItemStack(itemParts, 1, Parts.Bronze.ordinal()),
+            new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
+        GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, ColorCode.WHITE.ordinal()), new Object[] {
+            new ItemStack(blockPipe, 1, 15),
+            new ItemStack(blockPipe, 1, 15),
+            new ItemStack(blockPipe, 1, 15),
+            new ItemStack(blockPipe, 1, 15),
+            new ItemStack(Item.dyePowder, 1, 0) });
         // steam tank
         GameRegistry.addShapelessRecipe(new ItemStack(blockTank, 1, ColorCode.ORANGE.ordinal()), new Object[] {
                 new ItemStack(itemParts, 1, Parts.Tank.ordinal()),
@@ -239,7 +255,7 @@ public class LiquidMechanics extends DummyModContainer
                 'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()) });
 
         // release valve
-        GameRegistry.addRecipe(new ItemStack(blockMachine, 1), new Object[] {
+        GameRegistry.addRecipe(new ItemStack(blockReleaseValve, 1), new Object[] {
                 "RPR", "PVP", "RPR", " P ",
                 'P', new ItemStack(blockPipe, 1, 15),
                 'V', new ItemStack(itemParts, 1, Parts.Valve.ordinal()),
