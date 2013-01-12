@@ -265,7 +265,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 
 				for (int i = startIndex; i < startIndex + inventory.getSizeInventorySide(direction); i++)
 				{
-					itemStack = this.addStackToInventory(startIndex, inventory, itemStack);
+					itemStack = this.addStackToInventory(i, inventory, itemStack);
 					if (itemStack == null) { return null; }
 				}
 			}
@@ -296,7 +296,6 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 			{
 				inventory.setInventorySlotContents(slotIndex, itemStack);
 				if (inventory.getStackInSlot(slotIndex) == null) { return itemStack; }
-
 				return null;
 			}
 			else if (stackInInventory.isItemEqual(itemStack) && stackInInventory.isStackable())
