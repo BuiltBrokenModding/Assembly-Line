@@ -16,8 +16,6 @@ public class CommandIdle extends Command
 		{
 			this.idleTime = this.getIntArg(0);
 		}
-		
-		System.out.println("INITIATE");
 	}
 
 	protected boolean doTask()
