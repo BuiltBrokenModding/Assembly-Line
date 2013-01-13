@@ -60,12 +60,6 @@ public class TileEntityRoboticSorter extends TileEntityElectricityReceiver imple
 		return 4;
 	}
 
-	@Override
-	public double getVoltage()
-	{
-		return 120;
-	}
-
 	/**
 	 * Inventory functions.
 	 */

@@ -1,9 +1,5 @@
 package assemblyline.common.machine.command;
 
-import java.util.List;
-
-import net.minecraft.entity.Entity;
-import net.minecraft.util.AxisAlignedBB;
 
 public class CommandDrop extends Command
 {

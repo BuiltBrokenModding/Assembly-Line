@@ -3,7 +3,6 @@ package assemblyline.common.machine.imprinter;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import assemblyline.common.AssemblyLine;
 
 public class SlotCustom extends Slot
 {

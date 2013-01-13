@@ -28,8 +28,6 @@ public class CommandManager
 		{
 			if (this.tasks.size() > 0)
 			{
-				System.out.println(this.lastTask + " vs " + currentTask + ": " + this.tasks.size());
-
 				if (this.currentTask < this.tasks.size())
 				{
 					if (this.currentTask < 0)

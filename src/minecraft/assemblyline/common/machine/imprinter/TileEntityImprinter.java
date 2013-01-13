@@ -39,7 +39,8 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	@Override
 	public int getStartInventorySide(ForgeDirection side)
 	{
-		if (side == ForgeDirection.UP || side == ForgeDirection.DOWN) { return 3; }
+		if (side == ForgeDirection.UP || side == ForgeDirection.DOWN)
+			return 3;
 		return START_INVENTORY;
 	}
 

@@ -122,15 +122,6 @@ public class TileEntityRejector extends TileEntityFilterable
 	}
 
 	/**
-	 * UE methods
-	 */
-	@Override
-	public double getVoltage()
-	{
-		return 120;
-	}
-
-	/**
 	 * NBT Data
 	 */
 	@Override

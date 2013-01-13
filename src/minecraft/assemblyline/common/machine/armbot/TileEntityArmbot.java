@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +16,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -84,6 +83,20 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		{
 			Vector3 handPosition = this.getHandPosition();
 
+			/**
+			 * Break the block if the hand hits a solid block.
+			 */
+			Block block = Block.blocksList[handPosition.getBlockID(this.worldObj)];
+
+			if (block != null)
+			{
+				if (Block.isNormalCube(block.blockID))
+				{
+					block.dropBlockAsItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, handPosition.getBlockMetadata(this.worldObj), 0);
+					handPosition.setBlockWithNotify(this.worldObj, 0);
+				}
+			}
+
 			for (Entity entity : this.grabbedEntities)
 			{
 				entity.setPosition(handPosition.x, handPosition.y, handPosition.z);
@@ -149,7 +162,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		Vector3 position = new Vector3(this);
 		position.add(0.5);
 		// The distance of the position relative to the main position.
-		double distance = 1.7f;
+		double distance = 1f;
 		Vector3 delta = new Vector3();
 		// The delta Y of the hand.
 		delta.y = Math.sin(Math.toRadians(this.rotationPitch)) * distance;
@@ -159,16 +172,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		delta.x = Math.sin(Math.toRadians(-this.rotationYaw)) * dH;
 		delta.z = Math.cos(Math.toRadians(-this.rotationYaw)) * dH;
 		position.add(delta);
-		// TODO: Use Smoke Spawning to Determine Hand Calculation Position. Delete when done
-		// developing this part.
-		// this.worldObj.spawnParticle("smoke", position.x, position.y, position.z, 0, 0, 0);
 		return position;
-	}
-
-	@Override
-	public double getVoltage()
-	{
-		return 120;
 	}
 
 	@Override

@@ -1,22 +1,11 @@
 package assemblyline.common.machine.imprinter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.ShapedRecipes;
-import net.minecraft.item.crafting.ShapelessRecipes;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.Pair;
-import cpw.mods.fml.relauncher.ReflectionHelper;
 
 public class ContainerImprinter extends Container implements ISlotWatcher
 {

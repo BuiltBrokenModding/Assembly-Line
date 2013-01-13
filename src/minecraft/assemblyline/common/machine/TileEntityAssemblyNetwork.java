@@ -3,10 +3,8 @@ package assemblyline.common.machine;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.electricity.ElectricityConnections;
 import universalelectricity.core.electricity.ElectricityNetwork;
 import universalelectricity.core.electricity.ElectricityPack;
-import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.TileEntityElectricityReceiver;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -69,32 +67,13 @@ public abstract class TileEntityAssemblyNetwork extends TileEntityElectricityRec
 
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 		{
-			if (ElectricityConnections.getDirections(this) != null)
+			if (this.wattsReceived < this.getRequest().getWatts())
 			{
-				for (Object obj : ElectricityConnections.getDirections(this))
-				{
-					if (obj != null)
-					{
-						ForgeDirection inputDirection = (ForgeDirection) obj;
-						TileEntity inputTile = Vector3.getTileEntityFromSide(this.worldObj, new Vector3(this), inputDirection);
-
-						ElectricityNetwork network = ElectricityNetwork.getNetworkFromTileEntity(inputTile, inputDirection);
-
-						if (network != null)
-						{
-							if (this.wattsReceived >= this.getRequest().getWatts())
-							{
-								network.stopRequesting(this);
-							}
-							else
-							{
-								network.startRequesting(this, this.getRequest());
-								this.wattsReceived += network.consumeElectricity(this).getWatts() * 2;
-							}
-						}
-					}
-
-				}
+				this.wattsReceived += ElectricityNetwork.consumeFromMultipleSides(this, this.getRequest()).getWatts() * 2;
+			}
+			else
+			{
+				ElectricityNetwork.consumeFromMultipleSides(this, new ElectricityPack());
 			}
 		}
 
@@ -127,12 +106,6 @@ public abstract class TileEntityAssemblyNetwork extends TileEntityElectricityRec
 	protected void onUpdate()
 	{
 
-	}
-
-	@Override
-	public double getVoltage()
-	{
-		return 20;
 	}
 
 	protected ElectricityPack getRequest()
