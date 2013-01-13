@@ -1,5 +1,6 @@
 package assemblyline.common.machine.command;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 
 /**
  * Rotates the armbot to a specific direction. If not specified, it will turn right.
@@ -41,7 +42,7 @@ public class CommandRotate extends Command
 		super.doTask();
 		float rotationalDifference = Math.abs(this.tileEntity.rotationYaw - this.targetRotation);
 
-		if (rotationalDifference < 0.1)
+		if (rotationalDifference < ROTATION_SPEED)
 		{
 			this.tileEntity.rotationYaw = this.targetRotation;
 		}
@@ -55,9 +56,13 @@ public class CommandRotate extends Command
 			{
 				this.tileEntity.rotationYaw += ROTATION_SPEED;
 			}
+			this.ticks = 0;
 		}
 
-		if (this.ticks < 80) { return true; }
+		if (this.ticks < 10)
+		{
+			return true;
+		}
 
 		return false;
 	}

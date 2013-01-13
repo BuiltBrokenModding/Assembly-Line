@@ -22,7 +22,7 @@ public class BlockManipulator extends BlockImprintable
 	public BlockManipulator(int id)
 	{
 		super("manipulator", id, UniversalElectricity.machine, TabAssemblyLine.INSTANCE);
-		this.setBlockBounds(0, 0, 0, 1, 0.3f, 1);
+		this.setBlockBounds(0, 0, 0, 1, 0.29f, 1);
 	}
 
 	@Override

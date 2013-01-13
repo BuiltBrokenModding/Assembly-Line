@@ -188,7 +188,7 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 			{
 				relativeCommand = i - minCommand;
 				command = this.commands.get(i).toUpperCase();
-				drawCommand(command, 8, 46 + relativeCommand * (fontRenderer.FONT_HEIGHT + 4), this.selCommand == i);
+				drawCommand(command, 8, 47 + relativeCommand * (fontRenderer.FONT_HEIGHT + 4), this.selCommand == i);
 			}
 		}
 	}

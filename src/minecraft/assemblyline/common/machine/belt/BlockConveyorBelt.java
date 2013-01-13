@@ -238,13 +238,13 @@ public class BlockConveyorBelt extends BlockMachine
 				if (direction.offsetX != 0)
 				{
 					double difference = (z + 0.5) - entity.posZ;
-					entity.motionZ += difference * 0.006;
+					entity.motionZ += difference * 0.06;
 					// entity.posZ = z + 0.5;
 				}
 				else if (direction.offsetZ != 0)
 				{
 					double difference = (x + 0.5) - entity.posX;
-					entity.motionX += difference * 0.006;
+					entity.motionX += difference * 0.06;
 					// /entity.posX = x + 0.5;
 				}
 

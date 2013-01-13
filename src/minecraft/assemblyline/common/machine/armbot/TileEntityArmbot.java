@@ -131,13 +131,21 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 
 			// keep it within 0 - 360 degrees so ROTATE commands work properly
 			if (this.rotationPitch <= -360)
+			{
 				this.rotationPitch += 360;
+			}
 			if (this.rotationPitch >= 360)
+			{
 				this.rotationPitch -= 360;
+			}
 			if (this.rotationYaw <= -360)
+			{
 				this.rotationYaw += 360;
+			}
 			if (this.rotationYaw >= 360)
+			{
 				this.rotationYaw -= 360;
+			}
 
 			this.ticksSincePower = 0;
 		}
@@ -180,7 +188,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		writeToNBT(nbt);
-		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.commandManager.getCurrentTask(), nbt);
+		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.powerTransferRange, this.commandManager.getCurrentTask(), nbt);
 	}
 
 	/**
@@ -200,6 +208,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				x = dis.readInt();
 				y = dis.readInt();
 				z = dis.readInt();
+				this.powerTransferRange = dis.readInt();
 				this.commandManager.setCurrentTask(dis.readInt());
 				NBTTagCompound tag = Packet.readNBTTagCompound(dis);
 				readFromNBT(tag);
