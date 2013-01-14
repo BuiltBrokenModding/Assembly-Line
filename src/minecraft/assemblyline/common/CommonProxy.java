@@ -1,5 +1,11 @@
 package assemblyline.common;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -14,6 +20,7 @@ import assemblyline.common.machine.encoder.ContainerEncoder;
 import assemblyline.common.machine.encoder.TileEntityEncoder;
 import assemblyline.common.machine.imprinter.ContainerImprinter;
 import assemblyline.common.machine.imprinter.TileEntityImprinter;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -38,6 +45,67 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.registerTileEntity(TileEntityArmbot.class, "ALArmbot");
 		GameRegistry.registerTileEntity(TileEntityImprinter.class, "ALImprinter");
 		GameRegistry.registerTileEntity(TileEntityMulti.class, "ALMulti");
+	}
+
+	private void extractZipToLocation(File zipFile, String sourceFolder, String destFolder)
+	{
+		try
+		{
+
+			File destFile = new File(FMLCommonHandler.instance().getMinecraftServerInstance().getFile("."), destFolder);
+			String destinationName = destFile.getAbsolutePath();
+			byte[] buf = new byte[1024];
+			ZipInputStream zipinputstream = null;
+			ZipEntry zipentry;
+			zipinputstream = new ZipInputStream(new FileInputStream(zipFile));
+
+			zipentry = zipinputstream.getNextEntry();
+			while (zipentry != null)
+			{
+				// for each entry to be extracted
+				String zipentryName = zipentry.getName();
+				if (!zipentryName.startsWith(sourceFolder))
+				{
+					zipentry = zipinputstream.getNextEntry();
+					continue;
+				}
+
+				String entryName = destinationName + zipentryName.substring(Math.min(zipentryName.length(), sourceFolder.length() - 1));
+				entryName = entryName.replace('/', File.separatorChar);
+				entryName = entryName.replace('\\', File.separatorChar);
+				int n;
+				FileOutputStream fileoutputstream;
+				File newFile = new File(entryName);
+				if (zipentry.isDirectory())
+				{
+					if (!newFile.mkdirs())
+					{
+						break;
+					}
+					zipentry = zipinputstream.getNextEntry();
+					continue;
+				}
+
+				fileoutputstream = new FileOutputStream(entryName);
+
+				while ((n = zipinputstream.read(buf, 0, 1024)) > -1)
+				{
+					fileoutputstream.write(buf, 0, n);
+				}
+
+				fileoutputstream.close();
+				zipinputstream.closeEntry();
+				zipentry = zipinputstream.getNextEntry();
+
+			}// while
+
+			zipinputstream.close();
+		}
+		catch (Exception e)
+		{
+			System.out.println("Error while loading AssemblyLine Lua libraries: ");
+			e.printStackTrace();
+		}
 	}
 
 	@Override

@@ -59,6 +59,8 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	public double wattsReceived = 0;
 
 	private int playerUsing = 0;
+	
+	private int computersAttached = 0;
 
 	/**
 	 * The rotation of the arms. In Degrees.
@@ -115,7 +117,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				}
 			}
 
-			if (this.disk == null)
+			if (this.disk == null && this.computersAttached == 0)
 			{
 				this.commandManager.clear();
 
@@ -125,7 +127,9 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				}
 				else
 				{
-					this.commandManager.addCommand(this, CommandReturn.class);
+					if (!this.commandManager.hasTasks())
+						if (Math.abs(this.rotationYaw - CommandReturn.IDLE_ROTATION_YAW) > 0.01)
+							this.commandManager.addCommand(this, CommandReturn.class);
 				}
 
 				this.commandManager.setCurrentTask(0);
@@ -485,24 +489,25 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	@Override
 	public Object[] callMethod(IComputerAccess computer, int method, Object[] arguments) throws Exception
 	{
-		System.out.println(getMethodNames()[method] + ": ");
-		for (Object o : arguments)
-		{
-			System.out.println("  " + o.toString());
-		}
 		switch (method)
 		{
 			case 0: // rotateBy: rotates by a certain amount
 			{
 				if (arguments.length > 0)
 				{
-					if (arguments[0] instanceof Float)
+					try
+					// try to cast to Float
 					{
-						float angle = (Float) arguments[0];
-						this.commandManager.addCommand(this, CommandRotate.class, new String[] { Float.toString(angle) });
+						double angle = (Double) arguments[0];
+						this.commandManager.addCommand(this, CommandRotate.class, new String[] { Double.toString(angle) });
+						while(this.commandManager.hasTasks())
+						{
+							Thread.sleep(1);
+						}
 					}
-					else
+					catch (Exception ex)
 					{
+						ex.printStackTrace();
 						throw new IllegalArgumentException("expected number");
 					}
 				}
@@ -518,12 +523,17 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				{
 					try
 					{
-						float angle = (Float) arguments[0];
-						float diff = angle - this.rotationYaw;
-						this.commandManager.addCommand(this, CommandRotate.class, new String[] { Float.toString(diff) });
+						double angle = (Double) arguments[0];
+						double diff = angle - this.rotationYaw;
+						this.commandManager.addCommand(this, CommandRotate.class, new String[] { Double.toString(diff) });
+						while(this.commandManager.hasTasks())
+						{
+							Thread.sleep(1);
+						}
 					}
 					catch (Exception ex)
 					{
+						ex.printStackTrace();
 						throw new IllegalArgumentException("expected number");
 					}
 				}
@@ -536,11 +546,19 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			case 2: // grab: grabs an item
 			{
 				this.commandManager.addCommand(this, CommandGrab.class);
+				while(this.commandManager.hasTasks())
+				{
+					Thread.sleep(1);
+				}
 				break;
 			}
 			case 3: // drop: drops an item
 			{
 				this.commandManager.addCommand(this, CommandDrop.class);
+				while(this.commandManager.hasTasks())
+				{
+					Thread.sleep(1);
+				}
 				break;
 			}
 			case 4: // reset: calls the RETURN command
@@ -565,13 +583,13 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	@Override
 	public void attach(IComputerAccess computer)
 	{
-
+		computersAttached++;
 	}
 
 	@Override
 	public void detach(IComputerAccess computer)
 	{
-
+		computersAttached--;
 	}
 
 }
