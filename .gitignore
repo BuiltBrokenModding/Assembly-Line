@@ -8,6 +8,7 @@ CHANGELOG
 /src/minecraft/*
 !/src/minecraft/assemblyline/
 !/src/minecraft/universalelectricity/
+!/src/minecraft/dan200
 !/resources/
 !/models/
 !info.txt
