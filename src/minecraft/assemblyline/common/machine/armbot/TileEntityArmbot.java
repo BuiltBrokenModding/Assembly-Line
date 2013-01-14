@@ -30,8 +30,10 @@ import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.TileEntityAssemblyNetwork;
 import assemblyline.common.machine.command.Command;
 import assemblyline.common.machine.command.CommandDrop;
+import assemblyline.common.machine.command.CommandGrab;
 import assemblyline.common.machine.command.CommandManager;
 import assemblyline.common.machine.command.CommandReturn;
+import assemblyline.common.machine.command.CommandRotate;
 import assemblyline.common.machine.encoder.ItemDisk;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -39,8 +41,10 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
+import dan200.computer.api.IComputerAccess;
+import dan200.computer.api.IPeripheral;
 
-public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMultiBlock, IInventory, IPacketReceiver, IJouleStorage
+public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMultiBlock, IInventory, IPacketReceiver, IJouleStorage, IPeripheral
 {
 	private final CommandManager commandManager = new CommandManager();
 	private static final int PACKET_COMMANDS = 128;
@@ -464,6 +468,105 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		destroyPosition.add(new Vector3(0, 1, 0));
 		destroyPosition.setBlockWithNotify(this.worldObj, 0);
 		this.worldObj.setBlockWithNotify(this.xCoord, this.yCoord, this.zCoord, 0);
+	}
+
+	@Override
+	public String getType()
+	{
+		return "ArmBot";
+	}
+
+	@Override
+	public String[] getMethodNames()
+	{
+		return new String[] { "rotateBy", "rotateTo", "grab", "drop", "reset", "isWorking" };
+	}
+
+	@Override
+	public Object[] callMethod(IComputerAccess computer, int method, Object[] arguments) throws Exception
+	{
+		switch (method)
+		{
+			case 0: // rotateBy: rotates by a certain amount
+			{
+				if (arguments.length > 0)
+				{
+					if (arguments[0] instanceof Float)
+					{
+						float angle = (Float) arguments[0];
+						this.commandManager.addCommand(this, CommandRotate.class, new String[] { Float.toString(angle) });
+					}
+					else
+					{
+						throw new IllegalArgumentException("expected number");
+					}
+				}
+				else
+				{
+					throw new IllegalArgumentException("expected number");
+				}
+				break;
+			}
+			case 1: // rotateTo: rotates to an absolute angle (0 is idle position, increases clockwise)
+			{
+				if (arguments.length > 0)
+				{
+					if (arguments[0] instanceof Float)
+					{
+						float angle = (Float) arguments[0];
+						float diff = angle - this.rotationYaw;
+						this.commandManager.addCommand(this, CommandRotate.class, new String[] { Float.toString(diff) });
+					}
+					else
+					{
+						throw new IllegalArgumentException("expected number");
+					}
+				}
+				else
+				{
+					throw new IllegalArgumentException("expected number");
+				}
+				break;
+			}
+			case 2: // grab: grabs an item
+			{
+				this.commandManager.addCommand(this, CommandGrab.class);
+				break;
+			}
+			case 3: // drop: drops an item
+			{
+				this.commandManager.addCommand(this, CommandDrop.class);
+				break;
+			}
+			case 4: // reset: calls the RETURN command
+			{
+				this.commandManager.addCommand(this, CommandReturn.class);
+				break;
+			}
+			case 5: // isWorking: returns whether or not the ArmBot is executing commands
+			{
+				return new Object[] { this.commandManager.hasTasks() };
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public boolean canAttachToSide(int side)
+	{
+		return side != ForgeDirection.UP.ordinal();
+	}
+
+	@Override
+	public void attach(IComputerAccess computer)
+	{
+
+	}
+
+	@Override
+	public void detach(IComputerAccess computer)
+	{
+
 	}
 
 }
