@@ -1,6 +1,5 @@
 package assemblyline.common.machine.command;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 
 /**
  * Rotates the armbot to a specific direction. If not specified, it will turn right.
