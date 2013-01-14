@@ -485,6 +485,11 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	@Override
 	public Object[] callMethod(IComputerAccess computer, int method, Object[] arguments) throws Exception
 	{
+		System.out.println(getMethodNames()[method] + ": ");
+		for (Object o : arguments)
+		{
+			System.out.println("  " + o.toString());
+		}
 		switch (method)
 		{
 			case 0: // rotateBy: rotates by a certain amount
@@ -511,13 +516,13 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			{
 				if (arguments.length > 0)
 				{
-					if (arguments[0] instanceof Float)
+					try
 					{
 						float angle = (Float) arguments[0];
 						float diff = angle - this.rotationYaw;
 						this.commandManager.addCommand(this, CommandRotate.class, new String[] { Float.toString(diff) });
 					}
-					else
+					catch (Exception ex)
 					{
 						throw new IllegalArgumentException("expected number");
 					}
