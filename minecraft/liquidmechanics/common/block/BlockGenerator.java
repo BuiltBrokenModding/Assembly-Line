@@ -22,7 +22,7 @@ public class BlockGenerator extends universalelectricity.prefab.BlockMachine
 
 	public BlockGenerator(int id)
 	{
-		super("Generator", id, Material.iron);
+		super("lmGen", id, Material.iron);
 		this.setCreativeTab(TabLiquidMechanics.INSTANCE);
 		this.setHardness(1f);
 		this.setResistance(5f);

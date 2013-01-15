@@ -133,6 +133,9 @@ public class RenderTank extends TileEntitySpecialRenderer
             case 4:
                 type = "Water";
                 break;
+            case 13:
+                type = "Milk";
+                break;
             default:
                 type = "";
                 break;

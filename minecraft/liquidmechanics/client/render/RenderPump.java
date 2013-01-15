@@ -25,13 +25,13 @@ public class RenderPump extends TileEntitySpecialRenderer
         int meta = te.worldObj.getBlockMetadata(te.xCoord, te.yCoord, te.zCoord);
         switch (te.color.ordinal())
         {
-            case 1:
+            case 4:
                 bindTextureByName(LiquidMechanics.RESOURCE_PATH + "pumps/WaterPump.png");
                 break;// water
-            case 2:
+            case 1:
                 bindTextureByName(LiquidMechanics.RESOURCE_PATH + "pumps/LavaPump.png");
                 break;// lava
-            case 3:
+            case 0:
                 bindTextureByName(LiquidMechanics.RESOURCE_PATH + "pumps/OilPump.png");
                 break;
             default:

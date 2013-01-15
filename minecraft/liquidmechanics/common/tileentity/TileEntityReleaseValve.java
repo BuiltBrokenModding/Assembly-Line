@@ -62,7 +62,7 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
                 connected[i] = null;
             }
         }
-        if (!this.worldObj.isRemote && ticks++ >= 40)
+        if (!this.worldObj.isRemote && ticks++ >= 20)
         {
             ticks = 0;
             BlockReleaseValve.checkForPower(worldObj, xCoord, yCoord, zCoord);

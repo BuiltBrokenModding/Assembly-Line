@@ -223,12 +223,9 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
     public boolean canPump(int x, int y, int z)
     {
         // if (this.tank.getLiquid() == null) return false;
-        if (this.tank.getLiquid() != null && this.tank.getLiquid().amount >= this.wMax)
-            return false;
-        if (this.isDisabled())
-            return false;
-        if ((LiquidHandler.getFromBlockID(worldObj.getBlockId(x, y, z)) == null || LiquidHandler.getFromBlockID(worldObj.getBlockId(x, y, z)) == LiquidHandler.unkown))
-            return false;
+        if (this.tank.getLiquid() != null && this.tank.getLiquid().amount >= this.wMax) { return false; }
+        if (this.isDisabled()) { return false; }
+        if ((LiquidHandler.getFromBlockID(worldObj.getBlockId(x, y, z)) == null || LiquidHandler.getFromBlockID(worldObj.getBlockId(x, y, z)) == LiquidHandler.unkown)) { return false; }
         return true;
     }
 
