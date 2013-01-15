@@ -3,6 +3,8 @@ package assemblyline.common.machine.command;
 import java.util.HashMap;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.world.World;
 import assemblyline.common.machine.armbot.TileEntityArmbot;
 
@@ -121,7 +123,7 @@ public abstract class Command
 			}
 			catch (Exception e)
 			{
-
+				
 			}
 		}
 
@@ -130,6 +132,15 @@ public abstract class Command
 
 	public void writeToNBT(NBTTagCompound taskCompound)
 	{
-
+		NBTTagCompound tileEntityNBT = new NBTTagCompound();
+		this.tileEntity.writeToNBT(tileEntityNBT);
+		taskCompound.setCompoundTag("tileEntity", tileEntityNBT);
+		taskCompound.setInteger("ticks", this.ticks);
+		NBTTagList parList = new NBTTagList();
+		for (String parameter : this.parameters)
+		{
+			parList.appendTag(new NBTTagString(parameter));
+		}
+		taskCompound.setTag("parameters", parList);
 	}
 }

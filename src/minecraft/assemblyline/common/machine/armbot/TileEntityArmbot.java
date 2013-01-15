@@ -59,7 +59,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	public double wattsReceived = 0;
 
 	private int playerUsing = 0;
-	
+
 	private int computersAttached = 0;
 
 	/**
@@ -119,8 +119,6 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 
 			if (this.disk == null && this.computersAttached == 0)
 			{
-				this.commandManager.clear();
-
 				if (this.grabbedEntities.size() > 0)
 				{
 					this.commandManager.addCommand(this, CommandDrop.class);
@@ -128,8 +126,12 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				else
 				{
 					if (!this.commandManager.hasTasks())
+					{
 						if (Math.abs(this.rotationYaw - CommandReturn.IDLE_ROTATION_YAW) > 0.01)
+						{
 							this.commandManager.addCommand(this, CommandReturn.class);
+						}
+					}
 				}
 
 				this.commandManager.setCurrentTask(0);
@@ -457,6 +459,10 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				}
 			}
 		}
+		else
+		{
+			this.commandManager.clear();
+		}
 	}
 
 	@Override
@@ -500,7 +506,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 					{
 						double angle = (Double) arguments[0];
 						this.commandManager.addCommand(this, CommandRotate.class, new String[] { Double.toString(angle) });
-						while(this.commandManager.hasTasks())
+						while (this.commandManager.hasTasks())
 						{
 							Thread.sleep(1);
 						}
@@ -526,10 +532,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 						double angle = (Double) arguments[0];
 						double diff = angle - this.rotationYaw;
 						this.commandManager.addCommand(this, CommandRotate.class, new String[] { Double.toString(diff) });
-						while(this.commandManager.hasTasks())
-						{
-							Thread.sleep(1);
-						}
+						while (this.commandManager.hasTasks());
 					}
 					catch (Exception ex)
 					{
@@ -546,19 +549,11 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			case 2: // grab: grabs an item
 			{
 				this.commandManager.addCommand(this, CommandGrab.class);
-				while(this.commandManager.hasTasks())
-				{
-					Thread.sleep(1);
-				}
 				break;
 			}
 			case 3: // drop: drops an item
 			{
 				this.commandManager.addCommand(this, CommandDrop.class);
-				while(this.commandManager.hasTasks())
-				{
-					Thread.sleep(1);
-				}
 				break;
 			}
 			case 4: // reset: calls the RETURN command
