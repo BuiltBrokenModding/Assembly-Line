@@ -32,10 +32,10 @@ public enum ColorCode
         return this.name;
     }
 
-    /** gets a pipeColor from any of the following
+    /** gets a ColorCode from any of the following
      * 
      * @param obj
-     *            - Integer,String,LiquidData,PipeColor
+     *            - Integer,String,LiquidData,ColorCode
      * @return Color NONE if it can't find it */
     public static ColorCode get(Object obj)
     {

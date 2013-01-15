@@ -50,15 +50,17 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-/** Used in the creation of a new mod class
+/**
+ * Used in the creation of a new mod class
  * 
- * @author Rseifert */
+ * @author Rseifert
+ */
 @Mod(modid = LiquidMechanics.NAME, name = LiquidMechanics.NAME, version = LiquidMechanics.VERSION, dependencies = "after:BasicComponents")
 @NetworkMod(channels = { LiquidMechanics.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
 public class LiquidMechanics extends DummyModContainer
 {
     // TODO Change in Version Release
-    public static final String VERSION = "0.2.4";
+    public static final String VERSION = "0.2.6";
 
     // Constants
     public static final String NAME = "Liquid Mechanics";
@@ -226,25 +228,47 @@ public class LiquidMechanics extends DummyModContainer
                         new ItemStack(Item.dyePowder, 1, it) });
             }
         }
+        // steam pipes
         GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 1, ColorCode.ORANGE.ordinal()), new Object[] {
-            new ItemStack(itemParts, 1, Parts.Bronze.ordinal()),
-            new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
+                new ItemStack(itemParts, 1, Parts.Bronze.ordinal()),
+                new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
+        // milk pipes
         GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, ColorCode.WHITE.ordinal()), new Object[] {
-            new ItemStack(blockPipe, 1, 15),
-            new ItemStack(blockPipe, 1, 15),
-            new ItemStack(blockPipe, 1, 15),
-            new ItemStack(blockPipe, 1, 15),
-            new ItemStack(Item.dyePowder, 1, 0) });
+                new ItemStack(blockPipe, 1, 15),
+                new ItemStack(blockPipe, 1, 15),
+                new ItemStack(blockPipe, 1, 15),
+                new ItemStack(blockPipe, 1, 15),
+                new ItemStack(Item.dyePowder, 1, 0) });
         // steam tank
         GameRegistry.addShapelessRecipe(new ItemStack(blockTank, 1, ColorCode.ORANGE.ordinal()), new Object[] {
                 new ItemStack(itemParts, 1, Parts.Tank.ordinal()),
                 new ItemStack(itemParts, 1, Parts.Seal.ordinal()),
-                new ItemStack(Item.dyePowder, 1, ColorCode.ORANGE.ordinal()) });
+                new ItemStack(itemParts, 1, Parts.Bronze.ordinal()),
+                new ItemStack(itemParts, 1, Parts.Bronze.ordinal()) });
         // lava tank
         GameRegistry.addRecipe(new ItemStack(blockTank, 1, ColorCode.RED.ordinal()), new Object[] {
-                " @ ", "@T@", " @ ",
+                "N@N", "@ @", "N@N",
                 'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()),
-                '@', Block.obsidian, });
+                '@', Block.obsidian,
+                'N', Block.netherrack });
+        // water tank
+        GameRegistry.addRecipe(new ItemStack(blockTank, 1, ColorCode.BLUE.ordinal()), new Object[] {
+                "@G@", "STS", "@G@",
+                'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()),
+                '@', Block.planks,
+                'G', Block.glass,
+                'S', new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
+        // milk tank
+        GameRegistry.addRecipe(new ItemStack(blockTank, 1, ColorCode.WHITE.ordinal()), new Object[] {
+                "W@W", "WTW", "W@W",
+                'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()),
+                '@', Block.stone,
+                'W', Block.planks });
+        // generic Tank
+        GameRegistry.addRecipe(new ItemStack(blockTank, 1, ColorCode.NONE.ordinal()), new Object[] {
+                "@@@", "@T@", "@@@",
+                'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()),
+                '@', Block.stone });
 
         // pump
         GameRegistry.addRecipe(new ItemStack(blockMachine, 1, 0), new Object[] {

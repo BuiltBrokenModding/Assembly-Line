@@ -80,7 +80,7 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
                         if (pipe != null)
                         {
                             ILiquidTank tankP = pipe.getTanks(ForgeDirection.UNKNOWN)[0];
-                            //FMLLog.warning("Pipe: " + pipe.getColor() + " Vol: " + (tankP.getLiquid() != null ? tankP.getLiquid().amount : 0000));
+                           //FMLLog.warning("Pipe: " + pipe.getColor() + " Vol: " + (tankP.getLiquid() != null ? tankP.getLiquid().amount : 0000));
                             int drain = pipe.fill(ForgeDirection.UNKNOWN, tank.getLiquid(), true);
                             tank.drain(drain, true);
                         }

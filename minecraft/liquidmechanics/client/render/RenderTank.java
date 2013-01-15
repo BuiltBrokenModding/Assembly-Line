@@ -20,7 +20,6 @@ public class RenderTank extends TileEntitySpecialRenderer
     private ModelLiquidTank model;
     private ModelLiquidTankCorner modelC;
 
-
     public RenderTank()
     {
         model = new ModelLiquidTank();
@@ -33,15 +32,14 @@ public class RenderTank extends TileEntitySpecialRenderer
         int guageMeta = meta;
         LiquidStack stack = te.getStack();
         int pos = 0;
-        if(stack != null)
+        if (stack != null)
         {
             pos = Math.min((stack.amount / LiquidContainerRegistry.BUCKET_VOLUME), 4);
-            if(meta == ColorCode.NONE.ordinal())
+            if (meta == ColorCode.NONE.ordinal())
             {
                 guageMeta = ColorCode.get(stack).ordinal();
             }
         }
-        
 
         GL11.glPushMatrix();
         GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
@@ -90,6 +88,9 @@ public class RenderTank extends TileEntitySpecialRenderer
             case 4:
                 type = "Water";
                 break;
+            case 13:
+                type = "Milk";
+                break;
             case 14:
                 type = "Steam";
                 break;
@@ -127,7 +128,7 @@ public class RenderTank extends TileEntitySpecialRenderer
         switch (meta)
         {
             case 1:
-                type = "Red";
+                type = "Lava";
                 break;
             case 4:
                 type = "Water";
@@ -136,7 +137,7 @@ public class RenderTank extends TileEntitySpecialRenderer
                 type = "";
                 break;
         }
-        return LiquidMechanics.RESOURCE_PATH + "tanks/Corner" + type + "png";
+        return LiquidMechanics.RESOURCE_PATH + "tanks/Corner" + type + ".png";
 
     }
 

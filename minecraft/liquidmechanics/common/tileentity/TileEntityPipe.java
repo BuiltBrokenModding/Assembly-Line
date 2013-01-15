@@ -28,11 +28,13 @@ import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityPipe extends TileEntity implements ITankContainer, IReadOut,IColorCoded
+import cpw.mods.fml.common.FMLLog;
+
+public class TileEntityPipe extends TileEntity implements ITankContainer, IReadOut, IColorCoded
 {
     private ColorCode color = ColorCode.NONE;
 
-    private int count = 40;
+    private int count = 20;
     private int count2, presure = 0;
 
     public boolean converted = false;
@@ -48,7 +50,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
 
         this.validataConnections();
         this.color = ColorCode.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
-        if (!worldObj.isRemote && ++count >= 40)
+        if (!worldObj.isRemote && ++count >= 20)
         {
             count = 0;
             this.updatePressure();
@@ -76,7 +78,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
                             stored.drain(((ITankContainer) connectedBlocks[i]).fill(dir.getOpposite(), stack, true), true);
                         }
                     }
-                    
+
                     if (stack == null || stack.amount <= 0)
                     {
                         break;
@@ -124,7 +126,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
     {
         super.readFromNBT(nbt);
         UpdateConverter.convert(this, nbt);
-        
+
         LiquidStack liquid = new LiquidStack(0, 0, 0);
         liquid.readFromNBT(nbt.getCompoundTag("stored"));
         stored.setLiquid(liquid);
@@ -149,7 +151,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
         LiquidStack stack = this.stored.getLiquid();
         if (stack != null) { return (stack.amount / LiquidContainerRegistry.BUCKET_VOLUME) + "/" + (this.stored.getCapacity() / LiquidContainerRegistry.BUCKET_VOLUME) + " " + LiquidHandler.get(stack).getName() + " @ " + this.presure + "p"; }
 
-        return "Empty";
+        return "Empty" + " @ " + this.presure + "p";
     }
 
     @Override
@@ -159,36 +161,34 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
         LiquidStack stack = stored.getLiquid();
         if (color != ColorCode.NONE)
         {
-            if (color != ColorCode.get(LiquidHandler.get(resource)) || !LiquidHandler.isEqual(stack, resource))
+
+            if (stack == null || LiquidHandler.isEqual(resource, this.color.getLiquidData()))
             {
-                this.causeMix(stack, resource);
+                return this.fill(0, resource, doFill);
             }
             else
             {
-                this.fill(0, resource, doFill);
+                return this.causeMix(stack, resource);
             }
 
         }
         else
         {
-            if (stack != null && !LiquidHandler.isEqual(stack, resource))
+            if (stack == null || LiquidHandler.isEqual(stack, resource))
             {
-                this.causeMix(stack, resource);
+                return this.fill(0, resource, doFill);
             }
             else
             {
-                this.fill(0, resource, doFill);
+                return this.causeMix(stack, resource);
             }
         }
-
-        return 0;
     }
 
     @Override
     public int fill(int tankIndex, LiquidStack resource, boolean doFill)
     {
-        if (tankIndex != 0 || resource == null)
-            return 0;
+        if (tankIndex != 0 || resource == null) { return 0; }
 
         return stored.fill(resource, doFill);
     }

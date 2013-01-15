@@ -141,6 +141,7 @@ public class BlockTank extends BlockMachine
     {  
         par3List.add(new ItemStack(par1, 1, 1));
         par3List.add(new ItemStack(par1, 1, 4));
+        par3List.add(new ItemStack(par1, 1, 13));
         par3List.add(new ItemStack(par1, 1, 15));
     }
 }

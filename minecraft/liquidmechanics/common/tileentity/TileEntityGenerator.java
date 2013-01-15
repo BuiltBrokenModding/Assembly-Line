@@ -277,9 +277,10 @@ public class TileEntityGenerator extends TileEntityElectricityProducer implement
 	}
 
 	@Override
-	public double getVoltage()
+	public double getVoltage(Object... data)
 	{
-		return 120;
+        return 120;
+	    
 	}
 
 	@Override

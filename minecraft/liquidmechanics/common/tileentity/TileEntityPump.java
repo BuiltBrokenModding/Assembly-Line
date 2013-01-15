@@ -4,10 +4,12 @@ import java.util.EnumSet;
 
 import liquidmechanics.api.IReadOut;
 import liquidmechanics.api.IPressure;
+import liquidmechanics.api.helpers.ColorCode;
 import liquidmechanics.api.helpers.LiquidData;
 import liquidmechanics.api.helpers.LiquidHandler;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.MetaGroup;
+import liquidmechanics.common.handlers.UpdateConverter;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,6 +21,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
+import net.minecraftforge.liquids.LiquidContainerData;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.liquids.LiquidTank;
@@ -31,7 +34,7 @@ import universalelectricity.prefab.tile.TileEntityElectricityReceiver;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityPump extends TileEntityElectricityReceiver implements IPacketReceiver, IReadOut, IPressure,ITankContainer
+public class TileEntityPump extends TileEntityElectricityReceiver implements IPacketReceiver, IReadOut, IPressure, ITankContainer
 {
     public final double WATTS_PER_TICK = 400;
     double percentPumped = 0.0;
@@ -42,18 +45,17 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
     int count = 0;
 
     private boolean converted = false;
-
-    public LiquidData type = LiquidHandler.unkown;
+    public ColorCode color = ColorCode.NONE;
     public LiquidTank tank = new LiquidTank(wMax);
 
     @Override
     public void initiate()
     {
-        this.registerConnections();
+        this.registerWireConnections();
         this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, LiquidMechanics.blockMachine.blockID);
     }
 
-    public void registerConnections()
+    public void registerWireConnections()
     {
         int notchMeta = MetaGroup.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
         ForgeDirection facing = ForgeDirection.getOrientation(notchMeta).getOpposite();
@@ -92,29 +94,30 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
         {
             if (count-- <= 0)
             {
+                count = 40;
                 int bBlock = worldObj.getBlockId(xCoord, yCoord - 1, zCoord);
                 LiquidData bellow = LiquidHandler.getFromBlockID(bBlock);
                 if (bellow != null)
                 {
-                    if (this.type != bellow && bellow != LiquidHandler.unkown)
+                    if (this.color.getLiquidData() != bellow && bellow != LiquidHandler.unkown)
                     {
-                        this.tank.setLiquid(LiquidHandler.getStack(bellow, 0));
-                        this.type = bellow;
+                        this.tank.setLiquid(LiquidHandler.getStack(bellow, 1));
+                        this.color = bellow.getColor();
                     }
 
                 }
-                count = 40;
+
             }
-            
+
             if (this.tank.getLiquid() == null)
             {
-                this.tank.setLiquid(LiquidHandler.getStack(this.type, 1));
+                this.tank.setLiquid(LiquidHandler.getStack(this.color.getLiquidData(), 1));
             }
-            
-            //consume/give away stored units
+
+            // consume/give away stored units
             this.fillSurroundings();
             this.chargeUp();
-           
+
             if (this.joulesReceived >= this.WATTS_PER_TICK - 50 && this.canPump(xCoord, yCoord - 1, zCoord))
             {
 
@@ -130,11 +133,31 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
         {
             if (this.ticks % 10 == 0)
             {
-                Packet packet = PacketManager.getPacket(LiquidMechanics.CHANNEL, this, type.getName());
+                Packet packet = PacketManager.getPacket(LiquidMechanics.CHANNEL, this, color.ordinal());
                 PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 60);
             }
         }
     }
+
+    /**
+     * gets the search range the pump used to find valid block to pump
+     */
+    public int getPumpRange()
+    {
+        int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+        switch (MetaGroup.getGrouping(meta))
+        {
+            case 0:
+            case 1:
+                return 1;
+            case 2:
+                return 20;
+            case 3:
+                return 50;
+        }
+        return 1;
+    }
+
     /**
      * Cause this to empty its internal tank to surrounding tanks
      */
@@ -154,18 +177,22 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
                     int moved = ((ITankContainer) tile).fill(dir.getOpposite(), stack, true);
                     tank.drain(moved, true);
                     if (stack.amount <= 0)
+                    {
                         break;
+                    }
                 }
             }
 
         }
     }
+
     /**
      * causes this to request/drain energy from connected networks
      */
     public void chargeUp()
     {
-        this.joulesReceived += this.WATTS_PER_TICK; //TODO remove after testing
+        // this.joulesReceived += this.WATTS_PER_TICK; //TODO remove after
+        // testing
         int notchMeta = MetaGroup.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
         ForgeDirection facing = ForgeDirection.getOrientation(notchMeta).getOpposite();
 
@@ -192,6 +219,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
             }
         }
     }
+
     public boolean canPump(int x, int y, int z)
     {
         // if (this.tank.getLiquid() == null) return false;
@@ -212,24 +240,18 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
      */
     public boolean drainBlock(Vector3 loc)
     {
-        int bBlock = worldObj.getBlockId(loc.intX(), loc.intY(), loc.intZ());
+        int blockID = worldObj.getBlockId(loc.intX(), loc.intY(), loc.intZ());
         int meta = worldObj.getBlockMetadata(loc.intX(), loc.intY(), loc.intZ());
-        LiquidData bellow = LiquidHandler.getFromBlockID(bBlock);
-        if (bBlock == Block.waterMoving.blockID || (bBlock == Block.waterStill.blockID && meta != 0))
-            return false;
-        if (bBlock == Block.lavaMoving.blockID || (bBlock == Block.lavaStill.blockID && meta != 0))
-            return false;
-        if (bBlock == type.getStack().itemID)
+        LiquidData resource = LiquidHandler.getFromBlockID(blockID);
+        if (resource == color.getLiquidData())
         {
-            // FMLLog.info("pumping " + bellow.displayerName + " blockID:" +
-            // bBlock + " Meta:" +
-            // meta);
-            int f = this.tank.fill(LiquidHandler.getStack(this.type, LiquidContainerRegistry.BUCKET_VOLUME), true);
-            if (f > 0)
-                worldObj.setBlockWithNotify(loc.intX(), loc.intY(), loc.intZ(), 0);
-            percentPumped = 0;
+            worldObj.setBlockWithNotify(xCoord, yCoord - 1, zCoord, 0);
+            LiquidStack stack = resource.getStack();
+            stack.amount = LiquidContainerRegistry.BUCKET_VOLUME;
+            this.tank.fill(stack, true);
             return true;
         }
+
         return false;
     }
 
@@ -238,7 +260,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
     {
         try
         {
-            this.type = (LiquidHandler.get(data.readUTF()));
+            this.color = (ColorCode.get(data.readInt()));
         }
         catch (Exception e)
         {
@@ -255,21 +277,9 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
     {
         super.readFromNBT(nbt);
 
-        this.converted = nbt.getBoolean("converted");
-        if (!converted)
-        {
-            int t = nbt.getInteger("type");
-            this.type = LiquidHandler.getFromMeta(t);
-            this.converted = true;
-        }
-        else
-        {
-            this.type = LiquidHandler.get(nbt.getString("name"));
-        }
-        if (this.type == null) type = LiquidHandler.unkown;
-
-        int stored = nbt.getInteger("liquid");
-        this.tank.setLiquid(LiquidHandler.getStack(this.type, stored));
+        LiquidStack liquid = new LiquidStack(0, 0, 0);
+        liquid.readFromNBT(nbt.getCompoundTag("stored"));
+        tank.setLiquid(liquid);
     }
 
     /**
@@ -279,28 +289,19 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
     public void writeToNBT(NBTTagCompound nbt)
     {
         super.writeToNBT(nbt);
-        nbt.setBoolean("converted", this.converted);
-        int s = 1;
-        if (this.tank.getLiquid() != null) s = this.tank.getLiquid().amount;
-        nbt.setInteger("liquid", s);
-
-        nbt.setString("name", type.getName());
+        if (tank.getLiquid() != null)
+        {
+            nbt.setTag("stored", tank.getLiquid().writeToNBT(new NBTTagCompound()));
+        }
     }
 
     @Override
     public String getMeterReading(EntityPlayer user, ForgeDirection side)
     {
-        if (type == null) return "Error: No Type";
-        int liquid = 0;
-        if (this.tank.getLiquid() != null)
-        {
-            liquid = (this.tank.getLiquid().amount / LiquidContainerRegistry.BUCKET_VOLUME);
-        }
-        else
-        {
-            liquid = 0;
-        }
-        return liquid + "" + type.getName() + " " + this.joulesReceived + "W " + this.percentPumped + "/20";
+        LiquidStack stack = this.tank.getLiquid();
+        if (stack != null) { return (stack.amount / LiquidContainerRegistry.BUCKET_VOLUME) + "/" + (this.tank.getCapacity() / LiquidContainerRegistry.BUCKET_VOLUME) + " " + LiquidHandler.get(stack).getName() + " " + this.joulesReceived + "/" + this.WATTS_PER_TICK + " " + this.percentPumped; }
+
+        return "Empty";
     }
 
     @Override
@@ -318,15 +319,12 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
     @Override
     public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
     {
-        return drain(0, maxDrain, doDrain);
+        return null;
     }
 
     @Override
     public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
     {
-        if (tankIndex == 0)
-            return tank.drain(maxDrain, doDrain);
-
         return null;
     }
 
@@ -345,16 +343,15 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
     @Override
     public int presureOutput(LiquidData type, ForgeDirection dir)
     {
-        if (type == this.type || type == LiquidHandler.unkown)
-            return this.type.getPressure();
+        if (type == this.color.getLiquidData() || type == LiquidHandler.unkown)
+            return this.color.getLiquidData().getPressure();
         return 0;
     }
 
     @Override
     public boolean canPressureToo(LiquidData type, ForgeDirection dir)
     {
-        if (type == this.type || type == LiquidHandler.unkown)
-            return true;
+        if (type == this.color.getLiquidData() || type == LiquidHandler.unkown) { return true; }
         return false;
     }
 
