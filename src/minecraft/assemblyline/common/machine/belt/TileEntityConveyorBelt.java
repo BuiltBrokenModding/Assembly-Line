@@ -3,6 +3,7 @@ package assemblyline.common.machine.belt;
 import java.util.EnumSet;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -119,6 +120,9 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 
 		if (this.isRunning())
 		{
+			if (this.ticks % (80) == 0) //sound is 4 seconds long (20 ticks/second)
+				Minecraft.getMinecraft().sndManager.playSound("assemblyline.conveyor", this.xCoord, this.yCoord, this.zCoord, 0.125f, 0.3f);
+			
 			this.wheelRotation += 40;
 
 			if (this.wheelRotation > 360)

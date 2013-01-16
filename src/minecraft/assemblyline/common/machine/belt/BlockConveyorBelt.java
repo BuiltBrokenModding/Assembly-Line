@@ -247,9 +247,20 @@ public class BlockConveyorBelt extends BlockMachine
 					entity.motionX += difference * 0.06;
 					// /entity.posX = x + 0.5;
 				}
-
+				
 				((EntityItem) entity).age++;
-				((EntityItem) entity).delayBeforeCanPickup = 20;
+
+				boolean foundSneaking = false;
+				for (EntityPlayer player : (List<EntityPlayer>) world.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(x - 1, y - 1, z - 1, x + 1, y + 1, z + 1)))
+				{
+					if (player.isSneaking())
+						foundSneaking = true;
+				}
+				
+				if (foundSneaking)
+					((EntityItem) entity).delayBeforeCanPickup = 0;
+				else
+					((EntityItem) entity).delayBeforeCanPickup = 20;
 				entity.onGround = false;
 			}
 
