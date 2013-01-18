@@ -1,17 +1,24 @@
 package assemblyline.common.machine.command;
 
 
-public class CommandReturn extends Command
+public class CommandReturn extends CommandRotate
 {
 	public static final float IDLE_ROTATION_PITCH = 0;
 	public static final float IDLE_ROTATION_YAW = 0;
-
+	
 	@Override
+	public void onTaskStart()
+	{
+		this.targetRotation = IDLE_ROTATION_YAW;
+		this.totalTicks = Math.abs(this.targetRotation - this.tileEntity.rotationYaw) / this.tileEntity.ROTATION_SPEED;
+	}
+
+	/*@Override
 	protected boolean doTask()
 	{
 		/**
 		 * Move the arm rotation to idle position if the machine is not idling
-		 */
+		 *
 		if (Math.abs(this.tileEntity.rotationPitch - IDLE_ROTATION_PITCH) > 0.01 || Math.abs(this.tileEntity.rotationYaw - IDLE_ROTATION_YAW) > 0.01)
 		{
 			if (Math.abs(IDLE_ROTATION_PITCH - this.tileEntity.rotationPitch) > 0.125)
@@ -31,6 +38,6 @@ public class CommandReturn extends Command
 		}
 
 		return false;
-	}
+	}*/
 
 }

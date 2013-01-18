@@ -10,11 +10,13 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
@@ -54,22 +56,19 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	 * The items this container contains.
 	 */
 	protected ItemStack disk = null;
-
 	public final double WATT_REQUEST = 20;
-
 	public double wattsReceived = 0;
-
 	private int playerUsing = 0;
-
 	private int computersAttached = 0;
-
 	/**
 	 * The rotation of the arms. In Degrees.
 	 */
 	public float rotationPitch = 0;
 	public float rotationYaw = 0;
-
+	public float renderPitch = 0;
+	public float renderYaw = 0;
 	private int ticksSincePower = 0;
+	public final float ROTATION_SPEED = 1.3f;
 
 	/**
 	 * An entity that the armbot is grabbed onto.
@@ -86,25 +85,60 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	@Override
 	public void onUpdate()
 	{
+		Vector3 handPosition = this.getHandPosition();
 		if (this.isRunning())
 		{
-			Vector3 handPosition = this.getHandPosition();
-
-			/**
-			 * Break the block if the hand hits a solid block.
-			 */
-			Block block = Block.blocksList[handPosition.getBlockID(this.worldObj)];
-
-			if (block != null)
+			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 			{
-				if (Block.isNormalCube(block.blockID))
-				{
-					block.dropBlockAsItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, handPosition.getBlockMetadata(this.worldObj), 0);
-					handPosition.setBlockWithNotify(this.worldObj, 0);
-				}
-			}
+				/**
+				 * Break the block if the hand hits a solid block.
+				 */
+				Block block = Block.blocksList[handPosition.getBlockID(this.worldObj)];
 
-			for (Entity entity : this.grabbedEntities)
+				if (block != null)
+				{
+					if (Block.isNormalCube(block.blockID))
+					{
+						block.dropBlockAsItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, handPosition.getBlockMetadata(this.worldObj), 0);
+						handPosition.setBlockWithNotify(this.worldObj, 0);
+					}
+				}
+
+				if (this.disk == null && this.computersAttached == 0)
+				{
+					this.commandManager.clear();
+					if (this.grabbedEntities.size() > 0)
+					{
+						this.commandManager.addCommand(this, CommandDrop.class);
+					}
+					else
+					{
+						if (!this.commandManager.hasTasks())
+						{
+							if (Math.abs(this.rotationYaw - CommandReturn.IDLE_ROTATION_YAW) > 0.01)
+							{
+								this.commandManager.addCommand(this, CommandReturn.class);
+							}
+						}
+					}
+
+					this.commandManager.setCurrentTask(0);
+				}
+
+				if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+					this.commandManager.onUpdate();
+
+			}
+			this.ticksSincePower = 0;
+		}
+		else
+		{
+			this.ticksSincePower++;
+		}
+
+		for (Entity entity : this.grabbedEntities)
+		{
+			if (entity != null)
 			{
 				entity.setPosition(handPosition.x, handPosition.y, handPosition.z);
 				entity.motionX = 0;
@@ -117,54 +151,46 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 					((EntityItem) entity).age = 0;
 				}
 			}
-
-			if (this.disk == null && this.computersAttached == 0)
-			{
-				if (this.grabbedEntities.size() > 0)
-				{
-					this.commandManager.addCommand(this, CommandDrop.class);
-				}
-				else
-				{
-					if (!this.commandManager.hasTasks())
-					{
-						if (Math.abs(this.rotationYaw - CommandReturn.IDLE_ROTATION_YAW) > 0.01)
-						{
-							this.commandManager.addCommand(this, CommandReturn.class);
-						}
-					}
-				}
-
-				this.commandManager.setCurrentTask(0);
-			}
-
-			this.commandManager.onUpdate();
-
-			// keep it within 0 - 360 degrees so ROTATE commands work properly
-			if (this.rotationPitch <= -360)
-			{
-				this.rotationPitch += 360;
-			}
-			if (this.rotationPitch >= 360)
-			{
-				this.rotationPitch -= 360;
-			}
-			if (this.rotationYaw <= -360)
-			{
-				this.rotationYaw += 360;
-			}
-			if (this.rotationYaw >= 360)
-			{
-				this.rotationYaw -= 360;
-			}
-
-			this.ticksSincePower = 0;
 		}
-		else
+
+		// keep it within 0 - 360 degrees so ROTATE commands work properly
+		if (this.rotationPitch <= -360)
 		{
-			this.ticksSincePower++;
-			if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && ticksSincePower <= 20)
-				this.commandManager.onUpdate();
+			this.rotationPitch += 360;
+		}
+		if (this.rotationPitch >= 360)
+		{
+			this.rotationPitch -= 360;
+		}
+		if (this.rotationYaw <= -360)
+		{
+			this.rotationYaw += 360;
+		}
+		if (this.rotationYaw >= 360)
+		{
+			this.rotationYaw -= 360;
+		}
+
+		if (Math.abs(this.renderYaw - this.rotationYaw) > 0.001f)
+		{
+			float speed;
+			if (this.renderYaw > this.rotationYaw)
+				speed = -this.ROTATION_SPEED;
+			else
+				speed = this.ROTATION_SPEED;
+			// System.out.println("Speed: " + speed);
+			// System.out.println("Yaw: [" + this.rotationYaw + ", " + this.renderYaw + "]");
+			this.renderYaw += speed;
+			if (this.ticks % 5 == 0) //sound is 0.5 seconds long (20 ticks/second)
+				Minecraft.getMinecraft().sndManager.playSound("assemblyline.conveyor", this.xCoord, this.yCoord, this.zCoord, 2f, 1.7f);
+			if (Math.abs(this.renderYaw - this.rotationYaw) < this.ROTATION_SPEED + 0.1f)
+			{
+				this.renderYaw = this.rotationYaw;
+			}
+			if (Math.abs(this.renderYaw - this.rotationYaw) > 720f) // something's wrong!
+			{
+				this.renderYaw = this.rotationYaw;
+			}
 		}
 
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && this.ticks % 20 == 0)
@@ -184,12 +210,12 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		double distance = 1f;
 		Vector3 delta = new Vector3();
 		// The delta Y of the hand.
-		delta.y = Math.sin(Math.toRadians(this.rotationPitch)) * distance;
+		delta.y = Math.sin(Math.toRadians(this.renderPitch)) * distance;
 		// The horizontal delta of the hand.
-		double dH = Math.cos(Math.toRadians(this.rotationPitch)) * distance;
+		double dH = Math.cos(Math.toRadians(this.renderPitch)) * distance;
 		// The delta X and Z.
-		delta.x = Math.sin(Math.toRadians(-this.rotationYaw)) * dH;
-		delta.z = Math.cos(Math.toRadians(-this.rotationYaw)) * dH;
+		delta.x = Math.sin(Math.toRadians(-this.renderYaw)) * dH;
+		delta.z = Math.cos(Math.toRadians(-this.renderYaw)) * dH;
 		position.add(delta);
 		return position;
 	}
@@ -355,6 +381,18 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		this.rotationYaw = nbt.getFloat("yaw");
 		this.rotationPitch = nbt.getFloat("pitch");
 		this.commandManager.setCurrentTask(nbt.getInteger("currentTask"));
+
+		NBTTagList entities = nbt.getTagList("entities");
+		this.grabbedEntities.clear();
+		for (int i = 0; i < entities.tagCount(); i++)
+		{
+			NBTTagCompound entityTag = (NBTTagCompound) entities.tagAt(i);
+			if (entityTag != null)
+			{
+				Entity entity = EntityList.createEntityFromNBT(entityTag, worldObj);
+				this.grabbedEntities.add(entity);
+			}
+		}
 	}
 
 	/**
@@ -376,6 +414,20 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		nbt.setFloat("yaw", this.rotationYaw);
 		nbt.setFloat("pitch", this.rotationPitch);
 		nbt.setInteger("currentTask", this.commandManager.getCurrentTask());
+
+		NBTTagList entities = new NBTTagList();
+		for (Entity entity : grabbedEntities)
+		{
+			if (entity != null)
+			{
+				NBTTagCompound entityNBT = new NBTTagCompound();
+				entity.writeToNBT(entityNBT);
+				entity.addEntityID(entityNBT);
+				entities.appendTag(entityNBT);
+			}
+		}
+
+		nbt.setTag("entities", entities);
 	}
 
 	@Override
@@ -460,10 +512,6 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				}
 			}
 		}
-		else
-		{
-			this.commandManager.clear();
-		}
 	}
 
 	@Override
@@ -533,7 +581,8 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 						double angle = (Double) arguments[0];
 						double diff = angle - this.rotationYaw;
 						this.commandManager.addCommand(this, CommandRotate.class, new String[] { Double.toString(diff) });
-						while (this.commandManager.hasTasks());
+						while (this.commandManager.hasTasks())
+							;
 					}
 					catch (Exception ex)
 					{

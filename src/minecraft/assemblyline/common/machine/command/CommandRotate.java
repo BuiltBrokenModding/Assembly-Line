@@ -8,8 +8,8 @@ package assemblyline.common.machine.command;
  */
 public class CommandRotate extends Command
 {
-	public static final float ROTATION_SPEED = 1.3f;
 	float targetRotation = 0;
+	float totalTicks = 0f;
 
 	@Override
 	public void onTaskStart()
@@ -33,13 +33,15 @@ public class CommandRotate extends Command
 		{
 			this.targetRotation += 360;
 		}
+		
+		this.totalTicks = Math.abs(this.targetRotation - this.tileEntity.rotationYaw) / this.tileEntity.ROTATION_SPEED;
 	}
 
 	@Override
 	protected boolean doTask()
 	{
 		super.doTask();
-		float rotationalDifference = Math.abs(this.tileEntity.rotationYaw - this.targetRotation);
+		/*float rotationalDifference = Math.abs(this.tileEntity.rotationYaw - this.targetRotation);
 
 		if (rotationalDifference < ROTATION_SPEED)
 		{
@@ -56,9 +58,14 @@ public class CommandRotate extends Command
 				this.tileEntity.rotationYaw += ROTATION_SPEED;
 			}
 			this.ticks = 0;
-		}
+		}*/
+		
+		//set the rotation to the target immediately and let the client handle animating it
+		//wait for the client to catch up
+		if (Math.abs(this.tileEntity.rotationYaw - this.targetRotation) > 0.001f)
+			this.tileEntity.rotationYaw = this.targetRotation;
 
-		if (this.ticks < 10)
+		if (this.ticks < this.totalTicks)
 		{
 			return true;
 		}
