@@ -35,7 +35,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 			GL11.glTranslatef((float) 0.0F, (float) 1.5F, (float) 0.0F);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH + "belt/frame0.png"));
-			modelConveyorBelt.render(0.0625F, 0, false, false, false);
+			modelConveyorBelt.render(0.0625F, 0, false, false, false, false);
 			GL11.glPopMatrix();
 		}
 		else if (block.blockID == AssemblyLine.blockDetector.blockID)

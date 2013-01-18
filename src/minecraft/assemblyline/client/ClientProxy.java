@@ -11,7 +11,7 @@ import assemblyline.client.gui.GuiImprinter;
 import assemblyline.client.render.BlockRenderingHandler;
 import assemblyline.client.render.RenderArmbot;
 import assemblyline.client.render.RenderConveyorBelt;
-import assemblyline.client.render.RenderCrate;
+import assemblyline.client.render.RenderCrateOld;
 import assemblyline.client.render.RenderDetector;
 import assemblyline.client.render.RenderManipulator;
 import assemblyline.client.render.RenderRejector;
@@ -49,7 +49,7 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRejector.class, new RenderRejector());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDetector.class, new RenderDetector());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityManipulator.class, new RenderManipulator());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrate.class, new RenderCrate());
+		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrate.class, new RenderCrateOld());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmbot.class, new RenderArmbot());
 	}
 

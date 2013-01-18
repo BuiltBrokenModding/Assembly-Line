@@ -90,6 +90,12 @@ public class BlockCrate extends BlockMachine
 
 		return false;
 	}
+	
+	@Override
+	public int getRenderType()
+	{
+		return super.getRenderType();
+	}
 
 	/**
 	 * Inserts a the itemStack the player is holding into the crate.

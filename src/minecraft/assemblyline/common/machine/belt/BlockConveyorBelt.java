@@ -1,6 +1,7 @@
 package assemblyline.common.machine.belt;
 
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -9,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
@@ -32,6 +34,30 @@ public class BlockConveyorBelt extends BlockMachine
 		this.setBlockBounds(0, 0, 0, 1, 0.3f, 1);
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 	}
+	
+	@Override
+	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
+	{
+		TileEntity t = world.getBlockTileEntity(x, y, z);
+
+		if (t != null && t instanceof TileEntityConveyorBelt)
+		{
+			TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) t;
+
+			if (tileEntity.getSlant() == SlantType.UP || tileEntity.getSlant() == SlantType.DOWN)
+			{
+				this.setBlockBounds(0f, 0f, 0f, 1f, 0.98f, 1f);
+				return;
+			}
+			if (tileEntity.getSlant() == SlantType.TOP)
+			{
+				this.setBlockBounds(0f, 0.68f, 0f, 1f, 0.98f, 1f);
+				return;
+			}
+		}
+
+		this.setBlockBounds(0f, 0f, 0f, 1f, 0.3f, 1f);
+	}
 
 	@Override
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z)
@@ -42,7 +68,14 @@ public class BlockConveyorBelt extends BlockMachine
 		{
 			TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) t;
 
-			if (tileEntity.getSlant() != SlantType.NONE) { return AxisAlignedBB.getAABBPool().addOrModifyAABBInPool((double) x + this.minX, (double) y + this.minY, (double) z + this.minZ, (double) x + 1, (double) y + 1, (double) z + 1); }
+			if (tileEntity.getSlant() == SlantType.UP || tileEntity.getSlant() == SlantType.DOWN)
+			{
+				return AxisAlignedBB.getAABBPool().addOrModifyAABBInPool((double) x + this.minX, (double) y + this.minY, (double) z + this.minZ, (double) x + 1, (double) y + 1, (double) z + 1);
+			}
+			if (tileEntity.getSlant() == SlantType.TOP)
+			{
+				return AxisAlignedBB.getAABBPool().addOrModifyAABBInPool((double) x + this.minX, (double) y + 0.68f, (double) z + this.minZ, (double) x + this.maxX, (double) y + 0.98f, (double) z + this.maxZ);
+			}
 		}
 
 		return AxisAlignedBB.getAABBPool().addOrModifyAABBInPool((double) x + this.minX, (double) y + this.minY, (double) z + this.minZ, (double) x + this.maxX, (double) y + this.maxY, (double) z + this.maxZ);
@@ -57,7 +90,7 @@ public class BlockConveyorBelt extends BlockMachine
 		{
 			TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) t;
 
-			if (tileEntity.getSlant() != SlantType.NONE)
+			if (tileEntity.getSlant() == SlantType.UP || tileEntity.getSlant() == SlantType.DOWN)
 			{
 				AxisAlignedBB boundBottom = AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(x, y, z, x + 1, y + 0.3, z + 1);
 				AxisAlignedBB boundTop = null;
@@ -83,7 +116,7 @@ public class BlockConveyorBelt extends BlockMachine
 						boundTop = AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(x, y, z, x + 1, y + 0.8, z + (float) direction.offsetZ / -2);
 					}
 				}
-				else
+				else if (tileEntity.getSlant() == SlantType.DOWN)
 				{
 					if (direction.offsetX > 0)
 					{
@@ -115,6 +148,17 @@ public class BlockConveyorBelt extends BlockMachine
 				return;
 			}
 
+			if (tileEntity.getSlant() == SlantType.TOP)
+			{
+				AxisAlignedBB newBounds = AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(x, y + 0.68, z, x + 1, y + 0.98, z + 1);
+
+				if (newBounds != null && par5AxisAlignedBB.intersectsWith(newBounds))
+				{
+					par6List.add(newBounds);
+				}
+
+				return;
+			}
 		}
 
 		AxisAlignedBB newBounds = AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(x, y, z, x + 1, y + 0.3, z + 1);
@@ -247,7 +291,7 @@ public class BlockConveyorBelt extends BlockMachine
 					entity.motionX += difference * 0.06;
 					// /entity.posX = x + 0.5;
 				}
-				
+
 				((EntityItem) entity).age++;
 
 				boolean foundSneaking = false;
@@ -256,7 +300,7 @@ public class BlockConveyorBelt extends BlockMachine
 					if (player.isSneaking())
 						foundSneaking = true;
 				}
-				
+
 				if (foundSneaking)
 					((EntityItem) entity).delayBeforeCanPickup = 0;
 				else

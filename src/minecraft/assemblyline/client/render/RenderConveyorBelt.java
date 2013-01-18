@@ -48,19 +48,53 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 					GL11.glRotatef(-90f, 0f, 1f, 0f);
 					break;
 			}
-			
-			this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "slantedbelt/frame" + frame + ".png");
 
 			if (slantType == SlantType.UP)
 			{
+				this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "slantedbelt/frame" + frame + ".png");
 				GL11.glTranslatef(0f, 0.8f, -0.8f);
 				GL11.glRotatef(180f, 0f, 1f, 1f);
-				MODEL2.render(0.0625F);
+				boolean slantAdjust = false;
+				TileEntity test = tileEntity.worldObj.getBlockTileEntity(tileEntity.xCoord + tileEntity.getDirection().offsetX, tileEntity.yCoord, tileEntity.zCoord + tileEntity.getDirection().offsetZ);
+				if (test != null)
+				{
+					if (test instanceof TileEntityConveyorBelt)
+					{
+						if (((TileEntityConveyorBelt) test).getSlant() == SlantType.TOP)
+						{
+							GL11.glRotatef(10f, 1f, 0f, 0f);
+							slantAdjust = true;
+						}
+					}
+				}
+				MODEL2.render(0.0625F, true);
+			}
+			else if (slantType == SlantType.DOWN)
+			{
+				this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "slantedbelt/frame" + frame + ".png");
+				GL11.glRotatef(180f, 0f, 1f, 0f);
+				boolean slantAdjust = false;
+				TileEntity test = tileEntity.worldObj.getBlockTileEntity(tileEntity.xCoord - tileEntity.getDirection().offsetX, tileEntity.yCoord, tileEntity.zCoord - tileEntity.getDirection().offsetZ);
+				if (test != null)
+				{
+					if (test instanceof TileEntityConveyorBelt)
+					{
+						if (((TileEntityConveyorBelt) test).getSlant() == SlantType.TOP)
+						{
+							GL11.glRotatef(-10f, 1f, 0f, 0f);
+							GL11.glTranslatef(0f, 0.25f, 0f);
+							slantAdjust = true;
+						}
+					}
+				}
+				MODEL2.render(0.0625F, slantAdjust);
 			}
 			else
 			{
-				GL11.glRotatef(180f, 0f, 1f, 0f);
-				MODEL2.render(0.0625F);
+				this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "belt/frame" + frame + ".png");
+				GL11.glRotatef(180, 0f, 1f, 0f);
+				GL11.glTranslatef(0f, -0.68f, 0f);
+				MODEL.render(0.0625f, (float) Math.toRadians(tileEntity.wheelRotation), tileEntity.getIsLastBelt(), tileEntity.getIsFirstBelt(), false, false);
 			}
 		}
 		else
@@ -82,7 +116,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 			}
 
 			this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "belt/frame" + frame + ".png");
-			MODEL.render(0.0625F, (float) Math.toRadians(tileEntity.wheelRotation), tileEntity.getIsLastBelt(), tileEntity.getIsFirstBelt(), false);
+			MODEL.render(0.0625F, (float) Math.toRadians(tileEntity.wheelRotation), tileEntity.getIsLastBelt(), tileEntity.getIsFirstBelt(), false, true);
 
 		}
 

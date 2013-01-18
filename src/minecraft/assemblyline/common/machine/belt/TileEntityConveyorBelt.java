@@ -30,7 +30,7 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 {
 	public enum SlantType
 	{
-		NONE, UP, DOWN
+		NONE, UP, DOWN, TOP
 	}
 
 	public static final int MAX_FRAME = 13;
@@ -120,7 +120,7 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 
 		if (this.isRunning())
 		{
-			if (this.ticks % (80) == 0) //sound is 4 seconds long (20 ticks/second)
+			if (this.ticks % (10) == 0) //sound is 0.5 seconds long (20 ticks/second)
 				Minecraft.getMinecraft().sndManager.playSound("assemblyline.conveyor", this.xCoord, this.yCoord, this.zCoord, 0.125f, 0.3f);
 			
 			this.wheelRotation += 40;
@@ -131,7 +131,7 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 			float wheelRotPct = wheelRotation / 360f;
 
 			// Sync the animation. Slant belts are slower.
-			if (this.getSlant() == SlantType.NONE)
+			if (this.getSlant() == SlantType.NONE || this.getSlant() == SlantType.TOP)
 			{
 				this.animFrame = (int) (wheelRotPct * MAX_FRAME);
 				if (this.animFrame < 0)

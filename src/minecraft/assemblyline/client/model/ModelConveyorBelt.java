@@ -163,7 +163,7 @@ public class ModelConveyorBelt extends ModelBase
 		setRotation(c1, 0F, 0F, 0F);
 	}
 
-	public void render(float f5, float radians, boolean front, boolean back, boolean above)
+	public void render(float f5, float radians, boolean front, boolean back, boolean above, boolean legs)
 	{
 		boolean mid = front && back ? true : false;
 		boolean leftCap = !front && back ? true : false;
@@ -220,13 +220,16 @@ public class ModelConveyorBelt extends ModelBase
 		BRoller.render(f5);
 		FRoller.render(f5);
 
-		// legs
-		BRL.render(f5);
-		BML.render(f5);
-		FLL.render(f5);
-		BLL.render(f5);
-		FRL.render(f5);
-		MRL.render(f5);
+		if (legs)
+		{
+			// legs
+			BRL.render(f5);
+			BML.render(f5);
+			FLL.render(f5);
+			BLL.render(f5);
+			FRL.render(f5);
+			MRL.render(f5);
+		}
 	}
 
 	private void setRotation(ModelRenderer model, float x, float y, float z)
