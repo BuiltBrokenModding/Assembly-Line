@@ -77,7 +77,6 @@ public class LiquidMechanics extends DummyModContainer
     public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir() + "/UniversalElectricity/", NAME + ".cfg"));
 
     public final static int BLOCK_ID_PREFIX = 3100;
-    public final static int LIQUID_ID_PREFIX = 200;
     public final static int ITEM_ID_PREFIX = 13200;
 
     public static Block blockPipe;
@@ -115,6 +114,7 @@ public class LiquidMechanics extends DummyModContainer
         blockGenerator = new BlockGenerator((this.CONFIGURATION.getBlock("Generator", BLOCK_ID_PREFIX + 4).getInt()));
         blockReleaseValve = new BlockReleaseValve((this.CONFIGURATION.getBlock("Release Valve", BLOCK_ID_PREFIX + 5).getInt()));
         blockTank = new BlockTank(this.CONFIGURATION.getBlock("Tank", BLOCK_ID_PREFIX + 6).getInt());
+        blockWasteLiquid = new BlockWasteLiquid(this.CONFIGURATION.getBlock("WasteLiquid", BLOCK_ID_PREFIX + 7).getInt());
 
         // Items
         itemParts = new ItemParts(this.CONFIGURATION.getItem("Parts", ITEM_ID_PREFIX).getInt());
@@ -124,8 +124,6 @@ public class LiquidMechanics extends DummyModContainer
         // Valve item
         itemGauge = new ItemGuage(this.CONFIGURATION.getItem("PipeGuage", ITEM_ID_PREFIX + 3).getInt());
 
-        // Liquid Registry
-        blockWasteLiquid = new BlockWasteLiquid(this.CONFIGURATION.getBlock("WasteLiquid", LIQUID_ID_PREFIX).getInt());
         CONFIGURATION.save();
 
         proxy.preInit();
@@ -280,7 +278,7 @@ public class LiquidMechanics extends DummyModContainer
 
         // release valve
         GameRegistry.addRecipe(new ItemStack(blockReleaseValve, 1), new Object[] {
-                "RPR", "PVP", "RPR", " P ",
+                "RPR", "PVP", "RPR",
                 'P', new ItemStack(blockPipe, 1, 15),
                 'V', new ItemStack(itemParts, 1, Parts.Valve.ordinal()),
                 'R', Item.redstone });

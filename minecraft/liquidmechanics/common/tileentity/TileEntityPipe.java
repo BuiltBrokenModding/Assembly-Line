@@ -73,8 +73,24 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
                             }
 
                         }
+                        else if (connectedBlocks[i] instanceof TileEntityTank && ((TileEntityTank) connectedBlocks[i]).getColor() == this.color)
+                        {
+                            if (dir == ForgeDirection.UP && !color.getLiquidData().getCanFloat())
+                            {
+
+                            }
+                            else if (dir == ForgeDirection.DOWN && color.getLiquidData().getCanFloat())
+                            {
+
+                            }
+                            else
+                            {
+                                stored.drain(((ITankContainer) connectedBlocks[i]).fill(dir.getOpposite(), stack, true), true);
+                            }
+                        }
                         else
                         {
+
                             stored.drain(((ITankContainer) connectedBlocks[i]).fill(dir.getOpposite(), stack, true), true);
                         }
                     }
@@ -259,7 +275,8 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
                     connectedBlocks[i] = null;
                 }
 
-                if (this.color != ColorCode.NONE && ent instanceof TileEntityTank && color != ((TileEntityTank) ent).getColor())
+                if (this.color != ColorCode.NONE && ent instanceof TileEntityTank && ((TileEntityTank) ent).getColor() != ColorCode.NONE && color != ((TileEntityTank) ent).getColor()
+                        )
                 {
                     connectedBlocks[i] = null;
                 }
