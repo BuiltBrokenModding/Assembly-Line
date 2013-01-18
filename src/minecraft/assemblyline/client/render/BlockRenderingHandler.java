@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 import universalelectricity.core.vector.Vector3;
 import assemblyline.client.model.ModelConveyorBelt;
 import assemblyline.client.model.ModelManipulator;
-import assemblyline.client.model.ModelRejector;
+import assemblyline.client.model.ModelRejectorPiston;
 import assemblyline.common.AssemblyLine;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
@@ -23,7 +23,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 	public static BlockRenderingHandler instance = new BlockRenderingHandler();
 	public static final int BLOCK_RENDER_ID = RenderingRegistry.getNextAvailableRenderId();
 	private ModelConveyorBelt modelConveyorBelt = new ModelConveyorBelt();
-	private ModelRejector modelEjector = new ModelRejector();
+	private ModelRejectorPiston modelEjector = new ModelRejectorPiston();
 	private ModelManipulator modelInjector = new ModelManipulator();
 
 	@Override
@@ -44,12 +44,12 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 		}
 		else if (block.blockID == AssemblyLine.blockRejector.blockID)
 		{
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH + "sorter.png"));
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH + "rejector.png"));
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float) 0.6F, (float) 1.5F, (float) 0.6F);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
 			GL11.glRotatef(-90f, 0f, 1f, 0f);
-			modelEjector.renderMain(0.0625F);
+			modelEjector.render(0.0625F);
 			modelEjector.renderPiston(0.0625F, 1);
 			GL11.glPopMatrix();
 		}

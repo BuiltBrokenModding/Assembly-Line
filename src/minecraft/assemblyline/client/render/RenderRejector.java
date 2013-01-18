@@ -4,13 +4,13 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
-import assemblyline.client.model.ModelRejector;
+import assemblyline.client.model.ModelRejectorPiston;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.TileEntityRejector;
 
 public class RenderRejector extends RenderImprintable
 {
-	private ModelRejector model = new ModelRejector();
+	private ModelRejectorPiston model = new ModelRejectorPiston();
 
 	private void renderAModelAt(TileEntityRejector tileEntity, double x, double y, double z, float f)
 	{
@@ -22,7 +22,7 @@ public class RenderRejector extends RenderImprintable
 		{
 			pos = 8;
 		}
-		bindTextureByName(AssemblyLine.TEXTURE_PATH + "sorter.png");
+		bindTextureByName(AssemblyLine.TEXTURE_PATH + "rejector.png");
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
@@ -42,7 +42,7 @@ public class RenderRejector extends RenderImprintable
 		{
 			GL11.glRotatef(270f, 0f, 1f, 0f);
 		}
-		model.renderMain(0.0625F);
+		model.render(0.0625F);
 		model.renderPiston(0.0625F, pos);
 		GL11.glPopMatrix();
 	}
