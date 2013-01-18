@@ -4,7 +4,6 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
-import assemblyline.client.model.ModelRejector;
 import assemblyline.client.model.ModelRejectorPiston;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.TileEntityRejector;
