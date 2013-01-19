@@ -33,6 +33,7 @@ public class CommandManager
 					if (this.currentTask < 0)
 					{
 						this.currentTask = 0;
+						this.lastTask = -1;
 					}
 
 					Command task = this.tasks.get(this.currentTask);
@@ -42,7 +43,9 @@ public class CommandManager
 						this.lastTask = this.currentTask;
 						task.onTaskStart();
 					}
-
+					
+					//System.out.print(Command.getCommandName(task.getClass()) + "|");
+					
 					if (!task.doTask())
 					{
 						// End the task and reinitiate it into a new class to make sure it is fresh.
@@ -51,6 +54,18 @@ public class CommandManager
 						task.onTaskEnd();
 						this.tasks.set(tempCurrentTask, this.getNewCommand(task.tileEntity, task.getClass(), task.getArgs()));
 					}
+					
+					/*for (Command command : this.tasks)
+					{
+						System.out.print(Command.getCommandName(command.getClass()));
+						System.out.print("; ");
+					}
+					
+					System.out.println(this.currentTask);*/
+				}
+				else
+				{
+					this.clear();
 				}
 			}
 		}
@@ -110,7 +125,7 @@ public class CommandManager
 	 */
 	public boolean hasTasks()
 	{
-		return !tasks.isEmpty();
+		return tasks.size() > 0;
 	}
 
 	public List<Command> getCommands()

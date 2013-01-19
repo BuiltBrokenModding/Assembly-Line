@@ -21,6 +21,7 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityConnections;
 import universalelectricity.core.implement.IJouleStorage;
@@ -60,6 +61,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	public double wattsReceived = 0;
 	private int playerUsing = 0;
 	private int computersAttached = 0;
+	private List<IComputerAccess> connectedComputers = new ArrayList<IComputerAccess>();
 	/**
 	 * The rotation of the arms. In Degrees.
 	 */
@@ -175,13 +177,28 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		{
 			float speed;
 			if (this.renderYaw > this.rotationYaw)
-				speed = -this.ROTATION_SPEED;
+				if (Math.abs(this.renderYaw - this.rotationYaw) > 180)
+					speed = this.ROTATION_SPEED;
+				else
+					speed = -this.ROTATION_SPEED;
 			else
-				speed = this.ROTATION_SPEED;
-			// System.out.println("Speed: " + speed);
-			// System.out.println("Yaw: [" + this.rotationYaw + ", " + this.renderYaw + "]");
+				if (Math.abs(this.renderYaw - this.rotationYaw) > 180)
+					speed = -this.ROTATION_SPEED;
+				else
+					speed = this.ROTATION_SPEED;
+			
 			this.renderYaw += speed;
-			if (this.ticks % 5 == 0) //sound is 0.5 seconds long (20 ticks/second)
+			
+			if (this.renderYaw <= -360)
+			{
+				this.renderYaw += 360;
+			}
+			if (this.renderYaw >= 360)
+			{
+				this.renderYaw -= 360;
+			}
+			
+			if (this.ticks % 5 == 0) // sound is 0.5 seconds long (20 ticks/second)
 				Minecraft.getMinecraft().sndManager.playSound("assemblyline.conveyor", this.xCoord, this.yCoord, this.zCoord, 2f, 1.7f);
 			if (Math.abs(this.renderYaw - this.rotationYaw) < this.ROTATION_SPEED + 0.1f)
 			{
@@ -225,7 +242,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		writeToNBT(nbt);
-		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.powerTransferRange, this.commandManager.getCurrentTask(), nbt);
+		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.powerTransferRange, nbt);
 	}
 
 	/**
@@ -246,7 +263,6 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				y = dis.readInt();
 				z = dis.readInt();
 				this.powerTransferRange = dis.readInt();
-				this.commandManager.setCurrentTask(dis.readInt());
 				NBTTagCompound tag = Packet.readNBTTagCompound(dis);
 				readFromNBT(tag);
 			}
@@ -512,6 +528,11 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				}
 			}
 		}
+		else
+		{
+			this.commandManager.addCommand(this, Command.getCommand("DROP"));
+			this.commandManager.addCommand(this, Command.getCommand("RETURN"));
+		}
 	}
 
 	@Override
@@ -538,12 +559,12 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	@Override
 	public String[] getMethodNames()
 	{
-		return new String[] { "rotateBy", "rotateTo", "grab", "drop", "reset", "isWorking" };
+		return new String[] { "rotate", "grab", "drop", "reset", "isWorking", "touchingEntity" };
 	}
 
 	@Override
 	public Object[] callMethod(IComputerAccess computer, int method, Object[] arguments) throws Exception
-	{
+	{		
 		switch (method)
 		{
 			case 0: // rotateBy: rotates by a certain amount
@@ -555,10 +576,6 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 					{
 						double angle = (Double) arguments[0];
 						this.commandManager.addCommand(this, CommandRotate.class, new String[] { Double.toString(angle) });
-						while (this.commandManager.hasTasks())
-						{
-							Thread.sleep(1);
-						}
 					}
 					catch (Exception ex)
 					{
@@ -572,48 +589,41 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				}
 				break;
 			}
-			case 1: // rotateTo: rotates to an absolute angle (0 is idle position, increases clockwise)
-			{
-				if (arguments.length > 0)
-				{
-					try
-					{
-						double angle = (Double) arguments[0];
-						double diff = angle - this.rotationYaw;
-						this.commandManager.addCommand(this, CommandRotate.class, new String[] { Double.toString(diff) });
-						while (this.commandManager.hasTasks())
-							;
-					}
-					catch (Exception ex)
-					{
-						ex.printStackTrace();
-						throw new IllegalArgumentException("expected number");
-					}
-				}
-				else
-				{
-					throw new IllegalArgumentException("expected number");
-				}
-				break;
-			}
-			case 2: // grab: grabs an item
+			case 1: // grab: grabs an item
 			{
 				this.commandManager.addCommand(this, CommandGrab.class);
 				break;
 			}
-			case 3: // drop: drops an item
+			case 2: // drop: drops an item
 			{
 				this.commandManager.addCommand(this, CommandDrop.class);
 				break;
 			}
-			case 4: // reset: calls the RETURN command
+			case 3: // reset: clears the queue and calls the RETURN command
 			{
+				this.commandManager.clear();
 				this.commandManager.addCommand(this, CommandReturn.class);
 				break;
 			}
-			case 5: // isWorking: returns whether or not the ArmBot is executing commands
+			case 4: // isWorking: returns whether or not the ArmBot is executing commands
 			{
 				return new Object[] { this.commandManager.hasTasks() };
+			}
+			case 5: // touchingEntity: returns whether or not the ArmBot is touching an entity it is able to pick up
+			{
+				Vector3 serachPosition = this.getHandPosition();
+				List<Entity> found = this.worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(serachPosition.x - 0.5f, serachPosition.y - 0.5f, serachPosition.z - 0.5f, serachPosition.x + 0.5f, serachPosition.y + 0.5f, serachPosition.z + 0.5f));
+
+				if (found != null && found.size() > 0)
+				{
+					for (int i = 0; i < found.size(); i++)
+					{
+						if (found.get(i) != null && !(found.get(i) instanceof EntityPlayer) && found.get(i).ridingEntity == null) // isn't null, isn't a player, and isn't riding anything
+						{ return new Object[] { true }; }
+					}
+				}
+
+				return new Object[] { false };
 			}
 		}
 		return null;
@@ -629,12 +639,20 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	public void attach(IComputerAccess computer)
 	{
 		computersAttached++;
+		synchronized (connectedComputers)
+		{
+			connectedComputers.add(computer);
+		}
 	}
 
 	@Override
 	public void detach(IComputerAccess computer)
 	{
 		computersAttached--;
+		synchronized (connectedComputers)
+		{
+			connectedComputers.remove(computer);
+		}
 	}
 
 }

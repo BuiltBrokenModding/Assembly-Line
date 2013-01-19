@@ -129,6 +129,40 @@ public abstract class Command
 
 		return 0;
 	}
+	
+	protected Double getDoubleArg(int i)
+	{
+		if (getArg(i) != null)
+		{
+			try
+			{
+				return Double.parseDouble(getArg(i));
+			}
+			catch (Exception e)
+			{
+				
+			}
+		}
+
+		return 0.0;
+	}
+	
+	protected Float getFloatArg(int i)
+	{
+		if (getArg(i) != null)
+		{
+			try
+			{
+				return Float.parseFloat(getArg(i));
+			}
+			catch (Exception e)
+			{
+				
+			}
+		}
+
+		return 0.0f;
+	}
 
 	public void writeToNBT(NBTTagCompound taskCompound)
 	{

@@ -15,6 +15,8 @@ public class CommandRotate extends Command
 	public void onTaskStart()
 	{
 		super.onTaskStart();
+		
+		this.ticks = 0;
 
 		if (this.getArg(0) == null)
 		{
@@ -22,7 +24,7 @@ public class CommandRotate extends Command
 		}
 		else
 		{
-			this.targetRotation = this.tileEntity.rotationYaw + this.getIntArg(0);
+			this.targetRotation = this.tileEntity.rotationYaw + this.getFloatArg(0);
 		}
 
 		while (this.targetRotation >= 360)
