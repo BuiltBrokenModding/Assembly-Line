@@ -198,7 +198,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				this.renderYaw -= 360;
 			}
 			
-			if (this.ticks % 5 == 0) // sound is 0.5 seconds long (20 ticks/second)
+			if (this.ticks % 5 == 0 && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) // sound is 0.5 seconds long (20 ticks/second)
 				Minecraft.getMinecraft().sndManager.playSound("assemblyline.conveyor", this.xCoord, this.yCoord, this.zCoord, 2f, 1.7f);
 			if (Math.abs(this.renderYaw - this.rotationYaw) < this.ROTATION_SPEED + 0.1f)
 			{

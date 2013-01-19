@@ -41,12 +41,13 @@ public class CommandGrab extends Command
 		{
 			for (int i = 0; i < found.size(); i++)
 			{
-				if (found.get(i) != null && !(found.get(i) instanceof EntityPlayer) && found.get(i).ridingEntity == null) //isn't null, isn't a player, and isn't riding anything
+				if (found.get(i) != null && !(found.get(i) instanceof EntityPlayer) && found.get(i).ridingEntity == null) // isn't null, isn't a player, and isn't riding anything
 				{
 					this.tileEntity.grabbedEntities.add(found.get(i));
 					if (found.get(i) instanceof EntityItem)
-						this.tileEntity.worldObj.removeEntity(found.get(i)); //items don't move right, so we render them manually
-					Minecraft.getMinecraft().sndManager.playSound("random.pop", this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, 0.2F, ((this.tileEntity.worldObj.rand.nextFloat() - this.tileEntity.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.0F);
+						this.tileEntity.worldObj.removeEntity(found.get(i)); // items don't move right, so we render them manually
+					if (this.world.isRemote)
+						Minecraft.getMinecraft().sndManager.playSound("random.pop", this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, 0.2F, ((this.tileEntity.worldObj.rand.nextFloat() - this.tileEntity.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.0F);
 					found.get(i).isDead = false;
 					return false;
 				}

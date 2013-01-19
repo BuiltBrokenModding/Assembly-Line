@@ -53,8 +53,7 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	}
 
 	/**
-	 * This function is overriden to allow conveyor belts to power belts that are diagonally going
-	 * up.
+	 * This function is overriden to allow conveyor belts to power belts that are diagonally going up.
 	 */
 	@Override
 	public void updatePowerTransferRange()
@@ -118,11 +117,11 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 			PacketManager.sendPacketToClients(this.getDescriptionPacket());
 		}
 
-		if (this.isRunning()&& this.worldObj.isRemote)
+		if (this.isRunning())
 		{
-			if (this.ticks % (10) == 0 ) //sound is 0.5 seconds long (20 ticks/second)
+			if (this.ticks % (10) == 0 && this.worldObj.isRemote) // sound is 0.5 seconds long (20 ticks/second)
 				Minecraft.getMinecraft().sndManager.playSound("assemblyline.conveyor", this.xCoord, this.yCoord, this.zCoord, 0.125f, 0.3f);
-			
+
 			this.wheelRotation += 40;
 
 			if (this.wheelRotation > 360)
