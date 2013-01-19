@@ -49,7 +49,7 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRejector.class, new RenderRejector());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDetector.class, new RenderDetector());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityManipulator.class, new RenderManipulator());
-		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrate.class, new RenderCrateOld());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrate.class, new RenderCrateOld());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmbot.class, new RenderArmbot());
 	}
 
