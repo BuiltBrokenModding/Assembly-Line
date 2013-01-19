@@ -110,7 +110,7 @@ public abstract class TileEntityAssemblyNetwork extends TileEntityElectricityRec
 
 	protected ElectricityPack getRequest()
 	{
-		return new ElectricityPack(15, this.getVoltage());
+		return new ElectricityPack(10, this.getVoltage());
 	}
 
 	protected int getMaxTransferRange()
