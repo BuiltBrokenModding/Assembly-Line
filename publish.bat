@@ -28,10 +28,10 @@ cd reobf\minecraft\
 cd ..\..\
 cd resources\
 7z a "..\builds\%FILE_NAME%" "*"
-7z a "..\builds\%BACKUP_NAME%" "*" -pdarkguardsman
+7z a "..\builds\%BACKUP_NAME%" "*" -pdirewolf20rocks
 cd ..\
 cd src\
-7z a "..\builds\%BACKUP_NAME%" "*\assemblyline\" -pdarkguardsman
+7z a "..\builds\%BACKUP_NAME%" "*\assemblyline\" -pdirewolf20rocks
 7z a "..\builds\%API_NAME%" "*\assemblyline\api\"
 cd ..\
 
