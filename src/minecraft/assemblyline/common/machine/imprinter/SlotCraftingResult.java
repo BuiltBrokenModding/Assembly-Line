@@ -46,7 +46,7 @@ public class SlotCraftingResult extends Slot
 
 						if (checkStack != null)
 						{
-							if (searchStack.isItemEqual(checkStack))
+							if (searchStack.isItemEqual(checkStack) || (searchStack.itemID == checkStack.itemID && searchStack.getItemDamage() < 0))
 							{
 								this.container.tileEntity.decrStackSize(i, 1);
 								break;

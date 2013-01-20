@@ -1,5 +1,6 @@
-package assemblyline.common.machine.armbot;
+package assemblyline.api;
 
+import assemblyline.common.machine.armbot.TileEntityArmbot;
 import net.minecraft.entity.Entity;
 
 /**
@@ -9,7 +10,7 @@ import net.minecraft.entity.Entity;
  * @author Briman0094
  *
  */
-public interface IUseable
+public interface IArmbotUseable
 {
 	
 	/**

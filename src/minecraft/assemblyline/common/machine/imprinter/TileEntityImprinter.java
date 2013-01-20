@@ -3,6 +3,8 @@ package assemblyline.common.machine.imprinter;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
@@ -17,10 +19,13 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
+import assemblyline.api.IArmbotUseable;
+import assemblyline.common.AssemblyLine;
 import assemblyline.common.Pair;
+import assemblyline.common.machine.armbot.TileEntityArmbot;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
-public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInventory
+public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInventory, IArmbotUseable
 {
 	public static final int START_INVENTORY = 5;
 	public static final int INVENTORY_LENGTH = 9;
@@ -47,7 +52,10 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	@Override
 	public int getSizeInventorySide(ForgeDirection side)
 	{
-		if (side == ForgeDirection.UP || side == ForgeDirection.DOWN) { return 1; }
+		if (side == ForgeDirection.UP || side == ForgeDirection.DOWN)
+		{
+			return 1;
+		}
 		return INVENTORY_LENGTH;
 	}
 
@@ -64,8 +72,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	}
 
 	/**
-	 * Removes from an inventory slot (first arg) up to a specified number (second arg) of items and
-	 * returns them in a new stack.
+	 * Removes from an inventory slot (first arg) up to a specified number (second arg) of items and returns them in a new stack.
 	 */
 	@Override
 	public ItemStack decrStackSize(int i, int amount)
@@ -99,8 +106,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	}
 
 	/**
-	 * When some containers are closed they call this on each slot, then drop whatever it returns as
-	 * an EntityItem - like when you close a workbench GUI.
+	 * When some containers are closed they call this on each slot, then drop whatever it returns as an EntityItem - like when you close a workbench GUI.
 	 */
 	@Override
 	public ItemStack getStackInSlotOnClosing(int slot)
@@ -118,8 +124,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	}
 
 	/**
-	 * Sets the given item stack to the specified slot in the inventory (can be crafting or armor
-	 * sections).
+	 * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
 	 */
 	@Override
 	public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
@@ -258,11 +263,17 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 					{
 						if (object instanceof ShapedRecipes)
 						{
-							if (this.hasResource(((ShapedRecipes) object).recipeItems) != null) { return new Pair<ItemStack, ItemStack[]>(((IRecipe) object).getRecipeOutput().copy(), ((ShapedRecipes) object).recipeItems); }
+							if (this.hasResource(((ShapedRecipes) object).recipeItems) != null)
+							{
+								return new Pair<ItemStack, ItemStack[]>(((IRecipe) object).getRecipeOutput().copy(), ((ShapedRecipes) object).recipeItems);
+							}
 						}
 						else if (object instanceof ShapelessRecipes)
 						{
-							if (this.hasResource(((ShapelessRecipes) object).recipeItems.toArray(new ItemStack[1])) != null) { return new Pair<ItemStack, ItemStack[]>(((IRecipe) object).getRecipeOutput().copy(), (ItemStack[]) ((ShapelessRecipes) object).recipeItems.toArray(new ItemStack[1])); }
+							if (this.hasResource(((ShapelessRecipes) object).recipeItems.toArray(new ItemStack[1])) != null)
+							{
+								return new Pair<ItemStack, ItemStack[]>(((IRecipe) object).getRecipeOutput().copy(), (ItemStack[]) ((ShapelessRecipes) object).recipeItems.toArray(new ItemStack[1]));
+							}
 						}
 						else if (object instanceof ShapedOreRecipe)
 						{
@@ -271,7 +282,11 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
 							ArrayList<ItemStack> hasResources = this.hasResource(oreRecipeInput);
 
-							if (hasResources != null) { return new Pair<ItemStack, ItemStack[]>(((IRecipe) object).getRecipeOutput().copy(), hasResources.toArray(new ItemStack[1])); }
+							if (hasResources != null)
+							{
+
+								return new Pair<ItemStack, ItemStack[]>(((IRecipe) object).getRecipeOutput().copy(), hasResources.toArray(new ItemStack[1]));
+							}
 						}
 						else if (object instanceof ShapelessOreRecipe)
 						{
@@ -280,7 +295,10 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
 							List<ItemStack> hasResources = this.hasResource(oreRecipeInput.toArray());
 
-							if (hasResources != null) { return new Pair<ItemStack, ItemStack[]>(((IRecipe) object).getRecipeOutput().copy(), hasResources.toArray(new ItemStack[1])); }
+							if (hasResources != null)
+							{
+								return new Pair<ItemStack, ItemStack[]>(((IRecipe) object).getRecipeOutput().copy(), hasResources.toArray(new ItemStack[1]));
+							}
 						}
 					}
 				}
@@ -297,6 +315,10 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	 */
 	public ArrayList<ItemStack> hasResource(Object[] recipeItems)
 	{
+		TileEntityImprinter test = new TileEntityImprinter();
+		NBTTagCompound cloneData = new NBTTagCompound();
+		this.writeToNBT(cloneData);
+		test.readFromNBT(cloneData);
 		/**
 		 * The actual amount of resource required. Each ItemStack will only have stacksize of 1.
 		 */
@@ -312,15 +334,16 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
 				if (recipeItem != null)
 				{
-					for (int i = START_INVENTORY; i < this.getSizeInventory(); i++)
+					for (int i = START_INVENTORY; i < test.getSizeInventory(); i++)
 					{
-						ItemStack checkStack = this.getStackInSlot(i);
+						ItemStack checkStack = test.getStackInSlot(i);
 
 						if (checkStack != null)
 						{
-							if (recipeItem.isItemEqual(checkStack))
+							if (recipeItem.isItemEqual(checkStack) || (recipeItem.itemID == checkStack.itemID && recipeItem.getItemDamage() < 0))
 							{
-								// TODO Do NBT CHecking
+								// TODO Do NBT Checking
+								test.decrStackSize(i, 1);
 								itemMatch++;
 								break;
 							}
@@ -343,15 +366,16 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
 						if (recipeItem != null)
 						{
-							for (int i = START_INVENTORY; i < this.getSizeInventory(); i++)
+							for (int i = START_INVENTORY; i < test.getSizeInventory(); i++)
 							{
-								ItemStack checkStack = this.getStackInSlot(i);
+								ItemStack checkStack = test.getStackInSlot(i);
 
 								if (checkStack != null)
 								{
-									if (recipeItem.isItemEqual(checkStack))
+									if (recipeItem.isItemEqual(checkStack) || (recipeItem.itemID == checkStack.itemID && recipeItem.getItemDamage() < 0))
 									{
 										// TODO Do NBT CHecking
+										test.decrStackSize(i, 1);
 										itemMatch++;
 										break optionsLoop;
 									}
@@ -412,6 +436,105 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 		}
 
 		nbt.setTag("Items", var2);
+	}
+
+	@Override
+	public boolean onUse(TileEntityArmbot tileEntity, Entity heldEntity)
+	{
+		if (heldEntity != null)
+		{
+			if (heldEntity instanceof EntityItem)
+			{
+				ItemStack stack = ((EntityItem) heldEntity).func_92014_d();
+				if (this.getStackInSlot(3) == null && stack != null && stack.itemID == AssemblyLine.itemImprint.itemID) // no crafting imprint and stack not null and stack is imprint
+				{
+					this.setInventorySlotContents(3, stack);
+					this.onInventoryChanged();
+					tileEntity.grabbedEntities.remove(0);
+					return true;
+				}
+				else if (this.getStackInSlot(3) != null && stack != null)
+				{
+					ItemStack result = this.getStackInSlot(4); // crafting result
+					if (result != null)
+					{
+						result = this.getStackInSlot(4);
+						if (stack.isItemEqual(result))
+						{
+							if (result != null)
+							{
+								ItemStack[] requiredItems = this.getIdealRecipe(result).getValue().clone();
+
+								if (requiredItems != null)
+								{
+									for (ItemStack searchStack : requiredItems)
+									{
+										for (int i = 0; i < this.getSizeInventory(); i++)
+										{
+											ItemStack checkStack = this.getStackInSlot(i);
+
+											if (checkStack != null)
+											{
+												if (searchStack.isItemEqual(checkStack))
+												{
+													this.decrStackSize(i, 1);
+													break;
+												}
+											}
+										}
+									}
+								}
+							}
+							if (stack.isStackable())
+							{
+								stack.stackSize += result.stackSize;
+								this.onInventoryChanged();
+								tileEntity.grabbedEntities.remove(0);
+								tileEntity.grabbedEntities.add(new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, stack));
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			ItemStack result = this.getStackInSlot(4); // crafting result
+			if (result != null)
+			{
+				result = this.getStackInSlot(4);
+				if (result != null)
+				{
+					ItemStack[] requiredItems = this.getIdealRecipe(result).getValue().clone();
+
+					if (requiredItems != null)
+					{
+						for (ItemStack searchStack : requiredItems)
+						{
+							for (int i = 0; i < this.getSizeInventory(); i++)
+							{
+								ItemStack checkStack = this.getStackInSlot(i);
+
+								if (checkStack != null)
+								{
+									if (searchStack.isItemEqual(checkStack) || (searchStack.itemID == checkStack.itemID && searchStack.getItemDamage() < 0))
+									{
+										this.decrStackSize(i, 1);
+										break;
+									}
+								}
+							}
+						}
+					}
+				}
+				this.onInventoryChanged();
+				tileEntity.grabbedEntities.add(new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, result));
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 }

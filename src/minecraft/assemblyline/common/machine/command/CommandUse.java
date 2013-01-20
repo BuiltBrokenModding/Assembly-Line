@@ -2,10 +2,28 @@ package assemblyline.common.machine.command;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
-import assemblyline.common.machine.armbot.IUseable;
+import assemblyline.api.IArmbotUseable;
 
 public class CommandUse extends Command
 {
+	private int times;
+	private int curTimes;
+
+	@Override
+	public void onTaskStart()
+	{
+		times = 0;
+		curTimes = 0;
+
+		if (this.getArgs().length > 0)
+		{
+			times = this.getIntArg(0);
+		}
+
+		if (times <= 0)
+			times = 1;
+	}
+
 	@Override
 	protected boolean doTask()
 	{
@@ -15,11 +33,17 @@ public class CommandUse extends Command
 			handEntity = this.tileEntity.grabbedEntities.get(0);
 		if (handTile != null)
 		{
-			if (handTile instanceof IUseable)
+			if (handTile instanceof IArmbotUseable)
 			{
-				((IUseable) handTile).onUse(this.tileEntity, handEntity);
+				((IArmbotUseable) handTile).onUse(this.tileEntity, handEntity);
 			}
 		}
-		return false;
+		
+		curTimes++;
+
+		if (curTimes >= times)
+			return false;
+		
+		return true;
 	}
 }

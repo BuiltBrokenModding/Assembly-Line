@@ -30,6 +30,7 @@ import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.multiblock.IMultiBlock;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
+import assemblyline.api.IArmbotUseable;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.TileEntityAssemblyNetwork;
 import assemblyline.common.machine.command.Command;
@@ -102,8 +103,20 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				{
 					if (Block.isNormalCube(block.blockID))
 					{
-						block.dropBlockAsItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, handPosition.getBlockMetadata(this.worldObj), 0);
-						handPosition.setBlockWithNotify(this.worldObj, 0);
+						TileEntity tileEntity = this.getHandPosition().getTileEntity(this.worldObj);
+						if (tileEntity == null)
+						{
+							block.dropBlockAsItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, handPosition.getBlockMetadata(this.worldObj), 0);
+							handPosition.setBlockWithNotify(this.worldObj, 0);
+						}
+						else
+						{
+							if (!(tileEntity instanceof IArmbotUseable))
+							{
+								block.dropBlockAsItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, handPosition.getBlockMetadata(this.worldObj), 0);
+								handPosition.setBlockWithNotify(this.worldObj, 0);
+							}
+						}
 					}
 				}
 
@@ -628,7 +641,24 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			}
 			case 6:
 			{
-				this.commandManager.addCommand(this, CommandUse.class);
+				if (arguments.length > 0)
+				{
+					try
+					// try to cast to Float
+					{
+						int times = (Integer) arguments[0];
+						this.commandManager.addCommand(this, CommandUse.class, new String[] { Integer.toString(times) });
+					}
+					catch (Exception ex)
+					{
+						ex.printStackTrace();
+						throw new IllegalArgumentException("expected number");
+					}
+				}
+				else
+				{
+					this.commandManager.addCommand(this, CommandUse.class);
+				}
 				break;
 			}
 		}

@@ -20,8 +20,7 @@ public class CommandDrop extends Command
 				entity.worldObj = this.tileEntity.worldObj;
 				if (entity instanceof EntityItem)
 					world.spawnEntityInWorld(entity); //items don't move right, so we render them manually
-				if (this.world.isRemote)
-					Minecraft.getMinecraft().sndManager.playSound("random.pop", this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, 0.2F, ((this.tileEntity.worldObj.rand.nextFloat() - this.tileEntity.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.0F);
+				this.world.playSound(this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, "random.pop", 0.2F, ((this.tileEntity.worldObj.rand.nextFloat() - this.tileEntity.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.0F, true);
 			}
 		}
 		this.tileEntity.grabbedEntities.clear();

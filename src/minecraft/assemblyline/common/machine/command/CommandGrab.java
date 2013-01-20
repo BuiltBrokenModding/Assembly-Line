@@ -45,9 +45,8 @@ public class CommandGrab extends Command
 				{
 					this.tileEntity.grabbedEntities.add(found.get(i));
 					if (found.get(i) instanceof EntityItem)
-						this.tileEntity.worldObj.removeEntity(found.get(i)); // items don't move right, so we render them manually
-					if (this.world.isRemote)
-						Minecraft.getMinecraft().sndManager.playSound("random.pop", this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, 0.2F, ((this.tileEntity.worldObj.rand.nextFloat() - this.tileEntity.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.0F);
+						this.tileEntity.worldObj.removeEntity(found.get(i)); // items don't move right, so we render them manually\
+					this.world.playSound(this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, "random.pop", 0.2F, ((this.tileEntity.worldObj.rand.nextFloat() - this.tileEntity.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.0F, true);
 					found.get(i).isDead = false;
 					return false;
 				}
