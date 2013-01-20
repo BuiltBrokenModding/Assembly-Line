@@ -38,6 +38,7 @@ import assemblyline.common.machine.command.CommandGrab;
 import assemblyline.common.machine.command.CommandManager;
 import assemblyline.common.machine.command.CommandReturn;
 import assemblyline.common.machine.command.CommandRotate;
+import assemblyline.common.machine.command.CommandUse;
 import assemblyline.common.machine.encoder.ItemDisk;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -559,7 +560,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	@Override
 	public String[] getMethodNames()
 	{
-		return new String[] { "rotate", "grab", "drop", "reset", "isWorking", "touchingEntity" };
+		return new String[] { "rotate", "grab", "drop", "reset", "isWorking", "touchingEntity", "use" };
 	}
 
 	@Override
@@ -624,6 +625,11 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				}
 
 				return new Object[] { false };
+			}
+			case 6:
+			{
+				this.commandManager.addCommand(this, CommandUse.class);
+				break;
 			}
 		}
 		return null;

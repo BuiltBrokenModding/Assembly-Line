@@ -32,6 +32,7 @@ public abstract class Command
 		registerCommand("rotate", CommandRotate.class);
 		registerCommand("return", CommandReturn.class);
 		registerCommand("repeat", CommandRepeat.class);
+		registerCommand("use", CommandUse.class);
 	}
 
 	public static void registerCommand(String command, Class<? extends Command> commandClass)
