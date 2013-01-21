@@ -2,10 +2,10 @@ package assemblyline.common.machine.command;
 
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.util.AxisAlignedBB;
 import universalelectricity.core.vector.Vector3;
 
@@ -34,6 +34,10 @@ public class CommandGrab extends Command
 	protected boolean doTask()
 	{
 		super.doTask();
+		
+		if (this.tileEntity.grabbedEntities.size() > 0)
+			return false;
+		
 		Vector3 serachPosition = this.tileEntity.getHandPosition();
 		List<Entity> found = this.world.getEntitiesWithinAABB(this.entityToInclude, AxisAlignedBB.getBoundingBox(serachPosition.x - radius, serachPosition.y - radius, serachPosition.z - radius, serachPosition.x + radius, serachPosition.y + radius, serachPosition.z + radius));
 
@@ -41,7 +45,7 @@ public class CommandGrab extends Command
 		{
 			for (int i = 0; i < found.size(); i++)
 			{
-				if (found.get(i) != null && !(found.get(i) instanceof EntityPlayer) && found.get(i).ridingEntity == null) // isn't null, isn't a player, and isn't riding anything
+				if (found.get(i) != null && !(found.get(i) instanceof EntityPlayer) && !(found.get(i) instanceof EntityArrow) && found.get(i).ridingEntity == null) // isn't null, isn't a player, and isn't riding anything
 				{
 					this.tileEntity.grabbedEntities.add(found.get(i));
 					if (found.get(i) instanceof EntityItem)

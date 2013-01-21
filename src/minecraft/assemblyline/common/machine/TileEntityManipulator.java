@@ -21,14 +21,14 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class TileEntityManipulator extends TileEntityFilterable implements IRotatable, IRedstoneReceptor, IManipulator
 {
-	public boolean selfPulse = false;
+	public boolean	selfPulse			= false;
 
 	/**
 	 * Is the manipulator wrenched to turn into output mode?
 	 */
-	private boolean isOutput = false;
+	private boolean	isOutput			= false;
 
-	private boolean isRedstonePowered = false;
+	private boolean	isRedstonePowered	= false;
 
 	public boolean isOutput()
 	{
@@ -86,8 +86,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 	}
 
 	/**
-	 * Find items going into the manipulator and input them into an inventory behind this
-	 * manipulator.
+	 * Find items going into the manipulator and input them into an inventory behind this manipulator.
 	 */
 	@Override
 	public void inject()
@@ -111,8 +110,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 			if (entity.isDead)
 				continue;
 			/**
-			 * Try top first, then bottom, then the sides to see if it is possible to insert the
-			 * item into a inventory.
+			 * Try top first, then bottom, then the sides to see if it is possible to insert the item into a inventory.
 			 */
 			ItemStack remainingStack = entity.func_92014_d().copy();
 
@@ -182,16 +180,9 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 	}
 
 	/*
-	 * @Override public ArrayList getPacketData() { ArrayList list = super.getPacketData();
-	 * list.add(this.isOutput); list.add(this.wattsReceived); return list; }
+	 * @Override public ArrayList getPacketData() { ArrayList list = super.getPacketData(); list.add(this.isOutput); list.add(this.wattsReceived); return list; }
 	 * 
-	 * @Override public void handlePacketData(INetworkManager network, int packetType,
-	 * Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream) { if
-	 * (worldObj.isRemote) { ByteArrayInputStream bis = new ByteArrayInputStream(packet.data);
-	 * DataInputStream dis = new DataInputStream(bis); int id, x, y, z; try { id = dis.readInt(); x
-	 * = dis.readInt(); y = dis.readInt(); z = dis.readInt(); NBTTagCompound tag =
-	 * Packet.readNBTTagCompound(dis); readFromNBT(tag); this.wattsReceived = dis.readDouble();
-	 * this.isOutput = dis.readBoolean(); } catch (IOException e) { e.printStackTrace(); } } }
+	 * @Override public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream) { if (worldObj.isRemote) { ByteArrayInputStream bis = new ByteArrayInputStream(packet.data); DataInputStream dis = new DataInputStream(bis); int id, x, y, z; try { id = dis.readInt(); x = dis.readInt(); y = dis.readInt(); z = dis.readInt(); NBTTagCompound tag = Packet.readNBTTagCompound(dis); readFromNBT(tag); this.wattsReceived = dis.readDouble(); this.isOutput = dis.readBoolean(); } catch (IOException e) { e.printStackTrace(); } } }
 	 */
 
 	/**
@@ -249,11 +240,14 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 
 				for (TileEntityChest chest : chests)
 				{
-					for (int i = 0; i < chest.getSizeInventory(); i++)
+					if (chest != null)
 					{
-						itemStack = this.addStackToInventory(i, chest, itemStack);
-						if (itemStack == null)
-							return null;
+						for (int i = 0; i < chest.getSizeInventory(); i++)
+						{
+							itemStack = this.addStackToInventory(i, chest, itemStack);
+							if (itemStack == null)
+								return null;
+						}
 					}
 				}
 			}

@@ -52,32 +52,32 @@ import dan200.computer.api.IPeripheral;
 
 public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMultiBlock, IInventory, IPacketReceiver, IJouleStorage, IPeripheral
 {
-	private final CommandManager commandManager = new CommandManager();
-	private static final int PACKET_COMMANDS = 128;
+	private final CommandManager	commandManager		= new CommandManager();
+	private static final int		PACKET_COMMANDS		= 128;
 
 	/**
 	 * The items this container contains.
 	 */
-	protected ItemStack disk = null;
-	public final double WATT_REQUEST = 20;
-	public double wattsReceived = 0;
-	private int playerUsing = 0;
-	private int computersAttached = 0;
-	private List<IComputerAccess> connectedComputers = new ArrayList<IComputerAccess>();
+	protected ItemStack				disk				= null;
+	public final double				WATT_REQUEST		= 20;
+	public double					wattsReceived		= 0;
+	private int						playerUsing			= 0;
+	private int						computersAttached	= 0;
+	private List<IComputerAccess>	connectedComputers	= new ArrayList<IComputerAccess>();
 	/**
 	 * The rotation of the arms. In Degrees.
 	 */
-	public float rotationPitch = 0;
-	public float rotationYaw = 0;
-	public float renderPitch = 0;
-	public float renderYaw = 0;
-	private int ticksSincePower = 0;
-	public final float ROTATION_SPEED = 1.3f;
+	public float					rotationPitch		= 0;
+	public float					rotationYaw			= 0;
+	public float					renderPitch			= 0;
+	public float					renderYaw			= 0;
+	private int						ticksSincePower		= 0;
+	public final float				ROTATION_SPEED		= 1.3f;
 
 	/**
 	 * An entity that the armbot is grabbed onto.
 	 */
-	public final List<Entity> grabbedEntities = new ArrayList<Entity>();
+	public final List<Entity>		grabbedEntities		= new ArrayList<Entity>();
 
 	@Override
 	public void initiate()
@@ -131,7 +131,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 					{
 						if (!this.commandManager.hasTasks())
 						{
-							if (Math.abs(this.rotationYaw - CommandReturn.IDLE_ROTATION_YAW) > 0.01)
+							if (Math.abs(this.rotationYaw - CommandReturn.IDLE_ROTATION_YAW) > 0.01 || Math.abs(this.rotationPitch - CommandReturn.IDLE_ROTATION_PITCH) > 0.01)
 							{
 								this.commandManager.addCommand(this, CommandReturn.class);
 							}
@@ -140,16 +140,15 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 
 					this.commandManager.setCurrentTask(0);
 				}
-
-				if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-					this.commandManager.onUpdate();
-
 			}
+			this.commandManager.onUpdate();
 			this.ticksSincePower = 0;
 		}
 		else
 		{
 			this.ticksSincePower++;
+			if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && ticksSincePower < 20)
+				this.commandManager.onUpdate();
 		}
 
 		for (Entity entity : this.grabbedEntities)
@@ -282,7 +281,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		double distance = 1f;
 		Vector3 delta = new Vector3();
 		// The delta Y of the hand.
-		delta.y = Math.sin(Math.toRadians(this.renderPitch)) * distance;
+		delta.y = Math.sin(Math.toRadians(this.renderPitch)) * distance * 2; //arm bend up in a taller-than-wide arc
 		// The horizontal delta of the hand.
 		double dH = Math.cos(Math.toRadians(this.renderPitch)) * distance;
 		// The delta X and Z.
@@ -674,9 +673,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 					for (int i = 0; i < found.size(); i++)
 					{
 						if (found.get(i) != null && !(found.get(i) instanceof EntityPlayer) && found.get(i).ridingEntity == null) // isn't null, isn't a player, and isn't riding anything
-						{
-							return new Object[] { true };
-						}
+						{ return new Object[] { true }; }
 					}
 				}
 

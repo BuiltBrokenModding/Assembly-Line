@@ -33,6 +33,7 @@ public abstract class Command
 		registerCommand("return", CommandReturn.class);
 		registerCommand("repeat", CommandRepeat.class);
 		registerCommand("use", CommandUse.class);
+		registerCommand("fire", CommandFire.class);
 	}
 
 	public static void registerCommand(String command, Class<? extends Command> commandClass)

@@ -6,15 +6,17 @@ import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import assemblyline.common.machine.armbot.TileEntityArmbot;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.relauncher.Side;
 
 public class CommandManager
 {
-	private final List<Command> tasks = new ArrayList<Command>();
+	private final List<Command>	tasks		= new ArrayList<Command>();
 
-	private int ticks = 0;
-	private int currentTask = 0;
-	private int lastTask = -1;
+	private int					ticks		= 0;
+	private int					currentTask	= 0;
+	private int					lastTask	= -1;
 
 	/**
 	 * Must be called every tick by a tileEntity.
@@ -44,24 +46,19 @@ public class CommandManager
 						task.onTaskStart();
 					}
 					
-					//System.out.print(Command.getCommandName(task.getClass()) + "|");
-					
+					//System.out.println("curTask: " + currentTask);
+
 					if (!task.doTask())
 					{
-						// End the task and reinitiate it into a new class to make sure it is fresh.
 						int tempCurrentTask = this.currentTask;
-						this.currentTask++;
 						task.onTaskEnd();
-						this.tasks.set(tempCurrentTask, this.getNewCommand(task.tileEntity, task.getClass(), task.getArgs()));
+						this.currentTask++;
+						if (!(task instanceof CommandRepeat)) //repeat needs to be persistent
+						{
+							// End the task and reinitialize it into a new class to make sure it is fresh.
+							this.tasks.set(tempCurrentTask, this.getNewCommand(task.tileEntity, task.getClass(), task.getArgs()));
+						}
 					}
-					
-					/*for (Command command : this.tasks)
-					{
-						System.out.print(Command.getCommandName(command.getClass()));
-						System.out.print("; ");
-					}
-					
-					System.out.println(this.currentTask);*/
 				}
 				else
 				{
@@ -99,8 +96,7 @@ public class CommandManager
 	}
 
 	/**
-	 * Used to register Tasks for a TileEntity, executes onTaskStart for the Task after registering
-	 * it
+	 * Used to register Tasks for a TileEntity, executes onTaskStart for the Task after registering it
 	 * 
 	 * @param tileEntity TE instance to register the task for
 	 * @param newCommand Task instance to register
@@ -146,7 +142,7 @@ public class CommandManager
 
 	public void setCurrentTask(int i)
 	{
-		this.currentTask = Math.max(Math.min(i, this.tasks.size()), 0);
+		this.currentTask = Math.min(i, this.tasks.size());
 	}
 
 	public int getCurrentTask()
