@@ -8,7 +8,8 @@ package assemblyline.common.machine.command;
  */
 public class CommandRotate extends Command
 {
-	float targetRotation = 0;
+	float targetRotationYaw = 0;
+	float targetRotationPitch = 0;
 	float totalTicks = 0f;
 
 	@Override
@@ -18,25 +19,45 @@ public class CommandRotate extends Command
 		
 		this.ticks = 0;
 
-		if (this.getArg(0) == null)
+		if (this.getArg(0) != null)
 		{
-			this.targetRotation = this.tileEntity.rotationYaw + 90;
+			this.targetRotationYaw = this.tileEntity.rotationYaw + this.getFloatArg(0);
 		}
 		else
 		{
-			this.targetRotation = this.tileEntity.rotationYaw + this.getFloatArg(0);
-		}
-
-		while (this.targetRotation >= 360)
-		{
-			this.targetRotation -= 360;
-		}
-		while (this.targetRotation <= -360)
-		{
-			this.targetRotation += 360;
+			this.targetRotationYaw = this.tileEntity.rotationYaw + 90;
 		}
 		
-		this.totalTicks = Math.abs(this.targetRotation - this.tileEntity.rotationYaw) / this.tileEntity.ROTATION_SPEED;
+		if (this.getArg(1) != null)
+		{
+			this.targetRotationPitch = this.tileEntity.rotationPitch + this.getFloatArg(1);
+		}
+		else
+		{
+			this.targetRotationPitch = this.tileEntity.rotationPitch;
+		}
+
+		while (this.targetRotationYaw >= 360)
+		{
+			this.targetRotationYaw -= 360;
+		}
+		while (this.targetRotationYaw <= -360)
+		{
+			this.targetRotationYaw += 360;
+		}
+		
+		if (this.targetRotationPitch >= 60)
+		{
+			this.targetRotationPitch = 60;
+		}
+		if (this.targetRotationPitch <= 0)
+		{
+			this.targetRotationPitch = 0;
+		}
+		
+		float totalTicksYaw = Math.abs(this.targetRotationYaw - this.tileEntity.rotationYaw) / this.tileEntity.ROTATION_SPEED;
+		float totalTicksPitch = Math.abs(this.targetRotationPitch - this.tileEntity.rotationPitch) / this.tileEntity.ROTATION_SPEED;
+		this.totalTicks = Math.max(totalTicksYaw, totalTicksPitch);
 	}
 
 	@Override
@@ -64,8 +85,10 @@ public class CommandRotate extends Command
 		
 		//set the rotation to the target immediately and let the client handle animating it
 		//wait for the client to catch up
-		if (Math.abs(this.tileEntity.rotationYaw - this.targetRotation) > 0.001f)
-			this.tileEntity.rotationYaw = this.targetRotation;
+		if (Math.abs(this.tileEntity.rotationYaw - this.targetRotationYaw) > 0.001f)
+			this.tileEntity.rotationYaw = this.targetRotationYaw;
+		if (Math.abs(this.tileEntity.rotationPitch - this.targetRotationPitch) > 0.001f)
+			this.tileEntity.rotationPitch = this.targetRotationPitch;
 
 		if (this.ticks < this.totalTicks)
 		{

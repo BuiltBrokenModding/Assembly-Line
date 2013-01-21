@@ -170,13 +170,13 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		}
 
 		// keep it within 0 - 360 degrees so ROTATE commands work properly
-		if (this.rotationPitch <= -360)
+		if (this.rotationPitch <= 0)
 		{
-			this.rotationPitch += 360;
+			this.rotationPitch = 0;
 		}
-		if (this.rotationPitch >= 360)
+		if (this.rotationPitch >= 135)
 		{
-			this.rotationPitch -= 360;
+			this.rotationPitch = 135;
 		}
 		if (this.rotationYaw <= -360)
 		{
@@ -189,20 +189,21 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 
 		if (Math.abs(this.renderYaw - this.rotationYaw) > 0.001f)
 		{
-			float speed;
+			float speedYaw;
 			if (this.renderYaw > this.rotationYaw)
+			{
 				if (Math.abs(this.renderYaw - this.rotationYaw) > 180)
-					speed = this.ROTATION_SPEED;
+					speedYaw = this.ROTATION_SPEED;
 				else
-					speed = -this.ROTATION_SPEED;
+					speedYaw = -this.ROTATION_SPEED;
+			}
+			else if (Math.abs(this.renderYaw - this.rotationYaw) > 180)
+				speedYaw = -this.ROTATION_SPEED;
 			else
-				if (Math.abs(this.renderYaw - this.rotationYaw) > 180)
-					speed = -this.ROTATION_SPEED;
-				else
-					speed = this.ROTATION_SPEED;
-			
-			this.renderYaw += speed;
-			
+				speedYaw = this.ROTATION_SPEED;
+
+			this.renderYaw += speedYaw;
+
 			if (this.renderYaw <= -360)
 			{
 				this.renderYaw += 360;
@@ -211,9 +212,10 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			{
 				this.renderYaw -= 360;
 			}
-			
-			if (this.ticks % 5 == 0 && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) // sound is 0.5 seconds long (20 ticks/second)
-				Minecraft.getMinecraft().sndManager.playSound("assemblyline.conveyor", this.xCoord, this.yCoord, this.zCoord, 2f, 1.7f);
+
+			if (this.ticks % 5 == 0 && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) // sound is 0.25 seconds long (20 ticks/second)
+				this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "assemblyline.conveyor", 2f, 1.7f, true);
+
 			if (Math.abs(this.renderYaw - this.rotationYaw) < this.ROTATION_SPEED + 0.1f)
 			{
 				this.renderYaw = this.rotationYaw;
@@ -221,6 +223,45 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			if (Math.abs(this.renderYaw - this.rotationYaw) > 720f) // something's wrong!
 			{
 				this.renderYaw = this.rotationYaw;
+			}
+		}
+
+		if (Math.abs(this.renderPitch - this.rotationPitch) > 0.001f)
+		{
+			float speedPitch;
+			if (this.renderPitch > this.rotationPitch)
+			{
+				if (Math.abs(this.renderPitch - this.rotationPitch) > 180)
+					speedPitch = this.ROTATION_SPEED;
+				else
+					speedPitch = -this.ROTATION_SPEED;
+			}
+			else if (Math.abs(this.renderPitch - this.rotationPitch) > 180)
+				speedPitch = -this.ROTATION_SPEED;
+			else
+				speedPitch = this.ROTATION_SPEED;
+
+			this.renderPitch += speedPitch;
+
+			if (this.renderPitch <= 0)
+			{
+				this.renderPitch = 0;
+			}
+			if (this.renderPitch >= 60)
+			{
+				this.renderPitch = 60;
+			}
+
+			if (this.ticks % 4 == 0 && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) // sound is 0.25 seconds long (20 ticks/second)
+				this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "assemblyline.conveyor", 2f, 2.5f, true);
+
+			if (Math.abs(this.renderPitch - this.rotationPitch) < this.ROTATION_SPEED + 0.1f)
+			{
+				this.renderPitch = this.rotationPitch;
+			}
+			if (Math.abs(this.renderPitch - this.rotationPitch) > 270f) // something's wrong!
+			{
+				this.renderPitch = this.rotationPitch;
 			}
 		}
 
@@ -578,7 +619,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 
 	@Override
 	public Object[] callMethod(IComputerAccess computer, int method, Object[] arguments) throws Exception
-	{		
+	{
 		switch (method)
 		{
 			case 0: // rotateBy: rotates by a certain amount
@@ -633,7 +674,9 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 					for (int i = 0; i < found.size(); i++)
 					{
 						if (found.get(i) != null && !(found.get(i) instanceof EntityPlayer) && found.get(i).ridingEntity == null) // isn't null, isn't a player, and isn't riding anything
-						{ return new Object[] { true }; }
+						{
+							return new Object[] { true };
+						}
 					}
 				}
 

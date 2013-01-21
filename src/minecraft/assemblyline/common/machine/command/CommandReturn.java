@@ -9,8 +9,11 @@ public class CommandReturn extends CommandRotate
 	@Override
 	public void onTaskStart()
 	{
-		this.targetRotation = IDLE_ROTATION_YAW;
-		this.totalTicks = Math.abs(this.targetRotation - this.tileEntity.rotationYaw) / this.tileEntity.ROTATION_SPEED;
+		this.targetRotationYaw = IDLE_ROTATION_YAW;
+		this.targetRotationPitch = IDLE_ROTATION_PITCH;
+		float totalTicksYaw = Math.abs(this.targetRotationYaw - this.tileEntity.rotationYaw) / this.tileEntity.ROTATION_SPEED;
+		float totalTicksPitch = Math.abs(this.targetRotationPitch - this.tileEntity.rotationPitch) / this.tileEntity.ROTATION_SPEED;
+		this.totalTicks = Math.max(totalTicksYaw, totalTicksPitch);
 	}
 
 	/*@Override
