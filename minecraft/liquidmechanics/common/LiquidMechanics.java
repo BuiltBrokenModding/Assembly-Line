@@ -275,12 +275,13 @@ public class LiquidMechanics extends DummyModContainer
                 '@', Block.stone });
 
         // pump
-        GameRegistry.addRecipe(new ItemStack(blockMachine, 1, 0), new Object[] {
-                "@T@", "BPB", "@P@",
-                '@', new ItemStack(Item.ingotIron, 2),
+        CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(blockMachine, 1, 0), new Object[] {
+                "C@C", "BMB", "@X@",
+                '@', "plateSteel",
+                'X', new ItemStack(blockPipe, 1, ColorCode.NONE.ordinal()),
                 'B', new ItemStack(itemParts, 1, Parts.Valve.ordinal()),
-                'P', new ItemStack(Block.pistonBase),
-                'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()) });
+                'C',"basicCircuit",
+                'M', "motor" }));
 
         // release valve
         GameRegistry.addRecipe(new ItemStack(blockReleaseValve, 1), new Object[] {
