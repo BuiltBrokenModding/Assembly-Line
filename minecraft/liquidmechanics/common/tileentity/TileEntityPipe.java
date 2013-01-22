@@ -274,9 +274,8 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
                 {
                     connectedBlocks[i] = null;
                 }
-
-                if (this.color != ColorCode.NONE && ent instanceof TileEntityTank && ((TileEntityTank) ent).getColor() != ColorCode.NONE && color != ((TileEntityTank) ent).getColor()
-                        )
+                //TODO switch side catch for IPressure
+                if (this.color != ColorCode.NONE && ent instanceof TileEntityTank && ((TileEntityTank) ent).getColor() != ColorCode.NONE && color != ((TileEntityTank) ent).getColor())
                 {
                     connectedBlocks[i] = null;
                 }

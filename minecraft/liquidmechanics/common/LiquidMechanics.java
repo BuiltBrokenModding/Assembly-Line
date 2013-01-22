@@ -10,6 +10,7 @@ import liquidmechanics.common.block.BlockPumpMachine;
 import liquidmechanics.common.block.BlockPipe;
 import liquidmechanics.common.block.BlockReleaseValve;
 import liquidmechanics.common.block.BlockRod;
+import liquidmechanics.common.block.BlockSink;
 import liquidmechanics.common.block.BlockTank;
 import liquidmechanics.common.block.BlockWasteLiquid;
 import liquidmechanics.common.item.ItemGuage;
@@ -24,6 +25,7 @@ import liquidmechanics.common.tileentity.TileEntityPipe;
 import liquidmechanics.common.tileentity.TileEntityPump;
 import liquidmechanics.common.tileentity.TileEntityReleaseValve;
 import liquidmechanics.common.tileentity.TileEntityRod;
+import liquidmechanics.common.tileentity.TileEntitySink;
 import liquidmechanics.common.tileentity.TileEntityTank;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -60,7 +62,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public class LiquidMechanics extends DummyModContainer
 {
     // TODO Change in Version Release
-    public static final String VERSION = "0.2.5";
+    public static final String VERSION = "0.2.6";
 
     // Constants
     public static final String NAME = "Liquid Mechanics";
@@ -85,6 +87,7 @@ public class LiquidMechanics extends DummyModContainer
     public static Block blockRod;
     public static Block blockGenerator;
     public static Block blockReleaseValve;
+    public static Block blockSink;
 
     public static Block blockWasteLiquid;
 
@@ -115,6 +118,7 @@ public class LiquidMechanics extends DummyModContainer
         blockReleaseValve = new BlockReleaseValve((this.CONFIGURATION.getBlock("Release Valve", BLOCK_ID_PREFIX + 5).getInt()));
         blockTank = new BlockTank(this.CONFIGURATION.getBlock("Tank", BLOCK_ID_PREFIX + 6).getInt());
         blockWasteLiquid = new BlockWasteLiquid(this.CONFIGURATION.getBlock("WasteLiquid", BLOCK_ID_PREFIX + 7).getInt());
+        blockSink = new BlockSink(this.CONFIGURATION.getBlock("Sink", BLOCK_ID_PREFIX + 8).getInt());
 
         // Items
         itemParts = new ItemParts(this.CONFIGURATION.getItem("Parts", ITEM_ID_PREFIX).getInt());
@@ -135,6 +139,7 @@ public class LiquidMechanics extends DummyModContainer
         GameRegistry.registerBlock(blockGenerator, "lmGen");
         GameRegistry.registerBlock(blockMachine, ItemLiquidMachine.class, "lmMachines");
         GameRegistry.registerBlock(blockTank, ItemTank.class, "lmTank");
+        GameRegistry.registerBlock(blockSink, "lmSink");
     }
 
     @Init
@@ -148,6 +153,7 @@ public class LiquidMechanics extends DummyModContainer
         GameRegistry.registerTileEntity(TileEntityReleaseValve.class, "lmeValve");
         GameRegistry.registerTileEntity(TileEntityTank.class, "lmTank");
         GameRegistry.registerTileEntity(TileEntityGenerator.class, "lmGen");
+        GameRegistry.registerTileEntity(TileEntitySink.class,"lmSink");
         System.out.println("Fluid Mechanics Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
 
     }
@@ -167,7 +173,7 @@ public class LiquidMechanics extends DummyModContainer
         // pipe gauge
         GameRegistry.addRecipe(new ItemStack(this.itemGauge, 1, 0), new Object[] {
                 "TVT", " T ",
-                'V', new ItemStack(itemParts, 1, 7),
+                'V', new ItemStack(itemParts, 1, Parts.Valve.ordinal()),
                 'T', new ItemStack(itemParts, 1, Parts.Iron.ordinal()) });
         // iron tube
         GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Iron.ordinal()), new Object[] {
