@@ -153,7 +153,7 @@ public class LiquidMechanics extends DummyModContainer
         GameRegistry.registerTileEntity(TileEntityReleaseValve.class, "lmeValve");
         GameRegistry.registerTileEntity(TileEntityTank.class, "lmTank");
         GameRegistry.registerTileEntity(TileEntityGenerator.class, "lmGen");
-        GameRegistry.registerTileEntity(TileEntitySink.class,"lmSink");
+        GameRegistry.registerTileEntity(TileEntitySink.class, "lmSink");
         System.out.println("Fluid Mechanics Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
 
     }
@@ -288,6 +288,12 @@ public class LiquidMechanics extends DummyModContainer
                 'P', new ItemStack(blockPipe, 1, 15),
                 'V', new ItemStack(itemParts, 1, Parts.Valve.ordinal()),
                 'R', Item.redstone });
+        // sink
+        GameRegistry.addRecipe(new ItemStack(blockSink, 1), new Object[] {
+                "I I", "SIS", "SPS",
+                'P', new ItemStack(blockPipe, 1, 15),
+                'I', Item.ingotIron,
+                'S', Block.stone });
 
         // reg ore directory for parts
         OreDictionary.registerOre("bronzeTube", new ItemStack(itemParts, 1, Parts.Bronze.ordinal()));

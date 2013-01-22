@@ -23,44 +23,28 @@ public class RenderPump extends TileEntitySpecialRenderer
     public void renderAModelAt(TileEntityPump te, double d, double d1, double d2, float f)
     {
         int meta = te.worldObj.getBlockMetadata(te.xCoord, te.yCoord, te.zCoord);
-        switch (te.color.ordinal())
-        {
-            case 4:
-                bindTextureByName(LiquidMechanics.RESOURCE_PATH + "pumps/WaterPump.png");
-                break;// water
-            case 1:
-                bindTextureByName(LiquidMechanics.RESOURCE_PATH + "pumps/LavaPump.png");
-                break;// lava
-            case 0:
-                bindTextureByName(LiquidMechanics.RESOURCE_PATH + "pumps/OilPump.png");
-                break;
-            default:
-                bindTextureByName(LiquidMechanics.RESOURCE_PATH + "pumps/Pump.png");
-                break;
 
-        }
+        bindTextureByName(LiquidMechanics.RESOURCE_PATH + "pumps/WaterPump.png");
         GL11.glPushMatrix();
         GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
         GL11.glScalef(1.0F, -1F, -1F);
         switch (meta)
         {
-            case 1:
+            case 2:
                 GL11.glRotatef(0f, 0f, 1f, 0f);
                 break;
-            case 2:
+            case 3:
                 GL11.glRotatef(90f, 0f, 1f, 0f);
                 break;
-            case 3:
+            case 0:
                 GL11.glRotatef(180f, 0f, 1f, 0f);
                 break;
-            case 0:
+            case 1:
                 GL11.glRotatef(270f, 0f, 1f, 0f);
                 break;
         }
-        model.renderMain(0.0625F);
-        model.renderC1(0.0625F);
-        model.renderC2(0.0625F);
-        model.renderC3(0.0625F);
+        model.render(0.0625F);
+        model.renderMotion(0.0625F, te.pos);
         GL11.glPopMatrix();
 
     }

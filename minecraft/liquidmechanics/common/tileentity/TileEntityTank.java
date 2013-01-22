@@ -45,7 +45,6 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
     public void updateEntity()
     {
 
-       
         this.color = ColorCode.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
         if (++count >= 40)
         {
@@ -56,30 +55,24 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
                 this.tradeDown();
                 this.tradeArround();
                 this.fillPipe();
-                
-                int volume = 0; 
-                LiquidStack liquid = tank.getLiquid();
-                if(liquid != null){volume = liquid.amount;}
-                
-                if (volume != pVolume)
+
+                LiquidStack stack = new LiquidStack(0, 0, 0);
+                if (this.tank.getLiquid() != null)
                 {
-                    LiquidStack stack = new LiquidStack(0, 0, 0);
-                    if (this.tank.getLiquid() != null)
-                    {
-                        stack = this.tank.getLiquid();
-                    }
-                    Packet packet = PacketManager.getPacket(LiquidMechanics.CHANNEL, this, new Object[] { stack.itemID, stack.amount, stack.itemMeta });
-                    PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 20);
+                    stack = this.tank.getLiquid();
                 }
-                pVolume = volume;
+                Packet packet = PacketManager.getPacket(LiquidMechanics.CHANNEL, this, new Object[] { stack.itemID, stack.amount, stack.itemMeta });
+                PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 20);
 
             }
         }
     }
+
     public LiquidStack getStack()
     {
         return tank.getLiquid();
     }
+
     @Override
     public String getMeterReading(EntityPlayer user, ForgeDirection side)
     {
@@ -149,9 +142,11 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
         return this.tank.fill(resource, doFill);
     }
 
-    /** find out if this tank is actual full or not
+    /**
+     * find out if this tank is actual full or not
      * 
-     * @return */
+     * @return
+     */
     public boolean isFull()
     {
         if (this.tank.getLiquid() == null) { return false; }
@@ -219,8 +214,10 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
         return false;
     }
 
-    /** cause this TE to trade liquid down if the liquid is in liquid state or up
-     * if in gas state. */
+    /**
+     * cause this TE to trade liquid down if the liquid is in liquid state or up
+     * if in gas state.
+     */
     public void tradeDown()
     {
         if (this.tank.getLiquid() == null || this.tank.getLiquid().amount <= 0)

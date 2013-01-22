@@ -41,11 +41,9 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
             GL11.glPushMatrix();
             GL11.glTranslatef((float) 0.0F, (float) 1.1F, (float) 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(LiquidMechanics.RESOURCE_PATH + "pumps/Pump.png"));
-            modelPump.renderMain(0.0725F);
-            modelPump.renderC1(0.0725F);
-            modelPump.renderC2(0.0725F);
-            modelPump.renderC3(0.0725F);
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(LiquidMechanics.RESOURCE_PATH + "pumps/WaterPump.png"));
+            modelPump.render(0.0725F);
+            modelPump.renderMotion(0.0725F,0);
             GL11.glPopMatrix();
         }
         if (block.blockID == LiquidMechanics.blockSink.blockID)

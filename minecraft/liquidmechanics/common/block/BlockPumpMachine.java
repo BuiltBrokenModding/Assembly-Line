@@ -34,14 +34,16 @@ public class BlockPumpMachine extends BlockMachine
         this.setHardness(1f);
         this.setResistance(5f);
     }
-    public void onBlockAdded(World world, int x, int y, int z) 
+
+    public void onBlockAdded(World world, int x, int y, int z)
     {
         int meta = world.getBlockMetadata(x, y, z);
-        if(MetaGroup.getGrouping(meta) == 1)
+        if (MetaGroup.getGrouping(meta) == 1)
         {
             world.setBlockAndMetadata(x, y, z, LiquidMechanics.blockTank.blockID, 15);
         }
     }
+
     @Override
     public boolean isOpaqueCube()
     {
@@ -77,15 +79,15 @@ public class BlockPumpMachine extends BlockMachine
         {
             new ItemStack(LiquidMechanics.blockMachine, 1, 0);
         }
-       
+
         return null;
     }
 
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving par5EntityLiving)
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving p)
     {
         int meta = world.getBlockMetadata(x, y, z);
-        int angle = MathHelper.floor_double((par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+        int angle = MathHelper.floor_double((p.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
         TileEntity ent = world.getBlockTileEntity(x, y, z);
 
         world.setBlockMetadata(x, y, z, angle + MetaGroup.getGroupStartMeta(MetaGroup.getGrouping(meta)));
@@ -95,6 +97,10 @@ public class BlockPumpMachine extends BlockMachine
         }
 
         world.notifyBlocksOfNeighborChange(x, y, z, this.blockID);
+        if (p instanceof EntityPlayer)
+        {
+            ((EntityPlayer) p).sendChatToPlayer("meta:" + world.getBlockMetadata(x, y, z));
+        }
     }
 
     @Override
@@ -117,6 +123,7 @@ public class BlockPumpMachine extends BlockMachine
         }
         return null;
     }
+
     @Override
     public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {

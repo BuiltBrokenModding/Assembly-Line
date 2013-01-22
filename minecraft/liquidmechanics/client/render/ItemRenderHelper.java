@@ -19,7 +19,6 @@ import cpw.mods.fml.client.FMLClientHandler;
 /** special tanks to Mekanism github */
 public class ItemRenderHelper implements IItemRenderer
 {
-    private ModelPump modelPump = new ModelPump();
     private ModelGearRod modelRod = new ModelGearRod();
     private ModelGenerator modelGen = new ModelGenerator();
     private ModelLargePipe SixPipe = new ModelLargePipe();
