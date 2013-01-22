@@ -1,6 +1,7 @@
 package assemblyline.client.render;
 
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
@@ -37,10 +38,12 @@ public class RenderArmbot extends TileEntitySpecialRenderer
 			{
 				if (entity != null && entity instanceof EntityItem) //items don't move right, so we render them manually
 				{
-					Render render = RenderManager.instance.getEntityRenderObject(entity);
+					EntityItem item = (EntityItem) entity;
+					item.age = 0;
+					RenderItem render = (RenderItem) RenderManager.instance.getEntityRenderObject(entity);
 					if (render != null)
 					{
-						render.doRender(entity, -handPos.x + 0.5f, handPos.y - 1.5f, -handPos.z + 0.5f, 0, 0);
+						render.doRender(item, -handPos.x + 0.5f, handPos.y - 1.5f, -handPos.z + 0.5f, 0, 0);
 					}
 				}
 			}

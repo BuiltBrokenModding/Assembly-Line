@@ -1,25 +1,35 @@
 package assemblyline.common.machine.command;
 
+import java.util.Random;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import universalelectricity.core.vector.Vector3;
 
 public class CommandFire extends Command
 {
-	private static final float	MIN_ACTUAL_PITCH	= 0;
-	private static final float	MAX_ACTUAL_PITCH	= 100;
-	private static final float	VELOCITY			= 2f;
+	private static final float	MIN_ACTUAL_PITCH	= -80;
+	private static final float	MAX_ACTUAL_PITCH	= 80;
 
 	private float				actualYaw;
 	private float				actualPitch;
+	private float				velocity;
 	private Vector3				finalVelocity;
 
 	@Override
 	public void onTaskStart()
 	{
 		super.onTaskStart();
+		
+		velocity = this.getFloatArg(0);
+		if (velocity > 2.5f)
+			velocity = 2.5f;
+		if (velocity < 0.125f)
+			velocity = 1f;
+		
 		this.actualYaw = this.tileEntity.rotationYaw;
 		this.actualPitch = ((MAX_ACTUAL_PITCH - MIN_ACTUAL_PITCH) * (this.tileEntity.rotationPitch / 60f)) + MIN_ACTUAL_PITCH;
 
@@ -30,13 +40,17 @@ public class CommandFire extends Command
 		// yaw = actualYaw;
 		// pitch = actualPitch;
 
-		x = Math.sin(yaw) * Math.cos(pitch);
+		x = -Math.sin(yaw) * Math.cos(pitch);
 		y = Math.sin(pitch);
 		z = Math.cos(yaw) * Math.cos(pitch);
 
 		this.finalVelocity = new Vector3(x, y, z);
+		Random random = new Random(System.currentTimeMillis());
+		this.finalVelocity.x *= (1f - (1f / 200f)) + (random.nextFloat() * (1f / 100f));
+		this.finalVelocity.y *= (1f - (1f / 200f)) + (random.nextFloat() * (1f / 100f));
+		this.finalVelocity.z *= (1f - (1f / 200f)) + (random.nextFloat() * (1f / 100f));
 
-		this.finalVelocity.multiply(VELOCITY);
+		this.finalVelocity.multiply(velocity);
 	}
 
 	@Override
@@ -51,12 +65,17 @@ public class CommandFire extends Command
 			Entity held = this.tileEntity.grabbedEntities.get(0);
 			if (held != null)
 			{
+				this.world.playSound(this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, "random.bow", velocity, 2f - (velocity / 4f), true);
 				if (held instanceof EntityItem)
 				{
 					EntityItem item = (EntityItem) held;
-					if (item.func_92014_d().stackSize > 1)
+					ItemStack stack = item.func_92014_d();
+					ItemStack thrown = stack.copy();
+					thrown.stackSize = 1;
+					if (item.func_92014_d().stackSize > 0)
 					{
-						item.func_92014_d().stackSize--;
+						stack.stackSize--;
+						item.func_92013_a(stack);
 					}
 					else
 					{
@@ -75,7 +94,7 @@ public class CommandFire extends Command
 					}
 					else
 					{
-						EntityItem item2 = new EntityItem(world, this.tileEntity.getHandPosition().x, this.tileEntity.getHandPosition().y, this.tileEntity.getHandPosition().z, item.func_92014_d());
+						EntityItem item2 = new EntityItem(world, this.tileEntity.getHandPosition().x, this.tileEntity.getHandPosition().y, this.tileEntity.getHandPosition().z, thrown);
 						item2.motionX = this.finalVelocity.x;
 						item2.motionY = this.finalVelocity.y;
 						item2.motionZ = this.finalVelocity.z;

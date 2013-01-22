@@ -46,7 +46,8 @@ public class CommandManager
 						task.onTaskStart();
 					}
 					
-					//System.out.println("curTask: " + currentTask);
+					//if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+						//System.out.println("curTask: " + this.currentTask + ": " + this.tasks.get(this.currentTask).toString().substring(this.tasks.get(this.currentTask).toString().lastIndexOf('.') + 1));
 
 					if (!task.doTask())
 					{

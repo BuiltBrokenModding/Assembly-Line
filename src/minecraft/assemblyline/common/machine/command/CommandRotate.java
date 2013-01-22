@@ -85,6 +85,7 @@ public class CommandRotate extends Command
 		
 		//set the rotation to the target immediately and let the client handle animating it
 		//wait for the client to catch up
+		
 		if (Math.abs(this.tileEntity.rotationYaw - this.targetRotationYaw) > 0.001f)
 			this.tileEntity.rotationYaw = this.targetRotationYaw;
 		if (Math.abs(this.tileEntity.rotationPitch - this.targetRotationPitch) > 0.001f)

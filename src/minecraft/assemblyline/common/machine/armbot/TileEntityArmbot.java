@@ -8,7 +8,6 @@ import java.util.EnumSet;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityItem;
@@ -169,11 +168,11 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		}
 
 		// keep it within 0 - 360 degrees so ROTATE commands work properly
-		if (this.rotationPitch <= 0)
+		if (this.rotationPitch < 0)
 		{
 			this.rotationPitch = 0;
 		}
-		if (this.rotationPitch >= 135)
+		if (this.rotationPitch > 135)
 		{
 			this.rotationPitch = 135;
 		}
@@ -202,6 +201,10 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				speedYaw = this.ROTATION_SPEED;
 
 			this.renderYaw += speedYaw;
+			for (Entity e : (ArrayList<Entity>) this.worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord + 2, this.zCoord, this.xCoord + 1, this.yCoord + 3, this.zCoord + 1)))
+			{
+				e.rotationYaw += speedYaw;
+			}
 
 			if (this.renderYaw <= -360)
 			{
