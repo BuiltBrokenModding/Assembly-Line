@@ -110,8 +110,9 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
                 {
                     pos = 0;
                 }
-                if (percentPumped++ >= 20)
+                if (percentPumped++ >= 10)
                 {
+                    percentPumped = 0;
                     this.drainBlock(new Vector3(xCoord, yCoord - 1, zCoord));
                 }
             }

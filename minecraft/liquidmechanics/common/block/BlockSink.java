@@ -1,5 +1,6 @@
 package liquidmechanics.common.block;
 
+import universalelectricity.prefab.BlockMachine;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import liquidmechanics.client.render.BlockRenderHelper;
 import liquidmechanics.common.MetaGroup;
@@ -25,15 +26,13 @@ import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 
-public class BlockSink extends BlockContainer
+public class BlockSink extends BlockMachine
 {
     public BlockSink(int par1)
     {
-        super(par1, Material.iron);
+        super("lmSink", par1, Material.iron, TabLiquidMechanics.INSTANCE);
         this.setResistance(4f);
         this.setHardness(4f);
-        this.setBlockName("lmSink");
-        this.setCreativeTab(TabLiquidMechanics.INSTANCE);
     }
 
     @Override
@@ -42,7 +41,8 @@ public class BlockSink extends BlockContainer
         return new TileEntitySink();
     }
 
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float sx, float sy, float sz)
+    @Override
+    public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int side, float sx, float sy, float sz)
     {
         ItemStack heldItem = player.inventory.getCurrentItem();
         TileEntity ent = world.getBlockTileEntity(x, y, z);
@@ -57,8 +57,6 @@ public class BlockSink extends BlockContainer
             return true;
         }
         else
-        // ItemStack var12 = new ItemStack(Item.potion, 1, 0);heldItem.itemID ==
-        // Item.glassBottle.itemID
         {
             ILiquidTank tank = sink.getTanks(ForgeDirection.UNKNOWN)[0];
             LiquidStack stack = tank.getLiquid();
@@ -107,6 +105,27 @@ public class BlockSink extends BlockContainer
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean onUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
+    {
+        int meta = par1World.getBlockMetadata(x, y, z);
+        int g = MetaGroup.getGrouping(meta);
+        TileEntity ent = par1World.getBlockTileEntity(x, y, z);
+        int angle = MathHelper.floor_double((par5EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+
+        if (meta == (g * 4) + 3)
+        {
+            par1World.setBlockMetadataWithNotify(x, y, z, (g * 4));
+            return true;
+        }
+        else
+        {
+            par1World.setBlockMetadataWithNotify(x, y, z, meta + 1);
+            return true;
+        }
+        // return false;
     }
 
     @Override

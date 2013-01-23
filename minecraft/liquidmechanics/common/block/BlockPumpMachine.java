@@ -35,15 +35,6 @@ public class BlockPumpMachine extends BlockMachine
         this.setResistance(5f);
     }
 
-    public void onBlockAdded(World world, int x, int y, int z)
-    {
-        int meta = world.getBlockMetadata(x, y, z);
-        if (MetaGroup.getGrouping(meta) == 1)
-        {
-            world.setBlockAndMetadata(x, y, z, LiquidMechanics.blockTank.blockID, 15);
-        }
-    }
-
     @Override
     public boolean isOpaqueCube()
     {
@@ -99,7 +90,8 @@ public class BlockPumpMachine extends BlockMachine
         world.notifyBlocksOfNeighborChange(x, y, z, this.blockID);
         if (p instanceof EntityPlayer)
         {
-            ((EntityPlayer) p).sendChatToPlayer("meta:" + world.getBlockMetadata(x, y, z));
+            // ((EntityPlayer) p).sendChatToPlayer("meta:" +
+            // world.getBlockMetadata(x, y, z));
         }
     }
 
@@ -128,5 +120,25 @@ public class BlockPumpMachine extends BlockMachine
     public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {
         par3List.add(new ItemStack(par1, 1, 0));
+    }
+
+    public boolean onUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
+    {
+        int meta = par1World.getBlockMetadata(x, y, z);
+        int g = MetaGroup.getGrouping(meta);
+        TileEntity ent = par1World.getBlockTileEntity(x, y, z);
+        int angle = MathHelper.floor_double((par5EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+
+        if (meta == (g * 4) + 3)
+        {
+            par1World.setBlockMetadataWithNotify(x, y, z, (g * 4));
+            return true;
+        }
+        else
+        {
+            par1World.setBlockMetadataWithNotify(x, y, z, meta + 1);
+            return true;
+        }
+        //return false;
     }
 }
