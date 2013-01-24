@@ -2,7 +2,7 @@ package liquidmechanics.common.block;
 
 import java.util.List;
 
-import liquidmechanics.api.helpers.LiquidHandler;
+import liquidmechanics.api.liquids.LiquidHandler;
 import liquidmechanics.client.render.BlockRenderHelper;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.TabLiquidMechanics;

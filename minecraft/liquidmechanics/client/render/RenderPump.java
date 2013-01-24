@@ -1,7 +1,7 @@
 package liquidmechanics.client.render;
 
-import liquidmechanics.api.helpers.LiquidData;
-import liquidmechanics.api.helpers.LiquidHandler;
+import liquidmechanics.api.liquids.LiquidData;
+import liquidmechanics.api.liquids.LiquidHandler;
 import liquidmechanics.client.model.ModelPump;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.tileentity.TileEntityPump;

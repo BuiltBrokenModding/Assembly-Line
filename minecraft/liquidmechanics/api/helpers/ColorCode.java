@@ -1,5 +1,8 @@
 package liquidmechanics.api.helpers;
 
+import liquidmechanics.api.liquids.LiquidData;
+import liquidmechanics.api.liquids.LiquidHandler;
+
 
 public enum ColorCode
 {

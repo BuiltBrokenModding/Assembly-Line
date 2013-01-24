@@ -3,10 +3,10 @@ package liquidmechanics.common.tileentity;
 import java.util.EnumSet;
 
 import liquidmechanics.api.IReadOut;
-import liquidmechanics.api.IPressure;
 import liquidmechanics.api.helpers.ColorCode;
-import liquidmechanics.api.helpers.LiquidData;
-import liquidmechanics.api.helpers.LiquidHandler;
+import liquidmechanics.api.liquids.IPressure;
+import liquidmechanics.api.liquids.LiquidData;
+import liquidmechanics.api.liquids.LiquidHandler;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.MetaGroup;
 import liquidmechanics.common.handlers.UpdateConverter;

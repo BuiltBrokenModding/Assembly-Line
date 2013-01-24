@@ -2,9 +2,9 @@ package liquidmechanics.common.tileentity;
 
 import java.util.EnumSet;
 
-import liquidmechanics.api.IForce;
 import liquidmechanics.api.IReadOut;
 import liquidmechanics.api.helpers.connectionHelper;
+import liquidmechanics.api.mech.IForce;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.MetaGroup;
 import liquidmechanics.common.block.BlockGenerator;

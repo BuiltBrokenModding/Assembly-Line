@@ -1,4 +1,4 @@
-package liquidmechanics.api;
+package liquidmechanics.api.mech;
 
 import net.minecraftforge.common.ForgeDirection;
 

@@ -1,8 +1,8 @@
 package liquidmechanics.common.handlers;
 
 import net.minecraft.nbt.NBTTagCompound;
-import liquidmechanics.api.helpers.LiquidHandler;
 import liquidmechanics.api.helpers.ColorCode;
+import liquidmechanics.api.liquids.LiquidHandler;
 import liquidmechanics.common.tileentity.TileEntityPipe;
 import liquidmechanics.common.tileentity.TileEntityTank;
 

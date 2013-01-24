@@ -1,7 +1,7 @@
 package liquidmechanics.common.tileentity;
 
-import liquidmechanics.api.IForce;
 import liquidmechanics.api.IReadOut;
+import liquidmechanics.api.mech.IForce;
 import liquidmechanics.common.LiquidMechanics;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;

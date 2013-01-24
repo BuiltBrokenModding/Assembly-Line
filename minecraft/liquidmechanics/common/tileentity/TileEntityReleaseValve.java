@@ -8,12 +8,12 @@ import java.util.List;
 import cpw.mods.fml.common.FMLLog;
 
 import liquidmechanics.api.IColorCoded;
-import liquidmechanics.api.IPressure;
 import liquidmechanics.api.IReadOut;
-import liquidmechanics.api.helpers.LiquidData;
-import liquidmechanics.api.helpers.LiquidHandler;
 import liquidmechanics.api.helpers.ColorCode;
 import liquidmechanics.api.helpers.connectionHelper;
+import liquidmechanics.api.liquids.IPressure;
+import liquidmechanics.api.liquids.LiquidData;
+import liquidmechanics.api.liquids.LiquidHandler;
 import liquidmechanics.common.block.BlockReleaseValve;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

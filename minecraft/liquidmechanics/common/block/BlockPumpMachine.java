@@ -4,7 +4,7 @@ import java.util.List;
 
 import universalelectricity.prefab.BlockMachine;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
-import liquidmechanics.api.helpers.LiquidHandler;
+import liquidmechanics.api.liquids.LiquidHandler;
 import liquidmechanics.client.render.BlockRenderHelper;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.MetaGroup;

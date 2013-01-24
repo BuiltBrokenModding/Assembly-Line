@@ -1,9 +1,9 @@
 package liquidmechanics.client.render;
 
-import liquidmechanics.api.helpers.LiquidData;
-import liquidmechanics.api.helpers.LiquidHandler;
 import liquidmechanics.api.helpers.ColorCode;
 import liquidmechanics.api.helpers.connectionHelper;
+import liquidmechanics.api.liquids.LiquidData;
+import liquidmechanics.api.liquids.LiquidHandler;
 import liquidmechanics.client.model.ModelLiquidTank;
 import liquidmechanics.client.model.ModelLiquidTankCorner;
 import liquidmechanics.common.LiquidMechanics;

@@ -1,9 +1,11 @@
-package liquidmechanics.api.helpers;
+package liquidmechanics.api.liquids;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import liquidmechanics.api.helpers.ColorCode;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;

@@ -2,9 +2,9 @@ package liquidmechanics.common;
 
 import java.io.File;
 
-import liquidmechanics.api.helpers.LiquidData;
-import liquidmechanics.api.helpers.LiquidHandler;
 import liquidmechanics.api.helpers.ColorCode;
+import liquidmechanics.api.liquids.LiquidData;
+import liquidmechanics.api.liquids.LiquidHandler;
 import liquidmechanics.common.block.BlockGenerator;
 import liquidmechanics.common.block.BlockPumpMachine;
 import liquidmechanics.common.block.BlockPipe;

@@ -1,5 +1,6 @@
-package liquidmechanics.api.helpers;
+package liquidmechanics.api.liquids;
 
+import liquidmechanics.api.helpers.ColorCode;
 import net.minecraftforge.liquids.LiquidStack;
 
 public class LiquidData
