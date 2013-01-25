@@ -1,6 +1,5 @@
 package assemblyline.client.render;
 
-import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -36,7 +35,8 @@ public class RenderArmbot extends TileEntitySpecialRenderer
 			GL11.glRotatef(180, 0, 0, 1);
 			for (Entity entity : ((TileEntityArmbot) tileEntity).grabbedEntities)
 			{
-				if (entity != null && entity instanceof EntityItem) //items don't move right, so we render them manually
+				if (entity != null && entity instanceof EntityItem) // items don't move right, so we
+																	// render them manually
 				{
 					EntityItem item = (EntityItem) entity;
 					item.age = 0;

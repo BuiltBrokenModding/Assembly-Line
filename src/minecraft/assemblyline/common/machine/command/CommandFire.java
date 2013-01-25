@@ -11,25 +11,25 @@ import universalelectricity.core.vector.Vector3;
 
 public class CommandFire extends Command
 {
-	private static final float	MIN_ACTUAL_PITCH	= -80;
-	private static final float	MAX_ACTUAL_PITCH	= 80;
+	private static final float MIN_ACTUAL_PITCH = -80;
+	private static final float MAX_ACTUAL_PITCH = 80;
 
-	private float				actualYaw;
-	private float				actualPitch;
-	private float				velocity;
-	private Vector3				finalVelocity;
+	private float actualYaw;
+	private float actualPitch;
+	private float velocity;
+	private Vector3 finalVelocity;
 
 	@Override
 	public void onTaskStart()
 	{
 		super.onTaskStart();
-		
+
 		velocity = this.getFloatArg(0);
 		if (velocity > 2.5f)
 			velocity = 2.5f;
 		if (velocity < 0.125f)
 			velocity = 1f;
-		
+
 		this.actualYaw = this.tileEntity.rotationYaw;
 		this.actualPitch = ((MAX_ACTUAL_PITCH - MIN_ACTUAL_PITCH) * (this.tileEntity.rotationPitch / 60f)) + MIN_ACTUAL_PITCH;
 

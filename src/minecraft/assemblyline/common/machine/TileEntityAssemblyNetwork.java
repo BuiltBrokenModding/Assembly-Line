@@ -11,7 +11,8 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
 /**
- * A class to be inherited by all machines on the assembly line. This will allow all machines to be able to be powered through the powering of only one machine.
+ * A class to be inherited by all machines on the assembly line. This will allow all machines to be
+ * able to be powered through the powering of only one machine.
  * 
  * @author Calclavia
  * 

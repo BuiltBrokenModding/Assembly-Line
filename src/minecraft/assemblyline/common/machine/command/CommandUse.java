@@ -38,12 +38,12 @@ public class CommandUse extends Command
 				((IArmbotUseable) handTile).onUse(this.tileEntity, handEntity);
 			}
 		}
-		
+
 		curTimes++;
 
 		if (curTimes >= times)
 			return false;
-		
+
 		return true;
 	}
 }

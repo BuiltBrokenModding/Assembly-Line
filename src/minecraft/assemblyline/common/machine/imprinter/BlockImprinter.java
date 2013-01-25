@@ -19,7 +19,7 @@ public class BlockImprinter extends BlockMachine
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 		this.setTextureFile(AssemblyLine.BLOCK_TEXTURE_PATH);
 	}
-	
+
 	@Override
 	public void onBlockAdded(World world, int x, int y, int z)
 	{

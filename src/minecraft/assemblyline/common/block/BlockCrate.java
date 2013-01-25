@@ -90,7 +90,7 @@ public class BlockCrate extends BlockMachine
 
 		return false;
 	}
-	
+
 	@Override
 	public int getRenderType()
 	{
