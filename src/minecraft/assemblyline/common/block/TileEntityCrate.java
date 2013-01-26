@@ -23,6 +23,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements IInventory, I
 {
 	public static final int MAX_LIMIT = 2880;
 	private ItemStack[] containingItems = new ItemStack[1];
+	public long prevClickTime = -1000;
 
 	@Override
 	public boolean canUpdate()

@@ -36,32 +36,45 @@ public class BlockCrate extends BlockMachine
 	@Override
 	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
 	{
+
 		if (world.getBlockTileEntity(x, y, z) instanceof TileEntityCrate)
 		{
 			TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
 
-			if (side == ForgeDirection.UP.ordinal())
+			/**
+			 * Make double clicking input all stacks.
+			 */
+			boolean allMode = false;
+
+			if (world.getWorldTime() - tileEntity.prevClickTime < 10)
 			{
-				this.insertCurrentItem(tileEntity, player);
+				allMode = true;
 			}
-			else if (side == ForgeDirection.DOWN.ordinal())
+
+			tileEntity.prevClickTime = world.getWorldTime();
+
+			if (side == 1 || (side > 1 && hitY > 0.5))
 			{
-				this.ejectItems(tileEntity, player, 64);
-			}
-			else
-			{
-				if (hitY > 0.5)
+				if (allMode)
+				{
+					this.insertAllItems(tileEntity, player);
+				}
+				else
 				{
 					this.insertCurrentItem(tileEntity, player);
-					// return this.insertAllItems(tileEntity, player);
+				}
+			}
+			else if (side == 0 || (side > 1 && hitY <= 0.5))
+			{
+				if (allMode)
+				{
+					this.ejectItems(tileEntity, player, TileEntityCrate.MAX_LIMIT);
 				}
 				else
 				{
 					this.ejectItems(tileEntity, player, 64);
-					// return this.ejectItems(tileEntity, player, TileEntityCrate.MAX_LIMIT);
 				}
 			}
-
 		}
 
 		return true;
@@ -100,6 +113,11 @@ public class BlockCrate extends BlockMachine
 	public boolean insertAllItems(TileEntityCrate tileEntity, EntityPlayer player)
 	{
 		ItemStack requestStack = player.getCurrentEquippedItem();
+
+		if (requestStack == null && tileEntity.getStackInSlot(0) != null)
+		{
+			requestStack = tileEntity.getStackInSlot(0).copy();
+		}
 
 		if (requestStack != null)
 		{
