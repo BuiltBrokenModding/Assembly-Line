@@ -29,6 +29,7 @@ public class RenderArmbot extends TileEntitySpecialRenderer
 		if (tileEntity instanceof TileEntityArmbot)
 		{
 			Command curCommand = ((TileEntityArmbot) tileEntity).getCurrentCommand();
+			
 			if (curCommand != null)
 			{
 				EntityPlayer player = Minecraft.getMinecraft().thePlayer;
@@ -38,7 +39,7 @@ public class RenderArmbot extends TileEntitySpecialRenderer
 				{
 					if (objectPosition.blockX == tileEntity.xCoord && (objectPosition.blockY == tileEntity.yCoord || objectPosition.blockY == tileEntity.yCoord + 1) && objectPosition.blockZ == tileEntity.zCoord)
 					{
-						RenderHelper.renderFloatingText(curCommand.toString(), (float) x + 0.5f, ((float) y) + 0.25f, (float) z + 0.5f, 0xFFFFFF);
+						RenderHelper.renderFloatingText(curCommand.toString(), (float) x + 0.5f, (float) y, (float) z + 0.5f, 0xFFFFFF);
 					}
 				}
 			}

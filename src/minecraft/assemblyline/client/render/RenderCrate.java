@@ -19,7 +19,7 @@ import org.lwjgl.opengl.GL11;
 
 import assemblyline.common.block.TileEntityCrate;
 
-public class RenderCrateOld extends TileEntitySpecialRenderer
+public class RenderCrate extends TileEntitySpecialRenderer
 {
 	private final RenderBlocks renderBlocks = new RenderBlocks();
 
@@ -76,10 +76,13 @@ public class RenderCrateOld extends TileEntitySpecialRenderer
 
 					RenderEngine renderEngine = Minecraft.getMinecraft().renderEngine;
 					EntityItem ei = new EntityItem(tileEntity.worldObj, 0.0, 0.0, 0.0, itemStack);
+
+					GL11.glDisable(2896);
 					if (!ForgeHooksClient.renderInventoryItem(this.renderBlocks, renderEngine, itemStack, true, 0.0F, 0.0F, 0.0F))
 					{
 						renderItem.renderItemIntoGUI(this.getFontRenderer(), renderEngine, itemStack, 0, 0);
 					}
+					GL11.glEnable(2896);
 
 					GL11.glPopMatrix();
 				}
