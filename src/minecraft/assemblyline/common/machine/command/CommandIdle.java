@@ -1,6 +1,5 @@
 package assemblyline.common.machine.command;
 
-
 public class CommandIdle extends Command
 {
 	/**
@@ -25,7 +24,7 @@ public class CommandIdle extends Command
 		/**
 		 * Randomly move the arm to simulate life in the arm if the arm is powered
 		 */
-		//this.tileEntity.rotationPitch *= 0.98 * this.world.rand.nextFloat();
+		// this.tileEntity.rotationPitch *= 0.98 * this.world.rand.nextFloat();
 
 		if (this.idleTime > 0)
 		{

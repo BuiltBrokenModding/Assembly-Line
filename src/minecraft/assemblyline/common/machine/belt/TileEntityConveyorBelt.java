@@ -3,7 +3,6 @@ package assemblyline.common.machine.belt;
 import java.util.EnumSet;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -53,7 +52,8 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	}
 
 	/**
-	 * This function is overriden to allow conveyor belts to power belts that are diagonally going up.
+	 * This function is overriden to allow conveyor belts to power belts that are diagonally going
+	 * up.
 	 */
 	@Override
 	public void updatePowerTransferRange()
@@ -119,8 +119,11 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 
 		if (this.isRunning())
 		{
-			if (this.ticks % 10 == 0 && this.worldObj.isRemote && this.worldObj.getBlockId(xCoord - 1, yCoord, zCoord) != AssemblyLine.blockConveyorBelt.blockID && this.worldObj.getBlockId(xCoord, yCoord, zCoord - 1) != AssemblyLine.blockConveyorBelt.blockID) // sound is 0.5 seconds long (20 ticks/second)
-				this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "assemblyline.conveyor", 0.5f, 0.3f, true);
+			if (this.ticks % 10 == 0 && this.worldObj.isRemote && this.worldObj.getBlockId(xCoord - 1, yCoord, zCoord) != AssemblyLine.blockConveyorBelt.blockID && this.worldObj.getBlockId(xCoord, yCoord, zCoord - 1) != AssemblyLine.blockConveyorBelt.blockID)
+			{
+				// Sound is 0.5 seconds long (20 ticks/second)
+				this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "assemblyline.conveyor", 0.3f, 0.3f, true);
+			}
 
 			this.wheelRotation += 40;
 

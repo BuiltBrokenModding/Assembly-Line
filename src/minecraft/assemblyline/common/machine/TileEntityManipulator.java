@@ -14,6 +14,7 @@ import net.minecraftforge.common.ISidedInventory;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
 import universalelectricity.prefab.implement.IRotatable;
+import universalelectricity.prefab.multiblock.TileEntityMulti;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.api.IManipulator;
 import assemblyline.common.machine.imprinter.TileEntityFilterable;
@@ -21,14 +22,14 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class TileEntityManipulator extends TileEntityFilterable implements IRotatable, IRedstoneReceptor, IManipulator
 {
-	public boolean	selfPulse			= false;
+	public boolean selfPulse = false;
 
 	/**
 	 * Is the manipulator wrenched to turn into output mode?
 	 */
-	private boolean	isOutput			= false;
+	private boolean isOutput = false;
 
-	private boolean	isRedstonePowered	= false;
+	private boolean isRedstonePowered = false;
 
 	public boolean isOutput()
 	{
@@ -86,7 +87,8 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 	}
 
 	/**
-	 * Find items going into the manipulator and input them into an inventory behind this manipulator.
+	 * Find items going into the manipulator and input them into an inventory behind this
+	 * manipulator.
 	 */
 	@Override
 	public void inject()
@@ -110,7 +112,8 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 			if (entity.isDead)
 				continue;
 			/**
-			 * Try top first, then bottom, then the sides to see if it is possible to insert the item into a inventory.
+			 * Try top first, then bottom, then the sides to see if it is possible to insert the
+			 * item into a inventory.
 			 */
 			ItemStack remainingStack = entity.func_92014_d().copy();
 
@@ -180,9 +183,16 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 	}
 
 	/*
-	 * @Override public ArrayList getPacketData() { ArrayList list = super.getPacketData(); list.add(this.isOutput); list.add(this.wattsReceived); return list; }
+	 * @Override public ArrayList getPacketData() { ArrayList list = super.getPacketData();
+	 * list.add(this.isOutput); list.add(this.wattsReceived); return list; }
 	 * 
-	 * @Override public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream) { if (worldObj.isRemote) { ByteArrayInputStream bis = new ByteArrayInputStream(packet.data); DataInputStream dis = new DataInputStream(bis); int id, x, y, z; try { id = dis.readInt(); x = dis.readInt(); y = dis.readInt(); z = dis.readInt(); NBTTagCompound tag = Packet.readNBTTagCompound(dis); readFromNBT(tag); this.wattsReceived = dis.readDouble(); this.isOutput = dis.readBoolean(); } catch (IOException e) { e.printStackTrace(); } } }
+	 * @Override public void handlePacketData(INetworkManager network, int packetType,
+	 * Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream) { if
+	 * (worldObj.isRemote) { ByteArrayInputStream bis = new ByteArrayInputStream(packet.data);
+	 * DataInputStream dis = new DataInputStream(bis); int id, x, y, z; try { id = dis.readInt(); x
+	 * = dis.readInt(); y = dis.readInt(); z = dis.readInt(); NBTTagCompound tag =
+	 * Packet.readNBTTagCompound(dis); readFromNBT(tag); this.wattsReceived = dis.readDouble();
+	 * this.isOutput = dis.readBoolean(); } catch (IOException e) { e.printStackTrace(); } } }
 	 */
 
 	/**
@@ -215,7 +225,17 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 			/**
 			 * Try to put items into a chest.
 			 */
-			if (tileEntity instanceof TileEntityChest)
+			if (tileEntity instanceof TileEntityMulti)
+			{
+				Vector3 mainBlockPosition = ((TileEntityMulti) tileEntity).mainBlockPosition;
+
+				if (mainBlockPosition != null)
+				{
+					if (!(mainBlockPosition.getTileEntity(this.worldObj) instanceof TileEntityMulti))
+						return tryPlaceInPosition(itemStack, mainBlockPosition, direction);
+				}
+			}
+			else if (tileEntity instanceof TileEntityChest)
 			{
 				TileEntityChest[] chests = { (TileEntityChest) tileEntity, null };
 
@@ -323,7 +343,17 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 			/**
 			 * Try to put items into a chest.
 			 */
-			if (tileEntity instanceof TileEntityChest)
+			if (tileEntity instanceof TileEntityMulti)
+			{
+				Vector3 mainBlockPosition = ((TileEntityMulti) tileEntity).mainBlockPosition;
+
+				if (mainBlockPosition != null)
+				{
+					if (!(mainBlockPosition.getTileEntity(this.worldObj) instanceof TileEntityMulti))
+						return tryGrabFromPosition(mainBlockPosition, direction);
+				}
+			}
+			else if (tileEntity instanceof TileEntityChest)
 			{
 				TileEntityChest[] chests = { (TileEntityChest) tileEntity, null };
 

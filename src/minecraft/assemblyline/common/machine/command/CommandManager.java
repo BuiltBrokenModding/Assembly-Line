@@ -6,17 +6,15 @@ import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import assemblyline.common.machine.armbot.TileEntityArmbot;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.relauncher.Side;
 
 public class CommandManager
 {
-	private final List<Command>	tasks		= new ArrayList<Command>();
+	private final List<Command> tasks = new ArrayList<Command>();
 
-	private int					ticks		= 0;
-	private int					currentTask	= 0;
-	private int					lastTask	= -1;
+	private int ticks = 0;
+	private int currentTask = 0;
+	private int lastTask = -1;
 
 	/**
 	 * Must be called every tick by a tileEntity.
@@ -45,18 +43,21 @@ public class CommandManager
 						this.lastTask = this.currentTask;
 						task.onTaskStart();
 					}
-					
-					//if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-						//System.out.println("curTask: " + this.currentTask + ": " + this.tasks.get(this.currentTask).toString().substring(this.tasks.get(this.currentTask).toString().lastIndexOf('.') + 1));
+
+					// if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+					// System.out.println("curTask: " + this.currentTask + ": " +
+					// this.tasks.get(this.currentTask).toString().substring(this.tasks.get(this.currentTask).toString().lastIndexOf('.')
+					// + 1));
 
 					if (!task.doTask())
 					{
 						int tempCurrentTask = this.currentTask;
 						task.onTaskEnd();
 						this.currentTask++;
-						if (!(task instanceof CommandRepeat)) //repeat needs to be persistent
+						if (!(task instanceof CommandRepeat)) // repeat needs to be persistent
 						{
-							// End the task and reinitialize it into a new class to make sure it is fresh.
+							// End the task and reinitialize it into a new class to make sure it is
+							// fresh.
 							this.tasks.set(tempCurrentTask, this.getNewCommand(task.tileEntity, task.getClass(), task.getArgs()));
 						}
 					}
@@ -97,7 +98,8 @@ public class CommandManager
 	}
 
 	/**
-	 * Used to register Tasks for a TileEntity, executes onTaskStart for the Task after registering it
+	 * Used to register Tasks for a TileEntity, executes onTaskStart for the Task after registering
+	 * it
 	 * 
 	 * @param tileEntity TE instance to register the task for
 	 * @param newCommand Task instance to register

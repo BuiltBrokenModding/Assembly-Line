@@ -1,7 +1,6 @@
 package assemblyline.common.machine.belt;
 
 import java.util.List;
-import java.util.Random;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -34,7 +33,7 @@ public class BlockConveyorBelt extends BlockMachine
 		this.setBlockBounds(0, 0, 0, 1, 0.3f, 1);
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 	}
-	
+
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
 	{
@@ -68,14 +67,8 @@ public class BlockConveyorBelt extends BlockMachine
 		{
 			TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) t;
 
-			if (tileEntity.getSlant() == SlantType.UP || tileEntity.getSlant() == SlantType.DOWN)
-			{
-				return AxisAlignedBB.getAABBPool().addOrModifyAABBInPool((double) x + this.minX, (double) y + this.minY, (double) z + this.minZ, (double) x + 1, (double) y + 1, (double) z + 1);
-			}
-			if (tileEntity.getSlant() == SlantType.TOP)
-			{
-				return AxisAlignedBB.getAABBPool().addOrModifyAABBInPool((double) x + this.minX, (double) y + 0.68f, (double) z + this.minZ, (double) x + this.maxX, (double) y + 0.98f, (double) z + this.maxZ);
-			}
+			if (tileEntity.getSlant() == SlantType.UP || tileEntity.getSlant() == SlantType.DOWN) { return AxisAlignedBB.getAABBPool().addOrModifyAABBInPool((double) x + this.minX, (double) y + this.minY, (double) z + this.minZ, (double) x + 1, (double) y + 1, (double) z + 1); }
+			if (tileEntity.getSlant() == SlantType.TOP) { return AxisAlignedBB.getAABBPool().addOrModifyAABBInPool((double) x + this.minX, (double) y + 0.68f, (double) z + this.minZ, (double) x + this.maxX, (double) y + 0.98f, (double) z + this.maxZ); }
 		}
 
 		return AxisAlignedBB.getAABBPool().addOrModifyAABBInPool((double) x + this.minX, (double) y + this.minY, (double) z + this.minZ, (double) x + this.maxX, (double) y + this.maxY, (double) z + this.maxZ);
@@ -276,7 +269,7 @@ public class BlockConveyorBelt extends BlockMachine
 				entity.motionZ = direction.offsetZ * maxSpeed;
 				entity.motionX = 0;
 			}
-			
+
 			entity.motionY += 0.0125f;
 
 			if (entity instanceof EntityItem)

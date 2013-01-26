@@ -126,9 +126,28 @@ public class ModelArmbot extends ModelBase
 	{
 
 		/*
-		 * armMountRight.setRotationPoint(baseRotation.rotationPointX, armMountRight.rotationPointY, baseRotation.rotationPointX); armMountLeft.setRotationPoint(baseRotation.rotationPointX, armMountLeft.rotationPointY, baseRotation.rotationPointX); armLower.setRotationPoint(baseRotation.rotationPointX, armLower.rotationPointY, baseRotation.rotationPointX); armUpper.setRotationPoint(baseRotation.rotationPointX, armUpper.rotationPointY, baseRotation.rotationPointX); baseRotation.setRotationPoint(baseRotation.rotationPointX, baseRotation.rotationPointY, baseRotation.rotationPointX); clampBody.setRotationPoint(baseRotation.rotationPointX, clampBody.rotationPointY, baseRotation.rotationPointX); clampBody2.setRotationPoint(baseRotation.rotationPointX, clampBody2.rotationPointY, baseRotation.rotationPointX); clampClawLower.setRotationPoint(baseRotation.rotationPointX, clampClawLower.rotationPointY, baseRotation.rotationPointX); clampClawLower2.setRotationPoint(baseRotation.rotationPointX, clampClawLower2.rotationPointY, baseRotation.rotationPointX);
+		 * armMountRight.setRotationPoint(baseRotation.rotationPointX, armMountRight.rotationPointY,
+		 * baseRotation.rotationPointX); armMountLeft.setRotationPoint(baseRotation.rotationPointX,
+		 * armMountLeft.rotationPointY, baseRotation.rotationPointX);
+		 * armLower.setRotationPoint(baseRotation.rotationPointX, armLower.rotationPointY,
+		 * baseRotation.rotationPointX); armUpper.setRotationPoint(baseRotation.rotationPointX,
+		 * armUpper.rotationPointY, baseRotation.rotationPointX);
+		 * baseRotation.setRotationPoint(baseRotation.rotationPointX, baseRotation.rotationPointY,
+		 * baseRotation.rotationPointX); clampBody.setRotationPoint(baseRotation.rotationPointX,
+		 * clampBody.rotationPointY, baseRotation.rotationPointX);
+		 * clampBody2.setRotationPoint(baseRotation.rotationPointX, clampBody2.rotationPointY,
+		 * baseRotation.rotationPointX);
+		 * clampClawLower.setRotationPoint(baseRotation.rotationPointX,
+		 * clampClawLower.rotationPointY, baseRotation.rotationPointX);
+		 * clampClawLower2.setRotationPoint(baseRotation.rotationPointX,
+		 * clampClawLower2.rotationPointY, baseRotation.rotationPointX);
 		 * 
-		 * armMountRight.rotateAngleY = armBot.rotationYaw; armMountLeft.rotateAngleY = armBot.rotationYaw; armLower.rotateAngleY = armBot.rotationYaw; armUpper.rotateAngleY = armBot.rotationYaw; baseRotation.rotateAngleY = armBot.rotationYaw; clampBody.rotateAngleY = armBot.rotationYaw; clampBody2.rotateAngleY = armBot.rotationYaw; clampClawLower.rotateAngleY = armBot.rotationYaw; clampClawLower2.rotateAngleY = armBot.rotationYaw;
+		 * armMountRight.rotateAngleY = armBot.rotationYaw; armMountLeft.rotateAngleY =
+		 * armBot.rotationYaw; armLower.rotateAngleY = armBot.rotationYaw; armUpper.rotateAngleY =
+		 * armBot.rotationYaw; baseRotation.rotateAngleY = armBot.rotationYaw;
+		 * clampBody.rotateAngleY = armBot.rotationYaw; clampBody2.rotateAngleY =
+		 * armBot.rotationYaw; clampClawLower.rotateAngleY = armBot.rotationYaw;
+		 * clampClawLower2.rotateAngleY = armBot.rotationYaw;
 		 */
 
 		baseTop.render(f5);

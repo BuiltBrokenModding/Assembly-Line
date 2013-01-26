@@ -13,10 +13,10 @@ public class CommandRepeat extends Command
 	/**
 	 * The amount of tasks above this task to repeat.
 	 */
-	private int		tasksToRepeat;
-	private int		numReps;
-	private int		curReps;
-	private boolean	initialized	= false;
+	private int tasksToRepeat;
+	private int numReps;
+	private int curReps;
+	private boolean initialized = false;
 
 	public void onTaskStart()
 	{

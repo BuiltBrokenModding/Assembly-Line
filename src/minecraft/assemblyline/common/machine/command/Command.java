@@ -126,13 +126,13 @@ public abstract class Command
 			}
 			catch (Exception e)
 			{
-				
+
 			}
 		}
 
 		return 0;
 	}
-	
+
 	protected Double getDoubleArg(int i)
 	{
 		if (getArg(i) != null)
@@ -143,13 +143,13 @@ public abstract class Command
 			}
 			catch (Exception e)
 			{
-				
+
 			}
 		}
 
 		return 0.0;
 	}
-	
+
 	protected Float getFloatArg(int i)
 	{
 		if (getArg(i) != null)
@@ -160,7 +160,7 @@ public abstract class Command
 			}
 			catch (Exception e)
 			{
-				
+
 			}
 		}
 

@@ -11,7 +11,7 @@ public class RenderCrate implements ISimpleBlockRenderingHandler
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
 	{
-		
+
 	}
 
 	@Override
