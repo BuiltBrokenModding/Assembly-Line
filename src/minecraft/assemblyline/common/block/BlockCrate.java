@@ -42,53 +42,29 @@ public class BlockCrate extends BlockMachine
 
 			if (side == ForgeDirection.UP.ordinal())
 			{
-				if (tileEntity != null)
-				{
-					if (tileEntity instanceof IFilterable)
-					{
-						ItemStack containingStack = ((IFilterable) tileEntity).getFilter();
-
-						if (containingStack != null)
-						{
-							if (!world.isRemote)
-							{
-								EntityItem dropStack = new EntityItem(world, player.posX, player.posY, player.posZ, containingStack);
-								dropStack.delayBeforeCanPickup = 0;
-								world.spawnEntityInWorld(dropStack);
-							}
-
-							((IFilterable) tileEntity).setFilter(null);
-							return true;
-						}
-						else
-						{
-							if (player.getCurrentEquippedItem() != null)
-							{
-								if (player.getCurrentEquippedItem().getItem() instanceof ItemImprinter)
-								{
-									((IFilterable) tileEntity).setFilter(player.getCurrentEquippedItem());
-									player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
-									return true;
-								}
-							}
-						}
-
-					}
-				}
+				this.insertCurrentItem(tileEntity, player);
 			}
-
-			if (side > 1 && hitY > 0.7)
+			else if (side == ForgeDirection.DOWN.ordinal())
 			{
-				return this.insertAllItems(tileEntity, player);
+				this.ejectItems(tileEntity, player, 64);
 			}
 			else
 			{
-				return this.insertCurrentItem(tileEntity, player);
+				if (hitY > 0.5)
+				{
+					this.insertCurrentItem(tileEntity, player);
+					// return this.insertAllItems(tileEntity, player);
+				}
+				else
+				{
+					this.ejectItems(tileEntity, player, 64);
+					// return this.ejectItems(tileEntity, player, TileEntityCrate.MAX_LIMIT);
+				}
 			}
 
 		}
 
-		return false;
+		return true;
 	}
 
 	@Override
@@ -236,32 +212,6 @@ public class BlockCrate extends BlockMachine
 		if (itemStack.stackSize <= 0) { return null; }
 
 		return itemStack;
-	}
-
-	/**
-	 * Drops the crate as a block that stores items within it.
-	 */
-	@Override
-	public boolean onSneakMachineActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
-	{
-		if (world.getBlockTileEntity(x, y, z) != null)
-		{
-			TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
-
-			if (player.getCurrentEquippedItem() == null)
-			{
-				/**
-				 * Eject all items if clicked on the top 30% of the block.
-				 */
-				if (side > 1 && hitY > 0.7)
-				{
-					return this.ejectItems(tileEntity, player, TileEntityCrate.MAX_LIMIT);
-				}
-				else if (side != ForgeDirection.UP.ordinal()) { return this.ejectItems(tileEntity, player, 64); }
-			}
-		}
-
-		return false;
 	}
 
 	@Override

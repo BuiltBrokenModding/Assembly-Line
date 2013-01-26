@@ -1,6 +1,7 @@
 package assemblyline.common.block;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -8,7 +9,6 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.common.ISidedInventory;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
@@ -19,7 +19,7 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
-public class TileEntityCrate extends TileEntityAdvanced implements ISidedInventory, IPacketReceiver
+public class TileEntityCrate extends TileEntityAdvanced implements IInventory, IPacketReceiver
 {
 	public static final int MAX_LIMIT = 2880;
 	private ItemStack[] containingItems = new ItemStack[1];
@@ -243,17 +243,5 @@ public class TileEntityCrate extends TileEntityAdvanced implements ISidedInvento
 	public String getInvName()
 	{
 		return "Crate";
-	}
-
-	@Override
-	public int getStartInventorySide(ForgeDirection side)
-	{
-		return 0;
-	}
-
-	@Override
-	public int getSizeInventorySide(ForgeDirection side)
-	{
-		return 1;
 	}
 }
