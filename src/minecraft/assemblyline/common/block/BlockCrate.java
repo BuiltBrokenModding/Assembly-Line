@@ -5,13 +5,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.prefab.BlockMachine;
-import assemblyline.api.IFilterable;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.TabAssemblyLine;
-import assemblyline.common.machine.imprinter.ItemImprinter;
 
 /**
  * A block that allows the placement of mass amount of a specific item within it. It will be allowed

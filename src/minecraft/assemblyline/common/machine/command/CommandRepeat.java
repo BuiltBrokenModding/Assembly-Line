@@ -1,6 +1,5 @@
 package assemblyline.common.machine.command;
 
-import assemblyline.common.machine.armbot.TileEntityArmbot;
 
 /**
  * This task resets all previous tasks and does them again in a loop.
