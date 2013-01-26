@@ -62,4 +62,10 @@ public class CommandGrab extends Command
 
 		return true;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "GRAB";
+	}
 }

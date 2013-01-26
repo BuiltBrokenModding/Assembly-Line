@@ -7,6 +7,7 @@ public class CommandIdle extends Command
 	 * The amount of time in which the machine will idle.
 	 */
 	public int idleTime = 80;
+	private int totalIdleTime = 80;
 
 	public void onTaskStart()
 	{
@@ -15,6 +16,7 @@ public class CommandIdle extends Command
 		if (this.getIntArg(0) > 0)
 		{
 			this.idleTime = this.getIntArg(0);
+			this.totalIdleTime = this.idleTime;
 		}
 	}
 
@@ -32,6 +34,12 @@ public class CommandIdle extends Command
 		}
 
 		return false;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return "IDLE " + Integer.toString(this.totalIdleTime);
 	}
 
 }

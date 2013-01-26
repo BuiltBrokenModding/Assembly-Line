@@ -24,11 +24,11 @@ public class CommandFire extends Command
 	{
 		super.onTaskStart();
 		
-		velocity = this.getFloatArg(0);
-		if (velocity > 2.5f)
-			velocity = 2.5f;
-		if (velocity < 0.125f)
-			velocity = 1f;
+		this.velocity = this.getFloatArg(0);
+		if (this.velocity > 2.5f)
+			this.velocity = 2.5f;
+		if (this.velocity < 0.125f)
+			this.velocity = 1f;
 		
 		this.actualYaw = this.tileEntity.rotationYaw;
 		this.actualPitch = ((MAX_ACTUAL_PITCH - MIN_ACTUAL_PITCH) * (this.tileEntity.rotationPitch / 60f)) + MIN_ACTUAL_PITCH;
@@ -113,5 +113,11 @@ public class CommandFire extends Command
 		}
 
 		return false;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return "FIRE " + Float.toString(this.velocity);
 	}
 }

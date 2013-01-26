@@ -34,10 +34,12 @@ import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.TileEntityAssemblyNetwork;
 import assemblyline.common.machine.command.Command;
 import assemblyline.common.machine.command.CommandDrop;
+import assemblyline.common.machine.command.CommandFire;
 import assemblyline.common.machine.command.CommandGrab;
 import assemblyline.common.machine.command.CommandManager;
 import assemblyline.common.machine.command.CommandReturn;
-import assemblyline.common.machine.command.CommandRotate;
+import assemblyline.common.machine.command.CommandRotateBy;
+import assemblyline.common.machine.command.CommandRotateTo;
 import assemblyline.common.machine.command.CommandUse;
 import assemblyline.common.machine.encoder.ItemDisk;
 
@@ -271,6 +273,13 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		{
 			PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 50);
 		}
+	}
+	
+	public Command getCurrentCommand()
+	{
+		if (this.commandManager.hasTasks() && this.commandManager.getCurrentTask() >= 0 && this.commandManager.getCurrentTask() < this.commandManager.getCommands().size())
+			return this.commandManager.getCommands().get(this.commandManager.getCurrentTask());
+		return null;
 	}
 
 	/**
@@ -616,7 +625,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	@Override
 	public String[] getMethodNames()
 	{
-		return new String[] { "rotate", "grab", "drop", "reset", "isWorking", "touchingEntity", "use" };
+		return new String[] { "rotateBy", "rotateTo", "grab", "drop", "reset", "isWorking", "touchingEntity", "use", "fire" };
 	}
 
 	@Override
@@ -631,8 +640,9 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 					try
 					// try to cast to Float
 					{
-						double angle = (Double) arguments[0];
-						this.commandManager.addCommand(this, CommandRotate.class, new String[] { Double.toString(angle) });
+						double yaw = (Double) arguments[0];
+						double pitch = (Double) arguments[1];
+						this.commandManager.addCommand(this, CommandRotateBy.class, new String[] { Double.toString(yaw), Double.toString(pitch) });
 					}
 					catch (Exception ex)
 					{
@@ -646,27 +656,50 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				}
 				break;
 			}
-			case 1: // grab: grabs an item
+			case 1: // rotateTo: rotates to a specific rotation
+			{
+				if (arguments.length > 0)
+				{
+					try
+					// try to cast to Float
+					{
+						double yaw = (Double) arguments[0];
+						double pitch = (Double) arguments[1];
+						this.commandManager.addCommand(this, CommandRotateTo.class, new String[] { Double.toString(yaw), Double.toString(pitch) });
+					}
+					catch (Exception ex)
+					{
+						ex.printStackTrace();
+						throw new IllegalArgumentException("expected number");
+					}
+				}
+				else
+				{
+					throw new IllegalArgumentException("expected number");
+				}
+				break;
+			}
+			case 2: // grab: grabs an item
 			{
 				this.commandManager.addCommand(this, CommandGrab.class);
 				break;
 			}
-			case 2: // drop: drops an item
+			case 3: // drop: drops an item
 			{
 				this.commandManager.addCommand(this, CommandDrop.class);
 				break;
 			}
-			case 3: // reset: clears the queue and calls the RETURN command
+			case 4: // reset: clears the queue and calls the RETURN command
 			{
 				this.commandManager.clear();
 				this.commandManager.addCommand(this, CommandReturn.class);
 				break;
 			}
-			case 4: // isWorking: returns whether or not the ArmBot is executing commands
+			case 5: // isWorking: returns whether or not the ArmBot is executing commands
 			{
 				return new Object[] { this.commandManager.hasTasks() };
 			}
-			case 5: // touchingEntity: returns whether or not the ArmBot is touching an entity it is able to pick up
+			case 6: // touchingEntity: returns whether or not the ArmBot is touching an entity it is able to pick up
 			{
 				Vector3 serachPosition = this.getHandPosition();
 				List<Entity> found = this.worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(serachPosition.x - 0.5f, serachPosition.y - 0.5f, serachPosition.z - 0.5f, serachPosition.x + 0.5f, serachPosition.y + 0.5f, serachPosition.z + 0.5f));
@@ -682,7 +715,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 
 				return new Object[] { false };
 			}
-			case 6:
+			case 7:
 			{
 				if (arguments.length > 0)
 				{
@@ -701,6 +734,28 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				else
 				{
 					this.commandManager.addCommand(this, CommandUse.class);
+				}
+				break;
+			}
+			case 8: // fire: think "flying pig"
+			{
+				if (arguments.length > 0)
+				{
+					try
+					// try to cast to Float
+					{
+						float strength = (float) ((double) ((Double) arguments[0]));
+						this.commandManager.addCommand(this, CommandFire.class, new String[] { Float.toString(strength) });
+					}
+					catch (Exception ex)
+					{
+						ex.printStackTrace();
+						throw new IllegalArgumentException("expected number");
+					}
+				}
+				else
+				{
+					this.commandManager.addCommand(this, CommandFire.class);
 				}
 				break;
 			}

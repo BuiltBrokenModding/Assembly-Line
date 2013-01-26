@@ -424,7 +424,8 @@ public class ElectricityNetwork
 	}
 
 	/**
-	 * Consumes electricity from all specified sides. Use this as a simple helper function.
+	 * Requests and attempts to consume electricity from all specified sides. Use this as a simple
+	 * helper function.
 	 * 
 	 * @param tileEntity- The TileEntity consuming the electricity.
 	 * @param approachDirection - The sides in which you can connect.

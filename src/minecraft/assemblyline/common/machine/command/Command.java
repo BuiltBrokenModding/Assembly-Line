@@ -29,7 +29,8 @@ public abstract class Command
 		registerCommand("idle", CommandIdle.class);
 		registerCommand("grab", CommandGrab.class);
 		registerCommand("drop", CommandDrop.class);
-		registerCommand("rotate", CommandRotate.class);
+		registerCommand("rotate", CommandRotateBy.class);
+		registerCommand("rotateto", CommandRotateTo.class);
 		registerCommand("return", CommandReturn.class);
 		registerCommand("repeat", CommandRepeat.class);
 		registerCommand("use", CommandUse.class);
@@ -178,5 +179,11 @@ public abstract class Command
 			parList.appendTag(new NBTTagString(parameter));
 		}
 		taskCompound.setTag("parameters", parList);
+	}
+	
+	@Override
+	public String toString()
+	{
+		return "COMMAND";
 	}
 }

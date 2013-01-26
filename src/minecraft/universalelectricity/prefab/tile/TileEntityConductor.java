@@ -8,6 +8,9 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+
+import org.bouncycastle.util.Arrays;
+
 import universalelectricity.core.electricity.Electricity;
 import universalelectricity.core.electricity.ElectricityConnections;
 import universalelectricity.core.electricity.ElectricityNetwork;
@@ -148,6 +151,17 @@ public abstract class TileEntityConductor extends TileEntityAdvanced implements 
 	}
 
 	@Override
+	public void updateEntity()
+	{
+		super.updateEntity();
+
+		if (this.ticks % 300 == 0)
+		{
+			this.refreshConnectedBlocks();
+		}
+	}
+
+	@Override
 	public void reset()
 	{
 		this.network = null;
@@ -165,12 +179,20 @@ public abstract class TileEntityConductor extends TileEntityAdvanced implements 
 		{
 			if (!this.worldObj.isRemote)
 			{
+				boolean[] previousConnections = this.visuallyConnected.clone();
+
 				for (byte i = 0; i < 6; i++)
 				{
 					this.updateConnection(Vector3.getConnectorFromSide(this.worldObj, new Vector3(this), ForgeDirection.getOrientation(i)), ForgeDirection.getOrientation(i));
 				}
 
-				this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+				/**
+				 * Only send packet updates if visuallyConnected changed.
+				 */
+				if (!Arrays.areEqual(previousConnections, this.visuallyConnected))
+				{
+					this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+				}
 			}
 
 		}

@@ -6,11 +6,11 @@ package assemblyline.common.machine.command;
  * 
  * @author Calclavia
  */
-public class CommandRotate extends Command
+public class CommandRotateTo extends Command
 {
 	float targetRotationYaw = 0;
 	float targetRotationPitch = 0;
-	float totalTicks = 0f;
+	int totalTicks = 0;
 
 	@Override
 	public void onTaskStart()
@@ -18,23 +18,24 @@ public class CommandRotate extends Command
 		super.onTaskStart();
 		
 		this.ticks = 0;
+		this.totalTicks = 0;
 
 		if (this.getArg(0) != null)
 		{
-			this.targetRotationYaw = this.tileEntity.rotationYaw + this.getFloatArg(0);
+			this.targetRotationYaw = this.getFloatArg(0);
 		}
 		else
 		{
-			this.targetRotationYaw = this.tileEntity.rotationYaw + 90;
+			this.targetRotationYaw = 0;
 		}
 		
 		if (this.getArg(1) != null)
 		{
-			this.targetRotationPitch = this.tileEntity.rotationPitch + this.getFloatArg(1);
+			this.targetRotationPitch = this.getFloatArg(1);
 		}
 		else
 		{
-			this.targetRotationPitch = this.tileEntity.rotationPitch;
+			this.targetRotationPitch = 0;
 		}
 
 		while (this.targetRotationYaw >= 360)
@@ -46,18 +47,18 @@ public class CommandRotate extends Command
 			this.targetRotationYaw += 360;
 		}
 		
-		if (this.targetRotationPitch >= 60)
+		if (this.targetRotationPitch > 60)
 		{
 			this.targetRotationPitch = 60;
 		}
-		if (this.targetRotationPitch <= 0)
+		if (this.targetRotationPitch < 0)
 		{
 			this.targetRotationPitch = 0;
 		}
 		
-		float totalTicksYaw = Math.abs(this.targetRotationYaw - this.tileEntity.rotationYaw) / this.tileEntity.ROTATION_SPEED;
-		float totalTicksPitch = Math.abs(this.targetRotationPitch - this.tileEntity.rotationPitch) / this.tileEntity.ROTATION_SPEED;
-		this.totalTicks = Math.max(totalTicksYaw, totalTicksPitch);
+		int totalTicksYaw = (int) (Math.abs(this.targetRotationYaw - this.tileEntity.renderYaw) / this.tileEntity.ROTATION_SPEED);
+		int totalTicksPitch = (int) (Math.abs(this.targetRotationPitch - this.tileEntity.renderPitch) / this.tileEntity.ROTATION_SPEED);
+		this.totalTicks = (int) Math.max(totalTicksYaw, totalTicksPitch);
 	}
 
 	@Override
@@ -97,5 +98,11 @@ public class CommandRotate extends Command
 		}
 
 		return false;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return "ROTATETO " + Float.toString(this.targetRotationYaw) + " " + Float.toString(this.targetRotationPitch);
 	}
 }

@@ -46,4 +46,10 @@ public class CommandUse extends Command
 		
 		return true;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "USE " + Integer.toString(this.times);
+	}
 }

@@ -1,5 +1,7 @@
 package assemblyline.common.machine.command;
 
+import assemblyline.common.machine.armbot.TileEntityArmbot;
+
 /**
  * This task resets all previous tasks and does them again in a loop.
  * 
@@ -42,10 +44,25 @@ public class CommandRepeat extends Command
 			}
 			else
 			{
-				this.commandManager.setCurrentTask(-1);
+				this.commandManager.setCurrentTask(-2);
 				return;
 			}
 		}
 		this.initialized = false;
+	}
+	
+	@Override
+	public String toString()
+	{
+		int cmdToTest = 0;
+		if (this.tasksToRepeat > 0)
+		{
+			cmdToTest = this.commandManager.getCurrentTask() - this.tasksToRepeat;
+		}
+		if (this.commandManager.hasTasks() && this.commandManager.getCurrentTask() >= 0 && this.commandManager.getCurrentTask() < this.commandManager.getCommands().size())
+		{
+			return this.commandManager.getCommands().get(cmdToTest).toString();
+		}
+		return "REPEAT " + Integer.toString(this.tasksToRepeat) + " " + ((this.numReps > 0) ? Integer.toString(this.numReps) : "");
 	}
 }

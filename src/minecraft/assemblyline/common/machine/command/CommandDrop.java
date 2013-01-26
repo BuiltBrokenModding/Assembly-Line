@@ -30,4 +30,10 @@ public class CommandDrop extends Command
 		this.tileEntity.grabbedEntities.clear();
 		return false;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "DROP";
+	}
 }
