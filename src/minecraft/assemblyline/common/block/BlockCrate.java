@@ -5,13 +5,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.prefab.BlockMachine;
-import assemblyline.api.IFilterable;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.TabAssemblyLine;
-import assemblyline.common.machine.imprinter.ItemImprinter;
 
 /**
  * A block that allows the placement of mass amount of a specific item within it. It will be allowed
@@ -36,59 +33,48 @@ public class BlockCrate extends BlockMachine
 	@Override
 	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
 	{
+
 		if (world.getBlockTileEntity(x, y, z) instanceof TileEntityCrate)
 		{
 			TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
 
-			if (side == ForgeDirection.UP.ordinal())
+			/**
+			 * Make double clicking input all stacks.
+			 */
+			boolean allMode = false;
+
+			if (world.getWorldTime() - tileEntity.prevClickTime < 10)
 			{
-				if (tileEntity != null)
+				allMode = true;
+			}
+
+			tileEntity.prevClickTime = world.getWorldTime();
+
+			if (side == 1 || (side > 1 && hitY > 0.5))
+			{
+				if (allMode)
 				{
-					if (tileEntity instanceof IFilterable)
-					{
-						ItemStack containingStack = ((IFilterable) tileEntity).getFilter();
-
-						if (containingStack != null)
-						{
-							if (!world.isRemote)
-							{
-								EntityItem dropStack = new EntityItem(world, player.posX, player.posY, player.posZ, containingStack);
-								dropStack.delayBeforeCanPickup = 0;
-								world.spawnEntityInWorld(dropStack);
-							}
-
-							((IFilterable) tileEntity).setFilter(null);
-							return true;
-						}
-						else
-						{
-							if (player.getCurrentEquippedItem() != null)
-							{
-								if (player.getCurrentEquippedItem().getItem() instanceof ItemImprinter)
-								{
-									((IFilterable) tileEntity).setFilter(player.getCurrentEquippedItem());
-									player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
-									return true;
-								}
-							}
-						}
-
-					}
+					this.insertAllItems(tileEntity, player);
+				}
+				else
+				{
+					this.insertCurrentItem(tileEntity, player);
 				}
 			}
-
-			if (side > 1 && hitY > 0.7)
+			else if (side == 0 || (side > 1 && hitY <= 0.5))
 			{
-				return this.insertAllItems(tileEntity, player);
+				if (allMode)
+				{
+					this.ejectItems(tileEntity, player, TileEntityCrate.MAX_LIMIT);
+				}
+				else
+				{
+					this.ejectItems(tileEntity, player, 64);
+				}
 			}
-			else
-			{
-				return this.insertCurrentItem(tileEntity, player);
-			}
-
 		}
 
-		return false;
+		return true;
 	}
 
 	@Override
@@ -124,6 +110,11 @@ public class BlockCrate extends BlockMachine
 	public boolean insertAllItems(TileEntityCrate tileEntity, EntityPlayer player)
 	{
 		ItemStack requestStack = player.getCurrentEquippedItem();
+
+		if (requestStack == null && tileEntity.getStackInSlot(0) != null)
+		{
+			requestStack = tileEntity.getStackInSlot(0).copy();
+		}
 
 		if (requestStack != null)
 		{
@@ -236,32 +227,6 @@ public class BlockCrate extends BlockMachine
 		if (itemStack.stackSize <= 0) { return null; }
 
 		return itemStack;
-	}
-
-	/**
-	 * Drops the crate as a block that stores items within it.
-	 */
-	@Override
-	public boolean onSneakMachineActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
-	{
-		if (world.getBlockTileEntity(x, y, z) != null)
-		{
-			TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
-
-			if (player.getCurrentEquippedItem() == null)
-			{
-				/**
-				 * Eject all items if clicked on the top 30% of the block.
-				 */
-				if (side > 1 && hitY > 0.7)
-				{
-					return this.ejectItems(tileEntity, player, TileEntityCrate.MAX_LIMIT);
-				}
-				else if (side != ForgeDirection.UP.ordinal()) { return this.ejectItems(tileEntity, player, 64); }
-			}
-		}
-
-		return false;
 	}
 
 	@Override
