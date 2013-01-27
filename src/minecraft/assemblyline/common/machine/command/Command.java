@@ -167,18 +167,14 @@ public abstract class Command
 		return 0.0f;
 	}
 
+	public void readFromNBT(NBTTagCompound taskCompound)
+	{
+		this.ticks = taskCompound.getInteger("ticks");
+	}
+
 	public void writeToNBT(NBTTagCompound taskCompound)
 	{
-		NBTTagCompound tileEntityNBT = new NBTTagCompound();
-		this.tileEntity.writeToNBT(tileEntityNBT);
-		taskCompound.setCompoundTag("tileEntity", tileEntityNBT);
 		taskCompound.setInteger("ticks", this.ticks);
-		NBTTagList parList = new NBTTagList();
-		for (String parameter : this.parameters)
-		{
-			parList.appendTag(new NBTTagString(parameter));
-		}
-		taskCompound.setTag("parameters", parList);
 	}
 	
 	@Override

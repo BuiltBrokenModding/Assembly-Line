@@ -28,20 +28,9 @@ public class RenderArmbot extends TileEntitySpecialRenderer
 	{
 		if (tileEntity instanceof TileEntityArmbot)
 		{
-			Command curCommand = ((TileEntityArmbot) tileEntity).getCurrentCommand();
-			if (curCommand != null)
-			{
-				EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-				MovingObjectPosition objectPosition = player.rayTrace(8, 1);
-
-				if (objectPosition != null)
-				{
-					if (objectPosition.blockX == tileEntity.xCoord && (objectPosition.blockY == tileEntity.yCoord || objectPosition.blockY == tileEntity.yCoord + 1) && objectPosition.blockZ == tileEntity.zCoord)
-					{
-						RenderHelper.renderFloatingText(curCommand.toString(), (float) x + 0.5f, ((float) y) + 0.25f, (float) z + 0.5f, 0xFFFFFF);
-					}
-				}
-			}
+			String cmdText = ((TileEntityArmbot) tileEntity).getCommandDisplayText();
+			if (cmdText != null && !cmdText.isEmpty())
+				RenderHelper.renderFloatingText(cmdText, (float) x + 0.5f, ((float) y) + 0.25f, (float) z + 0.5f, 0xFFFFFF);
 
 			this.bindTextureByName(AssemblyLine.TEXTURE_PATH + TEXTURE);
 			GL11.glPushMatrix();

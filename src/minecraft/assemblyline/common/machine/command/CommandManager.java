@@ -5,16 +5,18 @@ import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
+import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.armbot.TileEntityArmbot;
 import cpw.mods.fml.common.FMLLog;
 
 public class CommandManager
 {
-	private final List<Command> tasks = new ArrayList<Command>();
+	private final List<Command>	tasks		= new ArrayList<Command>();
 
-	private int ticks = 0;
-	private int currentTask = 0;
-	private int lastTask = -1;
+	private int					ticks		= 0;
+	private int					currentTask	= 0;
+	private int					lastTask	= -1;
 
 	/**
 	 * Must be called every tick by a tileEntity.
@@ -98,8 +100,7 @@ public class CommandManager
 	}
 
 	/**
-	 * Used to register Tasks for a TileEntity, executes onTaskStart for the Task after registering
-	 * it
+	 * Used to register Tasks for a TileEntity, executes onTaskStart for the Task after registering it
 	 * 
 	 * @param tileEntity TE instance to register the task for
 	 * @param newCommand Task instance to register
@@ -153,14 +154,73 @@ public class CommandManager
 		return this.currentTask;
 	}
 
+	public void readFromNBT(TileEntityArmbot tileEntity, NBTTagCompound nbt)
+	{
+		this.currentTask = nbt.getInteger("curTasks");
+		this.lastTask = nbt.getInteger("lastTask");
+		this.ticks = nbt.getInteger("ticks");
+		if (nbt.getInteger("numTasks") > 0)
+		{
+			NBTTagList taskList = nbt.getTagList("commands");
+			for (int i = 0; i < taskList.tagCount(); i++)
+			{
+				NBTTagCompound cmdTag = (NBTTagCompound) taskList.tagAt(i);
+				try
+				{
+					Class cmdClass = Class.forName(cmdTag.getString("commandClass"));
+					ArrayList<String> pars = new ArrayList<String>();
+					if (cmdTag.getInteger("numParameters") > 0)
+					{
+						NBTTagList parameters = cmdTag.getTagList("parameters");
+						for (int ii = 0; ii < parameters.tagCount(); ii++)
+						{
+							pars.add(((NBTTagString) parameters.tagAt(ii)).data);
+						}
+					}
+					Command cmd = getNewCommand(tileEntity, cmdClass, pars.toArray(new String[] {}));
+					cmd.readFromNBT((NBTTagCompound) cmdTag.getTag("customData"));
+				}
+				catch (ClassNotFoundException e)
+				{
+					System.out.println("Error loading CommandManger: ");
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
 	public void writeToNBT(NBTTagCompound nbt)
 	{
-		NBTTagList taskList = new NBTTagList();
-		for (int i = 0; i < this.tasks.size(); i++)
+		nbt.setInteger("numTasks", this.tasks.size());
+		if (this.tasks.size() > 0)
 		{
-			NBTTagCompound taskCompound = new NBTTagCompound();
-			this.tasks.get(i).writeToNBT(taskCompound);
-			taskList.appendTag(taskCompound);
+			NBTTagList taskList = new NBTTagList("tasks");
+			for (int i = 0; i < this.tasks.size(); i++)
+			{
+				NBTTagCompound taskCompound = new NBTTagCompound("taskCompound");
+				String cmdName = this.tasks.get(i).getClass().getName();
+				if (cmdName != null && !cmdName.isEmpty())
+					taskCompound.setString("commandClass", cmdName);
+				if (this.tasks.get(i).getArgs().length > 0)
+				{
+					NBTTagList parameters = new NBTTagList("parameters");
+					for (String par : this.tasks.get(i).getArgs())
+					{
+						if (par != null && !par.isEmpty())
+							parameters.appendTag(new NBTTagString("parameter", par));
+					}
+					taskCompound.setTag("parameters", parameters);
+				}
+				taskCompound.setInteger("numParameters", this.tasks.get(i).getArgs().length);
+				NBTTagCompound customData = new NBTTagCompound("customData");
+				this.tasks.get(i).writeToNBT(customData);
+				taskCompound.setCompoundTag("customData", customData);
+				taskList.appendTag(taskCompound);
+			}
+			nbt.setTag("commands", taskList);
 		}
+		nbt.setInteger("curTask", this.currentTask);
+		nbt.setInteger("lastTask", this.lastTask);
+		nbt.setInteger("ticks", this.ticks);
 	}
 }

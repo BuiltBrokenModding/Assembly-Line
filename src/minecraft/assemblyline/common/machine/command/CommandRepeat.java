@@ -1,5 +1,6 @@
 package assemblyline.common.machine.command;
 
+import net.minecraft.nbt.NBTTagCompound;
 import assemblyline.common.machine.armbot.TileEntityArmbot;
 
 /**
@@ -49,6 +50,26 @@ public class CommandRepeat extends Command
 			}
 		}
 		this.initialized = false;
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound taskCompound)
+	{
+		super.readFromNBT(taskCompound);
+		this.initialized = taskCompound.getBoolean("repInitialized");
+		this.tasksToRepeat = taskCompound.getInteger("repTasks");
+		this.curReps = taskCompound.getInteger("repCur");
+		this.numReps = taskCompound.getInteger("repGoal");
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound taskCompound)
+	{
+		super.writeToNBT(taskCompound);
+		taskCompound.setBoolean("repInitialized", this.initialized);
+		taskCompound.setInteger("repTasks", this.tasksToRepeat);
+		taskCompound.setInteger("repCur", this.curReps);
+		taskCompound.setInteger("repGoal", this.numReps);
 	}
 	
 	@Override

@@ -1,6 +1,7 @@
 package assemblyline.common.machine.command;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import assemblyline.api.IArmbotUseable;
 
@@ -51,5 +52,21 @@ public class CommandUse extends Command
 	public String toString()
 	{
 		return "USE " + Integer.toString(this.times);
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound taskCompound)
+	{
+		super.readFromNBT(taskCompound);
+		this.times = taskCompound.getInteger("useTimes");
+		this.curTimes = taskCompound.getInteger("useCurTimes");
+	}
+	
+	@Override
+	public void writeToNBT(NBTTagCompound taskCompound)
+	{
+		super.writeToNBT(taskCompound);
+		taskCompound.setInteger("useTimes", this.times);
+		taskCompound.setInteger("useCurTimes", this.curTimes);
 	}
 }

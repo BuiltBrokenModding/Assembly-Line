@@ -7,6 +7,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import universalelectricity.core.vector.Vector3;
 
 public class CommandFire extends Command
@@ -23,13 +24,13 @@ public class CommandFire extends Command
 	public void onTaskStart()
 	{
 		super.onTaskStart();
-		
+
 		this.velocity = this.getFloatArg(0);
 		if (this.velocity > 2.5f)
 			this.velocity = 2.5f;
 		if (this.velocity < 0.125f)
 			this.velocity = 1f;
-		
+
 		this.actualYaw = this.tileEntity.rotationYaw;
 		this.actualPitch = ((MAX_ACTUAL_PITCH - MIN_ACTUAL_PITCH) * (this.tileEntity.rotationPitch / 60f)) + MIN_ACTUAL_PITCH;
 
@@ -114,7 +115,35 @@ public class CommandFire extends Command
 
 		return false;
 	}
-	
+
+	@Override
+	public void readFromNBT(NBTTagCompound taskCompound)
+	{
+		super.readFromNBT(taskCompound);
+		this.actualYaw = taskCompound.getFloat("fireYaw");
+		this.actualPitch = taskCompound.getFloat("firePitch");
+		this.velocity = taskCompound.getFloat("fireVelocity");
+		this.finalVelocity = new Vector3();
+		this.finalVelocity.x = taskCompound.getDouble("fireVectorX");
+		this.finalVelocity.y = taskCompound.getDouble("fireVectorY");
+		this.finalVelocity.z = taskCompound.getDouble("fireVectorZ");
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound taskCompound)
+	{
+		super.writeToNBT(taskCompound);
+		taskCompound.setFloat("fireYaw", this.actualYaw);
+		taskCompound.setFloat("firePitch", this.actualPitch);
+		taskCompound.setFloat("fireVelocity", this.velocity);
+		if (this.finalVelocity != null)
+		{
+			taskCompound.setDouble("fireVectorX", this.finalVelocity.x);
+			taskCompound.setDouble("fireVectorY", this.finalVelocity.y);
+			taskCompound.setDouble("fireVectorZ", this.finalVelocity.z);
+		}
+	}
+
 	@Override
 	public String toString()
 	{

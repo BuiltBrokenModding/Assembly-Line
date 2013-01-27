@@ -1,5 +1,7 @@
 package assemblyline.common.machine.command;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 public class CommandIdle extends Command
 {
 	/**
@@ -33,6 +35,22 @@ public class CommandIdle extends Command
 		}
 
 		return false;
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound taskCompound)
+	{
+		super.readFromNBT(taskCompound);
+		this.idleTime = taskCompound.getInteger("idleTime");
+		this.totalIdleTime = taskCompound.getInteger("idleTotal");
+	}
+	
+	@Override
+	public void writeToNBT(NBTTagCompound taskCompound)
+	{
+		super.writeToNBT(taskCompound);
+		taskCompound.setInteger("idleTime", this.idleTime);
+		taskCompound.setInteger("idleTotal", this.totalIdleTime);
 	}
 	
 	@Override

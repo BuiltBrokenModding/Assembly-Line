@@ -1,5 +1,7 @@
 package assemblyline.common.machine.command;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 /**
  * Rotates the armbot to a specific direction. If not specified, it will turn right.
  * 
@@ -84,8 +86,26 @@ public class CommandRotateBy extends Command
 			this.tileEntity.rotationPitch = this.targetRotationPitch;
 
 		if (this.ticks < this.totalTicks) { return true; }
+		if (Math.abs(this.tileEntity.renderPitch - this.tileEntity.rotationPitch) > 0.001f) { return true; }
+		if (Math.abs(this.tileEntity.renderYaw - this.tileEntity.rotationYaw) > 0.001f) { return true; }
 
 		return false;
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound taskCompound)
+	{
+		super.readFromNBT(taskCompound);
+		this.targetRotationPitch = taskCompound.getFloat("rotPitch");
+		this.targetRotationYaw = taskCompound.getFloat("rotYaw");
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound taskCompound)
+	{
+		super.writeToNBT(taskCompound);
+		taskCompound.setFloat("rotPitch", this.targetRotationPitch);
+		taskCompound.setFloat("rotYaw", this.targetRotationYaw);
 	}
 	
 	@Override
