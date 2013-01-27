@@ -55,9 +55,10 @@ public class AssemblyLine
 
 	public static final String CHANNEL = "AssemblyLine";
 
-	public static final String RESOURCE_PATH = "/assemblyline/";
-	public static final String TEXTURE_PATH = RESOURCE_PATH + "textures/";
-	public static final String LANGUAGE_PATH = RESOURCE_PATH + "language/";
+	public static final String DIRECTORY_NO_SLASH = "assemblyline/";
+	public static final String DIRECTORY = "/" + DIRECTORY_NO_SLASH;
+	public static final String TEXTURE_PATH = DIRECTORY + "textures/";
+	public static final String LANGUAGE_PATH = DIRECTORY + "language/";
 	public static final String BLOCK_TEXTURE_PATH = TEXTURE_PATH + "blocks.png";
 	public static final String ITEM_TEXTURE_PATH = TEXTURE_PATH + "items.png";
 
@@ -156,8 +157,6 @@ public class AssemblyLine
 
 		// Manipulator
 		GameRegistry.addRecipe(new ShapelessOreRecipe(blockManipulator, new Object[] { Block.dispenser, "basicCircuit" }));
-
-		UETab.setItemStack(new ItemStack(blockConveyorBelt));
 	}
 
 	public static void printSidedData(String data)

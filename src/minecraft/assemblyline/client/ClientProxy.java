@@ -15,7 +15,6 @@ import assemblyline.client.render.RenderCrate;
 import assemblyline.client.render.RenderDetector;
 import assemblyline.client.render.RenderManipulator;
 import assemblyline.client.render.RenderRejector;
-import assemblyline.client.sound.SoundManager;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.CommonProxy;
 import assemblyline.common.block.TileEntityCrate;
@@ -38,7 +37,7 @@ public class ClientProxy extends CommonProxy
 		MinecraftForgeClient.preloadTexture(AssemblyLine.BLOCK_TEXTURE_PATH);
 		MinecraftForgeClient.preloadTexture(AssemblyLine.ITEM_TEXTURE_PATH);
 		RenderingRegistry.registerBlockHandler(new BlockRenderingHandler());
-		MinecraftForge.EVENT_BUS.register(new SoundManager());
+		MinecraftForge.EVENT_BUS.register(SoundManager.INSTANCE);
 	}
 
 	@Override

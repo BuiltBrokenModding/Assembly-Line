@@ -6,7 +6,6 @@ import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.armbot.TileEntityArmbot;
 import cpw.mods.fml.common.FMLLog;
 

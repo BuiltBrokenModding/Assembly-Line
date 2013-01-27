@@ -1,7 +1,6 @@
 package assemblyline.common.machine.command;
 
 import net.minecraft.nbt.NBTTagCompound;
-import assemblyline.common.machine.armbot.TileEntityArmbot;
 
 /**
  * This task resets all previous tasks and does them again in a loop.

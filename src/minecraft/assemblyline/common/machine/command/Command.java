@@ -3,8 +3,6 @@ package assemblyline.common.machine.command;
 import java.util.HashMap;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.world.World;
 import assemblyline.common.machine.armbot.TileEntityArmbot;
 

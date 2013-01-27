@@ -16,7 +16,6 @@ import universalelectricity.core.vector.Vector3;
 import assemblyline.client.model.ModelArmbot;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.armbot.TileEntityArmbot;
-import assemblyline.common.machine.command.Command;
 
 public class RenderArmbot extends TileEntitySpecialRenderer
 {
