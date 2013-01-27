@@ -37,7 +37,7 @@ public class ClientProxy extends CommonProxy
 		MinecraftForgeClient.preloadTexture(AssemblyLine.BLOCK_TEXTURE_PATH);
 		MinecraftForgeClient.preloadTexture(AssemblyLine.ITEM_TEXTURE_PATH);
 		RenderingRegistry.registerBlockHandler(new BlockRenderingHandler());
-		MinecraftForge.EVENT_BUS.register(SoundManager.INSTANCE);
+		MinecraftForge.EVENT_BUS.register(SoundHandler.INSTANCE);
 	}
 
 	@Override

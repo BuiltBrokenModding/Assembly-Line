@@ -6,9 +6,9 @@ import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.event.ForgeSubscribe;
 import assemblyline.common.AssemblyLine;
 
-public class SoundManager
+public class SoundHandler
 {
-	public static final SoundManager INSTANCE = new SoundManager();
+	public static final SoundHandler INSTANCE = new SoundHandler();
 
 	public static final String[] SOUND_FILES = { "conveyor.ogg" };
 
@@ -18,8 +18,7 @@ public class SoundManager
 		for (int i = 0; i < SOUND_FILES.length; i++)
 		{
 			URL url = this.getClass().getResource(AssemblyLine.DIRECTORY + SOUND_FILES[i]);
-
-			event.manager.soundPoolSounds.addSound(AssemblyLine.DIRECTORY + SOUND_FILES[i], url);
+			event.manager.soundPoolSounds.addSound(AssemblyLine.DIRECTORY_NO_SLASH + SOUND_FILES[i], url);
 
 			if (url == null)
 			{
