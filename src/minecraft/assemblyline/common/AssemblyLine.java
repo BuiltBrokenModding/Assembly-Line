@@ -129,7 +129,7 @@ public class AssemblyLine
 		System.out.println(NAME + " Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
 
 		// Armbot
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockArmbot, new Object[] { "II ", " I ", "SCS", 'S', "plateSteel", 'C', "advancedCircuit", 'I', "ingotSteel" }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockArmbot, new Object[] { "II ", "SIS", "MCM", 'S', "plateSteel", 'C', "advancedCircuit", 'I', "ingotSteel", 'M', "motor" }));
 
 		// Disk
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemDisk, new Object[] { "III", "ICI", "III", 'I', itemImprint, 'C', "advancedCircuit" }));
