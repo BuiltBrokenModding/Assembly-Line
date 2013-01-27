@@ -30,13 +30,34 @@ public class RenderArmbot extends TileEntitySpecialRenderer
 		{
 			String cmdText = ((TileEntityArmbot) tileEntity).getCommandDisplayText();
 			if (cmdText != null && !cmdText.isEmpty())
-				RenderHelper.renderFloatingText(cmdText, (float) x + 0.5f, ((float) y) + 0.25f, (float) z + 0.5f, 0xFFFFFF);
+			{
+				EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+				MovingObjectPosition objectPosition = player.rayTrace(8, 1);
+
+				if (objectPosition != null)
+				{
+					if (objectPosition.blockX == tileEntity.xCoord && (objectPosition.blockY == tileEntity.yCoord || objectPosition.blockY == tileEntity.yCoord + 1) && objectPosition.blockZ == tileEntity.zCoord)
+					{
+						RenderHelper.renderFloatingText(cmdText, (float) x + 0.5f, ((float) y) + 0.25f, (float) z + 0.5f, 0xFFFFFF);
+					}
+				}
+			}
 
 			this.bindTextureByName(AssemblyLine.TEXTURE_PATH + TEXTURE);
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 			GL11.glScalef(1.0F, -1F, -1F);
+			
 			MODEL.render(0.0625f, ((TileEntityArmbot) tileEntity).renderYaw, ((TileEntityArmbot) tileEntity).renderPitch);
+			
+			//debug render
+			/*GL11.glEnable(GL11.GL_BLEND);
+			GL11.glEnable(GL11.GL_ALPHA_TEST);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GL11.glColor4f(1f, 1f, 1f, 0.25f);
+			MODEL.render(0.0625f, ((TileEntityArmbot) tileEntity).rotationYaw, ((TileEntityArmbot) tileEntity).rotationPitch);
+			GL11.glColor4f(1f, 1f, 1f, 1f);*/
+			
 			Vector3 handPos = ((TileEntityArmbot) tileEntity).getHandPosition();
 			handPos.subtract(new Vector3(tileEntity));
 			GL11.glPushMatrix();

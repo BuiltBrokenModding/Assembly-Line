@@ -39,8 +39,14 @@ public class CommandRotateTo extends Command
 			this.targetRotationPitch = 0;
 		}
 
-		this.targetRotationYaw = this.targetRotationYaw % 360;
-		this.targetRotationPitch = this.targetRotationPitch % 60;
+		while (this.targetRotationYaw < 0)
+			this.targetRotationYaw += 360;
+		while (this.targetRotationYaw > 360)
+			this.targetRotationYaw -= 360;
+		while (this.targetRotationPitch < 0)
+			this.targetRotationPitch += 60;
+		while (this.targetRotationPitch > 60)
+			this.targetRotationPitch -= 60;
 
 		int totalTicksYaw = (int) (Math.abs(this.targetRotationYaw - this.tileEntity.renderYaw) / this.tileEntity.ROTATION_SPEED);
 		int totalTicksPitch = (int) (Math.abs(this.targetRotationPitch - this.tileEntity.renderPitch) / this.tileEntity.ROTATION_SPEED);
@@ -60,12 +66,12 @@ public class CommandRotateTo extends Command
 		// set the rotation to the target immediately and let the client handle animating it
 		// wait for the client to catch up
 
-		if (Math.abs(this.tileEntity.rotationYaw - this.targetRotationYaw) > 0.001f)
-			this.tileEntity.rotationYaw = this.targetRotationYaw;
-		if (Math.abs(this.tileEntity.rotationPitch - this.targetRotationPitch) > 0.001f)
-			this.tileEntity.rotationPitch = this.targetRotationPitch;
+		this.tileEntity.rotationYaw = this.targetRotationYaw;
+		this.tileEntity.rotationPitch = this.targetRotationPitch;
 
 		if (this.ticks < this.totalTicks) { return true; }
+		if (Math.abs(this.tileEntity.renderPitch - this.tileEntity.rotationPitch) > 0.001f) { return true; }
+		if (Math.abs(this.tileEntity.renderYaw - this.tileEntity.rotationYaw) > 0.001f) { return true; }
 
 		return false;
 	}

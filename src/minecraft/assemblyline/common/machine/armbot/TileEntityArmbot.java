@@ -146,25 +146,36 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 					this.commandManager.setCurrentTask(0);
 				}
 			}
-			this.commandManager.onUpdate();
-			
-			if (this.worldObj.isRemote)
-			{
-				this.displayText = "";
-				Command curCommand = this.getCurrentCommand();
-				if (curCommand != null)
-				{
-					this.displayText = curCommand.toString(); 
-				}
-			}
-			
+			if (!this.worldObj.isRemote)
+				this.commandManager.onUpdate();
+
 			this.ticksSincePower = 0;
 		}
 		else
 		{
 			this.ticksSincePower++;
-			if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && ticksSincePower < 20)
-				this.commandManager.onUpdate();
+		}
+
+		if (!this.worldObj.isRemote)
+		{
+			if (!this.commandManager.hasTasks())
+			{
+				this.displayText = "";
+			}
+			else
+			{
+				try
+				{
+					Command curCommand = this.commandManager.getCommands().get(this.commandManager.getCurrentTask());
+					if (curCommand != null)
+					{
+						this.displayText = curCommand.toString();
+					}
+				}
+				catch (Exception ex)
+				{
+				}
+			}
 		}
 
 		for (Entity entity : this.grabbedEntities)
@@ -184,53 +195,32 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			}
 		}
 
-		// keep it within 0 - 360 degrees so ROTATE commands work properly
-		if (this.rotationPitch < 0)
-		{
-			this.rotationPitch = 0;
-		}
-		if (this.rotationPitch > 135)
-		{
-			this.rotationPitch = 135;
-		}
-		if (this.rotationYaw <= -360)
-		{
-			this.rotationYaw += 360;
-		}
-		if (this.rotationYaw >= 360)
-		{
-			this.rotationYaw -= 360;
-		}
-
+		// System.out.println("Ren: " + this.renderYaw + "; Rot: " + this.rotationYaw);
 		if (Math.abs(this.renderYaw - this.rotationYaw) > 0.001f)
 		{
 			float speedYaw;
 			if (this.renderYaw > this.rotationYaw)
 			{
-				if (Math.abs(this.renderYaw - this.rotationYaw) > 180)
+				if (Math.abs(this.renderYaw - this.rotationYaw) >= 180)
 					speedYaw = this.ROTATION_SPEED;
 				else
 					speedYaw = -this.ROTATION_SPEED;
 			}
-			else if (Math.abs(this.renderYaw - this.rotationYaw) > 180)
-				speedYaw = -this.ROTATION_SPEED;
 			else
-				speedYaw = this.ROTATION_SPEED;
+			{
+				if (Math.abs(this.renderYaw - this.rotationYaw) >= 180)
+					speedYaw = -this.ROTATION_SPEED;
+				else
+					speedYaw = this.ROTATION_SPEED;
+			}
 
 			this.renderYaw += speedYaw;
-			for (Entity e : (ArrayList<Entity>) this.worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord + 2, this.zCoord, this.xCoord + 1, this.yCoord + 3, this.zCoord + 1)))
-			{
-				e.rotationYaw += speedYaw;
-			}
 
-			if (this.renderYaw <= -360)
-			{
+			// keep it within 0 - 360 degrees so ROTATE commands work properly
+			while (this.renderYaw < 0)
 				this.renderYaw += 360;
-			}
-			if (this.renderYaw >= 360)
-			{
+			while (this.renderYaw > 360)
 				this.renderYaw -= 360;
-			}
 
 			if (this.ticks % 5 == 0 && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) // sound is 0.25 seconds long (20 ticks/second)
 				this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "assemblyline.conveyor", 2f, 1.7f, true);
@@ -239,9 +229,10 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			{
 				this.renderYaw = this.rotationYaw;
 			}
-			if (Math.abs(this.renderYaw - this.rotationYaw) > 720f) // something's wrong!
+
+			for (Entity e : (ArrayList<Entity>) this.worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord + 2, this.zCoord, this.xCoord + 1, this.yCoord + 3, this.zCoord + 1)))
 			{
-				this.renderYaw = this.rotationYaw;
+				e.rotationYaw = this.renderYaw;
 			}
 		}
 
@@ -250,26 +241,19 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			float speedPitch;
 			if (this.renderPitch > this.rotationPitch)
 			{
-				if (Math.abs(this.renderPitch - this.rotationPitch) > 180)
-					speedPitch = this.ROTATION_SPEED;
-				else
-					speedPitch = -this.ROTATION_SPEED;
-			}
-			else if (Math.abs(this.renderPitch - this.rotationPitch) > 180)
 				speedPitch = -this.ROTATION_SPEED;
+			}
 			else
+			{
 				speedPitch = this.ROTATION_SPEED;
+			}
 
 			this.renderPitch += speedPitch;
 
-			if (this.renderPitch <= 0)
-			{
-				this.renderPitch = 0;
-			}
-			if (this.renderPitch >= 60)
-			{
-				this.renderPitch = 60;
-			}
+			while (this.renderPitch < 0)
+				this.renderPitch += 60;
+			while (this.renderPitch > 60)
+				this.renderPitch -= 60;
 
 			if (this.ticks % 4 == 0 && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) // sound is 0.25 seconds long (20 ticks/second)
 				this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "assemblyline.conveyor", 2f, 2.5f, true);
@@ -278,11 +262,21 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			{
 				this.renderPitch = this.rotationPitch;
 			}
-			if (Math.abs(this.renderPitch - this.rotationPitch) > 270f) // something's wrong!
+
+			for (Entity e : (ArrayList<Entity>) this.worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord + 2, this.zCoord, this.xCoord + 1, this.yCoord + 3, this.zCoord + 1)))
 			{
-				this.renderPitch = this.rotationPitch;
+				e.rotationPitch = this.renderPitch;
 			}
 		}
+
+		while (this.rotationYaw < 0)
+			this.rotationYaw += 360;
+		while (this.rotationYaw > 360)
+			this.rotationYaw -= 360;
+		while (this.rotationPitch < 0)
+			this.rotationPitch += 60;
+		while (this.rotationPitch > 60)
+			this.rotationPitch -= 60;
 
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && this.ticks % 20 == 0)
 		{
@@ -456,6 +450,11 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		this.playerUsing--;
 	}
 
+	public String getCommandDisplayText()
+	{
+		return this.displayText;
+	}
+
 	/**
 	 * NBT Data
 	 */
@@ -478,6 +477,9 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		this.rotationYaw = nbt.getFloat("yaw");
 		this.rotationPitch = nbt.getFloat("pitch");
 
+		if (this.worldObj.isRemote)
+			this.displayText = nbt.getString("cmdText");
+
 		/*
 		 * NBTTagCompound cmdManager = nbt.getCompoundTag("cmdManager"); this.commandManager.readFromNBT(this, cmdManager);
 		 */
@@ -494,11 +496,6 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				this.grabbedEntities.add(entity);
 			}
 		}
-	}
-
-	public String getCommandDisplayText()
-	{
-		return displayText;
 	}
 
 	/**
@@ -524,15 +521,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		 * NBTTagCompound cmdManager = new NBTTagCompound("cmdManager"); this.commandManager.writeToNBT(cmdManager); nbt.setCompoundTag("cmdManager", cmdManager);
 		 */
 
-		Command curCommand = this.getCurrentCommand();
-		if (curCommand != null)
-		{
-			nbt.setString("cmdText", curCommand.toString());
-		}
-		else
-		{
-			nbt.setString("cmdText", "");
-		}
+		nbt.setString("cmdText", this.displayText);
 
 		nbt.setInteger("curTask", this.commandManager.getCurrentTask());
 
@@ -682,7 +671,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	@Override
 	public String[] getMethodNames()
 	{
-		return new String[] { "rotateBy", "rotateTo", "grab", "drop", "reset", "isWorking", "touchingEntity", "use", "fire" };
+		return new String[] { "rotateBy", "rotateTo", "grab", "drop", "reset", "isWorking", "touchingEntity", "use", "fire", "return", "clear", "isHolding" };
 	}
 
 	@Override
@@ -746,7 +735,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				this.addCommand(CommandDrop.class);
 				break;
 			}
-			case 4: // reset: clears the queue and calls the RETURN command
+			case 4: // reset: equivalent to calling .clear() then .return()
 			{
 				this.commandManager.clear();
 				this.addCommand(CommandReturn.class);
@@ -815,6 +804,20 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 					this.addCommand(CommandFire.class);
 				}
 				break;
+			}
+			case 9: // return: returns to home position
+			{
+				this.addCommand(CommandReturn.class);
+				break;
+			}
+			case 10: // clear: clears commands
+			{
+				this.commandManager.clear();
+				break;
+			}
+			case 11: // isHolding: returns whether or not it is holding something
+			{
+				return new Object[] { this.grabbedEntities.size() > 0 };
 			}
 		}
 		return null;
