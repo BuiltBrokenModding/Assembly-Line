@@ -15,6 +15,7 @@ import assemblyline.common.machine.TileEntityManipulator;
 import assemblyline.common.machine.TileEntityRejector;
 import assemblyline.common.machine.armbot.TileEntityArmbot;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt;
+import assemblyline.common.machine.crane.TileEntityCraneController;
 import assemblyline.common.machine.detector.TileEntityDetector;
 import assemblyline.common.machine.encoder.ContainerEncoder;
 import assemblyline.common.machine.encoder.TileEntityEncoder;
@@ -26,8 +27,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class CommonProxy implements IGuiHandler
 {
-	public static final int GUI_IMPRINTER = 1;
-	public static final int GUI_ENCODER = 2;
+	public static final int	GUI_IMPRINTER	= 1;
+	public static final int	GUI_ENCODER		= 2;
 
 	public void preInit()
 	{
@@ -43,6 +44,7 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.registerTileEntity(TileEntityDetector.class, "ALDetector");
 		GameRegistry.registerTileEntity(TileEntityEncoder.class, "ALEncoder");
 		GameRegistry.registerTileEntity(TileEntityArmbot.class, "ALArmbot");
+		GameRegistry.registerTileEntity(TileEntityCraneController.class, "ALCraneController");
 		GameRegistry.registerTileEntity(TileEntityImprinter.class, "ALImprinter");
 		GameRegistry.registerTileEntity(TileEntityMulti.class, "ALMulti");
 	}

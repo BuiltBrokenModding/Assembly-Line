@@ -8,9 +8,9 @@ package assemblyline.client.model;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.entity.Entity;
+import net.minecraftforge.common.ForgeDirection;
 
-public class ModelQuarryController extends ModelBase
+public class ModelCraneController extends ModelBase
 {
 	// fields
 	ModelRenderer	Base2;
@@ -23,7 +23,7 @@ public class ModelQuarryController extends ModelBase
 	ModelRenderer	ConnectorTop;
 	ModelRenderer	ConnectorRight;
 
-	public ModelQuarryController()
+	public ModelCraneController()
 	{
 		textureWidth = 128;
 		textureHeight = 64;
@@ -84,19 +84,36 @@ public class ModelQuarryController extends ModelBase
 		setRotation(ConnectorRight, 0F, 0F, 0F);
 	}
 
-	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
+	public void render(float scale)
 	{
-		super.render(entity, f, f1, f2, f3, f4, f5);
-		setRotationAngles(f, f1, f2, f3, f4, f5);
-		Base2.render(f5);
-		Base.render(f5);
-		ConnectorFront.render(f5);
-		Decoration1.render(f5);
-		Decoration2.render(f5);
-		Decoration3.render(f5);
-		Decoration4.render(f5);
-		ConnectorTop.render(f5);
-		ConnectorRight.render(f5);
+		Base2.setRotationPoint(-6F, 12F, -6F);
+		setRotation(Base2, 0F, 0F, 0F);
+		Base.setRotationPoint(-8F, 16F, -8F);
+		setRotation(Base, 0F, 0F, 0F);
+		Decoration1.setRotationPoint(2F, 15F, 6F);
+		setRotation(Decoration1, 0F, 0F, 0F);
+		Decoration2.setRotationPoint(-4F, 15F, 6F);
+		setRotation(Decoration2, 0F, 0F, 0F);
+		Decoration3.setRotationPoint(-7F, 15F, 2F);
+		setRotation(Decoration3, 0F, 0F, 0F);
+		Decoration4.setRotationPoint(-7F, 15F, -4F);
+		setRotation(Decoration4, 0F, 0F, 0F);
+		ConnectorTop.setRotationPoint(-4F, 16F, -4F);
+		setRotation(ConnectorTop, 0F, 0F, -1.570796F);
+		ConnectorFront.setRotationPoint(-4F, 12F, -0.01F);
+		setRotation(ConnectorFront, 0F, 1.570796F, 0F);
+		ConnectorRight.setRotationPoint(0.01F, 12F, -4F);
+		setRotation(ConnectorRight, 0F, 0F, 0F);
+		
+		Base2.render(scale);
+		Base.render(scale);
+		ConnectorFront.render(scale);
+		Decoration1.render(scale);
+		Decoration2.render(scale);
+		Decoration3.render(scale);
+		Decoration4.render(scale);
+		ConnectorTop.render(scale);
+		ConnectorRight.render(scale);
 	}
 
 	private void setRotation(ModelRenderer model, float x, float y, float z)
@@ -104,11 +121,6 @@ public class ModelQuarryController extends ModelBase
 		model.rotateAngleX = x;
 		model.rotateAngleY = y;
 		model.rotateAngleZ = z;
-	}
-
-	public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5)
-	{
-		super.setRotationAngles(f, f1, f2, f3, f4, f5, null);
 	}
 
 }

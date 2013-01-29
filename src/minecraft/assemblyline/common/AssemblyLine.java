@@ -5,14 +5,11 @@ import java.io.File;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.prefab.TranslationHelper;
-import universalelectricity.prefab.UETab;
 import universalelectricity.prefab.UpdateNotifier;
 import universalelectricity.prefab.multiblock.BlockMulti;
 import universalelectricity.prefab.network.PacketManager;
@@ -22,6 +19,7 @@ import assemblyline.common.machine.BlockManipulator;
 import assemblyline.common.machine.BlockRejector;
 import assemblyline.common.machine.armbot.BlockArmbot;
 import assemblyline.common.machine.belt.BlockConveyorBelt;
+import assemblyline.common.machine.crane.BlockCraneController;
 import assemblyline.common.machine.detector.BlockDetector;
 import assemblyline.common.machine.encoder.BlockEncoder;
 import assemblyline.common.machine.encoder.ItemDisk;
@@ -32,7 +30,6 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Mod.PostInit;
 import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.Mod.ServerStarted;
 import cpw.mods.fml.common.SidedProxy;
@@ -81,6 +78,7 @@ public class AssemblyLine
 	public static Block					blockDetector;
 	public static Block					blockRejector;
 	public static Block					blockArmbot;
+	public static Block					blockCraneController;
 
 	public static BlockMulti			blockMulti;
 
@@ -103,8 +101,8 @@ public class AssemblyLine
 		blockRejector = new BlockRejector(CONFIGURATION.getBlock("Rejector", BLOCK_ID_PREFIX + 6).getInt());
 		blockEncoder = new BlockEncoder(CONFIGURATION.getBlock("Encoder", BLOCK_ID_PREFIX + 7).getInt(), 7);
 		blockArmbot = new BlockArmbot(CONFIGURATION.getBlock("Armbot", BLOCK_ID_PREFIX + 8).getInt());
-
 		blockMulti = new BlockMulti(CONFIGURATION.getBlock("Multiblock", BLOCK_ID_PREFIX + 9).getInt());
+		blockCraneController = new BlockCraneController(CONFIGURATION.getBlock("CraneController", BLOCK_ID_PREFIX + 10).getInt());
 
 		itemImprint = new ItemImprinter(CONFIGURATION.getBlock("Imprint", ITEM_ID_PREFIX).getInt());
 		itemDisk = new ItemDisk(CONFIGURATION.getBlock("Disk", ITEM_ID_PREFIX + 1).getInt());
@@ -119,6 +117,7 @@ public class AssemblyLine
 		GameRegistry.registerBlock(blockDetector, "Detector");
 		GameRegistry.registerBlock(blockRejector, "Rejector");
 		GameRegistry.registerBlock(blockArmbot, "Armbot");
+		GameRegistry.registerBlock(blockCraneController, "Crane Controller");
 
 		TabAssemblyLine.itemStack = new ItemStack(AssemblyLine.blockConveyorBelt);
 		UpdateNotifier.INSTANCE.checkUpdate(NAME, VERSION, "http://calclavia.com/downloads/al/recommendedversion.txt");
