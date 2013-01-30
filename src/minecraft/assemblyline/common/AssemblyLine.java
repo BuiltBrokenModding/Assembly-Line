@@ -48,51 +48,51 @@ import cpw.mods.fml.relauncher.Side;
 public class AssemblyLine
 {
 	@SidedProxy(clientSide = "assemblyline.client.ClientProxy", serverSide = "assemblyline.common.CommonProxy")
-	public static CommonProxy			proxy;
+	public static CommonProxy proxy;
 
 	@Instance(AssemblyLine.CHANNEL)
-	public static AssemblyLine			instance;
+	public static AssemblyLine instance;
 
-	public static final String			NAME				= "Assembly Line";
+	public static final String NAME = "Assembly Line";
 
-	public static final String			VERSION				= "0.2.4";
+	public static final String VERSION = "0.2.5";
 
-	public static final String			CHANNEL				= "AssemblyLine";
+	public static final String CHANNEL = "AssemblyLine";
 
-	public static final String			DIRECTORY_NO_SLASH	= "assemblyline/";
-	public static final String			DIRECTORY			= "/" + DIRECTORY_NO_SLASH;
-	public static final String			TEXTURE_PATH		= DIRECTORY + "textures/";
-	public static final String			LANGUAGE_PATH		= DIRECTORY + "language/";
-	public static final String			BLOCK_TEXTURE_PATH	= TEXTURE_PATH + "blocks.png";
-	public static final String			ITEM_TEXTURE_PATH	= TEXTURE_PATH + "items.png";
+	public static final String DIRECTORY_NO_SLASH = "assemblyline/";
+	public static final String DIRECTORY = "/" + DIRECTORY_NO_SLASH;
+	public static final String TEXTURE_PATH = DIRECTORY + "textures/";
+	public static final String LANGUAGE_PATH = DIRECTORY + "language/";
+	public static final String BLOCK_TEXTURE_PATH = TEXTURE_PATH + "blocks.png";
+	public static final String ITEM_TEXTURE_PATH = TEXTURE_PATH + "items.png";
 
-	private static final String[]		LANGUAGES_SUPPORTED	= new String[] { "en_US" };
+	private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US" };
 
-	public static final Configuration	CONFIGURATION		= new Configuration(new File(Loader.instance().getConfigDir(), "UniversalElectricity/AssemblyLine.cfg"));
+	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "UniversalElectricity/AssemblyLine.cfg"));
 
-	public static final int				BLOCK_ID_PREFIX		= 3030;
+	public static final int BLOCK_ID_PREFIX = 3030;
 
-	public static Block					blockConveyorBelt;
-	public static Block					blockManipulator;
-	public static Block					blockCrate;
-	public static Block					blockImprinter;
-	public static Block					blockEncoder;
-	public static Block					blockDetector;
-	public static Block					blockRejector;
-	public static Block					blockArmbot;
-	public static Block					blockCraneController;
-	public static Block					blockCraneParts;
+	public static Block blockConveyorBelt;
+	public static Block blockManipulator;
+	public static Block blockCrate;
+	public static Block blockImprinter;
+	public static Block blockEncoder;
+	public static Block blockDetector;
+	public static Block blockRejector;
+	public static Block blockArmbot;
+	public static Block blockCraneController;
+	public static Block blockCraneParts;
 
-	public static BlockMulti			blockMulti;
+	public static BlockMulti blockMulti;
 
-	public static final int				ITEM_ID_PREFIX		= 13030;
-	public static Item					itemImprint;
-	public static Item					itemDisk;
+	public static final int ITEM_ID_PREFIX = 13030;
+	public static Item itemImprint;
+	public static Item itemDisk;
 
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		UniversalElectricity.register(this, 1, 2, 1, false);
+		UniversalElectricity.register(this, 1, 2, 4, false);
 		instance = this;
 
 		CONFIGURATION.load();
@@ -106,11 +106,10 @@ public class AssemblyLine
 		blockArmbot = new BlockArmbot(CONFIGURATION.getBlock("Armbot", BLOCK_ID_PREFIX + 8).getInt());
 		blockMulti = new BlockMulti(CONFIGURATION.getBlock("Multiblock", BLOCK_ID_PREFIX + 9).getInt());
 		blockCraneController = new BlockCraneController(CONFIGURATION.getBlock("CraneController", BLOCK_ID_PREFIX + 10).getInt());
-		blockCraneController = new BlockCraneParts(CONFIGURATION.getBlock("CraneParts", BLOCK_ID_PREFIX + 11).getInt());
+		blockCraneParts = new BlockCraneParts(CONFIGURATION.getBlock("CraneParts", BLOCK_ID_PREFIX + 11).getInt());
 
-		
-		itemImprint = new ItemImprinter(CONFIGURATION.getBlock("Imprint", ITEM_ID_PREFIX).getInt());
-		itemDisk = new ItemDisk(CONFIGURATION.getBlock("Disk", ITEM_ID_PREFIX + 1).getInt());
+		itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", ITEM_ID_PREFIX).getInt());
+		itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", ITEM_ID_PREFIX + 1).getInt());
 		CONFIGURATION.save();
 
 		NetworkRegistry.instance().registerGuiHandler(this, this.proxy);
@@ -123,7 +122,7 @@ public class AssemblyLine
 		GameRegistry.registerBlock(blockRejector, "Rejector");
 		GameRegistry.registerBlock(blockArmbot, "Armbot");
 		GameRegistry.registerBlock(blockCraneController, "Crane Controller");
-		GameRegistry.registerBlock(blockCraneParts,ItemCraneParts.class, "Crane Parts");
+		GameRegistry.registerBlock(blockCraneParts, ItemCraneParts.class, "Crane Parts");
 
 		TabAssemblyLine.itemStack = new ItemStack(AssemblyLine.blockConveyorBelt);
 		UpdateNotifier.INSTANCE.checkUpdate(NAME, VERSION, "http://calclavia.com/downloads/al/recommendedversion.txt");
@@ -172,8 +171,8 @@ public class AssemblyLine
 	@ServerStarted
 	public void serverStarted(FMLServerStartedEvent evt)
 	{
-		//LOLOLOL i wish
-		//MinecraftServer.getServer().getConfigurationManager().getBannedPlayers().remove("briman0094");
+		// LOLOLOL i wish
+		// MinecraftServer.getServer().getConfigurationManager().getBannedPlayers().remove("briman0094");
 	}
 
 	public static void printSidedData(String data)

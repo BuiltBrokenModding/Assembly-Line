@@ -33,6 +33,7 @@ public abstract class Command
 		registerCommand("repeat", CommandRepeat.class);
 		registerCommand("use", CommandUse.class);
 		registerCommand("fire", CommandFire.class);
+		registerCommand("break", CommandBreak.class);
 	}
 
 	public static void registerCommand(String command, Class<? extends Command> commandClass)
@@ -174,7 +175,7 @@ public abstract class Command
 	{
 		taskCompound.setInteger("ticks", this.ticks);
 	}
-	
+
 	@Override
 	public String toString()
 	{

@@ -8,7 +8,6 @@ package assemblyline.client.model;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraftforge.common.ForgeDirection;
 
 public class ModelCraneController extends ModelBase
 {

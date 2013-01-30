@@ -1,10 +1,8 @@
 package assemblyline.common.machine.crane;
 
-import assemblyline.common.TabAssemblyLine;
-import universalelectricity.prefab.BlockMachine;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
+import universalelectricity.prefab.BlockMachine;
+import assemblyline.common.TabAssemblyLine;
 
 public class BlockCraneParts extends BlockMachine
 {

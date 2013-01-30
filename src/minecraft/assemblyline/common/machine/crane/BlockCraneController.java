@@ -1,6 +1,5 @@
 package assemblyline.common.machine.crane;
 
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
