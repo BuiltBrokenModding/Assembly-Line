@@ -5,6 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.IPlantable;
 import universalelectricity.core.vector.Vector3;
 
@@ -44,19 +45,27 @@ public class CommandPlace extends Command
 						else if (itemStack.getItem() instanceof IPlantable)
 						{
 							IPlantable plantable = ((IPlantable) itemStack.getItem());
-							int blockID = plantable.getPlantID(this.world, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ());
-							int blockMetadata = plantable.getPlantMetadata(this.world, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ());
+							Block blockBelow = Block.blocksList[Vector3.add(serachPosition, new Vector3(0, -1, 0)).getBlockID(this.world)];
 
-							if (!world.setBlockAndMetadataWithNotify(serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), blockID, blockMetadata)) { return false; }
-
-							if (world.getBlockId(serachPosition.intX(), serachPosition.intY(), serachPosition.intZ()) == blockID)
+							if (blockBelow != null)
 							{
-								Block.blocksList[blockID].onBlockPlacedBy(world, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), null);
-								Block.blocksList[blockID].onPostBlockPlaced(world, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), blockMetadata);
-							}
+								if (blockBelow.canSustainPlant(this.world, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), ForgeDirection.UP, plantable))
+								{
+									int blockID = plantable.getPlantID(this.world, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ());
+									int blockMetadata = plantable.getPlantMetadata(this.world, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ());
 
-							this.tileEntity.grabbedEntities.remove(entity);
-							return false;
+									if (this.world.setBlockAndMetadataWithNotify(serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), blockID, blockMetadata))
+									{
+										if (this.world.getBlockId(serachPosition.intX(), serachPosition.intY(), serachPosition.intZ()) == blockID)
+										{
+											Block.blocksList[blockID].onBlockPlacedBy(world, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), null);
+											Block.blocksList[blockID].onPostBlockPlaced(world, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), blockMetadata);
+											this.tileEntity.grabbedEntities.remove(entity);
+											return false;
+										}
+									}
+								}
+							}
 						}
 					}
 				}

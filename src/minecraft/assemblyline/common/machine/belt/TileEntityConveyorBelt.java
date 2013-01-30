@@ -117,9 +117,9 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 			PacketManager.sendPacketToClients(this.getDescriptionPacket());
 		}
 
-		if (this.isRunning())
+		if (this.isRunning() && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
 		{
-			if (this.ticks % 10 == 0 && this.worldObj.isRemote && this.worldObj.getBlockId(xCoord - 1, yCoord, zCoord) != AssemblyLine.blockConveyorBelt.blockID && this.worldObj.getBlockId(xCoord, yCoord, zCoord - 1) != AssemblyLine.blockConveyorBelt.blockID)
+			if (this.ticks % 10 == 0 && this.worldObj.isRemote && this.worldObj.getBlockId(this.xCoord - 1, this.yCoord, this.zCoord) != AssemblyLine.blockConveyorBelt.blockID && this.worldObj.getBlockId(xCoord, yCoord, zCoord - 1) != AssemblyLine.blockConveyorBelt.blockID)
 			{
 				this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "assemblyline.conveyor", 0.5f, 0.7f, true);
 			}
@@ -278,31 +278,34 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 
 	public int getAnimationFrame()
 	{
-		TileEntity te = null;
-		te = this.worldObj.getBlockTileEntity(this.xCoord - 1, this.yCoord, this.zCoord);
-
-		if (te != null)
+		if (!this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
 		{
-			if (te instanceof TileEntityConveyorBelt)
+			TileEntity te = null;
+			te = this.worldObj.getBlockTileEntity(this.xCoord - 1, this.yCoord, this.zCoord);
+
+			if (te != null)
 			{
-				if (((TileEntityConveyorBelt) te).getSlant() == this.slantType)
-					return ((TileEntityConveyorBelt) te).getAnimationFrame();
+				if (te instanceof TileEntityConveyorBelt)
+				{
+					if (((TileEntityConveyorBelt) te).getSlant() == this.slantType)
+						return ((TileEntityConveyorBelt) te).getAnimationFrame();
+				}
+
 			}
 
-		}
+			te = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord - 1);
 
-		te = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord - 1);
-
-		if (te != null)
-		{
-			if (te instanceof TileEntityConveyorBelt)
+			if (te != null)
 			{
-				if (((TileEntityConveyorBelt) te).getSlant() == this.slantType)
-					return ((TileEntityConveyorBelt) te).getAnimationFrame();
+				if (te instanceof TileEntityConveyorBelt)
+				{
+					if (((TileEntityConveyorBelt) te).getSlant() == this.slantType)
+						return ((TileEntityConveyorBelt) te).getAnimationFrame();
+				}
+
 			}
-
 		}
-
+		
 		return this.animFrame;
 	}
 

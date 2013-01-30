@@ -241,7 +241,7 @@ public class BlockConveyorBelt extends BlockMachine
 		TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) world.getBlockTileEntity(x, y, z);
 		tileEntity.updatePowerTransferRange();
 
-		if (tileEntity.isRunning())
+		if (tileEntity.isRunning() && !world.isBlockIndirectlyGettingPowered(x, y, z))
 		{
 			float acceleration = tileEntity.acceleration;
 			float maxSpeed = tileEntity.maxSpeed;
