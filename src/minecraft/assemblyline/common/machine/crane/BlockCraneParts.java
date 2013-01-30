@@ -1,4 +1,4 @@
-package assemblyline.common.machine.quarry;
+package assemblyline.common.machine.crane;
 
 import assemblyline.common.TabAssemblyLine;
 import universalelectricity.prefab.BlockMachine;
@@ -8,12 +8,12 @@ import net.minecraft.creativetab.CreativeTabs;
 
 public class BlockCraneParts extends BlockMachine
 {
-    public static final int RAIL_META = 0;
-    public BlockCraneParts(int id)
-    {
-        super("CraneParts", id, Material.iron, TabAssemblyLine.INSTANCE);
-        
-    }
+	public static final int RAIL_META = 0;
 
+	public BlockCraneParts(int id)
+	{
+		super("CraneParts", id, Material.iron, TabAssemblyLine.INSTANCE);
+
+	}
 
 }

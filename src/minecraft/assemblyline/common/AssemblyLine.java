@@ -20,6 +20,8 @@ import assemblyline.common.machine.BlockRejector;
 import assemblyline.common.machine.armbot.BlockArmbot;
 import assemblyline.common.machine.belt.BlockConveyorBelt;
 import assemblyline.common.machine.crane.BlockCraneController;
+import assemblyline.common.machine.crane.BlockCraneParts;
+import assemblyline.common.machine.crane.ItemCraneParts;
 import assemblyline.common.machine.detector.BlockDetector;
 import assemblyline.common.machine.encoder.BlockEncoder;
 import assemblyline.common.machine.encoder.ItemDisk;
@@ -79,10 +81,11 @@ public class AssemblyLine
 	public static Block					blockRejector;
 	public static Block					blockArmbot;
 	public static Block					blockCraneController;
+	public static Block					blockCraneParts;
 
 	public static BlockMulti			blockMulti;
 
-	public static final int				ITEM_ID_PREFIX		= 3030;
+	public static final int				ITEM_ID_PREFIX		= 13030;
 	public static Item					itemImprint;
 	public static Item					itemDisk;
 
@@ -103,7 +106,9 @@ public class AssemblyLine
 		blockArmbot = new BlockArmbot(CONFIGURATION.getBlock("Armbot", BLOCK_ID_PREFIX + 8).getInt());
 		blockMulti = new BlockMulti(CONFIGURATION.getBlock("Multiblock", BLOCK_ID_PREFIX + 9).getInt());
 		blockCraneController = new BlockCraneController(CONFIGURATION.getBlock("CraneController", BLOCK_ID_PREFIX + 10).getInt());
+		blockCraneController = new BlockCraneParts(CONFIGURATION.getBlock("CraneParts", BLOCK_ID_PREFIX + 11).getInt());
 
+		
 		itemImprint = new ItemImprinter(CONFIGURATION.getBlock("Imprint", ITEM_ID_PREFIX).getInt());
 		itemDisk = new ItemDisk(CONFIGURATION.getBlock("Disk", ITEM_ID_PREFIX + 1).getInt());
 		CONFIGURATION.save();
@@ -118,6 +123,7 @@ public class AssemblyLine
 		GameRegistry.registerBlock(blockRejector, "Rejector");
 		GameRegistry.registerBlock(blockArmbot, "Armbot");
 		GameRegistry.registerBlock(blockCraneController, "Crane Controller");
+		GameRegistry.registerBlock(blockCraneParts,ItemCraneParts.class, "Crane Parts");
 
 		TabAssemblyLine.itemStack = new ItemStack(AssemblyLine.blockConveyorBelt);
 		UpdateNotifier.INSTANCE.checkUpdate(NAME, VERSION, "http://calclavia.com/downloads/al/recommendedversion.txt");
