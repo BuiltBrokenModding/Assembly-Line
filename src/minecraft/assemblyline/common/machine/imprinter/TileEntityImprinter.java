@@ -434,7 +434,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 		{
 			if (heldEntity instanceof EntityItem)
 			{
-				ItemStack stack = ((EntityItem) heldEntity).func_92014_d();
+				ItemStack stack = ((EntityItem) heldEntity).getEntityItem();
 				if (this.getStackInSlot(3) == null && stack != null && stack.itemID == AssemblyLine.itemImprint.itemID) // no
 																														// crafting
 																														// imprint

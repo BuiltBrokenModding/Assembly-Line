@@ -205,7 +205,7 @@ public abstract class BlockMachine extends BlockContainer implements ISneakUseWr
 
 							if (var7.hasTagCompound())
 							{
-								var12.func_92014_d().setTagCompound((NBTTagCompound) var7.getTagCompound().copy());
+								var12.getEntityItem().setTagCompound((NBTTagCompound) var7.getTagCompound().copy());
 							}
 
 							float var13 = 0.05F;

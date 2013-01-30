@@ -113,7 +113,7 @@ public class TileEntityRejector extends TileEntityFilterable
 		if (entity instanceof EntityItem)
 		{
 			EntityItem entityItem = (EntityItem) entity;
-			ItemStack itemStack = entityItem.func_92014_d();
+			ItemStack itemStack = entityItem.getEntityItem();
 
 			return this.isFiltering(itemStack);
 		}

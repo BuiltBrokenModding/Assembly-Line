@@ -70,13 +70,13 @@ public class CommandFire extends Command
 				if (held instanceof EntityItem)
 				{
 					EntityItem item = (EntityItem) held;
-					ItemStack stack = item.func_92014_d();
+					ItemStack stack = item.getEntityItem();
 					ItemStack thrown = stack.copy();
 					thrown.stackSize = 1;
-					if (item.func_92014_d().stackSize > 0)
+					if (item.getEntityItem().stackSize > 0)
 					{
 						stack.stackSize--;
-						item.func_92013_a(stack);
+						item.func_92058_a(stack);
 					}
 					else
 					{
@@ -84,7 +84,7 @@ public class CommandFire extends Command
 						if (!this.world.isRemote)
 							this.world.removeEntity(held);
 					}
-					if (item.func_92014_d().itemID == Item.arrow.itemID)
+					if (item.getEntityItem().itemID == Item.arrow.itemID)
 					{
 						EntityArrow arrow = new EntityArrow(world, this.tileEntity.getHandPosition().x, this.tileEntity.getHandPosition().y, this.tileEntity.getHandPosition().z);
 						arrow.motionX = this.finalVelocity.x;

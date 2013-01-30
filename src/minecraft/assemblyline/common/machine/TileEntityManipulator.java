@@ -115,7 +115,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 			 * Try top first, then bottom, then the sides to see if it is possible to insert the
 			 * item into a inventory.
 			 */
-			ItemStack remainingStack = entity.func_92014_d().copy();
+			ItemStack remainingStack = entity.getEntityItem().copy();
 
 			if (this.getFilter() == null || this.isFiltering(remainingStack))
 			{

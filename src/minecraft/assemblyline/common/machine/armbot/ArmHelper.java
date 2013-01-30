@@ -42,7 +42,7 @@ public class ArmHelper
 		List<EntityItem> itemsList = world.getEntitiesWithinAABB(EntityItem.class, bounds);
 		for (EntityItem item : itemsList)
 		{
-			ItemStack stackItem = item.func_92014_d();
+			ItemStack stackItem = item.getEntityItem();
 			if (stackItem.itemID != stack.itemID || stackItem.getItemDamage() != stack.getItemDamage())
 			{
 				itemsList.remove(item);
