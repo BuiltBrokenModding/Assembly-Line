@@ -38,7 +38,7 @@ public class TileEntityDetector extends TileEntityFilterable
 					for (int i = 0; i < entities.size(); i++)
 					{
 						EntityItem e = (EntityItem) entities.get(i);
-						ItemStack itemStack = e.func_92014_d();
+						ItemStack itemStack = e.getEntityItem();
 
 						powerCheck = this.isFiltering(itemStack);
 					}
