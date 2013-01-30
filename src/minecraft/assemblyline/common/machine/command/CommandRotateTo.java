@@ -9,9 +9,9 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class CommandRotateTo extends Command
 {
-	float	targetRotationYaw	= 0;
-	float	targetRotationPitch	= 0;
-	int		totalTicks			= 0;
+	float targetRotationYaw = 0;
+	float targetRotationPitch = 0;
+	int totalTicks = 0;
 
 	@Override
 	public void onTaskStart()
@@ -43,7 +43,7 @@ public class CommandRotateTo extends Command
 			this.targetRotationYaw += 360;
 		while (this.targetRotationYaw > 360)
 			this.targetRotationYaw -= 360;
-		while (this.targetRotationPitch < 0)
+		while (this.targetRotationPitch < -60)
 			this.targetRotationPitch += 60;
 		while (this.targetRotationPitch > 60)
 			this.targetRotationPitch -= 60;
@@ -60,7 +60,10 @@ public class CommandRotateTo extends Command
 		/*
 		 * float rotationalDifference = Math.abs(this.tileEntity.rotationYaw - this.targetRotation);
 		 * 
-		 * if (rotationalDifference < ROTATION_SPEED) { this.tileEntity.rotationYaw = this.targetRotation; } else { if (this.tileEntity.rotationYaw > this.targetRotation) { this.tileEntity.rotationYaw -= ROTATION_SPEED; } else { this.tileEntity.rotationYaw += ROTATION_SPEED; } this.ticks = 0; }
+		 * if (rotationalDifference < ROTATION_SPEED) { this.tileEntity.rotationYaw =
+		 * this.targetRotation; } else { if (this.tileEntity.rotationYaw > this.targetRotation) {
+		 * this.tileEntity.rotationYaw -= ROTATION_SPEED; } else { this.tileEntity.rotationYaw +=
+		 * ROTATION_SPEED; } this.ticks = 0; }
 		 */
 
 		// set the rotation to the target immediately and let the client handle animating it

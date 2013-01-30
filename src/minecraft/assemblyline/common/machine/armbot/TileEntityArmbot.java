@@ -92,6 +92,24 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	public void onUpdate()
 	{
 		Vector3 handPosition = this.getHandPosition();
+
+		for (Entity entity : this.grabbedEntities)
+		{
+			if (entity != null)
+			{
+				entity.setPosition(handPosition.x, handPosition.y, handPosition.z);
+				entity.motionX = 0;
+				entity.motionY = 0;
+				entity.motionZ = 0;
+
+				if (entity instanceof EntityItem)
+				{
+					((EntityItem) entity).delayBeforeCanPickup = 20;
+					((EntityItem) entity).age = 0;
+				}
+			}
+		}
+
 		if (this.isRunning())
 		{
 			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
@@ -171,23 +189,6 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				}
 				catch (Exception ex)
 				{
-				}
-			}
-		}
-
-		for (Entity entity : this.grabbedEntities)
-		{
-			if (entity != null)
-			{
-				entity.setPosition(handPosition.x, handPosition.y, handPosition.z);
-				entity.motionX = 0;
-				entity.motionY = 0;
-				entity.motionZ = 0;
-
-				if (entity instanceof EntityItem)
-				{
-					((EntityItem) entity).delayBeforeCanPickup = 20;
-					((EntityItem) entity).age = 0;
 				}
 			}
 		}
@@ -479,11 +480,16 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		this.rotationYaw = nbt.getFloat("yaw");
 		this.rotationPitch = nbt.getFloat("pitch");
 
-		if (this.worldObj.isRemote)
-			this.displayText = nbt.getString("cmdText");
-
+		if (this.worldObj != null)
+		{
+			if (this.worldObj.isRemote)
+			{
+				this.displayText = nbt.getString("cmdText");
+			}
+		}
 		/*
-		 * NBTTagCompound cmdManager = nbt.getCompoundTag("cmdManager"); this.commandManager.readFromNBT(this, cmdManager);
+		 * NBTTagCompound cmdManager = nbt.getCompoundTag("cmdManager");
+		 * this.commandManager.readFromNBT(this, cmdManager);
 		 */
 		this.commandManager.setCurrentTask(nbt.getInteger("curTask"));
 
@@ -520,7 +526,8 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		nbt.setFloat("pitch", this.rotationPitch);
 
 		/*
-		 * NBTTagCompound cmdManager = new NBTTagCompound("cmdManager"); this.commandManager.writeToNBT(cmdManager); nbt.setCompoundTag("cmdManager", cmdManager);
+		 * NBTTagCompound cmdManager = new NBTTagCompound("cmdManager");
+		 * this.commandManager.writeToNBT(cmdManager); nbt.setCompoundTag("cmdManager", cmdManager);
 		 */
 
 		nbt.setString("cmdText", this.displayText);

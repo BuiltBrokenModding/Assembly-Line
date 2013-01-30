@@ -48,15 +48,16 @@ public class CommandGrab extends Command
 				if (found.get(i) != null && !(found.get(i) instanceof EntityPlayer) && !(found.get(i) instanceof EntityArrow) && found.get(i).ridingEntity == null)
 				{
 					this.tileEntity.grabbedEntities.add(found.get(i));
-					
+
 					if (found.get(i) instanceof EntityItem)
 					{
 						// items don't move right, so we render them manually
 						this.tileEntity.worldObj.removeEntity(found.get(i));
 					}
-					
-					this.world.playSound(this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, "random.pop", 0.2F, ((this.tileEntity.worldObj.rand.nextFloat() - this.tileEntity.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.0F, true);
+
 					found.get(i).isDead = false;
+
+					this.world.playSound(this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, "random.pop", 0.2F, ((this.tileEntity.worldObj.rand.nextFloat() - this.tileEntity.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.0F, true);
 					return false;
 				}
 			}

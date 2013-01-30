@@ -11,20 +11,12 @@ import universalelectricity.core.vector.Vector3;
  */
 public class CommandBreak extends Command
 {
-	public static final float radius = 0.5f;
-
-	public CommandBreak()
-	{
-		super();
-	}
+	private CommandRotateTo rotateToCommand;
 
 	@Override
 	protected boolean doTask()
 	{
 		super.doTask();
-
-		if (this.tileEntity.grabbedEntities.size() > 0)
-			return false;
 
 		Vector3 serachPosition = this.tileEntity.getHandPosition();
 
@@ -34,6 +26,7 @@ public class CommandBreak extends Command
 		{
 			block.dropBlockAsItem(this.world, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), serachPosition.getBlockMetadata(this.world), 0);
 			serachPosition.setBlockWithNotify(this.world, 0);
+			return false;
 		}
 
 		return true;
