@@ -13,6 +13,7 @@ CHANGELOG
 !/resources/
 !/models/
 !info.txt
+!AssemblyLineStandard.xml
 !publish.bat
 !publish_obf.bat
 !include.bat
