@@ -305,7 +305,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 		if (inventory.getSizeInventory() > slotIndex)
 		{
 			ItemStack stackInInventory = inventory.getStackInSlot(slotIndex);
-
+			
 			if (stackInInventory == null)
 			{
 				inventory.setInventorySlotContents(slotIndex, itemStack);
@@ -313,9 +313,10 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 				return null;
 			}
 			else if (stackInInventory.isItemEqual(itemStack) && stackInInventory.isStackable())
-			{
+			{ 
 				stackInInventory = stackInInventory.copy();
-				int rejectedAmount = Math.max((stackInInventory.stackSize + itemStack.stackSize) - inventory.getInventoryStackLimit(), 0);
+				int stackLim = Math.min(inventory.getInventoryStackLimit(), itemStack.getMaxStackSize());
+				int rejectedAmount = Math.max((stackInInventory.stackSize + itemStack.stackSize) - stackLim , 0);
 				stackInInventory.stackSize = Math.min(Math.max((stackInInventory.stackSize + itemStack.stackSize - rejectedAmount), 0), inventory.getInventoryStackLimit());
 				itemStack.stackSize = rejectedAmount;
 				inventory.setInventorySlotContents(slotIndex, stackInInventory);

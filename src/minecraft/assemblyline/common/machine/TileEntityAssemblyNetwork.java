@@ -23,7 +23,8 @@ public abstract class TileEntityAssemblyNetwork extends TileEntityElectricityRec
 	 * The amount of watts received.
 	 */
 	public double wattsReceived = 0;
-
+	
+	public boolean debugMode = false;
 	/**
 	 * The range in which power can be transfered.
 	 */
@@ -31,7 +32,7 @@ public abstract class TileEntityAssemblyNetwork extends TileEntityElectricityRec
 
 	public boolean isRunning()
 	{
-		return this.powerTransferRange > 0 || this.wattsReceived > this.getRequest().getWatts();
+		return debugMode || this.powerTransferRange > 0 || this.wattsReceived > this.getRequest().getWatts();
 	}
 
 	public void updatePowerTransferRange()

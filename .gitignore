@@ -1,7 +1,11 @@
 *.bat
 *.sh
 *.db
+*.exe
 /*/
+/src/minecraft/assemblyline/textures
+/src/minecraft/assemblyline/language
+/src/minecraft/assemblyline/conveyor.ogg
 LICENSE.txt
 CHANGELOG
 
