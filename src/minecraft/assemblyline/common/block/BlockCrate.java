@@ -2,6 +2,7 @@ package assemblyline.common.block;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -11,8 +12,7 @@ import assemblyline.common.AssemblyLine;
 import assemblyline.common.TabAssemblyLine;
 
 /**
- * A block that allows the placement of mass amount of a specific item within it. It will be allowed
- * to go on Conveyor Belts
+ * A block that allows the placement of mass amount of a specific item within it. It will be allowed to go on Conveyor Belts
  * 
  * @author Calclavia
  * 
@@ -69,7 +69,11 @@ public class BlockCrate extends BlockMachine
 				}
 				else
 				{
-					this.ejectItems(tileEntity, player, 64);
+					ItemStack stack = tileEntity.getStackInSlot(0);
+					if (stack != null)
+					{
+						this.ejectItems(tileEntity, player, stack.getMaxStackSize());
+					}
 				}
 			}
 		}
