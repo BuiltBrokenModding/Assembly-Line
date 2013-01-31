@@ -16,6 +16,14 @@ import universalelectricity.core.vector.Vector3;
  */
 public class CommandPlace extends Command
 {
+	int PLACE_TIME = 30;
+
+	@Override
+	public void onTaskStart()
+	{
+		super.onTaskStart();
+	}
+
 	@Override
 	protected boolean doTask()
 	{
@@ -25,7 +33,7 @@ public class CommandPlace extends Command
 
 		Block block = Block.blocksList[serachPosition.getBlockID(this.world)];
 
-		if (block == null)
+		if (block == null && ticks >= this.PLACE_TIME)
 		{
 			for (Entity entity : this.tileEntity.grabbedEntities)
 			{
