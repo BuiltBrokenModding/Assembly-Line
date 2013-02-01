@@ -50,7 +50,7 @@ public class ItemBlockCrate extends ItemBlock
 			}
 		}
 	}
-
+	
 	public static void setContainingItemStack(ItemStack itemStack, ItemStack containingStack)
 	{
 		if (itemStack.stackTagCompound == null)
@@ -66,6 +66,10 @@ public class ItemBlockCrate extends ItemBlock
 			itemStack.getTagCompound().setTag("Item", itemTagCompound);
 
 			itemStack.getTagCompound().setInteger("Count", containingStack.stackSize);
+		}else
+		{
+			itemStack.getTagCompound().setTag("Item", new NBTTagCompound());
+			itemStack.getTagCompound().setInteger("Count", 0);
 		}
 	}
 

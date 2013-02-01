@@ -49,7 +49,7 @@ public class BlockCrate extends BlockMachine
 			}
 
 			tileEntity.prevClickTime = world.getWorldTime();
-
+			// add items
 			if (side == 1 || (side > 1 && hitY > 0.5))
 			{
 				if (allMode)
@@ -61,6 +61,7 @@ public class BlockCrate extends BlockMachine
 					this.insertCurrentItem(tileEntity, player);
 				}
 			}
+			// remove items
 			else if (side == 0 || (side > 1 && hitY <= 0.5))
 			{
 				if (allMode)
@@ -100,6 +101,18 @@ public class BlockCrate extends BlockMachine
 			{
 				player.inventory.setInventorySlotContents(player.inventory.currentItem, this.putIn(tileEntity, currentStack));
 				return true;
+			}// if the item being used is a create then try to merge the items inside
+			else if (currentStack.getItem().itemID == AssemblyLine.blockCrate.blockID)
+			{
+				ItemStack containedStack = ItemBlockCrate.getContainingItemStack(currentStack);
+				ItemStack crateStack = tileEntity.getStackInSlot(0);
+				if (containedStack != null && (crateStack == null || (crateStack != null && containedStack.getItem().itemID == crateStack.getItem().itemID && containedStack.getItemDamage() == crateStack.getItemDamage())))
+				{
+					ItemStack returned = this.putIn(tileEntity, containedStack);
+					ItemBlockCrate.setContainingItemStack(currentStack, returned );
+					return true;
+				}
+
 			}
 		}
 
