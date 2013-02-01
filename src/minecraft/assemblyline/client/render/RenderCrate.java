@@ -45,6 +45,9 @@ public class RenderCrate extends TileEntitySpecialRenderer
 			for (int side = 2; side < 6; side++)
 			{
 				ForgeDirection direction = ForgeDirection.getOrientation(side);
+				boolean solid = tileEntity.worldObj.isBlockSolidOnSide(tileEntity.xCoord + direction.offsetX, tileEntity.yCoord, tileEntity.zCoord + direction.offsetZ, direction.getOpposite());
+				if (solid)
+					continue;
 				this.setupLight(tileEntity, direction.offsetX, direction.offsetZ);
 
 				if (itemStack != null)
