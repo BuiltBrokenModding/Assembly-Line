@@ -32,6 +32,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -155,6 +156,7 @@ public class LiquidMechanics extends DummyModContainer
         GameRegistry.registerTileEntity(TileEntityGenerator.class, "lmGen");
         GameRegistry.registerTileEntity(TileEntitySink.class, "lmSink");
         System.out.println("Fluid Mechanics Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
+        MinecraftForge.EVENT_BUS.register(LiquidHandler.class);
 
     }
 

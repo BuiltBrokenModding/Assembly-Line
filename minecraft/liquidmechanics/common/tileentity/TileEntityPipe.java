@@ -1,6 +1,9 @@
 package liquidmechanics.common.tileentity;
 
+import java.util.Random;
+
 import liquidmechanics.api.IColorCoded;
+import liquidmechanics.api.IPipe;
 import liquidmechanics.api.IReadOut;
 import liquidmechanics.api.helpers.ColorCode;
 import liquidmechanics.api.helpers.connectionHelper;
@@ -10,12 +13,14 @@ import liquidmechanics.api.liquids.LiquidHandler;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.handlers.UpdateConverter;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
@@ -30,7 +35,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLLog;
 
-public class TileEntityPipe extends TileEntity implements ITankContainer, IReadOut, IColorCoded
+public class TileEntityPipe extends TileEntity implements ITankContainer, IReadOut, IPipe
 {
     private ColorCode color = ColorCode.NONE;
 
@@ -50,13 +55,16 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
 
         this.validataConnections();
         this.color = ColorCode.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
-        if (!worldObj.isRemote && ++count >= 20)
+        if (++count >= 20)
         {
             count = 0;
             this.updatePressure();
-
+            if (this.worldObj.isRemote)
+            {
+                this.randomDisplayTick();
+            }
             LiquidStack stack = stored.getLiquid();
-            if (stack != null && stack.amount >= 0)
+            if (!worldObj.isRemote && stack != null && stack.amount >= 0)
             {
 
                 for (int i = 0; i < 6; i++)
@@ -77,11 +85,11 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
                         {
                             if (dir == ForgeDirection.UP && !color.getLiquidData().getCanFloat())
                             {
-
+                                /* do nothing */
                             }
                             else if (dir == ForgeDirection.DOWN && color.getLiquidData().getCanFloat())
                             {
-
+                                /* do nothing */
                             }
                             else
                             {
@@ -103,6 +111,29 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
             }
         }
 
+    }
+
+    public void randomDisplayTick()
+    {
+        Random random = new Random();
+        LiquidStack stack = stored.getLiquid();
+        if (stack != null && random.nextInt(10) == 0)
+        {
+            // TODO align this with the pipe model so not to drip where there is
+            // no pipe
+            double xx = (double) ((float) xCoord + random.nextDouble());
+            double zz = (double) yCoord + .3D;
+            double yy = (double) ((float) zCoord + random.nextDouble());
+
+            if (ColorCode.get(stack) != ColorCode.RED)
+            {
+                worldObj.spawnParticle("dripWater", xx, zz, yy, 0.0D, 0.0D, 0.0D);
+            }
+            else
+            {
+                worldObj.spawnParticle("dripLava", xx, zz, yy, 0.0D, 0.0D, 0.0D);
+            }
+        }
     }
 
     /**
@@ -274,7 +305,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
                 {
                     connectedBlocks[i] = null;
                 }
-                //TODO switch side catch for IPressure
+                // TODO switch side catch for IPressure
                 if (this.color != ColorCode.NONE && ent instanceof TileEntityTank && ((TileEntityTank) ent).getColor() != ColorCode.NONE && color != ((TileEntityTank) ent).getColor())
                 {
                     connectedBlocks[i] = null;

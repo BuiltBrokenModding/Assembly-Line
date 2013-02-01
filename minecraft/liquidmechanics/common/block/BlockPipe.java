@@ -1,7 +1,9 @@
 package liquidmechanics.common.block;
 
 import java.util.List;
+import java.util.Random;
 
+import liquidmechanics.api.helpers.ColorCode;
 import liquidmechanics.client.render.BlockRenderHelper;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.TabLiquidMechanics;
@@ -12,6 +14,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.prefab.BlockMachine;
 
 public class BlockPipe extends BlockMachine
@@ -23,6 +27,7 @@ public class BlockPipe extends BlockMachine
         this.setHardness(1f);
         this.setBlockName("lmPipe");
         this.setResistance(3f);
+        //this.setTickRandomly(true);
     }
 
     @Override
@@ -42,7 +47,6 @@ public class BlockPipe extends BlockMachine
     {
         return -1;
     }
-
     /**
      * Lets the block know when one of its neighbor changes. Doesn't know which
      * neighbor changed (coordinates passed are their own) Args: x, y, z,

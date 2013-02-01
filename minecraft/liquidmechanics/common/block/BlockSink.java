@@ -80,7 +80,22 @@ public class BlockSink extends BlockMachine
                     LiquidStack drain = tank.drain(LiquidContainerRegistry.BUCKET_VOLUME, false);
                     if (drain != null && drain.amount >= LiquidContainerRegistry.BUCKET_VOLUME)
                     {
-                        player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Item.bucketWater));
+                        ItemStack var12 = new ItemStack(Item.bucketEmpty, 1, 0);
+                        if (!player.inventory.addItemStackToInventory(heldItem))
+                        {
+                            world.spawnEntityInWorld(new EntityItem(world, (double) x + 0.5D, (double) y + 1.5D, (double) z + 0.5D, var12));
+                        }
+                        else if (player instanceof EntityPlayerMP)
+                        {
+                            ((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
+                        }
+
+                        --heldItem.stackSize;
+
+                        if (heldItem.stackSize <= 0)
+                        {
+                            player.inventory.setInventorySlotContents(player.inventory.currentItem, (ItemStack) null);
+                        }
                         tank.drain(LiquidContainerRegistry.BUCKET_VOLUME, true);
                         return true;
                     }
@@ -91,7 +106,22 @@ public class BlockSink extends BlockMachine
                     LiquidStack drain = tank.drain(LiquidContainerRegistry.BUCKET_VOLUME / 4, false);
                     if (drain != null && drain.amount >= LiquidContainerRegistry.BUCKET_VOLUME / 4)
                     {
-                        player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Item.potion, 1, 0));
+                        ItemStack var12 = new ItemStack(Item.potion, 1, 0);
+                        if (!player.inventory.addItemStackToInventory(var12))
+                        {
+                            world.spawnEntityInWorld(new EntityItem(world, (double) x + 0.5D, (double) y + 1.5D, (double) z + 0.5D, var12));
+                        }
+                        else if (player instanceof EntityPlayerMP)
+                        {
+                            ((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
+                        }
+
+                        --heldItem.stackSize;
+
+                        if (heldItem.stackSize <= 0)
+                        {
+                            player.inventory.setInventorySlotContents(player.inventory.currentItem, (ItemStack) null);
+                        }
                         tank.drain(LiquidContainerRegistry.BUCKET_VOLUME / 4, true);
                         return true;
                     }
