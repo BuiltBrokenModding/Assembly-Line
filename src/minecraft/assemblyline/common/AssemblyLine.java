@@ -165,7 +165,7 @@ public class AssemblyLine
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockRejector, new Object[] { "WPW", "@R@", '@', "plateSteel", 'R', Item.redstone, 'P', Block.pistonBase, 'C', "basicCircuit", 'W', "copperWire" }));
 
 		// Manipulator
-		GameRegistry.addRecipe(new ShapelessOreRecipe(blockManipulator, new Object[] { Block.dispenser, "basicCircuit" }));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockManipulator, 2), new Object[] { Block.dispenser, "basicCircuit" }));
 	}
 
 	@ServerStarted
