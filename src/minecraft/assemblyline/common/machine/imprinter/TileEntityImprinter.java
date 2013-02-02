@@ -34,7 +34,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	/**
 	 * 9 slots for crafting, 1 slot for an imprint, 1 slot for an item
 	 */
-	public InventoryImprinterCrafting craftingMatrix = new InventoryImprinterCrafting(null, 3, 3);
+	public ItemStack[] craftingMatrix = new ItemStack[9];
 
 	public ItemStack[] imprinterMatrix = new ItemStack[3];
 
@@ -67,18 +67,47 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	@Override
 	public int getSizeInventory()
 	{
-		return this.imprinterMatrix.length + this.containingItems.length;
+		return this.craftingMatrix.length + this.imprinterMatrix.length + this.containingItems.length;
+	}
+
+	/**
+	 * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
+	 */
+	@Override
+	public void setInventorySlotContents(int slot, ItemStack itemStack)
+	{
+		if (slot < this.getSizeInventory())
+		{
+			if (slot < IMPRINTER_MATRIX_START)
+			{
+				this.craftingMatrix[slot] = itemStack;
+			}
+			else if (slot < INVENTORY_START)
+			{
+				this.imprinterMatrix[slot - IMPRINTER_MATRIX_START] = itemStack;
+			}
+			else
+			{
+				this.containingItems[slot - INVENTORY_START] = itemStack;
+			}
+		}
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int slot)
 	{
-		if (slot < 9)
+		if (slot < IMPRINTER_MATRIX_START)
 		{
-			return this.craftingMatrix.getStackInSlot(slot);
+			return this.craftingMatrix[slot];
 		}
-		else if (slot < 11) { return this.imprinterMatrix[slot - IMPRINTER_MATRIX_START]; }
-		return this.containingItems[slot - IMPRINTER_MATRIX_START];
+		else if (slot < INVENTORY_START)
+		{
+			return this.imprinterMatrix[slot - IMPRINTER_MATRIX_START];
+		}
+		else
+		{
+			return this.containingItems[slot - INVENTORY_START];
+		}
 	}
 
 	/**
@@ -87,23 +116,23 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	@Override
 	public ItemStack decrStackSize(int i, int amount)
 	{
-		if (this.containingItems[i] != null)
+		if (this.getStackInSlot(i) != null)
 		{
 			ItemStack var3;
 
-			if (this.containingItems[i].stackSize <= amount)
+			if (this.getStackInSlot(i).stackSize <= amount)
 			{
-				var3 = this.containingItems[i];
-				this.containingItems[i] = null;
+				var3 = this.getStackInSlot(i);
+				this.setInventorySlotContents(i, null);
 				return var3;
 			}
 			else
 			{
-				var3 = this.containingItems[i].splitStack(amount);
+				var3 = this.getStackInSlot(i).splitStack(amount);
 
-				if (this.containingItems[i].stackSize == 0)
+				if (this.getStackInSlot(i).stackSize == 0)
 				{
-					this.containingItems[i] = null;
+					this.setInventorySlotContents(i, null);
 				}
 
 				return var3;
@@ -121,27 +150,15 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	@Override
 	public ItemStack getStackInSlotOnClosing(int slot)
 	{
-		if (this.containingItems[slot] != null && slot != 2)
+		if (this.getStackInSlot(slot) != null && slot != 2)
 		{
-			ItemStack var2 = this.containingItems[slot];
-			this.containingItems[slot] = null;
+			ItemStack var2 = this.getStackInSlot(slot);
+			this.setInventorySlotContents(slot, null);
 			return var2;
 		}
 		else
 		{
 			return null;
-		}
-	}
-
-	/**
-	 * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
-	 */
-	@Override
-	public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
-	{
-		if (par1 < this.containingItems.length)
-		{
-			this.containingItems[par1] = par2ItemStack;
 		}
 	}
 
@@ -405,14 +422,14 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
 		this.containingItems = new ItemStack[this.getSizeInventory()];
 
-		for (int var3 = 0; var3 < var2.tagCount(); ++var3)
+		for (int i = 0; i < var2.tagCount(); ++i)
 		{
-			NBTTagCompound var4 = (NBTTagCompound) var2.tagAt(var3);
+			NBTTagCompound var4 = (NBTTagCompound) var2.tagAt(i);
 			byte var5 = var4.getByte("Slot");
 
-			if (var5 >= 0 && var5 < this.containingItems.length)
+			if (var5 >= 0 && var5 < this.getSizeInventory())
 			{
-				this.containingItems[var5] = ItemStack.loadItemStackFromNBT(var4);
+				this.setInventorySlotContents(i, ItemStack.loadItemStackFromNBT(var4));
 			}
 		}
 	}
@@ -427,13 +444,13 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
 		NBTTagList var2 = new NBTTagList();
 
-		for (int var3 = 0; var3 < this.containingItems.length; ++var3)
+		for (int i = 0; i < this.getSizeInventory(); ++i)
 		{
-			if (this.containingItems[var3] != null)
+			if (this.getStackInSlot(i) != null)
 			{
 				NBTTagCompound var4 = new NBTTagCompound();
-				var4.setByte("Slot", (byte) var3);
-				this.containingItems[var3].writeToNBT(var4);
+				var4.setByte("Slot", (byte) i);
+				this.getStackInSlot(i).writeToNBT(var4);
 				var2.appendTag(var4);
 			}
 		}
@@ -452,7 +469,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	public boolean onUse(IArmbot armbot)
 	{
 		TileEntityArmbot armbotTile = (TileEntityArmbot) armbot;
-		
+
 		if (armbotTile.getGrabbedEntities().size() > 0)
 		{
 			Entity heldEntity = armbot.getGrabbedEntities().get(0);

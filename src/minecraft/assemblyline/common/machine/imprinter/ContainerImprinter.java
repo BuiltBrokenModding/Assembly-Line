@@ -9,6 +9,7 @@ import assemblyline.common.AssemblyLine;
 
 public class ContainerImprinter extends Container implements ISlotWatcher
 {
+
 	private InventoryPlayer inventoryPlayer;
 	public TileEntityImprinter tileEntity;
 
@@ -24,7 +25,7 @@ public class ContainerImprinter extends Container implements ISlotWatcher
 		{
 			for (int y = 0; y < 3; y++)
 			{
-				this.addSlotToContainer(new Slot(this.tileEntity, y + x, 9 + y * 18, 16 + x * 18));
+				this.addSlotToContainer(new Slot(this.tileEntity, y + x * 3, 9 + y * 18, 16 + x * 18));
 			}
 		}
 
@@ -36,11 +37,11 @@ public class ContainerImprinter extends Container implements ISlotWatcher
 		this.addSlotToContainer(new SlotCraftingResult(this, this.tileEntity, TileEntityImprinter.IMPRINTER_MATRIX_START + 2, 148, 34));
 
 		// Imprinter Inventory
-		for (int i = 0; i < 9; i++)
+		for (int ii = 0; ii < 2; ii++)
 		{
-			for (int ii = 0; ii < 2; ii++)
+			for (int i = 0; i < 9; i++)
 			{
-				this.addSlotToContainer(new WatchedSlot(this.tileEntity, i + this.tileEntity.imprinterMatrix.length - 1, 8 + i * 18, 80 + ii * 18, this));
+				this.addSlotToContainer(new WatchedSlot(this.tileEntity, (i + ii * 9) + this.tileEntity.INVENTORY_START, 8 + i * 18, 80 + ii * 18, this));
 			}
 		}
 
