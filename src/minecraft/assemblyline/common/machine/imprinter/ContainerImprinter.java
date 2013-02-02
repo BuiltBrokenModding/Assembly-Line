@@ -16,6 +16,7 @@ public class ContainerImprinter extends Container implements ISlotWatcher
 	public ContainerImprinter(InventoryPlayer inventoryPlayer, TileEntityImprinter tileEntity)
 	{
 		this.tileEntity = tileEntity;
+		this.tileEntity.container = this;
 		this.inventoryPlayer = inventoryPlayer;
 
 		/**

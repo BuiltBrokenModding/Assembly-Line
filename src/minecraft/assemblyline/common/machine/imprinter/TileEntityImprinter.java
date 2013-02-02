@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
@@ -42,6 +43,8 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	 * The Imprinter inventory containing slots.
 	 */
 	public ItemStack[] containingItems = new ItemStack[18];
+
+	public ContainerImprinter container;
 
 	@Override
 	public boolean canUpdate()
@@ -150,7 +153,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	@Override
 	public ItemStack getStackInSlotOnClosing(int slot)
 	{
-		if (this.getStackInSlot(slot) != null && slot != 2)
+		if (this.getStackInSlot(slot) != null)
 		{
 			ItemStack var2 = this.getStackInSlot(slot);
 			this.setInventorySlotContents(slot, null);
@@ -201,18 +204,18 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 		 */
 		boolean didStamp = false;
 
-		if (this.getStackInSlot(0) != null && this.getStackInSlot(1) != null)
+		if (this.imprinterMatrix[0] != null && this.imprinterMatrix[1] != null)
 		{
-			if (this.getStackInSlot(0).getItem() instanceof ItemImprinter)
+			if (this.imprinterMatrix[0].getItem() instanceof ItemImprinter)
 			{
-				ItemStack outputStack = this.getStackInSlot(0).copy();
+				ItemStack outputStack = this.imprinterMatrix[0].copy();
 				outputStack.stackSize = 1;
 				ArrayList<ItemStack> filters = ItemImprinter.getFilters(outputStack);
 				boolean filteringItemExists = false;
 
 				for (ItemStack filteredStack : filters)
 				{
-					if (filteredStack.isItemEqual(this.getStackInSlot(1)))
+					if (filteredStack.isItemEqual(this.imprinterMatrix[1]))
 					{
 						filters.remove(filteredStack);
 						filteringItemExists = true;
@@ -222,54 +225,106 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
 				if (!filteringItemExists)
 				{
-					filters.add(this.getStackInSlot(1));
+					filters.add(this.imprinterMatrix[1]);
 				}
 
 				ItemImprinter.setFilters(outputStack, filters);
-				this.setInventorySlotContents(2, outputStack);
+				this.imprinterMatrix[2] = outputStack;
 				didStamp = true;
 			}
 		}
 
 		if (!didStamp)
 		{
-			this.setInventorySlotContents(2, null);
-		}
+			this.imprinterMatrix[2] = null;
 
-		// CRAFTING
-		boolean didCraft = false;
+			/**
+			 * Try to craft from crafting grid. If not possible, then craft from imprint.
+			 */
+			boolean didCraft = false;
 
-		if (this.getStackInSlot(3) != null)
-		{
-			if (this.getStackInSlot(3).getItem() instanceof ItemImprinter)
+			/**
+			 * Simulate an Inventory Crafting Instance
+			 */
+
+			if (this.container != null)
 			{
-				ArrayList<ItemStack> filters = ItemImprinter.getFilters(this.getStackInSlot(3));
+				InventoryCrafting inventoryCrafting = new InventoryCrafting(this.container, 3, 3);
 
-				for (ItemStack outputStack : filters)
+				for (int i = 0; i < this.craftingMatrix.length; i++)
 				{
-					if (outputStack != null)
+					inventoryCrafting.setInventorySlotContents(i, this.craftingMatrix[i]);
+				}
+				
+				ItemStack matrixOutput = CraftingManager.getInstance().findMatchingRecipe(inventoryCrafting, this.worldObj);
+
+				if (matrixOutput != null)
+				{
+					this.imprinterMatrix[2] = matrixOutput;
+					didCraft = true;
+				}
+			}
+
+			if (this.imprinterMatrix[0] != null && !didCraft)
+			{
+				if (this.imprinterMatrix[0].getItem() instanceof ItemImprinter)
+				{
+					ArrayList<ItemStack> filters = ItemImprinter.getFilters(this.imprinterMatrix[0]);
+
+					for (ItemStack outputStack : filters)
 					{
-						Pair<ItemStack, ItemStack[]> idealRecipe = this.getIdealRecipe(outputStack);
-
-						if (idealRecipe != null)
+						if (outputStack != null)
 						{
-							ItemStack recipeOutput = idealRecipe.getKey();
+							Pair<ItemStack, ItemStack[]> idealRecipe = this.getIdealRecipe(outputStack);
 
-							if (recipeOutput != null & recipeOutput.stackSize > 0)
+							if (idealRecipe != null)
 							{
-								this.setInventorySlotContents(4, recipeOutput);
-								didCraft = true;
+								ItemStack recipeOutput = idealRecipe.getKey();
+
+								if (recipeOutput != null & recipeOutput.stackSize > 0)
+								{
+									this.imprinterMatrix[2] = null;
+									didCraft = true;
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			if (!didCraft)
+			{
+				this.imprinterMatrix[2] = null;
+			}
+		}
+	}
+	
+	public void onPickUpFromResult(EntityPlayer entityPlayer, ItemStack itemStack)
+	{
+		if (itemStack != null)
+		{
+			ItemStack[] requiredItems = this.getIdealRecipe(itemStack).getValue().clone();
+
+			if (requiredItems != null)
+			{
+				for (ItemStack searchStack : requiredItems)
+				{
+					for (int i = 0; i < this.getSizeInventory(); i++)
+					{
+						ItemStack checkStack = this.getStackInSlot(i);
+
+						if (checkStack != null)
+						{
+							if (searchStack.isItemEqual(checkStack) || (searchStack.itemID == checkStack.itemID && searchStack.getItemDamage() < 0))
+							{
+								this.decrStackSize(i, 1);
 								break;
 							}
 						}
 					}
 				}
 			}
-		}
-
-		if (!didCraft)
-		{
-			this.setInventorySlotContents(4, null);
 		}
 	}
 
@@ -334,10 +389,10 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 		/**
 		 * Simulate an imprinter.
 		 */
-		TileEntityImprinter test = new TileEntityImprinter();
+		TileEntityImprinter dummyImprinter = new TileEntityImprinter();
 		NBTTagCompound cloneData = new NBTTagCompound();
 		this.writeToNBT(cloneData);
-		test.readFromNBT(cloneData);
+		dummyImprinter.readFromNBT(cloneData);
 
 		/**
 		 * The actual amount of resource required. Each ItemStack will only have stacksize of 1.
@@ -354,16 +409,16 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
 				if (recipeItem != null)
 				{
-					for (int i = imprinterMatrix.length; i < test.getSizeInventory(); i++)
+					for (int i = this.containingItems.length; i < this.containingItems.length; i++)
 					{
-						ItemStack checkStack = test.getStackInSlot(i);
+						ItemStack checkStack = this.containingItems[i];
 
 						if (checkStack != null)
 						{
 							if (recipeItem.isItemEqual(checkStack) || (recipeItem.itemID == checkStack.itemID && recipeItem.getItemDamage() < 0))
 							{
 								// TODO Do NBT Checking
-								test.decrStackSize(i, 1);
+								dummyImprinter.decrStackSize(i, 1);
 								itemMatch++;
 								break;
 							}
@@ -386,16 +441,16 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
 						if (recipeItem != null)
 						{
-							for (int i = imprinterMatrix.length; i < test.getSizeInventory(); i++)
+							for (int i = this.containingItems.length; i < this.containingItems.length; i++)
 							{
-								ItemStack checkStack = test.getStackInSlot(i);
+								ItemStack checkStack = this.containingItems[i];
 
 								if (checkStack != null)
 								{
 									if (recipeItem.isItemEqual(checkStack) || (recipeItem.itemID == checkStack.itemID && recipeItem.getItemDamage() < 0))
 									{
 										// TODO Do NBT CHecking
-										test.decrStackSize(i, 1);
+										dummyImprinter.decrStackSize(i, 1);
 										itemMatch++;
 										break optionsLoop;
 									}
@@ -510,7 +565,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 												{
 													if (searchStack.isItemEqual(checkStack))
 													{
-														this.decrStackSize(i, 1);
+														this.decrStackSize(i + INVENTORY_START, 1);
 														break;
 													}
 												}
@@ -553,7 +608,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 									{
 										if (searchStack.isItemEqual(checkStack) || (searchStack.itemID == checkStack.itemID && searchStack.getItemDamage() < 0))
 										{
-											this.decrStackSize(i, 1);
+											this.decrStackSize(i + INVENTORY_START, 1);
 											break;
 										}
 									}

@@ -24,49 +24,22 @@ public class SlotCraftingResult extends Slot
 	@Override
 	public boolean canTakeStack(EntityPlayer player)
 	{
-		return this.getStack() == null ? false : this.container.tileEntity.getIdealRecipe(this.getStack()) != null;
+		return true;
+		// this.getStack() == null ? false : this.container.tileEntity.getIdealRecipe(this.getStack()) != null;
 	}
 
 	@Override
-	public void onPickupFromSlot(EntityPlayer entityPlayer, ItemStack par2ItemStack)
+	public void onPickupFromSlot(EntityPlayer entityPlayer, ItemStack itemStack)
 	{
-		super.onPickupFromSlot(entityPlayer, par2ItemStack);
+		super.onPickupFromSlot(entityPlayer, itemStack);
 
-		if (this.getStack() != null)
-		{
-			ItemStack[] requiredItems = this.container.tileEntity.getIdealRecipe(this.getStack()).getValue().clone();
-
-			if (requiredItems != null)
-			{
-				for (ItemStack searchStack : requiredItems)
-				{
-					for (int i = 0; i < this.container.tileEntity.getSizeInventory(); i++)
-					{
-						ItemStack checkStack = this.container.tileEntity.getStackInSlot(i);
-
-						if (checkStack != null)
-						{
-							if (searchStack.isItemEqual(checkStack) || (searchStack.itemID == checkStack.itemID && searchStack.getItemDamage() < 0))
-							{
-								this.container.tileEntity.decrStackSize(i, 1);
-								break;
-							}
-						}
-					}
-				}
-			}
-		}
+		this.container.tileEntity.onPickUpFromResult(entityPlayer, itemStack);
 	}
 
 	/*
-	 * private boolean playerHasRequiredIngredients(EntityPlayer player, ItemStack desiredItem) { if
-	 * (this.getStack() != null) { ItemStack[] idealRecipe =
-	 * this.container.tileEntity.getIdealRecipe(this.getStack()).getValue(); if (idealRecipe !=
-	 * null) { ItemStack[] requiredItems = idealRecipe.clone(); int foundItems = 0;
+	 * private boolean playerHasRequiredIngredients(EntityPlayer player, ItemStack desiredItem) { if (this.getStack() != null) { ItemStack[] idealRecipe = this.container.tileEntity.getIdealRecipe(this.getStack()).getValue(); if (idealRecipe != null) { ItemStack[] requiredItems = idealRecipe.clone(); int foundItems = 0;
 	 * 
-	 * if (requiredItems != null) { for (ItemStack searchStack : requiredItems) { for (int i = 0; i
-	 * < player.inventory.getSizeInventory(); i++) { ItemStack checkStack =
-	 * player.inventory.getStackInSlot(i);
+	 * if (requiredItems != null) { for (ItemStack searchStack : requiredItems) { for (int i = 0; i < player.inventory.getSizeInventory(); i++) { ItemStack checkStack = player.inventory.getStackInSlot(i);
 	 * 
 	 * if (checkStack != null) { if (searchStack.isItemEqual(checkStack)) { foundItems++; } } } } }
 	 * 
