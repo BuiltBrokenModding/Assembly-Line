@@ -48,6 +48,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	public ItemStack[] containingItems = new ItemStack[18];
 
 	public ContainerImprinter container;
+	private boolean isImprinting = false;
 
 	@Override
 	public boolean canUpdate()
@@ -229,36 +230,30 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 		}
 	}
 
+	public boolean isMatrixEmpty()
+	{
+		for (int i = 0; i < 9; i++)
+		{
+			if (this.craftingMatrix[i] != null)
+				return false;
+		}
+
+		return true;
+	}
+
 	/**
 	 * Updates all the output slots. Call this to update the Imprinter.
 	 */
 	@Override
 	public void onInventoryChanged()
 	{
-		/**
-		 * Simulate an Inventory Crafting Instance
-		 */
-		InventoryCrafting inventoryCrafting = this.getCraftingMatrix();
 
 		/**
 		 * Makes the stamping recipe for filters
 		 */
-		boolean didStamp = false;
+		this.isImprinting = false;
 
-		/**
-		 * Check crafting matrix. Only allow imprinting if the matrix is clean.
-		 */
-		boolean cleanCraftingMatrix = true;
-
-		for (int i = 0; i < 9; i++)
-		{
-			if (inventoryCrafting.getStackInSlot(i) != null)
-			{
-				cleanCraftingMatrix = false;
-			}
-		}
-
-		if (cleanCraftingMatrix && this.imprinterMatrix[0] != null && this.imprinterMatrix[1] != null)
+		if (this.isMatrixEmpty() && this.imprinterMatrix[0] != null && this.imprinterMatrix[1] != null)
 		{
 			if (this.imprinterMatrix[0].getItem() instanceof ItemImprinter)
 			{
@@ -284,11 +279,11 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
 				ItemImprinter.setFilters(outputStack, filters);
 				this.imprinterMatrix[2] = outputStack;
-				didStamp = true;
+				this.isImprinting = true;
 			}
 		}
 
-		if (!didStamp)
+		if (!this.isImprinting)
 		{
 			this.imprinterMatrix[2] = null;
 
@@ -296,6 +291,11 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 			 * Try to craft from crafting grid. If not possible, then craft from imprint.
 			 */
 			boolean didCraft = false;
+
+			/**
+			 * Simulate an Inventory Crafting Instance
+			 */
+			InventoryCrafting inventoryCrafting = this.getCraftingMatrix();
 
 			if (inventoryCrafting != null)
 			{
@@ -347,75 +347,82 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	{
 		if (itemStack != null)
 		{
-			/**
-			 * Try to consume resource from the inventory.
-			 */
-			if (this.getIdealRecipe(itemStack) != null)
+			if (this.isImprinting)
 			{
-				ItemStack[] requiredItems = this.getIdealRecipe(itemStack).getValue().clone();
-
-				if (requiredItems != null)
-				{
-					for (ItemStack searchStack : requiredItems)
-					{
-						for (int i = 0; i < this.containingItems.length; i++)
-						{
-							ItemStack checkStack = this.containingItems[i];
-
-							if (checkStack != null)
-							{
-								if (searchStack.isItemEqual(checkStack) || (searchStack.itemID == checkStack.itemID && searchStack.getItemDamage() < 0))
-								{
-									this.decrStackSize(i + INVENTORY_START, 1);
-									break;
-								}
-							}
-						}
-					}
-				}
+				this.imprinterMatrix[0] = null;
 			}
 			else
 			{
 				/**
-				 * Fail to, hence consume from crafting grid.
+				 * Try to consume resource from the inventory.
 				 */
-				InventoryCrafting inventoryCrafting = this.getCraftingMatrix();
-				GameRegistry.onItemCrafted(entityPlayer, itemStack, inventoryCrafting);
-
-				for (int var3 = 0; var3 < inventoryCrafting.getSizeInventory(); ++var3)
+				if (this.getIdealRecipe(itemStack) != null)
 				{
-					ItemStack var4 = inventoryCrafting.getStackInSlot(var3);
+					ItemStack[] requiredItems = this.getIdealRecipe(itemStack).getValue().clone();
 
-					if (var4 != null)
+					if (requiredItems != null)
 					{
-						inventoryCrafting.decrStackSize(var3, 1);
-
-						if (var4.getItem().hasContainerItem())
+						for (ItemStack searchStack : requiredItems)
 						{
-							ItemStack var5 = var4.getItem().getContainerItemStack(var4);
-
-							if (var5.isItemStackDamageable() && var5.getItemDamage() > var5.getMaxDamage())
+							for (int i = 0; i < this.containingItems.length; i++)
 							{
-								MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(entityPlayer, var5));
-								var5 = null;
-							}
+								ItemStack checkStack = this.containingItems[i];
 
-							if (var5 != null && (!var4.getItem().doesContainerItemLeaveCraftingGrid(var4) || !entityPlayer.inventory.addItemStackToInventory(var5)))
-							{
-								if (inventoryCrafting.getStackInSlot(var3) == null)
+								if (checkStack != null)
 								{
-									inventoryCrafting.setInventorySlotContents(var3, var5);
-								}
-								else
-								{
-									entityPlayer.dropPlayerItem(var5);
+									if (searchStack.isItemEqual(checkStack) || (searchStack.itemID == checkStack.itemID && searchStack.getItemDamage() < 0))
+									{
+										this.decrStackSize(i + INVENTORY_START, 1);
+										break;
+									}
 								}
 							}
 						}
 					}
 				}
+				else
+				{
+					/**
+					 * Fail to, hence consume from crafting grid.
+					 */
+					InventoryCrafting inventoryCrafting = this.getCraftingMatrix();
+					GameRegistry.onItemCrafted(entityPlayer, itemStack, inventoryCrafting);
 
-				this.replaceCraftingMatrix(inventoryCrafting);
+					for (int var3 = 0; var3 < inventoryCrafting.getSizeInventory(); ++var3)
+					{
+						ItemStack var4 = inventoryCrafting.getStackInSlot(var3);
+
+						if (var4 != null)
+						{
+							inventoryCrafting.decrStackSize(var3, 1);
+
+							if (var4.getItem().hasContainerItem())
+							{
+								ItemStack var5 = var4.getItem().getContainerItemStack(var4);
+
+								if (var5.isItemStackDamageable() && var5.getItemDamage() > var5.getMaxDamage())
+								{
+									MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(entityPlayer, var5));
+									var5 = null;
+								}
+
+								if (var5 != null && (!var4.getItem().doesContainerItemLeaveCraftingGrid(var4) || !entityPlayer.inventory.addItemStackToInventory(var5)))
+								{
+									if (inventoryCrafting.getStackInSlot(var3) == null)
+									{
+										inventoryCrafting.setInventorySlotContents(var3, var5);
+									}
+									else
+									{
+										entityPlayer.dropPlayerItem(var5);
+									}
+								}
+							}
+						}
+					}
+
+					this.replaceCraftingMatrix(inventoryCrafting);
+				}
 			}
 		}
 	}

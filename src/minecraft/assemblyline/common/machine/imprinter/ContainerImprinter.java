@@ -83,7 +83,7 @@ public class ContainerImprinter extends Container implements ISlotWatcher
 			ItemStack slotStack = slotObj.getStack();
 			copyStack = slotStack.copy();
 
-			if (slot == 2)
+			if (slot == this.tileEntity.INVENTORY_START - 1)
 			{
 				// Prevents filter from being duplicated
 				this.tileEntity.setInventorySlotContents(0, null);
@@ -91,11 +91,11 @@ public class ContainerImprinter extends Container implements ISlotWatcher
 
 			if (slot > this.tileEntity.getSizeInventory())
 			{
-				if (this.getSlot(0).isItemValid(slotStack))
+				if (this.getSlot(this.tileEntity.IMPRINTER_MATRIX_START).isItemValid(slotStack))
 				{
-					if (!this.mergeItemStack(slotStack, 0, 1, false)) { return null; }
+					if (!this.mergeItemStack(slotStack, this.tileEntity.IMPRINTER_MATRIX_START, this.tileEntity.IMPRINTER_MATRIX_START + 1, true)) { return null; }
 				}
-				else if (!this.mergeItemStack(slotStack, this.tileEntity.imprinterMatrix.length, this.tileEntity.getSizeInventory(), false)) { return null; }
+				else if (!this.mergeItemStack(slotStack, this.tileEntity.INVENTORY_START, this.tileEntity.getSizeInventory(), false)) { return null; }
 			}
 			else if (!this.mergeItemStack(slotStack, this.tileEntity.getSizeInventory(), this.tileEntity.getSizeInventory() + 36, false)) { return null; }
 
