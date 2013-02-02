@@ -147,6 +147,10 @@ public class BlockCrate extends BlockMachine
 						if (requestStack.isItemEqual(currentStack))
 						{
 							player.inventory.setInventorySlotContents(i, this.putIn(tileEntity, currentStack));
+							if (player instanceof EntityPlayerMP)
+							{
+								((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
+							}
 						}
 					}
 				}

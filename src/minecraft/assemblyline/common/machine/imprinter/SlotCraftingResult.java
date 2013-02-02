@@ -24,7 +24,7 @@ public class SlotCraftingResult extends Slot
 	@Override
 	public boolean canTakeStack(EntityPlayer player)
 	{
-		return this.container.tileEntity.getIdealRecipe(this.getStack()) != null;
+		return this.getStack() == null ? false : this.container.tileEntity.getIdealRecipe(this.getStack()) != null;
 	}
 
 	@Override
