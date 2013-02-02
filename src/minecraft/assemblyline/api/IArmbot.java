@@ -1,5 +1,9 @@
 package assemblyline.api;
 
+import java.util.List;
+
+import net.minecraft.entity.Entity;
+
 /**
  * An interface applied to Armbots.
  * 
@@ -7,5 +11,5 @@ package assemblyline.api;
  */
 public interface IArmbot
 {
-	
+	public List<Entity> getGrabbedEntities();
 }

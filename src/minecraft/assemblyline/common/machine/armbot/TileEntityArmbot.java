@@ -866,4 +866,10 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		}
 	}
 
+	@Override
+	public List<Entity> getGrabbedEntities()
+	{
+		return this.grabbedEntities;
+	}
+
 }

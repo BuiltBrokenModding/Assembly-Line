@@ -13,47 +13,45 @@ public class CommandUse extends Command
 	@Override
 	public void onTaskStart()
 	{
-		times = 0;
-		curTimes = 0;
+		this.times = 0;
+		this.curTimes = 0;
 
 		if (this.getArgs().length > 0)
 		{
-			times = this.getIntArg(0);
+			this.times = this.getIntArg(0);
 		}
 
-		if (times <= 0)
-			times = 1;
+		if (this.times <= 0)
+			this.times = 1;
 	}
 
 	@Override
 	protected boolean doTask()
 	{
-		TileEntity handTile = this.tileEntity.getHandPosition().getTileEntity(this.world);
-		Entity handEntity = null;
-		if (this.tileEntity.grabbedEntities.size() > 0)
-			handEntity = this.tileEntity.grabbedEntities.get(0);
-		if (handTile != null)
+		TileEntity targetTile = this.tileEntity.getHandPosition().getTileEntity(this.world);
+
+		if (targetTile != null)
 		{
-			if (handTile instanceof IArmbotUseable)
+			if (targetTile instanceof IArmbotUseable)
 			{
-				((IArmbotUseable) handTile).onUse(this.tileEntity, handEntity);
+				((IArmbotUseable) targetTile).onUse(this.tileEntity);
 			}
 		}
 
-		curTimes++;
+		this.curTimes++;
 
-		if (curTimes >= times)
+		if (this.curTimes >= this.times)
 			return false;
 
 		return true;
 	}
-	
+
 	@Override
 	public String toString()
 	{
 		return "USE " + Integer.toString(this.times);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound taskCompound)
 	{
@@ -61,7 +59,7 @@ public class CommandUse extends Command
 		this.times = taskCompound.getInteger("useTimes");
 		this.curTimes = taskCompound.getInteger("useCurTimes");
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound taskCompound)
 	{
