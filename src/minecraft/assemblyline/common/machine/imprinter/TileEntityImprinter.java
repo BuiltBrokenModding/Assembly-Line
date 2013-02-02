@@ -16,6 +16,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import universalelectricity.prefab.TranslationHelper;
@@ -25,6 +27,7 @@ import assemblyline.api.IArmbotUseable;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.Pair;
 import assemblyline.common.machine.armbot.TileEntityArmbot;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
 public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInventory, IArmbotUseable
@@ -74,7 +77,8 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	}
 
 	/**
-	 * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
+	 * Sets the given item stack to the specified slot in the inventory (can be crafting or armor
+	 * sections).
 	 */
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack itemStack)
@@ -114,7 +118,8 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	}
 
 	/**
-	 * Removes from an inventory slot (first arg) up to a specified number (second arg) of items and returns them in a new stack.
+	 * Removes from an inventory slot (first arg) up to a specified number (second arg) of items and
+	 * returns them in a new stack.
 	 */
 	@Override
 	public ItemStack decrStackSize(int i, int amount)
@@ -148,7 +153,8 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	}
 
 	/**
-	 * When some containers are closed they call this on each slot, then drop whatever it returns as an EntityItem - like when you close a workbench GUI.
+	 * When some containers are closed they call this on each slot, then drop whatever it returns as
+	 * an EntityItem - like when you close a workbench GUI.
 	 */
 	@Override
 	public ItemStack getStackInSlotOnClosing(int slot)
@@ -194,17 +200,65 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	}
 
 	/**
-	 * Updates all the output slots.
+	 * Construct an InventoryCrafting Matrix on the fly.
+	 * 
+	 * @return
+	 */
+	public InventoryCrafting getCraftingMatrix()
+	{
+		if (this.container != null)
+		{
+			InventoryCrafting inventoryCrafting = new InventoryCrafting(this.container, 3, 3);
+
+			for (int i = 0; i < this.craftingMatrix.length; i++)
+			{
+				inventoryCrafting.setInventorySlotContents(i, this.craftingMatrix[i]);
+			}
+
+			return inventoryCrafting;
+		}
+
+		return null;
+	}
+
+	public void replaceCraftingMatrix(InventoryCrafting inventoryCrafting)
+	{
+		for (int i = 0; i < this.craftingMatrix.length; i++)
+		{
+			this.craftingMatrix[i] = inventoryCrafting.getStackInSlot(i);
+		}
+	}
+
+	/**
+	 * Updates all the output slots. Call this to update the Imprinter.
 	 */
 	@Override
 	public void onInventoryChanged()
 	{
 		/**
+		 * Simulate an Inventory Crafting Instance
+		 */
+		InventoryCrafting inventoryCrafting = this.getCraftingMatrix();
+
+		/**
 		 * Makes the stamping recipe for filters
 		 */
 		boolean didStamp = false;
 
-		if (this.imprinterMatrix[0] != null && this.imprinterMatrix[1] != null)
+		/**
+		 * Check crafting matrix. Only allow imprinting if the matrix is clean.
+		 */
+		boolean cleanCraftingMatrix = true;
+
+		for (int i = 0; i < 9; i++)
+		{
+			if (inventoryCrafting.getStackInSlot(i) != null)
+			{
+				cleanCraftingMatrix = false;
+			}
+		}
+
+		if (cleanCraftingMatrix && this.imprinterMatrix[0] != null && this.imprinterMatrix[1] != null)
 		{
 			if (this.imprinterMatrix[0].getItem() instanceof ItemImprinter)
 			{
@@ -243,19 +297,8 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 			 */
 			boolean didCraft = false;
 
-			/**
-			 * Simulate an Inventory Crafting Instance
-			 */
-
-			if (this.container != null)
+			if (inventoryCrafting != null)
 			{
-				InventoryCrafting inventoryCrafting = new InventoryCrafting(this.container, 3, 3);
-
-				for (int i = 0; i < this.craftingMatrix.length; i++)
-				{
-					inventoryCrafting.setInventorySlotContents(i, this.craftingMatrix[i]);
-				}
-				
 				ItemStack matrixOutput = CraftingManager.getInstance().findMatchingRecipe(inventoryCrafting, this.worldObj);
 
 				if (matrixOutput != null)
@@ -283,7 +326,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
 								if (recipeOutput != null & recipeOutput.stackSize > 0)
 								{
-									this.imprinterMatrix[2] = null;
+									this.imprinterMatrix[2] = recipeOutput;
 									didCraft = true;
 									break;
 								}
@@ -299,31 +342,80 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 			}
 		}
 	}
-	
+
 	public void onPickUpFromResult(EntityPlayer entityPlayer, ItemStack itemStack)
 	{
 		if (itemStack != null)
 		{
-			ItemStack[] requiredItems = this.getIdealRecipe(itemStack).getValue().clone();
-
-			if (requiredItems != null)
+			/**
+			 * Try to consume resource from the inventory.
+			 */
+			if (this.getIdealRecipe(itemStack) != null)
 			{
-				for (ItemStack searchStack : requiredItems)
-				{
-					for (int i = 0; i < this.getSizeInventory(); i++)
-					{
-						ItemStack checkStack = this.getStackInSlot(i);
+				ItemStack[] requiredItems = this.getIdealRecipe(itemStack).getValue().clone();
 
-						if (checkStack != null)
+				if (requiredItems != null)
+				{
+					for (ItemStack searchStack : requiredItems)
+					{
+						for (int i = 0; i < this.containingItems.length; i++)
 						{
-							if (searchStack.isItemEqual(checkStack) || (searchStack.itemID == checkStack.itemID && searchStack.getItemDamage() < 0))
+							ItemStack checkStack = this.containingItems[i];
+
+							if (checkStack != null)
 							{
-								this.decrStackSize(i, 1);
-								break;
+								if (searchStack.isItemEqual(checkStack) || (searchStack.itemID == checkStack.itemID && searchStack.getItemDamage() < 0))
+								{
+									this.decrStackSize(i + INVENTORY_START, 1);
+									break;
+								}
 							}
 						}
 					}
 				}
+			}
+			else
+			{
+				/**
+				 * Fail to, hence consume from crafting grid.
+				 */
+				InventoryCrafting inventoryCrafting = this.getCraftingMatrix();
+				GameRegistry.onItemCrafted(entityPlayer, itemStack, inventoryCrafting);
+
+				for (int var3 = 0; var3 < inventoryCrafting.getSizeInventory(); ++var3)
+				{
+					ItemStack var4 = inventoryCrafting.getStackInSlot(var3);
+
+					if (var4 != null)
+					{
+						inventoryCrafting.decrStackSize(var3, 1);
+
+						if (var4.getItem().hasContainerItem())
+						{
+							ItemStack var5 = var4.getItem().getContainerItemStack(var4);
+
+							if (var5.isItemStackDamageable() && var5.getItemDamage() > var5.getMaxDamage())
+							{
+								MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(entityPlayer, var5));
+								var5 = null;
+							}
+
+							if (var5 != null && (!var4.getItem().doesContainerItemLeaveCraftingGrid(var4) || !entityPlayer.inventory.addItemStackToInventory(var5)))
+							{
+								if (inventoryCrafting.getStackInSlot(var3) == null)
+								{
+									inventoryCrafting.setInventorySlotContents(var3, var5);
+								}
+								else
+								{
+									entityPlayer.dropPlayerItem(var5);
+								}
+							}
+						}
+					}
+				}
+
+				this.replaceCraftingMatrix(inventoryCrafting);
 			}
 		}
 	}
@@ -409,7 +501,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
 				if (recipeItem != null)
 				{
-					for (int i = this.containingItems.length; i < this.containingItems.length; i++)
+					for (int i = 0; i < this.containingItems.length; i++)
 					{
 						ItemStack checkStack = this.containingItems[i];
 
@@ -418,7 +510,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 							if (recipeItem.isItemEqual(checkStack) || (recipeItem.itemID == checkStack.itemID && recipeItem.getItemDamage() < 0))
 							{
 								// TODO Do NBT Checking
-								dummyImprinter.decrStackSize(i, 1);
+								dummyImprinter.decrStackSize(i + INVENTORY_START, 1);
 								itemMatch++;
 								break;
 							}
@@ -441,7 +533,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
 						if (recipeItem != null)
 						{
-							for (int i = this.containingItems.length; i < this.containingItems.length; i++)
+							for (int i = 0; i < this.containingItems.length; i++)
 							{
 								ItemStack checkStack = this.containingItems[i];
 
@@ -450,7 +542,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 									if (recipeItem.isItemEqual(checkStack) || (recipeItem.itemID == checkStack.itemID && recipeItem.getItemDamage() < 0))
 									{
 										// TODO Do NBT CHecking
-										dummyImprinter.decrStackSize(i, 1);
+										dummyImprinter.decrStackSize(i + INVENTORY_START, 1);
 										itemMatch++;
 										break optionsLoop;
 									}
@@ -474,8 +566,9 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 		super.readFromNBT(nbt);
 
 		NBTTagList var2 = nbt.getTagList("Items");
-
-		this.containingItems = new ItemStack[this.getSizeInventory()];
+		this.craftingMatrix = new ItemStack[9];
+		this.imprinterMatrix = new ItemStack[3];
+		this.containingItems = new ItemStack[18];
 
 		for (int i = 0; i < var2.tagCount(); ++i)
 		{
@@ -484,7 +577,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
 			if (var5 >= 0 && var5 < this.getSizeInventory())
 			{
-				this.setInventorySlotContents(i, ItemStack.loadItemStackFromNBT(var4));
+				this.setInventorySlotContents(var5, ItemStack.loadItemStackFromNBT(var4));
 			}
 		}
 	}

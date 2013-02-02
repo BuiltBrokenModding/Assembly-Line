@@ -78,7 +78,6 @@ public class RenderCrate extends TileEntitySpecialRenderer
 					GL11.glRotatef(180, 0, 0, 1);
 
 					RenderEngine renderEngine = Minecraft.getMinecraft().renderEngine;
-					EntityItem ei = new EntityItem(tileEntity.worldObj, 0.0, 0.0, 0.0, itemStack);
 
 					GL11.glDisable(2896);
 					if (!ForgeHooksClient.renderInventoryItem(this.renderBlocks, renderEngine, itemStack, true, 0.0F, 0.0F, 0.0F))
