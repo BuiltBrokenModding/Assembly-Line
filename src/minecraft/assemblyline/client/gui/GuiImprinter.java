@@ -18,7 +18,7 @@ public class GuiImprinter extends GuiContainer
 	public GuiImprinter(InventoryPlayer par1InventoryPlayer, TileEntityImprinter tileEntity)
 	{
 		super(new ContainerImprinter(par1InventoryPlayer, tileEntity));
-		this.ySize = 184;
+		this.ySize = 201;
 	}
 
 	/**
@@ -28,7 +28,6 @@ public class GuiImprinter extends GuiContainer
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
 		this.fontRenderer.drawString(TranslationHelper.getLocal("tile.imprinter.name"), 68, 6, 4210752);
-		this.fontRenderer.drawString(TranslationHelper.getLocal("assemblyline.gui.crafting") + ":", 20, 54, 4210752);
 	}
 
 	/**

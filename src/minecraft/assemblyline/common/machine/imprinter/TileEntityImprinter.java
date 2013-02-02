@@ -27,13 +27,20 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
 
 public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInventory, IArmbotUseable
 {
-	public static final int START_INVENTORY = 5;
-	public static final int INVENTORY_LENGTH = 9;
+	public static final int IMPRINTER_MATRIX_START = 9;
+	public static final int INVENTORY_START = IMPRINTER_MATRIX_START + 3;
 
 	/**
-	 * Imprinter slots. 10 extra slots for storing imprints.
+	 * 9 slots for crafting, 1 slot for an imprint, 1 slot for an item
 	 */
-	private ItemStack[] containingItems = new ItemStack[5 + INVENTORY_LENGTH];
+	public InventoryImprinterCrafting craftingMatrix = new InventoryImprinterCrafting(null, 3, 3);
+
+	public ItemStack[] imprinterMatrix = new ItemStack[3];
+
+	/**
+	 * The Imprinter inventory containing slots.
+	 */
+	public ItemStack[] containingItems = new ItemStack[18];
 
 	@Override
 	public boolean canUpdate()
@@ -46,31 +53,35 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	{
 		if (side == ForgeDirection.UP || side == ForgeDirection.DOWN)
 			return 3;
-		return START_INVENTORY;
+		return imprinterMatrix.length;
 	}
 
 	@Override
 	public int getSizeInventorySide(ForgeDirection side)
 	{
 		if (side == ForgeDirection.UP || side == ForgeDirection.DOWN) { return 1; }
-		return INVENTORY_LENGTH;
+		return containingItems.length;
 	}
 
 	@Override
 	public int getSizeInventory()
 	{
-		return this.containingItems.length;
+		return this.imprinterMatrix.length + this.containingItems.length;
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int slot)
 	{
-		return this.containingItems[slot];
+		if (slot < 9)
+		{
+			return this.craftingMatrix.getStackInSlot(slot);
+		}
+		else if (slot < 11) { return this.imprinterMatrix[slot - IMPRINTER_MATRIX_START]; }
+		return this.containingItems[slot - IMPRINTER_MATRIX_START];
 	}
 
 	/**
-	 * Removes from an inventory slot (first arg) up to a specified number (second arg) of items and
-	 * returns them in a new stack.
+	 * Removes from an inventory slot (first arg) up to a specified number (second arg) of items and returns them in a new stack.
 	 */
 	@Override
 	public ItemStack decrStackSize(int i, int amount)
@@ -104,8 +115,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	}
 
 	/**
-	 * When some containers are closed they call this on each slot, then drop whatever it returns as
-	 * an EntityItem - like when you close a workbench GUI.
+	 * When some containers are closed they call this on each slot, then drop whatever it returns as an EntityItem - like when you close a workbench GUI.
 	 */
 	@Override
 	public ItemStack getStackInSlotOnClosing(int slot)
@@ -123,8 +133,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	}
 
 	/**
-	 * Sets the given item stack to the specified slot in the inventory (can be crafting or armor
-	 * sections).
+	 * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
 	 */
 	@Override
 	public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
@@ -304,10 +313,14 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	 */
 	public ArrayList<ItemStack> hasResource(Object[] recipeItems)
 	{
+		/**
+		 * Simulate an imprinter.
+		 */
 		TileEntityImprinter test = new TileEntityImprinter();
 		NBTTagCompound cloneData = new NBTTagCompound();
 		this.writeToNBT(cloneData);
 		test.readFromNBT(cloneData);
+
 		/**
 		 * The actual amount of resource required. Each ItemStack will only have stacksize of 1.
 		 */
@@ -323,7 +336,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
 				if (recipeItem != null)
 				{
-					for (int i = START_INVENTORY; i < test.getSizeInventory(); i++)
+					for (int i = imprinterMatrix.length; i < test.getSizeInventory(); i++)
 					{
 						ItemStack checkStack = test.getStackInSlot(i);
 
@@ -355,7 +368,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
 						if (recipeItem != null)
 						{
-							for (int i = START_INVENTORY; i < test.getSizeInventory(); i++)
+							for (int i = imprinterMatrix.length; i < test.getSizeInventory(); i++)
 							{
 								ItemStack checkStack = test.getStackInSlot(i);
 
@@ -427,6 +440,12 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 		nbt.setTag("Items", var2);
 	}
 
+	/**
+	 * Armbot
+	 * @param tileEntity
+	 * @param heldEntity
+	 * @return
+	 */
 	@Override
 	public boolean onUse(TileEntityArmbot tileEntity, Entity heldEntity)
 	{
@@ -435,17 +454,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 			if (heldEntity instanceof EntityItem)
 			{
 				ItemStack stack = ((EntityItem) heldEntity).getEntityItem();
-				if (this.getStackInSlot(3) == null && stack != null && stack.itemID == AssemblyLine.itemImprint.itemID) // no
-																														// crafting
-																														// imprint
-																														// and
-																														// stack
-																														// not
-																														// null
-																														// and
-																														// stack
-																														// is
-																														// imprint
+				if (this.getStackInSlot(3) == null && stack != null && stack.itemID == AssemblyLine.itemImprint.itemID)
 				{
 					this.setInventorySlotContents(3, stack);
 					this.onInventoryChanged();

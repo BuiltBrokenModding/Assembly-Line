@@ -17,21 +17,31 @@ public class ContainerImprinter extends Container implements ISlotWatcher
 		this.tileEntity = tileEntity;
 		this.inventoryPlayer = inventoryPlayer;
 
-		// Paper Input
-		this.addSlotToContainer(new SlotCustom(this.tileEntity, 0, 33, 22, new ItemStack(AssemblyLine.itemImprint)));
-		// Item Stamp
-		this.addSlotToContainer(new Slot(this.tileEntity, 1, 69, 22));
-		// Output Filter
-		this.addSlotToContainer(new SlotImprintResult(this.tileEntity, 2, 127, 22));
-		// Crafting Slot
-		this.addSlotToContainer(new SlotCustom(this.tileEntity, 3, 69, 51, new ItemStack(AssemblyLine.itemImprint)));
-		// Crafting Output
-		this.addSlotToContainer(new SlotCraftingResult(this, this.tileEntity, 4, 127, 51));
+		/**
+		 * Crafting Matrix
+		 */
+		for (int x = 0; x < 3; x++)
+		{
+			for (int y = 0; y < 3; y++)
+			{
+				this.addSlotToContainer(new Slot(this.tileEntity, y + x, 9 + y * 18, 16 + x * 18));
+			}
+		}
+
+		// Imprint Input for Imprinting
+		this.addSlotToContainer(new SlotCustom(this.tileEntity, TileEntityImprinter.IMPRINTER_MATRIX_START, 68, 34, new ItemStack(AssemblyLine.itemImprint)));
+		// Item to be imprinted
+		this.addSlotToContainer(new Slot(this.tileEntity, TileEntityImprinter.IMPRINTER_MATRIX_START + 1, 92, 34));
+		// Result of Crafting/Imprinting
+		this.addSlotToContainer(new SlotCraftingResult(this, this.tileEntity, TileEntityImprinter.IMPRINTER_MATRIX_START + 2, 148, 34));
 
 		// Imprinter Inventory
 		for (int i = 0; i < 9; i++)
 		{
-			this.addSlotToContainer(new WatchedSlot(this.tileEntity, i + TileEntityImprinter.START_INVENTORY, 8 + i * 18, 80, this));
+			for (int ii = 0; ii < 2; ii++)
+			{
+				this.addSlotToContainer(new WatchedSlot(this.tileEntity, i + this.tileEntity.imprinterMatrix.length - 1, 8 + i * 18, 80 + ii * 18, this));
+			}
 		}
 
 		// Player Inventory
@@ -41,13 +51,13 @@ public class ContainerImprinter extends Container implements ISlotWatcher
 		{
 			for (int var4 = 0; var4 < 9; ++var4)
 			{
-				this.addSlotToContainer(new WatchedSlot(inventoryPlayer, var4 + var3 * 9 + 9, 8 + var4 * 18, 102 + var3 * 18, this));
+				this.addSlotToContainer(new WatchedSlot(inventoryPlayer, var4 + var3 * 9 + 9, 8 + var4 * 18, 120 + var3 * 18, this));
 			}
 		}
 
 		for (var3 = 0; var3 < 9; ++var3)
 		{
-			this.addSlotToContainer(new WatchedSlot(inventoryPlayer, var3, 8 + var3 * 18, 160, this));
+			this.addSlotToContainer(new WatchedSlot(inventoryPlayer, var3, 8 + var3 * 18, 178, this));
 		}
 	}
 
@@ -83,7 +93,7 @@ public class ContainerImprinter extends Container implements ISlotWatcher
 				{
 					if (!this.mergeItemStack(slotStack, 0, 1, false)) { return null; }
 				}
-				else if (!this.mergeItemStack(slotStack, this.tileEntity.START_INVENTORY, this.tileEntity.getSizeInventory(), false)) { return null; }
+				else if (!this.mergeItemStack(slotStack, this.tileEntity.imprinterMatrix.length, this.tileEntity.getSizeInventory(), false)) { return null; }
 			}
 			else if (!this.mergeItemStack(slotStack, this.tileEntity.getSizeInventory(), this.tileEntity.getSizeInventory() + 36, false)) { return null; }
 
