@@ -29,6 +29,7 @@ import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.multiblock.IMultiBlock;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
+import assemblyline.api.IArmbot;
 import assemblyline.api.IArmbotUseable;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.TileEntityAssemblyNetwork;
@@ -51,7 +52,7 @@ import cpw.mods.fml.relauncher.Side;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.IPeripheral;
 
-public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMultiBlock, IInventory, IPacketReceiver, IJouleStorage, IPeripheral
+public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMultiBlock, IInventory, IPacketReceiver, IJouleStorage, IArmbot, IPeripheral
 {
 	private final CommandManager commandManager = new CommandManager();
 	private static final int PACKET_COMMANDS = 128;
@@ -488,8 +489,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			}
 		}
 		/*
-		 * NBTTagCompound cmdManager = nbt.getCompoundTag("cmdManager");
-		 * this.commandManager.readFromNBT(this, cmdManager);
+		 * NBTTagCompound cmdManager = nbt.getCompoundTag("cmdManager"); this.commandManager.readFromNBT(this, cmdManager);
 		 */
 		this.commandManager.setCurrentTask(nbt.getInteger("curTask"));
 
@@ -526,8 +526,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		nbt.setFloat("pitch", this.rotationPitch);
 
 		/*
-		 * NBTTagCompound cmdManager = new NBTTagCompound("cmdManager");
-		 * this.commandManager.writeToNBT(cmdManager); nbt.setCompoundTag("cmdManager", cmdManager);
+		 * NBTTagCompound cmdManager = new NBTTagCompound("cmdManager"); this.commandManager.writeToNBT(cmdManager); nbt.setCompoundTag("cmdManager", cmdManager);
 		 */
 
 		nbt.setString("cmdText", this.displayText);

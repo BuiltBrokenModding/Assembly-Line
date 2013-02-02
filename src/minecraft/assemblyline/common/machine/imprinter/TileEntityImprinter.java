@@ -19,6 +19,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
+import assemblyline.api.IArmbot;
 import assemblyline.api.IArmbotUseable;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.Pair;
@@ -442,13 +443,16 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
 	/**
 	 * Armbot
+	 * 
 	 * @param tileEntity
 	 * @param heldEntity
 	 * @return
 	 */
 	@Override
-	public boolean onUse(TileEntityArmbot tileEntity, Entity heldEntity)
+	public boolean onUse(IArmbot iArmbot, Entity heldEntity)
 	{
+		TileEntityArmbot tileEntity = (TileEntityArmbot) iArmbot;
+		
 		if (heldEntity != null)
 		{
 			if (heldEntity instanceof EntityItem)
