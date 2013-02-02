@@ -364,16 +364,19 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 					{
 						for (ItemStack searchStack : requiredItems)
 						{
-							for (int i = 0; i < this.containingItems.length; i++)
+							if (searchStack != null)
 							{
-								ItemStack checkStack = this.containingItems[i];
-
-								if (checkStack != null)
+								for (int i = 0; i < this.containingItems.length; i++)
 								{
-									if (searchStack.isItemEqual(checkStack) || (searchStack.itemID == checkStack.itemID && searchStack.getItemDamage() < 0))
+									ItemStack checkStack = this.containingItems[i];
+
+									if (checkStack != null)
 									{
-										this.decrStackSize(i + INVENTORY_START, 1);
-										break;
+										if (searchStack.isItemEqual(checkStack) || (searchStack.itemID == checkStack.itemID && searchStack.getItemDamage() < 0))
+										{
+											this.decrStackSize(i + INVENTORY_START, 1);
+											break;
+										}
 									}
 								}
 							}
