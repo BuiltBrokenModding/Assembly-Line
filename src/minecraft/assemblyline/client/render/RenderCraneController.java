@@ -13,8 +13,8 @@ import assemblyline.common.AssemblyLine;
 
 public class RenderCraneController extends RenderImprintable
 {
-	public static final String					TEXTURE	= "QuarryControllerMap.png";
-	public static final ModelCraneController	MODEL	= new ModelCraneController();
+	public static final String TEXTURE = "quarry_controller_map.png";
+	public static final ModelCraneController MODEL = new ModelCraneController();
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float f)

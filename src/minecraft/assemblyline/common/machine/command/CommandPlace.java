@@ -35,7 +35,7 @@ public class CommandPlace extends Command
 
 		if (block == null && ticks >= this.PLACE_TIME)
 		{
-			for (Entity entity : this.tileEntity.grabbedEntities)
+			for (Entity entity : this.tileEntity.getGrabbedEntities())
 			{
 				if (entity instanceof EntityItem)
 				{
@@ -47,7 +47,7 @@ public class CommandPlace extends Command
 						{
 							((ItemBlock) itemStack.getItem()).placeBlockAt(itemStack, null, this.world, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), 0, 0.5f, 0.5f, 0.5f, itemStack.getItemDamage());
 
-							this.tileEntity.grabbedEntities.remove(entity);
+							this.tileEntity.dropEntity(entity);
 							return false;
 						}
 						else if (itemStack.getItem() instanceof IPlantable)
@@ -68,7 +68,7 @@ public class CommandPlace extends Command
 										{
 											Block.blocksList[blockID].onBlockPlacedBy(world, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), null);
 											Block.blocksList[blockID].onPostBlockPlaced(world, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), blockMetadata);
-											this.tileEntity.grabbedEntities.remove(entity);
+											this.tileEntity.dropEntity(entity);
 											return false;
 										}
 									}

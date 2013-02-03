@@ -16,6 +16,6 @@ public interface IArmbotUseable
 	 * 
 	 * @param armbot - The Armbot instance.
 	 */
-	public boolean onUse(IArmbot armbot);
+	public boolean onUse(IArmbot armbot, String[] args);
 
 }

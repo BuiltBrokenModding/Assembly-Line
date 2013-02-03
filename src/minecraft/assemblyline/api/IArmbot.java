@@ -11,5 +11,23 @@ import net.minecraft.entity.Entity;
  */
 public interface IArmbot
 {
+	/**
+	 * Adds an entity to the Armbot's grab list.
+	 */
+	public void grabEntity(Entity entity);
+
+	/**
+	 * Drops a specific entity from the Armbot's hand.
+	 */
+	public void dropEntity(Entity entity);
+
+	/**
+	 * Drops all entities in the Armbot's hand.
+	 */
+	public void dropAll();
+
+	/**
+	 * @return Returns all entities being grabbed by the Armbot.
+	 */
 	public List<Entity> getGrabbedEntities();
 }

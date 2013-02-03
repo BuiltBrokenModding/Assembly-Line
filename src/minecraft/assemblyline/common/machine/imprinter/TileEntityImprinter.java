@@ -59,15 +59,12 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	@Override
 	public int getStartInventorySide(ForgeDirection side)
 	{
-		if (side == ForgeDirection.UP || side == ForgeDirection.DOWN)
-			return 3;
-		return imprinterMatrix.length;
+		return INVENTORY_START;
 	}
 
 	@Override
 	public int getSizeInventorySide(ForgeDirection side)
 	{
-		if (side == ForgeDirection.UP || side == ForgeDirection.DOWN) { return 1; }
 		return containingItems.length;
 	}
 
@@ -624,107 +621,52 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	 * @return
 	 */
 	@Override
-	public boolean onUse(IArmbot armbot)
+	public boolean onUse(IArmbot armbot, String[] args)
 	{
+		this.onInventoryChanged();
 		TileEntityArmbot armbotTile = (TileEntityArmbot) armbot;
 
-		if (armbotTile.getGrabbedEntities().size() > 0)
+		if (this.imprinterMatrix[3] != null)
 		{
-			Entity heldEntity = armbot.getGrabbedEntities().get(0);
-
-			if (heldEntity != null)
-			{
-				if (heldEntity instanceof EntityItem)
-				{
-					ItemStack stack = ((EntityItem) heldEntity).getEntityItem();
-					if (this.getStackInSlot(3) == null && stack != null && stack.itemID == AssemblyLine.itemImprint.itemID)
-					{
-						this.setInventorySlotContents(3, stack);
-						this.onInventoryChanged();
-						armbotTile.grabbedEntities.remove(0);
-						return true;
-					}
-					else if (this.getStackInSlot(3) != null && stack != null)
-					{
-						ItemStack result = this.getStackInSlot(4); // crafting result
-						if (result != null)
-						{
-							result = this.getStackInSlot(4);
-							if (stack.isItemEqual(result))
-							{
-								if (result != null)
-								{
-									ItemStack[] requiredItems = this.getIdealRecipe(result).getValue().clone();
-
-									if (requiredItems != null)
-									{
-										for (ItemStack searchStack : requiredItems)
-										{
-											for (int i = 0; i < this.getSizeInventory(); i++)
-											{
-												ItemStack checkStack = this.getStackInSlot(i);
-
-												if (checkStack != null)
-												{
-													if (searchStack.isItemEqual(checkStack))
-													{
-														this.decrStackSize(i + INVENTORY_START, 1);
-														break;
-													}
-												}
-											}
-										}
-									}
-								}
-								if (stack.isStackable())
-								{
-									stack.stackSize += result.stackSize;
-									this.onInventoryChanged();
-									armbotTile.grabbedEntities.remove(0);
-									armbotTile.grabbedEntities.add(new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, stack));
-									return true;
-								}
-							}
-						}
-					}
-				}
-			}
-			else
-			{
-				ItemStack result = this.getStackInSlot(4); // crafting result
-				if (result != null)
-				{
-					result = this.getStackInSlot(4);
-					if (result != null)
-					{
-						ItemStack[] requiredItems = this.getIdealRecipe(result).getValue().clone();
-
-						if (requiredItems != null)
-						{
-							for (ItemStack searchStack : requiredItems)
-							{
-								for (int i = 0; i < this.getSizeInventory(); i++)
-								{
-									ItemStack checkStack = this.getStackInSlot(i);
-
-									if (checkStack != null)
-									{
-										if (searchStack.isItemEqual(checkStack) || (searchStack.itemID == checkStack.itemID && searchStack.getItemDamage() < 0))
-										{
-											this.decrStackSize(i + INVENTORY_START, 1);
-											break;
-										}
-									}
-								}
-							}
-						}
-					}
-					this.onInventoryChanged();
-					armbotTile.grabbedEntities.add(new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, result));
-					return true;
-				}
-			}
+			armbot.grabEntity(new EntityItem(this.worldObj, this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, this.imprinterMatrix[3]));
+			this.imprinterMatrix[3] = null;
 		}
+
+		/*
+		 * if (armbotTile.getGrabbedEntities().size() > 0) { Entity heldEntity =
+		 * armbot.getGrabbedEntities().get(0);
+		 * 
+		 * if (heldEntity != null) { if (heldEntity instanceof EntityItem) { ItemStack stack =
+		 * ((EntityItem) heldEntity).getEntityItem(); if (this.getStackInSlot(3) == null && stack !=
+		 * null && stack.itemID == AssemblyLine.itemImprint.itemID) {
+		 * this.setInventorySlotContents(3, stack); this.onInventoryChanged();
+		 * armbotTile.grabbedEntities.remove(0); return true; } else if (this.getStackInSlot(3) !=
+		 * null && stack != null) { // Crafting Result ItemStack result = this.getStackInSlot(4); if
+		 * (result != null) { result = this.getStackInSlot(4); if (stack.isItemEqual(result)) { if
+		 * (result != null) { ItemStack[] requiredItems =
+		 * this.getIdealRecipe(result).getValue().clone();
+		 * 
+		 * if (requiredItems != null) { for (ItemStack searchStack : requiredItems) { for (int i =
+		 * 0; i < this.getSizeInventory(); i++) { ItemStack checkStack = this.getStackInSlot(i);
+		 * 
+		 * if (checkStack != null) { if (searchStack.isItemEqual(checkStack)) { this.decrStackSize(i
+		 * + INVENTORY_START, 1); break; } } } } } } if (stack.isStackable()) { stack.stackSize +=
+		 * result.stackSize; this.onInventoryChanged(); armbotTile.grabbedEntities.remove(0);
+		 * armbotTile.grabbedEntities.add(new EntityItem(this.worldObj, this.xCoord, this.yCoord,
+		 * this.zCoord, stack)); return true; } } } } } } else { ItemStack result =
+		 * this.getStackInSlot(4); // crafting result if (result != null) { result =
+		 * this.getStackInSlot(4); if (result != null) { ItemStack[] requiredItems =
+		 * this.getIdealRecipe(result).getValue().clone();
+		 * 
+		 * if (requiredItems != null) { for (ItemStack searchStack : requiredItems) { for (int i =
+		 * 0; i < this.getSizeInventory(); i++) { ItemStack checkStack = this.getStackInSlot(i);
+		 * 
+		 * if (checkStack != null) { if (searchStack.isItemEqual(checkStack) || (searchStack.itemID
+		 * == checkStack.itemID && searchStack.getItemDamage() < 0)) { this.decrStackSize(i +
+		 * INVENTORY_START, 1); break; } } } } } } this.onInventoryChanged();
+		 * armbotTile.grabbedEntities.add(new EntityItem(this.worldObj, this.xCoord, this.yCoord,
+		 * this.zCoord, result)); return true; } } }
+		 */
 
 		return false;
 	}

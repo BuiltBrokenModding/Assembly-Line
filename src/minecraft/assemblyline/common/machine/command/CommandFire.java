@@ -61,9 +61,9 @@ public class CommandFire extends Command
 		{
 			this.finalVelocity = new Vector3(0, 0, 0);
 		}
-		if (this.tileEntity.grabbedEntities.size() > 0)
+		if (this.tileEntity.getGrabbedEntities().size() > 0)
 		{
-			Entity held = this.tileEntity.grabbedEntities.get(0);
+			Entity held = this.tileEntity.getGrabbedEntities().get(0);
 			if (held != null)
 			{
 				this.world.playSound(this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, "random.bow", velocity, 2f - (velocity / 4f), true);

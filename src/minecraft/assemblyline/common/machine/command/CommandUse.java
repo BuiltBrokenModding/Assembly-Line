@@ -34,7 +34,7 @@ public class CommandUse extends Command
 		{
 			if (targetTile instanceof IArmbotUseable)
 			{
-				((IArmbotUseable) targetTile).onUse(this.tileEntity);
+				((IArmbotUseable) targetTile).onUse(this.tileEntity, this.getArgs());
 			}
 		}
 

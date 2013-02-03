@@ -33,14 +33,16 @@ public class CommandBreak extends Command
 		if (block != null && BREAK_TIME <= this.ticks)
 		{
 			ArrayList<ItemStack> items = block.getBlockDropped(this.world, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), serachPosition.getBlockMetadata(world), 0);
-			if (!keep || items.size() > 1)
+			
+			if (!this.keep || items.size() > 1)
 			{
 				this.dropBlockAsItem(this.world, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ());
 			}
 			else
 			{
-				this.tileEntity.grabbedEntities.add(new EntityItem(world, (double) serachPosition.intX() + 0.5D, (double) serachPosition.intY() + 0.5D, (double) serachPosition.intZ() + 0.5D, items.get(0)));
+				this.tileEntity.grabEntity(new EntityItem(this.world, (double) serachPosition.intX() + 0.5D, (double) serachPosition.intY() + 0.5D, (double) serachPosition.intZ() + 0.5D, items.get(0)));
 			}
+			
 			serachPosition.setBlockWithNotify(this.world, 0);
 			return true;
 		}

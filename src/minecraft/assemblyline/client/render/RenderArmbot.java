@@ -62,17 +62,17 @@ public class RenderArmbot extends TileEntitySpecialRenderer
 			GL11.glPushMatrix();
 			GL11.glRotatef(180, 0, 0, 1);
 
-			for (Entity entity : ((TileEntityArmbot) tileEntity).grabbedEntities)
+			for (Entity entity : ((TileEntityArmbot) tileEntity).getGrabbedEntities())
 			{
-				if (entity != null && entity instanceof EntityItem) // items don't move right, so we
-																	// render them manually
+				// Items don't move right, so we render them manually
+				if (entity != null && entity instanceof EntityItem)
 				{
-					EntityItem item = (EntityItem) entity;
-					item.age = 0;
+					EntityItem entityItem = (EntityItem) entity;
 					RenderItem render = (RenderItem) RenderManager.instance.getEntityRenderObject(entity);
+
 					if (render != null)
 					{
-						render.doRender(item, -handPos.x + 0.5f, handPos.y - 1.5f, -handPos.z + 0.5f, 0, 0);
+						render.doRender(entityItem, -handPos.x + 0.5f, handPos.y - 1.5f, -handPos.z + 0.5f, 0, 0);
 					}
 				}
 			}

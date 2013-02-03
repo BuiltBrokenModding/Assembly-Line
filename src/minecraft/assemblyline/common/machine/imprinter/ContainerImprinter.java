@@ -9,7 +9,6 @@ import assemblyline.common.AssemblyLine;
 
 public class ContainerImprinter extends Container implements ISlotWatcher
 {
-
 	private InventoryPlayer inventoryPlayer;
 	public TileEntityImprinter tileEntity;
 

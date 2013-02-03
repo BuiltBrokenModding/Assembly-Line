@@ -10,10 +10,10 @@ public class CommandDrop extends Command
 	{
 		super.doTask();
 
-		if (this.tileEntity.grabbedEntities.size() == 0)
+		if (this.tileEntity.getGrabbedEntities().size() == 0)
 			return false;
 
-		for (Entity entity : this.tileEntity.grabbedEntities)
+		for (Entity entity : this.tileEntity.getGrabbedEntities())
 		{
 			if (entity != null)
 			{
@@ -33,7 +33,7 @@ public class CommandDrop extends Command
 
 		this.world.playSound(this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, "random.pop", 0.2F, ((this.tileEntity.worldObj.rand.nextFloat() - this.tileEntity.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.0F, true);
 
-		this.tileEntity.grabbedEntities.clear();
+		this.tileEntity.getGrabbedEntities().clear();
 		return false;
 	}
 

@@ -80,7 +80,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	/**
 	 * An entity that the armbot is grabbed onto.
 	 */
-	public final List<Entity> grabbedEntities = new ArrayList<Entity>();
+	private final List<Entity> grabbedEntities = new ArrayList<Entity>();
 
 	@Override
 	public void initiate()
@@ -489,7 +489,8 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			}
 		}
 		/*
-		 * NBTTagCompound cmdManager = nbt.getCompoundTag("cmdManager"); this.commandManager.readFromNBT(this, cmdManager);
+		 * NBTTagCompound cmdManager = nbt.getCompoundTag("cmdManager");
+		 * this.commandManager.readFromNBT(this, cmdManager);
 		 */
 		this.commandManager.setCurrentTask(nbt.getInteger("curTask"));
 
@@ -526,7 +527,8 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		nbt.setFloat("pitch", this.rotationPitch);
 
 		/*
-		 * NBTTagCompound cmdManager = new NBTTagCompound("cmdManager"); this.commandManager.writeToNBT(cmdManager); nbt.setCompoundTag("cmdManager", cmdManager);
+		 * NBTTagCompound cmdManager = new NBTTagCompound("cmdManager");
+		 * this.commandManager.writeToNBT(cmdManager); nbt.setCompoundTag("cmdManager", cmdManager);
 		 */
 
 		nbt.setString("cmdText", this.displayText);
@@ -872,4 +874,34 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		return this.grabbedEntities;
 	}
 
+	@Override
+	public void grabEntity(Entity entity)
+	{
+		this.grabbedEntities.add(entity);
+
+		if (entity instanceof EntityItem)
+		{
+			// Items don't move right, so we render them manually
+			this.worldObj.removeEntity(entity);
+		}
+
+		entity.isDead = false;
+	}
+
+	@Override
+	public void dropEntity(Entity entity)
+	{
+		this.grabbedEntities.remove(entity);
+	}
+
+	@Override
+	public void dropAll()
+	{
+		for (Entity entity : this.grabbedEntities)
+		{
+			this.dropEntity(entity);
+		}
+
+		this.grabbedEntities.clear();
+	}
 }

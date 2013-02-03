@@ -6,7 +6,6 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityNetwork;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.prefab.network.PacketManager;
-import universalelectricity.prefab.tile.TileEntityElectricityReceiver;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
@@ -17,13 +16,8 @@ import cpw.mods.fml.relauncher.Side;
  * @author Calclavia
  * 
  */
-public abstract class TileEntityAssemblyNetwork extends TileEntityElectricityReceiver
+public abstract class TileEntityAssemblyNetwork extends TIC2Receiver
 {
-	/**
-	 * The amount of watts received.
-	 */
-	public double wattsReceived = 0;
-	
 	public boolean debugMode = false;
 	/**
 	 * The range in which power can be transfered.
@@ -32,7 +26,7 @@ public abstract class TileEntityAssemblyNetwork extends TileEntityElectricityRec
 
 	public boolean isRunning()
 	{
-		return debugMode || this.powerTransferRange > 0 || this.wattsReceived > this.getRequest().getWatts();
+		return this.debugMode || this.powerTransferRange > 0 || this.wattsReceived > this.getRequest().getWatts();
 	}
 
 	public void updatePowerTransferRange()
@@ -66,18 +60,6 @@ public abstract class TileEntityAssemblyNetwork extends TileEntityElectricityRec
 	{
 		super.updateEntity();
 
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-		{
-			if (this.wattsReceived < this.getRequest().getWatts())
-			{
-				this.wattsReceived += ElectricityNetwork.consumeFromMultipleSides(this, this.getRequest()).getWatts() * 2;
-			}
-			else
-			{
-				ElectricityNetwork.consumeFromMultipleSides(this, new ElectricityPack());
-			}
-		}
-
 		this.onUpdate();
 
 		if (this.ticks % 10 == 0)
@@ -85,7 +67,6 @@ public abstract class TileEntityAssemblyNetwork extends TileEntityElectricityRec
 			if (this.wattsReceived >= this.getRequest().getWatts())
 			{
 				this.wattsReceived -= getRequest().getWatts();
-				// this.wattsReceived = 0;
 				this.powerTransferRange = this.getMaxTransferRange();
 			}
 			else
@@ -109,9 +90,10 @@ public abstract class TileEntityAssemblyNetwork extends TileEntityElectricityRec
 
 	}
 
-	protected ElectricityPack getRequest()
+	@Override
+	public ElectricityPack getRequest()
 	{
-		return new ElectricityPack(10, this.getVoltage());
+		return new ElectricityPack(1, this.getVoltage());
 	}
 
 	protected int getMaxTransferRange()
