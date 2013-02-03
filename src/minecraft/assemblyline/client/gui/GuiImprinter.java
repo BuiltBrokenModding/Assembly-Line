@@ -14,10 +14,12 @@ public class GuiImprinter extends GuiContainer
 {
 	private int containerWidth;
 	private int containerHeight;
+	private TileEntityImprinter tileEntity;
 
 	public GuiImprinter(InventoryPlayer par1InventoryPlayer, TileEntityImprinter tileEntity)
 	{
 		super(new ContainerImprinter(par1InventoryPlayer, tileEntity));
+		this.tileEntity = tileEntity;
 		this.ySize = 201;
 	}
 
