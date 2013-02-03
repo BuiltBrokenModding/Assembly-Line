@@ -5,6 +5,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -83,6 +84,11 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	private final List<Entity> grabbedEntities = new ArrayList<Entity>();
 	private final List<ItemStack> grabbedItems = new ArrayList<ItemStack>();
 
+	/**
+	 * Client Side Object Storage
+	 */
+	public EntityItem renderEntityItem = null;
+
 	@Override
 	public void initiate()
 	{
@@ -145,7 +151,8 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				if (this.disk == null && this.computersAttached == 0)
 				{
 					this.commandManager.clear();
-					if (this.grabbedEntities.size() > 0)
+
+					if (this.grabbedEntities.size() > 0 || this.grabbedItems.size() > 0)
 					{
 						this.addCommand(CommandDrop.class);
 					}
@@ -301,20 +308,23 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	{
 		Vector3 position = new Vector3(this);
 		position.add(0.5);
+		position.add(this.getDeltaHandPosition());
+		return position;
+	}
+
+	public Vector3 getDeltaHandPosition()
+	{
 		// The distance of the position relative to the main position.
 		double distance = 1f;
 		Vector3 delta = new Vector3();
 		// The delta Y of the hand.
-		delta.y = Math.sin(Math.toRadians(this.renderPitch)) * distance * 2; // arm bend up in a
-																				// taller-than-wide
-																				// arc
+		delta.y = Math.sin(Math.toRadians(this.renderPitch)) * distance * 2;
 		// The horizontal delta of the hand.
 		double dH = Math.cos(Math.toRadians(this.renderPitch)) * distance;
 		// The delta X and Z.
 		delta.x = Math.sin(Math.toRadians(-this.renderYaw)) * dH;
 		delta.z = Math.cos(Math.toRadians(-this.renderYaw)) * dH;
-		position.add(delta);
-		return position;
+		return delta;
 	}
 
 	@Override
@@ -489,10 +499,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				this.displayText = nbt.getString("cmdText");
 			}
 		}
-		/*
-		 * NBTTagCompound cmdManager = nbt.getCompoundTag("cmdManager");
-		 * this.commandManager.readFromNBT(this, cmdManager);
-		 */
+
 		this.commandManager.setCurrentTask(nbt.getInteger("curTask"));
 
 		NBTTagList entities = nbt.getTagList("entities");
@@ -504,6 +511,18 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			{
 				Entity entity = EntityList.createEntityFromNBT(entityTag, worldObj);
 				this.grabbedEntities.add(entity);
+			}
+		}
+
+		NBTTagList items = nbt.getTagList("items");
+		this.grabbedItems.clear();
+		for (int i = 0; i < items.tagCount(); i++)
+		{
+			NBTTagCompound itemTag = (NBTTagCompound) items.tagAt(i);
+			if (itemTag != null)
+			{
+				ItemStack item = ItemStack.loadItemStackFromNBT(itemTag);
+				this.grabbedItems.add(item);
 			}
 		}
 	}
@@ -527,16 +546,12 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		nbt.setFloat("yaw", this.rotationYaw);
 		nbt.setFloat("pitch", this.rotationPitch);
 
-		/*
-		 * NBTTagCompound cmdManager = new NBTTagCompound("cmdManager");
-		 * this.commandManager.writeToNBT(cmdManager); nbt.setCompoundTag("cmdManager", cmdManager);
-		 */
-
 		nbt.setString("cmdText", this.displayText);
 
 		nbt.setInteger("curTask", this.commandManager.getCurrentTask());
 
 		NBTTagList entities = new NBTTagList();
+
 		for (Entity entity : grabbedEntities)
 		{
 			if (entity != null)
@@ -549,6 +564,20 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		}
 
 		nbt.setTag("entities", entities);
+
+		NBTTagList items = new NBTTagList();
+
+		for (ItemStack itemStack : grabbedItems)
+		{
+			if (itemStack != null)
+			{
+				NBTTagCompound entityNBT = new NBTTagCompound();
+				itemStack.writeToNBT(entityNBT);
+				items.appendTag(entityNBT);
+			}
+		}
+
+		nbt.setTag("items", items);
 	}
 
 	@Override
@@ -713,13 +742,14 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				}
 				break;
 			}
-			case 1: // rotateTo: rotates to a specific rotation
+			case 1:
 			{
+				// rotateTo: rotates to a specific rotation
 				if (arguments.length > 0)
 				{
 					try
-					// try to cast to Float
-					{
+
+					{// try to cast to Float
 						double yaw = (Double) arguments[0];
 						double pitch = (Double) arguments[1];
 						this.addCommand(CommandRotateTo.class, new String[] { Double.toString(yaw), Double.toString(pitch) });
@@ -736,29 +766,34 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				}
 				break;
 			}
-			case 2: // grab: grabs an item
+			case 2:
 			{
+				// grab: grabs an item
 				this.addCommand(CommandGrab.class);
 				break;
 			}
-			case 3: // drop: drops an item
+			case 3:
 			{
+				// drop: drops an item
 				this.addCommand(CommandDrop.class);
 				break;
 			}
-			case 4: // reset: equivalent to calling .clear() then .return()
+			case 4:
 			{
+				// reset: equivalent to calling .clear() then .return()
 				this.commandManager.clear();
 				this.addCommand(CommandReturn.class);
 				break;
 			}
-			case 5: // isWorking: returns whether or not the ArmBot is executing commands
+			case 5:
 			{
+				// isWorking: returns whether or not the ArmBot is executing commands
 				return new Object[] { this.commandManager.hasTasks() };
 			}
-			case 6: // touchingEntity: returns whether or not the ArmBot is touching an entity it is
-					// able to pick up
+			case 6:
 			{
+				// touchingEntity: returns whether or not the ArmBot is touching an entity it is
+				// able to pick up
 				Vector3 serachPosition = this.getHandPosition();
 				List<Entity> found = this.worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(serachPosition.x - 0.5f, serachPosition.y - 0.5f, serachPosition.z - 0.5f, serachPosition.x + 0.5f, serachPosition.y + 0.5f, serachPosition.z + 0.5f));
 
@@ -766,16 +801,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				{
 					for (int i = 0; i < found.size(); i++)
 					{
-						if (found.get(i) != null && !(found.get(i) instanceof EntityPlayer) && found.get(i).ridingEntity == null) // isn't
-																																	// null,
-																																	// isn't
-																																	// a
-																																	// player,
-																																	// and
-																																	// isn't
-																																	// riding
-																																	// anything
-						{ return new Object[] { true }; }
+						if (found.get(i) != null && !(found.get(i) instanceof EntityPlayer) && found.get(i).ridingEntity == null) { return new Object[] { true }; }
 					}
 				}
 
@@ -786,8 +812,8 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				if (arguments.length > 0)
 				{
 					try
-					// try to cast to Float
 					{
+						// try to cast to Float
 						int times = (Integer) arguments[0];
 						this.addCommand(CommandUse.class, new String[] { Integer.toString(times) });
 					}
@@ -808,8 +834,8 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				if (arguments.length > 0)
 				{
 					try
-					// try to cast to Float
 					{
+						// try to cast to Float
 						float strength = (float) ((double) ((Double) arguments[0]));
 						this.addCommand(CommandFire.class, new String[] { Float.toString(strength) });
 					}
@@ -825,18 +851,21 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				}
 				break;
 			}
-			case 9: // return: returns to home position
+			case 9:
 			{
+				// return: returns to home position
 				this.addCommand(CommandReturn.class);
 				break;
 			}
-			case 10: // clear: clears commands
+			case 10:
 			{
+				// clear: clears commands
 				this.commandManager.clear();
 				break;
 			}
-			case 11: // isHolding: returns whether or not it is holding something
+			case 11:
 			{
+				// isHolding: returns whether or not it is holding something
 				return new Object[] { this.grabbedEntities.size() > 0 };
 			}
 		}
@@ -904,15 +933,20 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	@Override
 	public void dropItem(ItemStack itemStack)
 	{
+		Vector3 handPosition = this.getHandPosition();
+		this.worldObj.spawnEntityInWorld(new EntityItem(worldObj, handPosition.x, handPosition.y, handPosition.z, itemStack));
 		this.grabbedItems.remove(itemStack);
 	}
 
 	@Override
 	public void dropAll()
 	{
-		for (ItemStack itemStack : this.grabbedItems)
+		Vector3 handPosition = this.getHandPosition();
+		Iterator<ItemStack> it = this.grabbedItems.iterator();
+
+		while (it.hasNext())
 		{
-			this.dropItem(itemStack);
+			this.worldObj.spawnEntityInWorld(new EntityItem(worldObj, handPosition.x, handPosition.y, handPosition.z, it.next()));
 		}
 
 		this.grabbedEntities.clear();
