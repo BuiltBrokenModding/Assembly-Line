@@ -129,21 +129,22 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 
 				if (block != null)
 				{
-					if (Block.isNormalCube(block.blockID))
+					if (Block.isNormalCube(block.blockID) && block.getBlockHardness(this.worldObj, handPosition.intX(), handPosition.intY(), handPosition.intZ()) != -1)
 					{
 						TileEntity tileEntity = this.getHandPosition().getTileEntity(this.worldObj);
+
 						if (tileEntity == null)
 						{
-							block.dropBlockAsItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, handPosition.getBlockMetadata(this.worldObj), 0);
+							if (!this.worldObj.isRemote)
+							{
+								block.dropBlockAsItem(this.worldObj, handPosition.intX(), handPosition.intY(), handPosition.intZ(), handPosition.getBlockMetadata(this.worldObj), 0);
+							}
+
 							handPosition.setBlockWithNotify(this.worldObj, 0);
 						}
-						else
+						else if (!(tileEntity instanceof IArmbotUseable))
 						{
-							if (!(tileEntity instanceof IArmbotUseable))
-							{
-								block.dropBlockAsItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, handPosition.getBlockMetadata(this.worldObj), 0);
-								handPosition.setBlockWithNotify(this.worldObj, 0);
-							}
+							handPosition.setBlockWithNotify(this.worldObj, 0);
 						}
 					}
 				}
@@ -232,7 +233,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			if (this.ticks % 5 == 0 && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
 			{
 				// sound is 0.25 seconds long (20 ticks/second)
-				this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "assemblyline.conveyor", 2f, 1.7f, true);
+				this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "assemblyline.conveyor", 0.8f, 1.7f, true);
 			}
 
 			if (Math.abs(this.renderYaw - this.rotationYaw) < this.ROTATION_SPEED + 0.1f)
@@ -915,13 +916,19 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	{
 		if (entity instanceof EntityItem)
 		{
-			this.grabbedItems.add(((EntityItem) entity).getEntityItem());
+			this.grabItem(((EntityItem) entity).getEntityItem());
 			entity.setDead();
 		}
 		else
 		{
 			this.grabbedEntities.add(entity);
 		}
+	}
+
+	@Override
+	public void grabItem(ItemStack itemStack)
+	{
+		this.grabbedItems.add(itemStack);
 	}
 
 	@Override

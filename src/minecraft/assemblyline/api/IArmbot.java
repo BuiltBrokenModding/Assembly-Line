@@ -17,6 +17,8 @@ public interface IArmbot
 	 */
 	public void grabEntity(Entity entity);
 
+	public void grabItem(ItemStack itemStack);
+
 	/**
 	 * Drops a specific entity from the Armbot's hand.
 	 */

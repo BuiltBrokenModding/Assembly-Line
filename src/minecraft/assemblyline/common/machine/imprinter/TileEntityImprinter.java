@@ -382,46 +382,54 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 				}
 				else
 				{
-					/**
-					 * Fail to, hence consume from crafting grid.
-					 */
-					InventoryCrafting inventoryCrafting = this.getCraftingMatrix();
-					GameRegistry.onItemCrafted(entityPlayer, itemStack, inventoryCrafting);
-
-					for (int var3 = 0; var3 < inventoryCrafting.getSizeInventory(); ++var3)
+					try
 					{
-						ItemStack var4 = inventoryCrafting.getStackInSlot(var3);
+						/**
+						 * Fail to, hence consume from crafting grid.
+						 */
+						InventoryCrafting inventoryCrafting = this.getCraftingMatrix();
+						GameRegistry.onItemCrafted(entityPlayer, itemStack, inventoryCrafting);
 
-						if (var4 != null)
+						for (int var3 = 0; var3 < inventoryCrafting.getSizeInventory(); ++var3)
 						{
-							inventoryCrafting.decrStackSize(var3, 1);
+							ItemStack var4 = inventoryCrafting.getStackInSlot(var3);
 
-							if (var4.getItem().hasContainerItem())
+							if (var4 != null)
 							{
-								ItemStack var5 = var4.getItem().getContainerItemStack(var4);
+								inventoryCrafting.decrStackSize(var3, 1);
 
-								if (var5.isItemStackDamageable() && var5.getItemDamage() > var5.getMaxDamage())
+								if (var4.getItem().hasContainerItem())
 								{
-									MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(entityPlayer, var5));
-									var5 = null;
-								}
+									ItemStack var5 = var4.getItem().getContainerItemStack(var4);
 
-								if (var5 != null && (!var4.getItem().doesContainerItemLeaveCraftingGrid(var4) || !entityPlayer.inventory.addItemStackToInventory(var5)))
-								{
-									if (inventoryCrafting.getStackInSlot(var3) == null)
+									if (var5.isItemStackDamageable() && var5.getItemDamage() > var5.getMaxDamage())
 									{
-										inventoryCrafting.setInventorySlotContents(var3, var5);
+										MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(entityPlayer, var5));
+										var5 = null;
 									}
-									else
+
+									if (var5 != null && (!var4.getItem().doesContainerItemLeaveCraftingGrid(var4) || !entityPlayer.inventory.addItemStackToInventory(var5)))
 									{
-										entityPlayer.dropPlayerItem(var5);
+										if (inventoryCrafting.getStackInSlot(var3) == null)
+										{
+											inventoryCrafting.setInventorySlotContents(var3, var5);
+										}
+										else
+										{
+											entityPlayer.dropPlayerItem(var5);
+										}
 									}
 								}
 							}
 						}
-					}
 
-					this.replaceCraftingMatrix(inventoryCrafting);
+						this.replaceCraftingMatrix(inventoryCrafting);
+					}
+					catch (Exception e)
+					{
+						System.out.println("Imprinter: Failed to craft");
+						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -614,26 +622,22 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	}
 
 	/**
-	 * Armbot
-	 * 
-	 * @param tileEntity
-	 * @param heldEntity
-	 * @return
+	 * Tries to let the Armbot craft an item.
 	 */
 	@Override
 	public boolean onUse(IArmbot armbot, String[] args)
 	{
 		this.onInventoryChanged();
-		TileEntityArmbot armbotTile = (TileEntityArmbot) armbot;
 
-		if (this.imprinterMatrix[3] != null)
+		if (this.imprinterMatrix[2] != null)
 		{
-			armbot.grabEntity(new EntityItem(this.worldObj, this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, this.imprinterMatrix[3]));
-			this.imprinterMatrix[3] = null;
+			armbot.grabItem(this.imprinterMatrix[2].copy());
+			this.onPickUpFromResult(null, this.imprinterMatrix[2]);
+			this.imprinterMatrix[2] = null;
 		}
 
-		/*
-		 * if (armbotTile.getGrabbedEntities().size() > 0) { Entity heldEntity =
+		/**
+		 * OLD CODE if (armbotTile.getGrabbedEntities().size() > 0) { Entity heldEntity =
 		 * armbot.getGrabbedEntities().get(0);
 		 * 
 		 * if (heldEntity != null) { if (heldEntity instanceof EntityItem) { ItemStack stack =
