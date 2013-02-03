@@ -98,7 +98,6 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
                         }
                         else
                         {
-
                             stored.drain(((ITankContainer) connectedBlocks[i]).fill(dir.getOpposite(), stack, true), true);
                         }
                     }

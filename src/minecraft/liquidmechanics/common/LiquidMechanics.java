@@ -1,6 +1,7 @@
 package liquidmechanics.common;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 import liquidmechanics.api.helpers.ColorCode;
 import liquidmechanics.api.liquids.LiquidData;
@@ -40,6 +41,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.network.PacketManager;
 import cpw.mods.fml.common.DummyModContainer;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -66,7 +68,7 @@ public class LiquidMechanics extends DummyModContainer
     public static final String VERSION = "0.2.6";
 
     // Constants
-    public static final String NAME = "Liquid Mechanics";
+    public static final String NAME = "LiquidMechanics";
     public static final String CHANNEL = "liquidMech";
 
     public static final String PATH = "/liquidmechanics/";
@@ -104,13 +106,18 @@ public class LiquidMechanics extends DummyModContainer
     @Instance(NAME)
     public static LiquidMechanics instance;
 
+    public static Logger FMLog = Logger.getLogger(NAME);
+    
     @PreInit
     public void preInit(FMLPreInitializationEvent event)
     {
+    	FMLog.setParent(FMLLog.getLogger());
+    	FMLog.info(this.NAME+": Initializing...");
+    	MinecraftForge.EVENT_BUS.register(new LiquidHandler());
+    	
         instance = this;
-
         CONFIGURATION.load();
-
+        
         // Blocks
         blockPipe = new BlockPipe(this.CONFIGURATION.getBlock("Pipes", BLOCK_ID_PREFIX).getInt());
         blockMachine = new BlockPumpMachine(this.CONFIGURATION.getBlock("Machines", BLOCK_ID_PREFIX + 1).getInt());
@@ -141,11 +148,14 @@ public class LiquidMechanics extends DummyModContainer
         GameRegistry.registerBlock(blockMachine, ItemLiquidMachine.class, "lmMachines");
         GameRegistry.registerBlock(blockTank, ItemTank.class, "lmTank");
         GameRegistry.registerBlock(blockSink, "lmSink");
+        
+        
     }
 
     @Init
     public void Init(FMLInitializationEvent event)
     {
+    	FMLog.info(this.NAME+": Loading...");
         proxy.Init();
         // TileEntities
         GameRegistry.registerTileEntity(TileEntityPipe.class, "lmPipeTile");
@@ -155,14 +165,15 @@ public class LiquidMechanics extends DummyModContainer
         GameRegistry.registerTileEntity(TileEntityTank.class, "lmTank");
         GameRegistry.registerTileEntity(TileEntityGenerator.class, "lmGen");
         GameRegistry.registerTileEntity(TileEntitySink.class, "lmSink");
-        System.out.println("Fluid Mechanics Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
-        MinecraftForge.EVENT_BUS.register(LiquidHandler.class);
+        FMLog.info("Fluid Mechanics Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
+        
 
     }
 
     @PostInit
     public void PostInit(FMLPostInitializationEvent event)
     {
+    	FMLog.info(this.NAME+": Finalizing...");
         proxy.postInit();
         TabLiquidMechanics.setItemStack(new ItemStack(blockPipe, 1, 4));
         // generator
@@ -309,8 +320,9 @@ public class LiquidMechanics extends DummyModContainer
         OreDictionary.registerOre("bronzeTube", new ItemStack(itemParts, 1, Parts.Bronze.ordinal()));
         OreDictionary.registerOre("unfinishedTank", new ItemStack(itemParts, 1, Parts.Tank.ordinal()));
         // add Default Liquids to current list, done last to let other mods use
-        // there liquid data first if used
-        LiquidHandler.addDefaultLiquids();
+        // there liquid data first if used 
         LiquidStack waste = LiquidDictionary.getOrCreateLiquid("Waste", new LiquidStack(LiquidMechanics.blockWasteLiquid, 1));
+        LiquidHandler.addDefaultLiquids();       
+        FMLog.info(this.NAME+": Done Loading");
     }
 }

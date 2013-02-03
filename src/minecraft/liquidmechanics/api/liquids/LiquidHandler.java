@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
+
+import cpw.mods.fml.common.FMLLog;
 
 import liquidmechanics.api.helpers.ColorCode;
 
@@ -26,50 +29,61 @@ public class LiquidHandler
     public static LiquidData waste;
     public static LiquidData milk;
 
-    // public static LiquidData oil; TODO add
-    // public static LiquidData fuel;
+    public static Logger FMLog = Logger.getLogger("LiquidHandler");
+    
     /**
      * Called to add the default liquids to the allowed list
      */
     public static void addDefaultLiquids()
     {
+    	FMLog.setParent(FMLLog.getLogger());
         water = new LiquidData("water", LiquidDictionary.getOrCreateLiquid("Water", new LiquidStack(Block.waterStill, 1)), ColorCode.BLUE, false, 60);
         allowedLiquids.add(water);
+        
         lava = new LiquidData("Lava", LiquidDictionary.getOrCreateLiquid("Lava", new LiquidStack(Block.lavaStill, 1)), ColorCode.RED, false, 40);
         allowedLiquids.add(lava);
+        
         unkown = new LiquidData("Unknown", LiquidDictionary.getOrCreateLiquid("Unknown", new LiquidStack(20, 1)), ColorCode.NONE, false, 32);
         allowedLiquids.add(unkown);
+        
+        for(LiquidData data : allowedLiquids)
+        {
+        	FMLog.info(data.getName() + " registered as a liquid");
+        }
        
     }
 
     @ForgeSubscribe
-    public void liquidRegisterEvent(LiquidRegisterEvent event)
+    public void liquidRegisterEvent(LiquidDictionary.LiquidRegisterEvent event)
     {
         // TODO use this to add new liquid types to the data list
         // or something along the lines of IDing liquids for use
+    	FMLog.info("LiquidRegistered: "+event.Name);
+    	FMLog.setParent(FMLLog.getLogger());
         if (event.Name.equalsIgnoreCase("methane"))
         {
-            this.allowedLiquids.add(new LiquidData("methane", event.Liquid, ColorCode.LIME, true, 100));
+            allowedLiquids.add(new LiquidData("methane", event.Liquid, ColorCode.LIME, true, 100));
         }
         else if (event.Name.equalsIgnoreCase("oil"))
         {
-            this.allowedLiquids.add(new LiquidData("oil", event.Liquid, ColorCode.BLACK, true, 50));
+            allowedLiquids.add(new LiquidData("oil", event.Liquid, ColorCode.BLACK, true, 50));
         }
         else if (event.Name.equalsIgnoreCase("fuel"))
         {
-            this.allowedLiquids.add(new LiquidData("fuel", event.Liquid, ColorCode.YELLOW, true, 50));
+            allowedLiquids.add(new LiquidData("fuel", event.Liquid, ColorCode.YELLOW, true, 50));
         }
         else if (event.Name.equalsIgnoreCase("steam"))
         {
-            this.steam = new LiquidData("steam", event.Liquid, ColorCode.ORANGE, true, 100);
+            steam = new LiquidData("steam", event.Liquid, ColorCode.ORANGE, true, 100);
         }else if(event.Name.equalsIgnoreCase("Waste"))
         {
-            this.waste = new LiquidData("Waste", event.Liquid, ColorCode.BROWN, false, 40);
-            this.allowedLiquids.add(waste);
+            waste = new LiquidData("Waste", event.Liquid, ColorCode.BROWN, false, 40);
+            allowedLiquids.add(waste);
         }else if(event.Name.equalsIgnoreCase("Milk"))
         {
-            this.milk = new LiquidData("Milk", event.Liquid, ColorCode.WHITE, false, 50);
-            this.allowedLiquids.add(milk);
+            milk = new LiquidData("Milk", event.Liquid, ColorCode.WHITE, false, 50);
+            allowedLiquids.add(milk);
+            FMLog.warning("FluidMechanics: Milk has been registered");
         }
     }
 
