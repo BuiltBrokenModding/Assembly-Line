@@ -1,14 +1,16 @@
 package assemblyline.client.render;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderEngine;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraftforge.client.ForgeHooksClient;
 
 import org.lwjgl.opengl.GL11;
 
@@ -62,18 +64,15 @@ public class RenderArmbot extends TileEntitySpecialRenderer
 			GL11.glPushMatrix();
 			GL11.glRotatef(180, 0, 0, 1);
 
-			for (Entity entity : ((TileEntityArmbot) tileEntity).getGrabbedEntities())
+			for (ItemStack itemStack : ((TileEntityArmbot) tileEntity).getGrabbedItems())
 			{
 				// Items don't move right, so we render them manually
-				if (entity != null && entity instanceof EntityItem)
+				if (itemStack != null)
 				{
-					EntityItem entityItem = (EntityItem) entity;
-					RenderItem render = (RenderItem) RenderManager.instance.getEntityRenderObject(entity);
+					RenderItem renderItem = ((RenderItem) RenderManager.instance.getEntityClassRenderObject(EntityItem.class));
+					RenderEngine renderEngine = Minecraft.getMinecraft().renderEngine;
+					renderItem.renderItemIntoGUI(this.getFontRenderer(), renderEngine, itemStack, 0, 0);
 
-					if (render != null)
-					{
-						render.doRender(entityItem, -handPos.x + 0.5f, handPos.y - 1.5f, -handPos.z + 0.5f, 0, 0);
-					}
 				}
 			}
 			GL11.glPopMatrix();

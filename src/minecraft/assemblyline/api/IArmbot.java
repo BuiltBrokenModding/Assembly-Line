@@ -3,6 +3,7 @@ package assemblyline.api;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 
 /**
  * An interface applied to Armbots.
@@ -21,6 +22,8 @@ public interface IArmbot
 	 */
 	public void dropEntity(Entity entity);
 
+	public void dropItem(ItemStack itemStack);
+
 	/**
 	 * Drops all entities in the Armbot's hand.
 	 */
@@ -30,4 +33,6 @@ public interface IArmbot
 	 * @return Returns all entities being grabbed by the Armbot.
 	 */
 	public List<Entity> getGrabbedEntities();
+
+	public List<ItemStack> getGrabbedItems();
 }

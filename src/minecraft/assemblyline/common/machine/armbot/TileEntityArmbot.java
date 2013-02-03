@@ -78,9 +78,10 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	private String displayText = "";
 
 	/**
-	 * An entity that the armbot is grabbed onto.
+	 * An entity that the Armbot is grabbed onto. Entity Items are held separately.
 	 */
 	private final List<Entity> grabbedEntities = new ArrayList<Entity>();
+	private final List<ItemStack> grabbedItems = new ArrayList<ItemStack>();
 
 	@Override
 	public void initiate()
@@ -875,17 +876,23 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	}
 
 	@Override
+	public List<ItemStack> getGrabbedItems()
+	{
+		return this.grabbedItems;
+	}
+
+	@Override
 	public void grabEntity(Entity entity)
 	{
-		this.grabbedEntities.add(entity);
-
 		if (entity instanceof EntityItem)
 		{
-			// Items don't move right, so we render them manually
-			this.worldObj.removeEntity(entity);
+			this.grabbedItems.add(((EntityItem) entity).getEntityItem());
+			entity.setDead();
 		}
-
-		entity.isDead = false;
+		else
+		{
+			this.grabbedEntities.add(entity);
+		}
 	}
 
 	@Override
@@ -895,13 +902,20 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	}
 
 	@Override
+	public void dropItem(ItemStack itemStack)
+	{
+		this.grabbedItems.remove(itemStack);
+	}
+
+	@Override
 	public void dropAll()
 	{
-		for (Entity entity : this.grabbedEntities)
+		for (ItemStack itemStack : this.grabbedItems)
 		{
-			this.dropEntity(entity);
+			this.dropItem(itemStack);
 		}
 
 		this.grabbedEntities.clear();
+		this.grabbedItems.clear();
 	}
 }

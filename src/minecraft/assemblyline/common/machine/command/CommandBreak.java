@@ -33,7 +33,7 @@ public class CommandBreak extends Command
 		if (block != null && BREAK_TIME <= this.ticks)
 		{
 			ArrayList<ItemStack> items = block.getBlockDropped(this.world, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), serachPosition.getBlockMetadata(world), 0);
-			
+
 			if (!this.keep || items.size() > 1)
 			{
 				this.dropBlockAsItem(this.world, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ());
@@ -42,14 +42,15 @@ public class CommandBreak extends Command
 			{
 				this.tileEntity.grabEntity(new EntityItem(this.world, (double) serachPosition.intX() + 0.5D, (double) serachPosition.intY() + 0.5D, (double) serachPosition.intZ() + 0.5D, items.get(0)));
 			}
-			
+
 			serachPosition.setBlockWithNotify(this.world, 0);
-			return true;
+			return false;
 		}
+
 		/**
 		 * Notes on break command Beds Break Wrong Multi blocks don't work
 		 */
-		return false;
+		return true;
 	}
 
 	protected void dropBlockAsItem_do(World world, int x, int y, int z, ItemStack stack)
