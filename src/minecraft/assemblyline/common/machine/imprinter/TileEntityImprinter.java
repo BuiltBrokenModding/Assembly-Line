@@ -47,8 +47,20 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	 */
 	public ItemStack[] containingItems = new ItemStack[18];
 
+	/**
+	 * The containing currently used by the imprinter.
+	 */
 	public ContainerImprinter container;
+
+	/**
+	 * Is the current crafting result a result of an imprint?
+	 */
 	private boolean isImprinting = false;
+
+	/**
+	 * The ability for the imprinter to serach nearby inventories.
+	 */
+	public boolean searchInventories = true;
 
 	@Override
 	public boolean canUpdate()
@@ -351,7 +363,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 			else
 			{
 				/**
-				 * Try to consume resource from the inventory.
+				 * Based on the ideal recipe, consume all the items required to make such recipe.
 				 */
 				if (this.getIdealRecipe(itemStack) != null)
 				{
@@ -438,7 +450,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	/**
 	 * Does this player's inventory contain the required resources to craft this item?
 	 * 
-	 * @return Required Items
+	 * @return Required items to make the desired item.
 	 */
 	public Pair<ItemStack, ItemStack[]> getIdealRecipe(ItemStack outputItem)
 	{
@@ -635,42 +647,6 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 			this.onPickUpFromResult(null, this.imprinterMatrix[2]);
 			this.imprinterMatrix[2] = null;
 		}
-
-		/**
-		 * OLD CODE if (armbotTile.getGrabbedEntities().size() > 0) { Entity heldEntity =
-		 * armbot.getGrabbedEntities().get(0);
-		 * 
-		 * if (heldEntity != null) { if (heldEntity instanceof EntityItem) { ItemStack stack =
-		 * ((EntityItem) heldEntity).getEntityItem(); if (this.getStackInSlot(3) == null && stack !=
-		 * null && stack.itemID == AssemblyLine.itemImprint.itemID) {
-		 * this.setInventorySlotContents(3, stack); this.onInventoryChanged();
-		 * armbotTile.grabbedEntities.remove(0); return true; } else if (this.getStackInSlot(3) !=
-		 * null && stack != null) { // Crafting Result ItemStack result = this.getStackInSlot(4); if
-		 * (result != null) { result = this.getStackInSlot(4); if (stack.isItemEqual(result)) { if
-		 * (result != null) { ItemStack[] requiredItems =
-		 * this.getIdealRecipe(result).getValue().clone();
-		 * 
-		 * if (requiredItems != null) { for (ItemStack searchStack : requiredItems) { for (int i =
-		 * 0; i < this.getSizeInventory(); i++) { ItemStack checkStack = this.getStackInSlot(i);
-		 * 
-		 * if (checkStack != null) { if (searchStack.isItemEqual(checkStack)) { this.decrStackSize(i
-		 * + INVENTORY_START, 1); break; } } } } } } if (stack.isStackable()) { stack.stackSize +=
-		 * result.stackSize; this.onInventoryChanged(); armbotTile.grabbedEntities.remove(0);
-		 * armbotTile.grabbedEntities.add(new EntityItem(this.worldObj, this.xCoord, this.yCoord,
-		 * this.zCoord, stack)); return true; } } } } } } else { ItemStack result =
-		 * this.getStackInSlot(4); // crafting result if (result != null) { result =
-		 * this.getStackInSlot(4); if (result != null) { ItemStack[] requiredItems =
-		 * this.getIdealRecipe(result).getValue().clone();
-		 * 
-		 * if (requiredItems != null) { for (ItemStack searchStack : requiredItems) { for (int i =
-		 * 0; i < this.getSizeInventory(); i++) { ItemStack checkStack = this.getStackInSlot(i);
-		 * 
-		 * if (checkStack != null) { if (searchStack.isItemEqual(checkStack) || (searchStack.itemID
-		 * == checkStack.itemID && searchStack.getItemDamage() < 0)) { this.decrStackSize(i +
-		 * INVENTORY_START, 1); break; } } } } } } this.onInventoryChanged();
-		 * armbotTile.grabbedEntities.add(new EntityItem(this.worldObj, this.xCoord, this.yCoord,
-		 * this.zCoord, result)); return true; } } }
-		 */
 
 		return false;
 	}
