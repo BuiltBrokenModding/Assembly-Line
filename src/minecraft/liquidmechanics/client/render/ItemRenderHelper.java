@@ -4,13 +4,11 @@ import liquidmechanics.client.model.ModelGearRod;
 import liquidmechanics.client.model.ModelGenerator;
 import liquidmechanics.client.model.ModelLargePipe;
 import liquidmechanics.client.model.ModelLiquidTank;
-import liquidmechanics.client.model.ModelPump;
 import liquidmechanics.client.model.ModelReleaseValve;
 import liquidmechanics.common.LiquidMechanics;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 

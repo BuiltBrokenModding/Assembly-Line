@@ -4,13 +4,12 @@ import java.util.List;
 
 import liquidmechanics.api.liquids.LiquidHandler;
 import liquidmechanics.client.render.BlockRenderHelper;
-import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.TabLiquidMechanics;
-import liquidmechanics.common.tileentity.TileEntityPump;
 import liquidmechanics.common.tileentity.TileEntityTank;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
@@ -53,9 +52,11 @@ public class BlockTank extends BlockMachine
     {
         return meta;
     }
+
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int side, float hitX, float hitY, float hitZ)
     {
+        if (entityplayer.isSneaking()) { return false; }
         ItemStack current = entityplayer.inventory.getCurrentItem();
         if (current != null)
         {
@@ -71,6 +72,10 @@ public class BlockTank extends BlockMachine
                 // Handle filled containers
                 if (liquid != null)
                 {
+                    if (current.isItemEqual(new ItemStack(Item.potion)))
+                    {
+                        liquid = new LiquidStack(liquid.itemID, (LiquidContainerRegistry.BUCKET_VOLUME / 4), liquid.itemMeta);
+                    }
                     int filled = tank.fill(ForgeDirection.UNKNOWN, liquid, true);
 
                     if (filled != 0 && !entityplayer.capabilities.isCreativeMode)
@@ -110,7 +115,12 @@ public class BlockTank extends BlockMachine
                                     entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, liquidItem);
                                 }
                             }
-                            tank.drain(null, liquid.amount, true);
+                            int ammount = liquid.amount;
+                            if (current.isItemEqual(new ItemStack(Item.glassBottle)))
+                            {
+                                ammount = (LiquidContainerRegistry.BUCKET_VOLUME / 4);
+                            }
+                            tank.drain(null, ammount, true);
                             return true;
                         }
                     }
@@ -136,9 +146,10 @@ public class BlockTank extends BlockMachine
         return new ItemStack(this, 1, meta);
 
     }
+
     @Override
     public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
-    {  
+    {
         par3List.add(new ItemStack(par1, 1, 1));
         par3List.add(new ItemStack(par1, 1, 4));
         par3List.add(new ItemStack(par1, 1, 13));

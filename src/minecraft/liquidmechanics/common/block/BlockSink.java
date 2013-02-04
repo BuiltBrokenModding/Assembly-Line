@@ -1,17 +1,13 @@
 package liquidmechanics.common.block;
 
-import universalelectricity.prefab.BlockMachine;
-import universalelectricity.prefab.tile.TileEntityAdvanced;
+import liquidmechanics.api.liquids.LiquidHandler;
 import liquidmechanics.client.render.BlockRenderHelper;
 import liquidmechanics.common.MetaGroup;
 import liquidmechanics.common.TabLiquidMechanics;
 import liquidmechanics.common.tileentity.TileEntitySink;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
@@ -20,11 +16,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldProvider;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
+import universalelectricity.prefab.BlockMachine;
+import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 public class BlockSink extends BlockMachine
 {
@@ -42,71 +38,88 @@ public class BlockSink extends BlockMachine
     }
 
     @Override
-    public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int side, float sx, float sy, float sz)
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int side, float hitX, float hitY, float hitZ)
     {
-        if (world.isRemote)
+        if (entityplayer.isSneaking()) { return false; }
+        ItemStack current = entityplayer.inventory.getCurrentItem();
+        if (current != null)
         {
-            return true;
-        }
-        else
-        {
-            ItemStack heldItem = player.inventory.getCurrentItem();
-            TileEntity ent = world.getBlockTileEntity(x, y, z);
-            ForgeDirection facing = ForgeDirection.getOrientation(side);
-            if (heldItem == null || !(ent instanceof TileEntitySink))
-            {
-                return true;
-            }
-            else
-            {
-                TileEntitySink sink = (TileEntitySink) ent;
-                LiquidStack stack = sink.getStack();
 
-                if (heldItem.itemID == Item.bucketWater.itemID && stack != null && stack.amount < sink.getTanks(facing)[0].getCapacity())
+            LiquidStack liquid = LiquidContainerRegistry.getLiquidForFilledItem(current);
+
+            TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+            if (tileEntity instanceof TileEntitySink)
+            {
+                TileEntitySink tank = (TileEntitySink) tileEntity;
+
+                // Handle filled containers
+                if (liquid != null)
                 {
-                    int f = sink.fill(facing, LiquidContainerRegistry.getLiquidForFilledItem(heldItem), false);
-                    if (f >= (LiquidContainerRegistry.BUCKET_VOLUME / 2))
+                    if (current.isItemEqual(new ItemStack(Item.potion)))
                     {
-                        if (!player.capabilities.isCreativeMode)
+                        liquid = new LiquidStack(liquid.itemID, (LiquidContainerRegistry.BUCKET_VOLUME / 4), liquid.itemMeta);
+                    }
+                    int filled = tank.fill(ForgeDirection.UNKNOWN, liquid, true);
+
+                    if (filled != 0 && !entityplayer.capabilities.isCreativeMode)
+                    {
+                        entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, LiquidHandler.consumeItem(current));
+                    }
+
+                    return true;
+
+                    // Handle empty containers
+                }
+                else
+                {
+
+                    if (current.getItem() instanceof ItemArmor && ((ItemArmor) current.getItem()).getArmorMaterial() == EnumArmorMaterial.CLOTH)
+                    {
+                        ItemArmor var13 = (ItemArmor) current.getItem();
+                        var13.removeColor(current);
+                        return true;
+                    }
+                    LiquidStack stack = tank.getStack();
+                    if (stack != null)
+                    {
+                        ItemStack liquidItem = LiquidContainerRegistry.fillLiquidContainer(stack, current);
+
+                        liquid = LiquidContainerRegistry.getLiquidForFilledItem(liquidItem);
+
+                        if (liquid != null)
                         {
-                            player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Item.bucketEmpty));
+                            if (!entityplayer.capabilities.isCreativeMode)
+                            {
+                                if (current.stackSize > 1)
+                                {
+                                    if (!entityplayer.inventory.addItemStackToInventory(liquidItem)) return false;
+                                    else
+                                    {
+                                        entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, LiquidHandler.consumeItem(current));
+                                    }
+                                }
+                                else
+                                {
+                                    entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, LiquidHandler.consumeItem(current));
+                                    entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, liquidItem);
+                                }
+                            }
+                            int ammount = liquid.amount;
+                            if (current.isItemEqual(new ItemStack(Item.glassBottle)))
+                            {
+                                ammount = (LiquidContainerRegistry.BUCKET_VOLUME / 4);
+                            }
+                            tank.drain(null, ammount, true);
+                            return true;
                         }
-                        sink.fill(facing, LiquidContainerRegistry.getLiquidForFilledItem(heldItem), true);
-                    }
-                    return true;
-                }
-                else if (heldItem.itemID == Item.glassBottle.itemID && sink.drain(side, LiquidContainerRegistry.BUCKET_VOLUME, false).amount > (LiquidContainerRegistry.BUCKET_VOLUME / 4))
-                {
-                    sink.drain(side, (LiquidContainerRegistry.BUCKET_VOLUME / 4), true);
-                    ItemStack var12 = new ItemStack(Item.potion, 1, 0);
-
-                    if (!player.inventory.addItemStackToInventory(var12))
-                    {
-                        world.spawnEntityInWorld(new EntityItem(world, (double) x + 0.5D, (double) y + 1.5D, (double) z + 0.5D, var12));
-                    }
-                    else if (player instanceof EntityPlayerMP)
-                    {
-                        ((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
-                    }
-
-                    --heldItem.stackSize;
-
-                    if (heldItem.stackSize <= 0)
-                    {
-                        player.inventory.setInventorySlotContents(player.inventory.currentItem, (ItemStack) null);
                     }
                 }
-                else if (heldItem.getItem() instanceof ItemArmor && ((ItemArmor) heldItem.getItem()).getArmorMaterial() == EnumArmorMaterial.CLOTH)
-                {
-                    ItemArmor var13 = (ItemArmor) heldItem.getItem();
-                    var13.removeColor(heldItem);
-                    return true;
-                }
-
-                return true;
-
             }
         }
+
+        return false;
+
     }
 
     @Override

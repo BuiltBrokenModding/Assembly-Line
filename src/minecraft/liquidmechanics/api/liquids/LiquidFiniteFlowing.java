@@ -2,8 +2,6 @@ package liquidmechanics.api.liquids;
 
 import java.util.Random;
 
-import cpw.mods.fml.common.FMLLog;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlowing;
 import net.minecraft.block.material.Material;

@@ -1,7 +1,5 @@
 package liquidmechanics.common.tileentity;
 
-import javax.swing.colorchooser.ColorSelectionModel;
-
 import liquidmechanics.api.IColorCoded;
 import liquidmechanics.api.IReadOut;
 import liquidmechanics.api.helpers.ColorCode;

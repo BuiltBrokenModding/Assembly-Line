@@ -1,10 +1,10 @@
 package liquidmechanics.common.handlers;
 
-import net.minecraft.nbt.NBTTagCompound;
 import liquidmechanics.api.helpers.ColorCode;
 import liquidmechanics.api.liquids.LiquidHandler;
 import liquidmechanics.common.tileentity.TileEntityPipe;
 import liquidmechanics.common.tileentity.TileEntityTank;
+import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * used to help convert older system to newer systems.

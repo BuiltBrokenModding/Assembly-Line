@@ -1,11 +1,7 @@
 package liquidmechanics.common.tileentity;
 
-import java.nio.channels.Pipe;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
-import cpw.mods.fml.common.FMLLog;
 
 import liquidmechanics.api.IColorCoded;
 import liquidmechanics.api.IReadOut;
@@ -23,9 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
-import net.minecraftforge.liquids.LiquidTank;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
 
 public class TileEntityReleaseValve extends TileEntity implements IPressure, IReadOut, IRedstoneReceptor, IInventory

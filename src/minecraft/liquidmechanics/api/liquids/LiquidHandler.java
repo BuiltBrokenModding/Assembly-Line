@@ -6,16 +6,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
-import cpw.mods.fml.common.FMLLog;
-
 import liquidmechanics.api.helpers.ColorCode;
-
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
-import net.minecraftforge.liquids.LiquidDictionary.LiquidRegisterEvent;
+import cpw.mods.fml.common.FMLLog;
 
 public class LiquidHandler
 {

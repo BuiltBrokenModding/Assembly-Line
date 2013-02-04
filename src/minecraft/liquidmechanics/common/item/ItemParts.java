@@ -4,7 +4,6 @@ import java.util.List;
 
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.TabLiquidMechanics;
-
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

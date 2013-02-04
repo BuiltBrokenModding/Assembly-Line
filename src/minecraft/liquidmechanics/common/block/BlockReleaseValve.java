@@ -2,12 +2,9 @@ package liquidmechanics.common.block;
 
 import java.util.Random;
 
-import liquidmechanics.client.render.BlockRenderHelper;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.TabLiquidMechanics;
 import liquidmechanics.common.tileentity.TileEntityReleaseValve;
-
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;

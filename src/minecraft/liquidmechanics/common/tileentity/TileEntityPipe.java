@@ -2,38 +2,23 @@ package liquidmechanics.common.tileentity;
 
 import java.util.Random;
 
-import liquidmechanics.api.IColorCoded;
 import liquidmechanics.api.IPipe;
 import liquidmechanics.api.IReadOut;
 import liquidmechanics.api.helpers.ColorCode;
 import liquidmechanics.api.helpers.connectionHelper;
 import liquidmechanics.api.liquids.IPressure;
-import liquidmechanics.api.liquids.LiquidData;
 import liquidmechanics.api.liquids.LiquidHandler;
-import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.handlers.UpdateConverter;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.liquids.LiquidTank;
-import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.network.IPacketReceiver;
-import universalelectricity.prefab.network.PacketManager;
-
-import com.google.common.io.ByteArrayDataInput;
-
-import cpw.mods.fml.common.FMLLog;
 
 public class TileEntityPipe extends TileEntity implements ITankContainer, IReadOut, IPipe
 {

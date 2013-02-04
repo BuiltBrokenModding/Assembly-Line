@@ -2,16 +2,11 @@ package liquidmechanics.common.block;
 
 import java.util.List;
 
-import universalelectricity.prefab.BlockMachine;
-import universalelectricity.prefab.tile.TileEntityAdvanced;
-import liquidmechanics.api.liquids.LiquidHandler;
 import liquidmechanics.client.render.BlockRenderHelper;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.MetaGroup;
 import liquidmechanics.common.TabLiquidMechanics;
 import liquidmechanics.common.tileentity.TileEntityPump;
-import liquidmechanics.common.tileentity.TileEntityTank;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
@@ -21,9 +16,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidStack;
+import universalelectricity.prefab.BlockMachine;
+import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 public class BlockPumpMachine extends BlockMachine
 {

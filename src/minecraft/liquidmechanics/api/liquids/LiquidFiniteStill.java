@@ -4,7 +4,6 @@ import net.minecraft.block.BlockStationary;
 import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
 import net.minecraftforge.liquids.ILiquid;
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

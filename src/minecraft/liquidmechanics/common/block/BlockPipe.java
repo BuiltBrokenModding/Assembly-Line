@@ -1,10 +1,7 @@
 package liquidmechanics.common.block;
 
 import java.util.List;
-import java.util.Random;
 
-import liquidmechanics.api.helpers.ColorCode;
-import liquidmechanics.client.render.BlockRenderHelper;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.TabLiquidMechanics;
 import liquidmechanics.common.tileentity.TileEntityPipe;
@@ -14,8 +11,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.prefab.BlockMachine;
 
 public class BlockPipe extends BlockMachine

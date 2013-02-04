@@ -1,6 +1,5 @@
 package liquidmechanics.client.render;
 
-import liquidmechanics.api.helpers.connectionHelper;
 import liquidmechanics.client.model.ModelGearRod;
 import liquidmechanics.client.model.ModelGenerator;
 import liquidmechanics.client.model.ModelLargePipe;
@@ -9,11 +8,9 @@ import liquidmechanics.client.model.ModelPump;
 import liquidmechanics.client.model.ModelReleaseValve;
 import liquidmechanics.client.model.ModelSink;
 import liquidmechanics.common.LiquidMechanics;
-import liquidmechanics.common.tileentity.TileEntityReleaseValve;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 

@@ -3,12 +3,8 @@ package liquidmechanics.client.render;
 import liquidmechanics.client.model.ModelSink;
 import liquidmechanics.common.LiquidMechanics;
 import liquidmechanics.common.tileentity.TileEntitySink;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 
 import org.lwjgl.opengl.GL11;

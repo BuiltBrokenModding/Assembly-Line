@@ -1,8 +1,5 @@
 package liquidmechanics.client.render;
 
-import org.lwjgl.opengl.GL11;
-
-import net.minecraftforge.common.ForgeDirection;
 
 public class RenderRotation
 {

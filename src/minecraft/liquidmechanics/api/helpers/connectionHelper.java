@@ -1,13 +1,8 @@
 package liquidmechanics.api.helpers;
 
-import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquidTank;
-import net.minecraftforge.liquids.ITankContainer;
-import net.minecraftforge.liquids.LiquidStack;
-import universalelectricity.core.vector.Vector3;
 
 public class connectionHelper
 {

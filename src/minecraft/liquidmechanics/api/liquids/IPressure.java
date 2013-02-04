@@ -1,7 +1,6 @@
 package liquidmechanics.api.liquids;
 
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ITankContainer;
 
 public interface IPressure
 {

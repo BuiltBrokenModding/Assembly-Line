@@ -1,7 +1,6 @@
 package liquidmechanics.client.render;
 
 import liquidmechanics.api.helpers.ColorCode;
-import liquidmechanics.api.helpers.connectionHelper;
 import liquidmechanics.client.model.ModelLargePipe;
 import liquidmechanics.client.model.ModelReleaseValve;
 import liquidmechanics.common.LiquidMechanics;

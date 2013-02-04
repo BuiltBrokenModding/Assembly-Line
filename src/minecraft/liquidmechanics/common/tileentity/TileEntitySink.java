@@ -1,16 +1,9 @@
 package liquidmechanics.common.tileentity;
 
-import javax.swing.colorchooser.ColorSelectionModel;
-
 import liquidmechanics.api.IColorCoded;
-import liquidmechanics.api.IReadOut;
 import liquidmechanics.api.helpers.ColorCode;
-import liquidmechanics.api.helpers.connectionHelper;
-import liquidmechanics.api.liquids.IPressure;
-import liquidmechanics.api.liquids.LiquidData;
 import liquidmechanics.api.liquids.LiquidHandler;
 import liquidmechanics.common.LiquidMechanics;
-import liquidmechanics.common.handlers.UpdateConverter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
