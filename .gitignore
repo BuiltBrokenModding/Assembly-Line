@@ -14,6 +14,7 @@ CHANGELOG
 !/src/minecraft/assemblyline/
 !/src/minecraft/universalelectricity/
 !/src/minecraft/dan200
+!/src/minecraft/ic2
 !/resources/
 !/models/
 !info.txt
