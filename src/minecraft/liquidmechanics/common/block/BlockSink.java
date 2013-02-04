@@ -44,86 +44,56 @@ public class BlockSink extends BlockMachine
     @Override
     public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int side, float sx, float sy, float sz)
     {
-        ItemStack heldItem = player.inventory.getCurrentItem();
-        TileEntity ent = world.getBlockTileEntity(x, y, z);
-        int meta = world.getBlockMetadata(x, y, z);
-        int grouping = MetaGroup.getGrouping(meta);
-
-        if (heldItem == null || !(ent instanceof TileEntitySink)) { return false; }
-        TileEntitySink sink = (TileEntitySink) ent;
-
         if (world.isRemote)
         {
             return true;
         }
         else
         {
-            ILiquidTank tank = sink.getTanks(ForgeDirection.UNKNOWN)[0];
-            LiquidStack stack = tank.getLiquid();
-            if (grouping == 0 || grouping == 1)
+            ItemStack heldItem = player.inventory.getCurrentItem();
+            TileEntity ent = world.getBlockTileEntity(x, y, z);
+            ForgeDirection facing = ForgeDirection.getOrientation(side);
+            if (heldItem == null || !(ent instanceof TileEntitySink))
             {
-                if (heldItem.itemID == Item.bucketWater.itemID)
+                return true;
+            }
+            else
+            {
+                TileEntitySink sink = (TileEntitySink) ent;
+                LiquidStack stack = sink.getStack();
+
+                if (heldItem.itemID == Item.bucketWater.itemID && stack != null && stack.amount < sink.getTanks(facing)[0].getCapacity())
                 {
-                    LiquidStack filling = LiquidContainerRegistry.getLiquidForFilledItem(heldItem);
-                    if (stack == null || (stack != null && stack.amount < tank.getCapacity()))
+                    int f = sink.fill(facing, LiquidContainerRegistry.getLiquidForFilledItem(heldItem), false);
+                    if (f >= (LiquidContainerRegistry.BUCKET_VOLUME / 2))
                     {
-                        int f = sink.fill(ForgeDirection.getOrientation(side), filling, true);
-                        if (f > 0)
+                        if (!player.capabilities.isCreativeMode)
                         {
                             player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Item.bucketEmpty));
-                            return true;
                         }
+                        sink.fill(facing, LiquidContainerRegistry.getLiquidForFilledItem(heldItem), true);
                     }
+                    return true;
                 }
-                else if (heldItem.itemID == Item.bucketEmpty.itemID)
+                else if (heldItem.itemID == Item.glassBottle.itemID && sink.drain(side, LiquidContainerRegistry.BUCKET_VOLUME, false).amount > (LiquidContainerRegistry.BUCKET_VOLUME / 4))
                 {
-                    LiquidStack drain = tank.drain(LiquidContainerRegistry.BUCKET_VOLUME, false);
-                    if (drain != null && drain.amount >= LiquidContainerRegistry.BUCKET_VOLUME)
+                    sink.drain(side, (LiquidContainerRegistry.BUCKET_VOLUME / 4), true);
+                    ItemStack var12 = new ItemStack(Item.potion, 1, 0);
+
+                    if (!player.inventory.addItemStackToInventory(var12))
                     {
-                        ItemStack var12 = new ItemStack(Item.bucketEmpty, 1, 0);
-                        if (!player.inventory.addItemStackToInventory(heldItem))
-                        {
-                            world.spawnEntityInWorld(new EntityItem(world, (double) x + 0.5D, (double) y + 1.5D, (double) z + 0.5D, var12));
-                        }
-                        else if (player instanceof EntityPlayerMP)
-                        {
-                            ((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
-                        }
-
-                        --heldItem.stackSize;
-
-                        if (heldItem.stackSize <= 0)
-                        {
-                            player.inventory.setInventorySlotContents(player.inventory.currentItem, (ItemStack) null);
-                        }
-                        tank.drain(LiquidContainerRegistry.BUCKET_VOLUME, true);
-                        return true;
+                        world.spawnEntityInWorld(new EntityItem(world, (double) x + 0.5D, (double) y + 1.5D, (double) z + 0.5D, var12));
+                    }
+                    else if (player instanceof EntityPlayerMP)
+                    {
+                        ((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
                     }
 
-                }
-                else if (heldItem.itemID == Item.glassBottle.itemID)
-                {
-                    LiquidStack drain = tank.drain(LiquidContainerRegistry.BUCKET_VOLUME / 4, false);
-                    if (drain != null && drain.amount >= LiquidContainerRegistry.BUCKET_VOLUME / 4)
+                    --heldItem.stackSize;
+
+                    if (heldItem.stackSize <= 0)
                     {
-                        ItemStack var12 = new ItemStack(Item.potion, 1, 0);
-                        if (!player.inventory.addItemStackToInventory(var12))
-                        {
-                            world.spawnEntityInWorld(new EntityItem(world, (double) x + 0.5D, (double) y + 1.5D, (double) z + 0.5D, var12));
-                        }
-                        else if (player instanceof EntityPlayerMP)
-                        {
-                            ((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
-                        }
-
-                        --heldItem.stackSize;
-
-                        if (heldItem.stackSize <= 0)
-                        {
-                            player.inventory.setInventorySlotContents(player.inventory.currentItem, (ItemStack) null);
-                        }
-                        tank.drain(LiquidContainerRegistry.BUCKET_VOLUME / 4, true);
-                        return true;
+                        player.inventory.setInventorySlotContents(player.inventory.currentItem, (ItemStack) null);
                     }
                 }
                 else if (heldItem.getItem() instanceof ItemArmor && ((ItemArmor) heldItem.getItem()).getArmorMaterial() == EnumArmorMaterial.CLOTH)
@@ -132,9 +102,11 @@ public class BlockSink extends BlockMachine
                     var13.removeColor(heldItem);
                     return true;
                 }
+
+                return true;
+
             }
         }
-        return false;
     }
 
     @Override
