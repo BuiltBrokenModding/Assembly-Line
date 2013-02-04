@@ -3,6 +3,9 @@ package assemblyline.common.machine.imprinter;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -21,12 +24,26 @@ public class ItemImprinter extends Item
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 		this.setHasSubtypes(true);
 		this.setTextureFile(AssemblyLine.ITEM_TEXTURE_PATH);
+
 	}
 
 	@Override
 	public int getItemStackLimit()
 	{
 		return 1;
+	}
+
+	@Override
+	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
+	{
+		if (entity != null && !(entity instanceof IProjectile) && !(entity instanceof EntityPlayer))
+		{
+			String stringName = EntityList.getEntityString(entity);
+			//TODO add to filter
+			player.sendChatToPlayer("Target: "+ stringName);
+			return true;
+		}
+		return false;
 	}
 
 	@Override

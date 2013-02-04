@@ -52,7 +52,14 @@ public class CommandBreak extends Command
 		 */
 		return true;
 	}
-
+	/**
+	 * Drops an item stack at the exact center of the coords given
+	 * @param world
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param stack
+	 */
 	protected void dropBlockAsItem_do(World world, int x, int y, int z, ItemStack stack)
 	{
 		if (!world.isRemote && world.getGameRules().getGameRuleBooleanValue("doTileDrops"))
@@ -62,7 +69,13 @@ public class CommandBreak extends Command
 			world.spawnEntityInWorld(entity);
 		}
 	}
-
+	/**
+	 * grabs all the items that the block can drop then pass them onto dropBlockAsItem_do
+	 * @param world
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
 	public void dropBlockAsItem(World world, int x, int y, int z)
 	{
 		if (!world.isRemote)
