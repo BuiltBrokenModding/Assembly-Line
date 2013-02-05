@@ -27,27 +27,27 @@ public class LiquidHandler
     public static LiquidData milk;
 
     public static Logger FMLog = Logger.getLogger("LiquidHandler");
-    
+
     /**
      * Called to add the default liquids to the allowed list
      */
     public static void addDefaultLiquids()
     {
-    	FMLog.setParent(FMLLog.getLogger());
+        FMLog.setParent(FMLLog.getLogger());
         water = new LiquidData("water", LiquidDictionary.getOrCreateLiquid("Water", new LiquidStack(Block.waterStill, 1)), ColorCode.BLUE, false, 60);
         allowedLiquids.add(water);
-        
+
         lava = new LiquidData("Lava", LiquidDictionary.getOrCreateLiquid("Lava", new LiquidStack(Block.lavaStill, 1)), ColorCode.RED, false, 40);
         allowedLiquids.add(lava);
-        
+
         unkown = new LiquidData("Unknown", LiquidDictionary.getOrCreateLiquid("Unknown", new LiquidStack(20, 1)), ColorCode.NONE, false, 32);
         allowedLiquids.add(unkown);
-        
-        for(LiquidData data : allowedLiquids)
+
+        for (LiquidData data : allowedLiquids)
         {
-        	FMLog.info(data.getName() + " registered as a liquid");
+            FMLog.info(data.getName() + " registered as a liquid");
         }
-       
+
     }
 
     @ForgeSubscribe
@@ -55,8 +55,8 @@ public class LiquidHandler
     {
         // TODO use this to add new liquid types to the data list
         // or something along the lines of IDing liquids for use
-    	FMLog.info("LiquidRegistered: "+event.Name);
-    	FMLog.setParent(FMLLog.getLogger());
+        FMLog.info("LiquidRegistered: " + event.Name);
+        FMLog.setParent(FMLLog.getLogger());
         if (event.Name.equalsIgnoreCase("methane"))
         {
             allowedLiquids.add(new LiquidData("methane", event.Liquid, ColorCode.LIME, true, 100));
@@ -72,11 +72,13 @@ public class LiquidHandler
         else if (event.Name.equalsIgnoreCase("steam"))
         {
             steam = new LiquidData("steam", event.Liquid, ColorCode.ORANGE, true, 100);
-        }else if(event.Name.equalsIgnoreCase("Waste"))
+        }
+        else if (event.Name.equalsIgnoreCase("Waste"))
         {
             waste = new LiquidData("Waste", event.Liquid, ColorCode.BROWN, false, 40);
             allowedLiquids.add(waste);
-        }else if(event.Name.equalsIgnoreCase("Milk"))
+        }
+        else if (event.Name.equalsIgnoreCase("Milk"))
         {
             milk = new LiquidData("Milk", event.Liquid, ColorCode.WHITE, false, 50);
             allowedLiquids.add(milk);
@@ -107,29 +109,29 @@ public class LiquidHandler
         }
         return unkown;
     }
+
     /**
-     * gets the name of the liquidStack using either LiquidData or
-     * running threw the LiquidDirectory mapping
+     * gets the name of the liquidStack using either LiquidData or running threw
+     * the LiquidDirectory mapping
      */
     public static String getName(LiquidStack stack)
     {
-        if(get(stack) != unkown)
+        if (get(stack) != unkown)
         {
             return get(stack).getName();
-        }else
+        }
+        else
         {
             Map<String, LiquidStack> l = LiquidDictionary.getLiquids();
-            for(Entry<String, LiquidStack> liquid : l.entrySet())
+            for (Entry<String, LiquidStack> liquid : l.entrySet())
             {
                 LiquidStack t = liquid.getValue();
-                if(isEqual(t,stack))
-                {
-                    return liquid.getKey();
-                }
+                if (isEqual(t, stack)) { return liquid.getKey(); }
             }
         }
         return "unkown";
     }
+
     /**
      * creates a new LiquidStack using type and vol
      */
@@ -138,25 +140,24 @@ public class LiquidHandler
         if (type == null) return null;
         return new LiquidStack(type.getStack().itemID, vol, type.getStack().itemMeta);
     }
+
     /**
      * creates a new LiquidStack using a liquidStack and vol
      */
     public static LiquidStack getStack(LiquidStack stack, int vol)
     {
-        if(stack == null){return null;}
-        return new LiquidStack(stack.itemID,vol,stack.itemMeta);
+        if (stack == null) { return null; }
+        return new LiquidStack(stack.itemID, vol, stack.itemMeta);
     }
+
     public static int getMeta(LiquidData stack)
     {
-        if(stack != null && stack != unkown)
-        {
-            return stack.getColor().ordinal();
-        }
+        if (stack != null && stack != unkown) { return stack.getColor().ordinal(); }
         return 15;
     }
 
     public static LiquidData getFromMeta(int meta)
-    {        
+    {
         return ColorCode.get(meta).getLiquidData();
     }
 
