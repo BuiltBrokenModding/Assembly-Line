@@ -5,7 +5,6 @@ import java.io.File;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -15,6 +14,7 @@ import universalelectricity.prefab.UpdateNotifier;
 import universalelectricity.prefab.multiblock.BlockMulti;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.block.BlockCrate;
+import assemblyline.common.block.BlockTurntable;
 import assemblyline.common.block.ItemBlockCrate;
 import assemblyline.common.machine.BlockManipulator;
 import assemblyline.common.machine.BlockRejector;
@@ -83,6 +83,7 @@ public class AssemblyLine
 	public static Block blockArmbot;
 	public static Block blockCraneController;
 	public static Block blockCraneParts;
+	public static Block blockTurntable;
 
 	public static BlockMulti blockMulti;
 
@@ -108,6 +109,7 @@ public class AssemblyLine
 		blockMulti = new BlockMulti(CONFIGURATION.getBlock("Multiblock", BLOCK_ID_PREFIX + 9).getInt());
 		blockCraneController = new BlockCraneController(CONFIGURATION.getBlock("CraneController", BLOCK_ID_PREFIX + 10).getInt());
 		blockCraneParts = new BlockCraneParts(CONFIGURATION.getBlock("CraneParts", BLOCK_ID_PREFIX + 11).getInt());
+		blockTurntable = new BlockTurntable(CONFIGURATION.getBlock("Turntable", BLOCK_ID_PREFIX + 12).getInt(), 10);
 
 		itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", ITEM_ID_PREFIX).getInt());
 		itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", ITEM_ID_PREFIX + 1).getInt());
@@ -122,6 +124,7 @@ public class AssemblyLine
 		GameRegistry.registerBlock(blockDetector, "Detector");
 		GameRegistry.registerBlock(blockRejector, "Rejector");
 		GameRegistry.registerBlock(blockArmbot, "Armbot");
+		GameRegistry.registerBlock(blockTurntable, "Turntable");
 		GameRegistry.registerBlock(blockCraneController, "Crane Controller");
 		GameRegistry.registerBlock(blockCraneParts, ItemCraneParts.class, "Crane Parts");
 
@@ -164,6 +167,9 @@ public class AssemblyLine
 
 		// Rejector
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockRejector, new Object[] { "WPW", "@R@", '@', "ingotSteel", 'R', Item.redstone, 'P', Block.pistonBase, 'C', "basicCircuit", 'W', "copperWire" }));
+
+		// Turntable
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, new Object[] { "M", "P", 'M', "motor", 'P', Block.pistonBase }));
 
 		// Manipulator
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockManipulator, 2), new Object[] { Block.dispenser, "basicCircuit" }));
