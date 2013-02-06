@@ -1,7 +1,13 @@
 package assemblyline.common.machine.command;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockLever;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import net.minecraftforge.common.ISidedInventory;
 import assemblyline.api.IArmbotUseable;
 
 public class CommandUse extends Command
@@ -27,6 +33,7 @@ public class CommandUse extends Command
 	@Override
 	protected boolean doTask()
 	{
+		Block block = Block.blocksList[this.world.getBlockId(tileEntity.getHandPosition().intX(), tileEntity.getHandPosition().intY(), tileEntity.getHandPosition().intZ())];
 		TileEntity targetTile = this.tileEntity.getHandPosition().getTileEntity(this.world);
 
 		if (targetTile != null)
@@ -35,6 +42,23 @@ public class CommandUse extends Command
 			{
 				((IArmbotUseable) targetTile).onUse(this.tileEntity, this.getArgs());
 			}
+			else if (targetTile instanceof ISidedInventory)
+			{
+				// TODO add IInventory side behavior for placing and taking items.
+				if(tileEntity.getGrabbedEntities().size() > 0)
+				{
+					//add items to inv
+				}else
+				{
+					//remove items from inv
+				}
+			}
+			else if (block == Block.lever)
+			{
+				block.onBlockActivated(this.world, tileEntity.getHandPosition().intX(), tileEntity.getHandPosition().intY(), tileEntity.getHandPosition().intZ(), null, 0, 0, 0, 0);
+			}
+
+			
 		}
 
 		this.curTimes++;
