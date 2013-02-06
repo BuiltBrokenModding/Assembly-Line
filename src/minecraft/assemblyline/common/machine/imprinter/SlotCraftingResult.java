@@ -25,8 +25,6 @@ public class SlotCraftingResult extends Slot
 	public boolean canTakeStack(EntityPlayer player)
 	{
 		return true;
-		// this.getStack() == null ? false :
-		// this.container.tileEntity.getIdealRecipe(this.getStack()) != null;
 	}
 
 	@Override
@@ -36,19 +34,4 @@ public class SlotCraftingResult extends Slot
 
 		this.container.tileEntity.onPickUpFromResult(entityPlayer, itemStack);
 	}
-
-	/*
-	 * private boolean playerHasRequiredIngredients(EntityPlayer player, ItemStack desiredItem) { if
-	 * (this.getStack() != null) { ItemStack[] idealRecipe =
-	 * this.container.tileEntity.getIdealRecipe(this.getStack()).getValue(); if (idealRecipe !=
-	 * null) { ItemStack[] requiredItems = idealRecipe.clone(); int foundItems = 0;
-	 * 
-	 * if (requiredItems != null) { for (ItemStack searchStack : requiredItems) { for (int i = 0; i
-	 * < player.inventory.getSizeInventory(); i++) { ItemStack checkStack =
-	 * player.inventory.getStackInSlot(i);
-	 * 
-	 * if (checkStack != null) { if (searchStack.isItemEqual(checkStack)) { foundItems++; } } } } }
-	 * 
-	 * if (foundItems >= requiredItems.length) return true; } } return false; }
-	 */
 }

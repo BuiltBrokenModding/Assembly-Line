@@ -164,11 +164,16 @@ public class BlockCrate extends BlockMachine
 	 */
 	public boolean insertAllItems(TileEntityCrate tileEntity, EntityPlayer player)
 	{
-		ItemStack requestStack = player.getCurrentEquippedItem();
+		ItemStack requestStack = null;
 
-		if (requestStack == null && tileEntity.getStackInSlot(0) != null)
+		if (tileEntity.getStackInSlot(0) != null)
 		{
 			requestStack = tileEntity.getStackInSlot(0).copy();
+		}
+
+		if (requestStack == null)
+		{
+			requestStack = player.getCurrentEquippedItem();
 		}
 
 		if (requestStack != null)

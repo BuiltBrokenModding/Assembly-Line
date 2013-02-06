@@ -54,6 +54,20 @@ public class BlockImprinter extends BlockMachine
 
 	}
 
+	public boolean onUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
+	{
+		TileEntity tileEntity = par1World.getBlockTileEntity(x, y, z);
+
+		if (tileEntity instanceof TileEntityImprinter)
+		{
+			((TileEntityImprinter) tileEntity).searchInventories = !((TileEntityImprinter) tileEntity).searchInventories;
+			par1World.markBlockForUpdate(x, y, z);
+			return true;
+		}
+
+		return false;
+	}
+
 	@Override
 	public TileEntity createNewTileEntity(World var1)
 	{

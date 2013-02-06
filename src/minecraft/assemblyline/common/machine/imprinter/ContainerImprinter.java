@@ -9,7 +9,7 @@ import assemblyline.common.AssemblyLine;
 
 public class ContainerImprinter extends Container implements ISlotWatcher
 {
-	private InventoryPlayer inventoryPlayer;
+	public InventoryPlayer inventoryPlayer;
 	public TileEntityImprinter tileEntity;
 
 	public ContainerImprinter(InventoryPlayer inventoryPlayer, TileEntityImprinter tileEntity)
@@ -60,6 +60,15 @@ public class ContainerImprinter extends Container implements ISlotWatcher
 		{
 			this.addSlotToContainer(new WatchedSlot(inventoryPlayer, var3, 8 + var3 * 18, 178, this));
 		}
+
+		this.tileEntity.openChest();
+	}
+
+	@Override
+	public void onCraftGuiClosed(EntityPlayer par1EntityPlayer)
+	{
+		super.onCraftGuiClosed(par1EntityPlayer);
+		this.tileEntity.closeChest();
 	}
 
 	@Override

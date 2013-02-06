@@ -13,6 +13,9 @@ import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraftforge.common.ForgeDirection;
@@ -24,14 +27,20 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.multiblock.TileEntityMulti;
+import universalelectricity.prefab.network.IPacketReceiver;
+import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import assemblyline.api.IArmbot;
 import assemblyline.api.IArmbotUseable;
+import assemblyline.common.AssemblyLine;
 import assemblyline.common.Pair;
+
+import com.google.common.io.ByteArrayDataInput;
+
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
-public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInventory, IArmbotUseable
+public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInventory, IArmbotUseable, IPacketReceiver
 {
 	public static final int IMPRINTER_MATRIX_START = 9;
 	public static final int INVENTORY_START = IMPRINTER_MATRIX_START + 3;
@@ -203,11 +212,13 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	@Override
 	public void openChest()
 	{
+		this.onInventoryChanged();
 	}
 
 	@Override
 	public void closeChest()
 	{
+		this.onInventoryChanged();
 	}
 
 	/**
@@ -257,6 +268,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	@Override
 	public void onInventoryChanged()
 	{
+
 		/**
 		 * Makes the stamping recipe for filters
 		 */
@@ -721,7 +733,8 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
 				try
 				{
-					// TODO: Get Client Side Working.
+					// TODO: Get Client Side Working. The issue is that the client side doesn't know
+					// about the chest, and hence does not get the correct data.
 					TileEntity simulatedTileEntity = tileEntity.getClass().newInstance();
 					simulatedTileEntity.worldObj = tileEntity.worldObj;
 
@@ -753,6 +766,21 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 		return simulatedInventories;
 	}
 
+	@Override
+	public Packet getDescriptionPacket()
+	{
+		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.searchInventories);
+	}
+
+	@Override
+	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
+	{
+		if (this.worldObj.isRemote)
+		{
+			this.searchInventories = dataStream.readBoolean();
+		}
+	}
+
 	/**
 	 * NBT Data
 	 */
@@ -776,6 +804,8 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 				this.setInventorySlotContents(var5, ItemStack.loadItemStackFromNBT(var4));
 			}
 		}
+
+		this.searchInventories = nbt.getBoolean("searchInventories");
 	}
 
 	/**
@@ -800,6 +830,8 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 		}
 
 		nbt.setTag("Items", var2);
+
+		nbt.setBoolean("searchInventories", this.searchInventories);
 	}
 
 	/**
@@ -819,5 +851,4 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
 		return false;
 	}
-
 }
