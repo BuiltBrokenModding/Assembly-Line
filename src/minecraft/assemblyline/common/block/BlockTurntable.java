@@ -1,9 +1,9 @@
 package assemblyline.common.block;
 
-import assemblyline.common.AssemblyLine;
-import assemblyline.common.TabAssemblyLine;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import assemblyline.common.AssemblyLine;
+import assemblyline.common.TabAssemblyLine;
 
 public class BlockTurntable extends Block
 {
@@ -25,7 +25,7 @@ public class BlockTurntable extends Block
 		{
 			return this.blockIndexInTexture + 1;
 		}
-		
+
 		return this.blockIndexInTexture + 2;
 	}
 }

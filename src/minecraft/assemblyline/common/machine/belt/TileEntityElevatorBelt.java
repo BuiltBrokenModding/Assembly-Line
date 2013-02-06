@@ -27,7 +27,10 @@ public class TileEntityElevatorBelt extends TileEntityConveyorBelt
 	public boolean isBellowABelt()
 	{
 		TileEntity ent = worldObj.getBlockTileEntity(xCoord, xCoord - 1, zCoord);
-		if (ent instanceof TileEntityElevatorBelt) { return true; }
+		if (ent instanceof TileEntityElevatorBelt)
+		{
+			return true;
+		}
 		return false;
 	}
 

@@ -280,7 +280,10 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 				for (int i = startIndex; i < startIndex + inventory.getSizeInventorySide(direction); i++)
 				{
 					itemStack = this.addStackToInventory(i, inventory, itemStack);
-					if (itemStack == null) { return null; }
+					if (itemStack == null)
+					{
+						return null;
+					}
 				}
 			}
 			else if (tileEntity instanceof IInventory)
@@ -290,12 +293,18 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 				for (int i = 0; i < inventory.getSizeInventory(); i++)
 				{
 					itemStack = this.addStackToInventory(i, inventory, itemStack);
-					if (itemStack == null) { return null; }
+					if (itemStack == null)
+					{
+						return null;
+					}
 				}
 			}
 		}
 
-		if (itemStack.stackSize <= 0) { return null; }
+		if (itemStack.stackSize <= 0)
+		{
+			return null;
+		}
 
 		return itemStack;
 	}
@@ -305,25 +314,31 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 		if (inventory.getSizeInventory() > slotIndex)
 		{
 			ItemStack stackInInventory = inventory.getStackInSlot(slotIndex);
-			
+
 			if (stackInInventory == null)
 			{
 				inventory.setInventorySlotContents(slotIndex, itemStack);
-				if (inventory.getStackInSlot(slotIndex) == null) { return itemStack; }
+				if (inventory.getStackInSlot(slotIndex) == null)
+				{
+					return itemStack;
+				}
 				return null;
 			}
 			else if (stackInInventory.isItemEqual(itemStack) && stackInInventory.isStackable())
-			{ 
+			{
 				stackInInventory = stackInInventory.copy();
 				int stackLim = Math.min(inventory.getInventoryStackLimit(), itemStack.getMaxStackSize());
-				int rejectedAmount = Math.max((stackInInventory.stackSize + itemStack.stackSize) - stackLim , 0);
+				int rejectedAmount = Math.max((stackInInventory.stackSize + itemStack.stackSize) - stackLim, 0);
 				stackInInventory.stackSize = Math.min(Math.max((stackInInventory.stackSize + itemStack.stackSize - rejectedAmount), 0), inventory.getInventoryStackLimit());
 				itemStack.stackSize = rejectedAmount;
 				inventory.setInventorySlotContents(slotIndex, stackInInventory);
 			}
 		}
 
-		if (itemStack.stackSize <= 0) { return null; }
+		if (itemStack.stackSize <= 0)
+		{
+			return null;
+		}
 
 		return itemStack;
 	}

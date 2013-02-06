@@ -27,8 +27,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class CommonProxy implements IGuiHandler
 {
-	public static final int	GUI_IMPRINTER	= 1;
-	public static final int	GUI_ENCODER		= 2;
+	public static final int GUI_IMPRINTER = 1;
+	public static final int GUI_ENCODER = 2;
 
 	public void preInit()
 	{

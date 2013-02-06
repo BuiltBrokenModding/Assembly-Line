@@ -3,8 +3,6 @@ package assemblyline.common.machine.imprinter;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -24,9 +22,7 @@ import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import assemblyline.api.IArmbot;
 import assemblyline.api.IArmbotUseable;
-import assemblyline.common.AssemblyLine;
 import assemblyline.common.Pair;
-import assemblyline.common.machine.armbot.TileEntityArmbot;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
@@ -464,11 +460,17 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 					{
 						if (object instanceof ShapedRecipes)
 						{
-							if (this.hasResource(((ShapedRecipes) object).recipeItems) != null) { return new Pair<ItemStack, ItemStack[]>(((IRecipe) object).getRecipeOutput().copy(), ((ShapedRecipes) object).recipeItems); }
+							if (this.hasResource(((ShapedRecipes) object).recipeItems) != null)
+							{
+								return new Pair<ItemStack, ItemStack[]>(((IRecipe) object).getRecipeOutput().copy(), ((ShapedRecipes) object).recipeItems);
+							}
 						}
 						else if (object instanceof ShapelessRecipes)
 						{
-							if (this.hasResource(((ShapelessRecipes) object).recipeItems.toArray(new ItemStack[1])) != null) { return new Pair<ItemStack, ItemStack[]>(((IRecipe) object).getRecipeOutput().copy(), (ItemStack[]) ((ShapelessRecipes) object).recipeItems.toArray(new ItemStack[1])); }
+							if (this.hasResource(((ShapelessRecipes) object).recipeItems.toArray(new ItemStack[1])) != null)
+							{
+								return new Pair<ItemStack, ItemStack[]>(((IRecipe) object).getRecipeOutput().copy(), (ItemStack[]) ((ShapelessRecipes) object).recipeItems.toArray(new ItemStack[1]));
+							}
 						}
 						else if (object instanceof ShapedOreRecipe)
 						{
@@ -477,9 +479,11 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
 							ArrayList<ItemStack> hasResources = this.hasResource(oreRecipeInput);
 
-							if (hasResources != null) {
+							if (hasResources != null)
+							{
 
-							return new Pair<ItemStack, ItemStack[]>(((IRecipe) object).getRecipeOutput().copy(), hasResources.toArray(new ItemStack[1])); }
+								return new Pair<ItemStack, ItemStack[]>(((IRecipe) object).getRecipeOutput().copy(), hasResources.toArray(new ItemStack[1]));
+							}
 						}
 						else if (object instanceof ShapelessOreRecipe)
 						{
@@ -488,7 +492,10 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
 							List<ItemStack> hasResources = this.hasResource(oreRecipeInput.toArray());
 
-							if (hasResources != null) { return new Pair<ItemStack, ItemStack[]>(((IRecipe) object).getRecipeOutput().copy(), hasResources.toArray(new ItemStack[1])); }
+							if (hasResources != null)
+							{
+								return new Pair<ItemStack, ItemStack[]>(((IRecipe) object).getRecipeOutput().copy(), hasResources.toArray(new ItemStack[1]));
+							}
 						}
 					}
 				}

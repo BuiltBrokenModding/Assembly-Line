@@ -91,7 +91,10 @@ public class BlockDetector extends BlockImprintable
 	@Override
 	public int getBlockTextureFromSideAndMetadata(int side, int metadata)
 	{
-		if (side == ForgeDirection.DOWN.ordinal()) { return this.blockIndexInTexture + 1; }
+		if (side == ForgeDirection.DOWN.ordinal())
+		{
+			return this.blockIndexInTexture + 1;
+		}
 
 		return this.blockIndexInTexture;
 	}
@@ -150,7 +153,10 @@ public class BlockDetector extends BlockImprintable
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 		if (tileEntity != null)
 		{
-			if (tileEntity instanceof TileEntityDetector) { return ((TileEntityDetector) tileEntity).isPoweringTo(ForgeDirection.getOrientation(direction)); }
+			if (tileEntity instanceof TileEntityDetector)
+			{
+				return ((TileEntityDetector) tileEntity).isPoweringTo(ForgeDirection.getOrientation(direction));
+			}
 		}
 
 		return false;

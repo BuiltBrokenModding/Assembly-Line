@@ -64,10 +64,16 @@ public class ContainerEncoder extends Container
 			{
 				if (this.getSlot(0).isItemValid(slotStack))
 				{
-					if (!this.mergeItemStack(slotStack, 0, 1, false)) { return null; }
+					if (!this.mergeItemStack(slotStack, 0, 1, false))
+					{
+						return null;
+					}
 				}
 			}
-			else if (!this.mergeItemStack(slotStack, this.containingItems.length, 37, false)) { return null; }
+			else if (!this.mergeItemStack(slotStack, this.containingItems.length, 37, false))
+			{
+				return null;
+			}
 
 			if (slotStack.stackSize == 0)
 			{
@@ -78,7 +84,10 @@ public class ContainerEncoder extends Container
 				slotObj.onSlotChanged();
 			}
 
-			if (slotStack.stackSize == copyStack.stackSize) { return null; }
+			if (slotStack.stackSize == copyStack.stackSize)
+			{
+				return null;
+			}
 
 			slotObj.onPickupFromSlot(player, slotStack);
 		}

@@ -9,10 +9,10 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class CommandRotateBy extends Command
 {
-	float	targetRotationYaw	= 0;
-	float	targetRotationPitch	= 0;
-	float	deltaPitch			= 0, deltaYaw = 90;
-	float	totalTicks			= 0f;
+	float targetRotationYaw = 0;
+	float targetRotationPitch = 0;
+	float deltaPitch = 0, deltaYaw = 90;
+	float totalTicks = 0f;
 
 	@Override
 	public void onTaskStart()
@@ -62,7 +62,10 @@ public class CommandRotateBy extends Command
 		/*
 		 * float rotationalDifference = Math.abs(this.tileEntity.rotationYaw - this.targetRotation);
 		 * 
-		 * if (rotationalDifference < ROTATION_SPEED) { this.tileEntity.rotationYaw = this.targetRotation; } else { if (this.tileEntity.rotationYaw > this.targetRotation) { this.tileEntity.rotationYaw -= ROTATION_SPEED; } else { this.tileEntity.rotationYaw += ROTATION_SPEED; } this.ticks = 0; }
+		 * if (rotationalDifference < ROTATION_SPEED) { this.tileEntity.rotationYaw =
+		 * this.targetRotation; } else { if (this.tileEntity.rotationYaw > this.targetRotation) {
+		 * this.tileEntity.rotationYaw -= ROTATION_SPEED; } else { this.tileEntity.rotationYaw +=
+		 * ROTATION_SPEED; } this.ticks = 0; }
 		 */
 
 		// set the rotation to the target immediately and let the client handle animating it
@@ -73,9 +76,15 @@ public class CommandRotateBy extends Command
 		if (Math.abs(this.tileEntity.rotationPitch - this.targetRotationPitch) > 0.001f)
 			this.tileEntity.rotationPitch = this.targetRotationPitch;
 
-		//if (this.ticks < this.totalTicks) { return true; }
-		if (Math.abs(this.tileEntity.renderPitch - this.tileEntity.rotationPitch) > 0.001f) { return true; }
-		if (Math.abs(this.tileEntity.renderYaw - this.tileEntity.rotationYaw) > 0.001f) { return true; }
+		// if (this.ticks < this.totalTicks) { return true; }
+		if (Math.abs(this.tileEntity.renderPitch - this.tileEntity.rotationPitch) > 0.001f)
+		{
+			return true;
+		}
+		if (Math.abs(this.tileEntity.renderYaw - this.tileEntity.rotationYaw) > 0.001f)
+		{
+			return true;
+		}
 
 		return false;
 	}

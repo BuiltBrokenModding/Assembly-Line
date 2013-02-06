@@ -3,7 +3,6 @@ package assemblyline.common.machine.command;
 import java.util.ArrayList;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -52,8 +51,10 @@ public class CommandBreak extends Command
 		 */
 		return true;
 	}
+
 	/**
 	 * Drops an item stack at the exact center of the coords given
+	 * 
 	 * @param world
 	 * @param x
 	 * @param y
@@ -69,8 +70,10 @@ public class CommandBreak extends Command
 			world.spawnEntityInWorld(entity);
 		}
 	}
+
 	/**
 	 * grabs all the items that the block can drop then pass them onto dropBlockAsItem_do
+	 * 
 	 * @param world
 	 * @param x
 	 * @param y

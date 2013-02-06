@@ -103,7 +103,10 @@ public class RenderCrate extends TileEntitySpecialRenderer
 	{
 		World world = tileEntity.worldObj;
 
-		if (world.isBlockOpaqueCube(tileEntity.xCoord + xDifference, tileEntity.yCoord, tileEntity.zCoord + zDifference)) { return; }
+		if (world.isBlockOpaqueCube(tileEntity.xCoord + xDifference, tileEntity.yCoord, tileEntity.zCoord + zDifference))
+		{
+			return;
+		}
 
 		int br = world.getLightBrightnessForSkyBlocks(tileEntity.xCoord + xDifference, tileEntity.yCoord, tileEntity.zCoord + zDifference, 0);
 		int var11 = br % 65536;

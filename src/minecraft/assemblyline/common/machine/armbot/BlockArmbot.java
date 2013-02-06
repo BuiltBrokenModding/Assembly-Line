@@ -39,7 +39,10 @@ public class BlockArmbot extends BlockMachine
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tileEntity != null && tileEntity instanceof IMultiBlock) { return ((IMultiBlock) tileEntity).onActivated(player); }
+		if (tileEntity != null && tileEntity instanceof IMultiBlock)
+		{
+			return ((IMultiBlock) tileEntity).onActivated(player);
+		}
 
 		return false;
 	}

@@ -39,8 +39,8 @@ public class ItemImprinter extends Item
 		if (entity != null && !(entity instanceof IProjectile) && !(entity instanceof EntityPlayer))
 		{
 			String stringName = EntityList.getEntityString(entity);
-			//TODO add to filter
-			player.sendChatToPlayer("Target: "+ stringName);
+			// TODO add to filter
+			player.sendChatToPlayer("Target: " + stringName);
 			return true;
 		}
 		return false;

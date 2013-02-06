@@ -92,11 +92,20 @@ public class ContainerImprinter extends Container implements ISlotWatcher
 			{
 				if (this.getSlot(this.tileEntity.IMPRINTER_MATRIX_START).isItemValid(slotStack))
 				{
-					if (!this.mergeItemStack(slotStack, this.tileEntity.IMPRINTER_MATRIX_START, this.tileEntity.IMPRINTER_MATRIX_START + 1, true)) { return null; }
+					if (!this.mergeItemStack(slotStack, this.tileEntity.IMPRINTER_MATRIX_START, this.tileEntity.IMPRINTER_MATRIX_START + 1, true))
+					{
+						return null;
+					}
 				}
-				else if (!this.mergeItemStack(slotStack, this.tileEntity.INVENTORY_START, this.tileEntity.getSizeInventory(), false)) { return null; }
+				else if (!this.mergeItemStack(slotStack, this.tileEntity.INVENTORY_START, this.tileEntity.getSizeInventory(), false))
+				{
+					return null;
+				}
 			}
-			else if (!this.mergeItemStack(slotStack, this.tileEntity.getSizeInventory(), this.tileEntity.getSizeInventory() + 36, false)) { return null; }
+			else if (!this.mergeItemStack(slotStack, this.tileEntity.getSizeInventory(), this.tileEntity.getSizeInventory() + 36, false))
+			{
+				return null;
+			}
 
 			if (slotStack.stackSize == 0)
 			{
@@ -107,7 +116,10 @@ public class ContainerImprinter extends Container implements ISlotWatcher
 				slotObj.onSlotChanged();
 			}
 
-			if (slotStack.stackSize == copyStack.stackSize) { return null; }
+			if (slotStack.stackSize == copyStack.stackSize)
+			{
+				return null;
+			}
 
 			slotObj.onPickupFromSlot(player, slotStack);
 		}

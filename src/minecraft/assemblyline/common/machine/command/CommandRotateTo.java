@@ -72,9 +72,15 @@ public class CommandRotateTo extends Command
 		this.tileEntity.rotationYaw = this.targetRotationYaw;
 		this.tileEntity.rotationPitch = this.targetRotationPitch;
 
-		//if (this.ticks < this.totalTicks) { return true; }
-		if (Math.abs(this.tileEntity.renderPitch - this.tileEntity.rotationPitch) > 0.001f) { return true; }
-		if (Math.abs(this.tileEntity.renderYaw - this.tileEntity.rotationYaw) > 0.001f) { return true; }
+		// if (this.ticks < this.totalTicks) { return true; }
+		if (Math.abs(this.tileEntity.renderPitch - this.tileEntity.rotationPitch) > 0.001f)
+		{
+			return true;
+		}
+		if (Math.abs(this.tileEntity.renderYaw - this.tileEntity.rotationYaw) > 0.001f)
+		{
+			return true;
+		}
 
 		return false;
 	}

@@ -36,7 +36,7 @@ public class CommandIdle extends Command
 
 		return false;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound taskCompound)
 	{
@@ -44,7 +44,7 @@ public class CommandIdle extends Command
 		this.idleTime = taskCompound.getInteger("idleTime");
 		this.totalIdleTime = taskCompound.getInteger("idleTotal");
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound taskCompound)
 	{
@@ -52,7 +52,7 @@ public class CommandIdle extends Command
 		taskCompound.setInteger("idleTime", this.idleTime);
 		taskCompound.setInteger("idleTotal", this.totalIdleTime);
 	}
-	
+
 	@Override
 	public String toString()
 	{

@@ -112,7 +112,10 @@ public abstract class Command
 	 */
 	protected String getArg(int i)
 	{
-		if (i >= 0 && i < this.parameters.length) { return this.parameters[i]; }
+		if (i >= 0 && i < this.parameters.length)
+		{
+			return this.parameters[i];
+		}
 
 		return null;
 	}

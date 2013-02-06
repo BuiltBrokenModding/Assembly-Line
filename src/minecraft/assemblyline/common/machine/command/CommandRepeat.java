@@ -70,7 +70,7 @@ public class CommandRepeat extends Command
 		taskCompound.setInteger("repCur", this.curReps);
 		taskCompound.setInteger("repGoal", this.numReps);
 	}
-	
+
 	@Override
 	public String toString()
 	{

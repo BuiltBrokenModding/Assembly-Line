@@ -12,13 +12,13 @@ import universalelectricity.core.vector.Vector3;
 
 public class CommandFire extends Command
 {
-	private static final float	MIN_ACTUAL_PITCH	= -80;
-	private static final float	MAX_ACTUAL_PITCH	= 80;
+	private static final float MIN_ACTUAL_PITCH = -80;
+	private static final float MAX_ACTUAL_PITCH = 80;
 
-	private float				actualYaw;
-	private float				actualPitch;
-	private float				velocity;
-	private Vector3				finalVelocity;
+	private float actualYaw;
+	private float actualPitch;
+	private float velocity;
+	private Vector3 finalVelocity;
 
 	@Override
 	public void onTaskStart()

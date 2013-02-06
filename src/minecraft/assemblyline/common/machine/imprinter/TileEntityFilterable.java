@@ -46,7 +46,10 @@ public abstract class TileEntityFilterable extends TileEntityAssemblyNetwork imp
 				{
 					if (checkStacks.get(i) != null)
 					{
-						if (checkStacks.get(i).isItemEqual(itemStack)) { return !inverted; }
+						if (checkStacks.get(i).isItemEqual(itemStack))
+						{
+							return !inverted;
+						}
 					}
 				}
 			}

@@ -12,7 +12,8 @@ import assemblyline.common.AssemblyLine;
 import assemblyline.common.TabAssemblyLine;
 
 /**
- * A block that allows the placement of mass amount of a specific item within it. It will be allowed to go on Conveyor Belts
+ * A block that allows the placement of mass amount of a specific item within it. It will be allowed
+ * to go on Conveyor Belts
  * 
  * @author Calclavia
  * 
@@ -110,7 +111,7 @@ public class BlockCrate extends BlockMachine
 				if (containedStack != null && (crateStack == null || (crateStack != null && containedStack.getItem().itemID == crateStack.getItem().itemID && containedStack.getItemDamage() == crateStack.getItemDamage())))
 				{
 					ItemStack returned = this.putIn(tileEntity, containedStack);
-					ItemBlockCrate.setContainingItemStack(currentStack, returned );
+					ItemBlockCrate.setContainingItemStack(currentStack, returned);
 					return true;
 				}
 
@@ -246,7 +247,10 @@ public class BlockCrate extends BlockMachine
 			itemStack.stackSize = 0;
 		}
 
-		if (itemStack.stackSize <= 0) { return null; }
+		if (itemStack.stackSize <= 0)
+		{
+			return null;
+		}
 
 		return itemStack;
 	}

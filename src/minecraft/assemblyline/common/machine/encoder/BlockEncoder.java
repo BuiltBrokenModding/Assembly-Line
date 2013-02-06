@@ -30,7 +30,9 @@ public class BlockEncoder extends BlockMachine
 			return this.blockIndexInTexture;
 
 		}
-		else if (side == 1) { return this.blockIndexInTexture + 1;
+		else if (side == 1)
+		{
+			return this.blockIndexInTexture + 1;
 
 		}
 

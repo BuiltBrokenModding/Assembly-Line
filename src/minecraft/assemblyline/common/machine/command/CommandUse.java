@@ -1,6 +1,5 @@
 package assemblyline.common.machine.command;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import assemblyline.api.IArmbotUseable;

@@ -1,8 +1,5 @@
 package assemblyline.common.machine.command;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
-
 public class CommandDrop extends Command
 {
 	@Override

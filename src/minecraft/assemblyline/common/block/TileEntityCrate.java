@@ -65,7 +65,10 @@ public class TileEntityCrate extends TileEntityAdvanced implements IInventory, I
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		if (this.containingItems[0] != null) { return PacketManager.getPacket(AssemblyLine.CHANNEL, this, true, this.containingItems[0].itemID, this.containingItems[0].stackSize, this.containingItems[0].getItemDamage()); }
+		if (this.containingItems[0] != null)
+		{
+			return PacketManager.getPacket(AssemblyLine.CHANNEL, this, true, this.containingItems[0].itemID, this.containingItems[0].stackSize, this.containingItems[0].getItemDamage());
+		}
 		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, false);
 	}
 

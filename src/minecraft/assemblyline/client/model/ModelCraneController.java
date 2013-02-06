@@ -12,15 +12,15 @@ import net.minecraft.client.model.ModelRenderer;
 public class ModelCraneController extends ModelBase
 {
 	// fields
-	ModelRenderer	Base2;
-	ModelRenderer	Base;
-	ModelRenderer	ConnectorFront;
-	ModelRenderer	Decoration1;
-	ModelRenderer	Decoration2;
-	ModelRenderer	Decoration3;
-	ModelRenderer	Decoration4;
-	ModelRenderer	ConnectorTop;
-	ModelRenderer	ConnectorRight;
+	ModelRenderer Base2;
+	ModelRenderer Base;
+	ModelRenderer ConnectorFront;
+	ModelRenderer Decoration1;
+	ModelRenderer Decoration2;
+	ModelRenderer Decoration3;
+	ModelRenderer Decoration4;
+	ModelRenderer ConnectorTop;
+	ModelRenderer ConnectorRight;
 
 	public ModelCraneController()
 	{
@@ -103,7 +103,7 @@ public class ModelCraneController extends ModelBase
 		setRotation(ConnectorFront, 0F, 1.570796F, 0F);
 		ConnectorRight.setRotationPoint(0.01F, 12F, -4F);
 		setRotation(ConnectorRight, 0F, 0F, 0F);
-		
+
 		Base2.render(scale);
 		Base.render(scale);
 		ConnectorFront.render(scale);

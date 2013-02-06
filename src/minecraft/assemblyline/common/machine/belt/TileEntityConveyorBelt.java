@@ -305,7 +305,7 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 
 			}
 		}
-		
+
 		return this.animFrame;
 	}
 
