@@ -243,7 +243,7 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	@Override
 	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
 	{
-		if (worldObj.isRemote)
+		if (this.worldObj.isRemote)
 		{
 			try
 			{
