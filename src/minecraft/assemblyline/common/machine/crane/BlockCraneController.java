@@ -19,7 +19,7 @@ public class BlockCraneController extends BlockMachine
 		super("cranecontroller", id, UniversalElectricity.machine);
 		this.setResistance(5.0f);
 		this.setHardness(5.0f);
-		this.setCreativeTab(TabAssemblyLine.INSTANCE);
+		//this.setCreativeTab(TabAssemblyLine.INSTANCE);
 	}
 
 	@Override

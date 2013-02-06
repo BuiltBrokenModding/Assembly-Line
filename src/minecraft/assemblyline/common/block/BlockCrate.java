@@ -113,6 +113,7 @@ public class BlockCrate extends BlockMachine
 					else
 					{
 						ItemStack stack = tileEntity.getStackInSlot(0);
+
 						if (stack != null)
 						{
 							this.ejectItems(tileEntity, player, stack.getMaxStackSize());
@@ -183,6 +184,7 @@ public class BlockCrate extends BlockMachine
 						if (requestStack.isItemEqual(currentStack))
 						{
 							player.inventory.setInventorySlotContents(i, this.putIn(tileEntity, currentStack));
+
 							if (player instanceof EntityPlayerMP)
 							{
 								((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);

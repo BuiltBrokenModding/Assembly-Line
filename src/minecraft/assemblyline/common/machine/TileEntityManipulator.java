@@ -182,19 +182,6 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 		}
 	}
 
-	/*
-	 * @Override public ArrayList getPacketData() { ArrayList list = super.getPacketData();
-	 * list.add(this.isOutput); list.add(this.wattsReceived); return list; }
-	 * 
-	 * @Override public void handlePacketData(INetworkManager network, int packetType,
-	 * Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream) { if
-	 * (worldObj.isRemote) { ByteArrayInputStream bis = new ByteArrayInputStream(packet.data);
-	 * DataInputStream dis = new DataInputStream(bis); int id, x, y, z; try { id = dis.readInt(); x
-	 * = dis.readInt(); y = dis.readInt(); z = dis.readInt(); NBTTagCompound tag =
-	 * Packet.readNBTTagCompound(dis); readFromNBT(tag); this.wattsReceived = dis.readDouble();
-	 * this.isOutput = dis.readBoolean(); } catch (IOException e) { e.printStackTrace(); } } }
-	 */
-
 	/**
 	 * Throws the items from the manipulator into the world.
 	 * 

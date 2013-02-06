@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
@@ -12,13 +13,17 @@ import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityChest;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
+import universalelectricity.prefab.multiblock.TileEntityMulti;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import assemblyline.api.IArmbot;
 import assemblyline.api.IArmbotUseable;
@@ -252,7 +257,6 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	@Override
 	public void onInventoryChanged()
 	{
-
 		/**
 		 * Makes the stamping recipe for filters
 		 */
@@ -371,6 +375,24 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 						{
 							if (searchStack != null)
 							{
+								inventories:
+								for (IInventory inventory : getAvaliableInventories())
+								{
+									for (int i = 0; i < inventory.getSizeInventory(); i++)
+									{
+										ItemStack checkStack = inventory.getStackInSlot(i);
+
+										if (checkStack != null)
+										{
+											if (searchStack.isItemEqual(checkStack) || (searchStack.itemID == checkStack.itemID && searchStack.getItemDamage() < 0))
+											{
+												inventory.decrStackSize(i, 1);
+												break inventories;
+											}
+										}
+									}
+								}
+
 								for (int i = 0; i < this.containingItems.length; i++)
 								{
 									ItemStack checkStack = this.containingItems[i];
@@ -481,7 +503,6 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
 							if (hasResources != null)
 							{
-
 								return new Pair<ItemStack, ItemStack[]>(((IRecipe) object).getRecipeOutput().copy(), hasResources.toArray(new ItemStack[1]));
 							}
 						}
@@ -512,83 +533,224 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	 */
 	public ArrayList<ItemStack> hasResource(Object[] recipeItems)
 	{
-		/**
-		 * Simulate an imprinter.
-		 */
-		TileEntityImprinter dummyImprinter = new TileEntityImprinter();
-		NBTTagCompound cloneData = new NBTTagCompound();
-		this.writeToNBT(cloneData);
-		dummyImprinter.readFromNBT(cloneData);
-
-		/**
-		 * The actual amount of resource required. Each ItemStack will only have stacksize of 1.
-		 */
-		ArrayList<ItemStack> actualResources = new ArrayList<ItemStack>();
-		int itemMatch = 0;
-
-		for (Object obj : recipeItems)
+		try
 		{
-			if (obj instanceof ItemStack)
+			/**
+			 * Simulate an imprinter.
+			 */
+			TileEntityImprinter dummyImprinter = new TileEntityImprinter();
+			NBTTagCompound cloneData = new NBTTagCompound();
+			this.writeToNBT(cloneData);
+			dummyImprinter.readFromNBT(cloneData);
+
+			/**
+			 * The actual amount of resource required. Each ItemStack will only have stacksize of 1.
+			 */
+			ArrayList<ItemStack> actualResources = new ArrayList<ItemStack>();
+			int itemMatch = 0;
+
+			for (Object obj : recipeItems)
 			{
-				ItemStack recipeItem = (ItemStack) obj;
-				actualResources.add(recipeItem.copy());
-
-				if (recipeItem != null)
+				if (obj instanceof ItemStack)
 				{
-					for (int i = 0; i < this.containingItems.length; i++)
-					{
-						ItemStack checkStack = this.containingItems[i];
+					ItemStack recipeItem = (ItemStack) obj;
+					actualResources.add(recipeItem.copy());
 
-						if (checkStack != null)
+					if (recipeItem != null)
+					{
+						if (this.doesItemExist(recipeItem, dummyImprinter))
 						{
-							if (recipeItem.isItemEqual(checkStack) || (recipeItem.itemID == checkStack.itemID && recipeItem.getItemDamage() < 0))
-							{
-								// TODO Do NBT Checking
-								dummyImprinter.decrStackSize(i + INVENTORY_START, 1);
-								itemMatch++;
-								break;
-							}
+							itemMatch++;
 						}
 					}
 				}
-			}
-			else if (obj instanceof ArrayList)
-			{
-				ArrayList ingredientsList = (ArrayList) obj;
-				Object[] ingredientsArray = ingredientsList.toArray();
-
-				optionsLoop:
-				for (int x = 0; x < ingredientsArray.length; x++)
+				else if (obj instanceof ArrayList)
 				{
-					if (ingredientsArray[x] != null && ingredientsArray[x] instanceof ItemStack)
+					/**
+					 * Look for various possible ingredients of the same item and try to match it.
+					 */
+					ArrayList ingredientsList = (ArrayList) obj;
+					Object[] ingredientsArray = ingredientsList.toArray();
+
+					for (int x = 0; x < ingredientsArray.length; x++)
 					{
-						ItemStack recipeItem = (ItemStack) ingredientsArray[x];
-						actualResources.add(recipeItem.copy());
-
-						if (recipeItem != null)
+						if (ingredientsArray[x] != null && ingredientsArray[x] instanceof ItemStack)
 						{
-							for (int i = 0; i < this.containingItems.length; i++)
-							{
-								ItemStack checkStack = this.containingItems[i];
+							ItemStack recipeItem = (ItemStack) ingredientsArray[x];
+							actualResources.add(recipeItem.copy());
 
-								if (checkStack != null)
+							if (recipeItem != null)
+							{
+								if (this.doesItemExist(recipeItem, dummyImprinter))
 								{
-									if (recipeItem.isItemEqual(checkStack) || (recipeItem.itemID == checkStack.itemID && recipeItem.getItemDamage() < 0))
-									{
-										// TODO Do NBT CHecking
-										dummyImprinter.decrStackSize(i + INVENTORY_START, 1);
-										itemMatch++;
-										break optionsLoop;
-									}
+									itemMatch++;
+									break;
 								}
 							}
 						}
 					}
 				}
 			}
+
+			return itemMatch >= actualResources.size() ? actualResources : null;
+		}
+		catch (Exception e)
+		{
+			System.out.println("Failed to find recipes in the imprinter.");
+			e.printStackTrace();
 		}
 
-		return itemMatch >= actualResources.size() ? actualResources : null;
+		return null;
+	}
+
+	private boolean doesItemExist(ItemStack recipeItem, TileEntityImprinter dummyImprinter)
+	{
+		for (int i = 0; i < dummyImprinter.containingItems.length; i++)
+		{
+			ItemStack checkStack = dummyImprinter.containingItems[i];
+
+			if (checkStack != null)
+			{
+				if (recipeItem.isItemEqual(checkStack) || (recipeItem.itemID == checkStack.itemID && recipeItem.getItemDamage() < 0))
+				{
+					// TODO Do NBT Checking
+					dummyImprinter.decrStackSize(i + INVENTORY_START, 1);
+					return true;
+
+				}
+			}
+		}
+
+		for (IInventory inventory : getSimulatedAvaliableInventories())
+		{
+			for (int i = 0; i < inventory.getSizeInventory(); i++)
+			{
+				ItemStack checkStack = inventory.getStackInSlot(i);
+
+				if (checkStack != null)
+				{
+					if (recipeItem.isItemEqual(checkStack) || (recipeItem.itemID == checkStack.itemID && recipeItem.getItemDamage() < 0))
+					{
+						// TODO Do NBT Checking
+						inventory.decrStackSize(i, 1);
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	private List<IInventory> getAvaliableInventories()
+	{
+		List<IInventory> inventories = new ArrayList<IInventory>();
+
+		if (this.searchInventories)
+		{
+			for (int side = 0; side < 6; side++)
+			{
+				Vector3 position = new Vector3(this);
+				position.modifyPositionFromSide(ForgeDirection.getOrientation(side));
+				TileEntity tileEntity = position.getTileEntity(this.worldObj);
+
+				if (tileEntity != null)
+				{
+					/**
+					 * Try to put items into a chest.
+					 */
+					if (tileEntity instanceof TileEntityMulti)
+					{
+						Vector3 mainBlockPosition = ((TileEntityMulti) tileEntity).mainBlockPosition;
+
+						if (mainBlockPosition != null)
+						{
+							if (mainBlockPosition.getTileEntity(this.worldObj) instanceof IInventory)
+							{
+								inventories.add((IInventory) mainBlockPosition.getTileEntity(this.worldObj));
+							}
+						}
+					}
+					else if (tileEntity instanceof TileEntityChest)
+					{
+						inventories.add((TileEntityChest) tileEntity);
+
+						/**
+						 * Try to find a double chest.
+						 */
+						for (int i = 2; i < 6; i++)
+						{
+							ForgeDirection searchDirection = ForgeDirection.getOrientation(i);
+							Vector3 searchPosition = position.clone();
+							searchPosition.modifyPositionFromSide(searchDirection);
+
+							if (searchPosition.getTileEntity(this.worldObj) != null)
+							{
+								if (searchPosition.getTileEntity(this.worldObj).getClass() == tileEntity.getClass())
+								{
+									inventories.add((TileEntityChest) searchPosition.getTileEntity(this.worldObj));
+									break;
+								}
+							}
+						}
+
+					}
+					else if (tileEntity instanceof IInventory && !(tileEntity instanceof TileEntityImprinter))
+					{
+						inventories.add((IInventory) tileEntity);
+					}
+				}
+			}
+		}
+
+		return inventories;
+	}
+
+	private List<IInventory> getSimulatedAvaliableInventories()
+	{
+		List<IInventory> simulatedInventories = new ArrayList<IInventory>();
+
+		/**
+		 * Create a simulated version of all TileEntities.
+		 */
+		for (IInventory inventory : this.getAvaliableInventories())
+		{
+			if (inventory instanceof TileEntity)
+			{
+				TileEntity tileEntity = (TileEntity) inventory;
+
+				try
+				{
+					// TODO: Get Client Side Working.
+					TileEntity simulatedTileEntity = tileEntity.getClass().newInstance();
+					simulatedTileEntity.worldObj = tileEntity.worldObj;
+
+					NBTTagCompound cloneData = new NBTTagCompound();
+					tileEntity.writeToNBT(cloneData);
+					tileEntity.readFromNBT(cloneData);
+
+					for (int i = 0; i < inventory.getSizeInventory(); i++)
+					{
+						ItemStack itemStack = inventory.getStackInSlot(i);
+
+						if (itemStack != null)
+						{
+							itemStack = itemStack.copy();
+						}
+
+						((IInventory) simulatedTileEntity).setInventorySlotContents(i, itemStack);
+					}
+
+					simulatedInventories.add((IInventory) simulatedTileEntity);
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return simulatedInventories;
 	}
 
 	/**

@@ -10,8 +10,8 @@ public class BlockCraneParts extends BlockMachine
 
 	public BlockCraneParts(int id)
 	{
-		super("CraneParts", id, Material.iron, TabAssemblyLine.INSTANCE);
-
+		super("CraneParts", id, Material.iron);
+		// this.setCreativeTab(TabAssemblyLine.INSTANCE);
 	}
 
 }
