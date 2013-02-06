@@ -27,6 +27,8 @@ public class CraneManager
 	public void mapRails()
 	{
 		//TODO figure out what i'm going to use as the center point of this mapping first
+		//Most likely it will be the crane head itself, but this might be trigger by 
+		//the crane controller. 
 	}
 	/**
 	 * finds if the rail at this location is a rail and lines up with the current direction of the rails
@@ -37,6 +39,7 @@ public class CraneManager
 	{
 		int id = world.getBlockId(loc.intX(), loc.intY(), loc.intZ());
 		int meta = world.getBlockMetadata(loc.intX(), loc.intY(), loc.intZ());
+		//might have to change this meta later if i go with a more complex render that will connect to walls
 		ForgeDirection facing = ForgeDirection.getOrientation(meta);
 
 		if (id == AssemblyLine.blockCraneParts.blockID && (dir == facing || dir == facing.getOpposite()))
