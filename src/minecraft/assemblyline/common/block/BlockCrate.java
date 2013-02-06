@@ -28,44 +28,27 @@ public class BlockCrate extends BlockMachine
 		this.setTextureFile(AssemblyLine.BLOCK_TEXTURE_PATH);
 	}
 
-	/**
-	 * Placed the item the player is holding into the crate.
-	 */
 	@Override
-	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player)
 	{
-		if (world.isRemote)
-			return true;
-		if (world.getBlockTileEntity(x, y, z) instanceof TileEntityCrate)
+		if (!world.isRemote)
 		{
-			TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
-
-			/**
-			 * Make double clicking input all stacks.
-			 */
-			boolean allMode = false;
-
-			if (world.getWorldTime() - tileEntity.prevClickTime < 10)
+			if (world.getBlockTileEntity(x, y, z) instanceof TileEntityCrate)
 			{
-				allMode = true;
-			}
+				TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
 
-			tileEntity.prevClickTime = world.getWorldTime();
-			// add items
-			if (side == 1 || (side > 1 && hitY > 0.5))
-			{
-				if (allMode)
+				/**
+				 * Make double clicking input all stacks.
+				 */
+				boolean allMode = false;
+
+				if (world.getWorldTime() - tileEntity.prevClickTime < 10)
 				{
-					this.insertAllItems(tileEntity, player);
+					allMode = true;
 				}
-				else
-				{
-					this.insertCurrentItem(tileEntity, player);
-				}
-			}
-			// remove items
-			else if (side == 0 || (side > 1 && hitY <= 0.5))
-			{
+
+				tileEntity.prevClickTime = world.getWorldTime();
+
 				if (allMode)
 				{
 					this.ejectItems(tileEntity, player, TileEntityCrate.MAX_LIMIT);
@@ -73,21 +56,73 @@ public class BlockCrate extends BlockMachine
 				else
 				{
 					ItemStack stack = tileEntity.getStackInSlot(0);
+
 					if (stack != null)
 					{
 						this.ejectItems(tileEntity, player, stack.getMaxStackSize());
 					}
 				}
 			}
+
+		}
+	}
+
+	/**
+	 * Placed the item the player is holding into the crate.
+	 */
+	@Override
+	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+	{
+		if (!world.isRemote)
+		{
+			if (world.getBlockTileEntity(x, y, z) instanceof TileEntityCrate)
+			{
+				TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
+
+				/**
+				 * Make double clicking input all stacks.
+				 */
+				boolean allMode = false;
+
+				if (world.getWorldTime() - tileEntity.prevClickTime < 10)
+				{
+					allMode = true;
+				}
+
+				tileEntity.prevClickTime = world.getWorldTime();
+
+				// Add items
+				if (side == 1 || (side > 1 && hitY > 0.5) || !player.capabilities.isCreativeMode)
+				{
+					if (allMode)
+					{
+						this.insertAllItems(tileEntity, player);
+					}
+					else
+					{
+						this.insertCurrentItem(tileEntity, player);
+					}
+				}
+				// remove items
+				else if (side == 0 || (side > 1 && hitY <= 0.5))
+				{
+					if (allMode)
+					{
+						this.ejectItems(tileEntity, player, TileEntityCrate.MAX_LIMIT);
+					}
+					else
+					{
+						ItemStack stack = tileEntity.getStackInSlot(0);
+						if (stack != null)
+						{
+							this.ejectItems(tileEntity, player, stack.getMaxStackSize());
+						}
+					}
+				}
+			}
 		}
 
 		return true;
-	}
-
-	@Override
-	public int getRenderType()
-	{
-		return super.getRenderType();
 	}
 
 	/**
