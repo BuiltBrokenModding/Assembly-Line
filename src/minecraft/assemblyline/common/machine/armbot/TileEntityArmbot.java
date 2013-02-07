@@ -122,33 +122,6 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		{
 			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 			{
-				/**
-				 * Break the block if the hand hits a solid block.
-				 */
-				Block block = Block.blocksList[handPosition.getBlockID(this.worldObj)];
-
-				if (block != null)
-				{
-					if (Block.isNormalCube(block.blockID) && block.getBlockHardness(this.worldObj, handPosition.intX(), handPosition.intY(), handPosition.intZ()) != -1)
-					{
-						TileEntity tileEntity = this.getHandPosition().getTileEntity(this.worldObj);
-
-						if (tileEntity == null)
-						{
-							if (!this.worldObj.isRemote)
-							{
-								block.dropBlockAsItem(this.worldObj, handPosition.intX(), handPosition.intY(), handPosition.intZ(), handPosition.getBlockMetadata(this.worldObj), 0);
-							}
-
-							handPosition.setBlockWithNotify(this.worldObj, 0);
-						}
-						else if (!(tileEntity instanceof IArmbotUseable))
-						{
-							handPosition.setBlockWithNotify(this.worldObj, 0);
-						}
-					}
-				}
-
 				if (this.disk == null && this.computersAttached == 0)
 				{
 					this.commandManager.clear();
