@@ -64,7 +64,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public class LiquidMechanics extends DummyModContainer
 {
     // TODO Change in Version Release
-    public static final String VERSION = "0.2.6";
+    public static final String VERSION = "0.2.7";
 
     // Constants
     public static final String NAME = "LiquidMechanics";
@@ -111,7 +111,7 @@ public class LiquidMechanics extends DummyModContainer
     public void preInit(FMLPreInitializationEvent event)
     {
     	FMLog.setParent(FMLLog.getLogger());
-    	FMLog.info(this.NAME+": Initializing...");
+    	FMLog.info("Initializing...");
     	MinecraftForge.EVENT_BUS.register(new LiquidHandler());
     	
         instance = this;
@@ -154,7 +154,7 @@ public class LiquidMechanics extends DummyModContainer
     @Init
     public void Init(FMLInitializationEvent event)
     {
-    	FMLog.info(this.NAME+": Loading...");
+    	FMLog.info("Loading...");
         proxy.Init();
         // TileEntities
         GameRegistry.registerTileEntity(TileEntityPipe.class, "lmPipeTile");
@@ -172,7 +172,7 @@ public class LiquidMechanics extends DummyModContainer
     @PostInit
     public void PostInit(FMLPostInitializationEvent event)
     {
-    	FMLog.info(this.NAME+": Finalizing...");
+    	FMLog.info("Finalizing...");
         proxy.postInit();
         TabLiquidMechanics.setItemStack(new ItemStack(blockPipe, 1, 4));
         // generator
@@ -322,6 +322,6 @@ public class LiquidMechanics extends DummyModContainer
         // there liquid data first if used 
         LiquidStack waste = LiquidDictionary.getOrCreateLiquid("Waste", new LiquidStack(LiquidMechanics.blockWasteLiquid, 1));
         LiquidHandler.addDefaultLiquids();       
-        FMLog.info(this.NAME+": Done Loading");
+        FMLog.info("Done Loading");
     }
 }
