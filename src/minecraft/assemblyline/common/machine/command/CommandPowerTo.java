@@ -1,12 +1,12 @@
 package assemblyline.common.machine.command;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ISidedInventory;
-import assemblyline.api.IArmbotUseable;
+import dark.minecraft.helpers.DebugToPlayer;
 
-public class CommandUse extends Command
+public class CommandPowerTo extends Command
 {
 	private int times;
 	private int curTimes;
@@ -32,36 +32,14 @@ public class CommandUse extends Command
 		Block block = Block.blocksList[this.world.getBlockId(tileEntity.getHandPosition().intX(), tileEntity.getHandPosition().intY(), tileEntity.getHandPosition().intZ())];
 		TileEntity targetTile = this.tileEntity.getHandPosition().getTileEntity(this.world);
 
-		if (targetTile != null)
+		if (tileEntity.getGrabbedEntities().size() > 0 && tileEntity.getGrabbedEntities().get(0) instanceof EntityItem && ((EntityItem)tileEntity.getGrabbedEntities().get(0)).getEntityItem().itemID == Block.torchRedstoneIdle.blockID)
 		{
-			if (targetTile instanceof IArmbotUseable)
-			{
-				((IArmbotUseable) targetTile).onUse(this.tileEntity, this.getArgs());
-			}
-			else if (targetTile instanceof ISidedInventory)
-			{
-				// TODO add IInventory side behavior for placing and taking items.
-				if (tileEntity.getGrabbedEntities().size() > 0)
-				{
-					// add items to inv
-				}
-				else
-				{
-					// remove items from inv
-				}
-			}
-
+			//TODO have armbot cause redstone power at location
+			DebugToPlayer.SendToClosest(this.tileEntity, 10, "powering");
 		}
-		else if(block != null)
+		else
 		{
-			try{
-			boolean f = block.onBlockActivated(this.world, tileEntity.getHandPosition().intX(), tileEntity.getHandPosition().intY(), tileEntity.getHandPosition().intZ(), null, 0, 0, 0, 0);
-			}catch(Exception e)
-			{
-				
-				e.printStackTrace();
-			}
-			
+			return false;
 		}
 
 		this.curTimes++;
@@ -75,7 +53,7 @@ public class CommandUse extends Command
 	@Override
 	public String toString()
 	{
-		return "USE " + Integer.toString(this.times);
+		return "POWERTO " + Integer.toString(this.times);
 	}
 
 	@Override

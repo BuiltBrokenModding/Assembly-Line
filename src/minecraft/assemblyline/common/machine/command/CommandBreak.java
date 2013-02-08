@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
+import dark.minecraft.helpers.ItemWorldHelper;
 
 /**
  * Used by arms to break a specific block in a position.
@@ -35,7 +35,7 @@ public class CommandBreak extends Command
 
 			if (!this.keep || items.size() > 1)
 			{
-				this.dropBlockAsItem(this.world, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ());
+				ItemWorldHelper.dropBlockAsItem(this.world, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ());
 			}
 			else
 			{
@@ -52,47 +52,7 @@ public class CommandBreak extends Command
 		return true;
 	}
 
-	/**
-	 * Drops an item stack at the exact center of the coords given
-	 * 
-	 * @param world
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param stack
-	 */
-	protected void dropBlockAsItem_do(World world, int x, int y, int z, ItemStack stack)
-	{
-		if (!world.isRemote && world.getGameRules().getGameRuleBooleanValue("doTileDrops"))
-		{
-			EntityItem entity = new EntityItem(world, (double) x + 0.5D, (double) y + 0.5D, (double) z + 0.5D, stack);
-			entity.delayBeforeCanPickup = 10;
-			world.spawnEntityInWorld(entity);
-		}
-	}
-
-	/**
-	 * grabs all the items that the block can drop then pass them onto dropBlockAsItem_do
-	 * 
-	 * @param world
-	 * @param x
-	 * @param y
-	 * @param z
-	 */
-	public void dropBlockAsItem(World world, int x, int y, int z)
-	{
-		if (!world.isRemote)
-		{
-			int meta = world.getBlockMetadata(x, y, z);
-			int id = world.getBlockId(x, y, z);
-			ArrayList<ItemStack> items = Block.blocksList[id].getBlockDropped(world, x, y, z, meta, 0);
-
-			for (ItemStack item : items)
-			{
-				this.dropBlockAsItem_do(world, x, y, z, item);
-			}
-		}
-	}
+	
 
 	@Override
 	public String toString()

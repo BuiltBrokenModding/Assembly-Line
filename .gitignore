@@ -12,6 +12,7 @@ CHANGELOG
 !/src/
 /src/minecraft/*
 !/src/minecraft/assemblyline/
+!/src/minecraft/dark/
 !/src/minecraft/universalelectricity/
 !/src/minecraft/dan200
 !/src/minecraft/ic2

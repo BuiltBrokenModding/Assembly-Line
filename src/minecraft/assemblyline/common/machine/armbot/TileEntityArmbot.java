@@ -8,7 +8,6 @@ import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityItem;
@@ -31,7 +30,6 @@ import universalelectricity.prefab.multiblock.IMultiBlock;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.api.IArmbot;
-import assemblyline.api.IArmbotUseable;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.TileEntityAssemblyNetwork;
 import assemblyline.common.machine.command.Command;
@@ -52,6 +50,7 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.IPeripheral;
+import dark.minecraft.helpers.ItemWorldHelper;
 
 public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMultiBlock, IInventory, IPacketReceiver, IJouleStorage, IArmbot, IPeripheral
 {
@@ -929,7 +928,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 
 		while (it.hasNext())
 		{
-			this.worldObj.spawnEntityInWorld(new EntityItem(worldObj, handPosition.x, handPosition.y, handPosition.z, it.next()));
+			ItemWorldHelper.dropItemStackExact(worldObj, handPosition.x, handPosition.y, handPosition.z, it.next());
 		}
 
 		this.grabbedEntities.clear();

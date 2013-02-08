@@ -1,4 +1,4 @@
-package assemblyline.common;
+package dark.minecraft.helpers;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;

@@ -32,6 +32,7 @@ public abstract class Command
 		registerCommand("return", CommandReturn.class);
 		registerCommand("repeat", CommandRepeat.class);
 		registerCommand("use", CommandUse.class);
+		registerCommand("powerto", CommandPowerTo.class);
 		registerCommand("fire", CommandFire.class);
 		registerCommand("break", CommandBreak.class);
 		registerCommand("place", CommandPlace.class);
