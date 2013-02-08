@@ -9,6 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ISidedInventory;
 import assemblyline.api.IArmbotUseable;
+import assemblyline.common.DebugToPlayer;
 
 public class CommandUse extends Command
 {
@@ -45,19 +46,26 @@ public class CommandUse extends Command
 			else if (targetTile instanceof ISidedInventory)
 			{
 				// TODO add IInventory side behavior for placing and taking items.
-				if(tileEntity.getGrabbedEntities().size() > 0)
+				if (tileEntity.getGrabbedEntities().size() > 0)
 				{
-					//add items to inv
-				}else
+					// add items to inv
+				}
+				else
 				{
-					//remove items from inv
+					// remove items from inv
 				}
 			}
-			else if (block == Block.lever)
-			{
-				block.onBlockActivated(this.world, tileEntity.getHandPosition().intX(), tileEntity.getHandPosition().intY(), tileEntity.getHandPosition().intZ(), null, 0, 0, 0, 0);
-			}
 
+		}
+		else
+		{
+			try{
+			boolean f = block.onBlockActivated(this.world, tileEntity.getHandPosition().intX(), tileEntity.getHandPosition().intY(), tileEntity.getHandPosition().intZ(), null, 0, 0, 0, 0);
+			}catch(Exception e)
+			{
+				
+				e.printStackTrace();
+			}
 			
 		}
 

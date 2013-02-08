@@ -1,6 +1,7 @@
 package assemblyline.common;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -29,6 +30,7 @@ import assemblyline.common.machine.encoder.ItemDisk;
 import assemblyline.common.machine.imprinter.BlockImprinter;
 import assemblyline.common.machine.imprinter.ItemImprinter;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -91,9 +93,13 @@ public class AssemblyLine
 	public static Item itemImprint;
 	public static Item itemDisk;
 
+	public static Logger FMLog = Logger.getLogger(AssemblyLine.NAME);
+
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event)
 	{
+		FMLog.setParent(FMLLog.getLogger());
+		FMLog.info("Initializing...");
 		UniversalElectricity.register(this, 1, 2, 5, false);
 		instance = this;
 
@@ -137,6 +143,7 @@ public class AssemblyLine
 	@Init
 	public void load(FMLInitializationEvent evt)
 	{
+		FMLog.info("Loading...");
 		proxy.init();
 
 		System.out.println(NAME + " Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
@@ -173,13 +180,8 @@ public class AssemblyLine
 
 		// Manipulator
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockManipulator, 2), new Object[] { Block.dispenser, "basicCircuit" }));
-	}
-
-	@ServerStarted
-	public void serverStarted(FMLServerStartedEvent evt)
-	{
-		// LOLOLOL i wish
-		// MinecraftServer.getServer().getConfigurationManager().getBannedPlayers().remove("briman0094");
+		
+		FMLog.info("Ready to Use");
 	}
 
 	public static void printSidedData(String data)
