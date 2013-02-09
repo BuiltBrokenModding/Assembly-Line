@@ -24,15 +24,15 @@ runtime\bin\python\python_mcp runtime\reobfuscate.py %*
 
 ::ZIP-UP
 cd reobf\minecraft\
-7z a "..\..\builds\%FILE_NAME%" "*"
+"..\..\..\7za.exe" a "..\..\builds\%FILE_NAME%" "*"
 cd ..\..\
 cd resources\
-7z a "..\builds\%FILE_NAME%" "*"
-7z a "..\builds\%BACKUP_NAME%" "*" -pdirewolf20rocks
+"..\..\7za.exe" a "..\builds\%FILE_NAME%" "*"
+"..\..\7za.exe" a "..\builds\%BACKUP_NAME%" "*" -pdarkguardsman
 cd ..\
 cd src\
-7z a "..\builds\%BACKUP_NAME%" "*\assemblyline\" -pdirewolf20rocks
-7z a "..\builds\%API_NAME%" "*\assemblyline\api\"
+"..\..\7za.exe" a "..\builds\%BACKUP_NAME%" "*\assemblyline\" -pdarkguardsman
+"..\..\7za.exe" a "..\builds\%API_NAME%" "*\assemblyline\api\"
 cd ..\
 
 ::UPDATE INFO FILE

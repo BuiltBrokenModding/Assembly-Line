@@ -15,7 +15,7 @@ import universalelectricity.prefab.network.PacketManager;
  */
 public abstract class TileEntityAssemblyNetwork extends TIC2Receiver
 {
-	public boolean debugMode = true;
+	public boolean debugMode = false;
 	/**
 	 * The range in which power can be transfered.
 	 */
