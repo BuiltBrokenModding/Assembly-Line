@@ -16,6 +16,7 @@ import assemblyline.common.machine.TileEntityRejector;
 import assemblyline.common.machine.armbot.TileEntityArmbot;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt;
 import assemblyline.common.machine.crane.TileEntityCraneController;
+import assemblyline.common.machine.crane.TileEntityCraneRail;
 import assemblyline.common.machine.detector.TileEntityDetector;
 import assemblyline.common.machine.encoder.ContainerEncoder;
 import assemblyline.common.machine.encoder.TileEntityEncoder;
@@ -45,6 +46,7 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.registerTileEntity(TileEntityEncoder.class, "ALEncoder");
 		GameRegistry.registerTileEntity(TileEntityArmbot.class, "ALArmbot");
 		GameRegistry.registerTileEntity(TileEntityCraneController.class, "ALCraneController");
+		GameRegistry.registerTileEntity(TileEntityCraneRail.class, "ALCraneRail");
 		GameRegistry.registerTileEntity(TileEntityImprinter.class, "ALImprinter");
 		GameRegistry.registerTileEntity(TileEntityMulti.class, "ALMulti");
 	}

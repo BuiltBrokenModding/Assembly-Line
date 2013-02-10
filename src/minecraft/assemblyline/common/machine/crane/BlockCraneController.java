@@ -42,21 +42,25 @@ public class BlockCraneController extends BlockMachine
 		{
 			case 0: // WEST
 			{
+				System.out.println("Facing west...");
 				world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.WEST.ordinal());
 				break;
 			}
 			case 1: // NORTH
 			{
+				System.out.println("Facing north...");
 				world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.NORTH.ordinal());
 				break;
 			}
 			case 2: // EAST
 			{
+				System.out.println("Facing east...");
 				world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.EAST.ordinal());
 				break;
 			}
 			default: // SOUTH
 			{
+				System.out.println("Facing south...");
 				world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.SOUTH.ordinal());
 				break;
 			}

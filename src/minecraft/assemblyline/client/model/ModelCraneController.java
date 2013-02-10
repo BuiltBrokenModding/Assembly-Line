@@ -99,9 +99,9 @@ public class ModelCraneController extends ModelBase
 		setRotation(Decoration4, 0F, 0F, 0F);
 		ConnectorTop.setRotationPoint(-4F, 16F, -4F);
 		setRotation(ConnectorTop, 0F, 0F, -1.570796F);
-		ConnectorFront.setRotationPoint(-4F, 12F, -0.01F);
+		ConnectorFront.setRotationPoint(-4F, 11.99F, -0.01F);
 		setRotation(ConnectorFront, 0F, 1.570796F, 0F);
-		ConnectorRight.setRotationPoint(0.01F, 12F, -4F);
+		ConnectorRight.setRotationPoint(0.01F, 11.99F, -4F);
 		setRotation(ConnectorRight, 0F, 0F, 0F);
 
 		Base2.render(scale);
