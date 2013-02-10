@@ -1,4 +1,4 @@
 @echo off
 cd resources
-7z a "..\jars\bin\minecraft.jar" "*"
+"..\..\7za.exe" a "..\jars\bin\minecraft.jar" "*"
 pause
