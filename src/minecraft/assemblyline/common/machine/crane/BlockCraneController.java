@@ -7,6 +7,7 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.prefab.BlockMachine;
 import assemblyline.client.render.BlockRenderingHandler;
+import assemblyline.common.TabAssemblyLine;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -18,7 +19,7 @@ public class BlockCraneController extends BlockMachine
 		super("cranecontroller", id, UniversalElectricity.machine);
 		this.setResistance(5.0f);
 		this.setHardness(5.0f);
-		// this.setCreativeTab(TabAssemblyLine.INSTANCE);
+		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 	}
 
 	@Override

@@ -42,7 +42,7 @@ public class CraneManager
 		//might have to change this meta later if i go with a more complex render that will connect to walls
 		ForgeDirection facing = ForgeDirection.getOrientation(meta);
 
-		if (id == AssemblyLine.blockCraneParts.blockID && (dir == facing || dir == facing.getOpposite()))
+		if (id == AssemblyLine.blockCraneRail.blockID && (dir == facing || dir == facing.getOpposite()))
 		{
 			return true;
 		}

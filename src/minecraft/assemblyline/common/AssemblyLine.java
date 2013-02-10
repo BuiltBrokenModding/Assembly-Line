@@ -22,8 +22,7 @@ import assemblyline.common.machine.BlockRejector;
 import assemblyline.common.machine.armbot.BlockArmbot;
 import assemblyline.common.machine.belt.BlockConveyorBelt;
 import assemblyline.common.machine.crane.BlockCraneController;
-import assemblyline.common.machine.crane.BlockCraneParts;
-import assemblyline.common.machine.crane.ItemCraneParts;
+import assemblyline.common.machine.crane.BlockCraneRail;
 import assemblyline.common.machine.detector.BlockDetector;
 import assemblyline.common.machine.encoder.BlockEncoder;
 import assemblyline.common.machine.encoder.ItemDisk;
@@ -36,11 +35,9 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.PreInit;
-import cpw.mods.fml.common.Mod.ServerStarted;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -84,7 +81,7 @@ public class AssemblyLine
 	public static Block blockRejector;
 	public static Block blockArmbot;
 	public static Block blockCraneController;
-	public static Block blockCraneParts;
+	public static Block blockCraneRail;
 	public static Block blockTurntable;
 
 	public static BlockMulti blockMulti;
@@ -114,7 +111,7 @@ public class AssemblyLine
 		blockArmbot = new BlockArmbot(CONFIGURATION.getBlock("Armbot", BLOCK_ID_PREFIX + 8).getInt());
 		blockMulti = new BlockMulti(CONFIGURATION.getBlock("Multiblock", BLOCK_ID_PREFIX + 9).getInt());
 		blockCraneController = new BlockCraneController(CONFIGURATION.getBlock("CraneController", BLOCK_ID_PREFIX + 10).getInt());
-		blockCraneParts = new BlockCraneParts(CONFIGURATION.getBlock("CraneParts", BLOCK_ID_PREFIX + 11).getInt());
+		blockCraneRail = new BlockCraneRail(CONFIGURATION.getBlock("CraneParts", BLOCK_ID_PREFIX + 11).getInt());
 		blockTurntable = new BlockTurntable(CONFIGURATION.getBlock("Turntable", BLOCK_ID_PREFIX + 12).getInt(), 10);
 
 		itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", ITEM_ID_PREFIX).getInt());
@@ -132,7 +129,7 @@ public class AssemblyLine
 		GameRegistry.registerBlock(blockArmbot, "Armbot");
 		GameRegistry.registerBlock(blockTurntable, "Turntable");
 		GameRegistry.registerBlock(blockCraneController, "Crane Controller");
-		GameRegistry.registerBlock(blockCraneParts, ItemCraneParts.class, "Crane Parts");
+		GameRegistry.registerBlock(blockCraneRail, "Crane Rail");
 
 		TabAssemblyLine.itemStack = new ItemStack(AssemblyLine.blockConveyorBelt);
 		UpdateNotifier.INSTANCE.checkUpdate(NAME, VERSION, "http://calclavia.com/downloads/al/recommendedversion.txt");
