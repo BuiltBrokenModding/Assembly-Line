@@ -1,5 +1,8 @@
 package assemblyline.common.block;
 
+import java.util.List;
+
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -51,7 +54,7 @@ public class BlockCrate extends BlockMachine
 
 				if (allMode)
 				{
-					this.ejectItems(tileEntity, player, TileEntityCrate.MAX_LIMIT);
+					this.ejectItems(tileEntity, player, tileEntity.getMaxLimit());
 				}
 				else
 				{
@@ -108,7 +111,7 @@ public class BlockCrate extends BlockMachine
 				{
 					if (allMode)
 					{
-						this.ejectItems(tileEntity, player, TileEntityCrate.MAX_LIMIT);
+						this.ejectItems(tileEntity, player, tileEntity.getMaxLimit());
 					}
 					else
 					{
@@ -222,23 +225,27 @@ public class BlockCrate extends BlockMachine
 		{
 			if (containingStack.stackSize > 0)
 			{
-				int amountToTake = Math.min(containingStack.stackSize, maxStack);
-				ItemStack dropStack = containingStack.copy();
-				dropStack.stackSize = amountToTake;
-
-				if (!world.isRemote)
+				while (maxStack > 0)
 				{
-					EntityItem entityItem = new EntityItem(world, player.posX, player.posY, player.posZ, dropStack);
+					int amountToTake = Math.min(containingStack.stackSize, Math.min(maxStack, 64));
+					ItemStack dropStack = containingStack.copy();
+					dropStack.stackSize = amountToTake;
 
-					float var13 = 0.05F;
-					entityItem.motionX = ((float) world.rand.nextGaussian() * var13);
-					entityItem.motionY = ((float) world.rand.nextGaussian() * var13 + 0.2F);
-					entityItem.motionZ = ((float) world.rand.nextGaussian() * var13);
-					entityItem.delayBeforeCanPickup = 0;
-					world.spawnEntityInWorld(entityItem);
+					if (!world.isRemote)
+					{
+						EntityItem entityItem = new EntityItem(world, player.posX, player.posY, player.posZ, dropStack);
+
+						float var13 = 0.05F;
+						entityItem.motionX = ((float) world.rand.nextGaussian() * var13);
+						entityItem.motionY = ((float) world.rand.nextGaussian() * var13 + 0.2F);
+						entityItem.motionZ = ((float) world.rand.nextGaussian() * var13);
+						entityItem.delayBeforeCanPickup = 0;
+						world.spawnEntityInWorld(entityItem);
+					}
+
+					containingStack.stackSize -= amountToTake;
+					maxStack -= amountToTake;
 				}
-
-				containingStack.stackSize -= amountToTake;
 			}
 
 			if (containingStack.stackSize <= 0)
@@ -333,6 +340,15 @@ public class BlockCrate extends BlockMachine
 	public TileEntity createNewTileEntity(World var1)
 	{
 		return new TileEntityCrate();
+	}
+
+	@Override
+	public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List list)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			list.add(new ItemStack(this, 1, i));
+		}
 	}
 
 }

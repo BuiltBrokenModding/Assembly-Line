@@ -13,12 +13,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockCraneController extends BlockMachine
 {
-
 	public BlockCraneController(int id)
 	{
-		super("cranecontroller", id, UniversalElectricity.machine);
-		this.setResistance(5.0f);
-		this.setHardness(5.0f);
+		super("craneController", id, UniversalElectricity.machine);
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 	}
 

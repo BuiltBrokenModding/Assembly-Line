@@ -16,8 +16,13 @@ public class ItemBlockCrate extends ItemBlock
 	public ItemBlockCrate(int par1)
 	{
 		super(par1);
-		this.setMaxDamage(0);
 		this.setMaxStackSize(1);
+	}
+
+	@Override
+	public String getItemNameIS(ItemStack itemStack)
+	{
+		return this.getItemName() + "." + itemStack.getItemDamage();
 	}
 
 	@Override
@@ -46,7 +51,7 @@ public class ItemBlockCrate extends ItemBlock
 
 			if (containingStack != null)
 			{
-				player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 5, (int) ((float) containingStack.stackSize / (float) TileEntityCrate.MAX_LIMIT) * 5));
+				player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 5, (int) ((float) containingStack.stackSize / (float) TileEntityCrate.getMaxLimit(itemStack.getItemDamage())) * 5));
 			}
 		}
 	}
@@ -91,6 +96,12 @@ public class ItemBlockCrate extends ItemBlock
 		}
 
 		return containingStack;
+	}
+
+	@Override
+	public int getMetadata(int par1)
+	{
+		return par1;
 	}
 
 	@Override

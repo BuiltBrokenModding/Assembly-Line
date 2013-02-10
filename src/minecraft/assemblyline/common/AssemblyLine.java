@@ -22,7 +22,7 @@ import assemblyline.common.machine.BlockRejector;
 import assemblyline.common.machine.armbot.BlockArmbot;
 import assemblyline.common.machine.belt.BlockConveyorBelt;
 import assemblyline.common.machine.crane.BlockCraneController;
-import assemblyline.common.machine.crane.BlockCraneRail;
+import assemblyline.common.machine.crane.BlockCraneFrame;
 import assemblyline.common.machine.detector.BlockDetector;
 import assemblyline.common.machine.encoder.BlockEncoder;
 import assemblyline.common.machine.encoder.ItemDisk;
@@ -81,7 +81,7 @@ public class AssemblyLine
 	public static Block blockRejector;
 	public static Block blockArmbot;
 	public static Block blockCraneController;
-	public static Block blockCraneRail;
+	public static Block blockCraneFrame;
 	public static Block blockTurntable;
 
 	public static BlockMulti blockMulti;
@@ -110,8 +110,8 @@ public class AssemblyLine
 		blockEncoder = new BlockEncoder(CONFIGURATION.getBlock("Encoder", BLOCK_ID_PREFIX + 7).getInt(), 7);
 		blockArmbot = new BlockArmbot(CONFIGURATION.getBlock("Armbot", BLOCK_ID_PREFIX + 8).getInt());
 		blockMulti = new BlockMulti(CONFIGURATION.getBlock("Multiblock", BLOCK_ID_PREFIX + 9).getInt());
-		blockCraneController = new BlockCraneController(CONFIGURATION.getBlock("CraneController", BLOCK_ID_PREFIX + 10).getInt());
-		blockCraneRail = new BlockCraneRail(CONFIGURATION.getBlock("CraneParts", BLOCK_ID_PREFIX + 11).getInt());
+		blockCraneController = new BlockCraneController(CONFIGURATION.getBlock("Crane Controller", BLOCK_ID_PREFIX + 10).getInt());
+		blockCraneFrame = new BlockCraneFrame(CONFIGURATION.getBlock("Crane Frame", BLOCK_ID_PREFIX + 11).getInt());
 		blockTurntable = new BlockTurntable(CONFIGURATION.getBlock("Turntable", BLOCK_ID_PREFIX + 12).getInt(), 10);
 
 		itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", ITEM_ID_PREFIX).getInt());
@@ -129,7 +129,7 @@ public class AssemblyLine
 		GameRegistry.registerBlock(blockArmbot, "Armbot");
 		GameRegistry.registerBlock(blockTurntable, "Turntable");
 		GameRegistry.registerBlock(blockCraneController, "Crane Controller");
-		GameRegistry.registerBlock(blockCraneRail, "Crane Rail");
+		GameRegistry.registerBlock(blockCraneFrame, "Crane Frame");
 
 		TabAssemblyLine.itemStack = new ItemStack(AssemblyLine.blockConveyorBelt);
 		UpdateNotifier.INSTANCE.checkUpdate(NAME, VERSION, "http://calclavia.com/downloads/al/recommendedversion.txt");
@@ -157,14 +157,16 @@ public class AssemblyLine
 		// Imprint
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemImprint, new Object[] { "R", "P", "I", 'P', Item.paper, 'R', Item.redstone, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
 
-		// Imprinter
+		// Imprinter (VANILLA)
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockImprinter, new Object[] { "SIS", "SPS", "WCW", 'S', Item.ingotIron, 'C', Block.chest, 'W', Block.workbench, 'P', Block.pistonBase, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
 
 		// Detector
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, new Object[] { "SES", "SCS", "SPS", 'S', "ingotSteel", 'C', "basicCircuit", 'E', Item.eyeOfEnder }));
 
-		// Crate
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockCrate, new Object[] { "TST", "S S", "TST", 'S', Item.ingotIron, 'T', Block.wood }));
+		// Crate (VANILLA)
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 0), new Object[] { "TST", "S S", "TST", 'S', Item.ingotIron, 'T', Block.wood }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 1), new Object[] { "TST", "SCS", "TST", 'C', new ItemStack(blockCrate, 1, 0), 'S', Item.ingotIron, 'T', Block.wood }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 2), new Object[] { "TST", "SCS", "TST", 'C', new ItemStack(blockCrate, 1, 1), 'S', Item.ingotIron, 'T', Block.wood }));
 
 		// Conveyor Belt
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 10), new Object[] { "III", "WMW", 'I', "ingotSteel", 'W', Block.wood, 'M', "motor" }));

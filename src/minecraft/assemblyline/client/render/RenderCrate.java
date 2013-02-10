@@ -89,6 +89,29 @@ public class RenderCrate extends TileEntitySpecialRenderer
 					GL11.glPopMatrix();
 				}
 
+				switch (tileEntity.getTier())
+				{
+					default:
+					{
+						itemName = "\u00a7a" + itemName;
+						amount = "\u00a7a" + amount;
+						break;
+					}
+					case 1:
+					{
+						itemName = "\u00a74" + itemName;
+						amount = "\u00a74" + amount;
+
+						break;
+					}
+					case 2:
+					{
+						itemName = "\u00a79" + itemName;
+						amount = "\u00a79" + amount;
+						break;
+					}
+				}
+
 				this.renderText(itemName, side, 0.02f, x, y - 0.35f, z);
 
 				if (amount != "")
@@ -158,6 +181,7 @@ public class RenderCrate extends TileEntitySpecialRenderer
 		// Find Center
 		GL11.glTranslatef(displayWidth / 2, 1F, displayHeight / 2);
 		GL11.glRotatef(-90, 1, 0, 0);
+
 		FontRenderer fontRenderer = this.getFontRenderer();
 
 		int requiredWidth = Math.max(fontRenderer.getStringWidth(text), 1);

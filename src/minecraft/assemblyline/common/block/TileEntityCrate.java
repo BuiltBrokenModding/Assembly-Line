@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
+import universalelectricity.prefab.implement.ITier;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
@@ -18,11 +19,29 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
-public class TileEntityCrate extends TileEntityAdvanced implements IInventory, IPacketReceiver
+public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInventory, IPacketReceiver
 {
-	public static final int MAX_LIMIT = 2048;
 	private ItemStack[] containingItems = new ItemStack[1];
 	public long prevClickTime = -1000;
+
+	public int getMaxLimit()
+	{
+		return getMaxLimit(this.getTier());
+	}
+
+	public static int getMaxLimit(int tier)
+	{
+		if (tier >= 2)
+		{
+			return 16384;
+		}
+		else if (tier >= 1)
+		{
+			return 4096;
+		}
+
+		return 2048;
+	}
 
 	@Override
 	public boolean canUpdate()
@@ -233,7 +252,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements IInventory, I
 	@Override
 	public int getInventoryStackLimit()
 	{
-		return MAX_LIMIT;
+		return this.getMaxLimit();
 	}
 
 	@Override
@@ -246,5 +265,17 @@ public class TileEntityCrate extends TileEntityAdvanced implements IInventory, I
 	public String getInvName()
 	{
 		return "Crate";
+	}
+
+	@Override
+	public int getTier()
+	{
+		return this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord);
+	}
+
+	@Override
+	public void setTier(int tier)
+	{
+		this.worldObj.setBlockMetadata(this.xCoord, this.yCoord, this.zCoord, tier);
 	}
 }
