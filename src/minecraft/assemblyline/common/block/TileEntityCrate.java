@@ -20,7 +20,7 @@ import cpw.mods.fml.relauncher.Side;
 
 public class TileEntityCrate extends TileEntityAdvanced implements IInventory, IPacketReceiver
 {
-	public static final int MAX_LIMIT = 2880;
+	public static final int MAX_LIMIT = 2048;
 	private ItemStack[] containingItems = new ItemStack[1];
 	public long prevClickTime = -1000;
 
