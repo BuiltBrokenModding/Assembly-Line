@@ -74,7 +74,7 @@ public class AssemblyLine
 
 	public static Block blockConveyorBelt;
 	public static Block blockManipulator;
-	public static Block blockCrate;
+	public static BlockCrate blockCrate;
 	public static Block blockImprinter;
 	public static Block blockEncoder;
 	public static Block blockDetector;

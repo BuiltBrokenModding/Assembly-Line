@@ -9,7 +9,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
+import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.BlockMachine;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.TabAssemblyLine;
@@ -52,19 +54,7 @@ public class BlockCrate extends BlockMachine
 
 				tileEntity.prevClickTime = world.getWorldTime();
 
-				if (allMode)
-				{
-					this.ejectItems(tileEntity, player, tileEntity.getMaxLimit());
-				}
-				else
-				{
-					ItemStack stack = tileEntity.getStackInSlot(0);
-
-					if (stack != null)
-					{
-						this.ejectItems(tileEntity, player, stack.getMaxStackSize());
-					}
-				}
+				this.tryEject(tileEntity, player, allMode);
 			}
 
 		}
@@ -97,36 +87,85 @@ public class BlockCrate extends BlockMachine
 				// Add items
 				if (side == 1 || (side > 1 && hitY > 0.5) || !player.capabilities.isCreativeMode)
 				{
-					if (allMode)
-					{
-						this.insertAllItems(tileEntity, player);
-					}
-					else
-					{
-						this.insertCurrentItem(tileEntity, player);
-					}
+					this.tryInsert(tileEntity, player, allMode);
 				}
-				// remove items
+				// Remove items
 				else if (side == 0 || (side > 1 && hitY <= 0.5))
 				{
-					if (allMode)
-					{
-						this.ejectItems(tileEntity, player, tileEntity.getMaxLimit());
-					}
-					else
-					{
-						ItemStack stack = tileEntity.getStackInSlot(0);
-
-						if (stack != null)
-						{
-							this.ejectItems(tileEntity, player, stack.getMaxStackSize());
-						}
-					}
+					this.tryEject(tileEntity, player, allMode);
 				}
 			}
 		}
 
 		return true;
+	}
+
+	/**
+	 * Try to inject it into the crate. Otherwise, look around for nearby crates and try to put them
+	 * in.
+	 */
+	public void tryInsert(TileEntityCrate tileEntity, EntityPlayer player, boolean allMode, boolean doSearch)
+	{
+		boolean success;
+
+		if (allMode)
+		{
+			success = this.insertAllItems(tileEntity, player);
+		}
+		else
+		{
+			success = this.insertCurrentItem(tileEntity, player);
+		}
+
+		if (!success && doSearch)
+		{
+			int radius = 10;
+			for (int x = -radius; x < radius; x++)
+			{
+				for (int y = -radius; y < radius; y++)
+				{
+					for (int z = -radius; z < radius; z++)
+					{
+						Vector3 position = Vector3.add(new Vector3(tileEntity), new Vector3(x, y, z));
+						TileEntity checkTile = position.getTileEntity(tileEntity.worldObj);
+
+						if (checkTile instanceof TileEntityCrate)
+						{
+							AssemblyLine.blockCrate.tryInsert(((TileEntityCrate) checkTile), player, allMode, false);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public void tryInsert(TileEntityCrate tileEntity, EntityPlayer player, boolean allMode)
+	{
+		this.tryInsert(tileEntity, player, allMode, true);
+	}
+
+	public void tryEject(TileEntityCrate tileEntity, EntityPlayer player, boolean allMode)
+	{
+		if (allMode)
+		{
+			this.ejectItems(tileEntity, player, tileEntity.getMaxLimit());
+		}
+		else
+		{
+			if (player.isSneaking())
+			{
+				this.ejectItems(tileEntity, player, 1);
+			}
+			else
+			{
+				ItemStack stack = tileEntity.getStackInSlot(0);
+
+				if (stack != null)
+				{
+					this.ejectItems(tileEntity, player, stack.getMaxStackSize());
+				}
+			}
+		}
 	}
 
 	/**
@@ -140,9 +179,18 @@ public class BlockCrate extends BlockMachine
 		{
 			if (currentStack.isStackable())
 			{
+				if (tileEntity.getStackInSlot(0) != null)
+				{
+					if (!tileEntity.getStackInSlot(0).isItemEqual(currentStack))
+					{
+						return false;
+					}
+				}
+
 				player.inventory.setInventorySlotContents(player.inventory.currentItem, this.putIn(tileEntity, currentStack));
 				return true;
-			}// if the item being used is a create then try to merge the items inside
+			}
+			// If the item being used is a create then try to merge the items inside
 			else if (currentStack.getItem().itemID == AssemblyLine.blockCrate.blockID)
 			{
 				ItemStack containedStack = ItemBlockCrate.getContainingItemStack(currentStack);
@@ -163,7 +211,7 @@ public class BlockCrate extends BlockMachine
 	/**
 	 * Inserts all items of the same type this player has into the crate.
 	 * 
-	 * @return
+	 * @return True on success
 	 */
 	public boolean insertAllItems(TileEntityCrate tileEntity, EntityPlayer player)
 	{
@@ -197,11 +245,12 @@ public class BlockCrate extends BlockMachine
 							{
 								((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
 							}
+
+							return true;
 						}
 					}
 				}
 
-				return true;
 			}
 		}
 
@@ -249,6 +298,7 @@ public class BlockCrate extends BlockMachine
 
 			return true;
 		}
+
 		return false;
 	}
 
