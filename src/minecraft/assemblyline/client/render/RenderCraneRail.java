@@ -1,6 +1,11 @@
 package assemblyline.client.render;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_LIGHTING;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glRotatef;
+import static org.lwjgl.opengl.GL11.glTranslated;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import assemblyline.client.model.ModelCraneRail;
@@ -24,13 +29,13 @@ public class RenderCraneRail extends RenderImprintable
 			tZ = tileEntity.zCoord;
 			boolean renderUp = CraneHelper.canFrameConnectTo(tileEntity, tX, tY + 1, tZ, ForgeDirection.DOWN);
 			boolean renderDown = CraneHelper.canFrameConnectTo(tileEntity, tX, tY - 1, tZ, ForgeDirection.UP);
-			//EAST, X-
+			// EAST, X-
 			boolean renderLeft = CraneHelper.canFrameConnectTo(tileEntity, tX - 1, tY, tZ, ForgeDirection.EAST);
-			//WAST, X+
+			// WAST, X+
 			boolean renderRight = CraneHelper.canFrameConnectTo(tileEntity, tX + 1, tY, tZ, ForgeDirection.WEST);
-			//SOUTH, Z-
+			// SOUTH, Z-
 			boolean renderFront = CraneHelper.canFrameConnectTo(tileEntity, tX, tY, tZ - 1, ForgeDirection.SOUTH);
-			//NORTH, Z+
+			// NORTH, Z+
 			boolean renderBack = CraneHelper.canFrameConnectTo(tileEntity, tX, tY, tZ + 1, ForgeDirection.NORTH);
 			boolean renderFoot = tileEntity.worldObj.isBlockSolidOnSide(tX, tY - 1, tZ, ForgeDirection.UP);
 			this.bindTextureByName(AssemblyLine.TEXTURE_PATH + TEXTURE);

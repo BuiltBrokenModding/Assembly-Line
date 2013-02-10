@@ -177,7 +177,7 @@ public class AssemblyLine
 
 		// Manipulator
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockManipulator, 2), new Object[] { Block.dispenser, "basicCircuit" }));
-		
+
 		FMLog.info("Ready to Use");
 	}
 

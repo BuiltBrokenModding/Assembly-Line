@@ -52,8 +52,6 @@ public class CommandBreak extends Command
 		return true;
 	}
 
-	
-
 	@Override
 	public String toString()
 	{

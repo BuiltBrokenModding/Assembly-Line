@@ -32,9 +32,9 @@ public class CommandPowerTo extends Command
 		Block block = Block.blocksList[this.world.getBlockId(tileEntity.getHandPosition().intX(), tileEntity.getHandPosition().intY(), tileEntity.getHandPosition().intZ())];
 		TileEntity targetTile = this.tileEntity.getHandPosition().getTileEntity(this.world);
 
-		if (tileEntity.getGrabbedEntities().size() > 0 && tileEntity.getGrabbedEntities().get(0) instanceof EntityItem && ((EntityItem)tileEntity.getGrabbedEntities().get(0)).getEntityItem().itemID == Block.torchRedstoneIdle.blockID)
+		if (tileEntity.getGrabbedEntities().size() > 0 && tileEntity.getGrabbedEntities().get(0) instanceof EntityItem && ((EntityItem) tileEntity.getGrabbedEntities().get(0)).getEntityItem().itemID == Block.torchRedstoneIdle.blockID)
 		{
-			//TODO have armbot cause redstone power at location
+			// TODO have armbot cause redstone power at location
 			DebugToPlayer.SendToClosest(this.tileEntity, 10, "powering");
 		}
 		else

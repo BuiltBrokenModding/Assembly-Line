@@ -1,7 +1,5 @@
 package assemblyline.common.machine.crane;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -11,6 +9,8 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.BlockMachine;
 import assemblyline.client.render.BlockRenderingHandler;
 import assemblyline.common.TabAssemblyLine;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockCraneRail extends BlockMachine
 {
@@ -20,14 +20,14 @@ public class BlockCraneRail extends BlockMachine
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 		this.setBlockBounds(0.25f, 0.25f, 0.25f, 0.75f, 0.75f, 0.75f);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z)
 	{
 		return super.getSelectedBoundingBoxFromPool(world, x, y, z);
 	}
-	
+
 	@Override
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
 	{

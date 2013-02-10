@@ -52,16 +52,18 @@ public class CommandUse extends Command
 			}
 
 		}
-		else if(block != null)
+		else if (block != null)
 		{
-			try{
-			boolean f = block.onBlockActivated(this.world, tileEntity.getHandPosition().intX(), tileEntity.getHandPosition().intY(), tileEntity.getHandPosition().intZ(), null, 0, 0, 0, 0);
-			}catch(Exception e)
+			try
 			{
-				
+				boolean f = block.onBlockActivated(this.world, tileEntity.getHandPosition().intX(), tileEntity.getHandPosition().intY(), tileEntity.getHandPosition().intZ(), null, 0, 0, 0, 0);
+			}
+			catch (Exception e)
+			{
+
 				e.printStackTrace();
 			}
-			
+
 		}
 
 		this.curTimes++;

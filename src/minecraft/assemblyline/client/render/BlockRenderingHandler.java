@@ -84,7 +84,8 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 			RenderCraneController.MODEL.render(0.0625f);
 			GL11.glPopMatrix();
 		}
-		else if (block.blockID == AssemblyLine.blockCraneRail.blockID){
+		else if (block.blockID == AssemblyLine.blockCraneRail.blockID)
+		{
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH + RenderCraneRail.TEXTURE));
 			GL11.glPushMatrix();
 			GL11.glTranslatef(0f, 1f, 0f);
