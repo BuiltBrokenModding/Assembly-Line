@@ -469,7 +469,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 					}
 					catch (Exception e)
 					{
-						System.out.println("Imprinter: Failed to craft");
+						System.out.println("Imprinter: Failed to craft item: " + itemStack.getDisplayName());
 						e.printStackTrace();
 					}
 				}
