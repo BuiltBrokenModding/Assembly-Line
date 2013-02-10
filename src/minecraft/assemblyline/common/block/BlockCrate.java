@@ -11,8 +11,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
+import universalelectricity.core.implement.IItemElectric;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.BlockMachine;
+import universalelectricity.prefab.implement.IToolConfigurator;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.TabAssemblyLine;
 
@@ -64,8 +66,29 @@ public class BlockCrate extends BlockMachine
 	 * Placed the item the player is holding into the crate.
 	 */
 	@Override
-	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
+		/**
+		 * Check if the player is holding a wrench or an electric item. If so, do not open the GUI.
+		 */
+		if (entityPlayer.inventory.getCurrentItem() != null)
+		{
+			if (entityPlayer.inventory.getCurrentItem().getItem() instanceof IToolConfigurator)
+			{
+				world.notifyBlocksOfNeighborChange(x, y, z, this.blockID);
+				((IToolConfigurator) entityPlayer.inventory.getCurrentItem().getItem()).wrenchUsed(entityPlayer, x, y, z);
+
+				return this.onUseWrench(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ);
+			}
+			else if (entityPlayer.inventory.getCurrentItem().getItem() instanceof IItemElectric)
+			{
+				if (this.onUseElectricItem(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ))
+				{
+					return true;
+				}
+			}
+		}
+
 		if (!world.isRemote)
 		{
 			if (world.getBlockTileEntity(x, y, z) instanceof TileEntityCrate)
@@ -85,14 +108,14 @@ public class BlockCrate extends BlockMachine
 				tileEntity.prevClickTime = world.getWorldTime();
 
 				// Add items
-				if (side == 1 || (side > 1 && hitY > 0.5) || !player.capabilities.isCreativeMode)
+				if (side == 1 || (side > 1 && hitY > 0.5) || !entityPlayer.capabilities.isCreativeMode)
 				{
-					this.tryInsert(tileEntity, player, allMode);
+					this.tryInsert(tileEntity, entityPlayer, allMode);
 				}
 				// Remove items
 				else if (side == 0 || (side > 1 && hitY <= 0.5))
 				{
-					this.tryEject(tileEntity, player, allMode);
+					this.tryEject(tileEntity, entityPlayer, allMode);
 				}
 			}
 		}
@@ -231,6 +254,7 @@ public class BlockCrate extends BlockMachine
 		{
 			if (requestStack.isStackable())
 			{
+				boolean success = false;
 				for (int i = 0; i < player.inventory.getSizeInventory(); i++)
 				{
 					ItemStack currentStack = player.inventory.getStackInSlot(i);
@@ -246,11 +270,11 @@ public class BlockCrate extends BlockMachine
 								((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
 							}
 
-							return true;
+							success = true;
 						}
 					}
 				}
-
+				return success;
 			}
 		}
 
