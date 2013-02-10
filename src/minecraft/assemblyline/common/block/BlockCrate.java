@@ -213,39 +213,31 @@ public class BlockCrate extends BlockMachine
 	 * 
 	 * @param tileEntity
 	 * @param player
-	 * @param maxStack - The maximum stack size to take out. Default should be 64.
+	 * @param requestSize - The maximum stack size to take out. Default should be 64.
 	 * @return True on success
 	 */
-	public boolean ejectItems(TileEntityCrate tileEntity, EntityPlayer player, int maxStack)
+	public boolean ejectItems(TileEntityCrate tileEntity, EntityPlayer player, int requestSize)
 	{
 		World world = tileEntity.worldObj;
 		ItemStack containingStack = tileEntity.getStackInSlot(0);
 
 		if (containingStack != null)
 		{
-			if (containingStack.stackSize > 0)
+			if (containingStack.stackSize > 0 && requestSize > 0)
 			{
-				while (maxStack > 0)
+				int amountToTake = Math.min(containingStack.stackSize, requestSize);
+
+				ItemStack dropStack = containingStack.copy();
+				dropStack.stackSize = amountToTake;
+
+				if (!world.isRemote)
 				{
-					int amountToTake = Math.min(containingStack.stackSize, Math.min(maxStack, 64));
-					ItemStack dropStack = containingStack.copy();
-					dropStack.stackSize = amountToTake;
-
-					if (!world.isRemote)
-					{
-						EntityItem entityItem = new EntityItem(world, player.posX, player.posY, player.posZ, dropStack);
-
-						float var13 = 0.05F;
-						entityItem.motionX = ((float) world.rand.nextGaussian() * var13);
-						entityItem.motionY = ((float) world.rand.nextGaussian() * var13 + 0.2F);
-						entityItem.motionZ = ((float) world.rand.nextGaussian() * var13);
-						entityItem.delayBeforeCanPickup = 0;
-						world.spawnEntityInWorld(entityItem);
-					}
-
-					containingStack.stackSize -= amountToTake;
-					maxStack -= amountToTake;
+					EntityItem entityItem = new EntityItem(world, player.posX, player.posY, player.posZ, dropStack);
+					entityItem.delayBeforeCanPickup = 0;
+					world.spawnEntityInWorld(entityItem);
 				}
+
+				containingStack.stackSize -= amountToTake;
 			}
 
 			if (containingStack.stackSize <= 0)

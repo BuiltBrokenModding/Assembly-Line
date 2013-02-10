@@ -145,6 +145,12 @@ public class AssemblyLine
 
 		System.out.println(NAME + " Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
 
+		// Crane Controller
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockCraneController, new Object[] { "SFS", "MCM", "SMS", 'F', blockCraneFrame, 'S', "plateSteel", 'C', "advancedCircuit", 'I', "ingotSteel", 'M', "motor" }));
+		// Crane Frame
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCraneFrame, 5), new Object[] { "I I", "I I", 'I', Item.ingotIron }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCraneFrame, 5), new Object[] { "I I", "I I", 'I', "ingotBronze" }));
+
 		// Armbot
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockArmbot, new Object[] { "II ", "SIS", "MCM", 'S', "plateSteel", 'C', "advancedCircuit", 'I', "ingotSteel", 'M', "motor" }));
 
