@@ -20,9 +20,35 @@ public class CraneHelper
 	{
 		if (tileEntity.worldObj.getBlockTileEntity(x, y, z) != null && tileEntity.worldObj.getBlockTileEntity(x, y, z) instanceof ICraneConnectable)
 		{
-			return true;
+			return ((ICraneConnectable) tileEntity.worldObj.getBlockTileEntity(x, y, z)).canFrameConnectTo(side);
 		}
 
 		return false;
+	}
+	
+	public static ForgeDirection rotateClockwise(ForgeDirection direction)
+	{
+		if (direction == ForgeDirection.NORTH)
+			return ForgeDirection.EAST;
+		if (direction == ForgeDirection.EAST)
+			return ForgeDirection.SOUTH;
+		if (direction == ForgeDirection.SOUTH)
+			return ForgeDirection.WEST;
+		if (direction == ForgeDirection.WEST)
+			return ForgeDirection.NORTH;
+		return ForgeDirection.UNKNOWN;
+	}
+	
+	public static ForgeDirection rotateCounterClockwise(ForgeDirection direction)
+	{
+		if (direction == ForgeDirection.NORTH)
+			return ForgeDirection.WEST;
+		if (direction == ForgeDirection.WEST)
+			return ForgeDirection.SOUTH;
+		if (direction == ForgeDirection.SOUTH)
+			return ForgeDirection.EAST;
+		if (direction == ForgeDirection.EAST)
+			return ForgeDirection.NORTH;
+		return ForgeDirection.UNKNOWN;
 	}
 }
