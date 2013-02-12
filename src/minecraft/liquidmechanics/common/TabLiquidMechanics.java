@@ -7,13 +7,12 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 
 public class TabLiquidMechanics extends CreativeTabs
 {
-	public static final TabLiquidMechanics INSTANCE = new TabLiquidMechanics("BasicPipes");
+	public static final TabLiquidMechanics INSTANCE = new TabLiquidMechanics("fluidMechanics");
 	private static ItemStack itemStack;
 
 	public TabLiquidMechanics(String par2Str)
 	{
 		super(CreativeTabs.getNextID(), par2Str);
-		LanguageRegistry.instance().addStringLocalization("itemGroup.BasicPipes", "en_US", "Basic Pipes");
 	}
 
 	public static void setItemStack(ItemStack newItemStack)
