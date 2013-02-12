@@ -30,7 +30,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 public class TileEntityPump extends TileEntityElectricityReceiver implements IPacketReceiver, IReadOut, IPressure
 {
-    public final double WATTS_PER_TICK = 400;
+    public final double WATTS_PER_TICK = (400/20);
     double percentPumped = 0.0;
     double joulesReceived = 0;
 
