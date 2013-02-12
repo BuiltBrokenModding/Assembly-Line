@@ -83,7 +83,7 @@ public class ModelCraneController extends ModelBase
 		setRotation(ConnectorRight, 0F, 0F, 0F);
 	}
 
-	public void render(float scale)
+	public void render(float scale, boolean connectEast, boolean connectNorth)
 	{
 		Base2.setRotationPoint(-6F, 12F, -6F);
 		setRotation(Base2, 0F, 0F, 0F);
@@ -106,13 +106,19 @@ public class ModelCraneController extends ModelBase
 
 		Base2.render(scale);
 		Base.render(scale);
-		ConnectorFront.render(scale);
-		Decoration1.render(scale);
-		Decoration2.render(scale);
-		Decoration3.render(scale);
-		Decoration4.render(scale);
 		ConnectorTop.render(scale);
-		ConnectorRight.render(scale);
+		if (connectEast)
+		{
+			ConnectorFront.render(scale);
+			Decoration1.render(scale);
+			Decoration2.render(scale);
+		}
+		if (connectNorth)
+		{
+			ConnectorRight.render(scale);
+			Decoration3.render(scale);
+			Decoration4.render(scale);
+		}
 	}
 
 	private void setRotation(ModelRenderer model, float x, float y, float z)

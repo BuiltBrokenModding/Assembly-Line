@@ -81,7 +81,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 			GL11.glTranslatef(0f, 1f, 0f);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
 			GL11.glRotatef(-90f, 0f, 1f, 0f);
-			RenderCraneController.MODEL.render(0.0625f);
+			RenderCraneController.MODEL.render(0.0625f, false, false);
 			GL11.glPopMatrix();
 		}
 		else if (block.blockID == AssemblyLine.blockCraneFrame.blockID)

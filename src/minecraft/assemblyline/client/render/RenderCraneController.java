@@ -10,6 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import assemblyline.client.model.ModelCraneController;
 import assemblyline.common.AssemblyLine;
+import assemblyline.common.machine.crane.CraneHelper;
 import assemblyline.common.machine.crane.TileEntityCraneController;
 
 public class RenderCraneController extends RenderImprintable
@@ -24,13 +25,11 @@ public class RenderCraneController extends RenderImprintable
 		if (tileEntity != null && tileEntity instanceof TileEntityCraneController)
 		{
 			this.bindTextureByName(AssemblyLine.TEXTURE_PATH + (((TileEntityCraneController) tileEntity).isCraneValid() ? TEXTURE_VALID : TEXTURE));
-			ForgeDirection rot = ForgeDirection.getOrientation(tileEntity.worldObj.getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord));
+			ForgeDirection front = ForgeDirection.getOrientation(tileEntity.worldObj.getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord));
+			ForgeDirection right = CraneHelper.rotateClockwise(front);
 			float angle = 0f;
-
-			switch (rot)
+			switch (front)
 			{
-				default:
-					break;
 				case NORTH:
 				{
 					angle = 90f;
@@ -47,12 +46,18 @@ public class RenderCraneController extends RenderImprintable
 					break;
 				}
 			}
+			int tX, tY, tZ;
+			tX = tileEntity.xCoord;
+			tY = tileEntity.yCoord;
+			tZ = tileEntity.zCoord;
+			boolean connectFront = CraneHelper.canFrameConnectTo(tileEntity, tX + front.offsetX, tY, tZ + front.offsetZ, front.getOpposite());
+			boolean connectRight = CraneHelper.canFrameConnectTo(tileEntity, tX + right.offsetX, tY, tZ + right.offsetZ, right.getOpposite());
 			glPushMatrix();
 			glTranslated(x + 0.5, y + 1.5, z + 0.5);
 			glRotatef(180f, 0f, 0f, 1f);
 			glRotatef(angle, 0f, 1f, 0f);
 			glEnable(GL_LIGHTING);
-			MODEL.render(0.0625f);
+			MODEL.render(0.0625f, connectRight, connectFront);
 			glPopMatrix();
 		}
 	}
