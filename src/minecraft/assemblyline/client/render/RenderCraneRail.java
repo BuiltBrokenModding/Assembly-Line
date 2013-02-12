@@ -15,7 +15,7 @@ import assemblyline.common.machine.crane.TileEntityCraneRail;
 
 public class RenderCraneRail extends RenderImprintable
 {
-	public static final String TEXTURE = "craneRail.png";
+	public static final String TEXTURE = "crane_rail.png";
 	public static final ModelCraneRail MODEL = new ModelCraneRail();
 
 	@Override

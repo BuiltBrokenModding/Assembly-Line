@@ -25,14 +25,14 @@ public class ContainerImprinter extends Container implements ISlotWatcher
 		{
 			for (int y = 0; y < 3; y++)
 			{
-				this.addSlotToContainer(new Slot(this.tileEntity, y + x * 3, 9 + y * 18, 16 + x * 18));
+				this.addSlotToContainer(new WatchedSlot(this.tileEntity, y + x * 3, 9 + y * 18, 16 + x * 18, this));
 			}
 		}
 
 		// Imprint Input for Imprinting
 		this.addSlotToContainer(new SlotCustom(this.tileEntity, TileEntityImprinter.IMPRINTER_MATRIX_START, 68, 34, new ItemStack(AssemblyLine.itemImprint)));
 		// Item to be imprinted
-		this.addSlotToContainer(new Slot(this.tileEntity, TileEntityImprinter.IMPRINTER_MATRIX_START + 1, 92, 34));
+		this.addSlotToContainer(new WatchedSlot(this.tileEntity, TileEntityImprinter.IMPRINTER_MATRIX_START + 1, 92, 34, this));
 		// Result of Crafting/Imprinting
 		this.addSlotToContainer(new SlotCraftingResult(this, this.tileEntity, TileEntityImprinter.IMPRINTER_MATRIX_START + 2, 148, 34));
 
@@ -97,7 +97,7 @@ public class ContainerImprinter extends Container implements ISlotWatcher
 				this.tileEntity.setInventorySlotContents(this.tileEntity.INVENTORY_START - 1, null);
 			}
 
-			if (slot > this.tileEntity.getSizeInventory())
+			if (slot > this.tileEntity.getSizeInventory() - 1)
 			{
 				if (this.getSlot(this.tileEntity.IMPRINTER_MATRIX_START).isItemValid(slotStack))
 				{
@@ -134,7 +134,6 @@ public class ContainerImprinter extends Container implements ISlotWatcher
 		}
 
 		this.slotContentsChanged();
-
 		return copyStack;
 	}
 
@@ -142,5 +141,6 @@ public class ContainerImprinter extends Container implements ISlotWatcher
 	public void slotContentsChanged()
 	{
 		this.tileEntity.onInventoryChanged();
+		this.detectAndSendChanges();
 	}
 }

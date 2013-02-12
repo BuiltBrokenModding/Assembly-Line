@@ -1,5 +1,7 @@
 package assemblyline.common.machine.armbot;
 
+import java.util.Random;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -18,8 +20,6 @@ public class BlockArmbot extends BlockMachine
 	public BlockArmbot(int id)
 	{
 		super("armbot", id, UniversalElectricity.machine);
-		this.setResistance(5.0f);
-		this.setHardness(5.0f);
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 	}
 
@@ -60,6 +60,12 @@ public class BlockArmbot extends BlockMachine
 		this.dropBlockAsItem_do(world, x, y, z, new ItemStack(this));
 
 		super.breakBlock(world, x, y, z, par5, par6);
+	}
+
+	@Override
+	public int quantityDropped(Random par1Random)
+	{
+		return 0;
 	}
 
 	@Override

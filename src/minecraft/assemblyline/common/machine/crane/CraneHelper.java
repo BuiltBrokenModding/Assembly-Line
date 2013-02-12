@@ -18,12 +18,12 @@ public class CraneHelper
 	 * The maximum size that a crane can be
 	 */
 	public static final int MAX_SIZE = 64;
-	
+
 	public static boolean isCraneBlock(World world, int x, int y, int z)
 	{
 		return world.getBlockTileEntity(x, y, z) != null && world.getBlockTileEntity(x, y, z) instanceof ICraneConnectable;
 	}
-	
+
 	public static boolean isCraneStructureBlock(World world, int x, int y, int z)
 	{
 		return world.getBlockTileEntity(x, y, z) != null && world.getBlockTileEntity(x, y, z) instanceof ICraneStructure;
@@ -38,7 +38,7 @@ public class CraneHelper
 
 		return false;
 	}
-	
+
 	public static ForgeDirection rotateClockwise(ForgeDirection direction)
 	{
 		if (direction == ForgeDirection.NORTH)
@@ -51,7 +51,7 @@ public class CraneHelper
 			return ForgeDirection.NORTH;
 		return ForgeDirection.UNKNOWN;
 	}
-	
+
 	public static ForgeDirection rotateCounterClockwise(ForgeDirection direction)
 	{
 		if (direction == ForgeDirection.NORTH)
