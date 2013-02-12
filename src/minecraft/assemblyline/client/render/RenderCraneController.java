@@ -1,52 +1,52 @@
 package assemblyline.client.render;
 
-import static org.lwjgl.opengl.GL11.GL_LIGHTING;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glRotatef;
-import static org.lwjgl.opengl.GL11.glTranslated;
+import static org.lwjgl.opengl.GL11.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import assemblyline.client.model.ModelCraneController;
 import assemblyline.common.AssemblyLine;
+import assemblyline.common.machine.crane.TileEntityCraneController;
 
 public class RenderCraneController extends RenderImprintable
 {
-	public static final String TEXTURE = "quarry_controller_map.png";
+	public static final String TEXTURE = "quarryControllerOff.png";
+	public static final String TEXTURE_VALID = "quarryControllerValid.png";
 	public static final ModelCraneController MODEL = new ModelCraneController();
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float f)
 	{
-		this.bindTextureByName(AssemblyLine.TEXTURE_PATH + TEXTURE);
-		ForgeDirection rot = ForgeDirection.getOrientation(tileEntity.worldObj.getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord));
-		float angle = 0f;
-		switch (rot)
+		if (tileEntity != null && tileEntity instanceof TileEntityCraneController)
 		{
-			case NORTH:
+			this.bindTextureByName(AssemblyLine.TEXTURE_PATH + (((TileEntityCraneController) tileEntity).isCraneValid() ? TEXTURE_VALID : TEXTURE));
+			ForgeDirection rot = ForgeDirection.getOrientation(tileEntity.worldObj.getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord));
+			float angle = 0f;
+			switch (rot)
 			{
-				angle = 90f;
-				break;
+				case NORTH:
+				{
+					angle = 90f;
+					break;
+				}
+				case SOUTH:
+				{
+					angle = 270f;
+					break;
+				}
+				case EAST:
+				{
+					angle = 180f;
+					break;
+				}
 			}
-			case SOUTH:
-			{
-				angle = 270f;
-				break;
-			}
-			case EAST:
-			{
-				angle = 180f;
-				break;
-			}
+			glPushMatrix();
+			glTranslated(x + 0.5, y + 1.5, z + 0.5);
+			glRotatef(180f, 0f, 0f, 1f);
+			glRotatef(angle, 0f, 1f, 0f);
+			glEnable(GL_LIGHTING);
+			MODEL.render(0.0625f);
+			glPopMatrix();
 		}
-		glPushMatrix();
-		glTranslated(x + 0.5, y + 1.5, z + 0.5);
-		glRotatef(180f, 0f, 0f, 1f);
-		glRotatef(angle, 0f, 1f, 0f);
-		glEnable(GL_LIGHTING);
-		MODEL.render(0.0625f);
-		glPopMatrix();
 	}
 
 }

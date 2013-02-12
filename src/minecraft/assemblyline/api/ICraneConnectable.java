@@ -1,4 +1,4 @@
-package assemblyline.common.machine.crane;
+package assemblyline.api;
 
 import net.minecraftforge.common.ForgeDirection;
 

@@ -34,30 +34,26 @@ public class BlockCraneController extends BlockMachine
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving entity)
 	{
-		int rot = (int) Math.min((entity.rotationYaw - 45f) / 90f, 3);
+		int rot = (int) Math.min(((entity.rotationYaw + 315f) % 360f) / 90f, 3);
 		switch (rot)
 		{
 			case 0: // WEST
 			{
-				System.out.println("Facing west...");
 				world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.WEST.ordinal());
 				break;
 			}
 			case 1: // NORTH
 			{
-				System.out.println("Facing north...");
 				world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.NORTH.ordinal());
 				break;
 			}
 			case 2: // EAST
 			{
-				System.out.println("Facing east...");
 				world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.EAST.ordinal());
 				break;
 			}
 			default: // SOUTH
 			{
-				System.out.println("Facing south...");
 				world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.SOUTH.ordinal());
 				break;
 			}
