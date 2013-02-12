@@ -268,98 +268,100 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	@Override
 	public void onInventoryChanged()
 	{
-
-		/**
-		 * Makes the stamping recipe for filters
-		 */
-		this.isImprinting = false;
-
-		if (this.isMatrixEmpty() && this.imprinterMatrix[0] != null && this.imprinterMatrix[1] != null)
+		if (!this.worldObj.isRemote)
 		{
-			if (this.imprinterMatrix[0].getItem() instanceof ItemImprinter)
-			{
-				ItemStack outputStack = this.imprinterMatrix[0].copy();
-				outputStack.stackSize = 1;
-				ArrayList<ItemStack> filters = ItemImprinter.getFilters(outputStack);
-				boolean filteringItemExists = false;
-
-				for (ItemStack filteredStack : filters)
-				{
-					if (filteredStack.isItemEqual(this.imprinterMatrix[1]))
-					{
-						filters.remove(filteredStack);
-						filteringItemExists = true;
-						break;
-					}
-				}
-
-				if (!filteringItemExists)
-				{
-					filters.add(this.imprinterMatrix[1]);
-				}
-
-				ItemImprinter.setFilters(outputStack, filters);
-				this.imprinterMatrix[2] = outputStack;
-				this.isImprinting = true;
-			}
-		}
-
-		if (!this.isImprinting)
-		{
-			this.imprinterMatrix[2] = null;
-
 			/**
-			 * Try to craft from crafting grid. If not possible, then craft from imprint.
+			 * Makes the stamping recipe for filters
 			 */
-			boolean didCraft = false;
+			this.isImprinting = false;
 
-			/**
-			 * Simulate an Inventory Crafting Instance
-			 */
-			InventoryCrafting inventoryCrafting = this.getCraftingMatrix();
-
-			if (inventoryCrafting != null)
-			{
-				ItemStack matrixOutput = CraftingManager.getInstance().findMatchingRecipe(inventoryCrafting, this.worldObj);
-
-				if (matrixOutput != null)
-				{
-					this.imprinterMatrix[2] = matrixOutput;
-					didCraft = true;
-				}
-			}
-
-			if (this.imprinterMatrix[0] != null && !didCraft)
+			if (this.isMatrixEmpty() && this.imprinterMatrix[0] != null && this.imprinterMatrix[1] != null)
 			{
 				if (this.imprinterMatrix[0].getItem() instanceof ItemImprinter)
 				{
-					ArrayList<ItemStack> filters = ItemImprinter.getFilters(this.imprinterMatrix[0]);
+					ItemStack outputStack = this.imprinterMatrix[0].copy();
+					outputStack.stackSize = 1;
+					ArrayList<ItemStack> filters = ItemImprinter.getFilters(outputStack);
+					boolean filteringItemExists = false;
 
-					for (ItemStack outputStack : filters)
+					for (ItemStack filteredStack : filters)
 					{
-						if (outputStack != null)
+						if (filteredStack.isItemEqual(this.imprinterMatrix[1]))
 						{
-							Pair<ItemStack, ItemStack[]> idealRecipe = this.getIdealRecipe(outputStack);
+							filters.remove(filteredStack);
+							filteringItemExists = true;
+							break;
+						}
+					}
 
-							if (idealRecipe != null)
+					if (!filteringItemExists)
+					{
+						filters.add(this.imprinterMatrix[1]);
+					}
+
+					ItemImprinter.setFilters(outputStack, filters);
+					this.imprinterMatrix[2] = outputStack;
+					this.isImprinting = true;
+				}
+			}
+
+			if (!this.isImprinting)
+			{
+				this.imprinterMatrix[2] = null;
+
+				/**
+				 * Try to craft from crafting grid. If not possible, then craft from imprint.
+				 */
+				boolean didCraft = false;
+
+				/**
+				 * Simulate an Inventory Crafting Instance
+				 */
+				InventoryCrafting inventoryCrafting = this.getCraftingMatrix();
+
+				if (inventoryCrafting != null)
+				{
+					ItemStack matrixOutput = CraftingManager.getInstance().findMatchingRecipe(inventoryCrafting, this.worldObj);
+
+					if (matrixOutput != null)
+					{
+						this.imprinterMatrix[2] = matrixOutput;
+						didCraft = true;
+					}
+				}
+
+				if (this.imprinterMatrix[0] != null && !didCraft)
+				{
+					if (this.imprinterMatrix[0].getItem() instanceof ItemImprinter)
+					{
+						ArrayList<ItemStack> filters = ItemImprinter.getFilters(this.imprinterMatrix[0]);
+
+						for (ItemStack outputStack : filters)
+						{
+							if (outputStack != null)
 							{
-								ItemStack recipeOutput = idealRecipe.getKey();
+								Pair<ItemStack, ItemStack[]> idealRecipe = this.getIdealRecipe(outputStack);
 
-								if (recipeOutput != null & recipeOutput.stackSize > 0)
+								if (idealRecipe != null)
 								{
-									this.imprinterMatrix[2] = recipeOutput;
-									didCraft = true;
-									break;
+									ItemStack recipeOutput = idealRecipe.getKey();
+
+									if (recipeOutput != null & recipeOutput.stackSize > 0)
+									{
+										this.imprinterMatrix[2] = recipeOutput;
+										didCraft = true;
+										break;
+									}
 								}
 							}
 						}
 					}
 				}
-			}
 
-			if (!didCraft)
-			{
-				this.imprinterMatrix[2] = null;
+				if (!didCraft)
+				{
+					this.imprinterMatrix[2] = null;
+				}
 			}
 		}
 	}
