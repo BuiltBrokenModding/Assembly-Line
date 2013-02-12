@@ -38,6 +38,8 @@ public class RenderCraneRail extends RenderImprintable
 			// NORTH, Z+
 			boolean renderBack = CraneHelper.canFrameConnectTo(tileEntity, tX, tY, tZ + 1, ForgeDirection.NORTH);
 			boolean renderFoot = tileEntity.worldObj.isBlockSolidOnSide(tX, tY - 1, tZ, ForgeDirection.UP);
+			if ((renderLeft && renderRight) || (renderFront && renderBack))
+				renderFoot = false;
 			this.bindTextureByName(AssemblyLine.TEXTURE_PATH + TEXTURE);
 			glPushMatrix();
 			glTranslated(x + 0.5, y + 1.5, z + 0.5);
