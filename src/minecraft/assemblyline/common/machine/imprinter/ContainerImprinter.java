@@ -97,7 +97,7 @@ public class ContainerImprinter extends Container implements ISlotWatcher
 				this.tileEntity.setInventorySlotContents(this.tileEntity.INVENTORY_START - 1, null);
 			}
 
-			if (slot > this.tileEntity.getSizeInventory())
+			if (slot > this.tileEntity.getSizeInventory() - 1)
 			{
 				if (this.getSlot(this.tileEntity.IMPRINTER_MATRIX_START).isItemValid(slotStack))
 				{

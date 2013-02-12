@@ -14,8 +14,8 @@ import assemblyline.common.machine.crane.TileEntityCraneController;
 
 public class RenderCraneController extends RenderImprintable
 {
-	public static final String TEXTURE = "quarryControllerOff.png";
-	public static final String TEXTURE_VALID = "quarryControllerValid.png";
+	public static final String TEXTURE = "crane_controller_off.png";
+	public static final String TEXTURE_VALID = "crane_controller_on.png";
 	public static final ModelCraneController MODEL = new ModelCraneController();
 
 	@Override
@@ -26,8 +26,11 @@ public class RenderCraneController extends RenderImprintable
 			this.bindTextureByName(AssemblyLine.TEXTURE_PATH + (((TileEntityCraneController) tileEntity).isCraneValid() ? TEXTURE_VALID : TEXTURE));
 			ForgeDirection rot = ForgeDirection.getOrientation(tileEntity.worldObj.getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord));
 			float angle = 0f;
+
 			switch (rot)
 			{
+				default:
+					break;
 				case NORTH:
 				{
 					angle = 90f;
