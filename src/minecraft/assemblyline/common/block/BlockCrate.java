@@ -168,7 +168,7 @@ public class BlockCrate extends BlockMachine
 
 	public void tryEject(TileEntityCrate tileEntity, EntityPlayer player, boolean allMode)
 	{
-		if (allMode)
+		if (allMode && !player.isSneaking())
 		{
 			this.ejectItems(tileEntity, player, tileEntity.getMaxLimit());
 		}
