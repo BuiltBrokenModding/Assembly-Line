@@ -1,7 +1,6 @@
 package assemblyline.common.machine.crane;
 
 import net.minecraftforge.common.ForgeDirection;
-import assemblyline.api.ICraneConnectable;
 import assemblyline.api.ICraneStructure;
 import assemblyline.common.machine.TileEntityAssemblyNetwork;
 

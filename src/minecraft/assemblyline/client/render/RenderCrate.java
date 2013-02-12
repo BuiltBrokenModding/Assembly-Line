@@ -89,25 +89,11 @@ public class RenderCrate extends TileEntitySpecialRenderer
 					GL11.glPopMatrix();
 				}
 				/*
-				switch (tileEntity.getTier())
-				{
-					default:
-					{
-						itemName = "\u00a7a" + itemName;
-						break;
-					}
-					case 1:
-					{
-						itemName = "\u00a74" + itemName;
-
-						break;
-					}
-					case 2:
-					{
-						itemName = "\u00a79" + itemName;
-						break;
-					}
-				}*/
+				 * switch (tileEntity.getTier()) { default: { itemName = "\u00a7a" + itemName;
+				 * break; } case 1: { itemName = "\u00a74" + itemName;
+				 * 
+				 * break; } case 2: { itemName = "\u00a79" + itemName; break; } }
+				 */
 
 				this.renderText(itemName, side, 0.02f, x, y - 0.35f, z);
 

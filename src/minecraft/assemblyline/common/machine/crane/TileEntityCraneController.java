@@ -10,7 +10,7 @@ public class TileEntityCraneController extends TileEntityAssemblyNetwork impleme
 	int width, height, depth;
 	boolean isCraneValid;
 	long ticks;
-	
+
 	public TileEntityCraneController()
 	{
 		super();
@@ -18,7 +18,7 @@ public class TileEntityCraneController extends TileEntityAssemblyNetwork impleme
 		isCraneValid = false;
 		ticks = 0;
 	}
-	
+
 	@Override
 	public void updateEntity()
 	{
@@ -28,12 +28,12 @@ public class TileEntityCraneController extends TileEntityAssemblyNetwork impleme
 			validateCrane();
 		}
 	}
-	
+
 	public boolean isCraneValid()
 	{
 		return isCraneValid;
 	}
-	
+
 	private void validateCrane()
 	{
 		isCraneValid = false;
@@ -46,7 +46,7 @@ public class TileEntityCraneController extends TileEntityAssemblyNetwork impleme
 			isCraneValid = isFrameValid();
 		}
 	}
-	
+
 	private boolean isFrameValid()
 	{
 		for (int x = Math.min(0, width); x <= Math.max(0, width); x++)
@@ -79,7 +79,7 @@ public class TileEntityCraneController extends TileEntityAssemblyNetwork impleme
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Find x size and store in this.width
 	 */
@@ -107,13 +107,13 @@ public class TileEntityCraneController extends TileEntityAssemblyNetwork impleme
 				x--;
 			}
 		}
-		width = x; //can be negative
+		width = x; // can be negative
 		if (width < 0)
 			width++;
 		if (width > 0)
 			width--;
 	}
-	
+
 	/**
 	 * Find y size and store in this.height
 	 */
@@ -132,7 +132,7 @@ public class TileEntityCraneController extends TileEntityAssemblyNetwork impleme
 		}
 		height = y - 1;
 	}
-	
+
 	/**
 	 * Find x size and store in this.depth
 	 */
@@ -160,7 +160,7 @@ public class TileEntityCraneController extends TileEntityAssemblyNetwork impleme
 				z--;
 			}
 		}
-		depth = z; //can be negative
+		depth = z; // can be negative
 		if (depth < 0)
 			depth++;
 		if (depth > 0)
@@ -179,7 +179,7 @@ public class TileEntityCraneController extends TileEntityAssemblyNetwork impleme
 			return true;
 		return false;
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
@@ -189,7 +189,7 @@ public class TileEntityCraneController extends TileEntityAssemblyNetwork impleme
 		nbt.setInteger("depth", depth);
 		nbt.setBoolean("isValid", isCraneValid);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
