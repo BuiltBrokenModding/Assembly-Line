@@ -86,12 +86,12 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 		}
 		else if (block.blockID == AssemblyLine.blockCraneFrame.blockID)
 		{
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH + RenderCraneRail.TEXTURE));
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH + RenderCraneFrame.TEXTURE));
 			GL11.glPushMatrix();
 			GL11.glTranslatef(0f, 1f, 0f);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
 			GL11.glRotatef(-90f, 0f, 1f, 0f);
-			RenderCraneRail.MODEL.render(true, true, false, false, false, false, false);
+			RenderCraneFrame.MODEL.render(true, true, false, false, false, false, false);
 			GL11.glPopMatrix();
 		}
 	}

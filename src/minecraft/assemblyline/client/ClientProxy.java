@@ -12,7 +12,7 @@ import assemblyline.client.render.BlockRenderingHandler;
 import assemblyline.client.render.RenderArmbot;
 import assemblyline.client.render.RenderConveyorBelt;
 import assemblyline.client.render.RenderCraneController;
-import assemblyline.client.render.RenderCraneRail;
+import assemblyline.client.render.RenderCraneFrame;
 import assemblyline.client.render.RenderCrate;
 import assemblyline.client.render.RenderDetector;
 import assemblyline.client.render.RenderManipulator;
@@ -55,7 +55,7 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrate.class, new RenderCrate());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmbot.class, new RenderArmbot());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCraneController.class, new RenderCraneController());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCraneRail.class, new RenderCraneRail());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCraneRail.class, new RenderCraneFrame());
 	}
 
 	@Override

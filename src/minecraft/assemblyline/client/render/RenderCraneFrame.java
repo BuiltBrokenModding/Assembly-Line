@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTranslated;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import assemblyline.client.model.ModelCraneRail;
@@ -13,9 +14,9 @@ import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.crane.CraneHelper;
 import assemblyline.common.machine.crane.TileEntityCraneRail;
 
-public class RenderCraneRail extends RenderImprintable
+public class RenderCraneFrame extends TileEntitySpecialRenderer
 {
-	public static final String TEXTURE = "crane_rail.png";
+	public static final String TEXTURE = "crane_frame.png";
 	public static final ModelCraneRail MODEL = new ModelCraneRail();
 
 	@Override
