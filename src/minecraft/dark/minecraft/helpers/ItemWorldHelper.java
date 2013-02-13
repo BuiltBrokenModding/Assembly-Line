@@ -49,13 +49,14 @@ public class ItemWorldHelper
 			{
 				if (entityItem.getEntityItem().itemID == itemStack.itemID && entityItem.getEntityItem().getItemDamage() == itemStack.getItemDamage() && !newItemList.contains(entityItem))
 				{
-					entityItems.add(entityItem);
+					newItemList.add(entityItem);
 					break;
 				}
 			}
 		}
 		return newItemList;
 	}
+
 	/**
 	 * filters out EnittyItems from an Entity list
 	 */
@@ -65,13 +66,38 @@ public class ItemWorldHelper
 
 		for (Entity entity : entities)
 		{
-			if(entity instanceof EntityItem)
-			{	
+			if (entity instanceof EntityItem)
+			{
 				newEntityList.add((EntityItem) entity);
 			}
-			
+
 		}
 		return newEntityList;
+	}
+
+	/**
+	 * filter a list of itemStack to another list of itemStacks
+	 * 
+	 * @param totalItems - full list of items being filtered
+	 * @param desiredItems - list the of item that are being filtered too
+	 * @return a list of item from the original that are wanted
+	 */
+	public static List<ItemStack> filterItems(List<ItemStack> totalItems, List<ItemStack> desiredItems)
+	{
+		List<ItemStack> newItemList = new ArrayList<ItemStack>();
+
+		for (ItemStack entityItem : totalItems)
+		{
+			for (ItemStack itemStack : desiredItems)
+			{
+				if (entityItem.itemID == itemStack.itemID && entityItem.getItemDamage() == itemStack.getItemDamage() && !newItemList.contains(entityItem))
+				{
+					newItemList.add(entityItem);
+					break;
+				}
+			}
+		}
+		return newItemList;
 	}
 
 	/**

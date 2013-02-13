@@ -23,5 +23,6 @@ CHANGELOG
 !publish.bat
 !publish_obf.bat
 !include.bat
+!include2.bat
 !buildlocal.bat
 !/README
