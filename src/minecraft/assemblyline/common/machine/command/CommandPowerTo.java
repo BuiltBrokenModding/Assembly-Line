@@ -3,11 +3,14 @@ package assemblyline.common.machine.command;
 import java.util.ArrayList;
 import java.util.List;
 
+import universalelectricity.core.vector.Vector3;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
 import dark.minecraft.helpers.DebugToPlayer;
 import dark.minecraft.helpers.ItemWorldHelper;
 
@@ -27,9 +30,9 @@ public class CommandPowerTo extends Command
 			this.duration = this.getIntArg(0);
 		}
 
-		if (this.duration <= 0)
+		if (this.duration <= 30)
 		{
-			this.duration = 20;
+			this.duration = 30;
 		}
 	}
 
@@ -37,10 +40,15 @@ public class CommandPowerTo extends Command
 	protected boolean doTask()
 	{
 		super.doTask();
-		if (this.ticksRan >= duration)
+		if (this.tileEntity.isProvidingPower && this.ticksRan >= duration)
 		{
 			powerBlock(false);
 			return false;
+		}else if(this.tileEntity.isProvidingPower)
+		{
+			Vector3 loc = this.tileEntity.getHandPosition();
+			world.spawnParticle("smoke", loc.x, loc.y , loc.z, 0.0D, 0.0D, 0.0D);
+            world.spawnParticle("flame", loc.x, loc.y , loc.z, 0.0D, 0.0D, 0.0D);
 		}
 
 		Block block = Block.blocksList[this.world.getBlockId(tileEntity.getHandPosition().intX(), tileEntity.getHandPosition().intY(), tileEntity.getHandPosition().intZ())];
@@ -72,8 +80,11 @@ public class CommandPowerTo extends Command
 			this.tileEntity.isProvidingPower = true;
 		}
 		int id = this.tileEntity.worldObj.getBlockId(this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord);
-		Block block = Block.blocksList[id];
-		if(block != null) block.onNeighborBlockChange(this.world, this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, this.tileEntity.getFacingDirectionFromAngle().ordinal());
+		for (int i = 2; i < 6; i++)
+		{
+			ForgeDirection dir = ForgeDirection.getOrientation(i);
+			this.world.notifyBlocksOfNeighborChange(this.tileEntity.xCoord + dir.offsetX, this.tileEntity.yCoord + dir.offsetY, this.tileEntity.zCoord + dir.offsetZ, id);
+		}
 	}
 
 	@Override

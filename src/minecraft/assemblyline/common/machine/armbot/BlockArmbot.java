@@ -96,14 +96,16 @@ public class BlockArmbot extends BlockMachine
 	public boolean isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side)
 	{
 		TileEntity ent = world.getBlockTileEntity(x, y, z);
-		if (ent instanceof TileEntityArmbot) { return ((TileEntityArmbot) ent).isProvidingPowerSide(ForgeDirection.getOrientation(side)); }
+		// if (ent instanceof TileEntityArmbot) { return ((TileEntityArmbot) ent).isProvidingPowerSide(ForgeDirection.getOrientation(side)); }
+		// if (ent instanceof TileEntityArmbot) { return ((TileEntityArmbot) ent).getFacingDirectionFromAngle().getOpposite() == ForgeDirection.getOrientation(side);}
 		return false;
 	}
 
 	@Override
 	public boolean isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side)
 	{
-
 		return this.isProvidingStrongPower(world, x, y, z, side);
 	}
+
+	
 }
