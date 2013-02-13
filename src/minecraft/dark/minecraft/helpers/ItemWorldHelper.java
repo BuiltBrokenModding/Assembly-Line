@@ -2,8 +2,8 @@ package dark.minecraft.helpers;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
@@ -33,6 +33,14 @@ public class ItemWorldHelper
 	public static List<EntityItem> findSelectItems(World world, Vector3 start, Vector3 end, List<ItemStack> disiredItems)
 	{
 		List<EntityItem> entityItems = ItemWorldHelper.findAllItemIn(world, start, end);
+		return filterEntityItemsList(entityItems, disiredItems);
+	}
+
+	/**
+	 * filters an EntityItem List to a List of Items
+	 */
+	public static List<EntityItem> filterEntityItemsList(List<EntityItem> entityItems, List<ItemStack> disiredItems)
+	{
 		List<EntityItem> newItemList = new ArrayList<EntityItem>();
 
 		for (EntityItem entityItem : entityItems)
@@ -47,6 +55,23 @@ public class ItemWorldHelper
 			}
 		}
 		return newItemList;
+	}
+	/**
+	 * filters out EnittyItems from an Entity list
+	 */
+	public static List<EntityItem> filterOutItems(List<Entity> entities)
+	{
+		List<EntityItem> newEntityList = new ArrayList<EntityItem>();
+
+		for (Entity entity : entities)
+		{
+			if(entity instanceof EntityItem)
+			{	
+				newEntityList.add((EntityItem) entity);
+			}
+			
+		}
+		return newEntityList;
 	}
 
 	/**
