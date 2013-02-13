@@ -37,7 +37,7 @@ public class CommandGrab extends Command
 		this.entityToInclude = EntityItem.class;
 		if (this.parameters.length > 0 && this.parameters[0] != null)
 		{
-			if (this.getArg(0).equalsIgnoreCase("baby"))
+			if (this.getArg(0).equalsIgnoreCase("baby") || this.getArg(0).equalsIgnoreCase("child"))
 			{
 				child = true;
 				if (this.parameters.length > 1 && this.parameters[1] != null)
@@ -48,12 +48,9 @@ public class CommandGrab extends Command
 			else
 			{
 				this.entityToInclude = GrabDictionary.get(this.getArg(0)).getEntityClass();
-				if (this.parameters.length > 1 && this.parameters[1] != null && this.getArg(1).equalsIgnoreCase("baby"))
+				if (this.parameters.length > 1 && this.parameters[1] != null && (this.getArg(1).equalsIgnoreCase("baby") || this.getArg(0).equalsIgnoreCase("child")))
 				{
-					if (this.getArg(1) != null && this.getArg(1).equalsIgnoreCase("baby"))
-					{
-						child = true;
-					}
+					child = true;
 				}
 			}
 
