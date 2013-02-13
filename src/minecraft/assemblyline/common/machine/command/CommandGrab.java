@@ -72,7 +72,7 @@ public class CommandGrab extends Command
 		{
 			for (int i = 0; i < found.size(); i++)
 			{
-				if (found.get(i) != null && !(found.get(i) instanceof EntityArrow) && found.get(i).ridingEntity == null && (!(found.get(i) instanceof EntityAgeable) || (found.get(i) instanceof EntityAgeable && child != ((EntityAgeable) found.get(i)).isChild())))
+				if (found.get(i) != null && !(found.get(i) instanceof EntityArrow) && !(found.get(i) instanceof EntityPlayer) && found.get(i).ridingEntity == null && (!(found.get(i) instanceof EntityAgeable) || (found.get(i) instanceof EntityAgeable && child != ((EntityAgeable) found.get(i)).isChild())))
 				{
 					this.tileEntity.grabEntity(found.get(i));
 					this.world.playSound(this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, "random.pop", 0.2F, ((this.tileEntity.worldObj.rand.nextFloat() - this.tileEntity.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.0F, true);
