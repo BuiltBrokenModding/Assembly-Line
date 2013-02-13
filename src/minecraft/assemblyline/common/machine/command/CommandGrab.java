@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
@@ -19,13 +21,11 @@ import universalelectricity.core.vector.Vector3;
 public class CommandGrab extends Command
 {
 
-	
-
 	public static final float radius = 0.5f;
 	/**
 	 * If the grab command is specific to one entity this tell whether or not to grab the child version of that entity.
 	 */
-	public boolean child;
+	public boolean child = false;
 	/**
 	 * The item to be collected.
 	 */
@@ -34,33 +34,29 @@ public class CommandGrab extends Command
 	public CommandGrab()
 	{
 		super();
-		// TODO convert these predefined words to the minecraft translater
 		this.entityToInclude = EntityItem.class;
-
-		String firstWord = this.getArg(0);
-		String secondWord = this.getArg(1);
-
-		// find if grabbing the baby version of an Entity
-		if (firstWord != null && firstWord.equalsIgnoreCase("baby"))
+		if (this.parameters.length > 0 && this.parameters[0] != null)
 		{
-			child = true;
-			firstWord = secondWord;
-		}
-		else if (firstWord != null && firstWord.equalsIgnoreCase("baby"))
-		{
-			child = true;
-		}
-		else
-		{
-			child = false;
-		}
-		// find if we are grabing something else than an EntityItem
-		if (firstWord != null)
-		{
-			if (firstWord.equalsIgnoreCase("chicken"))
+			if (this.getArg(0).equalsIgnoreCase("baby"))
 			{
-				this.entityToInclude = EntityChicken.class;
+				child = true;
+				if (this.parameters.length > 1 && this.parameters[1] != null)
+				{
+					this.entityToInclude = GrabDictionary.get(this.getArg(0)).getEntityClass();
+				}
 			}
+			else
+			{
+				this.entityToInclude = GrabDictionary.get(this.getArg(0)).getEntityClass();
+				if (this.parameters.length > 1 && this.parameters[1] != null && this.getArg(1).equalsIgnoreCase("baby"))
+				{
+					if (this.getArg(1) != null && this.getArg(1).equalsIgnoreCase("baby"))
+					{
+						child = true;
+					}
+				}
+			}
+
 		}
 	}
 
@@ -69,8 +65,7 @@ public class CommandGrab extends Command
 	{
 		super.doTask();
 
-		if (this.tileEntity.getGrabbedEntities().size() > 0)
-			return false;
+		if (this.tileEntity.getGrabbedEntities().size() > 0) { return false; }
 
 		Vector3 serachPosition = this.tileEntity.getHandPosition();
 		List<Entity> found = this.world.getEntitiesWithinAABB(this.entityToInclude, AxisAlignedBB.getBoundingBox(serachPosition.x - radius, serachPosition.y - radius, serachPosition.z - radius, serachPosition.x + radius, serachPosition.y + radius, serachPosition.z + radius));
@@ -79,7 +74,7 @@ public class CommandGrab extends Command
 		{
 			for (int i = 0; i < found.size(); i++)
 			{
-				if (found.get(i) != null && !(found.get(i) instanceof EntityPlayer) && !(found.get(i) instanceof EntityArrow) && found.get(i).ridingEntity == null)
+				if (found.get(i) != null && !(found.get(i) instanceof EntityArrow) && found.get(i).ridingEntity == null && (found.get(i) instanceof EntityAgeable && (child && ((EntityAgeable) found.get(i)).isChild() || (!child && !((EntityAgeable) found.get(i)).isChild()))))
 				{
 					this.tileEntity.grabEntity(found.get(i));
 					this.world.playSound(this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, "random.pop", 0.2F, ((this.tileEntity.worldObj.rand.nextFloat() - this.tileEntity.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.0F, true);

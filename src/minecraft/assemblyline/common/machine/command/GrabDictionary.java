@@ -13,6 +13,7 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.passive.EntityCow;
+import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -86,6 +87,7 @@ public class GrabDictionary
 		registerGrabableEntity("chicken", EntityChicken.class);
 		registerGrabableEntity("cow", EntityCow.class);
 		registerGrabableEntity("sheep", EntitySheep.class);
+		registerGrabableEntity("pig", EntityPig.class);
 		registerGrabableEntity("player", EntityPlayer.class);
 		registerGrabableEntity("zombie", EntityZombie.class);
 		registerGrabableEntity("zomb", EntityZombie.class);
