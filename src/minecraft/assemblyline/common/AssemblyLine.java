@@ -21,6 +21,7 @@ import assemblyline.common.machine.BlockManipulator;
 import assemblyline.common.machine.BlockRejector;
 import assemblyline.common.machine.armbot.BlockArmbot;
 import assemblyline.common.machine.belt.BlockConveyorBelt;
+import assemblyline.common.machine.command.GrabDictionary;
 import assemblyline.common.machine.crane.BlockCraneController;
 import assemblyline.common.machine.crane.BlockCraneFrame;
 import assemblyline.common.machine.detector.BlockDetector;
@@ -142,7 +143,7 @@ public class AssemblyLine
 	{
 		FMLog.info("Loading...");
 		proxy.init();
-
+		GrabDictionary.registerList();
 		System.out.println(NAME + " Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
 
 		// Crane Controller
