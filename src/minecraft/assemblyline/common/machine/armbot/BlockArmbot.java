@@ -5,7 +5,9 @@ import java.util.Random;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.BlockMachine;
@@ -39,10 +41,7 @@ public class BlockArmbot extends BlockMachine
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tileEntity != null && tileEntity instanceof IMultiBlock)
-		{
-			return ((IMultiBlock) tileEntity).onActivated(player);
-		}
+		if (tileEntity != null && tileEntity instanceof IMultiBlock) { return ((IMultiBlock) tileEntity).onActivated(player); }
 
 		return false;
 	}
@@ -84,6 +83,17 @@ public class BlockArmbot extends BlockMachine
 	@Override
 	public boolean isOpaqueCube()
 	{
+		return false;
+	}
+
+	@Override
+	public boolean isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side)
+	{
+		TileEntity ent = world.getBlockTileEntity(x, y, z);
+		if(ent instanceof TileEntityArmbot)
+		{
+			return ((TileEntityArmbot)ent).isProvidingPowerSide(ForgeDirection.getOrientation(side));
+		}
 		return false;
 	}
 }

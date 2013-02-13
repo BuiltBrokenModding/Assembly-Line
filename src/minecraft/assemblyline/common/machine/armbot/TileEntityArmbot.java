@@ -21,6 +21,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityConnections;
 import universalelectricity.core.implement.IJouleStorage;
@@ -75,7 +76,10 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	public float renderYaw = 0;
 	private int ticksSincePower = 0;
 	public final float ROTATION_SPEED = 1.3f;
+
 	private String displayText = "";
+
+	public boolean isProvidingPower = false;
 
 	/**
 	 * An entity that the Armbot is grabbed onto. Entity Items are held separately.
@@ -774,10 +778,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				{
 					for (int i = 0; i < found.size(); i++)
 					{
-						if (found.get(i) != null && !(found.get(i) instanceof EntityPlayer) && found.get(i).ridingEntity == null)
-						{
-							return new Object[] { true };
-						}
+						if (found.get(i) != null && !(found.get(i) instanceof EntityPlayer) && found.get(i).ridingEntity == null) { return new Object[] { true }; }
 					}
 				}
 
@@ -934,4 +935,33 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		this.grabbedEntities.clear();
 		this.grabbedItems.clear();
 	}
+
+	public boolean isProvidingPowerSide(ForgeDirection dir)
+	{
+		return this.isProvidingPower && dir == this.getFacingDirectionFromAngle();
+	}
+
+	public ForgeDirection getFacingDirectionFromAngle()
+	{
+		float angle = MathHelper.wrapAngleTo180_float(this.rotationYaw);
+		if (angle >= -45 && angle <= 45)
+		{
+			return ForgeDirection.NORTH;
+		}
+		else if (angle >= 45 && angle <= 135)
+		{
+
+			return ForgeDirection.WEST;
+		}
+		else if (angle >= 135 && angle <= -135)
+		{
+
+			return ForgeDirection.NORTH;
+		}
+		else
+		{
+			return ForgeDirection.EAST;
+		}
+	}
+
 }

@@ -65,13 +65,11 @@ public class CommandPowerTo extends Command
 	{
 		if (!on)
 		{
-			// unpower block
-			//DebugToPlayer.SendToClosest(this.tileEntity, 20, "Power Off");
+			this.tileEntity.isProvidingPower = false;
 		}
 		else
 		{
-			// power block
-			//DebugToPlayer.SendToClosest(this.tileEntity, 20, "Power on");
+			this.tileEntity.isProvidingPower = true;
 		}
 	}
 
