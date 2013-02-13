@@ -35,7 +35,7 @@ public class CommandGrab extends Command
 	{
 		super();
 		this.entityToInclude = EntityItem.class;
-		if (this.parameters.length > 0 && this.parameters[0] != null)
+		if (this.parameters != null && this.parameters.length > 0 && this.parameters[0] != null)
 		{
 			if (this.getArg(0).equalsIgnoreCase("baby") || this.getArg(0).equalsIgnoreCase("child"))
 			{
