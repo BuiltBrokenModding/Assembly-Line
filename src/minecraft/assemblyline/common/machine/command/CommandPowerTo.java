@@ -1,10 +1,15 @@
 package assemblyline.common.machine.command;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import dark.minecraft.helpers.DebugToPlayer;
+import dark.minecraft.helpers.ItemWorldHelper;
 
 public class CommandPowerTo extends Command
 {
@@ -32,16 +37,21 @@ public class CommandPowerTo extends Command
 		Block block = Block.blocksList[this.world.getBlockId(tileEntity.getHandPosition().intX(), tileEntity.getHandPosition().intY(), tileEntity.getHandPosition().intZ())];
 		TileEntity targetTile = this.tileEntity.getHandPosition().getTileEntity(this.world);
 
-		if (tileEntity.getGrabbedEntities().size() > 0 
-				&& tileEntity.getGrabbedEntities().get(0) instanceof EntityItem 
-				&& ((EntityItem) tileEntity.getGrabbedEntities().get(0)).getEntityItem().itemID == Block.torchRedstoneIdle.blockID)
+		if (tileEntity.getGrabbedEntities().size() > 0)
 		{
-			// TODO have armbot cause redstone power at location
-			DebugToPlayer.SendToClosest(this.tileEntity, 10, "powering");
-		}
-		else
-		{
-			return false;
+			List<EntityItem> items = ItemWorldHelper.filterOutEntityItems(tileEntity.getGrabbedEntities());
+			if (items != null)
+			{
+				List<ItemStack> stacks = new ArrayList<ItemStack>();
+				stacks.add(new ItemStack(Block.torchRedstoneActive, 1, 0));
+				stacks.add(new ItemStack(Block.torchRedstoneIdle, 1, 0));
+				items = ItemWorldHelper.filterEntityItemsList(items, stacks);
+				if(items.size() > 0)
+				{
+					DebugToPlayer.SendToClosest(this.tileEntity, 10, "powering");
+					return true;
+				}
+			}
 		}
 
 		this.curTimes++;

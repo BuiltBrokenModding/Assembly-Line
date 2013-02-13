@@ -59,7 +59,7 @@ public class ItemWorldHelper
 	/**
 	 * filters out EnittyItems from an Entity list
 	 */
-	public static List<EntityItem> filterOutItems(List<Entity> entities)
+	public static List<EntityItem> filterOutEntityItems(List<Entity> entities)
 	{
 		List<EntityItem> newEntityList = new ArrayList<EntityItem>();
 
