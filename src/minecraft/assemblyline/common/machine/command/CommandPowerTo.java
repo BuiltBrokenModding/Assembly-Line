@@ -71,6 +71,9 @@ public class CommandPowerTo extends Command
 		{
 			this.tileEntity.isProvidingPower = true;
 		}
+		int id = this.tileEntity.worldObj.getBlockId(this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord);
+		Block block = Block.blocksList[id];
+		if(block != null) block.onNeighborBlockChange(this.world, this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, this.tileEntity.getFacingDirectionFromAngle().ordinal());
 	}
 
 	@Override

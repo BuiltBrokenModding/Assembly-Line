@@ -935,18 +935,23 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		this.grabbedEntities.clear();
 		this.grabbedItems.clear();
 	}
-
+	/**
+	 * called by the block when another checks it too
+	 * see if it is providing power to a direction
+	 */
 	public boolean isProvidingPowerSide(ForgeDirection dir)
 	{
-		return this.isProvidingPower && dir == this.getFacingDirectionFromAngle();
+		return this.isProvidingPower && dir.getOpposite() == this.getFacingDirectionFromAngle();
 	}
-
+	/**
+	 * gets the facing direction using the yaw angle
+	 */
 	public ForgeDirection getFacingDirectionFromAngle()
 	{
 		float angle = MathHelper.wrapAngleTo180_float(this.rotationYaw);
 		if (angle >= -45 && angle <= 45)
 		{
-			return ForgeDirection.NORTH;
+			return ForgeDirection.SOUTH;
 		}
 		else if (angle >= 45 && angle <= 135)
 		{
