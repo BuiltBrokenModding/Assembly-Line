@@ -68,7 +68,7 @@ public abstract class Command
 	 * The parameters this command has, or the properties. Entered by the player in the disk.
 	 * Parameters are entered like a Java function. idle(20) = Idles for 20 seconds.
 	 */
-	protected String[] parameters;
+	private String[] parameters;
 
 	/**
 	 * Called by the TaskManager to propagate tick updates

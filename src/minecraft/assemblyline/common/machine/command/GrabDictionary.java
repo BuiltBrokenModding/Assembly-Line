@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySkeleton;
@@ -35,11 +36,23 @@ public class GrabDictionary
 		return grabList;
 	}
 
-	public static GrabDictionary get(String name)
+	public static GrabDictionary get(Object ob)
 	{
-		for (GrabDictionary ref : grabList)
+		if (ob instanceof String)
 		{
-			if (ref.getName().equalsIgnoreCase(name)) { return ref; }
+			String name = (String) ob;
+			for (GrabDictionary ref : grabList)
+			{
+				if (ref.getName().equalsIgnoreCase(name)) { return ref; }
+			}
+		}
+		if(ob instanceof Class)
+		{
+			Class<? extends Entity> cc = (Class<? extends Entity>) ob;
+			for (GrabDictionary ref : grabList)
+			{
+				if (ref.getEntityClass() == cc) { return ref; }
+			}
 		}
 		return new GrabDictionary("Entity", Entity.class);
 	}
@@ -99,5 +112,8 @@ public class GrabDictionary
 		registerGrabableEntity("creeper", EntityCreeper.class);
 		registerGrabableEntity("spider", EntitySpider.class);
 		registerGrabableEntity("slime", EntitySlime.class);
+		registerGrabableEntity("items", EntityItem.class);
+		registerGrabableEntity("all", Entity.class);
+		registerGrabableEntity("everything", Entity.class);
 	}
 }

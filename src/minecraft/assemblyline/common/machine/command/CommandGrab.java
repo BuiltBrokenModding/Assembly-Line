@@ -10,6 +10,7 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import universalelectricity.core.vector.Vector3;
 
@@ -34,13 +35,13 @@ public class CommandGrab extends Command
 	public CommandGrab()
 	{
 		super();
-		this.entityToInclude = EntityItem.class;
-		if (this.parameters != null && this.parameters.length > 0 && this.parameters[0] != null)
+		this.entityToInclude = Entity.class;
+		if (this.getArgs() != null && this.getArgs().length > 0 && this.getArgs()[0] != null)
 		{
 			if (this.getArg(0).equalsIgnoreCase("baby") || this.getArg(0).equalsIgnoreCase("child"))
 			{
 				child = true;
-				if (this.parameters.length > 1 && this.parameters[1] != null)
+				if (this.getArgs().length > 1 && this.getArgs()[1] != null)
 				{
 					this.entityToInclude = GrabDictionary.get(this.getArg(0)).getEntityClass();
 				}
@@ -48,7 +49,7 @@ public class CommandGrab extends Command
 			else
 			{
 				this.entityToInclude = GrabDictionary.get(this.getArg(0)).getEntityClass();
-				if (this.parameters.length > 1 && this.parameters[1] != null && (this.getArg(1).equalsIgnoreCase("baby") || this.getArg(0).equalsIgnoreCase("child")))
+				if (this.getArgs().length > 1 && this.getArgs()[1] != null && (this.getArg(1).equalsIgnoreCase("baby") || this.getArg(0).equalsIgnoreCase("child")))
 				{
 					child = true;
 				}
@@ -71,10 +72,11 @@ public class CommandGrab extends Command
 		{
 			for (int i = 0; i < found.size(); i++)
 			{
-				if (found.get(i) != null && !(found.get(i) instanceof EntityArrow) && found.get(i).ridingEntity == null && (found.get(i) instanceof EntityAgeable && (child && ((EntityAgeable) found.get(i)).isChild() || (!child && !((EntityAgeable) found.get(i)).isChild()))))
+				if (found.get(i) != null && !(found.get(i) instanceof EntityArrow) && found.get(i).ridingEntity == null && (!(found.get(i) instanceof EntityAgeable) || (found.get(i) instanceof EntityAgeable && child != ((EntityAgeable) found.get(i)).isChild())))
 				{
 					this.tileEntity.grabEntity(found.get(i));
 					this.world.playSound(this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, "random.pop", 0.2F, ((this.tileEntity.worldObj.rand.nextFloat() - this.tileEntity.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.0F, true);
+
 					return false;
 				}
 			}
@@ -84,8 +86,35 @@ public class CommandGrab extends Command
 	}
 
 	@Override
+	public void readFromNBT(NBTTagCompound taskCompound)
+	{
+		super.readFromNBT(taskCompound);
+		this.child = taskCompound.getBoolean("child");
+		this.entityToInclude = GrabDictionary.get(taskCompound.getString("name")).getEntityClass();
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound taskCompound)
+	{
+		super.writeToNBT(taskCompound);
+		taskCompound.setBoolean("child", child);
+		taskCompound.setString("name", ((this.entityToInclude != null) ? GrabDictionary.get(this.entityToInclude).getName() : ""));
+	}
+
+	@Override
 	public String toString()
 	{
-		return "GRAB";
+		String baby = "";
+		String entity = "";
+		if (this.entityToInclude != null)
+		{
+			entity = GrabDictionary.get(this.entityToInclude).getName();
+			if (this.child)
+			{
+				// TODO do check for EntityAgable
+				baby = "baby ";
+			}
+		}
+		return "GRAB " + baby + entity;
 	}
 }
