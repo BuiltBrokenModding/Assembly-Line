@@ -1,8 +1,11 @@
 package assemblyline.common.machine.command;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.util.AxisAlignedBB;
@@ -16,8 +19,13 @@ import universalelectricity.core.vector.Vector3;
 public class CommandGrab extends Command
 {
 
-	public static final float radius = 0.5f;
+	
 
+	public static final float radius = 0.5f;
+	/**
+	 * If the grab command is specific to one entity this tell whether or not to grab the child version of that entity.
+	 */
+	public boolean child;
 	/**
 	 * The item to be collected.
 	 */
@@ -26,7 +34,34 @@ public class CommandGrab extends Command
 	public CommandGrab()
 	{
 		super();
-		this.entityToInclude = Entity.class;
+		// TODO convert these predefined words to the minecraft translater
+		this.entityToInclude = EntityItem.class;
+
+		String firstWord = this.getArg(0);
+		String secondWord = this.getArg(1);
+
+		// find if grabbing the baby version of an Entity
+		if (firstWord != null && firstWord.equalsIgnoreCase("baby"))
+		{
+			child = true;
+			firstWord = secondWord;
+		}
+		else if (firstWord != null && firstWord.equalsIgnoreCase("baby"))
+		{
+			child = true;
+		}
+		else
+		{
+			child = false;
+		}
+		// find if we are grabing something else than an EntityItem
+		if (firstWord != null)
+		{
+			if (firstWord.equalsIgnoreCase("chicken"))
+			{
+				this.entityToInclude = EntityChicken.class;
+			}
+		}
 	}
 
 	@Override
