@@ -22,10 +22,6 @@ public class RenderDetector extends RenderImprintable
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)
 	{
-		if (tileEntity instanceof TileEntityDetector)
-		{
-			// this.render(((TileEntityDetector) tileEntity).isInverted(), new Vector3(x, y, z));
-		}
 		super.renderTileEntityAt(tileEntity, x, y, z, var8);
 	}
 

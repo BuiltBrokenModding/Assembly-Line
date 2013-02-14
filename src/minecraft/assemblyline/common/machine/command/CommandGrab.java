@@ -1,13 +1,9 @@
 package assemblyline.common.machine.command;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,7 +20,8 @@ public class CommandGrab extends Command
 
 	public static final float radius = 0.5f;
 	/**
-	 * If the grab command is specific to one entity this tell whether or not to grab the child version of that entity.
+	 * If the grab command is specific to one entity this tell whether or not to grab the child
+	 * version of that entity.
 	 */
 	public boolean child = false;
 	/**
@@ -63,7 +60,10 @@ public class CommandGrab extends Command
 	{
 		super.doTask();
 
-		if (this.tileEntity.getGrabbedEntities().size() > 0) { return false; }
+		if (this.tileEntity.getGrabbedEntities().size() > 0)
+		{
+			return false;
+		}
 
 		Vector3 serachPosition = this.tileEntity.getHandPosition();
 		List<Entity> found = this.world.getEntitiesWithinAABB(this.entityToInclude, AxisAlignedBB.getBoundingBox(serachPosition.x - radius, serachPosition.y - radius, serachPosition.z - radius, serachPosition.x + radius, serachPosition.y + radius, serachPosition.z + radius));

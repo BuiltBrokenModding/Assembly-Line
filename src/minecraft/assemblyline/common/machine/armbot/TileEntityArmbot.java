@@ -778,7 +778,10 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				{
 					for (int i = 0; i < found.size(); i++)
 					{
-						if (found.get(i) != null && !(found.get(i) instanceof EntityPlayer) && found.get(i).ridingEntity == null) { return new Object[] { true }; }
+						if (found.get(i) != null && !(found.get(i) instanceof EntityPlayer) && found.get(i).ridingEntity == null)
+						{
+							return new Object[] { true };
+						}
 					}
 				}
 
@@ -935,14 +938,15 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		this.grabbedEntities.clear();
 		this.grabbedItems.clear();
 	}
+
 	/**
-	 * called by the block when another checks it too
-	 * see if it is providing power to a direction
+	 * called by the block when another checks it too see if it is providing power to a direction
 	 */
 	public boolean isProvidingPowerSide(ForgeDirection dir)
 	{
 		return this.isProvidingPower && dir.getOpposite() == this.getFacingDirectionFromAngle();
 	}
+
 	/**
 	 * gets the facing direction using the yaw angle
 	 */

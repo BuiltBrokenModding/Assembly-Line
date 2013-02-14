@@ -43,15 +43,21 @@ public class GrabDictionary
 			String name = (String) ob;
 			for (GrabDictionary ref : grabList)
 			{
-				if (ref.getName().equalsIgnoreCase(name)) { return ref; }
+				if (ref.getName().equalsIgnoreCase(name))
+				{
+					return ref;
+				}
 			}
 		}
-		if(ob instanceof Class)
+		if (ob instanceof Class)
 		{
 			Class<? extends Entity> cc = (Class<? extends Entity>) ob;
 			for (GrabDictionary ref : grabList)
 			{
-				if (ref.getEntityClass() == cc) { return ref; }
+				if (ref.getEntityClass() == cc)
+				{
+					return ref;
+				}
 			}
 		}
 		return new GrabDictionary("Entity", Entity.class);
@@ -64,7 +70,10 @@ public class GrabDictionary
 	 */
 	public String getName()
 	{
-		if (name != null) { return this.name; }
+		if (name != null)
+		{
+			return this.name;
+		}
 		return "";
 	}
 
@@ -75,12 +84,16 @@ public class GrabDictionary
 	 */
 	public Class<? extends Entity> getEntityClass()
 	{
-		if (this.entityClass != null) { return this.entityClass; }
+		if (this.entityClass != null)
+		{
+			return this.entityClass;
+		}
 		return Entity.class;
 	}
 
 	/**
-	 * registers an entity by a name to its class allowing it to be called by the grab command to be picked up
+	 * registers an entity by a name to its class allowing it to be called by the grab command to be
+	 * picked up
 	 */
 	public static void registerGrabableEntity(String name, Class<? extends Entity> eClass)
 	{
@@ -89,7 +102,10 @@ public class GrabDictionary
 		{
 			for (GrabDictionary ref : grabList)
 			{
-				if (ref.getName().equalsIgnoreCase(name)) { return; }
+				if (ref.getName().equalsIgnoreCase(name))
+				{
+					return;
+				}
 			}
 			GrabDictionary.getList().add(newGrab);
 		}

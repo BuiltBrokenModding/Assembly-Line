@@ -3,15 +3,12 @@ package assemblyline.common.machine.command;
 import java.util.ArrayList;
 import java.util.List;
 
-import universalelectricity.core.vector.Vector3;
-
 import net.minecraft.block.Block;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import dark.minecraft.helpers.DebugToPlayer;
+import universalelectricity.core.vector.Vector3;
 import dark.minecraft.helpers.ItemWorldHelper;
 
 public class CommandPowerTo extends Command
@@ -44,11 +41,12 @@ public class CommandPowerTo extends Command
 		{
 			powerBlock(false);
 			return false;
-		}else if(this.tileEntity.isProvidingPower)
+		}
+		else if (this.tileEntity.isProvidingPower)
 		{
 			Vector3 loc = this.tileEntity.getHandPosition();
-			world.spawnParticle("smoke", loc.x, loc.y , loc.z, 0.0D, 0.0D, 0.0D);
-            world.spawnParticle("flame", loc.x, loc.y , loc.z, 0.0D, 0.0D, 0.0D);
+			world.spawnParticle("smoke", loc.x, loc.y, loc.z, 0.0D, 0.0D, 0.0D);
+			world.spawnParticle("flame", loc.x, loc.y, loc.z, 0.0D, 0.0D, 0.0D);
 		}
 
 		Block block = Block.blocksList[this.world.getBlockId(tileEntity.getHandPosition().intX(), tileEntity.getHandPosition().intY(), tileEntity.getHandPosition().intZ())];
