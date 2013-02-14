@@ -20,8 +20,7 @@ public class CommandGrab extends Command
 
 	public static final float radius = 0.5f;
 	/**
-	 * If the grab command is specific to one entity this tell whether or not to grab the child
-	 * version of that entity.
+	 * If the grab command is specific to one entity this tell whether or not to grab the child version of that entity.
 	 */
 	public boolean child = false;
 	/**
@@ -29,18 +28,20 @@ public class CommandGrab extends Command
 	 */
 	private Class<? extends Entity> entityToInclude;
 
-	public CommandGrab()
+	@Override
+	public void onTaskStart()
 	{
-		super();
+		super.onTaskStart();
 		this.entityToInclude = Entity.class;
 		if (this.getArgs() != null && this.getArgs().length > 0 && this.getArgs()[0] != null)
 		{
+
 			if (this.getArg(0).equalsIgnoreCase("baby") || this.getArg(0).equalsIgnoreCase("child"))
 			{
 				child = true;
 				if (this.getArgs().length > 1 && this.getArgs()[1] != null)
 				{
-					this.entityToInclude = GrabDictionary.get(this.getArg(0)).getEntityClass();
+					this.entityToInclude = GrabDictionary.get(this.getArg(1)).getEntityClass();
 				}
 			}
 			else
@@ -60,10 +61,7 @@ public class CommandGrab extends Command
 	{
 		super.doTask();
 
-		if (this.tileEntity.getGrabbedEntities().size() > 0)
-		{
-			return false;
-		}
+		if (this.tileEntity.getGrabbedEntities().size() > 0) { return false; }
 
 		Vector3 serachPosition = this.tileEntity.getHandPosition();
 		List<Entity> found = this.world.getEntitiesWithinAABB(this.entityToInclude, AxisAlignedBB.getBoundingBox(serachPosition.x - radius, serachPosition.y - radius, serachPosition.z - radius, serachPosition.x + radius, serachPosition.y + radius, serachPosition.z + radius));
@@ -72,7 +70,7 @@ public class CommandGrab extends Command
 		{
 			for (int i = 0; i < found.size(); i++)
 			{
-				if (found.get(i) != null && !(found.get(i) instanceof EntityArrow) && !(found.get(i) instanceof EntityPlayer) && found.get(i).ridingEntity == null && (!(found.get(i) instanceof EntityAgeable) || (found.get(i) instanceof EntityAgeable && child != ((EntityAgeable) found.get(i)).isChild())))
+				if (found.get(i) != null && !(found.get(i) instanceof EntityArrow) && !(found.get(i) instanceof EntityPlayer) && found.get(i).ridingEntity == null && (!(found.get(i) instanceof EntityAgeable) || (found.get(i) instanceof EntityAgeable && child == ((EntityAgeable) found.get(i)).isChild())))
 				{
 					this.tileEntity.grabEntity(found.get(i));
 					this.world.playSound(this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, "random.pop", 0.2F, ((this.tileEntity.worldObj.rand.nextFloat() - this.tileEntity.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.0F, true);
