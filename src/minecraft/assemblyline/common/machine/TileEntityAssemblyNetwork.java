@@ -5,6 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.prefab.network.PacketManager;
+import assemblyline.common.AssemblyLine;
 
 /**
  * A class to be inherited by all machines on the assembly line. This will allow all machines to be
@@ -15,7 +16,6 @@ import universalelectricity.prefab.network.PacketManager;
  */
 public abstract class TileEntityAssemblyNetwork extends TIC2Runnable
 {
-	public boolean debugMode = true;
 	/**
 	 * The range in which power can be transfered.
 	 */
@@ -23,7 +23,7 @@ public abstract class TileEntityAssemblyNetwork extends TIC2Runnable
 
 	public boolean isRunning()
 	{
-		return this.debugMode || this.powerTransferRange > 0 || this.wattsReceived > this.getRequest().getWatts();
+		return AssemblyLine.DEBUG_MODE || this.powerTransferRange > 0 || this.wattsReceived > this.getRequest().getWatts();
 	}
 
 	public void updatePowerTransferRange()

@@ -11,11 +11,12 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
+import universalelectricity.prefab.BlockMachine;
 import universalelectricity.prefab.implement.IRotatable;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.TabAssemblyLine;
 
-public class BlockTurntable extends Block
+public class BlockTurntable extends BlockMachine
 {
 	public BlockTurntable(int par1, int par2)
 	{

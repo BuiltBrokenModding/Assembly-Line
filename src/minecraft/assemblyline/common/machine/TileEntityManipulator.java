@@ -190,12 +190,15 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 	 */
 	public void throwItem(Vector3 outputPosition, ItemStack items)
 	{
-		EntityItem entityItem = new EntityItem(worldObj, outputPosition.x + 0.5, outputPosition.y + 0.8, outputPosition.z + 0.5, items);
-		entityItem.motionX = 0;
-		entityItem.motionZ = 0;
-		entityItem.motionY /= 5;
-		entityItem.delayBeforeCanPickup = 20;
-		worldObj.spawnEntityInWorld(entityItem);
+		if (!this.worldObj.isRemote)
+		{
+			EntityItem entityItem = new EntityItem(this.worldObj, outputPosition.x + 0.5, outputPosition.y + 0.8, outputPosition.z + 0.5, items);
+			entityItem.motionX = 0;
+			entityItem.motionZ = 0;
+			entityItem.motionY /= 5;
+			entityItem.delayBeforeCanPickup = 20;
+			this.worldObj.spawnEntityInWorld(entityItem);
+		}
 	}
 
 	/**

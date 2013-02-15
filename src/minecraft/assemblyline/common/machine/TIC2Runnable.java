@@ -70,6 +70,6 @@ public abstract class TIC2Runnable extends TileEntityElectricityRunnable impleme
 	@Override
 	public int getMaxSafeInput()
 	{
-		return 2048;
+		return 32;
 	}
 }

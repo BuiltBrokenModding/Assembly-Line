@@ -60,7 +60,7 @@ public class BlockImprinter extends BlockMachine
 	}
 
 	@Override
-	public void breakBlock(World par1World, int x, int y, int z, int par5, int par6)
+	public void dropEntireInventory(World par1World, int x, int y, int z, int par5, int par6)
 	{
 		TileEntity tileEntity = par1World.getBlockTileEntity(x, y, z);
 
@@ -112,10 +112,9 @@ public class BlockImprinter extends BlockMachine
 				}
 			}
 		}
-
-		super.breakBlock(par1World, x, y, z, par5, par6);
 	}
 
+	@Override
 	public boolean onUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
 		TileEntity tileEntity = par1World.getBlockTileEntity(x, y, z);

@@ -402,6 +402,12 @@ public class BlockCrate extends BlockMachine
 	}
 
 	@Override
+	public int damageDropped(int metadata)
+	{
+		return metadata;
+	}
+
+	@Override
 	public TileEntity createNewTileEntity(World var1)
 	{
 		return new TileEntityCrate();

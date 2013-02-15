@@ -93,12 +93,15 @@ public class AssemblyLine
 
 	public static Logger FMLog = Logger.getLogger(AssemblyLine.NAME);
 
+	// TODO: MAKE THIS FALSE EVERY BUILD!
+	public static final boolean DEBUG_MODE = false;
+
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		FMLog.setParent(FMLLog.getLogger());
 		FMLog.info("Initializing...");
-		UniversalElectricity.register(this, 1, 2, 5, false);
+		UniversalElectricity.register(this, 1, 2, 6, false);
 		instance = this;
 
 		CONFIGURATION.load();
@@ -144,10 +147,12 @@ public class AssemblyLine
 		FMLog.info("Loading...");
 		proxy.init();
 		GrabDictionary.registerList();
-		System.out.println(NAME + " Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
+		
+		FMLog.info("Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
 
 		// Crane Controller
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockCraneController, new Object[] { "SFS", "MCM", "SMS", 'F', blockCraneFrame, 'S', "plateSteel", 'C', "advancedCircuit", 'I', "ingotSteel", 'M', "motor" }));
+
 		// Crane Frame
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCraneFrame, 5), new Object[] { "I I", "I I", 'I', Item.ingotIron }));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCraneFrame, 5), new Object[] { "I I", "I I", 'I', "ingotBronze" }));
@@ -159,10 +164,10 @@ public class AssemblyLine
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemDisk, new Object[] { "III", "ICI", "III", 'I', itemImprint, 'C', "advancedCircuit" }));
 
 		// Encoder
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockEncoder, new Object[] { "S S", "SCS", "SSS", 'S', "ingotSteel", 'C', "advancedCircuit" }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockEncoder, new Object[] { "SIS", "SCS", "SSS", 'I', itemImprint, 'S', "ingotSteel", 'C', "advancedCircuit" }));
 
 		// Imprint
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemImprint, new Object[] { "R", "P", "I", 'P', Item.paper, 'R', Item.redstone, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemImprint, 2), new Object[] { "R", "P", "I", 'P', Item.paper, 'R', Item.redstone, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
 
 		// Imprinter (VANILLA)
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockImprinter, new Object[] { "SIS", "SPS", "WCW", 'S', Item.ingotIron, 'C', Block.chest, 'W', Block.workbench, 'P', Block.pistonBase, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
