@@ -10,7 +10,7 @@ import universalelectricity.core.UniversalElectricity;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.prefab.tile.TileEntityElectricityRunnable;
 
-public class TIC2Receiver extends TileEntityElectricityRunnable implements IEnergySink
+public abstract class TIC2Runnable extends TileEntityElectricityRunnable implements IEnergySink
 {
 	@Override
 	public void initiate()
@@ -48,7 +48,7 @@ public class TIC2Receiver extends TileEntityElectricityRunnable implements IEner
 	@Override
 	public int demandsEnergy()
 	{
-		return (int) (this.getRequest().getWatts() * UniversalElectricity.TO_IC2_RATIO);
+		return (int) Math.ceil(this.getRequest().getWatts() * UniversalElectricity.TO_IC2_RATIO);
 	}
 
 	@Override

@@ -13,7 +13,7 @@ import universalelectricity.prefab.network.PacketManager;
  * @author Calclavia
  * 
  */
-public abstract class TileEntityAssemblyNetwork extends TIC2Receiver
+public abstract class TileEntityAssemblyNetwork extends TIC2Runnable
 {
 	public boolean debugMode = true;
 	/**

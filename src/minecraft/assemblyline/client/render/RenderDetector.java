@@ -12,7 +12,6 @@ import net.minecraftforge.client.ForgeHooksClient;
 import universalelectricity.core.vector.Vector3;
 import assemblyline.client.model.ModelHelper;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.machine.detector.TileEntityDetector;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
