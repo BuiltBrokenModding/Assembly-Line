@@ -139,26 +139,15 @@ public class BlockDetector extends BlockImprintable
 		return false;
 	}
 
-	/*
-	 * @Override public boolean renderAsNormalBlock() { return false; }
-	 * 
-	 * @SideOnly(Side.CLIENT)
-	 * 
-	 * @Override public int getRenderType() { return BlockRenderingHandler.BLOCK_RENDER_ID; }
-	 */
-
 	@Override
 	public boolean isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int direction)
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-		if (tileEntity != null)
-		{
-			if (tileEntity instanceof TileEntityDetector)
-			{
-				return ((TileEntityDetector) tileEntity).isPoweringTo(ForgeDirection.getOrientation(direction));
-			}
-		}
 
+		if (tileEntity instanceof TileEntityDetector)
+		{
+			return ((TileEntityDetector) tileEntity).isPoweringTo(ForgeDirection.getOrientation(direction));
+		}
 		return false;
 	}
 
@@ -166,16 +155,6 @@ public class BlockDetector extends BlockImprintable
 	public boolean isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int direction)
 	{
 		return isProvidingStrongPower(world, x, y, z, direction);
-		/*
-		 * if (direction != ForgeDirection.DOWN.ordinal() && direction !=
-		 * ForgeDirection.UP.ordinal()) { TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-		 * 
-		 * if (tileEntity != null) { if (tileEntity instanceof TileEntityDetector) { return
-		 * ((TileEntityDetector) tileEntity).isPoweringTo(ForgeDirection.getOrientation(direction));
-		 * } } }
-		 * 
-		 * return false;
-		 */
 	}
 
 	@Override

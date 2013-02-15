@@ -97,7 +97,7 @@ public class TileEntityDetector extends TileEntityFilterable
 
 	public boolean isPoweringTo(ForgeDirection side)
 	{
-		return this.powering;
+		return this.powering && this.getDirection() != side.getOpposite();
 	}
 
 	public boolean isIndirectlyPoweringTo(ForgeDirection side)
