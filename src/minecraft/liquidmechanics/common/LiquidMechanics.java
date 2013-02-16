@@ -254,7 +254,7 @@ public class LiquidMechanics extends DummyModContainer
                 new ItemStack(blockPipe, 1, 15),
                 new ItemStack(blockPipe, 1, 15),
                 new ItemStack(blockPipe, 1, 15),
-                new ItemStack(Item.dyePowder, 1, 0) });
+                new ItemStack(Item.dyePowder, 1, 15) });
         // steam tank
         GameRegistry.addShapelessRecipe(new ItemStack(blockTank, 1, ColorCode.ORANGE.ordinal()), new Object[] {
                 new ItemStack(itemParts, 1, Parts.Tank.ordinal()),
