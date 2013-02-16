@@ -220,7 +220,6 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
     public int fill(int tankIndex, LiquidStack resource, boolean doFill)
     {
         if (tankIndex != 0 || resource == null) { return 0; }
-
         return stored.fill(resource, doFill);
     }
 

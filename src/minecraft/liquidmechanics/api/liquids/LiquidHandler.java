@@ -42,7 +42,8 @@ public class LiquidHandler
 
         unkown = new LiquidData("Unknown", LiquidDictionary.getOrCreateLiquid("Unknown", new LiquidStack(20, 1)), ColorCode.NONE, false, 32);
         allowedLiquids.add(unkown);
-
+        
+        FMLog.setParent(FMLLog.getLogger());
         for (LiquidData data : allowedLiquids)
         {
             FMLog.info(data.getName() + " registered as a liquid");
@@ -53,10 +54,6 @@ public class LiquidHandler
     @ForgeSubscribe
     public void liquidRegisterEvent(LiquidDictionary.LiquidRegisterEvent event)
     {
-        // TODO use this to add new liquid types to the data list
-        // or something along the lines of IDing liquids for use
-        FMLog.info("LiquidRegistered: " + event.Name);
-        FMLog.setParent(FMLLog.getLogger());
         if (event.Name.equalsIgnoreCase("methane"))
         {
             allowedLiquids.add(new LiquidData("methane", event.Liquid, ColorCode.LIME, true, 100));
@@ -72,6 +69,7 @@ public class LiquidHandler
         else if (event.Name.equalsIgnoreCase("steam"))
         {
             steam = new LiquidData("steam", event.Liquid, ColorCode.ORANGE, true, 100);
+            allowedLiquids.add(steam);
         }
         else if (event.Name.equalsIgnoreCase("Waste"))
         {
@@ -82,7 +80,6 @@ public class LiquidHandler
         {
             milk = new LiquidData("Milk", event.Liquid, ColorCode.WHITE, false, 50);
             allowedLiquids.add(milk);
-            FMLog.warning("FluidMechanics: Milk has been registered");
         }
     }
 
@@ -171,11 +168,7 @@ public class LiquidHandler
     }
 
     /**
-     * compare a stack with a liquid type to see if there the same
-     * 
-     * @param stack
-     * @param type
-     * @return
+     * Compares a liquidStack to a sample stack stored in the LiquidData
      */
     public static boolean isEqual(LiquidStack stack, LiquidData type)
     {
@@ -183,7 +176,9 @@ public class LiquidHandler
         if (type.getStack().itemID == stack.itemID && type.getStack().itemMeta == stack.itemMeta) { return true; }
         return false;
     }
-
+    /**
+     * Compares one liquidStack to another LiquidStack
+     */
     public static boolean isEqual(LiquidStack stack, LiquidStack stack2)
     {
         if (stack == null || stack2 == null)
@@ -191,7 +186,9 @@ public class LiquidHandler
         if (stack2.itemID == stack.itemID && stack2.itemMeta == stack.itemMeta) { return true; }
         return false;
     }
-
+    /**
+     * Consumes one item of a the ItemStack
+     */
     public static ItemStack consumeItem(ItemStack stack)
     {
         if (stack.stackSize == 1)
@@ -202,7 +199,6 @@ public class LiquidHandler
         else
         {
             stack.splitStack(1);
-
             return stack;
         }
     }
