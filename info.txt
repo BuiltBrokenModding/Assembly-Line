@@ -15,3 +15,4 @@ x Fluid-Mechanics_v0.2.5.6.jar Fluid-Mechanics_v0.2.5.6_api.zip
 x Fluid-Mechanics_v0.2.7.15.jar Fluid-Mechanics_v0.2.7.15_api.zip
 @ Fluid-Mechanics_v0.2.7.16.jar Fluid-Mechanics_v0.2.7.16_api.zip
 @ Fluid-Mechanics_v0.2.7.17.jar Fluid-Mechanics_v0.2.7.17_api.zip
+* Fluid-Mechanics_v0.2.7.18.jar Fluid-Mechanics_v0.2.7.18_api.zip
