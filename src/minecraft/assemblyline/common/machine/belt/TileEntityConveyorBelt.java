@@ -120,13 +120,15 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 		}
 		
 		/* PROCESSES IGNORE LIST AND REMOVES UNNEED ENTRIES */
+		List<Entity> newList = new ArrayList<Entity>();
 		for (Entity ent : IgnoreList)
 		{
-			if (!this.getAffectedEntities().contains(ent))
+			if (this.getAffectedEntities().contains(ent))
 			{
-				this.IgnoreList.remove(ent);
+				newList.add(ent);
 			}
 		}
+		this.IgnoreList = newList;
 
 		if (this.isRunning() && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
 		{
