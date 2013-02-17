@@ -1,5 +1,6 @@
 package assemblyline.common.machine.belt;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -45,6 +46,8 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	private int animFrame = 0; // this is from 0 to 15
 	private SlantType slantType = SlantType.NONE;
 
+	public List<Entity> IgnoreList = new ArrayList<Entity>();// Entities that need to be ignored to prevent movement
+
 	public TileEntityConveyorBelt()
 	{
 		super();
@@ -52,8 +55,7 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	}
 
 	/**
-	 * This function is overriden to allow conveyor belts to power belts that are diagonally going
-	 * up.
+	 * This function is overriden to allow conveyor belts to power belts that are diagonally going up.
 	 */
 	@Override
 	public void updatePowerTransferRange()
@@ -115,6 +117,15 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && this.ticks % 10 == 0)
 		{
 			PacketManager.sendPacketToClients(this.getDescriptionPacket());
+		}
+		
+		/* PROCESSES IGNORE LIST AND REMOVES UNNEED ENTRIES */
+		for (Entity ent : IgnoreList)
+		{
+			if (!this.getAffectedEntities().contains(ent))
+			{
+				this.IgnoreList.remove(ent);
+			}
 		}
 
 		if (this.isRunning() && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
@@ -337,5 +348,15 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 		{
 			nbt.setInteger("rotation", worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
 		}
+	}
+
+	@Override
+	public void IgnoreEntity(Entity entity)
+	{
+		if (!this.IgnoreList.contains(entity))
+		{
+			this.IgnoreList.add(entity);
+		}
+
 	}
 }

@@ -18,4 +18,11 @@ public interface IBelt
 	 * @return list of entities in the belts are of effect
 	 */
 	public List<Entity> getAffectedEntities();
+	
+	/**
+	 * Adds and entity to the ignore list so its not moved
+	 * has to be done every 20 ticks
+	 * @param entity
+	 */
+	public void IgnoreEntity(Entity entity);
 }

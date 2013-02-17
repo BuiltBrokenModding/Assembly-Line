@@ -2,11 +2,14 @@ package assemblyline.common.machine.command;
 
 import java.util.List;
 
+import assemblyline.common.machine.belt.TileEntityConveyorBelt;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import universalelectricity.core.vector.Vector3;
 
@@ -20,10 +23,11 @@ public class CommandGrab extends Command
 
 	public static final float radius = 0.5f;
 	/**
-	 * If the grab command is specific to one entity this tell whether or not to grab the child
-	 * version of that entity.
+	 * If the grab command is specific to one entity this tell whether or not to grab the child version of that entity.
 	 */
 	public boolean child = false;
+
+	private TileEntityConveyorBelt belt;
 	/**
 	 * The item to be collected.
 	 */
@@ -62,14 +66,23 @@ public class CommandGrab extends Command
 	{
 		super.doTask();
 
-		if (this.tileEntity.getGrabbedEntities().size() > 0)
-		{
-			return false;
-		}
+		if (this.tileEntity.getGrabbedEntities().size() > 0) { return false; }
 
 		Vector3 serachPosition = this.tileEntity.getHandPosition();
 		List<Entity> found = this.world.getEntitiesWithinAABB(this.entityToInclude, AxisAlignedBB.getBoundingBox(serachPosition.x - radius, serachPosition.y - radius, serachPosition.z - radius, serachPosition.x + radius, serachPosition.y + radius, serachPosition.z + radius));
+		
+		TileEntity ent = serachPosition.getTileEntity(world);
+		Vector3 searchPostion2 = Vector3.add(serachPosition, new Vector3(0, -1, 0));
+		TileEntity ent2 = searchPostion2.getTileEntity(world);
+		if (ent instanceof TileEntityConveyorBelt)
+		{
+			this.belt = (TileEntityConveyorBelt) ent;
 
+		}
+		else if (ent2 instanceof TileEntityConveyorBelt)
+		{
+			this.belt = (TileEntityConveyorBelt) ent2;
+		}
 		if (found != null && found.size() > 0)
 		{
 			for (int i = 0; i < found.size(); i++)
@@ -78,7 +91,7 @@ public class CommandGrab extends Command
 				{
 					this.tileEntity.grabEntity(found.get(i));
 					this.world.playSound(this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, "random.pop", 0.2F, ((this.tileEntity.worldObj.rand.nextFloat() - this.tileEntity.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.0F, true);
-
+					if(this.belt != null){belt.IgnoreEntity(found.get(i));}
 					return false;
 				}
 			}

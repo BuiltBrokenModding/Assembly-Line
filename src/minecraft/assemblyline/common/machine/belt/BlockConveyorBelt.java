@@ -67,14 +67,8 @@ public class BlockConveyorBelt extends BlockMachine
 		{
 			TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) t;
 
-			if (tileEntity.getSlant() == SlantType.UP || tileEntity.getSlant() == SlantType.DOWN)
-			{
-				return AxisAlignedBB.getAABBPool().addOrModifyAABBInPool((double) x + this.minX, (double) y + this.minY, (double) z + this.minZ, (double) x + 1, (double) y + 1, (double) z + 1);
-			}
-			if (tileEntity.getSlant() == SlantType.TOP)
-			{
-				return AxisAlignedBB.getAABBPool().addOrModifyAABBInPool((double) x + this.minX, (double) y + 0.68f, (double) z + this.minZ, (double) x + this.maxX, (double) y + 0.98f, (double) z + this.maxZ);
-			}
+			if (tileEntity.getSlant() == SlantType.UP || tileEntity.getSlant() == SlantType.DOWN) { return AxisAlignedBB.getAABBPool().addOrModifyAABBInPool((double) x + this.minX, (double) y + this.minY, (double) z + this.minZ, (double) x + 1, (double) y + 1, (double) z + 1); }
+			if (tileEntity.getSlant() == SlantType.TOP) { return AxisAlignedBB.getAABBPool().addOrModifyAABBInPool((double) x + this.minX, (double) y + 0.68f, (double) z + this.minZ, (double) x + this.maxX, (double) y + 0.98f, (double) z + this.maxZ); }
 		}
 
 		return AxisAlignedBB.getAABBPool().addOrModifyAABBInPool((double) x + this.minX, (double) y + this.minY, (double) z + this.minZ, (double) x + this.maxX, (double) y + this.maxY, (double) z + this.maxZ);
@@ -246,7 +240,7 @@ public class BlockConveyorBelt extends BlockMachine
 	{
 		TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) world.getBlockTileEntity(x, y, z);
 		tileEntity.updatePowerTransferRange();
-
+		if (tileEntity.IgnoreList.contains(entity)) { return; }
 		if (tileEntity.isRunning() && !world.isBlockIndirectlyGettingPowered(x, y, z))
 		{
 			float acceleration = tileEntity.acceleration;
