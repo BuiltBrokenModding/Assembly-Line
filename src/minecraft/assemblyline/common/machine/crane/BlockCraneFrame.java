@@ -153,6 +153,7 @@ public class BlockCraneFrame extends BlockMachine
 		return false;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public int getRenderType()
 	{
