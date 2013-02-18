@@ -65,7 +65,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 			{
 				if (!this.isOutput)
 				{
-					this.inject();
+					this.eject();
 				}
 				else
 				{
@@ -79,7 +79,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 					 */
 					if (this.isRedstonePowered)
 					{
-						this.eject();
+						this.inject();
 					}
 				}
 			}
@@ -91,7 +91,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 	 * manipulator.
 	 */
 	@Override
-	public void inject()
+	public void eject()
 	{
 		Vector3 inputPosition = new Vector3(this);
 
@@ -104,6 +104,17 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 		Vector3 outputPosition = new Vector3(this);
 		outputPosition.modifyPositionFromSide(this.getDirection().getOpposite());
 
+		/**
+		 * Prevents manipulators from spamming and duping items.
+		 */
+		if (outputPosition.getTileEntity(this.worldObj) instanceof TileEntityManipulator)
+		{
+			if (((TileEntityManipulator) outputPosition.getTileEntity(this.worldObj)).getDirection() == this.getDirection().getOpposite())
+			{
+				return;
+			}
+		}
+
 		AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(inputPosition.x, inputPosition.y, inputPosition.z, inputPosition.x + 1, inputPosition.y + 1, inputPosition.z + 1);
 		List<EntityItem> itemsInBound = this.worldObj.getEntitiesWithinAABB(EntityItem.class, bounds);
 
@@ -111,6 +122,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 		{
 			if (entity.isDead)
 				continue;
+
 			/**
 			 * Try top first, then bottom, then the sides to see if it is possible to insert the
 			 * item into a inventory.
@@ -142,10 +154,10 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 	}
 
 	/**
-	 * Injects items
+	 * Inject items
 	 */
 	@Override
-	public void eject()
+	public void inject()
 	{
 		this.onPowerOff();
 
