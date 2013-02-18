@@ -100,7 +100,6 @@ public class AssemblyLine
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		FMLog.setParent(FMLLog.getLogger());
-		FMLog.info("Initializing...");
 		UniversalElectricity.register(this, 1, 2, 6, false);
 		instance = this;
 
@@ -144,10 +143,9 @@ public class AssemblyLine
 	@Init
 	public void load(FMLInitializationEvent evt)
 	{
-		FMLog.info("Loading...");
 		proxy.init();
 		GrabDictionary.registerList();
-		
+
 		FMLog.info("Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
 
 		// Crane Controller
@@ -191,8 +189,6 @@ public class AssemblyLine
 
 		// Manipulator
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockManipulator, 2), new Object[] { Block.dispenser, "basicCircuit" }));
-
-		FMLog.info("Ready to Use");
 	}
 
 	public static void printSidedData(String data)

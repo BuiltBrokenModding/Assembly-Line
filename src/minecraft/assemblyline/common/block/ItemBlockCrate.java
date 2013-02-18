@@ -99,9 +99,9 @@ public class ItemBlockCrate extends ItemBlock
 	}
 
 	@Override
-	public int getMetadata(int par1)
+	public int getMetadata(int metadata)
 	{
-		return par1;
+		return metadata;
 	}
 
 	@Override

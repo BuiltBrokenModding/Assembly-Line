@@ -385,7 +385,7 @@ public class BlockCrate extends BlockMachine
 					double var7 = (double) (world.rand.nextFloat() * var6) + (double) (1.0F - var6) * 0.5D;
 					double var9 = (double) (world.rand.nextFloat() * var6) + (double) (1.0F - var6) * 0.5D;
 					double var11 = (double) (world.rand.nextFloat() * var6) + (double) (1.0F - var6) * 0.5D;
-					ItemStack dropStack = new ItemStack(this, 1);
+					ItemStack dropStack = new ItemStack(this, 1, tileEntity.getTier());
 					ItemBlockCrate.setContainingItemStack(dropStack, containingStack);
 					EntityItem var13 = new EntityItem(world, (double) x + var7, (double) y + var9, (double) z + var11, dropStack);
 					var13.delayBeforeCanPickup = 10;
