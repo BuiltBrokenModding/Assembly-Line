@@ -305,9 +305,9 @@ public class BlockConveyorBelt extends BlockMachine
 
 			if (slantType == SlantType.UP)
 			{
-				if (entity.motionY < 0.3)
+				if (entity.motionY < 0.4)
 				{
-					entity.addVelocity(0, 0.2, 0);
+					entity.addVelocity(0, 0.4, 0);
 				}
 			}
 			else if (slantType == SlantType.DOWN)

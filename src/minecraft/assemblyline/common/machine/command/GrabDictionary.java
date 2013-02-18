@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySkeleton;
@@ -131,5 +133,7 @@ public class GrabDictionary
 		registerGrabableEntity("items", EntityItem.class);
 		registerGrabableEntity("all", Entity.class);
 		registerGrabableEntity("everything", Entity.class);
+		registerGrabableEntity("boat", EntityBoat.class);
+		registerGrabableEntity("cart", EntityMinecart.class);
 	}
 }
