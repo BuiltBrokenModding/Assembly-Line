@@ -8,7 +8,8 @@ CHANGELOG
 
 !/src/
 /src/minecraft/*
-!/src/minecraft/liquidmechanics/
+!/src/minecraft/fluidmech/
+!/src/minecraft/hydraulic/
 !/resources/
 !/models/
 !info.txt
