@@ -5,7 +5,7 @@ import hydraulic.core.implement.IReadOut;
 import java.util.List;
 
 import fluidmech.common.FluidMech;
-import fluidmech.common.TabLiquidMechanics;
+import fluidmech.common.TabFluidMech;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,7 +26,7 @@ public class ItemGuage extends Item
         this.setHasSubtypes(true);
         this.setIconIndex(10);
         this.setItemName("lmTool");
-        this.setCreativeTab(TabLiquidMechanics.INSTANCE);
+        this.setCreativeTab(TabFluidMech.INSTANCE);
         this.setMaxStackSize(1);
         this.setTextureFile(FluidMech.ITEM_TEXTURE_FILE);
     }

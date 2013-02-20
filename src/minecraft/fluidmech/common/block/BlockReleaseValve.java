@@ -3,7 +3,7 @@ package fluidmech.common.block;
 import java.util.Random;
 
 import fluidmech.common.FluidMech;
-import fluidmech.common.TabLiquidMechanics;
+import fluidmech.common.TabFluidMech;
 import fluidmech.common.tileentity.TileEntityReleaseValve;
 
 import net.minecraft.block.material.Material;
@@ -19,7 +19,7 @@ public class BlockReleaseValve extends BlockMachine
 {
 	public BlockReleaseValve(int par1)
 	{
-		super("eValve",par1, Material.iron,TabLiquidMechanics.INSTANCE);
+		super("eValve",par1, Material.iron,TabFluidMech.INSTANCE);
 		this.setHardness(1f);
 		this.setResistance(5f);
 		this.setTextureFile(FluidMech.BLOCK_TEXTURE_FILE);

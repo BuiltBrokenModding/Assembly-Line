@@ -1,5 +1,8 @@
 package fluidmech.common;
 
+import hydraulic.core.implement.ColorCode;
+import hydraulic.core.liquids.LiquidHandler;
+
 import java.io.File;
 import java.util.logging.Logger;
 
@@ -29,8 +32,6 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
-import fluidmech.api.helpers.ColorCode;
-import fluidmech.api.liquids.LiquidHandler;
 import fluidmech.common.block.BlockGenerator;
 import fluidmech.common.block.BlockPipe;
 import fluidmech.common.block.BlockPumpMachine;
@@ -174,7 +175,7 @@ public class FluidMech extends DummyModContainer
     {
     	FMLog.info("Finalizing...");
         proxy.postInit();
-        TabLiquidMechanics.setItemStack(new ItemStack(blockPipe, 1, 4));
+        TabFluidMech.setItemStack(new ItemStack(blockPipe, 1, 4));
         // generator
         CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(this.blockGenerator, 1), new Object[] {
                 "@T@", "OVO", "@T@",

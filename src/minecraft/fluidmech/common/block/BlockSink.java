@@ -1,9 +1,9 @@
 package fluidmech.common.block;
 
-import fluidmech.api.liquids.LiquidHandler;
+import hydraulic.core.helpers.MetaGroup;
+import hydraulic.core.liquids.LiquidHandler;
 import fluidmech.client.render.BlockRenderHelper;
-import fluidmech.common.MetaGroup;
-import fluidmech.common.TabLiquidMechanics;
+import fluidmech.common.TabFluidMech;
 import fluidmech.common.tileentity.TileEntitySink;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
@@ -26,7 +26,7 @@ public class BlockSink extends BlockMachine
 {
     public BlockSink(int par1)
     {
-        super("lmSink", par1, Material.iron, TabLiquidMechanics.INSTANCE);
+        super("lmSink", par1, Material.iron, TabFluidMech.INSTANCE);
         this.setResistance(4f);
         this.setHardness(4f);
     }

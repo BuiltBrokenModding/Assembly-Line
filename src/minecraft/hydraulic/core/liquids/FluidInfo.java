@@ -1,4 +1,4 @@
-package hydraulic.core.pressure;
+package hydraulic.core.liquids;
 
 /**
  * An easy way to display information on electricity.

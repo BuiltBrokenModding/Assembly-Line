@@ -1,6 +1,6 @@
 package fluidmech.common.block.liquids;
 
-import fluidmech.api.liquids.LiquidFiniteStill;
+import hydraulic.core.prefab.LiquidFiniteStill;
 
 public class BlockMilk extends LiquidFiniteStill
 {

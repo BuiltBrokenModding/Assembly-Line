@@ -1,6 +1,6 @@
-package fluidmech.api.liquids;
+package hydraulic.core.liquids;
 
-import fluidmech.api.helpers.ColorCode;
+import hydraulic.core.implement.ColorCode;
 import net.minecraftforge.liquids.LiquidStack;
 
 public class LiquidData

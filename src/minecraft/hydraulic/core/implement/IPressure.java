@@ -1,5 +1,6 @@
-package fluidmech.api.liquids;
+package hydraulic.core.implement;
 
+import hydraulic.core.liquids.LiquidData;
 import net.minecraftforge.common.ForgeDirection;
 
 public interface IPressure

@@ -1,6 +1,5 @@
 package hydraulic.core.implement;
 
-import fluidmech.api.helpers.ColorCode;
 
 public interface IColorCoded
 {

@@ -1,4 +1,4 @@
-package hydraulic.core.pressure;
+package hydraulic.core.liquids;
 
 import net.minecraftforge.liquids.LiquidStack;
 

@@ -1,4 +1,4 @@
-package hydraulic.core.pressure;
+package hydraulic.core.liquids;
 
 import hydraulic.core.implement.IFluidPipe;
 
@@ -16,11 +16,11 @@ import cpw.mods.fml.common.FMLLog;
  * based on Calclavia's UE Electric Network stuff
  * 
  */
-public class FluidPressure
+public class Hydraulic
 {
-    public static FluidPressure instance = new FluidPressure();
+    public static Hydraulic instance = new Hydraulic();
 
-    private List<FluidPressureNetwork> electricityNetworks = new ArrayList<FluidPressureNetwork>();
+    private List<HydraulicNetwork> electricityNetworks = new ArrayList<HydraulicNetwork>();
 
     /**
      * Registers a conductor into the UE electricity net.
@@ -28,13 +28,13 @@ public class FluidPressure
     public void registerConductor(IFluidPipe newConductor)
     {
         this.cleanUpNetworks();
-        FluidPressureNetwork newNetwork = new FluidPressureNetwork(newConductor);
+        HydraulicNetwork newNetwork = new HydraulicNetwork(newConductor);
         this.electricityNetworks.add(newNetwork);
     }
 
     public void unregister(TileEntity tileEntity)
     {
-        for (FluidPressureNetwork network : this.electricityNetworks)
+        for (HydraulicNetwork network : this.electricityNetworks)
         {
             network.stopProducing(tileEntity);
             network.stopRequesting(tileEntity);
@@ -49,7 +49,7 @@ public class FluidPressure
      * @param networkB
      *            - The network to be merged. This network will be deleted.
      */
-    public void mergeConnection(FluidPressureNetwork networkA, FluidPressureNetwork networkB)
+    public void mergeConnection(HydraulicNetwork networkA, HydraulicNetwork networkB)
     {
         if (networkA != networkB)
         {
@@ -83,7 +83,7 @@ public class FluidPressure
     {
         try
         {
-            FluidPressureNetwork network = conductorA.getNetwork();
+            HydraulicNetwork network = conductorA.getNetwork();
 
             if (network != null)
             {
@@ -125,7 +125,7 @@ public class FluidPressure
 
             while (it.hasNext())
             {
-                FluidPressureNetwork network = (FluidPressureNetwork) it.next();
+                HydraulicNetwork network = (HydraulicNetwork) it.next();
                 network.cleanConductors();
 
                 if (network.conductors.size() == 0)
@@ -147,7 +147,7 @@ public class FluidPressure
 
         while (it.hasNext())
         {
-            FluidPressureNetwork network = ((FluidPressureNetwork) it.next());
+            HydraulicNetwork network = ((HydraulicNetwork) it.next());
             network.resetConductors();
         }
     }

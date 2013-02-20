@@ -1,14 +1,14 @@
 package fluidmech.common.tileentity;
 
+import hydraulic.core.helpers.connectionHelper;
+import hydraulic.core.implement.ColorCode;
 import hydraulic.core.implement.IPipe;
+import hydraulic.core.implement.IPressure;
 import hydraulic.core.implement.IReadOut;
+import hydraulic.core.liquids.LiquidHandler;
 
 import java.util.Random;
 
-import fluidmech.api.helpers.ColorCode;
-import fluidmech.api.helpers.connectionHelper;
-import fluidmech.api.liquids.IPressure;
-import fluidmech.api.liquids.LiquidHandler;
 import fluidmech.common.handlers.UpdateConverter;
 
 import net.minecraft.block.Block;

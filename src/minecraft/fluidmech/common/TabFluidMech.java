@@ -5,12 +5,12 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
-public class TabLiquidMechanics extends CreativeTabs
+public class TabFluidMech extends CreativeTabs
 {
-	public static final TabLiquidMechanics INSTANCE = new TabLiquidMechanics("fluidMechanics");
+	public static final TabFluidMech INSTANCE = new TabFluidMech("fluidMechanics");
 	private static ItemStack itemStack;
 
-	public TabLiquidMechanics(String par2Str)
+	public TabFluidMech(String par2Str)
 	{
 		super(CreativeTabs.getNextID(), par2Str);
 	}

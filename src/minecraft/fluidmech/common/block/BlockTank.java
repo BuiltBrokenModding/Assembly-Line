@@ -1,10 +1,11 @@
 package fluidmech.common.block;
 
+import hydraulic.core.liquids.LiquidHandler;
+
 import java.util.List;
 
-import fluidmech.api.liquids.LiquidHandler;
 import fluidmech.client.render.BlockRenderHelper;
-import fluidmech.common.TabLiquidMechanics;
+import fluidmech.common.TabFluidMech;
 import fluidmech.common.tileentity.TileEntityTank;
 
 import net.minecraft.block.material.Material;
@@ -25,7 +26,7 @@ public class BlockTank extends BlockMachine
 
     public BlockTank(int id)
     {
-        super("lmTank", id, Material.rock, TabLiquidMechanics.INSTANCE);
+        super("lmTank", id, Material.rock, TabFluidMech.INSTANCE);
         this.setHardness(1f);
         this.setResistance(5f);
     }

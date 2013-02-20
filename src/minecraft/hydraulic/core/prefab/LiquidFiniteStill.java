@@ -1,4 +1,4 @@
-package fluidmech.api.liquids;
+package hydraulic.core.prefab;
 
 import net.minecraft.block.BlockStationary;
 import net.minecraft.block.material.Material;

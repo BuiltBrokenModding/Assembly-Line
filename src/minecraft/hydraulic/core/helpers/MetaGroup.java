@@ -1,4 +1,4 @@
-package fluidmech.common;
+package hydraulic.core.helpers;
 
 
 public class MetaGroup

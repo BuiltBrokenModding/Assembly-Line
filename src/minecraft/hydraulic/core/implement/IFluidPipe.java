@@ -1,6 +1,6 @@
 package hydraulic.core.implement;
 
-import hydraulic.core.pressure.FluidPressureNetwork;
+import hydraulic.core.liquids.HydraulicNetwork;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidStack;
@@ -17,9 +17,9 @@ public interface IFluidPipe
 	/**
 	 * The Fluid network that this pipe is part of
 	 */
-	public FluidPressureNetwork getNetwork();
+	public HydraulicNetwork getNetwork();
 
-	public void setNetwork(FluidPressureNetwork network);
+	public void setNetwork(HydraulicNetwork network);
 
 	/**
 	 * The UE tile entities that this conductor is connected to.

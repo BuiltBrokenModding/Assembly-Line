@@ -1,6 +1,6 @@
 package fluidmech.common.block.liquids;
 
-import fluidmech.api.liquids.LiquidFiniteFlowing;
+import hydraulic.core.prefab.LiquidFiniteFlowing;
 
 public class BlockOilFlowing extends LiquidFiniteFlowing
 {

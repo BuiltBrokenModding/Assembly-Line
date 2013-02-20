@@ -1,5 +1,7 @@
 package fluidmech.client.render;
 
+import hydraulic.core.helpers.connectionHelper;
+import hydraulic.core.implement.ColorCode;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
@@ -7,8 +9,6 @@ import net.minecraftforge.liquids.LiquidStack;
 
 import org.lwjgl.opengl.GL11;
 
-import fluidmech.api.helpers.ColorCode;
-import fluidmech.api.helpers.connectionHelper;
 import fluidmech.client.model.ModelLiquidTank;
 import fluidmech.client.model.ModelLiquidTankCorner;
 import fluidmech.common.FluidMech;

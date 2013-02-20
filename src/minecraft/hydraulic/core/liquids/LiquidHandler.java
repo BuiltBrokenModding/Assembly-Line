@@ -1,4 +1,6 @@
-package fluidmech.api.liquids;
+package hydraulic.core.liquids;
+
+import hydraulic.core.implement.ColorCode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +14,6 @@ import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
 import cpw.mods.fml.common.FMLLog;
-import fluidmech.api.helpers.ColorCode;
 
 public class LiquidHandler
 {

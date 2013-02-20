@@ -3,7 +3,7 @@ package fluidmech.common.block;
 import java.util.List;
 
 import fluidmech.common.FluidMech;
-import fluidmech.common.TabLiquidMechanics;
+import fluidmech.common.TabFluidMech;
 import fluidmech.common.tileentity.TileEntityPipe;
 
 import net.minecraft.block.material.Material;
@@ -18,7 +18,7 @@ public class BlockPipe extends BlockMachine
 {
     public BlockPipe(int id)
     {
-        super("Pipe", id, Material.iron, TabLiquidMechanics.INSTANCE);
+        super("Pipe", id, Material.iron, TabFluidMech.INSTANCE);
         this.setBlockBounds(0.30F, 0.30F, 0.30F, 0.70F, 0.70F, 0.70F);
         this.setHardness(1f);
         this.setBlockName("lmPipe");

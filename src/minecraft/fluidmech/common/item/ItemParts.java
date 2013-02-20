@@ -3,7 +3,7 @@ package fluidmech.common.item;
 import java.util.List;
 
 import fluidmech.common.FluidMech;
-import fluidmech.common.TabLiquidMechanics;
+import fluidmech.common.TabFluidMech;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -42,7 +42,7 @@ public class ItemParts extends Item
         this.setMaxDamage(0);
         this.setMaxStackSize(64);
         this.setItemName("lmPart");
-        this.setCreativeTab(TabLiquidMechanics.INSTANCE);
+        this.setCreativeTab(TabFluidMech.INSTANCE);
     }
 
     @Override

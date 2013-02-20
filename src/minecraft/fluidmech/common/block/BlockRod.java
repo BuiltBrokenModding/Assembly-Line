@@ -2,7 +2,7 @@ package fluidmech.common.block;
 
 import fluidmech.client.render.BlockRenderHelper;
 import fluidmech.common.FluidMech;
-import fluidmech.common.TabLiquidMechanics;
+import fluidmech.common.TabFluidMech;
 import fluidmech.common.tileentity.TileEntityRod;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
@@ -20,7 +20,7 @@ public class BlockRod extends universalelectricity.prefab.BlockMachine
     public BlockRod(int par1)
     {
         super("MechanicRod", par1, Material.iron);
-        this.setCreativeTab(TabLiquidMechanics.INSTANCE);
+        this.setCreativeTab(TabFluidMech.INSTANCE);
         this.setHardness(1f);
         this.setResistance(5f);
     }

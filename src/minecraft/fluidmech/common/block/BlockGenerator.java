@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import fluidmech.client.render.BlockRenderHelper;
 import fluidmech.common.FluidMech;
-import fluidmech.common.TabLiquidMechanics;
+import fluidmech.common.TabFluidMech;
 import fluidmech.common.tileentity.TileEntityGenerator;
 
 import net.minecraft.block.material.Material;
@@ -23,7 +23,7 @@ public class BlockGenerator extends universalelectricity.prefab.BlockMachine
 	public BlockGenerator(int id)
 	{
 		super("lmGen", id, Material.iron);
-		this.setCreativeTab(TabLiquidMechanics.INSTANCE);
+		this.setCreativeTab(TabFluidMech.INSTANCE);
 		this.setHardness(1f);
 		this.setResistance(5f);
 	}

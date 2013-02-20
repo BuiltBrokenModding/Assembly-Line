@@ -1,9 +1,9 @@
 package hydraulic.core;
 
+import hydraulic.core.liquids.Hydraulic;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
-import universalelectricity.core.electricity.Electricity;
 import cpw.mods.fml.common.FMLLog;
 
 
@@ -17,10 +17,10 @@ public class HydraulicLoader
 	{
 		if (!isInitialized)
 		{
-			Electricity.instance = new Electricity();
+		    Hydraulic.instance = new Hydraulic();
 			MinecraftForge.EVENT_BUS.register(this);			
 
-			FMLLog.finest("Universal Electricity v" + UniversalElectricity.VERSION + " successfully loaded!");
+			FMLLog.finest("Hydraulics v" + UniversalElectricity.VERSION + " loaded without error!");
 
 			isInitialized = true;
 		}
@@ -29,14 +29,14 @@ public class HydraulicLoader
 	@ForgeSubscribe
 	public void onWorldUnLoad(WorldEvent.Unload event)
 	{
-		Electricity.instance = new Electricity();
-		Electricity.instance.cleanUpNetworks();
+	    Hydraulic.instance = new Hydraulic();
+	    Hydraulic.instance.cleanUpNetworks();
 	}
 
 	@ForgeSubscribe
 	public void onWorldLoad(WorldEvent.Load event)
 	{
-		Electricity.instance = new Electricity();
-		Electricity.instance.cleanUpNetworks();
+	    Hydraulic.instance = new Hydraulic();
+	    Hydraulic.instance.cleanUpNetworks();
 	}
 }

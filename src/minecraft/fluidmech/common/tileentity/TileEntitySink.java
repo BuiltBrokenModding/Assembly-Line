@@ -1,6 +1,8 @@
 package fluidmech.common.tileentity;
 
+import hydraulic.core.implement.ColorCode;
 import hydraulic.core.implement.IColorCoded;
+import hydraulic.core.liquids.LiquidHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -19,8 +21,6 @@ import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
-import fluidmech.api.helpers.ColorCode;
-import fluidmech.api.liquids.LiquidHandler;
 import fluidmech.common.FluidMech;
 
 public class TileEntitySink extends TileEntity implements IPacketReceiver, ITankContainer, IColorCoded

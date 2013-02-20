@@ -1,4 +1,4 @@
-package hydraulic.core.pressure;
+package hydraulic.core.liquids;
 
 import hydraulic.core.implement.IFluidPipe;
 
@@ -15,9 +15,8 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.common.FMLLog;
-import fluidmech.api.liquids.LiquidHandler;
 
-public class FluidPressureNetwork
+public class HydraulicNetwork
 {
 	private final HashMap<TileEntity, FluidPacket> producers = new HashMap<TileEntity, FluidPacket>();
 	private final HashMap<TileEntity, FluidPacket> consumers = new HashMap<TileEntity, FluidPacket>();
@@ -26,7 +25,7 @@ public class FluidPressureNetwork
 	
 	public LiquidStack stack = new LiquidStack(0,0,0);
 	
-	public FluidPressureNetwork(IFluidPipe conductor)
+	public HydraulicNetwork(IFluidPipe conductor)
 	{
 		this.addConductor(conductor);
 	}

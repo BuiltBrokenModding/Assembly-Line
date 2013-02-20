@@ -1,5 +1,7 @@
 package fluidmech.common.tileentity;
 
+import hydraulic.core.helpers.MetaGroup;
+import hydraulic.core.helpers.connectionHelper;
 import hydraulic.core.implement.IReadOut;
 
 import java.util.EnumSet;
@@ -19,10 +21,8 @@ import universalelectricity.prefab.tile.TileEntityElectricityProducer;
 
 import com.google.common.io.ByteArrayDataInput;
 
-import fluidmech.api.helpers.connectionHelper;
 import fluidmech.api.mech.IForce;
 import fluidmech.common.FluidMech;
-import fluidmech.common.MetaGroup;
 import fluidmech.common.block.BlockGenerator;
 
 

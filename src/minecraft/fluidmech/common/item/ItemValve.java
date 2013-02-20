@@ -3,7 +3,7 @@ package fluidmech.common.item;
 import java.util.List;
 
 import fluidmech.common.FluidMech;
-import fluidmech.common.TabLiquidMechanics;
+import fluidmech.common.TabFluidMech;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -26,7 +26,7 @@ public class ItemValve extends ItemBlock
 		this.setHasSubtypes(true);
 		this.setIconIndex(10);
 		this.setItemName("Machine");
-		this.setCreativeTab(TabLiquidMechanics.INSTANCE);
+		this.setCreativeTab(TabFluidMech.INSTANCE);
 	}
 
 	@Override

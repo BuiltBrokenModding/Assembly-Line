@@ -1,6 +1,11 @@
 package fluidmech.common.tileentity;
 
+import hydraulic.core.helpers.MetaGroup;
+import hydraulic.core.implement.ColorCode;
+import hydraulic.core.implement.IPressure;
 import hydraulic.core.implement.IReadOut;
+import hydraulic.core.liquids.LiquidData;
+import hydraulic.core.liquids.LiquidHandler;
 
 import java.util.EnumSet;
 
@@ -23,12 +28,7 @@ import universalelectricity.prefab.tile.TileEntityElectricityReceiver;
 
 import com.google.common.io.ByteArrayDataInput;
 
-import fluidmech.api.helpers.ColorCode;
-import fluidmech.api.liquids.IPressure;
-import fluidmech.api.liquids.LiquidData;
-import fluidmech.api.liquids.LiquidHandler;
 import fluidmech.common.FluidMech;
-import fluidmech.common.MetaGroup;
 
 public class TileEntityPump extends TileEntityElectricityReceiver implements IPacketReceiver, IReadOut, IPressure
 {

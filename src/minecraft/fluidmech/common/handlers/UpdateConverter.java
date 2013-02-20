@@ -1,7 +1,7 @@
 package fluidmech.common.handlers;
 
-import fluidmech.api.helpers.ColorCode;
-import fluidmech.api.liquids.LiquidHandler;
+import hydraulic.core.implement.ColorCode;
+import hydraulic.core.liquids.LiquidHandler;
 import fluidmech.common.tileentity.TileEntityPipe;
 import fluidmech.common.tileentity.TileEntityTank;
 import net.minecraft.nbt.NBTTagCompound;

@@ -1,7 +1,7 @@
-package fluidmech.api.helpers;
+package hydraulic.core.implement;
 
-import fluidmech.api.liquids.LiquidData;
-import fluidmech.api.liquids.LiquidHandler;
+import hydraulic.core.liquids.LiquidData;
+import hydraulic.core.liquids.LiquidHandler;
 
 
 public enum ColorCode

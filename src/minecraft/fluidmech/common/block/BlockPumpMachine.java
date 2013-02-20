@@ -1,11 +1,12 @@
 package fluidmech.common.block;
 
+import hydraulic.core.helpers.MetaGroup;
+
 import java.util.List;
 
 import fluidmech.client.render.BlockRenderHelper;
 import fluidmech.common.FluidMech;
-import fluidmech.common.MetaGroup;
-import fluidmech.common.TabLiquidMechanics;
+import fluidmech.common.TabFluidMech;
 import fluidmech.common.tileentity.TileEntityPump;
 
 import net.minecraft.block.material.Material;
@@ -25,7 +26,7 @@ public class BlockPumpMachine extends BlockMachine
 
     public BlockPumpMachine(int id)
     {
-        super("lmMachines", id, Material.iron, TabLiquidMechanics.INSTANCE);
+        super("lmMachines", id, Material.iron, TabFluidMech.INSTANCE);
         this.setHardness(1f);
         this.setResistance(5f);
     }
