@@ -3,7 +3,7 @@ package fluidmech.common.tileentity;
 import hydraulic.core.helpers.connectionHelper;
 import hydraulic.core.implement.ColorCode;
 import hydraulic.core.implement.IColorCoded;
-import hydraulic.core.implement.IPressure;
+import hydraulic.core.implement.IPsiCreator;
 import hydraulic.core.implement.IReadOut;
 import hydraulic.core.liquids.LiquidData;
 import hydraulic.core.liquids.LiquidHandler;
@@ -24,7 +24,7 @@ import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
 
-public class TileEntityReleaseValve extends TileEntity implements IPressure, IReadOut, IRedstoneReceptor, IInventory
+public class TileEntityReleaseValve extends TileEntity implements IPsiCreator, IReadOut, IRedstoneReceptor, IInventory
 {
     public boolean[] allowed = new boolean[ColorCode.values().length - 1];
     public TileEntity[] connected = new TileEntity[6];
@@ -198,7 +198,7 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
     }
 
     @Override
-    public int presureOutput(LiquidData type, ForgeDirection dir)
+    public int getPressureOut(LiquidData type, ForgeDirection dir)
     {
         if (type == null) return 0;
         if (this.canConnect(type.getColor())) { return type.getPressure(); }
@@ -206,7 +206,7 @@ public class TileEntityReleaseValve extends TileEntity implements IPressure, IRe
     }
 
     @Override
-    public boolean canPressureToo(LiquidData type, ForgeDirection dir)
+    public boolean getCanPressureTo(LiquidData type, ForgeDirection dir)
     {
         if (type == null) return false;
         if (this.canConnect(type.getColor())) return true;

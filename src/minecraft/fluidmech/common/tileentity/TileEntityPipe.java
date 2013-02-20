@@ -1,15 +1,14 @@
 package fluidmech.common.tileentity;
 
+import fluidmech.common.handlers.UpdateConverter;
 import hydraulic.core.helpers.connectionHelper;
 import hydraulic.core.implement.ColorCode;
-import hydraulic.core.implement.IPipe;
-import hydraulic.core.implement.IPressure;
+import hydraulic.core.implement.IColorCoded;
+import hydraulic.core.implement.IPsiCreator;
 import hydraulic.core.implement.IReadOut;
 import hydraulic.core.liquids.LiquidHandler;
 
 import java.util.Random;
-
-import fluidmech.common.handlers.UpdateConverter;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,7 +21,7 @@ import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.liquids.LiquidTank;
 
-public class TileEntityPipe extends TileEntity implements ITankContainer, IReadOut, IPipe
+public class TileEntityPipe extends TileEntity implements ITankContainer, IReadOut, IColorCoded
 {
     private ColorCode color = ColorCode.NONE;
 
@@ -296,9 +295,9 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
                     connectedBlocks[i] = null;
                 }
             }
-            else if (ent instanceof IPressure)
+            else if (ent instanceof IPsiCreator)
             {
-                if (!((IPressure) ent).canPressureToo(color.getLiquidData(), dir))
+                if (!((IPsiCreator) ent).getCanPressureTo(color.getLiquidData(), dir))
                 {
                     connectedBlocks[i] = null;
                 }
@@ -329,10 +328,10 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
                     highestPressure = ((TileEntityPipe) connectedBlocks[i]).getPressure();
                 }
             }
-            if (connectedBlocks[i] instanceof IPressure && ((IPressure) connectedBlocks[i]).canPressureToo(color.getLiquidData(), dir))
+            if (connectedBlocks[i] instanceof IPsiCreator && ((IPsiCreator) connectedBlocks[i]).getCanPressureTo(color.getLiquidData(), dir))
             {
 
-                int p = ((IPressure) connectedBlocks[i]).presureOutput(color.getLiquidData(), dir);
+                int p = ((IPsiCreator) connectedBlocks[i]).getPressureOut(color.getLiquidData(), dir);
                 if (p > highestPressure)
                     highestPressure = p;
             }

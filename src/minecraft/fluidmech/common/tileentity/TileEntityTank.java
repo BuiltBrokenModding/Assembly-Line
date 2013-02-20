@@ -3,7 +3,7 @@ package fluidmech.common.tileentity;
 import hydraulic.core.helpers.connectionHelper;
 import hydraulic.core.implement.ColorCode;
 import hydraulic.core.implement.IColorCoded;
-import hydraulic.core.implement.IPressure;
+import hydraulic.core.implement.IPsiCreator;
 import hydraulic.core.implement.IReadOut;
 import hydraulic.core.liquids.LiquidData;
 import hydraulic.core.liquids.LiquidHandler;
@@ -28,7 +28,7 @@ import com.google.common.io.ByteArrayDataInput;
 import fluidmech.common.FluidMech;
 import fluidmech.common.handlers.UpdateConverter;
 
-public class TileEntityTank extends TileEntity implements IPacketReceiver, IReadOut, IPressure, ITankContainer, IColorCoded
+public class TileEntityTank extends TileEntity implements IPacketReceiver, IReadOut, IPsiCreator, ITankContainer, IColorCoded
 {
     public TileEntity[] cc = { null, null, null, null, null, null };
 
@@ -188,7 +188,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
     }
 
     @Override
-    public int presureOutput(LiquidData type, ForgeDirection dir)
+    public int getPressureOut(LiquidData type, ForgeDirection dir)
     {
         if (type == color.getLiquidData() || type == LiquidHandler.unkown)
         {
@@ -201,7 +201,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
     }
 
     @Override
-    public boolean canPressureToo(LiquidData type, ForgeDirection dir)
+    public boolean getCanPressureTo(LiquidData type, ForgeDirection dir)
     {
         if (type == color.getLiquidData() || type == LiquidHandler.unkown)
         {
