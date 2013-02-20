@@ -107,17 +107,17 @@ public class FluidMech extends DummyModContainer
     public static FluidMech instance;
 
     public static Logger FMLog = Logger.getLogger(NAME);
-    
+
     @PreInit
     public void preInit(FMLPreInitializationEvent event)
     {
-    	FMLog.setParent(FMLLog.getLogger());
-    	FMLog.info("Initializing...");
-    	MinecraftForge.EVENT_BUS.register(new LiquidHandler());
-    	
+        FMLog.setParent(FMLLog.getLogger());
+        FMLog.info("Initializing...");
+        MinecraftForge.EVENT_BUS.register(new LiquidHandler());
+
         instance = this;
         CONFIGURATION.load();
-        
+
         // Blocks
         blockPipe = new BlockPipe(this.CONFIGURATION.getBlock("Pipes", BLOCK_ID_PREFIX).getInt());
         blockMachine = new BlockPumpMachine(this.CONFIGURATION.getBlock("Machines", BLOCK_ID_PREFIX + 1).getInt());
@@ -148,14 +148,13 @@ public class FluidMech extends DummyModContainer
         GameRegistry.registerBlock(blockMachine, ItemLiquidMachine.class, "lmMachines");
         GameRegistry.registerBlock(blockTank, ItemTank.class, "lmTank");
         GameRegistry.registerBlock(blockSink, "lmSink");
-        
-        
+
     }
 
     @Init
     public void Init(FMLInitializationEvent event)
     {
-    	FMLog.info("Loading...");
+        FMLog.info("Loading...");
         proxy.Init();
         // TileEntities
         GameRegistry.registerTileEntity(TileEntityPipe.class, "lmPipeTile");
@@ -166,14 +165,13 @@ public class FluidMech extends DummyModContainer
         GameRegistry.registerTileEntity(TileEntityGenerator.class, "lmGen");
         GameRegistry.registerTileEntity(TileEntitySink.class, "lmSink");
         FMLog.info("Fluid Mechanics Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
-        
 
     }
 
     @PostInit
     public void PostInit(FMLPostInitializationEvent event)
     {
-    	FMLog.info("Finalizing...");
+        FMLog.info("Finalizing...");
         proxy.postInit();
         TabFluidMech.setItemStack(new ItemStack(blockPipe, 1, 4));
         // generator
@@ -293,7 +291,7 @@ public class FluidMech extends DummyModContainer
                 '@', "plateSteel",
                 'X', new ItemStack(blockPipe, 1, ColorCode.NONE.ordinal()),
                 'B', new ItemStack(itemParts, 1, Parts.Valve.ordinal()),
-                'C',"basicCircuit",
+                'C', "basicCircuit",
                 'M', "motor" }));
 
         // release valve
@@ -320,9 +318,9 @@ public class FluidMech extends DummyModContainer
         OreDictionary.registerOre("bronzeTube", new ItemStack(itemParts, 1, Parts.Bronze.ordinal()));
         OreDictionary.registerOre("unfinishedTank", new ItemStack(itemParts, 1, Parts.Tank.ordinal()));
         // add Default Liquids to current list, done last to let other mods use
-        // there liquid data first if used 
+        // there liquid data first if used
         LiquidStack waste = LiquidDictionary.getOrCreateLiquid("Waste", new LiquidStack(FluidMech.blockWasteLiquid, 1));
-        LiquidHandler.addDefaultLiquids();       
+        LiquidHandler.addDefaultLiquids();
         FMLog.info("Done Loading");
     }
 }
