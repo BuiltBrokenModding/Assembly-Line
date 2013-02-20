@@ -8,13 +8,14 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.prefab.tile.TileEntityConductor;
 import basiccomponents.common.BCLoader;
 
 public class TileEntityNewPipes extends TileEntityFluidHandler
 {
-	public static double RESISTANCE = 0.05;
+	public static double RESISTANCE = 0.5;
 	public static double MAX_AMPS = 200;
 
 	public TileEntityNewPipes()
@@ -29,7 +30,7 @@ public class TileEntityNewPipes extends TileEntityFluidHandler
 	}
 
 	@Override
-	public double getMaxPressure()
+	public double getMaxPressure(ForgeDirection side)
 	{
 		return this.MAX_AMPS;
 	}
@@ -49,7 +50,5 @@ public class TileEntityNewPipes extends TileEntityFluidHandler
 	@Override
 	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
 	{
-		// TODO Auto-generated method stub
-
 	}
 }

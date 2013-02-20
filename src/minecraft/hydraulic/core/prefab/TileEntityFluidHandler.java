@@ -1,8 +1,9 @@
 package hydraulic.core.prefab;
 
+import hydraulic.core.implement.IColorCoded;
 import hydraulic.core.implement.IFluidPipe;
 import hydraulic.core.implement.IPsiCreator;
-import hydraulic.core.implement.IPsiReceiver;
+import hydraulic.core.implement.IPsiMachine;
 import hydraulic.core.liquids.Hydraulic;
 import hydraulic.core.liquids.HydraulicNetwork;
 import hydraulic.core.liquids.LiquidData;
@@ -111,7 +112,7 @@ public abstract class TileEntityFluidHandler extends TileEntityAdvanced implemen
 	 */
 	public boolean canConnect(TileEntity tileEntity, ForgeDirection opposite)
 	{
-		if (tileEntity instanceof IPsiReceiver && ((IPsiReceiver) tileEntity).getInputPressure(opposite) <= this.getMaxPressure())
+		if (tileEntity instanceof IPsiMachine && ((IPsiMachine) tileEntity).getMaxPressure(opposite) <= this.getMaxPressure(opposite))
 		{
 			return true;
 		}

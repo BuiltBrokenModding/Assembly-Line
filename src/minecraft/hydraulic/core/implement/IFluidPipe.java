@@ -12,7 +12,7 @@ import universalelectricity.core.electricity.ElectricityNetwork;
  * @author Calclavia
  * 
  */
-public interface IFluidPipe
+public interface IFluidPipe extends IPsiMachine
 {
 	/**
 	 * The Fluid network that this pipe is part of
@@ -34,14 +34,6 @@ public interface IFluidPipe
 	 * @return The amount of Ohm's of resistance.
 	 */
 	public double getResistance(LiquidStack stack);
-
-	/**
-	 * The maximum amount of amps this pipe can handle before bursting. This is calculating
-	 * PER TICK!
-	 * 
-	 * @return The amount of amps in volts
-	 */
-	public double getMaxPressure();
 
 	/**
 	 * Called when the pressure on the pipe passes max
