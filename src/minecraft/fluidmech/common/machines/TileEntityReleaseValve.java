@@ -1,4 +1,4 @@
-package fluidmech.common.tileentity;
+package fluidmech.common.machines;
 
 import hydraulic.core.helpers.connectionHelper;
 import hydraulic.core.implement.ColorCode;
@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fluidmech.common.block.BlockReleaseValve;
+import fluidmech.common.machines.pipes.TileEntityPipe;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

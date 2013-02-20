@@ -1,4 +1,4 @@
-package fluidmech.common.tileentity;
+package fluidmech.common.machines.mech;
 
 import hydraulic.core.implement.IReadOut;
 import net.minecraft.entity.player.EntityPlayer;

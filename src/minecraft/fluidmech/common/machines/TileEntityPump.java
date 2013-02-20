@@ -1,4 +1,4 @@
-package fluidmech.common.tileentity;
+package fluidmech.common.machines;
 
 import hydraulic.core.helpers.MetaGroup;
 import hydraulic.core.implement.ColorCode;

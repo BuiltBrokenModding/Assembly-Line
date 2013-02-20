@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 
 import fluidmech.client.model.ModelSink;
 import fluidmech.common.FluidMech;
-import fluidmech.common.tileentity.TileEntitySink;
+import fluidmech.common.machines.TileEntitySink;
 
 public class RenderSink extends TileEntitySpecialRenderer
 {

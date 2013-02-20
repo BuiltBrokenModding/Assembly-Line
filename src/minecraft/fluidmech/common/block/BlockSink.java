@@ -4,7 +4,7 @@ import hydraulic.core.helpers.MetaGroup;
 import hydraulic.core.liquids.LiquidHandler;
 import fluidmech.client.render.BlockRenderHelper;
 import fluidmech.common.TabFluidMech;
-import fluidmech.common.tileentity.TileEntitySink;
+import fluidmech.common.machines.TileEntitySink;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;

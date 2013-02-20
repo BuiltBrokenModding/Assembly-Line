@@ -6,8 +6,8 @@
 
 package fluidmech.client.model;
 
-import fluidmech.common.tileentity.TileEntityPipe;
-import fluidmech.common.tileentity.TileEntityTank;
+import fluidmech.common.machines.TileEntityTank;
+import fluidmech.common.machines.pipes.TileEntityPipe;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.tileentity.TileEntity;

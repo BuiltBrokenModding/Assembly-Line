@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import fluidmech.client.model.ModelGearRod;
 import fluidmech.common.FluidMech;
-import fluidmech.common.tileentity.TileEntityRod;
+import fluidmech.common.machines.mech.TileEntityRod;
 
 
 public class RenderGearRod extends TileEntitySpecialRenderer

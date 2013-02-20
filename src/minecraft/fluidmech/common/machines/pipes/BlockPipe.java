@@ -1,10 +1,9 @@
-package fluidmech.common.block;
+package fluidmech.common.machines.pipes;
 
 import java.util.List;
 
 import fluidmech.common.FluidMech;
 import fluidmech.common.TabFluidMech;
-import fluidmech.common.tileentity.TileEntityPipe;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;

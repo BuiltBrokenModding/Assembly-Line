@@ -1,4 +1,4 @@
-package fluidmech.common.tileentity;
+package fluidmech.common.machines.mech;
 
 import hydraulic.core.helpers.MetaGroup;
 import hydraulic.core.helpers.connectionHelper;
@@ -23,7 +23,6 @@ import com.google.common.io.ByteArrayDataInput;
 
 import fluidmech.api.mech.IForce;
 import fluidmech.common.FluidMech;
-import fluidmech.common.block.BlockGenerator;
 
 
 public class TileEntityGenerator extends TileEntityElectricityProducer implements IPacketReceiver, IForce, IReadOut, IRedstoneReceptor

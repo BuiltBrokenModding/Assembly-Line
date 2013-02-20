@@ -1,6 +1,6 @@
-package fluidmech.common.tileentity;
+package fluidmech.common.machines.pipes;
 
-import fluidmech.common.handlers.UpdateConverter;
+import fluidmech.common.machines.TileEntityTank;
 import hydraulic.core.helpers.connectionHelper;
 import hydraulic.core.implement.ColorCode;
 import hydraulic.core.implement.IColorCoded;
@@ -157,7 +157,6 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
     public void readFromNBT(NBTTagCompound nbt)
     {
         super.readFromNBT(nbt);
-        UpdateConverter.convert(this, nbt);
 
         LiquidStack liquid = new LiquidStack(0, 0, 0);
         liquid.readFromNBT(nbt.getCompoundTag("stored"));

@@ -1,9 +1,8 @@
-package fluidmech.common.block;
+package fluidmech.common.machines.mech;
 
 import fluidmech.client.render.BlockRenderHelper;
 import fluidmech.common.FluidMech;
 import fluidmech.common.TabFluidMech;
-import fluidmech.common.tileentity.TileEntityRod;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;

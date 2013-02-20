@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL11;
 import fluidmech.client.model.ModelLiquidTank;
 import fluidmech.client.model.ModelLiquidTankCorner;
 import fluidmech.common.FluidMech;
-import fluidmech.common.tileentity.TileEntityTank;
+import fluidmech.common.machines.TileEntityTank;
 
 public class RenderTank extends TileEntitySpecialRenderer
 {

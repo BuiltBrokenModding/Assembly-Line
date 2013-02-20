@@ -1,11 +1,10 @@
-package fluidmech.common.block;
+package fluidmech.common.machines.mech;
 
 import java.util.ArrayList;
 
 import fluidmech.client.render.BlockRenderHelper;
 import fluidmech.common.FluidMech;
 import fluidmech.common.TabFluidMech;
-import fluidmech.common.tileentity.TileEntityGenerator;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;

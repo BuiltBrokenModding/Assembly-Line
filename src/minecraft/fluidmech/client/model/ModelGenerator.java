@@ -6,7 +6,7 @@
 
 package fluidmech.client.model;
 
-import fluidmech.common.tileentity.TileEntityGenerator;
+import fluidmech.common.machines.mech.TileEntityGenerator;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.tileentity.TileEntity;

@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import fluidmech.client.model.ModelPump;
 import fluidmech.common.FluidMech;
-import fluidmech.common.tileentity.TileEntityPump;
+import fluidmech.common.machines.TileEntityPump;
 
 public class RenderPump extends TileEntitySpecialRenderer
 {

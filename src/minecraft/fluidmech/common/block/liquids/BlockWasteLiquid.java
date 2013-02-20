@@ -1,4 +1,4 @@
-package fluidmech.common.block;
+package fluidmech.common.block.liquids;
 
 import net.minecraft.block.BlockFluid;
 import net.minecraft.block.material.Material;

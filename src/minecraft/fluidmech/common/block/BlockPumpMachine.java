@@ -7,7 +7,7 @@ import java.util.List;
 import fluidmech.client.render.BlockRenderHelper;
 import fluidmech.common.FluidMech;
 import fluidmech.common.TabFluidMech;
-import fluidmech.common.tileentity.TileEntityPump;
+import fluidmech.common.machines.TileEntityPump;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;

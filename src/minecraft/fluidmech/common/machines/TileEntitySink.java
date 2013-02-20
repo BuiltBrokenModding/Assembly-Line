@@ -1,4 +1,4 @@
-package fluidmech.common.tileentity;
+package fluidmech.common.machines;
 
 import hydraulic.core.implement.ColorCode;
 import hydraulic.core.implement.IColorCoded;

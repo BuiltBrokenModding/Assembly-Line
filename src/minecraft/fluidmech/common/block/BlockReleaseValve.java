@@ -4,7 +4,7 @@ import java.util.Random;
 
 import fluidmech.common.FluidMech;
 import fluidmech.common.TabFluidMech;
-import fluidmech.common.tileentity.TileEntityReleaseValve;
+import fluidmech.common.machines.TileEntityReleaseValve;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;

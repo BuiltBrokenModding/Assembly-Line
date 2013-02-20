@@ -1,5 +1,7 @@
-package fluidmech.common.tileentity;
+package fluidmech.common.machines;
 
+import fluidmech.common.FluidMech;
+import fluidmech.common.machines.pipes.TileEntityPipe;
 import hydraulic.core.helpers.connectionHelper;
 import hydraulic.core.implement.ColorCode;
 import hydraulic.core.implement.IColorCoded;
@@ -24,9 +26,6 @@ import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
-
-import fluidmech.common.FluidMech;
-import fluidmech.common.handlers.UpdateConverter;
 
 public class TileEntityTank extends TileEntity implements IPacketReceiver, IReadOut, IPsiCreator, ITankContainer, IColorCoded
 {
@@ -84,7 +83,6 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
     public void readFromNBT(NBTTagCompound nbt)
     {
         super.readFromNBT(nbt);
-        UpdateConverter.convert(this, nbt);
 
         LiquidStack liquid = new LiquidStack(0, 0, 0);
         liquid.readFromNBT(nbt.getCompoundTag("stored"));

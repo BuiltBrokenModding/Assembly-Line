@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 
 import fluidmech.client.model.ModelLargePipe;
 import fluidmech.common.FluidMech;
-import fluidmech.common.tileentity.TileEntityPipe;
+import fluidmech.common.machines.pipes.TileEntityPipe;
 
 public class RenderPipe extends TileEntitySpecialRenderer
 {
