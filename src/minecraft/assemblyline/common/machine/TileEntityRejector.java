@@ -75,13 +75,6 @@ public class TileEntityRejector extends TileEntityFilterable
 						}
 					}
 				}
-
-				/**
-				 * If a push happened, send a packet to the client to notify it for an animation.
-				 * 
-				 * if (!this.worldObj.isRemote && flag) {
-				 * PacketManager.sendPacketToClients(this.getDescriptionPacket()); }
-				 */
 			}
 			catch (Exception e)
 			{
