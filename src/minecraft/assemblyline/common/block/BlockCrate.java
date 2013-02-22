@@ -331,7 +331,7 @@ public class BlockCrate extends BlockMachine
 	 * @param tileEntity
 	 * @param itemStack
 	 */
-	private ItemStack putIn(TileEntityCrate tileEntity, ItemStack itemStack)
+	public static ItemStack putIn(TileEntityCrate tileEntity, ItemStack itemStack)
 	{
 		ItemStack containingStack = tileEntity.getStackInSlot(0);
 
