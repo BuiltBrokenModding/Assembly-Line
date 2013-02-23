@@ -202,10 +202,9 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
 			return 0;
 		}
 		LiquidStack stack = tank.getLiquid();
-		if (color != ColorCode.NONE)
+		if (this.color.isValidLiquid(resource))
 		{
-
-			if (stack == null || LiquidHandler.isEqual(resource, this.color.getLiquidData()))
+			if (stack == null || (stack != null && stack.isLiquidEqual(resource)))
 			{
 				return this.fill(0, resource, doFill);
 			}
@@ -215,17 +214,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
 			}
 
 		}
-		else
-		{
-			if (stack == null || LiquidHandler.isEqual(stack, resource))
-			{
-				return this.fill(0, resource, doFill);
-			}
-			else
-			{
-				return this.causeMix(stack, resource);
-			}
-		}
+		return 0;
 	}
 
 	@Override
@@ -245,12 +234,12 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
 			return 0;
 		}
 		// water flowing into lava creates obby
-		if (LiquidHandler.isEqual(stored, LiquidHandler.lava) && LiquidHandler.isEqual(fill, LiquidHandler.water))
+		if (fill.isLiquidEqual(LiquidHandler.lava.getStack()) && fill.isLiquidEqual(LiquidHandler.water.getStack()))
 		{
 			worldObj.setBlockWithNotify(xCoord, yCoord, zCoord, Block.obsidian.blockID);
 			return fill.amount;
 		}// lava flowing into water creates cobble
-		else if (LiquidHandler.isEqual(stored, LiquidHandler.water) && LiquidHandler.isEqual(fill, LiquidHandler.lava))
+		else if (fill.isLiquidEqual(LiquidHandler.water.getStack()) && fill.isLiquidEqual(LiquidHandler.lava.getStack()))
 		{
 			worldObj.setBlockWithNotify(xCoord, yCoord, zCoord, Block.cobblestone.blockID);
 			return fill.amount;
@@ -287,6 +276,10 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
 	@Override
 	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
 	{
+		if(this.color.isValidLiquid(type))
+		{
+			return this.tank;
+		}
 		return null;
 	}
 

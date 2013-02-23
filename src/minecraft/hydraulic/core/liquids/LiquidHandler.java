@@ -103,7 +103,7 @@ public class LiquidHandler
     {
         for (LiquidData data : LiquidHandler.allowedLiquids)
         {
-            if (isEqual(stack, data)) { return data; }
+            if (stack.isLiquidEqual(data.getStack())) { return data; }
         }
         return unkown;
     }
@@ -123,8 +123,7 @@ public class LiquidHandler
             Map<String, LiquidStack> l = LiquidDictionary.getLiquids();
             for (Entry<String, LiquidStack> liquid : l.entrySet())
             {
-                LiquidStack t = liquid.getValue();
-                if (isEqual(t, stack)) { return liquid.getKey(); }
+                if (liquid.getValue().isLiquidEqual(stack)) { return liquid.getKey(); }
             }
         }
         return "unkown";
@@ -166,27 +165,7 @@ public class LiquidHandler
             if (data.getStack().itemID == id) { return data; }
         }
         return unkown;
-    }
-
-    /**
-     * Compares a liquidStack to a sample stack stored in the LiquidData
-     */
-    public static boolean isEqual(LiquidStack stack, LiquidData type)
-    {
-        if (stack == null || type == null) { return false; }
-        if (type.getStack().itemID == stack.itemID && type.getStack().itemMeta == stack.itemMeta) { return true; }
-        return false;
-    }
-    /**
-     * Compares one liquidStack to another LiquidStack
-     */
-    public static boolean isEqual(LiquidStack stack, LiquidStack stack2)
-    {
-        if (stack == null || stack2 == null)
-            return false;
-        if (stack2.itemID == stack.itemID && stack2.itemMeta == stack.itemMeta) { return true; }
-        return false;
-    }
+    }   
     /**
      * Consumes one item of a the ItemStack
      */

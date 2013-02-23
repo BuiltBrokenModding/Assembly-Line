@@ -78,7 +78,6 @@ public class TileEntityReleaseValve extends TileEntityAdvanced implements IPsiCr
 						{
 							ILiquidTank pipeVolume = inputPipe.getTanks(ForgeDirection.UNKNOWN)[0];
 							int ammountFilled = inputPipe.fill(ForgeDirection.UNKNOWN, stack, true);
-							System.out.print("/n Amount Drained: "+ammountFilled);
 							drainedTank.drain(ForgeDirection.UNKNOWN, ammountFilled, true);
 						}
 					}
@@ -95,7 +94,7 @@ public class TileEntityReleaseValve extends TileEntityAdvanced implements IPsiCr
 		for (TileEntityPipe pipe : output)
 		{
 			ILiquidTank tank = pipe.getTanks(ForgeDirection.UNKNOWN)[0];
-			if (LiquidHandler.isEqual(pipe.getColor().getLiquidData().getStack(), stack) && (tank.getLiquid() == null || tank.getLiquid().amount < tank.getCapacity()))
+			if (pipe.getColor().getLiquidData().getStack().isLiquidEqual(stack) && (tank.getLiquid() == null || tank.getLiquid().amount < tank.getCapacity()))
 			{
 				//
 				return pipe;

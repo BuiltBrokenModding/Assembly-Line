@@ -35,7 +35,7 @@ public class HydraulicNetwork
 	 */
 	public void startProducing(TileEntity tileEntity, FluidPacket pack)
 	{
-		if (tileEntity != null && pack.liquidStack != null && LiquidHandler.isEqual(stack, pack.liquidStack))
+		if (tileEntity != null && pack.liquidStack != null && stack.isLiquidEqual(pack.liquidStack))
 		{
 			this.producers.put(tileEntity, pack);
 		}
@@ -64,7 +64,7 @@ public class HydraulicNetwork
 	 */
 	public void startRequesting(TileEntity tileEntity, FluidPacket pack)
 	{
-		if (tileEntity != null && pack.liquidStack != null && LiquidHandler.isEqual(stack, pack.liquidStack))
+		if (tileEntity != null && pack.liquidStack != null && stack.isLiquidEqual(pack.liquidStack))
 		{
 			this.consumers.put(tileEntity, pack);
 		}

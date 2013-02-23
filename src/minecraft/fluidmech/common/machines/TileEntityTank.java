@@ -117,7 +117,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
     @Override
     public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
     {
-        if (resource == null || (!LiquidHandler.isEqual(resource, color.getLiquidData().getStack()) && this.color != ColorCode.NONE)) { return 0; }
+        if (resource == null || (!color.getLiquidData().getStack().isLiquidEqual(resource) && this.color != ColorCode.NONE)) { return 0; }
         return this.fill(0, resource, doFill);
     }
 

@@ -102,7 +102,7 @@ public class TileEntitySink extends TileEntity implements IPacketReceiver, ITank
     @Override
     public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
     {
-        if (resource == null || (!LiquidHandler.isEqual(resource, color.getLiquidData().getStack()))) { return 0; }
+        if (resource == null || (!color.getLiquidData().getStack().isLiquidEqual(resource))) { return 0; }
         return this.fill(0, resource, doFill);
     }
 
