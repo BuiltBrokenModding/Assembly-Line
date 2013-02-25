@@ -219,8 +219,7 @@ public class HydraulicNetwork
 	{
 		for (int j = 0; j < this.conductors.size(); j++)
 		{
-			IFluidPipe conductor = this.conductors.get(j);
-			conductor.refreshConnectedBlocks();
+			this.conductors.get(j).refreshConnectedBlocks();
 		}
 	}
 
