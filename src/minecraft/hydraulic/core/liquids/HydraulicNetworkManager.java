@@ -16,11 +16,11 @@ import cpw.mods.fml.common.FMLLog;
  * based on Calclavia's UE Electric Network stuff
  * 
  */
-public class Hydraulic
+public class HydraulicNetworkManager
 {
-    public static Hydraulic instance = new Hydraulic();
+    public static HydraulicNetworkManager instance = new HydraulicNetworkManager();
 
-    private List<HydraulicNetwork> electricityNetworks = new ArrayList<HydraulicNetwork>();
+    private List<HydraulicNetwork> hydraulicNetworks = new ArrayList<HydraulicNetwork>();
 
     /**
      * Registers a conductor into the UE electricity net.
@@ -29,15 +29,14 @@ public class Hydraulic
     {
         this.cleanUpNetworks();
         HydraulicNetwork newNetwork = new HydraulicNetwork(newConductor);
-        this.electricityNetworks.add(newNetwork);
+        this.hydraulicNetworks.add(newNetwork);
     }
 
     public void unregister(TileEntity tileEntity)
     {
-        for (HydraulicNetwork network : this.electricityNetworks)
+        for (HydraulicNetwork network : this.hydraulicNetworks)
         {
-            network.stopProducing(tileEntity);
-            network.stopRequesting(tileEntity);
+            network.removeEntity(tileEntity);
         }
     }
 
@@ -57,14 +56,14 @@ public class Hydraulic
             {
                 networkA.conductors.addAll(networkB.conductors);
                 networkA.setNetwork();
-                this.electricityNetworks.remove(networkB);
+                this.hydraulicNetworks.remove(networkB);
                 networkB = null;
 
                 networkA.cleanConductors();
             }
             else
             {
-                System.err.println("Failed to merge Universal Electricity wire connections!");
+                System.err.println("Failed to merge pipe connections!");
             }
         }
     }
@@ -121,7 +120,7 @@ public class Hydraulic
     {
         try
         {
-            Iterator it = electricityNetworks.iterator();
+            Iterator it = hydraulicNetworks.iterator();
 
             while (it.hasNext())
             {
@@ -143,7 +142,7 @@ public class Hydraulic
 
     public void resetConductors()
     {
-        Iterator it = electricityNetworks.iterator();
+        Iterator it = hydraulicNetworks.iterator();
 
         while (it.hasNext())
         {

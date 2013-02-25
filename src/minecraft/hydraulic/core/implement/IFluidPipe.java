@@ -12,7 +12,7 @@ import universalelectricity.core.electricity.ElectricityNetwork;
  * @author Calclavia
  * 
  */
-public interface IFluidPipe extends IPsiMachine
+public interface IFluidPipe extends IColorCoded
 {
 	/**
 	 * The Fluid network that this pipe is part of
@@ -33,8 +33,13 @@ public interface IFluidPipe extends IPsiMachine
 	 * 
 	 * @return The amount of Ohm's of resistance.
 	 */
-	public double getResistance(LiquidStack stack);
+	public double getMaxFlowRate(LiquidStack stack);
 
+	/**
+     * gets the devices pressure from a given side
+     */
+	public double getMaxPressure(ForgeDirection side);
+	
 	/**
 	 * Called when the pressure on the pipe passes max
 	 */

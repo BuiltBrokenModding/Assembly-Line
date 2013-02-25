@@ -1,222 +1,69 @@
 package hydraulic.core.liquids;
 
+import hydraulic.core.implement.ColorCode;
 import hydraulic.core.implement.IFluidPipe;
+import hydraulic.core.implement.IPsiCreator;
+import hydraulic.core.implement.IPsiReciever;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidStack;
-import universalelectricity.core.vector.Vector3;
-import cpw.mods.fml.common.FMLLog;
 
 public class HydraulicNetwork
 {
-	private final HashMap<TileEntity, FluidPacket> producers = new HashMap<TileEntity, FluidPacket>();
-	private final HashMap<TileEntity, FluidPacket> consumers = new HashMap<TileEntity, FluidPacket>();
-
+	/* BLOCK THAT ACT AS FLUID CONVEYORS ** */
 	public final List<IFluidPipe> conductors = new ArrayList<IFluidPipe>();
-	
-	public LiquidStack stack = new LiquidStack(0,0,0);
-	
+
+	/* MACHINES THAT USE THE FORGE LIQUID API TO RECEIVE LIQUID ** */
+	public final List<ITankContainer> fluidReceivers = new ArrayList<ITankContainer>();
+
+	/* MACHINES THAT DEAL WITH PRESSURE ** */
+	public final List<IPsiCreator> pressureProducers = new ArrayList<IPsiCreator>();
+	public final List<IPsiReciever> pressureReceivers = new ArrayList<IPsiReciever>();
+
+	public ColorCode color;
+
 	public HydraulicNetwork(IFluidPipe conductor)
 	{
 		this.addConductor(conductor);
+		this.color = conductor.getColor();
 	}
 
 	/**
-	 * Sets this tile entity to start producing energy in this network.
+	 * Tries to add the liquid stack to the network's valid machines. Same as the fill method for
+	 * ITankContainer in that it will
+	 * 
+	 * @return The amount of Liquid used.
 	 */
-	public void startProducing(TileEntity tileEntity, FluidPacket pack)
+	public int addFluidToNetwork(LiquidStack stack)
 	{
-		if (tileEntity != null && pack.liquidStack != null && stack.isLiquidEqual(pack.liquidStack))
+		if (stack != null && canAcceptLiquid(stack))
 		{
-			this.producers.put(tileEntity, pack);
+
 		}
-	}
-
-	public void startProducing(TileEntity tileEntity, double pressure, LiquidStack stack)
-	{
-		this.startProducing(tileEntity, new FluidPacket(pressure, stack));
-	}
-
-	public boolean isProducing(TileEntity tileEntity)
-	{
-		return this.producers.containsKey(tileEntity);
+		return 0;
 	}
 
 	/**
-	 * Sets this tile entity to stop producing energy in this network.
+	 * can this network can accept the liquid type
 	 */
-	public void stopProducing(TileEntity tileEntity)
+	private boolean canAcceptLiquid(LiquidStack stack)
 	{
-		this.producers.remove(tileEntity);
+		return color.isValidLiquid(stack);
 	}
 
 	/**
-	 * Sets this tile entity to start producing energy in this network.
+	 * Removes a tileEntity from any of the valid lists
 	 */
-	public void startRequesting(TileEntity tileEntity, FluidPacket pack)
+	public void removeEntity(TileEntity ent)
 	{
-		if (tileEntity != null && pack.liquidStack != null && stack.isLiquidEqual(pack.liquidStack))
-		{
-			this.consumers.put(tileEntity, pack);
-		}
-	}
-
-	public void startRequesting(TileEntity tileEntity, double pressure, LiquidStack stack)
-	{
-		this.startRequesting(tileEntity, new FluidPacket(pressure, stack));
-	}
-
-	public boolean isRequesting(TileEntity tileEntity)
-	{
-		return this.consumers.containsKey(tileEntity);
-	}
-
-	/**
-	 * Sets this tile entity to stop producing energy in this network.
-	 */
-	public void stopRequesting(TileEntity tileEntity)
-	{
-		this.consumers.remove(tileEntity);
-	}
-
-	/**
-	 * @return The electricity produced in this electricity network
-	 */
-	public FluidPacket getProduced(LiquidStack stack)
-	{
-		FluidPacket totalElectricity = new FluidPacket(0, new LiquidStack(stack.itemID,0,stack.itemMeta));
-
-		Iterator it = this.producers.entrySet().iterator();
-
-		while (it.hasNext())
-		{
-			Map.Entry pairs = (Map.Entry) it.next();
-
-			if (pairs != null)
-			{
-				TileEntity tileEntity = (TileEntity) pairs.getKey();
-
-				if (tileEntity == null)
-				{
-					it.remove();
-					continue;
-				}
-
-				if (tileEntity.isInvalid())
-				{
-					it.remove();
-					continue;
-				}
-
-				if (tileEntity.worldObj.getBlockTileEntity(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord) != tileEntity)
-				{
-					it.remove();
-					continue;
-				}
-
-				FluidPacket pack = (FluidPacket) pairs.getValue();
-
-				if (pairs.getKey() != null && pairs.getValue() != null && pack != null && totalElectricity.liquidStack != null && pack.liquidStack != null)
-				{
-					int volume = totalElectricity.liquidStack.amount + pack.liquidStack.amount;
-					double pressure = Math.max(totalElectricity.pressure, pack.pressure);
-
-					totalElectricity.liquidStack = new LiquidStack(stack.itemID,volume,stack.itemMeta);
-					totalElectricity.pressure = pressure;
-				}
-			}
-		}
-
-		return totalElectricity;
-	}
-
-	/**
-	 * @return How much electricity this network needs.
-	 */
-	public FluidPacket getRequest(LiquidStack stack)
-	{
-		FluidPacket totalElectricity = this.getRequestWithoutReduction(stack);
-		LiquidStack a = totalElectricity.liquidStack;
-		LiquidStack b = this.getProduced(stack).liquidStack;
-		if(a != null && b != null)
-		{
-		    int amount = Math.max(a.amount - b.amount, 0);
-		    totalElectricity.liquidStack.amount = amount;
-		}
-
-		return totalElectricity;
-	}
-
-	public FluidPacket getRequestWithoutReduction(LiquidStack stack)
-	{
-		FluidPacket totalElectricity = new FluidPacket(0, new LiquidStack(stack.itemID,0,stack.itemMeta));
-
-		Iterator it = this.consumers.entrySet().iterator();
-
-		while (it.hasNext())
-		{
-			Map.Entry pairs = (Map.Entry) it.next();
-
-			if (pairs != null)
-			{
-				TileEntity tileEntity = (TileEntity) pairs.getKey();
-
-				if (tileEntity == null)
-				{
-					it.remove();
-					continue;
-				}
-
-				if (tileEntity.isInvalid())
-				{
-					it.remove();
-					continue;
-				}
-
-				if (tileEntity.worldObj.getBlockTileEntity(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord) != tileEntity)
-				{
-					it.remove();
-					continue;
-				}
-
-				FluidPacket pack = (FluidPacket) pairs.getValue();
-
-				if (pack != null && pack.liquidStack != null)
-				{
-					totalElectricity.liquidStack.amount += pack.liquidStack.amount;
-					totalElectricity.pressure = Math.max(totalElectricity.pressure, pack.pressure);
-				}
-			}
-		}
-
-		return totalElectricity;
-	}
-
-	
-
-	/**
-	 * @return Returns all producers in this electricity network.
-	 */
-	public HashMap<TileEntity, FluidPacket> getProducers()
-	{
-		return this.producers;
-	}
-
-	/**
-	 * @return Returns all consumers in this electricity network.
-	 */
-	public HashMap<TileEntity, FluidPacket> getConsumers()
-	{
-		return this.consumers;
+		fluidReceivers.remove(ent);
+		pressureProducers.remove(ent);
+		pressureReceivers.remove(ent);
 	}
 
 	public void addConductor(IFluidPipe newConductor)
@@ -228,28 +75,6 @@ public class HydraulicNetwork
 			conductors.add(newConductor);
 			newConductor.setNetwork(this);
 		}
-	}
-
-	/**
-	 * Get only the electric units that can receive electricity from the given side.
-	 */
-	public List<TileEntity> getReceivers()
-	{
-		List<TileEntity> receivers = new ArrayList<TileEntity>();
-
-		Iterator it = this.consumers.entrySet().iterator();
-
-		while (it.hasNext())
-		{
-			Map.Entry pairs = (Map.Entry) it.next();
-
-			if (pairs != null)
-			{
-				receivers.add((TileEntity) pairs.getKey());
-			}
-		}
-
-		return receivers;
 	}
 
 	public void cleanConductors()
@@ -302,10 +127,9 @@ public class HydraulicNetwork
 	{
 		for (int j = 0; j < this.conductors.size(); j++)
 		{
-		    IFluidPipe conductor = this.conductors.get(j);
+			IFluidPipe conductor = this.conductors.get(j);
 			conductor.refreshConnectedBlocks();
 		}
 	}
 
-	
 }

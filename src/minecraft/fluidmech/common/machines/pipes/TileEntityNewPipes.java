@@ -2,7 +2,7 @@ package fluidmech.common.machines.pipes;
 
 import com.google.common.io.ByteArrayDataInput;
 
-import hydraulic.core.prefab.TileEntityFluidHandler;
+import hydraulic.core.prefab.TileEntityFluidConveyor;
 import fluidmech.common.FluidMech;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,7 +13,7 @@ import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.prefab.tile.TileEntityConductor;
 import basiccomponents.common.BCLoader;
 
-public class TileEntityNewPipes extends TileEntityFluidHandler
+public class TileEntityNewPipes extends TileEntityFluidConveyor
 {
 	public static double RESISTANCE = 0.5;
 	public static double MAX_AMPS = 200;
@@ -24,7 +24,7 @@ public class TileEntityNewPipes extends TileEntityFluidHandler
 	}
 
 	@Override
-	public double getResistance(LiquidStack stack)
+	public double getMaxFlowRate(LiquidStack stack)
 	{
 		return this.RESISTANCE;
 	}

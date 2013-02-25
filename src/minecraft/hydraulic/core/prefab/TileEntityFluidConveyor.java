@@ -4,7 +4,7 @@ import hydraulic.core.implement.IColorCoded;
 import hydraulic.core.implement.IFluidPipe;
 import hydraulic.core.implement.IPsiCreator;
 import hydraulic.core.implement.IPsiMachine;
-import hydraulic.core.liquids.Hydraulic;
+import hydraulic.core.liquids.HydraulicNetworkManager;
 import hydraulic.core.liquids.HydraulicNetwork;
 import hydraulic.core.liquids.LiquidData;
 import hydraulic.core.liquids.LiquidHandler;
@@ -29,7 +29,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia,DarkGuardsman
  * 
  */
-public abstract class TileEntityFluidHandler extends TileEntityAdvanced implements IFluidPipe, IPacketReceiver
+public abstract class TileEntityFluidConveyor extends TileEntityAdvanced implements IFluidPipe, IPacketReceiver
 {
 	private HydraulicNetwork network;
 
@@ -47,7 +47,7 @@ public abstract class TileEntityFluidHandler extends TileEntityAdvanced implemen
 
 	protected LiquidData liquidData = LiquidHandler.unkown;
 
-	public TileEntityFluidHandler()
+	public TileEntityFluidConveyor()
 	{
 		this.reset();
 	}
@@ -84,7 +84,7 @@ public abstract class TileEntityFluidHandler extends TileEntityAdvanced implemen
 
 					if (tileEntity.getClass() == this.getClass())
 					{
-						Hydraulic.instance.mergeConnection(this.getNetwork(), ((IFluidPipe) tileEntity).getNetwork());
+						HydraulicNetworkManager.instance.mergeConnection(this.getNetwork(), ((IFluidPipe) tileEntity).getNetwork());
 					}
 
 					return;
@@ -95,11 +95,11 @@ public abstract class TileEntityFluidHandler extends TileEntityAdvanced implemen
 			{
 				if (this.connectedBlocks[side.ordinal()] instanceof IFluidPipe)
 				{
-					Hydraulic.instance.splitConnection(this, (IFluidPipe) this.getConnectedBlocks()[side.ordinal()]);
+					HydraulicNetworkManager.instance.splitConnection(this, (IFluidPipe) this.getConnectedBlocks()[side.ordinal()]);
 				}
 
-				this.getNetwork().stopProducing(this.connectedBlocks[side.ordinal()]);
-				this.getNetwork().stopRequesting(this.connectedBlocks[side.ordinal()]);
+				//this.getNetwork().stopProducing(this.connectedBlocks[side.ordinal()]);
+				//this.getNetwork().stopRequesting(this.connectedBlocks[side.ordinal()]);
 			}
 
 			this.connectedBlocks[side.ordinal()] = null;
@@ -157,7 +157,7 @@ public abstract class TileEntityFluidHandler extends TileEntityAdvanced implemen
 
 					if (tileEntity.getClass() == this.getClass())
 					{
-						Hydraulic.instance.mergeConnection(this.getNetwork(), ((IFluidPipe) tileEntity).getNetwork());
+						HydraulicNetworkManager.instance.mergeConnection(this.getNetwork(), ((IFluidPipe) tileEntity).getNetwork());
 					}
 
 					return;
@@ -191,9 +191,9 @@ public abstract class TileEntityFluidHandler extends TileEntityAdvanced implemen
 	{
 		this.network = null;
 
-		if (Hydraulic.instance != null)
+		if (HydraulicNetworkManager.instance != null)
 		{
-			Hydraulic.instance.registerConductor(this);
+			HydraulicNetworkManager.instance.registerConductor(this);
 		}
 	}
 

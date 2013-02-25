@@ -1,6 +1,6 @@
 package hydraulic.core;
 
-import hydraulic.core.liquids.Hydraulic;
+import hydraulic.core.liquids.HydraulicNetworkManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
@@ -16,7 +16,7 @@ public class HydraulicLoader
     {
         if (!isInitialized)
         {
-            Hydraulic.instance = new Hydraulic();
+            HydraulicNetworkManager.instance = new HydraulicNetworkManager();
             MinecraftForge.EVENT_BUS.register(this);
 
             FMLLog.finest("Hydraulics v" + Hydraulics.VERSION + " loaded without error!");
@@ -28,14 +28,14 @@ public class HydraulicLoader
     @ForgeSubscribe
     public void onWorldUnLoad(WorldEvent.Unload event)
     {
-        Hydraulic.instance = new Hydraulic();
-        Hydraulic.instance.cleanUpNetworks();
+        HydraulicNetworkManager.instance = new HydraulicNetworkManager();
+        HydraulicNetworkManager.instance.cleanUpNetworks();
     }
 
     @ForgeSubscribe
     public void onWorldLoad(WorldEvent.Load event)
     {
-        Hydraulic.instance = new Hydraulic();
-        Hydraulic.instance.cleanUpNetworks();
+        HydraulicNetworkManager.instance = new HydraulicNetworkManager();
+        HydraulicNetworkManager.instance.cleanUpNetworks();
     }
 }
