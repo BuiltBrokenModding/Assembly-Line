@@ -62,7 +62,7 @@ public class TileEntityReleaseValve extends TileEntityAdvanced implements IPsiCr
 			}
 		}
 
-		if (!this.worldObj.isRemote && this.ticks % 20 == 0)
+		if (!this.worldObj.isRemote && !isPowered && this.ticks % 20 == 0)
 		{
 			validateNBuildList();
 			// start the draining process
