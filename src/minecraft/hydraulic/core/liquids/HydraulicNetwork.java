@@ -1,5 +1,6 @@
 package hydraulic.core.liquids;
 
+import hydraulic.core.helpers.connectionHelper;
 import hydraulic.core.implement.ColorCode;
 import hydraulic.core.implement.IFluidPipe;
 import hydraulic.core.implement.IPsiCreator;
@@ -10,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidStack;
 
@@ -25,7 +28,7 @@ public class HydraulicNetwork
 	public final List<IPsiCreator> pressureProducers = new ArrayList<IPsiCreator>();
 	public final List<IPsiReciever> pressureReceivers = new ArrayList<IPsiReciever>();
 
-	public ColorCode color;
+	public ColorCode color = ColorCode.NONE;
 
 	public HydraulicNetwork(IFluidPipe conductor)
 	{
@@ -41,11 +44,100 @@ public class HydraulicNetwork
 	 */
 	public int addFluidToNetwork(LiquidStack stack)
 	{
+		int used = 0;
 		if (stack != null && canAcceptLiquid(stack))
 		{
+			if (stack.amount > this.getMaxFlow(stack))
+			{
+				stack = new LiquidStack(stack.itemID, this.getMaxFlow(stack), stack.itemMeta);
+			}
+			/* Main fill target to try to fill with the stack */
+			ITankContainer fillTarget = null;
+			int volume = Integer.MAX_VALUE;
+			ForgeDirection fillDir = ForgeDirection.UNKNOWN;
 
+			/* Secondary fill target if the main target is not found */
+			ITankContainer otherFillTarget = null;
+			int mostFill = 0;
+			ForgeDirection otherFillDir = ForgeDirection.UNKNOWN;
+
+			boolean found = false;
+
+			for (ITankContainer tank : fluidReceivers)
+			{
+				if (tank instanceof TileEntity)
+				{
+					TileEntity[] surroundings = connectionHelper.getSurroundingTileEntities((TileEntity) tank);
+					for (int i = 0; i < 6; i++)
+					{
+						if (surroundings[i] instanceof IFluidPipe && ((IFluidPipe) surroundings[i]).getNetwork() == this)
+						{
+							ForgeDirection dir = ForgeDirection.getOrientation(i).getOpposite();
+							ILiquidTank storage = tank.getTank(dir, stack);
+							int fill = tank.fill(dir, stack, false);
+							/*
+							 * if the TileEntity uses the getTank method
+							 */
+							if (storage != null)
+							{
+								LiquidStack stored = storage.getLiquid();
+								if (stored == null)
+								{
+									fillTarget = tank;
+									found = true;
+									fillDir = dir;
+									break;
+								}
+								else if (stored.amount < volume)
+								{
+									fillTarget = tank;
+									volume = stored.amount;
+								}
+							}
+							else if (fill > 0 && fill > mostFill)
+							{
+								otherFillTarget = tank;
+								mostFill = fill;
+								otherFillDir = dir;
+							}
+						}
+					}
+				}
+				if (found)
+				{
+					break;
+				}
+			}// End of tank finder
+			if (fillTarget != null)
+			{
+				used = fillTarget.fill(fillDir, stack, true);
+			}
+			else if (otherFillTarget != null)
+			{
+				used = otherFillTarget.fill(fillDir, stack, true);
+			}
 		}
-		return 0;
+
+		return used;
+	}
+
+	/**
+	 * gets the flow rate of the network by getting the pipe with the lowest flow rate.
+	 * 
+	 * @return units of liquid per tick, default 20B/s
+	 */
+	public int getMaxFlow(LiquidStack stack)
+	{
+		int flow = 1000;
+		for (IFluidPipe conductor : this.conductors)
+		{
+			int cFlow = conductor.getMaxFlowRate(stack);
+			if (cFlow < flow)
+			{
+				flow = cFlow;
+			}
+		}
+		return flow;
 	}
 
 	/**
@@ -70,7 +162,7 @@ public class HydraulicNetwork
 	{
 		this.cleanConductors();
 
-		if (!conductors.contains(newConductor))
+		if (newConductor.getColor() == this.color && !conductors.contains(newConductor))
 		{
 			conductors.add(newConductor);
 			newConductor.setNetwork(this);

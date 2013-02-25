@@ -33,7 +33,7 @@ public interface IFluidPipe extends IColorCoded
 	 * 
 	 * @return The amount of Ohm's of resistance.
 	 */
-	public double getMaxFlowRate(LiquidStack stack);
+	public int getMaxFlowRate(LiquidStack stack);
 
 	/**
      * gets the devices pressure from a given side
