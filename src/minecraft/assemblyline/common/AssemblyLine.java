@@ -149,11 +149,11 @@ public class AssemblyLine
 		FMLog.info("Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
 
 		// Crane Controller
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockCraneController, new Object[] { "SFS", "MCM", "SMS", 'F', blockCraneFrame, 'S', "plateSteel", 'C', "advancedCircuit", 'I', "ingotSteel", 'M', "motor" }));
+		//GameRegistry.addRecipe(new ShapedOreRecipe(blockCraneController, new Object[] { "SFS", "MCM", "SMS", 'F', blockCraneFrame, 'S', "plateSteel", 'C', "advancedCircuit", 'I', "ingotSteel", 'M', "motor" }));
 
 		// Crane Frame
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCraneFrame, 4), new Object[] { "ISI", "ISI", 'I', Item.ingotIron, 'S', Item.stick }));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCraneFrame, 4), new Object[] { "ISI", "ISI", 'I', "ingotBronze", 'S', Item.stick }));
+		//GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCraneFrame, 4), new Object[] { "ISI", "ISI", 'I', Item.ingotIron, 'S', Item.stick }));
+		//GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCraneFrame, 4), new Object[] { "ISI", "ISI", 'I', "ingotBronze", 'S', Item.stick }));
 
 		// Armbot
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockArmbot, new Object[] { "II ", "SIS", "MCM", 'S', "plateSteel", 'C', "advancedCircuit", 'I', "ingotSteel", 'M', "motor" }));

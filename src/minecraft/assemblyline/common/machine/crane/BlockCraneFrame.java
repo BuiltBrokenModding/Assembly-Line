@@ -17,7 +17,7 @@ public class BlockCraneFrame extends BlockMachine
 	public BlockCraneFrame(int id)
 	{
 		super("craneFrame", id, UniversalElectricity.machine);
-		this.setCreativeTab(TabAssemblyLine.INSTANCE);
+		//this.setCreativeTab(TabAssemblyLine.INSTANCE);
 		this.setBlockBounds(0.25f, 0.25f, 0.25f, 0.75f, 0.75f, 0.75f);
 	}
 
