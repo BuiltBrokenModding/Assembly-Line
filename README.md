@@ -4,9 +4,9 @@
 Assembly Line is a Minecraft mod that brings realistic factory style systems into Minecraft.
 
 ### Leaders and Developers
-Briman0094
-Calclavia
-Darkguardsman
+* Briman0094
+* Calclavia
+* Darkguardsman
 
 ### License
 This intellectual property is licensed under the following license: http://universalelectricity.com/?m=assembly_line&p=copyright
