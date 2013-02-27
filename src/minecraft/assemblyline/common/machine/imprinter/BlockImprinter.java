@@ -9,12 +9,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import universalelectricity.prefab.BlockMachine;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.CommonProxy;
 import assemblyline.common.TabAssemblyLine;
+import assemblyline.common.block.BlockALMachine;
 
-public class BlockImprinter extends BlockMachine
+public class BlockImprinter extends BlockALMachine
 {
 	public BlockImprinter(int id, int texture)
 	{

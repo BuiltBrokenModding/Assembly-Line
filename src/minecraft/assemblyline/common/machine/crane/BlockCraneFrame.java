@@ -6,13 +6,13 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
-import universalelectricity.prefab.BlockMachine;
 import assemblyline.client.render.BlockRenderingHandler;
 import assemblyline.common.TabAssemblyLine;
+import assemblyline.common.block.BlockALMachine;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockCraneFrame extends BlockMachine
+public class BlockCraneFrame extends BlockALMachine
 {
 	public BlockCraneFrame(int id)
 	{

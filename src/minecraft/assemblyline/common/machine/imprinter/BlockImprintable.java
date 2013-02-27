@@ -9,16 +9,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import universalelectricity.prefab.BlockMachine;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
 import assemblyline.api.IFilterable;
+import assemblyline.common.block.BlockALMachine;
 
 /**
  * Extend this block class if a filter is allowed to be placed inside of this block.
  * 
  * @author Calclavia
  */
-public abstract class BlockImprintable extends BlockMachine
+public abstract class BlockImprintable extends BlockALMachine
 {
 	public BlockImprintable(String name, int id, Material material, CreativeTabs creativeTab)
 	{

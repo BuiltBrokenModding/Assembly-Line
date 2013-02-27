@@ -12,7 +12,6 @@ import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.core.implement.IItemElectric;
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.BlockMachine;
 import universalelectricity.prefab.implement.IToolConfigurator;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.TabAssemblyLine;
@@ -24,11 +23,12 @@ import assemblyline.common.TabAssemblyLine;
  * @author Calclavia
  * 
  */
-public class BlockCrate extends BlockMachine
+public class BlockCrate extends BlockALMachine
 {
 	public BlockCrate(int id, int texture)
 	{
-		super("crate", id, UniversalElectricity.machine);
+		super(id, UniversalElectricity.machine);
+		this.setBlockName("crate");
 		this.blockIndexInTexture = texture;
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 		this.setTextureFile(AssemblyLine.BLOCK_TEXTURE_PATH);

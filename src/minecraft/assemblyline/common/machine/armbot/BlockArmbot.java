@@ -9,18 +9,19 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.BlockMachine;
 import universalelectricity.prefab.multiblock.IMultiBlock;
 import assemblyline.client.render.BlockRenderingHandler;
 import assemblyline.common.TabAssemblyLine;
+import assemblyline.common.block.BlockALMachine;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockArmbot extends BlockMachine
+public class BlockArmbot extends BlockALMachine
 {
 	public BlockArmbot(int id)
 	{
-		super("armbot", id, UniversalElectricity.machine);
+		super(id, UniversalElectricity.machine);
+		this.setBlockName("armbot");
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 	}
 

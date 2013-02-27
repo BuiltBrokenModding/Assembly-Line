@@ -13,9 +13,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
-import universalelectricity.prefab.BlockMachine;
 import assemblyline.client.render.BlockRenderingHandler;
 import assemblyline.common.TabAssemblyLine;
+import assemblyline.common.block.BlockALMachine;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt.SlantType;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -25,11 +25,12 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  * @author Calclavia, DarkGuardsman
  */
-public class BlockConveyorBelt extends BlockMachine
+public class BlockConveyorBelt extends BlockALMachine
 {
 	public BlockConveyorBelt(int id)
 	{
-		super("conveyorBelt", id, UniversalElectricity.machine);
+		super(id, UniversalElectricity.machine);
+		this.setBlockName("conveyorBelt");
 		this.setBlockBounds(0, 0, 0, 1, 0.3f, 1);
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 	}

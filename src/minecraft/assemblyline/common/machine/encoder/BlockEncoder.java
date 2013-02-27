@@ -4,12 +4,12 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import universalelectricity.prefab.BlockMachine;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.CommonProxy;
 import assemblyline.common.TabAssemblyLine;
+import assemblyline.common.block.BlockALMachine;
 
-public class BlockEncoder extends BlockMachine
+public class BlockEncoder extends BlockALMachine
 {
 	public BlockEncoder(int id, int texture)
 	{
