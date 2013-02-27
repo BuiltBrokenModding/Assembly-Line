@@ -22,7 +22,9 @@ public abstract class BlockImprintable extends BlockALMachine
 {
 	public BlockImprintable(String name, int id, Material material, CreativeTabs creativeTab)
 	{
-		super(name, id, material, creativeTab);
+		super(id, material);
+		this.setBlockName(name);
+		this.setCreativeTab(creativeTab);
 	}
 
 	/**
