@@ -16,7 +16,7 @@ public class BlockCraneController extends BlockMachine
 	public BlockCraneController(int id)
 	{
 		super("craneController", id, UniversalElectricity.machine);
-		//this.setCreativeTab(TabAssemblyLine.INSTANCE);
+		// this.setCreativeTab(TabAssemblyLine.INSTANCE);
 	}
 
 	@Override
