@@ -1,14 +1,11 @@
 package hydraulic.core.path;
 
-import hydraulic.core.implement.ILiquidConnectionProvider;
-import hydraulic.core.implement.ILiquidConnector;
-
 import java.util.Arrays;
 import java.util.List;
 
-import universalelectricity.core.vector.Vector3;
-
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.core.vector.Vector3;
 
 /**
  * Check if a conductor connects with another.
@@ -18,27 +15,18 @@ import net.minecraftforge.common.ForgeDirection;
  */
 public class PathfinderChecker extends Pathfinder
 {
-	public PathfinderChecker(final Vector3 targetConnector,final List<Integer> blockIds, final Vector3... ignoreConnector)
+	List<Vector3> ignoreList;
+	
+	public PathfinderChecker(World world, Vector3 targetConnector, List<Integer> blockIds, Vector3... ignoreConnector)
 	{
-		super(new IPathCallBack()
-		{
-			@Override
-			public boolean isValidNode(Pathfinder finder, ForgeDirection direction, Vector3 provider, Vector3 connectedBlock)
-			{
-				return !Arrays.asList(ignoreConnector).contains(connectedBlock);
-			}
+		super(world, blockIds);
+		this.ignoreList = Arrays.asList(ignoreConnector);
+		this.target = targetConnector;
+	}
 
-			@Override
-			public boolean onSearch(Pathfinder finder, Vector3 provider)
-			{
-				if (provider == targetConnector)
-				{
-					finder.results.add(provider);
-					return true;
-				}
-
-				return false;
-			}
-		}, blockIds);
+	@Override
+	public boolean isValidNode(ForgeDirection direction, Vector3 connectedBlock)
+	{
+		return !ignoreList.contains(connectedBlock);
 	}
 }

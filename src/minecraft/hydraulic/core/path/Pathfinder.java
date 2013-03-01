@@ -1,16 +1,13 @@
 package hydraulic.core.path;
 
 import hydraulic.core.helpers.connectionHelper;
-import hydraulic.core.implement.ILiquidConnectionProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import universalelectricity.core.vector.Vector3;
-
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.core.vector.Vector3;
 
 /**
  * A class that allows flexible path finding in Minecraft Blocks.
@@ -20,34 +17,11 @@ import net.minecraftforge.common.ForgeDirection;
  */
 public class Pathfinder
 {
-	public interface IPathCallBack
-	{
-		/**
-		 * Is this a valid node to search for?
-		 * 
-		 * @return
-		 */
-		public boolean isValidNode(Pathfinder finder, ForgeDirection direction, Vector3 provider, Vector3 node);
-
-		/**
-		 * Called when looping through nodes.
-		 * 
-		 * @param finder
-		 * @param provider
-		 * @return True to stop the path finding operation.
-		 */
-		public boolean onSearch(Pathfinder finder, Vector3 location);
-	}
-
-	/**
-	 * A pathfinding call back interface used to call back on paths.
-	 */
-	public IPathCallBack callBackCheck;
-
+	public Vector3 target;
 	/**
 	 * A list of nodes that the pathfinder went through.
 	 */
-	public List<Vector3> iteratedNodes;
+	public List<Vector3> searchedNodes;
 	/**
 	 * A list of valid block IDs to use as a path.
 	 */
@@ -58,20 +32,22 @@ public class Pathfinder
 	 */
 	public List results;
 
-	public Pathfinder(IPathCallBack callBack, List<Integer> blockIDs)
+	public World world;
+	
+	public Pathfinder(World world, List<Integer> blockIDs)
 	{
-		this.callBackCheck = callBack;
 		this.blockIDs = blockIDs;
+		this.world = world;
 		this.clear();
 	}
 
-	public boolean findNodes(World world, Vector3 location)
+	public boolean findNodes(Vector3 location)
 	{
 		int[] connectedBlocks = connectionHelper.getSurroundingBlocks(world, location);
 
-		this.iteratedNodes.add(location);
+		this.searchedNodes.add(location);
 
-		if (this.callBackCheck.onSearch(this, location))
+		if (this.onSearch(location))
 		{
 			return false;
 		}
@@ -83,11 +59,12 @@ public class Pathfinder
 			{
 				ForgeDirection dir = ForgeDirection.getOrientation(i);
 				Vector3 dirLoc = new Vector3(location.intX() + dir.offsetX, location.intY() + dir.offsetY, location.intZ() + dir.offsetZ);
-				if (!iteratedNodes.contains(dirLoc))
+
+				if (!searchedNodes.contains(dirLoc))
 				{
-					if (this.callBackCheck.isValidNode(this, ForgeDirection.getOrientation(i), location, dirLoc))
+					if (this.isValidNode(dir, dirLoc))
 					{
-						if (!this.findNodes(world, dirLoc))
+						if (!this.findNodes(dirLoc))
 						{
 							return false;
 						}
@@ -101,17 +78,45 @@ public class Pathfinder
 	}
 
 	/**
+	 * Is this a valid node to search for?
+	 * 
+	 * @return
+	 */
+	public boolean isValidNode(ForgeDirection direction, Vector3 foundNode)
+	{
+		return true;
+	}
+
+	/**
+	 * Called when looping through nodes.
+	 * 
+	 * @param finder
+	 * @param provider
+	 * @return True to stop the path finding operation.
+	 */
+	public boolean onSearch(Vector3 location)
+	{
+		if (location == target)
+		{
+			this.results.add(location);
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Called to execute the pathfinding operation.
 	 */
-	public Pathfinder init(World world, Vector3 location)
+	public Pathfinder init(Vector3 start, Vector3 target)
 	{
-		this.findNodes(world, location);
+		this.findNodes(start);
+		this.target = target;
 		return this;
 	}
 
 	public Pathfinder clear()
 	{
-		this.iteratedNodes = new ArrayList<Vector3>();
+		this.searchedNodes = new ArrayList<Vector3>();
 		this.results = new ArrayList();
 		return this;
 	}
