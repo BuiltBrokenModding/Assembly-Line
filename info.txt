@@ -23,3 +23,5 @@ x Fluid-Mechanics_v0.2.7.21.jar hydraulic_v0.2.7.21_api.zip
 @ Fluid-Mechanics_v0.2.8.23.jar hydraulic_v0.2.8.23_api.zip
 * Fluid-Mechanics_v0.2.8.24.jar hydraulic_v0.2.8.24_api.zip
 * Fluid-Mechanics_v0.2.8.25.jar hydraulic_v0.2.8.25_api.zip
+* Fluid-Mechanics_v0.2.8.26.jar hydraulic_v0.2.8.26_api.zip
+* Fluid-Mechanics_v0.2.8.27.jar hydraulic_v0.2.8.27_api.zip

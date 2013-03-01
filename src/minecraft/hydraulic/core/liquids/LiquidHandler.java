@@ -197,9 +197,13 @@ public class LiquidHandler
 		if (stack.stackSize == 1)
 		{
 			if (stack.getItem().hasContainerItem())
+			{
 				return stack.getItem().getContainerItemStack(stack);
+			}
 			else
+			{
 				return null;
+			}
 		}
 		else
 		{

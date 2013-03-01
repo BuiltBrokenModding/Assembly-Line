@@ -4,6 +4,7 @@ import hydraulic.core.helpers.connectionHelper;
 import hydraulic.core.implement.ColorCode;
 import hydraulic.core.implement.IFluidPipe;
 import hydraulic.core.implement.IPsiCreator;
+import hydraulic.core.implement.IPsiMachine;
 import hydraulic.core.implement.IPsiReciever;
 
 import java.util.ArrayList;
@@ -22,11 +23,7 @@ public class HydraulicNetwork
 	public final List<IFluidPipe> conductors = new ArrayList<IFluidPipe>();
 
 	/* MACHINES THAT USE THE FORGE LIQUID API TO RECEIVE LIQUID ** */
-	public final List<ITankContainer> fluidReceivers = new ArrayList<ITankContainer>();
-
-	/* MACHINES THAT DEAL WITH PRESSURE ** */
-	public final List<IPsiCreator> pressureProducers = new ArrayList<IPsiCreator>();
-	public final List<IPsiReciever> pressureReceivers = new ArrayList<IPsiReciever>();
+	public final List<TileEntity> receivers = new ArrayList<TileEntity>();
 
 	public ColorCode color = ColorCode.NONE;
 
@@ -63,10 +60,11 @@ public class HydraulicNetwork
 
 			boolean found = false;
 
-			for (ITankContainer tank : fluidReceivers)
+			for (TileEntity ent : receivers)
 			{
-				if (tank instanceof TileEntity)
+				if (ent instanceof ITankContainer)
 				{
+					ITankContainer tank = (ITankContainer) ent;
 					TileEntity[] surroundings = connectionHelper.getSurroundingTileEntities((TileEntity) tank);
 					for (int i = 0; i < 6; i++)
 					{
@@ -153,9 +151,20 @@ public class HydraulicNetwork
 	 */
 	public void removeEntity(TileEntity ent)
 	{
-		fluidReceivers.remove(ent);
-		pressureProducers.remove(ent);
-		pressureReceivers.remove(ent);
+		if (receivers.contains(ent))
+		{
+			receivers.remove(ent);
+		}
+	}
+	/**
+	 * Adds a tileEntity to the list if its valid
+	 */
+	public void addEntity(TileEntity ent)
+	{
+		if(!receivers.contains(ent) && (ent instanceof ITankContainer || ent instanceof IPsiMachine || ent instanceof IPsiCreator))
+		{
+			receivers.add(ent);
+		}
 	}
 
 	public void addConductor(IFluidPipe newConductor)
