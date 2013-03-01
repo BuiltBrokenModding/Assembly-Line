@@ -33,7 +33,7 @@ public class Pathfinder
 	public List results;
 
 	public World world;
-	
+
 	public Pathfinder(World world, List<Integer> blockIDs)
 	{
 		this.blockIDs = blockIDs;
@@ -60,15 +60,11 @@ public class Pathfinder
 				ForgeDirection dir = ForgeDirection.getOrientation(i);
 				Vector3 dirLoc = new Vector3(location.intX() + dir.offsetX, location.intY() + dir.offsetY, location.intZ() + dir.offsetZ);
 
-				if (!searchedNodes.contains(dirLoc))
+				if (!searchedNodes.contains(dirLoc) && this.isValidNode(dir, dirLoc))
 				{
-					if (this.isValidNode(dir, dirLoc))
+					if (!this.findNodes(dirLoc))
 					{
-						if (!this.findNodes(dirLoc))
-						{
-							return false;
-						}
-
+						return false;
 					}
 				}
 			}
@@ -109,8 +105,8 @@ public class Pathfinder
 	 */
 	public Pathfinder init(Vector3 start, Vector3 target)
 	{
-		this.findNodes(start);
 		this.target = target;
+		this.findNodes(start);		
 		return this;
 	}
 
