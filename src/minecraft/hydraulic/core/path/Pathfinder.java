@@ -1,17 +1,21 @@
 package hydraulic.core.path;
 
+import hydraulic.core.helpers.connectionHelper;
 import hydraulic.core.implement.ILiquidConnectionProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import universalelectricity.core.vector.Vector3;
+
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
 /**
  * A class that allows flexible path finding in Minecraft Blocks.
  * 
- * @author Calclavia
+ * @author Calclavia, DarkGuardsman
  * 
  */
 public class Pathfinder
@@ -23,7 +27,7 @@ public class Pathfinder
 		 * 
 		 * @return
 		 */
-		public boolean isValidNode(Pathfinder finder, ForgeDirection direction, ILiquidConnectionProvider provider, ILiquidConnectionProvider node);
+		public boolean isValidNode(Pathfinder finder, ForgeDirection direction, Vector3 provider, Vector3 node);
 
 		/**
 		 * Called when looping through nodes.
@@ -32,7 +36,7 @@ public class Pathfinder
 		 * @param provider
 		 * @return True to stop the path finding operation.
 		 */
-		public boolean onSearch(Pathfinder finder, ILiquidConnectionProvider provider);
+		public boolean onSearch(Pathfinder finder, Vector3 location);
 	}
 
 	/**
@@ -43,41 +47,47 @@ public class Pathfinder
 	/**
 	 * A list of nodes that the pathfinder went through.
 	 */
-	public List<ILiquidConnectionProvider> iteratedNodes;
+	public List<Vector3> iteratedNodes;
+	/**
+	 * A list of valid block IDs to use as a path.
+	 */
+	public List<Integer> blockIDs;
 
 	/**
 	 * The results and findings found by the pathfinder.
 	 */
 	public List results;
 
-	public Pathfinder(IPathCallBack callBack)
+	public Pathfinder(IPathCallBack callBack, List<Integer> blockIDs)
 	{
 		this.callBackCheck = callBack;
+		this.blockIDs = blockIDs;
 		this.clear();
 	}
 
-	public boolean findNodes(ILiquidConnectionProvider provider)
+	public boolean findNodes(World world, Vector3 location)
 	{
-		TileEntity[] connectedBlocks = provider.getAdjacentConnections();
+		int[] connectedBlocks = connectionHelper.getSurroundingBlocks(world, location);
 
-		this.iteratedNodes.add(provider);
+		this.iteratedNodes.add(location);
 
-		if (this.callBackCheck.onSearch(this, provider))
+		if (this.callBackCheck.onSearch(this, location))
 		{
 			return false;
 		}
 
 		for (int i = 0; i < connectedBlocks.length; i++)
 		{
-			TileEntity connectedBlock = connectedBlocks[i];
 
-			if (connectedBlock instanceof ILiquidConnectionProvider)
+			if (blockIDs.contains(connectedBlocks[i]))
 			{
-				if (!iteratedNodes.contains(connectedBlock))
+				ForgeDirection dir = ForgeDirection.getOrientation(i);
+				Vector3 dirLoc = new Vector3(location.intX() + dir.offsetX, location.intY() + dir.offsetY, location.intZ() + dir.offsetZ);
+				if (!iteratedNodes.contains(dirLoc))
 				{
-					if (this.callBackCheck.isValidNode(this, ForgeDirection.getOrientation(i), provider, (ILiquidConnectionProvider) connectedBlock))
+					if (this.callBackCheck.isValidNode(this, ForgeDirection.getOrientation(i), location, dirLoc))
 					{
-						if (!this.findNodes((ILiquidConnectionProvider) connectedBlock))
+						if (!this.findNodes(world, dirLoc))
 						{
 							return false;
 						}
@@ -93,15 +103,15 @@ public class Pathfinder
 	/**
 	 * Called to execute the pathfinding operation.
 	 */
-	public Pathfinder init(ILiquidConnectionProvider provider)
+	public Pathfinder init(World world, Vector3 location)
 	{
-		this.findNodes(provider);
+		this.findNodes(world, location);
 		return this;
 	}
 
 	public Pathfinder clear()
 	{
-		this.iteratedNodes = new ArrayList<ILiquidConnectionProvider>();
+		this.iteratedNodes = new ArrayList<Vector3>();
 		this.results = new ArrayList();
 		return this;
 	}
