@@ -3,6 +3,13 @@
 echo Promotion Type? (Choose * for recommended, @ for stable and x for unstable)
 set /p PROMOTION=
 
+echo FTP Server?
+set /p SERVER=
+echo FTP Username?
+set /p USERNAME=
+echo FTP Password?
+set /p PASSWORD=
+
 set /p MODVERSION=<modversion.txt
 set /p CurrentBuild=<buildnumber.txt
 set /a BUILD_NUMBER=%CurrentBuild%+1
@@ -39,9 +46,9 @@ cd ..\
 echo %PROMOTION% %FILE_NAME% %API_NAME%>>info.txt
 
 ::GENERATE FTP Script
-echo open calclavia.com>ftpscript.txt
-echo al@calclavia.com>>ftpscript.txt
-echo VkE4laBa84R9>>ftpscript.txt
+echo open %SERVER%>ftpscript.txt
+echo %USERNAME%>>ftpscript.txt
+echo %PASSWORD%>>ftpscript.txt
 echo binary>>ftpscript.txt
 echo put "recommendedversion.txt">>ftpscript.txt
 echo put "builds\%FILE_NAME%">>ftpscript.txt
@@ -51,6 +58,6 @@ echo quit>>ftpscript.txt
 ftp.exe -s:ftpscript.txt
 del ftpscript.txt
 
-echo Done building %FILE_NAME% for UE %UE_VERSION%
+echo Done building %FILE_NAME%
 
 pause
