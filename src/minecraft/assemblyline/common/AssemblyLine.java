@@ -1,5 +1,7 @@
 package assemblyline.common;
 
+import ic2.api.Ic2Recipes;
+
 import java.io.File;
 import java.util.logging.Logger;
 
@@ -93,8 +95,9 @@ public class AssemblyLine
 
 	public static Logger FMLog = Logger.getLogger(AssemblyLine.NAME);
 
-	// TODO: MAKE THIS FALSE EVERY BUILD!
-	public static final boolean DEBUG_MODE = false;
+	//TODO: MAKE THIS FALSE EVERY BUILD!
+	public static final boolean DEBUG = false;
+	public static boolean REQUIRE_NO_POWER = false;
 
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event)
@@ -119,6 +122,8 @@ public class AssemblyLine
 
 		itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", ITEM_ID_PREFIX).getInt());
 		itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", ITEM_ID_PREFIX + 1).getInt());
+		
+		REQUIRE_NO_POWER = DEBUG || !CONFIGURATION.get("general", "requirePower", true).getBoolean(true);
 		CONFIGURATION.save();
 
 		NetworkRegistry.instance().registerGuiHandler(this, this.proxy);
@@ -149,46 +154,105 @@ public class AssemblyLine
 		FMLog.info("Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
 
 		// Crane Controller
-		//GameRegistry.addRecipe(new ShapedOreRecipe(blockCraneController, new Object[] { "SFS", "MCM", "SMS", 'F', blockCraneFrame, 'S', "plateSteel", 'C', "advancedCircuit", 'I', "ingotSteel", 'M', "motor" }));
+		// GameRegistry.addRecipe(new ShapedOreRecipe(blockCraneController, new Object[] { "SFS",
+		// "MCM", "SMS", 'F', blockCraneFrame, 'S', "plateSteel", 'C', "advancedCircuit", 'I',
+		// "ingotSteel", 'M', "motor" }));
 
 		// Crane Frame
-		//GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCraneFrame, 4), new Object[] { "ISI", "ISI", 'I', Item.ingotIron, 'S', Item.stick }));
-		//GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCraneFrame, 4), new Object[] { "ISI", "ISI", 'I', "ingotBronze", 'S', Item.stick }));
+		// GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCraneFrame, 4), new
+		// Object[] { "ISI", "ISI", 'I', Item.ingotIron, 'S', Item.stick }));
+		// GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCraneFrame, 4), new
+		// Object[] { "ISI", "ISI", 'I', "ingotBronze", 'S', Item.stick }));
 
+		boolean ic2 = Loader.isModLoaded("IC2");
+		boolean ue = Loader.isModLoaded("BasicComponents");
+
+		createStandardRecipes();
+		if (ic2)
+		{
+			createIC2Recipes();
+		}
+		if (ue)
+		{
+			createUERecipes();
+		}
+		if (!ic2 && !ue)
+		{
+			createVanillaRecipes();
+			REQUIRE_NO_POWER = true;
+		}
+	}
+
+	private void createVanillaRecipes()
+	{
+		// Armbot
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockArmbot, new Object[] { "II ", "SIS", "MCM", 'S', "ingotIron", 'C', Item.redstoneRepeater, 'I', "ingotIron", 'M', Block.pistonBase }));
+		// Disk
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemDisk, new Object[] { "III", "ICI", "III", 'I', itemImprint, 'C', Item.redstoneRepeater }));
+		// Encoder
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockEncoder, new Object[] { "SIS", "SCS", "SSS", 'I', itemImprint, 'S', "ingotIron", 'C', Item.redstoneRepeater }));
+		// Detector
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, new Object[] { "SES", "SCS", "SPS", 'S', "ingotIron", 'C', Block.torchRedstoneActive, 'E', Item.eyeOfEnder }));
+		// Conveyor Belt
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 10), new Object[] { "III", "WMW", 'I', "ingotIron", 'W', Block.wood, 'M', Block.pistonBase }));
+		// Rejector
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockRejector, new Object[] { "WPW", "@R@", '@', "ingotIron", 'R', Item.redstone, 'P', Block.pistonBase, 'C', Block.torchRedstoneActive, 'W', Item.redstone }));
+		// Turntable
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, new Object[] { "P", "P", 'P', Block.pistonBase }));
+		// Manipulator
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockManipulator, 2), new Object[] { Block.dispenser, Block.torchRedstoneActive }));
+	}
+
+	private void createUERecipes()
+	{
 		// Armbot
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockArmbot, new Object[] { "II ", "SIS", "MCM", 'S', "plateSteel", 'C', "advancedCircuit", 'I', "ingotSteel", 'M', "motor" }));
-
 		// Disk
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemDisk, new Object[] { "III", "ICI", "III", 'I', itemImprint, 'C', "advancedCircuit" }));
-
 		// Encoder
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockEncoder, new Object[] { "SIS", "SCS", "SSS", 'I', itemImprint, 'S', "ingotSteel", 'C', "advancedCircuit" }));
-
-		// Imprint
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemImprint, 2), new Object[] { "R", "P", "I", 'P', Item.paper, 'R', Item.redstone, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
-
-		// Imprinter (VANILLA)
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockImprinter, new Object[] { "SIS", "SPS", "WCW", 'S', Item.ingotIron, 'C', Block.chest, 'W', Block.workbench, 'P', Block.pistonBase, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
-
 		// Detector
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, new Object[] { "SES", "SCS", "SPS", 'S', "ingotSteel", 'C', "basicCircuit", 'E', Item.eyeOfEnder }));
+		// Conveyor Belt
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 10), new Object[] { "III", "WMW", 'I', "ingotSteel", 'W', Block.wood, 'M', "motor" }));
+		// Rejector
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockRejector, new Object[] { "WPW", "@R@", '@', "ingotSteel", 'R', Item.redstone, 'P', Block.pistonBase, 'C', "basicCircuit", 'W', "copperWire" }));
+		// Turntable
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, new Object[] { "M", "P", 'M', "motor", 'P', Block.pistonBase }));
+		// Manipulator
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockManipulator, 2), new Object[] { Block.dispenser, "basicCircuit" }));
+	}
 
-		// Crate (VANILLA)
+	private void createIC2Recipes()
+	{
+		// Armbot
+		Ic2Recipes.addCraftingRecipe(new ItemStack(blockArmbot, 1), new Object[] { "II ", "SIS", "MCM", 'S', "advancedAlloy", 'C', "electronicCircuit", 'I', "ingotRefinedIron", 'M', "generator" });
+		// Disk
+		Ic2Recipes.addCraftingRecipe(new ItemStack(itemDisk, 1), new Object[] { "III", "ICI", "III", 'I', itemImprint, 'C', "advancedCircuit" });
+		// Encoder
+		Ic2Recipes.addCraftingRecipe(new ItemStack(blockEncoder, 1), new Object[] { "SIS", "SCS", "SSS", 'I', itemImprint, 'S', "ingotRefinedIron", 'C', "advancedCircuit" });
+		// Detector
+		Ic2Recipes.addCraftingRecipe(new ItemStack(blockDetector, 1), new Object[] { "SES", "SCS", "SPS", 'S', "ingotRefinedIron", 'C', "electronicCircuit", 'E', Item.eyeOfEnder });
+		// Conveyor Belt
+		Ic2Recipes.addCraftingRecipe(new ItemStack(blockConveyorBelt, 10), new Object[] { "III", "WMW", 'I', "ingotRefinedIron", 'W', Block.wood, 'M', "generator" });
+		// Rejector
+		Ic2Recipes.addCraftingRecipe(new ItemStack(blockRejector, 1), new Object[] { "WPW", "@R@", '@', "ingotRefinedIron", 'R', Item.redstone, 'P', Block.pistonBase, 'C', "electronicCircuit", 'W', "insulatedCopperCableItem" });
+		// Turntable
+		Ic2Recipes.addCraftingRecipe(new ItemStack(blockTurntable, 1), new Object[] { "M", "P", 'M', "generator", 'P', Block.pistonBase });
+		// Manipulator
+		Ic2Recipes.addCraftingRecipe(new ItemStack(blockManipulator, 2), new Object[] { Block.dispenser, "electronicCircuit" });
+	}
+
+	private void createStandardRecipes()
+	{
+		// Imprint
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemImprint, 2), new Object[] { "R", "P", "I", 'P', Item.paper, 'R', Item.redstone, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
+		// Imprinter
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockImprinter, new Object[] { "SIS", "SPS", "WCW", 'S', Item.ingotIron, 'C', Block.chest, 'W', Block.workbench, 'P', Block.pistonBase, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
+		// Crate
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 0), new Object[] { "TST", "S S", "TST", 'S', Item.ingotIron, 'T', Block.wood }));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 1), new Object[] { "TST", "SCS", "TST", 'C', new ItemStack(blockCrate, 1, 0), 'S', Item.ingotIron, 'T', Block.wood }));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 2), new Object[] { "TST", "SCS", "TST", 'C', new ItemStack(blockCrate, 1, 1), 'S', Item.ingotIron, 'T', Block.wood }));
-
-		// Conveyor Belt
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 10), new Object[] { "III", "WMW", 'I', "ingotSteel", 'W', Block.wood, 'M', "motor" }));
-
-		// Rejector
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockRejector, new Object[] { "WPW", "@R@", '@', "ingotSteel", 'R', Item.redstone, 'P', Block.pistonBase, 'C', "basicCircuit", 'W', "copperWire" }));
-
-		// Turntable
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, new Object[] { "M", "P", 'M', "motor", 'P', Block.pistonBase }));
-
-		// Manipulator
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockManipulator, 2), new Object[] { Block.dispenser, "basicCircuit" }));
 	}
 
 	public static void printSidedData(String data)

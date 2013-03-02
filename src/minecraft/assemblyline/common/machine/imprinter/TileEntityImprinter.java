@@ -206,6 +206,8 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer player)
 	{
+		if (this.worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
+			return false;
 		return true;
 	}
 

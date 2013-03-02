@@ -23,7 +23,7 @@ public abstract class TileEntityAssemblyNetwork extends TIC2Runnable
 
 	public boolean isRunning()
 	{
-		return AssemblyLine.DEBUG_MODE || this.powerTransferRange > 0 || this.wattsReceived > this.getRequest().getWatts();
+		return AssemblyLine.REQUIRE_NO_POWER || this.powerTransferRange > 0 || this.wattsReceived > this.getRequest().getWatts();
 	}
 
 	public void updatePowerTransferRange()

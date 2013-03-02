@@ -1,5 +1,7 @@
 package assemblyline.common;
 
+import ic2.api.Items;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -117,15 +119,18 @@ public class CommonProxy implements IGuiHandler
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-
-		switch (ID)
+		
+		if (tileEntity != null)
 		{
-			case GUI_IMPRINTER:
-				return new ContainerImprinter(player.inventory, (TileEntityImprinter) tileEntity);
-			case GUI_ENCODER:
+			switch (ID)
 			{
-				if (tileEntity != null && tileEntity instanceof TileEntityEncoder)
-					return new ContainerEncoder(player.inventory, (TileEntityEncoder) tileEntity);
+				case GUI_IMPRINTER:
+					return new ContainerImprinter(player.inventory, (TileEntityImprinter) tileEntity);
+				case GUI_ENCODER:
+				{
+					if (tileEntity != null && tileEntity instanceof TileEntityEncoder)
+						return new ContainerEncoder(player.inventory, (TileEntityEncoder) tileEntity);
+				}
 			}
 		}
 
@@ -149,6 +154,6 @@ public class CommonProxy implements IGuiHandler
 		{
 			return false;
 		}
-		return player.getCurrentEquippedItem().getItem() instanceof IToolWrench;
+		return player.getCurrentEquippedItem().getItem() instanceof IToolWrench || (Items.getItem("wrench") != null && player.getCurrentEquippedItem().isItemEqual(Items.getItem("wrench")));
 	}
 }

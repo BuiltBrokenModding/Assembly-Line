@@ -63,13 +63,16 @@ public class ClientProxy extends CommonProxy
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		switch (ID)
+		if (tileEntity != null)
 		{
-			case GUI_IMPRINTER:
-				return new GuiImprinter(player.inventory, (TileEntityImprinter) tileEntity);
-			case GUI_ENCODER:
-				if (tileEntity != null && tileEntity instanceof TileEntityEncoder)
-					return new GuiEncoder(player.inventory, (TileEntityEncoder) tileEntity);
+			switch (ID)
+			{
+				case GUI_IMPRINTER:
+					return new GuiImprinter(player.inventory, (TileEntityImprinter) tileEntity);
+				case GUI_ENCODER:
+					if (tileEntity != null && tileEntity instanceof TileEntityEncoder)
+						return new GuiEncoder(player.inventory, (TileEntityEncoder) tileEntity);
+			}
 		}
 
 		return null;
