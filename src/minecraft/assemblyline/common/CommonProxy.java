@@ -11,6 +11,7 @@ import java.util.zip.ZipInputStream;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import universalelectricity.prefab.implement.IToolConfigurator;
 import universalelectricity.prefab.multiblock.TileEntityMulti;
 import assemblyline.common.block.TileEntityCrate;
 import assemblyline.common.machine.TileEntityManipulator;
@@ -145,16 +146,5 @@ public class CommonProxy implements IGuiHandler
 	public boolean isCtrKeyDown()
 	{
 		return false;
-	}
-
-	public static boolean isHoldingBCWrench(EntityPlayer player)
-	{
-		if (player.getCurrentEquippedItem() != null)
-		{
-			return (Items.getItem("wrench") != null && player.getCurrentEquippedItem().isItemEqual(Items.getItem("wrench")));
-		}
-		
-		return false;
-
 	}
 }

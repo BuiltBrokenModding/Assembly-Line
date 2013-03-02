@@ -1,5 +1,6 @@
 package assemblyline.common.block;
 
+import ic2.api.Items;
 import assemblyline.common.CommonProxy;
 import universalelectricity.core.implement.IItemElectric;
 import universalelectricity.prefab.BlockMachine;
@@ -33,7 +34,7 @@ public class BlockALMachine extends BlockMachine
 	{
 		this(string, id, material);
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
 	{
@@ -42,13 +43,26 @@ public class BlockALMachine extends BlockMachine
 		 */
 		if (player.inventory.getCurrentItem() != null)
 		{
-			if (CommonProxy.isHoldingBCWrench(player))
+			if (isHoldingWrench(player))
 			{
 				return this.onUseWrench(world, x, y, z, player, side, hitX, hitY, hitZ);
 			}
 		}
-		
+
 		return super.onBlockActivated(world, x, y, z, player, side, hitX, hitY, hitZ);
 	}
-	
+
+	/**
+	 * Checks if the player is holding a foreign wrench.
+	 */
+	public static boolean isHoldingWrench(EntityPlayer player)
+	{
+		if (player.getCurrentEquippedItem() != null)
+		{
+			return (Items.getItem("wrench") != null && player.getCurrentEquippedItem().isItemEqual(Items.getItem("wrench")));
+		}
+
+		return false;
+
+	}
 }

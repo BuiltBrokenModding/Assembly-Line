@@ -14,6 +14,7 @@ import universalelectricity.core.implement.IItemElectric;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.implement.IToolConfigurator;
 import assemblyline.common.AssemblyLine;
+import assemblyline.common.PathfinderCrate;
 import assemblyline.common.TabAssemblyLine;
 
 /**
@@ -138,24 +139,16 @@ public class BlockCrate extends BlockALMachine
 		{
 			success = this.insertCurrentItem(tileEntity, player);
 		}
-
+		
 		if (!success && doSearch)
 		{
-			int radius = 10;
-			for (int x = -radius; x < radius; x++)
-			{
-				for (int y = -radius; y < radius; y++)
-				{
-					for (int z = -radius; z < radius; z++)
-					{
-						Vector3 position = Vector3.add(new Vector3(tileEntity), new Vector3(x, y, z));
-						TileEntity checkTile = position.getTileEntity(tileEntity.worldObj);
+			PathfinderCrate pathfinder = new PathfinderCrate().init(tileEntity);
 
-						if (checkTile instanceof TileEntityCrate)
-						{
-							AssemblyLine.blockCrate.tryInsert(((TileEntityCrate) checkTile), player, allMode, false);
-						}
-					}
+			for (TileEntity checkTile : pathfinder.iteratedNodes)
+			{
+				if (checkTile instanceof TileEntityCrate)
+				{
+					AssemblyLine.blockCrate.tryInsert(((TileEntityCrate) checkTile), player, allMode, false);
 				}
 			}
 		}
