@@ -24,7 +24,6 @@ import assemblyline.common.machine.encoder.ContainerEncoder;
 import assemblyline.common.machine.encoder.TileEntityEncoder;
 import assemblyline.common.machine.imprinter.ContainerImprinter;
 import assemblyline.common.machine.imprinter.TileEntityImprinter;
-import buildcraft.api.tools.IToolWrench;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -119,7 +118,7 @@ public class CommonProxy implements IGuiHandler
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-		
+
 		if (tileEntity != null)
 		{
 			switch (ID)
@@ -150,10 +149,12 @@ public class CommonProxy implements IGuiHandler
 
 	public static boolean isHoldingBCWrench(EntityPlayer player)
 	{
-		if (player.getCurrentEquippedItem() == null)
+		if (player.getCurrentEquippedItem() != null)
 		{
-			return false;
+			return (Items.getItem("wrench") != null && player.getCurrentEquippedItem().isItemEqual(Items.getItem("wrench")));
 		}
-		return player.getCurrentEquippedItem().getItem() instanceof IToolWrench || (Items.getItem("wrench") != null && player.getCurrentEquippedItem().isItemEqual(Items.getItem("wrench")));
+		
+		return false;
+
 	}
 }
