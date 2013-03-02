@@ -1,4 +1,4 @@
-package hydraulic.core.prefab;
+package hydraulic.prefab;
 
 import java.util.Random;
 

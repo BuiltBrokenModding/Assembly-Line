@@ -1,4 +1,4 @@
-package hydraulic.core.prefab;
+package hydraulic.prefab;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;

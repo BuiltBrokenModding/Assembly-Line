@@ -1,4 +1,4 @@
-package hydraulic.core.prefab;
+package hydraulic.prefab;
 
 import hydraulic.core.implement.IColorCoded;
 import hydraulic.core.implement.IFluidPipe;
@@ -97,9 +97,6 @@ public abstract class TileEntityFluidConveyor extends TileEntityAdvanced impleme
 				{
 					HydraulicNetworkManager.instance.splitConnection(this, (IFluidPipe) this.getConnectedBlocks()[side.ordinal()]);
 				}
-
-				//this.getNetwork().stopProducing(this.connectedBlocks[side.ordinal()]);
-				//this.getNetwork().stopRequesting(this.connectedBlocks[side.ordinal()]);
 			}
 
 			this.connectedBlocks[side.ordinal()] = null;
