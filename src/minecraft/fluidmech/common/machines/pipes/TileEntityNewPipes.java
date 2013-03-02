@@ -1,20 +1,17 @@
 package fluidmech.common.machines.pipes;
 
-import com.google.common.io.ByteArrayDataInput;
-
-import hydraulic.core.implement.ColorCode;
-import hydraulic.core.prefab.TileEntityFluidConveyor;
 import fluidmech.common.FluidMech;
+import hydraulic.core.implement.ColorCode;
+import hydraulic.prefab.TileEntityFluidConveyor;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.LiquidContainerData;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
-import universalelectricity.prefab.tile.TileEntityConductor;
-import basiccomponents.common.BCLoader;
+
+import com.google.common.io.ByteArrayDataInput;
 
 public class TileEntityNewPipes extends TileEntityFluidConveyor
 {
