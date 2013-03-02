@@ -76,4 +76,5 @@ x AssemblyLine_v0.2.4.64.jar AssemblyLine_v0.2.4.64_api.zip
 @ AssemblyLine_v0.2.7.82.jar AssemblyLine_v0.2.7.82_api.zip
 * AssemblyLine_v0.2.7.85.jar AssemblyLine_v0.2.7.85_api.zip
 @ AssemblyLine_v0.2.7.86.jar AssemblyLine_v0.2.7.86_api.zip
-* AssemblyLine_v0.2.7.87.jar AssemblyLine_v0.2.7.87_api.zip
+x AssemblyLine_v0.2.7.87.jar AssemblyLine_v0.2.7.87_api.zip
+* AssemblyLine_v0.2.7.88.jar AssemblyLine_v0.2.7.88_api.zip
