@@ -46,7 +46,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(modid = AssemblyLine.CHANNEL, name = AssemblyLine.NAME, version = AssemblyLine.VERSION, dependencies = "after:BasicComponents")
+@Mod(modid = AssemblyLine.CHANNEL, name = AssemblyLine.NAME, version = AssemblyLine.VERSION, dependencies = "after:BasicComponents, after:IC2")
 @NetworkMod(channels = { AssemblyLine.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
 public class AssemblyLine
 {
@@ -192,7 +192,7 @@ public class AssemblyLine
 		// Encoder
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockEncoder, new Object[] { "SIS", "SCS", "SSS", 'I', itemImprint, 'S', "ingotIron", 'C', Item.redstoneRepeater }));
 		// Detector
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, new Object[] { "SES", "SCS", "SPS", 'S', "ingotIron", 'C', Block.torchRedstoneActive, 'E', Item.eyeOfEnder }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, new Object[] { "SES", "SCS", "S S", 'S', "ingotIron", 'C', Block.torchRedstoneActive, 'E', Item.eyeOfEnder }));
 		// Conveyor Belt
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 10), new Object[] { "III", "WMW", 'I', "ingotIron", 'W', Block.wood, 'M', Block.pistonBase }));
 		// Rejector
@@ -212,7 +212,7 @@ public class AssemblyLine
 		// Encoder
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockEncoder, new Object[] { "SIS", "SCS", "SSS", 'I', itemImprint, 'S', "ingotSteel", 'C', "advancedCircuit" }));
 		// Detector
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, new Object[] { "SES", "SCS", "SPS", 'S', "ingotSteel", 'C', "basicCircuit", 'E', Item.eyeOfEnder }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, new Object[] { "SES", "SCS", "S S", 'S', "ingotSteel", 'C', "basicCircuit", 'E', Item.eyeOfEnder }));
 		// Conveyor Belt
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 10), new Object[] { "III", "WMW", 'I', "ingotSteel", 'W', Block.wood, 'M', "motor" }));
 		// Rejector
@@ -232,7 +232,7 @@ public class AssemblyLine
 		// Encoder
 		Ic2Recipes.addCraftingRecipe(new ItemStack(blockEncoder, 1), new Object[] { "SIS", "SCS", "SSS", 'I', itemImprint, 'S', "ingotRefinedIron", 'C', "advancedCircuit" });
 		// Detector
-		Ic2Recipes.addCraftingRecipe(new ItemStack(blockDetector, 1), new Object[] { "SES", "SCS", "SPS", 'S', "ingotRefinedIron", 'C', "electronicCircuit", 'E', Item.eyeOfEnder });
+		Ic2Recipes.addCraftingRecipe(new ItemStack(blockDetector, 1), new Object[] { "SES", "SCS", "S S", 'S', "ingotRefinedIron", 'C', "electronicCircuit", 'E', Item.eyeOfEnder });
 		// Conveyor Belt
 		Ic2Recipes.addCraftingRecipe(new ItemStack(blockConveyorBelt, 10), new Object[] { "III", "WMW", 'I', "ingotRefinedIron", 'W', Block.wood, 'M', "generator" });
 		// Rejector
