@@ -20,9 +20,4 @@ CHANGELOG
 !/models/
 !info.txt
 !AssemblyLineStandard.xml
-publish.bat
-publish_obf.bat
-include.bat
-include2.bat
-buildlocal.bat
 !/README
