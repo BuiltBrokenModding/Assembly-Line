@@ -67,7 +67,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 			{
 				if (!this.isOutput)
 				{
-					this.eject();
+					this.inject();
 				}
 				else
 				{
@@ -81,7 +81,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 					 */
 					if (this.isRedstonePowered)
 					{
-						this.inject();
+						this.eject();
 					}
 				}
 			}
@@ -92,7 +92,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 	 * Find items going into the manipulator and input them into an inventory behind this manipulator.
 	 */
 	@Override
-	public void eject()
+	public void inject()
 	{
 		Vector3 inputPosition = new Vector3(this);
 
@@ -154,7 +154,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 	 * Inject items
 	 */
 	@Override
-	public void inject()
+	public void eject()
 	{
 		this.onPowerOff();
 
