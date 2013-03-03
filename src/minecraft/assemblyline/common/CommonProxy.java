@@ -11,6 +11,7 @@ import java.util.zip.ZipInputStream;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import universalelectricity.prefab.implement.IToolConfigurator;
 import universalelectricity.prefab.multiblock.TileEntityMulti;
 import assemblyline.common.block.TileEntityCrate;
 import assemblyline.common.machine.TileEntityManipulator;
@@ -24,7 +25,6 @@ import assemblyline.common.machine.encoder.ContainerEncoder;
 import assemblyline.common.machine.encoder.TileEntityEncoder;
 import assemblyline.common.machine.imprinter.ContainerImprinter;
 import assemblyline.common.machine.imprinter.TileEntityImprinter;
-import buildcraft.api.tools.IToolWrench;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -119,7 +119,7 @@ public class CommonProxy implements IGuiHandler
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-		
+
 		if (tileEntity != null)
 		{
 			switch (ID)
@@ -146,14 +146,5 @@ public class CommonProxy implements IGuiHandler
 	public boolean isCtrKeyDown()
 	{
 		return false;
-	}
-
-	public static boolean isHoldingBCWrench(EntityPlayer player)
-	{
-		if (player.getCurrentEquippedItem() == null)
-		{
-			return false;
-		}
-		return player.getCurrentEquippedItem().getItem() instanceof IToolWrench || (Items.getItem("wrench") != null && player.getCurrentEquippedItem().isItemEqual(Items.getItem("wrench")));
 	}
 }

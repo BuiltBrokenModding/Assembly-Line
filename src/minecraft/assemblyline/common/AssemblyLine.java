@@ -46,7 +46,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(modid = AssemblyLine.CHANNEL, name = AssemblyLine.NAME, version = AssemblyLine.VERSION, dependencies = "after:BasicComponents, after:IC2")
+@Mod(modid = AssemblyLine.CHANNEL, name = AssemblyLine.NAME, version = AssemblyLine.VERSION, dependencies = "after:BasicComponents; after:IC2")
 @NetworkMod(channels = { AssemblyLine.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
 public class AssemblyLine
 {
@@ -58,7 +58,7 @@ public class AssemblyLine
 
 	public static final String NAME = "Assembly Line";
 
-	public static final String VERSION = "0.2.7";
+	public static final String VERSION = "0.2.8";
 
 	public static final String CHANNEL = "AssemblyLine";
 
