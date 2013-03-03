@@ -240,7 +240,7 @@ public class AssemblyLine
 		// Turntable
 		Ic2Recipes.addCraftingRecipe(new ItemStack(blockTurntable, 1), new Object[] { "M", "P", 'M', "generator", 'P', Block.pistonBase });
 		// Manipulator
-		Ic2Recipes.addCraftingRecipe(new ItemStack(blockManipulator, 2), new Object[] { Block.dispenser, "electronicCircuit" });
+		Ic2Recipes.addShapelessCraftingRecipe(new ItemStack(blockManipulator, 2), new Object[] { Block.dispenser, "electronicCircuit" });
 	}
 
 	private void createStandardRecipes()
