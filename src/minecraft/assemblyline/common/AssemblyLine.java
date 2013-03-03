@@ -185,6 +185,7 @@ public class AssemblyLine
 
 	private void createVanillaRecipes()
 	{
+		System.out.println("No crafting ingredient source found. Creating cheap-o vanilla recipes.");
 		// Armbot
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockArmbot, new Object[] { "II ", "SIS", "MCM", 'S', "ingotIron", 'C', Item.redstoneRepeater, 'I', "ingotIron", 'M', Block.pistonBase }));
 		// Disk
@@ -205,6 +206,7 @@ public class AssemblyLine
 
 	private void createUERecipes()
 	{
+		System.out.println("BasicComponents Found...adding UE recipes for Assembly Line.");
 		// Armbot
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockArmbot, new Object[] { "II ", "SIS", "MCM", 'S', "plateSteel", 'C', "advancedCircuit", 'I', "ingotSteel", 'M', "motor" }));
 		// Disk
@@ -225,6 +227,7 @@ public class AssemblyLine
 
 	private void createIC2Recipes()
 	{
+		System.out.println("IC2 Found...adding IC2 recipes for Assembly Line.");
 		// Armbot
 		Ic2Recipes.addCraftingRecipe(new ItemStack(blockArmbot, 1), new Object[] { "II ", "SIS", "MCM", 'S', "advancedAlloy", 'C', "electronicCircuit", 'I', "ingotRefinedIron", 'M', "generator" });
 		// Disk
