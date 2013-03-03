@@ -1,14 +1,12 @@
 package assemblyline.common.block;
 
 import ic2.api.Items;
-import assemblyline.common.CommonProxy;
-import universalelectricity.core.implement.IItemElectric;
-import universalelectricity.prefab.BlockMachine;
-import universalelectricity.prefab.implement.IToolConfigurator;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+import universalelectricity.prefab.BlockMachine;
+import buildcraft.api.tools.IToolWrench;
 
 public class BlockALMachine extends BlockMachine
 {
@@ -45,10 +43,16 @@ public class BlockALMachine extends BlockMachine
 		{
 			if (isHoldingWrench(player))
 			{
+				if (player.isSneaking())
+				{
+					if (this.onSneakMachineActivated(world, x, y, z, player, side, hitX, hitY, hitZ))
+						return true;
+					if (this.onSneakUseWrench(world, x, y, z, player, side, hitX, hitY, hitZ))
+						return true;
+				}
 				return this.onUseWrench(world, x, y, z, player, side, hitX, hitY, hitZ);
 			}
 		}
-
 		return super.onBlockActivated(world, x, y, z, player, side, hitX, hitY, hitZ);
 	}
 
@@ -59,7 +63,7 @@ public class BlockALMachine extends BlockMachine
 	{
 		if (player.getCurrentEquippedItem() != null)
 		{
-			return (Items.getItem("wrench") != null && player.getCurrentEquippedItem().isItemEqual(Items.getItem("wrench")));
+			return ((Items.getItem("wrench") != null && player.getCurrentEquippedItem().isItemEqual(Items.getItem("wrench"))) || player.getCurrentEquippedItem().getItem() instanceof IToolWrench);
 		}
 
 		return false;

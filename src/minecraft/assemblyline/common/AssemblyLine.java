@@ -1,6 +1,7 @@
 package assemblyline.common;
 
 import ic2.api.Ic2Recipes;
+import ic2.api.Items;
 
 import java.io.File;
 import java.util.logging.Logger;
@@ -229,21 +230,21 @@ public class AssemblyLine
 	{
 		System.out.println("IC2 Found...adding IC2 recipes for Assembly Line.");
 		// Armbot
-		Ic2Recipes.addCraftingRecipe(new ItemStack(blockArmbot, 1), "II ", "SIS", "MCM", 'S', "advancedAlloy", 'C', "electronicCircuit", 'I', "ingotRefinedIron", 'M', "generator");
+		Ic2Recipes.addCraftingRecipe(new ItemStack(blockArmbot, 1), "II ", "SIS", "MCM", 'S', Items.getItem("advancedAlloy"), 'C', Items.getItem("electronicCircuit"), 'I', "ingotRefinedIron", 'M', Items.getItem("generator"));
 		// Disk
-		Ic2Recipes.addCraftingRecipe(new ItemStack(itemDisk, 1), "III", "ICI", "III", 'I', itemImprint, 'C', "advancedCircuit");
+		Ic2Recipes.addCraftingRecipe(new ItemStack(itemDisk, 1), "III", "ICI", "III", 'I', itemImprint, 'C', Items.getItem("advancedCircuit"));
 		// Encoder
-		Ic2Recipes.addCraftingRecipe(new ItemStack(blockEncoder, 1), "SIS", "SCS", "SSS", 'I', itemImprint, 'S', "ingotRefinedIron", 'C', "advancedCircuit");
+		Ic2Recipes.addCraftingRecipe(new ItemStack(blockEncoder, 1), "SIS", "SCS", "SSS", 'I', itemImprint, 'S', "ingotRefinedIron", 'C', Items.getItem("advancedCircuit"));
 		// Detector
-		Ic2Recipes.addCraftingRecipe(new ItemStack(blockDetector, 1), "SES", "SCS", "S S", 'S', "ingotRefinedIron", 'C', "electronicCircuit", 'E', Item.eyeOfEnder);
+		Ic2Recipes.addCraftingRecipe(new ItemStack(blockDetector, 1), "SES", "SCS", "S S", 'S', "ingotRefinedIron", 'C', Items.getItem("electronicCircuit"), 'E', Item.eyeOfEnder);
 		// Conveyor Belt
-		Ic2Recipes.addCraftingRecipe(new ItemStack(blockConveyorBelt, 10), "III", "WMW", 'I', "ingotRefinedIron", 'W', Block.planks, 'M', "generator");
+		Ic2Recipes.addCraftingRecipe(new ItemStack(blockConveyorBelt, 10), "III", "WMW", 'I', "ingotRefinedIron", 'W', Block.planks, 'M', Items.getItem("generator"));
 		// Rejector
-		Ic2Recipes.addCraftingRecipe(new ItemStack(blockRejector, 1), "WPW", "@R@", '@', "ingotRefinedIron", 'R', Item.redstone, 'P', Block.pistonBase, 'C', "electronicCircuit", 'W', "insulatedCopperCableItem");
+		Ic2Recipes.addCraftingRecipe(new ItemStack(blockRejector, 1), "WPW", "@R@", '@', "ingotRefinedIron", 'R', Item.redstone, 'P', Block.pistonBase, 'C', Items.getItem("electronicCircuit"), 'W', Items.getItem("insulatedCopperCableItem"));
 		// Turntable
-		Ic2Recipes.addCraftingRecipe(new ItemStack(blockTurntable, 1), "M", "P", 'M', "generator", 'P', Block.pistonBase);
+		Ic2Recipes.addCraftingRecipe(new ItemStack(blockTurntable, 1), "M", "P", 'M', Items.getItem("generator"), 'P', Block.pistonBase);
 		// Manipulator
-		Ic2Recipes.addShapelessCraftingRecipe(new ItemStack(blockManipulator, 2), new Object[] { Block.dispenser, "electronicCircuit" });
+		Ic2Recipes.addShapelessCraftingRecipe(new ItemStack(blockManipulator, 2), Block.dispenser, Items.getItem("electronicCircuit"));
 	}
 
 	private void createStandardRecipes()

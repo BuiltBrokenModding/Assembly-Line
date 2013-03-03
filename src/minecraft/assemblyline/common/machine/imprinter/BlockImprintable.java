@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
 import assemblyline.api.IFilterable;
 import assemblyline.common.block.BlockALMachine;
+import cpw.mods.fml.common.FMLCommonHandler;
 
 /**
  * Extend this block class if a filter is allowed to be placed inside of this block.
@@ -83,6 +84,7 @@ public abstract class BlockImprintable extends BlockALMachine
 			{
 				((TileEntityFilterable) tileEntity).toggleInversion();
 				world.markBlockForRenderUpdate(x, y, z);
+				world.markBlockForUpdate(x, y, z);
 			}
 		}
 

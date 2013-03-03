@@ -138,6 +138,7 @@ public abstract class TileEntityFilterable extends TileEntityAssemblyNetwork imp
 				x = dis.readInt();
 				y = dis.readInt();
 				z = dis.readInt();
+				this.worldObj.markBlockForRenderUpdate(x, y, z);
 				NBTTagCompound tag = Packet.readNBTTagCompound(dis);
 				readFromNBT(tag);
 			}
