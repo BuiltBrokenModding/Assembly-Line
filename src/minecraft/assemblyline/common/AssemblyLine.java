@@ -95,7 +95,7 @@ public class AssemblyLine
 
 	public static Logger FMLog = Logger.getLogger(AssemblyLine.NAME);
 
-	//TODO: MAKE THIS FALSE EVERY BUILD!
+	// TODO: MAKE THIS FALSE EVERY BUILD!
 	public static final boolean DEBUG = false;
 	public static boolean REQUIRE_NO_POWER = false;
 
@@ -122,7 +122,7 @@ public class AssemblyLine
 
 		itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", ITEM_ID_PREFIX).getInt());
 		itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", ITEM_ID_PREFIX + 1).getInt());
-		
+
 		REQUIRE_NO_POWER = DEBUG || !CONFIGURATION.get("general", "requirePower", true).getBoolean(true);
 		CONFIGURATION.save();
 
@@ -195,7 +195,7 @@ public class AssemblyLine
 		// Detector
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, new Object[] { "SES", "SCS", "S S", 'S', "ingotIron", 'C', Block.torchRedstoneActive, 'E', Item.eyeOfEnder }));
 		// Conveyor Belt
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 10), new Object[] { "III", "WMW", 'I', "ingotIron", 'W', Block.wood, 'M', Block.pistonBase }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 10), new Object[] { "III", "WMW", 'I', "ingotIron", 'W', Block.planks, 'M', Block.pistonBase }));
 		// Rejector
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockRejector, new Object[] { "WPW", "@R@", '@', "ingotIron", 'R', Item.redstone, 'P', Block.pistonBase, 'C', Block.torchRedstoneActive, 'W', Item.redstone }));
 		// Turntable
@@ -216,7 +216,7 @@ public class AssemblyLine
 		// Detector
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, new Object[] { "SES", "SCS", "S S", 'S', "ingotSteel", 'C', "basicCircuit", 'E', Item.eyeOfEnder }));
 		// Conveyor Belt
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 10), new Object[] { "III", "WMW", 'I', "ingotSteel", 'W', Block.wood, 'M', "motor" }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 10), new Object[] { "III", "WMW", 'I', "ingotSteel", 'W', Block.planks, 'M', "motor" }));
 		// Rejector
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockRejector, new Object[] { "WPW", "@R@", '@', "ingotSteel", 'R', Item.redstone, 'P', Block.pistonBase, 'C', "basicCircuit", 'W', "copperWire" }));
 		// Turntable
@@ -237,7 +237,7 @@ public class AssemblyLine
 		// Detector
 		Ic2Recipes.addCraftingRecipe(new ItemStack(blockDetector, 1), new Object[] { "SES", "SCS", "S S", 'S', "ingotRefinedIron", 'C', "electronicCircuit", 'E', Item.eyeOfEnder });
 		// Conveyor Belt
-		Ic2Recipes.addCraftingRecipe(new ItemStack(blockConveyorBelt, 10), new Object[] { "III", "WMW", 'I', "ingotRefinedIron", 'W', Block.wood, 'M', "generator" });
+		Ic2Recipes.addCraftingRecipe(new ItemStack(blockConveyorBelt, 10), new Object[] { "III", "WMW", 'I', "ingotRefinedIron", 'W', Block.planks, 'M', "generator" });
 		// Rejector
 		Ic2Recipes.addCraftingRecipe(new ItemStack(blockRejector, 1), new Object[] { "WPW", "@R@", '@', "ingotRefinedIron", 'R', Item.redstone, 'P', Block.pistonBase, 'C', "electronicCircuit", 'W', "insulatedCopperCableItem" });
 		// Turntable
