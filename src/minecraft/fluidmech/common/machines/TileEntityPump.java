@@ -88,7 +88,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
 	{
 		super.updateEntity();
 
-		if (!this.worldObj.isRemote)
+		if (!this.worldObj.isRemote && !this.isDisabled())
 		{
 			// consume/give away stored units
 			this.chargeUp();
@@ -195,22 +195,17 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
 		{
 			return false;
 		}
-
-		if (this.isDisabled())
+		else if ((LiquidHandler.getFromBlockID(worldObj.getBlockId(x, y, z)) == null || LiquidHandler.getFromBlockID(worldObj.getBlockId(x, y, z)) == LiquidHandler.unkown))
 		{
 			return false;
 		}
+		else
 
-		if ((LiquidHandler.getFromBlockID(worldObj.getBlockId(x, y, z)) == null || LiquidHandler.getFromBlockID(worldObj.getBlockId(x, y, z)) == LiquidHandler.unkown))
+		if (blockID == Block.waterMoving.blockID || blockID == Block.lavaMoving.blockID)
 		{
 			return false;
 		}
-
-		if (blockID == Block.waterMoving.blockID || blockID == Block.lavaStill.blockID)
-		{
-			return false;
-		}
-		if (blockID == Block.waterStill.blockID || blockID == Block.waterStill.blockID)
+		else if (blockID == Block.waterStill.blockID || blockID == Block.waterStill.blockID)
 		{
 
 		}
@@ -228,7 +223,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
 		int blockID = worldObj.getBlockId(loc.intX(), loc.intY(), loc.intZ());
 		int meta = worldObj.getBlockMetadata(loc.intX(), loc.intY(), loc.intZ());
 		LiquidData resource = LiquidHandler.getFromBlockID(blockID);
-		
+
 		if (resource == color.getLiquidData() && meta == 0 && this.fillTarget.fill(back, resource.getStack(), false) != 0)
 		{
 
@@ -278,7 +273,7 @@ public class TileEntityPump extends TileEntityElectricityReceiver implements IPa
 
 	@Override
 	public boolean getCanPressureTo(LiquidData type, ForgeDirection dir)
-	{		
+	{
 		return dir == this.side.getOpposite() && this.color.isValidLiquid(type.getStack());
 	}
 
