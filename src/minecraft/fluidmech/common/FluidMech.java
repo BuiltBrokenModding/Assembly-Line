@@ -130,8 +130,6 @@ public class FluidMech extends DummyModContainer
 
         // Items
         itemParts = new ItemParts(this.CONFIGURATION.getItem("Parts", ITEM_ID_PREFIX).getInt());
-        // itemPipes = new ItemPipe(this.CONFIGURATION.getItem("PipeItem",
-        // ITEM_ID_PREFIX + 1).getInt());
 
         // Valve item
         itemGauge = new ItemGuage(this.CONFIGURATION.getItem("PipeGuage", ITEM_ID_PREFIX + 3).getInt());
@@ -164,7 +162,7 @@ public class FluidMech extends DummyModContainer
         GameRegistry.registerTileEntity(TileEntityTank.class, "lmTank");
         GameRegistry.registerTileEntity(TileEntityGenerator.class, "lmGen");
         GameRegistry.registerTileEntity(TileEntitySink.class, "lmSink");
-        FMLog.info("Fluid Mechanics Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
+        FMLog.info(" Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
 
     }
 
