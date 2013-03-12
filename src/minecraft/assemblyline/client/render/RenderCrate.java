@@ -1,7 +1,5 @@
 package assemblyline.client.render;
 
-import java.util.ArrayList;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -22,8 +20,6 @@ import net.minecraftforge.common.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import assemblyline.common.block.TileEntityCrate;
-import assemblyline.common.machine.imprinter.ItemImprinter;
-import assemblyline.common.machine.imprinter.TileEntityFilterable;
 
 public class RenderCrate extends TileEntitySpecialRenderer
 {

@@ -10,9 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
-import universalelectricity.core.implement.IItemElectric;
-import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.implement.IToolConfigurator;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.PathfinderCrate;
 import assemblyline.common.TabAssemblyLine;
@@ -121,7 +118,7 @@ public class BlockCrate extends BlockALMachine
 		{
 			success = this.insertCurrentItem(tileEntity, player);
 		}
-		
+
 		if (!success && doSearch)
 		{
 			PathfinderCrate pathfinder = new PathfinderCrate().init(tileEntity);
