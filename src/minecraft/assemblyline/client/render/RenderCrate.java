@@ -1,5 +1,7 @@
 package assemblyline.client.render;
 
+import java.util.ArrayList;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -9,8 +11,10 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.common.ForgeDirection;
@@ -18,23 +22,25 @@ import net.minecraftforge.common.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import assemblyline.common.block.TileEntityCrate;
+import assemblyline.common.machine.imprinter.ItemImprinter;
+import assemblyline.common.machine.imprinter.TileEntityFilterable;
 
 public class RenderCrate extends TileEntitySpecialRenderer
 {
 	private final RenderBlocks renderBlocks = new RenderBlocks();
 
 	@Override
-	public void renderTileEntityAt(TileEntity var1, double x, double y, double z, float var8)
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)
 	{
-		if (var1 instanceof TileEntityCrate)
+		if (tileEntity instanceof TileEntityCrate)
 		{
-			TileEntityCrate tileEntity = (TileEntityCrate) var1;
+			TileEntityCrate tileCrate = (TileEntityCrate) tileEntity;
 
 			RenderItem renderItem = ((RenderItem) RenderManager.instance.getEntityClassRenderObject(EntityItem.class));
 
 			String itemName = "Empty";
 			String amount = "";
-			ItemStack itemStack = tileEntity.getStackInSlot(0);
+			ItemStack itemStack = tileCrate.getStackInSlot(0);
 
 			if (itemStack != null)
 			{
@@ -45,10 +51,11 @@ public class RenderCrate extends TileEntitySpecialRenderer
 			for (int side = 2; side < 6; side++)
 			{
 				ForgeDirection direction = ForgeDirection.getOrientation(side);
-				boolean solid = tileEntity.worldObj.isBlockSolidOnSide(tileEntity.xCoord + direction.offsetX, tileEntity.yCoord, tileEntity.zCoord + direction.offsetZ, direction.getOpposite());
+				boolean solid = tileCrate.worldObj.isBlockSolidOnSide(tileCrate.xCoord + direction.offsetX, tileCrate.yCoord, tileCrate.zCoord + direction.offsetZ, direction.getOpposite());
 				if (solid)
 					continue;
-				this.setupLight(tileEntity, direction.offsetX, direction.offsetZ);
+				this.setupLight(tileCrate, direction.offsetX, direction.offsetZ);
+				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 
 				if (itemStack != null)
 				{
@@ -100,6 +107,17 @@ public class RenderCrate extends TileEntitySpecialRenderer
 				if (amount != "")
 				{
 					this.renderText(amount, side, 0.02f, x, y - 0.15f, z);
+				}
+			}
+
+			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+			MovingObjectPosition objectPosition = player.rayTrace(8, 1);
+
+			if (objectPosition != null)
+			{
+				if (objectPosition.blockX == tileCrate.xCoord && objectPosition.blockY == tileCrate.yCoord && objectPosition.blockZ == tileCrate.zCoord)
+				{
+					RenderHelper.renderFloatingText(itemName + (amount.isEmpty() ? "" : " (" + amount + ")"), (float) x + 0.5f, (float) y - 1f, (float) z + 0.5f, 0xFFFFFF);
 				}
 			}
 		}

@@ -68,26 +68,8 @@ public class BlockCrate extends BlockALMachine
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
-		/**
-		 * Check if the player is holding a wrench or an electric item. If so, do not open the GUI.
-		 */
-		if (entityPlayer.inventory.getCurrentItem() != null)
-		{
-			if (entityPlayer.inventory.getCurrentItem().getItem() instanceof IToolConfigurator)
-			{
-				world.notifyBlocksOfNeighborChange(x, y, z, this.blockID);
-				((IToolConfigurator) entityPlayer.inventory.getCurrentItem().getItem()).wrenchUsed(entityPlayer, x, y, z);
-
-				return this.onUseWrench(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ);
-			}
-			else if (entityPlayer.inventory.getCurrentItem().getItem() instanceof IItemElectric)
-			{
-				if (this.onUseElectricItem(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ))
-				{
-					return true;
-				}
-			}
-		}
+		if (super.onBlockActivated(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ))
+			return true;
 
 		if (!world.isRemote)
 		{

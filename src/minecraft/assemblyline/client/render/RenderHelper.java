@@ -1,6 +1,7 @@
 package assemblyline.client.render;
 
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 
@@ -34,6 +35,7 @@ public class RenderHelper
 		GL11.glRotatef(renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
 		GL11.glScalef(-scale, -scale, scale);
 		GL11.glDisable(GL11.GL_LIGHTING);
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 		GL11.glDepthMask(false);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glEnable(GL11.GL_BLEND);
