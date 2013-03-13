@@ -32,17 +32,15 @@ import com.google.common.io.ByteArrayDataInput;
 
 import fluidmech.common.FluidMech;
 
-public class TileEntityPump extends TileEntityElectricityRunnable implements IPacketReceiver, IReadOut, IPsiCreator
+public class TileEntityMinorPump extends TileEntityElectricityRunnable implements IPacketReceiver, IReadOut, IPsiCreator
 {
 	public final double WATTS_PER_TICK = (400 / 20);
 	double percentPumped = 0.0;
 	double joulesReceived = 0;
 
 	int disableTimer = 0;
-	int count = 0;
 	public int pos = 0;
 
-	private boolean converted = false;
 	public ColorCode color = ColorCode.BLUE;
 
 	ForgeDirection back = ForgeDirection.EAST;
@@ -82,15 +80,17 @@ public class TileEntityPump extends TileEntityElectricityRunnable implements IPa
 			if (this.canPump(xCoord, yCoord - 1, zCoord) && this.joulesReceived >= this.WATTS_PER_TICK)
 			{
 				joulesReceived -= this.WATTS_PER_TICK;
-				this.pos++;
-				if (pos >= 8)
-				{
-					pos = 0;
-				}
+
 				if (percentPumped++ >= 10)
 				{
 					percentPumped = 0;
 					this.drainBlock(new Vector3(xCoord, yCoord - 1, zCoord));
+				}
+				// // Do animation to simulate life //
+				this.pos++;
+				if (pos >= 8)
+				{
+					pos = 0;
 				}
 			}
 			if (this.ticks % 10 == 0)
@@ -137,9 +137,6 @@ public class TileEntityPump extends TileEntityElectricityRunnable implements IPa
 		int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 		switch (MetaGroup.getGrouping(meta))
 		{
-			case 0:
-			case 1:
-				return 1;
 			case 2:
 				return 20;
 			case 3:
@@ -193,10 +190,10 @@ public class TileEntityPump extends TileEntityElectricityRunnable implements IPa
 	{
 		int blockID = worldObj.getBlockId(loc.intX(), loc.intY(), loc.intZ());
 		int meta = worldObj.getBlockMetadata(loc.intX(), loc.intY(), loc.intZ());
-		
+
 		LiquidData resource = LiquidHandler.getFromBlockID(blockID);
 
-		if (color.isValidLiquid(resource) && meta == 0 && getFillTarget().fill(back, resource.getStack(), false) != 0)
+		if (color.isValidLiquid(resource.getStack()) && meta == 0 && getFillTarget().fill(back, resource.getStack(), false) != 0)
 		{
 
 			LiquidStack stack = resource.getStack();

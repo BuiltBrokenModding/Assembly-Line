@@ -14,7 +14,7 @@ import fluidmech.client.render.RenderSink;
 import fluidmech.client.render.RenderTank;
 import fluidmech.common.CommonProxy;
 import fluidmech.common.FluidMech;
-import fluidmech.common.machines.TileEntityPump;
+import fluidmech.common.machines.TileEntityMinorPump;
 import fluidmech.common.machines.TileEntityReleaseValve;
 import fluidmech.common.machines.TileEntitySink;
 import fluidmech.common.machines.TileEntityTank;
@@ -35,7 +35,7 @@ public class ClientProxy extends CommonProxy
 	public void Init()
 	{
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPipe.class, new RenderPipe());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPump.class, new RenderPump());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMinorPump.class, new RenderPump());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRod.class, new RenderGearRod());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGenerator.class, new RenderGenerator());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTank.class, new RenderTank());

@@ -7,7 +7,7 @@ import java.util.List;
 import fluidmech.client.render.BlockRenderHelper;
 import fluidmech.common.FluidMech;
 import fluidmech.common.TabFluidMech;
-import fluidmech.common.machines.TileEntityPump;
+import fluidmech.common.machines.TileEntityMinorPump;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -107,7 +107,7 @@ public class BlockPumpMachine extends BlockMachine
         }
         else
         {
-            return new TileEntityPump();
+            return new TileEntityMinorPump();
         }
         return null;
     }
