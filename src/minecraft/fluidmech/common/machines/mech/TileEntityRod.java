@@ -16,7 +16,6 @@ import com.google.common.io.ByteArrayDataInput;
 import fluidmech.api.mech.IForce;
 import fluidmech.common.FluidMech;
 
-
 public class TileEntityRod extends TileEntity implements IPacketReceiver, IForce, IReadOut
 {
 
@@ -46,7 +45,7 @@ public class TileEntityRod extends TileEntity implements IPacketReceiver, IForce
 			}
 			if (!worldObj.isRemote)
 			{
-				TileEntity ent = Vector3.getTileEntityFromSide(worldObj, new Vector3(this), facing);
+				TileEntity ent = worldObj.getBlockTileEntity(xCoord + facing.offsetX, yCoord + facing.offsetY, zCoord + facing.offsetZ);
 				appliedForce = Math.max(currentForce - 20, 0);
 				if (ent instanceof IForce && (((IForce) ent).canInputSide(facing)))
 				{
@@ -72,14 +71,20 @@ public class TileEntityRod extends TileEntity implements IPacketReceiver, IForce
 	@Override
 	public boolean canOutputSide(ForgeDirection side)
 	{
-		if (side == facing || side == facing.getOpposite()) { return true; }
+		if (side == facing || side == facing.getOpposite())
+		{
+			return true;
+		}
 		return false;
 	}
 
 	@Override
 	public boolean canInputSide(ForgeDirection side)
 	{
-		if (side == facing || side == facing.getOpposite()) { return true; }
+		if (side == facing || side == facing.getOpposite())
+		{
+			return true;
+		}
 		return false;
 	}
 

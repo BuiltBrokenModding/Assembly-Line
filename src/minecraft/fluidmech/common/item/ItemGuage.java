@@ -4,49 +4,40 @@ import hydraulic.core.implement.IReadOut;
 
 import java.util.List;
 
-import fluidmech.common.FluidMech;
-import fluidmech.common.TabFluidMech;
+import universalelectricity.components.common.BasicComponents;
+import universalelectricity.components.common.item.ItemBasic;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import fluidmech.common.FluidMech;
+import fluidmech.common.TabFluidMech;
 
-public class ItemGuage extends Item
+public class ItemGuage extends ItemBasic
 {
     private int spawnID;
 
     public ItemGuage(int id)
     {
-        super(id);
+        super("lmTool", id);
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
-        this.setIconIndex(10);
-        this.setItemName("lmTool");
         this.setCreativeTab(TabFluidMech.INSTANCE);
         this.setMaxStackSize(1);
-        this.setTextureFile(FluidMech.ITEM_TEXTURE_FILE);
     }
 
     @Override
     public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {
         par3List.add(new ItemStack(this, 1, 0));
-    }
-
-    @Override
-    public int getIconFromDamage(int par1)
-    {
-        switch (par1)
-        {
-            case 0:
-                return 24;
-            case 1:
-        }
-        return this.iconIndex;
     }
 
     @Override
@@ -79,11 +70,5 @@ public class ItemGuage extends Item
         }
 
         return false;
-    }
-
-    @Override
-    public String getItemNameIS(ItemStack itemstack)
-    {
-        return this.getItemName() + "." + itemstack.getItemDamage();
     }
 }

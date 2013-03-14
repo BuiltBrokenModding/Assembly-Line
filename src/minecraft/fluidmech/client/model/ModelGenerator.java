@@ -6,10 +6,10 @@
 
 package fluidmech.client.model;
 
-import fluidmech.common.machines.mech.TileEntityGenerator;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.tileentity.TileEntity;
+import fluidmech.common.machines.mech.TileEntityGenerator;
 
 public class ModelGenerator extends ModelBase
 {

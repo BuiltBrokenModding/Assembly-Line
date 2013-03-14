@@ -2,12 +2,11 @@ package fluidmech.common.item;
 
 import java.util.List;
 
-import fluidmech.common.FluidMech;
-import fluidmech.common.TabFluidMech;
-
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import fluidmech.common.FluidMech;
+import fluidmech.common.TabFluidMech;
 
 /** A metadata item containing parts of various machines in Liquid Mechanics Mod.
  * 

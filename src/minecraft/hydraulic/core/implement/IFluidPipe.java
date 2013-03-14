@@ -4,7 +4,6 @@ import hydraulic.core.liquids.HydraulicNetwork;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidStack;
-import universalelectricity.core.electricity.ElectricityNetwork;
 
 /**
  * Must be applied to all tile entities that are conductors.

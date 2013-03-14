@@ -1,9 +1,9 @@
 package hydraulic.core.helpers;
 
-import universalelectricity.core.vector.Vector3;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.core.vector.Vector3;
 
 public class connectionHelper
 {

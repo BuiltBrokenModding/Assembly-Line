@@ -3,7 +3,6 @@ package fluidmech.common;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 
 public class TabFluidMech extends CreativeTabs
 {

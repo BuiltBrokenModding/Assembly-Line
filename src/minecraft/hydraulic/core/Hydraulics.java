@@ -4,10 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.block.material.MapColor;
-import net.minecraft.block.material.Material;
 import net.minecraftforge.common.Configuration;
-import net.minecraftforge.common.ForgeVersion;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 

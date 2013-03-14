@@ -1,5 +1,6 @@
 package fluidmech.common.machines;
 
+import fluidmech.common.machines.pipes.TileEntityPipe;
 import hydraulic.core.helpers.connectionHelper;
 import hydraulic.core.implement.ColorCode;
 import hydraulic.core.implement.IColorCoded;
@@ -11,11 +12,7 @@ import hydraulic.core.liquids.LiquidHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-import fluidmech.common.block.BlockReleaseValve;
-import fluidmech.common.machines.pipes.TileEntityPipe;
-
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -23,7 +20,6 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidStack;
-import universalelectricity.prefab.implement.IRedstoneReceptor;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 public class TileEntityReleaseValve extends TileEntityAdvanced implements IPsiCreator, IReadOut
@@ -43,7 +39,7 @@ public class TileEntityReleaseValve extends TileEntityAdvanced implements IPsiCr
 	{
 		super.updateEntity();
 
-		this.isPowered = worldObj.isBlockGettingPowered(xCoord, yCoord, zCoord) || worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+		this.isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
 
 		connected = connectionHelper.getSurroundingTileEntities(this);
 

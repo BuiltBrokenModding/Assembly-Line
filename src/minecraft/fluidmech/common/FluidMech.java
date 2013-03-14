@@ -1,5 +1,27 @@
 package fluidmech.common;
 
+import fluidmech.common.block.BlockPumpMachine;
+import fluidmech.common.block.BlockReleaseValve;
+import fluidmech.common.block.BlockSink;
+import fluidmech.common.block.BlockTank;
+import fluidmech.common.block.liquids.BlockWasteLiquid;
+import fluidmech.common.item.ItemGuage;
+import fluidmech.common.item.ItemLiquidMachine;
+import fluidmech.common.item.ItemParts;
+import fluidmech.common.item.ItemParts.Parts;
+import fluidmech.common.item.ItemPipe;
+import fluidmech.common.item.ItemReleaseValve;
+import fluidmech.common.item.ItemTank;
+import fluidmech.common.machines.TileEntityMinorPump;
+import fluidmech.common.machines.TileEntityReleaseValve;
+import fluidmech.common.machines.TileEntitySink;
+import fluidmech.common.machines.TileEntityTank;
+import fluidmech.common.machines.mech.BlockGenerator;
+import fluidmech.common.machines.mech.BlockRod;
+import fluidmech.common.machines.mech.TileEntityGenerator;
+import fluidmech.common.machines.mech.TileEntityRod;
+import fluidmech.common.machines.pipes.BlockPipe;
+import fluidmech.common.machines.pipes.TileEntityPipe;
 import hydraulic.core.implement.ColorCode;
 import hydraulic.core.liquids.LiquidHandler;
 
@@ -32,28 +54,6 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
-import fluidmech.common.block.BlockPumpMachine;
-import fluidmech.common.block.BlockReleaseValve;
-import fluidmech.common.block.BlockSink;
-import fluidmech.common.block.BlockTank;
-import fluidmech.common.block.liquids.BlockWasteLiquid;
-import fluidmech.common.item.ItemGuage;
-import fluidmech.common.item.ItemLiquidMachine;
-import fluidmech.common.item.ItemParts;
-import fluidmech.common.item.ItemPipe;
-import fluidmech.common.item.ItemReleaseValve;
-import fluidmech.common.item.ItemTank;
-import fluidmech.common.item.ItemParts.Parts;
-import fluidmech.common.machines.TileEntityMinorPump;
-import fluidmech.common.machines.TileEntityReleaseValve;
-import fluidmech.common.machines.TileEntitySink;
-import fluidmech.common.machines.TileEntityTank;
-import fluidmech.common.machines.mech.BlockGenerator;
-import fluidmech.common.machines.mech.BlockRod;
-import fluidmech.common.machines.mech.TileEntityGenerator;
-import fluidmech.common.machines.mech.TileEntityRod;
-import fluidmech.common.machines.pipes.BlockPipe;
-import fluidmech.common.machines.pipes.TileEntityPipe;
 
 /**
  * Used in the creation of a new mod class

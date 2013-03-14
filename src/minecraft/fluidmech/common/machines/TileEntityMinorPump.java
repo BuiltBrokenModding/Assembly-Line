@@ -1,5 +1,6 @@
 package fluidmech.common.machines;
 
+import fluidmech.common.FluidMech;
 import hydraulic.core.helpers.MetaGroup;
 import hydraulic.core.implement.ColorCode;
 import hydraulic.core.implement.IPsiCreator;
@@ -19,18 +20,14 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
-import universalelectricity.core.electricity.ElectricityConnections;
-import universalelectricity.core.electricity.ElectricityNetwork;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
+import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
-import universalelectricity.prefab.tile.TileEntityElectricityReceiver;
 import universalelectricity.prefab.tile.TileEntityElectricityRunnable;
 
 import com.google.common.io.ByteArrayDataInput;
-
-import fluidmech.common.FluidMech;
 
 public class TileEntityMinorPump extends TileEntityElectricityRunnable implements IPacketReceiver, IReadOut, IPsiCreator
 {
@@ -50,7 +47,6 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 	public void initiate()
 	{
 		this.getConnections();
-		ElectricityConnections.registerConnector(this, EnumSet.of(back, side));
 		this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, FluidMech.blockMachine.blockID);
 	}
 
@@ -62,7 +58,7 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 		int notchMeta = MetaGroup.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
 
 		back = ForgeDirection.getOrientation(notchMeta);
-		side = Vector3.getOrientationFromSide(back, ForgeDirection.WEST);
+		side = VectorHelper.getOrientationFromSide(back, ForgeDirection.WEST);
 
 		if (notchMeta == 2 || notchMeta == 3)
 		{
@@ -229,6 +225,12 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 	public boolean getCanPressureTo(LiquidData type, ForgeDirection dir)
 	{
 		return dir == this.side.getOpposite() && this.color.isValidLiquid(type.getStack());
+	}
+
+	@Override
+	public boolean canConnect(ForgeDirection direction)
+	{
+		return direction == back;
 	}
 
 }

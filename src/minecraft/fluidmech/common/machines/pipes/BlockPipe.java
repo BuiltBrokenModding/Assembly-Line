@@ -2,8 +2,7 @@ package fluidmech.common.machines.pipes;
 
 import java.util.List;
 
-import fluidmech.common.FluidMech;
-import fluidmech.common.TabFluidMech;
+import universalelectricity.prefab.block.BlockAdvanced;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -11,16 +10,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import universalelectricity.prefab.BlockMachine;
+import fluidmech.common.FluidMech;
+import fluidmech.common.TabFluidMech;
 
-public class BlockPipe extends BlockMachine
+public class BlockPipe extends BlockAdvanced
 {
     public BlockPipe(int id)
     {
-        super("Pipe", id, Material.iron, TabFluidMech.INSTANCE);
+        super(id, Material.iron);
         this.setBlockBounds(0.30F, 0.30F, 0.30F, 0.70F, 0.70F, 0.70F);
         this.setHardness(1f);
-        this.setBlockName("lmPipe");
+        this.setCreativeTab(TabFluidMech.INSTANCE);
+        this.setUnlocalizedName("lmPipe");
         this.setResistance(3f);
     }
 

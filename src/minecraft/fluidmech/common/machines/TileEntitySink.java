@@ -1,5 +1,6 @@
 package fluidmech.common.machines;
 
+import fluidmech.common.FluidMech;
 import hydraulic.core.implement.ColorCode;
 import hydraulic.core.implement.IColorCoded;
 import hydraulic.core.liquids.LiquidHandler;
@@ -20,8 +21,6 @@ import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
-
-import fluidmech.common.FluidMech;
 
 public class TileEntitySink extends TileEntity implements IPacketReceiver, ITankContainer, IColorCoded
 {

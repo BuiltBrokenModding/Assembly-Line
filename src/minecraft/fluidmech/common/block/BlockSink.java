@@ -2,9 +2,6 @@ package fluidmech.common.block;
 
 import hydraulic.core.helpers.MetaGroup;
 import hydraulic.core.liquids.LiquidHandler;
-import fluidmech.client.render.BlockRenderHelper;
-import fluidmech.common.TabFluidMech;
-import fluidmech.common.machines.TileEntitySink;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,170 +16,179 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
-import universalelectricity.prefab.BlockMachine;
+import universalelectricity.prefab.block.BlockAdvanced;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
+import fluidmech.client.render.BlockRenderHelper;
+import fluidmech.common.TabFluidMech;
+import fluidmech.common.machines.TileEntitySink;
 
-public class BlockSink extends BlockMachine
+public class BlockSink extends BlockAdvanced
 {
-    public BlockSink(int par1)
-    {
-        super("lmSink", par1, Material.iron, TabFluidMech.INSTANCE);
-        this.setResistance(4f);
-        this.setHardness(4f);
-    }
+	public BlockSink(int par1)
+	{
+		super(par1, Material.iron);
+		this.setUnlocalizedName("lmSink");
+		this.setCreativeTab(TabFluidMech.INSTANCE);
+		this.setResistance(4f);
+		this.setHardness(4f);
+	}
 
-    @Override
-    public TileEntity createNewTileEntity(World var1)
-    {
-        return new TileEntitySink();
-    }
+	@Override
+	public TileEntity createNewTileEntity(World var1)
+	{
+		return new TileEntitySink();
+	}
 
-    @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int side, float hitX, float hitY, float hitZ)
-    {
-        if (entityplayer.isSneaking()) { return false; }
-        ItemStack current = entityplayer.inventory.getCurrentItem();
-        if (current != null)
-        {
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int side, float hitX, float hitY, float hitZ)
+	{
+		if (entityplayer.isSneaking())
+		{
+			return false;
+		}
+		ItemStack current = entityplayer.inventory.getCurrentItem();
+		if (current != null)
+		{
 
-            LiquidStack liquid = LiquidContainerRegistry.getLiquidForFilledItem(current);
+			LiquidStack liquid = LiquidContainerRegistry.getLiquidForFilledItem(current);
 
-            TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+			TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-            if (tileEntity instanceof TileEntitySink)
-            {
-                TileEntitySink tank = (TileEntitySink) tileEntity;
+			if (tileEntity instanceof TileEntitySink)
+			{
+				TileEntitySink tank = (TileEntitySink) tileEntity;
 
-                // Handle filled containers
-                if (liquid != null)
-                {
-                    if (current.isItemEqual(new ItemStack(Item.potion)))
-                    {
-                        liquid = new LiquidStack(liquid.itemID, (LiquidContainerRegistry.BUCKET_VOLUME / 4), liquid.itemMeta);
-                    }
-                    int filled = tank.fill(ForgeDirection.UNKNOWN, liquid, true);
+				// Handle filled containers
+				if (liquid != null)
+				{
+					if (current.isItemEqual(new ItemStack(Item.potion)))
+					{
+						liquid = new LiquidStack(liquid.itemID, (LiquidContainerRegistry.BUCKET_VOLUME / 4), liquid.itemMeta);
+					}
+					int filled = tank.fill(ForgeDirection.UNKNOWN, liquid, true);
 
-                    if (filled != 0 && !entityplayer.capabilities.isCreativeMode)
-                    {
-                        entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, LiquidHandler.consumeItem(current));
-                    }
+					if (filled != 0 && !entityplayer.capabilities.isCreativeMode)
+					{
+						entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, LiquidHandler.consumeItem(current));
+					}
 
-                    return true;
+					return true;
 
-                    // Handle empty containers
-                }
-                else
-                {
+					// Handle empty containers
+				}
+				else
+				{
 
-                    if (current.getItem() instanceof ItemArmor && ((ItemArmor) current.getItem()).getArmorMaterial() == EnumArmorMaterial.CLOTH)
-                    {
-                        ItemArmor var13 = (ItemArmor) current.getItem();
-                        var13.removeColor(current);
-                        return true;
-                    }
-                    LiquidStack stack = tank.getStack();
-                    if (stack != null)
-                    {
-                        ItemStack liquidItem = LiquidContainerRegistry.fillLiquidContainer(stack, current);
+					if (current.getItem() instanceof ItemArmor && ((ItemArmor) current.getItem()).getArmorMaterial() == EnumArmorMaterial.CLOTH)
+					{
+						ItemArmor var13 = (ItemArmor) current.getItem();
+						var13.removeColor(current);
+						return true;
+					}
+					LiquidStack stack = tank.getStack();
+					if (stack != null)
+					{
+						ItemStack liquidItem = LiquidContainerRegistry.fillLiquidContainer(stack, current);
 
-                        liquid = LiquidContainerRegistry.getLiquidForFilledItem(liquidItem);
+						liquid = LiquidContainerRegistry.getLiquidForFilledItem(liquidItem);
 
-                        if (liquid != null)
-                        {
-                            if (!entityplayer.capabilities.isCreativeMode)
-                            {
-                                if (current.stackSize > 1)
-                                {
-                                    if (!entityplayer.inventory.addItemStackToInventory(liquidItem)) return false;
-                                    else
-                                    {
-                                        entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, LiquidHandler.consumeItem(current));
-                                    }
-                                }
-                                else
-                                {
-                                    entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, LiquidHandler.consumeItem(current));
-                                    entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, liquidItem);
-                                }
-                            }
-                            int ammount = liquid.amount;
-                            if (current.isItemEqual(new ItemStack(Item.glassBottle)))
-                            {
-                                ammount = (LiquidContainerRegistry.BUCKET_VOLUME / 4);
-                            }
-                            tank.drain(null, ammount, true);
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
+						if (liquid != null)
+						{
+							if (!entityplayer.capabilities.isCreativeMode)
+							{
+								if (current.stackSize > 1)
+								{
+									if (!entityplayer.inventory.addItemStackToInventory(liquidItem))
+										return false;
+									else
+									{
+										entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, LiquidHandler.consumeItem(current));
+									}
+								}
+								else
+								{
+									entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, LiquidHandler.consumeItem(current));
+									entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, liquidItem);
+								}
+							}
+							int ammount = liquid.amount;
+							if (current.isItemEqual(new ItemStack(Item.glassBottle)))
+							{
+								ammount = (LiquidContainerRegistry.BUCKET_VOLUME / 4);
+							}
+							tank.drain(null, ammount, true);
+							return true;
+						}
+					}
+				}
+			}
+		}
 
-        return false;
+		return false;
 
-    }
+	}
 
-    @Override
-    public boolean onUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
-    {
-        int meta = par1World.getBlockMetadata(x, y, z);
-        int g = MetaGroup.getGrouping(meta);
-        TileEntity ent = par1World.getBlockTileEntity(x, y, z);
-        int angle = MathHelper.floor_double((par5EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+	@Override
+	public boolean onUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
+	{
+		int meta = par1World.getBlockMetadata(x, y, z);
+		int g = MetaGroup.getGrouping(meta);
+		TileEntity ent = par1World.getBlockTileEntity(x, y, z);
+		int angle = MathHelper.floor_double((par5EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 
-        if (meta == (g * 4) + 3)
-        {
-            par1World.setBlockMetadataWithNotify(x, y, z, (g * 4));
-            return true;
-        }
-        else
-        {
-            par1World.setBlockMetadataWithNotify(x, y, z, meta + 1);
-            return true;
-        }
-        // return false;
-    }
+		if (meta == (g * 4) + 3)
+		{
+			par1World.setBlockMetadataWithNotify(x, y, z, (g * 4), 3);
+			return true;
+		}
+		else
+		{
+			par1World.setBlockMetadataWithNotify(x, y, z, meta + 1, 3);
+			return true;
+		}
+		// return false;
+	}
 
-    @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving par5EntityLiving)
-    {
-        int meta = world.getBlockMetadata(x, y, z);
-        int angle = MathHelper.floor_double((par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-        TileEntity ent = world.getBlockTileEntity(x, y, z);
+	@Override
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving par5EntityLiving, ItemStack itemStack)
+	{
+		int meta = world.getBlockMetadata(x, y, z);
+		int angle = MathHelper.floor_double((par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+		TileEntity ent = world.getBlockTileEntity(x, y, z);
 
-        world.setBlockMetadata(x, y, z, angle + MetaGroup.getGroupStartMeta(MetaGroup.getGrouping(meta)));
-        if (ent instanceof TileEntityAdvanced)
-        {
-            ((TileEntityAdvanced) world.getBlockTileEntity(x, y, z)).initiate();
-        }
+		world.setBlockMetadataWithNotify(x, y, z, angle + MetaGroup.getGroupStartMeta(MetaGroup.getGrouping(meta)), 3);
+		if (ent instanceof TileEntityAdvanced)
+		{
+			((TileEntityAdvanced) world.getBlockTileEntity(x, y, z)).initiate();
+		}
 
-        world.notifyBlocksOfNeighborChange(x, y, z, this.blockID);
-    }
+		world.notifyBlocksOfNeighborChange(x, y, z, this.blockID);
+	}
 
-    @Override
-    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
-    {
-        int meta = world.getBlockMetadata(x, y, z);
+	@Override
+	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+	{
+		int meta = world.getBlockMetadata(x, y, z);
 
-        return new ItemStack(this, 1, 0);
+		return new ItemStack(this, 1, 0);
 
-    }
+	}
 
-    @Override
-    public boolean isOpaqueCube()
-    {
-        return false;
-    }
+	@Override
+	public boolean isOpaqueCube()
+	{
+		return false;
+	}
 
-    @Override
-    public boolean renderAsNormalBlock()
-    {
-        return false;
-    }
+	@Override
+	public boolean renderAsNormalBlock()
+	{
+		return false;
+	}
 
-    @Override
-    public int getRenderType()
-    {
-        return BlockRenderHelper.renderID;
-    }
+	@Override
+	public int getRenderType()
+	{
+		return BlockRenderHelper.renderID;
+	}
 }

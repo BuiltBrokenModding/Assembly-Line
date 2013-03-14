@@ -1,11 +1,12 @@
 package hydraulic.core.implement;
 
+import hydraulic.core.liquids.LiquidData;
+import hydraulic.core.liquids.LiquidHandler;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraftforge.liquids.LiquidStack;
-import hydraulic.core.liquids.LiquidData;
-import hydraulic.core.liquids.LiquidHandler;
 
 public enum ColorCode
 {

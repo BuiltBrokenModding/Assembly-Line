@@ -2,27 +2,26 @@ package fluidmech.common.block;
 
 import java.util.Random;
 
-import fluidmech.common.FluidMech;
-import fluidmech.common.TabFluidMech;
-import fluidmech.common.machines.TileEntityReleaseValve;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import universalelectricity.prefab.BlockMachine;
-import universalelectricity.prefab.implement.IRedstoneReceptor;
+import universalelectricity.prefab.block.BlockAdvanced;
+import fluidmech.common.FluidMech;
+import fluidmech.common.TabFluidMech;
+import fluidmech.common.machines.TileEntityReleaseValve;
 
-public class BlockReleaseValve extends BlockMachine
+public class BlockReleaseValve extends BlockAdvanced
 {
 	public BlockReleaseValve(int par1)
 	{
-		super("eValve",par1, Material.iron,TabFluidMech.INSTANCE);
+		super(par1, Material.iron);
+		this.setCreativeTab(TabFluidMech.INSTANCE);
+		this.setUnlocalizedName("eValve");
 		this.setHardness(1f);
 		this.setResistance(5f);
-		this.setTextureFile(FluidMech.BLOCK_TEXTURE_FILE);
 	}
 
 	@Override
@@ -41,12 +40,6 @@ public class BlockReleaseValve extends BlockMachine
 	public boolean isOpaqueCube()
 	{
 		return false;
-	}
-
-	@Override
-	public int getBlockTextureFromSideAndMetadata(int side, int meta)
-	{
-		return 0;
 	}
 
 	@Override

@@ -5,10 +5,8 @@ import hydraulic.core.implement.ColorCode;
 import hydraulic.core.implement.IFluidPipe;
 import hydraulic.core.implement.IPsiCreator;
 import hydraulic.core.implement.IPsiMachine;
-import hydraulic.core.implement.IPsiReciever;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import net.minecraft.tileentity.TileEntity;

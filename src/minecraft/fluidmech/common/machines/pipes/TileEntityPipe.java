@@ -210,7 +210,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
 			}
 			else
 			{
-				return this.causeMix(stack, resource);
+				//return this.causeMix(stack, resource);
 			}
 
 		}
@@ -227,33 +227,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
 		return tank.fill(resource, doFill);
 	}
 
-	public int causeMix(LiquidStack stored, LiquidStack fill)
-	{
-		if (stored == null || fill == null)
-		{
-			return 0;
-		}
-		// water flowing into lava creates obby
-		if (fill.isLiquidEqual(LiquidHandler.lava.getStack()) && fill.isLiquidEqual(LiquidHandler.water.getStack()))
-		{
-			worldObj.setBlockWithNotify(xCoord, yCoord, zCoord, Block.obsidian.blockID);
-			return fill.amount;
-		}// lava flowing into water creates cobble
-		else if (fill.isLiquidEqual(LiquidHandler.water.getStack()) && fill.isLiquidEqual(LiquidHandler.lava.getStack()))
-		{
-			worldObj.setBlockWithNotify(xCoord, yCoord, zCoord, Block.cobblestone.blockID);
-			return fill.amount;
-		}
-		else
-		// anything else creates waste liquid
-		{
-			int f = this.tank.fill(new LiquidStack(stored.itemID, fill.amount, stored.itemMeta), true);
-			int s = this.tank.getLiquid().amount;
-			LiquidStack stack = LiquidHandler.getStack(LiquidHandler.waste, s);
-			this.tank.setLiquid(stack);
-			return f;
-		}
-	}
+	
 
 	@Override
 	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)

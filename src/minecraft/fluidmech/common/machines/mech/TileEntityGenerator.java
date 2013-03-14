@@ -11,21 +11,22 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.electricity.ElectricityConnections;
+import universalelectricity.core.block.IConductor;
 import universalelectricity.core.electricity.ElectricityNetwork;
-import universalelectricity.core.implement.IConductor;
+import universalelectricity.core.electricity.ElectricityNetworkHelper;
+import universalelectricity.core.electricity.IElectricityNetwork;
 import universalelectricity.core.vector.Vector3;
+import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
 import universalelectricity.prefab.network.IPacketReceiver;
-import universalelectricity.prefab.tile.TileEntityElectricityProducer;
+import universalelectricity.prefab.tile.TileEntityElectrical;
 
 import com.google.common.io.ByteArrayDataInput;
 
 import fluidmech.api.mech.IForce;
 import fluidmech.common.FluidMech;
 
-
-public class TileEntityGenerator extends TileEntityElectricityProducer implements IPacketReceiver, IForce, IReadOut, IRedstoneReceptor
+public class TileEntityGenerator extends TileEntityElectrical implements IPacketReceiver, IForce, IReadOut, IRedstoneReceptor
 {
 	public boolean isPowered = false;
 
@@ -41,34 +42,6 @@ public class TileEntityGenerator extends TileEntityElectricityProducer implement
 	double genAmmount = 0;// watt output of machine
 
 	IConductor[] wires = { null, null, null, null, null, null };
-
-	public boolean needUpdate()
-	{
-		return false;
-	}
-
-	public void initiate()
-	{
-		this.registerConnections();
-		this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, FluidMech.blockGenerator.blockID);
-	}
-
-	public void registerConnections()
-	{
-		int notchMeta = MetaGroup.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
-		ForgeDirection facing = ForgeDirection.getOrientation(notchMeta).getOpposite();
-		ForgeDirection[] dirs = new ForgeDirection[] { ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN };
-		ElectricityConnections.registerConnector(this, EnumSet.of(facing.getOpposite()));
-		for (int i = 2; i < 6; i++)
-		{
-			ForgeDirection dir = ForgeDirection.getOrientation(i);
-			if (dir != facing && dir != facing.getOpposite())
-			{
-				dirs[i] = dir;
-			}
-		}
-		ElectricityConnections.registerConnector(this, EnumSet.of(dirs[0], dirs[1], dirs[2], dirs[3], dirs[4], dirs[5]));
-	}
 
 	@Override
 	public void updateEntity()
@@ -88,7 +61,6 @@ public class TileEntityGenerator extends TileEntityElectricityProducer implement
 		}// end wire count
 		if (tCount-- <= 0)
 		{
-			BlockGenerator.checkForPower(worldObj, xCoord, yCoord, zCoord);
 			tCount = 10;
 			if (this.force > 0 || this.isPowered)
 			{
@@ -115,8 +87,8 @@ public class TileEntityGenerator extends TileEntityElectricityProducer implement
 					if (dir != facing && dir != facing.getOpposite())
 					{
 
-						TileEntity outputTile = Vector3.getConnectorFromSide(this.worldObj, new Vector3(this), dir);
-						ElectricityNetwork network = ElectricityNetwork.getNetworkFromTileEntity(outputTile, dir);
+						TileEntity outputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), dir);
+						IElectricityNetwork network = ElectricityNetworkHelper.getNetworkFromTileEntity(outputTile, dir);
 						if (network != null)
 						{
 							if (network.getRequest().getWatts() > 0)
@@ -138,8 +110,8 @@ public class TileEntityGenerator extends TileEntityElectricityProducer implement
 					ForgeDirection dir = ForgeDirection.getOrientation(i);
 					if (dir != facing && dir != facing.getOpposite())
 					{
-						TileEntity inputTile = Vector3.getTileEntityFromSide(this.worldObj, new Vector3(this), dir);
-						ElectricityNetwork network = ElectricityNetwork.getNetworkFromTileEntity(inputTile, dir);
+						TileEntity inputTile = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), dir);
+						IElectricityNetwork network = ElectricityNetworkHelper.getNetworkFromTileEntity(inputTile, dir);
 						if (network != null)
 						{
 
@@ -158,7 +130,7 @@ public class TileEntityGenerator extends TileEntityElectricityProducer implement
 				if (this.joulesReceived >= this.WATTS_PER_TICK - 50)
 				{
 					joulesReceived -= this.WATTS_PER_TICK;
-					TileEntity rod = Vector3.getTileEntityFromSide(worldObj, new Vector3(this), facing);
+					TileEntity rod = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), facing);
 					if (rod instanceof IForce && ((IForce) rod).canInputSide(facing))
 					{
 						((IForce) rod).applyForce(10000);
@@ -223,7 +195,10 @@ public class TileEntityGenerator extends TileEntityElectricityProducer implement
 	@Override
 	public int getForceSide(ForgeDirection side)
 	{
-		if (side == facing.getOpposite()) { return aForce; }
+		if (side == facing.getOpposite())
+		{
+			return aForce;
+		}
 		return 0;
 	}
 
@@ -236,14 +211,20 @@ public class TileEntityGenerator extends TileEntityElectricityProducer implement
 	@Override
 	public boolean canOutputSide(ForgeDirection side)
 	{
-		if (side == facing) { return true; }
+		if (side == facing)
+		{
+			return true;
+		}
 		return false;
 	}
 
 	@Override
 	public boolean canInputSide(ForgeDirection side)
 	{
-		if (side == facing || side == facing.getOpposite()) { return true; }
+		if (side == facing || side == facing.getOpposite())
+		{
+			return true;
+		}
 		return false;
 	}
 
@@ -272,15 +253,18 @@ public class TileEntityGenerator extends TileEntityElectricityProducer implement
 	@Override
 	public boolean isDisabled()
 	{
-		if (disableTicks-- <= 0) { return false; }
+		if (disableTicks-- <= 0)
+		{
+			return false;
+		}
 		return true;
 	}
 
 	@Override
-	public double getVoltage(Object... data)
+	public double getVoltage()
 	{
-        return 120;
-	    
+		return 120;
+
 	}
 
 	@Override
@@ -306,6 +290,15 @@ public class TileEntityGenerator extends TileEntityElectricityProducer implement
 	{
 		this.isPowered = false;
 
+	}
+
+	@Override
+	public boolean canConnect(ForgeDirection dir)
+	{
+		int notchMeta = MetaGroup.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+		ForgeDirection facing = ForgeDirection.getOrientation(notchMeta).getOpposite();
+
+		return dir != facing && dir != facing.getOpposite();
 	}
 
 }
