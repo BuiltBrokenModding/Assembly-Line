@@ -1,13 +1,14 @@
 package fluidmech.common.item;
 
+import fluidmech.common.item.ItemParts.Parts;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
-public class ItemLiquidMachine extends ItemBlock
+public class ItemBlockPipe extends ItemBlock
 {
 
-	public ItemLiquidMachine(int id)
+	public ItemBlockPipe(int id)
 	{
 		super(id);
 		this.setMaxDamage(0);

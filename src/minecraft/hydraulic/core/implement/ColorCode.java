@@ -40,6 +40,10 @@ public enum ColorCode
 		{
 			return ((LiquidData) obj).getColor();
 		}
+		else if (obj instanceof LiquidStack)
+		{
+			return LiquidHandler.get((LiquidStack) obj).getColor();
+		}
 		else if (obj instanceof ColorCode)
 		{
 			return (ColorCode) obj;
@@ -71,7 +75,8 @@ public enum ColorCode
 		}
 		return LiquidHandler.unkown;
 	}
-	/** 
+
+	/**
 	 * Gets a list of LiquidData that are linked with the color
 	 */
 	public List<LiquidData> getAllLiquidData()
@@ -96,7 +101,7 @@ public enum ColorCode
 		{
 			return false;
 		}
-		if (this == NONE)
+		if (this == NONE || this.getAllLiquidData().size() == 0)
 		{
 			return true;
 		}

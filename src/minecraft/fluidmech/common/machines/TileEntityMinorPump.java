@@ -40,15 +40,8 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 
 	public ColorCode color = ColorCode.BLUE;
 
-	ForgeDirection back = ForgeDirection.EAST;
-	ForgeDirection side = ForgeDirection.EAST;
-
-	@Override
-	public void initiate()
-	{
-		this.getConnections();
-		this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, FluidMech.blockMachine.blockID);
-	}
+	ForgeDirection wireConnection = ForgeDirection.EAST;
+	ForgeDirection pipeConnection = ForgeDirection.EAST;
 
 	/**
 	 * gets the side connection for the wire and pipe
@@ -57,12 +50,12 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 	{
 		int notchMeta = MetaGroup.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
 
-		back = ForgeDirection.getOrientation(notchMeta);
-		side = VectorHelper.getOrientationFromSide(back, ForgeDirection.WEST);
+		wireConnection = ForgeDirection.getOrientation(notchMeta);
+		pipeConnection = VectorHelper.getOrientationFromSide(wireConnection, ForgeDirection.WEST);
 
 		if (notchMeta == 2 || notchMeta == 3)
 		{
-			side = side.getOpposite();
+			pipeConnection = pipeConnection.getOpposite();
 		}
 	}
 
@@ -70,6 +63,8 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 	public void updateEntity()
 	{
 		super.updateEntity();
+
+		this.getConnections();
 
 		if (!this.worldObj.isRemote && !this.isDisabled())
 		{
@@ -116,7 +111,7 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 
 	public ITankContainer getFillTarget()
 	{
-		TileEntity ent = worldObj.getBlockTileEntity(xCoord + side.offsetX, yCoord + side.offsetY, zCoord + side.offsetZ);
+		TileEntity ent = worldObj.getBlockTileEntity(xCoord + pipeConnection.offsetX, yCoord + pipeConnection.offsetY, zCoord + pipeConnection.offsetZ);
 
 		if (ent instanceof ITankContainer)
 		{
@@ -157,7 +152,7 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 
 		ITankContainer fillTarget = getFillTarget();
 
-		if (fillTarget == null || fillTarget.fill(side, this.color.getLiquidData().getStack(), false) == 0)
+		if (fillTarget == null || fillTarget.fill(pipeConnection, this.color.getLiquidData().getStack(), false) == 0)
 		{
 			return false;
 		}
@@ -189,12 +184,12 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 
 		LiquidData resource = LiquidHandler.getFromBlockID(blockID);
 
-		if (color.isValidLiquid(resource.getStack()) && meta == 0 && getFillTarget().fill(back, resource.getStack(), false) != 0)
+		if (color.isValidLiquid(resource.getStack()) && meta == 0 && getFillTarget().fill(wireConnection, resource.getStack(), false) != 0)
 		{
 
 			LiquidStack stack = resource.getStack();
 			stack.amount = LiquidContainerRegistry.BUCKET_VOLUME;
-			int f = getFillTarget().fill(back, this.color.getLiquidData().getStack(), true);
+			int f = getFillTarget().fill(wireConnection, this.color.getLiquidData().getStack(), true);
 			if (f > 0)
 			{
 				worldObj.setBlockAndMetadataWithNotify(xCoord, yCoord - 1, zCoord, 0, 0, 3);
@@ -212,25 +207,25 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 	}
 
 	@Override
-	public int getPressureOut(LiquidData type, ForgeDirection dir)
+	public int getPressureOut(LiquidStack type, ForgeDirection dir)
 	{
-		if (type != null && this.color.isValidLiquid(type.getStack()))
+		if (type != null && this.color.isValidLiquid(type))
 		{
-			return type.getPressure();
+			return LiquidHandler.get(type).getPressure();
 		}
 		return 0;
 	}
 
 	@Override
-	public boolean getCanPressureTo(LiquidData type, ForgeDirection dir)
+	public boolean getCanPressureTo(LiquidStack type, ForgeDirection dir)
 	{
-		return dir == this.side.getOpposite() && this.color.isValidLiquid(type.getStack());
+		return dir == this.pipeConnection.getOpposite() && this.color.isValidLiquid(type);
 	}
 
 	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
-		return direction == back;
+		return direction == wireConnection;
 	}
 
 }

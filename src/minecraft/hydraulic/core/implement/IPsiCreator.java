@@ -1,17 +1,17 @@
 package hydraulic.core.implement;
 
-import hydraulic.core.liquids.LiquidData;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.liquids.LiquidStack;
 
 public interface IPsiCreator
 {
 	/**
-	 * gets the PressureOutput of a device 
+	 * gets the PressureOutput of a device
 	 */
-	public int getPressureOut(LiquidData type, ForgeDirection dir);
+	public int getPressureOut(LiquidStack stack, ForgeDirection dir);
 
 	/**
 	 * Quick way to check if the TE will output pressure
 	 */
-	public boolean getCanPressureTo(LiquidData type, ForgeDirection dir);
+	public boolean getCanPressureTo(LiquidStack stack, ForgeDirection dir);
 }

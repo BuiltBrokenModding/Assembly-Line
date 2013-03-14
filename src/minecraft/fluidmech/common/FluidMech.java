@@ -5,13 +5,13 @@ import fluidmech.common.block.BlockReleaseValve;
 import fluidmech.common.block.BlockSink;
 import fluidmech.common.block.BlockTank;
 import fluidmech.common.block.liquids.BlockWasteLiquid;
-import fluidmech.common.item.ItemGuage;
-import fluidmech.common.item.ItemLiquidMachine;
+import fluidmech.common.item.ItemTools;
+import fluidmech.common.item.ItemBlockLiquidMachine;
 import fluidmech.common.item.ItemParts;
 import fluidmech.common.item.ItemParts.Parts;
-import fluidmech.common.item.ItemPipe;
-import fluidmech.common.item.ItemReleaseValve;
-import fluidmech.common.item.ItemTank;
+import fluidmech.common.item.ItemBlockPipe;
+import fluidmech.common.item.ItemBlockReleaseValve;
+import fluidmech.common.item.ItemBlockTank;
 import fluidmech.common.machines.TileEntityMinorPump;
 import fluidmech.common.machines.TileEntityReleaseValve;
 import fluidmech.common.machines.TileEntitySink;
@@ -137,19 +137,19 @@ public class FluidMech extends DummyModContainer
         itemParts = new ItemParts(this.CONFIGURATION.getItem("Parts", ITEM_ID_PREFIX).getInt());
 
         // Valve item
-        itemGauge = new ItemGuage(this.CONFIGURATION.getItem("PipeGuage", ITEM_ID_PREFIX + 3).getInt());
+        itemGauge = new ItemTools(this.CONFIGURATION.getItem("PipeGuage", ITEM_ID_PREFIX + 3).getInt());
 
         CONFIGURATION.save();
 
         proxy.preInit();
 
         // block registry
-        GameRegistry.registerBlock(blockPipe, ItemPipe.class, "lmPipe");
-        GameRegistry.registerBlock(blockReleaseValve, ItemReleaseValve.class, "eValve");
+        GameRegistry.registerBlock(blockPipe, ItemBlockPipe.class, "lmPipe");
+        GameRegistry.registerBlock(blockReleaseValve, ItemBlockReleaseValve.class, "eValve");
         GameRegistry.registerBlock(blockRod, "mechRod");
         GameRegistry.registerBlock(blockGenerator, "lmGen");
-        GameRegistry.registerBlock(blockMachine, ItemLiquidMachine.class, "lmMachines");
-        GameRegistry.registerBlock(blockTank, ItemTank.class, "lmTank");
+        GameRegistry.registerBlock(blockMachine, ItemBlockLiquidMachine.class, "lmMachines");
+        GameRegistry.registerBlock(blockTank, ItemBlockTank.class, "lmTank");
         GameRegistry.registerBlock(blockSink, "lmSink");
 
     }

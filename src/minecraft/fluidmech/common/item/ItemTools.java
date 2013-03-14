@@ -13,11 +13,11 @@ import net.minecraftforge.common.ForgeDirection;
 import fluidmech.common.TabFluidMech;
 import fluidmech.common.item.ItemParts.Parts;
 
-public class ItemGuage extends ItemBasic
+public class ItemTools extends ItemBasic
 {
 	private int spawnID;
 
-	public ItemGuage(int id)
+	public ItemTools(int id)
 	{
 		super("lmTool", id);
 		this.setMaxDamage(0);

@@ -10,6 +10,8 @@ import hydraulic.core.liquids.LiquidHandler;
 
 import java.util.Random;
 
+import universalelectricity.prefab.tile.TileEntityAdvanced;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -22,20 +24,19 @@ import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.liquids.LiquidTank;
 
-public class TileEntityPipe extends TileEntity implements ITankContainer, IReadOut, IColorCoded
+public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer, IReadOut, IColorCoded
 {
 	private ColorCode color = ColorCode.NONE;
 
-	private int count = 20;
-	private int count2, presure = 0;
+	private int presure = 0;
 
 	public boolean converted = false;
 	public boolean isUniversal = false;
 
 	public TileEntity[] connectedBlocks = new TileEntity[6];
-	
+
 	public static final int maxVolume = LiquidContainerRegistry.BUCKET_VOLUME * 2;
-	
+
 	private LiquidTank tank = new LiquidTank(maxVolume);
 
 	@Override
@@ -44,14 +45,10 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
 
 		this.validataConnections();
 		this.color = ColorCode.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
-		if (++count >= 20)
+		if (ticks % 20 == 0)
 		{
-			count = 0;
 			this.updatePressure();
-			if (this.worldObj.isRemote)
-			{
-				this.randomDisplayTick();
-			}
+
 			LiquidStack stack = tank.getLiquid();
 			if (!worldObj.isRemote && stack != null && stack.amount >= 0)
 			{
@@ -210,7 +207,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
 			}
 			else
 			{
-				//return this.causeMix(stack, resource);
+				// return this.causeMix(stack, resource);
 			}
 
 		}
@@ -226,8 +223,6 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
 		}
 		return tank.fill(resource, doFill);
 	}
-
-	
 
 	@Override
 	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
@@ -250,7 +245,7 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
 	@Override
 	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
 	{
-		if(this.color.isValidLiquid(type))
+		if (this.color.isValidLiquid(type))
 		{
 			return this.tank;
 		}
@@ -263,32 +258,34 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
 	public void validataConnections()
 	{
 		this.connectedBlocks = connectionHelper.getSurroundingTileEntities(worldObj, xCoord, yCoord, zCoord);
-		for (int i = 0; i < 6; i++)
+
+		for (int side = 0; side < 6; side++)
 		{
-			ForgeDirection dir = ForgeDirection.getOrientation(i);
-			TileEntity ent = connectedBlocks[i];
-			if (ent instanceof ITankContainer)
+			ForgeDirection direction = ForgeDirection.getOrientation(side);
+			TileEntity tileEntity = connectedBlocks[side];
+
+			if (tileEntity instanceof ITankContainer)
 			{
-				if (ent instanceof TileEntityPipe && color != ((TileEntityPipe) ent).getColor())
+				if (tileEntity instanceof TileEntityPipe && this.color != ((TileEntityPipe) tileEntity).getColor())
 				{
-					connectedBlocks[i] = null;
+					connectedBlocks[side] = null;
 				}
 				// TODO switch side catch for IPressure
-				if (this.color != ColorCode.NONE && ent instanceof TileEntityTank && ((TileEntityTank) ent).getColor() != ColorCode.NONE && color != ((TileEntityTank) ent).getColor())
+				if (this.color != ColorCode.NONE && tileEntity instanceof TileEntityTank && ((TileEntityTank) tileEntity).getColor() != ColorCode.NONE && color != ((TileEntityTank) tileEntity).getColor())
 				{
-					connectedBlocks[i] = null;
+					connectedBlocks[side] = null;
 				}
 			}
-			else if (ent instanceof IPsiCreator)
+			else if (tileEntity instanceof IPsiCreator)
 			{
-				if (!((IPsiCreator) ent).getCanPressureTo(color.getLiquidData(), dir))
+				if (!((IPsiCreator) tileEntity).getCanPressureTo(color.getLiquidData().getStack(), direction))
 				{
-					connectedBlocks[i] = null;
+					connectedBlocks[side] = null;
 				}
 			}
 			else
 			{
-				connectedBlocks[i] = null;
+				connectedBlocks[side] = null;
 			}
 		}
 	}
@@ -312,10 +309,10 @@ public class TileEntityPipe extends TileEntity implements ITankContainer, IReadO
 					highestPressure = ((TileEntityPipe) connectedBlocks[i]).getPressure();
 				}
 			}
-			if (connectedBlocks[i] instanceof IPsiCreator && ((IPsiCreator) connectedBlocks[i]).getCanPressureTo(color.getLiquidData(), dir))
+			if (connectedBlocks[i] instanceof IPsiCreator && ((IPsiCreator) connectedBlocks[i]).getCanPressureTo(color.getLiquidData().getStack(), dir))
 			{
 
-				int p = ((IPsiCreator) connectedBlocks[i]).getPressureOut(color.getLiquidData(), dir);
+				int p = ((IPsiCreator) connectedBlocks[i]).getPressureOut(color.getLiquidData().getStack(), dir);
 				if (p > highestPressure)
 					highestPressure = p;
 			}
