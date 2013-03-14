@@ -97,14 +97,15 @@ public enum ColorCode
 	 */
 	public boolean isValidLiquid(LiquidStack stack)
 	{
-		if (stack == null)
-		{
-			return false;
-		}
 		if (this == NONE || this.getAllLiquidData().size() == 0)
 		{
 			return true;
 		}
+		if (stack == null)
+		{
+			return false;
+		}
+
 		for (LiquidData data : LiquidHandler.allowedLiquids)
 		{
 			if (data.getStack().isLiquidEqual(stack) && data.getColor() == this)

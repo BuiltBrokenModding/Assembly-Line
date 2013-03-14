@@ -33,7 +33,6 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 {
 	public final double WATTS_PER_TICK = (400 / 20);
 	double percentPumped = 0.0;
-	double joulesReceived = 0;
 
 	int disableTimer = 0;
 	public int pos = 0;
@@ -68,9 +67,9 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 
 		if (!this.worldObj.isRemote && !this.isDisabled())
 		{
-			if (this.canPump(xCoord, yCoord - 1, zCoord) && this.joulesReceived >= this.WATTS_PER_TICK)
+			if (this.canPump(xCoord, yCoord - 1, zCoord) && this.wattsReceived >= this.WATTS_PER_TICK)
 			{
-				joulesReceived -= this.WATTS_PER_TICK;
+				wattsReceived -= this.WATTS_PER_TICK;
 
 				if (percentPumped++ >= 10)
 				{
@@ -87,7 +86,7 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 			if (this.ticks % 10 == 0)
 			{
 				// TODO fix this to tell the client its running
-				Packet packet = PacketManager.getPacket(FluidMech.CHANNEL, this, color.ordinal(), this.joulesReceived);
+				Packet packet = PacketManager.getPacket(FluidMech.CHANNEL, this, color.ordinal(), this.wattsReceived);
 				PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 60);
 			}
 		}
@@ -100,7 +99,7 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 		try
 		{
 			this.color = ColorCode.get(data.readInt());
-			this.joulesReceived = data.readDouble();
+			this.wattsReceived = data.readDouble();
 		}
 		catch (Exception e)
 		{
@@ -203,7 +202,7 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 	@Override
 	public String getMeterReading(EntityPlayer user, ForgeDirection side)
 	{
-		return this.joulesReceived + "/" + this.WATTS_PER_TICK + " " + this.percentPumped;
+		return this.wattsReceived + "/" + this.WATTS_PER_TICK + " " + this.percentPumped;
 	}
 
 	@Override
