@@ -21,14 +21,8 @@ public class ItemReleaseValve extends ItemBlock
     }
 
     @Override
-    public String getItemNameIS(ItemStack par1ItemStack)
-    {
-        return Block.blocksList[this.getBlockID()].getBlockName() + "." + (par1ItemStack.getItemDamage());
-    }
-
-    @Override
-    public String getItemName()
-    {
-        return Block.blocksList[this.getBlockID()].getBlockName() + ".0";
-    }
+	public String getUnlocalizedName(ItemStack itemStack)
+	{
+		return "tile." + Block.blocksList[this.getBlockID()].getUnlocalizedName() + "." + itemStack.getItemDamage();
+	}
 }

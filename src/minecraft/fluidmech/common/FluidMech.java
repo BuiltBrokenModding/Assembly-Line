@@ -76,6 +76,8 @@ public class FluidMech extends DummyModContainer
     public static final String BLOCK_TEXTURE_FILE = RESOURCE_PATH + "blocks.png";
     public static final String ITEM_TEXTURE_FILE = RESOURCE_PATH + "items.png";
     public static final String LANGUAGE_PATH = RESOURCE_PATH + "lang/";
+    
+    public static final String TEXTURE_NAME_PREFIX = "fluidmechanics:";
 
     private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US" };
 
