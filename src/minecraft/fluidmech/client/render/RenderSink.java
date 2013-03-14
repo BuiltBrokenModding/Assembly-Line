@@ -23,7 +23,7 @@ public class RenderSink extends TileEntitySpecialRenderer
     public void renderWater(LiquidStack stack)
     {
         if (stack == null || stack.amount <= 1) { return; }
-        bindTextureByName(FluidMech.RESOURCE_PATH + "blue.png");
+        bindTextureByName(FluidMech.MODEL_TEXTURE_DIRECTORY + "blue.png");
         float p = 0;
         if(stack.amount > 0)p = 0.5f;
         if(stack.amount > 500)p=1.5f;
@@ -37,7 +37,7 @@ public class RenderSink extends TileEntitySpecialRenderer
     {
         int meta = te.worldObj.getBlockMetadata(te.xCoord, te.yCoord, te.zCoord);
 
-        bindTextureByName(FluidMech.RESOURCE_PATH + "Sink.png");
+        bindTextureByName(FluidMech.MODEL_TEXTURE_DIRECTORY + "Sink.png");
         GL11.glPushMatrix();
         GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
         GL11.glScalef(1.0F, -1F, -1F);

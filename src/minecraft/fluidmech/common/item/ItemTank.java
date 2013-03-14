@@ -23,6 +23,6 @@ public class ItemTank extends ItemBlock
 	@Override
 	public String getUnlocalizedName(ItemStack itemStack)
 	{
-		return "tile." + Block.blocksList[this.getBlockID()].getUnlocalizedName() + "." + itemStack.getItemDamage();
+		return Block.blocksList[this.getBlockID()].getUnlocalizedName() + "." + itemStack.getItemDamage();
 	}
 }

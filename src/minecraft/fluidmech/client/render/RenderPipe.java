@@ -38,7 +38,7 @@ public class RenderPipe extends TileEntitySpecialRenderer
     }
     public static String getPipeTexture(int meta)
     {
-        return FluidMech.RESOURCE_PATH + "pipes/"+ColorCode.get(meta).getName()+"Pipe.png";
+        return FluidMech.MODEL_TEXTURE_DIRECTORY + "pipes/"+ColorCode.get(meta).getName()+"Pipe.png";
     }
     public void render(int meta, TileEntity[] ents)
     {

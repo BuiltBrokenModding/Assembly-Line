@@ -71,13 +71,16 @@ public class FluidMech extends DummyModContainer
     public static final String NAME = "Fluid_Mechanics";
     public static final String CHANNEL = "FluidMech";
 
-    public static final String PATH = "/fluidmech/";
-    public static final String RESOURCE_PATH = PATH + "resource/";
-    public static final String BLOCK_TEXTURE_FILE = RESOURCE_PATH + "blocks.png";
-    public static final String ITEM_TEXTURE_FILE = RESOURCE_PATH + "items.png";
-    public static final String LANGUAGE_PATH = RESOURCE_PATH + "lang/";
+    public static final String RESOURCE_PATH = "/mods/fluidmech/";
+    public static final String TEXTURE_DIRECTORY = RESOURCE_PATH + "textures/";
+	public static final String GUI_DIRECTORY = TEXTURE_DIRECTORY + "gui/";
+	public static final String BLOCK_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + "blocks/";
+	public static final String ITEM_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + "items/";
+	public static final String MODEL_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + "models/";
     
-    public static final String TEXTURE_NAME_PREFIX = "fluidmechanics:";
+    public static final String TEXTURE_NAME_PREFIX = "fluidmech:";
+    
+    public static final String LANGUAGE_PATH = RESOURCE_PATH + "languages/";
 
     private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US" };
 

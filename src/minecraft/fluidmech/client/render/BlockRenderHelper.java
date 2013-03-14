@@ -38,7 +38,7 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
             GL11.glPushMatrix();
             GL11.glTranslatef((float) 0.0F, (float) 1.1F, (float) 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(FluidMech.RESOURCE_PATH + "pumps/WaterPump.png"));
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(FluidMech.MODEL_TEXTURE_DIRECTORY + "pumps/WaterPump.png"));
             modelPump.render(0.0725F);
             modelPump.renderMotion(0.0725F,0);
             GL11.glPopMatrix();
@@ -48,7 +48,7 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
             GL11.glPushMatrix();
             GL11.glTranslatef((float) 0.0F, (float) .8F, (float) 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(FluidMech.RESOURCE_PATH + "Sink.png"));
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(FluidMech.MODEL_TEXTURE_DIRECTORY + "Sink.png"));
             sink.render(0.0565F);
             GL11.glPopMatrix();
         }
@@ -68,7 +68,7 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
             GL11.glPushMatrix();
             GL11.glTranslatef((float) 0.0F, (float) 1.5F, (float) 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(FluidMech.RESOURCE_PATH + "mechanical/GearRod.png"));
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(FluidMech.MODEL_TEXTURE_DIRECTORY + "mechanical/GearRod.png"));
             modelRod.render(0.0825F, 0);
             GL11.glPopMatrix();
         }
@@ -77,7 +77,7 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
             GL11.glPushMatrix();
             GL11.glTranslatef((float) 0.0F, (float) 1.0F, (float) 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(FluidMech.RESOURCE_PATH + "mechanical/Generator.png"));
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(FluidMech.MODEL_TEXTURE_DIRECTORY + "mechanical/Generator.png"));
             modelGen.render(null);
             GL11.glPopMatrix();
         }

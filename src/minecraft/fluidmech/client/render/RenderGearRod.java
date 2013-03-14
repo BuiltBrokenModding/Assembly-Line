@@ -21,7 +21,7 @@ public class RenderGearRod extends TileEntitySpecialRenderer
 
 	public void renderAModelAt(TileEntityRod tileEntity, double d, double d1, double d2, float f)
 	{
-		bindTextureByName(FluidMech.RESOURCE_PATH + "mechanical/GearRod.png");
+		bindTextureByName(FluidMech.MODEL_TEXTURE_DIRECTORY + "mechanical/GearRod.png");
 		GL11.glPushMatrix();
 
 		int meta = tileEntity.worldObj.getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);

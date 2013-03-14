@@ -27,8 +27,7 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void preInit()
 	{
-		MinecraftForgeClient.preloadTexture(FluidMech.BLOCK_TEXTURE_FILE);
-		MinecraftForgeClient.preloadTexture(FluidMech.ITEM_TEXTURE_FILE);
+		
 	}
 
 	@Override
@@ -41,8 +40,10 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTank.class, new RenderTank());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityReleaseValve.class, new RenderReleaseValve());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySink.class, new RenderSink());
+		
 		MinecraftForgeClient.registerItemRenderer(FluidMech.blockPipe.blockID, new ItemRenderHelper());
 		MinecraftForgeClient.registerItemRenderer(FluidMech.blockReleaseValve.blockID, new ItemRenderHelper());
+		
 		RenderingRegistry.registerBlockHandler(new BlockRenderHelper());
 	}
 

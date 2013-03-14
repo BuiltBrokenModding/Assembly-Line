@@ -98,7 +98,7 @@ public class RenderTank extends TileEntitySpecialRenderer
                 break;
         }
 
-        return FluidMech.RESOURCE_PATH + "tanks/" + type + "Tank.png";
+        return FluidMech.MODEL_TEXTURE_DIRECTORY + "tanks/" + type + "Tank.png";
 
     }
 
@@ -118,7 +118,7 @@ public class RenderTank extends TileEntitySpecialRenderer
                 break;
         }
 
-        return FluidMech.RESOURCE_PATH + "tanks/guage/" + pos + type + ".png";
+        return FluidMech.MODEL_TEXTURE_DIRECTORY + "tanks/guage/" + pos + type + ".png";
     }
 
     public static String getCornerTexture(int meta)
@@ -139,7 +139,7 @@ public class RenderTank extends TileEntitySpecialRenderer
                 type = "";
                 break;
         }
-        return FluidMech.RESOURCE_PATH + "tanks/Corner" + type + ".png";
+        return FluidMech.MODEL_TEXTURE_DIRECTORY + "tanks/Corner" + type + ".png";
 
     }
 

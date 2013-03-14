@@ -23,7 +23,7 @@ public class RenderPump extends TileEntitySpecialRenderer
     {
         int meta = te.worldObj.getBlockMetadata(te.xCoord, te.yCoord, te.zCoord);
 
-        bindTextureByName(FluidMech.RESOURCE_PATH + "pumps/WaterPump.png");
+        bindTextureByName(FluidMech.MODEL_TEXTURE_DIRECTORY + "pumps/WaterPump.png");
         GL11.glPushMatrix();
         GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
         GL11.glScalef(1.0F, -1F, -1F);

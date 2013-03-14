@@ -92,7 +92,7 @@ public class ItemRenderHelper implements IItemRenderer
             SixPipe.renderMiddle();
         }
 
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(FluidMech.RESOURCE_PATH + "ReleaseValve.png"));
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(FluidMech.MODEL_TEXTURE_DIRECTORY + "ReleaseValve.png"));
         GL11.glRotatef(180f, 0f, 0f, 1f);
         if (!equ)
         {

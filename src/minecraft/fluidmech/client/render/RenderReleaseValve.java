@@ -49,7 +49,7 @@ public class RenderReleaseValve extends TileEntitySpecialRenderer
         if (ents[4] != null)
             SixPipe.renderLeft();
         SixPipe.renderMiddle();
-        bindTextureByName(FluidMech.RESOURCE_PATH + "ReleaseValve.png"); 
+        bindTextureByName(FluidMech.MODEL_TEXTURE_DIRECTORY + "ReleaseValve.png"); 
         if(ents[1] == null)valve.render();
         GL11.glPopMatrix();
 
@@ -57,7 +57,7 @@ public class RenderReleaseValve extends TileEntitySpecialRenderer
 
     public static String getPipeTexture(int meta)
     {
-        return FluidMech.RESOURCE_PATH + "pipes/" + ColorCode.get(meta).getName() + "Pipe.png";
+        return FluidMech.MODEL_TEXTURE_DIRECTORY + "pipes/" + ColorCode.get(meta).getName() + "Pipe.png";
     }
 
     @Override
