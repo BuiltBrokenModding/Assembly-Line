@@ -1,6 +1,6 @@
 package fluidmech.common.block;
 
-import hydraulic.core.helpers.MetaGroup;
+import hydraulic.helpers.MetaGroup;
 
 import java.util.List;
 
@@ -13,8 +13,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import universalelectricity.components.common.BasicComponents;
-import universalelectricity.components.common.block.BlockBasicMachine;
 import universalelectricity.prefab.block.BlockAdvanced;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import fluidmech.client.render.BlockRenderHelper;

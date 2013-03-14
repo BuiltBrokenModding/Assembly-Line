@@ -1,7 +1,7 @@
 package fluidmech.client.render;
 
-import hydraulic.core.helpers.connectionHelper;
-import hydraulic.core.implement.ColorCode;
+import hydraulic.api.ColorCode;
+import hydraulic.helpers.connectionHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.liquids.LiquidContainerRegistry;

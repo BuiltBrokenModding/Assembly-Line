@@ -1,6 +1,5 @@
 package fluidmech.common.item;
 
-import fluidmech.common.item.ItemParts.Parts;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;

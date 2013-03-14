@@ -11,7 +11,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import universalelectricity.prefab.block.BlockAdvanced;
-import universalelectricity.prefab.implement.IRedstoneReceptor;
 import fluidmech.client.render.BlockRenderHelper;
 import fluidmech.common.FluidMech;
 import fluidmech.common.TabFluidMech;

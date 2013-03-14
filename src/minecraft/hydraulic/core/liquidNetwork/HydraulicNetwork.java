@@ -1,10 +1,10 @@
-package hydraulic.core.liquids;
+package hydraulic.core.liquidNetwork;
 
-import hydraulic.core.helpers.connectionHelper;
-import hydraulic.core.implement.ColorCode;
-import hydraulic.core.implement.IFluidPipe;
-import hydraulic.core.implement.IPsiCreator;
-import hydraulic.core.implement.IPsiMachine;
+import hydraulic.api.ColorCode;
+import hydraulic.api.IFluidPipe;
+import hydraulic.api.IPsiCreator;
+import hydraulic.api.IPsiMachine;
+import hydraulic.helpers.connectionHelper;
 
 import java.util.ArrayList;
 import java.util.List;

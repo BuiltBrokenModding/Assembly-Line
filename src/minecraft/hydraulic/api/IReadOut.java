@@ -1,4 +1,4 @@
-package hydraulic.core.implement;
+package hydraulic.api;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.ForgeDirection;

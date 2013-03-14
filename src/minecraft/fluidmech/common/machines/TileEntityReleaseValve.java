@@ -1,13 +1,12 @@
 package fluidmech.common.machines;
 
 import fluidmech.common.machines.pipes.TileEntityPipe;
-import hydraulic.core.helpers.connectionHelper;
-import hydraulic.core.implement.ColorCode;
-import hydraulic.core.implement.IColorCoded;
-import hydraulic.core.implement.IPsiCreator;
-import hydraulic.core.implement.IReadOut;
-import hydraulic.core.liquids.LiquidData;
-import hydraulic.core.liquids.LiquidHandler;
+import hydraulic.api.ColorCode;
+import hydraulic.api.IColorCoded;
+import hydraulic.api.IPsiCreator;
+import hydraulic.api.IReadOut;
+import hydraulic.core.liquidNetwork.LiquidHandler;
+import hydraulic.helpers.connectionHelper;
 
 import java.util.ArrayList;
 import java.util.List;

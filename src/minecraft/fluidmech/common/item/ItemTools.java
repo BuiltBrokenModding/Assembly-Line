@@ -1,6 +1,6 @@
 package fluidmech.common.item;
 
-import hydraulic.core.implement.IReadOut;
+import hydraulic.api.IReadOut;
 
 import java.util.List;
 
@@ -11,7 +11,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import fluidmech.common.TabFluidMech;
-import fluidmech.common.item.ItemParts.Parts;
 
 public class ItemTools extends ItemBasic
 {

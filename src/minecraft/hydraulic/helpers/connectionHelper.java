@@ -1,4 +1,4 @@
-package hydraulic.core.helpers;
+package hydraulic.helpers;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;

@@ -1,4 +1,4 @@
-package hydraulic.core.helpers;
+package hydraulic.helpers;
 
 
 public class MetaGroup

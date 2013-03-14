@@ -1,10 +1,8 @@
 package fluidmech.common.block;
 
-import hydraulic.core.liquids.LiquidHandler;
+import hydraulic.core.liquidNetwork.LiquidHandler;
 
 import java.util.List;
-
-import universalelectricity.prefab.block.BlockAdvanced;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -17,6 +15,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
+import universalelectricity.prefab.block.BlockAdvanced;
 import fluidmech.client.render.BlockRenderHelper;
 import fluidmech.common.TabFluidMech;
 import fluidmech.common.machines.TileEntityTank;

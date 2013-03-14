@@ -1,6 +1,6 @@
-package hydraulic.core.liquids;
+package hydraulic.core.liquidNetwork;
 
-import hydraulic.core.implement.ColorCode;
+import hydraulic.api.ColorCode;
 
 import java.util.ArrayList;
 import java.util.List;

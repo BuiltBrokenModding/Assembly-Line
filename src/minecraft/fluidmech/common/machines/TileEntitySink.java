@@ -1,9 +1,9 @@
 package fluidmech.common.machines;
 
 import fluidmech.common.FluidMech;
-import hydraulic.core.implement.ColorCode;
-import hydraulic.core.implement.IColorCoded;
-import hydraulic.core.liquids.LiquidHandler;
+import hydraulic.api.ColorCode;
+import hydraulic.api.IColorCoded;
+import hydraulic.core.liquidNetwork.LiquidHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;

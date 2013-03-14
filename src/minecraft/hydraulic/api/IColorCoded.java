@@ -1,4 +1,4 @@
-package hydraulic.core.implement;
+package hydraulic.api;
 
 
 public interface IColorCoded

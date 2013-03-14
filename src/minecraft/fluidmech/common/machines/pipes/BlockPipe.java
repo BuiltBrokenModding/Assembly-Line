@@ -2,14 +2,13 @@ package fluidmech.common.machines.pipes;
 
 import java.util.List;
 
-import universalelectricity.prefab.block.BlockAdvanced;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import universalelectricity.prefab.block.BlockAdvanced;
 import fluidmech.common.FluidMech;
 import fluidmech.common.TabFluidMech;
 

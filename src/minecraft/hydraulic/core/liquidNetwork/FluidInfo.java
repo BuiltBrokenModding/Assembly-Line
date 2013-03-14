@@ -1,4 +1,4 @@
-package hydraulic.core.liquids;
+package hydraulic.core.liquidNetwork;
 
 /**
  * An easy way to display information on electricity.

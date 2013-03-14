@@ -1,6 +1,6 @@
 package hydraulic.core.path;
 
-import hydraulic.core.helpers.connectionHelper;
+import hydraulic.helpers.connectionHelper;
 
 import java.util.ArrayList;
 import java.util.List;

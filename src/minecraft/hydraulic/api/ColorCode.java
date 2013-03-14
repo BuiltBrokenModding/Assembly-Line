@@ -1,7 +1,7 @@
-package hydraulic.core.implement;
+package hydraulic.api;
 
-import hydraulic.core.liquids.LiquidData;
-import hydraulic.core.liquids.LiquidHandler;
+import hydraulic.core.liquidNetwork.LiquidData;
+import hydraulic.core.liquidNetwork.LiquidHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,7 +101,7 @@ public enum ColorCode
 		{
 			return true;
 		}
-		if (stack == null)
+		else if (stack == null)
 		{
 			return false;
 		}

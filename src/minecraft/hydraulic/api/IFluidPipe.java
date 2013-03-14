@@ -1,6 +1,6 @@
-package hydraulic.core.implement;
+package hydraulic.api;
 
-import hydraulic.core.liquids.HydraulicNetwork;
+import hydraulic.core.liquidNetwork.HydraulicNetwork;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidStack;
@@ -21,24 +21,22 @@ public interface IFluidPipe extends IColorCoded
 	public void setNetwork(HydraulicNetwork network);
 
 	/**
-	 * The UE tile entities that this conductor is connected to.
+	 * The tileEntities surrounding the block
 	 * 
 	 * @return
 	 */
 	public TileEntity[] getConnectedBlocks();
 
 	/**
-	 * Gets the resistance the pipes too the liquid going threw it
-	 * 
-	 * @return The amount of Ohm's of resistance.
+	 * The max amount of liquid that can flow per request
 	 */
 	public int getMaxFlowRate(LiquidStack stack);
 
 	/**
-     * gets the devices pressure from a given side
-     */
-	public double getMaxPressure(ForgeDirection side);
-	
+	 * gets the pipe's max pressure before bursting
+	 */
+	public double getMaxPressure();
+
 	/**
 	 * Called when the pressure on the pipe passes max
 	 */

@@ -1,18 +1,15 @@
 package fluidmech.common.machines.pipes;
 
 import fluidmech.common.machines.TileEntityTank;
-import hydraulic.core.helpers.connectionHelper;
-import hydraulic.core.implement.ColorCode;
-import hydraulic.core.implement.IColorCoded;
-import hydraulic.core.implement.IPsiCreator;
-import hydraulic.core.implement.IReadOut;
-import hydraulic.core.liquids.LiquidHandler;
+import hydraulic.api.ColorCode;
+import hydraulic.api.IColorCoded;
+import hydraulic.api.IPsiCreator;
+import hydraulic.api.IReadOut;
+import hydraulic.core.liquidNetwork.LiquidHandler;
+import hydraulic.helpers.connectionHelper;
 
 import java.util.Random;
 
-import universalelectricity.prefab.tile.TileEntityAdvanced;
-
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,6 +20,7 @@ import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.liquids.LiquidTank;
+import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer, IReadOut, IColorCoded
 {

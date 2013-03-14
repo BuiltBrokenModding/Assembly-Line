@@ -1,6 +1,6 @@
 package fluidmech.common.machines.mech;
 
-import hydraulic.core.implement.IReadOut;
+import hydraulic.api.IReadOut;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;

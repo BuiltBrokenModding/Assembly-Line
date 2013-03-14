@@ -1,6 +1,6 @@
-package hydraulic.core.liquids;
+package hydraulic.core.liquidNetwork;
 
-import hydraulic.core.implement.IFluidPipe;
+import hydraulic.api.IFluidPipe;
 
 import java.util.ArrayList;
 import java.util.Iterator;

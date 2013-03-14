@@ -1,6 +1,6 @@
 package hydraulic.core;
 
-import hydraulic.core.liquids.HydraulicNetworkManager;
+import hydraulic.core.liquidNetwork.HydraulicNetworkManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;

@@ -1,7 +1,7 @@
 package fluidmech.common.block;
 
-import hydraulic.core.helpers.MetaGroup;
-import hydraulic.core.liquids.LiquidHandler;
+import hydraulic.core.liquidNetwork.LiquidHandler;
+import hydraulic.helpers.MetaGroup;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;

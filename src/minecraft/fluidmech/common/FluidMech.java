@@ -5,13 +5,13 @@ import fluidmech.common.block.BlockReleaseValve;
 import fluidmech.common.block.BlockSink;
 import fluidmech.common.block.BlockTank;
 import fluidmech.common.block.liquids.BlockWasteLiquid;
-import fluidmech.common.item.ItemTools;
 import fluidmech.common.item.ItemBlockLiquidMachine;
-import fluidmech.common.item.ItemParts;
-import fluidmech.common.item.ItemParts.Parts;
 import fluidmech.common.item.ItemBlockPipe;
 import fluidmech.common.item.ItemBlockReleaseValve;
 import fluidmech.common.item.ItemBlockTank;
+import fluidmech.common.item.ItemParts;
+import fluidmech.common.item.ItemParts.Parts;
+import fluidmech.common.item.ItemTools;
 import fluidmech.common.machines.TileEntityMinorPump;
 import fluidmech.common.machines.TileEntityReleaseValve;
 import fluidmech.common.machines.TileEntitySink;
@@ -22,8 +22,8 @@ import fluidmech.common.machines.mech.TileEntityGenerator;
 import fluidmech.common.machines.mech.TileEntityRod;
 import fluidmech.common.machines.pipes.BlockPipe;
 import fluidmech.common.machines.pipes.TileEntityPipe;
-import hydraulic.core.implement.ColorCode;
-import hydraulic.core.liquids.LiquidHandler;
+import hydraulic.api.ColorCode;
+import hydraulic.core.liquidNetwork.LiquidHandler;
 
 import java.io.File;
 import java.util.logging.Logger;
@@ -65,7 +65,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public class FluidMech extends DummyModContainer
 {
     // TODO Change in Version Release
-    public static final String VERSION = "0.2.7";
+    public static final String VERSION = "0.3.0";
 
     // Constants
     public static final String NAME = "Fluid_Mechanics";

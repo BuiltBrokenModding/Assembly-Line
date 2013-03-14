@@ -1,15 +1,12 @@
 package fluidmech.common.machines;
 
 import fluidmech.common.FluidMech;
-import hydraulic.core.helpers.MetaGroup;
-import hydraulic.core.implement.ColorCode;
-import hydraulic.core.implement.IPsiCreator;
-import hydraulic.core.implement.IReadOut;
-import hydraulic.core.liquids.LiquidData;
-import hydraulic.core.liquids.LiquidHandler;
-
-import java.util.EnumSet;
-
+import hydraulic.api.ColorCode;
+import hydraulic.api.IPsiCreator;
+import hydraulic.api.IReadOut;
+import hydraulic.core.liquidNetwork.LiquidData;
+import hydraulic.core.liquidNetwork.LiquidHandler;
+import hydraulic.helpers.MetaGroup;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;

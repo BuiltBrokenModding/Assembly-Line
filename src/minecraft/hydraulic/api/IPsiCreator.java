@@ -1,4 +1,4 @@
-package hydraulic.core.implement;
+package hydraulic.api;
 
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidStack;

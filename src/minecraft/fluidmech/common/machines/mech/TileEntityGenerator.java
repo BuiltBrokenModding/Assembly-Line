@@ -1,11 +1,8 @@
 package fluidmech.common.machines.mech;
 
-import hydraulic.core.helpers.MetaGroup;
-import hydraulic.core.helpers.connectionHelper;
-import hydraulic.core.implement.IReadOut;
-
-import java.util.EnumSet;
-
+import hydraulic.api.IReadOut;
+import hydraulic.helpers.MetaGroup;
+import hydraulic.helpers.connectionHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
@@ -24,7 +21,6 @@ import universalelectricity.prefab.tile.TileEntityElectrical;
 import com.google.common.io.ByteArrayDataInput;
 
 import fluidmech.api.mech.IForce;
-import fluidmech.common.FluidMech;
 
 public class TileEntityGenerator extends TileEntityElectrical implements IPacketReceiver, IForce, IReadOut, IRedstoneReceptor
 {
