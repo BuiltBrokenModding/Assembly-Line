@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
+import universalelectricity.core.vector.VectorHelper;
 import assemblyline.common.block.TileEntityCrate;
 
 /**
@@ -84,7 +85,7 @@ public class PathfinderCrate
 
 			for (int i = 0; i < 6; i++)
 			{
-				TileEntity connectedTile = Vector3.getTileEntityFromSide(provider.worldObj, new Vector3(provider), ForgeDirection.getOrientation(i));
+				TileEntity connectedTile = VectorHelper.getTileEntityFromSide(provider.worldObj, new Vector3(provider), ForgeDirection.getOrientation(i));
 
 				if (!iteratedNodes.contains(connectedTile))
 				{

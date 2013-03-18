@@ -276,6 +276,20 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	@Override
 	public void setTier(int tier)
 	{
-		this.worldObj.setBlockMetadata(this.xCoord, this.yCoord, this.zCoord, tier);
+		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, tier, 3);
+	}
+
+	@Override
+	public boolean func_94042_c()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean func_94041_b(int i, ItemStack itemstack)
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

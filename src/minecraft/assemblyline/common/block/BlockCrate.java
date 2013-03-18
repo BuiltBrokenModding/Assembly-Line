@@ -26,10 +26,8 @@ public class BlockCrate extends BlockALMachine
 	public BlockCrate(int id, int texture)
 	{
 		super(id, UniversalElectricity.machine);
-		this.setBlockName("crate");
-		this.blockIndexInTexture = texture;
+		this.setUnlocalizedName("crate");
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
-		this.setTextureFile(AssemblyLine.BLOCK_TEXTURE_PATH);
 	}
 
 	@Override
@@ -363,7 +361,7 @@ public class BlockCrate extends BlockALMachine
 					var13.delayBeforeCanPickup = 10;
 					world.spawnEntityInWorld(var13);
 					tileEntity.setInventorySlotContents(0, null);
-					world.setBlockWithNotify(x, y, z, 0);
+					world.setBlockAndMetadataWithNotify(x, y, z, 0, 0, 3);
 
 					return true;
 				}

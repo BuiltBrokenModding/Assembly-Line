@@ -6,44 +6,28 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.implement.IRotatable;
-import assemblyline.common.AssemblyLine;
 import assemblyline.common.TabAssemblyLine;
 
 public class BlockTurntable extends BlockALMachine
 {
-	public BlockTurntable(int par1, int par2)
+	public BlockTurntable(int par1)
 	{
-		super(par1, par2, Material.piston);
-		this.setBlockName("turntable");
+		super(par1, Material.piston);
+		this.setUnlocalizedName("turntable");
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
-		this.setTextureFile(AssemblyLine.BLOCK_TEXTURE_PATH);
 	}
 
 	@Override
 	public void updateTick(World world, int x, int y, int z, Random par5Random)
 	{
 		this.updateTurntableState(world, x, y, z);
-	}
-
-	@Override
-	public int getBlockTextureFromSideAndMetadata(int side, int metadata)
-	{
-		if (side == ForgeDirection.getOrientation(metadata).getOpposite().ordinal())
-		{
-			return this.blockIndexInTexture;
-		}
-		else if (side == metadata)
-		{
-			return this.blockIndexInTexture + 1;
-		}
-
-		return this.blockIndexInTexture + 2;
 	}
 
 	public static int determineOrientation(World world, int x, int y, int z, EntityPlayer entityPlayer)
@@ -68,10 +52,10 @@ public class BlockTurntable extends BlockALMachine
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving par5EntityLiving)
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving par5EntityLiving, ItemStack stack)
 	{
 		int metadata = determineOrientation(world, x, y, z, (EntityPlayer) par5EntityLiving);
-		world.setBlockMetadataWithNotify(x, y, z, metadata);
+		world.setBlockMetadataWithNotify(x, y, z, metadata, 3);
 
 		world.scheduleBlockUpdate(x, y, z, this.blockID, 20);
 	}
@@ -107,7 +91,7 @@ public class BlockTurntable extends BlockALMachine
 
 				if (rotatable != null)
 				{
-					int newDir = ((IRotatable) tileEntity).getDirection().ordinal();
+					int newDir = ((IRotatable) tileEntity).getDirection(world, x, y, z).ordinal();
 					newDir++;
 
 					while (newDir >= 6)
@@ -120,7 +104,7 @@ public class BlockTurntable extends BlockALMachine
 						newDir += 6;
 					}
 
-					rotatable.setDirection(ForgeDirection.getOrientation(newDir));
+					rotatable.setDirection(world, x, y, z, ForgeDirection.getOrientation(newDir));
 
 					world.markBlockForUpdate(position.intX(), position.intY(), position.intZ());
 					world.playSoundEffect((double) x + 0.5D, (double) y + 0.5D, (double) z + 0.5D, "tile.piston.in", 0.5F, world.rand.nextFloat() * 0.15F + 0.6F);

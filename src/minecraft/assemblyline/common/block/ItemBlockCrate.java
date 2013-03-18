@@ -20,9 +20,9 @@ public class ItemBlockCrate extends ItemBlock
 	}
 
 	@Override
-	public String getItemNameIS(ItemStack itemStack)
+	public String getUnlocalizedName(ItemStack itemStack)
 	{
-		return this.getItemName() + "." + itemStack.getItemDamage();
+		return this.getUnlocalizedName() + "." + itemStack.getItemDamage();
 	}
 
 	@Override

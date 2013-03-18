@@ -6,7 +6,6 @@ import net.minecraft.world.IBlockAccess;
 
 import org.lwjgl.opengl.GL11;
 
-import universalelectricity.core.vector.Vector3;
 import assemblyline.client.model.ModelConveyorBelt;
 import assemblyline.client.model.ModelManipulator;
 import assemblyline.client.model.ModelRejectorPiston;
@@ -37,10 +36,6 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH + "belt/frame0.png"));
 			modelConveyorBelt.render(0.0625F, 0, false, false, false, false);
 			GL11.glPopMatrix();
-		}
-		else if (block.blockID == AssemblyLine.blockDetector.blockID)
-		{
-			RenderDetector.render(false, new Vector3());
 		}
 		else if (block.blockID == AssemblyLine.blockRejector.blockID)
 		{

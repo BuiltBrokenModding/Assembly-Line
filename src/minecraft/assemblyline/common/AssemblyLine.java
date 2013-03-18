@@ -119,7 +119,7 @@ public class AssemblyLine
 		blockMulti = new BlockMulti(CONFIGURATION.getBlock("Multiblock", BLOCK_ID_PREFIX + 9).getInt());
 		blockCraneController = new BlockCraneController(CONFIGURATION.getBlock("Crane Controller", BLOCK_ID_PREFIX + 10).getInt());
 		blockCraneFrame = new BlockCraneFrame(CONFIGURATION.getBlock("Crane Frame", BLOCK_ID_PREFIX + 11).getInt());
-		blockTurntable = new BlockTurntable(CONFIGURATION.getBlock("Turntable", BLOCK_ID_PREFIX + 12).getInt(), 10);
+		blockTurntable = new BlockTurntable(CONFIGURATION.getBlock("Turntable", BLOCK_ID_PREFIX + 12).getInt());
 
 		itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", ITEM_ID_PREFIX).getInt());
 		itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", ITEM_ID_PREFIX + 1).getInt());
@@ -141,7 +141,8 @@ public class AssemblyLine
 		GameRegistry.registerBlock(blockCraneFrame, "Crane Frame");
 
 		TabAssemblyLine.itemStack = new ItemStack(AssemblyLine.blockConveyorBelt);
-		UpdateNotifier.INSTANCE.checkUpdate(NAME, VERSION, "http://calclavia.com/downloads/al/recommendedversion.txt");
+		// TODO // UpdateNotifier.INSTANCE.checkUpdate(NAME, VERSION,
+		// "http://calclavia.com/downloads/al/recommendedversion.txt");
 
 		proxy.preInit();
 	}

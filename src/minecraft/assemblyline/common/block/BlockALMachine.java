@@ -5,34 +5,16 @@ import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import universalelectricity.prefab.BlockMachine;
+import universalelectricity.prefab.block.BlockAdvanced;
 import buildcraft.api.tools.IToolWrench;
 
-public class BlockALMachine extends BlockMachine
+public class BlockALMachine extends BlockAdvanced
 {
 
 	public BlockALMachine(int id, Material material)
 	{
 		super(id, material);
 	}
-
-	public BlockALMachine(int id, int textureIndex, Material material)
-	{
-		super(id, textureIndex, material);
-	}
-
-	@Deprecated
-	public BlockALMachine(String string, int id, Material material)
-	{
-		this(id, material);
-	}
-
-	@Deprecated
-	public BlockALMachine(String string, int id, Material material, CreativeTabs creativeTab)
-	{
-		this(string, id, material);
-	}
-
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
 	{
