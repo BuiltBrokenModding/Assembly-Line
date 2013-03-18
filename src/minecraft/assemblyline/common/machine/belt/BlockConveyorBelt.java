@@ -83,7 +83,7 @@ public class BlockConveyorBelt extends BlockALMachine
 	}
 
 	@Override
-	public void addCollidingBlockToList(World world, int x, int y, int z, AxisAlignedBB par5AxisAlignedBB, List par6List, Entity par7Entity)
+	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB par5AxisAlignedBB, List par6List, Entity par7Entity)
 	{
 		TileEntity t = world.getBlockTileEntity(x, y, z);
 

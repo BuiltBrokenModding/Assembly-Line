@@ -74,10 +74,10 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 		this.commandField = new GuiTextField(fontRenderer, 8, 129 + ContainerEncoder.Y_OFFSET, xSize - 52, 18);
 		// commandList = new GuiCommandList(mc, xSize - 7, 128, 7, 120, 170, 20);
 
-		this.controlList.add(addButton);
-		this.controlList.add(delButton);
-		this.controlList.add(pUpButton);
-		this.controlList.add(pDnButton);
+		this.buttonList.add(addButton);
+		this.buttonList.add(delButton);
+		this.buttonList.add(pUpButton);
+		this.buttonList.add(pDnButton);
 
 		this.commands = new ArrayList<String>();
 		this.minCommand = 0;
@@ -311,7 +311,6 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 	{
 		int var4 = this.mc.renderEngine.getTexture(AssemblyLine.TEXTURE_PATH + "gui_encoder.png");
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		this.mc.renderEngine.bindTexture(var4);
 
 		this.drawTexturedModalRect(containerWidth, containerHeight + ContainerEncoder.Y_OFFSET, 0, 0, this.xSize, this.ySize);
 		drawOutlineRect(containerWidth + 7, containerHeight + 46 + ContainerEncoder.Y_OFFSET, containerWidth + (xSize - 25), containerHeight + 46 + 80 + ContainerEncoder.Y_OFFSET, 0, 0, 0, 0.5f, 0.5f, 0.5f);

@@ -1,7 +1,11 @@
 package assemblyline.common.machine.detector;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
@@ -17,13 +21,15 @@ import assemblyline.common.machine.imprinter.BlockImprintable;
  */
 public class BlockDetector extends BlockImprintable
 {
+	Icon eye_red;
+	Icon eye_green;
 	public BlockDetector(int blockID, int texture)
 	{
 		super("detector", blockID, UniversalElectricity.machine, TabAssemblyLine.INSTANCE);
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving entity)
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving entity, ItemStack stack)
 	{
 		int angle = MathHelper.floor_double((entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		int change = 2;
@@ -55,7 +61,15 @@ public class BlockDetector extends BlockImprintable
 
 		world.setBlockMetadataWithNotify(x, y, z, change,3);
 	}
-
+	
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void func_94332_a(IconRegister iconReg)
+	{
+		super.func_94332_a(iconReg);
+		this.eye_green = iconReg.func_94245_a("detector_green");
+		this.eye_red = iconReg.func_94245_a("detector_red");
+	}
 	@Override
 	public Icon getBlockTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side)
 	{
@@ -66,28 +80,28 @@ public class BlockDetector extends BlockImprintable
 			{
 				if (((TileEntityDetector) tileEntity).isInverted())
 				{
-					return this.blockIndexInTexture + 2;
+					return this.eye_red;
 
 				}
 				else
 				{
-					return this.blockIndexInTexture + 1;
+					return this.eye_green;
 				}
 			}
 		}
 
-		return this.blockIndexInTexture;
+		return this.machine_icon;
 	}
 	
 	@Override
-	public int getBlockTextureFromSideAndMetadata(int side, int metadata)
+	public Icon getBlockTextureFromSideAndMetadata(int side, int metadata)
 	{
 		if (side == ForgeDirection.DOWN.ordinal())
 		{
-			return this.blockIndexInTexture + 1;
+			return this.eye_green;
 		}
 
-		return this.blockIndexInTexture;
+		return this.machine_icon;
 	}
 	@Override
 	public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
@@ -104,7 +118,7 @@ public class BlockDetector extends BlockImprintable
 		if (!canBlockStay(world, x, y, z))
 		{
 			this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
-			world.setBlockWithNotify(x, y, z, 0);
+			world.setBlockAndMetadataWithNotify(x, y, z, 0,0,3);
 		}
 	}
 

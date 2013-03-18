@@ -12,9 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
-import universalelectricity.core.UniversalElectricity;
 import universalelectricity.prefab.TranslationHelper;
-import universalelectricity.prefab.UpdateNotifier;
 import universalelectricity.prefab.multiblock.BlockMulti;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.block.BlockCrate;
@@ -63,7 +61,7 @@ public class AssemblyLine
 
 	public static final String CHANNEL = "AssemblyLine";
 
-	public static final String DIRECTORY_NO_SLASH = "assemblyline/";
+	public static final String DIRECTORY_NO_SLASH = "mods/assemblyline/";
 	public static final String DIRECTORY = "/" + DIRECTORY_NO_SLASH;
 	public static final String TEXTURE_PATH = DIRECTORY + "textures/";
 	public static final String LANGUAGE_PATH = DIRECTORY + "language/";
@@ -104,7 +102,7 @@ public class AssemblyLine
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		FMLog.setParent(FMLLog.getLogger());
-		UniversalElectricity.register(this, 1, 2, 6, false);
+		//UniversalElectricity.register(this, 1, 2, 6, false);
 		instance = this;
 
 		CONFIGURATION.load();

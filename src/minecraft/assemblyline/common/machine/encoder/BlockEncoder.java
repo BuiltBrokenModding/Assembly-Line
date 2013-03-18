@@ -1,8 +1,12 @@
 package assemblyline.common.machine.encoder;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.CommonProxy;
@@ -11,6 +15,9 @@ import assemblyline.common.block.BlockALMachine;
 
 public class BlockEncoder extends BlockALMachine
 {
+	Icon encoder_side;
+	Icon encoder_top;
+	Icon encoder_bottom;
 	public BlockEncoder(int id, int texture)
 	{
 		super(id, Material.wood);
@@ -18,23 +25,31 @@ public class BlockEncoder extends BlockALMachine
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 	}
 
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void func_94332_a(IconRegister iconReg)
+	{
+		this.encoder_side = iconReg.func_94245_a("encoder_side");
+		this.encoder_top = iconReg.func_94245_a("encoder_top");
+		this.encoder_bottom = iconReg.func_94245_a("encoder_bottom");
+	}
 	/**
 	 * Returns the block texture based on the side being looked at. Args: side
 	 */
-	public int getBlockTextureFromSide(int side)
+	public Icon getBlockTextureFromSide(int side, int meta)
 	{
 		if (side == 0)
 		{
-			return this.blockIndexInTexture;
+			return this.encoder_top;
 
 		}
 		else if (side == 1)
 		{
-			return this.blockIndexInTexture + 1;
+			return this.encoder_bottom;
 
 		}
 
-		return this.blockIndexInTexture + 2;
+		return this.encoder_side;
 	}
 
 	/**
@@ -50,12 +65,6 @@ public class BlockEncoder extends BlockALMachine
 
 		return true;
 
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World world)
-	{
-		return createNewTileEntity(world, 0);
 	}
 
 	@Override

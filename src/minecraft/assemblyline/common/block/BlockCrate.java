@@ -2,17 +2,22 @@ package assemblyline.common.block;
 
 import java.util.List;
 
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Icon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.PathfinderCrate;
 import assemblyline.common.TabAssemblyLine;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * A block that allows the placement of mass amount of a specific item within it. It will be allowed
@@ -23,11 +28,32 @@ import assemblyline.common.TabAssemblyLine;
  */
 public class BlockCrate extends BlockALMachine
 {
+	Icon crate_icon;
 	public BlockCrate(int id, int texture)
 	{
 		super(id, UniversalElectricity.machine);
 		this.setUnlocalizedName("crate");
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void func_94332_a(IconRegister iconReg)
+	{
+		this.crate_icon = iconReg.func_94245_a("crate");
+	}
+
+	@Override
+	public Icon getBlockTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side)
+	{
+
+		return this.crate_icon;
+	}
+
+	@Override
+	public Icon getBlockTextureFromSideAndMetadata(int side, int metadata)
+	{
+		return this.crate_icon;
 	}
 
 	@Override
