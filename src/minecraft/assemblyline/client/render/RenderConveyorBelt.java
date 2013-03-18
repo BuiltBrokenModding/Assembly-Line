@@ -51,7 +51,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 
 			if (slantType == SlantType.UP)
 			{
-				this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "slantedbelt/frame" + frame + ".png");
+				this.bindTextureByName(AssemblyLine.MODEL_TEXTURES_PATH + "slantedbelt/frame" + frame + ".png");
 				GL11.glTranslatef(0f, 0.8f, -0.8f);
 				GL11.glRotatef(180f, 0f, 1f, 1f);
 				boolean slantAdjust = false;
@@ -71,7 +71,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 			}
 			else if (slantType == SlantType.DOWN)
 			{
-				this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "slantedbelt/frame" + frame + ".png");
+				this.bindTextureByName(AssemblyLine.MODEL_TEXTURES_PATH + "slantedbelt/frame" + frame + ".png");
 				GL11.glRotatef(180f, 0f, 1f, 0f);
 				boolean slantAdjust = false;
 				TileEntity test = tileEntity.worldObj.getBlockTileEntity(tileEntity.xCoord - tileEntity.getDirection().offsetX, tileEntity.yCoord, tileEntity.zCoord - tileEntity.getDirection().offsetZ);
@@ -91,7 +91,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 			}
 			else
 			{
-				this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "belt/frame" + frame + ".png");
+				this.bindTextureByName(AssemblyLine.MODEL_TEXTURES_PATH + "belt/frame" + frame + ".png");
 				GL11.glRotatef(180, 0f, 1f, 0f);
 				GL11.glTranslatef(0f, -0.68f, 0f);
 				MODEL.render(0.0625f, (float) Math.toRadians(tileEntity.wheelRotation), tileEntity.getIsLastBelt(), tileEntity.getIsFirstBelt(), false, false);
@@ -115,7 +115,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 					break;
 			}
 
-			this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "belt/frame" + frame + ".png");
+			this.bindTextureByName(AssemblyLine.MODEL_TEXTURES_PATH + "belt/frame" + frame + ".png");
 			MODEL.render(0.0625F, (float) Math.toRadians(tileEntity.wheelRotation), tileEntity.getIsLastBelt(), tileEntity.getIsFirstBelt(), false, true);
 
 		}

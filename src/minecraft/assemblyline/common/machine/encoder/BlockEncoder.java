@@ -29,21 +29,22 @@ public class BlockEncoder extends BlockALMachine
 	@Override
 	public void func_94332_a(IconRegister iconReg)
 	{
-		this.encoder_side = iconReg.func_94245_a("encoder_side");
-		this.encoder_top = iconReg.func_94245_a("encoder_top");
-		this.encoder_bottom = iconReg.func_94245_a("encoder_bottom");
+		this.encoder_side = iconReg.func_94245_a(AssemblyLine.TEXTURE_NAME_PREFIX+"encoder_side");
+		this.encoder_top = iconReg.func_94245_a(AssemblyLine.TEXTURE_NAME_PREFIX+"encoder_top");
+		this.encoder_bottom = iconReg.func_94245_a(AssemblyLine.TEXTURE_NAME_PREFIX+"encoder_bottom");
 	}
 	/**
 	 * Returns the block texture based on the side being looked at. Args: side
 	 */
-	public Icon getBlockTextureFromSide(int side, int meta)
+	@Override
+	public Icon getBlockTextureFromSideAndMetadata(int side, int meta)
 	{
-		if (side == 0)
+		if (side == 1)
 		{
 			return this.encoder_top;
 
 		}
-		else if (side == 1)
+		else if (side == 0)
 		{
 			return this.encoder_bottom;
 

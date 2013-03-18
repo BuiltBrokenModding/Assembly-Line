@@ -24,7 +24,7 @@ public class RenderCraneController extends RenderImprintable
 	{
 		if (tileEntity != null && tileEntity instanceof TileEntityCraneController)
 		{
-			this.bindTextureByName(AssemblyLine.TEXTURE_PATH + (((TileEntityCraneController) tileEntity).isCraneValid() ? TEXTURE_VALID : TEXTURE));
+			this.bindTextureByName(AssemblyLine.MODEL_TEXTURES_PATH + (((TileEntityCraneController) tileEntity).isCraneValid() ? TEXTURE_VALID : TEXTURE));
 			ForgeDirection front = ForgeDirection.getOrientation(tileEntity.worldObj.getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord));
 			ForgeDirection right = CraneHelper.rotateClockwise(front);
 			float angle = 0f;

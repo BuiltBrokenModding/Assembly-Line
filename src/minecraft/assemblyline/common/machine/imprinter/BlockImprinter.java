@@ -35,28 +35,29 @@ public class BlockImprinter extends BlockALMachine
 	@Override
 	public void func_94332_a(IconRegister iconReg)
 	{
-		this.imprinter_side = iconReg.func_94245_a("imprinter_side");
-		this.imprinter_top = iconReg.func_94245_a("imprinter_top");
-		this.imprinter_bottom = iconReg.func_94245_a("imprinter_bottom");
+		this.imprinter_side = iconReg.func_94245_a(AssemblyLine.TEXTURE_NAME_PREFIX+"imprinter_side");
+		this.imprinter_top = iconReg.func_94245_a(AssemblyLine.TEXTURE_NAME_PREFIX+"imprinter_top");
+		this.imprinter_bottom = iconReg.func_94245_a(AssemblyLine.TEXTURE_NAME_PREFIX+"imprinter_bottom");
 	}
 
 	/**
 	 * Returns the block texture based on the side being looked at. Args: side
 	 */
-	public Icon getBlockTextureFromSide(int side, int meta)
+	@Override
+	public Icon getBlockTextureFromSideAndMetadata(int side, int meta)
 	{
-		if (side == 0)
+		if (side == 1)
 		{
 			return this.imprinter_top;
 
 		}
-		else if (side == 1)
+		else if (side == 0)
 		{
 			return this.imprinter_bottom;
 
 		}
 
-		return this.imprinter_top;
+		return this.imprinter_side;
 	}
 
 	/**

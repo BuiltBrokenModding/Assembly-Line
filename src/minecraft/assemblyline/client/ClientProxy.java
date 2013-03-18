@@ -14,6 +14,7 @@ import assemblyline.client.render.RenderConveyorBelt;
 import assemblyline.client.render.RenderCraneController;
 import assemblyline.client.render.RenderCraneFrame;
 import assemblyline.client.render.RenderCrate;
+import assemblyline.client.render.RenderDetector;
 import assemblyline.client.render.RenderManipulator;
 import assemblyline.client.render.RenderRejector;
 import assemblyline.common.AssemblyLine;
@@ -25,6 +26,7 @@ import assemblyline.common.machine.armbot.TileEntityArmbot;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt;
 import assemblyline.common.machine.crane.TileEntityCraneController;
 import assemblyline.common.machine.crane.TileEntityCraneRail;
+import assemblyline.common.machine.detector.TileEntityDetector;
 import assemblyline.common.machine.encoder.TileEntityEncoder;
 import assemblyline.common.machine.imprinter.TileEntityImprinter;
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -49,6 +51,7 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityManipulator.class, new RenderManipulator());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrate.class, new RenderCrate());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmbot.class, new RenderArmbot());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDetector.class, new RenderDetector());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCraneController.class, new RenderCraneController());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCraneRail.class, new RenderCraneFrame());
 	}

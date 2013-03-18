@@ -41,7 +41,7 @@ public class GuiAutoCrafting extends GuiContainer
 	 */
 	protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
 	{
-		int var4 = this.mc.renderEngine.getTexture(AssemblyLine.TEXTURE_PATH + "gui_crafting.png");
+		int var4 = this.mc.renderEngine.getTexture(AssemblyLine.GUI_TEXTURES_PATH + "gui_crafting.png");
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		int var5 = (this.width - this.xSize) / 2;
 		int var6 = (this.height - this.ySize) / 2;

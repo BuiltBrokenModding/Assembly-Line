@@ -1,7 +1,5 @@
 package assemblyline.common.machine.detector;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,8 +11,11 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
+import assemblyline.common.AssemblyLine;
 import assemblyline.common.TabAssemblyLine;
 import assemblyline.common.machine.imprinter.BlockImprintable;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Briman0094
@@ -23,6 +24,7 @@ public class BlockDetector extends BlockImprintable
 {
 	Icon eye_red;
 	Icon eye_green;
+
 	public BlockDetector(int blockID, int texture)
 	{
 		super("detector", blockID, UniversalElectricity.machine, TabAssemblyLine.INSTANCE);
@@ -59,17 +61,18 @@ public class BlockDetector extends BlockImprintable
 			change = ForgeDirection.UP.ordinal();
 		}
 
-		world.setBlockMetadataWithNotify(x, y, z, change,3);
+		world.setBlockMetadataWithNotify(x, y, z, change, 3);
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void func_94332_a(IconRegister iconReg)
 	{
 		super.func_94332_a(iconReg);
-		this.eye_green = iconReg.func_94245_a("detector_green");
-		this.eye_red = iconReg.func_94245_a("detector_red");
+		this.eye_green = iconReg.func_94245_a(AssemblyLine.TEXTURE_NAME_PREFIX + "detector_green");
+		this.eye_red = iconReg.func_94245_a(AssemblyLine.TEXTURE_NAME_PREFIX + "detector_red");
 	}
+
 	@Override
 	public Icon getBlockTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side)
 	{
@@ -92,7 +95,7 @@ public class BlockDetector extends BlockImprintable
 
 		return this.machine_icon;
 	}
-	
+
 	@Override
 	public Icon getBlockTextureFromSideAndMetadata(int side, int metadata)
 	{
@@ -103,14 +106,13 @@ public class BlockDetector extends BlockImprintable
 
 		return this.machine_icon;
 	}
+
 	@Override
 	public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
-		world.setBlockMetadataWithNotify(x, y, z, side,3);
+		world.setBlockMetadataWithNotify(x, y, z, side, 3);
 		return true;
 	}
-
-	
 
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
@@ -118,7 +120,7 @@ public class BlockDetector extends BlockImprintable
 		if (!canBlockStay(world, x, y, z))
 		{
 			this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
-			world.setBlockAndMetadataWithNotify(x, y, z, 0,0,3);
+			world.setBlockAndMetadataWithNotify(x, y, z, 0, 0, 3);
 		}
 	}
 

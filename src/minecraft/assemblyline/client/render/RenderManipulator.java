@@ -22,11 +22,11 @@ public class RenderManipulator extends RenderImprintable
 
 		if (tileEntity.isOutput())
 		{
-			this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "manipulator1.png");
+			this.bindTextureByName(AssemblyLine.MODEL_TEXTURES_PATH + "manipulator1.png");
 		}
 		else
 		{
-			this.bindTextureByName(AssemblyLine.TEXTURE_PATH + "manipulator2.png");
+			this.bindTextureByName(AssemblyLine.MODEL_TEXTURES_PATH + "manipulator2.png");
 		}
 
 		if (face == 2)

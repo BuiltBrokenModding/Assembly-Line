@@ -43,7 +43,7 @@ public class RenderArmbot extends TileEntitySpecialRenderer
 				}
 			}
 
-			this.bindTextureByName(AssemblyLine.TEXTURE_PATH + TEXTURE);
+			this.bindTextureByName(AssemblyLine.MODEL_TEXTURES_PATH + TEXTURE);
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 			GL11.glScalef(1.0F, -1F, -1F);

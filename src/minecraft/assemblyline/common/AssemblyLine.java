@@ -57,16 +57,20 @@ public class AssemblyLine
 
 	public static final String NAME = "Assembly Line";
 
-	public static final String VERSION = "0.2.8";
+	public static final String VERSION = "0.3.0";
 
 	public static final String CHANNEL = "AssemblyLine";
 
 	public static final String DIRECTORY_NO_SLASH = "mods/assemblyline/";
 	public static final String DIRECTORY = "/" + DIRECTORY_NO_SLASH;
-	public static final String TEXTURE_PATH = DIRECTORY + "textures/";
-	public static final String LANGUAGE_PATH = DIRECTORY + "language/";
-	public static final String BLOCK_TEXTURE_PATH = TEXTURE_PATH + "blocks.png";
-	public static final String ITEM_TEXTURE_PATH = TEXTURE_PATH + "items.png";
+	public static final String TEXTURE_PATHS = DIRECTORY + "textures/";
+	public static final String MODEL_TEXTURES_PATH = TEXTURE_PATHS + "models/";
+	public static final String BLOCK_TEXTURES_PATH = TEXTURE_PATHS + "blocks/";
+	public static final String ITEM_TEXTURES_PATH = TEXTURE_PATHS + "items/";
+	public static final String GUI_TEXTURES_PATH = TEXTURE_PATHS + "guis/";
+	public static final String LANGUAGE_PATH = DIRECTORY + "languages/";
+	
+	public static final String TEXTURE_NAME_PREFIX = "assemblyline:";
 
 	private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US" };
 

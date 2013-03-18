@@ -40,7 +40,7 @@ public class BlockCrate extends BlockALMachine
 	@Override
 	public void func_94332_a(IconRegister iconReg)
 	{
-		this.crate_icon = iconReg.func_94245_a("crate");
+		this.crate_icon = iconReg.func_94245_a(AssemblyLine.TEXTURE_NAME_PREFIX+"crate");
 	}
 
 	@Override

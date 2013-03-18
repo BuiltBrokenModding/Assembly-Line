@@ -33,13 +33,13 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float) 0.0F, (float) 1.5F, (float) 0.0F);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH + "belt/frame0.png"));
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.MODEL_TEXTURES_PATH + "belt/frame0.png"));
 			modelConveyorBelt.render(0.0625F, 0, false, false, false, false);
 			GL11.glPopMatrix();
 		}
 		else if (block.blockID == AssemblyLine.blockRejector.blockID)
 		{
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH + "rejector.png"));
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.MODEL_TEXTURES_PATH + "rejector.png"));
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float) 0.6F, (float) 1.5F, (float) 0.6F);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
@@ -50,7 +50,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 		}
 		else if (block.blockID == AssemblyLine.blockManipulator.blockID)
 		{
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH + "manipulator1.png"));
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.MODEL_TEXTURES_PATH + "manipulator1.png"));
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float) 0.6F, (float) 1.5F, (float) 0.6F);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
@@ -60,7 +60,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 		}
 		else if (block.blockID == AssemblyLine.blockArmbot.blockID)
 		{
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH + RenderArmbot.TEXTURE));
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.MODEL_TEXTURES_PATH + RenderArmbot.TEXTURE));
 			GL11.glPushMatrix();
 			GL11.glTranslatef(0.4f, 0.8f, 0f);
 			GL11.glScalef(0.7f, 0.7f, 0.7f);
@@ -71,7 +71,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 		}
 		else if (block.blockID == AssemblyLine.blockCraneController.blockID)
 		{
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH + RenderCraneController.TEXTURE));
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.MODEL_TEXTURES_PATH + RenderCraneController.TEXTURE));
 			GL11.glPushMatrix();
 			GL11.glTranslatef(0f, 1f, 0f);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
@@ -81,7 +81,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 		}
 		else if (block.blockID == AssemblyLine.blockCraneFrame.blockID)
 		{
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.TEXTURE_PATH + RenderCraneFrame.TEXTURE));
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(AssemblyLine.MODEL_TEXTURES_PATH + RenderCraneFrame.TEXTURE));
 			GL11.glPushMatrix();
 			GL11.glTranslatef(0f, 1f, 0f);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
