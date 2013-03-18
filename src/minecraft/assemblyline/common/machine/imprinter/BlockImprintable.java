@@ -24,7 +24,7 @@ public abstract class BlockImprintable extends BlockALMachine
 	public BlockImprintable(String name, int id, Material material, CreativeTabs creativeTab)
 	{
 		super(id, material);
-		this.setBlockName(name);
+		this.setUnlocalizedName(name);
 		this.setCreativeTab(creativeTab);
 	}
 
@@ -114,7 +114,7 @@ public abstract class BlockImprintable extends BlockALMachine
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving par5EntityLiving)
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving par5EntityLiving, ItemStack stack)
 	{
 		int angle = MathHelper.floor_double((par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		int change = 2;
@@ -135,7 +135,7 @@ public abstract class BlockImprintable extends BlockALMachine
 				break;
 
 		}
-		world.setBlockMetadataWithNotify(x, y, z, change);
+		world.setBlockMetadataWithNotify(x, y, z, change,3);
 	}
 
 	@Override
@@ -161,7 +161,7 @@ public abstract class BlockImprintable extends BlockALMachine
 
 		}
 
-		world.setBlockMetadataWithNotify(x, y, z, change);
+		world.setBlockMetadataWithNotify(x, y, z, change,3);
 
 		return true;
 	}

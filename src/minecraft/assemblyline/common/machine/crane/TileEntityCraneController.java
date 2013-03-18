@@ -199,4 +199,10 @@ public class TileEntityCraneController extends TileEntityAssemblyNetwork impleme
 		depth = nbt.getInteger("depth");
 		isCraneValid = nbt.getBoolean("isValid");
 	}
+
+	@Override
+	public boolean canConnect(ForgeDirection direction)
+	{
+		return true;
+	}
 }

@@ -12,8 +12,8 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.electricity.ElectricityConnections;
 import universalelectricity.prefab.implement.IRotatable;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
@@ -46,16 +46,12 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	private int animFrame = 0; // this is from 0 to 15
 	private SlantType slantType = SlantType.NONE;
 
-	public List<Entity> IgnoreList = new ArrayList<Entity>();// Entities that need to be ignored to prevent movement
-
-	public TileEntityConveyorBelt()
-	{
-		super();
-		ElectricityConnections.registerConnector(this, EnumSet.of(ForgeDirection.DOWN));
-	}
+	public List<Entity> IgnoreList = new ArrayList<Entity>();// Entities that need to be ignored to
+																// prevent movement
 
 	/**
-	 * This function is overriden to allow conveyor belts to power belts that are diagonally going up.
+	 * This function is overriden to allow conveyor belts to power belts that are diagonally going
+	 * up.
 	 */
 	@Override
 	public void updatePowerTransferRange()
@@ -118,7 +114,7 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 		{
 			PacketManager.sendPacketToClients(this.getDescriptionPacket());
 		}
-		
+
 		/* PROCESSES IGNORE LIST AND REMOVES UNNEED ENTRIES */
 		List<Entity> newList = new ArrayList<Entity>();
 		for (Entity ent : IgnoreList)
@@ -271,15 +267,25 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	}
 
 	@Override
-	public void setDirection(ForgeDirection facingDirection)
+	public void setDirection(World world, int x, int y, int z, ForgeDirection facingDirection)
 	{
-		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, facingDirection.ordinal());
+		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, facingDirection.ordinal(), 3);
 	}
 
 	@Override
-	public ForgeDirection getDirection()
+	public ForgeDirection getDirection(World world, int x, int y, int z)
 	{
 		return ForgeDirection.getOrientation(this.getBlockMetadata());
+	}
+
+	public ForgeDirection getDirection()
+	{
+		return this.getDirection(worldObj, xCoord, yCoord, zCoord);
+	}
+
+	public void setDirection(ForgeDirection facingDirection)
+	{
+		this.setDirection(worldObj, xCoord, yCoord, zCoord, facingDirection);
 	}
 
 	@Override
@@ -333,7 +339,7 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 
 		if (worldObj != null)
 		{
-			worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, nbt.getInteger("rotation"));
+			worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, nbt.getInteger("rotation"), 3);
 		}
 	}
 
@@ -360,5 +366,11 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 			this.IgnoreList.add(entity);
 		}
 
+	}
+
+	@Override
+	public boolean canConnect(ForgeDirection direction)
+	{
+		return direction == ForgeDirection.DOWN;
 	}
 }

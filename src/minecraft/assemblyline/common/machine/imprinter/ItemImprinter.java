@@ -19,11 +19,9 @@ public class ItemImprinter extends Item
 	public ItemImprinter(int id)
 	{
 		super(id);
-		this.setItemName("imprint");
-		this.setIconIndex(1);
+		this.setUnlocalizedName("imprint");
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 		this.setHasSubtypes(true);
-		this.setTextureFile(AssemblyLine.ITEM_TEXTURE_PATH);
 
 	}
 

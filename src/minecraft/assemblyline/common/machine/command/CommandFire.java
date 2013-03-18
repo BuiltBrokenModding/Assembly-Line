@@ -76,7 +76,7 @@ public class CommandFire extends Command
 					if (item.getEntityItem().stackSize > 0)
 					{
 						stack.stackSize--;
-						item.func_92058_a(stack);
+						item.setEntityItemStack(stack);
 					}
 					else
 					{

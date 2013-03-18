@@ -133,4 +133,10 @@ public class TileEntityRejector extends TileEntityFilterable
 		super.writeToNBT(nbt);
 		nbt.setBoolean("piston", this.firePiston);
 	}
+
+	@Override
+	public boolean canConnect(ForgeDirection dir)
+	{
+		return dir != this.getDirection();
+	}
 }

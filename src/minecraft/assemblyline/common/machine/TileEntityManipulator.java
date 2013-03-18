@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 import universalelectricity.core.vector.Vector3;
@@ -480,5 +481,11 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 	public void onPowerOff()
 	{
 		this.isRedstonePowered = false;
+	}
+
+	@Override
+	public boolean canConnect(ForgeDirection dir)
+	{
+		return dir != this.getDirection();
 	}
 }

@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,8 +22,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.electricity.ElectricityConnections;
-import universalelectricity.core.implement.IJouleStorage;
+import universalelectricity.core.block.IElectricityStorage;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.multiblock.IMultiBlock;
@@ -53,7 +51,7 @@ import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.IPeripheral;
 import dark.minecraft.helpers.ItemWorldHelper;
 
-public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMultiBlock, IInventory, IPacketReceiver, IJouleStorage, IArmbot, IPeripheral
+public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMultiBlock, IInventory, IPacketReceiver, IElectricityStorage, IArmbot, IPeripheral
 {
 	private final CommandManager commandManager = new CommandManager();
 	private static final int PACKET_COMMANDS = 128;
@@ -91,13 +89,6 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	 * Client Side Object Storage
 	 */
 	public EntityItem renderEntityItem = null;
-
-	@Override
-	public void initiate()
-	{
-		ElectricityConnections.registerConnector(this, EnumSet.of(ForgeDirection.DOWN));
-		this.onInventoryChanged();
-	}
 
 	@Override
 	public void onUpdate()
@@ -558,19 +549,19 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	}
 
 	@Override
-	public double getJoules(Object... data)
+	public double getJoules()
 	{
 		return this.wattsReceived;
 	}
 
 	@Override
-	public void setJoules(double joules, Object... data)
+	public void setJoules(double joules)
 	{
 		this.wattsReceived = joules;
 	}
 
 	@Override
-	public double getMaxJoules(Object... data)
+	public double getMaxJoules()
 	{
 		return 1000;
 	}
@@ -673,10 +664,8 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	@Override
 	public void onDestroy(TileEntity callingBlock)
 	{
-		Vector3 destroyPosition = new Vector3(callingBlock);
-		destroyPosition.add(new Vector3(0, 1, 0));
-		destroyPosition.setBlockWithNotify(this.worldObj, 0);
-		this.worldObj.setBlockWithNotify(this.xCoord, this.yCoord, this.zCoord, 0);
+		this.worldObj.setBlockAndMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, 0, 0, 3);
+		this.worldObj.setBlockAndMetadataWithNotify(this.xCoord, this.yCoord + 1, this.zCoord, 0, 0, 3);
 	}
 
 	@Override
@@ -971,6 +960,25 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		{
 			return ForgeDirection.EAST;
 		}
+	}
+
+	@Override
+	public boolean canConnect(ForgeDirection direction)
+	{
+		return direction == ForgeDirection.DOWN;
+	}
+
+	@Override
+	public boolean func_94042_c()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean func_94041_b(int i, ItemStack itemstack)
+	{
+		return false;
 	}
 
 }

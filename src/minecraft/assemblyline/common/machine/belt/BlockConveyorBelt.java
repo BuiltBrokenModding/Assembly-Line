@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
@@ -30,7 +31,7 @@ public class BlockConveyorBelt extends BlockALMachine
 	public BlockConveyorBelt(int id)
 	{
 		super(id, UniversalElectricity.machine);
-		this.setBlockName("conveyorBelt");
+		this.setUnlocalizedName("conveyorBelt");
 		this.setBlockBounds(0, 0, 0, 1, 0.3f, 1);
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 	}
@@ -68,11 +69,17 @@ public class BlockConveyorBelt extends BlockALMachine
 		{
 			TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) t;
 
-			if (tileEntity.getSlant() == SlantType.UP || tileEntity.getSlant() == SlantType.DOWN) { return AxisAlignedBB.getAABBPool().addOrModifyAABBInPool((double) x + this.minX, (double) y + this.minY, (double) z + this.minZ, (double) x + 1, (double) y + 1, (double) z + 1); }
-			if (tileEntity.getSlant() == SlantType.TOP) { return AxisAlignedBB.getAABBPool().addOrModifyAABBInPool((double) x + this.minX, (double) y + 0.68f, (double) z + this.minZ, (double) x + this.maxX, (double) y + 0.98f, (double) z + this.maxZ); }
+			if (tileEntity.getSlant() == SlantType.UP || tileEntity.getSlant() == SlantType.DOWN)
+			{
+				return AxisAlignedBB.getAABBPool().getAABB((double) x + this.minX, (double) y + this.minY, (double) z + this.minZ, (double) x + 1, (double) y + 1, (double) z + 1);
+			}
+			if (tileEntity.getSlant() == SlantType.TOP)
+			{
+				return AxisAlignedBB.getAABBPool().getAABB((double) x + this.minX, (double) y + 0.68f, (double) z + this.minZ, (double) x + this.maxX, (double) y + 0.98f, (double) z + this.maxZ);
+			}
 		}
 
-		return AxisAlignedBB.getAABBPool().addOrModifyAABBInPool((double) x + this.minX, (double) y + this.minY, (double) z + this.minZ, (double) x + this.maxX, (double) y + this.maxY, (double) z + this.maxZ);
+		return AxisAlignedBB.getAABBPool().getAABB((double) x + this.minX, (double) y + this.minY, (double) z + this.minZ, (double) x + this.maxX, (double) y + this.maxY, (double) z + this.maxZ);
 	}
 
 	@Override
@@ -86,7 +93,7 @@ public class BlockConveyorBelt extends BlockALMachine
 
 			if (tileEntity.getSlant() == SlantType.UP || tileEntity.getSlant() == SlantType.DOWN)
 			{
-				AxisAlignedBB boundBottom = AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(x, y, z, x + 1, y + 0.3, z + 1);
+				AxisAlignedBB boundBottom = AxisAlignedBB.getAABBPool().getAABB(x, y, z, x + 1, y + 0.3, z + 1);
 				AxisAlignedBB boundTop = null;
 
 				ForgeDirection direction = tileEntity.getDirection();
@@ -95,38 +102,38 @@ public class BlockConveyorBelt extends BlockALMachine
 				{
 					if (direction.offsetX > 0)
 					{
-						boundTop = AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(x + (float) direction.offsetX / 2, y, z, x + 1, y + 0.8, z + 1);
+						boundTop = AxisAlignedBB.getAABBPool().getAABB(x + (float) direction.offsetX / 2, y, z, x + 1, y + 0.8, z + 1);
 					}
 					else if (direction.offsetX < 0)
 					{
-						boundTop = AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(x, y, z, x + (float) direction.offsetX / -2, y + 0.8, z + 1);
+						boundTop = AxisAlignedBB.getAABBPool().getAABB(x, y, z, x + (float) direction.offsetX / -2, y + 0.8, z + 1);
 					}
 					else if (direction.offsetZ > 0)
 					{
-						boundTop = AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(x, y, z + (float) direction.offsetZ / 2, x + 1, y + 0.8, z + 1);
+						boundTop = AxisAlignedBB.getAABBPool().getAABB(x, y, z + (float) direction.offsetZ / 2, x + 1, y + 0.8, z + 1);
 					}
 					else if (direction.offsetZ < 0)
 					{
-						boundTop = AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(x, y, z, x + 1, y + 0.8, z + (float) direction.offsetZ / -2);
+						boundTop = AxisAlignedBB.getAABBPool().getAABB(x, y, z, x + 1, y + 0.8, z + (float) direction.offsetZ / -2);
 					}
 				}
 				else if (tileEntity.getSlant() == SlantType.DOWN)
 				{
 					if (direction.offsetX > 0)
 					{
-						boundTop = AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(x, y, z, x + (float) direction.offsetX / 2, y + 0.8, z + 1);
+						boundTop = AxisAlignedBB.getAABBPool().getAABB(x, y, z, x + (float) direction.offsetX / 2, y + 0.8, z + 1);
 					}
 					else if (direction.offsetX < 0)
 					{
-						boundTop = AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(x + (float) direction.offsetX / -2, y, z, x + 1, y + 0.8, z + 1);
+						boundTop = AxisAlignedBB.getAABBPool().getAABB(x + (float) direction.offsetX / -2, y, z, x + 1, y + 0.8, z + 1);
 					}
 					else if (direction.offsetZ > 0)
 					{
-						boundTop = AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(x, y, z, x + 1, y + 0.8, z + (float) direction.offsetZ / 2);
+						boundTop = AxisAlignedBB.getAABBPool().getAABB(x, y, z, x + 1, y + 0.8, z + (float) direction.offsetZ / 2);
 					}
 					else if (direction.offsetZ < 0)
 					{
-						boundTop = AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(x, y, z + (float) direction.offsetZ / -2, x + 1, y + 0.8, z + 1);
+						boundTop = AxisAlignedBB.getAABBPool().getAABB(x, y, z + (float) direction.offsetZ / -2, x + 1, y + 0.8, z + 1);
 					}
 				}
 
@@ -144,7 +151,7 @@ public class BlockConveyorBelt extends BlockALMachine
 
 			if (tileEntity.getSlant() == SlantType.TOP)
 			{
-				AxisAlignedBB newBounds = AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(x, y + 0.68, z, x + 1, y + 0.98, z + 1);
+				AxisAlignedBB newBounds = AxisAlignedBB.getAABBPool().getAABB(x, y + 0.68, z, x + 1, y + 0.98, z + 1);
 
 				if (newBounds != null && par5AxisAlignedBB.intersectsWith(newBounds))
 				{
@@ -155,7 +162,7 @@ public class BlockConveyorBelt extends BlockALMachine
 			}
 		}
 
-		AxisAlignedBB newBounds = AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(x, y, z, x + 1, y + 0.3, z + 1);
+		AxisAlignedBB newBounds = AxisAlignedBB.getAABBPool().getAABB(x, y, z, x + 1, y + 0.3, z + 1);
 
 		if (newBounds != null && par5AxisAlignedBB.intersectsWith(newBounds))
 		{
@@ -164,7 +171,7 @@ public class BlockConveyorBelt extends BlockALMachine
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving par5EntityLiving)
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving par5EntityLiving, ItemStack stack)
 	{
 		int angle = MathHelper.floor_double((par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		int change = 2;
@@ -185,7 +192,7 @@ public class BlockConveyorBelt extends BlockALMachine
 				break;
 
 		}
-		world.setBlockMetadataWithNotify(x, y, z, change);
+		world.setBlockMetadataWithNotify(x, y, z, change, 3);
 	}
 
 	@Override
@@ -211,7 +218,7 @@ public class BlockConveyorBelt extends BlockALMachine
 
 		}
 
-		world.setBlockMetadataWithNotify(x, y, z, change);
+		world.setBlockMetadataWithNotify(x, y, z, change, 3);
 
 		return true;
 	}
@@ -241,7 +248,10 @@ public class BlockConveyorBelt extends BlockALMachine
 	{
 		TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) world.getBlockTileEntity(x, y, z);
 		tileEntity.updatePowerTransferRange();
-		if (tileEntity.IgnoreList.contains(entity)) { return; }
+		if (tileEntity.IgnoreList.contains(entity))
+		{
+			return;
+		}
 		if (tileEntity.isRunning() && !world.isBlockIndirectlyGettingPowered(x, y, z))
 		{
 			float acceleration = tileEntity.acceleration;

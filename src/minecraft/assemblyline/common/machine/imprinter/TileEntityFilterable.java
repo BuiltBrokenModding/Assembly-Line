@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.implement.IRotatable;
 import universalelectricity.prefab.network.IPacketReceiver;
@@ -95,15 +96,25 @@ public abstract class TileEntityFilterable extends TileEntityAssemblyNetwork imp
 	}
 
 	@Override
-	public ForgeDirection getDirection()
+	public ForgeDirection getDirection(World world, int x, int y, int z)
 	{
 		return ForgeDirection.getOrientation(this.getBlockMetadata());
 	}
 
 	@Override
+	public void setDirection(World world, int x, int y, int z, ForgeDirection facingDirection)
+	{
+		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, facingDirection.ordinal(), 3);
+	}
+
 	public void setDirection(ForgeDirection facingDirection)
 	{
-		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, facingDirection.ordinal());
+		this.setDirection(worldObj, xCoord, yCoord, zCoord, facingDirection);
+	}
+
+	public ForgeDirection getDirection()
+	{
+		return this.getDirection(worldObj, xCoord, yCoord, zCoord);
 	}
 
 	/**

@@ -28,7 +28,7 @@ public class BlockManipulator extends BlockImprintable
 	@Override
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
 	{
-		return AxisAlignedBB.getAABBPool().addOrModifyAABBInPool((double) par2, (double) par3, (double) par4, (double) par2 + 1, (double) par3 + 1, (double) par4 + 1);
+		return AxisAlignedBB.getAABBPool().getAABB((double) par2, (double) par3, (double) par4, (double) par2 + 1, (double) par3 + 1, (double) par4 + 1);
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class BlockManipulator extends BlockImprintable
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World var1, int metadata)
+	public TileEntity createTileEntity(World var1, int metadata)
 	{
 		return new TileEntityManipulator();
 	}

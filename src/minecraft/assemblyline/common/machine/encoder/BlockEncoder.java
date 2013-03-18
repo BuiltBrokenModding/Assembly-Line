@@ -14,10 +14,8 @@ public class BlockEncoder extends BlockALMachine
 	public BlockEncoder(int id, int texture)
 	{
 		super(id, Material.wood);
-		this.blockIndexInTexture = texture;
-		this.setBlockName("encoder");
+		this.setUnlocalizedName("encoder");
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
-		this.setTextureFile(AssemblyLine.BLOCK_TEXTURE_PATH);
 	}
 
 	/**
@@ -61,7 +59,7 @@ public class BlockEncoder extends BlockALMachine
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int metadata)
+	public TileEntity createTileEntity(World world, int metadata)
 	{
 		return new TileEntityEncoder();
 	}

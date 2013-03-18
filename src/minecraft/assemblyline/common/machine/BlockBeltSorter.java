@@ -1,16 +1,17 @@
 package assemblyline.common.machine;
 
+import net.minecraft.block.material.Material;
 import assemblyline.common.TabAssemblyLine;
 import assemblyline.common.block.BlockALMachine;
-import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
 
 public class BlockBeltSorter extends BlockALMachine
 {
 
 	public BlockBeltSorter(int id)
 	{
-		super("BlockBeltSorter", id, Material.iron, TabAssemblyLine.INSTANCE);
+		super(id, Material.iron);
+		this.setCreativeTab(TabAssemblyLine.INSTANCE);
+		this.setUnlocalizedName("BeltSorter");
 	}
-	
+
 }

@@ -16,11 +16,9 @@ public class ItemDisk extends Item
 	public ItemDisk(int id)
 	{
 		super(id);
-		this.setItemName("disk");
-		this.setIconIndex(0);
+		this.setUnlocalizedName("disk");
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 		this.setHasSubtypes(true);
-		this.setTextureFile(AssemblyLine.ITEM_TEXTURE_PATH);
 	}
 
 	@Override

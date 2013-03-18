@@ -7,13 +7,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.network.IPacketReceiver;
-import universalelectricity.prefab.tile.TileEntityElectricityReceiver;
+import universalelectricity.prefab.tile.TileEntityElectricityRunnable;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityRoboticSorter extends TileEntityElectricityReceiver implements IPacketReceiver, IInventory
+public class TileEntityRoboticSorter extends TileEntityElectricityRunnable implements IPacketReceiver, IInventory
 {
 	/**
 	 * The items this container contains.
@@ -210,5 +211,23 @@ public class TileEntityRoboticSorter extends TileEntityElectricityReceiver imple
 	public int getInventoryStackLimit()
 	{
 		return 1;
+	}
+
+	@Override
+	public boolean canConnect(ForgeDirection dir)
+	{
+		return dir == ForgeDirection.DOWN;
+	}
+
+	@Override
+	public boolean func_94042_c()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean func_94041_b(int i, ItemStack itemstack)
+	{
+		return false;
 	}
 }

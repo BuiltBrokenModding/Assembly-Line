@@ -21,7 +21,7 @@ public class BlockArmbot extends BlockALMachine
 	public BlockArmbot(int id)
 	{
 		super(id, UniversalElectricity.machine);
-		this.setBlockName("armbot");
+		this.setUnlocalizedName("armbot");
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 	}
 
@@ -93,23 +93,6 @@ public class BlockArmbot extends BlockALMachine
 	public boolean canProvidePower()
 	{
 		return true;
-	}
-
-	@Override
-	public boolean isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side)
-	{
-		TileEntity ent = world.getBlockTileEntity(x, y, z);
-		// if (ent instanceof TileEntityArmbot) { return ((TileEntityArmbot)
-		// ent).isProvidingPowerSide(ForgeDirection.getOrientation(side)); }
-		// if (ent instanceof TileEntityArmbot) { return ((TileEntityArmbot)
-		// ent).getFacingDirectionFromAngle().getOpposite() == ForgeDirection.getOrientation(side);}
-		return false;
-	}
-
-	@Override
-	public boolean isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side)
-	{
-		return this.isProvidingStrongPower(world, x, y, z, side);
 	}
 
 }

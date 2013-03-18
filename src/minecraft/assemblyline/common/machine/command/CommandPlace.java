@@ -62,11 +62,11 @@ public class CommandPlace extends Command
 									int blockID = plantable.getPlantID(this.world, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ());
 									int blockMetadata = plantable.getPlantMetadata(this.world, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ());
 
-									if (this.world.setBlockAndMetadataWithNotify(serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), blockID, blockMetadata))
+									if (this.world.setBlockAndMetadataWithNotify(serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), blockID, blockMetadata, 3))
 									{
 										if (this.world.getBlockId(serachPosition.intX(), serachPosition.intY(), serachPosition.intZ()) == blockID)
 										{
-											Block.blocksList[blockID].onBlockPlacedBy(world, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), null);
+											Block.blocksList[blockID].onBlockPlacedBy(world, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), null, itemStack);
 											Block.blocksList[blockID].onPostBlockPlaced(world, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), blockMetadata);
 											this.tileEntity.dropEntity(entity);
 											return false;

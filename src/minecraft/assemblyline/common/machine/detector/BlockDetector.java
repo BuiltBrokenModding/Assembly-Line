@@ -3,12 +3,12 @@ package assemblyline.common.machine.detector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
-import assemblyline.common.AssemblyLine;
 import assemblyline.common.TabAssemblyLine;
 import assemblyline.common.machine.imprinter.BlockImprintable;
 
@@ -20,8 +20,6 @@ public class BlockDetector extends BlockImprintable
 	public BlockDetector(int blockID, int texture)
 	{
 		super("detector", blockID, UniversalElectricity.machine, TabAssemblyLine.INSTANCE);
-		this.blockIndexInTexture = texture;
-		this.setTextureFile(AssemblyLine.BLOCK_TEXTURE_PATH);
 	}
 
 	@Override
@@ -55,11 +53,11 @@ public class BlockDetector extends BlockImprintable
 			change = ForgeDirection.UP.ordinal();
 		}
 
-		world.setBlockMetadataWithNotify(x, y, z, change);
+		world.setBlockMetadataWithNotify(x, y, z, change,3);
 	}
 
 	@Override
-	public int getBlockTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side)
+	public Icon getBlockTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side)
 	{
 		TileEntity tileEntity = iBlockAccess.getBlockTileEntity(x, y, z);
 		if (tileEntity instanceof TileEntityDetector)
@@ -80,14 +78,7 @@ public class BlockDetector extends BlockImprintable
 
 		return this.blockIndexInTexture;
 	}
-
-	@Override
-	public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
-	{
-		world.setBlockMetadataWithNotify(x, y, z, side);
-		return true;
-	}
-
+	
 	@Override
 	public int getBlockTextureFromSideAndMetadata(int side, int metadata)
 	{
@@ -98,6 +89,14 @@ public class BlockDetector extends BlockImprintable
 
 		return this.blockIndexInTexture;
 	}
+	@Override
+	public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
+	{
+		world.setBlockMetadataWithNotify(x, y, z, side,3);
+		return true;
+	}
+
+	
 
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
@@ -140,7 +139,7 @@ public class BlockDetector extends BlockImprintable
 	}
 
 	@Override
-	public boolean isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int direction)
+	public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int direction)
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
@@ -148,11 +147,11 @@ public class BlockDetector extends BlockImprintable
 		{
 			return ((TileEntityDetector) tileEntity).isPoweringTo(ForgeDirection.getOrientation(direction));
 		}
-		return false;
+		return 0;
 	}
 
 	@Override
-	public boolean isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int direction)
+	public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int direction)
 	{
 		return isProvidingStrongPower(world, x, y, z, direction);
 	}

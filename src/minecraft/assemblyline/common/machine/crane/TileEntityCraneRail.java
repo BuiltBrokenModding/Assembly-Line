@@ -13,4 +13,10 @@ public class TileEntityCraneRail extends TileEntityAssemblyNetwork implements IC
 		return true;
 	}
 
+	@Override
+	public boolean canConnect(ForgeDirection direction)
+	{
+		return false;
+	}
+
 }
