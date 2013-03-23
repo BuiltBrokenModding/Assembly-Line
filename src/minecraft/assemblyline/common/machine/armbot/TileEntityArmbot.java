@@ -170,7 +170,8 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			}
 		}
 
-		// System.out.println("Ren: " + this.renderYaw + "; Rot: " + this.rotationYaw);
+		// System.out.println("Ren: " + this.renderYaw + "; Rot: " +
+		// this.rotationYaw);
 		if (Math.abs(this.renderYaw - this.rotationYaw) > 0.001f)
 		{
 			float speedYaw;
@@ -664,8 +665,8 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	@Override
 	public void onDestroy(TileEntity callingBlock)
 	{
-		this.worldObj.setBlockAndMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, 0, 0, 3);
-		this.worldObj.setBlockAndMetadataWithNotify(this.xCoord, this.yCoord + 1, this.zCoord, 0, 0, 3);
+		this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, 0, 0, 3);
+		this.worldObj.setBlock(this.xCoord, this.yCoord + 1, this.zCoord, 0, 0, 3);
 	}
 
 	@Override
@@ -753,12 +754,14 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			}
 			case 5:
 			{
-				// isWorking: returns whether or not the ArmBot is executing commands
+				// isWorking: returns whether or not the ArmBot is executing
+				// commands
 				return new Object[] { this.commandManager.hasTasks() };
 			}
 			case 6:
 			{
-				// touchingEntity: returns whether or not the ArmBot is touching an entity it is
+				// touchingEntity: returns whether or not the ArmBot is touching an
+				// entity it is
 				// able to pick up
 				Vector3 serachPosition = this.getHandPosition();
 				List<Entity> found = this.worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(serachPosition.x - 0.5f, serachPosition.y - 0.5f, serachPosition.z - 0.5f, serachPosition.x + 0.5f, serachPosition.y + 0.5f, serachPosition.z + 0.5f));
@@ -969,14 +972,13 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	}
 
 	@Override
-	public boolean func_94042_c()
+	public boolean isInvNameLocalized()
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean func_94041_b(int i, ItemStack itemstack)
+	public boolean isStackValidForSlot(int i, ItemStack itemstack)
 	{
 		return false;
 	}

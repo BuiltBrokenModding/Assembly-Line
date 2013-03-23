@@ -202,14 +202,14 @@ public class TileEntityEncoder extends TileEntityAdvanced implements IPacketRece
 	}
 
 	@Override
-	public boolean func_94042_c()
+	public boolean isInvNameLocalized()
 	{
 		//TODO ?
 		return false;
 	}
 
 	@Override
-	public boolean func_94041_b(int i, ItemStack itemstack)
+	public boolean isStackValidForSlot(int i, ItemStack itemstack)
 	{
 		// TODO Auto-generated method stub
 		return false;

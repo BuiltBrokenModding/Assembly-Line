@@ -22,9 +22,9 @@ public class BlockALMachine extends BlockAdvanced
 	
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void func_94332_a(IconRegister iconReg)
+	public void registerIcons(IconRegister iconReg)
 	{
-		this.machine_icon = iconReg.func_94245_a("machine");
+		this.machine_icon = iconReg.registerIcon("machine");
 	}
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)

@@ -38,9 +38,9 @@ public class BlockCrate extends BlockALMachine
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void func_94332_a(IconRegister iconReg)
+	public void registerIcons(IconRegister iconReg)
 	{
-		this.crate_icon = iconReg.func_94245_a(AssemblyLine.TEXTURE_NAME_PREFIX+"crate");
+		this.crate_icon = iconReg.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX+"crate");
 	}
 
 	@Override
@@ -387,8 +387,7 @@ public class BlockCrate extends BlockALMachine
 					var13.delayBeforeCanPickup = 10;
 					world.spawnEntityInWorld(var13);
 					tileEntity.setInventorySlotContents(0, null);
-					world.setBlockAndMetadataWithNotify(x, y, z, 0, 0, 3);
-
+					world.setBlock(x, y, z, 0, 0, 3);
 					return true;
 				}
 			}

@@ -66,11 +66,11 @@ public class BlockDetector extends BlockImprintable
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void func_94332_a(IconRegister iconReg)
+	public void registerIcons(IconRegister iconReg)
 	{
-		super.func_94332_a(iconReg);
-		this.eye_green = iconReg.func_94245_a(AssemblyLine.TEXTURE_NAME_PREFIX + "detector_green");
-		this.eye_red = iconReg.func_94245_a(AssemblyLine.TEXTURE_NAME_PREFIX + "detector_red");
+		super.registerIcons(iconReg);
+		this.eye_green = iconReg.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX + "detector_green");
+		this.eye_red = iconReg.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX + "detector_red");
 	}
 
 	@Override
@@ -120,7 +120,7 @@ public class BlockDetector extends BlockImprintable
 		if (!canBlockStay(world, x, y, z))
 		{
 			this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
-			world.setBlockAndMetadataWithNotify(x, y, z, 0, 0, 3);
+			world.setBlock(x, y, z, 0, 0, 3);
 		}
 	}
 

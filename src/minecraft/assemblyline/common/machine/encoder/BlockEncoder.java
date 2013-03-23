@@ -27,11 +27,11 @@ public class BlockEncoder extends BlockALMachine
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void func_94332_a(IconRegister iconReg)
+	public void registerIcons(IconRegister iconReg)
 	{
-		this.encoder_side = iconReg.func_94245_a(AssemblyLine.TEXTURE_NAME_PREFIX+"encoder_side");
-		this.encoder_top = iconReg.func_94245_a(AssemblyLine.TEXTURE_NAME_PREFIX+"encoder_top");
-		this.encoder_bottom = iconReg.func_94245_a(AssemblyLine.TEXTURE_NAME_PREFIX+"encoder_bottom");
+		this.encoder_side = iconReg.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX+"encoder_side");
+		this.encoder_top = iconReg.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX+"encoder_top");
+		this.encoder_bottom = iconReg.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX+"encoder_bottom");
 	}
 	/**
 	 * Returns the block texture based on the side being looked at. Args: side

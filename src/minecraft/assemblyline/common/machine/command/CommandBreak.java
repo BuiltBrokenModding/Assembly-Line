@@ -42,7 +42,7 @@ public class CommandBreak extends Command
 				this.tileEntity.grabEntity(new EntityItem(this.world, (double) serachPosition.intX() + 0.5D, (double) serachPosition.intY() + 0.5D, (double) serachPosition.intZ() + 0.5D, items.get(0)));
 			}
 
-			world.setBlockAndMetadataWithNotify(serachPosition.intX(),serachPosition.intY(),serachPosition.intZ(), 0, 0, 3);
+			world.setBlock(serachPosition.intX(),serachPosition.intY(),serachPosition.intZ(), 0, 0, 3);
 			return false;
 		}
 

@@ -33,11 +33,11 @@ public class BlockImprinter extends BlockALMachine
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void func_94332_a(IconRegister iconReg)
+	public void registerIcons(IconRegister iconReg)
 	{
-		this.imprinter_side = iconReg.func_94245_a(AssemblyLine.TEXTURE_NAME_PREFIX+"imprinter_side");
-		this.imprinter_top = iconReg.func_94245_a(AssemblyLine.TEXTURE_NAME_PREFIX+"imprinter_top");
-		this.imprinter_bottom = iconReg.func_94245_a(AssemblyLine.TEXTURE_NAME_PREFIX+"imprinter_bottom");
+		this.imprinter_side = iconReg.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX+"imprinter_side");
+		this.imprinter_top = iconReg.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX+"imprinter_top");
+		this.imprinter_bottom = iconReg.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX+"imprinter_bottom");
 	}
 
 	/**
