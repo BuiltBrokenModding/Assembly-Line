@@ -99,7 +99,7 @@ public class BlockDetector extends BlockImprintable
 	@Override
 	public Icon getBlockTextureFromSideAndMetadata(int side, int metadata)
 	{
-		if (side == ForgeDirection.DOWN.ordinal())
+		if (side == ForgeDirection.SOUTH.ordinal())
 		{
 			return this.eye_green;
 		}

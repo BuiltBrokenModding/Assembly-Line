@@ -3,6 +3,10 @@ package assemblyline.common.machine.encoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,6 +23,13 @@ public class ItemDisk extends Item
 		this.setUnlocalizedName("disk");
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 		this.setHasSubtypes(true);
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void updateIcons(IconRegister par1IconRegister)
+	{
+		this.iconIndex = par1IconRegister.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX + "disk");
 	}
 
 	@Override
