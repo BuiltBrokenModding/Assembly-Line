@@ -6,18 +6,22 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidStack;
 
 /**
- * Must be applied to all tile entities that are conductors.
- * 
- * @author Calclavia
- * 
+ * A machine that acts as one with the liquid network using the networks pressure for some function
  */
-public interface IFluidPipe extends IColorCoded
+public interface ILiquidNetworkPart
 {
 	/**
-	 * The Fluid network that this pipe is part of
+	 * gets the devices pressure from a given side for input
+	 */
+	public double getMaxPressure(ForgeDirection side);
+	
+	/**
+	 * The Fluid network that this machine is part of
 	 */
 	public HydraulicNetwork getNetwork();
-
+	/**
+	 * sets the machines network
+	 */
 	public void setNetwork(HydraulicNetwork network);
 
 	/**
@@ -32,10 +36,6 @@ public interface IFluidPipe extends IColorCoded
 	 */
 	public int getMaxFlowRate(LiquidStack stack);
 
-	/**
-	 * gets the pipe's max pressure before bursting
-	 */
-	public double getMaxPressure();
 
 	/**
 	 * Called when the pressure on the pipe passes max
@@ -53,7 +53,7 @@ public interface IFluidPipe extends IColorCoded
 	public void refreshConnectedBlocks();
 
 	/**
-	 * Adds a connection between this conductor and a UE unit
+	 * Adds a connection between this machine and another machine
 	 * 
 	 * @param tileEntity - Must be either a producer, consumer or a conductor
 	 * @param side - side in which the connection is coming from
@@ -61,4 +61,5 @@ public interface IFluidPipe extends IColorCoded
 	public void updateConnection(TileEntity tileEntity, ForgeDirection side);
 
 	public void updateConnectionWithoutSplit(TileEntity connectorFromSide, ForgeDirection orientation);
+
 }

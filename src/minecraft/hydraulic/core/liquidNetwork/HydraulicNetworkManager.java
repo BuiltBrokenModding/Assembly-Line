@@ -1,6 +1,7 @@
 package hydraulic.core.liquidNetwork;
 
-import hydraulic.api.IFluidPipe;
+import hydraulic.api.ColorCode;
+import hydraulic.api.ILiquidNetworkPart;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,15 +24,20 @@ public class HydraulicNetworkManager
 	private List<HydraulicNetwork> hydraulicNetworks = new ArrayList<HydraulicNetwork>();
 
 	/**
-	 * Registers a conductor into the UE electricity net.
+	 * Registers a pipe into the network, if not using a specific color give ColorCode.NONE
 	 */
-	public void registerConductor(IFluidPipe newConductor)
+	public void registerConductor(ILiquidNetworkPart newConductor, ColorCode color)
 	{
 		this.cleanUpNetworks();
-		HydraulicNetwork newNetwork = new HydraulicNetwork(newConductor);
+		HydraulicNetwork newNetwork = new HydraulicNetwork(newConductor, color);
 		this.hydraulicNetworks.add(newNetwork);
 	}
 
+	/**
+	 * unregisters a tileEntity from the network
+	 * 
+	 * @param tileEntity
+	 */
 	public void unregister(TileEntity tileEntity)
 	{
 		for (HydraulicNetwork network : this.hydraulicNetworks)
@@ -73,7 +79,7 @@ public class HydraulicNetworkManager
 	 * @param conductorA - existing conductor
 	 * @param conductorB - broken/invalid conductor
 	 */
-	public void splitConnection(IFluidPipe conductorA, IFluidPipe conductorB)
+	public void splitConnection(ILiquidNetworkPart conductorA, ILiquidNetworkPart conductorB)
 	{
 		try
 		{
@@ -88,7 +94,7 @@ public class HydraulicNetworkManager
 
 				while (it.hasNext())
 				{
-					IFluidPipe conductor = (IFluidPipe) it.next();
+					ILiquidNetworkPart conductor = (ILiquidNetworkPart) it.next();
 
 					for (byte i = 0; i < 6; i++)
 					{

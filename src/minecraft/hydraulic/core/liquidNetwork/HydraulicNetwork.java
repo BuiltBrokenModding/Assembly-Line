@@ -1,9 +1,8 @@
 package hydraulic.core.liquidNetwork;
 
 import hydraulic.api.ColorCode;
-import hydraulic.api.IFluidPipe;
 import hydraulic.api.IPsiCreator;
-import hydraulic.api.IPsiMachine;
+import hydraulic.api.ILiquidNetworkPart;
 import hydraulic.helpers.connectionHelper;
 
 import java.util.ArrayList;
@@ -18,17 +17,17 @@ import net.minecraftforge.liquids.LiquidStack;
 public class HydraulicNetwork
 {
 	/* BLOCK THAT ACT AS FLUID CONVEYORS ** */
-	public final List<IFluidPipe> conductors = new ArrayList<IFluidPipe>();
+	public final List<ILiquidNetworkPart> conductors = new ArrayList<ILiquidNetworkPart>();
 
 	/* MACHINES THAT USE THE FORGE LIQUID API TO RECEIVE LIQUID ** */
 	public final List<TileEntity> receivers = new ArrayList<TileEntity>();
 
 	public ColorCode color = ColorCode.NONE;
 
-	public HydraulicNetwork(IFluidPipe conductor)
+	public HydraulicNetwork(ILiquidNetworkPart conductor, ColorCode color)
 	{
-		this.addConductor(conductor);
-		this.color = conductor.getColor();
+		this.addConductor(conductor, color);
+		this.color = color;
 	}
 
 	/**
@@ -66,7 +65,7 @@ public class HydraulicNetwork
 					TileEntity[] surroundings = connectionHelper.getSurroundingTileEntities((TileEntity) tank);
 					for (int i = 0; i < 6; i++)
 					{
-						if (surroundings[i] instanceof IFluidPipe && ((IFluidPipe) surroundings[i]).getNetwork() == this)
+						if (surroundings[i] instanceof ILiquidNetworkPart && ((ILiquidNetworkPart) surroundings[i]).getNetwork() == this)
 						{
 							ForgeDirection dir = ForgeDirection.getOrientation(i).getOpposite();
 							ILiquidTank storage = tank.getTank(dir, stack);
@@ -125,7 +124,7 @@ public class HydraulicNetwork
 	public int getMaxFlow(LiquidStack stack)
 	{
 		int flow = 1000;
-		for (IFluidPipe conductor : this.conductors)
+		for (ILiquidNetworkPart conductor : this.conductors)
 		{
 			int cFlow = conductor.getMaxFlowRate(stack);
 			if (cFlow < flow)
@@ -159,17 +158,17 @@ public class HydraulicNetwork
 	 */
 	public void addEntity(TileEntity ent)
 	{
-		if(!receivers.contains(ent) && (ent instanceof ITankContainer || ent instanceof IPsiMachine || ent instanceof IPsiCreator))
+		if(!receivers.contains(ent) && (ent instanceof ITankContainer || ent instanceof ILiquidNetworkPart || ent instanceof IPsiCreator))
 		{
 			receivers.add(ent);
 		}
 	}
 
-	public void addConductor(IFluidPipe newConductor)
+	public void addConductor(ILiquidNetworkPart newConductor, ColorCode code)
 	{
 		this.cleanConductors();
 
-		if (newConductor.getColor() == this.color && !conductors.contains(newConductor))
+		if (code == this.color && !conductors.contains(newConductor))
 		{
 			conductors.add(newConductor);
 			newConductor.setNetwork(this);
@@ -203,7 +202,7 @@ public class HydraulicNetwork
 	{
 		this.cleanConductors();
 
-		for (IFluidPipe conductor : this.conductors)
+		for (ILiquidNetworkPart conductor : this.conductors)
 		{
 			conductor.setNetwork(this);
 		}
