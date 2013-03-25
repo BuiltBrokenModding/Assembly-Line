@@ -91,6 +91,16 @@ public enum ColorCode
 		}
 		return validLiquids;
 	}
+	
+	public List<LiquidStack> getAllLiquidStacks()
+	{
+		List<LiquidStack> validStacks = new ArrayList<LiquidStack>();
+		for (LiquidData data : getAllLiquidData())
+		{
+				validStacks.add(data.getStack());
+		}
+		return validStacks;
+	}
 
 	/**
 	 * checks to see if the liquidStack is valid for the given color

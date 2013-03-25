@@ -1,6 +1,7 @@
 package hydraulic.core.liquidNetwork;
 
 import hydraulic.api.ColorCode;
+import hydraulic.api.IPipeConnector;
 import hydraulic.api.IPsiCreator;
 import hydraulic.api.ILiquidNetworkPart;
 import hydraulic.api.IPsiReciever;
@@ -18,8 +19,8 @@ import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidStack;
 
 /**
- * Side note: the network should act like this when done
- * {@link http://www.e4training.com/hydraulic_calculators/B1.htm} as well as stay compatible with the forge
+ * Side note: the network should act like this when done {@link http
+ * ://www.e4training.com/hydraulic_calculators/B1.htm} as well as stay compatible with the forge
  * Liquids
  * 
  * @author Rseifert
@@ -46,8 +47,35 @@ public class HydraulicNetwork
 	}
 
 	/**
+	 * updates the pressure in the network
+	 * 
+	 * @param ent
+	 */
+	public void updatePressure()
+	{
+		this.pressureLoad = 0;
+		this.pressureProduced = 0;
+		for (TileEntity ent : receivers)
+		{
+			if (ent instanceof IPipeConnector && ((IPipeConnector) ent).canConnect(ForgeDirection.UNKNOWN, (LiquidStack[]) this.color.getAllLiquidStacks().toArray()))
+			{
+				if (ent instanceof IPsiReciever)
+				{
+					pressureLoad += ((IPsiReciever) ent).getPressureLoad();
+				}
+				else if (ent instanceof IPsiCreator)
+				{
+					pressureProduced += ((IPsiCreator) ent).getPressureOut(color.getLiquidData().getStack(), ForgeDirection.UNKNOWN);
+				}
+			}
+		}
+	}
+
+	/**
 	 * Tries to add the liquid stack to the network's valid machines. Same as the fill method for
-	 * ITankContainer in that it will fill machines, however it also includes pressure
+	 * ITankContainer in that it will fill machines, however it also includes pressure if the
+	 * machine also adds pressure to the network. Called mostly by pipes as they are filled from
+	 * other mod sources
 	 * 
 	 * @return The amount of Liquid used.
 	 */
@@ -76,32 +104,6 @@ public class HydraulicNetwork
 			{
 				TileEntity[] surroundings = connectionHelper.getSurroundingTileEntities(ent);
 
-				if (ent instanceof IPsiReciever)
-				{
-					IPsiReciever machine = (IPsiReciever) ent;
-
-					for (int i = 0; i < 6; i++)
-					{
-						if (surroundings[i] instanceof ILiquidNetworkPart && ((ILiquidNetworkPart) surroundings[i]).getNetwork() == this)
-						{
-							ForgeDirection dir = ForgeDirection.getOrientation(i).getOpposite();
-							if (machine.canConnect(dir, ent, stack))
-							{
-								int lose = machine.onReceiveFluid(pressure, stack);
-								used += lose;
-								stack = new LiquidStack(stack.itemID, Math.max(0, stack.amount - lose), stack.itemMeta);
-							}
-						}
-						if (stack == null || stack.amount <= 0)
-						{
-							return used;
-						}
-					}
-					if (stack == null || stack.amount <= 0)
-					{
-						return used;
-					}
-				}
 				if (ent instanceof ITankContainer)
 				{
 					ITankContainer tank = (ITankContainer) ent;
@@ -173,7 +175,8 @@ public class HydraulicNetwork
 		int flow = 1000;
 		for (ILiquidNetworkPart conductor : this.conductors)
 		{
-			// TODO change the direction to actual look for connected only directions and pipes along
+			// TODO change the direction to actual look for connected only directions and pipes
+			// along
 			// the path to the target
 			int cFlow = conductor.getMaxFlowRate(stack, ForgeDirection.UNKNOWN);
 			if (cFlow < flow)
