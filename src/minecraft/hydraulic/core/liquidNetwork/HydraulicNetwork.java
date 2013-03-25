@@ -3,10 +3,13 @@ package hydraulic.core.liquidNetwork;
 import hydraulic.api.ColorCode;
 import hydraulic.api.IPsiCreator;
 import hydraulic.api.ILiquidNetworkPart;
+import hydraulic.api.IPsiReciever;
 import hydraulic.helpers.connectionHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import universalelectricity.prefab.network.IPacketReceiver;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -23,6 +26,8 @@ public class HydraulicNetwork
 	public final List<TileEntity> receivers = new ArrayList<TileEntity>();
 
 	public ColorCode color = ColorCode.NONE;
+	/* PRESSURE OF THE NETWORK AS A TOTAL. ZERO AS IN DEFUALT */
+	public double pressure = 0;
 
 	public HydraulicNetwork(ILiquidNetworkPart conductor, ColorCode color)
 	{
@@ -126,7 +131,12 @@ public class HydraulicNetwork
 		int flow = 1000;
 		for (ILiquidNetworkPart conductor : this.conductors)
 		{
-			int cFlow = conductor.getMaxFlowRate(stack);
+			int cFlow = conductor.getMaxFlowRate(stack, ForgeDirection.UNKNOWN); // TODO change the
+																					// direction to
+																					// actual look
+																					// for connected
+																					// only
+																					// directions
 			if (cFlow < flow)
 			{
 				flow = cFlow;
@@ -153,12 +163,13 @@ public class HydraulicNetwork
 			receivers.remove(ent);
 		}
 	}
+
 	/**
 	 * Adds a tileEntity to the list if its valid
 	 */
 	public void addEntity(TileEntity ent)
 	{
-		if(!receivers.contains(ent) && (ent instanceof ITankContainer || ent instanceof ILiquidNetworkPart || ent instanceof IPsiCreator))
+		if (!receivers.contains(ent) && (ent instanceof ITankContainer || ent instanceof IPsiReciever || ent instanceof IPsiCreator))
 		{
 			receivers.add(ent);
 		}
@@ -208,13 +219,20 @@ public class HydraulicNetwork
 		}
 	}
 
-	public void onOverCharge()
+	public void onPresureCharge()
 	{
 		this.cleanConductors();
 
 		for (int i = 0; i < conductors.size(); i++)
 		{
-			conductors.get(i).onOverPressure();
+			//TODO change to actual check connected sides only && get true value from settings file
+			ILiquidNetworkPart part = conductors.get(i);
+			if(part.getMaxPressure(ForgeDirection.UNKNOWN) < this.pressure && part.onOverPressure(true))
+			{
+				this.conductors.remove(part);
+				this.cleanConductors();
+			}
+			
 		}
 	}
 
