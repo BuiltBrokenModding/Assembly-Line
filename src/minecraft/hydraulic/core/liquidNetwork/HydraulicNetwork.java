@@ -17,6 +17,14 @@ import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidStack;
 
+/**
+ * Side note: the network should act like this when done
+ * {@link http://www.e4training.com/hydraulic_calculators/B1.htm} as well as stay compatible with the forge
+ * Liquids
+ * 
+ * @author Rseifert
+ * 
+ */
 public class HydraulicNetwork
 {
 	/* BLOCK THAT ACT AS FLUID CONVEYORS ** */
@@ -27,7 +35,9 @@ public class HydraulicNetwork
 
 	public ColorCode color = ColorCode.NONE;
 	/* PRESSURE OF THE NETWORK AS A TOTAL. ZERO AS IN DEFUALT */
-	public double pressure = 0;
+	public double pressureProduced = 0;
+	/* PRESSURE OF THE NETWORK'S LOAD AS A TOTAL. ZERO AS IN DEFUALT */
+	public double pressureLoad = 0;
 
 	public HydraulicNetwork(ILiquidNetworkPart conductor, ColorCode color)
 	{
@@ -37,7 +47,7 @@ public class HydraulicNetwork
 
 	/**
 	 * Tries to add the liquid stack to the network's valid machines. Same as the fill method for
-	 * ITankContainer in that it will
+	 * ITankContainer in that it will fill machines, however it also includes pressure
 	 * 
 	 * @return The amount of Liquid used.
 	 */
@@ -256,7 +266,7 @@ public class HydraulicNetwork
 		{
 			// TODO change to actual check connected sides only && get true value from settings file
 			ILiquidNetworkPart part = conductors.get(i);
-			if (part.getMaxPressure(ForgeDirection.UNKNOWN) < this.pressure && part.onOverPressure(true))
+			if (part.getMaxPressure(ForgeDirection.UNKNOWN) < this.pressureProduced && part.onOverPressure(true))
 			{
 				this.conductors.remove(part);
 				this.cleanConductors();
