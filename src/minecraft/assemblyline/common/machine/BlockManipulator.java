@@ -74,7 +74,7 @@ public class BlockManipulator extends BlockImprintable
 			}
 		}
 
-		return false;
+		return true;
 	}
 
 	@Override

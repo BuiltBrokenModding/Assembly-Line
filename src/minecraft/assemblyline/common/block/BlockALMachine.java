@@ -59,7 +59,8 @@ public class BlockALMachine extends BlockAdvanced
 					if (this.onSneakUseWrench(world, x, y, z, player, side, hitX, hitY, hitZ))
 						return true;
 				}
-				return this.onUseWrench(world, x, y, z, player, side, hitX, hitY, hitZ);
+				if (this.onUseWrench(world, x, y, z, player, side, hitX, hitY, hitZ))
+					return true;
 			}
 		}
 		return super.onBlockActivated(world, x, y, z, player, side, hitX, hitY, hitZ);
@@ -72,7 +73,7 @@ public class BlockALMachine extends BlockAdvanced
 	{
 		if (player.getCurrentEquippedItem() != null)
 		{
-			return ((Items.getItem("wrench") != null && player.getCurrentEquippedItem().isItemEqual(Items.getItem("wrench"))) || player.getCurrentEquippedItem().getItem() instanceof IToolWrench);
+			return (AssemblyLine.ic2Wrench != null && player.getCurrentEquippedItem().isItemEqual(AssemblyLine.ic2Wrench) || player.getCurrentEquippedItem().getItem() instanceof IToolWrench);
 		}
 
 		return false;

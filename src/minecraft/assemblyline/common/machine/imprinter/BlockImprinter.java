@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.CommonProxy;
@@ -35,9 +36,16 @@ public class BlockImprinter extends BlockALMachine
 	@Override
 	public void registerIcons(IconRegister iconReg)
 	{
-		this.imprinter_side = iconReg.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX+"imprinter_side");
-		this.imprinter_top = iconReg.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX+"imprinter_top");
-		this.imprinter_bottom = iconReg.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX+"imprinter_bottom");
+		this.imprinter_side = iconReg.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX + "imprinter_side");
+		this.imprinter_top = iconReg.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX + "imprinter_top");
+		this.imprinter_bottom = iconReg.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX + "imprinter_bottom");
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
+	{
+		return getBlockTextureFromSideAndMetadata(side, 0);
 	}
 
 	/**

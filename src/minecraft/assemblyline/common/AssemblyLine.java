@@ -67,9 +67,9 @@ public class AssemblyLine
 	public static final String MODEL_TEXTURES_PATH = TEXTURE_PATHS + "models/";
 	public static final String BLOCK_TEXTURES_PATH = TEXTURE_PATHS + "blocks/";
 	public static final String ITEM_TEXTURES_PATH = TEXTURE_PATHS + "items/";
-	public static final String GUI_TEXTURES_PATH = TEXTURE_PATHS + "guis/";
+	public static final String GUI_TEXTURES_PATH = TEXTURE_PATHS + "gui/";
 	public static final String LANGUAGE_PATH = DIRECTORY + "languages/";
-	
+
 	public static final String TEXTURE_NAME_PREFIX = "assemblyline:";
 
 	private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US" };
@@ -95,6 +95,7 @@ public class AssemblyLine
 	public static final int ITEM_ID_PREFIX = 13030;
 	public static Item itemImprint;
 	public static Item itemDisk;
+	public static ItemStack ic2Wrench = null;
 
 	public static Logger FMLog = Logger.getLogger(AssemblyLine.NAME);
 
@@ -106,7 +107,7 @@ public class AssemblyLine
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		FMLog.setParent(FMLLog.getLogger());
-		//UniversalElectricity.register(this, 1, 2, 6, false);
+		// UniversalElectricity.register(this, 1, 2, 6, false);
 		instance = this;
 
 		CONFIGURATION.load();
@@ -175,6 +176,7 @@ public class AssemblyLine
 		if (ic2)
 		{
 			createIC2Recipes();
+			ic2Wrench = Items.getItem("wrench");
 		}
 		if (ue)
 		{

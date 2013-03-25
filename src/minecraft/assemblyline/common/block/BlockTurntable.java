@@ -2,32 +2,67 @@ package assemblyline.common.block;
 
 import java.util.Random;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.implement.IRotatable;
+import assemblyline.common.AssemblyLine;
 import assemblyline.common.TabAssemblyLine;
 
 public class BlockTurntable extends BlockALMachine
 {
+	private Icon top;
+	
 	public BlockTurntable(int par1)
 	{
 		super(par1, Material.piston);
 		this.setUnlocalizedName("turntable");
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IconRegister iconReg)
+	{
+		super.registerIcons(iconReg);
+		this.top = iconReg.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX + "turntable");
+	}
 
 	@Override
 	public void updateTick(World world, int x, int y, int z, Random par5Random)
 	{
 		this.updateTurntableState(world, x, y, z);
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
+	{
+		if (side == ForgeDirection.UP.ordinal())
+			return this.top;
+		return this.machine_icon;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Icon getBlockTextureFromSideAndMetadata(int side, int meta)
+	{
+		if (side == ForgeDirection.UP.ordinal())
+			return this.top;
+		return this.machine_icon;
 	}
 
 	public static int determineOrientation(World world, int x, int y, int z, EntityPlayer entityPlayer)

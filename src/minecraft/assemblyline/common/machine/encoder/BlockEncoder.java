@@ -1,17 +1,18 @@
 package assemblyline.common.machine.encoder;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.CommonProxy;
 import assemblyline.common.TabAssemblyLine;
 import assemblyline.common.block.BlockALMachine;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockEncoder extends BlockALMachine
 {
@@ -33,6 +34,16 @@ public class BlockEncoder extends BlockALMachine
 		this.encoder_top = iconReg.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX+"encoder_top");
 		this.encoder_bottom = iconReg.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX+"encoder_bottom");
 	}
+	
+	/**
+	 * Returns the block texture based on the side being looked at. Args: side
+	 */
+	@Override
+	public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
+	{
+		return getBlockTextureFromSideAndMetadata(side, 0);
+	}
+	
 	/**
 	 * Returns the block texture based on the side being looked at. Args: side
 	 */
