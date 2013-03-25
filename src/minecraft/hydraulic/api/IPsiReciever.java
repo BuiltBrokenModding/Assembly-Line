@@ -1,6 +1,9 @@
 package hydraulic.api;
 
+import java.util.List;
+
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidStack;
 
 /**
@@ -11,7 +14,8 @@ import net.minecraftforge.liquids.LiquidStack;
 public interface IPsiReciever
 {
 	/**
-	 * Called when this machine receives a fluid at a given pressure
+	 * Called when this machine receives a fluid at a given pressure. Will be called by the network
+	 * before ITankContainer.fill
 	 * 
 	 * @param pressure - input pressure, fill free to pass a reduced # to another network if you can
 	 * (100->[*]->40)
@@ -24,10 +28,10 @@ public interface IPsiReciever
 	/**
 	 * 
 	 * @param ent - tileEntity trying to connect to this machine
-	 * @param stack - liquid it is most likely going to take or pass. It will pass null if it
+	 * @param stack - liquid(s) it is most likely going to take or pass. It will pass null if it
 	 * doesn't care
 	 * @return true if it can connect
 	 */
-	public boolean canConnect(TileEntity ent, LiquidStack stack);
+	public boolean canConnect(ForgeDirection dir, TileEntity ent, LiquidStack... stacks);
 
 }

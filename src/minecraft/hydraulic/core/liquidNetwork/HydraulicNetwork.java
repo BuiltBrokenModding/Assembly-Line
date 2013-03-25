@@ -41,7 +41,7 @@ public class HydraulicNetwork
 	 * 
 	 * @return The amount of Liquid used.
 	 */
-	public int addFluidToNetwork(LiquidStack stack)
+	public int addFluidToNetwork(LiquidStack stack, double pressure)
 	{
 		int used = 0;
 		if (stack != null && canAcceptLiquid(stack))
@@ -64,10 +64,38 @@ public class HydraulicNetwork
 
 			for (TileEntity ent : receivers)
 			{
+				TileEntity[] surroundings = connectionHelper.getSurroundingTileEntities(ent);
+
+				if (ent instanceof IPsiReciever)
+				{
+					IPsiReciever machine = (IPsiReciever) ent;
+
+					for (int i = 0; i < 6; i++)
+					{
+						if (surroundings[i] instanceof ILiquidNetworkPart && ((ILiquidNetworkPart) surroundings[i]).getNetwork() == this)
+						{
+							ForgeDirection dir = ForgeDirection.getOrientation(i).getOpposite();
+							if (machine.canConnect(dir, ent, stack))
+							{
+								int lose = machine.onReceiveFluid(pressure, stack);
+								used += lose;
+								stack = new LiquidStack(stack.itemID, Math.max(0, stack.amount - lose), stack.itemMeta);
+							}
+						}
+						if (stack == null || stack.amount <= 0)
+						{
+							return used;
+						}
+					}
+					if (stack == null || stack.amount <= 0)
+					{
+						return used;
+					}
+				}
 				if (ent instanceof ITankContainer)
 				{
 					ITankContainer tank = (ITankContainer) ent;
-					TileEntity[] surroundings = connectionHelper.getSurroundingTileEntities((TileEntity) tank);
+
 					for (int i = 0; i < 6; i++)
 					{
 						if (surroundings[i] instanceof ILiquidNetworkPart && ((ILiquidNetworkPart) surroundings[i]).getNetwork() == this)
@@ -107,6 +135,10 @@ public class HydraulicNetwork
 				{
 					break;
 				}
+				if (stack == null || stack.amount <= 0)
+				{
+					return used;
+				}
 			}// End of tank finder
 			if (fillTarget != null)
 			{
@@ -131,12 +163,9 @@ public class HydraulicNetwork
 		int flow = 1000;
 		for (ILiquidNetworkPart conductor : this.conductors)
 		{
-			int cFlow = conductor.getMaxFlowRate(stack, ForgeDirection.UNKNOWN); // TODO change the
-																					// direction to
-																					// actual look
-																					// for connected
-																					// only
-																					// directions
+			// TODO change the direction to actual look for connected only directions and pipes along
+			// the path to the target
+			int cFlow = conductor.getMaxFlowRate(stack, ForgeDirection.UNKNOWN);
 			if (cFlow < flow)
 			{
 				flow = cFlow;
@@ -219,20 +248,20 @@ public class HydraulicNetwork
 		}
 	}
 
-	public void onPresureCharge()
+	public void onPresureChange()
 	{
 		this.cleanConductors();
 
 		for (int i = 0; i < conductors.size(); i++)
 		{
-			//TODO change to actual check connected sides only && get true value from settings file
+			// TODO change to actual check connected sides only && get true value from settings file
 			ILiquidNetworkPart part = conductors.get(i);
-			if(part.getMaxPressure(ForgeDirection.UNKNOWN) < this.pressure && part.onOverPressure(true))
+			if (part.getMaxPressure(ForgeDirection.UNKNOWN) < this.pressure && part.onOverPressure(true))
 			{
 				this.conductors.remove(part);
 				this.cleanConductors();
 			}
-			
+
 		}
 	}
 
