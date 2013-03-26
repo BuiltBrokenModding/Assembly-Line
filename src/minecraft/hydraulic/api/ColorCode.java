@@ -92,7 +92,7 @@ public enum ColorCode
 		return validLiquids;
 	}
 	
-	public List<LiquidStack> getAllLiquidStacks()
+	public List<LiquidStack> getAllLiquidStack()
 	{
 		List<LiquidStack> validStacks = new ArrayList<LiquidStack>();
 		for (LiquidData data : getAllLiquidData())
@@ -100,6 +100,21 @@ public enum ColorCode
 				validStacks.add(data.getStack());
 		}
 		return validStacks;
+	}
+	
+	public LiquidStack[] getArrayLiquidStacks()
+	{
+		List<LiquidStack> validStacks = new ArrayList<LiquidStack>();
+		for (LiquidData data : getAllLiquidData())
+		{
+				validStacks.add(data.getStack());
+		}
+		LiquidStack[] stacks = new LiquidStack[validStacks.size()];
+		for(int i =0; i < validStacks.size();i++)
+		{
+			stacks[i] = validStacks.get(i);
+		}
+		return stacks;
 	}
 
 	/**

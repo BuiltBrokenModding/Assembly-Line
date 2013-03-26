@@ -57,7 +57,7 @@ public class HydraulicNetwork
 		this.pressureProduced = 0;
 		for (TileEntity ent : receivers)
 		{
-			if (ent instanceof IPipeConnector && ((IPipeConnector) ent).canConnect(ForgeDirection.UNKNOWN, (LiquidStack[]) this.color.getAllLiquidStacks().toArray()))
+			if (ent instanceof IPipeConnector && ((IPipeConnector) ent).canConnect(ForgeDirection.UNKNOWN, this.color.getArrayLiquidStacks()))
 			{
 				if (ent instanceof IPsiReciever)
 				{

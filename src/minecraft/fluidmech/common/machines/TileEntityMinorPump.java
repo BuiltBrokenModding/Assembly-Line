@@ -105,6 +105,10 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 
 	}
 
+	/**
+	 * gets the fluidConductor or storageTank to ouput its pumped liquids too if there is not one it
+	 * will not function
+	 */
 	public ITankContainer getFillTarget()
 	{
 		TileEntity ent = worldObj.getBlockTileEntity(xCoord + pipeConnection.offsetX, yCoord + pipeConnection.offsetY, zCoord + pipeConnection.offsetZ);
@@ -138,7 +142,11 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 		double amps = (this.WATTS_PER_TICK / this.getVoltage());
 		return new ElectricityPack(amps, this.getVoltage());
 	}
-
+	/**
+	 * checks to see if this pump can pump the selected target block
+	 * @param x y z - location of the block, use the tileEntities world
+	 * @return true if it can pump
+	 */
 	boolean canPump(int x, int y, int z)
 	{
 		int blockID = worldObj.getBlockId(x, y, z);
@@ -168,9 +176,9 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 	}
 
 	/**
-	 * drains the block or in other words removes it
+	 * drains the block(removes) at the location given
 	 * 
-	 * @param loc
+	 * @param loc - vector 3 location
 	 * @return true if the block was drained
 	 */
 	boolean drainBlock(Vector3 loc)
@@ -180,13 +188,14 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 
 		LiquidData resource = LiquidHandler.getFromBlockID(blockID);
 
-		if (color.isValidLiquid(resource.getStack()) && meta == 0 && getFillTarget().fill(wireConnection, resource.getStack(), false) != 0)
+		if (color.isValidLiquid(resource.getStack()) && meta == 0 && getFillTarget().fill(pipeConnection, resource.getStack(), false) != 0)
 		{
 
 			LiquidStack stack = resource.getStack();
 			stack.amount = LiquidContainerRegistry.BUCKET_VOLUME;
-			int f = getFillTarget().fill(wireConnection, this.color.getLiquidData().getStack(), true);
-			if (f > 0)
+			int fillAmmount = getFillTarget().fill(pipeConnection, this.color.getLiquidData().getStack(), true);
+			
+			if (fillAmmount > 0)
 			{
 				worldObj.setBlockAndMetadataWithNotify(xCoord, yCoord - 1, zCoord, 0, 0, 3);
 				return true;
@@ -199,7 +208,7 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 	@Override
 	public String getMeterReading(EntityPlayer user, ForgeDirection side)
 	{
-		return this.wattsReceived + "/" + this.WATTS_PER_TICK + "W " + this.percentPumped+"% DONE";
+		return this.wattsReceived + "/" + this.WATTS_PER_TICK + "W " + this.percentPumped + "% DONE";
 	}
 
 	@Override
@@ -221,15 +230,15 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 	@Override
 	public boolean canConnect(ForgeDirection dir, LiquidStack... stacks)
 	{
-		if(dir == this.pipeConnection.getOpposite())
+		if (dir == this.pipeConnection.getOpposite())
 		{
-			if(stacks == null || stacks.length == 0)
+			if (stacks == null || stacks.length == 0)
 			{
 				return true;
 			}
-			for(int i =0; i< stacks.length; i++)
+			for (int i = 0; i < stacks.length; i++)
 			{
-				if(this.color.isValidLiquid(stacks[i]))
+				if (this.color.isValidLiquid(stacks[i]))
 				{
 					return true;
 				}

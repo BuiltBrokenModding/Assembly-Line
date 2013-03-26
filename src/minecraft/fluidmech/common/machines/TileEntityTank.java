@@ -220,15 +220,15 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 	}
 
 	@Override
-	public boolean getCanPressureTo(LiquidStack type, ForgeDirection dir)
+	public boolean canConnect(ForgeDirection dir, LiquidStack... stacks)
 	{
-		if (color.isValidLiquid(type) || type.isLiquidEqual(LiquidHandler.unkown.getStack()))
+		for (int i = 0; i < stacks.length; i++)
 		{
-			LiquidData data = LiquidHandler.get(type);
-			if (data.getCanFloat() && dir == ForgeDirection.DOWN)
+			LiquidData data = LiquidHandler.get(stacks[i]);
+			if (color.isValidLiquid(stacks[i]) && ((data.getCanFloat() && dir == ForgeDirection.DOWN) || (!data.getCanFloat() && dir == ForgeDirection.UP)))
+			{
 				return true;
-			if (!data.getCanFloat() && dir == ForgeDirection.UP)
-				return true;
+			}
 		}
 		return false;
 	}

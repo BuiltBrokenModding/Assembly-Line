@@ -213,9 +213,16 @@ public class TileEntityReleaseValve extends TileEntityAdvanced implements IPsiCr
 	}
 
 	@Override
-	public boolean getCanPressureTo(LiquidStack type, ForgeDirection dir)
+	public boolean canConnect(ForgeDirection dir, LiquidStack... stacks)
 	{
-		return type != null && this.canConnect(ColorCode.get(type));
+		for (int i = 0; i < stacks.length; i++)
+		{
+			if (this.canConnect(ColorCode.get(stacks[i])))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
