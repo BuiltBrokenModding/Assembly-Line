@@ -199,7 +199,7 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 	@Override
 	public String getMeterReading(EntityPlayer user, ForgeDirection side)
 	{
-		return this.wattsReceived + "/" + this.WATTS_PER_TICK + " " + this.percentPumped;
+		return this.wattsReceived + "/" + this.WATTS_PER_TICK + "W " + this.percentPumped+"% DONE";
 	}
 
 	@Override
@@ -213,15 +213,29 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 	}
 
 	@Override
-	public boolean getCanPressureTo(LiquidStack type, ForgeDirection dir)
-	{
-		return dir == this.pipeConnection.getOpposite() && this.color.isValidLiquid(type);
-	}
-
-	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
 		return direction == wireConnection;
+	}
+
+	@Override
+	public boolean canConnect(ForgeDirection dir, LiquidStack... stacks)
+	{
+		if(dir == this.pipeConnection.getOpposite())
+		{
+			if(stacks == null || stacks.length == 0)
+			{
+				return true;
+			}
+			for(int i =0; i< stacks.length; i++)
+			{
+				if(this.color.isValidLiquid(stacks[i]))
+				{
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 }

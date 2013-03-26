@@ -35,9 +35,9 @@ public class HydraulicNetwork
 	public final List<TileEntity> receivers = new ArrayList<TileEntity>();
 
 	public ColorCode color = ColorCode.NONE;
-	/* PRESSURE OF THE NETWORK AS A TOTAL. ZERO AS IN DEFUALT */
+	/* PRESSURE OF THE NETWORK AS A TOTAL. ZERO AS IN NO PRODUCTION */
 	public double pressureProduced = 0;
-	/* PRESSURE OF THE NETWORK'S LOAD AS A TOTAL. ZERO AS IN DEFUALT */
+	/* PRESSURE OF THE NETWORK'S LOAD AS A TOTAL. ZERO AS IN NO LOAD */
 	public double pressureLoad = 0;
 
 	public HydraulicNetwork(ILiquidNetworkPart conductor, ColorCode color)
