@@ -51,6 +51,7 @@ public class TileEntityNetworkPipe extends TileEntityAdvanced implements ITankCo
 	@Override
 	public void updateEntity()
 	{
+		super.updateEntity();
 		if (worldObj.isRemote && ticks % ((int) random.nextInt(10) * 10 + 1) == 0)
 		{
 			this.updateAdjacentConnections();
@@ -67,7 +68,7 @@ public class TileEntityNetworkPipe extends TileEntityAdvanced implements ITankCo
 	@Override
 	public void invalidate()
 	{
-		if (!this.worldObj.isRemote && this.getNetwork() != null)
+		if (!this.worldObj.isRemote)
 		{
 			this.getNetwork().splitNetwork(this);
 		}
