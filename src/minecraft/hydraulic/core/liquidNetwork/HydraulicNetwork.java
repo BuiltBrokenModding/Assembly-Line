@@ -1,22 +1,25 @@
 package hydraulic.core.liquidNetwork;
 
 import hydraulic.api.ColorCode;
+import hydraulic.api.ILiquidNetworkPart;
 import hydraulic.api.IPipeConnector;
 import hydraulic.api.IPsiCreator;
-import hydraulic.api.ILiquidNetworkPart;
 import hydraulic.api.IPsiReciever;
 import hydraulic.helpers.connectionHelper;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-
-import universalelectricity.prefab.network.IPacketReceiver;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidStack;
+import universalelectricity.core.block.IConnectionProvider;
+import universalelectricity.core.path.Pathfinder;
+import universalelectricity.core.path.PathfinderChecker;
+import cpw.mods.fml.common.FMLLog;
 
 /**
  * Side note: the network should act like this when done {@link http
@@ -40,9 +43,8 @@ public class HydraulicNetwork
 	/* PRESSURE OF THE NETWORK'S LOAD AS A TOTAL. ZERO AS IN NO LOAD */
 	public double pressureLoad = 0;
 
-	public HydraulicNetwork(ILiquidNetworkPart conductor, ColorCode color)
+	public HydraulicNetwork(ColorCode color)
 	{
-		this.addConductor(conductor, color);
 		this.color = color;
 	}
 
@@ -79,7 +81,7 @@ public class HydraulicNetwork
 	 * 
 	 * @return The amount of Liquid used.
 	 */
-	public int addFluidToNetwork(LiquidStack stack, double pressure)
+	public int addFluidToNetwork(LiquidStack stack, double pressure, boolean doFill)
 	{
 		int used = 0;
 		if (stack != null && canAcceptLiquid(stack))
@@ -152,13 +154,16 @@ public class HydraulicNetwork
 					return used;
 				}
 			}// End of tank finder
-			if (fillTarget != null)
+			if (doFill)
 			{
-				used = fillTarget.fill(fillDir, stack, true);
-			}
-			else if (otherFillTarget != null)
-			{
-				used = otherFillTarget.fill(fillDir, stack, true);
+				if (fillTarget != null)
+				{
+					used = fillTarget.fill(fillDir, stack, true);
+				}
+				else if (otherFillTarget != null)
+				{
+					used = otherFillTarget.fill(fillDir, stack, true);
+				}
 			}
 		}
 
@@ -243,14 +248,6 @@ public class HydraulicNetwork
 		}
 	}
 
-	public void resetConductors()
-	{
-		for (int i = 0; i < conductors.size(); i++)
-		{
-			conductors.get(i).reset();
-		}
-	}
-
 	public void setNetwork()
 	{
 		this.cleanConductors();
@@ -278,14 +275,141 @@ public class HydraulicNetwork
 		}
 	}
 
+	public void cleanUpConductors()
+	{
+		Iterator it = this.conductors.iterator();
+
+		while (it.hasNext())
+		{
+			ILiquidNetworkPart conductor = (ILiquidNetworkPart) it.next();
+
+			if (conductor == null)
+			{
+				it.remove();
+			}
+			else if (((TileEntity) conductor).isInvalid())
+			{
+				it.remove();
+			}
+			else
+			{
+				conductor.setNetwork(this);
+			}
+		}
+	}
+
 	/**
 	 * This function is called to refresh all conductors in this network
 	 */
 	public void refreshConductors()
 	{
-		for (int j = 0; j < this.conductors.size(); j++)
+		this.cleanUpConductors();
+
+		try
 		{
-			this.conductors.get(j).refreshConnectedBlocks();
+			Iterator<ILiquidNetworkPart> it = this.conductors.iterator();
+
+			while (it.hasNext())
+			{
+				ILiquidNetworkPart conductor = it.next();
+				conductor.updateAdjacentConnections();
+			}
+		}
+		catch (Exception e)
+		{
+			FMLLog.severe("Universal Electricity: Failed to refresh conductor.");
+			e.printStackTrace();
+		}
+	}
+
+	public List<ILiquidNetworkPart> getFluidNetworkParts()
+	{
+		return this.conductors;
+	}
+
+	public void mergeNetworks(HydraulicNetwork network)
+	{
+		if (network != null && network != this && network.color == this.color)
+		{
+			HydraulicNetwork newNetwork = new HydraulicNetwork(this.color);
+
+			newNetwork.getFluidNetworkParts().addAll(this.getFluidNetworkParts());
+			newNetwork.getFluidNetworkParts().addAll(network.getFluidNetworkParts());
+
+			newNetwork.cleanUpConductors();
+		}
+	}
+
+	public void splitNetwork(IConnectionProvider splitPoint)
+	{
+		if (splitPoint instanceof TileEntity)
+		{
+			this.getFluidNetworkParts().remove(splitPoint);
+
+			/**
+			 * Loop through the connected blocks and attempt to see if there are connections between
+			 * the two points elsewhere.
+			 */
+			TileEntity[] connectedBlocks = splitPoint.getAdjacentConnections();
+
+			for (int i = 0; i < connectedBlocks.length; i++)
+			{
+				TileEntity connectedBlockA = connectedBlocks[i];
+
+				if (connectedBlockA instanceof IConnectionProvider)
+				{
+					for (int ii = 0; ii < connectedBlocks.length; ii++)
+					{
+						final TileEntity connectedBlockB = connectedBlocks[ii];
+
+						if (connectedBlockA != connectedBlockB && connectedBlockB instanceof IConnectionProvider)
+						{
+							Pathfinder finder = new PathfinderChecker((IConnectionProvider) connectedBlockB, splitPoint);
+							finder.init((IConnectionProvider) connectedBlockA);
+
+							if (finder.results.size() > 0)
+							{
+								/**
+								 * The connections A and B are still intact elsewhere. Set all
+								 * references of wire connection into one network.
+								 */
+
+								for (IConnectionProvider node : finder.iteratedNodes)
+								{
+									if (node instanceof ILiquidNetworkPart)
+									{
+										if (node != splitPoint)
+										{
+											((ILiquidNetworkPart) node).setNetwork(this);
+										}
+									}
+								}
+							}
+							else
+							{
+								/**
+								 * The connections A and B are not connected anymore. Give both of
+								 * them a new network.
+								 */
+								HydraulicNetwork newNetwork = new HydraulicNetwork(this.color);
+
+								for (IConnectionProvider node : finder.iteratedNodes)
+								{
+									if (node instanceof ILiquidNetworkPart)
+									{
+										if (node != splitPoint)
+										{
+											newNetwork.getFluidNetworkParts().add((ILiquidNetworkPart) node);
+										}
+									}
+								}
+
+								newNetwork.cleanUpConductors();
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 
