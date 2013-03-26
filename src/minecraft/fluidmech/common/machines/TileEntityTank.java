@@ -220,7 +220,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection dir, LiquidStack... stacks)
+	public boolean canConnect(ForgeDirection dir, TileEntity entity, LiquidStack... stacks)
 	{
 		for (int i = 0; i < stacks.length; i++)
 		{

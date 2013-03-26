@@ -11,7 +11,7 @@ import net.minecraftforge.liquids.LiquidStack;
  * net.minecraftforge.liquids too make your machine work with other fluid mods that don't use
  * pressure
  */
-public interface IPsiReciever extends IPipeConnector
+public interface IPsiReciever extends IPipeConnection
 {
 	/**
 	 * the load that this machine is handling, working, or moving

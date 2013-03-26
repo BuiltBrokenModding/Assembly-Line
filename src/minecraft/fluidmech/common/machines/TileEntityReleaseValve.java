@@ -213,7 +213,7 @@ public class TileEntityReleaseValve extends TileEntityAdvanced implements IPsiCr
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection dir, LiquidStack... stacks)
+	public boolean canConnect(ForgeDirection dir,TileEntity entity, LiquidStack... stacks)
 	{
 		for (int i = 0; i < stacks.length; i++)
 		{

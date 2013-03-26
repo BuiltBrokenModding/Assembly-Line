@@ -4,7 +4,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidStack;
 
-public interface IPipeConnector
+public interface IPipeConnection
 {
 	/**
 	 * 
@@ -13,5 +13,5 @@ public interface IPipeConnector
 	 * connecting machine has no specific stack requirement
 	 * @return true if it can connect
 	 */
-	public boolean canConnect(ForgeDirection dir, LiquidStack... stacks);
+	public boolean canConnect(ForgeDirection dir,TileEntity entity, LiquidStack... stacks);
 }

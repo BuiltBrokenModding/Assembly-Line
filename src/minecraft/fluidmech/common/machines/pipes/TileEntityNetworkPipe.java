@@ -3,8 +3,8 @@ package fluidmech.common.machines.pipes;
 import fluidmech.common.FluidMech;
 import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
+import hydraulic.api.IPipeConnection;
 import hydraulic.api.IFluidNetworkPart;
-import hydraulic.api.IPipeConnector;
 import hydraulic.api.IReadOut;
 import hydraulic.core.liquidNetwork.HydraulicNetwork;
 
@@ -36,8 +36,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityNetworkPipe extends TileEntityAdvanced implements ITankContainer, IReadOut, IColorCoded, IFluidNetworkPart, IPacketReceiver
 {
-	/* COLOR CODE THIS PIPE USES FOR CONNECTION RULES */
-	private ColorCode color = ColorCode.NONE;
 	/* TANK TO FAKE OTHER TILES INTO BELIVING THIS HAS AN INTERNAL STORAGE */
 	private LiquidTank fakeTank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
 	/* CURRENTLY CONNECTED TILE ENTITIES TO THIS */
@@ -61,7 +59,6 @@ public class TileEntityNetworkPipe extends TileEntityAdvanced implements ITankCo
 	@Override
 	public void initiate()
 	{
-		this.color = ColorCode.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
 		this.updateAdjacentConnections();
 	}
 
@@ -103,7 +100,7 @@ public class TileEntityNetworkPipe extends TileEntityAdvanced implements ITankCo
 	@Override
 	public ColorCode getColor()
 	{
-		return this.color;
+		return ColorCode.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
 	}
 
 	/**
@@ -112,37 +109,28 @@ public class TileEntityNetworkPipe extends TileEntityAdvanced implements ITankCo
 	@Override
 	public void setColor(Object cc)
 	{
-		this.color = ColorCode.get(cc);
-	}
-
-	/**
-	 * sets the current color mark of the pipe
-	 */
-	public void setColor(int i)
-	{
-		if (i < ColorCode.values().length)
-		{
-			this.color = ColorCode.values()[i];
-		}
+		// TODO add stuff here to reset the pipe's metadata
 	}
 
 	@Override
 	public String getMeterReading(EntityPlayer user, ForgeDirection side)
 	{
-		/* DEBUG CODE */
-		boolean testConnections = false;
+		/* DEBUG CODE ACTIVATERS */
+		boolean testConnections = true;
 		boolean testNetwork = true;
 
+		/* NORMAL OUTPUT */
 		String string = this.getNetwork().pressureProduced + "p ";
+
+		/* DEBUG CODE */
 		if (testConnections)
 		{
 			for (int i = 0; i < 6; i++)
 			{
-				string += " " + this.renderConnection[i];
-				string.replaceAll("true", "T").replaceAll("false", "F");
+				string += ":" + (this.renderConnection[i] ? "T" : "F") + (this.getAdjacentConnections()[i] != null ? "T" : "F");
 			}
 		}
-		if(testNetwork)
+		if (testNetwork)
 		{
 			string += " " + this.getNetwork().toString();
 		}
@@ -153,7 +141,7 @@ public class TileEntityNetworkPipe extends TileEntityAdvanced implements ITankCo
 	@Override
 	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
 	{
-		if (resource == null || !this.color.isValidLiquid(resource))
+		if (resource == null || !this.getColor().isValidLiquid(resource))
 		{
 			return 0;
 		}
@@ -163,7 +151,7 @@ public class TileEntityNetworkPipe extends TileEntityAdvanced implements ITankCo
 	@Override
 	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
 	{
-		if (tankIndex != 0 || resource == null || !this.color.isValidLiquid(resource))
+		if (tankIndex != 0 || resource == null || !this.getColor().isValidLiquid(resource))
 		{
 			return 0;
 		}
@@ -191,7 +179,7 @@ public class TileEntityNetworkPipe extends TileEntityAdvanced implements ITankCo
 	@Override
 	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
 	{
-		if (this.color.isValidLiquid(type))
+		if (this.getColor().isValidLiquid(type))
 		{
 			return this.fakeTank;
 		}
@@ -199,26 +187,39 @@ public class TileEntityNetworkPipe extends TileEntityAdvanced implements ITankCo
 	}
 
 	/**
-	 * validates that the tileEntity this pipe is connecting to is valid
+	 * Checks to make sure the connection is valid to the tileEntity
 	 * 
-	 * @param tileEntity - connection
-	 * @param side - side connecting
+	 * @param tileEntity - the tileEntity being checked
+	 * @param side - side the connection is too
 	 */
-	public void validataConnectionSide(TileEntity tileEntity, ForgeDirection side)
+	public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)
 	{
 		if (!this.worldObj.isRemote && tileEntity != null)
 		{
-			if (tileEntity instanceof IPipeConnector && ((IPipeConnector) tileEntity).canConnect(side, color.getArrayLiquidStacks()))
+			if (tileEntity instanceof IPipeConnection)
 			{
-				if (tileEntity instanceof IFluidNetworkPart)
+				if (((IPipeConnection) tileEntity).canConnect(side, this, getColor().getArrayLiquidStacks()))
 				{
-					this.getNetwork().mergeNetworks(((IFluidNetworkPart) tileEntity).getNetwork());
+					if (tileEntity instanceof IFluidNetworkPart)
+					{
+						if (((IFluidNetworkPart) tileEntity).getColor() == this.getColor())
+						{
+							this.getNetwork().mergeNetworks(((IFluidNetworkPart) tileEntity).getNetwork());
+							connectedBlocks[side.ordinal()] = tileEntity;
+						}
+					}
+					else
+					{
+						connectedBlocks[side.ordinal()] = tileEntity;
+					}
 				}
-				connectedBlocks[side.ordinal()] = tileEntity;
 			}
-			else if (tileEntity instanceof IColorCoded && (this.color == ColorCode.NONE || this.color == ((IColorCoded) tileEntity).getColor()))
+			else if (tileEntity instanceof IColorCoded)
 			{
-				connectedBlocks[side.ordinal()] = tileEntity;
+				if (this.getColor() == ColorCode.NONE || this.getColor() == ((IColorCoded) tileEntity).getColor())
+				{
+					connectedBlocks[side.ordinal()] = tileEntity;
+				}
 			}
 			else if (tileEntity instanceof ITankContainer)
 			{
@@ -239,9 +240,13 @@ public class TileEntityNetworkPipe extends TileEntityAdvanced implements ITankCo
 			for (int i = 0; i < 6; i++)
 			{
 				ForgeDirection dir = ForgeDirection.getOrientation(i);
-				this.validataConnectionSide(this.worldObj.getBlockTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ), dir);
+				this.validateConnectionSide(this.worldObj.getBlockTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ), dir);
 
 				this.renderConnection[i] = this.connectedBlocks[i] != null;
+				if (this.connectedBlocks[i] instanceof ITankContainer)
+				{
+					this.getNetwork().addEntity(this.connectedBlocks[i]);
+				}
 			}
 
 			/**
@@ -255,16 +260,9 @@ public class TileEntityNetworkPipe extends TileEntityAdvanced implements ITankCo
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection dir, LiquidStack... stacks)
+	public boolean canConnect(ForgeDirection dir, TileEntity entity, LiquidStack... stacks)
 	{
-		for (int i = 0; i < stacks.length; i++)
-		{
-			if (this.color.isValidLiquid(stacks[i]))
-			{
-				return true;
-			}
-		}
-		return false;
+		return true;
 	}
 
 	@Override
@@ -278,7 +276,7 @@ public class TileEntityNetworkPipe extends TileEntityAdvanced implements ITankCo
 	{
 		if (this.pipeNetwork == null)
 		{
-			this.setNetwork(new HydraulicNetwork(color,this));
+			this.setNetwork(new HydraulicNetwork(this.getColor(), this));
 		}
 		return this.pipeNetwork;
 	}
@@ -319,9 +317,9 @@ public class TileEntityNetworkPipe extends TileEntityAdvanced implements ITankCo
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection direction)
+	public boolean canConnect(ForgeDirection dir)
 	{
-		return true;
+		return worldObj.getBlockTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetZ, zCoord + dir.offsetY) instanceof IFluidNetworkPart;
 	}
 
 }

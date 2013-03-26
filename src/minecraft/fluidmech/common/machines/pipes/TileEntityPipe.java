@@ -3,7 +3,7 @@ package fluidmech.common.machines.pipes;
 import fluidmech.common.machines.TileEntityTank;
 import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
-import hydraulic.api.IPipeConnector;
+import hydraulic.api.IPipeConnection;
 import hydraulic.api.IPsiCreator;
 import hydraulic.api.IReadOut;
 import hydraulic.core.liquidNetwork.LiquidHandler;
@@ -275,9 +275,9 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 					connectedBlocks[side] = null;
 				}
 			}
-			else if (tileEntity instanceof IPipeConnector)
+			else if (tileEntity instanceof IPipeConnection)
 			{
-				if (!((IPipeConnector) tileEntity).canConnect(direction, color.getLiquidData().getStack()))
+				if (!((IPipeConnection) tileEntity).canConnect(direction,this, color.getLiquidData().getStack()))
 				{
 					connectedBlocks[side] = null;
 				}
@@ -308,7 +308,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 					highestPressure = ((TileEntityPipe) connectedBlocks[i]).getPressure();
 				}
 			}
-			if (connectedBlocks[i] instanceof IPsiCreator && ((IPipeConnector) connectedBlocks[i]).canConnect(dir, color.getArrayLiquidStacks()))
+			if (connectedBlocks[i] instanceof IPsiCreator && ((IPipeConnection) connectedBlocks[i]).canConnect(dir,this, color.getArrayLiquidStacks()))
 			{
 
 				int p = ((IPsiCreator) connectedBlocks[i]).getPressureOut(color.getLiquidData().getStack(), dir);

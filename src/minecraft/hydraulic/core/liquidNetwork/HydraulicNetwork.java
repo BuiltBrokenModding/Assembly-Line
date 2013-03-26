@@ -2,7 +2,7 @@ package hydraulic.core.liquidNetwork;
 
 import hydraulic.api.ColorCode;
 import hydraulic.api.IFluidNetworkPart;
-import hydraulic.api.IPipeConnector;
+import hydraulic.api.IPipeConnection;
 import hydraulic.api.IPsiCreator;
 import hydraulic.api.IPsiReciever;
 import hydraulic.helpers.connectionHelper;
@@ -50,29 +50,14 @@ public class HydraulicNetwork
 		this.color = color;
 	}
 
-	/**
-	 * updates the pressure in the network
-	 * 
-	 * @param ent
-	 */
-	public void updatePressure()
+	public void registerLoad(TileEntity entity)
 	{
-		this.pressureLoad = 0;
-		this.pressureProduced = 0;
-		for (TileEntity ent : receivers)
-		{
-			if (ent instanceof IPipeConnector && ((IPipeConnector) ent).canConnect(ForgeDirection.UNKNOWN, this.color.getArrayLiquidStacks()))
-			{
-				if (ent instanceof IPsiReciever)
-				{
-					pressureLoad += ((IPsiReciever) ent).getPressureLoad();
-				}
-				else if (ent instanceof IPsiCreator)
-				{
-					pressureProduced += ((IPsiCreator) ent).getPressureOut(color.getLiquidData().getStack(), ForgeDirection.UNKNOWN);
-				}
-			}
-		}
+
+	}
+
+	public void registerProducer(TileEntity entity)
+	{
+
 	}
 
 	/**
@@ -290,6 +275,10 @@ public class HydraulicNetwork
 				it.remove();
 			}
 			else if (((TileEntity) conductor).isInvalid())
+			{
+				it.remove();
+			}
+			else if (conductor.getColor() != this.color)
 			{
 				it.remove();
 			}

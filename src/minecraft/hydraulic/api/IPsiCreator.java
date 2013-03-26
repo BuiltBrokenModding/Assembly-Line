@@ -3,7 +3,7 @@ package hydraulic.api;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidStack;
 
-public interface IPsiCreator extends IPipeConnector
+public interface IPsiCreator extends IPipeConnection
 {
 	/**
 	 * gets the pressure produced from that side of the machine. Use canConnect method to allow a
