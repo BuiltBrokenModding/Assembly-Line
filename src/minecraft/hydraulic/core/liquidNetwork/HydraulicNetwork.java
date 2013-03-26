@@ -1,13 +1,14 @@
 package hydraulic.core.liquidNetwork;
 
 import hydraulic.api.ColorCode;
-import hydraulic.api.ILiquidNetworkPart;
+import hydraulic.api.IFluidNetworkPart;
 import hydraulic.api.IPipeConnector;
 import hydraulic.api.IPsiCreator;
 import hydraulic.api.IPsiReciever;
 import hydraulic.helpers.connectionHelper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -32,7 +33,7 @@ import cpw.mods.fml.common.FMLLog;
 public class HydraulicNetwork
 {
 	/* BLOCK THAT ACT AS FLUID CONVEYORS ** */
-	public final List<ILiquidNetworkPart> conductors = new ArrayList<ILiquidNetworkPart>();
+	public final List<IFluidNetworkPart> conductors = new ArrayList<IFluidNetworkPart>();
 
 	/* MACHINES THAT USE THE FORGE LIQUID API TO RECEIVE LIQUID ** */
 	public final List<TileEntity> receivers = new ArrayList<TileEntity>();
@@ -43,8 +44,9 @@ public class HydraulicNetwork
 	/* PRESSURE OF THE NETWORK'S LOAD AS A TOTAL. ZERO AS IN NO LOAD */
 	public double pressureLoad = 0;
 
-	public HydraulicNetwork(ColorCode color)
+	public HydraulicNetwork(ColorCode color, IFluidNetworkPart... parts)
 	{
+		this.conductors.addAll(Arrays.asList(parts));
 		this.color = color;
 	}
 
@@ -112,7 +114,7 @@ public class HydraulicNetwork
 
 					for (int i = 0; i < 6; i++)
 					{
-						if (surroundings[i] instanceof ILiquidNetworkPart && ((ILiquidNetworkPart) surroundings[i]).getNetwork() == this)
+						if (surroundings[i] instanceof IFluidNetworkPart && ((IFluidNetworkPart) surroundings[i]).getNetwork() == this)
 						{
 							ForgeDirection dir = ForgeDirection.getOrientation(i).getOpposite();
 							ILiquidTank storage = tank.getTank(dir, stack);
@@ -178,7 +180,7 @@ public class HydraulicNetwork
 	public int getMaxFlow(LiquidStack stack)
 	{
 		int flow = 1000;
-		for (ILiquidNetworkPart conductor : this.conductors)
+		for (IFluidNetworkPart conductor : this.conductors)
 		{
 			// TODO change the direction to actual look for connected only directions and pipes
 			// along
@@ -222,7 +224,7 @@ public class HydraulicNetwork
 		}
 	}
 
-	public void addConductor(ILiquidNetworkPart newConductor, ColorCode code)
+	public void addConductor(IFluidNetworkPart newConductor, ColorCode code)
 	{
 		this.cleanConductors();
 
@@ -252,7 +254,7 @@ public class HydraulicNetwork
 	{
 		this.cleanConductors();
 
-		for (ILiquidNetworkPart conductor : this.conductors)
+		for (IFluidNetworkPart conductor : this.conductors)
 		{
 			conductor.setNetwork(this);
 		}
@@ -265,7 +267,7 @@ public class HydraulicNetwork
 		for (int i = 0; i < conductors.size(); i++)
 		{
 			// TODO change to actual check connected sides only && get true value from settings file
-			ILiquidNetworkPart part = conductors.get(i);
+			IFluidNetworkPart part = conductors.get(i);
 			if (part.getMaxPressure(ForgeDirection.UNKNOWN) < this.pressureProduced && part.onOverPressure(true))
 			{
 				this.conductors.remove(part);
@@ -281,7 +283,7 @@ public class HydraulicNetwork
 
 		while (it.hasNext())
 		{
-			ILiquidNetworkPart conductor = (ILiquidNetworkPart) it.next();
+			IFluidNetworkPart conductor = (IFluidNetworkPart) it.next();
 
 			if (conductor == null)
 			{
@@ -307,11 +309,11 @@ public class HydraulicNetwork
 
 		try
 		{
-			Iterator<ILiquidNetworkPart> it = this.conductors.iterator();
+			Iterator<IFluidNetworkPart> it = this.conductors.iterator();
 
 			while (it.hasNext())
 			{
-				ILiquidNetworkPart conductor = it.next();
+				IFluidNetworkPart conductor = it.next();
 				conductor.updateAdjacentConnections();
 			}
 		}
@@ -322,7 +324,7 @@ public class HydraulicNetwork
 		}
 	}
 
-	public List<ILiquidNetworkPart> getFluidNetworkParts()
+	public List<IFluidNetworkPart> getFluidNetworkParts()
 	{
 		return this.conductors;
 	}
@@ -376,11 +378,11 @@ public class HydraulicNetwork
 
 								for (IConnectionProvider node : finder.iteratedNodes)
 								{
-									if (node instanceof ILiquidNetworkPart)
+									if (node instanceof IFluidNetworkPart)
 									{
 										if (node != splitPoint)
 										{
-											((ILiquidNetworkPart) node).setNetwork(this);
+											((IFluidNetworkPart) node).setNetwork(this);
 										}
 									}
 								}
@@ -395,11 +397,11 @@ public class HydraulicNetwork
 
 								for (IConnectionProvider node : finder.iteratedNodes)
 								{
-									if (node instanceof ILiquidNetworkPart)
+									if (node instanceof IFluidNetworkPart)
 									{
 										if (node != splitPoint)
 										{
-											newNetwork.getFluidNetworkParts().add((ILiquidNetworkPart) node);
+											newNetwork.getFluidNetworkParts().add((IFluidNetworkPart) node);
 										}
 									}
 								}
@@ -413,4 +415,9 @@ public class HydraulicNetwork
 		}
 	}
 
+	@Override
+	public String toString()
+	{
+		return "hydraulicNetwork[" + this.hashCode() + "|parts:" + this.conductors.size() + "]";
+	}
 }

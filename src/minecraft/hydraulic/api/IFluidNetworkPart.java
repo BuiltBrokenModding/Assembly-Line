@@ -11,7 +11,7 @@ import net.minecraftforge.liquids.LiquidStack;
  * that doesn't change the over all network pressure. So pipes, gauges, tubes, buffers, decor
  * blocks.
  */
-public interface ILiquidNetworkPart extends IPipeConnector, IColorCoded, IConnectionProvider
+public interface IFluidNetworkPart extends IPipeConnector, IColorCoded, IConnectionProvider
 {
 	/**
 	 * gets the devices pressure from a given side for input
