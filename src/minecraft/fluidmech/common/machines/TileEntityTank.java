@@ -1,5 +1,7 @@
 package fluidmech.common.machines;
 
+import java.util.Random;
+
 import fluidmech.common.FluidMech;
 import fluidmech.common.machines.pipes.TileEntityPipe;
 import hydraulic.api.ColorCode;
@@ -24,45 +26,66 @@ import net.minecraftforge.liquids.LiquidTank;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
+import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityTank extends TileEntity implements IPacketReceiver, IReadOut, IPsiCreator, ITankContainer, IColorCoded
+public class TileEntityTank extends TileEntityAdvanced implements IPacketReceiver, IReadOut, IPsiCreator, ITankContainer, IColorCoded
 {
 	public TileEntity[] cc = { null, null, null, null, null, null };
 
-	private ColorCode color = ColorCode.NONE;
-
 	public static final int LMax = 4;
-	private int count, count2 = 0;
 
-	public int pVolume = 0;
+	private Random random = new Random();
+
+	private boolean sendPacket = true;
 
 	private LiquidTank tank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME * LMax);
+
+	@Override
+	public void initiate()
+	{
+
+	}
 
 	public void updateEntity()
 	{
 
-		this.color = ColorCode.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
-		if (++count >= 40)
+		this.cc = connectionHelper.getSurroundingTileEntities(worldObj, xCoord, yCoord, zCoord);
+		if (!worldObj.isRemote)
 		{
-			count = 0;
-			this.cc = connectionHelper.getSurroundingTileEntities(worldObj, xCoord, yCoord, zCoord);
-			if (!worldObj.isRemote)
+			int originalVolume = 0;
+			LiquidStack sendStack = new LiquidStack(0, 0, 0);
+
+			if (this.tank.getLiquid() != null)
 			{
-				this.tradeDown();
-				this.tradeArround();
-				this.fillPipe();
+				sendStack = this.tank.getLiquid();
+				originalVolume = this.tank.getLiquid().amount;
 
-				LiquidStack stack = new LiquidStack(0, 0, 0);
-				if (this.tank.getLiquid() != null)
+				if (ticks % 20 >= 0)
 				{
-					stack = this.tank.getLiquid();
+					this.tradeDown();
+					this.tradeArround();
+					this.fillPipe();
 				}
-				Packet packet = PacketManager.getPacket(FluidMech.CHANNEL, this, new Object[] { stack.itemID, stack.amount, stack.itemMeta });
-				PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 20);
 
+				if (this.tank.getLiquid() == null && originalVolume != 0)
+				{
+					this.sendPacket = true;
+				}
+				else if (this.tank.getLiquid() != null && this.tank.getLiquid().amount != originalVolume)
+				{
+					sendStack = this.tank.getLiquid();
+				}
 			}
+
+			if (sendPacket || ticks % (random.nextInt(5) * 10 + 20) == 0)
+			{
+				Packet packet = PacketManager.getPacket(FluidMech.CHANNEL, this, sendStack.itemID, sendStack.amount, sendStack.itemMeta);
+				PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 20);
+				sendPacket = false;
+			}
+
 		}
 	}
 
@@ -88,7 +111,10 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 
 		LiquidStack liquid = new LiquidStack(0, 0, 0);
 		liquid.readFromNBT(nbt.getCompoundTag("stored"));
-		tank.setLiquid(liquid);
+		if (!liquid.isLiquidEqual(LiquidHandler.unkown.getStack()))
+		{
+			tank.setLiquid(liquid);
+		}
 	}
 
 	@Override
@@ -119,7 +145,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 	@Override
 	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
 	{
-		if (resource == null || (!color.getLiquidData().getStack().isLiquidEqual(resource) && this.color != ColorCode.NONE))
+		if (resource == null || (!getColor().getLiquidData().getStack().isLiquidEqual(resource) && this.getColor() != ColorCode.NONE))
 		{
 			return 0;
 		}
@@ -208,7 +234,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 	@Override
 	public int getPressureOut(LiquidStack type, ForgeDirection dir)
 	{
-		if (color.isValidLiquid(type) || type.isLiquidEqual(LiquidHandler.unkown.getStack()))
+		if (getColor().isValidLiquid(type) || type.isLiquidEqual(LiquidHandler.unkown.getStack()))
 		{
 			LiquidData data = LiquidHandler.get(type);
 			if (data.getCanFloat() && dir == ForgeDirection.DOWN)
@@ -225,7 +251,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 		for (int i = 0; i < stacks.length; i++)
 		{
 			LiquidData data = LiquidHandler.get(stacks[i]);
-			if (color.isValidLiquid(stacks[i]) && ((data.getCanFloat() && dir == ForgeDirection.DOWN) || (!data.getCanFloat() && dir == ForgeDirection.UP)))
+			if (getColor().isValidLiquid(stacks[i]) && ((data.getCanFloat() && dir == ForgeDirection.DOWN) || (!data.getCanFloat() && dir == ForgeDirection.UP)))
 			{
 				return true;
 			}
@@ -241,7 +267,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 		if (this.tank.getLiquid() == null || this.tank.getLiquid().amount <= 0)
 			return;
 		TileEntity ent = worldObj.getBlockTileEntity(xCoord, yCoord - 1, zCoord);
-		if (ent instanceof TileEntityTank && ((TileEntityTank) ent).getColor() == this.color && !((TileEntityTank) ent).isFull())
+		if (ent instanceof TileEntityTank && ((TileEntityTank) ent).getColor() == this.getColor() && !((TileEntityTank) ent).isFull())
 		{
 			int f = ((TileEntityTank) ent).tank.fill(this.tank.getLiquid(), true);
 			this.tank.drain(f, true);
@@ -263,7 +289,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 
 		for (int i = 2; i < 6; i++)
 		{
-			if (ents[i] instanceof TileEntityTank && ((TileEntityTank) ents[i]).color == this.color)
+			if (ents[i] instanceof TileEntityTank && ((TileEntityTank) ents[i]).getColor() == this.getColor())
 			{
 				tanks++;
 				if (((TileEntityTank) ents[i]).tank.getLiquid() != null)
@@ -282,7 +308,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 				break;
 			}
 
-			if (ents[i] instanceof TileEntityTank && ((TileEntityTank) ents[i]).color == this.color && !((TileEntityTank) ents[i]).isFull())
+			if (ents[i] instanceof TileEntityTank && ((TileEntityTank) ents[i]).getColor() == this.getColor() && !((TileEntityTank) ents[i]).isFull())
 			{
 				LiquidStack target = ((TileEntityTank) ents[i]).tank.getLiquid();
 				LiquidStack filling = this.tank.getLiquid();
@@ -326,7 +352,7 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 			if (ent instanceof TileEntityPipe)
 			{
 				ColorCode c = ((TileEntityPipe) ent).getColor();
-				if (c == ColorCode.NONE || c == this.color)
+				if (c == ColorCode.NONE || c == this.getColor())
 				{
 					int vol = LiquidContainerRegistry.BUCKET_VOLUME;
 					if (this.tank.getLiquid().amount < vol)
@@ -343,13 +369,16 @@ public class TileEntityTank extends TileEntity implements IPacketReceiver, IRead
 	@Override
 	public void setColor(Object obj)
 	{
-		this.color = ColorCode.get(cc);
-
+		ColorCode code = ColorCode.get(obj);
+		if (worldObj.isRemote && code != this.getColor() && (this.tank != null || code.isValidLiquid(this.tank.getLiquid())))
+		{
+			this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, code.ordinal() & 15, 3);
+		}
 	}
 
 	@Override
 	public ColorCode getColor()
 	{
-		return color;
+		return ColorCode.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
 	}
 }
