@@ -23,6 +23,8 @@ import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.liquids.LiquidTank;
+import universalelectricity.core.block.IConductor;
+import universalelectricity.core.block.IConnectionProvider;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
@@ -30,9 +32,9 @@ import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityTank extends TileEntityAdvanced implements IPacketReceiver, IReadOut, IPsiCreator, ITankContainer, IColorCoded
+public class TileEntityTank extends TileEntityAdvanced implements IPacketReceiver, IReadOut, IPsiCreator, ITankContainer, IColorCoded, IConnectionProvider
 {
-	public TileEntity[] cc = { null, null, null, null, null, null };
+	public TileEntity[] connectedBlocks = { null, null, null, null, null, null };
 
 	public static final int LMax = 4;
 
@@ -45,13 +47,15 @@ public class TileEntityTank extends TileEntityAdvanced implements IPacketReceive
 	@Override
 	public void initiate()
 	{
-
+		this.updateAdjacentConnections();
 	}
 
 	public void updateEntity()
 	{
-
-		this.cc = connectionHelper.getSurroundingTileEntities(worldObj, xCoord, yCoord, zCoord);
+		if (this.ticks % (random.nextInt(10) * 5 + 20) == 0)
+		{
+			updateAdjacentConnections();
+		}
 		if (!worldObj.isRemote)
 		{
 			int originalVolume = 0;
@@ -62,7 +66,7 @@ public class TileEntityTank extends TileEntityAdvanced implements IPacketReceive
 				sendStack = this.tank.getLiquid();
 				originalVolume = this.tank.getLiquid().amount;
 
-				if (ticks % 20 >= 0)
+				if (ticks % (random.nextInt(4) * 5 + 10) >= 0)
 				{
 					this.fillTanksAround();
 					this.fillTankBellow();
@@ -359,6 +363,7 @@ public class TileEntityTank extends TileEntityAdvanced implements IPacketReceive
 		if (!worldObj.isRemote && code != this.getColor() && (this.tank != null || code.isValidLiquid(this.tank.getLiquid())))
 		{
 			this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, code.ordinal() & 15, 3);
+			this.updateAdjacentConnections();
 		}
 	}
 
@@ -366,5 +371,50 @@ public class TileEntityTank extends TileEntityAdvanced implements IPacketReceive
 	public ColorCode getColor()
 	{
 		return ColorCode.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+	}
+
+	@Override
+	public boolean canConnect(ForgeDirection direction)
+	{
+		TileEntity entity = worldObj.getBlockTileEntity(xCoord, yCoord, zCoord);
+
+		return entity != null && entity.getClass() == this.getClass() && ((IColorCoded) entity).getColor() == this.getColor();
+	}
+
+	@Override
+	public TileEntity[] getAdjacentConnections()
+	{
+		return this.connectedBlocks;
+	}
+
+	@Override
+	public void updateAdjacentConnections()
+	{
+		this.connectedBlocks = new TileEntity[6];
+		for (int side = 0; side < 6; side++)
+		{
+			ForgeDirection direction = ForgeDirection.getOrientation(side);
+			TileEntity entity = worldObj.getBlockTileEntity(xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ);
+			if (entity != null && !(entity instanceof IConductor))
+			{
+				/*
+				 * IF IS NOT A COLOR CODED BLOCK |OR| IF IT IS AND HAS NO COLOR CODE OR A MATCHING
+				 * CODE
+				 */
+				if (!(entity instanceof IColorCoded) || (entity instanceof IColorCoded && (((IColorCoded) entity).getColor() == ColorCode.NONE || ((IColorCoded) entity).getColor() == this.getColor())))
+				{
+					if (entity instanceof IConnectionProvider && ((IConnectionProvider) entity).canConnect(direction))
+					{
+						connectedBlocks[side] = entity;
+					}
+					else if (entity instanceof ITankContainer)
+					{
+						connectedBlocks[side] = entity;
+					}
+				}
+			}
+
+		}
+
 	}
 }
