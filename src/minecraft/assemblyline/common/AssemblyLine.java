@@ -63,6 +63,7 @@ public class AssemblyLine
 
 	public static final String DIRECTORY_NO_SLASH = "mods/assemblyline/";
 	public static final String DIRECTORY = "/" + DIRECTORY_NO_SLASH;
+	public static final String SOUND_PATH = "audio/";
 	public static final String TEXTURE_PATHS = DIRECTORY + "textures/";
 	public static final String MODEL_TEXTURES_PATH = TEXTURE_PATHS + "models/";
 	public static final String BLOCK_TEXTURES_PATH = TEXTURE_PATHS + "blocks/";

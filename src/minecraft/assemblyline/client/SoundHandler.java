@@ -17,7 +17,7 @@ public class SoundHandler
 	{
 		for (int i = 0; i < SOUND_FILES.length; i++)
 		{
-			URL url = this.getClass().getResource(AssemblyLine.DIRECTORY + SOUND_FILES[i]);
+			URL url = this.getClass().getResource(AssemblyLine.DIRECTORY + AssemblyLine.SOUND_PATH + SOUND_FILES[i]);
 			event.manager.soundPoolSounds.addSound(AssemblyLine.DIRECTORY_NO_SLASH + SOUND_FILES[i], url);
 
 			if (url == null)

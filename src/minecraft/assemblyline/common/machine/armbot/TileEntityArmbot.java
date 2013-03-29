@@ -201,7 +201,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			if (this.ticks % 5 == 0 && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
 			{
 				// sound is 0.25 seconds long (20 ticks/second)
-				this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "assemblyline.conveyor", 0.8f, 1.7f, true);
+				this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "mods.assemblyline.conveyor", 0.8f, 1.7f, true);
 			}
 
 			if (Math.abs(this.renderYaw - this.rotationYaw) < this.ROTATION_SPEED + 0.1f)
@@ -235,7 +235,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				this.renderPitch -= 60;
 
 			if (this.ticks % 4 == 0 && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
-				this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "assemblyline.conveyor", 2f, 2.5f, true);
+				this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "mods.assemblyline.conveyor", 2f, 2.5f, true);
 
 			if (Math.abs(this.renderPitch - this.rotationPitch) < this.ROTATION_SPEED + 0.1f)
 			{
