@@ -2,12 +2,12 @@ package fluidmech.common.machines;
 
 import fluidmech.common.FluidMech;
 import hydraulic.api.ColorCode;
+import hydraulic.api.IColorCoded;
 import hydraulic.api.IPsiCreator;
 import hydraulic.api.IReadOut;
 import hydraulic.core.liquidNetwork.LiquidData;
 import hydraulic.core.liquidNetwork.LiquidHandler;
 import hydraulic.helpers.MetaGroup;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
@@ -215,21 +215,11 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection dir, TileEntity entity, LiquidStack... stacks)
+	public boolean canConnect(TileEntity entity, ForgeDirection dir)
 	{
 		if (dir == this.pipeConnection.getOpposite())
 		{
-			if (stacks == null || stacks.length == 0)
-			{
-				return true;
-			}
-			for (int i = 0; i < stacks.length; i++)
-			{
-				if (this.color.isValidLiquid(stacks[i]))
-				{
-					return true;
-				}
-			}
+			return entity != null && entity instanceof IColorCoded && (((IColorCoded) entity).getColor() == ColorCode.NONE || ((IColorCoded) entity).getColor() == this.color);
 		}
 		return false;
 	}

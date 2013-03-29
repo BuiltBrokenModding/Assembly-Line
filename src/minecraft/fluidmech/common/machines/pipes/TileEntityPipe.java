@@ -277,7 +277,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 			}
 			else if (tileEntity instanceof IPipeConnection)
 			{
-				if (!((IPipeConnection) tileEntity).canConnect(direction,this, color.getLiquidData().getStack()))
+				if (!((IPipeConnection) tileEntity).canConnect(this, direction))
 				{
 					connectedBlocks[side] = null;
 				}
@@ -308,11 +308,11 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 					highestPressure = ((TileEntityPipe) connectedBlocks[i]).getPressure();
 				}
 			}
-			if (connectedBlocks[i] instanceof IPsiCreator && ((IPipeConnection) connectedBlocks[i]).canConnect(dir,this, color.getArrayLiquidStacks()))
+			if (connectedBlocks[i] instanceof IPsiCreator && ((IPipeConnection) connectedBlocks[i]).canConnect(this, dir))
 			{
 
 				int p = ((IPsiCreator) connectedBlocks[i]).getPressureOut(color.getLiquidData().getStack(), dir);
-				
+
 				if (p > highestPressure)
 				{
 					highestPressure = p;

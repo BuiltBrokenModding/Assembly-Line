@@ -9,9 +9,9 @@ public interface IPipeConnection
 	/**
 	 * 
 	 * @param ent - tileEntity trying to connect to this machine
-	 * @param stack - liquid(s) it can accept. It will pass null if the
-	 * connecting machine has no specific stack requirement
+	 * @param stack - liquid(s) it can accept. It will pass null if the connecting machine has no
+	 * specific stack requirement
 	 * @return true if it can connect
 	 */
-	public boolean canConnect(ForgeDirection dir,TileEntity entity, LiquidStack... stacks);
+	public boolean canConnect(TileEntity entity, ForgeDirection dir);
 }

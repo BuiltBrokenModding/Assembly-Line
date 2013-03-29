@@ -120,8 +120,8 @@ public class TileEntityNetworkPipe extends TileEntityAdvanced implements ITankCo
 	public String getMeterReading(EntityPlayer user, ForgeDirection side)
 	{
 		/* DEBUG CODE ACTIVATERS */
-		boolean testConnections = true;
-		boolean testNetwork = true;
+		boolean testConnections = false;
+		boolean testNetwork = false;
 
 		/* NORMAL OUTPUT */
 		String string = this.getNetwork().pressureProduced + "p ";
@@ -202,7 +202,7 @@ public class TileEntityNetworkPipe extends TileEntityAdvanced implements ITankCo
 		{
 			if (tileEntity instanceof IPipeConnection)
 			{
-				if (((IPipeConnection) tileEntity).canConnect(side, this, getColor().getArrayLiquidStacks()))
+				if (((IPipeConnection) tileEntity).canConnect(this, side))
 				{
 					if (tileEntity instanceof IFluidNetworkPart)
 					{
@@ -264,7 +264,7 @@ public class TileEntityNetworkPipe extends TileEntityAdvanced implements ITankCo
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection dir, TileEntity entity, LiquidStack... stacks)
+	public boolean canConnect(TileEntity entity, ForgeDirection dir)
 	{
 		return true;
 	}

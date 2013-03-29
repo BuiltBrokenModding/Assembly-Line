@@ -248,20 +248,6 @@ public class TileEntityTank extends TileEntityAdvanced implements IPacketReceive
 		return 0;
 	}
 
-	@Override
-	public boolean canConnect(ForgeDirection dir, TileEntity entity, LiquidStack... stacks)
-	{
-		for (int i = 0; i < stacks.length; i++)
-		{
-			LiquidData data = LiquidHandler.get(stacks[i]);
-			if (getColor().isValidLiquid(stacks[i]) && ((data.getCanFloat() && dir == ForgeDirection.DOWN) || (!data.getCanFloat() && dir == ForgeDirection.UP)))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-
 	/** Cause this TE to trade liquid with the Tanks around it to level off */
 	public void fillTanksAround()
 	{
@@ -382,6 +368,12 @@ public class TileEntityTank extends TileEntityAdvanced implements IPacketReceive
 	}
 
 	@Override
+	public boolean canConnect(TileEntity entity, ForgeDirection dir)
+	{
+		return entity != null && entity instanceof IColorCoded && (((IColorCoded) entity).getColor() == ColorCode.NONE || ((IColorCoded) entity).getColor() == this.getColor());
+	}
+
+	@Override
 	public TileEntity[] getAdjacentConnections()
 	{
 		return this.connectedBlocks;
@@ -397,10 +389,6 @@ public class TileEntityTank extends TileEntityAdvanced implements IPacketReceive
 			TileEntity entity = worldObj.getBlockTileEntity(xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ);
 			if (entity != null && !(entity instanceof IConductor))
 			{
-				/*
-				 * IF IS NOT A COLOR CODED BLOCK |OR| IF IT IS AND HAS NO COLOR CODE OR A MATCHING
-				 * CODE
-				 */
 				if (!(entity instanceof IColorCoded) || (entity instanceof IColorCoded && (((IColorCoded) entity).getColor() == ColorCode.NONE || ((IColorCoded) entity).getColor() == this.getColor())))
 				{
 					if (entity instanceof IConnectionProvider && ((IConnectionProvider) entity).canConnect(direction))
