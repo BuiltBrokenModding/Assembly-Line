@@ -109,7 +109,11 @@ public class TileEntityNetworkPipe extends TileEntityAdvanced implements ITankCo
 	@Override
 	public void setColor(Object cc)
 	{
-		// TODO add stuff here to reset the pipe's metadata
+		ColorCode code = ColorCode.get(cc);
+		if (!worldObj.isRemote && code != this.getColor())
+		{
+			this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, code.ordinal() & 15, 3);
+		}
 	}
 
 	@Override

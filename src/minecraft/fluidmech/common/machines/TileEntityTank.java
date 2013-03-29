@@ -370,7 +370,7 @@ public class TileEntityTank extends TileEntityAdvanced implements IPacketReceive
 	public void setColor(Object obj)
 	{
 		ColorCode code = ColorCode.get(obj);
-		if (worldObj.isRemote && code != this.getColor() && (this.tank != null || code.isValidLiquid(this.tank.getLiquid())))
+		if (!worldObj.isRemote && code != this.getColor() && (this.tank != null || code.isValidLiquid(this.tank.getLiquid())))
 		{
 			this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, code.ordinal() & 15, 3);
 		}
