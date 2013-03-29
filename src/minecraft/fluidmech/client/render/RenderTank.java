@@ -110,8 +110,8 @@ public class RenderTank extends TileEntitySpecialRenderer
 			case RED:
 				type = "Lava";
 				break;
-			case BLUE:
-				type = "Water";
+			case YELLOW:
+				type = "Fuel";
 				break;
 			default:
 				type = "";

@@ -365,7 +365,7 @@ public class ModelLiquidTank extends ModelBase
 		// Front
 		if (conenctedTiles[2] instanceof TileEntityPipe)
 		{
-			CCFront.render(f5);
+			CCBack.render(f5);
 		}
 		else
 		{
@@ -379,7 +379,7 @@ public class ModelLiquidTank extends ModelBase
 		// back
 		if (conenctedTiles[3] instanceof TileEntityPipe)
 		{
-			CCBack.render(f5);
+			CCFront.render(f5);
 		}
 		else
 		{

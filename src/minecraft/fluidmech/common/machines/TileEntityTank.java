@@ -104,7 +104,7 @@ public class TileEntityTank extends TileEntityAdvanced implements IPacketReceive
 		{
 			return "Empty";
 		}
-		return (tank.getLiquid().amount / LiquidContainerRegistry.BUCKET_VOLUME) + "/" + (tank.getCapacity() / LiquidContainerRegistry.BUCKET_VOLUME) + " " + LiquidHandler.get(tank.getLiquid()).getName();
+		return String.format("%d/%d %S Stored", tank.getLiquid().amount / LiquidContainerRegistry.BUCKET_VOLUME, tank.getCapacity() / LiquidContainerRegistry.BUCKET_VOLUME, LiquidHandler.get(tank.getLiquid()).getName());
 	}
 
 	@Override
