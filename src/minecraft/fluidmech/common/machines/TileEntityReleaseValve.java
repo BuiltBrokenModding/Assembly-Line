@@ -3,7 +3,7 @@ package fluidmech.common.machines;
 import fluidmech.common.machines.pipes.TileEntityPipe;
 import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
-import hydraulic.api.IPsiCreator;
+import hydraulic.api.IPipeConnection;
 import hydraulic.api.IReadOut;
 import hydraulic.core.liquidNetwork.LiquidHandler;
 import hydraulic.helpers.connectionHelper;
@@ -22,7 +22,7 @@ import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 
-public class TileEntityReleaseValve extends TileEntityAdvanced implements IPsiCreator, IReadOut
+public class TileEntityReleaseValve extends TileEntityAdvanced implements IPipeConnection, IReadOut
 {
 	public boolean[] allowed = new boolean[ColorCode.values().length - 1];
 	public TileEntity[] connected = new TileEntity[6];
@@ -73,7 +73,7 @@ public class TileEntityReleaseValve extends TileEntityAdvanced implements IPsiCr
 						if (inputPipe != null)
 						{
 							ILiquidTank pipeVolume = inputPipe.getTanks(ForgeDirection.UNKNOWN)[0];
-							int ammountFilled = inputPipe.fill(ForgeDirection.UNKNOWN, stack, true);
+							int ammountFilled = inputPipe.getNetwork().addFluidToNetwork(stack, 100, true);
 							drainedTank.drain(ForgeDirection.UNKNOWN, ammountFilled, true);
 						}
 					}
@@ -205,12 +205,6 @@ public class TileEntityReleaseValve extends TileEntityAdvanced implements IPsiCr
 				connected[i] = null;
 			}
 		}
-	}
-
-	@Override
-	public int getPressureOut(LiquidStack type, ForgeDirection dir)
-	{
-		return (type != null && this.canConnect(ColorCode.get(type)) ? LiquidHandler.get(type).getPressure() : 0);
 	}
 
 	@Override

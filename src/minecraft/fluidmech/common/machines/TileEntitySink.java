@@ -1,5 +1,7 @@
 package fluidmech.common.machines;
 
+import java.util.Random;
+
 import fluidmech.common.FluidMech;
 import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
@@ -19,148 +21,150 @@ import net.minecraftforge.liquids.LiquidTank;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
+import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntitySink extends TileEntity implements IPacketReceiver, ITankContainer, IColorCoded
+public class TileEntitySink extends TileEntityAdvanced implements IPacketReceiver, ITankContainer, IColorCoded
 {
-    public TileEntity[] cc = { null, null, null, null, null, null };
+	public TileEntity[] cc = { null, null, null, null, null, null };
 
-    private ColorCode color = ColorCode.BLUE;
+	public static final int LMax = 2;
+	private int count = 100;
+	private Random random = new Random();
+	private LiquidTank tank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME * LMax);
 
-    public static final int LMax = 2;
-    private int count = 100;
-    private LiquidTank tank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME * LMax);
+	@Override
+	public void updateEntity()
+	{
+		if (!worldObj.isRemote)
+		{
+			if (ticks % (random.nextInt(5) * 10 + 20) == 0)
+			{
+				this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+			}
+		}
+	}
 
-    @Override
-    public void updateEntity()
-    {
-        if (count++ >= 100)
-        {
-            triggerUpdate();
-        }
-    }
+	@Override
+	public Packet getDescriptionPacket()
+	{
+		if (this.getStack() != null)
+		{
+			return PacketManager.getPacket(FluidMech.CHANNEL, this, this.getStack().itemID, this.getStack().amount, this.getStack().itemMeta);
+		}
+		else
+		{
+			return PacketManager.getPacket(FluidMech.CHANNEL, this, 0, 0, 0);
+		}
+	}
 
-    /**
-     */
-    public void triggerUpdate()
-    {
-        if (!worldObj.isRemote)
-        {
-            LiquidStack stack = new LiquidStack(0, 0, 0);
-            if (this.tank.getLiquid() != null)
-            {
-                stack = this.tank.getLiquid();
-            }
-            Packet packet = PacketManager.getPacket(FluidMech.CHANNEL, this, new Object[] { stack.itemID, stack.amount, stack.itemMeta });
-            PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 20);
+	public LiquidStack getStack()
+	{
+		return tank.getLiquid();
+	}
 
-        }
-    }
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
 
-    public LiquidStack getStack()
-    {
-        return tank.getLiquid();
-    }
+		LiquidStack liquid = new LiquidStack(0, 0, 0);
+		liquid.readFromNBT(nbt.getCompoundTag("stored"));
+		tank.setLiquid(liquid);
+	}
 
-    @Override
-    public void readFromNBT(NBTTagCompound nbt)
-    {
-        super.readFromNBT(nbt);
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		if (tank.getLiquid() != null)
+		{
+			nbt.setTag("stored", tank.getLiquid().writeToNBT(new NBTTagCompound()));
+		}
+	}
 
-        LiquidStack liquid = new LiquidStack(0, 0, 0);
-        liquid.readFromNBT(nbt.getCompoundTag("stored"));
-        tank.setLiquid(liquid);
-    }
+	@Override
+	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput data)
+	{
+		try
+		{
+			this.tank.setLiquid(new LiquidStack(data.readInt(), data.readInt(), data.readInt()));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			System.out.print("Fail reading data for Storage tank \n");
+		}
 
-    @Override
-    public void writeToNBT(NBTTagCompound nbt)
-    {
-        super.writeToNBT(nbt);
-        if (tank.getLiquid() != null)
-        {
-            nbt.setTag("stored", tank.getLiquid().writeToNBT(new NBTTagCompound()));
-        }
-    }
+	}
 
-    @Override
-    public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput data)
-    {
-        try
-        {
-            this.tank.setLiquid(new LiquidStack(data.readInt(), data.readInt(), data.readInt()));
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            System.out.print("Fail reading data for Storage tank \n");
-        }
+	@Override
+	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
+	{
+		return (resource == null || (!this.getColor().getLiquidData().getStack().isLiquidEqual(resource))) ? 0 : this.fill(0, resource, doFill);
+	}
 
-    }
+	@Override
+	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
+	{
+		if (resource == null || tankIndex != 0)
+		{
+			return 0;
+		}
+		if (doFill)
+		{
+			this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+		}
+		return this.tank.fill(resource, doFill);
+	}
 
-    @Override
-    public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
-    {
-        if (resource == null || (!color.getLiquidData().getStack().isLiquidEqual(resource))) { return 0; }
-        return this.fill(0, resource, doFill);
-    }
+	@Override
+	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	{
+		return this.drain(0, maxDrain, doDrain);
+	}
 
-    @Override
-    public int fill(int tankIndex, LiquidStack resource, boolean doFill)
-    {
-        if (resource == null || tankIndex != 0) { return 0; }
-        if (doFill)
-        {
-            triggerUpdate();
-        }
-        return this.tank.fill(resource, doFill);
-    }
+	@Override
+	public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
+	{
+		if (tankIndex != 0 || this.tank.getLiquid() == null)
+		{
+			return null;
+		}
+		LiquidStack stack = this.tank.getLiquid();
+		if (maxDrain < this.tank.getLiquid().amount)
+		{
+			stack = LiquidHandler.getStack(stack, maxDrain);
+		}
+		if (doDrain)
+		{
+			this.tank.drain(maxDrain, doDrain);
+			this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+		}
+		return stack;
+	}
 
-    @Override
-    public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
-    {
-        return this.drain(0, maxDrain, doDrain);
-    }
+	@Override
+	public ILiquidTank[] getTanks(ForgeDirection direction)
+	{
+		return new ILiquidTank[] { tank };
+	}
 
-    @Override
-    public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
-    {
-        if (tankIndex != 0 || this.tank.getLiquid() == null) { return null; }
-        LiquidStack stack = this.tank.getLiquid();
-        if (maxDrain < this.tank.getLiquid().amount)
-        {
-            stack = LiquidHandler.getStack(stack, maxDrain);
-        }
-        if (doDrain)
-        {
-            triggerUpdate();
-            this.tank.drain(maxDrain, doDrain);
+	@Override
+	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
+	{
+		return tank;
+	}
 
-        }
-        return stack;
-    }
+	@Override
+	public void setColor(Object obj)
+	{
+	}
 
-    @Override
-    public ILiquidTank[] getTanks(ForgeDirection direction)
-    {
-        return new ILiquidTank[] { tank };
-    }
-
-    @Override
-    public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
-    {
-        return null;
-    }
-
-    @Override
-    public void setColor(Object obj)
-    {
-        // this.color = ColorCode.get(cc);
-    }
-
-    @Override
-    public ColorCode getColor()
-    {
-        return color;
-    }
+	@Override
+	public ColorCode getColor()
+	{
+		return ColorCode.BLUE;
+	}
 }

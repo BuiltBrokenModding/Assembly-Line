@@ -2,15 +2,14 @@ package hydraulic.core.liquidNetwork;
 
 import hydraulic.api.ColorCode;
 import hydraulic.api.IFluidNetworkPart;
-import hydraulic.api.IPipeConnection;
-import hydraulic.api.IPsiCreator;
-import hydraulic.api.IPsiReciever;
 import hydraulic.helpers.connectionHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -33,10 +32,12 @@ import cpw.mods.fml.common.FMLLog;
 public class HydraulicNetwork
 {
 	/* BLOCK THAT ACT AS FLUID CONVEYORS ** */
-	public final List<IFluidNetworkPart> conductors = new ArrayList<IFluidNetworkPart>();
-
+	public final List<IFluidNetworkPart> fluidParts = new ArrayList<IFluidNetworkPart>();
 	/* MACHINES THAT USE THE FORGE LIQUID API TO RECEIVE LIQUID ** */
-	public final List<ITankContainer> receivers = new ArrayList<ITankContainer>();
+	public final List<ITankContainer> fluidTanks = new ArrayList<ITankContainer>();
+	/* MACHINES THAT USE THE PRESSURE SYSTEM TO DO WORK ** */
+	private final HashMap<TileEntity, FluidPressurePack> pressureProducers = new HashMap<TileEntity, FluidPressurePack>();
+	private final HashMap<TileEntity, FluidPressurePack> pressureLoads = new HashMap<TileEntity, FluidPressurePack>();
 
 	public ColorCode color = ColorCode.NONE;
 	/* PRESSURE OF THE NETWORK AS A TOTAL. ZERO AS IN NO PRODUCTION */
@@ -48,18 +49,139 @@ public class HydraulicNetwork
 
 	public HydraulicNetwork(ColorCode color, IFluidNetworkPart... parts)
 	{
-		this.conductors.addAll(Arrays.asList(parts));
+		this.fluidParts.addAll(Arrays.asList(parts));
 		this.color = color;
 	}
 
-	public void registerLoad(TileEntity entity)
+	/**
+	 * sets this tileEntity to produce a pressure and flow rate in the network
+	 */
+	public void startProducingPressure(TileEntity tileEntity, FluidPressurePack fluidPack)
 	{
-
+		if (tileEntity != null && fluidPack.liquidStack != null && fluidPack.liquidStack.amount > 0)
+		{
+			this.pressureProducers.put(tileEntity, fluidPack);
+		}
 	}
 
-	public void registerProducer(TileEntity entity)
+	/**
+	 * sets this tileEntity to produce a pressure and flow rate in the network
+	 */
+	public void startProducingPressure(TileEntity tileEntity, LiquidStack stack, double pressure)
 	{
+		this.startProducingPressure(tileEntity, new FluidPressurePack(stack, pressure));
+	}
 
+	/**
+	 * is this tile entity producing a pressure
+	 */
+	public boolean isProducingPressure(TileEntity tileEntity)
+	{
+		return this.pressureProducers.containsKey(tileEntity);
+	}
+
+	/**
+	 * Sets this tile entity to stop producing pressure and flow in this network
+	 */
+	public void stopProducing(TileEntity tileEntity)
+	{
+		this.pressureProducers.remove(tileEntity);
+	}
+
+	/**
+	 * Sets this tile entity to act as a load on the system
+	 */
+	public void addLoad(TileEntity tileEntity, FluidPressurePack fluidPack)
+	{
+		if (tileEntity != null && fluidPack.liquidStack != null && fluidPack.liquidStack.amount > 0)
+		{
+			this.pressureLoads.put(tileEntity, fluidPack);
+		}
+	}
+
+	/**
+	 * Sets this tile entity to act as a load on the system
+	 */
+	public void addLoad(TileEntity tileEntity, LiquidStack stack, double pressure)
+	{
+		this.addLoad(tileEntity, new FluidPressurePack(stack, pressure));
+	}
+
+	/**
+	 * is this tileEntity a load in the network
+	 */
+	public boolean isLoad(TileEntity tileEntity)
+	{
+		return this.pressureLoads.containsKey(tileEntity);
+	}
+
+	/**
+	 * removes this tileEntity from being a load on the network
+	 */
+	public void removeLoad(TileEntity tileEntity)
+	{
+		this.pressureLoads.remove(tileEntity);
+	}
+
+	/**
+	 * @param ignoreTiles The TileEntities to ignore during this calculation. Null will make it not
+	 * ignore any.
+	 * @return The electricity produced in this electricity network
+	 */
+	public double getPressureProduced(TileEntity... ignoreTiles)
+	{
+		int totalPressure = 0;
+
+		Iterator it = this.pressureProducers.entrySet().iterator();
+
+		loop:
+		while (it.hasNext())
+		{
+			Map.Entry pairs = (Map.Entry) it.next();
+
+			if (pairs != null)
+			{
+				TileEntity tileEntity = (TileEntity) pairs.getKey();
+
+				if (tileEntity == null)
+				{
+					it.remove();
+					continue;
+				}
+
+				if (tileEntity.isInvalid())
+				{
+					it.remove();
+					continue;
+				}
+
+				if (tileEntity.worldObj.getBlockTileEntity(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord) != tileEntity)
+				{
+					it.remove();
+					continue;
+				}
+
+				if (ignoreTiles != null)
+				{
+					for (TileEntity ignoreTile : ignoreTiles)
+					{
+						if (tileEntity == ignoreTile)
+						{
+							continue loop;
+						}
+					}
+				}
+
+				FluidPressurePack pack = (FluidPressurePack) pairs.getValue();
+
+				if (pairs.getKey() != null && pairs.getValue() != null && pack != null)
+				{
+					totalPressure += pack.pressure;
+				}
+			}
+		}
+
+		return totalPressure;
 	}
 
 	/**
@@ -91,7 +213,7 @@ public class HydraulicNetwork
 
 			boolean found = false;
 
-			for (ITankContainer tankContainer : receivers)
+			for (ITankContainer tankContainer : fluidTanks)
 			{
 				if (tankContainer instanceof TileEntity)
 				{
@@ -165,7 +287,7 @@ public class HydraulicNetwork
 	public int getMaxFlow(LiquidStack stack)
 	{
 		int flow = 1000;
-		for (IFluidNetworkPart conductor : this.conductors)
+		for (IFluidNetworkPart conductor : this.fluidParts)
 		{
 			// TODO change the direction to actual look for connected only directions and pipes
 			// along
@@ -192,9 +314,9 @@ public class HydraulicNetwork
 	 */
 	public void removeEntity(TileEntity ent)
 	{
-		if (receivers.contains(ent))
+		if (fluidTanks.contains(ent))
 		{
-			receivers.remove(ent);
+			fluidTanks.remove(ent);
 		}
 	}
 
@@ -207,9 +329,9 @@ public class HydraulicNetwork
 		{
 			return;
 		}
-		if (!receivers.contains(ent))
+		if (!fluidTanks.contains(ent))
 		{
-			receivers.add(ent);
+			fluidTanks.add(ent);
 		}
 	}
 
@@ -217,24 +339,24 @@ public class HydraulicNetwork
 	{
 		this.cleanConductors();
 
-		if (code == this.color && !conductors.contains(newConductor))
+		if (code == this.color && !fluidParts.contains(newConductor))
 		{
-			conductors.add(newConductor);
+			fluidParts.add(newConductor);
 			newConductor.setNetwork(this);
 		}
 	}
 
 	public void cleanConductors()
 	{
-		for (int i = 0; i < conductors.size(); i++)
+		for (int i = 0; i < fluidParts.size(); i++)
 		{
-			if (conductors.get(i) == null)
+			if (fluidParts.get(i) == null)
 			{
-				conductors.remove(i);
+				fluidParts.remove(i);
 			}
-			else if (((TileEntity) conductors.get(i)).isInvalid())
+			else if (((TileEntity) fluidParts.get(i)).isInvalid())
 			{
-				conductors.remove(i);
+				fluidParts.remove(i);
 			}
 		}
 	}
@@ -243,7 +365,7 @@ public class HydraulicNetwork
 	{
 		this.cleanConductors();
 
-		for (IFluidNetworkPart conductor : this.conductors)
+		for (IFluidNetworkPart conductor : this.fluidParts)
 		{
 			conductor.setNetwork(this);
 		}
@@ -253,13 +375,13 @@ public class HydraulicNetwork
 	{
 		this.cleanConductors();
 
-		for (int i = 0; i < conductors.size(); i++)
+		for (int i = 0; i < fluidParts.size(); i++)
 		{
 			// TODO change to actual check connected sides only && get true value from settings file
-			IFluidNetworkPart part = conductors.get(i);
+			IFluidNetworkPart part = fluidParts.get(i);
 			if (part.getMaxPressure(ForgeDirection.UNKNOWN) < this.pressureProduced && part.onOverPressure(true))
 			{
-				this.conductors.remove(part);
+				this.fluidParts.remove(part);
 				this.cleanConductors();
 			}
 
@@ -268,7 +390,7 @@ public class HydraulicNetwork
 
 	public void cleanUpConductors()
 	{
-		Iterator it = this.conductors.iterator();
+		Iterator it = this.fluidParts.iterator();
 
 		while (it.hasNext())
 		{
@@ -302,7 +424,7 @@ public class HydraulicNetwork
 
 		try
 		{
-			Iterator<IFluidNetworkPart> it = this.conductors.iterator();
+			Iterator<IFluidNetworkPart> it = this.fluidParts.iterator();
 
 			while (it.hasNext())
 			{
@@ -319,7 +441,7 @@ public class HydraulicNetwork
 
 	public List<IFluidNetworkPart> getFluidNetworkParts()
 	{
-		return this.conductors;
+		return this.fluidParts;
 	}
 
 	public void mergeNetworks(HydraulicNetwork network)
@@ -411,6 +533,6 @@ public class HydraulicNetwork
 	@Override
 	public String toString()
 	{
-		return "hydraulicNetwork[" + this.hashCode() + "|parts:" + this.conductors.size() + "]";
+		return "hydraulicNetwork[" + this.hashCode() + "|parts:" + this.fluidParts.size() + "]";
 	}
 }

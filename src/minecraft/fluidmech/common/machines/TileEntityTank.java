@@ -1,16 +1,16 @@
 package fluidmech.common.machines;
 
-import java.util.Random;
-
 import fluidmech.common.FluidMech;
-import fluidmech.common.machines.pipes.TileEntityPipe;
 import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
-import hydraulic.api.IPsiCreator;
+import hydraulic.api.IPipeConnection;
 import hydraulic.api.IReadOut;
 import hydraulic.core.liquidNetwork.LiquidData;
 import hydraulic.core.liquidNetwork.LiquidHandler;
 import hydraulic.helpers.connectionHelper;
+
+import java.util.Random;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -25,14 +25,13 @@ import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.liquids.LiquidTank;
 import universalelectricity.core.block.IConductor;
 import universalelectricity.core.block.IConnectionProvider;
-import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityTank extends TileEntityAdvanced implements IPacketReceiver, IReadOut, IPsiCreator, ITankContainer, IColorCoded, IConnectionProvider
+public class TileEntityTank extends TileEntityAdvanced implements IPacketReceiver, IReadOut, IPipeConnection, ITankContainer, IColorCoded, IConnectionProvider
 {
 	public TileEntity[] connectedBlocks = { null, null, null, null, null, null };
 
@@ -250,24 +249,6 @@ public class TileEntityTank extends TileEntityAdvanced implements IPacketReceive
 		}
 		return tank;
 
-	}
-
-	@Override
-	public int getPressureOut(LiquidStack type, ForgeDirection dir)
-	{
-		if (getColor().isValidLiquid(type))
-		{
-			LiquidData data = LiquidHandler.get(type);
-			if (data.getCanFloat() && dir == ForgeDirection.DOWN)
-			{
-				return data.getPressure();
-			}
-			if (!data.getCanFloat() && dir == ForgeDirection.UP)
-			{
-				return data.getPressure();
-			}
-		}
-		return 0;
 	}
 
 	/** Cause this TE to trade liquid with the Tanks around it to level off */

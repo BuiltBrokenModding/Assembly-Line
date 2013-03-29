@@ -3,7 +3,7 @@ package fluidmech.common.machines;
 import fluidmech.common.FluidMech;
 import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
-import hydraulic.api.IPsiCreator;
+import hydraulic.api.IPipeConnection;
 import hydraulic.api.IReadOut;
 import hydraulic.core.liquidNetwork.LiquidData;
 import hydraulic.core.liquidNetwork.LiquidHandler;
@@ -26,12 +26,11 @@ import universalelectricity.prefab.tile.TileEntityElectricityRunnable;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityMinorPump extends TileEntityElectricityRunnable implements IPacketReceiver, IReadOut, IPsiCreator
+public class TileEntityMinorPump extends TileEntityElectricityRunnable implements IPacketReceiver, IReadOut, IPipeConnection
 {
 	public final double WATTS_PER_TICK = (400 / 20);
-	double percentPumped = 0.0;
+	private double percentPumped = 0.0;
 
-	int disableTimer = 0;
 	public int pos = 0;
 
 	public ColorCode color = ColorCode.BLUE;
@@ -73,7 +72,8 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 					percentPumped = 0;
 					this.drainBlock(new Vector3(xCoord, yCoord - 1, zCoord));
 				}
-				// // Do animation to simulate life //
+
+				/* DO ANIMATION CHANGE */
 				this.pos++;
 				if (pos >= 8)
 				{
@@ -82,7 +82,6 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 			}
 			if (this.ticks % 10 == 0)
 			{
-				// TODO fix this to tell the client its running
 				Packet packet = PacketManager.getPacket(FluidMech.CHANNEL, this, color.ordinal(), this.wattsReceived);
 				PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 60);
 			}
@@ -196,16 +195,6 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 	public String getMeterReading(EntityPlayer user, ForgeDirection side)
 	{
 		return this.wattsReceived + "/" + this.WATTS_PER_TICK + "W " + this.percentPumped + "% DONE";
-	}
-
-	@Override
-	public int getPressureOut(LiquidStack type, ForgeDirection dir)
-	{
-		if (type != null && this.color.isValidLiquid(type))
-		{
-			return LiquidHandler.get(type).getPressure();
-		}
-		return 0;
 	}
 
 	@Override
