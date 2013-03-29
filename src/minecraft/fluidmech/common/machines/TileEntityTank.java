@@ -148,7 +148,15 @@ public class TileEntityTank extends TileEntityAdvanced implements IPacketReceive
 	@Override
 	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
 	{
-		if (resource == null || (!getColor().getLiquidData().getStack().isLiquidEqual(resource) && this.getColor() != ColorCode.NONE))
+		if (resource == null || (this.getColor() != ColorCode.NONE && !getColor().getLiquidData().getStack().isLiquidEqual(resource)))
+		{
+			// TODO add if liquids are not equal but can still be accept cause mixing
+			return 0;
+		}
+
+		LiquidData data = LiquidHandler.get(resource);
+
+		if ((data.getCanFloat() && from == ForgeDirection.DOWN) || !data.getCanFloat() && from == ForgeDirection.UP)
 		{
 			return 0;
 		}
@@ -180,9 +188,7 @@ public class TileEntityTank extends TileEntityAdvanced implements IPacketReceive
 	}
 
 	/**
-	 * find out if this tank is actual full or not
-	 * 
-	 * @return
+	 * is the tank full
 	 */
 	public boolean isFull()
 	{
@@ -190,7 +196,7 @@ public class TileEntityTank extends TileEntityAdvanced implements IPacketReceive
 		{
 			return false;
 		}
-		if (this.tank.getLiquid().amount > 0 && this.tank.getLiquid().amount < this.tank.getCapacity())
+		if (this.tank.getLiquid().amount < this.tank.getCapacity())
 		{
 			return false;
 		}
@@ -224,26 +230,39 @@ public class TileEntityTank extends TileEntityAdvanced implements IPacketReceive
 
 	@Override
 	public ILiquidTank[] getTanks(ForgeDirection direction)
-	{
+	{		
 		return new ILiquidTank[] { tank };
 	}
 
 	@Override
-	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
+	public ILiquidTank getTank(ForgeDirection direction, LiquidStack resource)
 	{
-		return null;
+		if (getColor().isValidLiquid(resource))
+		{
+			LiquidData data = LiquidHandler.get(resource);
+			if ((data.getCanFloat() && direction == ForgeDirection.DOWN) || !data.getCanFloat() && direction == ForgeDirection.UP)
+			{
+				return null;
+			}
+		}
+		return tank;
+
 	}
 
 	@Override
 	public int getPressureOut(LiquidStack type, ForgeDirection dir)
 	{
-		if (getColor().isValidLiquid(type) || type.isLiquidEqual(LiquidHandler.unkown.getStack()))
+		if (getColor().isValidLiquid(type))
 		{
 			LiquidData data = LiquidHandler.get(type);
 			if (data.getCanFloat() && dir == ForgeDirection.DOWN)
+			{
 				return data.getPressure();
+			}
 			if (!data.getCanFloat() && dir == ForgeDirection.UP)
+			{
 				return data.getPressure();
+			}
 		}
 		return 0;
 	}

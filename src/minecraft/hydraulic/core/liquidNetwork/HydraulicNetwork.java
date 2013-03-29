@@ -203,7 +203,7 @@ public class HydraulicNetwork
 	 */
 	public void addEntity(ITankContainer ent)
 	{
-		if (ent == null)
+		if (ent == null || ent instanceof IFluidNetworkPart)
 		{
 			return;
 		}
@@ -213,7 +213,7 @@ public class HydraulicNetwork
 		}
 	}
 
-	public void addConductor(IFluidNetworkPart newConductor, ColorCode code)
+	public void addNetworkPart(IFluidNetworkPart newConductor, ColorCode code)
 	{
 		this.cleanConductors();
 
