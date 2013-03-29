@@ -40,8 +40,6 @@ public class TileEntityTank extends TileEntityAdvanced implements IPacketReceive
 
 	private Random random = new Random();
 
-	private boolean sendPacket = true;
-
 	private LiquidTank tank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME * LMax);
 
 	@Override
@@ -52,18 +50,16 @@ public class TileEntityTank extends TileEntityAdvanced implements IPacketReceive
 
 	public void updateEntity()
 	{
-		if (this.ticks % (random.nextInt(10) * 5 + 20) == 0)
+		if (this.ticks % (random.nextInt(10) * 4 + 20) == 0)
 		{
 			updateAdjacentConnections();
 		}
 		if (!worldObj.isRemote)
 		{
 			int originalVolume = 0;
-			LiquidStack sendStack = new LiquidStack(0, 0, 0);
 
 			if (this.tank.getLiquid() != null)
 			{
-				sendStack = this.tank.getLiquid();
 				originalVolume = this.tank.getLiquid().amount;
 
 				if (ticks % (random.nextInt(4) * 5 + 10) >= 0)
@@ -72,23 +68,30 @@ public class TileEntityTank extends TileEntityAdvanced implements IPacketReceive
 					this.fillTankBellow();
 				}
 
-				if (this.tank.getLiquid() == null && originalVolume != 0)
+				if ((this.tank.getLiquid() == null && originalVolume != 0) || (this.tank.getLiquid() != null && this.tank.getLiquid().amount != originalVolume))
 				{
-					this.sendPacket = true;
-				}
-				else if (this.tank.getLiquid() != null && this.tank.getLiquid().amount != originalVolume)
-				{
-					sendStack = this.tank.getLiquid();
+					this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 				}
 			}
 
-			if (sendPacket || ticks % (random.nextInt(5) * 10 + 20) == 0)
+			if (ticks % (random.nextInt(5) * 10 + 20) == 0)
 			{
-				Packet packet = PacketManager.getPacket(FluidMech.CHANNEL, this, sendStack.itemID, sendStack.amount, sendStack.itemMeta);
-				PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 20);
-				sendPacket = false;
+				this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 			}
 
+		}
+	}
+
+	@Override
+	public Packet getDescriptionPacket()
+	{
+		if (this.getStack() != null)
+		{
+			return PacketManager.getPacket(FluidMech.CHANNEL, this, this.getStack().itemID, this.getStack().amount, this.getStack().itemMeta);
+		}
+		else
+		{
+			return PacketManager.getPacket(FluidMech.CHANNEL, this, 0, 0, 0);
 		}
 	}
 
@@ -230,7 +233,7 @@ public class TileEntityTank extends TileEntityAdvanced implements IPacketReceive
 
 	@Override
 	public ILiquidTank[] getTanks(ForgeDirection direction)
-	{		
+	{
 		return new ILiquidTank[] { tank };
 	}
 
@@ -401,6 +404,7 @@ public class TileEntityTank extends TileEntityAdvanced implements IPacketReceive
 	@Override
 	public void updateAdjacentConnections()
 	{
+		TileEntity[] originalConnection = this.connectedBlocks;
 		this.connectedBlocks = new TileEntity[6];
 		for (int side = 0; side < 6; side++)
 		{
@@ -421,6 +425,11 @@ public class TileEntityTank extends TileEntityAdvanced implements IPacketReceive
 				}
 			}
 
+		}
+
+		if (!originalConnection.equals(this.connectedBlocks))
+		{
+			this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 		}
 
 	}
