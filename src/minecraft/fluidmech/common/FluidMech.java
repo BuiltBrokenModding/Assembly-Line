@@ -20,9 +20,9 @@ import fluidmech.common.machines.mech.BlockGenerator;
 import fluidmech.common.machines.mech.BlockRod;
 import fluidmech.common.machines.mech.TileEntityGenerator;
 import fluidmech.common.machines.mech.TileEntityRod;
-import fluidmech.common.machines.pipes.BlockNetworkPipe;
 import fluidmech.common.machines.pipes.BlockPipe;
-import fluidmech.common.machines.pipes.TileEntityNetworkPipe;
+import fluidmech.common.machines.pipes.BlockPipe;
+import fluidmech.common.machines.pipes.TileEntityPipe;
 import fluidmech.common.machines.pipes.TileEntityPipe;
 import hydraulic.api.ColorCode;
 import hydraulic.core.liquidNetwork.LiquidHandler;
@@ -92,7 +92,6 @@ public class FluidMech extends DummyModContainer
     public final static int ITEM_ID_PREFIX = 13200;
 
     public static Block blockPipe;
-    public static Block blockNetPipe;
     public static Block blockTank;
     public static Block blockMachine;
     public static Block blockRod;
@@ -128,7 +127,6 @@ public class FluidMech extends DummyModContainer
 
         // Blocks
         blockPipe = new BlockPipe(this.CONFIGURATION.getBlock("Pipes", BLOCK_ID_PREFIX).getInt());
-        blockNetPipe = new BlockNetworkPipe(this.CONFIGURATION.getBlock("HydraPipes", BLOCK_ID_PREFIX+9).getInt());
         blockMachine = new BlockPumpMachine(this.CONFIGURATION.getBlock("Machines", BLOCK_ID_PREFIX + 1).getInt());
         blockRod = new BlockRod(this.CONFIGURATION.getBlock("Mechanical Rod", BLOCK_ID_PREFIX + 3).getInt());
         blockGenerator = new BlockGenerator((this.CONFIGURATION.getBlock("Generator", BLOCK_ID_PREFIX + 4).getInt()));
@@ -149,7 +147,6 @@ public class FluidMech extends DummyModContainer
 
         // block registry
         GameRegistry.registerBlock(blockPipe, ItemBlockPipe.class, "lmPipe");
-        GameRegistry.registerBlock(blockNetPipe, ItemBlockPipe.class, "lmNPipe");
         GameRegistry.registerBlock(blockReleaseValve, ItemBlockReleaseValve.class, "eValve");
         GameRegistry.registerBlock(blockRod, "mechRod");
         GameRegistry.registerBlock(blockGenerator, "lmGen");
@@ -166,7 +163,6 @@ public class FluidMech extends DummyModContainer
         proxy.Init();
         // TileEntities
         GameRegistry.registerTileEntity(TileEntityPipe.class, "lmPipeTile");
-        GameRegistry.registerTileEntity(TileEntityNetworkPipe.class, "lmNPipeTile");
         GameRegistry.registerTileEntity(TileEntityMinorPump.class, "lmPumpTile");
         GameRegistry.registerTileEntity(TileEntityRod.class, "lmRodTile");
         GameRegistry.registerTileEntity(TileEntityReleaseValve.class, "lmeValve");

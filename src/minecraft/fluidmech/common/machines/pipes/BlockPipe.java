@@ -1,5 +1,7 @@
 package fluidmech.common.machines.pipes;
 
+import hydraulic.api.IFluidNetworkPart;
+
 import java.util.List;
 
 import net.minecraft.block.material.Material;
@@ -8,78 +10,91 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import universalelectricity.core.block.IConductor;
 import universalelectricity.prefab.block.BlockAdvanced;
 import fluidmech.common.FluidMech;
 import fluidmech.common.TabFluidMech;
 
 public class BlockPipe extends BlockAdvanced
 {
-    public BlockPipe(int id)
-    {
-        super(id, Material.iron);
-        this.setBlockBounds(0.30F, 0.30F, 0.30F, 0.70F, 0.70F, 0.70F);
-        this.setHardness(1f);
-        this.setCreativeTab(TabFluidMech.INSTANCE);
-        this.setUnlocalizedName("lmPipe");
-        this.setResistance(3f);
-    }
+	public BlockPipe(int id)
+	{
+		super(id, Material.iron);
+		this.setBlockBounds(0.30F, 0.30F, 0.30F, 0.70F, 0.70F, 0.70F);
+		this.setHardness(1f);
+		this.setCreativeTab(TabFluidMech.INSTANCE);
+		this.setUnlocalizedName("lmPipe");
+		this.setResistance(3f);
+	}
 
-    @Override
-    public boolean isOpaqueCube()
-    {
-        return false;
-    }
+	@Override
+	public boolean isOpaqueCube()
+	{
+		return false;
+	}
 
-    @Override
-    public boolean renderAsNormalBlock()
-    {
-        return false;
-    }
+	@Override
+	public boolean renderAsNormalBlock()
+	{
+		return false;
+	}
 
-    @Override
-    public int damageDropped(int par1)
-    {
-        return par1;
-    }
+	@Override
+	public int damageDropped(int par1)
+	{
+		return par1;
+	}
 
-    @Override
-    public int getRenderType()
-    {
-        return -1;
-    }
+	@Override
+	public int getRenderType()
+	{
+		return -1;
+	}
 
-    @Override
-    public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)
-    {
-        int var5 = par1World.getBlockId(par2, par3, par4);
-        return var5 == 0 || blocksList[var5].blockMaterial.isReplaceable();
-    }
+	@Override
+	public void onBlockAdded(World world, int x, int y, int z)
+	{
+		super.onBlockAdded(world, x, y, z);
 
-    @Override
-    public boolean canPlaceBlockOnSide(World par1World, int par2, int par3, int par4, int par5)
-    {
-        return true;
-    }
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-    @Override
-    public TileEntity createNewTileEntity(World var1)
-    {
-        return new TileEntityPipe();
-    }
+		if (tileEntity instanceof IFluidNetworkPart)
+		{
+			((IFluidNetworkPart) tileEntity).updateAdjacentConnections();
+		}
+	}
 
-    @Override
-    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
-    {
-        int meta = world.getBlockMetadata(x, y, z);
-        return new ItemStack(FluidMech.blockPipe, 1, meta);
-    }
+	
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
+	{
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-    @Override
-    public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
-    {
-        for (int i = 0; i < 16; i++)
-        {
-            par3List.add(new ItemStack(par1, 1, i));
-        }
-    }
+		if (tileEntity instanceof IFluidNetworkPart)
+		{
+			((IFluidNetworkPart) tileEntity).updateAdjacentConnections();
+		}
+	}
+	
+	@Override
+	public TileEntity createNewTileEntity(World var1)
+	{
+		return new TileEntityPipe();
+	}
+
+	@Override
+	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+	{
+		int meta = world.getBlockMetadata(x, y, z);
+		return new ItemStack(FluidMech.blockPipe, 1, meta);
+	}
+
+	@Override
+	public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
+	{
+		for (int i = 0; i < 16; i++)
+		{
+			par3List.add(new ItemStack(par1, 1, i));
+		}
+	}
 }

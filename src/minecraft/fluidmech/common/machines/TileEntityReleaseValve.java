@@ -18,6 +18,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
+import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 
@@ -65,7 +66,7 @@ public class TileEntityReleaseValve extends TileEntityAdvanced implements IPsiCr
 			{
 				for (ITankContainer drainedTank : input)
 				{
-					LiquidStack stack = drainedTank.drain(ForgeDirection.UNKNOWN, TileEntityPipe.maxVolume, false);
+					LiquidStack stack = drainedTank.drain(ForgeDirection.UNKNOWN, LiquidContainerRegistry.BUCKET_VOLUME, false);
 					if (stack != null && stack.amount > 0)
 					{
 						TileEntityPipe inputPipe = this.findValidPipe(stack);

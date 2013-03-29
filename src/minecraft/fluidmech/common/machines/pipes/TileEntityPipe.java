@@ -1,123 +1,96 @@
 package fluidmech.common.machines.pipes;
 
-import fluidmech.common.machines.TileEntityTank;
+import fluidmech.common.FluidMech;
 import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
 import hydraulic.api.IPipeConnection;
-import hydraulic.api.IPsiCreator;
+import hydraulic.api.IFluidNetworkPart;
 import hydraulic.api.IReadOut;
-import hydraulic.core.liquidNetwork.LiquidHandler;
-import hydraulic.helpers.connectionHelper;
+import hydraulic.core.liquidNetwork.HydraulicNetwork;
 
 import java.util.Random;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.liquids.LiquidTank;
+
+import org.bouncycastle.util.Arrays;
+
+import universalelectricity.prefab.network.IPacketReceiver;
+import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 
-public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer, IReadOut, IColorCoded
+import com.google.common.io.ByteArrayDataInput;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer, IReadOut, IColorCoded, IFluidNetworkPart, IPacketReceiver
 {
-	private ColorCode color = ColorCode.NONE;
-
-	private int presure = 0;
-
-	public boolean converted = false;
-	public boolean isUniversal = false;
-
-	public TileEntity[] connectedBlocks = new TileEntity[6];
-
-	public static final int maxVolume = LiquidContainerRegistry.BUCKET_VOLUME * 2;
-
-	private LiquidTank tank = new LiquidTank(maxVolume);
+	/* TANK TO FAKE OTHER TILES INTO BELIVING THIS HAS AN INTERNAL STORAGE */
+	private LiquidTank fakeTank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
+	/* CURRENTLY CONNECTED TILE ENTITIES TO THIS */
+	private TileEntity[] connectedBlocks = new TileEntity[6];
+	public boolean[] renderConnection = new boolean[6];
+	/* RANDOM INSTANCE USED BY THE UPDATE TICK */
+	private Random random = new Random();
+	/* NETWORK INSTANCE THAT THIS PIPE USES */
+	private HydraulicNetwork pipeNetwork;
 
 	@Override
 	public void updateEntity()
 	{
-
-		this.validataConnections();
-		this.color = ColorCode.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
-		if (ticks % 20 == 0)
+		super.updateEntity();
+		if (!worldObj.isRemote && ticks % ((int) random.nextInt(10) * 80 + 20) == 0)
 		{
-			this.updatePressure();
-
-			LiquidStack stack = tank.getLiquid();
-			if (!worldObj.isRemote && stack != null && stack.amount >= 0)
-			{
-
-				for (int i = 0; i < 6; i++)
-				{
-					ForgeDirection dir = ForgeDirection.getOrientation(i);
-
-					if (connectedBlocks[i] instanceof ITankContainer)
-					{
-						if (connectedBlocks[i] instanceof TileEntityPipe)
-						{
-							if (((TileEntityPipe) connectedBlocks[i]).presure < this.presure)
-							{
-								tank.drain(((TileEntityPipe) connectedBlocks[i]).fill(dir, stack, true), true);
-							}
-
-						}
-						else if (connectedBlocks[i] instanceof TileEntityTank && ((TileEntityTank) connectedBlocks[i]).getColor() == this.color)
-						{
-							if (dir == ForgeDirection.UP && !color.getLiquidData().getCanFloat())
-							{
-								/* do nothing */
-							}
-							else if (dir == ForgeDirection.DOWN && color.getLiquidData().getCanFloat())
-							{
-								/* do nothing */
-							}
-							else
-							{
-								tank.drain(((ITankContainer) connectedBlocks[i]).fill(dir.getOpposite(), stack, true), true);
-							}
-						}
-						else
-						{
-							tank.drain(((ITankContainer) connectedBlocks[i]).fill(dir.getOpposite(), stack, true), true);
-						}
-					}
-
-					if (stack == null || stack.amount <= 0)
-					{
-						break;
-					}
-				}
-			}
+			this.updateAdjacentConnections();
 		}
-
 	}
 
-	public void randomDisplayTick()
+	@Override
+	public void initiate()
 	{
-		Random random = new Random();
-		LiquidStack stack = tank.getLiquid();
-		if (stack != null && random.nextInt(10) == 0)
-		{
-			// TODO align this with the pipe model so not to drip where there is
-			// no pipe
-			double xx = (double) ((float) xCoord + random.nextDouble());
-			double zz = (double) yCoord + .3D;
-			double yy = (double) ((float) zCoord + random.nextDouble());
+		this.updateAdjacentConnections();
+	}
 
-			if (ColorCode.get(stack) != ColorCode.RED)
-			{
-				worldObj.spawnParticle("dripWater", xx, zz, yy, 0.0D, 0.0D, 0.0D);
-			}
-			else
-			{
-				worldObj.spawnParticle("dripLava", xx, zz, yy, 0.0D, 0.0D, 0.0D);
-			}
+	@Override
+	public void invalidate()
+	{
+		if (!this.worldObj.isRemote)
+		{
+			this.getNetwork().splitNetwork(this);
 		}
+
+		super.invalidate();
+	}
+
+	@Override
+	public void handlePacketData(INetworkManager network, int type, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
+	{
+		if (this.worldObj.isRemote)
+		{
+			this.renderConnection[0] = dataStream.readBoolean();
+			this.renderConnection[1] = dataStream.readBoolean();
+			this.renderConnection[2] = dataStream.readBoolean();
+			this.renderConnection[3] = dataStream.readBoolean();
+			this.renderConnection[4] = dataStream.readBoolean();
+			this.renderConnection[5] = dataStream.readBoolean();
+		}
+	}
+
+	@Override
+	public Packet getDescriptionPacket()
+	{
+		return PacketManager.getPacket(FluidMech.CHANNEL, this, this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
 	}
 
 	/**
@@ -126,7 +99,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	@Override
 	public ColorCode getColor()
 	{
-		return this.color;
+		return ColorCode.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
 	}
 
 	/**
@@ -135,92 +108,57 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	@Override
 	public void setColor(Object cc)
 	{
-		this.color = ColorCode.get(cc);
-	}
-
-	/**
-	 * sets the current color mark of the pipe
-	 */
-	public void setColor(int i)
-	{
-		if (i < ColorCode.values().length)
+		ColorCode code = ColorCode.get(cc);
+		if (!worldObj.isRemote && code != this.getColor())
 		{
-			this.color = ColorCode.values()[i];
-		}
-	}
-
-	/**
-	 * Reads a tile entity from NBT.
-	 */
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
-
-		LiquidStack liquid = new LiquidStack(0, 0, 0);
-		liquid.readFromNBT(nbt.getCompoundTag("stored"));
-		if (Item.itemsList[liquid.itemID] != null && liquid.amount > 0)
-		{
-			this.tank.setLiquid(liquid);
-		}
-	}
-
-	/**
-	 * Writes a tile entity to NBT.
-	 */
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
-		if (tank.getLiquid() != null)
-		{
-			nbt.setTag("stored", tank.getLiquid().writeToNBT(new NBTTagCompound()));
+			this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, code.ordinal() & 15, 3);
 		}
 	}
 
 	@Override
 	public String getMeterReading(EntityPlayer user, ForgeDirection side)
 	{
-		LiquidStack stack = this.tank.getLiquid();
-		if (stack != null)
+		/* DEBUG CODE ACTIVATERS */
+		boolean testConnections = false;
+		boolean testNetwork = false;
+
+		/* NORMAL OUTPUT */
+		String string = this.getNetwork().pressureProduced + "p ";
+
+		/* DEBUG CODE */
+		if (testConnections)
 		{
-			return (stack.amount / LiquidContainerRegistry.BUCKET_VOLUME) + "/" + (this.tank.getCapacity() / LiquidContainerRegistry.BUCKET_VOLUME) + " " + LiquidHandler.get(stack).getName() + " @ " + this.presure + "p";
+			for (int i = 0; i < 6; i++)
+			{
+				string += ":" + (this.renderConnection[i] ? "T" : "F") + (this.getAdjacentConnections()[i] != null ? "T" : "F");
+			}
+		}
+		if (testNetwork)
+		{
+			string += " " + this.getNetwork().toString();
 		}
 
-		return "Empty" + " @ " + this.presure + "p";
+		return string;
 	}
 
 	@Override
 	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
 	{
-		if (resource == null)
+		if (resource == null || !this.getColor().isValidLiquid(resource))
 		{
 			return 0;
 		}
-		LiquidStack stack = tank.getLiquid();
-		if (this.color.isValidLiquid(resource))
-		{
-			if (stack == null || (stack != null && stack.isLiquidEqual(resource)))
-			{
-				return this.fill(0, resource, doFill);
-			}
-			else
-			{
-				// return this.causeMix(stack, resource);
-			}
-
-		}
-		return 0;
+		return this.fill(0, resource, doFill);
 	}
 
 	@Override
 	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
 	{
-		if (tankIndex != 0 || resource == null)
+		if (tankIndex != 0 || resource == null || !this.getColor().isValidLiquid(resource))
 		{
 			return 0;
 		}
-		return tank.fill(resource, doFill);
+		return this.getNetwork().addFluidToNetwork(resource, 0, doFill);
 	}
 
 	@Override
@@ -238,92 +176,153 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	@Override
 	public ILiquidTank[] getTanks(ForgeDirection direction)
 	{
-		return new ILiquidTank[] { this.tank };
+		return new ILiquidTank[] { this.fakeTank };
 	}
 
 	@Override
 	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
 	{
-		if (this.color.isValidLiquid(type))
+		if (this.getColor().isValidLiquid(type))
 		{
-			return this.tank;
+			return this.fakeTank;
 		}
 		return null;
 	}
 
 	/**
-	 * collects and sorts the surrounding TE for valid connections
+	 * Checks to make sure the connection is valid to the tileEntity
+	 * 
+	 * @param tileEntity - the tileEntity being checked
+	 * @param side - side the connection is too
 	 */
-	public void validataConnections()
+	public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)
 	{
-		this.connectedBlocks = connectionHelper.getSurroundingTileEntities(worldObj, xCoord, yCoord, zCoord);
-
-		for (int side = 0; side < 6; side++)
+		if (!this.worldObj.isRemote && tileEntity != null)
 		{
-			ForgeDirection direction = ForgeDirection.getOrientation(side);
-			TileEntity tileEntity = connectedBlocks[side];
-
-			if (tileEntity instanceof ITankContainer)
+			if (tileEntity instanceof IPipeConnection)
 			{
-				if (tileEntity instanceof TileEntityPipe && this.color != ((TileEntityPipe) tileEntity).getColor())
+				if (((IPipeConnection) tileEntity).canConnect(this, side))
 				{
-					connectedBlocks[side] = null;
-				}
-				// TODO switch side catch for IPressure
-				if (this.color != ColorCode.NONE && tileEntity instanceof TileEntityTank && ((TileEntityTank) tileEntity).getColor() != ColorCode.NONE && color != ((TileEntityTank) tileEntity).getColor())
-				{
-					connectedBlocks[side] = null;
-				}
-			}
-			else if (tileEntity instanceof IPipeConnection)
-			{
-				if (!((IPipeConnection) tileEntity).canConnect(this, direction))
-				{
-					connectedBlocks[side] = null;
+					if (tileEntity instanceof IFluidNetworkPart)
+					{
+						if (((IFluidNetworkPart) tileEntity).getColor() == this.getColor())
+						{
+							this.getNetwork().mergeNetworks(((IFluidNetworkPart) tileEntity).getNetwork());
+							connectedBlocks[side.ordinal()] = tileEntity;
+						}
+					}
+					else
+					{
+						connectedBlocks[side.ordinal()] = tileEntity;
+					}
 				}
 			}
-			else
+			else if (tileEntity instanceof IColorCoded)
 			{
-				connectedBlocks[side] = null;
+				if (this.getColor() == ColorCode.NONE || this.getColor() == ((IColorCoded) tileEntity).getColor())
+				{
+					connectedBlocks[side.ordinal()] = tileEntity;
+				}
+			}
+			else if (tileEntity instanceof ITankContainer)
+			{
+				connectedBlocks[side.ordinal()] = tileEntity;
 			}
 		}
 	}
 
-	/**
-	 * updates this units pressure level using the pipe/machines around it
-	 */
-	public void updatePressure()
+	@Override
+	public void updateAdjacentConnections()
 	{
-		int highestPressure = 0;
-		this.presure = 0;
 
-		for (int i = 0; i < 6; i++)
+		if (this.worldObj != null && !this.worldObj.isRemote)
 		{
-			ForgeDirection dir = ForgeDirection.getOrientation(i);
+			boolean[] previousConnections = this.renderConnection.clone();
+			this.connectedBlocks = new TileEntity[6];
 
-			if (connectedBlocks[i] instanceof TileEntityPipe)
+			for (int i = 0; i < 6; i++)
 			{
-				if (((TileEntityPipe) connectedBlocks[i]).getPressure() > highestPressure)
+				ForgeDirection dir = ForgeDirection.getOrientation(i);
+				this.validateConnectionSide(this.worldObj.getBlockTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ), dir);
+
+				this.renderConnection[i] = this.connectedBlocks[i] != null;
+				if (this.renderConnection[i] && this.connectedBlocks[i] instanceof ITankContainer && !(this.connectedBlocks[i] instanceof IFluidNetworkPart))
 				{
-					highestPressure = ((TileEntityPipe) connectedBlocks[i]).getPressure();
+					this.getNetwork().addEntity((ITankContainer) this.connectedBlocks[i]);
 				}
 			}
-			if (connectedBlocks[i] instanceof IPsiCreator && ((IPipeConnection) connectedBlocks[i]).canConnect(this, dir))
+
+			/**
+			 * Only send packet updates if visuallyConnected changed.
+			 */
+			if (!Arrays.areEqual(previousConnections, this.renderConnection))
 			{
-
-				int p = ((IPsiCreator) connectedBlocks[i]).getPressureOut(color.getLiquidData().getStack(), dir);
-
-				if (p > highestPressure)
-				{
-					highestPressure = p;
-				}
+				this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 			}
 		}
-		this.presure = highestPressure - 1;
 	}
 
-	public int getPressure()
+	@Override
+	public boolean canConnect(TileEntity entity, ForgeDirection dir)
 	{
-		return this.presure;
+		return true;
 	}
+
+	@Override
+	public double getMaxPressure(ForgeDirection side)
+	{
+		return 350;
+	}
+
+	@Override
+	public HydraulicNetwork getNetwork()
+	{
+		if (this.pipeNetwork == null)
+		{
+			this.setNetwork(new HydraulicNetwork(this.getColor(), this));
+		}
+		return this.pipeNetwork;
+	}
+
+	@Override
+	public void setNetwork(HydraulicNetwork network)
+	{
+		this.pipeNetwork = network;
+	}
+
+	@Override
+	public int getMaxFlowRate(LiquidStack stack, ForgeDirection side)
+	{
+		return LiquidContainerRegistry.BUCKET_VOLUME * 2;
+	}
+
+	@Override
+	public boolean onOverPressure(Boolean damageAllowed)
+	{
+		if (damageAllowed)
+		{
+			worldObj.setBlockAndMetadataWithNotify(xCoord, yCoord, yCoord, 0, 0, 3);
+			return true;
+		}
+		return false;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public AxisAlignedBB getRenderBoundingBox()
+	{
+		return AxisAlignedBB.getAABBPool().getAABB(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1);
+	}
+
+	@Override
+	public TileEntity[] getAdjacentConnections()
+	{
+		return this.connectedBlocks;
+	}
+
+	@Override
+	public boolean canConnect(ForgeDirection dir)
+	{
+		return worldObj.getBlockTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetZ, zCoord + dir.offsetY) instanceof IFluidNetworkPart;
+	}
+
 }
