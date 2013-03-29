@@ -64,9 +64,8 @@ public class TileEntityTank extends TileEntityAdvanced implements IPacketReceive
 
 				if (ticks % 20 >= 0)
 				{
-					this.tradeDown();
-					this.tradeArround();
-					this.fillPipe();
+					this.fillTanksAround();
+					this.fillTankBellow();
 				}
 
 				if (this.tank.getLiquid() == null && originalVolume != 0)
@@ -259,23 +258,8 @@ public class TileEntityTank extends TileEntityAdvanced implements IPacketReceive
 		return false;
 	}
 
-	/**
-	 * cause this TE to trade liquid down if the liquid is in liquid state or up if in gas state.
-	 */
-	public void tradeDown()
-	{
-		if (this.tank.getLiquid() == null || this.tank.getLiquid().amount <= 0)
-			return;
-		TileEntity ent = worldObj.getBlockTileEntity(xCoord, yCoord - 1, zCoord);
-		if (ent instanceof TileEntityTank && ((TileEntityTank) ent).getColor() == this.getColor() && !((TileEntityTank) ent).isFull())
-		{
-			int f = ((TileEntityTank) ent).tank.fill(this.tank.getLiquid(), true);
-			this.tank.drain(f, true);
-		}
-	}
-
 	/** Cause this TE to trade liquid with the Tanks around it to level off */
-	public void tradeArround()
+	public void fillTanksAround()
 	{
 		if (this.tank.getLiquid() == null || this.tank.getLiquid().amount <= 0)
 		{
@@ -332,36 +316,38 @@ public class TileEntityTank extends TileEntityAdvanced implements IPacketReceive
 		}
 	}
 
-	/** Causes this to fill a pipe either above or bellow based on liquid data */
-	public void fillPipe()
+	/** Will fill the ITankContainer bellow with up to one bucket of liquid a request */
+	public void fillTankBellow()
 	{
 		if (this.tank.getLiquid() == null || this.tank.getLiquid().amount <= 0)
 		{
 			return;
 		}
-		LiquidData data = LiquidHandler.get(this.tank.getLiquid());
-		if (data != null)
-		{
+		/* GET DATA FOR THE LIQUID IN THE INTERNAL TANK */
+		LiquidData liquidData = LiquidHandler.get(this.tank.getLiquid());
 
-			int change = -1;
-			if (data.getCanFloat())
+		if (liquidData != null)
+		{
+			/* GET THE TILE ABOVE OR BELLOW BASE ON LIQUID DATA */
+			ForgeDirection fillDirection = liquidData.getCanFloat() ? ForgeDirection.UP : ForgeDirection.DOWN;
+			TileEntity tileEntity = worldObj.getBlockTileEntity(xCoord, yCoord + fillDirection.offsetY, zCoord);
+
+			if (tileEntity instanceof ITankContainer)
 			{
-				change = 1;
-			}
-			TileEntity ent = worldObj.getBlockTileEntity(xCoord, yCoord + change, zCoord);
-			if (ent instanceof TileEntityPipe)
-			{
-				ColorCode c = ((TileEntityPipe) ent).getColor();
-				if (c == ColorCode.NONE || c == this.getColor())
+				/* DO CHECK FOR NON-MATCHING COLOR CODE */
+				if (tileEntity instanceof IColorCoded && ((IColorCoded) tileEntity).getColor() != ColorCode.NONE && ((IColorCoded) tileEntity).getColor() != this.getColor())
 				{
-					int vol = LiquidContainerRegistry.BUCKET_VOLUME;
-					if (this.tank.getLiquid().amount < vol)
-					{
-						vol = this.tank.getLiquid().amount;
-					}
-					int f = ((TileEntityPipe) ent).fill(0, LiquidHandler.getStack(this.tank.getLiquid(), vol), true);
-					this.tank.drain(f, true);
+					return;
 				}
+				/* CAN ONLY TRADE ONE BUCKET AT A TIME */
+				int vol = LiquidContainerRegistry.BUCKET_VOLUME;
+				if (this.tank.getLiquid().amount < vol)
+				{
+					vol = this.tank.getLiquid().amount;
+				}
+				/* FILL THE ITANKCONTAINER BELLOW THEN DRAIN THE INTERAL TANK IN THIS */
+				int fillAmmount = ((ITankContainer) tileEntity).fill(fillDirection, LiquidHandler.getStack(this.tank.getLiquid(), vol), true);
+				this.tank.drain(fillAmmount, true);
 			}
 		}
 	}
