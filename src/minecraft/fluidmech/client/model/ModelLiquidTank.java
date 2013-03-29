@@ -363,9 +363,9 @@ public class ModelLiquidTank extends ModelBase
 			conenctedTiles = ((TileEntityTank) tee).connectedBlocks;
 		}
 		// Front
-		if (conenctedTiles[2] instanceof TileEntityPipe)
+		if (conenctedTiles[3] instanceof TileEntityPipe)
 		{
-			CCBack.render(f5);
+			CCFront.render(f5);
 		}
 		else
 		{
@@ -377,9 +377,9 @@ public class ModelLiquidTank extends ModelBase
 			GuageL.render(f5);
 		}
 		// back
-		if (conenctedTiles[3] instanceof TileEntityPipe)
+		if (conenctedTiles[2] instanceof TileEntityPipe)
 		{
-			CCFront.render(f5);
+			CCBack.render(f5);
 		}
 		else
 		{
