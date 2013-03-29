@@ -92,6 +92,10 @@ public class LiquidHandler
 	 * Gets the LiquidData linked to the liquid by name
 	 * 
 	 * @param name - String name, not case sensitive
+	 * 
+	 * @return the data
+	 * 
+	 * Note: @LiquidHandler.unkown is the same as null and should be treated that way.
 	 */
 	public static LiquidData get(String name)
 	{
@@ -105,6 +109,14 @@ public class LiquidHandler
 		return unkown;
 	}
 
+	/**
+	 * Gets the LiquidData linked to the liquidStack
+	 * 
+	 * @param stack - @LiquidStack
+	 * @return the data
+	 * 
+	 * Note: @LiquidHandler.unkown is the same as null and should be treated that way.
+	 */
 	public static LiquidData get(LiquidStack stack)
 	{
 		for (LiquidData data : LiquidHandler.allowedLiquids)
@@ -118,8 +130,11 @@ public class LiquidHandler
 	}
 
 	/**
-	 * gets the name of the liquidStack using either LiquidData or running threw the LiquidDirectory
-	 * mapping
+	 * Gets the name of a LiquidStack using the LiquidData name or Value hidden in the LiquidStack
+	 * map stored at @LiquidDictionary
+	 * 
+	 * @param stack - @LiquidStack
+	 * @return - (String) Name of the Stack or unkown if one couldn't be found
 	 */
 	public static String getName(LiquidStack stack)
 	{
@@ -142,17 +157,27 @@ public class LiquidHandler
 	}
 
 	/**
-	 * creates a new LiquidStack using type and vol
+	 * Creates a new LiquidStack using the sample stack from the data
+	 * 
+	 * @param liquidData - liquidData being used to create the stack
+	 * @param vol - amount or volume of the stack
+	 * @return a new @LiquidStack
 	 */
-	public static LiquidStack getStack(LiquidData type, int vol)
+	public static LiquidStack getStack(LiquidData liquidData, int vol)
 	{
-		if (type == null)
+		if (liquidData == null)
+		{
 			return null;
-		return new LiquidStack(type.getStack().itemID, vol, type.getStack().itemMeta);
+		}
+		return new LiquidStack(liquidData.getStack().itemID, vol, liquidData.getStack().itemMeta);
 	}
 
 	/**
-	 * creates a new LiquidStack using a liquidStack and vol
+	 * Creates a new LiquidStack using the sample stack
+	 * 
+	 * @param stack - liquidLiquid being used to create the stack
+	 * @param vol - amount or volume of the stack
+	 * @return a new @LiquidStack
 	 */
 	public static LiquidStack getStack(LiquidStack stack, int vol)
 	{
@@ -163,25 +188,18 @@ public class LiquidHandler
 		return new LiquidStack(stack.itemID, vol, stack.itemMeta);
 	}
 
-	public static int getMeta(LiquidData stack)
-	{
-		if (stack != null && stack != unkown)
-		{
-			return stack.getColor().ordinal();
-		}
-		return 15;
-	}
-
-	public static LiquidData getFromMeta(int meta)
-	{
-		return ColorCode.get(meta).getLiquidData();
-	}
-
-	public static LiquidData getFromBlockID(int id)
+	/**
+	 * gets the LiquidData from the blockID and metadata
+	 * 
+	 * @param blockID - id used to reference the block in @Block
+	 * @param blockMeta - the blocks sub id from 0-15. -1 will ignore metadata
+	 * @return LiquidData if there is one for this block or unkown in place of null/not found
+	 */
+	public static LiquidData getFromBlockAndMetadata(int blockID, int blockMeta)
 	{
 		for (LiquidData data : allowedLiquids)
 		{
-			if (data.getStack().itemID == id)
+			if (data.getStack().itemID == blockID)
 			{
 				return data;
 			}

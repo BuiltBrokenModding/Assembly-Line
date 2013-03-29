@@ -142,8 +142,10 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 		double amps = (this.WATTS_PER_TICK / this.getVoltage());
 		return new ElectricityPack(amps, this.getVoltage());
 	}
+
 	/**
 	 * checks to see if this pump can pump the selected target block
+	 * 
 	 * @param x y z - location of the block, use the tileEntities world
 	 * @return true if it can pump
 	 */
@@ -152,26 +154,11 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 		int blockID = worldObj.getBlockId(x, y, z);
 		int meta = worldObj.getBlockMetadata(x, y, z);
 
-		LiquidData resource = LiquidHandler.getFromBlockID(blockID);
+		LiquidData resource = LiquidHandler.getFromBlockAndMetadata(blockID, meta);
 
 		ITankContainer fillTarget = getFillTarget();
 
-		if (fillTarget == null || fillTarget.fill(pipeConnection, this.color.getLiquidData().getStack(), false) == 0)
-		{
-			return false;
-		}
-		else if ((LiquidHandler.getFromBlockID(worldObj.getBlockId(x, y, z)) == null || LiquidHandler.getFromBlockID(worldObj.getBlockId(x, y, z)) == LiquidHandler.unkown))
-		{
-			return false;
-		}
-		else if (blockID == Block.waterMoving.blockID || blockID == Block.lavaMoving.blockID)
-		{
-			return false;
-		}
-		else if (blockID == Block.waterStill.blockID || blockID == Block.waterStill.blockID)
-		{
-
-		}
+		// TODO redo this
 		return true;
 	}
 
@@ -186,7 +173,7 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 		int blockID = worldObj.getBlockId(loc.intX(), loc.intY(), loc.intZ());
 		int meta = worldObj.getBlockMetadata(loc.intX(), loc.intY(), loc.intZ());
 
-		LiquidData resource = LiquidHandler.getFromBlockID(blockID);
+		LiquidData resource = LiquidHandler.getFromBlockAndMetadata(blockID, meta);
 
 		if (color.isValidLiquid(resource.getStack()) && meta == 0 && getFillTarget().fill(pipeConnection, resource.getStack(), false) != 0)
 		{
@@ -194,7 +181,7 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 			LiquidStack stack = resource.getStack();
 			stack.amount = LiquidContainerRegistry.BUCKET_VOLUME;
 			int fillAmmount = getFillTarget().fill(pipeConnection, this.color.getLiquidData().getStack(), true);
-			
+
 			if (fillAmmount > 0)
 			{
 				worldObj.setBlockAndMetadataWithNotify(xCoord, yCoord - 1, zCoord, 0, 0, 3);
@@ -228,7 +215,7 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection dir,TileEntity entity, LiquidStack... stacks)
+	public boolean canConnect(ForgeDirection dir, TileEntity entity, LiquidStack... stacks)
 	{
 		if (dir == this.pipeConnection.getOpposite())
 		{
