@@ -28,12 +28,8 @@ public class connectionHelper
 		TileEntity[] list = new TileEntity[] { null, null, null, null, null, null };
 		for (int i = 0; i < 6; i++)
 		{
-			ForgeDirection d = ForgeDirection.getOrientation(i);
-			TileEntity aEntity = world.getBlockTileEntity(x + d.offsetX, y + d.offsetY, z + d.offsetZ);
-			if (aEntity instanceof TileEntity)
-			{
-				list[i] = aEntity;
-			}
+			ForgeDirection direction = ForgeDirection.getOrientation(i);
+			list[i] = world.getBlockTileEntity(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ);
 		}
 		return list;
 	}

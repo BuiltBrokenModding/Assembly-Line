@@ -36,13 +36,15 @@ public class HydraulicNetwork
 	public final List<IFluidNetworkPart> conductors = new ArrayList<IFluidNetworkPart>();
 
 	/* MACHINES THAT USE THE FORGE LIQUID API TO RECEIVE LIQUID ** */
-	public final List<TileEntity> receivers = new ArrayList<TileEntity>();
+	public final List<ITankContainer> receivers = new ArrayList<ITankContainer>();
 
 	public ColorCode color = ColorCode.NONE;
 	/* PRESSURE OF THE NETWORK AS A TOTAL. ZERO AS IN NO PRODUCTION */
 	public double pressureProduced = 0;
 	/* PRESSURE OF THE NETWORK'S LOAD AS A TOTAL. ZERO AS IN NO LOAD */
 	public double pressureLoad = 0;
+	/* IS IT PROCESSING AN ADD LIQUID EVENT */
+	private boolean processingRequest = false;
 
 	public HydraulicNetwork(ColorCode color, IFluidNetworkPart... parts)
 	{
@@ -71,7 +73,7 @@ public class HydraulicNetwork
 	public int addFluidToNetwork(LiquidStack stack, double pressure, boolean doFill)
 	{
 		int used = 0;
-		if (stack != null && canAcceptLiquid(stack))
+		if (!this.processingRequest && stack != null && canAcceptLiquid(stack))
 		{
 			if (stack.amount > this.getMaxFlow(stack))
 			{
@@ -89,21 +91,19 @@ public class HydraulicNetwork
 
 			boolean found = false;
 
-			for (TileEntity ent : receivers)
+			for (ITankContainer tankContainer : receivers)
 			{
-				TileEntity[] surroundings = connectionHelper.getSurroundingTileEntities(ent);
-
-				if (ent instanceof ITankContainer)
+				if (tankContainer instanceof TileEntity)
 				{
-					ITankContainer tank = (ITankContainer) ent;
+					TileEntity[] connectedTiles = connectionHelper.getSurroundingTileEntities((TileEntity) tankContainer);
 
 					for (int i = 0; i < 6; i++)
 					{
-						if (surroundings[i] instanceof IFluidNetworkPart && ((IFluidNetworkPart) surroundings[i]).getNetwork() == this)
+						if (connectedTiles[i] instanceof IFluidNetworkPart && ((IFluidNetworkPart) connectedTiles[i]).getNetwork() == this)
 						{
 							ForgeDirection dir = ForgeDirection.getOrientation(i).getOpposite();
-							ILiquidTank storage = tank.getTank(dir, stack);
-							int fill = tank.fill(dir, stack, false);
+							ILiquidTank storage = tankContainer.getTank(dir, stack);
+							int fill = tankContainer.fill(dir, stack, false);
 							/*
 							 * if the TileEntity uses the getTank method
 							 */
@@ -112,20 +112,20 @@ public class HydraulicNetwork
 								LiquidStack stored = storage.getLiquid();
 								if (stored == null)
 								{
-									fillTarget = tank;
+									fillTarget = tankContainer;
 									found = true;
 									fillDir = dir;
 									break;
 								}
 								else if (stored.amount < volume)
 								{
-									fillTarget = tank;
+									fillTarget = tankContainer;
 									volume = stored.amount;
 								}
 							}
 							else if (fill > 0 && fill > mostFill)
 							{
-								otherFillTarget = tank;
+								otherFillTarget = tankContainer;
 								mostFill = fill;
 								otherFillDir = dir;
 							}
@@ -153,7 +153,7 @@ public class HydraulicNetwork
 				}
 			}
 		}
-
+		this.processingRequest = false;
 		return used;
 	}
 
@@ -201,9 +201,13 @@ public class HydraulicNetwork
 	/**
 	 * Adds a tileEntity to the list if its valid
 	 */
-	public void addEntity(TileEntity ent)
+	public void addEntity(ITankContainer ent)
 	{
-		if (!receivers.contains(ent) && (ent instanceof ITankContainer || ent instanceof IPsiReciever || ent instanceof IPsiCreator))
+		if (ent == null)
+		{
+			return;
+		}
+		if (!receivers.contains(ent))
 		{
 			receivers.add(ent);
 		}

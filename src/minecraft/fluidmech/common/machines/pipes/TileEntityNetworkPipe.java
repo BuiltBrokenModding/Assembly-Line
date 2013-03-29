@@ -247,9 +247,9 @@ public class TileEntityNetworkPipe extends TileEntityAdvanced implements ITankCo
 				this.validateConnectionSide(this.worldObj.getBlockTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ), dir);
 
 				this.renderConnection[i] = this.connectedBlocks[i] != null;
-				if (this.connectedBlocks[i] instanceof ITankContainer)
+				if (this.renderConnection[i] && this.connectedBlocks[i] instanceof ITankContainer && !(this.connectedBlocks[i] instanceof IFluidNetworkPart))
 				{
-					this.getNetwork().addEntity(this.connectedBlocks[i]);
+					this.getNetwork().addEntity((ITankContainer) this.connectedBlocks[i]);
 				}
 			}
 
