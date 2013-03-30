@@ -174,7 +174,7 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 
 		LiquidData resource = LiquidHandler.getFromBlockAndMetadata(blockID, meta);
 
-		if (color.isValidLiquid(resource.getStack()) && meta == 0 && getFillTarget().fill(pipeConnection, resource.getStack(), false) != 0)
+		if (color.isValidLiquid(resource.getStack()) && meta == 0)
 		{
 
 			LiquidStack stack = resource.getStack();

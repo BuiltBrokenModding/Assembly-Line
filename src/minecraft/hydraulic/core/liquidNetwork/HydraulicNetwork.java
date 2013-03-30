@@ -241,7 +241,7 @@ public class HydraulicNetwork
 	public int addFluidToNetwork(TileEntity source, LiquidStack stack, double pressure, boolean doFill)
 	{
 		int used = 0;
-
+		LiquidStack prevCombined = this.combinedStorage.getLiquid();
 		if (!this.processingRequest && stack != null && color.isValidLiquid(stack))
 		{
 			if (this.combinedStorage.getLiquid() != null && !stack.isLiquidEqual(this.combinedStorage.getLiquid()))
@@ -314,19 +314,18 @@ public class HydraulicNetwork
 			boolean filledMain = false;
 			if (primaryFill != null)
 			{
-				System.out.println("Primary Target");
 				used = primaryFill.fill(fillDir, stack, doFill);
+				System.out.println("Primary Target " + used);
 			}
 			else if (secondayFill != null)
 			{
-				System.out.println("Seconday Target");
 				used = secondayFill.fill(fillDir, stack, doFill);
+				System.out.println("Seconday Target " + used);
 			}
 			else if (this.combinedStorage.getLiquid() == null || this.combinedStorage.getLiquid().amount < this.combinedStorage.getCapacity())
 			{
 				used = this.combinedStorage.fill(stack, doFill);
 				System.out.println("Network Target filled for " + used);
-				this.moveAndSumVolume(false);
 				filledMain = true;
 			}
 			/* IF THE COMBINED STORAGE OF THE PIPES HAS LIQUID MOVE IT FIRST */
@@ -345,8 +344,12 @@ public class HydraulicNetwork
 					used = Math.min(used, Math.max(used - this.combinedStorage.getLiquid().amount, 0));
 					drainStack = this.combinedStorage.drain(pUsed - used, doFill);
 				}
+				System.out.println("Pulling " + drainStack.amount + " from combined leaving " + this.combinedStorage.getLiquid().amount);
+
+			}
+			if (prevCombined != null && this.combinedStorage.getLiquid() != null && prevCombined.amount != this.combinedStorage.getLiquid().amount)
+			{
 				this.moveAndSumVolume(false);
-				System.out.println("Pulling " + stack.amount + " from combined");
 			}
 		}
 		this.processingRequest = false;
@@ -615,7 +618,8 @@ public class HydraulicNetwork
 			}
 			this.combinedStorage.setLiquid(new LiquidStack(itemID, volume, itemMeta));
 		}
-		if (this.combinedStorage.getLiquid() != null)
+
+		if (this.combinedStorage.getLiquid() != null && this.fluidParts.size() > 0)
 		{
 			volume = this.combinedStorage.getLiquid().amount / this.fluidParts.size();
 			itemID = this.combinedStorage.getLiquid().itemID;
