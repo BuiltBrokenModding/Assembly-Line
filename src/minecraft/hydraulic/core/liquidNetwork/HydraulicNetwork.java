@@ -326,6 +326,7 @@ public class HydraulicNetwork
 			{
 				used = this.combinedStorage.fill(stack, doFill);
 				System.out.println("Network Target filled for " + used);
+				this.moveAndSumVolume(false);
 				filledMain = true;
 			}
 			/* IF THE COMBINED STORAGE OF THE PIPES HAS LIQUID MOVE IT FIRST */
@@ -344,6 +345,7 @@ public class HydraulicNetwork
 					used = Math.min(used, Math.max(used - this.combinedStorage.getLiquid().amount, 0));
 					drainStack = this.combinedStorage.drain(pUsed - used, doFill);
 				}
+				this.moveAndSumVolume(false);
 				System.out.println("Pulling " + stack.amount + " from combined");
 			}
 		}
@@ -439,7 +441,7 @@ public class HydraulicNetwork
 			else
 			{
 				conductor.setNetwork(this);
-				capacity += conductor.getTankSize();
+				capacity += LiquidContainerRegistry.BUCKET_VOLUME;
 			}
 		}
 		this.combinedStorage.setCapacity(capacity);
@@ -484,6 +486,8 @@ public class HydraulicNetwork
 			}
 			else
 			{
+				this.moveAndSumVolume(false);
+				network.moveAndSumVolume(false);
 				LiquidStack stack = new LiquidStack(0, 0, 0);
 				if (this.combinedStorage.getLiquid() != null && network.combinedStorage.getLiquid() != null && this.combinedStorage.getLiquid().isLiquidEqual(network.combinedStorage.getLiquid()))
 				{
@@ -504,7 +508,7 @@ public class HydraulicNetwork
 				newNetwork.getFluidNetworkParts().addAll(network.getFluidNetworkParts());
 
 				newNetwork.cleanUpConductors();
-				newNetwork.combinedStorage.setLiquid(stack);
+				newNetwork.moveAndSumVolume(true);
 			}
 		}
 	}
@@ -520,7 +524,7 @@ public class HydraulicNetwork
 		if (splitPoint instanceof TileEntity)
 		{
 			this.getFluidNetworkParts().remove(splitPoint);
-
+			this.moveAndSumVolume(false);
 			/**
 			 * Loop through the connected blocks and attempt to see if there are connections between
 			 * the two points elsewhere.
@@ -574,12 +578,7 @@ public class HydraulicNetwork
 								}
 
 								newNetwork.cleanUpConductors();
-
-								LiquidStack stack = this.combinedStorage.getLiquid();
-								if (stack != null)
-								{
-									newNetwork.combinedStorage.setLiquid(new LiquidStack(stack.itemID, parts * this.getVolumePerPart(), stack.itemMeta));
-								}
+								newNetwork.moveAndSumVolume(true);
 							}
 						}
 					}
@@ -589,35 +588,45 @@ public class HydraulicNetwork
 	}
 
 	/**
-	 * gets the amount of liquid stored in each part in the system
+	 * Moves the volume stored in the network to the parts or sums up the volume from the parts and
+	 * loads it to the network. Assumes that all liquidStacks stored are equal
+	 * 
+	 * @param load - loads the volume from the parts before leveling out the volumes
 	 */
-	public int getVolumePerPart()
+	public void moveAndSumVolume(boolean load)
 	{
-		int volumePerPart = 0;
-		int cap = 0;
-		LiquidStack stack = this.combinedStorage.getLiquid();
-		if (stack != null)
+		int volume = 0;
+		int itemID = 0;
+		int itemMeta = 0;
+		if (load)
 		{
-			for (IFluidNetworkPart par : this.fluidParts)
+			for (IFluidNetworkPart part : this.fluidParts)
 			{
-				cap += par.getTankSize();
-			}
-			volumePerPart = this.combinedStorage.getLiquid().amount / cap;
-		}
-		return volumePerPart;
-	}
 
-	/**
-	 * Drain a set volume from the system
-	 */
-	public LiquidStack drainVolumeFromSystem(int volume, boolean doDrain)
-	{
-		LiquidStack stack = null;
+				if (part.getTank() != null && part.getTank().getLiquid() != null)
+				{
+					if (itemID == 0)
+					{
+						itemID = part.getTank().getLiquid().itemID;
+						itemMeta = part.getTank().getLiquid().itemMeta;
+					}
+					volume += part.getTank().getLiquid().amount;
+				}
+			}
+			this.combinedStorage.setLiquid(new LiquidStack(itemID, volume, itemMeta));
+		}
 		if (this.combinedStorage.getLiquid() != null)
 		{
-			stack = this.combinedStorage.drain(this.getVolumePerPart(), doDrain);
+			volume = this.combinedStorage.getLiquid().amount / this.fluidParts.size();
+			itemID = this.combinedStorage.getLiquid().itemID;
+			itemMeta = this.combinedStorage.getLiquid().itemMeta;
+
+			for (IFluidNetworkPart part : this.fluidParts)
+			{
+				part.setTankContent(null);
+				part.setTankContent(new LiquidStack(itemID, volume, itemMeta));
+			}
 		}
-		return stack;
 	}
 
 	@Override

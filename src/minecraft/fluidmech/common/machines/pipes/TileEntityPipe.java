@@ -118,7 +118,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		LiquidStack stack = this.getNetwork().drainVolumeFromSystem(this.getNetwork().getVolumePerPart(), true);
+		LiquidStack stack = this.fakeTank.getLiquid();
 		if (stack != null)
 		{
 			nbt.setTag("stored", stack.writeToNBT(new NBTTagCompound()));
@@ -268,12 +268,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	{
 
 		if (this.worldObj != null && !this.worldObj.isRemote)
-		{
-			if (this.fakeTank.getLiquid() != null && this.fakeTank.getLiquid().amount > 0)
-			{
-				int fill = this.getNetwork().addFluidToNetwork(this, this.fakeTank.getLiquid(), 0, true);
-				this.fakeTank.drain(fill, true);
-			}
+		{	
 
 			boolean[] previousConnections = this.renderConnection.clone();
 			this.connectedBlocks = new TileEntity[6];
@@ -378,6 +373,19 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	public int getTankSize()
 	{
 		return LiquidContainerRegistry.BUCKET_VOLUME * 2;
+	}
+
+	@Override
+	public ILiquidTank getTank()
+	{
+		return this.fakeTank;
+	}
+
+	@Override
+	public void setTankContent(LiquidStack stack)
+	{
+		this.fakeTank.setLiquid(stack);
+		
 	}
 
 }

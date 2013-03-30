@@ -4,8 +4,10 @@ import universalelectricity.core.block.IConnectionProvider;
 import hydraulic.core.liquidNetwork.HydraulicNetwork;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidStack;
+import net.minecraftforge.liquids.LiquidTank;
 
 /**
  * A machine that acts as one with the liquid network using the networks pressure for some function
@@ -46,5 +48,9 @@ public interface IFluidNetworkPart extends IPipeConnection, IColorCoded, IConnec
 	 * size of the pipes liquid storage ability
 	 */
 	public int getTankSize();
+	
+	public ILiquidTank getTank();
+	
+	public void setTankContent(LiquidStack stack);
 
 }
