@@ -3,14 +3,13 @@
 echo Promotion Type? (Choose * for recommended, @ for stable and x for unstable)
 set /p PROMOTION=
 
-echo FTP Server?
-set /p SERVER=
-echo FTP Username?
-set /p USERNAME=
+set /p SERVER=<server.txt
+set /p USERNAME=<username.txt
 echo FTP Password?
 set /p PASSWORD=
 
 set /p MODVERSION=<modversion.txt
+set /p MCVERSION=<mcver.txt
 set /p CurrentBuild=<buildnumber.txt
 set /a BUILD_NUMBER=%CurrentBuild%+1
 echo %BUILD_NUMBER% >buildnumber.txt
@@ -19,9 +18,9 @@ if %PROMOTION%==* (
 	echo %MODVERSION% >recommendedversion.txt
 )
 
-set FILE_NAME=AssemblyLine_v%MODVERSION%.%BUILD_NUMBER%.jar
-set API_NAME=AssemblyLine_v%MODVERSION%.%BUILD_NUMBER%_api.zip
-set BACKUP_NAME=AssemblyLine_v%MODVERSION%.%BUILD_NUMBER%_backup.zip
+set FILE_NAME=AssemblyLine_mc%MCVERSION%_v%MODVERSION%.%BUILD_NUMBER%.jar
+set API_NAME=AssemblyLine_mc%MCVERSION%_v%MODVERSION%.%BUILD_NUMBER%_api.zip
+set BACKUP_NAME=AssemblyLine_mc%MCVERSION%_v%MODVERSION%.%BUILD_NUMBER%_backup.zip
 
 echo Starting to build %FILE_NAME%
 
@@ -43,10 +42,10 @@ cd src\
 cd ..\
 
 ::UPDATE INFO FILE
-echo %PROMOTION% %FILE_NAME% %API_NAME%>>info.txt
+echo %PROMOTION% %MCVERSION% %FILE_NAME% %API_NAME%>>info.txt
 
 ::GENERATE FTP Script
-echo open %SERVER%>ftpscript.txt
+echo open %SERVER%>ftpscript.txt 
 echo %USERNAME%>>ftpscript.txt
 echo %PASSWORD%>>ftpscript.txt
 echo binary>>ftpscript.txt
