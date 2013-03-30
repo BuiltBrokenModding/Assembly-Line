@@ -73,7 +73,7 @@ public class TileEntityReleaseValve extends TileEntityAdvanced implements IPipeC
 						if (inputPipe != null)
 						{
 							ILiquidTank pipeVolume = inputPipe.getTanks(ForgeDirection.UNKNOWN)[0];
-							int ammountFilled = inputPipe.getNetwork().addFluidToNetwork(stack, 100, true);
+							int ammountFilled = inputPipe.getNetwork().addFluidToNetwork(this,stack, 100, true);
 							drainedTank.drain(ForgeDirection.UNKNOWN, ammountFilled, true);
 						}
 					}

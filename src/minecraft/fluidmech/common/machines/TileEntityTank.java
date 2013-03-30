@@ -208,6 +208,10 @@ public class TileEntityTank extends TileEntityAdvanced implements IPacketReceive
 	@Override
 	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
+		if(from  == ForgeDirection.UP || from  == ForgeDirection.DOWN)
+		{
+			return null;
+		}
 		return this.drain(0, maxDrain, doDrain);
 	}
 

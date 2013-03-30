@@ -107,7 +107,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		liquid.readFromNBT(nbt.getCompoundTag("stored"));
 		if (Item.itemsList[liquid.itemID] != null && liquid.amount > 0)
 		{
-			this.getNetwork().addFluidToNetwork(liquid, 0, true);
+			this.fakeTank.setLiquid(liquid);
 		}
 	}
 
@@ -180,7 +180,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		{
 			return 0;
 		}
-		return this.fill(0, resource, doFill);
+		return this.getNetwork().addFluidToNetwork(worldObj.getBlockTileEntity(xCoord + from.offsetX, yCoord + from.offsetY, zCoord + from.offsetZ), resource, 0, doFill);
 	}
 
 	@Override
@@ -190,7 +190,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		{
 			return 0;
 		}
-		return this.getNetwork().addFluidToNetwork(resource, 0, doFill);
+		return this.getNetwork().addFluidToNetwork(this, resource, 0, doFill);
 	}
 
 	@Override
@@ -269,6 +269,12 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 
 		if (this.worldObj != null && !this.worldObj.isRemote)
 		{
+			if (this.fakeTank.getLiquid() != null && this.fakeTank.getLiquid().amount > 0)
+			{
+				int fill = this.getNetwork().addFluidToNetwork(this, this.fakeTank.getLiquid(), 0, true);
+				this.fakeTank.drain(fill, true);
+			}
+
 			boolean[] previousConnections = this.renderConnection.clone();
 			this.connectedBlocks = new TileEntity[6];
 
@@ -278,9 +284,20 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 				this.validateConnectionSide(this.worldObj.getBlockTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ), dir);
 
 				this.renderConnection[i] = this.connectedBlocks[i] != null;
+
 				if (this.renderConnection[i] && this.connectedBlocks[i] instanceof ITankContainer && !(this.connectedBlocks[i] instanceof IFluidNetworkPart))
 				{
-					this.getNetwork().addEntity((ITankContainer) this.connectedBlocks[i]);
+					ITankContainer tankContainer = (ITankContainer) this.connectedBlocks[i];
+					this.getNetwork().addEntity(tankContainer);
+
+					/* LITTLE TRICK TO AUTO DRAIN TANKS ON EACH CONNECTION UPDATE */
+
+					LiquidStack stack = tankContainer.drain(dir, LiquidContainerRegistry.BUCKET_VOLUME, false);
+					if (stack != null && stack.amount > 0)
+					{
+						int fill = this.getNetwork().addFluidToNetwork((TileEntity) tankContainer, stack, 0, true);
+						tankContainer.drain(dir, fill, true);
+					}
 				}
 			}
 
