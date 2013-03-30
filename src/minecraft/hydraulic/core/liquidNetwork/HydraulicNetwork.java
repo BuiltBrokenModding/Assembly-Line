@@ -2,6 +2,7 @@ package hydraulic.core.liquidNetwork;
 
 import hydraulic.api.ColorCode;
 import hydraulic.api.IFluidNetworkPart;
+import hydraulic.core.path.PathfinderCheckerPipes;
 import hydraulic.helpers.connectionHelper;
 
 import java.util.ArrayList;
@@ -15,7 +16,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
+import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
+import net.minecraftforge.liquids.LiquidTank;
 import universalelectricity.core.block.IConnectionProvider;
 import universalelectricity.core.path.Pathfinder;
 import universalelectricity.core.path.PathfinderChecker;
@@ -46,6 +49,8 @@ public class HydraulicNetwork
 	public double pressureLoad = 0;
 	/* IS IT PROCESSING AN ADD LIQUID EVENT */
 	private boolean processingRequest = false;
+	/* COMBINED TEMP STORAGE FOR ALL PIPES IN THE NETWORK */
+	private LiquidTank combinedStorage = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
 
 	public HydraulicNetwork(ColorCode color, IFluidNetworkPart... parts)
 	{
@@ -124,6 +129,47 @@ public class HydraulicNetwork
 	}
 
 	/**
+	 * Removes a tileEntity from any of the valid lists
+	 */
+	public void removeEntity(TileEntity ent)
+	{
+		if (fluidTanks.contains(ent))
+		{
+			fluidTanks.remove(ent);
+		}
+	}
+
+	/**
+	 * Adds a tileEntity to the list if its valid
+	 */
+	public void addEntity(ITankContainer ent)
+	{
+		if (ent == null)
+		{
+			return;
+		}
+		if (ent instanceof IFluidNetworkPart)
+		{
+			this.addNetworkPart((IFluidNetworkPart) ent);
+		}
+		if (!fluidTanks.contains(ent))
+		{
+			fluidTanks.add(ent);
+		}
+	}
+
+	public void addNetworkPart(IFluidNetworkPart newConductor)
+	{
+		this.cleanConductors();
+
+		if (newConductor.getColor() == this.color && !fluidParts.contains(newConductor))
+		{
+			fluidParts.add(newConductor);
+			newConductor.setNetwork(this);
+		}
+	}
+
+	/**
 	 * @param ignoreTiles The TileEntities to ignore during this calculation. Null will make it not
 	 * ignore any.
 	 * @return The electricity produced in this electricity network
@@ -195,24 +241,31 @@ public class HydraulicNetwork
 	public int addFluidToNetwork(LiquidStack stack, double pressure, boolean doFill)
 	{
 		int used = 0;
-		if (!this.processingRequest && stack != null && canAcceptLiquid(stack))
+
+		if (!this.processingRequest && stack != null && color.isValidLiquid(stack))
 		{
+			if (this.combinedStorage.getLiquid() != null && !stack.isLiquidEqual(this.combinedStorage.getLiquid()))
+			{
+				// TODO cause mixing
+			}
 			if (stack.amount > this.getMaxFlow(stack))
 			{
 				stack = new LiquidStack(stack.itemID, this.getMaxFlow(stack), stack.itemMeta);
 			}
+
 			/* Main fill target to try to fill with the stack */
-			ITankContainer fillTarget = null;
+			ITankContainer primaryFill = null;
 			int volume = Integer.MAX_VALUE;
 			ForgeDirection fillDir = ForgeDirection.UNKNOWN;
 
 			/* Secondary fill target if the main target is not found */
-			ITankContainer otherFillTarget = null;
+			ITankContainer secondayFill = null;
 			int mostFill = 0;
 			ForgeDirection otherFillDir = ForgeDirection.UNKNOWN;
 
 			boolean found = false;
 
+			/* FIND THE FILL TARGET FROM THE LIST OF FLUID RECIEVERS */
 			for (ITankContainer tankContainer : fluidTanks)
 			{
 				if (tankContainer instanceof TileEntity)
@@ -224,30 +277,29 @@ public class HydraulicNetwork
 						if (connectedTiles[i] instanceof IFluidNetworkPart && ((IFluidNetworkPart) connectedTiles[i]).getNetwork() == this)
 						{
 							ForgeDirection dir = ForgeDirection.getOrientation(i).getOpposite();
-							ILiquidTank storage = tankContainer.getTank(dir, stack);
+							ILiquidTank targetTank = tankContainer.getTank(dir, stack);
 							int fill = tankContainer.fill(dir, stack, false);
-							/*
-							 * if the TileEntity uses the getTank method
-							 */
-							if (storage != null)
+
+							/* USE GET TANK FROM SIDE METHOD FIRST */
+							if (targetTank != null)
 							{
-								LiquidStack stored = storage.getLiquid();
-								if (stored == null)
+								LiquidStack stackStored = targetTank.getLiquid();
+								if (stackStored == null)
 								{
-									fillTarget = tankContainer;
+									primaryFill = tankContainer;
 									found = true;
 									fillDir = dir;
 									break;
 								}
-								else if (stored.amount < volume)
+								else if (stackStored.amount < targetTank.getCapacity() && stackStored.amount < volume)
 								{
-									fillTarget = tankContainer;
-									volume = stored.amount;
+									primaryFill = tankContainer;
+									volume = stackStored.amount;
 								}
-							}
+							}/* USE FILL METHOD IF GET TANK == NULL */
 							else if (fill > 0 && fill > mostFill)
 							{
-								otherFillTarget = tankContainer;
+								secondayFill = tankContainer;
 								mostFill = fill;
 								otherFillDir = dir;
 							}
@@ -258,21 +310,38 @@ public class HydraulicNetwork
 				{
 					break;
 				}
-				if (stack == null || stack.amount <= 0)
-				{
-					return used;
-				}
 			}// End of tank finder
-			if (doFill)
+
+			if (primaryFill != null)
 			{
-				if (fillTarget != null)
+				used = primaryFill.fill(fillDir, stack, doFill);
+			}
+			else if (secondayFill != null)
+			{
+				used = secondayFill.fill(fillDir, stack, doFill);
+			}
+			else if (this.combinedStorage.getLiquid() == null || this.combinedStorage.getLiquid().amount < this.combinedStorage.getCapacity())
+			{
+				used = this.combinedStorage.fill(stack, doFill);
+				System.out.println("Network Target");
+			}
+			/* IF THE COMBINED STORAGE OF THE PIPES HAS LIQUID MOVE IT FIRST */
+			if (this.combinedStorage.getLiquid() != null && this.combinedStorage.getLiquid().amount > 0)
+			{
+				System.out.println("Pulling from combined");
+				if (this.combinedStorage.getLiquid().amount >= used)
 				{
-					used = fillTarget.fill(fillDir, stack, true);
+					used = 0;
+					this.combinedStorage.drain(stack.amount, doFill);
+
 				}
-				else if (otherFillTarget != null)
+				else
 				{
-					used = otherFillTarget.fill(fillDir, stack, true);
+					int pUsed = stack.amount;
+					used = Math.min(used, Math.max(stack.amount - this.combinedStorage.getLiquid().amount, 0));
+					this.combinedStorage.drain(pUsed - used, doFill);
 				}
+
 			}
 		}
 		this.processingRequest = false;
@@ -299,51 +368,6 @@ public class HydraulicNetwork
 			}
 		}
 		return flow;
-	}
-
-	/**
-	 * can this network can accept the liquid type
-	 */
-	private boolean canAcceptLiquid(LiquidStack stack)
-	{
-		return color.isValidLiquid(stack);
-	}
-
-	/**
-	 * Removes a tileEntity from any of the valid lists
-	 */
-	public void removeEntity(TileEntity ent)
-	{
-		if (fluidTanks.contains(ent))
-		{
-			fluidTanks.remove(ent);
-		}
-	}
-
-	/**
-	 * Adds a tileEntity to the list if its valid
-	 */
-	public void addEntity(ITankContainer ent)
-	{
-		if (ent == null || ent instanceof IFluidNetworkPart)
-		{
-			return;
-		}
-		if (!fluidTanks.contains(ent))
-		{
-			fluidTanks.add(ent);
-		}
-	}
-
-	public void addNetworkPart(IFluidNetworkPart newConductor, ColorCode code)
-	{
-		this.cleanConductors();
-
-		if (code == this.color && !fluidParts.contains(newConductor))
-		{
-			fluidParts.add(newConductor);
-			newConductor.setNetwork(this);
-		}
 	}
 
 	public void cleanConductors()
@@ -391,6 +415,7 @@ public class HydraulicNetwork
 	public void cleanUpConductors()
 	{
 		Iterator it = this.fluidParts.iterator();
+		int capacity = 0;
 
 		while (it.hasNext())
 		{
@@ -411,8 +436,10 @@ public class HydraulicNetwork
 			else
 			{
 				conductor.setNetwork(this);
+				capacity += conductor.getTankSize();
 			}
 		}
+		this.combinedStorage.setCapacity(capacity);
 	}
 
 	/**
@@ -448,13 +475,41 @@ public class HydraulicNetwork
 	{
 		if (network != null && network != this && network.color == this.color)
 		{
-			HydraulicNetwork newNetwork = new HydraulicNetwork(this.color);
+			if (this.combinedStorage.getLiquid() != null && network.combinedStorage.getLiquid() != null && !this.combinedStorage.getLiquid().isLiquidEqual(network.combinedStorage.getLiquid()))
+			{
+				this.causingMixing(this.combinedStorage.getLiquid(), network.combinedStorage.getLiquid());
+			}
+			else
+			{
+				LiquidStack stack = new LiquidStack(0, 0, 0);
+				if (this.combinedStorage.getLiquid() != null && network.combinedStorage.getLiquid() != null && this.combinedStorage.getLiquid().isLiquidEqual(network.combinedStorage.getLiquid()))
+				{
+					stack = this.combinedStorage.getLiquid();
+					stack.amount += network.combinedStorage.getLiquid().amount;
+				}
+				else if (this.combinedStorage.getLiquid() == null && network.combinedStorage.getLiquid() != null)
+				{
+					stack = network.combinedStorage.getLiquid();
+				}
+				else if (this.combinedStorage.getLiquid() != null && network.combinedStorage.getLiquid() == null)
+				{
+					stack = this.combinedStorage.getLiquid();
+				}
+				HydraulicNetwork newNetwork = new HydraulicNetwork(this.color);
 
-			newNetwork.getFluidNetworkParts().addAll(this.getFluidNetworkParts());
-			newNetwork.getFluidNetworkParts().addAll(network.getFluidNetworkParts());
+				newNetwork.getFluidNetworkParts().addAll(this.getFluidNetworkParts());
+				newNetwork.getFluidNetworkParts().addAll(network.getFluidNetworkParts());
 
-			newNetwork.cleanUpConductors();
+				newNetwork.cleanUpConductors();
+				newNetwork.combinedStorage.setLiquid(stack);
+			}
 		}
+	}
+
+	public void causingMixing(LiquidStack stack, LiquidStack stack2)
+	{
+		// TODO cause mixing of liquids based on types and volume. Also apply damage to pipes/parts
+		// as needed
 	}
 
 	public void splitNetwork(IConnectionProvider splitPoint)
@@ -475,22 +530,18 @@ public class HydraulicNetwork
 
 				if (connectedBlockA instanceof IConnectionProvider)
 				{
-					for (int ii = 0; ii < connectedBlocks.length; ii++)
+					for (int pipeCount = 0; pipeCount < connectedBlocks.length; pipeCount++)
 					{
-						final TileEntity connectedBlockB = connectedBlocks[ii];
+						final TileEntity connectedBlockB = connectedBlocks[pipeCount];
 
 						if (connectedBlockA != connectedBlockB && connectedBlockB instanceof IConnectionProvider)
 						{
-							Pathfinder finder = new PathfinderChecker((IConnectionProvider) connectedBlockB, splitPoint);
+							Pathfinder finder = new PathfinderCheckerPipes((IConnectionProvider) connectedBlockB, splitPoint);
 							finder.init((IConnectionProvider) connectedBlockA);
 
 							if (finder.results.size() > 0)
 							{
-								/**
-								 * The connections A and B are still intact elsewhere. Set all
-								 * references of wire connection into one network.
-								 */
-
+								/* STILL CONNECTED SOMEWHERE ELSE */
 								for (IConnectionProvider node : finder.iteratedNodes)
 								{
 									if (node instanceof IFluidNetworkPart)
@@ -504,12 +555,9 @@ public class HydraulicNetwork
 							}
 							else
 							{
-								/**
-								 * The connections A and B are not connected anymore. Give both of
-								 * them a new network.
-								 */
+								/* NO LONGER CONNECTED ELSE WHERE SO SPLIT AND REFRESH */
 								HydraulicNetwork newNetwork = new HydraulicNetwork(this.color);
-
+								int parts = 0;
 								for (IConnectionProvider node : finder.iteratedNodes)
 								{
 									if (node instanceof IFluidNetworkPart)
@@ -517,11 +565,18 @@ public class HydraulicNetwork
 										if (node != splitPoint)
 										{
 											newNetwork.getFluidNetworkParts().add((IFluidNetworkPart) node);
+											parts++;
 										}
 									}
 								}
 
 								newNetwork.cleanUpConductors();
+
+								LiquidStack stack = this.combinedStorage.getLiquid();
+								if (stack != null)
+								{
+									newNetwork.combinedStorage.setLiquid(new LiquidStack(stack.itemID, parts * this.getVolumePerPart(), stack.itemMeta));
+								}
 							}
 						}
 					}
@@ -530,9 +585,45 @@ public class HydraulicNetwork
 		}
 	}
 
+	/**
+	 * gets the amount of liquid stored in each part in the system
+	 */
+	public int getVolumePerPart()
+	{
+		int volumePerPart = 0;
+		LiquidStack stack = this.combinedStorage.getLiquid();
+		if (stack != null)
+		{
+			volumePerPart = this.combinedStorage.getLiquid().amount / this.fluidParts.size();
+		}
+		return volumePerPart;
+	}
+
+	/**
+	 * Drain a set volume from the system
+	 */
+	public LiquidStack drainVolumeFromSystem(int volume, boolean doDrain)
+	{
+		LiquidStack stack = null;
+		if (this.combinedStorage.getLiquid() != null)
+		{
+			stack = this.combinedStorage.drain(this.getVolumePerPart(), doDrain);
+		}
+		return stack;
+	}
+
 	@Override
 	public String toString()
 	{
-		return "hydraulicNetwork[" + this.hashCode() + "|parts:" + this.fluidParts.size() + "]";
+		return "HydraulicNetwork[" + this.hashCode() + "|parts:" + this.fluidParts.size() + "]";
+	}
+
+	public String getStorageFluid()
+	{
+		if (combinedStorage.getLiquid() == null)
+		{
+			return "Zero";
+		}
+		return String.format("%d/%d %S Stored", combinedStorage.getLiquid().amount / LiquidContainerRegistry.BUCKET_VOLUME, combinedStorage.getCapacity() / LiquidContainerRegistry.BUCKET_VOLUME, LiquidHandler.getName(this.combinedStorage.getLiquid()));
 	}
 }

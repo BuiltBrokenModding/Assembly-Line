@@ -3,14 +3,16 @@ package fluidmech.common.machines.pipes;
 import fluidmech.common.FluidMech;
 import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
-import hydraulic.api.IPipeConnection;
 import hydraulic.api.IFluidNetworkPart;
+import hydraulic.api.IPipeConnection;
 import hydraulic.api.IReadOut;
 import hydraulic.core.liquidNetwork.HydraulicNetwork;
 
 import java.util.Random;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
@@ -94,6 +96,36 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	}
 
 	/**
+	 * Reads a tile entity from NBT.
+	 */
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+
+		LiquidStack liquid = new LiquidStack(0, 0, 0);
+		liquid.readFromNBT(nbt.getCompoundTag("stored"));
+		if (Item.itemsList[liquid.itemID] != null && liquid.amount > 0)
+		{
+			this.getNetwork().addFluidToNetwork(liquid, 0, true);
+		}
+	}
+
+	/**
+	 * Writes a tile entity to NBT.
+	 */
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		LiquidStack stack = this.getNetwork().drainVolumeFromSystem(this.getNetwork().getVolumePerPart(), true);
+		if (stack != null)
+		{
+			nbt.setTag("stored", stack.writeToNBT(new NBTTagCompound()));
+		}
+	}
+
+	/**
 	 * gets the current color mark of the pipe
 	 */
 	@Override
@@ -123,7 +155,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		boolean testNetwork = false;
 
 		/* NORMAL OUTPUT */
-		String string = this.getNetwork().pressureProduced + "p ";
+		String string = this.getNetwork().pressureProduced + "p " + this.getNetwork().getStorageFluid() + " Extra";
 
 		/* DEBUG CODE */
 		if (testConnections)
@@ -323,6 +355,12 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	public boolean canConnect(ForgeDirection dir)
 	{
 		return worldObj.getBlockTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetZ, zCoord + dir.offsetY) instanceof IFluidNetworkPart;
+	}
+
+	@Override
+	public int getTankSize()
+	{
+		return LiquidContainerRegistry.BUCKET_VOLUME * 2;
 	}
 
 }

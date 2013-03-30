@@ -4,6 +4,7 @@ import universalelectricity.core.block.IConnectionProvider;
 import hydraulic.core.liquidNetwork.HydraulicNetwork;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidStack;
 
 /**
@@ -11,7 +12,7 @@ import net.minecraftforge.liquids.LiquidStack;
  * that doesn't change the over all network pressure. So pipes, gauges, tubes, buffers, decor
  * blocks.
  */
-public interface IFluidNetworkPart extends IPipeConnection, IColorCoded, IConnectionProvider
+public interface IFluidNetworkPart extends IPipeConnection, IColorCoded, IConnectionProvider, ITankContainer
 {
 	/**
 	 * gets the devices pressure from a given side for input
@@ -40,5 +41,10 @@ public interface IFluidNetworkPart extends IPipeConnection, IColorCoded, IConnec
 	 * @return true if the device over pressured and destroyed itself
 	 */
 	public boolean onOverPressure(Boolean damageAllowed);
+
+	/**
+	 * size of the pipes liquid storage ability
+	 */
+	public int getTankSize();
 
 }
