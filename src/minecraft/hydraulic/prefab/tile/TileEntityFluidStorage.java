@@ -21,7 +21,7 @@ import net.minecraftforge.liquids.LiquidTank;
 public abstract class TileEntityFluidStorage extends TileEntityFluidDevice implements ITankContainer, IColorCoded
 {
 	/* INTERNAL TANK */
-	public LiquidTank tank = new LiquidTank(getTankSize());
+	public LiquidTank tank = new LiquidTank(this.getTankSize());
 	/* FLUID FILL AND DRAIN RULES */
 	private EnumSet<ForgeDirection> fillableSides = EnumSet.allOf(ForgeDirection.class);
 	private EnumSet<ForgeDirection> drainableSides = EnumSet.allOf(ForgeDirection.class);
@@ -54,6 +54,7 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 	@Override
 	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
 	{
+		
 		if (fillableSides.contains(from))
 		{
 			return this.fill(0, resource, doFill);
@@ -72,7 +73,7 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 		{
 			return 0;
 		}
-		else if (this.tank.getLiquid() != null && resource.isLiquidEqual(this.tank.getLiquid()))
+		else if (this.tank.getLiquid() != null && !resource.isLiquidEqual(this.tank.getLiquid()))
 		{
 			return 0;
 		}

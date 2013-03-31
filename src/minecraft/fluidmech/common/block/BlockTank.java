@@ -82,7 +82,7 @@ public class BlockTank extends BlockAdvanced
 					{
 						liquid = new LiquidStack(liquid.itemID, (LiquidContainerRegistry.BUCKET_VOLUME / 4), liquid.itemMeta);
 					}
-					int filled = tank.fill(ForgeDirection.UNKNOWN, liquid, true);
+					int filled = tank.fill(ForgeDirection.getOrientation(side), liquid, true);
 
 					if (filled != 0 && !entityplayer.capabilities.isCreativeMode)
 					{
@@ -127,7 +127,7 @@ public class BlockTank extends BlockAdvanced
 							{
 								ammount = (LiquidContainerRegistry.BUCKET_VOLUME / 4);
 							}
-							tank.drain(null, ammount, true);
+							tank.drain(ForgeDirection.getOrientation(side), ammount, true);
 							return true;
 						}
 					}
