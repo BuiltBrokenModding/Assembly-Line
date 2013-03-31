@@ -1,11 +1,11 @@
 package hydraulic.api;
 
-import hydraulic.core.liquidNetwork.LiquidData;
-import hydraulic.core.liquidNetwork.LiquidHandler;
+import hydraulic.fluidnetwork.FluidHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
 
 public enum ColorCode
@@ -36,14 +36,6 @@ public enum ColorCode
 		{
 			return ColorCode.values()[((Integer) obj)];
 		}
-		else if (obj instanceof LiquidData)
-		{
-			return ((LiquidData) obj).getColor();
-		}
-		else if (obj instanceof LiquidStack)
-		{
-			return LiquidHandler.get((LiquidStack) obj).getColor();
-		}
 		else if (obj instanceof ColorCode)
 		{
 			return (ColorCode) obj;
@@ -62,67 +54,11 @@ public enum ColorCode
 	}
 
 	/**
-	 * gets the liquidData linked with this color
-	 */
-	public LiquidData getLiquidData()
-	{
-		for (LiquidData data : LiquidHandler.allowedLiquids)
-		{
-			if (data.getColor() == this)
-			{
-				return data;
-			}
-		}
-		return LiquidHandler.unkown;
-	}
-
-	/**
-	 * Gets a list of LiquidData that are linked with the color
-	 */
-	public List<LiquidData> getAllLiquidData()
-	{
-		List<LiquidData> validLiquids = new ArrayList<LiquidData>();
-		for (LiquidData data : LiquidHandler.allowedLiquids)
-		{
-			if (data.getColor() == this && !validLiquids.contains(data))
-			{
-				validLiquids.add(data);
-			}
-		}
-		return validLiquids;
-	}
-	
-	public List<LiquidStack> getAllLiquidStack()
-	{
-		List<LiquidStack> validStacks = new ArrayList<LiquidStack>();
-		for (LiquidData data : getAllLiquidData())
-		{
-				validStacks.add(data.getStack());
-		}
-		return validStacks;
-	}
-	
-	public LiquidStack[] getArrayLiquidStacks()
-	{
-		List<LiquidStack> validStacks = new ArrayList<LiquidStack>();
-		for (LiquidData data : getAllLiquidData())
-		{
-				validStacks.add(data.getStack());
-		}
-		LiquidStack[] stacks = new LiquidStack[validStacks.size()];
-		for(int i =0; i < validStacks.size();i++)
-		{
-			stacks[i] = validStacks.get(i);
-		}
-		return stacks;
-	}
-
-	/**
 	 * checks to see if the liquidStack is valid for the given color
 	 */
 	public boolean isValidLiquid(LiquidStack stack)
 	{
-		if (this == NONE || this.getAllLiquidData().size() == 0)
+		if (this != BLUE && this != RED && this != BLACK && this != YELLOW && this != ORANGE)
 		{
 			return true;
 		}
@@ -130,13 +66,25 @@ public enum ColorCode
 		{
 			return false;
 		}
-
-		for (LiquidData data : LiquidHandler.allowedLiquids)
+		else if (this == BLUE && stack.isLiquidEqual(LiquidDictionary.getCanonicalLiquid("Water")))
 		{
-			if (data.getStack().isLiquidEqual(stack) && data.getColor() == this)
-			{
-				return true;
-			}
+			return true;
+		}
+		else if (this == RED && stack.isLiquidEqual(LiquidDictionary.getCanonicalLiquid("Lava")))
+		{
+			return true;
+		}
+		else if (this == BLACK && stack.isLiquidEqual(LiquidDictionary.getCanonicalLiquid("Oil")))
+		{
+			return true;
+		}
+		else if (this == YELLOW && stack.isLiquidEqual(LiquidDictionary.getCanonicalLiquid("Fuel")))
+		{
+			return true;
+		}
+		else if (this == ORANGE && stack.isLiquidEqual(LiquidDictionary.getCanonicalLiquid("Steam")))
+		{
+			return true;
 		}
 		return false;
 	}

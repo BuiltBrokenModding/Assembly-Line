@@ -29,7 +29,7 @@ public class RenderTank extends TileEntitySpecialRenderer
 	{
 		int meta = te.getBlockMetadata();
 		int guageMeta = meta;
-		LiquidStack stack = te.getStack();
+		LiquidStack stack = te.getStoredLiquid();
 		int pos = 0;
 		if (stack != null)
 		{

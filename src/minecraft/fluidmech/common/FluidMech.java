@@ -25,7 +25,7 @@ import fluidmech.common.machines.pipes.BlockPipe;
 import fluidmech.common.machines.pipes.TileEntityPipe;
 import fluidmech.common.machines.pipes.TileEntityPipe;
 import hydraulic.api.ColorCode;
-import hydraulic.core.liquidNetwork.LiquidHandler;
+import hydraulic.fluidnetwork.FluidHelper;
 
 import java.io.File;
 import java.util.logging.Logger;
@@ -120,7 +120,7 @@ public class FluidMech extends DummyModContainer
     {
         FMLog.setParent(FMLLog.getLogger());
         FMLog.info("Initializing...");
-        MinecraftForge.EVENT_BUS.register(new LiquidHandler());
+        MinecraftForge.EVENT_BUS.register(new FluidHelper());
 
         instance = this;
         CONFIGURATION.load();
@@ -325,7 +325,7 @@ public class FluidMech extends DummyModContainer
         // add Default Liquids to current list, done last to let other mods use
         // there liquid data first if used
         LiquidStack waste = LiquidDictionary.getOrCreateLiquid("Waste", new LiquidStack(FluidMech.blockWasteLiquid, 1));
-        LiquidHandler.addDefaultLiquids();
+        FluidHelper.addDefaultLiquids();
         FMLog.info("Done Loading");
     }
 }

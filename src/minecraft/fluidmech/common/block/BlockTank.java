@@ -1,6 +1,6 @@
 package fluidmech.common.block;
 
-import hydraulic.core.liquidNetwork.LiquidHandler;
+import hydraulic.fluidnetwork.FluidHelper;
 
 import java.util.List;
 
@@ -86,7 +86,7 @@ public class BlockTank extends BlockAdvanced
 
 					if (filled != 0 && !entityplayer.capabilities.isCreativeMode)
 					{
-						entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, LiquidHandler.consumeItem(current));
+						entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, FluidHelper.consumeItem(current));
 					}
 
 					return true;
@@ -96,7 +96,7 @@ public class BlockTank extends BlockAdvanced
 				else
 				{
 
-					LiquidStack stack = tank.getStack();
+					LiquidStack stack = tank.getStoredLiquid();
 					if (stack != null)
 					{
 						ItemStack liquidItem = LiquidContainerRegistry.fillLiquidContainer(stack, current);
@@ -113,12 +113,12 @@ public class BlockTank extends BlockAdvanced
 										return false;
 									else
 									{
-										entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, LiquidHandler.consumeItem(current));
+										entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, FluidHelper.consumeItem(current));
 									}
 								}
 								else
 								{
-									entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, LiquidHandler.consumeItem(current));
+									entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, FluidHelper.consumeItem(current));
 									entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, liquidItem);
 								}
 							}

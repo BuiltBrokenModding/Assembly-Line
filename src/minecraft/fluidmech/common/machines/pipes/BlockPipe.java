@@ -1,6 +1,6 @@
 package fluidmech.common.machines.pipes;
 
-import hydraulic.api.IFluidNetworkPart;
+import hydraulic.fluidnetwork.IFluidNetworkPart;
 
 import java.util.List;
 

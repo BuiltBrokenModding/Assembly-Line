@@ -1,8 +1,6 @@
-package hydraulic.core.liquidNetwork;
+package hydraulic.fluidnetwork;
 
 import hydraulic.api.ColorCode;
-import hydraulic.api.IFluidNetworkPart;
-import hydraulic.core.path.PathfinderCheckerPipes;
 import hydraulic.helpers.connectionHelper;
 
 import java.util.ArrayList;
@@ -17,6 +15,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
+import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.liquids.LiquidTank;
 import universalelectricity.core.block.IConnectionProvider;
@@ -649,7 +648,7 @@ public class HydraulicNetwork
 		{
 			return "Zero";
 		}
-		return String.format("%d/%d %S Stored", combinedStorage.getLiquid().amount / LiquidContainerRegistry.BUCKET_VOLUME, combinedStorage.getCapacity() / LiquidContainerRegistry.BUCKET_VOLUME, LiquidHandler.getName(this.combinedStorage.getLiquid()));
+		return String.format("%d/%d %S Stored", combinedStorage.getLiquid().amount / LiquidContainerRegistry.BUCKET_VOLUME, combinedStorage.getCapacity() / LiquidContainerRegistry.BUCKET_VOLUME, LiquidDictionary.findLiquidName(this.combinedStorage.getLiquid()));
 	}
 
 	public ILiquidTank getTank()

@@ -1,6 +1,5 @@
-package hydraulic.core.liquidNetwork;
+package hydraulic.fluidnetwork;
 
-import hydraulic.api.IFluidNetworkPart;
 
 import java.util.ArrayList;
 import java.util.EnumSet;

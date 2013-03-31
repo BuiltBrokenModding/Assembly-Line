@@ -57,7 +57,7 @@ public class RenderSink extends TileEntitySpecialRenderer
                 break;
         }
         model.render(0.0625F);
-        renderWater(te.getStack());
+        renderWater(te.getStoredLiquid());
         GL11.glPopMatrix();
 
     }

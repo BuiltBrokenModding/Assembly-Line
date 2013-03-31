@@ -3,10 +3,10 @@ package fluidmech.common.machines.pipes;
 import fluidmech.common.FluidMech;
 import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
-import hydraulic.api.IFluidNetworkPart;
 import hydraulic.api.IPipeConnection;
 import hydraulic.api.IReadOut;
-import hydraulic.core.liquidNetwork.HydraulicNetwork;
+import hydraulic.fluidnetwork.HydraulicNetwork;
+import hydraulic.fluidnetwork.IFluidNetworkPart;
 
 import java.util.Random;
 

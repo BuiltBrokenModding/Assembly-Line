@@ -1,7 +1,8 @@
-package hydraulic.api;
+package hydraulic.fluidnetwork;
 
 import universalelectricity.core.block.IConnectionProvider;
-import hydraulic.core.liquidNetwork.HydraulicNetwork;
+import hydraulic.api.IColorCoded;
+import hydraulic.api.IPipeConnection;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;

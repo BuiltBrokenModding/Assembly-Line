@@ -1,20 +1,15 @@
 package hydraulic.prefab.tile;
 
+import hydraulic.api.IPipeConnection;
+import hydraulic.api.IReadOut;
+import hydraulic.fluidnetwork.HydraulicNetworkHelper;
+
 import java.util.Random;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ITankContainer;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
-import hydraulic.api.ColorCode;
-import hydraulic.api.IColorCoded;
-import hydraulic.api.IPipeConnection;
-import hydraulic.api.IReadOut;
-import hydraulic.core.liquidNetwork.HydraulicNetworkHelper;
-import hydraulic.core.liquidNetwork.LiquidData;
-import hydraulic.core.liquidNetwork.LiquidHandler;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 public abstract class TileEntityFluidDevice extends TileEntityAdvanced implements IReadOut, IPipeConnection

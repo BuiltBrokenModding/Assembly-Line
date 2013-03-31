@@ -5,7 +5,6 @@ import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
 import hydraulic.api.IPipeConnection;
 import hydraulic.api.IReadOut;
-import hydraulic.core.liquidNetwork.LiquidHandler;
 import hydraulic.helpers.connectionHelper;
 import hydraulic.prefab.tile.TileEntityFluidDevice;
 
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -21,7 +19,6 @@ import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
-import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 public class TileEntityReleaseValve extends TileEntityFluidDevice implements IPipeConnection, IReadOut
 {
@@ -131,17 +128,6 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements IPi
 	}
 
 	/**
-	 * checks a liquidstack against its color code
-	 * 
-	 * @param stack
-	 * @return
-	 */
-	public boolean canAcceptLiquid(LiquidStack stack)
-	{
-		return !this.isRestricted() || canConnect(ColorCode.get(LiquidHandler.get(stack)));
-	}
-
-	/**
 	 * Collects info about the surrounding 6 tiles and orders them into drain-able(ITankContainer)
 	 * and fill-able(TileEntityPipes) instances
 	 */
@@ -181,11 +167,8 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements IPi
 					LiquidStack ll = tanks[t].getLiquid();
 					if (ll != null && ll.amount > 0 && ll.amount > 0)
 					{
-						if (this.canAcceptLiquid(ll))
-						{
-							this.input.add((ITankContainer) ent);
-							break;
-						}
+						this.input.add((ITankContainer) ent);
+						break;
 					}
 				}
 			}

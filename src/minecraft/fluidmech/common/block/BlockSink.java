@@ -1,6 +1,6 @@
 package fluidmech.common.block;
 
-import hydraulic.core.liquidNetwork.LiquidHandler;
+import hydraulic.fluidnetwork.FluidHelper;
 import hydraulic.helpers.MetaGroup;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
@@ -69,7 +69,7 @@ public class BlockSink extends BlockAdvanced
 
 					if (filled != 0 && !entityplayer.capabilities.isCreativeMode)
 					{
-						entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, LiquidHandler.consumeItem(current));
+						entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, FluidHelper.consumeItem(current));
 					}
 
 					return true;
@@ -85,7 +85,7 @@ public class BlockSink extends BlockAdvanced
 						var13.removeColor(current);
 						return true;
 					}
-					LiquidStack stack = tank.getStack();
+					LiquidStack stack = tank.getStoredLiquid();
 					if (stack != null)
 					{
 						ItemStack liquidItem = LiquidContainerRegistry.fillLiquidContainer(stack, current);
@@ -102,12 +102,12 @@ public class BlockSink extends BlockAdvanced
 										return false;
 									else
 									{
-										entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, LiquidHandler.consumeItem(current));
+										entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, FluidHelper.consumeItem(current));
 									}
 								}
 								else
 								{
-									entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, LiquidHandler.consumeItem(current));
+									entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, FluidHelper.consumeItem(current));
 									entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, liquidItem);
 								}
 							}

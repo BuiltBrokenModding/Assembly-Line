@@ -5,8 +5,7 @@ import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
 import hydraulic.api.IPipeConnection;
 import hydraulic.api.IReadOut;
-import hydraulic.core.liquidNetwork.LiquidData;
-import hydraulic.core.liquidNetwork.LiquidHandler;
+import hydraulic.fluidnetwork.FluidHelper;
 import hydraulic.helpers.MetaGroup;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
@@ -153,8 +152,6 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 		int blockID = worldObj.getBlockId(x, y, z);
 		int meta = worldObj.getBlockMetadata(x, y, z);
 
-		LiquidData resource = LiquidHandler.getFromBlockAndMetadata(blockID, meta);
-
 		ITankContainer fillTarget = getFillTarget();
 
 		// TODO redo this
@@ -170,16 +167,12 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 	boolean drainBlock(Vector3 loc)
 	{
 		int blockID = worldObj.getBlockId(loc.intX(), loc.intY(), loc.intZ());
-		int meta = worldObj.getBlockMetadata(loc.intX(), loc.intY(), loc.intZ());
 
-		LiquidData resource = LiquidHandler.getFromBlockAndMetadata(blockID, meta);
-
-		if (color.isValidLiquid(resource.getStack()) && meta == 0)
+		LiquidStack stack = FluidHelper.getLiquidFromBlockId(blockID);
+		if (color.isValidLiquid(stack))
 		{
-
-			LiquidStack stack = resource.getStack();
 			stack.amount = LiquidContainerRegistry.BUCKET_VOLUME;
-			int fillAmmount = getFillTarget().fill(pipeConnection, this.color.getLiquidData().getStack(), true);
+			int fillAmmount = getFillTarget().fill(pipeConnection, stack, true);
 
 			if (fillAmmount > 0)
 			{

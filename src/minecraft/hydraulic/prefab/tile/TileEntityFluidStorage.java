@@ -1,12 +1,12 @@
 package hydraulic.prefab.tile;
 
-import java.util.EnumSet;
-
 import fluidmech.common.machines.TileEntityTank;
 import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
-import hydraulic.core.liquidNetwork.LiquidData;
-import hydraulic.core.liquidNetwork.LiquidHandler;
+import hydraulic.fluidnetwork.FluidHelper;
+
+import java.util.EnumSet;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -14,6 +14,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
+import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.liquids.LiquidTank;
 
@@ -24,10 +25,12 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 	/* FLUID FILL AND DRAIN RULES */
 	private EnumSet<ForgeDirection> fillableSides = EnumSet.allOf(ForgeDirection.class);
 	private EnumSet<ForgeDirection> drainableSides = EnumSet.allOf(ForgeDirection.class);
+
 	/**
 	 * gets the max storage limit of the tank
 	 */
 	public abstract int getTankSize();
+
 	@Override
 	public String getMeterReading(EntityPlayer user, ForgeDirection side)
 	{
@@ -35,7 +38,7 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 		{
 			return "Empty";
 		}
-		return String.format("%d/%d %S Stored", tank.getLiquid().amount / LiquidContainerRegistry.BUCKET_VOLUME, tank.getCapacity() / LiquidContainerRegistry.BUCKET_VOLUME, LiquidHandler.get(tank.getLiquid()).getName());
+		return String.format("%d/%d %S Stored", tank.getLiquid().amount / LiquidContainerRegistry.BUCKET_VOLUME, tank.getCapacity() / LiquidContainerRegistry.BUCKET_VOLUME, LiquidDictionary.findLiquidName(tank.getLiquid()));
 	}
 
 	@Override
@@ -60,27 +63,14 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 		if (resource == null || tankIndex != 0)
 		{
 			return 0;
-		}else
-		if (this.getColor() != ColorCode.NONE && !getColor().getLiquidData().getStack().isLiquidEqual(resource))
-		{
-			return 0;
-		}else if (this.tank.getLiquid() != null && resource.isLiquidEqual(this.tank.getLiquid()))
+		}
+		else if (this.getColor() != ColorCode.NONE && !getColor().isValidLiquid(resource))
 		{
 			return 0;
 		}
-
-		if (this.isFull())
+		else if (this.tank.getLiquid() != null && resource.isLiquidEqual(this.tank.getLiquid()))
 		{
-			int change = 1;
-			if (LiquidHandler.get(resource).getCanFloat())
-			{
-				change = -1;
-			}
-			TileEntity tank = worldObj.getBlockTileEntity(xCoord, yCoord + change, zCoord);
-			if (tank instanceof TileEntityTank)
-			{
-				return ((TileEntityTank) tank).fill(0, resource, doFill);
-			}
+			return 0;
 		}
 		return this.tank.fill(resource, doFill);
 	}
@@ -105,7 +95,7 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 		LiquidStack stack = this.tank.getLiquid();
 		if (maxDrain < stack.amount)
 		{
-			stack = LiquidHandler.getStack(stack, maxDrain);
+			stack = FluidHelper.getStack(stack, maxDrain);
 		}
 		if (doDrain)
 		{
@@ -148,10 +138,7 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 
 		LiquidStack liquid = new LiquidStack(0, 0, 0);
 		liquid.readFromNBT(nbt.getCompoundTag("stored"));
-		if (!liquid.isLiquidEqual(LiquidHandler.unkown.getStack()))
-		{
-			tank.setLiquid(liquid);
-		}
+		tank.setLiquid(liquid);
 	}
 
 	@Override
@@ -174,6 +161,14 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * gets the liquidStack stored in the internal tank
+	 */
+	public LiquidStack getStoredLiquid()
+	{
+		return this.tank.getLiquid();
 	}
 
 }

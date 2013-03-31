@@ -3,33 +3,21 @@ package fluidmech.common.machines;
 import fluidmech.common.FluidMech;
 import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
-import hydraulic.api.IPipeConnection;
-import hydraulic.api.IReadOut;
-import hydraulic.core.liquidNetwork.LiquidData;
-import hydraulic.core.liquidNetwork.LiquidHandler;
-import hydraulic.helpers.connectionHelper;
-import hydraulic.prefab.tile.TileEntityFluidDevice;
+import hydraulic.fluidnetwork.FluidHelper;
 import hydraulic.prefab.tile.TileEntityFluidStorage;
-
-import java.util.Random;
-
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
-import net.minecraftforge.liquids.LiquidTank;
 import universalelectricity.core.block.IConductor;
 import universalelectricity.core.block.IConnectionProvider;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
-import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -60,7 +48,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IPacketRec
 				if (ticks % (random.nextInt(4) * 5 + 10) >= 0)
 				{
 					this.fillTanksAround();
-					this.fillTankBellow();
+					this.tank.drain(this.fillSide(this.getStoredLiquid(), ForgeDirection.DOWN, true), true);
 				}
 
 				if ((this.tank.getLiquid() == null && originalVolume != 0) || (this.tank.getLiquid() != null && this.tank.getLiquid().amount != originalVolume))
@@ -80,9 +68,9 @@ public class TileEntityTank extends TileEntityFluidStorage implements IPacketRec
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		if (this.getStack() != null)
+		if (this.getStoredLiquid() != null)
 		{
-			return PacketManager.getPacket(FluidMech.CHANNEL, this, this.getStack().itemID, this.getStack().amount, this.getStack().itemMeta);
+			return PacketManager.getPacket(FluidMech.CHANNEL, this, this.getStoredLiquid().itemID, this.getStoredLiquid().amount, this.getStoredLiquid().itemMeta);
 		}
 		else
 		{
@@ -90,7 +78,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IPacketRec
 		}
 	}
 
-	public LiquidStack getStack()
+	public LiquidStack getStoredLiquid()
 	{
 		return tank.getLiquid();
 	}
@@ -113,14 +101,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IPacketRec
 	@Override
 	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
 	{
-		if (resource == null || (this.getColor() != ColorCode.NONE && !getColor().getLiquidData().getStack().isLiquidEqual(resource)))
-		{
-			return 0;
-		}
-
-		LiquidData data = LiquidHandler.get(resource);
-
-		if ((data.getCanFloat() && from == ForgeDirection.DOWN) || !data.getCanFloat() && from == ForgeDirection.UP)
+		if (resource == null || (this.getColor() != ColorCode.NONE && !getColor().isValidLiquid(resource)))
 		{
 			return 0;
 		}
@@ -132,12 +113,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IPacketRec
 	{
 		if (this.isFull())
 		{
-			int change = 1;
-			if (LiquidHandler.get(resource).getCanFloat())
-			{
-				change = -1;
-			}
-			TileEntity tank = worldObj.getBlockTileEntity(xCoord, yCoord + change, zCoord);
+			TileEntity tank = worldObj.getBlockTileEntity(xCoord, yCoord + 1, zCoord);
 			if (tank instanceof TileEntityTank)
 			{
 				return ((TileEntityTank) tank).fill(0, resource, doFill);
@@ -165,7 +141,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IPacketRec
 		}
 
 		TileEntity[] ents = this.getAdjacentConnections();
-		
+
 		/* SUM VOLUME UP FOR ALL CONNECTED TANKS */
 		int commonVol = this.tank.getLiquid().amount;
 		int equalVol = commonVol;
@@ -198,11 +174,11 @@ public class TileEntityTank extends TileEntityFluidStorage implements IPacketRec
 
 				if (target == null)
 				{
-					filling = LiquidHandler.getStack(this.tank.getLiquid(), equalVol);
+					filling = FluidHelper.getStack(this.tank.getLiquid(), equalVol);
 				}
 				else if (target.amount < equalVol)
 				{
-					filling = LiquidHandler.getStack(this.tank.getLiquid(), equalVol - target.amount);
+					filling = FluidHelper.getStack(this.tank.getLiquid(), equalVol - target.amount);
 				}
 				else
 				{
@@ -212,42 +188,6 @@ public class TileEntityTank extends TileEntityFluidStorage implements IPacketRec
 				this.tank.drain(f, true);
 			}
 
-		}
-	}
-
-	/** Will fill the ITankContainer bellow with up to one bucket of liquid a request */
-	public void fillTankBellow()
-	{
-		if (this.tank.getLiquid() == null || this.tank.getLiquid().amount <= 0)
-		{
-			return;
-		}
-		/* GET DATA FOR THE LIQUID IN THE INTERNAL TANK */
-		LiquidData liquidData = LiquidHandler.get(this.tank.getLiquid());
-
-		if (liquidData != null)
-		{
-			/* GET THE TILE ABOVE OR BELLOW BASE ON LIQUID DATA */
-			ForgeDirection fillDirection = liquidData.getCanFloat() ? ForgeDirection.UP : ForgeDirection.DOWN;
-			TileEntity tileEntity = worldObj.getBlockTileEntity(xCoord, yCoord + fillDirection.offsetY, zCoord);
-
-			if (tileEntity instanceof ITankContainer)
-			{
-				/* DO CHECK FOR NON-MATCHING COLOR CODE */
-				if (tileEntity instanceof IColorCoded && ((IColorCoded) tileEntity).getColor() != ColorCode.NONE && ((IColorCoded) tileEntity).getColor() != this.getColor())
-				{
-					return;
-				}
-				/* CAN ONLY TRADE ONE BUCKET AT A TIME */
-				int vol = LiquidContainerRegistry.BUCKET_VOLUME;
-				if (this.tank.getLiquid().amount < vol)
-				{
-					vol = this.tank.getLiquid().amount;
-				}
-				/* FILL THE ITANKCONTAINER BELLOW THEN DRAIN THE INTERAL TANK IN THIS */
-				int fillAmmount = ((ITankContainer) tileEntity).fill(fillDirection, LiquidHandler.getStack(this.tank.getLiquid(), vol), true);
-				this.tank.drain(fillAmmount, true);
-			}
 		}
 	}
 

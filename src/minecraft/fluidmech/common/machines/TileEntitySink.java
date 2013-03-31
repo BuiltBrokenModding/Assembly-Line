@@ -5,7 +5,7 @@ import java.util.Random;
 import fluidmech.common.FluidMech;
 import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
-import hydraulic.core.liquidNetwork.LiquidHandler;
+import hydraulic.fluidnetwork.FluidHelper;
 import hydraulic.prefab.tile.TileEntityFluidStorage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -95,4 +95,6 @@ public class TileEntitySink extends TileEntityFluidStorage implements IPacketRec
 	{
 		return ColorCode.BLUE;
 	}
+
+	
 }

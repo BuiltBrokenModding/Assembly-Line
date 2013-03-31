@@ -25,7 +25,7 @@ public class connectionHelper
 
 	public static TileEntity[] getSurroundingTileEntities(World world, int x, int y, int z)
 	{
-		TileEntity[] list = new TileEntity[] { null, null, null, null, null, null };
+		TileEntity[] list = new TileEntity[6];
 		for (int i = 0; i < 6; i++)
 		{
 			ForgeDirection direction = ForgeDirection.getOrientation(i);

@@ -1,4 +1,4 @@
-package hydraulic.core.path;
+package hydraulic.fluidnetwork;
 
 import hydraulic.api.IPipeConnection;
 
