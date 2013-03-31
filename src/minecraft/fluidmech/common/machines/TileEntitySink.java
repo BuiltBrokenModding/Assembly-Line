@@ -6,6 +6,7 @@ import fluidmech.common.FluidMech;
 import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
 import hydraulic.core.liquidNetwork.LiquidHandler;
+import hydraulic.prefab.tile.TileEntityFluidStorage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -25,14 +26,13 @@ import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntitySink extends TileEntityAdvanced implements IPacketReceiver, ITankContainer, IColorCoded
+public class TileEntitySink extends TileEntityFluidStorage implements IPacketReceiver, ITankContainer, IColorCoded
 {
-	public TileEntity[] cc = { null, null, null, null, null, null };
-
-	public static final int LMax = 2;
-	private int count = 100;
-	private Random random = new Random();
-	private LiquidTank tank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME * LMax);
+	@Override
+	public int getTankSize()
+	{
+		return LiquidContainerRegistry.BUCKET_VOLUME * 2;
+	}
 
 	@Override
 	public void updateEntity()
@@ -49,38 +49,14 @@ public class TileEntitySink extends TileEntityAdvanced implements IPacketReceive
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		if (this.getStack() != null)
+		LiquidStack stack = this.tank.getLiquid();
+		if (stack != null)
 		{
-			return PacketManager.getPacket(FluidMech.CHANNEL, this, this.getStack().itemID, this.getStack().amount, this.getStack().itemMeta);
+			return PacketManager.getPacket(FluidMech.CHANNEL, this, stack.itemID, stack.amount, stack.itemMeta);
 		}
 		else
 		{
 			return PacketManager.getPacket(FluidMech.CHANNEL, this, 0, 0, 0);
-		}
-	}
-
-	public LiquidStack getStack()
-	{
-		return tank.getLiquid();
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
-
-		LiquidStack liquid = new LiquidStack(0, 0, 0);
-		liquid.readFromNBT(nbt.getCompoundTag("stored"));
-		tank.setLiquid(liquid);
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
-		if (tank.getLiquid() != null)
-		{
-			nbt.setTag("stored", tank.getLiquid().writeToNBT(new NBTTagCompound()));
 		}
 	}
 
@@ -100,61 +76,13 @@ public class TileEntitySink extends TileEntityAdvanced implements IPacketReceive
 	}
 
 	@Override
-	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
-	{
-		return (resource == null || (!this.getColor().getLiquidData().getStack().isLiquidEqual(resource))) ? 0 : this.fill(0, resource, doFill);
-	}
-
-	@Override
 	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
 	{
-		if (resource == null || tankIndex != 0)
-		{
-			return 0;
-		}
 		if (doFill)
 		{
 			this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 		}
-		return this.tank.fill(resource, doFill);
-	}
-
-	@Override
-	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
-	{
-		return this.drain(0, maxDrain, doDrain);
-	}
-
-	@Override
-	public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
-	{
-		if (tankIndex != 0 || this.tank.getLiquid() == null)
-		{
-			return null;
-		}
-		LiquidStack stack = this.tank.getLiquid();
-		if (maxDrain < this.tank.getLiquid().amount)
-		{
-			stack = LiquidHandler.getStack(stack, maxDrain);
-		}
-		if (doDrain)
-		{
-			this.tank.drain(maxDrain, doDrain);
-			this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
-		}
-		return stack;
-	}
-
-	@Override
-	public ILiquidTank[] getTanks(ForgeDirection direction)
-	{
-		return new ILiquidTank[] { tank };
-	}
-
-	@Override
-	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
-	{
-		return tank;
+		return super.fill(tankIndex, resource, doFill);
 	}
 
 	@Override

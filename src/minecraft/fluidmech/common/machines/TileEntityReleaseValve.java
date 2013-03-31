@@ -7,6 +7,7 @@ import hydraulic.api.IPipeConnection;
 import hydraulic.api.IReadOut;
 import hydraulic.core.liquidNetwork.LiquidHandler;
 import hydraulic.helpers.connectionHelper;
+import hydraulic.prefab.tile.TileEntityFluidDevice;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 
-public class TileEntityReleaseValve extends TileEntityAdvanced implements IPipeConnection, IReadOut
+public class TileEntityReleaseValve extends TileEntityFluidDevice implements IPipeConnection, IReadOut
 {
 	public boolean[] allowed = new boolean[ColorCode.values().length - 1];
 	public TileEntity[] connected = new TileEntity[6];
@@ -31,8 +32,6 @@ public class TileEntityReleaseValve extends TileEntityAdvanced implements IPipeC
 	private List<ITankContainer> input = new ArrayList<ITankContainer>();
 
 	public boolean isPowered = false;
-
-	private ItemStack[] inventory = new ItemStack[0];
 
 	@Override
 	public void updateEntity()
@@ -73,7 +72,7 @@ public class TileEntityReleaseValve extends TileEntityAdvanced implements IPipeC
 						if (inputPipe != null)
 						{
 							ILiquidTank pipeVolume = inputPipe.getTanks(ForgeDirection.UNKNOWN)[0];
-							int ammountFilled = inputPipe.getNetwork().addFluidToNetwork(this,stack, 100, true);
+							int ammountFilled = inputPipe.getNetwork().addFluidToNetwork(this, stack, 100, true);
 							drainedTank.drain(ForgeDirection.UNKNOWN, ammountFilled, true);
 						}
 					}
@@ -89,17 +88,7 @@ public class TileEntityReleaseValve extends TileEntityAdvanced implements IPipeC
 		// find normal color selective pipe first
 		for (TileEntityPipe pipe : output)
 		{
-			ILiquidTank tank = pipe.getTanks(ForgeDirection.UNKNOWN)[0];
-			if (pipe.getColor().getLiquidData().getStack().isLiquidEqual(stack) && (tank.getLiquid() == null || tank.getLiquid().amount < tank.getCapacity()))
-			{
-				//
-				return pipe;
-			}
-		}
-		// if no color selective pipe is found look for generic pipes
-		for (TileEntityPipe pipe : output)
-		{
-			if (pipe.getColor() == ColorCode.NONE)
+			if (pipe.fill(ForgeDirection.UNKNOWN, stack, false) > 0)
 			{
 				return pipe;
 			}
@@ -210,7 +199,7 @@ public class TileEntityReleaseValve extends TileEntityAdvanced implements IPipeC
 	@Override
 	public boolean canConnect(TileEntity entity, ForgeDirection dir)
 	{
-		return entity != null && entity instanceof IColorCoded && (((IColorCoded) entity).getColor() == ColorCode.NONE || this.canConnect(((IColorCoded) entity).getColor()));
+		return entity != null && entity instanceof IColorCoded && this.canConnect(((IColorCoded) entity).getColor());
 	}
 
 	@Override
