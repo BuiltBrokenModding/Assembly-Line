@@ -23,6 +23,7 @@ public class LiquidHandler
 	public static LiquidData steam;
 	public static LiquidData water;
 	public static LiquidData lava;
+	@Deprecated
 	public static LiquidData unkown;
 	public static LiquidData waste;
 	public static LiquidData milk;
