@@ -22,9 +22,6 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 {
 	/* INTERNAL TANK */
 	public LiquidTank tank = new LiquidTank(this.getTankSize());
-	/* FLUID FILL AND DRAIN RULES */
-	private EnumSet<ForgeDirection> fillableSides = EnumSet.allOf(ForgeDirection.class);
-	private EnumSet<ForgeDirection> drainableSides = EnumSet.allOf(ForgeDirection.class);
 
 	/**
 	 * gets the max storage limit of the tank
@@ -44,22 +41,13 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 	@Override
 	public boolean canConnect(TileEntity entity, ForgeDirection dir)
 	{
-		if (fillableSides.contains(dir) || drainableSides.contains(dir))
-		{
-			return true;
-		}
-		return false;
+		return true;
 	}
 
 	@Override
 	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
 	{
-		
-		if (fillableSides.contains(from))
-		{
-			return this.fill(0, resource, doFill);
-		}
-		return 0;
+		return this.fill(0, resource, doFill);
 	}
 
 	@Override
@@ -83,11 +71,7 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 	@Override
 	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		if (this.drainableSides.contains(from))
-		{
-			return this.drain(0, maxDrain, doDrain);
-		}
-		return null;
+		return this.drain(0, maxDrain, doDrain);
 	}
 
 	@Override
@@ -108,11 +92,7 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 	@Override
 	public ILiquidTank[] getTanks(ForgeDirection dir)
 	{
-		if (fillableSides.contains(dir) || drainableSides.contains(dir))
-		{
-			return new ILiquidTank[] { this.tank };
-		}
-		return null;
+		return new ILiquidTank[] { this.tank };
 	}
 
 	@Override
@@ -122,12 +102,9 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 		{
 			return null;
 		}
-		if (fillableSides.contains(dir) || drainableSides.contains(dir))
+		if (type.isLiquidEqual(this.tank.getLiquid()))
 		{
-			if (type.isLiquidEqual(this.tank.getLiquid()))
-			{
-				return this.tank;
-			}
+			return this.tank;
 		}
 		return null;
 	}

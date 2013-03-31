@@ -53,7 +53,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	public void updateEntity()
 	{
 		super.updateEntity();
-		if (!worldObj.isRemote && ticks % ((int) random.nextInt(10) * 80 + 20) == 0)
+		if (!worldObj.isRemote && ticks % ((int) random.nextInt(5) * 40 + 20) == 0)
 		{
 			this.updateAdjacentConnections();
 		}

@@ -158,7 +158,7 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 	 */
 	boolean canPump(int x, int y, int z)
 	{
-		return getFillTarget() != null && FluidHelper.getLiquidId(worldObj.getBlockId(x, y, z)) != -1;
+		return getFillTarget() != null && FluidHelper.getLiquidId(worldObj.getBlockId(x, y, z)) != -1 && worldObj.getBlockMetadata(x, y, z) == 0 ;
 	}
 
 	/**
