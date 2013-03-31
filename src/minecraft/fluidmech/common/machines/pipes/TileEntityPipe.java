@@ -7,6 +7,7 @@ import hydraulic.api.IPipeConnection;
 import hydraulic.api.IReadOut;
 import hydraulic.fluidnetwork.HydraulicNetwork;
 import hydraulic.fluidnetwork.IFluidNetworkPart;
+import hydraulic.helpers.FluidHelper;
 
 import java.util.Random;
 
@@ -268,7 +269,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	{
 
 		if (this.worldObj != null && !this.worldObj.isRemote)
-		{	
+		{
 
 			boolean[] previousConnections = this.renderConnection.clone();
 			this.connectedBlocks = new TileEntity[6];
@@ -337,7 +338,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	@Override
 	public int getMaxFlowRate(LiquidStack stack, ForgeDirection side)
 	{
-		return LiquidContainerRegistry.BUCKET_VOLUME * 2;
+		return FluidHelper.getDefaultFlowRate(stack) * 2;
 	}
 
 	@Override
@@ -385,7 +386,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	public void setTankContent(LiquidStack stack)
 	{
 		this.fakeTank.setLiquid(stack);
-		
+
 	}
 
 }

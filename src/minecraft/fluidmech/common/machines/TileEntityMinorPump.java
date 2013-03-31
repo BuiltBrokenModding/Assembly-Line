@@ -54,6 +54,12 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 	}
 
 	@Override
+	public void initiate()
+	{
+		this.getConnections();
+	}
+
+	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
@@ -65,11 +71,13 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 			if (this.canPump(xCoord, yCoord - 1, zCoord) && this.wattsReceived >= this.WATTS_PER_TICK)
 			{
 				wattsReceived -= this.WATTS_PER_TICK;
-
-				if (percentPumped++ >= 10)
+				if (percentPumped < 10)
+				{
+					percentPumped++;
+				}
+				else if (percentPumped >= 10 && this.drainBlock(new Vector3(xCoord, yCoord - 1, zCoord)))
 				{
 					percentPumped = 0;
-					this.drainBlock(new Vector3(xCoord, yCoord - 1, zCoord));
 				}
 
 				/* DO ANIMATION CHANGE */
@@ -81,8 +89,9 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 			}
 			if (this.ticks % 10 == 0)
 			{
-				Packet packet = PacketManager.getPacket(FluidMech.CHANNEL, this, color.ordinal(), this.wattsReceived);
-				PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 60);
+				// Packet packet = PacketManager.getPacket(FluidMech.CHANNEL, this, color.ordinal(),
+				// this.wattsReceived);
+				// PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 60);
 			}
 		}
 
@@ -181,7 +190,7 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 	@Override
 	public String getMeterReading(EntityPlayer user, ForgeDirection side)
 	{
-		return this.wattsReceived + "/" + this.WATTS_PER_TICK + "W " + this.percentPumped + "% DONE";
+		return String.format("%.2f/%.2f  %f Done", this.wattsReceived,this.WATTS_PER_TICK,this.percentPumped);
 	}
 
 	@Override

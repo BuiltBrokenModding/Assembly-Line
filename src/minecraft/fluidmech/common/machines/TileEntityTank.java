@@ -99,16 +99,6 @@ public class TileEntityTank extends TileEntityFluidStorage implements IPacketRec
 	}
 
 	@Override
-	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
-	{
-		if (resource == null || (this.getColor() != ColorCode.NONE && !getColor().isValidLiquid(resource)))
-		{
-			return 0;
-		}
-		return this.fill(0, resource, doFill);
-	}
-
-	@Override
 	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
 	{
 		if (this.isFull())
@@ -116,7 +106,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IPacketRec
 			TileEntity tank = worldObj.getBlockTileEntity(xCoord, yCoord + 1, zCoord);
 			if (tank instanceof TileEntityTank)
 			{
-				return ((TileEntityTank) tank).fill(0, resource, doFill);
+				return ((TileEntityTank) tank).fill(tankIndex, resource, doFill);
 			}
 		}
 		return super.fill(tankIndex, resource, doFill);
@@ -125,7 +115,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IPacketRec
 	@Override
 	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		if (from != ForgeDirection.UP && from != ForgeDirection.DOWN)
+		if (from != ForgeDirection.DOWN)
 		{
 			return super.drain(from, maxDrain, doDrain);
 		}
@@ -264,6 +254,6 @@ public class TileEntityTank extends TileEntityFluidStorage implements IPacketRec
 	@Override
 	public int getTankSize()
 	{
-		return LiquidContainerRegistry.BUCKET_VOLUME * 4;
+		return (LiquidContainerRegistry.BUCKET_VOLUME * 4);
 	}
 }

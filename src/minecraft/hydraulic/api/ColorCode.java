@@ -5,6 +5,8 @@ import hydraulic.helpers.FluidHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.block.Block;
+import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
 
@@ -66,11 +68,11 @@ public enum ColorCode
 		{
 			return false;
 		}
-		else if (this == BLUE && stack.isLiquidEqual(LiquidDictionary.getCanonicalLiquid("Water")))
+		else if (this == BLUE && stack.isLiquidEqual(new LiquidStack(Block.waterStill, LiquidContainerRegistry.BUCKET_VOLUME)))
 		{
 			return true;
 		}
-		else if (this == RED && stack.isLiquidEqual(LiquidDictionary.getCanonicalLiquid("Lava")))
+		else if (this == RED && stack.isLiquidEqual(new LiquidStack(Block.lavaStill, LiquidContainerRegistry.BUCKET_VOLUME)))
 		{
 			return true;
 		}

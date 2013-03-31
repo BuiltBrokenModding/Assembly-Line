@@ -82,10 +82,6 @@ public class BlockPumpMachine extends BlockAdvanced
 		TileEntity ent = world.getBlockTileEntity(x, y, z);
 
 		world.setBlockMetadataWithNotify(x, y, z, angle + MetaGroup.getGroupStartMeta(MetaGroup.getGrouping(meta)), 3);
-		if (ent instanceof TileEntityAdvanced)
-		{
-			((TileEntityAdvanced) world.getBlockTileEntity(x, y, z)).initiate();
-		}
 
 		world.notifyBlocksOfNeighborChange(x, y, z, this.blockID);
 		if (p instanceof EntityPlayer)
@@ -132,13 +128,15 @@ public class BlockPumpMachine extends BlockAdvanced
 		if (meta == (g * 4) + 3)
 		{
 			par1World.setBlockMetadataWithNotify(x, y, z, (g * 4), 3);
-			return true;
 		}
 		else
 		{
 			par1World.setBlockMetadataWithNotify(x, y, z, meta + 1, 3);
-			return true;
 		}
-		// return false;
+		if (ent instanceof TileEntityMinorPump)
+		{
+			((TileEntityMinorPump) ent).getConnections();
+		}
+		return true;
 	}
 }

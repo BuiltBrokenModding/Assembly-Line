@@ -19,7 +19,7 @@ public class FluidHelper
 	 * The default built in flow rate of the liquid threw the pipes. Will correct this later to use
 	 * a visc value instead of flow value so that the size of the pipe can play a factor in flow
 	 */
-	public int getDefaultFlowRate(LiquidStack stack)
+	public static int getDefaultFlowRate(LiquidStack stack)
 	{
 		if (stack != null)
 		{

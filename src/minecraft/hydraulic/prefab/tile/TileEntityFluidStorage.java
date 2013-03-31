@@ -54,7 +54,11 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 	@Override
 	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
 	{
-		return this.fill(0, resource, doFill);
+		if (fillableSides.contains(from))
+		{
+			return this.fill(0, resource, doFill);
+		}
+		return 0;
 	}
 
 	@Override
@@ -64,7 +68,7 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 		{
 			return 0;
 		}
-		else if (this.getColor() != ColorCode.NONE && !getColor().isValidLiquid(resource))
+		else if (!getColor().isValidLiquid(resource))
 		{
 			return 0;
 		}
@@ -97,11 +101,7 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 		{
 			stack = FluidHelper.getStack(stack, maxDrain);
 		}
-		if (doDrain)
-		{
-			this.tank.drain(maxDrain, doDrain);
-		}
-		return stack;
+		return this.tank.drain(maxDrain, doDrain);
 	}
 
 	@Override
