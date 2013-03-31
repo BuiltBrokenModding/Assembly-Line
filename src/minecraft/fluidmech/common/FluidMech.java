@@ -25,7 +25,7 @@ import fluidmech.common.machines.pipes.BlockPipe;
 import fluidmech.common.machines.pipes.TileEntityPipe;
 import fluidmech.common.machines.pipes.TileEntityPipe;
 import hydraulic.api.ColorCode;
-import hydraulic.fluidnetwork.FluidHelper;
+import hydraulic.helpers.FluidHelper;
 
 import java.io.File;
 import java.util.logging.Logger;
@@ -325,7 +325,6 @@ public class FluidMech extends DummyModContainer
         // add Default Liquids to current list, done last to let other mods use
         // there liquid data first if used
         LiquidStack waste = LiquidDictionary.getOrCreateLiquid("Waste", new LiquidStack(FluidMech.blockWasteLiquid, 1));
-        FluidHelper.addDefaultLiquids();
         FMLog.info("Done Loading");
     }
 }

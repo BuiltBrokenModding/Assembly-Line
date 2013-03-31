@@ -1,4 +1,4 @@
-package hydraulic.fluidnetwork;
+package hydraulic.helpers;
 
 import hydraulic.api.ColorCode;
 
@@ -15,41 +15,31 @@ import net.minecraftforge.liquids.LiquidStack;
 
 public class FluidHelper
 {
-
-	private static HashMap<LiquidStack, Integer> getMaxFlowPerRequest = new HashMap<LiquidStack, Integer>();
-
-	public static Logger FMLog = Logger.getLogger("LiquidHandler");
-
 	/**
-	 * Called to add the default liquids to the allowed list
+	 * The default built in flow rate of the liquid threw the pipes. Will correct this later to use
+	 * a visc value instead of flow value so that the size of the pipe can play a factor in flow
 	 */
-	public static void addDefaultLiquids()
-	{
-
-	}
-
-	@ForgeSubscribe
-	public void liquidRegisterEvent(LiquidDictionary.LiquidRegisterEvent event)
-	{
-		if (event.Name.equalsIgnoreCase("UraniumHexafluoride"))
-		{
-			getMaxFlowPerRequest.put(event.Liquid, 1000);
-		}
-		else if (event.Name.equalsIgnoreCase("methane"))
-		{
-			getMaxFlowPerRequest.put(event.Liquid, 1000);
-		}
-		else if (event.Name.equalsIgnoreCase("steam"))
-		{
-			getMaxFlowPerRequest.put(event.Liquid, 2000);
-		}
-	}
-
 	public int getDefaultFlowRate(LiquidStack stack)
 	{
-		if (getMaxFlowPerRequest.containsKey(stack))
+		if (stack != null)
 		{
-			return getMaxFlowPerRequest.get(stack);
+			String stackName = LiquidDictionary.findLiquidName(stack);
+			if (stackName.equalsIgnoreCase("UraniumHexafluoride"))
+			{
+				return 1000;
+			}
+			else if (stackName.equalsIgnoreCase("steam"))
+			{
+				return 1000;
+			}
+			else if (stackName.equalsIgnoreCase("methane"))
+			{
+				return 1000;
+			}
+			else if (stackName.equalsIgnoreCase("lava"))
+			{
+				return 250;
+			}
 		}
 		return 500;
 	}

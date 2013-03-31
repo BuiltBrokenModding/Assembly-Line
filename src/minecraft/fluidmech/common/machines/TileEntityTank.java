@@ -3,7 +3,7 @@ package fluidmech.common.machines;
 import fluidmech.common.FluidMech;
 import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
-import hydraulic.fluidnetwork.FluidHelper;
+import hydraulic.helpers.FluidHelper;
 import hydraulic.prefab.tile.TileEntityFluidStorage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;

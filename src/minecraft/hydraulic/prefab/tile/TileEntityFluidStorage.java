@@ -3,7 +3,7 @@ package hydraulic.prefab.tile;
 import fluidmech.common.machines.TileEntityTank;
 import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
-import hydraulic.fluidnetwork.FluidHelper;
+import hydraulic.helpers.FluidHelper;
 
 import java.util.EnumSet;
 

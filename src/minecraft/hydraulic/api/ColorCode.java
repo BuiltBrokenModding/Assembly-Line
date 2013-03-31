@@ -1,6 +1,6 @@
 package hydraulic.api;
 
-import hydraulic.fluidnetwork.FluidHelper;
+import hydraulic.helpers.FluidHelper;
 
 import java.util.ArrayList;
 import java.util.List;

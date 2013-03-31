@@ -1,6 +1,6 @@
 package fluidmech.common.block;
 
-import hydraulic.fluidnetwork.FluidHelper;
+import hydraulic.helpers.FluidHelper;
 
 import java.util.List;
 
