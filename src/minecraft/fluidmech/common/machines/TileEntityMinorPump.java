@@ -5,7 +5,7 @@ import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
 import hydraulic.api.IPipeConnection;
 import hydraulic.api.IReadOut;
-import hydraulic.fluidnetwork.FluidHelper;
+import hydraulic.helpers.FluidHelper;
 import hydraulic.helpers.MetaGroup;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
@@ -149,13 +149,7 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 	 */
 	boolean canPump(int x, int y, int z)
 	{
-		int blockID = worldObj.getBlockId(x, y, z);
-		int meta = worldObj.getBlockMetadata(x, y, z);
-
-		ITankContainer fillTarget = getFillTarget();
-
-		// TODO redo this
-		return true;
+		return getFillTarget() != null && FluidHelper.getLiquidId(worldObj.getBlockId(x, y, z)) != -1;
 	}
 
 	/**
@@ -169,10 +163,10 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 		int blockID = worldObj.getBlockId(loc.intX(), loc.intY(), loc.intZ());
 
 		LiquidStack stack = FluidHelper.getLiquidFromBlockId(blockID);
-		if (color.isValidLiquid(stack))
+		if (color.isValidLiquid(stack) && getFillTarget() != null)
 		{
 			stack.amount = LiquidContainerRegistry.BUCKET_VOLUME;
-			int fillAmmount = getFillTarget().fill(pipeConnection, stack, true);
+			int fillAmmount = getFillTarget().fill(pipeConnection.getOpposite(), stack, true);
 
 			if (fillAmmount > 0)
 			{
