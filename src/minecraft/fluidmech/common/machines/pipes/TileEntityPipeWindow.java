@@ -2,14 +2,22 @@ package fluidmech.common.machines.pipes;
 
 import com.google.common.io.ByteArrayDataInput;
 
+import fluidmech.client.render.pipeextentions.IPipeExtentionRender;
+
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.liquids.LiquidStack;
 
-public class TileEntityPipeWindow extends TileEntity implements IPipeExtention
+public class TileEntityPipeWindow extends TileEntityPipeExtention
 {
+	public TileEntityPipeWindow(TileEntityPipe pipe)
+	{
+		super(pipe);
+	}
+
 	private TileEntityPipe pipe = null;
 	private boolean shouldUpdate = false;
 
@@ -36,6 +44,18 @@ public class TileEntityPipeWindow extends TileEntity implements IPipeExtention
 	}
 
 	@Override
+	public boolean shouldSendPacket(boolean server)
+	{
+		return shouldUpdate;
+	}
+
+	@Override
+	public NBTTagCompound getExtentionPacketData(boolean server)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
 	public boolean canBePlacedOnPipe(TileEntityPipe pipe)
 	{
 		return true;
@@ -59,10 +79,13 @@ public class TileEntityPipeWindow extends TileEntity implements IPipeExtention
 		return 10;
 	}
 
+	
+
 	@Override
-	public boolean shouldSendPacket()
+	public IPipeExtentionRender getExtentionRenderClass()
 	{
-		return shouldUpdate;
+		return null;
 	}
+
 
 }

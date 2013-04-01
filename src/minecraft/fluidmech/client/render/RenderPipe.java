@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 
 import fluidmech.client.model.ModelLargePipe;
 import fluidmech.common.FluidMech;
+import fluidmech.common.machines.pipes.IPipeExtention;
 import fluidmech.common.machines.pipes.TileEntityPipe;
 import fluidmech.common.machines.pipes.TileEntityPipe;
 
@@ -33,7 +34,12 @@ public class RenderPipe extends TileEntitySpecialRenderer
 		if (te instanceof TileEntityPipe)
 		{
 			meta = te.getBlockMetadata();
-			this.renderSide = ((TileEntityPipe) te).renderConnection;
+			TileEntityPipe pipe = ((TileEntityPipe) te);
+			this.renderSide = pipe.renderConnection;
+			for(int i = 0; i < 6; i++)
+			{
+				IPipeExtention extention = (IPipeExtention) pipe.subEntities[i];
+			}
 		}
 		this.render(meta, renderSide);
 		GL11.glPopMatrix();

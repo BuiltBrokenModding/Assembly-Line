@@ -1,8 +1,10 @@
 package fluidmech.common.machines.pipes;
 
+import net.minecraft.nbt.NBTTagCompound;
+import fluidmech.client.render.pipeextentions.IPipeExtentionRender;
 import universalelectricity.prefab.network.IPacketReceiver;
 
-public interface IPipeExtention extends IPacketReceiver
+public interface IPipeExtention
 {
 	public boolean canBePlacedOnPipe(TileEntityPipe pipe);
 
@@ -17,9 +19,18 @@ public interface IPipeExtention extends IPacketReceiver
 
 	/**
 	 * if this sub tile needs a packet update
-	 * 
-	 * Note it pulls the packet from description packet
+	 * @param  
 	 */
-	public boolean shouldSendPacket();
+	public boolean shouldSendPacket(boolean server);
+
+	/**
+	 * data that will be sent to this extension
+	 */
+	public NBTTagCompound getExtentionPacketData(boolean server);
+
+	/**
+	 * render class to be used to render this pipe extension of the face of the main pipe
+	 */
+	public IPipeExtentionRender getExtentionRenderClass();
 
 }

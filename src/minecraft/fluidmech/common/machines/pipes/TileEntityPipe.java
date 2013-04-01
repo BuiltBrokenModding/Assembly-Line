@@ -28,6 +28,7 @@ import net.minecraftforge.liquids.LiquidTank;
 
 import org.bouncycastle.util.Arrays;
 
+import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
@@ -39,35 +40,57 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer, IReadOut, IColorCoded, IFluidNetworkPart, IPacketReceiver
 {
+
 	/* TANK TO FAKE OTHER TILES INTO BELIVING THIS HAS AN INTERNAL STORAGE */
 	private LiquidTank fakeTank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
 	/* CURRENTLY CONNECTED TILE ENTITIES TO THIS */
 	private TileEntity[] connectedBlocks = new TileEntity[6];
 	public boolean[] renderConnection = new boolean[6];
-	private TileEntity[] subEntities = new TileEntity[6];
+	public IPipeExtention[] subEntities = new IPipeExtention[6];
 	/* RANDOM INSTANCE USED BY THE UPDATE TICK */
 	private Random random = new Random();
 	/* NETWORK INSTANCE THAT THIS PIPE USES */
 	private HydraulicNetwork pipeNetwork;
 
+	public enum PacketID
+	{
+		PIPE_CONNECTIONS, EXTENTION;
+	}
+
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
-		for (int i = 0; i < 6; i++)
+		this.updateSubEntities();
+		if (!worldObj.isRemote)
 		{
-			if(subEntities[i] instanceof IPipeExtention && subEntities[i] instanceof TileEntity)
+			if (ticks % ((int) random.nextInt(5) * 40 + 20) == 0)
 			{
-				IPipeExtention extention = (IPipeExtention) subEntities[i];
-				if(this.ticks % extention.updateTick() == 0)
-				{
-					
-				}
+				this.updateAdjacentConnections();
 			}
 		}
-		if (!worldObj.isRemote && ticks % ((int) random.nextInt(5) * 40 + 20) == 0)
+	}
+
+	/**
+	 * Builds and sends data to client for all PipeExtentions
+	 */
+	private void updateSubEntities()
+	{
+		for (int i = 0; i < 6; i++)
 		{
-			this.updateAdjacentConnections();
+			if (subEntities[i] instanceof IPipeExtention && subEntities[i] instanceof TileEntity)
+			{
+				IPipeExtention extention = subEntities[i];
+				if (this.ticks % extention.updateTick() == 0)
+				{
+					((TileEntity) extention).updateEntity();
+					if (extention.shouldSendPacket(!this.worldObj.isRemote) && extention.getExtentionPacketData(!this.worldObj.isRemote) != null)
+					{
+						Packet packet = PacketManager.getPacket(FluidMech.CHANNEL, this, PacketID.EXTENTION, ForgeDirection.getOrientation(i), extention.getExtentionPacketData(!this.worldObj.isRemote));
+						PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 50);
+					}
+				}
+			}
 		}
 	}
 
@@ -91,7 +114,8 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	@Override
 	public void handlePacketData(INetworkManager network, int type, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
 	{
-		if (this.worldObj.isRemote)
+		PacketID id = PacketID.values()[dataStream.readInt()];
+		if (this.worldObj.isRemote && id == PacketID.PIPE_CONNECTIONS)
 		{
 			this.renderConnection[0] = dataStream.readBoolean();
 			this.renderConnection[1] = dataStream.readBoolean();
@@ -105,7 +129,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return PacketManager.getPacket(FluidMech.CHANNEL, this, this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
+		return PacketManager.getPacket(FluidMech.CHANNEL, this, PacketID.PIPE_CONNECTIONS.ordinal(), this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
 	}
 
 	/**
