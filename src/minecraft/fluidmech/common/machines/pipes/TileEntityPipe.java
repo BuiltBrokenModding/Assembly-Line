@@ -44,6 +44,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	/* CURRENTLY CONNECTED TILE ENTITIES TO THIS */
 	private TileEntity[] connectedBlocks = new TileEntity[6];
 	public boolean[] renderConnection = new boolean[6];
+	private TileEntity[] subEntities = new TileEntity[6];
 	/* RANDOM INSTANCE USED BY THE UPDATE TICK */
 	private Random random = new Random();
 	/* NETWORK INSTANCE THAT THIS PIPE USES */
@@ -53,6 +54,17 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	public void updateEntity()
 	{
 		super.updateEntity();
+		for (int i = 0; i < 6; i++)
+		{
+			if(subEntities[i] instanceof IPipeExtention && subEntities[i] instanceof TileEntity)
+			{
+				IPipeExtention extention = (IPipeExtention) subEntities[i];
+				if(this.ticks % extention.updateTick() == 0)
+				{
+					
+				}
+			}
+		}
 		if (!worldObj.isRemote && ticks % ((int) random.nextInt(5) * 40 + 20) == 0)
 		{
 			this.updateAdjacentConnections();
