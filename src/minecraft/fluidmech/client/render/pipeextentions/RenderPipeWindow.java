@@ -1,9 +1,8 @@
-package fluidmech.client.render;
+package fluidmech.client.render.pipeextentions;
 
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import fluidmech.client.model.ModelLargePipe;
-import fluidmech.client.render.pipeextentions.IPipeExtentionRender;
 import fluidmech.common.machines.pipes.TileEntityPipe;
 
 public class RenderPipeWindow implements IPipeExtentionRender

@@ -8,7 +8,7 @@ import net.minecraftforge.liquids.LiquidStack;
 
 import com.google.common.io.ByteArrayDataInput;
 
-import fluidmech.client.render.RenderPipeWindow;
+import fluidmech.client.render.pipeextentions.RenderPipeWindow;
 
 public class TileEntityPipeWindow extends TileEntityPipeExtention
 {

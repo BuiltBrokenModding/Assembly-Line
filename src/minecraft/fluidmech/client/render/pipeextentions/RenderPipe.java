@@ -1,4 +1,4 @@
-package fluidmech.client.render;
+package fluidmech.client.render.pipeextentions;
 
 import hydraulic.api.ColorCode;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -9,7 +9,6 @@ import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.vector.Vector3;
 import fluidmech.client.model.ModelLargePipe;
-import fluidmech.client.render.pipeextentions.IPipeExtentionRender;
 import fluidmech.common.FluidMech;
 import fluidmech.common.machines.pipes.IPipeExtention;
 import fluidmech.common.machines.pipes.TileEntityPipe;

@@ -2,7 +2,6 @@ package fluidmech.client.render.pipeextentions;
 
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
-import fluidmech.client.render.RenderPipe;
 import fluidmech.common.machines.pipes.TileEntityPipe;
 
 /**
