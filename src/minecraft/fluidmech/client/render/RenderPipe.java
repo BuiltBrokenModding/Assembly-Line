@@ -7,6 +7,8 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
+import universalelectricity.core.vector.Vector3;
+
 import fluidmech.client.model.ModelLargePipe;
 import fluidmech.client.render.pipeextentions.IPipeExtentionRender;
 import fluidmech.common.FluidMech;
@@ -47,19 +49,20 @@ public class RenderPipe extends TileEntitySpecialRenderer
 					try
 					{
 						ob = extention.getExtentionRenderClass().newInstance();
-					
-					if (ob instanceof IPipeExtentionRender)
-					{
-						IPipeExtentionRender render = (IPipeExtentionRender) ob;
-						if (render != null)
+
+						if (ob instanceof IPipeExtentionRender)
 						{
-							render.renderAModelAt(pipe, d, d1, d2, f, ForgeDirection.getOrientation(i));
+							IPipeExtentionRender render = (IPipeExtentionRender) ob;
+							if (render != null)
+							{
+								System.out.println("Rendering Pipe Addon side " + i);
+								render.renderAModelAt(this, pipe, new Vector3(0, 0, 0), f, ForgeDirection.getOrientation(i));
+							}
 						}
-					}
 					}
 					catch (Exception e)
 					{
-						System.out.print("Failed to render a pipe extention");
+						System.out.println("Failed to render a pipe extention");
 						e.printStackTrace();
 					}
 				}
@@ -68,6 +71,11 @@ public class RenderPipe extends TileEntitySpecialRenderer
 		this.render(meta, renderSide);
 		GL11.glPopMatrix();
 
+	}
+
+	public void bindTextureForPipe(String texture)
+	{
+		this.bindTextureByName(texture);
 	}
 
 	public static String getPipeTexture(int meta)

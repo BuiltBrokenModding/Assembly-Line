@@ -65,13 +65,13 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	public void initiate()
 	{
 		this.updateAdjacentConnections();
+		if (this.subEntities[0] == null)
+		{
+			this.addNewExtention(0, TileEntityPipeWindow.class);
+		}
 		if (!worldObj.isRemote)
 		{
-			if (this.subEntities[0] == null)
-			{
-				this.subEntities[0] = new TileEntityPipeWindow();
-				this.initSubTile(0);
-			}
+
 			for (int i = 0; i < 6; i++)
 			{
 				TileEntity entity = (TileEntity) this.subEntities[i];
@@ -110,7 +110,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 				IPipeExtention extention = subEntities[i];
 				if (this.ticks % extention.updateTick() == 0)
 				{
-					System.out.println("Updating addon " + (worldObj.isRemote ? "Client" : "Server") + " on side " + i);
+					//System.out.println("Updating addon " + (worldObj.isRemote ? "Client" : "Server") + " on side " + i);
 					((TileEntity) extention).updateEntity();
 					if (extention.shouldSendPacket(!this.worldObj.isRemote) && extention.getExtentionPacketData(!this.worldObj.isRemote) != null)
 					{
@@ -215,7 +215,8 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 			TileEntity tile = partClass.newInstance();
 			if (tile instanceof IPipeExtention)
 			{
-
+				this.subEntities[side] = (IPipeExtention) tile;
+				this.initSubTile(side);
 			}
 		}
 		catch (Exception e)
