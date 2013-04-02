@@ -21,8 +21,6 @@ import fluidmech.common.machines.mech.BlockRod;
 import fluidmech.common.machines.mech.TileEntityGenerator;
 import fluidmech.common.machines.mech.TileEntityRod;
 import fluidmech.common.machines.pipes.BlockPipe;
-import fluidmech.common.machines.pipes.BlockPipe;
-import fluidmech.common.machines.pipes.TileEntityPipe;
 import fluidmech.common.machines.pipes.TileEntityPipe;
 import fluidmech.common.machines.pipes.TileEntityPipeWindow;
 import hydraulic.api.ColorCode;
@@ -41,6 +39,10 @@ import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+
+import org.modstats.ModstatInfo;
+import org.modstats.Modstats;
+
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.network.PacketManager;
 import cpw.mods.fml.common.DummyModContainer;
@@ -63,6 +65,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
  * 
  * @author Rseifert
  */
+@ModstatInfo(prefix="MyPrefix")
 @Mod(modid = FluidMech.NAME, name = FluidMech.NAME, version = FluidMech.VERSION, dependencies = "after:BasicComponents")
 @NetworkMod(channels = { FluidMech.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
 public class FluidMech extends DummyModContainer
@@ -124,6 +127,7 @@ public class FluidMech extends DummyModContainer
         MinecraftForge.EVENT_BUS.register(new FluidHelper());
 
         instance = this;
+        Modstats.instance().getReporter().registerMod(this);
         CONFIGURATION.load();
 
         // Blocks

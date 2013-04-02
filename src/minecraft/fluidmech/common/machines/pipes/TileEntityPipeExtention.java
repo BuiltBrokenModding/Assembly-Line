@@ -7,6 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 
@@ -20,7 +21,18 @@ import universalelectricity.prefab.tile.TileEntityAdvanced;
 public abstract class TileEntityPipeExtention extends TileEntityAdvanced implements IPipeExtention, IPacketReceiver
 {
 
-	private TileEntityPipe masterPipe = null;	
+	private TileEntityPipe masterPipe = null;
+	public ForgeDirection direction = ForgeDirection.UNKNOWN;
+
+	@Override
+	public void initiate()
+	{
+		if (this.masterPipe != null)
+		{
+			System.out.println("Sending TileEntity to Client from extention.class");
+			masterPipe.sendExtentionToClient(direction.ordinal());
+		}
+	}
 
 	@Override
 	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
@@ -39,6 +51,19 @@ public abstract class TileEntityPipeExtention extends TileEntityAdvanced impleme
 	public void setPipe(TileEntityPipe pipe)
 	{
 		this.masterPipe = pipe;
+	}
+
+	@Override
+	public void setDirection(ForgeDirection dir)
+	{
+		this.direction = dir;
+
+	}
+
+	@Override
+	public ForgeDirection getDirection()
+	{
+		return this.direction;
 	}
 
 	@Override

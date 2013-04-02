@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidStack;
 
 public class TileEntityPipeWindow extends TileEntityPipeExtention
@@ -24,11 +25,18 @@ public class TileEntityPipeWindow extends TileEntityPipeExtention
 	public void updateEntity()
 	{
 		super.updateEntity();
-		System.out.println("Updating side " + (worldObj.isRemote ? "Client" : "Server") );
-		if(!worldObj.isRemote && pipe != null)
-		{			
-			stack = pipe.getNetwork().getTank().getLiquid();
-			worldObj.setBlockAndMetadataWithNotify(xCoord, yCoord+1, yCoord, 0, 0, 3);
+
+		if (!worldObj.isRemote)
+		{
+			if (pipe != null)
+			{
+				stack = pipe.getNetwork().getTank().getLiquid();
+				worldObj.setBlockAndMetadataWithNotify(xCoord, yCoord + 1, yCoord, 0, 0, 3);
+			}
+		}
+		else
+		{
+			System.out.println("Updating side Client");
 		}
 	}
 
@@ -36,9 +44,9 @@ public class TileEntityPipeWindow extends TileEntityPipeExtention
 	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
 	{
 
-		if(pipe != null && worldObj.isRemote)
+		if (pipe != null && worldObj.isRemote)
 		{
-			
+
 		}
 
 	}
@@ -55,10 +63,15 @@ public class TileEntityPipeWindow extends TileEntityPipeExtention
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 	@Override
-	public boolean canBePlacedOnPipe(TileEntityPipe pipe)
+	public boolean canBePlacedOnPipe(TileEntityPipe pipe, int side)
 	{
-		return true;
+		if(pipe != null && pipe.subEntities[side] == null)
+		{
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -77,13 +90,14 @@ public class TileEntityPipeWindow extends TileEntityPipeExtention
 	public int updateTick()
 	{
 		return 20;
-	}	
+	}
 
 	@Override
 	public Class<RenderPipeWindow> getExtentionRenderClass()
 	{
 		return RenderPipeWindow.class;
 	}
+
 	@Override
 	public String toString()
 	{

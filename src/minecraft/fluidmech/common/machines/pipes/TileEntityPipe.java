@@ -54,6 +54,8 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	/* NETWORK INSTANCE THAT THIS PIPE USES */
 	private HydraulicNetwork pipeNetwork;
 
+	private boolean shouldAutoDrain = false;
+
 	public enum PacketID
 	{
 		PIPE_CONNECTIONS, EXTENTION_CREATE, EXTENTION_UPDATE;
@@ -100,6 +102,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	 */
 	private void updateSubEntities()
 	{
+
 		for (int i = 0; i < 6; i++)
 		{
 			if (subEntities[i] instanceof IPipeExtention && subEntities[i] instanceof TileEntity)
@@ -107,6 +110,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 				IPipeExtention extention = subEntities[i];
 				if (this.ticks % extention.updateTick() == 0)
 				{
+					System.out.println("Updating addon " + (worldObj.isRemote ? "Client" : "Server") + " on side " + i);
 					((TileEntity) extention).updateEntity();
 					if (extention.shouldSendPacket(!this.worldObj.isRemote) && extention.getExtentionPacketData(!this.worldObj.isRemote) != null)
 					{
@@ -148,7 +152,9 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 				}
 				else if (id == PacketID.EXTENTION_CREATE)
 				{
+					System.out.println("Packet for addon");
 					int side = dataStream.readInt();
+
 					this.loadOrCreateSubTile(side, PacketManager.readNBTTagCompound(dataStream));
 
 				}
@@ -233,6 +239,10 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 				{
 					System.out.println("Creating addon " + (worldObj.isRemote ? "Client" : "Server"));
 				}
+				else
+				{
+					System.out.println("Creating addon Unkown side");
+				}
 			}
 		}
 	}
@@ -243,10 +253,12 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		{
 			TileEntity tile = (TileEntity) subEntities[side];
 			((IPipeExtention) tile).setPipe(this);
+			((IPipeExtention) tile).setDirection(ForgeDirection.getOrientation(side));
 			tile.worldObj = this.worldObj;
 			tile.xCoord = this.xCoord;
 			tile.yCoord = this.yCoord;
 			tile.zCoord = this.zCoord;
+
 			sendExtentionToClient(side);
 		}
 	}
@@ -257,7 +269,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		{
 			NBTTagCompound tag = new NBTTagCompound();
 			((TileEntity) this.subEntities[side]).writeToNBT(tag);
-			if (tag != null && tag.getTags().size() != 0)
+			if (tag != null && tag.hasKey("id"))
 			{
 				System.out.println("Sending TileEntity to Client");
 				Packet packet = PacketManager.getPacket(FluidMech.CHANNEL, this, PacketID.EXTENTION_CREATE.ordinal(), ForgeDirection.getOrientation(side), tag);
@@ -501,7 +513,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	@Override
 	public boolean canConnect(TileEntity entity, ForgeDirection dir)
 	{
-		return true;
+		return this.subEntities[dir.ordinal()] == null;
 	}
 
 	@Override
