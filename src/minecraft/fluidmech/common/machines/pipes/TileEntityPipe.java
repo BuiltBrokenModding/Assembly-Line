@@ -9,6 +9,7 @@ import hydraulic.fluidnetwork.HydraulicNetwork;
 import hydraulic.fluidnetwork.IFluidNetworkPart;
 import hydraulic.helpers.FluidHelper;
 
+import java.io.IOException;
 import java.util.Random;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -86,7 +87,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 					((TileEntity) extention).updateEntity();
 					if (extention.shouldSendPacket(!this.worldObj.isRemote) && extention.getExtentionPacketData(!this.worldObj.isRemote) != null)
 					{
-						Packet packet = PacketManager.getPacket(FluidMech.CHANNEL, this, PacketID.EXTENTION, ForgeDirection.getOrientation(i), extention.getExtentionPacketData(!this.worldObj.isRemote));
+						Packet packet = PacketManager.getPacket(FluidMech.CHANNEL, this, PacketID.EXTENTION, 0, ForgeDirection.getOrientation(i), extention.getExtentionPacketData(!this.worldObj.isRemote));
 						PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 50);
 					}
 				}
@@ -114,15 +115,48 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	@Override
 	public void handlePacketData(INetworkManager network, int type, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
 	{
-		PacketID id = PacketID.values()[dataStream.readInt()];
-		if (this.worldObj.isRemote && id == PacketID.PIPE_CONNECTIONS)
+		try
 		{
-			this.renderConnection[0] = dataStream.readBoolean();
-			this.renderConnection[1] = dataStream.readBoolean();
-			this.renderConnection[2] = dataStream.readBoolean();
-			this.renderConnection[3] = dataStream.readBoolean();
-			this.renderConnection[4] = dataStream.readBoolean();
-			this.renderConnection[5] = dataStream.readBoolean();
+			PacketID id = PacketID.values()[dataStream.readInt()];
+			if (this.worldObj.isRemote)
+			{
+				if (id == PacketID.PIPE_CONNECTIONS)
+				{
+					this.renderConnection[0] = dataStream.readBoolean();
+					this.renderConnection[1] = dataStream.readBoolean();
+					this.renderConnection[2] = dataStream.readBoolean();
+					this.renderConnection[3] = dataStream.readBoolean();
+					this.renderConnection[4] = dataStream.readBoolean();
+					this.renderConnection[5] = dataStream.readBoolean();
+				}
+				if (id == PacketID.EXTENTION)
+				{
+					int loadType = dataStream.readInt();
+					int side = dataStream.readInt();
+					NBTTagCompound tag = PacketManager.readNBTTagCompound(dataStream);
+					/* Normal packet update */
+					if (loadType == 0)
+					{
+
+					}
+					/* Full packet Load */
+					else if (loadType == 1)
+					{
+						this.subEntities[side] = null;
+						TileEntity entity = TileEntity.createAndLoadEntity(tag);
+						if (entity != null && entity instanceof IPipeExtention)
+						{
+							this.subEntities[side] = (IPipeExtention) entity;
+						}
+					}
+
+				}
+			}
+		}
+		catch (IOException e)
+		{
+			System.out.print("Error with reading packet for TileEntityPipe");
+			e.printStackTrace();
 		}
 	}
 
@@ -146,6 +180,24 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		{
 			this.fakeTank.setLiquid(liquid);
 		}
+		for (int i = 0; i < 6; i++)
+		{
+			if (this.subEntities[i] != null)
+			{
+				if (nbt.hasKey("Addon" + i))
+				{
+					NBTTagCompound tag = nbt.getCompoundTag("Addon" + i);
+					if (tag != null && tag.getTags().size() != 0)
+					{
+						TileEntity tile = TileEntity.createAndLoadEntity(tag);
+						if (tile instanceof IPipeExtention)
+						{
+							this.subEntities[i] = (IPipeExtention) tile;
+						}
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -159,6 +211,15 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		if (stack != null)
 		{
 			nbt.setTag("stored", stack.writeToNBT(new NBTTagCompound()));
+		}
+		for (int i = 0; i < 6; i++)
+		{
+			if (this.subEntities[i] != null)
+			{
+				NBTTagCompound tag = new NBTTagCompound();
+				((TileEntity) this.subEntities[i]).writeToNBT(tag);
+				nbt.setTag("Addon" + i, tag);
+			}
 		}
 	}
 
