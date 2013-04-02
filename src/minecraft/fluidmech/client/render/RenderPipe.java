@@ -43,10 +43,24 @@ public class RenderPipe extends TileEntitySpecialRenderer
 				IPipeExtention extention = (IPipeExtention) pipe.subEntities[i];
 				if (extention != null)
 				{
-					IPipeExtentionRender render = extention.getExtentionRenderClass();
-					if (render != null)
+					Object ob;
+					try
 					{
-						render.renderAModelAt(pipe, d, d1, d2, f, ForgeDirection.getOrientation(i));
+						ob = extention.getExtentionRenderClass().newInstance();
+					
+					if (ob instanceof IPipeExtentionRender)
+					{
+						IPipeExtentionRender render = (IPipeExtentionRender) ob;
+						if (render != null)
+						{
+							render.renderAModelAt(pipe, d, d1, d2, f, ForgeDirection.getOrientation(i));
+						}
+					}
+					}
+					catch (Exception e)
+					{
+						System.out.print("Failed to render a pipe extention");
+						e.printStackTrace();
 					}
 				}
 			}

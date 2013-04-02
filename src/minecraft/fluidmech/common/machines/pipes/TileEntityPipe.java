@@ -63,26 +63,21 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	public void initiate()
 	{
 		this.updateAdjacentConnections();
-		for (int i = 0; i < 6; i++)
+		if (!worldObj.isRemote)
 		{
-			TileEntity entity = (TileEntity) this.subEntities[i];
-			if (entity != null)
+			if (this.subEntities[0] == null)
 			{
-				this.initSubTile(i);
-				this.sendExtentionToClient(i);
+				this.subEntities[0] = new TileEntityPipeWindow();
+				this.initSubTile(0);
 			}
-		}
-	}
-
-	public void sendExtentionToClient(int side)
-	{
-		if (this.subEntities[side] instanceof TileEntity)
-		{
-			NBTTagCompound tag = new NBTTagCompound();
-			((Entity) this.subEntities[side]).writeToNBT(tag);
-
-			Packet packet = PacketManager.getPacket(FluidMech.CHANNEL, this, PacketID.EXTENTION_FULL, ForgeDirection.getOrientation(side), tag);
-			PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 50);
+			for (int i = 0; i < 6; i++)
+			{
+				TileEntity entity = (TileEntity) this.subEntities[i];
+				if (entity != null)
+				{
+					this.initSubTile(i);
+				}
+			}
 		}
 	}
 
@@ -93,11 +88,6 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		this.updateSubEntities();
 		if (!worldObj.isRemote)
 		{
-			if (this.subEntities[0] == null)
-			{
-				this.subEntities[0] = new TileEntityPipeWindow();
-				this.initSubTile(0);
-			}
 			if (ticks % ((int) random.nextInt(5) * 40 + 20) == 0)
 			{
 				this.updateAdjacentConnections();
@@ -120,7 +110,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 					((TileEntity) extention).updateEntity();
 					if (extention.shouldSendPacket(!this.worldObj.isRemote) && extention.getExtentionPacketData(!this.worldObj.isRemote) != null)
 					{
-						Packet packet = PacketManager.getPacket(FluidMech.CHANNEL, this, PacketID.EXTENTION_UPDATE,ForgeDirection.getOrientation(i), extention.getExtentionPacketData(!this.worldObj.isRemote));
+						Packet packet = PacketManager.getPacket(FluidMech.CHANNEL, this, PacketID.EXTENTION_UPDATE.ordinal(), ForgeDirection.getOrientation(i), extention.getExtentionPacketData(!this.worldObj.isRemote));
 						PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 50);
 					}
 				}
@@ -239,6 +229,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 			{
 				this.subEntities[side] = (IPipeExtention) tile;
 				this.initSubTile(side);
+				System.out.println("Creating addon " + (worldObj.isRemote ? "Client" : "Server"));
 			}
 		}
 	}
@@ -253,6 +244,19 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 			tile.xCoord = this.xCoord;
 			tile.yCoord = this.yCoord;
 			tile.zCoord = this.zCoord;
+			sendExtentionToClient(side);
+		}
+	}
+
+	public void sendExtentionToClient(int side)
+	{
+		if (worldObj != null && !worldObj.isRemote && this.subEntities[side] instanceof TileEntity)
+		{
+			NBTTagCompound tag = new NBTTagCompound();
+			((TileEntity) this.subEntities[side]).writeToNBT(tag);
+
+			Packet packet = PacketManager.getPacket(FluidMech.CHANNEL, this, PacketID.EXTENTION_FULL.ordinal(), ForgeDirection.getOrientation(side), tag);
+			PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 50);
 		}
 	}
 
@@ -408,6 +412,11 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	{
 		if (!this.worldObj.isRemote && tileEntity != null)
 		{
+			if (this.subEntities[side.ordinal()] != null)
+			{
+				connectedBlocks[side.ordinal()] = null;
+				return;
+			}
 			if (tileEntity instanceof IPipeConnection)
 			{
 				if (((IPipeConnection) tileEntity).canConnect(this, side))

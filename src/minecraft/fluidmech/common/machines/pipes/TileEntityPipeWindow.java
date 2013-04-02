@@ -2,6 +2,7 @@ package fluidmech.common.machines.pipes;
 
 import com.google.common.io.ByteArrayDataInput;
 
+import fluidmech.client.render.RenderPipeWindow;
 import fluidmech.client.render.pipeextentions.IPipeExtentionRender;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,13 +23,12 @@ public class TileEntityPipeWindow extends TileEntityPipeExtention
 	@Override
 	public void updateEntity()
 	{
+		super.updateEntity();
+		System.out.println("Updating side " + (worldObj.isRemote ? "Client" : "Server") );
 		if(!worldObj.isRemote && pipe != null)
 		{			
 			stack = pipe.getNetwork().getTank().getLiquid();
-		}
-		if(worldObj.isRemote)
-		{
-			System.out.println("Alive");
+			worldObj.setBlockAndMetadataWithNotify(xCoord, yCoord+1, yCoord, 0, 0, 3);
 		}
 	}
 
@@ -76,15 +76,13 @@ public class TileEntityPipeWindow extends TileEntityPipeExtention
 	@Override
 	public int updateTick()
 	{
-		return 10;
-	}
-
-	
+		return 20;
+	}	
 
 	@Override
-	public IPipeExtentionRender getExtentionRenderClass()
+	public Class<RenderPipeWindow> getExtentionRenderClass()
 	{
-		return null;
+		return RenderPipeWindow.class;
 	}
 	@Override
 	public String toString()

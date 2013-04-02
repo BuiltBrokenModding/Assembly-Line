@@ -1,6 +1,7 @@
 package fluidmech.common.machines.pipes;
 
 import net.minecraft.nbt.NBTTagCompound;
+import fluidmech.client.render.RenderPipeWindow;
 import fluidmech.client.render.pipeextentions.IPipeExtentionRender;
 import universalelectricity.prefab.network.IPacketReceiver;
 
@@ -31,6 +32,6 @@ public interface IPipeExtention extends IPacketReceiver
 	/**
 	 * render class to be used to render this pipe extension of the face of the main pipe
 	 */
-	public IPipeExtentionRender getExtentionRenderClass();
+	public Class<?> getExtentionRenderClass();
 
 }

@@ -24,6 +24,7 @@ import fluidmech.common.machines.pipes.BlockPipe;
 import fluidmech.common.machines.pipes.BlockPipe;
 import fluidmech.common.machines.pipes.TileEntityPipe;
 import fluidmech.common.machines.pipes.TileEntityPipe;
+import fluidmech.common.machines.pipes.TileEntityPipeWindow;
 import hydraulic.api.ColorCode;
 import hydraulic.helpers.FluidHelper;
 
@@ -169,6 +170,9 @@ public class FluidMech extends DummyModContainer
         GameRegistry.registerTileEntity(TileEntityTank.class, "lmTank");
         GameRegistry.registerTileEntity(TileEntityGenerator.class, "lmGen");
         GameRegistry.registerTileEntity(TileEntitySink.class, "lmSink");
+        // Pipe Extention TileEntities
+        GameRegistry.registerTileEntity(TileEntityPipeWindow.class, "lmPipeWidnow");
+        
         FMLog.info(" Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
 
     }

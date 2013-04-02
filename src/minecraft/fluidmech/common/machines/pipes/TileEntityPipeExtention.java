@@ -8,6 +8,7 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.prefab.network.IPacketReceiver;
+import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 /**
  * Pipe Extension for the TileEntityPipe.class is a sub TileEntity and is not loaded the same way as
@@ -16,7 +17,7 @@ import universalelectricity.prefab.network.IPacketReceiver;
  * @author Rseifert
  * 
  */
-public abstract class TileEntityPipeExtention extends TileEntity implements IPipeExtention, IPacketReceiver
+public abstract class TileEntityPipeExtention extends TileEntityAdvanced implements IPipeExtention, IPacketReceiver
 {
 
 	private TileEntityPipe masterPipe = null;
