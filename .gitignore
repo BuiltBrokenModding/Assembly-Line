@@ -10,6 +10,7 @@ CHANGELOG
 /src/minecraft/*
 !/src/minecraft/fluidmech/
 !/src/minecraft/hydraulic/
+!/src/minecraft/org/
 !/resources/
 !/models/
 !info.txt
