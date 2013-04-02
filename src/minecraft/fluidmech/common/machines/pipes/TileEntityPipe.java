@@ -56,7 +56,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 
 	public enum PacketID
 	{
-		PIPE_CONNECTIONS, EXTENTION_FULL, EXTENTION_UPDATE;
+		PIPE_CONNECTIONS, EXTENTION_CREATE, EXTENTION_UPDATE;
 	}
 
 	@Override
@@ -146,7 +146,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 					this.renderConnection[4] = dataStream.readBoolean();
 					this.renderConnection[5] = dataStream.readBoolean();
 				}
-				else if (id == PacketID.EXTENTION_FULL)
+				else if (id == PacketID.EXTENTION_CREATE)
 				{
 					int side = dataStream.readInt();
 					this.loadOrCreateSubTile(side, PacketManager.readNBTTagCompound(dataStream));
@@ -229,7 +229,10 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 			{
 				this.subEntities[side] = (IPipeExtention) tile;
 				this.initSubTile(side);
-				System.out.println("Creating addon " + (worldObj.isRemote ? "Client" : "Server"));
+				if (worldObj != null)
+				{
+					System.out.println("Creating addon " + (worldObj.isRemote ? "Client" : "Server"));
+				}
 			}
 		}
 	}
@@ -254,9 +257,12 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		{
 			NBTTagCompound tag = new NBTTagCompound();
 			((TileEntity) this.subEntities[side]).writeToNBT(tag);
-
-			Packet packet = PacketManager.getPacket(FluidMech.CHANNEL, this, PacketID.EXTENTION_FULL.ordinal(), ForgeDirection.getOrientation(side), tag);
-			PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 50);
+			if (tag != null && tag.getTags().size() != 0)
+			{
+				System.out.println("Sending TileEntity to Client");
+				Packet packet = PacketManager.getPacket(FluidMech.CHANNEL, this, PacketID.EXTENTION_CREATE.ordinal(), ForgeDirection.getOrientation(side), tag);
+				PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 50);
+			}
 		}
 	}
 

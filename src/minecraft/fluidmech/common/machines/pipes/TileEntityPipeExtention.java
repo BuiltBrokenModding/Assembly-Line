@@ -20,23 +20,7 @@ import universalelectricity.prefab.tile.TileEntityAdvanced;
 public abstract class TileEntityPipeExtention extends TileEntityAdvanced implements IPipeExtention, IPacketReceiver
 {
 
-	private TileEntityPipe masterPipe = null;
-
-	/**
-	 * Reads a tile entity from NBT.
-	 */
-	public void readFromNBT(NBTTagCompound par1NBTTagCompound)
-	{
-
-	}
-
-	/**
-	 * Writes a tile entity to NBT.
-	 */
-	public void writeToNBT(NBTTagCompound par1NBTTagCompound)
-	{
-		super.writeToNBT(par1NBTTagCompound);
-	}
+	private TileEntityPipe masterPipe = null;	
 
 	@Override
 	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
