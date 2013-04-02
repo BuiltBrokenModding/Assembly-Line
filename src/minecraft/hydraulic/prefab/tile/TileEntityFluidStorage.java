@@ -1,12 +1,7 @@
 package hydraulic.prefab.tile;
 
-import fluidmech.common.machines.TileEntityTank;
-import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
 import hydraulic.helpers.FluidHelper;
-
-import java.util.EnumSet;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;

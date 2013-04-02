@@ -2,7 +2,6 @@ package hydraulic.api;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.LiquidStack;
 
 public interface IPipeConnection
 {

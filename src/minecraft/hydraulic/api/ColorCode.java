@@ -1,10 +1,5 @@
 package hydraulic.api;
 
-import hydraulic.helpers.FluidHelper;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidDictionary;

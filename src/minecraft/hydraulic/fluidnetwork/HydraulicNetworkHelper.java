@@ -1,14 +1,8 @@
 package hydraulic.fluidnetwork;
 
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.block.IConnector;
-import universalelectricity.core.block.INetworkProvider;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 

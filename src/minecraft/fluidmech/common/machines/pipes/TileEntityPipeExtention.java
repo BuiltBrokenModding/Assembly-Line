@@ -1,15 +1,13 @@
 package fluidmech.common.machines.pipes;
 
-import com.google.common.io.ByteArrayDataInput;
-
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
+
+import com.google.common.io.ByteArrayDataInput;
 
 /**
  * Pipe Extension for the TileEntityPipe.class is a sub TileEntity and is not loaded the same way as

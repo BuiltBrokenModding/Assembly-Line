@@ -1,17 +1,14 @@
 package fluidmech.common.machines.pipes;
 
-import com.google.common.io.ByteArrayDataInput;
-
-import fluidmech.client.render.RenderPipeWindow;
-import fluidmech.client.render.pipeextentions.IPipeExtentionRender;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidStack;
+
+import com.google.common.io.ByteArrayDataInput;
+
+import fluidmech.client.render.RenderPipeWindow;
 
 public class TileEntityPipeWindow extends TileEntityPipeExtention
 {
@@ -93,7 +90,7 @@ public class TileEntityPipeWindow extends TileEntityPipeExtention
 	}
 
 	@Override
-	public Class<RenderPipeWindow> getExtentionRenderClass()
+	public Class<?> getExtentionRenderClass()
 	{
 		return RenderPipeWindow.class;
 	}

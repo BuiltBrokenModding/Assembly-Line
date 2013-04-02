@@ -1,13 +1,7 @@
 package hydraulic.helpers;
 
-import hydraulic.api.ColorCode;
-
-import java.util.HashMap;
-import java.util.logging.Logger;
-
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.liquids.ILiquid;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidDictionary;

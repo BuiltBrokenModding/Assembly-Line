@@ -1,11 +1,9 @@
 package fluidmech.client.render.pipeextentions;
 
+import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import fluidmech.client.render.RenderPipe;
 import fluidmech.common.machines.pipes.TileEntityPipe;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
 
 /**
  * Class for TileEntity Renders that extend the pipe class to use instead of extending

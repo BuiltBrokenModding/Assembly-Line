@@ -20,7 +20,6 @@ import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.liquids.LiquidTank;
 import universalelectricity.core.block.IConnectionProvider;
 import universalelectricity.core.path.Pathfinder;
-import universalelectricity.core.path.PathfinderChecker;
 import cpw.mods.fml.common.FMLLog;
 
 /**

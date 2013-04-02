@@ -1,10 +1,5 @@
 package hydraulic.api;
 
-import java.util.List;
-
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.LiquidStack;
 
 /**
  * A tileEntity that receives a pressure driven fluid. Suggested to use some of the class from
