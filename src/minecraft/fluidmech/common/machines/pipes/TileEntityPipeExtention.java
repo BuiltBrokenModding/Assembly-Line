@@ -21,11 +21,6 @@ public abstract class TileEntityPipeExtention extends TileEntity implements IPip
 
 	private TileEntityPipe masterPipe = null;
 
-	public TileEntityPipeExtention(TileEntityPipe pipe)
-	{
-		this.masterPipe = pipe;
-	}
-
 	/**
 	 * Reads a tile entity from NBT.
 	 */
@@ -59,5 +54,11 @@ public abstract class TileEntityPipeExtention extends TileEntity implements IPip
 	public void setPipe(TileEntityPipe pipe)
 	{
 		this.masterPipe = pipe;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "PipeExtention";
 	}
 }

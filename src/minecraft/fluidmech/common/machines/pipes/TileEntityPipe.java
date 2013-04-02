@@ -12,6 +12,7 @@ import hydraulic.helpers.FluidHelper;
 import java.io.IOException;
 import java.util.Random;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
@@ -55,7 +56,34 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 
 	public enum PacketID
 	{
-		PIPE_CONNECTIONS, EXTENTION;
+		PIPE_CONNECTIONS, EXTENTION_FULL, EXTENTION_UPDATE;
+	}
+
+	@Override
+	public void initiate()
+	{
+		this.updateAdjacentConnections();
+		for (int i = 0; i < 6; i++)
+		{
+			TileEntity entity = (TileEntity) this.subEntities[i];
+			if (entity != null)
+			{
+				this.initSubTile(i);
+				this.sendExtentionToClient(i);
+			}
+		}
+	}
+
+	public void sendExtentionToClient(int side)
+	{
+		if (this.subEntities[side] instanceof TileEntity)
+		{
+			NBTTagCompound tag = new NBTTagCompound();
+			((Entity) this.subEntities[side]).writeToNBT(tag);
+
+			Packet packet = PacketManager.getPacket(FluidMech.CHANNEL, this, PacketID.EXTENTION_FULL, ForgeDirection.getOrientation(side), tag);
+			PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 50);
+		}
 	}
 
 	@Override
@@ -65,6 +93,11 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		this.updateSubEntities();
 		if (!worldObj.isRemote)
 		{
+			if (this.subEntities[0] == null)
+			{
+				this.subEntities[0] = new TileEntityPipeWindow();
+				this.initSubTile(0);
+			}
 			if (ticks % ((int) random.nextInt(5) * 40 + 20) == 0)
 			{
 				this.updateAdjacentConnections();
@@ -87,18 +120,12 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 					((TileEntity) extention).updateEntity();
 					if (extention.shouldSendPacket(!this.worldObj.isRemote) && extention.getExtentionPacketData(!this.worldObj.isRemote) != null)
 					{
-						Packet packet = PacketManager.getPacket(FluidMech.CHANNEL, this, PacketID.EXTENTION, 0, ForgeDirection.getOrientation(i), extention.getExtentionPacketData(!this.worldObj.isRemote));
+						Packet packet = PacketManager.getPacket(FluidMech.CHANNEL, this, PacketID.EXTENTION_UPDATE,ForgeDirection.getOrientation(i), extention.getExtentionPacketData(!this.worldObj.isRemote));
 						PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 50);
 					}
 				}
 			}
 		}
-	}
-
-	@Override
-	public void initiate()
-	{
-		this.updateAdjacentConnections();
 	}
 
 	@Override
@@ -129,27 +156,19 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 					this.renderConnection[4] = dataStream.readBoolean();
 					this.renderConnection[5] = dataStream.readBoolean();
 				}
-				if (id == PacketID.EXTENTION)
+				else if (id == PacketID.EXTENTION_FULL)
 				{
-					int loadType = dataStream.readInt();
 					int side = dataStream.readInt();
-					NBTTagCompound tag = PacketManager.readNBTTagCompound(dataStream);
-					/* Normal packet update */
-					if (loadType == 0)
-					{
+					this.loadOrCreateSubTile(side, PacketManager.readNBTTagCompound(dataStream));
 
-					}
-					/* Full packet Load */
-					else if (loadType == 1)
+				}
+				else if (id == PacketID.EXTENTION_UPDATE)
+				{
+					int side = dataStream.readInt();
+					if (this.subEntities[side] instanceof IPipeExtention)
 					{
-						this.subEntities[side] = null;
-						TileEntity entity = TileEntity.createAndLoadEntity(tag);
-						if (entity != null && entity instanceof IPipeExtention)
-						{
-							this.subEntities[side] = (IPipeExtention) entity;
-						}
+						this.subEntities[side].handlePacketData(network, type, packet, player, dataStream);
 					}
-
 				}
 			}
 		}
@@ -182,22 +201,65 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		}
 		for (int i = 0; i < 6; i++)
 		{
-			if (this.subEntities[i] != null)
+			if (nbt.hasKey("Addon" + i))
 			{
-				if (nbt.hasKey("Addon" + i))
-				{
-					NBTTagCompound tag = nbt.getCompoundTag("Addon" + i);
-					if (tag != null && tag.getTags().size() != 0)
-					{
-						TileEntity tile = TileEntity.createAndLoadEntity(tag);
-						if (tile instanceof IPipeExtention)
-						{
-							this.subEntities[i] = (IPipeExtention) tile;
-						}
-					}
-				}
+				this.loadOrCreateSubTile(i, nbt.getCompoundTag("Addon" + i));
 			}
 		}
+	}
+
+	public boolean addNewExtention(int side, Class<? extends TileEntity> partClass)
+	{
+		if (partClass == null)
+		{
+			return false;
+		}
+		try
+		{
+			TileEntity tile = partClass.newInstance();
+			if (tile instanceof IPipeExtention)
+			{
+
+			}
+		}
+		catch (Exception e)
+		{
+			System.out.print("Failed to add a Pipe Extention using Class " + partClass.toString());
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public void loadOrCreateSubTile(int side, NBTTagCompound tag)
+	{
+		if (tag != null && tag.getTags().size() != 0)
+		{
+			TileEntity tile = TileEntity.createAndLoadEntity(tag);
+			if (tile instanceof IPipeExtention)
+			{
+				this.subEntities[side] = (IPipeExtention) tile;
+				this.initSubTile(side);
+			}
+		}
+	}
+
+	public void initSubTile(int side)
+	{
+		if (this.subEntities[side] instanceof TileEntity)
+		{
+			TileEntity tile = (TileEntity) subEntities[side];
+			((IPipeExtention) tile).setPipe(this);
+			tile.worldObj = this.worldObj;
+			tile.xCoord = this.xCoord;
+			tile.yCoord = this.yCoord;
+			tile.zCoord = this.zCoord;
+		}
+	}
+
+	public TileEntity getEntitySide(ForgeDirection side)
+	{
+		return (TileEntity) this.subEntities[side.ordinal() & 5];
+
 	}
 
 	/**
@@ -251,6 +313,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		/* DEBUG CODE ACTIVATERS */
 		boolean testConnections = false;
 		boolean testNetwork = false;
+		boolean testSubs = true;
 
 		/* NORMAL OUTPUT */
 		String string = this.getNetwork().pressureProduced + "p " + this.getNetwork().getStorageFluid() + " Extra";
@@ -266,6 +329,22 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		if (testNetwork)
 		{
 			string += " " + this.getNetwork().toString();
+		}
+		if (testSubs)
+		{
+			string += " ";
+			for (int i = 0; i < 6; i++)
+			{
+				if (this.subEntities[i] == null)
+				{
+					string += ":" + "Null";
+				}
+				else
+				{
+					string += ":" + this.subEntities[i].toString();
+				}
+			}
+			string += " ";
 		}
 
 		return string;

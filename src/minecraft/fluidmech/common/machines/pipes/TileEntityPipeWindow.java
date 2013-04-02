@@ -13,10 +13,6 @@ import net.minecraftforge.liquids.LiquidStack;
 
 public class TileEntityPipeWindow extends TileEntityPipeExtention
 {
-	public TileEntityPipeWindow(TileEntityPipe pipe)
-	{
-		super(pipe);
-	}
 
 	private TileEntityPipe pipe = null;
 	private boolean shouldUpdate = false;
@@ -26,9 +22,13 @@ public class TileEntityPipeWindow extends TileEntityPipeExtention
 	@Override
 	public void updateEntity()
 	{
-		if(pipe != null)
+		if(!worldObj.isRemote && pipe != null)
 		{			
 			stack = pipe.getNetwork().getTank().getLiquid();
+		}
+		if(worldObj.isRemote)
+		{
+			System.out.println("Alive");
 		}
 	}
 
@@ -86,6 +86,10 @@ public class TileEntityPipeWindow extends TileEntityPipeExtention
 	{
 		return null;
 	}
-
+	@Override
+	public String toString()
+	{
+		return "PipeWindow";
+	}
 
 }

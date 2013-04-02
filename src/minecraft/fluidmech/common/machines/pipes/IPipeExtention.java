@@ -4,7 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import fluidmech.client.render.pipeextentions.IPipeExtentionRender;
 import universalelectricity.prefab.network.IPacketReceiver;
 
-public interface IPipeExtention
+public interface IPipeExtention extends IPacketReceiver
 {
 	public boolean canBePlacedOnPipe(TileEntityPipe pipe);
 

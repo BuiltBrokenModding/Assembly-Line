@@ -3,10 +3,12 @@ package fluidmech.client.render;
 import hydraulic.api.ColorCode;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
 import fluidmech.client.model.ModelLargePipe;
+import fluidmech.client.render.pipeextentions.IPipeExtentionRender;
 import fluidmech.common.FluidMech;
 import fluidmech.common.machines.pipes.IPipeExtention;
 import fluidmech.common.machines.pipes.TileEntityPipe;
@@ -36,9 +38,17 @@ public class RenderPipe extends TileEntitySpecialRenderer
 			meta = te.getBlockMetadata();
 			TileEntityPipe pipe = ((TileEntityPipe) te);
 			this.renderSide = pipe.renderConnection;
-			for(int i = 0; i < 6; i++)
+			for (int i = 0; i < 6; i++)
 			{
 				IPipeExtention extention = (IPipeExtention) pipe.subEntities[i];
+				if (extention != null)
+				{
+					IPipeExtentionRender render = extention.getExtentionRenderClass();
+					if (render != null)
+					{
+						render.renderAModelAt(pipe, d, d1, d2, f, ForgeDirection.getOrientation(i));
+					}
+				}
 			}
 		}
 		this.render(meta, renderSide);
