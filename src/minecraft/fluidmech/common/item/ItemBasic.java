@@ -33,12 +33,12 @@ public class ItemBasic extends Item
 		{
 			for (ItemStack itemStack : list)
 			{
-				this.icons.add(iconRegister.func_94245_a(this.getUnlocalizedName(itemStack).replace("item.", FluidMech.TEXTURE_NAME_PREFIX)));
+				this.icons.add(iconRegister.registerIcon(this.getUnlocalizedName(itemStack).replace("item.", FluidMech.TEXTURE_NAME_PREFIX)));
 			}
 		}
 		else
 		{
-			this.iconIndex = iconRegister.func_94245_a(this.getUnlocalizedName().replace("item.", FluidMech.TEXTURE_NAME_PREFIX));
+			this.iconIndex = iconRegister.registerIcon(this.getUnlocalizedName().replace("item.", FluidMech.TEXTURE_NAME_PREFIX));
 		}
 	}
 

@@ -11,10 +11,10 @@ CHANGELOG
 !/src/minecraft/fluidmech/
 !/src/minecraft/hydraulic/
 !/src/minecraft/org/
-!/resources/
-!/models/
+!/resources/models/
+!/resources/mods/fluidmech/
+!/resources/mods/mcmod.info
 !info.txt
-!AssemblyLineStandard.xml
 !publish.bat
 !publish_obf.bat
 !include.bat

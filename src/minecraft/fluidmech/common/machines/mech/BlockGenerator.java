@@ -44,7 +44,7 @@ public class BlockGenerator extends BlockAdvanced
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving par5EntityLiving, ItemStack stack)
 	{
 		int angle = MathHelper.floor_double((par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-		world.setBlockAndMetadataWithNotify(x, y, z, blockID, angle, 3);
+		world.setBlockMetadataWithNotify(x, y, z, blockID, angle);
 	}
 
 	@Override
@@ -54,11 +54,11 @@ public class BlockGenerator extends BlockAdvanced
 		int metadata = par1World.getBlockMetadata(x, y, z);
 		if (metadata < 3)
 		{
-			par1World.setBlockAndMetadataWithNotify(x, y, z, blockID, metadata + angle, 3);
+			par1World.setBlockMetadataWithNotify(x, y, z, blockID, metadata + angle);
 		}
 		else
 		{
-			par1World.setBlockAndMetadataWithNotify(x, y, z, blockID, 0, 3);
+			par1World.setBlockMetadataWithNotify(x, y, z, blockID, 0);
 		}
 		return true;
 	}

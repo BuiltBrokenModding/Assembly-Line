@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
@@ -20,6 +21,7 @@ import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.liquids.LiquidTank;
 import universalelectricity.core.block.IConnectionProvider;
 import universalelectricity.core.path.Pathfinder;
+import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.common.FMLLog;
 
 /**
@@ -149,11 +151,11 @@ public class HydraulicNetwork
 		{
 			return;
 		}
-		if (ent instanceof IFluidNetworkPart)
+		else if (ent instanceof IFluidNetworkPart)
 		{
 			this.addNetworkPart((IFluidNetworkPart) ent);
 		}
-		if (!fluidTanks.contains(ent))
+		else if (!fluidTanks.contains(ent))
 		{
 			fluidTanks.add(ent);
 		}
@@ -232,14 +234,28 @@ public class HydraulicNetwork
 	}
 
 	/**
-	 * Tries to add the liquid stack to the network's valid machines. Same as the fill method for
-	 * ITankContainer in that it will fill machines, however it also includes pressure if the
-	 * machine also adds pressure to the network. Called mostly by pipes as they are filled from
-	 * other mod sources
+	 * Adds FLuid to this network from one of the connected Pipes
 	 * 
-	 * @return The amount of Liquid used.
+	 * @param source - Were this liquid came from
+	 * @param stack - LiquidStack to be sent
+	 * @param doFill - actually fill the tank or just check numbers
+	 * @return the amount of liquid consumed from the init stack
 	 */
-	public int addFluidToNetwork(TileEntity source, LiquidStack stack, double pressure, boolean doFill)
+	public int addFluidToNetwork(TileEntity source, LiquidStack stack, boolean doFill)
+	{
+		return this.addFluidToNetwork(source, stack, doFill, true);
+	}
+
+	/**
+	 * Adds FLuid to this network from one of the connected Pipes
+	 * 
+	 * @param source - Were this liquid came from
+	 * @param stack - LiquidStack to be sent
+	 * @param doFill - actually fill the tank or just check numbers
+	 * @param allowStore - allows the network to store this liquid in the pipes
+	 * @return the amount of liquid consumed from the init stack
+	 */
+	public int addFluidToNetwork(TileEntity source, LiquidStack stack, boolean doFill, boolean allowStore)
 	{
 		int used = 0;
 		LiquidStack prevCombined = this.combinedStorage.getLiquid();
@@ -323,7 +339,7 @@ public class HydraulicNetwork
 				used = secondayFill.fill(fillDir, stack, doFill);
 				System.out.println("Seconday Target " + used + doFill);
 			}
-			else if (this.combinedStorage.getLiquid() == null || this.combinedStorage.getLiquid().amount < this.combinedStorage.getCapacity())
+			else if (allowStore && (this.combinedStorage.getLiquid() == null || this.combinedStorage.getLiquid().amount < this.combinedStorage.getCapacity()))
 			{
 				used = this.combinedStorage.fill(stack, doFill);
 				System.out.println("Network Target filled for " + used + doFill);
@@ -523,7 +539,7 @@ public class HydraulicNetwork
 		// as needed
 	}
 
-	public void splitNetwork(IConnectionProvider splitPoint)
+	public void splitNetwork(World world, IConnectionProvider splitPoint)
 	{
 		if (splitPoint instanceof TileEntity)
 		{
@@ -547,15 +563,16 @@ public class HydraulicNetwork
 
 						if (connectedBlockA != connectedBlockB && connectedBlockB instanceof IConnectionProvider)
 						{
-							Pathfinder finder = new PathfinderCheckerPipes((IConnectionProvider) connectedBlockB, splitPoint);
-							finder.init((IConnectionProvider) connectedBlockA);
+							Pathfinder finder = new PathfinderCheckerPipes(world, (IConnectionProvider) connectedBlockB, splitPoint);
+							finder.init(new Vector3(connectedBlockA));
 
 							if (finder.results.size() > 0)
 							{
 								/* STILL CONNECTED SOMEWHERE ELSE */
-								for (IConnectionProvider node : finder.iteratedNodes)
+								for (Vector3 node : finder.closedSet)
 								{
-									if (node instanceof IFluidNetworkPart)
+									TileEntity entity = node.getTileEntity(world);
+									if (entity instanceof IFluidNetworkPart)
 									{
 										if (node != splitPoint)
 										{
@@ -569,9 +586,10 @@ public class HydraulicNetwork
 								/* NO LONGER CONNECTED ELSE WHERE SO SPLIT AND REFRESH */
 								HydraulicNetwork newNetwork = new HydraulicNetwork(this.color);
 								int parts = 0;
-								for (IConnectionProvider node : finder.iteratedNodes)
+								for (Vector3 node : finder.closedSet)
 								{
-									if (node instanceof IFluidNetworkPart)
+									TileEntity entity = node.getTileEntity(world);
+									if (entity instanceof IFluidNetworkPart)
 									{
 										if (node != splitPoint)
 										{

@@ -28,7 +28,7 @@ public class TileEntityPipeWindow extends TileEntityPipeExtention
 			if (pipe != null)
 			{
 				stack = pipe.getNetwork().getTank().getLiquid();
-				worldObj.setBlockAndMetadataWithNotify(xCoord, yCoord + 1, yCoord, 0, 0, 3);
+				worldObj.setBlockMetadataWithNotify(xCoord, yCoord + 1, yCoord, 0, 0);
 			}
 		}
 		else

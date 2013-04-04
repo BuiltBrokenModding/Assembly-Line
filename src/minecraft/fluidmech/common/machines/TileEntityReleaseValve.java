@@ -39,18 +39,18 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements IPi
 
 		connected = connectionHelper.getSurroundingTileEntities(this);
 
-		for (int i = 0; i < 6; i++)
+		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 		{
-			if (connected[i] instanceof ITankContainer)
+			if (connected[dir.ordinal()] instanceof ITankContainer)
 			{
-				if (connected[i] instanceof IColorCoded && !this.canConnect(((IColorCoded) connected[i]).getColor()))
+				if (connected[dir.ordinal()] instanceof IColorCoded && !this.canConnect(((IColorCoded) connected[dir.ordinal()]).getColor()))
 				{
-					connected[i] = null;
+					connected[dir.ordinal()] = null;
 				}
 			}
 			else
 			{
-				connected[i] = null;
+				connected[dir.ordinal()] = null;
 			}
 		}
 
@@ -69,7 +69,7 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements IPi
 						if (inputPipe != null)
 						{
 							ILiquidTank pipeVolume = inputPipe.getTanks(ForgeDirection.UNKNOWN)[0];
-							int ammountFilled = inputPipe.getNetwork().addFluidToNetwork(this, stack, 100, true);
+							int ammountFilled = inputPipe.getNetwork().addFluidToNetwork(this, stack, true);
 							drainedTank.drain(ForgeDirection.UNKNOWN, ammountFilled, true);
 						}
 					}

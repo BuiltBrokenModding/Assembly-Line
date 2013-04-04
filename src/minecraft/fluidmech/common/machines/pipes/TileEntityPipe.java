@@ -138,7 +138,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	{
 		if (!this.worldObj.isRemote)
 		{
-			this.getNetwork().splitNetwork(this);
+			this.getNetwork().splitNetwork(this.worldObj, this);
 		}
 
 		super.invalidate();
@@ -394,7 +394,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		{
 			return 0;
 		}
-		return this.getNetwork().addFluidToNetwork(worldObj.getBlockTileEntity(xCoord + from.offsetX, yCoord + from.offsetY, zCoord + from.offsetZ), resource, 0, doFill);
+		return this.getNetwork().addFluidToNetwork(worldObj.getBlockTileEntity(xCoord + from.offsetX, yCoord + from.offsetY, zCoord + from.offsetZ), resource, doFill);
 	}
 
 	@Override
@@ -404,7 +404,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		{
 			return 0;
 		}
-		return this.getNetwork().addFluidToNetwork(this, resource, 0, doFill);
+		return this.getNetwork().addFluidToNetwork(this, resource,doFill);
 	}
 
 	@Override
@@ -509,7 +509,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 					LiquidStack stack = tankContainer.drain(dir, LiquidContainerRegistry.BUCKET_VOLUME, false);
 					if (stack != null && stack.amount > 0)
 					{
-						int fill = this.getNetwork().addFluidToNetwork((TileEntity) tankContainer, stack, 0, true);
+						int fill = this.getNetwork().addFluidToNetwork((TileEntity) tankContainer, stack,true);
 						tankContainer.drain(dir, fill, true);
 					}
 				}
@@ -564,7 +564,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	{
 		if (damageAllowed)
 		{
-			worldObj.setBlockAndMetadataWithNotify(xCoord, yCoord, yCoord, 0, 0, 3);
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, yCoord, 0, 0);
 			return true;
 		}
 		return false;

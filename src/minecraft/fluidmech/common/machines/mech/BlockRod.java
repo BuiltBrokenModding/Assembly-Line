@@ -59,7 +59,7 @@ public class BlockRod extends BlockAdvanced
 				dX++;
 				break;
 		}
-		world.setBlockAndMetadataWithNotify(i, j, k, blockID, meta, 3);
+		world.setBlockMetadataWithNotify(i, j, k, blockID, meta);
 	}
 
 	@Override

@@ -176,7 +176,7 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 
 			if (fillAmmount > 0)
 			{
-				worldObj.setBlockAndMetadataWithNotify(xCoord, yCoord - 1, zCoord, 0, 0, 3);
+				worldObj.setBlockMetadataWithNotify(xCoord, yCoord - 1, zCoord, 0, 0);
 				return true;
 			}
 		}
