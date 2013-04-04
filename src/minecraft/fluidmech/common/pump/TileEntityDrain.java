@@ -12,12 +12,13 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 
-public class TileEntityDrain extends TileEntityFluidDevice
+public class TileEntityDrain extends TileEntityFluidDevice implements ITankContainer
 {
 	private ForgeDirection face = ForgeDirection.UNKNOWN;
 	private boolean drainSources = true;
@@ -58,7 +59,8 @@ public class TileEntityDrain extends TileEntityFluidDevice
 								{
 									for (Entry<TileEntityConstructionPump, LiquidStack> pump : requestMap.entrySet())
 									{
-										if (pump.getValue().isLiquidEqual(stack))
+										LiquidStack requestStack = pump.getValue();
+										if (requestStack != null && (requestStack.isLiquidEqual(stack) || requestStack.itemID == -1))
 										{
 											if (((ITankContainer) entity).fill(0, stack, false) >= stack.amount)
 											{
@@ -150,5 +152,47 @@ public class TileEntityDrain extends TileEntityFluidDevice
 				this.targetSources.add(loc);
 			}
 		}
+	}
+
+	@Override
+	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ILiquidTank[] getTanks(ForgeDirection direction)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -1,6 +1,5 @@
 package fluidmech.common;
 
-import fluidmech.common.block.BlockPumpMachine;
 import fluidmech.common.block.BlockReleaseValve;
 import fluidmech.common.block.BlockSink;
 import fluidmech.common.block.BlockTank;
@@ -22,6 +21,7 @@ import fluidmech.common.machines.mech.TileEntityRod;
 import fluidmech.common.machines.pipes.BlockPipe;
 import fluidmech.common.machines.pipes.TileEntityPipe;
 import fluidmech.common.machines.pipes.TileEntityPipeWindow;
+import fluidmech.common.pump.BlockPumpMachine;
 import fluidmech.common.pump.TileEntityStarterPump;
 import hydraulic.api.ColorCode;
 import hydraulic.helpers.FluidHelper;

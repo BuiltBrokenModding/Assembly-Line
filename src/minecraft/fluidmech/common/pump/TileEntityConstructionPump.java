@@ -1,9 +1,11 @@
 package fluidmech.common.pump;
 
+import hydraulic.fluidnetwork.IFluidNetworkPart;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
+import net.minecraftforge.liquids.LiquidContainerData;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.liquids.LiquidTank;
@@ -25,7 +27,31 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 	@Override
 	public void updateEntity()
 	{
+		if (!worldObj.isRemote && this.wattsReceived >= this.WATTS_PER_TICK)
+		{
+			if (this.ticks % 10 == 0)
+			{
+				boolean called = false;
+				TileEntity inputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), inputSide);
+				TileEntity outputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), outputSide);
+				if (inputTile instanceof IFluidNetworkPart)
+				{
+					if (outputTile instanceof ITankContainer)
+					{
+						for (ITankContainer tank : ((IFluidNetworkPart) inputTile).getNetwork().fluidTanks)
+						{
+							if (tank instanceof TileEntityDrain)
+							{
+								((TileEntityDrain) tank).requestLiquid(this, new LiquidStack(-1, LiquidContainerRegistry.BUCKET_VOLUME));
+								called = true;
+							}
 
+						}
+					}
+				}
+
+			}
+		}
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package fluidmech.common.block;
+package fluidmech.common.pump;
 
 import hydraulic.helpers.MetaGroup;
 
@@ -17,7 +17,6 @@ import universalelectricity.prefab.block.BlockAdvanced;
 import fluidmech.client.render.BlockRenderHelper;
 import fluidmech.common.FluidMech;
 import fluidmech.common.TabFluidMech;
-import fluidmech.common.pump.TileEntityStarterPump;
 
 public class BlockPumpMachine extends BlockAdvanced
 {
