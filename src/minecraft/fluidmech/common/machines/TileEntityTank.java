@@ -207,7 +207,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IPacketRec
 	}
 
 	@Override
-	public boolean canConnect(TileEntity entity, ForgeDirection dir)
+	public boolean canPipeConnect(TileEntity entity, ForgeDirection dir)
 	{
 		return entity != null && entity instanceof IColorCoded && (((IColorCoded) entity).getColor() == ColorCode.NONE || ((IColorCoded) entity).getColor() == this.getColor());
 	}

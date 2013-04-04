@@ -12,5 +12,5 @@ public interface IPipeConnection
 	 * specific stack requirement
 	 * @return true if it can connect
 	 */
-	public boolean canConnect(TileEntity entity, ForgeDirection dir);
+	public boolean canPipeConnect(TileEntity entity, ForgeDirection dir);
 }

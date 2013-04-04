@@ -197,7 +197,7 @@ public class TileEntityMinorPump extends TileEntityElectricityRunnable implement
 	}
 
 	@Override
-	public boolean canConnect(TileEntity entity, ForgeDirection dir)
+	public boolean canPipeConnect(TileEntity entity, ForgeDirection dir)
 	{
 		if (dir == this.pipeConnection.getOpposite())
 		{

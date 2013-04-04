@@ -34,7 +34,7 @@ public class PathfinderCheckerPipes extends Pathfinder
 
 					if (connectedBlock instanceof IFluidNetworkPart && !Arrays.asList(ignoreConnector).contains(connectedBlock))
 					{
-						if (((IFluidNetworkPart) connectedBlock).canConnect(connectedBlock, direction.getOpposite()))
+						if (((IFluidNetworkPart) connectedBlock).canPipeConnect(connectedBlock, direction.getOpposite()))
 						{
 							neighbors.add(position);
 						}

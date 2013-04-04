@@ -452,7 +452,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 			}
 			if (tileEntity instanceof IPipeConnection)
 			{
-				if (((IPipeConnection) tileEntity).canConnect(this, side))
+				if (((IPipeConnection) tileEntity).canPipeConnect(this, side))
 				{
 					if (tileEntity instanceof IFluidNetworkPart)
 					{
@@ -526,7 +526,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	}
 
 	@Override
-	public boolean canConnect(TileEntity entity, ForgeDirection dir)
+	public boolean canPipeConnect(TileEntity entity, ForgeDirection dir)
 	{
 		return this.subEntities[dir.ordinal()] == null;
 	}

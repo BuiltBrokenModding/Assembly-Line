@@ -180,7 +180,7 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements IPi
 	}
 
 	@Override
-	public boolean canConnect(TileEntity entity, ForgeDirection dir)
+	public boolean canPipeConnect(TileEntity entity, ForgeDirection dir)
 	{
 		return entity != null && entity instanceof IColorCoded && this.canConnect(((IColorCoded) entity).getColor());
 	}
