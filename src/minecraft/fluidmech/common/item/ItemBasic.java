@@ -7,10 +7,10 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
-import universalelectricity.components.common.BasicComponents;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import fluidmech.common.FluidMech;
+import fluidmech.common.TabFluidMech;
 
 public class ItemBasic extends Item
 {
@@ -20,7 +20,7 @@ public class ItemBasic extends Item
 	{
 		super(id);
 		this.setUnlocalizedName(name);
-		this.setCreativeTab(BasicComponents.TAB);
+		this.setCreativeTab(TabFluidMech.INSTANCE);
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -12,7 +12,6 @@ import fluidmech.common.item.ItemBlockTank;
 import fluidmech.common.item.ItemParts;
 import fluidmech.common.item.ItemParts.Parts;
 import fluidmech.common.item.ItemTools;
-import fluidmech.common.machines.TileEntityMinorPump;
 import fluidmech.common.machines.TileEntityReleaseValve;
 import fluidmech.common.machines.TileEntitySink;
 import fluidmech.common.machines.TileEntityTank;
@@ -23,6 +22,7 @@ import fluidmech.common.machines.mech.TileEntityRod;
 import fluidmech.common.machines.pipes.BlockPipe;
 import fluidmech.common.machines.pipes.TileEntityPipe;
 import fluidmech.common.machines.pipes.TileEntityPipeWindow;
+import fluidmech.common.pump.TileEntityStarterPump;
 import hydraulic.api.ColorCode;
 import hydraulic.helpers.FluidHelper;
 
@@ -168,7 +168,7 @@ public class FluidMech extends DummyModContainer
         proxy.Init();
         // TileEntities
         GameRegistry.registerTileEntity(TileEntityPipe.class, "lmPipeTile");
-        GameRegistry.registerTileEntity(TileEntityMinorPump.class, "lmPumpTile");
+        GameRegistry.registerTileEntity(TileEntityStarterPump.class, "lmPumpTile");
         GameRegistry.registerTileEntity(TileEntityRod.class, "lmRodTile");
         GameRegistry.registerTileEntity(TileEntityReleaseValve.class, "lmeValve");
         GameRegistry.registerTileEntity(TileEntityTank.class, "lmTank");

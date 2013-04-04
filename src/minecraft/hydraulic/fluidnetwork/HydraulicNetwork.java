@@ -179,6 +179,8 @@ public class HydraulicNetwork
 	 */
 	public double getPressureProduced(TileEntity... ignoreTiles)
 	{
+		// TODO pressure is not added as a sum but rather as a collective sum of the largest
+		// pressures. IF the pressure is to small it will be ignored and stop producing pressure.
 		int totalPressure = 0;
 
 		Iterator it = this.pressureProducers.entrySet().iterator();

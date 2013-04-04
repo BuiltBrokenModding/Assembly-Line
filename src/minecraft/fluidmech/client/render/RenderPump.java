@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import fluidmech.client.model.ModelPump;
 import fluidmech.common.FluidMech;
-import fluidmech.common.machines.TileEntityMinorPump;
+import fluidmech.common.pump.TileEntityStarterPump;
 
 public class RenderPump extends TileEntitySpecialRenderer
 {
@@ -19,7 +19,7 @@ public class RenderPump extends TileEntitySpecialRenderer
         model = new ModelPump();
     }
 
-    public void renderAModelAt(TileEntityMinorPump te, double d, double d1, double d2, float f)
+    public void renderAModelAt(TileEntityStarterPump te, double d, double d1, double d2, float f)
     {
         int meta = te.worldObj.getBlockMetadata(te.xCoord, te.yCoord, te.zCoord);
 
@@ -51,7 +51,7 @@ public class RenderPump extends TileEntitySpecialRenderer
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double var2, double var4, double var6, float var8)
     {
-        this.renderAModelAt((TileEntityMinorPump) tileEntity, var2, var4, var6, var8);
+        this.renderAModelAt((TileEntityStarterPump) tileEntity, var2, var4, var6, var8);
     }
 
 }

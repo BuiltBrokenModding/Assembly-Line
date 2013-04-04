@@ -17,7 +17,7 @@ import universalelectricity.prefab.block.BlockAdvanced;
 import fluidmech.client.render.BlockRenderHelper;
 import fluidmech.common.FluidMech;
 import fluidmech.common.TabFluidMech;
-import fluidmech.common.machines.TileEntityMinorPump;
+import fluidmech.common.pump.TileEntityStarterPump;
 
 public class BlockPumpMachine extends BlockAdvanced
 {
@@ -106,7 +106,7 @@ public class BlockPumpMachine extends BlockAdvanced
 		}
 		else
 		{
-			return new TileEntityMinorPump();
+			return new TileEntityStarterPump();
 		}
 		return null;
 	}
@@ -132,9 +132,9 @@ public class BlockPumpMachine extends BlockAdvanced
 		{
 			par1World.setBlockMetadataWithNotify(x, y, z, meta + 1, 3);
 		}
-		if (ent instanceof TileEntityMinorPump)
+		if (ent instanceof TileEntityStarterPump)
 		{
-			((TileEntityMinorPump) ent).getConnections();
+			((TileEntityStarterPump) ent).getConnections();
 		}
 		return true;
 	}

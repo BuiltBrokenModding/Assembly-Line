@@ -2,10 +2,12 @@ package hydraulic.helpers;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.liquids.ILiquid;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
+import universalelectricity.core.vector.Vector3;
 
 public class FluidHelper
 {
@@ -131,5 +133,22 @@ public class FluidHelper
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * is block at the location is a still source block
+	 * 
+	 */
+	public static boolean isStillLiquid(World world, Vector3 pos)
+	{
+		int blockID = pos.getBlockID(world);
+		int meta = pos.getBlockMetadata(world);
+		int LiquidID = FluidHelper.getLiquidId(blockID);
+
+		if (LiquidID != -1 && meta == 0)
+		{
+			return true;
+		}
+		return false;
 	}
 }
