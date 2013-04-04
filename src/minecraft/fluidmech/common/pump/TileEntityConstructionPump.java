@@ -23,6 +23,7 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 	private ForgeDirection inputSide = ForgeDirection.UNKNOWN;
 	/* Fake Internal Tank */
 	private LiquidTank fakeTank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
+	private int liquidRequest = 1;
 
 	@Override
 	public void updateEntity()
@@ -42,7 +43,7 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 						{
 							if (tank instanceof TileEntityDrain)
 							{
-								((TileEntityDrain) tank).requestLiquid(this, new LiquidStack(-1, LiquidContainerRegistry.BUCKET_VOLUME));
+								((TileEntityDrain) tank).requestLiquid(this, new LiquidStack(-1, liquidRequest * LiquidContainerRegistry.BUCKET_VOLUME));
 								called = true;
 							}
 

@@ -15,9 +15,11 @@ import universalelectricity.core.path.IPathCallBack;
 import universalelectricity.core.path.Pathfinder;
 import universalelectricity.core.vector.Vector3;
 
-public class PathfinderCheckerLiquid extends Pathfinder
+public class PathfinderFindHighestBlock extends Pathfinder
 {
-	public PathfinderCheckerLiquid(final World world, final int maxResources, final LiquidStack resource, final Vector3... ignoreList)
+	public static int highestY = 0;
+
+	public PathfinderFindHighestBlock(final World world, final int blockID, final Vector3... ignoreList)
 	{
 		super(new IPathCallBack()
 		{
@@ -25,14 +27,27 @@ public class PathfinderCheckerLiquid extends Pathfinder
 			public Set<Vector3> getConnectedNodes(Pathfinder finder, Vector3 currentNode)
 			{
 				Set<Vector3> neighbors = new HashSet<Vector3>();
-
+				Vector3 pos = currentNode.clone().modifyPositionFromSide(ForgeDirection.UP);
+				if (pos.getBlockID(world) == blockID)
+				{
+					neighbors.add(pos);
+					if (pos.intY() > highestY)
+					{
+						highestY = pos.intY();
+					}
+					return neighbors;
+				}
 				for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 				{
-					Vector3 pos = currentNode.clone().modifyPositionFromSide(direction);
+					pos = currentNode.clone().modifyPositionFromSide(direction);
 
-					if (FluidHelper.isStillLiquid(world,pos) && FluidHelper.getLiquidFromBlockId(pos.getBlockID(world)).equals(resource))
+					if (pos.getBlockID(world) == blockID)
 					{
 						neighbors.add(pos);
+						if (pos.intY() > highestY)
+						{
+							highestY = pos.intY();
+						}
 					}
 				}
 
@@ -42,7 +57,7 @@ public class PathfinderCheckerLiquid extends Pathfinder
 			@Override
 			public boolean onSearch(Pathfinder finder, Vector3 node)
 			{
-				if (finder.closedSet.size() >= maxResources)
+				if (finder.closedSet.size() >= 10000 || highestY == 256)
 				{
 					return true;
 				}
@@ -50,5 +65,6 @@ public class PathfinderCheckerLiquid extends Pathfinder
 				return false;
 			}
 		});
+		this.highestY = 0;
 	}
 }

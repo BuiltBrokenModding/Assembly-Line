@@ -22,7 +22,8 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 {
 	private ForgeDirection face = ForgeDirection.UNKNOWN;
 	private boolean drainSources = true;
-
+	/* MAX BLOCKS DRAINED PER 1/2 SECOND */
+	public static int MAX_DRAIN_PER_PROCESS = 30;
 	/* LIST OF PUMPS AND THERE REQUESTS FOR THIS DRAIN */
 	private HashMap<TileEntityConstructionPump, LiquidStack> requestMap = new HashMap<TileEntityConstructionPump, LiquidStack>();
 
@@ -52,7 +53,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 						int blocksDrained = 0;
 						for (Vector3 loc : targetSources)
 						{
-							if (blocksDrained >= 5 && FluidHelper.isStillLiquid(this.worldObj, loc))
+							if (blocksDrained >= MAX_DRAIN_PER_PROCESS && FluidHelper.isStillLiquid(this.worldObj, loc))
 							{
 								LiquidStack stack = FluidHelper.getLiquidFromBlockId(loc.getBlockID(this.worldObj));
 								if (stack != null)
@@ -132,17 +133,12 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	 */
 	public void getNextFluidBlock()
 	{
-		int blockID = Block.waterStill.blockID;
-		int y = this.yCoord + 1;
-		while (blockID == Block.waterStill.blockID)
-		{
-			blockID = worldObj.getBlockId(xCoord, y, zCoord);
-			if (blockID == Block.waterStill.blockID)
-			{
-				y++;
-			}
-
-		}
+		/* FIND HIGHEST DRAIN POINT FIRST */
+		PathfinderFindHighestBlock path = new PathfinderFindHighestBlock(this.worldObj, Block.waterStill.blockID);
+		path.init(new Vector3(xCoord + this.face.offsetX, yCoord + this.face.offsetY, zCoord + this.face.offsetZ));
+		int y = path.highestY;
+		
+		/* FIND 10 UNMARKED SOURCES */
 		PathfinderCheckerLiquid pathFinder = new PathfinderCheckerLiquid(worldObj, 10, null, (Vector3[]) this.targetSources.toArray());
 		pathFinder.init(new Vector3(xCoord, y, zCoord));
 		for (Vector3 loc : pathFinder.closedSet)
