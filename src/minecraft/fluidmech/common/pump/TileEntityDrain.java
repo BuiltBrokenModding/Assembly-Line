@@ -34,6 +34,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	/* MAX BLOCKS DRAINED PER 1/2 SECOND */
 	public static int MAX_DRAIN_PER_PROCESS = 30;
 	private int currentDrains = 0;
+	int yFillStart = 0;
 	/* LIST OF PUMPS AND THERE REQUESTS FOR THIS DRAIN */
 	private HashMap<TileEntityConstructionPump, LiquidStack> requestMap = new HashMap<TileEntityConstructionPump, LiquidStack>();
 
@@ -155,10 +156,12 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 						}
 					}
 				}
-			}// END OF DRAIN
-			else
-			{
-				// TODO time to have fun finding a place for this block to exist
+				// END OF DRAIN
+				else
+				{
+					// TODO time to have fun finding a place for this block to exist
+					//this.fillArea(LiquidDictionary.getLiquid("Water", LiquidContainerRegistry.BUCKET_VOLUME * 5), true);
+				}
 			}
 		}
 	}
@@ -166,24 +169,50 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	@Override
 	public int fillArea(LiquidStack resource, boolean doFill)
 	{
+		int drained = 0;
+		if (yFillStart == 0 || yFillStart >= 255)
+		{
+			yFillStart = this.yCoord + this.getFacing().offsetY;
+		}
+
 		if (!this.drainSources)
 		{
 			System.out.println("Filling Area: " + doFill);
-			if (resource == null || resource.amount < LiquidContainerRegistry.BUCKET_VOLUME || !(Block.blocksList[resource.itemID] instanceof ILiquid))
+			if (resource == null || resource.amount < LiquidContainerRegistry.BUCKET_VOLUME)
 			{
 				System.out.println("Invalid Resource");
 				return 0;
 			}
 			System.out.println("Resource: " + LiquidDictionary.findLiquidName(resource) + ":" + resource.amount);
-			
-			ILiquid liquidBlock = (ILiquid) Block.blocksList[resource.itemID];
-			
-			int drained = 0;
+			int blockID = resource.itemID;
+			int meta = resource.itemMeta;
+			if (resource.itemID == Block.waterStill.blockID)
+			{
+				blockID = Block.waterStill.blockID;
+				meta = 0;
+			}
+			else if (resource.itemID != Block.lavaStill.blockID)
+			{
+				blockID = Block.lavaStill.blockID;
+				meta = 0;
+			}
+			else if (Block.blocksList[resource.itemID] instanceof ILiquid)
+			{
+				ILiquid liquidBlock = (ILiquid) Block.blocksList[resource.itemID];
+				blockID = liquidBlock.stillLiquidId();
+				meta = liquidBlock.stillLiquidMeta();
+			}
+			else
+			{
+				return 0;
+			}
+
 			int blocks = (resource.amount / LiquidContainerRegistry.BUCKET_VOLUME);
 
 			PathfinderCheckerFindAir pathFinder = new PathfinderCheckerFindAir(this.worldObj);
 			pathFinder.init(new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ));
 			System.out.println("Nodes: " + pathFinder.closedSet.size());
+			int fillable = 0;
 			for (Vector3 loc : pathFinder.closedSet)
 			{
 				if (blocks <= 0)
@@ -193,12 +222,17 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 				LiquidStack stack = FluidHelper.getLiquidFromBlockId(loc.getBlockID(worldObj));
 				if (stack != null && stack.isLiquidEqual(resource) && loc.getBlockMetadata(worldObj) != 0)
 				{
+					fillable++;
 					drained += LiquidContainerRegistry.BUCKET_VOLUME;
 					blocks--;
 					if (doFill)
 					{
-						System.out.println("PlacedAt:Flowing: "+loc.toString());
-						loc.setBlock(worldObj, liquidBlock.stillLiquidId(), liquidBlock.stillLiquidMeta(), 2);
+						System.out.println("PlacedAt:Flowing: " + loc.toString());
+						loc.setBlock(worldObj, blockID, meta, 2);
+						if (!this.updateQue.contains(loc))
+						{
+							this.updateQue.add(loc);
+						}
 					}
 				}
 
@@ -212,17 +246,26 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 				}
 				if (loc.getBlockID(worldObj) == 0)
 				{
+					fillable++;
 					drained += LiquidContainerRegistry.BUCKET_VOLUME;
 					blocks--;
 					if (doFill)
 					{
-						System.out.println("PlacedAt:Air: "+loc.toString());
-						loc.setBlock(worldObj, liquidBlock.stillLiquidId(), liquidBlock.stillLiquidMeta(), 2);
+						System.out.println("PlacedAt:Air: " + loc.toString());
+						loc.setBlock(worldObj, blockID, meta, 2);
+						if (!this.updateQue.contains(loc))
+						{
+							this.updateQue.add(loc);
+						}
 					}
 				}
 			}
+			if (fillable == 0)
+			{
+				this.yFillStart++;
+			}
 		}
-		return 0;
+		return drained;
 	}
 
 	@Override

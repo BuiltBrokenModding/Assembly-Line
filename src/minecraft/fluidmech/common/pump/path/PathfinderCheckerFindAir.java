@@ -30,6 +30,7 @@ public class PathfinderCheckerFindAir extends Pathfinder
 			public Set<Vector3> getConnectedNodes(Pathfinder finder, Vector3 currentNode)
 			{
 				Set<Vector3> neighbors = new HashSet<Vector3>();
+				int fillable = 0;
 				for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 				{
 					if (direction != ForgeDirection.UP)
@@ -38,17 +39,12 @@ public class PathfinderCheckerFindAir extends Pathfinder
 						LiquidStack liquid = FluidHelper.getLiquidFromBlockId(pos.getBlockID(world));
 						if (liquid != null || pos.getBlockID(world) == 0)
 						{
+							if(isFillableBlock(world,pos))
+							{
+								fillable++;
+							}
 							neighbors.add(pos);
 						}
-					}
-				}
-				if(neighbors.size() == 0)
-				{
-					Vector3 pos = currentNode.clone().modifyPositionFromSide(ForgeDirection.UP);
-					LiquidStack liquid = FluidHelper.getLiquidFromBlockId(pos.getBlockID(world));
-					if (liquid != null || pos.getBlockID(world) == 0)
-					{
-						neighbors.add(pos);
 					}
 				}
 
@@ -66,5 +62,15 @@ public class PathfinderCheckerFindAir extends Pathfinder
 				return false;
 			}
 		});
+	}
+
+	public static boolean isFillableBlock(World world, Vector3 vec)
+	{
+		LiquidStack liquid = FluidHelper.getLiquidFromBlockId(vec.getBlockID(world));
+		if ((liquid != null && vec.getBlockMetadata(world) != 0) || vec.getBlockID(world) == 0)
+		{
+			return true;
+		}
+		return false;
 	}
 }
