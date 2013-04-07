@@ -1,5 +1,7 @@
 package fluidmech.common.pump;
 
+import hydraulic.api.IDrain;
+import hydraulic.fluidnetwork.IFluidNetworkPart;
 import hydraulic.helpers.FluidHelper;
 import hydraulic.prefab.tile.TileEntityFluidDevice;
 
@@ -18,12 +20,12 @@ import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 
-public class TileEntityDrain extends TileEntityFluidDevice implements ITankContainer
+public class TileEntityDrain extends TileEntityFluidDevice implements ITankContainer, IDrain
 {
-	private ForgeDirection face = ForgeDirection.UNKNOWN;
 	private boolean drainSources = true;
 	/* MAX BLOCKS DRAINED PER 1/2 SECOND */
-	public static int MAX_DRAIN_PER_PROCESS = 30;
+	public static int MAX_DRAIN_PER_PROCESS = 15;
+	private int currentDrains = 0;
 	/* LIST OF PUMPS AND THERE REQUESTS FOR THIS DRAIN */
 	private HashMap<TileEntityConstructionPump, LiquidStack> requestMap = new HashMap<TileEntityConstructionPump, LiquidStack>();
 
@@ -32,7 +34,17 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	@Override
 	public String getMeterReading(EntityPlayer user, ForgeDirection side)
 	{
-		return (drainSources ? "Draining" : "");
+		return (drainSources ? "Draining" : "Filling");
+	}
+
+	public ForgeDirection getFacing()
+	{
+		int meta = 0;
+		if (worldObj != null)
+		{
+			meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+		}
+		return ForgeDirection.getOrientation(meta);
 	}
 
 	@Override
@@ -41,37 +53,59 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 
 		if (!this.worldObj.isRemote && this.ticks % 10 == 0)
 		{
+			this.currentDrains = 0;
 			/* MAIN LOGIC PATH FOR DRAINING BODIES OF LIQUID */
 			if (this.drainSources)
 			{
-				TileEntity entity = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), this.face.getOpposite());
-				if (entity instanceof ITankContainer)
+				TileEntity pipe = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), this.getFacing().getOpposite());
+
+				if (pipe instanceof IFluidNetworkPart)
 				{
 					if (this.requestMap.size() > 0)
 					{
 						this.getNextFluidBlock();
-						int blocksDrained = 0;
-						for (Vector3 loc : targetSources)
+
+						for (Entry<TileEntityConstructionPump, LiquidStack> request : requestMap.entrySet())
 						{
-							if (blocksDrained >= MAX_DRAIN_PER_PROCESS && FluidHelper.isStillLiquid(this.worldObj, loc))
+							if (this.currentDrains >= MAX_DRAIN_PER_PROCESS)
 							{
-								LiquidStack stack = FluidHelper.getLiquidFromBlockId(loc.getBlockID(this.worldObj));
-								if (stack != null)
+								break;
+							}
+							if (((IFluidNetworkPart) pipe).getNetwork().isConnected(request.getKey()))
+							{
+								for (Vector3 loc : targetSources)
 								{
-									for (Entry<TileEntityConstructionPump, LiquidStack> pump : requestMap.entrySet())
+									if (this.currentDrains >= MAX_DRAIN_PER_PROCESS)
 									{
-										LiquidStack requestStack = pump.getValue();
-										if (requestStack != null && (requestStack.isLiquidEqual(stack) || requestStack.itemID == -1))
+										break;
+									}
+
+									if (FluidHelper.isLiquidBlock(this.worldObj, loc))
+									{
+										LiquidStack stack = FluidHelper.getLiquidFromBlockId(loc.getBlockID(this.worldObj));
+										LiquidStack requestStack = request.getValue();
+
+										if (stack != null && requestStack != null && (requestStack.isLiquidEqual(stack) || requestStack.itemID == -1))
 										{
-											if (((ITankContainer) entity).fill(0, stack, false) >= stack.amount)
+											if (request.getKey().fill(0, stack, false) >= stack.amount)
 											{
-												((ITankContainer) entity).fill(0, stack, true);
+												int requestAmmount = requestStack.amount - request.getKey().fill(0, stack, true);
+												if (requestAmmount <= 0)
+												{
+													this.requestMap.remove(request);
+												}
+												else
+												{
+													request.setValue(FluidHelper.getStack(requestStack, requestAmmount));
+												}
+
 												loc.setBlock(this.worldObj, 0);
-												blocksDrained++;
+												this.currentDrains++;
 											}
 										}
 									}
 								}
+
 							}
 						}
 					}
@@ -84,42 +118,29 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 		}
 	}
 
-	/**
-	 * uses the LiquidStack to fill the area bellow the drain
-	 * 
-	 * @param stack - liquidStack
-	 * @return amount of liquid consumed
-	 */
-	public int fillArea(LiquidStack stack)
+	@Override
+	public int fillArea(LiquidStack stack, boolean doFill)
 	{
+		if (!this.drainSources)
+		{
+
+		}
 		return 0;
 	}
 
 	@Override
 	public boolean canPipeConnect(TileEntity entity, ForgeDirection dir)
 	{
-		return dir == face.getOpposite();
+		return dir == getFacing().getOpposite();
 	}
 
-	/**
-	 * Requests that this drain give the pump this liquid. The pump will have to decide if it can
-	 * accept, request, and maintain this demand
-	 * 
-	 * @param pump - requesting pump
-	 * @param stack - liquid this pump wants for this request
-	 */
+	@Override
 	public void requestLiquid(TileEntityConstructionPump pump, LiquidStack stack)
 	{
 		this.requestMap.put(pump, stack);
 	}
 
-	/**
-	 * Request that this drain no longer supply the pump with a volume. By default a request will be
-	 * removed from the request map after being filled. However, this can be used too stop a request
-	 * short if the pump becomes full before the request is filled
-	 * 
-	 * @param pump - requesting pump
-	 */
+	@Override
 	public void stopRequesting(TileEntityConstructionPump pump)
 	{
 		if (this.requestMap.containsKey(pump))
@@ -129,17 +150,17 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	}
 
 	/**
-	 * Finds at least 10 more liquid possible targets for the pump to pump
+	 * Finds more liquid blocks using a path finder to be drained
 	 */
 	public void getNextFluidBlock()
 	{
 		/* FIND HIGHEST DRAIN POINT FIRST */
 		PathfinderFindHighestBlock path = new PathfinderFindHighestBlock(this.worldObj, Block.waterStill.blockID);
-		path.init(new Vector3(xCoord + this.face.offsetX, yCoord + this.face.offsetY, zCoord + this.face.offsetZ));
+		path.init(new Vector3(xCoord + this.getFacing().offsetX, yCoord + this.getFacing().offsetY, zCoord + this.getFacing().offsetZ));
 		int y = path.highestY;
-		
+
 		/* FIND 10 UNMARKED SOURCES */
-		PathfinderCheckerLiquid pathFinder = new PathfinderCheckerLiquid(worldObj, 10, null, (Vector3[]) this.targetSources.toArray());
+		PathfinderCheckerLiquid pathFinder = new PathfinderCheckerLiquid(worldObj, this.MAX_DRAIN_PER_PROCESS, null, (Vector3[]) this.targetSources.toArray());
 		pathFinder.init(new Vector3(xCoord, y, zCoord));
 		for (Vector3 loc : pathFinder.closedSet)
 		{
@@ -153,42 +174,48 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	@Override
 	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		if (this.drainSources || from != this.getFacing().getOpposite())
+		{
+			return 0;
+		}
+		return this.fill(0, resource, doFill);
 	}
 
 	@Override
 	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		if (resource == null || tankIndex != 0)
+		{
+			return 0;
+		}
+		return this.fillArea(resource, doFill);
 	}
 
 	@Override
 	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if (from != this.getFacing().getOpposite())
+		{
+			return null;
+		}
+		return this.drain(0, maxDrain, doDrain);
 	}
 
 	@Override
 	public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public ILiquidTank[] getTanks(ForgeDirection direction)
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

@@ -30,7 +30,7 @@ public class PathfinderCheckerLiquid extends Pathfinder
 				{
 					Vector3 pos = currentNode.clone().modifyPositionFromSide(direction);
 
-					if (FluidHelper.isStillLiquid(world,pos) && FluidHelper.getLiquidFromBlockId(pos.getBlockID(world)).equals(resource))
+					if (FluidHelper.isLiquidBlock(world,pos) && FluidHelper.getLiquidFromBlockId(pos.getBlockID(world)).equals(resource))
 					{
 						neighbors.add(pos);
 					}

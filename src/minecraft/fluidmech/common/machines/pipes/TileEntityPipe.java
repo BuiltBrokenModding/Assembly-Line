@@ -24,6 +24,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
+import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.liquids.LiquidTank;
 
@@ -201,7 +202,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		super.readFromNBT(nbt);
 
 		LiquidStack liquid = new LiquidStack(0, 0, 0);
-		liquid.readFromNBT(nbt.getCompoundTag("stored"));
+		liquid.loadLiquidStackFromNBT(nbt.getCompoundTag("stored"));
 		if (Item.itemsList[liquid.itemID] != null && liquid.amount > 0)
 		{
 			this.fakeTank.setLiquid(liquid);
@@ -307,8 +308,8 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	{
 		super.writeToNBT(nbt);
 		LiquidStack stack = this.fakeTank.getLiquid();
-		if (stack != null)
-		{
+		if (stack != null && LiquidDictionary.findLiquidName(stack) != null)
+		{			
 			nbt.setTag("stored", stack.writeToNBT(new NBTTagCompound()));
 		}
 		for (int i = 0; i < 6; i++)
@@ -350,7 +351,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		/* DEBUG CODE ACTIVATERS */
 		boolean testConnections = false;
 		boolean testNetwork = false;
-		boolean testSubs = true;
+		boolean testSubs = false;
 
 		/* NORMAL OUTPUT */
 		String string = this.getNetwork().pressureProduced + "p " + this.getNetwork().getStorageFluid() + " Extra";

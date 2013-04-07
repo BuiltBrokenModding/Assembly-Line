@@ -139,7 +139,7 @@ public class FluidHelper
 	 * is block at the location is a still source block
 	 * 
 	 */
-	public static boolean isStillLiquid(World world, Vector3 pos)
+	public static boolean isLiquidBlock(World world, Vector3 pos)
 	{
 		int blockID = pos.getBlockID(world);
 		int meta = pos.getBlockMetadata(world);

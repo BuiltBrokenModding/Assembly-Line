@@ -21,7 +21,10 @@ import fluidmech.common.machines.mech.TileEntityRod;
 import fluidmech.common.machines.pipes.BlockPipe;
 import fluidmech.common.machines.pipes.TileEntityPipe;
 import fluidmech.common.machines.pipes.TileEntityPipeWindow;
+import fluidmech.common.pump.BlockDrain;
 import fluidmech.common.pump.BlockPumpMachine;
+import fluidmech.common.pump.TileEntityConstructionPump;
+import fluidmech.common.pump.TileEntityDrain;
 import fluidmech.common.pump.TileEntityStarterPump;
 import hydraulic.api.ColorCode;
 import hydraulic.helpers.FluidHelper;
@@ -102,6 +105,8 @@ public class FluidMech extends DummyModContainer
     public static Block blockGenerator;
     public static Block blockReleaseValve;
     public static Block blockSink;
+    public static Block blockDrain;
+    public static Block blockConPump;
 
     public static Block blockWasteLiquid;
 
@@ -139,6 +144,8 @@ public class FluidMech extends DummyModContainer
         blockTank = new BlockTank(this.CONFIGURATION.getBlock("Tank", BLOCK_ID_PREFIX + 6).getInt());
         blockWasteLiquid = new BlockWasteLiquid(this.CONFIGURATION.getBlock("WasteLiquid", BLOCK_ID_PREFIX + 7).getInt());
         blockSink = new BlockSink(this.CONFIGURATION.getBlock("Sink", BLOCK_ID_PREFIX + 8).getInt());
+        blockDrain = new BlockDrain(this.CONFIGURATION.getBlock("Drain", BLOCK_ID_PREFIX + 9).getInt());
+        blockConPump = new BlockDrain(this.CONFIGURATION.getBlock("ConstructionPump", BLOCK_ID_PREFIX + 10).getInt());
 
         // Items
         itemParts = new ItemParts(this.CONFIGURATION.getItem("Parts", ITEM_ID_PREFIX).getInt());
@@ -158,6 +165,8 @@ public class FluidMech extends DummyModContainer
         GameRegistry.registerBlock(blockMachine, ItemBlockLiquidMachine.class, "lmMachines");
         GameRegistry.registerBlock(blockTank, ItemBlockTank.class, "lmTank");
         GameRegistry.registerBlock(blockSink, "lmSink");
+        GameRegistry.registerBlock(blockDrain, "lmDrain");
+        GameRegistry.registerBlock(blockConPump, "lmConPump");
 
     }
 
@@ -174,8 +183,10 @@ public class FluidMech extends DummyModContainer
         GameRegistry.registerTileEntity(TileEntityTank.class, "lmTank");
         GameRegistry.registerTileEntity(TileEntityGenerator.class, "lmGen");
         GameRegistry.registerTileEntity(TileEntitySink.class, "lmSink");
+        GameRegistry.registerTileEntity(TileEntityDrain.class, "lmDrain");
+        GameRegistry.registerTileEntity(TileEntityConstructionPump.class, "lmConPump");
         // Pipe Extention TileEntities
-        GameRegistry.registerTileEntity(TileEntityPipeWindow.class, "lmPipeWidnow");
+        GameRegistry.registerTileEntity(TileEntityPipeWindow.class, "lmPipeWindow");
         
         FMLog.info(" Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
 

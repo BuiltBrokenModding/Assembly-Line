@@ -173,6 +173,25 @@ public class HydraulicNetwork
 	}
 
 	/**
+	 * Checks too see if the tileEntity is part of or connected too the network
+	 */
+	public boolean isConnected(TileEntity tileEntity)
+	{
+		if (this.fluidParts.contains(tileEntity))
+		{
+			return true;
+		}
+		else if (this.fluidTanks.contains(tileEntity))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	/**
 	 * @param ignoreTiles The TileEntities to ignore during this calculation. Null will make it not
 	 * ignore any.
 	 * @return The electricity produced in this electricity network

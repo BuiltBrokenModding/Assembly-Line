@@ -14,7 +14,7 @@ import fluidmech.common.TabFluidMech;
 
 public class ItemBasic extends Item
 {
-	protected List<Icon> icons = new ArrayList<Icon>();
+	protected final Icon[] icons = new Icon[256];
 
 	public ItemBasic(String name, int id)
 	{
@@ -24,32 +24,30 @@ public class ItemBasic extends Item
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void func_94581_a(IconRegister iconRegister)
+	@Override
+	public void updateIcons(IconRegister iconRegister)
 	{
 		List<ItemStack> list = new ArrayList<ItemStack>();
 		this.getSubItems(this.itemID, this.getCreativeTab(), list);
 
-		if (list.size() > 0)
+		if (list.size() < this.icons.length)
 		{
 			for (ItemStack itemStack : list)
 			{
-				this.icons.add(iconRegister.registerIcon(this.getUnlocalizedName(itemStack).replace("item.", FluidMech.TEXTURE_NAME_PREFIX)));
+				this.icons[list.indexOf(itemStack)] = iconRegister.registerIcon(this.getUnlocalizedName(itemStack).replace("item.", FluidMech.TEXTURE_NAME_PREFIX));
 			}
-		}
-		else
-		{
-			this.iconIndex = iconRegister.registerIcon(this.getUnlocalizedName().replace("item.", FluidMech.TEXTURE_NAME_PREFIX));
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public Icon getIconFromDamage(int damage)
 	{
-		if (this.icons.size() > damage)
+		if (this.icons.length > damage && !this.isDamageable())
 		{
-			return icons.get(damage);
+			return this.icons[damage];
 		}
 
-		return super.getIconFromDamage(damage);
+		return icons[0];
 	}
 }

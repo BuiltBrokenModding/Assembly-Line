@@ -1,5 +1,6 @@
 package fluidmech.common.pump;
 
+import hydraulic.api.IPipeConnection;
 import hydraulic.fluidnetwork.IFluidNetworkPart;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -14,7 +15,7 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.tile.TileEntityElectricityRunnable;
 
-public class TileEntityConstructionPump extends TileEntityElectricityRunnable implements ITankContainer
+public class TileEntityConstructionPump extends TileEntityElectricityRunnable implements ITankContainer, IPipeConnection
 {
 	/* ENERGY PER TICK TO TRY TO PUMP */
 	public static final double WATTS_PER_TICK = 100;
@@ -23,14 +24,23 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 	private ForgeDirection inputSide = ForgeDirection.UNKNOWN;
 	/* Fake Internal Tank */
 	private LiquidTank fakeTank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
-	private int liquidRequest = 1;
+	private int liquidRequest = 5;
+
+	@Override
+	public void initiate()
+	{
+		// TODO if use wrench to change rotation have it call this
+		int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+		this.outputSide = ForgeDirection.getOrientation(meta);
+		this.inputSide = outputSide.getOpposite();
+	}
 
 	@Override
 	public void updateEntity()
 	{
 		if (!worldObj.isRemote && this.wattsReceived >= this.WATTS_PER_TICK)
 		{
-			if (this.ticks % 10 == 0)
+			if (this.ticks % 10 == 0) // TODO add electric Drain
 			{
 				boolean called = false;
 				TileEntity inputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), inputSide);
@@ -123,6 +133,12 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 			return fakeTank;
 		}
 		return null;
+	}
+
+	@Override
+	public boolean canPipeConnect(TileEntity entity, ForgeDirection dir)
+	{
+		return dir == this.inputSide || dir == this.outputSide;
 	}
 
 }
