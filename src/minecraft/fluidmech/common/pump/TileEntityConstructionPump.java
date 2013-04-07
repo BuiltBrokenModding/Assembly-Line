@@ -21,8 +21,6 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 	/* ENERGY PER TICK TO TRY TO PUMP */
 	public static final double WATTS_PER_TICK = 100;
 	/* LIQUID FLOW CONNECTION SIDES */
-	public ForgeDirection outputSide = ForgeDirection.NORTH;
-	public ForgeDirection inputSide = ForgeDirection.SOUTH;
 	/* Fake Internal Tank */
 	private LiquidTank fakeTank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
 	private int liquidRequest = 5;
@@ -32,8 +30,6 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 	{
 		// TODO if use wrench to change rotation have it call this
 		int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-		this.outputSide = ForgeDirection.getOrientation(meta);
-		this.inputSide = outputSide.getOpposite();
 	}
 
 	public ForgeDirection getFacing()
@@ -57,8 +53,8 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 			{
 				boolean called = false;
 
-				TileEntity inputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), inputSide);
-				TileEntity outputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), outputSide);
+				TileEntity inputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), getFacing());
+				TileEntity outputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), getFacing().getOpposite());
 				if (inputTile instanceof IFluidNetworkPart)
 				{
 					if (outputTile instanceof ITankContainer)
@@ -88,13 +84,13 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
-		return direction != outputSide && direction != inputSide;
+		return direction != getFacing().getOpposite() && direction != getFacing();
 	}
 
 	@Override
 	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
 	{
-		if (from != inputSide.getOpposite())
+		if (from != getFacing().getOpposite())
 		{
 			return 0;
 		}
@@ -108,11 +104,10 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 		{
 			return 0;
 		}
-		TileEntity entity = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), outputSide);
+		TileEntity entity = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), getFacing());
 		if (entity instanceof ITankContainer)
 		{
-			return resource.amount;
-			// return ((ITankContainer) entity).fill(outputSide.getOpposite(), resource, doFill);
+			return ((ITankContainer) entity).fill(getFacing().getOpposite(), resource, doFill);
 		}
 		return 0;
 	}
@@ -133,7 +128,7 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 	@Override
 	public ILiquidTank[] getTanks(ForgeDirection direction)
 	{
-		if (direction == this.inputSide)
+		if (direction == this.getFacing())
 		{
 			return new ILiquidTank[] { fakeTank };
 		}
@@ -143,7 +138,7 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 	@Override
 	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
 	{
-		if (direction == this.inputSide)
+		if (direction == this.getFacing())
 		{
 			return fakeTank;
 		}
@@ -153,7 +148,7 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 	@Override
 	public boolean canPipeConnect(TileEntity entity, ForgeDirection dir)
 	{
-		return dir == this.inputSide || dir == this.outputSide;
+		return dir == this.getFacing() || dir == this.getFacing().getOpposite();
 	}
 
 	@Override

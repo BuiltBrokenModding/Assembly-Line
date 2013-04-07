@@ -1,5 +1,6 @@
 package fluidmech.common.pump;
 
+import fluidmech.common.FluidMech;
 import fluidmech.common.pump.path.PathfinderCheckerFindAir;
 import fluidmech.common.pump.path.PathfinderCheckerLiquid;
 import fluidmech.common.pump.path.PathfinderFindHighestSource;
@@ -16,6 +17,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -30,7 +32,6 @@ import universalelectricity.core.vector.VectorHelper;
 
 public class TileEntityDrain extends TileEntityFluidDevice implements ITankContainer, IDrain
 {
-	private boolean drainSources = false;
 	/* MAX BLOCKS DRAINED PER 1/2 SECOND */
 	public static int MAX_DRAIN_PER_PROCESS = 30;
 	private int currentDrains = 0;
@@ -40,19 +41,31 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 
 	private List<Vector3> targetSources = new ArrayList<Vector3>();
 	private List<Vector3> updateQue = new ArrayList<Vector3>();
-
+	
 	@Override
 	public String getMeterReading(EntityPlayer user, ForgeDirection side)
 	{
-		return (drainSources ? "Draining" : "Filling");
+		return "Set to "+ (canDrainSources() ? "input liquids" : "output liquids");
 	}
-
+	public boolean canDrainSources()
+	{
+		int meta = 0;
+		if (worldObj != null)
+		{
+			meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+		}
+		return meta < 6;
+	}
 	public ForgeDirection getFacing()
 	{
 		int meta = 0;
 		if (worldObj != null)
 		{
 			meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+			if(meta > 5)
+			{
+				meta -= 6;
+			}
 		}
 		return ForgeDirection.getOrientation(meta);
 	}
@@ -93,7 +106,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 
 				this.currentDrains = 0;
 				/* MAIN LOGIC PATH FOR DRAINING BODIES OF LIQUID */
-				if (this.drainSources)
+				if (this.canDrainSources())
 				{
 					TileEntity pipe = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), this.getFacing().getOpposite());
 
@@ -175,7 +188,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 			yFillStart = this.yCoord + this.getFacing().offsetY;
 		}
 
-		if (!this.drainSources)
+		if (!this.canDrainSources())
 		{
 			System.out.println("Filling Area: " + doFill);
 			if (resource == null || resource.amount < LiquidContainerRegistry.BUCKET_VOLUME)
@@ -322,7 +335,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	@Override
 	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
 	{
-		if (this.drainSources)
+		if (this.canDrainSources())
 		{
 			return 0;
 		}

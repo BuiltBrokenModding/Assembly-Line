@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,7 +21,8 @@ import fluidmech.common.TabFluidMech;
 
 public class BlockConstructionPump extends BlockAdvanced
 {
-
+	Icon inputIcon;
+	Icon outputIcon;
 	public BlockConstructionPump(int id)
 	{
 		super(id, Material.iron);
@@ -30,9 +32,18 @@ public class BlockConstructionPump extends BlockAdvanced
 		this.setResistance(5f);
 	}
 
+	@Override
+	public void registerIcons(IconRegister par1IconRegister)
+	{
+		this.blockIcon = par1IconRegister.registerIcon(FluidMech.TEXTURE_NAME_PREFIX + "ironMachineSide");
+		this.inputIcon = par1IconRegister.registerIcon(FluidMech.TEXTURE_NAME_PREFIX + "inputMachineSide");
+		this.outputIcon = par1IconRegister.registerIcon(FluidMech.TEXTURE_NAME_PREFIX + "outputMachineSide");
+	}
+	
+	@Override
 	public Icon getBlockTextureFromSideAndMetadata(int par1, int par2)
 	{
-		return par1 != 1 && par1 != 0 ? Block.stone.getBlockTextureFromSideAndMetadata(par1, par2) : Block.planks.getBlockTextureFromSide(par1);
+		return par1 != 1 && par1 != 0 ? this.blockIcon : this.inputIcon;
 	}
 
 	@Override
@@ -42,17 +53,17 @@ public class BlockConstructionPump extends BlockAdvanced
 		ForgeDirection dir = ForgeDirection.getOrientation(side);
 		if (entity instanceof TileEntityConstructionPump)
 		{
-			
-			if(dir == ((TileEntityConstructionPump)entity).inputSide)
+
+			if (dir == ((TileEntityConstructionPump) entity).getFacing().getOpposite())
 			{
-				return Block.planks.getBlockTextureFromSide(side);
+				return this.outputIcon;
 			}
-			if(dir == ((TileEntityConstructionPump)entity).outputSide)
+			if (dir == ((TileEntityConstructionPump) entity).getFacing())
 			{
-				return Block.blockEmerald.getBlockTextureFromSide(side);
+				return this.inputIcon;
 			}
 		}
-		return Block.stone.getBlockTextureFromSide(side);
+		return this.blockIcon;
 	}
 
 	@Override
@@ -98,7 +109,7 @@ public class BlockConstructionPump extends BlockAdvanced
 
 	public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
-		if(!world.isRemote)
+		if (!world.isRemote)
 		{
 			world.setBlockMetadataWithNotify(x, y, z, side, 3);
 			return true;

@@ -1,11 +1,16 @@
 package fluidmech.common.pump;
 
+import fluidmech.common.FluidMech;
 import fluidmech.common.TabFluidMech;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -13,7 +18,9 @@ import universalelectricity.prefab.block.BlockAdvanced;
 
 public class BlockDrain extends BlockAdvanced
 {
-
+	private Icon blockIcon;
+	private Icon drainIcon;
+	private Icon drainIcon2;
 	public BlockDrain(int id)
 	{
 		super(id, Material.iron);
@@ -21,15 +28,25 @@ public class BlockDrain extends BlockAdvanced
 		this.setUnlocalizedName("lmDrain");
 	}
 
+	
+
+	@Override
+	public void registerIcons(IconRegister par1IconRegister)
+	{
+		this.blockIcon = par1IconRegister.registerIcon(FluidMech.TEXTURE_NAME_PREFIX + "ironMachineSide");
+		this.drainIcon = par1IconRegister.registerIcon(FluidMech.TEXTURE_NAME_PREFIX + "drain");
+		this.drainIcon2 = par1IconRegister.registerIcon(FluidMech.TEXTURE_NAME_PREFIX + "drain2");
+	}
+
 	@Override
 	public TileEntity createNewTileEntity(World var1)
 	{
 		return new TileEntityDrain();
 	}
-	
+
 	public Icon getBlockTextureFromSideAndMetadata(int par1, int par2)
 	{
-		return par1 != 1 && par1 != 0 ? Block.blockGold.getBlockTextureFromSideAndMetadata(par1, par2) : Block.ice.getBlockTextureFromSide(par1);
+		return par1 != 1 && par1 != 0 ? this.blockIcon : this.drainIcon;
 	}
 
 	@Override
@@ -39,21 +56,63 @@ public class BlockDrain extends BlockAdvanced
 		ForgeDirection dir = ForgeDirection.getOrientation(side);
 		if (entity instanceof TileEntityDrain)
 		{
-			
-			if(dir == ((TileEntityDrain)entity).getFacing())
+
+			if (dir == ((TileEntityDrain) entity).getFacing())
 			{
-				return Block.blockGold.getBlockTextureFromSide(side);
+				if (((TileEntityDrain) entity).canDrainSources())
+				{
+					return this.drainIcon;
+				}
+				else
+				{
+					return this.drainIcon2;
+				}
+
 			}
 		}
-		return Block.ice.getBlockTextureFromSide(side);
+		return this.blockIcon;
 	}
-	
+
+	@Override
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving p, ItemStack itemStack)
+	{
+		int angle = MathHelper.floor_double((p.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+		world.setBlockMetadataWithNotify(x, y, z, angle, 3);
+		TileEntity entity = world.getBlockTileEntity(x, y, z);
+	}
+
 	public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
-		if(!world.isRemote)
+		if (!world.isRemote)
 		{
-			world.setBlockMetadataWithNotify(x, y, z, side, 3);
+			int meta = world.getBlockMetadata(x, y, z);
+			if (world.getBlockMetadata(x, y, z) < 6)
+			{
+				meta += 6;
+			}
+			else
+			{
+				meta -= 6;
+			}
+			world.setBlockMetadataWithNotify(x, y, z, meta, 3);
+			return true;
 		}
-		return this.onUseWrench(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ);
+		return true;
 	}
+
+	public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
+	{
+		if (!world.isRemote)
+		{
+			int meta = side;
+			if (world.getBlockMetadata(x, y, z) > 5)
+			{
+				meta += 6;
+			}
+			world.setBlockMetadataWithNotify(x, y, z, meta, 3);
+			return true;
+		}
+		return true;
+	}
+
 }
