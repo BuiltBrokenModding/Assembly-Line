@@ -31,7 +31,7 @@ public class ItemTools extends ItemBasic
 		int meta = itemStack.getItemDamage();
 		if (meta == 0)
 		{
-			return "PipeGauge";
+			return "item."+"PipeGauge";
 		}
 		return "item."+this.getUnlocalizedName() + "." + meta;
 	}

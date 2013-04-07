@@ -21,6 +21,7 @@ import fluidmech.common.machines.mech.TileEntityRod;
 import fluidmech.common.machines.pipes.BlockPipe;
 import fluidmech.common.machines.pipes.TileEntityPipe;
 import fluidmech.common.machines.pipes.TileEntityPipeWindow;
+import fluidmech.common.pump.BlockConstructionPump;
 import fluidmech.common.pump.BlockDrain;
 import fluidmech.common.pump.BlockPumpMachine;
 import fluidmech.common.pump.TileEntityConstructionPump;
@@ -145,7 +146,7 @@ public class FluidMech extends DummyModContainer
         blockWasteLiquid = new BlockWasteLiquid(this.CONFIGURATION.getBlock("WasteLiquid", BLOCK_ID_PREFIX + 7).getInt());
         blockSink = new BlockSink(this.CONFIGURATION.getBlock("Sink", BLOCK_ID_PREFIX + 8).getInt());
         blockDrain = new BlockDrain(this.CONFIGURATION.getBlock("Drain", BLOCK_ID_PREFIX + 9).getInt());
-        blockConPump = new BlockDrain(this.CONFIGURATION.getBlock("ConstructionPump", BLOCK_ID_PREFIX + 10).getInt());
+        blockConPump = new BlockConstructionPump(this.CONFIGURATION.getBlock("ConstructionPump", BLOCK_ID_PREFIX + 10).getInt());
 
         // Items
         itemParts = new ItemParts(this.CONFIGURATION.getItem("Parts", ITEM_ID_PREFIX).getInt());

@@ -20,8 +20,8 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 	/* ENERGY PER TICK TO TRY TO PUMP */
 	public static final double WATTS_PER_TICK = 100;
 	/* LIQUID FLOW CONNECTION SIDES */
-	private ForgeDirection outputSide = ForgeDirection.UNKNOWN;
-	private ForgeDirection inputSide = ForgeDirection.UNKNOWN;
+	public ForgeDirection outputSide = ForgeDirection.NORTH;
+	public ForgeDirection inputSide = ForgeDirection.SOUTH;
 	/* Fake Internal Tank */
 	private LiquidTank fakeTank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
 	private int liquidRequest = 5;
@@ -34,7 +34,16 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 		this.outputSide = ForgeDirection.getOrientation(meta);
 		this.inputSide = outputSide.getOpposite();
 	}
-
+	public ForgeDirection getFacing()
+	{
+		int meta = 2;
+		if(worldObj != null)
+		{
+			meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);			
+		}
+		return ForgeDirection.getOrientation(meta);
+		
+	}
 	@Override
 	public void updateEntity()
 	{
@@ -140,5 +149,7 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 	{
 		return dir == this.inputSide || dir == this.outputSide;
 	}
+	
+	
 
 }

@@ -131,7 +131,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	@Override
 	public boolean canPipeConnect(TileEntity entity, ForgeDirection dir)
 	{
-		return dir == getFacing().getOpposite();
+		return dir == this.getFacing();
 	}
 
 	@Override
