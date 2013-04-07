@@ -1,6 +1,7 @@
-package fluidmech.common.pump;
+package fluidmech.common.pump.path;
 
 import fluidmech.common.FluidMech;
+import fluidmech.common.pump.TileEntityDrain;
 import hydraulic.helpers.FluidHelper;
 
 import java.util.ArrayList;
@@ -28,17 +29,14 @@ public class PathfinderCheckerLiquid extends Pathfinder
 			@Override
 			public Set<Vector3> getConnectedNodes(Pathfinder finder, Vector3 currentNode)
 			{
-				//System.out.println("AN:" + currentNode.toString());
 				Set<Vector3> neighbors = new HashSet<Vector3>();
 
 				for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 				{
 					Vector3 pos = currentNode.clone().modifyPositionFromSide(direction);
-					//System.out.println("AN:" + direction.ordinal() + ":" + pos.toString() + "  " + pos.getBlockID(world) + ":" + pos.getBlockMetadata(world));
 					LiquidStack liquid = FluidHelper.getLiquidFromBlockId(pos.getBlockID(world));
 					if (pos.getBlockID(world) != 0 && liquid != null && (liquid.equals(resource) || resource == null))
 					{
-						//System.out.println("ADD:" + pos.toString());
 						neighbors.add(pos);
 					}
 				}

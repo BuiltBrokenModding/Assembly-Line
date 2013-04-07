@@ -1,4 +1,4 @@
-package fluidmech.common.pump;
+package fluidmech.common.pump.path;
 
 import fluidmech.common.FluidMech;
 import hydraulic.helpers.FluidHelper;

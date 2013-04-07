@@ -1,5 +1,8 @@
 package fluidmech.common.pump;
 
+import fluidmech.common.pump.path.PathfinderCheckerFindAir;
+import fluidmech.common.pump.path.PathfinderCheckerLiquid;
+import fluidmech.common.pump.path.PathfinderFindHighestSource;
 import hydraulic.api.IDrain;
 import hydraulic.fluidnetwork.IFluidNetworkPart;
 import hydraulic.helpers.FluidHelper;
@@ -16,15 +19,18 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.liquids.ILiquid;
 import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
+import net.minecraftforge.liquids.LiquidContainerRegistry;
+import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 
 public class TileEntityDrain extends TileEntityFluidDevice implements ITankContainer, IDrain
 {
-	private boolean drainSources = true;
+	private boolean drainSources = false;
 	/* MAX BLOCKS DRAINED PER 1/2 SECOND */
 	public static int MAX_DRAIN_PER_PROCESS = 30;
 	private int currentDrains = 0;
@@ -56,7 +62,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 
 		if (!this.worldObj.isRemote)
 		{
-			if (this.ticks % (200 + new Random().nextInt(100)) == 0 && updateQue.size() > 0 )
+			if (this.ticks % (200 + new Random().nextInt(100)) == 0 && updateQue.size() > 0)
 			{
 				Iterator pp = this.updateQue.iterator();
 				while (pp.hasNext())
@@ -158,11 +164,63 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	}
 
 	@Override
-	public int fillArea(LiquidStack stack, boolean doFill)
+	public int fillArea(LiquidStack resource, boolean doFill)
 	{
 		if (!this.drainSources)
 		{
+			System.out.println("Filling Area: " + doFill);
+			if (resource == null || resource.amount < LiquidContainerRegistry.BUCKET_VOLUME || !(Block.blocksList[resource.itemID] instanceof ILiquid))
+			{
+				System.out.println("Invalid Resource");
+				return 0;
+			}
+			System.out.println("Resource: " + LiquidDictionary.findLiquidName(resource) + ":" + resource.amount);
+			
+			ILiquid liquidBlock = (ILiquid) Block.blocksList[resource.itemID];
+			
+			int drained = 0;
+			int blocks = (resource.amount / LiquidContainerRegistry.BUCKET_VOLUME);
 
+			PathfinderCheckerFindAir pathFinder = new PathfinderCheckerFindAir(this.worldObj);
+			pathFinder.init(new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ));
+			System.out.println("Nodes: " + pathFinder.closedSet.size());
+			for (Vector3 loc : pathFinder.closedSet)
+			{
+				if (blocks <= 0)
+				{
+					break;
+				}
+				LiquidStack stack = FluidHelper.getLiquidFromBlockId(loc.getBlockID(worldObj));
+				if (stack != null && stack.isLiquidEqual(resource) && loc.getBlockMetadata(worldObj) != 0)
+				{
+					drained += LiquidContainerRegistry.BUCKET_VOLUME;
+					blocks--;
+					if (doFill)
+					{
+						System.out.println("PlacedAt:Flowing: "+loc.toString());
+						loc.setBlock(worldObj, liquidBlock.stillLiquidId(), liquidBlock.stillLiquidMeta(), 2);
+					}
+				}
+
+			}
+
+			for (Vector3 loc : pathFinder.closedSet)
+			{
+				if (blocks <= 0)
+				{
+					break;
+				}
+				if (loc.getBlockID(worldObj) == 0)
+				{
+					drained += LiquidContainerRegistry.BUCKET_VOLUME;
+					blocks--;
+					if (doFill)
+					{
+						System.out.println("PlacedAt:Air: "+loc.toString());
+						loc.setBlock(worldObj, liquidBlock.stillLiquidId(), liquidBlock.stillLiquidMeta(), 2);
+					}
+				}
+			}
 		}
 		return 0;
 	}
@@ -201,7 +259,6 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	 */
 	public void getNextFluidBlock()
 	{
-		System.out.println("Before Targets:" + this.targetSources.size());
 		/* FIND HIGHEST DRAIN POINT FIRST */
 		PathfinderFindHighestSource path = new PathfinderFindHighestSource(this.worldObj, null);
 		path.init(new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ));
@@ -217,13 +274,12 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 				this.targetSources.add(loc);
 			}
 		}
-		System.out.println("Targets:" + this.targetSources.size());
 	}
 
 	@Override
 	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
 	{
-		if (this.drainSources || from != this.getFacing().getOpposite())
+		if (this.drainSources)
 		{
 			return 0;
 		}
