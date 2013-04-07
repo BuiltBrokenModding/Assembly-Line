@@ -12,8 +12,7 @@ public class HydraulicNetworkHelper
 {
 
 	/**
-	 * Invalidates a TileEntity from the electrical network, thereby removing it from all
-	 * electricity network that are adjacent to it.
+	 * Invalidates a TileEntity 
 	 */
 	public static void invalidate(TileEntity tileEntity)
 	{

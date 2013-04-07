@@ -15,11 +15,11 @@ import universalelectricity.core.path.IPathCallBack;
 import universalelectricity.core.path.Pathfinder;
 import universalelectricity.core.vector.Vector3;
 
-public class PathfinderFindLiquid extends Pathfinder
+public class PathfinderFindHighestSource extends Pathfinder
 {
 	public static int highestY = 0;
 
-	public PathfinderFindLiquid(final World world, final LiquidStack resource, final Vector3... ignoreList)
+	public PathfinderFindHighestSource(final World world, final LiquidStack resource, final Vector3... ignoreList)
 	{
 		super(new IPathCallBack()
 		{
@@ -30,7 +30,7 @@ public class PathfinderFindLiquid extends Pathfinder
 				
 				Vector3 pos = currentNode.clone().modifyPositionFromSide(ForgeDirection.UP);
 				LiquidStack liquid = FluidHelper.getLiquidFromBlockId(pos.getBlockID(world));
-				if (liquid != null && (liquid.equals(resource) || resource == null))
+				if (pos.getBlockID(world) != 0 && liquid != null && (liquid.equals(resource) || resource == null))
 				{
 					neighbors.add(pos);
 					if (pos.intY() > highestY)
@@ -44,7 +44,7 @@ public class PathfinderFindLiquid extends Pathfinder
 				{
 					pos = currentNode.clone().modifyPositionFromSide(direction);
 					liquid = FluidHelper.getLiquidFromBlockId(pos.getBlockID(world));
-					if (liquid != null && (liquid.equals(resource) || resource == null))
+					if (pos.getBlockID(world) != 0 && liquid != null && (liquid.equals(resource) || resource == null))
 					{
 						neighbors.add(pos);
 						if (pos.intY() > highestY)

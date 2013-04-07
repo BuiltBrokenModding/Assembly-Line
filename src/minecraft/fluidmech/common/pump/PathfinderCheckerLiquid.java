@@ -28,17 +28,17 @@ public class PathfinderCheckerLiquid extends Pathfinder
 			@Override
 			public Set<Vector3> getConnectedNodes(Pathfinder finder, Vector3 currentNode)
 			{
-				System.out.println("AN:" + currentNode.toString());
+				//System.out.println("AN:" + currentNode.toString());
 				Set<Vector3> neighbors = new HashSet<Vector3>();
 
 				for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 				{
 					Vector3 pos = currentNode.clone().modifyPositionFromSide(direction);
-					System.out.println("AN:" + direction.ordinal() + ":" + pos.toString() + "  " + pos.getBlockID(world) + ":" + pos.getBlockMetadata(world));
+					//System.out.println("AN:" + direction.ordinal() + ":" + pos.toString() + "  " + pos.getBlockID(world) + ":" + pos.getBlockMetadata(world));
 					LiquidStack liquid = FluidHelper.getLiquidFromBlockId(pos.getBlockID(world));
-					if (liquid != null && (liquid.equals(resource) || resource == null))
+					if (pos.getBlockID(world) != 0 && liquid != null && (liquid.equals(resource) || resource == null))
 					{
-						System.out.println("ADD:" + pos.toString());
+						//System.out.println("ADD:" + pos.toString());
 						neighbors.add(pos);
 					}
 				}
