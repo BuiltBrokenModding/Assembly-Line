@@ -1,6 +1,7 @@
 package fluidmech.common.pump;
 
 import hydraulic.api.IPipeConnection;
+import hydraulic.fluidnetwork.HydraulicNetworkHelper;
 import hydraulic.fluidnetwork.IFluidNetworkPart;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -34,24 +35,28 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 		this.outputSide = ForgeDirection.getOrientation(meta);
 		this.inputSide = outputSide.getOpposite();
 	}
+
 	public ForgeDirection getFacing()
 	{
 		int meta = 2;
-		if(worldObj != null)
+		if (worldObj != null)
 		{
-			meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);			
+			meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 		}
 		return ForgeDirection.getOrientation(meta);
-		
+
 	}
+
 	@Override
 	public void updateEntity()
 	{
-		if (!worldObj.isRemote && this.wattsReceived >= this.WATTS_PER_TICK)
+		// this.wattsReceived >= this.WATTS_PER_TICK
+		if (!worldObj.isRemote)
 		{
 			if (this.ticks % 10 == 0) // TODO add electric Drain
 			{
 				boolean called = false;
+
 				TileEntity inputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), inputSide);
 				TileEntity outputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), outputSide);
 				if (inputTile instanceof IFluidNetworkPart)
@@ -89,7 +94,7 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 	@Override
 	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
 	{
-		if (from != inputSide)
+		if (from != inputSide.getOpposite())
 		{
 			return 0;
 		}
@@ -106,7 +111,8 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 		TileEntity entity = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), outputSide);
 		if (entity instanceof ITankContainer)
 		{
-			return ((ITankContainer) entity).fill(outputSide.getOpposite(), resource, doFill);
+			return resource.amount;
+			// return ((ITankContainer) entity).fill(outputSide.getOpposite(), resource, doFill);
 		}
 		return 0;
 	}
@@ -149,7 +155,11 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 	{
 		return dir == this.inputSide || dir == this.outputSide;
 	}
-	
-	
 
+	@Override
+	public void invalidate()
+	{
+		super.invalidate();
+		HydraulicNetworkHelper.invalidate(this);
+	}
 }

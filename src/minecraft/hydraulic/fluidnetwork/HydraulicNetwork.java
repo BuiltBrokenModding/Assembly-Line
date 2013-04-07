@@ -140,6 +140,8 @@ public class HydraulicNetwork
 		{
 			fluidTanks.remove(ent);
 		}
+		this.removeLoad(ent);
+		this.removeSource(ent);
 	}
 
 	/**
@@ -264,7 +266,7 @@ public class HydraulicNetwork
 	 */
 	public int addFluidToNetwork(TileEntity source, LiquidStack stack, boolean doFill)
 	{
-		return this.addFluidToNetwork(source, stack, doFill, true);
+		return this.addFluidToNetwork(source, stack, doFill, false);
 	}
 
 	/**
@@ -306,7 +308,7 @@ public class HydraulicNetwork
 			/* FIND THE FILL TARGET FROM THE LIST OF FLUID RECIEVERS */
 			for (ITankContainer tankContainer : fluidTanks)
 			{
-				if (tankContainer instanceof TileEntity && tankContainer != source)
+				if (tankContainer instanceof TileEntity && tankContainer != source && !(tankContainer instanceof IFluidNetworkPart))
 				{
 					TileEntity[] connectedTiles = connectionHelper.getSurroundingTileEntities((TileEntity) tankContainer);
 
@@ -353,17 +355,17 @@ public class HydraulicNetwork
 			if (primaryFill != null)
 			{
 				used = primaryFill.fill(fillDir, stack, doFill);
-				System.out.println("Primary Target " + used + doFill);
+				//System.out.println("Primary Target " + used + doFill);
 			}
 			else if (secondayFill != null)
 			{
 				used = secondayFill.fill(fillDir, stack, doFill);
-				System.out.println("Seconday Target " + used + doFill);
+				//System.out.println("Seconday Target " + used + doFill);
 			}
 			else if (allowStore && (this.combinedStorage.getLiquid() == null || this.combinedStorage.getLiquid().amount < this.combinedStorage.getCapacity()))
 			{
 				used = this.combinedStorage.fill(stack, doFill);
-				System.out.println("Network Target filled for " + used + doFill);
+				//System.out.println("Network Target filled for " + used + doFill);
 				filledMain = true;
 			}
 			/* IF THE COMBINED STORAGE OF THE PIPES HAS LIQUID MOVE IT FIRST */
@@ -382,7 +384,7 @@ public class HydraulicNetwork
 					used = Math.min(used, Math.max(used - this.combinedStorage.getLiquid().amount, 0));
 					drainStack = this.combinedStorage.drain(pUsed - used, doFill);
 				}
-				System.out.println("Pulling " + (drainStack != null ? drainStack.amount : 0) + " from combined leaving " + (this.combinedStorage.getLiquid() != null ? this.combinedStorage.getLiquid().amount : 0));
+				//System.out.println("Pulling " + (drainStack != null ? drainStack.amount : 0) + " from combined leaving " + (this.combinedStorage.getLiquid() != null ? this.combinedStorage.getLiquid().amount : 0));
 
 			}
 			if (prevCombined != null && this.combinedStorage.getLiquid() != null && prevCombined.amount != this.combinedStorage.getLiquid().amount)
@@ -614,7 +616,7 @@ public class HydraulicNetwork
 									{
 										if (node != splitPoint)
 										{
-											newNetwork.getFluidNetworkParts().add((IFluidNetworkPart) node);
+											newNetwork.getFluidNetworkParts().add((IFluidNetworkPart) entity);
 											parts++;
 										}
 									}
@@ -681,7 +683,7 @@ public class HydraulicNetwork
 
 	public String getStorageFluid()
 	{
-		if (combinedStorage.getLiquid() == null)
+		if (!combinedStorage.containsValidLiquid())
 		{
 			return "Zero";
 		}

@@ -1,8 +1,10 @@
 package hydraulic.fluidnetwork;
 
 
+import hydraulic.api.IDrain;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.liquids.ITankContainer;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 
@@ -26,8 +28,14 @@ public class HydraulicNetworkHelper
 
 				if (network != null)
 				{
-					network.removeLoad(tileEntity);
-					network.removeSource(tileEntity);
+					network.removeEntity(tileEntity);
+					for(ITankContainer tank : network.fluidTanks)
+					{
+						if(tank instanceof IDrain)
+						{
+							((IDrain)tank).stopRequesting(tileEntity);
+						}
+					}
 				}
 			}
 		}

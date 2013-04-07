@@ -200,10 +200,8 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-
-		LiquidStack liquid = new LiquidStack(0, 0, 0);
-		liquid.loadLiquidStackFromNBT(nbt.getCompoundTag("stored"));
-		if (Item.itemsList[liquid.itemID] != null && liquid.amount > 0)
+		LiquidStack liquid = LiquidStack.loadLiquidStackFromNBT(nbt.getCompoundTag("tank"));
+		if (liquid != null)
 		{
 			this.fakeTank.setLiquid(liquid);
 		}
@@ -212,6 +210,28 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 			if (nbt.hasKey("Addon" + i))
 			{
 				this.loadOrCreateSubTile(i, nbt.getCompoundTag("Addon" + i));
+			}
+		}
+	}
+
+	/**
+	 * Writes a tile entity to NBT.
+	 */
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		if (this.fakeTank.containsValidLiquid())
+		{
+			nbt.setTag("stored", this.fakeTank.getLiquid().writeToNBT(new NBTTagCompound()));
+		}
+		for (int i = 0; i < 6; i++)
+		{
+			if (this.subEntities[i] != null)
+			{
+				NBTTagCompound tag = new NBTTagCompound();
+				((TileEntity) this.subEntities[i]).writeToNBT(tag);
+				nbt.setTag("Addon" + i, tag);
 			}
 		}
 	}
@@ -301,29 +321,6 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	}
 
 	/**
-	 * Writes a tile entity to NBT.
-	 */
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
-		LiquidStack stack = this.fakeTank.getLiquid();
-		if (stack != null && LiquidDictionary.findLiquidName(stack) != null)
-		{			
-			nbt.setTag("stored", stack.writeToNBT(new NBTTagCompound()));
-		}
-		for (int i = 0; i < 6; i++)
-		{
-			if (this.subEntities[i] != null)
-			{
-				NBTTagCompound tag = new NBTTagCompound();
-				((TileEntity) this.subEntities[i]).writeToNBT(tag);
-				nbt.setTag("Addon" + i, tag);
-			}
-		}
-	}
-
-	/**
 	 * gets the current color mark of the pipe
 	 */
 	@Override
@@ -405,7 +402,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		{
 			return 0;
 		}
-		return this.getNetwork().addFluidToNetwork(this, resource,doFill);
+		return this.getNetwork().addFluidToNetwork(this, resource, doFill);
 	}
 
 	@Override
@@ -510,7 +507,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 					LiquidStack stack = tankContainer.drain(dir, LiquidContainerRegistry.BUCKET_VOLUME, false);
 					if (stack != null && stack.amount > 0)
 					{
-						int fill = this.getNetwork().addFluidToNetwork((TileEntity) tankContainer, stack,true);
+						int fill = this.getNetwork().addFluidToNetwork((TileEntity) tankContainer, stack, true);
 						tankContainer.drain(dir, fill, true);
 					}
 				}

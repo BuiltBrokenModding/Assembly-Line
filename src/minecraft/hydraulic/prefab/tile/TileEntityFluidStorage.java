@@ -109,18 +109,20 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 	{
 		super.readFromNBT(nbt);
 
-		LiquidStack liquid = new LiquidStack(0, 0, 0);
-		liquid.readFromNBT(nbt.getCompoundTag("stored"));
-		tank.setLiquid(liquid);
+		LiquidStack liquid = LiquidStack.loadLiquidStackFromNBT(nbt.getCompoundTag("stored"));
+		if (liquid != null)
+		{
+			tank.setLiquid(liquid);
+		}
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		if (tank.getLiquid() != null)
+		if (this.tank.containsValidLiquid())
 		{
-			nbt.setTag("stored", tank.getLiquid().writeToNBT(new NBTTagCompound()));
+			nbt.setTag("stored", this.tank.getLiquid().writeToNBT(new NBTTagCompound()));
 		}
 	}
 

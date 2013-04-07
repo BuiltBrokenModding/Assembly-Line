@@ -53,7 +53,6 @@ public class BlockDrain extends BlockAdvanced
 		if(!world.isRemote)
 		{
 			world.setBlockMetadataWithNotify(x, y, z, side, 3);
-			return true;
 		}
 		return this.onUseWrench(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ);
 	}

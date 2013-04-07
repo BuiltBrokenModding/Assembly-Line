@@ -7,6 +7,7 @@ import hydraulic.prefab.tile.TileEntityFluidDevice;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -24,7 +25,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 {
 	private boolean drainSources = true;
 	/* MAX BLOCKS DRAINED PER 1/2 SECOND */
-	public static int MAX_DRAIN_PER_PROCESS = 15;
+	public static int MAX_DRAIN_PER_PROCESS = 30;
 	private int currentDrains = 0;
 	/* LIST OF PUMPS AND THERE REQUESTS FOR THIS DRAIN */
 	private HashMap<TileEntityConstructionPump, LiquidStack> requestMap = new HashMap<TileEntityConstructionPump, LiquidStack>();
@@ -71,10 +72,12 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 							{
 								break;
 							}
-							if (((IFluidNetworkPart) pipe).getNetwork().isConnected(request.getKey()))
+							if (((IFluidNetworkPart) pipe).getNetwork().isConnected(request.getKey()) && targetSources.size() > 0)
 							{
-								for (Vector3 loc : targetSources)
+								Iterator it = this.targetSources.iterator();
+								while (it.hasNext())
 								{
+									Vector3 loc = (Vector3) it.next();
 									if (this.currentDrains >= MAX_DRAIN_PER_PROCESS)
 									{
 										break;
@@ -87,7 +90,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 
 										if (stack != null && requestStack != null && (requestStack.isLiquidEqual(stack) || requestStack.itemID == -1))
 										{
-											if (request.getKey().fill(0, stack, false) >= stack.amount)
+											if (request.getKey().fill(0, stack, false) > 0)
 											{
 												int requestAmmount = requestStack.amount - request.getKey().fill(0, stack, true);
 												if (requestAmmount <= 0)
@@ -101,6 +104,8 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 
 												loc.setBlock(this.worldObj, 0);
 												this.currentDrains++;
+												it.remove();
+
 											}
 										}
 									}
@@ -141,27 +146,34 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	}
 
 	@Override
-	public void stopRequesting(TileEntityConstructionPump pump)
+	public void stopRequesting(TileEntity pump)
 	{
 		if (this.requestMap.containsKey(pump))
 		{
 			this.requestMap.remove(pump);
 		}
 	}
-
+	public void addVectorToQue(Vector3 vector)
+	{
+		if(!this.targetSources.contains(vector))
+		{
+			this.targetSources.add(vector);
+		}
+	}
 	/**
 	 * Finds more liquid blocks using a path finder to be drained
 	 */
 	public void getNextFluidBlock()
 	{
+		System.out.println("Before Targets:"+this.targetSources.size());
 		/* FIND HIGHEST DRAIN POINT FIRST */
-		PathfinderFindHighestBlock path = new PathfinderFindHighestBlock(this.worldObj, Block.waterStill.blockID);
-		path.init(new Vector3(xCoord + this.getFacing().offsetX, yCoord + this.getFacing().offsetY, zCoord + this.getFacing().offsetZ));
+		PathfinderFindLiquid path = new PathfinderFindLiquid(this.worldObj, null);
+		path.init(new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ));
 		int y = path.highestY;
 
 		/* FIND 10 UNMARKED SOURCES */
-		PathfinderCheckerLiquid pathFinder = new PathfinderCheckerLiquid(worldObj, this.MAX_DRAIN_PER_PROCESS, null, (Vector3[]) this.targetSources.toArray());
-		pathFinder.init(new Vector3(xCoord, y, zCoord));
+		PathfinderCheckerLiquid pathFinder = new PathfinderCheckerLiquid(this.worldObj, new Vector3(this), null);
+		pathFinder.init(new Vector3(this.xCoord, y, this.zCoord));
 		for (Vector3 loc : pathFinder.closedSet)
 		{
 			if (!this.targetSources.contains(loc))
@@ -169,6 +181,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 				this.targetSources.add(loc);
 			}
 		}
+		System.out.println("Targets:"+this.targetSources.size());
 	}
 
 	@Override

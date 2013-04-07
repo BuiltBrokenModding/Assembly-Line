@@ -1,6 +1,7 @@
 package hydraulic.api;
 
 import fluidmech.common.pump.TileEntityConstructionPump;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidStack;
 
@@ -38,7 +39,7 @@ public interface IDrain extends ITankContainer
 	 * removed from the request map after being filled. However, this can be used too stop a request
 	 * short if the pump becomes full before the request is filled
 	 * 
-	 * @param pump - requesting pump
+	 * @param tileEntity - requesting pump
 	 */
-	public void stopRequesting(TileEntityConstructionPump pump);
+	public void stopRequesting(TileEntity tileEntity);
 }

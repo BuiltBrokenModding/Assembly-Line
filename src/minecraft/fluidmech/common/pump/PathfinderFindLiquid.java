@@ -15,11 +15,11 @@ import universalelectricity.core.path.IPathCallBack;
 import universalelectricity.core.path.Pathfinder;
 import universalelectricity.core.vector.Vector3;
 
-public class PathfinderFindHighestBlock extends Pathfinder
+public class PathfinderFindLiquid extends Pathfinder
 {
 	public static int highestY = 0;
 
-	public PathfinderFindHighestBlock(final World world, final int blockID, final Vector3... ignoreList)
+	public PathfinderFindLiquid(final World world, final LiquidStack resource, final Vector3... ignoreList)
 	{
 		super(new IPathCallBack()
 		{
@@ -27,8 +27,10 @@ public class PathfinderFindHighestBlock extends Pathfinder
 			public Set<Vector3> getConnectedNodes(Pathfinder finder, Vector3 currentNode)
 			{
 				Set<Vector3> neighbors = new HashSet<Vector3>();
+				
 				Vector3 pos = currentNode.clone().modifyPositionFromSide(ForgeDirection.UP);
-				if (pos.getBlockID(world) == blockID)
+				LiquidStack liquid = FluidHelper.getLiquidFromBlockId(pos.getBlockID(world));
+				if (liquid != null && (liquid.equals(resource) || resource == null))
 				{
 					neighbors.add(pos);
 					if (pos.intY() > highestY)
@@ -37,11 +39,12 @@ public class PathfinderFindHighestBlock extends Pathfinder
 					}
 					return neighbors;
 				}
+				
 				for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 				{
 					pos = currentNode.clone().modifyPositionFromSide(direction);
-
-					if (pos.getBlockID(world) == blockID)
+					liquid = FluidHelper.getLiquidFromBlockId(pos.getBlockID(world));
+					if (liquid != null && (liquid.equals(resource) || resource == null))
 					{
 						neighbors.add(pos);
 						if (pos.intY() > highestY)
@@ -57,7 +60,7 @@ public class PathfinderFindHighestBlock extends Pathfinder
 			@Override
 			public boolean onSearch(Pathfinder finder, Vector3 node)
 			{
-				if (finder.closedSet.size() >= 10000 || highestY == 256)
+				if (finder.closedSet.size() >= 1000 || highestY >= 255)
 				{
 					return true;
 				}
