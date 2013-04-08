@@ -3,6 +3,7 @@ package hydraulic.helpers;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquid;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidDictionary;
@@ -136,19 +137,50 @@ public class FluidHelper
 	}
 
 	/**
-	 * is block at the location is a still source block
-	 * 
+	 * Is the location a liquid source block
 	 */
-	public static boolean isLiquidBlock(World world, Vector3 pos)
+	public static boolean isSourceBlock(World world, Vector3 vec)
 	{
-		int blockID = pos.getBlockID(world);
-		int meta = pos.getBlockMetadata(world);
-		int LiquidID = FluidHelper.getLiquidId(blockID);
-
-		if (LiquidID != -1 && meta == 0)
+		LiquidStack liquid = FluidHelper.getLiquidFromBlockId(vec.getBlockID(world));
+		if ((liquid != null && vec.getBlockMetadata(world) == 0))
 		{
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Gets the number of source liquids blocks around the locaiton
+	 */
+	public static int getConnectedSources(World world, Vector3 vec)
+	{
+		int sources = 0;
+		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+		{
+			Vector3 pos = vec.clone().modifyPositionFromSide(direction);
+			if (isSourceBlock(world, pos))
+			{
+				sources++;
+			}
+		}
+		return sources;
+	}
+
+	/**
+	 * Gets the number of liquid fillable blocks around the location
+	 */
+	public static int getConnectedFillables(World world, Vector3 vec)
+	{
+		int sources = 0;
+		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+		{
+			Vector3 pos = vec.clone().modifyPositionFromSide(direction);
+			LiquidStack liquid = FluidHelper.getLiquidFromBlockId(pos.getBlockID(world));
+			if ((liquid != null || pos.getBlockID(world) == 0) && getConnectedSources(world, pos) > 0)
+			{
+				sources++;
+			}
+		}
+		return sources;
 	}
 }

@@ -1,7 +1,7 @@
 package fluidmech.common.pump;
 
 import fluidmech.common.FluidMech;
-import fluidmech.common.pump.path.PathfinderCheckerFindAir;
+import fluidmech.common.pump.path.PathfinderCheckerFindFillable;
 import fluidmech.common.pump.path.PathfinderCheckerLiquid;
 import fluidmech.common.pump.path.PathfinderFindHighestSource;
 import hydraulic.api.IDrain;
@@ -35,7 +35,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	/* MAX BLOCKS DRAINED PER 1/2 SECOND */
 	public static int MAX_DRAIN_PER_PROCESS = 30;
 	private int currentDrains = 0;
-	int yFillStart = 0;
+	public int yFillStart = 0;
 	/* LIST OF PUMPS AND THERE REQUESTS FOR THIS DRAIN */
 	private HashMap<TileEntityConstructionPump, LiquidStack> requestMap = new HashMap<TileEntityConstructionPump, LiquidStack>();
 
@@ -76,7 +76,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 
 		if (!this.worldObj.isRemote)
 		{
-			if (this.ticks % (200 + new Random().nextInt(100)) == 0 && updateQue.size() > 0)
+			if (this.ticks % (20 + new Random().nextInt(100)) == 0 && updateQue.size() > 0)
 			{
 				Iterator pp = this.updateQue.iterator();
 				while (pp.hasNext())
@@ -134,7 +134,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 											break;
 										}
 
-										if (FluidHelper.isLiquidBlock(this.worldObj, loc))
+										if (FluidHelper.isSourceBlock(this.worldObj, loc))
 										{
 											LiquidStack stack = FluidHelper.getLiquidFromBlockId(loc.getBlockID(this.worldObj));
 											LiquidStack requestStack = request.getValue();
@@ -222,8 +222,8 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 
 			int blocks = (resource.amount / LiquidContainerRegistry.BUCKET_VOLUME);
 
-			PathfinderCheckerFindAir pathFinder = new PathfinderCheckerFindAir(this.worldObj);
-			pathFinder.init(new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ));
+			PathfinderCheckerFindFillable pathFinder = new PathfinderCheckerFindFillable(this.worldObj);
+			pathFinder.init(new Vector3(this.xCoord + this.getFacing().offsetX, yFillStart, this.zCoord + this.getFacing().offsetZ));
 			System.out.println("Nodes: " + pathFinder.closedSet.size());
 			int fillable = 0;
 			for (Vector3 loc : pathFinder.closedSet)
@@ -241,7 +241,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 					if (doFill)
 					{
 						System.out.println("PlacedAt:Flowing: " + loc.toString());
-						loc.setBlock(worldObj, blockID, meta, 2);
+						loc.setBlock(worldObj, blockID, meta);
 						if (!this.updateQue.contains(loc))
 						{
 							this.updateQue.add(loc);
@@ -265,7 +265,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 					if (doFill)
 					{
 						System.out.println("PlacedAt:Air: " + loc.toString());
-						loc.setBlock(worldObj, blockID, meta, 2);
+						loc.setBlock(worldObj, blockID, meta);
 						if (!this.updateQue.contains(loc))
 						{
 							this.updateQue.add(loc);

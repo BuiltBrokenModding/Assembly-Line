@@ -599,7 +599,7 @@ public class HydraulicNetwork
 									{
 										if (node != splitPoint)
 										{
-											((IFluidNetworkPart) node).setNetwork(this);
+											((IFluidNetworkPart) entity).setNetwork(this);
 										}
 									}
 								}

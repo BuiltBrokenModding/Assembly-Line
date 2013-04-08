@@ -18,11 +18,11 @@ import universalelectricity.core.path.IPathCallBack;
 import universalelectricity.core.path.Pathfinder;
 import universalelectricity.core.vector.Vector3;
 
-public class PathfinderCheckerFindAir extends Pathfinder
+public class PathfinderCheckerFindFillable extends Pathfinder
 {
 	public List<Vector3> targetList = new ArrayList<Vector3>();
 
-	public PathfinderCheckerFindAir(final World world)
+	public PathfinderCheckerFindFillable(final World world)
 	{
 		super(new IPathCallBack()
 		{
@@ -30,24 +30,29 @@ public class PathfinderCheckerFindAir extends Pathfinder
 			public Set<Vector3> getConnectedNodes(Pathfinder finder, Vector3 currentNode)
 			{
 				Set<Vector3> neighbors = new HashSet<Vector3>();
-				int fillable = 0;
+				int sources = 0;
+				
+				Vector3 pos = currentNode.clone().modifyPositionFromSide(ForgeDirection.DOWN);
+				LiquidStack liquid = FluidHelper.getLiquidFromBlockId(pos.getBlockID(world));
+				/* SEARCH DOWN */
+				if ((liquid != null || pos.getBlockID(world) == 0) && FluidHelper.getConnectedSources(world, pos) > 0)
+				{
+					neighbors.add(pos);
+					return neighbors;
+				}
+				/* SEARCH AROUND - UP SEARCH IS DONE BY THE OBJECT USING THIS PATHFINDER */
 				for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 				{
-					if (direction != ForgeDirection.UP)
+					if (direction != ForgeDirection.UP && direction != ForgeDirection.DOWN)
 					{
-						Vector3 pos = currentNode.clone().modifyPositionFromSide(direction);
-						LiquidStack liquid = FluidHelper.getLiquidFromBlockId(pos.getBlockID(world));
-						if (liquid != null || pos.getBlockID(world) == 0)
+						pos = currentNode.clone().modifyPositionFromSide(direction);
+						liquid = FluidHelper.getLiquidFromBlockId(pos.getBlockID(world));
+						if ((liquid != null || pos.getBlockID(world) == 0) && FluidHelper.getConnectedSources(world, pos) > 0)
 						{
-							if(isFillableBlock(world,pos))
-							{
-								fillable++;
-							}
 							neighbors.add(pos);
 						}
 					}
 				}
-
 				return neighbors;
 			}
 
@@ -64,13 +69,5 @@ public class PathfinderCheckerFindAir extends Pathfinder
 		});
 	}
 
-	public static boolean isFillableBlock(World world, Vector3 vec)
-	{
-		LiquidStack liquid = FluidHelper.getLiquidFromBlockId(vec.getBlockID(world));
-		if ((liquid != null && vec.getBlockMetadata(world) != 0) || vec.getBlockID(world) == 0)
-		{
-			return true;
-		}
-		return false;
-	}
+	
 }

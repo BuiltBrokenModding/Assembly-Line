@@ -1,8 +1,5 @@
 package fluidmech.common.pump;
 
-import fluidmech.common.FluidMech;
-import fluidmech.common.TabFluidMech;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLiving;
@@ -15,12 +12,14 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.block.BlockAdvanced;
+import fluidmech.common.FluidMech;
+import fluidmech.common.TabFluidMech;
 
 public class BlockDrain extends BlockAdvanced
 {
 	private Icon blockIcon;
 	private Icon drainIcon;
-	private Icon drainIcon2;
+	private Icon fillIcon;
 	public BlockDrain(int id)
 	{
 		super(id, Material.iron);
@@ -35,7 +34,7 @@ public class BlockDrain extends BlockAdvanced
 	{
 		this.blockIcon = par1IconRegister.registerIcon(FluidMech.TEXTURE_NAME_PREFIX + "ironMachineSide");
 		this.drainIcon = par1IconRegister.registerIcon(FluidMech.TEXTURE_NAME_PREFIX + "drain");
-		this.drainIcon2 = par1IconRegister.registerIcon(FluidMech.TEXTURE_NAME_PREFIX + "drain2");
+		this.fillIcon = par1IconRegister.registerIcon(FluidMech.TEXTURE_NAME_PREFIX + "drain2");
 	}
 
 	@Override
@@ -65,7 +64,7 @@ public class BlockDrain extends BlockAdvanced
 				}
 				else
 				{
-					return this.drainIcon2;
+					return this.fillIcon;
 				}
 
 			}
@@ -95,6 +94,12 @@ public class BlockDrain extends BlockAdvanced
 				meta -= 6;
 			}
 			world.setBlockMetadataWithNotify(x, y, z, meta, 3);
+			TileEntity entity = world.getBlockTileEntity(x, y, z);
+			if(entity instanceof TileEntityDrain)
+			{
+				entityPlayer.sendChatToPlayer("Draining Sources? " + ((TileEntityDrain) entity).canDrainSources());
+				
+			}
 			return true;
 		}
 		return true;
