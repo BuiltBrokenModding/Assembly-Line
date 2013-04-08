@@ -4,6 +4,7 @@ import fluidmech.common.FluidMech;
 import fluidmech.common.pump.path.PathfinderCheckerFindFillable;
 import fluidmech.common.pump.path.PathfinderCheckerLiquid;
 import fluidmech.common.pump.path.PathfinderFindHighestSource;
+import fluidmech.common.pump.path.PathfinderFindPathThrewWater;
 import hydraulic.api.IDrain;
 import hydraulic.fluidnetwork.IFluidNetworkPart;
 import hydraulic.helpers.FluidHelper;
@@ -293,11 +294,16 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 					}
 				}
 			}
-			
+
 			/* IF NO FILL TARGETS WERE FOUND ON THIS LEVEL INCREASE YFILLSTART */
 			if (fillable == 0)
 			{
-				this.yFillStart++;
+				PathfinderFindPathThrewWater aPath = new PathfinderFindPathThrewWater(this.worldObj, new Vector3(xCoord, yCoord, zCoord));
+				aPath.init(new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ));
+				if (aPath.results.size() > 0)
+				{
+					this.yFillStart++;
+				}
 			}
 		}
 		return drained;
