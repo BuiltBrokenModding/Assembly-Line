@@ -1,10 +1,6 @@
 package fluidmech.common.pump;
 
-import fluidmech.common.FluidMech;
-import fluidmech.common.pump.path.PathfinderCheckerFindFillable;
-import fluidmech.common.pump.path.PathfinderCheckerLiquid;
-import fluidmech.common.pump.path.PathfinderFindHighestSource;
-import fluidmech.common.pump.path.PathfinderFindPathThrewWater;
+import fluidmech.common.pump.path.LiquidPathFinder;
 import hydraulic.api.IDrain;
 import hydraulic.fluidnetwork.IFluidNetworkPart;
 import hydraulic.helpers.FluidHelper;
@@ -15,10 +11,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -26,7 +20,6 @@ import net.minecraftforge.liquids.ILiquid;
 import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
@@ -36,7 +29,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	/* MAX BLOCKS DRAINED PER 1/2 SECOND */
 	public static int MAX_WORLD_EDITS_PER_PROCESS = 30;
 	private int currentWorldEdits = 0;
-	public int yFillStart = 0;
+
 	/* LIST OF PUMPS AND THERE REQUESTS FOR THIS DRAIN */
 	private HashMap<TileEntityConstructionPump, LiquidStack> requestMap = new HashMap<TileEntityConstructionPump, LiquidStack>();
 
@@ -156,8 +149,16 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	 */
 	public void getNextFluidBlock()
 	{
-		PathfinderCheckerLiquid pathFinder = new PathfinderCheckerLiquid(this.worldObj, this);
+		LiquidPathFinder pathFinder = new LiquidPathFinder(this.worldObj, false, this.MAX_WORLD_EDITS_PER_PROCESS * 2);
 		pathFinder.init(new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ));
+
+		for (Vector3 vec : pathFinder.results)
+		{
+			if (!this.targetSources.contains(vec))
+			{
+				this.targetSources.add(vec);
+			}
+		}
 	}
 
 	public void doCleanup()
@@ -204,13 +205,8 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	public int fillArea(LiquidStack resource, boolean doFill)
 	{
 		int drained = 0;
-		/* INIT SET FILL HEIGHT */
-		if (yFillStart == 0 || yFillStart >= 255)
-		{
-			yFillStart = this.yCoord + this.getFacing().offsetY;
-		}
 
-		if (!this.canDrainSources() && this.currentWorldEdits >= MAX_WORLD_EDITS_PER_PROCESS)
+		if (!this.canDrainSources() && this.currentWorldEdits < MAX_WORLD_EDITS_PER_PROCESS)
 		{
 			/* ID LIQUID BLOCK AND SET VARS FOR BLOCK PLACEMENT */
 			if (resource == null || resource.amount < LiquidContainerRegistry.BUCKET_VOLUME)
@@ -244,12 +240,12 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 			int blocks = (resource.amount / LiquidContainerRegistry.BUCKET_VOLUME);
 
 			/* FIND ALL VALID BLOCKS ON LEVEL OR BELLOW */
-			PathfinderCheckerFindFillable pathFinder = new PathfinderCheckerFindFillable(this.worldObj);
-			pathFinder.init(new Vector3(this.xCoord + this.getFacing().offsetX, yFillStart, this.zCoord + this.getFacing().offsetZ));
+			LiquidPathFinder pathFinder = new LiquidPathFinder(this.worldObj, true, this.MAX_WORLD_EDITS_PER_PROCESS * 2);
+			pathFinder.init(new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ));
 
 			/* START FILLING IN OR CHECKING IF CAN FILL AREA */
 			int fillable = 0;
-			for (Vector3 loc : pathFinder.closedSet)
+			for (Vector3 loc : pathFinder.results)
 			{
 				if (blocks <= 0)
 				{
@@ -274,7 +270,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 
 			}
 
-			for (Vector3 loc : pathFinder.closedSet)
+			for (Vector3 loc : pathFinder.results)
 			{
 				if (blocks <= 0)
 				{
@@ -294,21 +290,6 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 							this.updateQue.add(loc);
 						}
 					}
-				}
-			}
-
-			/* IF NO FILL TARGETS WERE FOUND ON THIS LEVEL INCREASE YFILLSTART */
-			if (fillable == 0)
-			{
-				PathfinderFindPathThrewWater aPath = new PathfinderFindPathThrewWater(this.worldObj, new Vector3(xCoord, yCoord, zCoord));
-				aPath.init(new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ));
-				if (aPath.results.size() > 0)
-				{
-					this.yFillStart++;
-				}
-				else
-				{
-					yFillStart = this.yCoord + this.getFacing().offsetY;
 				}
 			}
 		}

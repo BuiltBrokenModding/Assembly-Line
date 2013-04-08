@@ -31,6 +31,7 @@ public class BlockConstructionPump extends BlockAdvanced
 		this.setCreativeTab(TabFluidMech.INSTANCE);
 		this.setHardness(1f);
 		this.setResistance(5f);
+		
 	}
 
 	@Override
@@ -117,4 +118,6 @@ public class BlockConstructionPump extends BlockAdvanced
 		}
 		return this.onUseWrench(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ);
 	}
+	
+	
 }
