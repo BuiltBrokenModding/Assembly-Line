@@ -34,8 +34,8 @@ import universalelectricity.core.vector.VectorHelper;
 public class TileEntityDrain extends TileEntityFluidDevice implements ITankContainer, IDrain
 {
 	/* MAX BLOCKS DRAINED PER 1/2 SECOND */
-	public static int MAX_DRAIN_PER_PROCESS = 30;
-	private int currentDrains = 0;
+	public static int MAX_WORLD_EDITS_PER_PROCESS = 30;
+	private int currentWorldEdits = 0;
 	public int yFillStart = 0;
 	/* LIST OF PUMPS AND THERE REQUESTS FOR THIS DRAIN */
 	private HashMap<TileEntityConstructionPump, LiquidStack> requestMap = new HashMap<TileEntityConstructionPump, LiquidStack>();
@@ -79,10 +79,10 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 		/* MAIN LOGIC PATH FOR DRAINING BODIES OF LIQUID */
 		if (!this.worldObj.isRemote && this.canDrainSources() && this.ticks % 20 == 0 && this.requestMap.size() > 0)
 		{
-			this.currentDrains = 0;
+			this.currentWorldEdits = 0;
 			this.doCleanup();
 			/* ONLY FIND NEW SOURCES IF OUR CURRENT LIST RUNS DRY */
-			if (this.targetSources.size() < this.MAX_DRAIN_PER_PROCESS + 10)
+			if (this.targetSources.size() < this.MAX_WORLD_EDITS_PER_PROCESS + 10)
 			{
 				this.getNextFluidBlock();
 			}
@@ -93,7 +93,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 			{
 				for (Entry<TileEntityConstructionPump, LiquidStack> request : requestMap.entrySet())
 				{
-					if (this.currentDrains >= MAX_DRAIN_PER_PROCESS)
+					if (this.currentWorldEdits >= MAX_WORLD_EDITS_PER_PROCESS)
 					{
 						break;
 					}
@@ -103,7 +103,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 						while (it.hasNext())
 						{
 							Vector3 loc = (Vector3) it.next();
-							if (this.currentDrains >= MAX_DRAIN_PER_PROCESS)
+							if (this.currentWorldEdits >= MAX_WORLD_EDITS_PER_PROCESS)
 							{
 								break;
 							}
@@ -138,7 +138,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 
 										/* REMOVE BLOCK */
 										loc.setBlock(this.worldObj, 0, 0, 2);
-										this.currentDrains++;
+										this.currentWorldEdits++;
 										it.remove();
 
 									}
@@ -210,7 +210,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 			yFillStart = this.yCoord + this.getFacing().offsetY;
 		}
 
-		if (!this.canDrainSources())
+		if (!this.canDrainSources() && this.currentWorldEdits >= MAX_WORLD_EDITS_PER_PROCESS)
 		{
 			/* ID LIQUID BLOCK AND SET VARS FOR BLOCK PLACEMENT */
 			if (resource == null || resource.amount < LiquidContainerRegistry.BUCKET_VOLUME)
@@ -264,6 +264,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 					if (doFill)
 					{
 						loc.setBlock(worldObj, blockID, meta);
+						this.currentWorldEdits++;
 						if (!this.updateQue.contains(loc))
 						{
 							this.updateQue.add(loc);
@@ -287,6 +288,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 					if (doFill)
 					{
 						loc.setBlock(worldObj, blockID, meta);
+						this.currentWorldEdits++;
 						if (!this.updateQue.contains(loc))
 						{
 							this.updateQue.add(loc);
