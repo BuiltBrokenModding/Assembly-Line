@@ -5,6 +5,7 @@ import hydraulic.helpers.FluidHelper;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidStack;
@@ -41,18 +42,28 @@ public class LiquidPathFinder
 	/**
 	 * @return True on success finding, false on failure.
 	 */
-	public boolean findNodes(Vector3 currentNode)
+	public boolean findNodes(Vector3 node)
 	{
-		this.nodes.add(currentNode);
-		if (this.fill || FluidHelper.isSourceBlock(world, currentNode))
+		this.nodes.add(node);
+		Block block = Block.blocksList[node.getBlockID(world)];
+		if (block != null)
 		{
-			this.results.add(currentNode);
+			if (this.fill && block.isBlockReplaceable(world, node.intX(), node.intY(), node.intZ()))
+			{
+				this.results.add(node);
+			}
+			else if (!this.fill && FluidHelper.isSourceBlock(world, node))
+			{
+				this.results.add(node);
+			}
 		}
-		if (this.isDone(currentNode))
+
+		if (this.isDone(node))
 		{
 			return false;
 		}
-		Vector3 vec = currentNode.modifyPositionFromSide(this.priority);
+
+		Vector3 vec = node.clone().modifyPositionFromSide(this.priority);
 		if (this.isValidNode(vec) & !this.nodes.contains(vec))
 		{
 			if (this.findNodes(vec))
@@ -60,11 +71,12 @@ public class LiquidPathFinder
 				return true;
 			}
 		}
+
 		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 		{
 			if (direction != this.priority)
 			{
-				vec = currentNode.modifyPositionFromSide(direction);
+				vec = node.clone().modifyPositionFromSide(direction);
 				if (this.isValidNode(vec) & !this.nodes.contains(vec))
 				{
 					if (this.findNodes(vec))
@@ -80,14 +92,14 @@ public class LiquidPathFinder
 
 	public boolean isValidNode(Vector3 pos)
 	{
-		LiquidStack liquid = FluidHelper.getLiquidFromBlockId(pos.getBlockID(world));
-		if (this.fill)
+		Block block = Block.blocksList[pos.getBlockID(world)];
+		if (!this.fill)
 		{
-			return ((liquid != null || pos.getBlockID(world) == 0) && FluidHelper.getConnectedSources(world, pos) > 0);
+			return FluidHelper.getLiquidFromBlockId(pos.getBlockID(world)) != null;
 		}
 		else
 		{
-			return liquid != null;
+			return FluidHelper.getLiquidFromBlockId(pos.getBlockID(world)) != null || (block.isBlockReplaceable(world, pos.intX(), pos.intY(), pos.intZ()) && FluidHelper.getConnectedSources(world, pos) > 0);
 		}
 	}
 

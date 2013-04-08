@@ -70,70 +70,74 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	public void updateEntity()
 	{
 		/* MAIN LOGIC PATH FOR DRAINING BODIES OF LIQUID */
-		if (!this.worldObj.isRemote && this.canDrainSources() && this.ticks % 20 == 0 && this.requestMap.size() > 0)
+		if (!this.worldObj.isRemote && this.canDrainSources() && this.ticks % 20 == 0)
 		{
 			this.currentWorldEdits = 0;
 			this.doCleanup();
-			/* ONLY FIND NEW SOURCES IF OUR CURRENT LIST RUNS DRY */
-			if (this.targetSources.size() < this.MAX_WORLD_EDITS_PER_PROCESS + 10)
+			
+			if (this.requestMap.size() > 0)
 			{
-				this.getNextFluidBlock();
-			}
-
-			TileEntity pipe = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), this.getFacing().getOpposite());
-
-			if (pipe instanceof IFluidNetworkPart)
-			{
-				for (Entry<TileEntityConstructionPump, LiquidStack> request : requestMap.entrySet())
+				/* ONLY FIND NEW SOURCES IF OUR CURRENT LIST RUNS DRY */
+				if (this.targetSources.size() < this.MAX_WORLD_EDITS_PER_PROCESS + 10)
 				{
-					if (this.currentWorldEdits >= MAX_WORLD_EDITS_PER_PROCESS)
+					this.getNextFluidBlock();
+				}
+
+				TileEntity pipe = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), this.getFacing().getOpposite());
+
+				if (pipe instanceof IFluidNetworkPart)
+				{
+					for (Entry<TileEntityConstructionPump, LiquidStack> request : requestMap.entrySet())
 					{
-						break;
-					}
-					if (((IFluidNetworkPart) pipe).getNetwork().isConnected(request.getKey()) && targetSources.size() > 0)
-					{
-						Iterator it = this.targetSources.iterator();
-						while (it.hasNext())
+						if (this.currentWorldEdits >= MAX_WORLD_EDITS_PER_PROCESS)
 						{
-							Vector3 loc = (Vector3) it.next();
-							if (this.currentWorldEdits >= MAX_WORLD_EDITS_PER_PROCESS)
+							break;
+						}
+						if (((IFluidNetworkPart) pipe).getNetwork().isConnected(request.getKey()) && targetSources.size() > 0)
+						{
+							Iterator it = this.targetSources.iterator();
+							while (it.hasNext())
 							{
-								break;
-							}
-
-							if (FluidHelper.isSourceBlock(this.worldObj, loc))
-							{
-								/* GET STACKS */
-								LiquidStack stack = FluidHelper.getLiquidFromBlockId(loc.getBlockID(this.worldObj));
-								LiquidStack requestStack = request.getValue();
-
-								if (stack != null && requestStack != null && (requestStack.isLiquidEqual(stack) || requestStack.itemID == -1))
+								Vector3 loc = (Vector3) it.next();
+								if (this.currentWorldEdits >= MAX_WORLD_EDITS_PER_PROCESS)
 								{
-									if (request.getKey().fill(0, stack, false) > 0)
+									break;
+								}
+
+								if (FluidHelper.isSourceBlock(this.worldObj, loc))
+								{
+									/* GET STACKS */
+									LiquidStack stack = FluidHelper.getLiquidFromBlockId(loc.getBlockID(this.worldObj));
+									LiquidStack requestStack = request.getValue();
+
+									if (stack != null && requestStack != null && (requestStack.isLiquidEqual(stack) || requestStack.itemID == -1))
 									{
-
-										/* EDIT REQUEST IN MAP */
-										int requestAmmount = requestStack.amount - request.getKey().fill(0, stack, true);
-										if (requestAmmount <= 0)
+										if (request.getKey().fill(0, stack, false) > 0)
 										{
-											this.requestMap.remove(request);
-										}
-										else
-										{
-											request.setValue(FluidHelper.getStack(requestStack, requestAmmount));
-										}
 
-										/* ADD TO UPDATE QUE */
-										if (!this.updateQue.contains(loc))
-										{
-											this.updateQue.add(loc);
+											/* EDIT REQUEST IN MAP */
+											int requestAmmount = requestStack.amount - request.getKey().fill(0, stack, true);
+											if (requestAmmount <= 0)
+											{
+												this.requestMap.remove(request);
+											}
+											else
+											{
+												request.setValue(FluidHelper.getStack(requestStack, requestAmmount));
+											}
+
+											/* ADD TO UPDATE QUE */
+											if (!this.updateQue.contains(loc))
+											{
+												this.updateQue.add(loc);
+											}
+
+											/* REMOVE BLOCK */
+											loc.setBlock(this.worldObj, 0, 0, 2);
+											this.currentWorldEdits++;
+											it.remove();
+
 										}
-
-										/* REMOVE BLOCK */
-										loc.setBlock(this.worldObj, 0, 0, 2);
-										this.currentWorldEdits++;
-										it.remove();
-
 									}
 								}
 							}
@@ -151,7 +155,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	{
 		LiquidPathFinder pathFinder = new LiquidPathFinder(this.worldObj, false, this.MAX_WORLD_EDITS_PER_PROCESS * 2);
 		pathFinder.init(new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ));
-		System.out.println("Nodes:"+pathFinder.nodes.size()+"Results:"+pathFinder.results.size());
+		System.out.println("Nodes:" + pathFinder.nodes.size() + "Results:" + pathFinder.results.size());
 		for (Vector3 vec : pathFinder.results)
 		{
 			this.addVectorToQue(vec);
@@ -161,7 +165,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	public void doCleanup()
 	{
 		/* CALL UPDATE ON EDITED BLOCKS */
-		if (this.ticks % 100 == 0 && updateQue.size() > 0)
+		if (this.ticks % 40 == 0 && updateQue.size() > 0)
 		{
 			Iterator pp = this.updateQue.iterator();
 			while (pp.hasNext())
