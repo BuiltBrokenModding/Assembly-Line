@@ -304,6 +304,10 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 				{
 					this.yFillStart++;
 				}
+				else
+				{
+					yFillStart = this.yCoord + this.getFacing().offsetY;
+				}
 			}
 		}
 		return drained;
