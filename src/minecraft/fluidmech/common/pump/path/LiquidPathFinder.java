@@ -83,7 +83,7 @@ public class LiquidPathFinder
 		LiquidStack liquid = FluidHelper.getLiquidFromBlockId(pos.getBlockID(world));
 		if (this.fill)
 		{
-			return (liquid != null || pos.getBlockID(world) == 0) && FluidHelper.getConnectedSources(world, pos) > 0;
+			return ((liquid != null || pos.getBlockID(world) == 0) && FluidHelper.getConnectedSources(world, pos) > 0);
 		}
 		else
 		{

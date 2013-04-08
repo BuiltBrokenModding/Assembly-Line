@@ -151,13 +151,10 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	{
 		LiquidPathFinder pathFinder = new LiquidPathFinder(this.worldObj, false, this.MAX_WORLD_EDITS_PER_PROCESS * 2);
 		pathFinder.init(new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ));
-
+		System.out.println("Nodes:"+pathFinder.nodes.size()+"Results:"+pathFinder.results.size());
 		for (Vector3 vec : pathFinder.results)
 		{
-			if (!this.targetSources.contains(vec))
-			{
-				this.targetSources.add(vec);
-			}
+			this.addVectorToQue(vec);
 		}
 	}
 
