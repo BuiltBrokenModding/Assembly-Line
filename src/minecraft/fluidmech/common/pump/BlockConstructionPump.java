@@ -23,6 +23,7 @@ public class BlockConstructionPump extends BlockAdvanced
 {
 	Icon inputIcon;
 	Icon outputIcon;
+
 	public BlockConstructionPump(int id)
 	{
 		super(id, Material.iron);
@@ -39,7 +40,7 @@ public class BlockConstructionPump extends BlockAdvanced
 		this.inputIcon = par1IconRegister.registerIcon(FluidMech.TEXTURE_NAME_PREFIX + "inputMachineSide");
 		this.outputIcon = par1IconRegister.registerIcon(FluidMech.TEXTURE_NAME_PREFIX + "outputMachineSide");
 	}
-	
+
 	@Override
 	public Icon getBlockTextureFromSideAndMetadata(int par1, int par2)
 	{
@@ -54,11 +55,11 @@ public class BlockConstructionPump extends BlockAdvanced
 		if (entity instanceof TileEntityConstructionPump)
 		{
 
-			if (dir == ((TileEntityConstructionPump) entity).getFacing().getOpposite())
+			if (dir == ((TileEntityConstructionPump) entity).getFacing(false))
 			{
 				return this.outputIcon;
 			}
-			if (dir == ((TileEntityConstructionPump) entity).getFacing())
+			if (dir == ((TileEntityConstructionPump) entity).getFacing(true))
 			{
 				return this.inputIcon;
 			}
