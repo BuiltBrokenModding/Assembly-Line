@@ -22,7 +22,7 @@ public class PathfinderCheckerLiquid extends Pathfinder
 {
 	public List<Vector3> targetList = new ArrayList<Vector3>();
 
-	public PathfinderCheckerLiquid(final World world, final Vector3 callLoc, final LiquidStack resource, final Vector3... ignoreList)
+	public PathfinderCheckerLiquid(final World world, final TileEntityDrain drain)
 	{
 		super(new IPathCallBack()
 		{
@@ -34,8 +34,7 @@ public class PathfinderCheckerLiquid extends Pathfinder
 				for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 				{
 					Vector3 pos = currentNode.clone().modifyPositionFromSide(direction);
-					LiquidStack liquid = FluidHelper.getLiquidFromBlockId(pos.getBlockID(world));
-					if (pos.getBlockID(world) != 0 && liquid != null && (liquid.equals(resource) || resource == null))
+					if (FluidHelper.isSourceBlock(world, pos))
 					{
 						neighbors.add(pos);
 					}
@@ -47,14 +46,9 @@ public class PathfinderCheckerLiquid extends Pathfinder
 			@Override
 			public boolean onSearch(Pathfinder finder, Vector3 node)
 			{
-				LiquidStack liquid = FluidHelper.getLiquidFromBlockId(node.getBlockID(world));
-				if (liquid != null && (liquid.equals(resource) || resource == null) && node.getBlockMetadata(world) == 0)
+				if (FluidHelper.isSourceBlock(world, node))
 				{
-					TileEntity entity = callLoc.getTileEntity(world);
-					if (entity instanceof TileEntityDrain)
-					{
-						((TileEntityDrain) entity).addVectorToQue(node);
-					}
+					drain.addVectorToQue(node);
 				}
 				if (finder.closedSet.size() >= 2000)
 				{

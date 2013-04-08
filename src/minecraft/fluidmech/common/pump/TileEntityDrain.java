@@ -41,12 +41,13 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 
 	private List<Vector3> targetSources = new ArrayList<Vector3>();
 	private List<Vector3> updateQue = new ArrayList<Vector3>();
-	
+
 	@Override
 	public String getMeterReading(EntityPlayer user, ForgeDirection side)
 	{
-		return "Set to "+ (canDrainSources() ? "input liquids" : "output liquids");
+		return "Set to " + (canDrainSources() ? "input liquids" : "output liquids");
 	}
+
 	public boolean canDrainSources()
 	{
 		int meta = 0;
@@ -56,13 +57,14 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 		}
 		return meta < 6;
 	}
+
 	public ForgeDirection getFacing()
 	{
 		int meta = 0;
 		if (worldObj != null)
 		{
 			meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-			if(meta > 5)
+			if (meta > 5)
 			{
 				meta -= 6;
 			}
@@ -73,108 +75,126 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	@Override
 	public void updateEntity()
 	{
-
-		if (!this.worldObj.isRemote)
+		/* MAIN LOGIC PATH FOR DRAINING BODIES OF LIQUID */
+		if (!this.worldObj.isRemote && this.canDrainSources() && this.ticks % 20 == 0 && this.requestMap.size() > 0)
 		{
-			if (this.ticks % (20 + new Random().nextInt(100)) == 0 && updateQue.size() > 0)
+			this.currentDrains = 0;
+			this.doCleanup();
+			/* ONLY FIND NEW SOURCES IF OUR CURRENT LIST RUNS DRY */
+			if (this.targetSources.size() < this.MAX_DRAIN_PER_PROCESS + 10)
 			{
-				Iterator pp = this.updateQue.iterator();
-				while (pp.hasNext())
-				{
-					Vector3 vec = (Vector3) pp.next();
-					worldObj.markBlockForUpdate(vec.intX(), vec.intY(), vec.intZ());
-					pp.remove();
-				}
+				this.getNextFluidBlock();
 			}
-			if (this.ticks % 20 == 0)
+
+			TileEntity pipe = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), this.getFacing().getOpposite());
+
+			if (pipe instanceof IFluidNetworkPart)
 			{
-				/* CLEANUP MAP */
-				Iterator mn = this.requestMap.entrySet().iterator();
-				while (mn.hasNext())
+				for (Entry<TileEntityConstructionPump, LiquidStack> request : requestMap.entrySet())
 				{
-					Entry<TileEntityConstructionPump, LiquidStack> entry = (Entry<TileEntityConstructionPump, LiquidStack>) mn.next();
-					TileEntity entity = entry.getKey();
-					if (entity == null)
+					if (this.currentDrains >= MAX_DRAIN_PER_PROCESS)
 					{
-						mn.remove();
+						break;
 					}
-					else if (entity.isInvalid())
+					if (((IFluidNetworkPart) pipe).getNetwork().isConnected(request.getKey()) && targetSources.size() > 0)
 					{
-						mn.remove();
-					}
-				}
-
-				this.currentDrains = 0;
-				/* MAIN LOGIC PATH FOR DRAINING BODIES OF LIQUID */
-				if (this.canDrainSources())
-				{
-					TileEntity pipe = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), this.getFacing().getOpposite());
-
-					if (pipe instanceof IFluidNetworkPart)
-					{
-						if (this.requestMap.size() > 0)
+						Iterator it = this.targetSources.iterator();
+						while (it.hasNext())
 						{
-							this.getNextFluidBlock();
-
-							for (Entry<TileEntityConstructionPump, LiquidStack> request : requestMap.entrySet())
+							Vector3 loc = (Vector3) it.next();
+							if (this.currentDrains >= MAX_DRAIN_PER_PROCESS)
 							{
-								if (this.currentDrains >= MAX_DRAIN_PER_PROCESS)
+								break;
+							}
+
+							if (FluidHelper.isSourceBlock(this.worldObj, loc))
+							{
+								/* GET STACKS */
+								LiquidStack stack = FluidHelper.getLiquidFromBlockId(loc.getBlockID(this.worldObj));
+								LiquidStack requestStack = request.getValue();
+
+								if (stack != null && requestStack != null && (requestStack.isLiquidEqual(stack) || requestStack.itemID == -1))
 								{
-									break;
-								}
-								if (((IFluidNetworkPart) pipe).getNetwork().isConnected(request.getKey()) && targetSources.size() > 0)
-								{
-									Iterator it = this.targetSources.iterator();
-									int m = 0;
-									while (it.hasNext())
+									if (request.getKey().fill(0, stack, false) > 0)
 									{
-										Vector3 loc = (Vector3) it.next();
-										if (this.currentDrains >= MAX_DRAIN_PER_PROCESS)
+
+										/* EDIT REQUEST IN MAP */
+										int requestAmmount = requestStack.amount - request.getKey().fill(0, stack, true);
+										if (requestAmmount <= 0)
 										{
-											break;
+											this.requestMap.remove(request);
+										}
+										else
+										{
+											request.setValue(FluidHelper.getStack(requestStack, requestAmmount));
 										}
 
-										if (FluidHelper.isSourceBlock(this.worldObj, loc))
+										/* ADD TO UPDATE QUE */
+										if (!this.updateQue.contains(loc))
 										{
-											LiquidStack stack = FluidHelper.getLiquidFromBlockId(loc.getBlockID(this.worldObj));
-											LiquidStack requestStack = request.getValue();
-
-											if (stack != null && requestStack != null && (requestStack.isLiquidEqual(stack) || requestStack.itemID == -1))
-											{
-												if (request.getKey().fill(0, stack, false) > 0)
-												{
-													int requestAmmount = requestStack.amount - request.getKey().fill(0, stack, true);
-													if (requestAmmount <= 0)
-													{
-														this.requestMap.remove(request);
-													}
-													else
-													{
-														request.setValue(FluidHelper.getStack(requestStack, requestAmmount));
-													}
-													if (++m >= 3 && !this.updateQue.contains(loc))
-													{
-														this.updateQue.add(loc);
-													}
-													loc.setBlock(this.worldObj, 0, 0, 2);
-													this.currentDrains++;
-													it.remove();
-
-												}
-											}
+											this.updateQue.add(loc);
 										}
+
+										/* REMOVE BLOCK */
+										loc.setBlock(this.worldObj, 0, 0, 2);
+										this.currentDrains++;
+										it.remove();
+
 									}
 								}
 							}
 						}
 					}
 				}
-				// END OF DRAIN
-				else
-				{
-					// TODO time to have fun finding a place for this block to exist
-					//this.fillArea(LiquidDictionary.getLiquid("Water", LiquidContainerRegistry.BUCKET_VOLUME * 5), true);
-				}
+			}
+		}
+	}
+
+	/**
+	 * Finds more liquid blocks using a path finder to be drained
+	 */
+	public void getNextFluidBlock()
+	{
+		PathfinderCheckerLiquid pathFinder = new PathfinderCheckerLiquid(this.worldObj, this);
+		pathFinder.init(new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ));
+	}
+
+	public void doCleanup()
+	{
+		/* CALL UPDATE ON EDITED BLOCKS */
+		if (this.ticks % 100 == 0 && updateQue.size() > 0)
+		{
+			Iterator pp = this.updateQue.iterator();
+			while (pp.hasNext())
+			{
+				Vector3 vec = (Vector3) pp.next();
+				worldObj.markBlockForUpdate(vec.intX(), vec.intY(), vec.intZ());
+				pp.remove();
+			}
+		}
+		/* CLEANUP REQUEST MAP AND REMOVE INVALID TILES */
+		Iterator requests = this.requestMap.entrySet().iterator();
+		while (requests.hasNext())
+		{
+			Entry<TileEntityConstructionPump, LiquidStack> entry = (Entry<TileEntityConstructionPump, LiquidStack>) requests.next();
+			TileEntity entity = entry.getKey();
+			if (entity == null)
+			{
+				requests.remove();
+			}
+			else if (entity.isInvalid())
+			{
+				requests.remove();
+			}
+		}
+		/* CLEANUP TARGET LIST AND REMOVE INVALID SOURCES */
+		Iterator mn = this.targetSources.iterator();
+		while (mn.hasNext())
+		{
+			Vector3 vec = (Vector3) mn.next();
+			if (!FluidHelper.isSourceBlock(this.worldObj, vec))
+			{
+				mn.remove();
 			}
 		}
 	}
@@ -183,6 +203,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	public int fillArea(LiquidStack resource, boolean doFill)
 	{
 		int drained = 0;
+		/* INIT SET FILL HEIGHT */
 		if (yFillStart == 0 || yFillStart >= 255)
 		{
 			yFillStart = this.yCoord + this.getFacing().offsetY;
@@ -190,13 +211,12 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 
 		if (!this.canDrainSources())
 		{
-			System.out.println("Filling Area: " + doFill);
+			/* ID LIQUID BLOCK AND SET VARS FOR BLOCK PLACEMENT */
 			if (resource == null || resource.amount < LiquidContainerRegistry.BUCKET_VOLUME)
 			{
-				System.out.println("Invalid Resource");
 				return 0;
 			}
-			System.out.println("Resource: " + LiquidDictionary.findLiquidName(resource) + ":" + resource.amount);
+
 			int blockID = resource.itemID;
 			int meta = resource.itemMeta;
 			if (resource.itemID == Block.waterStill.blockID)
@@ -222,9 +242,11 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 
 			int blocks = (resource.amount / LiquidContainerRegistry.BUCKET_VOLUME);
 
+			/* FIND ALL VALID BLOCKS ON LEVEL OR BELLOW */
 			PathfinderCheckerFindFillable pathFinder = new PathfinderCheckerFindFillable(this.worldObj);
 			pathFinder.init(new Vector3(this.xCoord + this.getFacing().offsetX, yFillStart, this.zCoord + this.getFacing().offsetZ));
-			System.out.println("Nodes: " + pathFinder.closedSet.size());
+
+			/* START FILLING IN OR CHECKING IF CAN FILL AREA */
 			int fillable = 0;
 			for (Vector3 loc : pathFinder.closedSet)
 			{
@@ -240,7 +262,6 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 					blocks--;
 					if (doFill)
 					{
-						System.out.println("PlacedAt:Flowing: " + loc.toString());
 						loc.setBlock(worldObj, blockID, meta);
 						if (!this.updateQue.contains(loc))
 						{
@@ -264,7 +285,6 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 					blocks--;
 					if (doFill)
 					{
-						System.out.println("PlacedAt:Air: " + loc.toString());
 						loc.setBlock(worldObj, blockID, meta);
 						if (!this.updateQue.contains(loc))
 						{
@@ -273,6 +293,8 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 					}
 				}
 			}
+			
+			/* IF NO FILL TARGETS WERE FOUND ON THIS LEVEL INCREASE YFILLSTART */
 			if (fillable == 0)
 			{
 				this.yFillStart++;
@@ -307,28 +329,6 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 		if (!this.targetSources.contains(vector))
 		{
 			this.targetSources.add(vector);
-		}
-	}
-
-	/**
-	 * Finds more liquid blocks using a path finder to be drained
-	 */
-	public void getNextFluidBlock()
-	{
-		/* FIND HIGHEST DRAIN POINT FIRST */
-		PathfinderFindHighestSource path = new PathfinderFindHighestSource(this.worldObj, null);
-		path.init(new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ));
-		int y = path.highestY;
-
-		/* FIND 10 UNMARKED SOURCES */
-		PathfinderCheckerLiquid pathFinder = new PathfinderCheckerLiquid(this.worldObj, new Vector3(this), null);
-		pathFinder.init(new Vector3(this.xCoord, y, this.zCoord));
-		for (Vector3 loc : pathFinder.closedSet)
-		{
-			if (!this.targetSources.contains(loc))
-			{
-				this.targetSources.add(loc);
-			}
 		}
 	}
 
