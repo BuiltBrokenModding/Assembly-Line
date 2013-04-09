@@ -1,5 +1,7 @@
 package fluidmech.common.pump;
 
+import hydraulic.fluidnetwork.HydraulicNetworkHelper;
+
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -114,6 +116,11 @@ public class BlockConstructionPump extends BlockAdvanced
 		if (!world.isRemote)
 		{
 			world.setBlockMetadataWithNotify(x, y, z, side, 3);
+			TileEntity entity = world.getBlockTileEntity(x, y, z);
+			if(entity instanceof TileEntityConstructionPump)
+			{
+				HydraulicNetworkHelper.invalidate(entity);
+			}
 			return true;
 		}
 		return this.onUseWrench(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ);

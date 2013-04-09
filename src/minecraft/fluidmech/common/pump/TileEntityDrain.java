@@ -70,12 +70,12 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	public void updateEntity()
 	{
 		/* MAIN LOGIC PATH FOR DRAINING BODIES OF LIQUID */
-		if (!this.worldObj.isRemote && this.canDrainSources() && this.ticks % 20 == 0)
+		if (!this.worldObj.isRemote && this.ticks % 20 == 0)
 		{
 			this.currentWorldEdits = 0;
 			this.doCleanup();
 
-			if (this.requestMap.size() > 0)
+			if (this.canDrainSources() && this.requestMap.size() > 0)
 			{
 				/* ONLY FIND NEW SOURCES IF OUR CURRENT LIST RUNS DRY */
 				if (this.targetSources.size() < this.MAX_WORLD_EDITS_PER_PROCESS + 10)
@@ -88,7 +88,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 					{
 						break;
 					}
-					
+
 					Iterator it = this.targetSources.iterator();
 					while (it.hasNext())
 					{
@@ -147,7 +147,8 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	{
 		LiquidPathFinder pathFinder = new LiquidPathFinder(this.worldObj, false, this.MAX_WORLD_EDITS_PER_PROCESS * 2);
 		pathFinder.init(new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ));
-		System.out.println("Nodes:" + pathFinder.nodes.size() + "Results:" + pathFinder.results.size());
+		// System.out.println("Nodes:" + pathFinder.nodes.size() + "Results:" +
+		// pathFinder.results.size());
 		for (Vector3 vec : pathFinder.results)
 		{
 			this.addVectorToQue(vec);
@@ -157,13 +158,13 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	public void doCleanup()
 	{
 		/* CALL UPDATE ON EDITED BLOCKS */
-		if (this.ticks % 40 == 0 && updateQue.size() > 0)
+		if (this.ticks % 100 == 0 && updateQue.size() > 0)
 		{
 			Iterator pp = this.updateQue.iterator();
 			while (pp.hasNext())
 			{
 				Vector3 vec = (Vector3) pp.next();
-				worldObj.markBlockForUpdate(vec.intX(), vec.intY(), vec.intZ());
+				worldObj.notifyBlocksOfNeighborChange(vec.intX(), vec.intY(), vec.intZ(), vec.getBlockID(this.worldObj));
 				pp.remove();
 			}
 		}
@@ -241,7 +242,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 			/* FIND ALL VALID BLOCKS ON LEVEL OR BELLOW */
 			LiquidPathFinder pathFinder = new LiquidPathFinder(this.worldObj, true, this.MAX_WORLD_EDITS_PER_PROCESS * 2);
 			pathFinder.init(new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ));
-
+			System.out.println("Nodes:" + pathFinder.nodes.size() + "Results:" + pathFinder.results.size());
 			/* START FILLING IN OR CHECKING IF CAN FILL AREA */
 			int fillable = 0;
 			for (Vector3 loc : pathFinder.results)
@@ -293,6 +294,32 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 			}
 		}
 		return drained;
+	}
+
+	/**
+	 * Sorter used by the fill method to maker sure its filling the lowest blocks closest to the
+	 * drain first
+	 */
+	public static void SortListClosestToOrLowest(ArrayList<Vector3> list, Vector3 target)
+	{
+		if (list.size() > 1) // check if the number of orders is larger than 1
+		{
+			for (int x = 0; x < list.size(); x++) // bubble sort outer loop
+			{
+				Vector3 vec = list.get(x);
+				double distance = Vector3.distance(vec, target);
+				for (int i = 0; i < list.size(); i++)
+				{
+					Vector3 pos = list.get(x);
+					if (Vector3.distance(pos, target) < distance)
+					{
+						list.set(x, pos);
+						list.set(i, vec);
+					}
+				}
+			}
+		}
+
 	}
 
 	@Override

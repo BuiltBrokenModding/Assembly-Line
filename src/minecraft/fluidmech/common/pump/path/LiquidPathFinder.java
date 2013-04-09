@@ -45,17 +45,13 @@ public class LiquidPathFinder
 	public boolean findNodes(Vector3 node)
 	{
 		this.nodes.add(node);
-		Block block = Block.blocksList[node.getBlockID(world)];
-		if (block != null)
+		if (this.fill && (node.getBlockID(world) == 0 || (FluidHelper.getLiquidFromBlockId(node.getBlockID(world)) != null && node.getBlockMetadata(world) != 0)))
 		{
-			if (this.fill && block.isBlockReplaceable(world, node.intX(), node.intY(), node.intZ()))
-			{
-				this.results.add(node);
-			}
-			else if (!this.fill && FluidHelper.isSourceBlock(world, node))
-			{
-				this.results.add(node);
-			}
+			this.results.add(node);
+		}
+		else if (!this.fill && FluidHelper.isSourceBlock(world, node))
+		{
+			this.results.add(node);
 		}
 
 		if (this.isDone(node))
@@ -92,14 +88,14 @@ public class LiquidPathFinder
 
 	public boolean isValidNode(Vector3 pos)
 	{
-		Block block = Block.blocksList[pos.getBlockID(world)];
+		int blockID = pos.getBlockID(world);
 		if (!this.fill)
 		{
 			return FluidHelper.getLiquidFromBlockId(pos.getBlockID(world)) != null;
 		}
 		else
 		{
-			return FluidHelper.getLiquidFromBlockId(pos.getBlockID(world)) != null || (block.isBlockReplaceable(world, pos.intX(), pos.intY(), pos.intZ()) && FluidHelper.getConnectedSources(world, pos) > 0);
+			return FluidHelper.getLiquidFromBlockId(pos.getBlockID(world)) != null || (blockID == 0 && FluidHelper.getConnectedSources(world, pos) > 0);
 		}
 	}
 
@@ -118,6 +114,10 @@ public class LiquidPathFinder
 	public LiquidPathFinder init(Vector3 startNode)
 	{
 		this.findNodes(startNode);
+		if (this.fill && this.isValidNode(startNode))
+		{
+
+		}
 		return this;
 	}
 
