@@ -2,7 +2,9 @@ package fluidmech.common.pump.path;
 
 import hydraulic.helpers.FluidHelper;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import net.minecraft.block.Block;
@@ -17,8 +19,8 @@ import universalelectricity.core.vector.Vector3;
 public class LiquidPathFinder
 {
 	private World world; /* MC WORLD */
-	public Set<Vector3> nodes; /* LOCATIONs THE PATH FINDER HAS GONE OVER */
-	public Set<Vector3> results;/* LOCATIONS THAT ARE VALID RESULTS */
+	public List<Vector3> nodes = new ArrayList<Vector3>(); /* LOCATIONs THE PATH FINDER HAS GONE OVER */
+	public List<Vector3> results = new ArrayList<Vector3>();/* LOCATIONS THAT ARE VALID RESULTS */
 	private boolean fill; /* ARE WE FILLING THE PATH OR DRAINING THE PATH */
 	private ForgeDirection priority; /* BASED ON fill -- WHICH DIRECTION WILL THE PATH GO FIRST */
 	private int resultLimit = 2000;
@@ -123,8 +125,8 @@ public class LiquidPathFinder
 
 	public LiquidPathFinder reset()
 	{
-		this.nodes = new HashSet<Vector3>();
-		this.results = new HashSet<Vector3>();
+		this.nodes.clear();
+		this.results.clear();
 		return this;
 	}
 }

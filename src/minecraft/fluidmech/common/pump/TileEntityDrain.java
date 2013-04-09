@@ -7,6 +7,8 @@ import hydraulic.helpers.FluidHelper;
 import hydraulic.prefab.tile.TileEntityFluidDevice;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -134,6 +136,16 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 								}
 							}
 						}
+						else if (FluidHelper.getLiquidFromBlockId(loc.getBlockID(this.worldObj)) != null && loc.getBlockMetadata(this.worldObj) != 0)
+						{
+							loc.setBlock(this.worldObj, 0, 0, 2);
+
+							/* ADD TO UPDATE QUE */
+							if (!this.updateQue.contains(loc))
+							{
+								this.updateQue.add(loc);
+							}
+						}
 					}
 				}
 			}
@@ -149,7 +161,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 		pathFinder.init(new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ));
 		// System.out.println("Nodes:" + pathFinder.nodes.size() + "Results:" +
 		// pathFinder.results.size());
-		for (Vector3 vec : pathFinder.results)
+		for (Vector3 vec : pathFinder.nodes)
 		{
 			this.addVectorToQue(vec);
 		}
@@ -161,11 +173,14 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 		if (this.ticks % 100 == 0 && updateQue.size() > 0)
 		{
 			Iterator pp = this.updateQue.iterator();
-			while (pp.hasNext())
+			int up = 0;
+			while (pp.hasNext() && up < this.MAX_WORLD_EDITS_PER_PROCESS)
 			{
 				Vector3 vec = (Vector3) pp.next();
-				worldObj.notifyBlocksOfNeighborChange(vec.intX(), vec.intY(), vec.intZ(), vec.getBlockID(this.worldObj));
+				worldObj.notifyBlockChange(vec.intX(), vec.intY(), vec.intZ(), vec.getBlockID(this.worldObj));
+				worldObj.notifyBlockOfNeighborChange(vec.intX(), vec.intY(), vec.intZ(), vec.getBlockID(this.worldObj));
 				pp.remove();
+				up++;
 			}
 		}
 		/* CLEANUP REQUEST MAP AND REMOVE INVALID TILES */
@@ -241,8 +256,46 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 
 			/* FIND ALL VALID BLOCKS ON LEVEL OR BELLOW */
 			LiquidPathFinder pathFinder = new LiquidPathFinder(this.worldObj, true, this.MAX_WORLD_EDITS_PER_PROCESS * 2);
-			pathFinder.init(new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ));
-			System.out.println("Nodes:" + pathFinder.nodes.size() + "Results:" + pathFinder.results.size());
+			final Vector3 faceVec = new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ);
+			pathFinder.init(faceVec);
+			
+			/* SORT RESULTS TO PUT THE LOWEST AND CLOSEST AT THE TOP */
+			try
+			{
+				if (pathFinder.results.size() > 1)
+				{
+					Collections.sort(pathFinder.results, new Comparator()
+					{
+						@Override
+						public int compare(Object o1, Object o2)
+						{
+							if (o1 == o2)
+							{
+								return 0;
+							}
+							Vector3 a = (Vector3) o1;
+							Vector3 b = (Vector3) o2;
+							double da = Vector3.distance(a, faceVec);
+							double db = Vector3.distance(b, faceVec);
+							;
+							if (a.equals(b))
+							{
+								return 0;
+							}
+							if (Integer.compare(a.intY(), b.intY()) != 0)
+							{
+								return Integer.compare(a.intY(), b.intY());
+							}
+							return Double.compare(da, db);
+						}
+					});
+				}
+			}
+			catch (Exception e)
+			{
+				System.out.println("FluidMech: Error sorting fill collection \n");
+				e.printStackTrace();
+			}
 			/* START FILLING IN OR CHECKING IF CAN FILL AREA */
 			int fillable = 0;
 			for (Vector3 loc : pathFinder.results)
@@ -294,32 +347,6 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 			}
 		}
 		return drained;
-	}
-
-	/**
-	 * Sorter used by the fill method to maker sure its filling the lowest blocks closest to the
-	 * drain first
-	 */
-	public static void SortListClosestToOrLowest(ArrayList<Vector3> list, Vector3 target)
-	{
-		if (list.size() > 1) // check if the number of orders is larger than 1
-		{
-			for (int x = 0; x < list.size(); x++) // bubble sort outer loop
-			{
-				Vector3 vec = list.get(x);
-				double distance = Vector3.distance(vec, target);
-				for (int i = 0; i < list.size(); i++)
-				{
-					Vector3 pos = list.get(x);
-					if (Vector3.distance(pos, target) < distance)
-					{
-						list.set(x, pos);
-						list.set(i, vec);
-					}
-				}
-			}
-		}
-
 	}
 
 	@Override
