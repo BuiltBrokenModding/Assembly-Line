@@ -214,6 +214,45 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 				mn.remove();
 			}
 		}
+		/* SORT RESULTS TO PUT THE HiGHEST AND FURTHEST AT THE TOP */
+		try
+		{
+			if (this.targetSources.size() > 1)
+			{
+				final Vector3 faceVec = new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ);
+				Collections.sort(this.targetSources, new Comparator()
+				{
+					@Override
+					public int compare(Object o1, Object o2)
+					{
+						if (o1 == o2)
+						{
+							return 0;
+						}
+						Vector3 a = (Vector3) o1;
+						Vector3 b = (Vector3) o2;
+						double da = Vector3.distance(a, faceVec);
+						double db = Vector3.distance(b, faceVec);
+						;
+						if (a.equals(b))
+						{
+							return 0;
+						}
+						if (Integer.compare(b.intY(), a.intY()) != 0)
+						{
+							return Integer.compare(b.intY(), a.intY());
+						}
+						return Double.compare(da, db);
+					}
+				});
+			}
+		}
+		catch (Exception e)
+		{
+			System.out.println("FluidMech: Error sorting fill collection \n");
+			e.printStackTrace();
+		}
+
 	}
 
 	@Override
@@ -258,7 +297,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 			LiquidPathFinder pathFinder = new LiquidPathFinder(this.worldObj, true, this.MAX_WORLD_EDITS_PER_PROCESS * 2);
 			final Vector3 faceVec = new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ);
 			pathFinder.init(faceVec);
-			
+
 			/* SORT RESULTS TO PUT THE LOWEST AND CLOSEST AT THE TOP */
 			try
 			{
