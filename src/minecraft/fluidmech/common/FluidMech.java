@@ -75,7 +75,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public class FluidMech extends DummyModContainer
 {
     // TODO Change in Version Release
-    public static final String VERSION = "0.3.5";
+    public static final String VERSION = "0.3.7";
 
     // Constants
     public static final String NAME = "Fluid_Mechanics";
