@@ -1,7 +1,6 @@
 package assemblyline.common.machine.belt;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
@@ -12,6 +11,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.implement.IRotatable;
@@ -273,7 +273,7 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	}
 
 	@Override
-	public ForgeDirection getDirection(World world, int x, int y, int z)
+	public ForgeDirection getDirection(IBlockAccess world, int x, int y, int z)
 	{
 		return ForgeDirection.getOrientation(this.getBlockMetadata());
 	}
