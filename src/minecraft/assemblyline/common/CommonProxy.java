@@ -1,7 +1,5 @@
 package assemblyline.common;
 
-import ic2.api.Items;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -11,7 +9,6 @@ import java.util.zip.ZipInputStream;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import universalelectricity.prefab.implement.IToolConfigurator;
 import universalelectricity.prefab.multiblock.TileEntityMulti;
 import assemblyline.common.block.TileEntityCrate;
 import assemblyline.common.machine.TileEntityManipulator;

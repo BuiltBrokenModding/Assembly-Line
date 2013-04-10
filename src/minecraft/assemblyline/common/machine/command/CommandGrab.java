@@ -2,8 +2,6 @@ package assemblyline.common.machine.command;
 
 import java.util.List;
 
-import assemblyline.common.machine.belt.TileEntityConveyorBelt;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import universalelectricity.core.vector.Vector3;
+import assemblyline.common.machine.belt.TileEntityConveyorBelt;
 
 /**
  * Used by arms to search for entities in a region

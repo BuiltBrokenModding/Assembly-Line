@@ -1,3 +1,8 @@
+/**
+ * This file is part of the public ComputerCraft API - http://www.computercraft.info
+ * Copyright Daniel Ratcliffe, 2011-2013. This API may be redistributed unmodified and in full only.
+ * For help using the API, and posting your mods, visit the forums at computercraft.info.
+ */
 
 package dan200.computer.api;
 
@@ -93,12 +98,6 @@ public interface IComputerAccess
 	public int getID();	
 
 	/**
-	 * Equivalent to queueEvent( String event, Object[] arguments ) with an empty arguments array.
-	 * @see	#queueEvent(String, Object[])
-	 */
-	public void queueEvent( String event );
-
-	/**
 	 * Causes an event to be raised on this computer, which the computer can respond to by calling
 	 * os.pullEvent(). This can be used to notify the computer when things happen in the world or to
 	 * this peripheral.
@@ -116,12 +115,12 @@ public interface IComputerAccess
 	public void queueEvent( String event, Object[] arguments );
 
 	/**
-	 * Get a string indicating which "side" of the computer the IComputerAccess this peripheral
-	 * has been created for is attached to, relative to the computers orientation. This can be used to
-	 * uniquely identify the peripheral when raising events or returning values to the computer.
-	 * The value returned by this function will be different for the IComputerAccess for each of
-	 * the peripherals attached to the computer.
-	 * @return One of "top", "bottom", "left", "right", "front" or "back"
+	 * Get a string, unique to the computer, by which the computer refers to this peripheral.
+	 * For directly attached peripherals this will be "left","right","front","back",etc, but
+	 * for peripherals attached remotely it will be different. It is good practice to supply
+	 * this string when raising events to the computer, so that the computer knows from
+	 * which peripheral the event came.
+	 * @return A string unique to the computer, but not globally.
 	 */
-	public String getAttachmentSide();
+	public String getAttachmentName();
 }

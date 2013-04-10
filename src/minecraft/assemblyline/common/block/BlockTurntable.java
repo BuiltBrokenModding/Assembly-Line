@@ -2,9 +2,6 @@ package assemblyline.common.block;
 
 import java.util.Random;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -21,6 +18,8 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.implement.IRotatable;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.TabAssemblyLine;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockTurntable extends BlockALMachine
 {

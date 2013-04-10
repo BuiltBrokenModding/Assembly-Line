@@ -1,6 +1,5 @@
 package assemblyline.common.block;
 
-import ic2.api.Items;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
