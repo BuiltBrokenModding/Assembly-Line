@@ -6,6 +6,7 @@
 !*.gitmodules
 !*.gitattributes
 !*.properties
+!*.xml
 /*/
 LICENSE.txt
 CHANGELOG
