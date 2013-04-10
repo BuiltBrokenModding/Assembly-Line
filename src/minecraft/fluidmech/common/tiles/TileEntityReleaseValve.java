@@ -1,10 +1,11 @@
-package fluidmech.common.machines;
+package fluidmech.common.tiles;
 
 import fluidmech.common.machines.pipes.TileEntityPipe;
 import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
 import hydraulic.api.IPipeConnection;
 import hydraulic.api.IReadOut;
+import hydraulic.fluidnetwork.IFluidNetworkPart;
 import hydraulic.helpers.connectionHelper;
 import hydraulic.prefab.tile.TileEntityFluidDevice;
 
@@ -25,8 +26,8 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements IPi
 	public boolean[] allowed = new boolean[ColorCode.values().length - 1];
 	public TileEntity[] connected = new TileEntity[6];
 
-	private List<TileEntityPipe> output = new ArrayList<TileEntityPipe>();
-	private List<ITankContainer> input = new ArrayList<ITankContainer>();
+	private List<IFluidNetworkPart> output = new ArrayList<IFluidNetworkPart>();
+	private ITankContainer[] input = new ITankContainer[6];
 
 	public boolean isPowered = false;
 
@@ -56,20 +57,20 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements IPi
 
 		if (!this.worldObj.isRemote && !isPowered && this.ticks % 20 == 0)
 		{
-			validateNBuildList();
+			this.validateNBuildList();
 			// start the draining process
-			if (this.input.size() > 0 && this.output.size() > 0)
+			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 			{
-				for (ITankContainer drainedTank : input)
+				ITankContainer drainedTank = input[dir.ordinal()];
+				if (drainedTank != null)
 				{
-					LiquidStack stack = drainedTank.drain(ForgeDirection.UNKNOWN, LiquidContainerRegistry.BUCKET_VOLUME, false);
+					LiquidStack stack = drainedTank.drain(dir.getOpposite(), LiquidContainerRegistry.BUCKET_VOLUME, false);
 					if (stack != null && stack.amount > 0)
 					{
-						TileEntityPipe inputPipe = this.findValidPipe(stack);
+						IFluidNetworkPart inputPipe = this.findValidPipe(stack);
 						if (inputPipe != null)
 						{
-							ILiquidTank pipeVolume = inputPipe.getTanks(ForgeDirection.UNKNOWN)[0];
-							int ammountFilled = inputPipe.getNetwork().addFluidToNetwork(this, stack, true);
+							int ammountFilled = inputPipe.getNetwork().addFluidToNetwork((TileEntity) drainedTank, stack, true);
 							drainedTank.drain(ForgeDirection.UNKNOWN, ammountFilled, true);
 						}
 					}
@@ -80,10 +81,10 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements IPi
 	}
 
 	/** used to find a valid pipe for filling of the liquid type */
-	public TileEntityPipe findValidPipe(LiquidStack stack)
+	public IFluidNetworkPart findValidPipe(LiquidStack stack)
 	{
 		// find normal color selective pipe first
-		for (TileEntityPipe pipe : output)
+		for (IFluidNetworkPart pipe : output)
 		{
 			if (pipe.fill(ForgeDirection.UNKNOWN, stack, false) > 0)
 			{
@@ -135,46 +136,35 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements IPi
 	{
 		// cleanup
 		this.connected = connectionHelper.getSurroundingTileEntities(worldObj, xCoord, yCoord, zCoord);
-		this.input.clear();
+		this.input = new ITankContainer[6];
 		this.output.clear();
 		// read surroundings
-		for (int i = 0; i < 6; i++)
+		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 		{
-			ForgeDirection dir = ForgeDirection.getOrientation(i);
-			TileEntity ent = connected[i];
-			if (ent instanceof TileEntityPipe)
+			TileEntity tileEntity = connected[dir.ordinal()];
+			if (tileEntity instanceof IFluidNetworkPart)
 			{
-				TileEntityPipe pipe = (TileEntityPipe) ent;
-				ILiquidTank tank = pipe.getTanks(ForgeDirection.UNKNOWN)[0];
-				if (this.isRestricted() && this.canConnect(pipe.getColor()))
-				{
-					connected[i] = null;
-				}
-				else if (tank.getLiquid() != null && tank.getLiquid().amount >= tank.getCapacity())
-				{
-					connected[i] = null;
-				}
-				else
+				IFluidNetworkPart pipe = (IFluidNetworkPart) tileEntity;
+				if (this.canConnect(pipe.getColor()))
 				{
 					this.output.add(pipe);
 				}
-			}
-			else if (ent instanceof ITankContainer)
-			{
-				ILiquidTank[] tanks = ((ITankContainer) connected[i]).getTanks(dir);
-				for (int t = 0; t < tanks.length; t++)
+				else
 				{
-					LiquidStack ll = tanks[t].getLiquid();
-					if (ll != null && ll.amount > 0 && ll.amount > 0)
-					{
-						this.input.add((ITankContainer) ent);
-						break;
-					}
+					this.connected[dir.ordinal()] = null;
+				}
+			}
+			else if (tileEntity instanceof ITankContainer)
+			{
+				ITankContainer tank = (ITankContainer) tileEntity;
+				if (tank != null && tank.drain(dir.getOpposite(), LiquidContainerRegistry.BUCKET_VOLUME, false) != null)
+				{
+					this.input[dir.ordinal()] = (ITankContainer) tileEntity;
 				}
 			}
 			else
 			{
-				connected[i] = null;
+				connected[dir.ordinal()] = null;
 			}
 		}
 	}

@@ -18,7 +18,7 @@ import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.prefab.block.BlockAdvanced;
 import fluidmech.client.render.BlockRenderHelper;
 import fluidmech.common.TabFluidMech;
-import fluidmech.common.machines.TileEntityTank;
+import fluidmech.common.tiles.TileEntityTank;
 
 public class BlockTank extends BlockAdvanced
 {

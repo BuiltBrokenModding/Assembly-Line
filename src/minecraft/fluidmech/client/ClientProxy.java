@@ -14,13 +14,13 @@ import fluidmech.client.render.RenderTank;
 import fluidmech.client.render.pipeextentions.RenderPipe;
 import fluidmech.common.CommonProxy;
 import fluidmech.common.FluidMech;
-import fluidmech.common.machines.TileEntityReleaseValve;
-import fluidmech.common.machines.TileEntitySink;
-import fluidmech.common.machines.TileEntityTank;
 import fluidmech.common.machines.mech.TileEntityGenerator;
 import fluidmech.common.machines.mech.TileEntityRod;
 import fluidmech.common.machines.pipes.TileEntityPipe;
 import fluidmech.common.pump.TileEntityStarterPump;
+import fluidmech.common.tiles.TileEntityReleaseValve;
+import fluidmech.common.tiles.TileEntitySink;
+import fluidmech.common.tiles.TileEntityTank;
 
 public class ClientProxy extends CommonProxy
 {

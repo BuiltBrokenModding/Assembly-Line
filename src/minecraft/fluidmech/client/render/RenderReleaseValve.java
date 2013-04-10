@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 import fluidmech.client.model.ModelLargePipe;
 import fluidmech.client.model.ModelReleaseValve;
 import fluidmech.common.FluidMech;
-import fluidmech.common.machines.TileEntityReleaseValve;
+import fluidmech.common.tiles.TileEntityReleaseValve;
 
 public class RenderReleaseValve extends TileEntitySpecialRenderer
 {

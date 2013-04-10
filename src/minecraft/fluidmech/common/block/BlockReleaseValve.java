@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import universalelectricity.prefab.block.BlockAdvanced;
 import fluidmech.common.FluidMech;
 import fluidmech.common.TabFluidMech;
-import fluidmech.common.machines.TileEntityReleaseValve;
+import fluidmech.common.tiles.TileEntityReleaseValve;
 
 public class BlockReleaseValve extends BlockAdvanced
 {

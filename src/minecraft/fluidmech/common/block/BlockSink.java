@@ -20,7 +20,7 @@ import universalelectricity.prefab.block.BlockAdvanced;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import fluidmech.client.render.BlockRenderHelper;
 import fluidmech.common.TabFluidMech;
-import fluidmech.common.machines.TileEntitySink;
+import fluidmech.common.tiles.TileEntitySink;
 
 public class BlockSink extends BlockAdvanced
 {

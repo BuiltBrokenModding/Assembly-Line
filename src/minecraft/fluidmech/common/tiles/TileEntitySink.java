@@ -1,4 +1,4 @@
-package fluidmech.common.machines;
+package fluidmech.common.tiles;
 
 import fluidmech.common.FluidMech;
 import hydraulic.api.ColorCode;

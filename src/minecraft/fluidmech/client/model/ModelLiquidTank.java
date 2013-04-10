@@ -9,8 +9,8 @@ package fluidmech.client.model;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.tileentity.TileEntity;
-import fluidmech.common.machines.TileEntityTank;
 import fluidmech.common.machines.pipes.TileEntityPipe;
+import fluidmech.common.tiles.TileEntityTank;
 
 public class ModelLiquidTank extends ModelBase
 {
