@@ -58,7 +58,7 @@
 		
 			<fileset dir="${dir.development}resources">
 				<exclude name=".git/**"/>
-                <exclude name="/models/"/>
+                <exclude name="**/*.tcn"/>
 				<exclude name="**/*.java"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
