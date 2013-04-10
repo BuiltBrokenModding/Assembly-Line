@@ -31,6 +31,7 @@ import hydraulic.api.ColorCode;
 import hydraulic.helpers.FluidHelper;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
@@ -55,8 +56,10 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.Mod.Metadata;
 import cpw.mods.fml.common.Mod.PostInit;
 import cpw.mods.fml.common.Mod.PreInit;
+import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -69,282 +72,328 @@ import cpw.mods.fml.common.registry.GameRegistry;
  * 
  * @author Rseifert
  */
-@ModstatInfo(prefix="MyPrefix")
-@Mod(modid = FluidMech.NAME, name = FluidMech.NAME, version = FluidMech.VERSION, dependencies = "after:BasicComponents")
+@ModstatInfo(prefix = "MyPrefix")
+@Mod(modid = FluidMech.MOD_ID, name = FluidMech.MOD_NAME, version = FluidMech.VERSION, dependencies = "after:BasicComponents", useMetadata = true)
 @NetworkMod(channels = { FluidMech.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
 public class FluidMech extends DummyModContainer
 {
-    // TODO Change in Version Release
-    public static final String VERSION = "0.3.7";
 
-    // Constants
-    public static final String NAME = "Fluid_Mechanics";
-    public static final String CHANNEL = "FluidMech";
+	// @Mod Prerequisites
+	public static final String MAJOR_VERSION = "@MAJOR@";
+	public static final String MINOR_VERSION = "@MINOR@";
+	public static final String REVIS_VERSION = "@REVIS@";
+	public static final String BUILD_VERSION = "@BUILD@";
 
-    public static final String RESOURCE_PATH = "/mods/fluidmech/";
-    public static final String TEXTURE_DIRECTORY = RESOURCE_PATH + "textures/";
+	// @Mod
+	public static final String MOD_ID = "Fluid_Mechanics";
+	public static final String MOD_NAME = "Fluid Mechanics";
+	public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + REVIS_VERSION + "." + BUILD_VERSION;
+	public static final String DEPENDENCIES = "after:UniversalElectricity;after:AtomicScience";
+	public static final boolean USE_METADATA = true;
+
+	// @NetworkMod
+	public static final boolean USES_CLIENT = true;
+	public static final boolean USES_SERVER = false;
+	public static final String CHANNEL = "FluidMech";
+
+	@Metadata(FluidMech.MOD_ID)
+	public static ModMetadata meta;
+
+	/* RESOURCE FILE PATHS */
+	public static final String RESOURCE_PATH = "/mods/fluidmech/";
+	public static final String TEXTURE_DIRECTORY = RESOURCE_PATH + "textures/";
 	public static final String GUI_DIRECTORY = TEXTURE_DIRECTORY + "gui/";
 	public static final String BLOCK_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + "blocks/";
 	public static final String ITEM_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + "items/";
 	public static final String MODEL_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + "models/";
-    
-    public static final String TEXTURE_NAME_PREFIX = "fluidmech:";
-    
-    public static final String LANGUAGE_PATH = RESOURCE_PATH + "languages/";
+	public static final String TEXTURE_NAME_PREFIX = "fluidmech:";
+	public static final String LANGUAGE_PATH = RESOURCE_PATH + "languages/";
 
-    private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US" };
+	/* SUPPORTED LANGS */
+	private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US" };
 
-    public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir() + "/UniversalElectricity/", NAME + ".cfg"));
+	/* CONFIG FILE */
+	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir() + "/UniversalElectricity/", FluidMech.MOD_NAME + ".cfg"));
 
-    public final static int BLOCK_ID_PREFIX = 3100;
-    public final static int ITEM_ID_PREFIX = 13200;
+	/* START IDS */
+	public final static int BLOCK_ID_PREFIX = 3100;
+	public final static int ITEM_ID_PREFIX = 13200;
 
-    public static Block blockPipe;
-    public static Block blockTank;
-    public static Block blockMachine;
-    public static Block blockRod;
-    public static Block blockGenerator;
-    public static Block blockReleaseValve;
-    public static Block blockSink;
-    public static Block blockDrain;
-    public static Block blockConPump;
+	/* BLOCKS */
+	public static Block blockPipe;
+	public static Block blockTank;
+	public static Block blockMachine;
+	public static Block blockRod;
+	public static Block blockGenerator;
+	public static Block blockReleaseValve;
+	public static Block blockSink;
+	public static Block blockDrain;
+	public static Block blockConPump;
+	public static Block blockWasteLiquid;
 
-    public static Block blockWasteLiquid;
+	/* ITEMS */
+	public static Item itemParts;
+	public static Item itemGauge;
 
-    public static LiquidStack liquidSteam;
+	@SidedProxy(clientSide = "fluidmech.client.ClientProxy", serverSide = "fluidmech.common.CommonProxy")
+	public static CommonProxy proxy;
 
-    public static Item itemParts;
-    // public static Item itemPipes;
-    public static Item itemGauge;
+	@Instance(FluidMech.MOD_NAME)
+	public static FluidMech instance;
 
-    @SidedProxy(clientSide = "fluidmech.client.ClientProxy", serverSide = "fluidmech.common.CommonProxy")
-    public static CommonProxy proxy;
+	/* LOGGER - EXTENDS FORGE'S LOG SYSTEM */
+	public static Logger FMLog = Logger.getLogger(FluidMech.MOD_NAME);
 
-    @Instance(NAME)
-    public static FluidMech instance;
+	@PreInit
+	public void preInit(FMLPreInitializationEvent event)
+	{
+		/* LOGGER SETUP */
+		FMLog.setParent(FMLLog.getLogger());
+		FMLog.info("Initializing...");
 
-    public static Logger FMLog = Logger.getLogger(NAME);
+		/* EVENT BUS */
+		MinecraftForge.EVENT_BUS.register(new FluidHelper());
 
-    @PreInit
-    public void preInit(FMLPreInitializationEvent event)
-    {
-        FMLog.setParent(FMLLog.getLogger());
-        FMLog.info("Initializing...");
-        MinecraftForge.EVENT_BUS.register(new FluidHelper());
+		instance = this;
 
-        instance = this;
-        Modstats.instance().getReporter().registerMod(this);
-        CONFIGURATION.load();
+		/* UPDATE NOTIFIER */
+		Modstats.instance().getReporter().registerMod(this);
 
-        // Blocks
-        blockPipe = new BlockPipe(this.CONFIGURATION.getBlock("Pipes", BLOCK_ID_PREFIX).getInt());
-        blockMachine = new BlockPumpMachine(this.CONFIGURATION.getBlock("Machines", BLOCK_ID_PREFIX + 1).getInt());
-        blockRod = new BlockRod(this.CONFIGURATION.getBlock("Mechanical Rod", BLOCK_ID_PREFIX + 3).getInt());
-        blockGenerator = new BlockGenerator((this.CONFIGURATION.getBlock("Generator", BLOCK_ID_PREFIX + 4).getInt()));
-        blockReleaseValve = new BlockReleaseValve((this.CONFIGURATION.getBlock("Release Valve", BLOCK_ID_PREFIX + 5).getInt()));
-        blockTank = new BlockTank(this.CONFIGURATION.getBlock("Tank", BLOCK_ID_PREFIX + 6).getInt());
-        blockWasteLiquid = new BlockWasteLiquid(this.CONFIGURATION.getBlock("WasteLiquid", BLOCK_ID_PREFIX + 7).getInt());
-        blockSink = new BlockSink(this.CONFIGURATION.getBlock("Sink", BLOCK_ID_PREFIX + 8).getInt());
-        blockDrain = new BlockDrain(this.CONFIGURATION.getBlock("Drain", BLOCK_ID_PREFIX + 9).getInt());
-        blockConPump = new BlockConstructionPump(this.CONFIGURATION.getBlock("ConstructionPump", BLOCK_ID_PREFIX + 10).getInt());
+		/* CONFIGS */
+		CONFIGURATION.load();
 
-        // Items
-        itemParts = new ItemParts(this.CONFIGURATION.getItem("Parts", ITEM_ID_PREFIX).getInt());
+		/* BLOCK DECLARATION -- CONFIG LOADER */
+		blockPipe = new BlockPipe(this.CONFIGURATION.getBlock("Pipes", BLOCK_ID_PREFIX).getInt());
+		blockMachine = new BlockPumpMachine(this.CONFIGURATION.getBlock("Machines", BLOCK_ID_PREFIX + 1).getInt());
+		blockRod = new BlockRod(this.CONFIGURATION.getBlock("Mechanical Rod", BLOCK_ID_PREFIX + 3).getInt());
+		blockGenerator = new BlockGenerator((this.CONFIGURATION.getBlock("Generator", BLOCK_ID_PREFIX + 4).getInt()));
+		blockReleaseValve = new BlockReleaseValve((this.CONFIGURATION.getBlock("Release Valve", BLOCK_ID_PREFIX + 5).getInt()));
+		blockTank = new BlockTank(this.CONFIGURATION.getBlock("Tank", BLOCK_ID_PREFIX + 6).getInt());
+		blockWasteLiquid = new BlockWasteLiquid(this.CONFIGURATION.getBlock("WasteLiquid", BLOCK_ID_PREFIX + 7).getInt());
+		blockSink = new BlockSink(this.CONFIGURATION.getBlock("Sink", BLOCK_ID_PREFIX + 8).getInt());
+		blockDrain = new BlockDrain(this.CONFIGURATION.getBlock("Drain", BLOCK_ID_PREFIX + 9).getInt());
+		blockConPump = new BlockConstructionPump(this.CONFIGURATION.getBlock("ConstructionPump", BLOCK_ID_PREFIX + 10).getInt());
 
-        // Valve item
-        itemGauge = new ItemTools(this.CONFIGURATION.getItem("PipeGuage", ITEM_ID_PREFIX + 3).getInt());
+		/* ITEM DECLARATION -- COFNGI LOADER */
+		itemParts = new ItemParts(this.CONFIGURATION.getItem("Parts", ITEM_ID_PREFIX).getInt());
+		itemGauge = new ItemTools(this.CONFIGURATION.getItem("PipeGuage", ITEM_ID_PREFIX + 3).getInt());
 
-        CONFIGURATION.save();
+		CONFIGURATION.save();/* CONFIG END */
 
-        proxy.preInit();
+		proxy.preInit();
 
-        // block registry
-        GameRegistry.registerBlock(blockPipe, ItemBlockPipe.class, "lmPipe");
-        GameRegistry.registerBlock(blockReleaseValve, ItemBlockReleaseValve.class, "eValve");
-        GameRegistry.registerBlock(blockRod, "mechRod");
-        GameRegistry.registerBlock(blockGenerator, "lmGen");
-        GameRegistry.registerBlock(blockMachine, ItemBlockLiquidMachine.class, "lmMachines");
-        GameRegistry.registerBlock(blockTank, ItemBlockTank.class, "lmTank");
-        GameRegistry.registerBlock(blockSink, "lmSink");
-        GameRegistry.registerBlock(blockDrain, "lmDrain");
-        GameRegistry.registerBlock(blockConPump, "lmConPump");
+		/* BLOCK REGISTER CALLS */
+		GameRegistry.registerBlock(blockPipe, ItemBlockPipe.class, "lmPipe");
+		GameRegistry.registerBlock(blockReleaseValve, ItemBlockReleaseValve.class, "eValve");
+		GameRegistry.registerBlock(blockRod, "mechRod");
+		GameRegistry.registerBlock(blockGenerator, "lmGen");
+		GameRegistry.registerBlock(blockMachine, ItemBlockLiquidMachine.class, "lmMachines");
+		GameRegistry.registerBlock(blockTank, ItemBlockTank.class, "lmTank");
+		GameRegistry.registerBlock(blockSink, "lmSink");
+		GameRegistry.registerBlock(blockDrain, "lmDrain");
+		GameRegistry.registerBlock(blockConPump, "lmConPump");
 
-    }
+	}
 
-    @Init
-    public void Init(FMLInitializationEvent event)
-    {
-        FMLog.info("Loading...");
-        proxy.Init();
-        // TileEntities
-        GameRegistry.registerTileEntity(TileEntityPipe.class, "lmPipeTile");
-        GameRegistry.registerTileEntity(TileEntityStarterPump.class, "lmPumpTile");
-        GameRegistry.registerTileEntity(TileEntityRod.class, "lmRodTile");
-        GameRegistry.registerTileEntity(TileEntityReleaseValve.class, "lmeValve");
-        GameRegistry.registerTileEntity(TileEntityTank.class, "lmTank");
-        GameRegistry.registerTileEntity(TileEntityGenerator.class, "lmGen");
-        GameRegistry.registerTileEntity(TileEntitySink.class, "lmSink");
-        GameRegistry.registerTileEntity(TileEntityDrain.class, "lmDrain");
-        GameRegistry.registerTileEntity(TileEntityConstructionPump.class, "lmConPump");
-        // Pipe Extention TileEntities
-        GameRegistry.registerTileEntity(TileEntityPipeWindow.class, "lmPipeWindow");
-        
-        FMLog.info(" Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
+	@Init
+	public void Init(FMLInitializationEvent event)
+	{
+		/* MCMOD.INFO FILE BUILDER? */
+		meta.modId = FluidMech.MOD_ID;
+		meta.name = FluidMech.MOD_NAME;
+		meta.description = "Simple liquid and mechanical handling support system. Adds pumps, pipes, tanks, and tools to work with liquids";
 
-    }
+		meta.url = "http://universalelectricity.com/?m=fluid_mechanics";
 
-    @PostInit
-    public void PostInit(FMLPostInitializationEvent event)
-    {
-        FMLog.info("Finalizing...");
-        proxy.postInit();
-        TabFluidMech.setItemStack(new ItemStack(blockPipe, 1, 4));
-        // generator
-        CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(this.blockGenerator, 1), new Object[] {
-                "@T@", "OVO", "@T@",
-                'T', new ItemStack(FluidMech.blockRod, 1),
-                '@', "plateSteel",
-                'O', "basicCircuit",
-                'V', "motor" }));
-        // pipe gauge
-        GameRegistry.addRecipe(new ItemStack(this.itemGauge, 1, 0), new Object[] {
-                "TVT", " T ",
-                'V', new ItemStack(itemParts, 1, Parts.Valve.ordinal()),
-                'T', new ItemStack(itemParts, 1, Parts.Iron.ordinal()) });
-        // iron tube
-        GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Iron.ordinal()), new Object[] {
-                "@@@",
-                '@', Item.ingotIron });
-        // bronze tube
-        CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(itemParts, 4, Parts.Bronze.ordinal()), new Object[] {
-                "@@@",
-                '@', "ingotBronze" }));
-        // obby tube
-        GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Obby.ordinal()), new Object[] {
-                "@@@",
-                '@', Block.obsidian });
-        // nether tube
-        GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Nether.ordinal()), new Object[] {
-                "N@N",
-                'N', Block.netherrack,
-                '@', new ItemStack(itemParts, 2, Parts.Obby.ordinal()) });
-        // seal
-        GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Seal.ordinal()), new Object[] {
-                "@@", "@@",
-                '@', Item.leather });
-        // slime steal
-        GameRegistry.addShapelessRecipe(new ItemStack(itemParts, 1, Parts.SlimeSeal.ordinal()), new Object[] {
-                new ItemStack(itemParts, 1, Parts.Seal.ordinal()),
-                new ItemStack(Item.slimeBall, 1) });
-        // part valve
-        GameRegistry.addRecipe(new ItemStack(itemParts, 1, Parts.Valve.ordinal()), new Object[] {
-                "T@T",
-                'T', new ItemStack(itemParts, 1, Parts.Iron.ordinal()),
-                '@', Block.lever });
+		meta.logoFile = "/EELogo.png";
+		meta.version = FluidMech.VERSION;
+		meta.authorList = Arrays.asList(new String[] { "DarkGuardsman AKA DarkCow" });
+		meta.credits = "Please see the website.";
+		meta.autogenerated = false;
 
-        // unfinished tank
-        GameRegistry.addRecipe(new ItemStack(itemParts, 1, Parts.Tank.ordinal()), new Object[] {
-                " @ ", "@ @", " @ ",
-                '@', Item.ingotIron });
-        // mechanical rod
-        GameRegistry.addRecipe(new ItemStack(blockRod, 1), new Object[] {
-                "I@I",
-                'I', Item.ingotIron,
-                '@', new ItemStack(itemParts, 1, Parts.Iron.ordinal()) });
+		/* LOGGER */
+		FMLog.info("Loading...");
+		proxy.Init();
 
-        // Iron Pipe
-        GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 1, 15), new Object[] {
-                new ItemStack(itemParts, 1, Parts.Iron.ordinal()),
-                new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
-        for (int it = 0; it < 15; it++)
-        {
-            if (it != ColorCode.WHITE.ordinal() && it != ColorCode.ORANGE.ordinal())
-            {
-                GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, it), new Object[] {
-                        new ItemStack(blockPipe, 1, 15),
-                        new ItemStack(blockPipe, 1, 15),
-                        new ItemStack(blockPipe, 1, 15),
-                        new ItemStack(blockPipe, 1, 15),
-                        new ItemStack(Item.dyePowder, 1, it) });
-            }
-        }
-        // steam pipes
-        GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 1, ColorCode.ORANGE.ordinal()), new Object[] {
-                new ItemStack(itemParts, 1, Parts.Bronze.ordinal()),
-                new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
-        // milk pipes
-        GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, ColorCode.WHITE.ordinal()), new Object[] {
-                new ItemStack(blockPipe, 1, 15),
-                new ItemStack(blockPipe, 1, 15),
-                new ItemStack(blockPipe, 1, 15),
-                new ItemStack(blockPipe, 1, 15),
-                new ItemStack(Item.dyePowder, 1, 15) });
-        // steam tank
-        GameRegistry.addShapelessRecipe(new ItemStack(blockTank, 1, ColorCode.ORANGE.ordinal()), new Object[] {
-                new ItemStack(itemParts, 1, Parts.Tank.ordinal()),
-                new ItemStack(itemParts, 1, Parts.Seal.ordinal()),
-                new ItemStack(itemParts, 1, Parts.Bronze.ordinal()),
-                new ItemStack(itemParts, 1, Parts.Bronze.ordinal()) });
-        // lava tank
-        GameRegistry.addRecipe(new ItemStack(blockTank, 1, ColorCode.RED.ordinal()), new Object[] {
-                "N@N", "@ @", "N@N",
-                'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()),
-                '@', Block.obsidian,
-                'N', Block.netherrack });
-        // water tank
-        GameRegistry.addRecipe(new ItemStack(blockTank, 1, ColorCode.BLUE.ordinal()), new Object[] {
-                "@G@", "STS", "@G@",
-                'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()),
-                '@', Block.planks,
-                'G', Block.glass,
-                'S', new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
-        // milk tank
-        GameRegistry.addRecipe(new ItemStack(blockTank, 1, ColorCode.WHITE.ordinal()), new Object[] {
-                "W@W", "WTW", "W@W",
-                'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()),
-                '@', Block.stone,
-                'W', Block.planks });
-        // generic Tank
-        GameRegistry.addRecipe(new ItemStack(blockTank, 1, ColorCode.NONE.ordinal()), new Object[] {
-                "@@@", "@T@", "@@@",
-                'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()),
-                '@', Block.stone });
+		/* TILE ENTITY REGISTER CALLS */
+		GameRegistry.registerTileEntity(TileEntityPipe.class, "lmPipeTile");
+		GameRegistry.registerTileEntity(TileEntityStarterPump.class, "lmPumpTile");
+		GameRegistry.registerTileEntity(TileEntityRod.class, "lmRodTile");
+		GameRegistry.registerTileEntity(TileEntityReleaseValve.class, "lmeValve");
+		GameRegistry.registerTileEntity(TileEntityTank.class, "lmTank");
+		GameRegistry.registerTileEntity(TileEntityGenerator.class, "lmGen");
+		GameRegistry.registerTileEntity(TileEntitySink.class, "lmSink");
+		GameRegistry.registerTileEntity(TileEntityDrain.class, "lmDrain");
+		GameRegistry.registerTileEntity(TileEntityConstructionPump.class, "lmConPump");
+		GameRegistry.registerTileEntity(TileEntityPipeWindow.class, "lmPipeWindow");
 
-        // pump
-        CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(blockMachine, 1, 0), new Object[] {
-                "C@C", "BMB", "@X@",
-                '@', "plateSteel",
-                'X', new ItemStack(blockPipe, 1, ColorCode.NONE.ordinal()),
-                'B', new ItemStack(itemParts, 1, Parts.Valve.ordinal()),
-                'C', "basicCircuit",
-                'M', "motor" }));
+		/* LANG LOADING */
+		FMLog.info(" Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
 
-        // release valve
-        GameRegistry.addRecipe(new ItemStack(blockReleaseValve, 1), new Object[] {
-                "RPR", "PVP", "RPR",
-                'P', new ItemStack(blockPipe, 1, 15),
-                'V', new ItemStack(itemParts, 1, Parts.Valve.ordinal()),
-                'R', Item.redstone });
-        // sink
-        GameRegistry.addRecipe(new ItemStack(blockSink, 1), new Object[] {
-                "I I", "SIS", "SPS",
-                'P', new ItemStack(blockPipe, 1, 15),
-                'I', Item.ingotIron,
-                'S', Block.stone });
+		/* MOD CHECK */
+		if (!Loader.isModLoaded("BasicComponents"))
+		{
+			// FMLog.fine("");
+		}
 
-        // reg ore directory for parts
-        OreDictionary.registerOre("bronzeTube", new ItemStack(itemParts, 1, Parts.Bronze.ordinal()));
-        OreDictionary.registerOre("ironTube", new ItemStack(itemParts, 1, Parts.Iron.ordinal()));
-        OreDictionary.registerOre("netherTube", new ItemStack(itemParts, 1, Parts.Nether.ordinal()));
-        OreDictionary.registerOre("obbyTube", new ItemStack(itemParts, 1, Parts.Obby.ordinal()));
-        OreDictionary.registerOre("leatherSeal", new ItemStack(itemParts, 1, Parts.Seal.ordinal()));
-        OreDictionary.registerOre("leatherSlimeSeal", new ItemStack(itemParts, 1, Parts.SlimeSeal.ordinal()));
-        OreDictionary.registerOre("valvePart", new ItemStack(itemParts, 1, Parts.Valve.ordinal()));
-        OreDictionary.registerOre("bronzeTube", new ItemStack(itemParts, 1, Parts.Bronze.ordinal()));
-        OreDictionary.registerOre("unfinishedTank", new ItemStack(itemParts, 1, Parts.Tank.ordinal()));
-        // add Default Liquids to current list, done last to let other mods use
-        // there liquid data first if used
-        LiquidStack waste = LiquidDictionary.getOrCreateLiquid("Waste", new LiquidStack(FluidMech.blockWasteLiquid, 1));
-        FMLog.info("Done Loading");
-    }
+		/* ORE DIRECTORY REGISTER */
+		OreDictionary.registerOre("bronzeTube", new ItemStack(itemParts, 1, Parts.Bronze.ordinal()));
+		OreDictionary.registerOre("ironTube", new ItemStack(itemParts, 1, Parts.Iron.ordinal()));
+		OreDictionary.registerOre("netherTube", new ItemStack(itemParts, 1, Parts.Nether.ordinal()));
+		OreDictionary.registerOre("obbyTube", new ItemStack(itemParts, 1, Parts.Obby.ordinal()));
+		OreDictionary.registerOre("leatherSeal", new ItemStack(itemParts, 1, Parts.Seal.ordinal()));
+		OreDictionary.registerOre("leatherSlimeSeal", new ItemStack(itemParts, 1, Parts.SlimeSeal.ordinal()));
+		OreDictionary.registerOre("valvePart", new ItemStack(itemParts, 1, Parts.Valve.ordinal()));
+		OreDictionary.registerOre("bronzeTube", new ItemStack(itemParts, 1, Parts.Bronze.ordinal()));
+		OreDictionary.registerOre("unfinishedTank", new ItemStack(itemParts, 1, Parts.Tank.ordinal()));
+		
+		/* LIQUID DIRECTORY CALL */
+		LiquidStack waste = LiquidDictionary.getOrCreateLiquid("Waste", new LiquidStack(FluidMech.blockWasteLiquid, 1));
+
+	}
+
+	@PostInit
+	public void PostInit(FMLPostInitializationEvent event)
+	{
+		/* LOGGER */
+		FMLog.info("Finalizing...");
+		proxy.postInit();
+		/* TAB ITEM SET */
+		TabFluidMech.setItemStack(new ItemStack(blockPipe, 1, 4));
+
+		/* RECIPES */
+
+		// generator
+		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(this.blockGenerator, 1), new Object[] {
+			"@T@", 
+			"OVO", 
+			"@T@", 
+			'T', new ItemStack(FluidMech.blockRod, 1), 
+			'@', "plateSteel", 
+			'O', "basicCircuit", 
+			'V', "motor" }));
+		// pipe gauge
+		GameRegistry.addRecipe(new ItemStack(this.itemGauge, 1, 0), new Object[] {
+			"TVT", 
+			" T ", 
+			'V', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 
+			'T', new ItemStack(itemParts, 1, Parts.Iron.ordinal()) });
+		// iron tube
+		GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Iron.ordinal()), new Object[] { 
+			"@@@", 
+			'@', Item.ingotIron });
+		// bronze tube
+		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(itemParts, 4, Parts.Bronze.ordinal()), new Object[] { 
+			"@@@", 
+			'@', "ingotBronze" }));
+		// obby tube
+		GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Obby.ordinal()), new Object[] { 
+			"@@@", 
+			'@', Block.obsidian });
+		// nether tube
+		GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Nether.ordinal()), new Object[] { 
+			"N@N", 
+			'N', Block.netherrack, 
+			'@', new ItemStack(itemParts, 2, Parts.Obby.ordinal()) });
+		// seal
+		GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Seal.ordinal()), new Object[] { 
+			"@@",
+			"@@", 
+			'@', Item.leather });
+		// slime steal
+		GameRegistry.addShapelessRecipe(new ItemStack(itemParts, 1, Parts.SlimeSeal.ordinal()), new Object[] { new ItemStack(itemParts, 1, Parts.Seal.ordinal()), new ItemStack(Item.slimeBall, 1) });
+		// part valve
+		GameRegistry.addRecipe(new ItemStack(itemParts, 1, Parts.Valve.ordinal()), new Object[] { 
+			"T@T", 
+			'T', new ItemStack(itemParts, 1, Parts.Iron.ordinal()), 
+			'@', Block.lever });
+
+		// unfinished tank
+		GameRegistry.addRecipe(new ItemStack(itemParts, 1, Parts.Tank.ordinal()), new Object[] { 
+			" @ ", 
+			"@ @", 
+			" @ ", 
+			'@', Item.ingotIron });
+		// mechanical rod
+		GameRegistry.addRecipe(new ItemStack(blockRod, 1), new Object[] { 
+			"I@I", 
+			'I', Item.ingotIron, 
+			'@', new ItemStack(itemParts, 1, Parts.Iron.ordinal()) });
+
+		// Iron Pipe
+		GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 1, 15), new Object[] { new ItemStack(itemParts, 1, Parts.Iron.ordinal()), new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
+		for (int it = 0; it < 15; it++)
+		{
+			if (it != ColorCode.WHITE.ordinal() && it != ColorCode.ORANGE.ordinal())
+			{
+				GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, it), new Object[] { new ItemStack(blockPipe, 1, 15), new ItemStack(blockPipe, 1, 15), new ItemStack(blockPipe, 1, 15), new ItemStack(blockPipe, 1, 15), new ItemStack(Item.dyePowder, 1, it) });
+			}
+		}
+		// steam pipes
+		GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 1, ColorCode.ORANGE.ordinal()), new Object[] { new ItemStack(itemParts, 1, Parts.Bronze.ordinal()), new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
+		// milk pipes
+		GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, ColorCode.WHITE.ordinal()), new Object[] { new ItemStack(blockPipe, 1, 15), new ItemStack(blockPipe, 1, 15), new ItemStack(blockPipe, 1, 15), new ItemStack(blockPipe, 1, 15), new ItemStack(Item.dyePowder, 1, 15) });
+		// lava tank
+		GameRegistry.addRecipe(new ItemStack(blockTank, 1, ColorCode.RED.ordinal()), new Object[] {
+			"N@N", 
+			"@ @", 
+			"N@N", 
+			'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()), 
+			'@', Block.obsidian, 'N', Block.netherrack });
+		// water tank
+		GameRegistry.addRecipe(new ItemStack(blockTank, 1, ColorCode.BLUE.ordinal()), new Object[] { 
+			"@G@", 
+			"STS", 
+			"@G@", 
+			'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()), 
+			'@', Block.planks, 
+			'G', Block.glass, 
+			'S', new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
+		// milk tank
+		GameRegistry.addRecipe(new ItemStack(blockTank, 1, ColorCode.WHITE.ordinal()), new Object[] { 
+			"W@W", 
+			"WTW", 
+			"W@W", 
+			'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()), 
+			'@', Block.stone, 
+			'W', Block.planks });
+		// generic Tank
+		GameRegistry.addRecipe(new ItemStack(blockTank, 1, ColorCode.NONE.ordinal()), new Object[] { 
+			"@@@", 
+			"@T@", 
+			"@@@", 
+			'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()), 
+			'@', Block.stone });
+
+		// pump
+		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(blockMachine, 1, 0), new Object[] { 
+			"C@C", 
+			"BMB", 
+			"@X@", 
+			'@', "plateSteel", 
+			'X', new ItemStack(blockPipe, 1, ColorCode.NONE.ordinal()), 
+			'B', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 
+			'C', "basicCircuit", 
+			'M', "motor" }));
+
+		// release valve
+		GameRegistry.addRecipe(new ItemStack(blockReleaseValve, 1), new Object[] { 
+			"RPR", 
+			"PVP", 
+			"RPR", 
+			'P', new ItemStack(blockPipe, 1, 15), 
+			'V', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 
+			'R', Item.redstone });
+		// sink
+		GameRegistry.addRecipe(new ItemStack(blockSink, 1), new Object[] { 
+			"I I", 
+			"SIS", 
+			"SPS", 
+			'P', new ItemStack(blockPipe, 1, 15), 
+			'I', Item.ingotIron, 
+			'S', Block.stone });
+
+		
+		FMLog.info("Done Loading");
+	}
 }
