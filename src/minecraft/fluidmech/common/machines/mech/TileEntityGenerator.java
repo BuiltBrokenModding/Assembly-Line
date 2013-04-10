@@ -199,12 +199,6 @@ public class TileEntityGenerator extends TileEntityElectrical implements IPacket
 	}
 
 	@Override
-	public int getForce()
-	{
-		return this.force;
-	}
-
-	@Override
 	public boolean canOutputSide(ForgeDirection side)
 	{
 		if (side == facing)

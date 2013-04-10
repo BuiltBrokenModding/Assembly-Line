@@ -12,8 +12,6 @@ public interface IForce
 	 */
 	public int getForceSide(ForgeDirection side);
 
-	public int getForce();
-
 	/**
 	 * 
 	 * @param side

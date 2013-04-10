@@ -117,13 +117,6 @@ public class TileEntityRod extends TileEntity implements IPacketReceiver, IForce
 	}
 
 	@Override
-	public int getForce()
-	{
-		// TODO Auto-generated method stub
-		return this.currentForce;
-	}
-
-	@Override
 	public String getMeterReading(EntityPlayer user, ForgeDirection side)
 	{
 		return this.appliedForce + "N Out " + this.currentForce + "N In";
