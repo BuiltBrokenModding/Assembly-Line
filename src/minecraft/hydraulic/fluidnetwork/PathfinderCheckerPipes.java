@@ -7,7 +7,6 @@ import java.util.Set;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.block.IConnectionProvider;
 import universalelectricity.core.path.IPathCallBack;
 import universalelectricity.core.path.Pathfinder;
 import universalelectricity.core.vector.Vector3;
@@ -17,7 +16,7 @@ import universalelectricity.core.vector.Vector3;
  */
 public class PathfinderCheckerPipes extends Pathfinder
 {
-	public PathfinderCheckerPipes(final World world, final IConnectionProvider targetConnector, final IConnectionProvider... ignoreConnector)
+	public PathfinderCheckerPipes(final World world, final IFluidNetworkPart targetConnector, final IFluidNetworkPart... ignoreConnector)
 	{
 		super(new IPathCallBack()
 		{

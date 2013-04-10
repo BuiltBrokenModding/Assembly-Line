@@ -2,6 +2,7 @@ package hydraulic.fluidnetwork;
 
 import hydraulic.api.IColorCoded;
 import hydraulic.api.IPipeConnection;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
@@ -13,7 +14,7 @@ import universalelectricity.core.block.IConnectionProvider;
  * that doesn't change the over all network pressure. So pipes, gauges, tubes, buffers, decor
  * blocks.
  */
-public interface IFluidNetworkPart extends IPipeConnection, IColorCoded, IConnectionProvider, ITankContainer
+public interface IFluidNetworkPart extends IPipeConnection, IColorCoded, ITankContainer
 {
 	/**
 	 * gets the devices pressure from a given side for input
@@ -51,5 +52,19 @@ public interface IFluidNetworkPart extends IPipeConnection, IColorCoded, IConnec
 	public ILiquidTank getTank();
 	
 	public void setTankContent(LiquidStack stack);
+	
+	/**
+	 * Gets a list of all the connected TileEntities that this conductor is connected to. The
+	 * array's length should be always the 6 adjacent wires.
+	 * 
+	 * @return
+	 */
+	public TileEntity[] getAdjacentConnections();
+
+	/**
+	 * Instantly refreshes all connected blocks around the conductor, recalculating the connected
+	 * blocks.
+	 */
+	public void updateAdjacentConnections();
 
 }

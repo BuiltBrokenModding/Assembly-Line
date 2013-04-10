@@ -113,13 +113,6 @@ public class TileEntityEndPipe extends TileEntityFluidDevice implements INetwork
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection direction)
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
 	{
 		// TODO Auto-generated method stub

@@ -19,7 +19,6 @@ import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.liquids.LiquidTank;
-import universalelectricity.core.block.IConnectionProvider;
 import universalelectricity.core.path.Pathfinder;
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.common.FMLLog;
@@ -562,7 +561,7 @@ public class HydraulicNetwork
 		// as needed
 	}
 
-	public void splitNetwork(World world, IConnectionProvider splitPoint)
+	public void splitNetwork(World world, IFluidNetworkPart splitPoint)
 	{
 		if (splitPoint instanceof TileEntity)
 		{
@@ -578,15 +577,15 @@ public class HydraulicNetwork
 			{
 				TileEntity connectedBlockA = connectedBlocks[i];
 
-				if (connectedBlockA instanceof IConnectionProvider)
+				if (connectedBlockA instanceof IFluidNetworkPart)
 				{
 					for (int pipeCount = 0; pipeCount < connectedBlocks.length; pipeCount++)
 					{
 						final TileEntity connectedBlockB = connectedBlocks[pipeCount];
 
-						if (connectedBlockA != connectedBlockB && connectedBlockB instanceof IConnectionProvider)
+						if (connectedBlockA != connectedBlockB && connectedBlockB instanceof IFluidNetworkPart)
 						{
-							Pathfinder finder = new PathfinderCheckerPipes(world, (IConnectionProvider) connectedBlockB, splitPoint);
+							Pathfinder finder = new PathfinderCheckerPipes(world, (IFluidNetworkPart) connectedBlockB, splitPoint);
 							finder.init(new Vector3(connectedBlockA));
 
 							if (finder.results.size() > 0)

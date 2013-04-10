@@ -90,8 +90,6 @@ public class FluidMech extends DummyModContainer
 	public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + REVIS_VERSION + "." + BUILD_VERSION;
 
 	// @NetworkMod
-	public static final boolean USES_CLIENT = true;
-	public static final boolean USES_SERVER = false;
 	public static final String CHANNEL = "FluidMech";
 
 	@Metadata(FluidMech.MOD_ID)

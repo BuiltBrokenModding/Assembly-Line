@@ -579,12 +579,6 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection dir)
-	{
-		return worldObj.getBlockTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetZ, zCoord + dir.offsetY) instanceof IFluidNetworkPart;
-	}
-
-	@Override
 	public int getTankSize()
 	{
 		return LiquidContainerRegistry.BUCKET_VOLUME * 2;
