@@ -1,7 +1,8 @@
-*.bat
-*.sh
-*.db
-*.exe
+*.*
+!*.java
+!*.txt
+!*.png
+!*.tcn
 /*/
 LICENSE.txt
 CHANGELOG
