@@ -1,15 +1,8 @@
 package fluidmech.common.block.liquids;
 
-import static net.minecraftforge.common.ForgeDirection.UP;
-
 import java.util.Random;
 
-import universalelectricity.core.vector.Vector3;
-import universalelectricity.core.vector.VectorHelper;
-
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockStairs;
-import net.minecraft.block.BlockStep;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
@@ -17,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.core.vector.Vector3;
 
 /**
  * Block prefab for gas that will spread and decay in the world as time goes on. Useful for filling

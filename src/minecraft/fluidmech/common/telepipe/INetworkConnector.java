@@ -1,9 +1,8 @@
 package fluidmech.common.telepipe;
 
-import java.util.List;
-
-import hydraulic.api.IPipeConnection;
 import hydraulic.fluidnetwork.IFluidNetworkPart;
+
+import java.util.List;
 
 /**
  * Used by IFluidNetworkPart to signal this block is remotely connected to another network. It will

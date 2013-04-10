@@ -1,9 +1,9 @@
 package hydraulic.api;
 
-import fluidmech.common.pump.TileEntityConstructionPump;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidStack;
+import fluidmech.common.pump.TileEntityConstructionPump;
 
 /**
  * Interface to make or use the TileEntityDrain. In real life a drain would do nothing but act as an

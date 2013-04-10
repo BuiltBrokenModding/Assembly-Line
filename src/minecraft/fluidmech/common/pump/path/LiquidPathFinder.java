@@ -3,14 +3,10 @@ package fluidmech.common.pump.path;
 import hydraulic.helpers.FluidHelper;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.core.vector.Vector3;
 
 /**

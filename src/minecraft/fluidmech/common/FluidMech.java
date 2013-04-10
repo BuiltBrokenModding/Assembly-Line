@@ -88,8 +88,6 @@ public class FluidMech extends DummyModContainer
 	public static final String MOD_ID = "Fluid_Mechanics";
 	public static final String MOD_NAME = "Fluid Mechanics";
 	public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + REVIS_VERSION + "." + BUILD_VERSION;
-	public static final String DEPENDENCIES = "after:UniversalElectricity;after:AtomicScience";
-	public static final boolean USE_METADATA = true;
 
 	// @NetworkMod
 	public static final boolean USES_CLIENT = true;

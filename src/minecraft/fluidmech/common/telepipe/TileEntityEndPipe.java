@@ -1,5 +1,9 @@
 package fluidmech.common.telepipe;
 
+import hydraulic.api.ColorCode;
+import hydraulic.fluidnetwork.HydraulicNetwork;
+import hydraulic.prefab.tile.TileEntityFluidDevice;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -9,9 +13,6 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
-import hydraulic.api.ColorCode;
-import hydraulic.fluidnetwork.HydraulicNetwork;
-import hydraulic.prefab.tile.TileEntityFluidDevice;
 
 public class TileEntityEndPipe extends TileEntityFluidDevice implements INetworkConnector
 {
