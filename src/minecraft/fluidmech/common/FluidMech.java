@@ -258,10 +258,11 @@ public class FluidMech extends DummyModContainer
 		/* LOGGER */
 		FMLog.info("Finalizing...");
 		proxy.postInit();
+		
 		/* TAB ITEM SET */
 		TabFluidMech.setItemStack(new ItemStack(blockPipe, 1, 4));
 
-		/* RECIPES */
+		/*/******** RECIPES **************/
 
 		// generator
 		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(this.blockGenerator, 1), new Object[] {
@@ -301,7 +302,9 @@ public class FluidMech extends DummyModContainer
 			"@@", 
 			'@', Item.leather });
 		// slime steal
-		GameRegistry.addShapelessRecipe(new ItemStack(itemParts, 1, Parts.SlimeSeal.ordinal()), new Object[] { new ItemStack(itemParts, 1, Parts.Seal.ordinal()), new ItemStack(Item.slimeBall, 1) });
+		GameRegistry.addShapelessRecipe(new ItemStack(itemParts, 1, Parts.SlimeSeal.ordinal()), new Object[] {
+			new ItemStack(itemParts, 1, Parts.Seal.ordinal()), 
+			new ItemStack(Item.slimeBall, 1) });
 		// part valve
 		GameRegistry.addRecipe(new ItemStack(itemParts, 1, Parts.Valve.ordinal()), new Object[] { 
 			"T@T", 
@@ -321,18 +324,36 @@ public class FluidMech extends DummyModContainer
 			'@', new ItemStack(itemParts, 1, Parts.Iron.ordinal()) });
 
 		// Iron Pipe
-		GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 1, 15), new Object[] { new ItemStack(itemParts, 1, Parts.Iron.ordinal()), new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
-		for (int it = 0; it < 15; it++)
+		GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 1, 15), new Object[] {
+			new ItemStack(itemParts, 1, Parts.Iron.ordinal()), 
+			new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
+		
+		// steam pipes
+		GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 1, ColorCode.ORANGE.ordinal()), new Object[] {
+			new ItemStack(itemParts, 1, Parts.Bronze.ordinal()), 
+			new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
+		
+		for (int pipeMeta = 0; pipeMeta < 15; pipeMeta++)
 		{
-			if (it != ColorCode.WHITE.ordinal() && it != ColorCode.ORANGE.ordinal())
+			if (pipeMeta != ColorCode.WHITE.ordinal() && pipeMeta != ColorCode.ORANGE.ordinal())
 			{
-				GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, it), new Object[] { new ItemStack(blockPipe, 1, 15), new ItemStack(blockPipe, 1, 15), new ItemStack(blockPipe, 1, 15), new ItemStack(blockPipe, 1, 15), new ItemStack(Item.dyePowder, 1, it) });
+				GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, pipeMeta), new Object[] {
+					new ItemStack(blockPipe, 1, 15), 
+					new ItemStack(blockPipe, 1, 15), 
+					new ItemStack(blockPipe, 1, 15), 
+					new ItemStack(blockPipe, 1, 15), 
+					new ItemStack(Item.dyePowder, 1, pipeMeta) });
 			}
 		}
-		// steam pipes
-		GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 1, ColorCode.ORANGE.ordinal()), new Object[] { new ItemStack(itemParts, 1, Parts.Bronze.ordinal()), new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
+		
 		// milk pipes
-		GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, ColorCode.WHITE.ordinal()), new Object[] { new ItemStack(blockPipe, 1, 15), new ItemStack(blockPipe, 1, 15), new ItemStack(blockPipe, 1, 15), new ItemStack(blockPipe, 1, 15), new ItemStack(Item.dyePowder, 1, 15) });
+		GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, ColorCode.WHITE.ordinal()), new Object[] {
+			new ItemStack(blockPipe, 1, 15), 
+			new ItemStack(blockPipe, 1, 15), 
+			new ItemStack(blockPipe, 1, 15), 
+			new ItemStack(blockPipe, 1, 15), 
+			new ItemStack(Item.dyePowder, 1, 15) });
+		
 		// lava tank
 		GameRegistry.addRecipe(new ItemStack(blockTank, 1, ColorCode.RED.ordinal()), new Object[] {
 			"N@N", 
