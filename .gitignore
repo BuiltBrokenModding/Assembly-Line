@@ -10,6 +10,7 @@ LICENSE.txt
 CHANGELOG
 
 !/src/
+!/buildFiles/
 /src/minecraft/*
 !/src/minecraft/assemblyline/
 !/src/minecraft/dark/
