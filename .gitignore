@@ -3,6 +3,9 @@
 !*.txt
 !*.png
 !*.tcn
+!*.gitmodules
+!*.gitattributes
+!*.properties
 /*/
 LICENSE.txt
 CHANGELOG
