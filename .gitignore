@@ -15,7 +15,6 @@ CHANGELOG
 /src/minecraft/*
 !/src/minecraft/fluidmech/
 !/src/minecraft/hydraulic/
-/src/minecraft/universalelectricity/
 !/src/minecraft/org/
 !/resources/
 !info.txt
