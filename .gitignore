@@ -12,9 +12,7 @@ CHANGELOG
 !/src/minecraft/hydraulic/
 !/src/minecraft/universalelectricity/
 !/src/minecraft/org/
-!/resources/models/
-!/resources/mods/fluidmech/
-!/resources/mods/mcmod.info
+!/resources/
 !info.txt
 !publish.bat
 !publish_obf.bat
