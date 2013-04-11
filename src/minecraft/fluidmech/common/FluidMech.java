@@ -31,6 +31,7 @@ import hydraulic.api.ColorCode;
 import hydraulic.helpers.FluidHelper;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
@@ -95,6 +96,9 @@ public class FluidMech extends DummyModContainer
 	@Metadata(FluidMech.MOD_ID)
 	public static ModMetadata meta;
 
+	/* LIQUID TYPES */
+	public static ArrayList<Integer> liquidTypes = new ArrayList();
+
 	/* RESOURCE FILE PATHS */
 	public static final String RESOURCE_PATH = "/mods/fluidmech/";
 	public static final String TEXTURE_DIRECTORY = RESOURCE_PATH + "textures/";
@@ -139,6 +143,18 @@ public class FluidMech extends DummyModContainer
 
 	/* LOGGER - EXTENDS FORGE'S LOG SYSTEM */
 	public static Logger FMLog = Logger.getLogger(FluidMech.MOD_NAME);
+	
+	static
+	{
+		/* EVENT BUS (done here to ensure all fluid events are caught)*/
+		MinecraftForge.EVENT_BUS.register(new FluidEvents());
+		
+		/* ADD DEFAULT LIQUIDS */
+		liquidTypes.add(ColorCode.get(ColorCode.BLUE).ordinal());
+		liquidTypes.add(ColorCode.get(ColorCode.RED).ordinal());
+		liquidTypes.add(ColorCode.get(ColorCode.NONE).ordinal());
+		liquidTypes.add(ColorCode.get(ColorCode.WHITE).ordinal());
+	}
 
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event)
@@ -149,7 +165,7 @@ public class FluidMech extends DummyModContainer
 
 		/* EVENT BUS */
 		MinecraftForge.EVENT_BUS.register(new FluidHelper());
-
+		
 		instance = this;
 
 		/* UPDATE NOTIFIER */
