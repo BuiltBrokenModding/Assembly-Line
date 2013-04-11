@@ -12,6 +12,7 @@ LICENSE.txt
 CHANGELOG
 
 !/src/
+!/Universal-Electricity/
 /src/minecraft/*
 !/src/minecraft/fluidmech/
 !/src/minecraft/hydraulic/
