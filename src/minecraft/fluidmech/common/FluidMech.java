@@ -199,7 +199,7 @@ public class FluidMech extends DummyModContainer
 		meta.name = FluidMech.MOD_NAME;
 		meta.description = "Simple liquid and mechanical handling support system. Adds pumps, pipes, tanks, and tools to work with liquids";
 
-		meta.url = "http://universalelectricity.com/?m=fluid_mechanics";
+		meta.url = "http://www.universalelectricity.com/fluidmechanics";
 
 		meta.logoFile = "/EELogo.png";
 		meta.version = FluidMech.VERSION;
