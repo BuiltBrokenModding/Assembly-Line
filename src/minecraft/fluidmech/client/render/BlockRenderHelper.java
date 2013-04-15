@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import fluidmech.client.model.ModelConstructionPump;
 import fluidmech.client.model.ModelGearRod;
 import fluidmech.client.model.ModelGenerator;
 import fluidmech.client.model.ModelLargePipe;
@@ -29,6 +30,7 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
     private ModelLiquidTank tank = new ModelLiquidTank();
     private ModelReleaseValve valve = new ModelReleaseValve();
     private ModelSink sink = new ModelSink();
+    private ModelConstructionPump conPump = new ModelConstructionPump();
 
     @Override
     public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
@@ -79,6 +81,16 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
             GL11.glRotatef(180f, 0f, 0f, 1f);
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(FluidMech.MODEL_TEXTURE_DIRECTORY + "mechanical/Generator.png"));
             modelGen.render(null);
+            GL11.glPopMatrix();
+        }
+        if (block.blockID == FluidMech.blockConPump.blockID && metadata < 4)
+        {
+            GL11.glPushMatrix();
+            GL11.glTranslatef((float) 0.0F, (float) 1.1F, (float) 0.0F);
+            GL11.glRotatef(180f, 0f, 0f, 1f);
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(FluidMech.MODEL_TEXTURE_DIRECTORY + "ConstructionPump.png"));
+            conPump.render(0.0725F);
+            conPump.renderMotor(0.0725F);
             GL11.glPopMatrix();
         }
     }

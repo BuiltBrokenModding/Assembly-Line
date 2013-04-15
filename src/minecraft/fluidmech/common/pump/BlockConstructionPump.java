@@ -12,11 +12,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.block.BlockAdvanced;
+import fluidmech.client.render.BlockRenderHelper;
 import fluidmech.common.FluidMech;
 import fluidmech.common.TabFluidMech;
 
@@ -78,13 +80,18 @@ public class BlockConstructionPump extends BlockAdvanced
 	@Override
 	public boolean renderAsNormalBlock()
 	{
-		return true;
+		return false;
 	}
 
 	@Override
 	public int damageDropped(int meta)
 	{
 		return 0;
+	}
+	@Override
+	public int getRenderType()
+	{
+		return BlockRenderHelper.instance.renderID;
 	}
 
 	@Override
@@ -114,7 +121,18 @@ public class BlockConstructionPump extends BlockAdvanced
 	{
 		if (!world.isRemote)
 		{
-			world.setBlockMetadataWithNotify(x, y, z, side, 3);
+			int meta = world.getBlockMetadata(x, y, z);
+			int angle = MathHelper.floor_double((entityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+
+			if (meta == 3)
+			{
+				world.setBlockMetadataWithNotify(x, y, z, 0, 3);
+			}
+			else
+			{
+				world.setBlockMetadataWithNotify(x, y, z, meta + 1, 3);
+			}
+			
 			TileEntity entity = world.getBlockTileEntity(x, y, z);
 			if(entity instanceof TileEntityConstructionPump)
 			{

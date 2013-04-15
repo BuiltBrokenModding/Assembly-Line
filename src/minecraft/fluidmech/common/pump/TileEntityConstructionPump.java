@@ -23,6 +23,7 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 	/* Fake Internal Tank */
 	private LiquidTank fakeTank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
 	private int liquidRequest = 5;
+	public int rotation = 0;
 
 	@Override
 	public void initiate()
@@ -52,11 +53,16 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 	@Override
 	public void updateEntity()
 	{
-		// this.wattsReceived >= this.WATTS_PER_TICK
 		if (!worldObj.isRemote)
 		{
-			if (this.ticks % 10 == 0) // TODO add electric Drain
+			if (this.ticks % 10 == 0 && this.wattsReceived >= this.WATTS_PER_TICK) // TODO add electric Drain
 			{
+				this.wattsReceived -= this.WATTS_PER_TICK;
+				this.rotation += 1;
+				if(rotation >= 7)
+				{
+					rotation = 0;
+				}
 				boolean called = false;
 
 				TileEntity inputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), getFacing(true));
