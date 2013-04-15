@@ -28,10 +28,8 @@ import fluidmech.common.tiles.TileEntityReleaseValve;
 import fluidmech.common.tiles.TileEntitySink;
 import fluidmech.common.tiles.TileEntityTank;
 import hydraulic.api.ColorCode;
-import hydraulic.helpers.FluidHelper;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
@@ -96,9 +94,6 @@ public class FluidMech extends DummyModContainer
 	@Metadata(FluidMech.MOD_ID)
 	public static ModMetadata meta;
 
-	/* LIQUID TYPES */
-	public static ArrayList<Integer> liquidTypes = new ArrayList();
-
 	/* RESOURCE FILE PATHS */
 	public static final String RESOURCE_PATH = "/mods/fluidmech/";
 	public static final String TEXTURE_DIRECTORY = RESOURCE_PATH + "textures/";
@@ -143,17 +138,11 @@ public class FluidMech extends DummyModContainer
 
 	/* LOGGER - EXTENDS FORGE'S LOG SYSTEM */
 	public static Logger FMLog = Logger.getLogger(FluidMech.MOD_NAME);
-	
+
 	static
 	{
-		/* EVENT BUS (done here to ensure all fluid events are caught)*/
+		/* EVENT BUS (done here to ensure all fluid events are caught) */
 		MinecraftForge.EVENT_BUS.register(new FluidEvents());
-		
-		/* ADD DEFAULT LIQUIDS */
-		liquidTypes.add(ColorCode.get(ColorCode.BLUE).ordinal());
-		liquidTypes.add(ColorCode.get(ColorCode.RED).ordinal());
-		liquidTypes.add(ColorCode.get(ColorCode.NONE).ordinal());
-		liquidTypes.add(ColorCode.get(ColorCode.WHITE).ordinal());
 	}
 
 	@PreInit
@@ -162,9 +151,6 @@ public class FluidMech extends DummyModContainer
 		/* LOGGER SETUP */
 		FMLog.setParent(FMLLog.getLogger());
 		FMLog.info("Initializing...");
-
-		/* EVENT BUS */
-		MinecraftForge.EVENT_BUS.register(new FluidHelper());
 		
 		instance = this;
 
@@ -213,13 +199,7 @@ public class FluidMech extends DummyModContainer
 		/* MCMOD.INFO FILE BUILDER? */
 		meta.modId = FluidMech.MOD_ID;
 		meta.name = FluidMech.MOD_NAME;
-		meta.description = "Fluid Mechanics is a combination between supporting fluid handling and mechanical energy handling system. " +
-				"Its designed to help other mods move there liquids to using a universal liquid system managed by forge. As a bonus it also " +
-				"comes with suppot to help mods move energy by means of mechanics motion along rods. This mod by itself doesn't offer much more " +
-				"than basic liquid storage, placement, and removel in the world. Its suggest to download other mods that supports the Forge's " +
-				"LiquidDictionary. " +
-				"\n" +
-				"Suported Power systems: Universal Electric ";
+		meta.description = "Fluid Mechanics is a combination between supporting fluid handling and mechanical energy handling system. " + "Its designed to help other mods move there liquids to using a universal liquid system managed by forge. As a bonus it also " + "comes with suppot to help mods move energy by means of mechanics motion along rods. This mod by itself doesn't offer much more " + "than basic liquid storage, placement, and removel in the world. Its suggest to download other mods that supports the Forge's " + "LiquidDictionary. " + "\n" + "Suported Power systems: Universal Electric ";
 
 		meta.url = "http://www.universalelectricity.com/fluidmechanics";
 
@@ -264,7 +244,7 @@ public class FluidMech extends DummyModContainer
 		OreDictionary.registerOre("valvePart", new ItemStack(itemParts, 1, Parts.Valve.ordinal()));
 		OreDictionary.registerOre("bronzeTube", new ItemStack(itemParts, 1, Parts.Bronze.ordinal()));
 		OreDictionary.registerOre("unfinishedTank", new ItemStack(itemParts, 1, Parts.Tank.ordinal()));
-		
+
 		/* LIQUID DIRECTORY CALL */
 		LiquidStack waste = LiquidDictionary.getOrCreateLiquid("Waste", new LiquidStack(FluidMech.blockWasteLiquid, 1));
 
@@ -276,163 +256,70 @@ public class FluidMech extends DummyModContainer
 		/* LOGGER */
 		FMLog.info("Finalizing...");
 		proxy.postInit();
-		
+
 		/* TAB ITEM SET */
 		TabFluidMech.setItemStack(new ItemStack(blockPipe, 1, 4));
 
-		/*/******** RECIPES **************/
+		/* /******** RECIPES ************* */
 
 		// generator
-		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(this.blockGenerator, 1), new Object[] {
-			"@T@", 
-			"OVO", 
-			"@T@", 
-			'T', new ItemStack(FluidMech.blockRod, 1), 
-			'@', "plateSteel", 
-			'O', "basicCircuit", 
-			'V', "motor" }));
+		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(this.blockGenerator, 1), new Object[] { "@T@", "OVO", "@T@", 'T', new ItemStack(FluidMech.blockRod, 1), '@', "plateSteel", 'O', "basicCircuit", 'V', "motor" }));
 		// pipe gauge
-		GameRegistry.addRecipe(new ItemStack(this.itemGauge, 1, 0), new Object[] {
-			"TVT", 
-			" T ", 
-			'V', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 
-			'T', new ItemStack(itemParts, 1, Parts.Iron.ordinal()) });
+		GameRegistry.addRecipe(new ItemStack(this.itemGauge, 1, 0), new Object[] { "TVT", " T ", 'V', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 'T', new ItemStack(itemParts, 1, Parts.Iron.ordinal()) });
 		// iron tube
-		GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Iron.ordinal()), new Object[] { 
-			"@@@", 
-			'@', Item.ingotIron });
+		GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Iron.ordinal()), new Object[] { "@@@", '@', Item.ingotIron });
 		// bronze tube
-		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(itemParts, 4, Parts.Bronze.ordinal()), new Object[] { 
-			"@@@", 
-			'@', "ingotBronze" }));
+		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(itemParts, 4, Parts.Bronze.ordinal()), new Object[] { "@@@", '@', "ingotBronze" }));
 		// obby tube
-		GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Obby.ordinal()), new Object[] { 
-			"@@@", 
-			'@', Block.obsidian });
+		GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Obby.ordinal()), new Object[] { "@@@", '@', Block.obsidian });
 		// nether tube
-		GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Nether.ordinal()), new Object[] { 
-			"N@N", 
-			'N', Block.netherrack, 
-			'@', new ItemStack(itemParts, 2, Parts.Obby.ordinal()) });
+		GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Nether.ordinal()), new Object[] { "N@N", 'N', Block.netherrack, '@', new ItemStack(itemParts, 2, Parts.Obby.ordinal()) });
 		// seal
-		GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Seal.ordinal()), new Object[] { 
-			"@@",
-			"@@", 
-			'@', Item.leather });
+		GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Seal.ordinal()), new Object[] { "@@", "@@", '@', Item.leather });
 		// slime steal
-		GameRegistry.addShapelessRecipe(new ItemStack(itemParts, 1, Parts.SlimeSeal.ordinal()), new Object[] {
-			new ItemStack(itemParts, 1, Parts.Seal.ordinal()), 
-			new ItemStack(Item.slimeBall, 1) });
+		GameRegistry.addShapelessRecipe(new ItemStack(itemParts, 1, Parts.SlimeSeal.ordinal()), new Object[] { new ItemStack(itemParts, 1, Parts.Seal.ordinal()), new ItemStack(Item.slimeBall, 1) });
 		// part valve
-		GameRegistry.addRecipe(new ItemStack(itemParts, 1, Parts.Valve.ordinal()), new Object[] { 
-			"T@T", 
-			'T', new ItemStack(itemParts, 1, Parts.Iron.ordinal()), 
-			'@', Block.lever });
+		GameRegistry.addRecipe(new ItemStack(itemParts, 1, Parts.Valve.ordinal()), new Object[] { "T@T", 'T', new ItemStack(itemParts, 1, Parts.Iron.ordinal()), '@', Block.lever });
 
 		// unfinished tank
-		GameRegistry.addRecipe(new ItemStack(itemParts, 1, Parts.Tank.ordinal()), new Object[] { 
-			" @ ", 
-			"@ @", 
-			" @ ", 
-			'@', Item.ingotIron });
+		GameRegistry.addRecipe(new ItemStack(itemParts, 1, Parts.Tank.ordinal()), new Object[] { " @ ", "@ @", " @ ", '@', Item.ingotIron });
 		// mechanical rod
-		GameRegistry.addRecipe(new ItemStack(blockRod, 1), new Object[] { 
-			"I@I", 
-			'I', Item.ingotIron, 
-			'@', new ItemStack(itemParts, 1, Parts.Iron.ordinal()) });
+		GameRegistry.addRecipe(new ItemStack(blockRod, 1), new Object[] { "I@I", 'I', Item.ingotIron, '@', new ItemStack(itemParts, 1, Parts.Iron.ordinal()) });
 
 		// Iron Pipe
-		GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 1, 15), new Object[] {
-			new ItemStack(itemParts, 1, Parts.Iron.ordinal()), 
-			new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
-		
+		GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 1, 15), new Object[] { new ItemStack(itemParts, 1, Parts.Iron.ordinal()), new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
+
 		// steam pipes
-		GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 1, ColorCode.ORANGE.ordinal()), new Object[] {
-			new ItemStack(itemParts, 1, Parts.Bronze.ordinal()), 
-			new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
-		
+		GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 1, ColorCode.ORANGE.ordinal()), new Object[] { new ItemStack(itemParts, 1, Parts.Bronze.ordinal()), new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
+
 		for (int pipeMeta = 0; pipeMeta < 15; pipeMeta++)
 		{
 			if (pipeMeta != ColorCode.WHITE.ordinal() && pipeMeta != ColorCode.ORANGE.ordinal())
 			{
-				GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, pipeMeta), new Object[] {
-					new ItemStack(blockPipe, 1, 15), 
-					new ItemStack(blockPipe, 1, 15), 
-					new ItemStack(blockPipe, 1, 15), 
-					new ItemStack(blockPipe, 1, 15), 
-					new ItemStack(Item.dyePowder, 1, pipeMeta) });
+				GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, pipeMeta), new Object[] { new ItemStack(blockPipe, 1, 15), new ItemStack(blockPipe, 1, 15), new ItemStack(blockPipe, 1, 15), new ItemStack(blockPipe, 1, 15), new ItemStack(Item.dyePowder, 1, pipeMeta) });
 			}
 		}
-		
+
 		// milk pipes
-		GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, ColorCode.WHITE.ordinal()), new Object[] {
-			new ItemStack(blockPipe, 1, 15), 
-			new ItemStack(blockPipe, 1, 15), 
-			new ItemStack(blockPipe, 1, 15), 
-			new ItemStack(blockPipe, 1, 15), 
-			new ItemStack(Item.dyePowder, 1, 15) });
-		
+		GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, ColorCode.WHITE.ordinal()), new Object[] { new ItemStack(blockPipe, 1, 15), new ItemStack(blockPipe, 1, 15), new ItemStack(blockPipe, 1, 15), new ItemStack(blockPipe, 1, 15), new ItemStack(Item.dyePowder, 1, 15) });
+
 		// lava tank
-		GameRegistry.addRecipe(new ItemStack(blockTank, 1, ColorCode.RED.ordinal()), new Object[] {
-			"N@N", 
-			"@ @", 
-			"N@N", 
-			'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()), 
-			'@', Block.obsidian, 'N', Block.netherrack });
+		GameRegistry.addRecipe(new ItemStack(blockTank, 1, ColorCode.RED.ordinal()), new Object[] { "N@N", "@ @", "N@N", 'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()), '@', Block.obsidian, 'N', Block.netherrack });
 		// water tank
-		GameRegistry.addRecipe(new ItemStack(blockTank, 1, ColorCode.BLUE.ordinal()), new Object[] { 
-			"@G@", 
-			"STS", 
-			"@G@", 
-			'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()), 
-			'@', Block.planks, 
-			'G', Block.glass, 
-			'S', new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
+		GameRegistry.addRecipe(new ItemStack(blockTank, 1, ColorCode.BLUE.ordinal()), new Object[] { "@G@", "STS", "@G@", 'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()), '@', Block.planks, 'G', Block.glass, 'S', new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
 		// milk tank
-		GameRegistry.addRecipe(new ItemStack(blockTank, 1, ColorCode.WHITE.ordinal()), new Object[] { 
-			"W@W", 
-			"WTW", 
-			"W@W", 
-			'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()), 
-			'@', Block.stone, 
-			'W', Block.planks });
+		GameRegistry.addRecipe(new ItemStack(blockTank, 1, ColorCode.WHITE.ordinal()), new Object[] { "W@W", "WTW", "W@W", 'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()), '@', Block.stone, 'W', Block.planks });
 		// generic Tank
-		GameRegistry.addRecipe(new ItemStack(blockTank, 1, ColorCode.NONE.ordinal()), new Object[] { 
-			"@@@", 
-			"@T@", 
-			"@@@", 
-			'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()), 
-			'@', Block.stone });
+		GameRegistry.addRecipe(new ItemStack(blockTank, 1, ColorCode.NONE.ordinal()), new Object[] { "@@@", "@T@", "@@@", 'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()), '@', Block.stone });
 
 		// pump
-		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(blockMachine, 1, 0), new Object[] { 
-			"C@C", 
-			"BMB", 
-			"@X@", 
-			'@', "plateSteel", 
-			'X', new ItemStack(blockPipe, 1, ColorCode.NONE.ordinal()), 
-			'B', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 
-			'C', "basicCircuit", 
-			'M', "motor" }));
+		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(blockMachine, 1, 0), new Object[] { "C@C", "BMB", "@X@", '@', "plateSteel", 'X', new ItemStack(blockPipe, 1, ColorCode.NONE.ordinal()), 'B', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 'C', "basicCircuit", 'M', "motor" }));
 
 		// release valve
-		GameRegistry.addRecipe(new ItemStack(blockReleaseValve, 1), new Object[] { 
-			"RPR", 
-			"PVP", 
-			"RPR", 
-			'P', new ItemStack(blockPipe, 1, 15), 
-			'V', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 
-			'R', Item.redstone });
+		GameRegistry.addRecipe(new ItemStack(blockReleaseValve, 1), new Object[] { "RPR", "PVP", "RPR", 'P', new ItemStack(blockPipe, 1, 15), 'V', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 'R', Item.redstone });
 		// sink
-		GameRegistry.addRecipe(new ItemStack(blockSink, 1), new Object[] { 
-			"I I", 
-			"SIS", 
-			"SPS", 
-			'P', new ItemStack(blockPipe, 1, 15), 
-			'I', Item.ingotIron, 
-			'S', Block.stone });
+		GameRegistry.addRecipe(new ItemStack(blockSink, 1), new Object[] { "I I", "SIS", "SPS", 'P', new ItemStack(blockPipe, 1, 15), 'I', Item.ingotIron, 'S', Block.stone });
 
-		
 		FMLog.info("Done Loading");
 	}
 }

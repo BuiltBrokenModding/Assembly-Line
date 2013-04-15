@@ -17,6 +17,7 @@ import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.prefab.block.BlockAdvanced;
 import fluidmech.client.render.BlockRenderHelper;
+import fluidmech.common.FluidEvents;
 import fluidmech.common.FluidMech;
 import fluidmech.common.TabFluidMech;
 import fluidmech.common.tiles.TileEntityTank;
@@ -158,9 +159,12 @@ public class BlockTank extends BlockAdvanced
 	@Override
 	public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
-		for (Integer i : FluidMech.liquidTypes)
+		for (int i = 0; i < 16; i++)
 		{
-			par3List.add(new ItemStack(par1, 1, i));
+			if (FluidEvents.hasRestrictedStack(i))
+			{
+				par3List.add(new ItemStack(par1, 1, i));
+			}
 		}
 	}
 }
