@@ -16,6 +16,7 @@ import fluidmech.common.machines.mech.BlockRod;
 import fluidmech.common.machines.mech.TileEntityGenerator;
 import fluidmech.common.machines.mech.TileEntityRod;
 import fluidmech.common.machines.pipes.BlockPipe;
+import fluidmech.common.machines.pipes.TileEntityGenericPipe;
 import fluidmech.common.machines.pipes.TileEntityPipe;
 import fluidmech.common.machines.pipes.TileEntityPipeWindow;
 import fluidmech.common.pump.BlockConstructionPump;
@@ -117,6 +118,7 @@ public class FluidMech extends DummyModContainer
 
 	/* BLOCKS */
 	public static Block blockPipe;
+	public static Block blockGenPipe;
 	public static Block blockTank;
 	public static Block blockMachine;
 	public static Block blockRod;
@@ -172,6 +174,7 @@ public class FluidMech extends DummyModContainer
 		blockSink = new BlockSink(this.CONFIGURATION.getBlock("Sink", BLOCK_ID_PREFIX + 8).getInt());
 		blockDrain = new BlockDrain(this.CONFIGURATION.getBlock("Drain", BLOCK_ID_PREFIX + 9).getInt());
 		blockConPump = new BlockConstructionPump(this.CONFIGURATION.getBlock("ConstructionPump", BLOCK_ID_PREFIX + 10).getInt());
+		blockGenPipe = new BlockPipe(this.CONFIGURATION.getBlock("GeneralPipes", BLOCK_ID_PREFIX+11).getInt());
 
 		/* ITEM DECLARATION -- COFNGI LOADER */
 		itemParts = new ItemParts(this.CONFIGURATION.getItem("Parts", ITEM_ID_PREFIX).getInt());
@@ -183,6 +186,7 @@ public class FluidMech extends DummyModContainer
 
 		/* BLOCK REGISTER CALLS */
 		GameRegistry.registerBlock(blockPipe, ItemBlockPipe.class, "lmPipe");
+		GameRegistry.registerBlock(blockPipe, ItemBlockPipe.class, "lmGenPipe");
 		GameRegistry.registerBlock(blockReleaseValve, ItemBlockReleaseValve.class, "eValve");
 		GameRegistry.registerBlock(blockRod, "mechRod");
 		GameRegistry.registerBlock(blockGenerator, "lmGen");
@@ -216,6 +220,7 @@ public class FluidMech extends DummyModContainer
 
 		/* TILE ENTITY REGISTER CALLS */
 		GameRegistry.registerTileEntity(TileEntityPipe.class, "lmPipeTile");
+		GameRegistry.registerTileEntity(TileEntityGenericPipe.class, "lmGenPipeTile");
 		GameRegistry.registerTileEntity(TileEntityStarterPump.class, "lmPumpTile");
 		GameRegistry.registerTileEntity(TileEntityRod.class, "lmRodTile");
 		GameRegistry.registerTileEntity(TileEntityReleaseValve.class, "lmeValve");

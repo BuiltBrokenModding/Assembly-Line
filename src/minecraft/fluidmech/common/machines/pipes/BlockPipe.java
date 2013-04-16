@@ -1,5 +1,6 @@
 package fluidmech.common.machines.pipes;
 
+import hydraulic.api.FluidRestrictionHandler;
 import hydraulic.fluidnetwork.IFluidNetworkPart;
 
 import java.util.List;
@@ -26,8 +27,8 @@ public class BlockPipe extends BlockAdvanced
 		this.setCreativeTab(TabFluidMech.INSTANCE);
 		this.setUnlocalizedName("lmPipe");
 		this.setResistance(3f);
+		
 	}
-
 	@Override
 	public boolean isOpaqueCube()
 	{
@@ -94,7 +95,10 @@ public class BlockPipe extends BlockAdvanced
 	{
 		for (int i = 0; i < 16; i++)
 		{
-			par3List.add(new ItemStack(par1, 1, i));
+			if (this.blockID == FluidMech.blockGenPipe.blockID || FluidRestrictionHandler.hasRestrictedStack(i))
+			{
+				par3List.add(new ItemStack(par1, 1, i));
+			}
 		}
 	}
 

@@ -42,7 +42,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 {
 
 	/* TANK TO FAKE OTHER TILES INTO BELIVING THIS HAS AN INTERNAL STORAGE */
-	private LiquidTank fakeTank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
+	protected LiquidTank fakeTank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
 	/* CURRENTLY CONNECTED TILE ENTITIES TO THIS */
 	private TileEntity[] connectedBlocks = new TileEntity[6];
 	public boolean[] renderConnection = new boolean[6];
@@ -290,7 +290,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 			tile.yCoord = this.yCoord;
 			tile.zCoord = this.zCoord;
 
-			sendExtentionToClient(side);
+			this.sendExtentionToClient(side);
 		}
 	}
 
@@ -324,6 +324,10 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	@Override
 	public ColorCode getColor()
 	{
+		if(this.worldObj == null)
+		{
+			return ColorCode.NONE;
+		}
 		return ColorCode.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
 	}
 
@@ -336,7 +340,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		ColorCode code = ColorCode.get(cc);
 		if (!worldObj.isRemote && code != this.getColor())
 		{
-			this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, code.ordinal() & 15, 3);
+			this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, code.ordinal(), 3);
 		}
 	}
 
