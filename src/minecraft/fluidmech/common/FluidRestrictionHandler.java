@@ -9,7 +9,7 @@ import net.minecraftforge.liquids.LiquidStack;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
-public class FluidEvents
+public class FluidRestrictionHandler
 {
 	private static BiMap<ColorCode, LiquidStack> restrictedStacks = HashBiMap.create();
 
@@ -37,16 +37,23 @@ public class FluidEvents
 			{
 				restrictedStacks.put(ColorCode.WHITE, event.Liquid);
 			}
-
 		}
 	}
 
+	/**
+	 * Checks too see if a color has a restricted stack
+	 */
 	public static boolean hasRestrictedStack(int meta)
 	{
-		if (restrictedStacks.containsKey(ColorCode.get(meta)))
-		{
-			return true;
-		}
-		return false;
+		return restrictedStacks.containsKey(ColorCode.get(meta));
+	}
+
+	/**
+	 * gets the liquid stack that is restricted to this color
+	 * 
+	 */
+	public static LiquidStack getStackForColor(ColorCode color)
+	{
+		return restrictedStacks.get(color);
 	}
 }

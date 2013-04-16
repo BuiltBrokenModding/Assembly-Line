@@ -142,7 +142,7 @@ public class FluidMech extends DummyModContainer
 	static
 	{
 		/* EVENT BUS (done here to ensure all fluid events are caught) */
-		MinecraftForge.EVENT_BUS.register(new FluidEvents());
+		MinecraftForge.EVENT_BUS.register(new FluidRestrictionHandler());
 	}
 
 	@PreInit

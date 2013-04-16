@@ -14,7 +14,7 @@ import universalelectricity.core.block.IConnectionProvider;
  * that doesn't change the over all network pressure. So pipes, gauges, tubes, buffers, decor
  * blocks.
  */
-public interface IFluidNetworkPart extends IPipeConnection, IColorCoded, ITankContainer
+public interface IFluidNetworkPart extends IPipeConnection, IColorCoded, ITankContainer,  INetworkPath
 {
 	/**
 	 * gets the devices pressure from a given side for input
@@ -24,17 +24,7 @@ public interface IFluidNetworkPart extends IPipeConnection, IColorCoded, ITankCo
 	/**
 	 * The max amount of liquid that can flow per request
 	 */
-	public int getMaxFlowRate(LiquidStack stack, ForgeDirection side);
-
-	/**
-	 * The Fluid network that this machine is part of
-	 */
-	public HydraulicNetwork getNetwork();
-
-	/**
-	 * sets the machines network
-	 */
-	public void setNetwork(HydraulicNetwork network);
+	public int getMaxFlowRate(LiquidStack stack, ForgeDirection side);	
 
 	/**
 	 * Called when the pressure on the machine reachs max
@@ -53,18 +43,5 @@ public interface IFluidNetworkPart extends IPipeConnection, IColorCoded, ITankCo
 	
 	public void setTankContent(LiquidStack stack);
 	
-	/**
-	 * Gets a list of all the connected TileEntities that this conductor is connected to. The
-	 * array's length should be always the 6 adjacent wires.
-	 * 
-	 * @return
-	 */
-	public TileEntity[] getAdjacentConnections();
-
-	/**
-	 * Instantly refreshes all connected blocks around the conductor, recalculating the connected
-	 * blocks.
-	 */
-	public void updateAdjacentConnections();
 
 }
