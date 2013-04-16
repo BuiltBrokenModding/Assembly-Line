@@ -1,9 +1,11 @@
 package fluidmech.common.machines.pipes;
 
 import hydraulic.api.ColorCode;
+import hydraulic.helpers.FluidHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
+import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 
 public class TileEntityGenericPipe extends TileEntityPipe
@@ -34,15 +36,22 @@ public class TileEntityGenericPipe extends TileEntityPipe
 		return this.fakeTank;
 	}
 
-	@Override
-	public ColorCode getColor()
-	{
-		return ColorCode.NONE;
-	}
+	
 	@Override
 	public boolean canPipeConnect(TileEntity entity, ForgeDirection dir)
 	{
 		return this.subEntities[dir.ordinal()] == null && entity.getClass().equals(this.getClass());
+	}
+	
+	@Override
+	public int getTankSize()
+	{
+		return LiquidContainerRegistry.BUCKET_VOLUME;
+	}
+	@Override
+	public int getMaxFlowRate(LiquidStack stack, ForgeDirection side)
+	{
+		return FluidHelper.getDefaultFlowRate(stack);
 	}
 	
 }

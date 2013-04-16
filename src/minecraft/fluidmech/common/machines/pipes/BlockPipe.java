@@ -114,11 +114,11 @@ public class BlockPipe extends BlockAdvanced
 			{
 				if (tank.getLiquid().itemID == Block.waterStill.blockID)
 				{
-					world.setBlockMetadataWithNotify(x, y, z, Block.waterStill.blockID, 7);
+					world.setBlock(x, y, z, Block.waterStill.blockID);
 				}
 				if (tank.getLiquid().itemID == Block.lavaStill.blockID)
 				{
-					world.setBlockMetadataWithNotify(x, y, z, Block.lavaStill.blockID, 4);
+					world.setBlock(x, y, z, Block.lavaStill.blockID);
 				}
 			}
 		}

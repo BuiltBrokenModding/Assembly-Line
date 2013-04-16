@@ -556,7 +556,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	@Override
 	public int getMaxFlowRate(LiquidStack stack, ForgeDirection side)
 	{
-		return FluidHelper.getDefaultFlowRate(stack) * 2;
+		return FluidHelper.getDefaultFlowRate(stack) * 3;
 	}
 
 	@Override
@@ -585,7 +585,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	@Override
 	public int getTankSize()
 	{
-		return LiquidContainerRegistry.BUCKET_VOLUME * 2;
+		return LiquidContainerRegistry.BUCKET_VOLUME * 3;
 	}
 
 	@Override
