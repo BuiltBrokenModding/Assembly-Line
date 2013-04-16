@@ -1,5 +1,6 @@
 package fluidmech.common.block;
 
+import hydraulic.api.FluidRestrictionHandler;
 import hydraulic.helpers.FluidHelper;
 
 import java.util.List;
@@ -17,7 +18,6 @@ import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.prefab.block.BlockAdvanced;
 import fluidmech.client.render.BlockRenderHelper;
-import fluidmech.common.FluidRestrictionHandler;
 import fluidmech.common.FluidMech;
 import fluidmech.common.TabFluidMech;
 import fluidmech.common.tiles.TileEntityTank;

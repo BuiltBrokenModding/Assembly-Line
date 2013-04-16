@@ -1,8 +1,8 @@
 package fluidmech.common.tiles;
 
 import fluidmech.common.FluidMech;
-import fluidmech.common.FluidRestrictionHandler;
 import hydraulic.api.ColorCode;
+import hydraulic.api.FluidRestrictionHandler;
 import hydraulic.api.IColorCoded;
 import hydraulic.helpers.FluidHelper;
 import hydraulic.prefab.tile.TileEntityFluidStorage;
@@ -102,7 +102,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IPacketRec
 	@Override
 	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
 	{
-		if (FluidRestrictionHandler.hasRestrictedStack(this.getColor().ordinal()) && !FluidRestrictionHandler.getStackForColor(this.getColor()).isLiquidEqual(resource))
+		if (!this.getColor().isValidLiquid(resource))
 		{
 			return 0;
 		}

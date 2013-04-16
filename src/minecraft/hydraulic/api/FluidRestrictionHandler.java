@@ -1,6 +1,5 @@
-package fluidmech.common;
+package hydraulic.api;
 
-import hydraulic.api.ColorCode;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidDictionary.LiquidRegisterEvent;
@@ -47,7 +46,14 @@ public class FluidRestrictionHandler
 	{
 		return restrictedStacks.containsKey(ColorCode.get(meta));
 	}
-
+	public static boolean hasRestrictedStack(LiquidStack stack)
+	{
+		if(stack == null)
+		{
+			return false;
+		}					
+		return restrictedStacks.inverse().containsKey(stack);
+	}
 	/**
 	 * gets the liquid stack that is restricted to this color
 	 * 

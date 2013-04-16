@@ -55,34 +55,10 @@ public enum ColorCode
 	 */
 	public boolean isValidLiquid(LiquidStack stack)
 	{
-		if (this != BLUE && this != RED && this != BLACK && this != YELLOW && this != ORANGE)
-		{
-			return true;
-		}
-		else if (stack == null)
+		if (stack == null || !FluidRestrictionHandler.hasRestrictedStack(this.ordinal()))
 		{
 			return false;
 		}
-		else if (this == BLUE && stack.isLiquidEqual(new LiquidStack(Block.waterStill, LiquidContainerRegistry.BUCKET_VOLUME)))
-		{
-			return true;
-		}
-		else if (this == RED && stack.isLiquidEqual(new LiquidStack(Block.lavaStill, LiquidContainerRegistry.BUCKET_VOLUME)))
-		{
-			return true;
-		}
-		else if (this == BLACK && stack.isLiquidEqual(LiquidDictionary.getCanonicalLiquid("Oil")))
-		{
-			return true;
-		}
-		else if (this == YELLOW && stack.isLiquidEqual(LiquidDictionary.getCanonicalLiquid("Fuel")))
-		{
-			return true;
-		}
-		else if (this == ORANGE && stack.isLiquidEqual(LiquidDictionary.getCanonicalLiquid("Steam")))
-		{
-			return true;
-		}
-		return false;
+		return FluidRestrictionHandler.hasRestrictedStack(this.ordinal()) && FluidRestrictionHandler.getStackForColor(this).isLiquidEqual(stack);
 	}
 }

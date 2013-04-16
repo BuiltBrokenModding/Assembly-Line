@@ -28,6 +28,7 @@ import fluidmech.common.tiles.TileEntityReleaseValve;
 import fluidmech.common.tiles.TileEntitySink;
 import fluidmech.common.tiles.TileEntityTank;
 import hydraulic.api.ColorCode;
+import hydraulic.api.FluidRestrictionHandler;
 
 import java.io.File;
 import java.util.Arrays;
