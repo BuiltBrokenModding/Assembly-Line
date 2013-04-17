@@ -29,6 +29,7 @@ import net.minecraftforge.liquids.LiquidTank;
 import org.bouncycastle.util.Arrays;
 
 import universalelectricity.core.vector.Vector3;
+import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
@@ -394,7 +395,8 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		{
 			return 0;
 		}
-		return this.getNetwork().addFluidToNetwork(worldObj.getBlockTileEntity(xCoord + from.offsetX, yCoord + from.offsetY, zCoord + from.offsetZ), resource, doFill);
+		TileEntity tile = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), from);
+		return this.getNetwork().addFluidToNetwork(tile, resource, doFill);
 	}
 
 	@Override

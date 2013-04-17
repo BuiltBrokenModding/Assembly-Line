@@ -3,6 +3,7 @@ package fluidmech.common.pump;
 import hydraulic.api.IPipeConnection;
 import hydraulic.fluidnetwork.HydraulicNetworkHelper;
 import hydraulic.fluidnetwork.IFluidNetworkPart;
+import hydraulic.helpers.MetaGroup;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
@@ -34,7 +35,7 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 
 	public ForgeDirection getFacing(boolean input)
 	{
-		int meta = 2;
+		int meta = MetaGroup.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));		
 		if (worldObj != null)
 		{
 			meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
@@ -53,6 +54,7 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 	@Override
 	public void updateEntity()
 	{
+		super.updateEntity();
 		if (!worldObj.isRemote)
 		{
 			if (this.ticks % 10 == 0 && this.wattsReceived >= this.WATTS_PER_TICK) // TODO add electric Drain

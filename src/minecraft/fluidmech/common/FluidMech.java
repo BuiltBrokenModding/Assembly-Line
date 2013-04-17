@@ -333,15 +333,8 @@ public class FluidMech extends DummyModContainer
 		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(blockMachine, 1, 0), new Object[] { "C@C", "BMB", "@X@", '@', "plateSteel", 'X', new ItemStack(blockPipe, 1, ColorCode.NONE.ordinal()), 'B', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 'C', "basicCircuit", 'M', "motor" }));
 		// construction pump
 		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(blockConPump, 1, 0), new Object[] { "@C@", "BMB", "@@@", '@', "plateSteel", 'B', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 'C', "advancedCircuit", 'M', "motor" }));
-		//Drain
-		GameRegistry.addRecipe(new ItemStack(blockDrain, 1, 0), new Object[] {
-			"IGI", "SVS", " P ",
-			'I', Item.ingotIron,
-			'G', Block.dispenser,
-			'S', Block.stone,
-			'P', new ItemStack(blockPipe, 1),
-			'V', new ItemStack(itemParts, 1, Parts.Valve.ordinal())});
-
+		// Drain
+		GameRegistry.addRecipe(new ItemStack(blockDrain, 1, 0), new Object[] { "IGI", "SVS", " P ", 'I', Item.ingotIron, 'G', Block.dispenser, 'S', Block.stone, 'P', new ItemStack(blockPipe, 1), 'V', new ItemStack(itemParts, 1, Parts.Valve.ordinal()) });
 
 		// release valve
 		GameRegistry.addRecipe(new ItemStack(blockReleaseValve, 1), new Object[] { "RPR", "PVP", "RPR", 'P', new ItemStack(blockPipe, 1, 15), 'V', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 'R', Item.redstone });

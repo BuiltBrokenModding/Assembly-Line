@@ -86,7 +86,7 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
         if (block.blockID == FluidMech.blockConPump.blockID && metadata < 4)
         {
             GL11.glPushMatrix();
-            GL11.glTranslatef((float) 0.0F, (float) 1.0F, (float) 0.0F);
+            GL11.glTranslatef((float) 0.0F, (float) 1.2F, (float) 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(FluidMech.MODEL_TEXTURE_DIRECTORY + "ConstructionPump.png"));
             conPump.render(0.0725F);
