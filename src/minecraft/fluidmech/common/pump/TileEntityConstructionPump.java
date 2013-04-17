@@ -35,10 +35,10 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 
 	public ForgeDirection getFacing(boolean input)
 	{
-		int meta = MetaGroup.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));		
+		int meta = 0;		
 		if (worldObj != null)
 		{
-			meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+			meta = MetaGroup.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
 		}
 		if (input)
 		{
