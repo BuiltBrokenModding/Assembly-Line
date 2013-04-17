@@ -55,9 +55,13 @@ public enum ColorCode
 	 */
 	public boolean isValidLiquid(LiquidStack stack)
 	{
-		if (stack == null || !FluidRestrictionHandler.hasRestrictedStack(this.ordinal()))
+		if (stack == null)
 		{
 			return false;
+		}
+		if(!FluidRestrictionHandler.hasRestrictedStack(this.ordinal()))
+		{
+			return true;
 		}
 		return FluidRestrictionHandler.hasRestrictedStack(this.ordinal()) && FluidRestrictionHandler.getStackForColor(this).isLiquidEqual(stack);
 	}

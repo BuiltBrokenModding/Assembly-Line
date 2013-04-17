@@ -1,5 +1,7 @@
 package fluidmech.common.machines.pipes;
 
+import universalelectricity.core.vector.Vector3;
+import universalelectricity.core.vector.VectorHelper;
 import hydraulic.api.ColorCode;
 import hydraulic.helpers.FluidHelper;
 import net.minecraft.tileentity.TileEntity;
@@ -17,7 +19,8 @@ public class TileEntityGenericPipe extends TileEntityPipe
 		{
 			return 0;
 		}
-		return this.getNetwork().addFluidToNetwork(worldObj.getBlockTileEntity(xCoord + from.offsetX, yCoord + from.offsetY, zCoord + from.offsetZ), resource, doFill);
+		TileEntity tile = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), from);
+		return this.getNetwork().addFluidToNetwork(tile, resource, doFill);
 	}
 
 	@Override
@@ -36,23 +39,24 @@ public class TileEntityGenericPipe extends TileEntityPipe
 		return this.fakeTank;
 	}
 
-	
 	@Override
 	public boolean canPipeConnect(TileEntity entity, ForgeDirection dir)
 	{
 		return this.subEntities[dir.ordinal()] == null && entity.getClass().equals(this.getClass());
 	}
-	
+
 	@Override
 	public int getTankSize()
 	{
 		return LiquidContainerRegistry.BUCKET_VOLUME;
 	}
+
 	@Override
 	public int getMaxFlowRate(LiquidStack stack, ForgeDirection side)
 	{
 		return FluidHelper.getDefaultFlowRate(stack);
 	}
+
 	@Override
 	public ColorCode getColor()
 	{
