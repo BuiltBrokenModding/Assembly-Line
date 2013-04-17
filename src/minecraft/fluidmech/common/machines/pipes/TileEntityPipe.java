@@ -528,7 +528,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	@Override
 	public boolean canPipeConnect(TileEntity entity, ForgeDirection dir)
 	{
-		return this.subEntities[dir.ordinal()] == null;
+		return entity != null && this.subEntities[dir.ordinal()] == null;
 	}
 
 	@Override

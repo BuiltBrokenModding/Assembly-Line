@@ -41,7 +41,7 @@ public class ItemRenderHelper implements IItemRenderer
     {
         if (item.itemID == FluidMech.blockPipe.blockID || item.itemID == FluidMech.blockGenPipe.blockID)
         {
-            this.renderPipeItem((RenderBlocks) data[0], item.getItemDamage(), type == ItemRenderType.EQUIPPED);
+            this.renderPipeItem((RenderBlocks) data[0], item, type == ItemRenderType.EQUIPPED);
         }
         if (item.itemID == FluidMech.blockReleaseValve.blockID)
         {
@@ -50,11 +50,11 @@ public class ItemRenderHelper implements IItemRenderer
 
     }
 
-    public void renderPipeItem(RenderBlocks renderer, int meta, boolean equ)
+    public void renderPipeItem(RenderBlocks renderer,  ItemStack item, boolean equ)
     {
-
+    	
         GL11.glPushMatrix();
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(RenderPipe.getPipeTexture(meta)));
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(RenderPipe.getPipeTexture(item.getItemDamage(),item.itemID == FluidMech.blockPipe.blockID)));
 
         if (!equ)
         {
@@ -77,7 +77,7 @@ public class ItemRenderHelper implements IItemRenderer
     public void renderReleaseValve(RenderBlocks renderer, int meta, boolean equ)
     {
         GL11.glPushMatrix();
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(RenderPipe.getPipeTexture(15)));
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(RenderPipe.getPipeTexture(15,false)));
         if (!equ)
         {
             GL11.glTranslatef(0.5F, -0.5F, 0.5F);

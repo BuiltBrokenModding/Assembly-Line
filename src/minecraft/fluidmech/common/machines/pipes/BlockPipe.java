@@ -80,6 +80,10 @@ public class BlockPipe extends BlockAdvanced
 	@Override
 	public TileEntity createNewTileEntity(World var1)
 	{
+		if(this.blockID == FluidMech.blockGenPipe.blockID)
+		{
+			return new TileEntityGenericPipe();
+		}
 		return new TileEntityPipe();
 	}
 
@@ -87,7 +91,8 @@ public class BlockPipe extends BlockAdvanced
 	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
 	{
 		int meta = world.getBlockMetadata(x, y, z);
-		return new ItemStack(FluidMech.blockPipe, 1, meta);
+		int blockID = world.getBlockId(x, y, z);
+		return new ItemStack(blockID, 1, meta);
 	}
 
 	@Override

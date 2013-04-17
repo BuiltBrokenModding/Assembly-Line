@@ -18,7 +18,7 @@ public class RenderPipeWindow implements IPipeExtentionRender
 	@Override
 	public void renderAModelAt(RenderPipe renderPipe, TileEntityPipe pipe, Vector3 location, float size, ForgeDirection facingDirection)
 	{
-		renderPipe.bindTextureForPipe(renderPipe.getPipeTexture(0));
+		renderPipe.bindTextureForPipe(renderPipe.getPipeTexture(0,false));
 		this.render(facingDirection.ordinal());
 		System.out.println("Rendered Window Pipe");
 

@@ -14,6 +14,7 @@ import universalelectricity.core.vector.Vector3;
 import fluidmech.client.model.ModelLargePipe;
 import fluidmech.common.FluidMech;
 import fluidmech.common.machines.pipes.IPipeExtention;
+import fluidmech.common.machines.pipes.TileEntityGenericPipe;
 import fluidmech.common.machines.pipes.TileEntityPipe;
 
 public class RenderPipe extends TileEntitySpecialRenderer
@@ -40,6 +41,8 @@ public class RenderPipe extends TileEntitySpecialRenderer
 			meta = te.getBlockMetadata();
 			TileEntityPipe pipe = ((TileEntityPipe) te);
 			this.renderSide = pipe.renderConnection;
+
+			// Pipes extension rendering
 			for (int i = 0; i < 6; i++)
 			{
 				IPipeExtention extention = (IPipeExtention) pipe.subEntities[i];
@@ -68,7 +71,7 @@ public class RenderPipe extends TileEntitySpecialRenderer
 				}
 			}
 		}
-		this.render(meta, renderSide);
+		this.render(te, meta, renderSide);
 		GL11.glPopMatrix();
 
 	}
@@ -78,9 +81,9 @@ public class RenderPipe extends TileEntitySpecialRenderer
 		this.bindTextureByName(texture);
 	}
 
-	public static String getPipeTexture(int meta, Object... og)
+	public static String getPipeTexture(int meta, boolean bool)
 	{
-		if (og != null && og.length > 0 && og[0] instanceof TileEntityPipe && FluidRestrictionHandler.hasRestrictedStack(meta))
+		if (bool && FluidRestrictionHandler.hasRestrictedStack(meta))
 		{
 			LiquidStack stack = FluidRestrictionHandler.getStackForColor(ColorCode.get(meta));
 			String name = LiquidDictionary.findLiquidName(stack);
@@ -92,9 +95,14 @@ public class RenderPipe extends TileEntitySpecialRenderer
 		return FluidMech.MODEL_TEXTURE_DIRECTORY + "pipes/" + ColorCode.get(meta).getName() + "Pipe.png";
 	}
 
-	public void render(int meta, boolean[] side)
+	public void render(TileEntity entity, int meta, boolean[] side)
 	{
-		bindTextureByName(this.getPipeTexture(meta));
+		boolean bool = true;
+		if (entity instanceof TileEntityGenericPipe)
+		{
+			bool = false;
+		}
+		bindTextureByName(this.getPipeTexture(meta, bool));
 		if (side[0])
 		{
 			SixPipe.renderBottom();

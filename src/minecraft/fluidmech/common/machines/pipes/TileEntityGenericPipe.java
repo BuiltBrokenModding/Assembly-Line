@@ -53,5 +53,9 @@ public class TileEntityGenericPipe extends TileEntityPipe
 	{
 		return FluidHelper.getDefaultFlowRate(stack);
 	}
-	
+	@Override
+	public ColorCode getColor()
+	{
+		return ColorCode.NONE;
+	}
 }
