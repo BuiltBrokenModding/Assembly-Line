@@ -307,18 +307,19 @@ public class FluidMech extends DummyModContainer
 
 		// steam pipes
 		GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, ColorCode.ORANGE.ordinal()), new Object[] { new ItemStack(itemParts, 1, Parts.Bronze.ordinal()), new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
-
+		// generic pipe crafting
 		for (int pipeMeta = 0; pipeMeta < 15; pipeMeta++)
 		{
 			if (pipeMeta != ColorCode.WHITE.ordinal() && pipeMeta != ColorCode.NONE.ordinal())
 			{
-				GameRegistry.addRecipe(new ItemStack(blockGenPipe, 4, pipeMeta), new Object[] {" P ", "PCP", " P ",'P', blockGenPipe,'C', new ItemStack(Item.dyePowder, 1, pipeMeta) });
+				GameRegistry.addRecipe(new ItemStack(blockGenPipe, 4, pipeMeta), new Object[] { " P ", "PCP", " P ", 'P', blockGenPipe, 'C', new ItemStack(Item.dyePowder, 1, pipeMeta) });
 			}
 		}
-		GameRegistry.addRecipe(new ItemStack(blockGenPipe, 1,15), new Object[] {"P",'P', blockGenPipe});
-	
+		GameRegistry.addRecipe(new ItemStack(blockGenPipe, 1, 15), new Object[] { "P", 'P', blockGenPipe });
+
+		// white pipe crafting -- has to be separate since iron pipe is #15 instead of white
 		GameRegistry.addShapelessRecipe(new ItemStack(blockGenPipe, 4, ColorCode.WHITE.ordinal()), new Object[] { new ItemStack(blockGenPipe, 1, 15), new ItemStack(blockGenPipe, 1, 15), new ItemStack(blockGenPipe, 1, 15), new ItemStack(blockGenPipe, 1, 15), new ItemStack(Item.dyePowder, 1, 15) });
-		
+
 		// lava tank
 		GameRegistry.addRecipe(new ItemStack(blockTank, 1, ColorCode.RED.ordinal()), new Object[] { "N@N", "@ @", "N@N", 'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()), '@', Block.obsidian, 'N', Block.netherrack });
 		// water tank
@@ -330,6 +331,17 @@ public class FluidMech extends DummyModContainer
 
 		// pump
 		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(blockMachine, 1, 0), new Object[] { "C@C", "BMB", "@X@", '@', "plateSteel", 'X', new ItemStack(blockPipe, 1, ColorCode.NONE.ordinal()), 'B', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 'C', "basicCircuit", 'M', "motor" }));
+		// construction pump
+		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(blockConPump, 1, 0), new Object[] { "@C@", "BMB", "@@@", '@', "plateSteel", 'B', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 'C', "advancedCircuit", 'M', "motor" }));
+		//Drain
+		GameRegistry.addRecipe(new ItemStack(blockDrain, 1, 0), new Object[] {
+			"IGI", "SVS", " P ",
+			'I', Item.ingotIron,
+			'G', Block.dispenser,
+			'S', Block.stone,
+			'P', new ItemStack(blockPipe, 1),
+			'V', new ItemStack(itemParts, 1, Parts.Valve.ordinal())});
+
 
 		// release valve
 		GameRegistry.addRecipe(new ItemStack(blockReleaseValve, 1), new Object[] { "RPR", "PVP", "RPR", 'P', new ItemStack(blockPipe, 1, 15), 'V', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 'R', Item.redstone });
