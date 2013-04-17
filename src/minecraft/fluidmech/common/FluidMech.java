@@ -300,10 +300,10 @@ public class FluidMech extends DummyModContainer
 		GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, ColorCode.YELLOW.ordinal()), new Object[] { new ItemStack(blockGenPipe, 1, ColorCode.YELLOW.ordinal()), new ItemStack(blockGenPipe, 1, ColorCode.YELLOW.ordinal()), new ItemStack(blockGenPipe, 1, ColorCode.YELLOW.ordinal()), new ItemStack(blockGenPipe, 1, ColorCode.YELLOW.ordinal()), new ItemStack(itemParts, 1, Parts.SlimeSeal.ordinal()) });
 
 		// oil pipe
-		GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, ColorCode.BLACK.ordinal()), new Object[] { new ItemStack(blockGenPipe, 1, ColorCode.BLACK.ordinal()),new ItemStack(blockGenPipe, 1, ColorCode.BLACK.ordinal()),new ItemStack(blockGenPipe, 1, ColorCode.BLACK.ordinal()),new ItemStack(blockGenPipe, 1, ColorCode.BLACK.ordinal()), new ItemStack(itemParts, 1, Parts.SlimeSeal.ordinal()) });
+		GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, ColorCode.BLACK.ordinal()), new Object[] { new ItemStack(blockGenPipe, 1, ColorCode.BLACK.ordinal()), new ItemStack(blockGenPipe, 1, ColorCode.BLACK.ordinal()), new ItemStack(blockGenPipe, 1, ColorCode.BLACK.ordinal()), new ItemStack(blockGenPipe, 1, ColorCode.BLACK.ordinal()), new ItemStack(itemParts, 1, Parts.SlimeSeal.ordinal()) });
 
 		// water pipe
-		GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, ColorCode.BLUE.ordinal()), new Object[] { new ItemStack(blockGenPipe, 1, ColorCode.BLUE.ordinal()),new ItemStack(blockGenPipe, 1, ColorCode.BLUE.ordinal()),new ItemStack(blockGenPipe, 1, ColorCode.BLUE.ordinal()),new ItemStack(blockGenPipe, 1, ColorCode.BLUE.ordinal()), new ItemStack(itemParts, 1, Parts.SlimeSeal.ordinal()) });
+		GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, ColorCode.BLUE.ordinal()), new Object[] { new ItemStack(blockGenPipe, 1, ColorCode.BLUE.ordinal()), new ItemStack(blockGenPipe, 1, ColorCode.BLUE.ordinal()), new ItemStack(blockGenPipe, 1, ColorCode.BLUE.ordinal()), new ItemStack(blockGenPipe, 1, ColorCode.BLUE.ordinal()), new ItemStack(itemParts, 1, Parts.SlimeSeal.ordinal()) });
 
 		// steam pipes
 		GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, ColorCode.ORANGE.ordinal()), new Object[] { new ItemStack(itemParts, 1, Parts.Bronze.ordinal()), new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
@@ -312,11 +312,13 @@ public class FluidMech extends DummyModContainer
 		{
 			if (pipeMeta != ColorCode.WHITE.ordinal() && pipeMeta != ColorCode.NONE.ordinal())
 			{
-				GameRegistry.addShapelessRecipe(new ItemStack(blockGenPipe, 4, pipeMeta), new Object[] { new ItemStack(blockGenPipe, 1, 15), new ItemStack(blockGenPipe, 1, 15), new ItemStack(blockGenPipe, 1, 15), new ItemStack(blockGenPipe, 1, 15), new ItemStack(Item.dyePowder, 1, pipeMeta) });
+				GameRegistry.addRecipe(new ItemStack(blockGenPipe, 4, pipeMeta), new Object[] {" P ", "PCP", " P ",'P', blockGenPipe,'C', new ItemStack(Item.dyePowder, 1, pipeMeta) });
 			}
 		}
-		GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, ColorCode.WHITE.ordinal()), new Object[] { new ItemStack(blockPipe, 1, 15), new ItemStack(blockPipe, 1, 15), new ItemStack(blockPipe, 1, 15), new ItemStack(blockPipe, 1, 15), new ItemStack(Item.dyePowder, 1, 15) });
-
+		GameRegistry.addRecipe(new ItemStack(blockGenPipe, 1,15), new Object[] {"P",'P', blockGenPipe});
+	
+		GameRegistry.addShapelessRecipe(new ItemStack(blockGenPipe, 4, ColorCode.WHITE.ordinal()), new Object[] { new ItemStack(blockGenPipe, 1, 15), new ItemStack(blockGenPipe, 1, 15), new ItemStack(blockGenPipe, 1, 15), new ItemStack(blockGenPipe, 1, 15), new ItemStack(Item.dyePowder, 1, 15) });
+		
 		// lava tank
 		GameRegistry.addRecipe(new ItemStack(blockTank, 1, ColorCode.RED.ordinal()), new Object[] { "N@N", "@ @", "N@N", 'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()), '@', Block.obsidian, 'N', Block.netherrack });
 		// water tank
