@@ -17,6 +17,7 @@ import fluidmech.common.CommonProxy;
 import fluidmech.common.FluidMech;
 import fluidmech.common.machines.mech.TileEntityGenerator;
 import fluidmech.common.machines.mech.TileEntityRod;
+import fluidmech.common.machines.pipes.TileEntityGenericPipe;
 import fluidmech.common.machines.pipes.TileEntityPipe;
 import fluidmech.common.pump.TileEntityConstructionPump;
 import fluidmech.common.pump.TileEntityStarterPump;
@@ -36,7 +37,7 @@ public class ClientProxy extends CommonProxy
 	public void Init()
 	{
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPipe.class, new RenderPipe());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPipe.class, new RenderPipe());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGenericPipe.class, new RenderPipe());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityStarterPump.class, new RenderPump());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRod.class, new RenderGearRod());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGenerator.class, new RenderGenerator());
@@ -46,6 +47,7 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConstructionPump.class, new RenderConstructionPump());
 		
 		MinecraftForgeClient.registerItemRenderer(FluidMech.blockPipe.blockID, new ItemRenderHelper());
+		MinecraftForgeClient.registerItemRenderer(FluidMech.blockGenPipe.blockID, new ItemRenderHelper());
 		MinecraftForgeClient.registerItemRenderer(FluidMech.blockReleaseValve.blockID, new ItemRenderHelper());
 		
 		RenderingRegistry.registerBlockHandler(new BlockRenderHelper());

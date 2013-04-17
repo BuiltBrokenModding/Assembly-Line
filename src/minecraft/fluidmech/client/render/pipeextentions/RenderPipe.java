@@ -1,9 +1,12 @@
 package fluidmech.client.render.pipeextentions;
 
 import hydraulic.api.ColorCode;
+import hydraulic.api.FluidRestrictionHandler;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.liquids.LiquidDictionary;
+import net.minecraftforge.liquids.LiquidStack;
 
 import org.lwjgl.opengl.GL11;
 
@@ -75,8 +78,17 @@ public class RenderPipe extends TileEntitySpecialRenderer
 		this.bindTextureByName(texture);
 	}
 
-	public static String getPipeTexture(int meta)
+	public static String getPipeTexture(int meta, Object... og)
 	{
+		if (og != null && og.length > 0 && og[0] instanceof TileEntityPipe && FluidRestrictionHandler.hasRestrictedStack(meta))
+		{
+			LiquidStack stack = FluidRestrictionHandler.getStackForColor(ColorCode.get(meta));
+			String name = LiquidDictionary.findLiquidName(stack);
+			if (name != null)
+			{
+				return FluidMech.MODEL_TEXTURE_DIRECTORY + "pipes/" + name + "Pipe.png";
+			}
+		}
 		return FluidMech.MODEL_TEXTURE_DIRECTORY + "pipes/" + ColorCode.get(meta).getName() + "Pipe.png";
 	}
 

@@ -39,7 +39,7 @@ public class ItemRenderHelper implements IItemRenderer
     @Override
     public void renderItem(ItemRenderType type, ItemStack item, Object... data)
     {
-        if (item.itemID == FluidMech.blockPipe.blockID)
+        if (item.itemID == FluidMech.blockPipe.blockID || item.itemID == FluidMech.blockGenPipe.blockID)
         {
             this.renderPipeItem((RenderBlocks) data[0], item.getItemDamage(), type == ItemRenderType.EQUIPPED);
         }
