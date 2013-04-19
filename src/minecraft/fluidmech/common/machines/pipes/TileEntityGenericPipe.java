@@ -42,7 +42,16 @@ public class TileEntityGenericPipe extends TileEntityPipe
 	@Override
 	public boolean canPipeConnect(TileEntity entity, ForgeDirection dir)
 	{
-		return this.subEntities[dir.ordinal()] == null && entity.getClass().equals(this.getClass());
+		Vector3 vec = new Vector3(entity);
+		int meta = vec.getBlockMetadata(this.worldObj);
+		int blockID = vec.getBlockID(this.worldObj);
+		
+		if (entity instanceof TileEntityPipe && blockID == this.getBlockType().blockID)
+		{
+			return meta == this.getBlockMetadata();
+		}
+		
+		return super.canPipeConnect(entity, dir);
 	}
 
 	@Override
