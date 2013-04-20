@@ -29,9 +29,9 @@ public class ItemImprinter extends Item
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void updateIcons(IconRegister par1IconRegister)
+	public void registerIcons(IconRegister par1IconRegister)
 	{
-		this.iconIndex = par1IconRegister.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX + "imprint");
+		this.itemIcon = par1IconRegister.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX + "imprint");
 	}
 
 	@Override

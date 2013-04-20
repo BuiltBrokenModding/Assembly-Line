@@ -9,7 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
-import dark.minecraft.helpers.ItemWorldHelper;
+import dark.helpers.ItemFindingHelper;
 
 public class CommandPowerTo extends Command
 {
@@ -57,7 +57,7 @@ public class CommandPowerTo extends Command
 			List<ItemStack> stacks = new ArrayList<ItemStack>();
 			stacks.add(new ItemStack(Block.torchRedstoneActive, 1, 0));
 			stacks.add(new ItemStack(Block.torchRedstoneIdle, 1, 0));
-			if (ItemWorldHelper.filterItems(this.tileEntity.getGrabbedItems(), stacks).size() > 0)
+			if (ItemFindingHelper.filterItems(this.tileEntity.getGrabbedItems(), stacks).size() > 0)
 			{
 				this.powerBlock(true);
 			}

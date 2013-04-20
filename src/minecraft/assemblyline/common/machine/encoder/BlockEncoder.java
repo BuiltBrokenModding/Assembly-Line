@@ -41,14 +41,14 @@ public class BlockEncoder extends BlockALMachine
 	@Override
 	public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
 	{
-		return getBlockTextureFromSideAndMetadata(side, 0);
+		return getIcon(side, 0);
 	}
 	
 	/**
 	 * Returns the block texture based on the side being looked at. Args: side
 	 */
 	@Override
-	public Icon getBlockTextureFromSideAndMetadata(int side, int meta)
+	public Icon getIcon(int side, int meta)
 	{
 		if (side == 1)
 		{

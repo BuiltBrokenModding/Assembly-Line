@@ -51,7 +51,7 @@ public class BlockCrate extends BlockALMachine
 	}
 
 	@Override
-	public Icon getBlockTextureFromSideAndMetadata(int side, int metadata)
+	public Icon getIcon(int side, int metadata)
 	{
 		return this.crate_icon;
 	}

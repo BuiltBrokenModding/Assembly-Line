@@ -49,7 +49,7 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.IPeripheral;
-import dark.minecraft.helpers.ItemWorldHelper;
+import dark.helpers.ItemFindingHelper;
 
 public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMultiBlock, IInventory, IPacketReceiver, IElectricityStorage, IArmbot, IPeripheral
 {
@@ -924,7 +924,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 
 		while (it.hasNext())
 		{
-			ItemWorldHelper.dropItemStackExact(worldObj, handPosition.x, handPosition.y, handPosition.z, it.next());
+			ItemFindingHelper.dropItemStackExact(worldObj, handPosition.x, handPosition.y, handPosition.z, it.next());
 		}
 
 		this.grabbedEntities.clear();

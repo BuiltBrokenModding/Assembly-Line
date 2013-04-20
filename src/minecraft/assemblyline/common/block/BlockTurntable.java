@@ -57,7 +57,7 @@ public class BlockTurntable extends BlockALMachine
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getBlockTextureFromSideAndMetadata(int side, int meta)
+	public Icon getIcon(int side, int meta)
 	{
 		if (side == ForgeDirection.UP.ordinal())
 			return this.top;
