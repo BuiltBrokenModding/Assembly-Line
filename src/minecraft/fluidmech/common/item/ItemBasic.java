@@ -25,7 +25,7 @@ public class ItemBasic extends Item
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void updateIcons(IconRegister iconRegister)
+	public void registerIcons(IconRegister iconRegister)
 	{
 		List<ItemStack> list = new ArrayList<ItemStack>();
 		this.getSubItems(this.itemID, this.getCreativeTab(), list);

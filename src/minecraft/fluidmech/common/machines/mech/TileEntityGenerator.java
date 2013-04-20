@@ -1,8 +1,6 @@
 package fluidmech.common.machines.mech;
 
 import hydraulic.api.IReadOut;
-import hydraulic.helpers.MetaGroup;
-import hydraulic.helpers.connectionHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
@@ -19,6 +17,9 @@ import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.tile.TileEntityElectrical;
 
 import com.google.common.io.ByteArrayDataInput;
+
+import dark.helpers.MetaGroup;
+import dark.helpers.ConnectionHelper;
 
 import fluidmech.api.mech.IForce;
 
@@ -45,7 +46,7 @@ public class TileEntityGenerator extends TileEntityElectrical implements IPacket
 		this.genAmmount = Math.abs(force / this.getVoltage());
 		// wire count update
 		int wireCount = 0;
-		TileEntity[] ents = connectionHelper.getSurroundingTileEntities(worldObj, xCoord, yCoord, zCoord);
+		TileEntity[] ents = ConnectionHelper.getSurroundingTileEntities(worldObj, xCoord, yCoord, zCoord);
 		this.wires = new IConductor[6];
 		for (int i = 0; i < ents.length; i++)
 		{

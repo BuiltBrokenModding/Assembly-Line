@@ -1,7 +1,6 @@
 package hydraulic.fluidnetwork;
 
 import hydraulic.api.ColorCode;
-import hydraulic.helpers.connectionHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +21,7 @@ import net.minecraftforge.liquids.LiquidTank;
 import universalelectricity.core.path.Pathfinder;
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.common.FMLLog;
+import dark.helpers.ConnectionHelper;
 
 /**
  * Side note: the network should act like this when done {@link http
@@ -309,7 +309,7 @@ public class HydraulicNetwork
 			{
 				if (tankContainer instanceof TileEntity && tankContainer != source && !(tankContainer instanceof IFluidNetworkPart))
 				{
-					TileEntity[] connectedTiles = connectionHelper.getSurroundingTileEntities((TileEntity) tankContainer);
+					TileEntity[] connectedTiles = ConnectionHelper.getSurroundingTileEntities((TileEntity) tankContainer);
 
 					for (int i = 0; i < 6; i++)
 					{

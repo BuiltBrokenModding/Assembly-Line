@@ -1,8 +1,9 @@
 package fluidmech.common.pump;
 
-import hydraulic.helpers.MetaGroup;
 
 import java.util.List;
+
+import dark.helpers.MetaGroup;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;

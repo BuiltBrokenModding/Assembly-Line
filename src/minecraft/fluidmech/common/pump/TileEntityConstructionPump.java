@@ -1,9 +1,9 @@
 package fluidmech.common.pump;
 
+import dark.helpers.MetaGroup;
 import hydraulic.api.IPipeConnection;
 import hydraulic.fluidnetwork.HydraulicNetworkHelper;
 import hydraulic.fluidnetwork.IFluidNetworkPart;
-import hydraulic.helpers.MetaGroup;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;

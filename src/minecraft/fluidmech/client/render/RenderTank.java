@@ -1,13 +1,14 @@
 package fluidmech.client.render;
 
 import hydraulic.api.ColorCode;
-import hydraulic.helpers.connectionHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 
 import org.lwjgl.opengl.GL11;
+
+import dark.helpers.ConnectionHelper;
 
 import fluidmech.client.model.ModelLiquidTank;
 import fluidmech.client.model.ModelLiquidTankCorner;
@@ -44,10 +45,10 @@ public class RenderTank extends TileEntitySpecialRenderer
 		GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
 
-		if (connectionHelper.corner(te) > 0)
+		if (ConnectionHelper.corner(te) > 0)
 		{
 			bindTextureByName(this.getCornerTexture(meta));
-			int corner = connectionHelper.corner(te);
+			int corner = ConnectionHelper.corner(te);
 			switch (corner)
 			{
 				case 2:

@@ -46,12 +46,6 @@ public class BlockConstructionPump extends BlockAdvanced
 	}
 
 	@Override
-	public Icon getBlockTextureFromSideAndMetadata(int par1, int par2)
-	{
-		return par1 != 1 && par1 != 0 ? this.blockIcon : this.inputIcon;
-	}
-
-	@Override
 	public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
 	{
 		TileEntity entity = world.getBlockTileEntity(x, y, z);

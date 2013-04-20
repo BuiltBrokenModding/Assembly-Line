@@ -5,7 +5,6 @@ import hydraulic.api.IColorCoded;
 import hydraulic.api.IPipeConnection;
 import hydraulic.api.IReadOut;
 import hydraulic.helpers.FluidHelper;
-import hydraulic.helpers.MetaGroup;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
@@ -21,6 +20,8 @@ import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.tile.TileEntityElectricityRunnable;
 
 import com.google.common.io.ByteArrayDataInput;
+
+import dark.helpers.MetaGroup;
 
 public class TileEntityStarterPump extends TileEntityElectricityRunnable implements IPacketReceiver, IReadOut, IPipeConnection
 {

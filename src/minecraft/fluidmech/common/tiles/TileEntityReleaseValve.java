@@ -6,11 +6,12 @@ import hydraulic.api.IColorCoded;
 import hydraulic.api.IPipeConnection;
 import hydraulic.api.IReadOut;
 import hydraulic.fluidnetwork.IFluidNetworkPart;
-import hydraulic.helpers.connectionHelper;
 import hydraulic.prefab.tile.TileEntityFluidDevice;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import dark.helpers.ConnectionHelper;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -38,7 +39,7 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements IPi
 
 		this.isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
 
-		connected = connectionHelper.getSurroundingTileEntities(this);
+		connected = ConnectionHelper.getSurroundingTileEntities(this);
 
 		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 		{
@@ -135,7 +136,7 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements IPi
 	public void validateNBuildList()
 	{
 		// cleanup
-		this.connected = connectionHelper.getSurroundingTileEntities(worldObj, xCoord, yCoord, zCoord);
+		this.connected = ConnectionHelper.getSurroundingTileEntities(worldObj, xCoord, yCoord, zCoord);
 		this.input = new ITankContainer[6];
 		this.output.clear();
 		// read surroundings

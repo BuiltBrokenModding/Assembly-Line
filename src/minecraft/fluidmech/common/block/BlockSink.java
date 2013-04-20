@@ -1,7 +1,7 @@
 package fluidmech.common.block;
 
+import dark.helpers.MetaGroup;
 import hydraulic.helpers.FluidHelper;
-import hydraulic.helpers.MetaGroup;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
