@@ -1,5 +1,6 @@
 package fluidmech.client.render;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.liquids.LiquidStack;
@@ -23,7 +24,7 @@ public class RenderSink extends TileEntitySpecialRenderer
     public void renderWater(LiquidStack stack)
     {
         if (stack == null || stack.amount <= 1) { return; }
-        bindTextureByName(FluidMech.MODEL_TEXTURE_DIRECTORY + "blue.png");
+        bindTextureByName(Block.waterStill.getBlockTextureFromSide(0)+ "blue.png");
         float p = 0;
         if(stack.amount > 0)p = 0.5f;
         if(stack.amount > 500)p=1.5f;
