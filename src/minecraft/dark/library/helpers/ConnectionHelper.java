@@ -1,4 +1,4 @@
-package dark.helpers;
+package dark.library.helpers;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;

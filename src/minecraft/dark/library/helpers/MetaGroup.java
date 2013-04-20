@@ -1,4 +1,4 @@
-package dark.helpers;
+package dark.library.helpers;
 
 
 public class MetaGroup

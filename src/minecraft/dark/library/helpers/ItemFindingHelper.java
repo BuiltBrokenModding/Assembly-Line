@@ -1,4 +1,4 @@
-package dark.helpers;
+package dark.library.helpers;
 
 import java.util.ArrayList;
 import java.util.List;
