@@ -21,7 +21,7 @@ import universalelectricity.prefab.tile.TileEntityElectricityRunnable;
 
 import com.google.common.io.ByteArrayDataInput;
 
-import dark.helpers.MetaGroup;
+import dark.library.helpers.MetaGroup;
 
 public class TileEntityStarterPump extends TileEntityElectricityRunnable implements IPacketReceiver, IReadOut, IPipeConnection
 {

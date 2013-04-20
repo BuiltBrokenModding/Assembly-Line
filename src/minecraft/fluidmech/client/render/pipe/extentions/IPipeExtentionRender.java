@@ -1,4 +1,4 @@
-package fluidmech.client.render.pipeextentions;
+package fluidmech.client.render.pipe.extentions;
 
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;

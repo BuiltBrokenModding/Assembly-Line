@@ -21,7 +21,7 @@ import net.minecraftforge.liquids.LiquidTank;
 import universalelectricity.core.path.Pathfinder;
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.common.FMLLog;
-import dark.helpers.ConnectionHelper;
+import dark.library.helpers.ConnectionHelper;
 
 /**
  * Side note: the network should act like this when done {@link http

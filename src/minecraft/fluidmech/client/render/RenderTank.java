@@ -8,7 +8,7 @@ import net.minecraftforge.liquids.LiquidStack;
 
 import org.lwjgl.opengl.GL11;
 
-import dark.helpers.ConnectionHelper;
+import dark.library.helpers.ConnectionHelper;
 
 import fluidmech.client.model.ModelLiquidTank;
 import fluidmech.client.model.ModelLiquidTankCorner;

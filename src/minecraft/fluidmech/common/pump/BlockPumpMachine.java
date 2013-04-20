@@ -3,7 +3,7 @@ package fluidmech.common.pump;
 
 import java.util.List;
 
-import dark.helpers.MetaGroup;
+import dark.library.helpers.MetaGroup;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;

@@ -1,4 +1,4 @@
-package fluidmech.client.render.pipeextentions;
+package fluidmech.client.render.pipe.extentions;
 
 import hydraulic.api.ColorCode;
 import hydraulic.api.FluidRestrictionHandler;

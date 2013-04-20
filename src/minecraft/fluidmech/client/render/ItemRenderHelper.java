@@ -12,7 +12,7 @@ import fluidmech.client.model.ModelGenerator;
 import fluidmech.client.model.ModelLargePipe;
 import fluidmech.client.model.ModelLiquidTank;
 import fluidmech.client.model.ModelReleaseValve;
-import fluidmech.client.render.pipeextentions.RenderPipe;
+import fluidmech.client.render.pipe.extentions.RenderPipe;
 import fluidmech.common.FluidMech;
 
 /** special tanks to Mekanism github */

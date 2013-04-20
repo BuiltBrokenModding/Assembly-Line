@@ -18,8 +18,8 @@ import universalelectricity.prefab.tile.TileEntityElectrical;
 
 import com.google.common.io.ByteArrayDataInput;
 
-import dark.helpers.MetaGroup;
-import dark.helpers.ConnectionHelper;
+import dark.library.helpers.ConnectionHelper;
+import dark.library.helpers.MetaGroup;
 
 import fluidmech.api.mech.IForce;
 

@@ -12,7 +12,7 @@ import fluidmech.client.render.RenderPump;
 import fluidmech.client.render.RenderReleaseValve;
 import fluidmech.client.render.RenderSink;
 import fluidmech.client.render.RenderTank;
-import fluidmech.client.render.pipeextentions.RenderPipe;
+import fluidmech.client.render.pipe.extentions.RenderPipe;
 import fluidmech.common.CommonProxy;
 import fluidmech.common.FluidMech;
 import fluidmech.common.machines.mech.TileEntityGenerator;

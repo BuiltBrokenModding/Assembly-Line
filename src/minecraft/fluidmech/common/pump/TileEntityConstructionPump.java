@@ -1,6 +1,6 @@
 package fluidmech.common.pump;
 
-import dark.helpers.MetaGroup;
+import dark.library.helpers.MetaGroup;
 import hydraulic.api.IPipeConnection;
 import hydraulic.fluidnetwork.HydraulicNetworkHelper;
 import hydraulic.fluidnetwork.IFluidNetworkPart;

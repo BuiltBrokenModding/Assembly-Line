@@ -1,6 +1,6 @@
 package fluidmech.common.block;
 
-import dark.helpers.MetaGroup;
+import dark.library.helpers.MetaGroup;
 import hydraulic.helpers.FluidHelper;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;

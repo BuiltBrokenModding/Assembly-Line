@@ -11,7 +11,7 @@ import hydraulic.prefab.tile.TileEntityFluidDevice;
 import java.util.ArrayList;
 import java.util.List;
 
-import dark.helpers.ConnectionHelper;
+import dark.library.helpers.ConnectionHelper;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
