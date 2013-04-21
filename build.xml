@@ -10,7 +10,7 @@
 
 		<delete dir="contents" />
 		<delete dir="build" />
-        <delete dir="${download.dir}" />
+        <delete dir="download" />
 		<delete dir="${dir.development}/forge" />
 
 		<copy todir="${dir.development}">
