@@ -28,7 +28,7 @@
 				<exclude name="**/*.xml"/>
 			</fileset>
             
-            <fileset dir="${download.dir}/unzip/Dark-Library-master/src/minecraft/">
+            <fileset dir="download/unzip/Dark-Library-master/src/minecraft/">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
@@ -79,7 +79,7 @@
 				<exclude name="**/*.xml"/>
 			</fileset>
             
-            <fileset dir="${download.dir}/unzip/Dark-Library-master/resources">
+            <fileset dir="download/unzip/Dark-Library-master/resources">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.java"/>
 				<exclude name="**/*.xml"/>
