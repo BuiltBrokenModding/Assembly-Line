@@ -29,6 +29,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class BlockCrate extends BlockALMachine
 {
 	Icon crate_icon;
+
 	public BlockCrate(int id, int texture)
 	{
 		super(id, UniversalElectricity.machine);
@@ -40,7 +41,7 @@ public class BlockCrate extends BlockALMachine
 	@Override
 	public void registerIcons(IconRegister iconReg)
 	{
-		this.crate_icon = iconReg.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX+"crate");
+		this.crate_icon = iconReg.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX + "crate");
 	}
 
 	@Override
@@ -109,17 +110,22 @@ public class BlockCrate extends BlockALMachine
 				}
 
 				tileEntity.prevClickTime = world.getWorldTime();
+				ItemStack current = entityPlayer.inventory.getCurrentItem();
 
 				// Add items
 				if (side == 1 || (side > 1 && hitY > 0.5) || !entityPlayer.capabilities.isCreativeMode)
 				{
-					this.tryInsert(tileEntity, entityPlayer, allMode);
+					if (current != null && current.getMaxStackSize() > 1 && current.itemID != this.blockID)
+					{
+						this.tryInsert(tileEntity, entityPlayer, allMode);
+					}
 				}
 				// Remove items
 				else if (side == 0 || (side > 1 && hitY <= 0.5))
 				{
 					this.tryEject(tileEntity, entityPlayer, allMode);
 				}
+
 			}
 		}
 
