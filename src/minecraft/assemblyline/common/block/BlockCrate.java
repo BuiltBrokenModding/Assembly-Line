@@ -47,7 +47,6 @@ public class BlockCrate extends BlockALMachine
 	@Override
 	public Icon getBlockTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side)
 	{
-
 		return this.crate_icon;
 	}
 
