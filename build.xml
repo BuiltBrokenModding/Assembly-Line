@@ -17,14 +17,9 @@
 		<copy todir="${dir.development}">
 			<fileset dir="../Minecraft Forge/" />
 		</copy>
-        <!-- Download necessary files -->
-        <target name="download-files" depends="download-Dark-Library"/>
-
-        <!-- Download forge (if it doesn't exist) -->
-        <target name="download-Dark-Library">
-            <get src="https://github.com/DarkGuardsman/Dark-Library/archive/master.zip" dest="${download.dir}" usetimestamp="True"/>
-            <unzip dest="${download.dir}/unzip/.." src="${download.dir}/Dark-Library-master.zip/Dark-Library-master/"/>
-        </target>
+        
+        <get src="https://github.com/DarkGuardsman/Dark-Library/archive/master.zip" dest="${download.dir}" usetimestamp="True"/>
+        <unzip dest="${download.dir}/unzip/.." src="${download.dir}/Dark-Library-master.zip/Dark-Library-master/"/>
         
 		<copy todir="${dir.mcp}/src/minecraft">
 
