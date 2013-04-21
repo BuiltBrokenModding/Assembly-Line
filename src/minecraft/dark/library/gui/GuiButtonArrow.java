@@ -5,6 +5,8 @@ import net.minecraft.client.gui.GuiButton;
 
 import org.lwjgl.opengl.GL11;
 
+import dark.library.DarkMain;
+
 public class GuiButtonArrow extends GuiButton
 {
 	boolean isLeft = false;
@@ -22,7 +24,7 @@ public class GuiButtonArrow extends GuiButton
 	{
 		if (this.drawButton)
 		{
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, par1Minecraft.renderEngine.getTexture("/dark/library/resources/textures/gui/gui@.png"));
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, par1Minecraft.renderEngine.getTexture(DarkMain.GUI_DIRECTORY+"gui@.png"));
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			boolean var4 = width >= this.xPosition && hight >= this.yPosition && width < this.xPosition + this.width && hight < this.yPosition + this.height;
 			int var5 = 106;
