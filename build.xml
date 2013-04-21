@@ -5,7 +5,6 @@
 	<property file="build.properties" />
 	<property environment="env" />
 	<property name="file.EEjar" value="FluidMechanics_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
-    <property name="download.dir" value="download"/>
     
 	<target name="build">
 
@@ -17,9 +16,10 @@
 		<copy todir="${dir.development}">
 			<fileset dir="../Minecraft Forge/" />
 		</copy>
-        
-        <get src="https://github.com/DarkGuardsman/Dark-Library/archive/master.zip" dest="${download.dir}" usetimestamp="True"/>
-        <unzip dest="${download.dir}/unzip/.." src="${download.dir}/Dark-Library-master.zip/Dark-Library-master/"/>
+        <mkdir dir="download" />
+        <mkdir dir="download/unzip" />
+        <get src="https://github.com/DarkGuardsman/Dark-Library/archive/master.zip" dest="download" usetimestamp="True"/>
+        <unzip dest="download/unzip/.." src="${download.dir}/Dark-Library-master.zip/Dark-Library-master/"/>
         
 		<copy todir="${dir.mcp}/src/minecraft">
 
