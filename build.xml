@@ -23,7 +23,7 @@
         <get src="https://github.com/DarkGuardsman/Dark-Library/archive/master.zip" dest="download" usetimestamp="True"/>
         <unzip dest="download/unzip/.." src="download/master.zip"/>
         <get src="http://ic2api.player.to:8080/job/IC2/lastSuccessfulBuild/artifact/packages/${dir.ic}" dest="download" usetimestamp="True"/>
-        <unzip dest="download/unzip/.." src="download/master.zip"/>
+        <unzip dest="download/unzip/.." src="download/${dir.ic}"/>
         <get src="${dir.bc}" dest="download" usetimestamp="True"/>
         <unzip dest="download/unzip/.." src="download/master.zip"/>
         <get src="${dir.cc}" dest="download" usetimestamp="True"/>
