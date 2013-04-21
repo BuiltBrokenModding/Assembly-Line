@@ -208,7 +208,7 @@ public class FluidMech extends DummyModContainer
 
 		meta.url = "http://www.universalelectricity.com/fluidmechanics";
 
-		meta.logoFile = "/EELogo.png";
+		meta.logoFile = FluidMech.TEXTURE_DIRECTORY+"FM_Banner.png";
 		meta.version = FluidMech.VERSION;
 		meta.authorList = Arrays.asList(new String[] { "DarkGuardsman AKA DarkCow" });
 		meta.credits = "Please see the website.";
