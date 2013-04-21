@@ -20,14 +20,13 @@ public class BlockDrain extends BlockAdvanced
 	private Icon blockIcon;
 	private Icon drainIcon;
 	private Icon fillIcon;
+
 	public BlockDrain(int id)
 	{
 		super(id, Material.iron);
 		this.setCreativeTab(TabFluidMech.INSTANCE);
 		this.setUnlocalizedName("lmDrain");
 	}
-
-	
 
 	@Override
 	public void registerIcons(IconRegister par1IconRegister)
@@ -43,7 +42,8 @@ public class BlockDrain extends BlockAdvanced
 		return new TileEntityDrain();
 	}
 
-	public Icon getBlockTextureFromSideAndMetadata(int par1, int par2)
+	@Override
+	public Icon getIcon(int par1, int par2)
 	{
 		return par1 != 1 && par1 != 0 ? this.blockIcon : this.drainIcon;
 	}
@@ -95,10 +95,10 @@ public class BlockDrain extends BlockAdvanced
 			}
 			world.setBlockMetadataWithNotify(x, y, z, meta, 3);
 			TileEntity entity = world.getBlockTileEntity(x, y, z);
-			if(entity instanceof TileEntityDrain)
+			if (entity instanceof TileEntityDrain)
 			{
 				entityPlayer.sendChatToPlayer("Draining Sources? " + ((TileEntityDrain) entity).canDrainSources());
-				
+
 			}
 			return true;
 		}
