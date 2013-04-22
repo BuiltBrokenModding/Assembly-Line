@@ -34,7 +34,7 @@ public class BlockConstructionPump extends BlockAdvanced
 		this.setCreativeTab(TabFluidMech.INSTANCE);
 		this.setHardness(1f);
 		this.setResistance(5f);
-		
+
 	}
 
 	@Override
@@ -82,6 +82,7 @@ public class BlockConstructionPump extends BlockAdvanced
 	{
 		return 0;
 	}
+
 	@Override
 	public int getRenderType()
 	{
@@ -117,7 +118,13 @@ public class BlockConstructionPump extends BlockAdvanced
 		{
 			int meta = world.getBlockMetadata(x, y, z);
 			int angle = MathHelper.floor_double((entityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-
+			
+			TileEntity entity = world.getBlockTileEntity(x, y, z);
+			if (entity instanceof TileEntityConstructionPump)
+			{
+				HydraulicNetworkHelper.invalidate(entity);
+			}
+			
 			if (meta == 3)
 			{
 				world.setBlockMetadataWithNotify(x, y, z, 0, 3);
@@ -126,16 +133,10 @@ public class BlockConstructionPump extends BlockAdvanced
 			{
 				world.setBlockMetadataWithNotify(x, y, z, meta + 1, 3);
 			}
-			
-			TileEntity entity = world.getBlockTileEntity(x, y, z);
-			if(entity instanceof TileEntityConstructionPump)
-			{
-				HydraulicNetworkHelper.invalidate(entity);
-			}
+
 			return true;
 		}
 		return this.onUseWrench(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ);
 	}
-	
-	
+
 }
