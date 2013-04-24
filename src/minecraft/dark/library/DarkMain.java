@@ -1,5 +1,12 @@
 package dark.library;
 
+import java.awt.Color;
+
+import net.minecraft.world.World;
+import universalelectricity.core.vector.Vector3;
+import cpw.mods.fml.client.FMLClientHandler;
+import dark.library.effects.FXBeam;
+
 public class DarkMain
 {
 	/* RESOURCE FILE PATHS */
@@ -12,4 +19,8 @@ public class DarkMain
 	public static final String TEXTURE_NAME_PREFIX = "dark:";
 	
 	
+	public static void renderBeam(World world, Vector3 position, Vector3 target, Color color, int age)
+	{
+		FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXBeam(world, position, target, color.getRed(), color.getGreen(), color.getBlue(), age));
+	}
 }

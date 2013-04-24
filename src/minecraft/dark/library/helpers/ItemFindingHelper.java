@@ -18,7 +18,7 @@ public class ItemFindingHelper
 	 */
 	public static List<EntityItem> findAllItemIn(World world, Vector3 start, Vector3 end)
 	{
-		return world.getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(start.x, start.y, start.z, end.x, end.x, end.x));
+		return world.getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(start.x, start.y, start.z, end.x, end.y, end.z));
 	}
 
 	/**

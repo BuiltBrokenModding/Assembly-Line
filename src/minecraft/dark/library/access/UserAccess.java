@@ -1,4 +1,4 @@
-package dark.library.locking;
+package dark.library.access;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class UserAccess
 	}
 
 	/**
-	 * Reads a userAccess instance from nbt
+	 * Read from nbt
 	 */
 	public void readFromNBT(NBTTagCompound nbt)
 	{
@@ -38,16 +38,14 @@ public class UserAccess
 		this.level = AccessLevel.get(nbt.getInteger("ID"));
 	}
 
-	/**
-	 * writes a userAccess instance to nbt
-	 */
 	public static UserAccess loadFromNBT(NBTTagCompound nbt)
 	{
 		UserAccess access = new UserAccess("", AccessLevel.NONE, true);
 		access.readFromNBT(nbt);
 		return access;
 	}
-
+	
+	
 	/**
 	 * Reads an entire UserAccess list from an nbt file
 	 * 

@@ -1,4 +1,4 @@
-package dark.library.locking;
+package dark.library.access;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;

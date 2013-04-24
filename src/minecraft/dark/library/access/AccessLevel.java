@@ -1,4 +1,4 @@
-package dark.library.locking;
+package dark.library.access;
 
 public enum AccessLevel
 {
