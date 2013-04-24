@@ -3,10 +3,11 @@
 ### Brief
 Assembly Line is a Minecraft mod that brings realistic factory style systems into Minecraft.
 
-### Leaders and Developers
+### Project Team
+* Darkguardsman - Lead-Dev
 * Briman0094 - Ex-Dev
 * Calclavia - Ex-Dev
-* Darkguardsman - Lead
+
 
 ### License
 Anyone is free to work on the mod and will get credit as long as they understand the mod belongs to the repo owner.
