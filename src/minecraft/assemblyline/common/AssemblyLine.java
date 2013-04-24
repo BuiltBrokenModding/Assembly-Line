@@ -190,7 +190,6 @@ public class AssemblyLine
 
 		boolean ic2 = Loader.isModLoaded("IC2");
 		boolean ue = Loader.isModLoaded("BasicComponents");
-
 		createStandardRecipes();
 		if (ic2)
 		{

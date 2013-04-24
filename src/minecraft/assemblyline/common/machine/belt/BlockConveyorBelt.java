@@ -39,20 +39,18 @@ public class BlockConveyorBelt extends BlockALMachine
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
 	{
-		TileEntity t = world.getBlockTileEntity(x, y, z);
-
-		if (t != null && t instanceof TileEntityConveyorBelt)
+		if (world.getBlockTileEntity(x, y, z) instanceof TileEntityConveyorBelt)
 		{
-			TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) t;
+			TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) world.getBlockTileEntity(x, y, z);
 
 			if (tileEntity.getSlant() == SlantType.UP || tileEntity.getSlant() == SlantType.DOWN)
 			{
-				this.setBlockBounds(0f, 0f, 0f, 1f, 0.98f, 1f);
+				this.setBlockBounds(0f, 0f, 0f, 1f, 0.96f, 1f);
 				return;
 			}
 			if (tileEntity.getSlant() == SlantType.TOP)
 			{
-				this.setBlockBounds(0f, 0.68f, 0f, 1f, 0.98f, 1f);
+				this.setBlockBounds(0f, 0.68f, 0f, 1f, 0.96f, 1f);
 				return;
 			}
 		}
