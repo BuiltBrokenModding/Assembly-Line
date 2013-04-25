@@ -2,13 +2,16 @@ package dark.library.access;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.minecraft.nbt.NBTTagCompound;
+import universalelectricity.core.vector.Vector2;
 import universalelectricity.prefab.flag.NBTFileLoader;
 
-public class GlobalAccessList
+public class GlobalAccessManager
 {
 
 	/** Hash map of loaded lists **/
@@ -41,6 +44,31 @@ public class GlobalAccessList
 			list = this.createList(name, owner);
 		}
 		return list;
+	}
+
+	/**
+	 * gets all the access list by name the user can edit
+	 */
+	public List<String> getUsersLists(String username)
+	{
+		List<String> lists = new ArrayList<String>();
+		Iterator<Entry<String, List<UserAccess>>> it = this.globalUserLists.entrySet().iterator();
+
+		while (it.hasNext())
+		{
+			Entry<String, List<UserAccess>> entry = it.next();
+			List<UserAccess> list = entry.getValue();
+			for (UserAccess access : list)
+			{
+				if (access.username.equalsIgnoreCase(username) && access.level.ordinal() >= AccessLevel.ADMIN.ordinal())
+				{
+					lists.add(entry.getKey());
+					break;
+				}
+			}
+
+		}
+		return lists;
 	}
 
 	/**

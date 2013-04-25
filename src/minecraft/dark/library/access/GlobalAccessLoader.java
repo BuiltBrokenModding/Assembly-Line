@@ -29,9 +29,9 @@ public class GlobalAccessLoader implements INbtSave
 	@ServerStarting
 	public void serverStarting(FMLServerStartingEvent event)
 	{
-		if (!GlobalAccessList.hasLoaded)
+		if (!GlobalAccessManager.hasLoaded)
 		{
-			GlobalAccessList.getMasterSaveFile();
+			GlobalAccessManager.getMasterSaveFile();
 		}
 	}
 
@@ -44,12 +44,12 @@ public class GlobalAccessLoader implements INbtSave
 	@Override
 	public NBTTagCompound getSaveData()
 	{
-		return GlobalAccessList.getMasterSaveFile();
+		return GlobalAccessManager.getMasterSaveFile();
 	}
 
 	@Override
 	public boolean shouldSave(boolean isServer)
 	{
-		return isServer && GlobalAccessList.hasLoaded && !GlobalAccessList.loading;
+		return isServer && GlobalAccessManager.hasLoaded && !GlobalAccessManager.loading;
 	}
 }
