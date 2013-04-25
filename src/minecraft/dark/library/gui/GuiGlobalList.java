@@ -182,7 +182,7 @@ public class GuiGlobalList extends GuiBase implements IScroll
 
 	public List getDisplayList()
 	{
-		return new ArrayList<>();
+		return new ArrayList();
 	}
 
 	@Override
