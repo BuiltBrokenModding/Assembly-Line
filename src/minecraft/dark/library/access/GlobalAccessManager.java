@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import net.minecraft.nbt.NBTTagCompound;
-import universalelectricity.core.vector.Vector2;
 import universalelectricity.prefab.flag.NBTFileLoader;
 
 public class GlobalAccessManager
@@ -52,7 +51,7 @@ public class GlobalAccessManager
 	public List<String> getUsersLists(String username)
 	{
 		List<String> lists = new ArrayList<String>();
-		Iterator<Entry<String, List<UserAccess>>> it = this.globalUserLists.entrySet().iterator();
+		Iterator<Entry<String, List<UserAccess>>> it = GlobalAccessManager.globalUserLists.entrySet().iterator();
 
 		while (it.hasNext())
 		{

@@ -18,7 +18,6 @@ import universalelectricity.core.vector.Vector2;
 import universalelectricity.prefab.GuiBase;
 import universalelectricity.prefab.vector.Region2;
 import dark.library.DarkMain;
-import dark.library.access.AccessLevel;
 import dark.library.access.UserAccess;
 import dark.library.access.interfaces.IScroll;
 

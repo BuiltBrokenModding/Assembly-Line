@@ -38,7 +38,7 @@ public class GlobalAccessLoader implements INbtSave
 	@Override
 	public String saveFileName()
 	{
-		return this.SAVE_NAME;
+		return GlobalAccessLoader.SAVE_NAME;
 	}
 
 	@Override

@@ -3,10 +3,9 @@ package dark.library.terminal.commands;
 
 import java.util.List;
 
+import net.minecraft.entity.player.EntityPlayer;
 import dark.library.access.interfaces.ISpecialAccess;
 import dark.library.access.interfaces.ITerminal;
-
-import net.minecraft.entity.player.EntityPlayer;
 /**
  * 
  * @author Calclavia, DarkGuardsman

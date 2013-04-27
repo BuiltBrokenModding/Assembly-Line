@@ -5,8 +5,6 @@ import java.awt.Color;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.client.registry.KeyBindingRegistry;
-import cpw.mods.fml.common.SidedProxy;
 import dark.library.effects.FXBeam;
 
 public class DarkMain

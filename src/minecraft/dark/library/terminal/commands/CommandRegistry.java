@@ -4,9 +4,8 @@ package dark.library.terminal.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import dark.library.access.interfaces.ITerminal;
-
 import net.minecraft.entity.player.EntityPlayer;
+import dark.library.access.interfaces.ITerminal;
 /**
  * 
  * @author Calclavia, DarkGuardsman
