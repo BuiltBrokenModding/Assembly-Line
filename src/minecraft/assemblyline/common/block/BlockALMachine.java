@@ -2,10 +2,8 @@ package assemblyline.common.block;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import universalelectricity.prefab.block.BlockAdvanced;
 import assemblyline.common.AssemblyLine;
 import cpw.mods.fml.relauncher.Side;
