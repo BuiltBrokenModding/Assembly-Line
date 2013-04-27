@@ -1,8 +1,5 @@
 package hydraulic.api;
 
-import net.minecraft.block.Block;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
 
 public enum ColorCode

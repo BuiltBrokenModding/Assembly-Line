@@ -6,7 +6,6 @@ import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 
 import fluidmech.client.model.ModelConstructionPump;
-import fluidmech.client.model.ModelGenerator;
 import fluidmech.common.FluidMech;
 import fluidmech.common.pump.TileEntityConstructionPump;
 

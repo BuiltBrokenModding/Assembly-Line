@@ -2,12 +2,10 @@ package hydraulic.fluidnetwork;
 
 import hydraulic.api.IColorCoded;
 import hydraulic.api.IPipeConnection;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidStack;
-import universalelectricity.core.block.IConnectionProvider;
 
 /**
  * A machine that acts as one with the liquid network using the networks pressure for some function

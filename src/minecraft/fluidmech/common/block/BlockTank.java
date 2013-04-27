@@ -18,7 +18,6 @@ import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.prefab.block.BlockAdvanced;
 import fluidmech.client.render.BlockRenderHelper;
-import fluidmech.common.FluidMech;
 import fluidmech.common.TabFluidMech;
 import fluidmech.common.tiles.TileEntityTank;
 

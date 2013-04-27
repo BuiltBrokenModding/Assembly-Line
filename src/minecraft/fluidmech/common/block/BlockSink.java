@@ -1,6 +1,5 @@
 package fluidmech.common.block;
 
-import dark.library.helpers.MetaGroup;
 import hydraulic.helpers.FluidHelper;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
@@ -18,6 +17,7 @@ import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.prefab.block.BlockAdvanced;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
+import dark.library.helpers.MetaGroup;
 import fluidmech.client.render.BlockRenderHelper;
 import fluidmech.common.TabFluidMech;
 import fluidmech.common.tiles.TileEntitySink;

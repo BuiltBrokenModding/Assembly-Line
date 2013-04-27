@@ -2,7 +2,6 @@ package fluidmech.common.tiles;
 
 import fluidmech.common.FluidMech;
 import hydraulic.api.ColorCode;
-import hydraulic.api.FluidRestrictionHandler;
 import hydraulic.api.IColorCoded;
 import hydraulic.helpers.FluidHelper;
 import hydraulic.prefab.tile.TileEntityFluidStorage;

@@ -20,7 +20,6 @@ import com.google.common.io.ByteArrayDataInput;
 
 import dark.library.helpers.ConnectionHelper;
 import dark.library.helpers.MetaGroup;
-
 import fluidmech.api.mech.IForce;
 
 public class TileEntityGenerator extends TileEntityElectrical implements IPacketReceiver, IForce, IReadOut, IRedstoneReceptor

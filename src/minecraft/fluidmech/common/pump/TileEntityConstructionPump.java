@@ -1,6 +1,5 @@
 package fluidmech.common.pump;
 
-import dark.library.helpers.MetaGroup;
 import hydraulic.api.IPipeConnection;
 import hydraulic.fluidnetwork.HydraulicNetworkHelper;
 import hydraulic.fluidnetwork.IFluidNetworkPart;
@@ -15,6 +14,7 @@ import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.tile.TileEntityElectricityRunnable;
+import dark.library.helpers.MetaGroup;
 
 public class TileEntityConstructionPump extends TileEntityElectricityRunnable implements ITankContainer, IPipeConnection
 {

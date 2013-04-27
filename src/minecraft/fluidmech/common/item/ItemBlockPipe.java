@@ -1,9 +1,9 @@
 package fluidmech.common.item;
 
-import fluidmech.common.FluidMech;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import fluidmech.common.FluidMech;
 
 public class ItemBlockPipe extends ItemBlock
 {

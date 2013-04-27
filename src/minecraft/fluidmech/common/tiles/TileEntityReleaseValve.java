@@ -1,6 +1,5 @@
 package fluidmech.common.tiles;
 
-import fluidmech.common.machines.pipes.TileEntityPipe;
 import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
 import hydraulic.api.IPipeConnection;
@@ -11,16 +10,14 @@ import hydraulic.prefab.tile.TileEntityFluidDevice;
 import java.util.ArrayList;
 import java.util.List;
 
-import dark.library.helpers.ConnectionHelper;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
+import dark.library.helpers.ConnectionHelper;
 
 public class TileEntityReleaseValve extends TileEntityFluidDevice implements IPipeConnection, IReadOut
 {
