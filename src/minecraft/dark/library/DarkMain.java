@@ -26,11 +26,10 @@ public class DarkMain
 		FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXBeam(world, position, target, color.getRed(), color.getGreen(), color.getBlue(), age));
 	}
 	
-	@SidedProxy(clientSide = "dark.library.ClientProxy", serverSide = "dark.library..CommonProxy")
-	public static CommonProxy proxy;
+	
 	
 	public void init()
 	{
-		proxy.preInit();		
+		
 	}
 }
