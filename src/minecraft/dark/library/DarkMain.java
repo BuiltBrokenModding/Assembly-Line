@@ -25,11 +25,4 @@ public class DarkMain
 	{
 		FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXBeam(world, position, target, color.getRed(), color.getGreen(), color.getBlue(), age));
 	}
-	
-	
-	
-	public void init()
-	{
-		
-	}
 }
