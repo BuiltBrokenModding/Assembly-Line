@@ -1,0 +1,6 @@
+[submodule "Universal-Electricity"]
+	path = Universal-Electricity
+	url = git@github.com:calclavia/Universal-Electricity.git
+[submodule "Dark-Library"]
+	path = Dark-Library
+	url = git@github.com:DarkGuardsman/Dark-Library.git

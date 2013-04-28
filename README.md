@@ -1,10 +1,10 @@
 ##  Fluid Mechanics
 
 ### Brief
-Fluid Mechanics is a modifaction for minecraf that uses Forge, and UE to add support for Liquids and Mechanical energy transport and storage. 
+Fluid Mechanics is a modifaction for minecraft that uses Forge, and UE to add support for Liquids and Mechanical energy transport and storage. 
 
 ### Leaders and Developers
-* Darkguardsman
+* Darkguardsman - Lead
 
 ### License
 This intellectual property is licensed under the following license: https://github.com/DarkGuardsman/Fluid-Mechanics/blob/master/LISENCE.txt
