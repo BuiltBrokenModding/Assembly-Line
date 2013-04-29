@@ -89,8 +89,8 @@ public class BlockCrate extends BlockALMachine
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
-		if (super.onBlockActivated(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ))
-			return true;
+		if (super.onBlockActivated(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ)){
+			return true;}
 
 		if (!world.isRemote)
 		{
@@ -101,12 +101,7 @@ public class BlockCrate extends BlockALMachine
 				/**
 				 * Make double clicking input all stacks.
 				 */
-				boolean allMode = false;
-
-				if (world.getWorldTime() - tileEntity.prevClickTime < 10)
-				{
-					allMode = true;
-				}
+				boolean allMode = (world.getWorldTime() - tileEntity.prevClickTime < 10);
 
 				tileEntity.prevClickTime = world.getWorldTime();
 				ItemStack current = entityPlayer.inventory.getCurrentItem();
@@ -114,7 +109,7 @@ public class BlockCrate extends BlockALMachine
 				// Add items
 				if (side == 1 || (side > 1 && hitY > 0.5) || !entityPlayer.capabilities.isCreativeMode)
 				{
-					if (current != null && current.getMaxStackSize() > 1 && current.itemID != this.blockID)
+					if (current != null && (current.getMaxStackSize() > 1 || current.itemID == this.blockID))
 					{
 						this.tryInsert(tileEntity, entityPlayer, allMode);
 					}
