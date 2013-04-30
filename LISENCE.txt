@@ -1,4 +1,5 @@
-v1.0
+Copyright (c) 2013, DarkGuardsman
+All rights reserved.
 
 0. Definitions
 
@@ -18,7 +19,7 @@ Mod: The mod code designated by the present license, in source form, binary form
 Dependency: Code required for the Mod to work properly. This includes dependencies required to compile the code as well as any file or modification
 that is explicitely or implicitely required for the Mod to be working.
 
-Owner: The project leader of the Mod.
+Owner: The project leader of the Mod reguardless of repo holder or manager
 
 1. Scope
 --------
@@ -38,7 +39,7 @@ The user is allowed to install this Mod on a client or a server and to play with
 4. Modification rights
 ----------------------
 
-The user may modify the original code for private use or to make a contribution to the project. Contrubution doesn't make the user a develeper of the project or allow unlimited distrubution rights.
+The user may modify the original code for private use, learning experience or to make a contribution to the original project source code. 
 
 5. Distribution of original or modified copy rights
 ---------------------------------------------------
@@ -53,8 +54,8 @@ resulting from source modifications
 
 A) The user is NOT allowed to redistribute this Mod partially, in totality, or included in a distribution without explict permissions from the owner. 
 
-B) In the case of a private or public server only mod pack the user can distribute the mod without permission. 
+B) In the case of a server only mod pack the user can distribute the mod without permission. This is given as long as the owner of the server has a way to restrict the pack download to users of the server.
 
-C) In the case of a public mod pack the user needs writen permission or wait two weeks after a release to use it in a pack. 
+C) In the case of a public mod pack the user needs writen permission or wait two weeks after a release. 
 
-D) When permission is given it requirement that the user provide documentation to prove permission to distrubute all mods in the pack including this mod, provide a way for the user to view the site hosting this mod, and provide credit to the owner of the mod. 
+D) If the user desitrubutes the mod in anyway with permission the user must provide documentation of permission, links to mod documentation, and credit to creators of the mod.
