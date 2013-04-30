@@ -68,12 +68,7 @@ public class BlockCrate extends BlockALMachine
 				/**
 				 * Make double clicking input all stacks.
 				 */
-				boolean allMode = false;
-
-				if (world.getWorldTime() - tileEntity.prevClickTime < 10)
-				{
-					allMode = true;
-				}
+				boolean allMode = (world.getWorldTime() - tileEntity.prevClickTime < 10);
 
 				tileEntity.prevClickTime = world.getWorldTime();
 

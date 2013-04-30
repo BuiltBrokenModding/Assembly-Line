@@ -40,7 +40,7 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
-public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInventory, IArmbotUseable, IPacketReceiver
+public class TileEntityImprinter extends TileEntityAdvanced implements IInventory, IArmbotUseable, IPacketReceiver
 {
 	public static final int IMPRINTER_MATRIX_START = 9;
 	public static final int INVENTORY_START = IMPRINTER_MATRIX_START + 3;
@@ -76,18 +76,6 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	public boolean canUpdate()
 	{
 		return false;
-	}
-
-	@Override
-	public int getStartInventorySide(ForgeDirection side)
-	{
-		return INVENTORY_START;
-	}
-
-	@Override
-	public int getSizeInventorySide(ForgeDirection side)
-	{
-		return containingItems.length;
 	}
 
 	@Override
@@ -859,14 +847,12 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	@Override
 	public boolean isInvNameLocalized()
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isStackValidForSlot(int i, ItemStack itemstack)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 }
