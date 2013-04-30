@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
@@ -19,12 +20,12 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.common.ISidedInventory;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import universalelectricity.core.vector.Vector3;
+import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.multiblock.TileEntityMulti;
 import universalelectricity.prefab.network.IPacketReceiver;
@@ -40,7 +41,7 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
-public class TileEntityImprinter extends TileEntityAdvanced implements IInventory, IArmbotUseable, IPacketReceiver
+public class TileEntityImprinter extends TileEntityAdvanced implements net.minecraftforge.common.ISidedInventory, ISidedInventory, IArmbotUseable, IPacketReceiver
 {
 	public static final int IMPRINTER_MATRIX_START = 9;
 	public static final int INVENTORY_START = IMPRINTER_MATRIX_START + 3;
@@ -109,27 +110,6 @@ public class TileEntityImprinter extends TileEntityAdvanced implements IInventor
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int slot)
-	{
-		if (slot < IMPRINTER_MATRIX_START)
-		{
-			return this.craftingMatrix[slot];
-		}
-		else if (slot < INVENTORY_START)
-		{
-			return this.imprinterMatrix[slot - IMPRINTER_MATRIX_START];
-		}
-		else
-		{
-			return this.containingItems[slot - INVENTORY_START];
-		}
-	}
-
-	/**
-	 * Removes from an inventory slot (first arg) up to a specified number (second arg) of items and
-	 * returns them in a new stack.
-	 */
-	@Override
 	public ItemStack decrStackSize(int i, int amount)
 	{
 		if (this.getStackInSlot(i) != null)
@@ -160,6 +140,23 @@ public class TileEntityImprinter extends TileEntityAdvanced implements IInventor
 		}
 	}
 
+	@Override
+	public ItemStack getStackInSlot(int slot)
+	{
+		if (slot < IMPRINTER_MATRIX_START)
+		{
+			return this.craftingMatrix[slot];
+		}
+		else if (slot < INVENTORY_START)
+		{
+			return this.imprinterMatrix[slot - IMPRINTER_MATRIX_START];
+		}
+		else
+		{
+			return this.containingItems[slot - INVENTORY_START];
+		}
+	}
+
 	/**
 	 * When some containers are closed they call this on each slot, then drop whatever it returns as
 	 * an EntityItem - like when you close a workbench GUI.
@@ -183,20 +180,6 @@ public class TileEntityImprinter extends TileEntityAdvanced implements IInventor
 	public String getInvName()
 	{
 		return TranslationHelper.getLocal("tile.imprinter.name");
-	}
-
-	@Override
-	public int getInventoryStackLimit()
-	{
-		return 64;
-	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer player)
-	{
-		if (this.worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
-			return false;
-		return true;
 	}
 
 	@Override
@@ -297,6 +280,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements IInventor
 
 			if (!this.isImprinting)
 			{
+				System.out.println("Crafting");
 				this.imprinterMatrix[2] = null;
 
 				/**
@@ -311,10 +295,12 @@ public class TileEntityImprinter extends TileEntityAdvanced implements IInventor
 
 				if (inventoryCrafting != null)
 				{
+					
 					ItemStack matrixOutput = CraftingManager.getInstance().findMatchingRecipe(inventoryCrafting, this.worldObj);
 
 					if (matrixOutput != null)
 					{
+						System.out.println("Using crafting grid");
 						this.imprinterMatrix[2] = matrixOutput;
 						didCraft = true;
 					}
@@ -322,8 +308,11 @@ public class TileEntityImprinter extends TileEntityAdvanced implements IInventor
 
 				if (this.imprinterMatrix[0] != null && !didCraft)
 				{
+					
 					if (this.imprinterMatrix[0].getItem() instanceof ItemImprinter)
 					{
+						System.out.println("Using imprint as grid");
+						
 						ArrayList<ItemStack> filters = ItemImprinter.getFilters(this.imprinterMatrix[0]);
 
 						for (ItemStack outputStack : filters)
@@ -331,11 +320,11 @@ public class TileEntityImprinter extends TileEntityAdvanced implements IInventor
 							if (outputStack != null)
 							{
 								Pair<ItemStack, ItemStack[]> idealRecipe = this.getIdealRecipe(outputStack);
-
+								
 								if (idealRecipe != null)
 								{
 									ItemStack recipeOutput = idealRecipe.getKey();
-
+									System.out.println("Ideal R: "+recipeOutput.toString());
 									if (recipeOutput != null & recipeOutput.stackSize > 0)
 									{
 										this.imprinterMatrix[2] = recipeOutput;
@@ -625,38 +614,21 @@ public class TileEntityImprinter extends TileEntityAdvanced implements IInventor
 			}
 		}
 
-		for (IInventory inventory : getSimulatedAvaliableInventories())
-		{
-			for (int i = 0; i < inventory.getSizeInventory(); i++)
-			{
-				ItemStack checkStack = inventory.getStackInSlot(i);
-
-				if (checkStack != null)
-				{
-					if (recipeItem.isItemEqual(checkStack) || (recipeItem.itemID == checkStack.itemID && recipeItem.getItemDamage() < 0))
-					{
-						// TODO Do NBT Checking
-						inventory.decrStackSize(i, 1);
-						return true;
-					}
-				}
-			}
-		}
-
 		return false;
 	}
 
+	/**
+	 * Gets all valid inventories that imprinter can use for resources
+	 */
 	private List<IInventory> getAvaliableInventories()
 	{
 		List<IInventory> inventories = new ArrayList<IInventory>();
 
 		if (this.searchInventories)
 		{
-			for (int side = 0; side < 6; side++)
+			for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 			{
-				Vector3 position = new Vector3(this);
-				position.modifyPositionFromSide(ForgeDirection.getOrientation(side));
-				TileEntity tileEntity = position.getTileEntity(this.worldObj);
+				TileEntity tileEntity = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), direction);
 
 				if (tileEntity != null)
 				{
@@ -684,17 +656,12 @@ public class TileEntityImprinter extends TileEntityAdvanced implements IInventor
 						 */
 						for (int i = 2; i < 6; i++)
 						{
-							ForgeDirection searchDirection = ForgeDirection.getOrientation(i);
-							Vector3 searchPosition = position.clone();
-							searchPosition.modifyPositionFromSide(searchDirection);
+							TileEntity chest = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(tileEntity), ForgeDirection.getOrientation(2));
 
-							if (searchPosition.getTileEntity(this.worldObj) != null)
+							if (chest != null && chest.getClass() == tileEntity.getClass())
 							{
-								if (searchPosition.getTileEntity(this.worldObj).getClass() == tileEntity.getClass())
-								{
-									inventories.add((TileEntityChest) searchPosition.getTileEntity(this.worldObj));
-									break;
-								}
+								inventories.add((TileEntityChest) chest);
+								break;
 							}
 						}
 
@@ -708,54 +675,6 @@ public class TileEntityImprinter extends TileEntityAdvanced implements IInventor
 		}
 
 		return inventories;
-	}
-
-	private List<IInventory> getSimulatedAvaliableInventories()
-	{
-		List<IInventory> simulatedInventories = new ArrayList<IInventory>();
-
-		/**
-		 * Create a simulated version of all TileEntities.
-		 */
-		for (IInventory inventory : this.getAvaliableInventories())
-		{
-			if (inventory instanceof TileEntity)
-			{
-				TileEntity tileEntity = (TileEntity) inventory;
-
-				try
-				{
-					// TODO: Get Client Side Working. The issue is that the client side doesn't know
-					// about the chest, and hence does not get the correct data.
-					TileEntity simulatedTileEntity = tileEntity.getClass().newInstance();
-					simulatedTileEntity.worldObj = tileEntity.worldObj;
-
-					NBTTagCompound cloneData = new NBTTagCompound();
-					tileEntity.writeToNBT(cloneData);
-					tileEntity.readFromNBT(cloneData);
-
-					for (int i = 0; i < inventory.getSizeInventory(); i++)
-					{
-						ItemStack itemStack = inventory.getStackInSlot(i);
-
-						if (itemStack != null)
-						{
-							itemStack = itemStack.copy();
-						}
-
-						((IInventory) simulatedTileEntity).setInventorySlotContents(i, itemStack);
-					}
-
-					simulatedInventories.add((IInventory) simulatedTileEntity);
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-				}
-			}
-		}
-
-		return simulatedInventories;
 	}
 
 	@Override
@@ -847,12 +766,64 @@ public class TileEntityImprinter extends TileEntityAdvanced implements IInventor
 	@Override
 	public boolean isInvNameLocalized()
 	{
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean isStackValidForSlot(int i, ItemStack itemstack)
 	{
 		return true;
+	}
+
+	@Override
+	public int getInventoryStackLimit()
+	{
+		return 64;
+	}
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer entityplayer)
+	{
+		return this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord) != this ? false : entityplayer.getDistanceSq((double) this.xCoord + 0.5D, (double) this.yCoord + 0.5D, (double) this.zCoord + 0.5D) <= 64.0D;
+
+	}
+
+	@Override
+	public int[] getSizeInventorySide(int var1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean func_102007_a(int i, ItemStack itemstack, int j)
+	{
+		return this.isStackValidForSlot(i, itemstack);
+	}
+
+	@Override
+	public boolean func_102008_b(int i, ItemStack itemstack, int j)
+	{
+		return this.isStackValidForSlot(i, itemstack);
+	}
+
+	@Override
+	public int getStartInventorySide(ForgeDirection side)
+	{
+		if(side == ForgeDirection.DOWN || side == ForgeDirection.UP)
+		{
+			return this.craftingMatrix.length + this.imprinterMatrix.length;
+		}
+		return this.craftingMatrix.length + 1;
+	}
+
+	@Override
+	public int getSizeInventorySide(ForgeDirection side)
+	{
+		if(side == ForgeDirection.DOWN || side == ForgeDirection.UP)
+		{
+			return this.containingItems.length -1;
+		}
+		return 1;
 	}
 }
