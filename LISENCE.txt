@@ -38,7 +38,7 @@ The user is allowed to install this Mod on a client or a server and to play with
 4. Modification rights
 ----------------------
 
-The user has NO right to decompile the source code, look at either the decompiled version or the original source code, or to modify it without the explict permission from the owner of the Mod. Decompilation or reverse-engineering is strictly prohibited.
+The user may modify the original code for private use or to make a contribution to the project. Contrubution doesn't make the user a develeper of the project or allow unlimited distrubution rights.
 
 5. Distribution of original or modified copy rights
 ---------------------------------------------------
@@ -53,7 +53,7 @@ resulting from source modifications
 
 A) The user is NOT allowed to redistribute this Mod partially, in totality, or included in a distribution without explict permissions from the owner. 
 
-B) In the case of a private or public server only mod pack to distribute the mod without permission. 
+B) In the case of a private or public server only mod pack the user can distribute the mod without permission. 
 
 C) In the case of a public mod pack the user needs writen permission or wait two weeks after a release to use it in a pack. 
 
