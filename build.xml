@@ -7,7 +7,10 @@
 	<property name="file.EEjar" value="FluidMechanics_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
     
 	<target name="build"> 
-    
+    	<copy todir="${dir.development}">
+			<fileset dir="../Minecraft Forge/" />
+		</copy>
+        
 		<copy todir="${dir.mcp}/src/minecraft">
 			<fileset dir="${dir.development}src">
 				<exclude name=".git/**"/>
