@@ -6,57 +6,18 @@
 	<property environment="env" />
 	<property name="file.EEjar" value= "AssemblyLine_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
 
-	<target name="build">
-
-		<delete dir="contents" />
-		<delete dir="build" />
-        <delete dir="download" />
-		<delete dir="${dir.development}/forge" />
-		
-		<copy todir="${dir.development}">
-			<fileset dir="../Minecraft Forge/" />
-		</copy>
-        
-        <mkdir dir="download" />
-        <mkdir dir="download/cc" />
-        
-        <get src="https://github.com/DarkGuardsman/Dark-Library/archive/master.zip" dest="download" usetimestamp="True"/>
-        <unzip dest="download/unzip/.." src="download/master.zip"/>
-        <get src="http://ic2api.player.to:8080/job/IC2/lastSuccessfulBuild/artifact/packages/${dir.ic}" dest="download" usetimestamp="True"/>
-        <unzip dest="download/unzip/.." src="download/${dir.ic}"/>
-        <get src="${dir.bc}" dest="download" usetimestamp="True"/>
-        <unzip dest="download/unzip/.." src="download/master.zip"/>
-        <get src="${dir.cc}" dest="download" usetimestamp="True"/>
-        <unzip dest="download/cc/" src="download/ComputerCraft.zip"/>
+	<target name="build">	
         
 		<copy todir="${dir.mcp}/src/minecraft">
-			
 			<fileset dir="${dir.development}src">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
-			
-			<fileset dir="${dir.development}../Universal Electricity/src">
+			<fileset dir="${dir.development}Modding-Library/">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
-            
-             <fileset dir="download/Dark-Library-master/src/minecraft/">
-				<exclude name=".git/**"/>
-				<exclude name="**/*.xml"/>
-			</fileset>
-            
-             <fileset dir="download/cc/api/src/dan200">
-				<exclude name=".git/**"/>
-				<exclude name="**/*.xml"/>
-			</fileset>
-            
-             <fileset dir="download/ic2">
-				<exclude name=".git/**"/>
-				<exclude name="**/*.xml"/>
-			</fileset>
-            
-             <fileset dir="download/BuildCraft-master/common/buildcraft/api">
+			<fileset dir="${dir.development}Dark-Library/src/minecraft/">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
