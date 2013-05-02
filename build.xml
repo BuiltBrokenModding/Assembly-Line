@@ -61,7 +61,7 @@
 				<exclude name="**/*.xml"/>
 			</fileset>
              
-            <fileset dir="download/Dark-Library-master/resources">
+            <fileset dir="**/Dark-Library/resources">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.java"/>
 				<exclude name="**/*.xml"/>
