@@ -104,18 +104,7 @@ public class RenderCrate extends TileEntitySpecialRenderer
 				{
 					this.renderText(amount, side, 0.02f, x, y - 0.15f, z);
 				}
-			}
-
-			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-			MovingObjectPosition objectPosition = player.rayTrace(8, 1);
-
-			if (objectPosition != null)
-			{
-				if (objectPosition.blockX == tileCrate.xCoord && objectPosition.blockY == tileCrate.yCoord && objectPosition.blockZ == tileCrate.zCoord)
-				{
-					RenderHelper.renderFloatingText(itemName + (amount.isEmpty() ? "" : " (" + amount + ")"), (float) x + 0.5f, (float) y - 1f, (float) z + 0.5f, 0xFFFFFF);
-				}
-			}
+			}			
 		}
 	}
 
