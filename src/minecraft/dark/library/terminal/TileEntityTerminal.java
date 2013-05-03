@@ -1,6 +1,5 @@
 package dark.library.terminal;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +13,7 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
-import universalelectricity.prefab.tile.TileEntityElectricityRunnable;
+import calclavia.lib.TileEntityUniversalRunnable;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -25,41 +24,32 @@ import dark.library.access.UserAccess;
 import dark.library.access.interfaces.ISpecialAccess;
 import dark.library.access.interfaces.ITerminal;
 import dark.library.terminal.commands.CommandRegistry;
+
 /**
  * 
  * @author Calclavia, DarkGuardsman
- *
+ * 
  */
-public abstract class TileEntityTerminal extends TileEntityElectricityRunnable implements ISpecialAccess, IPacketReceiver, ITerminal
+public abstract class TileEntityTerminal extends TileEntityUniversalRunnable implements ISpecialAccess, IPacketReceiver, ITerminal
 {
 	public enum PacketType
 	{
 		GUI_EVENT, GUI_COMMAND, TERMINAL_OUTPUT, DESCRIPTION_DATA;
 	}
 
-	/**
-	 * A list of everything typed inside the terminal.
-	 */
+	/** A list of everything typed inside the terminal */
 	private final List<String> terminalOutput = new ArrayList<String>();
 
-	/**
-	 * A list of user access data.
-	 */
+	/** A list of user access data. */
 	private final List<UserAccess> users = new ArrayList<UserAccess>();
 
-	/**
-	 * The amount of players using the console.
-	 */
+	/** The amount of players using the console. */
 	public int playersUsing = 0;
 
-	/**
-	 * The amount of lines the terminal can store.
-	 */
+	/** The amount of lines the terminal can store. */
 	public static final int SCROLL_SIZE = 15;
 
-	/**
-	 * Used on client side to determine the scroll of the terminal.
-	 */
+	/** Used on client side to determine the scroll of the terminal. */
 	private int scroll = 0;
 
 	@Override
@@ -85,13 +75,10 @@ public abstract class TileEntityTerminal extends TileEntityElectricityRunnable i
 		}
 	}
 
-	/**
-	 * Packet Methods
-	 */
+	/** Channel to be used for packets */
 	public abstract String getChannel();
-	/**
-	 * Sends all NBT data. Server -> Client
-	 */
+
+	/** Sends all NBT data. Server -> Client */
 	@Override
 	public Packet getDescriptionPacket()
 	{
@@ -100,9 +87,7 @@ public abstract class TileEntityTerminal extends TileEntityElectricityRunnable i
 		return PacketManager.getPacket(this.getChannel(), this, PacketType.DESCRIPTION_DATA.ordinal(), nbt);
 	}
 
-	/**
-	 * Sends all Terminal data Server -> Client
-	 */
+	/** Sends all Terminal data Server -> Client */
 	public void sendTerminalOutputToClients()
 	{
 		List data = new ArrayList();
@@ -114,12 +99,7 @@ public abstract class TileEntityTerminal extends TileEntityElectricityRunnable i
 		PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 10);
 	}
 
-	/**
-	 * Client -> Server
-	 * 
-	 * @param entityPlayer
-	 * @param cmdInput
-	 */
+	/** Send a terminal command to the server */
 	public void sendCommandToServer(EntityPlayer entityPlayer, String cmdInput)
 	{
 		if (this.worldObj.isRemote)
@@ -223,6 +203,11 @@ public abstract class TileEntityTerminal extends TileEntityElectricityRunnable i
 			}
 		}
 		return AccessLevel.NONE;
+	}
+
+	public boolean canUserAccess(String username)
+	{
+		return(this.getUserAccess(username).ordinal() > AccessLevel.BASIC.ordinal());
 	}
 
 	@Override
