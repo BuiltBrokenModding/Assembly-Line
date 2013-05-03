@@ -99,7 +99,7 @@ public abstract class TileEntityTerminal extends TileEntityUniversalRunnable imp
 		PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 10);
 	}
 
-	/** Send a terminal command to the server */
+	/** Send a terminal command Client -> server */
 	public void sendCommandToServer(EntityPlayer entityPlayer, String cmdInput)
 	{
 		if (this.worldObj.isRemote)

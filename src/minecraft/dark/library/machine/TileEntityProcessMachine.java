@@ -15,7 +15,7 @@ public abstract class TileEntityProcessMachine extends TileEntityBasicMachine
 	int[] BOTTOM_SLOTS = { 2 };
 
 	@Override
-	public int[] getSizeInventorySide(int side)
+	public int[] getAccessibleSlotsFromSide(int side)
 	{
 		ForgeDirection direction = ForgeDirection.getOrientation(side);
 		switch (direction)
@@ -37,13 +37,13 @@ public abstract class TileEntityProcessMachine extends TileEntityBasicMachine
 	}
 
 	@Override
-	public boolean func_102007_a(int par1, ItemStack par2ItemStack, int par3)
+	public boolean canInsertItem(int par1, ItemStack par2ItemStack, int par3)
 	{
 		return this.isStackValidForSlot(par1, par2ItemStack);
 	}
 
 	@Override
-	public boolean func_102008_b(int i, ItemStack itemstack, int j)
+	public boolean canExtractItem(int i, ItemStack itemstack, int j)
 	{
 		return this.isStackValidForSlot(i, itemstack);
 	}
