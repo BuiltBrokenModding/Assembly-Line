@@ -1,6 +1,5 @@
 package assemblyline.common;
 
-
 import ic2.api.item.Items;
 import ic2.api.recipe.Recipes;
 
@@ -53,8 +52,7 @@ import cpw.mods.fml.relauncher.Side;
 @NetworkMod(channels = { AssemblyLine.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
 public class AssemblyLine
 {
-	
-	
+
 	// @Mod Prerequisites
 	public static final String MAJOR_VERSION = "@MAJOR@";
 	public static final String MINOR_VERSION = "@MINOR@";
@@ -68,13 +66,13 @@ public class AssemblyLine
 
 	// @NetworkMod
 	public static final String CHANNEL = "AssemblyLine";
-	
+
 	@SidedProxy(clientSide = "assemblyline.client.ClientProxy", serverSide = "assemblyline.common.CommonProxy")
 	public static CommonProxy proxy;
 
 	@Instance(AssemblyLine.CHANNEL)
 	public static AssemblyLine instance;
-	
+
 	@Metadata(AssemblyLine.MOD_ID)
 	public static ModMetadata meta;
 
@@ -252,23 +250,31 @@ public class AssemblyLine
 
 	private void createIC2Recipes()
 	{
-		System.out.println("IC2 Found...adding IC2 recipes for Assembly Line.");
-		// Armbot
-		GameRegistry.addRecipe(new ItemStack(blockArmbot, 1), "II ", "SIS", "MCM", 'S', Items.getItem("advancedAlloy"), 'C', Items.getItem("electronicCircuit"), 'I', "ingotRefinedIron", 'M', Items.getItem("generator"));
-		// Disk
-		GameRegistry.addRecipe(new ItemStack(itemDisk, 1), "III", "ICI", "III", 'I', itemImprint, 'C', Items.getItem("advancedCircuit"));
-		// Encoder
-		GameRegistry.addRecipe(new ItemStack(blockEncoder, 1), "SIS", "SCS", "SSS", 'I', itemImprint, 'S', "ingotRefinedIron", 'C', Items.getItem("advancedCircuit"));
-		// Detector
-		GameRegistry.addRecipe(new ItemStack(blockDetector, 1), "SES", "SCS", "S S", 'S', "ingotRefinedIron", 'C', Items.getItem("electronicCircuit"), 'E', Item.eyeOfEnder);
-		// Conveyor Belt
-		GameRegistry.addRecipe(new ItemStack(blockConveyorBelt, 10), "III", "WMW", 'I', "ingotRefinedIron", 'W', Block.planks, 'M', Items.getItem("generator"));
-		// Rejector
-		GameRegistry.addRecipe(new ItemStack(blockRejector, 1), "WPW", "@R@", '@', "ingotRefinedIron", 'R', Item.redstone, 'P', Block.pistonBase, 'C', Items.getItem("electronicCircuit"), 'W', Items.getItem("insulatedCopperCableItem"));
-		// Turntable
-		GameRegistry.addRecipe(new ItemStack(blockTurntable, 1), "M", "P", 'M', Items.getItem("generator"), 'P', Block.pistonBase);
-		// Manipulator
-		GameRegistry.addShapelessRecipe(new ItemStack(blockManipulator, 2), Block.dispenser, Items.getItem("electronicCircuit"));
+		try
+		{
+			System.out.println("IC2 Found...adding IC2 recipes for Assembly Line.");
+			// Armbot
+			GameRegistry.addRecipe(new ItemStack(blockArmbot, 1), "II ", "SIS", "MCM", 'S', Items.getItem("advancedAlloy"), 'C', Items.getItem("electronicCircuit"), 'I', "ingotRefinedIron", 'M', Items.getItem("generator"));
+			// Disk
+			GameRegistry.addRecipe(new ItemStack(itemDisk, 1), "III", "ICI", "III", 'I', itemImprint, 'C', Items.getItem("advancedCircuit"));
+			// Encoder
+			GameRegistry.addRecipe(new ItemStack(blockEncoder, 1), "SIS", "SCS", "SSS", 'I', itemImprint, 'S', "ingotRefinedIron", 'C', Items.getItem("advancedCircuit"));
+			// Detector
+			GameRegistry.addRecipe(new ItemStack(blockDetector, 1), "SES", "SCS", "S S", 'S', "ingotRefinedIron", 'C', Items.getItem("electronicCircuit"), 'E', Item.eyeOfEnder);
+			// Conveyor Belt
+			GameRegistry.addRecipe(new ItemStack(blockConveyorBelt, 10), "III", "WMW", 'I', "ingotRefinedIron", 'W', Block.planks, 'M', Items.getItem("generator"));
+			// Rejector
+			GameRegistry.addRecipe(new ItemStack(blockRejector, 1), "WPW", "@R@", '@', "ingotRefinedIron", 'R', Item.redstone, 'P', Block.pistonBase, 'C', Items.getItem("electronicCircuit"), 'W', Items.getItem("insulatedCopperCableItem"));
+			// Turntable
+			GameRegistry.addRecipe(new ItemStack(blockTurntable, 1), "M", "P", 'M', Items.getItem("generator"), 'P', Block.pistonBase);
+			// Manipulator
+			GameRegistry.addShapelessRecipe(new ItemStack(blockManipulator, 2), Block.dispenser, Items.getItem("electronicCircuit"));
+		}
+		catch (Exception e)
+		{
+			System.out.print("AssemblyLine: Failed to load IC2 recipes");
+			e.printStackTrace();
+		}
 	}
 
 	private void createStandardRecipes()
