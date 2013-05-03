@@ -19,6 +19,8 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
+import universalelectricity.core.vector.Vector3;
+
 import assemblyline.common.block.TileEntityCrate;
 
 public class RenderCrate extends TileEntitySpecialRenderer
@@ -28,7 +30,9 @@ public class RenderCrate extends TileEntitySpecialRenderer
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)
 	{
-		if (tileEntity instanceof TileEntityCrate)
+		Vector3 vec = new Vector3(x,y,z);
+		double distance = vec.distanceTo(new Vector3(0,0,0));
+		if (tileEntity instanceof TileEntityCrate && distance < 15)
 		{
 			TileEntityCrate tileCrate = (TileEntityCrate) tileEntity;
 
@@ -47,9 +51,10 @@ public class RenderCrate extends TileEntitySpecialRenderer
 			for (int side = 2; side < 6; side++)
 			{
 				ForgeDirection direction = ForgeDirection.getOrientation(side);
-				boolean solid = tileCrate.worldObj.isBlockSolidOnSide(tileCrate.xCoord + direction.offsetX, tileCrate.yCoord, tileCrate.zCoord + direction.offsetZ, direction.getOpposite());
-				if (solid)
+				if (tileCrate.worldObj.isBlockSolidOnSide(tileCrate.xCoord + direction.offsetX, tileCrate.yCoord, tileCrate.zCoord + direction.offsetZ, direction.getOpposite()))
+				{
 					continue;
+				}
 				this.setupLight(tileCrate, direction.offsetX, direction.offsetZ);
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 
@@ -104,7 +109,7 @@ public class RenderCrate extends TileEntitySpecialRenderer
 				{
 					this.renderText(amount, side, 0.02f, x, y - 0.15f, z);
 				}
-			}			
+			}
 		}
 	}
 
