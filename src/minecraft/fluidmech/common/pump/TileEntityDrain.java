@@ -37,7 +37,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 
 	private List<Vector3> targetSources = new ArrayList<Vector3>();
 	private List<Vector3> updateQue = new ArrayList<Vector3>();
-
+	private LiquidPathFinder pathFinder = new LiquidPathFinder(this.worldObj, false, TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS * 2);
 	@Override
 	public String getMeterReading(EntityPlayer user, ForgeDirection side)
 	{
@@ -72,7 +72,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	public void updateEntity()
 	{
 		/* MAIN LOGIC PATH FOR DRAINING BODIES OF LIQUID */
-		if (!this.worldObj.isRemote && this.ticks % 20 == 0)
+		if (!this.worldObj.isRemote && this.ticks % 30 == 0)
 		{
 			this.currentWorldEdits = 0;
 			this.doCleanup();
@@ -80,7 +80,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 			if (this.canDrainSources() && this.requestMap.size() > 0)
 			{
 				/* ONLY FIND NEW SOURCES IF OUR CURRENT LIST RUNS DRY */
-				if (this.targetSources.size() < this.MAX_WORLD_EDITS_PER_PROCESS + 10)
+				if (this.targetSources.size() < TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS + 10)
 				{
 					this.getNextFluidBlock();
 				}
@@ -91,7 +91,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 						break;
 					}
 
-					Iterator it = this.targetSources.iterator();
+					Iterator<Vector3> it = this.targetSources.iterator();
 					while (it.hasNext())
 					{
 						Vector3 loc = (Vector3) it.next();
@@ -136,16 +136,6 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 								}
 							}
 						}
-						else if (FluidHelper.getLiquidFromBlockId(loc.getBlockID(this.worldObj)) != null && loc.getBlockMetadata(this.worldObj) != 0)
-						{
-							loc.setBlock(this.worldObj, 0, 0, 2);
-
-							/* ADD TO UPDATE QUE */
-							if (!this.updateQue.contains(loc))
-							{
-								this.updateQue.add(loc);
-							}
-						}
 					}
 				}
 			}
@@ -156,8 +146,8 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	 * Finds more liquid blocks using a path finder to be drained
 	 */
 	public void getNextFluidBlock()
-	{
-		LiquidPathFinder pathFinder = new LiquidPathFinder(this.worldObj, false, this.MAX_WORLD_EDITS_PER_PROCESS * 2);
+	{		
+		pathFinder.reset();
 		pathFinder.init(new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ));
 		// System.out.println("Nodes:" + pathFinder.nodes.size() + "Results:" +
 		// pathFinder.results.size());
@@ -172,9 +162,9 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 		/* CALL UPDATE ON EDITED BLOCKS */
 		if (this.ticks % 100 == 0 && updateQue.size() > 0)
 		{
-			Iterator pp = this.updateQue.iterator();
+			Iterator<Vector3> pp = this.updateQue.iterator();
 			int up = 0;
-			while (pp.hasNext() && up < this.MAX_WORLD_EDITS_PER_PROCESS)
+			while (pp.hasNext() && up < TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS)
 			{
 				Vector3 vec = (Vector3) pp.next();
 				worldObj.notifyBlockChange(vec.intX(), vec.intY(), vec.intZ(), vec.getBlockID(this.worldObj));
