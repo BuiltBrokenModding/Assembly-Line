@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 
@@ -15,13 +16,16 @@ import universalelectricity.core.vector.Vector3;
 public class LiquidPathFinder
 {
 	private World world; /* MC WORLD */
-	public List<Vector3> nodes = new ArrayList<Vector3>(); /* LOCATIONs THE PATH FINDER HAS GONE OVER */
+	public List<Vector3> nodes = new ArrayList<Vector3>(); /*
+															 * LOCATIONs THE PATH FINDER HAS GONE
+															 * OVER
+															 */
 	public List<Vector3> results = new ArrayList<Vector3>();/* LOCATIONS THAT ARE VALID RESULTS */
 	private boolean fill; /* ARE WE FILLING THE PATH OR DRAINING THE PATH */
 	private ForgeDirection priority; /* BASED ON fill -- WHICH DIRECTION WILL THE PATH GO FIRST */
 	private int resultLimit = 2000;
 
-	public LiquidPathFinder(final World world, final boolean fill, int resultLimit)
+	public LiquidPathFinder(final World world, final boolean fill, final int resultLimit)
 	{
 		this.world = world;
 		this.fill = fill;
@@ -41,9 +45,22 @@ public class LiquidPathFinder
 	 * @return True on success finding, false on failure.
 	 */
 	public boolean findNodes(Vector3 node)
-	{
-		this.nodes.add(node);
-		if (this.fill && (node.getBlockID(world) == 0 || (FluidHelper.getLiquidFromBlockId(node.getBlockID(world)) != null && node.getBlockMetadata(world) != 0)))
+	{		
+		Vector3 vec = node.clone();
+		
+		Chunk chunk = this.world.getChunkFromBlockCoords(vec.intX(), vec.intZ());
+		
+		if (!chunk.isChunkLoaded)
+		{
+			return true;
+		}else
+		{
+			this.nodes.add(node);
+		}
+		
+		int id = node.getBlockID(world);
+		int meta = node.getBlockID(world);
+		if (this.fill && (id == 0 || (FluidHelper.getLiquidFromBlockId(id) != null && meta != 0)))
 		{
 			this.results.add(node);
 		}
@@ -57,7 +74,7 @@ public class LiquidPathFinder
 			return false;
 		}
 
-		Vector3 vec = node.clone().modifyPositionFromSide(this.priority);
+		vec = node.clone().modifyPositionFromSide(this.priority);
 		if (this.isValidNode(vec) & !this.nodes.contains(vec))
 		{
 			if (this.findNodes(vec))
@@ -99,7 +116,7 @@ public class LiquidPathFinder
 
 	public boolean isDone(Vector3 vec)
 	{
-		if (this.results.size() >= this.resultLimit || this.nodes.size() >= 10000)
+		if (this.results.size() >= this.resultLimit || this.nodes.size() >= 4000)
 		{
 			return true;
 		}
