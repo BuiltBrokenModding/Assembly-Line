@@ -50,13 +50,24 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 	 * 9 slots for crafting, 1 slot for an imprint, 1 slot for an item
 	 */
 	public ItemStack[] craftingMatrix = new ItemStack[9];
+	public static final int[] craftingSlots = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 
 	public ItemStack[] imprinterMatrix = new ItemStack[3];
+	public static final int[] imprinterSlots = { IMPRINTER_MATRIX_START, IMPRINTER_MATRIX_START + 1, IMPRINTER_MATRIX_START + 2 };
 
 	/**
 	 * The Imprinter inventory containing slots.
 	 */
 	public ItemStack[] containingItems = new ItemStack[18];
+	public static final int[] invSlots = new int[18];
+
+	static
+	{
+		for (int i = 0; i < invSlots.length; i++)
+		{
+			invSlots[i] = TileEntityImprinter.INVENTORY_START + i;
+		}
+	}
 
 	/**
 	 * The containing currently used by the imprinter.
@@ -295,7 +306,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 
 				if (inventoryCrafting != null)
 				{
-					
+
 					ItemStack matrixOutput = CraftingManager.getInstance().findMatchingRecipe(inventoryCrafting, this.worldObj);
 
 					if (matrixOutput != null)
@@ -308,11 +319,11 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 
 				if (this.imprinterMatrix[0] != null && !didCraft)
 				{
-					
+
 					if (this.imprinterMatrix[0].getItem() instanceof ItemImprinter)
 					{
 						System.out.println("Using imprint as grid");
-						
+
 						ArrayList<ItemStack> filters = ItemImprinter.getFilters(this.imprinterMatrix[0]);
 
 						for (ItemStack outputStack : filters)
@@ -320,11 +331,11 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 							if (outputStack != null)
 							{
 								Pair<ItemStack, ItemStack[]> idealRecipe = this.getIdealRecipe(outputStack);
-								
+
 								if (idealRecipe != null)
 								{
 									ItemStack recipeOutput = idealRecipe.getKey();
-									System.out.println("Ideal R: "+recipeOutput.toString());
+									System.out.println("Ideal R: " + recipeOutput.toString());
 									if (recipeOutput != null & recipeOutput.stackSize > 0)
 									{
 										this.imprinterMatrix[2] = recipeOutput;
@@ -789,41 +800,37 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 	}
 
 	@Override
-	public int[] getAccessibleSlotsFromSide(int var1)
+	public int[] getAccessibleSlotsFromSide(int side)
 	{
-		// TODO Auto-generated method stub
+		ForgeDirection dir = ForgeDirection.getOrientation(side);
+		if (dir != ForgeDirection.DOWN)
+		{
+			return this.invSlots;
+		}
 		return null;
 	}
 
 	@Override
-	public boolean canInsertItem(int i, ItemStack itemstack, int j)
+	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
 	{
-		return this.isStackValidForSlot(i, itemstack);
+		return this.isStackValidForSlot(slot, itemstack);
 	}
 
 	@Override
-	public boolean canExtractItem(int i, ItemStack itemstack, int j)
+	public boolean canExtractItem(int slot, ItemStack itemstack, int side)
 	{
-		return false;
+		return this.isStackValidForSlot(slot, itemstack);
 	}
 
 	@Override
 	public int getStartInventorySide(ForgeDirection side)
 	{
-		if(side == ForgeDirection.DOWN || side == ForgeDirection.UP)
-		{
-			return this.craftingMatrix.length + this.imprinterMatrix.length;
-		}
-		return this.craftingMatrix.length + 1;
+		return this.craftingMatrix.length + this.imprinterMatrix.length;
 	}
 
 	@Override
 	public int getSizeInventorySide(ForgeDirection side)
 	{
-		if(side == ForgeDirection.DOWN || side == ForgeDirection.UP)
-		{
-			return this.containingItems.length -1;
-		}
-		return 1;
+		return this.containingItems.length - 1;
 	}
 }
