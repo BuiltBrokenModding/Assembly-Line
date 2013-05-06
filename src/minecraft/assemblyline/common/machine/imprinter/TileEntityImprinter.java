@@ -291,7 +291,6 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 
 			if (!this.isImprinting)
 			{
-				System.out.println("Crafting");
 				this.imprinterMatrix[2] = null;
 
 				/**
@@ -311,7 +310,6 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 
 					if (matrixOutput != null)
 					{
-						System.out.println("Using crafting grid");
 						this.imprinterMatrix[2] = matrixOutput;
 						didCraft = true;
 					}
@@ -319,10 +317,10 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 
 				if (this.imprinterMatrix[0] != null && !didCraft)
 				{
-
+					System.out.println("Using imprint as grid");
 					if (this.imprinterMatrix[0].getItem() instanceof ItemImprinter)
 					{
-						System.out.println("Using imprint as grid");
+						
 
 						ArrayList<ItemStack> filters = ItemImprinter.getFilters(this.imprinterMatrix[0]);
 
@@ -334,6 +332,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 
 								if (idealRecipe != null)
 								{
+									System.out.println("IdealRecipe: "+idealRecipe.getKey().toString());
 									ItemStack recipeOutput = idealRecipe.getKey();
 									System.out.println("Ideal R: " + recipeOutput.toString());
 									if (recipeOutput != null & recipeOutput.stackSize > 0)

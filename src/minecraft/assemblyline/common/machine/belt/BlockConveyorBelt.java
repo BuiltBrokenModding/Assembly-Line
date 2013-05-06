@@ -263,7 +263,20 @@ public class BlockConveyorBelt extends BlockALMachine
 				acceleration *= 5;
 				maxSpeed *= 10;
 			}
-
+			if (slantType == SlantType.UP)
+			{
+				if (entity.motionY < 0.2)
+				{
+					entity.addVelocity(0, 0.2, 0);
+				}
+			}
+			else if (slantType == SlantType.DOWN)
+			{
+				if (entity.motionY > -0.1)
+				{
+					entity.addVelocity(0, -0.1, 0);
+				}
+			}
 			// Move the entity based on the conveyor belt's direction.
 			entity.addVelocity(direction.offsetX * acceleration, 0, direction.offsetZ * acceleration);
 
@@ -310,21 +323,6 @@ public class BlockConveyorBelt extends BlockALMachine
 				else
 					((EntityItem) entity).delayBeforeCanPickup = 20;
 				entity.onGround = false;
-			}
-
-			if (slantType == SlantType.UP)
-			{
-				if (entity.motionY < 0.4)
-				{
-					entity.addVelocity(0, 0.4, 0);
-				}
-			}
-			else if (slantType == SlantType.DOWN)
-			{
-				if (entity.motionY > -0.1)
-				{
-					entity.addVelocity(0, -0.1, 0);
-				}
 			}
 
 		}
