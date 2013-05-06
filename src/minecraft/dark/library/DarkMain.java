@@ -2,6 +2,8 @@ package dark.library;
 
 import java.awt.Color;
 
+import basiccomponents.common.BasicComponents;
+
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -32,5 +34,10 @@ public class DarkMain
 		{
 			FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXBeam(world, position, target, Color.DARK_GRAY, DarkMain.TEXTURE_DIRECTORY + "traceStream.png", 5,true));
 		}
+	}
+	
+	public void forceLoadBCItems(Object mod, String channel)
+	{
+		BasicComponents.register(mod, channel);
 	}
 }
