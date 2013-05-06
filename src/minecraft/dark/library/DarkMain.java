@@ -17,10 +17,20 @@ public class DarkMain
 	public static final String ITEM_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + "items/";
 	public static final String MODEL_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + "models/";
 	public static final String TEXTURE_NAME_PREFIX = "dark:";
-	
-	
+
 	public static void renderBeam(World world, Vector3 position, Vector3 target, Color color, int age)
 	{
-		FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXBeam(world, position, target, color.getRed(), color.getGreen(), color.getBlue(), age));
+		if (world.isRemote)
+		{
+			FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXBeam(world, position, target, color, DarkMain.TEXTURE_DIRECTORY + "", age));
+		}
+	}
+
+	public static void renderTracer(World world, Vector3 position, Vector3 target)
+	{
+		if (world.isRemote)
+		{
+			FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXBeam(world, position, target, Color.DARK_GRAY, DarkMain.TEXTURE_DIRECTORY + "traceStream.png", 10,true));
+		}
 	}
 }

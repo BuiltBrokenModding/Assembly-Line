@@ -1,5 +1,7 @@
 package dark.library.effects;
 
+import java.awt.Color;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
@@ -36,19 +38,27 @@ public class FXBeam extends EntityFX
 	private int rotationSpeed = 20;
 	private float prevSize = 0.0F;
 	private float beamD = 0.08f;
+	private String texture = DarkMain.TEXTURE_DIRECTORY+"";
 
-	public FXBeam(World par1World, Vector3 position, Vector3 target, float red, float green, float blue, int age)
+	public FXBeam(World world, Vector3 start, Vector3 end, Color color, String texture, int age, boolean pulse)
 	{
-		super(par1World, position.x, position.y, position.z, 0.0D, 0.0D, 0.0D);
+		this(world, start, end, color, texture, age);
+		this.pulse = pulse;
+	}
+	public FXBeam(World world, Vector3 start, Vector3 end, Color color, String texture, int age)
+	{
+		super(world, start.x, start.y, start.z, 0.0D, 0.0D, 0.0D);
 
-		this.setRGB(red, green, blue);
-
+		this.setRGB(color.getRed(), color.getGreen(), color.getBlue());
+		
+		this.texture = texture;
+		
 		this.setSize(0.02F, 0.02F);
 		this.noClip = true;
 		this.motionX = 0.0D;
 		this.motionY = 0.0D;
 		this.motionZ = 0.0D;
-		this.target = target;
+		this.target = end;
 		float xd = (float) (this.posX - this.target.x);
 		float yd = (float) (this.posY - this.target.y);
 		float zd = (float) (this.posZ - this.target.z);
@@ -134,7 +144,7 @@ public class FXBeam extends EntityFX
 			op = 0.5F - (4 - (this.particleMaxAge - this.particleAge)) * 0.1F;
 		}
 
-		Minecraft.getMinecraft().renderEngine.bindTexture(DarkMain.BLOCK_TEXTURE_DIRECTORY + "");
+		Minecraft.getMinecraft().renderEngine.bindTexture(this.texture);
 
 		GL11.glTexParameterf(3553, 10242, 10497.0F);
 		GL11.glTexParameterf(3553, 10243, 10497.0F);
