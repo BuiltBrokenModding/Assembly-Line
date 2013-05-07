@@ -84,8 +84,10 @@ public class BlockCrate extends BlockALMachine
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
-		if (super.onBlockActivated(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ)){
-			return true;}
+		if (super.onBlockActivated(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ))
+		{
+			return true;
+		}
 
 		if (!world.isRemote)
 		{
@@ -100,7 +102,13 @@ public class BlockCrate extends BlockALMachine
 
 				tileEntity.prevClickTime = world.getWorldTime();
 				ItemStack current = entityPlayer.inventory.getCurrentItem();
-
+				if(side == 1 && entityPlayer.capabilities.isCreativeMode)
+				{
+					if (current != null && tileEntity.getStackInSlot(0) == null)
+					{
+						tileEntity.setInventorySlotContents(0, new ItemStack(current.itemID, TileEntityCrate.getMaxLimit(world.getBlockMetadata(x, y, z)), current.getItemDamage()));
+					}
+				}
 				// Add items
 				if (side == 1 || (side > 1 && hitY > 0.5) || !entityPlayer.capabilities.isCreativeMode)
 				{
@@ -410,6 +418,18 @@ public class BlockCrate extends BlockALMachine
 		{
 			list.add(new ItemStack(this, 1, i));
 		}
+		try
+		{
+			ItemStack stack = new ItemStack(this);
+			ItemBlockCrate.setContainingItemStack(stack, new ItemStack(1, 2048, 0));
+			list.add(stack);	
+			// 3903
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
 	}
 
 }

@@ -49,7 +49,7 @@ public class ItemBlockCrate extends ItemBlock
 			EntityPlayer player = (EntityPlayer) entity;
 			ItemStack containingStack = getContainingItemStack(itemStack);
 
-			if (containingStack != null)
+			if (containingStack != null && !player.capabilities.isCreativeMode)
 			{
 				player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 5, (int) ((float) containingStack.stackSize / (float) TileEntityCrate.getMaxLimit(itemStack.getItemDamage())) * 5));
 			}

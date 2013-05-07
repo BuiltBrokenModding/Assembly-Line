@@ -153,14 +153,11 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	{
 		if (stack != null)
 		{
-			if (stack.isStackable())
-			{
-				this.containingItems[slot] = stack;
+			this.containingItems[slot] = stack;
 
-				if (stack != null && stack.stackSize > this.getInventoryStackLimit())
-				{
-					stack.stackSize = this.getInventoryStackLimit();
-				}
+			if (stack != null && stack.stackSize > this.getInventoryStackLimit())
+			{
+				stack.stackSize = this.getInventoryStackLimit();
 			}
 		}
 		else
