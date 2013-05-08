@@ -5,3 +5,6 @@
 [submodule "Dark-Library"]
 	path = Dark-Library
 	url = git@github.com:DarkGuardsman/Dark-Library.git
+[submodule "Basic-Compoents"]
+	path = Basic-Compoents
+	url = git://github.com/calclavia/Basic-Components.git
