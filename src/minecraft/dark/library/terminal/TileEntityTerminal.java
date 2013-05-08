@@ -19,7 +19,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.PacketDispatcher;
-import dark.library.DarkMain;
+import dark.library.PowerSystems;
 import dark.library.access.AccessLevel;
 import dark.library.access.UserAccess;
 import dark.library.access.interfaces.ISpecialAccess;
@@ -63,7 +63,7 @@ public abstract class TileEntityTerminal extends TileEntityUniversalRunnable imp
 	public void updateEntity()
 	{
 		super.updateEntity();
-		if (DarkMain.runPowerLess)
+		if (PowerSystems.runPowerLess(PowerSystems.INDUSTRIALCRAFT, PowerSystems.BUILDCRAFT, PowerSystems.MEKANISM))
 		{
 			this.wattsReceived += this.getRequest().getWatts();
 		}

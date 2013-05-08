@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
-import universalelectricity.core.UniversalElectricity;
 import universalelectricity.core.vector.Vector3;
 import basiccomponents.common.BasicComponents;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -15,10 +14,8 @@ import dark.library.effects.FXBeam;
 
 public class DarkMain
 {
-	private static boolean isInit = false;
-
+	private static boolean loadedItems = false;
 	
-	public static boolean runPowerLess = true; 
 	/* RESOURCE FILE PATHS */
 	public static final String RESOURCE_PATH = "/mods/dark/";
 	public static final String TEXTURE_DIRECTORY = RESOURCE_PATH + "textures/";
@@ -32,6 +29,17 @@ public class DarkMain
 
 	public static final Logger LOGGER = Logger.getLogger("Dark-Lib");
 
+	
+
+	/**
+	 * Renders a laser beam from one power to another by a set color for a set time
+	 * 
+	 * @param world - world this laser is to be rendered in
+	 * @param position - start vector3
+	 * @param target - end vector3
+	 * @param color - color of the beam
+	 * @param age - life of the beam in 1/20 secs
+	 */
 	public static void renderBeam(World world, Vector3 position, Vector3 target, Color color, int age)
 	{
 		if (world.isRemote)
@@ -40,6 +48,9 @@ public class DarkMain
 		}
 	}
 
+	/**
+	 * Renders a bullet tracer from one spot to another will later be replaced with start and degree
+	 */
 	public static void renderTracer(World world, Vector3 position, Vector3 target)
 	{
 		if (world.isRemote)
@@ -48,11 +59,14 @@ public class DarkMain
 		}
 	}
 
+	/**
+	 * Loads most of the items from basic components to be used
+	 */
 	public static void forceLoadBCItems(Object mod, String channel)
 	{
 		BasicComponents.register(mod, channel);
 
-		if (!isInit)
+		if (!loadedItems)
 		{
 			// UniversalElectricity.CONFIGURATION.load();
 			BasicComponents.requestItem("ingotCopper", 0);
@@ -79,7 +93,7 @@ public class DarkMain
 			BasicComponents.registerInfiniteBattery(0);
 			BasicComponents.registerBattery(0);
 
-			isInit = true;
+			loadedItems = true;
 		}
 	}
 }
