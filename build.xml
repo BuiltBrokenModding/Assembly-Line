@@ -25,7 +25,7 @@
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
-             <fileset dir="${dir.development}/Basic-Compoents/src">
+             <fileset dir="${dir.development}Basic-Compoents/src">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
@@ -55,7 +55,6 @@
 
 		<copy todir="contents">
 			<fileset dir="${dir.mcp}/reobf/minecraft" excludes=".git/**">
-				<exclude name="**/BCLoader.class"/>
 			</fileset>
 		
 			<fileset dir="${dir.development}resources">
