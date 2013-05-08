@@ -3,6 +3,7 @@ package assemblyline.common.imprinter;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -317,10 +318,9 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 
 				if (this.imprinterMatrix[0] != null && !didCraft)
 				{
-					System.out.println("Using imprint as grid");
+					//System.out.println("Using imprint as grid");
 					if (this.imprinterMatrix[0].getItem() instanceof ItemImprinter)
 					{
-						
 
 						ArrayList<ItemStack> filters = ItemImprinter.getFilters(this.imprinterMatrix[0]);
 
@@ -328,13 +328,13 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 						{
 							if (outputStack != null)
 							{
+							//	System.out.println("Imprint: Geting recipe for " + outputStack.toString());
 								Pair<ItemStack, ItemStack[]> idealRecipe = this.getIdealRecipe(outputStack);
 
 								if (idealRecipe != null)
 								{
-									System.out.println("IdealRecipe: "+idealRecipe.getKey().toString());
+									//System.out.println("Imprint: found ideal recipe for  " + idealRecipe.getKey().toString());
 									ItemStack recipeOutput = idealRecipe.getKey();
-									System.out.println("Ideal R: " + recipeOutput.toString());
 									if (recipeOutput != null & recipeOutput.stackSize > 0)
 									{
 										this.imprinterMatrix[2] = recipeOutput;
@@ -357,8 +357,10 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 
 	public void onPickUpFromResult(EntityPlayer entityPlayer, ItemStack itemStack)
 	{
+
 		if (itemStack != null)
 		{
+			//System.out.println("PickResult:" + worldObj.isRemote + " managing item " + itemStack.toString());
 			if (this.isImprinting)
 			{
 				this.imprinterMatrix[0] = null;
@@ -370,10 +372,20 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 				 */
 				if (this.getIdealRecipe(itemStack) != null)
 				{
+					//System.out.println("PickResult: ideal recipe  ");
 					ItemStack[] requiredItems = this.getIdealRecipe(itemStack).getValue().clone();
 
 					if (requiredItems != null)
 					{
+						for (int i = 0; i < requiredItems.length; i++)
+						{
+							ItemStack sta = requiredItems[i];
+							if (sta != null && sta.itemID < Block.blocksList.length && sta.getItemDamage() == 32767)
+							{
+								requiredItems[i] = new ItemStack(sta.itemID, sta.stackSize, 0);
+							}
+						}
+						//System.out.println("PickResult: valid resources  ");
 						for (ItemStack searchStack : requiredItems)
 						{
 							if (searchStack != null)
@@ -387,9 +399,10 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 
 										if (checkStack != null)
 										{
-											if (searchStack.isItemEqual(checkStack) || (searchStack.itemID == checkStack.itemID && searchStack.getItemDamage() < 0))
+											if (areStacksEqual(searchStack, checkStack))
 											{
 												inventory.decrStackSize(i, 1);
+												//System.out.println("Consumed Item From Chest: " + checkStack.toString());
 												break inventories;
 											}
 										}
@@ -402,9 +415,10 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 
 									if (checkStack != null)
 									{
-										if (searchStack.isItemEqual(checkStack) || (searchStack.itemID == checkStack.itemID && searchStack.getItemDamage() < 0))
+										if (areStacksEqual(searchStack, checkStack))
 										{
 											this.decrStackSize(i + INVENTORY_START, 1);
+											//System.out.println("Consumed Item From Inv: " + checkStack.toString());
 											break;
 										}
 									}
@@ -460,7 +474,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 					}
 					catch (Exception e)
 					{
-						System.out.println("Imprinter: Failed to craft item: " + itemStack.getDisplayName());
+						//System.out.println("Imprinter: Failed to craft item: " + itemStack.getDisplayName());
 						e.printStackTrace();
 					}
 				}
@@ -475,18 +489,21 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 	 */
 	public Pair<ItemStack, ItemStack[]> getIdealRecipe(ItemStack outputItem)
 	{
+		//System.out.println("IdealRecipe: Finding  " + outputItem.toString());
 		for (Object object : CraftingManager.getInstance().getRecipeList())
 		{
 			if (object instanceof IRecipe)
 			{
 				if (((IRecipe) object).getRecipeOutput() != null)
 				{
-					if (outputItem.isItemEqual(((IRecipe) object).getRecipeOutput()))
+					if (this.areStacksEqual(outputItem, ((IRecipe) object).getRecipeOutput()))
 					{
+						//System.out.println("IdealRecipe: Output Match Found");
 						if (object instanceof ShapedRecipes)
 						{
 							if (this.hasResource(((ShapedRecipes) object).recipeItems) != null)
 							{
+								//System.out.println("IdealRecipe: Shaped Recipe Found");
 								return new Pair<ItemStack, ItemStack[]>(((IRecipe) object).getRecipeOutput().copy(), ((ShapedRecipes) object).recipeItems);
 							}
 						}
@@ -494,6 +511,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 						{
 							if (this.hasResource(((ShapelessRecipes) object).recipeItems.toArray(new ItemStack[1])) != null)
 							{
+								//System.out.println("IdealRecipe: Shapeless Recipe Found");
 								return new Pair<ItemStack, ItemStack[]>(((IRecipe) object).getRecipeOutput().copy(), (ItemStack[]) ((ShapelessRecipes) object).recipeItems.toArray(new ItemStack[1]));
 							}
 						}
@@ -506,6 +524,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 
 							if (hasResources != null)
 							{
+								//System.out.println("IdealRecipe: ShapedOre Recipe Found");
 								return new Pair<ItemStack, ItemStack[]>(((IRecipe) object).getRecipeOutput().copy(), hasResources.toArray(new ItemStack[1]));
 							}
 						}
@@ -518,6 +537,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 
 							if (hasResources != null)
 							{
+								//System.out.println("IdealRecipe: ShapelessOre Recipe Found");
 								return new Pair<ItemStack, ItemStack[]>(((IRecipe) object).getRecipeOutput().copy(), hasResources.toArray(new ItemStack[1]));
 							}
 						}
@@ -546,23 +566,34 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 			this.writeToNBT(cloneData);
 			dummyImprinter.readFromNBT(cloneData);
 
+			//System.out.println("ResourceChecker: Looking for items");
+			for (int i = 0; i < recipeItems.length; i++)
+			{
+				//System.out.println("ResourceChecker: Looking for " + recipeItems.toString());
+			}
 			/**
 			 * The actual amount of resource required. Each ItemStack will only have stacksize of 1.
 			 */
 			ArrayList<ItemStack> actualResources = new ArrayList<ItemStack>();
 			int itemMatch = 0;
-
+			int w = 0;
 			for (Object obj : recipeItems)
 			{
+				w++;
 				if (obj instanceof ItemStack)
 				{
 					ItemStack recipeItem = (ItemStack) obj;
+					if (recipeItem.itemID < Block.blocksList.length && recipeItem.getItemDamage() == 32767)
+					{
+						recipeItem = new ItemStack(recipeItem.itemID, recipeItem.stackSize, 0);
+					}
 					actualResources.add(recipeItem.copy());
-
 					if (recipeItem != null)
 					{
+						//System.out.println("ResourceChecker: Item0" + w + " = " + recipeItem.toString());
 						if (this.doesItemExist(recipeItem, dummyImprinter))
 						{
+							//System.out.println("ResourceChecker: Match found");
 							itemMatch++;
 						}
 					}
@@ -574,12 +605,16 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 					 */
 					ArrayList ingredientsList = (ArrayList) obj;
 					Object[] ingredientsArray = ingredientsList.toArray();
-
+					//System.out.println("ResourceChecker: Obj0" + w + " = " + obj.toString());
 					for (int x = 0; x < ingredientsArray.length; x++)
 					{
 						if (ingredientsArray[x] != null && ingredientsArray[x] instanceof ItemStack)
 						{
 							ItemStack recipeItem = (ItemStack) ingredientsArray[x];
+							if (recipeItem.itemID < Block.blocksList.length && recipeItem.getItemDamage() == 32767)
+							{
+								recipeItem = new ItemStack(recipeItem.itemID, recipeItem.stackSize, 0);
+							}
 							actualResources.add(recipeItem.copy());
 
 							if (recipeItem != null)
@@ -593,13 +628,20 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 						}
 					}
 				}
+				else
+				{
+					// System.out.println("ResourceChecker: Item0"+w+" = null");
+					itemMatch++;
+				}
 			}
-
-			return itemMatch >= actualResources.size() ? actualResources : null;
+			boolean resourcesFound = itemMatch >= actualResources.size();
+			// System.out.println("ResourceChecker: Found "+actualResources.size()+" Items and "+itemMatch+" slot matches");
+			// System.out.println("ResourceChecker: has all resources been found? /n A: "+resourcesFound);
+			return resourcesFound ? actualResources : null;
 		}
 		catch (Exception e)
 		{
-			System.out.println("Failed to find recipes in the imprinter.");
+			// System.out.println("Failed to find recipes in the imprinter.");
 			e.printStackTrace();
 		}
 
@@ -608,23 +650,35 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 
 	private boolean doesItemExist(ItemStack recipeItem, TileEntityImprinter dummyImprinter)
 	{
+
+		if (recipeItem == null || recipeItem.itemID == 0 || recipeItem.stackSize <= 0)
+		{
+			return true;
+		}
+		//System.out.println("ResourceChecker: Checking inv for item " + recipeItem.toString());
 		for (int i = 0; i < dummyImprinter.containingItems.length; i++)
 		{
 			ItemStack checkStack = dummyImprinter.containingItems[i];
 
 			if (checkStack != null)
 			{
-				if (recipeItem.isItemEqual(checkStack) || (recipeItem.itemID == checkStack.itemID && recipeItem.getItemDamage() < 0))
+				//System.out.println("ResourceChecker: -----Item in slot0" + i + " = " + checkStack.toString());
+				if (areStacksEqual(recipeItem, checkStack))
 				{
 					// TODO Do NBT Checking
 					dummyImprinter.decrStackSize(i + INVENTORY_START, 1);
+					//System.out.println("ResourceChecker: Found matching item " + checkStack.toString());
 					return true;
-
 				}
 			}
 		}
 
 		return false;
+	}
+
+	public boolean areStacksEqual(ItemStack recipeItem, ItemStack checkStack)
+	{
+		return recipeItem.isItemEqual(checkStack) || (recipeItem.itemID == checkStack.itemID && recipeItem.isItemStackDamageable() && !recipeItem.isItemDamaged());
 	}
 
 	/**
