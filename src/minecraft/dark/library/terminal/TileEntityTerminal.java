@@ -24,6 +24,7 @@ import dark.library.access.AccessLevel;
 import dark.library.access.UserAccess;
 import dark.library.access.interfaces.ISpecialAccess;
 import dark.library.access.interfaces.ITerminal;
+import dark.library.machine.TileEntityRunnableMachine;
 import dark.library.terminal.commands.CommandRegistry;
 
 /**
@@ -31,7 +32,7 @@ import dark.library.terminal.commands.CommandRegistry;
  * @author Calclavia, DarkGuardsman
  * 
  */
-public abstract class TileEntityTerminal extends TileEntityUniversalRunnable implements ISpecialAccess, IPacketReceiver, ITerminal
+public abstract class TileEntityTerminal extends TileEntityRunnableMachine implements ISpecialAccess, IPacketReceiver, ITerminal
 {
 	public enum PacketType
 	{
@@ -44,9 +45,6 @@ public abstract class TileEntityTerminal extends TileEntityUniversalRunnable imp
 	/** A list of user access data. */
 	private final List<UserAccess> users = new ArrayList<UserAccess>();
 
-	/** The amount of players using the console. */
-	public int playersUsing = 0;
-
 	/** The amount of lines the terminal can store. */
 	public static final int SCROLL_SIZE = 15;
 
@@ -54,19 +52,9 @@ public abstract class TileEntityTerminal extends TileEntityUniversalRunnable imp
 	private int scroll = 0;
 
 	@Override
-	public void initiate()
-	{
-		super.initiate();
-	}
-
-	@Override
 	public void updateEntity()
 	{
-		super.updateEntity();
-		if (PowerSystems.runPowerLess(PowerSystems.INDUSTRIALCRAFT, PowerSystems.BUILDCRAFT, PowerSystems.MEKANISM))
-		{
-			this.wattsReceived += this.getRequest().getWatts();
-		}
+		super.updateEntity();		
 		if (!this.worldObj.isRemote)
 		{
 
@@ -315,8 +303,6 @@ public abstract class TileEntityTerminal extends TileEntityUniversalRunnable imp
 	{
 		super.readFromNBT(nbt);
 
-		this.wattsReceived = nbt.getDouble("wattsReceived");
-
 		// Read user list
 		this.users.clear();
 
@@ -333,8 +319,6 @@ public abstract class TileEntityTerminal extends TileEntityUniversalRunnable imp
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-
-		nbt.setDouble("wattsReceived", this.wattsReceived);
 
 		// Write user list
 		NBTTagList usersTag = new NBTTagList();
