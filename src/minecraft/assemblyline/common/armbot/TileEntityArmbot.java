@@ -201,7 +201,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			if (this.ticks % 5 == 0 && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
 			{
 				// sound is 0.25 seconds long (20 ticks/second)
-				this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "mods.assemblyline.conveyor", 0.8f, 1.7f, true);
+				this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "mods.assemblyline.conveyor", 0.4f, 1.7f, true);
 			}
 
 			if (Math.abs(this.renderYaw - this.rotationYaw) < this.ROTATION_SPEED + 0.1f)
