@@ -390,6 +390,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 						{
 							if (searchStack != null)
 							{
+								/**
 								inventories:
 								for (IInventory inventory : getAvaliableInventories())
 								{
@@ -407,7 +408,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 											}
 										}
 									}
-								}
+								}*/
 
 								for (int i = 0; i < this.containingItems.length; i++)
 								{
