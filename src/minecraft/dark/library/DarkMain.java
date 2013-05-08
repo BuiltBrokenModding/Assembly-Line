@@ -90,8 +90,8 @@ public class DarkMain
 			BasicComponents.requestItem("circuitElite", 0);
 
 			BasicComponents.requestItem("motor", 0);
-			BasicComponents.registerInfiniteBattery(0);
-			BasicComponents.registerBattery(0);
+			BasicComponents.requireInfiniteBattery(0);
+			BasicComponents.requireBattery(0);
 
 			loadedItems = true;
 		}
