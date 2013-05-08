@@ -19,6 +19,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import dark.library.DarkMain;
 import dark.library.access.AccessLevel;
 import dark.library.access.UserAccess;
 import dark.library.access.interfaces.ISpecialAccess;
@@ -62,9 +63,13 @@ public abstract class TileEntityTerminal extends TileEntityUniversalRunnable imp
 	public void updateEntity()
 	{
 		super.updateEntity();
-
+		if (DarkMain.runPowerLess)
+		{
+			this.wattsReceived += this.getRequest().getWatts();
+		}
 		if (!this.worldObj.isRemote)
 		{
+
 			if (this.playersUsing > 0)
 			{
 				if (this.ticks % 5 == 0)
@@ -207,7 +212,7 @@ public abstract class TileEntityTerminal extends TileEntityUniversalRunnable imp
 
 	public boolean canUserAccess(String username)
 	{
-		return(this.getUserAccess(username).ordinal() > AccessLevel.BASIC.ordinal());
+		return (this.getUserAccess(username).ordinal() > AccessLevel.BASIC.ordinal());
 	}
 
 	@Override

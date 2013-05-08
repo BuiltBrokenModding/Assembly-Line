@@ -1,16 +1,24 @@
 package dark.library;
 
 import java.awt.Color;
-
-import basiccomponents.common.BasicComponents;
+import java.io.File;
+import java.util.logging.Logger;
 
 import net.minecraft.world.World;
+import net.minecraftforge.common.Configuration;
+import universalelectricity.core.UniversalElectricity;
 import universalelectricity.core.vector.Vector3;
+import basiccomponents.common.BasicComponents;
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.Loader;
 import dark.library.effects.FXBeam;
 
 public class DarkMain
 {
+	private static boolean isInit = false;
+
+	
+	public static boolean runPowerLess = true; 
 	/* RESOURCE FILE PATHS */
 	public static final String RESOURCE_PATH = "/mods/dark/";
 	public static final String TEXTURE_DIRECTORY = RESOURCE_PATH + "textures/";
@@ -19,6 +27,10 @@ public class DarkMain
 	public static final String ITEM_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + "items/";
 	public static final String MODEL_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + "models/";
 	public static final String TEXTURE_NAME_PREFIX = "dark:";
+
+	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "Dark/General.cfg"));
+
+	public static final Logger LOGGER = Logger.getLogger("Dark-Lib");
 
 	public static void renderBeam(World world, Vector3 position, Vector3 target, Color color, int age)
 	{
@@ -32,12 +44,42 @@ public class DarkMain
 	{
 		if (world.isRemote)
 		{
-			FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXBeam(world, position, target, Color.DARK_GRAY, DarkMain.TEXTURE_DIRECTORY + "traceStream.png", 5,true));
+			FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXBeam(world, position, target, Color.DARK_GRAY, DarkMain.TEXTURE_DIRECTORY + "traceStream.png", 5, true));
 		}
 	}
-	
-	public void forceLoadBCItems(Object mod, String channel)
+
+	public static void forceLoadBCItems(Object mod, String channel)
 	{
 		BasicComponents.register(mod, channel);
+
+		if (!isInit)
+		{
+			// UniversalElectricity.CONFIGURATION.load();
+			BasicComponents.requestItem("ingotCopper", 0);
+			BasicComponents.requestItem("ingotTin", 0);
+
+			BasicComponents.requestBlock("oreCopper", 0);
+			BasicComponents.requestBlock("oreTin", 0);
+
+			BasicComponents.requestItem("ingotSteel", 0);
+			BasicComponents.requestItem("dustSteel", 0);
+			BasicComponents.requestItem("plateSteel", 0);
+
+			BasicComponents.requestItem("ingotBronze", 0);
+			BasicComponents.requestItem("dustBronze", 0);
+			BasicComponents.requestItem("plateBronze", 0);
+
+			BasicComponents.requestBlock("copperWire", 0);
+
+			BasicComponents.requestItem("circuitBasic", 0);
+			BasicComponents.requestItem("circuitAdvanced", 0);
+			BasicComponents.requestItem("circuitElite", 0);
+
+			BasicComponents.requestItem("motor", 0);
+			BasicComponents.registerInfiniteBattery(0);
+			BasicComponents.registerBattery(0);
+
+			isInit = true;
+		}
 	}
 }
