@@ -19,7 +19,7 @@ import universalelectricity.prefab.network.PacketManager;
 import assemblyline.api.IManipulator;
 import assemblyline.common.block.BlockCrate;
 import assemblyline.common.block.TileEntityCrate;
-import assemblyline.common.machine.imprinter.TileEntityFilterable;
+import assemblyline.common.imprinter.prefab.TileEntityFilterable;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class TileEntityManipulator extends TileEntityFilterable implements IRotatable, IRedstoneReceptor, IManipulator

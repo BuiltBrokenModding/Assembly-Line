@@ -8,8 +8,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
-import assemblyline.common.machine.imprinter.ItemImprinter;
-import assemblyline.common.machine.imprinter.TileEntityFilterable;
+import assemblyline.common.imprinter.ItemImprinter;
+import assemblyline.common.imprinter.prefab.TileEntityFilterable;
 
 /**
  * @author Briman0094

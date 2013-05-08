@@ -17,16 +17,16 @@ import assemblyline.client.render.RenderDetector;
 import assemblyline.client.render.RenderManipulator;
 import assemblyline.client.render.RenderRejector;
 import assemblyline.common.CommonProxy;
+import assemblyline.common.armbot.TileEntityArmbot;
 import assemblyline.common.block.TileEntityCrate;
+import assemblyline.common.imprinter.TileEntityImprinter;
 import assemblyline.common.machine.TileEntityManipulator;
 import assemblyline.common.machine.TileEntityRejector;
-import assemblyline.common.machine.armbot.TileEntityArmbot;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt;
 import assemblyline.common.machine.crane.TileEntityCraneController;
 import assemblyline.common.machine.crane.TileEntityCraneRail;
 import assemblyline.common.machine.detector.TileEntityDetector;
 import assemblyline.common.machine.encoder.TileEntityEncoder;
-import assemblyline.common.machine.imprinter.TileEntityImprinter;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 

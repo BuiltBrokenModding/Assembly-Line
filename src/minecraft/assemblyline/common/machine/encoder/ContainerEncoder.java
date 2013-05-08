@@ -6,7 +6,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.machine.imprinter.SlotCustom;
+import assemblyline.common.imprinter.SlotCustom;
 
 public class ContainerEncoder extends Container
 {

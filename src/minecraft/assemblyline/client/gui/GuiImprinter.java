@@ -7,8 +7,8 @@ import org.lwjgl.opengl.GL11;
 
 import universalelectricity.prefab.TranslationHelper;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.machine.imprinter.ContainerImprinter;
-import assemblyline.common.machine.imprinter.TileEntityImprinter;
+import assemblyline.common.imprinter.ContainerImprinter;
+import assemblyline.common.imprinter.TileEntityImprinter;
 
 public class GuiImprinter extends GuiContainer
 {

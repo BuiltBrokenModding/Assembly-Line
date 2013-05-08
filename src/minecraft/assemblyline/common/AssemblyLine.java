@@ -1,7 +1,6 @@
 package assemblyline.common;
 
 import ic2.api.item.Items;
-import ic2.api.recipe.Recipes;
 
 import java.io.File;
 import java.util.Arrays;
@@ -16,21 +15,21 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.multiblock.BlockMulti;
 import universalelectricity.prefab.network.PacketManager;
+import assemblyline.common.armbot.BlockArmbot;
+import assemblyline.common.armbot.command.GrabDictionary;
 import assemblyline.common.block.BlockCrate;
 import assemblyline.common.block.BlockTurntable;
 import assemblyline.common.block.ItemBlockCrate;
+import assemblyline.common.imprinter.BlockImprinter;
+import assemblyline.common.imprinter.ItemImprinter;
 import assemblyline.common.machine.BlockManipulator;
 import assemblyline.common.machine.BlockRejector;
-import assemblyline.common.machine.armbot.BlockArmbot;
 import assemblyline.common.machine.belt.BlockConveyorBelt;
-import assemblyline.common.machine.command.GrabDictionary;
 import assemblyline.common.machine.crane.BlockCraneController;
 import assemblyline.common.machine.crane.BlockCraneFrame;
 import assemblyline.common.machine.detector.BlockDetector;
 import assemblyline.common.machine.encoder.BlockEncoder;
 import assemblyline.common.machine.encoder.ItemDisk;
-import assemblyline.common.machine.imprinter.BlockImprinter;
-import assemblyline.common.machine.imprinter.ItemImprinter;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -192,7 +191,7 @@ public class AssemblyLine
 		{
 			createIC2Recipes();
 		}
-		
+
 	}
 
 	private void createVanillaRecipes()

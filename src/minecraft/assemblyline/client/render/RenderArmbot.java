@@ -16,7 +16,7 @@ import org.lwjgl.opengl.GL11;
 import universalelectricity.core.vector.Vector3;
 import assemblyline.client.model.ModelArmbot;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.machine.armbot.TileEntityArmbot;
+import assemblyline.common.armbot.TileEntityArmbot;
 
 public class RenderArmbot extends TileEntitySpecialRenderer
 {

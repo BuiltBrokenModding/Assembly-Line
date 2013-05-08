@@ -11,7 +11,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.PacketManager;
-import assemblyline.common.machine.imprinter.TileEntityFilterable;
+import assemblyline.common.imprinter.prefab.TileEntityFilterable;
 
 /**
  * 

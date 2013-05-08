@@ -7,7 +7,7 @@ import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
 import assemblyline.client.render.BlockRenderingHandler;
 import assemblyline.common.TabAssemblyLine;
-import assemblyline.common.machine.imprinter.BlockImprintable;
+import assemblyline.common.imprinter.prefab.BlockImprintable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

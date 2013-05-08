@@ -11,7 +11,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
-import assemblyline.common.machine.command.Command;
+import assemblyline.common.armbot.command.Command;
 
 import com.google.common.io.ByteArrayDataInput;
 
