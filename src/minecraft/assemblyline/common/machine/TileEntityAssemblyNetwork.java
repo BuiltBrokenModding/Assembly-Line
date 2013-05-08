@@ -1,5 +1,6 @@
 package assemblyline.common.machine;
 
+import dark.library.machine.TileEntityRunnableMachine;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -14,7 +15,7 @@ import assemblyline.common.AssemblyLine;
  * @author Calclavia
  * 
  */
-public abstract class TileEntityAssemblyNetwork extends TIC2Runnable
+public abstract class TileEntityAssemblyNetwork extends TileEntityRunnableMachine
 {
 	/**
 	 * The range in which power can be transfered.
@@ -96,19 +97,5 @@ public abstract class TileEntityAssemblyNetwork extends TIC2Runnable
 	protected int getMaxTransferRange()
 	{
 		return 30;
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
-		nbt.setDouble("wattsReceived", this.wattsReceived);
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
-		this.wattsReceived = nbt.getDouble("wattsReceived");
 	}
 }

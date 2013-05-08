@@ -143,7 +143,7 @@ public class AssemblyLine
 		itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", ITEM_ID_PREFIX).getInt());
 		itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", ITEM_ID_PREFIX + 1).getInt());
 
-		REQUIRE_NO_POWER = DEBUG || !CONFIGURATION.get("general", "requirePower", true).getBoolean(true) || PowerSystems.runPowerLess(PowerSystems.INDUSTRIALCRAFT, PowerSystems.BUILDCRAFT, PowerSystems.MEKANISM);
+		REQUIRE_NO_POWER = !CONFIGURATION.get("general", "requirePower", true).getBoolean(true) || PowerSystems.runPowerLess(PowerSystems.INDUSTRIALCRAFT, PowerSystems.BUILDCRAFT, PowerSystems.MEKANISM);
 		CONFIGURATION.save();
 
 		NetworkRegistry.instance().registerGuiHandler(this, this.proxy);
