@@ -95,7 +95,7 @@ public abstract class TileEntityAssemblyNetwork extends TIC2Runnable
 
 	protected int getMaxTransferRange()
 	{
-		return 20;
+		return 30;
 	}
 
 	@Override
