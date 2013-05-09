@@ -18,6 +18,7 @@ import assemblyline.client.model.ModelArmbot;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.armbot.TileEntityArmbot;
 
+@SideOnly(Side.CLIENT)
 public class RenderArmbot extends TileEntitySpecialRenderer
 {
 	public static final ModelArmbot MODEL = new ModelArmbot();

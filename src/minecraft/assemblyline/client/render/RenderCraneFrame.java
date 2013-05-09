@@ -14,6 +14,7 @@ import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.crane.CraneHelper;
 import assemblyline.common.machine.crane.TileEntityCraneRail;
 
+@SideOnly(Side.CLIENT)
 public class RenderCraneFrame extends TileEntitySpecialRenderer
 {
 	public static final String TEXTURE = "crane_frame.png";

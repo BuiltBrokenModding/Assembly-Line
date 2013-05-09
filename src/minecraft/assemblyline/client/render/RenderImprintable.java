@@ -14,6 +14,7 @@ import assemblyline.common.imprinter.prefab.TileEntityFilterable;
 /**
  * @author Briman0094
  */
+@SideOnly(Side.CLIENT)
 public abstract class RenderImprintable extends TileEntitySpecialRenderer
 {
 	@Override
