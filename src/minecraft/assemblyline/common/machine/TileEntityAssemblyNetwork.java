@@ -1,12 +1,11 @@
 package assemblyline.common.machine;
 
-import dark.library.machine.TileEntityRunnableMachine;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.AssemblyLine;
+import dark.library.machine.TileEntityRunnableMachine;
 
 /**
  * A class to be inherited by all machines on the assembly line. This will allow all machines to be

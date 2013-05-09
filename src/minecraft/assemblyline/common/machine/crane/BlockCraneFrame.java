@@ -7,6 +7,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 import assemblyline.client.render.BlockRenderingHandler;
+import assemblyline.common.TabAssemblyLine;
 import assemblyline.common.block.BlockALMachine;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -17,7 +18,7 @@ public class BlockCraneFrame extends BlockALMachine
 	{
 		super(id, UniversalElectricity.machine);
 		this.setUnlocalizedName("craneFrame");
-		// this.setCreativeTab(TabAssemblyLine.INSTANCE);
+		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 		this.setBlockBounds(0.25f, 0.25f, 0.25f, 0.75f, 0.75f, 0.75f);
 	}
 

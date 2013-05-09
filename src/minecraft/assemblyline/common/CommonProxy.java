@@ -1,5 +1,6 @@
 package assemblyline.common;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -9,6 +10,7 @@ import java.util.zip.ZipInputStream;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.multiblock.TileEntityMulti;
 import assemblyline.common.armbot.TileEntityArmbot;
 import assemblyline.common.block.TileEntityCrate;
@@ -143,5 +145,18 @@ public class CommonProxy implements IGuiHandler
 	public boolean isCtrKeyDown()
 	{
 		return false;
+	}
+	
+	/**
+	 * Renders a laser beam from one power to another by a set color for a set time
+	 * 
+	 * @param world - world this laser is to be rendered in
+	 * @param position - start vector3
+	 * @param target - end vector3
+	 * @param color - color of the beam
+	 * @param age - life of the beam in 1/20 secs
+	 */
+	public void renderBeam(World world, Vector3 position, Vector3 target, Color color, int age)
+	{
 	}
 }

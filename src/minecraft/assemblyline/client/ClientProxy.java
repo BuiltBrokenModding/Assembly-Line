@@ -1,10 +1,13 @@
 package assemblyline.client;
 
+import java.awt.Color;
+
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import universalelectricity.core.vector.Vector3;
 import assemblyline.client.gui.GuiEncoder;
 import assemblyline.client.gui.GuiImprinter;
 import assemblyline.client.render.BlockRenderingHandler;
@@ -27,8 +30,13 @@ import assemblyline.common.machine.crane.TileEntityCraneController;
 import assemblyline.common.machine.crane.TileEntityCraneRail;
 import assemblyline.common.machine.detector.TileEntityDetector;
 import assemblyline.common.machine.encoder.TileEntityEncoder;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+import dark.library.DarkMain;
+import dark.library.effects.FXBeam;
 
 public class ClientProxy extends CommonProxy
 {
@@ -78,5 +86,22 @@ public class ClientProxy extends CommonProxy
 	public boolean isCtrKeyDown()
 	{
 		return GuiScreen.isCtrlKeyDown();
+	}
+	
+	/**
+	 * Renders a laser beam from one power to another by a set color for a set time
+	 * 
+	 * @param world - world this laser is to be rendered in
+	 * @param position - start vector3
+	 * @param target - end vector3
+	 * @param color - color of the beam
+	 * @param age - life of the beam in 1/20 secs
+	 */
+	public void renderBeam(World world, Vector3 position, Vector3 target, Color color, int age)
+	{
+		if (world.isRemote || FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+		{
+			FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXBeam(world, position, target, color, DarkMain.TEXTURE_DIRECTORY + "", age));
+		}
 	}
 }

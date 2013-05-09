@@ -1,31 +1,58 @@
 package assemblyline.common.machine.crane;
 
+import java.awt.Color;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
-import assemblyline.api.ICraneConnectable;
+import universalelectricity.core.vector.Vector3;
+import assemblyline.api.ICraneStructure;
+import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.TileEntityAssemblyNetwork;
 
-public class TileEntityCraneController extends TileEntityAssemblyNetwork implements ICraneConnectable
+public class TileEntityCraneController extends TileEntityAssemblyNetwork implements ICraneStructure
 {
-	int width, height, depth;
+	int width, depth;
 	boolean isCraneValid;
-	long ticks;
-
+	Vector3 armPos;
+	
+	@Override
+	public void initiate()
+	{
+		this.validateCrane();
+		if(armPos == null || armPos.equals(new Vector3()))
+		{
+			int deltaX = 0;
+			int deltaZ = 0;
+			switch(this.getFacing())
+			{
+				case SOUTH: case EAST: deltaX = (this.width/2);deltaZ = (this.depth/2);break;
+				case NORTH: case WEST: deltaX = -(this.width/2);deltaZ = -(this.depth/2);break;
+			}
+			armPos = new Vector3(this.xCoord + deltaX, this.yCoord, this.zCoord+ deltaZ);
+		}
+	}
+	public ForgeDirection getFacing()
+	{
+		return ForgeDirection.getOrientation(this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
+	}
 	public TileEntityCraneController()
 	{
 		super();
-		width = height = depth = 0;
+		width = depth = 0;
 		isCraneValid = false;
-		ticks = 0;
 	}
 
 	@Override
 	public void updateEntity()
 	{
-		ticks++;
-		if (ticks % 20 == 0)
+		if(this.worldObj.isRemote && armPos != null)
 		{
-			validateCrane();
+			AssemblyLine.proxy.renderBeam(this.worldObj, new Vector3(this), armPos, Color.BLUE, 1);
+		}
+		super.updateEntity();
+		if (ticks % 60 == 0)
+		{
+			this.validateCrane();
 		}
 	}
 
@@ -37,44 +64,46 @@ public class TileEntityCraneController extends TileEntityAssemblyNetwork impleme
 	private void validateCrane()
 	{
 		isCraneValid = false;
-		width = height = depth = 0;
-		findCraneHeight();
+		width = depth = 0;
 		findCraneWidth();
+		System.out.println("CraneValidator: Width = "+ this.width);
 		findCraneDepth();
-		if (Math.abs(height) > 1 && Math.abs(width) > 1 && Math.abs(depth) > 1)
+		System.out.println("CraneValidator: Depth = "+ this.depth);
+		if (Math.abs(width) > 1 && Math.abs(depth) > 1)
 		{
 			isCraneValid = isFrameValid();
+			
 		}
+		System.out.println("CraneValidator: is valid? "+ this.isCraneValid);
 	}
 
 	private boolean isFrameValid()
 	{
 		for (int x = Math.min(0, width); x <= Math.max(0, width); x++)
 		{
-			if (!CraneHelper.isCraneStructureBlock(worldObj, xCoord + x, yCoord + height, zCoord))
+			if (!CraneHelper.isCraneStructureBlock(worldObj, xCoord + x, yCoord, zCoord))
+			{
+				System.out.println("CraneValidator: Failed width check ");
 				return false;
-		}
-		for (int x = Math.min(0, width); x <= Math.max(0, width); x++)
-		{
-			if (!CraneHelper.isCraneStructureBlock(worldObj, xCoord + x, yCoord + height, zCoord + depth))
-				return false;
+			}
 		}
 		for (int z = Math.min(0, depth); z <= Math.max(0, depth); z++)
 		{
-			if (!CraneHelper.isCraneStructureBlock(worldObj, xCoord, yCoord + height, zCoord + z))
+			if (!CraneHelper.isCraneStructureBlock(worldObj, xCoord, yCoord, zCoord + z))
+			{
+				System.out.println("CraneValidator: Failed Depth Check? ");
 				return false;
-		}
-		for (int z = Math.min(0, depth); z <= Math.max(0, depth); z++)
-		{
-			if (!CraneHelper.isCraneStructureBlock(worldObj, xCoord + width, yCoord + height, zCoord + z))
-				return false;
+			}
 		}
 		for (int x = Math.min(width + 1, 1); x <= Math.max(-1, width - 1); x++)
 		{
 			for (int z = Math.min(depth + 1, 1); z <= Math.max(-1, depth - 1); z++)
 			{
-				if (!worldObj.isAirBlock(xCoord + x, yCoord + height, zCoord + z))
+				if (!worldObj.isAirBlock(xCoord + x, yCoord, zCoord + z))
+				{
+					System.out.println("CraneValidator: Failed Area check");
 					return false;
+				}
 			}
 		}
 		return true;
@@ -85,19 +114,20 @@ public class TileEntityCraneController extends TileEntityAssemblyNetwork impleme
 	 */
 	private void findCraneWidth()
 	{
-		if (height == 0)
-		{
-			width = 0;
-			return;
-		}
 		int x = 0;
-		ForgeDirection facing = ForgeDirection.getOrientation(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+		ForgeDirection facing = this.getFacing();
+		System.out.println("CraneValidator: Width direction = "+ facing.ordinal());
 		while (true)
 		{
-			if (Math.abs(x) > CraneHelper.MAX_SIZE)
+			if (Math.abs(x) >= CraneHelper.MAX_SIZE)
+			{
 				break;
-			if (!CraneHelper.isCraneStructureBlock(worldObj, xCoord + x, yCoord + height, zCoord))
+			}
+			if (!CraneHelper.isCraneStructureBlock(worldObj, xCoord + x, yCoord, zCoord))
+			{
+				System.out.println("CraneValidator: Hit non block at x = "+ x);
 				break;
+			}
 			if (facing == ForgeDirection.NORTH || facing == ForgeDirection.EAST)
 			{
 				x++;
@@ -109,28 +139,13 @@ public class TileEntityCraneController extends TileEntityAssemblyNetwork impleme
 		}
 		width = x; // can be negative
 		if (width < 0)
-			width++;
-		if (width > 0)
-			width--;
-	}
-
-	/**
-	 * Find y size and store in this.height
-	 */
-	private void findCraneHeight()
-	{
-		int y = 1;
-		while (true)
 		{
-			if (yCoord + y >= 256)
-				break;
-			if (y > CraneHelper.MAX_SIZE)
-				break;
-			if (!CraneHelper.isCraneStructureBlock(worldObj, xCoord, yCoord + y, zCoord))
-				break;
-			y++;
+			width++;
 		}
-		height = y - 1;
+		if (width > 0)
+		{
+			width--;
+		}
 	}
 
 	/**
@@ -138,18 +153,13 @@ public class TileEntityCraneController extends TileEntityAssemblyNetwork impleme
 	 */
 	private void findCraneDepth()
 	{
-		if (height == 0)
-		{
-			width = 0;
-			return;
-		}
 		int z = 0;
-		ForgeDirection facing = ForgeDirection.getOrientation(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+		ForgeDirection facing = this.getFacing();
 		while (true)
 		{
 			if (Math.abs(z) > CraneHelper.MAX_SIZE)
 				break;
-			if (!CraneHelper.isCraneStructureBlock(worldObj, xCoord, yCoord + height, zCoord + z))
+			if (!CraneHelper.isCraneStructureBlock(worldObj, xCoord, yCoord, zCoord + z))
 				break;
 			if (facing == ForgeDirection.SOUTH || facing == ForgeDirection.EAST)
 			{
@@ -185,7 +195,6 @@ public class TileEntityCraneController extends TileEntityAssemblyNetwork impleme
 	{
 		super.writeToNBT(nbt);
 		nbt.setInteger("width", width);
-		nbt.setInteger("height", height);
 		nbt.setInteger("depth", depth);
 		nbt.setBoolean("isValid", isCraneValid);
 	}
@@ -195,7 +204,6 @@ public class TileEntityCraneController extends TileEntityAssemblyNetwork impleme
 	{
 		super.readFromNBT(nbt);
 		width = nbt.getInteger("width");
-		height = nbt.getInteger("height");
 		depth = nbt.getInteger("depth");
 		isCraneValid = nbt.getBoolean("isValid");
 	}
