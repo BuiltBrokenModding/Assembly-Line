@@ -20,6 +20,7 @@ import org.lwjgl.opengl.GL11;
 import universalelectricity.core.vector.Vector3;
 import assemblyline.common.block.TileEntityCrate;
 
+@SideOnly(Side.CLIENT)
 public class RenderCrate extends TileEntitySpecialRenderer
 {
 	private final RenderBlocks renderBlocks = new RenderBlocks();
