@@ -1,16 +1,11 @@
 package dark.library;
 
-import java.awt.Color;
 import java.io.File;
 import java.util.logging.Logger;
 
-import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
-import universalelectricity.core.vector.Vector3;
 import basiccomponents.common.BasicComponents;
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.Loader;
-import dark.library.effects.FXBeam;
 
 public class DarkMain
 {
@@ -28,36 +23,6 @@ public class DarkMain
 	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "Dark/General.cfg"));
 
 	public static final Logger LOGGER = Logger.getLogger("Dark-Lib");
-
-	
-
-	/**
-	 * Renders a laser beam from one power to another by a set color for a set time
-	 * 
-	 * @param world - world this laser is to be rendered in
-	 * @param position - start vector3
-	 * @param target - end vector3
-	 * @param color - color of the beam
-	 * @param age - life of the beam in 1/20 secs
-	 */
-	public static void renderBeam(World world, Vector3 position, Vector3 target, Color color, int age)
-	{
-		if (world.isRemote)
-		{
-			FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXBeam(world, position, target, color, DarkMain.TEXTURE_DIRECTORY + "", age));
-		}
-	}
-
-	/**
-	 * Renders a bullet tracer from one spot to another will later be replaced with start and degree
-	 */
-	public static void renderTracer(World world, Vector3 position, Vector3 target)
-	{
-		if (world.isRemote)
-		{
-			FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXBeam(world, position, target, Color.DARK_GRAY, DarkMain.TEXTURE_DIRECTORY + "traceStream.png", 5, true));
-		}
-	}
 
 	/**
 	 * Loads most of the items from basic components to be used
