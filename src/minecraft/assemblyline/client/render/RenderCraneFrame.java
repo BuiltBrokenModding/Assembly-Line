@@ -13,6 +13,8 @@ import assemblyline.client.model.ModelCraneRail;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.crane.CraneHelper;
 import assemblyline.common.machine.crane.TileEntityCraneRail;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderCraneFrame extends TileEntitySpecialRenderer
