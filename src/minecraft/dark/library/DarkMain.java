@@ -29,7 +29,7 @@ public class DarkMain
 	 */
 	public static void forceLoadBCItems(Object mod, String channel)
 	{
-		BasicComponents.register(mod, channel);
+		
 
 		if (!loadedItems)
 		{
@@ -60,5 +60,6 @@ public class DarkMain
 
 			loadedItems = true;
 		}
+		BasicComponents.register(mod, channel);
 	}
 }
