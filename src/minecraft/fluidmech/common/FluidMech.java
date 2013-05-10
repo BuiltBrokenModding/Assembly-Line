@@ -219,8 +219,6 @@ public class FluidMech extends DummyModContainer
 		FMLog.info("Loading...");
 		proxy.Init();
 		
-		DarkMain.forceLoadBCItems(this, this.CHANNEL);
-		
 		/* TILE ENTITY REGISTER CALLS */
 		GameRegistry.registerTileEntity(TileEntityPipe.class, "lmPipeTile");
 		GameRegistry.registerTileEntity(TileEntityGenericPipe.class, "lmGenPipeTile");
