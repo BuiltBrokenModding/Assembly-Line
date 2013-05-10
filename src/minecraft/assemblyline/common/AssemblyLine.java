@@ -220,19 +220,58 @@ public class AssemblyLine
 		DarkMain.forceLoadBCItems(this, AssemblyLine.CHANNEL);
 		System.out.println("BasicComponents Found...adding UE recipes for Assembly Line.");
 		// Armbot
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockArmbot, new Object[] { "II ", "SIS", "MCM", 'S', "plateSteel", 'C', "advancedCircuit", 'I', "ingotSteel", 'M', "motor" }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockArmbot, new Object[] {
+				"II ", 
+				"SIS", 
+				"MCM", 
+				'S', "plateSteel", 
+				'C', "advancedCircuit", 
+				'I', "ingotSteel", 
+				'M', "motor" }));
 		// Disk
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemDisk, new Object[] { "III", "ICI", "III", 'I', itemImprint, 'C', "advancedCircuit" }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemDisk, new Object[] {
+				"III",
+				"ICI", 
+				"III", 
+				'I', itemImprint,
+				'C', "advancedCircuit" }));
 		// Encoder
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockEncoder, new Object[] { "SIS", "SCS", "SSS", 'I', itemImprint, 'S', "ingotSteel", 'C', "advancedCircuit" }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockEncoder, new Object[] {
+				"SIS",
+				"SCS",
+				"SSS",
+				'I', itemImprint,
+				'S', "ingotSteel",
+				'C', "advancedCircuit" }));
 		// Detector
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, new Object[] { "SES", "SCS", "S S", 'S', "ingotSteel", 'C', "basicCircuit", 'E', Item.eyeOfEnder }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, new Object[] {
+				"SES",
+				"SCS",
+				"S S",
+				'S', "ingotSteel", 
+				'C', "basicCircuit",
+				'E', Item.eyeOfEnder }));
 		// Conveyor Belt
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 10), new Object[] { "III", "WMW", 'I', "ingotSteel", 'W', Block.planks, 'M', "motor" }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 10), new Object[] {
+			"III",
+			"WMW", 
+			'I', "ingotSteel",
+			'W', Block.planks,
+			'M', "motor" }));
 		// Rejector
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockRejector, new Object[] { "WPW", "@R@", '@', "ingotSteel", 'R', Item.redstone, 'P', Block.pistonBase, 'C', "basicCircuit", 'W', "copperWire" }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockRejector, new Object[] {
+				"CPC",
+				"@R@",
+				'@', "ingotSteel",
+				'R', Item.redstone, 
+				'P', Block.pistonBase,
+				'C', "basicCircuit"}));
 		// Turntable
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, new Object[] { "M", "P", 'M', "motor", 'P', Block.pistonBase }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, new Object[] {
+				"M",
+				"P", 
+				'M', "motor", 
+				'P', Block.pistonBase }));
 		// Manipulator
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockManipulator, 2), new Object[] { Block.dispenser, "basicCircuit" }));
 	}
