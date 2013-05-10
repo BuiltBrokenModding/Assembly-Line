@@ -29,8 +29,6 @@ public class DarkMain
 	 */
 	public static void forceLoadBCItems(Object mod, String channel)
 	{
-		
-
 		if (!loadedItems)
 		{
 			// UniversalElectricity.CONFIGURATION.load();
@@ -47,8 +45,6 @@ public class DarkMain
 			BasicComponents.requestItem("ingotBronze", 0);
 			BasicComponents.requestItem("dustBronze", 0);
 			BasicComponents.requestItem("plateBronze", 0);
-
-			BasicComponents.requestBlock("copperWire", 0);
 
 			BasicComponents.requestItem("circuitBasic", 0);
 			BasicComponents.requestItem("circuitAdvanced", 0);
