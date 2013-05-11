@@ -1,7 +1,9 @@
 package dark.library.terminal;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -18,6 +20,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
 import dark.library.access.AccessLevel;
 import dark.library.access.UserAccess;
 import dark.library.access.interfaces.ISpecialAccess;
@@ -49,18 +52,20 @@ public abstract class TileEntityTerminal extends TileEntityRunnableMachine imple
 	/** Used on client side to determine the scroll of the terminal. */
 	private int scroll = 0;
 
+	public final Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
+
 	@Override
 	public void updateEntity()
 	{
-		super.updateEntity();		
+		super.updateEntity();
+
 		if (!this.worldObj.isRemote)
 		{
-
-			if (this.playersUsing > 0)
+			if (this.ticks % 3 == 0)
 			{
-				if (this.ticks % 5 == 0)
+				for (EntityPlayer player : this.playersUsing)
 				{
-					PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 12);
+					PacketDispatcher.sendPacketToPlayer(this.getDescriptionPacket(), (Player) player);
 				}
 			}
 		}
@@ -140,12 +145,12 @@ public abstract class TileEntityTerminal extends TileEntityRunnableMachine imple
 					{
 						if (dataStream.readBoolean())
 						{
-							this.playersUsing++;
+							this.playersUsing.add(player);
 							this.sendTerminalOutputToClients();
 						}
 						else
 						{
-							this.playersUsing--;
+							this.playersUsing.remove(player);
 						}
 					}
 					break;
