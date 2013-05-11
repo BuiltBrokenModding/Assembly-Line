@@ -6,13 +6,14 @@ import dark.library.PowerSystems;
 
 public class TileEntityRunnableMachine extends TileEntityUniversalRunnable
 {
-
 	/** The amount of players using the console. */
 	public int playersUsing = 0;
 
 	@Override
 	public void updateEntity()
 	{
+		super.updateEntity();
+
 		if (this.wattsReceived < this.getWattBuffer() && PowerSystems.runPowerLess(PowerSystems.INDUSTRIALCRAFT, PowerSystems.BUILDCRAFT, PowerSystems.MEKANISM))
 		{
 			this.wattsReceived += Math.max(this.getWattBuffer() - this.wattsReceived, 0);
