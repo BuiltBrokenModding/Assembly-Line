@@ -37,7 +37,9 @@ public class DarkMain
 
 			BasicComponents.requestBlock("oreCopper", 0);
 			BasicComponents.requestBlock("oreTin", 0);
-
+			
+			BasicComponents.requestBlock("copperWire", 0);
+			
 			BasicComponents.requestItem("ingotSteel", 0);
 			BasicComponents.requestItem("dustSteel", 0);
 			BasicComponents.requestItem("plateSteel", 0);
