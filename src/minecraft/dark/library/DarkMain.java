@@ -22,8 +22,19 @@ public class DarkMain
 
 	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "Dark/General.cfg"));
 
-	public static final Logger LOGGER = Logger.getLogger("Dark-Lib");
-
+	public static final Logger LOGGER = Logger.getLogger("DarkLib");
+	
+	public void init()
+	{
+		
+	}
+	
+	public static void registerMod(Object mod)
+	{
+		
+	}
+	
+	
 	/**
 	 * Loads most of the items from basic components to be used
 	 */
@@ -31,6 +42,8 @@ public class DarkMain
 	{
 		if (!loadedItems)
 		{
+			LOGGER.fine("Loaded Basic Components Items");
+			
 			// UniversalElectricity.CONFIGURATION.load();
 			BasicComponents.requestItem("ingotCopper", 0);
 			BasicComponents.requestItem("ingotTin", 0);

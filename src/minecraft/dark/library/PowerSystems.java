@@ -5,8 +5,11 @@ import cpw.mods.fml.common.Loader;
 public enum PowerSystems
 {
 	INDUSTRIALCRAFT("IC2"), MEKANISM("Mekanism"), BUILDCRAFT("BuildCraft|Energy");
+	
 	public String id;
-
+	
+	private boolean[] loaded = new boolean[this.values().length];
+	
 	private PowerSystems(String id)
 	{
 		this.id = id;
