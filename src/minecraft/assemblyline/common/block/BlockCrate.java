@@ -106,7 +106,7 @@ public class BlockCrate extends BlockALMachine
 				{
 					if (current != null && tileEntity.getStackInSlot(0) == null)
 					{
-						tileEntity.setInventorySlotContents(0, new ItemStack(current.itemID, TileEntityCrate.getMaxLimit(world.getBlockMetadata(x, y, z)), current.getItemDamage()));
+						tileEntity.setInventorySlotContents(0, new ItemStack(current.itemID, TileEntityCrate.getSlotCount(world.getBlockMetadata(x, y, z)), current.getItemDamage()));
 					}
 				}
 				// Add items
@@ -169,7 +169,7 @@ public class BlockCrate extends BlockALMachine
 	{
 		if (allMode && !player.isSneaking())
 		{
-			this.ejectItems(tileEntity, player, tileEntity.getMaxLimit());
+			this.ejectItems(tileEntity, player, tileEntity.getSlotCount());
 		}
 		else
 		{
@@ -374,8 +374,10 @@ public class BlockCrate extends BlockALMachine
 		if (!world.isRemote && world.getBlockTileEntity(x, y, z) != null)
 		{
 			TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
-			ItemStack containingStack = tileEntity.getStackInSlot(0);
-
+			ItemStack containingStack = tileEntity.sampleStack;
+			
+			tileEntity.buildSampleStack();
+			
 			if (containingStack != null)
 			{
 				if (containingStack.stackSize > 0)

@@ -37,7 +37,7 @@ public class RenderCrate extends TileEntitySpecialRenderer
 
 			String itemName = "Empty";
 			String amount = "";
-			ItemStack itemStack = tileCrate.getStackInSlot(0);
+			ItemStack itemStack = tileCrate.sampleStack;
 
 			if (itemStack != null)
 			{

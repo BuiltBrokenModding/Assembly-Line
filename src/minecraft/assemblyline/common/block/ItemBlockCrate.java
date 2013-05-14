@@ -51,7 +51,7 @@ public class ItemBlockCrate extends ItemBlock
 
 			if (containingStack != null && !player.capabilities.isCreativeMode)
 			{
-				player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 5, (int) ((float) containingStack.stackSize / (float) TileEntityCrate.getMaxLimit(itemStack.getItemDamage())) * 5));
+				player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 5, (int) ((float) containingStack.stackSize / (float) TileEntityCrate.getSlotCount(itemStack.getItemDamage())) * 5));
 			}
 		}
 	}
@@ -116,7 +116,22 @@ public class ItemBlockCrate extends ItemBlock
 				if (containingItem.stackSize > 0)
 				{
 					TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
-					tileEntity.setInventorySlotContents(0, containingItem);
+					int count = containingItem.stackSize;
+
+					for (int i = 0; i < tileEntity.getSizeInventory(); i++)
+					{
+						int stackSize = Math.min(64, count);
+						tileEntity.setInventorySlotContents(0, new ItemStack(containingItem.itemID, stackSize, containingItem.getItemDamage()));
+						count -= stackSize;
+
+						if (count <= 0)
+						{
+							containingItem = null;
+							break;
+						}
+
+					}
+					tileEntity.buildSampleStack();
 				}
 			}
 		}
