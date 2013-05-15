@@ -8,12 +8,14 @@ public enum PowerSystems
 	
 	public String id;
 	
-	private boolean[] loaded = new boolean[this.values().length];
+	
 	
 	private PowerSystems(String id)
 	{
 		this.id = id;
 	}
+	
+	//private static boolean[] loaded = new boolean[PowerSystems.values().length];
 	
 	/**
 	 * Checks to see if something can run powerless based on mods loaded
