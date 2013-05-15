@@ -32,30 +32,6 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 
 	public long prevClickTime = -1000;
 
-	@Override
-	public void initiate()
-	{
-		slots = new int[this.getSlotCount()];
-		for (int i = 0; i < slots.length; i++)
-		{
-			slots[i] = i;
-		}
-		ItemStack[] itemSet = this.items.clone();
-		this.items = new ItemStack[this.getSlotCount()];
-		for (int i = 0; i < itemSet.length; i++)
-		{
-			if (i < this.items.length)
-			{
-				this.items[i] = itemSet[i];
-			}
-		}
-		this.buildSampleStack();
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-		{
-			PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj);
-		}
-	}
-
 	public void buildSampleStack()
 	{
 		int count = 0;
@@ -63,7 +39,31 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 		int meta = 0;
 
 		boolean rebuildBase = false;
-
+		/* Similar to Init but checks so often just in case something does break */
+		if (worldObj != null)
+		{
+			if (slots == null || slots != null && slots.length != this.getSlotCount())
+			{
+				slots = new int[this.getSlotCount()];
+				for (int i = 0; i < slots.length; i++)
+				{
+					slots[i] = i;
+				}
+			}
+			if (this.items != null && this.items.length != this.getSlotCount())
+			{
+				ItemStack[] itemSet = this.items.clone();
+				this.items = new ItemStack[this.getSlotCount()];
+				for (int i = 0; i < itemSet.length; i++)
+				{
+					if (i < this.items.length)
+					{
+						this.items[i] = itemSet[i];
+					}
+				}
+			}
+		}
+		/* Creates the sample stack that is used as a collective itemstack */
 		for (int i = 0; i < this.items.length; i++)
 		{
 			ItemStack stack = this.items[i];
@@ -72,9 +72,9 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 				id = this.items[i].itemID;
 				meta = this.items[i].getItemDamage();
 				int ss = this.items[i].stackSize;
-				
+
 				count += ss;
-				
+
 				if (ss > this.items[i].getMaxStackSize())
 				{
 					rebuildBase = true;
@@ -89,7 +89,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 		{
 			this.sampleStack = new ItemStack(id, count, meta);
 		}
-
+		/* if one stack is over sized this rebuilds the inv to redistribute the items in the slots */
 		if (rebuildBase && this.getSampleStack() != null)
 		{
 			ItemStack baseStack = this.getSampleStack().copy();
@@ -139,7 +139,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	@Override
 	public boolean canUpdate()
 	{
-		return this.ticks <= 1;
+		return false;
 	}
 
 	@Override
@@ -177,6 +177,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	@Override
 	public Packet getDescriptionPacket()
 	{
+		this.buildSampleStack();
 		ItemStack stack = this.getSampleStack();
 		if (stack != null)
 		{
