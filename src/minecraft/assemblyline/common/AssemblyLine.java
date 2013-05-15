@@ -187,7 +187,7 @@ public class AssemblyLine
 
 		this.createStandardRecipes();
 		this.createUERecipes();
-		if (PowerSystems.isPowerSystemLoaded(PowerSystems.INDUSTRIALCRAFT))
+		if (PowerSystems.isPowerSystemLoaded(PowerSystems.INDUSTRIALCRAFT, true))
 		{
 			createIC2Recipes();
 		}
