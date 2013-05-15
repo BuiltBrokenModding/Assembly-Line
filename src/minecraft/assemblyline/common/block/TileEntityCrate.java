@@ -48,7 +48,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 			{
 				this.items[i] = itemSet[i];
 			}
-			else if(itemSet[i] != null)
+			else if (itemSet[i] != null)
 			{
 				float area = 1.5F;
 				double dropX = (double) (worldObj.rand.nextFloat() * area) + (double) (1.0F - area) * 0.5D;
@@ -60,6 +60,10 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 			}
 		}
 		this.buildSampleStack();
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+		{
+			PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj);
+		}
 	}
 
 	public void buildSampleStack()
@@ -68,7 +72,9 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 		int count = 0;
 		int id = 0;
 		int meta = 0;
-
+		
+		boolean rebuildBase = false;
+		
 		for (int i = 0; i < this.items.length; i++)
 		{
 			ItemStack stack = this.items[i];
@@ -76,7 +82,12 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 			{
 				id = this.items[i].itemID;
 				meta = this.items[i].getItemDamage();
-				count += this.items[i].stackSize;
+				int ss =  this.items[i].stackSize;
+				count+= ss;
+				if(ss > this.items[i].getMaxStackSize())
+				{
+					rebuildBase = true;
+				}
 			}
 		}
 		if (id == 0 || count == 0)
@@ -86,6 +97,23 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 		else
 		{
 			this.sampleStack = new ItemStack(id, count, meta);
+		}
+		
+		if(rebuildBase && this.getSampleStack() != null)
+		{
+			ItemStack baseStack = this.getSampleStack().copy();
+			this.items = new ItemStack[this.getSlotCount()];
+			for(int slot = 0; slot < this.items.length; slot++)
+			{
+				int stackL = Math.min(Math.min(baseStack.stackSize, baseStack.getMaxStackSize()), this.getInventoryStackLimit());
+				this.items[slot] = new ItemStack(baseStack.itemID, stackL,baseStack.getItemDamage());
+				baseStack.stackSize -= stackL;
+				if(baseStack.stackSize <= 0)
+				{
+					baseStack = null;
+					break;
+				}
+			}
 		}
 	}
 
@@ -274,44 +302,28 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	{
 		super.readFromNBT(nbt);
 
-		NBTTagList tagList = nbt.getTagList("Items");
+		NBTTagList var2 = nbt.getTagList("Items");
 
 		this.items = new ItemStack[this.getSizeInventory()];
 
-		for (int slot = 0; slot < tagList.tagCount(); ++slot)
+		for (int var3 = 0; var3 < var2.tagCount(); ++var3)
 		{
-			NBTTagCompound tag = (NBTTagCompound) tagList.tagAt(slot);
-			byte var5 = tag.getByte("Slot");
+			NBTTagCompound var4 = (NBTTagCompound) var2.tagAt(var3);
+			byte var5 = var4.getByte("Slot");
 
 			if (var5 >= 0 && var5 < this.items.length)
 			{
-				this.items[var5] = ItemStack.loadItemStackFromNBT(tag);
+				this.items[var5] = ItemStack.loadItemStackFromNBT(var4);
 			}
 		}
-
+		
+		this.buildSampleStack();
+		 
 		if (nbt.hasKey("Count") && this.items[0] != null)
 		{
-			int count = nbt.getInteger("Count");
-
-			ItemStack prItems = items[0].copy();
-
-			for (int i = 0; i < this.items.length; i++)
-			{
-				if (prItems != null)
-				{
-					int stackSize = Math.min(64, prItems.stackSize);
-					this.items[i] = new ItemStack(prItems.itemID, stackSize, prItems.getItemDamage());
-					count -= stackSize;
-				}
-				if (count <= 0)
-				{
-					prItems = null;
-					break;
-				}
-
-			}
-
-		}
+			this.items[0].stackSize = nbt.getInteger("Count");
+		}	
+		
 	}
 
 	/**
