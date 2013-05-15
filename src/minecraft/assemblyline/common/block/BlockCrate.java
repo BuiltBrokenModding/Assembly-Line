@@ -261,7 +261,7 @@ public class BlockCrate extends BlockALMachine
 					{
 						if (requestStack.isItemEqual(currentStack))
 						{
-							player.inventory.setInventorySlotContents(i, this.putIn(tileEntity, currentStack));
+							player.inventory.setInventorySlotContents(i, BlockCrate.putIn(tileEntity, currentStack));
 
 							if (player instanceof EntityPlayerMP)
 							{
