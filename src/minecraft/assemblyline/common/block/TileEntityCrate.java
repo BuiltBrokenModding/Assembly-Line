@@ -316,14 +316,13 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 				this.items[var5] = ItemStack.loadItemStackFromNBT(var4);
 			}
 		}
-		
-		this.buildSampleStack();
 		 
 		if (nbt.hasKey("Count") && this.items[0] != null)
 		{
 			this.items[0].stackSize = nbt.getInteger("Count");
 		}	
 		
+		this.buildSampleStack();
 	}
 
 	/**
