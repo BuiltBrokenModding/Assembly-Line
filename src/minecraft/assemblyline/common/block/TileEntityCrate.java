@@ -22,9 +22,12 @@ import cpw.mods.fml.relauncher.Side;
 
 public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInventory, IPacketReceiver, ISidedInventory
 {
-	public ItemStack sampleStack;
-
+	/*For display/boolean use only */
+	private ItemStack sampleStack;
+	public int itemCount;
+	/* Slots that can be accesed threw ISidedInv */
 	private int[] slots;
+	/*Actual Inv of the crate */
 	private ItemStack[] items = new ItemStack[TileEntityCrate.getSlotCount(15)];
 
 	public long prevClickTime = -1000;
@@ -44,6 +47,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 		int count = 0;
 		int id = 0;
 		int meta = 0;
+
 		for (int i = 0; i < this.items.length; i++)
 		{
 
@@ -54,9 +58,19 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 				count += this.items[i].stackSize;
 			}
 		}
-		this.sampleStack = new ItemStack(id, count, meta);
+		this.itemCount = count;
+		this.sampleStack = new ItemStack(id, 1, meta);
 	}
-
+	
+	public ItemStack getSampleStack()
+	{
+		if(this.sampleStack == null)
+		{
+			this.buildSampleStack();
+		}
+		return this.sampleStack;
+	}
+	
 	public int getSlotCount()
 	{
 		return TileEntityCrate.getSlotCount(this.getTier());
@@ -354,11 +368,11 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	@Override
 	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
 	{
-		if (this.sampleStack == null)
+		if (this.getSampleStack() == null)
 		{
 			return true;
 		}
-		else if (itemstack != null && itemstack.isItemEqual(this.sampleStack))
+		else if (itemstack != null && itemstack.isItemEqual(this.getSampleStack()))
 		{
 			return true;
 		}

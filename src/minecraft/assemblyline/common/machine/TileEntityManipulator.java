@@ -272,7 +272,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 			}
 			else if (tileEntity instanceof TileEntityCrate)
 			{
-				return BlockCrate.putIn((TileEntityCrate) tileEntity, itemStack);				
+				return BlockCrate.addStackToCrate((TileEntityCrate) tileEntity, itemStack);				
 			}
 			else if (tileEntity instanceof ISidedInventory)
 			{
