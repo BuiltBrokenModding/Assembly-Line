@@ -1,46 +1,55 @@
 package dark.library.helpers;
 
-
+/**
+ * Used by machines that only rotate to 4 directions
+ * 
+ * @author DarkGuardsman *
+ */
 public class MetaGroup
-{    
-    public static int getFacingMeta(int metaData)
-    {
-        int meta = metaData % 4;
-        int newMeta = 0;
-        switch (meta)
-        {
-            case 0:
-                newMeta = 2;
-                break;
-            case 1:
-                newMeta = 5;
-                break;
-            case 2:
-                newMeta = 3;
-                break;
-            case 3:
-                newMeta = 4;
-        }
+{
+	/**
+	 * Gets minecraft style facing direction base
+	 * 
+	 * @param metaData - block metadata based on 4 meta rotation
+	 * @return 2,5,3,4
+	 */
+	public static int getFacingMeta(int metaData)
+	{
+		int meta = metaData % 4;
+		int newMeta = 0;
+		switch (meta)
+		{
+			case 0:
+				newMeta = 2;
+				break;
+			case 1:
+				newMeta = 5;
+				break;
+			case 2:
+				newMeta = 3;
+				break;
+			case 3:
+				newMeta = 4;
+		}
 
-        return newMeta;
-    }
+		return newMeta;
+	}
 
-    public static int getGrouping(int meta)
-    {
-        if ((meta >= 0) && (meta <= 3))
-            return 0;
-        if ((meta >= 4) && (meta <= 7))
-            return 1;
-        if ((meta >= 8) && (meta <= 11))
-            return 2;
-        if ((meta >= 12) && (meta <= 15))
-            return 3;
-        return 0;
-    }
+	/**
+	 * Gets the block's group
+	 */
+	public static int getGrouping(int meta)
+	{
+		return meta % 4;
+	}
+	/**
+	 * Gets the starting meta of a group
+	 * @param grouping - 4 meta group base
+	 * @return metadata
+	 */
+	public static int getGroupStartMeta(int grouping)
+	{
+		return grouping * 4;
+	}
 
-    public static int getGroupStartMeta(int grouping)
-    {
-        return grouping * 4;
-    }
-   
 }

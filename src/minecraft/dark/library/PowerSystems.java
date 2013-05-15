@@ -5,18 +5,17 @@ import cpw.mods.fml.common.Loader;
 public enum PowerSystems
 {
 	INDUSTRIALCRAFT("IC2"), MEKANISM("Mekanism"), BUILDCRAFT("BuildCraft|Energy");
-	
+
 	public String id;
-	
-	
-	
+
 	private PowerSystems(String id)
 	{
 		this.id = id;
 	}
-	
-	//private static boolean[] loaded = new boolean[PowerSystems.values().length];
-	
+
+	private static boolean init = false;
+	private static Boolean[] loaded;
+
 	/**
 	 * Checks to see if something can run powerless based on mods loaded
 	 * 
@@ -27,7 +26,7 @@ public enum PowerSystems
 	{
 		for (int i = 0; i < optional.length; i++)
 		{
-			if (isPowerSystemLoaded(optional[i]))
+			if (isPowerSystemLoaded(optional[i], false))
 			{
 				return false;
 			}
@@ -38,8 +37,17 @@ public enum PowerSystems
 	/**
 	 * Check to see if one of the mods listed in the PowerSystem enum is loaded
 	 */
-	public static boolean isPowerSystemLoaded(PowerSystems power)
+	public static boolean isPowerSystemLoaded(PowerSystems power, boolean force)
 	{
-		return power != null && Loader.isModLoaded(power.id);
+		if (!init || force)
+		{
+			loaded = new Boolean[PowerSystems.values().length];
+			for (int i = 0; i < PowerSystems.values().length; i++)
+			{
+				loaded[i] = Loader.isModLoaded(PowerSystems.values()[i].id);
+			}
+			init = true;
+		}
+		return power != null && loaded[power.ordinal()];
 	}
 }
