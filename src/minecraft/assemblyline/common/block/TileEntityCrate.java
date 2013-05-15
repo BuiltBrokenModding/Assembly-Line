@@ -134,7 +134,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 		if (this.sampleStack != null)
 		{
 			this.buildSampleStack();
-			return PacketManager.getPacket(AssemblyLine.CHANNEL, this, true, this.sampleStack.itemID, this.sampleStack.stackSize, this.sampleStack.getItemDamage());
+			return PacketManager.getPacket(AssemblyLine.CHANNEL, this, true, this.sampleStack.itemID, this.itemCount, this.sampleStack.getItemDamage());
 		}
 		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, false);
 	}
