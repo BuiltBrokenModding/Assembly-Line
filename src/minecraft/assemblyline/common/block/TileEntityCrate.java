@@ -23,12 +23,12 @@ import cpw.mods.fml.relauncher.Side;
 
 public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInventory, IPacketReceiver, ISidedInventory
 {
-	/* For display/boolean use only */
+	/* Collective total stack of all inv slots */
 	private ItemStack sampleStack;
 	/* Slots that can be accesed threw ISidedInv */
 	private int[] slots;
-	/* Actual Inv of the crate */
-	private ItemStack[] items = new ItemStack[TileEntityCrate.getSlotCount(15)];
+	/* Sudo inv for the crate to interact with other things */
+	private ItemStack[] items = new ItemStack[1028];
 
 	public long prevClickTime = -1000;
 
@@ -48,16 +48,6 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 			{
 				this.items[i] = itemSet[i];
 			}
-			else if (itemSet[i] != null)
-			{
-				float area = 1.5F;
-				double dropX = (double) (worldObj.rand.nextFloat() * area) + (double) (1.0F - area) * 0.5D;
-				double dropY = (double) (worldObj.rand.nextFloat() * area) + (double) (1.0F - area) * 0.5D;
-				double dropZ = (double) (worldObj.rand.nextFloat() * area) + (double) (1.0F - area) * 0.5D;
-				EntityItem var13 = new EntityItem(worldObj, (double) xCoord + dropX, (double) yCoord + dropY, (double) zCoord + dropZ, itemSet[i]);
-				var13.delayBeforeCanPickup = 10;
-				worldObj.spawnEntityInWorld(var13);
-			}
 		}
 		this.buildSampleStack();
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
@@ -68,13 +58,12 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 
 	public void buildSampleStack()
 	{
-		this.sampleStack = null;
 		int count = 0;
 		int id = 0;
 		int meta = 0;
-		
+
 		boolean rebuildBase = false;
-		
+
 		for (int i = 0; i < this.items.length; i++)
 		{
 			ItemStack stack = this.items[i];
@@ -82,9 +71,11 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 			{
 				id = this.items[i].itemID;
 				meta = this.items[i].getItemDamage();
-				int ss =  this.items[i].stackSize;
-				count+= ss;
-				if(ss > this.items[i].getMaxStackSize())
+				int ss = this.items[i].stackSize;
+				
+				count += ss;
+				
+				if (ss > this.items[i].getMaxStackSize())
 				{
 					rebuildBase = true;
 				}
@@ -98,17 +89,17 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 		{
 			this.sampleStack = new ItemStack(id, count, meta);
 		}
-		
-		if(rebuildBase && this.getSampleStack() != null)
+
+		if (rebuildBase && this.getSampleStack() != null)
 		{
 			ItemStack baseStack = this.getSampleStack().copy();
 			this.items = new ItemStack[this.getSlotCount()];
-			for(int slot = 0; slot < this.items.length; slot++)
+			for (int slot = 0; slot < this.items.length; slot++)
 			{
 				int stackL = Math.min(Math.min(baseStack.stackSize, baseStack.getMaxStackSize()), this.getInventoryStackLimit());
-				this.items[slot] = new ItemStack(baseStack.itemID, stackL,baseStack.getItemDamage());
+				this.items[slot] = new ItemStack(baseStack.itemID, stackL, baseStack.getItemDamage());
 				baseStack.stackSize -= stackL;
-				if(baseStack.stackSize <= 0)
+				if (baseStack.stackSize <= 0)
 				{
 					baseStack = null;
 					break;
@@ -186,7 +177,6 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		this.buildSampleStack();
 		ItemStack stack = this.getSampleStack();
 		if (stack != null)
 		{
@@ -302,51 +292,50 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	{
 		super.readFromNBT(nbt);
 
-		NBTTagList var2 = nbt.getTagList("Items");
-
 		this.items = new ItemStack[this.getSizeInventory()];
 
-		for (int var3 = 0; var3 < var2.tagCount(); ++var3)
+		if (nbt.hasKey("Items"))
 		{
-			NBTTagCompound var4 = (NBTTagCompound) var2.tagAt(var3);
-			byte var5 = var4.getByte("Slot");
+			NBTTagList var2 = nbt.getTagList("Items");
 
-			if (var5 >= 0 && var5 < this.items.length)
+			for (int var3 = 0; var3 < var2.tagCount(); ++var3)
 			{
-				this.items[var5] = ItemStack.loadItemStackFromNBT(var4);
+				NBTTagCompound var4 = (NBTTagCompound) var2.tagAt(var3);
+				byte var5 = var4.getByte("Slot");
+
+				if (var5 >= 0 && var5 < this.items.length)
+				{
+					this.items[var5] = ItemStack.loadItemStackFromNBT(var4);
+				}
+			}
+			if (nbt.hasKey("Count") && this.items[0] != null)
+			{
+				this.items[0].stackSize = nbt.getInteger("Count");
 			}
 		}
-		 
-		if (nbt.hasKey("Count") && this.items[0] != null)
+		else
 		{
-			this.items[0].stackSize = nbt.getInteger("Count");
-		}	
-		
-		this.buildSampleStack();
+			ItemStack stack = new ItemStack(nbt.getInteger("itemID"), nbt.getInteger("Count"), nbt.getInteger("itemMeta"));
+			if (stack != null && stack.itemID != 0 && stack.stackSize > 0)
+			{
+				this.items[0] = stack;
+			}
+		}
+
 	}
 
-	/**
-	 * Writes a tile entity to NBT.
-	 */
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-
-		NBTTagList tagList = new NBTTagList();
-
-		for (int slot = 0; slot < this.items.length; ++slot)
+		this.buildSampleStack();
+		ItemStack stack = this.getSampleStack();
+		if (stack != null)
 		{
-			if (this.items[slot] != null)
-			{
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setByte("Slot", (byte) slot);
-				this.items[slot].writeToNBT(tag);
-				tagList.appendTag(tag);
-			}
+			nbt.setInteger("itemID", stack.itemID);
+			nbt.setInteger("itemMeta", stack.getItemDamage());
+			nbt.setInteger("Count", stack.stackSize);
 		}
-
-		nbt.setTag("Items", tagList);
 	}
 
 	@Override
