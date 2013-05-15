@@ -1,6 +1,5 @@
 package assemblyline.common.block;
 
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -380,7 +379,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	}
 
 	@Override
-	public boolean isStackValidForSlot(int i, ItemStack itemstack)
+	public boolean isStackValidForSlot(int slot, ItemStack itemstack)
 	{
 		if (this.sampleStack == null)
 		{
@@ -394,7 +393,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	}
 
 	@Override
-	public int[] getAccessibleSlotsFromSide(int var1)
+	public int[] getAccessibleSlotsFromSide(int side)
 	{
 		return this.slots;
 	}
@@ -402,15 +401,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	@Override
 	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
 	{
-		if (this.getSampleStack() == null)
-		{
-			return true;
-		}
-		else if (itemstack != null && itemstack.isItemEqual(this.getSampleStack()))
-		{
-			return true;
-		}
-		return false;
+		return this.isStackValidForSlot(slot, itemstack);
 	}
 
 	@Override
