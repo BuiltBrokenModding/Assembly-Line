@@ -1,5 +1,6 @@
 package assemblyline.common.block;
 
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -22,12 +23,11 @@ import cpw.mods.fml.relauncher.Side;
 
 public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInventory, IPacketReceiver, ISidedInventory
 {
-	/*For display/boolean use only */
+	/* For display/boolean use only */
 	private ItemStack sampleStack;
-	public int itemCount;
 	/* Slots that can be accesed threw ISidedInv */
 	private int[] slots;
-	/*Actual Inv of the crate */
+	/* Actual Inv of the crate */
 	private ItemStack[] items = new ItemStack[TileEntityCrate.getSlotCount(15)];
 
 	public long prevClickTime = -1000;
@@ -40,37 +40,64 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 		{
 			slots[i] = i;
 		}
+		ItemStack[] itemSet = this.items.clone();
+		this.items = new ItemStack[this.getSlotCount()];
+		for (int i = 0; i < itemSet.length; i++)
+		{
+			if (i < this.items.length)
+			{
+				this.items[i] = itemSet[i];
+			}
+			else if(itemSet[i] != null)
+			{
+				float area = 1.5F;
+				double dropX = (double) (worldObj.rand.nextFloat() * area) + (double) (1.0F - area) * 0.5D;
+				double dropY = (double) (worldObj.rand.nextFloat() * area) + (double) (1.0F - area) * 0.5D;
+				double dropZ = (double) (worldObj.rand.nextFloat() * area) + (double) (1.0F - area) * 0.5D;
+				EntityItem var13 = new EntityItem(worldObj, (double) xCoord + dropX, (double) yCoord + dropY, (double) zCoord + dropZ, itemSet[i]);
+				var13.delayBeforeCanPickup = 10;
+				worldObj.spawnEntityInWorld(var13);
+			}
+		}
+		this.buildSampleStack();
 	}
 
 	public void buildSampleStack()
 	{
+		this.sampleStack = null;
 		int count = 0;
 		int id = 0;
 		int meta = 0;
 
 		for (int i = 0; i < this.items.length; i++)
 		{
-
-			if (this.items[i] != null)
+			ItemStack stack = this.items[i];
+			if (stack != null && stack.itemID != 0)
 			{
 				id = this.items[i].itemID;
 				meta = this.items[i].getItemDamage();
 				count += this.items[i].stackSize;
 			}
 		}
-		this.itemCount = count;
-		this.sampleStack = new ItemStack(id, 1, meta);
+		if (id == 0 || count == 0)
+		{
+			this.sampleStack = null;
+		}
+		else
+		{
+			this.sampleStack = new ItemStack(id, count, meta);
+		}
 	}
-	
+
 	public ItemStack getSampleStack()
 	{
-		if(this.sampleStack == null)
+		if (this.sampleStack == null)
 		{
 			this.buildSampleStack();
 		}
 		return this.sampleStack;
 	}
-	
+
 	public int getSlotCount()
 	{
 		return TileEntityCrate.getSlotCount(this.getTier());
@@ -131,12 +158,16 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		if (this.sampleStack != null)
+		this.buildSampleStack();
+		ItemStack stack = this.getSampleStack();
+		if (stack != null)
 		{
-			this.buildSampleStack();
-			return PacketManager.getPacket(AssemblyLine.CHANNEL, this, true, this.sampleStack.itemID, this.itemCount, this.sampleStack.getItemDamage());
+			return PacketManager.getPacket(AssemblyLine.CHANNEL, this, true, stack.itemID, stack.stackSize, stack.getItemDamage());
 		}
-		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, false);
+		else
+		{
+			return PacketManager.getPacket(AssemblyLine.CHANNEL, this, false);
+		}
 	}
 
 	/**
@@ -203,7 +234,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 		{
 			this.items[slot] = stack;
 
-			if (stack != null && stack.stackSize > this.getInventoryStackLimit())
+			if (stack.stackSize > this.getInventoryStackLimit())
 			{
 				stack.stackSize = this.getInventoryStackLimit();
 			}
@@ -269,7 +300,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 				if (prItems != null)
 				{
 					int stackSize = Math.min(64, prItems.stackSize);
-					this.items[i] =  new ItemStack(prItems.itemID, stackSize, prItems.getItemDamage());
+					this.items[i] = new ItemStack(prItems.itemID, stackSize, prItems.getItemDamage());
 					count -= stackSize;
 				}
 				if (count <= 0)
@@ -281,8 +312,6 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 			}
 
 		}
-		this.buildSampleStack();
-
 	}
 
 	/**
@@ -318,6 +347,10 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	@Override
 	public int getSizeInventory()
 	{
+		if (worldObj != null)
+		{
+			return this.getSlotCount();
+		}
 		return this.items.length;
 	}
 
