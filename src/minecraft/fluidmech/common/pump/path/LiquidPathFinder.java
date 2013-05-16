@@ -44,58 +44,62 @@ public class LiquidPathFinder
 	/**
 	 * @return True on success finding, false on failure.
 	 */
-	public boolean findNodes(Vector3 node)
-	{		
-		Vector3 vec = node.clone();
-		
-		Chunk chunk = this.world.getChunkFromBlockCoords(vec.intX(), vec.intZ());
-		
-		if (!chunk.isChunkLoaded)
+	public boolean findNodes(final Vector3 node)
+	{
+		try
 		{
-			return true;
-		}else
-		{
+			Vector3 vec = node.clone();
 			this.nodes.add(node);
-		}
-		
-		int id = node.getBlockID(world);
-		int meta = node.getBlockID(world);
-		if (this.fill && (id == 0 || (FluidHelper.getLiquidFromBlockId(id) != null && meta != 0)))
-		{
-			this.results.add(node);
-		}
-		else if (!this.fill && FluidHelper.isSourceBlock(world, node))
-		{
-			this.results.add(node);
-		}
+			Chunk chunk = this.world.getChunkFromBlockCoords(vec.intX(), vec.intZ());
 
-		if (this.isDone(node))
-		{
-			return false;
-		}
-
-		vec = node.clone().modifyPositionFromSide(this.priority);
-		if (this.isValidNode(vec) & !this.nodes.contains(vec))
-		{
-			if (this.findNodes(vec))
+			if (chunk == null || !chunk.isChunkLoaded)
 			{
 				return true;
 			}
-		}
 
-		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
-		{
-			if (direction != this.priority)
+			int id = node.getBlockID(world);
+			int meta = node.getBlockID(world);
+			if (this.fill && (id == 0 || (FluidHelper.getLiquidFromBlockId(id) != null && meta != 0)))
 			{
-				vec = node.clone().modifyPositionFromSide(direction);
-				if (this.isValidNode(vec) & !this.nodes.contains(vec))
+				this.results.add(node);
+			}
+			else if (!this.fill && FluidHelper.isSourceBlock(world, node))
+			{
+				this.results.add(node);
+			}
+
+			if (this.isDone(node))
+			{
+				return false;
+			}
+
+			vec = node.clone().modifyPositionFromSide(this.priority);
+			if (this.isValidNode(vec) & !this.nodes.contains(vec))
+			{
+				if (this.findNodes(vec))
 				{
-					if (this.findNodes(vec))
+					return true;
+				}
+			}
+
+			for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+			{
+				if (direction != this.priority)
+				{
+					vec = node.clone().modifyPositionFromSide(direction);
+					if (this.isValidNode(vec) & !this.nodes.contains(vec))
 					{
-						return true;
+						if (this.findNodes(vec))
+						{
+							return true;
+						}
 					}
 				}
 			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
 		}
 
 		return false;

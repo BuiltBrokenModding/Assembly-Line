@@ -17,13 +17,13 @@ import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.network.IPacketReceiver;
-import universalelectricity.prefab.tile.TileEntityElectricityRunnable;
 
 import com.google.common.io.ByteArrayDataInput;
 
 import dark.library.helpers.MetaGroup;
+import dark.library.machine.TileEntityRunnableMachine;
 
-public class TileEntityStarterPump extends TileEntityElectricityRunnable implements IPacketReceiver, IReadOut, IPipeConnection
+public class TileEntityStarterPump extends TileEntityRunnableMachine implements IPacketReceiver, IReadOut, IPipeConnection
 {
 	public final double WATTS_PER_TICK = (400 / 20);
 	private double percentPumped = 0.0;

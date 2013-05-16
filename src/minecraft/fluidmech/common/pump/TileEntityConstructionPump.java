@@ -13,10 +13,10 @@ import net.minecraftforge.liquids.LiquidTank;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
-import universalelectricity.prefab.tile.TileEntityElectricityRunnable;
 import dark.library.helpers.MetaGroup;
+import dark.library.machine.TileEntityRunnableMachine;
 
-public class TileEntityConstructionPump extends TileEntityElectricityRunnable implements ITankContainer, IPipeConnection
+public class TileEntityConstructionPump extends TileEntityRunnableMachine implements ITankContainer, IPipeConnection
 {
 	/* ENERGY PER TICK TO TRY TO PUMP */
 	public static final double WATTS_PER_TICK = 100;
@@ -121,9 +121,9 @@ public class TileEntityConstructionPump extends TileEntityElectricityRunnable im
 		TileEntity entity = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), getFacing(false));
 		if (entity instanceof ITankContainer)
 		{
-			return ((ITankContainer) entity).fill(getFacing(false).getOpposite(), resource, doFill);
+			//return ((ITankContainer) entity).fill(getFacing(false).getOpposite(), resource, doFill);
 		}
-		return 0;
+		return resource.amount;
 	}
 
 	@Override

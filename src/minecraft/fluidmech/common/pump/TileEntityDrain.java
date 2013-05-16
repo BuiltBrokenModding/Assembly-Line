@@ -37,11 +37,19 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 
 	private List<Vector3> targetSources = new ArrayList<Vector3>();
 	private List<Vector3> updateQue = new ArrayList<Vector3>();
-	private LiquidPathFinder pathFinder = new LiquidPathFinder(this.worldObj, false, TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS * 2);
+	private LiquidPathFinder pathFinder;
+
 	@Override
 	public String getMeterReading(EntityPlayer user, ForgeDirection side)
 	{
 		return "Set to " + (canDrainSources() ? "input liquids" : "output liquids");
+	}
+
+	@Override
+	public void invalidate()
+	{
+		super.invalidate();
+		pathFinder = new LiquidPathFinder(this.worldObj, false, TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS * 2);
 	}
 
 	public boolean canDrainSources()
@@ -71,6 +79,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	@Override
 	public void updateEntity()
 	{
+		super.updateEntity();
 		/* MAIN LOGIC PATH FOR DRAINING BODIES OF LIQUID */
 		if (!this.worldObj.isRemote && this.ticks % 30 == 0)
 		{
@@ -94,7 +103,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 					Iterator<Vector3> it = this.targetSources.iterator();
 					while (it.hasNext())
 					{
-						Vector3 loc = (Vector3) it.next();
+						Vector3 loc = it.next();
 						if (this.currentWorldEdits >= MAX_WORLD_EDITS_PER_PROCESS)
 						{
 							break;
@@ -146,7 +155,11 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	 * Finds more liquid blocks using a path finder to be drained
 	 */
 	public void getNextFluidBlock()
-	{		
+	{
+		if (pathFinder == null)
+		{
+			pathFinder = new LiquidPathFinder(this.worldObj, false, TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS * 2);
+		}
 		pathFinder.reset();
 		pathFinder.init(new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ));
 		// System.out.println("Nodes:" + pathFinder.nodes.size() + "Results:" +
@@ -157,6 +170,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void doCleanup()
 	{
 		/* CALL UPDATE ON EDITED BLOCKS */
@@ -166,7 +180,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 			int up = 0;
 			while (pp.hasNext() && up < TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS)
 			{
-				Vector3 vec = (Vector3) pp.next();
+				Vector3 vec = pp.next();
 				worldObj.notifyBlockChange(vec.intX(), vec.intY(), vec.intZ(), vec.getBlockID(this.worldObj));
 				worldObj.notifyBlockOfNeighborChange(vec.intX(), vec.intY(), vec.intZ(), vec.getBlockID(this.worldObj));
 				pp.remove();
@@ -195,10 +209,10 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 			}
 		}
 		/* CLEANUP TARGET LIST AND REMOVE INVALID SOURCES */
-		Iterator mn = this.targetSources.iterator();
+		Iterator<Vector3> mn = this.targetSources.iterator();
 		while (mn.hasNext())
 		{
-			Vector3 vec = (Vector3) mn.next();
+			Vector3 vec = mn.next();
 			if (!FluidHelper.isSourceBlock(this.worldObj, vec))
 			{
 				mn.remove();
@@ -219,20 +233,20 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 						{
 							return 0;
 						}
-						Vector3 a = (Vector3) o1;
-						Vector3 b = (Vector3) o2;
-						double da = Vector3.distance(a, faceVec);
-						double db = Vector3.distance(b, faceVec);
-						;
-						if (a.equals(b))
+						Vector3 first = (Vector3) o1;
+						Vector3 second = (Vector3) o2;
+						double firstDistance = Vector3.distance(first, faceVec);
+						double secondDistance = Vector3.distance(second, faceVec);
+						if (first.equals(second))
 						{
 							return 0;
 						}
-						if (Integer.compare(b.intY(), a.intY()) != 0)
+						int cc = Integer.compare(second.intY(), first.intY());
+						if (cc != 0)
 						{
-							return Integer.compare(b.intY(), a.intY());
+							return cc;
 						}
-						return Double.compare(da, db);
+						return Double.compare(secondDistance,firstDistance);
 					}
 				});
 			}
