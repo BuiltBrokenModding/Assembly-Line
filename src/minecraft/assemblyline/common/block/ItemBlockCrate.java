@@ -131,7 +131,7 @@ public class ItemBlockCrate extends ItemBlock
 						}
 
 					}
-					tileEntity.buildSampleStack();
+					tileEntity.buildSampleStack(false);
 				}
 			}
 		}

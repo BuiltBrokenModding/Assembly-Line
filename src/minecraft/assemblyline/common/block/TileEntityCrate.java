@@ -9,6 +9,11 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityHopper;
+import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.core.vector.Vector3;
+import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.implement.ITier;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
@@ -31,7 +36,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 
 	public long prevClickTime = -1000;
 
-	public void buildSampleStack()
+	public void buildSampleStack(boolean force)
 	{
 		int count = 0;
 		int id = 0;
@@ -41,15 +46,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 		/* Similar to Init but checks so often just in case something does break */
 		if (worldObj != null)
 		{
-			if (slots == null || slots != null && slots.length != this.getSlotCount())
-			{
-				slots = new int[this.getSlotCount()];
-				for (int i = 0; i < slots.length; i++)
-				{
-					slots[i] = i;
-				}
-			}
-			if (this.items != null && this.items.length != this.getSlotCount())
+			if (this.items != null && this.items.length > this.getSlotCount())
 			{
 				ItemStack[] itemSet = this.items.clone();
 				this.items = new ItemStack[this.getSlotCount()];
@@ -89,9 +86,9 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 			this.sampleStack = new ItemStack(id, count, meta);
 		}
 		/* if one stack is over sized this rebuilds the inv to redistribute the items in the slots */
-		if (rebuildBase && this.getSampleStack() != null)
+		if ((rebuildBase || force) && this.sampleStack != null)
 		{
-			ItemStack baseStack = this.getSampleStack().copy();
+			ItemStack baseStack = this.sampleStack.copy();
 			this.items = new ItemStack[this.getSlotCount()];
 			for (int slot = 0; slot < this.items.length; slot++)
 			{
@@ -111,7 +108,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	{
 		if (this.sampleStack == null)
 		{
-			this.buildSampleStack();
+			this.buildSampleStack(false);
 		}
 		return this.sampleStack;
 	}
@@ -176,7 +173,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		this.buildSampleStack();
+		this.buildSampleStack(false);
 		ItemStack stack = this.getSampleStack();
 		if (stack != null)
 		{
@@ -235,7 +232,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	{
 		if (this.items[slot] != null)
 		{
-			ItemStack var2 = this.items[slot];
+			ItemStack var2 = this.items[slot].copy();
 			this.items[slot] = null;
 			return var2;
 		}
@@ -248,20 +245,13 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack)
 	{
-		if (stack != null)
-		{
-			this.items[slot] = stack;
+		this.items[slot] = stack;
 
-			if (stack.stackSize > this.getInventoryStackLimit())
-			{
-				stack.stackSize = this.getInventoryStackLimit();
-			}
-		}
-		else
+		if (stack != null && stack.stackSize > this.getInventoryStackLimit())
 		{
-			this.items[slot] = null;
+			stack.stackSize = this.getInventoryStackLimit();
 		}
-
+		
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 		{
 			PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj);
@@ -328,7 +318,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		this.buildSampleStack();
+		this.buildSampleStack(false);
 		ItemStack stack = this.getSampleStack();
 		if (stack != null)
 		{
@@ -381,11 +371,11 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	@Override
 	public boolean isStackValidForSlot(int slot, ItemStack itemstack)
 	{
-		if (this.sampleStack == null)
+		if(slot >= this.getSlotCount())
 		{
-			return true;
+			return false;
 		}
-		else if (itemstack != null && itemstack.equals(this.sampleStack))
+		if (this.sampleStack == null || itemstack != null && itemstack.isItemEqual(this.sampleStack))
 		{
 			return true;
 		}
@@ -395,18 +385,39 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side)
 	{
+		if (slots == null || slots != null && slots.length != this.getSlotCount())
+		{
+			slots = new int[this.getSlotCount()];
+			for (int i = 0; i < slots.length; i++)
+			{
+				slots[i] = i;
+			}
+		}
 		return this.slots;
 	}
 
 	@Override
 	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
 	{
+		ForgeDirection dir = ForgeDirection.getOrientation(side);
+		TileEntity ent = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), dir);
+		if(ent instanceof TileEntityHopper)
+		{
+			return false;
+		}
+		
 		return this.isStackValidForSlot(slot, itemstack);
 	}
 
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int side)
 	{
+		ForgeDirection dir = ForgeDirection.getOrientation(side);
+		TileEntity ent = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), dir);
+		if(ent instanceof TileEntityHopper)
+		{
+			return false;
+		}
 		return true;
 	}
 }

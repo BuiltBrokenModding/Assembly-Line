@@ -389,7 +389,7 @@ public class BlockCrate extends BlockALMachine
 		{
 			TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
 			ItemStack containingStack = tileEntity.getSampleStack();
-			tileEntity.buildSampleStack();
+			tileEntity.buildSampleStack(false);
 			
 			if (containingStack != null)
 			{
