@@ -63,7 +63,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 		for (int i = 0; i < this.items.length; i++)
 		{
 			ItemStack stack = this.items[i];
-			if (stack != null && stack.itemID != 0)
+			if (stack != null && stack.itemID > 0 && stack.stackSize > 0)
 			{
 				id = this.items[i].itemID;
 				meta = this.items[i].getItemDamage();

@@ -89,7 +89,8 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 	}
 
 	/**
-	 * Find items going into the manipulator and input them into an inventory behind this manipulator.
+	 * Find items going into the manipulator and input them into an inventory behind this
+	 * manipulator.
 	 */
 	@Override
 	public void inject()
@@ -110,7 +111,10 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 		 */
 		if (outputPosition.getTileEntity(this.worldObj) instanceof TileEntityManipulator)
 		{
-			if (((TileEntityManipulator) outputPosition.getTileEntity(this.worldObj)).getDirection() == this.getDirection().getOpposite()) { return; }
+			if (((TileEntityManipulator) outputPosition.getTileEntity(this.worldObj)).getDirection() == this.getDirection().getOpposite())
+			{
+				return;
+			}
 		}
 
 		AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(inputPosition.x, inputPosition.y, inputPosition.z, inputPosition.x + 1, inputPosition.y + 1, inputPosition.z + 1);
@@ -122,7 +126,8 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 				continue;
 
 			/**
-			 * Try top first, then bottom, then the sides to see if it is possible to insert the item into a inventory.
+			 * Try top first, then bottom, then the sides to see if it is possible to insert the
+			 * item into a inventory.
 			 */
 			ItemStack remainingStack = entity.getEntityItem().copy();
 
@@ -265,25 +270,47 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 						{
 							itemStack = this.addStackToInventory(i, chest, itemStack);
 							if (itemStack == null)
+							{
 								return null;
+							}
 						}
 					}
 				}
 			}
 			else if (tileEntity instanceof TileEntityCrate)
 			{
-				return BlockCrate.addStackToCrate((TileEntityCrate) tileEntity, itemStack);				
+				return BlockCrate.addStackToCrate((TileEntityCrate) tileEntity, itemStack);
+			}
+			else if (tileEntity instanceof net.minecraft.inventory.ISidedInventory)
+			{
+				net.minecraft.inventory.ISidedInventory inventory = (net.minecraft.inventory.ISidedInventory) tileEntity;
+				int[] slots = inventory.getAccessibleSlotsFromSide(direction.getOpposite().ordinal());
+				for (int i = 0; i < slots.length; i++)
+				{
+					if (inventory.canInsertItem(slots[i], itemStack, direction.getOpposite().ordinal()))
+					{
+						itemStack = this.addStackToInventory(i, inventory, itemStack);
+					}
+					if (itemStack == null)
+					{
+						return null;
+					}
+				}
+
 			}
 			else if (tileEntity instanceof ISidedInventory)
 			{
 				ISidedInventory inventory = (ISidedInventory) tileEntity;
 
-				int startIndex = inventory.getStartInventorySide(direction);
+				int startIndex = inventory.getStartInventorySide(direction.getOpposite());
 
 				for (int i = startIndex; i < startIndex + inventory.getSizeInventorySide(direction); i++)
 				{
 					itemStack = this.addStackToInventory(i, inventory, itemStack);
-					if (itemStack == null) { return null; }
+					if (itemStack == null)
+					{
+						return null;
+					}
 				}
 			}
 			else if (tileEntity instanceof IInventory)
@@ -293,12 +320,18 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 				for (int i = 0; i < inventory.getSizeInventory(); i++)
 				{
 					itemStack = this.addStackToInventory(i, inventory, itemStack);
-					if (itemStack == null) { return null; }
+					if (itemStack == null)
+					{
+						return null;
+					}
 				}
 			}
 		}
 
-		if (itemStack.stackSize <= 0) { return null; }
+		if (itemStack.stackSize <= 0)
+		{
+			return null;
+		}
 
 		return itemStack;
 	}
@@ -312,7 +345,10 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 			if (stackInInventory == null)
 			{
 				inventory.setInventorySlotContents(slotIndex, itemStack);
-				if (inventory.getStackInSlot(slotIndex) == null) { return itemStack; }
+				if (inventory.getStackInSlot(slotIndex) == null)
+				{
+					return itemStack;
+				}
 				return null;
 			}
 			else if (stackInInventory.isItemEqual(itemStack) && stackInInventory.isStackable())
@@ -326,7 +362,10 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 			}
 		}
 
-		if (itemStack.stackSize <= 0) { return null; }
+		if (itemStack.stackSize <= 0)
+		{
+			return null;
+		}
 
 		return itemStack;
 	}
