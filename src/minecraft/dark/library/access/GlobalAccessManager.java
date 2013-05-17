@@ -31,7 +31,7 @@ public class GlobalAccessManager
 	 * @param owner - the player's name to be used to create a new list
 	 * @return - UserAccess list
 	 */
-	public List<UserAccess> getOrCreateList(String name, String owner)
+	public static List<UserAccess> getOrCreateList(String name, String owner)
 	{
 		if (name.toCharArray().length < 5 || owner.isEmpty() || name.startsWith("Default#"))
 		{
@@ -40,7 +40,7 @@ public class GlobalAccessManager
 		List<UserAccess> list = getList(name);
 		if (list == null)
 		{
-			list = this.createList(name, owner);
+			list = createList(name, owner);
 		}
 		return list;
 	}
@@ -48,7 +48,7 @@ public class GlobalAccessManager
 	/**
 	 * gets all the access list by name the user can edit
 	 */
-	public List<String> getUsersLists(String username)
+	public static List<String> getUsersLists(String username)
 	{
 		List<String> lists = new ArrayList<String>();
 		Iterator<Entry<String, List<UserAccess>>> it = GlobalAccessManager.globalUserLists.entrySet().iterator();
@@ -77,7 +77,7 @@ public class GlobalAccessManager
 	 * @param owner
 	 * @return
 	 */
-	public List<UserAccess> createList(String name, String owner)
+	public static List<UserAccess> createList(String name, String owner)
 	{
 		/*** Creates a new List if one doesn't exist ***/
 		List<UserAccess> list = new ArrayList<UserAccess>();
@@ -85,7 +85,7 @@ public class GlobalAccessManager
 
 		globalUserLists.put(name, list);
 		saveList(name, list);
-		this.needsSaving = true;
+		needsSaving = true;
 		return list;
 	}
 
@@ -95,7 +95,7 @@ public class GlobalAccessManager
 	 * @param name - name of the list
 	 * @return - the list
 	 */
-	public List<UserAccess> getList(String name)
+	public static List<UserAccess> getList(String name)
 	{
 		if (globalUserLists.containsKey(name))
 		{
@@ -183,7 +183,7 @@ public class GlobalAccessManager
 	 * @param name - name given to the list for reference
 	 * @return - the list of user access levels to be used
 	 */
-	private List<UserAccess> loadList(String name)
+	private static List<UserAccess> loadList(String name)
 	{
 		NBTTagCompound masterSave = getMasterSaveFile();
 		if (masterSave != null && masterSave.hasKey(name))
@@ -200,14 +200,14 @@ public class GlobalAccessManager
 	 * @param name - name to save the list as
 	 * @param list - list to be saved
 	 */
-	private void saveList(String name, List<UserAccess> list)
+	private static void saveList(String name, List<UserAccess> list)
 	{
 		NBTTagCompound masterSave = getMasterSaveFile();
 		if (masterSave != null)
 		{
 			NBTTagCompound accessSave = masterSave.getCompoundTag(name);
 			UserAccess.writeListToNBT(accessSave, list);
-			this.getMasterSaveFile().setCompoundTag(name, accessSave);
+			masterSave.setCompoundTag(name, accessSave);
 		}
 	}
 
