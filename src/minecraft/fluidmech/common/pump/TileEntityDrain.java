@@ -33,7 +33,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	private int currentWorldEdits = 0;
 
 	/* LIST OF PUMPS AND THERE REQUESTS FOR THIS DRAIN */
-	private HashMap<TileEntityConstructionPump, LiquidStack> requestMap = new HashMap<TileEntityConstructionPump, LiquidStack>();
+	private HashMap<TileEntity, LiquidStack> requestMap = new HashMap<TileEntity, LiquidStack>();
 
 	private List<Vector3> targetSources = new ArrayList<Vector3>();
 	private List<Vector3> updateQue = new ArrayList<Vector3>();
@@ -93,55 +93,58 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 				{
 					this.getNextFluidBlock();
 				}
-				for (Entry<TileEntityConstructionPump, LiquidStack> request : requestMap.entrySet())
+				for (Entry<TileEntity, LiquidStack> request : requestMap.entrySet())
 				{
 					if (this.currentWorldEdits >= MAX_WORLD_EDITS_PER_PROCESS)
 					{
 						break;
 					}
-
-					Iterator<Vector3> it = this.targetSources.iterator();
-					while (it.hasNext())
+					if (request.getKey() instanceof ITankContainer)
 					{
-						Vector3 loc = it.next();
-						if (this.currentWorldEdits >= MAX_WORLD_EDITS_PER_PROCESS)
+						ITankContainer tank = (ITankContainer) request.getKey();
+						Iterator<Vector3> it = this.targetSources.iterator();
+						while (it.hasNext())
 						{
-							break;
-						}
-
-						if (FluidHelper.isSourceBlock(this.worldObj, loc))
-						{
-							/* GET STACKS */
-							LiquidStack stack = FluidHelper.getLiquidFromBlockId(loc.getBlockID(this.worldObj));
-							LiquidStack requestStack = request.getValue();
-
-							if (stack != null && requestStack != null && (requestStack.isLiquidEqual(stack) || requestStack.itemID == -1))
+							Vector3 loc = it.next();
+							if (this.currentWorldEdits >= MAX_WORLD_EDITS_PER_PROCESS)
 							{
-								if (request.getKey().fill(0, stack, false) > 0)
+								break;
+							}
+
+							if (FluidHelper.isSourceBlock(this.worldObj, loc))
+							{
+								/* GET STACKS */
+								LiquidStack stack = FluidHelper.getLiquidFromBlockId(loc.getBlockID(this.worldObj));
+								LiquidStack requestStack = request.getValue();
+
+								if (stack != null && requestStack != null && (requestStack.isLiquidEqual(stack) || requestStack.itemID == -1))
 								{
-
-									/* EDIT REQUEST IN MAP */
-									int requestAmmount = requestStack.amount - request.getKey().fill(0, stack, true);
-									if (requestAmmount <= 0)
+									if (tank.fill(0, stack, false) > 0)
 									{
-										this.requestMap.remove(request);
-									}
-									else
-									{
-										request.setValue(FluidHelper.getStack(requestStack, requestAmmount));
-									}
 
-									/* ADD TO UPDATE QUE */
-									if (!this.updateQue.contains(loc))
-									{
-										this.updateQue.add(loc);
+										/* EDIT REQUEST IN MAP */
+										int requestAmmount = requestStack.amount - tank.fill(0, stack, true);
+										if (requestAmmount <= 0)
+										{
+											this.requestMap.remove(request);
+										}
+										else
+										{
+											request.setValue(FluidHelper.getStack(requestStack, requestAmmount));
+										}
+
+										/* ADD TO UPDATE QUE */
+										if (!this.updateQue.contains(loc))
+										{
+											this.updateQue.add(loc);
+										}
+
+										/* REMOVE BLOCK */
+										loc.setBlock(this.worldObj, 0, 0, 2);
+										this.currentWorldEdits++;
+										it.remove();
+
 									}
-
-									/* REMOVE BLOCK */
-									loc.setBlock(this.worldObj, 0, 0, 2);
-									this.currentWorldEdits++;
-									it.remove();
-
 								}
 							}
 						}
@@ -158,7 +161,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	{
 		if (pathFinder == null)
 		{
-			pathFinder = new LiquidPathFinder(this.worldObj, false, TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS * 2);
+			pathFinder = new LiquidPathFinder(this.worldObj, false, 1000);
 		}
 		pathFinder.reset();
 		pathFinder.init(new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ));
@@ -221,34 +224,17 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 		/* SORT RESULTS TO PUT THE HiGHEST AND FURTHEST AT THE TOP */
 		try
 		{
-			if (this.targetSources.size() > 1)
+			for (int i = 0; i < this.targetSources.size(); i++)
 			{
-				final Vector3 faceVec = new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ);
-				Collections.sort(this.targetSources, new Comparator()
+				Vector3 vec = this.targetSources.get(i);
+				if (i + 1 < this.targetSources.size())
 				{
-					@Override
-					public int compare(Object o1, Object o2)
+					for (int b = i + 1; b < this.targetSources.size(); b++)
 					{
-						if (o1 == o2)
-						{
-							return 0;
-						}
-						Vector3 first = (Vector3) o1;
-						Vector3 second = (Vector3) o2;
-						double firstDistance = Vector3.distance(first, faceVec);
-						double secondDistance = Vector3.distance(second, faceVec);
-						if (first.equals(second))
-						{
-							return 0;
-						}
-						int cc = Integer.compare(second.intY(), first.intY());
-						if (cc != 0)
-						{
-							return cc;
-						}
-						return Double.compare(secondDistance,firstDistance);
+
 					}
-				});
+				}
+
 			}
 		}
 		catch (Exception e)
@@ -399,7 +385,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	}
 
 	@Override
-	public void requestLiquid(TileEntityConstructionPump pump, LiquidStack stack)
+	public void requestLiquid(TileEntity pump, LiquidStack stack)
 	{
 		this.requestMap.put(pump, stack);
 	}
