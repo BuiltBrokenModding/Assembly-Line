@@ -6,12 +6,12 @@ import net.minecraft.item.ItemStack;
 
 public class TabFluidMech extends CreativeTabs
 {
-	public static final TabFluidMech INSTANCE = new TabFluidMech("fluidMechanics");
+	public static final TabFluidMech INSTANCE = new TabFluidMech();
 	private static ItemStack itemStack;
 
-	public TabFluidMech(String par2Str)
+	public TabFluidMech()
 	{
-		super(CreativeTabs.getNextID(), par2Str);
+		super(CreativeTabs.getNextID(), "Fluid Mechanics");
 	}
 
 	public static void setItemStack(ItemStack newItemStack)
@@ -25,7 +25,10 @@ public class TabFluidMech extends CreativeTabs
 	@Override
 	public ItemStack getIconItemStack()
 	{
-		if (itemStack == null) { return new ItemStack(Block.blocksList[this.getTabIconItemIndex()]); }
+		if (itemStack == null)
+		{
+			return new ItemStack(Block.blocksList[this.getTabIconItemIndex()]);
+		}
 
 		return itemStack;
 	}

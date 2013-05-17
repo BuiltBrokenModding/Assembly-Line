@@ -69,12 +69,8 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.library.DarkMain;
 
-/**
- * Used in the creation of a new mod class
- * 
- * @author Rseifert
- */
-@ModstatInfo(prefix = "MyPrefix")
+
+@ModstatInfo(prefix = "fluidmech")
 @Mod(modid = FluidMech.MOD_ID, name = FluidMech.MOD_NAME, version = FluidMech.VERSION, dependencies = "after:BasicComponents", useMetadata = true)
 @NetworkMod(channels = { FluidMech.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
 public class FluidMech extends DummyModContainer
