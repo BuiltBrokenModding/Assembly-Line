@@ -10,7 +10,7 @@ import cpw.mods.fml.common.Loader;
 public class DarkMain
 {
 	private static boolean loadedItems = false;
-	
+
 	/* RESOURCE FILE PATHS */
 	public static final String RESOURCE_PATH = "/mods/dark/";
 	public static final String TEXTURE_DIRECTORY = RESOURCE_PATH + "textures/";
@@ -23,18 +23,17 @@ public class DarkMain
 	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "Dark/General.cfg"));
 
 	public static final Logger LOGGER = Logger.getLogger("DarkLib");
-	
+
 	public void init()
 	{
-		
+
 	}
-	
+
 	public static void registerMod(Object mod)
 	{
-		
+
 	}
-	
-	
+
 	/**
 	 * Loads most of the items from basic components to be used
 	 */
@@ -43,16 +42,16 @@ public class DarkMain
 		if (!loadedItems)
 		{
 			LOGGER.fine("Loaded Basic Components Items");
-			
+
 			// UniversalElectricity.CONFIGURATION.load();
 			BasicComponents.requestItem("ingotCopper", 0);
 			BasicComponents.requestItem("ingotTin", 0);
 
 			BasicComponents.requestBlock("oreCopper", 0);
 			BasicComponents.requestBlock("oreTin", 0);
-			
+
 			BasicComponents.requestBlock("copperWire", 0);
-			
+
 			BasicComponents.requestItem("ingotSteel", 0);
 			BasicComponents.requestItem("dustSteel", 0);
 			BasicComponents.requestItem("plateSteel", 0);
@@ -66,8 +65,8 @@ public class DarkMain
 			BasicComponents.requestItem("circuitElite", 0);
 
 			BasicComponents.requestItem("motor", 0);
-			BasicComponents.requireInfiniteBattery(0);
-			BasicComponents.requireBattery(0);
+			BasicComponents.requestItem("battery", 0);
+			BasicComponents.requestItem("infiniteBattery", 0);
 
 			loadedItems = true;
 		}
