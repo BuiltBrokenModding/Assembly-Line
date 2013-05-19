@@ -12,7 +12,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
-import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 
@@ -92,7 +91,11 @@ public abstract class TileEntityTerminal extends TileEntityRunnableMachine imple
 		data.addAll(this.getTerminalOuput());
 
 		Packet packet = PacketManager.getPacket(this.getChannel(), this, data.toArray());
-		PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 10);
+
+		for (EntityPlayer player : this.playersUsing)
+		{
+			PacketDispatcher.sendPacketToPlayer(packet, (Player) player);
+		}
 	}
 
 	/** Send a terminal command Client -> server */
@@ -234,7 +237,9 @@ public abstract class TileEntityTerminal extends TileEntityRunnableMachine imple
 	public boolean addUserAccess(String player, AccessLevel lvl, boolean save)
 	{
 		this.removeUserAccess(player);
-		return this.users.add(new UserAccess(player, lvl, save));
+		boolean bool = this.users.add(new UserAccess(player, lvl, save));
+		this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+		return bool;
 	}
 
 	@Override
