@@ -72,7 +72,7 @@ public class CommandRegistry
 				}
 			}
 
-			terminal.addToConsole("Unkown Command.");
+			terminal.addToConsole("Unknown Command.");
 		}
 	}
 
