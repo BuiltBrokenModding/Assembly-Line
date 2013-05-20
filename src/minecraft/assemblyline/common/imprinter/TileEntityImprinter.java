@@ -51,6 +51,9 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 
 	public ItemStack[] imprinterMatrix = new ItemStack[3];
 	public static final int[] imprinterSlots = { IMPRINTER_MATRIX_START, IMPRINTER_MATRIX_START + 1, IMPRINTER_MATRIX_START + 2 };
+	int imprintInputSlot = 0;
+	int imprintOutputSlot = 1;
+	int craftingOutputSlot = 2;
 
 	/**
 	 * The Imprinter inventory containing slots.
@@ -260,18 +263,18 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 			 */
 			this.isImprinting = false;
 
-			if (this.isMatrixEmpty() && this.imprinterMatrix[0] != null && this.imprinterMatrix[1] != null)
+			if (this.isMatrixEmpty() && this.imprinterMatrix[imprintInputSlot] != null && this.imprinterMatrix[1] != null)
 			{
-				if (this.imprinterMatrix[0].getItem() instanceof ItemImprinter)
+				if (this.imprinterMatrix[imprintInputSlot].getItem() instanceof ItemImprinter)
 				{
-					ItemStack outputStack = this.imprinterMatrix[0].copy();
+					ItemStack outputStack = this.imprinterMatrix[imprintInputSlot].copy();
 					outputStack.stackSize = 1;
 					ArrayList<ItemStack> filters = ItemImprinter.getFilters(outputStack);
 					boolean filteringItemExists = false;
 
 					for (ItemStack filteredStack : filters)
 					{
-						if (filteredStack.isItemEqual(this.imprinterMatrix[1]))
+						if (filteredStack.isItemEqual(this.imprinterMatrix[imprintOutputSlot]))
 						{
 							filters.remove(filteredStack);
 							filteringItemExists = true;
@@ -281,18 +284,18 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 
 					if (!filteringItemExists)
 					{
-						filters.add(this.imprinterMatrix[1]);
+						filters.add(this.imprinterMatrix[imprintOutputSlot]);
 					}
 
 					ItemImprinter.setFilters(outputStack, filters);
-					this.imprinterMatrix[2] = outputStack;
+					this.imprinterMatrix[craftingOutputSlot] = outputStack;
 					this.isImprinting = true;
 				}
 			}
 
 			if (!this.isImprinting)
 			{
-				this.imprinterMatrix[2] = null;
+				this.imprinterMatrix[craftingOutputSlot] = null;
 
 				/**
 				 * Try to craft from crafting grid. If not possible, then craft from imprint.
@@ -310,15 +313,16 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 
 					if (matrixOutput != null && this.craftingManager.getIdealRecipe(matrixOutput) != null)
 					{
-						this.imprinterMatrix[2] = matrixOutput;
+						System.out.println("Using crafting grid");
+						this.imprinterMatrix[craftingOutputSlot] = matrixOutput;
 						didCraft = true;
 					}
 				}
 
-				if (this.imprinterMatrix[0] != null && !didCraft)
+				if (this.imprinterMatrix[imprintInputSlot] != null && !didCraft)
 				{
-					// System.out.println("Using imprint as grid");
-					if (this.imprinterMatrix[0].getItem() instanceof ItemImprinter)
+					System.out.println("Using imprint as grid");
+					if (this.imprinterMatrix[imprintInputSlot].getItem() instanceof ItemImprinter)
 					{
 
 						ArrayList<ItemStack> filters = ItemImprinter.getFilters(this.imprinterMatrix[0]);
@@ -338,7 +342,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 									ItemStack recipeOutput = idealRecipe.getKey();
 									if (recipeOutput != null & recipeOutput.stackSize > 0)
 									{
-										this.imprinterMatrix[2] = recipeOutput;
+										this.imprinterMatrix[craftingOutputSlot] = recipeOutput;
 										didCraft = true;
 										break;
 									}
@@ -350,7 +354,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 
 				if (!didCraft)
 				{
-					this.imprinterMatrix[2] = null;
+					this.imprinterMatrix[craftingOutputSlot] = null;
 				}
 			}
 		}
@@ -633,6 +637,6 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 	@Override
 	public int[] getCraftingInv()
 	{
-		return this.invSlots;
+		return TileEntityImprinter.invSlots;
 	}
 }

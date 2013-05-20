@@ -10,7 +10,6 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
@@ -27,7 +26,7 @@ import dark.library.helpers.Pair;
  */
 public class AutoCraftingManager
 {
-	boolean doDebug = true;
+	final static boolean doDebug = true;
 	TileEntity craftingEntity;
 	IInventory craftingInv;
 
@@ -144,7 +143,10 @@ public class AutoCraftingManager
 
 		for (int slot = 0; slot < slots.length; slot++)
 		{
-			containingItems[slot] = inv.getStackInSlot(slots[slot]);
+			if (inv.getStackInSlot(slots[slot]) != null)
+			{
+				containingItems[slot] = inv.getStackInSlot(slots[slot]).copy();
+			}
 		}
 
 		return containingItems;
@@ -164,14 +166,16 @@ public class AutoCraftingManager
 			this.printDebug("ResourceChecker", "Looking for items");
 			for (int i = 0; i < recipeItems.length && this.doDebug; i++)
 			{
-				this.printDebug("ResourceChecker", "ResourceChecker: Looking for " + recipeItems.toString());
+				this.printDebug("ResourceChecker", "Looking for " + recipeItems.toString());
 			}
 			/**
 			 * The actual amount of resource required. Each ItemStack will only have stacksize of 1.
 			 */
 			ArrayList<ItemStack> actualResources = new ArrayList<ItemStack>();
+
 			int itemMatch = 0;
 			int itemInList = 0;
+
 			for (Object obj : recipeItems)
 			{
 				itemInList++;
@@ -179,11 +183,12 @@ public class AutoCraftingManager
 				{
 					ItemStack recipeItem = (ItemStack) obj;
 					actualResources.add(recipeItem.copy());
+
 					if (recipeItem != null)
 					{
 						this.printDebug("ResourceChecker", "Item0" + itemInList + " = " + recipeItem.toString());
 						int match = this.doesItemExist(recipeItem, containingItems);
-						if (match != -2)
+						if (match >= 0)
 						{
 							containingItems[match] = this.decrStackSize(containingItems[match], recipeItem.stackSize);
 							this.printDebug("ResourceChecker", "Match found @" + match);
@@ -211,8 +216,7 @@ public class AutoCraftingManager
 							if (recipeItem != null)
 							{
 								int match = this.doesItemExist(recipeItem, containingItems);
-								this.printDebug("ResourceChecker", "Item0" + itemInList + " = " + recipeItem.toString());
-								if (match != -2)
+								if (match >= 0)
 								{
 									containingItems[match] = this.decrStackSize(containingItems[match], recipeItem.stackSize);
 									this.printDebug("ResourceChecker", "Match found @" + match);
@@ -226,11 +230,10 @@ public class AutoCraftingManager
 				else
 				{
 					this.printDebug("ResourceChecker", "Item0" + itemInList + " = null");
-					itemMatch++;
 				}
 			}
 			boolean resourcesFound = itemMatch >= actualResources.size();
-			this.printDebug("ResourceChecker", "Found " + actualResources.size() + " Items and " + itemMatch + " slot matches");
+			this.printDebug("ResourceChecker", actualResources.size() + " items needed and " + itemMatch + " valid matches found");
 			this.printDebug("ResourceChecker", "has all resources been found? /n A: " + resourcesFound);
 			return resourcesFound ? actualResources : null;
 		}
@@ -251,22 +254,23 @@ public class AutoCraftingManager
 	 * @return the edited stack
 	 */
 	public ItemStack decrStackSize(ItemStack stack, int amount)
-	{
+	{		
 		if (stack != null)
 		{
-			if (stack.stackSize <= amount)
+			ItemStack itemStack = stack.copy();
+			if (itemStack.stackSize <= amount)
 			{
 				return null;
 			}
 			else
 			{
-				stack = stack.splitStack(amount);
+				itemStack.stackSize -= amount;
 
-				if (stack.stackSize == 0)
+				if (itemStack.stackSize <= 0)
 				{
 					return null;
 				}
-				return stack;
+				return itemStack;
 			}
 		}
 		else
@@ -297,7 +301,7 @@ public class AutoCraftingManager
 			if (checkStack != null)
 			{
 				this.printDebug("ResourceChecker", " -----Item in slot0" + i + " = " + checkStack.toString());
-				if (areStacksEqual(recipeItem, checkStack))
+				if (this.areStacksEqual(recipeItem, checkStack))
 				{
 					this.printDebug("ResourceChecker", "Found matching item " + checkStack.toString());
 					return i;
@@ -328,7 +332,11 @@ public class AutoCraftingManager
 		{
 			return recipeItem.itemID == checkStack.itemID;
 		}
-		return recipeItem.isItemEqual(checkStack) || (recipeItem.itemID == checkStack.itemID && recipeItem.isItemStackDamageable() && !recipeItem.isItemDamaged());
+		if (recipeItem.isItemStackDamageable())
+		{
+			return !recipeItem.isItemDamaged() && recipeItem.itemID == checkStack.itemID;
+		}
+		return recipeItem.isItemEqual(checkStack);
 	}
 
 	/**
@@ -338,12 +346,13 @@ public class AutoCraftingManager
 	 * @param ammount - amount to consume
 	 * @return what is left of the itemStack if any
 	 */
-	public ItemStack consumeItem(ItemStack stack, int amount)
+	public ItemStack consumeItem(ItemStack itemStack, int amount)
 	{
-		if (stack == null)
+		if (itemStack == null)
 		{
 			return null;
 		}
+		ItemStack stack = itemStack.copy();
 		if (stack.getItem().hasContainerItem())
 		{
 			ItemStack containerStack = stack.getItem().getContainerItemStack(stack);
