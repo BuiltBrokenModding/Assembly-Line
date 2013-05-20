@@ -313,7 +313,6 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 
 					if (matrixOutput != null && this.craftingManager.getIdealRecipe(matrixOutput) != null)
 					{
-						System.out.println("Using crafting grid");
 						this.imprinterMatrix[craftingOutputSlot] = matrixOutput;
 						didCraft = true;
 					}
@@ -321,7 +320,6 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 
 				if (this.imprinterMatrix[imprintInputSlot] != null && !didCraft)
 				{
-					System.out.println("Using imprint as grid");
 					if (this.imprinterMatrix[imprintInputSlot].getItem() instanceof ItemImprinter)
 					{
 
@@ -370,7 +368,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 				craftingManager = new AutoCraftingManager(this);
 			}
 
-			System.out.println("PickResult:" + worldObj.isRemote + " managing item " + itemStack.toString());
+			//System.out.println("PickResult:" + worldObj.isRemote + " managing item " + itemStack.toString());
 
 			if (this.isImprinting)
 			{
@@ -384,26 +382,26 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 				 */
 				if (idealRecipeItem != null)
 				{
-					System.out.println("PickResult: ideal recipe  ");
+					//System.out.println("PickResult: ideal recipe  ");
 					ItemStack[] requiredItems = idealRecipeItem.getValue().clone();
 
 					if (requiredItems != null)
 					{
-						System.out.println("PickResult: valid resources  ");
+						//System.out.println("PickResult: valid resources  ");
 						for (ItemStack searchStack : requiredItems)
 						{
 							if (searchStack != null)
 							{
-								for (int i = 0; i < this.containingItems.length; i++)
+								for (int i = 0; i < this.invSlots.length; i++)
 								{
-									ItemStack checkStack = this.containingItems[i];
+									ItemStack checkStack = this.getStackInSlot(this.invSlots[i]);
 
 									if (checkStack != null)
 									{
 										if (craftingManager.areStacksEqual(searchStack, checkStack))
 										{
-											this.decrStackSize(i + INVENTORY_START, 1);
-											System.out.println("Consumed Item From Inv: " + checkStack.toString());
+											this.setInventorySlotContents(this.invSlots[i], this.craftingManager.consumeItem(searchStack, 1));
+											//System.out.println("Consumed Item From Inv: " + checkStack.toString());
 											break;
 										}
 									}

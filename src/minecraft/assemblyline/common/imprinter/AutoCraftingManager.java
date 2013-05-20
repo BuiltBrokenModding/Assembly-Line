@@ -5,6 +5,8 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
@@ -26,7 +28,7 @@ import dark.library.helpers.Pair;
  */
 public class AutoCraftingManager
 {
-	final static boolean doDebug = true;
+	final static boolean doDebug = false;
 	TileEntity craftingEntity;
 	IInventory craftingInv;
 
@@ -254,7 +256,7 @@ public class AutoCraftingManager
 	 * @return the edited stack
 	 */
 	public ItemStack decrStackSize(ItemStack stack, int amount)
-	{		
+	{
 		if (stack != null)
 		{
 			ItemStack itemStack = stack.copy();
@@ -353,6 +355,10 @@ public class AutoCraftingManager
 			return null;
 		}
 		ItemStack stack = itemStack.copy();
+		if (stack.getItem() instanceof ItemBucket && stack.itemID != Item.bucketEmpty.itemID)
+		{
+			return new ItemStack(Item.bucketEmpty, 1);
+		}
 		if (stack.getItem().hasContainerItem())
 		{
 			ItemStack containerStack = stack.getItem().getContainerItemStack(stack);
