@@ -383,10 +383,6 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 						this.getCraftingManager().consumeItems(requiredItems);
 					}
 				}
-				else
-				{
-
-				}
 			}
 		}
 	}
@@ -394,9 +390,9 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 	/**
 	 * Gets all valid inventories that imprinter can use for resources
 	 */
-	private List<IInventory> getAvaliableInventories()
+	private IInventory[] getAvaliableInventories()
 	{
-		List<IInventory> inventories = new ArrayList<IInventory>();
+		IInventory[] inventories = new IInventory[6];
 
 		if (this.searchInventories)
 		{
@@ -406,9 +402,6 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 
 				if (tileEntity != null)
 				{
-					/**
-					 * Try to put items into a chest.
-					 */
 					if (tileEntity instanceof TileEntityMulti)
 					{
 						Vector3 mainBlockPosition = ((TileEntityMulti) tileEntity).mainBlockPosition;
@@ -417,32 +410,13 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 						{
 							if (mainBlockPosition.getTileEntity(this.worldObj) instanceof IInventory)
 							{
-								inventories.add((IInventory) mainBlockPosition.getTileEntity(this.worldObj));
+								inventories[direction.ordinal()] = ((IInventory) mainBlockPosition.getTileEntity(this.worldObj));
 							}
 						}
-					}
-					else if (tileEntity instanceof TileEntityChest)
-					{
-						inventories.add((TileEntityChest) tileEntity);
-
-						/**
-						 * Try to find a double chest.
-						 */
-						for (int i = 2; i < 6; i++)
-						{
-							TileEntity chest = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(tileEntity), ForgeDirection.getOrientation(2));
-
-							if (chest != null && chest.getClass() == tileEntity.getClass())
-							{
-								inventories.add((TileEntityChest) chest);
-								break;
-							}
-						}
-
 					}
 					else if (tileEntity instanceof IInventory && !(tileEntity instanceof TileEntityImprinter))
 					{
-						inventories.add((IInventory) tileEntity);
+						inventories[direction.ordinal()] = ((IInventory) tileEntity);
 					}
 				}
 			}
@@ -459,11 +433,11 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 	{
 		this.onInventoryChanged();
 
-		if (this.imprinterMatrix[2] != null)
+		if (this.imprinterMatrix[craftingOutputSlot] != null)
 		{
-			armbot.grabItem(this.imprinterMatrix[2].copy());
-			this.onPickUpFromSlot(null, 2, this.imprinterMatrix[2]);
-			this.imprinterMatrix[2] = null;
+			armbot.grabItem(this.imprinterMatrix[craftingOutputSlot].copy());
+			this.onPickUpFromSlot(null, 2, this.imprinterMatrix[craftingOutputSlot]);
+			this.imprinterMatrix[craftingOutputSlot] = null;
 		}
 
 		return false;
@@ -573,12 +547,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side)
 	{
-		ForgeDirection dir = ForgeDirection.getOrientation(side);
-		if (dir != ForgeDirection.DOWN)
-		{
-			return this.invSlots;
-		}
-		return null;
+		return this.invSlots;
 	}
 
 	@Override
