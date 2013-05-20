@@ -6,15 +6,16 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-import org.modstats.ModstatInfo;
-import org.modstats.Modstats;
-
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+
+import org.modstats.ModstatInfo;
+import org.modstats.Modstats;
+
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.multiblock.BlockMulti;
 import universalelectricity.prefab.network.PacketManager;

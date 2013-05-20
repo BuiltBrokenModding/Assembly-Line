@@ -383,4 +383,32 @@ public class AutoCraftingManager
 		}
 		return this.decrStackSize(stack, amount);
 	}
+
+	/**
+	 * Used to automatically remove selected items from crafting inv
+	 * 
+	 * @param requiredItems - items that are to be removed
+	 */
+	public void consumeItems(final ItemStack... requiredItems)
+	{
+		for (ItemStack searchStack : requiredItems)
+		{
+			if (searchStack != null)
+			{
+				int[] invSlots = ((IAutoCrafter) this.craftingEntity).getCraftingInv();
+				for (int i = 0; i < invSlots.length; i++)
+				{
+					ItemStack checkStack = this.craftingInv.getStackInSlot(invSlots[i]);
+					if (checkStack != null)
+					{
+						if (this.areStacksEqual(searchStack, checkStack))
+						{
+							this.craftingInv.setInventorySlotContents(invSlots[i], this.consumeItem(searchStack, 1));
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
 }

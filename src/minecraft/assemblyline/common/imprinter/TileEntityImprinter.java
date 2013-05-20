@@ -3,7 +3,6 @@ package assemblyline.common.imprinter;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -18,8 +17,6 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.TranslationHelper;
@@ -33,7 +30,6 @@ import assemblyline.common.AssemblyLine;
 
 import com.google.common.io.ByteArrayDataInput;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import dark.library.helpers.Pair;
 import dark.library.inv.ISlotPickResult;
 
@@ -42,7 +38,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 	public static final int IMPRINTER_MATRIX_START = 9;
 	public static final int INVENTORY_START = IMPRINTER_MATRIX_START + 3;
 
-	private AutoCraftingManager craftingManager;
+	private AutoCraftingManager craftManager;
 	/**
 	 * 9 slots for crafting, 1 slot for an imprint, 1 slot for an item
 	 */
@@ -88,6 +84,18 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 	public boolean canUpdate()
 	{
 		return false;
+	}
+
+	/**
+	 * Gets the AutoCraftingManager that does all the crafting results
+	 */
+	public AutoCraftingManager getCraftingManager()
+	{
+		if (craftManager == null)
+		{
+			craftManager = new AutoCraftingManager(this);
+		}
+		return craftManager;
 	}
 
 	@Override
@@ -254,10 +262,6 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 	{
 		if (!this.worldObj.isRemote)
 		{
-			if (craftingManager == null)
-			{
-				craftingManager = new AutoCraftingManager(this);
-			}
 			/**
 			 * Makes the stamping recipe for filters
 			 */
@@ -311,7 +315,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 				{
 					ItemStack matrixOutput = CraftingManager.getInstance().findMatchingRecipe(inventoryCrafting, this.worldObj);
 
-					if (matrixOutput != null && this.craftingManager.getIdealRecipe(matrixOutput) != null)
+					if (matrixOutput != null && this.getCraftingManager().getIdealRecipe(matrixOutput) != null)
 					{
 						this.imprinterMatrix[craftingOutputSlot] = matrixOutput;
 						didCraft = true;
@@ -331,7 +335,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 							{
 								// System.out.println("Imprint: Geting recipe for " +
 								// outputStack.toString());
-								Pair<ItemStack, ItemStack[]> idealRecipe = this.craftingManager.getIdealRecipe(outputStack);
+								Pair<ItemStack, ItemStack[]> idealRecipe = this.getCraftingManager().getIdealRecipe(outputStack);
 
 								if (idealRecipe != null)
 								{
@@ -363,51 +367,20 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 	{
 		if (itemStack != null)
 		{
-			if (craftingManager == null)
-			{
-				craftingManager = new AutoCraftingManager(this);
-			}
-
-			//System.out.println("PickResult:" + worldObj.isRemote + " managing item " + itemStack.toString());
-
 			if (this.isImprinting)
 			{
 				this.imprinterMatrix[0] = null;
 			}
 			else
 			{
-				Pair<ItemStack, ItemStack[]> idealRecipeItem = this.craftingManager.getIdealRecipe(itemStack);
-				/**
-				 * Based on the ideal recipe, consume all the items required to make such recipe.
-				 */
+				Pair<ItemStack, ItemStack[]> idealRecipeItem = this.getCraftingManager().getIdealRecipe(itemStack);
+
 				if (idealRecipeItem != null)
 				{
-					//System.out.println("PickResult: ideal recipe  ");
 					ItemStack[] requiredItems = idealRecipeItem.getValue().clone();
-
 					if (requiredItems != null)
 					{
-						//System.out.println("PickResult: valid resources  ");
-						for (ItemStack searchStack : requiredItems)
-						{
-							if (searchStack != null)
-							{
-								for (int i = 0; i < this.invSlots.length; i++)
-								{
-									ItemStack checkStack = this.getStackInSlot(this.invSlots[i]);
-
-									if (checkStack != null)
-									{
-										if (craftingManager.areStacksEqual(searchStack, checkStack))
-										{
-											this.setInventorySlotContents(this.invSlots[i], this.craftingManager.consumeItem(searchStack, 1));
-											//System.out.println("Consumed Item From Inv: " + checkStack.toString());
-											break;
-										}
-									}
-								}
-							}
-						}
+						this.getCraftingManager().consumeItems(requiredItems);
 					}
 				}
 				else
