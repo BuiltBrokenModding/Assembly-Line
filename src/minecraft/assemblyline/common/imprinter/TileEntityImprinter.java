@@ -4,31 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.ShapedRecipes;
-import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
-import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.TranslationHelper;
@@ -43,7 +34,6 @@ import assemblyline.common.AssemblyLine;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.ReflectionHelper;
 import dark.library.helpers.Pair;
 import dark.library.inv.ISlotPickResult;
 
@@ -316,10 +306,9 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 
 				if (inventoryCrafting != null)
 				{
-
 					ItemStack matrixOutput = CraftingManager.getInstance().findMatchingRecipe(inventoryCrafting, this.worldObj);
 
-					if (matrixOutput != null)
+					if (matrixOutput != null && this.craftingManager.getIdealRecipe(matrixOutput) != null)
 					{
 						this.imprinterMatrix[2] = matrixOutput;
 						didCraft = true;
@@ -370,15 +359,15 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 	@Override
 	public void onPickUpFromSlot(EntityPlayer entityPlayer, int s, ItemStack itemStack)
 	{
-
 		if (itemStack != null)
 		{
 			if (craftingManager == null)
 			{
 				craftingManager = new AutoCraftingManager(this);
 			}
-			// System.out.println("PickResult:" + worldObj.isRemote + " managing item " +
-			// itemStack.toString());
+
+			System.out.println("PickResult:" + worldObj.isRemote + " managing item " + itemStack.toString());
+
 			if (this.isImprinting)
 			{
 				this.imprinterMatrix[0] = null;
@@ -391,36 +380,16 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 				 */
 				if (idealRecipeItem != null)
 				{
-					// System.out.println("PickResult: ideal recipe  ");
+					System.out.println("PickResult: ideal recipe  ");
 					ItemStack[] requiredItems = idealRecipeItem.getValue().clone();
 
 					if (requiredItems != null)
 					{
-						for (int i = 0; i < requiredItems.length; i++)
-						{
-							ItemStack sta = requiredItems[i];
-							if (sta != null && sta.itemID < Block.blocksList.length && sta.getItemDamage() == 32767)
-							{
-								requiredItems[i] = new ItemStack(sta.itemID, sta.stackSize, 0);
-							}
-						}
-						// System.out.println("PickResult: valid resources  ");
+						System.out.println("PickResult: valid resources  ");
 						for (ItemStack searchStack : requiredItems)
 						{
 							if (searchStack != null)
 							{
-								/**
-								 * inventories: for (IInventory inventory :
-								 * getAvaliableInventories()) { for (int i = 0; i <
-								 * inventory.getSizeInventory(); i++) { ItemStack checkStack =
-								 * inventory.getStackInSlot(i);
-								 * 
-								 * if (checkStack != null) { if (areStacksEqual(searchStack,
-								 * checkStack)) { inventory.decrStackSize(i, 1);
-								 * //System.out.println("Consumed Item From Chest: " +
-								 * checkStack.toString()); break inventories; } } } }
-								 */
-
 								for (int i = 0; i < this.containingItems.length; i++)
 								{
 									ItemStack checkStack = this.containingItems[i];
@@ -430,8 +399,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 										if (craftingManager.areStacksEqual(searchStack, checkStack))
 										{
 											this.decrStackSize(i + INVENTORY_START, 1);
-											// System.out.println("Consumed Item From Inv: " +
-											// checkStack.toString());
+											System.out.println("Consumed Item From Inv: " + checkStack.toString());
 											break;
 										}
 									}
@@ -442,71 +410,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 				}
 				else
 				{
-					int slot = 0;
-					try
-					{
-						InventoryCrafting inventoryCrafting = this.getCraftingMatrix();
-						GameRegistry.onItemCrafted(entityPlayer, itemStack, inventoryCrafting);
 
-						for (slot = 0; slot < inventoryCrafting.getSizeInventory(); ++slot)
-						{
-							ItemStack slotStack = inventoryCrafting.getStackInSlot(slot);
-
-							if (slotStack != null)
-							{
-								inventoryCrafting.decrStackSize(slot, 1);
-
-								if (slotStack.getItem().hasContainerItem())
-								{
-									ItemStack containerStack = slotStack.getItem().getContainerItemStack(slotStack);
-
-									if (containerStack.isItemStackDamageable() && containerStack.getItemDamage() > containerStack.getMaxDamage())
-									{
-										MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(entityPlayer, containerStack));
-										containerStack = null;
-									}
-
-									if (containerStack != null && !slotStack.getItem().doesContainerItemLeaveCraftingGrid(slotStack))
-									{
-										if (inventoryCrafting.getStackInSlot(slot) == null)
-										{
-											inventoryCrafting.setInventorySlotContents(slot, containerStack);
-										}
-										else
-										{
-											entityPlayer.dropPlayerItem(containerStack);
-										}
-									}
-								}
-							}
-						}
-
-						this.replaceCraftingMatrix(inventoryCrafting);
-					}
-					catch (Exception e)
-					{
-						System.out.println("Imprinter: Failed to craft item: " + itemStack.getDisplayName());
-						System.out.println("Vaporizing items to prevent inf crafting");
-						for (slot = slot; slot < this.craftingMatrix.length; ++slot)
-						{
-							ItemStack slotStack = this.getStackInSlot(slot);
-
-							if (slotStack != null)
-							{
-								if (slotStack.getItem().hasContainerItem())
-								{
-									this.setInventorySlotContents(slot, slotStack.getItem().getContainerItemStack(slotStack));
-								}
-								else
-								{
-									this.decrStackSize(slot, 1);
-								}
-
-							}
-						}
-						// this.craftingMatrix = new ItemStack[9];
-						e.printStackTrace();
-					}
 				}
 			}
 		}

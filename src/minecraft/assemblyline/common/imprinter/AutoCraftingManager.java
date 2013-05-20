@@ -12,6 +12,8 @@ import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import cpw.mods.fml.relauncher.ReflectionHelper;
@@ -25,7 +27,7 @@ import dark.library.helpers.Pair;
  */
 public class AutoCraftingManager
 {
-	boolean doDebug = false;
+	boolean doDebug = true;
 	TileEntity craftingEntity;
 	IInventory craftingInv;
 
@@ -184,7 +186,7 @@ public class AutoCraftingManager
 						if (match != -2)
 						{
 							containingItems[match] = this.decrStackSize(containingItems[match], recipeItem.stackSize);
-							this.printDebug("ResourceChecker", "Match found");
+							this.printDebug("ResourceChecker", "Match found @" + match);
 							itemMatch++;
 						}
 					}
@@ -209,9 +211,11 @@ public class AutoCraftingManager
 							if (recipeItem != null)
 							{
 								int match = this.doesItemExist(recipeItem, containingItems);
+								this.printDebug("ResourceChecker", "Item0" + itemInList + " = " + recipeItem.toString());
 								if (match != -2)
 								{
 									containingItems[match] = this.decrStackSize(containingItems[match], recipeItem.stackSize);
+									this.printDebug("ResourceChecker", "Match found @" + match);
 									itemMatch++;
 									break;
 								}
@@ -325,5 +329,43 @@ public class AutoCraftingManager
 			return recipeItem.itemID == checkStack.itemID;
 		}
 		return recipeItem.isItemEqual(checkStack) || (recipeItem.itemID == checkStack.itemID && recipeItem.isItemStackDamageable() && !recipeItem.isItemDamaged());
+	}
+
+	/**
+	 * Consumes an item checking for extra conditions like container items
+	 * 
+	 * @param stack - starting itemStack
+	 * @param ammount - amount to consume
+	 * @return what is left of the itemStack if any
+	 */
+	public ItemStack consumeItem(ItemStack stack, int amount)
+	{
+		if (stack == null)
+		{
+			return null;
+		}
+		if (stack.getItem().hasContainerItem())
+		{
+			ItemStack containerStack = stack.getItem().getContainerItemStack(stack);
+
+			if (containerStack.isItemStackDamageable() && containerStack.getItemDamage() > containerStack.getMaxDamage())
+			{
+				try
+				{
+					MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(null, containerStack));
+				}
+				catch (Exception e)
+				{
+
+				}
+				return null;
+			}
+
+			if (containerStack != null && !stack.getItem().doesContainerItemLeaveCraftingGrid(stack))
+			{
+				return containerStack;
+			}
+		}
+		return this.decrStackSize(stack, amount);
 	}
 }
