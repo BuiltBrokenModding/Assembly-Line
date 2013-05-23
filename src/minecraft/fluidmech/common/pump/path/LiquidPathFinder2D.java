@@ -3,20 +3,17 @@ package fluidmech.common.pump.path;
 import hydraulic.helpers.FluidHelper;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
 
 /**
  * A simpler pathfinder based on Calclavia's PathFinder from UE api
  */
-public class LiquidPathFinder
+public class LiquidPathFinder2D
 {
 	private World world; /* MC WORLD */
 	public List<Vector3> nodes = new ArrayList<Vector3>(); /*
@@ -27,14 +24,9 @@ public class LiquidPathFinder
 	private boolean fill; /* ARE WE FILLING THE PATH OR DRAINING THE PATH */
 	private ForgeDirection priority; /* BASED ON fill -- WHICH DIRECTION WILL THE PATH GO FIRST */
 	private int resultLimit = 2000;
-	private Vector2 Start;
-	private double range;
-	private Random random = new Random();
-	List<ForgeDirection> bn = new ArrayList<ForgeDirection>();
 
-	public LiquidPathFinder(final World world, final boolean fill, final int resultLimit, final double range)
+	public LiquidPathFinder2D(final World world, final int resultLimit)
 	{
-		this.range = range;
 		this.world = world;
 		this.fill = fill;
 		if (fill)
@@ -47,10 +39,6 @@ public class LiquidPathFinder
 		}
 		this.resultLimit = resultLimit;
 		this.reset();
-		bn.add(ForgeDirection.EAST);
-		bn.add(ForgeDirection.WEST);
-		bn.add(ForgeDirection.NORTH);
-		bn.add(ForgeDirection.SOUTH);
 	}
 
 	/**
@@ -84,26 +72,19 @@ public class LiquidPathFinder
 			{
 				return false;
 			}
-
-			if (find(this.priority, node.clone()))
+			for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 			{
-				return true;
-			}
-
-			Collections.shuffle(bn);
-			Collections.shuffle(bn);
-
-			for (ForgeDirection direction : bn)
-			{
-				if (find(direction, vec))
+				if (direction != ForgeDirection.DOWN && direction != ForgeDirection.UP)
 				{
-					return true;
+					vec = node.clone().modifyPositionFromSide(direction);
+					if (this.isValidNode(vec) & !this.nodes.contains(vec))
+					{
+						if (this.findNodes(vec))
+						{
+							return true;
+						}
+					}
 				}
-			}
-
-			if (find(this.priority.getOpposite(), node.clone()))
-			{
-				return true;
 			}
 		}
 		catch (Exception e)
@@ -111,20 +92,6 @@ public class LiquidPathFinder
 			e.printStackTrace();
 		}
 
-		return false;
-	}
-
-	public boolean find(ForgeDirection direction, Vector3 vec)
-	{
-		vec = vec.clone().modifyPositionFromSide(direction);
-		double distance = vec.toVector2().distanceTo(this.Start);
-		if (distance <= this.range && this.isValidNode(vec) & !this.nodes.contains(vec))
-		{
-			if (this.findNodes(vec))
-			{
-				return true;
-			}
-		}
 		return false;
 	}
 
@@ -153,9 +120,8 @@ public class LiquidPathFinder
 	/**
 	 * Called to execute the pathfinding operation.
 	 */
-	public LiquidPathFinder init(final Vector3 startNode)
+	public LiquidPathFinder2D init(Vector3 startNode)
 	{
-		this.Start = startNode.toVector2();
 		this.findNodes(startNode);
 		if (this.fill && this.isValidNode(startNode))
 		{
@@ -164,7 +130,7 @@ public class LiquidPathFinder
 		return this;
 	}
 
-	public LiquidPathFinder reset()
+	public LiquidPathFinder2D reset()
 	{
 		this.nodes.clear();
 		this.results.clear();

@@ -23,6 +23,7 @@ import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
+import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 
@@ -37,7 +38,16 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 
 	private List<Vector3> targetSources = new ArrayList<Vector3>();
 	private List<Vector3> updateQue = new ArrayList<Vector3>();
-	private LiquidPathFinder pathFinder;
+	private LiquidPathFinder pathLiquid;
+	
+	public LiquidPathFinder getLiquidFinder()
+	{
+		if(pathLiquid == null)
+		{
+			pathLiquid = new LiquidPathFinder(this.worldObj, false, 1000, 100);
+		}
+		return pathLiquid;
+	}
 
 	@Override
 	public String getMeterReading(EntityPlayer user, ForgeDirection side)
@@ -49,7 +59,6 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	public void invalidate()
 	{
 		super.invalidate();
-		pathFinder = new LiquidPathFinder(this.worldObj, false, TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS * 2);
 	}
 
 	public boolean canDrainSources()
@@ -99,13 +108,17 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 					{
 						break;
 					}
+
 					if (request.getKey() instanceof ITankContainer)
 					{
 						ITankContainer tank = (ITankContainer) request.getKey();
-						Iterator<Vector3> it = this.targetSources.iterator();
-						while (it.hasNext())
+
+						Vector3[] sortedList = this.sortedDrainList();
+
+						for (int i = 0; sortedList != null && i < sortedList.length; i++)
 						{
-							Vector3 loc = it.next();
+							Vector3 loc = sortedList[i];
+
 							if (this.currentWorldEdits >= MAX_WORLD_EDITS_PER_PROCESS)
 							{
 								break;
@@ -142,8 +155,6 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 										/* REMOVE BLOCK */
 										loc.setBlock(this.worldObj, 0, 0, 2);
 										this.currentWorldEdits++;
-										it.remove();
-
 									}
 								}
 							}
@@ -159,15 +170,12 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	 */
 	public void getNextFluidBlock()
 	{
-		if (pathFinder == null)
-		{
-			pathFinder = new LiquidPathFinder(this.worldObj, false, 1000);
-		}
-		pathFinder.reset();
-		pathFinder.init(new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ));
+		
+		getLiquidFinder().reset();
+		getLiquidFinder().init(new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ));
 		// System.out.println("Nodes:" + pathFinder.nodes.size() + "Results:" +
 		// pathFinder.results.size());
-		for (Vector3 vec : pathFinder.nodes)
+		for (Vector3 vec : getLiquidFinder().nodes)
 		{
 			this.addVectorToQue(vec);
 		}
@@ -211,73 +219,95 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 				requests.remove();
 			}
 		}
-		/* CLEANUP TARGET LIST AND REMOVE INVALID SOURCES */
-		Iterator<Vector3> targetIt = this.targetSources.iterator();
-		while (targetIt.hasNext())
-		{
-			Vector3 vec = targetIt.next();
-			if (!FluidHelper.isSourceBlock(this.worldObj, vec))
-			{
-				targetIt.remove();
-			}
-		}
-		/* SORT RESULTS TO PUT THE HiGHEST AND FURTHEST AT THE TOP */
+
+	}
+
+	public Vector3[] sortedDrainList()
+	{
 		try
 		{
-			List<Vector3> updatedList = new ArrayList<Vector3>();
-			updatedList.addAll(this.targetSources);
-
-			for (int i = 0; i < updatedList.size(); i++)
+			/* CLEANUP TARGET LIST AND REMOVE INVALID SOURCES */
+			Iterator<Vector3> targetIt = this.targetSources.iterator();
+			while (targetIt.hasNext())
 			{
-				Vector3 vec = updatedList.get(i).clone();
-				if (i + 1 < updatedList.size())
+				Vector3 vec = targetIt.next();
+				if (!FluidHelper.isSourceBlock(this.worldObj, vec))
 				{
-					for (int b = i + 1; b < updatedList.size(); b++)
+					targetIt.remove();
+				}
+			}
+
+			Vector3[] sortedList = new Vector3[this.targetSources.size()];
+			for (int b = 0; b < this.targetSources.size(); b++)
+			{
+				sortedList[b] = this.targetSources.get(b);
+			}
+
+			/* SORT RESULTS TO PUT THE HiGHEST AND FURTHEST AT THE TOP */
+			Vector2 machine = new Vector3(this).toVector2();
+			for (int i = 0; i < sortedList.length; i++)
+			{
+				Vector3 vec = sortedList[i].clone();
+				Vector2 first = vec.toVector2();
+				if (i + 1 < sortedList.length)
+				{
+					Vector3 highest = vec;
+					int b = 0;
+					for (b = i + 1; b < sortedList.length; b++)
 					{
-						Vector3 checkVec = updatedList.get(b).clone();
+						Vector3 checkVec = sortedList[b].clone();
 						if (checkVec != null)
 						{
-							if (checkVec.distanceTo(new Vector3(this)) > vec.distanceTo(new Vector3(this)))
+							Vector2 second = checkVec.toVector2();
+
+							if (second.distanceTo(machine) > vec.toVector2().distanceTo(machine))
 							{
-								updatedList.set(i, checkVec);
-								updatedList.set(b, vec);
-								break;
+								highest = checkVec.clone();
 							}
 						}
 					}
-				}
-			}
-			for (int i = 0; i < updatedList.size(); i++)
-			{
-				Vector3 vec = updatedList.get(i).clone();
-				if (i + 1 < updatedList.size())
-				{
-					for (int b = i + 1; b < updatedList.size(); b++)
+					if (b < sortedList.length)
 					{
-						Vector3 checkVec = updatedList.get(b).clone();
-						if (checkVec != null)
-						{
-							if (checkVec.intY() > vec.intY())
-							{
-								updatedList.set(i, checkVec);
-								updatedList.set(b, vec);
-								break;
-							}
-						}
+						sortedList[i] = vec;
+						sortedList[b] = highest;
 					}
 				}
 			}
-			this.targetSources.clear();
-			this.targetSources.addAll(updatedList);
-			updatedList.clear();
+			for (int i = 0; i < sortedList.length; i++)
+			{
+				Vector3 vec = sortedList[i].clone();
+				if (i + 1 < sortedList.length)
+				{
+					Vector3 highest = vec;
+					int b = 0;
+					for (b = i + 1; b < sortedList.length; b++)
+					{
+						Vector3 checkVec = sortedList[b].clone();
+						if (checkVec != null)
+						{
+							if (checkVec.intY() > highest.intY())
+							{
+								highest = checkVec.clone();
 
+							}
+						}
+					}
+					if (b < sortedList.length)
+					{
+						sortedList[i] = vec;
+						sortedList[b] = highest;
+					}
+				}
+			}
+			return sortedList;
 		}
 		catch (Exception e)
 		{
-			System.out.println("FluidMech: Error sorting fill collection \n");
+			System.out.println("FluidMech: Critical Error Processing Drain List");
 			e.printStackTrace();
 		}
 
+		return null;
 	}
 
 	@Override
@@ -318,17 +348,16 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 
 			int blocks = (resource.amount / LiquidContainerRegistry.BUCKET_VOLUME);
 
-			/* FIND ALL VALID BLOCKS ON LEVEL OR BELLOW */
-			LiquidPathFinder pathFinder = new LiquidPathFinder(this.worldObj, true, this.MAX_WORLD_EDITS_PER_PROCESS * 2);
+			/* FIND ALL VALID BLOCKS ON LEVEL OR BELLOW */			
 			final Vector3 faceVec = new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ);
-			pathFinder.init(faceVec);
+			getLiquidFinder().init(faceVec);
 
 			/* SORT RESULTS TO PUT THE LOWEST AND CLOSEST AT THE TOP */
 			try
 			{
-				if (pathFinder.results.size() > 1)
+				if (getLiquidFinder().results.size() > 1)
 				{
-					Collections.sort(pathFinder.results, new Comparator()
+					Collections.sort(getLiquidFinder().results, new Comparator()
 					{
 						@Override
 						public int compare(Object o1, Object o2)
@@ -362,7 +391,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 			}
 			/* START FILLING IN OR CHECKING IF CAN FILL AREA */
 			int fillable = 0;
-			for (Vector3 loc : pathFinder.results)
+			for (Vector3 loc : getLiquidFinder().results)
 			{
 				if (blocks <= 0)
 				{
@@ -387,7 +416,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 
 			}
 
-			for (Vector3 loc : pathFinder.results)
+			for (Vector3 loc : getLiquidFinder().results)
 			{
 				if (blocks <= 0)
 				{
