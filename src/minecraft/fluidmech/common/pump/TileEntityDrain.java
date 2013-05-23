@@ -212,30 +212,65 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 			}
 		}
 		/* CLEANUP TARGET LIST AND REMOVE INVALID SOURCES */
-		Iterator<Vector3> mn = this.targetSources.iterator();
-		while (mn.hasNext())
+		Iterator<Vector3> targetIt = this.targetSources.iterator();
+		while (targetIt.hasNext())
 		{
-			Vector3 vec = mn.next();
+			Vector3 vec = targetIt.next();
 			if (!FluidHelper.isSourceBlock(this.worldObj, vec))
 			{
-				mn.remove();
+				targetIt.remove();
 			}
 		}
 		/* SORT RESULTS TO PUT THE HiGHEST AND FURTHEST AT THE TOP */
 		try
 		{
-			for (int i = 0; i < this.targetSources.size(); i++)
-			{
-				Vector3 vec = this.targetSources.get(i);
-				if (i + 1 < this.targetSources.size())
-				{
-					for (int b = i + 1; b < this.targetSources.size(); b++)
-					{
+			List<Vector3> updatedList = new ArrayList<Vector3>();
+			updatedList.addAll(this.targetSources);
 
+			for (int i = 0; i < updatedList.size(); i++)
+			{
+				Vector3 vec = updatedList.get(i).clone();
+				if (i + 1 < updatedList.size())
+				{
+					for (int b = i + 1; b < updatedList.size(); b++)
+					{
+						Vector3 checkVec = updatedList.get(b).clone();
+						if (checkVec != null)
+						{
+							if (checkVec.distanceTo(new Vector3(this)) > vec.distanceTo(new Vector3(this)))
+							{
+								updatedList.set(i, checkVec);
+								updatedList.set(b, vec);
+								break;
+							}
+						}
 					}
 				}
-
 			}
+			for (int i = 0; i < updatedList.size(); i++)
+			{
+				Vector3 vec = updatedList.get(i).clone();
+				if (i + 1 < updatedList.size())
+				{
+					for (int b = i + 1; b < updatedList.size(); b++)
+					{
+						Vector3 checkVec = updatedList.get(b).clone();
+						if (checkVec != null)
+						{
+							if (checkVec.intY() > vec.intY())
+							{
+								updatedList.set(i, checkVec);
+								updatedList.set(b, vec);
+								break;
+							}
+						}
+					}
+				}
+			}
+			this.targetSources.clear();
+			this.targetSources.addAll(updatedList);
+			updatedList.clear();
+
 		}
 		catch (Exception e)
 		{
