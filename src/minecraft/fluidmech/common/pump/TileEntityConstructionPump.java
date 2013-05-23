@@ -121,9 +121,9 @@ public class TileEntityConstructionPump extends TileEntityRunnableMachine implem
 		TileEntity entity = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), getFacing(false));
 		if (entity instanceof ITankContainer)
 		{
-			//return ((ITankContainer) entity).fill(getFacing(false).getOpposite(), resource, doFill);
+			return ((ITankContainer) entity).fill(getFacing(false).getOpposite(), resource, doFill);
 		}
-		return resource.amount;
+		return 0;
 	}
 
 	@Override
