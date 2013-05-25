@@ -455,25 +455,12 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	@Override
 	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
 	{
-		ForgeDirection dir = ForgeDirection.getOrientation(side);
-		TileEntity ent = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), dir);
-		if (ent instanceof TileEntityHopper)
-		{
-			// return false;
-		}
-
 		return this.isStackValidForSlot(slot, itemstack);
 	}
 
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int side)
 	{
-		ForgeDirection dir = ForgeDirection.getOrientation(side);
-		TileEntity ent = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), dir);
-		if (ent instanceof TileEntityHopper)
-		{
-			// return false;
-		}
 		return true;
 	}
 }
