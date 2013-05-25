@@ -289,7 +289,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 				{
 					if (inventory.canInsertItem(slots[i], itemStack, direction.getOpposite().ordinal()))
 					{
-						itemStack = this.addStackToInventory(i, inventory, itemStack);
+						itemStack = this.addStackToInventory(slots[i], inventory, itemStack);
 					}
 					if (itemStack == null)
 					{
