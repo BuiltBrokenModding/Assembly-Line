@@ -55,15 +55,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	 * The Imprinter inventory containing slots.
 	 */
 	public ItemStack[] containingItems = new ItemStack[18];
-	public static final int[] invSlots = new int[18];
-
-	static
-	{
-		for (int i = 0; i < invSlots.length; i++)
-		{
-			invSlots[i] = TileEntityImprinter.INVENTORY_START + i;
-		}
-	}
+	public static int[] inventorySlots;
 
 	/**
 	 * The containing currently used by the imprinter.
@@ -543,7 +535,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side)
 	{
-		return this.invSlots;
+		return this.getCraftingInv();
 	}
 
 	@Override
@@ -561,6 +553,14 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	@Override
 	public int[] getCraftingInv()
 	{
-		return TileEntityImprinter.invSlots;
+		if (this.inventorySlots == null)
+		{
+			this.inventorySlots = new int[18];
+			for (int i = 0; i < inventorySlots.length; i++)
+			{
+				inventorySlots[i] = TileEntityImprinter.INVENTORY_START + i;
+			}
+		}
+		return TileEntityImprinter.inventorySlots;
 	}
 }
