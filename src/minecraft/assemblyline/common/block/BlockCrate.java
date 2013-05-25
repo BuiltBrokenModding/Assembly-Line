@@ -305,11 +305,11 @@ public class BlockCrate extends BlockALMachine
 
 						EntityItem entityItem = new EntityItem(world, player.posX, player.posY, player.posZ, dropStack);
 						entityItem.delayBeforeCanPickup = 0;
-						world.spawnEntityInWorld(entityItem);						
+						world.spawnEntityInWorld(entityItem);
 
 						slotStack.stackSize -= amountToTake;
 						ammountEjected += amountToTake;
-						if(slotStack.stackSize <= 0)
+						if (slotStack.stackSize <= 0)
 						{
 							slotStack = null;
 						}
@@ -346,31 +346,18 @@ public class BlockCrate extends BlockALMachine
 
 		if (containingStack == null || containingStack != null && containingStack.isItemEqual(itemStack))
 		{
-			for (int slot = 0; slot < tileEntity.getSizeInventory(); slot++)
+			int room = (tileEntity.getSizeInventory() * 64) - (containingStack != null ? containingStack.stackSize : 0);
+			if (itemStack.stackSize <= room)
 			{
-				ItemStack slotStack = tileEntity.getStackInSlot(slot);
-
-				int insertStackSize = Math.min(Math.min(itemStack.getMaxStackSize(), tileEntity.getInventoryStackLimit()), itemStack.stackSize);
-
-				if (slotStack != null)
-				{
-					if (slotStack.stackSize < slotStack.getItem().getItemStackLimit())
-					{
-						insertStackSize = Math.min(insertStackSize, Math.max(slotStack.getMaxStackSize() - slotStack.stackSize, 0));
-						tileEntity.setInventorySlotContents(slot, new ItemStack(itemStack.itemID, slotStack.stackSize + insertStackSize, itemStack.getItemDamage()));
-						itemStack.stackSize -= insertStackSize;
-					}
-				}
-				else
-				{
-					tileEntity.setInventorySlotContents(slot, new ItemStack(itemStack.itemID, insertStackSize, itemStack.getItemDamage()));
-					itemStack.stackSize -= insertStackSize;
-				}
-				if (itemStack == null || itemStack.stackSize <= 0)
-				{
-					return null;
-				}
+				tileEntity.addToStack(itemStack);
+				itemStack = null;
 			}
+			else
+			{
+				tileEntity.addToStack(itemStack, room);
+				itemStack.stackSize -= room;
+			}
+			return itemStack;
 
 		}
 
@@ -390,7 +377,7 @@ public class BlockCrate extends BlockALMachine
 			TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
 			ItemStack containingStack = tileEntity.getSampleStack();
 			tileEntity.buildSampleStack(false);
-			
+
 			if (containingStack != null)
 			{
 				if (containingStack.stackSize > 0)
@@ -407,7 +394,7 @@ public class BlockCrate extends BlockALMachine
 					var13.delayBeforeCanPickup = 10;
 					world.spawnEntityInWorld(var13);
 
-					for(int i =0; i < tileEntity.getSizeInventory(); i++)
+					for (int i = 0; i < tileEntity.getSizeInventory(); i++)
 					{
 						tileEntity.setInventorySlotContents(i, null);
 					}
