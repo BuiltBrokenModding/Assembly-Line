@@ -1,4 +1,5 @@
-v1.0
+Copyright (c) 2013, DarkGuardsman
+All rights reserved.
 
 0. Definitions
 
@@ -15,10 +16,14 @@ User: Anybody that interacts with the software in one of the following ways:
 
 Mod: The mod code designated by the present license, in source form, binary form, as obtained standalone, as part of a wider distribution or resulting from the compilation of the original or modified Minecraft sources.
 
+Mod Pack - Package distrubution of mods and there assets to be used by the user for easy install and collective download.
+
+Texture Pack - Package distrubution of texture or art work to change the visual look of the mod.
+
 Dependency: Code required for the Mod to work properly. This includes dependencies required to compile the code as well as any file or modification
 that is explicitely or implicitely required for the Mod to be working.
 
-Owner: The project leader of the Mod.
+Owner: The project leader of the Mod reguardless of repo holder or manager
 
 1. Scope
 --------
@@ -38,23 +43,26 @@ The user is allowed to install this Mod on a client or a server and to play with
 4. Modification rights
 ----------------------
 
-The user has NO right to decompile the source code, look at either the decompiled version or the original source code, or to modify it without the explict permission from the owner of the Mod. Decompilation or reverse-engineering is strictly prohibited.
+The user may modify the original code for private use, learning experience, or to make a contribution to the original project source code. This does not give the right to redistrubute any part of the original or modified code.
 
 5. Distribution of original or modified copy rights
 ---------------------------------------------------
 
 Is subject to distribution rights this entire Mod in its various forms. This
-include:
+includes:
 - original binary or source forms of this Mod files
-- modified versions of these binaries or source files, as well as binaries
-resulting from source modifications
-- patch to its source or binary files
+- modified versions of these binaries or source files, as well as binaries resulting from source modifications
+- patches to its source or binary files
 - any copy of a portion of its binary source files
 
 A) The user is NOT allowed to redistribute this Mod partially, in totality, or included in a distribution without explict permissions from the owner. 
 
-B) In the case of a private or public server only mod pack to distribute the mod without permission. 
+B) Distrubution of this mod in a mod pack is allowed as long as the user obeys the following rules:
+   1) The mod pack should not contain a major version release of the mod within one week of the mod version release to allow for bug fixes
+   2) The mod pack should not contain a modified version of the mod unless to change the texture look of parts of the mod
+   3) The mod pack owner or contributors must redirect errors and bug reports to the issue area of the mod's original github repo
+   4) The mod pack needs full public permission from all parts of the mod pack including mods, assets, and textures.
+   5) The mod pack or its download site should allow access by users to the list of permissions and credits to authors
+   6) The mod pack or its download site should contain links to mod documentation and original mod sites
 
-C) In the case of a public mod pack the user needs writen permission or wait two weeks after a release to use it in a pack. 
-
-D) When permission is given it requirement that the user provide documentation to prove permission to distrubute all mods in the pack including this mod, provide a way for the user to view the site hosting this mod, and provide credit to the owner of the mod. 
+C) Textures of this mod are allowed to be used in the creation or modification of texture packs without permision. That is as long as links and credit to the original mod are given for easy user understanding.
