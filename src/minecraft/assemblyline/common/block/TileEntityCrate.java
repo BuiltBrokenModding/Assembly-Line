@@ -265,6 +265,20 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	}
 
 	@Override
+	public void onInventoryChanged()
+	{
+		super.onInventoryChanged();
+
+		if (this.worldObj != null)
+		{
+			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+			{
+				PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj);
+			}
+		}
+	}
+
+	@Override
 	public ItemStack getStackInSlotOnClosing(int par1)
 	{
 		if (this.items[par1] != null)
@@ -345,7 +359,8 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 			ItemStack stack = new ItemStack(nbt.getInteger("itemID"), nbt.getInteger("Count"), nbt.getInteger("itemMeta"));
 			if (stack != null && stack.itemID != 0 && stack.stackSize > 0)
 			{
-				this.items[0] = stack;
+				this.sampleStack = stack;
+				this.buildInventory();
 			}
 		}
 
@@ -390,6 +405,10 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	@Override
 	public int getTier()
 	{
+		if (this.worldObj == null)
+		{
+			return 15;
+		}
 		return this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord);
 	}
 
@@ -440,7 +459,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 		TileEntity ent = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), dir);
 		if (ent instanceof TileEntityHopper)
 		{
-			return false;
+			// return false;
 		}
 
 		return this.isStackValidForSlot(slot, itemstack);
@@ -453,7 +472,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 		TileEntity ent = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), dir);
 		if (ent instanceof TileEntityHopper)
 		{
-			return false;
+			// return false;
 		}
 		return true;
 	}
