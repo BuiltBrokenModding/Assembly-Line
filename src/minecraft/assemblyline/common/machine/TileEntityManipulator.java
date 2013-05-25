@@ -4,13 +4,13 @@ import java.util.List;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.common.ISidedInventory;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
 import universalelectricity.prefab.implement.IRotatable;
@@ -281,9 +281,9 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 			{
 				return BlockCrate.addStackToCrate((TileEntityCrate) tileEntity, itemStack);
 			}
-			else if (tileEntity instanceof net.minecraft.inventory.ISidedInventory)
+			else if (tileEntity instanceof ISidedInventory)
 			{
-				net.minecraft.inventory.ISidedInventory inventory = (net.minecraft.inventory.ISidedInventory) tileEntity;
+				ISidedInventory inventory = (ISidedInventory) tileEntity;
 				int[] slots = inventory.getAccessibleSlotsFromSide(direction.getOpposite().ordinal());
 				for (int i = 0; i < slots.length; i++)
 				{
@@ -298,9 +298,9 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 				}
 
 			}
-			else if (tileEntity instanceof ISidedInventory)
+			else if (tileEntity instanceof net.minecraftforge.common.ISidedInventory)
 			{
-				ISidedInventory inventory = (ISidedInventory) tileEntity;
+				net.minecraftforge.common.ISidedInventory inventory = (net.minecraftforge.common.ISidedInventory) tileEntity;
 
 				int startIndex = inventory.getStartInventorySide(direction.getOpposite());
 
@@ -440,6 +440,23 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 			else if (tileEntity instanceof ISidedInventory)
 			{
 				ISidedInventory inventory = (ISidedInventory) tileEntity;
+
+				int[] slots = inventory.getAccessibleSlotsFromSide(direction.ordinal());
+
+				for (int i = 0; i < slots.length; i++)
+				{
+					int slot = slots[i];
+					ItemStack itemStack = this.removeStackFromInventory(i, inventory);
+					if (itemStack != null && inventory.canExtractItem(slot, itemStack, direction.ordinal()))
+					{
+						returnStack = itemStack;
+						break;
+					}
+				}
+			}
+			else if (tileEntity instanceof net.minecraftforge.common.ISidedInventory)
+			{
+				net.minecraftforge.common.ISidedInventory inventory = (net.minecraftforge.common.ISidedInventory) tileEntity;
 
 				int startIndex = inventory.getStartInventorySide(direction);
 
