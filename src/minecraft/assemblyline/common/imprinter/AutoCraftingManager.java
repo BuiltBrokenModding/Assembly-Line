@@ -354,11 +354,14 @@ public class AutoCraftingManager
 		{
 			return null;
 		}
+		
 		ItemStack stack = itemStack.copy();
+		
 		if (stack.getItem() instanceof ItemBucket && stack.itemID != Item.bucketEmpty.itemID)
 		{
 			return new ItemStack(Item.bucketEmpty, 1);
 		}
+		
 		if (stack.getItem().hasContainerItem())
 		{
 			ItemStack containerStack = stack.getItem().getContainerItemStack(stack);
@@ -381,6 +384,7 @@ public class AutoCraftingManager
 				return containerStack;
 			}
 		}
+		System.out.println("ItemGrinder: "+stack.toString());
 		return this.decrStackSize(stack, amount);
 	}
 
@@ -389,22 +393,25 @@ public class AutoCraftingManager
 	 * 
 	 * @param requiredItems - items that are to be removed
 	 */
-	public void consumeItems(final ItemStack... requiredItems)
+	public void consumeItems(ItemStack... requiredItems)
 	{
-		for (ItemStack searchStack : requiredItems)
+		if (requiredItems != null)
 		{
-			if (searchStack != null)
+			for (ItemStack searchStack : requiredItems)
 			{
-				int[] invSlots = ((IAutoCrafter) this.craftingEntity).getCraftingInv();
-				for (int i = 0; i < invSlots.length; i++)
+				if (searchStack != null)
 				{
-					ItemStack checkStack = this.craftingInv.getStackInSlot(invSlots[i]);
-					if (checkStack != null)
+					int[] invSlots = ((IAutoCrafter) this.craftingEntity).getCraftingInv();
+					for (int i = 0; i < invSlots.length; i++)
 					{
-						if (this.areStacksEqual(searchStack, checkStack))
+						ItemStack checkStack = this.craftingInv.getStackInSlot(invSlots[i]);
+						if (checkStack != null)
 						{
-							this.craftingInv.setInventorySlotContents(invSlots[i], this.consumeItem(searchStack, 1));
-							break;
+							if (this.areStacksEqual(searchStack, checkStack))
+							{
+								this.craftingInv.setInventorySlotContents(invSlots[i], this.consumeItem(checkStack, 1));
+								break;
+							}
 						}
 					}
 				}

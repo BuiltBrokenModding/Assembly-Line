@@ -116,7 +116,7 @@ public class BlockImprinter extends BlockALMachine
 
 							itemStack.stackSize -= var11;
 
-							if (i != inventory.imprinterMatrix.length + TileEntityImprinter.IMPRINTER_MATRIX_START - 1)
+							if (i != inventory.craftingOutputSlot)
 							{
 								EntityItem entityItem = new EntityItem(par1World, (x + var8), (y + var9), (z + var10), new ItemStack(itemStack.itemID, var11, itemStack.getItemDamage()));
 

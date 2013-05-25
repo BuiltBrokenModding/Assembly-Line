@@ -33,7 +33,7 @@ import com.google.common.io.ByteArrayDataInput;
 import dark.library.helpers.Pair;
 import dark.library.inv.ISlotPickResult;
 
-public class TileEntityImprinter extends TileEntityAdvanced implements net.minecraftforge.common.ISidedInventory, ISidedInventory, IArmbotUseable, IPacketReceiver, ISlotPickResult, IAutoCrafter
+public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInventory, IArmbotUseable, IPacketReceiver, ISlotPickResult, IAutoCrafter
 {
 	public static final int IMPRINTER_MATRIX_START = 9;
 	public static final int INVENTORY_START = IMPRINTER_MATRIX_START + 3;
@@ -377,11 +377,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 
 				if (idealRecipeItem != null)
 				{
-					ItemStack[] requiredItems = idealRecipeItem.getValue().clone();
-					if (requiredItems != null)
-					{
-						this.getCraftingManager().consumeItems(requiredItems);
-					}
+					this.getCraftingManager().consumeItems(idealRecipeItem.getValue().clone());
 				}
 			}
 		}
@@ -560,18 +556,6 @@ public class TileEntityImprinter extends TileEntityAdvanced implements net.minec
 	public boolean canExtractItem(int slot, ItemStack itemstack, int side)
 	{
 		return this.isStackValidForSlot(slot, itemstack);
-	}
-
-	@Override
-	public int getStartInventorySide(ForgeDirection side)
-	{
-		return this.craftingMatrix.length + this.imprinterMatrix.length;
-	}
-
-	@Override
-	public int getSizeInventorySide(ForgeDirection side)
-	{
-		return this.containingItems.length - 1;
 	}
 
 	@Override
