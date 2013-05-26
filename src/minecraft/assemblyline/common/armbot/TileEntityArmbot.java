@@ -73,7 +73,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	public float renderPitch = 0;
 	public float renderYaw = 0;
 	private int ticksSincePower = 0;
-	public final float ROTATION_SPEED = 1.3f;
+	public final float ROTATION_SPEED = 2.0f;
 
 	private String displayText = "";
 
@@ -89,6 +89,16 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	 * Client Side Object Storage
 	 */
 	public EntityItem renderEntityItem = null;
+
+	@Override
+	public void initiate()
+	{
+		super.initiate();
+		if(!this.commandManager.hasTasks())
+		{
+			this.onInventoryChanged();
+		}
+	}
 
 	@Override
 	public void onUpdate()
