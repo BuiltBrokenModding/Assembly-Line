@@ -1,7 +1,6 @@
 package assemblyline.common.imprinter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -15,7 +14,6 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityChest;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
@@ -428,6 +426,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 			armbot.grabItem(this.imprinterMatrix[craftingOutputSlot].copy());
 			this.onPickUpFromSlot(null, 2, this.imprinterMatrix[craftingOutputSlot]);
 			this.imprinterMatrix[craftingOutputSlot] = null;
+			return true;
 		}
 
 		return false;

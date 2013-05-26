@@ -1,6 +1,5 @@
 package assemblyline.common.armbot.command;
 
-import net.minecraft.block.Block;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -82,7 +81,7 @@ public class CommandTake extends Command
 	@Override
 	public String toString()
 	{
-		return "Take " + (stack != null ? stack.toString() : "1x???@???  ")+this.tileEntity.getGrabbedItems().size();
+		return "Take " + (stack != null ? stack.toString() : "1x???@???  ");
 	}
 
 	@Override

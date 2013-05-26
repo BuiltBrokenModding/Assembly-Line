@@ -2,7 +2,6 @@ package assemblyline.common.armbot.command;
 
 import java.util.Iterator;
 
-import universalelectricity.core.vector.Vector3;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

@@ -3,7 +3,6 @@ package assemblyline.common.armbot.command;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ISidedInventory;
 import assemblyline.api.IArmbotUseable;
 
 public class CommandUse extends Command
@@ -57,7 +56,9 @@ public class CommandUse extends Command
 		this.curTimes++;
 
 		if (this.curTimes >= this.times)
+		{
 			return false;
+		}
 
 		return true;
 	}
