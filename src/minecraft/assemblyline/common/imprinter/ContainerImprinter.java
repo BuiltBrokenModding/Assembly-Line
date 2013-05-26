@@ -6,6 +6,10 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import assemblyline.common.AssemblyLine;
+import dark.library.inv.ISlotWatcher;
+import dark.library.inv.SlotCraftingResult;
+import dark.library.inv.SlotRestricted;
+import dark.library.inv.WatchedSlot;
 
 public class ContainerImprinter extends Container implements ISlotWatcher
 {
@@ -30,11 +34,11 @@ public class ContainerImprinter extends Container implements ISlotWatcher
 		}
 
 		// Imprint Input for Imprinting
-		this.addSlotToContainer(new SlotCustom(this.tileEntity, TileEntityImprinter.IMPRINTER_MATRIX_START, 68, 34, new ItemStack(AssemblyLine.itemImprint)));
+		this.addSlotToContainer(new SlotRestricted(this.tileEntity, TileEntityImprinter.IMPRINTER_MATRIX_START, 68, 34, new ItemStack(AssemblyLine.itemImprint)));
 		// Item to be imprinted
 		this.addSlotToContainer(new WatchedSlot(this.tileEntity, TileEntityImprinter.IMPRINTER_MATRIX_START + 1, 92, 34, this));
 		// Result of Crafting/Imprinting
-		this.addSlotToContainer(new SlotCraftingResult(this, this.tileEntity, TileEntityImprinter.IMPRINTER_MATRIX_START + 2, 148, 34));
+		this.addSlotToContainer(new SlotCraftingResult(this.tileEntity, this, this.tileEntity, TileEntityImprinter.IMPRINTER_MATRIX_START + 2, 148, 34));
 
 		// Imprinter Inventory
 		for (int ii = 0; ii < 2; ii++)
@@ -133,12 +137,12 @@ public class ContainerImprinter extends Container implements ISlotWatcher
 			slotObj.onPickupFromSlot(player, slotStack);
 		}
 
-		this.slotContentsChanged();
+		this.slotContentsChanged(slot);
 		return copyStack;
 	}
 
 	@Override
-	public void slotContentsChanged()
+	public void slotContentsChanged(int slot)
 	{
 		this.tileEntity.onInventoryChanged();
 		this.detectAndSendChanges();

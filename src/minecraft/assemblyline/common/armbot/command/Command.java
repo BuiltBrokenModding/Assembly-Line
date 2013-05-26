@@ -37,6 +37,8 @@ public abstract class Command
 		registerCommand("break", CommandBreak.class);
 		registerCommand("place", CommandPlace.class);
 		registerCommand("harvest", CommandHarvest.class);
+		registerCommand("take", CommandTake.class);
+		registerCommand("give", CommandGive.class);
 	}
 
 	public static void registerCommand(String command, Class<? extends Command> commandClass)

@@ -3,7 +3,6 @@ package assemblyline.common.armbot.command;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ISidedInventory;
 import assemblyline.api.IArmbotUseable;
 
 public class CommandUse extends Command
@@ -38,18 +37,6 @@ public class CommandUse extends Command
 			{
 				((IArmbotUseable) targetTile).onUse(this.tileEntity, this.getArgs());
 			}
-			else if (targetTile instanceof ISidedInventory)
-			{
-				// TODO add IInventory side behavior for placing and taking items.
-				if (tileEntity.getGrabbedEntities().size() > 0)
-				{
-					// add items to inv
-				}
-				else
-				{
-					// remove items from inv
-				}
-			}
 
 		}
 		else if (block != null)
@@ -69,7 +56,9 @@ public class CommandUse extends Command
 		this.curTimes++;
 
 		if (this.curTimes >= this.times)
+		{
 			return false;
+		}
 
 		return true;
 	}

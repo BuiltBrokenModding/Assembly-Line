@@ -15,6 +15,8 @@ public interface IArmbotUseable
 	 * touching.
 	 * 
 	 * @param armbot - The Armbot instance.
+	 * 
+	 * @return true if the use was completed correctly
 	 */
 	public boolean onUse(IArmbot armbot, String[] args);
 

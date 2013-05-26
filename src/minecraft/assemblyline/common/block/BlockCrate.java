@@ -112,10 +112,7 @@ public class BlockCrate extends BlockALMachine
 				// Add items
 				if (side == 1 || (side > 1 && hitY > 0.5) || !entityPlayer.capabilities.isCreativeMode)
 				{
-					if (current != null && (current.getMaxStackSize() > 1 || current.itemID == this.blockID))
-					{
-						this.tryInsert(tileEntity, entityPlayer, allMode);
-					}
+					this.tryInsert(tileEntity, entityPlayer, allMode);
 				}
 				// Remove items
 				else if (side == 0 || (side > 1 && hitY <= 0.5))
@@ -268,10 +265,9 @@ public class BlockCrate extends BlockALMachine
 						success = true;
 					}
 				}
-				return success;
 			}
+			return success;
 		}
-
 		return false;
 	}
 
@@ -305,11 +301,11 @@ public class BlockCrate extends BlockALMachine
 
 						EntityItem entityItem = new EntityItem(world, player.posX, player.posY, player.posZ, dropStack);
 						entityItem.delayBeforeCanPickup = 0;
-						world.spawnEntityInWorld(entityItem);						
+						world.spawnEntityInWorld(entityItem);
 
 						slotStack.stackSize -= amountToTake;
 						ammountEjected += amountToTake;
-						if(slotStack.stackSize <= 0)
+						if (slotStack.stackSize <= 0)
 						{
 							slotStack = null;
 						}
@@ -346,31 +342,18 @@ public class BlockCrate extends BlockALMachine
 
 		if (containingStack == null || containingStack != null && containingStack.isItemEqual(itemStack))
 		{
-			for (int slot = 0; slot < tileEntity.getSizeInventory(); slot++)
+			int room = (tileEntity.getSizeInventory() * 64) - (containingStack != null ? containingStack.stackSize : 0);
+			if (itemStack.stackSize <= room)
 			{
-				ItemStack slotStack = tileEntity.getStackInSlot(slot);
-
-				int insertStackSize = Math.min(Math.min(itemStack.getItem().getItemStackLimit(), tileEntity.getInventoryStackLimit()), itemStack.stackSize);
-
-				if (slotStack != null)
-				{
-					if (slotStack.stackSize < slotStack.getItem().getItemStackLimit())
-					{
-						insertStackSize = Math.min(insertStackSize, Math.min(slotStack.getItem().getItemStackLimit() - slotStack.stackSize, 0));
-						tileEntity.setInventorySlotContents(slot, new ItemStack(itemStack.itemID, insertStackSize, itemStack.getItemDamage()));
-						itemStack.stackSize -= insertStackSize;
-					}
-				}
-				else
-				{
-					tileEntity.setInventorySlotContents(slot, new ItemStack(itemStack.itemID, insertStackSize, itemStack.getItemDamage()));
-					itemStack.stackSize -= insertStackSize;
-				}
-				if (itemStack.stackSize <= 0)
-				{
-					return null;
-				}
+				tileEntity.addToStack(itemStack);
+				itemStack = null;
 			}
+			else
+			{
+				tileEntity.addToStack(itemStack, room);
+				itemStack.stackSize -= room;
+			}
+			return itemStack;
 
 		}
 
@@ -389,8 +372,8 @@ public class BlockCrate extends BlockALMachine
 		{
 			TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
 			ItemStack containingStack = tileEntity.getSampleStack();
-			tileEntity.buildSampleStack();
-			
+			tileEntity.buildSampleStack(false);
+
 			if (containingStack != null)
 			{
 				if (containingStack.stackSize > 0)
@@ -407,7 +390,7 @@ public class BlockCrate extends BlockALMachine
 					var13.delayBeforeCanPickup = 10;
 					world.spawnEntityInWorld(var13);
 
-					for(int i =0; i < tileEntity.getSizeInventory(); i++)
+					for (int i = 0; i < tileEntity.getSizeInventory(); i++)
 					{
 						tileEntity.setInventorySlotContents(i, null);
 					}

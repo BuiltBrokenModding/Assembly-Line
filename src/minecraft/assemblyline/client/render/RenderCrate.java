@@ -27,9 +27,9 @@ public class RenderCrate extends TileEntitySpecialRenderer
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)
 	{
-		Vector3 vec = new Vector3(x,y,z);
-		double distance = vec.distanceTo(new Vector3(0,0,0));
-		if (tileEntity instanceof TileEntityCrate && distance < 15)
+		Vector3 vec = new Vector3(x, y, z);
+		double distance = vec.distanceTo(new Vector3(0, 0, 0));
+		if (tileEntity instanceof TileEntityCrate && distance < 35)
 		{
 			TileEntityCrate tileCrate = (TileEntityCrate) tileEntity;
 
@@ -133,8 +133,6 @@ public class RenderCrate extends TileEntitySpecialRenderer
 		GL11.glPolygonOffset(-10, -10);
 		GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
 
-		float displayX = 1 / 16;
-		float displayY = 1 / 16;
 		float displayWidth = 1 - (2 / 16);
 		float displayHeight = 1 - (2 / 16);
 		GL11.glTranslated(x, y, z);

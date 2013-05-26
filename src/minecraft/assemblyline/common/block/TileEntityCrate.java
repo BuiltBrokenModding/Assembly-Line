@@ -1,6 +1,5 @@
 package assemblyline.common.block;
 
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -32,7 +31,24 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 
 	public long prevClickTime = -1000;
 
-	public void buildSampleStack()
+	public void buildInventory()
+	{
+		ItemStack baseStack = this.sampleStack.copy();
+		this.items = new ItemStack[this.getSlotCount()];
+		for (int slot = 0; slot < this.items.length; slot++)
+		{
+			int stackL = Math.min(Math.min(baseStack.stackSize, baseStack.getMaxStackSize()), this.getInventoryStackLimit());
+			this.items[slot] = new ItemStack(baseStack.itemID, stackL, baseStack.getItemDamage());
+			baseStack.stackSize -= stackL;
+			if (baseStack.stackSize <= 0)
+			{
+				baseStack = null;
+				break;
+			}
+		}
+	}
+
+	public void buildSampleStack(boolean force)
 	{
 		int count = 0;
 		int id = 0;
@@ -42,15 +58,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 		/* Similar to Init but checks so often just in case something does break */
 		if (worldObj != null)
 		{
-			if (slots == null || slots != null && slots.length != this.getSlotCount())
-			{
-				slots = new int[this.getSlotCount()];
-				for (int i = 0; i < slots.length; i++)
-				{
-					slots[i] = i;
-				}
-			}
-			if (this.items != null && this.items.length != this.getSlotCount())
+			if (this.items != null && this.items.length > this.getSlotCount())
 			{
 				ItemStack[] itemSet = this.items.clone();
 				this.items = new ItemStack[this.getSlotCount()];
@@ -67,7 +75,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 		for (int i = 0; i < this.items.length; i++)
 		{
 			ItemStack stack = this.items[i];
-			if (stack != null && stack.itemID != 0)
+			if (stack != null && stack.itemID > 0 && stack.stackSize > 0)
 			{
 				id = this.items[i].itemID;
 				meta = this.items[i].getItemDamage();
@@ -90,21 +98,9 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 			this.sampleStack = new ItemStack(id, count, meta);
 		}
 		/* if one stack is over sized this rebuilds the inv to redistribute the items in the slots */
-		if (rebuildBase && this.getSampleStack() != null)
+		if ((rebuildBase || force) && this.sampleStack != null)
 		{
-			ItemStack baseStack = this.getSampleStack().copy();
-			this.items = new ItemStack[this.getSlotCount()];
-			for (int slot = 0; slot < this.items.length; slot++)
-			{
-				int stackL = Math.min(Math.min(baseStack.stackSize, baseStack.getMaxStackSize()), this.getInventoryStackLimit());
-				this.items[slot] = new ItemStack(baseStack.itemID, stackL, baseStack.getItemDamage());
-				baseStack.stackSize -= stackL;
-				if (baseStack.stackSize <= 0)
-				{
-					baseStack = null;
-					break;
-				}
-			}
+			this.buildInventory();
 		}
 	}
 
@@ -112,9 +108,44 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	{
 		if (this.sampleStack == null)
 		{
-			this.buildSampleStack();
+			this.buildSampleStack(false);
 		}
 		return this.sampleStack;
+	}
+
+	public void addToStack(ItemStack stack, int amount)
+	{
+		if (stack != null)
+		{
+			this.addToStack(new ItemStack(stack.stackSize, amount, stack.getItemDamage()));
+		}
+	}
+
+	public void addToStack(ItemStack stack)
+	{
+		if (stack != null)
+		{
+			this.buildSampleStack(false);
+			boolean flag = false;
+			if (this.sampleStack == null)
+			{
+				this.sampleStack = stack;
+				flag = true;
+			}
+			else if (this.sampleStack.isItemEqual(stack))
+			{
+				this.sampleStack.stackSize += stack.stackSize;
+				flag = true;
+			}
+			if (flag)
+			{
+				this.buildInventory();
+				if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+				{
+					PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj);
+				}
+			}
+		}
 	}
 
 	public int getSlotCount()
@@ -177,7 +208,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		this.buildSampleStack();
+		this.buildSampleStack(false);
 		ItemStack stack = this.getSampleStack();
 		if (stack != null)
 		{
@@ -189,9 +220,6 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 		}
 	}
 
-	/**
-	 * Inventory functions.
-	 */
 	@Override
 	public ItemStack getStackInSlot(int par1)
 	{
@@ -199,30 +227,30 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	}
 
 	@Override
-	public ItemStack decrStackSize(int slot, int ammount)
+	public ItemStack decrStackSize(int par1, int par2)
 	{
-		if (this.items[slot] != null)
+		if (this.items[par1] != null)
 		{
-			ItemStack var3;
+			ItemStack itemstack;
 
-			if (this.items[slot].stackSize <= ammount)
+			if (this.items[par1].stackSize <= par2)
 			{
-				var3 = this.items[slot];
-				this.setInventorySlotContents(slot, null);
-				return var3;
+				itemstack = this.items[par1];
+				this.items[par1] = null;
+				this.onInventoryChanged();
+				return itemstack;
 			}
 			else
 			{
-				var3 = this.items[slot].splitStack(ammount);
+				itemstack = this.items[par1].splitStack(par2);
 
-				if (this.items[slot].stackSize == 0)
+				if (this.items[par1].stackSize == 0)
 				{
-					this.items[slot] = null;
+					this.items[par1] = null;
 				}
 
-				this.setInventorySlotContents(slot, this.items[slot]);
-
-				return var3;
+				this.onInventoryChanged();
+				return itemstack;
 			}
 		}
 		else
@@ -232,35 +260,42 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot)
+	public void onInventoryChanged()
 	{
-		if (this.items[slot] != null)
-		{
-			ItemStack var2 = this.items[slot];
-			this.items[slot] = null;
-			return var2;
-		}
-		else
-		{
-			return null;
-		}
-	}
+		super.onInventoryChanged();
 
-	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack)
-	{
-		if (stack != null)
+		if (this.worldObj != null)
 		{
-			this.items[slot] = stack;
-
-			if (stack.stackSize > this.getInventoryStackLimit())
+			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 			{
-				stack.stackSize = this.getInventoryStackLimit();
+				PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj);
 			}
+		}
+	}
+
+	@Override
+	public ItemStack getStackInSlotOnClosing(int par1)
+	{
+		if (this.items[par1] != null)
+		{
+			ItemStack itemstack = this.items[par1];
+			this.items[par1] = null;
+			return itemstack;
 		}
 		else
 		{
-			this.items[slot] = null;
+			return null;
+		}
+	}
+
+	@Override
+	public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
+	{
+		this.items[par1] = par2ItemStack;
+
+		if (par2ItemStack != null && par2ItemStack.stackSize > this.getInventoryStackLimit())
+		{
+			par2ItemStack.stackSize = this.getInventoryStackLimit();
 		}
 
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
@@ -319,7 +354,8 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 			ItemStack stack = new ItemStack(nbt.getInteger("itemID"), nbt.getInteger("Count"), nbt.getInteger("itemMeta"));
 			if (stack != null && stack.itemID != 0 && stack.stackSize > 0)
 			{
-				this.items[0] = stack;
+				this.sampleStack = stack;
+				this.buildInventory();
 			}
 		}
 
@@ -329,7 +365,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		this.buildSampleStack();
+		this.buildSampleStack(false);
 		ItemStack stack = this.getSampleStack();
 		if (stack != null)
 		{
@@ -364,6 +400,10 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	@Override
 	public int getTier()
 	{
+		if (this.worldObj == null)
+		{
+			return 15;
+		}
 		return this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord);
 	}
 
@@ -380,13 +420,13 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	}
 
 	@Override
-	public boolean isStackValidForSlot(int i, ItemStack itemstack)
+	public boolean isStackValidForSlot(int slot, ItemStack itemstack)
 	{
-		if (this.sampleStack == null)
+		if (slot >= this.getSlotCount())
 		{
-			return true;
+			return false;
 		}
-		else if (itemstack != null && itemstack.equals(this.sampleStack))
+		if (this.sampleStack == null || itemstack != null && itemstack.isItemEqual(this.sampleStack))
 		{
 			return true;
 		}
@@ -394,23 +434,23 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	}
 
 	@Override
-	public int[] getAccessibleSlotsFromSide(int var1)
+	public int[] getAccessibleSlotsFromSide(int side)
 	{
+		if (slots == null || slots != null && slots.length != this.getSlotCount())
+		{
+			slots = new int[this.getSlotCount()];
+			for (int i = 0; i < slots.length; i++)
+			{
+				slots[i] = i;
+			}
+		}
 		return this.slots;
 	}
 
 	@Override
 	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
 	{
-		if (this.getSampleStack() == null)
-		{
-			return true;
-		}
-		else if (itemstack != null && itemstack.isItemEqual(this.getSampleStack()))
-		{
-			return true;
-		}
-		return false;
+		return this.isStackValidForSlot(slot, itemstack);
 	}
 
 	@Override

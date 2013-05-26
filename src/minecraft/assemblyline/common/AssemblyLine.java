@@ -12,6 +12,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+
+import org.modstats.ModstatInfo;
+import org.modstats.Modstats;
+
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.multiblock.BlockMulti;
 import universalelectricity.prefab.network.PacketManager;
@@ -49,6 +53,7 @@ import cpw.mods.fml.relauncher.Side;
 import dark.library.DarkMain;
 import dark.library.PowerSystems;
 
+@ModstatInfo(prefix = "asmline")
 @Mod(modid = AssemblyLine.CHANNEL, name = AssemblyLine.MOD_NAME, version = AssemblyLine.VERSION, dependencies = "after:BasicComponents; after:IC2", useMetadata = true)
 @NetworkMod(channels = { AssemblyLine.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
 public class AssemblyLine
@@ -125,6 +130,9 @@ public class AssemblyLine
 		FMLog.setParent(FMLLog.getLogger());
 		// UniversalElectricity.register(this, 1, 2, 6, false);
 		instance = this;
+		
+		/* UPDATE NOTIFIER */
+		Modstats.instance().getReporter().registerMod(this);
 
 		CONFIGURATION.load();
 		blockConveyorBelt = new BlockConveyorBelt(CONFIGURATION.getBlock("Conveyor Belt", BLOCK_ID_PREFIX).getInt());
@@ -187,7 +195,7 @@ public class AssemblyLine
 
 		this.createStandardRecipes();
 		this.createUERecipes();
-		if (PowerSystems.isPowerSystemLoaded(PowerSystems.INDUSTRIALCRAFT))
+		if (PowerSystems.isPowerSystemLoaded(PowerSystems.INDUSTRIALCRAFT, true))
 		{
 			createIC2Recipes();
 		}
