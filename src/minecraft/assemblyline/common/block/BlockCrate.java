@@ -112,10 +112,7 @@ public class BlockCrate extends BlockALMachine
 				// Add items
 				if (side == 1 || (side > 1 && hitY > 0.5) || !entityPlayer.capabilities.isCreativeMode)
 				{
-					if (current != null && (current.getMaxStackSize() > 1 || current.itemID == this.blockID))
-					{
-						this.tryInsert(tileEntity, entityPlayer, allMode);
-					}
+					this.tryInsert(tileEntity, entityPlayer, allMode);
 				}
 				// Remove items
 				else if (side == 0 || (side > 1 && hitY <= 0.5))
@@ -268,10 +265,9 @@ public class BlockCrate extends BlockALMachine
 						success = true;
 					}
 				}
-				return success;
 			}
+			return success;
 		}
-
 		return false;
 	}
 
