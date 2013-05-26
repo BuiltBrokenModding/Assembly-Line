@@ -255,7 +255,7 @@ public class AutoCraftingManager
 	 * @param amount - amount of items
 	 * @return the edited stack
 	 */
-	public ItemStack decrStackSize(ItemStack stack, int amount)
+	public static ItemStack decrStackSize(ItemStack stack, int amount)
 	{
 		if (stack != null)
 		{
@@ -328,8 +328,12 @@ public class AutoCraftingManager
 	 * If the item's meta data is not normal or in other words equals 32767 the meta data will be
 	 * ignored
 	 */
-	public boolean areStacksEqual(ItemStack recipeItem, ItemStack checkStack)
+	public static boolean areStacksEqual(ItemStack recipeItem, ItemStack checkStack)
 	{
+		if(recipeItem == null || checkStack == null)
+		{
+			return false;
+		}
 		if (recipeItem.itemID < Block.blocksList.length && recipeItem.getItemDamage() == 32767)
 		{
 			return recipeItem.itemID == checkStack.itemID;
@@ -384,7 +388,7 @@ public class AutoCraftingManager
 				return containerStack;
 			}
 		}
-		System.out.println("ItemGrinder: "+stack.toString());
+		//System.out.println("ItemGrinder: "+stack.toString());
 		return this.decrStackSize(stack, amount);
 	}
 
