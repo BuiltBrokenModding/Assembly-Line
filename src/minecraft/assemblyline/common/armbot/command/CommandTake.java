@@ -21,15 +21,21 @@ public class CommandTake extends Command
 
 		if (this.getArgs().length > 0)
 		{
-			id = this.getIntArg(0);
+			String block = this.getArg(0);
+			if (block.contains(":"))
+			{
+				String[] blockID = block.split(":");
+				id = Integer.parseInt(blockID[0]);
+				meta = Integer.parseInt(blockID[1]);
+			}
+			else
+			{
+				id = Integer.parseInt(block);
+			}
 		}
 		if (this.getArgs().length > 1)
 		{
 			count = this.getIntArg(1);
-		}
-		if (this.getArgs().length > 2)
-		{
-			meta = this.getIntArg(2);
 		}
 		if (id == 0)
 		{
@@ -59,14 +65,15 @@ public class CommandTake extends Command
 					{
 						if (AutoCraftingManager.areStacksEqual(this.stack, slotStack) && inventory.canExtractItem(slots[i], this.stack, direction.getOpposite().ordinal()))
 						{
-							this.stack.stackSize = Math.min(this.stack.stackSize, slotStack.stackSize);
-							this.tileEntity.grabItem(this.stack);
-							inventory.setInventorySlotContents(slots[i], AutoCraftingManager.decrStackSize(slotStack, this.stack.stackSize));
+							ItemStack insertStack = this.stack.copy();
+							insertStack.stackSize = Math.min(this.stack.stackSize, slotStack.stackSize);
+							this.tileEntity.grabItem(insertStack);
+							inventory.setInventorySlotContents(slots[i], AutoCraftingManager.decrStackSize(slotStack, insertStack.stackSize));
 							return false;
 						}
 					}
 				}
-			}//TODO add a way to steal items from players
+			}// TODO add a way to steal items from players
 
 		}
 		return true;
@@ -75,7 +82,7 @@ public class CommandTake extends Command
 	@Override
 	public String toString()
 	{
-		return "Take " + (stack != null ? stack.toString() : "1x???@???");
+		return "Take " + (stack != null ? stack.toString() : "1x???@???  ")+this.tileEntity.getGrabbedItems().size();
 	}
 
 	@Override
