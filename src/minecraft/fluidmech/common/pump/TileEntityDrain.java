@@ -39,12 +39,12 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	private List<Vector3> targetSources = new ArrayList<Vector3>();
 	private List<Vector3> updateQue = new ArrayList<Vector3>();
 	private LiquidPathFinder pathLiquid;
-	
+
 	public LiquidPathFinder getLiquidFinder()
 	{
-		if(pathLiquid == null)
+		if (pathLiquid == null)
 		{
-			pathLiquid = new LiquidPathFinder(this.worldObj, false, 1000, 100);
+			pathLiquid = new LiquidPathFinder(this.worldObj, 1000, 100);
 		}
 		return pathLiquid;
 	}
@@ -170,9 +170,9 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	 */
 	public void getNextFluidBlock()
 	{
-		
+
 		getLiquidFinder().reset();
-		getLiquidFinder().init(new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ));
+		getLiquidFinder().init(new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ), false);
 		// System.out.println("Nodes:" + pathFinder.nodes.size() + "Results:" +
 		// pathFinder.results.size());
 		for (Vector3 vec : getLiquidFinder().nodes)
@@ -348,10 +348,11 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 
 			int blocks = (resource.amount / LiquidContainerRegistry.BUCKET_VOLUME);
 
-			/* FIND ALL VALID BLOCKS ON LEVEL OR BELLOW */			
+			/* FIND ALL VALID BLOCKS ON LEVEL OR BELLOW */
 			final Vector3 faceVec = new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ);
-			getLiquidFinder().init(faceVec);
-
+			getLiquidFinder().init(faceVec, true);
+			//System.out.println("Drain:FillArea: Targets -> " + getLiquidFinder().results.size());
+			
 			/* SORT RESULTS TO PUT THE LOWEST AND CLOSEST AT THE TOP */
 			try
 			{
@@ -386,11 +387,9 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 			}
 			catch (Exception e)
 			{
-				System.out.println("FluidMech: Error sorting fill collection \n");
+				System.out.println("FluidMech: Error sorting fill collection");
 				e.printStackTrace();
 			}
-			/* START FILLING IN OR CHECKING IF CAN FILL AREA */
-			int fillable = 0;
 			for (Vector3 loc : getLiquidFinder().results)
 			{
 				if (blocks <= 0)
@@ -400,7 +399,6 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 				LiquidStack stack = FluidHelper.getLiquidFromBlockId(loc.getBlockID(worldObj));
 				if (stack != null && stack.isLiquidEqual(resource) && loc.getBlockMetadata(worldObj) != 0)
 				{
-					fillable++;
 					drained += LiquidContainerRegistry.BUCKET_VOLUME;
 					blocks--;
 					if (doFill)
@@ -424,7 +422,6 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 				}
 				if (loc.getBlockID(worldObj) == 0)
 				{
-					fillable++;
 					drained += LiquidContainerRegistry.BUCKET_VOLUME;
 					blocks--;
 					if (doFill)

@@ -24,7 +24,7 @@ public class LiquidPathFinder
 															 * OVER
 															 */
 	public List<Vector3> results = new ArrayList<Vector3>();/* LOCATIONS THAT ARE VALID RESULTS */
-	private boolean fill; /* ARE WE FILLING THE PATH OR DRAINING THE PATH */
+	private boolean fill = false; /* ARE WE FILLING THE PATH OR DRAINING THE PATH */
 	private ForgeDirection priority; /* BASED ON fill -- WHICH DIRECTION WILL THE PATH GO FIRST */
 	private int resultLimit = 2000;
 	private Vector2 Start;
@@ -32,11 +32,10 @@ public class LiquidPathFinder
 	private Random random = new Random();
 	List<ForgeDirection> bn = new ArrayList<ForgeDirection>();
 
-	public LiquidPathFinder(final World world, final boolean fill, final int resultLimit, final double range)
+	public LiquidPathFinder(final World world, final int resultLimit, final double range)
 	{
 		this.range = range;
 		this.world = world;
-		this.fill = fill;
 		if (fill)
 		{
 			priority = ForgeDirection.DOWN;
@@ -153,14 +152,11 @@ public class LiquidPathFinder
 	/**
 	 * Called to execute the pathfinding operation.
 	 */
-	public LiquidPathFinder init(final Vector3 startNode)
+	public LiquidPathFinder init(final Vector3 startNode, final boolean fill)
 	{
 		this.Start = startNode.toVector2();
+		this.fill = fill;
 		this.findNodes(startNode);
-		if (this.fill && this.isValidNode(startNode))
-		{
-
-		}
 		return this;
 	}
 
