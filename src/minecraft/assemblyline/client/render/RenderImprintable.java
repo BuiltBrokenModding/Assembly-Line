@@ -10,10 +10,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import assemblyline.common.imprinter.ItemImprinter;
 import assemblyline.common.imprinter.prefab.TileEntityFilterable;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Briman0094
  */
+@SideOnly(Side.CLIENT)
 public abstract class RenderImprintable extends TileEntitySpecialRenderer
 {
 	@Override
