@@ -20,22 +20,29 @@ public class FluidHelper
 	{
 		if (stack != null)
 		{
-			String stackName = LiquidDictionary.findLiquidName(stack);
-			if (stackName.equalsIgnoreCase("UraniumHexafluoride"))
+			try
 			{
-				return 1000;
+				String stackName = LiquidDictionary.findLiquidName(stack);
+				if (stackName.equalsIgnoreCase("UraniumHexafluoride"))
+				{
+					return 1000;
+				}
+				else if (stackName.equalsIgnoreCase("steam"))
+				{
+					return 1000;
+				}
+				else if (stackName.equalsIgnoreCase("methane"))
+				{
+					return 1000;
+				}
+				else if (stackName.equalsIgnoreCase("lava"))
+				{
+					return 250;
+				}
 			}
-			else if (stackName.equalsIgnoreCase("steam"))
+			catch (Exception e)
 			{
-				return 1000;
-			}
-			else if (stackName.equalsIgnoreCase("methane"))
-			{
-				return 1000;
-			}
-			else if (stackName.equalsIgnoreCase("lava"))
-			{
-				return 250;
+				e.printStackTrace();
 			}
 		}
 		return 500;
