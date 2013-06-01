@@ -11,7 +11,7 @@ public class TabFluidMech extends CreativeTabs
 
 	public TabFluidMech()
 	{
-		super(CreativeTabs.getNextID(), "Fluid Mechanics");
+		super(CreativeTabs.getNextID(), "FluidMechanics");
 	}
 
 	public static void setItemStack(ItemStack newItemStack)
