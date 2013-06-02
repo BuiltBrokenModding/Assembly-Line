@@ -94,7 +94,7 @@ public class AssemblyLine
 
 	public static final String TEXTURE_NAME_PREFIX = "assemblyline:";
 
-	private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US","nl_NL" };
+	private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US","nl_NL","fr_FR" };
 
 	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "UniversalElectricity/AssemblyLine.cfg"));
 
