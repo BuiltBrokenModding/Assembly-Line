@@ -226,7 +226,7 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 			int[] previousConnections = this.renderConnection.clone();
 			this.connectedBlocks = new TileEntity[6];
 
-			for (int i = 2; i < 6; i++)
+			for (int i = 0; i < 6; i++)
 			{
 				ForgeDirection dir = ForgeDirection.getOrientation(i);
 				this.validateConnectionSide(this.worldObj.getBlockTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ), dir);
