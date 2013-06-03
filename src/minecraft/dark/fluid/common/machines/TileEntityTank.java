@@ -2,263 +2,394 @@ package dark.fluid.common.machines;
 
 import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
+import hydraulic.api.INetworkPipe;
+import hydraulic.api.ITileConnector;
+import hydraulic.api.IReadOut;
 import hydraulic.helpers.FluidHelper;
+import hydraulic.network.PipeNetwork;
 import hydraulic.prefab.tile.TileEntityFluidStorage;
+
+import java.util.Random;
+
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
-import universalelectricity.core.block.IConductor;
-import universalelectricity.core.block.IConnectionProvider;
+import net.minecraftforge.liquids.LiquidTank;
+
+import org.bouncycastle.util.Arrays;
+
+import universalelectricity.core.vector.Vector3;
+import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import dark.fluid.common.FluidMech;
+import dark.fluid.common.pipes.TileEntityPipe;
 
-public class TileEntityTank extends TileEntityFluidStorage implements IPacketReceiver, ITankContainer, IColorCoded, IConnectionProvider
+public class TileEntityTank extends TileEntityFluidStorage implements ITankContainer, IReadOut, IColorCoded, INetworkPipe, IPacketReceiver
 {
-	public TileEntity[] connectedBlocks = { null, null, null, null, null, null };
+	/* TANK TO FAKE OTHER TILES INTO BELIVING THIS HAS AN INTERNAL STORAGE */
+	protected LiquidTank fakeTank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
+	/* CURRENTLY CONNECTED TILE ENTITIES TO THIS */
+	private TileEntity[] connectedBlocks = new TileEntity[6];
+	public int[] renderConnection = new int[6];
+	/* RANDOM INSTANCE USED BY THE UPDATE TICK */
+	private Random random = new Random();
+	/* NETWORK INSTANCE THAT THIS PIPE USES */
+	private PipeNetwork pipeNetwork;
+
+	private boolean shouldAutoDrain = false;
+
+	public enum PacketID
+	{
+		PIPE_CONNECTIONS, EXTENTION_CREATE, EXTENTION_UPDATE;
+	}
 
 	@Override
 	public void initiate()
 	{
-		this.updateAdjacentConnections();
+		this.updateNetworkConnections();
 	}
 
+	@Override
 	public void updateEntity()
 	{
-		if (this.ticks % (random.nextInt(10) * 4 + 20) == 0)
-		{
-			updateAdjacentConnections();
-		}
+		super.updateEntity();
 		if (!worldObj.isRemote)
 		{
-			int originalVolume = 0;
-
-			if (this.tank.getLiquid() != null)
+			if (ticks % ((int) random.nextInt(5) * 40 + 20) == 0)
 			{
-				originalVolume = this.tank.getLiquid().amount;
-
-				if (ticks % (random.nextInt(4) * 5 + 10) >= 0)
-				{
-					this.fillTanksAround();
-					this.tank.drain(this.fillSide(this.getStoredLiquid(), ForgeDirection.DOWN, true), true);
-				}
-
-				if ((this.tank.getLiquid() == null && originalVolume != 0) || (this.tank.getLiquid() != null && this.tank.getLiquid().amount != originalVolume))
-				{
-					this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
-				}
+				this.updateNetworkConnections();
 			}
+		}
+	}
 
-			if (ticks % (random.nextInt(5) * 10 + 20) == 0)
+	@Override
+	public void invalidate()
+	{
+		if (!this.worldObj.isRemote)
+		{
+			this.getTileNetwork().splitNetwork(this.worldObj, this);
+		}
+
+		super.invalidate();
+	}
+
+	@Override
+	public void handlePacketData(INetworkManager network, int type, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
+	{
+		PacketID id = PacketID.values()[dataStream.readInt()];
+		if (this.worldObj.isRemote)
+		{
+			if (id == PacketID.PIPE_CONNECTIONS)
 			{
-				this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+				this.renderConnection[0] = dataStream.readInt();
+				this.renderConnection[1] = dataStream.readInt();
+				this.renderConnection[2] = dataStream.readInt();
+				this.renderConnection[3] = dataStream.readInt();
+				this.renderConnection[4] = dataStream.readInt();
+				this.renderConnection[5] = dataStream.readInt();
 			}
-
 		}
 	}
 
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		if (this.getStoredLiquid() != null)
+		return PacketManager.getPacket(FluidMech.CHANNEL, this, PacketID.PIPE_CONNECTIONS.ordinal(), this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
+	}
+
+	/**
+	 * Reads a tile entity from NBT.
+	 */
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		LiquidStack liquid = LiquidStack.loadLiquidStackFromNBT(nbt.getCompoundTag("tank"));
+		if (liquid != null)
 		{
-			return PacketManager.getPacket(FluidMech.CHANNEL, this, this.getStoredLiquid().itemID, this.getStoredLiquid().amount, this.getStoredLiquid().itemMeta);
-		}
-		else
-		{
-			return PacketManager.getPacket(FluidMech.CHANNEL, this, 0, 0, 0);
+			this.fakeTank.setLiquid(liquid);
 		}
 	}
 
-	public LiquidStack getStoredLiquid()
+	/**
+	 * Writes a tile entity to NBT.
+	 */
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
 	{
-		return tank.getLiquid();
+		super.writeToNBT(nbt);
+		if (this.fakeTank.containsValidLiquid())
+		{
+			nbt.setTag("stored", this.fakeTank.getLiquid().writeToNBT(new NBTTagCompound()));
+		}
+	}
+
+	/**
+	 * gets the current color mark of the pipe
+	 */
+	@Override
+	public ColorCode getColor()
+	{
+		if (this.worldObj == null)
+		{
+			return ColorCode.NONE;
+		}
+		return ColorCode.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+	}
+
+	/**
+	 * sets the current color mark of the pipe
+	 */
+	@Override
+	public void setColor(Object cc)
+	{
+		ColorCode code = ColorCode.get(cc);
+		if (!worldObj.isRemote && code != this.getColor())
+		{
+			this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, code.ordinal(), 3);
+		}
 	}
 
 	@Override
-	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput data)
+	public String getMeterReading(EntityPlayer user, ForgeDirection side)
 	{
-		try
+		/* DEBUG CODE ACTIVATERS */
+		boolean testConnections = false;
+		boolean testNetwork = false;
+		boolean testSubs = false;
+
+		/* NORMAL OUTPUT */
+		String string = this.getTileNetwork().pressureProduced + "p " + this.getTileNetwork().getNetworkFluid() + " Extra";
+
+		/* DEBUG CODE */
+		if (testConnections)
 		{
-			this.tank.setLiquid(new LiquidStack(data.readInt(), data.readInt(), data.readInt()));
+			for (int i = 0; i < 6; i++)
+			{
+				string += ":" + this.renderConnection[i] + (this.getNetworkConnections()[i] != null ? "T" : "F");
+			}
 		}
-		catch (Exception e)
+		if (testNetwork)
 		{
-			e.printStackTrace();
-			System.out.print("Fail reading data for Storage tank \n");
+			string += " " + this.getTileNetwork().toString();
 		}
 
+		return string;
+	}
+
+	@Override
+	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
+	{
+		if (resource == null || !this.getColor().isValidLiquid(resource))
+		{
+			return 0;
+		}
+		TileEntity tile = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), from);
+		return this.getTileNetwork().addFluidToNetwork(tile, resource, doFill);
 	}
 
 	@Override
 	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
 	{
-		if (!this.getColor().isValidLiquid(resource))
+		if (tankIndex != 0 || resource == null || !this.getColor().isValidLiquid(resource))
 		{
 			return 0;
 		}
-		if (this.isFull())
-		{
-			TileEntity tank = worldObj.getBlockTileEntity(xCoord, yCoord + 1, zCoord);
-			if (tank instanceof TileEntityTank)
-			{
-				return ((TileEntityTank) tank).fill(tankIndex, resource, doFill);
-			}
-		}
-		return super.fill(tankIndex, resource, doFill);
+		return this.getTileNetwork().addFluidToNetwork(this, resource, doFill);
 	}
 
 	@Override
 	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		if (from != ForgeDirection.DOWN)
+		return null;
+	}
+
+	@Override
+	public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
+	{
+		return null;
+	}
+
+	@Override
+	public ILiquidTank[] getTanks(ForgeDirection direction)
+	{
+		return new ILiquidTank[] { this.fakeTank };
+	}
+
+	@Override
+	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
+	{
+		if (this.getColor().isValidLiquid(type))
 		{
-			return super.drain(from, maxDrain, doDrain);
+			return this.fakeTank;
 		}
 		return null;
 	}
 
-	/** Cause this TE to trade liquid with the Tanks around it to level off */
-	public void fillTanksAround()
+	/**
+	 * Checks to make sure the connection is valid to the tileEntity
+	 * 
+	 * @param tileEntity - the tileEntity being checked
+	 * @param side - side the connection is too
+	 */
+	public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)
 	{
-		if (this.tank.getLiquid() == null || this.tank.getLiquid().amount <= 0)
+		if (!this.worldObj.isRemote && tileEntity != null)
 		{
-			return;
-		}
-
-		TileEntity[] ents = this.getAdjacentConnections();
-
-		/* SUM VOLUME UP FOR ALL CONNECTED TANKS */
-		int commonVol = this.tank.getLiquid().amount;
-		int equalVol = commonVol;
-		int tanks = 1;
-
-		for (int i = 2; i < 6; i++)
-		{
-			if (ents[i] instanceof TileEntityTank && ((TileEntityTank) ents[i]).getColor() == this.getColor())
+			if (tileEntity instanceof ITileConnector)
 			{
-				tanks++;
-				if (((TileEntityTank) ents[i]).tank.getLiquid() != null)
+				if (((ITileConnector) tileEntity).canPipeConnect(this, side))
 				{
-					commonVol += ((TileEntityTank) ents[i]).tank.getLiquid().amount;
+					if (tileEntity instanceof INetworkPipe)
+					{
+						if (((INetworkPipe) tileEntity).getColor() == this.getColor())
+						{
+							this.getTileNetwork().merge(((INetworkPipe) tileEntity).getTileNetwork());
+							connectedBlocks[side.ordinal()] = tileEntity;
+						}
+					}
+					else
+					{
+						connectedBlocks[side.ordinal()] = tileEntity;
+					}
 				}
 			}
-		}
-		equalVol = commonVol / tanks;
-
-		for (int i = 2; i < 6; i++)
-		{
-			if (this.tank.getLiquid() == null || this.tank.getLiquid().amount <= equalVol)
+			else if (tileEntity instanceof IColorCoded)
 			{
-				break;
+				if (this.getColor() == ColorCode.NONE || this.getColor() == ((IColorCoded) tileEntity).getColor())
+				{
+					connectedBlocks[side.ordinal()] = tileEntity;
+				}
 			}
-
-			if (ents[i] instanceof TileEntityTank && ((TileEntityTank) ents[i]).getColor() == this.getColor() && !((TileEntityTank) ents[i]).isFull())
+			else if (tileEntity instanceof ITankContainer)
 			{
-				LiquidStack target = ((TileEntityTank) ents[i]).tank.getLiquid();
-				LiquidStack filling = this.tank.getLiquid();
-
-				if (target == null)
-				{
-					filling = FluidHelper.getStack(this.tank.getLiquid(), equalVol);
-				}
-				else if (target.amount < equalVol)
-				{
-					filling = FluidHelper.getStack(this.tank.getLiquid(), equalVol - target.amount);
-				}
-				else
-				{
-					filling = null;
-				}
-				int f = ((TileEntityTank) ents[i]).tank.fill(filling, true);
-				this.tank.drain(f, true);
+				connectedBlocks[side.ordinal()] = tileEntity;
 			}
-
 		}
 	}
 
 	@Override
-	public void setColor(Object obj)
+	public void updateNetworkConnections()
 	{
-		ColorCode code = ColorCode.get(obj);
-		if (!worldObj.isRemote && code != this.getColor() && (this.tank != null || code.isValidLiquid(this.tank.getLiquid())))
+
+		if (this.worldObj != null && !this.worldObj.isRemote)
 		{
-			this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, code.ordinal() & 15, 3);
-			this.updateAdjacentConnections();
+
+			int[] previousConnections = this.renderConnection.clone();
+			this.connectedBlocks = new TileEntity[6];
+
+			for (int i = 0; i < 6; i++)
+			{
+				ForgeDirection dir = ForgeDirection.getOrientation(i);
+				this.validateConnectionSide(this.worldObj.getBlockTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ), dir);
+
+				this.renderConnection[i] = this.connectedBlocks[i] instanceof TileEntityTank ? 2 : (this.connectedBlocks[i] instanceof INetworkPipe ? 1 : this.connectedBlocks[i] != null ? 3 : 0);
+
+				if (this.connectedBlocks[i] instanceof TileEntityTank)
+				{
+					ITankContainer tankContainer = (ITankContainer) this.connectedBlocks[i];
+					this.getTileNetwork().addEntity(tankContainer);
+				}
+			}
+
+			/**
+			 * Only send packet updates if visuallyConnected changed.
+			 */
+			if (!Arrays.areEqual(previousConnections, this.renderConnection))
+			{
+				this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+			}
 		}
-	}
-
-	@Override
-	public ColorCode getColor()
-	{
-		return ColorCode.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
-	}
-
-	@Override
-	public boolean canConnect(ForgeDirection direction)
-	{
-		TileEntity entity = worldObj.getBlockTileEntity(xCoord, yCoord, zCoord);
-
-		return entity != null && entity.getClass() == this.getClass() && ((IColorCoded) entity).getColor() == this.getColor();
 	}
 
 	@Override
 	public boolean canPipeConnect(TileEntity entity, ForgeDirection dir)
 	{
-		return entity != null && entity instanceof IColorCoded && (((IColorCoded) entity).getColor() == ColorCode.NONE || ((IColorCoded) entity).getColor() == this.getColor());
+		return entity != null;
 	}
 
 	@Override
-	public TileEntity[] getAdjacentConnections()
+	public double getMaxPressure(ForgeDirection side)
+	{
+		return 350;
+	}
+
+	@Override
+	public PipeNetwork getTileNetwork()
+	{
+		if (this.pipeNetwork == null)
+		{
+			this.setNetwork(new PipeNetwork(this.getColor(), this));
+		}
+		return this.pipeNetwork;
+	}
+
+	@Override
+	public void setNetwork(PipeNetwork network)
+	{
+		this.pipeNetwork = network;
+	}
+
+	@Override
+	public int getMaxFlowRate(LiquidStack stack, ForgeDirection side)
+	{
+		return FluidHelper.getDefaultFlowRate(stack) * 3;
+	}
+
+	@Override
+	public boolean onOverPressure(Boolean damageAllowed)
+	{
+		if (damageAllowed)
+		{
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, yCoord, 0, 0);
+			return true;
+		}
+		return false;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public AxisAlignedBB getRenderBoundingBox()
+	{
+		return AxisAlignedBB.getAABBPool().getAABB(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1);
+	}
+
+	@Override
+	public TileEntity[] getNetworkConnections()
 	{
 		return this.connectedBlocks;
 	}
 
 	@Override
-	public void updateAdjacentConnections()
+	public int getTankSize()
 	{
-		TileEntity[] originalConnection = this.connectedBlocks;
-		this.connectedBlocks = new TileEntity[6];
-		for (int side = 0; side < 6; side++)
-		{
-			ForgeDirection direction = ForgeDirection.getOrientation(side);
-			TileEntity entity = worldObj.getBlockTileEntity(xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ);
-			if (entity != null && !(entity instanceof IConductor))
-			{
-				if (!(entity instanceof IColorCoded) || (entity instanceof IColorCoded && (((IColorCoded) entity).getColor() == ColorCode.NONE || ((IColorCoded) entity).getColor() == this.getColor())))
-				{
-					if (entity instanceof IConnectionProvider && ((IConnectionProvider) entity).canConnect(direction))
-					{
-						connectedBlocks[side] = entity;
-					}
-					else if (entity instanceof ITankContainer)
-					{
-						connectedBlocks[side] = entity;
-					}
-				}
-			}
-
-		}
-
-		if (!originalConnection.equals(this.connectedBlocks))
-		{
-			this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
-		}
-
+		return LiquidContainerRegistry.BUCKET_VOLUME * 3;
 	}
 
 	@Override
-	public int getTankSize()
+	public ILiquidTank getTank()
 	{
-		return (LiquidContainerRegistry.BUCKET_VOLUME * 4);
+		return this.fakeTank;
+	}
+
+	@Override
+	public void setTankContent(LiquidStack stack)
+	{
+		this.fakeTank.setLiquid(stack);
+
 	}
 }

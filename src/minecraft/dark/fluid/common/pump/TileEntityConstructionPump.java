@@ -1,8 +1,9 @@
 package dark.fluid.common.pump;
 
-import hydraulic.api.IPipeConnection;
-import hydraulic.fluidnetwork.HydraulicNetworkHelper;
-import hydraulic.fluidnetwork.IFluidNetworkPart;
+import hydraulic.api.INetworkPipe;
+import hydraulic.api.ITileConnector;
+import hydraulic.network.FluidNetwork;
+import hydraulic.network.HydraulicNetworkHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
@@ -16,7 +17,7 @@ import universalelectricity.core.vector.VectorHelper;
 import dark.library.helpers.MetaGroup;
 import dark.library.machine.TileEntityRunnableMachine;
 
-public class TileEntityConstructionPump extends TileEntityRunnableMachine implements ITankContainer, IPipeConnection
+public class TileEntityConstructionPump extends TileEntityRunnableMachine implements ITankContainer, ITileConnector
 {
 	/* ENERGY PER TICK TO TRY TO PUMP */
 	public static final double WATTS_PER_TICK = 100;
@@ -35,7 +36,7 @@ public class TileEntityConstructionPump extends TileEntityRunnableMachine implem
 
 	public ForgeDirection getFacing(boolean input)
 	{
-		int meta = 0;		
+		int meta = 0;
 		if (worldObj != null)
 		{
 			meta = MetaGroup.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
@@ -57,11 +58,13 @@ public class TileEntityConstructionPump extends TileEntityRunnableMachine implem
 		super.updateEntity();
 		if (!worldObj.isRemote)
 		{
-			if (this.ticks % 10 == 0 && this.wattsReceived >= this.WATTS_PER_TICK) // TODO add electric Drain
+			if (this.ticks % 10 == 0 && this.wattsReceived >= this.WATTS_PER_TICK) // TODO add
+																					// electric
+																					// Drain
 			{
 				this.wattsReceived -= this.WATTS_PER_TICK;
 				this.rotation += 1;
-				if(rotation >= 7)
+				if (rotation >= 7)
 				{
 					rotation = 0;
 				}
@@ -69,11 +72,11 @@ public class TileEntityConstructionPump extends TileEntityRunnableMachine implem
 
 				TileEntity inputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), getFacing(true));
 				TileEntity outputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), getFacing(false));
-				if (inputTile instanceof IFluidNetworkPart)
+				if (inputTile instanceof INetworkPipe && ((INetworkPipe) inputTile).getTileNetwork() instanceof FluidNetwork)
 				{
 					if (outputTile instanceof ITankContainer)
 					{
-						for (ITankContainer tank : ((IFluidNetworkPart) inputTile).getNetwork().fluidTanks)
+						for (ITankContainer tank : ((FluidNetwork) ((INetworkPipe) inputTile).getTileNetwork()).fluidTanks)
 						{
 							if (tank instanceof TileEntityDrain)
 							{
@@ -160,9 +163,9 @@ public class TileEntityConstructionPump extends TileEntityRunnableMachine implem
 	}
 
 	@Override
-	public boolean canPipeConnect(TileEntity entity, ForgeDirection dir)
+	public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
 	{
-		return dir == this.getFacing(false) || dir == this.getFacing(true);
+		return entity instanceof ITankContainer && (dir == this.getFacing(false) || dir == this.getFacing(true));
 	}
 
 	@Override

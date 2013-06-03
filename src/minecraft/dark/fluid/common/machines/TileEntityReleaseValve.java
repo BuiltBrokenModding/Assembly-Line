@@ -2,9 +2,10 @@ package dark.fluid.common.machines;
 
 import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
-import hydraulic.api.IPipeConnection;
+import hydraulic.api.INetworkPipe;
+import hydraulic.api.ITileConnector;
 import hydraulic.api.IReadOut;
-import hydraulic.fluidnetwork.IFluidNetworkPart;
+import hydraulic.network.PipeNetwork;
 import hydraulic.prefab.tile.TileEntityFluidDevice;
 
 import java.util.ArrayList;
@@ -19,12 +20,12 @@ import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 import dark.library.helpers.ConnectionHelper;
 
-public class TileEntityReleaseValve extends TileEntityFluidDevice implements IPipeConnection, IReadOut
+public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITileConnector, IReadOut
 {
 	public boolean[] allowed = new boolean[ColorCode.values().length - 1];
 	public TileEntity[] connected = new TileEntity[6];
 
-	private List<IFluidNetworkPart> output = new ArrayList<IFluidNetworkPart>();
+	private List<INetworkPipe> output = new ArrayList<INetworkPipe>();
 	private ITankContainer[] input = new ITankContainer[6];
 
 	public boolean isPowered = false;
@@ -65,10 +66,10 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements IPi
 					LiquidStack stack = drainedTank.drain(dir.getOpposite(), LiquidContainerRegistry.BUCKET_VOLUME, false);
 					if (stack != null && stack.amount > 0)
 					{
-						IFluidNetworkPart inputPipe = this.findValidPipe(stack);
+						INetworkPipe inputPipe = this.findValidPipe(stack);
 						if (inputPipe != null)
 						{
-							int ammountFilled = inputPipe.getNetwork().addFluidToNetwork((TileEntity) drainedTank, stack, true);
+							int ammountFilled = ((PipeNetwork)inputPipe.getTileNetwork()).addFluidToNetwork((TileEntity) drainedTank, stack, true);
 							drainedTank.drain(ForgeDirection.UNKNOWN, ammountFilled, true);
 						}
 					}
@@ -79,10 +80,10 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements IPi
 	}
 
 	/** used to find a valid pipe for filling of the liquid type */
-	public IFluidNetworkPart findValidPipe(LiquidStack stack)
+	public INetworkPipe findValidPipe(LiquidStack stack)
 	{
 		// find normal color selective pipe first
-		for (IFluidNetworkPart pipe : output)
+		for (INetworkPipe pipe : output)
 		{
 			if (pipe.fill(ForgeDirection.UNKNOWN, stack, false) > 0)
 			{
@@ -140,9 +141,9 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements IPi
 		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 		{
 			TileEntity tileEntity = connected[dir.ordinal()];
-			if (tileEntity instanceof IFluidNetworkPart)
+			if (tileEntity instanceof INetworkPipe)
 			{
-				IFluidNetworkPart pipe = (IFluidNetworkPart) tileEntity;
+				INetworkPipe pipe = (INetworkPipe) tileEntity;
 				if (this.canConnect(pipe.getColor()))
 				{
 					this.output.add(pipe);
@@ -168,9 +169,9 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements IPi
 	}
 
 	@Override
-	public boolean canPipeConnect(TileEntity entity, ForgeDirection dir)
+	public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
 	{
-		return entity != null && entity instanceof IColorCoded && this.canConnect(((IColorCoded) entity).getColor());
+		return entity != null && entity instanceof ITankContainer && entity instanceof IColorCoded && this.canConnect(((IColorCoded) entity).getColor());
 	}
 
 	@Override

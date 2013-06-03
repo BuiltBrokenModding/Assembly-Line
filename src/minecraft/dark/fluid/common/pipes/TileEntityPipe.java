@@ -2,11 +2,12 @@ package dark.fluid.common.pipes;
 
 import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
-import hydraulic.api.IPipeConnection;
+import hydraulic.api.INetworkPipe;
+import hydraulic.api.ITileConnector;
 import hydraulic.api.IReadOut;
-import hydraulic.fluidnetwork.HydraulicNetwork;
-import hydraulic.fluidnetwork.IFluidNetworkPart;
 import hydraulic.helpers.FluidHelper;
+import hydraulic.network.PipeNetwork;
+import hydraulic.network.TileNetwork;
 
 import java.io.IOException;
 import java.util.Random;
@@ -40,7 +41,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.pipes.addon.IPipeExtention;
 
-public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer, IReadOut, IColorCoded, IFluidNetworkPart, IPacketReceiver
+public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer, IReadOut, IColorCoded, INetworkPipe, IPacketReceiver
 {
 
 	/* TANK TO FAKE OTHER TILES INTO BELIVING THIS HAS AN INTERNAL STORAGE */
@@ -52,7 +53,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	/* RANDOM INSTANCE USED BY THE UPDATE TICK */
 	private Random random = new Random();
 	/* NETWORK INSTANCE THAT THIS PIPE USES */
-	private HydraulicNetwork pipeNetwork;
+	private PipeNetwork pipeNetwork;
 
 	private boolean shouldAutoDrain = false;
 
@@ -64,7 +65,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	@Override
 	public void initiate()
 	{
-		this.updateAdjacentConnections();
+		this.updateNetworkConnections();
 		if (this.subEntities[0] == null)
 		{
 			// this.addNewExtention(0, TileEntityPipeWindow.class);
@@ -95,7 +96,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		{
 			if (ticks % ((int) random.nextInt(5) * 40 + 20) == 0)
 			{
-				this.updateAdjacentConnections();
+				this.updateNetworkConnections();
 			}
 			if (ticks % ((int) random.nextInt(5) * 60 + 20) == 0)
 			{
@@ -139,7 +140,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	{
 		if (!this.worldObj.isRemote)
 		{
-			this.getNetwork().splitNetwork(this.worldObj, this);
+			this.getTileNetwork().splitNetwork(this.worldObj, this);
 		}
 
 		super.invalidate();
@@ -326,7 +327,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	@Override
 	public ColorCode getColor()
 	{
-		if(this.worldObj == null)
+		if (this.worldObj == null)
 		{
 			return ColorCode.NONE;
 		}
@@ -355,19 +356,19 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		boolean testSubs = false;
 
 		/* NORMAL OUTPUT */
-		String string = this.getNetwork().pressureProduced + "p " + this.getNetwork().getStorageFluid() + " Extra";
+		String string = ((PipeNetwork)this.getTileNetwork()).pressureProduced + "p " + ((PipeNetwork)this.getTileNetwork()).getNetworkFluid() + " Extra";
 
 		/* DEBUG CODE */
 		if (testConnections)
 		{
 			for (int i = 0; i < 6; i++)
 			{
-				string += ":" + (this.renderConnection[i] ? "T" : "F") + (this.getAdjacentConnections()[i] != null ? "T" : "F");
+				string += ":" + (this.renderConnection[i] ? "T" : "F") + (this.getNetworkConnections()[i] != null ? "T" : "F");
 			}
 		}
 		if (testNetwork)
 		{
-			string += " " + this.getNetwork().toString();
+			string += " " + this.getTileNetwork().toString();
 		}
 		if (testSubs)
 		{
@@ -397,7 +398,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 			return 0;
 		}
 		TileEntity tile = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), from);
-		return this.getNetwork().addFluidToNetwork(tile, resource, doFill);
+		return ((PipeNetwork)this.getTileNetwork()).addFluidToNetwork(tile, resource, doFill);
 	}
 
 	@Override
@@ -407,7 +408,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		{
 			return 0;
 		}
-		return this.getNetwork().addFluidToNetwork(this, resource, doFill);
+		return ((PipeNetwork)this.getTileNetwork()).addFluidToNetwork(this, resource, doFill);
 	}
 
 	@Override
@@ -453,15 +454,15 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 				connectedBlocks[side.ordinal()] = null;
 				return;
 			}
-			if (tileEntity instanceof IPipeConnection)
+			if (tileEntity instanceof ITileConnector)
 			{
-				if (((IPipeConnection) tileEntity).canPipeConnect(this, side))
+				if (((ITileConnector) tileEntity).canTileConnect(this, side))
 				{
-					if (tileEntity instanceof IFluidNetworkPart)
+					if (tileEntity instanceof INetworkPipe)
 					{
-						if (((IFluidNetworkPart) tileEntity).getColor() == this.getColor())
+						if (((INetworkPipe) tileEntity).getColor() == this.getColor())
 						{
-							this.getNetwork().mergeNetworks(((IFluidNetworkPart) tileEntity).getNetwork());
+							this.getTileNetwork().merge(((INetworkPipe) tileEntity).getTileNetwork());
 							connectedBlocks[side.ordinal()] = tileEntity;
 						}
 					}
@@ -486,7 +487,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	}
 
 	@Override
-	public void updateAdjacentConnections()
+	public void updateNetworkConnections()
 	{
 
 		if (this.worldObj != null && !this.worldObj.isRemote)
@@ -502,17 +503,17 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 
 				this.renderConnection[i] = this.connectedBlocks[i] != null;
 
-				if (this.renderConnection[i] && this.connectedBlocks[i] instanceof ITankContainer && !(this.connectedBlocks[i] instanceof IFluidNetworkPart))
+				if (this.renderConnection[i] && this.connectedBlocks[i] instanceof ITankContainer && !(this.connectedBlocks[i] instanceof INetworkPipe))
 				{
 					ITankContainer tankContainer = (ITankContainer) this.connectedBlocks[i];
-					this.getNetwork().addEntity(tankContainer);
+					this.getTileNetwork().addEntity(this.connectedBlocks[i], false);
 
 					/* LITTLE TRICK TO AUTO DRAIN TANKS ON EACH CONNECTION UPDATE */
 
 					LiquidStack stack = tankContainer.drain(dir, LiquidContainerRegistry.BUCKET_VOLUME, false);
 					if (stack != null && stack.amount > 0)
 					{
-						int fill = this.getNetwork().addFluidToNetwork((TileEntity) tankContainer, stack, true);
+						int fill = ((PipeNetwork)this.getTileNetwork()).addFluidToNetwork((TileEntity) tankContainer, stack, true);
 						tankContainer.drain(dir, fill, true);
 					}
 				}
@@ -529,7 +530,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	}
 
 	@Override
-	public boolean canPipeConnect(TileEntity entity, ForgeDirection dir)
+	public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
 	{
 		return entity != null && this.subEntities[dir.ordinal()] == null;
 	}
@@ -541,19 +542,22 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	}
 
 	@Override
-	public HydraulicNetwork getNetwork()
+	public TileNetwork getTileNetwork()
 	{
 		if (this.pipeNetwork == null)
 		{
-			this.setNetwork(new HydraulicNetwork(this.getColor(), this));
+			this.setTileNetwork(new PipeNetwork(this.getColor(), this));
 		}
 		return this.pipeNetwork;
 	}
 
 	@Override
-	public void setNetwork(HydraulicNetwork network)
+	public void setTileNetwork(TileNetwork network)
 	{
-		this.pipeNetwork = network;
+		if (network instanceof PipeNetwork)
+		{
+			this.pipeNetwork = (PipeNetwork) network;
+		}
 	}
 
 	@Override
@@ -580,19 +584,13 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	}
 
 	@Override
-	public TileEntity[] getAdjacentConnections()
+	public TileEntity[] getNetworkConnections()
 	{
 		return this.connectedBlocks;
 	}
 
 	@Override
-	public int getTankSize()
-	{
-		return LiquidContainerRegistry.BUCKET_VOLUME * 3;
-	}
-
-	@Override
-	public ILiquidTank getTank()
+	public LiquidTank getTank()
 	{
 		return this.fakeTank;
 	}
@@ -600,8 +598,11 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	@Override
 	public void setTankContent(LiquidStack stack)
 	{
+		if(this.fakeTank == null)
+		{
+			this.fakeTank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
+		}
 		this.fakeTank.setLiquid(stack);
-
 	}
 
 }

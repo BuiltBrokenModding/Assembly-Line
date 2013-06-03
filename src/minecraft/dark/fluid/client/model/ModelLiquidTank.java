@@ -357,17 +357,17 @@ public class ModelLiquidTank extends ModelBase
 
 	public void renderMeter(TileEntity tee, float f5)
 	{
-		TileEntity[] conenctedTiles = new TileEntity[6];
+		int[] conenctedTiles = new int[6];
 		if (tee instanceof TileEntityTank)
 		{
-			conenctedTiles = ((TileEntityTank) tee).connectedBlocks;
+			conenctedTiles = ((TileEntityTank) tee).renderConnection;
 		}
 		// Front
-		if (conenctedTiles[3] instanceof TileEntityPipe)
+		if (conenctedTiles[3] == 1)
 		{
 			CCFront.render(f5);
 		}
-		else
+		else if (conenctedTiles[3] == 0)
 		{
 			GuageT.render(f5);
 			GuageB.render(f5);
@@ -377,11 +377,11 @@ public class ModelLiquidTank extends ModelBase
 			GuageL.render(f5);
 		}
 		// back
-		if (conenctedTiles[2] instanceof TileEntityPipe)
+		if (conenctedTiles[2] == 1)
 		{
 			CCBack.render(f5);
 		}
-		else
+		else if (conenctedTiles[2] == 0)
 		{
 			GuageT3.render(f5);
 			Guage3.render(f5);
@@ -391,11 +391,11 @@ public class ModelLiquidTank extends ModelBase
 			GuageL3.render(f5);
 		}
 		// right
-		if (conenctedTiles[4] instanceof TileEntityPipe)
+		if (conenctedTiles[4] == 1)
 		{
 			CCRight.render(f5);
 		}
-		else
+		else if (conenctedTiles[4] == 0)
 		{
 			GuageT4.render(f5);
 			Guage4.render(f5);
@@ -405,11 +405,11 @@ public class ModelLiquidTank extends ModelBase
 			GuageL4.render(f5);
 		}
 		// left
-		if (conenctedTiles[5] instanceof TileEntityPipe)
+		if (conenctedTiles[5] == 1)
 		{
 			CCLeft.render(f5);
 		}
-		else
+		else if (conenctedTiles[3] == 1)
 		{
 			GuageT2.render(f5);
 			Guage2.render(f5);

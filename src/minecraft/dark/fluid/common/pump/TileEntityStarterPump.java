@@ -2,7 +2,7 @@ package dark.fluid.common.pump;
 
 import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
-import hydraulic.api.IPipeConnection;
+import hydraulic.api.ITileConnector;
 import hydraulic.api.IReadOut;
 import hydraulic.helpers.FluidHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +23,7 @@ import com.google.common.io.ByteArrayDataInput;
 import dark.library.helpers.MetaGroup;
 import dark.library.machine.TileEntityRunnableMachine;
 
-public class TileEntityStarterPump extends TileEntityRunnableMachine implements IPacketReceiver, IReadOut, IPipeConnection
+public class TileEntityStarterPump extends TileEntityRunnableMachine implements IPacketReceiver, IReadOut, ITileConnector
 {
 	public final double WATTS_PER_TICK = (400 / 20);
 	private double percentPumped = 0.0;
@@ -198,9 +198,9 @@ public class TileEntityStarterPump extends TileEntityRunnableMachine implements 
 	}
 
 	@Override
-	public boolean canPipeConnect(TileEntity entity, ForgeDirection dir)
+	public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
 	{
-		if (dir == this.pipeConnection.getOpposite())
+		if (dir == this.pipeConnection.getOpposite() && entity instanceof ITankContainer)
 		{
 			return entity != null && entity instanceof IColorCoded && (((IColorCoded) entity).getColor() == ColorCode.NONE || ((IColorCoded) entity).getColor() == this.color);
 		}

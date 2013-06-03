@@ -1,7 +1,7 @@
 package dark.fluid.common.pipes;
 
 import hydraulic.api.FluidRestrictionHandler;
-import hydraulic.fluidnetwork.IFluidNetworkPart;
+import hydraulic.api.INetworkPipe;
 
 import java.util.List;
 
@@ -61,9 +61,9 @@ public class BlockPipe extends BlockAdvanced
 
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tileEntity instanceof IFluidNetworkPart)
+		if (tileEntity instanceof INetworkPipe)
 		{
-			((IFluidNetworkPart) tileEntity).updateAdjacentConnections();
+			((INetworkPipe) tileEntity).updateNetworkConnections();
 		}
 	}
 
@@ -72,9 +72,9 @@ public class BlockPipe extends BlockAdvanced
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tileEntity instanceof IFluidNetworkPart)
+		if (tileEntity instanceof INetworkPipe)
 		{
-			((IFluidNetworkPart) tileEntity).updateAdjacentConnections();
+			((INetworkPipe) tileEntity).updateNetworkConnections();
 		}
 	}
 

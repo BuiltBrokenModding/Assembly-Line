@@ -1,5 +1,6 @@
 package dark.fluid.common.pipes.addon;
 
+import hydraulic.network.PipeNetwork;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -10,7 +11,6 @@ import com.google.common.io.ByteArrayDataInput;
 
 import dark.fluid.client.render.pipe.RenderPipeWindow;
 import dark.fluid.common.pipes.TileEntityPipe;
-
 
 public class TileEntityPipeWindow extends TileEntityPipeExtention
 {
@@ -23,13 +23,14 @@ public class TileEntityPipeWindow extends TileEntityPipeExtention
 	@Override
 	public void updateEntity()
 	{
+		// TODO replace the updateEntity method with updateAddon(TileEntityPipe pipe)
 		super.updateEntity();
 
 		if (!worldObj.isRemote)
 		{
 			if (pipe != null)
 			{
-				stack = pipe.getNetwork().getTank().getLiquid();
+				stack = ((PipeNetwork) pipe.getTileNetwork()).getNetworkTank().getLiquid();
 				worldObj.setBlockMetadataWithNotify(xCoord, yCoord + 1, yCoord, 0, 0);
 			}
 		}
@@ -66,7 +67,7 @@ public class TileEntityPipeWindow extends TileEntityPipeExtention
 	@Override
 	public boolean canBePlacedOnPipe(TileEntityPipe pipe, int side)
 	{
-		if(pipe != null && pipe.subEntities[side] == null)
+		if (pipe != null && pipe.subEntities[side] == null)
 		{
 			return true;
 		}

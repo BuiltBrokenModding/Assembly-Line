@@ -1,6 +1,6 @@
 package dark.fluid.common.pump;
 
-import hydraulic.fluidnetwork.HydraulicNetworkHelper;
+import hydraulic.network.HydraulicNetworkHelper;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package dark.fluid.common.pump;
 
 import hydraulic.api.IDrain;
-import hydraulic.fluidnetwork.IFluidNetworkPart;
+import hydraulic.api.INetworkPipe;
 import hydraulic.helpers.FluidHelper;
 import hydraulic.prefab.tile.TileEntityFluidDevice;
 
@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
+
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -213,7 +214,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 			{
 				requests.remove();
 			}
-			else if (pipe instanceof IFluidNetworkPart && !((IFluidNetworkPart) pipe).getNetwork().isConnected(entry.getKey()))
+			else if (pipe instanceof INetworkPipe && !((INetworkPipe) pipe).getTileNetwork().isPartOfNetwork(entry.getKey()))
 			{
 				requests.remove();
 			}
@@ -439,7 +440,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	}
 
 	@Override
-	public boolean canPipeConnect(TileEntity entity, ForgeDirection dir)
+	public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
 	{
 		return dir == this.getFacing();
 	}

@@ -1,6 +1,6 @@
 package dark.fluid.common.pipes.tele;
 
-import hydraulic.fluidnetwork.IFluidNetworkPart;
+import hydraulic.api.INetworkPipe;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import java.util.List;
  * cause that network to seak out all other connected network and try to merge them
  * 
  */
-public interface INetworkConnector extends IFluidNetworkPart
+public interface INetworkConnector extends INetworkPipe
 {
 	/**
 	 * gets the pipes frequency
