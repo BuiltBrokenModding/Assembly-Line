@@ -22,7 +22,7 @@ public class FluidRestrictionHandler
 	@ForgeSubscribe
 	public void onLiquidRegistered(LiquidRegisterEvent event)
 	{
-		if (event.Name != null)
+		if (event != null && event.Name != null)
 		{
 			if (event.Name.equalsIgnoreCase("Fuel") && !restrictedStacks.containsKey(ColorCode.YELLOW))
 			{
@@ -46,14 +46,16 @@ public class FluidRestrictionHandler
 	{
 		return restrictedStacks.containsKey(ColorCode.get(meta));
 	}
+
 	public static boolean hasRestrictedStack(LiquidStack stack)
 	{
-		if(stack == null)
+		if (stack == null)
 		{
 			return false;
-		}					
+		}
 		return restrictedStacks.inverse().containsKey(stack);
 	}
+
 	/**
 	 * gets the liquid stack that is restricted to this color
 	 * 

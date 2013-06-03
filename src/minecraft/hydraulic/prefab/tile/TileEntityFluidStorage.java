@@ -34,9 +34,13 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 	}
 
 	@Override
-	public boolean canPipeConnect(TileEntity entity, ForgeDirection dir)
+	public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
 	{
-		return true;
+		if (entity instanceof ITankContainer)
+		{
+			return true;
+		}
+		return false;
 	}
 
 	@Override

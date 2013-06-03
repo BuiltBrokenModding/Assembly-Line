@@ -1,4 +1,4 @@
-package hydraulic.fluidnetwork;
+package hydraulic.network;
 
 import net.minecraftforge.liquids.LiquidStack;
 

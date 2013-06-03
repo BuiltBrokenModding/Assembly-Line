@@ -1,7 +1,7 @@
-package hydraulic.fluidnetwork;
-
+package hydraulic.network;
 
 import hydraulic.api.IDrain;
+import hydraulic.api.INetworkPart;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ITankContainer;
@@ -12,7 +12,7 @@ public class HydraulicNetworkHelper
 {
 
 	/**
-	 * Invalidates a TileEntity 
+	 * Invalidates a TileEntity
 	 */
 	public static void invalidate(TileEntity tileEntity)
 	{
@@ -21,18 +21,18 @@ public class HydraulicNetworkHelper
 			ForgeDirection direction = ForgeDirection.getOrientation(i);
 			TileEntity checkTile = VectorHelper.getConnectorFromSide(tileEntity.worldObj, new Vector3(tileEntity), direction);
 
-			if (checkTile instanceof IFluidNetworkPart)
+			if (checkTile instanceof INetworkPart)
 			{
-				HydraulicNetwork network = ((IFluidNetworkPart) checkTile).getNetwork();
+				TileNetwork network = ((INetworkPart) checkTile).getTileNetwork();
 
-				if (network != null)
+				if (network != null && network instanceof FluidNetwork)
 				{
 					network.removeEntity(tileEntity);
-					for(ITankContainer tank : network.fluidTanks)
+					for (ITankContainer tank : ((FluidNetwork) network).fluidTanks)
 					{
-						if(tank instanceof IDrain)
+						if (tank instanceof IDrain)
 						{
-							((IDrain)tank).stopRequesting(tileEntity);
+							((IDrain) tank).stopRequesting(tileEntity);
 						}
 					}
 				}

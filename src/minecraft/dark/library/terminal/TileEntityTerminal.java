@@ -186,7 +186,7 @@ public abstract class TileEntityTerminal extends TileEntityRunnableMachine imple
 		}
 		catch (Exception e)
 		{
-			FMLLog.severe("ICBM: Failed to receive packet for terminal.");
+			FMLLog.severe("DarkLib>>>TerminalInstance>>>PacketReadError>>>ForTile>>>"+this.toString());
 			e.printStackTrace();
 		}
 	}

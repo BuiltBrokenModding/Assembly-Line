@@ -13,7 +13,7 @@ import universalelectricity.core.vector.VectorHelper;
  * 
  * @author DarkGuardsman
  */
-public class FillDrainHelper
+public class TankHelper
 {
 	/**
 	 * Fills all ITankContainers around the point
@@ -29,7 +29,7 @@ public class FillDrainHelper
 		int fill = 0;
 		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 		{
-			fill += FillDrainHelper.fillDirection(world, center, stack, direction);
+			fill += TankHelper.fillDirection(world, center, stack, direction);
 		}
 		return fill;
 	}

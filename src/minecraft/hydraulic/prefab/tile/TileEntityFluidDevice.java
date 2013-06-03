@@ -1,8 +1,8 @@
 package hydraulic.prefab.tile;
 
-import hydraulic.api.IPipeConnection;
+import hydraulic.api.ITileConnector;
 import hydraulic.api.IReadOut;
-import hydraulic.fluidnetwork.HydraulicNetworkHelper;
+import hydraulic.network.HydraulicNetworkHelper;
 
 import java.util.Random;
 
@@ -12,7 +12,7 @@ import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 
-public abstract class TileEntityFluidDevice extends TileEntityAdvanced implements IReadOut, IPipeConnection
+public abstract class TileEntityFluidDevice extends TileEntityAdvanced implements IReadOut, ITileConnector
 {
 	public Random random = new Random();
 

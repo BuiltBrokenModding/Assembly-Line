@@ -1,4 +1,7 @@
-package hydraulic.fluidnetwork;
+package hydraulic.network;
+
+import hydraulic.api.INetworkPart;
+import hydraulic.api.INetworkPipe;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -16,7 +19,7 @@ import universalelectricity.core.vector.Vector3;
  */
 public class PathfinderCheckerPipes extends Pathfinder
 {
-	public PathfinderCheckerPipes(final World world, final IFluidNetworkPart targetConnector, final IFluidNetworkPart... ignoreConnector)
+	public PathfinderCheckerPipes(final World world, final INetworkPart connectedBlockB, final INetworkPart splitPoint)
 	{
 		super(new IPathCallBack()
 		{
@@ -31,9 +34,9 @@ public class PathfinderCheckerPipes extends Pathfinder
 					Vector3 position = currentNode.clone().modifyPositionFromSide(direction);
 					TileEntity connectedBlock = position.getTileEntity(world);
 
-					if (connectedBlock instanceof IFluidNetworkPart && !Arrays.asList(ignoreConnector).contains(connectedBlock))
+					if (connectedBlock instanceof INetworkPipe && !Arrays.asList(splitPoint).contains(connectedBlock))
 					{
-						if (((IFluidNetworkPart) connectedBlock).canPipeConnect(connectedBlock, direction.getOpposite()))
+						if (((INetworkPipe) connectedBlock).canTileConnect(connectedBlock, direction.getOpposite()))
 						{
 							neighbors.add(position);
 						}
@@ -46,7 +49,7 @@ public class PathfinderCheckerPipes extends Pathfinder
 			@Override
 			public boolean onSearch(Pathfinder finder, Vector3 node)
 			{
-				if (node.getTileEntity(world) == targetConnector)
+				if (node.getTileEntity(world) == connectedBlockB)
 				{
 					finder.results.add(node);
 					return true;
