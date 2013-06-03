@@ -5,10 +5,10 @@ import hydraulic.api.IColorCoded;
 import hydraulic.api.INetworkFluidPart;
 import hydraulic.api.INetworkPipe;
 import hydraulic.api.IReadOut;
+import hydraulic.network.ContainerNetwork;
 import hydraulic.network.FluidNetwork;
 import hydraulic.network.TileNetwork;
 import hydraulic.prefab.tile.TileEntityFluidDevice;
-import hydraulic.prefab.tile.TileEntityFluidStorage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -39,11 +39,11 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 	/* CURRENTLY CONNECTED TILE ENTITIES TO THIS */
 	private TileEntity[] connectedBlocks = new TileEntity[6];
 	public int[] renderConnection = new int[6];
-	
+
 	private LiquidTank tank = new LiquidTank(this.getTankSize());
-	
+
 	/* NETWORK INSTANCE THAT THIS PIPE USES */
-	private FluidNetwork fluidNetwork;
+	private ContainerNetwork fluidNetwork;
 
 	@Override
 	public void initiate()
@@ -83,6 +83,7 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 			int id = dataStream.readInt();
 			if (id == 0)
 			{
+				this.tank.setLiquid(new LiquidStack(dataStream.readInt(), dataStream.readInt(), dataStream.readInt()));
 				this.renderConnection[0] = dataStream.readInt();
 				this.renderConnection[1] = dataStream.readInt();
 				this.renderConnection[2] = dataStream.readInt();
@@ -96,7 +97,12 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return PacketManager.getPacket(FluidMech.CHANNEL, this, 0, this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
+		LiquidStack stack = new LiquidStack(0, 0, 0);
+		if (this.getTank().getLiquid() != null)
+		{
+			stack = this.getTank().getLiquid();
+		}
+		return PacketManager.getPacket(FluidMech.CHANNEL, this, 0, stack.itemID, stack.amount, stack.itemMeta, this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
 	}
 
 	/**
@@ -131,7 +137,7 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 
 		if (testNetwork)
 		{
-			string += "|NetID>" + this.getTileNetwork().toString();
+			string += "\nNetID>" + this.getTileNetwork().toString();
 		}
 
 		return string;
@@ -146,11 +152,11 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 	@Override
 	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
 	{
-		if (tankIndex != 0 || resource == null || !this.getColor().isValidLiquid(resource))
+		if (tankIndex != 0 || resource == null || !this.getColor().isValidLiquid(resource) || this.worldObj.isRemote)
 		{
 			return 0;
 		}
-		return ((FluidNetwork) this.getTileNetwork()).storeFluidInSystem(resource, doFill);
+		return ((ContainerNetwork) this.getTileNetwork()).storeFluidInSystem(resource, doFill);
 	}
 
 	@Override
@@ -162,7 +168,11 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 	@Override
 	public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
 	{
-		return ((FluidNetwork) this.getTileNetwork()).drainFluidFromSystem(maxDrain, doDrain);
+		if (tankIndex != 0 || this.worldObj.isRemote)
+		{
+			return null;
+		}
+		return ((ContainerNetwork) this.getTileNetwork()).drainFluidFromSystem(maxDrain, doDrain);
 	}
 
 	@Override
@@ -243,7 +253,7 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 	{
 		if (this.fluidNetwork == null)
 		{
-			this.setTileNetwork(new FluidNetwork(this.getColor(), this));
+			this.setTileNetwork(new ContainerNetwork(this.getColor(), this));
 		}
 		return this.fluidNetwork;
 	}
@@ -251,9 +261,9 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 	@Override
 	public void setTileNetwork(TileNetwork network)
 	{
-		if (network instanceof FluidNetwork)
+		if (network instanceof ContainerNetwork)
 		{
-			this.fluidNetwork = ((FluidNetwork) network);
+			this.fluidNetwork = ((ContainerNetwork) network);
 		}
 	}
 

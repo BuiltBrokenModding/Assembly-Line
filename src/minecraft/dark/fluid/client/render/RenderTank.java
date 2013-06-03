@@ -33,7 +33,7 @@ public class RenderTank extends TileEntitySpecialRenderer
 		int pos = 0;
 		if (stack != null)
 		{
-			pos = Math.min((stack.amount / LiquidContainerRegistry.BUCKET_VOLUME), 4);
+			pos = Math.min(((stack.amount / LiquidContainerRegistry.BUCKET_VOLUME) / 2), 4);
 			if (meta == ColorCode.NONE.ordinal())
 			{
 				guageMeta = ColorCode.get(stack).ordinal();

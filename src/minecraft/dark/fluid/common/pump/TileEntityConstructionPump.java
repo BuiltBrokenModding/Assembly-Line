@@ -76,7 +76,7 @@ public class TileEntityConstructionPump extends TileEntityRunnableMachine implem
 				{
 					if (outputTile instanceof ITankContainer)
 					{
-						for (ITankContainer tank : ((FluidNetwork) ((INetworkPipe) inputTile).getTileNetwork()).fluidTanks)
+						for (ITankContainer tank : ((FluidNetwork) ((INetworkPipe) inputTile).getTileNetwork()).connectedTanks)
 						{
 							if (tank instanceof TileEntityDrain)
 							{

@@ -1,6 +1,7 @@
 package dark.fluid.common.machines;
 
 import hydraulic.api.FluidRestrictionHandler;
+import hydraulic.api.INetworkPart;
 import hydraulic.api.INetworkPipe;
 import hydraulic.helpers.FluidHelper;
 
@@ -175,9 +176,9 @@ public class BlockTank extends BlockAdvanced
 
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tileEntity instanceof INetworkPipe)
+		if (tileEntity instanceof INetworkPart)
 		{
-			((INetworkPipe) tileEntity).updateNetworkConnections();
+			((INetworkPart) tileEntity).updateNetworkConnections();
 		}
 	}
 
@@ -186,9 +187,9 @@ public class BlockTank extends BlockAdvanced
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tileEntity instanceof INetworkPipe)
+		if (tileEntity instanceof INetworkPart)
 		{
-			((INetworkPipe) tileEntity).updateNetworkConnections();
+			((INetworkPart) tileEntity).updateNetworkConnections();
 		}
 	}
 }
