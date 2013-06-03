@@ -30,7 +30,7 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void preInit()
 	{
-		
+
 	}
 
 	@Override
@@ -41,15 +41,15 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityStarterPump.class, new RenderPump());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRod.class, new RenderGearRod());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGenerator.class, new RenderGenerator());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTank.class, new RenderTank());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityReleaseValve.class, new RenderReleaseValve());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySink.class, new RenderSink());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConstructionPump.class, new RenderConstructionPump());
-		
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTank.class, new RenderTank());
+
 		MinecraftForgeClient.registerItemRenderer(FluidMech.blockPipe.blockID, new ItemRenderHelper());
 		MinecraftForgeClient.registerItemRenderer(FluidMech.blockGenPipe.blockID, new ItemRenderHelper());
 		MinecraftForgeClient.registerItemRenderer(FluidMech.blockReleaseValve.blockID, new ItemRenderHelper());
-		
+
 		RenderingRegistry.registerBlockHandler(new BlockRenderHelper());
 	}
 

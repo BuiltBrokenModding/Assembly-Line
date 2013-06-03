@@ -1,152 +1,75 @@
 package dark.fluid.client.render;
 
 import hydraulic.api.ColorCode;
+import hydraulic.helpers.LiquidRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
+import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.LiquidStack;
 
 import org.lwjgl.opengl.GL11;
 
-import dark.fluid.client.model.ModelLiquidTank;
-import dark.fluid.client.model.ModelLiquidTankCorner;
+import dark.fluid.client.model.ModelTankSide;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.machines.TileEntityTank;
-import dark.library.helpers.ConnectionHelper;
 
 public class RenderTank extends TileEntitySpecialRenderer
 {
-	private ModelLiquidTank model;
-	private ModelLiquidTankCorner modelC;
+	private ModelTankSide model;
 
 	public RenderTank()
 	{
-		model = new ModelLiquidTank();
-		modelC = new ModelLiquidTankCorner();
-	}
-
-	public void renderAModelAt(TileEntityTank te, double d, double d1, double d2, float f)
-	{
-		int meta = te.getBlockMetadata();
-		int guageMeta = meta;
-		LiquidStack stack = te.getTank().getLiquid();
-		int pos = 0;
-		if (stack != null)
-		{
-			pos = Math.min(((stack.amount / LiquidContainerRegistry.BUCKET_VOLUME) / 2), 4);
-			if (meta == ColorCode.NONE.ordinal())
-			{
-				guageMeta = ColorCode.get(stack).ordinal();
-			}
-		}
-
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
-		GL11.glScalef(1.0F, -1F, -1F);
-
-		if (ConnectionHelper.corner(te) > 0)
-		{
-			bindTextureByName(this.getCornerTexture(meta));
-			int corner = ConnectionHelper.corner(te);
-			switch (corner)
-			{
-				case 2:
-					GL11.glRotatef(270f, 0f, 1f, 0f);
-					break;
-				case 3:
-					GL11.glRotatef(0f, 0f, 1f, 0f);
-					break;
-				case 4:
-					GL11.glRotatef(90f, 0f, 1f, 0f);
-					break;
-				case 1:
-					GL11.glRotatef(180f, 0f, 1f, 0f);
-					break;
-			}
-			modelC.render(0.0625F);
-		}
-		else
-		{
-			bindTextureByName(this.getTankTexture(meta));
-			model.renderMain(0.0625F);
-			bindTextureByName(this.getGuageTexture(guageMeta, pos));
-			model.renderMeter(te, 0.0625F);
-		}
-		GL11.glPopMatrix();
-
-	}
-
-	public static String getTankTexture(int meta)
-	{
-		String type = "";
-		switch (ColorCode.get(meta))
-		{
-			case RED:
-				type = "Lava";
-				break;
-			case BLUE:
-				type = "Water";
-				break;
-			case WHITE:
-				type = "Milk";
-				break;
-			case ORANGE:
-				type = "Steam";
-				break;
-			default:
-				type = "";
-				break;
-		}
-
-		return FluidMech.MODEL_TEXTURE_DIRECTORY + "tanks/" + type + "Tank.png";
-
-	}
-
-	public static String getGuageTexture(int meta, int pos)
-	{
-		String type = "";
-		switch (ColorCode.get(meta))
-		{
-			case RED:
-				type = "Lava";
-				break;
-			case YELLOW:
-				type = "Fuel";
-				break;
-			default:
-				type = "";
-				break;
-		}
-
-		return FluidMech.MODEL_TEXTURE_DIRECTORY + "tanks/guage/" + pos + type + ".png";
-	}
-
-	public static String getCornerTexture(int meta)
-	{
-		String type = "";
-		switch (ColorCode.get(meta))
-		{
-			case RED:
-				type = "Lava";
-				break;
-			case BLUE:
-				type = "Water";
-				break;
-			case WHITE:
-				type = "Milk";
-				break;
-			default:
-				type = "";
-				break;
-		}
-		return FluidMech.MODEL_TEXTURE_DIRECTORY + "tanks/Corner" + type + ".png";
-
+		model = new ModelTankSide();
 	}
 
 	@Override
-	public void renderTileEntityAt(TileEntity tileEntity, double var2, double var4, double var6, float var8)
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)
 	{
-		this.renderAModelAt((TileEntityTank) tileEntity, var2, var4, var6, var8);
-	}
+		if (tileEntity instanceof TileEntityTank)
+		{
+			TileEntityTank tileEntityTank = ((TileEntityTank) tileEntity);
+			ILiquidTank tank = tileEntityTank.getTank();
+			LiquidStack liquid = tank.getLiquid();
 
+			ColorCode color = tileEntityTank.getColor();
+
+			GL11.glPushMatrix();
+			bindTextureByName(FluidMech.MODEL_TEXTURE_DIRECTORY + "TankSide.png");
+
+			GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 5F);
+			GL11.glScalef(1.0F, -1F, -1F);
+			model.render(0.0625F, false, false, false, false);
+			GL11.glRotatef(90f, 0f, 1f, 0f);
+			model.render(0.0625F, false, false, false, false);
+			GL11.glRotatef(180f, 0f, 1f, 0f);
+			model.render(0.0625F, false, false, false, false);
+			GL11.glRotatef(270f, 0f, 1f, 0f);
+			model.render(0.0625F, false, false, false, false);
+			
+			if (liquid != null && liquid.amount > 0)
+			{
+
+				int[] displayList = LiquidRenderer.getLiquidDisplayLists(liquid, tileEntity.worldObj, false);
+				if (displayList != null)
+				{
+					GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+					GL11.glEnable(GL11.GL_CULL_FACE);
+					GL11.glDisable(GL11.GL_LIGHTING);
+					GL11.glEnable(GL11.GL_BLEND);
+					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+					bindTextureByName(LiquidRenderer.getLiquidSheet(liquid));
+
+					// GL11.glTranslatef((float) -0.475F, (float) -1.5F, (float) -0.475F);
+					GL11.glScalef(0.6F, 0.999F, 0.6F);
+
+					GL11.glCallList(displayList[(int) ((float) liquid.amount / (float) (tank.getCapacity()) * (LiquidRenderer.DISPLAY_STAGES - 1))]);
+
+					GL11.glPopAttrib();
+
+				}
+			}
+
+			GL11.glPopMatrix();
+		}
+	}
 }
