@@ -53,7 +53,7 @@ public class PipeNetwork extends FluidNetwork
 	{
 		if (tileEntity != null && fluidPack.liquidStack != null)
 		{
-			if ((this.combinedStorage.getLiquid() == null || fluidPack.liquidStack.isLiquidEqual(this.combinedStorage.getLiquid())) && fluidPack.liquidStack.amount > 0)
+			if ((this.combinedStorage().getLiquid() == null || fluidPack.liquidStack.isLiquidEqual(this.combinedStorage().getLiquid())) && fluidPack.liquidStack.amount > 0)
 			{
 				this.pressureProducers.put(tileEntity, fluidPack);
 			}
@@ -196,15 +196,19 @@ public class PipeNetwork extends FluidNetwork
 	 * @param allowStore - allows the network to store this liquid in the pipes
 	 * @return the amount of liquid consumed from the init stack
 	 */
-	public int addFluidToNetwork(TileEntity source, LiquidStack stack, boolean doFill, boolean allowStore)
+	public int addFluidToNetwork(TileEntity source, LiquidStack sta, boolean doFill, boolean allowStore)
 	{
 		int used = 0;
-		LiquidStack prevCombined = this.combinedStorage.getLiquid();
+		LiquidStack prevCombined = this.combinedStorage().getLiquid();
+		LiquidStack stack = sta.copy();
+
 		if (!this.processingRequest && stack != null && color.isValidLiquid(stack))
 		{
-			if (this.combinedStorage.getLiquid() != null && !stack.isLiquidEqual(this.combinedStorage.getLiquid()))
+			this.processingRequest = true;
+
+			if (this.combinedStorage().getLiquid() != null && !stack.isLiquidEqual(this.combinedStorage().getLiquid()))
 			{
-				// TODO cause mixing
+				this.causingMixing(null,this.combinedStorage().getLiquid(), stack);
 			}
 			if (stack.amount > this.getMaxFlow(stack))
 			{
@@ -269,6 +273,7 @@ public class PipeNetwork extends FluidNetwork
 					break;
 				}
 			}// End of tank finder
+
 			boolean filledMain = false;
 			if (primaryFill != null)
 			{
@@ -280,34 +285,35 @@ public class PipeNetwork extends FluidNetwork
 				used = secondayFill.fill(fillDir, stack, doFill);
 				// System.out.println("Seconday Target " + used + doFill);
 			}
-			else if (allowStore && (this.combinedStorage.getLiquid() == null || this.combinedStorage.getLiquid().amount < this.combinedStorage.getCapacity()))
+			else if (allowStore)
 			{
-				used = this.combinedStorage.fill(stack, doFill);
+				used = this.storeFluidInSystem(stack, doFill);
 				// System.out.println("Network Target filled for " + used + doFill);
 				filledMain = true;
 			}
+
 			/* IF THE COMBINED STORAGE OF THE PIPES HAS LIQUID MOVE IT FIRST */
-			if (!filledMain && used > 0 && this.combinedStorage.getLiquid() != null && this.combinedStorage.getLiquid().amount > 0)
+			if (!filledMain && used > 0 && this.combinedStorage().getLiquid() != null && this.combinedStorage().getLiquid().amount > 0)
 			{
 
 				LiquidStack drainStack = new LiquidStack(0, 0, 0);
-				if (this.combinedStorage.getLiquid().amount >= used)
+				if (this.combinedStorage().getLiquid().amount >= used)
 				{
-					drainStack = this.combinedStorage.drain(used, doFill);
+					drainStack = this.combinedStorage().drain(used, doFill);
 					used = 0;
 				}
 				else
 				{
 					int pUsed = used;
-					used = Math.min(used, Math.max(used - this.combinedStorage.getLiquid().amount, 0));
-					drainStack = this.combinedStorage.drain(pUsed - used, doFill);
+					used = Math.min(used, Math.max(used - this.combinedStorage().getLiquid().amount, 0));
+					drainStack = this.combinedStorage().drain(pUsed - used, doFill);
 				}
 				// System.out.println("Pulling " + (drainStack != null ? drainStack.amount : 0) +
 				// " from combined leaving " + (this.combinedStorage.getLiquid() != null ?
 				// this.combinedStorage.getLiquid().amount : 0));
 
 			}
-			if (prevCombined != null && this.combinedStorage.getLiquid() != null && prevCombined.amount != this.combinedStorage.getLiquid().amount)
+			if (prevCombined != null && this.combinedStorage().getLiquid() != null && prevCombined.amount != this.combinedStorage().getLiquid().amount)
 			{
 				this.balanceColletiveTank(false);
 			}
@@ -317,9 +323,7 @@ public class PipeNetwork extends FluidNetwork
 	}
 
 	/**
-	 * gets the flow rate of the network by getting the pipe with the lowest flow rate.
-	 * 
-	 * @return units of liquid per tick, default 20B/s
+	 * Gets the flow rate of the system using the lowest flow rate
 	 */
 	public int getMaxFlow(LiquidStack stack)
 	{
@@ -338,6 +342,9 @@ public class PipeNetwork extends FluidNetwork
 		return flow;
 	}
 
+	/**
+	 * Updates after the pressure has changed a good bit
+	 */
 	public void onPresureChange()
 	{
 		this.cleanUpConductors();

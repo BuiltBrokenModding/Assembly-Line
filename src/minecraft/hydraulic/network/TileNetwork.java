@@ -7,11 +7,10 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import universalelectricity.core.path.Pathfinder;
-import universalelectricity.core.vector.Vector3;
-
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import universalelectricity.core.path.Pathfinder;
+import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.common.FMLLog;
 
 public class TileNetwork
@@ -138,12 +137,13 @@ public class TileNetwork
 	 * Combines two networks together into one
 	 * 
 	 * @param network
+	 * @param part
 	 */
-	public void merge(TileNetwork network)
+	public void merge(TileNetwork network, INetworkPart part)
 	{
 		if (network != null && network != this && network.getClass().equals(this.getClass()))
 		{
-			if (this.preMergeProcessing(network))
+			if (this.preMergeProcessing(network, part))
 			{
 				this.postMergeProcessing(network);
 			}
@@ -155,7 +155,7 @@ public class TileNetwork
 	 * 
 	 * @return false if the merge needs to be canceled
 	 */
-	public boolean preMergeProcessing(TileNetwork network)
+	public boolean preMergeProcessing(TileNetwork network, INetworkPart part)
 	{
 		return true;
 	}
