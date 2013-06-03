@@ -130,7 +130,7 @@ public class FluidMech extends DummyModContainer
 	public static Item itemParts;
 	public static Item itemGauge;
 
-	@SidedProxy(clientSide = "fluidmech.client.ClientProxy", serverSide = "fluidmech.common.CommonProxy")
+	@SidedProxy(clientSide = "dark.fluid.client.ClientProxy", serverSide = "dark.fluid.common.CommonProxy")
 	public static CommonProxy proxy;
 
 	@Instance(FluidMech.MOD_NAME)

@@ -1,6 +1,7 @@
 package dark.fluid.common.machines;
 
 import hydraulic.api.FluidRestrictionHandler;
+import hydraulic.api.INetworkPipe;
 import hydraulic.helpers.FluidHelper;
 
 import java.util.List;
@@ -97,7 +98,7 @@ public class BlockTank extends BlockAdvanced
 				else
 				{
 
-					LiquidStack stack = tank.getStoredLiquid();
+					LiquidStack stack = tank.getTank().getLiquid();
 					if (stack != null)
 					{
 						ItemStack liquidItem = LiquidContainerRegistry.fillLiquidContainer(stack, current);
@@ -164,6 +165,30 @@ public class BlockTank extends BlockAdvanced
 			{
 				par3List.add(new ItemStack(par1, 1, i));
 			}
+		}
+	}
+
+	@Override
+	public void onBlockAdded(World world, int x, int y, int z)
+	{
+		super.onBlockAdded(world, x, y, z);
+
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+		if (tileEntity instanceof INetworkPipe)
+		{
+			((INetworkPipe) tileEntity).updateNetworkConnections();
+		}
+	}
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
+	{
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+		if (tileEntity instanceof INetworkPipe)
+		{
+			((INetworkPipe) tileEntity).updateNetworkConnections();
 		}
 	}
 }

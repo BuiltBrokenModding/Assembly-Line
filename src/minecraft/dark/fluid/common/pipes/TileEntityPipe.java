@@ -201,7 +201,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		LiquidStack liquid = LiquidStack.loadLiquidStackFromNBT(nbt.getCompoundTag("tank"));
+		LiquidStack liquid = LiquidStack.loadLiquidStackFromNBT(nbt.getCompoundTag("stored"));
 		if (liquid != null)
 		{
 			this.fakeTank.setLiquid(liquid);
@@ -356,7 +356,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		boolean testSubs = false;
 
 		/* NORMAL OUTPUT */
-		String string = ((PipeNetwork)this.getTileNetwork()).pressureProduced + "p " + ((PipeNetwork)this.getTileNetwork()).getNetworkFluid() + " Extra";
+		String string = ((PipeNetwork) this.getTileNetwork()).pressureProduced + "p " + ((PipeNetwork) this.getTileNetwork()).getNetworkFluid() + " Extra";
 
 		/* DEBUG CODE */
 		if (testConnections)
@@ -398,7 +398,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 			return 0;
 		}
 		TileEntity tile = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), from);
-		return ((PipeNetwork)this.getTileNetwork()).addFluidToNetwork(tile, resource, doFill);
+		return ((PipeNetwork) this.getTileNetwork()).addFluidToNetwork(tile, resource, doFill);
 	}
 
 	@Override
@@ -408,7 +408,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		{
 			return 0;
 		}
-		return ((PipeNetwork)this.getTileNetwork()).addFluidToNetwork(this, resource, doFill);
+		return ((PipeNetwork) this.getTileNetwork()).addFluidToNetwork(this, resource, doFill);
 	}
 
 	@Override
@@ -462,7 +462,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 					{
 						if (((INetworkPipe) tileEntity).getColor() == this.getColor())
 						{
-							this.getTileNetwork().merge(((INetworkPipe) tileEntity).getTileNetwork());
+							this.getTileNetwork().merge(((INetworkPipe) tileEntity).getTileNetwork(), this);
 							connectedBlocks[side.ordinal()] = tileEntity;
 						}
 					}
@@ -513,7 +513,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 					LiquidStack stack = tankContainer.drain(dir, LiquidContainerRegistry.BUCKET_VOLUME, false);
 					if (stack != null && stack.amount > 0)
 					{
-						int fill = ((PipeNetwork)this.getTileNetwork()).addFluidToNetwork((TileEntity) tankContainer, stack, true);
+						int fill = ((PipeNetwork) this.getTileNetwork()).addFluidToNetwork((TileEntity) tankContainer, stack, true);
 						tankContainer.drain(dir, fill, true);
 					}
 				}
@@ -598,7 +598,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	@Override
 	public void setTankContent(LiquidStack stack)
 	{
-		if(this.fakeTank == null)
+		if (this.fakeTank == null)
 		{
 			this.fakeTank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
 		}
