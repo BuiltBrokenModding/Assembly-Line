@@ -30,7 +30,7 @@ public class FluidNetwork extends TileNetwork
 	public LiquidTank sharedTank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
 
 	public ColorCode color = ColorCode.NONE;
-	private boolean loadedLiquids = false;
+	protected boolean loadedLiquids = false;
 
 	public FluidNetwork(ColorCode color, INetworkPart... parts)
 	{

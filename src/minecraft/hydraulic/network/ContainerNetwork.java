@@ -1,6 +1,12 @@
 package hydraulic.network;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import universalelectricity.core.vector.Vector2;
+import universalelectricity.core.vector.Vector3;
 import hydraulic.api.ColorCode;
+import hydraulic.api.INetworkFluidPart;
 import hydraulic.api.INetworkPart;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.liquids.LiquidStack;
@@ -25,7 +31,76 @@ public class ContainerNetwork extends FluidNetwork
 	// TODO change this to place liquids at the bottom first
 	public void balanceColletiveTank(boolean sumParts)
 	{
-		super.balanceColletiveTank(sumParts);
+		int volume = 0, itemID = 0, itemMeta = 0;
+
+		if (sumParts)
+		{
+			for (INetworkPart par : this.networkMember)
+			{
+				if (par instanceof INetworkFluidPart)
+				{
+					INetworkFluidPart part = ((INetworkFluidPart) par);
+					if (part.getTank() != null && part.getTank().getLiquid() != null)
+					{
+						if (itemID == 0)
+						{
+							itemID = part.getTank().getLiquid().itemID;
+							itemMeta = part.getTank().getLiquid().itemMeta;
+						}
+						volume += part.getTank().getLiquid().amount;
+					}
+				}
+			}
+			this.combinedStorage().setLiquid(new LiquidStack(itemID, volume, itemMeta));
+			this.loadedLiquids = true;
+		}
+		if (this.combinedStorage().getLiquid() != null && this.getNetworkMemebers().size() > 0)
+		{
+			this.cleanUpConductors();
+
+			int lowestY = 255;
+			int highestY = 0;
+			for (INetworkPart part : this.getNetworkMemebers())
+			{
+				if (part instanceof TileEntity && ((TileEntity) part).yCoord < lowestY)
+				{
+					lowestY = ((TileEntity) part).yCoord;
+				}
+				if (part instanceof TileEntity && ((TileEntity) part).yCoord > highestY)
+				{
+					highestY = ((TileEntity) part).yCoord;
+				}
+			}
+			itemID = this.combinedStorage().getLiquid().itemID;
+			itemMeta = this.combinedStorage().getLiquid().itemMeta;
+			volume = this.combinedStorage().getLiquid().amount;
+
+			for (int y = lowestY; y <= highestY; y++)
+			{
+				List<INetworkFluidPart> parts = new ArrayList<INetworkFluidPart>();
+				for (INetworkPart part : this.getNetworkMemebers())
+				{
+					if (part instanceof INetworkFluidPart && ((TileEntity) part).yCoord == y)
+					{
+						parts.add((INetworkFluidPart) part);
+					}
+				}
+				int fillvolume = volume / parts.size();
+
+				for (INetworkFluidPart part : parts)
+				{
+					part.setTankContent(null);
+					int fill = Math.min(fillvolume, part.getTank().getCapacity());
+					part.setTankContent(new LiquidStack(itemID, fill, itemMeta));
+					volume -= fill;
+				}
+				if (volume <= 0)
+				{
+					break;
+				}
+			}
+		}
+
 	}
 
 	@Override
