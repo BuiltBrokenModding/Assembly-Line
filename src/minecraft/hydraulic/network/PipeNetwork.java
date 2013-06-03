@@ -228,7 +228,7 @@ public class PipeNetwork extends FluidNetwork
 			boolean found = false;
 
 			/* FIND THE FILL TARGET FROM THE LIST OF FLUID RECIEVERS */
-			for (ITankContainer tankContainer : fluidTanks)
+			for (ITankContainer tankContainer : connectedTanks)
 			{
 				if (tankContainer instanceof TileEntity && tankContainer != source && !(tankContainer instanceof INetworkPipe))
 				{

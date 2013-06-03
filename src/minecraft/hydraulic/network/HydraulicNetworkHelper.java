@@ -28,7 +28,7 @@ public class HydraulicNetworkHelper
 				if (network != null && network instanceof FluidNetwork)
 				{
 					network.removeEntity(tileEntity);
-					for (ITankContainer tank : ((FluidNetwork) network).fluidTanks)
+					for (ITankContainer tank : ((FluidNetwork) network).connectedTanks)
 					{
 						if (tank instanceof IDrain)
 						{

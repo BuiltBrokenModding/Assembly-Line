@@ -23,13 +23,14 @@ import cpw.mods.fml.common.FMLLog;
 
 public class FluidNetwork extends TileNetwork
 {
-	/* MACHINES THAT USE THE FORGE LIQUID API TO RECEIVE LIQUID ** */
-	public final List<ITankContainer> fluidTanks = new ArrayList<ITankContainer>();
+	/* MACHINES THAT ARE FLUID BASED AND CONNECTED BUT NOT PART OF THE NETWORK ** */
+	public final List<ITankContainer> connectedTanks = new ArrayList<ITankContainer>();
 
 	/* COMBINED TEMP STORAGE FOR ALL PIPES IN THE NETWORK */
 	public LiquidTank sharedTank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
 
 	public ColorCode color = ColorCode.NONE;
+	private boolean loadedLiquids = false;
 
 	public FluidNetwork(ColorCode color, INetworkPart... parts)
 	{
@@ -42,7 +43,7 @@ public class FluidNetwork extends TileNetwork
 		if (this.sharedTank == null)
 		{
 			this.sharedTank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
-			this.cleanUpConductors();
+			this.balanceColletiveTank(true);
 		}
 		return this.sharedTank;
 	}
@@ -52,9 +53,13 @@ public class FluidNetwork extends TileNetwork
 	 */
 	public int storeFluidInSystem(LiquidStack stack, boolean doFill)
 	{
-		if (stack == null || (this.combinedStorage() != null && this.combinedStorage().getLiquid() != null && !this.combinedStorage().getLiquid().isLiquidEqual(stack)))
+		if (stack == null || this.combinedStorage().containsValidLiquid() && (this.combinedStorage().getLiquid() != null && !this.combinedStorage().getLiquid().isLiquidEqual(stack)))
 		{
 			return 0;
+		}
+		if (!loadedLiquids)
+		{
+			this.balanceColletiveTank(true);
 		}
 		if (this.combinedStorage().getLiquid() == null || this.combinedStorage().getLiquid().amount < this.combinedStorage().getCapacity())
 		{
@@ -73,6 +78,10 @@ public class FluidNetwork extends TileNetwork
 	 */
 	public LiquidStack drainFluidFromSystem(int maxDrain, boolean doDrain)
 	{
+		if (!loadedLiquids)
+		{
+			this.balanceColletiveTank(true);
+		}
 		LiquidStack stack = this.combinedStorage().getLiquid();
 		if (stack != null)
 		{
@@ -119,6 +128,7 @@ public class FluidNetwork extends TileNetwork
 				}
 			}
 			this.combinedStorage().setLiquid(new LiquidStack(itemID, volume, itemMeta));
+			this.loadedLiquids = true;
 		}
 
 		if (this.combinedStorage().getLiquid() != null && this.networkMember.size() > 0)
@@ -143,15 +153,15 @@ public class FluidNetwork extends TileNetwork
 	public void removeEntity(TileEntity ent)
 	{
 		super.removeEntity(ent);
-		this.fluidTanks.remove(ent);
+		this.connectedTanks.remove(ent);
 	}
 
 	@Override
 	public boolean addEntity(TileEntity ent, boolean member)
 	{
-		if (!(super.addEntity(ent, member)) && ent instanceof ITankContainer && !fluidTanks.contains(ent))
+		if (!(super.addEntity(ent, member)) && ent instanceof ITankContainer && !connectedTanks.contains(ent))
 		{
-			fluidTanks.add((ITankContainer) ent);
+			connectedTanks.add((ITankContainer) ent);
 			return true;
 		}
 		return false;
@@ -162,12 +172,12 @@ public class FluidNetwork extends TileNetwork
 	 */
 	public boolean isConnected(TileEntity tileEntity)
 	{
-		return this.fluidTanks.contains(tileEntity);
+		return this.connectedTanks.contains(tileEntity);
 	}
 
 	public boolean isPartOfNetwork(TileEntity ent)
 	{
-		return super.isPartOfNetwork(ent) || this.fluidTanks.contains(ent);
+		return super.isPartOfNetwork(ent) || this.connectedTanks.contains(ent);
 	}
 
 	public void causingMixing(INetworkPart Fluid, LiquidStack stack, LiquidStack stack2)
@@ -252,31 +262,24 @@ public class FluidNetwork extends TileNetwork
 		if (net instanceof FluidNetwork && ((FluidNetwork) net).color == this.color)
 		{
 			FluidNetwork network = (FluidNetwork) net;
-			if (this.combinedStorage().getLiquid() != null && network.combinedStorage().getLiquid() != null && !this.combinedStorage().getLiquid().isLiquidEqual(network.combinedStorage().getLiquid()))
+
+			this.balanceColletiveTank(true);
+			network.balanceColletiveTank(true);
+
+			LiquidStack stack = new LiquidStack(0, 0, 0);
+
+			if (this.combinedStorage().getLiquid() != null && network.combinedStorage().getLiquid() != null && this.combinedStorage().getLiquid().isLiquidEqual(network.combinedStorage().getLiquid()))
 			{
-				this.causingMixing(part instanceof INetworkFluidPart ? ((INetworkFluidPart) part) : null, this.combinedStorage().getLiquid(), network.combinedStorage().getLiquid());
+				stack = this.combinedStorage().getLiquid();
+				stack.amount += network.combinedStorage().getLiquid().amount;
 			}
-			else
+			else if (this.combinedStorage().getLiquid() == null && network.combinedStorage().getLiquid() != null)
 			{
-				this.balanceColletiveTank(false);
-				network.balanceColletiveTank(false);
-
-				LiquidStack stack = new LiquidStack(0, 0, 0);
-
-				if (this.combinedStorage().getLiquid() != null && network.combinedStorage().getLiquid() != null && this.combinedStorage().getLiquid().isLiquidEqual(network.combinedStorage().getLiquid()))
-				{
-					stack = this.combinedStorage().getLiquid();
-					stack.amount += network.combinedStorage().getLiquid().amount;
-				}
-				else if (this.combinedStorage().getLiquid() == null && network.combinedStorage().getLiquid() != null)
-				{
-					stack = network.combinedStorage().getLiquid();
-				}
-				else if (this.combinedStorage().getLiquid() != null && network.combinedStorage().getLiquid() == null)
-				{
-					stack = this.combinedStorage().getLiquid();
-				}
-
+				stack = network.combinedStorage().getLiquid();
+			}
+			else if (this.combinedStorage().getLiquid() != null && network.combinedStorage().getLiquid() == null)
+			{
+				stack = this.combinedStorage().getLiquid();
 			}
 			return true;
 		}
@@ -297,6 +300,10 @@ public class FluidNetwork extends TileNetwork
 	@Override
 	public void cleanUpConductors()
 	{
+		if (!loadedLiquids)
+		{
+			this.balanceColletiveTank(true);
+		}
 		Iterator<INetworkPart> it = this.networkMember.iterator();
 		int capacity = 0;
 		while (it.hasNext())
@@ -333,7 +340,7 @@ public class FluidNetwork extends TileNetwork
 	public String getNetworkFluid()
 	{
 		int cap = combinedStorage().getCapacity() / LiquidContainerRegistry.BUCKET_VOLUME;
-		int vol = combinedStorage().containsValidLiquid() ? (combinedStorage().getLiquid().amount / LiquidContainerRegistry.BUCKET_VOLUME) : 0;
+		int vol = combinedStorage().getLiquid() != null ? (combinedStorage().getLiquid().amount / LiquidContainerRegistry.BUCKET_VOLUME) : 0;
 		String name = LiquidDictionary.findLiquidName(this.combinedStorage().getLiquid()) != null ? LiquidDictionary.findLiquidName(this.combinedStorage().getLiquid()) : "Unkown";
 		return String.format("%d/%d %S Stored", vol, cap, name);
 	}
