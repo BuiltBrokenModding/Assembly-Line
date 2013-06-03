@@ -49,8 +49,7 @@ public class RenderTank extends TileEntitySpecialRenderer
 
 					GL11.glTranslatef((float) x + 0.025F, (float) y, (float) z + 0.025F);
 					GL11.glScalef(0.87F, 0.999F, 0.87F);
-
-					GL11.glCallList(displayList[(int) ((float) liquid.amount / (float) (tank.getCapacity()) * (LiquidRenderer.DISPLAY_STAGES - 1))]);
+					GL11.glCallList(displayList[(int) ((float) Math.min(liquid.amount, tank.getCapacity()) / (float) (tank.getCapacity()) * (LiquidRenderer.DISPLAY_STAGES - 1))]);
 
 					GL11.glPopAttrib();
 					GL11.glPopMatrix();
@@ -59,7 +58,7 @@ public class RenderTank extends TileEntitySpecialRenderer
 			}
 			bindTextureByName(FluidMech.MODEL_TEXTURE_DIRECTORY + "TankSide.png");
 			GL11.glPushMatrix();
-			
+
 			GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 			GL11.glScalef(1.0F, -1F, -1F);
 
