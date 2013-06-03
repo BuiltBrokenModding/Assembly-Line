@@ -1,4 +1,4 @@
-package dark.fluid.common.machines.pipes;
+package dark.fluid.common.pipes.addon;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
@@ -8,6 +8,8 @@ import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
+
+import dark.fluid.common.pipes.TileEntityPipe;
 
 /**
  * Pipe Extension for the TileEntityPipe.class is a sub TileEntity and is not loaded the same way as

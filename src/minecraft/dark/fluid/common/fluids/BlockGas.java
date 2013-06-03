@@ -1,4 +1,4 @@
-package dark.fluid.common.machines.liquids;
+package dark.fluid.common.fluids;
 
 import java.util.Random;
 

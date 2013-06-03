@@ -1,4 +1,4 @@
-package dark.fluid.common.telepipe;
+package dark.fluid.common.pipes.tele;
 
 import hydraulic.api.ColorCode;
 import hydraulic.fluidnetwork.HydraulicNetwork;

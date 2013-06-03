@@ -1,4 +1,4 @@
-package dark.fluid.common.machines.pipes;
+package dark.fluid.common.pipes;
 
 import hydraulic.api.ColorCode;
 import hydraulic.api.IColorCoded;
@@ -38,6 +38,7 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.fluid.common.FluidMech;
+import dark.fluid.common.pipes.addon.IPipeExtention;
 
 public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer, IReadOut, IColorCoded, IFluidNetworkPart, IPacketReceiver
 {

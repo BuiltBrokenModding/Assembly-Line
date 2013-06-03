@@ -10,7 +10,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 import dark.fluid.client.model.ModelLargePipe;
 import dark.fluid.client.model.ModelLiquidTank;
 import dark.fluid.client.model.ModelReleaseValve;
-import dark.fluid.client.render.pipe.extentions.RenderPipe;
+import dark.fluid.client.render.pipe.RenderPipe;
 import dark.fluid.common.FluidMech;
 import dark.mech.client.model.ModelGearRod;
 import dark.mech.client.model.ModelGenerator;

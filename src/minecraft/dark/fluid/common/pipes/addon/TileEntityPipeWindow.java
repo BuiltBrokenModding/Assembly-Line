@@ -1,4 +1,4 @@
-package dark.fluid.common.machines.pipes;
+package dark.fluid.common.pipes.addon;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -8,7 +8,8 @@ import net.minecraftforge.liquids.LiquidStack;
 
 import com.google.common.io.ByteArrayDataInput;
 
-import dark.fluid.client.render.pipe.extentions.RenderPipeWindow;
+import dark.fluid.client.render.pipe.RenderPipeWindow;
+import dark.fluid.common.pipes.TileEntityPipe;
 
 
 public class TileEntityPipeWindow extends TileEntityPipeExtention

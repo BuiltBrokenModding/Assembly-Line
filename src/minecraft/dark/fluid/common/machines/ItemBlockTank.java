@@ -1,4 +1,4 @@
-package dark.fluid.common.item;
+package dark.fluid.common.machines;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;

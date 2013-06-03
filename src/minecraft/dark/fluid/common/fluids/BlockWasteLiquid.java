@@ -1,4 +1,4 @@
-package dark.fluid.common.machines.liquids;
+package dark.fluid.common.fluids;
 
 import net.minecraft.block.BlockFluid;
 import net.minecraft.block.material.Material;

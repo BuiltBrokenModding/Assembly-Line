@@ -1,4 +1,4 @@
-package dark.fluid.common.item;
+package dark.fluid.common.pipes;
 
 import dark.fluid.common.FluidMech;
 import net.minecraft.block.Block;

@@ -1,7 +1,7 @@
-package dark.fluid.client.render.pipe.extentions;
+package dark.fluid.client.render.pipe;
 
 import dark.fluid.client.model.ModelLargePipe;
-import dark.fluid.common.machines.pipes.TileEntityPipe;
+import dark.fluid.common.pipes.TileEntityPipe;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 

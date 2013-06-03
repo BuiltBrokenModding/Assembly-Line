@@ -1,4 +1,4 @@
-package dark.fluid.client.render.pipe.extentions;
+package dark.fluid.client.render.pipe;
 
 import hydraulic.api.ColorCode;
 import hydraulic.api.FluidRestrictionHandler;
@@ -12,9 +12,9 @@ import org.lwjgl.opengl.GL11;
 
 import dark.fluid.client.model.ModelLargePipe;
 import dark.fluid.common.FluidMech;
-import dark.fluid.common.machines.pipes.IPipeExtention;
-import dark.fluid.common.machines.pipes.TileEntityGenericPipe;
-import dark.fluid.common.machines.pipes.TileEntityPipe;
+import dark.fluid.common.pipes.TileEntityGenericPipe;
+import dark.fluid.common.pipes.TileEntityPipe;
+import dark.fluid.common.pipes.addon.IPipeExtention;
 
 import universalelectricity.core.vector.Vector3;
 

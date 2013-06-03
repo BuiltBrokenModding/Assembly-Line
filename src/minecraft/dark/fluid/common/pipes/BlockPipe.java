@@ -1,4 +1,4 @@
-package dark.fluid.common.machines.pipes;
+package dark.fluid.common.pipes;
 
 import hydraulic.api.FluidRestrictionHandler;
 import hydraulic.fluidnetwork.IFluidNetworkPart;
