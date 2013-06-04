@@ -122,77 +122,79 @@ public class ModelTankSide extends ModelBase
 		setRotation(rightTopSide, 0F, 0F, 0F);
 	}
 
-	public void render(float f5, boolean left, boolean right, boolean bot, boolean top)
+	/**
+	 * 
+	 * @param size - render size normal is 0.0625F
+	 * @param left - is the an instance of this to the left
+	 * @param right - "" to the right
+	 * @param bot - "" to the bot
+	 * @param top - "" to the top
+	 * 
+	 * Not this only renders one side of the block. You will need to rotate it to face another
+	 * direction then render it. If rotating up or down you will need to translate it a bit
+	 */
+	public void render(float size, boolean left, boolean right, boolean bot, boolean top)
 	{
-		// tankBack.render(f5);
 		if (!top)
 		{
-			topSiding.render(f5);
-			topRightOut.render(f5);
-			topLeftOut.render(f5);
+			topSiding.render(size);
+			topRightOut.render(size);
+			topLeftOut.render(size);
 			if (right)
-			{	
-				rightTopSide.render(f5);
+			{
+				rightTopSide.render(size);
 			}
 			if (left)
 			{
-				leftTopSide.render(f5);
+				leftTopSide.render(size);
 			}
 		}
 		if (!bot)
 		{
-			botSiding.render(f5);
-			botRightOut.render(f5);
-			botLeftOut.render(f5);
+			botSiding.render(size);
+			botRightOut.render(size);
+			botLeftOut.render(size);
 			if (right)
-			{				
-				rightBotSide.render(f5);
+			{
+				rightBotSide.render(size);
 			}
 			if (left)
 			{
-				leftBotSide.render(f5);
+				leftBotSide.render(size);
 			}
 		}
 		if (!right)
 		{
-			rightSiding.render(f5);
-			rightBotSide.render(f5);
-			rightTopSide.render(f5);
-			rightSide.render(f5);
+			rightSiding.render(size);
+			rightBotSide.render(size);
+			rightTopSide.render(size);
+			rightSide.render(size);
 
 			if (top)
 			{
-				topRightOut.render(f5);
-				
+				topRightOut.render(size);
+
 			}
 			if (bot)
 			{
-				botRightOut.render(f5);
+				botRightOut.render(size);
 			}
-		}
-		else
-		{
-
 		}
 		if (!left)
 		{
-			leftSiding.render(f5);
-			leftBotSide.render(f5);
-			leftTopSide.render(f5);
-			leftSide.render(f5);
-			
+			leftSiding.render(size);
+			leftBotSide.render(size);
+			leftTopSide.render(size);
+			leftSide.render(size);
+
 			if (top)
 			{
-				topLeftOut.render(f5);
+				topLeftOut.render(size);
 			}
 			if (bot)
 			{
-				botLeftOut.render(f5);
+				botLeftOut.render(size);
 			}
-		}
-		else
-		{
-
 		}
 
 	}
