@@ -1,9 +1,5 @@
 package dark.fluid.common.pump;
 
-import hydraulic.api.IDrain;
-import hydraulic.api.INetworkPipe;
-import hydraulic.helpers.FluidHelper;
-import hydraulic.prefab.tile.TileEntityFluidDevice;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,6 +8,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
+
+import dark.hydraulic.api.IDrain;
+import dark.hydraulic.api.INetworkPipe;
+import dark.hydraulic.helpers.FluidHelper;
+import dark.hydraulic.prefab.tile.TileEntityFluidDevice;
 
 
 import net.minecraft.block.Block;

@@ -1,6 +1,5 @@
 package dark.fluid.common.machines;
 
-import hydraulic.helpers.FluidHelper;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,6 +18,7 @@ import universalelectricity.prefab.block.BlockAdvanced;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.TabFluidMech;
+import dark.hydraulic.helpers.FluidHelper;
 import dark.library.helpers.MetaGroup;
 
 public class BlockSink extends BlockAdvanced

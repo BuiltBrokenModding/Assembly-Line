@@ -12,138 +12,171 @@ import net.minecraft.entity.Entity;
 
 public class ModelTankSide extends ModelBase
 {
-	// fields
-	ModelRenderer backRightSiding;
-	ModelRenderer backLeftSiding;
-	ModelRenderer backTopSiding;
-	ModelRenderer backBotSiding;
-	ModelRenderer topLeft;
-	ModelRenderer topRight;
-	ModelRenderer botRight;
-	ModelRenderer botLeft;
+
+	ModelRenderer botSiding;
 	ModelRenderer botRightOut;
 	ModelRenderer botLeftOut;
+
+	ModelRenderer topSiding;
 	ModelRenderer topRightOut;
 	ModelRenderer topLeftOut;
+
+	ModelRenderer leftSiding;
+	ModelRenderer leftBotSide;
+	ModelRenderer leftTopSide;
+	ModelRenderer leftSide;
+
+	ModelRenderer rightSiding;
+	ModelRenderer rightBotSide;
+	ModelRenderer rightTopSide;
+	ModelRenderer rightSide;
 
 	public ModelTankSide()
 	{
 		textureWidth = 128;
 		textureHeight = 128;
 
-		 backRightSiding = new ModelRenderer(this, 0, 19);
-	      backRightSiding.addBox(-7F, 10F, 7F, 2, 12, 1);
-	      backRightSiding.setRotationPoint(0F, 0F, 0F);
-	      backRightSiding.setTextureSize(128, 128);
-	      backRightSiding.mirror = true;
-	      setRotation(backRightSiding, 0F, 0F, 0F);
-	      backLeftSiding = new ModelRenderer(this, 0, 19);
-	      backLeftSiding.addBox(5F, 10F, 7F, 2, 12, 1);
-	      backLeftSiding.setRotationPoint(0F, 0F, 0F);
-	      backLeftSiding.setTextureSize(128, 128);
-	      backLeftSiding.mirror = true;
-	      setRotation(backLeftSiding, 0F, 0F, 0F);
-	      backTopSiding = new ModelRenderer(this, 7, 8);
-	      backTopSiding.addBox(-4F, 8F, 7F, 8, 2, 1);
-	      backTopSiding.setRotationPoint(0F, 0F, 0F);
-	      backTopSiding.setTextureSize(128, 128);
-	      backTopSiding.mirror = true;
-	      setRotation(backTopSiding, 0F, 0F, 0F);
-	      backBotSiding = new ModelRenderer(this, 7, 8);
-	      backBotSiding.addBox(-4F, 22F, 7F, 8, 2, 1);
-	      backBotSiding.setRotationPoint(0F, 0F, 0F);
-	      backBotSiding.setTextureSize(128, 128);
-	      backBotSiding.mirror = true;
-	      setRotation(backBotSiding, 0F, 0F, 0F);
-	      topLeft = new ModelRenderer(this, 0, 0);
-	      topLeft.addBox(4F, 8F, 7F, 2, 2, 1);
-	      topLeft.setRotationPoint(0F, 0F, 0F);
-	      topLeft.setTextureSize(128, 128);
-	      topLeft.mirror = true;
-	      setRotation(topLeft, 0F, 0F, 0F);
-	      topRight = new ModelRenderer(this, 0, 0);
-	      topRight.addBox(-6F, 8F, 7F, 2, 2, 1);
-	      topRight.setRotationPoint(0F, 0F, 0F);
-	      topRight.setTextureSize(128, 128);
-	      topRight.mirror = true;
-	      setRotation(topRight, 0F, 0F, 0F);
-	      botRight = new ModelRenderer(this, 0, 0);
-	      botRight.addBox(-6F, 22F, 7F, 2, 2, 1);
-	      botRight.setRotationPoint(0F, 0F, 0F);
-	      botRight.setTextureSize(128, 128);
-	      botRight.mirror = true;
-	      setRotation(botRight, 0F, 0F, 0F);
-	      botLeft = new ModelRenderer(this, 0, 0);
-	      botLeft.addBox(4F, 22F, 7F, 2, 2, 1);
-	      botLeft.setRotationPoint(0F, 0F, 0F);
-	      botLeft.setTextureSize(128, 128);
-	      botLeft.mirror = true;
-	      setRotation(botLeft, 0F, 0F, 0F);
-	      botRightOut = new ModelRenderer(this, 0, 0);
-	      botRightOut.addBox(-7F, 22F, 7F, 2, 2, 1);
-	      botRightOut.setRotationPoint(0F, 0F, 0F);
-	      botRightOut.setTextureSize(128, 128);
-	      botRightOut.mirror = true;
-	      setRotation(botRightOut, 0F, 0F, 0F);
-	      botLeftOut = new ModelRenderer(this, 0, 0);
-	      botLeftOut.addBox(5F, 22F, 7F, 2, 2, 1);
-	      botLeftOut.setRotationPoint(0F, 0F, 0F);
-	      botLeftOut.setTextureSize(128, 128);
-	      botLeftOut.mirror = true;
-	      setRotation(botLeftOut, 0F, 0F, 0F);
-	      topRightOut = new ModelRenderer(this, 0, 0);
-	      topRightOut.addBox(-7F, 8F, 7F, 2, 2, 1);
-	      topRightOut.setRotationPoint(0F, 0F, 0F);
-	      topRightOut.setTextureSize(128, 128);
-	      topRightOut.mirror = true;
-	      setRotation(topRightOut, 0F, 0F, 0F);
-	      topLeftOut = new ModelRenderer(this, 0, 0);
-	      topLeftOut.addBox(5F, 8F, 7F, 2, 2, 1);
-	      topLeftOut.setRotationPoint(0F, 0F, 0F);
-	      topLeftOut.setTextureSize(128, 128);
-	      topLeftOut.mirror = true;
-	      setRotation(topLeftOut, 0F, 0F, 0F);
+		rightSiding = new ModelRenderer(this, 0, 19);
+		rightSiding.addBox(-7F, 11F, 7F, 2, 10, 1);
+		rightSiding.setRotationPoint(0F, 0F, 0F);
+		rightSiding.setTextureSize(128, 128);
+		rightSiding.mirror = true;
+		setRotation(rightSiding, 0F, 0F, 0F);
+		leftSiding = new ModelRenderer(this, 0, 19);
+		leftSiding.addBox(5F, 11F, 7F, 2, 10, 1);
+		leftSiding.setRotationPoint(0F, 0F, 0F);
+		leftSiding.setTextureSize(128, 128);
+		leftSiding.mirror = true;
+		setRotation(leftSiding, 0F, 0F, 0F);
+		topSiding = new ModelRenderer(this, 7, 8);
+		topSiding.addBox(-5F, 8F, 7F, 10, 3, 1);
+		topSiding.setRotationPoint(0F, 0F, 0F);
+		topSiding.setTextureSize(128, 128);
+		topSiding.mirror = true;
+		setRotation(topSiding, 0F, 0F, 0F);
+		botSiding = new ModelRenderer(this, 7, 8);
+		botSiding.addBox(-5F, 21F, 7F, 10, 3, 1);
+		botSiding.setRotationPoint(0F, 0F, 0F);
+		botSiding.setTextureSize(128, 128);
+		botSiding.mirror = true;
+		setRotation(botSiding, 0F, 0F, 0F);
+		botRightOut = new ModelRenderer(this, 0, 0);
+		botRightOut.addBox(-7F, 21F, 7F, 2, 3, 1);
+		botRightOut.setRotationPoint(0F, 0F, 0F);
+		botRightOut.setTextureSize(128, 128);
+		botRightOut.mirror = true;
+		setRotation(botRightOut, 0F, 0F, 0F);
+		botLeftOut = new ModelRenderer(this, 0, 0);
+		botLeftOut.addBox(5F, 21F, 7F, 2, 3, 1);
+		botLeftOut.setRotationPoint(0F, 0F, 0F);
+		botLeftOut.setTextureSize(128, 128);
+		botLeftOut.mirror = true;
+		setRotation(botLeftOut, 0F, 0F, 0F);
+		topRightOut = new ModelRenderer(this, 0, 0);
+		topRightOut.addBox(-7F, 8F, 7F, 2, 3, 1);
+		topRightOut.setRotationPoint(0F, 0F, 0F);
+		topRightOut.setTextureSize(128, 128);
+		topRightOut.mirror = true;
+		setRotation(topRightOut, 0F, 0F, 0F);
+		topLeftOut = new ModelRenderer(this, 0, 0);
+		topLeftOut.addBox(5F, 8F, 7F, 2, 3, 1);
+		topLeftOut.setRotationPoint(0F, 0F, 0F);
+		topLeftOut.setTextureSize(128, 128);
+		topLeftOut.mirror = true;
+		setRotation(topLeftOut, 0F, 0F, 0F);
+		leftSide = new ModelRenderer(this, 0, 19);
+		leftSide.addBox(7F, 11F, 7F, 1, 10, 1);
+		leftSide.setRotationPoint(0F, 0F, 0F);
+		leftSide.setTextureSize(128, 128);
+		leftSide.mirror = true;
+		setRotation(leftSide, 0F, 0F, 0F);
+		leftTopSide = new ModelRenderer(this, 0, 0);
+		leftTopSide.addBox(7F, 8F, 7F, 1, 3, 1);
+		leftTopSide.setRotationPoint(0F, 0F, 0F);
+		leftTopSide.setTextureSize(128, 128);
+		leftTopSide.mirror = true;
+		setRotation(leftTopSide, 0F, 0F, 0F);
+		leftBotSide = new ModelRenderer(this, 0, 0);
+		leftBotSide.addBox(7F, 21F, 7F, 1, 3, 1);
+		leftBotSide.setRotationPoint(0F, 0F, 0F);
+		leftBotSide.setTextureSize(128, 128);
+		leftBotSide.mirror = true;
+		setRotation(leftBotSide, 0F, 0F, 0F);
+		rightBotSide = new ModelRenderer(this, 0, 0);
+		rightBotSide.addBox(-8F, 21F, 7F, 1, 3, 1);
+		rightBotSide.setRotationPoint(0F, 0F, 0F);
+		rightBotSide.setTextureSize(128, 128);
+		rightBotSide.mirror = true;
+		setRotation(rightBotSide, 0F, 0F, 0F);
+		rightSide = new ModelRenderer(this, 0, 19);
+		rightSide.addBox(-8F, 11F, 7F, 1, 10, 1);
+		rightSide.setRotationPoint(0F, 0F, 0F);
+		rightSide.setTextureSize(128, 128);
+		rightSide.mirror = true;
+		setRotation(rightSide, 0F, 0F, 0F);
+		rightTopSide = new ModelRenderer(this, 0, 0);
+		rightTopSide.addBox(-8F, 8F, 7F, 1, 3, 1);
+		rightTopSide.setRotationPoint(0F, 0F, 0F);
+		rightTopSide.setTextureSize(128, 128);
+		rightTopSide.mirror = true;
+		setRotation(rightTopSide, 0F, 0F, 0F);
 	}
 
 	public void render(float f5, boolean left, boolean right, boolean bot, boolean top)
 	{
-		//tankBack.render(f5);
+		// tankBack.render(f5);
 		if (!top)
 		{
-			backTopSiding.render(f5);
-			topLeft.render(f5);
-			topRight.render(f5);
+			topSiding.render(f5);
 			topRightOut.render(f5);
 			topLeftOut.render(f5);
+
 		}
 		if (!bot)
 		{
-			backBotSiding.render(f5);
-			botRight.render(f5);
-			botLeft.render(f5);
+			botSiding.render(f5);
 			botRightOut.render(f5);
 			botLeftOut.render(f5);
 		}
 		if (!right)
 		{
-			backRightSiding.render(f5);
+			rightSiding.render(f5);
+			rightBotSide.render(f5);
+			rightTopSide.render(f5);
+			rightSide.render(f5);
+
 			if (top)
 			{
-				topRight.render(f5);
+				topRightOut.render(f5);
+			}
+			if (bot)
+			{
+				botRightOut.render(f5);
 			}
 		}
 		else
 		{
-			//tankBackRight.render(f5);
-			
+
 		}
 		if (!left)
 		{
-			backLeftSiding.render(f5);
+			leftSiding.render(f5);
+			leftBotSide.render(f5);
+			leftTopSide.render(f5);
+			leftSide.render(f5);
+			
+			if (top)
+			{
+				topLeftOut.render(f5);
+			}
+			if (bot)
+			{
+				botLeftOut.render(f5);
+			}
 		}
 		else
 		{
-			//tankBackLeft.render(f5);
+
 		}
 
 	}

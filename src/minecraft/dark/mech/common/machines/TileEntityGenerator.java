@@ -1,6 +1,5 @@
 package dark.mech.common.machines;
 
-import hydraulic.api.IReadOut;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
@@ -19,6 +18,7 @@ import universalelectricity.prefab.tile.TileEntityElectrical;
 import com.google.common.io.ByteArrayDataInput;
 
 import dark.fluid.api.mech.IForce;
+import dark.hydraulic.api.IReadOut;
 import dark.library.helpers.ConnectionHelper;
 import dark.library.helpers.MetaGroup;
 

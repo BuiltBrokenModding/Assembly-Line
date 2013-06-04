@@ -1,14 +1,5 @@
 package dark.fluid.common.machines;
 
-import hydraulic.api.ColorCode;
-import hydraulic.api.IColorCoded;
-import hydraulic.api.INetworkFluidPart;
-import hydraulic.api.INetworkPipe;
-import hydraulic.api.IReadOut;
-import hydraulic.network.ContainerNetwork;
-import hydraulic.network.FluidNetwork;
-import hydraulic.network.TileNetwork;
-import hydraulic.prefab.tile.TileEntityFluidDevice;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -33,6 +24,15 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.fluid.common.FluidMech;
+import dark.hydraulic.api.ColorCode;
+import dark.hydraulic.api.IColorCoded;
+import dark.hydraulic.api.INetworkFluidPart;
+import dark.hydraulic.api.INetworkPipe;
+import dark.hydraulic.api.IReadOut;
+import dark.hydraulic.network.ContainerNetwork;
+import dark.hydraulic.network.FluidNetwork;
+import dark.hydraulic.network.TileNetwork;
+import dark.hydraulic.prefab.tile.TileEntityFluidDevice;
 
 public class TileEntityTank extends TileEntityFluidDevice implements ITankContainer, IReadOut, IColorCoded, INetworkFluidPart, IPacketReceiver
 {

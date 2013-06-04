@@ -1,7 +1,5 @@
 package dark.fluid.client.render.pipe;
 
-import hydraulic.api.ColorCode;
-import hydraulic.api.FluidRestrictionHandler;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -15,6 +13,8 @@ import dark.fluid.common.FluidMech;
 import dark.fluid.common.pipes.TileEntityGenericPipe;
 import dark.fluid.common.pipes.TileEntityPipe;
 import dark.fluid.common.pipes.addon.IPipeExtention;
+import dark.hydraulic.api.ColorCode;
+import dark.hydraulic.api.FluidRestrictionHandler;
 
 import universalelectricity.core.vector.Vector3;
 

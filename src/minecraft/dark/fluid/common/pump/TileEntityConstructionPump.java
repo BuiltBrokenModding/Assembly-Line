@@ -1,9 +1,5 @@
 package dark.fluid.common.pump;
 
-import hydraulic.api.INetworkPipe;
-import hydraulic.api.ITileConnector;
-import hydraulic.network.FluidNetwork;
-import hydraulic.network.HydraulicNetworkHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
@@ -14,6 +10,10 @@ import net.minecraftforge.liquids.LiquidTank;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
+import dark.hydraulic.api.INetworkPipe;
+import dark.hydraulic.api.ITileConnector;
+import dark.hydraulic.network.FluidNetwork;
+import dark.hydraulic.network.HydraulicNetworkHelper;
 import dark.library.helpers.MetaGroup;
 import dark.library.machine.TileEntityRunnableMachine;
 

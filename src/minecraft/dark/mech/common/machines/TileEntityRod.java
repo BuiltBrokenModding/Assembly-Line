@@ -1,6 +1,5 @@
 package dark.mech.common.machines;
 
-import hydraulic.api.IReadOut;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
@@ -15,6 +14,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 import dark.fluid.api.mech.IForce;
 import dark.fluid.common.FluidMech;
+import dark.hydraulic.api.IReadOut;
 
 
 public class TileEntityRod extends TileEntity implements IPacketReceiver, IForce, IReadOut

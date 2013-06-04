@@ -1,8 +1,5 @@
 package dark.fluid.common.machines;
 
-import hydraulic.api.ColorCode;
-import hydraulic.api.IColorCoded;
-import hydraulic.prefab.tile.TileEntityFluidStorage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
@@ -16,6 +13,9 @@ import universalelectricity.prefab.network.PacketManager;
 import com.google.common.io.ByteArrayDataInput;
 
 import dark.fluid.common.FluidMech;
+import dark.hydraulic.api.ColorCode;
+import dark.hydraulic.api.IColorCoded;
+import dark.hydraulic.prefab.tile.TileEntityFluidStorage;
 
 public class TileEntitySink extends TileEntityFluidStorage implements IPacketReceiver, ITankContainer, IColorCoded
 {

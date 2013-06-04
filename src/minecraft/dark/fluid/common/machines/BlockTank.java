@@ -1,14 +1,14 @@
 package dark.fluid.common.machines;
 
-import hydraulic.api.FluidRestrictionHandler;
-import hydraulic.api.INetworkPart;
-import hydraulic.api.INetworkPipe;
-import hydraulic.helpers.FluidHelper;
 
 import java.util.List;
 
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.TabFluidMech;
+import dark.hydraulic.api.FluidRestrictionHandler;
+import dark.hydraulic.api.INetworkPart;
+import dark.hydraulic.api.INetworkPipe;
+import dark.hydraulic.helpers.FluidHelper;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;

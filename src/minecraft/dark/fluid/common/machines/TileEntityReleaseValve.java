@@ -1,12 +1,5 @@
 package dark.fluid.common.machines;
 
-import hydraulic.api.ColorCode;
-import hydraulic.api.IColorCoded;
-import hydraulic.api.INetworkPipe;
-import hydraulic.api.ITileConnector;
-import hydraulic.api.IReadOut;
-import hydraulic.network.PipeNetwork;
-import hydraulic.prefab.tile.TileEntityFluidDevice;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +11,13 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
+import dark.hydraulic.api.ColorCode;
+import dark.hydraulic.api.IColorCoded;
+import dark.hydraulic.api.INetworkPipe;
+import dark.hydraulic.api.IReadOut;
+import dark.hydraulic.api.ITileConnector;
+import dark.hydraulic.network.PipeNetwork;
+import dark.hydraulic.prefab.tile.TileEntityFluidDevice;
 import dark.library.helpers.ConnectionHelper;
 
 public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITileConnector, IReadOut

@@ -1,10 +1,5 @@
 package dark.fluid.common.pump;
 
-import hydraulic.api.ColorCode;
-import hydraulic.api.IColorCoded;
-import hydraulic.api.ITileConnector;
-import hydraulic.api.IReadOut;
-import hydraulic.helpers.FluidHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
@@ -20,6 +15,11 @@ import universalelectricity.prefab.network.IPacketReceiver;
 
 import com.google.common.io.ByteArrayDataInput;
 
+import dark.hydraulic.api.ColorCode;
+import dark.hydraulic.api.IColorCoded;
+import dark.hydraulic.api.IReadOut;
+import dark.hydraulic.api.ITileConnector;
+import dark.hydraulic.helpers.FluidHelper;
 import dark.library.helpers.MetaGroup;
 import dark.library.machine.TileEntityRunnableMachine;
 

@@ -1,12 +1,12 @@
 package dark.fluid.common.pump;
 
-import hydraulic.network.HydraulicNetworkHelper;
 
 import java.util.List;
 
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.TabFluidMech;
+import dark.hydraulic.network.HydraulicNetworkHelper;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;

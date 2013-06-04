@@ -1,7 +1,5 @@
 package dark.fluid.common;
 
-import hydraulic.api.ColorCode;
-import hydraulic.api.FluidRestrictionHandler;
 
 import java.io.File;
 import java.util.Arrays;
@@ -63,6 +61,8 @@ import dark.fluid.common.pump.BlockPumpMachine;
 import dark.fluid.common.pump.TileEntityConstructionPump;
 import dark.fluid.common.pump.TileEntityDrain;
 import dark.fluid.common.pump.TileEntityStarterPump;
+import dark.hydraulic.api.ColorCode;
+import dark.hydraulic.api.FluidRestrictionHandler;
 import dark.library.DarkMain;
 import dark.mech.common.machines.BlockGenerator;
 import dark.mech.common.machines.BlockRod;

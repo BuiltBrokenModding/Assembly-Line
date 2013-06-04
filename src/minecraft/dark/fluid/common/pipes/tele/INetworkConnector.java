@@ -1,8 +1,9 @@
 package dark.fluid.common.pipes.tele;
 
-import hydraulic.api.INetworkPipe;
 
 import java.util.List;
+
+import dark.hydraulic.api.INetworkPipe;
 
 /**
  * Used by IFluidNetworkPart to signal this block is remotely connected to another network. It will

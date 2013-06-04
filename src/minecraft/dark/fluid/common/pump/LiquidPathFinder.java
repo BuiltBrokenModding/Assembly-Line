@@ -1,11 +1,12 @@
 package dark.fluid.common.pump;
 
-import hydraulic.helpers.FluidHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+
+import dark.hydraulic.helpers.FluidHelper;
 
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;

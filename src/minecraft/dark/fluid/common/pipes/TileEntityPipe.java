@@ -1,13 +1,5 @@
 package dark.fluid.common.pipes;
 
-import hydraulic.api.ColorCode;
-import hydraulic.api.IColorCoded;
-import hydraulic.api.INetworkPipe;
-import hydraulic.api.ITileConnector;
-import hydraulic.api.IReadOut;
-import hydraulic.helpers.FluidHelper;
-import hydraulic.network.PipeNetwork;
-import hydraulic.network.TileNetwork;
 
 import java.io.IOException;
 import java.util.Random;
@@ -40,6 +32,14 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.pipes.addon.IPipeExtention;
+import dark.hydraulic.api.ColorCode;
+import dark.hydraulic.api.IColorCoded;
+import dark.hydraulic.api.INetworkPipe;
+import dark.hydraulic.api.IReadOut;
+import dark.hydraulic.api.ITileConnector;
+import dark.hydraulic.helpers.FluidHelper;
+import dark.hydraulic.network.PipeNetwork;
+import dark.hydraulic.network.TileNetwork;
 
 public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer, IReadOut, IColorCoded, INetworkPipe, IPacketReceiver
 {

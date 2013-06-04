@@ -1,8 +1,8 @@
 package dark.fluid.common.pipes;
 
-import hydraulic.api.ColorCode;
-import hydraulic.helpers.FluidHelper;
-import hydraulic.network.PipeNetwork;
+import dark.hydraulic.api.ColorCode;
+import dark.hydraulic.helpers.FluidHelper;
+import dark.hydraulic.network.PipeNetwork;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;

@@ -1,6 +1,5 @@
 package dark.fluid.common.pipes.addon;
 
-import hydraulic.network.PipeNetwork;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -11,6 +10,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 import dark.fluid.client.render.pipe.RenderPipeWindow;
 import dark.fluid.common.pipes.TileEntityPipe;
+import dark.hydraulic.network.PipeNetwork;
 
 public class TileEntityPipeWindow extends TileEntityPipeExtention
 {
