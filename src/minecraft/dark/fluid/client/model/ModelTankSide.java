@@ -130,13 +130,28 @@ public class ModelTankSide extends ModelBase
 			topSiding.render(f5);
 			topRightOut.render(f5);
 			topLeftOut.render(f5);
-
+			if (right)
+			{	
+				rightTopSide.render(f5);
+			}
+			if (left)
+			{
+				leftTopSide.render(f5);
+			}
 		}
 		if (!bot)
 		{
 			botSiding.render(f5);
 			botRightOut.render(f5);
 			botLeftOut.render(f5);
+			if (right)
+			{				
+				rightBotSide.render(f5);
+			}
+			if (left)
+			{
+				leftBotSide.render(f5);
+			}
 		}
 		if (!right)
 		{
@@ -148,6 +163,7 @@ public class ModelTankSide extends ModelBase
 			if (top)
 			{
 				topRightOut.render(f5);
+				
 			}
 			if (bot)
 			{
