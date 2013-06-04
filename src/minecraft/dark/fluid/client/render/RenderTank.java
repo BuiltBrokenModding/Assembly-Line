@@ -2,6 +2,7 @@ package dark.fluid.client.render;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.LiquidStack;
 
@@ -35,7 +36,6 @@ public class RenderTank extends TileEntitySpecialRenderer
 			int[] render = ((TileEntityTank) tileEntity).renderConnection;
 
 			ColorCode color = tileEntityTank.getColor();
-			boolean lre = false;
 			if (liquid != null && liquid.amount > 0)
 			{
 
@@ -56,27 +56,55 @@ public class RenderTank extends TileEntitySpecialRenderer
 
 					GL11.glPopAttrib();
 					GL11.glPopMatrix();
-					lre = true;
 				}
 			}
 			bindTextureByName(DarkMain.TEXTURE_DIRECTORY + "CobbleBack.png");
-			GL11.glPushMatrix();
 
-			GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
-			GL11.glScalef(1.0F, -1F, -1F);
-			
-			boolean bot = tileEntity.worldObj.getBlockTileEntity(tileEntity.xCoord, tileEntity.yCoord + 1, tileEntity.zCoord) instanceof TileEntityTank;
-			boolean top = tileEntity.worldObj.getBlockTileEntity(tileEntity.xCoord, tileEntity.yCoord - 1, tileEntity.zCoord) instanceof TileEntityTank;
-			
-			model.render(0.0625F, false, false, top, bot);
-			GL11.glRotatef(90f, 0f, 1f, 0f);
-			model.render(0.0625F, false, false, top, bot);
-			GL11.glRotatef(180f, 0f, 1f, 0f);
-			model.render(0.0625F, false, false, top, bot);
-			GL11.glRotatef(270f, 0f, 1f, 0f);
-			model.render(0.0625F, false, false, top, bot);
+			boolean bot = render[1] == 2;
+			boolean top = render[0] == 2;
+			boolean north = render[2] == 2;
+			boolean south = render[3] == 2;
+			boolean east = render[5] == 2;
+			boolean west = render[4] == 2;
+			for (int i = 0; i < 4; i++)
+			{
+				ForgeDirection dir = ForgeDirection.getOrientation(i + 2);
+				if (render[dir.getOpposite().ordinal()] != 2)
+				{
+					GL11.glPushMatrix();
+					GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
+					GL11.glScalef(1.0F, -1F, -1F);
+					boolean left = false;
+					boolean right = false;
+					switch (dir)
+					{
+						case NORTH:
+							GL11.glRotatef(180f, 0f, 1f, 0f);
+							left = west;
+							right = east;
+							break;
+						case SOUTH:
+							GL11.glRotatef(0f, 0f, 1f, 0f);
+							left = east;
+							right = west;
+							break;
+						case WEST:
+							GL11.glRotatef(90f, 0f, 1f, 0f);
+							left = south;
+							right = north;
+							break;
+						case EAST:
+							GL11.glRotatef(270f, 0f, 1f, 0f);
+							left = north;
+							right = south;
+							break;
+					}
 
-			GL11.glPopMatrix();
+					model.render(0.0625F, left, right, top, bot);
+
+					GL11.glPopMatrix();
+				}
+			}
 		}
 	}
 }
