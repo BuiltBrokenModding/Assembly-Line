@@ -107,7 +107,12 @@ public class NetworkOrbit
 			IOrbitingEntity entity = it.next().getKey();
 			if (entity instanceof Entity)
 			{
-				width += ((Entity) entity).width;
+				width += ((Entity) entity).width > ((Entity) entity).height ? ((Entity) entity).width : ((Entity) entity).height;
+			}
+			else
+			{
+				// TODO get size threw the interface or detect other possible orbit objects
+				width += 1;
 			}
 		}
 		width = width / this.getOrbitMemebers().size();
@@ -124,17 +129,28 @@ public class NetworkOrbit
 	 * 
 	 * http://en.wikipedia.org/wiki/Spherical_coordinates
 	 */
-	public Vector3 getOrbitOffset(int pos)
+	public Vector3 getOrbitOffset(Entity entity, int pos)
 	{
-		double minRadius = this.getMinRadius();
-		if (this.orbitRadius < minRadius)
+		double r = this.getMinRadius();
+		if (this.orbitRadius < r)
 		{
-			this.orbitRadius = minRadius;
+			this.orbitRadius = r;
 		}
-		double spacing = this.orbitRadius / this.getOrbitMemebers().size();
+		else
+		{
+			r = this.orbitRadius;
+		}
+		if (entity instanceof IOrbitingEntity && this.getOrbitMemebers().containsKey(entity))
+		{
+			r += this.getOrbitMemebers().get(entity);
+		}
+		double spacing = r / this.getOrbitMemebers().size();
+		Vector3 t = this.getRotation();
 
-		double inclination = 0;
-		double azimuth = (spacing * pos) + this.getRotation().y;
-		return LinearAlg.sphereAnglesToVec(this.orbitRadius, inclination, azimuth);
+		double deltaX = (r * Math.cos(t.y + spacing)) + (r * Math.sin(t.z));
+		double deltaY = (r * Math.sin(t.x)) + (r * Math.sin(t.z));
+		double deltaZ = (r * Math.sin(t.y + spacing)) + (r * Math.cos(t.x));
+
+		return new Vector3(deltaX, deltaY, deltaZ);
 	}
 }
