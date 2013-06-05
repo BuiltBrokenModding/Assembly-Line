@@ -7,7 +7,7 @@ public interface IOrbitingEntity
 	/**
 	 * Gets the current orbit the object is using
 	 */
-	public OrbitNetworkRing getOrbit();
+	public NetworkOrbit getOrbit();
 
 	/**
 	 * Tells this object were it should be in the orbit

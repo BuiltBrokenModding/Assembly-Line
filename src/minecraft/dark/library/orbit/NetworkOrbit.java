@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+import dark.library.helpers.Pair;
+
 import net.minecraft.entity.Entity;
 import universalelectricity.core.vector.Vector3;
 
@@ -13,11 +15,11 @@ import universalelectricity.core.vector.Vector3;
  * @author DarkGuardsman
  * 
  */
-public class OrbitNetworkRing
+public class NetworkOrbit
 {
-	/* DEFINED IDEAL OBJECTS NUMBERS OF ORBIT */
-	public static final int minObjects = 3;
-	public static final int maxObjects = 20;
+	/* DEFINED IDEAL NUMBER OF OBJECTS IN ORBIT */
+	public static int minObjects = 3;
+	public static int maxObjects = 20;
 
 	/* CURRENT RADIUS OF THE CIRCLE */
 	float orbitRadius;
@@ -31,7 +33,7 @@ public class OrbitNetworkRing
 	/**
 	 * @param entities - entities to add to this orbit when its created < Entity, Radius change>
 	 */
-	public OrbitNetworkRing(HashMap<IOrbitingEntity, Integer> entities)
+	public NetworkOrbit(HashMap<IOrbitingEntity, Integer> entities)
 	{
 		if (entities != null)
 		{
@@ -39,6 +41,9 @@ public class OrbitNetworkRing
 		}
 	}
 
+	/**
+	 * Called by the host of the orbit too see if this orbit can continue
+	 */
 	public boolean canOrbitExist()
 	{
 		int members = this.getOrbitMemebers().size();
@@ -115,6 +120,8 @@ public class OrbitNetworkRing
 	 * Note this only gives the offset from the orbit point. This needs to be used to in combo with
 	 * something else to get the orbit point. Then add the result of this to get the pos of the
 	 * object
+	 * 
+	 * http://en.wikipedia.org/wiki/Spherical_coordinates
 	 */
 	public Vector3 getOrbitOffset(int pos)
 	{
@@ -128,5 +135,5 @@ public class OrbitNetworkRing
 		double x = this.orbitRadius * Math.cos((spacing * pos) + this.getRotation().y);
 		double z = this.orbitRadius * Math.sin((spacing * pos) + this.getRotation().y);
 		return null;
-	}
+	}	
 }
