@@ -201,7 +201,7 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 	{
 		if (!this.worldObj.isRemote)
 		{
-			this.renderConnection[side.ordinal()] = tileEntity instanceof TileEntityTank ? 2 : (tileEntity instanceof INetworkPipe ? 1 : tileEntity != null ? 3 : 0);
+			this.renderConnection[side.ordinal()] = tileEntity instanceof TileEntityTank && ((TileEntityTank) tileEntity).getColor() == this.getColor() ? 1 : (tileEntity instanceof INetworkPipe ? 1 : tileEntity != null ? 3 : 0);
 
 			if (tileEntity != null)
 			{
