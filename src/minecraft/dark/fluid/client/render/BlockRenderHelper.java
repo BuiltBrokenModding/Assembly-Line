@@ -53,7 +53,7 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
 		}
 		else if (block.blockID == FluidMech.blockTank.blockID)
 		{
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(metadata == 2 ? "/textures/blocks/obsidian.png" : "/textures/blocks/stonebrick.png"));
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(metadata == 1 ? "/textures/blocks/obsidian.png" : "/textures/blocks/stonebrick.png"));
 			GL11.glTranslatef((float) 0.0F, (float) -0.9F, (float) 0.0F);
 			tank.render(0.0625F, false, false, false, false);
 			GL11.glRotatef(90f, 0f, 1f, 0f);

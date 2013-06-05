@@ -28,7 +28,7 @@ public class RenderTank extends TileEntitySpecialRenderer
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)
 	{
 		LiquidStack liquid = tileEntity instanceof TileEntityTank ? ((TileEntityTank) tileEntity).getTank().getLiquid() : null;
-		this.renderTank(tileEntity, x, y, z, -1, liquid);
+		this.renderTank(tileEntity, x, y, z, 0, liquid);
 	}
 
 	public void renderTank(TileEntity tileEntity, double x, double y, double z, int meta, LiquidStack liquid)
@@ -38,9 +38,6 @@ public class RenderTank extends TileEntitySpecialRenderer
 		if (tileEntity instanceof TileEntityTank)
 		{
 			render = ((TileEntityTank) tileEntity).renderConnection;
-		}
-		if (meta == -1 && tileEntity instanceof TileEntityTank)
-		{
 			color = ((TileEntityTank) tileEntity).getColor();
 		}
 		if (liquid != null && liquid.amount > 0)
