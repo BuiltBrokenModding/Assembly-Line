@@ -1,4 +1,4 @@
-package dark.library.math;
+package dark.library.orbit;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -7,14 +7,31 @@ import java.util.Map.Entry;
 import net.minecraft.entity.Entity;
 import universalelectricity.core.vector.Vector3;
 
+/**
+ * Designed to be used by flying Entities to create an orbit pattern around a central point
+ * 
+ * @author DarkGuardsman
+ * 
+ */
 public class OrbitNetworkRing
 {
+	/* DEFINED IDEAL OBJECTS NUMBERS OF ORBIT */
+	public static final int minObjects = 3;
+	public static final int maxObjects = 20;
+
+	/* CURRENT RADIUS OF THE CIRCLE */
 	float orbitRadius;
+
+	/* CHANGE IN ROTATION OF THE CIRCLE X Y Z */
 	Vector3 rotationChange = new Vector3(0, 0, 0);
 
-	HashMap<Entity, Integer> orbitMemeber = new HashMap<Entity, Integer>();
+	/* OBJECTS IN ORBIT <Entity, Change in radius> */
+	HashMap<IOrbitingEntity, Integer> orbitMemeber = new HashMap<IOrbitingEntity, Integer>();
 
-	public OrbitNetworkRing(HashMap<Entity, Integer> entities)
+	/**
+	 * @param entities - entities to add to this orbit when its created < Entity, Radius change>
+	 */
+	public OrbitNetworkRing(HashMap<IOrbitingEntity, Integer> entities)
 	{
 		if (entities != null)
 		{
@@ -22,17 +39,30 @@ public class OrbitNetworkRing
 		}
 	}
 
-	public HashMap<Entity, Integer> getOrbitMemebers()
+	public boolean canOrbitExist()
+	{
+		int members = this.getOrbitMemebers().size();
+		if (members > maxObjects || members < minObjects)
+		{
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Gets the list of Entities in this orbit
+	 */
+	public HashMap<IOrbitingEntity, Integer> getOrbitMemebers()
 	{
 		if (this.orbitMemeber == null)
 		{
-			this.orbitMemeber = new HashMap<Entity, Integer>();
+			this.orbitMemeber = new HashMap<IOrbitingEntity, Integer>();
 		}
 		return this.orbitMemeber;
 	}
 
 	/**
-	 * Increase the rotation angles of the orbitRing
+	 * Increase/changes the rotation angles of the orbit
 	 * 
 	 * @param vec - rotation change stored as a vector3
 	 * @param increase - add the vec rotation to current rotation
@@ -65,21 +95,20 @@ public class OrbitNetworkRing
 	public float getMinRadius()
 	{
 		float width = 0;
-		Iterator<Entry<Entity, Integer>> it = this.getOrbitMemebers().entrySet().iterator();
+		Iterator<Entry<IOrbitingEntity, Integer>> it = this.getOrbitMemebers().entrySet().iterator();
 		while (it.hasNext())
 		{
-			Entity entity = it.next().getKey();
-			width += entity.width;
+			IOrbitingEntity entity = it.next().getKey();
+			if (entity instanceof Entity)
+			{
+				width += ((Entity) entity).width;
+			}
 		}
 		width = width / this.getOrbitMemebers().size();
 		return ((width + (width / 2)) * this.getOrbitMemebers().size());
 	}
 
 	/**
-	 * 
-	 * @param objectSize - side of the object in the direction it will orbit
-	 * @param radIncrase - increase in radius size
-	 * @param objects - number of the objects in the orbit
 	 * @param pos - position in the orbit
 	 * @return offset distance from orbit center
 	 * 
