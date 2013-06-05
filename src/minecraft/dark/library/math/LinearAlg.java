@@ -1,19 +1,30 @@
 package dark.library.math;
 
 import universalelectricity.core.vector.Vector3;
-import dark.library.helpers.Pair;
 
 public class LinearAlg
 {
-	public Pair<Double, Double> vecToSphereAngles(Vector3 vec)
+	/**
+	 * @param vec - vector3 that is on the sphere
+	 * @return new Vector3(radius, inclination, azimuth)
+	 */
+	public static Vector3 vecToSphereAngles(Vector3 vec)
 	{
 		double radius = Math.sqrt((vec.x * vec.x) + (vec.y * vec.y) + (vec.z * vec.z));
 		double inclination = Math.acos(vec.z / radius);
 		double azimuth = Math.atan(vec.y / vec.z);
-		return new Pair<Double, Double>(inclination, azimuth);
+		return new Vector3(radius, inclination, azimuth);
 	}
 
-	public Vector3 sphereAnglesToVec(Double radius, Double inclination, Double azimuth)
+	/**
+	 * Turns radius and sphere cords into a vector3
+	 * 
+	 * @param radius - sphere radius
+	 * @param inclination -
+	 * @param azimuth
+	 * @return Vector3(x,y,z)
+	 */
+	public static Vector3 sphereAnglesToVec(Double radius, Double inclination, Double azimuth)
 	{
 		double x = radius * Math.sin(inclination) * Math.cos(azimuth);
 		double y = radius * Math.sin(inclination) * Math.sin(azimuth);

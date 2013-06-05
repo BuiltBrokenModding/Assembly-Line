@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 import dark.library.helpers.Pair;
+import dark.library.math.LinearAlg;
 
 import net.minecraft.entity.Entity;
 import universalelectricity.core.vector.Vector3;
@@ -22,7 +23,7 @@ public class NetworkOrbit
 	public static int maxObjects = 20;
 
 	/* CURRENT RADIUS OF THE CIRCLE */
-	float orbitRadius;
+	Double orbitRadius;
 
 	/* CHANGE IN ROTATION OF THE CIRCLE X Y Z */
 	Vector3 rotationChange = new Vector3(0, 0, 0);
@@ -97,7 +98,7 @@ public class NetworkOrbit
 	/**
 	 * Ideal minimal radius needed for the number of objects
 	 */
-	public float getMinRadius()
+	public double getMinRadius()
 	{
 		float width = 0;
 		Iterator<Entry<IOrbitingEntity, Integer>> it = this.getOrbitMemebers().entrySet().iterator();
@@ -125,15 +126,15 @@ public class NetworkOrbit
 	 */
 	public Vector3 getOrbitOffset(int pos)
 	{
-		float minRadius = this.getMinRadius();
+		double minRadius = this.getMinRadius();
 		if (this.orbitRadius < minRadius)
 		{
 			this.orbitRadius = minRadius;
 		}
-		float spacing = this.orbitRadius / this.getOrbitMemebers().size();
+		double spacing = this.orbitRadius / this.getOrbitMemebers().size();
 
-		double x = this.orbitRadius * Math.cos((spacing * pos) + this.getRotation().y);
-		double z = this.orbitRadius * Math.sin((spacing * pos) + this.getRotation().y);
-		return null;
-	}	
+		double inclination = 0;
+		double azimuth = (spacing * pos) + this.getRotation().y;
+		return LinearAlg.sphereAnglesToVec(this.orbitRadius, inclination, azimuth);
+	}
 }
