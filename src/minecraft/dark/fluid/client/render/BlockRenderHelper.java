@@ -10,9 +10,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import dark.fluid.client.model.ModelConstructionPump;
-import dark.fluid.client.model.ModelLargePipe;
 import dark.fluid.client.model.ModelPump;
-import dark.fluid.client.model.ModelReleaseValve;
 import dark.fluid.client.model.ModelSink;
 import dark.fluid.client.model.ModelTankSide;
 import dark.fluid.common.FluidMech;
@@ -26,9 +24,7 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
 	private ModelPump modelPump = new ModelPump();
 	private ModelGearRod modelRod = new ModelGearRod();
 	private ModelGenerator modelGen = new ModelGenerator();
-	private ModelLargePipe SixPipe = new ModelLargePipe();
 	private ModelTankSide tank = new ModelTankSide();
-	private ModelReleaseValve valve = new ModelReleaseValve();
 	private ModelSink sink = new ModelSink();
 	private ModelConstructionPump conPump = new ModelConstructionPump();
 

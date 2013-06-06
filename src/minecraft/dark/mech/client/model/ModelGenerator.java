@@ -6,10 +6,10 @@
 
 package dark.mech.client.model;
 
-import dark.mech.common.machines.TileEntityGenerator;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.tileentity.TileEntity;
+import dark.mech.common.machines.TileEntityGenerator;
 
 public class ModelGenerator extends ModelBase
 {

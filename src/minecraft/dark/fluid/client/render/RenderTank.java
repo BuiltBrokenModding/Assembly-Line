@@ -3,17 +3,14 @@ package dark.fluid.client.render;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.LiquidStack;
 
 import org.lwjgl.opengl.GL11;
 
 import dark.fluid.client.model.ModelTankSide;
-import dark.fluid.common.FluidMech;
 import dark.fluid.common.machines.TileEntityTank;
 import dark.hydraulic.api.ColorCode;
 import dark.hydraulic.helpers.LiquidRenderer;
-import dark.library.DarkMain;
 
 public class RenderTank extends TileEntitySpecialRenderer
 {

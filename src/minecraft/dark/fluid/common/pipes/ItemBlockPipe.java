@@ -1,9 +1,9 @@
 package dark.fluid.common.pipes;
 
-import dark.fluid.common.FluidMech;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import dark.fluid.common.FluidMech;
 
 public class ItemBlockPipe extends ItemBlock
 {

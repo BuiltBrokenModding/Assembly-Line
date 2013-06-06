@@ -6,11 +6,10 @@
 
 package dark.fluid.client.model;
 
-import dark.fluid.common.machines.TileEntityTank;
-import dark.fluid.common.pipes.TileEntityPipe;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.tileentity.TileEntity;
+import dark.fluid.common.machines.TileEntityTank;
 
 public class ModelLiquidTank extends ModelBase
 {

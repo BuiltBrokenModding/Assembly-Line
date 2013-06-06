@@ -1,9 +1,9 @@
 package dark.fluid.common.pipes.addon;
 
-import dark.fluid.common.pipes.TileEntityPipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.network.IPacketReceiver;
+import dark.fluid.common.pipes.TileEntityPipe;
 
 public interface IPipeExtention extends IPacketReceiver
 {

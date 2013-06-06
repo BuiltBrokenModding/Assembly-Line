@@ -1,15 +1,14 @@
 package dark.fluid.common.pipes;
 
-import dark.hydraulic.api.ColorCode;
-import dark.hydraulic.helpers.FluidHelper;
-import dark.hydraulic.network.PipeNetwork;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
+import dark.hydraulic.api.ColorCode;
+import dark.hydraulic.helpers.FluidHelper;
+import dark.hydraulic.network.PipeNetwork;
 
 public class TileEntityGenericPipe extends TileEntityPipe
 {

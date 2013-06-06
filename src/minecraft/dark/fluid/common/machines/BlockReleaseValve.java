@@ -2,9 +2,6 @@ package dark.fluid.common.machines;
 
 import java.util.Random;
 
-import dark.fluid.common.FluidMech;
-import dark.fluid.common.TabFluidMech;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -12,6 +9,8 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import universalelectricity.prefab.block.BlockAdvanced;
+import dark.fluid.common.FluidMech;
+import dark.fluid.common.TabFluidMech;
 
 public class BlockReleaseValve extends BlockAdvanced
 {

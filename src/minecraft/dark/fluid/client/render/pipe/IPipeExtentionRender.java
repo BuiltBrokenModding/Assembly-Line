@@ -1,8 +1,8 @@
 package dark.fluid.client.render.pipe;
 
-import dark.fluid.common.pipes.TileEntityPipe;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
+import dark.fluid.common.pipes.TileEntityPipe;
 
 /**
  * Class for TileEntity Renders that extend the pipe class to use instead of extending

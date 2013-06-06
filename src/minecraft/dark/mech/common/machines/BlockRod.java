@@ -1,8 +1,5 @@
 package dark.mech.common.machines;
 
-import dark.fluid.client.render.BlockRenderHelper;
-import dark.fluid.common.FluidMech;
-import dark.fluid.common.TabFluidMech;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,6 +10,9 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.block.BlockAdvanced;
+import dark.fluid.client.render.BlockRenderHelper;
+import dark.fluid.common.FluidMech;
+import dark.fluid.common.TabFluidMech;
 
 public class BlockRod extends BlockAdvanced
 {

@@ -3,11 +3,6 @@ package dark.fluid.common.pipes;
 
 import java.util.List;
 
-import dark.fluid.common.FluidMech;
-import dark.fluid.common.TabFluidMech;
-import dark.hydraulic.api.FluidRestrictionHandler;
-import dark.hydraulic.api.INetworkPipe;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -17,6 +12,10 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.liquids.ILiquidTank;
 import universalelectricity.prefab.block.BlockAdvanced;
+import dark.fluid.common.FluidMech;
+import dark.fluid.common.TabFluidMech;
+import dark.hydraulic.api.FluidRestrictionHandler;
+import dark.hydraulic.api.INetworkPipe;
 
 public class BlockPipe extends BlockAdvanced
 {

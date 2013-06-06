@@ -1,6 +1,5 @@
 package dark.fluid.common;
 
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.logging.Logger;
@@ -39,8 +38,8 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.fluid.common.fluids.BlockWasteLiquid;
 import dark.fluid.common.item.ItemParts;
-import dark.fluid.common.item.ItemTools;
 import dark.fluid.common.item.ItemParts.Parts;
+import dark.fluid.common.item.ItemTools;
 import dark.fluid.common.machines.BlockReleaseValve;
 import dark.fluid.common.machines.BlockSink;
 import dark.fluid.common.machines.BlockTank;
@@ -68,7 +67,6 @@ import dark.mech.common.machines.BlockGenerator;
 import dark.mech.common.machines.BlockRod;
 import dark.mech.common.machines.TileEntityGenerator;
 import dark.mech.common.machines.TileEntityRod;
-
 
 @ModstatInfo(prefix = "fluidmech")
 @Mod(modid = FluidMech.MOD_ID, name = FluidMech.MOD_NAME, version = FluidMech.VERSION, dependencies = "after:BasicComponents", useMetadata = true)
@@ -161,21 +159,21 @@ public class FluidMech extends DummyModContainer
 		CONFIGURATION.load();
 
 		/* BLOCK DECLARATION -- CONFIG LOADER */
-		blockGenPipe = new BlockPipe(this.CONFIGURATION.getBlock("Pipes", BLOCK_ID_PREFIX).getInt());
-		blockMachine = new BlockPumpMachine(this.CONFIGURATION.getBlock("Machines", BLOCK_ID_PREFIX + 1).getInt());
-		blockRod = new BlockRod(this.CONFIGURATION.getBlock("Mechanical Rod", BLOCK_ID_PREFIX + 3).getInt());
-		blockGenerator = new BlockGenerator((this.CONFIGURATION.getBlock("Generator", BLOCK_ID_PREFIX + 4).getInt()));
-		blockReleaseValve = new BlockReleaseValve((this.CONFIGURATION.getBlock("Release Valve", BLOCK_ID_PREFIX + 5).getInt()));
-		blockTank = new BlockTank(this.CONFIGURATION.getBlock("Tank", BLOCK_ID_PREFIX + 6).getInt());
-		blockWasteLiquid = new BlockWasteLiquid(this.CONFIGURATION.getBlock("WasteLiquid", BLOCK_ID_PREFIX + 7).getInt());
-		blockSink = new BlockSink(this.CONFIGURATION.getBlock("Sink", BLOCK_ID_PREFIX + 8).getInt());
-		blockDrain = new BlockDrain(this.CONFIGURATION.getBlock("Drain", BLOCK_ID_PREFIX + 9).getInt());
-		blockConPump = new BlockConstructionPump(this.CONFIGURATION.getBlock("ConstructionPump", BLOCK_ID_PREFIX + 10).getInt());
-		blockPipe = new BlockPipe(this.CONFIGURATION.getBlock("RestrictedPipes", BLOCK_ID_PREFIX + 11).getInt());
+		blockGenPipe = new BlockPipe(FluidMech.CONFIGURATION.getBlock("Pipes", BLOCK_ID_PREFIX).getInt());
+		blockMachine = new BlockPumpMachine(FluidMech.CONFIGURATION.getBlock("Machines", BLOCK_ID_PREFIX + 1).getInt());
+		blockRod = new BlockRod(FluidMech.CONFIGURATION.getBlock("Mechanical Rod", BLOCK_ID_PREFIX + 3).getInt());
+		blockGenerator = new BlockGenerator((FluidMech.CONFIGURATION.getBlock("Generator", BLOCK_ID_PREFIX + 4).getInt()));
+		blockReleaseValve = new BlockReleaseValve((FluidMech.CONFIGURATION.getBlock("Release Valve", BLOCK_ID_PREFIX + 5).getInt()));
+		blockTank = new BlockTank(FluidMech.CONFIGURATION.getBlock("Tank", BLOCK_ID_PREFIX + 6).getInt());
+		blockWasteLiquid = new BlockWasteLiquid(FluidMech.CONFIGURATION.getBlock("WasteLiquid", BLOCK_ID_PREFIX + 7).getInt());
+		blockSink = new BlockSink(FluidMech.CONFIGURATION.getBlock("Sink", BLOCK_ID_PREFIX + 8).getInt());
+		blockDrain = new BlockDrain(FluidMech.CONFIGURATION.getBlock("Drain", BLOCK_ID_PREFIX + 9).getInt());
+		blockConPump = new BlockConstructionPump(FluidMech.CONFIGURATION.getBlock("ConstructionPump", BLOCK_ID_PREFIX + 10).getInt());
+		blockPipe = new BlockPipe(FluidMech.CONFIGURATION.getBlock("RestrictedPipes", BLOCK_ID_PREFIX + 11).getInt());
 
 		/* ITEM DECLARATION -- COFNGI LOADER */
-		itemParts = new ItemParts(this.CONFIGURATION.getItem("Parts", ITEM_ID_PREFIX).getInt());
-		itemGauge = new ItemTools(this.CONFIGURATION.getItem("PipeGuage", ITEM_ID_PREFIX + 3).getInt());
+		itemParts = new ItemParts(FluidMech.CONFIGURATION.getItem("Parts", ITEM_ID_PREFIX).getInt());
+		itemGauge = new ItemTools(FluidMech.CONFIGURATION.getItem("PipeGuage", ITEM_ID_PREFIX + 3).getInt());
 		if (CONFIGURATION.hasChanged())
 		{
 			CONFIGURATION.save();
@@ -233,7 +231,6 @@ public class FluidMech extends DummyModContainer
 
 		/* LANG LOADING */
 		FMLog.info(" Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
-		
 
 		/* ORE DIRECTORY REGISTER */
 		OreDictionary.registerOre("bronzeTube", new ItemStack(itemParts, 1, Parts.Bronze.ordinal()));
@@ -266,7 +263,7 @@ public class FluidMech extends DummyModContainer
 		// generator
 		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(this.blockGenerator, 1), new Object[] { "@T@", "OVO", "@T@", 'T', new ItemStack(FluidMech.blockRod, 1), '@', "plateSteel", 'O', "basicCircuit", 'V', "motor" }));
 		// pipe gauge
-		GameRegistry.addRecipe(new ItemStack(this.itemGauge, 1, 0), new Object[] { "TVT", " T ", 'V', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 'T', new ItemStack(itemParts, 1, Parts.Iron.ordinal()) });
+		GameRegistry.addRecipe(new ItemStack(FluidMech.itemGauge, 1, 0), new Object[] { "TVT", " T ", 'V', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 'T', new ItemStack(itemParts, 1, Parts.Iron.ordinal()) });
 		// iron tube
 		GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Iron.ordinal()), new Object[] { "@@@", '@', Item.ingotIron });
 		// bronze tube

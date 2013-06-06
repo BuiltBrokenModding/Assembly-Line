@@ -8,6 +8,7 @@ import net.minecraftforge.liquids.LiquidStack;
 
 import org.lwjgl.opengl.GL11;
 
+import universalelectricity.core.vector.Vector3;
 import dark.fluid.client.model.ModelLargePipe;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.pipes.TileEntityGenericPipe;
@@ -15,8 +16,6 @@ import dark.fluid.common.pipes.TileEntityPipe;
 import dark.fluid.common.pipes.addon.IPipeExtention;
 import dark.hydraulic.api.ColorCode;
 import dark.hydraulic.api.FluidRestrictionHandler;
-
-import universalelectricity.core.vector.Vector3;
 
 public class RenderPipe extends TileEntitySpecialRenderer
 {
@@ -103,7 +102,7 @@ public class RenderPipe extends TileEntitySpecialRenderer
 		{
 			bool = false;
 		}
-		bindTextureByName(this.getPipeTexture(meta, bool));
+		bindTextureByName(RenderPipe.getPipeTexture(meta, bool));
 		if (side[0])
 		{
 			SixPipe.renderBottom();

@@ -9,12 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import dark.hydraulic.api.IDrain;
-import dark.hydraulic.api.INetworkPipe;
-import dark.hydraulic.helpers.FluidHelper;
-import dark.hydraulic.prefab.tile.TileEntityFluidDevice;
-
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -27,6 +21,10 @@ import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
+import dark.hydraulic.api.IDrain;
+import dark.hydraulic.api.INetworkPipe;
+import dark.hydraulic.helpers.FluidHelper;
+import dark.hydraulic.prefab.tile.TileEntityFluidDevice;
 
 public class TileEntityDrain extends TileEntityFluidDevice implements ITankContainer, IDrain
 {

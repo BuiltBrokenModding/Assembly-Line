@@ -3,15 +3,14 @@ package dark.fluid.common.item;
 
 import java.util.List;
 
-import dark.fluid.common.TabFluidMech;
-import dark.hydraulic.api.IReadOut;
-
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import dark.fluid.common.TabFluidMech;
+import dark.hydraulic.api.IReadOut;
 
 public class ItemTools extends ItemBasic
 {

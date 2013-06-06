@@ -6,13 +6,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import dark.hydraulic.helpers.FluidHelper;
-
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
+import dark.hydraulic.helpers.FluidHelper;
 
 /**
  * A simpler pathfinder based on Calclavia's PathFinder from UE api
