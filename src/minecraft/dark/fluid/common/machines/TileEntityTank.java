@@ -178,7 +178,7 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 	@Override
 	public ILiquidTank[] getTanks(ForgeDirection direction)
 	{
-		return new ILiquidTank[] { this.tank };
+		return new ILiquidTank[] { ((ContainerNetwork) this.getTileNetwork()).combinedStorage() };
 	}
 
 	@Override
@@ -186,7 +186,7 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 	{
 		if (this.getColor().isValidLiquid(type))
 		{
-			return this.tank;
+			return ((ContainerNetwork) this.getTileNetwork()).combinedStorage();
 		}
 		return null;
 	}
