@@ -65,7 +65,6 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
 		}
 		if (block.blockID == FluidMech.blockRod.blockID)
 		{
-			GL11.glPushMatrix();
 			GL11.glTranslatef((float) 0.0F, (float) 1.5F, (float) 0.0F);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(FluidMech.MODEL_TEXTURE_DIRECTORY + "mechanical/GearRod.png"));
@@ -73,7 +72,6 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
 		}
 		else if (block.blockID == FluidMech.blockGenerator.blockID)
 		{
-			GL11.glPushMatrix();
 			GL11.glTranslatef((float) 0.0F, (float) 1.0F, (float) 0.0F);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(FluidMech.MODEL_TEXTURE_DIRECTORY + "mechanical/Generator.png"));
