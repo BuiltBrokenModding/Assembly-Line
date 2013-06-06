@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import dark.library.helpers.Pair;
 import dark.library.math.LinearAlg;
+import dark.library.math.Quaternion;
 
 import net.minecraft.entity.Entity;
 import universalelectricity.core.vector.Vector3;
@@ -144,13 +145,15 @@ public class NetworkOrbit
 		{
 			r += this.getOrbitMemebers().get(entity);
 		}
-		double spacing = r / this.getOrbitMemebers().size();
+		double spacing = (2 * r * Math.PI) / this.getOrbitMemebers().size();
 		Vector3 t = this.getRotation();
+		return NetworkOrbit.getOrbitOffset(r, spacing * pos, t);
+	}
 
-		double deltaX = (r * Math.cos(t.y + spacing)) + (r * Math.sin(t.z));
-		double deltaY = (r * Math.sin(t.x)) + (r * Math.sin(t.z));
-		double deltaZ = (r * Math.sin(t.y + spacing)) + (r * Math.cos(t.x));
-
-		return new Vector3(deltaX, deltaY, deltaZ);
+	public static Vector3 getOrbitOffset(double r, double o, Vector3 t)
+	{
+		Quaternion quat = new Quaternion();
+		quat.FromEuler((float) t.x, ((float) (t.y + o)), (float) t.z);
+		return quat.multi(new Vector3(r, r, r));
 	}
 }
