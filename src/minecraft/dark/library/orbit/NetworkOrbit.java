@@ -132,6 +132,7 @@ public class NetworkOrbit
 	 */
 	public Vector3 getOrbitOffset(Entity entity, int pos)
 	{
+		/* GET RADIUS OF CIRCLE IF TOO SMALL INCREASE AS WELL INCRASE BY OFFSET GIVEN */
 		double r = this.getMinRadius();
 		if (this.orbitRadius < r)
 		{
@@ -145,15 +146,19 @@ public class NetworkOrbit
 		{
 			r += this.getOrbitMemebers().get(entity);
 		}
+		/* DO ROTATION */
 		double spacing = (2 * r * Math.PI) / this.getOrbitMemebers().size();
-		Vector3 t = this.getRotation();
-		return NetworkOrbit.getOrbitOffset(r, spacing * pos, t);
+		return NetworkOrbit.getOrbitOffset(r, spacing * pos, this.getRotation());
 	}
 
 	public static Vector3 getOrbitOffset(double r, double o, Vector3 t)
 	{
 		Quaternion quat = new Quaternion();
-		quat.FromEuler((float) t.x, ((float) (t.y + o)), (float) t.z);
-		return quat.multi(new Vector3(r, r, r));
+		Quaternion ya = new Quaternion();
+
+		quat.FromEuler((float) t.x, ((float) (t.y)), (float) t.z);
+		ya.FromAxis(new Vector3(0, 1f, 0), (float) o);
+
+		return ya.multi(quat).multi(new Vector3(0, 0, r));
 	}
 }

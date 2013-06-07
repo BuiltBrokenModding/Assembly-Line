@@ -32,9 +32,25 @@ public class Quaternion
 		this((float) vec.x, (float) vec.y, (float) vec.z, w);
 	}
 
-	// normalising a quaternion works similar to a vector. This method will not do anything
-	// if the quaternion is close enough to being unit-length. define TOLERANCE as something
-	// small like 0.00001f to get accurate results
+	public void set(Quaternion quaternion)
+	{
+		w = quaternion.w;
+		x = quaternion.x;
+		y = quaternion.y;
+		z = quaternion.z;
+	}
+
+	public void set(float x, float y, float z, float w)
+	{
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.w = w;
+	}
+
+	/**
+	 * Normalizes the Quaternion only if its outside the min errors range
+	 */
 	public void normalise()
 	{
 		// Don't normalize if we don't have to
@@ -49,22 +65,38 @@ public class Quaternion
 		}
 	}
 
-	// We need to get the inverse of a quaternion to properly apply a quaternion-rotation to a
-	// vector
-	// The conjugate of a quaternion is the same as the inverse, as long as the quaternion is
-	// unit-length
-	public Quaternion getConjugate()
+	/**
+	 * Gets the inverse of this Quaternion
+	 */
+	public Quaternion getConj()
 	{
 		return new Quaternion(-x, -y, -z, w);
 	}
 
-	// Multiplying q1 with q2 applies the rotation q2 to q1
+	public void conj()
+	{
+		x = -x;
+		y = -y;
+		z = -z;
+	}
+
+	/**
+	 * Multiplying q1 with q2 applies the rotation q2 to q1
+	 * */
 	public Quaternion multi(Quaternion rq)
 	{
 		return new Quaternion(w * rq.x + x * rq.w + y * rq.z - z * rq.y, w * rq.y + y * rq.w + z * rq.x - x * rq.z, w * rq.z + z * rq.w + x * rq.y - y * rq.x, w * rq.w - x * rq.x - y * rq.y - z * rq.z);
 	}
 
-	// Multiplying a quaternion q with a vector v applies the q-rotation to v
+	public void multLocal(Quaternion q)
+	{
+		Quaternion temp = this.multi(q);
+		this.set(temp);
+	}
+
+	/**
+	 * Multi a vector against this in other words applying rotation
+	 */
 	public Vector3 multi(Vector3 vec)
 	{
 		Vector3 vn = vec.clone();
@@ -76,7 +108,7 @@ public class Quaternion
 		vecQuat.z = (float) vn.z;
 		vecQuat.w = 0.0f;
 
-		resQuat = vecQuat.multi(this.getConjugate());
+		resQuat = vecQuat.multi(this.getConj());
 		resQuat = this.multi(resQuat);
 
 		return new Vector3(resQuat.x, resQuat.y, resQuat.z);
@@ -84,12 +116,11 @@ public class Quaternion
 
 	public void FromAxis(Vector3 v, float angle)
 	{
-		float sinAngle;
 		angle *= 0.5f;
 		Vector3 vn = v.clone();
 		vn.normalize();
 
-		sinAngle = (float) Math.sin(angle);
+		float sinAngle = (float) Math.sin(angle);
 
 		x = (float) (vn.x * sinAngle);
 		y = (float) (vn.y * sinAngle);
@@ -151,5 +182,11 @@ public class Quaternion
 		y = y / scale;
 		z = z / scale;
 		angle = (float) (Math.acos(w) * 2.0f);
+	}
+
+	@Override
+	public String toString()
+	{
+		return "<" + x + "x " + y + "y " + z + "z @" + w + ">";
 	}
 }
