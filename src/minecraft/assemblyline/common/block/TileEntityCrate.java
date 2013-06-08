@@ -31,10 +31,15 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 
 	public long prevClickTime = -1000;
 
+	/**
+	 * Clones the single stack into an inventory format for automation interaction
+	 */
 	public void buildInventory()
 	{
 		ItemStack baseStack = this.sampleStack.copy();
+
 		this.items = new ItemStack[this.getSlotCount()];
+
 		for (int slot = 0; slot < this.items.length; slot++)
 		{
 			int stackL = Math.min(Math.min(baseStack.stackSize, baseStack.getMaxStackSize()), this.getInventoryStackLimit());
@@ -48,6 +53,13 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 		}
 	}
 
+	/**
+	 * Turns the inventory array into a single stack of matching items. This assumes that all items
+	 * in the crate are the same TODO eject minority items and only keep the majority that are the
+	 * same to prevent duplication issues
+	 * 
+	 * @param force - force a rebuild of the inventory from the single stack created
+	 */
 	public void buildSampleStack(boolean force)
 	{
 		int count = 0;
@@ -55,22 +67,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 		int meta = 0;
 
 		boolean rebuildBase = false;
-		/* Similar to Init but checks so often just in case something does break */
-		if (worldObj != null)
-		{
-			if (this.items != null && this.items.length > this.getSlotCount())
-			{
-				ItemStack[] itemSet = this.items.clone();
-				this.items = new ItemStack[this.getSlotCount()];
-				for (int i = 0; i < itemSet.length; i++)
-				{
-					if (i < this.items.length)
-					{
-						this.items[i] = itemSet[i];
-					}
-				}
-			}
-		}
+
 		/* Creates the sample stack that is used as a collective itemstack */
 		for (int i = 0; i < this.items.length; i++)
 		{
@@ -98,7 +95,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 			this.sampleStack = new ItemStack(id, count, meta);
 		}
 		/* if one stack is over sized this rebuilds the inv to redistribute the items in the slots */
-		if ((rebuildBase || force) && this.sampleStack != null)
+		if ((rebuildBase || force || this.items.length > this.getSlotCount()) && this.sampleStack != null)
 		{
 			this.buildInventory();
 		}
