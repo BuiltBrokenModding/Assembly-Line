@@ -159,6 +159,6 @@ public class NetworkOrbit
 		quat.FromEuler((float) t.x, ((float) (t.y)), (float) t.z);
 		ya.FromAxis(new Vector3(0, 1f, 0), (float) o);
 
-		return ya.multi(quat).multi(new Vector3(0, 0, r));
+		return quat.multi(ya).multi(new Vector3(0, 0, r));
 	}
 }

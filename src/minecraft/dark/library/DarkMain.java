@@ -42,8 +42,7 @@ public class DarkMain
 		if (!loadedItems)
 		{
 			LOGGER.fine("Loaded Basic Components Items");
-
-			// UniversalElectricity.CONFIGURATION.load();
+			
 			BasicComponents.requestItem("ingotCopper", 0);
 			BasicComponents.requestItem("ingotTin", 0);
 
@@ -69,7 +68,8 @@ public class DarkMain
 			BasicComponents.requestItem("infiniteBattery", 0);
 
 			loadedItems = true;
+			BasicComponents.register(mod, channel);
 		}
-		BasicComponents.register(mod, channel);
+		
 	}
 }
