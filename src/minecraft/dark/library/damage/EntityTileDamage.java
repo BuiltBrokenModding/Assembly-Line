@@ -4,6 +4,7 @@ import universalelectricity.core.vector.Vector3;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
@@ -27,7 +28,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author DarkGuardsman
  * 
  */
-public class EntityTileDamage extends Entity implements IEntityAdditionalSpawnData
+public class EntityTileDamage extends EntityLiving implements IEntityAdditionalSpawnData
 {
 
 	private TileEntity host;
@@ -120,7 +121,7 @@ public class EntityTileDamage extends Entity implements IEntityAdditionalSpawnDa
 	}
 
 	@Override
-	protected void readEntityFromNBT(NBTTagCompound nbttagcompound)
+	public void readEntityFromNBT(NBTTagCompound nbttagcompound)
 	{
 		// TODO Auto-generated method stub
 
@@ -132,7 +133,7 @@ public class EntityTileDamage extends Entity implements IEntityAdditionalSpawnDa
 	}
 
 	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbttagcompound)
+	public void writeEntityToNBT(NBTTagCompound nbttagcompound)
 	{
 		// TODO Auto-generated method stub
 
@@ -152,20 +153,7 @@ public class EntityTileDamage extends Entity implements IEntityAdditionalSpawnDa
 	}
 
 	@Override
-	protected void entityInit()
-	{
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public boolean canBeCollidedWith()
-	{
-		return true;
-	}
-
-	@SideOnly(Side.CLIENT)
-	public boolean func_98034_c(EntityPlayer par1EntityPlayer)
 	{
 		return true;
 	}
@@ -208,5 +196,11 @@ public class EntityTileDamage extends Entity implements IEntityAdditionalSpawnDa
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public int getMaxHealth()
+	{
+		return this.host != null && host instanceof IHpTile ? ((IHpTile) host).getMaxHealth() : 100;
 	}
 }
