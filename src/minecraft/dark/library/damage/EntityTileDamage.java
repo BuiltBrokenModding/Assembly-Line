@@ -79,6 +79,13 @@ public class EntityTileDamage extends EntityLiving implements IEntityAdditionalS
 	}
 
 	@Override
+	public boolean isPotionApplicable(PotionEffect par1PotionEffect)
+	{
+		// TODO change this later to pass this question to the tile
+		return false;
+	}
+
+	@Override
 	public String getEntityName()
 	{
 		return "EntityTileTarget";
