@@ -186,7 +186,7 @@ public abstract class TileEntityTerminal extends TileEntityRunnableMachine imple
 		}
 		catch (Exception e)
 		{
-			FMLLog.severe("DarkLib>>>TerminalInstance>>>PacketReadError>>>ForTile>>>"+this.toString());
+			FMLLog.severe("DarkLib>>>TerminalInstance>>>PacketReadError>>>ForTile>>>" + this.toString());
 			e.printStackTrace();
 		}
 	}
@@ -256,7 +256,10 @@ public abstract class TileEntityTerminal extends TileEntityRunnableMachine imple
 		}
 		if (removeList != null && removeList.size() > 0)
 		{
-			return this.users.removeAll(removeList);
+
+			boolean bool = this.users.removeAll(removeList);
+			this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+			return bool;
 		}
 		return false;
 	}

@@ -2,16 +2,23 @@ package dark.library.damage;
 
 import universalelectricity.core.vector.Vector3;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Entity designed to take damage and apply it to the tile from an Entity. Simulates the tile is
@@ -29,32 +36,21 @@ public class EntityTileDamage extends Entity implements IEntityAdditionalSpawnDa
 	public EntityTileDamage(World par1World)
 	{
 		super(par1World);
-		this.setSize(1F, 1F);
-	}
-
-	public EntityTileDamage(World par1World, TileEntity c)
-	{
-		this(par1World);
 		this.isImmuneToFire = true;
-		this.setPosition(c.xCoord + 0.5, c.yCoord + 0.5, c.zCoord + 0.5);
-		this.host = c;
+		this.setSize(1.1F, 1.1F);
 	}
 
-	@Override
-	protected void entityInit()
+	public EntityTileDamage(TileEntity c)
 	{
-		// TODO Auto-generated method stub
-
+		this(c.worldObj);
+		this.setPosition(c.xCoord + 0.5, c.yCoord, c.zCoord + 0.5);
+		this.host = c;
 	}
 
 	@Override
 	public boolean attackEntityFrom(DamageSource source, int ammount)
 	{
-		if (this.isEntityInvulnerable())
-		{
-			return false;
-		}
-		else if (this.host instanceof IHpTile)
+		if (this.host instanceof IHpTile)
 		{
 			return ((IHpTile) this.host).onDamageTaken(source, ammount);
 		}
@@ -78,7 +74,7 @@ public class EntityTileDamage extends Entity implements IEntityAdditionalSpawnDa
 				this.setDead();
 
 			}
-			return false;
+			return true;
 		}
 	}
 
@@ -113,10 +109,14 @@ public class EntityTileDamage extends Entity implements IEntityAdditionalSpawnDa
 			this.setDead();
 			return;
 		}
-		if (this.host instanceof IHpTile && !((IHpTile) this.host).isAlive())
+		else if (this.host instanceof IHpTile && !((IHpTile) this.host).isAlive())
 		{
 			this.setDead();
 			return;
+		}
+		else
+		{
+			this.setPosition(this.host.xCoord + 0.5, this.host.yCoord, this.host.zCoord + 0.5);
 		}
 	}
 
@@ -124,6 +124,11 @@ public class EntityTileDamage extends Entity implements IEntityAdditionalSpawnDa
 	protected void readEntityFromNBT(NBTTagCompound nbttagcompound)
 	{
 		// TODO Auto-generated method stub
+
+	}
+
+	public void moveEntity(double par1, double par3, double par5)
+	{
 
 	}
 
@@ -136,6 +141,58 @@ public class EntityTileDamage extends Entity implements IEntityAdditionalSpawnDa
 
 	@Override
 	protected boolean canTriggerWalking()
+	{
+		return false;
+	}
+
+	@Override
+	public AxisAlignedBB getCollisionBox(Entity par1Entity)
+	{
+		return AxisAlignedBB.getBoundingBox(this.posX - .6, this.posY - .6, this.posZ - .6, this.posX + .6, this.posY + .6, this.posZ + .6);
+
+	}
+
+	@Override
+	protected void entityInit()
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean canBeCollidedWith()
+	{
+		return true;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public boolean func_98034_c(EntityPlayer par1EntityPlayer)
+	{
+		return true;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public boolean isInRangeToRenderVec3D(Vec3 par1Vec3)
+	{
+		return false;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public boolean isInRangeToRenderDist(double par1)
+	{
+		return false;
+	}
+
+	@Override
+	public void setVelocity(double par1, double par3, double par5)
+	{
+
+	}
+
+	@Override
+	public boolean isInsideOfMaterial(Material par1Material)
 	{
 		return false;
 	}

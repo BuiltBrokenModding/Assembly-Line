@@ -13,8 +13,8 @@ public class TileDamageSource extends CustomDamageSource
 {
 	protected Object damageSource;
 
-	public static final CustomDamageSource bullets = ((CustomDamageSource) new CustomDamageSource("Bullets")).setDeathMessage("%1$s was filled with holes!");
-	public static final CustomDamageSource laser = ((CustomDamageSource) new CustomDamageSource("Laser")).setDeathMessage("%1$s was vaporized!");
+	public static final CustomDamageSource bullets = ((CustomDamageSource) new CustomDamageSource("Bullets").setProjectile()).setDeathMessage("%1$s was filled with holes!");
+	public static final CustomDamageSource laser = ((CustomDamageSource) new CustomDamageSource("Laser").setFireDamage()).setDeathMessage("%1$s was vaporized!");
 
 	public TileDamageSource(String damageName, Object attacker)
 	{
