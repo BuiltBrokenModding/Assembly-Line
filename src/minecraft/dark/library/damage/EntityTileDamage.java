@@ -56,8 +56,7 @@ public class EntityTileDamage extends Entity implements IEntityAdditionalSpawnDa
 		}
 		else
 		{
-			this.hp -= ammount;
-			if (hp <= 0)
+			if ((hp -= ammount) <= 0)
 			{
 				if (this.host != null)
 				{
@@ -197,4 +196,17 @@ public class EntityTileDamage extends Entity implements IEntityAdditionalSpawnDa
 		return false;
 	}
 
+	@Override
+	public boolean interact(EntityPlayer player)
+	{
+		if (this.host != null && player != null)
+		{
+			Block block = Block.blocksList[this.worldObj.getBlockId(this.host.xCoord, this.host.yCoord, this.host.zCoord)];
+			if (block != null)
+			{
+				return block.onBlockActivated(this.worldObj, this.host.xCoord, this.host.yCoord, this.host.zCoord, player, 0, 0, 0, 0);
+			}
+		}
+		return false;
+	}
 }
