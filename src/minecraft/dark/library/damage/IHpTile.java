@@ -18,4 +18,22 @@ public interface IHpTile
 	 * considered dead
 	 */
 	public boolean isAlive();
+
+	/**
+	 * Current hp of the tile
+	 */
+	public int hp();
+
+	/**
+	 * Sets the tiles hp
+	 * 
+	 * @param i - amount
+	 * @param increase - increase instead of replace
+	 */
+	public void setHp(int i, boolean increase);
+
+	/**
+	 * Max hp of the object
+	 */
+	public int getMaxHealth();
 }
