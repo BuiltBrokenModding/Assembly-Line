@@ -1,5 +1,6 @@
 package dark.library.damage;
 
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 
 public interface IHpTile
@@ -36,4 +37,9 @@ public interface IHpTile
 	 * Max hp of the object
 	 */
 	public int getMaxHealth();
+
+	/**
+	 * Can the potion be used on the Entity that is translating damage for the TileEntity
+	 */
+	public boolean canApplyPotion(PotionEffect par1PotionEffect);
 }

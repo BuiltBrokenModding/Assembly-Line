@@ -1,6 +1,5 @@
 package dark.library.damage;
 
-import universalelectricity.core.vector.Vector3;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -13,6 +12,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import universalelectricity.core.vector.Vector3;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
@@ -81,8 +81,29 @@ public class EntityTileDamage extends EntityLiving implements IEntityAdditionalS
 	@Override
 	public boolean isPotionApplicable(PotionEffect par1PotionEffect)
 	{
-		// TODO change this later to pass this question to the tile
+		if (par1PotionEffect != null && this.host instanceof IHpTile)
+		{
+			return ((IHpTile) this.host).canApplyPotion(par1PotionEffect);
+		}
 		return false;
+	}
+
+	@Override
+	public void addPotionEffect(PotionEffect par1PotionEffect)
+	{
+		if (this.isPotionApplicable(par1PotionEffect))
+		{
+			if (this.activePotionsMap.containsKey(Integer.valueOf(par1PotionEffect.getPotionID())))
+			{
+				((PotionEffect) this.activePotionsMap.get(Integer.valueOf(par1PotionEffect.getPotionID()))).combine(par1PotionEffect);
+				this.onChangedPotionEffect((PotionEffect) this.activePotionsMap.get(Integer.valueOf(par1PotionEffect.getPotionID())));
+			}
+			else
+			{
+				this.activePotionsMap.put(Integer.valueOf(par1PotionEffect.getPotionID()), par1PotionEffect);
+				this.onNewPotionEffect(par1PotionEffect);
+			}
+		}
 	}
 
 	@Override
@@ -123,6 +144,7 @@ public class EntityTileDamage extends EntityLiving implements IEntityAdditionalS
 		}
 		else
 		{
+			this.updatePotionEffects();
 			this.setPosition(this.host.xCoord + 0.5, this.host.yCoord, this.host.zCoord + 0.5);
 		}
 	}
