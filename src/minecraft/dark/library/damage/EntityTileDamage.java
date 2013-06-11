@@ -126,26 +126,34 @@ public class EntityTileDamage extends EntityLiving implements IEntityAdditionalS
 	@Override
 	public void readSpawnData(ByteArrayDataInput data)
 	{
-		this.host = this.worldObj.getBlockTileEntity(data.readInt(), data.readInt(), data.readInt());
+		try
+		{
+			this.host = this.worldObj.getBlockTileEntity(data.readInt(), data.readInt(), data.readInt());
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void onUpdate()
 	{
-		if (this.host == null || this.host.isInvalid())
+		if (!this.worldObj.isRemote)
 		{
-			this.setDead();
-			return;
-		}
-		else if (this.host instanceof IHpTile && !((IHpTile) this.host).isAlive())
-		{
-			this.setDead();
-			return;
-		}
-		else
-		{
-			this.updatePotionEffects();
-			this.setPosition(this.host.xCoord + 0.5, this.host.yCoord, this.host.zCoord + 0.5);
+			if (this.host == null || this.host.isInvalid())
+			{
+				this.setDead();
+			}
+			else if (this.host instanceof IHpTile && !((IHpTile) this.host).isAlive())
+			{
+				this.setDead();
+			}
+			else
+			{
+				this.updatePotionEffects();
+				this.setPosition(this.host.xCoord + 0.5, this.host.yCoord, this.host.zCoord + 0.5);
+			}
 		}
 	}
 
