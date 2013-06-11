@@ -1,6 +1,6 @@
 package dark.library.npc;
 
-import dark.library.team.FactionInstance;
+import dark.faction.core.FactionInstance;
 import net.minecraft.entity.INpc;
 
 public interface IAdvancedNpc extends INpc

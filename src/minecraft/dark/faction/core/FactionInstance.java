@@ -1,7 +1,8 @@
-package dark.library.team;
+package dark.faction.core;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,11 +19,11 @@ import dark.library.helpers.Time;
  */
 public class FactionInstance
 {
-	List<UserAccess> userList;
-	String name;
-	String creator;
-	String date = "unkown";
-	String prefix;
+	public List<UserAccess> userList;
+	public String name;
+	public String creator;
+	public String date = "unkown";
+	public String prefix;	
 
 	public FactionInstance(String prefix, String name, String maker, Pair<String, Date> date)
 	{
@@ -99,9 +100,25 @@ public class FactionInstance
 		tag.setString("creator", this.creator);
 		return tag;
 	}
-	
+
 	public void read(NBTTagCompound tag)
 	{
-		
+
+	}
+
+	public boolean isEqual(FactionInstance faction)
+	{
+
+		return faction != null && faction.name.equalsIgnoreCase(this.name) && faction.creator.equalsIgnoreCase(this.creator);
+	}
+
+	public boolean isInvalid()
+	{
+		return this.wasPlayerCreated() && this.userList.isEmpty();
+	}
+
+	public boolean wasPlayerCreated()
+	{
+		return !this.creator.equalsIgnoreCase("World");
 	}
 }
