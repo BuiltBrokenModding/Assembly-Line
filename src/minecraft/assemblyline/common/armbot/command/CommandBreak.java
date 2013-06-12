@@ -6,7 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import universalelectricity.core.vector.Vector3;
-import dark.library.helpers.ItemFindingHelper;
+import dark.helpers.ItemFindingHelper;
 
 /**
  * Used by arms to break a specific block in a position.

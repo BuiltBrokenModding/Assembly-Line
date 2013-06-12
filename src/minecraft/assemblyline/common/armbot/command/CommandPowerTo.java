@@ -9,7 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
-import dark.library.helpers.ItemFindingHelper;
+import dark.helpers.ItemFindingHelper;
 
 public class CommandPowerTo extends Command
 {

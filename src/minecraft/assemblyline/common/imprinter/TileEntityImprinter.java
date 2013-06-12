@@ -28,7 +28,7 @@ import assemblyline.common.AssemblyLine;
 
 import com.google.common.io.ByteArrayDataInput;
 
-import dark.library.helpers.Pair;
+import dark.helpers.Pair;
 import dark.library.inv.ISlotPickResult;
 import dark.library.machine.crafting.AutoCraftingManager;
 import dark.library.machine.crafting.IAutoCrafter;
