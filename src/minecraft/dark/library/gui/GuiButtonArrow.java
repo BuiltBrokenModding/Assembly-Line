@@ -5,7 +5,7 @@ import net.minecraft.client.gui.GuiButton;
 
 import org.lwjgl.opengl.GL11;
 
-import dark.library.DarkMain;
+import dark.core.DarkMain;
 
 public class GuiButtonArrow extends GuiButton
 {

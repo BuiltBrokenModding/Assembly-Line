@@ -17,9 +17,9 @@ import org.lwjgl.opengl.GL11;
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.prefab.GuiBase;
 import universalelectricity.prefab.vector.Region2;
-import dark.library.DarkMain;
+import dark.core.DarkMain;
+import dark.core.api.terminal.IScroll;
 import dark.library.access.UserAccess;
-import dark.library.access.interfaces.IScroll;
 
 public class GuiGlobalList extends GuiBase implements IScroll
 {

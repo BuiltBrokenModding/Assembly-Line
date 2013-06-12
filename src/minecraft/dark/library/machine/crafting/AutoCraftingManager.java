@@ -18,7 +18,7 @@ import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import cpw.mods.fml.relauncher.ReflectionHelper;
-import dark.library.helpers.Pair;
+import dark.helpers.Pair;
 
 /**
  * Rewrite of the imprinter crafting system into its own manageable class

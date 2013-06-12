@@ -1,4 +1,0 @@
-TASK: Collection
-From: tile.chest ore
-To: tile.furnace 0
-

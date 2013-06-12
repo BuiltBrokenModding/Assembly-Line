@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 import calclavia.lib.TileEntityUniversalRunnable;
-import dark.library.PowerSystems;
+import dark.core.power.PowerSystems;
 
 public class TileEntityRunnableMachine extends TileEntityUniversalRunnable
 {

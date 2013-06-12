@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import dark.library.helpers.Pair;
+import dark.helpers.Pair;
 import dark.library.math.LinearAlg;
 import dark.library.math.Quaternion;
 
