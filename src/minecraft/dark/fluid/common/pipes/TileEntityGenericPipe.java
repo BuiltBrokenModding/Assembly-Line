@@ -6,9 +6,9 @@ import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
-import dark.hydraulic.api.ColorCode;
-import dark.hydraulic.helpers.FluidHelper;
-import dark.hydraulic.network.PipeNetwork;
+import dark.core.api.ColorCode;
+import dark.core.hydraulic.helpers.FluidHelper;
+import dark.core.hydraulic.network.fluid.NetworkPipes;
 
 public class TileEntityGenericPipe extends TileEntityPipe
 {
@@ -20,7 +20,7 @@ public class TileEntityGenericPipe extends TileEntityPipe
 			return 0;
 		}
 		TileEntity tile = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), from);
-		return ((PipeNetwork) this.getTileNetwork()).addFluidToNetwork(tile, resource, doFill);
+		return ((NetworkPipes) this.getTileNetwork()).addFluidToNetwork(tile, resource, doFill);
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class TileEntityGenericPipe extends TileEntityPipe
 		{
 			return 0;
 		}
-		return ((PipeNetwork) this.getTileNetwork()).addFluidToNetwork(this, resource, doFill);
+		return ((NetworkPipes) this.getTileNetwork()).addFluidToNetwork(this, resource, doFill);
 	}
 
 	@Override

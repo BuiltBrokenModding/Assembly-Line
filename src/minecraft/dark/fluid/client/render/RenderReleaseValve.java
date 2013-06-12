@@ -5,11 +5,11 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
+import dark.core.api.ColorCode;
 import dark.fluid.client.model.ModelLargePipe;
 import dark.fluid.client.model.ModelReleaseValve;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.machines.TileEntityReleaseValve;
-import dark.hydraulic.api.ColorCode;
 
 public class RenderReleaseValve extends TileEntitySpecialRenderer
 {

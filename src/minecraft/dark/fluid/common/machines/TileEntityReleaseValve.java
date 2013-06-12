@@ -11,14 +11,14 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
-import dark.hydraulic.api.ColorCode;
-import dark.hydraulic.api.IColorCoded;
-import dark.hydraulic.api.INetworkPipe;
-import dark.hydraulic.api.IReadOut;
-import dark.hydraulic.api.ITileConnector;
-import dark.hydraulic.network.PipeNetwork;
-import dark.hydraulic.prefab.tile.TileEntityFluidDevice;
-import dark.library.helpers.ConnectionHelper;
+import dark.core.api.ColorCode;
+import dark.core.api.IColorCoded;
+import dark.core.api.network.ITileConnector;
+import dark.core.api.network.fluid.INetworkPipe;
+import dark.core.api.tools.IReadOut;
+import dark.core.hydraulic.network.fluid.NetworkPipes;
+import dark.helpers.ConnectionHelper;
+import dark.prefab.tile.fluid.TileEntityFluidDevice;
 
 public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITileConnector, IReadOut
 {
@@ -69,7 +69,7 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITi
 						INetworkPipe inputPipe = this.findValidPipe(stack);
 						if (inputPipe != null)
 						{
-							int ammountFilled = ((PipeNetwork)inputPipe.getTileNetwork()).addFluidToNetwork((TileEntity) drainedTank, stack, true);
+							int ammountFilled = ((NetworkPipes)inputPipe.getTileNetwork()).addFluidToNetwork((TileEntity) drainedTank, stack, true);
 							drainedTank.drain(ForgeDirection.UNKNOWN, ammountFilled, true);
 						}
 					}

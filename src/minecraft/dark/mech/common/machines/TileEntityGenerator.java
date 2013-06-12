@@ -17,10 +17,10 @@ import universalelectricity.prefab.tile.TileEntityElectrical;
 
 import com.google.common.io.ByteArrayDataInput;
 
+import dark.core.api.tools.IReadOut;
 import dark.fluid.api.mech.IForce;
-import dark.hydraulic.api.IReadOut;
-import dark.library.helpers.ConnectionHelper;
-import dark.library.helpers.MetaGroup;
+import dark.helpers.ConnectionHelper;
+import dark.helpers.MetaGroup;
 
 public class TileEntityGenerator extends TileEntityElectrical implements IPacketReceiver, IForce, IReadOut, IRedstoneReceptor
 {

@@ -1,6 +1,5 @@
 package dark.fluid.common.pipes;
 
-
 import java.io.IOException;
 import java.util.Random;
 
@@ -30,16 +29,17 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.core.api.ColorCode;
+import dark.core.api.IColorCoded;
+import dark.core.api.network.ITileConnector;
+import dark.core.api.network.fluid.INetworkPipe;
+import dark.core.api.tools.IReadOut;
+import dark.core.hydraulic.helpers.FluidHelper;
+import dark.core.hydraulic.helpers.FluidRestrictionHandler;
+import dark.core.hydraulic.network.NetworkTileEntities;
+import dark.core.hydraulic.network.fluid.NetworkPipes;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.pipes.addon.IPipeExtention;
-import dark.hydraulic.api.ColorCode;
-import dark.hydraulic.api.IColorCoded;
-import dark.hydraulic.api.INetworkPipe;
-import dark.hydraulic.api.IReadOut;
-import dark.hydraulic.api.ITileConnector;
-import dark.hydraulic.helpers.FluidHelper;
-import dark.hydraulic.network.PipeNetwork;
-import dark.hydraulic.network.TileNetwork;
 
 public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer, IReadOut, IColorCoded, INetworkPipe, IPacketReceiver
 {
@@ -53,7 +53,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	/* RANDOM INSTANCE USED BY THE UPDATE TICK */
 	private Random random = new Random();
 	/* NETWORK INSTANCE THAT THIS PIPE USES */
-	private PipeNetwork pipeNetwork;
+	private NetworkPipes pipeNetwork;
 
 	private boolean shouldAutoDrain = false;
 
@@ -356,7 +356,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		boolean testSubs = false;
 
 		/* NORMAL OUTPUT */
-		String string = ((PipeNetwork) this.getTileNetwork()).pressureProduced + "p " + ((PipeNetwork) this.getTileNetwork()).getNetworkFluid() + " Extra";
+		String string = ((NetworkPipes) this.getTileNetwork()).pressureProduced + "p " + ((NetworkPipes) this.getTileNetwork()).getNetworkFluid() + " Extra";
 
 		/* DEBUG CODE */
 		if (testConnections)
@@ -393,22 +393,22 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	@Override
 	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
 	{
-		if (resource == null || !this.getColor().isValidLiquid(resource))
+		if (resource == null || !FluidRestrictionHandler.isValidLiquid(this.getColor(), resource))
 		{
 			return 0;
 		}
 		TileEntity tile = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), from);
-		return ((PipeNetwork) this.getTileNetwork()).addFluidToNetwork(tile, resource, doFill);
+		return ((NetworkPipes) this.getTileNetwork()).addFluidToNetwork(tile, resource, doFill);
 	}
 
 	@Override
 	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
 	{
-		if (tankIndex != 0 || resource == null || !this.getColor().isValidLiquid(resource))
+		if (tankIndex != 0 || resource == null || !FluidRestrictionHandler.isValidLiquid(this.getColor(), resource))
 		{
 			return 0;
 		}
-		return ((PipeNetwork) this.getTileNetwork()).addFluidToNetwork(this, resource, doFill);
+		return ((NetworkPipes) this.getTileNetwork()).addFluidToNetwork(this, resource, doFill);
 	}
 
 	@Override
@@ -432,7 +432,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	@Override
 	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
 	{
-		if (this.getColor().isValidLiquid(type))
+		if (FluidRestrictionHandler.isValidLiquid(this.getColor(), type))
 		{
 			return this.fakeTank;
 		}
@@ -513,7 +513,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 					LiquidStack stack = tankContainer.drain(dir, LiquidContainerRegistry.BUCKET_VOLUME, false);
 					if (stack != null && stack.amount > 0)
 					{
-						int fill = ((PipeNetwork) this.getTileNetwork()).addFluidToNetwork((TileEntity) tankContainer, stack, true);
+						int fill = ((NetworkPipes) this.getTileNetwork()).addFluidToNetwork((TileEntity) tankContainer, stack, true);
 						tankContainer.drain(dir, fill, true);
 					}
 				}
@@ -542,21 +542,21 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	}
 
 	@Override
-	public TileNetwork getTileNetwork()
+	public NetworkTileEntities getTileNetwork()
 	{
 		if (this.pipeNetwork == null)
 		{
-			this.setTileNetwork(new PipeNetwork(this.getColor(), this));
+			this.setTileNetwork(new NetworkPipes(this.getColor(), this));
 		}
 		return this.pipeNetwork;
 	}
 
 	@Override
-	public void setTileNetwork(TileNetwork network)
+	public void setTileNetwork(NetworkTileEntities network)
 	{
-		if (network instanceof PipeNetwork)
+		if (network instanceof NetworkPipes)
 		{
-			this.pipeNetwork = (PipeNetwork) network;
+			this.pipeNetwork = (NetworkPipes) network;
 		}
 	}
 

@@ -15,12 +15,13 @@ import universalelectricity.prefab.network.IPacketReceiver;
 
 import com.google.common.io.ByteArrayDataInput;
 
-import dark.hydraulic.api.ColorCode;
-import dark.hydraulic.api.IColorCoded;
-import dark.hydraulic.api.IReadOut;
-import dark.hydraulic.api.ITileConnector;
-import dark.hydraulic.helpers.FluidHelper;
-import dark.library.helpers.MetaGroup;
+import dark.core.api.ColorCode;
+import dark.core.api.IColorCoded;
+import dark.core.api.network.ITileConnector;
+import dark.core.api.tools.IReadOut;
+import dark.core.hydraulic.helpers.FluidHelper;
+import dark.core.hydraulic.helpers.FluidRestrictionHandler;
+import dark.helpers.MetaGroup;
 import dark.library.machine.TileEntityRunnableMachine;
 
 public class TileEntityStarterPump extends TileEntityRunnableMachine implements IPacketReceiver, IReadOut, ITileConnector
@@ -170,7 +171,7 @@ public class TileEntityStarterPump extends TileEntityRunnableMachine implements 
 		int blockID = worldObj.getBlockId(loc.intX(), loc.intY(), loc.intZ());
 
 		LiquidStack stack = FluidHelper.getLiquidFromBlockId(blockID);
-		if (color.isValidLiquid(stack) && getFillTarget() != null)
+		if (FluidRestrictionHandler.isValidLiquid(color,stack) && getFillTarget() != null)
 		{
 			stack.amount = LiquidContainerRegistry.BUCKET_VOLUME;
 			int fillAmmount = getFillTarget().fill(pipeConnection.getOpposite(), stack, true);

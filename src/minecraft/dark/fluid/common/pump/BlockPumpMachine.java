@@ -16,7 +16,7 @@ import universalelectricity.prefab.block.BlockAdvanced;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.TabFluidMech;
-import dark.library.helpers.MetaGroup;
+import dark.helpers.MetaGroup;
 
 public class BlockPumpMachine extends BlockAdvanced
 {

@@ -16,10 +16,10 @@ import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.prefab.block.BlockAdvanced;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
+import dark.core.hydraulic.helpers.FluidHelper;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.TabFluidMech;
-import dark.hydraulic.helpers.FluidHelper;
-import dark.library.helpers.MetaGroup;
+import dark.helpers.MetaGroup;
 
 public class BlockSink extends BlockAdvanced
 {

@@ -10,11 +10,11 @@ import net.minecraftforge.liquids.LiquidTank;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
-import dark.hydraulic.api.INetworkPipe;
-import dark.hydraulic.api.ITileConnector;
-import dark.hydraulic.network.FluidNetwork;
-import dark.hydraulic.network.HydraulicNetworkHelper;
-import dark.library.helpers.MetaGroup;
+import dark.core.api.network.ITileConnector;
+import dark.core.api.network.fluid.INetworkPipe;
+import dark.core.hydraulic.network.fluid.HydraulicNetworkHelper;
+import dark.core.hydraulic.network.fluid.NetworkFluidTiles;
+import dark.helpers.MetaGroup;
 import dark.library.machine.TileEntityRunnableMachine;
 
 public class TileEntityConstructionPump extends TileEntityRunnableMachine implements ITankContainer, ITileConnector
@@ -72,11 +72,11 @@ public class TileEntityConstructionPump extends TileEntityRunnableMachine implem
 
 				TileEntity inputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), getFacing(true));
 				TileEntity outputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), getFacing(false));
-				if (inputTile instanceof INetworkPipe && ((INetworkPipe) inputTile).getTileNetwork() instanceof FluidNetwork)
+				if (inputTile instanceof INetworkPipe && ((INetworkPipe) inputTile).getTileNetwork() instanceof NetworkFluidTiles)
 				{
 					if (outputTile instanceof ITankContainer)
 					{
-						for (ITankContainer tank : ((FluidNetwork) ((INetworkPipe) inputTile).getTileNetwork()).connectedTanks)
+						for (ITankContainer tank : ((NetworkFluidTiles) ((INetworkPipe) inputTile).getTileNetwork()).connectedTanks)
 						{
 							if (tank instanceof TileEntityDrain)
 							{

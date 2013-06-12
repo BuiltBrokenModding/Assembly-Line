@@ -8,9 +8,9 @@ import net.minecraftforge.liquids.LiquidStack;
 
 import com.google.common.io.ByteArrayDataInput;
 
+import dark.core.hydraulic.network.fluid.NetworkPipes;
 import dark.fluid.client.render.pipe.RenderPipeWindow;
 import dark.fluid.common.pipes.TileEntityPipe;
-import dark.hydraulic.network.PipeNetwork;
 
 public class TileEntityPipeWindow extends TileEntityPipeExtention
 {
@@ -30,7 +30,7 @@ public class TileEntityPipeWindow extends TileEntityPipeExtention
 		{
 			if (pipe != null)
 			{
-				stack = ((PipeNetwork) pipe.getTileNetwork()).combinedStorage().getLiquid();
+				stack = ((NetworkPipes) pipe.getTileNetwork()).combinedStorage().getLiquid();
 				worldObj.setBlockMetadataWithNotify(xCoord, yCoord + 1, yCoord, 0, 0);
 			}
 		}

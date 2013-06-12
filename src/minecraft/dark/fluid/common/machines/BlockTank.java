@@ -15,11 +15,11 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.prefab.block.BlockAdvanced;
+import dark.core.api.network.INetworkPart;
+import dark.core.hydraulic.helpers.FluidHelper;
+import dark.core.hydraulic.helpers.FluidRestrictionHandler;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.TabFluidMech;
-import dark.hydraulic.api.FluidRestrictionHandler;
-import dark.hydraulic.api.INetworkPart;
-import dark.hydraulic.helpers.FluidHelper;
 
 public class BlockTank extends BlockAdvanced
 {

@@ -12,9 +12,9 @@ import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
+import dark.core.api.tools.IReadOut;
 import dark.fluid.api.mech.IForce;
 import dark.fluid.common.FluidMech;
-import dark.hydraulic.api.IReadOut;
 
 
 public class TileEntityRod extends TileEntity implements IPacketReceiver, IForce, IReadOut

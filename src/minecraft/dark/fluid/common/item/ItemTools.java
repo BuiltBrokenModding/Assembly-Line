@@ -9,8 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import dark.core.api.tools.IReadOut;
 import dark.fluid.common.TabFluidMech;
-import dark.hydraulic.api.IReadOut;
 
 public class ItemTools extends ItemBasic
 {

@@ -23,16 +23,17 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.core.api.ColorCode;
+import dark.core.api.IColorCoded;
+import dark.core.api.network.fluid.INetworkFluidPart;
+import dark.core.api.network.fluid.INetworkPipe;
+import dark.core.api.tools.IReadOut;
+import dark.core.hydraulic.helpers.FluidRestrictionHandler;
+import dark.core.hydraulic.network.NetworkFluidContainers;
+import dark.core.hydraulic.network.NetworkTileEntities;
+import dark.core.hydraulic.network.fluid.NetworkFluidTiles;
 import dark.fluid.common.FluidMech;
-import dark.hydraulic.api.ColorCode;
-import dark.hydraulic.api.IColorCoded;
-import dark.hydraulic.api.INetworkFluidPart;
-import dark.hydraulic.api.INetworkPipe;
-import dark.hydraulic.api.IReadOut;
-import dark.hydraulic.network.ContainerNetwork;
-import dark.hydraulic.network.FluidNetwork;
-import dark.hydraulic.network.TileNetwork;
-import dark.hydraulic.prefab.tile.TileEntityFluidDevice;
+import dark.prefab.tile.fluid.TileEntityFluidDevice;
 
 public class TileEntityTank extends TileEntityFluidDevice implements ITankContainer, IReadOut, IColorCoded, INetworkFluidPart, IPacketReceiver
 {
@@ -43,7 +44,7 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 	private LiquidTank tank = new LiquidTank(this.getTankSize());
 
 	/* NETWORK INSTANCE THAT THIS PIPE USES */
-	private ContainerNetwork fluidNetwork;
+	private NetworkFluidContainers fluidNetwork;
 
 	@Override
 	public void initiate()
@@ -133,7 +134,7 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 		boolean testNetwork = true;
 
 		/* NORMAL OUTPUT */
-		String string = "Fluid>" + (this.getTileNetwork() instanceof FluidNetwork ? ((FluidNetwork) this.getTileNetwork()).getNetworkFluid() : "Error");
+		String string = "Fluid>" + (this.getTileNetwork() instanceof NetworkFluidTiles ? ((NetworkFluidTiles) this.getTileNetwork()).getNetworkFluid() : "Error");
 
 		if (testNetwork)
 		{
@@ -152,11 +153,11 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 	@Override
 	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
 	{
-		if (tankIndex != 0 || resource == null || !this.getColor().isValidLiquid(resource) || this.worldObj.isRemote)
+		if (tankIndex != 0 || resource == null || !FluidRestrictionHandler.isValidLiquid(this.getColor(), resource) || this.worldObj.isRemote)
 		{
 			return 0;
 		}
-		return ((ContainerNetwork) this.getTileNetwork()).storeFluidInSystem(resource, doFill);
+		return ((NetworkFluidContainers) this.getTileNetwork()).storeFluidInSystem(resource, doFill);
 	}
 
 	@Override
@@ -172,21 +173,21 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 		{
 			return null;
 		}
-		return ((ContainerNetwork) this.getTileNetwork()).drainFluidFromSystem(maxDrain, doDrain);
+		return ((NetworkFluidContainers) this.getTileNetwork()).drainFluidFromSystem(maxDrain, doDrain);
 	}
 
 	@Override
 	public ILiquidTank[] getTanks(ForgeDirection direction)
 	{
-		return new ILiquidTank[] { ((ContainerNetwork) this.getTileNetwork()).combinedStorage() };
+		return new ILiquidTank[] { ((NetworkFluidContainers) this.getTileNetwork()).combinedStorage() };
 	}
 
 	@Override
 	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
 	{
-		if (this.getColor().isValidLiquid(type))
+		if (FluidRestrictionHandler.isValidLiquid(this.getColor(),type))
 		{
-			return ((ContainerNetwork) this.getTileNetwork()).combinedStorage();
+			return ((NetworkFluidContainers) this.getTileNetwork()).combinedStorage();
 		}
 		return null;
 	}
@@ -249,21 +250,21 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 	}
 
 	@Override
-	public TileNetwork getTileNetwork()
+	public NetworkTileEntities getTileNetwork()
 	{
 		if (this.fluidNetwork == null)
 		{
-			this.setTileNetwork(new ContainerNetwork(this.getColor(), this));
+			this.setTileNetwork(new NetworkFluidContainers(this.getColor(), this));
 		}
 		return this.fluidNetwork;
 	}
 
 	@Override
-	public void setTileNetwork(TileNetwork network)
+	public void setTileNetwork(NetworkTileEntities network)
 	{
-		if (network instanceof ContainerNetwork)
+		if (network instanceof NetworkFluidContainers)
 		{
-			this.fluidNetwork = ((ContainerNetwork) network);
+			this.fluidNetwork = ((NetworkFluidContainers) network);
 		}
 	}
 

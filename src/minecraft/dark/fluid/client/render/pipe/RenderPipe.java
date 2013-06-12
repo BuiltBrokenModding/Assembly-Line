@@ -9,13 +9,13 @@ import net.minecraftforge.liquids.LiquidStack;
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.vector.Vector3;
+import dark.core.api.ColorCode;
+import dark.core.hydraulic.helpers.FluidRestrictionHandler;
 import dark.fluid.client.model.ModelLargePipe;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.pipes.TileEntityGenericPipe;
 import dark.fluid.common.pipes.TileEntityPipe;
 import dark.fluid.common.pipes.addon.IPipeExtention;
-import dark.hydraulic.api.ColorCode;
-import dark.hydraulic.api.FluidRestrictionHandler;
 
 public class RenderPipe extends TileEntitySpecialRenderer
 {

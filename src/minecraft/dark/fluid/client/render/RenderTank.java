@@ -7,10 +7,10 @@ import net.minecraftforge.liquids.LiquidStack;
 
 import org.lwjgl.opengl.GL11;
 
+import dark.core.api.ColorCode;
+import dark.core.hydraulic.helpers.LiquidRenderer;
 import dark.fluid.client.model.ModelTankSide;
 import dark.fluid.common.machines.TileEntityTank;
-import dark.hydraulic.api.ColorCode;
-import dark.hydraulic.helpers.LiquidRenderer;
 
 public class RenderTank extends TileEntitySpecialRenderer
 {
