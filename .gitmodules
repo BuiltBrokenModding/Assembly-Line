@@ -8,3 +8,6 @@
 [submodule "Basic-Compoents"]
 	path = Basic-Compoents
 	url = git://github.com/calclavia/Basic-Components.git
+[submodule "API-Bank"]
+	path = API-Bank
+	url = git://github.com/DarkGuardsman/API-Bank.git
