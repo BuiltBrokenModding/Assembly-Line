@@ -100,7 +100,6 @@ public class Quaternion
 	public Vector3 multi(Vector3 vec)
 	{
 		Vector3 vn = vec.clone();
-		vn.normalize();
 
 		Quaternion vecQuat = new Quaternion(0, 0, 0, 1), resQuat;
 		vecQuat.x = (float) vn.x;

@@ -1,14 +1,12 @@
 package dark.library.machine;
 
+import ic2.api.Direction;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySink;
-import ic2.api.Direction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
@@ -16,14 +14,13 @@ import universalelectricity.core.UniversalElectricity;
 import universalelectricity.core.block.IConnector;
 import universalelectricity.core.block.IVoltage;
 import universalelectricity.core.electricity.ElectricityPack;
-import universalelectricity.prefab.implement.IRotatable;
 import universalelectricity.prefab.tile.TileEntityElectricityRunnable;
 import buildcraft.api.power.IPowerProvider;
 import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerFramework;
 import dark.core.power.PowerSystems;
 
-public class TileEntityRunnableMachine extends TileEntityElectricityRunnable implements IPowerReceptor, IEnergySink, IConnector, IVoltage
+public abstract class TileEntityRunnableMachine extends TileEntityElectricityRunnable implements IPowerReceptor, IEnergySink, IConnector, IVoltage
 {
 	public static String powerToggleItemID = "battery";
 
@@ -33,14 +30,7 @@ public class TileEntityRunnableMachine extends TileEntityElectricityRunnable imp
 
 	public TileEntityRunnableMachine()
 	{
-		if (PowerFramework.currentFramework != null)
-		{
-			if (this.powerProvider == null)
-			{
-				this.powerProvider = PowerFramework.currentFramework.createPowerProvider();
-				this.powerProvider.configure(0, 0, Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
-			}
-		}
+
 	}
 
 	@Override
@@ -97,34 +87,20 @@ public class TileEntityRunnableMachine extends TileEntityElectricityRunnable imp
 		{
 			this.wattsReceived += Math.max(this.getWattBuffer() - this.wattsReceived, 0);
 		}
-
+		if (PowerFramework.currentFramework != null)
+		{
+			if (this.powerProvider == null)
+			{
+				this.powerProvider = PowerFramework.currentFramework.createPowerProvider();
+				this.powerProvider.configure(0, 0, Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
+			}
+		}
 		if (this.powerProvider != null)
 		{
 			int requiredEnergy = (int) (this.getRequest().getWatts() * UniversalElectricity.TO_BC_RATIO);
 			float energyReceived = this.powerProvider.useEnergy(requiredEnergy, requiredEnergy, true);
 			this.onReceive(ElectricityPack.getFromWatts(UniversalElectricity.BC3_RATIO * energyReceived, this.getVoltage()));
 		}
-	}
-
-	@Override
-	public boolean canConnect(ForgeDirection direction)
-	{
-		if (this instanceof IRotatable)
-		{
-			return direction == ForgeDirection.getOrientation(this.getBlockMetadata()).getOpposite();
-		}
-
-		return true;
-	}
-
-	public ForgeDirection getDirection(IBlockAccess world, int x, int y, int z)
-	{
-		return ForgeDirection.getOrientation(this.getBlockMetadata());
-	}
-
-	public void setDirection(World world, int x, int y, int z, ForgeDirection facingDirection)
-	{
-		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, facingDirection.ordinal(), 2);
 	}
 
 	/**
