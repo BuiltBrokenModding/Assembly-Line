@@ -15,7 +15,14 @@ public class ItemParts extends ItemBasic
 {
 	public enum Parts
 	{
-		Bronze("BronzeTube"), Iron("IronTube"), Obby("ObbyTube"), Nether("NetherTube"), Seal("LeatherSeal"), SlimeSeal("SlimeSeal"), Tank("UnfinishedTank"), Valve("ValvePart");
+		Bronze("BronzeTube"),
+		Iron("IronTube"),
+		Obby("ObbyTube"),
+		Nether("NetherTube"),
+		Seal("LeatherSeal"),
+		SlimeSeal("SlimeSeal"),
+		Tank("UnfinishedTank"),
+		Valve("ValvePart");
 
 		public String name;
 
