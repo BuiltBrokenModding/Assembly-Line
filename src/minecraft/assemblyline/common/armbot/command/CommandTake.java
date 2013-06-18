@@ -1,11 +1,14 @@
 package assemblyline.common.armbot.command;
 
-import net.minecraft.inventory.ISidedInventory;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import dark.library.machine.crafting.AutoCraftingManager;
+import universalelectricity.core.vector.Vector3;
+import assemblyline.common.machine.InvExtractionHelper;
 
 public class CommandTake extends Command
 {
@@ -50,29 +53,18 @@ public class CommandTake extends Command
 	protected boolean doTask()
 	{
 		TileEntity targetTile = this.tileEntity.getHandPosition().getTileEntity(this.world);
-		ForgeDirection direction = this.tileEntity.getFacingDirectionFromAngle();
+
 		if (targetTile != null && this.tileEntity.getGrabbedItems().size() <= 0)
 		{
-			if (targetTile instanceof ISidedInventory)
+			ForgeDirection direction = this.tileEntity.getFacingDirectionFromAngle();
+			List<ItemStack> stacks = new ArrayList<ItemStack>();
+			if (this.stack != null)
 			{
-				ISidedInventory inventory = (ISidedInventory) targetTile;
-				int[] slots = inventory.getAccessibleSlotsFromSide(direction.getOpposite().ordinal());
-				for (int i = 0; i < slots.length; i++)
-				{
-					ItemStack slotStack = inventory.getStackInSlot(slots[i]);
-					if (this.stack != null)
-					{
-						if (AutoCraftingManager.areStacksEqual(this.stack, slotStack) && inventory.canExtractItem(slots[i], this.stack, direction.getOpposite().ordinal()))
-						{
-							ItemStack insertStack = this.stack.copy();
-							insertStack.stackSize = Math.min(this.stack.stackSize, slotStack.stackSize);
-							this.tileEntity.grabItem(insertStack);
-							inventory.setInventorySlotContents(slots[i], AutoCraftingManager.decrStackSize(slotStack, insertStack.stackSize));
-							return false;
-						}
-					}
-				}
-			}// TODO add a way to steal items from players
+				stacks.add(stack);
+			}
+			InvExtractionHelper invEx = new InvExtractionHelper(this.tileEntity.worldObj, new Vector3(this.tileEntity), stacks, false);
+			this.tileEntity.grabItem(invEx.tryGrabFromPosition(new Vector3(targetTile), direction, this.stack != null ? stack.stackSize : 1));
+			return !(this.tileEntity.getGrabbedItems().size() > 0);
 
 		}
 		return true;

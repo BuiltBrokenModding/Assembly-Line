@@ -1,24 +1,26 @@
 package assemblyline.common.armbot.command;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import dark.library.machine.crafting.AutoCraftingManager;
+import universalelectricity.core.vector.Vector3;
+import assemblyline.common.machine.InvExtractionHelper;
 
 public class CommandGive extends Command
 {
 	private ItemStack stack;
+	private int ammount = -1;
 
 	@Override
 	public void onTaskStart()
 	{
 		int id = 0;
 		int meta = 32767;
-		int count = 1;
 
 		if (this.getArgs().length > 0)
 		{
@@ -36,7 +38,7 @@ public class CommandGive extends Command
 		}
 		if (this.getArgs().length > 1)
 		{
-			count = this.getIntArg(1);
+			ammount = this.getIntArg(1);
 		}
 		if (id == 0)
 		{
@@ -44,7 +46,7 @@ public class CommandGive extends Command
 		}
 		else
 		{
-			stack = new ItemStack(id, count, meta);
+			stack = new ItemStack(id, ammount == -1 ? 1 : ammount, meta);
 		}
 	}
 
@@ -52,57 +54,32 @@ public class CommandGive extends Command
 	protected boolean doTask()
 	{
 		TileEntity targetTile = this.tileEntity.getHandPosition().getTileEntity(this.world);
-		ForgeDirection direction = this.tileEntity.getFacingDirectionFromAngle();
+
 		if (targetTile != null && this.tileEntity.getGrabbedItems().size() > 0)
 		{
-			if (targetTile instanceof ISidedInventory)
+			ForgeDirection direction = this.tileEntity.getFacingDirectionFromAngle();
+			List<ItemStack> stacks = new ArrayList<ItemStack>();
+			if (this.stack != null)
 			{
-				ISidedInventory inventory = (ISidedInventory) targetTile;
-				int[] slots = inventory.getAccessibleSlotsFromSide(direction.getOpposite().ordinal());
-				Iterator<ItemStack> targetIt = this.tileEntity.getGrabbedItems().iterator();
-				while (targetIt.hasNext())
+				stacks.add(stack);
+			}
+			InvExtractionHelper invEx = new InvExtractionHelper(this.tileEntity.worldObj, new Vector3(this.tileEntity), stacks, false);
+
+			Iterator<ItemStack> targetIt = this.tileEntity.getGrabbedItems().iterator();
+			boolean flag = true;
+			while (targetIt.hasNext())
+			{
+				ItemStack insertStack = targetIt.next();
+				ItemStack original = insertStack.copy();
+				insertStack = invEx.tryPlaceInPosition(insertStack, new Vector3(targetTile), direction.getOpposite());
+				flag = insertStack != null && insertStack.stackSize == original.stackSize;
+				if (insertStack == null || insertStack.stackSize <= 0)
 				{
-					ItemStack itemstack = targetIt.next();
-					for (int i = 0; i < slots.length; i++)
-					{
-						if (this.stack == null || AutoCraftingManager.areStacksEqual(this.stack, itemstack))
-						{
-							if (inventory.canInsertItem(slots[i], itemstack, direction.getOpposite().ordinal()))
-							{
-								ItemStack slotStack = inventory.getStackInSlot(slots[i]);
-								if (slotStack == null)
-								{
-									ItemStack insertstack = itemstack.copy();
-									insertstack.stackSize = Math.min(itemstack.stackSize, inventory.getInventoryStackLimit());
-									inventory.setInventorySlotContents(slots[i], insertstack);
-									itemstack = AutoCraftingManager.decrStackSize(itemstack, insertstack.stackSize);
-								}
-								else if (AutoCraftingManager.areStacksEqual(slotStack, itemstack))
-								{
-									int room = slotStack.getMaxStackSize() - slotStack.stackSize;
-									if (room > 0)
-									{
-										ItemStack insertstack = itemstack.copy();
-										insertstack.stackSize = Math.min(Math.min(itemstack.stackSize, inventory.getInventoryStackLimit()), room);
-										itemstack = AutoCraftingManager.decrStackSize(itemstack, insertstack.stackSize);
-										insertstack.stackSize += slotStack.stackSize;
-										inventory.setInventorySlotContents(slots[i], insertstack);
-									}
-								}
-							}
-							if (itemstack == null || itemstack.stackSize <= 0)
-							{
-								targetIt.remove();
-								break;
-							}
-						}
-
-					}
-
+					targetIt.remove();
+					break;
 				}
-				return false;
-			}// TODO add a way to steal items from players
-
+			}
+			return flag;
 		}
 		return true;
 	}
