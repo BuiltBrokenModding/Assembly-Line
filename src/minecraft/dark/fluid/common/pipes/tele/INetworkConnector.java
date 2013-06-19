@@ -3,7 +3,7 @@ package dark.fluid.common.pipes.tele;
 
 import java.util.List;
 
-import dark.core.api.network.fluid.INetworkPipe;
+import dark.fluid.api.INetworkPipe;
 
 /**
  * Used by IFluidNetworkPart to signal this block is remotely connected to another network. It will

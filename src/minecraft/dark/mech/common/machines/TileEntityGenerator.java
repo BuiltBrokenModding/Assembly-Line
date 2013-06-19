@@ -17,12 +17,13 @@ import universalelectricity.prefab.tile.TileEntityElectrical;
 
 import com.google.common.io.ByteArrayDataInput;
 
-import dark.core.api.tools.IReadOut;
+import dark.core.api.IToolReadOut;
+import dark.core.api.IToolReadOut.EnumTools;
 import dark.fluid.api.mech.IForce;
 import dark.helpers.ConnectionHelper;
 import dark.helpers.MetaGroup;
 
-public class TileEntityGenerator extends TileEntityElectrical implements IPacketReceiver, IForce, IReadOut, IRedstoneReceptor
+public class TileEntityGenerator extends TileEntityElectrical implements IPacketReceiver, IForce, IToolReadOut, IRedstoneReceptor
 {
 	public boolean isPowered = false;
 
@@ -258,7 +259,7 @@ public class TileEntityGenerator extends TileEntityElectrical implements IPacket
 	}
 
 	@Override
-	public String getMeterReading(EntityPlayer user, ForgeDirection side)
+	public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
 	{
 		if (this.isPowered)
 			return "Outputing Force " + this.joulesReceived + "J " + "pos " + this.pos;

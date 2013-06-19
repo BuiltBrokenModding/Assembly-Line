@@ -13,14 +13,15 @@ import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 import dark.core.api.ColorCode;
 import dark.core.api.IColorCoded;
-import dark.core.api.network.ITileConnector;
-import dark.core.api.network.fluid.INetworkPipe;
-import dark.core.api.tools.IReadOut;
-import dark.core.hydraulic.network.fluid.NetworkPipes;
+import dark.core.api.IToolReadOut;
+import dark.core.api.ITileConnector;
+import dark.core.api.IToolReadOut.EnumTools;
+import dark.core.network.fluid.NetworkPipes;
+import dark.fluid.api.INetworkPipe;
+import dark.fluid.common.prefab.TileEntityFluidDevice;
 import dark.helpers.ConnectionHelper;
-import dark.prefab.tile.fluid.TileEntityFluidDevice;
 
-public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITileConnector, IReadOut
+public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITileConnector, IToolReadOut
 {
 	public boolean[] allowed = new boolean[ColorCode.values().length - 1];
 	public TileEntity[] connected = new TileEntity[6];
@@ -175,7 +176,7 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITi
 	}
 
 	@Override
-	public String getMeterReading(EntityPlayer user, ForgeDirection side)
+	public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
 	{
 		// TODO maybe debug on # of connected units of input/output
 		String output = "";

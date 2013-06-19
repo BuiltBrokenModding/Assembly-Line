@@ -15,7 +15,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.prefab.block.BlockAdvanced;
-import dark.core.api.network.INetworkPart;
+import dark.core.api.INetworkPart;
 import dark.core.hydraulic.helpers.FluidHelper;
 import dark.core.hydraulic.helpers.FluidRestrictionHandler;
 import dark.fluid.client.render.BlockRenderHelper;

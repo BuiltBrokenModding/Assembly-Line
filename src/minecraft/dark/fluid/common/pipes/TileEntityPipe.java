@@ -31,17 +31,18 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.api.ColorCode;
 import dark.core.api.IColorCoded;
-import dark.core.api.network.ITileConnector;
-import dark.core.api.network.fluid.INetworkPipe;
-import dark.core.api.tools.IReadOut;
+import dark.core.api.IToolReadOut;
+import dark.core.api.ITileConnector;
+import dark.core.api.IToolReadOut.EnumTools;
 import dark.core.hydraulic.helpers.FluidHelper;
 import dark.core.hydraulic.helpers.FluidRestrictionHandler;
-import dark.core.hydraulic.network.NetworkTileEntities;
-import dark.core.hydraulic.network.fluid.NetworkPipes;
+import dark.core.network.fluid.NetworkPipes;
+import dark.core.tile.network.NetworkTileEntities;
+import dark.fluid.api.INetworkPipe;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.pipes.addon.IPipeExtention;
 
-public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer, IReadOut, IColorCoded, INetworkPipe, IPacketReceiver
+public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer, IToolReadOut, IColorCoded, INetworkPipe, IPacketReceiver
 {
 
 	/* TANK TO FAKE OTHER TILES INTO BELIVING THIS HAS AN INTERNAL STORAGE */
@@ -348,11 +349,11 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	}
 
 	@Override
-	public String getMeterReading(EntityPlayer user, ForgeDirection side)
+	public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
 	{
 		/* DEBUG CODE ACTIVATERS */
 		boolean testConnections = false;
-		boolean testNetwork = false;
+		boolean testNetwork = true;
 		boolean testSubs = false;
 
 		/* NORMAL OUTPUT */

@@ -9,7 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import dark.core.api.tools.IReadOut;
+import dark.core.api.IToolReadOut;
+import dark.core.api.IToolReadOut.EnumTools;
 import dark.fluid.common.TabFluidMech;
 
 public class ItemTools extends ItemBasic
@@ -54,9 +55,9 @@ public class ItemTools extends ItemBasic
 			if (meta == 0)
 			{
 
-				if (blockEntity instanceof IReadOut)
+				if (blockEntity instanceof IToolReadOut)
 				{
-					String output = ((IReadOut) blockEntity).getMeterReading(player, ForgeDirection.getOrientation(side));
+					String output = ((IToolReadOut) blockEntity).getMeterReading(player, ForgeDirection.getOrientation(side), EnumTools.PIPE_GUAGE);
 					if (output.length() > 100)
 					{
 						output = output.substring(0, 100);

@@ -25,17 +25,18 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.api.ColorCode;
 import dark.core.api.IColorCoded;
-import dark.core.api.network.fluid.INetworkFluidPart;
-import dark.core.api.network.fluid.INetworkPipe;
-import dark.core.api.tools.IReadOut;
+import dark.core.api.IToolReadOut;
+import dark.core.api.IToolReadOut.EnumTools;
 import dark.core.hydraulic.helpers.FluidRestrictionHandler;
-import dark.core.hydraulic.network.NetworkFluidContainers;
-import dark.core.hydraulic.network.NetworkTileEntities;
-import dark.core.hydraulic.network.fluid.NetworkFluidTiles;
+import dark.core.network.fluid.NetworkFluidContainers;
+import dark.core.network.fluid.NetworkFluidTiles;
+import dark.core.tile.network.NetworkTileEntities;
+import dark.fluid.api.INetworkFluidPart;
+import dark.fluid.api.INetworkPipe;
 import dark.fluid.common.FluidMech;
-import dark.prefab.tile.fluid.TileEntityFluidDevice;
+import dark.fluid.common.prefab.TileEntityFluidDevice;
 
-public class TileEntityTank extends TileEntityFluidDevice implements ITankContainer, IReadOut, IColorCoded, INetworkFluidPart, IPacketReceiver
+public class TileEntityTank extends TileEntityFluidDevice implements ITankContainer, IToolReadOut, IColorCoded, INetworkFluidPart, IPacketReceiver
 {
 	/* CURRENTLY CONNECTED TILE ENTITIES TO THIS */
 	private TileEntity[] connectedBlocks = new TileEntity[6];
@@ -128,7 +129,7 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 	}
 
 	@Override
-	public String getMeterReading(EntityPlayer user, ForgeDirection side)
+	public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
 	{
 		/* DEBUG CODE ACTIVATERS */
 		boolean testNetwork = true;

@@ -15,7 +15,7 @@ import com.google.common.io.ByteArrayDataInput;
 import dark.core.api.ColorCode;
 import dark.core.api.IColorCoded;
 import dark.fluid.common.FluidMech;
-import dark.prefab.tile.fluid.TileEntityFluidStorage;
+import dark.fluid.common.prefab.TileEntityFluidStorage;
 
 public class TileEntitySink extends TileEntityFluidStorage implements IPacketReceiver, ITankContainer, IColorCoded
 {

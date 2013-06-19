@@ -21,10 +21,11 @@ import net.minecraftforge.liquids.LiquidStack;
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
-import dark.core.api.hydraulic.IDrain;
-import dark.core.api.network.fluid.INetworkPipe;
+import dark.core.api.IToolReadOut.EnumTools;
 import dark.core.hydraulic.helpers.FluidHelper;
-import dark.prefab.tile.fluid.TileEntityFluidDevice;
+import dark.fluid.api.IDrain;
+import dark.fluid.api.INetworkPipe;
+import dark.fluid.common.prefab.TileEntityFluidDevice;
 
 public class TileEntityDrain extends TileEntityFluidDevice implements ITankContainer, IDrain
 {
@@ -49,7 +50,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 	}
 
 	@Override
-	public String getMeterReading(EntityPlayer user, ForgeDirection side)
+	public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
 	{
 		return "Set to " + (canDrainSources() ? "input liquids" : "output liquids");
 	}

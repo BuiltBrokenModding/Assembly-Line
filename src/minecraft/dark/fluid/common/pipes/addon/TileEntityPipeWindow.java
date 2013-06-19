@@ -8,7 +8,7 @@ import net.minecraftforge.liquids.LiquidStack;
 
 import com.google.common.io.ByteArrayDataInput;
 
-import dark.core.hydraulic.network.fluid.NetworkPipes;
+import dark.core.network.fluid.NetworkPipes;
 import dark.fluid.client.render.pipe.RenderPipeWindow;
 import dark.fluid.common.pipes.TileEntityPipe;
 

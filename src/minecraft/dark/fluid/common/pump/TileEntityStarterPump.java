@@ -17,14 +17,15 @@ import com.google.common.io.ByteArrayDataInput;
 
 import dark.core.api.ColorCode;
 import dark.core.api.IColorCoded;
-import dark.core.api.network.ITileConnector;
-import dark.core.api.tools.IReadOut;
+import dark.core.api.IToolReadOut;
+import dark.core.api.ITileConnector;
+import dark.core.api.IToolReadOut.EnumTools;
 import dark.core.hydraulic.helpers.FluidHelper;
 import dark.core.hydraulic.helpers.FluidRestrictionHandler;
 import dark.helpers.MetaGroup;
 import dark.library.machine.TileEntityRunnableMachine;
 
-public class TileEntityStarterPump extends TileEntityRunnableMachine implements IPacketReceiver, IReadOut, ITileConnector
+public class TileEntityStarterPump extends TileEntityRunnableMachine implements IPacketReceiver, IToolReadOut, ITileConnector
 {
 	public final double WATTS_PER_TICK = (400 / 20);
 	private double percentPumped = 0.0;
@@ -187,7 +188,7 @@ public class TileEntityStarterPump extends TileEntityRunnableMachine implements 
 	}
 
 	@Override
-	public String getMeterReading(EntityPlayer user, ForgeDirection side)
+	public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
 	{
 		return String.format("%.2f/%.2f  %f Done", this.wattsReceived,this.WATTS_PER_TICK,this.percentPumped);
 	}

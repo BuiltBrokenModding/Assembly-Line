@@ -12,12 +12,13 @@ import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
-import dark.core.api.tools.IReadOut;
+import dark.core.api.IToolReadOut;
+import dark.core.api.IToolReadOut.EnumTools;
 import dark.fluid.api.mech.IForce;
 import dark.fluid.common.FluidMech;
 
 
-public class TileEntityRod extends TileEntity implements IPacketReceiver, IForce, IReadOut
+public class TileEntityRod extends TileEntity implements IPacketReceiver, IForce, IToolReadOut
 {
 
 	public int pos = 0;
@@ -118,7 +119,7 @@ public class TileEntityRod extends TileEntity implements IPacketReceiver, IForce
 	}
 
 	@Override
-	public String getMeterReading(EntityPlayer user, ForgeDirection side)
+	public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
 	{
 		return this.appliedForce + "N Out " + this.currentForce + "N In";
 	}
