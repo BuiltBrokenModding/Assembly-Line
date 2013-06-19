@@ -20,12 +20,11 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
-import dark.core.api.terminal.ISpecialAccess;
-import dark.core.api.terminal.ITerminal;
+import dark.core.api.ISpecialAccess;
+import dark.core.api.ITerminal;
 import dark.library.access.AccessLevel;
 import dark.library.access.UserAccess;
 import dark.library.machine.TileEntityRunnableMachine;
-import dark.library.machine.terminal.commands.CommandRegistry;
 
 /**
  * 

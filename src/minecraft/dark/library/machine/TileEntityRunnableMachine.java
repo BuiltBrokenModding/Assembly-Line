@@ -18,7 +18,7 @@ import universalelectricity.prefab.tile.TileEntityElectricityRunnable;
 import buildcraft.api.power.IPowerProvider;
 import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerFramework;
-import dark.core.power.PowerSystems;
+import dark.core.PowerSystems;
 
 public abstract class TileEntityRunnableMachine extends TileEntityElectricityRunnable implements IPowerReceptor, IEnergySink, IConnector, IVoltage
 {

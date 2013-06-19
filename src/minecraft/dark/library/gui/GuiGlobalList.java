@@ -18,7 +18,7 @@ import universalelectricity.core.vector.Vector2;
 import universalelectricity.prefab.GuiBase;
 import universalelectricity.prefab.vector.Region2;
 import dark.core.DarkMain;
-import dark.core.api.terminal.IScroll;
+import dark.core.api.IScroll;
 import dark.library.access.UserAccess;
 
 public class GuiGlobalList extends GuiBase implements IScroll
