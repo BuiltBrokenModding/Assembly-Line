@@ -51,7 +51,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import dark.core.DarkMain;
-import dark.core.power.PowerSystems;
+import dark.core.PowerSystems;
 
 @ModstatInfo(prefix = "asmline")
 @Mod(modid = AssemblyLine.CHANNEL, name = AssemblyLine.MOD_NAME, version = AssemblyLine.VERSION, dependencies = "after:BasicComponents; after:IC2", useMetadata = true)

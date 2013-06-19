@@ -29,9 +29,9 @@ import assemblyline.common.AssemblyLine;
 import com.google.common.io.ByteArrayDataInput;
 
 import dark.helpers.Pair;
-import dark.library.inv.ISlotPickResult;
-import dark.library.machine.crafting.AutoCraftingManager;
-import dark.library.machine.crafting.IAutoCrafter;
+import dark.library.gui.ISlotPickResult;
+import dark.library.machine.AutoCraftingManager;
+import dark.library.machine.IAutoCrafter;
 
 public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInventory, IArmbotUseable, IPacketReceiver, ISlotPickResult, IAutoCrafter
 {
