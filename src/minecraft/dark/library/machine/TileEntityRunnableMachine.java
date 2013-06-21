@@ -87,6 +87,7 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectricityRun
 		{
 			this.wattsReceived += Math.max(this.getWattBuffer() - this.wattsReceived, 0);
 		}
+
 		if (PowerFramework.currentFramework != null)
 		{
 			if (this.powerProvider == null)
@@ -97,8 +98,8 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectricityRun
 		}
 		if (this.powerProvider != null)
 		{
-			int requiredEnergy = (int) (this.getRequest().getWatts() * UniversalElectricity.TO_BC_RATIO);
-			float energyReceived = this.powerProvider.useEnergy(requiredEnergy, requiredEnergy, true);
+			float requiredEnergy = (float) (this.getRequest().getWatts() * UniversalElectricity.TO_BC_RATIO);
+			float energyReceived = this.powerProvider.useEnergy(0, requiredEnergy, true);
 			this.onReceive(ElectricityPack.getFromWatts(UniversalElectricity.BC3_RATIO * energyReceived, this.getVoltage()));
 		}
 	}
@@ -179,7 +180,7 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectricityRun
 	{
 		if (this.canConnect(from))
 		{
-			return (int) (this.getRequest().getWatts() * UniversalElectricity.TO_BC_RATIO);
+			return (int) Math.ceil(this.getRequest().getWatts() * UniversalElectricity.TO_BC_RATIO);
 		}
 
 		return 0;
