@@ -70,13 +70,16 @@ public class CommandGive extends Command
 			while (targetIt.hasNext())
 			{
 				ItemStack insertStack = targetIt.next();
-				ItemStack original = insertStack.copy();
-				insertStack = invEx.tryPlaceInPosition(insertStack, new Vector3(targetTile), direction.getOpposite());
-				flag = insertStack != null && insertStack.stackSize == original.stackSize;
-				if (insertStack == null || insertStack.stackSize <= 0)
+				if (insertStack != null)
 				{
-					targetIt.remove();
-					break;
+					ItemStack original = insertStack.copy();
+					insertStack = invEx.tryPlaceInPosition(insertStack, new Vector3(targetTile), direction.getOpposite());
+					flag = insertStack != null && insertStack.stackSize == original.stackSize;
+					if (insertStack == null || insertStack.stackSize <= 0)
+					{
+						targetIt.remove();
+						break;
+					}
 				}
 			}
 			return flag;
