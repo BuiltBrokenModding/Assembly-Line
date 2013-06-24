@@ -161,9 +161,9 @@ public class FluidMech extends DummyModContainer
 		/* BLOCK DECLARATION -- CONFIG LOADER */
 		blockGenPipe = new BlockPipe(FluidMech.CONFIGURATION.getBlock("Pipes", BLOCK_ID_PREFIX).getInt());
 		blockMachine = new BlockPumpMachine(FluidMech.CONFIGURATION.getBlock("Machines", BLOCK_ID_PREFIX + 1).getInt());
-		blockRod = new BlockRod(FluidMech.CONFIGURATION.getBlock("Mechanical Rod", BLOCK_ID_PREFIX + 3).getInt());
+		blockRod = new BlockRod(FluidMech.CONFIGURATION.getBlock("MechRod", BLOCK_ID_PREFIX + 3).getInt());
 		blockGenerator = new BlockGenerator((FluidMech.CONFIGURATION.getBlock("Generator", BLOCK_ID_PREFIX + 4).getInt()));
-		blockReleaseValve = new BlockReleaseValve((FluidMech.CONFIGURATION.getBlock("Release Valve", BLOCK_ID_PREFIX + 5).getInt()));
+		blockReleaseValve = new BlockReleaseValve((FluidMech.CONFIGURATION.getBlock("ReleaseValve", BLOCK_ID_PREFIX + 5).getInt()));
 		blockTank = new BlockTank(FluidMech.CONFIGURATION.getBlock("Tank", BLOCK_ID_PREFIX + 6).getInt());
 		blockWasteLiquid = new BlockWasteLiquid(FluidMech.CONFIGURATION.getBlock("WasteLiquid", BLOCK_ID_PREFIX + 7).getInt());
 		blockSink = new BlockSink(FluidMech.CONFIGURATION.getBlock("Sink", BLOCK_ID_PREFIX + 8).getInt());

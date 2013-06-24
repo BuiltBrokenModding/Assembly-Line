@@ -55,8 +55,12 @@ public class LiquidPathFinder
 	/**
 	 * @return True on success finding, false on failure.
 	 */
-	public boolean findNodes(final Vector3 node)
+	public boolean findNodes(Vector3 node)
 	{
+		if(node == null)
+		{
+			return true;
+		}
 		try
 		{
 			Vector3 vec = node.clone();
