@@ -38,7 +38,7 @@ public class BlockManipulator extends BlockImprintable
 
 		if (tileEntity instanceof TileEntityManipulator)
 		{
-			((TileEntityManipulator) tileEntity).selfPulse = !((TileEntityManipulator) tileEntity).selfPulse;
+			((TileEntityManipulator) tileEntity).setSelfPulse(!((TileEntityManipulator) tileEntity).isSelfPulse());
 		}
 
 		return true;

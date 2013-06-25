@@ -35,13 +35,17 @@ public class InvExtractionHelper
 		}
 		this.inverted = inverted;
 	}
+	
+	public void setFilter(List<ItemStack> filters, boolean inverted)
+	{
+		this.filterItems = filters;
+		this.inverted = inverted;
+	}
 
-	/**
-	 * Throws the items from the manipulator into the world.
+	/** Throws the items from the manipulator into the world.
 	 * 
 	 * @param outputPosition
-	 * @param items
-	 */
+	 * @param items */
 	public void throwItem(Vector3 outputPosition, ItemStack items)
 	{
 		if (!world.isRemote)
@@ -55,20 +59,17 @@ public class InvExtractionHelper
 		}
 	}
 
-	/**
-	 * Tries to place an itemStack in a specific position if it is an inventory.
+	/** Tries to place an itemStack in a specific position if it is an inventory.
 	 * 
-	 * @return The ItemStack remained after place attempt
-	 */
-	public ItemStack tryPlaceInPosition(ItemStack itemStack, Vector3 position, ForgeDirection direction)
+	 * @return The ItemStack remained after place attempt */
+	public ItemStack tryPlaceInPosition(ItemStack itemStack, Vector3 position, ForgeDirection dir)
 	{
 		TileEntity tileEntity = position.getTileEntity(world);
+		ForgeDirection direction = dir.getOpposite();
 
 		if (tileEntity != null && itemStack != null)
 		{
-			/**
-			 * Try to put items into a chest.
-			 */
+			/** Try to put items into a chest. */
 			if (tileEntity instanceof TileEntityMulti)
 			{
 				Vector3 mainBlockPosition = ((TileEntityMulti) tileEntity).mainBlockPosition;
@@ -85,9 +86,7 @@ public class InvExtractionHelper
 			{
 				TileEntityChest[] chests = { (TileEntityChest) tileEntity, null };
 
-				/**
-				 * Try to find a double chest.
-				 */
+				/** Try to find a double chest. */
 				for (int i = 2; i < 6; i++)
 				{
 					ForgeDirection searchDirection = ForgeDirection.getOrientation(i);
@@ -126,10 +125,10 @@ public class InvExtractionHelper
 			else if (tileEntity instanceof ISidedInventory)
 			{
 				ISidedInventory inventory = (ISidedInventory) tileEntity;
-				int[] slots = inventory.getAccessibleSlotsFromSide(direction.getOpposite().ordinal());
+				int[] slots = inventory.getAccessibleSlotsFromSide(direction.ordinal());
 				for (int i = 0; i < slots.length; i++)
 				{
-					if (inventory.canInsertItem(slots[i], itemStack, direction.getOpposite().ordinal()))
+					if (inventory.canInsertItem(slots[i], itemStack, direction.ordinal()))
 					{
 						itemStack = this.addStackToInventory(slots[i], inventory, itemStack);
 					}
@@ -144,7 +143,7 @@ public class InvExtractionHelper
 			{
 				net.minecraftforge.common.ISidedInventory inventory = (net.minecraftforge.common.ISidedInventory) tileEntity;
 
-				int startIndex = inventory.getStartInventorySide(direction.getOpposite());
+				int startIndex = inventory.getStartInventorySide(direction);
 
 				for (int i = startIndex; i < startIndex + inventory.getSizeInventorySide(direction); i++)
 				{
@@ -212,22 +211,21 @@ public class InvExtractionHelper
 		return itemStack;
 	}
 
-	/**
-	 * Tries to take a item from a inventory at a specific position.
+	/** Tries to get an item from a position
 	 * 
-	 * @param position
-	 * @return
-	 */
-	public ItemStack tryGrabFromPosition(Vector3 position, ForgeDirection direction, int ammount)
+	 * @param position - location of item
+	 * @param direction - direction this item is from the original
+	 * @param ammount - amount up to one stack to grab
+	 * @return the grabbed item stack */
+	public ItemStack tryGrabFromPosition(Vector3 position, ForgeDirection dir, int ammount)
 	{
 		ItemStack returnStack = null;
 		TileEntity tileEntity = position.getTileEntity(world);
+		ForgeDirection direction = dir.getOpposite();
 
 		if (tileEntity != null)
 		{
-			/**
-			 * Try to put items into a chest.
-			 */
+			/** Try to put items into a chest. */
 			if (tileEntity instanceof TileEntityMulti)
 			{
 				Vector3 mainBlockPosition = ((TileEntityMulti) tileEntity).mainBlockPosition;
@@ -244,9 +242,7 @@ public class InvExtractionHelper
 			{
 				TileEntityChest[] chests = { (TileEntityChest) tileEntity, null };
 
-				/**
-				 * Try to find a double chest.
-				 */
+				/** Try to find a double chest. */
 				for (int i = 2; i < 6; i++)
 				{
 					ForgeDirection searchDirection = ForgeDirection.getOrientation(i);
@@ -270,7 +266,7 @@ public class InvExtractionHelper
 					{
 						for (int i = 0; i < chest.getSizeInventory(); i++)
 						{
-							ItemStack itemStack = this.removeStackFromInventory(i, chest,ammount);
+							ItemStack itemStack = this.removeStackFromInventory(i, chest, ammount);
 
 							if (itemStack != null)
 							{
@@ -284,17 +280,21 @@ public class InvExtractionHelper
 			else if (tileEntity instanceof ISidedInventory)
 			{
 				ISidedInventory inventory = (ISidedInventory) tileEntity;
-
+				/*TODO something might be wrong with taking items out of machines */
 				int[] slots = inventory.getAccessibleSlotsFromSide(direction.ordinal());
 
 				for (int i = 0; i < slots.length; i++)
 				{
 					int slot = slots[i];
-					ItemStack itemStack = this.removeStackFromInventory(i, inventory,ammount);
-					if (itemStack != null && inventory.canExtractItem(slot, itemStack, direction.ordinal()))
+					ItemStack slotStack = inventory.getStackInSlot(slot);
+					if (inventory.canExtractItem(slot, slotStack, direction.ordinal()))
 					{
-						returnStack = itemStack;
-						break;
+						ItemStack itemStack = this.removeStackFromInventory(i, inventory, ammount);
+						if (itemStack != null)
+						{
+							returnStack = itemStack;
+							break;
+						}
 					}
 				}
 			}
@@ -306,7 +306,8 @@ public class InvExtractionHelper
 
 				for (int i = startIndex; i < startIndex + inventory.getSizeInventorySide(direction); i++)
 				{
-					ItemStack itemStack = this.removeStackFromInventory(i, inventory,ammount);
+					//TODO fix this to prevent item lose just in case it does cause some issues
+					ItemStack itemStack = this.removeStackFromInventory(i, inventory, ammount);
 
 					if (itemStack != null)
 					{
@@ -321,7 +322,7 @@ public class InvExtractionHelper
 
 				for (int i = 0; i < inventory.getSizeInventory(); i++)
 				{
-					ItemStack itemStack = this.removeStackFromInventory(i, inventory,ammount);
+					ItemStack itemStack = this.removeStackFromInventory(i, inventory, ammount);
 					if (itemStack != null)
 					{
 						returnStack = itemStack;
@@ -333,10 +334,9 @@ public class InvExtractionHelper
 
 		return returnStack;
 	}
-	/**
-	 * Takes an item from the given inventory
-	 */
-	public ItemStack removeStackFromInventory(int slotIndex, IInventory inventory, int ammount)
+
+	/** Takes an item from the given inventory */
+	public ItemStack removeStackFromInventory(int slotIndex, IInventory inventory, int amount)
 	{
 		if (inventory.getStackInSlot(slotIndex) != null)
 		{
@@ -344,8 +344,9 @@ public class InvExtractionHelper
 
 			if (this.filterItems.size() == 0 || this.isFiltering(itemStack))
 			{
-				itemStack.stackSize = ammount;
-				inventory.decrStackSize(slotIndex, 1);
+				amount = Math.min(amount, itemStack.stackSize);
+				itemStack.stackSize = amount;
+				inventory.decrStackSize(slotIndex, amount);
 				return itemStack;
 			}
 		}
@@ -353,9 +354,7 @@ public class InvExtractionHelper
 		return null;
 	}
 
-	/**
-	 * is the item being restricted to a filter set
-	 */
+	/** is the item being restricted to a filter set */
 	public boolean isFiltering(ItemStack itemStack)
 	{
 		if (this.filterItems != null && itemStack != null)
