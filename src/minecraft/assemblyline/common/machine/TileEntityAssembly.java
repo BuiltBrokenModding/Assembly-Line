@@ -15,7 +15,7 @@ import dark.library.machine.TileEntityRunnableMachine;
  * @author Calclavia */
 public abstract class TileEntityAssembly extends TileEntityRunnableMachine implements INetworkPart
 {
-	boolean powered = false;
+	public boolean powered = false;
 	/** Network used to link assembly machines together */
 	private NetworkAssembly assemblyNetwork;
 
