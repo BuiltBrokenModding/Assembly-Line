@@ -20,14 +20,14 @@ import universalelectricity.prefab.network.PacketManager;
 import assemblyline.api.IFilterable;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.imprinter.ItemImprinter;
-import assemblyline.common.machine.TileEntityAssemblyNetwork;
+import assemblyline.common.machine.TileEntityAssembly;
 
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
-public abstract class TileEntityFilterable extends TileEntityAssemblyNetwork implements IRotatable, IFilterable, IPacketReceiver
+public abstract class TileEntityFilterable extends TileEntityAssembly implements IRotatable, IFilterable, IPacketReceiver
 {
 	private ItemStack filterItem;
 	private boolean inverted;

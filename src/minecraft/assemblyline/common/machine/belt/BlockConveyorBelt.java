@@ -246,7 +246,6 @@ public class BlockConveyorBelt extends BlockALMachine
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
 		TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) world.getBlockTileEntity(x, y, z);
-		tileEntity.updatePowerTransferRange();
 		if (tileEntity.IgnoreList.contains(entity))
 		{
 			return;

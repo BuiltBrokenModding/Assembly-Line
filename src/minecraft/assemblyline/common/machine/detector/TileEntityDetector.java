@@ -110,4 +110,11 @@ public class TileEntityDetector extends TileEntityFilterable
 	{
 		return direction != this.getDirection();
 	}
+
+	@Override
+	public void onUpdate()
+	{
+		// TODO Auto-generated method stub
+		
+	}
 }

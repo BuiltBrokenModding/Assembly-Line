@@ -39,7 +39,7 @@ import assemblyline.common.armbot.command.CommandReturn;
 import assemblyline.common.armbot.command.CommandRotateBy;
 import assemblyline.common.armbot.command.CommandRotateTo;
 import assemblyline.common.armbot.command.CommandUse;
-import assemblyline.common.machine.TileEntityAssemblyNetwork;
+import assemblyline.common.machine.TileEntityAssembly;
 import assemblyline.common.machine.encoder.ItemDisk;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -51,7 +51,7 @@ import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.IPeripheral;
 import dark.helpers.ItemFindingHelper;
 
-public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMultiBlock, IInventory, IPacketReceiver, IElectricityStorage, IArmbot, IPeripheral
+public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IInventory, IPacketReceiver, IElectricityStorage, IArmbot, IPeripheral
 {
 	private final CommandManager commandManager = new CommandManager();
 	private static final int PACKET_COMMANDS = 128;
@@ -311,7 +311,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		writeToNBT(nbt);
-		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.powerTransferRange, nbt);
+		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, nbt);
 	}
 
 	/**
@@ -331,9 +331,8 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 				x = dis.readInt();
 				y = dis.readInt();
 				z = dis.readInt();
-				this.powerTransferRange = dis.readInt();
 				NBTTagCompound tag = Packet.readNBTTagCompound(dis);
-				readFromNBT(tag);
+				this.readFromNBT(tag);
 			}
 			catch (IOException e)
 			{

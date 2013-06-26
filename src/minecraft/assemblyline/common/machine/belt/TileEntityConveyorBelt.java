@@ -19,14 +19,14 @@ import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.api.IBelt;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.machine.TileEntityAssemblyNetwork;
+import assemblyline.common.machine.TileEntityAssembly;
 
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
-public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements IPacketReceiver, IBelt, IRotatable
+public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacketReceiver, IBelt, IRotatable
 {
 	public enum SlantType
 	{
@@ -45,67 +45,10 @@ public class TileEntityConveyorBelt extends TileEntityAssemblyNetwork implements
 	public float wheelRotation = 0;
 	private int animFrame = 0; // this is from 0 to 15
 	private SlantType slantType = SlantType.NONE;
+	/** Entities that are ignored allowing for other tiles to interact with them */
+	public List<Entity> IgnoreList = new ArrayList<Entity>();
 
-	public List<Entity> IgnoreList = new ArrayList<Entity>();// Entities that need to be ignored to
-																// prevent movement
-
-	/**
-	 * This function is overriden to allow conveyor belts to power belts that are diagonally going
-	 * up.
-	 */
-	@Override
-	public void updatePowerTransferRange()
-	{
-		int maximumTransferRange = 0;
-
-		for (int i = 0; i < 6; i++)
-		{
-			ForgeDirection direction = ForgeDirection.getOrientation(i);
-			TileEntity tileEntity = worldObj.getBlockTileEntity(this.xCoord + direction.offsetX, this.yCoord + direction.offsetY, this.zCoord + direction.offsetZ);
-
-			if (tileEntity != null)
-			{
-				if (tileEntity instanceof TileEntityAssemblyNetwork)
-				{
-					TileEntityAssemblyNetwork assemblyNetwork = (TileEntityAssemblyNetwork) tileEntity;
-
-					if (assemblyNetwork.powerTransferRange > maximumTransferRange)
-					{
-						maximumTransferRange = assemblyNetwork.powerTransferRange;
-					}
-				}
-			}
-		}
-
-		for (int d = 0; d <= 1; d++)
-		{
-			ForgeDirection direction = this.getDirection();
-
-			if (d == 1)
-			{
-				direction = direction.getOpposite();
-			}
-
-			for (int i = -1; i <= 1; i++)
-			{
-				TileEntity tileEntity = worldObj.getBlockTileEntity(this.xCoord + direction.offsetX, this.yCoord + i, this.zCoord + direction.offsetZ);
-				if (tileEntity != null)
-				{
-					if (tileEntity instanceof TileEntityAssemblyNetwork)
-					{
-						TileEntityAssemblyNetwork assemblyNetwork = (TileEntityAssemblyNetwork) tileEntity;
-
-						if (assemblyNetwork.powerTransferRange > maximumTransferRange)
-						{
-							maximumTransferRange = assemblyNetwork.powerTransferRange;
-						}
-					}
-				}
-			}
-		}
-
-		this.powerTransferRange = Math.max(maximumTransferRange - 1, 0);
-	}
+	
 
 	@Override
 	public void onUpdate()

@@ -39,7 +39,6 @@ public class TileEntityRejector extends TileEntityFilterable
 	@Override
 	public void onUpdate()
 	{
-		super.onUpdate();
 		/**
 		 * Has to update a bit faster than a conveyer belt
 		 */

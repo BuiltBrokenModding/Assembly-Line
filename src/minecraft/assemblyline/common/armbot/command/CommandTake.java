@@ -8,7 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
-import assemblyline.common.machine.InvExtractionHelper;
+import assemblyline.common.machine.InvInteractionHelper;
 
 public class CommandTake extends Command
 {
@@ -62,7 +62,7 @@ public class CommandTake extends Command
 			{
 				stacks.add(stack);
 			}
-			InvExtractionHelper invEx = new InvExtractionHelper(this.tileEntity.worldObj, new Vector3(this.tileEntity), stacks, false);
+			InvInteractionHelper invEx = new InvInteractionHelper(this.tileEntity.worldObj, new Vector3(this.tileEntity), stacks, false);
 			this.tileEntity.grabItem(invEx.tryGrabFromPosition(new Vector3(targetTile), direction, this.stack != null ? stack.stackSize : 1));
 			return !(this.tileEntity.getGrabbedItems().size() > 0);
 
