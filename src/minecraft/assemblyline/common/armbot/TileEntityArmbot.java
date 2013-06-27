@@ -41,6 +41,7 @@ import assemblyline.common.armbot.command.CommandRotateTo;
 import assemblyline.common.armbot.command.CommandUse;
 import assemblyline.common.machine.TileEntityAssembly;
 import assemblyline.common.machine.encoder.ItemDisk;
+import buildcraft.api.power.PowerProvider;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -991,5 +992,4 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 	{
 		return false;
 	}
-
 }

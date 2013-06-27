@@ -2,20 +2,26 @@ package assemblyline.common.block;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import universalelectricity.prefab.block.BlockAdvanced;
 import assemblyline.common.AssemblyLine;
+import assemblyline.common.TabAssemblyLine;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.core.api.INetworkPart;
 
 public class BlockALMachine extends BlockAdvanced
 {
 	public Icon machine_icon;
 
-	public BlockALMachine(int id, Material material)
+	public BlockALMachine(int id, Material material, String name)
 	{
 		super(id, material);
+		this.setUnlocalizedName(name);
+		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -38,5 +44,29 @@ public class BlockALMachine extends BlockAdvanced
 	{
 		return this.machine_icon;
 	}
-	
+
+	@Override
+	public void onBlockAdded(World world, int x, int y, int z)
+	{
+		super.onBlockAdded(world, x, y, z);
+
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+		if (tileEntity instanceof INetworkPart)
+		{
+			((INetworkPart) tileEntity).updateNetworkConnections();
+		}
+	}
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
+	{
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+		if (tileEntity instanceof INetworkPart)
+		{
+			((INetworkPart) tileEntity).updateNetworkConnections();
+		}
+	}
+
 }

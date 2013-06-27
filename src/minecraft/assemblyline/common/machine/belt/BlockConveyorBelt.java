@@ -30,10 +30,8 @@ public class BlockConveyorBelt extends BlockALMachine
 {
 	public BlockConveyorBelt(int id)
 	{
-		super(id, UniversalElectricity.machine);
-		this.setUnlocalizedName("conveyorBelt");
+		super(id, UniversalElectricity.machine,"conveyorBelt");
 		this.setBlockBounds(0, 0, 0, 1, 0.3f, 1);
-		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 	}
 
 	@Override

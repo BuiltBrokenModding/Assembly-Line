@@ -16,9 +16,7 @@ public class BlockCraneController extends BlockALMachine
 {
 	public BlockCraneController(int id)
 	{
-		super(id, UniversalElectricity.machine);
-		this.setUnlocalizedName("craneController");
-		this.setCreativeTab(TabAssemblyLine.INSTANCE);
+		super(id, UniversalElectricity.machine,"craneController");
 	}
 
 	@Override

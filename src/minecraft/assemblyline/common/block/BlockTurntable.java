@@ -27,9 +27,7 @@ public class BlockTurntable extends BlockALMachine
 	
 	public BlockTurntable(int par1)
 	{
-		super(par1, Material.piston);
-		this.setUnlocalizedName("turntable");
-		this.setCreativeTab(TabAssemblyLine.INSTANCE);
+		super(par1, Material.piston,"turntable");
 	}
 	
 	@Override

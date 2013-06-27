@@ -19,9 +19,7 @@ public class BlockArmbot extends BlockALMachine
 {
 	public BlockArmbot(int id)
 	{
-		super(id, UniversalElectricity.machine);
-		this.setUnlocalizedName("armbot");
-		this.setCreativeTab(TabAssemblyLine.INSTANCE);
+		super(id, UniversalElectricity.machine,"armbot");
 	}
 
 	@Override

@@ -21,9 +21,7 @@ public class BlockEncoder extends BlockALMachine
 	Icon encoder_bottom;
 	public BlockEncoder(int id, int texture)
 	{
-		super(id, Material.wood);
-		this.setUnlocalizedName("encoder");
-		this.setCreativeTab(TabAssemblyLine.INSTANCE);
+		super(id, Material.wood,"encoder");
 	}
 
 	@SideOnly(Side.CLIENT)

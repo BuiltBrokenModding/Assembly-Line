@@ -32,9 +32,7 @@ public class BlockCrate extends BlockALMachine
 
 	public BlockCrate(int id, int texture)
 	{
-		super(id, UniversalElectricity.machine);
-		this.setUnlocalizedName("crate");
-		this.setCreativeTab(TabAssemblyLine.INSTANCE);
+		super(id, UniversalElectricity.machine,"crate");		
 	}
 
 	@SideOnly(Side.CLIENT)

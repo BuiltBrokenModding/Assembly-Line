@@ -27,9 +27,7 @@ public class BlockImprinter extends BlockALMachine
 
 	public BlockImprinter(int id, int texture)
 	{
-		super(id, Material.wood);
-		this.setUnlocalizedName("imprinter");
-		this.setCreativeTab(TabAssemblyLine.INSTANCE);
+		super(id, Material.wood,"imprinter");
 	}
 
 	@SideOnly(Side.CLIENT)
