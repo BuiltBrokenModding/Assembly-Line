@@ -40,17 +40,7 @@ public class CommonProxy implements IGuiHandler
 
 	public void init()
 	{
-		GameRegistry.registerTileEntity(TileEntityConveyorBelt.class, "ALConveyorBelt");
-		GameRegistry.registerTileEntity(TileEntityRejector.class, "ALSorter");
-		GameRegistry.registerTileEntity(TileEntityManipulator.class, "ALManipulator");
-		GameRegistry.registerTileEntity(TileEntityCrate.class, "ALCrate");
-		GameRegistry.registerTileEntity(TileEntityDetector.class, "ALDetector");
-		GameRegistry.registerTileEntity(TileEntityEncoder.class, "ALEncoder");
-		GameRegistry.registerTileEntity(TileEntityArmbot.class, "ALArmbot");
-		GameRegistry.registerTileEntity(TileEntityCraneController.class, "ALCraneController");
-		GameRegistry.registerTileEntity(TileEntityCraneRail.class, "ALCraneRail");
-		GameRegistry.registerTileEntity(TileEntityImprinter.class, "ALImprinter");
-		GameRegistry.registerTileEntity(TileEntityMulti.class, "ALMulti");
+		
 	}
 
 	private void extractZipToLocation(File zipFile, String sourceFolder, String destFolder)

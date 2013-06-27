@@ -18,22 +18,33 @@ import org.modstats.Modstats;
 
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.multiblock.BlockMulti;
+import universalelectricity.prefab.multiblock.TileEntityMulti;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.armbot.BlockArmbot;
+import assemblyline.common.armbot.TileEntityArmbot;
 import assemblyline.common.armbot.command.GrabDictionary;
 import assemblyline.common.block.BlockCrate;
 import assemblyline.common.block.BlockTurntable;
 import assemblyline.common.block.ItemBlockCrate;
+import assemblyline.common.block.TileEntityCrate;
 import assemblyline.common.imprinter.BlockImprinter;
 import assemblyline.common.imprinter.ItemImprinter;
+import assemblyline.common.imprinter.TileEntityImprinter;
 import assemblyline.common.machine.BlockManipulator;
 import assemblyline.common.machine.BlockRejector;
+import assemblyline.common.machine.TileEntityManipulator;
+import assemblyline.common.machine.TileEntityRejector;
 import assemblyline.common.machine.belt.BlockConveyorBelt;
+import assemblyline.common.machine.belt.TileEntityConveyorBelt;
 import assemblyline.common.machine.crane.BlockCraneController;
 import assemblyline.common.machine.crane.BlockCraneFrame;
+import assemblyline.common.machine.crane.TileEntityCraneController;
+import assemblyline.common.machine.crane.TileEntityCraneRail;
 import assemblyline.common.machine.detector.BlockDetector;
+import assemblyline.common.machine.detector.TileEntityDetector;
 import assemblyline.common.machine.encoder.BlockEncoder;
 import assemblyline.common.machine.encoder.ItemDisk;
+import assemblyline.common.machine.encoder.TileEntityEncoder;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -155,6 +166,7 @@ public class AssemblyLine
 		CONFIGURATION.save();
 
 		NetworkRegistry.instance().registerGuiHandler(this, this.proxy);
+		
 		GameRegistry.registerBlock(blockConveyorBelt, "Conveyor Belt");
 		GameRegistry.registerBlock(blockCrate, ItemBlockCrate.class, "Crate");
 		GameRegistry.registerBlock(blockManipulator, "Manipulator");
@@ -167,6 +179,18 @@ public class AssemblyLine
 		GameRegistry.registerBlock(blockCraneController, "Crane Controller");
 		GameRegistry.registerBlock(blockCraneFrame, "Crane Frame");
 
+		GameRegistry.registerTileEntity(TileEntityConveyorBelt.class, "ALConveyorBelt");
+		GameRegistry.registerTileEntity(TileEntityRejector.class, "ALSorter");
+		GameRegistry.registerTileEntity(TileEntityManipulator.class, "ALManipulator");
+		GameRegistry.registerTileEntity(TileEntityCrate.class, "ALCrate");
+		GameRegistry.registerTileEntity(TileEntityDetector.class, "ALDetector");
+		GameRegistry.registerTileEntity(TileEntityEncoder.class, "ALEncoder");
+		GameRegistry.registerTileEntity(TileEntityArmbot.class, "ALArmbot");
+		GameRegistry.registerTileEntity(TileEntityCraneController.class, "ALCraneController");
+		GameRegistry.registerTileEntity(TileEntityCraneRail.class, "ALCraneRail");
+		GameRegistry.registerTileEntity(TileEntityImprinter.class, "ALImprinter");
+		GameRegistry.registerTileEntity(TileEntityMulti.class, "ALMulti");
+		
 		TabAssemblyLine.itemStack = new ItemStack(AssemblyLine.blockConveyorBelt);
 
 		proxy.preInit();
