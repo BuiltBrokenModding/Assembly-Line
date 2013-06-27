@@ -19,7 +19,7 @@ public class BlockALMachine extends BlockAdvanced
 
 	public BlockALMachine(int id, Material material, String name)
 	{
-		super(id, material);
+		super(AssemblyLine.CONFIGURATION.getBlock(name, id).getInt(), material);
 		this.setUnlocalizedName(name);
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 	}

@@ -30,7 +30,7 @@ public class BlockCrate extends BlockALMachine
 {
 	Icon crate_icon;
 
-	public BlockCrate(int id, int texture)
+	public BlockCrate(int id)
 	{
 		super(id, UniversalElectricity.machine,"crate");		
 	}

@@ -19,7 +19,7 @@ public class BlockEncoder extends BlockALMachine
 	Icon encoder_side;
 	Icon encoder_top;
 	Icon encoder_bottom;
-	public BlockEncoder(int id, int texture)
+	public BlockEncoder(int id)
 	{
 		super(id, Material.wood,"encoder");
 	}

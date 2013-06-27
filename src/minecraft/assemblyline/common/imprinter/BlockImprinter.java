@@ -25,7 +25,7 @@ public class BlockImprinter extends BlockALMachine
 	Icon imprinter_top;
 	Icon imprinter_bottom;
 
-	public BlockImprinter(int id, int texture)
+	public BlockImprinter(int id)
 	{
 		super(id, Material.wood,"imprinter");
 	}

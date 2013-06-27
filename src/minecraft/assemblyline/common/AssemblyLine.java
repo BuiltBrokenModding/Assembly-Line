@@ -109,7 +109,7 @@ public class AssemblyLine
 
 	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "UniversalElectricity/AssemblyLine.cfg"));
 
-	public static final int BLOCK_ID_PREFIX = 3030;
+	public static int BLOCK_ID_PREFIX = 3030;
 
 	public static Block blockConveyorBelt;
 	public static Block blockManipulator;
@@ -146,18 +146,18 @@ public class AssemblyLine
 		Modstats.instance().getReporter().registerMod(this);
 
 		CONFIGURATION.load();
-		blockConveyorBelt = new BlockConveyorBelt(CONFIGURATION.getBlock("Conveyor Belt", BLOCK_ID_PREFIX).getInt());
-		blockManipulator = new BlockManipulator(CONFIGURATION.getBlock("Manipulator", BLOCK_ID_PREFIX + 1).getInt());
-		blockCrate = new BlockCrate(CONFIGURATION.getBlock("Crate", BLOCK_ID_PREFIX + 3).getInt(), 0);
-		blockImprinter = new BlockImprinter(CONFIGURATION.getBlock("Imprinter", BLOCK_ID_PREFIX + 4).getInt(), 4);
-		blockDetector = new BlockDetector(CONFIGURATION.getBlock("Detector", BLOCK_ID_PREFIX + 5).getInt(), 1);
-		blockRejector = new BlockRejector(CONFIGURATION.getBlock("Rejector", BLOCK_ID_PREFIX + 6).getInt());
-		blockEncoder = new BlockEncoder(CONFIGURATION.getBlock("Encoder", BLOCK_ID_PREFIX + 7).getInt(), 7);
-		blockArmbot = new BlockArmbot(CONFIGURATION.getBlock("Armbot", BLOCK_ID_PREFIX + 8).getInt());
-		blockMulti = new BlockMulti(CONFIGURATION.getBlock("Multiblock", BLOCK_ID_PREFIX + 9).getInt());
-		blockCraneController = new BlockCraneController(CONFIGURATION.getBlock("Crane Controller", BLOCK_ID_PREFIX + 10).getInt());
-		blockCraneFrame = new BlockCraneFrame(CONFIGURATION.getBlock("Crane Frame", BLOCK_ID_PREFIX + 11).getInt());
-		blockTurntable = new BlockTurntable(CONFIGURATION.getBlock("Turntable", BLOCK_ID_PREFIX + 12).getInt());
+		blockConveyorBelt = new BlockConveyorBelt(BLOCK_ID_PREFIX);
+		blockManipulator = new BlockManipulator(BLOCK_ID_PREFIX++);
+		blockCrate = new BlockCrate(BLOCK_ID_PREFIX++);
+		blockImprinter = new BlockImprinter(BLOCK_ID_PREFIX++);
+		blockDetector = new BlockDetector(BLOCK_ID_PREFIX++);
+		blockRejector = new BlockRejector(BLOCK_ID_PREFIX++);
+		blockEncoder = new BlockEncoder(BLOCK_ID_PREFIX++);
+		blockArmbot = new BlockArmbot(BLOCK_ID_PREFIX++);
+		blockMulti = new BlockMulti(BLOCK_ID_PREFIX++);
+		blockCraneController = new BlockCraneController(BLOCK_ID_PREFIX++);
+		blockCraneFrame = new BlockCraneFrame(BLOCK_ID_PREFIX++);
+		blockTurntable = new BlockTurntable(BLOCK_ID_PREFIX++);
 
 		itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", ITEM_ID_PREFIX).getInt());
 		itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", ITEM_ID_PREFIX + 1).getInt());
