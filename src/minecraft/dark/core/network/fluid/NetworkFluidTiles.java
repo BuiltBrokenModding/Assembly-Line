@@ -246,7 +246,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
 									}
 								}
 
-								newNetwork.cleanUpConductors();
+								newNetwork.cleanUpMembers();
 								newNetwork.balanceColletiveTank(true);
 							}
 						}
@@ -293,12 +293,12 @@ public class NetworkFluidTiles extends NetworkTileEntities
 		newNetwork.getNetworkMemebers().addAll(this.getNetworkMemebers());
 		newNetwork.getNetworkMemebers().addAll(network.getNetworkMemebers());
 
-		newNetwork.cleanUpConductors();
+		newNetwork.cleanUpMembers();
 		newNetwork.balanceColletiveTank(true);
 	}
 
 	@Override
-	public void cleanUpConductors()
+	public void cleanUpMembers()
 	{
 		if (!loadedLiquids)
 		{

@@ -349,7 +349,7 @@ public class NetworkPipes extends NetworkFluidTiles
 	 */
 	public void onPresureChange()
 	{
-		this.cleanUpConductors();
+		this.cleanUpMembers();
 
 		for (int i = 0; i < networkMember.size(); i++)
 		{
@@ -359,7 +359,7 @@ public class NetworkPipes extends NetworkFluidTiles
 				if (part.getMaxPressure(ForgeDirection.UNKNOWN) < this.pressureProduced && part.onOverPressure(true))
 				{
 					this.networkMember.remove(part);
-					this.cleanUpConductors();
+					this.cleanUpMembers();
 				}
 			}
 
@@ -373,7 +373,7 @@ public class NetworkPipes extends NetworkFluidTiles
 		newNetwork.getNetworkMemebers().addAll(this.getNetworkMemebers());
 		newNetwork.getNetworkMemebers().addAll(network.getNetworkMemebers());
 
-		newNetwork.cleanUpConductors();
+		newNetwork.cleanUpMembers();
 		newNetwork.balanceColletiveTank(true);
 	}
 

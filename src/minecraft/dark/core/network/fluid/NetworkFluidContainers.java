@@ -55,7 +55,7 @@ public class NetworkFluidContainers extends NetworkFluidTiles
 		}
 		if (this.combinedStorage().getLiquid() != null && this.getNetworkMemebers().size() > 0)
 		{
-			this.cleanUpConductors();
+			this.cleanUpMembers();
 
 			int lowestY = 255;
 			int highestY = 0;
@@ -159,7 +159,7 @@ public class NetworkFluidContainers extends NetworkFluidTiles
 		newNetwork.getNetworkMemebers().addAll(this.getNetworkMemebers());
 		newNetwork.getNetworkMemebers().addAll(network.getNetworkMemebers());
 
-		newNetwork.cleanUpConductors();
+		newNetwork.cleanUpMembers();
 		newNetwork.balanceColletiveTank(true);
 	}
 }

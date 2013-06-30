@@ -1,6 +1,5 @@
 package dark.fluid.common.machines;
 
-
 import java.util.List;
 
 import net.minecraft.block.material.Material;
@@ -147,27 +146,6 @@ public class BlockTank extends BlockAdvanced
 	}
 
 	@Override
-	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
-	{
-		int meta = world.getBlockMetadata(x, y, z);
-
-		return new ItemStack(this, 1, meta);
-
-	}
-
-	@Override
-	public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
-	{
-		for (int i = 0; i < 16; i++)
-		{
-			if (FluidRestrictionHandler.hasRestrictedStack(i))
-			{
-				par3List.add(new ItemStack(par1, 1, i));
-			}
-		}
-	}
-
-	@Override
 	public void onBlockAdded(World world, int x, int y, int z)
 	{
 		super.onBlockAdded(world, x, y, z);
@@ -190,4 +168,43 @@ public class BlockTank extends BlockAdvanced
 			((INetworkPart) tileEntity).updateNetworkConnections();
 		}
 	}
+
+	@Override
+	public boolean hasComparatorInputOverride()
+	{
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(World world, int x, int y, int z, int par5)
+	{
+		TileEntityTank tileEntity = (TileEntityTank) world.getBlockTileEntity(x, y, z);
+		if (tileEntity != null)
+		{
+			return tileEntity.getRedstoneLevel();
+		}
+		return 0;
+	}
+
+	@Override
+	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+	{
+		int meta = world.getBlockMetadata(x, y, z);
+
+		return new ItemStack(this, 1, meta);
+
+	}
+
+	@Override
+	public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
+	{
+		for (int i = 0; i < 16; i++)
+		{
+			if (FluidRestrictionHandler.hasRestrictedStack(i))
+			{
+				par3List.add(new ItemStack(par1, 1, i));
+			}
+		}
+	}
+
 }

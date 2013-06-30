@@ -6,6 +6,7 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityComparator;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
@@ -26,7 +27,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.api.ColorCode;
 import dark.core.api.IColorCoded;
 import dark.core.api.IToolReadOut;
-import dark.core.api.IToolReadOut.EnumTools;
 import dark.core.hydraulic.helpers.FluidRestrictionHandler;
 import dark.core.network.fluid.NetworkFluidContainers;
 import dark.core.network.fluid.NetworkFluidTiles;
@@ -107,9 +107,7 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 		return PacketManager.getPacket(FluidMech.CHANNEL, this, 0, stack.itemID, stack.amount, stack.itemMeta, this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
 	}
 
-	/**
-	 * gets the current color mark of the pipe
-	 */
+	/** gets the current color mark of the pipe */
 	@Override
 	public ColorCode getColor()
 	{
@@ -120,9 +118,7 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 		return ColorCode.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
 	}
 
-	/**
-	 * sets the current color mark of the pipe
-	 */
+	/** sets the current color mark of the pipe */
 	@Override
 	public void setColor(Object cc)
 	{
@@ -186,19 +182,17 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 	@Override
 	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
 	{
-		if (FluidRestrictionHandler.isValidLiquid(this.getColor(),type))
+		if (FluidRestrictionHandler.isValidLiquid(this.getColor(), type))
 		{
 			return ((NetworkFluidContainers) this.getTileNetwork()).combinedStorage();
 		}
 		return null;
 	}
 
-	/**
-	 * Checks to make sure the connection is valid to the tileEntity
+	/** Checks to make sure the connection is valid to the tileEntity
 	 * 
 	 * @param tileEntity - the tileEntity being checked
-	 * @param side - side the connection is too
-	 */
+	 * @param side - side the connection is too */
 	public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)
 	{
 		if (!this.worldObj.isRemote)
@@ -214,6 +208,10 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 						this.getTileNetwork().merge(((TileEntityTank) tileEntity).getTileNetwork(), this);
 						connectedBlocks[side.ordinal()] = tileEntity;
 					}
+				}
+				if(tileEntity instanceof TileEntityComparator)
+				{
+					this.worldObj.markBlockForUpdate(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
 				}
 			}
 		}
@@ -234,9 +232,7 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 				this.validateConnectionSide(this.worldObj.getBlockTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ), dir);
 
 			}
-			/**
-			 * Only send packet updates if visuallyConnected changed.
-			 */
+			/** Only send packet updates if visuallyConnected changed. */
 			if (!Arrays.areEqual(previousConnections, this.renderConnection))
 			{
 				this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
@@ -326,5 +322,21 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 			this.tank = new LiquidTank(this.getTankSize());
 		}
 		this.tank.setLiquid(stack);
+	}
+
+	public int getRedstoneLevel()
+	{
+		if (this.getTileNetwork() != null && this.getTileNetwork() instanceof NetworkFluidTiles)
+		{
+			ILiquidTank tank = ((NetworkFluidTiles) this.getTileNetwork()).combinedStorage();
+			if (tank != null && tank.getLiquid() != null)
+			{
+				int max = tank.getCapacity();
+				int current = tank.getLiquid().amount;
+				double percent = current / max;
+				return ((int) (15 * percent));
+			}
+		}
+		return 0;
 	}
 }
