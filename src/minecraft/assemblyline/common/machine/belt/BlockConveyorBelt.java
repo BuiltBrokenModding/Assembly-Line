@@ -170,6 +170,7 @@ public class BlockConveyorBelt extends BlockALMachine
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving par5EntityLiving, ItemStack stack)
 	{
+		super.onBlockPlacedBy(world, x, y, z, par5EntityLiving, stack);
 		int angle = MathHelper.floor_double((par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		int change = 2;
 

@@ -1,8 +1,11 @@
 package assemblyline.common.machine;
 
+import java.util.Random;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityPack;
+import universalelectricity.core.vector.Vector3;
 import assemblyline.common.AssemblyLine;
 import dark.core.api.INetworkPart;
 import dark.core.tile.network.NetworkTileEntities;
@@ -20,32 +23,45 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 	private NetworkAssembly assemblyNetwork;
 	/** Tiles that are connected to this */
 	private TileEntity[] connectedTiles = new TileEntity[6];
-	private TileEntityAssembly powerSource;
+	/** Cached power source to reduce the need to path find for a new one each tick */
+	public TileEntityAssembly powerSource;
+	/** Random instance */
+	public Random random = new Random();
+	/** Number of ticks this can go without power */
+	private int powerTicks = 0;
+	private int updateTick = 1;
 
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
 
+		if (ticks % updateTick == 0)
+		{
+			this.updateTick = ((int) random.nextInt(10) + 20);
+			this.updateNetworkConnections();
+			this.powerSource = null;
+		}
 		if (this.wattsReceived >= this.getRequest().getWatts())
 		{
 			this.wattsReceived -= getRequest().getWatts();
 			this.powered = true;
-			if (this.getTileNetwork() instanceof NetworkAssembly)
-			{
-				NetworkAssembly net = ((NetworkAssembly) this.getTileNetwork());
-				net.markAsPowerSource(this);
-			}
+			this.powerTicks = 2;
+
+		}
+		else if (this.powerTicks > 0)
+		{
+			this.powerTicks--;
+			this.powered = true;
 		}
 		else
 		{
 			this.powered = false;
-			if (this.getTileNetwork() instanceof NetworkAssembly)
-			{
-				NetworkAssembly net = ((NetworkAssembly) this.getTileNetwork());
-				net.removeAsPowerSource(this);
-			}
-
+		}
+		if (this.getTileNetwork() instanceof NetworkAssembly)
+		{
+			NetworkAssembly net = ((NetworkAssembly) this.getTileNetwork());
+			net.markAsPowerSource(this, this.powered);
 		}
 
 		this.onUpdate();
@@ -136,5 +152,10 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 			this.assemblyNetwork = (NetworkAssembly) network;
 		}
 
+	}
+
+	public String toString()
+	{
+		return "AssemblyTile>>>At>>>" + (new Vector3(this).toString());
 	}
 }

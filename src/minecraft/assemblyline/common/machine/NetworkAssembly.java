@@ -69,7 +69,7 @@ public class NetworkAssembly extends NetworkTileEntities
 		{
 			if (((TileEntityAssembly) part).powered)
 			{
-				this.markAsPowerSource((TileEntity) part);
+				this.markAsPowerSource((TileEntity) part, true);
 			}
 		}
 		return added;
@@ -81,18 +81,21 @@ public class NetworkAssembly extends NetworkTileEntities
 		return super.isValidMember(part) && part instanceof TileEntityAssembly;
 	}
 
-	/** Marks a tile as the source of power for the network */
-	public void markAsPowerSource(TileEntity entity)
+	/** Marks a tile as the source of power for the network
+	 * 
+	 * @param powered true to add, false to remove */
+	public void markAsPowerSource(TileEntity entity, boolean powered)
 	{
-		if (!this.powerSources.contains(entity))
+		if (powered)
 		{
-			this.powerSources.add(entity);
+			if (!this.powerSources.contains(entity))
+			{
+				this.powerSources.add(entity);
+			}
 		}
-	}
-
-	/** unmarks or removes the tile as a source of power for the network */
-	public void removeAsPowerSource(TileEntity entity)
-	{
-		this.powerSources.remove(entity);
+		else
+		{
+			this.powerSources.remove(entity);
+		}
 	}
 }
