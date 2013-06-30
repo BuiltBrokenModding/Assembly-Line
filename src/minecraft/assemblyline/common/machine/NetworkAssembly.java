@@ -13,26 +13,42 @@ public class NetworkAssembly extends NetworkTileEntities
 {
 	/** List of network members that are providing power for the network */
 	private List<TileEntity> powerSources = new ArrayList<TileEntity>();
-	public final int powerRange = 20;
+	public final int MAX_POWER_RANGE = 20;
 
 	public NetworkAssembly(INetworkPart... parts)
 	{
 		super(parts);
 	}
 
-	public boolean canRun(TileEntityAssembly tile)
+	/** Detects if the tile can run by tracking down a tileEntity marked as a power provider in the
+	 * network. Does use a pathfinder that will work threw at least a sphere with a radius the same
+	 * as the max power range of the network
+	 * 
+	 * @param tile - tileEntity which is mainly used as a way to locate the tile and gets its world
+	 * @return true if the tile can be powered by the network */
+	public TileEntityAssembly canRun(TileEntityAssembly tile)
 	{
-		if (tile != null && !tile.powered)
+		if (tile != null && !tile.powered && this.powerSources.size() > 0)
 		{
 			for (TileEntity entity : powerSources)
 			{
-				Vector3 start = new Vector3(tile);
-				PowerPathFinder path = new PowerPathFinder(tile.worldObj, start, new Vector3(entity), powerRange);
-				path.init(start);
-				return path.results.size() > 0;
+				if (entity instanceof TileEntityAssembly && ((TileEntityAssembly) entity).powered)
+				{
+					Vector3 start = new Vector3(tile);
+					Vector3 end = new Vector3(entity);
+					if (start.distanceTo(end) <= this.MAX_POWER_RANGE)
+					{
+						PowerPathFinder path = new PowerPathFinder(tile.worldObj, start, end, MAX_POWER_RANGE);
+						path.init(start);
+						if (path.results.size() > 0)
+						{
+							return (TileEntityAssembly) entity;
+						}
+					}
+				}
 			}
 		}
-		return tile != null && tile.powered;
+		return null;
 	}
 
 	@Override

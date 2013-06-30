@@ -2,6 +2,9 @@ package assemblyline.common.block;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
@@ -9,6 +12,7 @@ import net.minecraft.world.World;
 import universalelectricity.prefab.block.BlockAdvanced;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.TabAssemblyLine;
+import assemblyline.common.machine.TileEntityAssembly;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.api.INetworkPart;
@@ -22,6 +26,21 @@ public class BlockALMachine extends BlockAdvanced
 		super(AssemblyLine.CONFIGURATION.getBlock(name, id).getInt(), material);
 		this.setUnlocalizedName(name);
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
+	}
+
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
+	{
+		ItemStack stack = entityPlayer.getHeldItem();
+		TileEntity ent = world.getBlockTileEntity(x, y, z);
+		if (!world.isRemote && stack != null && stack.itemID == Item.stick.itemID && ent instanceof TileEntityAssembly && entityPlayer != null)
+		{
+			TileEntityAssembly asm = (TileEntityAssembly) ent;
+			String output = "Debug>>>";
+			output += "Channel:" + (asm.getTileNetwork() != null ? asm.getTileNetwork().toString() : "Error") + "|";
+			entityPlayer.sendChatToPlayer(output);
+		}
+		return super.onBlockActivated(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ);
 	}
 
 	@SideOnly(Side.CLIENT)

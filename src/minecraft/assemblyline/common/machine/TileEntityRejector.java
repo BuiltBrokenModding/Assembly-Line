@@ -31,12 +31,6 @@ public class TileEntityRejector extends TileEntityFilterable
 	}
 
 	@Override
-	protected int getMaxTransferRange()
-	{
-		return 20;
-	}
-
-	@Override
 	public void onUpdate()
 	{
 		/**

@@ -105,12 +105,6 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
 	}
 
 	@Override
-	protected int getMaxTransferRange()
-	{
-		return 20;
-	}
-
-	@Override
 	public Packet getDescriptionPacket()
 	{
 		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.wattsReceived, this.slantType.ordinal());

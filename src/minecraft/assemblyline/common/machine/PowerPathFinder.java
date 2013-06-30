@@ -35,7 +35,7 @@ public class PowerPathFinder extends Pathfinder
 		public Set<Vector3> getConnectedNodes(Pathfinder finder, Vector3 currentNode)
 		{
 			Set<Vector3> neighbors = new HashSet<Vector3>();
-
+			//TODO change this to get the connected tiles from the tile itself so to allow for non-forge direction connections
 			for (int i = 0; i < 6; i++)
 			{
 				ForgeDirection direction = ForgeDirection.getOrientation(i);
