@@ -93,9 +93,9 @@ public class TileEntityConstructionPump extends TileEntityRunnableMachine implem
 	}
 
 	@Override
-	public ElectricityPack getRequest()
+	public double getRequest()
 	{
-		return new ElectricityPack(WATTS_PER_TICK / this.getVoltage(), this.getVoltage());
+		return WATTS_PER_TICK;
 	}
 
 	@Override
