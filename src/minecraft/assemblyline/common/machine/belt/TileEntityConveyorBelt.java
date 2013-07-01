@@ -16,6 +16,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.implement.IRotatable;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
@@ -41,7 +42,6 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
 	public static final int MAX_FRAME = 13;
 	public static final int MAX_SLANT_FRAME = 23;
 
-	/** Joules required to run this thing. */
 	public final float acceleration = 0.01f;
 	public final float maxSpeed = 0.1f;
 	/** Current rotation of the model wheels */
@@ -120,16 +120,12 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
 	/** Is this belt in the front of a conveyor line? Used for rendering. */
 	public boolean getIsFirstBelt()
 	{
-
-		ForgeDirection front = this.getDirection();
-		ForgeDirection back = this.getDirection().getOpposite();
-		TileEntity fBelt = worldObj.getBlockTileEntity(xCoord + front.offsetX, yCoord + front.offsetY, zCoord + front.offsetZ);
-		TileEntity BBelt = worldObj.getBlockTileEntity(xCoord + back.offsetX, yCoord + back.offsetY, zCoord + back.offsetZ);
-		if (fBelt instanceof TileEntityConveyorBelt)
+		Vector3 vec = new Vector3(this);
+		TileEntity fBelt = vec.clone().modifyPositionFromSide(this.getDirection()).getTileEntity(this.worldObj);
+		TileEntity bBelt = vec.clone().modifyPositionFromSide(this.getDirection().getOpposite()).getTileEntity(this.worldObj);
+		if (fBelt instanceof TileEntityConveyorBelt && !(bBelt instanceof TileEntityConveyorBelt))
 		{
-			ForgeDirection fD = ((TileEntityConveyorBelt) fBelt).getDirection();
-			ForgeDirection TD = this.getDirection();
-			return fD == TD;
+			return ((TileEntityConveyorBelt) fBelt).getDirection() == this.getDirection();
 		}
 		return false;
 	}
@@ -138,16 +134,12 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
 	public boolean getIsMiddleBelt()
 	{
 
-		ForgeDirection front = this.getDirection();
-		ForgeDirection back = this.getDirection().getOpposite();
-		TileEntity fBelt = worldObj.getBlockTileEntity(xCoord + front.offsetX, yCoord + front.offsetY, zCoord + front.offsetZ);
-		TileEntity BBelt = worldObj.getBlockTileEntity(xCoord + back.offsetX, yCoord + back.offsetY, zCoord + back.offsetZ);
-		if (fBelt instanceof TileEntityConveyorBelt && BBelt instanceof TileEntityConveyorBelt)
+		Vector3 vec = new Vector3(this);
+		TileEntity fBelt = vec.clone().modifyPositionFromSide(this.getDirection()).getTileEntity(this.worldObj);
+		TileEntity bBelt = vec.clone().modifyPositionFromSide(this.getDirection().getOpposite()).getTileEntity(this.worldObj);
+		if (fBelt instanceof TileEntityConveyorBelt && bBelt instanceof TileEntityConveyorBelt)
 		{
-			ForgeDirection fD = ((TileEntityConveyorBelt) fBelt).getDirection();
-			ForgeDirection BD = ((TileEntityConveyorBelt) BBelt).getDirection();
-			ForgeDirection TD = this.getDirection();
-			return fD == TD && BD == TD;
+			return ((TileEntityConveyorBelt) fBelt).getDirection() == this.getDirection() && ((TileEntityConveyorBelt) bBelt).getDirection() == this.getDirection();
 		}
 		return false;
 	}
@@ -155,17 +147,12 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
 	/** Is this belt in the back of a conveyor line? Used for rendering. */
 	public boolean getIsLastBelt()
 	{
-
-		ForgeDirection front = this.getDirection();
-		ForgeDirection back = this.getDirection().getOpposite();
-		TileEntity fBelt = worldObj.getBlockTileEntity(xCoord + front.offsetX, yCoord + front.offsetY, zCoord + front.offsetZ);
-		TileEntity BBelt = worldObj.getBlockTileEntity(xCoord + back.offsetX, yCoord + back.offsetY, zCoord + back.offsetZ);
-
-		if (BBelt instanceof TileEntityConveyorBelt)
+		Vector3 vec = new Vector3(this);
+		TileEntity fBelt = vec.clone().modifyPositionFromSide(this.getDirection()).getTileEntity(this.worldObj);
+		TileEntity bBelt = vec.clone().modifyPositionFromSide(this.getDirection().getOpposite()).getTileEntity(this.worldObj);
+		if (bBelt instanceof TileEntityConveyorBelt && !(fBelt instanceof TileEntityConveyorBelt))
 		{
-			ForgeDirection BD = ((TileEntityConveyorBelt) BBelt).getDirection();
-			ForgeDirection TD = this.getDirection();
-			return BD == TD;
+			return ((TileEntityConveyorBelt) bBelt).getDirection() == this.getDirection().getOpposite();
 		}
 		return false;
 	}
@@ -216,8 +203,7 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
 	@Override
 	public List<Entity> getAffectedEntities()
 	{
-		AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1);
-		return worldObj.getEntitiesWithinAABB(Entity.class, bounds);
+		return worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1));
 	}
 
 	public int getAnimationFrame()

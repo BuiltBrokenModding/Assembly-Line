@@ -32,11 +32,9 @@ public abstract class TileEntityFilterable extends TileEntityAssembly implements
 	private ItemStack filterItem;
 	private boolean inverted;
 
-	/**
-	 * Looks through the things in the filter and finds out which item is being filtered.
+	/** Looks through the things in the filter and finds out which item is being filtered.
 	 * 
-	 * @return Is this filterable block filtering this specific ItemStack?
-	 */
+	 * @return Is this filterable block filtering this specific ItemStack? */
 	public boolean isFiltering(ItemStack itemStack)
 	{
 		if (this.getFilter() != null && itemStack != null)
@@ -65,11 +63,7 @@ public abstract class TileEntityFilterable extends TileEntityAssembly implements
 	public void setFilter(ItemStack filter)
 	{
 		this.filterItem = filter;
-
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-		{
-			PacketManager.sendPacketToClients(this.getDescriptionPacket());
-		}
+		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	@Override
@@ -81,10 +75,7 @@ public abstract class TileEntityFilterable extends TileEntityAssembly implements
 	public void setInverted(boolean inverted)
 	{
 		this.inverted = inverted;
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-		{
-			PacketManager.sendPacketToClients(this.getDescriptionPacket());
-		}
+		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	public boolean isInverted()
@@ -119,13 +110,11 @@ public abstract class TileEntityFilterable extends TileEntityAssembly implements
 		return this.getDirection(worldObj, xCoord, yCoord, zCoord);
 	}
 
-	/**
-	 * Don't override this! Override getPackData() instead!
-	 */
+	/** Don't override this! Override getPackData() instead! */
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.getPacketData().toArray());
+		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, AssemblyTilePacket.NBT, this.getPacketData().toArray());
 	}
 
 	public ArrayList getPacketData()
@@ -135,31 +124,6 @@ public abstract class TileEntityFilterable extends TileEntityAssembly implements
 		writeToNBT(tag);
 		array.add(tag);
 		return array;
-	}
-
-	@Override
-	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
-	{
-		if (worldObj.isRemote)
-		{
-			ByteArrayInputStream bis = new ByteArrayInputStream(packet.data);
-			DataInputStream dis = new DataInputStream(bis);
-			int id, x, y, z;
-			try
-			{
-				id = dis.readInt();
-				x = dis.readInt();
-				y = dis.readInt();
-				z = dis.readInt();
-				this.worldObj.markBlockForRenderUpdate(x, y, z);
-				NBTTagCompound tag = Packet.readNBTTagCompound(dis);
-				readFromNBT(tag);
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
-		}
 	}
 
 	@Override
