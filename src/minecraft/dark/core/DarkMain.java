@@ -33,43 +33,4 @@ public class DarkMain
 	{
 
 	}
-
-	/**
-	 * Loads most of the items from basic components to be used
-	 */
-	public static void forceLoadBCItems(Object mod, String channel)
-	{
-		if (!loadedItems)
-		{
-			LOGGER.fine("Loaded Basic Components Items");
-			
-			BasicComponents.requestItem("ingotCopper", 0);
-			BasicComponents.requestItem("ingotTin", 0);
-
-			BasicComponents.requestBlock("oreCopper", 0);
-			BasicComponents.requestBlock("oreTin", 0);
-
-			BasicComponents.requestBlock("copperWire", 0);
-
-			BasicComponents.requestItem("ingotSteel", 0);
-			BasicComponents.requestItem("dustSteel", 0);
-			BasicComponents.requestItem("plateSteel", 0);
-
-			BasicComponents.requestItem("ingotBronze", 0);
-			BasicComponents.requestItem("dustBronze", 0);
-			BasicComponents.requestItem("plateBronze", 0);
-
-			BasicComponents.requestItem("circuitBasic", 0);
-			BasicComponents.requestItem("circuitAdvanced", 0);
-			BasicComponents.requestItem("circuitElite", 0);
-
-			BasicComponents.requestItem("motor", 0);
-			BasicComponents.requestItem("battery", 0);
-			BasicComponents.requestItem("infiniteBattery", 0);
-
-			loadedItems = true;
-			BasicComponents.register(mod, channel);
-		}
-		
-	}
 }
