@@ -1,93 +1,68 @@
 package dark.library.machine;
 
-import ic2.api.Direction;
-import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.event.EnergyTileUnloadEvent;
-import ic2.api.energy.tile.IEnergySink;
+import java.util.EnumSet;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.core.block.IConnector;
 import universalelectricity.core.block.IVoltage;
+import universalelectricity.core.electricity.ElectricityNetworkHelper;
 import universalelectricity.core.electricity.ElectricityPack;
+import universalelectricity.prefab.tile.TileEntityElectrical;
 import universalelectricity.prefab.tile.TileEntityElectricityRunnable;
 import buildcraft.api.power.IPowerProvider;
 import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerFramework;
 import dark.core.PowerSystems;
 
-public abstract class TileEntityRunnableMachine extends TileEntityElectricityRunnable implements IPowerReceptor, IEnergySink, IConnector, IVoltage
+public abstract class TileEntityRunnableMachine extends TileEntityElectrical implements IPowerReceptor, IConnector, IVoltage
 {
+	/** Forge Ore Directory name of the item to toggle power */
 	public static String powerToggleItemID = "battery";
-
+	/** Should this machine run without power */
 	protected boolean runPowerless = false;
-
+	/** BuildCraft power provider? */
 	private IPowerProvider powerProvider;
 
-	public TileEntityRunnableMachine()
-	{
+	public double prevWatts, wattsReceived = 0;
 
-	}
-
-	@Override
-	public void initiate()
-	{
-		super.initiate();
-		MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
-	}
-
-	@Override
-	public void invalidate()
-	{
-		MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
-		super.invalidate();
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
-		this.wattsReceived = nbt.getDouble("wattsReceived");
-		this.runPowerless = nbt.getBoolean("shouldPower");
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
-		nbt.setDouble("wattsReceived", this.wattsReceived);
-		nbt.setBoolean("shouldPower", this.runPowerless);
-	}
-
-	/**
-	 * Sets this machine to run without power only if the given stack match an ore directory name
-	 */
-	public void toggleInfPower(ItemStack item)
-	{
-		for (ItemStack stack : OreDictionary.getOres(this.powerToggleItemID))
-		{
-			if (stack.isItemEqual(item))
-			{
-				this.runPowerless = !this.runPowerless;
-				break;
-			}
-		}
-	}
+	private PowerSystems[] powerList = new PowerSystems[] { PowerSystems.BUILDCRAFT, PowerSystems.MEKANISM };
 
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
-
-		if (this.wattsReceived < this.getWattBuffer() && (this.runPowerless || PowerSystems.runPowerLess(PowerSystems.INDUSTRIALCRAFT, PowerSystems.BUILDCRAFT, PowerSystems.MEKANISM)))
+		this.prevWatts = this.wattsReceived;
+		if (!this.worldObj.isRemote)
 		{
-			this.wattsReceived += Math.max(this.getWattBuffer() - this.wattsReceived, 0);
+			if ((this.runPowerless || PowerSystems.runPowerLess(powerList)) && this.wattsReceived < this.getWattBuffer())
+			{
+				this.wattsReceived += Math.max(this.getWattBuffer() - this.wattsReceived, 0);
+			}
+			else
+			{
+				this.doPowerUpdate();
+			}
+		}
+	}
+
+	public void doPowerUpdate()
+	{
+		// UNIVERSAL ELECTRICITY UPDATE
+		if (!this.isDisabled())
+		{
+			ElectricityPack electricityPack = ElectricityNetworkHelper.consumeFromMultipleSides(this, this.getConsumingSides(), ElectricityPack.getFromWatts(this.getRequest(), this.getVoltage()));
+			this.onReceive(electricityPack.voltage, electricityPack.amperes);
+		}
+		else
+		{
+			ElectricityNetworkHelper.consumeFromMultipleSides(this, new ElectricityPack());
 		}
 
+		// BUILDCRAFT POWER UPDATE
 		if (PowerFramework.currentFramework != null)
 		{
 			if (this.powerProvider == null)
@@ -98,65 +73,14 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectricityRun
 		}
 		if (this.powerProvider != null)
 		{
-			float requiredEnergy = (float) (this.getRequest().getWatts() * UniversalElectricity.TO_BC_RATIO);
+			float requiredEnergy = (float) (this.getRequest() * UniversalElectricity.TO_BC_RATIO);
 			float energyReceived = this.powerProvider.useEnergy(0, requiredEnergy, true);
-			this.onReceive(ElectricityPack.getFromWatts(UniversalElectricity.BC3_RATIO * energyReceived, this.getVoltage()));
+			this.onReceive(this.getVoltage(), (UniversalElectricity.BC3_RATIO * energyReceived) / this.getVoltage());
 		}
+		//TODO add other power systems
 	}
 
-	/**
-	 * IC2
-	 */
-	@Override
-	public boolean acceptsEnergyFrom(TileEntity emitter, Direction direction)
-	{
-		if (this.getConsumingSides() != null)
-		{
-			return this.getConsumingSides().contains(direction.toForgeDirection());
-		}
-		else
-		{
-			return true;
-		}
-	}
-
-	@Override
-	public boolean isAddedToEnergyNet()
-	{
-		return this.ticks > 0;
-	}
-
-	@Override
-	public int demandsEnergy()
-	{
-		return (int) Math.ceil(this.getRequest().getWatts() * UniversalElectricity.TO_IC2_RATIO);
-	}
-
-	@Override
-	public int injectEnergy(Direction direction, int i)
-	{
-		double givenElectricity = i * UniversalElectricity.IC2_RATIO;
-		double rejects = 0;
-
-		if (givenElectricity > this.getWattBuffer())
-		{
-			rejects = givenElectricity - this.getRequest().getWatts();
-		}
-
-		this.onReceive(new ElectricityPack(givenElectricity / this.getVoltage(), this.getVoltage()));
-
-		return (int) (rejects * UniversalElectricity.TO_IC2_RATIO);
-	}
-
-	@Override
-	public int getMaxSafeInput()
-	{
-		return 2048;
-	}
-
-	/**
-	 * Buildcraft
-	 */
+	/** Buildcraft */
 	@Override
 	public void setPowerProvider(IPowerProvider provider)
 	{
@@ -172,7 +96,6 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectricityRun
 	@Override
 	public void doWork()
 	{
-
 	}
 
 	@Override
@@ -180,9 +103,65 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectricityRun
 	{
 		if (this.canConnect(from))
 		{
-			return (int) Math.ceil(this.getRequest().getWatts() * UniversalElectricity.TO_BC_RATIO);
+			return (int) Math.ceil(this.getRequest() * UniversalElectricity.TO_BC_RATIO);
 		}
 
 		return 0;
+	}
+
+	protected EnumSet<ForgeDirection> getConsumingSides()
+	{
+		return ElectricityNetworkHelper.getDirections(this);
+	}
+
+	/** Watts this tile needs a tick to function */
+	public abstract double getRequest();
+
+	public void onReceive(double voltage, double amperes)
+	{
+		if (voltage > this.getVoltage())
+		{
+			this.onDisable(2);
+			return;
+		}
+		this.wattsReceived = Math.min(this.wattsReceived + (voltage * amperes), this.getWattBuffer());
+	}
+
+	/** @return The amount of internal buffer that may be stored within this machine. This will make
+	 * the machine run smoother as electricity might not always be consistent. */
+	public double getWattBuffer()
+	{
+		return this.getRequest() * 2;
+	}
+
+	/** Sets this machine to run without power only if the given stack match an ore directory name */
+	public void toggleInfPower(ItemStack item)
+	{
+		for (ItemStack stack : OreDictionary.getOres(this.powerToggleItemID))
+		{
+			if (stack.isItemEqual(item))
+			{
+				this.runPowerless = !this.runPowerless;
+				break;
+			}
+		}
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		this.wattsReceived = nbt.getDouble("wattsReceived");
+		this.runPowerless = nbt.getBoolean("shouldPower");
+		this.disabledTicks = nbt.getInteger("disabledTicks");
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		nbt.setDouble("wattsReceived", this.wattsReceived);
+		nbt.setBoolean("shouldPower", this.runPowerless);
+		nbt.setInteger("disabledTicks", this.disabledTicks);
 	}
 }

@@ -1,6 +1,5 @@
 package dark.core.tile.network;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -8,8 +7,10 @@ import java.util.List;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.path.Pathfinder;
 import universalelectricity.core.vector.Vector3;
+import universalelectricity.core.vector.VectorHelper;
 import cpw.mods.fml.common.FMLLog;
 import dark.core.api.INetworkPart;
 
@@ -23,13 +24,11 @@ public class NetworkTileEntities
 		this.networkMember.addAll(Arrays.asList(parts));
 	}
 
-	/**
-	 * Adds a TileEntity to the network
+	/** Adds a TileEntity to the network
 	 * 
 	 * @param ent - tileEntity instance
 	 * @param member - add to network member list
-	 * @return
-	 */
+	 * @return */
 	public boolean addEntity(TileEntity ent, boolean member)
 	{
 		if (ent == null || this.isPartOfNetwork(ent))
@@ -48,33 +47,27 @@ public class NetworkTileEntities
 		return this.networkMember.contains(ent);
 	}
 
-	/**
-	 * Adds a new part to the network member list
-	 */
+	/** Adds a new part to the network member list */
 	public boolean addNetworkPart(INetworkPart part)
 	{
 		if (!networkMember.contains(part) && this.isValidMember(part))
 		{
 			networkMember.add(part);
 			part.setTileNetwork(this);
-			this.cleanUpConductors();
+			this.cleanUpMembers();
 			return true;
 		}
 		return false;
 	}
 
-	/**
-	 * Removes a tileEntity from any of the valid lists
-	 */
+	/** Removes a tileEntity from any of the valid lists */
 	public void removeEntity(TileEntity ent)
 	{
 		this.networkMember.remove(ent);
 	}
 
-	/**
-	 * Cleans the list of networkMembers and remove those that no longer belong
-	 */
-	public void cleanUpConductors()
+	/** Cleans the list of networkMembers and remove those that no longer belong */
+	public void cleanUpMembers()
 	{
 		Iterator<INetworkPart> it = this.networkMember.iterator();
 
@@ -94,20 +87,16 @@ public class NetworkTileEntities
 
 	}
 
-	/**
-	 * Is this part a valid member of the network
-	 */
+	/** Is this part a valid member of the network */
 	public boolean isValidMember(INetworkPart part)
 	{
 		return part != null && part instanceof TileEntity && !((TileEntity) part).isInvalid();
 	}
 
-	/**
-	 * Refreshes the network... mainly the network member list
-	 */
+	/** Refreshes the network... mainly the network member list */
 	public void refresh()
 	{
-		this.cleanUpConductors();
+		this.cleanUpMembers();
 		try
 		{
 			Iterator<INetworkPart> it = this.networkMember.iterator();
@@ -125,20 +114,16 @@ public class NetworkTileEntities
 		}
 	}
 
-	/**
-	 * Gets the list of network members
-	 */
+	/** Gets the list of network members */
 	public List<INetworkPart> getNetworkMemebers()
 	{
 		return this.networkMember;
 	}
 
-	/**
-	 * Combines two networks together into one
+	/** Combines two networks together into one
 	 * 
 	 * @param network
-	 * @param part
-	 */
+	 * @param part */
 	public void merge(NetworkTileEntities network, INetworkPart part)
 	{
 		if (network != null && network != this && network.getClass().equals(this.getClass()))
@@ -150,43 +135,34 @@ public class NetworkTileEntities
 		}
 	}
 
-	/**
-	 * Processing that needs too be done before the network merges
+	/** Processing that needs too be done before the network merges
 	 * 
-	 * @return false if the merge needs to be canceled
-	 */
+	 * @return false if the merge needs to be canceled */
 	public boolean preMergeProcessing(NetworkTileEntities network, INetworkPart part)
 	{
 		return true;
 	}
 
-	/**
-	 * Finalizing the merge of two networks by creating the new network and importing all network
-	 * parts
-	 */
+	/** Finalizing the merge of two networks by creating the new network and importing all network
+	 * parts */
 	public void postMergeProcessing(NetworkTileEntities network)
 	{
 		NetworkTileEntities newNetwork = new NetworkTileEntities();
 		newNetwork.getNetworkMemebers().addAll(this.getNetworkMemebers());
 		newNetwork.getNetworkMemebers().addAll(network.getNetworkMemebers());
 
-		newNetwork.cleanUpConductors();
-		// newNetwork.balanceColletiveTank(true);
+		newNetwork.cleanUpMembers();
 	}
 
-	/**
-	 * Called when a peace of the network is remove from the network. Will split the network if it
-	 * can no longer find a valid connection too all parts
-	 */
+	/** Called when a peace of the network is remove from the network. Will split the network if it
+	 * can no longer find a valid connection too all parts */
 	public void splitNetwork(World world, INetworkPart splitPoint)
 	{
 		if (splitPoint instanceof TileEntity)
 		{
 			this.getNetworkMemebers().remove(splitPoint);
-			/**
-			 * Loop through the connected blocks and attempt to see if there are connections between
-			 * the two points elsewhere.
-			 */
+			/** Loop through the connected blocks and attempt to see if there are connections between
+			 * the two points elsewhere. */
 			TileEntity[] connectedBlocks = splitPoint.getNetworkConnections();
 
 			for (int i = 0; i < connectedBlocks.length; i++)
@@ -237,7 +213,7 @@ public class NetworkTileEntities
 									}
 								}
 
-								newNetwork.cleanUpConductors();
+								newNetwork.cleanUpMembers();
 							}
 						}
 					}
@@ -250,5 +226,18 @@ public class NetworkTileEntities
 	public String toString()
 	{
 		return "TileNetwork[" + this.hashCode() + "|parts:" + this.networkMember.size() + "]";
+	}
+	
+	public static void invalidate(TileEntity tileEntity)
+	{
+		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+		{
+			TileEntity checkTile = VectorHelper.getConnectorFromSide(tileEntity.worldObj, new Vector3(tileEntity), direction);
+
+			if (checkTile instanceof INetworkPart && ((INetworkPart) checkTile).getTileNetwork() != null)
+			{
+				((INetworkPart) checkTile).getTileNetwork().removeEntity(tileEntity);
+			}
+		}
 	}
 }
