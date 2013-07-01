@@ -70,9 +70,9 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 				this.updateTick = ((int) random.nextInt(10) + 20);
 				this.updateNetworkConnections();
 			}
-			if (this.wattsReceived >= this.getRequest().getWatts())
+			if (this.wattsReceived >= this.getRequest())
 			{
-				this.wattsReceived -= getRequest().getWatts();
+				this.wattsReceived -= getRequest();
 				this.powered = true;
 			}
 			else
@@ -134,15 +134,9 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 	}
 
 	@Override
-	public ElectricityPack getRequest()
+	public double getRequest()
 	{
-		int voltage = 120;
-		double amps = .1D;
-		if (this.getTileNetwork() instanceof NetworkAssembly)
-		{
-
-		}
-		return new ElectricityPack(amps, voltage);
+		return .1D;
 	}
 
 	@Override
