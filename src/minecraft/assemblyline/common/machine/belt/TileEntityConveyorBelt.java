@@ -1,6 +1,8 @@
 package assemblyline.common.machine.belt;
 
+import java.io.DataInputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
@@ -30,56 +32,46 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
 {
 	public enum SlantType
 	{
-		NONE, UP, DOWN, TOP
+		NONE,
+		UP,
+		DOWN,
+		TOP
 	}
 
 	public static final int MAX_FRAME = 13;
 	public static final int MAX_SLANT_FRAME = 23;
 
-	/**
-	 * Joules required to run this thing.
-	 */
+	/** Joules required to run this thing. */
 	public final float acceleration = 0.01f;
 	public final float maxSpeed = 0.1f;
-
+	/** Current rotation of the model wheels */
 	public float wheelRotation = 0;
 	private int animFrame = 0; // this is from 0 to 15
 	private SlantType slantType = SlantType.NONE;
 	/** Entities that are ignored allowing for other tiles to interact with them */
 	public List<Entity> IgnoreList = new ArrayList<Entity>();
 
-	
-
 	@Override
 	public void onUpdate()
 	{
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && this.ticks % 10 == 0)
-		{
-			PacketManager.sendPacketToClients(this.getDescriptionPacket());
-		}
-
 		/* PROCESSES IGNORE LIST AND REMOVES UNNEED ENTRIES */
-		List<Entity> newList = new ArrayList<Entity>();
-		for (Entity ent : IgnoreList)
+		Iterator<Entity> it = this.IgnoreList.iterator();
+		while (it.hasNext())
 		{
-			if (this.getAffectedEntities().contains(ent))
+			if (!this.getAffectedEntities().contains(it.next()))
 			{
-				newList.add(ent);
+				it.remove();
 			}
 		}
-		this.IgnoreList = newList;
 
-		if (this.isRunning() && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
+		if (this.worldObj.isRemote && this.isRunning() && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
 		{
 			if (this.ticks % 10 == 0 && this.worldObj.isRemote && this.worldObj.getBlockId(this.xCoord - 1, this.yCoord, this.zCoord) != AssemblyLine.blockConveyorBelt.blockID && this.worldObj.getBlockId(xCoord, yCoord, zCoord - 1) != AssemblyLine.blockConveyorBelt.blockID)
 			{
 				this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "mods.assemblyline.conveyor", 0.5f, 0.7f, true);
 			}
 
-			this.wheelRotation += 40;
-
-			if (this.wheelRotation > 360)
-				this.wheelRotation = 0;
+			this.wheelRotation = (40 + this.wheelRotation) % 360;
 
 			float wheelRotPct = wheelRotation / 360f;
 
@@ -107,7 +99,7 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.wattsReceived, this.slantType.ordinal());
+		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, 3, this.slantType.ordinal());
 	}
 
 	public SlantType getSlant()
@@ -121,15 +113,11 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
 		{
 			slantType = SlantType.NONE;
 		}
-
 		this.slantType = slantType;
-
-		PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj);
+		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
-	/**
-	 * Is this belt in the front of a conveyor line? Used for rendering.
-	 */
+	/** Is this belt in the front of a conveyor line? Used for rendering. */
 	public boolean getIsFirstBelt()
 	{
 
@@ -146,9 +134,7 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
 		return false;
 	}
 
-	/**
-	 * Is this belt in the middile of two belts? Used for rendering.
-	 */
+	/** Is this belt in the middile of two belts? Used for rendering. */
 	public boolean getIsMiddleBelt()
 	{
 
@@ -166,9 +152,7 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
 		return false;
 	}
 
-	/**
-	 * Is this belt in the back of a conveyor line? Used for rendering.
-	 */
+	/** Is this belt in the back of a conveyor line? Used for rendering. */
 	public boolean getIsLastBelt()
 	{
 
@@ -187,20 +171,24 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
 	}
 
 	@Override
-	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
+	public boolean handlePacket(int id, DataInputStream dis, EntityPlayer player)
 	{
-		if (this.worldObj.isRemote)
+		if (!super.handlePacket(id, dis, player) && this.worldObj.isRemote)
 		{
 			try
 			{
-				this.wattsReceived = dataStream.readDouble();
-				this.slantType = SlantType.values()[dataStream.readInt()];
+				if (id == 3)
+				{
+					this.slantType = SlantType.values()[dis.readInt()];
+					return true;
+				}
 			}
 			catch (Exception e)
 			{
 				e.printStackTrace();
 			}
 		}
+		return false;
 	}
 
 	@Override
@@ -234,29 +222,32 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
 
 	public int getAnimationFrame()
 	{
-		if (!this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
+		if (!this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord) && this.isRunning())
 		{
-			TileEntity te = null;
-			te = this.worldObj.getBlockTileEntity(this.xCoord - 1, this.yCoord, this.zCoord);
+			TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.xCoord - 1, this.yCoord, this.zCoord);
 
-			if (te != null)
+			if (tileEntity != null)
 			{
-				if (te instanceof TileEntityConveyorBelt)
+				if (tileEntity instanceof TileEntityConveyorBelt)
 				{
-					if (((TileEntityConveyorBelt) te).getSlant() == this.slantType)
-						return ((TileEntityConveyorBelt) te).getAnimationFrame();
+					if (((TileEntityConveyorBelt) tileEntity).getSlant() == this.slantType)
+					{
+						return ((TileEntityConveyorBelt) tileEntity).getAnimationFrame();
+					}
 				}
 
 			}
 
-			te = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord - 1);
+			tileEntity = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord - 1);
 
-			if (te != null)
+			if (tileEntity != null)
 			{
-				if (te instanceof TileEntityConveyorBelt)
+				if (tileEntity instanceof TileEntityConveyorBelt)
 				{
-					if (((TileEntityConveyorBelt) te).getSlant() == this.slantType)
-						return ((TileEntityConveyorBelt) te).getAnimationFrame();
+					if (((TileEntityConveyorBelt) tileEntity).getSlant() == this.slantType)
+					{
+						return ((TileEntityConveyorBelt) tileEntity).getAnimationFrame();
+					}
 				}
 
 			}
@@ -265,34 +256,20 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
 		return this.animFrame;
 	}
 
-	/**
-	 * NBT Data
-	 */
+	/** NBT Data */
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
 		this.slantType = SlantType.values()[nbt.getByte("slant")];
-
-		if (worldObj != null)
-		{
-			worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, nbt.getInteger("rotation"), 3);
-		}
 	}
 
-	/**
-	 * Writes a tile entity to NBT.
-	 */
+	/** Writes a tile entity to NBT. */
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
 		nbt.setByte("slant", (byte) this.slantType.ordinal());
-
-		if (worldObj != null)
-		{
-			nbt.setInteger("rotation", worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
-		}
 	}
 
 	@Override

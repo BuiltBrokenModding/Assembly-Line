@@ -41,7 +41,6 @@ import assemblyline.common.armbot.command.CommandRotateTo;
 import assemblyline.common.armbot.command.CommandUse;
 import assemblyline.common.machine.TileEntityAssembly;
 import assemblyline.common.machine.encoder.ItemDisk;
-import buildcraft.api.power.PowerProvider;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -57,18 +56,13 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 	private final CommandManager commandManager = new CommandManager();
 	private static final int PACKET_COMMANDS = 128;
 
-	/**
-	 * The items this container contains.
-	 */
+	/** The items this container contains. */
 	protected ItemStack disk = null;
 	public final double WATT_REQUEST = 20;
-	public double wattsReceived = 0;
 	private int playerUsing = 0;
 	private int computersAttached = 0;
 	private List<IComputerAccess> connectedComputers = new ArrayList<IComputerAccess>();
-	/**
-	 * The rotation of the arms. In Degrees.
-	 */
+	/** The rotation of the arms. In Degrees. */
 	public float rotationPitch = 0;
 	public float rotationYaw = 0;
 	public float renderPitch = 0;
@@ -80,22 +74,18 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
 	public boolean isProvidingPower = false;
 
-	/**
-	 * An entity that the Armbot is grabbed onto. Entity Items are held separately.
-	 */
+	/** An entity that the Armbot is grabbed onto. Entity Items are held separately. */
 	private final List<Entity> grabbedEntities = new ArrayList<Entity>();
 	private final List<ItemStack> grabbedItems = new ArrayList<ItemStack>();
 
-	/**
-	 * Client Side Object Storage
-	 */
+	/** Client Side Object Storage */
 	public EntityItem renderEntityItem = null;
 
 	@Override
 	public void initiate()
 	{
 		super.initiate();
-		if(!this.commandManager.hasTasks())
+		if (!this.commandManager.hasTasks())
 		{
 			this.onInventoryChanged();
 		}
@@ -281,9 +271,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 		return null;
 	}
 
-	/**
-	 * @return The current hand position of the armbot.
-	 */
+	/** @return The current hand position of the armbot. */
 	public Vector3 getHandPosition()
 	{
 		Vector3 position = new Vector3(this);
@@ -307,45 +295,16 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 		return delta;
 	}
 
+	/** Data */
 	@Override
 	public Packet getDescriptionPacket()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
-		writeToNBT(nbt);
-		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, nbt);
+		this.writeToNBT(nbt);
+		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, AssemblyTilePacket.NBT, nbt);
 	}
 
-	/**
-	 * Data
-	 */
-	@Override
-	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
-	{
-		if (this.worldObj.isRemote)
-		{
-			try
-			{
-				ByteArrayInputStream bis = new ByteArrayInputStream(packet.data);
-				DataInputStream dis = new DataInputStream(bis);
-				int id, x, y, z;
-				id = dis.readInt();
-				x = dis.readInt();
-				y = dis.readInt();
-				z = dis.readInt();
-				NBTTagCompound tag = Packet.readNBTTagCompound(dis);
-				this.readFromNBT(tag);
-			}
-			catch (IOException e)
-			{
-				FMLLog.severe("Failed to receive packet for Armbot");
-				e.printStackTrace();
-			}
-		}
-	}
-
-	/**
-	 * Inventory
-	 */
+	/** Inventory */
 	@Override
 	public int getSizeInventory()
 	{
@@ -358,9 +317,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 		return TranslationHelper.getLocal("tile.armbot.name");
 	}
 
-	/**
-	 * Inventory functions.
-	 */
+	/** Inventory functions. */
 	@Override
 	public ItemStack getStackInSlot(int par1)
 	{
@@ -449,9 +406,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 		return this.displayText;
 	}
 
-	/**
-	 * NBT Data
-	 */
+	/** NBT Data */
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
@@ -506,9 +461,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 		}
 	}
 
-	/**
-	 * Writes a tile entity to NBT.
-	 */
+	/** Writes a tile entity to NBT. */
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
@@ -941,17 +894,13 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 		this.grabbedItems.clear();
 	}
 
-	/**
-	 * called by the block when another checks it too see if it is providing power to a direction
-	 */
+	/** called by the block when another checks it too see if it is providing power to a direction */
 	public boolean isProvidingPowerSide(ForgeDirection dir)
 	{
 		return this.isProvidingPower && dir.getOpposite() == this.getFacingDirectionFromAngle();
 	}
 
-	/**
-	 * gets the facing direction using the yaw angle
-	 */
+	/** gets the facing direction using the yaw angle */
 	public ForgeDirection getFacingDirectionFromAngle()
 	{
 		float angle = MathHelper.wrapAngleTo180_float(this.rotationYaw);

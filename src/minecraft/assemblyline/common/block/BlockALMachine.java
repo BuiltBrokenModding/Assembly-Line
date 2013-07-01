@@ -40,7 +40,7 @@ public class BlockALMachine extends BlockAdvanced
 			output += "Channel:" + (asm.getTileNetwork() != null ? asm.getTileNetwork().toString() : "Error") + "|";			
 			entityPlayer.sendChatToPlayer(output);
 			output = "Debug>>>";
-			output += "Powered:"+asm.powered + " By:"+(asm.powerSource != null ? asm.powerSource.toString() : "Error");
+			output += "Powered:"+asm.powered + " By:"+(asm.powerSource != null ? asm.powerSource.toString() : "null");
 			entityPlayer.sendChatToPlayer(output);
 		}
 		return super.onBlockActivated(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ);
