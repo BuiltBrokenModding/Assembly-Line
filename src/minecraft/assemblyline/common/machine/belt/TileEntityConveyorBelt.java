@@ -184,6 +184,11 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
 		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, facingDirection.ordinal(), 3);
 	}
 
+	public void setDirection(ForgeDirection facingDirection)
+	{
+		this.setDirection(worldObj, xCoord, yCoord, zCoord, facingDirection);
+	}
+
 	@Override
 	public ForgeDirection getDirection(IBlockAccess world, int x, int y, int z)
 	{
@@ -195,11 +200,6 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
 		return this.getDirection(worldObj, xCoord, yCoord, zCoord);
 	}
 
-	public void setDirection(ForgeDirection facingDirection)
-	{
-		this.setDirection(worldObj, xCoord, yCoord, zCoord, facingDirection);
-	}
-
 	@Override
 	public List<Entity> getAffectedEntities()
 	{
@@ -208,37 +208,6 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
 
 	public int getAnimationFrame()
 	{
-		if (!this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord) && this.isRunning())
-		{
-			TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.xCoord - 1, this.yCoord, this.zCoord);
-
-			if (tileEntity != null)
-			{
-				if (tileEntity instanceof TileEntityConveyorBelt)
-				{
-					if (((TileEntityConveyorBelt) tileEntity).getSlant() == this.slantType)
-					{
-						return ((TileEntityConveyorBelt) tileEntity).getAnimationFrame();
-					}
-				}
-
-			}
-
-			tileEntity = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord - 1);
-
-			if (tileEntity != null)
-			{
-				if (tileEntity instanceof TileEntityConveyorBelt)
-				{
-					if (((TileEntityConveyorBelt) tileEntity).getSlant() == this.slantType)
-					{
-						return ((TileEntityConveyorBelt) tileEntity).getAnimationFrame();
-					}
-				}
-
-			}
-		}
-
 		return this.animFrame;
 	}
 

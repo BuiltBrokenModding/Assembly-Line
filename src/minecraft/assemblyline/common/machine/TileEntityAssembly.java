@@ -40,8 +40,6 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 	public TileEntityAssembly powerSource;
 	/** Random instance */
 	public Random random = new Random();
-	/** Number of ticks this can go without power */
-	private int powerTicks = 0;
 	/** percent tick rate this tile will update at */
 	private int updateTick = 1;
 	/** ticks sync this tile has gotten power */
@@ -65,34 +63,28 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 	{
 		super.updateEntity();
 		boolean prevRun = this.running;
-		if (ticks % updateTick == 0)
-		{
-			this.updateTick = ((int) random.nextInt(10) + 20);
-			this.updateNetworkConnections();
-		}
-		if (this.wattsReceived >= this.getRequest().getWatts())
-		{
-			this.wattsReceived -= getRequest().getWatts();
-			this.powered = true;
-			this.powerTicks = 2;
-
-		}
-		else if (this.powerTicks > 0)
-		{
-			this.powerTicks--;
-			this.powered = true;
-		}
-		else
-		{
-			this.powered = false;
-		}
-		if (this.getTileNetwork() instanceof NetworkAssembly)
-		{
-			NetworkAssembly net = ((NetworkAssembly) this.getTileNetwork());
-			net.markAsPowerSource(this, this.powered);
-		}
 		if (!this.worldObj.isRemote)
 		{
+			if (ticks % updateTick == 0)
+			{
+				this.updateTick = ((int) random.nextInt(10) + 20);
+				this.updateNetworkConnections();
+			}
+			if (this.wattsReceived >= this.getRequest().getWatts())
+			{
+				this.wattsReceived -= getRequest().getWatts();
+				this.powered = true;
+			}
+			else
+			{
+				this.powered = false;
+			}
+			if (this.getTileNetwork() instanceof NetworkAssembly)
+			{
+				NetworkAssembly net = ((NetworkAssembly) this.getTileNetwork());
+				net.markAsPowerSource(this, this.powered);
+			}
+
 			this.running = this.isRunning();
 			if (running != prevRun)
 			{
@@ -120,13 +112,13 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 				if (!running)
 				{
 					this.lastPoweredTicks++;
-					if (this.lastPoweredTicks >= 20 && !net.getNetworkMemebers().contains(this.powerSource))
+					if (this.lastPoweredTicks >= 20 || !net.getNetworkMemebers().contains(this.powerSource))
 					{
 						this.powerSource = null;
 					}
 				}
 			}
-			if (!running && this.getTileNetwork() instanceof NetworkAssembly)
+			if ((!running || this.powerSource == null) && this.getTileNetwork() instanceof NetworkAssembly)
 			{
 				NetworkAssembly net = ((NetworkAssembly) this.getTileNetwork());
 				this.powerSource = net.canRun(this);
