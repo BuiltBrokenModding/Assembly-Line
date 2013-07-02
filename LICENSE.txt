@@ -55,14 +55,15 @@ includes:
 - patches to its source or binary files
 - any copy of a portion of its binary source files
 
-A) The user is NOT allowed to redistribute this Mod partially, in totality, or included in a distribution without explict permissions from the owner. 
+A) The user is NOT allowed to redistribute this Mod partially, in totality, or included in a distribution without explict permissions from the owner with the only exception of clause 5-B 
 
 B) Distrubution of this mod in a mod pack is allowed as long as the user obeys the following rules:
    1) The mod pack should not contain a major version release of the mod within one week of the mod version release to allow for bug fixes
    2) The mod pack should not contain a modified version of the mod unless to change the texture look of parts of the mod
    3) The mod pack owner or contributors must redirect errors and bug reports to the issue area of the mod's original github repo
-   4) The mod pack needs full public permission from all parts of the mod pack including mods, assets, and textures.
-   5) The mod pack or its download site should allow access by users to the list of permissions and credits to authors
+   4) The mod pack needs full permission from all parts of the mod pack including mods, assets, and textures.
+   5) The mod pack or its download site should allow access to the list of permissions and credits to authors by anyone
    6) The mod pack or its download site should contain links to mod documentation and original mod sites
+   7) The mod pack or mod should never be used to gain profit that doesn't go to the mod author
 
 C) Textures of this mod are allowed to be used in the creation or modification of texture packs without permision. That is as long as links and credit to the original mod are given for easy user understanding.
