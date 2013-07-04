@@ -29,17 +29,17 @@ public class BlockDrain extends BlockAdvanced
 	}
 
 	@Override
+	public TileEntity createNewTileEntity(World var1)
+	{
+		return new TileEntityDrain();
+	}
+
+	@Override
 	public void registerIcons(IconRegister par1IconRegister)
 	{
 		this.blockIcon = par1IconRegister.registerIcon(FluidMech.TEXTURE_NAME_PREFIX + "ironMachineSide");
 		this.drainIcon = par1IconRegister.registerIcon(FluidMech.TEXTURE_NAME_PREFIX + "drain");
 		this.fillIcon = par1IconRegister.registerIcon(FluidMech.TEXTURE_NAME_PREFIX + "drain2");
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World var1)
-	{
-		return new TileEntityDrain();
 	}
 
 	@Override

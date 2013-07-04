@@ -1,6 +1,5 @@
 package dark.fluid.common.pipes;
 
-
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -10,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
 import universalelectricity.prefab.block.BlockAdvanced;
 import dark.core.hydraulic.helpers.FluidRestrictionHandler;
@@ -27,8 +27,9 @@ public class BlockPipe extends BlockAdvanced
 		this.setCreativeTab(TabFluidMech.INSTANCE);
 		this.setUnlocalizedName("lmPipe");
 		this.setResistance(3f);
-		
+
 	}
+
 	@Override
 	public boolean isOpaqueCube()
 	{
@@ -80,7 +81,7 @@ public class BlockPipe extends BlockAdvanced
 	@Override
 	public TileEntity createNewTileEntity(World var1)
 	{
-		if(this.blockID == FluidMech.blockGenPipe.blockID)
+		if (this.blockID == FluidMech.blockGenPipe.blockID)
 		{
 			return new TileEntityGenericPipe();
 		}
@@ -127,5 +128,21 @@ public class BlockPipe extends BlockAdvanced
 				}
 			}
 		}
+	}
+
+	@Override
+	public boolean recolourBlock(World world, int x, int y, int z, ForgeDirection side, int colour)
+	{
+		if (this.blockID == FluidMech.blockGenPipe.blockID)
+		{
+			int meta = world.getBlockMetadata(x, y, z);
+			if (meta != colour)
+			{
+				world.setBlockMetadataWithNotify(x, y, z, colour, 3);
+				this.onNeighborBlockChange(world, x, y, z, world.getBlockId(x, y, z));
+				return true;
+			}
+		}
+		return false;
 	}
 }
