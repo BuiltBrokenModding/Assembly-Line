@@ -37,9 +37,7 @@ public class TileEntityStarterPump extends TileEntityRunnableMachine implements 
 	ForgeDirection wireConnection = ForgeDirection.EAST;
 	ForgeDirection pipeConnection = ForgeDirection.EAST;
 
-	/**
-	 * gets the side connection for the wire and pipe
-	 */
+	/** gets the side connection for the wire and pipe */
 	public void getConnections()
 	{
 		int notchMeta = MetaGroup.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
@@ -112,10 +110,8 @@ public class TileEntityStarterPump extends TileEntityRunnableMachine implements 
 
 	}
 
-	/**
-	 * gets the fluidConductor or storageTank to ouput its pumped liquids too if there is not one it
-	 * will not function
-	 */
+	/** gets the fluidConductor or storageTank to ouput its pumped liquids too if there is not one it
+	 * will not function */
 	public ITankContainer getFillTarget()
 	{
 		TileEntity ent = worldObj.getBlockTileEntity(xCoord + pipeConnection.offsetX, yCoord + pipeConnection.offsetY, zCoord + pipeConnection.offsetZ);
@@ -127,9 +123,7 @@ public class TileEntityStarterPump extends TileEntityRunnableMachine implements 
 		return null;
 	}
 
-	/**
-	 * gets the search range the pump used to find valid block to pump
-	 */
+	/** gets the search range the pump used to find valid block to pump */
 	public int getPumpRange()
 	{
 		int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
@@ -144,35 +138,30 @@ public class TileEntityStarterPump extends TileEntityRunnableMachine implements 
 	}
 
 	@Override
-	public ElectricityPack getRequest()
+	public double getRequest()
 	{
-		double amps = (this.WATTS_PER_TICK / this.getVoltage());
-		return new ElectricityPack(amps, this.getVoltage());
+		return this.WATTS_PER_TICK;
 	}
 
-	/**
-	 * checks to see if this pump can pump the selected target block
+	/** checks to see if this pump can pump the selected target block
 	 * 
 	 * @param x y z - location of the block, use the tileEntities world
-	 * @return true if it can pump
-	 */
+	 * @return true if it can pump */
 	boolean canPump(int x, int y, int z)
 	{
-		return getFillTarget() != null && FluidHelper.getLiquidId(worldObj.getBlockId(x, y, z)) != -1 && worldObj.getBlockMetadata(x, y, z) == 0 ;
+		return getFillTarget() != null && FluidHelper.getLiquidId(worldObj.getBlockId(x, y, z)) != -1 && worldObj.getBlockMetadata(x, y, z) == 0;
 	}
 
-	/**
-	 * drains the block(removes) at the location given
+	/** drains the block(removes) at the location given
 	 * 
 	 * @param loc - vector 3 location
-	 * @return true if the block was drained
-	 */
+	 * @return true if the block was drained */
 	boolean drainBlock(Vector3 loc)
 	{
 		int blockID = worldObj.getBlockId(loc.intX(), loc.intY(), loc.intZ());
 
 		LiquidStack stack = FluidHelper.getLiquidFromBlockId(blockID);
-		if (FluidRestrictionHandler.isValidLiquid(color,stack) && getFillTarget() != null)
+		if (FluidRestrictionHandler.isValidLiquid(color, stack) && getFillTarget() != null)
 		{
 			stack.amount = LiquidContainerRegistry.BUCKET_VOLUME;
 			int fillAmmount = getFillTarget().fill(pipeConnection.getOpposite(), stack, true);
@@ -190,7 +179,7 @@ public class TileEntityStarterPump extends TileEntityRunnableMachine implements 
 	@Override
 	public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
 	{
-		return String.format("%.2f/%.2f  %f Done", this.wattsReceived,this.WATTS_PER_TICK,this.percentPumped);
+		return String.format("%.2f/%.2f  %f Done", this.wattsReceived, this.WATTS_PER_TICK, this.percentPumped);
 	}
 
 	@Override

@@ -254,7 +254,6 @@ public class FluidMech extends DummyModContainer
 		/* LOGGER */
 		FMLog.info("Finalizing...");
 		proxy.postInit();
-		DarkMain.forceLoadBCItems(this, FluidMech.CHANNEL);
 		/* TAB ITEM SET */
 		TabFluidMech.setItemStack(new ItemStack(blockPipe, 1, 4));
 
