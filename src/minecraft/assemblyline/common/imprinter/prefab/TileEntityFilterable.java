@@ -19,8 +19,8 @@ import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.api.IFilterable;
 import assemblyline.common.AssemblyLine;
+import assemblyline.common.block.TileEntityAssembly;
 import assemblyline.common.imprinter.ItemImprinter;
-import assemblyline.common.machine.TileEntityAssembly;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -114,7 +114,7 @@ public abstract class TileEntityFilterable extends TileEntityAssembly implements
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, AssemblyTilePacket.NBT, this.getPacketData().toArray());
+		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, AssemblyTilePacket.NBT.ordinal(), this.getPacketData().toArray());
 	}
 
 	public ArrayList getPacketData()

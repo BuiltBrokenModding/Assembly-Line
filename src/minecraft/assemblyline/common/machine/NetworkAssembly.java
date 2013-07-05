@@ -1,54 +1,64 @@
 package assemblyline.common.machine;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
+import assemblyline.common.block.TileEntityAssembly;
+
+import universalelectricity.core.block.IConductor;
+import universalelectricity.core.block.IConnectionProvider;
+import universalelectricity.core.electricity.ElectricityPack;
+import universalelectricity.core.electricity.IElectricityNetwork;
 import universalelectricity.core.vector.Vector3;
 
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
 import dark.core.api.INetworkPart;
+import dark.core.tile.network.NetworkPowerTiles;
 import dark.core.tile.network.NetworkTileEntities;
 
-public class NetworkAssembly extends NetworkTileEntities
+public class NetworkAssembly extends NetworkPowerTiles
 {
 	/** List of network members that are providing power for the network */
 	private List<TileEntity> powerSources = new ArrayList<TileEntity>();
-	public final int MAX_POWER_RANGE = 20;
+	public double wattStored = 0.0;
 
 	public NetworkAssembly(INetworkPart... parts)
 	{
 		super(parts);
 	}
 
-	/** Detects if the tile can run by tracking down a tileEntity marked as a power provider in the
-	 * network. Does use a pathfinder that will work threw at least a sphere with a radius the same
-	 * as the max power range of the network
-	 * 
-	 * @param tile - tileEntity which is mainly used as a way to locate the tile and gets its world
-	 * @return true if the tile can be powered by the network */
-	public TileEntityAssembly canRun(TileEntityAssembly tile)
+	/** Checks if the tile can run as well sucks up energy for the tile to run */
+	public boolean canRun(TileEntityAssembly tile)
 	{
-		if (tile != null && !tile.powered && this.powerSources.size() > 0)
+		if (tile != null && this.wattStored >= tile.getRequest(ForgeDirection.UNKNOWN))
 		{
-			for (TileEntity entity : powerSources)
+			this.wattStored -= tile.getRequest(ForgeDirection.UNKNOWN);
+			return true;
+		}
+		return false;
+	}
+
+	/** Gets the amount of power this network needs
+	 * 
+	 * @param total - true for total network, false for amount equal to each power connection */
+	public double getRequest(boolean total)
+	{
+		double watt = 1;
+		for (INetworkPart part : this.getNetworkMemebers())
+		{
+			if (part instanceof TileEntityAssembly)
 			{
-				if (entity instanceof TileEntityAssembly && ((TileEntityAssembly) entity).powered)
-				{
-					Vector3 start = new Vector3(tile);
-					Vector3 end = new Vector3(entity);
-					if (start.distanceTo(end) <= this.MAX_POWER_RANGE)
-					{
-						PowerPathFinder path = new PowerPathFinder(tile.worldObj, start, end, MAX_POWER_RANGE);
-						path.init(start);
-						if (path.results.size() > 0)
-						{
-							return (TileEntityAssembly) entity;
-						}
-					}
-				}
+				watt += ((TileEntityAssembly) part).getRequest(ForgeDirection.UNKNOWN);
 			}
 		}
-		return null;
+		if (!total)
+		{
+			return watt / this.powerSources.size();
+		}
+		return watt;
 	}
 
 	@Override
@@ -72,6 +82,10 @@ public class NetworkAssembly extends NetworkTileEntities
 				this.markAsPowerSource((TileEntity) part, true);
 			}
 		}
+		if (added)
+		{
+			this.doCalc();
+		}
 		return added;
 	}
 
@@ -79,6 +93,11 @@ public class NetworkAssembly extends NetworkTileEntities
 	public boolean isValidMember(INetworkPart part)
 	{
 		return super.isValidMember(part) && part instanceof TileEntityAssembly;
+	}
+
+	public void doCalc()
+	{
+
 	}
 
 	/** Marks a tile as the source of power for the network
@@ -98,4 +117,5 @@ public class NetworkAssembly extends NetworkTileEntities
 			this.powerSources.remove(entity);
 		}
 	}
+
 }

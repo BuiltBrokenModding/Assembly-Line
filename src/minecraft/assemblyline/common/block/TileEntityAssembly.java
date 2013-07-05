@@ -1,4 +1,4 @@
-package assemblyline.common.machine;
+package assemblyline.common.block;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -11,11 +11,13 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.electricity.ElectricityPack;
+import universalelectricity.core.block.IConductor;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
+import universalelectricity.prefab.tile.TileEntityElectrical;
 import assemblyline.common.AssemblyLine;
+import assemblyline.common.machine.NetworkAssembly;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -27,7 +29,7 @@ import dark.library.machine.TileEntityRunnableMachine;
  * able to be powered through the powering of only one machine.
  * 
  * @author Calclavia */
-public abstract class TileEntityAssembly extends TileEntityRunnableMachine implements INetworkPart, IPacketReceiver
+public abstract class TileEntityAssembly extends TileEntityElectrical implements INetworkPart, IPacketReceiver
 {
 	/** Is this tile being powered by a non-network connection */
 	public boolean powered = false;
@@ -36,8 +38,7 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 	private NetworkAssembly assemblyNetwork;
 	/** Tiles that are connected to this */
 	private TileEntity[] connectedTiles = new TileEntity[6];
-	/** Cached power source to reduce the need to path find for a new one each tick */
-	public TileEntityAssembly powerSource;
+	private TileEntity[] tiles = new TileEntity[6];
 	/** Random instance */
 	public Random random = new Random();
 	/** percent tick rate this tile will update at */
@@ -70,14 +71,13 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 				this.updateTick = ((int) random.nextInt(10) + 20);
 				this.updateNetworkConnections();
 			}
-			if (this.wattsReceived >= this.getRequest())
+			for (int i = 0; i < this.tiles.length; i++)
 			{
-				this.wattsReceived -= getRequest();
-				this.powered = true;
-			}
-			else
-			{
-				this.powered = false;
+				TileEntity ent = this.tiles[i];
+				if (ent instanceof IConductor)
+				{
+
+				}
 			}
 			if (this.getTileNetwork() instanceof NetworkAssembly)
 			{
@@ -104,25 +104,10 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 	{
 		if (!worldObj.isRemote)
 		{
-			boolean running = AssemblyLine.REQUIRE_NO_POWER || this.powered;
-			if (!running && this.powerSource != null && this.getTileNetwork() instanceof NetworkAssembly)
+			boolean running = AssemblyLine.REQUIRE_NO_POWER;
+			if (!running && this.getTileNetwork() instanceof NetworkAssembly)
 			{
-				NetworkAssembly net = ((NetworkAssembly) this.getTileNetwork());
-				running = net.getNetworkMemebers().contains(this.powerSource) && this.powerSource.powered;
-				if (!running)
-				{
-					this.lastPoweredTicks++;
-					if (this.lastPoweredTicks >= 20 || !net.getNetworkMemebers().contains(this.powerSource))
-					{
-						this.powerSource = null;
-					}
-				}
-			}
-			if ((!running || this.powerSource == null) && this.getTileNetwork() instanceof NetworkAssembly)
-			{
-				NetworkAssembly net = ((NetworkAssembly) this.getTileNetwork());
-				this.powerSource = net.canRun(this);
-				running = this.powerSource != null && this.powerSource.powered;
+				running = ((NetworkAssembly) this.getTileNetwork()).canRun(this);
 			}
 			return running;
 		}
@@ -133,29 +118,15 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 
 	}
 
-	@Override
-	public double getRequest()
+	public double getRequest(ForgeDirection side)
 	{
-		return .1D;
+		return .1;
 	}
 
 	@Override
 	public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
 	{
 		return entity != null && entity instanceof TileEntityAssembly;
-	}
-
-	/** Validates and adds a connection on a given side from a given tileEntity */
-	public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)
-	{
-		if (!this.worldObj.isRemote)
-		{
-			if (tileEntity instanceof TileEntityAssembly)
-			{
-				this.getTileNetwork().merge(((TileEntityAssembly) tileEntity).getTileNetwork(), this);
-				connectedTiles[side.ordinal()] = tileEntity;
-			}
-		}
 	}
 
 	@Override
@@ -168,8 +139,16 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 			for (int i = 0; i < 6; i++)
 			{
 				ForgeDirection dir = ForgeDirection.getOrientation(i);
-				this.validateConnectionSide(this.worldObj.getBlockTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ), dir);
-
+				TileEntity tileEntity = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
+				if (tileEntity instanceof TileEntityAssembly)
+				{
+					this.getTileNetwork().merge(((TileEntityAssembly) tileEntity).getTileNetwork(), this);
+					connectedTiles[dir.ordinal()] = tileEntity;
+				}
+				else
+				{
+					this.tiles[dir.ordinal()] = tileEntity;
+				}
 			}
 		}
 	}
@@ -208,7 +187,7 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 	@Override
 	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
 	{
-		boolean packetSize = true;
+		boolean packetSize = false;
 		try
 		{
 			ByteArrayInputStream bis = new ByteArrayInputStream(packet.data);

@@ -12,7 +12,6 @@ import net.minecraft.world.World;
 import universalelectricity.prefab.block.BlockAdvanced;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.TabAssemblyLine;
-import assemblyline.common.machine.TileEntityAssembly;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.api.INetworkPart;
@@ -37,10 +36,10 @@ public class BlockALMachine extends BlockAdvanced
 		{
 			TileEntityAssembly asm = (TileEntityAssembly) ent;
 			String output = "Debug>>>";
-			output += "Channel:" + (asm.getTileNetwork() != null ? asm.getTileNetwork().toString() : "Error") + "|";			
+			output += "Channel:" + (asm.getTileNetwork() != null ? asm.getTileNetwork().toString() : "Error") + "|";
 			entityPlayer.sendChatToPlayer(output);
 			output = "Debug>>>";
-			output += "Powered:"+asm.powered + " By:"+(asm.powerSource != null ? asm.powerSource.toString() : "null");
+			output += "Powered:" + asm.running;
 			entityPlayer.sendChatToPlayer(output);
 		}
 		return super.onBlockActivated(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ);

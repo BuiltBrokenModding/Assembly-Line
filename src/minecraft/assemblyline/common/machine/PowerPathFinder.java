@@ -3,6 +3,8 @@ package assemblyline.common.machine;
 import java.util.HashSet;
 import java.util.Set;
 
+import assemblyline.common.block.TileEntityAssembly;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
