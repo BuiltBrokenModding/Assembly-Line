@@ -1,4 +1,4 @@
-package assemblyline.common.block;
+package assemblyline.common.machine;
 
 import java.util.Random;
 

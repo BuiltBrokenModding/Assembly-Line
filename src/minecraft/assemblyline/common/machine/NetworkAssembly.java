@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import assemblyline.common.block.TileEntityAssembly;
 
 import universalelectricity.core.block.IConductor;
 import universalelectricity.core.block.IConnectionProvider;

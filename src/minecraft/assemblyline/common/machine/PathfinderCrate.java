@@ -1,4 +1,4 @@
-package assemblyline.common;
+package assemblyline.common.machine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
-import assemblyline.common.block.TileEntityCrate;
 
 /**
  * A class that allows flexible path finding in Minecraft Blocks. Back Ported from UE 1.3.0.

@@ -11,8 +11,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
 import assemblyline.api.IFilterable;
-import assemblyline.common.block.BlockALMachine;
 import assemblyline.common.imprinter.ItemImprinter;
+import assemblyline.common.machine.BlockALMachine;
 
 /**
  * Extend this block class if a filter is allowed to be placed inside of this block.

@@ -1,4 +1,4 @@
-package assemblyline.common.block;
+package assemblyline.common.machine;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -17,7 +17,6 @@ import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.TileEntityElectrical;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.machine.NetworkAssembly;
 
 import com.google.common.io.ByteArrayDataInput;
 

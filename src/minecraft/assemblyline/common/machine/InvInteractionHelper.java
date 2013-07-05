@@ -13,8 +13,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.multiblock.TileEntityMulti;
-import assemblyline.common.block.BlockCrate;
-import assemblyline.common.block.TileEntityCrate;
 import assemblyline.common.imprinter.ItemImprinter;
 
 public class InvInteractionHelper

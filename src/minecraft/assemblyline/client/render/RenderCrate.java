@@ -18,7 +18,7 @@ import net.minecraftforge.common.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.vector.Vector3;
-import assemblyline.common.block.TileEntityCrate;
+import assemblyline.common.machine.TileEntityCrate;
 
 public class RenderCrate extends TileEntitySpecialRenderer
 {

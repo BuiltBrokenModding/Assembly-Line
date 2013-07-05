@@ -2,7 +2,7 @@ package assemblyline.common.machine.crane;
 
 import net.minecraftforge.common.ForgeDirection;
 import assemblyline.api.ICraneStructure;
-import assemblyline.common.block.TileEntityAssembly;
+import assemblyline.common.machine.TileEntityAssembly;
 
 public class TileEntityCraneRail extends TileEntityAssembly implements ICraneStructure
 {

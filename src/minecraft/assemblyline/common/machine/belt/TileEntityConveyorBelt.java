@@ -22,7 +22,7 @@ import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.api.IBelt;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.block.TileEntityAssembly;
+import assemblyline.common.machine.TileEntityAssembly;
 
 import com.google.common.io.ByteArrayDataInput;
 

@@ -33,7 +33,7 @@ import assemblyline.common.armbot.command.CommandReturn;
 import assemblyline.common.armbot.command.CommandRotateBy;
 import assemblyline.common.armbot.command.CommandRotateTo;
 import assemblyline.common.armbot.command.CommandUse;
-import assemblyline.common.block.TileEntityAssembly;
+import assemblyline.common.machine.TileEntityAssembly;
 import assemblyline.common.machine.encoder.ItemDisk;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;

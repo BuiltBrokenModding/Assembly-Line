@@ -1,4 +1,4 @@
-package assemblyline.common.block;
+package assemblyline.common.machine;
 
 import java.util.List;
 
@@ -14,7 +14,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.PathfinderCrate;
 import assemblyline.common.TabAssemblyLine;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
