@@ -15,7 +15,7 @@ import cpw.mods.fml.common.FMLLog;
 import dark.core.api.INetworkPart;
 import dark.helpers.ConnectionHelper;
 
-public class NetworkTileEntities
+public abstract class NetworkTileEntities
 {
 	/* BLOCK THAT ACT AS FLUID CONVEYORS ** */
 	public final List<INetworkPart> networkMember = new ArrayList<INetworkPart>();
@@ -25,27 +25,29 @@ public class NetworkTileEntities
 		this.networkMember.addAll(Arrays.asList(parts));
 	}
 
-	/** Adds a TileEntity to the network
+	/** Creates a new instance of this network to be used to merge or split networks while still
+	 * maintaining each class that extends the base network class
 	 * 
-	 * @param ent - tileEntity instance
+	 * @return - new network instance using the current networks properties */
+	public abstract NetworkTileEntities newInstance();
+
+	/** Adds a TileEntity to the network. extends this to catch non-network parts and add them to
+	 * other tile lists
+	 * 
+	 * @param tileEntity - tileEntity instance
 	 * @param member - add to network member list
 	 * @return */
-	public boolean addEntity(TileEntity ent, boolean member)
+	public boolean addTile(TileEntity tileEntity, boolean member)
 	{
-		if (ent == null || this.isPartOfNetwork(ent))
+		if (tileEntity == null || this.isPartOfNetwork(tileEntity))
 		{
 			return false;
 		}
-		else if (ent instanceof INetworkPart && member)
+		else if (tileEntity instanceof INetworkPart && member)
 		{
-			return this.addNetworkPart((INetworkPart) ent);
+			return this.addNetworkPart((INetworkPart) tileEntity);
 		}
 		return false;
-	}
-
-	public boolean isPartOfNetwork(TileEntity ent)
-	{
-		return this.networkMember.contains(ent);
 	}
 
 	/** Adds a new part to the network member list */
@@ -59,6 +61,11 @@ public class NetworkTileEntities
 			return true;
 		}
 		return false;
+	}
+
+	public boolean isPartOfNetwork(TileEntity ent)
+	{
+		return this.networkMember.contains(ent);
 	}
 
 	/** Removes a tileEntity from any of the valid lists */
@@ -131,24 +138,34 @@ public class NetworkTileEntities
 		{
 			if (this.preMergeProcessing(network, part))
 			{
-				this.postMergeProcessing(network);
+				this.mergeDo(network);
 			}
 		}
 	}
 
-	/** Processing that needs too be done before the network merges
+	/** Processing that needs too be done before the network merges. Use this to do final network
+	 * merge calculations and to cause network merge failure
 	 * 
-	 * @return false if the merge needs to be canceled */
+	 * @param network the network that is to merge with this one
+	 * @param part the part at which started the network merge. Use this to cause damage if two
+	 * networks merge with real world style failures
+	 * 
+	 * @return false if the merge needs to be canceled.
+	 * 
+	 * Cases in which the network should fail to merge are were the two networks merge with error.
+	 * Or, in the case of pipes the two networks merge and the merge point was destroyed by
+	 * combination of liquids.
+	 * 
+	 * Ex Lava and water */
 	public boolean preMergeProcessing(NetworkTileEntities network, INetworkPart part)
 	{
 		return true;
 	}
 
-	/** Finalizing the merge of two networks by creating the new network and importing all network
-	 * parts */
-	public void postMergeProcessing(NetworkTileEntities network)
+	/** Merges the two networks together */
+	protected void mergeDo(NetworkTileEntities network)
 	{
-		NetworkTileEntities newNetwork = new NetworkTileEntities();
+		NetworkTileEntities newNetwork = this.newInstance();
 		newNetwork.getNetworkMemebers().addAll(this.getNetworkMemebers());
 		newNetwork.getNetworkMemebers().addAll(network.getNetworkMemebers());
 
@@ -199,7 +216,7 @@ public class NetworkTileEntities
 							else
 							{
 								/* NO LONGER CONNECTED ELSE WHERE SO SPLIT AND REFRESH */
-								NetworkTileEntities newNetwork = new NetworkTileEntities();
+								NetworkTileEntities newNetwork = this.newInstance();
 								int parts = 0;
 								for (Vector3 node : finder.closedSet)
 								{
@@ -226,9 +243,12 @@ public class NetworkTileEntities
 	@Override
 	public String toString()
 	{
-		return "TileNetwork[" + this.hashCode() + "|parts:" + this.networkMember.size() + "]";
+		return "TileNetwork[" + this.hashCode() + "| Parts:" + this.networkMember.size() + "]";
 	}
-	
+
+	/** invalidates/remove a tile from the networks that surround and connect to it
+	 * 
+	 * @param tileEntity - tile */
 	public static void invalidate(TileEntity tileEntity)
 	{
 		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)

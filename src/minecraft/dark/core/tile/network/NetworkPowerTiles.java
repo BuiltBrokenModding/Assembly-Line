@@ -25,6 +25,12 @@ public class NetworkPowerTiles extends NetworkTileEntities implements IElectrici
 	{
 		super(conductors);
 	}
+	
+	@Override
+	public NetworkTileEntities newInstance()
+	{
+		return new NetworkPowerTiles();
+	}
 
 	@Override
 	public void startProducing(TileEntity tileEntity, ElectricityPack electricityPack)
@@ -320,4 +326,5 @@ public class NetworkPowerTiles extends NetworkTileEntities implements IElectrici
 	{
 
 	}
+
 }

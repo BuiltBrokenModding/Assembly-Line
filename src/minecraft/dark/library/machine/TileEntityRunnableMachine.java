@@ -1,9 +1,11 @@
 package dark.library.machine;
 
 import java.util.EnumSet;
+import java.util.List;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.core.UniversalElectricity;
@@ -11,12 +13,14 @@ import universalelectricity.core.block.IConnector;
 import universalelectricity.core.block.IVoltage;
 import universalelectricity.core.electricity.ElectricityNetworkHelper;
 import universalelectricity.core.electricity.ElectricityPack;
+import universalelectricity.core.electricity.IElectricityNetwork;
 import universalelectricity.prefab.tile.TileEntityElectrical;
 import universalelectricity.prefab.tile.TileEntityElectricityRunnable;
 import buildcraft.api.power.IPowerProvider;
 import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerFramework;
 import dark.core.PowerSystems;
+import dark.core.api.INetworkPart;
 
 public abstract class TileEntityRunnableMachine extends TileEntityElectrical implements IPowerReceptor, IConnector, IVoltage
 {
@@ -54,8 +58,8 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectrical imp
 		// UNIVERSAL ELECTRICITY UPDATE
 		if (!this.isDisabled())
 		{
-			ElectricityPack electricityPack = ElectricityNetworkHelper.consumeFromMultipleSides(this, this.getConsumingSides(), ElectricityPack.getFromWatts(this.getRequest(ForgeDirection.UNKNOWN), this.getVoltage()));
-			this.onReceive(ForgeDirection.UNKNOWN,electricityPack.voltage, electricityPack.amperes);
+			ElectricityPack electricityPack = TileEntityRunnableMachine.consumeFromMultipleSides(this, this.getConsumingSides(), ElectricityPack.getFromWatts(this.getRequest(ForgeDirection.UNKNOWN), this.getVoltage()));
+			this.onReceive(ForgeDirection.UNKNOWN, electricityPack.voltage, electricityPack.amperes);
 		}
 		else
 		{
@@ -74,8 +78,8 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectrical imp
 		if (this.powerProvider != null)
 		{
 			float requiredEnergy = (float) (this.getRequest(ForgeDirection.UNKNOWN) * UniversalElectricity.TO_BC_RATIO);
-			float energyReceived = this.powerProvider.useEnergy(0, requiredEnergy, true);
-			this.onReceive(ForgeDirection.UNKNOWN,this.getVoltage(), (UniversalElectricity.BC3_RATIO * energyReceived) / this.getVoltage());
+			float energyReceived = this.powerProvider.useEnergy(requiredEnergy, requiredEnergy, true);
+			this.onReceive(ForgeDirection.UNKNOWN, this.getVoltage(), (UniversalElectricity.BC3_RATIO * energyReceived) / this.getVoltage());
 		}
 		//TODO add other power systems
 	}
@@ -169,5 +173,44 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectrical imp
 		nbt.setDouble("wattsReceived", this.wattsReceived);
 		nbt.setBoolean("shouldPower", this.runPowerless);
 		nbt.setInteger("disabledTicks", this.disabledTicks);
+	}
+
+	public static ElectricityPack consumeFromMultipleSides(TileEntity tileEntity, EnumSet<ForgeDirection> approachingDirection, ElectricityPack requestPack)
+	{
+		ElectricityPack consumedPack = new ElectricityPack();
+
+		if (tileEntity != null && approachingDirection != null)
+		{
+			final List<IElectricityNetwork> connectedNetworks = ElectricityNetworkHelper.getNetworksFromMultipleSides(tileEntity, approachingDirection);
+
+			if (connectedNetworks.size() > 0)
+			{
+				/** Requests an even amount of electricity from all sides. */
+				double wattsPerSide = (requestPack.getWatts() / connectedNetworks.size());
+				double voltage = requestPack.voltage;
+
+				for (IElectricityNetwork network : connectedNetworks)
+				{
+					boolean flag = false;
+					if (tileEntity instanceof INetworkPart && ((INetworkPart) tileEntity).getTileNetwork() instanceof IElectricityNetwork)
+					{
+						flag = network.equals(((IElectricityNetwork) ((INetworkPart) tileEntity).getTileNetwork()));
+					}
+					if (!flag && wattsPerSide > 0 && requestPack.getWatts() > 0)
+					{
+						network.startRequesting(tileEntity, wattsPerSide / voltage, voltage);
+						ElectricityPack receivedPack = network.consumeElectricity(tileEntity);
+						consumedPack.amperes += receivedPack.amperes;
+						consumedPack.voltage = Math.max(consumedPack.voltage, receivedPack.voltage);
+					}
+					else
+					{
+						network.stopRequesting(tileEntity);
+					}
+				}
+			}
+		}
+
+		return consumedPack;
 	}
 }
