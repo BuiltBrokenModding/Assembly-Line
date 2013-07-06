@@ -3,6 +3,8 @@ package assemblyline.common.machine;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,11 +14,14 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.block.IConductor;
+import universalelectricity.core.electricity.ElectricityNetworkHelper;
+import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.TileEntityElectrical;
 import assemblyline.common.AssemblyLine;
+import buildcraft.api.power.IPowerReceptor;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -28,7 +33,7 @@ import dark.library.machine.TileEntityRunnableMachine;
  * able to be powered through the powering of only one machine.
  * 
  * @author Calclavia */
-public abstract class TileEntityAssembly extends TileEntityElectrical implements INetworkPart, IPacketReceiver
+public abstract class TileEntityAssembly extends TileEntityRunnableMachine implements INetworkPart, IPacketReceiver
 {
 	/** Is this tile being powered by a non-network connection */
 	public boolean powered = false;
@@ -36,8 +41,7 @@ public abstract class TileEntityAssembly extends TileEntityElectrical implements
 	/** Network used to link assembly machines together */
 	private NetworkAssembly assemblyNetwork;
 	/** Tiles that are connected to this */
-	private TileEntity[] connectedTiles = new TileEntity[6];
-	private TileEntity[] tiles = new TileEntity[6];
+	private List<TileEntity> connectedTiles = new ArrayList<TileEntity>();
 	/** Random instance */
 	public Random random = new Random();
 	/** percent tick rate this tile will update at */
@@ -61,8 +65,9 @@ public abstract class TileEntityAssembly extends TileEntityElectrical implements
 	@Override
 	public void updateEntity()
 	{
-		super.updateEntity();
 		boolean prevRun = this.running;
+		this.powered = false;
+		super.updateEntity();
 		if (!this.worldObj.isRemote)
 		{
 			if (ticks % updateTick == 0)
@@ -70,20 +75,6 @@ public abstract class TileEntityAssembly extends TileEntityElectrical implements
 				this.updateTick = ((int) random.nextInt(10) + 20);
 				this.updateNetworkConnections();
 			}
-			for (int i = 0; i < this.tiles.length; i++)
-			{
-				TileEntity ent = this.tiles[i];
-				if (ent instanceof IConductor)
-				{
-
-				}
-			}
-			if (this.getTileNetwork() instanceof NetworkAssembly)
-			{
-				NetworkAssembly net = ((NetworkAssembly) this.getTileNetwork());
-				net.markAsPowerSource(this, this.powered);
-			}
-
 			this.running = this.isRunning();
 			if (running != prevRun)
 			{
@@ -117,9 +108,21 @@ public abstract class TileEntityAssembly extends TileEntityElectrical implements
 
 	}
 
-	public double getRequest(ForgeDirection side)
+	public double getRequest()
 	{
 		return .1;
+	}
+
+	@Override
+	public double getRequest(ForgeDirection side)
+	{
+		if (this.getTileNetwork() instanceof NetworkAssembly)
+		{
+			NetworkAssembly net = ((NetworkAssembly) this.getTileNetwork());
+			double room = net.getMaxBattery() - net.getCurrentBattery();
+			return Math.min(100, Math.max(0, room));
+		}
+		return 0;
 	}
 
 	@Override
@@ -133,27 +136,22 @@ public abstract class TileEntityAssembly extends TileEntityElectrical implements
 	{
 		if (this.worldObj != null && !this.worldObj.isRemote)
 		{
-			this.connectedTiles = new TileEntity[6];
+			this.connectedTiles.clear();
 
-			for (int i = 0; i < 6; i++)
+			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 			{
-				ForgeDirection dir = ForgeDirection.getOrientation(i);
 				TileEntity tileEntity = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
 				if (tileEntity instanceof TileEntityAssembly)
 				{
 					this.getTileNetwork().merge(((TileEntityAssembly) tileEntity).getTileNetwork(), this);
-					connectedTiles[dir.ordinal()] = tileEntity;
-				}
-				else
-				{
-					this.tiles[dir.ordinal()] = tileEntity;
+					connectedTiles.add(tileEntity);
 				}
 			}
 		}
 	}
 
 	@Override
-	public TileEntity[] getNetworkConnections()
+	public List<TileEntity> getNetworkConnections()
 	{
 		return this.connectedTiles;
 	}

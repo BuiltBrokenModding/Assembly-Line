@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-
 import universalelectricity.core.block.IConductor;
 import universalelectricity.core.block.IConnectionProvider;
 import universalelectricity.core.electricity.ElectricityPack;
@@ -22,7 +21,7 @@ public class NetworkAssembly extends NetworkPowerTiles
 {
 	/** List of network members that are providing power for the network */
 	private List<TileEntity> powerSources = new ArrayList<TileEntity>();
-	public double wattStored = 0.0;
+	private double wattStored = 0.0;
 
 	public NetworkAssembly(INetworkPart... parts)
 	{
@@ -43,7 +42,7 @@ public class NetworkAssembly extends NetworkPowerTiles
 	/** Gets the amount of power this network needs
 	 * 
 	 * @param total - true for total network, false for amount equal to each power connection */
-	public double getRequest(boolean total)
+	public double getRequest()
 	{
 		double watt = 1;
 		for (INetworkPart part : this.getNetworkMemebers())
@@ -53,11 +52,17 @@ public class NetworkAssembly extends NetworkPowerTiles
 				watt += ((TileEntityAssembly) part).getRequest(ForgeDirection.UNKNOWN);
 			}
 		}
-		if (!total)
-		{
-			return watt / this.powerSources.size();
-		}
 		return watt;
+	}
+
+	public double getMaxBattery()
+	{
+		return this.getRequest() * 4;
+	}
+	
+	public double getCurrentBattery()
+	{
+		return this.wattStored;
 	}
 
 	@Override
