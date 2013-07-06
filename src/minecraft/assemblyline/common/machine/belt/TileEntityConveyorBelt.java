@@ -158,9 +158,9 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
 	}
 
 	@Override
-	public boolean handlePacket(int id, DataInputStream dis, EntityPlayer player)
+	public boolean simplePacket(int id, DataInputStream dis, EntityPlayer player)
 	{
-		if (!super.handlePacket(id, dis, player) && this.worldObj.isRemote)
+		if (!super.simplePacket(id, dis, player) && this.worldObj.isRemote)
 		{
 			try
 			{

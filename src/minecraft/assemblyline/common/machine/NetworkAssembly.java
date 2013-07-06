@@ -1,12 +1,13 @@
 package assemblyline.common.machine;
 
+import universalelectricity.core.electricity.ElectricityDisplay;
+import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import dark.core.api.INetworkPart;
 import dark.core.tile.network.NetworkPowerTiles;
 import dark.core.tile.network.NetworkTileEntities;
 
 public class NetworkAssembly extends NetworkPowerTiles
 {
-
 	/** Power stored to be used by network members */
 	private double wattStored = 0.0;
 
@@ -20,12 +21,17 @@ public class NetworkAssembly extends NetworkPowerTiles
 		return new NetworkAssembly();
 	}
 
-	/** Checks if the tile can run as well sucks up energy for the tile to run */
-	public boolean doPowerRun(TileEntityAssembly tile)
+	/** Consumes power for the tile to run on
+	 * 
+	 * @param tile - tileEntity
+	 * @return true if the power was consumed */
+	public boolean consumePower(TileEntityAssembly tile)
 	{
 		if (tile != null && this.wattStored >= tile.getRequest())
 		{
+			double before = this.wattStored;
 			this.wattStored -= tile.getRequest();
+			System.out.println("Tile drained power| B: " + ElectricityDisplay.getDisplaySimple(before, ElectricUnit.WATT, 2) + " A: " + ElectricityDisplay.getDisplaySimple(this.wattStored, ElectricUnit.WATT, 2));
 			return true;
 		}
 		return false;
