@@ -228,7 +228,7 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
 	}
 
 	@Override
-	public void IgnoreEntity(Entity entity)
+	public void ignoreEntity(Entity entity)
 	{
 		if (!this.IgnoreList.contains(entity))
 		{
