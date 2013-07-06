@@ -81,6 +81,24 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 		this.onUpdate();
 	}
 
+	@Override
+	public void onReceive(ForgeDirection side, double voltage, double amperes)
+	{
+		if (voltage > this.getVoltage())
+		{
+			this.onDisable(2);
+			return;
+		}
+		if (this.getTileNetwork() instanceof NetworkAssembly)
+		{
+			((NetworkAssembly) this.getTileNetwork()).addPower(voltage * amperes);
+		}
+		else
+		{
+			this.wattsReceived = Math.min(this.wattsReceived + (voltage * amperes), this.getBattery(side));
+		}
+	}
+
 	/** Same as updateEntity */
 	public abstract void onUpdate();
 

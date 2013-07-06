@@ -39,6 +39,12 @@ public class NetworkAssembly extends NetworkPowerTiles
 		return false;
 	}
 
+	/** Adds power to the network. Does not save power on area unload */
+	public void addPower(double d)
+	{
+		this.wattStored += d;
+	}
+
 	/** Gets the amount of power this network needs
 	 * 
 	 * @param total - true for total network, false for amount equal to each power connection */
@@ -59,7 +65,7 @@ public class NetworkAssembly extends NetworkPowerTiles
 	{
 		return this.getRequest() * 4;
 	}
-	
+
 	public double getCurrentBattery()
 	{
 		return this.wattStored;
@@ -76,50 +82,9 @@ public class NetworkAssembly extends NetworkPowerTiles
 	}
 
 	@Override
-	public boolean addNetworkPart(INetworkPart part)
-	{
-		boolean added = super.addNetworkPart(part);
-		if (added && part instanceof TileEntityAssembly)
-		{
-			if (((TileEntityAssembly) part).powered)
-			{
-				this.markAsPowerSource((TileEntity) part, true);
-			}
-		}
-		if (added)
-		{
-			this.doCalc();
-		}
-		return added;
-	}
-
-	@Override
 	public boolean isValidMember(INetworkPart part)
 	{
 		return super.isValidMember(part) && part instanceof TileEntityAssembly;
-	}
-
-	public void doCalc()
-	{
-
-	}
-
-	/** Marks a tile as the source of power for the network
-	 * 
-	 * @param powered true to add, false to remove */
-	public void markAsPowerSource(TileEntity entity, boolean powered)
-	{
-		if (powered)
-		{
-			if (!this.powerSources.contains(entity))
-			{
-				this.powerSources.add(entity);
-			}
-		}
-		else
-		{
-			this.powerSources.remove(entity);
-		}
 	}
 
 }
