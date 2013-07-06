@@ -1,24 +1,20 @@
 package dark.core.tile.network;
 
-import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.path.IPathCallBack;
 import universalelectricity.core.path.Pathfinder;
 import universalelectricity.core.vector.Vector3;
 import dark.core.api.INetworkPart;
-import dark.core.api.ITileConnector;
 
-/**
- * Check if a conductor connects with another.
- */
+/** Check if a conductor connects with another. */
 public class NetworkPathFinder extends Pathfinder
 {
-	public NetworkPathFinder(final World world, final INetworkPart connectedBlockB, final INetworkPart splitPoint)
+	public NetworkPathFinder(final World world, final INetworkPart targetPoint, final INetworkPart... ignoredTiles)
 	{
 		super(new IPathCallBack()
 		{
@@ -26,18 +22,14 @@ public class NetworkPathFinder extends Pathfinder
 			public Set<Vector3> getConnectedNodes(Pathfinder finder, Vector3 currentNode)
 			{
 				Set<Vector3> neighbors = new HashSet<Vector3>();
-
-				for (int i = 0; i < 6; i++)
+				TileEntity tile = currentNode.getTileEntity(world);
+				if (tile instanceof INetworkPart)
 				{
-					ForgeDirection direction = ForgeDirection.getOrientation(i);
-					Vector3 position = currentNode.clone().modifyPositionFromSide(direction);
-					TileEntity connectedBlock = position.getTileEntity(world);
-
-					if (connectedBlock instanceof ITileConnector && !Arrays.asList(splitPoint).contains(connectedBlock))
+					for (TileEntity ent : ((INetworkPart) tile).getNetworkConnections())
 					{
-						if (((ITileConnector) connectedBlock).canTileConnect(connectedBlock, direction.getOpposite()))
+						if (ent instanceof INetworkPart)
 						{
-							neighbors.add(position);
+							neighbors.add(new Vector3(ent));
 						}
 					}
 				}
@@ -48,7 +40,7 @@ public class NetworkPathFinder extends Pathfinder
 			@Override
 			public boolean onSearch(Pathfinder finder, Vector3 node)
 			{
-				if (node.getTileEntity(world) == connectedBlockB)
+				if (node.getTileEntity(world) == targetPoint)
 				{
 					finder.results.add(node);
 					return true;

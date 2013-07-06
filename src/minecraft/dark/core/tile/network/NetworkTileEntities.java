@@ -13,6 +13,7 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import cpw.mods.fml.common.FMLLog;
 import dark.core.api.INetworkPart;
+import dark.helpers.ConnectionHelper;
 
 public class NetworkTileEntities
 {
@@ -163,7 +164,7 @@ public class NetworkTileEntities
 			this.getNetworkMemebers().remove(splitPoint);
 			/** Loop through the connected blocks and attempt to see if there are connections between
 			 * the two points elsewhere. */
-			TileEntity[] connectedBlocks = splitPoint.getNetworkConnections();
+			TileEntity[] connectedBlocks = ConnectionHelper.getSurroundingTileEntities((TileEntity) splitPoint);
 
 			for (int i = 0; i < connectedBlocks.length; i++)
 			{
