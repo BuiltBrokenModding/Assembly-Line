@@ -13,15 +13,10 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.block.IConductor;
-import universalelectricity.core.electricity.ElectricityNetworkHelper;
-import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
-import universalelectricity.prefab.tile.TileEntityElectrical;
 import assemblyline.common.AssemblyLine;
-import buildcraft.api.power.IPowerReceptor;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -41,7 +36,7 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 	/** Network used to link assembly machines together */
 	private NetworkAssembly assemblyNetwork;
 	/** Tiles that are connected to this */
-	private List<TileEntity> connectedTiles = new ArrayList<TileEntity>();
+	public List<TileEntity> connectedTiles = new ArrayList<TileEntity>();
 	/** Random instance */
 	public Random random = new Random();
 	/** percent tick rate this tile will update at */

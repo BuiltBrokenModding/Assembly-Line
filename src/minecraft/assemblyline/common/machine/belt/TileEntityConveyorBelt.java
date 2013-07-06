@@ -242,4 +242,43 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
 	{
 		return direction == ForgeDirection.DOWN;
 	}
+
+	@Override
+	public void updateNetworkConnections()
+	{
+		super.updateNetworkConnections();
+		if (this.worldObj != null && !this.worldObj.isRemote)
+		{
+			Vector3 face = new Vector3(this).modifyPositionFromSide(this.getDirection());
+			Vector3 back = new Vector3(this).modifyPositionFromSide(this.getDirection().getOpposite());
+			TileEntity front, rear;
+			if (this.slantType == SlantType.DOWN)
+			{
+				face.add(new Vector3(0, -1, 0));
+				back.add(new Vector3(0, 1, 0));
+			}
+			else if (this.slantType == SlantType.UP)
+			{
+				face.add(new Vector3(0, 1, 0));
+				back.add(new Vector3(0, -1, 0));
+			}
+			else
+			{
+				return;
+			}
+			front = face.getTileEntity(this.worldObj);
+			rear = back.getTileEntity(this.worldObj);
+			if (front instanceof TileEntityAssembly)
+			{
+				this.getTileNetwork().merge(((TileEntityAssembly) front).getTileNetwork(), this);
+				this.connectedTiles.add(front);
+			}
+			if (rear instanceof TileEntityAssembly)
+			{
+				this.getTileNetwork().merge(((TileEntityAssembly) rear).getTileNetwork(), this);
+				this.connectedTiles.add(rear);
+			}
+
+		}
+	}
 }

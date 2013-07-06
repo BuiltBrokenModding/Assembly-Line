@@ -49,7 +49,7 @@ public class NetworkAssembly extends NetworkPowerTiles
 		{
 			if (part instanceof TileEntityAssembly)
 			{
-				watt += ((TileEntityAssembly) part).getRequest(ForgeDirection.UNKNOWN);
+				watt += ((TileEntityAssembly) part).getRequest();
 			}
 		}
 		return watt;
