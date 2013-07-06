@@ -29,7 +29,7 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectrical imp
 	/** Should this machine run without power */
 	protected boolean runPowerless = false;
 	/** BuildCraft power provider? */
-	private IPowerProvider powerProvider;
+	protected IPowerProvider powerProvider;
 
 	public double prevWatts, wattsReceived = 0;
 
@@ -75,9 +75,9 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectrical imp
 				this.powerProvider.configure(0, 0, Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
 			}
 		}
-		if (this.powerProvider != null)
+		float requiredEnergy = (float) (this.getRequest(ForgeDirection.UNKNOWN) * UniversalElectricity.TO_BC_RATIO);
+		if (this.powerProvider != null && this.powerProvider.useEnergy(requiredEnergy, requiredEnergy, false) >= requiredEnergy)
 		{
-			float requiredEnergy = (float) (this.getRequest(ForgeDirection.UNKNOWN) * UniversalElectricity.TO_BC_RATIO);
 			float energyReceived = this.powerProvider.useEnergy(requiredEnergy, requiredEnergy, true);
 			this.onReceive(ForgeDirection.UNKNOWN, this.getVoltage(), (UniversalElectricity.BC3_RATIO * energyReceived) / this.getVoltage());
 		}
