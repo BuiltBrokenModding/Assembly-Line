@@ -44,8 +44,6 @@ import dark.helpers.ItemFindingHelper;
 public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IInventory, IPacketReceiver, IArmbot, IPeripheral
 {
 	private final CommandManager commandManager = new CommandManager();
-	private static final int PACKET_COMMANDS = 128;
-
 	/** The items this container contains. */
 	protected ItemStack disk = null;
 	public final double WATT_REQUEST = 20;
@@ -831,32 +829,35 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 	}
 
 	@Override
-	public void dropEntity(Entity entity)
+	public void drop(Object object)
 	{
-		this.grabbedEntities.remove(entity);
-	}
-
-	@Override
-	public void dropItem(ItemStack itemStack)
-	{
-		Vector3 handPosition = this.getHandPosition();
-		this.worldObj.spawnEntityInWorld(new EntityItem(worldObj, handPosition.x, handPosition.y, handPosition.z, itemStack));
-		this.grabbedItems.remove(itemStack);
-	}
-
-	@Override
-	public void dropAll()
-	{
-		Vector3 handPosition = this.getHandPosition();
-		Iterator<ItemStack> it = this.grabbedItems.iterator();
-
-		while (it.hasNext())
+		if (object instanceof Entity)
 		{
-			ItemFindingHelper.dropItemStackExact(worldObj, handPosition.x, handPosition.y, handPosition.z, it.next());
+			this.grabbedEntities.remove((Entity) object);
 		}
+		if (object instanceof ItemStack)
+		{
+			Vector3 handPosition = this.getHandPosition();
+			ItemFindingHelper.dropItemStackExact(worldObj, handPosition.x, handPosition.y, handPosition.z, (ItemStack) object);
+			this.grabbedItems.remove((ItemStack) object);
+		}
+		if (object instanceof String)
+		{
+			String string = ((String) object).toLowerCase();
+			if (string.equalsIgnoreCase("all"))
+			{
+				Vector3 handPosition = this.getHandPosition();
+				Iterator<ItemStack> it = this.grabbedItems.iterator();
 
-		this.grabbedEntities.clear();
-		this.grabbedItems.clear();
+				while (it.hasNext())
+				{
+					ItemFindingHelper.dropItemStackExact(worldObj, handPosition.x, handPosition.y, handPosition.z, it.next());
+				}
+
+				this.grabbedEntities.clear();
+				this.grabbedItems.clear();
+			}
+		}
 	}
 
 	/** called by the block when another checks it too see if it is providing power to a direction */
@@ -905,5 +906,15 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 	public boolean isStackValidForSlot(int i, ItemStack itemstack)
 	{
 		return false;
+	}
+
+	@Override
+	public double getRequest()
+	{
+		if (this.getCurrentCommand() != null)
+		{
+			return 2;
+		}
+		return .1;
 	}
 }
