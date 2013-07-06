@@ -1,5 +1,8 @@
 package dark.fluid.common.machines;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -39,7 +42,7 @@ import dark.fluid.common.prefab.TileEntityFluidDevice;
 public class TileEntityTank extends TileEntityFluidDevice implements ITankContainer, IToolReadOut, IColorCoded, INetworkFluidPart, IPacketReceiver
 {
 	/* CURRENTLY CONNECTED TILE ENTITIES TO THIS */
-	private TileEntity[] connectedBlocks = new TileEntity[6];
+	private List<TileEntity> connectedBlocks = new ArrayList<TileEntity>();
 	public int[] renderConnection = new int[6];
 
 	private LiquidTank tank = new LiquidTank(this.getTankSize());
@@ -206,7 +209,7 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 					if (((TileEntityTank) tileEntity).getColor() == this.getColor())
 					{
 						this.getTileNetwork().merge(((TileEntityTank) tileEntity).getTileNetwork(), this);
-						connectedBlocks[side.ordinal()] = tileEntity;
+						connectedBlocks.add(tileEntity);
 					}
 				}
 				if(tileEntity instanceof TileEntityComparator)
@@ -224,7 +227,7 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 		if (this.worldObj != null && !this.worldObj.isRemote)
 		{
 			int[] previousConnections = this.renderConnection.clone();
-			this.connectedBlocks = new TileEntity[6];
+			this.connectedBlocks.clear();
 
 			for (int i = 0; i < 6; i++)
 			{
@@ -272,7 +275,7 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 	}
 
 	@Override
-	public TileEntity[] getNetworkConnections()
+	public List<TileEntity> getNetworkConnections()
 	{
 		return this.connectedBlocks;
 	}

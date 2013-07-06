@@ -93,7 +93,7 @@ public class TileEntityConstructionPump extends TileEntityRunnableMachine implem
 	}
 
 	@Override
-	public double getRequest()
+	public double getRequest(ForgeDirection direction)
 	{
 		return WATTS_PER_TICK;
 	}

@@ -25,6 +25,11 @@ public class NetworkFluidContainers extends NetworkFluidTiles
 	{
 		super(color, parts);
 	}
+	@Override
+	public NetworkTileEntities newInstance()
+	{
+		return new NetworkFluidContainers(this.color);
+	}
 
 	@Override
 	// TODO change this to place liquids at the bottom first
@@ -153,7 +158,7 @@ public class NetworkFluidContainers extends NetworkFluidTiles
 	}
 
 	@Override
-	public void postMergeProcessing(NetworkTileEntities network)
+	public void mergeDo(NetworkTileEntities network)
 	{
 		NetworkFluidContainers newNetwork = new NetworkFluidContainers(this.color);
 		newNetwork.getNetworkMemebers().addAll(this.getNetworkMemebers());

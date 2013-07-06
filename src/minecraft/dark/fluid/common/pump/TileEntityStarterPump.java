@@ -138,7 +138,7 @@ public class TileEntityStarterPump extends TileEntityRunnableMachine implements 
 	}
 
 	@Override
-	public double getRequest()
+	public double getRequest(ForgeDirection side)
 	{
 		return this.WATTS_PER_TICK;
 	}

@@ -1,6 +1,5 @@
 package dark.core.network.fluid;
 
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -20,6 +19,7 @@ import dark.core.hydraulic.helpers.FluidHelper;
 import dark.core.tile.network.NetworkPathFinder;
 import dark.core.tile.network.NetworkTileEntities;
 import dark.fluid.api.INetworkFluidPart;
+import dark.helpers.ConnectionHelper;
 
 public class NetworkFluidTiles extends NetworkTileEntities
 {
@@ -38,6 +38,12 @@ public class NetworkFluidTiles extends NetworkTileEntities
 		this.color = color;
 	}
 
+	@Override
+	public NetworkTileEntities newInstance()
+	{
+		return new NetworkFluidTiles(this.color);
+	}
+
 	public LiquidTank combinedStorage()
 	{
 		if (this.sharedTank == null)
@@ -48,9 +54,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
 		return this.sharedTank;
 	}
 
-	/**
-	 * Stores Fluid in this network's collective tank
-	 */
+	/** Stores Fluid in this network's collective tank */
 	public int storeFluidInSystem(LiquidStack stack, boolean doFill)
 	{
 		if (stack == null || this.combinedStorage().containsValidLiquid() && (this.combinedStorage().getLiquid() != null && !this.combinedStorage().getLiquid().isLiquidEqual(stack)))
@@ -73,9 +77,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
 		return 0;
 	}
 
-	/**
-	 * Drains the network's collective tank
-	 */
+	/** Drains the network's collective tank */
 	public LiquidStack drainFluidFromSystem(int maxDrain, boolean doDrain)
 	{
 		if (!loadedLiquids)
@@ -99,12 +101,10 @@ public class NetworkFluidTiles extends NetworkTileEntities
 		return stack;
 	}
 
-	/**
-	 * Moves the volume stored in the network to the parts or sums up the volume from the parts and
+	/** Moves the volume stored in the network to the parts or sums up the volume from the parts and
 	 * loads it to the network. Assumes that all liquidStacks stored are equal
 	 * 
-	 * @param sumParts - loads the volume from the parts before leveling out the volumes
-	 */
+	 * @param sumParts - loads the volume from the parts before leveling out the volumes */
 	public void balanceColletiveTank(boolean sumParts)
 	{
 		int volume = 0, itemID = 0, itemMeta = 0;
@@ -157,9 +157,9 @@ public class NetworkFluidTiles extends NetworkTileEntities
 	}
 
 	@Override
-	public boolean addEntity(TileEntity ent, boolean member)
+	public boolean addTile(TileEntity ent, boolean member)
 	{
-		if (!(super.addEntity(ent, member)) && ent instanceof ITankContainer && !connectedTanks.contains(ent))
+		if (!(super.addTile(ent, member)) && ent instanceof ITankContainer && !connectedTanks.contains(ent))
 		{
 			connectedTanks.add((ITankContainer) ent);
 			return true;
@@ -167,9 +167,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
 		return false;
 	}
 
-	/**
-	 * Checks too see if the tileEntity is part of or connected too the network
-	 */
+	/** Checks too see if the tileEntity is part of or connected too the network */
 	public boolean isConnected(TileEntity tileEntity)
 	{
 		return this.connectedTanks.contains(tileEntity);
@@ -192,11 +190,9 @@ public class NetworkFluidTiles extends NetworkTileEntities
 		{
 			this.getNetworkMemebers().remove(splitPoint);
 			this.balanceColletiveTank(false);
-			/**
-			 * Loop through the connected blocks and attempt to see if there are connections between
-			 * the two points elsewhere.
-			 */
-			TileEntity[] connectedBlocks = splitPoint.getNetworkConnections();
+			/** Loop through the connected blocks and attempt to see if there are connections between
+			 * the two points elsewhere. */
+			TileEntity[] connectedBlocks = ConnectionHelper.getSurroundingTileEntities((TileEntity) splitPoint);
 
 			for (int i = 0; i < connectedBlocks.length; i++)
 			{
@@ -287,7 +283,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
 	}
 
 	@Override
-	public void postMergeProcessing(NetworkTileEntities network)
+	public void mergeDo(NetworkTileEntities network)
 	{
 		NetworkFluidTiles newNetwork = new NetworkFluidTiles(this.color);
 		newNetwork.getNetworkMemebers().addAll(this.getNetworkMemebers());

@@ -42,6 +42,12 @@ public class NetworkPipes extends NetworkFluidTiles
 	{
 		super(color, parts);
 	}
+	
+	@Override
+	public NetworkTileEntities newInstance()
+	{
+		return new NetworkPipes(this.color);
+	}
 
 	public boolean isPartOfNetwork(TileEntity ent)
 	{
@@ -367,7 +373,7 @@ public class NetworkPipes extends NetworkFluidTiles
 	}
 	
 	@Override
-	public void postMergeProcessing(NetworkTileEntities network)
+	public void mergeDo(NetworkTileEntities network)
 	{
 		NetworkPipes newNetwork = new NetworkPipes(this.color);
 		newNetwork.getNetworkMemebers().addAll(this.getNetworkMemebers());

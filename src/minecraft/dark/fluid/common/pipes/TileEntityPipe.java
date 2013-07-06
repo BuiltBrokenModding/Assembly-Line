@@ -1,6 +1,8 @@
 package dark.fluid.common.pipes;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -48,7 +50,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	/* TANK TO FAKE OTHER TILES INTO BELIVING THIS HAS AN INTERNAL STORAGE */
 	protected LiquidTank fakeTank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
 	/* CURRENTLY CONNECTED TILE ENTITIES TO THIS */
-	private TileEntity[] connectedBlocks = new TileEntity[6];
+	private List<TileEntity> connectedBlocks = new ArrayList<TileEntity>();
 	public boolean[] renderConnection = new boolean[6];
 	public IPipeExtention[] subEntities = new IPipeExtention[6];
 	/* RANDOM INSTANCE USED BY THE UPDATE TICK */
@@ -60,7 +62,9 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 
 	public enum PacketID
 	{
-		PIPE_CONNECTIONS, EXTENTION_CREATE, EXTENTION_UPDATE;
+		PIPE_CONNECTIONS,
+		EXTENTION_CREATE,
+		EXTENTION_UPDATE;
 	}
 
 	@Override
@@ -112,9 +116,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		}
 	}
 
-	/**
-	 * Builds and sends data to client for all PipeExtentions
-	 */
+	/** Builds and sends data to client for all PipeExtentions */
 	private void updateSubEntities()
 	{
 
@@ -195,9 +197,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		return PacketManager.getPacket(FluidMech.CHANNEL, this, PacketID.PIPE_CONNECTIONS.ordinal(), this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
 	}
 
-	/**
-	 * Reads a tile entity from NBT.
-	 */
+	/** Reads a tile entity from NBT. */
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
@@ -216,9 +216,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		}
 	}
 
-	/**
-	 * Writes a tile entity to NBT.
-	 */
+	/** Writes a tile entity to NBT. */
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
@@ -298,9 +296,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		}
 	}
 
-	/**
-	 * Sends the save data for the tileEntity too the client
-	 */
+	/** Sends the save data for the tileEntity too the client */
 	public void sendExtentionToClient(int side)
 	{
 		if (worldObj != null && !worldObj.isRemote && this.subEntities[side] instanceof TileEntity)
@@ -322,9 +318,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 
 	}
 
-	/**
-	 * gets the current color mark of the pipe
-	 */
+	/** gets the current color mark of the pipe */
 	@Override
 	public ColorCode getColor()
 	{
@@ -335,9 +329,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		return ColorCode.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
 	}
 
-	/**
-	 * sets the current color mark of the pipe
-	 */
+	/** sets the current color mark of the pipe */
 	@Override
 	public void setColor(Object cc)
 	{
@@ -364,7 +356,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		{
 			for (int i = 0; i < 6; i++)
 			{
-				string += ":" + (this.renderConnection[i] ? "T" : "F") + (this.getNetworkConnections()[i] != null ? "T" : "F");
+				string += ":" + (this.renderConnection[i] ? "T" : "F") + (this.renderConnection[i] ? "T" : "F");
 			}
 		}
 		if (testNetwork)
@@ -440,20 +432,18 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		return null;
 	}
 
-	/**
-	 * Checks to make sure the connection is valid to the tileEntity
+	/** Checks to make sure the connection is valid to the tileEntity
 	 * 
 	 * @param tileEntity - the tileEntity being checked
 	 * @param side - side the connection is too
-	 */
-	public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)
+	 * @return */
+	public boolean validateConnectionSide(TileEntity tileEntity, ForgeDirection side)
 	{
 		if (!this.worldObj.isRemote && tileEntity != null)
 		{
 			if (this.subEntities[side.ordinal()] != null)
 			{
-				connectedBlocks[side.ordinal()] = null;
-				return;
+				return false;
 			}
 			if (tileEntity instanceof ITileConnector)
 			{
@@ -464,12 +454,13 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 						if (((INetworkPipe) tileEntity).getColor() == this.getColor())
 						{
 							this.getTileNetwork().merge(((INetworkPipe) tileEntity).getTileNetwork(), this);
-							connectedBlocks[side.ordinal()] = tileEntity;
+							return connectedBlocks.add(tileEntity);
+
 						}
 					}
 					else
 					{
-						connectedBlocks[side.ordinal()] = tileEntity;
+						return connectedBlocks.add(tileEntity);
 					}
 				}
 			}
@@ -477,14 +468,15 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 			{
 				if (this.getColor() == ColorCode.NONE || this.getColor() == ((IColorCoded) tileEntity).getColor())
 				{
-					connectedBlocks[side.ordinal()] = tileEntity;
+					return connectedBlocks.add(tileEntity);
 				}
 			}
 			else if (tileEntity instanceof ITankContainer)
 			{
-				connectedBlocks[side.ordinal()] = tileEntity;
+				return connectedBlocks.add(tileEntity);
 			}
 		}
+		return false;
 	}
 
 	@Override
@@ -495,19 +487,17 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 		{
 
 			boolean[] previousConnections = this.renderConnection.clone();
-			this.connectedBlocks = new TileEntity[6];
+			this.connectedBlocks.clear();
 
-			for (int i = 0; i < 6; i++)
+			for (ForgeDirection dir: ForgeDirection.VALID_DIRECTIONS)
 			{
-				ForgeDirection dir = ForgeDirection.getOrientation(i);
-				this.validateConnectionSide(this.worldObj.getBlockTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ), dir);
+				TileEntity ent = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
+				this.renderConnection[dir.ordinal()] = this.validateConnectionSide(ent, dir);
 
-				this.renderConnection[i] = this.connectedBlocks[i] != null;
-
-				if (this.renderConnection[i] && this.connectedBlocks[i] instanceof ITankContainer && !(this.connectedBlocks[i] instanceof INetworkPipe))
+				if (this.renderConnection[dir.ordinal()] && ent instanceof ITankContainer && !(ent instanceof INetworkPipe))
 				{
-					ITankContainer tankContainer = (ITankContainer) this.connectedBlocks[i];
-					this.getTileNetwork().addEntity(this.connectedBlocks[i], false);
+					ITankContainer tankContainer = (ITankContainer) ent;
+					this.getTileNetwork().addTile(ent, false);
 
 					/* LITTLE TRICK TO AUTO DRAIN TANKS ON EACH CONNECTION UPDATE */
 
@@ -520,9 +510,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 				}
 			}
 
-			/**
-			 * Only send packet updates if visuallyConnected changed.
-			 */
+			/** Only send packet updates if visuallyConnected changed. */
 			if (!Arrays.areEqual(previousConnections, this.renderConnection))
 			{
 				this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
@@ -585,7 +573,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	}
 
 	@Override
-	public TileEntity[] getNetworkConnections()
+	public List<TileEntity> getNetworkConnections()
 	{
 		return this.connectedBlocks;
 	}
