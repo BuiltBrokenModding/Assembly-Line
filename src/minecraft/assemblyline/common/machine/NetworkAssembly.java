@@ -1,26 +1,13 @@
 package assemblyline.common.machine;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-
-import universalelectricity.core.block.IConductor;
-import universalelectricity.core.block.IConnectionProvider;
-import universalelectricity.core.electricity.ElectricityPack;
-import universalelectricity.core.electricity.IElectricityNetwork;
-import universalelectricity.core.vector.Vector3;
-
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
 import dark.core.api.INetworkPart;
 import dark.core.tile.network.NetworkPowerTiles;
 import dark.core.tile.network.NetworkTileEntities;
 
 public class NetworkAssembly extends NetworkPowerTiles
 {
-	/** List of network members that are providing power for the network */
-	private List<TileEntity> powerSources = new ArrayList<TileEntity>();
+
+	/** Power stored to be used by network members */
 	private double wattStored = 0.0;
 
 	public NetworkAssembly(INetworkPart... parts)
@@ -28,12 +15,17 @@ public class NetworkAssembly extends NetworkPowerTiles
 		super(parts);
 	}
 
-	/** Checks if the tile can run as well sucks up energy for the tile to run */
-	public boolean canRun(TileEntityAssembly tile)
+	public NetworkTileEntities newInstance()
 	{
-		if (tile != null && this.wattStored >= tile.getRequest(ForgeDirection.UNKNOWN))
+		return new NetworkAssembly();
+	}
+
+	/** Checks if the tile can run as well sucks up energy for the tile to run */
+	public boolean doPowerRun(TileEntityAssembly tile)
+	{
+		if (tile != null && this.wattStored >= tile.getRequest())
 		{
-			this.wattStored -= tile.getRequest(ForgeDirection.UNKNOWN);
+			this.wattStored -= tile.getRequest();
 			return true;
 		}
 		return false;
@@ -72,7 +64,7 @@ public class NetworkAssembly extends NetworkPowerTiles
 	}
 
 	@Override
-	public void postMergeProcessing(NetworkTileEntities network)
+	public void mergeDo(NetworkTileEntities network)
 	{
 		NetworkAssembly newNetwork = new NetworkAssembly();
 		newNetwork.getNetworkMemebers().addAll(this.getNetworkMemebers());
@@ -85,6 +77,12 @@ public class NetworkAssembly extends NetworkPowerTiles
 	public boolean isValidMember(INetworkPart part)
 	{
 		return super.isValidMember(part) && part instanceof TileEntityAssembly;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "AssemblyNetwork[" + this.hashCode() + "|parts:" + this.networkMember.size() + "]";
 	}
 
 }

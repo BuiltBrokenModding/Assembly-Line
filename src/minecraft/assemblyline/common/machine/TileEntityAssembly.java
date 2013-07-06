@@ -54,17 +54,22 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 	public void invalidate()
 	{
 		NetworkAssembly.invalidate(this);
+		if (this.getTileNetwork() != null)
+		{
+			this.getTileNetwork().splitNetwork(this.worldObj, this);
+		}
 		super.invalidate();
 	}
 
 	@Override
 	public void updateEntity()
 	{
-		boolean prevRun = this.running;
-		this.powered = false;
-		super.updateEntity();
+
 		if (!this.worldObj.isRemote)
 		{
+			boolean prevRun = this.running;
+			this.powered = false;
+			super.updateEntity();
 			if (ticks % updateTick == 0)
 			{
 				this.updateTick = ((int) random.nextInt(10) + 20);
@@ -105,14 +110,14 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 	/** Checks to see if this assembly tile can run using several methods */
 	public boolean isRunning()
 	{
-		if (!worldObj.isRemote)
+		if (!this.worldObj.isRemote)
 		{
-			boolean running = AssemblyLine.REQUIRE_NO_POWER;
-			if (!running && this.getTileNetwork() instanceof NetworkAssembly)
+			boolean on = AssemblyLine.REQUIRE_NO_POWER;
+			if (!on && this.getTileNetwork() instanceof NetworkAssembly)
 			{
-				running = ((NetworkAssembly) this.getTileNetwork()).canRun(this);
+				on = ((NetworkAssembly) this.getTileNetwork()).doPowerRun(this);
 			}
-			return running;
+			return on;
 		}
 		else
 		{

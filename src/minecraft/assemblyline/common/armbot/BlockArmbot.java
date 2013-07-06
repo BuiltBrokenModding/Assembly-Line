@@ -11,11 +11,11 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.multiblock.IMultiBlock;
 import assemblyline.client.render.BlockRenderingHandler;
 import assemblyline.common.TabAssemblyLine;
-import assemblyline.common.machine.BlockALMachine;
+import assemblyline.common.machine.BlockAssembly;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockArmbot extends BlockALMachine
+public class BlockArmbot extends BlockAssembly
 {
 	public BlockArmbot(int id)
 	{

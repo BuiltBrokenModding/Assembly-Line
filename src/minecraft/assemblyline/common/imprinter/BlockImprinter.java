@@ -15,11 +15,11 @@ import net.minecraft.world.World;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.CommonProxy;
 import assemblyline.common.TabAssemblyLine;
-import assemblyline.common.machine.BlockALMachine;
+import assemblyline.common.machine.BlockAssembly;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockImprinter extends BlockALMachine
+public class BlockImprinter extends BlockAssembly
 {
 	Icon imprinter_side;
 	Icon imprinter_top;

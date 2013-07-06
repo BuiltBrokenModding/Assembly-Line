@@ -16,7 +16,7 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 import assemblyline.client.render.BlockRenderingHandler;
 import assemblyline.common.TabAssemblyLine;
-import assemblyline.common.machine.BlockALMachine;
+import assemblyline.common.machine.BlockAssembly;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt.SlantType;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -26,7 +26,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  * @author Calclavia, DarkGuardsman
  */
-public class BlockConveyorBelt extends BlockALMachine
+public class BlockConveyorBelt extends BlockAssembly
 {
 	public BlockConveyorBelt(int id)
 	{

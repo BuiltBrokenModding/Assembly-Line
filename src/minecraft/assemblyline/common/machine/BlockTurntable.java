@@ -21,7 +21,7 @@ import assemblyline.common.TabAssemblyLine;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockTurntable extends BlockALMachine
+public class BlockTurntable extends BlockAssembly
 {
 	private Icon top;
 	

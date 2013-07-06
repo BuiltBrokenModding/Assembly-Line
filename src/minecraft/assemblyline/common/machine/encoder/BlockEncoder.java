@@ -10,11 +10,11 @@ import net.minecraft.world.World;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.CommonProxy;
 import assemblyline.common.TabAssemblyLine;
-import assemblyline.common.machine.BlockALMachine;
+import assemblyline.common.machine.BlockAssembly;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockEncoder extends BlockALMachine
+public class BlockEncoder extends BlockAssembly
 {
 	Icon encoder_side;
 	Icon encoder_top;

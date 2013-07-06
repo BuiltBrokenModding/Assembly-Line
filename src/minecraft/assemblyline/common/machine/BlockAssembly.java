@@ -9,6 +9,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import universalelectricity.core.electricity.ElectricityDisplay;
+import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import universalelectricity.prefab.block.BlockAdvanced;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.TabAssemblyLine;
@@ -16,11 +18,11 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.api.INetworkPart;
 
-public class BlockALMachine extends BlockAdvanced
+public class BlockAssembly extends BlockAdvanced
 {
 	public Icon machine_icon;
 
-	public BlockALMachine(int id, Material material, String name)
+	public BlockAssembly(int id, Material material, String name)
 	{
 		super(AssemblyLine.CONFIGURATION.getBlock(name, id).getInt(), material);
 		this.setUnlocalizedName(name);
@@ -39,7 +41,13 @@ public class BlockALMachine extends BlockAdvanced
 			output += "Channel:" + (asm.getTileNetwork() != null ? asm.getTileNetwork().toString() : "Error") + "|";
 			entityPlayer.sendChatToPlayer(output);
 			output = "Debug>>>";
-			output += "Powered:" + asm.running;
+			output += "Powered:" + asm.running + " ";
+			if (asm.getTileNetwork() instanceof NetworkAssembly)
+			{
+				output += ElectricityDisplay.getDisplaySimple(((NetworkAssembly) asm.getTileNetwork()).getCurrentBattery(), ElectricUnit.WATT, 2);
+				output += "/";
+				output += ElectricityDisplay.getDisplaySimple(((NetworkAssembly) asm.getTileNetwork()).getMaxBattery(), ElectricUnit.WATT, 2);
+			}
 			entityPlayer.sendChatToPlayer(output);
 		}
 		return super.onBlockActivated(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ);

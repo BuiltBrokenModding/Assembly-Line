@@ -25,7 +25,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class BlockCrate extends BlockALMachine
+public class BlockCrate extends BlockAssembly
 {
 	Icon crate_icon;
 
