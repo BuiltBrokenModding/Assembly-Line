@@ -38,9 +38,9 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectrical imp
 		this.prevWatts = this.wattsReceived;
 		if (!this.worldObj.isRemote)
 		{
-			if ((this.runPowerless || PowerSystems.runPowerLess(powerList)) && this.wattsReceived < this.getWattBuffer())
+			if ((this.runPowerless || PowerSystems.runPowerLess(powerList)) && this.wattsReceived < this.getBattery(ForgeDirection.UNKNOWN))
 			{
-				this.wattsReceived += Math.max(this.getWattBuffer() - this.wattsReceived, 0);
+				this.wattsReceived += Math.max(this.getBattery(ForgeDirection.UNKNOWN) - this.wattsReceived, 0);
 			}
 			else
 			{
@@ -54,8 +54,8 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectrical imp
 		// UNIVERSAL ELECTRICITY UPDATE
 		if (!this.isDisabled())
 		{
-			ElectricityPack electricityPack = ElectricityNetworkHelper.consumeFromMultipleSides(this, this.getConsumingSides(), ElectricityPack.getFromWatts(this.getRequest(), this.getVoltage()));
-			this.onReceive(electricityPack.voltage, electricityPack.amperes);
+			ElectricityPack electricityPack = ElectricityNetworkHelper.consumeFromMultipleSides(this, this.getConsumingSides(), ElectricityPack.getFromWatts(this.getRequest(ForgeDirection.UNKNOWN), this.getVoltage()));
+			this.onReceive(ForgeDirection.UNKNOWN,electricityPack.voltage, electricityPack.amperes);
 		}
 		else
 		{
@@ -73,9 +73,9 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectrical imp
 		}
 		if (this.powerProvider != null)
 		{
-			float requiredEnergy = (float) (this.getRequest() * UniversalElectricity.TO_BC_RATIO);
+			float requiredEnergy = (float) (this.getRequest(ForgeDirection.UNKNOWN) * UniversalElectricity.TO_BC_RATIO);
 			float energyReceived = this.powerProvider.useEnergy(0, requiredEnergy, true);
-			this.onReceive(this.getVoltage(), (UniversalElectricity.BC3_RATIO * energyReceived) / this.getVoltage());
+			this.onReceive(ForgeDirection.UNKNOWN,this.getVoltage(), (UniversalElectricity.BC3_RATIO * energyReceived) / this.getVoltage());
 		}
 		//TODO add other power systems
 	}
@@ -103,7 +103,7 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectrical imp
 	{
 		if (this.canConnect(from))
 		{
-			return (int) Math.ceil(this.getRequest() * UniversalElectricity.TO_BC_RATIO);
+			return (int) Math.ceil(this.getRequest(from) * UniversalElectricity.TO_BC_RATIO);
 		}
 
 		return 0;
@@ -114,35 +114,41 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectrical imp
 		return ElectricityNetworkHelper.getDirections(this);
 	}
 
-	/** Watts this tile needs a tick to function */
-	public abstract double getRequest();
+	/** Watts this tile want to receive each tick */
+	public abstract double getRequest(ForgeDirection side);
 
-	public void onReceive(double voltage, double amperes)
+	/** Called when this tile gets power. Should equal getRequest or power will be wasted
+	 * 
+	 * @param voltage - E pressure
+	 * @param amperes - E flow rate */
+	public void onReceive(ForgeDirection side, double voltage, double amperes)
 	{
 		if (voltage > this.getVoltage())
 		{
 			this.onDisable(2);
 			return;
 		}
-		this.wattsReceived = Math.min(this.wattsReceived + (voltage * amperes), this.getWattBuffer());
+		this.wattsReceived = Math.min(this.wattsReceived + (voltage * amperes), this.getBattery(side));
 	}
 
-	/** @return The amount of internal buffer that may be stored within this machine. This will make
-	 * the machine run smoother as electricity might not always be consistent. */
-	public double getWattBuffer()
+	/** Amount of Watts the internal battery/cap can store */
+	public double getBattery(ForgeDirection side)
 	{
-		return this.getRequest() * 2;
+		return this.getRequest(side) * 2;
 	}
 
 	/** Sets this machine to run without power only if the given stack match an ore directory name */
 	public void toggleInfPower(ItemStack item)
 	{
-		for (ItemStack stack : OreDictionary.getOres(this.powerToggleItemID))
+		if (item != null)
 		{
-			if (stack.isItemEqual(item))
+			for (ItemStack stack : OreDictionary.getOres(this.powerToggleItemID))
 			{
-				this.runPowerless = !this.runPowerless;
-				break;
+				if (stack.isItemEqual(item))
+				{
+					this.runPowerless = !this.runPowerless;
+					break;
+				}
 			}
 		}
 	}
