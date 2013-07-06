@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.logging.Logger;
 
 import net.minecraftforge.common.Configuration;
-import basiccomponents.common.BasicComponents;
 import cpw.mods.fml.common.Loader;
 
 public class DarkMain
