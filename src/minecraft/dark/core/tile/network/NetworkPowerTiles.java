@@ -18,14 +18,15 @@ import dark.core.api.INetworkPart;
 
 public class NetworkPowerTiles extends NetworkTileEntities implements IElectricityNetwork
 {
-	private final HashMap<TileEntity, ElectricityPack> producers = new HashMap<TileEntity, ElectricityPack>();
-	private final HashMap<TileEntity, ElectricityPack> consumers = new HashMap<TileEntity, ElectricityPack>();
+	protected final HashMap<TileEntity, ElectricityPack> producers = new HashMap<TileEntity, ElectricityPack>();
+	protected final HashMap<TileEntity, ElectricityPack> consumers = new HashMap<TileEntity, ElectricityPack>();
+	protected double wattStored = 0.0;
 
 	public NetworkPowerTiles(INetworkPart... conductors)
 	{
 		super(conductors);
 	}
-	
+
 	@Override
 	public NetworkTileEntities newInstance()
 	{
@@ -35,7 +36,7 @@ public class NetworkPowerTiles extends NetworkTileEntities implements IElectrici
 	@Override
 	public void startProducing(TileEntity tileEntity, ElectricityPack electricityPack)
 	{
-		if (tileEntity != null && electricityPack.getWatts() > 0)
+		if (!this.networkMember.contains(tileEntity) && tileEntity != null && electricityPack.getWatts() > 0)
 		{
 			this.producers.put(tileEntity, electricityPack);
 		}
@@ -64,7 +65,7 @@ public class NetworkPowerTiles extends NetworkTileEntities implements IElectrici
 	@Override
 	public void startRequesting(TileEntity tileEntity, ElectricityPack electricityPack)
 	{
-		if (tileEntity != null && electricityPack.getWatts() > 0)
+		if (!this.networkMember.contains(tileEntity) && tileEntity != null && electricityPack.getWatts() > 0)
 		{
 			this.consumers.put(tileEntity, electricityPack);
 		}
@@ -157,9 +158,17 @@ public class NetworkPowerTiles extends NetworkTileEntities implements IElectrici
 	@Override
 	public ElectricityPack getRequest(TileEntity... ignoreTiles)
 	{
-		ElectricityPack totalElectricity = this.getRequestWithoutReduction();
-		totalElectricity.amperes = Math.max(totalElectricity.amperes - this.getProduced(ignoreTiles).amperes, 0);
-		return totalElectricity;
+		return this.getRequestWithoutReduction();
+	}
+
+	public double getMaxBattery()
+	{
+		return Math.min(this.getRequest().getWatts(), this.networkMember.size() * 10);
+	}
+
+	public double getCurrentBattery()
+	{
+		return this.wattStored;
 	}
 
 	@Override
@@ -221,6 +230,11 @@ public class NetworkPowerTiles extends NetworkTileEntities implements IElectrici
 
 			if (this.consumers.containsKey(tileEntity) && tileRequest != null)
 			{
+				if (this.wattStored >= tileRequest.getWatts())
+				{
+					this.wattStored -= tileRequest.getWatts();
+					return tileRequest;
+				}
 				// Calculate the electricity this TileEntity is receiving in percentage.
 				totalElectricity = this.getProduced();
 
@@ -277,19 +291,6 @@ public class NetworkPowerTiles extends NetworkTileEntities implements IElectrici
 	}
 
 	@Override
-	public void cleanUpConductors()
-	{
-		this.cleanUpMembers();
-	}
-
-	/** This function is called to refresh all conductors in this network */
-	@Override
-	public void refreshConductors()
-	{
-		super.refresh();
-	}
-
-	@Override
 	public double getTotalResistance()
 	{
 		return 1;
@@ -304,27 +305,27 @@ public class NetworkPowerTiles extends NetworkTileEntities implements IElectrici
 	@Override
 	public Set<IConductor> getConductors()
 	{
-		Set<IConductor> cond = new HashSet<IConductor>();
-		for (INetworkPart part : this.getNetworkMemebers())
-		{
-			if (part instanceof IConductor)
-			{
-				cond.add((IConductor) part);
-			}
-		}
-		return cond;
+		return new HashSet<IConductor>();
 	}
 
 	@Override
 	public void mergeConnection(IElectricityNetwork network)
 	{
-
 	}
 
 	@Override
 	public void splitNetwork(IConnectionProvider splitPoint)
 	{
+	}
 
+	@Override
+	public void cleanUpConductors()
+	{
+	}
+
+	@Override
+	public void refreshConductors()
+	{
 	}
 
 }

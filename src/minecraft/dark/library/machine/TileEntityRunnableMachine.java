@@ -1,5 +1,6 @@
 package dark.library.machine;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import universalelectricity.core.block.IVoltage;
 import universalelectricity.core.electricity.ElectricityNetworkHelper;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.electricity.IElectricityNetwork;
+import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.tile.TileEntityElectrical;
 import universalelectricity.prefab.tile.TileEntityElectricityRunnable;
 import buildcraft.api.power.IPowerProvider;
@@ -63,7 +65,7 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectrical imp
 		}
 		else
 		{
-			ElectricityNetworkHelper.consumeFromMultipleSides(this, new ElectricityPack());
+			ElectricityNetworkHelper.consumeFromMultipleSides(this, new ElectricityPack(0, 0));
 		}
 
 		// BUILDCRAFT POWER UPDATE
@@ -76,7 +78,7 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectrical imp
 			}
 		}
 		float requiredEnergy = (float) (this.getRequest(ForgeDirection.UNKNOWN) * UniversalElectricity.TO_BC_RATIO);
-		if (this.powerProvider != null && this.powerProvider.useEnergy(requiredEnergy, requiredEnergy, false) >= requiredEnergy)
+		if (this.powerProvider != null && this.powerProvider.useEnergy(0, requiredEnergy, false) > 0)
 		{
 			float energyReceived = this.powerProvider.useEnergy(requiredEnergy, requiredEnergy, true);
 			this.onReceive(ForgeDirection.UNKNOWN, this.getVoltage(), (UniversalElectricity.BC3_RATIO * energyReceived) / this.getVoltage());
@@ -181,7 +183,7 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectrical imp
 
 		if (tileEntity != null && approachingDirection != null)
 		{
-			final List<IElectricityNetwork> connectedNetworks = ElectricityNetworkHelper.getNetworksFromMultipleSides(tileEntity, approachingDirection);
+			final List<IElectricityNetwork> connectedNetworks = getNetworksFromMultipleSides(tileEntity, approachingDirection);
 
 			if (connectedNetworks.size() > 0)
 			{
@@ -191,12 +193,7 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectrical imp
 
 				for (IElectricityNetwork network : connectedNetworks)
 				{
-					boolean flag = false;
-					if (tileEntity instanceof INetworkPart && ((INetworkPart) tileEntity).getTileNetwork() instanceof IElectricityNetwork)
-					{
-						flag = network.equals(((IElectricityNetwork) ((INetworkPart) tileEntity).getTileNetwork()));
-					}
-					if (!flag && wattsPerSide > 0 && requestPack.getWatts() > 0)
+					if (wattsPerSide > 0 && requestPack.getWatts() > 0)
 					{
 						network.startRequesting(tileEntity, wattsPerSide / voltage, voltage);
 						ElectricityPack receivedPack = network.consumeElectricity(tileEntity);
@@ -212,5 +209,32 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectrical imp
 		}
 
 		return consumedPack;
+	}
+
+	public static List<IElectricityNetwork> getNetworksFromMultipleSides(TileEntity tileEntity, EnumSet<ForgeDirection> approachingDirection)
+	{
+		final List<IElectricityNetwork> connectedNetworks = new ArrayList<IElectricityNetwork>();
+
+		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+		{
+			if (approachingDirection.contains(direction))
+			{
+				Vector3 position = new Vector3(tileEntity);
+				position.modifyPositionFromSide(direction);
+				TileEntity outputConductor = position.getTileEntity(tileEntity.worldObj);
+				IElectricityNetwork electricityNetwork = ElectricityNetworkHelper.getNetworkFromTileEntity(outputConductor, direction);
+
+				if (electricityNetwork != null && !connectedNetworks.contains(connectedNetworks))
+				{
+					if (tileEntity instanceof INetworkPart && outputConductor instanceof INetworkPart && ((INetworkPart) tileEntity).getTileNetwork().isPartOfNetwork(outputConductor))
+					{
+						continue;
+					}
+					connectedNetworks.add(electricityNetwork);
+				}
+			}
+		}
+
+		return connectedNetworks;
 	}
 }
