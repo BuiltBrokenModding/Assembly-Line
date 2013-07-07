@@ -27,6 +27,7 @@ import buildcraft.api.power.PowerProvider;
 import com.google.common.io.ByteArrayDataInput;
 
 import dark.core.api.INetworkPart;
+import dark.core.tile.network.NetworkPowerTiles;
 import dark.core.tile.network.NetworkTileEntities;
 import dark.library.machine.TileEntityRunnableMachine;
 
@@ -38,6 +39,7 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 {
 	/** Is the tile currently powered allowing it to run */
 	public boolean running = false;
+	private boolean prevRun = false;
 	/** Network used to link assembly machines together */
 	private NetworkAssembly assemblyNetwork;
 	/** Tiles that are connected to this */
@@ -46,12 +48,6 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 	public Random random = new Random();
 	/** Random rate by which this tile updates its connections */
 	private int updateTick = 1;
-
-	public TileEntityAssembly()
-	{
-		this.powerProvider = new AssemblyPowerProvider(this);
-		powerProvider.configure(0, 0, 100, 0, 200);
-	}
 
 	public static enum AssemblyTilePacket
 	{
@@ -75,7 +71,7 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 	{
 		if (!this.worldObj.isRemote)
 		{
-			boolean prevRun = this.running;
+			this.prevRun = this.running;
 			super.updateEntity();
 			if (ticks % updateTick == 0)
 			{
@@ -135,6 +131,26 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 		return 1;
 	}
 
+	@Override
+	public double getBattery(ForgeDirection side)
+	{
+		if (this.getTileNetwork() instanceof NetworkAssembly)
+		{
+			return ((NetworkAssembly) this.getTileNetwork()).getMaxBattery();
+		}
+		return super.getBattery(side);
+	}
+
+	@Override
+	public double getCurrentBattery(ForgeDirection side)
+	{
+		if (this.getTileNetwork() instanceof NetworkAssembly)
+		{
+			return ((NetworkAssembly) this.getTileNetwork()).getCurrentBattery();
+		}
+		return super.getCurrentBattery(side);
+	}
+
 	/** Amount of energy the network needs at any given time */
 	@Override
 	public double getRequest(ForgeDirection side)
@@ -142,8 +158,7 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 		if (this.getTileNetwork() instanceof NetworkAssembly)
 		{
 			NetworkAssembly net = ((NetworkAssembly) this.getTileNetwork());
-			double room = net.getMaxBattery() - net.getCurrentBattery();
-			return Math.min(100, Math.max(0, room));
+			return Math.min(100 + net.getMemberRequest(), Math.max(0, net.getRequest(new Vector3(this).modifyPositionFromSide(side).getTileEntity(this.worldObj), this).getWatts()));
 		}
 		return 0;
 	}
@@ -301,32 +316,6 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 	public double getCurrentCapcity()
 	{
 		return 1000;
-	}
-
-	class AssemblyPowerProvider extends PowerProvider
-	{
-		public TileEntityAssembly tileEntity;
-
-		public AssemblyPowerProvider(TileEntityAssembly tile)
-		{
-			tileEntity = tile;
-		}
-
-		@Override
-		public void receiveEnergy(float quantity, ForgeDirection from)
-		{
-			powerSources[from.ordinal()] = 2;
-			
-			if (tileEntity.getTileNetwork() instanceof NetworkAssembly)
-			{
-				((NetworkAssembly) tileEntity.getTileNetwork()).addPower(UniversalElectricity.BC3_RATIO * quantity);
-				System.out.println("BuildCraft Power Reciver>>>PlugPower>>>"+quantity);
-			}
-			else
-			{
-				this.energyStored += quantity;
-			}
-		}
 	}
 
 }

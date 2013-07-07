@@ -39,7 +39,7 @@ public class NetworkAssembly extends NetworkPowerTiles
 	public void addPower(double d)
 	{
 		double before = this.wattStored;
-		this.wattStored = Math.max(this.wattStored + d, this.getMaxBattery());
+		this.wattStored = Math.min(this.wattStored + d, this.getMaxBattery());
 		System.out.println("Power| +++" + ElectricityDisplay.getDisplaySimple(d, ElectricUnit.WATT, 2) + " A: " + ElectricityDisplay.getDisplaySimple(this.wattStored, ElectricUnit.WATT, 2));
 
 	}
@@ -52,7 +52,14 @@ public class NetworkAssembly extends NetworkPowerTiles
 		{
 			pack = new ElectricityPack(0, 120);
 		}
-		double watt = pack.getWatts();
+
+		return ElectricityPack.getFromWatts(pack.getWatts() + this.getMemberRequest(), pack.voltage);
+	}
+
+	@Override
+	public double getMemberRequest()
+	{
+		double watt = 0;
 		for (INetworkPart part : this.getNetworkMemebers())
 		{
 			//TODO do check for ignored tiles/ents
@@ -61,7 +68,7 @@ public class NetworkAssembly extends NetworkPowerTiles
 				watt += ((TileEntityAssembly) part).getWattLoad();
 			}
 		}
-		return ElectricityPack.getFromWatts(watt, pack.voltage);
+		return watt;
 	}
 
 	@Override

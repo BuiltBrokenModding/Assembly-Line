@@ -8,8 +8,6 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
@@ -20,7 +18,6 @@ import universalelectricity.prefab.multiblock.TileEntityMulti;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.armbot.BlockArmbot;
 import assemblyline.common.armbot.TileEntityArmbot;
-import assemblyline.common.armbot.command.GrabDictionary;
 import assemblyline.common.imprinter.BlockImprinter;
 import assemblyline.common.imprinter.ItemImprinter;
 import assemblyline.common.imprinter.TileEntityImprinter;
@@ -59,8 +56,6 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
-import dark.core.DarkMain;
-import dark.core.PowerSystems;
 
 @ModstatInfo(prefix = "asmline")
 @Mod(modid = AssemblyLine.CHANNEL, name = AssemblyLine.MOD_NAME, version = AssemblyLine.VERSION, dependencies = "after:BasicComponents; after:IC2", useMetadata = true)
