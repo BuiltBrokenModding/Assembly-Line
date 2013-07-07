@@ -909,7 +909,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 	}
 
 	@Override
-	public double getRequest()
+	public double getWattLoad()
 	{
 		if (this.getCurrentCommand() != null)
 		{

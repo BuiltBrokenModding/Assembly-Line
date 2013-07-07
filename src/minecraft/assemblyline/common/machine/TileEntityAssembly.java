@@ -14,8 +14,10 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
+import universalelectricity.core.block.IConductor;
 import universalelectricity.core.electricity.ElectricityDisplay;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
+import universalelectricity.core.electricity.IElectricityNetwork;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
@@ -32,7 +34,7 @@ import dark.library.machine.TileEntityRunnableMachine;
  * in a network of similar tiles allowing all to share power from one or more sources
  * 
  * @author DarkGuardsman */
-public abstract class TileEntityAssembly extends TileEntityRunnableMachine implements INetworkPart, IPacketReceiver
+public abstract class TileEntityAssembly extends TileEntityRunnableMachine implements INetworkPart, IPacketReceiver, IConductor
 {
 	/** Is the tile currently powered allowing it to run */
 	public boolean running = false;
@@ -48,7 +50,7 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 	public TileEntityAssembly()
 	{
 		this.powerProvider = new AssemblyPowerProvider(this);
-		powerProvider.configure(0, 0, 200, 0, 200);
+		powerProvider.configure(0, 0, 100, 0, 200);
 	}
 
 	public static enum AssemblyTilePacket
@@ -106,7 +108,7 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 		if (this.getTileNetwork() instanceof NetworkAssembly)
 		{
 			((NetworkAssembly) this.getTileNetwork()).addPower(voltage * amperes);
-			System.out.println("Tile got power Side:" + side.toString() + " " + ElectricityDisplay.getDisplaySimple(voltage, ElectricUnit.VOLTAGE, 2) + " " + ElectricityDisplay.getDisplaySimple(amperes, ElectricUnit.AMPERE, 2));
+			//System.out.println("Tile got power Side:" + side.toString() + " " + ElectricityDisplay.getDisplaySimple(voltage, ElectricUnit.VOLTAGE, 2) + " " + ElectricityDisplay.getDisplaySimple(amperes, ElectricUnit.AMPERE, 2));
 		}
 	}
 
@@ -128,7 +130,7 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 	}
 
 	/** Amount of energy this tile runs on per tick */
-	public double getRequest()
+	public double getWattLoad()
 	{
 		return 1;
 	}
@@ -263,6 +265,44 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 		return false;
 	}
 
+	@Override
+	public IElectricityNetwork getNetwork()
+	{
+		return (this.getTileNetwork() instanceof IElectricityNetwork ? (IElectricityNetwork) this.getTileNetwork() : null);
+	}
+
+	@Override
+	public void setNetwork(IElectricityNetwork network)
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public TileEntity[] getAdjacentConnections()
+	{
+		return new TileEntity[6];
+	}
+
+	@Override
+	public void updateAdjacentConnections()
+	{
+		this.updateNetworkConnections();
+
+	}
+
+	@Override
+	public double getResistance()
+	{
+		return 0.01;
+	}
+
+	@Override
+	public double getCurrentCapcity()
+	{
+		return 1000;
+	}
+
 	class AssemblyPowerProvider extends PowerProvider
 	{
 		public TileEntityAssembly tileEntity;
@@ -275,9 +315,12 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 		@Override
 		public void receiveEnergy(float quantity, ForgeDirection from)
 		{
+			powerSources[from.ordinal()] = 2;
+			
 			if (tileEntity.getTileNetwork() instanceof NetworkAssembly)
 			{
 				((NetworkAssembly) tileEntity.getTileNetwork()).addPower(UniversalElectricity.BC3_RATIO * quantity);
+				System.out.println("BuildCraft Power Reciver>>>PlugPower>>>"+quantity);
 			}
 			else
 			{
@@ -285,4 +328,5 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 			}
 		}
 	}
+
 }

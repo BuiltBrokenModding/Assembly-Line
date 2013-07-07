@@ -281,4 +281,11 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
 
 		}
 	}
+
+	@Override
+	public double getWattLoad()
+	{
+		return 0.1 + (0.1 * this.getAffectedEntities().size());
+	}
+
 }

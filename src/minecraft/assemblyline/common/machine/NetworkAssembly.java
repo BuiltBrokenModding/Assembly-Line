@@ -2,15 +2,14 @@ package assemblyline.common.machine;
 
 import universalelectricity.core.electricity.ElectricityDisplay;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
+import universalelectricity.core.electricity.ElectricityPack;
+import net.minecraft.tileentity.TileEntity;
 import dark.core.api.INetworkPart;
 import dark.core.tile.network.NetworkPowerTiles;
 import dark.core.tile.network.NetworkTileEntities;
 
 public class NetworkAssembly extends NetworkPowerTiles
 {
-	/** Power stored to be used by network members */
-	private double wattStored = 0.0;
-
 	public NetworkAssembly(INetworkPart... parts)
 	{
 		super(parts);
@@ -27,11 +26,10 @@ public class NetworkAssembly extends NetworkPowerTiles
 	 * @return true if the power was consumed */
 	public boolean consumePower(TileEntityAssembly tile)
 	{
-		if (tile != null && this.wattStored >= tile.getRequest())
+		if (tile != null && this.wattStored >= tile.getWattLoad())
 		{
-			double before = this.wattStored;
-			this.wattStored -= tile.getRequest();
-			System.out.println("Tile drained power| B: " + ElectricityDisplay.getDisplaySimple(before, ElectricUnit.WATT, 2) + " A: " + ElectricityDisplay.getDisplaySimple(this.wattStored, ElectricUnit.WATT, 2));
+			this.wattStored -= tile.getWattLoad();
+			//System.out.println("Power| ---" + ElectricityDisplay.getDisplaySimple(tile.getWattLoad(), ElectricUnit.WATT, 2) + " A: " + ElectricityDisplay.getDisplaySimple(this.wattStored, ElectricUnit.WATT, 2));
 			return true;
 		}
 		return false;
@@ -40,43 +38,30 @@ public class NetworkAssembly extends NetworkPowerTiles
 	/** Adds power to the network. Does not save power on area unload */
 	public void addPower(double d)
 	{
-		this.wattStored += d;
-	}
+		double before = this.wattStored;
+		this.wattStored = Math.max(this.wattStored + d, this.getMaxBattery());
+		System.out.println("Power| +++" + ElectricityDisplay.getDisplaySimple(d, ElectricUnit.WATT, 2) + " A: " + ElectricityDisplay.getDisplaySimple(this.wattStored, ElectricUnit.WATT, 2));
 
-	/** Gets the amount of power this network needs
-	 * 
-	 * @param total - true for total network, false for amount equal to each power connection */
-	public double getRequest()
-	{
-		double watt = 1;
-		for (INetworkPart part : this.getNetworkMemebers())
-		{
-			if (part instanceof TileEntityAssembly)
-			{
-				watt += ((TileEntityAssembly) part).getRequest();
-			}
-		}
-		return watt;
-	}
-
-	public double getMaxBattery()
-	{
-		return this.getRequest() * 4;
-	}
-
-	public double getCurrentBattery()
-	{
-		return this.wattStored;
 	}
 
 	@Override
-	public void mergeDo(NetworkTileEntities network)
+	public ElectricityPack getRequest(TileEntity... ents)
 	{
-		NetworkAssembly newNetwork = new NetworkAssembly();
-		newNetwork.getNetworkMemebers().addAll(this.getNetworkMemebers());
-		newNetwork.getNetworkMemebers().addAll(network.getNetworkMemebers());
-
-		newNetwork.cleanUpMembers();
+		ElectricityPack pack = super.getRequest(ents);
+		if (pack == null || pack.voltage == 0 || pack.amperes == 0)
+		{
+			pack = new ElectricityPack(0, 120);
+		}
+		double watt = pack.getWatts();
+		for (INetworkPart part : this.getNetworkMemebers())
+		{
+			//TODO do check for ignored tiles/ents
+			if (part instanceof TileEntityAssembly)
+			{
+				watt += ((TileEntityAssembly) part).getWattLoad();
+			}
+		}
+		return ElectricityPack.getFromWatts(watt, pack.voltage);
 	}
 
 	@Override
@@ -88,7 +73,7 @@ public class NetworkAssembly extends NetworkPowerTiles
 	@Override
 	public String toString()
 	{
-		return "AssemblyNetwork[" + this.hashCode() + "|parts:" + this.networkMember.size() + "]";
+		return "AssemblyNetwork[" + this.hashCode() + "][parts:" + this.networkMember.size() + "][Power:" + ElectricityDisplay.getDisplaySimple(this.wattStored, ElectricUnit.WATT, 2) + "]";
 	}
 
 }
