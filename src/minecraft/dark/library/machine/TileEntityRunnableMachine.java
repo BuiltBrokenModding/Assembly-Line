@@ -17,10 +17,10 @@ import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.electricity.IElectricityNetwork;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.tile.TileEntityElectrical;
-import universalelectricity.prefab.tile.TileEntityElectricityRunnable;
 import buildcraft.api.power.IPowerProvider;
 import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerFramework;
+import buildcraft.api.power.PowerProvider;
 import dark.core.PowerSystems;
 import dark.core.api.INetworkPart;
 
@@ -31,7 +31,7 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectrical imp
 	/** Should this machine run without power */
 	protected boolean runPowerless = false;
 	/** BuildCraft power provider? */
-	protected IPowerProvider powerProvider;
+	private IPowerProvider powerProvider;
 
 	public double prevWatts, wattsReceived = 0;
 
@@ -44,7 +44,7 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectrical imp
 		this.prevWatts = this.wattsReceived;
 		if (!this.worldObj.isRemote)
 		{
-			if ((this.runPowerless || PowerSystems.runPowerLess(powerList)) && this.wattsReceived < this.getBattery(ForgeDirection.UNKNOWN))
+			if (!this.isDisabled() && (this.runPowerless || PowerSystems.runPowerLess(powerList)) && this.wattsReceived < this.getBattery(ForgeDirection.UNKNOWN))
 			{
 				this.wattsReceived += Math.max(this.getBattery(ForgeDirection.UNKNOWN) - this.wattsReceived, 0);
 			}
@@ -55,6 +55,8 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectrical imp
 		}
 	}
 
+	/** Any updating for power. Called seperate from the main update method too allow for inf power
+	 * without unneeded power drain */
 	public void doPowerUpdate()
 	{
 		// UNIVERSAL ELECTRICITY UPDATE
@@ -67,47 +69,13 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectrical imp
 		{
 			ElectricityNetworkHelper.consumeFromMultipleSides(this, new ElectricityPack(0, 0));
 		}
-
-		// BUILDCRAFT POWER UPDATE
-		if (PowerFramework.currentFramework != null)
-		{
-			if (this.powerProvider == null)
-			{
-				this.powerProvider = PowerFramework.currentFramework.createPowerProvider();
-				this.powerProvider.configure(0, 0, Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
-			}
-		}
-		float requiredEnergy = (float) (this.getRequest(ForgeDirection.UNKNOWN) * UniversalElectricity.TO_BC_RATIO);
-		if (this.powerProvider != null && this.powerProvider.useEnergy(0, requiredEnergy, false) > 0)
-		{
-			float energyReceived = this.powerProvider.useEnergy(requiredEnergy, requiredEnergy, true);
-			this.onReceive(ForgeDirection.UNKNOWN, this.getVoltage(), (UniversalElectricity.BC3_RATIO * energyReceived) / this.getVoltage());
-		}
 		//TODO add other power systems
-	}
-
-	/** Buildcraft */
-	@Override
-	public void setPowerProvider(IPowerProvider provider)
-	{
-		this.powerProvider = provider;
-	}
-
-	@Override
-	public IPowerProvider getPowerProvider()
-	{
-		return this.powerProvider;
-	}
-
-	@Override
-	public void doWork()
-	{
 	}
 
 	@Override
 	public int powerRequest(ForgeDirection from)
 	{
-		if (this.canConnect(from))
+		if (this.canConnect(from) && !this.runPowerless)
 		{
 			return (int) Math.ceil(this.getRequest(from) * UniversalElectricity.TO_BC_RATIO);
 		}
@@ -120,13 +88,20 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectrical imp
 		return ElectricityNetworkHelper.getDirections(this);
 	}
 
-	/** Watts this tile want to receive each tick */
+	/** Watts this tile want to receive each tick
+	 ** 
+	 * @param side - If side == UNKNOWN then either the method that called it doesn't use sides or
+	 * it was called from inside the machine or by the power provider. Return request equal to that
+	 * off all sides at the given time */
 	public abstract double getRequest(ForgeDirection side);
 
 	/** Called when this tile gets power. Should equal getRequest or power will be wasted
 	 * 
 	 * @param voltage - E pressure
-	 * @param amperes - E flow rate */
+	 * @param amperes - E flow rate
+	 * @param side - If side == UNKNOWN then either the method that called it doesn't use sides or
+	 * it was called from inside the machine or by the power provider. Accept power as an internal
+	 * amount */
 	public void onReceive(ForgeDirection side, double voltage, double amperes)
 	{
 		if (voltage > this.getVoltage())
@@ -137,10 +112,24 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectrical imp
 		this.wattsReceived = Math.min(this.wattsReceived + (voltage * amperes), this.getBattery(side));
 	}
 
-	/** Amount of Watts the internal battery/cap can store */
+	/** Amount of Watts the internal battery/cap can store.
+	 * 
+	 * @param side - If side == UNKNOWN then either the method that called it doesn't use sides or
+	 * it was called from inside the machine or by the power provider. Return amount of all sides in
+	 * this case */
 	public double getBattery(ForgeDirection side)
 	{
 		return this.getRequest(side) * 2;
+	}
+
+	/** Amount of energy currently stored for use.
+	 * 
+	 * @param side - If side == UNKNOWN then either the method that called it doesn't use sides or
+	 * it was called from inside the machine or by the power provider. Return amount of all sides in
+	 * this case */
+	public double getCurrentBattery(ForgeDirection side)
+	{
+		return this.wattsReceived;
 	}
 
 	/** Sets this machine to run without power only if the given stack match an ore directory name */
@@ -148,7 +137,7 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectrical imp
 	{
 		if (item != null)
 		{
-			for (ItemStack stack : OreDictionary.getOres(this.powerToggleItemID))
+			for (ItemStack stack : OreDictionary.getOres(TileEntityRunnableMachine.powerToggleItemID))
 			{
 				if (stack.isItemEqual(item))
 				{
@@ -236,5 +225,93 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectrical imp
 		}
 
 		return connectedNetworks;
+	}
+
+	/** Buildcraft */
+	@Override
+	public void setPowerProvider(IPowerProvider provider)
+	{
+		this.powerProvider = provider;
+	}
+
+	@Override
+	public IPowerProvider getPowerProvider()
+	{
+		if (this.powerProvider == null)
+		{
+			this.powerProvider = new RunPowerProvider(this);
+		}
+		return this.powerProvider;
+	}
+
+	@Override
+	public void doWork()
+	{
+	}
+
+	class RunPowerProvider extends PowerProvider
+	{
+		public TileEntityRunnableMachine tileEntity;
+
+		public RunPowerProvider(TileEntityRunnableMachine tile)
+		{
+			tileEntity = tile;
+		}
+
+		@Override
+		public void receiveEnergy(float quantity, ForgeDirection from)
+		{
+			powerSources[from.ordinal()] = 2;
+
+			tileEntity.onReceive(ForgeDirection.UNKNOWN, tileEntity.getVoltage(), (UniversalElectricity.BC3_RATIO * quantity) / tileEntity.getVoltage());
+
+		}
+
+		@Override
+		public float useEnergy(float min, float max, boolean doUse)
+		{
+			float result = 0;
+
+			if (tileEntity.wattsReceived >= min)
+			{
+				if (tileEntity.wattsReceived <= max)
+				{
+					result = (float) tileEntity.wattsReceived;
+					if (doUse)
+					{
+						tileEntity.wattsReceived = 0;
+					}
+				}
+				else
+				{
+					result = max;
+					if (doUse)
+					{
+						tileEntity.wattsReceived -= max;
+					}
+				}
+			}
+
+			return result;
+
+		}
+
+		@Override
+		public float getEnergyStored()
+		{
+			return (float) this.tileEntity.getCurrentBattery(ForgeDirection.UNKNOWN);
+		}
+
+		@Override
+		public int getMaxEnergyReceived()
+		{
+			return (int) Math.ceil(this.tileEntity.getBattery(ForgeDirection.UNKNOWN));
+		}
+
+		@Override
+		public int getMaxEnergyStored()
+		{
+			return (int) Math.ceil(this.tileEntity.getBattery(ForgeDirection.UNKNOWN));
+		}
 	}
 }

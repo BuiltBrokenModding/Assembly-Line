@@ -36,7 +36,7 @@ public class NetworkPowerTiles extends NetworkTileEntities implements IElectrici
 	@Override
 	public void startProducing(TileEntity tileEntity, ElectricityPack electricityPack)
 	{
-		if (!this.networkMember.contains(tileEntity) && tileEntity != null && electricityPack.getWatts() > 0)
+		if (tileEntity != null && electricityPack.getWatts() > 0)
 		{
 			this.producers.put(tileEntity, electricityPack);
 		}
@@ -65,7 +65,7 @@ public class NetworkPowerTiles extends NetworkTileEntities implements IElectrici
 	@Override
 	public void startRequesting(TileEntity tileEntity, ElectricityPack electricityPack)
 	{
-		if (!this.networkMember.contains(tileEntity) && tileEntity != null && electricityPack.getWatts() > 0)
+		if (tileEntity != null && electricityPack.getWatts() > 0)
 		{
 			this.consumers.put(tileEntity, electricityPack);
 		}
@@ -142,11 +142,8 @@ public class NetworkPowerTiles extends NetworkTileEntities implements IElectrici
 
 				if (pairs.getKey() != null && pairs.getValue() != null && pack != null)
 				{
-					double newWatts = totalElectricity.getWatts() + pack.getWatts();
-					double newVoltage = Math.max(totalElectricity.voltage, pack.voltage);
+					totalElectricity = ElectricityPack.getFromWatts(totalElectricity.getWatts() + pack.getWatts(), Math.max(totalElectricity.voltage, pack.voltage));
 
-					totalElectricity.amperes = newWatts / newVoltage;
-					totalElectricity.voltage = newVoltage;
 				}
 			}
 		}
@@ -161,9 +158,14 @@ public class NetworkPowerTiles extends NetworkTileEntities implements IElectrici
 		return this.getRequestWithoutReduction();
 	}
 
+	public double getMemberRequest()
+	{
+		return 0;
+	}
+
 	public double getMaxBattery()
 	{
-		return Math.min(this.getRequest().getWatts(), this.networkMember.size() * 10);
+		return Math.min(this.getRequest().getWatts(), this.networkMember.size() * 10) * 2;
 	}
 
 	public double getCurrentBattery()
@@ -208,8 +210,8 @@ public class NetworkPowerTiles extends NetworkTileEntities implements IElectrici
 
 				if (pack != null)
 				{
-					totalElectricity.amperes += pack.amperes;
-					totalElectricity.voltage = Math.max(totalElectricity.voltage, pack.voltage);
+					totalElectricity = ElectricityPack.getFromWatts(totalElectricity.getWatts() + pack.getWatts(), Math.max(totalElectricity.voltage, pack.voltage));
+
 				}
 			}
 		}
@@ -230,7 +232,7 @@ public class NetworkPowerTiles extends NetworkTileEntities implements IElectrici
 
 			if (this.consumers.containsKey(tileEntity) && tileRequest != null)
 			{
-				if (this.wattStored >= tileRequest.getWatts())
+				if (this.wattStored - this.getMemberRequest() >= tileRequest.getWatts())
 				{
 					this.wattStored -= tileRequest.getWatts();
 					return tileRequest;
@@ -243,8 +245,8 @@ public class NetworkPowerTiles extends NetworkTileEntities implements IElectrici
 					ElectricityPack totalRequest = this.getRequestWithoutReduction();
 					totalElectricity.amperes *= (tileRequest.amperes / totalRequest.amperes);
 
-					double ampsReceived = totalElectricity.amperes - (totalElectricity.amperes * totalElectricity.amperes * this.getTotalResistance()) / totalElectricity.voltage;
-					double voltsReceived = totalElectricity.voltage - (totalElectricity.amperes * this.getTotalResistance());
+					double ampsReceived = totalElectricity.amperes;
+					double voltsReceived = totalElectricity.voltage;
 
 					totalElectricity.amperes = ampsReceived;
 					totalElectricity.voltage = voltsReceived;
@@ -293,7 +295,7 @@ public class NetworkPowerTiles extends NetworkTileEntities implements IElectrici
 	@Override
 	public double getTotalResistance()
 	{
-		return 1;
+		return 0.001;
 	}
 
 	@Override
