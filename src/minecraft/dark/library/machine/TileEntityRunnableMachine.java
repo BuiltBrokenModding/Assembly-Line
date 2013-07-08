@@ -179,15 +179,14 @@ public abstract class TileEntityRunnableMachine extends TileEntityElectrical imp
 				/** Requests an even amount of electricity from all sides. */
 				double wattsPerSide = (requestPack.getWatts() / connectedNetworks.size());
 				double voltage = requestPack.voltage;
-
+				/*TODO change this out to calculate if the network on each side can handle a larger request than another network to evenly distribute drain rather than asked the same of a network they may not be able to put out a larger amount*/
 				for (IElectricityNetwork network : connectedNetworks)
 				{
 					if (wattsPerSide > 0 && requestPack.getWatts() > 0)
 					{
 						network.startRequesting(tileEntity, wattsPerSide / voltage, voltage);
 						ElectricityPack receivedPack = network.consumeElectricity(tileEntity);
-						consumedPack.amperes += receivedPack.amperes;
-						consumedPack.voltage = Math.max(consumedPack.voltage, receivedPack.voltage);
+						consumedPack = ElectricityPack.getFromWatts(consumedPack.getWatts() + receivedPack.getWatts(), Math.max(consumedPack.voltage, receivedPack.voltage));
 					}
 					else
 					{

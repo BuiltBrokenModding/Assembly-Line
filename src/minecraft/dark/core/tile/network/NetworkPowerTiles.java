@@ -245,12 +245,6 @@ public class NetworkPowerTiles extends NetworkTileEntities implements IElectrici
 					ElectricityPack totalRequest = this.getRequestWithoutReduction();
 					totalElectricity.amperes *= (tileRequest.amperes / totalRequest.amperes);
 
-					double ampsReceived = totalElectricity.amperes;
-					double voltsReceived = totalElectricity.voltage;
-
-					totalElectricity.amperes = ampsReceived;
-					totalElectricity.voltage = voltsReceived;
-
 					return totalElectricity;
 				}
 			}
