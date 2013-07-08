@@ -1,4 +1,4 @@
-package assemblyline.common.block;
+package assemblyline.common.machine;
 
 import java.util.Random;
 
@@ -21,15 +21,13 @@ import assemblyline.common.TabAssemblyLine;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockTurntable extends BlockALMachine
+public class BlockTurntable extends BlockAssembly
 {
 	private Icon top;
 	
 	public BlockTurntable(int par1)
 	{
-		super(par1, Material.piston);
-		this.setUnlocalizedName("turntable");
-		this.setCreativeTab(TabAssemblyLine.INSTANCE);
+		super(par1, Material.piston,"turntable");
 	}
 	
 	@Override

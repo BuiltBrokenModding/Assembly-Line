@@ -1,4 +1,4 @@
-package assemblyline.common.block;
+package assemblyline.common.machine;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

@@ -13,9 +13,9 @@ import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.multiblock.TileEntityMulti;
 import assemblyline.common.armbot.TileEntityArmbot;
-import assemblyline.common.block.TileEntityCrate;
 import assemblyline.common.imprinter.ContainerImprinter;
 import assemblyline.common.imprinter.TileEntityImprinter;
+import assemblyline.common.machine.TileEntityCrate;
 import assemblyline.common.machine.TileEntityManipulator;
 import assemblyline.common.machine.TileEntityRejector;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt;
@@ -40,17 +40,7 @@ public class CommonProxy implements IGuiHandler
 
 	public void init()
 	{
-		GameRegistry.registerTileEntity(TileEntityConveyorBelt.class, "ALConveyorBelt");
-		GameRegistry.registerTileEntity(TileEntityRejector.class, "ALSorter");
-		GameRegistry.registerTileEntity(TileEntityManipulator.class, "ALManipulator");
-		GameRegistry.registerTileEntity(TileEntityCrate.class, "ALCrate");
-		GameRegistry.registerTileEntity(TileEntityDetector.class, "ALDetector");
-		GameRegistry.registerTileEntity(TileEntityEncoder.class, "ALEncoder");
-		GameRegistry.registerTileEntity(TileEntityArmbot.class, "ALArmbot");
-		GameRegistry.registerTileEntity(TileEntityCraneController.class, "ALCraneController");
-		GameRegistry.registerTileEntity(TileEntityCraneRail.class, "ALCraneRail");
-		GameRegistry.registerTileEntity(TileEntityImprinter.class, "ALImprinter");
-		GameRegistry.registerTileEntity(TileEntityMulti.class, "ALMulti");
+		
 	}
 
 	private void extractZipToLocation(File zipFile, String sourceFolder, String destFolder)

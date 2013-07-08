@@ -7,7 +7,7 @@ public class CommandDrop extends Command
 	{
 		super.doTask();
 
-		this.tileEntity.dropAll();
+		this.tileEntity.drop("all");
 		this.world.playSound(this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, "random.pop", 0.2F, ((this.tileEntity.worldObj.rand.nextFloat() - this.tileEntity.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.0F, true);
 
 		return false;

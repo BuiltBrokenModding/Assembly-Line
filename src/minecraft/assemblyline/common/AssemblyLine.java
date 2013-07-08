@@ -1,7 +1,5 @@
 package assemblyline.common;
 
-import ic2.api.item.Items;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.logging.Logger;
@@ -10,30 +8,38 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.multiblock.BlockMulti;
+import universalelectricity.prefab.multiblock.TileEntityMulti;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.armbot.BlockArmbot;
-import assemblyline.common.armbot.command.GrabDictionary;
-import assemblyline.common.block.BlockCrate;
-import assemblyline.common.block.BlockTurntable;
-import assemblyline.common.block.ItemBlockCrate;
+import assemblyline.common.armbot.TileEntityArmbot;
 import assemblyline.common.imprinter.BlockImprinter;
 import assemblyline.common.imprinter.ItemImprinter;
+import assemblyline.common.imprinter.TileEntityImprinter;
+import assemblyline.common.machine.BlockCrate;
 import assemblyline.common.machine.BlockManipulator;
 import assemblyline.common.machine.BlockRejector;
+import assemblyline.common.machine.BlockTurntable;
+import assemblyline.common.machine.ItemBlockCrate;
+import assemblyline.common.machine.TileEntityCrate;
+import assemblyline.common.machine.TileEntityManipulator;
+import assemblyline.common.machine.TileEntityRejector;
 import assemblyline.common.machine.belt.BlockConveyorBelt;
+import assemblyline.common.machine.belt.TileEntityConveyorBelt;
 import assemblyline.common.machine.crane.BlockCraneController;
 import assemblyline.common.machine.crane.BlockCraneFrame;
+import assemblyline.common.machine.crane.TileEntityCraneController;
+import assemblyline.common.machine.crane.TileEntityCraneRail;
 import assemblyline.common.machine.detector.BlockDetector;
+import assemblyline.common.machine.detector.TileEntityDetector;
 import assemblyline.common.machine.encoder.BlockEncoder;
 import assemblyline.common.machine.encoder.ItemDisk;
+import assemblyline.common.machine.encoder.TileEntityEncoder;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -50,8 +56,6 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
-import dark.core.DarkMain;
-import dark.core.PowerSystems;
 
 @ModstatInfo(prefix = "asmline")
 @Mod(modid = AssemblyLine.CHANNEL, name = AssemblyLine.MOD_NAME, version = AssemblyLine.VERSION, dependencies = "after:BasicComponents; after:IC2", useMetadata = true)
@@ -94,11 +98,11 @@ public class AssemblyLine
 
 	public static final String TEXTURE_NAME_PREFIX = "assemblyline:";
 
-	private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US","nl_NL","fr_FR" };
+	private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US", "nl_NL", "fr_FR" };
 
 	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "UniversalElectricity/AssemblyLine.cfg"));
 
-	public static final int BLOCK_ID_PREFIX = 3030;
+	public static int BLOCK_ID_PREFIX = 3030;
 
 	public static Block blockConveyorBelt;
 	public static Block blockManipulator;
@@ -123,39 +127,44 @@ public class AssemblyLine
 	// TODO: MAKE THIS FALSE EVERY BUILD!
 	public static final boolean DEBUG = false;
 	public static boolean REQUIRE_NO_POWER = false;
+	public static boolean VINALLA_RECIPES = false;
 
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		FMLog.setParent(FMLLog.getLogger());
-		// UniversalElectricity.register(this, 1, 2, 6, false);
 		instance = this;
-		
+
 		/* UPDATE NOTIFIER */
 		Modstats.instance().getReporter().registerMod(this);
 
 		CONFIGURATION.load();
-		blockConveyorBelt = new BlockConveyorBelt(CONFIGURATION.getBlock("Conveyor Belt", BLOCK_ID_PREFIX).getInt());
-		blockManipulator = new BlockManipulator(CONFIGURATION.getBlock("Manipulator", BLOCK_ID_PREFIX + 1).getInt());
-		blockCrate = new BlockCrate(CONFIGURATION.getBlock("Crate", BLOCK_ID_PREFIX + 3).getInt(), 0);
-		blockImprinter = new BlockImprinter(CONFIGURATION.getBlock("Imprinter", BLOCK_ID_PREFIX + 4).getInt(), 4);
-		blockDetector = new BlockDetector(CONFIGURATION.getBlock("Detector", BLOCK_ID_PREFIX + 5).getInt(), 1);
-		blockRejector = new BlockRejector(CONFIGURATION.getBlock("Rejector", BLOCK_ID_PREFIX + 6).getInt());
-		blockEncoder = new BlockEncoder(CONFIGURATION.getBlock("Encoder", BLOCK_ID_PREFIX + 7).getInt(), 7);
-		blockArmbot = new BlockArmbot(CONFIGURATION.getBlock("Armbot", BLOCK_ID_PREFIX + 8).getInt());
-		blockMulti = new BlockMulti(CONFIGURATION.getBlock("Multiblock", BLOCK_ID_PREFIX + 9).getInt());
-		blockCraneController = new BlockCraneController(CONFIGURATION.getBlock("Crane Controller", BLOCK_ID_PREFIX + 10).getInt());
-		blockCraneFrame = new BlockCraneFrame(CONFIGURATION.getBlock("Crane Frame", BLOCK_ID_PREFIX + 11).getInt());
-		blockTurntable = new BlockTurntable(CONFIGURATION.getBlock("Turntable", BLOCK_ID_PREFIX + 12).getInt());
+		blockConveyorBelt = new BlockConveyorBelt(BLOCK_ID_PREFIX);
+		blockManipulator = new BlockManipulator(BLOCK_ID_PREFIX++);
+		blockCrate = new BlockCrate(BLOCK_ID_PREFIX++);
+		blockImprinter = new BlockImprinter(BLOCK_ID_PREFIX++);
+		blockDetector = new BlockDetector(BLOCK_ID_PREFIX++);
+		blockRejector = new BlockRejector(BLOCK_ID_PREFIX++);
+		blockEncoder = new BlockEncoder(BLOCK_ID_PREFIX++);
+		blockArmbot = new BlockArmbot(BLOCK_ID_PREFIX++);
+		blockMulti = new BlockMulti(BLOCK_ID_PREFIX++);
+		blockCraneController = new BlockCraneController(BLOCK_ID_PREFIX++);
+		blockCraneFrame = new BlockCraneFrame(BLOCK_ID_PREFIX++);
+		blockTurntable = new BlockTurntable(BLOCK_ID_PREFIX++);
 
 		itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", ITEM_ID_PREFIX).getInt());
 		itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", ITEM_ID_PREFIX + 1).getInt());
 
-		REQUIRE_NO_POWER = !CONFIGURATION.get("general", "requirePower", true).getBoolean(true) || PowerSystems.runPowerLess(PowerSystems.INDUSTRIALCRAFT, PowerSystems.BUILDCRAFT, PowerSystems.MEKANISM);
-		CONFIGURATION.save();
+		AssemblyLine.REQUIRE_NO_POWER = !CONFIGURATION.get("general", "requirePower", true).getBoolean(true);
+		AssemblyLine.VINALLA_RECIPES = CONFIGURATION.get("general", "Vinalla_Recipes", false).getBoolean(false);
+		if (CONFIGURATION.hasChanged())
+		{
+			CONFIGURATION.save();
+		}
 
 		NetworkRegistry.instance().registerGuiHandler(this, this.proxy);
-		GameRegistry.registerBlock(blockConveyorBelt, "Conveyor Belt");
+
+		GameRegistry.registerBlock(blockConveyorBelt, "ConveyorBelt");
 		GameRegistry.registerBlock(blockCrate, ItemBlockCrate.class, "Crate");
 		GameRegistry.registerBlock(blockManipulator, "Manipulator");
 		GameRegistry.registerBlock(blockImprinter, "Imprinter");
@@ -164,8 +173,20 @@ public class AssemblyLine
 		GameRegistry.registerBlock(blockRejector, "Rejector");
 		GameRegistry.registerBlock(blockArmbot, "Armbot");
 		GameRegistry.registerBlock(blockTurntable, "Turntable");
-		GameRegistry.registerBlock(blockCraneController, "Crane Controller");
+		GameRegistry.registerBlock(blockCraneController, "CraneController");
 		GameRegistry.registerBlock(blockCraneFrame, "Crane Frame");
+
+		GameRegistry.registerTileEntity(TileEntityConveyorBelt.class, "ALConveyorBelt");
+		GameRegistry.registerTileEntity(TileEntityRejector.class, "ALSorter");
+		GameRegistry.registerTileEntity(TileEntityManipulator.class, "ALManipulator");
+		GameRegistry.registerTileEntity(TileEntityCrate.class, "ALCrate");
+		GameRegistry.registerTileEntity(TileEntityDetector.class, "ALDetector");
+		GameRegistry.registerTileEntity(TileEntityEncoder.class, "ALEncoder");
+		GameRegistry.registerTileEntity(TileEntityArmbot.class, "ALArmbot");
+		GameRegistry.registerTileEntity(TileEntityCraneController.class, "ALCraneController");
+		GameRegistry.registerTileEntity(TileEntityCraneRail.class, "ALCraneRail");
+		GameRegistry.registerTileEntity(TileEntityImprinter.class, "ALImprinter");
+		GameRegistry.registerTileEntity(TileEntityMulti.class, "ALMulti");
 
 		TabAssemblyLine.itemStack = new ItemStack(AssemblyLine.blockConveyorBelt);
 
@@ -176,153 +197,24 @@ public class AssemblyLine
 	public void load(FMLInitializationEvent evt)
 	{
 		proxy.init();
-		GrabDictionary.registerList();
 
 		FMLog.info("Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
 
 		/* MCMOD.INFO FILE BUILDER? */
 		meta.modId = AssemblyLine.MOD_ID;
 		meta.name = AssemblyLine.MOD_NAME;
-		meta.description = "A mod that brings conveyor belt transporting systems to Minecraft.";
+		meta.description = "Simi Realistic factory system for minecraft bring in conveyor belts, robotic arms, and simple machines";
 
-		meta.url = "http://calclavia.com/universalelectricity/?m=18";
+		meta.url = "http://universalelectricity.com/assembly-line";
 
 		meta.logoFile = "/al_logo.png";
 		meta.version = AssemblyLine.VERSION;
-		meta.authorList = Arrays.asList(new String[] { "DarkGuardsman, Briaman, Calclavia" });
+		meta.authorList = Arrays.asList(new String[] { "DarkGuardsman" });
 		meta.credits = "Please see the website.";
 		meta.autogenerated = false;
 
-		this.createStandardRecipes();
-		this.createUERecipes();
-		if (PowerSystems.isPowerSystemLoaded(PowerSystems.INDUSTRIALCRAFT, true))
-		{
-			createIC2Recipes();
-		}
+		Recipes.loadRecipes();
 
-	}
-
-	private void createVanillaRecipes()
-	{
-		System.out.println("No crafting ingredient source found. Creating cheap-o vanilla recipes.");
-		// Armbot
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockArmbot, new Object[] { "II ", "SIS", "MCM", 'S', "ingotIron", 'C', Item.redstoneRepeater, 'I', "ingotIron", 'M', Block.pistonBase }));
-		// Disk
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemDisk, new Object[] { "III", "ICI", "III", 'I', itemImprint, 'C', Item.redstoneRepeater }));
-		// Encoder
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockEncoder, new Object[] { "SIS", "SCS", "SSS", 'I', itemImprint, 'S', "ingotIron", 'C', Item.redstoneRepeater }));
-		// Detector
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, new Object[] { "SES", "SCS", "S S", 'S', "ingotIron", 'C', Block.torchRedstoneActive, 'E', Item.eyeOfEnder }));
-		// Conveyor Belt
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 10), new Object[] { "III", "WMW", 'I', "ingotIron", 'W', Block.planks, 'M', Block.pistonBase }));
-		// Rejector
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockRejector, new Object[] { "WPW", "@R@", '@', "ingotIron", 'R', Item.redstone, 'P', Block.pistonBase, 'C', Block.torchRedstoneActive, 'W', Item.redstone }));
-		// Turntable
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, new Object[] { "P", "P", 'P', Block.pistonBase }));
-		// Manipulator
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockManipulator, 2), new Object[] { Block.dispenser, Block.torchRedstoneActive }));
-	}
-
-	private void createUERecipes()
-	{
-		DarkMain.forceLoadBCItems(this, AssemblyLine.CHANNEL);
-		System.out.println("BasicComponents Found...adding UE recipes for Assembly Line.");
-		// Armbot
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockArmbot, new Object[] {
-				"II ", 
-				"SIS", 
-				"MCM", 
-				'S', "plateSteel", 
-				'C', "advancedCircuit", 
-				'I', "ingotSteel", 
-				'M', "motor" }));
-		// Disk
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemDisk, new Object[] {
-				"III",
-				"ICI", 
-				"III", 
-				'I', itemImprint,
-				'C', "advancedCircuit" }));
-		// Encoder
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockEncoder, new Object[] {
-				"SIS",
-				"SCS",
-				"SSS",
-				'I', itemImprint,
-				'S', "ingotSteel",
-				'C', "advancedCircuit" }));
-		// Detector
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, new Object[] {
-				"SES",
-				"SCS",
-				"S S",
-				'S', "ingotSteel", 
-				'C', "basicCircuit",
-				'E', Item.eyeOfEnder }));
-		// Conveyor Belt
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 10), new Object[] {
-			"III",
-			"WMW", 
-			'I', "ingotSteel",
-			'W', Block.planks,
-			'M', "motor" }));
-		// Rejector
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockRejector, new Object[] {
-				"CPC",
-				"@R@",
-				'@', "ingotSteel",
-				'R', Item.redstone, 
-				'P', Block.pistonBase,
-				'C', "basicCircuit"}));
-		// Turntable
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, new Object[] {
-				"M",
-				"P", 
-				'M', "motor", 
-				'P', Block.pistonBase }));
-		// Manipulator
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockManipulator, 2), new Object[] { Block.dispenser, "basicCircuit" }));
-	}
-
-	private void createIC2Recipes()
-	{
-		try
-		{
-			System.out.println("IC2 Found...adding IC2 recipes for Assembly Line.");
-			// Armbot
-			GameRegistry.addRecipe(new ItemStack(blockArmbot, 1), "II ", "SIS", "MCM", 'S', Items.getItem("advancedAlloy"), 'C', Items.getItem("electronicCircuit"), 'I', "ingotRefinedIron", 'M', Items.getItem("generator"));
-			// Disk
-			GameRegistry.addRecipe(new ItemStack(itemDisk, 1), "III", "ICI", "III", 'I', itemImprint, 'C', Items.getItem("advancedCircuit"));
-			// Encoder
-			GameRegistry.addRecipe(new ItemStack(blockEncoder, 1), "SIS", "SCS", "SSS", 'I', itemImprint, 'S', "ingotRefinedIron", 'C', Items.getItem("advancedCircuit"));
-			// Detector
-			GameRegistry.addRecipe(new ItemStack(blockDetector, 1), "SES", "SCS", "S S", 'S', "ingotRefinedIron", 'C', Items.getItem("electronicCircuit"), 'E', Item.eyeOfEnder);
-			// Conveyor Belt
-			GameRegistry.addRecipe(new ItemStack(blockConveyorBelt, 10), "III", "WMW", 'I', "ingotRefinedIron", 'W', Block.planks, 'M', Items.getItem("generator"));
-			// Rejector
-			GameRegistry.addRecipe(new ItemStack(blockRejector, 1), "WPW", "@R@", '@', "ingotRefinedIron", 'R', Item.redstone, 'P', Block.pistonBase, 'C', Items.getItem("electronicCircuit"), 'W', Items.getItem("insulatedCopperCableItem"));
-			// Turntable
-			GameRegistry.addRecipe(new ItemStack(blockTurntable, 1), "M", "P", 'M', Items.getItem("generator"), 'P', Block.pistonBase);
-			// Manipulator
-			GameRegistry.addShapelessRecipe(new ItemStack(blockManipulator, 2), Block.dispenser, Items.getItem("electronicCircuit"));
-		}
-		catch (Exception e)
-		{
-			System.out.print("AssemblyLine: Failed to load IC2 recipes");
-			e.printStackTrace();
-		}
-	}
-
-	private void createStandardRecipes()
-	{
-		// Imprint
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemImprint, 2), new Object[] { "R", "P", "I", 'P', Item.paper, 'R', Item.redstone, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
-		// Imprinter
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockImprinter, new Object[] { "SIS", "SPS", "WCW", 'S', Item.ingotIron, 'C', Block.chest, 'W', Block.workbench, 'P', Block.pistonBase, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
-		// Crate
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 0), new Object[] { "TST", "S S", "TST", 'S', Item.ingotIron, 'T', Block.wood }));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 1), new Object[] { "TST", "SCS", "TST", 'C', new ItemStack(blockCrate, 1, 0), 'S', Item.ingotIron, 'T', Block.wood }));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 2), new Object[] { "TST", "SCS", "TST", 'C', new ItemStack(blockCrate, 1, 1), 'S', Item.ingotIron, 'T', Block.wood }));
 	}
 
 	public static void printSidedData(String data)

@@ -113,7 +113,7 @@ public class GrabDictionary
 		}
 	}
 
-	public static void registerList()
+	static
 	{
 		registerGrabableEntity("chicken", EntityChicken.class);
 		registerGrabableEntity("cow", EntityCow.class);

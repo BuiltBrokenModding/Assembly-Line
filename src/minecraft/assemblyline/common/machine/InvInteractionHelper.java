@@ -13,18 +13,16 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.multiblock.TileEntityMulti;
-import assemblyline.common.block.BlockCrate;
-import assemblyline.common.block.TileEntityCrate;
 import assemblyline.common.imprinter.ItemImprinter;
 
-public class InvExtractionHelper
+public class InvInteractionHelper
 {
 	World world;
 	Vector3 location;
 	List<ItemStack> filterItems;
 	boolean inverted;
 
-	public InvExtractionHelper(World world, Vector3 location, List<ItemStack> filters, boolean inverted)
+	public InvInteractionHelper(World world, Vector3 location, List<ItemStack> filters, boolean inverted)
 	{
 		this.world = world;
 		this.location = location;

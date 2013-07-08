@@ -8,17 +8,15 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 import assemblyline.client.render.BlockRenderingHandler;
 import assemblyline.common.TabAssemblyLine;
-import assemblyline.common.block.BlockALMachine;
+import assemblyline.common.machine.BlockAssembly;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockCraneController extends BlockALMachine
+public class BlockCraneController extends BlockAssembly
 {
 	public BlockCraneController(int id)
 	{
-		super(id, UniversalElectricity.machine);
-		this.setUnlocalizedName("craneController");
-		this.setCreativeTab(TabAssemblyLine.INSTANCE);
+		super(id, UniversalElectricity.machine,"craneController");
 	}
 
 	@Override

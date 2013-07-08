@@ -15,21 +15,19 @@ import net.minecraft.world.World;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.CommonProxy;
 import assemblyline.common.TabAssemblyLine;
-import assemblyline.common.block.BlockALMachine;
+import assemblyline.common.machine.BlockAssembly;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockImprinter extends BlockALMachine
+public class BlockImprinter extends BlockAssembly
 {
 	Icon imprinter_side;
 	Icon imprinter_top;
 	Icon imprinter_bottom;
 
-	public BlockImprinter(int id, int texture)
+	public BlockImprinter(int id)
 	{
-		super(id, Material.wood);
-		this.setUnlocalizedName("imprinter");
-		this.setCreativeTab(TabAssemblyLine.INSTANCE);
+		super(id, Material.wood,"imprinter");
 	}
 
 	@SideOnly(Side.CLIENT)

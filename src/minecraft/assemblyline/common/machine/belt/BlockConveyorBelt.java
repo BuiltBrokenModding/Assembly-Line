@@ -16,7 +16,7 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 import assemblyline.client.render.BlockRenderingHandler;
 import assemblyline.common.TabAssemblyLine;
-import assemblyline.common.block.BlockALMachine;
+import assemblyline.common.machine.BlockAssembly;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt.SlantType;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -26,14 +26,12 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  * @author Calclavia, DarkGuardsman
  */
-public class BlockConveyorBelt extends BlockALMachine
+public class BlockConveyorBelt extends BlockAssembly
 {
 	public BlockConveyorBelt(int id)
 	{
-		super(id, UniversalElectricity.machine);
-		this.setUnlocalizedName("conveyorBelt");
+		super(id, UniversalElectricity.machine,"conveyorBelt");
 		this.setBlockBounds(0, 0, 0, 1, 0.3f, 1);
-		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 	}
 
 	@Override
@@ -172,6 +170,7 @@ public class BlockConveyorBelt extends BlockALMachine
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving par5EntityLiving, ItemStack stack)
 	{
+		super.onBlockPlacedBy(world, x, y, z, par5EntityLiving, stack);
 		int angle = MathHelper.floor_double((par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		int change = 2;
 
@@ -246,7 +245,6 @@ public class BlockConveyorBelt extends BlockALMachine
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
 		TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) world.getBlockTileEntity(x, y, z);
-		tileEntity.updatePowerTransferRange();
 		if (tileEntity.IgnoreList.contains(entity))
 		{
 			return;

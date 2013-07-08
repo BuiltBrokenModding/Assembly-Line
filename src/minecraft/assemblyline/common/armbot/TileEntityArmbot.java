@@ -1,8 +1,5 @@
 package assemblyline.common.armbot;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -15,14 +12,11 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.block.IElectricityStorage;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.multiblock.IMultiBlock;
@@ -39,62 +33,45 @@ import assemblyline.common.armbot.command.CommandReturn;
 import assemblyline.common.armbot.command.CommandRotateBy;
 import assemblyline.common.armbot.command.CommandRotateTo;
 import assemblyline.common.armbot.command.CommandUse;
-import assemblyline.common.machine.TileEntityAssemblyNetwork;
+import assemblyline.common.machine.TileEntityAssembly;
 import assemblyline.common.machine.encoder.ItemDisk;
-
-import com.google.common.io.ByteArrayDataInput;
-
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.IPeripheral;
 import dark.helpers.ItemFindingHelper;
 
-public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMultiBlock, IInventory, IPacketReceiver, IElectricityStorage, IArmbot, IPeripheral
+public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IInventory, IPacketReceiver, IArmbot, IPeripheral
 {
 	private final CommandManager commandManager = new CommandManager();
-	private static final int PACKET_COMMANDS = 128;
-
-	/**
-	 * The items this container contains.
-	 */
+	/** The items this container contains. */
 	protected ItemStack disk = null;
 	public final double WATT_REQUEST = 20;
-	public double wattsReceived = 0;
-	private int playerUsing = 0;
 	private int computersAttached = 0;
 	private List<IComputerAccess> connectedComputers = new ArrayList<IComputerAccess>();
-	/**
-	 * The rotation of the arms. In Degrees.
-	 */
+	/** The rotation of the arms. In Degrees. */
 	public float rotationPitch = 0;
 	public float rotationYaw = 0;
 	public float renderPitch = 0;
 	public float renderYaw = 0;
-	private int ticksSincePower = 0;
 	public final float ROTATION_SPEED = 2.0f;
 
 	private String displayText = "";
 
 	public boolean isProvidingPower = false;
 
-	/**
-	 * An entity that the Armbot is grabbed onto. Entity Items are held separately.
-	 */
+	/** An entity that the Armbot is grabbed onto. Entity Items are held separately. */
 	private final List<Entity> grabbedEntities = new ArrayList<Entity>();
 	private final List<ItemStack> grabbedItems = new ArrayList<ItemStack>();
 
-	/**
-	 * Client Side Object Storage
-	 */
+	/** Client Side Object Storage */
 	public EntityItem renderEntityItem = null;
 
 	@Override
 	public void initiate()
 	{
 		super.initiate();
-		if(!this.commandManager.hasTasks())
+		if (!this.commandManager.hasTasks())
 		{
 			this.onInventoryChanged();
 		}
@@ -150,12 +127,9 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 			}
 			if (!this.worldObj.isRemote)
 				this.commandManager.onUpdate();
-
-			this.ticksSincePower = 0;
 		}
 		else
 		{
-			this.ticksSincePower++;
 		}
 
 		if (!this.worldObj.isRemote)
@@ -280,9 +254,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		return null;
 	}
 
-	/**
-	 * @return The current hand position of the armbot.
-	 */
+	/** @return The current hand position of the armbot. */
 	public Vector3 getHandPosition()
 	{
 		Vector3 position = new Vector3(this);
@@ -306,46 +278,16 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		return delta;
 	}
 
+	/** Data */
 	@Override
 	public Packet getDescriptionPacket()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
-		writeToNBT(nbt);
-		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.powerTransferRange, nbt);
+		this.writeToNBT(nbt);
+		return PacketManager.getPacket(AssemblyLine.CHANNEL, this, AssemblyTilePacket.NBT, nbt);
 	}
 
-	/**
-	 * Data
-	 */
-	@Override
-	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
-	{
-		if (this.worldObj.isRemote)
-		{
-			try
-			{
-				ByteArrayInputStream bis = new ByteArrayInputStream(packet.data);
-				DataInputStream dis = new DataInputStream(bis);
-				int id, x, y, z;
-				id = dis.readInt();
-				x = dis.readInt();
-				y = dis.readInt();
-				z = dis.readInt();
-				this.powerTransferRange = dis.readInt();
-				NBTTagCompound tag = Packet.readNBTTagCompound(dis);
-				readFromNBT(tag);
-			}
-			catch (IOException e)
-			{
-				FMLLog.severe("Failed to receive packet for Armbot");
-				e.printStackTrace();
-			}
-		}
-	}
-
-	/**
-	 * Inventory
-	 */
+	/** Inventory */
 	@Override
 	public int getSizeInventory()
 	{
@@ -358,9 +300,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		return TranslationHelper.getLocal("tile.armbot.name");
 	}
 
-	/**
-	 * Inventory functions.
-	 */
+	/** Inventory functions. */
 	@Override
 	public ItemStack getStackInSlot(int par1)
 	{
@@ -435,13 +375,11 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	@Override
 	public void openChest()
 	{
-		this.playerUsing++;
 	}
 
 	@Override
 	public void closeChest()
 	{
-		this.playerUsing--;
 	}
 
 	public String getCommandDisplayText()
@@ -449,9 +387,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		return this.displayText;
 	}
 
-	/**
-	 * NBT Data
-	 */
+	/** NBT Data */
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
@@ -506,9 +442,7 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		}
 	}
 
-	/**
-	 * Writes a tile entity to NBT.
-	 */
+	/** Writes a tile entity to NBT. */
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
@@ -557,24 +491,6 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		}
 
 		nbt.setTag("items", items);
-	}
-
-	@Override
-	public double getJoules()
-	{
-		return this.wattsReceived;
-	}
-
-	@Override
-	public void setJoules(double joules)
-	{
-		this.wattsReceived = joules;
-	}
-
-	@Override
-	public double getMaxJoules()
-	{
-		return 1000;
 	}
 
 	@Override
@@ -913,45 +829,44 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 	}
 
 	@Override
-	public void dropEntity(Entity entity)
+	public void drop(Object object)
 	{
-		this.grabbedEntities.remove(entity);
-	}
-
-	@Override
-	public void dropItem(ItemStack itemStack)
-	{
-		Vector3 handPosition = this.getHandPosition();
-		this.worldObj.spawnEntityInWorld(new EntityItem(worldObj, handPosition.x, handPosition.y, handPosition.z, itemStack));
-		this.grabbedItems.remove(itemStack);
-	}
-
-	@Override
-	public void dropAll()
-	{
-		Vector3 handPosition = this.getHandPosition();
-		Iterator<ItemStack> it = this.grabbedItems.iterator();
-
-		while (it.hasNext())
+		if (object instanceof Entity)
 		{
-			ItemFindingHelper.dropItemStackExact(worldObj, handPosition.x, handPosition.y, handPosition.z, it.next());
+			this.grabbedEntities.remove((Entity) object);
 		}
+		if (object instanceof ItemStack)
+		{
+			Vector3 handPosition = this.getHandPosition();
+			ItemFindingHelper.dropItemStackExact(worldObj, handPosition.x, handPosition.y, handPosition.z, (ItemStack) object);
+			this.grabbedItems.remove((ItemStack) object);
+		}
+		if (object instanceof String)
+		{
+			String string = ((String) object).toLowerCase();
+			if (string.equalsIgnoreCase("all"))
+			{
+				Vector3 handPosition = this.getHandPosition();
+				Iterator<ItemStack> it = this.grabbedItems.iterator();
 
-		this.grabbedEntities.clear();
-		this.grabbedItems.clear();
+				while (it.hasNext())
+				{
+					ItemFindingHelper.dropItemStackExact(worldObj, handPosition.x, handPosition.y, handPosition.z, it.next());
+				}
+
+				this.grabbedEntities.clear();
+				this.grabbedItems.clear();
+			}
+		}
 	}
 
-	/**
-	 * called by the block when another checks it too see if it is providing power to a direction
-	 */
+	/** called by the block when another checks it too see if it is providing power to a direction */
 	public boolean isProvidingPowerSide(ForgeDirection dir)
 	{
 		return this.isProvidingPower && dir.getOpposite() == this.getFacingDirectionFromAngle();
 	}
 
-	/**
-	 * gets the facing direction using the yaw angle
-	 */
+	/** gets the facing direction using the yaw angle */
 	public ForgeDirection getFacingDirectionFromAngle()
 	{
 		float angle = MathHelper.wrapAngleTo180_float(this.rotationYaw);
@@ -993,4 +908,13 @@ public class TileEntityArmbot extends TileEntityAssemblyNetwork implements IMult
 		return false;
 	}
 
+	@Override
+	public double getWattLoad()
+	{
+		if (this.getCurrentCommand() != null)
+		{
+			return 2;
+		}
+		return .1;
+	}
 }

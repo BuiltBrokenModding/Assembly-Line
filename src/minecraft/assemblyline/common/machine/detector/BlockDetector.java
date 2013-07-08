@@ -25,7 +25,7 @@ public class BlockDetector extends BlockImprintable
 	Icon eye_red;
 	Icon eye_green;
 
-	public BlockDetector(int blockID, int texture)
+	public BlockDetector(int blockID)
 	{
 		super("detector", blockID, UniversalElectricity.machine, TabAssemblyLine.INSTANCE);
 	}

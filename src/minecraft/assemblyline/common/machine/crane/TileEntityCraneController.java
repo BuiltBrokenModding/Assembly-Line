@@ -7,9 +7,9 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import assemblyline.api.ICraneStructure;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.machine.TileEntityAssemblyNetwork;
+import assemblyline.common.machine.TileEntityAssembly;
 
-public class TileEntityCraneController extends TileEntityAssemblyNetwork implements ICraneStructure
+public class TileEntityCraneController extends TileEntityAssembly implements ICraneStructure
 {
 	int width, depth;
 	boolean isCraneValid;
@@ -212,5 +212,11 @@ public class TileEntityCraneController extends TileEntityAssemblyNetwork impleme
 	public boolean canConnect(ForgeDirection direction)
 	{
 		return true;
+	}
+	@Override
+	public void onUpdate()
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }

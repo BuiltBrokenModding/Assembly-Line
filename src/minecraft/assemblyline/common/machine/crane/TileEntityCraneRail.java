@@ -2,9 +2,9 @@ package assemblyline.common.machine.crane;
 
 import net.minecraftforge.common.ForgeDirection;
 import assemblyline.api.ICraneStructure;
-import assemblyline.common.machine.TileEntityAssemblyNetwork;
+import assemblyline.common.machine.TileEntityAssembly;
 
-public class TileEntityCraneRail extends TileEntityAssemblyNetwork implements ICraneStructure
+public class TileEntityCraneRail extends TileEntityAssembly implements ICraneStructure
 {
 
 	@Override
@@ -17,6 +17,13 @@ public class TileEntityCraneRail extends TileEntityAssemblyNetwork implements IC
 	public boolean canConnect(ForgeDirection direction)
 	{
 		return false;
+	}
+
+	@Override
+	public void onUpdate()
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

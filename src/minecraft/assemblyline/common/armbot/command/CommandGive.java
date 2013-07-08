@@ -9,7 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
-import assemblyline.common.machine.InvExtractionHelper;
+import assemblyline.common.machine.InvInteractionHelper;
 
 public class CommandGive extends Command
 {
@@ -63,7 +63,7 @@ public class CommandGive extends Command
 			{
 				stacks.add(stack);
 			}
-			InvExtractionHelper invEx = new InvExtractionHelper(this.tileEntity.worldObj, new Vector3(this.tileEntity), stacks, false);
+			InvInteractionHelper invEx = new InvInteractionHelper(this.tileEntity.worldObj, new Vector3(this.tileEntity), stacks, false);
 
 			Iterator<ItemStack> targetIt = this.tileEntity.getGrabbedItems().iterator();
 			boolean flag = true;

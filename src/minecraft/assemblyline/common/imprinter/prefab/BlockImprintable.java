@@ -11,20 +11,19 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
 import assemblyline.api.IFilterable;
-import assemblyline.common.block.BlockALMachine;
 import assemblyline.common.imprinter.ItemImprinter;
+import assemblyline.common.machine.BlockAssembly;
 
 /**
  * Extend this block class if a filter is allowed to be placed inside of this block.
  * 
  * @author Calclavia
  */
-public abstract class BlockImprintable extends BlockALMachine
+public abstract class BlockImprintable extends BlockAssembly
 {
 	public BlockImprintable(String name, int id, Material material, CreativeTabs creativeTab)
 	{
-		super(id, material);
-		this.setUnlocalizedName(name);
+		super(id, material,name);
 		this.setCreativeTab(creativeTab);
 	}
 

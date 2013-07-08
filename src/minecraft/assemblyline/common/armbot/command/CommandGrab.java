@@ -90,7 +90,7 @@ public class CommandGrab extends Command
 				{
 					this.tileEntity.grabEntity(found.get(i));
 					this.world.playSound(this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, "random.pop", 0.2F, ((this.tileEntity.worldObj.rand.nextFloat() - this.tileEntity.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.0F, true);
-					if(this.belt != null){belt.IgnoreEntity(found.get(i));}
+					if(this.belt != null){belt.ignoreEntity(found.get(i));}
 					return false;
 				}
 			}

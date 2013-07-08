@@ -11,17 +11,15 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.multiblock.IMultiBlock;
 import assemblyline.client.render.BlockRenderingHandler;
 import assemblyline.common.TabAssemblyLine;
-import assemblyline.common.block.BlockALMachine;
+import assemblyline.common.machine.BlockAssembly;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockArmbot extends BlockALMachine
+public class BlockArmbot extends BlockAssembly
 {
 	public BlockArmbot(int id)
 	{
-		super(id, UniversalElectricity.machine);
-		this.setUnlocalizedName("armbot");
-		this.setCreativeTab(TabAssemblyLine.INSTANCE);
+		super(id, UniversalElectricity.machine,"armbot");
 	}
 
 	@Override

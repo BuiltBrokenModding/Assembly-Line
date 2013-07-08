@@ -1,4 +1,4 @@
-package assemblyline.common.block;
+package assemblyline.common.machine;
 
 import java.util.List;
 
@@ -14,7 +14,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.PathfinderCrate;
 import assemblyline.common.TabAssemblyLine;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -26,15 +25,13 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class BlockCrate extends BlockALMachine
+public class BlockCrate extends BlockAssembly
 {
 	Icon crate_icon;
 
-	public BlockCrate(int id, int texture)
+	public BlockCrate(int id)
 	{
-		super(id, UniversalElectricity.machine);
-		this.setUnlocalizedName("crate");
-		this.setCreativeTab(TabAssemblyLine.INSTANCE);
+		super(id, UniversalElectricity.machine,"crate");		
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -5,35 +5,22 @@ import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 
-/**
- * An interface applied to Armbots.
- * 
- * @author Calclavia
- */
+/** Should be used to interact with the armbot and not to create a new armbot */
 public interface IArmbot
 {
-	/**
-	 * Adds an entity to the Armbot's grab list.
-	 */
+	/** Adds an entity to the Armbot's grab list. */
 	public void grabEntity(Entity entity);
 
 	public void grabItem(ItemStack itemStack);
 
-	/**
-	 * Drops a specific entity from the Armbot's hand.
-	 */
-	public void dropEntity(Entity entity);
+	/** Drops the given object
+	 * 
+	 * @param object - Entity or ItemStack
+	 * 
+	 * String "All" should cause the armbot to drop all items */
+	public void drop(Object object);
 
-	public void dropItem(ItemStack itemStack);
-
-	/**
-	 * Drops all entities in the Armbot's hand.
-	 */
-	public void dropAll();
-
-	/**
-	 * @return Returns all entities being grabbed by the Armbot.
-	 */
+	/** @return Returns all entities being grabbed by the Armbot. */
 	public List<Entity> getGrabbedEntities();
 
 	public List<ItemStack> getGrabbedItems();

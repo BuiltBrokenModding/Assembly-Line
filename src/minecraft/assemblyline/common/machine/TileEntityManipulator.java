@@ -25,10 +25,10 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 	/** True if is currently powered by redstone */
 	private boolean isRedstonePowered = false;
 	/** The class that interacts with inventories for this machine */
-	private InvExtractionHelper invExtractionHelper;
+	private InvInteractionHelper invExtractionHelper;
 
 	@Override
-	protected void onUpdate()
+	public void onUpdate()
 	{
 		if (!this.worldObj.isRemote)
 		{
@@ -201,11 +201,11 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 	}
 
 	/** Gets the class that managed extracting and placing items into inventories */
-	public InvExtractionHelper invHelper()
+	public InvInteractionHelper invHelper()
 	{
 		if (invExtractionHelper == null || invExtractionHelper.world != this.worldObj)
 		{
-			this.invExtractionHelper = new InvExtractionHelper(this.worldObj, new Vector3(this), this.getFilter() != null ? ItemImprinter.getFilters(getFilter()) : null, this.isInverted());
+			this.invExtractionHelper = new InvInteractionHelper(this.worldObj, new Vector3(this), this.getFilter() != null ? ItemImprinter.getFilters(getFilter()) : null, this.isInverted());
 		}
 		return invExtractionHelper;
 	}
