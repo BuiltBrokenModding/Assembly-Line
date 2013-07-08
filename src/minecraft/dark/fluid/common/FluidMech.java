@@ -102,7 +102,7 @@ public class FluidMech extends DummyModContainer
 	public static final String LANGUAGE_PATH = RESOURCE_PATH + "languages/";
 
 	/* SUPPORTED LANGS */
-	private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US" };
+	private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US", "de_DE" };
 
 	/* CONFIG FILE */
 	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir() + "/UniversalElectricity/", FluidMech.MOD_NAME + ".cfg"));
