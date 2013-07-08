@@ -215,7 +215,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 	{
 		super.setFilter(filter);
 		/* Reset inv Helper's filters */
-		this.invExtractionHelper.setFilter(this.getFilter() != null ? ItemImprinter.getFilters(this.getFilter()) : null, this.isInverted());
+		this.invHelper().setFilter(this.getFilter() != null ? ItemImprinter.getFilters(this.getFilter()) : null, this.isInverted());
 	}
 
 	/** Is this manipulator set to output items */
