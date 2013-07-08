@@ -24,10 +24,6 @@
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
-             <fileset dir="${dir.development}Basic-Compoents/src">
-				<exclude name=".git/**"/>
-				<exclude name="**/*.xml"/>
-			</fileset>
 		</copy>
         
         
@@ -69,12 +65,6 @@
 				<exclude name="**/*.java"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
-             <fileset dir="${dir.development}Basic-Compoents/resources">
-				<exclude name=".git/**"/>
-				<exclude name="**/*.java"/>
-				<exclude name="**/*.xml"/>
-            </fileset>		
-
 		</copy>
 
 		<jar destfile="output/${file.EEjar}">
