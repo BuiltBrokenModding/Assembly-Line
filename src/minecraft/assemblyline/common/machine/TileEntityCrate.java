@@ -417,7 +417,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	}
 
 	@Override
-	public boolean isStackValidForSlot(int slot, ItemStack itemstack)
+	public boolean isItemValidForSlot(int slot, ItemStack itemstack)
 	{
 		if (slot >= this.getSlotCount())
 		{
@@ -447,7 +447,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	@Override
 	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
 	{
-		return this.isStackValidForSlot(slot, itemstack);
+		return this.isItemValidForSlot(slot, itemstack);
 	}
 
 	@Override

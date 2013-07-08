@@ -1,13 +1,12 @@
 package assemblyline.common.machine.crane;
 
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 import assemblyline.client.render.BlockRenderingHandler;
-import assemblyline.common.TabAssemblyLine;
 import assemblyline.common.machine.BlockAssembly;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -16,7 +15,7 @@ public class BlockCraneController extends BlockAssembly
 {
 	public BlockCraneController(int id)
 	{
-		super(id, UniversalElectricity.machine,"craneController");
+		super(id, UniversalElectricity.machine, "craneController");
 	}
 
 	@Override
@@ -32,7 +31,7 @@ public class BlockCraneController extends BlockAssembly
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving entity, ItemStack stack)
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
 	{
 		int rot = (int) Math.min(((entity.rotationYaw + 315f) % 360f) / 90f, 3);
 		switch (rot)

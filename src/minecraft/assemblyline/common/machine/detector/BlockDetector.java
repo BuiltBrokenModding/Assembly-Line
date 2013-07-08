@@ -1,7 +1,7 @@
 package assemblyline.common.machine.detector;
 
 import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -17,9 +17,7 @@ import assemblyline.common.imprinter.prefab.BlockImprintable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-/**
- * @author Briman0094
- */
+/** @author Briman0094 */
 public class BlockDetector extends BlockImprintable
 {
 	Icon eye_red;
@@ -31,7 +29,7 @@ public class BlockDetector extends BlockImprintable
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving entity, ItemStack stack)
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
 	{
 		int angle = MathHelper.floor_double((entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		int change = 2;

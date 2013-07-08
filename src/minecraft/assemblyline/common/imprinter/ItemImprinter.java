@@ -47,7 +47,7 @@ public class ItemImprinter extends Item
 		{
 			String stringName = EntityList.getEntityString(entity);
 			// TODO add to filter
-			player.sendChatToPlayer("Target: " + stringName);
+			//player.sendChatToPlayer("Target: " + stringName);
 			return true;
 		}
 		return false;

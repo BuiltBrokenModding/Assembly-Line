@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -15,22 +16,19 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 import assemblyline.client.render.BlockRenderingHandler;
-import assemblyline.common.TabAssemblyLine;
 import assemblyline.common.machine.BlockAssembly;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt.SlantType;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-/**
- * The block for the actual conveyor belt!
+/** The block for the actual conveyor belt!
  * 
- * @author Calclavia, DarkGuardsman
- */
+ * @author Calclavia, DarkGuardsman */
 public class BlockConveyorBelt extends BlockAssembly
 {
 	public BlockConveyorBelt(int id)
 	{
-		super(id, UniversalElectricity.machine,"conveyorBelt");
+		super(id, UniversalElectricity.machine, "conveyorBelt");
 		this.setBlockBounds(0, 0, 0, 1, 0.3f, 1);
 	}
 
@@ -81,7 +79,7 @@ public class BlockConveyorBelt extends BlockAssembly
 	@Override
 	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB par5AxisAlignedBB, List par6List, Entity par7Entity)
 	{
-		
+
 		TileEntity t = world.getBlockTileEntity(x, y, z);
 
 		if (t != null && t instanceof TileEntityConveyorBelt)
@@ -168,7 +166,7 @@ public class BlockConveyorBelt extends BlockAssembly
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving par5EntityLiving, ItemStack stack)
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase par5EntityLiving, ItemStack stack)
 	{
 		super.onBlockPlacedBy(world, x, y, z, par5EntityLiving, stack);
 		int angle = MathHelper.floor_double((par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
@@ -238,9 +236,7 @@ public class BlockConveyorBelt extends BlockAssembly
 		return true;
 	}
 
-	/**
-	 * Moves the entity if the conductor is powered.
-	 */
+	/** Moves the entity if the conductor is powered. */
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
@@ -327,9 +323,7 @@ public class BlockConveyorBelt extends BlockAssembly
 		}
 	}
 
-	/**
-	 * Returns the TileEntity used by this block.
-	 */
+	/** Returns the TileEntity used by this block. */
 	@Override
 	public TileEntity createNewTileEntity(World var1)
 	{

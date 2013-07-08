@@ -1,10 +1,11 @@
 package assemblyline.client.render;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderEngine;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -42,8 +43,9 @@ public class RenderArmbot extends TileEntitySpecialRenderer
 					}
 				}
 			}
+			ResourceLocation name = new ResourceLocation(AssemblyLine.MODEL_TEXTURES_PATH + ":" + TEXTURE);
+			func_110628_a(name);
 
-			this.bindTextureByName(AssemblyLine.MODEL_TEXTURES_PATH + TEXTURE);
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 			GL11.glScalef(1.0F, -1F, -1F);
@@ -56,7 +58,7 @@ public class RenderArmbot extends TileEntitySpecialRenderer
 			handPosition.add(0.5);
 			handPosition.add(new Vector3(x, y, z));
 			RenderItem renderItem = ((RenderItem) RenderManager.instance.getEntityClassRenderObject(EntityItem.class));
-			RenderEngine renderEngine = Minecraft.getMinecraft().renderEngine;
+			TextureManager renderEngine = Minecraft.getMinecraft().renderEngine;
 
 			for (ItemStack itemStack : ((TileEntityArmbot) tileEntity).getGrabbedItems())
 			{

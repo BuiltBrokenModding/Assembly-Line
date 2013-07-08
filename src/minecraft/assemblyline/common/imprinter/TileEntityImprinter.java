@@ -515,7 +515,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	}
 
 	@Override
-	public boolean isStackValidForSlot(int i, ItemStack itemstack)
+	public boolean isItemValidForSlot(int i, ItemStack itemstack)
 	{
 		return true;
 	}
@@ -542,13 +542,13 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	@Override
 	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
 	{
-		return this.isStackValidForSlot(slot, itemstack);
+		return this.isItemValidForSlot(slot, itemstack);
 	}
 
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int side)
 	{
-		return this.isStackValidForSlot(slot, itemstack);
+		return this.isItemValidForSlot(slot, itemstack);
 	}
 
 	@Override

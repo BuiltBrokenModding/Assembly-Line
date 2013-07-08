@@ -330,7 +330,7 @@ public class BlockCrate extends BlockAssembly
 	 */
 	public static ItemStack addStackToCrate(TileEntityCrate tileEntity, ItemStack itemStack)
 	{
-		if (itemStack == null || itemStack.getItem().isDamageable() && itemStack.getItem().getItemDamageFromStack(itemStack) > 0)
+		if (itemStack == null || itemStack.getItem().isDamageable() && itemStack.getItem().getDamage(itemStack) > 0)
 		{
 			return itemStack;
 		}

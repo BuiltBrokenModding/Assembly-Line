@@ -29,30 +29,6 @@ public class BlockAssembly extends BlockAdvanced
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 	}
 
-	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
-	{
-		ItemStack stack = entityPlayer.getHeldItem();
-		TileEntity ent = world.getBlockTileEntity(x, y, z);
-		if (!world.isRemote && stack != null && stack.itemID == Item.stick.itemID && ent instanceof TileEntityAssembly && entityPlayer != null)
-		{
-			TileEntityAssembly asm = (TileEntityAssembly) ent;
-			String output = "Debug>>>";
-			output += "Channel:" + (asm.getTileNetwork() != null ? asm.getTileNetwork().toString() : "Error") + "|";
-			entityPlayer.sendChatToPlayer(output);
-			output = "Debug>>>";
-			output += "Powered:" + asm.running + " ";
-			if (asm.getTileNetwork() instanceof NetworkAssembly)
-			{
-				output += ElectricityDisplay.getDisplaySimple(((NetworkAssembly) asm.getTileNetwork()).getCurrentBattery(), ElectricUnit.WATT, 2);
-				output += "/";
-				output += ElectricityDisplay.getDisplaySimple(((NetworkAssembly) asm.getTileNetwork()).getMaxBattery(), ElectricUnit.WATT, 2);
-			}
-			entityPlayer.sendChatToPlayer(output);
-		}
-		return super.onBlockActivated(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ);
-	}
-
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerIcons(IconRegister iconReg)

@@ -903,12 +903,6 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 	}
 
 	@Override
-	public boolean isStackValidForSlot(int i, ItemStack itemstack)
-	{
-		return false;
-	}
-
-	@Override
 	public double getWattLoad()
 	{
 		if (this.getCurrentCommand() != null)
@@ -916,5 +910,12 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 			return 2;
 		}
 		return .1;
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int i, ItemStack itemstack)
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

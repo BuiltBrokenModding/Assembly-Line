@@ -7,6 +7,7 @@ import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTranslated;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import assemblyline.client.model.ModelCraneRail;
@@ -41,7 +42,8 @@ public class RenderCraneFrame extends TileEntitySpecialRenderer
 			boolean renderFoot = tileEntity.worldObj.isBlockSolidOnSide(tX, tY - 1, tZ, ForgeDirection.UP);
 			if ((renderLeft && renderRight) || (renderFront && renderBack))
 				renderFoot = false;
-			this.bindTextureByName(AssemblyLine.MODEL_TEXTURES_PATH + TEXTURE);
+			ResourceLocation name = new ResourceLocation(AssemblyLine.MODEL_TEXTURES_PATH + ":" + TEXTURE);
+			func_110628_a(name);
 			glPushMatrix();
 			glTranslated(x + 0.5, y + 1.5, z + 0.5);
 			glRotatef(180f, 0f, 0f, 1f);

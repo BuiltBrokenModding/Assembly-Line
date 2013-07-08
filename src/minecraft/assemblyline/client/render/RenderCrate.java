@@ -4,9 +4,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.RenderEngine;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
@@ -82,7 +82,7 @@ public class RenderCrate extends TileEntitySpecialRenderer
 					GL11.glScalef(0.6f * scale, 0.6f * scale, 0);
 					GL11.glRotatef(180, 0, 0, 1);
 
-					RenderEngine renderEngine = Minecraft.getMinecraft().renderEngine;
+					TextureManager renderEngine = Minecraft.getMinecraft().renderEngine;
 
 					GL11.glDisable(2896);
 					if (!ForgeHooksClient.renderInventoryItem(this.renderBlocks, renderEngine, itemStack, true, 0.0F, 0.0F, 0.0F))
