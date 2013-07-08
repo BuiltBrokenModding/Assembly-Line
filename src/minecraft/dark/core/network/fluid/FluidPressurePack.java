@@ -1,21 +1,16 @@
 package dark.core.network.fluid;
 
-import net.minecraftforge.liquids.LiquidStack;
+import net.minecraftforge.fluids.FluidStack;
 
 public class FluidPressurePack implements Cloneable
 {
-	public LiquidStack liquidStack;
+	public FluidStack liquidStack;
 	public double pressure;
 
-	public FluidPressurePack(LiquidStack liquidStack, double voltage)
+	public FluidPressurePack(FluidStack liquidStack, double voltage)
 	{
 		this.liquidStack = liquidStack;
 		this.pressure = voltage;
-	}
-
-	public FluidPressurePack()
-	{
-		this(new LiquidStack(0, 0, 0), 0);
 	}
 
 	@Override

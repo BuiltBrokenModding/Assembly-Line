@@ -1,21 +1,16 @@
 package dark.fluid.api;
 
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.IFluidTank;
 import dark.core.api.IColorCoded;
 import dark.core.api.INetworkPart;
-import net.minecraftforge.liquids.ILiquidTank;
-import net.minecraftforge.liquids.ITankContainer;
-import net.minecraftforge.liquids.LiquidStack;
-import net.minecraftforge.liquids.LiquidTank;
 
-public interface INetworkFluidPart extends IColorCoded, ITankContainer, INetworkPart
+public interface INetworkFluidPart extends IColorCoded, IFluidHandler, INetworkPart
 {
-	/**
-	 * Gets the part's main tank for shared storage
-	 */
-	public ILiquidTank getTank();
+	/** Gets the part's main tank for shared storage */
+	public IFluidTank getTank();
 
-	/**
-	 * Sets the content of the part's main tank
-	 */
-	public void setTankContent(LiquidStack stack);
+	/** Sets the content of the part's main tank */
+	public void setTankContent(FluidStack stack);
 }

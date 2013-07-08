@@ -2,7 +2,7 @@ package dark.core.network.fluid;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ITankContainer;
+import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import dark.core.api.INetworkPart;
@@ -12,9 +12,7 @@ import dark.fluid.api.IDrain;
 public class HydraulicNetworkHelper
 {
 
-	/**
-	 * Invalidates a TileEntity
-	 */
+	/** Invalidates a TileEntity */
 	public static void invalidate(TileEntity tileEntity)
 	{
 		for (int i = 0; i < 6; i++)
@@ -29,7 +27,7 @@ public class HydraulicNetworkHelper
 				if (network != null && network instanceof NetworkFluidTiles)
 				{
 					network.removeEntity(tileEntity);
-					for (ITankContainer tank : ((NetworkFluidTiles) network).connectedTanks)
+					for (IFluidHandler tank : ((NetworkFluidTiles) network).connectedTanks)
 					{
 						if (tank instanceof IDrain)
 						{
