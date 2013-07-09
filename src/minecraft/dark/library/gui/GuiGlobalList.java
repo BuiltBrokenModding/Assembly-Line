@@ -7,22 +7,24 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.StringTranslate;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.vector.Vector2;
-import universalelectricity.prefab.GuiBase;
 import universalelectricity.prefab.vector.Region2;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.DarkMain;
 import dark.core.api.IScroll;
 import dark.library.access.UserAccess;
 
-public class GuiGlobalList extends GuiBase implements IScroll
+@SideOnly(Side.CLIENT)
+public class GuiGlobalList extends GuiScreen implements IScroll
 {
 	EntityPlayer player;
 	private GuiTextField stringInput;
@@ -50,8 +52,8 @@ public class GuiGlobalList extends GuiBase implements IScroll
 	public void initGui()
 	{
 		super.initGui();
-		int width = (this.width - this.xSize) / 2;
-		int height = (this.height - this.ySize) / 2;
+		int width = (this.width - this.width) / 2;
+		int height = (this.height - this.height) / 2;
 
 		this.stringInput = new GuiTextField(this.fontRenderer, width + 12, height + 165, 135, 11);
 		this.stringInput.setMaxStringLength(30);
@@ -130,7 +132,7 @@ public class GuiGlobalList extends GuiBase implements IScroll
 	@Override
 	protected void drawBackgroundLayer(int x, int y, float var1)
 	{
-		ResourceLocation name = new ResourceLocation(DarkMain.GUI_DIRECTORY + ":gui_access_base.png"); 
+		ResourceLocation name = new ResourceLocation(DarkMain.GUI_DIRECTORY + ":gui_access_base.png");
 		this.mc.renderEngine.func_110577_a(name);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 

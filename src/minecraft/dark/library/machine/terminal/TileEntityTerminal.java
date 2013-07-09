@@ -26,16 +26,20 @@ import dark.library.access.AccessLevel;
 import dark.library.access.UserAccess;
 import dark.library.machine.TileEntityRunnableMachine;
 
-/**
- * 
- * @author Calclavia, DarkGuardsman
- * 
- */
+/** @author Calclavia, DarkGuardsman */
 public abstract class TileEntityTerminal extends TileEntityRunnableMachine implements ISpecialAccess, IPacketReceiver, ITerminal
 {
+	public TileEntityTerminal(int tickEnergy)
+	{
+		super(tickEnergy);
+	}
+
 	public enum PacketType
 	{
-		GUI_EVENT, GUI_COMMAND, TERMINAL_OUTPUT, DESCRIPTION_DATA;
+		GUI_EVENT,
+		GUI_COMMAND,
+		TERMINAL_OUTPUT,
+		DESCRIPTION_DATA;
 	}
 
 	/** A list of everything typed inside the terminal */

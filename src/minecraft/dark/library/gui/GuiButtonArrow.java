@@ -2,14 +2,20 @@ package dark.library.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import dark.core.DarkMain;
 
+@SideOnly(Side.CLIENT)
 public class GuiButtonArrow extends GuiButton
 {
 	boolean isLeft = false;
+	private static final ResourceLocation gui_pic = new ResourceLocation(DarkMain.GUI_DIRECTORY + "gui@.png");
 
 	public GuiButtonArrow(int par1, int par2, int par3, boolean left)
 	{
@@ -17,14 +23,12 @@ public class GuiButtonArrow extends GuiButton
 		isLeft = left;
 	}
 
-	/**
-	 * Draws this button to the screen.
-	 */
+	/** Draws this button to the screen. */
 	public void drawButton(Minecraft par1Minecraft, int width, int hight)
 	{
 		if (this.drawButton)
 		{
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, par1Minecraft.renderEngine.getTexture(DarkMain.GUI_DIRECTORY+"gui@.png"));
+			par1Minecraft.func_110434_K().func_110577_a(gui_pic);
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			boolean var4 = width >= this.xPosition && hight >= this.yPosition && width < this.xPosition + this.width && hight < this.yPosition + this.height;
 			int var5 = 106;

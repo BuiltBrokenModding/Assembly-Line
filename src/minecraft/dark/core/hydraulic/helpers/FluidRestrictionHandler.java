@@ -78,6 +78,6 @@ public class FluidRestrictionHandler
 		{
 			return true;
 		}
-		return FluidRestrictionHandler.hasRestrictedStack(color.ordinal()) && FluidRestrictionHandler.getStackForColor(color).isLiquidEqual(stack);
+		return FluidRestrictionHandler.hasRestrictedStack(color.ordinal()) && FluidRestrictionHandler.getStackForColor(color).isEqual(stack);
 	}
 }

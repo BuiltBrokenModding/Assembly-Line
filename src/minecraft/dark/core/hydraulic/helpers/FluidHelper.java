@@ -1,175 +1,50 @@
 package dark.core.hydraulic.helpers;
 
+import universalelectricity.core.vector.Vector3;
 import net.minecraft.block.Block;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
-import universalelectricity.core.vector.Vector3;
 
 public class FluidHelper
 {
-	/** The default built in flow rate of the liquid threw the pipes. Will correct this later to use
-	 * a visc value instead of flow value so that the size of the pipe can play a factor in flow */
-	public static int getDefaultFlowRate(FluidStack stack)
-	{
-		if (stack != null)
-		{
-			try
-			{
-				String stackName = LiquidDictionary.findLiquidName(stack);
-				if (stackName.equalsIgnoreCase("UraniumHexafluoride"))
-				{
-					return 1000;
-				}
-				else if (stackName.equalsIgnoreCase("steam"))
-				{
-					return 1000;
-				}
-				else if (stackName.equalsIgnoreCase("methane"))
-				{
-					return 1000;
-				}
-				else if (stackName.equalsIgnoreCase("lava"))
-				{
-					return 250;
-				}
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-		return 500;
-	}
 
-	/** Creates a new LiquidStack using the sample stack
+	/** Gets the block's fluid if it has one
 	 * 
-	 * @param stack - liquidLiquid being used to create the stack
-	 * @param vol - amount or volume of the stack
-	 * @return a new @LiquidStack */
-	public static LiquidStack getStack(LiquidStack stack, int vol)
+	 * @param world - world we are working in
+	 * @param vector - 3D location in world
+	 * @return @Fluid that the block is */
+	public static Fluid getLiquidFromBlock(World world, Vector3 vector)
 	{
-		if (stack == null)
-		{
-			return null;
-		}
-		return new LiquidStack(stack.itemID, vol, stack.itemMeta);
+		return FluidHelper.getFluidFromBlockID(vector.getBlockID(world));
 	}
 
-	/** Consumes one item of a the ItemStack */
-	public static ItemStack consumeItem(ItemStack stack)
-	{
-		if (stack.stackSize == 1)
-		{
-			if (stack.getItem().hasContainerItem())
-			{
-				return stack.getItem().getContainerItemStack(stack);
-			}
-			else
-			{
-				return null;
-			}
-		}
-		else
-		{
-			stack.splitStack(1);
-			return stack;
-		}
-	}
-
-	/** gets the blockID/ItemID of the Still liquid
-	 * 
-	 * @param id - blockID
-	 * @return will return -1 if its not a valid liquid Block */
-	public static int getLiquidId(int id)
+	/** Gets a fluid from blockID */
+	public static Fluid getFluidFromBlockID(int id)
 	{
 		if (id == Block.waterStill.blockID || id == Block.waterMoving.blockID)
 		{
-			return Block.waterStill.blockID;
+			return FluidRegistry.getFluid("water");
 		}
 		else if (id == Block.lavaStill.blockID || id == Block.lavaMoving.blockID)
 		{
-			return Block.lavaStill.blockID;
+			return FluidRegistry.getFluid("lava");
 		}
 		else if (Block.blocksList[id] instanceof IFluidBlock)
 		{
-			return ((IFluidBlock) Block.blocksList[id]).getFluid().getBlockID();
-		}
-		else
-		{
-			return -1;
-		}
-	}
-
-	/** gets the liquidStack of the block
-	 * 
-	 * @param id - block's ID */
-	public static LiquidStack getLiquidFromBlockId(int id)
-	{
-		if (id == Block.waterStill.blockID || id == Block.waterMoving.blockID)
-		{
-			return new LiquidStack(Block.waterStill.blockID, LiquidContainerRegistry.BUCKET_VOLUME, 0);
-		}
-		else if (id == Block.lavaStill.blockID || id == Block.lavaMoving.blockID)
-		{
-			return new LiquidStack(Block.lavaStill.blockID, LiquidContainerRegistry.BUCKET_VOLUME, 0);
-		}
-		else if (Block.blocksList[id] instanceof ILiquid)
-		{
-			ILiquid liquid = (ILiquid) Block.blocksList[id];
-			if (liquid.isMetaSensitive())
-			{
-				return new LiquidStack(liquid.stillLiquidId(), LiquidContainerRegistry.BUCKET_VOLUME, liquid.stillLiquidMeta());
-			}
-			else
-			{
-				return new LiquidStack(liquid.stillLiquidId(), LiquidContainerRegistry.BUCKET_VOLUME, 0);
-			}
+			return ((IFluidBlock) Block.blocksList[id]).getFluid();
 		}
 		return null;
 	}
 
-	/** Is the location a liquid source block */
-	public static boolean isSourceBlock(World world, Vector3 vec)
+	public static FluidStack getStack(FluidStack stack, int amount)
 	{
-		LiquidStack liquid = FluidHelper.getLiquidFromBlockId(vec.getBlockID(world));
-		if ((liquid != null && vec.getBlockMetadata(world) == 0))
+		if(stack != null)
 		{
-			return true;
+			return new FluidStack(stack.getFluid(), amount);
 		}
-		return false;
-	}
-
-	/** Gets the number of source liquids blocks around the locaiton */
-	public static int getConnectedSources(World world, Vector3 vec)
-	{
-		int sources = 0;
-		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
-		{
-			Vector3 pos = vec.clone().modifyPositionFromSide(direction);
-			if (isSourceBlock(world, pos))
-			{
-				sources++;
-			}
-		}
-		return sources;
-	}
-
-	/** Gets the number of liquid fillable blocks around the location */
-	public static int getConnectedFillables(World world, Vector3 vec)
-	{
-		int sources = 0;
-		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
-		{
-			Vector3 pos = vec.clone().modifyPositionFromSide(direction);
-			LiquidStack liquid = FluidHelper.getLiquidFromBlockId(pos.getBlockID(world));
-			if ((liquid != null || pos.getBlockID(world) == 0) && getConnectedSources(world, pos) > 0)
-			{
-				sources++;
-			}
-		}
-		return sources;
+		return stack;
 	}
 }

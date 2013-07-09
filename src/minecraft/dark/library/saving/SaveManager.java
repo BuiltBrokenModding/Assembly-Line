@@ -6,7 +6,6 @@ import java.util.List;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
-import universalelectricity.prefab.flag.NBTFileLoader;
 import cpw.mods.fml.common.Mod.ServerStopping;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 
@@ -18,11 +17,9 @@ public class SaveManager
 
 	public static SaveManager intance = new SaveManager();
 
-	/**
-	 * registers a class that uses INbtSave to save data to a file in the worldSave file
+	/** registers a class that uses INbtSave to save data to a file in the worldSave file
 	 * 
-	 * @param saveClass
-	 */
+	 * @param saveClass */
 	public void registerNbtSave(INbtSave saveClass)
 	{
 		if (!isInitialized)
