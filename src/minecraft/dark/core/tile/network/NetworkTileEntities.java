@@ -8,6 +8,7 @@ import java.util.List;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.core.grid.IGridNetwork;
 import universalelectricity.core.path.Pathfinder;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
@@ -67,11 +68,10 @@ public abstract class NetworkTileEntities
 	{
 		return this.networkMember.contains(ent);
 	}
-
-	/** Removes a tileEntity from any of the valid lists */
-	public void removeEntity(TileEntity ent)
+	
+	public boolean removeTile(TileEntity ent)
 	{
-		this.networkMember.remove(ent);
+		return this.networkMember.remove(ent);
 	}
 
 	/** Cleans the list of networkMembers and remove those that no longer belong */
@@ -257,7 +257,7 @@ public abstract class NetworkTileEntities
 
 			if (checkTile instanceof INetworkPart && ((INetworkPart) checkTile).getTileNetwork() != null)
 			{
-				((INetworkPart) checkTile).getTileNetwork().removeEntity(tileEntity);
+				((INetworkPart) checkTile).getTileNetwork().removeTile(tileEntity);
 			}
 		}
 	}

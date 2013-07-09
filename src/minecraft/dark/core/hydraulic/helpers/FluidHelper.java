@@ -4,19 +4,15 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquid;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidDictionary;
-import net.minecraftforge.liquids.LiquidStack;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidBlock;
 import universalelectricity.core.vector.Vector3;
 
 public class FluidHelper
 {
-	/**
-	 * The default built in flow rate of the liquid threw the pipes. Will correct this later to use
-	 * a visc value instead of flow value so that the size of the pipe can play a factor in flow
-	 */
-	public static int getDefaultFlowRate(LiquidStack stack)
+	/** The default built in flow rate of the liquid threw the pipes. Will correct this later to use
+	 * a visc value instead of flow value so that the size of the pipe can play a factor in flow */
+	public static int getDefaultFlowRate(FluidStack stack)
 	{
 		if (stack != null)
 		{
@@ -48,13 +44,11 @@ public class FluidHelper
 		return 500;
 	}
 
-	/**
-	 * Creates a new LiquidStack using the sample stack
+	/** Creates a new LiquidStack using the sample stack
 	 * 
 	 * @param stack - liquidLiquid being used to create the stack
 	 * @param vol - amount or volume of the stack
-	 * @return a new @LiquidStack
-	 */
+	 * @return a new @LiquidStack */
 	public static LiquidStack getStack(LiquidStack stack, int vol)
 	{
 		if (stack == null)
@@ -64,9 +58,7 @@ public class FluidHelper
 		return new LiquidStack(stack.itemID, vol, stack.itemMeta);
 	}
 
-	/**
-	 * Consumes one item of a the ItemStack
-	 */
+	/** Consumes one item of a the ItemStack */
 	public static ItemStack consumeItem(ItemStack stack)
 	{
 		if (stack.stackSize == 1)
@@ -87,12 +79,10 @@ public class FluidHelper
 		}
 	}
 
-	/**
-	 * gets the blockID/ItemID of the Still liquid
+	/** gets the blockID/ItemID of the Still liquid
 	 * 
 	 * @param id - blockID
-	 * @return will return -1 if its not a valid liquid Block
-	 */
+	 * @return will return -1 if its not a valid liquid Block */
 	public static int getLiquidId(int id)
 	{
 		if (id == Block.waterStill.blockID || id == Block.waterMoving.blockID)
@@ -103,9 +93,9 @@ public class FluidHelper
 		{
 			return Block.lavaStill.blockID;
 		}
-		else if (Block.blocksList[id] instanceof ILiquid)
+		else if (Block.blocksList[id] instanceof IFluidBlock)
 		{
-			return ((ILiquid) Block.blocksList[id]).stillLiquidId();
+			return ((IFluidBlock) Block.blocksList[id]).getFluid().getBlockID();
 		}
 		else
 		{
@@ -113,11 +103,9 @@ public class FluidHelper
 		}
 	}
 
-	/**
-	 * gets the liquidStack of the block
+	/** gets the liquidStack of the block
 	 * 
-	 * @param id - block's ID
-	 */
+	 * @param id - block's ID */
 	public static LiquidStack getLiquidFromBlockId(int id)
 	{
 		if (id == Block.waterStill.blockID || id == Block.waterMoving.blockID)
@@ -143,9 +131,7 @@ public class FluidHelper
 		return null;
 	}
 
-	/**
-	 * Is the location a liquid source block
-	 */
+	/** Is the location a liquid source block */
 	public static boolean isSourceBlock(World world, Vector3 vec)
 	{
 		LiquidStack liquid = FluidHelper.getLiquidFromBlockId(vec.getBlockID(world));
@@ -156,9 +142,7 @@ public class FluidHelper
 		return false;
 	}
 
-	/**
-	 * Gets the number of source liquids blocks around the locaiton
-	 */
+	/** Gets the number of source liquids blocks around the locaiton */
 	public static int getConnectedSources(World world, Vector3 vec)
 	{
 		int sources = 0;
@@ -173,9 +157,7 @@ public class FluidHelper
 		return sources;
 	}
 
-	/**
-	 * Gets the number of liquid fillable blocks around the location
-	 */
+	/** Gets the number of liquid fillable blocks around the location */
 	public static int getConnectedFillables(World world, Vector3 vec)
 	{
 		int sources = 0;

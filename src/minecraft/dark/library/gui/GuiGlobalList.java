@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.StringTranslate;
 
@@ -49,7 +50,6 @@ public class GuiGlobalList extends GuiBase implements IScroll
 	public void initGui()
 	{
 		super.initGui();
-		StringTranslate var1 = StringTranslate.getInstance();
 		int width = (this.width - this.xSize) / 2;
 		int height = (this.height - this.ySize) / 2;
 
@@ -130,7 +130,8 @@ public class GuiGlobalList extends GuiBase implements IScroll
 	@Override
 	protected void drawBackgroundLayer(int x, int y, float var1)
 	{
-		this.mc.renderEngine.bindTexture(DarkMain.GUI_DIRECTORY + "gui_access_base.png");
+		ResourceLocation name = new ResourceLocation(DarkMain.GUI_DIRECTORY + ":gui_access_base.png"); 
+		this.mc.renderEngine.func_110577_a(name);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		int containerWidth = (this.width - this.xSize) / 2;

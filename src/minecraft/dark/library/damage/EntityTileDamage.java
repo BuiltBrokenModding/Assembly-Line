@@ -49,7 +49,7 @@ public class EntityTileDamage extends EntityLiving implements IEntityAdditionalS
 	}
 
 	@Override
-	public boolean attackEntityFrom(DamageSource source, int ammount)
+	public boolean attackEntityFrom(DamageSource source, float ammount)
 	{
 		if (this.host instanceof IHpTile)
 		{
@@ -86,24 +86,6 @@ public class EntityTileDamage extends EntityLiving implements IEntityAdditionalS
 			return ((IHpTile) this.host).canApplyPotion(par1PotionEffect);
 		}
 		return false;
-	}
-
-	@Override
-	public void addPotionEffect(PotionEffect par1PotionEffect)
-	{
-		if (this.isPotionApplicable(par1PotionEffect))
-		{
-			if (this.activePotionsMap.containsKey(Integer.valueOf(par1PotionEffect.getPotionID())))
-			{
-				((PotionEffect) this.activePotionsMap.get(Integer.valueOf(par1PotionEffect.getPotionID()))).combine(par1PotionEffect);
-				this.onChangedPotionEffect((PotionEffect) this.activePotionsMap.get(Integer.valueOf(par1PotionEffect.getPotionID())));
-			}
-			else
-			{
-				this.activePotionsMap.put(Integer.valueOf(par1PotionEffect.getPotionID()), par1PotionEffect);
-				this.onNewPotionEffect(par1PotionEffect);
-			}
-		}
 	}
 
 	@Override
@@ -233,11 +215,5 @@ public class EntityTileDamage extends EntityLiving implements IEntityAdditionalS
 			}
 		}
 		return false;
-	}
-
-	@Override
-	public int getMaxHealth()
-	{
-		return this.host != null && host instanceof IHpTile ? ((IHpTile) host).getMaxHealth() : 100;
 	}
 }

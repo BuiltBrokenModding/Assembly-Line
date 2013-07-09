@@ -1,6 +1,10 @@
 package dark.core.hydraulic.helpers;
 
 import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidRegistry.FluidRegisterEvent;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidDictionary.LiquidRegisterEvent;
 import net.minecraftforge.liquids.LiquidStack;
@@ -12,44 +16,43 @@ import dark.core.api.ColorCode;
 
 public class FluidRestrictionHandler
 {
-	private static BiMap<ColorCode, LiquidStack> restrictedStacks = HashBiMap.create();
+	private static BiMap<ColorCode, Fluid> restrictedStacks = HashBiMap.create();
 
 	static
 	{
 		/* ADD DEFAULT LIQUIDS */
-		restrictedStacks.put(ColorCode.BLUE, LiquidDictionary.getCanonicalLiquid("Water"));
-		restrictedStacks.put(ColorCode.RED, LiquidDictionary.getCanonicalLiquid("Lava"));
+		restrictedStacks.put(ColorCode.BLUE, FluidRegistry.getFluid("Water"));
+		restrictedStacks.put(ColorCode.RED, FluidRegistry.getFluid("Lava"));
 	}
 
 	@ForgeSubscribe
-	public void onLiquidRegistered(LiquidRegisterEvent event)
+	public void onLiquidRegistered(FluidRegisterEvent event)
 	{
-		if (event != null && event.Name != null)
+		if (event != null && event.fluidName != null)
 		{
-			if (event.Name.equalsIgnoreCase("Fuel") && !restrictedStacks.containsKey(ColorCode.YELLOW))
+			Fluid fluid = FluidRegistry.getFluid(event.fluidName);
+			if (event.fluidName.equalsIgnoreCase("Fuel") && !restrictedStacks.containsKey(ColorCode.YELLOW))
 			{
-				restrictedStacks.put(ColorCode.YELLOW, event.Liquid);
+				restrictedStacks.put(ColorCode.YELLOW, fluid);
 			}
-			else if (event.Name.equalsIgnoreCase("Oil") && !restrictedStacks.containsKey(ColorCode.BLACK))
+			else if (event.fluidName.equalsIgnoreCase("Oil") && !restrictedStacks.containsKey(ColorCode.BLACK))
 			{
-				restrictedStacks.put(ColorCode.BLACK, event.Liquid);
+				restrictedStacks.put(ColorCode.BLACK, fluid);
 			}
-			else if (event.Name.equalsIgnoreCase("Milk") && !restrictedStacks.containsKey(ColorCode.WHITE))
+			else if (event.fluidName.equalsIgnoreCase("Milk") && !restrictedStacks.containsKey(ColorCode.WHITE))
 			{
-				restrictedStacks.put(ColorCode.WHITE, event.Liquid);
+				restrictedStacks.put(ColorCode.WHITE, fluid);
 			}
 		}
 	}
 
-	/**
-	 * Checks too see if a color has a restricted stack
-	 */
+	/** Checks too see if a color has a restricted stack */
 	public static boolean hasRestrictedStack(int meta)
 	{
 		return restrictedStacks.containsKey(ColorCode.get(meta));
 	}
 
-	public static boolean hasRestrictedStack(LiquidStack stack)
+	public static boolean hasRestrictedStack(Fluid stack)
 	{
 		if (stack == null)
 		{
@@ -58,24 +61,20 @@ public class FluidRestrictionHandler
 		return restrictedStacks.inverse().containsKey(stack);
 	}
 
-	/**
-	 * gets the liquid stack that is restricted to this color
-	 * 
-	 */
-	public static LiquidStack getStackForColor(ColorCode color)
+	/** gets the liquid stack that is restricted to this color */
+	public static Fluid getStackForColor(ColorCode color)
 	{
 		return restrictedStacks.get(color);
 	}
-	/**
-	 * checks to see if the liquidStack is valid for the given color
-	 */
-	public static boolean isValidLiquid(ColorCode color, LiquidStack stack)
+
+	/** checks to see if the liquidStack is valid for the given color */
+	public static boolean isValidLiquid(ColorCode color, Fluid stack)
 	{
 		if (stack == null)
 		{
 			return false;
 		}
-		if(!FluidRestrictionHandler.hasRestrictedStack(color.ordinal()))
+		if (!FluidRestrictionHandler.hasRestrictedStack(color.ordinal()))
 		{
 			return true;
 		}

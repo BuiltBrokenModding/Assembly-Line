@@ -24,7 +24,7 @@ public class PlayerMsgHelper
 
 			for (EntityPlayer player : list)
 			{
-				player.sendChatToPlayer(sendMsg);
+				//player..sendChatToPlayer(sendMsg);
 			}
 		}
 	}

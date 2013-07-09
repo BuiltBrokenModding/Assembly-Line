@@ -12,7 +12,9 @@ public enum PowerSystems
 	{
 		this.id = id;
 	}
-
+	public static float BC3_RATIO = 100;
+	public static float TO_BC_RATIO = 1 / BC3_RATIO;
+	
 	private static boolean init = false;
 	private static Boolean[] loaded;
 

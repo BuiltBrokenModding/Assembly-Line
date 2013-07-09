@@ -13,6 +13,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
@@ -72,7 +73,8 @@ public class RenderEntityBlock extends Render
 		World world = entity.worldObj;
 		BlockInterface util = new BlockInterface();
 		util.texture = entity.texture;
-		loadTexture("/terrain.png");
+		ResourceLocation name = new ResourceLocation("minecraft:terrain.png"); 
+		func_110776_a(name);
 
 		for (int iBase = 0; iBase < entity.iSize; ++iBase)
 		{
@@ -217,5 +219,11 @@ public class RenderEntityBlock extends Render
 		{
 			tessellator.draw();
 		}
+	}
+
+	@Override
+	protected ResourceLocation func_110775_a(Entity entity)
+	{
+		return null;
 	}
 }

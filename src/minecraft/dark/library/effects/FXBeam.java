@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
@@ -74,7 +75,7 @@ public class FXBeam extends EntityFX
 		/**
 		 * Sets the particle age based on distance.
 		 */
-		EntityLiving renderentity = Minecraft.getMinecraft().renderViewEntity;
+		EntityLivingBase renderentity = Minecraft.getMinecraft().renderViewEntity;
 		int visibleDistance = 50;
 
 		if (!Minecraft.getMinecraft().gameSettings.fancyGraphics)
