@@ -1,7 +1,7 @@
 package dark.mech.common.machines;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -9,12 +9,12 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.prefab.block.BlockAdvanced;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.TabFluidMech;
+import dark.library.machine.BlockMachine;
 
-public class BlockRod extends BlockAdvanced
+public class BlockRod extends BlockMachine
 {
 
 	public BlockRod(int par1)
@@ -33,7 +33,7 @@ public class BlockRod extends BlockAdvanced
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int i, int j, int k, EntityLiving player, ItemStack stack)
+	public void onBlockPlacedBy(World world, int i, int j, int k, EntityLivingBase player, ItemStack stack)
 	{
 		int angle = MathHelper.floor_double((player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		int meta = 0;
@@ -75,12 +75,6 @@ public class BlockRod extends BlockAdvanced
 			world.setBlockMetadataWithNotify(x, y, z, meta + 1, 3);
 		}
 		return true;
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World var1)
-	{
-		return new TileEntityRod();
 	}
 
 	@Override

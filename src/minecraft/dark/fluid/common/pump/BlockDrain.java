@@ -2,7 +2,7 @@ package dark.fluid.common.pump;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -11,11 +11,11 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.prefab.block.BlockAdvanced;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.TabFluidMech;
+import dark.library.machine.BlockMachine;
 
-public class BlockDrain extends BlockAdvanced
+public class BlockDrain extends BlockMachine
 {
 	private Icon blockIcon;
 	private Icon drainIcon;
@@ -73,7 +73,7 @@ public class BlockDrain extends BlockAdvanced
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving p, ItemStack itemStack)
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase p, ItemStack itemStack)
 	{
 		int angle = MathHelper.floor_double((p.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		world.setBlockMetadataWithNotify(x, y, z, angle, 3);

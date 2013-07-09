@@ -9,7 +9,6 @@ package dark.mech.client.model;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.tileentity.TileEntity;
-import dark.mech.common.machines.TileEntityGenerator;
 
 public class ModelGenerator extends ModelBase
 {
@@ -168,8 +167,6 @@ public class ModelGenerator extends ModelBase
 		FrontBracer.render(f5);
 		// Moving parts
 		float pos = 0;
-		if (ent instanceof TileEntityGenerator)
-			pos = 45 * ((TileEntityGenerator) ent).getAnimationPos();
 
 		// change
 		FrontDisc.rotateAngleZ = (float) Math.toRadians(pos);

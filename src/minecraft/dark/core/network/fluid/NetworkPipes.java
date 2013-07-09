@@ -175,9 +175,9 @@ public class NetworkPipes extends NetworkFluidTiles
 	}
 
 	@Override
-	public void removeEntity(TileEntity ent)
+	public void removeTile(TileEntity ent)
 	{
-		super.removeEntity(ent);
+		super.removeTile(ent);
 		this.pressureLoads.remove(ent);
 		this.pressureProducers.remove(ent);
 	}

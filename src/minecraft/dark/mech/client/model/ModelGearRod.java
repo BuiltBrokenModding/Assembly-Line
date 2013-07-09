@@ -8,6 +8,7 @@ package dark.mech.client.model;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.tileentity.TileEntity;
 
 public class ModelGearRod extends ModelBase
 {
@@ -104,10 +105,10 @@ public class ModelGearRod extends ModelBase
 		setRotation(Rod2, 0F, 0F, 0.7853982F);
 	}
 
-	public void render(float f5, int r)
+	public void render(float f5, TileEntity tileEntity)
 	{
 
-		Rod.rotateAngleZ = 45 * r;
+		//Rod.rotateAngleZ = 45 * tileEntity;
 		Rod2.rotateAngleZ = Rod.rotateAngleZ + 45;
 
 		Rod.render(f5);

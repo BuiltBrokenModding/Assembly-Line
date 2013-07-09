@@ -2,12 +2,12 @@ package dark.fluid.common.pump;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquidTank;
-import net.minecraftforge.liquids.ITankContainer;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidStack;
-import net.minecraftforge.liquids.LiquidTank;
-import universalelectricity.core.electricity.ElectricityPack;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import dark.core.api.ITileConnector;
@@ -17,15 +17,19 @@ import dark.fluid.api.INetworkPipe;
 import dark.helpers.MetaGroup;
 import dark.library.machine.TileEntityRunnableMachine;
 
-public class TileEntityConstructionPump extends TileEntityRunnableMachine implements ITankContainer, ITileConnector
+public class TileEntityConstructionPump extends TileEntityRunnableMachine implements IFluidHandler, ITileConnector
 {
-	/* ENERGY PER TICK TO TRY TO PUMP */
-	public static final double WATTS_PER_TICK = 100;
 	/* LIQUID FLOW CONNECTION SIDES */
-	/* Fake Internal Tank */
-	private LiquidTank fakeTank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
+	/** Internal tank for interaction but not real storage */
+	private FluidTank fakeTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 	private int liquidRequest = 5;
 	public int rotation = 0;
+
+	public TileEntityConstructionPump()
+	{
+		super(100);
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	public void initiate()
@@ -58,11 +62,8 @@ public class TileEntityConstructionPump extends TileEntityRunnableMachine implem
 		super.updateEntity();
 		if (!worldObj.isRemote)
 		{
-			if (this.ticks % 10 == 0 && this.wattsReceived >= this.WATTS_PER_TICK) // TODO add
-																					// electric
-																					// Drain
+			if (this.ticks % 10 == 0 && this.canRun())
 			{
-				this.wattsReceived -= this.WATTS_PER_TICK;
 				this.rotation += 1;
 				if (rotation >= 7)
 				{
@@ -74,13 +75,13 @@ public class TileEntityConstructionPump extends TileEntityRunnableMachine implem
 				TileEntity outputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), getFacing(false));
 				if (inputTile instanceof INetworkPipe && ((INetworkPipe) inputTile).getTileNetwork() instanceof NetworkFluidTiles)
 				{
-					if (outputTile instanceof ITankContainer)
+					if (outputTile instanceof IFluidHandler)
 					{
-						for (ITankContainer tank : ((NetworkFluidTiles) ((INetworkPipe) inputTile).getTileNetwork()).connectedTanks)
+						for (IFluidHandler tank : ((NetworkFluidTiles) ((INetworkPipe) inputTile).getTileNetwork()).connectedTanks)
 						{
 							if (tank instanceof TileEntityDrain)
 							{
-								((TileEntityDrain) tank).requestLiquid(this, new LiquidStack(-1, liquidRequest * LiquidContainerRegistry.BUCKET_VOLUME));
+								((TileEntityDrain) tank).requestLiquid(this, null, liquidRequest * FluidContainerRegistry.BUCKET_VOLUME);
 								called = true;
 							}
 
@@ -93,79 +94,65 @@ public class TileEntityConstructionPump extends TileEntityRunnableMachine implem
 	}
 
 	@Override
-	public double getRequest(ForgeDirection direction)
-	{
-		return WATTS_PER_TICK;
-	}
-
-	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
 		return direction != getFacing(true) && direction != getFacing(false);
 	}
 
 	@Override
-	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
 		if (from != getFacing(true))
 		{
 			return 0;
 		}
-		return this.fill(0, resource, doFill);
-	}
-
-	@Override
-	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
-	{
-		if (tankIndex != 0 || resource == null)
-		{
-			return 0;
-		}
 		TileEntity entity = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), getFacing(false));
-		if (entity instanceof ITankContainer)
+		if (entity instanceof IFluidHandler)
 		{
-			return ((ITankContainer) entity).fill(getFacing(false).getOpposite(), resource, doFill);
+			return ((IFluidHandler) entity).fill(getFacing(false).getOpposite(), resource, doFill);
 		}
 		return 0;
 	}
 
 	@Override
-	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
-	{
-		// TODO maybe have it make a request for liquid if something tries to drain it
-		return null;
-	}
-
-	@Override
-	public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		return null;
 	}
 
 	@Override
-	public ILiquidTank[] getTanks(ForgeDirection direction)
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		if (direction == this.getFacing(false))
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public FluidTankInfo[] getTankInfo(ForgeDirection direction)
+	{
+		if (direction == this.getFacing(false) && this.fakeTank != null)
 		{
-			return new ILiquidTank[] { fakeTank };
+			return new FluidTankInfo[] { new FluidTankInfo(fakeTank.getFluid(), fakeTank.getCapacity()) };
 		}
 		return null;
 	}
 
 	@Override
-	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
+	public boolean canFill(ForgeDirection from, Fluid fluid)
 	{
-		if (direction == this.getFacing(false))
-		{
-			return fakeTank;
-		}
-		return null;
+		return from != getFacing(true);
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	{
+		return false;
 	}
 
 	@Override
 	public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
 	{
-		return entity instanceof ITankContainer && (dir == this.getFacing(false) || dir == this.getFacing(true));
+		return entity instanceof IFluidHandler && (dir == this.getFacing(false) || dir == this.getFacing(true));
 	}
 
 	@Override
@@ -174,4 +161,5 @@ public class TileEntityConstructionPump extends TileEntityRunnableMachine implem
 		super.invalidate();
 		HydraulicNetworkHelper.invalidate(this);
 	}
+
 }

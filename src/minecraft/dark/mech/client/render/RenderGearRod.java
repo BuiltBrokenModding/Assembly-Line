@@ -7,9 +7,6 @@ import org.lwjgl.opengl.GL11;
 
 import dark.fluid.common.FluidMech;
 import dark.mech.client.model.ModelGearRod;
-import dark.mech.common.machines.TileEntityRod;
-
-
 
 public class RenderGearRod extends TileEntitySpecialRenderer
 {
@@ -20,9 +17,9 @@ public class RenderGearRod extends TileEntitySpecialRenderer
 		model = new ModelGearRod();
 	}
 
-	public void renderAModelAt(TileEntityRod tileEntity, double d, double d1, double d2, float f)
+	public void renderAModelAt(TileEntity tileEntity, double d, double d1, double d2, float f)
 	{
-		bindTextureByName(FluidMech.MODEL_TEXTURE_DIRECTORY + "mechanical/GearRod.png");
+		//bindTextureByName(FluidMech.MODEL_TEXTURE_DIRECTORY + "mechanical/GearRod.png");
 		GL11.glPushMatrix();
 
 		int meta = tileEntity.worldObj.getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
@@ -60,7 +57,7 @@ public class RenderGearRod extends TileEntitySpecialRenderer
 				GL11.glRotatef(270f, 0f, 1f, 0f);
 				break;
 		}
-		model.render(0.0625F, tileEntity.pos);
+		model.render(0.0625F, tileEntity);
 		GL11.glPopMatrix();
 
 	}
@@ -68,7 +65,7 @@ public class RenderGearRod extends TileEntitySpecialRenderer
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double var2, double var4, double var6, float var8)
 	{
-		this.renderAModelAt((TileEntityRod) tileEntity, var2, var4, var6, var8);
+		this.renderAModelAt(tileEntity, var2, var4, var6, var8);
 	}
 
 }

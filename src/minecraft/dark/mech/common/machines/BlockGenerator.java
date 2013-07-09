@@ -3,19 +3,19 @@ package dark.mech.common.machines;
 import java.util.ArrayList;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import universalelectricity.prefab.block.BlockAdvanced;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.TabFluidMech;
+import dark.library.machine.BlockMachine;
 
-public class BlockGenerator extends BlockAdvanced
+public class BlockGenerator extends BlockMachine
 {
 
 	public BlockGenerator(int id)
@@ -41,7 +41,7 @@ public class BlockGenerator extends BlockAdvanced
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving par5EntityLiving, ItemStack stack)
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase par5EntityLiving, ItemStack stack)
 	{
 		int angle = MathHelper.floor_double((par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		world.setBlockMetadataWithNotify(x, y, z, blockID, angle);
@@ -79,12 +79,6 @@ public class BlockGenerator extends BlockAdvanced
 	public int getRenderType()
 	{
 		return BlockRenderHelper.renderID;
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World world)
-	{
-		return new TileEntityGenerator();
 	}
 
 	@Override

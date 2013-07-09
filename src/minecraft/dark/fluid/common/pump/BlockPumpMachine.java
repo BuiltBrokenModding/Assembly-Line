@@ -1,24 +1,23 @@
 package dark.fluid.common.pump;
 
-
 import java.util.List;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import universalelectricity.prefab.block.BlockAdvanced;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.TabFluidMech;
 import dark.helpers.MetaGroup;
+import dark.library.machine.BlockMachine;
 
-public class BlockPumpMachine extends BlockAdvanced
+public class BlockPumpMachine extends BlockMachine
 {
 
 	public BlockPumpMachine(int id)
@@ -73,7 +72,7 @@ public class BlockPumpMachine extends BlockAdvanced
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving p, ItemStack itemStack)
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase p, ItemStack itemStack)
 	{
 		int meta = world.getBlockMetadata(x, y, z);
 		int angle = MathHelper.floor_double((p.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;

@@ -8,11 +8,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import universalelectricity.prefab.block.BlockAdvanced;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.TabFluidMech;
+import dark.library.machine.BlockMachine;
 
-public class BlockReleaseValve extends BlockAdvanced
+public class BlockReleaseValve extends BlockMachine
 {
 	public BlockReleaseValve(int par1)
 	{

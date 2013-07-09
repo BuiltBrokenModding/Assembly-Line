@@ -1,27 +1,20 @@
 package dark.fluid.common.machines;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumArmorMaterial;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidStack;
-import universalelectricity.prefab.block.BlockAdvanced;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
-import dark.core.hydraulic.helpers.FluidHelper;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.TabFluidMech;
 import dark.helpers.MetaGroup;
+import dark.library.machine.BlockMachine;
 
-public class BlockSink extends BlockAdvanced
+public class BlockSink extends BlockMachine
 {
 	public BlockSink(int par1)
 	{
@@ -36,95 +29,6 @@ public class BlockSink extends BlockAdvanced
 	public TileEntity createNewTileEntity(World var1)
 	{
 		return new TileEntitySink();
-	}
-
-	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int side, float hitX, float hitY, float hitZ)
-	{
-		if (entityplayer.isSneaking())
-		{
-			return false;
-		}
-		ItemStack current = entityplayer.inventory.getCurrentItem();
-		if (current != null)
-		{
-
-			LiquidStack liquid = LiquidContainerRegistry.getLiquidForFilledItem(current);
-
-			TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-
-			if (tileEntity instanceof TileEntitySink)
-			{
-				TileEntitySink tank = (TileEntitySink) tileEntity;
-
-				// Handle filled containers
-				if (liquid != null)
-				{
-					if (current.isItemEqual(new ItemStack(Item.potion)))
-					{
-						liquid = new LiquidStack(liquid.itemID, (LiquidContainerRegistry.BUCKET_VOLUME / 4), liquid.itemMeta);
-					}
-					int filled = tank.fill(ForgeDirection.UNKNOWN, liquid, true);
-
-					if (filled != 0 && !entityplayer.capabilities.isCreativeMode)
-					{
-						entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, FluidHelper.consumeItem(current));
-					}
-
-					return true;
-
-					// Handle empty containers
-				}
-				else
-				{
-
-					if (current.getItem() instanceof ItemArmor && ((ItemArmor) current.getItem()).getArmorMaterial() == EnumArmorMaterial.CLOTH)
-					{
-						ItemArmor var13 = (ItemArmor) current.getItem();
-						var13.removeColor(current);
-						return true;
-					}
-					LiquidStack stack = tank.getStoredLiquid();
-					if (stack != null)
-					{
-						ItemStack liquidItem = LiquidContainerRegistry.fillLiquidContainer(stack, current);
-
-						liquid = LiquidContainerRegistry.getLiquidForFilledItem(liquidItem);
-
-						if (liquid != null)
-						{
-							if (!entityplayer.capabilities.isCreativeMode)
-							{
-								if (current.stackSize > 1)
-								{
-									if (!entityplayer.inventory.addItemStackToInventory(liquidItem))
-										return false;
-									else
-									{
-										entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, FluidHelper.consumeItem(current));
-									}
-								}
-								else
-								{
-									entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, FluidHelper.consumeItem(current));
-									entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, liquidItem);
-								}
-							}
-							int ammount = liquid.amount;
-							if (current.isItemEqual(new ItemStack(Item.glassBottle)))
-							{
-								ammount = (LiquidContainerRegistry.BUCKET_VOLUME / 4);
-							}
-							tank.drain(null, ammount, true);
-							return true;
-						}
-					}
-				}
-			}
-		}
-
-		return false;
-
 	}
 
 	@Override
@@ -149,7 +53,7 @@ public class BlockSink extends BlockAdvanced
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving par5EntityLiving, ItemStack itemStack)
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase par5EntityLiving, ItemStack itemStack)
 	{
 		int meta = world.getBlockMetadata(x, y, z);
 		int angle = MathHelper.floor_double((par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;

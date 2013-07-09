@@ -1,6 +1,7 @@
 package dark.fluid.api;
 
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 
@@ -25,7 +26,7 @@ public interface IDrain extends IFluidHandler
 	 * 
 	 * @param pump - requesting pump
 	 * @param stack - liquid this pump wants for this request */
-	public void requestLiquid(TileEntity pump, FluidStack stack);
+	public void requestLiquid(TileEntity pump, Fluid fluid, int amount);
 
 	/** Request that this drain no longer supply the pump with a volume. By default a request will be
 	 * removed from the request map after being filled. However, this can be used too stop a request

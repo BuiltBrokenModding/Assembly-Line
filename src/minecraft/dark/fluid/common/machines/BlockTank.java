@@ -11,16 +11,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidStack;
-import universalelectricity.prefab.block.BlockAdvanced;
 import dark.core.api.INetworkPart;
 import dark.core.hydraulic.helpers.FluidHelper;
 import dark.core.hydraulic.helpers.FluidRestrictionHandler;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.TabFluidMech;
+import dark.library.machine.BlockMachine;
 
-public class BlockTank extends BlockAdvanced
+public class BlockTank extends BlockMachine
 {
 
 	public BlockTank(int id)

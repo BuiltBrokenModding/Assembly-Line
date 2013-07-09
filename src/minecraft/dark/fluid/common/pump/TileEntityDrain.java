@@ -1,6 +1,5 @@
 package dark.fluid.common.pump;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -13,28 +12,24 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquid;
-import net.minecraftforge.liquids.ILiquidTank;
-import net.minecraftforge.liquids.ITankContainer;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidStack;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
-import dark.core.api.IToolReadOut.EnumTools;
 import dark.core.hydraulic.helpers.FluidHelper;
 import dark.fluid.api.IDrain;
 import dark.fluid.api.INetworkPipe;
 import dark.fluid.common.prefab.TileEntityFluidDevice;
 
-public class TileEntityDrain extends TileEntityFluidDevice implements ITankContainer, IDrain
+public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHandler, IDrain
 {
 	/* MAX BLOCKS DRAINED PER 1/2 SECOND */
 	public static int MAX_WORLD_EDITS_PER_PROCESS = 30;
 	private int currentWorldEdits = 0;
 
 	/* LIST OF PUMPS AND THERE REQUESTS FOR THIS DRAIN */
-	private HashMap<TileEntity, LiquidStack> requestMap = new HashMap<TileEntity, LiquidStack>();
+	private HashMap<TileEntity, FluidStack> requestMap = new HashMap<TileEntity, FluidStack>();
 
 	private List<Vector3> targetSources = new ArrayList<Vector3>();
 	private List<Vector3> updateQue = new ArrayList<Vector3>();
@@ -165,9 +160,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 		}
 	}
 
-	/**
-	 * Finds more liquid blocks using a path finder to be drained
-	 */
+	/** Finds more liquid blocks using a path finder to be drained */
 	public void getNextFluidBlock()
 	{
 
@@ -352,7 +345,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements ITankConta
 			final Vector3 faceVec = new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ);
 			getLiquidFinder().init(faceVec, true);
 			//System.out.println("Drain:FillArea: Targets -> " + getLiquidFinder().results.size());
-			
+
 			/* SORT RESULTS TO PUT THE LOWEST AND CLOSEST AT THE TOP */
 			try
 			{

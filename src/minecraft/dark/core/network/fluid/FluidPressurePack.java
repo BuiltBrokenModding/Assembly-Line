@@ -19,8 +19,8 @@ public class FluidPressurePack implements Cloneable
 		return new FluidPressurePack(this.liquidStack, this.pressure);
 	}
 
-	public boolean isEqual(FluidPressurePack electricityPack)
+	public boolean isEqual(FluidPressurePack packet)
 	{
-		return this.liquidStack.isLiquidEqual(electricityPack.liquidStack) && this.pressure == electricityPack.pressure;
+		return this.liquidStack.isFluidEqual(packet.liquidStack) && this.pressure == packet.pressure;
 	}
 }

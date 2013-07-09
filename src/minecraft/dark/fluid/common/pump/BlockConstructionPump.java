@@ -1,12 +1,11 @@
 package dark.fluid.common.pump;
 
-
 import java.util.List;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -16,13 +15,13 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.prefab.block.BlockAdvanced;
 import dark.core.network.fluid.HydraulicNetworkHelper;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.TabFluidMech;
+import dark.library.machine.BlockMachine;
 
-public class BlockConstructionPump extends BlockAdvanced
+public class BlockConstructionPump extends BlockMachine
 {
 	Icon inputIcon;
 	Icon outputIcon;
@@ -96,7 +95,7 @@ public class BlockConstructionPump extends BlockAdvanced
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving p, ItemStack itemStack)
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase p, ItemStack itemStack)
 	{
 	}
 
@@ -118,13 +117,13 @@ public class BlockConstructionPump extends BlockAdvanced
 		{
 			int meta = world.getBlockMetadata(x, y, z);
 			int angle = MathHelper.floor_double((entityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-			
+
 			TileEntity entity = world.getBlockTileEntity(x, y, z);
 			if (entity instanceof TileEntityConstructionPump)
 			{
 				HydraulicNetworkHelper.invalidate(entity);
 			}
-			
+
 			if (meta == 3)
 			{
 				world.setBlockMetadataWithNotify(x, y, z, 0, 3);
