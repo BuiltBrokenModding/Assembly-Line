@@ -13,8 +13,6 @@ import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
 import universalelectricity.prefab.TranslationHelper;
-import universalelectricity.prefab.multiblock.BlockMulti;
-import universalelectricity.prefab.multiblock.TileEntityMulti;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.armbot.BlockArmbot;
 import assemblyline.common.armbot.TileEntityArmbot;
@@ -44,10 +42,9 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.Init;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.Metadata;
-import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -56,6 +53,8 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
+import dark.library.machine.BlockMulti;
+import dark.library.machine.TileEntityMulti;
 
 @ModstatInfo(prefix = "asmline")
 @Mod(modid = AssemblyLine.CHANNEL, name = AssemblyLine.MOD_NAME, version = AssemblyLine.VERSION, dependencies = "after:BasicComponents; after:IC2", useMetadata = true)
@@ -129,7 +128,7 @@ public class AssemblyLine
 	public static boolean REQUIRE_NO_POWER = false;
 	public static boolean VINALLA_RECIPES = false;
 
-	@PreInit
+	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		FMLog.setParent(FMLLog.getLogger());
@@ -193,7 +192,7 @@ public class AssemblyLine
 		proxy.preInit();
 	}
 
-	@Init
+	@EventHandler
 	public void load(FMLInitializationEvent evt)
 	{
 		proxy.init();

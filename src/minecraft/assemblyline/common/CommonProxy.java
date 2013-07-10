@@ -11,22 +11,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.multiblock.TileEntityMulti;
-import assemblyline.common.armbot.TileEntityArmbot;
 import assemblyline.common.imprinter.ContainerImprinter;
 import assemblyline.common.imprinter.TileEntityImprinter;
-import assemblyline.common.machine.TileEntityCrate;
-import assemblyline.common.machine.TileEntityManipulator;
-import assemblyline.common.machine.TileEntityRejector;
-import assemblyline.common.machine.belt.TileEntityConveyorBelt;
-import assemblyline.common.machine.crane.TileEntityCraneController;
-import assemblyline.common.machine.crane.TileEntityCraneRail;
-import assemblyline.common.machine.detector.TileEntityDetector;
 import assemblyline.common.machine.encoder.ContainerEncoder;
 import assemblyline.common.machine.encoder.TileEntityEncoder;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.IGuiHandler;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class CommonProxy implements IGuiHandler
 {
@@ -40,7 +30,7 @@ public class CommonProxy implements IGuiHandler
 
 	public void init()
 	{
-		
+
 	}
 
 	private void extractZipToLocation(File zipFile, String sourceFolder, String destFolder)
@@ -136,16 +126,14 @@ public class CommonProxy implements IGuiHandler
 	{
 		return false;
 	}
-	
-	/**
-	 * Renders a laser beam from one power to another by a set color for a set time
+
+	/** Renders a laser beam from one power to another by a set color for a set time
 	 * 
 	 * @param world - world this laser is to be rendered in
 	 * @param position - start vector3
 	 * @param target - end vector3
 	 * @param color - color of the beam
-	 * @param age - life of the beam in 1/20 secs
-	 */
+	 * @param age - life of the beam in 1/20 secs */
 	public void renderBeam(World world, Vector3 position, Vector3 target, Color color, int age)
 	{
 	}
