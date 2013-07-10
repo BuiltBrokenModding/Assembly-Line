@@ -5,10 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
-import dark.fluid.common.FluidMech;
 import dark.mech.client.model.ModelGenerator;
-
-
 
 public class RenderGenerator extends TileEntitySpecialRenderer
 {

@@ -13,29 +13,22 @@ public interface IPipeExtention extends IPacketReceiver
 
 	public void setPipe(TileEntityPipe pipe);
 
-	/**
-	 * how many ticks before next update
-	 */
+	/** how many ticks before next update */
 	public int updateTick();
 
-	/**
-	 * if this sub tile needs a packet update
-	 * @param  
-	 */
+	/** if this sub tile needs a packet update
+	 * 
+	 * @param */
 	public boolean shouldSendPacket(boolean server);
 
-	/**
-	 * data that will be sent to this extension
-	 */
+	/** data that will be sent to this extension */
 	public NBTTagCompound getExtentionPacketData(boolean server);
 
-	/**
-	 * render class to be used to render this pipe extension of the face of the main pipe
-	 */
+	/** render class to be used to render this pipe extension of the face of the main pipe */
 	public Class<?> getExtentionRenderClass();
-	
+
 	public void setDirection(ForgeDirection dir);
-	
+
 	public ForgeDirection getDirection();
 
 }

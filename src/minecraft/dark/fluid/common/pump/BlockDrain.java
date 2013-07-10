@@ -6,6 +6,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
@@ -97,7 +98,7 @@ public class BlockDrain extends BlockMachine
 			TileEntity entity = world.getBlockTileEntity(x, y, z);
 			if (entity instanceof TileEntityDrain)
 			{
-				entityPlayer.sendChatToPlayer("Draining Sources? " + ((TileEntityDrain) entity).canDrainSources());
+				entityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("Draining Sources? " + ((TileEntityDrain) entity).canDrainSources()));
 
 			}
 			return true;

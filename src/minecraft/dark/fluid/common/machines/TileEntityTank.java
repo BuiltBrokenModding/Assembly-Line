@@ -12,11 +12,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityComparator;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquidTank;
-import net.minecraftforge.liquids.ITankContainer;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidStack;
-import net.minecraftforge.liquids.LiquidTank;
 
 import org.bouncycastle.util.Arrays;
 
@@ -212,7 +207,7 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 						connectedBlocks.add(tileEntity);
 					}
 				}
-				if(tileEntity instanceof TileEntityComparator)
+				if (tileEntity instanceof TileEntityComparator)
 				{
 					this.worldObj.markBlockForUpdate(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
 				}

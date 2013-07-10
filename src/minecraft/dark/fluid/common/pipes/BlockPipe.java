@@ -10,14 +10,15 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquidTank;
+import net.minecraftforge.fluids.IFluidTank;
 import universalelectricity.prefab.block.BlockAdvanced;
 import dark.core.hydraulic.helpers.FluidRestrictionHandler;
 import dark.fluid.api.INetworkPipe;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.TabFluidMech;
+import dark.library.machine.BlockMachine;
 
-public class BlockPipe extends BlockAdvanced
+public class BlockPipe extends BlockMachine
 {
 	public BlockPipe(int id)
 	{
@@ -115,7 +116,7 @@ public class BlockPipe extends BlockAdvanced
 		TileEntity entity = world.getBlockTileEntity(x, y, z);
 		if (entity instanceof TileEntityPipe)
 		{
-			ILiquidTank tank = ((TileEntityPipe) entity).getTank();
+			IFluidTank tank = ((TileEntityPipe) entity).getTank();
 			if (tank != null && tank.getLiquid() != null && tank.getLiquid().amount > 0)
 			{
 				if (tank.getLiquid().itemID == Block.waterStill.blockID)

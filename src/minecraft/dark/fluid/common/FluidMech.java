@@ -10,8 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.liquids.LiquidDictionary;
-import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
@@ -36,10 +34,8 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
-import dark.core.DarkMain;
 import dark.core.api.ColorCode;
 import dark.core.hydraulic.helpers.FluidRestrictionHandler;
-import dark.fluid.common.fluids.BlockWasteLiquid;
 import dark.fluid.common.item.ItemParts;
 import dark.fluid.common.item.ItemParts.Parts;
 import dark.fluid.common.item.ItemTools;
@@ -65,8 +61,6 @@ import dark.fluid.common.pump.TileEntityDrain;
 import dark.fluid.common.pump.TileEntityStarterPump;
 import dark.mech.common.machines.BlockGenerator;
 import dark.mech.common.machines.BlockRod;
-import dark.mech.common.machines.TileEntityGenerator;
-import dark.mech.common.machines.TileEntityRod;
 
 @ModstatInfo(prefix = "fluidmech")
 @Mod(modid = FluidMech.MOD_ID, name = FluidMech.MOD_NAME, version = FluidMech.VERSION, dependencies = "after:BasicComponents", useMetadata = true)

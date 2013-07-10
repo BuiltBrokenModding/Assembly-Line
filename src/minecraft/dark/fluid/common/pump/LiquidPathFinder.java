@@ -1,6 +1,5 @@
 package dark.fluid.common.pump;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,9 +12,7 @@ import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
 import dark.core.hydraulic.helpers.FluidHelper;
 
-/**
- * A simpler pathfinder based on Calclavia's PathFinder from UE api
- */
+/** A simpler pathfinder based on Calclavia's PathFinder from UE api */
 public class LiquidPathFinder
 {
 	private World world; /* MC WORLD */
@@ -52,12 +49,10 @@ public class LiquidPathFinder
 		bn.add(ForgeDirection.SOUTH);
 	}
 
-	/**
-	 * @return True on success finding, false on failure.
-	 */
+	/** @return True on success finding, false on failure. */
 	public boolean findNodes(Vector3 node)
 	{
-		if(node == null)
+		if (node == null)
 		{
 			return true;
 		}
@@ -74,11 +69,11 @@ public class LiquidPathFinder
 
 			int id = node.getBlockID(world);
 			int meta = node.getBlockID(world);
-			if (this.fill && (id == 0 || (FluidHelper.getBlockFluidStack(id) != null && meta != 0)))
+			if (this.fill && (id == 0 || (FluidHelper.isFillable(world, node))))
 			{
 				this.results.add(node);
 			}
-			else if (!this.fill && FluidHelper.isSourceBlock(world, node))
+			else if (!this.fill && FluidHelper.drainBlock(world, node, false) != null)
 			{
 				this.results.add(node);
 			}
@@ -133,15 +128,7 @@ public class LiquidPathFinder
 
 	public boolean isValidNode(Vector3 pos)
 	{
-		int blockID = pos.getBlockID(world);
-		if (!this.fill)
-		{
-			return FluidHelper.getBlockFluidStack(pos.getBlockID(world)) != null;
-		}
-		else
-		{
-			return FluidHelper.getBlockFluidStack(pos.getBlockID(world)) != null || (blockID == 0 && FluidHelper.getConnectedSources(world, pos) > 0);
-		}
+		return FluidHelper.drainBlock(world, pos, false) != null;
 	}
 
 	public boolean isDone(Vector3 vec)
@@ -153,9 +140,7 @@ public class LiquidPathFinder
 		return false;
 	}
 
-	/**
-	 * Called to execute the pathfinding operation.
-	 */
+	/** Called to execute the pathfinding operation. */
 	public LiquidPathFinder init(final Vector3 startNode, final boolean fill)
 	{
 		this.Start = startNode.toVector2();

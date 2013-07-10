@@ -1,6 +1,5 @@
 package dark.fluid.common.machines;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,14 +7,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ITankContainer;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidStack;
 import dark.core.api.ColorCode;
 import dark.core.api.IColorCoded;
-import dark.core.api.IToolReadOut;
 import dark.core.api.ITileConnector;
-import dark.core.api.IToolReadOut.EnumTools;
+import dark.core.api.IToolReadOut;
 import dark.core.network.fluid.NetworkPipes;
 import dark.fluid.api.INetworkPipe;
 import dark.fluid.common.prefab.TileEntityFluidDevice;
@@ -70,7 +65,7 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITi
 						INetworkPipe inputPipe = this.findValidPipe(stack);
 						if (inputPipe != null)
 						{
-							int ammountFilled = ((NetworkPipes)inputPipe.getTileNetwork()).addFluidToNetwork((TileEntity) drainedTank, stack, true);
+							int ammountFilled = ((NetworkPipes) inputPipe.getTileNetwork()).addFluidToNetwork((TileEntity) drainedTank, stack, true);
 							drainedTank.drain(ForgeDirection.UNKNOWN, ammountFilled, true);
 						}
 					}
@@ -111,11 +106,9 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITi
 		return true;
 	}
 
-	/**
-	 * if any of allowed list is true
+	/** if any of allowed list is true
 	 * 
-	 * @return true
-	 */
+	 * @return true */
 	public boolean isRestricted()
 	{
 		for (int i = 0; i < this.allowed.length; i++)
@@ -128,10 +121,8 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITi
 		return false;
 	}
 
-	/**
-	 * Collects info about the surrounding 6 tiles and orders them into drain-able(ITankContainer)
-	 * and fill-able(TileEntityPipes) instances
-	 */
+	/** Collects info about the surrounding 6 tiles and orders them into drain-able(ITankContainer)
+	 * and fill-able(TileEntityPipes) instances */
 	public void validateNBuildList()
 	{
 		// cleanup

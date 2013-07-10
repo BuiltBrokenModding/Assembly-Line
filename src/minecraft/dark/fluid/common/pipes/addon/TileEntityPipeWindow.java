@@ -4,11 +4,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
-import net.minecraftforge.liquids.LiquidStack;
 
 import com.google.common.io.ByteArrayDataInput;
 
-import dark.core.network.fluid.NetworkPipes;
 import dark.fluid.client.render.pipe.RenderPipeWindow;
 import dark.fluid.common.pipes.TileEntityPipe;
 
@@ -17,8 +15,6 @@ public class TileEntityPipeWindow extends TileEntityPipeExtention
 
 	private TileEntityPipe pipe = null;
 	private boolean shouldUpdate = false;
-
-	LiquidStack stack = new LiquidStack(0, 0, 0);
 
 	@Override
 	public void updateEntity()
@@ -30,8 +26,6 @@ public class TileEntityPipeWindow extends TileEntityPipeExtention
 		{
 			if (pipe != null)
 			{
-				stack = ((NetworkPipes) pipe.getTileNetwork()).combinedStorage().getLiquid();
-				worldObj.setBlockMetadataWithNotify(xCoord, yCoord + 1, yCoord, 0, 0);
 			}
 		}
 		else

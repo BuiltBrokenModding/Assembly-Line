@@ -71,13 +71,13 @@ public class ModelConstructionPump extends ModelBase
 
 	public void render(float f5)
 	{
-		Side3.render(f5);		
+		Side3.render(f5);
 		side.render(f5);
 		base.render(f5);
 		side2.render(f5);
 		side4.render(f5);
 	}
-	
+
 	public void renderMotor(float f5)
 	{
 		Motor2.render(f5);

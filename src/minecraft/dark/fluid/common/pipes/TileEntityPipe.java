@@ -13,11 +13,12 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquidTank;
-import net.minecraftforge.liquids.ITankContainer;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidStack;
-import net.minecraftforge.liquids.LiquidTank;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.IFluidHandler;
 
 import org.bouncycastle.util.Arrays;
 
@@ -33,9 +34,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.api.ColorCode;
 import dark.core.api.IColorCoded;
-import dark.core.api.IToolReadOut;
 import dark.core.api.ITileConnector;
-import dark.core.api.IToolReadOut.EnumTools;
+import dark.core.api.IToolReadOut;
 import dark.core.hydraulic.helpers.FluidHelper;
 import dark.core.hydraulic.helpers.FluidRestrictionHandler;
 import dark.core.network.fluid.NetworkPipes;
@@ -44,11 +44,11 @@ import dark.fluid.api.INetworkPipe;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.pipes.addon.IPipeExtention;
 
-public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer, IToolReadOut, IColorCoded, INetworkPipe, IPacketReceiver
+public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler, IToolReadOut, IColorCoded, INetworkPipe, IPacketReceiver
 {
 
 	/* TANK TO FAKE OTHER TILES INTO BELIVING THIS HAS AN INTERNAL STORAGE */
-	protected LiquidTank fakeTank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
+	protected FluidTank fakeTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 	/* CURRENTLY CONNECTED TILE ENTITIES TO THIS */
 	private List<TileEntity> connectedBlocks = new ArrayList<TileEntity>();
 	public boolean[] renderConnection = new boolean[6];
@@ -202,10 +202,21 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		LiquidStack liquid = LiquidStack.loadLiquidStackFromNBT(nbt.getCompoundTag("stored"));
+		FluidStack liquid = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("FluidTank"));
+		if (nbt.hasKey("stored"))
+		{
+			NBTTagCompound tag = nbt.getCompoundTag("stored");
+			String name = tag.getString("LiquidName");
+			int amount = nbt.getInteger("Amount");
+			Fluid fluid = FluidRegistry.getFluid(name);
+			if (fluid != null)
+			{
+				liquid = new FluidStack(fluid, amount);
+			}
+		}
 		if (liquid != null)
 		{
-			this.fakeTank.setLiquid(liquid);
+			this.fakeTank.setFluid(liquid);
 		}
 		for (int i = 0; i < 6; i++)
 		{
@@ -221,9 +232,9 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		if (this.fakeTank.containsValidLiquid())
+		if (this.fakeTank != null)
 		{
-			nbt.setTag("stored", this.fakeTank.getLiquid().writeToNBT(new NBTTagCompound()));
+			nbt.setTag("FluidTank", this.fakeTank.getFluid().writeToNBT(new NBTTagCompound()));
 		}
 		for (int i = 0; i < 6; i++)
 		{
@@ -384,24 +395,14 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 	}
 
 	@Override
-	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if (resource == null || !FluidRestrictionHandler.isValidLiquid(this.getColor(), resource))
+		if (resource == null || !FluidRestrictionHandler.isValidLiquid(this.getColor(), resource.getFluid()))
 		{
 			return 0;
 		}
 		TileEntity tile = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), from);
 		return ((NetworkPipes) this.getTileNetwork()).addFluidToNetwork(tile, resource, doFill);
-	}
-
-	@Override
-	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
-	{
-		if (tankIndex != 0 || resource == null || !FluidRestrictionHandler.isValidLiquid(this.getColor(), resource))
-		{
-			return 0;
-		}
-		return ((NetworkPipes) this.getTileNetwork()).addFluidToNetwork(this, resource, doFill);
 	}
 
 	@Override
@@ -489,7 +490,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements ITankContainer
 			boolean[] previousConnections = this.renderConnection.clone();
 			this.connectedBlocks.clear();
 
-			for (ForgeDirection dir: ForgeDirection.VALID_DIRECTIONS)
+			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 			{
 				TileEntity ent = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
 				this.renderConnection[dir.ordinal()] = this.validateConnectionSide(ent, dir);

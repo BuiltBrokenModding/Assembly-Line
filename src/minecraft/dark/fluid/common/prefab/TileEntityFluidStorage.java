@@ -4,69 +4,53 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquidTank;
-import net.minecraftforge.liquids.ITankContainer;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidDictionary;
-import net.minecraftforge.liquids.LiquidStack;
-import net.minecraftforge.liquids.LiquidTank;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
 import dark.core.api.IColorCoded;
-import dark.core.api.IToolReadOut.EnumTools;
 import dark.core.hydraulic.helpers.FluidHelper;
 import dark.core.hydraulic.helpers.FluidRestrictionHandler;
 
-public abstract class TileEntityFluidStorage extends TileEntityFluidDevice implements ITankContainer, IColorCoded
+public abstract class TileEntityFluidStorage extends TileEntityFluidDevice implements IFluidHandler, IColorCoded
 {
 	/* INTERNAL TANK */
-	public LiquidTank tank = new LiquidTank(this.getTankSize());
+	public FluidTank tank = new FluidTank(this.getTankSize());
 
-	/**
-	 * gets the max storage limit of the tank
-	 */
+	/** gets the max storage limit of the tank */
 	public abstract int getTankSize();
 
 	@Override
 	public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
 	{
-		if(tool != EnumTools.PIPE_GUAGE)
+		if (tool != EnumTools.PIPE_GUAGE)
 		{
 			return null;
 		}
-		if (this.tank.getLiquid() == null)
+		if (this.tank.getFluid() == null)
 		{
 			return "Empty";
 		}
-		return String.format("%d/%d %S Stored", tank.getLiquid().amount / LiquidContainerRegistry.BUCKET_VOLUME, tank.getCapacity() / LiquidContainerRegistry.BUCKET_VOLUME, LiquidDictionary.findLiquidName(tank.getLiquid()));
+		return String.format("%d/%d %S Stored", tank.getFluid().amount / FluidContainerRegistry.BUCKET_VOLUME, tank.getCapacity() / FluidContainerRegistry.BUCKET_VOLUME, tank.getFluid().getFluid().getLocalizedName());
 	}
 
 	@Override
 	public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
 	{
-		if (entity instanceof ITankContainer)
-		{
-			return true;
-		}
-		return false;
+		return entity instanceof IFluidHandler;
 	}
 
 	@Override
-	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		return this.fill(0, resource, doFill);
-	}
-
-	@Override
-	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
-	{
-		if (resource == null || tankIndex != 0)
+		if (resource == null || resource.getFluid() == null || !FluidRestrictionHandler.isValidLiquid(getColor(), resource.getFluid()))
 		{
 			return 0;
 		}
-		else if (!FluidRestrictionHandler.isValidLiquid(getColor(),resource))
-		{
-			return 0;
-		}
-		else if (this.tank.getLiquid() != null && !resource.isLiquidEqual(this.tank.getLiquid()))
+		else if (this.tank.getFluid() != null && !resource.isFluidEqual(this.tank.getFluid()))
 		{
 			return 0;
 		}
@@ -74,19 +58,13 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 	}
 
 	@Override
-	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		return this.drain(0, maxDrain, doDrain);
-	}
-
-	@Override
-	public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
-	{
-		if (tankIndex != 0 || this.tank.getLiquid() == null)
+		if (this.tank.getFluid() == null)
 		{
 			return null;
 		}
-		LiquidStack stack = this.tank.getLiquid();
+		FluidStack stack = this.tank.getFluid();
 		if (maxDrain < stack.amount)
 		{
 			stack = FluidHelper.getStack(stack, maxDrain);
@@ -95,23 +73,13 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 	}
 
 	@Override
-	public ILiquidTank[] getTanks(ForgeDirection dir)
+	public FluidTankInfo[] getTankInfo(ForgeDirection from)
 	{
-		return new ILiquidTank[] { this.tank };
-	}
-
-	@Override
-	public ILiquidTank getTank(ForgeDirection dir, LiquidStack type)
-	{
-		if (type == null)
+		if (this.tank != null)
 		{
-			return null;
+			return new FluidTankInfo[] { new FluidTankInfo(this.tank.getFluid(), this.tank.getCapacity()) };
 		}
-		if (type.isLiquidEqual(this.tank.getLiquid()))
-		{
-			return this.tank;
-		}
-		return null;
+		return new FluidTankInfo[1];
 	}
 
 	@Override
@@ -119,10 +87,21 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 	{
 		super.readFromNBT(nbt);
 
-		LiquidStack liquid = LiquidStack.loadLiquidStackFromNBT(nbt.getCompoundTag("stored"));
+		FluidStack liquid = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("FluidTank"));
+		if (nbt.hasKey("stored"))
+		{
+			NBTTagCompound tag = nbt.getCompoundTag("stored");
+			String name = tag.getString("LiquidName");
+			int amount = nbt.getInteger("Amount");
+			Fluid fluid = FluidRegistry.getFluid(name);
+			if (fluid != null)
+			{
+				liquid = new FluidStack(fluid, amount);
+			}
+		}
 		if (liquid != null)
 		{
-			tank.setLiquid(liquid);
+			tank.setFluid(liquid);
 		}
 	}
 
@@ -130,30 +109,26 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		if (this.tank.containsValidLiquid())
+		if (this.tank != null)
 		{
-			nbt.setTag("stored", this.tank.getLiquid().writeToNBT(new NBTTagCompound()));
+			nbt.setTag("FluidTank", this.tank.getFluid().writeToNBT(new NBTTagCompound()));
 		}
 	}
 
-	/**
-	 * Is the internal tank full
-	 */
+	/** Is the internal tank full */
 	public boolean isFull()
 	{
-		if (this.tank.getLiquid() == null || this.tank.getLiquid().amount < this.tank.getCapacity())
+		if (this.tank.getFluid() == null || this.tank.getFluid().amount < this.tank.getCapacity())
 		{
 			return false;
 		}
 		return true;
 	}
 
-	/**
-	 * gets the liquidStack stored in the internal tank
-	 */
-	public LiquidStack getStoredLiquid()
+	/** gets the liquidStack stored in the internal tank */
+	public FluidStack getStoredLiquid()
 	{
-		return this.tank.getLiquid();
+		return this.tank.getFluid();
 	}
 
 }

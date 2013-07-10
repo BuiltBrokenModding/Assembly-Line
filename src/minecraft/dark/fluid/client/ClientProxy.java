@@ -22,8 +22,6 @@ import dark.fluid.common.pump.TileEntityConstructionPump;
 import dark.fluid.common.pump.TileEntityStarterPump;
 import dark.mech.client.render.RenderGearRod;
 import dark.mech.client.render.RenderGenerator;
-import dark.mech.common.machines.TileEntityGenerator;
-import dark.mech.common.machines.TileEntityRod;
 
 public class ClientProxy extends CommonProxy
 {

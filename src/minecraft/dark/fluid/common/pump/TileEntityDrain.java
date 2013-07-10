@@ -8,7 +8,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -125,7 +124,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 							if (stack != null)
 							{
 								/* GET STACKS */
-								
+
 								FluidStack requestStack = request.getValue();
 
 								if (stack != null && requestStack != null && (requestStack.isFluidEqual(stack) || requestStack.getFluid().getBlockID() == -111))

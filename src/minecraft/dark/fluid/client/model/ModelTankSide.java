@@ -121,17 +121,14 @@ public class ModelTankSide extends ModelBase
 		setRotation(rightTopSide, 0F, 0F, 0F);
 	}
 
-	/**
-	 * 
-	 * @param size - render size normal is 0.0625F
+	/** @param size - render size normal is 0.0625F
 	 * @param left - is the an instance of this to the left
 	 * @param right - "" to the right
 	 * @param bot - "" to the bot
 	 * @param top - "" to the top
 	 * 
 	 * Not this only renders one side of the block. You will need to rotate it to face another
-	 * direction then render it. If rotating up or down you will need to translate it a bit
-	 */
+	 * direction then render it. If rotating up or down you will need to translate it a bit */
 	public void render(float size, boolean left, boolean right, boolean bot, boolean top)
 	{
 		if (!top)

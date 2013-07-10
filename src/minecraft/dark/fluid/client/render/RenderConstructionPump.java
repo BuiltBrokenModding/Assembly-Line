@@ -9,8 +9,6 @@ import dark.fluid.client.model.ModelConstructionPump;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.pump.TileEntityConstructionPump;
 
-
-
 public class RenderConstructionPump extends TileEntitySpecialRenderer
 {
 	int type = 0;
@@ -45,9 +43,9 @@ public class RenderConstructionPump extends TileEntitySpecialRenderer
 				break;
 		}
 		model.render(0.0625F);
-		if(tileEntity instanceof TileEntityConstructionPump)
+		if (tileEntity instanceof TileEntityConstructionPump)
 		{
-			
+
 		}
 		model.renderMotor(0.0625F);
 		GL11.glPopMatrix();

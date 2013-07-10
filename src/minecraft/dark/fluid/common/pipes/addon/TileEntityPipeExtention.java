@@ -11,13 +11,10 @@ import com.google.common.io.ByteArrayDataInput;
 
 import dark.fluid.common.pipes.TileEntityPipe;
 
-/**
- * Pipe Extension for the TileEntityPipe.class is a sub TileEntity and is not loaded the same way as
+/** Pipe Extension for the TileEntityPipe.class is a sub TileEntity and is not loaded the same way as
  * a normal TileEntity
  * 
- * @author Rseifert
- * 
- */
+ * @author Rseifert */
 public abstract class TileEntityPipeExtention extends TileEntityAdvanced implements IPipeExtention, IPacketReceiver
 {
 

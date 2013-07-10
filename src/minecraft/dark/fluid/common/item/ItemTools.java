@@ -1,6 +1,5 @@
 package dark.fluid.common.item;
 
-
 import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -32,9 +31,9 @@ public class ItemTools extends ItemBasic
 		int meta = itemStack.getItemDamage();
 		if (meta == 0)
 		{
-			return "item."+"PipeGauge";
+			return "item." + "PipeGauge";
 		}
-		return "item."+this.getUnlocalizedName() + "." + meta;
+		return "item." + this.getUnlocalizedName() + "." + meta;
 	}
 
 	@Override
