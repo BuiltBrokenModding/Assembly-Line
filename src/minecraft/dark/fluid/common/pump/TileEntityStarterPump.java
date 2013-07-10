@@ -5,10 +5,9 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ITankContainer;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidStack;
-import universalelectricity.core.electricity.ElectricityPack;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.network.IPacketReceiver;
@@ -17,9 +16,8 @@ import com.google.common.io.ByteArrayDataInput;
 
 import dark.core.api.ColorCode;
 import dark.core.api.IColorCoded;
-import dark.core.api.IToolReadOut;
 import dark.core.api.ITileConnector;
-import dark.core.api.IToolReadOut.EnumTools;
+import dark.core.api.IToolReadOut;
 import dark.core.hydraulic.helpers.FluidHelper;
 import dark.core.hydraulic.helpers.FluidRestrictionHandler;
 import dark.helpers.MetaGroup;
@@ -27,7 +25,7 @@ import dark.library.machine.TileEntityRunnableMachine;
 
 public class TileEntityStarterPump extends TileEntityRunnableMachine implements IPacketReceiver, IToolReadOut, ITileConnector
 {
-	public final double WATTS_PER_TICK = (400 / 20);
+	public final static float WATTS_PER_TICK = 20;
 	private double percentPumped = 0.0;
 
 	public int pos = 0;
@@ -36,6 +34,12 @@ public class TileEntityStarterPump extends TileEntityRunnableMachine implements 
 
 	ForgeDirection wireConnection = ForgeDirection.EAST;
 	ForgeDirection pipeConnection = ForgeDirection.EAST;
+
+	public TileEntityStarterPump()
+	{
+		super(20);
+		// TODO Auto-generated constructor stub
+	}
 
 	/** gets the side connection for the wire and pipe */
 	public void getConnections()
@@ -66,9 +70,8 @@ public class TileEntityStarterPump extends TileEntityRunnableMachine implements 
 
 		if (!this.worldObj.isRemote && !this.isDisabled())
 		{
-			if (this.canPump(xCoord, yCoord - 1, zCoord) && this.wattsReceived >= this.WATTS_PER_TICK)
+			if (this.canPump(new Vector3(xCoord, yCoord - 1, zCoord)) && this.canRun())
 			{
-				wattsReceived -= this.WATTS_PER_TICK;
 				if (percentPumped < 10)
 				{
 					percentPumped++;
@@ -101,7 +104,6 @@ public class TileEntityStarterPump extends TileEntityRunnableMachine implements 
 		try
 		{
 			this.color = ColorCode.get(data.readInt());
-			this.wattsReceived = data.readDouble();
 		}
 		catch (Exception e)
 		{
@@ -110,35 +112,8 @@ public class TileEntityStarterPump extends TileEntityRunnableMachine implements 
 
 	}
 
-	/** gets the fluidConductor or storageTank to ouput its pumped liquids too if there is not one it
-	 * will not function */
-	public ITankContainer getFillTarget()
-	{
-		TileEntity ent = worldObj.getBlockTileEntity(xCoord + pipeConnection.offsetX, yCoord + pipeConnection.offsetY, zCoord + pipeConnection.offsetZ);
-
-		if (ent instanceof ITankContainer)
-		{
-			return (ITankContainer) ent;
-		}
-		return null;
-	}
-
-	/** gets the search range the pump used to find valid block to pump */
-	public int getPumpRange()
-	{
-		int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-		switch (MetaGroup.getGrouping(meta))
-		{
-			case 2:
-				return 20;
-			case 3:
-				return 50;
-		}
-		return 1;
-	}
-
 	@Override
-	public double getRequest(ForgeDirection side)
+	public float getRequest(ForgeDirection side)
 	{
 		return this.WATTS_PER_TICK;
 	}
@@ -147,9 +122,10 @@ public class TileEntityStarterPump extends TileEntityRunnableMachine implements 
 	 * 
 	 * @param x y z - location of the block, use the tileEntities world
 	 * @return true if it can pump */
-	boolean canPump(int x, int y, int z)
+	boolean canPump(Vector3 vec)
 	{
-		return getFillTarget() != null && FluidHelper.getLiquidId(worldObj.getBlockId(x, y, z)) != -1 && worldObj.getBlockMetadata(x, y, z) == 0;
+		FluidStack stack = FluidHelper.drainBlock(this.worldObj, vec, false);
+		return stack != null;
 	}
 
 	/** drains the block(removes) at the location given
@@ -158,40 +134,52 @@ public class TileEntityStarterPump extends TileEntityRunnableMachine implements 
 	 * @return true if the block was drained */
 	boolean drainBlock(Vector3 loc)
 	{
-		int blockID = worldObj.getBlockId(loc.intX(), loc.intY(), loc.intZ());
-
-		LiquidStack stack = FluidHelper.getLiquidFromBlockId(blockID);
-		if (FluidRestrictionHandler.isValidLiquid(color, stack) && getFillTarget() != null)
+		FluidStack stack = FluidHelper.drainBlock(this.worldObj, loc, false);
+		if (FluidRestrictionHandler.isValidLiquid(color, stack.getFluid()) && this.fillAroundTile(stack, false) >= FluidContainerRegistry.BUCKET_VOLUME)
 		{
-			stack.amount = LiquidContainerRegistry.BUCKET_VOLUME;
-			int fillAmmount = getFillTarget().fill(pipeConnection.getOpposite(), stack, true);
-
-			if (fillAmmount > 0)
-			{
-				worldObj.setBlockMetadataWithNotify(xCoord, yCoord - 1, zCoord, 0, 0);
-				return true;
-			}
+			return this.fillAroundTile(FluidHelper.drainBlock(this.worldObj, loc, true), true) > 0;
 		}
-
 		return false;
+	}
+
+	public int fillAroundTile(FluidStack stack, boolean doFill)
+	{
+		if (stack != null && stack.getFluid() != null)
+		{
+			int amount = stack.amount;
+			for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+			{
+				TileEntity entity = new Vector3(this).modifyPositionFromSide(direction).getTileEntity(this.worldObj);
+				if (direction != ForgeDirection.DOWN && entity instanceof IFluidHandler)
+				{
+					amount -= ((IFluidHandler) entity).fill(direction.getOpposite(), FluidHelper.getStack(stack, amount), doFill);
+				}
+				if (amount <= 0)
+				{
+					break;
+				}
+			}
+			return amount;
+		}
+		return 0;
 	}
 
 	@Override
 	public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
 	{
-		return String.format("%.2f/%.2f  %f Done", this.wattsReceived, this.WATTS_PER_TICK, this.percentPumped);
+		return String.format("%.2f/%.2f  %f Done", this.getEnergyStored(), this.getMaxEnergyStored(), this.percentPumped);
 	}
 
 	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
-		return direction == wireConnection;
+		return direction != ForgeDirection.DOWN;
 	}
 
 	@Override
 	public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
 	{
-		if (dir == this.pipeConnection.getOpposite() && entity instanceof ITankContainer)
+		if (dir == this.pipeConnection.getOpposite() && entity instanceof IFluidHandler)
 		{
 			return entity != null && entity instanceof IColorCoded && (((IColorCoded) entity).getColor() == ColorCode.NONE || ((IColorCoded) entity).getColor() == this.color);
 		}

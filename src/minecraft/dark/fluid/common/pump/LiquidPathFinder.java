@@ -74,7 +74,7 @@ public class LiquidPathFinder
 
 			int id = node.getBlockID(world);
 			int meta = node.getBlockID(world);
-			if (this.fill && (id == 0 || (FluidHelper.getLiquidFromBlockId(id) != null && meta != 0)))
+			if (this.fill && (id == 0 || (FluidHelper.getBlockFluidStack(id) != null && meta != 0)))
 			{
 				this.results.add(node);
 			}
@@ -136,11 +136,11 @@ public class LiquidPathFinder
 		int blockID = pos.getBlockID(world);
 		if (!this.fill)
 		{
-			return FluidHelper.getLiquidFromBlockId(pos.getBlockID(world)) != null;
+			return FluidHelper.getBlockFluidStack(pos.getBlockID(world)) != null;
 		}
 		else
 		{
-			return FluidHelper.getLiquidFromBlockId(pos.getBlockID(world)) != null || (blockID == 0 && FluidHelper.getConnectedSources(world, pos) > 0);
+			return FluidHelper.getBlockFluidStack(pos.getBlockID(world)) != null || (blockID == 0 && FluidHelper.getConnectedSources(world, pos) > 0);
 		}
 	}
 

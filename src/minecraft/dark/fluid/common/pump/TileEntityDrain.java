@@ -12,7 +12,10 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
@@ -97,16 +100,16 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 				{
 					this.getNextFluidBlock();
 				}
-				for (Entry<TileEntity, LiquidStack> request : requestMap.entrySet())
+				for (Entry<TileEntity, FluidStack> request : requestMap.entrySet())
 				{
 					if (this.currentWorldEdits >= MAX_WORLD_EDITS_PER_PROCESS)
 					{
 						break;
 					}
 
-					if (request.getKey() instanceof ITankContainer)
+					if (request.getKey() instanceof IFluidHandler)
 					{
-						ITankContainer tank = (ITankContainer) request.getKey();
+						IFluidHandler tank = (IFluidHandler) request.getKey();
 
 						Vector3[] sortedList = this.sortedDrainList();
 
@@ -118,20 +121,20 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 							{
 								break;
 							}
-
-							if (FluidHelper.isSourceBlock(this.worldObj, loc))
+							FluidStack stack = FluidHelper.drainBlock(this.worldObj, loc, false);
+							if (stack != null)
 							{
 								/* GET STACKS */
-								LiquidStack stack = FluidHelper.getLiquidFromBlockId(loc.getBlockID(this.worldObj));
-								LiquidStack requestStack = request.getValue();
+								
+								FluidStack requestStack = request.getValue();
 
-								if (stack != null && requestStack != null && (requestStack.isLiquidEqual(stack) || requestStack.itemID == -1))
+								if (stack != null && requestStack != null && (requestStack.isFluidEqual(stack) || requestStack.getFluid().getBlockID() == -111))
 								{
-									if (tank.fill(0, stack, false) > 0)
+									if (tank.fill(ForgeDirection.UNKNOWN, stack, false) > FluidContainerRegistry.BUCKET_VOLUME)
 									{
 
 										/* EDIT REQUEST IN MAP */
-										int requestAmmount = requestStack.amount - tank.fill(0, stack, true);
+										int requestAmmount = requestStack.amount - tank.fill(ForgeDirection.UNKNOWN, stack, true);
 										if (requestAmmount <= 0)
 										{
 											this.requestMap.remove(request);
@@ -148,7 +151,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 										}
 
 										/* REMOVE BLOCK */
-										loc.setBlock(this.worldObj, 0, 0, 2);
+										FluidHelper.drainBlock(this.worldObj, loc, true);
 										this.currentWorldEdits++;
 									}
 								}
@@ -197,7 +200,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 
 		while (requests.hasNext())
 		{
-			Entry<TileEntityConstructionPump, LiquidStack> entry = (Entry<TileEntityConstructionPump, LiquidStack>) requests.next();
+			Entry<TileEntityConstructionPump, FluidStack> entry = (Entry<TileEntityConstructionPump, FluidStack>) requests.next();
 			TileEntity entity = entry.getKey();
 			if (entity == null)
 			{
@@ -224,7 +227,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 			while (targetIt.hasNext())
 			{
 				Vector3 vec = targetIt.next();
-				if (!FluidHelper.isSourceBlock(this.worldObj, vec))
+				if (FluidHelper.drainBlock(this.worldObj, vec, false) == null)
 				{
 					targetIt.remove();
 				}
@@ -304,42 +307,20 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 	}
 
 	@Override
-	public int fillArea(LiquidStack resource, boolean doFill)
+	public int fillArea(FluidStack resource, boolean doFill)
 	{
 		int drained = 0;
 
 		if (!this.canDrainSources() && this.currentWorldEdits < MAX_WORLD_EDITS_PER_PROCESS)
 		{
 			/* ID LIQUID BLOCK AND SET VARS FOR BLOCK PLACEMENT */
-			if (resource == null || resource.amount < LiquidContainerRegistry.BUCKET_VOLUME)
+			if (resource == null || resource.amount < FluidContainerRegistry.BUCKET_VOLUME)
 			{
 				return 0;
 			}
 
-			int blockID = resource.itemID;
-			int meta = resource.itemMeta;
-			if (resource.itemID == Block.waterStill.blockID)
-			{
-				blockID = Block.waterStill.blockID;
-				meta = 0;
-			}
-			else if (resource.itemID != Block.lavaStill.blockID)
-			{
-				blockID = Block.lavaStill.blockID;
-				meta = 0;
-			}
-			else if (Block.blocksList[resource.itemID] instanceof ILiquid)
-			{
-				ILiquid liquidBlock = (ILiquid) Block.blocksList[resource.itemID];
-				blockID = liquidBlock.stillLiquidId();
-				meta = liquidBlock.stillLiquidMeta();
-			}
-			else
-			{
-				return 0;
-			}
-
-			int blocks = (resource.amount / LiquidContainerRegistry.BUCKET_VOLUME);
+			int blockID = resource.getFluid().getBlockID();
+			int blocks = (resource.amount / FluidContainerRegistry.BUCKET_VOLUME);
 
 			/* FIND ALL VALID BLOCKS ON LEVEL OR BELLOW */
 			final Vector3 faceVec = new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ);
@@ -389,14 +370,14 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 				{
 					break;
 				}
-				LiquidStack stack = FluidHelper.getLiquidFromBlockId(loc.getBlockID(worldObj));
-				if (stack != null && stack.isLiquidEqual(resource) && loc.getBlockMetadata(worldObj) != 0)
+				Fluid stack = FluidHelper.getFluidFromBlockID(loc.getBlockID(worldObj));
+				if (stack != null && stack.getBlockID() == blockID && loc.getBlockMetadata(worldObj) != 0)
 				{
-					drained += LiquidContainerRegistry.BUCKET_VOLUME;
+					drained += FluidContainerRegistry.BUCKET_VOLUME;
 					blocks--;
 					if (doFill)
 					{
-						loc.setBlock(worldObj, blockID, meta);
+						loc.setBlock(worldObj, blockID, 0);
 						this.currentWorldEdits++;
 						if (!this.updateQue.contains(loc))
 						{
@@ -415,11 +396,11 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 				}
 				if (loc.getBlockID(worldObj) == 0)
 				{
-					drained += LiquidContainerRegistry.BUCKET_VOLUME;
+					drained += FluidContainerRegistry.BUCKET_VOLUME;
 					blocks--;
 					if (doFill)
 					{
-						loc.setBlock(worldObj, blockID, meta);
+						loc.setBlock(worldObj, blockID, 0);
 						this.currentWorldEdits++;
 						if (!this.updateQue.contains(loc))
 						{
@@ -439,9 +420,9 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 	}
 
 	@Override
-	public void requestLiquid(TileEntity pump, LiquidStack stack)
+	public void requestLiquid(TileEntity pump, Fluid fluid, int amount)
 	{
-		this.requestMap.put(pump, stack);
+		this.requestMap.put(pump, new FluidStack(-111, amount));
 	}
 
 	@Override
@@ -462,19 +443,9 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 	}
 
 	@Override
-	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if (this.canDrainSources())
-		{
-			return 0;
-		}
-		return this.fill(0, resource, doFill);
-	}
-
-	@Override
-	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
-	{
-		if (resource == null || tankIndex != 0)
+		if (this.canDrainSources() || resource == null)
 		{
 			return 0;
 		}
@@ -482,29 +453,32 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 	}
 
 	@Override
-	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		if (from != this.getFacing().getOpposite())
-		{
-			return null;
-		}
-		return this.drain(0, maxDrain, doDrain);
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		return null;
 	}
 
 	@Override
-	public ILiquidTank[] getTanks(ForgeDirection direction)
+	public boolean canFill(ForgeDirection from, Fluid fluid)
 	{
-		return null;
+		return this.getFacing() == from;
 	}
 
 	@Override
-	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
+	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	{
+		return false;
+	}
+
+	@Override
+	public FluidTankInfo[] getTankInfo(ForgeDirection from)
 	{
 		return null;
 	}
