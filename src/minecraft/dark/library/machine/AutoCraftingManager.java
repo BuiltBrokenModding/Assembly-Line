@@ -352,7 +352,7 @@ public class AutoCraftingManager
 	 * @param ammount - amount to consume
 	 * @return what is left of the itemStack if any
 	 */
-	public ItemStack consumeItem(ItemStack itemStack, int amount)
+	public static ItemStack consumeItem(ItemStack itemStack, int amount)
 	{
 		if (itemStack == null)
 		{
@@ -389,7 +389,7 @@ public class AutoCraftingManager
 			}
 		}
 		//System.out.println("ItemGrinder: "+stack.toString());
-		return this.decrStackSize(stack, amount);
+		return decrStackSize(stack, amount);
 	}
 
 	/**
