@@ -101,6 +101,15 @@ public class NetworkFluidTiles extends NetworkTileEntities
 		return stack;
 	}
 
+	public FluidStack drainFluidFromSystem(FluidStack stack, boolean doDrain)
+	{
+		if (stack != null && this.combinedStorage().getFluid() != null && stack.isFluidEqual(this.combinedStorage().getFluid()))
+		{
+			return this.drainFluidFromSystem(stack.amount, doDrain);
+		}
+		return null;
+	}
+
 	/** Moves the volume stored in the network to the parts or sums up the volume from the parts and
 	 * loads it to the network. Assumes that all liquidStacks stored are equal
 	 * 

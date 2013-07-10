@@ -3,6 +3,7 @@ package dark.fluid.client.render;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
@@ -22,11 +23,11 @@ public class RenderTank extends TileEntitySpecialRenderer
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)
 	{
-		LiquidStack liquid = tileEntity instanceof TileEntityTank ? ((TileEntityTank) tileEntity).getTank().getLiquid() : null;
+		FluidStack liquid = tileEntity instanceof TileEntityTank ? ((TileEntityTank) tileEntity).getTank().getFluid() : null;
 		this.renderTank(tileEntity, x, y, z, 0, liquid);
 	}
 
-	public void renderTank(TileEntity tileEntity, double x, double y, double z, int meta, LiquidStack liquid)
+	public void renderTank(TileEntity tileEntity, double x, double y, double z, int meta, FluidStack liquid)
 	{
 		int[] render = new int[6];
 		ColorCode color = ColorCode.get(meta >= 0 && meta < ColorCode.values().length ? meta : 0);

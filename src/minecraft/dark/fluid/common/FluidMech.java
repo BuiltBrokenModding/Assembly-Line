@@ -5,11 +5,15 @@ import java.util.Arrays;
 import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.BlockFluidFinite;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
@@ -22,6 +26,7 @@ import cpw.mods.fml.common.DummyModContainer;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.Metadata;
@@ -137,7 +142,7 @@ public class FluidMech extends DummyModContainer
 		MinecraftForge.EVENT_BUS.register(new FluidRestrictionHandler());
 	}
 
-	@PreInit
+	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		/* LOGGER SETUP */
@@ -151,7 +156,10 @@ public class FluidMech extends DummyModContainer
 
 		/* CONFIGS */
 		CONFIGURATION.load();
-
+		
+		/* LIQUID DIRECTORY CALL */
+		Fluid waste = new Fluid("waste").setBlockID(FluidMech.CONFIGURATION.getBlock("WasteLiquid", BLOCK_ID_PREFIX + 7).getInt());
+		
 		/* BLOCK DECLARATION -- CONFIG LOADER */
 		blockGenPipe = new BlockPipe(FluidMech.CONFIGURATION.getBlock("Pipes", BLOCK_ID_PREFIX).getInt());
 		blockMachine = new BlockPumpMachine(FluidMech.CONFIGURATION.getBlock("Machines", BLOCK_ID_PREFIX + 1).getInt());
@@ -159,7 +167,7 @@ public class FluidMech extends DummyModContainer
 		blockGenerator = new BlockGenerator((FluidMech.CONFIGURATION.getBlock("Generator", BLOCK_ID_PREFIX + 4).getInt()));
 		blockReleaseValve = new BlockReleaseValve((FluidMech.CONFIGURATION.getBlock("ReleaseValve", BLOCK_ID_PREFIX + 5).getInt()));
 		blockTank = new BlockTank(FluidMech.CONFIGURATION.getBlock("Tank", BLOCK_ID_PREFIX + 6).getInt());
-		blockWasteLiquid = new BlockWasteLiquid(FluidMech.CONFIGURATION.getBlock("WasteLiquid", BLOCK_ID_PREFIX + 7).getInt());
+		blockWasteLiquid = new BlockFluidFinite(waste.getBlockID(), waste, Material.water);
 		blockSink = new BlockSink(FluidMech.CONFIGURATION.getBlock("Sink", BLOCK_ID_PREFIX + 8).getInt());
 		blockDrain = new BlockDrain(FluidMech.CONFIGURATION.getBlock("Drain", BLOCK_ID_PREFIX + 9).getInt());
 		blockConPump = new BlockConstructionPump(FluidMech.CONFIGURATION.getBlock("ConstructionPump", BLOCK_ID_PREFIX + 10).getInt());
@@ -190,7 +198,7 @@ public class FluidMech extends DummyModContainer
 
 	}
 
-	@Init
+	@EventHandler
 	public void Init(FMLInitializationEvent event)
 	{
 		/* MCMOD.INFO FILE BUILDER? */
@@ -214,10 +222,10 @@ public class FluidMech extends DummyModContainer
 		GameRegistry.registerTileEntity(TileEntityPipe.class, "lmPipeTile");
 		GameRegistry.registerTileEntity(TileEntityGenericPipe.class, "lmGenPipeTile");
 		GameRegistry.registerTileEntity(TileEntityStarterPump.class, "lmPumpTile");
-		GameRegistry.registerTileEntity(TileEntityRod.class, "lmRodTile");
+		//GameRegistry.registerTileEntity(TileEntityRod.class, "lmRodTile");
 		GameRegistry.registerTileEntity(TileEntityReleaseValve.class, "lmeValve");
 		GameRegistry.registerTileEntity(TileEntityTank.class, "lmTank");
-		GameRegistry.registerTileEntity(TileEntityGenerator.class, "lmGen");
+		//GameRegistry.registerTileEntity(TileEntityGenerator.class, "lmGen");
 		GameRegistry.registerTileEntity(TileEntitySink.class, "lmSink");
 		GameRegistry.registerTileEntity(TileEntityDrain.class, "lmDrain");
 		GameRegistry.registerTileEntity(TileEntityConstructionPump.class, "lmConPump");
@@ -237,12 +245,9 @@ public class FluidMech extends DummyModContainer
 		OreDictionary.registerOre("bronzeTube", new ItemStack(itemParts, 1, Parts.Bronze.ordinal()));
 		OreDictionary.registerOre("unfinishedTank", new ItemStack(itemParts, 1, Parts.Tank.ordinal()));
 
-		/* LIQUID DIRECTORY CALL */
-		LiquidStack waste = LiquidDictionary.getOrCreateLiquid("Waste", new LiquidStack(FluidMech.blockWasteLiquid, 1));
-
 	}
 
-	@PostInit
+	@EventHandler
 	public void PostInit(FMLPostInitializationEvent event)
 	{
 		/* LOGGER */

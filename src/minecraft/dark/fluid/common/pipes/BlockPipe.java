@@ -117,13 +117,13 @@ public class BlockPipe extends BlockMachine
 		if (entity instanceof TileEntityPipe)
 		{
 			IFluidTank tank = ((TileEntityPipe) entity).getTank();
-			if (tank != null && tank.getLiquid() != null && tank.getLiquid().amount > 0)
+			if (tank != null && tank.getFluid() != null && tank.getFluid().getFluid() != null && tank.getFluid().amount > 0)
 			{
-				if (tank.getLiquid().itemID == Block.waterStill.blockID)
+				if (tank.getFluid().getFluid().getName().equalsIgnoreCase("water"))
 				{
 					world.setBlock(x, y, z, Block.waterStill.blockID);
 				}
-				if (tank.getLiquid().itemID == Block.lavaStill.blockID)
+				if (tank.getFluid().getFluid().getName().equalsIgnoreCase("lava"))
 				{
 					world.setBlock(x, y, z, Block.lavaStill.blockID);
 				}

@@ -7,6 +7,7 @@ import java.util.Map;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
 import dark.core.api.ColorCode;
@@ -160,7 +161,7 @@ public class NetworkPipes extends NetworkFluidTiles
 	@Override
 	public boolean removeTile(TileEntity ent)
 	{
-		return super.removeTile(ent) || this.pressureLoads.remove(ent) || this.pressureProducers.remove(ent);
+		return super.removeTile(ent) || this.pressureLoads.remove(ent) != null || this.pressureProducers.remove(ent) != null ;
 	}
 
 	/** Adds FLuid to this network from one of the connected Pipes
@@ -224,24 +225,28 @@ public class NetworkPipes extends NetworkFluidTiles
 						if (connectedTiles[i] instanceof INetworkPipe && ((INetworkPipe) connectedTiles[i]).getTileNetwork() == this)
 						{
 							ForgeDirection dir = ForgeDirection.getOrientation(i).getOpposite();
-							IFluidTank targetTank = tankContainer.getTank(dir, stack);
+							FluidTankInfo[] targetTank = tankContainer.getTankInfo(dir);
 							int fill = tankContainer.fill(dir, stack, false);
 
 							/* USE GET TANK FROM SIDE METHOD FIRST */
 							if (targetTank != null)
 							{
-								FluidStack stackStored = targetTank.getFluid();
-								if (stackStored == null)
+								for (int t = 0; t < targetTank.length; t++)
 								{
-									primaryFill = tankContainer;
-									found = true;
-									fillDir = dir;
-									break;
-								}
-								else if (stackStored.amount < targetTank.getCapacity() && stackStored.amount < volume)
-								{
-									primaryFill = tankContainer;
-									volume = stackStored.amount;
+									FluidStack stackStored = targetTank[t].fluid;
+									int tankCap = targetTank[t].capacity;
+									if (stackStored == null)
+									{
+										primaryFill = tankContainer;
+										found = true;
+										fillDir = dir;
+										break;
+									}
+									else if (stackStored.isFluidEqual(sta) && stackStored.amount < tankCap && stackStored.amount < volume)
+									{
+										primaryFill = tankContainer;
+										volume = stackStored.amount;
+									}
 								}
 							}/* USE FILL METHOD IF GET TANK == NULL */
 							else if (fill > 0 && fill > mostFill)
@@ -281,7 +286,7 @@ public class NetworkPipes extends NetworkFluidTiles
 			if (!filledMain && used > 0 && this.combinedStorage().getFluid() != null && this.combinedStorage().getFluid().amount > 0)
 			{
 
-				LiquidStack drainStack = new LiquidStack(0, 0, 0);
+				FluidStack drainStack = new FluidStack(0, 0);
 				if (this.combinedStorage().getFluid().amount >= used)
 				{
 					drainStack = this.combinedStorage().drain(used, doFill);
@@ -308,21 +313,9 @@ public class NetworkPipes extends NetworkFluidTiles
 	}
 
 	/** Gets the flow rate of the system using the lowest flow rate */
-	public int getMaxFlow(LiquidStack stack)
+	public int getMaxFlow(FluidStack stack)
 	{
-		int flow = 1000;
-		for (INetworkPart conductor : this.networkMember)
-		{
-			if (conductor instanceof INetworkPipe)
-			{
-				int cFlow = ((INetworkPipe) conductor).getMaxFlowRate(stack, ForgeDirection.UNKNOWN);
-				if (cFlow < flow)
-				{
-					flow = cFlow;
-				}
-			}
-		}
-		return flow;
+		return 1000;
 	}
 
 	/** Updates after the pressure has changed a good bit */

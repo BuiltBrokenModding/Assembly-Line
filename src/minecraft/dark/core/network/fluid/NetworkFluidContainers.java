@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import dark.core.api.ColorCode;
 import dark.core.api.INetworkPart;
 import dark.core.tile.network.NetworkTileEntities;
@@ -32,7 +34,8 @@ public class NetworkFluidContainers extends NetworkFluidTiles
 	// TODO change this to place liquids at the bottom first
 	public void balanceColletiveTank(boolean sumParts)
 	{
-		int volume = 0, itemID = 0, itemMeta = 0;
+		int volume = 0;
+		Fluid fluid = null;
 
 		if (sumParts)
 		{
@@ -41,21 +44,20 @@ public class NetworkFluidContainers extends NetworkFluidTiles
 				if (par instanceof INetworkFluidPart)
 				{
 					INetworkFluidPart part = ((INetworkFluidPart) par);
-					if (part.getTank() != null && part.getTank().getLiquid() != null)
+					if (part.getTank() != null && part.getTank().getFluid() != null)
 					{
-						if (itemID == 0)
+						if (fluid == null)
 						{
-							itemID = part.getTank().getLiquid().itemID;
-							itemMeta = part.getTank().getLiquid().itemMeta;
+							fluid = part.getTank().getFluid().getFluid();
 						}
-						volume += part.getTank().getLiquid().amount;
+						volume += part.getTank().getFluid().amount;
 					}
 				}
 			}
-			this.combinedStorage().setLiquid(new LiquidStack(itemID, volume, itemMeta));
+			this.combinedStorage().setFluid(new FluidStack(fluid, volume));
 			this.loadedLiquids = true;
 		}
-		if (this.combinedStorage().getLiquid() != null && this.getNetworkMemebers().size() > 0)
+		if (this.combinedStorage().getFluid() != null && this.getNetworkMemebers().size() > 0)
 		{
 			this.cleanUpMembers();
 
@@ -72,9 +74,8 @@ public class NetworkFluidContainers extends NetworkFluidTiles
 					highestY = ((TileEntity) part).yCoord;
 				}
 			}
-			itemID = this.combinedStorage().getLiquid().itemID;
-			itemMeta = this.combinedStorage().getLiquid().itemMeta;
-			volume = this.combinedStorage().getLiquid().amount;
+			fluid = this.combinedStorage().getFluid().getFluid();
+			volume = this.combinedStorage().getFluid().amount;
 
 			for (int y = lowestY; y <= highestY; y++)
 			{
@@ -92,7 +93,7 @@ public class NetworkFluidContainers extends NetworkFluidTiles
 				{
 					part.setTankContent(null);
 					int fill = Math.min(fillvolume, part.getTank().getCapacity());
-					part.setTankContent(new LiquidStack(itemID, fill, itemMeta));
+					part.setTankContent(new FluidStack(fluid, fill));
 					volume -= fill;
 				}
 				if (volume <= 0)
@@ -105,9 +106,9 @@ public class NetworkFluidContainers extends NetworkFluidTiles
 	}
 
 	@Override
-	public int storeFluidInSystem(LiquidStack stack, boolean doFill)
+	public int storeFluidInSystem(FluidStack stack, boolean doFill)
 	{
-		int vol = this.combinedStorage().getLiquid() != null ? this.combinedStorage().getLiquid().amount : 0;
+		int vol = this.combinedStorage().getFluid() != null ? this.combinedStorage().getFluid().amount : 0;
 		int filled = super.storeFluidInSystem(stack, doFill);
 		if (vol != filled)
 		{
@@ -124,10 +125,10 @@ public class NetworkFluidContainers extends NetworkFluidTiles
 	}
 
 	@Override
-	public LiquidStack drainFluidFromSystem(int maxDrain, boolean doDrain)
+	public FluidStack drainFluidFromSystem(int maxDrain, boolean doDrain)
 	{
-		LiquidStack vol = this.combinedStorage().getLiquid();
-		LiquidStack stack = super.drainFluidFromSystem(maxDrain, doDrain);
+		FluidStack vol = this.combinedStorage().getFluid();
+		FluidStack stack = super.drainFluidFromSystem(maxDrain, doDrain);
 		boolean flag = false;
 		if (vol != null)
 		{
@@ -164,4 +165,6 @@ public class NetworkFluidContainers extends NetworkFluidTiles
 		newNetwork.cleanUpMembers();
 		newNetwork.balanceColletiveTank(true);
 	}
+
+	
 }

@@ -11,11 +11,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import dark.core.api.INetworkPart;
 import dark.core.hydraulic.helpers.FluidHelper;
 import dark.core.hydraulic.helpers.FluidRestrictionHandler;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.TabFluidMech;
+import dark.library.machine.AutoCraftingManager;
 import dark.library.machine.BlockMachine;
 
 public class BlockTank extends BlockMachine
@@ -65,7 +68,7 @@ public class BlockTank extends BlockMachine
 		if (current != null)
 		{
 
-			LiquidStack liquid = LiquidContainerRegistry.getLiquidForFilledItem(current);
+			FluidStack liquid = FluidContainerRegistry.getFluidForFilledItem(current);
 
 			TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
@@ -78,13 +81,13 @@ public class BlockTank extends BlockMachine
 				{
 					if (current.isItemEqual(new ItemStack(Item.potion)))
 					{
-						liquid = new LiquidStack(liquid.itemID, (LiquidContainerRegistry.BUCKET_VOLUME / 4), liquid.itemMeta);
+						liquid = FluidHelper.getStack(liquid, FluidContainerRegistry.BUCKET_VOLUME / 4);
 					}
 					int filled = tank.fill(ForgeDirection.getOrientation(side), liquid, true);
 
 					if (filled != 0 && !entityplayer.capabilities.isCreativeMode)
 					{
-						entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, FluidHelper.consumeItem(current));
+						entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, AutoCraftingManager.consumeItem(current, 1));
 					}
 
 					return true;
@@ -94,12 +97,12 @@ public class BlockTank extends BlockMachine
 				else
 				{
 
-					LiquidStack stack = tank.getTank().getLiquid();
+					FluidStack stack = tank.getTank().getFluid();
 					if (stack != null)
 					{
-						ItemStack liquidItem = LiquidContainerRegistry.fillLiquidContainer(stack, current);
+						ItemStack liquidItem = FluidContainerRegistry.fillFluidContainer(stack, current);
 
-						liquid = LiquidContainerRegistry.getLiquidForFilledItem(liquidItem);
+						liquid = FluidContainerRegistry.getFluidForFilledItem(liquidItem);
 
 						if (liquid != null)
 						{
@@ -111,19 +114,19 @@ public class BlockTank extends BlockMachine
 										return false;
 									else
 									{
-										entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, FluidHelper.consumeItem(current));
+										entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, AutoCraftingManager.consumeItem(current, 1));
 									}
 								}
 								else
 								{
-									entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, FluidHelper.consumeItem(current));
+									entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, AutoCraftingManager.consumeItem(current, 1));
 									entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, liquidItem);
 								}
 							}
 							int ammount = liquid.amount;
 							if (current.isItemEqual(new ItemStack(Item.glassBottle)))
 							{
-								ammount = (LiquidContainerRegistry.BUCKET_VOLUME / 4);
+								ammount = (FluidContainerRegistry.BUCKET_VOLUME / 4);
 							}
 							tank.drain(ForgeDirection.getOrientation(side), ammount, true);
 							return true;

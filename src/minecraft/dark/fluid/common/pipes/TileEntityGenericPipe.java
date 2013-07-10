@@ -2,6 +2,9 @@ package dark.fluid.common.pipes;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import dark.core.api.ColorCode;
@@ -11,7 +14,7 @@ import dark.core.network.fluid.NetworkPipes;
 public class TileEntityGenericPipe extends TileEntityPipe
 {
 	@Override
-	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
 		if (resource == null)
 		{
@@ -19,22 +22,6 @@ public class TileEntityGenericPipe extends TileEntityPipe
 		}
 		TileEntity tile = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), from);
 		return ((NetworkPipes) this.getTileNetwork()).addFluidToNetwork(tile, resource, doFill);
-	}
-
-	@Override
-	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
-	{
-		if (tankIndex != 0 || resource == null)
-		{
-			return 0;
-		}
-		return ((NetworkPipes) this.getTileNetwork()).addFluidToNetwork(this, resource, doFill);
-	}
-
-	@Override
-	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
-	{
-		return this.fakeTank;
 	}
 
 	@Override
@@ -53,9 +40,9 @@ public class TileEntityGenericPipe extends TileEntityPipe
 	}
 
 	@Override
-	public int getMaxFlowRate(LiquidStack stack, ForgeDirection side)
+	public int getMaxFlowRate(Fluid stack, ForgeDirection side)
 	{
-		return FluidHelper.getDefaultFlowRate(stack);
+		return FluidContainerRegistry.BUCKET_VOLUME;
 	}
 
 	@Override

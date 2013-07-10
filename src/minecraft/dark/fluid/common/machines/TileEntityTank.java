@@ -1,5 +1,6 @@
 package dark.fluid.common.machines;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityComparator;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.IFluidTank;
 
 import org.bouncycastle.util.Arrays;
 
@@ -32,15 +40,15 @@ import dark.core.tile.network.NetworkTileEntities;
 import dark.fluid.api.INetworkFluidPart;
 import dark.fluid.api.INetworkPipe;
 import dark.fluid.common.FluidMech;
-import dark.fluid.common.prefab.TileEntityFluidDevice;
+import dark.fluid.common.prefab.TileEntityFluidStorage;
 
-public class TileEntityTank extends TileEntityFluidDevice implements ITankContainer, IToolReadOut, IColorCoded, INetworkFluidPart, IPacketReceiver
+public class TileEntityTank extends TileEntityFluidStorage implements IFluidHandler, IToolReadOut, IColorCoded, INetworkFluidPart, IPacketReceiver
 {
 	/* CURRENTLY CONNECTED TILE ENTITIES TO THIS */
 	private List<TileEntity> connectedBlocks = new ArrayList<TileEntity>();
 	public int[] renderConnection = new int[6];
 
-	private LiquidTank tank = new LiquidTank(this.getTankSize());
+	private FluidTank tank = new FluidTank(this.getTankSize());
 
 	/* NETWORK INSTANCE THAT THIS PIPE USES */
 	private NetworkFluidContainers fluidNetwork;
@@ -78,31 +86,41 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 	@Override
 	public void handlePacketData(INetworkManager network, int type, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
 	{
-		if (this.worldObj.isRemote)
+		try
 		{
-			int id = dataStream.readInt();
-			if (id == 0)
+			if (this.worldObj.isRemote)
 			{
-				this.tank.setLiquid(new LiquidStack(dataStream.readInt(), dataStream.readInt(), dataStream.readInt()));
-				this.renderConnection[0] = dataStream.readInt();
-				this.renderConnection[1] = dataStream.readInt();
-				this.renderConnection[2] = dataStream.readInt();
-				this.renderConnection[3] = dataStream.readInt();
-				this.renderConnection[4] = dataStream.readInt();
-				this.renderConnection[5] = dataStream.readInt();
+				int id = dataStream.readInt();
+				if (id == 0)
+				{
+
+					this.tank.setFluid(FluidStack.loadFluidStackFromNBT(PacketManager.readNBTTagCompound(dataStream)));
+
+					this.renderConnection[0] = dataStream.readInt();
+					this.renderConnection[1] = dataStream.readInt();
+					this.renderConnection[2] = dataStream.readInt();
+					this.renderConnection[3] = dataStream.readInt();
+					this.renderConnection[4] = dataStream.readInt();
+					this.renderConnection[5] = dataStream.readInt();
+				}
 			}
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		LiquidStack stack = new LiquidStack(0, 0, 0);
-		if (this.getTank().getLiquid() != null)
+		FluidStack stack = new FluidStack(0, 0);
+		if (this.getTank().getFluid() != null)
 		{
-			stack = this.getTank().getLiquid();
+			stack = this.getTank().getFluid();
 		}
-		return PacketManager.getPacket(FluidMech.CHANNEL, this, 0, stack.itemID, stack.amount, stack.itemMeta, this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
+		return PacketManager.getPacket(FluidMech.CHANNEL, this, 0, stack.writeToNBT(new NBTTagCompound()), this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
 	}
 
 	/** gets the current color mark of the pipe */
@@ -140,15 +158,9 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 	}
 
 	@Override
-	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		return this.fill(0, resource, doFill);
-	}
-
-	@Override
-	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
-	{
-		if (tankIndex != 0 || resource == null || !FluidRestrictionHandler.isValidLiquid(this.getColor(), resource) || this.worldObj.isRemote)
+		if (resource == null || !FluidRestrictionHandler.isValidLiquid(this.getColor(), resource.getFluid()) || this.worldObj.isRemote)
 		{
 			return 0;
 		}
@@ -156,15 +168,19 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 	}
 
 	@Override
-	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	public FluidStack drain(ForgeDirection from, FluidStack stack, boolean doDrain)
 	{
-		return this.drain(0, maxDrain, doDrain);
+		if (this.worldObj.isRemote)
+		{
+			return null;
+		}
+		return ((NetworkFluidContainers) this.getTileNetwork()).drainFluidFromSystem(stack, doDrain);
 	}
 
 	@Override
-	public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		if (tankIndex != 0 || this.worldObj.isRemote)
+		if (this.worldObj.isRemote)
 		{
 			return null;
 		}
@@ -172,19 +188,9 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 	}
 
 	@Override
-	public ILiquidTank[] getTanks(ForgeDirection direction)
+	public FluidTankInfo[] getTankInfo(ForgeDirection direction)
 	{
-		return new ILiquidTank[] { ((NetworkFluidContainers) this.getTileNetwork()).combinedStorage() };
-	}
-
-	@Override
-	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
-	{
-		if (FluidRestrictionHandler.isValidLiquid(this.getColor(), type))
-		{
-			return ((NetworkFluidContainers) this.getTileNetwork()).combinedStorage();
-		}
-		return null;
+		return new FluidTankInfo[] { new FluidTankInfo(((NetworkFluidContainers) this.getTileNetwork()).combinedStorage()) };
 	}
 
 	/** Checks to make sure the connection is valid to the tileEntity
@@ -241,7 +247,7 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 	@Override
 	public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
 	{
-		return entity != null && entity instanceof ITankContainer;
+		return entity != null && entity instanceof IFluidHandler;
 	}
 
 	@Override
@@ -275,66 +281,52 @@ public class TileEntityTank extends TileEntityFluidDevice implements ITankContai
 		return this.connectedBlocks;
 	}
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
-
-		LiquidStack liquid = LiquidStack.loadLiquidStackFromNBT(nbt.getCompoundTag("stored"));
-		if (liquid != null)
-		{
-			tank.setLiquid(liquid);
-		}
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
-		if (this.tank.containsValidLiquid())
-		{
-			nbt.setTag("stored", this.tank.getLiquid().writeToNBT(new NBTTagCompound()));
-		}
-	}
-
 	public int getTankSize()
 	{
-		return LiquidContainerRegistry.BUCKET_VOLUME * 8;
+		return FluidContainerRegistry.BUCKET_VOLUME * 8;
 	}
 
 	@Override
-	public ILiquidTank getTank()
+	public FluidTank getTank()
 	{
 		if (this.tank == null)
 		{
-			this.tank = new LiquidTank(this.getTankSize());
+			this.tank = new FluidTank(this.getTankSize());
 		}
 		return this.tank;
 	}
 
 	@Override
-	public void setTankContent(LiquidStack stack)
+	public void setTankContent(FluidStack stack)
 	{
-		if (this.tank == null)
-		{
-			this.tank = new LiquidTank(this.getTankSize());
-		}
-		this.tank.setLiquid(stack);
+		this.getTank().setFluid(stack);
 	}
 
 	public int getRedstoneLevel()
 	{
 		if (this.getTileNetwork() != null && this.getTileNetwork() instanceof NetworkFluidTiles)
 		{
-			ILiquidTank tank = ((NetworkFluidTiles) this.getTileNetwork()).combinedStorage();
-			if (tank != null && tank.getLiquid() != null)
+			IFluidTank tank = ((NetworkFluidTiles) this.getTileNetwork()).combinedStorage();
+			if (tank != null && tank.getFluid() != null)
 			{
 				int max = tank.getCapacity();
-				int current = tank.getLiquid().amount;
+				int current = tank.getFluid().amount;
 				double percent = current / max;
 				return ((int) (15 * percent));
 			}
 		}
 		return 0;
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid)
+	{
+		return fluid != null;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	{
+		return fluid != null;
 	}
 }

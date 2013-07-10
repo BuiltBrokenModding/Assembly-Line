@@ -6,6 +6,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import dark.core.api.IToolReadOut;
@@ -62,7 +63,7 @@ public class ItemTools extends ItemBasic
 						output = output.substring(0, 100);
 					}
 					output.trim();
-					player.sendChatToPlayer("ReadOut: " + output);
+					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("ReadOut: " + output));
 				}
 			}
 			else if (meta == 1)

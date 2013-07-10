@@ -3,6 +3,7 @@ package dark.fluid.client.render.pipe;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
@@ -84,8 +85,8 @@ public class RenderPipe extends TileEntitySpecialRenderer
 	{
 		if (bool && FluidRestrictionHandler.hasRestrictedStack(meta))
 		{
-			FluidStack stack = FluidRestrictionHandler.getStackForColor(ColorCode.get(meta));
-			String name = LiquidDictionary.findLiquidName(stack);
+			Fluid stack = FluidRestrictionHandler.getStackForColor(ColorCode.get(meta));
+			String name = stack != null ? stack.getName() : "";
 			if (name != null)
 			{
 				return FluidMech.MODEL_TEXTURE_DIRECTORY + "pipes/" + name + "Pipe.png";

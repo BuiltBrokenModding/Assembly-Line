@@ -18,6 +18,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import org.bouncycastle.util.Arrays;
@@ -406,31 +407,15 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
 	}
 
 	@Override
-	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		return null;
 	}
 
 	@Override
-	public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
+	public FluidTankInfo[] getTankInfo(ForgeDirection direction)
 	{
-		return null;
-	}
-
-	@Override
-	public ILiquidTank[] getTanks(ForgeDirection direction)
-	{
-		return new ILiquidTank[] { this.fakeTank };
-	}
-
-	@Override
-	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
-	{
-		if (FluidRestrictionHandler.isValidLiquid(this.getColor(), type))
-		{
-			return this.fakeTank;
-		}
-		return null;
+		return new FluidTankInfo[] { new FluidTankInfo(this.getTank()) };
 	}
 
 	/** Checks to make sure the connection is valid to the tileEntity
@@ -472,7 +457,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
 					return connectedBlocks.add(tileEntity);
 				}
 			}
-			else if (tileEntity instanceof ITankContainer)
+			else if (tileEntity instanceof IFluidHandler)
 			{
 				return connectedBlocks.add(tileEntity);
 			}
@@ -495,14 +480,14 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
 				TileEntity ent = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
 				this.renderConnection[dir.ordinal()] = this.validateConnectionSide(ent, dir);
 
-				if (this.renderConnection[dir.ordinal()] && ent instanceof ITankContainer && !(ent instanceof INetworkPipe))
+				if (this.renderConnection[dir.ordinal()] && ent instanceof IFluidHandler && !(ent instanceof INetworkPipe))
 				{
-					ITankContainer tankContainer = (ITankContainer) ent;
+					IFluidHandler tankContainer = (IFluidHandler) ent;
 					this.getTileNetwork().addTile(ent, false);
 
 					/* LITTLE TRICK TO AUTO DRAIN TANKS ON EACH CONNECTION UPDATE */
 
-					LiquidStack stack = tankContainer.drain(dir, LiquidContainerRegistry.BUCKET_VOLUME, false);
+					FluidStack stack = tankContainer.drain(dir, FluidContainerRegistry.BUCKET_VOLUME, false);
 					if (stack != null && stack.amount > 0)
 					{
 						int fill = ((NetworkPipes) this.getTileNetwork()).addFluidToNetwork((TileEntity) tankContainer, stack, true);
@@ -551,9 +536,10 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
 	}
 
 	@Override
-	public int getMaxFlowRate(LiquidStack stack, ForgeDirection side)
+	public int getMaxFlowRate(Fluid stack, ForgeDirection side)
 	{
-		return FluidHelper.getDefaultFlowRate(stack) * 3;
+		//TODO change this to get info from stack
+		return 1000 * 3;
 	}
 
 	@Override
@@ -580,19 +566,39 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
 	}
 
 	@Override
-	public LiquidTank getTank()
+	public FluidTank getTank()
 	{
+		if (this.fakeTank == null)
+		{
+			this.fakeTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
+		}
 		return this.fakeTank;
 	}
 
 	@Override
-	public void setTankContent(LiquidStack stack)
+	public void setTankContent(FluidStack stack)
+	{		
+		this.getTank().setFluid(stack);
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		if (this.fakeTank == null)
-		{
-			this.fakeTank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
-		}
-		this.fakeTank.setLiquid(stack);
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid)
+	{
+		return this.subEntities[from.ordinal()] == null;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
