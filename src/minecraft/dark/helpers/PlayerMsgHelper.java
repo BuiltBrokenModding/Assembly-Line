@@ -37,7 +37,7 @@ public class PlayerMsgHelper
 		while (it.hasNext() && canSee)
 		{
 			EntityPlayer player = it.next();
-			if (world.rayTraceBlocks(loc.toVec3(), new Vector3(player).add(new Vector3(0, player.getEyeHeight(), 0)).toVec3()) != null)
+			if (world.rayTraceBlocks_do_do(loc.toVec3(), new Vector3(player).add(new Vector3(0, player.getEyeHeight(), 0)).toVec3(), canSee, canSee) != null)
 			{
 				it.remove();
 			}

@@ -5,12 +5,15 @@ import java.awt.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.client.FMLClientHandler;
 
 import universalelectricity.core.vector.Vector3;
 import dark.core.DarkMain;
@@ -145,7 +148,7 @@ public class FXBeam extends EntityFX
 			op = 0.5F - (4 - (this.particleMaxAge - this.particleAge)) * 0.1F;
 		}
 
-		Minecraft.getMinecraft().renderEngine.bindTexture(this.texture);
+		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(this.texture));
 
 		GL11.glTexParameterf(3553, 10242, 10497.0F);
 		GL11.glTexParameterf(3553, 10243, 10497.0F);
@@ -207,6 +210,6 @@ public class FXBeam extends EntityFX
 		tessellator.startDrawingQuads();
 		this.prevSize = size;
 
-		Minecraft.getMinecraft().renderEngine.bindTexture("/particles.png");
+		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation("/particles.png"));
 	}
 }

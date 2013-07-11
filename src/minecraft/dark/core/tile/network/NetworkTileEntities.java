@@ -112,7 +112,7 @@ public abstract class NetworkTileEntities
 			while (it.hasNext())
 			{
 				INetworkPart conductor = it.next();
-				conductor.updateNetworkConnections();
+				conductor.refresh();
 			}
 		}
 		catch (Exception e)

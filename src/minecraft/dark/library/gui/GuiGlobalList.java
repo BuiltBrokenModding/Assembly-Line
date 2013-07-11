@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -24,7 +24,7 @@ import dark.core.api.IScroll;
 import dark.library.access.UserAccess;
 
 @SideOnly(Side.CLIENT)
-public class GuiGlobalList extends GuiScreen implements IScroll
+public class GuiGlobalList extends GuiContainer implements IScroll
 {
 	EntityPlayer player;
 	private GuiTextField stringInput;
@@ -34,7 +34,7 @@ public class GuiGlobalList extends GuiScreen implements IScroll
 
 	public GuiGlobalList(EntityPlayer player)
 	{
-		super();
+		super(new ContainerFake(null));
 		this.player = player;
 	}
 
@@ -122,23 +122,23 @@ public class GuiGlobalList extends GuiScreen implements IScroll
 	}
 
 	@Override
-	protected void drawForegroundLayer(int x, int y, float var1)
+	protected void drawGuiContainerForegroundLayer(int x, int y)
 	{
 		String title = "Global Access Interface";
-		this.fontRenderer.drawString("\u00a77" + title, this.xSize / 2 - title.length() * 3, 4, 4210752);
+		this.fontRenderer.drawString("\u00a77" + title, this.width / 2 - title.length() * 3, 4, 4210752);
 
 	}
 
 	@Override
-	protected void drawBackgroundLayer(int x, int y, float var1)
+	protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
 	{
 		ResourceLocation name = new ResourceLocation(DarkMain.GUI_DIRECTORY + ":gui_access_base.png");
 		this.mc.renderEngine.func_110577_a(name);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-		int containerWidth = (this.width - this.xSize) / 2;
-		int containerHeight = (this.height - this.ySize) / 2;
-		this.drawTexturedModalRect(containerWidth, containerHeight, 0, 0, this.xSize, this.ySize);
+		int containerWidth = (this.width - this.width) / 2;
+		int containerHeight = (this.height - this.height) / 2;
+		this.drawTexturedModalRect(containerWidth, containerHeight, 0, 0, this.width, this.height);
 
 	}
 

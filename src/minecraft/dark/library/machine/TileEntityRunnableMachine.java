@@ -8,9 +8,9 @@ import dark.core.PowerSystems;
 
 public class TileEntityRunnableMachine extends TileEntityElectricMachine
 {
-	public TileEntityRunnableMachine(int tickEnergy)
+	public TileEntityRunnableMachine(float d)
 	{
-		super(tickEnergy * 2, tickEnergy);
+		super(d * 2, d);
 	}
 
 	/** Forge Ore Directory name of the item to toggle power */

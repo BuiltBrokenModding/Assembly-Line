@@ -24,9 +24,9 @@ public abstract class TileEntityElectricMachine extends TileEntityAdvanced imple
 	/** Remaining ticks of time to remain disabled */
 	protected int ticksDisabled = 0;
 	/** Max energy storage limit */
-	protected int maxEnergy;
+	protected float maxEnergy;
 	/** Energy needed to run per tick regardless of function */
-	protected int tickEnergy;
+	protected float tickEnergy;
 	
 	
 	/** Should this machine run without power */
@@ -36,10 +36,10 @@ public abstract class TileEntityElectricMachine extends TileEntityAdvanced imple
 	private IPowerProvider powerProvider;
 
 
-	public TileEntityElectricMachine(int maxEnergy, int tickEnergy)
+	public TileEntityElectricMachine(float d, float d2)
 	{
-		this.maxEnergy = maxEnergy;
-		this.tickEnergy = tickEnergy;
+		this.maxEnergy = d;
+		this.tickEnergy = d2;
 	}
 
 	@Override

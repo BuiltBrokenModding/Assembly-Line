@@ -4,10 +4,6 @@ import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidRegistry.FluidRegisterEvent;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.liquids.LiquidDictionary;
-import net.minecraftforge.liquids.LiquidDictionary.LiquidRegisterEvent;
-import net.minecraftforge.liquids.LiquidStack;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -78,6 +74,6 @@ public class FluidRestrictionHandler
 		{
 			return true;
 		}
-		return FluidRestrictionHandler.hasRestrictedStack(color.ordinal()) && FluidRestrictionHandler.getStackForColor(color).isEqual(stack);
+		return FluidRestrictionHandler.hasRestrictedStack(color.ordinal()) && FluidRestrictionHandler.getStackForColor(color).equals(stack);
 	}
 }

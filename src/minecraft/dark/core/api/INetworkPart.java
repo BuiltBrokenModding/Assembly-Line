@@ -15,7 +15,7 @@ public interface INetworkPart extends ITileConnector
 	/**
 	 * Update the connection this tile has to other tiles
 	 */
-	public void updateNetworkConnections();
+	public void refresh();
 
 	/**
 	 * Gets the networkPart's primary network

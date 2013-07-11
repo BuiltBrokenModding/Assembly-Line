@@ -25,6 +25,7 @@ public class BlockMachine extends BlockAdvanced implements ITileEntityProvider
 	public void breakBlock(World par1World, int par2, int par3, int par4, int par5, int par6)
 	{
 		super.breakBlock(par1World, par2, par3, par4, par5, par6);
+		this.dropEntireInventory(par1World, par2, par3, par4, par5, par6);
 		par1World.removeBlockTileEntity(par2, par3, par4);
 	}
 
@@ -43,6 +44,10 @@ public class BlockMachine extends BlockAdvanced implements ITileEntityProvider
 	{
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public void dropEntireInventory(World par1World, int x, int y, int z, int par5, int par6)
+	{
 	}
 
 }
