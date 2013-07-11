@@ -1,15 +1,19 @@
 package dark.fluid.client.render;
 
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 import dark.fluid.client.model.ModelPump;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.pump.TileEntityStarterPump;
 
-public class RenderPump extends TileEntitySpecialRenderer
+@SideOnly(Side.CLIENT)
+public class RenderPump extends RenderMachine
 {
 	int type = 0;
 	private ModelPump model;
@@ -23,7 +27,7 @@ public class RenderPump extends TileEntitySpecialRenderer
 	{
 		int meta = te.worldObj.getBlockMetadata(te.xCoord, te.yCoord, te.zCoord);
 
-		bindTextureByName(FluidMech.MODEL_TEXTURE_DIRECTORY + "pumps/WaterPump.png");
+		bindTextureByName(this.getTexture(te.getBlockType().blockID, te.getBlockMetadata()));
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
@@ -51,7 +55,16 @@ public class RenderPump extends TileEntitySpecialRenderer
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double var2, double var4, double var6, float var8)
 	{
-		this.renderAModelAt((TileEntityStarterPump) tileEntity, var2, var4, var6, var8);
+		if (tileEntity instanceof TileEntityStarterPump)
+		{
+			this.renderAModelAt((TileEntityStarterPump) tileEntity, var2, var4, var6, var8);
+		}
+	}
+
+	@Override
+	public ResourceLocation getTexture(int block, int meta)
+	{
+		return new ResourceLocation(FluidMech.MODEL_TEXTURE_DIRECTORY + "pumps/WaterPump.png");
 	}
 
 }

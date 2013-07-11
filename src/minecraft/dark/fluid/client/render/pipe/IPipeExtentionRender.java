@@ -1,5 +1,7 @@
 package dark.fluid.client.render.pipe;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import dark.fluid.common.pipes.TileEntityPipe;
@@ -8,6 +10,7 @@ import dark.fluid.common.pipes.TileEntityPipe;
  * TileEntitySpecialRender
  * 
  * @author Rseifert */
+@SideOnly(Side.CLIENT)
 public interface IPipeExtentionRender
 {
 	/** Renders the pipe extension just like a normal tileEntity render however this is called and

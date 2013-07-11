@@ -1,9 +1,12 @@
 package dark.fluid.client.render;
 
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 import dark.core.api.ColorCode;
 import dark.fluid.client.model.ModelLargePipe;
@@ -11,7 +14,8 @@ import dark.fluid.client.model.ModelReleaseValve;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.machines.TileEntityReleaseValve;
 
-public class RenderReleaseValve extends TileEntitySpecialRenderer
+@SideOnly(Side.CLIENT)
+public class RenderReleaseValve extends RenderMachine
 {
 	private ModelLargePipe SixPipe;
 	private ModelReleaseValve valve;
@@ -33,7 +37,7 @@ public class RenderReleaseValve extends TileEntitySpecialRenderer
 		{
 			ents = ((TileEntityReleaseValve) te).connected;
 		}
-		bindTextureByName(RenderReleaseValve.getPipeTexture(15));
+		bindTextureByName(this.getTexture(te.getBlockType().blockID, te.getBlockMetadata()));
 		if (ents[0] != null)
 			SixPipe.renderBottom();
 		if (ents[1] != null)
@@ -63,5 +67,11 @@ public class RenderReleaseValve extends TileEntitySpecialRenderer
 	public void renderTileEntityAt(TileEntity tileEntity, double var2, double var4, double var6, float var8)
 	{
 		this.renderAModelAt(tileEntity, var2, var4, var6, var8);
+	}
+
+	@Override
+	public ResourceLocation getTexture(int block, int meta)
+	{
+		return new ResourceLocation(FluidMech.MODEL_TEXTURE_DIRECTORY + "pipes/" + ColorCode.get(15).getName() + "Pipe.png");
 	}
 }

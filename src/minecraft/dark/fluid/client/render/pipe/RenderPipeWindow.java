@@ -1,10 +1,13 @@
 package dark.fluid.client.render.pipe;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import dark.fluid.client.model.ModelLargePipe;
 import dark.fluid.common.pipes.TileEntityPipe;
 
+@SideOnly(Side.CLIENT)
 public class RenderPipeWindow implements IPipeExtentionRender
 {
 	private ModelLargePipe SixPipe;
@@ -17,7 +20,7 @@ public class RenderPipeWindow implements IPipeExtentionRender
 	@Override
 	public void renderAModelAt(RenderPipe renderPipe, TileEntityPipe pipe, Vector3 location, float size, ForgeDirection facingDirection)
 	{
-		renderPipe.bindTextureForPipe(RenderPipe.getPipeTexture(0, false));
+		//renderPipe.bindTextureForPipe(RenderPipe.getPipeTexture(0, false));
 		this.render(facingDirection.ordinal());
 		System.out.println("Rendered Window Pipe");
 

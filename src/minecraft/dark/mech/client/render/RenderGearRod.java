@@ -56,7 +56,7 @@ public class RenderGearRod extends TileEntitySpecialRenderer
 				GL11.glRotatef(270f, 0f, 1f, 0f);
 				break;
 		}
-		model.render(0.0625F, tileEntity);
+		model.render(0.0625F, 0);
 		GL11.glPopMatrix();
 
 	}

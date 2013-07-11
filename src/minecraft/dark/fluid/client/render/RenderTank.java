@@ -1,20 +1,26 @@
 package dark.fluid.client.render;
 
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import dark.core.api.ColorCode;
+import dark.core.render.LiquidRenderer;
 import dark.fluid.client.model.ModelTankSide;
 import dark.fluid.common.machines.TileEntityTank;
 
-public class RenderTank extends TileEntitySpecialRenderer
+@SideOnly(Side.CLIENT)
+public class RenderTank extends RenderMachine
 {
 	private ModelTankSide model;
 
+	//TODO https://www.opengl.org/sdk/docs/man/xhtml/glDepthMask.xml <- fix z fighting 
 	public RenderTank()
 	{
 		model = new ModelTankSide();
@@ -48,7 +54,7 @@ public class RenderTank extends TileEntitySpecialRenderer
 				GL11.glDisable(GL11.GL_LIGHTING);
 				GL11.glEnable(GL11.GL_BLEND);
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-				bindTextureByName(LiquidRenderer.getLiquidSheet(liquid));
+				bindTextureByName(LiquidRenderer.getLiquidSheet(liquid.getFluid()));
 
 				GL11.glTranslatef((float) x, (float) y, (float) z);
 				GL11.glScalef(1.01F, 1.01F, 1.01F);
@@ -59,15 +65,7 @@ public class RenderTank extends TileEntitySpecialRenderer
 				GL11.glPopMatrix();
 			}
 		}
-		// DarkMain.TEXTURE_DIRECTORY + "CobbleBack.png"
-		if (color == ColorCode.RED)
-		{
-			bindTextureByName("/textures/blocks/obsidian.png");
-		}
-		else
-		{
-			bindTextureByName("/textures/blocks/stonebrick.png");
-		}
+		bindTextureByName(this.getTexture(tileEntity.getBlockType().blockID, tileEntity.getBlockMetadata()));
 
 		boolean bot = render[1] == 2;
 		boolean top = render[0] == 2;
@@ -115,5 +113,20 @@ public class RenderTank extends TileEntitySpecialRenderer
 			}
 		}
 
+	}
+
+	@Override
+	public ResourceLocation getTexture(int block, int meta)
+	{
+		String texture = "";
+		if (ColorCode.get(meta) == ColorCode.RED)
+		{
+			texture = "/textures/blocks/obsidian.png";
+		}
+		else
+		{
+			texture = "/textures/blocks/stonebrick.png";
+		}
+		return new ResourceLocation(texture);
 	}
 }

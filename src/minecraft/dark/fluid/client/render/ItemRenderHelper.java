@@ -1,21 +1,25 @@
 package dark.fluid.client.render;
 
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import dark.fluid.client.model.ModelLargePipe;
 import dark.fluid.client.model.ModelReleaseValve;
 import dark.fluid.client.render.pipe.RenderPipe;
 import dark.fluid.common.FluidMech;
 
+@SideOnly(Side.CLIENT)
 public class ItemRenderHelper implements IItemRenderer
 {
-	private ModelLargePipe SixPipe = new ModelLargePipe();
 	private ModelReleaseValve valve = new ModelReleaseValve();
+	private RenderPipe pipe = new RenderPipe();
 
 	@Override
 	public boolean handleRenderType(ItemStack item, ItemRenderType type)
@@ -47,21 +51,21 @@ public class ItemRenderHelper implements IItemRenderer
 	{
 
 		GL11.glPushMatrix();
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(RenderPipe.getPipeTexture(item.getItemDamage(), item.itemID == FluidMech.blockPipe.blockID)));
 
+		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(pipe.getTexture(item.itemID, item.getItemDamage()));
 		if (!equ)
 		{
 			GL11.glTranslatef(0.5F, -0.5F, 0.5F);
-			SixPipe.renderRight();
-			SixPipe.renderLeft();
-			SixPipe.renderMiddle();
+			pipe.SixPipe.renderRight();
+			pipe.SixPipe.renderLeft();
+			pipe.SixPipe.renderMiddle();
 		}
 		else
 		{
 			GL11.glTranslatef(0.5F, -0.5F, 0.5F);
-			SixPipe.renderFront();
-			SixPipe.renderBack();
-			SixPipe.renderMiddle();
+			pipe.SixPipe.renderFront();
+			pipe.SixPipe.renderBack();
+			pipe.SixPipe.renderMiddle();
 		}
 
 		GL11.glPopMatrix();
@@ -70,23 +74,22 @@ public class ItemRenderHelper implements IItemRenderer
 	public void renderReleaseValve(RenderBlocks renderer, int meta, boolean equ)
 	{
 		GL11.glPushMatrix();
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(RenderPipe.getPipeTexture(15, false)));
+		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(pipe.getTexture(FluidMech.blockPipe.blockID, 15));
 		if (!equ)
 		{
 			GL11.glTranslatef(0.5F, -0.5F, 0.5F);
-			SixPipe.renderRight();
-			SixPipe.renderLeft();
-			SixPipe.renderMiddle();
+			pipe.SixPipe.renderRight();
+			pipe.SixPipe.renderLeft();
+			pipe.SixPipe.renderMiddle();
 		}
 		else
 		{
 			GL11.glTranslatef(0.5F, -0.5F, 0.5F);
-			SixPipe.renderFront();
-			SixPipe.renderBack();
-			SixPipe.renderMiddle();
+			pipe.SixPipe.renderFront();
+			pipe.SixPipe.renderBack();
+			pipe.SixPipe.renderMiddle();
 		}
-
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(FluidMech.MODEL_TEXTURE_DIRECTORY + "ReleaseValve.png"));
+		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(FluidMech.MODEL_TEXTURE_DIRECTORY + "ReleaseValve.png"));
 		GL11.glRotatef(180f, 0f, 0f, 1f);
 		if (!equ)
 		{

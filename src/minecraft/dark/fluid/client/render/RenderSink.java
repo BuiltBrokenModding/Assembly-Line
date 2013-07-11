@@ -1,16 +1,21 @@
 package dark.fluid.client.render;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 import dark.fluid.client.model.ModelSink;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.machines.TileEntitySink;
 
-public class RenderSink extends TileEntitySpecialRenderer
+@SideOnly(Side.CLIENT)
+public class RenderSink extends RenderMachine
 {
 	int type = 0;
 	private ModelSink model;
@@ -20,7 +25,7 @@ public class RenderSink extends TileEntitySpecialRenderer
 		model = new ModelSink();
 	}
 
-	public void renderWater(LiquidStack stack)
+	public void renderWater(FluidStack stack)
 	{
 		if (stack == null || stack.amount <= 1)
 		{
@@ -44,7 +49,7 @@ public class RenderSink extends TileEntitySpecialRenderer
 	{
 		int meta = te.worldObj.getBlockMetadata(te.xCoord, te.yCoord, te.zCoord);
 
-		bindTextureByName(FluidMech.MODEL_TEXTURE_DIRECTORY + "Sink.png");
+		bindTextureByName(this.getTexture(te.getBlockType().blockID, te.getBlockMetadata()));
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
@@ -73,6 +78,12 @@ public class RenderSink extends TileEntitySpecialRenderer
 	public void renderTileEntityAt(TileEntity tileEntity, double var2, double var4, double var6, float var8)
 	{
 		this.renderAModelAt((TileEntitySink) tileEntity, var2, var4, var6, var8);
+	}
+
+	@Override
+	public ResourceLocation getTexture(int block, int meta)
+	{
+		return new ResourceLocation(FluidMech.MODEL_TEXTURE_DIRECTORY + "Sink.png");
 	}
 
 }

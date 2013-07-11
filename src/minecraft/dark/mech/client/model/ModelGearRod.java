@@ -105,7 +105,7 @@ public class ModelGearRod extends ModelBase
 		setRotation(Rod2, 0F, 0F, 0.7853982F);
 	}
 
-	public void render(float f5, TileEntity tileEntity)
+	public void render(float f5, int pos)
 	{
 
 		//Rod.rotateAngleZ = 45 * tileEntity;

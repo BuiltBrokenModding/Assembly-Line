@@ -1,25 +1,29 @@
 package dark.fluid.client.render.pipe;
 
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 import universalelectricity.core.vector.Vector3;
 import dark.core.api.ColorCode;
 import dark.core.hydraulic.helpers.FluidRestrictionHandler;
 import dark.fluid.client.model.ModelLargePipe;
+import dark.fluid.client.render.RenderMachine;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.pipes.TileEntityGenericPipe;
 import dark.fluid.common.pipes.TileEntityPipe;
 import dark.fluid.common.pipes.addon.IPipeExtention;
 
-public class RenderPipe extends TileEntitySpecialRenderer
+@SideOnly(Side.CLIENT)
+public class RenderPipe extends RenderMachine
 {
-	private ModelLargePipe SixPipe;
+	public ModelLargePipe SixPipe;
 	private boolean[] renderSide = new boolean[6];
 
 	public RenderPipe()
@@ -35,10 +39,13 @@ public class RenderPipe extends TileEntitySpecialRenderer
 		GL11.glScalef(1.0F, -1F, -1F);
 
 		int meta = 0;
+		int blockID = FluidMech.blockPipe.blockID;
 
 		if (te instanceof TileEntityPipe)
 		{
 			meta = te.getBlockMetadata();
+			blockID = te.getBlockType().blockID;
+
 			TileEntityPipe pipe = ((TileEntityPipe) te);
 			this.renderSide = pipe.renderConnection;
 
@@ -71,38 +78,30 @@ public class RenderPipe extends TileEntitySpecialRenderer
 				}
 			}
 		}
-		this.render(te, meta, renderSide);
+		this.render(blockID, meta, renderSide);
 		GL11.glPopMatrix();
 
 	}
 
-	public void bindTextureForPipe(String texture)
+	@Override
+	public ResourceLocation getTexture(int block, int meta)
 	{
-		this.bindTextureByName(texture);
-	}
-
-	public static String getPipeTexture(int meta, boolean bool)
-	{
-		if (bool && FluidRestrictionHandler.hasRestrictedStack(meta))
+		String name = "";
+		if (block == FluidMech.blockPipe.blockID)
 		{
 			Fluid stack = FluidRestrictionHandler.getStackForColor(ColorCode.get(meta));
-			String name = stack != null ? stack.getName() : "";
-			if (name != null)
-			{
-				return FluidMech.MODEL_TEXTURE_DIRECTORY + "pipes/" + name + "Pipe.png";
-			}
+			name = stack != null ? stack.getName() : "";
 		}
-		return FluidMech.MODEL_TEXTURE_DIRECTORY + "pipes/" + ColorCode.get(meta).getName() + "Pipe.png";
+		else
+		{
+			name = ColorCode.get(meta).getName();
+		}
+		return new ResourceLocation(FluidMech.MODEL_TEXTURE_DIRECTORY + "pipes/" + name + "Pipe.png");
 	}
 
-	public void render(TileEntity entity, int meta, boolean[] side)
+	public void render(int blockID, int meta, boolean[] side)
 	{
-		boolean bool = true;
-		if (entity instanceof TileEntityGenericPipe)
-		{
-			bool = false;
-		}
-		bindTextureByName(RenderPipe.getPipeTexture(meta, bool));
+		bindTextureByName(this.getTexture(blockID, meta));
 		if (side[0])
 		{
 			SixPipe.renderBottom();
