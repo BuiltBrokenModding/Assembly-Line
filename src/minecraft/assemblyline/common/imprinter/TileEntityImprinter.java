@@ -18,7 +18,6 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.TranslationHelper;
-import universalelectricity.prefab.multiblock.TileEntityMulti;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
@@ -32,6 +31,7 @@ import dark.helpers.Pair;
 import dark.library.gui.ISlotPickResult;
 import dark.library.machine.AutoCraftingManager;
 import dark.library.machine.IAutoCrafter;
+import dark.library.machine.TileEntityMulti;
 
 public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInventory, IArmbotUseable, IPacketReceiver, ISlotPickResult, IAutoCrafter
 {
@@ -39,9 +39,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	public static final int INVENTORY_START = IMPRINTER_MATRIX_START + 3;
 
 	private AutoCraftingManager craftManager;
-	/**
-	 * 9 slots for crafting, 1 slot for an imprint, 1 slot for an item
-	 */
+	/** 9 slots for crafting, 1 slot for an imprint, 1 slot for an item */
 	public ItemStack[] craftingMatrix = new ItemStack[9];
 	public static final int[] craftingSlots = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 
@@ -51,25 +49,17 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	int imprintOutputSlot = 1;
 	int craftingOutputSlot = 2;
 
-	/**
-	 * The Imprinter inventory containing slots.
-	 */
+	/** The Imprinter inventory containing slots. */
 	public ItemStack[] containingItems = new ItemStack[18];
 	public static int[] inventorySlots;
 
-	/**
-	 * The containing currently used by the imprinter.
-	 */
+	/** The containing currently used by the imprinter. */
 	public ContainerImprinter container;
 
-	/**
-	 * Is the current crafting result a result of an imprint?
-	 */
+	/** Is the current crafting result a result of an imprint? */
 	private boolean isImprinting = false;
 
-	/**
-	 * The ability for the imprinter to serach nearby inventories.
-	 */
+	/** The ability for the imprinter to serach nearby inventories. */
 	public boolean searchInventories = true;
 
 	@Override
@@ -78,9 +68,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 		return false;
 	}
 
-	/**
-	 * Gets the AutoCraftingManager that does all the crafting results
-	 */
+	/** Gets the AutoCraftingManager that does all the crafting results */
 	public AutoCraftingManager getCraftingManager()
 	{
 		if (craftManager == null)
@@ -96,10 +84,8 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 		return this.craftingMatrix.length + this.imprinterMatrix.length + this.containingItems.length;
 	}
 
-	/**
-	 * Sets the given item stack to the specified slot in the inventory (can be crafting or armor
-	 * sections).
-	 */
+	/** Sets the given item stack to the specified slot in the inventory (can be crafting or armor
+	 * sections). */
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack itemStack)
 	{
@@ -168,10 +154,8 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 		}
 	}
 
-	/**
-	 * When some containers are closed they call this on each slot, then drop whatever it returns as
-	 * an EntityItem - like when you close a workbench GUI.
-	 */
+	/** When some containers are closed they call this on each slot, then drop whatever it returns as
+	 * an EntityItem - like when you close a workbench GUI. */
 	@Override
 	public ItemStack getStackInSlotOnClosing(int slot)
 	{
@@ -205,11 +189,9 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 		this.onInventoryChanged();
 	}
 
-	/**
-	 * Construct an InventoryCrafting Matrix on the fly.
+	/** Construct an InventoryCrafting Matrix on the fly.
 	 * 
-	 * @return
-	 */
+	 * @return */
 	public InventoryCrafting getCraftingMatrix()
 	{
 		if (this.container != null)
@@ -246,17 +228,13 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 		return true;
 	}
 
-	/**
-	 * Updates all the output slots. Call this to update the Imprinter.
-	 */
+	/** Updates all the output slots. Call this to update the Imprinter. */
 	@Override
 	public void onInventoryChanged()
 	{
 		if (!this.worldObj.isRemote)
 		{
-			/**
-			 * Makes the stamping recipe for filters
-			 */
+			/** Makes the stamping recipe for filters */
 			this.isImprinting = false;
 
 			if (this.isMatrixEmpty() && this.imprinterMatrix[imprintInputSlot] != null && this.imprinterMatrix[1] != null)
@@ -293,14 +271,10 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 			{
 				this.imprinterMatrix[craftingOutputSlot] = null;
 
-				/**
-				 * Try to craft from crafting grid. If not possible, then craft from imprint.
-				 */
+				/** Try to craft from crafting grid. If not possible, then craft from imprint. */
 				boolean didCraft = false;
 
-				/**
-				 * Simulate an Inventory Crafting Instance
-				 */
+				/** Simulate an Inventory Crafting Instance */
 				InventoryCrafting inventoryCrafting = this.getCraftingMatrix();
 
 				if (inventoryCrafting != null)
@@ -375,9 +349,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 		}
 	}
 
-	/**
-	 * Gets all valid inventories that imprinter can use for resources
-	 */
+	/** Gets all valid inventories that imprinter can use for resources */
 	private IInventory[] getAvaliableInventories()
 	{
 		IInventory[] inventories = new IInventory[6];
@@ -413,9 +385,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 		return inventories;
 	}
 
-	/**
-	 * Tries to let the Armbot craft an item.
-	 */
+	/** Tries to let the Armbot craft an item. */
 	@Override
 	public boolean onUse(IArmbot armbot, String[] args)
 	{
@@ -436,9 +406,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	// // Save And Data processing //////
 	// ///////////////////////////////////////
 
-	/**
-	 * NBT Data
-	 */
+	/** NBT Data */
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
@@ -463,9 +431,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 		this.searchInventories = nbt.getBoolean("searchInventories");
 	}
 
-	/**
-	 * Writes a tile entity to NBT.
-	 */
+	/** Writes a tile entity to NBT. */
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{

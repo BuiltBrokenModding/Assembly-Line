@@ -8,29 +8,21 @@ import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.implement.IRotatable;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
+import universalelectricity.prefab.tile.IRotatable;
 import assemblyline.api.IBelt;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.TileEntityAssembly;
 
-import com.google.common.io.ByteArrayDataInput;
-
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
-
 public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacketReceiver, IBelt, IRotatable
 {
+
 	public enum SlantType
 	{
 		NONE,
@@ -50,6 +42,12 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
 	private SlantType slantType = SlantType.NONE;
 	/** Entities that are ignored allowing for other tiles to interact with them */
 	public List<Entity> IgnoreList = new ArrayList<Entity>();
+
+	public TileEntityConveyorBelt()
+	{
+		super(0.1f);
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	public void onUpdate()
@@ -179,25 +177,15 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
 	}
 
 	@Override
-	public void setDirection(World world, int x, int y, int z, ForgeDirection facingDirection)
+	public void setDirection(ForgeDirection facingDirection)
 	{
 		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, facingDirection.ordinal(), 3);
 	}
 
-	public void setDirection(ForgeDirection facingDirection)
-	{
-		this.setDirection(worldObj, xCoord, yCoord, zCoord, facingDirection);
-	}
-
 	@Override
-	public ForgeDirection getDirection(IBlockAccess world, int x, int y, int z)
-	{
-		return ForgeDirection.getOrientation(this.getBlockMetadata());
-	}
-
 	public ForgeDirection getDirection()
 	{
-		return this.getDirection(worldObj, xCoord, yCoord, zCoord);
+		return ForgeDirection.getOrientation(this.getBlockMetadata());
 	}
 
 	@Override
@@ -244,9 +232,9 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
 	}
 
 	@Override
-	public void updateNetworkConnections()
+	public void refresh()
 	{
-		super.updateNetworkConnections();
+		super.refresh();
 		if (this.worldObj != null && !this.worldObj.isRemote)
 		{
 			Vector3 face = new Vector3(this).modifyPositionFromSide(this.getDirection());

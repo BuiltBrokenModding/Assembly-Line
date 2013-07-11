@@ -13,21 +13,17 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.UniversalElectricity;
 import universalelectricity.core.block.IConductor;
-import universalelectricity.core.electricity.ElectricityDisplay;
-import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
-import universalelectricity.core.electricity.IElectricityNetwork;
+import universalelectricity.core.electricity.ElectricityPack;
+import universalelectricity.core.grid.IElectricityNetwork;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.common.AssemblyLine;
-import buildcraft.api.power.PowerProvider;
 
 import com.google.common.io.ByteArrayDataInput;
 
 import dark.core.api.INetworkPart;
-import dark.core.tile.network.NetworkPowerTiles;
 import dark.core.tile.network.NetworkTileEntities;
 import dark.library.machine.TileEntityRunnableMachine;
 
@@ -37,6 +33,12 @@ import dark.library.machine.TileEntityRunnableMachine;
  * @author DarkGuardsman */
 public abstract class TileEntityAssembly extends TileEntityRunnableMachine implements INetworkPart, IPacketReceiver, IConductor
 {
+	public TileEntityAssembly(float d)
+	{
+		super(d);
+		// TODO Auto-generated constructor stub
+	}
+
 	/** Is the tile currently powered allowing it to run */
 	public boolean running = false;
 	private boolean prevRun = false;
@@ -76,9 +78,9 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 			if (ticks % updateTick == 0)
 			{
 				this.updateTick = ((int) random.nextInt(10) + 20);
-				this.updateNetworkConnections();
+				this.refresh();
 			}
-			this.running = ((NetworkAssembly) this.getTileNetwork()).consumePower(this);
+			this.running = this.canRun();
 			if (running != prevRun)
 			{
 				Packet packet = PacketManager.getPacket(AssemblyLine.CHANNEL, this, AssemblyTilePacket.POWER.ordinal(), this.running);
@@ -87,25 +89,6 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 		}
 
 		this.onUpdate();
-	}
-
-	@Override
-	public void onReceive(ForgeDirection side, double voltage, double amperes)
-	{
-		if (voltage <= 0 || amperes <= 0)
-		{
-			return;
-		}
-		if (voltage > this.getVoltage())
-		{
-			this.onDisable(2);
-			return;
-		}
-		if (this.getTileNetwork() instanceof NetworkAssembly)
-		{
-			((NetworkAssembly) this.getTileNetwork()).addPower(voltage * amperes);
-			//System.out.println("Tile got power Side:" + side.toString() + " " + ElectricityDisplay.getDisplaySimple(voltage, ElectricUnit.VOLTAGE, 2) + " " + ElectricityDisplay.getDisplaySimple(amperes, ElectricUnit.AMPERE, 2));
-		}
 	}
 
 	/** Same as updateEntity */
@@ -132,45 +115,13 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 	}
 
 	@Override
-	public double getBattery(ForgeDirection side)
-	{
-		if (this.getTileNetwork() instanceof NetworkAssembly)
-		{
-			return ((NetworkAssembly) this.getTileNetwork()).getMaxBattery();
-		}
-		return super.getBattery(side);
-	}
-
-	@Override
-	public double getCurrentBattery(ForgeDirection side)
-	{
-		if (this.getTileNetwork() instanceof NetworkAssembly)
-		{
-			return ((NetworkAssembly) this.getTileNetwork()).getCurrentBattery();
-		}
-		return super.getCurrentBattery(side);
-	}
-
-	/** Amount of energy the network needs at any given time */
-	@Override
-	public double getRequest(ForgeDirection side)
-	{
-		if (this.getTileNetwork() instanceof NetworkAssembly)
-		{
-			NetworkAssembly net = ((NetworkAssembly) this.getTileNetwork());
-			return Math.min(100 + net.getMemberRequest(), Math.max(0, net.getRequest(new Vector3(this).modifyPositionFromSide(side).getTileEntity(this.worldObj), this).getWatts()));
-		}
-		return 0;
-	}
-
-	@Override
 	public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
 	{
 		return entity != null && entity instanceof TileEntityAssembly;
 	}
 
 	@Override
-	public void updateNetworkConnections()
+	public void refresh()
 	{
 		if (this.worldObj != null && !this.worldObj.isRemote)
 		{
@@ -296,24 +247,17 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 	@Override
 	public TileEntity[] getAdjacentConnections()
 	{
-		return new TileEntity[6];
+		return this.connectedTiles.toArray(new TileEntity[this.connectedTiles.size()]);
 	}
 
 	@Override
-	public void updateAdjacentConnections()
+	public float getResistance()
 	{
-		this.updateNetworkConnections();
-
+		return 0.01f;
 	}
 
 	@Override
-	public double getResistance()
-	{
-		return 0.01;
-	}
-
-	@Override
-	public double getCurrentCapcity()
+	public float getCurrentCapacity()
 	{
 		return 1000;
 	}

@@ -1,34 +1,29 @@
 package assemblyline.common.imprinter.prefab;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.prefab.implement.IRotatable;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
+import universalelectricity.prefab.tile.IRotatable;
 import assemblyline.api.IFilterable;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.imprinter.ItemImprinter;
 import assemblyline.common.machine.TileEntityAssembly;
 
-import com.google.common.io.ByteArrayDataInput;
-
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
-
 public abstract class TileEntityFilterable extends TileEntityAssembly implements IRotatable, IFilterable, IPacketReceiver
 {
+	public TileEntityFilterable(int tickEnergy)
+	{
+		super(tickEnergy);
+		// TODO Auto-generated constructor stub
+	}
+
 	private ItemStack filterItem;
 	private boolean inverted;
 
@@ -89,27 +84,16 @@ public abstract class TileEntityFilterable extends TileEntityAssembly implements
 	}
 
 	@Override
-	public ForgeDirection getDirection(IBlockAccess world, int x, int y, int z)
+	public ForgeDirection getDirection()
 	{
 		return ForgeDirection.getOrientation(this.getBlockMetadata());
 	}
 
 	@Override
-	public void setDirection(World world, int x, int y, int z, ForgeDirection facingDirection)
+	public void setDirection(ForgeDirection facingDirection)
 	{
 		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, facingDirection.ordinal(), 3);
 	}
-
-	public void setDirection(ForgeDirection facingDirection)
-	{
-		this.setDirection(worldObj, xCoord, yCoord, zCoord, facingDirection);
-	}
-
-	public ForgeDirection getDirection()
-	{
-		return this.getDirection(worldObj, xCoord, yCoord, zCoord);
-	}
-
 	/** Don't override this! Override getPackData() instead! */
 	@Override
 	public Packet getDescriptionPacket()

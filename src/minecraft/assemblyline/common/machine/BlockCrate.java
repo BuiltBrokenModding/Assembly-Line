@@ -14,24 +14,20 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.TabAssemblyLine;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-/**
- * A block that allows the placement of mass amount of a specific item within it. It will be allowed
+/** A block that allows the placement of mass amount of a specific item within it. It will be allowed
  * to go on Conveyor Belts
  * 
- * @author Calclavia
- * 
- */
+ * @author Calclavia */
 public class BlockCrate extends BlockAssembly
 {
 	Icon crate_icon;
 
 	public BlockCrate(int id)
 	{
-		super(id, UniversalElectricity.machine,"crate");		
+		super(id, UniversalElectricity.machine, "crate");
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -62,9 +58,7 @@ public class BlockCrate extends BlockAssembly
 			{
 				TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
 
-				/**
-				 * Make double clicking input all stacks.
-				 */
+				/** Make double clicking input all stacks. */
 				boolean allMode = (world.getWorldTime() - tileEntity.prevClickTime < 10);
 
 				tileEntity.prevClickTime = world.getWorldTime();
@@ -75,9 +69,7 @@ public class BlockCrate extends BlockAssembly
 		}
 	}
 
-	/**
-	 * Placed the item the player is holding into the crate.
-	 */
+	/** Placed the item the player is holding into the crate. */
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
@@ -92,9 +84,7 @@ public class BlockCrate extends BlockAssembly
 			{
 				TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
 
-				/**
-				 * Make double clicking input all stacks.
-				 */
+				/** Make double clicking input all stacks. */
 				boolean allMode = (world.getWorldTime() - tileEntity.prevClickTime < 10);
 
 				tileEntity.prevClickTime = world.getWorldTime();
@@ -123,10 +113,8 @@ public class BlockCrate extends BlockAssembly
 		return true;
 	}
 
-	/**
-	 * Try to inject it into the crate. Otherwise, look around for nearby crates and try to put them
-	 * in.
-	 */
+	/** Try to inject it into the crate. Otherwise, look around for nearby crates and try to put them
+	 * in. */
 	public void tryInsert(TileEntityCrate tileEntity, EntityPlayer player, boolean allMode, boolean doSearch)
 	{
 		boolean success;
@@ -182,9 +170,7 @@ public class BlockCrate extends BlockAssembly
 		}
 	}
 
-	/**
-	 * Inserts a the itemStack the player is holding into the crate.
-	 */
+	/** Inserts a the itemStack the player is holding into the crate. */
 	public boolean insertCurrentItem(TileEntityCrate tileEntity, EntityPlayer player)
 	{
 		ItemStack currentStack = player.getCurrentEquippedItem();
@@ -221,11 +207,9 @@ public class BlockCrate extends BlockAssembly
 		return false;
 	}
 
-	/**
-	 * Inserts all items of the same type this player has into the crate.
+	/** Inserts all items of the same type this player has into the crate.
 	 * 
-	 * @return True on success
-	 */
+	 * @return True on success */
 	public boolean insertAllItems(TileEntityCrate tileEntity, EntityPlayer player)
 	{
 		ItemStack requestStack = null;
@@ -268,14 +252,12 @@ public class BlockCrate extends BlockAssembly
 		return false;
 	}
 
-	/**
-	 * Ejects and item out of the crate and spawn it under the player entity.
+	/** Ejects and item out of the crate and spawn it under the player entity.
 	 * 
 	 * @param tileEntity
 	 * @param player
 	 * @param requestSize - The maximum stack size to take out. Default should be 64.
-	 * @return True on success
-	 */
+	 * @return True on success */
 	public boolean ejectItems(TileEntityCrate tileEntity, EntityPlayer player, int requestSize)
 	{
 		World world = tileEntity.worldObj;
@@ -322,12 +304,10 @@ public class BlockCrate extends BlockAssembly
 		return false;
 	}
 
-	/**
-	 * Puts an itemStack into the crate.
+	/** Puts an itemStack into the crate.
 	 * 
 	 * @param tileEntity
-	 * @param itemStack
-	 */
+	 * @param itemStack */
 	public static ItemStack addStackToCrate(TileEntityCrate tileEntity, ItemStack itemStack)
 	{
 		if (itemStack == null || itemStack.getItem().isDamageable() && itemStack.getItem().getDamage(itemStack) > 0)
@@ -380,7 +360,7 @@ public class BlockCrate extends BlockAssembly
 					double dropY = (double) (world.rand.nextFloat() * area) + (double) (1.0F - area) * 0.5D;
 					double dropZ = (double) (world.rand.nextFloat() * area) + (double) (1.0F - area) * 0.5D;
 
-					ItemStack dropStack = new ItemStack(this, 1, tileEntity.getTier());
+					ItemStack dropStack = new ItemStack(this, 1, tileEntity.getBlockMetadata());
 					ItemBlockCrate.setContainingItemStack(dropStack, containingStack);
 
 					EntityItem var13 = new EntityItem(world, (double) x + dropX, (double) y + dropY, (double) z + dropZ, dropStack);

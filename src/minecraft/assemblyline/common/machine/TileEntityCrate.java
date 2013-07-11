@@ -9,7 +9,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
-import universalelectricity.prefab.implement.ITier;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
@@ -20,7 +19,7 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
-public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInventory, IPacketReceiver, ISidedInventory
+public class TileEntityCrate extends TileEntityAdvanced implements IInventory, IPacketReceiver, ISidedInventory
 {
 	/* Collective total stack of all inv slots */
 	private ItemStack sampleStack;
@@ -31,9 +30,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 
 	public long prevClickTime = -1000;
 
-	/**
-	 * Clones the single stack into an inventory format for automation interaction
-	 */
+	/** Clones the single stack into an inventory format for automation interaction */
 	public void buildInventory()
 	{
 		ItemStack baseStack = this.sampleStack.copy();
@@ -53,13 +50,11 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 		}
 	}
 
-	/**
-	 * Turns the inventory array into a single stack of matching items. This assumes that all items
+	/** Turns the inventory array into a single stack of matching items. This assumes that all items
 	 * in the crate are the same TODO eject minority items and only keep the majority that are the
 	 * same to prevent duplication issues
 	 * 
-	 * @param force - force a rebuild of the inventory from the single stack created
-	 */
+	 * @param force - force a rebuild of the inventory from the single stack created */
 	public void buildSampleStack(boolean force)
 	{
 		int count = 0;
@@ -147,7 +142,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 
 	public int getSlotCount()
 	{
-		return TileEntityCrate.getSlotCount(this.getTier());
+		return TileEntityCrate.getSlotCount(this.getBlockMetadata());
 	}
 
 	public static int getSlotCount(int metadata)
@@ -317,9 +312,7 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	{
 	}
 
-	/**
-	 * NBT Data
-	 */
+	/** NBT Data */
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
@@ -392,22 +385,6 @@ public class TileEntityCrate extends TileEntityAdvanced implements ITier, IInven
 	public String getInvName()
 	{
 		return "inv.Crate";
-	}
-
-	@Override
-	public int getTier()
-	{
-		if (this.worldObj == null)
-		{
-			return 15;
-		}
-		return this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord);
-	}
-
-	@Override
-	public void setTier(int tier)
-	{
-		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, tier, 3);
 	}
 
 	@Override

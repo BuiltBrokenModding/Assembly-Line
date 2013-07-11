@@ -14,7 +14,13 @@ import assemblyline.common.imprinter.prefab.TileEntityFilterable;
 
 public class TileEntityDetector extends TileEntityFilterable
 {
+
 	private boolean powering = false;
+
+	public TileEntityDetector()
+	{
+		super(1);
+	}
 
 	@Override
 	public void updateEntity()
@@ -115,6 +121,6 @@ public class TileEntityDetector extends TileEntityFilterable
 	public void onUpdate()
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 }

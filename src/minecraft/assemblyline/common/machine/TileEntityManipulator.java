@@ -8,16 +8,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.implement.IRedstoneReceptor;
-import universalelectricity.prefab.implement.IRotatable;
-import universalelectricity.prefab.network.PacketManager;
+import universalelectricity.prefab.tile.IRotatable;
 import assemblyline.api.IManipulator;
 import assemblyline.common.imprinter.ItemImprinter;
 import assemblyline.common.imprinter.prefab.TileEntityFilterable;
-import cpw.mods.fml.common.network.PacketDispatcher;
 
-public class TileEntityManipulator extends TileEntityFilterable implements IRotatable, IRedstoneReceptor, IManipulator
+public class TileEntityManipulator extends TileEntityFilterable implements IRotatable, IManipulator
 {
+
 	/** True to auto output items with a redstone pulse */
 	private boolean selfPulse = false;
 	/** True if outputting items */
@@ -26,6 +24,11 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 	private boolean isRedstonePowered = false;
 	/** The class that interacts with inventories for this machine */
 	private InvInteractionHelper invExtractionHelper;
+
+	public TileEntityManipulator()
+	{
+		super(1);
+	}
 
 	@Override
 	public void onUpdate()
@@ -40,6 +43,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 				}
 				else
 				{
+					this.isRedstonePowered = this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
 					if (this.isSelfPulse() && this.ticks % 10 == 0)
 					{
 						this.isRedstonePowered = true;
@@ -120,7 +124,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 	@Override
 	public void eject()
 	{
-		this.onPowerOff();
+		this.isRedstonePowered = false;
 		/** input location up */
 		Vector3 inputUp = new Vector3(this);
 		inputUp.modifyPositionFromSide(ForgeDirection.UP);
@@ -170,18 +174,6 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 		super.writeToNBT(nbt);
 		nbt.setBoolean("isOutput", this.isOutput);
 		nbt.setBoolean("selfpulse", this.isSelfPulse());
-	}
-
-	@Override
-	public void onPowerOn()
-	{
-		this.isRedstonePowered = true;
-	}
-
-	@Override
-	public void onPowerOff()
-	{
-		this.isRedstonePowered = false;
 	}
 
 	@Override

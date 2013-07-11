@@ -8,18 +8,17 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.multiblock.IMultiBlock;
 import assemblyline.client.render.BlockRenderingHandler;
-import assemblyline.common.TabAssemblyLine;
 import assemblyline.common.machine.BlockAssembly;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.library.machine.IMultiBlock;
 
 public class BlockArmbot extends BlockAssembly
 {
 	public BlockArmbot(int id)
 	{
-		super(id, UniversalElectricity.machine,"armbot");
+		super(id, UniversalElectricity.machine, "armbot");
 	}
 
 	@Override

@@ -54,7 +54,7 @@ public class BlockAssembly extends BlockMachine
 
 		if (tileEntity instanceof INetworkPart)
 		{
-			((INetworkPart) tileEntity).updateNetworkConnections();
+			((INetworkPart) tileEntity).refresh();
 		}
 	}
 
@@ -65,7 +65,7 @@ public class BlockAssembly extends BlockMachine
 
 		if (tileEntity instanceof INetworkPart)
 		{
-			((INetworkPart) tileEntity).updateNetworkConnections();
+			((INetworkPart) tileEntity).refresh();
 		}
 	}
 

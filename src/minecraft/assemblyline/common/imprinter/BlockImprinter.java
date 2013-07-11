@@ -14,7 +14,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.CommonProxy;
-import assemblyline.common.TabAssemblyLine;
 import assemblyline.common.machine.BlockAssembly;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -27,7 +26,7 @@ public class BlockImprinter extends BlockAssembly
 
 	public BlockImprinter(int id)
 	{
-		super(id, Material.wood,"imprinter");
+		super(id, Material.wood, "imprinter");
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -46,9 +45,7 @@ public class BlockImprinter extends BlockAssembly
 		return getIcon(side, 0);
 	}
 
-	/**
-	 * Returns the block texture based on the side being looked at. Args: side
-	 */
+	/** Returns the block texture based on the side being looked at. Args: side */
 	@Override
 	public Icon getIcon(int side, int meta)
 	{
@@ -66,9 +63,7 @@ public class BlockImprinter extends BlockAssembly
 		return this.imprinter_side;
 	}
 
-	/**
-	 * Called upon block activation (right click on the block.)
-	 */
+	/** Called upon block activation (right click on the block.) */
 	@Override
 	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
 	{

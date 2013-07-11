@@ -17,9 +17,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.core.grid.IElectricityNetwork;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
-import universalelectricity.prefab.multiblock.IMultiBlock;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import assemblyline.api.IArmbot;
@@ -40,9 +40,11 @@ import cpw.mods.fml.relauncher.Side;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.IPeripheral;
 import dark.helpers.ItemFindingHelper;
+import dark.library.machine.IMultiBlock;
 
 public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IInventory, IPacketReceiver, IArmbot, IPeripheral
 {
+
 	private final CommandManager commandManager = new CommandManager();
 	/** The items this container contains. */
 	protected ItemStack disk = null;
@@ -66,6 +68,11 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
 	/** Client Side Object Storage */
 	public EntityItem renderEntityItem = null;
+
+	public TileEntityArmbot()
+	{
+		super(5);
+	}
 
 	@Override
 	public void initiate()
@@ -917,5 +924,26 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 	{
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public float getCurrentCapacity()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setNetwork(IElectricityNetwork network)
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void refresh()
+	{
+		// TODO Auto-generated method stub
+
 	}
 }

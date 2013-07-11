@@ -14,38 +14,50 @@ public class TileEntityCraneController extends TileEntityAssembly implements ICr
 	int width, depth;
 	boolean isCraneValid;
 	Vector3 armPos;
+
+	public TileEntityCraneController()
+	{
+		super(10);
+		width = depth = 0;
+		isCraneValid = false;
+	}
 	
 	@Override
 	public void initiate()
 	{
 		this.validateCrane();
-		if(armPos == null || armPos.equals(new Vector3()))
+		if (armPos == null || armPos.equals(new Vector3()))
 		{
 			int deltaX = 0;
 			int deltaZ = 0;
-			switch(this.getFacing())
+			switch (this.getFacing())
 			{
-				case SOUTH: case EAST: deltaX = (this.width/2);deltaZ = (this.depth/2);break;
-				case NORTH: case WEST: deltaX = -(this.width/2);deltaZ = -(this.depth/2);break;
+				case SOUTH:
+				case EAST:
+					deltaX = (this.width / 2);
+					deltaZ = (this.depth / 2);
+					break;
+				case NORTH:
+				case WEST:
+					deltaX = -(this.width / 2);
+					deltaZ = -(this.depth / 2);
+					break;
 			}
-			armPos = new Vector3(this.xCoord + deltaX, this.yCoord, this.zCoord+ deltaZ);
+			armPos = new Vector3(this.xCoord + deltaX, this.yCoord, this.zCoord + deltaZ);
 		}
 	}
+
 	public ForgeDirection getFacing()
 	{
 		return ForgeDirection.getOrientation(this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
 	}
-	public TileEntityCraneController()
-	{
-		super();
-		width = depth = 0;
-		isCraneValid = false;
-	}
+
+	
 
 	@Override
 	public void updateEntity()
 	{
-		if(this.worldObj.isRemote && armPos != null)
+		if (this.worldObj.isRemote && armPos != null)
 		{
 			AssemblyLine.proxy.renderBeam(this.worldObj, new Vector3(this), armPos, Color.BLUE, 1);
 		}
@@ -66,15 +78,15 @@ public class TileEntityCraneController extends TileEntityAssembly implements ICr
 		isCraneValid = false;
 		width = depth = 0;
 		findCraneWidth();
-		System.out.println("CraneValidator: Width = "+ this.width);
+		System.out.println("CraneValidator: Width = " + this.width);
 		findCraneDepth();
-		System.out.println("CraneValidator: Depth = "+ this.depth);
+		System.out.println("CraneValidator: Depth = " + this.depth);
 		if (Math.abs(width) > 1 && Math.abs(depth) > 1)
 		{
 			isCraneValid = isFrameValid();
-			
+
 		}
-		System.out.println("CraneValidator: is valid? "+ this.isCraneValid);
+		System.out.println("CraneValidator: is valid? " + this.isCraneValid);
 	}
 
 	private boolean isFrameValid()
@@ -109,14 +121,12 @@ public class TileEntityCraneController extends TileEntityAssembly implements ICr
 		return true;
 	}
 
-	/**
-	 * Find x size and store in this.width
-	 */
+	/** Find x size and store in this.width */
 	private void findCraneWidth()
 	{
 		int x = 0;
 		ForgeDirection facing = this.getFacing();
-		System.out.println("CraneValidator: Width direction = "+ facing.ordinal());
+		System.out.println("CraneValidator: Width direction = " + facing.ordinal());
 		while (true)
 		{
 			if (Math.abs(x) >= CraneHelper.MAX_SIZE)
@@ -125,7 +135,7 @@ public class TileEntityCraneController extends TileEntityAssembly implements ICr
 			}
 			if (!CraneHelper.isCraneStructureBlock(worldObj, xCoord + x, yCoord, zCoord))
 			{
-				System.out.println("CraneValidator: Hit non block at x = "+ x);
+				System.out.println("CraneValidator: Hit non block at x = " + x);
 				break;
 			}
 			if (facing == ForgeDirection.NORTH || facing == ForgeDirection.EAST)
@@ -148,9 +158,7 @@ public class TileEntityCraneController extends TileEntityAssembly implements ICr
 		}
 	}
 
-	/**
-	 * Find x size and store in this.depth
-	 */
+	/** Find x size and store in this.depth */
 	private void findCraneDepth()
 	{
 		int z = 0;
@@ -213,10 +221,11 @@ public class TileEntityCraneController extends TileEntityAssembly implements ICr
 	{
 		return true;
 	}
+
 	@Override
 	public void onUpdate()
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 }

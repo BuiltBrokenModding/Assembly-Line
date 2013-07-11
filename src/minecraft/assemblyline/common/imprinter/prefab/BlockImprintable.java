@@ -2,7 +2,6 @@ package assemblyline.common.imprinter.prefab;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,27 +9,22 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import universalelectricity.prefab.implement.IRedstoneReceptor;
 import assemblyline.api.IFilterable;
 import assemblyline.common.imprinter.ItemImprinter;
 import assemblyline.common.machine.BlockAssembly;
 
-/**
- * Extend this block class if a filter is allowed to be placed inside of this block.
+/** Extend this block class if a filter is allowed to be placed inside of this block.
  * 
- * @author Calclavia
- */
+ * @author Calclavia */
 public abstract class BlockImprintable extends BlockAssembly
 {
 	public BlockImprintable(String name, int id, Material material, CreativeTabs creativeTab)
 	{
-		super(id, material,name);
+		super(id, material, name);
 		this.setCreativeTab(creativeTab);
 	}
 
-	/**
-	 * Allows filters to be placed inside of this block.
-	 */
+	/** Allows filters to be placed inside of this block. */
 	@Override
 	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
 	{
@@ -98,22 +92,6 @@ public abstract class BlockImprintable extends BlockAssembly
 	}
 
 	@Override
-	public void onNeighborBlockChange(World par1World, int x, int y, int z, int side)
-	{
-		super.onNeighborBlockChange(par1World, x, y, z, side);
-
-		TileEntity tileEntity = par1World.getBlockTileEntity(x, y, z);
-
-		if (tileEntity instanceof IRedstoneReceptor)
-		{
-			if (par1World.isBlockIndirectlyGettingPowered(x, y, z))
-			{
-				((IRedstoneReceptor) par1World.getBlockTileEntity(x, y, z)).onPowerOn();
-			}
-		}
-	}
-
-	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase par5EntityLiving, ItemStack stack)
 	{
 		int angle = MathHelper.floor_double((par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
@@ -135,7 +113,7 @@ public abstract class BlockImprintable extends BlockAssembly
 				break;
 
 		}
-		world.setBlockMetadataWithNotify(x, y, z, change,3);
+		world.setBlockMetadataWithNotify(x, y, z, change, 3);
 	}
 
 	@Override
@@ -161,7 +139,7 @@ public abstract class BlockImprintable extends BlockAssembly
 
 		}
 
-		world.setBlockMetadataWithNotify(x, y, z, change,3);
+		world.setBlockMetadataWithNotify(x, y, z, change, 3);
 
 		return true;
 	}

@@ -1,6 +1,7 @@
 package assemblyline.client.gui;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.entity.player.InventoryPlayer;
 
 import org.lwjgl.opengl.GL11;
@@ -23,9 +24,7 @@ public class GuiImprinter extends GuiContainer
 		this.ySize = 201;
 	}
 
-	/**
-	 * Draw the foreground layer for the GuiContainer (everything in front of the items)
-	 */
+	/** Draw the foreground layer for the GuiContainer (everything in front of the items) */
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
@@ -34,13 +33,11 @@ public class GuiImprinter extends GuiContainer
 		this.fontRenderer.drawString(TranslationHelper.getLocal("tile.imprinter.name"), 68, 6, 4210752);
 	}
 
-	/**
-	 * Draw the background layer for the GuiContainer (everything behind the items)
-	 */
+	/** Draw the background layer for the GuiContainer (everything behind the items) */
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
 	{
-		this.mc.renderEngine.bindTexture(AssemblyLine.GUI_TEXTURES_PATH + "gui_imprinter.png");
+		this.mc.func_110434_K().func_110577_a(new ResourceLocation(AssemblyLine.GUI_TEXTURES_PATH + "gui_imprinter.png"));
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.containerWidth = (this.width - this.xSize) / 2;
 		this.containerHeight = (this.height - this.ySize) / 2;

@@ -16,8 +16,15 @@ import assemblyline.common.imprinter.prefab.TileEntityFilterable;
 /** @author Darkguardsman */
 public class TileEntityRejector extends TileEntityFilterable
 {
+
 	/** should the piston fire, or be extended */
 	public boolean firePiston = false;
+
+	public TileEntityRejector()
+	{
+		super(1);
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	public void onUpdate()
@@ -25,8 +32,8 @@ public class TileEntityRejector extends TileEntityFilterable
 		/** Has to update a bit faster than a conveyer belt */
 		if (this.ticks % 5 == 0 && !this.isDisabled())
 		{
-			this.firePiston = false;		
-			
+			this.firePiston = false;
+
 			Vector3 searchPosition = new Vector3(this);
 			searchPosition.modifyPositionFromSide(this.getDirection());
 			TileEntity tileEntity = searchPosition.getTileEntity(this.worldObj);

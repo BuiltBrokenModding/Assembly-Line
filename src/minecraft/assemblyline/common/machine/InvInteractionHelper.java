@@ -12,8 +12,7 @@ import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.multiblock.TileEntityMulti;
-import assemblyline.common.imprinter.ItemImprinter;
+import dark.library.machine.TileEntityMulti;
 
 public class InvInteractionHelper
 {
@@ -33,7 +32,7 @@ public class InvInteractionHelper
 		}
 		this.inverted = inverted;
 	}
-	
+
 	public void setFilter(List<ItemStack> filters, boolean inverted)
 	{
 		this.filterItems = filters;

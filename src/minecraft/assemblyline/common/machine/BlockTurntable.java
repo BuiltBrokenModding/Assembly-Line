@@ -5,7 +5,6 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -16,21 +15,20 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.implement.IRotatable;
+import universalelectricity.prefab.tile.IRotatable;
 import assemblyline.common.AssemblyLine;
-import assemblyline.common.TabAssemblyLine;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockTurntable extends BlockAssembly
 {
 	private Icon top;
-	
+
 	public BlockTurntable(int par1)
 	{
-		super(par1, Material.piston,"turntable");
+		super(par1, Material.piston, "turntable");
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconReg)
@@ -44,7 +42,7 @@ public class BlockTurntable extends BlockAssembly
 	{
 		this.updateTurntableState(world, x, y, z);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
@@ -53,7 +51,7 @@ public class BlockTurntable extends BlockAssembly
 			return this.top;
 		return this.machine_icon;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public Icon getIcon(int side, int meta)
@@ -124,7 +122,7 @@ public class BlockTurntable extends BlockAssembly
 
 				if (rotatable != null)
 				{
-					int newDir = ((IRotatable) tileEntity).getDirection(world, x, y, z).ordinal();
+					int newDir = ((IRotatable) tileEntity).getDirection().ordinal();
 					newDir++;
 
 					while (newDir >= 6)
@@ -137,7 +135,7 @@ public class BlockTurntable extends BlockAssembly
 						newDir += 6;
 					}
 
-					rotatable.setDirection(world, x, y, z, ForgeDirection.getOrientation(newDir));
+					rotatable.setDirection(ForgeDirection.getOrientation(newDir));
 
 					world.markBlockForUpdate(position.intX(), position.intY(), position.intZ());
 					world.playSoundEffect((double) x + 0.5D, (double) y + 0.5D, (double) z + 0.5D, "tile.piston.in", 0.5F, world.rand.nextFloat() * 0.15F + 0.6F);
