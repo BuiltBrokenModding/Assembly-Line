@@ -64,7 +64,7 @@ public class BlockPipe extends BlockMachine
 
 		if (tileEntity instanceof INetworkPipe)
 		{
-			((INetworkPipe) tileEntity).updateNetworkConnections();
+			((INetworkPipe) tileEntity).refresh();
 		}
 	}
 
@@ -75,7 +75,7 @@ public class BlockPipe extends BlockMachine
 
 		if (tileEntity instanceof INetworkPipe)
 		{
-			((INetworkPipe) tileEntity).updateNetworkConnections();
+			((INetworkPipe) tileEntity).refresh();
 		}
 	}
 

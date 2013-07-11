@@ -71,7 +71,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
 	@Override
 	public void initiate()
 	{
-		this.updateNetworkConnections();
+		this.refresh();
 		if (this.subEntities[0] == null)
 		{
 			// this.addNewExtention(0, TileEntityPipeWindow.class);
@@ -102,7 +102,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
 		{
 			if (ticks % ((int) random.nextInt(5) * 40 + 20) == 0)
 			{
-				this.updateNetworkConnections();
+				this.refresh();
 			}
 			if (ticks % ((int) random.nextInt(5) * 60 + 20) == 0)
 			{
@@ -466,7 +466,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
 	}
 
 	@Override
-	public void updateNetworkConnections()
+	public void refresh()
 	{
 
 		if (this.worldObj != null && !this.worldObj.isRemote)

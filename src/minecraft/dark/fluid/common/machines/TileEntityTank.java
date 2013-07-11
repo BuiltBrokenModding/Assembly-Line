@@ -56,7 +56,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
 	@Override
 	public void initiate()
 	{
-		this.updateNetworkConnections();
+		this.refresh();
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
 		{
 			if (ticks % ((int) random.nextInt(5) * 40 + 20) == 0)
 			{
-				this.updateNetworkConnections();
+				this.refresh();
 			}
 		}
 	}
@@ -222,7 +222,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
 	}
 
 	@Override
-	public void updateNetworkConnections()
+	public void refresh()
 	{
 
 		if (this.worldObj != null && !this.worldObj.isRemote)

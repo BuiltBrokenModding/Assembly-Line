@@ -155,7 +155,7 @@ public class BlockTank extends BlockMachine
 
 		if (tileEntity instanceof INetworkPart)
 		{
-			((INetworkPart) tileEntity).updateNetworkConnections();
+			((INetworkPart) tileEntity).refresh();
 		}
 	}
 
@@ -166,7 +166,7 @@ public class BlockTank extends BlockMachine
 
 		if (tileEntity instanceof INetworkPart)
 		{
-			((INetworkPart) tileEntity).updateNetworkConnections();
+			((INetworkPart) tileEntity).refresh();
 		}
 	}
 
