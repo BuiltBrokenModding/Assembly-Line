@@ -34,7 +34,7 @@ public class BlockCrate extends BlockAssembly
 	@Override
 	public void registerIcons(IconRegister iconReg)
 	{
-		this.crate_icon = iconReg.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX + "crate");
+		this.crate_icon = iconReg.registerIcon(AssemblyLine.PREFIX + "crate");
 	}
 
 	@Override

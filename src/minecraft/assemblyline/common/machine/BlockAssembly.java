@@ -28,7 +28,7 @@ public class BlockAssembly extends BlockMachine
 	@Override
 	public void registerIcons(IconRegister iconReg)
 	{
-		this.machine_icon = iconReg.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX + "machine");
+		this.machine_icon = iconReg.registerIcon(AssemblyLine.PREFIX + "machine");
 	}
 
 	@Override

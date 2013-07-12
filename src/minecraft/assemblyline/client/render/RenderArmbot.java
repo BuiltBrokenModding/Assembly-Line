@@ -5,12 +5,12 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
@@ -43,7 +43,7 @@ public class RenderArmbot extends TileEntitySpecialRenderer
 					}
 				}
 			}
-			ResourceLocation name = new ResourceLocation(AssemblyLine.MODEL_TEXTURES_PATH + ":" + TEXTURE);
+			ResourceLocation name = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + TEXTURE);
 			func_110628_a(name);
 
 			GL11.glPushMatrix();

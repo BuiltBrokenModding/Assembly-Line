@@ -9,7 +9,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.CommonProxy;
-import assemblyline.common.TabAssemblyLine;
 import assemblyline.common.machine.BlockAssembly;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -28,9 +27,9 @@ public class BlockEncoder extends BlockAssembly
 	@Override
 	public void registerIcons(IconRegister iconReg)
 	{
-		this.encoder_side = iconReg.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX+"encoder_side");
-		this.encoder_top = iconReg.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX+"encoder_top");
-		this.encoder_bottom = iconReg.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX+"encoder_bottom");
+		this.encoder_side = iconReg.registerIcon(AssemblyLine.PREFIX+"encoder_side");
+		this.encoder_top = iconReg.registerIcon(AssemblyLine.PREFIX+"encoder_top");
+		this.encoder_bottom = iconReg.registerIcon(AssemblyLine.PREFIX+"encoder_bottom");
 	}
 	
 	/**

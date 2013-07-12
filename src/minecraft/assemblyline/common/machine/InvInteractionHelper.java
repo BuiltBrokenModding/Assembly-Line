@@ -136,21 +136,6 @@ public class InvInteractionHelper
 				}
 
 			}
-			else if (tileEntity instanceof net.minecraftforge.common.ISidedInventory)
-			{
-				net.minecraftforge.common.ISidedInventory inventory = (net.minecraftforge.common.ISidedInventory) tileEntity;
-
-				int startIndex = inventory.getStartInventorySide(direction);
-
-				for (int i = startIndex; i < startIndex + inventory.getSizeInventorySide(direction); i++)
-				{
-					itemStack = this.addStackToInventory(i, inventory, itemStack);
-					if (itemStack == null)
-					{
-						return null;
-					}
-				}
-			}
 			else if (tileEntity instanceof IInventory)
 			{
 				IInventory inventory = (IInventory) tileEntity;
@@ -292,24 +277,6 @@ public class InvInteractionHelper
 							returnStack = itemStack;
 							break;
 						}
-					}
-				}
-			}
-			else if (tileEntity instanceof net.minecraftforge.common.ISidedInventory)
-			{
-				net.minecraftforge.common.ISidedInventory inventory = (net.minecraftforge.common.ISidedInventory) tileEntity;
-
-				int startIndex = inventory.getStartInventorySide(direction);
-
-				for (int i = startIndex; i < startIndex + inventory.getSizeInventorySide(direction); i++)
-				{
-					//TODO fix this to prevent item lose just in case it does cause some issues
-					ItemStack itemStack = this.removeStackFromInventory(i, inventory, ammount);
-
-					if (itemStack != null)
-					{
-						returnStack = itemStack;
-						break;
 					}
 				}
 			}

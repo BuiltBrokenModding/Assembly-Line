@@ -3,12 +3,12 @@ package assemblyline.common.machine.encoder;
 import java.util.ArrayList;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.common.ISidedInventory;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import assemblyline.common.armbot.command.Command;
@@ -126,18 +126,6 @@ public class TileEntityEncoder extends TileEntityAdvanced implements IPacketRece
 	}
 
 	@Override
-	public int getStartInventorySide(ForgeDirection side)
-	{
-		return 0;
-	}
-
-	@Override
-	public int getSizeInventorySide(ForgeDirection side)
-	{
-		return (side == ForgeDirection.UP) ? 1 : 0;
-	}
-
-	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
@@ -210,6 +198,27 @@ public class TileEntityEncoder extends TileEntityAdvanced implements IPacketRece
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack)
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public int[] getAccessibleSlotsFromSide(int var1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean canInsertItem(int i, ItemStack itemstack, int j)
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean canExtractItem(int i, ItemStack itemstack, int j)
 	{
 		// TODO Auto-generated method stub
 		return false;

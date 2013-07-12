@@ -72,6 +72,8 @@ public class AssemblyLine
 	public static final String MOD_ID = "AssemblyLine";
 	public static final String MOD_NAME = "Assembly Line";
 	public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + REVIS_VERSION + "." + BUILD_VERSION;
+	public static final String DOMAIN = "al";
+	public static final String PREFIX = DOMAIN + ":";
 
 	// @NetworkMod
 	public static final String CHANNEL = "AssemblyLine";
@@ -85,17 +87,18 @@ public class AssemblyLine
 	@Metadata(AssemblyLine.MOD_ID)
 	public static ModMetadata meta;
 
-	public static final String DIRECTORY_NO_SLASH = "mods/assemblyline/";
+	public static final String DIRECTORY_NO_SLASH = "assets/al/";
 	public static final String DIRECTORY = "/" + DIRECTORY_NO_SLASH;
-	public static final String SOUND_PATH = "audio/";
-	public static final String TEXTURE_PATHS = DIRECTORY + "textures/";
-	public static final String MODEL_TEXTURES_PATH = TEXTURE_PATHS + "models/";
-	public static final String BLOCK_TEXTURES_PATH = TEXTURE_PATHS + "blocks/";
-	public static final String ITEM_TEXTURES_PATH = TEXTURE_PATHS + "items/";
-	public static final String GUI_TEXTURES_PATH = TEXTURE_PATHS + "gui/";
 	public static final String LANGUAGE_PATH = DIRECTORY + "languages/";
+	public static final String SOUND_PATH = DIRECTORY + "audio/";
 
-	public static final String TEXTURE_NAME_PREFIX = "assemblyline:";
+	public static final String TEXTURE_DIRECTORY = "textures/";
+	public static final String BLOCK_DIRECTORY = TEXTURE_DIRECTORY + "blocks/";
+	public static final String ITEM_DIRECTORY = TEXTURE_DIRECTORY + "items/";
+	public static final String MODEL_DIRECTORY = TEXTURE_DIRECTORY + "models/";
+	public static final String GUI_DIRECTORY = TEXTURE_DIRECTORY + "gui/";
+
+	//public static final String TEXTURE_NAME_PREFIX = "assemblyline:";
 
 	private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US", "nl_NL", "fr_FR", "de_DE" };
 

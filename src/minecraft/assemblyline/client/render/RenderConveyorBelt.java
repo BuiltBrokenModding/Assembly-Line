@@ -1,8 +1,8 @@
 package assemblyline.client.render;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
@@ -11,7 +11,6 @@ import assemblyline.client.model.ModelConveyorBelt;
 import assemblyline.common.AssemblyLine;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt;
 import assemblyline.common.machine.belt.TileEntityConveyorBelt.SlantType;
-import assemblyline.common.machine.crane.TileEntityCraneController;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -53,7 +52,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 
 			if (slantType == SlantType.UP)
 			{
-				ResourceLocation name = new ResourceLocation(AssemblyLine.MODEL_TEXTURES_PATH + ":" + "slantedbelt/frame" + frame + ".png");
+				ResourceLocation name = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "slantedbelt/frame" + frame + ".png");
 				func_110628_a(name);
 
 				GL11.glTranslatef(0f, 0.8f, -0.8f);
@@ -75,7 +74,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 			}
 			else if (slantType == SlantType.DOWN)
 			{
-				ResourceLocation name = new ResourceLocation(AssemblyLine.MODEL_TEXTURES_PATH + ":" + "slantedbelt/frame" + frame + ".png");
+				ResourceLocation name = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "slantedbelt/frame" + frame + ".png");
 				func_110628_a(name);
 				GL11.glRotatef(180f, 0f, 1f, 0f);
 				boolean slantAdjust = false;
@@ -96,7 +95,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 			}
 			else
 			{
-				ResourceLocation name = new ResourceLocation(AssemblyLine.MODEL_TEXTURES_PATH + ":" + "belt/frame" + frame + ".png");
+				ResourceLocation name = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "belt/frame" + frame + ".png");
 				func_110628_a(name);
 				GL11.glRotatef(180, 0f, 1f, 0f);
 				GL11.glTranslatef(0f, -0.68f, 0f);
@@ -120,7 +119,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 					GL11.glRotatef(90f, 0f, 1f, 0f);
 					break;
 			}
-			ResourceLocation name = new ResourceLocation(AssemblyLine.MODEL_TEXTURES_PATH + ":" + "belt/frame" + frame + ".png");
+			ResourceLocation name = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "belt/frame" + frame + ".png");
 			func_110628_a(name);
 			MODEL.render(0.0625F, (float) Math.toRadians(tileEntity.wheelRotation), tileEntity.getIsLastBelt(), tileEntity.getIsFirstBelt(), false, true);
 

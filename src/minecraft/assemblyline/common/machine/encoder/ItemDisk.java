@@ -28,7 +28,7 @@ public class ItemDisk extends Item
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister par1IconRegister)
 	{
-		this.itemIcon = par1IconRegister.registerIcon(AssemblyLine.TEXTURE_NAME_PREFIX + "disk");
+		this.itemIcon = par1IconRegister.registerIcon(AssemblyLine.PREFIX + "disk");
 	}
 
 	@Override

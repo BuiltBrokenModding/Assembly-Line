@@ -1,9 +1,9 @@
 package assemblyline.client.gui;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ContainerWorkbench;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiAutoCrafting extends GuiContainer
 {
-	private static final ResourceLocation gui_pic = new ResourceLocation(AssemblyLine.GUI_TEXTURES_PATH + "gui_crafting.png");
+	private static final ResourceLocation gui_pic = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.GUI_DIRECTORY + "gui_crafting.png");
 
 	public GuiAutoCrafting(InventoryPlayer par1InventoryPlayer, World par2World, int par3, int par4, int par5)
 	{
