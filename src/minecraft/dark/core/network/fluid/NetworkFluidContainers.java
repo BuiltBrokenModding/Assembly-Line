@@ -54,7 +54,14 @@ public class NetworkFluidContainers extends NetworkFluidTiles
 					}
 				}
 			}
-			this.combinedStorage().setFluid(new FluidStack(fluid, volume));
+			if (fluid != null)
+			{
+				this.combinedStorage().setFluid(new FluidStack(fluid, volume));
+			}
+			else
+			{
+				this.combinedStorage().setFluid(null);
+			}
 			this.loadedLiquids = true;
 		}
 		if (this.combinedStorage().getFluid() != null && this.getNetworkMemebers().size() > 0)
@@ -166,5 +173,4 @@ public class NetworkFluidContainers extends NetworkFluidTiles
 		newNetwork.balanceColletiveTank(true);
 	}
 
-	
 }

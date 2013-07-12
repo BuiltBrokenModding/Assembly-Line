@@ -15,6 +15,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -115,7 +116,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		FluidStack stack = new FluidStack(0, 0);
+		FluidStack stack = new FluidStack(FluidRegistry.WATER, 0);
 		if (this.getTank().getFluid() != null)
 		{
 			stack = this.getTank().getFluid();
