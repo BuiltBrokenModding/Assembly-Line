@@ -1,7 +1,7 @@
 package dark.fluid.client.render;
 
-import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -9,9 +9,9 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
 import dark.core.api.ColorCode;
 import dark.core.render.LiquidRenderer;
+import dark.core.render.RenderMachine;
 import dark.fluid.client.model.ModelTankSide;
 import dark.fluid.common.machines.TileEntityTank;
 
@@ -54,7 +54,7 @@ public class RenderTank extends RenderMachine
 				GL11.glDisable(GL11.GL_LIGHTING);
 				GL11.glEnable(GL11.GL_BLEND);
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-				bindTextureByName(LiquidRenderer.getLiquidSheet(liquid.getFluid()));
+				bindTextureByName("",LiquidRenderer.getLiquidSheet(liquid.getFluid()));
 
 				GL11.glTranslatef((float) x, (float) y, (float) z);
 				GL11.glScalef(1.01F, 1.01F, 1.01F);

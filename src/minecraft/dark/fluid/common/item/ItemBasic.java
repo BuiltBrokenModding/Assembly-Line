@@ -34,7 +34,7 @@ public class ItemBasic extends Item
 		{
 			for (ItemStack itemStack : list)
 			{
-				this.icons[list.indexOf(itemStack)] = iconRegister.registerIcon(this.getUnlocalizedName(itemStack).replace("item.", FluidMech.TEXTURE_NAME_PREFIX));
+				this.icons[list.indexOf(itemStack)] = iconRegister.registerIcon(this.getUnlocalizedName(itemStack).replace("item.", FluidMech.PREFIX));
 			}
 		}
 	}

@@ -1,13 +1,13 @@
 package dark.fluid.client.render;
 
-import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
+import dark.core.render.RenderMachine;
 import dark.fluid.client.model.ModelPump;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.pump.TileEntityStarterPump;
@@ -64,7 +64,7 @@ public class RenderPump extends RenderMachine
 	@Override
 	public ResourceLocation getTexture(int block, int meta)
 	{
-		return new ResourceLocation(FluidMech.MODEL_TEXTURE_DIRECTORY + "pumps/WaterPump.png");
+		return new ResourceLocation(FluidMech.DOMAIN, FluidMech.MODEL_DIRECTORY + "pumps/WaterPump.png");
 	}
 
 }

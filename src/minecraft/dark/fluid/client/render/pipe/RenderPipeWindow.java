@@ -1,9 +1,9 @@
 package dark.fluid.client.render.pipe;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import dark.fluid.client.model.ModelLargePipe;
 import dark.fluid.common.pipes.TileEntityPipe;
 

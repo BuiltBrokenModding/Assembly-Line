@@ -1,8 +1,8 @@
 package dark.fluid.client.render;
 
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
@@ -10,7 +10,6 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.fluid.client.model.ModelLargePipe;
 import dark.fluid.client.model.ModelReleaseValve;
 import dark.fluid.client.render.pipe.RenderPipe;
 import dark.fluid.common.FluidMech;
@@ -89,7 +88,7 @@ public class ItemRenderHelper implements IItemRenderer
 			pipe.SixPipe.renderBack();
 			pipe.SixPipe.renderMiddle();
 		}
-		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(FluidMech.MODEL_TEXTURE_DIRECTORY + "ReleaseValve.png"));
+		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(FluidMech.DOMAIN, FluidMech.MODEL_DIRECTORY + "ReleaseValve.png"));
 		GL11.glRotatef(180f, 0f, 0f, 1f);
 		if (!equ)
 		{

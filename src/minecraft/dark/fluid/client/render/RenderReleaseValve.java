@@ -1,14 +1,14 @@
 package dark.fluid.client.render;
 
-import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
 import dark.core.api.ColorCode;
+import dark.core.render.RenderMachine;
 import dark.fluid.client.model.ModelLargePipe;
 import dark.fluid.client.model.ModelReleaseValve;
 import dark.fluid.common.FluidMech;
@@ -51,7 +51,7 @@ public class RenderReleaseValve extends RenderMachine
 		if (ents[4] != null)
 			SixPipe.renderLeft();
 		SixPipe.renderMiddle();
-		bindTextureByName(FluidMech.MODEL_TEXTURE_DIRECTORY + "ReleaseValve.png");
+		bindTextureByName(FluidMech.DOMAIN, FluidMech.MODEL_DIRECTORY + "ReleaseValve.png");
 		if (ents[1] == null)
 			valve.render();
 		GL11.glPopMatrix();
@@ -60,7 +60,7 @@ public class RenderReleaseValve extends RenderMachine
 
 	public static String getPipeTexture(int meta)
 	{
-		return FluidMech.MODEL_TEXTURE_DIRECTORY + "pipes/" + ColorCode.get(meta).getName() + "Pipe.png";
+		return FluidMech.MODEL_DIRECTORY + "pipes/" + ColorCode.get(meta).getName() + "Pipe.png";
 	}
 
 	@Override
@@ -72,6 +72,6 @@ public class RenderReleaseValve extends RenderMachine
 	@Override
 	public ResourceLocation getTexture(int block, int meta)
 	{
-		return new ResourceLocation(FluidMech.MODEL_TEXTURE_DIRECTORY + "pipes/" + ColorCode.get(15).getName() + "Pipe.png");
+		return new ResourceLocation(FluidMech.DOMAIN, FluidMech.MODEL_DIRECTORY + "pipes/" + ColorCode.get(15).getName() + "Pipe.png");
 	}
 }

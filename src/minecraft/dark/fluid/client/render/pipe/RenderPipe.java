@@ -1,22 +1,20 @@
 package dark.fluid.client.render.pipe;
 
-import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 
 import org.lwjgl.opengl.GL11;
 
+import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
-import universalelectricity.core.vector.Vector3;
 import dark.core.api.ColorCode;
 import dark.core.hydraulic.helpers.FluidRestrictionHandler;
+import dark.core.render.RenderMachine;
 import dark.fluid.client.model.ModelLargePipe;
-import dark.fluid.client.render.RenderMachine;
 import dark.fluid.common.FluidMech;
-import dark.fluid.common.pipes.TileEntityGenericPipe;
 import dark.fluid.common.pipes.TileEntityPipe;
 import dark.fluid.common.pipes.addon.IPipeExtention;
 
@@ -96,7 +94,7 @@ public class RenderPipe extends RenderMachine
 		{
 			name = ColorCode.get(meta).getName();
 		}
-		return new ResourceLocation(FluidMech.MODEL_TEXTURE_DIRECTORY + "pipes/" + name + "Pipe.png");
+		return new ResourceLocation(FluidMech.DOMAIN, FluidMech.MODEL_DIRECTORY + "pipes/" + name + "Pipe.png");
 	}
 
 	public void render(int blockID, int meta, boolean[] side)

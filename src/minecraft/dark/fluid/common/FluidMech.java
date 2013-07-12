@@ -13,7 +13,6 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
@@ -27,11 +26,8 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.Metadata;
-import cpw.mods.fml.common.Mod.PostInit;
-import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -68,7 +64,7 @@ import dark.mech.common.machines.BlockGenerator;
 import dark.mech.common.machines.BlockRod;
 
 @ModstatInfo(prefix = "fluidmech")
-@Mod(modid = FluidMech.MOD_ID, name = FluidMech.MOD_NAME, version = FluidMech.VERSION, dependencies = "after:BasicComponents", useMetadata = true)
+@Mod(modid = FluidMech.MOD_ID, name = FluidMech.MOD_NAME, version = FluidMech.VERSION, useMetadata = true)
 @NetworkMod(channels = { FluidMech.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
 public class FluidMech extends DummyModContainer
 {
@@ -80,10 +76,11 @@ public class FluidMech extends DummyModContainer
 	public static final String BUILD_VERSION = "@BUILD@";
 
 	// @Mod
-	public static final String MOD_ID = "Fluid_Mechanics";
-	public static final String MOD_NAME = "Fluid Mechanics";
+	public static final String MOD_ID = "FluidMech";
+	public static final String MOD_NAME = "Fluid_Mechanics";
 	public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + REVIS_VERSION + "." + BUILD_VERSION;
-
+	public static final String DOMAIN = "fm";
+	public static final String PREFIX = DOMAIN + ":";
 	// @NetworkMod
 	public static final String CHANNEL = "FluidMech";
 
@@ -91,20 +88,22 @@ public class FluidMech extends DummyModContainer
 	public static ModMetadata meta;
 
 	/* RESOURCE FILE PATHS */
-	public static final String RESOURCE_PATH = "/mods/fluidmech/";
-	public static final String TEXTURE_DIRECTORY = RESOURCE_PATH + "textures/";
+	public static final String DIRECTORY_NO_SLASH = "assets/fm/";
+	public static final String DIRECTORY = "/" + DIRECTORY_NO_SLASH;
+	public static final String LANGUAGE_PATH = DIRECTORY + "languages/";
+	public static final String SOUND_PATH = DIRECTORY + "audio/";
+
+	public static final String TEXTURE_DIRECTORY = "textures/";
+	public static final String BLOCK_DIRECTORY = TEXTURE_DIRECTORY + "blocks/";
+	public static final String ITEM_DIRECTORY = TEXTURE_DIRECTORY + "items/";
+	public static final String MODEL_DIRECTORY = TEXTURE_DIRECTORY + "models/";
 	public static final String GUI_DIRECTORY = TEXTURE_DIRECTORY + "gui/";
-	public static final String BLOCK_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + "blocks/";
-	public static final String ITEM_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + "items/";
-	public static final String MODEL_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + "models/";
-	public static final String TEXTURE_NAME_PREFIX = "fluidmech:";
-	public static final String LANGUAGE_PATH = RESOURCE_PATH + "languages/";
 
 	/* SUPPORTED LANGS */
 	private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US", "de_DE" };
 
 	/* CONFIG FILE */
-	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir() + "/UniversalElectricity/", FluidMech.MOD_NAME + ".cfg"));
+	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir() + "/Dark/", FluidMech.MOD_NAME + ".cfg"));
 
 	/* START IDS */
 	public final static int BLOCK_ID_PREFIX = 3100;
@@ -136,11 +135,6 @@ public class FluidMech extends DummyModContainer
 	/* LOGGER - EXTENDS FORGE'S LOG SYSTEM */
 	public static Logger FMLog = Logger.getLogger(FluidMech.MOD_NAME);
 
-	static
-	{
-		/* EVENT BUS (done here to ensure all fluid events are caught) */
-		MinecraftForge.EVENT_BUS.register(new FluidRestrictionHandler());
-	}
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -153,7 +147,7 @@ public class FluidMech extends DummyModContainer
 
 		/* UPDATE NOTIFIER */
 		Modstats.instance().getReporter().registerMod(this);
-
+		MinecraftForge.EVENT_BUS.register(new FluidRestrictionHandler());
 		/* CONFIGS */
 		CONFIGURATION.load();
 		

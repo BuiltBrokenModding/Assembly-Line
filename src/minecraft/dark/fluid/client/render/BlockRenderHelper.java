@@ -2,7 +2,7 @@ package dark.fluid.client.render;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.resources.ResourceLocation;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
 
 import org.lwjgl.opengl.GL11;
@@ -41,7 +41,7 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
 			GL11.glTranslatef((float) 0.0F, (float) 1.1F, (float) 0.0F);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
 			
-			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(FluidMech.MODEL_TEXTURE_DIRECTORY + "pumps/WaterPump.png"));
+			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(FluidMech.DOMAIN, FluidMech.MODEL_DIRECTORY + "pumps/WaterPump.png"));
 			modelPump.render(0.0725F);
 			modelPump.renderMotion(0.0725F, 0);
 		}
@@ -49,7 +49,7 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
 		{
 			GL11.glTranslatef((float) 0.0F, (float) .8F, (float) 0.0F);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
-			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(FluidMech.MODEL_TEXTURE_DIRECTORY + "Sink.png"));
+			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(FluidMech.DOMAIN, FluidMech.MODEL_DIRECTORY + "Sink.png"));
 			sink.render(0.0565F);
 		}
 		else if (block.blockID == FluidMech.blockTank.blockID)
@@ -68,21 +68,21 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
 		{
 			GL11.glTranslatef((float) 0.0F, (float) 1.5F, (float) 0.0F);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
-			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(FluidMech.MODEL_TEXTURE_DIRECTORY + "mechanical/GearRod.png"));
+			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(FluidMech.DOMAIN, FluidMech.MODEL_DIRECTORY + "mechanical/GearRod.png"));
 			modelRod.render(0.0825F, 0);
 		}
 		else if (block.blockID == FluidMech.blockGenerator.blockID)
 		{
 			GL11.glTranslatef((float) 0.0F, (float) 1.0F, (float) 0.0F);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
-			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(FluidMech.MODEL_TEXTURE_DIRECTORY + "mechanical/Generator.png"));
+			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(FluidMech.DOMAIN, FluidMech.MODEL_DIRECTORY + "mechanical/Generator.png"));
 			modelGen.render(null);
 		}
 		else if (block.blockID == FluidMech.blockConPump.blockID && metadata < 4)
 		{
 			GL11.glTranslatef((float) 0.0F, (float) 1.2F, (float) 0.0F);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
-			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(FluidMech.MODEL_TEXTURE_DIRECTORY + "ConstructionPump.png"));
+			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(FluidMech.DOMAIN, FluidMech.MODEL_DIRECTORY + "ConstructionPump.png"));
 			conPump.render(0.0725F);
 			conPump.renderMotor(0.0725F);
 

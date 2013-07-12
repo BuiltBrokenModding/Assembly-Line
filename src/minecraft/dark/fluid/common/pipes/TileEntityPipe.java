@@ -37,7 +37,6 @@ import dark.core.api.ColorCode;
 import dark.core.api.IColorCoded;
 import dark.core.api.ITileConnector;
 import dark.core.api.IToolReadOut;
-import dark.core.hydraulic.helpers.FluidHelper;
 import dark.core.hydraulic.helpers.FluidRestrictionHandler;
 import dark.core.network.fluid.NetworkPipes;
 import dark.core.tile.network.NetworkTileEntities;

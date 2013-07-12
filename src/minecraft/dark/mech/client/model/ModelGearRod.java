@@ -8,7 +8,6 @@ package dark.mech.client.model;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.tileentity.TileEntity;
 
 public class ModelGearRod extends ModelBase
 {

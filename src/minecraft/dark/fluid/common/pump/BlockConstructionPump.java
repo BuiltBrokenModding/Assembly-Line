@@ -39,9 +39,9 @@ public class BlockConstructionPump extends BlockMachine
 	@Override
 	public void registerIcons(IconRegister par1IconRegister)
 	{
-		this.blockIcon = par1IconRegister.registerIcon(FluidMech.TEXTURE_NAME_PREFIX + "ironMachineSide");
-		this.inputIcon = par1IconRegister.registerIcon(FluidMech.TEXTURE_NAME_PREFIX + "inputMachineSide");
-		this.outputIcon = par1IconRegister.registerIcon(FluidMech.TEXTURE_NAME_PREFIX + "outputMachineSide");
+		this.blockIcon = par1IconRegister.registerIcon(FluidMech.PREFIX + "ironMachineSide");
+		this.inputIcon = par1IconRegister.registerIcon(FluidMech.PREFIX + "inputMachineSide");
+		this.outputIcon = par1IconRegister.registerIcon(FluidMech.PREFIX + "outputMachineSide");
 	}
 
 	@Override

@@ -11,7 +11,6 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidTank;
-import universalelectricity.prefab.block.BlockAdvanced;
 import dark.core.hydraulic.helpers.FluidRestrictionHandler;
 import dark.fluid.api.INetworkPipe;
 import dark.fluid.common.FluidMech;

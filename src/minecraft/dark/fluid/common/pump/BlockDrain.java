@@ -38,9 +38,9 @@ public class BlockDrain extends BlockMachine
 	@Override
 	public void registerIcons(IconRegister par1IconRegister)
 	{
-		this.blockIcon = par1IconRegister.registerIcon(FluidMech.TEXTURE_NAME_PREFIX + "ironMachineSide");
-		this.drainIcon = par1IconRegister.registerIcon(FluidMech.TEXTURE_NAME_PREFIX + "drain");
-		this.fillIcon = par1IconRegister.registerIcon(FluidMech.TEXTURE_NAME_PREFIX + "drain2");
+		this.blockIcon = par1IconRegister.registerIcon(FluidMech.PREFIX + "ironMachineSide");
+		this.drainIcon = par1IconRegister.registerIcon(FluidMech.PREFIX + "drain");
+		this.fillIcon = par1IconRegister.registerIcon(FluidMech.PREFIX + "drain2");
 	}
 
 	@Override

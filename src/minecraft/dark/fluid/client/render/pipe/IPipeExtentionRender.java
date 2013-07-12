@@ -1,9 +1,9 @@
 package dark.fluid.client.render.pipe;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import dark.fluid.common.pipes.TileEntityPipe;
 
 /** Class for TileEntity Renders that extend the pipe class to use instead of extending

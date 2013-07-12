@@ -9,7 +9,6 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import net.minecraftforge.fluids.IFluidTank;
 import dark.core.api.ColorCode;
 import dark.core.api.INetworkPart;
 import dark.core.hydraulic.helpers.FluidHelper;
