@@ -1,7 +1,6 @@
 package dark.core.tile.network;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import net.minecraft.tileentity.TileEntity;

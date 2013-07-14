@@ -1,6 +1,5 @@
 package dark.core;
 
-import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 
 public enum Direction

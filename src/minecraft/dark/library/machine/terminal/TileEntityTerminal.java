@@ -29,9 +29,9 @@ import dark.library.machine.TileEntityRunnableMachine;
 /** @author Calclavia, DarkGuardsman */
 public abstract class TileEntityTerminal extends TileEntityRunnableMachine implements ISpecialAccess, IPacketReceiver, ITerminal
 {
-	public TileEntityTerminal(int tickEnergy)
+	public TileEntityTerminal(float watttick)
 	{
-		super(tickEnergy);
+		super(watttick);
 	}
 
 	public enum PacketType

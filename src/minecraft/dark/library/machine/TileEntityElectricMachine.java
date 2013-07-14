@@ -2,9 +2,10 @@ package dark.library.machine;
 
 import java.util.Random;
 
+import dark.core.IDisableable;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.block.IDisableable;
 import universalelectricity.core.block.IElectrical;
 import universalelectricity.core.block.IElectricalStorage;
 import universalelectricity.core.electricity.ElectricityPack;
@@ -12,7 +13,6 @@ import universalelectricity.prefab.tile.ElectricityHandler;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import buildcraft.api.power.IPowerProvider;
 import buildcraft.api.power.IPowerReceptor;
-import dark.core.PowerSystems;
 
 public abstract class TileEntityElectricMachine extends TileEntityAdvanced implements IDisableable, IElectrical, IElectricalStorage, IPowerReceptor
 {

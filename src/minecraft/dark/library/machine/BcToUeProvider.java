@@ -1,9 +1,9 @@
 package dark.library.machine;
 
-import dark.core.PowerSystems;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityPack;
 import buildcraft.api.power.PowerProvider;
+import dark.core.PowerSystems;
 
 public class BcToUeProvider extends PowerProvider
 {

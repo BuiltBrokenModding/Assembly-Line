@@ -17,8 +17,8 @@ public class FluidRestrictionHandler
 	static
 	{
 		/* ADD DEFAULT LIQUIDS */
-		restrictedStacks.put(ColorCode.BLUE, FluidRegistry.getFluid("Water"));
-		restrictedStacks.put(ColorCode.RED, FluidRegistry.getFluid("Lava"));
+		restrictedStacks.put(ColorCode.BLUE, FluidRegistry.WATER);
+		restrictedStacks.put(ColorCode.RED, FluidRegistry.LAVA);
 	}
 
 	@ForgeSubscribe
