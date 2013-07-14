@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -26,7 +27,7 @@ public class ItemImprinter extends Item
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 		this.setHasSubtypes(true);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister par1IconRegister)
@@ -53,6 +54,12 @@ public class ItemImprinter extends Item
 		return false;
 	}
 
+
+	public boolean itemInteractionForEntity(ItemStack par1ItemStack, EntityLivingBase par2EntityLiving)
+	{
+		return false;
+	}
+
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List list, boolean par4)
 	{
@@ -71,9 +78,7 @@ public class ItemImprinter extends Item
 		}
 	}
 
-	/**
-	 * Saves the list of items to filter out inside.
-	 */
+	/** Saves the list of items to filter out inside. */
 	public static void setFilters(ItemStack itemStack, ArrayList<ItemStack> filterStacks)
 	{
 		if (itemStack.getTagCompound() == null)

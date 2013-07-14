@@ -87,7 +87,7 @@ public class AssemblyLine
 	@Metadata(AssemblyLine.MOD_ID)
 	public static ModMetadata meta;
 
-	public static final String DIRECTORY_NO_SLASH = "assets/al/";
+	public static final String DIRECTORY_NO_SLASH = "assets/" + DOMAIN + "/";
 	public static final String DIRECTORY = "/" + DIRECTORY_NO_SLASH;
 	public static final String LANGUAGE_PATH = DIRECTORY + "languages/";
 	public static final String SOUND_PATH = DIRECTORY + "audio/";
@@ -102,7 +102,7 @@ public class AssemblyLine
 
 	private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US", "nl_NL", "fr_FR", "de_DE" };
 
-	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "UniversalElectricity/AssemblyLine.cfg"));
+	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "Dark/AssemblyLine.cfg"));
 
 	public static int BLOCK_ID_PREFIX = 3030;
 
