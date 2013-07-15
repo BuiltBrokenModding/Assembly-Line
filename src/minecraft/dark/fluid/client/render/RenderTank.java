@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.api.ColorCode;
-import dark.core.render.LiquidRenderer;
+import dark.core.render.FluidBlockRenderer;
 import dark.core.render.RenderMachine;
 import dark.fluid.client.model.ModelTankSide;
 import dark.fluid.common.machines.TileEntityTank;
@@ -42,28 +42,27 @@ public class RenderTank extends RenderMachine
 			render = ((TileEntityTank) tileEntity).renderConnection;
 			color = ((TileEntityTank) tileEntity).getColor();
 		}
-		if (liquid != null && liquid.amount > 0)
+		if (liquid != null && liquid.amount > 100)
 		{
 
-			int[] displayList = LiquidRenderer.getLiquidDisplayLists(liquid, tileEntity.worldObj, false);
-			if (displayList != null)
-			{
-				GL11.glPushMatrix();
-				GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-				GL11.glEnable(GL11.GL_CULL_FACE);
-				GL11.glDisable(GL11.GL_LIGHTING);
-				GL11.glEnable(GL11.GL_BLEND);
-				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-				bindTextureByName("",LiquidRenderer.getLiquidSheet(liquid.getFluid()));
+			int[] displayList = FluidBlockRenderer.getFluidDisplayLists(liquid, tileEntity.worldObj, false);
 
-				GL11.glTranslatef((float) x, (float) y, (float) z);
-				GL11.glScalef(1.01F, 1.01F, 1.01F);
-				int cap = (tileEntity instanceof TileEntityTank ? ((TileEntityTank) tileEntity).getTank().getCapacity() : 8000);
-				GL11.glCallList(displayList[(int) ((float) Math.min(liquid.amount, cap) / (float) (cap) * (LiquidRenderer.DISPLAY_STAGES - 1))]);
+			GL11.glPushMatrix();
+			GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+			GL11.glEnable(GL11.GL_CULL_FACE);
+			GL11.glDisable(GL11.GL_LIGHTING);
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-				GL11.glPopAttrib();
-				GL11.glPopMatrix();
-			}
+			func_110628_a(FluidBlockRenderer.getFluidSheet(liquid));
+
+			GL11.glTranslatef((float) x, (float) y, (float) z);
+			GL11.glScalef(1.01F, 1.01F, 1.01F);
+			int cap = tileEntity instanceof TileEntityTank ? ((TileEntityTank)tileEntity).getTankSize() : liquid.amount;
+			GL11.glCallList(displayList[(int) ((float) liquid.amount / (float) (cap) * (FluidBlockRenderer.DISPLAY_STAGES - 1))]);
+
+			GL11.glPopAttrib();
+			GL11.glPopMatrix();
 		}
 		bindTextureByName(this.getTexture(tileEntity.getBlockType().blockID, tileEntity.getBlockMetadata()));
 

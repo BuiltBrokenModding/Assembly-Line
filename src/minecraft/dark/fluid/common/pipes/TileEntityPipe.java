@@ -232,7 +232,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		if (this.fakeTank != null)
+		if (this.fakeTank != null && this.fakeTank.getFluid() != null)
 		{
 			nbt.setTag("FluidTank", this.fakeTank.getFluid().writeToNBT(new NBTTagCompound()));
 		}

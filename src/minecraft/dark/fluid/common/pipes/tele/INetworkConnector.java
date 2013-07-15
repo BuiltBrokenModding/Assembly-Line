@@ -1,7 +1,5 @@
 package dark.fluid.common.pipes.tele;
 
-import java.util.List;
-
 import dark.fluid.api.INetworkPipe;
 
 /** Used by IFluidNetworkPart to signal this block is remotely connected to another network. It will
@@ -17,7 +15,4 @@ public interface INetworkConnector extends INetworkPipe
 	public String getOwner();
 
 	public void setOwner(String username);
-
-	/** gets a list off all INetworkConnector this pipe shares frequency and owner with */
-	public List<INetworkConnector> getConnectedParts();
 }

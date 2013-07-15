@@ -109,7 +109,7 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		if (this.tank != null)
+		if (this.tank != null && this.tank.getFluid() != null)
 		{
 			nbt.setTag("FluidTank", this.tank.getFluid().writeToNBT(new NBTTagCompound()));
 		}

@@ -136,7 +136,14 @@ public class NetworkFluidTiles extends NetworkTileEntities
 					}
 				}
 			}
-			this.combinedStorage().setFluid(new FluidStack(fluid, volume));
+			if (fluid != null)
+			{
+				this.combinedStorage().setFluid(new FluidStack(fluid, volume));
+			}
+			else
+			{
+				this.combinedStorage().setFluid(null);
+			}
 			this.loadedLiquids = true;
 		}
 

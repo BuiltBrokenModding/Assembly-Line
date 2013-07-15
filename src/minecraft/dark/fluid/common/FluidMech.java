@@ -88,7 +88,7 @@ public class FluidMech extends DummyModContainer
 	public static ModMetadata meta;
 
 	/* RESOURCE FILE PATHS */
-	public static final String DIRECTORY_NO_SLASH = "assets/fm/";
+	public static final String DIRECTORY_NO_SLASH = "assets/" + DOMAIN + "/";
 	public static final String DIRECTORY = "/" + DIRECTORY_NO_SLASH;
 	public static final String LANGUAGE_PATH = DIRECTORY + "languages/";
 	public static final String SOUND_PATH = DIRECTORY + "audio/";
@@ -135,7 +135,6 @@ public class FluidMech extends DummyModContainer
 	/* LOGGER - EXTENDS FORGE'S LOG SYSTEM */
 	public static Logger FMLog = Logger.getLogger(FluidMech.MOD_NAME);
 
-
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
@@ -150,10 +149,10 @@ public class FluidMech extends DummyModContainer
 		MinecraftForge.EVENT_BUS.register(new FluidRestrictionHandler());
 		/* CONFIGS */
 		CONFIGURATION.load();
-		
+
 		/* LIQUID DIRECTORY CALL */
 		Fluid waste = new Fluid("waste").setBlockID(FluidMech.CONFIGURATION.getBlock("WasteLiquid", BLOCK_ID_PREFIX + 7).getInt());
-		
+
 		/* BLOCK DECLARATION -- CONFIG LOADER */
 		blockGenPipe = new BlockPipe(FluidMech.CONFIGURATION.getBlock("Pipes", BLOCK_ID_PREFIX).getInt());
 		blockMachine = new BlockPumpMachine(FluidMech.CONFIGURATION.getBlock("Machines", BLOCK_ID_PREFIX + 1).getInt());
