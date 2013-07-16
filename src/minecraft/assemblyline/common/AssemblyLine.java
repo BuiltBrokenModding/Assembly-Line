@@ -149,7 +149,7 @@ public class AssemblyLine
 		blockRejector = new BlockRejector(BLOCK_ID_PREFIX++);
 		blockEncoder = new BlockEncoder(BLOCK_ID_PREFIX++);
 		blockArmbot = new BlockArmbot(BLOCK_ID_PREFIX++);
-		blockMulti = new BlockMulti(AssemblyLine.CONFIGURATION.getBlock("multiBlock", BLOCK_ID_PREFIX++).getInt());
+		blockMulti = new BlockMulti(BLOCK_ID_PREFIX++);
 		blockCraneController = new BlockCraneController(BLOCK_ID_PREFIX++);
 		blockCraneFrame = new BlockCraneFrame(BLOCK_ID_PREFIX++);
 		blockTurntable = new BlockTurntable(BLOCK_ID_PREFIX++);
