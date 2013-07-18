@@ -1,4 +1,4 @@
-package dark.core;
+package dark.helpers;
 
 import universalelectricity.core.vector.Vector3;
 
