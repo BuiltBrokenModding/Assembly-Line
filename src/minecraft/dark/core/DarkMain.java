@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.logging.Logger;
 
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.event.world.WorldEvent;
 import universalelectricity.prefab.network.PacketManager;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -15,7 +18,10 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import dark.core.hydraulic.helpers.FluidRestrictionHandler;
+import dark.library.saving.SaveManager;
 
 /** @author HangCow, DarkGuardsman */
 @Mod(modid = DarkMain.MOD_ID, name = DarkMain.MOD_NAME, version = DarkMain.VERSION, useMetadata = true)
@@ -59,11 +65,14 @@ public class DarkMain
 	/** Main config file */
 	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "Dark/General.cfg"));
 	/** Main mod output to console */
-	public static final Logger LOGGER = Logger.getLogger("DarkLib");
+	public static final Logger LOGGER = Logger.getLogger("DarkCore");
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
+		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new FluidRestrictionHandler());
+
 		proxy.preInit();
 
 	}
@@ -72,7 +81,7 @@ public class DarkMain
 	public void generalLoad(FMLInitializationEvent event)
 	{
 		proxy.init();
-		
+
 		/* MCMOD.INFO FILE BUILDER? */
 		meta.modId = DarkMain.MOD_ID;
 		meta.name = DarkMain.MOD_NAME;
@@ -92,6 +101,18 @@ public class DarkMain
 	{
 		proxy.postInit();
 
+	}
+
+	@ForgeSubscribe
+	public void onWorldSave(WorldEvent.Save event)
+	{
+		SaveManager.save(!event.world.isRemote);
+	}
+
+	@EventHandler
+	public void serverStopping(FMLServerStoppingEvent event)
+	{
+		SaveManager.save(true);
 	}
 
 }

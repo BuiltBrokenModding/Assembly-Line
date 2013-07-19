@@ -6,7 +6,7 @@ import java.util.List;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
-import cpw.mods.fml.common.Mod.ServerStopping;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 
 public class SaveManager
@@ -33,20 +33,10 @@ public class SaveManager
 			nbtSaveList.add(saveClass);
 		}
 	}
+	
 
-	@ForgeSubscribe
-	public void onWorldSave(WorldEvent.Save event)
-	{
-		save(!event.world.isRemote);
-	}
-
-	@ServerStopping
-	public void serverStopping(FMLServerStoppingEvent event)
-	{
-		save(true);
-	}
-
-	public void save(boolean isServer)
+	/** Called to get all INbtSave classes to do a save to world */
+	public static void save(boolean isServer)
 	{
 		for (INbtSave save : nbtSaveList)
 		{
