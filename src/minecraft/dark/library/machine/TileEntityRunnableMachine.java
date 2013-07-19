@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
-import dark.core.PowerSystems;
+import dark.core.api.PowerSystems;
 
 public class TileEntityRunnableMachine extends TileEntityElectricMachine
 {

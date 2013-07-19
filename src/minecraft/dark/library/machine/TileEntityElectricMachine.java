@@ -2,7 +2,7 @@ package dark.library.machine;
 
 import java.util.Random;
 
-import dark.core.IDisableable;
+import dark.core.api.IDisableable;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;

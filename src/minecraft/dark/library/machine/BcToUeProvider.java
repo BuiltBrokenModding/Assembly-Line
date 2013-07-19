@@ -3,7 +3,7 @@ package dark.library.machine;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityPack;
 import buildcraft.api.power.PowerProvider;
-import dark.core.PowerSystems;
+import dark.core.api.PowerSystems;
 
 public class BcToUeProvider extends PowerProvider
 {

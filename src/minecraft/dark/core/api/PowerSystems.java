@@ -1,4 +1,4 @@
-package dark.core;
+package dark.core.api;
 
 import cpw.mods.fml.common.Loader;
 
