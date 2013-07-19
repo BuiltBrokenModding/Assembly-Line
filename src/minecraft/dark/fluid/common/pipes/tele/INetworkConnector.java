@@ -1,6 +1,6 @@
 package dark.fluid.common.pipes.tele;
 
-import dark.fluid.api.INetworkPipe;
+import dark.api.fluid.INetworkPipe;
 
 /** Used by IFluidNetworkPart to signal this block is remotely connected to another network. It will
  * cause that network to seak out all other connected network and try to merge them */

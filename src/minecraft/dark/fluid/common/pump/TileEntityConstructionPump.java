@@ -10,10 +10,10 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
+import dark.api.fluid.INetworkPipe;
 import dark.core.api.ITileConnector;
 import dark.core.network.fluid.HydraulicNetworkHelper;
 import dark.core.network.fluid.NetworkFluidTiles;
-import dark.fluid.api.INetworkPipe;
 import dark.helpers.MetaGroup;
 import dark.library.machine.TileEntityRunnableMachine;
 

@@ -12,10 +12,10 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import dark.fluid.common.BlockFM;
 import dark.fluid.common.FluidMech;
-import dark.library.machine.BlockMachine;
 
-public class BlockDrain extends BlockMachine
+public class BlockDrain extends BlockFM
 {
 	private Icon blockIcon;
 	private Icon drainIcon;
@@ -23,9 +23,7 @@ public class BlockDrain extends BlockMachine
 
 	public BlockDrain(int id)
 	{
-		super(id, Material.iron);
-		this.setCreativeTab(FluidMech.TabFluidMech);
-		this.setUnlocalizedName("lmDrain");
+		super("FluidDrain", id, Material.iron);
 	}
 
 	@Override
@@ -37,9 +35,9 @@ public class BlockDrain extends BlockMachine
 	@Override
 	public void registerIcons(IconRegister par1IconRegister)
 	{
-		this.blockIcon = par1IconRegister.registerIcon(FluidMech.PREFIX + "ironMachineSide");
-		this.drainIcon = par1IconRegister.registerIcon(FluidMech.PREFIX + "drain");
-		this.fillIcon = par1IconRegister.registerIcon(FluidMech.PREFIX + "drain2");
+		this.blockIcon = par1IconRegister.registerIcon(FluidMech.instance.PREFIX + "ironMachineSide");
+		this.drainIcon = par1IconRegister.registerIcon(FluidMech.instance.PREFIX + "drain");
+		this.fillIcon = par1IconRegister.registerIcon(FluidMech.instance.PREFIX + "drain2");
 	}
 
 	@Override

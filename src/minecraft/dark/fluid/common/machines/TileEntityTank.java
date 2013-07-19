@@ -31,6 +31,8 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.api.fluid.INetworkFluidPart;
+import dark.api.fluid.INetworkPipe;
 import dark.core.api.ColorCode;
 import dark.core.api.IColorCoded;
 import dark.core.api.IToolReadOut;
@@ -38,8 +40,6 @@ import dark.core.hydraulic.helpers.FluidRestrictionHandler;
 import dark.core.network.fluid.NetworkFluidContainers;
 import dark.core.network.fluid.NetworkFluidTiles;
 import dark.core.tile.network.NetworkTileEntities;
-import dark.fluid.api.INetworkFluidPart;
-import dark.fluid.api.INetworkPipe;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.prefab.TileEntityFluidStorage;
 

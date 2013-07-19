@@ -1,4 +1,4 @@
-package dark.fluid.api;
+package dark.api.fluid;
 
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;

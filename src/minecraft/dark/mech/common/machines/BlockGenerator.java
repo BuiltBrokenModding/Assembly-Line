@@ -6,21 +6,20 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import dark.fluid.client.render.BlockRenderHelper;
+import dark.fluid.common.BlockFM;
 import dark.fluid.common.FluidMech;
-import dark.library.machine.BlockMachine;
 
-public class BlockGenerator extends BlockMachine
+public class BlockGenerator extends BlockFM
 {
 
 	public BlockGenerator(int id)
 	{
-		super(id, Material.iron);
-		this.setUnlocalizedName("lmGen");
-		this.setCreativeTab(FluidMech.TabFluidMech);
+		super("MechanicalGenerator", id, Material.iron);
 		this.setHardness(1f);
 		this.setResistance(5f);
 	}
@@ -84,5 +83,12 @@ public class BlockGenerator extends BlockMachine
 	{
 		super.onNeighborBlockChange(par1World, x, y, z, side);
 
+	}
+
+	@Override
+	public TileEntity createNewTileEntity(World world)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -11,20 +11,18 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidTank;
+import dark.api.fluid.INetworkPipe;
 import dark.core.hydraulic.helpers.FluidRestrictionHandler;
-import dark.fluid.api.INetworkPipe;
+import dark.fluid.common.BlockFM;
 import dark.fluid.common.FluidMech;
-import dark.library.machine.BlockMachine;
 
-public class BlockPipe extends BlockMachine
+public class BlockPipe extends BlockFM
 {
 	public BlockPipe(int id)
 	{
-		super(id, Material.iron);
+		super("FluidPipe", id, Material.iron);
 		this.setBlockBounds(0.30F, 0.30F, 0.30F, 0.70F, 0.70F, 0.70F);
 		this.setHardness(1f);
-		this.setCreativeTab(FluidMech.TabFluidMech);
-		this.setUnlocalizedName("lmPipe");
 		this.setResistance(3f);
 
 	}

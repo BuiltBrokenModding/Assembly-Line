@@ -88,7 +88,7 @@ public class ItemRenderHelper implements IItemRenderer
 			pipe.SixPipe.renderBack();
 			pipe.SixPipe.renderMiddle();
 		}
-		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(FluidMech.DOMAIN, FluidMech.MODEL_DIRECTORY + "ReleaseValve.png"));
+		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(FluidMech.instance.DOMAIN, FluidMech.MODEL_DIRECTORY + "ReleaseValve.png"));
 		GL11.glRotatef(180f, 0f, 0f, 1f);
 		if (!equ)
 		{

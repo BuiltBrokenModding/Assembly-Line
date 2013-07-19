@@ -1,4 +1,4 @@
-package dark.fluid.api;
+package dark.api.fluid;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.Fluid;

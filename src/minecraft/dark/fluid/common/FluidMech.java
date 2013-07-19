@@ -35,6 +35,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
+import dark.core.ModPrefab;
 import dark.core.api.ColorCode;
 import dark.fluid.common.item.ItemParts;
 import dark.fluid.common.item.ItemParts.Parts;
@@ -65,7 +66,7 @@ import dark.mech.common.machines.BlockRod;
 @ModstatInfo(prefix = "fluidmech")
 @Mod(modid = FluidMech.MOD_ID, name = FluidMech.MOD_NAME, version = FluidMech.VERSION, useMetadata = true)
 @NetworkMod(channels = { FluidMech.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
-public class FluidMech extends DummyModContainer
+public class FluidMech extends ModPrefab
 {
 
 	// @Mod Prerequisites
@@ -78,35 +79,18 @@ public class FluidMech extends DummyModContainer
 	public static final String MOD_ID = "FluidMech";
 	public static final String MOD_NAME = "Fluid_Mechanics";
 	public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + REVIS_VERSION + "." + BUILD_VERSION;
-	public static final String DOMAIN = "fm";
-	public static final String PREFIX = DOMAIN + ":";
+
 	// @NetworkMod
 	public static final String CHANNEL = "FluidMech";
 
 	@Metadata(FluidMech.MOD_ID)
 	public static ModMetadata meta;
 
-	/* RESOURCE FILE PATHS */
-	public static final String DIRECTORY_NO_SLASH = "assets/" + DOMAIN + "/";
-	public static final String DIRECTORY = "/" + DIRECTORY_NO_SLASH;
-	public static final String LANGUAGE_PATH = DIRECTORY + "languages/";
-	public static final String SOUND_PATH = DIRECTORY + "audio/";
-
-	public static final String TEXTURE_DIRECTORY = "textures/";
-	public static final String BLOCK_DIRECTORY = TEXTURE_DIRECTORY + "blocks/";
-	public static final String ITEM_DIRECTORY = TEXTURE_DIRECTORY + "items/";
-	public static final String MODEL_DIRECTORY = TEXTURE_DIRECTORY + "models/";
-	public static final String GUI_DIRECTORY = TEXTURE_DIRECTORY + "gui/";
-
 	/* SUPPORTED LANGS */
 	private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US", "de_DE" };
 
 	/* CONFIG FILE */
 	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir() + "/Dark/", FluidMech.MOD_NAME + ".cfg"));
-
-	/* START IDS */
-	public final static int BLOCK_ID_PREFIX = 3100;
-	public final static int ITEM_ID_PREFIX = 13200;
 
 	/* BLOCKS */
 	public static Block blockPipe;
@@ -134,6 +118,12 @@ public class FluidMech extends DummyModContainer
 	/* LOGGER - EXTENDS FORGE'S LOG SYSTEM */
 	public static Logger FMLog = Logger.getLogger(FluidMech.MOD_NAME);
 
+	public FluidMech()
+	{
+		super("fm");
+		// TODO Auto-generated constructor stub
+	}
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
@@ -146,32 +136,6 @@ public class FluidMech extends DummyModContainer
 		/* UPDATE NOTIFIER */
 		Modstats.instance().getReporter().registerMod(this);
 
-		/* CONFIGS */
-		CONFIGURATION.load();
-
-		/* LIQUID DIRECTORY CALL */
-		Fluid waste = new Fluid("waste").setBlockID(FluidMech.CONFIGURATION.getBlock("WasteLiquid", BLOCK_ID_PREFIX + 7).getInt());
-
-		/* BLOCK DECLARATION -- CONFIG LOADER */
-		blockGenPipe = new BlockPipe(FluidMech.CONFIGURATION.getBlock("Pipes", BLOCK_ID_PREFIX).getInt());
-		blockMachine = new BlockPumpMachine(FluidMech.CONFIGURATION.getBlock("Machines", BLOCK_ID_PREFIX + 1).getInt());
-		blockRod = new BlockRod(FluidMech.CONFIGURATION.getBlock("MechRod", BLOCK_ID_PREFIX + 3).getInt());
-		blockGenerator = new BlockGenerator((FluidMech.CONFIGURATION.getBlock("Generator", BLOCK_ID_PREFIX + 4).getInt()));
-		blockReleaseValve = new BlockReleaseValve((FluidMech.CONFIGURATION.getBlock("ReleaseValve", BLOCK_ID_PREFIX + 5).getInt()));
-		blockTank = new BlockTank(FluidMech.CONFIGURATION.getBlock("Tank", BLOCK_ID_PREFIX + 6).getInt());
-		blockWasteLiquid = new BlockFluidFinite(waste.getBlockID(), waste, Material.water);
-		blockSink = new BlockSink(FluidMech.CONFIGURATION.getBlock("Sink", BLOCK_ID_PREFIX + 8).getInt());
-		blockDrain = new BlockDrain(FluidMech.CONFIGURATION.getBlock("Drain", BLOCK_ID_PREFIX + 9).getInt());
-		blockConPump = new BlockConstructionPump(FluidMech.CONFIGURATION.getBlock("ConstructionPump", BLOCK_ID_PREFIX + 10).getInt());
-		blockPipe = new BlockPipe(FluidMech.CONFIGURATION.getBlock("RestrictedPipes", BLOCK_ID_PREFIX + 11).getInt());
-
-		/* ITEM DECLARATION -- COFNGI LOADER */
-		itemParts = new ItemParts(FluidMech.CONFIGURATION.getItem("Parts", ITEM_ID_PREFIX).getInt());
-		itemGauge = new ItemTools(FluidMech.CONFIGURATION.getItem("PipeGuage", ITEM_ID_PREFIX + 3).getInt());
-		if (CONFIGURATION.hasChanged())
-		{
-			CONFIGURATION.save();
-		}
 		/* CONFIG END */
 
 		proxy.preInit();
@@ -193,18 +157,6 @@ public class FluidMech extends DummyModContainer
 	@EventHandler
 	public void Init(FMLInitializationEvent event)
 	{
-		/* MCMOD.INFO FILE BUILDER? */
-		meta.modId = FluidMech.MOD_ID;
-		meta.name = FluidMech.MOD_NAME;
-		meta.description = "Fluid Mechanics is a combination between supporting fluid handling and mechanical energy handling system. " + "Its designed to help other mods move there liquids to using a universal liquid system managed by forge. As a bonus it also " + "comes with suppot to help mods move energy by means of mechanics motion along rods. This mod by itself doesn't offer much more " + "than basic liquid storage, placement, and removel in the world. Its suggest to download other mods that supports the Forge's " + "LiquidDictionary. " + "\n" + "Suported Power systems: Universal Electric ";
-
-		meta.url = "http://www.universalelectricity.com/fluidmechanics";
-
-		meta.logoFile = FluidMech.TEXTURE_DIRECTORY + "FM_Banner.png";
-		meta.version = FluidMech.VERSION;
-		meta.authorList = Arrays.asList(new String[] { "DarkGuardsman AKA DarkCow" });
-		meta.credits = "Please see the website.";
-		meta.autogenerated = false;
 
 		/* LOGGER */
 		FMLog.info("Loading...");
@@ -324,6 +276,56 @@ public class FluidMech extends DummyModContainer
 		GameRegistry.addRecipe(new ItemStack(blockSink, 1), new Object[] { "I I", "SIS", "SPS", 'P', new ItemStack(blockGenPipe, 1), 'I', Item.ingotIron, 'S', Block.stone });
 
 		FMLog.info("Done Loading");
+	}
+
+	@Override
+	public void loadConfig()
+	{
+		/* CONFIGS */
+		CONFIGURATION.load();
+
+		/* LIQUID DIRECTORY CALL */
+		Fluid waste = new Fluid("waste").setBlockID(FluidMech.CONFIGURATION.getBlock("WasteLiquid", BLOCK_ID_PREFIX++).getInt());
+
+		/* BLOCK DECLARATION -- CONFIG LOADER */
+		blockGenPipe = new BlockPipe(FluidMech.CONFIGURATION.getBlock("Pipes", BLOCK_ID_PREFIX).getInt());
+		blockMachine = new BlockPumpMachine(FluidMech.CONFIGURATION.getBlock("Machines", BLOCK_ID_PREFIX + 1).getInt());
+		blockRod = new BlockRod(FluidMech.CONFIGURATION.getBlock("MechRod", BLOCK_ID_PREFIX + 3).getInt());
+		blockGenerator = new BlockGenerator((FluidMech.CONFIGURATION.getBlock("Generator", BLOCK_ID_PREFIX + 4).getInt()));
+		blockReleaseValve = new BlockReleaseValve((FluidMech.CONFIGURATION.getBlock("ReleaseValve", BLOCK_ID_PREFIX + 5).getInt()));
+		blockTank = new BlockTank(FluidMech.CONFIGURATION.getBlock("Tank", BLOCK_ID_PREFIX + 6).getInt());
+		blockWasteLiquid = new BlockFluidFinite(waste.getBlockID(), waste, Material.water);
+		blockSink = new BlockSink(FluidMech.CONFIGURATION.getBlock("Sink", BLOCK_ID_PREFIX + 8).getInt());
+		blockDrain = new BlockDrain(FluidMech.CONFIGURATION.getBlock("Drain", BLOCK_ID_PREFIX + 9).getInt());
+		blockConPump = new BlockConstructionPump(FluidMech.CONFIGURATION.getBlock("ConstructionPump", BLOCK_ID_PREFIX + 10).getInt());
+		blockPipe = new BlockPipe(FluidMech.CONFIGURATION.getBlock("RestrictedPipes", BLOCK_ID_PREFIX + 11).getInt());
+
+		/* ITEM DECLARATION */
+		itemParts = new ItemParts(FluidMech.CONFIGURATION.getItem("Parts", ITEM_ID_PREFIX).getInt());
+		itemGauge = new ItemTools(FluidMech.CONFIGURATION.getItem("PipeGuage", ITEM_ID_PREFIX + 3).getInt());
+		if (CONFIGURATION.hasChanged())
+		{
+			CONFIGURATION.save();
+		}
+
+	}
+
+	@Override
+	public void loadModMeta()
+	{
+		/* MCMOD.INFO FILE BUILDER? */
+		meta.modId = FluidMech.MOD_ID;
+		meta.name = FluidMech.MOD_NAME;
+		meta.description = "Fluid Mechanics is a combination between supporting fluid handling and mechanical energy handling system. " + "Its designed to help other mods move there liquids using a universal liquid system managed by forge. As a bonus it also " + "comes with suppot to help mods move energy by means of mechanics motion along rods. This mod by itself doesn't offer much more " + "than basic liquid storage, placement, and removel in the world. Its suggest to download other mods that supports the Forge's " + "Fluid System. " + "\n\n" + "Suported Power systems: Universal Electric, BuildCraft, IndustrialCraft ";
+
+		meta.url = "http://www.universalelectricity.com/fluidmechanics";
+
+		meta.logoFile = FluidMech.TEXTURE_DIRECTORY + "FM_Banner.png";
+		meta.version = FluidMech.VERSION;
+		meta.authorList = Arrays.asList(new String[] { "DarkGuardsman AKA DarkCow" });
+		meta.credits = "Please see the website.";
+		meta.autogenerated = false;
+
 	}
 
 	public static final CreativeTabs TabFluidMech = new CreativeTabs("Fluid Mechanics")

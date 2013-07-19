@@ -82,7 +82,7 @@ public class RenderSink extends RenderMachine
 	@Override
 	public ResourceLocation getTexture(int block, int meta)
 	{
-		return new ResourceLocation(FluidMech.DOMAIN, FluidMech.MODEL_DIRECTORY + "Sink.png");
+		return new ResourceLocation(FluidMech.instance.DOMAIN, FluidMech.MODEL_DIRECTORY + "Sink.png");
 	}
 
 }

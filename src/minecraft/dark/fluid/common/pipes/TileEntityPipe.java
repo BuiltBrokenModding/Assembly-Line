@@ -33,6 +33,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.api.fluid.INetworkPipe;
 import dark.core.api.ColorCode;
 import dark.core.api.IColorCoded;
 import dark.core.api.ITileConnector;
@@ -40,7 +41,6 @@ import dark.core.api.IToolReadOut;
 import dark.core.hydraulic.helpers.FluidRestrictionHandler;
 import dark.core.network.fluid.NetworkPipes;
 import dark.core.tile.network.NetworkTileEntities;
-import dark.fluid.api.INetworkPipe;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.pipes.addon.IPipeExtention;
 

@@ -1,4 +1,4 @@
-package dark.fluid.api;
+package dark.api.fluid;
 
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;

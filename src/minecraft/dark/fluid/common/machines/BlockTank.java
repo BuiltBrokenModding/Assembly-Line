@@ -17,18 +17,15 @@ import dark.core.api.INetworkPart;
 import dark.core.hydraulic.helpers.FluidHelper;
 import dark.core.hydraulic.helpers.FluidRestrictionHandler;
 import dark.fluid.client.render.BlockRenderHelper;
-import dark.fluid.common.FluidMech;
+import dark.fluid.common.BlockFM;
 import dark.library.machine.AutoCraftingManager;
-import dark.library.machine.BlockMachine;
 
-public class BlockTank extends BlockMachine
+public class BlockTank extends BlockFM
 {
 
 	public BlockTank(int id)
 	{
-		super(id, Material.rock);
-		this.setCreativeTab(FluidMech.TabFluidMech);
-		this.setUnlocalizedName("lmTank");
+		super("FluidTank", id, Material.rock);
 		this.setHardness(1f);
 		this.setResistance(5f);
 	}

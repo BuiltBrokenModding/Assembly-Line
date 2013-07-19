@@ -1,4 +1,4 @@
-package dark.fluid.api.mech;
+package dark.api.mech;
 
 import net.minecraftforge.common.ForgeDirection;
 

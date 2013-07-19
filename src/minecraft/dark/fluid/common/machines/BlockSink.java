@@ -10,17 +10,14 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import dark.fluid.client.render.BlockRenderHelper;
-import dark.fluid.common.FluidMech;
+import dark.fluid.common.BlockFM;
 import dark.helpers.MetaGroup;
-import dark.library.machine.BlockMachine;
 
-public class BlockSink extends BlockMachine
+public class BlockSink extends BlockFM
 {
 	public BlockSink(int par1)
 	{
-		super(par1, Material.iron);
-		this.setUnlocalizedName("lmSink");
-		this.setCreativeTab(FluidMech.TabFluidMech);
+		super("FluidSink", par1, Material.iron);
 		this.setResistance(4f);
 		this.setHardness(4f);
 	}

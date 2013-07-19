@@ -4,22 +4,21 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import dark.fluid.client.render.BlockRenderHelper;
+import dark.fluid.common.BlockFM;
 import dark.fluid.common.FluidMech;
-import dark.library.machine.BlockMachine;
 
-public class BlockRod extends BlockMachine
+public class BlockRod extends BlockFM
 {
 
 	public BlockRod(int par1)
 	{
-		super(par1, Material.iron);
-		this.setCreativeTab(FluidMech.TabFluidMech);
-		this.setUnlocalizedName("MechanicRod");
+		super("MechanicalRod", par1, Material.iron);
 		this.setHardness(1f);
 		this.setResistance(5f);
 	}
@@ -97,6 +96,13 @@ public class BlockRod extends BlockMachine
 	public int getRenderType()
 	{
 		return BlockRenderHelper.renderID;
+	}
+
+	@Override
+	public TileEntity createNewTileEntity(World world)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

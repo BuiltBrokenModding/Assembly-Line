@@ -9,12 +9,12 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import dark.api.fluid.INetworkPipe;
 import dark.core.api.ColorCode;
 import dark.core.api.INetworkPart;
 import dark.core.hydraulic.helpers.FluidHelper;
 import dark.core.hydraulic.helpers.FluidRestrictionHandler;
 import dark.core.tile.network.NetworkTileEntities;
-import dark.fluid.api.INetworkPipe;
 import dark.helpers.ConnectionHelper;
 
 /** Side note: the network should act like this when done {@link http

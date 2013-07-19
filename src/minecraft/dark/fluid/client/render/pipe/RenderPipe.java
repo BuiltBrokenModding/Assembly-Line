@@ -94,7 +94,7 @@ public class RenderPipe extends RenderMachine
 		{
 			name = ColorCode.get(meta).getName();
 		}
-		return new ResourceLocation(FluidMech.DOMAIN, FluidMech.MODEL_DIRECTORY + "pipes/" + name + "Pipe.png");
+		return new ResourceLocation(FluidMech.instance.DOMAIN, FluidMech.MODEL_DIRECTORY + "pipes/" + name + "Pipe.png");
 	}
 
 	public void render(int blockID, int meta, boolean[] side)

@@ -58,7 +58,7 @@ public class RenderConstructionPump extends RenderMachine
 	@Override
 	public ResourceLocation getTexture(int block, int meta)
 	{
-		return new ResourceLocation(FluidMech.DOMAIN, FluidMech.MODEL_DIRECTORY + "ConstructionPump.png");
+		return new ResourceLocation(FluidMech.instance.DOMAIN, FluidMech.MODEL_DIRECTORY + "ConstructionPump.png");
 	}
 
 }

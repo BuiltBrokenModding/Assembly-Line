@@ -17,19 +17,17 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import dark.core.network.fluid.HydraulicNetworkHelper;
 import dark.fluid.client.render.BlockRenderHelper;
+import dark.fluid.common.BlockFM;
 import dark.fluid.common.FluidMech;
-import dark.library.machine.BlockMachine;
 
-public class BlockConstructionPump extends BlockMachine
+public class BlockConstructionPump extends BlockFM
 {
 	Icon inputIcon;
 	Icon outputIcon;
 
 	public BlockConstructionPump(int id)
 	{
-		super(id, Material.iron);
-		this.setUnlocalizedName("lmConPump");
-		this.setCreativeTab(FluidMech.TabFluidMech);
+		super("ConstructionPump", id, Material.iron);
 		this.setHardness(1f);
 		this.setResistance(5f);
 
@@ -38,9 +36,9 @@ public class BlockConstructionPump extends BlockMachine
 	@Override
 	public void registerIcons(IconRegister par1IconRegister)
 	{
-		this.blockIcon = par1IconRegister.registerIcon(FluidMech.PREFIX + "ironMachineSide");
-		this.inputIcon = par1IconRegister.registerIcon(FluidMech.PREFIX + "inputMachineSide");
-		this.outputIcon = par1IconRegister.registerIcon(FluidMech.PREFIX + "outputMachineSide");
+		this.blockIcon = par1IconRegister.registerIcon(FluidMech.instance.PREFIX + "ironMachineSide");
+		this.inputIcon = par1IconRegister.registerIcon(FluidMech.instance.PREFIX + "inputMachineSide");
+		this.outputIcon = par1IconRegister.registerIcon(FluidMech.instance.PREFIX + "outputMachineSide");
 	}
 
 	@Override

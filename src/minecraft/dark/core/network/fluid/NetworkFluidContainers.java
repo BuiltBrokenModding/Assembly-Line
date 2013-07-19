@@ -6,10 +6,10 @@ import java.util.List;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import dark.api.fluid.INetworkFluidPart;
 import dark.core.api.ColorCode;
 import dark.core.api.INetworkPart;
 import dark.core.tile.network.NetworkTileEntities;
-import dark.fluid.api.INetworkFluidPart;
 
 /** Side note: the network should act like this when done {@link http
  * ://www.e4training.com/hydraulic_calculators/B1.htm} as well as stay compatible with the forge

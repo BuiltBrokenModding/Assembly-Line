@@ -12,18 +12,16 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import dark.fluid.client.render.BlockRenderHelper;
+import dark.fluid.common.BlockFM;
 import dark.fluid.common.FluidMech;
 import dark.helpers.MetaGroup;
-import dark.library.machine.BlockMachine;
 
-public class BlockPumpMachine extends BlockMachine
+public class BlockPumpMachine extends BlockFM
 {
 
 	public BlockPumpMachine(int id)
 	{
-		super(id, Material.iron);
-		this.setUnlocalizedName("lmMachines");
-		this.setCreativeTab(FluidMech.TabFluidMech);
+		super("FluidMachine", id, Material.iron);
 		this.setHardness(1f);
 		this.setResistance(5f);
 	}
@@ -88,6 +86,13 @@ public class BlockPumpMachine extends BlockMachine
 	}
 
 	@Override
+	public TileEntity createNewTileEntity(World world)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
 	public TileEntity createTileEntity(World var1, int meta)
 	{
 		if (meta >= 12)
@@ -135,4 +140,5 @@ public class BlockPumpMachine extends BlockMachine
 		}
 		return true;
 	}
+
 }
