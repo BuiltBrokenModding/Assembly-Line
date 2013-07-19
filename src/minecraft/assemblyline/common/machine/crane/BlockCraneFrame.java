@@ -134,7 +134,7 @@ public class BlockCraneFrame extends BlockAssembly
 	}
 
 	@Override
-	public TileEntity createTileEntity(World world, int metadata)
+	public TileEntity createNewTileEntity(World world)
 	{
 		return new TileEntityCraneRail();
 	}

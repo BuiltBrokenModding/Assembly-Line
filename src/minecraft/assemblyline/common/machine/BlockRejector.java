@@ -17,7 +17,7 @@ public class BlockRejector extends BlockImprintable
 	}
 
 	@Override
-	public TileEntity createTileEntity(World var1, int metadata)
+	public TileEntity createNewTileEntity(World var1)
 	{
 		return new TileEntityRejector();
 	}
