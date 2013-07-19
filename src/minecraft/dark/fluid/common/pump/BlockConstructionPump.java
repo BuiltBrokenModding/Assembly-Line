@@ -18,7 +18,6 @@ import net.minecraftforge.common.ForgeDirection;
 import dark.core.network.fluid.HydraulicNetworkHelper;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.FluidMech;
-import dark.fluid.common.TabFluidMech;
 import dark.library.machine.BlockMachine;
 
 public class BlockConstructionPump extends BlockMachine
@@ -30,7 +29,7 @@ public class BlockConstructionPump extends BlockMachine
 	{
 		super(id, Material.iron);
 		this.setUnlocalizedName("lmConPump");
-		this.setCreativeTab(TabFluidMech.INSTANCE);
+		this.setCreativeTab(FluidMech.TabFluidMech);
 		this.setHardness(1f);
 		this.setResistance(5f);
 

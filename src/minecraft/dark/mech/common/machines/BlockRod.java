@@ -10,7 +10,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.FluidMech;
-import dark.fluid.common.TabFluidMech;
 import dark.library.machine.BlockMachine;
 
 public class BlockRod extends BlockMachine
@@ -19,7 +18,7 @@ public class BlockRod extends BlockMachine
 	public BlockRod(int par1)
 	{
 		super(par1, Material.iron);
-		this.setCreativeTab(TabFluidMech.INSTANCE);
+		this.setCreativeTab(FluidMech.TabFluidMech);
 		this.setUnlocalizedName("MechanicRod");
 		this.setHardness(1f);
 		this.setResistance(5f);

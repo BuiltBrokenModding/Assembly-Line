@@ -2,9 +2,10 @@ package dark.fluid.common.item;
 
 import java.util.List;
 
+import dark.fluid.common.FluidMech;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
-import dark.fluid.common.TabFluidMech;
 
 /** A metadata item containing parts of various machines in Liquid Mechanics Mod.
  * 
@@ -36,7 +37,7 @@ public class ItemParts extends ItemBasic
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);
 		this.setMaxStackSize(64);
-		this.setCreativeTab(TabFluidMech.INSTANCE);
+		this.setCreativeTab(FluidMech.TabFluidMech);
 	}
 
 	@Override

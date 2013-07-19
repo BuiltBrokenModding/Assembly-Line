@@ -10,7 +10,6 @@ import net.minecraft.util.Icon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.fluid.common.FluidMech;
-import dark.fluid.common.TabFluidMech;
 
 public class ItemBasic extends Item
 {
@@ -20,7 +19,7 @@ public class ItemBasic extends Item
 	{
 		super(id);
 		this.setUnlocalizedName(name);
-		this.setCreativeTab(TabFluidMech.INSTANCE);
+		this.setCreativeTab(FluidMech.TabFluidMech);
 	}
 
 	@SideOnly(Side.CLIENT)

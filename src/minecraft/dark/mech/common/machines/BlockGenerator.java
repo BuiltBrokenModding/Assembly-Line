@@ -11,7 +11,6 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.FluidMech;
-import dark.fluid.common.TabFluidMech;
 import dark.library.machine.BlockMachine;
 
 public class BlockGenerator extends BlockMachine
@@ -21,7 +20,7 @@ public class BlockGenerator extends BlockMachine
 	{
 		super(id, Material.iron);
 		this.setUnlocalizedName("lmGen");
-		this.setCreativeTab(TabFluidMech.INSTANCE);
+		this.setCreativeTab(FluidMech.TabFluidMech);
 		this.setHardness(1f);
 		this.setResistance(5f);
 	}

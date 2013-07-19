@@ -53,12 +53,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
 
 	/* NETWORK INSTANCE THAT THIS PIPE USES */
 	private NetworkFluidContainers fluidNetwork;
-
-	@Override
-	public void initiate()
-	{
-		this.refresh();
-	}
+	private int refreshRate = 1;
 
 	@Override
 	public void updateEntity()
@@ -66,11 +61,18 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
 		super.updateEntity();
 		if (!worldObj.isRemote)
 		{
-			if (ticks % ((int) random.nextInt(5) * 40 + 20) == 0)
+			if (ticks % refreshRate == 0)
 			{
+				this.refreshRate = ((int) random.nextInt(5) * 40) + 20;
 				this.refresh();
 			}
 		}
+	}
+
+	@Override
+	public void initiate()
+	{
+		this.refresh();
 	}
 
 	@Override

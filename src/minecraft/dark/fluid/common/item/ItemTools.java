@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import dark.core.api.IToolReadOut;
 import dark.core.api.IToolReadOut.EnumTools;
-import dark.fluid.common.TabFluidMech;
+import dark.fluid.common.FluidMech;
 
 public class ItemTools extends ItemBasic
 {
@@ -22,7 +22,7 @@ public class ItemTools extends ItemBasic
 		super("lmTool", id);
 		this.setMaxDamage(0);
 		this.setHasSubtypes(true);
-		this.setCreativeTab(TabFluidMech.INSTANCE);
+		this.setCreativeTab(FluidMech.TabFluidMech);
 		this.setMaxStackSize(1);
 	}
 

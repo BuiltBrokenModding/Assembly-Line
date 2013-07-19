@@ -77,7 +77,7 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 	{
 		if (this.tank != null)
 		{
-			return new FluidTankInfo[] { new FluidTankInfo(this.tank.getFluid(), this.tank.getCapacity()) };
+			return new FluidTankInfo[] { new FluidTankInfo(this.tank) };
 		}
 		return new FluidTankInfo[1];
 	}
@@ -118,11 +118,7 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 	/** Is the internal tank full */
 	public boolean isFull()
 	{
-		if (this.tank.getFluid() == null || this.tank.getFluid().amount < this.tank.getCapacity())
-		{
-			return false;
-		}
-		return true;
+		return this.tank.getFluid() != null && this.tank.getFluid().amount >= this.tank.getCapacity();
 	}
 
 	/** gets the liquidStack stored in the internal tank */

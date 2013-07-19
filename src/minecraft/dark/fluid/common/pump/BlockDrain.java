@@ -13,7 +13,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import dark.fluid.common.FluidMech;
-import dark.fluid.common.TabFluidMech;
 import dark.library.machine.BlockMachine;
 
 public class BlockDrain extends BlockMachine
@@ -25,7 +24,7 @@ public class BlockDrain extends BlockMachine
 	public BlockDrain(int id)
 	{
 		super(id, Material.iron);
-		this.setCreativeTab(TabFluidMech.INSTANCE);
+		this.setCreativeTab(FluidMech.TabFluidMech);
 		this.setUnlocalizedName("lmDrain");
 	}
 

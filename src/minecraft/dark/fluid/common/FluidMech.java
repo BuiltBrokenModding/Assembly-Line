@@ -6,11 +6,11 @@ import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraftforge.common.Configuration;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.oredict.OreDictionary;
@@ -36,7 +36,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.core.api.ColorCode;
-import dark.core.hydraulic.helpers.FluidRestrictionHandler;
 import dark.fluid.common.item.ItemParts;
 import dark.fluid.common.item.ItemParts.Parts;
 import dark.fluid.common.item.ItemTools;
@@ -146,7 +145,7 @@ public class FluidMech extends DummyModContainer
 
 		/* UPDATE NOTIFIER */
 		Modstats.instance().getReporter().registerMod(this);
-		MinecraftForge.EVENT_BUS.register(new FluidRestrictionHandler());
+
 		/* CONFIGS */
 		CONFIGURATION.load();
 
@@ -246,8 +245,6 @@ public class FluidMech extends DummyModContainer
 		/* LOGGER */
 		FMLog.info("Finalizing...");
 		proxy.postInit();
-		/* TAB ITEM SET */
-		TabFluidMech.setItemStack(new ItemStack(blockPipe, 1, 4));
 
 		/* /******** RECIPES ************* */
 
@@ -328,4 +325,13 @@ public class FluidMech extends DummyModContainer
 
 		FMLog.info("Done Loading");
 	}
+
+	public static final CreativeTabs TabFluidMech = new CreativeTabs("Fluid Mechanics")
+	{
+
+		public ItemStack getIconItemStack()
+		{
+			return new ItemStack(blockPipe, 1, 4);
+		}
+	};
 }

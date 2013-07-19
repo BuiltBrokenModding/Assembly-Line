@@ -9,7 +9,6 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import dark.fluid.common.FluidMech;
-import dark.fluid.common.TabFluidMech;
 import dark.library.machine.BlockMachine;
 
 public class BlockReleaseValve extends BlockMachine
@@ -17,7 +16,7 @@ public class BlockReleaseValve extends BlockMachine
 	public BlockReleaseValve(int par1)
 	{
 		super(par1, Material.iron);
-		this.setCreativeTab(TabFluidMech.INSTANCE);
+		this.setCreativeTab(FluidMech.TabFluidMech);
 		this.setUnlocalizedName("eValve");
 		this.setHardness(1f);
 		this.setResistance(5f);

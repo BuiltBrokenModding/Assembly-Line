@@ -14,7 +14,6 @@ import net.minecraftforge.fluids.IFluidTank;
 import dark.core.hydraulic.helpers.FluidRestrictionHandler;
 import dark.fluid.api.INetworkPipe;
 import dark.fluid.common.FluidMech;
-import dark.fluid.common.TabFluidMech;
 import dark.library.machine.BlockMachine;
 
 public class BlockPipe extends BlockMachine
@@ -24,7 +23,7 @@ public class BlockPipe extends BlockMachine
 		super(id, Material.iron);
 		this.setBlockBounds(0.30F, 0.30F, 0.30F, 0.70F, 0.70F, 0.70F);
 		this.setHardness(1f);
-		this.setCreativeTab(TabFluidMech.INSTANCE);
+		this.setCreativeTab(FluidMech.TabFluidMech);
 		this.setUnlocalizedName("lmPipe");
 		this.setResistance(3f);
 
