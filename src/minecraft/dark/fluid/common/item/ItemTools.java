@@ -9,8 +9,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import dark.core.api.IToolReadOut;
-import dark.core.api.IToolReadOut.EnumTools;
+import dark.api.IToolReadOut;
+import dark.api.IToolReadOut.EnumTools;
 import dark.fluid.common.FluidMech;
 
 public class ItemTools extends ItemBasic

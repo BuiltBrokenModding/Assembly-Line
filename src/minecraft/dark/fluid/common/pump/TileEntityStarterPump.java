@@ -14,16 +14,16 @@ import universalelectricity.prefab.network.IPacketReceiver;
 
 import com.google.common.io.ByteArrayDataInput;
 
-import dark.core.api.ColorCode;
-import dark.core.api.IColorCoded;
-import dark.core.api.ITileConnector;
-import dark.core.api.IToolReadOut;
-import dark.core.hydraulic.helpers.FluidHelper;
-import dark.core.hydraulic.helpers.FluidRestrictionHandler;
+import dark.api.ColorCode;
+import dark.api.IColorCoded;
+import dark.api.ITileConnector;
+import dark.api.IToolReadOut;
+import dark.helpers.FluidHelper;
+import dark.helpers.FluidRestrictionHandler;
 import dark.helpers.MetaGroup;
-import dark.library.machine.TileEntityRunnableMachine;
+import dark.prefab.machine.TileEntityMachine;
 
-public class TileEntityStarterPump extends TileEntityRunnableMachine implements IPacketReceiver, IToolReadOut, ITileConnector
+public class TileEntityStarterPump extends TileEntityMachine implements IPacketReceiver, IToolReadOut, ITileConnector
 {
 	public final static float WATTS_PER_TICK = 20;
 	private double percentPumped = 0.0;

@@ -1,7 +1,7 @@
 package dark.fluid.common;
 
 import net.minecraft.block.material.Material;
-import dark.library.machine.BlockMachine;
+import dark.prefab.machine.BlockMachine;
 
 public abstract class BlockFM extends BlockMachine
 {

@@ -5,8 +5,8 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
+import dark.api.INetworkPart;
 import dark.api.fluid.IDrain;
-import dark.core.api.INetworkPart;
 import dark.core.tile.network.NetworkTileEntities;
 
 public class HydraulicNetworkHelper

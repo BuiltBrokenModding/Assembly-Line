@@ -10,13 +10,13 @@ import org.lwjgl.opengl.GL11;
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.api.ColorCode;
-import dark.core.hydraulic.helpers.FluidRestrictionHandler;
+import dark.api.ColorCode;
 import dark.core.render.RenderMachine;
 import dark.fluid.client.model.ModelLargePipe;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.pipes.TileEntityPipe;
 import dark.fluid.common.pipes.addon.IPipeExtention;
+import dark.helpers.FluidRestrictionHandler;
 
 @SideOnly(Side.CLIENT)
 public class RenderPipe extends RenderMachine

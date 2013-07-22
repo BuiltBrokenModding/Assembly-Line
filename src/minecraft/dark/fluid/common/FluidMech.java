@@ -34,8 +34,8 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
+import dark.api.ColorCode;
 import dark.core.ModPrefab;
-import dark.core.api.ColorCode;
 import dark.fluid.common.item.ItemParts;
 import dark.fluid.common.item.ItemParts.Parts;
 import dark.fluid.common.item.ItemTools;
@@ -61,7 +61,7 @@ import dark.mech.common.machines.BlockGenerator;
 import dark.mech.common.machines.BlockRod;
 
 @ModstatInfo(prefix = "fluidmech")
-@Mod(modid = FluidMech.MOD_ID, name = FluidMech.MOD_NAME, version = FluidMech.VERSION, useMetadata = true)
+@Mod(modid = FluidMech.MOD_ID, name = FluidMech.MOD_NAME, version = FluidMech.VERSION,dependencies = "after:DarkCore", useMetadata = true)
 @NetworkMod(channels = { FluidMech.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
 public class FluidMech extends ModPrefab
 {

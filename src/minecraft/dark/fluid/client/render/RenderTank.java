@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.api.ColorCode;
+import dark.api.ColorCode;
 import dark.core.render.FluidBlockRenderer;
 import dark.core.render.RenderMachine;
 import dark.fluid.client.model.ModelTankSide;

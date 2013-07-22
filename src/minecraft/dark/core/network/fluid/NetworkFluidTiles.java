@@ -13,13 +13,13 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.path.Pathfinder;
 import universalelectricity.core.vector.Vector3;
+import dark.api.ColorCode;
+import dark.api.INetworkPart;
 import dark.api.fluid.INetworkFluidPart;
-import dark.core.api.ColorCode;
-import dark.core.api.INetworkPart;
-import dark.core.hydraulic.helpers.FluidHelper;
 import dark.core.tile.network.NetworkPathFinder;
 import dark.core.tile.network.NetworkTileEntities;
 import dark.helpers.ConnectionHelper;
+import dark.helpers.FluidHelper;
 
 public class NetworkFluidTiles extends NetworkTileEntities
 {

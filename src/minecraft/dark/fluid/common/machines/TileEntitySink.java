@@ -14,7 +14,7 @@ import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
-import dark.core.api.ColorCode;
+import dark.api.ColorCode;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.prefab.TileEntityFluidStorage;
 

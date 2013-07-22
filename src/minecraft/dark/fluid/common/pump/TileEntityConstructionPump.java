@@ -10,14 +10,14 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
+import dark.api.ITileConnector;
 import dark.api.fluid.INetworkPipe;
-import dark.core.api.ITileConnector;
 import dark.core.network.fluid.HydraulicNetworkHelper;
 import dark.core.network.fluid.NetworkFluidTiles;
 import dark.helpers.MetaGroup;
-import dark.library.machine.TileEntityRunnableMachine;
+import dark.prefab.machine.TileEntityMachine;
 
-public class TileEntityConstructionPump extends TileEntityRunnableMachine implements IFluidHandler, ITileConnector
+public class TileEntityConstructionPump extends TileEntityMachine implements IFluidHandler, ITileConnector
 {
 	/* LIQUID FLOW CONNECTION SIDES */
 	/** Internal tank for interaction but not real storage */

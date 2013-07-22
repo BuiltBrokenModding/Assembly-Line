@@ -12,9 +12,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidTank;
 import dark.api.fluid.INetworkPipe;
-import dark.core.hydraulic.helpers.FluidRestrictionHandler;
 import dark.fluid.common.BlockFM;
 import dark.fluid.common.FluidMech;
+import dark.helpers.FluidRestrictionHandler;
 
 public class BlockPipe extends BlockFM
 {
