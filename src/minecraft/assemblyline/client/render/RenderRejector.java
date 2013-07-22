@@ -23,7 +23,7 @@ public class RenderRejector extends RenderImprintable
 		{
 			pos = 8;
 		}
-		ResourceLocation name = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "rejector.png"); 
+		ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "rejector.png");
 		func_110628_a(name);
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);

@@ -43,7 +43,7 @@ public class RenderArmbot extends TileEntitySpecialRenderer
 					}
 				}
 			}
-			ResourceLocation name = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + TEXTURE);
+			ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY + TEXTURE);
 			func_110628_a(name);
 
 			GL11.glPushMatrix();

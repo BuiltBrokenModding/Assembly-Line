@@ -23,12 +23,12 @@ public class ItemDisk extends Item
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 		this.setHasSubtypes(true);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister par1IconRegister)
 	{
-		this.itemIcon = par1IconRegister.registerIcon(AssemblyLine.PREFIX + "disk");
+		this.itemIcon = par1IconRegister.registerIcon(AssemblyLine.instance.PREFIX + "disk");
 	}
 
 	@Override

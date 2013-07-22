@@ -42,7 +42,7 @@ public class RenderCraneFrame extends TileEntitySpecialRenderer
 			boolean renderFoot = tileEntity.worldObj.isBlockSolidOnSide(tX, tY - 1, tZ, ForgeDirection.UP);
 			if ((renderLeft && renderRight) || (renderFront && renderBack))
 				renderFoot = false;
-			ResourceLocation name = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + TEXTURE);
+			ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY + TEXTURE);
 			func_110628_a(name);
 			glPushMatrix();
 			glTranslated(x + 0.5, y + 1.5, z + 0.5);

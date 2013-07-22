@@ -15,7 +15,7 @@ public class SoundHandler
 	{
 		for (int i = 0; i < SOUND_FILES.length; i++)
 		{
-			event.manager.soundPoolSounds.addSound(AssemblyLine.DIRECTORY_NO_SLASH + SOUND_FILES[i]);
+			event.manager.soundPoolSounds.addSound(AssemblyLine.instance.DIRECTORY_NO_SLASH + SOUND_FILES[i]);
 		}
 	}
 }

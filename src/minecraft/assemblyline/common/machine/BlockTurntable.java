@@ -34,7 +34,7 @@ public class BlockTurntable extends BlockAssembly
 	public void registerIcons(IconRegister iconReg)
 	{
 		super.registerIcons(iconReg);
-		this.top = iconReg.registerIcon(AssemblyLine.PREFIX + "turntable");
+		this.top = iconReg.registerIcon(AssemblyLine.instance.PREFIX + "turntable");
 	}
 
 	@Override

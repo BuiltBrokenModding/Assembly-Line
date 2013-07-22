@@ -29,9 +29,9 @@ import com.google.common.io.ByteArrayDataInput;
 
 import dark.helpers.Pair;
 import dark.library.gui.ISlotPickResult;
-import dark.library.machine.AutoCraftingManager;
-import dark.library.machine.IAutoCrafter;
-import dark.library.machine.TileEntityMulti;
+import dark.prefab.machine.AutoCraftingManager;
+import dark.prefab.machine.IAutoCrafter;
+import dark.prefab.machine.TileEntityMulti;
 
 public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInventory, IArmbotUseable, IPacketReceiver, ISlotPickResult, IAutoCrafter
 {

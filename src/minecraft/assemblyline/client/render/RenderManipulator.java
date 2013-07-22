@@ -23,12 +23,12 @@ public class RenderManipulator extends RenderImprintable
 
 		if (tileEntity.isOutput())
 		{
-			ResourceLocation name = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "manipulator1.png"); 
+			ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "manipulator1.png");
 			func_110628_a(name);
 		}
 		else
 		{
-			ResourceLocation name = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "manipulator2.png"); 
+			ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "manipulator2.png");
 			func_110628_a(name);
 		}
 

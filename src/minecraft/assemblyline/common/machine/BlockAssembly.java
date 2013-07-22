@@ -10,8 +10,8 @@ import assemblyline.common.AssemblyLine;
 import assemblyline.common.TabAssemblyLine;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.api.INetworkPart;
-import dark.library.machine.BlockMachine;
+import dark.api.INetworkPart;
+import dark.prefab.machine.BlockMachine;
 
 public abstract class BlockAssembly extends BlockMachine
 {

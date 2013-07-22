@@ -34,13 +34,13 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float) 0.0F, (float) 1.5F, (float) 0.0F);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
-			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "belt/frame0.png"));
+			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "belt/frame0.png"));
 			modelConveyorBelt.render(0.0625F, 0, false, false, false, false);
 			GL11.glPopMatrix();
 		}
 		else if (block.blockID == AssemblyLine.blockRejector.blockID)
 		{
-			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "rejector.png"));
+			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "rejector.png"));
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float) 0.6F, (float) 1.5F, (float) 0.6F);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
@@ -51,7 +51,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 		}
 		else if (block.blockID == AssemblyLine.blockManipulator.blockID)
 		{
-			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "manipulator1.png"));
+			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "manipulator1.png"));
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float) 0.6F, (float) 1.5F, (float) 0.6F);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
@@ -61,7 +61,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 		}
 		else if (block.blockID == AssemblyLine.blockArmbot.blockID)
 		{
-			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + RenderArmbot.TEXTURE));
+			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY + RenderArmbot.TEXTURE));
 			GL11.glPushMatrix();
 			GL11.glTranslatef(0.4f, 0.8f, 0f);
 			GL11.glScalef(0.7f, 0.7f, 0.7f);
@@ -72,7 +72,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 		}
 		else if (block.blockID == AssemblyLine.blockCraneController.blockID)
 		{
-			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + RenderCraneController.TEXTURE));
+			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY + RenderCraneController.TEXTURE));
 			GL11.glPushMatrix();
 			GL11.glTranslatef(0f, 1f, 0f);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
@@ -82,7 +82,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 		}
 		else if (block.blockID == AssemblyLine.blockCraneFrame.blockID)
 		{
-			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + RenderCraneFrame.TEXTURE));
+			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY + RenderCraneFrame.TEXTURE));
 			GL11.glPushMatrix();
 			GL11.glTranslatef(0f, 1f, 0f);
 			GL11.glRotatef(180f, 0f, 0f, 1f);

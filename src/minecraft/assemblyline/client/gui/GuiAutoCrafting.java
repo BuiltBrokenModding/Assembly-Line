@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiAutoCrafting extends GuiContainer
 {
-	private static final ResourceLocation gui_pic = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.GUI_DIRECTORY + "gui_crafting.png");
+	private static final ResourceLocation gui_pic = new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.GUI_DIRECTORY + "gui_crafting.png");
 
 	public GuiAutoCrafting(InventoryPlayer par1InventoryPlayer, World par2World, int par3, int par4, int par5)
 	{

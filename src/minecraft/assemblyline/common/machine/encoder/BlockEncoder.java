@@ -27,11 +27,11 @@ public class BlockEncoder extends BlockAssembly
 	@Override
 	public void registerIcons(IconRegister iconReg)
 	{
-		this.encoder_side = iconReg.registerIcon(AssemblyLine.PREFIX+"encoder_side");
-		this.encoder_top = iconReg.registerIcon(AssemblyLine.PREFIX+"encoder_top");
-		this.encoder_bottom = iconReg.registerIcon(AssemblyLine.PREFIX+"encoder_bottom");
+		this.encoder_side = iconReg.registerIcon(AssemblyLine.instance.PREFIX+"encoder_side");
+		this.encoder_top = iconReg.registerIcon(AssemblyLine.instance.PREFIX+"encoder_top");
+		this.encoder_bottom = iconReg.registerIcon(AssemblyLine.instance.PREFIX+"encoder_bottom");
 	}
-	
+
 	/**
 	 * Returns the block texture based on the side being looked at. Args: side
 	 */
@@ -40,7 +40,7 @@ public class BlockEncoder extends BlockAssembly
 	{
 		return getIcon(side, 0);
 	}
-	
+
 	/**
 	 * Returns the block texture based on the side being looked at. Args: side
 	 */

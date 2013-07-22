@@ -25,7 +25,7 @@ public class RenderCraneController extends RenderImprintable
 	{
 		if (tileEntity != null && tileEntity instanceof TileEntityCraneController)
 		{
-			ResourceLocation name = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY+(((TileEntityCraneController) tileEntity).isCraneValid() ? TEXTURE_VALID : TEXTURE));
+			ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY+(((TileEntityCraneController) tileEntity).isCraneValid() ? TEXTURE_VALID : TEXTURE));
 			func_110628_a(name);
 			ForgeDirection front = ForgeDirection.getOrientation(tileEntity.worldObj.getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord));
 			ForgeDirection right = CraneHelper.rotateClockwise(front);

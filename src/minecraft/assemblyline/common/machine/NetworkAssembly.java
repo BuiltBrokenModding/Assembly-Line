@@ -1,6 +1,6 @@
 package assemblyline.common.machine;
 
-import dark.core.api.INetworkPart;
+import dark.api.INetworkPart;
 import dark.core.tile.network.NetworkTileEntities;
 
 public class NetworkAssembly extends NetworkTileEntities

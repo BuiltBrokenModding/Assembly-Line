@@ -22,15 +22,15 @@ import assemblyline.common.AssemblyLine;
 
 import com.google.common.io.ByteArrayDataInput;
 
-import dark.core.api.INetworkPart;
+import dark.api.INetworkPart;
 import dark.core.tile.network.NetworkTileEntities;
-import dark.library.machine.TileEntityRunnableMachine;
+import dark.prefab.machine.TileEntityMachine;
 
 /** A class to be inherited by all machines on the assembly line. This class acts as a single peace
  * in a network of similar tiles allowing all to share power from one or more sources
  *
  * @author DarkGuardsman */
-public abstract class TileEntityAssembly extends TileEntityRunnableMachine implements INetworkPart, IPacketReceiver, IConductor
+public abstract class TileEntityAssembly extends TileEntityMachine implements INetworkPart, IPacketReceiver, IConductor
 {
 
 	/** Is the tile currently powered allowing it to run */

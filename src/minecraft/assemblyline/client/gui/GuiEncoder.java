@@ -310,7 +310,7 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
 	{
-		this.mc.func_110434_K().func_110577_a( new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.GUI_DIRECTORY + "gui_encoder.png"));
+		this.mc.func_110434_K().func_110577_a( new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.GUI_DIRECTORY + "gui_encoder.png"));
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		this.drawTexturedModalRect(containerWidth, containerHeight + ContainerEncoder.Y_OFFSET, 0, 0, this.xSize, this.ySize);
