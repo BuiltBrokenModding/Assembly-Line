@@ -1,6 +1,0 @@
-[submodule "Dark-Library"]
-	path = Dark-Library
-	url = git@github.com:DarkGuardsman/Dark-Library.git
-[submodule "API-Bank"]
-	path = API-Bank
-	url = git://github.com/DarkGuardsman/API-Bank.git
