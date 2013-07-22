@@ -1,15 +1,15 @@
 ## Dark's Modding And Coding collection
 
 ### Brief
-This is a general collection of helpful classes to make modding and general java coding for minecraft eaiser.
+This is a mod set or series for minecraft that is designed to add ores, items, machines, and news ways to play the game. 
 
 ### Leaders and Developers
-* Darkguardsman
-* HangCow
+* Darkguardsman - Code & Project Lead
+* HangCow - Art Lead
+* Doppelgangerous - Tester
 
 ### License
- You are welcome to use the code as is, break it into parts, edit, change it, or do what ever you need. If you make some correction or improvement fill free to submite a pull request. If you do take code or use it in another project give credit to the authors and try to contrubute back. 
-
+Read teh license.txt in the repo file for more information
 
 ### Contact
-Email rseifert.phone@gmail.com
+Email - DarkGuardsman - rseifert.phone@gmail.com
