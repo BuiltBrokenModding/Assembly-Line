@@ -1,0 +1,68 @@
+Copyright (c) 2013, DarkGuardsman
+All rights reserved.
+
+0. Definitions
+
+--------------
+
+Minecraft: Denotes a copy of the Minecraft game licensed by Mojang AB
+
+User: Anybody that interacts with the software in one of the following ways:
+- play
+- decompile
+- recompile or compile
+- modify
+- distribute
+
+Mod: The mod code designated by the present license, in source form, binary form, as obtained standalone, as part of a wider distribution or resulting from the compilation of the original or modified Minecraft sources.
+
+Mod Pack - Package distrubution of mods and there assets to be used by the user for easy install and collective download.
+
+Texture Pack - Package distrubution of texture or art work to change the visual look of the mod.
+
+Dependency: Code required for the Mod to work properly. This includes dependencies required to compile the code as well as any file or modification
+that is explicitely or implicitely required for the Mod to be working.
+
+Owner: The project leader of the Mod reguardless of repo holder or manager
+
+1. Scope
+--------
+
+The present license is granted to any user of the Mod. As a prerequisite, a user must own a legally acquired copy of Minecraft. Terms of license may change anytime with or without notice. The user of this Mod will be subject to the newest version of this license.
+
+2. Liability
+------------
+
+This Mod is provided 'as is' with no warranties, implied or otherwise. The owner of this Mod takes no responsibility for any damages incurred from the use of this Mod. This Mod alters fundamental parts of the Minecraft game, parts of Minecraft may not work with this Mod installed. All damages caused from the use or misuse of this Mod fall on the user.
+
+3. Play rights
+--------------
+
+The user is allowed to install this Mod on a client or a server and to play without restriction.
+
+4. Modification rights
+----------------------
+
+The user may modify the original code for private use, learning experience, or to make a contribution to the original project source code. This does not give the right to redistrubute any part of the original or modified code.
+
+5. Distribution of original or modified copy rights
+---------------------------------------------------
+
+Is subject to distribution rights this entire Mod in its various forms. This
+includes:
+- original binary or source forms of this Mod files
+- modified versions of these binaries or source files, as well as binaries resulting from source modifications
+- patches to its source or binary files
+- any copy of a portion of its binary source files
+
+A) The user is NOT allowed to redistribute this Mod partially, in totality, or included in a distribution without explict permissions from the owner. 
+
+B) Distrubution of this mod in a mod pack is allowed as long as the user obeys the following rules:
+   1) The mod pack should not contain a major version release of the mod within one week of the mod version release to allow for bug fixes
+   2) The mod pack should not contain a modified version of the mod unless to change the texture look of parts of the mod
+   3) The mod pack owner or contributors must redirect errors and bug reports to the issue area of the mod's original github repo
+   4) The mod pack needs full public permission from all parts of the mod pack including mods, assets, and textures.
+   5) The mod pack or its download site should allow access by users to the list of permissions and credits to authors
+   6) The mod pack or its download site should contain links to mod documentation and original mod sites
+
+C) Textures of this mod are allowed to be used in the creation or modification of texture packs without permision. That is as long as links and credit to the original mod are given for easy user understanding.
