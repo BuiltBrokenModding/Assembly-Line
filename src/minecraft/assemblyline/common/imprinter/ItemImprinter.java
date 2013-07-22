@@ -26,6 +26,7 @@ public class ItemImprinter extends Item
 		this.setUnlocalizedName("imprint");
 		this.setCreativeTab(TabAssemblyLine.INSTANCE);
 		this.setHasSubtypes(true);
+		this.maxStackSize = 1;
 	}
 
 	@Override

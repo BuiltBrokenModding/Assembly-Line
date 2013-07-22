@@ -70,11 +70,6 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 	/** Client Side Object Storage */
 	public EntityItem renderEntityItem = null;
 
-	public TileEntityArmbot()
-	{
-		super(5);
-	}
-
 	@Override
 	public void initiate()
 	{

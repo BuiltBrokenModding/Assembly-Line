@@ -25,11 +25,6 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 	/** The class that interacts with inventories for this machine */
 	private InvInteractionHelper invExtractionHelper;
 
-	public TileEntityManipulator()
-	{
-		super(1);
-	}
-
 	@Override
 	public void onUpdate()
 	{

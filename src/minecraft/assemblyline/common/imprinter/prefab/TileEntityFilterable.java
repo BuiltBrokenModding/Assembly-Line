@@ -16,17 +16,12 @@ import assemblyline.common.machine.TileEntityAssembly;
 
 public abstract class TileEntityFilterable extends TileEntityAssembly implements IRotatable, IFilterable, IPacketReceiver
 {
-	public TileEntityFilterable(int tickEnergy)
-	{
-		super(tickEnergy);
-		// TODO Auto-generated constructor stub
-	}
 
 	private ItemStack filterItem;
 	private boolean inverted;
 
 	/** Looks through the things in the filter and finds out which item is being filtered.
-	 * 
+	 *
 	 * @return Is this filterable block filtering this specific ItemStack? */
 	public boolean isFiltering(ItemStack itemStack)
 	{

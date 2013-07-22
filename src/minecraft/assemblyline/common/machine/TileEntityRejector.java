@@ -19,12 +19,6 @@ public class TileEntityRejector extends TileEntityFilterable
 	/** should the piston fire, or be extended */
 	public boolean firePiston = false;
 
-	public TileEntityRejector()
-	{
-		super(1);
-		// TODO Auto-generated constructor stub
-	}
-
 	@Override
 	public void onUpdate()
 	{

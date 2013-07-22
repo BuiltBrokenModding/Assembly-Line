@@ -17,11 +17,10 @@ public class TileEntityCraneController extends TileEntityAssembly implements ICr
 
 	public TileEntityCraneController()
 	{
-		super(10);
 		width = depth = 0;
 		isCraneValid = false;
 	}
-	
+
 	@Override
 	public void initiate()
 	{
@@ -52,7 +51,7 @@ public class TileEntityCraneController extends TileEntityAssembly implements ICr
 		return ForgeDirection.getOrientation(this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
 	}
 
-	
+
 
 	@Override
 	public void updateEntity()

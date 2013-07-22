@@ -28,15 +28,10 @@ import dark.library.machine.TileEntityRunnableMachine;
 
 /** A class to be inherited by all machines on the assembly line. This class acts as a single peace
  * in a network of similar tiles allowing all to share power from one or more sources
- * 
+ *
  * @author DarkGuardsman */
 public abstract class TileEntityAssembly extends TileEntityRunnableMachine implements INetworkPart, IPacketReceiver, IConductor
 {
-	public TileEntityAssembly(float d)
-	{
-		super(d);
-		// TODO Auto-generated constructor stub
-	}
 
 	/** Is the tile currently powered allowing it to run */
 	public boolean running = false;
@@ -201,7 +196,7 @@ public abstract class TileEntityAssembly extends TileEntityRunnableMachine imple
 	}
 
 	/** Handles reduced data from the main packet method
-	 * 
+	 *
 	 * @param id - packet ID
 	 * @param dis - data
 	 * @param player - player

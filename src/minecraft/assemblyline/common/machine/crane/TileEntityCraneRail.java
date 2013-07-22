@@ -7,12 +7,6 @@ import assemblyline.common.machine.TileEntityAssembly;
 public class TileEntityCraneRail extends TileEntityAssembly implements ICraneStructure
 {
 
-	public TileEntityCraneRail()
-	{
-		super(0);
-		// TODO Auto-generated constructor stub
-	}
-
 	@Override
 	public boolean canFrameConnectTo(ForgeDirection side)
 	{
@@ -29,7 +23,7 @@ public class TileEntityCraneRail extends TileEntityAssembly implements ICraneStr
 	public void onUpdate()
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
