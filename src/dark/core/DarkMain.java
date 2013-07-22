@@ -67,6 +67,7 @@ public class DarkMain extends ModPrefab
 	public static BlockMulti blockMulti;
 
 	public static DarkMain instance;
+	public static CoreRecipeLoader recipeLoader;
 
 	public DarkMain()
 	{
@@ -80,7 +81,7 @@ public class DarkMain extends ModPrefab
 		super.preInit(event);
 		LOGGER.setParent(FMLLog.getLogger());
 		LOGGER.info("Initializing...");
-
+		recipeLoader = new CoreRecipeLoader();
 		instance = this;
 
 		MinecraftForge.EVENT_BUS.register(this);
@@ -96,7 +97,7 @@ public class DarkMain extends ModPrefab
 	{
 		super.init(event);
 
-		GameRegistry.registerBlock(RecipeManager.blockOre, ItemOre.class, "DMOre");
+		GameRegistry.registerBlock(recipeLoader.blockOre, ItemOre.class, "DMOre");
 		GameRegistry.registerBlock(blockMulti, "multiBlock");
 
 		GameRegistry.registerTileEntity(TileEntityMulti.class, "ALMulti");
@@ -123,7 +124,7 @@ public class DarkMain extends ModPrefab
 	{
 		super.postInit(event);
 
-		RecipeManager.loadRecipes();
+		recipeLoader.loadRecipes();
 
 		proxy.postInit();
 
@@ -138,12 +139,12 @@ public class DarkMain extends ModPrefab
 		DarkMain.blockMulti = new BlockMulti(DarkMain.CONFIGURATION.getBlock("RestrictedPipes", BLOCK_ID_PREFIX++).getInt());
 		if (CONFIGURATION.get("general", "LoadOre", true).getBoolean(true))
 		{
-			RecipeManager.blockOre = new BlockOre(BLOCK_ID_PREFIX++, CONFIGURATION);
+			recipeLoader.blockOre = new BlockOre(BLOCK_ID_PREFIX++, CONFIGURATION);
 		}
 		/* ITEMS */
 		if (CONFIGURATION.get("general", "LoadOreItems", true).getBoolean(true))
 		{
-			RecipeManager.itemMetals = new ItemOreDirv(ITEM_ID_PREFIX++, CONFIGURATION);
+			recipeLoader.itemMetals = new ItemOreDirv(ITEM_ID_PREFIX++, CONFIGURATION);
 		}
 		if (CONFIGURATION.hasChanged())
 		{

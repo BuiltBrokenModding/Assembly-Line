@@ -7,7 +7,7 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import dark.core.items.EnumMeterials;
 import dark.core.items.EnumOreParts;
 
-public class RecipeManager
+public class CoreRecipeLoader
 {
 
 	/* BLOCKS */

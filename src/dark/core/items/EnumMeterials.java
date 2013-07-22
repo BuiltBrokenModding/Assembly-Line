@@ -6,11 +6,10 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import universalelectricity.prefab.ore.OreGenReplaceStone;
 import dark.core.DarkMain;
-import dark.core.RecipeManager;
 
 /** Class for storing materials, there icon names, sub items to be made from them or there sub ores
- * 
- * 
+ *
+ *
  * @author DarkGuardsman */
 public enum EnumMeterials
 {
@@ -75,7 +74,7 @@ public enum EnumMeterials
 	{
 		if (this.doWorldGen)
 		{
-			ItemStack stack = new ItemStack(RecipeManager.blockOre, 1, this.ordinal());
+			ItemStack stack = new ItemStack(DarkMain.recipeLoader.blockOre, 1, this.ordinal());
 			return (OreGenReplaceStone) new OreGenReplaceStone(this.name, this.name + "Ore", stack, this.maxY, this.ammount, this.branch).enable(DarkMain.instance.CONFIGURATION);
 		}
 		return null;

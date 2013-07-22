@@ -31,17 +31,14 @@ public abstract class ModPrefab
 	public ModPrefab(String domain)
 	{
 		DOMAIN = domain;
-		this.loadModMeta();
-		/* UPDATE NOTIFIER */
-		Modstats.instance().getReporter().registerMod(this);
-		this.loadConfig();
-		/* CONFIG END */
 	}
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-
+		this.loadModMeta();
+		Modstats.instance().getReporter().registerMod(this);
+		this.loadConfig();
 	}
 
 	@EventHandler

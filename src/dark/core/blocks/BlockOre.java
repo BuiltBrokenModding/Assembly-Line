@@ -11,7 +11,6 @@ import net.minecraft.util.Icon;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import dark.core.DarkMain;
-import dark.core.RecipeManager;
 import dark.core.items.EnumMeterials;
 
 public class BlockOre extends Block
@@ -31,7 +30,7 @@ public class BlockOre extends Block
 		{
 			if (EnumMeterials.values()[i].doWorldGen)
 			{
-				OreDictionary.registerOre(EnumMeterials.values()[i].name + "Ore", new ItemStack(RecipeManager.blockOre.blockID, 1, i));
+				OreDictionary.registerOre(EnumMeterials.values()[i].name + "Ore", new ItemStack(DarkMain.recipeLoader.blockOre.blockID, 1, i));
 			}
 		}
 	}

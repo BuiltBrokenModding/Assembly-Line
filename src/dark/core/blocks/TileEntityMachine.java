@@ -2,6 +2,9 @@ package dark.core.blocks;
 
 import java.util.Random;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,6 +25,8 @@ public class TileEntityMachine extends TileEntityUniversalElectrical implements 
 	protected int ticksDisabled = 0;
 	protected boolean runWithOutPower = false;
 
+	public float maxEnergyStored = 1;
+
 	@Override
 	public void updateEntity()
 	{
@@ -37,7 +42,6 @@ public class TileEntityMachine extends TileEntityUniversalElectrical implements 
 	/** Does this tile have power to run and do work */
 	public boolean canRun()
 	{
-		;
 		return !this.isDisabled() && (this.runWithOutPower || PowerSystems.runPowerLess(PowerSystems.UE_SUPPORTED_SYSTEMS));
 	}
 
@@ -99,14 +103,22 @@ public class TileEntityMachine extends TileEntityUniversalElectrical implements 
 	@Override
 	public float getMaxEnergyStored()
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return this.maxEnergyStored;
 	}
 
 	/** Called every tick while this tile entity is disabled. */
 	protected void whileDisable()
 	{
-		//TODO generate electric sparks
+		if (worldObj.isRemote)
+		{
+			this.renderSparks();
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	private void renderSparks()
+	{
+		//TODO render sparks or call to a client-proxy method to render sparks around the block correctly
 	}
 
 	@Override
