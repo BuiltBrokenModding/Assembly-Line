@@ -6,7 +6,7 @@ import dark.api.INetworkPart;
 
 /** Used for tile networks that only need to share power or act like a group battery that doesn't
  * store power on world save
- *
+ * 
  * @author DarkGuardsman */
 public class NetworkSharedPower extends NetworkTileEntities
 {

@@ -1,9 +1,23 @@
 package dark.api;
 
-
 public enum ColorCode
 {
-	BLACK("Black"), RED("Red"), GREEN("Green"), BROWN("Brown"), BLUE("Blue"), PURPLE("Purple"), CYAN("Cyan"), SILVER("Silver"), GREY("Grey"), PINK("Pink"), LIME("Lime"), YELLOW("Yellow"), LIGHTBLUE("LightBlue"), WHITE("White"), ORANGE("Orange"), NONE("");
+	BLACK("Black"),
+	RED("Red"),
+	GREEN("Green"),
+	BROWN("Brown"),
+	BLUE("Blue"),
+	PURPLE("Purple"),
+	CYAN("Cyan"),
+	SILVER("Silver"),
+	GREY("Grey"),
+	PINK("Pink"),
+	LIME("Lime"),
+	YELLOW("Yellow"),
+	LIGHTBLUE("LightBlue"),
+	WHITE("White"),
+	ORANGE("Orange"),
+	NONE("");
 
 	String name;
 
@@ -17,12 +31,10 @@ public enum ColorCode
 		return this.name;
 	}
 
-	/**
-	 * gets a ColorCode from any of the following
+	/** gets a ColorCode from any of the following
 	 * 
 	 * @param obj - Integer,String,LiquidData,ColorCode
-	 * @return Color NONE if it can't find it
-	 */
+	 * @return Color NONE if it can't find it */
 	public static ColorCode get(Object obj)
 	{
 		if (obj instanceof Integer && ((Integer) obj) < ColorCode.values().length)
@@ -46,5 +58,4 @@ public enum ColorCode
 		return NONE;
 	}
 
-	
 }

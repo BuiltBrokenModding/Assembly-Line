@@ -20,7 +20,7 @@ public enum PowerSystems
 	private static Boolean[] loaded;
 
 	/** Checks to see if something can run powerless based on mods loaded
-	 *
+	 * 
 	 * @param optional - power system that the device can use
 	 * @return true if free power is to be generated */
 	public static boolean runPowerLess(PowerSystems... optional)

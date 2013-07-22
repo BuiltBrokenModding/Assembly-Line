@@ -1,6 +1,6 @@
 package dark.core;
 
-public class ClientProxy extends MainProxy
+public class ClientProxy extends CommonProxy
 {
 
 }

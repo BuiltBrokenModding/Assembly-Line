@@ -24,15 +24,13 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
-import dark.core.items.parts.BlockOre;
-import dark.core.items.parts.EnumMeterials;
-import dark.core.items.parts.ItemOre;
-import dark.core.items.parts.ItemOreDirv;
-import dark.core.recipes.RecipeManager;
-import dark.helpers.FluidRestrictionHandler;
-import dark.library.saving.SaveManager;
-import dark.prefab.machine.BlockMulti;
-import dark.prefab.machine.TileEntityMulti;
+import dark.core.blocks.BlockMulti;
+import dark.core.blocks.BlockOre;
+import dark.core.blocks.TileEntityMulti;
+import dark.core.helpers.FluidRestrictionHandler;
+import dark.core.items.EnumMeterials;
+import dark.core.items.ItemOre;
+import dark.core.items.ItemOreDirv;
 
 /** @author HangCow, DarkGuardsman */
 @Mod(modid = DarkMain.MOD_ID, name = DarkMain.MOD_NAME, version = DarkMain.VERSION, dependencies = "after:IC2,after:BuildCraft|Energy", useMetadata = true)
@@ -50,8 +48,8 @@ public class DarkMain extends ModPrefab
 	public static final String MOD_NAME = "Dark Heart";
 	public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + REVIS_VERSION + "." + BUILD_VERSION;
 
-	@SidedProxy(clientSide = "dark.core.ClientProxy", serverSide = "dark.core.MainProxy")
-	public static MainProxy proxy;
+	@SidedProxy(clientSide = "dark.core.ClientProxy", serverSide = "dark.core.CommonProxy")
+	public static CommonProxy proxy;
 
 	public static final String CHANNEL = "DarkPackets";
 

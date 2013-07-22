@@ -2,8 +2,8 @@ package dark.api;
 
 import java.util.List;
 
-import dark.library.access.AccessLevel;
-import dark.library.access.UserAccess;
+import dark.core.access.AccessLevel;
+import dark.core.access.UserAccess;
 
 /** Used by any object that needs to restrict access to it by a set of usernames
  * 

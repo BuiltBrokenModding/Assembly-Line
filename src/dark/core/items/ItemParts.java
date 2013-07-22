@@ -6,13 +6,10 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 
-/**
- * Parts that are used for crafting higher up items and block. These parts have no use other that
+/** Parts that are used for crafting higher up items and block. These parts have no use other that
  * crafting
  * 
- * @author DarkGuardsman
- * 
- */
+ * @author DarkGuardsman */
 public class ItemParts extends ItemBasic
 {
 
@@ -31,7 +28,7 @@ public class ItemParts extends ItemBasic
 
 	public ItemParts(int itemID, Configuration config)
 	{
-		super(itemID, "lmPart",config);
+		super(itemID, "lmPart", config);
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);
 		this.setMaxStackSize(64);

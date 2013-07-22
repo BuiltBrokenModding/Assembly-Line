@@ -1,7 +1,5 @@
 package dark.core;
 
-import net.minecraftforge.common.Configuration;
-
 import org.modstats.Modstats;
 
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -11,7 +9,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 public abstract class ModPrefab
 {
-
 
 	public String DOMAIN = "dark";
 	public String PREFIX = DOMAIN + ":";
