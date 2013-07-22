@@ -50,11 +50,7 @@ public class FluidRestrictionHandler
 
 	public static boolean hasRestrictedStack(Fluid stack)
 	{
-		if (stack == null)
-		{
-			return false;
-		}
-		return restrictedStacks.inverse().containsKey(stack);
+		return stack != null && restrictedStacks.inverse().containsKey(stack);
 	}
 
 	/** gets the liquid stack that is restricted to this color */
