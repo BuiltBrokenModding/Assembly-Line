@@ -32,9 +32,10 @@ import dark.core.recipes.RecipeManager;
 import dark.helpers.FluidRestrictionHandler;
 import dark.library.saving.SaveManager;
 import dark.prefab.machine.BlockMulti;
+import dark.prefab.machine.TileEntityMulti;
 
 /** @author HangCow, DarkGuardsman */
-@Mod(modid = DarkMain.MOD_ID, name = DarkMain.MOD_NAME, version = DarkMain.VERSION, useMetadata = true)
+@Mod(modid = DarkMain.MOD_ID, name = DarkMain.MOD_NAME, version = DarkMain.VERSION, dependencies = "after:IC2,after:BuildCraft|Energy", useMetadata = true)
 @NetworkMod(channels = { DarkMain.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
 public class DarkMain extends ModPrefab
 {
@@ -98,6 +99,10 @@ public class DarkMain extends ModPrefab
 		super.init(event);
 
 		GameRegistry.registerBlock(RecipeManager.blockOre, ItemOre.class, "DMOre");
+		GameRegistry.registerBlock(blockMulti, "multiBlock");
+
+		GameRegistry.registerTileEntity(TileEntityMulti.class, "ALMulti");
+
 		BlockOre.regiserOreNames();
 
 		for (int i = 0; i < EnumMeterials.values().length; i++)
