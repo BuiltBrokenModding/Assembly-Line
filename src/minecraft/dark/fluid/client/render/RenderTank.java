@@ -10,8 +10,8 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.ColorCode;
-import dark.core.render.FluidBlockRenderer;
-import dark.core.render.RenderMachine;
+import dark.core.client.FluidBlockRenderer;
+import dark.core.client.RenderMachine;
 import dark.fluid.client.model.ModelTankSide;
 import dark.fluid.common.machines.TileEntityTank;
 

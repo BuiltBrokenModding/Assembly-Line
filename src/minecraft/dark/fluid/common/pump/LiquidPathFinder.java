@@ -10,7 +10,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
-import dark.helpers.FluidHelper;
+import dark.core.helpers.FluidHelper;
 
 /** A simpler pathfinder based on Calclavia's PathFinder from UE api */
 public class LiquidPathFinder

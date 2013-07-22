@@ -36,23 +36,23 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
 	public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
 	{
 		GL11.glPushMatrix();
-		if (block.blockID == FluidMech.blockMachine.blockID && metadata < 4)
+		if (block.blockID == FluidMech.recipeLoader.blockMachine.blockID && metadata < 4)
 		{
 			GL11.glTranslatef((float) 0.0F, (float) 1.1F, (float) 0.0F);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
-			
+
 			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(FluidMech.instance.DOMAIN, FluidMech.MODEL_DIRECTORY + "pumps/WaterPump.png"));
 			modelPump.render(0.0725F);
 			modelPump.renderMotion(0.0725F, 0);
 		}
-		else if (block.blockID == FluidMech.blockSink.blockID)
+		else if (block.blockID == FluidMech.recipeLoader.blockSink.blockID)
 		{
 			GL11.glTranslatef((float) 0.0F, (float) .8F, (float) 0.0F);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
 			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(FluidMech.instance.DOMAIN, FluidMech.MODEL_DIRECTORY + "Sink.png"));
 			sink.render(0.0565F);
 		}
-		else if (block.blockID == FluidMech.blockTank.blockID)
+		else if (block.blockID == FluidMech.recipeLoader.blockTank.blockID)
 		{
 			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(metadata == 1 ? "/textures/blocks/obsidian.png" : "/textures/blocks/stonebrick.png"));
 			GL11.glTranslatef((float) 0.0F, (float) -0.9F, (float) 0.0F);
@@ -64,21 +64,21 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
 			GL11.glRotatef(90f, 0f, 1f, 0f);
 			tank.render(0.0625F, false, false, false, false);
 		}
-		if (block.blockID == FluidMech.blockRod.blockID)
+		if (block.blockID == FluidMech.recipeLoader.blockRod.blockID)
 		{
 			GL11.glTranslatef((float) 0.0F, (float) 1.5F, (float) 0.0F);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
 			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(FluidMech.instance.DOMAIN, FluidMech.MODEL_DIRECTORY + "mechanical/GearRod.png"));
 			modelRod.render(0.0825F, 0);
 		}
-		else if (block.blockID == FluidMech.blockGenerator.blockID)
+		else if (block.blockID == FluidMech.recipeLoader.blockGenerator.blockID)
 		{
 			GL11.glTranslatef((float) 0.0F, (float) 1.0F, (float) 0.0F);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
 			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(FluidMech.instance.DOMAIN, FluidMech.MODEL_DIRECTORY + "mechanical/Generator.png"));
 			modelGen.render(null);
 		}
-		else if (block.blockID == FluidMech.blockConPump.blockID && metadata < 4)
+		else if (block.blockID == FluidMech.recipeLoader.blockConPump.blockID && metadata < 4)
 		{
 			GL11.glTranslatef((float) 0.0F, (float) 1.2F, (float) 0.0F);
 			GL11.glRotatef(180f, 0f, 0f, 1f);

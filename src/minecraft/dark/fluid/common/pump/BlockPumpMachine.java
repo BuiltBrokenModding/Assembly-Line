@@ -11,10 +11,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import dark.core.helpers.MetaGroup;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.BlockFM;
 import dark.fluid.common.FluidMech;
-import dark.helpers.MetaGroup;
 
 public class BlockPumpMachine extends BlockFM
 {
@@ -62,7 +62,7 @@ public class BlockPumpMachine extends BlockFM
 
 		if (meta < 4)
 		{
-			new ItemStack(FluidMech.blockMachine, 1, 0);
+			new ItemStack(FluidMech.recipeLoader.blockMachine, 1, 0);
 		}
 
 		return null;

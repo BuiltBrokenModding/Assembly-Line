@@ -21,8 +21,8 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import dark.api.fluid.IDrain;
 import dark.api.fluid.INetworkPipe;
+import dark.core.helpers.FluidHelper;
 import dark.fluid.common.prefab.TileEntityFluidDevice;
-import dark.helpers.FluidHelper;
 
 public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHandler, IDrain
 {

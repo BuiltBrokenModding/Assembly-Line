@@ -34,7 +34,7 @@ public class BlockGenerator extends BlockFM
 	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
 	{
 
-		return new ItemStack(FluidMech.blockGenerator, 1);
+		return new ItemStack(FluidMech.recipeLoader.blockGenerator, 1);
 	}
 
 	@Override

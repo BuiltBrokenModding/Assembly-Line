@@ -12,10 +12,10 @@ import net.minecraftforge.fluids.IFluidHandler;
 import dark.api.ColorCode;
 import dark.api.INetworkPart;
 import dark.api.fluid.INetworkPipe;
+import dark.core.helpers.ConnectionHelper;
+import dark.core.helpers.FluidHelper;
+import dark.core.helpers.FluidRestrictionHandler;
 import dark.core.tile.network.NetworkTileEntities;
-import dark.helpers.ConnectionHelper;
-import dark.helpers.FluidHelper;
-import dark.helpers.FluidRestrictionHandler;
 
 /** Side note: the network should act like this when done {@link http
  * ://www.e4training.com/hydraulic_calculators/B1.htm} as well as stay compatible with the forge

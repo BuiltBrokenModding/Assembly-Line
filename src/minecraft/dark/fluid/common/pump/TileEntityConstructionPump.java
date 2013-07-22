@@ -12,10 +12,10 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import dark.api.ITileConnector;
 import dark.api.fluid.INetworkPipe;
+import dark.core.blocks.TileEntityMachine;
+import dark.core.helpers.MetaGroup;
 import dark.core.network.fluid.HydraulicNetworkHelper;
 import dark.core.network.fluid.NetworkFluidTiles;
-import dark.helpers.MetaGroup;
-import dark.prefab.machine.TileEntityMachine;
 
 public class TileEntityConstructionPump extends TileEntityMachine implements IFluidHandler, ITileConnector
 {

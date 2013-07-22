@@ -16,10 +16,10 @@ import universalelectricity.core.vector.Vector3;
 import dark.api.ColorCode;
 import dark.api.INetworkPart;
 import dark.api.fluid.INetworkFluidPart;
+import dark.core.helpers.ConnectionHelper;
+import dark.core.helpers.FluidHelper;
 import dark.core.tile.network.NetworkPathFinder;
 import dark.core.tile.network.NetworkTileEntities;
-import dark.helpers.ConnectionHelper;
-import dark.helpers.FluidHelper;
 
 public class NetworkFluidTiles extends NetworkTileEntities
 {

@@ -38,11 +38,11 @@ import dark.api.IColorCoded;
 import dark.api.ITileConnector;
 import dark.api.IToolReadOut;
 import dark.api.fluid.INetworkPipe;
+import dark.core.helpers.FluidRestrictionHandler;
 import dark.core.network.fluid.NetworkPipes;
 import dark.core.tile.network.NetworkTileEntities;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.pipes.addon.IPipeExtention;
-import dark.helpers.FluidRestrictionHandler;
 
 public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler, IToolReadOut, IColorCoded, INetworkPipe, IPacketReceiver
 {

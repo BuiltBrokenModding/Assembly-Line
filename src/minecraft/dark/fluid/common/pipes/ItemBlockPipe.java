@@ -24,7 +24,7 @@ public class ItemBlockPipe extends ItemBlock
 	@Override
 	public String getUnlocalizedName(ItemStack itemStack)
 	{
-		if (itemStack.itemID == FluidMech.blockPipe.blockID)
+		if (itemStack.itemID == FluidMech.recipeLoader.blockPipe.blockID)
 		{
 			return "tile.rpipe." + itemStack.getItemDamage();
 		}

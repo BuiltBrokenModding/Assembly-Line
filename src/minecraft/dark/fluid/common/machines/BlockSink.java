@@ -9,9 +9,9 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
+import dark.core.helpers.MetaGroup;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.BlockFM;
-import dark.helpers.MetaGroup;
 
 public class BlockSink extends BlockFM
 {

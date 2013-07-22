@@ -12,9 +12,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidTank;
 import dark.api.fluid.INetworkPipe;
+import dark.core.helpers.FluidRestrictionHandler;
 import dark.fluid.common.BlockFM;
 import dark.fluid.common.FluidMech;
-import dark.helpers.FluidRestrictionHandler;
 
 public class BlockPipe extends BlockFM
 {
@@ -78,7 +78,7 @@ public class BlockPipe extends BlockFM
 	@Override
 	public TileEntity createNewTileEntity(World var1)
 	{
-		if (this.blockID == FluidMech.blockGenPipe.blockID)
+		if (this.blockID == FluidMech.recipeLoader.blockGenPipe.blockID)
 		{
 			return new TileEntityGenericPipe();
 		}
@@ -98,7 +98,7 @@ public class BlockPipe extends BlockFM
 	{
 		for (int i = 0; i < 16; i++)
 		{
-			if (this.blockID == FluidMech.blockGenPipe.blockID || FluidRestrictionHandler.hasRestrictedStack(i))
+			if (this.blockID == FluidMech.recipeLoader.blockGenPipe.blockID || FluidRestrictionHandler.hasRestrictedStack(i))
 			{
 				par3List.add(new ItemStack(par1, 1, i));
 			}
@@ -130,7 +130,7 @@ public class BlockPipe extends BlockFM
 	@Override
 	public boolean recolourBlock(World world, int x, int y, int z, ForgeDirection side, int colour)
 	{
-		if (this.blockID == FluidMech.blockGenPipe.blockID)
+		if (this.blockID == FluidMech.recipeLoader.blockGenPipe.blockID)
 		{
 			int meta = world.getBlockMetadata(x, y, z);
 			if (meta != colour)

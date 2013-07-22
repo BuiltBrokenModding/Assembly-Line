@@ -11,12 +11,12 @@ import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.ColorCode;
-import dark.core.render.RenderMachine;
+import dark.core.client.RenderMachine;
+import dark.core.helpers.FluidRestrictionHandler;
 import dark.fluid.client.model.ModelLargePipe;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.pipes.TileEntityPipe;
 import dark.fluid.common.pipes.addon.IPipeExtention;
-import dark.helpers.FluidRestrictionHandler;
 
 @SideOnly(Side.CLIENT)
 public class RenderPipe extends RenderMachine
@@ -37,7 +37,7 @@ public class RenderPipe extends RenderMachine
 		GL11.glScalef(1.0F, -1F, -1F);
 
 		int meta = 0;
-		int blockID = FluidMech.blockPipe.blockID;
+		int blockID = FluidMech.recipeLoader.blockPipe.blockID;
 
 		if (te instanceof TileEntityPipe)
 		{
@@ -85,7 +85,7 @@ public class RenderPipe extends RenderMachine
 	public ResourceLocation getTexture(int block, int meta)
 	{
 		String name = "";
-		if (block == FluidMech.blockPipe.blockID)
+		if (block == FluidMech.recipeLoader.blockPipe.blockID)
 		{
 			Fluid stack = FluidRestrictionHandler.getStackForColor(ColorCode.get(meta));
 			name = stack != null ? stack.getName() : "";

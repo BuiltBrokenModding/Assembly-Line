@@ -35,11 +35,11 @@ public class ItemRenderHelper implements IItemRenderer
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
 	{
-		if (item.itemID == FluidMech.blockPipe.blockID || item.itemID == FluidMech.blockGenPipe.blockID)
+		if (item.itemID == FluidMech.recipeLoader.blockPipe.blockID || item.itemID == FluidMech.recipeLoader.blockGenPipe.blockID)
 		{
 			this.renderPipeItem((RenderBlocks) data[0], item, type == ItemRenderType.EQUIPPED);
 		}
-		if (item.itemID == FluidMech.blockReleaseValve.blockID)
+		if (item.itemID == FluidMech.recipeLoader.blockReleaseValve.blockID)
 		{
 			this.renderReleaseValve((RenderBlocks) data[0], item.getItemDamage(), type == ItemRenderType.EQUIPPED);
 		}
@@ -73,7 +73,7 @@ public class ItemRenderHelper implements IItemRenderer
 	public void renderReleaseValve(RenderBlocks renderer, int meta, boolean equ)
 	{
 		GL11.glPushMatrix();
-		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(pipe.getTexture(FluidMech.blockPipe.blockID, 15));
+		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(pipe.getTexture(FluidMech.recipeLoader.blockPipe.blockID, 15));
 		if (!equ)
 		{
 			GL11.glTranslatef(0.5F, -0.5F, 0.5F);

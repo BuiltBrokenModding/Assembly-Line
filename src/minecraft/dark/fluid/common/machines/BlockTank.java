@@ -14,11 +14,11 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import dark.api.INetworkPart;
+import dark.core.helpers.AutoCraftingManager;
+import dark.core.helpers.FluidHelper;
+import dark.core.helpers.FluidRestrictionHandler;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.BlockFM;
-import dark.helpers.FluidHelper;
-import dark.helpers.FluidRestrictionHandler;
-import dark.prefab.machine.AutoCraftingManager;
 
 public class BlockTank extends BlockFM
 {

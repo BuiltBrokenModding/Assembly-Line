@@ -18,10 +18,10 @@ import dark.api.ColorCode;
 import dark.api.IColorCoded;
 import dark.api.ITileConnector;
 import dark.api.IToolReadOut;
-import dark.helpers.FluidHelper;
-import dark.helpers.FluidRestrictionHandler;
-import dark.helpers.MetaGroup;
-import dark.prefab.machine.TileEntityMachine;
+import dark.core.blocks.TileEntityMachine;
+import dark.core.helpers.FluidHelper;
+import dark.core.helpers.FluidRestrictionHandler;
+import dark.core.helpers.MetaGroup;
 
 public class TileEntityStarterPump extends TileEntityMachine implements IPacketReceiver, IToolReadOut, ITileConnector
 {

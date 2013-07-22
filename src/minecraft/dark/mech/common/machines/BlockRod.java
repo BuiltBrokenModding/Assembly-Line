@@ -83,7 +83,7 @@ public class BlockRod extends BlockFM
 	@Override
 	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
 	{
-		return new ItemStack(FluidMech.blockRod, 1, 0);
+		return new ItemStack(FluidMech.recipeLoader.blockRod, 1, 0);
 	}
 
 	@Override

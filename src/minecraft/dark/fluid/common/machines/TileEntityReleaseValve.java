@@ -15,9 +15,9 @@ import dark.api.IColorCoded;
 import dark.api.ITileConnector;
 import dark.api.IToolReadOut;
 import dark.api.fluid.INetworkPipe;
+import dark.core.helpers.ConnectionHelper;
 import dark.core.network.fluid.NetworkPipes;
 import dark.fluid.common.prefab.TileEntityFluidDevice;
-import dark.helpers.ConnectionHelper;
 
 public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITileConnector, IToolReadOut
 {
