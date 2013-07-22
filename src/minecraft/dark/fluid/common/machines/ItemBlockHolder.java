@@ -4,10 +4,10 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
-public class ItemBlockTank extends ItemBlock
+public class ItemBlockHolder extends ItemBlock
 {
 
-	public ItemBlockTank(int id)
+	public ItemBlockHolder(int id)
 	{
 		super(id);
 		this.setMaxDamage(0);

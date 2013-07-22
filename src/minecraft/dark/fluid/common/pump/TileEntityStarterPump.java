@@ -35,12 +35,6 @@ public class TileEntityStarterPump extends TileEntityRunnableMachine implements 
 	ForgeDirection wireConnection = ForgeDirection.EAST;
 	ForgeDirection pipeConnection = ForgeDirection.EAST;
 
-	public TileEntityStarterPump()
-	{
-		super(20);
-		// TODO Auto-generated constructor stub
-	}
-
 	/** gets the side connection for the wire and pipe */
 	public void getConnections()
 	{
@@ -119,7 +113,7 @@ public class TileEntityStarterPump extends TileEntityRunnableMachine implements 
 	}
 
 	/** checks to see if this pump can pump the selected target block
-	 * 
+	 *
 	 * @param x y z - location of the block, use the tileEntities world
 	 * @return true if it can pump */
 	boolean canPump(Vector3 vec)
@@ -129,7 +123,7 @@ public class TileEntityStarterPump extends TileEntityRunnableMachine implements 
 	}
 
 	/** drains the block(removes) at the location given
-	 * 
+	 *
 	 * @param loc - vector 3 location
 	 * @return true if the block was drained */
 	boolean drainBlock(Vector3 loc)

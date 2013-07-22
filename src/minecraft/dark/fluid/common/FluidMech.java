@@ -21,7 +21,6 @@ import org.modstats.Modstats;
 
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.network.PacketManager;
-import cpw.mods.fml.common.DummyModContainer;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -43,9 +42,7 @@ import dark.fluid.common.item.ItemTools;
 import dark.fluid.common.machines.BlockReleaseValve;
 import dark.fluid.common.machines.BlockSink;
 import dark.fluid.common.machines.BlockTank;
-import dark.fluid.common.machines.ItemBlockLiquidMachine;
-import dark.fluid.common.machines.ItemBlockReleaseValve;
-import dark.fluid.common.machines.ItemBlockTank;
+import dark.fluid.common.machines.ItemBlockHolder;
 import dark.fluid.common.machines.TileEntityReleaseValve;
 import dark.fluid.common.machines.TileEntitySink;
 import dark.fluid.common.machines.TileEntityTank;
@@ -127,6 +124,7 @@ public class FluidMech extends ModPrefab
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
+		super.preInit(event);
 		/* LOGGER SETUP */
 		FMLog.setParent(FMLLog.getLogger());
 		FMLog.info("Initializing...");
@@ -143,11 +141,11 @@ public class FluidMech extends ModPrefab
 		/* BLOCK REGISTER CALLS */
 		GameRegistry.registerBlock(blockPipe, ItemBlockPipe.class, "lmPipe");
 		GameRegistry.registerBlock(blockGenPipe, ItemBlockPipe.class, "lmGenPipe");
-		GameRegistry.registerBlock(blockReleaseValve, ItemBlockReleaseValve.class, "eValve");
+		GameRegistry.registerBlock(blockReleaseValve, ItemBlockHolder.class, "eValve");
 		GameRegistry.registerBlock(blockRod, "mechRod");
 		GameRegistry.registerBlock(blockGenerator, "lmGen");
-		GameRegistry.registerBlock(blockMachine, ItemBlockLiquidMachine.class, "lmMachines");
-		GameRegistry.registerBlock(blockTank, ItemBlockTank.class, "lmTank");
+		GameRegistry.registerBlock(blockMachine, ItemBlockHolder.class, "lmMachines");
+		GameRegistry.registerBlock(blockTank, ItemBlockHolder.class, "lmTank");
 		GameRegistry.registerBlock(blockSink, "lmSink");
 		GameRegistry.registerBlock(blockDrain, "lmDrain");
 		GameRegistry.registerBlock(blockConPump, "lmConPump");
@@ -155,9 +153,9 @@ public class FluidMech extends ModPrefab
 	}
 
 	@EventHandler
-	public void Init(FMLInitializationEvent event)
+	public void init(FMLInitializationEvent event)
 	{
-
+		super.init(event);
 		/* LOGGER */
 		FMLog.info("Loading...");
 		proxy.Init();
@@ -167,7 +165,7 @@ public class FluidMech extends ModPrefab
 		GameRegistry.registerTileEntity(TileEntityGenericPipe.class, "lmGenPipeTile");
 		GameRegistry.registerTileEntity(TileEntityStarterPump.class, "lmPumpTile");
 		//GameRegistry.registerTileEntity(TileEntityRod.class, "lmRodTile");
-		GameRegistry.registerTileEntity(TileEntityReleaseValve.class, "lmeValve");
+		GameRegistry.registerTileEntity(TileEntityReleaseValve.class, "lmReleaseValve");
 		GameRegistry.registerTileEntity(TileEntityTank.class, "lmTank");
 		//GameRegistry.registerTileEntity(TileEntityGenerator.class, "lmGen");
 		GameRegistry.registerTileEntity(TileEntitySink.class, "lmSink");
@@ -192,8 +190,9 @@ public class FluidMech extends ModPrefab
 	}
 
 	@EventHandler
-	public void PostInit(FMLPostInitializationEvent event)
+	public void postInit(FMLPostInitializationEvent event)
 	{
+		super.postInit(event);
 		/* LOGGER */
 		FMLog.info("Finalizing...");
 		proxy.postInit();
@@ -288,17 +287,17 @@ public class FluidMech extends ModPrefab
 		Fluid waste = new Fluid("waste").setBlockID(FluidMech.CONFIGURATION.getBlock("WasteLiquid", BLOCK_ID_PREFIX++).getInt());
 
 		/* BLOCK DECLARATION -- CONFIG LOADER */
-		blockGenPipe = new BlockPipe(FluidMech.CONFIGURATION.getBlock("Pipes", BLOCK_ID_PREFIX).getInt());
-		blockMachine = new BlockPumpMachine(FluidMech.CONFIGURATION.getBlock("Machines", BLOCK_ID_PREFIX + 1).getInt());
-		blockRod = new BlockRod(FluidMech.CONFIGURATION.getBlock("MechRod", BLOCK_ID_PREFIX + 3).getInt());
-		blockGenerator = new BlockGenerator((FluidMech.CONFIGURATION.getBlock("Generator", BLOCK_ID_PREFIX + 4).getInt()));
-		blockReleaseValve = new BlockReleaseValve((FluidMech.CONFIGURATION.getBlock("ReleaseValve", BLOCK_ID_PREFIX + 5).getInt()));
-		blockTank = new BlockTank(FluidMech.CONFIGURATION.getBlock("Tank", BLOCK_ID_PREFIX + 6).getInt());
+		blockGenPipe = new BlockPipe(BLOCK_ID_PREFIX++);
+		blockMachine = new BlockPumpMachine(BLOCK_ID_PREFIX++);
+		blockRod = new BlockRod(BLOCK_ID_PREFIX++);
+		blockGenerator = new BlockGenerator(BLOCK_ID_PREFIX++);
+		blockReleaseValve = new BlockReleaseValve(BLOCK_ID_PREFIX++);
+		blockTank = new BlockTank(BLOCK_ID_PREFIX++);
 		blockWasteLiquid = new BlockFluidFinite(waste.getBlockID(), waste, Material.water);
-		blockSink = new BlockSink(FluidMech.CONFIGURATION.getBlock("Sink", BLOCK_ID_PREFIX + 8).getInt());
-		blockDrain = new BlockDrain(FluidMech.CONFIGURATION.getBlock("Drain", BLOCK_ID_PREFIX + 9).getInt());
-		blockConPump = new BlockConstructionPump(FluidMech.CONFIGURATION.getBlock("ConstructionPump", BLOCK_ID_PREFIX + 10).getInt());
-		blockPipe = new BlockPipe(FluidMech.CONFIGURATION.getBlock("RestrictedPipes", BLOCK_ID_PREFIX + 11).getInt());
+		blockSink = new BlockSink(BLOCK_ID_PREFIX++);
+		blockDrain = new BlockDrain(BLOCK_ID_PREFIX++);
+		blockConPump = new BlockConstructionPump(BLOCK_ID_PREFIX++);
+		blockPipe = new BlockPipe(BLOCK_ID_PREFIX++);
 
 		/* ITEM DECLARATION */
 		itemParts = new ItemParts(FluidMech.CONFIGURATION.getItem("Parts", ITEM_ID_PREFIX).getInt());
@@ -330,7 +329,6 @@ public class FluidMech extends ModPrefab
 
 	public static final CreativeTabs TabFluidMech = new CreativeTabs("Fluid Mechanics")
 	{
-
 		public ItemStack getIconItemStack()
 		{
 			return new ItemStack(blockPipe, 1, 4);

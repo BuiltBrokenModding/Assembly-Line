@@ -25,12 +25,6 @@ public class TileEntityConstructionPump extends TileEntityRunnableMachine implem
 	private int liquidRequest = 5;
 	public int rotation = 0;
 
-	public TileEntityConstructionPump()
-	{
-		super(100);
-		// TODO Auto-generated constructor stub
-	}
-
 	@Override
 	public void initiate()
 	{
