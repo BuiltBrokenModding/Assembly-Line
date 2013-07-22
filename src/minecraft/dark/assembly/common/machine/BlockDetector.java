@@ -1,4 +1,4 @@
-package dark.assembly.common.machine.detector;
+package dark.assembly.common.machine;
 
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLivingBase;

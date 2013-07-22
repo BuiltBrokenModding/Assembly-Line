@@ -23,8 +23,8 @@ import com.google.common.io.ByteArrayDataInput;
 
 import dark.api.INetworkPart;
 import dark.assembly.common.AssemblyLine;
+import dark.core.blocks.TileEntityMachine;
 import dark.core.tile.network.NetworkTileEntities;
-import dark.prefab.machine.TileEntityMachine;
 
 /** A class to be inherited by all machines on the assembly line. This class acts as a single peace
  * in a network of similar tiles allowing all to share power from one or more sources

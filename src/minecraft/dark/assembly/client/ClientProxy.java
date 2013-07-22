@@ -28,15 +28,15 @@ import dark.assembly.common.CommonProxy;
 import dark.assembly.common.armbot.TileEntityArmbot;
 import dark.assembly.common.imprinter.TileEntityImprinter;
 import dark.assembly.common.machine.TileEntityCrate;
+import dark.assembly.common.machine.TileEntityDetector;
 import dark.assembly.common.machine.TileEntityManipulator;
 import dark.assembly.common.machine.TileEntityRejector;
 import dark.assembly.common.machine.belt.TileEntityConveyorBelt;
 import dark.assembly.common.machine.crane.TileEntityCraneController;
 import dark.assembly.common.machine.crane.TileEntityCraneRail;
-import dark.assembly.common.machine.detector.TileEntityDetector;
 import dark.assembly.common.machine.encoder.TileEntityEncoder;
 import dark.core.DarkMain;
-import dark.library.effects.FXBeam;
+import dark.core.client.FXBeam;
 
 public class ClientProxy extends CommonProxy
 {

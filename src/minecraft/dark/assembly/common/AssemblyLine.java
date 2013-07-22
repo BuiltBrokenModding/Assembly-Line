@@ -35,11 +35,13 @@ import dark.assembly.common.imprinter.BlockImprinter;
 import dark.assembly.common.imprinter.ItemImprinter;
 import dark.assembly.common.imprinter.TileEntityImprinter;
 import dark.assembly.common.machine.BlockCrate;
+import dark.assembly.common.machine.BlockDetector;
 import dark.assembly.common.machine.BlockManipulator;
 import dark.assembly.common.machine.BlockRejector;
 import dark.assembly.common.machine.BlockTurntable;
 import dark.assembly.common.machine.ItemBlockCrate;
 import dark.assembly.common.machine.TileEntityCrate;
+import dark.assembly.common.machine.TileEntityDetector;
 import dark.assembly.common.machine.TileEntityManipulator;
 import dark.assembly.common.machine.TileEntityRejector;
 import dark.assembly.common.machine.belt.BlockConveyorBelt;
@@ -48,15 +50,13 @@ import dark.assembly.common.machine.crane.BlockCraneController;
 import dark.assembly.common.machine.crane.BlockCraneFrame;
 import dark.assembly.common.machine.crane.TileEntityCraneController;
 import dark.assembly.common.machine.crane.TileEntityCraneRail;
-import dark.assembly.common.machine.detector.BlockDetector;
-import dark.assembly.common.machine.detector.TileEntityDetector;
 import dark.assembly.common.machine.encoder.BlockEncoder;
 import dark.assembly.common.machine.encoder.ItemDisk;
 import dark.assembly.common.machine.encoder.TileEntityEncoder;
 import dark.core.DarkMain;
 import dark.core.ModPrefab;
-import dark.prefab.machine.BlockMulti;
-import dark.prefab.machine.TileEntityMulti;
+import dark.core.blocks.BlockMulti;
+import dark.core.blocks.TileEntityMulti;
 
 @ModstatInfo(prefix = "asmline")
 @Mod(modid = AssemblyLine.CHANNEL, name = AssemblyLine.MOD_NAME, version = DarkMain.VERSION, dependencies = "after:DarkCore", useMetadata = true)
@@ -82,6 +82,8 @@ public class AssemblyLine extends ModPrefab
 	@Instance(AssemblyLine.CHANNEL)
 	public static AssemblyLine instance;
 
+	public static ALRecipeLoader recipeLoader;
+
 	@Metadata(AssemblyLine.MOD_ID)
 	public static ModMetadata meta;
 
@@ -90,22 +92,6 @@ public class AssemblyLine extends ModPrefab
 	private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US", "nl_NL", "fr_FR", "de_DE" };
 
 	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "Dark/AssemblyLine.cfg"));
-
-
-	public static Block blockConveyorBelt;
-	public static Block blockManipulator;
-	public static BlockCrate blockCrate;
-	public static Block blockImprinter;
-	public static Block blockEncoder;
-	public static Block blockDetector;
-	public static Block blockRejector;
-	public static Block blockArmbot;
-	public static Block blockCraneController;
-	public static Block blockCraneFrame;
-	public static Block blockTurntable;
-
-	public static Item itemImprint;
-	public static Item itemDisk;
 
 	public static Logger FMLog = Logger.getLogger(AssemblyLine.MOD_NAME);
 
@@ -117,48 +103,27 @@ public class AssemblyLine extends ModPrefab
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
+		super.preInit(event);
 		FMLog.setParent(FMLLog.getLogger());
 		instance = this;
+		recipeLoader = new ALRecipeLoader();
 
 		/* UPDATE NOTIFIER */
 		Modstats.instance().getReporter().registerMod(this);
 
-		CONFIGURATION.load();
-		blockConveyorBelt = new BlockConveyorBelt(BLOCK_ID_PREFIX);
-		blockManipulator = new BlockManipulator(BLOCK_ID_PREFIX++);
-		blockCrate = new BlockCrate(BLOCK_ID_PREFIX++);
-		blockImprinter = new BlockImprinter(BLOCK_ID_PREFIX++);
-		blockDetector = new BlockDetector(BLOCK_ID_PREFIX++);
-		blockRejector = new BlockRejector(BLOCK_ID_PREFIX++);
-		blockEncoder = new BlockEncoder(BLOCK_ID_PREFIX++);
-		blockArmbot = new BlockArmbot(BLOCK_ID_PREFIX++);
-		blockCraneController = new BlockCraneController(BLOCK_ID_PREFIX++);
-		blockCraneFrame = new BlockCraneFrame(BLOCK_ID_PREFIX++);
-		blockTurntable = new BlockTurntable(BLOCK_ID_PREFIX++);
-
-		itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", ITEM_ID_PREFIX).getInt());
-		itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", ITEM_ID_PREFIX + 1).getInt());
-
-		AssemblyLine.REQUIRE_NO_POWER = !CONFIGURATION.get("general", "requirePower", true).getBoolean(true);
-		AssemblyLine.VINALLA_RECIPES = CONFIGURATION.get("general", "Vinalla_Recipes", false).getBoolean(false);
-		if (CONFIGURATION.hasChanged())
-		{
-			CONFIGURATION.save();
-		}
-
 		NetworkRegistry.instance().registerGuiHandler(this, this.proxy);
 
-		GameRegistry.registerBlock(blockConveyorBelt, "ConveyorBelt");
-		GameRegistry.registerBlock(blockCrate, ItemBlockCrate.class, "Crate");
-		GameRegistry.registerBlock(blockManipulator, "Manipulator");
-		GameRegistry.registerBlock(blockImprinter, "Imprinter");
-		GameRegistry.registerBlock(blockEncoder, "Encoder");
-		GameRegistry.registerBlock(blockDetector, "Detector");
-		GameRegistry.registerBlock(blockRejector, "Rejector");
-		GameRegistry.registerBlock(blockArmbot, "Armbot");
-		GameRegistry.registerBlock(blockTurntable, "Turntable");
-		GameRegistry.registerBlock(blockCraneController, "CraneController");
-		GameRegistry.registerBlock(blockCraneFrame, "Crane Frame");
+		GameRegistry.registerBlock(recipeLoader.blockConveyorBelt, "ConveyorBelt");
+		GameRegistry.registerBlock(recipeLoader.blockCrate, ItemBlockCrate.class, "Crate");
+		GameRegistry.registerBlock(recipeLoader.blockManipulator, "Manipulator");
+		GameRegistry.registerBlock(recipeLoader.blockImprinter, "Imprinter");
+		GameRegistry.registerBlock(recipeLoader.blockEncoder, "Encoder");
+		GameRegistry.registerBlock(recipeLoader.blockDetector, "Detector");
+		GameRegistry.registerBlock(recipeLoader.blockRejector, "Rejector");
+		GameRegistry.registerBlock(recipeLoader.blockArmbot, "Armbot");
+		GameRegistry.registerBlock(recipeLoader.blockTurntable, "Turntable");
+		GameRegistry.registerBlock(recipeLoader.blockCraneController, "CraneController");
+		GameRegistry.registerBlock(recipeLoader.blockCraneFrame, "Crane Frame");
 
 		GameRegistry.registerTileEntity(TileEntityConveyorBelt.class, "ALConveyorBelt");
 		GameRegistry.registerTileEntity(TileEntityRejector.class, "ALSorter");
@@ -171,7 +136,7 @@ public class AssemblyLine extends ModPrefab
 		GameRegistry.registerTileEntity(TileEntityCraneRail.class, "ALCraneRail");
 		GameRegistry.registerTileEntity(TileEntityImprinter.class, "ALImprinter");
 
-		TabAssemblyLine.itemStack = new ItemStack(AssemblyLine.blockConveyorBelt);
+		TabAssemblyLine.itemStack = new ItemStack(recipeLoader.blockConveyorBelt);
 
 		proxy.preInit();
 	}
@@ -179,24 +144,12 @@ public class AssemblyLine extends ModPrefab
 	@EventHandler
 	public void load(FMLInitializationEvent evt)
 	{
+		super.init(evt);
 		proxy.init();
 
 		FMLog.info("Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
 
-		/* MCMOD.INFO FILE BUILDER? */
-		meta.modId = AssemblyLine.MOD_ID;
-		meta.name = AssemblyLine.MOD_NAME;
-		meta.description = "Simi Realistic factory system for minecraft bring in conveyor belts, robotic arms, and simple machines";
-
-		meta.url = "http://universalelectricity.com/assembly-line";
-
-		meta.logoFile = "/al_logo.png";
-		meta.version = DarkMain.VERSION;
-		meta.authorList = Arrays.asList(new String[] { "DarkGuardsman" });
-		meta.credits = "Please see the website.";
-		meta.autogenerated = false;
-
-		Recipes.loadRecipes();
+		recipeLoader.loadRecipes();
 
 	}
 
@@ -209,14 +162,45 @@ public class AssemblyLine extends ModPrefab
 	@Override
 	public void loadConfig()
 	{
-		// TODO Auto-generated method stub
+		CONFIGURATION.load();
+		recipeLoader.blockConveyorBelt = new BlockConveyorBelt(BLOCK_ID_PREFIX);
+		recipeLoader.blockManipulator = new BlockManipulator(BLOCK_ID_PREFIX++);
+		recipeLoader.blockCrate = new BlockCrate(BLOCK_ID_PREFIX++);
+		recipeLoader.blockImprinter = new BlockImprinter(BLOCK_ID_PREFIX++);
+		recipeLoader.blockDetector = new BlockDetector(BLOCK_ID_PREFIX++);
+		recipeLoader.blockRejector = new BlockRejector(BLOCK_ID_PREFIX++);
+		recipeLoader.blockEncoder = new BlockEncoder(BLOCK_ID_PREFIX++);
+		recipeLoader.blockArmbot = new BlockArmbot(BLOCK_ID_PREFIX++);
+		recipeLoader.blockCraneController = new BlockCraneController(BLOCK_ID_PREFIX++);
+		recipeLoader.blockCraneFrame = new BlockCraneFrame(BLOCK_ID_PREFIX++);
+		recipeLoader.blockTurntable = new BlockTurntable(BLOCK_ID_PREFIX++);
+
+		recipeLoader.itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", ITEM_ID_PREFIX).getInt());
+		recipeLoader.itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", ITEM_ID_PREFIX + 1).getInt());
+
+		AssemblyLine.REQUIRE_NO_POWER = !CONFIGURATION.get("general", "requirePower", true).getBoolean(true);
+		AssemblyLine.VINALLA_RECIPES = CONFIGURATION.get("general", "Vinalla_Recipes", false).getBoolean(false);
+		if (CONFIGURATION.hasChanged())
+		{
+			CONFIGURATION.save();
+		}
 
 	}
 
 	@Override
 	public void loadModMeta()
 	{
-		// TODO Auto-generated method stub
+		meta.modId = AssemblyLine.MOD_ID;
+		meta.name = AssemblyLine.MOD_NAME;
+		meta.description = "Simi Realistic factory system for minecraft bring in conveyor belts, robotic arms, and simple machines";
+
+		meta.url = "http://universalelectricity.com/assembly-line";
+
+		meta.logoFile = "/al_logo.png";
+		meta.version = DarkMain.VERSION;
+		meta.authorList = Arrays.asList(new String[] { "DarkGuardsman" });
+		meta.credits = "Please see the website.";
+		meta.autogenerated = false;
 
 	}
 }

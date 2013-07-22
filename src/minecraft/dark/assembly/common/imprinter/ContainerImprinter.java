@@ -6,10 +6,10 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import dark.assembly.common.AssemblyLine;
-import dark.library.gui.ISlotWatcher;
-import dark.library.gui.SlotCraftingResult;
-import dark.library.gui.SlotRestricted;
-import dark.library.gui.WatchedSlot;
+import dark.core.gui.ISlotWatcher;
+import dark.core.gui.SlotCraftingResult;
+import dark.core.gui.SlotRestricted;
+import dark.core.gui.WatchedSlot;
 
 public class ContainerImprinter extends Container implements ISlotWatcher
 {
@@ -34,7 +34,7 @@ public class ContainerImprinter extends Container implements ISlotWatcher
 		}
 
 		// Imprint Input for Imprinting
-		this.addSlotToContainer(new SlotRestricted(this.tileEntity, TileEntityImprinter.IMPRINTER_MATRIX_START, 68, 34, new ItemStack(AssemblyLine.itemImprint)));
+		this.addSlotToContainer(new SlotRestricted(this.tileEntity, TileEntityImprinter.IMPRINTER_MATRIX_START, 68, 34, new ItemStack(AssemblyLine.recipeLoader.itemImprint)));
 		// Item to be imprinted
 		this.addSlotToContainer(new WatchedSlot(this.tileEntity, TileEntityImprinter.IMPRINTER_MATRIX_START + 1, 92, 34, this));
 		// Result of Crafting/Imprinting

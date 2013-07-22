@@ -11,7 +11,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.INetworkPart;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.TabAssemblyLine;
-import dark.prefab.machine.BlockMachine;
+import dark.core.blocks.BlockMachine;
 
 public abstract class BlockAssembly extends BlockMachine
 {

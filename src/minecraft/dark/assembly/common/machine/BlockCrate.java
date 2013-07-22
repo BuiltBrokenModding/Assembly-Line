@@ -136,7 +136,7 @@ public class BlockCrate extends BlockAssembly
 			{
 				if (checkTile instanceof TileEntityCrate)
 				{
-					AssemblyLine.blockCrate.tryInsert(((TileEntityCrate) checkTile), player, allMode, false);
+					AssemblyLine.recipeLoader.blockCrate.tryInsert(((TileEntityCrate) checkTile), player, allMode, false);
 				}
 			}
 		}
@@ -177,7 +177,7 @@ public class BlockCrate extends BlockAssembly
 
 		if (currentStack != null)
 		{
-			if (currentStack.getItem().itemID == AssemblyLine.blockCrate.blockID)
+			if (currentStack.getItem().itemID == AssemblyLine.recipeLoader.blockCrate.blockID)
 			{
 				ItemStack containedStack = ItemBlockCrate.getContainingItemStack(currentStack);
 				ItemStack crateStack = tileEntity.getSampleStack();

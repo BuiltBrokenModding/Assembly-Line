@@ -41,8 +41,8 @@ import dark.assembly.common.armbot.command.CommandUse;
 import dark.assembly.common.machine.TileEntityAssembly;
 import dark.assembly.common.machine.encoder.ItemDisk;
 import dark.core.DarkMain;
-import dark.helpers.ItemFindingHelper;
-import dark.prefab.machine.IMultiBlock;
+import dark.core.blocks.IMultiBlock;
+import dark.core.helpers.ItemFindingHelper;
 
 public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IInventory, IPacketReceiver, IArmbot, IPeripheral
 {

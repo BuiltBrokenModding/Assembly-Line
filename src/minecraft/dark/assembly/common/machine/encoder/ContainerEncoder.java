@@ -6,7 +6,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import dark.assembly.common.AssemblyLine;
-import dark.library.gui.SlotRestricted;
+import dark.core.gui.SlotRestricted;
 
 public class ContainerEncoder extends Container
 {
@@ -22,7 +22,7 @@ public class ContainerEncoder extends Container
 		this.tileEntity = encoder;
 
 		// Disk
-		this.addSlotToContainer(new SlotRestricted(encoder, 0, 80, 24 + Y_OFFSET, new ItemStack(AssemblyLine.itemDisk)));
+		this.addSlotToContainer(new SlotRestricted(encoder, 0, 80, 24 + Y_OFFSET, new ItemStack(AssemblyLine.recipeLoader.itemDisk)));
 
 		int var3;
 
