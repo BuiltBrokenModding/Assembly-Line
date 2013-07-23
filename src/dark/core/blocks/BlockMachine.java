@@ -17,7 +17,7 @@ import dark.core.DarkMain;
 /** Basic TileEntity Container class designed to be used by generic machines. It is suggested that
  * each mod using this create there own basic block extending this to reduce need to input config
  * file each time
- * 
+ *
  * @author Rseifert */
 public abstract class BlockMachine extends BlockAdvanced implements ITileEntityProvider
 {
@@ -37,7 +37,7 @@ public abstract class BlockMachine extends BlockAdvanced implements ITileEntityP
 	@Override
 	public void registerIcons(IconRegister iconReg)
 	{
-		this.blockIcon = iconReg.registerIcon(DarkMain.instance.PREFIX + "machine");
+		this.blockIcon = iconReg.registerIcon(DarkMain.getInstance().PREFIX + "machine");
 	}
 
 	@Override

@@ -23,7 +23,7 @@ public class ItemOre extends ItemBlock
 	@Override
 	public String getUnlocalizedName(ItemStack par1ItemStack)
 	{
-		return "tile." + DarkMain.instance.PREFIX + EnumMeterials.values()[par1ItemStack.getItemDamage()].name + "Ore";
+		return "tile." + DarkMain.getInstance().PREFIX + EnumMeterials.values()[par1ItemStack.getItemDamage()].name + "Ore";
 	}
 
 }

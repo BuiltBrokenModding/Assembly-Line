@@ -12,7 +12,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.DarkMain;
 
 /** A series of items that are derived from a basic ore block
- * 
+ *
  * @author DarkGuardsman */
 public class ItemOreDirv extends ItemBasic
 {
@@ -34,7 +34,7 @@ public class ItemOreDirv extends ItemBasic
 		if (itemStack != null)
 		{
 			int meta = itemStack.getItemDamage();
-			return "item." + DarkMain.instance.PREFIX + EnumOreParts.getFullName(meta);
+			return "item." + DarkMain.getInstance().PREFIX + EnumOreParts.getFullName(meta);
 		}
 		else
 		{
@@ -58,7 +58,7 @@ public class ItemOreDirv extends ItemBasic
 			int meta = EnumOreParts.values()[j].meta;
 			for (int i = 0; i < EnumMeterials.values().length; i++)
 			{
-				ICONS[i + meta] = iconRegister.registerIcon(DarkMain.instance.PREFIX + EnumMeterials.values()[i].name + suf);
+				ICONS[i + meta] = iconRegister.registerIcon(DarkMain.getInstance().PREFIX + EnumMeterials.values()[i].name + suf);
 			}
 		}
 	}

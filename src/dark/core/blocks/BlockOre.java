@@ -21,7 +21,7 @@ public class BlockOre extends Block
 	{
 		super(config.getBlock("Ore", par1).getInt(), Material.rock);
 		this.setCreativeTab(CreativeTabs.tabBlock);
-		this.setUnlocalizedName(DarkMain.instance.PREFIX + "Ore");
+		this.setUnlocalizedName(DarkMain.getInstance().PREFIX + "Ore");
 	}
 
 	public static void regiserOreNames()
@@ -54,7 +54,7 @@ public class BlockOre extends Block
 		{
 			if (EnumMeterials.values()[i].doWorldGen)
 			{
-				this.icons[i] = par1IconRegister.registerIcon(DarkMain.instance.PREFIX + EnumMeterials.values()[i].name + "Ore");
+				this.icons[i] = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + EnumMeterials.values()[i].name + "Ore");
 			}
 		}
 	}

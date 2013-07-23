@@ -1,13 +1,13 @@
 package dark.core;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import dark.core.helpers.Pair;
-import dark.core.helpers.Triple;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import cpw.mods.fml.common.registry.GameRegistry;
+import dark.core.helpers.Pair;
+import dark.core.helpers.Triple;
 
 public abstract class RecipeLoader
 {
@@ -51,6 +51,15 @@ public abstract class RecipeLoader
 		}
 	}
 
+	public ItemStack setStackSize(ItemStack stack, int amount)
+	{
+		if (stack != null)
+		{
+			return new ItemStack(stack.itemID, amount, stack.getItemDamage());
+		}
+		return stack;
+	}
+
 	public static class RecipeGrid
 	{
 		Object A, B, C, D, E, F, G, H, I;
@@ -58,10 +67,15 @@ public abstract class RecipeLoader
 		int width = 3;
 		int hight = 3;
 
-		public RecipeGrid(int width, int hight)
+		public RecipeGrid(Object stack)
 		{
-			this.width = Math.max(Math.min(width, 3), 1);
-			this.hight = Math.max(Math.min(hight, 3), 1);;
+			out = stack;
+		}
+
+		public RecipeGrid(Object stack, int w, int h)
+		{
+			this(stack);
+			this.setSize(w, h);
 		}
 
 		/** 3x3 Crafting grid. Each Triple is a row. Input for the triples should be any of { Item,
@@ -70,8 +84,9 @@ public abstract class RecipeLoader
 		 * @param one - top row
 		 * @param two - middle row
 		 * @param three - bottom row */
-		public RecipeGrid(Triple one, Triple two, Triple three)
+		public RecipeGrid(Object stack, Triple one, Triple two, Triple three)
 		{
+			this(stack);
 			this.setRowOne(one.getA(), one.getB(), one.getC());
 			this.setRowTwo(two.getA(), two.getB(), two.getC());
 			this.setRowThree(three.getA(), three.getB(), three.getC());
@@ -82,19 +97,34 @@ public abstract class RecipeLoader
 		 *
 		 * @param one - top row
 		 * @param two - middle row */
-		public RecipeGrid(Pair one, Pair two)
+		public RecipeGrid(Object stack, Pair one, Pair two)
 		{
+			this(stack);
 			this.setRowOne(one.getKey(), one.getValue());
 			this.setRowTwo(two.getKey(), two.getValue());
 			this.hight = 2;
 			this.width = 2;
 		}
 
+		/** Sets the grid size */
+		public RecipeGrid setSize(int w, int h)
+		{
+			this.width = Math.max(Math.min(w, 3), 1);
+			this.hight = Math.max(Math.min(h, 3), 1);
+			return this;
+		}
+
+		/** Sets the grid recipe output */
+		public RecipeGrid setOutput(Object stack)
+		{
+			out = stack;
+			return this;
+		}
+
 		public RecipeGrid setRowOne(Object... objects)
 		{
 			if (objects != null)
 			{
-
 				this.A = objects[0];
 				if (objects.length > 1)
 				{
@@ -112,7 +142,6 @@ public abstract class RecipeLoader
 		{
 			if (objects != null)
 			{
-
 				this.D = objects[0];
 				if (objects.length > 1)
 				{
@@ -130,7 +159,6 @@ public abstract class RecipeLoader
 		{
 			if (objects != null)
 			{
-
 				this.G = objects[0];
 				if (objects.length > 1)
 				{
@@ -144,27 +172,13 @@ public abstract class RecipeLoader
 			return this;
 		}
 
-		public void norm()
+		public String getOreName(ItemStack stack)
 		{
-			Object[] list = new Object[] { A, B, C, D, E, F, G, H, I };
-			for (int i = 0; i < list.length; i++)
+			if (stack != null)
 			{
-				if (list[i] == null || (!(list[i] instanceof Item) && !(list[i] instanceof Block) && !(list[i] instanceof ItemStack) && !(list[i] instanceof String)))
-				{
-					list[i] = "";
-				}
-				else
-				{
-					if (list[i] instanceof ItemStack)
-					{
-						String name = OreDictionary.getOreName(OreDictionary.getOreID((ItemStack) list[i]));
-						if (name != null)
-						{
-							list[i] = name;
-						}
-					}
-				}
+				return OreDictionary.getOreName(OreDictionary.getOreID(stack));
 			}
+			return null;
 		}
 
 		public void RegisterRecipe()
@@ -180,43 +194,96 @@ public abstract class RecipeLoader
 		{
 			ShapedOreRecipe re = null;
 			Object[] recipe = null;
+			String AA = "A";
+			String BB = "B";
+			String CC = "C";
+			String DD = "D";
+			String EE = "E";
+			String FF = "F";
+			String GG = "G";
+			String HH = "H";
+			String II = "I";
+			if (A == null)
+			{
+				AA = " ";
+				A = "";
+			}
+			if (B == null)
+			{
+				BB = " ";
+				B = "";
+			}
+			if (C == null)
+			{
+				CC = " ";
+				C = "";
+			}
+			if (D == null)
+			{
+				DD = " ";
+				D = "";
+			}
+			if (E == null)
+			{
+				EE = " ";
+				E = "";
+			}
+			if (F == null)
+			{
+				FF = " ";
+				F = "";
+			}
+			if (G == null)
+			{
+				GG = " ";
+				G = "";
+			}
+			if (H == null)
+			{
+				HH = " ";
+				H = "";
+			}
+			if (I == null)
+			{
+				II = " ";
+				I = "";
+			}
 
-			this.norm();
 			if (width == 3 && hight == 3)
 			{
-				recipe = new Object[] { "ABC", "DEF", "GHI", 'A', A, 'B', B, 'C', C, 'D', D, 'E', E, 'F', F, 'G', G, 'H', H, 'I', I };
+				recipe = new Object[] { AA + BB + CC, DD + EE + FF, GG + HH + II, 'A', A, 'B', B, 'C', C, 'D', D, 'E', E, 'F', F, 'G', G, 'H', H, 'I', I };
 			}
 			else if (width == 2 && hight == 3)
 			{
-				recipe = new Object[] { "AB", "DE", "GH", 'A', A, 'B', B, 'D', D, 'E', E, 'G', G, 'H', H };
+				recipe = new Object[] { AA + BB, DD + EE, GG + HH, 'A', A, 'B', B, 'D', D, 'E', E, 'G', G, 'H', H };
 			}
 			else if (width == 3 && hight == 2)
 			{
-				recipe = new Object[] { "ABC", "DEF", 'A', A, 'B', B, 'C', C, 'D', D, 'E', E, 'F', F };
+				recipe = new Object[] { AA + BB + CC, DD + EE + FF, 'A', A, 'B', B, 'C', C, 'D', D, 'E', E, 'F', F };
 			}
 			else if (width == 1 && hight == 3)
 			{
-				recipe = new Object[] { "A", "D", "G", 'A', A, 'D', D, 'G', G };
+				recipe = new Object[] { AA, DD, GG, 'A', A, 'D', D, 'G', G };
 			}
 			else if (width == 3 && hight == 1)
 			{
-				recipe = new Object[] { "ABC", 'A', A, 'B', B, 'C', C };
+				recipe = new Object[] { AA + BB + CC, 'A', A, 'B', B, 'C', C };
 			}
 			else if (width == 2 && hight == 2)
 			{
-				recipe = new Object[] { "AB", "DE", 'A', A, 'B', B, 'D', D, 'E', E };
+				recipe = new Object[] { AA + BB, DD + EE, 'A', A, 'B', B, 'D', D, 'E', E };
 			}
 			else if (width == 1 && hight == 2)
 			{
-				recipe = new Object[] { "A", "D", 'A', A, 'D', D, };
+				recipe = new Object[] { AA, DD, 'A', A, 'D', D, };
 			}
 			else if (width == 2 && hight == 1)
 			{
-				recipe = new Object[] { "AB", 'A', A, 'B', B, };
+				recipe = new Object[] { AA + BB, 'A', A, 'B', B, };
 			}
 			else if (width == 1 && hight == 1)
 			{
-				recipe = new Object[] { "A", 'A', A };
+				recipe = new Object[] { AA, 'A', A };
 			}
 			if (recipe != null)
 			{

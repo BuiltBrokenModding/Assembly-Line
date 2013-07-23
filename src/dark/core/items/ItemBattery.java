@@ -13,7 +13,7 @@ public class ItemBattery extends ItemElectric
 	public ItemBattery(String name, int id)
 	{
 		super(DarkMain.CONFIGURATION.getItem(name, id).getInt(id));
-		this.setUnlocalizedName(DarkMain.instance.PREFIX + name);
+		this.setUnlocalizedName(DarkMain.getInstance().PREFIX + name);
 		this.setCreativeTab(CreativeTabs.tabRedstone);
 	}
 

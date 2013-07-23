@@ -12,7 +12,7 @@ public class ItemBasic extends Item
 	public ItemBasic(int itemID, String name, Configuration config)
 	{
 		super(config.getItem(name, itemID).getInt());
-		this.setUnlocalizedName(DarkMain.instance.PREFIX + name);
+		this.setUnlocalizedName(DarkMain.getInstance().PREFIX + name);
 	}
 
 }

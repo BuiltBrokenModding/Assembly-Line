@@ -2,15 +2,17 @@ package dark.core;
 
 import org.modstats.Modstats;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.relauncher.Side;
 
 public abstract class ModPrefab
 {
 
-	public String DOMAIN = "dark";
+	public String DOMAIN = this.getDomain();
 	public String PREFIX = DOMAIN + ":";
 
 	public String DIRECTORY_NO_SLASH = "assets/" + DOMAIN + "/";
@@ -28,10 +30,7 @@ public abstract class ModPrefab
 	public static int BLOCK_ID_PREFIX = 3100;
 	public static int ITEM_ID_PREFIX = 13200;
 
-	public ModPrefab(String domain)
-	{
-		DOMAIN = domain;
-	}
+	public abstract String getDomain();
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -51,6 +50,12 @@ public abstract class ModPrefab
 	public void postInit(FMLPostInitializationEvent event)
 	{
 
+	}
+
+	public static void printSidedData(String data)
+	{
+		System.out.print(FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT ? "[C]" : "[S]");
+		System.out.println(" " + data);
 	}
 
 	public abstract void loadConfig();

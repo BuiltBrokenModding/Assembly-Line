@@ -75,7 +75,7 @@ public enum EnumMeterials
 		if (this.doWorldGen)
 		{
 			ItemStack stack = new ItemStack(DarkMain.recipeLoader.blockOre, 1, this.ordinal());
-			return (OreGenReplaceStone) new OreGenReplaceStone(this.name, this.name + "Ore", stack, this.maxY, this.ammount, this.branch).enable(DarkMain.instance.CONFIGURATION);
+			return (OreGenReplaceStone) new OreGenReplaceStone(this.name, this.name + "Ore", stack, this.maxY, this.ammount, this.branch).enable(DarkMain.getInstance().CONFIGURATION);
 		}
 		return null;
 	}

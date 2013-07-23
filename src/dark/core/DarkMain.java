@@ -57,38 +57,35 @@ public class DarkMain extends ModPrefab
 	public static ModMetadata meta;
 
 	/** Main config file */
-	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "Dark/General.cfg"));
+	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "Dark/TheDarkMachine.cfg"));
 	private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US" };
 	/** Can over pressure of devices do area damage */
 	public static boolean overPressureDamage;
-	/** Main mod output to console */
-	public static final Logger LOGGER = Logger.getLogger("DarkCore");
 
 	public static BlockMulti blockMulti;
 
-	public static DarkMain instance;
+	private static DarkMain instance;
 	public static CoreRecipeLoader recipeLoader;
 
-	public DarkMain()
+	public static DarkMain getInstance()
 	{
-		super("dark");
+		if(instance == null)
+		{
+			instance = new DarkMain();
+		}
+		return instance;
 	}
-
 	@EventHandler
 	@Override
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		super.preInit(event);
-		LOGGER.setParent(FMLLog.getLogger());
-		LOGGER.info("Initializing...");
-		recipeLoader = new CoreRecipeLoader();
 		instance = this;
+		super.preInit(event);
 
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(new FluidRestrictionHandler());
 
 		proxy.preInit();
-
 	}
 
 	@EventHandler
@@ -133,10 +130,14 @@ public class DarkMain extends ModPrefab
 	@Override
 	public void loadConfig()
 	{
+		if (recipeLoader == null)
+		{
+			recipeLoader = new CoreRecipeLoader();
+		}
 		/* CONFIGS */
 		CONFIGURATION.load();
 		/* BLOCKS */
-		DarkMain.blockMulti = new BlockMulti(DarkMain.CONFIGURATION.getBlock("RestrictedPipes", BLOCK_ID_PREFIX++).getInt());
+		DarkMain.blockMulti = new BlockMulti(DarkMain.CONFIGURATION.getBlock("MultiBlock", BLOCK_ID_PREFIX++).getInt());
 		if (CONFIGURATION.get("general", "LoadOre", true).getBoolean(true))
 		{
 			recipeLoader.blockOre = new BlockOre(BLOCK_ID_PREFIX++, CONFIGURATION);
@@ -180,6 +181,12 @@ public class DarkMain extends ModPrefab
 	public void serverStopping(FMLServerStoppingEvent event)
 	{
 		SaveManager.save(true);
+	}
+	@Override
+	public String getDomain()
+	{
+		// TODO Auto-generated method stub
+		return "dark";
 	}
 
 }
