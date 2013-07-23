@@ -85,7 +85,6 @@ public class FluidMech extends ModPrefab
 
 	/* BLOCKS */
 
-
 	@SidedProxy(clientSide = "dark.fluid.client.ClientProxy", serverSide = "dark.fluid.common.CommonProxy")
 	public static CommonProxy proxy;
 
@@ -97,26 +96,11 @@ public class FluidMech extends ModPrefab
 	/* LOGGER - EXTENDS FORGE'S LOG SYSTEM */
 	public static Logger FMLog = Logger.getLogger(FluidMech.MOD_NAME);
 
-	public FluidMech()
-	{
-		super("fm");
-		// TODO Auto-generated constructor stub
-	}
-
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		/* LOGGER SETUP */
-		FMLog.setParent(FMLLog.getLogger());
-		FMLog.info("Initializing...");
-
 		instance = this;
-		recipeLoader = new FMRecipeLoader();
 		super.preInit(event);
-
-		/* CONFIG END */
-
-		proxy.preInit();
 
 		/* BLOCK REGISTER CALLS */
 		GameRegistry.registerBlock(FMRecipeLoader.blockPipe, ItemBlockPipe.class, "lmPipe");
@@ -130,6 +114,7 @@ public class FluidMech extends ModPrefab
 		GameRegistry.registerBlock(FMRecipeLoader.blockDrain, "lmDrain");
 		GameRegistry.registerBlock(FMRecipeLoader.blockConPump, "lmConPump");
 
+		proxy.preInit();
 	}
 
 	@EventHandler
@@ -155,7 +140,6 @@ public class FluidMech extends ModPrefab
 
 		/* LANG LOADING */
 		FMLog.info(" Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
-
 		/* ORE DIRECTORY REGISTER */
 		OreDictionary.registerOre("bronzeTube", new ItemStack(FMRecipeLoader.itemParts, 1, Parts.Bronze.ordinal()));
 		OreDictionary.registerOre("ironTube", new ItemStack(FMRecipeLoader.itemParts, 1, Parts.Iron.ordinal()));
@@ -180,13 +164,16 @@ public class FluidMech extends ModPrefab
 		/* /******** RECIPES ************* */
 		recipeLoader.loadRecipes();
 
-
 		FMLog.info("Done Loading");
 	}
 
 	@Override
 	public void loadConfig()
 	{
+		if(recipeLoader == null)
+		{
+			recipeLoader = new FMRecipeLoader();
+		}
 		/* CONFIGS */
 		CONFIGURATION.load();
 
@@ -194,7 +181,7 @@ public class FluidMech extends ModPrefab
 		Fluid waste = new Fluid("waste").setBlockID(FluidMech.CONFIGURATION.getBlock("WasteLiquid", BLOCK_ID_PREFIX++).getInt());
 
 		/* BLOCK DECLARATION -- CONFIG LOADER */
-		FMRecipeLoader.blockGenPipe = new BlockPipe(BLOCK_ID_PREFIX++);
+		FMRecipeLoader.blockGenPipe = new BlockPipe(BLOCK_ID_PREFIX++, "GenericPipe");
 		FMRecipeLoader.blockMachine = new BlockPumpMachine(BLOCK_ID_PREFIX++);
 		FMRecipeLoader.blockRod = new BlockRod(BLOCK_ID_PREFIX++);
 		FMRecipeLoader.blockGenerator = new BlockGenerator(BLOCK_ID_PREFIX++);
@@ -204,7 +191,7 @@ public class FluidMech extends ModPrefab
 		FMRecipeLoader.blockSink = new BlockSink(BLOCK_ID_PREFIX++);
 		FMRecipeLoader.blockDrain = new BlockDrain(BLOCK_ID_PREFIX++);
 		FMRecipeLoader.blockConPump = new BlockConstructionPump(BLOCK_ID_PREFIX++);
-		FMRecipeLoader.blockPipe = new BlockPipe(BLOCK_ID_PREFIX++);
+		FMRecipeLoader.blockPipe = new BlockPipe(BLOCK_ID_PREFIX++, "RestrictedPipe");
 
 		/* ITEM DECLARATION */
 		FMRecipeLoader.itemParts = new ItemParts(FluidMech.CONFIGURATION.getItem("Parts", ITEM_ID_PREFIX++).getInt());
@@ -241,4 +228,10 @@ public class FluidMech extends ModPrefab
 			return new ItemStack(FMRecipeLoader.blockPipe, 1, 4);
 		}
 	};
+
+	@Override
+	public String getDomain()
+	{
+		return "fm";
+	}
 }

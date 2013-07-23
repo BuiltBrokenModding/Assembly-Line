@@ -18,9 +18,9 @@ import dark.fluid.common.FluidMech;
 
 public class BlockPipe extends BlockFM
 {
-	public BlockPipe(int id)
+	public BlockPipe(int id, String name)
 	{
-		super("FluidPipe", id, Material.iron);
+		super(name, id, Material.iron);
 		this.setBlockBounds(0.30F, 0.30F, 0.30F, 0.70F, 0.70F, 0.70F);
 		this.setHardness(1f);
 		this.setResistance(3f);
