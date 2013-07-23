@@ -29,32 +29,48 @@ public class FMRecipeLoader extends RecipeLoader
 	public static Item itemParts;
 	public static Item itemGauge;
 
+	public static ItemStack ironPipe;
+	public static ItemStack bronzeTube;
+	public static ItemStack obbyTube;
+	public static ItemStack netherTube;
+	public static ItemStack leatherSeal;
+	public static ItemStack slimeSeal;
+	public static ItemStack valvePart;
+	public static ItemStack unfinishedTank;
+
 	@Override
 	public void loadRecipes()
 	{
+		ironPipe = new ItemStack(itemParts, 1, Parts.Iron.ordinal());
+		bronzeTube = new ItemStack(itemParts, 1, Parts.Bronze.ordinal());
+		obbyTube = new ItemStack(itemParts, 1, Parts.Obby.ordinal());
+		netherTube = new ItemStack(itemParts, 1, Parts.Nether.ordinal());
+		leatherSeal = new ItemStack(itemParts, 1, Parts.Seal.ordinal());
+		slimeSeal = new ItemStack(itemParts, 1, Parts.SlimeSeal.ordinal());
+		valvePart = new ItemStack(itemParts, 1, Parts.Tank.ordinal());
+		unfinishedTank = new ItemStack(itemParts, 1, Parts.Tank.ordinal());
 		// generator
-		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(this.blockGenerator, 1), new Object[] { "@T@", "OVO", "@T@", 'T', new ItemStack(blockRod, 1), '@', "plateSteel", 'O', "basicCircuit", 'V', "motor" }));
-		// pipe gauge
-		GameRegistry.addRecipe(new ItemStack(itemGauge, 1, 0), new Object[] { "TVT", " T ", 'V', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 'T', new ItemStack(itemParts, 1, Parts.Iron.ordinal()) });
-		// iron tube
-		GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Iron.ordinal()), new Object[] { "@@@", '@', Item.ingotIron });
-		// bronze tube
-		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(itemParts, 4, Parts.Bronze.ordinal()), new Object[] { "@@@", '@', "ingotBronze" }));
-		// obby tube
-		GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Obby.ordinal()), new Object[] { "@@@", '@', Block.obsidian });
-		// nether tube
-		GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Nether.ordinal()), new Object[] { "NNN", 'N', Block.netherrack });
-		// seal
-		GameRegistry.addRecipe(new ItemStack(itemParts, 4, Parts.Seal.ordinal()), new Object[] { "@@", "@@", '@', Item.leather });
-		// slime steal
-		GameRegistry.addShapelessRecipe(new ItemStack(itemParts, 1, Parts.SlimeSeal.ordinal()), new Object[] { new ItemStack(itemParts, 1, Parts.Seal.ordinal()), new ItemStack(Item.slimeBall, 1) });
-		// part valve
-		GameRegistry.addRecipe(new ItemStack(itemParts, 1, Parts.Valve.ordinal()), new Object[] { "T@T", 'T', new ItemStack(itemParts, 1, Parts.Iron.ordinal()), '@', Block.lever });
-
-		// unfinished tank
-		GameRegistry.addRecipe(new ItemStack(itemParts, 1, Parts.Tank.ordinal()), new Object[] { " @ ", "@ @", " @ ", '@', Item.ingotIron });
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this.blockGenerator, 1), new Object[] { "@T@", "OVO", "@T@", 'T', new ItemStack(blockRod, 1), '@', "plateSteel", 'O', "basicCircuit", 'V', "motor" }));
 		// mechanical rod
 		GameRegistry.addRecipe(new ItemStack(blockRod, 1), new Object[] { "I@I", 'I', Item.ingotIron, '@', new ItemStack(itemParts, 1, Parts.Iron.ordinal()) });
+		// pipe gauge
+		new RecipeGrid(itemGauge, 3, 2).setRowOne("ironTube", "valvePart", "ironTube").setRowTwo(null, "ironTube", null).RegisterRecipe();
+		// iron tube
+		new RecipeGrid(this.setStackSize(ironPipe, 4), 3, 1).setRowOne(Item.ingotIron, Item.ingotIron, Item.ingotIron).RegisterRecipe();
+		// bronze tube
+		new RecipeGrid(this.setStackSize(bronzeTube, 4), 3, 1).setRowOne("ingotBronze", "ingotBronze", "ingotBronze").RegisterRecipe();
+		// obby tube
+		new RecipeGrid(this.setStackSize(obbyTube, 4), 3, 1).setRowOne(Block.obsidian, Block.obsidian, Block.obsidian).RegisterRecipe();
+		// nether tube
+		new RecipeGrid(this.setStackSize(netherTube, 4), 3, 1).setRowOne(Block.netherrack, Block.netherrack, Block.netherrack).RegisterRecipe();
+		// seal
+		new RecipeGrid(this.setStackSize(leatherSeal, 16), 2, 2).setRowOne(Item.leather, Item.leather).setRowTwo(Item.leather, Item.leather).RegisterRecipe();
+		// slime steal
+		GameRegistry.addShapelessRecipe(slimeSeal, new Object[] { new ItemStack(itemParts, 1, Parts.Seal.ordinal()), new ItemStack(Item.slimeBall, 1) });
+		// part valve
+		new RecipeGrid(valvePart, 3, 1).setRowOne(ironPipe, Block.lever, ironPipe).RegisterRecipe();
+		// unfinished tank
+		new RecipeGrid(unfinishedTank).setRowOne(null, Item.ingotIron, null).setRowTwo(Item.ingotIron, null, Item.ingotIron).setRowThree(null, Item.ingotIron, null);
 
 		// Iron Pipe
 		GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 1, 15), new Object[] { new ItemStack(itemParts, 1, Parts.Iron.ordinal()), new ItemStack(itemParts, 1, Parts.Seal.ordinal()) });
@@ -95,9 +111,9 @@ public class FMRecipeLoader extends RecipeLoader
 		GameRegistry.addRecipe(new ItemStack(blockTank, 1, ColorCode.NONE.ordinal()), new Object[] { "@@@", "@T@", "@@@", 'T', new ItemStack(itemParts, 1, Parts.Tank.ordinal()), '@', Block.stone });
 
 		// pump
-		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(blockMachine, 1, 0), new Object[] { "C@C", "BMB", "@X@", '@', "plateSteel", 'X', new ItemStack(blockPipe, 1), 'B', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 'C', "basicCircuit", 'M', "motor" }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockMachine, 1, 0), new Object[] { "C@C", "BMB", "@X@", '@', "plateSteel", 'X', new ItemStack(blockPipe, 1), 'B', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 'C', "basicCircuit", 'M', "motor" }));
 		// construction pump
-		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(blockConPump, 1, 0), new Object[] { "@C@", "BMB", "@@@", '@', "plateSteel", 'B', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 'C', "advancedCircuit", 'M', "motor" }));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConPump, 1, 0), new Object[] { "@C@", "BMB", "@@@", '@', "plateSteel", 'B', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 'C', "advancedCircuit", 'M', "motor" }));
 		// Drain
 		GameRegistry.addRecipe(new ItemStack(blockDrain, 1, 0), new Object[] { "IGI", "SVS", " P ", 'I', Item.ingotIron, 'G', Block.dispenser, 'S', Block.stone, 'P', new ItemStack(blockPipe, 1), 'V', new ItemStack(itemParts, 1, Parts.Valve.ordinal()) });
 
