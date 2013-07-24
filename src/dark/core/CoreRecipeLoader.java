@@ -7,7 +7,7 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import dark.core.items.EnumMeterials;
 import dark.core.items.EnumOreParts;
 
-public class CoreRecipeLoader
+public class CoreRecipeLoader extends RecipeLoader
 {
 
 	/* BLOCKS */
@@ -16,12 +16,14 @@ public class CoreRecipeLoader
 	/* ITEMS */
 	public static Item itemMetals;
 
-	public static void loadRecipes()
+	@Override
+	public void loadRecipes()
 	{
+		super.loadRecipes();
 		loadSmeltingRecipes();
 	}
 
-	public static void loadSmeltingRecipes()
+	public void loadSmeltingRecipes()
 	{
 		if (blockOre != null && itemMetals != null)
 		{

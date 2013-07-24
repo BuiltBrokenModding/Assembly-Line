@@ -17,37 +17,54 @@ public abstract class RecipeLoader
 	protected static Object steel;
 	protected static Object steelPlate;
 	protected static Object motor;
+	protected static Object bronze;
+	protected static Object bronzePlate;
+
+	static boolean loaded = false;
 
 	/** Should be called to load recipes. The main class only loads ore name items to decrease
 	 * chances of missing items in recipes */
 	public void loadRecipes()
 	{
-		/* Vinalla items load first */
-		circuit = Item.redstoneRepeater;
-		circuit2 = Item.comparator;
-		steel = Item.ingotIron;
-		steelPlate = Item.ingotGold;
-		motor = Block.pistonBase;
-		/* Ore directory items load over teh vinalla ones if they are present */
-		if (OreDictionary.getOres("basicCircuit").size() > 0)
+		if (!loaded)
 		{
-			circuit = "basicCircuit";
-		}
-		if (OreDictionary.getOres("advancedCircuit").size() > 0)
-		{
-			circuit = "advancedCircuit";
-		}
-		if (OreDictionary.getOres("ingotSteel").size() > 0)
-		{
-			steel = "ingotSteel";
-		}
-		if (OreDictionary.getOres("plateSteel").size() > 0)
-		{
-			steelPlate = "plateSteel";
-		}
-		if (OreDictionary.getOres("motor").size() > 0)
-		{
-			motor = "motor";
+			/* Vinalla items load first */
+			circuit = Item.redstoneRepeater;
+			circuit2 = Item.comparator;
+			steel = Item.ingotIron;
+			steelPlate = Item.ingotGold;
+			motor = Block.pistonBase;
+			bronze = Item.ingotIron;
+			bronzePlate = Item.ingotGold;
+			/* Ore directory items load over teh vinalla ones if they are present */
+			if (OreDictionary.getOres("basicCircuit").size() > 0)
+			{
+				circuit = "basicCircuit";
+			}
+			if (OreDictionary.getOres("advancedCircuit").size() > 0)
+			{
+				circuit = "advancedCircuit";
+			}
+			if (OreDictionary.getOres("ingotSteel").size() > 0)
+			{
+				steel = "ingotSteel";
+			}
+			if (OreDictionary.getOres("plateSteel").size() > 0)
+			{
+				steelPlate = "plateSteel";
+			}
+			if (OreDictionary.getOres("motor").size() > 0)
+			{
+				motor = "motor";
+			}
+			if (OreDictionary.getOres("ingotBronze").size() > 0)
+			{
+				bronze = "ingotBronze";
+			}
+			if (OreDictionary.getOres("plateBronze").size() > 0)
+			{
+				bronzePlate = "plateBronze";
+			}
 		}
 	}
 

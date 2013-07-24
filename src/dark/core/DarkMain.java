@@ -15,6 +15,7 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.Metadata;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
@@ -64,17 +65,20 @@ public class DarkMain extends ModPrefab
 
 	public static BlockMulti blockMulti;
 
+	@Instance(MOD_ID)
 	private static DarkMain instance;
+
 	public static CoreRecipeLoader recipeLoader;
 
 	public static DarkMain getInstance()
 	{
-		if(instance == null)
+		if (instance == null)
 		{
 			instance = new DarkMain();
 		}
 		return instance;
 	}
+
 	@EventHandler
 	@Override
 	public void preInit(FMLPreInitializationEvent event)
@@ -94,7 +98,7 @@ public class DarkMain extends ModPrefab
 	{
 		super.init(event);
 
-		GameRegistry.registerBlock(recipeLoader.blockOre, ItemOre.class, "DMOre");
+		GameRegistry.registerBlock(CoreRecipeLoader.blockOre, ItemOre.class, "DMOre");
 		GameRegistry.registerBlock(blockMulti, "multiBlock");
 
 		GameRegistry.registerTileEntity(TileEntityMulti.class, "ALMulti");
@@ -120,7 +124,7 @@ public class DarkMain extends ModPrefab
 	public void postInit(FMLPostInitializationEvent event)
 	{
 		super.postInit(event);
-
+		//TODO load langs
 		recipeLoader.loadRecipes();
 
 		proxy.postInit();
@@ -137,15 +141,15 @@ public class DarkMain extends ModPrefab
 		/* CONFIGS */
 		CONFIGURATION.load();
 		/* BLOCKS */
-		DarkMain.blockMulti = new BlockMulti(DarkMain.CONFIGURATION.getBlock("MultiBlock", BLOCK_ID_PREFIX++).getInt());
+		blockMulti = new BlockMulti(DarkMain.CONFIGURATION.getBlock("MultiBlock", BLOCK_ID_PREFIX++).getInt());
 		if (CONFIGURATION.get("general", "LoadOre", true).getBoolean(true))
 		{
-			recipeLoader.blockOre = new BlockOre(BLOCK_ID_PREFIX++, CONFIGURATION);
+			CoreRecipeLoader.blockOre = new BlockOre(BLOCK_ID_PREFIX++, CONFIGURATION);
 		}
 		/* ITEMS */
 		if (CONFIGURATION.get("general", "LoadOreItems", true).getBoolean(true))
 		{
-			recipeLoader.itemMetals = new ItemOreDirv(ITEM_ID_PREFIX++, CONFIGURATION);
+			CoreRecipeLoader.itemMetals = new ItemOreDirv(ITEM_ID_PREFIX++, CONFIGURATION);
 		}
 		if (CONFIGURATION.hasChanged())
 		{
@@ -182,10 +186,10 @@ public class DarkMain extends ModPrefab
 	{
 		SaveManager.save(true);
 	}
+
 	@Override
 	public String getDomain()
 	{
-		// TODO Auto-generated method stub
 		return "dark";
 	}
 
