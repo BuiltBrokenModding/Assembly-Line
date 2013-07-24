@@ -1,6 +1,8 @@
 package universalelectricity.prefab.tile;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,7 +22,7 @@ public abstract class TileEntityElectrical extends TileEntityAdvanced implements
 	public float energyStored = 0;
 
 	/**
-	 * Recharges electric item.
+	 *  Recharges electric item.
 	 */
 	public void recharge(ItemStack itemStack)
 	{
@@ -28,7 +30,7 @@ public abstract class TileEntityElectrical extends TileEntityAdvanced implements
 	}
 
 	/**
-	 * Discharges electric item.
+	 *  Discharges electric item.
 	 */
 	public void discharge(ItemStack itemStack)
 	{
@@ -36,7 +38,7 @@ public abstract class TileEntityElectrical extends TileEntityAdvanced implements
 	}
 
 	/**
-	 * Called to produce the potential electricity inside this block.
+	 *  Called to produce the potential electricity inside this block.
 	 */
 	public void produce()
 	{
@@ -51,7 +53,7 @@ public abstract class TileEntityElectrical extends TileEntityAdvanced implements
 
 	/**
 	 * Produces UE power towards a specific direction.
-	 * 
+	 *
 	 * @param outputDirection - The output direction.
 	 */
 	public void produceUE(ForgeDirection outputDirection)
@@ -82,7 +84,7 @@ public abstract class TileEntityElectrical extends TileEntityAdvanced implements
 
 	/**
 	 * The electrical input direction.
-	 * 
+	 *
 	 * @return The direction that electricity is entered into the tile. Return null for no input. By
 	 * default you can accept power from all sides.
 	 */
@@ -93,7 +95,7 @@ public abstract class TileEntityElectrical extends TileEntityAdvanced implements
 
 	/**
 	 * The electrical output direction.
-	 * 
+	 *
 	 * @return The direction that electricity is output from the tile. Return null for no output. By
 	 * default it will return an empty EnumSet.
 	 */

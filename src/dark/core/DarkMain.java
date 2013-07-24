@@ -141,10 +141,10 @@ public class DarkMain extends ModPrefab
 		/* CONFIGS */
 		CONFIGURATION.load();
 		/* BLOCKS */
-		blockMulti = new BlockMulti(DarkMain.CONFIGURATION.getBlock("MultiBlock", BLOCK_ID_PREFIX++).getInt());
+		blockMulti = new BlockMulti(DarkMain.CONFIGURATION.getBlock("MultiBlock", getNextID()).getInt());
 		if (CONFIGURATION.get("general", "LoadOre", true).getBoolean(true))
 		{
-			CoreRecipeLoader.blockOre = new BlockOre(BLOCK_ID_PREFIX++, CONFIGURATION);
+			CoreRecipeLoader.blockOre = new BlockOre(getNextID(), CONFIGURATION);
 		}
 		/* ITEMS */
 		if (CONFIGURATION.get("general", "LoadOreItems", true).getBoolean(true))

@@ -1,5 +1,7 @@
 package dark.core;
 
+import net.minecraft.block.Block;
+
 import org.modstats.Modstats;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -27,10 +29,29 @@ public abstract class ModPrefab
 	public static final String GUI_DIRECTORY = TEXTURE_DIRECTORY + "gui/";
 
 	/* START IDS */
-	public static int BLOCK_ID_PREFIX = 3100;
+	public static int BLOCK_ID_PRE = 3100;
 	public static int ITEM_ID_PREFIX = 13200;
 
 	public abstract String getDomain();
+
+	/** Gets the next unused ID in the block list. Does not prevent config file issues after the file
+	 * has been made */
+	public int getNextID()
+	{
+		int id = BLOCK_ID_PRE;
+
+		while (id > 255 && id < 4048)
+		{
+			Block block = Block.blocksList[id];
+			if (block == null)
+			{
+				break;
+			}
+			id++;
+		}
+		BLOCK_ID_PRE = id + 1;
+		return id;
+	}
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
