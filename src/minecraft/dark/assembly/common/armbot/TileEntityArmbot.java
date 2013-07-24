@@ -105,7 +105,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
 		if (this.isRunning())
 		{
-			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+			if (!this.worldObj.isRemote)
 			{
 				if (this.disk == null && this.computersAttached == 0)
 				{
@@ -130,7 +130,9 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 				}
 			}
 			if (!this.worldObj.isRemote)
+			{
 				this.commandManager.onUpdate();
+			}
 		}
 		else
 		{
@@ -589,7 +591,10 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 	@Override
 	public void onCreate(Vector3 placedPosition)
 	{
-		DarkMain.blockMulti.makeFakeBlock(this.worldObj, Vector3.add(placedPosition, new Vector3(0, 1, 0)), placedPosition);
+		if (DarkMain.blockMulti != null)
+		{
+			DarkMain.blockMulti.makeFakeBlock(this.worldObj, Vector3.add(placedPosition, new Vector3(0, 1, 0)), placedPosition);
+		}
 	}
 
 	@Override

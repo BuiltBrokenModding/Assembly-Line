@@ -85,21 +85,20 @@ public abstract class TileEntityAssembly extends TileEntityMachine implements IN
 		this.onUpdate();
 	}
 
+	@Override
+	public boolean canRun()
+	{
+		//TODO add check for network power
+		return super.canRun() || AssemblyLine.REQUIRE_NO_POWER;
+	}
+
 	/** Same as updateEntity */
 	public abstract void onUpdate();
 
 	/** Checks to see if this assembly tile can run using several methods */
 	public boolean isRunning()
 	{
-		if (!this.worldObj.isRemote)
-		{
-			return this.running || AssemblyLine.REQUIRE_NO_POWER;
-		}
-		else
-		{
-			return this.running;
-		}
-
+		return this.running;
 	}
 
 	/** Amount of energy this tile runs on per tick */
