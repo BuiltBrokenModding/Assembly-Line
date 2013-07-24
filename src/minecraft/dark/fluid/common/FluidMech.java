@@ -181,26 +181,26 @@ public class FluidMech extends ModPrefab
 		if (FluidMech.CONFIGURATION.get("general", "EnableWasteFluid", true).getBoolean(true))
 		{
 			Fluid waste = new Fluid("waste");
-			FMRecipeLoader.blockWasteLiquid = new BlockFluid(waste, BLOCK_ID_PREFIX++);
+			FMRecipeLoader.blockWasteLiquid = new BlockFluid(waste, getNextID());
 			FluidRegistry.registerFluid(waste);
 		}
 		if (FluidMech.CONFIGURATION.get("general", "EnableOilFluid", true).getBoolean(true))
 		{
-			Fluid waste = new Fluid("oil");
-			FMRecipeLoader.blockWasteLiquid = new BlockFluid(waste, BLOCK_ID_PREFIX++);
-			FluidRegistry.registerFluid(waste);
+			Fluid oil = new Fluid("oil");
+			FMRecipeLoader.blockWasteLiquid = new BlockFluid(oil, getNextID());
+			FluidRegistry.registerFluid(oil);
 		}
 		/* BLOCK DECLARATION -- CONFIG LOADER */
-		FMRecipeLoader.blockGenPipe = new BlockPipe(BLOCK_ID_PREFIX++, "GenericPipe");
-		FMRecipeLoader.blockMachine = new BlockPumpMachine(BLOCK_ID_PREFIX++);
-		FMRecipeLoader.blockRod = new BlockRod(BLOCK_ID_PREFIX++);
-		FMRecipeLoader.blockGenerator = new BlockGenerator(BLOCK_ID_PREFIX++);
-		FMRecipeLoader.blockReleaseValve = new BlockReleaseValve(BLOCK_ID_PREFIX++);
-		FMRecipeLoader.blockTank = new BlockTank(BLOCK_ID_PREFIX++);
-		FMRecipeLoader.blockSink = new BlockSink(BLOCK_ID_PREFIX++);
-		FMRecipeLoader.blockDrain = new BlockDrain(BLOCK_ID_PREFIX++);
-		FMRecipeLoader.blockConPump = new BlockConstructionPump(BLOCK_ID_PREFIX++);
-		FMRecipeLoader.blockPipe = new BlockPipe(BLOCK_ID_PREFIX++, "RestrictedPipe");
+		FMRecipeLoader.blockGenPipe = new BlockPipe(getNextID(), "GenericPipe");
+		FMRecipeLoader.blockMachine = new BlockPumpMachine(getNextID());
+		FMRecipeLoader.blockRod = new BlockRod(getNextID());
+		FMRecipeLoader.blockGenerator = new BlockGenerator(getNextID());
+		FMRecipeLoader.blockReleaseValve = new BlockReleaseValve(getNextID());
+		FMRecipeLoader.blockTank = new BlockTank(getNextID());
+		FMRecipeLoader.blockSink = new BlockSink(getNextID());
+		FMRecipeLoader.blockDrain = new BlockDrain(getNextID());
+		FMRecipeLoader.blockConPump = new BlockConstructionPump(getNextID());
+		FMRecipeLoader.blockPipe = new BlockPipe(getNextID(), "RestrictedPipe");
 
 		/* ITEM DECLARATION */
 		FMRecipeLoader.itemParts = new ItemParts(FluidMech.CONFIGURATION.getItem("Parts", ITEM_ID_PREFIX++).getInt());
