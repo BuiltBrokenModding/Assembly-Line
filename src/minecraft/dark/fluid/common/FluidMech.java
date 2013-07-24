@@ -13,6 +13,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
@@ -40,6 +41,7 @@ import dark.core.ModPrefab;
 import dark.fluid.common.item.ItemParts;
 import dark.fluid.common.item.ItemParts.Parts;
 import dark.fluid.common.item.ItemTools;
+import dark.fluid.common.machines.BlockFluid;
 import dark.fluid.common.machines.BlockReleaseValve;
 import dark.fluid.common.machines.BlockSink;
 import dark.fluid.common.machines.BlockTank;
@@ -170,16 +172,24 @@ public class FluidMech extends ModPrefab
 	@Override
 	public void loadConfig()
 	{
-		if(recipeLoader == null)
+		if (recipeLoader == null)
 		{
 			recipeLoader = new FMRecipeLoader();
 		}
 		/* CONFIGS */
 		CONFIGURATION.load();
-
-		/* LIQUID DIRECTORY CALL */
-		Fluid waste = new Fluid("waste").setBlockID(FluidMech.CONFIGURATION.getBlock("WasteLiquid", BLOCK_ID_PREFIX++).getInt());
-
+		if (FluidMech.CONFIGURATION.get("general", "EnableWasteFluid", true).getBoolean(true))
+		{
+			Fluid waste = new Fluid("waste");
+			FMRecipeLoader.blockWasteLiquid = new BlockFluid(waste, BLOCK_ID_PREFIX++);
+			FluidRegistry.registerFluid(waste);
+		}
+		if (FluidMech.CONFIGURATION.get("general", "EnableOilFluid", true).getBoolean(true))
+		{
+			Fluid waste = new Fluid("oil");
+			FMRecipeLoader.blockWasteLiquid = new BlockFluid(waste, BLOCK_ID_PREFIX++);
+			FluidRegistry.registerFluid(waste);
+		}
 		/* BLOCK DECLARATION -- CONFIG LOADER */
 		FMRecipeLoader.blockGenPipe = new BlockPipe(BLOCK_ID_PREFIX++, "GenericPipe");
 		FMRecipeLoader.blockMachine = new BlockPumpMachine(BLOCK_ID_PREFIX++);
@@ -187,7 +197,6 @@ public class FluidMech extends ModPrefab
 		FMRecipeLoader.blockGenerator = new BlockGenerator(BLOCK_ID_PREFIX++);
 		FMRecipeLoader.blockReleaseValve = new BlockReleaseValve(BLOCK_ID_PREFIX++);
 		FMRecipeLoader.blockTank = new BlockTank(BLOCK_ID_PREFIX++);
-		FMRecipeLoader.blockWasteLiquid = new BlockFluidFinite(waste.getBlockID(), waste, Material.water);
 		FMRecipeLoader.blockSink = new BlockSink(BLOCK_ID_PREFIX++);
 		FMRecipeLoader.blockDrain = new BlockDrain(BLOCK_ID_PREFIX++);
 		FMRecipeLoader.blockConPump = new BlockConstructionPump(BLOCK_ID_PREFIX++);
