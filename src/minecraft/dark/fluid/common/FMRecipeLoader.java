@@ -8,6 +8,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import dark.api.ColorCode;
 import dark.core.RecipeLoader;
 import dark.fluid.common.item.ItemParts.Parts;
+import dark.fluid.common.machines.BlockFluid;
 
 public class FMRecipeLoader extends RecipeLoader
 {
@@ -22,7 +23,10 @@ public class FMRecipeLoader extends RecipeLoader
 	public static Block blockSink;
 	public static Block blockDrain;
 	public static Block blockConPump;
-	public static Block blockWasteLiquid;
+
+	public static BlockFluid blockWasteLiquid;
+	public static BlockFluid blockOilLiquid;
+	public static BlockFluid blockFuelLiquid;
 
 	/* ITEMS */
 	public static Item itemParts;
@@ -106,21 +110,21 @@ public class FMRecipeLoader extends RecipeLoader
 		// part valve
 		new RecipeGrid(valvePart, 3, 1).setRowOne(ironTube, Block.lever, ironTube).RegisterRecipe();
 		// unfinished tank
-		new RecipeGrid(unfinishedTank).setRowOne(null, Item.ingotIron, null).setRowTwo(Item.ingotIron, null, Item.ingotIron).setRowThree(null, Item.ingotIron, null);
-		new RecipeGrid(unfinishedTank).setRowOne(null, bronze, null).setRowTwo(bronze, null, bronze).setRowThree(null, bronze, null);
+		new RecipeGrid(unfinishedTank).setRowOne(null, Item.ingotIron, null).setRowTwo(Item.ingotIron, null, Item.ingotIron).setRowThree(null, Item.ingotIron, null).RegisterRecipe();
+		new RecipeGrid(unfinishedTank).setRowOne(null, bronze, null).setRowTwo(bronze, null, bronze).setRowThree(null, bronze, null).RegisterRecipe();
 
 	}
 
 	public void registerTanks()
 	{
 		// lava tank
-		new RecipeGrid(new ItemStack(blockTank, 4, ColorCode.RED.ordinal())).setRowOne(Block.netherrack, Block.obsidian, Block.netherrack).setRowTwo(Block.obsidian, null, Block.obsidian).setRowThree(Block.netherrack, Block.obsidian, Block.netherrack);
+		new RecipeGrid(new ItemStack(blockTank, 4, ColorCode.RED.ordinal())).setRowOne(Block.netherrack, Block.obsidian, Block.netherrack).setRowTwo(Block.obsidian, null, Block.obsidian).setRowThree(Block.netherrack, Block.obsidian, Block.netherrack).RegisterRecipe();
 		// water tank
 		GameRegistry.addShapelessRecipe(new ItemStack(blockTank, 1, ColorCode.BLUE.ordinal()), new Object[] { new ItemStack(blockTank, 4, ColorCode.NONE.ordinal()), new ItemStack(Item.dyePowder, 1, ColorCode.BLUE.ordinal()) });
 		// milk tank
-		new RecipeGrid(new ItemStack(blockTank, 4, ColorCode.WHITE.ordinal())).setRowOne(Block.planks, Block.glass, Block.planks).setRowTwo(Block.glass, null, Block.glass).setRowThree(Block.planks, Block.glass, Block.planks);
+		new RecipeGrid(new ItemStack(blockTank, 4, ColorCode.WHITE.ordinal())).setRowOne(Block.planks, Block.glass, Block.planks).setRowTwo(Block.glass, null, Block.glass).setRowThree(Block.planks, Block.glass, Block.planks).RegisterRecipe();
 		// generic Tank
-		new RecipeGrid(new ItemStack(blockTank, 4, ColorCode.NONE.ordinal())).setRowOne(Item.ingotIron, Block.glass, Item.ingotIron).setRowTwo(Block.glass, null, Block.glass).setRowThree(Item.ingotIron, Block.glass, Item.ingotIron);
+		new RecipeGrid(new ItemStack(blockTank, 4, ColorCode.NONE.ordinal())).setRowOne(Item.ingotIron, Block.glass, Item.ingotIron).setRowTwo(Block.glass, null, Block.glass).setRowThree(Item.ingotIron, Block.glass, Item.ingotIron).RegisterRecipe();
 	}
 
 	public void registerPipes()
@@ -145,7 +149,7 @@ public class FMRecipeLoader extends RecipeLoader
 		{
 			if (pipeMeta != ColorCode.WHITE.ordinal() && pipeMeta != ColorCode.NONE.ordinal())
 			{
-				new RecipeGrid(new ItemStack(blockGenPipe, 4, pipeMeta)).setRowOne(null, blockGenPipe, null).setRowTwo(blockGenPipe, new ItemStack(Item.dyePowder, 1, pipeMeta), blockGenPipe).setRowOne(null, blockGenPipe, null);
+				new RecipeGrid(new ItemStack(blockGenPipe, 4, pipeMeta)).setRowOne(null, blockGenPipe, null).setRowTwo(blockGenPipe, new ItemStack(Item.dyePowder, 1, pipeMeta), blockGenPipe).setRowOne(null, blockGenPipe, null).RegisterRecipe();
 			}
 		}
 		new RecipeGrid(ironPipe, 1, 1).setRowOne(blockGenPipe).RegisterRecipe();
