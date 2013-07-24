@@ -152,17 +152,17 @@ public class AssemblyLine extends ModPrefab
 			recipeLoader = new ALRecipeLoader();
 		}
 		CONFIGURATION.load();
-		recipeLoader.blockConveyorBelt = new BlockConveyorBelt(BLOCK_ID_PREFIX++);
-		recipeLoader.blockManipulator = new BlockManipulator(BLOCK_ID_PREFIX++);
-		recipeLoader.blockCrate = new BlockCrate(BLOCK_ID_PREFIX++);
-		recipeLoader.blockImprinter = new BlockImprinter(BLOCK_ID_PREFIX++);
-		recipeLoader.blockDetector = new BlockDetector(BLOCK_ID_PREFIX++);
-		recipeLoader.blockRejector = new BlockRejector(BLOCK_ID_PREFIX++);
-		recipeLoader.blockEncoder = new BlockEncoder(BLOCK_ID_PREFIX++);
-		recipeLoader.blockArmbot = new BlockArmbot(BLOCK_ID_PREFIX++);
-		recipeLoader.blockCraneController = new BlockCraneController(BLOCK_ID_PREFIX++);
-		recipeLoader.blockCraneFrame = new BlockCraneFrame(BLOCK_ID_PREFIX++);
-		recipeLoader.blockTurntable = new BlockTurntable(BLOCK_ID_PREFIX++);
+		recipeLoader.blockConveyorBelt = new BlockConveyorBelt(getNextID());
+		recipeLoader.blockManipulator = new BlockManipulator(getNextID());
+		recipeLoader.blockCrate = new BlockCrate(getNextID());
+		recipeLoader.blockImprinter = new BlockImprinter(getNextID());
+		recipeLoader.blockDetector = new BlockDetector(getNextID());
+		recipeLoader.blockRejector = new BlockRejector(getNextID());
+		recipeLoader.blockEncoder = new BlockEncoder(getNextID());
+		recipeLoader.blockArmbot = new BlockArmbot(getNextID());
+		recipeLoader.blockCraneController = new BlockCraneController(getNextID());
+		recipeLoader.blockCraneFrame = new BlockCraneFrame(getNextID());
+		recipeLoader.blockTurntable = new BlockTurntable(getNextID());
 
 		recipeLoader.itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", ITEM_ID_PREFIX).getInt());
 		recipeLoader.itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", ITEM_ID_PREFIX + 1).getInt());
