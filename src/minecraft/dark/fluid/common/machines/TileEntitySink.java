@@ -10,6 +10,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.IFluidTank;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 
@@ -42,7 +44,7 @@ public class TileEntitySink extends TileEntityFluidStorage implements IPacketRec
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		FluidStack stack = this.tank.getFluid();
+		FluidStack stack = this.getTank().getFluid();
 		if (stack != null && stack.getFluid() != null)
 		{
 			return PacketManager.getPacket(FluidMech.CHANNEL, this, stack.writeToNBT(new NBTTagCompound()));
@@ -59,7 +61,7 @@ public class TileEntitySink extends TileEntityFluidStorage implements IPacketRec
 	{
 		try
 		{
-			this.tank.setFluid(FluidStack.loadFluidStackFromNBT(PacketManager.readNBTTagCompound(data)));
+			this.getTank().setFluid(FluidStack.loadFluidStackFromNBT(PacketManager.readNBTTagCompound(data)));
 		}
 		catch (Exception e)
 		{

@@ -11,18 +11,15 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.IFluidTank;
 import dark.api.IColorCoded;
 import dark.core.helpers.FluidHelper;
 import dark.core.helpers.FluidRestrictionHandler;
 
 public abstract class TileEntityFluidStorage extends TileEntityFluidDevice implements IFluidHandler, IColorCoded
 {
-	/* INTERNAL TANK */
-	public FluidTank tank = new FluidTank(this.getTankSize());
 
-	/** gets the max storage limit of the tank */
-	public abstract int getTankSize();
-
+	public FluidTank fluidTank = new FluidTank(this.getTankSize());
 	@Override
 	public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
 	{
@@ -30,11 +27,11 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 		{
 			return null;
 		}
-		if (this.tank.getFluid() == null)
+		if (this.getTank().getFluid() == null)
 		{
 			return "Empty";
 		}
-		return String.format("%d/%d %S Stored", tank.getFluid().amount / FluidContainerRegistry.BUCKET_VOLUME, tank.getCapacity() / FluidContainerRegistry.BUCKET_VOLUME, tank.getFluid().getFluid().getLocalizedName());
+		return String.format("%d/%d %S Stored", getTank().getFluid().amount / FluidContainerRegistry.BUCKET_VOLUME, this.getTank().getCapacity() / FluidContainerRegistry.BUCKET_VOLUME, getTank().getFluid().getFluid().getLocalizedName());
 	}
 
 	@Override
@@ -50,34 +47,34 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 		{
 			return 0;
 		}
-		else if (this.tank.getFluid() != null && !resource.isFluidEqual(this.tank.getFluid()))
+		else if (this.getTank().getFluid() != null && !resource.isFluidEqual(this.getTank().getFluid()))
 		{
 			return 0;
 		}
-		return this.tank.fill(resource, doFill);
+		return this.getTank().fill(resource, doFill);
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		if (this.tank.getFluid() == null)
+		if (this.getTank().getFluid() == null)
 		{
 			return null;
 		}
-		FluidStack stack = this.tank.getFluid();
+		FluidStack stack = this.getTank().getFluid();
 		if (maxDrain < stack.amount)
 		{
 			stack = FluidHelper.getStack(stack, maxDrain);
 		}
-		return this.tank.drain(maxDrain, doDrain);
+		return this.getTank().drain(maxDrain, doDrain);
 	}
 
 	@Override
 	public FluidTankInfo[] getTankInfo(ForgeDirection from)
 	{
-		if (this.tank != null)
+		if (this.getTank() != null)
 		{
-			return new FluidTankInfo[] { new FluidTankInfo(this.tank) };
+			return new FluidTankInfo[] { new FluidTankInfo(this.getTank()) };
 		}
 		return new FluidTankInfo[1];
 	}
@@ -95,13 +92,13 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 			if (fluid != null)
 			{
 				FluidStack liquid = new FluidStack(fluid, amount);
-				tank.setFluid(liquid);
+				getTank().setFluid(liquid);
 			}
 		}else
 		{
 			System.out.println("Loading fluid tank");
-			tank.readFromNBT(nbt.getCompoundTag("FluidTank"));
-			System.out.println("Tank: "+ (tank.getFluid() != null ? tank.getFluid().fluidID +"@"+tank.getFluid().amount+"mb" : "Empty"));
+			getTank().readFromNBT(nbt.getCompoundTag("FluidTank"));
+			System.out.println("Tank: "+ (getTank().getFluid() != null ? getTank().getFluid().fluidID +"@"+getTank().getFluid().amount+"mb" : "Empty"));
 
 		}
 	}
@@ -110,24 +107,36 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		if (this.tank != null)
+		if (this.getTank() != null)
 		{
 			System.out.println("Saving fluid tank");
-			System.out.println("Tank: "+ (tank.getFluid() != null ? tank.getFluid().fluidID +"@"+tank.getFluid().amount+"mb" : "Empty"));
-			nbt.setCompoundTag("FluidTank", this.tank.writeToNBT(new NBTTagCompound()));
+			System.out.println("Tank: "+ (getTank().getFluid() != null ? getTank().getFluid().fluidID +"@"+getTank().getFluid().amount+"mb" : "Empty"));
+			nbt.setCompoundTag("FluidTank", this.getTank().writeToNBT(new NBTTagCompound()));
 		}
 	}
 
 	/** Is the internal tank full */
 	public boolean isFull()
 	{
-		return this.tank.getFluid() != null && this.tank.getFluid().amount >= this.tank.getCapacity();
+		return this.getTank().getFluid() != null && this.getTank().getFluid().amount >= this.getTank().getCapacity();
 	}
 
 	/** gets the liquidStack stored in the internal tank */
 	public FluidStack getStoredLiquid()
 	{
-		return this.tank.getFluid();
+		return this.getTank().getFluid();
 	}
+
+	public FluidTank getTank()
+	{
+		if(this.fluidTank == null)
+		{
+			this.fluidTank = new FluidTank(this.getTankSize());
+		}
+		return this.fluidTank;
+	}
+
+	/** gets the max storage limit of the tank */
+	public abstract int getTankSize();
 
 }

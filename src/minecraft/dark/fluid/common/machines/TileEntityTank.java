@@ -49,8 +49,6 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
 	private List<TileEntity> connectedBlocks = new ArrayList<TileEntity>();
 	public int[] renderConnection = new int[6];
 
-	private FluidTank tank = new FluidTank(this.getTankSize());
-
 	/* NETWORK INSTANCE THAT THIS PIPE USES */
 	private NetworkFluidContainers fluidNetwork;
 	private int refreshRate = 1;
@@ -97,7 +95,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
 				if (id == 0)
 				{
 
-					this.tank.setFluid(FluidStack.loadFluidStackFromNBT(PacketManager.readNBTTagCompound(dataStream)));
+					this.getTank().setFluid(FluidStack.loadFluidStackFromNBT(PacketManager.readNBTTagCompound(dataStream)));
 
 					this.renderConnection[0] = dataStream.readInt();
 					this.renderConnection[1] = dataStream.readInt();
@@ -287,16 +285,6 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
 	public int getTankSize()
 	{
 		return FluidContainerRegistry.BUCKET_VOLUME * 8;
-	}
-
-	@Override
-	public FluidTank getTank()
-	{
-		if (this.tank == null)
-		{
-			this.tank = new FluidTank(this.getTankSize());
-		}
-		return this.tank;
 	}
 
 	@Override
