@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.Fluid;
@@ -30,12 +31,16 @@ public class NetworkFluidTiles extends NetworkTileEntities
 	/** Collective storage of all fluid tiles */
 	public FluidTank sharedTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 	/** Map of results of two different liquids merging */
-	public HashMap<Pair<Fluid, Fluid>, String> mergeResult = new HashMap<Pair<Fluid, Fluid>, String>();
+	public static HashMap<Pair<Fluid, Fluid>, String> mergeResult = new HashMap<Pair<Fluid, Fluid>, String>();
 	/** Color code of the network, mainly used for connection rules */
 	public ColorCode color = ColorCode.NONE;
 	/** Has the collective tank been loaded yet */
 	protected boolean loadedLiquids = false;
-
+	static
+	{
+		mergeResult.put(new Pair<Fluid,Fluid>(FluidRegistry.WATER,FluidRegistry.LAVA), "Block:"+Block.obsidian.blockID+"@0");
+		mergeResult.put(new Pair<Fluid,Fluid>(FluidRegistry.LAVA,FluidRegistry.WATER), "Block:"+Block.cobblestone.blockID+"@0");
+	}
 	public NetworkFluidTiles(ColorCode color, INetworkPart... parts)
 	{
 		super(parts);
@@ -220,6 +225,14 @@ public class NetworkFluidTiles extends NetworkTileEntities
 		}
 		else if (stackTwo != null && stackOne != null && !stackOne.isFluidEqual(stackTwo))
 		{
+			if (this.mergeResult.containsKey(new Pair<Fluid, Fluid>(stackOne.getFluid(), stackTwo.getFluid())))
+			{
+				String result = this.mergeResult.get(new Pair<Fluid, Fluid>(stackOne.getFluid(), stackTwo.getFluid()));
+				if (result.startsWith("Liquid"))
+				{
+					//TODO check merge result first to allow for some liquids to merge in X way
+				}
+			}
 			Fluid waste = FluidRegistry.getFluid("waste");
 			/* If the two liquids are not waste merge and set tag too liquids */
 			if (stackTwo.fluidID != waste.getID() && stackOne.fluidID != waste.getID())
@@ -261,8 +274,6 @@ public class NetworkFluidTiles extends NetworkTileEntities
 					wasteStack.tag.setCompoundTag("Liquid" + wasteStack.tag.getInteger("liquids") + 1, codeStack.writeToNBT(new NBTTagCompound()));
 				}
 			}
-			//TODO do mixing of liquids and create a new waste liquid stack that is encoded with the volume of the two liquids before it
-			//TODO check merge result first to allow for some liquids to merge in X way
 		}
 		return stack;
 	}
