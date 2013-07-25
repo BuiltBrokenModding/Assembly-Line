@@ -418,7 +418,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
 	}
 
 	/** Checks to make sure the connection is valid to the tileEntity
-	 * 
+	 *
 	 * @param tileEntity - the tileEntity being checked
 	 * @param side - side the connection is too
 	 * @return */
@@ -576,7 +576,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
 
 	@Override
 	public void setTankContent(FluidStack stack)
-	{		
+	{
 		this.getTank().setFluid(stack);
 	}
 
@@ -595,6 +595,13 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
 
 	@Override
 	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean mergeDamage(String result)
 	{
 		// TODO Auto-generated method stub
 		return false;

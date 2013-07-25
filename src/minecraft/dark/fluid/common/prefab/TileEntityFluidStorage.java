@@ -86,8 +86,6 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-
-		FluidStack liquid = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("FluidTank"));
 		if (nbt.hasKey("stored"))
 		{
 			NBTTagCompound tag = nbt.getCompoundTag("stored");
@@ -96,12 +94,15 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 			Fluid fluid = FluidRegistry.getFluid(name);
 			if (fluid != null)
 			{
-				liquid = new FluidStack(fluid, amount);
+				FluidStack liquid = new FluidStack(fluid, amount);
+				tank.setFluid(liquid);
 			}
-		}
-		if (liquid != null)
+		}else
 		{
-			tank.setFluid(liquid);
+			System.out.println("Loading fluid tank");
+			tank.readFromNBT(nbt.getCompoundTag("FluidTank"));
+			System.out.println("Tank: "+ (tank.getFluid() != null ? tank.getFluid().fluidID +"@"+tank.getFluid().amount+"mb" : "Empty"));
+
 		}
 	}
 
@@ -109,9 +110,11 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		if (this.tank != null && this.tank.getFluid() != null)
+		if (this.tank != null)
 		{
-			nbt.setCompoundTag("FluidTank", this.tank.getFluid().writeToNBT(new NBTTagCompound()));
+			System.out.println("Saving fluid tank");
+			System.out.println("Tank: "+ (tank.getFluid() != null ? tank.getFluid().fluidID +"@"+tank.getFluid().amount+"mb" : "Empty"));
+			nbt.setCompoundTag("FluidTank", this.tank.writeToNBT(new NBTTagCompound()));
 		}
 	}
 

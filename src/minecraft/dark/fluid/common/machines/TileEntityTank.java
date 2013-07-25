@@ -197,7 +197,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
 	}
 
 	/** Checks to make sure the connection is valid to the tileEntity
-	 * 
+	 *
 	 * @param tileEntity - the tileEntity being checked
 	 * @param side - side the connection is too */
 	public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)
@@ -331,5 +331,11 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
 	public boolean canDrain(ForgeDirection from, Fluid fluid)
 	{
 		return fluid != null;
+	}
+
+	@Override
+	public boolean mergeDamage(String result)
+	{
+		return false;
 	}
 }

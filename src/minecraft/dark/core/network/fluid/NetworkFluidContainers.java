@@ -3,6 +3,8 @@ package dark.core.network.fluid;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -14,7 +16,7 @@ import dark.core.tile.network.NetworkTileEntities;
 /** Side note: the network should act like this when done {@link http
  * ://www.e4training.com/hydraulic_calculators/B1.htm} as well as stay compatible with the forge
  * Liquids
- * 
+ *
  * @author Rseifert */
 public class NetworkFluidContainers extends NetworkFluidTiles
 {
@@ -31,11 +33,11 @@ public class NetworkFluidContainers extends NetworkFluidTiles
 	}
 
 	@Override
-	// TODO change this to place liquids at the bottom first
 	public void balanceColletiveTank(boolean sumParts)
 	{
 		int volume = 0;
-		Fluid fluid = null;
+		int fluid = -1;
+		NBTTagCompound tag = new NBTTagCompound();
 
 		if (sumParts)
 		{
@@ -46,15 +48,17 @@ public class NetworkFluidContainers extends NetworkFluidTiles
 					INetworkFluidPart part = ((INetworkFluidPart) par);
 					if (part.getTank() != null && part.getTank().getFluid() != null)
 					{
-						if (fluid == null)
+						FluidStack fluidStack = part.getTank().getFluid();
+						fluid = fluidStack.fluidID;
+						volume += fluidStack.amount;
+						if (fluidStack.tag != null && !fluidStack.tag.hasNoTags() && tag.hasNoTags())
 						{
-							fluid = part.getTank().getFluid().getFluid();
+							tag = fluidStack.tag;
 						}
-						volume += part.getTank().getFluid().amount;
 					}
 				}
 			}
-			if (fluid != null)
+			if (fluid != -1)
 			{
 				this.combinedStorage().setFluid(new FluidStack(fluid, volume));
 			}
@@ -81,9 +85,10 @@ public class NetworkFluidContainers extends NetworkFluidTiles
 					highestY = ((TileEntity) part).yCoord;
 				}
 			}
-			fluid = this.combinedStorage().getFluid().getFluid();
-			volume = this.combinedStorage().getFluid().amount;
-
+			fluid = this.combinedStorage().getFluid().fluidID;
+			volume = Math.abs(this.combinedStorage().getFluid().amount);
+			tag = this.combinedStorage().getFluid().tag;
+			//TODO change this to use hydraulics to not only place fluid at the lowest but as well not move it to another side if there is no path there threw fluid
 			for (int y = lowestY; y <= highestY; y++)
 			{
 				List<INetworkFluidPart> parts = new ArrayList<INetworkFluidPart>();
@@ -94,13 +99,13 @@ public class NetworkFluidContainers extends NetworkFluidTiles
 						parts.add((INetworkFluidPart) part);
 					}
 				}
-				int fillvolume = volume / parts.size();
+				int fillvolume = Math.abs(volume / parts.size());
 
 				for (INetworkFluidPart part : parts)
 				{
 					part.setTankContent(null);
 					int fill = Math.min(fillvolume, part.getTank().getCapacity());
-					part.setTankContent(new FluidStack(fluid, fill));
+					part.setTankContent(new FluidStack(fluid, fill, tag));
 					volume -= fill;
 				}
 				if (volume <= 0)
@@ -160,17 +165,6 @@ public class NetworkFluidContainers extends NetworkFluidTiles
 			}
 		}
 		return stack;
-	}
-
-	@Override
-	public void mergeDo(NetworkTileEntities network)
-	{
-		NetworkFluidContainers newNetwork = new NetworkFluidContainers(this.color);
-		newNetwork.getNetworkMemebers().addAll(this.getNetworkMemebers());
-		newNetwork.getNetworkMemebers().addAll(network.getNetworkMemebers());
-
-		newNetwork.cleanUpMembers();
-		newNetwork.balanceColletiveTank(true);
 	}
 
 }

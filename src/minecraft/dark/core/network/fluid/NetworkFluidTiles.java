@@ -1,35 +1,37 @@
 package dark.core.network.fluid;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidHandler;
-import universalelectricity.core.path.Pathfinder;
 import universalelectricity.core.vector.Vector3;
 import dark.api.ColorCode;
 import dark.api.INetworkPart;
+import dark.api.fluid.AdvancedFluidEvent;
+import dark.api.fluid.AdvancedFluidEvent.FluidMergeEvent;
 import dark.api.fluid.INetworkFluidPart;
-import dark.core.helpers.ConnectionHelper;
 import dark.core.helpers.FluidHelper;
-import dark.core.tile.network.NetworkPathFinder;
+import dark.core.helpers.Pair;
 import dark.core.tile.network.NetworkTileEntities;
 
 public class NetworkFluidTiles extends NetworkTileEntities
 {
-	/* MACHINES THAT ARE FLUID BASED AND CONNECTED BUT NOT PART OF THE NETWORK ** */
+	/** Fluid Tanks that are connected to the network but not part of it ** */
 	public final List<IFluidHandler> connectedTanks = new ArrayList<IFluidHandler>();
-
-	/* COMBINED TEMP STORAGE FOR ALL PIPES IN THE NETWORK */
+	/** Collective storage of all fluid tiles */
 	public FluidTank sharedTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
-
+	/** Map of results of two different liquids merging */
+	public HashMap<Pair<Fluid, Fluid>, String> mergeResult = new HashMap<Pair<Fluid, Fluid>, String>();
+	/** Color code of the network, mainly used for connection rules */
 	public ColorCode color = ColorCode.NONE;
+	/** Has the collective tank been loaded yet */
 	protected boolean loadedLiquids = false;
 
 	public NetworkFluidTiles(ColorCode color, INetworkPart... parts)
@@ -44,6 +46,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
 		return new NetworkFluidTiles(this.color);
 	}
 
+	/** Gets the collective tank of the network */
 	public FluidTank combinedStorage()
 	{
 		if (this.sharedTank == null)
@@ -112,7 +115,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
 
 	/** Moves the volume stored in the network to the parts or sums up the volume from the parts and
 	 * loads it to the network. Assumes that all liquidStacks stored are equal
-	 * 
+	 *
 	 * @param sumParts - loads the volume from the parts before leveling out the volumes */
 	public void balanceColletiveTank(boolean sumParts)
 	{
@@ -192,119 +195,73 @@ public class NetworkFluidTiles extends NetworkTileEntities
 		return super.isPartOfNetwork(ent) || this.connectedTanks.contains(ent);
 	}
 
-	public void causingMixing(INetworkPart Fluid, FluidStack stack, FluidStack stack2)
+	/** Merges two fluids together that don't result in damage to the network */
+	public FluidStack mergeFluids(FluidStack stackOne, FluidStack stackTwo)
 	{
-		// TODO cause mixing of liquids based on types and volume. Also apply damage to pipes/parts
-		// as needed
+		FluidStack stack = null;
+
+		if (stackTwo != null && stackOne != null && stackOne.isFluidEqual(stackTwo))
+		{
+			stack = stackOne.copy();
+			stack.amount += stackTwo.amount;
+		}
+		else if (stackOne == null && stackTwo != null)
+		{
+			stack = stackTwo.copy();
+		}
+		else if (stackOne != null && stackTwo == null)
+		{
+			stack = stackOne.copy();
+		}
+		else
+		{
+			//TODO do mixing of liquids and create a new waste liquid stack that is encoded with the volume of the two liquids before it
+			//TODO check merge result first to allow for some liquids to merge in X way
+		}
+		return stack;
 	}
 
-	public void splitNetwork(World world, INetworkPart splitPoint)
+	/** Checks if the liquid can be merged without damage */
+	public String canMergeFluids(FluidStack stackOne, FluidStack stackTwo)
 	{
-		if (splitPoint instanceof TileEntity)
+		if (stackOne != null && stackTwo != null && !stackOne.equals(stackTwo))
 		{
-			this.getNetworkMemebers().remove(splitPoint);
-			this.balanceColletiveTank(false);
-			/** Loop through the connected blocks and attempt to see if there are connections between
-			 * the two points elsewhere. */
-			TileEntity[] connectedBlocks = ConnectionHelper.getSurroundingTileEntities((TileEntity) splitPoint);
-
-			for (int i = 0; i < connectedBlocks.length; i++)
+			if (this.mergeResult.containsKey(new Pair<Fluid, Fluid>(stackOne.getFluid(), stackTwo.getFluid())))
 			{
-				TileEntity connectedBlockA = connectedBlocks[i];
-
-				if (connectedBlockA instanceof INetworkPart)
-				{
-					for (int pipeCount = 0; pipeCount < connectedBlocks.length; pipeCount++)
-					{
-						final TileEntity connectedBlockB = connectedBlocks[pipeCount];
-
-						if (connectedBlockA != connectedBlockB && connectedBlockB instanceof INetworkPart)
-						{
-							Pathfinder finder = new NetworkPathFinder(world, (INetworkPart) connectedBlockB, splitPoint);
-							finder.init(new Vector3(connectedBlockA));
-
-							if (finder.results.size() > 0)
-							{
-								/* STILL CONNECTED SOMEWHERE ELSE */
-								for (Vector3 node : finder.closedSet)
-								{
-									TileEntity entity = node.getTileEntity(world);
-									if (entity instanceof INetworkPart)
-									{
-										if (node != splitPoint)
-										{
-											((INetworkPart) entity).setTileNetwork(this);
-										}
-									}
-								}
-							}
-							else
-							{
-								/* NO LONGER CONNECTED ELSE WHERE SO SPLIT AND REFRESH */
-								NetworkPipes newNetwork = new NetworkPipes(this.color);
-								int parts = 0;
-								for (Vector3 node : finder.closedSet)
-								{
-									TileEntity entity = node.getTileEntity(world);
-									if (entity instanceof INetworkPart)
-									{
-										if (node != splitPoint)
-										{
-											newNetwork.getNetworkMemebers().add((INetworkPart) entity);
-											parts++;
-										}
-									}
-								}
-
-								newNetwork.cleanUpMembers();
-								newNetwork.balanceColletiveTank(true);
-							}
-						}
-					}
-				}
+				return this.mergeResult.get(new Pair<Fluid, Fluid>(stackOne.getFluid(), stackTwo.getFluid()));
 			}
 		}
+		return null;
 	}
 
 	@Override
-	public boolean preMergeProcessing(NetworkTileEntities net, INetworkPart part)
+	public void init()
 	{
-		if (net instanceof NetworkFluidTiles && ((NetworkFluidTiles) net).color == this.color)
+		super.init();
+		this.balanceColletiveTank(true);
+	}
+
+	@Override
+	public boolean preMergeProcessing(NetworkTileEntities mergingNetwork, INetworkPart mergePoint)
+	{
+		if (mergingNetwork instanceof NetworkFluidTiles && ((NetworkFluidTiles) mergingNetwork).color == this.color)
 		{
-			NetworkFluidTiles network = (NetworkFluidTiles) net;
+			NetworkFluidTiles network = (NetworkFluidTiles) mergingNetwork;
 
 			this.balanceColletiveTank(true);
 			network.balanceColletiveTank(true);
-
-			FluidStack stack = new FluidStack(0, 0);
-
-			if (this.combinedStorage().getFluid() != null && network.combinedStorage().getFluid() != null && this.combinedStorage().getFluid().isFluidEqual(network.combinedStorage().getFluid()))
+			String result = this.canMergeFluids(this.combinedStorage().getFluid(), network.combinedStorage().getFluid());
+			if (result != null)
 			{
-				stack = this.combinedStorage().getFluid();
-				stack.amount += network.combinedStorage().getFluid().amount;
-			}
-			else if (this.combinedStorage().getFluid() == null && network.combinedStorage().getFluid() != null)
-			{
-				stack = network.combinedStorage().getFluid();
-			}
-			else if (this.combinedStorage().getFluid() != null && network.combinedStorage().getFluid() == null)
-			{
-				stack = this.combinedStorage().getFluid();
+				if (!mergePoint.mergeDamage(result) && mergePoint instanceof TileEntity)
+				{
+					AdvancedFluidEvent.fireEvent(new FluidMergeEvent(this.combinedStorage().getFluid(), network.combinedStorage().getFluid(), ((TileEntity) mergePoint).worldObj, new Vector3(((TileEntity) mergePoint))));
+				}
+				return false;
 			}
 			return true;
 		}
 		return false;
-	}
-
-	@Override
-	public void mergeDo(NetworkTileEntities network)
-	{
-		NetworkFluidTiles newNetwork = new NetworkFluidTiles(this.color);
-		newNetwork.getNetworkMemebers().addAll(this.getNetworkMemebers());
-		newNetwork.getNetworkMemebers().addAll(network.getNetworkMemebers());
-
-		newNetwork.cleanUpMembers();
-		newNetwork.balanceColletiveTank(true);
 	}
 
 	@Override
