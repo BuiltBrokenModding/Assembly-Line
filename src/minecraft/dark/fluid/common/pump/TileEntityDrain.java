@@ -22,6 +22,7 @@ import universalelectricity.core.vector.VectorHelper;
 import dark.api.fluid.IDrain;
 import dark.api.fluid.INetworkPipe;
 import dark.core.helpers.FluidHelper;
+import dark.core.helpers.Pair;
 import dark.fluid.common.prefab.TileEntityFluidDevice;
 
 public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHandler, IDrain
@@ -31,7 +32,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 	private int currentWorldEdits = 0;
 
 	/* LIST OF PUMPS AND THERE REQUESTS FOR THIS DRAIN */
-	private HashMap<TileEntity, FluidStack> requestMap = new HashMap<TileEntity, FluidStack>();
+	private HashMap<TileEntity, Pair<FluidStack, Integer>> requestMap = new HashMap<TileEntity, Pair<FluidStack, Integer>>();
 
 	private List<Vector3> targetSources = new ArrayList<Vector3>();
 	private List<Vector3> updateQue = new ArrayList<Vector3>();
@@ -99,7 +100,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 				{
 					this.getNextFluidBlock();
 				}
-				for (Entry<TileEntity, FluidStack> request : requestMap.entrySet())
+				for (Entry<TileEntity, Pair<FluidStack, Integer>> request : requestMap.entrySet())
 				{
 					if (this.currentWorldEdits >= MAX_WORLD_EDITS_PER_PROCESS)
 					{
@@ -125,33 +126,36 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 							{
 								/* GET STACKS */
 
-								FluidStack requestStack = request.getValue();
-
-								if (stack != null && requestStack != null && (requestStack.isFluidEqual(stack) || requestStack.getFluid().getBlockID() == -111))
+								Pair<FluidStack, Integer> requestStack = request.getValue();
+								boolean flag = false;
+								if (requestStack != null && requestStack.getValue() > 0)
 								{
-									if (tank.fill(ForgeDirection.UNKNOWN, stack, false) > FluidContainerRegistry.BUCKET_VOLUME)
+									if (requestStack.getKey() == null || requestStack.getKey() != null && stack.isFluidEqual(requestStack.getKey().copy()))
 									{
-
-										/* EDIT REQUEST IN MAP */
-										int requestAmmount = requestStack.amount - tank.fill(ForgeDirection.UNKNOWN, stack, true);
-										if (requestAmmount <= 0)
+										if (tank.fill(ForgeDirection.UNKNOWN, stack, false) > FluidContainerRegistry.BUCKET_VOLUME)
 										{
-											this.requestMap.remove(request);
-										}
-										else
-										{
-											request.setValue(FluidHelper.getStack(requestStack, requestAmmount));
-										}
 
-										/* ADD TO UPDATE QUE */
-										if (!this.updateQue.contains(loc))
-										{
-											this.updateQue.add(loc);
-										}
+											/* EDIT REQUEST IN MAP */
+											int requestAmmount = requestStack.getValue() - tank.fill(ForgeDirection.UNKNOWN, stack, true);
+											if (requestAmmount <= 0)
+											{
+												this.requestMap.remove(request);
+											}
+											else
+											{
+												this.requestMap.put(request.getKey(),new Pair<FluidStack, Integer>(requestStack.getKey(),requestAmmount));
+											}
 
-										/* REMOVE BLOCK */
-										FluidHelper.drainBlock(this.worldObj, loc, true);
-										this.currentWorldEdits++;
+											/* ADD TO UPDATE QUE */
+											if (!this.updateQue.contains(loc))
+											{
+												this.updateQue.add(loc);
+											}
+
+											/* REMOVE BLOCK */
+											FluidHelper.drainBlock(this.worldObj, loc, true);
+											this.currentWorldEdits++;
+										}
 									}
 								}
 							}
@@ -324,7 +328,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 			/* FIND ALL VALID BLOCKS ON LEVEL OR BELLOW */
 			final Vector3 faceVec = new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ);
 			getLiquidFinder().init(faceVec, true);
-			//System.out.println("Drain:FillArea: Targets -> " + getLiquidFinder().results.size());
+			System.out.println("Drain:FillArea: Targets -> " + getLiquidFinder().results.size());
 
 			/* SORT RESULTS TO PUT THE LOWEST AND CLOSEST AT THE TOP */
 			try
@@ -419,9 +423,9 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 	}
 
 	@Override
-	public void requestLiquid(TileEntity pump, Fluid fluid, int amount)
+	public void requestLiquid(TileEntity pump, FluidStack fluid, int amount)
 	{
-		this.requestMap.put(pump, new FluidStack(-111, amount));
+		this.requestMap.put(pump, new Pair<FluidStack, Integer>(fluid, amount));
 	}
 
 	@Override

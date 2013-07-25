@@ -96,9 +96,9 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 			}
 		}else
 		{
-			System.out.println("Loading fluid tank");
+			//System.out.println("Loading fluid tank");
 			getTank().readFromNBT(nbt.getCompoundTag("FluidTank"));
-			System.out.println("Tank: "+ (getTank().getFluid() != null ? getTank().getFluid().fluidID +"@"+getTank().getFluid().amount+"mb" : "Empty"));
+			//System.out.println("Tank: "+ (getTank().getFluid() != null ? getTank().getFluid().fluidID +"@"+getTank().getFluid().amount+"mb" : "Empty"));
 
 		}
 	}
@@ -109,8 +109,8 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 		super.writeToNBT(nbt);
 		if (this.getTank() != null)
 		{
-			System.out.println("Saving fluid tank");
-			System.out.println("Tank: "+ (getTank().getFluid() != null ? getTank().getFluid().fluidID +"@"+getTank().getFluid().amount+"mb" : "Empty"));
+			//System.out.println("Saving fluid tank");
+			//System.out.println("Tank: "+ (getTank().getFluid() != null ? getTank().getFluid().fluidID +"@"+getTank().getFluid().amount+"mb" : "Empty"));
 			nbt.setCompoundTag("FluidTank", this.getTank().writeToNBT(new NBTTagCompound()));
 		}
 	}

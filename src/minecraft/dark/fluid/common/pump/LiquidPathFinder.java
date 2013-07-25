@@ -68,7 +68,6 @@ public class LiquidPathFinder
 			}
 
 			int id = node.getBlockID(world);
-			int meta = node.getBlockID(world);
 			if (this.fill && (id == 0 || (FluidHelper.isFillable(world, node))))
 			{
 				this.results.add(node);
