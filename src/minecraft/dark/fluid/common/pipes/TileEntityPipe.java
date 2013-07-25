@@ -489,6 +489,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
 					FluidStack stack = tankContainer.drain(dir, FluidContainerRegistry.BUCKET_VOLUME, false);
 					if (stack != null && stack.amount > 0)
 					{
+						//TODO change this to be turned off or leave it as is for not using valves
 						int fill = ((NetworkPipes) this.getTileNetwork()).addFluidToNetwork((TileEntity) tankContainer, stack, true);
 						tankContainer.drain(dir, fill, true);
 					}

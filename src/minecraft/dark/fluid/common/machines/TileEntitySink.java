@@ -44,16 +44,12 @@ public class TileEntitySink extends TileEntityFluidStorage implements IPacketRec
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		FluidStack stack = this.getTank().getFluid();
-		if (stack != null && stack.getFluid() != null)
+		FluidStack stack = new FluidStack(FluidRegistry.WATER, 0);
+		if (this.getTank().getFluid() != null)
 		{
-			return PacketManager.getPacket(FluidMech.CHANNEL, this, stack.writeToNBT(new NBTTagCompound()));
+			stack = this.getTank().getFluid();
 		}
-		else
-		{
-			stack = new FluidStack(FluidRegistry.WATER, 0);
-			return PacketManager.getPacket(FluidMech.CHANNEL, this, stack.writeToNBT(new NBTTagCompound()));
-		}
+		return PacketManager.getPacket(FluidMech.CHANNEL, this, stack.writeToNBT(new NBTTagCompound()));
 	}
 
 	@Override
@@ -66,7 +62,7 @@ public class TileEntitySink extends TileEntityFluidStorage implements IPacketRec
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			System.out.print("Fail reading data for Storage tank \n");
+			System.out.println("Fail reading data for fluid sink");
 		}
 
 	}
