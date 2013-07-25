@@ -6,8 +6,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -23,6 +26,8 @@ import dark.api.fluid.INetworkFluidPart;
 import dark.core.helpers.FluidHelper;
 import dark.core.helpers.Pair;
 import dark.core.tile.network.NetworkTileEntities;
+import dark.fluid.common.machines.TileEntityTank;
+import dark.fluid.common.pipes.TileEntityPipe;
 
 public class NetworkFluidTiles extends NetworkTileEntities
 {
@@ -31,16 +36,17 @@ public class NetworkFluidTiles extends NetworkTileEntities
 	/** Collective storage of all fluid tiles */
 	public FluidTank sharedTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 	/** Map of results of two different liquids merging */
-	public static HashMap<Pair<Fluid, Fluid>, String> mergeResult = new HashMap<Pair<Fluid, Fluid>, String>();
+	public static HashMap<Pair<Fluid, Fluid>, Object> mergeResult = new HashMap<Pair<Fluid, Fluid>, Object>();
 	/** Color code of the network, mainly used for connection rules */
 	public ColorCode color = ColorCode.NONE;
 	/** Has the collective tank been loaded yet */
 	protected boolean loadedLiquids = false;
 	static
 	{
-		mergeResult.put(new Pair<Fluid,Fluid>(FluidRegistry.WATER,FluidRegistry.LAVA), "Block:"+Block.obsidian.blockID+"@0");
-		mergeResult.put(new Pair<Fluid,Fluid>(FluidRegistry.LAVA,FluidRegistry.WATER), "Block:"+Block.cobblestone.blockID+"@0");
+		mergeResult.put(new Pair<Fluid, Fluid>(FluidRegistry.WATER, FluidRegistry.LAVA), Block.obsidian);
+		mergeResult.put(new Pair<Fluid, Fluid>(FluidRegistry.LAVA, FluidRegistry.WATER), Block.cobblestone);
 	}
+
 	public NetworkFluidTiles(ColorCode color, INetworkPart... parts)
 	{
 		super(parts);
@@ -206,7 +212,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
 	}
 
 	/** Merges two fluids together that don't result in damage to the network */
-	public FluidStack mergeFluids(FluidStack stackOne, FluidStack stackTwo)
+	public static FluidStack mergeFluids(FluidStack stackOne, FluidStack stackTwo)
 	{
 		FluidStack stack = null;
 
@@ -225,60 +231,46 @@ public class NetworkFluidTiles extends NetworkTileEntities
 		}
 		else if (stackTwo != null && stackOne != null && !stackOne.isFluidEqual(stackTwo))
 		{
-			if (this.mergeResult.containsKey(new Pair<Fluid, Fluid>(stackOne.getFluid(), stackTwo.getFluid())))
-			{
-				String result = this.mergeResult.get(new Pair<Fluid, Fluid>(stackOne.getFluid(), stackTwo.getFluid()));
-				if (result.startsWith("Liquid"))
-				{
-					//TODO check merge result first to allow for some liquids to merge in X way
-				}
-			}
 			Fluid waste = FluidRegistry.getFluid("waste");
-			/* If the two liquids are not waste merge and set tag too liquids */
-			if (stackTwo.fluidID != waste.getID() && stackOne.fluidID != waste.getID())
+			/* Try to merge fluids by mod defined rules first */
+			if (mergeResult.containsKey(new Pair<Fluid, Fluid>(stackOne.getFluid(), stackTwo.getFluid())))
 			{
-				stack = new FluidStack(waste, stackTwo.amount + stackOne.amount);
-				stack.tag = new NBTTagCompound();
-				stack.tag.setCompoundTag("Liquid1", stackTwo.writeToNBT(new NBTTagCompound()));
-				stack.tag.setCompoundTag("Liquid2", stackOne.writeToNBT(new NBTTagCompound()));
-				stack.tag.setInteger("liquids", 2);
-			}
-			else if (stackTwo.fluidID == waste.getID() && stackOne.fluidID == waste.getID())
-			{
-				List<FluidStack> stacks = new ArrayList<FluidStack>();
-				stacks.addAll(this.getStacksFromWaste(stackOne.copy()));
-				stacks.addAll(this.getStacksFromWaste(stackTwo.copy()));
-				stack = new FluidStack(waste, stackOne.amount + stackTwo.amount);
-				stack.tag = new NBTTagCompound();
-				stack.tag.setInteger("liquids", stacks.size());
-				for (int i = 0; i < stacks.size(); i++)
+				Object result = mergeResult.get(new Pair<Fluid, Fluid>(stackOne.getFluid(), stackTwo.getFluid()));
+				if (result instanceof Fluid)
 				{
-					stack.tag.setCompoundTag("Liquids" + 1 + i, stacks.get(i).writeToNBT(new NBTTagCompound()));
+					stack = new FluidStack(((Fluid) result).getID(), stackOne.amount + stackTwo.amount);
+				}
+				else if (result instanceof FluidStack)
+				{
+					stack = ((FluidStack) result).copy();
+					stack.amount = stackOne.amount + stackTwo.amount;
+				}
+				else if (result instanceof String && ((String) result).startsWith("Liquid:"))
+				{
+					stack = new FluidStack(FluidRegistry.getFluid(((String) result).replace("Liquid:", "")), stackOne.amount + stackTwo.amount);
 				}
 			}
-			else
+			if (stack != null)
 			{
-				FluidStack wasteStack = null, codeStack = null;
-				if (stackOne.fluidID != waste.getID() && stackTwo.fluidID == waste.getID())
+				/* If both liquids are waste then copy fluidStack lists then merge */
+				if (stackTwo.fluidID == waste.getID() && stackOne.fluidID == waste.getID())
 				{
-					wasteStack = stackTwo.copy();
-					codeStack = stackOne.copy();
+					List<FluidStack> stacks = new ArrayList<FluidStack>();
+					stacks.addAll(getStacksFromWaste(stackOne.copy()));
+					stacks.addAll(getStacksFromWaste(stackTwo.copy()));
+					stack = createNewWasteStack(stacks.toArray(new FluidStack[stacks.size()]));
 				}
-				else if (stackOne.fluidID == waste.getID() && stackTwo.fluidID != waste.getID())
+				else
 				{
-					wasteStack = stackOne.copy();
-					codeStack = stackTwo.copy();
-				}
-				if (wasteStack != null)
-				{
-					wasteStack.tag.setCompoundTag("Liquid" + wasteStack.tag.getInteger("liquids") + 1, codeStack.writeToNBT(new NBTTagCompound()));
+					stack = createNewWasteStack(stackOne.copy(), stackTwo.copy());
 				}
 			}
 		}
 		return stack;
 	}
 
-	public List<FluidStack> getStacksFromWaste(FluidStack wasteStack)
+	/** Gets the fluidStacks that make up a waste FluidStack */
+	public static List<FluidStack> getStacksFromWaste(FluidStack wasteStack)
 	{
 		List<FluidStack> stacks = new ArrayList<FluidStack>();
 		if (wasteStack.fluidID == FluidRegistry.getFluidID("waste"))
@@ -295,8 +287,42 @@ public class NetworkFluidTiles extends NetworkTileEntities
 		return stacks;
 	}
 
+	/** Creates a new waste stack from the listed fluidStacks */
+	public static FluidStack createNewWasteStack(FluidStack... liquids)
+	{
+		FluidStack stack = new FluidStack(FluidRegistry.getFluid("waste"), 0);
+		stack.tag = new NBTTagCompound();
+		if (liquids != null)
+		{
+			int count = 0;
+			for (int i = 0; i < liquids.length; i++)
+			{
+				if (liquids[i] != null)
+				{
+					if (!liquids[i].getFluid().equals(stack.getFluid()))
+					{
+						count++;
+						stack.tag.setCompoundTag("Liquids" + count, liquids[i].writeToNBT(new NBTTagCompound()));
+						stack.amount += liquids[i].amount;
+					}
+					else
+					{
+						for (FluidStack loadStack : getStacksFromWaste(liquids[i]))
+						{
+							count++;
+							stack.tag.setCompoundTag("Liquids" + count, loadStack.writeToNBT(new NBTTagCompound()));
+							stack.amount += loadStack.amount;
+						}
+					}
+				}
+			}
+			stack.tag.setInteger("liquids", count);
+		}
+		return stack;
+	}
+
 	/** Checks if the liquid can be merged without damage */
-	public String canMergeFluids(FluidStack stackOne, FluidStack stackTwo)
+	public Object canMergeFluids(FluidStack stackOne, FluidStack stackTwo)
 	{
 		if (stackOne != null && stackTwo != null && !stackOne.equals(stackTwo))
 		{
@@ -326,18 +352,93 @@ public class NetworkFluidTiles extends NetworkTileEntities
 
 			this.balanceColletiveTank(true);
 			network.balanceColletiveTank(true);
-			String result = this.canMergeFluids(this.combinedStorage().getFluid(), network.combinedStorage().getFluid());
-			if (result != null)
+			Object result = this.canMergeFluids(this.combinedStorage().getFluid(), network.combinedStorage().getFluid());
+			if (mergePoint instanceof TileEntity)
 			{
-				if (!mergePoint.mergeDamage(result) && mergePoint instanceof TileEntity)
+				World world = ((TileEntity) mergePoint).worldObj;
+				int x = ((TileEntity) mergePoint).xCoord;
+				int y = ((TileEntity) mergePoint).xCoord;
+				int z = ((TileEntity) mergePoint).xCoord;
+				try
 				{
-					AdvancedFluidEvent.fireEvent(new FluidMergeEvent(this.combinedStorage().getFluid(), network.combinedStorage().getFluid(), ((TileEntity) mergePoint).worldObj, new Vector3(((TileEntity) mergePoint))));
+					if (result != null)
+					{
+						if (result instanceof Block)
+						{
+							if (mergePoint instanceof TileEntityPipe)
+							{
+								//TODO in-case pipe in the block
+							}
+							else if (mergePoint instanceof TileEntityTank)
+							{
+								//TODO in-case tank in the block
+								//for tank set the render Entity to the block at full size
+							}
+							else
+							{
+								world.setBlock(x, y, z, 0);
+								world.setBlock(x, y, z, ((Block) result).blockID);
+							}
+						}
+						else if (result instanceof ItemStack)
+						{
+							world.setBlock(x, y, z, 0);
+
+							if (((ItemStack) result).itemID >= Block.blocksList.length)
+							{
+								EntityItem item = new EntityItem(world, x, y, z, (ItemStack) result);
+								//TODO add some effect to this
+								world.spawnEntityInWorld(item);
+							}
+							else
+							{
+								world.setBlock(x, y, z, ((ItemStack) result).itemID, ((ItemStack) result).getItemDamage(), 3);
+							}
+						}
+						else if (result instanceof String)
+						{
+
+							String string = (String) result;
+							if (string.startsWith("explosion:"))
+							{
+								int size = Integer.parseInt(string.replace("explosion:", ""));
+								world.setBlock(x, y, z, 0);
+								world.createExplosion(null, x, y, z, size, false);
+
+							}
+
+						}
+						AdvancedFluidEvent.fireEvent(new FluidMergeEvent(this.combinedStorage().getFluid(), network.combinedStorage().getFluid(), world, new Vector3(x, y, z)));
+						return false;
+					}
 				}
-				return false;
+				catch (Exception e)
+				{
+
+				}
+
 			}
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	protected void mergeDo(NetworkTileEntities network)
+	{
+		NetworkFluidTiles newNetwork = (NetworkFluidTiles) this.newInstance();
+		FluidStack one = this.combinedStorage().getFluid();
+		FluidStack two = ((NetworkFluidTiles) network).combinedStorage().getFluid();
+
+		this.combinedStorage().setFluid(null);
+		((NetworkFluidTiles) network).combinedStorage().setFluid(null);
+
+		newNetwork.getNetworkMemebers().addAll(this.getNetworkMemebers());
+		newNetwork.getNetworkMemebers().addAll(network.getNetworkMemebers());
+
+		newNetwork.cleanUpMembers();
+		newNetwork.combinedStorage().setFluid(mergeFluids(one, two));
+		newNetwork.balanceColletiveTank(false);
 	}
 
 	@Override
