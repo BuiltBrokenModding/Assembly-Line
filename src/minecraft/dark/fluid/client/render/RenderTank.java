@@ -13,6 +13,7 @@ import dark.api.ColorCode;
 import dark.core.client.FluidBlockRenderer;
 import dark.core.client.RenderMachine;
 import dark.fluid.client.model.ModelTankSide;
+import dark.fluid.common.FluidMech;
 import dark.fluid.common.machines.TileEntityTank;
 
 @SideOnly(Side.CLIENT)
@@ -20,7 +21,7 @@ public class RenderTank extends RenderMachine
 {
 	private ModelTankSide model;
 
-	//TODO https://www.opengl.org/sdk/docs/man/xhtml/glDepthMask.xml <- fix z fighting 
+	//TODO https://www.opengl.org/sdk/docs/man/xhtml/glDepthMask.xml <- fix z fighting
 	public RenderTank()
 	{
 		model = new ModelTankSide();
@@ -120,12 +121,12 @@ public class RenderTank extends RenderMachine
 		String texture = "";
 		if (ColorCode.get(meta) == ColorCode.RED)
 		{
-			texture = "/textures/blocks/obsidian.png";
+			texture = "textures/blocks/obsidian.png";
 		}
 		else
 		{
-			texture = "/textures/blocks/stonebrick.png";
+			texture = "textures/blocks/iron_block.png";
 		}
-		return new ResourceLocation(texture);
+		return new ResourceLocation(FluidMech.instance.getDomain(),texture);
 	}
 }
