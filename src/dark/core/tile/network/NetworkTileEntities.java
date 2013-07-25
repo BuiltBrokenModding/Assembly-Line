@@ -168,8 +168,7 @@ public abstract class NetworkTileEntities
 		NetworkTileEntities newNetwork = this.newInstance();
 		newNetwork.getNetworkMemebers().addAll(this.getNetworkMemebers());
 		newNetwork.getNetworkMemebers().addAll(network.getNetworkMemebers());
-
-		newNetwork.refresh();
+		newNetwork.init();
 	}
 
 	/** Called when a peace of the network is remove from the network. Will split the network if it
@@ -230,14 +229,19 @@ public abstract class NetworkTileEntities
 										}
 									}
 								}
-
-								newNetwork.cleanUpMembers();
+								newNetwork.init();
 							}
 						}
 					}
 				}
 			}
 		}
+	}
+
+	/** Should be called after a network is created from a split or merge */
+	public void init()
+	{
+		cleanUpMembers();
 	}
 
 	@Override

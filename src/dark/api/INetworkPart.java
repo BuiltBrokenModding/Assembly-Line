@@ -18,4 +18,6 @@ public interface INetworkPart extends ITileConnector
 
 	/** Sets the networkPart's primary network */
 	public void setTileNetwork(NetworkTileEntities fluidNetwok);
+
+	public boolean mergeDamage(String result);
 }
