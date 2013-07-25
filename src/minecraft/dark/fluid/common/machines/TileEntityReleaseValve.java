@@ -27,14 +27,10 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITi
 	private List<INetworkPipe> output = new ArrayList<INetworkPipe>();
 	private IFluidHandler[] input = new IFluidHandler[6];
 
-	public boolean isPowered = false;
-
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
-
-		this.isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
 
 		connected = ConnectionHelper.getSurroundingTileEntities(this);
 
@@ -53,7 +49,7 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITi
 			}
 		}
 
-		if (!this.worldObj.isRemote && !isPowered && this.ticks % 20 == 0)
+		if (!this.worldObj.isRemote && this.ticks % 10 == 0 && !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord))
 		{
 			this.validateNBuildList();
 			// start the draining process
@@ -74,7 +70,6 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITi
 					}
 				}
 			}
-
 		}
 	}
 
@@ -110,7 +105,7 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITi
 	}
 
 	/** if any of allowed list is true
-	 * 
+	 *
 	 * @return true */
 	public boolean isRestricted()
 	{
@@ -182,7 +177,7 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITi
 		{
 			output += " Output: UnRestricted and";
 		}
-		if (!this.isPowered)
+		if (!worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord))
 		{
 			output += " Open ";
 		}
