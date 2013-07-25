@@ -54,36 +54,28 @@ public class TileEntityConstructionPump extends TileEntityMachine implements IFl
 	public void updateEntity()
 	{
 		super.updateEntity();
-		if (!worldObj.isRemote)
+		if (!worldObj.isRemote && this.ticks % 10 == 0 && this.canRun() && this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord))
 		{
-			if (this.ticks % 10 == 0 && this.canRun())
-			{
-				this.rotation += 1;
-				if (rotation >= 7)
-				{
-					rotation = 0;
-				}
-				boolean called = false;
+			this.rotation = Math.max(Math.min(this.rotation + 1, 7), 0);
 
-				TileEntity inputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), getFacing(true));
-				TileEntity outputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), getFacing(false));
-				if (inputTile instanceof INetworkPipe && ((INetworkPipe) inputTile).getTileNetwork() instanceof NetworkFluidTiles)
+			TileEntity inputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), getFacing(true));
+			TileEntity outputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), getFacing(false));
+			if (inputTile instanceof INetworkPipe && ((INetworkPipe) inputTile).getTileNetwork() instanceof NetworkFluidTiles)
+			{
+				if (outputTile instanceof IFluidHandler)
 				{
-					if (outputTile instanceof IFluidHandler)
+					for (IFluidHandler tank : ((NetworkFluidTiles) ((INetworkPipe) inputTile).getTileNetwork()).connectedTanks)
 					{
-						for (IFluidHandler tank : ((NetworkFluidTiles) ((INetworkPipe) inputTile).getTileNetwork()).connectedTanks)
+						if (tank instanceof TileEntityDrain)
 						{
-							if (tank instanceof TileEntityDrain)
-							{
-								((TileEntityDrain) tank).requestLiquid(this, null, liquidRequest * FluidContainerRegistry.BUCKET_VOLUME);
-								called = true;
-							}
+							((TileEntityDrain) tank).requestLiquid(this, null, liquidRequest * FluidContainerRegistry.BUCKET_VOLUME);
 
 						}
+
 					}
 				}
-
 			}
+
 		}
 	}
 
