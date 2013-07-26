@@ -110,8 +110,11 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
                     if (request.getKey() instanceof IFluidHandler)
                     {
                         IFluidHandler tank = (IFluidHandler) request.getKey();
-
-                        Vector3[] sortedList = this.sortedDrainList();
+                        if (getLiquidFinder().results.size() > 1)
+                        {
+                            this.sortBlockList(new Vector3(this).modifyPositionFromSide(this.getFacing()), getLiquidFinder().results, false, true);
+                        }
+                        Vector3[] sortedList = this.getLiquidFinder().results.toArray(new Vector3[MAX_WORLD_EDITS_PER_PROCESS]);
 
                         for (int i = 0; sortedList != null && i < sortedList.length; i++)
                         {
@@ -221,93 +224,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 
     }
 
-    public Vector3[] sortedDrainList()
-    {
-        try
-        {
-            /* CLEANUP TARGET LIST AND REMOVE INVALID SOURCES */
-            Iterator<Vector3> targetIt = this.targetSources.iterator();
-            while (targetIt.hasNext())
-            {
-                Vector3 vec = targetIt.next();
-                if (FluidHelper.drainBlock(this.worldObj, vec, false) == null)
-                {
-                    targetIt.remove();
-                }
-            }
 
-            Vector3[] sortedList = new Vector3[this.targetSources.size()];
-            for (int b = 0; b < this.targetSources.size(); b++)
-            {
-                sortedList[b] = this.targetSources.get(b);
-            }
-
-            /* SORT RESULTS TO PUT THE HiGHEST AND FURTHEST AT THE TOP */
-            Vector2 machine = new Vector3(this).toVector2();
-            for (int i = 0; i < sortedList.length; i++)
-            {
-                Vector3 vec = sortedList[i].clone();
-                Vector2 first = vec.toVector2();
-                if (i + 1 < sortedList.length)
-                {
-                    Vector3 highest = vec;
-                    int b = 0;
-                    for (b = i + 1; b < sortedList.length; b++)
-                    {
-                        Vector3 checkVec = sortedList[b].clone();
-                        if (checkVec != null)
-                        {
-                            Vector2 second = checkVec.toVector2();
-
-                            if (second.distanceTo(machine) > vec.toVector2().distanceTo(machine))
-                            {
-                                highest = checkVec.clone();
-                            }
-                        }
-                    }
-                    if (b < sortedList.length)
-                    {
-                        sortedList[i] = vec;
-                        sortedList[b] = highest;
-                    }
-                }
-            }
-            for (int i = 0; i < sortedList.length; i++)
-            {
-                Vector3 vec = sortedList[i].clone();
-                if (i + 1 < sortedList.length)
-                {
-                    Vector3 highest = vec;
-                    int b = 0;
-                    for (b = i + 1; b < sortedList.length; b++)
-                    {
-                        Vector3 checkVec = sortedList[b].clone();
-                        if (checkVec != null)
-                        {
-                            if (checkVec.intY() > highest.intY())
-                            {
-                                highest = checkVec.clone();
-
-                            }
-                        }
-                    }
-                    if (b < sortedList.length)
-                    {
-                        sortedList[i] = vec;
-                        sortedList[b] = highest;
-                    }
-                }
-            }
-            return sortedList;
-        }
-        catch (Exception e)
-        {
-            System.out.println("FluidMech: Critical Error Processing Drain List");
-            e.printStackTrace();
-        }
-
-        return null;
-    }
 
     @Override
     public int fillArea(FluidStack resource, boolean doFill)
@@ -331,42 +248,12 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
             System.out.println("Drain:FillArea: Targets -> " + getLiquidFinder().results.size());
 
             /* SORT RESULTS TO PUT THE LOWEST AND CLOSEST AT THE TOP */
-            try
+
+            if (getLiquidFinder().results.size() > 1)
             {
-                if (getLiquidFinder().results.size() > 1)
-                {
-                    Collections.sort(getLiquidFinder().results, new Comparator()
-                    {
-                        @Override
-                        public int compare(Object o1, Object o2)
-                        {
-                            if (o1 == o2)
-                            {
-                                return 0;
-                            }
-                            Vector3 a = (Vector3) o1;
-                            Vector3 b = (Vector3) o2;
-                            double da = Vector3.distance(a, faceVec);
-                            double db = Vector3.distance(b, faceVec);
-                            ;
-                            if (a.equals(b))
-                            {
-                                return 0;
-                            }
-                            if (Integer.compare(a.intY(), b.intY()) != 0)
-                            {
-                                return Integer.compare(a.intY(), b.intY());
-                            }
-                            return Double.compare(da, db);
-                        }
-                    });
-                }
+                this.sortBlockList(faceVec, getLiquidFinder().results, true, false);
             }
-            catch (Exception e)
-            {
-                System.out.println("FluidMech: Error sorting fill collection");
-                e.printStackTrace();
-            }
+
             for (Vector3 loc : getLiquidFinder().results)
             {
                 if (blocks <= 0)
@@ -416,6 +303,66 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
         return drained;
     }
 
+    /** Used to sort a list of vector3 locations using the vector3's distance from one point and
+     * elevation in the y axis
+     *
+     * @param start - start location to measure distance from
+     * @param locations - list of vectors to sort
+     * @param closest - sort closest distance to the top
+     * @param highest - sort highest y value to the top.
+     *
+     * Note: highest takes priority over closest */
+    public void sortBlockList(final Vector3 start, final List<Vector3> locations, final boolean closest, final boolean highest)
+    {
+        try
+        {
+            Collections.sort(locations, new Comparator<Vector3>()
+            {
+                @Override
+                public int compare(Vector3 vecA, Vector3 vecB)
+                {
+                    //Though unlikely always return zero for equal vectors
+                    if (vecA.equals(vecB))
+                    {
+                        return 0;
+                    }
+                    //Check y value fist as this is the primary search area
+                    if (Integer.compare(vecA.intY(), vecB.intY()) != 0)
+                    {
+                        if (highest)
+                        {
+                            return vecA.intY() > vecB.intY() ? -1 : 1;
+                        }
+                        else
+                        {
+                            return vecA.intY() > vecB.intY() ? 1 : -1;
+                        }
+                    }
+                    //Check distance after that
+                    double distanceA = Vector3.distance(vecA, start);
+                    double distanceB = Vector3.distance(vecB, start);
+                    if (Double.compare(distanceA, distanceB) != 0)
+                    {
+                        if (closest)
+                        {
+                            return distanceA > distanceB ? 1 : -1;
+                        }
+                        else
+                        {
+                            return distanceA > distanceB ? -1 : 1;
+                        }
+                    }
+                    return Double.compare(distanceA, distanceB);
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            System.out.println("FluidMech>>>BlockDrain>>FillArea>>Error>>CollectionSorter");
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
     {
@@ -446,6 +393,12 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
     }
 
     @Override
+    public boolean canFill(ForgeDirection from, Fluid fluid)
+    {
+        return this.getFacing() == from;
+    }
+
+    @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
     {
         if (this.canDrainSources() || resource == null)
@@ -453,6 +406,12 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
             return 0;
         }
         return this.fillArea(resource, doFill);
+    }
+
+    @Override
+    public boolean canDrain(ForgeDirection from, Fluid fluid)
+    {
+        return false;
     }
 
     @Override
@@ -466,18 +425,6 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
     public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
     {
         return null;
-    }
-
-    @Override
-    public boolean canFill(ForgeDirection from, Fluid fluid)
-    {
-        return this.getFacing() == from;
-    }
-
-    @Override
-    public boolean canDrain(ForgeDirection from, Fluid fluid)
-    {
-        return false;
     }
 
     @Override

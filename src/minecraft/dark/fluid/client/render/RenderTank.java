@@ -24,8 +24,6 @@ public class RenderTank extends RenderMachine
 {
     private ModelTankSide model;
 
-    private static Map<ForgeDirection, int[]> blockRenderCache = new HashMap<ForgeDirection, int[]>();
-
     //TODO https://www.opengl.org/sdk/docs/man/xhtml/glDepthMask.xml <- fix z fighting
     public RenderTank()
     {
