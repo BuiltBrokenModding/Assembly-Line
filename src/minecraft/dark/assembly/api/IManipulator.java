@@ -1,21 +1,14 @@
 package dark.assembly.api;
 
-/**
- * Interface applied to the manipulator.
+/** Interface applied to the manipulator.
  * 
- * @author Calclavia
- * 
- */
+ * @author Calclavia */
 public interface IManipulator
 {
-	/**
-	 * Find items going into the manipulator and input them into an inventory behind this
-	 * manipulator.
-	 */
-	public void eject();
+    /** Find items going into the manipulator and input them into an inventory behind this
+     * manipulator. */
+    public void eject();
 
-	/**
-	 * Injects items
-	 */
-	public void inject();
+    /** Injects items */
+    public void inject();
 }

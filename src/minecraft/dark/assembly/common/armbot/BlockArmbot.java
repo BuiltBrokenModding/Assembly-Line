@@ -16,79 +16,79 @@ import dark.core.blocks.IMultiBlock;
 
 public class BlockArmbot extends BlockAssembly
 {
-	public BlockArmbot(int id)
-	{
-		super(id, UniversalElectricity.machine, "armbot");
-	}
+    public BlockArmbot(int id)
+    {
+        super(id, UniversalElectricity.machine, "armbot");
+    }
 
-	@Override
-	public void onBlockAdded(World world, int x, int y, int z)
-	{
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+    @Override
+    public void onBlockAdded(World world, int x, int y, int z)
+    {
+        TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tileEntity != null && tileEntity instanceof IMultiBlock)
-		{
-			((IMultiBlock) tileEntity).onCreate(new Vector3(x, y, z));
-		}
-	}
+        if (tileEntity != null && tileEntity instanceof IMultiBlock)
+        {
+            ((IMultiBlock) tileEntity).onCreate(new Vector3(x, y, z));
+        }
+    }
 
-	@Override
-	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
-	{
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+    @Override
+    public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
+    {
+        TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tileEntity != null && tileEntity instanceof IMultiBlock)
-		{
-			return ((IMultiBlock) tileEntity).onActivated(player);
-		}
+        if (tileEntity != null && tileEntity instanceof IMultiBlock)
+        {
+            return ((IMultiBlock) tileEntity).onActivated(player);
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	@Override
-	public void breakBlock(World world, int x, int y, int z, int par5, int par6)
-	{
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+    @Override
+    public void breakBlock(World world, int x, int y, int z, int par5, int par6)
+    {
+        TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tileEntity != null && tileEntity instanceof IMultiBlock)
-		{
-			((IMultiBlock) tileEntity).onDestroy(tileEntity);
-		}
+        if (tileEntity != null && tileEntity instanceof IMultiBlock)
+        {
+            ((IMultiBlock) tileEntity).onDestroy(tileEntity);
+        }
 
-		this.dropBlockAsItem_do(world, x, y, z, new ItemStack(this));
+        this.dropBlockAsItem_do(world, x, y, z, new ItemStack(this));
 
-		super.breakBlock(world, x, y, z, par5, par6);
-	}
+        super.breakBlock(world, x, y, z, par5, par6);
+    }
 
-	@Override
-	public int quantityDropped(Random par1Random)
-	{
-		return 0;
-	}
+    @Override
+    public int quantityDropped(Random par1Random)
+    {
+        return 0;
+    }
 
-	@Override
-	public TileEntity createNewTileEntity(World var1)
-	{
-		return new TileEntityArmbot();
-	}
+    @Override
+    public TileEntity createNewTileEntity(World var1)
+    {
+        return new TileEntityArmbot();
+    }
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public int getRenderType()
-	{
-		return BlockRenderingHandler.BLOCK_RENDER_ID;
-	}
+    @SideOnly(Side.CLIENT)
+    @Override
+    public int getRenderType()
+    {
+        return BlockRenderingHandler.BLOCK_RENDER_ID;
+    }
 
-	@Override
-	public boolean isOpaqueCube()
-	{
-		return false;
-	}
+    @Override
+    public boolean isOpaqueCube()
+    {
+        return false;
+    }
 
-	@Override
-	public boolean canProvidePower()
-	{
-		return true;
-	}
+    @Override
+    public boolean canProvidePower()
+    {
+        return true;
+    }
 
 }

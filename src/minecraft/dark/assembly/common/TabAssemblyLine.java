@@ -5,17 +5,17 @@ import net.minecraft.item.ItemStack;
 
 public class TabAssemblyLine extends CreativeTabs
 {
-	public static final TabAssemblyLine INSTANCE = new TabAssemblyLine("assemblyline");
-	public static ItemStack itemStack;
+    public static final TabAssemblyLine INSTANCE = new TabAssemblyLine("assemblyline");
+    public static ItemStack itemStack;
 
-	public TabAssemblyLine(String par2Str)
-	{
-		super(CreativeTabs.getNextID(), par2Str);
-	}
+    public TabAssemblyLine(String par2Str)
+    {
+        super(CreativeTabs.getNextID(), par2Str);
+    }
 
-	@Override
-	public ItemStack getIconItemStack()
-	{
-		return itemStack;
-	}
+    @Override
+    public ItemStack getIconItemStack()
+    {
+        return itemStack;
+    }
 }

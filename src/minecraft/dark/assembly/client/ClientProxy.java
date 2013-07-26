@@ -41,68 +41,68 @@ import dark.core.client.FXBeam;
 public class ClientProxy extends CommonProxy
 {
 
-	@Override
-	public void preInit()
-	{
-		RenderingRegistry.registerBlockHandler(new BlockRenderingHandler());
-		MinecraftForge.EVENT_BUS.register(SoundHandler.INSTANCE);
-	}
+    @Override
+    public void preInit()
+    {
+        RenderingRegistry.registerBlockHandler(new BlockRenderingHandler());
+        MinecraftForge.EVENT_BUS.register(SoundHandler.INSTANCE);
+    }
 
-	@Override
-	public void init()
-	{
-		super.init();
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConveyorBelt.class, new RenderConveyorBelt());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRejector.class, new RenderRejector());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityManipulator.class, new RenderManipulator());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrate.class, new RenderCrate());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmbot.class, new RenderArmbot());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDetector.class, new RenderDetector());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCraneController.class, new RenderCraneController());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCraneRail.class, new RenderCraneFrame());
-	}
+    @Override
+    public void init()
+    {
+        super.init();
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConveyorBelt.class, new RenderConveyorBelt());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRejector.class, new RenderRejector());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityManipulator.class, new RenderManipulator());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrate.class, new RenderCrate());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmbot.class, new RenderArmbot());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDetector.class, new RenderDetector());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCraneController.class, new RenderCraneController());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCraneRail.class, new RenderCraneFrame());
+    }
 
-	@Override
-	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
-	{
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+    @Override
+    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+    {
+        TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tileEntity != null)
-		{
-			switch (ID)
-			{
-				case GUI_IMPRINTER:
-				{
-					return new GuiImprinter(player.inventory, (TileEntityImprinter) tileEntity);
-				}
-				case GUI_ENCODER:
-				{
-					return new GuiEncoder(player.inventory, (TileEntityEncoder) tileEntity);
-				}
-			}
-		}
+        if (tileEntity != null)
+        {
+            switch (ID)
+            {
+                case GUI_IMPRINTER:
+                {
+                    return new GuiImprinter(player.inventory, (TileEntityImprinter) tileEntity);
+                }
+                case GUI_ENCODER:
+                {
+                    return new GuiEncoder(player.inventory, (TileEntityEncoder) tileEntity);
+                }
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public boolean isCtrKeyDown()
-	{
-		return GuiScreen.isCtrlKeyDown();
-	}
+    @Override
+    public boolean isCtrKeyDown()
+    {
+        return GuiScreen.isCtrlKeyDown();
+    }
 
-	/** Renders a laser beam from one power to another by a set color for a set time
-	 * 
-	 * @param world - world this laser is to be rendered in
-	 * @param position - start vector3
-	 * @param target - end vector3
-	 * @param color - color of the beam
-	 * @param age - life of the beam in 1/20 secs */
-	public void renderBeam(World world, Vector3 position, Vector3 target, Color color, int age)
-	{
-		if (world.isRemote || FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
-		{
-			FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXBeam(world, position, target, color, DarkMain.TEXTURE_DIRECTORY + "", age));
-		}
-	}
+    /** Renders a laser beam from one power to another by a set color for a set time
+     * 
+     * @param world - world this laser is to be rendered in
+     * @param position - start vector3
+     * @param target - end vector3
+     * @param color - color of the beam
+     * @param age - life of the beam in 1/20 secs */
+    public void renderBeam(World world, Vector3 position, Vector3 target, Color color, int age)
+    {
+        if (world.isRemote || FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+        {
+            FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXBeam(world, position, target, color, DarkMain.TEXTURE_DIRECTORY + "", age));
+        }
+    }
 }

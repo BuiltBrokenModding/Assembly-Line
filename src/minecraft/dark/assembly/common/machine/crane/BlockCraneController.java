@@ -13,63 +13,63 @@ import dark.assembly.common.machine.BlockAssembly;
 
 public class BlockCraneController extends BlockAssembly
 {
-	public BlockCraneController(int id)
-	{
-		super(id, UniversalElectricity.machine, "craneController");
-	}
+    public BlockCraneController(int id)
+    {
+        super(id, UniversalElectricity.machine, "craneController");
+    }
 
-	@Override
-	public boolean isOpaqueCube()
-	{
-		return false;
-	}
+    @Override
+    public boolean isOpaqueCube()
+    {
+        return false;
+    }
 
-	@Override
-	public boolean renderAsNormalBlock()
-	{
-		return false;
-	}
+    @Override
+    public boolean renderAsNormalBlock()
+    {
+        return false;
+    }
 
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
-	{
-		int rot = (int) Math.min(((entity.rotationYaw + 315f) % 360f) / 90f, 3);
-		switch (rot)
-		{
-			case 0: // WEST
-			{
-				world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.WEST.ordinal(), 3);
-				break;
-			}
-			case 1: // NORTH
-			{
-				world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.NORTH.ordinal(), 3);
-				break;
-			}
-			case 2: // EAST
-			{
-				world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.EAST.ordinal(), 3);
-				break;
-			}
-			default: // SOUTH
-			{
-				world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.SOUTH.ordinal(), 3);
-				break;
-			}
-		}
-	}
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
+    {
+        int rot = (int) Math.min(((entity.rotationYaw + 315f) % 360f) / 90f, 3);
+        switch (rot)
+        {
+            case 0: // WEST
+            {
+                world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.WEST.ordinal(), 3);
+                break;
+            }
+            case 1: // NORTH
+            {
+                world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.NORTH.ordinal(), 3);
+                break;
+            }
+            case 2: // EAST
+            {
+                world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.EAST.ordinal(), 3);
+                break;
+            }
+            default: // SOUTH
+            {
+                world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.SOUTH.ordinal(), 3);
+                break;
+            }
+        }
+    }
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public int getRenderType()
-	{
-		return BlockRenderingHandler.BLOCK_RENDER_ID;
-	}
+    @SideOnly(Side.CLIENT)
+    @Override
+    public int getRenderType()
+    {
+        return BlockRenderingHandler.BLOCK_RENDER_ID;
+    }
 
-	@Override
-	public TileEntity createNewTileEntity(World world)
-	{
-		return new TileEntityCraneController();
-	}
+    @Override
+    public TileEntity createNewTileEntity(World world)
+    {
+        return new TileEntityCraneController();
+    }
 
 }

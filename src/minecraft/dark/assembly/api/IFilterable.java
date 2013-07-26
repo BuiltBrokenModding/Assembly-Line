@@ -2,15 +2,12 @@ package dark.assembly.api;
 
 import net.minecraft.item.ItemStack;
 
-/**
- * Applied to TileEntities that can accept a filter.
+/** Applied to TileEntities that can accept a filter.
  * 
- * @author Calclavia
- * 
- */
+ * @author Calclavia */
 public interface IFilterable
 {
-	public void setFilter(ItemStack filter);
+    public void setFilter(ItemStack filter);
 
-	public ItemStack getFilter();
+    public ItemStack getFilter();
 }

@@ -1,23 +1,21 @@
 package dark.assembly.common.armbot.command;
 
-/**
- * Used by arms to break a specific block in a position.
+/** Used by arms to break a specific block in a position.
  * 
- * @author Calclavia
- */
+ * @author Calclavia */
 public class CommandHarvest extends CommandBreak
 {
-	private CommandRotateTo rotateToCommand;
+    private CommandRotateTo rotateToCommand;
 
-	@Override
-	public void onTaskStart()
-	{
-		this.keep = true;
-	}
+    @Override
+    public void onTaskStart()
+    {
+        this.keep = true;
+    }
 
-	@Override
-	public String toString()
-	{
-		return "HARVEST";
-	}
+    @Override
+    public String toString()
+    {
+        return "HARVEST";
+    }
 }

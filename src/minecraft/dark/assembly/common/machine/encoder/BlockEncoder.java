@@ -15,70 +15,65 @@ import dark.assembly.common.machine.BlockAssembly;
 
 public class BlockEncoder extends BlockAssembly
 {
-	Icon encoder_side;
-	Icon encoder_top;
-	Icon encoder_bottom;
-	public BlockEncoder(int id)
-	{
-		super(id, Material.wood,"encoder");
-	}
+    Icon encoder_side;
+    Icon encoder_top;
+    Icon encoder_bottom;
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IconRegister iconReg)
-	{
-		this.encoder_side = iconReg.registerIcon(AssemblyLine.instance.PREFIX+"encoder_side");
-		this.encoder_top = iconReg.registerIcon(AssemblyLine.instance.PREFIX+"encoder_top");
-		this.encoder_bottom = iconReg.registerIcon(AssemblyLine.instance.PREFIX+"encoder_bottom");
-	}
+    public BlockEncoder(int id)
+    {
+        super(id, Material.wood, "encoder");
+    }
 
-	/**
-	 * Returns the block texture based on the side being looked at. Args: side
-	 */
-	@Override
-	public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
-	{
-		return getIcon(side, 0);
-	}
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void registerIcons(IconRegister iconReg)
+    {
+        this.encoder_side = iconReg.registerIcon(AssemblyLine.instance.PREFIX + "encoder_side");
+        this.encoder_top = iconReg.registerIcon(AssemblyLine.instance.PREFIX + "encoder_top");
+        this.encoder_bottom = iconReg.registerIcon(AssemblyLine.instance.PREFIX + "encoder_bottom");
+    }
 
-	/**
-	 * Returns the block texture based on the side being looked at. Args: side
-	 */
-	@Override
-	public Icon getIcon(int side, int meta)
-	{
-		if (side == 1)
-		{
-			return this.encoder_top;
+    /** Returns the block texture based on the side being looked at. Args: side */
+    @Override
+    public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
+    {
+        return getIcon(side, 0);
+    }
 
-		}
-		else if (side == 0)
-		{
-			return this.encoder_bottom;
+    /** Returns the block texture based on the side being looked at. Args: side */
+    @Override
+    public Icon getIcon(int side, int meta)
+    {
+        if (side == 1)
+        {
+            return this.encoder_top;
 
-		}
+        }
+        else if (side == 0)
+        {
+            return this.encoder_bottom;
 
-		return this.encoder_side;
-	}
+        }
 
-	/**
-	 * Called upon block activation (right click on the block.)
-	 */
-	@Override
-	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
-	{
-		if (!world.isRemote)
-		{
-			entityPlayer.openGui(AssemblyLine.instance, CommonProxy.GUI_ENCODER, world, x, y, z);
-		}
+        return this.encoder_side;
+    }
 
-		return true;
+    /** Called upon block activation (right click on the block.) */
+    @Override
+    public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
+    {
+        if (!world.isRemote)
+        {
+            entityPlayer.openGui(AssemblyLine.instance, CommonProxy.GUI_ENCODER, world, x, y, z);
+        }
 
-	}
+        return true;
 
-	@Override
-	public TileEntity createNewTileEntity(World world)
-	{
-		return new TileEntityEncoder();
-	}
+    }
+
+    @Override
+    public TileEntity createNewTileEntity(World world)
+    {
+        return new TileEntityEncoder();
+    }
 }

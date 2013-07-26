@@ -11,34 +11,34 @@ import dark.assembly.common.imprinter.prefab.BlockImprintable;
 
 public class BlockRejector extends BlockImprintable
 {
-	public BlockRejector(int id)
-	{
-		super("rejector", id, UniversalElectricity.machine, TabAssemblyLine.INSTANCE);
-	}
+    public BlockRejector(int id)
+    {
+        super("rejector", id, UniversalElectricity.machine, TabAssemblyLine.INSTANCE);
+    }
 
-	@Override
-	public TileEntity createNewTileEntity(World var1)
-	{
-		return new TileEntityRejector();
-	}
+    @Override
+    public TileEntity createNewTileEntity(World var1)
+    {
+        return new TileEntityRejector();
+    }
 
-	@Override
-	public boolean isOpaqueCube()
-	{
-		return false;
-	}
+    @Override
+    public boolean isOpaqueCube()
+    {
+        return false;
+    }
 
-	@Override
-	public boolean renderAsNormalBlock()
-	{
-		return false;
-	}
+    @Override
+    public boolean renderAsNormalBlock()
+    {
+        return false;
+    }
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public int getRenderType()
-	{
-		return BlockRenderingHandler.BLOCK_RENDER_ID;
-	}
+    @SideOnly(Side.CLIENT)
+    @Override
+    public int getRenderType()
+    {
+        return BlockRenderingHandler.BLOCK_RENDER_ID;
+    }
 
 }
