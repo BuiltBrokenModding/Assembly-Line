@@ -7,33 +7,33 @@ import universalelectricity.prefab.CustomDamageSource;
 
 public class TileDamageSource extends CustomDamageSource
 {
-	protected Object damageSource;
+    protected Object damageSource;
 
-	public TileDamageSource(String damageName, Object attacker)
-	{
-		super(damageName);
-		this.damageSource = attacker;
-	}
+    public TileDamageSource(String damageName, Object attacker)
+    {
+        super(damageName);
+        this.damageSource = attacker;
+    }
 
-	@Override
-	public Entity getEntity()
-	{
-		return damageSource instanceof Entity ? ((Entity) damageSource) : null;
-	}
+    @Override
+    public Entity getEntity()
+    {
+        return damageSource instanceof Entity ? ((Entity) damageSource) : null;
+    }
 
-	@Override
-	public boolean isDifficultyScaled()
-	{
-		return this.damageSource != null && this.damageSource instanceof EntityLiving && !(this.damageSource instanceof EntityPlayer);
-	}
+    @Override
+    public boolean isDifficultyScaled()
+    {
+        return this.damageSource != null && this.damageSource instanceof EntityLiving && !(this.damageSource instanceof EntityPlayer);
+    }
 
-	public static TileDamageSource doBulletDamage(Object object)
-	{
-		return (TileDamageSource) ((CustomDamageSource) new TileDamageSource("Bullets", object).setProjectile()).setDeathMessage("%1$s was filled with holes!");
-	}
+    public static TileDamageSource doBulletDamage(Object object)
+    {
+        return (TileDamageSource) ((CustomDamageSource) new TileDamageSource("Bullets", object).setProjectile()).setDeathMessage("%1$s was filled with holes!");
+    }
 
-	public static TileDamageSource doLaserDamage(Object object)
-	{
-		return (TileDamageSource) ((CustomDamageSource) new TileDamageSource("Laser", object).setProjectile()).setDeathMessage("%1$s was vaporized!");
-	}
+    public static TileDamageSource doLaserDamage(Object object)
+    {
+        return (TileDamageSource) ((CustomDamageSource) new TileDamageSource("Laser", object).setProjectile()).setDeathMessage("%1$s was vaporized!");
+    }
 }

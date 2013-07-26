@@ -7,6 +7,6 @@ import net.minecraft.entity.player.EntityPlayer;
  * @author Calclavia */
 public interface IBlockActivate
 {
-	/** Called when activated */
-	public boolean onActivated(EntityPlayer entityPlayer);
+    /** Called when activated */
+    public boolean onActivated(EntityPlayer entityPlayer);
 }

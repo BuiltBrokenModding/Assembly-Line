@@ -7,13 +7,13 @@ import net.minecraft.nbt.NBTTagCompound;
  * @author DarkGuardsman */
 public interface INbtSave
 {
-	/** gets the file name to save as */
-	public String saveFileName();
+    /** gets the file name to save as */
+    public String saveFileName();
 
-	/** the data to save when saving to the file */
-	public NBTTagCompound getSaveData();
+    /** the data to save when saving to the file */
+    public NBTTagCompound getSaveData();
 
-	/** can the file be saved at this moment */
-	public boolean shouldSave(boolean isServer);
+    /** can the file be saved at this moment */
+    public boolean shouldSave(boolean isServer);
 
 }

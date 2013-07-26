@@ -18,122 +18,122 @@ import com.google.common.io.ByteArrayDataInput;
  * @author Calclavia */
 public class TileEntityMulti extends TileEntity implements IPacketReceiver
 {
-	// The the position of the main block
-	public Vector3 mainBlockPosition;
-	public String channel;
+    // The the position of the main block
+    public Vector3 mainBlockPosition;
+    public String channel;
 
-	public TileEntityMulti()
-	{
+    public TileEntityMulti()
+    {
 
-	}
+    }
 
-	public TileEntityMulti(String channel)
-	{
-		this.channel = channel;
-	}
+    public TileEntityMulti(String channel)
+    {
+        this.channel = channel;
+    }
 
-	public void setMainBlock(Vector3 mainBlock)
-	{
-		this.mainBlockPosition = mainBlock;
+    public void setMainBlock(Vector3 mainBlock)
+    {
+        this.mainBlockPosition = mainBlock;
 
-		if (!this.worldObj.isRemote)
-		{
-			this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
-		}
-	}
+        if (!this.worldObj.isRemote)
+        {
+            this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+        }
+    }
 
-	@Override
-	public Packet getDescriptionPacket()
-	{
-		if (this.mainBlockPosition != null)
-		{
-			if (this.channel == null || this.channel == "" && this.getBlockType() instanceof BlockMulti)
-			{
-				this.channel = ((BlockMulti) this.getBlockType()).channel;
-			}
+    @Override
+    public Packet getDescriptionPacket()
+    {
+        if (this.mainBlockPosition != null)
+        {
+            if (this.channel == null || this.channel == "" && this.getBlockType() instanceof BlockMulti)
+            {
+                this.channel = ((BlockMulti) this.getBlockType()).channel;
+            }
 
-			return PacketManager.getPacket(this.channel, this, this.mainBlockPosition.intX(), this.mainBlockPosition.intY(), this.mainBlockPosition.intZ());
+            return PacketManager.getPacket(this.channel, this, this.mainBlockPosition.intX(), this.mainBlockPosition.intY(), this.mainBlockPosition.intZ());
 
-		}
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public void onBlockRemoval()
-	{
-		if (this.mainBlockPosition != null)
-		{
-			TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.mainBlockPosition.intX(), this.mainBlockPosition.intY(), this.mainBlockPosition.intZ());
+    public void onBlockRemoval()
+    {
+        if (this.mainBlockPosition != null)
+        {
+            TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.mainBlockPosition.intX(), this.mainBlockPosition.intY(), this.mainBlockPosition.intZ());
 
-			if (tileEntity != null && tileEntity instanceof IMultiBlock)
-			{
-				IMultiBlock mainBlock = (IMultiBlock) tileEntity;
+            if (tileEntity != null && tileEntity instanceof IMultiBlock)
+            {
+                IMultiBlock mainBlock = (IMultiBlock) tileEntity;
 
-				if (mainBlock != null)
-				{
-					mainBlock.onDestroy(this);
-				}
-			}
-		}
-	}
+                if (mainBlock != null)
+                {
+                    mainBlock.onDestroy(this);
+                }
+            }
+        }
+    }
 
-	public boolean onBlockActivated(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer)
-	{
-		if (this.mainBlockPosition != null)
-		{
-			TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.mainBlockPosition.intX(), this.mainBlockPosition.intY(), this.mainBlockPosition.intZ());
+    public boolean onBlockActivated(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer)
+    {
+        if (this.mainBlockPosition != null)
+        {
+            TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.mainBlockPosition.intX(), this.mainBlockPosition.intY(), this.mainBlockPosition.intZ());
 
-			if (tileEntity != null)
-			{
-				if (tileEntity instanceof IMultiBlock)
-				{
-					return ((IMultiBlock) tileEntity).onActivated(par5EntityPlayer);
-				}
-			}
-		}
+            if (tileEntity != null)
+            {
+                if (tileEntity instanceof IMultiBlock)
+                {
+                    return ((IMultiBlock) tileEntity).onActivated(par5EntityPlayer);
+                }
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	/** Reads a tile entity from NBT. */
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
-		this.mainBlockPosition = Vector3.readFromNBT(nbt.getCompoundTag("mainBlockPosition"));
-	}
+    /** Reads a tile entity from NBT. */
+    @Override
+    public void readFromNBT(NBTTagCompound nbt)
+    {
+        super.readFromNBT(nbt);
+        this.mainBlockPosition = Vector3.readFromNBT(nbt.getCompoundTag("mainBlockPosition"));
+    }
 
-	/** Writes a tile entity to NBT. */
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
+    /** Writes a tile entity to NBT. */
+    @Override
+    public void writeToNBT(NBTTagCompound nbt)
+    {
+        super.writeToNBT(nbt);
 
-		if (this.mainBlockPosition != null)
-		{
-			nbt.setCompoundTag("mainBlockPosition", this.mainBlockPosition.writeToNBT(new NBTTagCompound()));
-		}
-	}
+        if (this.mainBlockPosition != null)
+        {
+            nbt.setCompoundTag("mainBlockPosition", this.mainBlockPosition.writeToNBT(new NBTTagCompound()));
+        }
+    }
 
-	/** Determines if this TileEntity requires update calls.
-	 * 
-	 * @return True if you want updateEntity() to be called, false if not */
-	@Override
-	public boolean canUpdate()
-	{
-		return false;
-	}
+    /** Determines if this TileEntity requires update calls.
+     * 
+     * @return True if you want updateEntity() to be called, false if not */
+    @Override
+    public boolean canUpdate()
+    {
+        return false;
+    }
 
-	@Override
-	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
-	{
-		try
-		{
-			this.mainBlockPosition = new Vector3(dataStream.readInt(), dataStream.readInt(), dataStream.readInt());
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
+    @Override
+    public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
+    {
+        try
+        {
+            this.mainBlockPosition = new Vector3(dataStream.readInt(), dataStream.readInt(), dataStream.readInt());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 }

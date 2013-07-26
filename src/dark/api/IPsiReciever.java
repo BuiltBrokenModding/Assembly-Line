@@ -5,7 +5,7 @@ package dark.api;
  * pressure */
 public interface IPsiReciever extends ITileConnector
 {
-	/** the load that this machine is handling, working, or moving */
-	public double getPressureLoad();
+    /** the load that this machine is handling, working, or moving */
+    public double getPressureLoad();
 
 }

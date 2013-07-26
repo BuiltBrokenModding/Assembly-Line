@@ -7,20 +7,20 @@ import net.minecraft.tileentity.TileEntity;
 
 public class ContainerFake extends Container
 {
-	TileEntity entity = null;
+    TileEntity entity = null;
 
-	public ContainerFake(TileEntity entity)
-	{
-		this.entity = entity;
-	}
+    public ContainerFake(TileEntity entity)
+    {
+        this.entity = entity;
+    }
 
-	public boolean canInteractWith(EntityPlayer par1EntityPlayer)
-	{
-		if (entity instanceof IInventory)
-		{
-			return ((IInventory) this.entity).isUseableByPlayer(par1EntityPlayer);
-		}
-		return true;
-	}
+    public boolean canInteractWith(EntityPlayer par1EntityPlayer)
+    {
+        if (entity instanceof IInventory)
+        {
+            return ((IInventory) this.entity).isUseableByPlayer(par1EntityPlayer);
+        }
+        return true;
+    }
 
 }
