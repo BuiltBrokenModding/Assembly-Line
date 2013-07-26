@@ -8,9 +8,9 @@ import dark.api.INetworkPart;
 
 public interface INetworkFluidPart extends IColorCoded, IFluidHandler, INetworkPart
 {
-	/** Gets the part's main tank for shared storage */
-	public IFluidTank getTank();
+    /** Gets the part's main tank for shared storage */
+    public IFluidTank getTank();
 
-	/** Sets the content of the part's main tank */
-	public void setTankContent(FluidStack stack);
+    /** Sets the content of the part's main tank */
+    public void setTankContent(FluidStack stack);
 }

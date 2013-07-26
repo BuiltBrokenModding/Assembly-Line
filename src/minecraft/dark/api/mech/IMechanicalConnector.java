@@ -4,5 +4,5 @@ import net.minecraftforge.common.ForgeDirection;
 
 public interface IMechanicalConnector
 {
-	public boolean canRodeConnect(ForgeDirection side);
+    public boolean canRodeConnect(ForgeDirection side);
 }

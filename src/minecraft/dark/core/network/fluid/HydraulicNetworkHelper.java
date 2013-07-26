@@ -12,30 +12,30 @@ import dark.core.tile.network.NetworkTileEntities;
 public class HydraulicNetworkHelper
 {
 
-	/** Invalidates a TileEntity */
-	public static void invalidate(TileEntity tileEntity)
-	{
-		for (int i = 0; i < 6; i++)
-		{
-			ForgeDirection direction = ForgeDirection.getOrientation(i);
-			TileEntity checkTile = VectorHelper.getConnectorFromSide(tileEntity.worldObj, new Vector3(tileEntity), direction);
+    /** Invalidates a TileEntity */
+    public static void invalidate(TileEntity tileEntity)
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            ForgeDirection direction = ForgeDirection.getOrientation(i);
+            TileEntity checkTile = VectorHelper.getConnectorFromSide(tileEntity.worldObj, new Vector3(tileEntity), direction);
 
-			if (checkTile instanceof INetworkPart)
-			{
-				NetworkTileEntities network = ((INetworkPart) checkTile).getTileNetwork();
+            if (checkTile instanceof INetworkPart)
+            {
+                NetworkTileEntities network = ((INetworkPart) checkTile).getTileNetwork();
 
-				if (network != null && network instanceof NetworkFluidTiles)
-				{
-					network.removeTile(tileEntity);
-					for (IFluidHandler tank : ((NetworkFluidTiles) network).connectedTanks)
-					{
-						if (tank instanceof IDrain)
-						{
-							((IDrain) tank).stopRequesting(tileEntity);
-						}
-					}
-				}
-			}
-		}
-	}
+                if (network != null && network instanceof NetworkFluidTiles)
+                {
+                    network.removeTile(tileEntity);
+                    for (IFluidHandler tank : ((NetworkFluidTiles) network).connectedTanks)
+                    {
+                        if (tank instanceof IDrain)
+                        {
+                            ((IDrain) tank).stopRequesting(tileEntity);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

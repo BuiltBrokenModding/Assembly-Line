@@ -9,12 +9,12 @@ import dark.core.network.fluid.HydraulicNetworkHelper;
 
 public abstract class TileEntityFluidDevice extends TileEntityAdvanced implements IToolReadOut, ITileConnector
 {
-	public Random random = new Random();
+    public Random random = new Random();
 
-	@Override
-	public void invalidate()
-	{
-		super.invalidate();
-		HydraulicNetworkHelper.invalidate(this);
-	}
+    @Override
+    public void invalidate()
+    {
+        super.invalidate();
+        HydraulicNetworkHelper.invalidate(this);
+    }
 }

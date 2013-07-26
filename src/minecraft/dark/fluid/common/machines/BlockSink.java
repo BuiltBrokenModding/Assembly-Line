@@ -15,80 +15,80 @@ import dark.fluid.common.BlockFM;
 
 public class BlockSink extends BlockFM
 {
-	public BlockSink(int par1)
-	{
-		super("FluidSink", par1, Material.iron);
-		this.setResistance(4f);
-		this.setHardness(4f);
-	}
+    public BlockSink(int par1)
+    {
+        super("FluidSink", par1, Material.iron);
+        this.setResistance(4f);
+        this.setHardness(4f);
+    }
 
-	@Override
-	public TileEntity createNewTileEntity(World var1)
-	{
-		return new TileEntitySink();
-	}
+    @Override
+    public TileEntity createNewTileEntity(World var1)
+    {
+        return new TileEntitySink();
+    }
 
-	@Override
-	public boolean onUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
-	{
-		int meta = par1World.getBlockMetadata(x, y, z);
-		int g = MetaGroup.getGrouping(meta);
-		TileEntity ent = par1World.getBlockTileEntity(x, y, z);
-		int angle = MathHelper.floor_double((par5EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+    @Override
+    public boolean onUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
+    {
+        int meta = par1World.getBlockMetadata(x, y, z);
+        int g = MetaGroup.getGrouping(meta);
+        TileEntity ent = par1World.getBlockTileEntity(x, y, z);
+        int angle = MathHelper.floor_double((par5EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 
-		if (meta == (g * 4) + 3)
-		{
-			par1World.setBlockMetadataWithNotify(x, y, z, (g * 4), 3);
-			return true;
-		}
-		else
-		{
-			par1World.setBlockMetadataWithNotify(x, y, z, meta + 1, 3);
-			return true;
-		}
-		// return false;
-	}
+        if (meta == (g * 4) + 3)
+        {
+            par1World.setBlockMetadataWithNotify(x, y, z, (g * 4), 3);
+            return true;
+        }
+        else
+        {
+            par1World.setBlockMetadataWithNotify(x, y, z, meta + 1, 3);
+            return true;
+        }
+        // return false;
+    }
 
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase par5EntityLiving, ItemStack itemStack)
-	{
-		int meta = world.getBlockMetadata(x, y, z);
-		int angle = MathHelper.floor_double((par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-		TileEntity ent = world.getBlockTileEntity(x, y, z);
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase par5EntityLiving, ItemStack itemStack)
+    {
+        int meta = world.getBlockMetadata(x, y, z);
+        int angle = MathHelper.floor_double((par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+        TileEntity ent = world.getBlockTileEntity(x, y, z);
 
-		world.setBlockMetadataWithNotify(x, y, z, angle + MetaGroup.getGroupStartMeta(MetaGroup.getGrouping(meta)), 3);
-		if (ent instanceof TileEntityAdvanced)
-		{
-			((TileEntityAdvanced) world.getBlockTileEntity(x, y, z)).initiate();
-		}
+        world.setBlockMetadataWithNotify(x, y, z, angle + MetaGroup.getGroupStartMeta(MetaGroup.getGrouping(meta)), 3);
+        if (ent instanceof TileEntityAdvanced)
+        {
+            ((TileEntityAdvanced) world.getBlockTileEntity(x, y, z)).initiate();
+        }
 
-		world.notifyBlocksOfNeighborChange(x, y, z, this.blockID);
-	}
+        world.notifyBlocksOfNeighborChange(x, y, z, this.blockID);
+    }
 
-	@Override
-	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
-	{
-		int meta = world.getBlockMetadata(x, y, z);
+    @Override
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+    {
+        int meta = world.getBlockMetadata(x, y, z);
 
-		return new ItemStack(this, 1, 0);
+        return new ItemStack(this, 1, 0);
 
-	}
+    }
 
-	@Override
-	public boolean isOpaqueCube()
-	{
-		return false;
-	}
+    @Override
+    public boolean isOpaqueCube()
+    {
+        return false;
+    }
 
-	@Override
-	public boolean renderAsNormalBlock()
-	{
-		return false;
-	}
+    @Override
+    public boolean renderAsNormalBlock()
+    {
+        return false;
+    }
 
-	@Override
-	public int getRenderType()
-	{
-		return BlockRenderHelper.renderID;
-	}
+    @Override
+    public int getRenderType()
+    {
+        return BlockRenderHelper.renderID;
+    }
 }

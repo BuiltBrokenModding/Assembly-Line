@@ -6,10 +6,10 @@ import dark.core.blocks.BlockMachine;
 public abstract class BlockFM extends BlockMachine
 {
 
-	public BlockFM(String name, int blockID, Material material)
-	{
-		super(name, FluidMech.CONFIGURATION, blockID, material);
-		this.setCreativeTab(FluidMech.TabFluidMech);
-	}
+    public BlockFM(String name, int blockID, Material material)
+    {
+        super(name, FluidMech.CONFIGURATION, blockID, material);
+        this.setCreativeTab(FluidMech.TabFluidMech);
+    }
 
 }

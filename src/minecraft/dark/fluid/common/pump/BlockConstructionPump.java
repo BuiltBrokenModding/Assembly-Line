@@ -22,117 +22,117 @@ import dark.fluid.common.FluidMech;
 
 public class BlockConstructionPump extends BlockFM
 {
-	Icon inputIcon;
-	Icon outputIcon;
+    Icon inputIcon;
+    Icon outputIcon;
 
-	public BlockConstructionPump(int id)
-	{
-		super("ConstructionPump", id, Material.iron);
-		this.setHardness(1f);
-		this.setResistance(5f);
+    public BlockConstructionPump(int id)
+    {
+        super("ConstructionPump", id, Material.iron);
+        this.setHardness(1f);
+        this.setResistance(5f);
 
-	}
+    }
 
-	@Override
-	public void registerIcons(IconRegister par1IconRegister)
-	{
-		this.blockIcon = par1IconRegister.registerIcon(FluidMech.instance.PREFIX + "ironMachineSide");
-		this.inputIcon = par1IconRegister.registerIcon(FluidMech.instance.PREFIX + "inputMachineSide");
-		this.outputIcon = par1IconRegister.registerIcon(FluidMech.instance.PREFIX + "outputMachineSide");
-	}
+    @Override
+    public void registerIcons(IconRegister par1IconRegister)
+    {
+        this.blockIcon = par1IconRegister.registerIcon(FluidMech.instance.PREFIX + "ironMachineSide");
+        this.inputIcon = par1IconRegister.registerIcon(FluidMech.instance.PREFIX + "inputMachineSide");
+        this.outputIcon = par1IconRegister.registerIcon(FluidMech.instance.PREFIX + "outputMachineSide");
+    }
 
-	@Override
-	public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
-	{
-		TileEntity entity = world.getBlockTileEntity(x, y, z);
-		ForgeDirection dir = ForgeDirection.getOrientation(side);
-		if (entity instanceof TileEntityConstructionPump)
-		{
+    @Override
+    public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
+    {
+        TileEntity entity = world.getBlockTileEntity(x, y, z);
+        ForgeDirection dir = ForgeDirection.getOrientation(side);
+        if (entity instanceof TileEntityConstructionPump)
+        {
 
-			if (dir == ((TileEntityConstructionPump) entity).getFacing(false))
-			{
-				return this.outputIcon;
-			}
-			if (dir == ((TileEntityConstructionPump) entity).getFacing(true))
-			{
-				return this.inputIcon;
-			}
-		}
-		return this.blockIcon;
-	}
+            if (dir == ((TileEntityConstructionPump) entity).getFacing(false))
+            {
+                return this.outputIcon;
+            }
+            if (dir == ((TileEntityConstructionPump) entity).getFacing(true))
+            {
+                return this.inputIcon;
+            }
+        }
+        return this.blockIcon;
+    }
 
-	@Override
-	public boolean isOpaqueCube()
-	{
-		return false;
-	}
+    @Override
+    public boolean isOpaqueCube()
+    {
+        return false;
+    }
 
-	@Override
-	public boolean renderAsNormalBlock()
-	{
-		return false;
-	}
+    @Override
+    public boolean renderAsNormalBlock()
+    {
+        return false;
+    }
 
-	@Override
-	public int damageDropped(int meta)
-	{
-		return 0;
-	}
+    @Override
+    public int damageDropped(int meta)
+    {
+        return 0;
+    }
 
-	@Override
-	public int getRenderType()
-	{
-		return BlockRenderHelper.instance.renderID;
-	}
+    @Override
+    public int getRenderType()
+    {
+        return BlockRenderHelper.instance.renderID;
+    }
 
-	@Override
-	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
-	{
-		return new ItemStack(FluidMech.recipeLoader.blockConPump, 1, 0);
-	}
+    @Override
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+    {
+        return new ItemStack(FluidMech.recipeLoader.blockConPump, 1, 0);
+    }
 
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase p, ItemStack itemStack)
-	{
-	}
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase p, ItemStack itemStack)
+    {
+    }
 
-	@Override
-	public TileEntity createNewTileEntity(World var1)
-	{
-		return new TileEntityConstructionPump();
-	}
+    @Override
+    public TileEntity createNewTileEntity(World var1)
+    {
+        return new TileEntityConstructionPump();
+    }
 
-	@Override
-	public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
-	{
-		par3List.add(new ItemStack(par1, 1, 0));
-	}
+    @Override
+    public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
+    {
+        par3List.add(new ItemStack(par1, 1, 0));
+    }
 
-	public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
-	{
-		if (!world.isRemote)
-		{
-			int meta = world.getBlockMetadata(x, y, z);
-			int angle = MathHelper.floor_double((entityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+    public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
+    {
+        if (!world.isRemote)
+        {
+            int meta = world.getBlockMetadata(x, y, z);
+            int angle = MathHelper.floor_double((entityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 
-			TileEntity entity = world.getBlockTileEntity(x, y, z);
-			if (entity instanceof TileEntityConstructionPump)
-			{
-				HydraulicNetworkHelper.invalidate(entity);
-			}
+            TileEntity entity = world.getBlockTileEntity(x, y, z);
+            if (entity instanceof TileEntityConstructionPump)
+            {
+                HydraulicNetworkHelper.invalidate(entity);
+            }
 
-			if (meta == 3)
-			{
-				world.setBlockMetadataWithNotify(x, y, z, 0, 3);
-			}
-			else
-			{
-				world.setBlockMetadataWithNotify(x, y, z, meta + 1, 3);
-			}
+            if (meta == 3)
+            {
+                world.setBlockMetadataWithNotify(x, y, z, 0, 3);
+            }
+            else
+            {
+                world.setBlockMetadataWithNotify(x, y, z, meta + 1, 3);
+            }
 
-			return true;
-		}
-		return this.onUseWrench(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ);
-	}
+            return true;
+        }
+        return this.onUseWrench(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ);
+    }
 
 }
