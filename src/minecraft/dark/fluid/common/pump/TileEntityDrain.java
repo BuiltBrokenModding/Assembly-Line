@@ -94,65 +94,72 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
                 {
                     this.getLiquidFinder().start(new Vector3(this).modifyPositionFromSide(this.getFacing()), false);
                 }
-                for (Entry<TileEntity, Pair<FluidStack, Integer>> request : requestMap.entrySet())
+                /* Sort list if it is large than one block TODO set this in path finder */
+                if (getLiquidFinder().results.size() > 1)
                 {
-                    if (this.currentWorldEdits >= MAX_WORLD_EDITS_PER_PROCESS)
+                    this.sortBlockList(new Vector3(this).modifyPositionFromSide(this.getFacing()), getLiquidFinder().results, false, true);
+                }
+                System.out.println("Drain>>DrainArea>>Targets>" + this.getLiquidFinder().results.size());
+
+                for (Entry<TileEntity, Pair<FluidStack, Integer>> requestEntry : requestMap.entrySet())
+                {
+                    System.out.println("Drain>>DrainArea>>ProcessingTile");
+
+                    IFluidHandler requestTile = null;
+                    if (requestEntry.getKey() instanceof IFluidHandler)
                     {
-                        break;
+                        requestTile = (IFluidHandler) requestEntry.getKey();
+                    }
+                    else if (new Vector3(this).modifyPositionFromSide(this.getFacing().getOpposite()).getTileEntity(worldObj) instanceof IFluidHandler)
+                    {
+                        requestTile = (IFluidHandler) new Vector3(this).modifyPositionFromSide(this.getFacing().getOpposite()).getTileEntity(worldObj);
+                    }
+                    else
+                    {
+                        this.requestMap.remove(requestEntry.getKey());
+                        continue;
                     }
 
-                    if (request.getKey() instanceof IFluidHandler)
+                    Iterator<Vector3> fluidList = this.getLiquidFinder().results.iterator();
+
+                    while (fluidList.hasNext())
                     {
-                        IFluidHandler tank = (IFluidHandler) request.getKey();
-                        if (getLiquidFinder().results.size() > 1)
+                        System.out.println("Drain>>DrainArea>>Draining>>NextFluidBlock");
+                        Vector3 drainLocation = fluidList.next();
+                        FluidStack drainStack = FluidHelper.drainBlock(this.worldObj, drainLocation, false);
+                        Pair<FluidStack, Integer> fluidRequest = requestEntry.getValue();
+
+                        if (this.currentWorldEdits >= MAX_WORLD_EDITS_PER_PROCESS)
                         {
-                            this.sortBlockList(new Vector3(this).modifyPositionFromSide(this.getFacing()), getLiquidFinder().results, false, true);
+                            break;
                         }
-                        Vector3[] sortedList = this.getLiquidFinder().results.toArray(new Vector3[MAX_WORLD_EDITS_PER_PROCESS]);
 
-                        for (int i = 0; sortedList != null && i < sortedList.length; i++)
+                        if (drainStack != null && fluidRequest != null && fluidRequest.getValue() > 0)
                         {
-                            Vector3 loc = sortedList[i];
-
-                            if (this.currentWorldEdits >= MAX_WORLD_EDITS_PER_PROCESS)
+                            if (fluidRequest.getKey() == null || fluidRequest.getKey() != null && drainStack.isFluidEqual(fluidRequest.getKey().copy()))
                             {
-                                break;
-                            }
-                            FluidStack stack = FluidHelper.drainBlock(this.worldObj, loc, false);
-                            if (stack != null)
-                            {
-                                /* GET STACKS */
-
-                                Pair<FluidStack, Integer> requestStack = request.getValue();
-                                boolean flag = false;
-                                if (requestStack != null && requestStack.getValue() > 0)
+                                System.out.println("Drain>>DrainArea>>Draining>>RequestMatched>>" + (drainStack == null ? "null" : drainStack.getFluid().getName() + "@" + drainStack.amount + "mb"));
+                                if (requestTile.fill(ForgeDirection.UNKNOWN, drainStack, false) >= FluidContainerRegistry.BUCKET_VOLUME)
                                 {
-                                    if (requestStack.getKey() == null || requestStack.getKey() != null && stack.isFluidEqual(requestStack.getKey().copy()))
+                                    /* EDIT REQUEST IN MAP */
+                                    int requestAmmount = fluidRequest.getValue() - requestTile.fill(ForgeDirection.UNKNOWN, drainStack, true);
+                                    if (requestAmmount <= 0)
                                     {
-                                        if (tank.fill(ForgeDirection.UNKNOWN, stack, false) > FluidContainerRegistry.BUCKET_VOLUME)
-                                        {
-
-                                            /* EDIT REQUEST IN MAP */
-                                            int requestAmmount = requestStack.getValue() - tank.fill(ForgeDirection.UNKNOWN, stack, true);
-                                            if (requestAmmount <= 0)
-                                            {
-                                                this.requestMap.remove(request);
-                                            }
-                                            else
-                                            {
-                                                this.requestMap.put(request.getKey(), new Pair<FluidStack, Integer>(requestStack.getKey(), requestAmmount));
-                                            }
-
-                                            /* ADD TO UPDATE QUE */
-                                            if (!this.updateQue.contains(loc))
-                                            {
-                                                this.updateQue.add(loc);
-                                            }
-
-                                            /* REMOVE BLOCK */
-                                            FluidHelper.drainBlock(this.worldObj, loc, true);
-                                            this.currentWorldEdits++;
-                                        }
+                                        this.requestMap.remove(requestEntry.getKey());
+                                    }
+                                    else
+                                    {
+                                        this.requestMap.put(requestEntry.getKey(), new Pair<FluidStack, Integer>(fluidRequest.getKey(), requestAmmount));
+                                    }
+                                    System.out.println("Drain>>DrainArea>>Draining>>Fluid>" + drainLocation.toString());
+                                    /* REMOVE BLOCK */
+                                    FluidHelper.drainBlock(this.worldObj, drainLocation, true);
+                                    this.currentWorldEdits++;
+                                    fluidList.remove();
+                                    /* ADD TO UPDATE QUE */
+                                    if (!this.updateQue.contains(drainLocation))
+                                    {
+                                        this.updateQue.add(drainLocation);
                                     }
                                 }
                             }
@@ -382,16 +389,14 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
     @Override
     public void requestLiquid(TileEntity pump, FluidStack fluid, int amount)
     {
+        //System.out.println("Drain>>Request>>Received>>Tile>"+(pump != null ? "Pump" : "null")+" Fluid>"+(fluid == null ? "Any": fluid.fluidID)+" V>"+amount);
         this.requestMap.put(pump, new Pair<FluidStack, Integer>(fluid, amount));
     }
 
     @Override
     public void stopRequesting(TileEntity pump)
     {
-        if (this.requestMap.containsKey(pump))
-        {
-            this.requestMap.remove(pump);
-        }
+        this.requestMap.remove(pump);
     }
 
     @Override

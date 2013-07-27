@@ -87,9 +87,9 @@ public class TileEntityConstructionPump extends TileEntityMachine implements IFl
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
     {
-        if (from != getFacing(true))
+        if(resource != null)
         {
-            return 0;
+            return resource.amount;
         }
         TileEntity entity = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), getFacing(false));
         if (entity instanceof IFluidHandler)
