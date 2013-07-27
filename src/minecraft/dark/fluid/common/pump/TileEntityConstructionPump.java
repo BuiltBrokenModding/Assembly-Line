@@ -53,12 +53,14 @@ public class TileEntityConstructionPump extends TileEntityMachine implements IFl
     public void updateEntity()
     {
         super.updateEntity();
-        if (!worldObj.isRemote && this.ticks % 10 == 0 && this.canRun() && this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord))
+        if (!worldObj.isRemote && this.ticks % 10 == 0)
         {
+
             this.rotation = Math.max(Math.min(this.rotation + 1, 7), 0);
 
             TileEntity inputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), getFacing(true));
             TileEntity outputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), getFacing(false));
+
             if (inputTile instanceof INetworkPipe && ((INetworkPipe) inputTile).getTileNetwork() instanceof NetworkFluidTiles)
             {
                 if (outputTile instanceof IFluidHandler)
@@ -67,7 +69,14 @@ public class TileEntityConstructionPump extends TileEntityMachine implements IFl
                     {
                         if (tank instanceof TileEntityDrain)
                         {
-                            ((TileEntityDrain) tank).requestLiquid(this, null, liquidRequest * FluidContainerRegistry.BUCKET_VOLUME);
+                            if (this.canRun() && this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord))
+                            {
+                                ((TileEntityDrain) tank).requestLiquid(this, null, liquidRequest * FluidContainerRegistry.BUCKET_VOLUME);
+                            }
+                            else
+                            {
+                                ((TileEntityDrain) tank).stopRequesting(this);
+                            }
 
                         }
 
@@ -87,10 +96,6 @@ public class TileEntityConstructionPump extends TileEntityMachine implements IFl
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
     {
-        if(resource != null)
-        {
-            return resource.amount;
-        }
         TileEntity entity = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), getFacing(false));
         if (entity instanceof IFluidHandler)
         {

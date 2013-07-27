@@ -103,7 +103,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 
                 for (Entry<TileEntity, Pair<FluidStack, Integer>> requestEntry : requestMap.entrySet())
                 {
-                    System.out.println("Drain>>DrainArea>>ProcessingTile");
+                    System.out.println("Drain>>DrainArea>>ProcessingTile>"+(requestEntry.getKey() != null ? requestEntry.getKey().toString() : "null"));
 
                     IFluidHandler requestTile = null;
                     if (requestEntry.getKey() instanceof IFluidHandler)
