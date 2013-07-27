@@ -2,6 +2,7 @@ package dark.fluid.common.pump;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class LiquidPathFinder
     /** Limit on the searched nodes per run */
     private int resultLimit = 2000;
     /** Start location of the pathfinder used for range calculations */
-    private Vector2 Start;
+    private Vector3 Start;
     /** Range to limit the search to */
     private double range;
     /** List of forgeDirection to use that are shuffled to prevent strait lines */
@@ -114,7 +115,7 @@ public class LiquidPathFinder
     public boolean find(ForgeDirection direction, Vector3 origin)
     {
         Vector3 vec = origin.clone().modifyPositionFromSide(direction);
-        double distance = vec.toVector2().distanceTo(this.Start);
+        double distance = vec.toVector2().distanceTo(this.Start.toVector2());
         if (distance <= this.range && this.isValidNode(vec) & !this.nodes.contains(vec))
         {
             if (this.findNodes(vec))
@@ -139,11 +140,11 @@ public class LiquidPathFinder
             return false;
         }
         /* Fillable blocks need to be connected to fillable fluid blocks to be valid */
-        if (FluidHelper.isFillableBlock(world, pos))
+        if (this.fill && FluidHelper.isFillableBlock(world, pos))
         {
             for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
             {
-                if (FluidHelper.isFillableFluid(world, pos.clone().modifyPositionFromSide(dir)))
+                if (FluidHelper.isFillableFluid(world, pos.clone().modifyPositionFromSide(dir)) || FluidHelper.drainBlock(world, pos, false) != null)
                 {
                     return true;
                 }
@@ -154,17 +155,13 @@ public class LiquidPathFinder
 
     public boolean isValidResult(Vector3 node)
     {
-        if (this.fill && (FluidHelper.isFillableBlock(world, node) || FluidHelper.isFillableFluid(world, node)))
+        if (this.fill)
         {
-            return true;
-        }
-        else if (!this.fill && FluidHelper.drainBlock(world, node, false) != null)
-        {
-            return true;
+            return FluidHelper.isFillableBlock(world, node) || FluidHelper.isFillableFluid(world, node);
         }
         else
         {
-            return false;
+            return FluidHelper.drainBlock(world, node, false) != null;
         }
     }
 
@@ -181,7 +178,7 @@ public class LiquidPathFinder
     /** Called to execute the pathfinding operation. */
     public LiquidPathFinder start(final Vector3 startNode, final boolean fill)
     {
-        this.Start = startNode.toVector2();
+        this.Start = startNode;
         this.fill = fill;
         if (this.nodes.isEmpty())
         {
@@ -191,6 +188,8 @@ public class LiquidPathFinder
         {
             this.find(ForgeDirection.UNKNOWN, startNode);
         }
+        this.refresh();
+        this.sortBlockList(Start, results, !fill, fill);
         return this;
     }
 
@@ -204,21 +203,82 @@ public class LiquidPathFinder
     public LiquidPathFinder refresh()
     {
         Iterator<Vector3> it = this.nodes.iterator();
-        while(it.hasNext())
+        while (it.hasNext())
         {
-            if(!this.isValidNode(it.next()))
+            if (!this.isValidNode(it.next()))
             {
                 it.remove();
             }
         }
         it = this.results.iterator();
-        while(it.hasNext())
+        while (it.hasNext())
         {
-            if(!this.isValidResult(it.next()))
+            if (!this.isValidResult(it.next()))
             {
                 it.remove();
             }
         }
         return this;
+    }
+
+
+    /** Used to sort a list of vector3 locations using the vector3's distance from one point and
+     * elevation in the y axis
+     *
+     * @param start - start location to measure distance from
+     * @param locations - list of vectors to sort
+     * @param closest - sort closest distance to the top
+     * @param highest - sort highest y value to the top.
+     *
+     * Note: highest takes priority over closest */
+    public void sortBlockList(final Vector3 start, final List<Vector3> locations, final boolean closest, final boolean highest)
+    {
+        try
+        {
+            Collections.sort(locations, new Comparator<Vector3>()
+            {
+                @Override
+                public int compare(Vector3 vecA, Vector3 vecB)
+                {
+                    //Though unlikely always return zero for equal vectors
+                    if (vecA.equals(vecB))
+                    {
+                        return 0;
+                    }
+                    //Check y value fist as this is the primary search area
+                    if (Integer.compare(vecA.intY(), vecB.intY()) != 0)
+                    {
+                        if (highest)
+                        {
+                            return vecA.intY() > vecB.intY() ? -1 : 1;
+                        }
+                        else
+                        {
+                            return vecA.intY() > vecB.intY() ? 1 : -1;
+                        }
+                    }
+                    //Check distance after that
+                    double distanceA = Vector3.distance(vecA, start);
+                    double distanceB = Vector3.distance(vecB, start);
+                    if (Double.compare(distanceA, distanceB) != 0)
+                    {
+                        if (closest)
+                        {
+                            return distanceA > distanceB ? 1 : -1;
+                        }
+                        else
+                        {
+                            return distanceA > distanceB ? -1 : 1;
+                        }
+                    }
+                    return Double.compare(distanceA, distanceB);
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            System.out.println("FluidMech>>>BlockDrain>>FillArea>>Error>>CollectionSorter");
+            e.printStackTrace();
+        }
     }
 }

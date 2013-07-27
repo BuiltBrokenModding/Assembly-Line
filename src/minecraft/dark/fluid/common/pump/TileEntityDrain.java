@@ -95,15 +95,11 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
                     this.getLiquidFinder().start(new Vector3(this).modifyPositionFromSide(this.getFacing()), false);
                 }
                 /* Sort list if it is large than one block TODO set this in path finder */
-                if (getLiquidFinder().results.size() > 1)
-                {
-                    this.sortBlockList(new Vector3(this).modifyPositionFromSide(this.getFacing()), getLiquidFinder().results, false, true);
-                }
-                System.out.println("Drain>>DrainArea>>Targets>" + this.getLiquidFinder().results.size());
+                //System.out.println("Drain>>DrainArea>>Targets>" + this.getLiquidFinder().results.size());
 
                 for (Entry<TileEntity, Pair<FluidStack, Integer>> requestEntry : requestMap.entrySet())
                 {
-                    System.out.println("Drain>>DrainArea>>ProcessingTile>"+(requestEntry.getKey() != null ? requestEntry.getKey().toString() : "null"));
+                   // System.out.println("Drain>>DrainArea>>ProcessingTile>"+(requestEntry.getKey() != null ? requestEntry.getKey().toString() : "null"));
 
                     IFluidHandler requestTile = null;
                     if (requestEntry.getKey() instanceof IFluidHandler)
@@ -124,7 +120,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 
                     while (fluidList.hasNext())
                     {
-                        System.out.println("Drain>>DrainArea>>Draining>>NextFluidBlock");
+                        //System.out.println("Drain>>DrainArea>>Draining>>NextFluidBlock");
                         Vector3 drainLocation = fluidList.next();
                         FluidStack drainStack = FluidHelper.drainBlock(this.worldObj, drainLocation, false);
                         Pair<FluidStack, Integer> fluidRequest = requestEntry.getValue();
@@ -138,7 +134,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
                         {
                             if (fluidRequest.getKey() == null || fluidRequest.getKey() != null && drainStack.isFluidEqual(fluidRequest.getKey().copy()))
                             {
-                                System.out.println("Drain>>DrainArea>>Draining>>RequestMatched>>" + (drainStack == null ? "null" : drainStack.getFluid().getName() + "@" + drainStack.amount + "mb"));
+                               //System.out.println("Drain>>DrainArea>>Draining>>RequestMatched>>" + (drainStack == null ? "null" : drainStack.getFluid().getName() + "@" + drainStack.amount + "mb"));
                                 if (requestTile.fill(ForgeDirection.UNKNOWN, drainStack, false) >= FluidContainerRegistry.BUCKET_VOLUME)
                                 {
                                     /* EDIT REQUEST IN MAP */
@@ -151,7 +147,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
                                     {
                                         this.requestMap.put(requestEntry.getKey(), new Pair<FluidStack, Integer>(fluidRequest.getKey(), requestAmmount));
                                     }
-                                    System.out.println("Drain>>DrainArea>>Draining>>Fluid>" + drainLocation.toString());
+                                    //System.out.println("Drain>>DrainArea>>Draining>>Fluid>" + drainLocation.toString());
                                     /* REMOVE BLOCK */
                                     FluidHelper.drainBlock(this.worldObj, drainLocation, true);
                                     this.currentWorldEdits++;
@@ -235,13 +231,8 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
             /* FIND ALL VALID BLOCKS ON LEVEL OR BELLOW */
             final Vector3 faceVec = new Vector3(this).modifyPositionFromSide(this.getFacing());
             this.getLiquidFinder().start(faceVec, true);
-            //System.out.println("Drain>>FillArea>>Targets>> " + getLiquidFinder().results.size());
+            System.out.println("Drain>>FillArea>>Targets>> " + getLiquidFinder().results.size());
 
-            /* SORT RESULTS TO PUT THE LOWEST AND CLOSEST AT THE TOP */
-            if (getLiquidFinder().results.size() > 1)
-            {
-                this.sortBlockList(faceVec, getLiquidFinder().results, true, false);
-            }
             List<Vector3> fluids = new ArrayList<Vector3>();
             List<Vector3> blocks = new ArrayList<Vector3>();
             List<Vector3> drained = new ArrayList<Vector3>();
@@ -274,7 +265,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
                 {
 
                     fillVolume -= FluidHelper.fillBlock(worldObj, loc, FluidHelper.getStack(resource, fillVolume), doFill);
-                    //System.out.println("Drain>>FillArea>>Filling>>" + (doFill ? "" : "Sim>>") + ">>Fluid>" + loc.toString());
+                    System.out.println("Drain>>FillArea>>Filling>>" + (doFill ? "" : "Sim>>") + ">>Fluid>" + loc.toString());
 
                     if (doFill)
                     {
@@ -299,7 +290,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
                 if (FluidHelper.isFillableBlock(worldObj, loc))
                 {
                     fillVolume -= FluidHelper.fillBlock(worldObj, loc, FluidHelper.getStack(resource, fillVolume), doFill);
-                    //System.out.println("Drain>>FillArea>>Filling>>" + (doFill ? "" : "Sim>>") + ">>Block>" + loc.toString());
+                    System.out.println("Drain>>FillArea>>Filling>>" + (doFill ? "" : "Sim>>") + ">>Block>" + loc.toString());
 
                     if (doFill)
                     {
@@ -314,71 +305,13 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
                 }
             }
             this.getLiquidFinder().results.removeAll(drained);
-            //System.out.println("Drain>>FillArea>>Filling>>Filled>>" + (doFill ? "" : "Sim>>") + (resource.amount - fillVolume) + "mb");
+            System.out.println("Drain>>FillArea>>Filling>>Filled>>" + (doFill ? "" : "Sim>>") + (resource.amount - fillVolume) + "mb");
             return Math.max(resource.amount - fillVolume, 0);
         }
         return 0;
     }
 
-    /** Used to sort a list of vector3 locations using the vector3's distance from one point and
-     * elevation in the y axis
-     *
-     * @param start - start location to measure distance from
-     * @param locations - list of vectors to sort
-     * @param closest - sort closest distance to the top
-     * @param highest - sort highest y value to the top.
-     *
-     * Note: highest takes priority over closest */
-    public void sortBlockList(final Vector3 start, final List<Vector3> locations, final boolean closest, final boolean highest)
-    {
-        try
-        {
-            Collections.sort(locations, new Comparator<Vector3>()
-            {
-                @Override
-                public int compare(Vector3 vecA, Vector3 vecB)
-                {
-                    //Though unlikely always return zero for equal vectors
-                    if (vecA.equals(vecB))
-                    {
-                        return 0;
-                    }
-                    //Check y value fist as this is the primary search area
-                    if (Integer.compare(vecA.intY(), vecB.intY()) != 0)
-                    {
-                        if (highest)
-                        {
-                            return vecA.intY() > vecB.intY() ? -1 : 1;
-                        }
-                        else
-                        {
-                            return vecA.intY() > vecB.intY() ? 1 : -1;
-                        }
-                    }
-                    //Check distance after that
-                    double distanceA = Vector3.distance(vecA, start);
-                    double distanceB = Vector3.distance(vecB, start);
-                    if (Double.compare(distanceA, distanceB) != 0)
-                    {
-                        if (closest)
-                        {
-                            return distanceA > distanceB ? 1 : -1;
-                        }
-                        else
-                        {
-                            return distanceA > distanceB ? -1 : 1;
-                        }
-                    }
-                    return Double.compare(distanceA, distanceB);
-                }
-            });
-        }
-        catch (Exception e)
-        {
-            System.out.println("FluidMech>>>BlockDrain>>FillArea>>Error>>CollectionSorter");
-            e.printStackTrace();
-        }
-    }
+
 
     @Override
     public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
