@@ -81,19 +81,21 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
     public void updateEntity()
     {
         super.updateEntity();
+
         /* MAIN LOGIC PATH FOR DRAINING BODIES OF LIQUID */
         if (!this.worldObj.isRemote && this.ticks % 20 == 0)
         {
             this.currentWorldEdits = 0;
             this.doCleanup();
 
+            /* ONLY FIND NEW SOURCES IF OUR CURRENT LIST RUNS DRY */
+            if (this.getLiquidFinder().results.size() < TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS + 10)
+            {
+                this.getLiquidFinder().start(new Vector3(this).modifyPositionFromSide(this.getFacing()), !this.canDrainSources());
+            }
+
             if (this.canDrainSources() && this.requestMap.size() > 0)
             {
-                /* ONLY FIND NEW SOURCES IF OUR CURRENT LIST RUNS DRY */
-                if (this.getLiquidFinder().results.size() < TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS + 10)
-                {
-                    this.getLiquidFinder().start(new Vector3(this).modifyPositionFromSide(this.getFacing()), false);
-                }
                 /* Sort list if it is large than one block TODO set this in path finder */
                 //System.out.println("Drain>>DrainArea>>Targets>" + this.getLiquidFinder().results.size());
 
@@ -228,9 +230,6 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 
             fillVolume = resource.amount;
 
-            /* FIND ALL VALID BLOCKS ON LEVEL OR BELLOW */
-            final Vector3 faceVec = new Vector3(this).modifyPositionFromSide(this.getFacing());
-            this.getLiquidFinder().start(faceVec, true);
             System.out.println("Drain>>FillArea>>Targets>> " + getLiquidFinder().results.size());
 
             List<Vector3> fluids = new ArrayList<Vector3>();
