@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFluid;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -11,6 +13,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
+import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
 
 public class FluidHelper
@@ -98,12 +101,12 @@ public class FluidHelper
                     Vector3 vec = node.clone().modifyPositionFromSide(ForgeDirection.UP);
                     if (vec.getBlockID(world) == Block.waterlily.blockID)
                     {
-                        vec.setBlock(world, 0);
+                        vec.setBlock(world, 0, 0, 2);
                         node.setBlock(world, blockID, meta);
                     }
                     else
                     {
-                        node.setBlock(world, 0);
+                        node.setBlock(world, 0, 0, 2);
                     }
                 }
                 return new FluidStack(FluidRegistry.getFluid("water"), FluidContainerRegistry.BUCKET_VOLUME);
@@ -112,7 +115,7 @@ public class FluidHelper
             {
                 if (doDrain)
                 {
-                    node.setBlock(world, 0);
+                    node.setBlock(world, 0, 0, 2);
                 }
                 return new FluidStack(FluidRegistry.getFluid("lava"), FluidContainerRegistry.BUCKET_VOLUME);
             }
@@ -120,7 +123,30 @@ public class FluidHelper
         return null;
     }
 
-    public static boolean isFillable(World world, Vector3 node)
+    /** Checks to see if a non-fluid block is able to be filled with fluid */
+    public static boolean isFillableBlock(World world, Vector3 node)
+    {
+        if (world == null || node == null || isFillableFluid(world, node))
+        {
+            return false;
+        }
+
+        int blockID = node.getBlockID(world);
+        int meta = node.getBlockMetadata(world);
+        Block block = Block.blocksList[blockID];
+        if (block == null || block.blockID == 0 || block.isAirBlock(world, node.intX(), node.intY(), node.intZ()))
+        {
+            return true;
+        }
+        else if (block.isBlockReplaceable(world, node.intX(), node.intY(), node.intZ()) || replacableBlockMeta.contains(new Pair<Integer, Integer>(blockID, meta)) || replacableBlocks.contains(block))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /** Checks to see if a fluid related block is able to be filled */
+    public static boolean isFillableFluid(World world, Vector3 node)
     {
         if (world == null || node == null)
         {
@@ -131,58 +157,83 @@ public class FluidHelper
         int meta = node.getBlockMetadata(world);
         Block block = Block.blocksList[blockID];
 
-        if (block == null || block.blockID == 0 || block.isAirBlock(world, node.intX(), node.intY(), node.intZ()))
-        {
-            return true;
-        }
-        else if (block.isBlockReplaceable(world, node.intX(), node.intY(), node.intZ()) || replacableBlockMeta.contains(new Pair<Integer, Integer>(blockID, meta)) || replacableBlocks.contains(block))
-        {
-            return true;
-        }
-        else if ((blockID == Block.waterMoving.blockID || blockID == Block.waterStill.blockID) && meta != 0)
-        {
-            return true;
-        }
-        else if ((blockID == Block.lavaMoving.blockID || blockID == Block.lavaStill.blockID) && meta != 0)
-        {
-            return true;
-        }
-        else if (block instanceof IFluidBlock)
+        if (block instanceof IFluidBlock)
         {
             //TODO when added change this to call canFill and fill
-            return node.getBlockMetadata(world) != 0;
+            return meta != 0;
+        }
+        else if (block instanceof BlockFluid)
+        {
+            return meta != 0;
         }
         return false;
     }
 
     /** Helper method to fill a location with a fluid
      *
+     * Note: This does not update the block to prevent the liquid from flowing
+     *
      * @return */
     public static int fillBlock(World world, Vector3 node, FluidStack stack, boolean doFill)
     {
-        if (isFillable(world, node) && stack != null && stack.amount >= FluidContainerRegistry.BUCKET_VOLUME)
+        if ((isFillableBlock(world, node) || isFillableFluid(world, node)) && stack != null && stack.amount >= FluidContainerRegistry.BUCKET_VOLUME)
         {
             if (doFill)
             {
-                node.setBlock(world, stack.getFluid().getBlockID(), 0);
-
                 int blockID = node.getBlockID(world);
                 int meta = node.getBlockMetadata(world);
                 Block block = Block.blocksList[blockID];
                 Vector3 vec = node.clone().modifyPositionFromSide(ForgeDirection.UP);
-                if (block.blockID == Block.waterlily.blockID && vec.getBlockID(world) == 0)
+
+                if (block != null)
                 {
-                    vec.setBlock(world, blockID, meta);
-                }
-                else if (block != null && replacableBlocks.contains(block) && !nonBlockDropList.contains(block))
-                {
-                    block.dropBlockAsItem(world, node.intX(), node.intY(), node.intZ(), meta, 1);
-                    block.breakBlock(world, node.intX(), node.intY(), node.intZ(), blockID, meta);
+                    if (block.blockID == Block.waterlily.blockID && vec.getBlockID(world) == 0)
+                    {
+                        vec.setBlock(world, blockID, meta);
+                    }
+                    else if (block != null && replacableBlocks.contains(block) && !nonBlockDropList.contains(block))
+                    {
+                        block.dropBlockAsItem(world, node.intX(), node.intY(), node.intZ(), meta, 1);
+                        block.breakBlock(world, node.intX(), node.intY(), node.intZ(), blockID, meta);
+                    }
                 }
 
+                node.setBlock(world, stack.getFluid().getBlockID(), 0, 2);
             }
-            return stack.amount - FluidContainerRegistry.BUCKET_VOLUME;
+            return FluidContainerRegistry.BUCKET_VOLUME;
         }
         return 0;
+    }
+
+    public static int fillTanksAllSides(World world, Vector3 origin, FluidStack stack,boolean doFill, ForgeDirection...ignore )
+    {
+        int filled = 0;
+        FluidStack fillStack = stack != null ? stack.copy() : null;
+        for(ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+        {
+            if(fillStack == null || fillStack.amount <= 0)
+            {
+                return 0;
+            }
+            if(ignore != null)
+            {
+                for(int i =0; i < ignore.length; i++)
+                {
+                    if(direction == ignore[i])
+                    {
+                        continue;
+                    }
+                }
+            }
+            TileEntity entity = origin.clone().modifyPositionFromSide(direction).getTileEntity(world);
+            if(entity instanceof IFluidHandler && ((IFluidHandler) entity).canFill(direction.getOpposite(), fillStack.getFluid()))
+            {
+                int f = ((IFluidHandler)entity).fill(direction.getOpposite(), fillStack, doFill);
+               filled += f;
+               fillStack.amount -=f;
+            }
+
+        }
+        return filled;
     }
 }
