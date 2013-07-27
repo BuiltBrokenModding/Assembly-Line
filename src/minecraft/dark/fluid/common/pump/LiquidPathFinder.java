@@ -15,19 +15,24 @@ import dark.core.helpers.FluidHelper;
 /** A simpler pathfinder based on Calclavia's PathFinder from UE api */
 public class LiquidPathFinder
 {
-    private World world; /* MC WORLD */
-    public List<Vector3> nodes = new ArrayList<Vector3>(); /*
-                                                            * LOCATIONs THE PATH FINDER HAS GONE
-                                                            * OVER
-                                                            */
-    public List<Vector3> results = new ArrayList<Vector3>();/* LOCATIONS THAT ARE VALID RESULTS */
-    private boolean fill = false; /* ARE WE FILLING THE PATH OR DRAINING THE PATH */
-    private ForgeDirection priority; /* BASED ON fill -- WHICH DIRECTION WILL THE PATH GO FIRST */
+    /** Curent world this pathfinder will operate in */
+    private World world;
+    /** List of all nodes traveled by the path finder */
+    public List<Vector3> nodes = new ArrayList<Vector3>();
+    /** List of all nodes that match the search parms */
+    public List<Vector3> results = new ArrayList<Vector3>();
+    /** Are we looking for liquid fillable blocks */
+    private boolean fill = false;
+    /** priority search direction either up or down only */
+    private ForgeDirection priority;
+    /** Limit on the searched nodes per run */
     private int resultLimit = 2000;
+    /** Start location of the pathfinder used for range calculations */
     private Vector2 Start;
+    /** Range to limit the search to */
     private double range;
-    private Random random = new Random();
-    List<ForgeDirection> bn = new ArrayList<ForgeDirection>();
+    /** List of forgeDirection to use that are shuffled to prevent strait lines */
+    List<ForgeDirection> shuffledDirections = new ArrayList<ForgeDirection>();
 
     public LiquidPathFinder(final World world, final int resultLimit, final double range)
     {
@@ -43,13 +48,15 @@ public class LiquidPathFinder
         }
         this.resultLimit = resultLimit;
         this.reset();
-        bn.add(ForgeDirection.EAST);
-        bn.add(ForgeDirection.WEST);
-        bn.add(ForgeDirection.NORTH);
-        bn.add(ForgeDirection.SOUTH);
+        shuffledDirections.add(ForgeDirection.EAST);
+        shuffledDirections.add(ForgeDirection.WEST);
+        shuffledDirections.add(ForgeDirection.NORTH);
+        shuffledDirections.add(ForgeDirection.SOUTH);
     }
 
-    /** @return True on success finding, false on failure. */
+    /** Searches for nodes attached to the given node
+     *
+     * @return True on success finding, false on failure. */
     public boolean findNodes(Vector3 node)
     {
         if (node == null)
@@ -67,8 +74,7 @@ public class LiquidPathFinder
                 return true;
             }
 
-            int id = node.getBlockID(world);
-            if (this.fill && (id == 0 || (FluidHelper.isFillable(world, node))))
+            if (this.fill && FluidHelper.isFillable(world, node))
             {
                 this.results.add(node);
             }
@@ -77,7 +83,7 @@ public class LiquidPathFinder
                 this.results.add(node);
             }
 
-            if (this.isDone(node))
+            if (this.isDone(node.clone()))
             {
                 return false;
             }
@@ -87,10 +93,10 @@ public class LiquidPathFinder
                 return true;
             }
 
-            Collections.shuffle(bn);
-            Collections.shuffle(bn);
+            Collections.shuffle(shuffledDirections);
+            Collections.shuffle(shuffledDirections);
 
-            for (ForgeDirection direction : bn)
+            for (ForgeDirection direction : shuffledDirections)
             {
                 if (find(direction, vec))
                 {
@@ -111,9 +117,12 @@ public class LiquidPathFinder
         return false;
     }
 
-    public boolean find(ForgeDirection direction, Vector3 vec)
+    /** Find all node attached to the origin mode in the given direction
+     *
+     * Note: Calls findNode if the next code is valid */
+    public boolean find(ForgeDirection direction, Vector3 origin)
     {
-        vec = vec.clone().modifyPositionFromSide(direction);
+        Vector3 vec = origin.clone().modifyPositionFromSide(direction);
         double distance = vec.toVector2().distanceTo(this.Start);
         if (distance <= this.range && this.isValidNode(vec) & !this.nodes.contains(vec))
         {
@@ -125,11 +134,13 @@ public class LiquidPathFinder
         return false;
     }
 
+    /** Checks to see if this node is valid to path find threw */
     public boolean isValidNode(Vector3 pos)
     {
-        return FluidHelper.drainBlock(world, pos, false) != null;
+        return FluidHelper.drainBlock(world, pos, false) != null || FluidHelper.isFillable(world, pos);
     }
 
+    /** Checks to see if we are done pathfinding */
     public boolean isDone(Vector3 vec)
     {
         if (this.results.size() >= this.resultLimit || this.nodes.size() >= 4000)

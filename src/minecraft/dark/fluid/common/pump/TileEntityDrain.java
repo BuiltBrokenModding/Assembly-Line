@@ -74,11 +74,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
         int meta = 0;
         if (worldObj != null)
         {
-            meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-            if (meta > 5)
-            {
-                meta -= 6;
-            }
+            meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord) % 6;
         }
         return ForgeDirection.getOrientation(meta);
     }
@@ -223,8 +219,6 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
         }
 
     }
-
-
 
     @Override
     public int fillArea(FluidStack resource, boolean doFill)
