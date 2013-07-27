@@ -1,9 +1,16 @@
 package dark.fluid.common.pump;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -11,6 +18,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.network.IPacketReceiver;
+import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -22,37 +30,35 @@ import dark.core.blocks.TileEntityMachine;
 import dark.core.helpers.FluidHelper;
 import dark.core.helpers.FluidRestrictionHandler;
 import dark.core.helpers.MetaGroup;
+import dark.core.helpers.Pair;
+import dark.fluid.common.FluidMech;
 
 public class TileEntityStarterPump extends TileEntityMachine implements IPacketReceiver, IToolReadOut, ITileConnector
 {
     public final static float WATTS_PER_TICK = 20;
-    private double percentPumped = 0.0;
+
+    private int currentWorldEdits = 0;
+    private static final int MAX_WORLD_EDITS_PER_PROCESS = 30;
+
+    private List<Vector3> updateQue = new ArrayList<Vector3>();
+    private LiquidPathFinder pathLiquid;
 
     public int pos = 0;
-
-    public ColorCode color = ColorCode.BLUE;
-
-    ForgeDirection wireConnection = ForgeDirection.EAST;
-    ForgeDirection pipeConnection = ForgeDirection.EAST;
-
-    /** gets the side connection for the wire and pipe */
-    public void getConnections()
-    {
-        int notchMeta = MetaGroup.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
-
-        wireConnection = ForgeDirection.getOrientation(notchMeta);
-        pipeConnection = VectorHelper.getOrientationFromSide(wireConnection, ForgeDirection.WEST);
-
-        if (notchMeta == 2 || notchMeta == 3)
-        {
-            pipeConnection = pipeConnection.getOpposite();
-        }
-    }
+    public boolean running = false;
 
     @Override
     public void initiate()
     {
-        this.getConnections();
+        super.initiate();
+    }
+
+    public LiquidPathFinder getLiquidFinder()
+    {
+        if (pathLiquid == null)
+        {
+            pathLiquid = new LiquidPathFinder(this.worldObj, 100, 20);
+        }
+        return pathLiquid;
     }
 
     @Override
@@ -60,36 +66,64 @@ public class TileEntityStarterPump extends TileEntityMachine implements IPacketR
     {
         super.updateEntity();
 
-        this.getConnections();
-
-        if (!this.worldObj.isRemote && !this.isDisabled())
+        if (!this.worldObj.isRemote && !this.isDisabled() && this.ticks % 20 == 0 && !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, yCoord))
         {
-            if (this.canPump(new Vector3(xCoord, yCoord - 1, zCoord)) && this.canRun())
+            if (this.getLiquidFinder().results.size() < TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS + 10)
             {
-                if (percentPumped < 10)
+                this.getLiquidFinder().start(new Vector3(this).modifyPositionFromSide(ForgeDirection.DOWN), false);
+            }
+            boolean prevRun = this.running;
+            if (this.canRun())
+            {
+                this.running = true;
+                if (this.getLiquidFinder().results.size() > 0)
                 {
-                    percentPumped++;
-                }
-                else if (percentPumped >= 10 && this.drainBlock(new Vector3(xCoord, yCoord - 1, zCoord)))
-                {
-                    percentPumped = 0;
-                }
+                    System.out.println("StartPump>>DrainArea>>Targets>" + this.getLiquidFinder().results.size());
 
-                /* DO ANIMATION CHANGE */
-                this.pos++;
-                if (pos >= 8)
-                {
-                    pos = 0;
+                    Iterator<Vector3> fluidList = this.getLiquidFinder().results.iterator();
+
+                    while (fluidList.hasNext())
+                    {
+                        System.out.println("StartPump>>DrainArea>>Draining>>NextFluidBlock");
+                        Vector3 drainLocation = fluidList.next();
+                        FluidStack drainStack = FluidHelper.drainBlock(this.worldObj, drainLocation, false);
+
+                        if (this.currentWorldEdits >= MAX_WORLD_EDITS_PER_PROCESS)
+                        {
+                            break;
+                        }
+                        if (drainStack != null && FluidHelper.fillTanksAllSides(worldObj, new Vector3(this), drainStack, false, ForgeDirection.DOWN) >= drainStack.amount)
+                        {
+                            System.out.println("StartPump>>DrainArea>>Draining>>Fluid>" + drainLocation.toString());
+                            /* REMOVE BLOCK */
+                            FluidHelper.drainBlock(this.worldObj, drainLocation, true);
+                            this.currentWorldEdits++;
+                            fluidList.remove();
+                            /* ADD TO UPDATE QUE */
+                            if (!this.updateQue.contains(drainLocation))
+                            {
+                                this.updateQue.add(drainLocation);
+                            }
+                        }
+                    }
                 }
             }
-            if (this.ticks % 10 == 0)
+            else
             {
-                // Packet packet = PacketManager.getPacket(FluidMech.CHANNEL, this, color.ordinal(),
-                // this.wattsReceived);
-                // PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 60);
+                this.running = false;
+            }
+            if (running != prevRun)
+            {
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
             }
         }
 
+    }
+
+    @Override
+    public Packet getDescriptionPacket()
+    {
+        return PacketManager.getPacket(FluidMech.CHANNEL, this, this.running);
     }
 
     @Override
@@ -97,7 +131,10 @@ public class TileEntityStarterPump extends TileEntityMachine implements IPacketR
     {
         try
         {
-            this.color = ColorCode.get(data.readInt());
+            if (worldObj.isRemote)
+            {
+                this.running = data.readBoolean();
+            }
         }
         catch (Exception e)
         {
@@ -109,59 +146,13 @@ public class TileEntityStarterPump extends TileEntityMachine implements IPacketR
     @Override
     public float getRequest(ForgeDirection side)
     {
-        return this.WATTS_PER_TICK;
-    }
-
-    /** checks to see if this pump can pump the selected target block
-     * 
-     * @param x y z - location of the block, use the tileEntities world
-     * @return true if it can pump */
-    boolean canPump(Vector3 vec)
-    {
-        FluidStack stack = FluidHelper.drainBlock(this.worldObj, vec, false);
-        return stack != null;
-    }
-
-    /** drains the block(removes) at the location given
-     * 
-     * @param loc - vector 3 location
-     * @return true if the block was drained */
-    boolean drainBlock(Vector3 loc)
-    {
-        FluidStack stack = FluidHelper.drainBlock(this.worldObj, loc, false);
-        if (FluidRestrictionHandler.isValidLiquid(color, stack.getFluid()) && this.fillAroundTile(stack, false) >= FluidContainerRegistry.BUCKET_VOLUME)
-        {
-            return this.fillAroundTile(FluidHelper.drainBlock(this.worldObj, loc, true), true) > 0;
-        }
-        return false;
-    }
-
-    public int fillAroundTile(FluidStack stack, boolean doFill)
-    {
-        if (stack != null && stack.getFluid() != null)
-        {
-            int amount = stack.amount;
-            for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
-            {
-                TileEntity entity = new Vector3(this).modifyPositionFromSide(direction).getTileEntity(this.worldObj);
-                if (direction != ForgeDirection.DOWN && entity instanceof IFluidHandler)
-                {
-                    amount -= ((IFluidHandler) entity).fill(direction.getOpposite(), FluidHelper.getStack(stack, amount), doFill);
-                }
-                if (amount <= 0)
-                {
-                    break;
-                }
-            }
-            return amount;
-        }
-        return 0;
+        return WATTS_PER_TICK;
     }
 
     @Override
     public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
     {
-        return String.format("%.2f/%.2f  %f Done", this.getEnergyStored(), this.getMaxEnergyStored(), this.percentPumped);
+        return String.format("%.2f/%.2fWatts  %f SourceBlocks", this.getEnergyStored(), this.getMaxEnergyStored(), this.getLiquidFinder().results.size());
     }
 
     @Override
@@ -171,13 +162,9 @@ public class TileEntityStarterPump extends TileEntityMachine implements IPacketR
     }
 
     @Override
-    public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
+    public boolean canTileConnect(TileEntity entity, ForgeDirection direction)
     {
-        if (dir == this.pipeConnection.getOpposite() && entity instanceof IFluidHandler)
-        {
-            return entity != null && entity instanceof IColorCoded && (((IColorCoded) entity).getColor() == ColorCode.NONE || ((IColorCoded) entity).getColor() == this.color);
-        }
-        return false;
+        return direction != ForgeDirection.DOWN;
     }
 
 }
