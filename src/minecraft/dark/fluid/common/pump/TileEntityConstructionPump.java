@@ -28,8 +28,7 @@ public class TileEntityConstructionPump extends TileEntityMachine implements IFl
     @Override
     public void initiate()
     {
-        // TODO if use wrench to change rotation have it call this
-        int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+        super.initiate();
     }
 
     public ForgeDirection getFacing(boolean input)

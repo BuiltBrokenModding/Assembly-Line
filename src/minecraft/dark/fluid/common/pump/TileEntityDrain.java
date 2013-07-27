@@ -16,7 +16,6 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import dark.api.fluid.IDrain;
@@ -34,7 +33,6 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
     /* LIST OF PUMPS AND THERE REQUESTS FOR THIS DRAIN */
     private HashMap<TileEntity, Pair<FluidStack, Integer>> requestMap = new HashMap<TileEntity, Pair<FluidStack, Integer>>();
 
-    private List<Vector3> targetSources = new ArrayList<Vector3>();
     private List<Vector3> updateQue = new ArrayList<Vector3>();
     private LiquidPathFinder pathLiquid;
 
@@ -84,7 +82,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
     {
         super.updateEntity();
         /* MAIN LOGIC PATH FOR DRAINING BODIES OF LIQUID */
-        if (!this.worldObj.isRemote && this.ticks % 30 == 0)
+        if (!this.worldObj.isRemote && this.ticks % 20 == 0)
         {
             this.currentWorldEdits = 0;
             this.doCleanup();
@@ -92,9 +90,9 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
             if (this.canDrainSources() && this.requestMap.size() > 0)
             {
                 /* ONLY FIND NEW SOURCES IF OUR CURRENT LIST RUNS DRY */
-                if (this.targetSources.size() < TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS + 10)
+                if (this.getLiquidFinder().results.size() < TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS + 10)
                 {
-                    this.getNextFluidBlock();
+                    this.getLiquidFinder().start(new Vector3(this).modifyPositionFromSide(this.getFacing()), false);
                 }
                 for (Entry<TileEntity, Pair<FluidStack, Integer>> request : requestMap.entrySet())
                 {
@@ -165,23 +163,15 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
         }
     }
 
-    /** Finds more liquid blocks using a path finder to be drained */
-    public void getNextFluidBlock()
-    {
-
-        getLiquidFinder().reset();
-        getLiquidFinder().init(new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ), false);
-        // System.out.println("Nodes:" + pathFinder.nodes.size() + "Results:" +
-        // pathFinder.results.size());
-        for (Vector3 vec : getLiquidFinder().nodes)
-        {
-            this.addVectorToQue(vec);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
+    /** Cleans up all the data lists to remove unneeded references
+     *
+     * UpdateQue run every 5 seconds
+     *
+     * RequestQue is cleaned every time this method is called */
     public void doCleanup()
     {
+        /* Call refresh on path finder to clear out invalid nodes/results */
+        this.getLiquidFinder().refresh();
         /* CALL UPDATE ON EDITED BLOCKS */
         if (this.ticks % 100 == 0 && updateQue.size() > 0)
         {
@@ -197,12 +187,12 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
             }
         }
         /* CLEANUP REQUEST MAP AND REMOVE INVALID TILES */
-        Iterator requests = this.requestMap.entrySet().iterator();
+        Iterator<Entry<TileEntity, Pair<FluidStack, Integer>>> requests = this.requestMap.entrySet().iterator();
         TileEntity pipe = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), this.getFacing().getOpposite());
 
         while (requests.hasNext())
         {
-            Entry<TileEntityConstructionPump, FluidStack> entry = (Entry<TileEntityConstructionPump, FluidStack>) requests.next();
+            Entry<TileEntity, Pair<FluidStack, Integer>> entry = (Entry<TileEntity, Pair<FluidStack, Integer>>) requests.next();
             TileEntity entity = entry.getKey();
             if (entity == null)
             {
@@ -223,7 +213,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
     @Override
     public int fillArea(FluidStack resource, boolean doFill)
     {
-        int drained = 0;
+        int fillVolume = 0;
 
         if (!this.canDrainSources() && this.currentWorldEdits < MAX_WORLD_EDITS_PER_PROCESS)
         {
@@ -233,68 +223,94 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
                 return 0;
             }
 
-            int blockID = resource.getFluid().getBlockID();
-            int blocks = (resource.amount / FluidContainerRegistry.BUCKET_VOLUME);
+            fillVolume = resource.amount;
 
             /* FIND ALL VALID BLOCKS ON LEVEL OR BELLOW */
-            final Vector3 faceVec = new Vector3(this.xCoord + this.getFacing().offsetX, this.yCoord + this.getFacing().offsetY, this.zCoord + this.getFacing().offsetZ);
-            getLiquidFinder().init(faceVec, true);
-            System.out.println("Drain:FillArea: Targets -> " + getLiquidFinder().results.size());
+            final Vector3 faceVec = new Vector3(this).modifyPositionFromSide(this.getFacing());
+            this.getLiquidFinder().start(faceVec, true);
+            //System.out.println("Drain>>FillArea>>Targets>> " + getLiquidFinder().results.size());
 
             /* SORT RESULTS TO PUT THE LOWEST AND CLOSEST AT THE TOP */
-
             if (getLiquidFinder().results.size() > 1)
             {
                 this.sortBlockList(faceVec, getLiquidFinder().results, true, false);
             }
-
-            for (Vector3 loc : getLiquidFinder().results)
+            List<Vector3> fluids = new ArrayList<Vector3>();
+            List<Vector3> blocks = new ArrayList<Vector3>();
+            List<Vector3> drained = new ArrayList<Vector3>();
+            /* Sort results out into two groups and clear the rest out of the result list */
+            Iterator<Vector3> it = this.getLiquidFinder().results.iterator();
+            while (it.hasNext())
             {
-                if (blocks <= 0)
+                Vector3 vec = it.next();
+                if (FluidHelper.isFillableFluid(worldObj, vec) && !fluids.contains(vec) && !blocks.contains(vec))
+                {
+                    fluids.add(vec);
+                }
+                else if (FluidHelper.isFillableBlock(worldObj, vec) && !blocks.contains(vec) && !fluids.contains(vec))
+                {
+                    blocks.add(vec);
+                }
+                else
+                {
+                    it.remove();
+                }
+            }
+            /* Fill non-full fluids first */
+            for (Vector3 loc : fluids)
+            {
+                if (fillVolume <= 0)
                 {
                     break;
                 }
-                Fluid stack = FluidHelper.getFluidFromBlockID(loc.getBlockID(worldObj));
-                if (stack != null && stack.getBlockID() == blockID && loc.getBlockMetadata(worldObj) != 0)
+                if (FluidHelper.isFillableFluid(worldObj, loc))
                 {
-                    drained += FluidContainerRegistry.BUCKET_VOLUME;
-                    blocks--;
+
+                    fillVolume -= FluidHelper.fillBlock(worldObj, loc, FluidHelper.getStack(resource, fillVolume), doFill);
+                    //System.out.println("Drain>>FillArea>>Filling>>" + (doFill ? "" : "Sim>>") + ">>Fluid>" + loc.toString());
+
                     if (doFill)
                     {
-                        loc.setBlock(worldObj, blockID, 0);
+                        drained.add(loc);
                         this.currentWorldEdits++;
                         if (!this.updateQue.contains(loc))
                         {
                             this.updateQue.add(loc);
                         }
                     }
+
                 }
 
             }
-
-            for (Vector3 loc : getLiquidFinder().results)
+            /* Fill air or replaceable blocks after non-full fluids */
+            for (Vector3 loc : blocks)
             {
-                if (blocks <= 0)
+                if (fillVolume <= 0)
                 {
                     break;
                 }
-                if (loc.getBlockID(worldObj) == 0)
+                if (FluidHelper.isFillableBlock(worldObj, loc))
                 {
-                    drained += FluidContainerRegistry.BUCKET_VOLUME;
-                    blocks--;
+                    fillVolume -= FluidHelper.fillBlock(worldObj, loc, FluidHelper.getStack(resource, fillVolume), doFill);
+                    //System.out.println("Drain>>FillArea>>Filling>>" + (doFill ? "" : "Sim>>") + ">>Block>" + loc.toString());
+
                     if (doFill)
                     {
-                        loc.setBlock(worldObj, blockID, 0);
+                        drained.add(loc);
                         this.currentWorldEdits++;
                         if (!this.updateQue.contains(loc))
                         {
                             this.updateQue.add(loc);
                         }
                     }
+
                 }
             }
+            this.getLiquidFinder().results.removeAll(drained);
+            //System.out.println("Drain>>FillArea>>Filling>>Filled>>" + (doFill ? "" : "Sim>>") + (resource.amount - fillVolume) + "mb");
+            return Math.max(resource.amount - fillVolume, 0);
         }
-        return drained;
+        return 0;
     }
 
     /** Used to sort a list of vector3 locations using the vector3's distance from one point and
@@ -375,14 +391,6 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
         if (this.requestMap.containsKey(pump))
         {
             this.requestMap.remove(pump);
-        }
-    }
-
-    public void addVectorToQue(Vector3 vector)
-    {
-        if (!this.targetSources.contains(vector))
-        {
-            this.targetSources.add(vector);
         }
     }
 
