@@ -119,17 +119,14 @@ public class FluidMech extends ModPrefab
         proxy.Init();
 
         /* TILE ENTITY REGISTER CALLS */
-        GameRegistry.registerTileEntity(TileEntityPipe.class, "lmPipeTile");
-        GameRegistry.registerTileEntity(TileEntityGenericPipe.class, "lmGenPipeTile");
-        GameRegistry.registerTileEntity(TileEntityStarterPump.class, "lmPumpTile");
-        //GameRegistry.registerTileEntity(TileEntityRod.class, "lmRodTile");
-        GameRegistry.registerTileEntity(TileEntityReleaseValve.class, "lmReleaseValve");
-        GameRegistry.registerTileEntity(TileEntityTank.class, "lmTank");
-        //GameRegistry.registerTileEntity(TileEntityGenerator.class, "lmGen");
-        GameRegistry.registerTileEntity(TileEntitySink.class, "lmSink");
-        GameRegistry.registerTileEntity(TileEntityDrain.class, "lmDrain");
-        GameRegistry.registerTileEntity(TileEntityConstructionPump.class, "lmConPump");
-        GameRegistry.registerTileEntity(TileEntityPipeWindow.class, "lmPipeWindow");
+        GameRegistry.registerTileEntity(TileEntityPipe.class, "FluidPipe");
+        GameRegistry.registerTileEntity(TileEntityGenericPipe.class, "ColoredPipe");
+        GameRegistry.registerTileEntity(TileEntityStarterPump.class, "starterPump");
+        GameRegistry.registerTileEntity(TileEntityReleaseValve.class, "ReleaseValve");
+        GameRegistry.registerTileEntity(TileEntityTank.class, "FluidTank");
+        GameRegistry.registerTileEntity(TileEntitySink.class, "FluidSink");
+        GameRegistry.registerTileEntity(TileEntityDrain.class, "FluidDrain");
+        GameRegistry.registerTileEntity(TileEntityConstructionPump.class, "ConstructionPump");
 
         /* LANG LOADING */
         FMLog.info(" Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");

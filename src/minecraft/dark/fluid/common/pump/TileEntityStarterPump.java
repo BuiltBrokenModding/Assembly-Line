@@ -33,18 +33,16 @@ import dark.core.helpers.MetaGroup;
 import dark.core.helpers.Pair;
 import dark.fluid.common.FluidMech;
 
-public class TileEntityStarterPump extends TileEntityMachine implements IPacketReceiver, IToolReadOut, ITileConnector
+public class TileEntityStarterPump extends TileEntityMachine implements IToolReadOut, ITileConnector
 {
-    public final static float WATTS_PER_TICK = 20;
 
     private int currentWorldEdits = 0;
-    private static final int MAX_WORLD_EDITS_PER_PROCESS = 30;
+    private static final int MAX_WORLD_EDITS_PER_PROCESS = 5;
 
     private List<Vector3> updateQue = new ArrayList<Vector3>();
     private LiquidPathFinder pathLiquid;
 
     public int pos = 0;
-    public boolean running = false;
 
     @Override
     public void initiate()
@@ -66,16 +64,17 @@ public class TileEntityStarterPump extends TileEntityMachine implements IPacketR
     {
         super.updateEntity();
 
-        if (!this.worldObj.isRemote && !this.isDisabled() && this.ticks % 20 == 0 && !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, yCoord))
+        if (!this.worldObj.isRemote && !this.isDisabled() && this.ticks % 20 == 0)
         {
-            if (this.getLiquidFinder().results.size() < TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS + 10)
-            {
-                this.getLiquidFinder().start(new Vector3(this).modifyPositionFromSide(ForgeDirection.DOWN), false);
-            }
-            boolean prevRun = this.running;
+            this.currentWorldEdits = 0;
+
             if (this.canRun())
             {
-                this.running = true;
+                if (this.getLiquidFinder().results.size() < TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS + 10)
+                {
+                    this.getLiquidFinder().start(new Vector3(this).modifyPositionFromSide(ForgeDirection.DOWN), false);
+                }
+
                 if (this.getLiquidFinder().results.size() > 0)
                 {
                     System.out.println("StartPump>>DrainArea>>Targets>" + this.getLiquidFinder().results.size());
@@ -84,19 +83,22 @@ public class TileEntityStarterPump extends TileEntityMachine implements IPacketR
 
                     while (fluidList.hasNext())
                     {
-                        System.out.println("StartPump>>DrainArea>>Draining>>NextFluidBlock");
                         Vector3 drainLocation = fluidList.next();
                         FluidStack drainStack = FluidHelper.drainBlock(this.worldObj, drainLocation, false);
+                        System.out.println("StartPump>>DrainArea>>Draining>>NextFluidBlock>" + (drainStack == null ? "Null" : drainStack.amount + "mb of " + drainStack.getFluid().getName()));
 
                         if (this.currentWorldEdits >= MAX_WORLD_EDITS_PER_PROCESS)
                         {
                             break;
                         }
-                        if (drainStack != null && FluidHelper.fillTanksAllSides(worldObj, new Vector3(this), drainStack, false, ForgeDirection.DOWN) >= drainStack.amount)
+                        int fillV = FluidHelper.fillTanksAllSides(worldObj, new Vector3(this), drainStack, false, ForgeDirection.DOWN);
+                        System.out.println("StartPump>>DrainArea>>Draining>>NextFluidBlock>Filled>" + fillV + "mb");
+                        if (drainStack != null && fillV >= drainStack.amount)
                         {
                             System.out.println("StartPump>>DrainArea>>Draining>>Fluid>" + drainLocation.toString());
                             /* REMOVE BLOCK */
                             FluidHelper.drainBlock(this.worldObj, drainLocation, true);
+                            FluidHelper.fillTanksAllSides(worldObj, new Vector3(this), drainStack, true, ForgeDirection.DOWN);
                             this.currentWorldEdits++;
                             fluidList.remove();
                             /* ADD TO UPDATE QUE */
@@ -108,39 +110,32 @@ public class TileEntityStarterPump extends TileEntityMachine implements IPacketR
                     }
                 }
             }
-            else
+
+            if (this.updateQue.size() > 0)
             {
-                this.running = false;
-            }
-            if (running != prevRun)
-            {
-                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+                for (Vector3 vec : this.updateQue)
+                {
+                    this.worldObj.markBlockForUpdate(vec.intX(), vec.intY(), vec.intZ());
+                    for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+                    {
+                        Vector3 veb = vec.clone().modifyPositionFromSide(direction);
+                        if (!updateQue.contains(veb))
+                        {
+                            updateQue.add(veb);
+                            this.worldObj.markBlockForUpdate(veb.intX(), veb.intY(), veb.intZ());
+                        }
+                    }
+                }
+                this.updateQue.clear();
             }
         }
 
     }
 
     @Override
-    public Packet getDescriptionPacket()
+    public boolean canRun()
     {
-        return PacketManager.getPacket(FluidMech.CHANNEL, this, this.running);
-    }
-
-    @Override
-    public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput data)
-    {
-        try
-        {
-            if (worldObj.isRemote)
-            {
-                this.running = data.readBoolean();
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
+        return super.canRun() && !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
     }
 
     @Override
@@ -152,7 +147,7 @@ public class TileEntityStarterPump extends TileEntityMachine implements IPacketR
     @Override
     public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
     {
-        return String.format("%.2f/%.2fWatts  %f SourceBlocks", this.getEnergyStored(), this.getMaxEnergyStored(), this.getLiquidFinder().results.size());
+        return String.format("%.2f/%.2fWatts  %d SourceBlocks", this.getEnergyStored(), this.getMaxEnergyStored(), this.getLiquidFinder().results.size());
     }
 
     @Override
