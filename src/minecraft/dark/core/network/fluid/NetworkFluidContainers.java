@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidHandler;
 import dark.api.ColorCode;
 import dark.api.INetworkPart;
 import dark.api.fluid.INetworkFluidPart;
@@ -14,7 +15,7 @@ import dark.core.tile.network.NetworkTileEntities;
 /** Side note: the network should act like this when done {@link http
  * ://www.e4training.com/hydraulic_calculators/B1.htm} as well as stay compatible with the forge
  * Liquids
- * 
+ *
  * @author Rseifert */
 public class NetworkFluidContainers extends NetworkFluidTiles
 {
@@ -31,49 +32,25 @@ public class NetworkFluidContainers extends NetworkFluidTiles
     }
 
     @Override
-    public void balanceColletiveTank(boolean sumParts)
+    public void writeDataToTiles()
     {
-        int volume = 0;
-        int fluid = -1;
-        NBTTagCompound tag = new NBTTagCompound();
+        int fluid = this.combinedStorage().getFluid().fluidID;
+        int volume = Math.abs(this.combinedStorage().getFluid().amount);
+        NBTTagCompound tag = this.combinedStorage().getFluid().tag;
 
-        if (sumParts)
-        {
-            for (INetworkPart par : this.networkMember)
-            {
-                if (par instanceof INetworkFluidPart)
-                {
-                    INetworkFluidPart part = ((INetworkFluidPart) par);
-                    if (part.getTank() != null && part.getTank().getFluid() != null)
-                    {
-                        FluidStack fluidStack = part.getTank().getFluid();
-                        fluid = fluidStack.fluidID;
-                        volume += fluidStack.amount;
-                        if (fluidStack.tag != null && !fluidStack.tag.hasNoTags() && tag.hasNoTags())
-                        {
-                            tag = fluidStack.tag;
-                        }
-                    }
-                }
-            }
-            if (fluid != -1)
-            {
-                this.combinedStorage().setFluid(new FluidStack(fluid, volume));
-            }
-            else
-            {
-                this.combinedStorage().setFluid(null);
-            }
-            this.loadedLiquids = true;
-        }
+        int lowestY = 255;
+        int highestY = 0;
+
+        this.cleanUpMembers();
+
         if (this.combinedStorage().getFluid() != null && this.getNetworkMemebers().size() > 0)
         {
-            this.cleanUpMembers();
-
-            int lowestY = 255;
-            int highestY = 0;
             for (INetworkPart part : this.getNetworkMemebers())
             {
+                if (part instanceof IFluidHandler)
+                {
+                    ((INetworkFluidPart) part).setTankContent(null);
+                }
                 if (part instanceof TileEntity && ((TileEntity) part).yCoord < lowestY)
                 {
                     lowestY = ((TileEntity) part).yCoord;
@@ -83,13 +60,14 @@ public class NetworkFluidContainers extends NetworkFluidTiles
                     highestY = ((TileEntity) part).yCoord;
                 }
             }
-            fluid = this.combinedStorage().getFluid().fluidID;
-            volume = Math.abs(this.combinedStorage().getFluid().amount);
-            tag = this.combinedStorage().getFluid().tag;
+
             //TODO change this to use hydraulics to not only place fluid at the lowest but as well not move it to another side if there is no path there threw fluid
             for (int y = lowestY; y <= highestY; y++)
             {
+                /** List of parts for this Y level */
                 List<INetworkFluidPart> parts = new ArrayList<INetworkFluidPart>();
+
+                /* Grab all parts that share this Y level*/
                 for (INetworkPart part : this.getNetworkMemebers())
                 {
                     if (part instanceof INetworkFluidPart && ((TileEntity) part).yCoord == y)
@@ -97,15 +75,20 @@ public class NetworkFluidContainers extends NetworkFluidTiles
                         parts.add((INetworkFluidPart) part);
                     }
                 }
-                int fillvolume = Math.abs(volume / parts.size());
-
-                for (INetworkFluidPart part : parts)
+                if (!parts.isEmpty())
                 {
-                    part.setTankContent(null);
-                    int fill = Math.min(fillvolume, part.getTank().getCapacity());
-                    part.setTankContent(new FluidStack(fluid, fill, tag));
-                    volume -= fill;
+                    /* Div out the volume for this level. TODO change this to use a percent system for even filling */
+                    int fillvolume = Math.abs(volume / parts.size());
+
+                    /* Fill all tanks on this level */
+                    for (INetworkFluidPart part : parts)
+                    {
+                        int fill = Math.min(fillvolume, part.getTank().getCapacity());
+                        part.setTankContent(new FluidStack(fluid, fill, tag));
+                        volume -= fill;
+                    }
                 }
+
                 if (volume <= 0)
                 {
                     break;

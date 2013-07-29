@@ -65,7 +65,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
         if (this.sharedTank == null)
         {
             this.sharedTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
-            this.balanceColletiveTank(true);
+            this.readDataFromTiles();
         }
         return this.sharedTank;
     }
@@ -79,14 +79,14 @@ public class NetworkFluidTiles extends NetworkTileEntities
         }
         if (!loadedLiquids)
         {
-            this.balanceColletiveTank(true);
+            this.readDataFromTiles();
         }
         if (this.combinedStorage().getFluid() == null || this.combinedStorage().getFluid().amount < this.combinedStorage().getCapacity())
         {
             int filled = this.combinedStorage().fill(stack, doFill);
             if (doFill)
             {
-                this.balanceColletiveTank(false);
+                this.writeDataToTiles();
             }
             return filled;
         }
@@ -98,7 +98,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
     {
         if (!loadedLiquids)
         {
-            this.balanceColletiveTank(true);
+            this.readDataFromTiles();
         }
         FluidStack stack = this.combinedStorage().getFluid();
         if (stack != null)
@@ -111,7 +111,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
             stack = this.combinedStorage().drain(maxDrain, doDrain);
             if (doDrain)
             {
-                this.balanceColletiveTank(false);
+                this.writeDataToTiles();
             }
         }
         return stack;
@@ -126,50 +126,15 @@ public class NetworkFluidTiles extends NetworkTileEntities
         return null;
     }
 
-    /** Moves the volume stored in the network to the parts or sums up the volume from the parts and
-     * loads it to the network. Assumes that all liquidStacks stored are equal
-     * 
-     * @param sumParts - loads the volume from the parts before leveling out the volumes */
-    public void balanceColletiveTank(boolean sumParts)
+    @Override
+    public void writeDataToTiles()
     {
-        int fluid = -1;
-        NBTTagCompound tag = new NBTTagCompound();
-        int volume = 0;
-
-        if (sumParts)
-        {
-            for (INetworkPart par : this.networkMember)
-            {
-                if (par instanceof INetworkFluidPart)
-                {
-                    INetworkFluidPart part = ((INetworkFluidPart) par);
-                    if (part.getTank() != null && part.getTank().getFluid() != null)
-                    {
-                        if (fluid == -1)
-                        {
-                            fluid = part.getTank().getFluid().fluidID;
-                            tag = part.getTank().getFluid().tag;
-                        }
-                        volume += part.getTank().getFluid().amount;
-                    }
-                }
-            }
-            if (fluid != -1)
-            {
-                this.combinedStorage().setFluid(new FluidStack(fluid, volume, tag));
-            }
-            else
-            {
-                this.combinedStorage().setFluid(null);
-            }
-            this.loadedLiquids = true;
-        }
-
         if (this.combinedStorage().getFluid() != null && this.networkMember.size() > 0)
         {
-            volume = this.combinedStorage().getFluid().amount / this.networkMember.size();
-            fluid = this.combinedStorage().getFluid().fluidID;
-            tag = this.combinedStorage().getFluid().tag;
+            //TODO change this to percent based system so tiles get volume that they can store
+            int volume = this.combinedStorage().getFluid().amount / this.networkMember.size();
+            int fluid = this.combinedStorage().getFluid().fluidID;
+            NBTTagCompound tag = this.combinedStorage().getFluid().tag;
 
             for (INetworkPart par : this.networkMember)
             {
@@ -181,6 +146,40 @@ public class NetworkFluidTiles extends NetworkTileEntities
                 }
             }
         }
+    }
+
+    @Override
+    public void readDataFromTiles()
+    {
+        int fluid = -1;
+        NBTTagCompound tag = new NBTTagCompound();
+        int volume = 0;
+        //TODO change this to map out all the liquids too do a merge conflict or reject fluids
+        for (INetworkPart par : this.networkMember)
+        {
+            if (par instanceof INetworkFluidPart)
+            {
+                INetworkFluidPart part = ((INetworkFluidPart) par);
+                if (part.getTank() != null && part.getTank().getFluid() != null)
+                {
+                    if (fluid == -1)
+                    {
+                        fluid = part.getTank().getFluid().fluidID;
+                        tag = part.getTank().getFluid().tag;
+                    }
+                    volume += part.getTank().getFluid().amount;
+                }
+            }
+        }
+        if (fluid != -1)
+        {
+            this.combinedStorage().setFluid(new FluidStack(fluid, volume, tag));
+        }
+        else
+        {
+            this.combinedStorage().setFluid(null);
+        }
+        this.loadedLiquids = true;
     }
 
     @Override
@@ -340,7 +339,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
     public void init()
     {
         super.init();
-        this.balanceColletiveTank(true);
+        this.readDataFromTiles();
     }
 
     @Override
@@ -350,8 +349,8 @@ public class NetworkFluidTiles extends NetworkTileEntities
         {
             NetworkFluidTiles network = (NetworkFluidTiles) mergingNetwork;
 
-            this.balanceColletiveTank(true);
-            network.balanceColletiveTank(true);
+            this.readDataFromTiles();
+            network.readDataFromTiles();
             Object result = this.canMergeFluids(this.combinedStorage().getFluid(), network.combinedStorage().getFluid());
             if (mergePoint instanceof TileEntity)
             {
@@ -438,7 +437,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
 
         newNetwork.cleanUpMembers();
         newNetwork.combinedStorage().setFluid(mergeFluids(one, two));
-        newNetwork.balanceColletiveTank(false);
+        newNetwork.writeDataToTiles();
     }
 
     @Override
@@ -446,7 +445,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
     {
         if (!loadedLiquids)
         {
-            this.balanceColletiveTank(true);
+            this.readDataFromTiles();
         }
         Iterator<INetworkPart> it = this.networkMember.iterator();
         int capacity = 0;
