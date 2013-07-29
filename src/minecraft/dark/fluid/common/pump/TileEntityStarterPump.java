@@ -3,35 +3,18 @@ package dark.fluid.common.pump;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.core.vector.VectorHelper;
-import universalelectricity.prefab.network.IPacketReceiver;
-import universalelectricity.prefab.network.PacketManager;
-
-import com.google.common.io.ByteArrayDataInput;
-
-import dark.api.ColorCode;
-import dark.api.IColorCoded;
 import dark.api.ITileConnector;
 import dark.api.IToolReadOut;
 import dark.core.blocks.TileEntityMachine;
 import dark.core.helpers.FluidHelper;
-import dark.core.helpers.FluidRestrictionHandler;
-import dark.core.helpers.MetaGroup;
-import dark.core.helpers.Pair;
-import dark.fluid.common.FluidMech;
 
 public class TileEntityStarterPump extends TileEntityMachine implements IToolReadOut, ITileConnector
 {
@@ -80,7 +63,7 @@ public class TileEntityStarterPump extends TileEntityMachine implements IToolRea
 
             if (this.getLiquidFinder().results.size() < TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS + 10)
             {
-                this.getLiquidFinder().start(new Vector3(this).modifyPositionFromSide(ForgeDirection.DOWN), false);
+                this.getLiquidFinder().refresh().start(new Vector3(this).modifyPositionFromSide(ForgeDirection.DOWN), false);
             }
 
             if (entity == null && this.getLiquidFinder().results.size() > 0)
@@ -97,7 +80,7 @@ public class TileEntityStarterPump extends TileEntityMachine implements IToolRea
                     }
 
                     Vector3 drainLocation = fluidList.next();
-                    FluidStack drainStack = FluidHelper.drainBlock(this.worldObj, drainLocation, false);
+                    FluidStack drainStack = FluidHelper.drainBlock(this.worldObj, drainLocation, false, 3);
                     System.out.println("StartPump>>DrainArea>>Draining>>NextFluidBlock>" + (drainStack == null ? "Null" : drainStack.amount + "mb of " + drainStack.getFluid().getName()));
 
                     int fillV = FluidHelper.fillTanksAllSides(worldObj, new Vector3(this), drainStack, false, ForgeDirection.DOWN);
@@ -107,36 +90,12 @@ public class TileEntityStarterPump extends TileEntityMachine implements IToolRea
                     {
                         System.out.println("StartPump>>DrainArea>>Draining>>Fluid>" + drainLocation.toString());
                         /* REMOVE BLOCK */
-                        FluidHelper.drainBlock(this.worldObj, drainLocation, true);
+                        FluidHelper.drainBlock(this.worldObj, drainLocation, true, 3);
                         FluidHelper.fillTanksAllSides(worldObj, new Vector3(this), drainStack, true, ForgeDirection.DOWN);
                         this.currentWorldEdits++;
                         fluidList.remove();
-                        /* ADD TO UPDATE QUE */
-                        if (!this.updateQue.contains(drainLocation))
-                        {
-                            this.updateQue.add(drainLocation);
-                        }
-
                     }
                 }
-            }
-
-            if (this.updateQue.size() > 0)
-            {
-                for (Vector3 vec : this.updateQue)
-                {
-                    this.worldObj.markBlockForUpdate(vec.intX(), vec.intY(), vec.intZ());
-                    for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
-                    {
-                        Vector3 veb = vec.clone().modifyPositionFromSide(direction);
-                        if (!updateQue.contains(veb))
-                        {
-                            updateQue.add(veb);
-                            this.worldObj.markBlockForUpdate(veb.intX(), veb.intY(), veb.intZ());
-                        }
-                    }
-                }
-                this.updateQue.clear();
             }
         }
 
