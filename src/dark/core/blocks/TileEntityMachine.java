@@ -21,10 +21,11 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.IDisableable;
+import dark.api.IPowerLess;
 import dark.api.PowerSystems;
 import dark.core.DarkMain;
 
-public abstract class TileEntityMachine extends TileEntityUniversalElectrical implements IDisableable, IPacketReceiver
+public abstract class TileEntityMachine extends TileEntityUniversalElectrical implements IDisableable, IPacketReceiver, IPowerLess
 {
 
     /** Forge Ore Directory name of the item to toggle power */
@@ -34,11 +35,9 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
 
     protected int ticksDisabled = 0;
 
-    protected float WATTS_PER_TICK = 2;
-    protected float MAX_WATTS = 40;
+    protected float WATTS_PER_TICK, MAX_WATTS;
 
-    protected boolean runPowerLess = false;
-    protected boolean running = false;
+    protected boolean unpowered, running;
 
     @Override
     public void updateEntity()
@@ -47,7 +46,7 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
         if (!this.worldObj.isRemote)
         {
             boolean prevRun = this.running;
-            this.running = this.canRun() && this.consumePower();
+            this.running = this.canRun() && this.consumePower(this.WATTS_PER_TICK, true);
             if (prevRun != this.running)
             {
                 PacketManager.sendPacketToClients(this.getDescriptionPacket(), worldObj, new Vector3(this), 64);
@@ -61,21 +60,41 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
         }
     }
 
-    /** Called to consume power per tick */
-    public boolean consumePower()
+    /** Called to consume power from the internal storage */
+    public boolean consumePower(float watts, boolean doDrain)
     {
-        if (!this.runPowerLess && this.getEnergyStored() >= this.WATTS_PER_TICK)
+        if (!this.runPowerLess() && this.getEnergyStored() >= watts)
         {
-            this.setEnergyStored(this.getEnergyStored() - this.WATTS_PER_TICK);
+            if (doDrain)
+            {
+                this.setEnergyStored(this.getEnergyStored() - watts);
+            }
             return true;
         }
-        return this.canRun();
+        return this.runPowerLess();
     }
 
     /** Does this tile have power to run and do work */
     public boolean canRun()
     {
-        return !this.isDisabled() && (this.runPowerLess || PowerSystems.runPowerLess(PowerSystems.UE_SUPPORTED_SYSTEMS));
+        return !this.isDisabled() && (this.runPowerLess() || this.getEnergyStored() >= this.WATTS_PER_TICK);
+    }
+
+    @Override
+    public boolean runPowerLess()
+    {
+        return this.unpowered || PowerSystems.runPowerLess(PowerSystems.UE_SUPPORTED_SYSTEMS);
+    }
+
+    @Override
+    public void setPowerLess(boolean bool)
+    {
+        this.unpowered = bool;
+    }
+
+    public void togglePowerMode()
+    {
+        this.setPowerLess(!this.runPowerLess());
     }
 
     /** Called when a player activates the tile's block */
@@ -90,7 +109,7 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
                 {
                     if (stack.isItemEqual(itemStack))
                     {
-                        this.runPowerLess = !this.runPowerLess;
+                        this.togglePowerMode();
                         return true;
                     }
                 }
@@ -102,7 +121,7 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
     @Override
     public float receiveElectricity(ForgeDirection from, ElectricityPack receive, boolean doReceive)
     {
-        if (!this.runPowerLess && receive != null && this.canConnect(from))
+        if (!this.runPowerLess() && receive != null && this.canConnect(from))
         {
             // Only do voltage disable if the voltage is higher than the peek voltage and if random chance
             //TODO replace random with timed damage to only disable after so many ticks
@@ -193,7 +212,7 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
     {
         super.readFromNBT(nbt);
         this.ticksDisabled = nbt.getInteger("disabledTicks");
-        this.runPowerLess = nbt.getBoolean("shouldPower");
+        this.unpowered = nbt.getBoolean("shouldPower");
         if (nbt.hasKey("wattsReceived"))
         {
             this.energyStored = (float) nbt.getDouble("wattsReceived");
@@ -205,6 +224,6 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
     {
         super.writeToNBT(nbt);
         nbt.setInteger("disabledTicks", this.ticksDisabled);
-        nbt.setBoolean("shouldPower", this.runPowerLess);
+        nbt.setBoolean("shouldPower", this.unpowered);
     }
 }

@@ -3,15 +3,16 @@ package dark.core.tile.network;
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.core.block.IElectricalStorage;
 import dark.api.INetworkPart;
+import dark.api.IPowerLess;
 
 /** Used for tile networks that only need to share power or act like a group battery that doesn't
  * store power on world save
- * 
+ *
  * @author DarkGuardsman */
-public class NetworkSharedPower extends NetworkTileEntities
+public class NetworkSharedPower extends NetworkTileEntities implements IElectricalStorage, IPowerLess
 {
-    private float sharedPower = 0;
-    private float maxPower = 1;
+    private float energy;
+    private boolean runPowerLess;
 
     public NetworkSharedPower(INetworkPart... parts)
     {
@@ -26,12 +27,12 @@ public class NetworkSharedPower extends NetworkTileEntities
 
     public float dumpPower(TileEntity source, float power, boolean doFill)
     {
-        float room = (maxPower - sharedPower);
-        if (this.networkMember.contains(source) && Math.ceil(room) > 0)
+        float room = (this.getMaxEnergyStored() - this.getEnergyStored());
+        if (!this.runPowerLess && this.networkMember.contains(source) && Math.ceil(room) > 0)
         {
             if (doFill)
             {
-                this.sharedPower = Math.max(this.sharedPower + power, this.maxPower);
+                this.setEnergyStored(Math.max(this.getEnergyStored() + power, this.getMaxEnergyStored()));
             }
             return Math.max(Math.min(Math.abs(room - power), power), 0);
         }
@@ -40,11 +41,11 @@ public class NetworkSharedPower extends NetworkTileEntities
 
     public boolean drainPower(TileEntity source, float power, boolean doDrain)
     {
-        if (this.networkMember.contains(source) && this.sharedPower >= power)
+        if (this.networkMember.contains(source) && (this.getEnergyStored() >= power || this.runPowerLess))
         {
-            if (doDrain)
+            if (doDrain && !this.runPowerLess)
             {
-                this.sharedPower -= power;
+                this.setEnergyStored(this.getEnergyStored() - power);
             }
             return true;
         }
@@ -55,15 +56,52 @@ public class NetworkSharedPower extends NetworkTileEntities
     public void cleanUpMembers()
     {
         super.cleanUpMembers();
-        this.maxPower = 0;
         for (INetworkPart part : this.networkMember)
         {
-            if (part instanceof IElectricalStorage)
+            if (part instanceof IPowerLess && ((IPowerLess) part).runPowerLess())
             {
-                this.maxPower += ((IElectricalStorage) part).getMaxEnergyStored();
+                this.setPowerLess(((IPowerLess) part).runPowerLess());
+                break;
             }
         }
 
+    }
+
+    @Override
+    public boolean runPowerLess()
+    {
+        return this.runPowerLess;
+    }
+
+    @Override
+    public void setPowerLess(boolean bool)
+    {
+        this.runPowerLess = bool;
+        for (INetworkPart part : this.networkMember)
+        {
+            if (part instanceof IPowerLess)
+            {
+                ((IPowerLess) part).setPowerLess(bool);
+            }
+        }
+    }
+
+    @Override
+    public void setEnergyStored(float energy)
+    {
+        this.energy = energy;
+    }
+
+    @Override
+    public float getEnergyStored()
+    {
+        return this.energy;
+    }
+
+    @Override
+    public float getMaxEnergyStored()
+    {
+        return Integer.MAX_VALUE;
     }
 
 }
