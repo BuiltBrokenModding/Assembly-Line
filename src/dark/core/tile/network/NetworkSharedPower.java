@@ -2,6 +2,7 @@ package dark.core.tile.network;
 
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.core.block.IElectricalStorage;
+import dark.api.INetworkEnergyPart;
 import dark.api.INetworkPart;
 import dark.api.IPowerLess;
 
@@ -11,7 +12,7 @@ import dark.api.IPowerLess;
  * @author DarkGuardsman */
 public class NetworkSharedPower extends NetworkTileEntities implements IElectricalStorage, IPowerLess
 {
-    private float energy;
+    private float energy, energyMax;
     private boolean runPowerLess;
 
     public NetworkSharedPower(INetworkPart... parts)
@@ -23,6 +24,12 @@ public class NetworkSharedPower extends NetworkTileEntities implements IElectric
     public NetworkTileEntities newInstance()
     {
         return new NetworkSharedPower();
+    }
+
+    @Override
+    public boolean isValidMember(INetworkPart part)
+    {
+        return super.isValidMember(part) && part instanceof INetworkEnergyPart;
     }
 
     public float dumpPower(TileEntity source, float power, boolean doFill)
@@ -101,7 +108,38 @@ public class NetworkSharedPower extends NetworkTileEntities implements IElectric
     @Override
     public float getMaxEnergyStored()
     {
-        return Integer.MAX_VALUE;
+        return this.energyMax;
+    }
+
+    @Override
+    public void writeDataToTiles()
+    {
+        this.cleanUpMembers();
+        float energyRemaining = this.getEnergyStored();
+        for (INetworkPart part : this.getNetworkMemebers())
+        {
+            float watts = energyRemaining / this.getNetworkMemebers().size();
+            if (part instanceof INetworkEnergyPart)
+            {
+                ((INetworkEnergyPart) part).setEnergyStored(Math.min(watts, ((INetworkEnergyPart) part).getMaxEnergyStored()));
+                energyRemaining -= Math.min(watts, ((INetworkEnergyPart) part).getMaxEnergyStored());
+            }
+        }
+    }
+
+    @Override
+    public void readDataFromTiles()
+    {
+        this.energy = 0;
+        this.cleanUpMembers();
+        for (INetworkPart part : this.getNetworkMemebers())
+        {
+            if (part instanceof INetworkEnergyPart)
+            {
+                this.energy += ((INetworkEnergyPart) part).getPartEnergy();
+                this.energyMax += ((INetworkEnergyPart) part).getPartMaxEnergy();
+            }
+        }
     }
 
 }
