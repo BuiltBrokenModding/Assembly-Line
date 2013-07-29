@@ -43,6 +43,11 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
     /** Entities that are ignored allowing for other tiles to interact with them */
     public List<Entity> IgnoreList = new ArrayList<Entity>();
 
+    public TileEntityConveyorBelt()
+    {
+        super(.1f);
+    }
+
     @Override
     public void onUpdate()
     {

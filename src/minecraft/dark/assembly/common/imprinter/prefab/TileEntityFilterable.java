@@ -20,8 +20,18 @@ public abstract class TileEntityFilterable extends TileEntityAssembly implements
     private ItemStack filterItem;
     private boolean inverted;
 
+    public TileEntityFilterable(float wattsPerTick, float maxEnergy)
+    {
+        super(wattsPerTick, maxEnergy);
+    }
+
+    public TileEntityFilterable(float wattsPerTick)
+    {
+        super(wattsPerTick);
+    }
+
     /** Looks through the things in the filter and finds out which item is being filtered.
-     * 
+     *
      * @return Is this filterable block filtering this specific ItemStack? */
     public boolean isFiltering(ItemStack itemStack)
     {

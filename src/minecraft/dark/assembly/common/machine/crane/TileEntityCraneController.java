@@ -17,8 +17,10 @@ public class TileEntityCraneController extends TileEntityAssembly implements ICr
 
     public TileEntityCraneController()
     {
+        super(1);
         width = depth = 0;
         isCraneValid = false;
+
     }
 
     @Override

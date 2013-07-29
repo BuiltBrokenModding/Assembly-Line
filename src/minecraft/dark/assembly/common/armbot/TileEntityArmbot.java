@@ -46,11 +46,9 @@ import dark.core.helpers.ItemFindingHelper;
 
 public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IInventory, IPacketReceiver, IArmbot, IPeripheral
 {
-
     private final CommandManager commandManager = new CommandManager();
     /** The items this container contains. */
     protected ItemStack disk = null;
-    public final double WATT_REQUEST = 20;
     private int computersAttached = 0;
     private List<IComputerAccess> connectedComputers = new ArrayList<IComputerAccess>();
     /** The rotation of the arms. In Degrees. */
@@ -70,6 +68,12 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
     /** Client Side Object Storage */
     public EntityItem renderEntityItem = null;
+
+    public TileEntityArmbot()
+    {
+        super(20);
+        // TODO Auto-generated constructor stub
+    }
 
     @Override
     public void initiate()

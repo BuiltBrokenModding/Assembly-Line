@@ -14,8 +14,12 @@ import dark.assembly.common.imprinter.prefab.TileEntityFilterable;
 
 public class TileEntityDetector extends TileEntityFilterable
 {
-
     private boolean powering = false;
+
+    public TileEntityDetector()
+    {
+        super(1);
+    }
 
     @Override
     public void updateEntity()

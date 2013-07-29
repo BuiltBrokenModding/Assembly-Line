@@ -28,10 +28,20 @@ import dark.core.tile.network.NetworkTileEntities;
 
 /** A class to be inherited by all machines on the assembly line. This class acts as a single peace
  * in a network of similar tiles allowing all to share power from one or more sources
- * 
+ *
  * @author DarkGuardsman */
 public abstract class TileEntityAssembly extends TileEntityMachine implements INetworkPart, IPacketReceiver, IConductor
 {
+
+    public TileEntityAssembly(float wattsPerTick)
+    {
+        super(wattsPerTick);
+    }
+
+    public TileEntityAssembly(float wattsPerTick, float maxEnergy)
+    {
+        super(wattsPerTick, maxEnergy);
+    }
 
     /** Is the tile currently powered allowing it to run */
     public boolean running = false;
@@ -202,7 +212,7 @@ public abstract class TileEntityAssembly extends TileEntityMachine implements IN
     }
 
     /** Handles reduced data from the main packet method
-     * 
+     *
      * @param id - packet ID
      * @param dis - data
      * @param player - player
