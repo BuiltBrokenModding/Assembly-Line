@@ -205,9 +205,14 @@ public class LiquidPathFinder
         Iterator<Vector3> it = this.nodes.iterator();
         while (it.hasNext())
         {
-            if (!this.isValidNode(it.next()))
+            Vector3 vec = it.next();
+            if (!this.isValidNode(vec))
             {
                 it.remove();
+            }
+            if(this.isValidResult(vec))
+            {
+                this.results.add(vec);
             }
         }
         it = this.results.iterator();
