@@ -73,7 +73,7 @@ public class FluidHelper
     {
         if (stack != null)
         {
-            return new FluidStack(stack.getFluid(), amount);
+            return new FluidStack(stack.getFluid().getID(), amount, stack.tag);
         }
         return stack;
     }
@@ -205,35 +205,52 @@ public class FluidHelper
         return 0;
     }
 
-    public static int fillTanksAllSides(World world, Vector3 origin, FluidStack stack,boolean doFill, ForgeDirection...ignore )
+    /** Fills all instances of IFluidHandler surrounding the origin
+     *
+     * @param stack - FluidStack that will be filled into the tanks
+     * @param doFill - Actually perform the action or simulate action
+     * @param ignore - ForgeDirections to ignore
+     * @return amount of fluid that was used from the stack */
+    public static int fillTanksAllSides(World world, Vector3 origin, FluidStack stack, boolean doFill, ForgeDirection... ignore)
     {
         int filled = 0;
         FluidStack fillStack = stack != null ? stack.copy() : null;
-        for(ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+        for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
         {
-            if(fillStack == null || fillStack.amount <= 0)
+            if (fillStack == null || fillStack.amount <= 0)
             {
                 return 0;
             }
-            if(ignore != null)
+            if (ignore != null)
             {
-                for(int i =0; i < ignore.length; i++)
+                for (int i = 0; i < ignore.length; i++)
                 {
-                    if(direction == ignore[i])
+                    if (direction == ignore[i])
                     {
                         continue;
                     }
                 }
             }
-            TileEntity entity = origin.clone().modifyPositionFromSide(direction).getTileEntity(world);
-            if(entity instanceof IFluidHandler && ((IFluidHandler) entity).canFill(direction.getOpposite(), fillStack.getFluid()))
-            {
-                int f = ((IFluidHandler)entity).fill(direction.getOpposite(), fillStack, doFill);
-               filled += f;
-               fillStack.amount -=f;
-            }
+            filled += fillTankSide(world, origin, stack, doFill, direction);
+            fillStack = getStack(stack, stack.amount - filled);
 
         }
         return filled;
+    }
+
+    /** Fills an instance of IFluidHandler in the given direction
+     *
+     * @param stack - FluidStack to fill the tank will
+     * @param doFill - Actually perform the action or simulate action
+     * @param direction - direction to fill in from the origin
+     * @return amount of fluid that was used from the stack */
+    public static int fillTankSide(World world, Vector3 origin, FluidStack stack, boolean doFill, ForgeDirection direction)
+    {
+        TileEntity entity = origin.clone().modifyPositionFromSide(direction).getTileEntity(world);
+        if (entity instanceof IFluidHandler && ((IFluidHandler) entity).canFill(direction.getOpposite(), stack.getFluid()))
+        {
+            return ((IFluidHandler) entity).fill(direction.getOpposite(), stack, doFill);
+        }
+        return 0;
     }
 }
