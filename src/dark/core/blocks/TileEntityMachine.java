@@ -39,6 +39,23 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
 
     protected boolean unpowered, running;
 
+    public TileEntityMachine()
+    {
+
+    }
+
+    public TileEntityMachine(float wattsPerTick)
+    {
+        this.WATTS_PER_TICK = wattsPerTick;
+        this.MAX_WATTS = wattsPerTick * 20;
+    }
+
+    public TileEntityMachine(float wattsPerTick, float maxEnergy)
+    {
+        this.WATTS_PER_TICK = wattsPerTick;
+        this.MAX_WATTS = maxEnergy;
+    }
+
     @Override
     public void updateEntity()
     {

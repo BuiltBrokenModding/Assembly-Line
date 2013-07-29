@@ -5,6 +5,7 @@ import dark.core.blocks.TileEntityMachine;
 
 public class TileEntityLaserEmitter extends TileEntityMachine
 {
+
     /** Facing direction of the tile and not the laser */
     public ForgeDirection getFacingDirection()
     {

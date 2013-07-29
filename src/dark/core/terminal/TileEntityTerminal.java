@@ -52,6 +52,21 @@ public abstract class TileEntityTerminal extends TileEntityMachine implements IS
 
     public final Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
 
+    public TileEntityTerminal()
+    {
+        super(0, 0);
+    }
+
+    public TileEntityTerminal(float wattsPerTick)
+    {
+        super(wattsPerTick);
+    }
+
+    public TileEntityTerminal(float wattsPerTick, float maxEnergy)
+    {
+        super(wattsPerTick, maxEnergy);
+    }
+
     @Override
     public void updateEntity()
     {
