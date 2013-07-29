@@ -34,6 +34,10 @@ public class NetworkFluidContainers extends NetworkFluidTiles
     @Override
     public void writeDataToTiles()
     {
+        if(this.combinedStorage() == null || this.combinedStorage().getFluid() == null)
+        {
+            return;
+        }
         int fluid = this.combinedStorage().getFluid().fluidID;
         int volume = Math.abs(this.combinedStorage().getFluid().amount);
         NBTTagCompound tag = this.combinedStorage().getFluid().tag;
