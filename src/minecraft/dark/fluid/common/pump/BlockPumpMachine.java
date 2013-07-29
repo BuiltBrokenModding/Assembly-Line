@@ -4,14 +4,11 @@ import java.util.List;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import dark.core.helpers.MetaGroup;
+import net.minecraftforge.common.ForgeDirection;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.BlockFM;
 import dark.fluid.common.FluidMech;
@@ -48,6 +45,12 @@ public class BlockPumpMachine extends BlockFM
     public int damageDropped(int meta)
     {
         return 0;
+    }
+
+    @Override
+    public boolean isBlockSolidOnSide(World world, int x, int y, int z, ForgeDirection side)
+    {
+        return side != ForgeDirection.DOWN;
     }
 
     @Override
