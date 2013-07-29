@@ -418,7 +418,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     }
 
     /** Checks to make sure the connection is valid to the tileEntity
-     * 
+     *
      * @param tileEntity - the tileEntity being checked
      * @param side - side the connection is too
      * @return */
@@ -432,7 +432,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
             }
             if (tileEntity instanceof ITileConnector)
             {
-                if (((ITileConnector) tileEntity).canTileConnect(this, side))
+                if (((ITileConnector) tileEntity).canTileConnect(this, side.getOpposite()))
                 {
                     if (tileEntity instanceof INetworkPipe)
                     {
