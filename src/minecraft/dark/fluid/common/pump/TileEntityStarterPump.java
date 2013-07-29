@@ -35,19 +35,19 @@ import dark.fluid.common.FluidMech;
 
 public class TileEntityStarterPump extends TileEntityMachine implements IToolReadOut, ITileConnector
 {
-
     private int currentWorldEdits = 0;
     private static final int MAX_WORLD_EDITS_PER_PROCESS = 5;
+
+    public static float ENERGY_PER_DRAIN = 5;
 
     private List<Vector3> updateQue = new ArrayList<Vector3>();
     private LiquidPathFinder pathLiquid;
 
     public int pos = 0;
 
-    @Override
-    public void initiate()
+    public TileEntityStarterPump()
     {
-        super.initiate();
+        super(1, (MAX_WORLD_EDITS_PER_PROCESS * ENERGY_PER_DRAIN) + 20);
     }
 
     public LiquidPathFinder getLiquidFinder()
@@ -64,49 +64,59 @@ public class TileEntityStarterPump extends TileEntityMachine implements IToolRea
     {
         super.updateEntity();
 
-        if (!this.worldObj.isRemote && !this.isDisabled() && this.ticks % 20 == 0)
+        if (!this.worldObj.isRemote && !this.isDisabled() && this.ticks % 20 == 0 && this.canRun())
         {
             this.currentWorldEdits = 0;
 
-            if (this.canRun())
+            TileEntity entity = new Vector3(this).modifyPositionFromSide(ForgeDirection.DOWN).getTileEntity(worldObj);
+            if (entity instanceof IFluidHandler)
             {
-                if (this.getLiquidFinder().results.size() < TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS + 10)
+                FluidStack draStack = ((IFluidHandler) entity).drain(ForgeDirection.UP, MAX_WORLD_EDITS_PER_PROCESS * FluidContainerRegistry.BUCKET_VOLUME, false);
+                if (draStack != null && FluidHelper.fillTanksAllSides(worldObj, new Vector3(this), draStack, false, ForgeDirection.DOWN) > 0)
                 {
-                    this.getLiquidFinder().start(new Vector3(this).modifyPositionFromSide(ForgeDirection.DOWN), false);
+                    ((IFluidHandler) entity).drain(ForgeDirection.UP, FluidHelper.fillTanksAllSides(worldObj, new Vector3(this), draStack, true, ForgeDirection.DOWN), true);
                 }
+            }
 
-                if (this.getLiquidFinder().results.size() > 0)
+            if (this.getLiquidFinder().results.size() < TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS + 10)
+            {
+                this.getLiquidFinder().start(new Vector3(this).modifyPositionFromSide(ForgeDirection.DOWN), false);
+            }
+
+            if (entity == null && this.getLiquidFinder().results.size() > 0)
+            {
+                System.out.println("StartPump>>DrainArea>>Targets>" + this.getLiquidFinder().results.size());
+
+                Iterator<Vector3> fluidList = this.getLiquidFinder().results.iterator();
+
+                while (fluidList.hasNext() && this.consumePower(ENERGY_PER_DRAIN, false))
                 {
-                    System.out.println("StartPump>>DrainArea>>Targets>" + this.getLiquidFinder().results.size());
-
-                    Iterator<Vector3> fluidList = this.getLiquidFinder().results.iterator();
-
-                    while (fluidList.hasNext())
+                    if (this.currentWorldEdits >= MAX_WORLD_EDITS_PER_PROCESS)
                     {
-                        Vector3 drainLocation = fluidList.next();
-                        FluidStack drainStack = FluidHelper.drainBlock(this.worldObj, drainLocation, false);
-                        System.out.println("StartPump>>DrainArea>>Draining>>NextFluidBlock>" + (drainStack == null ? "Null" : drainStack.amount + "mb of " + drainStack.getFluid().getName()));
+                        break;
+                    }
 
-                        if (this.currentWorldEdits >= MAX_WORLD_EDITS_PER_PROCESS)
+                    Vector3 drainLocation = fluidList.next();
+                    FluidStack drainStack = FluidHelper.drainBlock(this.worldObj, drainLocation, false);
+                    System.out.println("StartPump>>DrainArea>>Draining>>NextFluidBlock>" + (drainStack == null ? "Null" : drainStack.amount + "mb of " + drainStack.getFluid().getName()));
+
+                    int fillV = FluidHelper.fillTanksAllSides(worldObj, new Vector3(this), drainStack, false, ForgeDirection.DOWN);
+                    System.out.println("StartPump>>DrainArea>>Draining>>NextFluidBlock>Filled>" + fillV + "mb");
+
+                    if (drainStack != null && fillV >= drainStack.amount && this.consumePower(ENERGY_PER_DRAIN, true))
+                    {
+                        System.out.println("StartPump>>DrainArea>>Draining>>Fluid>" + drainLocation.toString());
+                        /* REMOVE BLOCK */
+                        FluidHelper.drainBlock(this.worldObj, drainLocation, true);
+                        FluidHelper.fillTanksAllSides(worldObj, new Vector3(this), drainStack, true, ForgeDirection.DOWN);
+                        this.currentWorldEdits++;
+                        fluidList.remove();
+                        /* ADD TO UPDATE QUE */
+                        if (!this.updateQue.contains(drainLocation))
                         {
-                            break;
+                            this.updateQue.add(drainLocation);
                         }
-                        int fillV = FluidHelper.fillTanksAllSides(worldObj, new Vector3(this), drainStack, false, ForgeDirection.DOWN);
-                        System.out.println("StartPump>>DrainArea>>Draining>>NextFluidBlock>Filled>" + fillV + "mb");
-                        if (drainStack != null && fillV >= drainStack.amount)
-                        {
-                            System.out.println("StartPump>>DrainArea>>Draining>>Fluid>" + drainLocation.toString());
-                            /* REMOVE BLOCK */
-                            FluidHelper.drainBlock(this.worldObj, drainLocation, true);
-                            FluidHelper.fillTanksAllSides(worldObj, new Vector3(this), drainStack, true, ForgeDirection.DOWN);
-                            this.currentWorldEdits++;
-                            fluidList.remove();
-                            /* ADD TO UPDATE QUE */
-                            if (!this.updateQue.contains(drainLocation))
-                            {
-                                this.updateQue.add(drainLocation);
-                            }
-                        }
+
                     }
                 }
             }

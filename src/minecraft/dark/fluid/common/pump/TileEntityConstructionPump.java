@@ -25,10 +25,9 @@ public class TileEntityConstructionPump extends TileEntityMachine implements IFl
     private int liquidRequest = 5;
     public int rotation = 0;
 
-    @Override
-    public void initiate()
+    public TileEntityConstructionPump()
     {
-        super.initiate();
+        super(5);
     }
 
     public ForgeDirection getFacing(boolean input)
