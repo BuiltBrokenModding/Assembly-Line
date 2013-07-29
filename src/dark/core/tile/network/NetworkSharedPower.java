@@ -63,12 +63,18 @@ public class NetworkSharedPower extends NetworkTileEntities implements IElectric
     public void cleanUpMembers()
     {
         super.cleanUpMembers();
+        boolean set = false;
+        this.energyMax = 0;
         for (INetworkPart part : this.networkMember)
         {
-            if (part instanceof IPowerLess && ((IPowerLess) part).runPowerLess())
+            if (!set && part instanceof IPowerLess && ((IPowerLess) part).runPowerLess())
             {
                 this.setPowerLess(((IPowerLess) part).runPowerLess());
-                break;
+                set = true;
+            }
+            if (part instanceof INetworkEnergyPart)
+            {
+                this.energyMax += ((INetworkEnergyPart) part).getPartMaxEnergy();
             }
         }
 
@@ -90,6 +96,7 @@ public class NetworkSharedPower extends NetworkTileEntities implements IElectric
             {
                 ((IPowerLess) part).setPowerLess(bool);
             }
+
         }
     }
 
@@ -130,14 +137,13 @@ public class NetworkSharedPower extends NetworkTileEntities implements IElectric
     @Override
     public void readDataFromTiles()
     {
-        this.energy = 0;
+        this.setEnergyStored(0);
         this.cleanUpMembers();
         for (INetworkPart part : this.getNetworkMemebers())
         {
             if (part instanceof INetworkEnergyPart)
             {
-                this.energy += ((INetworkEnergyPart) part).getPartEnergy();
-                this.energyMax += ((INetworkEnergyPart) part).getPartMaxEnergy();
+                this.setEnergyStored(this.getEnergyStored() + ((INetworkEnergyPart) part).getPartEnergy());
             }
         }
     }
