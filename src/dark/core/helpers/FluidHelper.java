@@ -78,7 +78,24 @@ public class FluidHelper
         return stack;
     }
 
+    /** Drains a block of fluid
+     *
+     * @Note sets the block with a client update only. Doesn't tick the block allowing for better
+     * placement of fluid that can flow infinitely
+     *
+     * @param doDrain - do the action
+     * @return FluidStack drained from the block */
     public static FluidStack drainBlock(World world, Vector3 node, boolean doDrain)
+    {
+        return drainBlock(world, node, doDrain, 2);
+    }
+
+    /** Drains a block of fluid
+     *
+     * @param doDrain - do the action
+     * @param update - block update flag to use
+     * @return FluidStack drained from the block */
+    public static FluidStack drainBlock(World world, Vector3 node, boolean doDrain, int update)
     {
         if (world == null || node == null)
         {
@@ -101,12 +118,12 @@ public class FluidHelper
                     Vector3 vec = node.clone().modifyPositionFromSide(ForgeDirection.UP);
                     if (vec.getBlockID(world) == Block.waterlily.blockID)
                     {
-                        vec.setBlock(world, 0, 0, 2);
+                        vec.setBlock(world, 0, 0, update);
                         node.setBlock(world, blockID, meta);
                     }
                     else
                     {
-                        node.setBlock(world, 0, 0, 2);
+                        node.setBlock(world, 0, 0, update);
                     }
                 }
                 return new FluidStack(FluidRegistry.getFluid("water"), FluidContainerRegistry.BUCKET_VOLUME);
@@ -115,7 +132,7 @@ public class FluidHelper
             {
                 if (doDrain)
                 {
-                    node.setBlock(world, 0, 0, 2);
+                    node.setBlock(world, 0, 0, update);
                 }
                 return new FluidStack(FluidRegistry.getFluid("lava"), FluidContainerRegistry.BUCKET_VOLUME);
             }
@@ -157,13 +174,9 @@ public class FluidHelper
         int meta = node.getBlockMetadata(world);
         Block block = Block.blocksList[blockID];
 
-        if (block instanceof IFluidBlock)
+        if (block instanceof IFluidBlock || block instanceof BlockFluid)
         {
             //TODO when added change this to call canFill and fill
-            return meta != 0;
-        }
-        else if (block instanceof BlockFluid)
-        {
             return meta != 0;
         }
         return false;
@@ -219,7 +232,7 @@ public class FluidHelper
         {
             if (fillStack == null || fillStack.amount <= 0)
             {
-                return 0;
+                return filled;
             }
             if (ignore != null)
             {
