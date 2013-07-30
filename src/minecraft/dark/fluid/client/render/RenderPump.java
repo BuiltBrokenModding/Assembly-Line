@@ -47,7 +47,7 @@ public class RenderPump extends RenderMachine
                 break;
         }
         model.render(0.0625F);
-        model.renderMotion(0.0625F, te.pos);
+        model.renderMotion(0.0625F, te.rotation);
         GL11.glPopMatrix();
 
     }

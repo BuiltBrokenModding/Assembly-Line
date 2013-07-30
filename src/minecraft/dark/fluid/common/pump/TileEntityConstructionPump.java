@@ -1,6 +1,10 @@
 package dark.fluid.common.pump;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -11,25 +15,31 @@ import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import dark.api.ITileConnector;
+import dark.api.fluid.IDrain;
 import dark.api.fluid.INetworkPipe;
 import dark.core.blocks.TileEntityMachine;
 import dark.core.helpers.MetaGroup;
+import dark.core.helpers.Pair;
 import dark.core.network.fluid.HydraulicNetworkHelper;
 import dark.core.network.fluid.NetworkFluidTiles;
 
-public class TileEntityConstructionPump extends TileEntityMachine implements IFluidHandler, ITileConnector
+public class TileEntityConstructionPump extends TileEntityStarterPump implements IFluidHandler, ITileConnector
 {
     /* LIQUID FLOW CONNECTION SIDES */
     /** Internal tank for interaction but not real storage */
     private FluidTank fakeTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
-    private int liquidRequest = 5;
-    public int rotation = 0;
+
+    List<IDrain> drainsUsed = new ArrayList<IDrain>();
 
     public TileEntityConstructionPump()
     {
-        super(5);
+        super(5, 10, 30);
     }
 
+    /** Gets the facing direction
+     *
+     * @param input true for input side, false for output side
+     * @return */
     public ForgeDirection getFacing(boolean input)
     {
         int meta = 0;
@@ -49,41 +59,61 @@ public class TileEntityConstructionPump extends TileEntityMachine implements IFl
     }
 
     @Override
-    public void updateEntity()
+    public Pair<World, Vector3> getDrainOrigin()
     {
-        super.updateEntity();
-        if (!worldObj.isRemote && this.ticks % 10 == 0)
+        TileEntity inputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), getFacing(true));
+        TileEntity outputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), getFacing(false));
+        IDrain drain = this.getNextDrain(inputTile, outputTile, drainsUsed);
+        if (drain == null)
         {
+            this.drainsUsed.clear();
+            drain = this.getNextDrain(inputTile, outputTile, drainsUsed);
+        }
 
-            this.rotation = Math.max(Math.min(this.rotation + 1, 7), 0);
+        if (drain instanceof TileEntity)
+        {
+            this.drainsUsed.add(drain);
+            return new Pair<World, Vector3>(((TileEntity) drain).worldObj, new Vector3(((TileEntity) drain)));
+        }
+        return null;
+    }
 
-            TileEntity inputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), getFacing(true));
-            TileEntity outputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), getFacing(false));
+    @Override
+    public boolean canRun()
+    {
+        return super.canRun() && this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+    }
 
-            if (inputTile instanceof INetworkPipe && ((INetworkPipe) inputTile).getTileNetwork() instanceof NetworkFluidTiles)
+    /** Gets the nextDrain in the list
+     *
+     * @param inputTile - input tile must be an instance of INetworkPipe
+     * @param outputTile - output tile must be an instance of IFluidHandler
+     * @param ignoreList - list of drains to ignore so that the next one is selected
+     * @return the next drain it finds or null if it went threw the entire list. Its suggested to
+     * clear the ignoreList after getting null */
+    public IDrain getNextDrain(TileEntity inputTile, TileEntity outputTile, List<IDrain> ignoreList)
+    {
+        IDrain drain = null;
+        if (ignoreList == null)
+        {
+            ignoreList = new ArrayList<IDrain>();
+        }
+
+        if (inputTile instanceof INetworkPipe && ((INetworkPipe) inputTile).getTileNetwork() instanceof NetworkFluidTiles)
+        {
+            if (outputTile instanceof IFluidHandler)
             {
-                if (outputTile instanceof IFluidHandler)
+                for (IFluidHandler tank : ((NetworkFluidTiles) ((INetworkPipe) inputTile).getTileNetwork()).connectedTanks)
                 {
-                    for (IFluidHandler tank : ((NetworkFluidTiles) ((INetworkPipe) inputTile).getTileNetwork()).connectedTanks)
+                    if (tank instanceof IDrain && !ignoreList.contains((IDrain) tank))
                     {
-                        if (tank instanceof TileEntityDrain)
-                        {
-                            if (this.canRun() && this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord))
-                            {
-                                ((TileEntityDrain) tank).requestLiquid(this, null, liquidRequest * FluidContainerRegistry.BUCKET_VOLUME);
-                            }
-                            else
-                            {
-                                ((TileEntityDrain) tank).stopRequesting(this);
-                            }
-
-                        }
-
+                        drain = (IDrain) tank;
+                        break;
                     }
                 }
             }
-
         }
+        return drain;
     }
 
     @Override
