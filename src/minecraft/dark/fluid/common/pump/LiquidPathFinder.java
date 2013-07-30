@@ -3,8 +3,10 @@ package dark.fluid.common.pump;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -21,9 +23,9 @@ public class LiquidPathFinder
     /** Curent world this pathfinder will operate in */
     private World world;
     /** List of all nodes traveled by the path finder */
-    public List<Vector3> nodes = new ArrayList<Vector3>();
+    public Set<Vector3> nodes = new HashSet<Vector3>();
     /** List of all nodes that match the search parms */
-    public List<Vector3> results = new ArrayList<Vector3>();
+    public Set<Vector3> results = new HashSet<Vector3>();
     /** Are we looking for liquid fillable blocks */
     private boolean fill = false;
     /** priority search direction either up or down only */
@@ -210,7 +212,7 @@ public class LiquidPathFinder
             {
                 it.remove();
             }
-            if(this.isValidResult(vec))
+            if (this.isValidResult(vec))
             {
                 this.results.add(vec);
             }
@@ -226,21 +228,22 @@ public class LiquidPathFinder
         return this;
     }
 
-
     /** Used to sort a list of vector3 locations using the vector3's distance from one point and
      * elevation in the y axis
      *
      * @param start - start location to measure distance from
-     * @param locations - list of vectors to sort
+     * @param results2 - list of vectors to sort
      * @param closest - sort closest distance to the top
      * @param highest - sort highest y value to the top.
      *
      * Note: highest takes priority over closest */
-    public void sortBlockList(final Vector3 start, final List<Vector3> locations, final boolean closest, final boolean highest)
+    public void sortBlockList(final Vector3 start, final Set<Vector3> set, final boolean closest, final boolean highest)
     {
         try
         {
-            Collections.sort(locations, new Comparator<Vector3>()
+            List<Vector3> list = new ArrayList<Vector3>();
+            list.addAll(set);
+            Collections.sort(list, new Comparator<Vector3>()
             {
                 @Override
                 public int compare(Vector3 vecA, Vector3 vecB)
@@ -279,11 +282,23 @@ public class LiquidPathFinder
                     return Double.compare(distanceA, distanceB);
                 }
             });
+            set.clear();
+            set.addAll(list);
         }
         catch (Exception e)
         {
             System.out.println("FluidMech>>>BlockDrain>>FillArea>>Error>>CollectionSorter");
             e.printStackTrace();
         }
+    }
+
+    public LiquidPathFinder setWorld(World world2)
+    {
+        if (world2 != this.world)
+        {
+            this.reset();
+            this.world = world2;
+        }
+        return this;
     }
 }
