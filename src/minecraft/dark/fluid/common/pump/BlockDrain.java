@@ -53,19 +53,7 @@ public class BlockDrain extends BlockFM
         ForgeDirection dir = ForgeDirection.getOrientation(side);
         if (entity instanceof TileEntityDrain)
         {
-
-            if (dir == ((TileEntityDrain) entity).getFacing())
-            {
-                if (((TileEntityDrain) entity).canDrainSources())
-                {
-                    return this.drainIcon;
-                }
-                else
-                {
-                    return this.fillIcon;
-                }
-
-            }
+            return this.drainIcon;
         }
         return this.blockIcon;
     }
@@ -78,41 +66,11 @@ public class BlockDrain extends BlockFM
         TileEntity entity = world.getBlockTileEntity(x, y, z);
     }
 
-    public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
-    {
-        if (!world.isRemote)
-        {
-            int meta = world.getBlockMetadata(x, y, z);
-            if (world.getBlockMetadata(x, y, z) < 6)
-            {
-                meta += 6;
-            }
-            else
-            {
-                meta -= 6;
-            }
-            world.setBlockMetadataWithNotify(x, y, z, meta, 3);
-            TileEntity entity = world.getBlockTileEntity(x, y, z);
-            if (entity instanceof TileEntityDrain)
-            {
-                entityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("Draining Sources? " + ((TileEntityDrain) entity).canDrainSources()));
-
-            }
-            return true;
-        }
-        return true;
-    }
-
     public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
     {
         if (!world.isRemote)
         {
-            int meta = side;
-            if (world.getBlockMetadata(x, y, z) > 5)
-            {
-                meta += 6;
-            }
-            world.setBlockMetadataWithNotify(x, y, z, meta, 3);
+            world.setBlockMetadataWithNotify(x, y, z, side, 3);
             return true;
         }
         return true;
