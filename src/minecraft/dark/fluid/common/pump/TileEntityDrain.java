@@ -44,7 +44,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
     {
         if (pathFill == null)
         {
-            pathFill = new LiquidPathFinder(this.worldObj, 1000, 100);
+            pathFill = new LiquidPathFinder(this.worldObj, 100, 100);
         }
         return pathFill;
     }
@@ -83,7 +83,12 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
             /* ONLY FIND NEW SOURCES IF OUR CURRENT LIST RUNS DRY */
             if (this.getLiquidFinder().results.size() < TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS + 10)
             {
-                this.getLiquidFinder().refresh().start(new Vector3(this).modifyPositionFromSide(this.getDirection()), false);
+                this.getLiquidFinder().refresh().start(new Vector3(this).modifyPositionFromSide(this.getDirection()), TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS, false);
+            }
+
+            if (this.getFillFinder().results.size() < TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS + 10)
+            {
+                this.getFillFinder().refresh().start(new Vector3(this).modifyPositionFromSide(this.getDirection()), TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS, true);
             }
 
         }
@@ -99,11 +104,6 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
             if (resource == null || resource.amount < FluidContainerRegistry.BUCKET_VOLUME)
             {
                 return 0;
-            }
-
-            if (this.getFillFinder().results.size() < TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS + 10)
-            {
-                this.getFillFinder().refresh().start(new Vector3(this).modifyPositionFromSide(this.getDirection()), true);
             }
 
             fillVolume = resource.amount;

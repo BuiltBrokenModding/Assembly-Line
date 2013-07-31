@@ -138,9 +138,9 @@ public class TileEntityStarterPump extends TileEntityMachine implements IToolRea
 
         if (drainList == null)
         {
-            if (this.getLiquidFinder().results.size() < TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS + 10)
+            if (this.getLiquidFinder().results.size() < MAX_WORLD_EDITS_PER_PROCESS + 10)
             {
-                this.getLiquidFinder().setWorld(world).refresh().start(origin, false);
+                this.getLiquidFinder().setWorld(world).refresh().start(origin, MAX_WORLD_EDITS_PER_PROCESS, false);
             }
             drainList = this.getLiquidFinder().refresh().results;
         }

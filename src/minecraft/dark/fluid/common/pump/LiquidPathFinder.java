@@ -23,7 +23,7 @@ public class LiquidPathFinder
     /** Curent world this pathfinder will operate in */
     private World world;
     /** List of all nodes traveled by the path finder */
-    public Set<Vector3> nodes = new HashSet<Vector3>();
+    public Set<Vector3> nodeList = new HashSet<Vector3>();
     /** List of all nodes that match the search parms */
     public Set<Vector3> results = new HashSet<Vector3>();
     /** Are we looking for liquid fillable blocks */
@@ -31,7 +31,10 @@ public class LiquidPathFinder
     /** priority search direction either up or down only */
     private ForgeDirection priority;
     /** Limit on the searched nodes per run */
-    private int resultLimit = 2000;
+    private int resultLimit = 200;
+    private int resultsFound = 0;
+    private int resultRun = resultLimit;
+    private int runs = 0;
     /** Start location of the pathfinder used for range calculations */
     private Vector3 Start;
     /** Range to limit the search to */
@@ -59,6 +62,23 @@ public class LiquidPathFinder
         shuffledDirections.add(ForgeDirection.SOUTH);
     }
 
+    public void addNode(Vector3 vec)
+    {
+        if (!this.nodeList.contains(vec))
+        {
+            this.nodeList.add(vec);
+        }
+    }
+
+    public void addResult(Vector3 vec)
+    {
+        if (!this.results.contains(vec))
+        {
+            this.resultsFound++;
+            this.results.add(vec);
+        }
+    }
+
     /** Searches for nodes attached to the given node
      *
      * @return True on success finding, false on failure. */
@@ -70,11 +90,11 @@ public class LiquidPathFinder
         }
         try
         {
-            this.nodes.add(node);
+            this.addNode(node);
 
             if (this.isValidResult(node))
             {
-                this.results.add(node);
+                this.addResult(node);
             }
 
             if (this.isDone(node.clone()))
@@ -116,10 +136,26 @@ public class LiquidPathFinder
      * Note: Calls findNode if the next code is valid */
     public boolean find(ForgeDirection direction, Vector3 origin)
     {
+        this.runs++;
         Vector3 vec = origin.clone().modifyPositionFromSide(direction);
         double distance = vec.toVector2().distanceTo(this.Start.toVector2());
         if (distance <= this.range && this.isValidNode(vec))
         {
+            if (this.fill && FluidHelper.drainBlock(world, vec, false) != null || FluidHelper.isFillableFluid(world, vec))
+            {
+                for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+                {
+                    Vector3 veb = vec.clone().modifyPositionFromSide(dir);
+                    if (FluidHelper.isFillableBlock(world, veb))
+                    {
+                        this.addNode(veb);
+                        if (this.isValidResult(veb))
+                        {
+                            this.addResult(veb);
+                        }
+                    }
+                }
+            }
             if (this.findNodes(vec))
             {
                 return true;
@@ -131,7 +167,7 @@ public class LiquidPathFinder
     /** Checks to see if this node is valid to path find threw */
     public boolean isValidNode(Vector3 pos)
     {
-        if (pos == null || this.nodes.contains(pos))
+        if (pos == null || this.nodeList.contains(pos))
         {
             return false;
         }
@@ -141,19 +177,7 @@ public class LiquidPathFinder
         {
             return false;
         }
-        boolean flag = FluidHelper.drainBlock(world, pos, false) != null || FluidHelper.isFillableFluid(world, pos);
-        /* Fillable blocks need to be connected to fillable fluid blocks to be valid */
-        if (this.fill && flag)
-        {
-            for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-            {
-                if (FluidHelper.isFillableBlock(world, pos.clone().modifyPositionFromSide(dir)))
-                {
-                    return true;
-                }
-            }
-        }
-        return flag;
+        return FluidHelper.drainBlock(world, pos, false) != null || FluidHelper.isFillableFluid(world, pos);
     }
 
     public boolean isValidResult(Vector3 node)
@@ -171,7 +195,12 @@ public class LiquidPathFinder
     /** Checks to see if we are done pathfinding */
     public boolean isDone(Vector3 vec)
     {
-        if (this.results.size() >= this.resultLimit || this.nodes.size() >= 4000)
+        if(this.runs > 1000)
+        {
+            return true;
+        }
+        if(this.resultsFound >= this.resultRun)
+        if (this.results.size() >= this.resultLimit || this.nodeList.size() >= 10000)
         {
             return true;
         }
@@ -179,18 +208,15 @@ public class LiquidPathFinder
     }
 
     /** Called to execute the pathfinding operation. */
-    public LiquidPathFinder start(final Vector3 startNode, final boolean fill)
+    public LiquidPathFinder start(final Vector3 startNode, int runCount, final boolean fill)
     {
         this.Start = startNode;
         this.fill = fill;
-        if (this.nodes.isEmpty())
-        {
-            this.findNodes(startNode);
-        }
-        else
-        {
-            this.find(ForgeDirection.UNKNOWN, startNode);
-        }
+        this.runs = 0;
+        this.resultsFound = 0;
+        this.resultRun = runCount;
+        this.find(ForgeDirection.UNKNOWN, startNode);
+
         this.refresh();
         this.sortBlockList(Start, results, !fill, fill);
         return this;
@@ -198,14 +224,14 @@ public class LiquidPathFinder
 
     public LiquidPathFinder reset()
     {
-        this.nodes.clear();
+        this.nodeList.clear();
         this.results.clear();
         return this;
     }
 
     public LiquidPathFinder refresh()
     {
-        Iterator<Vector3> it = this.nodes.iterator();
+        Iterator<Vector3> it = this.nodeList.iterator();
         while (it.hasNext())
         {
             Vector3 vec = it.next();
@@ -215,7 +241,7 @@ public class LiquidPathFinder
             }
             if (this.isValidResult(vec))
             {
-                this.results.add(vec);
+                this.addResult(vec);
             }
         }
         it = this.results.iterator();
@@ -228,7 +254,7 @@ public class LiquidPathFinder
             }
             if (this.isValidNode(vec))
             {
-                this.nodes.add(vec);
+                this.addNode(vec);
             }
         }
         return this;
@@ -272,8 +298,8 @@ public class LiquidPathFinder
                         }
                     }
                     //Check distance after that
-                    double distanceA = Vector3.distance(vecA, start);
-                    double distanceB = Vector3.distance(vecB, start);
+                    double distanceA = Vector2.distance(vecA.toVector2(), start.toVector2());
+                    double distanceB = Vector2.distance(vecB.toVector2(), start.toVector2());
                     if (Double.compare(distanceA, distanceB) != 0)
                     {
                         if (closest)
