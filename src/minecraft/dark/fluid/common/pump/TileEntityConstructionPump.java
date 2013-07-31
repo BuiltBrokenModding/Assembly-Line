@@ -78,12 +78,6 @@ public class TileEntityConstructionPump extends TileEntityStarterPump implements
         return null;
     }
 
-    @Override
-    public boolean canRun()
-    {
-        return super.canRun() && this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
-    }
-
     /** Gets the nextDrain in the list
      *
      * @param inputTile - input tile must be an instance of INetworkPipe

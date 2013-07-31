@@ -57,7 +57,7 @@ public class TileEntityStarterPump extends TileEntityMachine implements IToolRea
     {
         super.updateEntity();
 
-        if (this.ticks % 20 == 0)
+        if (this.ticks % 10 == 0)
         {
             this.currentWorldEdits = 0;
 
@@ -191,7 +191,7 @@ public class TileEntityStarterPump extends TileEntityMachine implements IToolRea
     @Override
     public boolean canRun()
     {
-        return super.canRun() && !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+        return super.canRun() && worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
     }
 
     @Override
