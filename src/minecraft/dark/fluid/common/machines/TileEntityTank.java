@@ -91,11 +91,17 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
             if (this.worldObj.isRemote)
             {
                 int id = dataStream.readInt();
-                if (id == 0)
+                if (id == 0 || id == 1)
                 {
-
-                    this.getTank().setFluid(FluidStack.loadFluidStackFromNBT(PacketManager.readNBTTagCompound(dataStream)));
-
+                    if (id == 0)
+                    {
+                        this.getTank().setFluid(FluidStack.loadFluidStackFromNBT(PacketManager.readNBTTagCompound(dataStream)));
+                    }
+                    else
+                    {
+                        this.getTank().setFluid(null);
+                        dataStream.readInt();
+                    }
                     this.renderConnection[0] = dataStream.readInt();
                     this.renderConnection[1] = dataStream.readInt();
                     this.renderConnection[2] = dataStream.readInt();
@@ -115,12 +121,12 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
     @Override
     public Packet getDescriptionPacket()
     {
-        FluidStack stack = new FluidStack(FluidRegistry.WATER, 0);
+        FluidStack stack = null;
         if (this.getTank().getFluid() != null && this.getTank().getFluid().getFluid() != null)
         {
             stack = this.getTank().getFluid();
         }
-        return PacketManager.getPacket(FluidMech.CHANNEL, this, 0, stack.writeToNBT(new NBTTagCompound()), this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
+        return PacketManager.getPacket(FluidMech.CHANNEL, this, stack != null ? 0 : 1, stack != null ? stack.writeToNBT(new NBTTagCompound()) : 1, this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
     }
 
     /** gets the current color mark of the pipe */
