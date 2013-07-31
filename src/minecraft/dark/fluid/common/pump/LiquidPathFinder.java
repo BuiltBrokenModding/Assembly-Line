@@ -66,7 +66,7 @@ public class LiquidPathFinder
     {
         if (node == null)
         {
-            return true;
+            return false;
         }
         try
         {
@@ -118,7 +118,7 @@ public class LiquidPathFinder
     {
         Vector3 vec = origin.clone().modifyPositionFromSide(direction);
         double distance = vec.toVector2().distanceTo(this.Start.toVector2());
-        if (distance <= this.range && this.isValidNode(vec) & !this.nodes.contains(vec))
+        if (distance <= this.range && this.isValidNode(vec))
         {
             if (this.findNodes(vec))
             {
@@ -131,7 +131,7 @@ public class LiquidPathFinder
     /** Checks to see if this node is valid to path find threw */
     public boolean isValidNode(Vector3 pos)
     {
-        if (pos == null)
+        if (pos == null || this.nodes.contains(pos))
         {
             return false;
         }
@@ -141,18 +141,19 @@ public class LiquidPathFinder
         {
             return false;
         }
+        boolean flag = FluidHelper.drainBlock(world, pos, false) != null || FluidHelper.isFillableFluid(world, pos);
         /* Fillable blocks need to be connected to fillable fluid blocks to be valid */
-        if (this.fill && FluidHelper.isFillableBlock(world, pos))
+        if (this.fill && flag)
         {
             for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
             {
-                if (FluidHelper.isFillableFluid(world, pos.clone().modifyPositionFromSide(dir)) || FluidHelper.drainBlock(world, pos, false) != null)
+                if (FluidHelper.isFillableBlock(world, pos.clone().modifyPositionFromSide(dir)))
                 {
                     return true;
                 }
             }
         }
-        return FluidHelper.drainBlock(world, pos, false) != null || FluidHelper.isFillableFluid(world, pos);
+        return flag;
     }
 
     public boolean isValidResult(Vector3 node)
@@ -220,9 +221,14 @@ public class LiquidPathFinder
         it = this.results.iterator();
         while (it.hasNext())
         {
-            if (!this.isValidResult(it.next()))
+            Vector3 vec = it.next();
+            if (!this.isValidResult(vec))
             {
                 it.remove();
+            }
+            if (this.isValidNode(vec))
+            {
+                this.nodes.add(vec);
             }
         }
         return this;
