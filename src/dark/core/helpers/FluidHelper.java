@@ -143,7 +143,7 @@ public class FluidHelper
     /** Checks to see if a non-fluid block is able to be filled with fluid */
     public static boolean isFillableBlock(World world, Vector3 node)
     {
-        if (world == null || node == null || isFillableFluid(world, node))
+        if (world == null || node == null)
         {
             return false;
         }
@@ -151,11 +151,15 @@ public class FluidHelper
         int blockID = node.getBlockID(world);
         int meta = node.getBlockMetadata(world);
         Block block = Block.blocksList[blockID];
-        if (block == null || block.blockID == 0 || block.isAirBlock(world, node.intX(), node.intY(), node.intZ()))
+        if (drainBlock(world, node, false) != null)
+        {
+            return false;
+        }
+        else if (block == null || block.blockID == 0 || block.isAirBlock(world, node.intX(), node.intY(), node.intZ()))
         {
             return true;
         }
-        else if (block.isBlockReplaceable(world, node.intX(), node.intY(), node.intZ()) || replacableBlockMeta.contains(new Pair<Integer, Integer>(blockID, meta)) || replacableBlocks.contains(block))
+        else if (!(block instanceof IFluidBlock || block instanceof BlockFluid) && block.isBlockReplaceable(world, node.intX(), node.intY(), node.intZ()) || replacableBlockMeta.contains(new Pair<Integer, Integer>(blockID, meta)) || replacableBlocks.contains(block))
         {
             return true;
         }
@@ -173,10 +177,13 @@ public class FluidHelper
         int blockID = node.getBlockID(world);
         int meta = node.getBlockMetadata(world);
         Block block = Block.blocksList[blockID];
-
-        if (block instanceof IFluidBlock || block instanceof BlockFluid)
+        //TODO when added change this to call canFill and fill
+        if (drainBlock(world, node, false) != null)
         {
-            //TODO when added change this to call canFill and fill
+            return false;
+        }
+        else if (block instanceof IFluidBlock || block instanceof BlockFluid)
+        {
             return meta != 0;
         }
         return false;
@@ -211,7 +218,7 @@ public class FluidHelper
                     }
                 }
 
-                node.setBlock(world, stack.getFluid().getBlockID(), 0, 2);
+                node.setBlock(world, stack.getFluid().getBlockID());
             }
             return FluidContainerRegistry.BUCKET_VOLUME;
         }
