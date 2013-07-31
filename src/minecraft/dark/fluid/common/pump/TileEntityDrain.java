@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -15,6 +16,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
+import dark.api.IToolReadOut.EnumTools;
 import dark.api.fluid.IDrain;
 import dark.core.helpers.FluidHelper;
 import dark.core.helpers.Pair;
@@ -33,6 +35,11 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
     private LiquidPathFinder pathDrain;
     private LiquidPathFinder pathFill;
 
+    public boolean canDrain()
+    {
+        return this.getBlockMetadata() < 6;
+    }
+
     public LiquidPathFinder getFillFinder()
     {
         if (pathFill == null)
@@ -45,7 +52,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
     @Override
     public Set<Vector3> getFillList()
     {
-        return this.getLiquidFinder().refresh().results;
+        return this.getFillFinder().refresh().results;
     }
 
     public LiquidPathFinder getLiquidFinder()
@@ -60,7 +67,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
     @Override
     public Set<Vector3> getFluidList()
     {
-        return this.getFillFinder().refresh().results;
+        return this.getLiquidFinder().refresh().results;
     }
 
     @Override
@@ -79,11 +86,6 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
                 this.getLiquidFinder().refresh().start(new Vector3(this).modifyPositionFromSide(this.getDirection()), false);
             }
 
-            if (this.getFillFinder().results.size() < TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS + 10)
-            {
-                this.getFillFinder().refresh().start(new Vector3(this).modifyPositionFromSide(this.getDirection()), true);
-            }
-
         }
     }
 
@@ -99,15 +101,20 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
                 return 0;
             }
 
+            if (this.getFillFinder().results.size() < TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS + 10)
+            {
+                this.getFillFinder().refresh().start(new Vector3(this).modifyPositionFromSide(this.getDirection()), true);
+            }
+
             fillVolume = resource.amount;
 
-            System.out.println("Drain>>FillArea>>Targets>> " + getLiquidFinder().results.size());
+            System.out.println("Drain>>FillArea>>Targets>> " + getFillFinder().results.size());
 
             List<Vector3> fluids = new ArrayList<Vector3>();
             List<Vector3> blocks = new ArrayList<Vector3>();
-            List<Vector3> drained = new ArrayList<Vector3>();
+            List<Vector3> filled = new ArrayList<Vector3>();
             /* Sort results out into two groups and clear the rest out of the result list */
-            Iterator<Vector3> it = this.getLiquidFinder().results.iterator();
+            Iterator<Vector3> it = this.getFillFinder().refresh().results.iterator();
             while (it.hasNext())
             {
                 Vector3 vec = it.next();
@@ -139,7 +146,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 
                     if (doFill)
                     {
-                        drained.add(loc);
+                        filled.add(loc);
                         this.currentWorldEdits++;
                         if (!this.updateQue.contains(loc))
                         {
@@ -164,7 +171,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 
                     if (doFill)
                     {
-                        drained.add(loc);
+                        filled.add(loc);
                         this.currentWorldEdits++;
                         if (!this.updateQue.contains(loc))
                         {
@@ -174,7 +181,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 
                 }
             }
-            this.getLiquidFinder().results.removeAll(drained);
+            this.getLiquidFinder().results.removeAll(filled);
             System.out.println("Drain>>FillArea>>Filling>>Filled>>" + (doFill ? "" : "Sim>>") + (resource.amount - fillVolume) + "mb");
             return Math.max(resource.amount - fillVolume, 0);
         }
@@ -209,13 +216,13 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
     @Override
     public boolean canFill(ForgeDirection from, Fluid fluid)
     {
-        return this.getDirection() != from;
+        return this.getDirection() != from && !this.canDrain();
     }
 
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
     {
-        if (resource == null)
+        if (resource == null || this.canDrain())
         {
             return 0;
         }
@@ -250,19 +257,29 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
     @Override
     public boolean canDrain(ForgeDirection direction)
     {
-        return direction == this.getDirection() && !this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+        return direction == this.getDirection() && !this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) && this.canDrain();
     }
 
     @Override
     public boolean canFill(ForgeDirection direction)
     {
-        return this.canDrain(direction);
+        return direction == this.getDirection() && !this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) && !this.canDrain();
     }
 
     @Override
     public void onUse(Vector3 vec)
     {
         this.currentWorldEdits++;
+    }
+
+    @Override
+    public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
+    {
+        if (tool != null && tool == EnumTools.PIPE_GUAGE)
+        {
+            return " F:" + this.getFillList().size() + "  D:" + this.getFluidList().size();
+        }
+        return super.getMeterReading(user, side, tool);
     }
 
 }
