@@ -136,7 +136,7 @@ public class BlockCrate extends BlockAssembly
             {
                 if (checkTile instanceof TileEntityCrate)
                 {
-                    AssemblyLine.recipeLoader.blockCrate.tryInsert(((TileEntityCrate) checkTile), player, allMode, false);
+                    this.tryInsert(((TileEntityCrate) checkTile), player, allMode, false);
                 }
             }
         }
@@ -177,7 +177,7 @@ public class BlockCrate extends BlockAssembly
 
         if (currentStack != null)
         {
-            if (currentStack.getItem().itemID == AssemblyLine.recipeLoader.blockCrate.blockID)
+            if (currentStack.getItem().itemID == this.blockID)
             {
                 ItemStack containedStack = ItemBlockCrate.getContainingItemStack(currentStack);
                 ItemStack crateStack = tileEntity.getSampleStack();
@@ -319,7 +319,7 @@ public class BlockCrate extends BlockAssembly
 
         if (containingStack == null || containingStack != null && containingStack.isItemEqual(itemStack))
         {
-            int room = (tileEntity.getInventory().getSizeInventory() * 64) - (containingStack != null ? containingStack.stackSize : 0);
+            int room = Math.max((tileEntity.getInventory().getSizeInventory() * 64) - (containingStack != null ? containingStack.stackSize : 0), 0);
             if (itemStack.stackSize <= room)
             {
                 tileEntity.addToStack(itemStack);
@@ -349,7 +349,7 @@ public class BlockCrate extends BlockAssembly
         {
             TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
             ItemStack containingStack = tileEntity.getSampleStack();
-            tileEntity.buildSampleStack(false);
+            tileEntity.buildSampleStack();
 
             if (containingStack != null)
             {

@@ -25,6 +25,8 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
 
     /** delay from last click */
     public long prevClickTime = -1000;
+    /** max meta size of the crate */
+    public static final int maxSize = 2;
 
     @Override
     public InventoryCrate getInventory()
@@ -36,20 +38,14 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
         return (InventoryCrate) this.inventory;
     }
 
-    @Override
-    public boolean canStore(ItemStack stack, int slot, ForgeDirection side)
+    /** Gets the sample stack that represent the total inv */
+    public ItemStack getSampleStack()
     {
-        return this.sampleStack == null || stack != null && stack.equals(sampleStack);
-    }
-
-    @Override
-    public boolean canRemove(ItemStack stack, int slot, ForgeDirection side)
-    {
-        if (slot >= this.getSlotCount())
+        if (this.sampleStack == null)
         {
-            return false;
+            this.buildSampleStack();
         }
-        return true;
+        return this.sampleStack;
     }
 
     /** Turns the inventory array into a single stack of matching items. This assumes that all items
@@ -57,56 +53,48 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
      * same to prevent duplication issues
      *
      * @param force - force a rebuild of the inventory from the single stack created */
-    public void buildSampleStack(boolean force)
+    public void buildSampleStack()
     {
-        int count = 0;
-        int id = 0;
-        int meta = 0;
+        ItemStack stack = null;
 
         boolean rebuildBase = false;
 
         /* Creates the sample stack that is used as a collective itemstack */
         for (int i = 0; i < this.getInventory().getContainedItems().length; i++)
         {
-            ItemStack stack = this.getInventory().getContainedItems()[i];
-            if (stack != null && stack.itemID > 0 && stack.stackSize > 0)
+            ItemStack s = this.getInventory().getContainedItems()[i];
+            if (s != null && s.itemID > 0 && s.stackSize > 0)
             {
-                id = this.getInventory().getContainedItems()[i].itemID;
-                meta = this.getInventory().getContainedItems()[i].getItemDamage();
-                int ss = this.getInventory().getContainedItems()[i].stackSize;
-
-                count += ss;
-
-                if (ss > this.getInventory().getContainedItems()[i].getMaxStackSize())
+                if (stack == null)
+                {
+                    stack = s.copy();
+                }
+                else
+                {
+                    stack.stackSize += this.getInventory().getContainedItems()[i].stackSize;
+                }
+                if (this.getInventory().getContainedItems()[i].stackSize > this.getInventory().getContainedItems()[i].getMaxStackSize())
                 {
                     rebuildBase = true;
                 }
             }
         }
-        if (id == 0 || count == 0)
+        if (stack == null || stack.itemID == 0 || stack.stackSize == 0)
         {
             this.sampleStack = null;
         }
         else
         {
-            this.sampleStack = new ItemStack(id, count, meta);
+            this.sampleStack = stack.copy();
         }
         /* if one stack is over sized this rebuilds the inv to redistribute the items in the slots */
-        if ((rebuildBase || force || this.getInventory().getContainedItems().length > this.getSlotCount()) && this.sampleStack != null)
+        if ((rebuildBase || this.getInventory().getContainedItems().length > this.getSlotCount()) && this.sampleStack != null)
         {
             this.getInventory().buildInventory(this.sampleStack);
         }
     }
 
-    public ItemStack getSampleStack()
-    {
-        if (this.sampleStack == null)
-        {
-            this.buildSampleStack(false);
-        }
-        return this.sampleStack;
-    }
-
+    /** Adds an item to the stack */
     public void addToStack(ItemStack stack, int amount)
     {
         if (stack != null)
@@ -115,11 +103,12 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
         }
     }
 
+    /** Adds the stack to the sample stack */
     public void addToStack(ItemStack stack)
     {
         if (stack != null)
         {
-            this.buildSampleStack(false);
+            this.buildSampleStack();
             boolean flag = false;
             if (this.sampleStack == null)
             {
@@ -134,10 +123,7 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
             if (flag)
             {
                 this.getInventory().buildInventory(this.sampleStack);
-                if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-                {
-                    PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj);
-                }
+                this.onInventoryChanged();
             }
         }
     }
@@ -156,11 +142,33 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
         }
     }
 
+    @Override
+    public boolean canStore(ItemStack stack, int slot, ForgeDirection side)
+    {
+        return this.sampleStack == null || stack != null && stack.equals(sampleStack);
+    }
+
+    @Override
+    public boolean canRemove(ItemStack stack, int slot, ForgeDirection side)
+    {
+        if (slot >= this.getSlotCount())
+        {
+            return false;
+        }
+        return true;
+    }
+
+    /** Gets the current slot count for the crate */
     public int getSlotCount()
     {
+        if (this.worldObj == null)
+        {
+            return TileEntityCrate.getSlotCount(TileEntityCrate.maxSize);
+        }
         return TileEntityCrate.getSlotCount(this.getBlockMetadata());
     }
 
+    /** Gets the slot count for the crate meta */
     public static int getSlotCount(int metadata)
     {
         if (metadata >= 2)
@@ -171,7 +179,6 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
         {
             return 64;
         }
-
         return 32;
     }
 
@@ -190,16 +197,8 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
             {
                 if (dataStream.readBoolean())
                 {
-                    if (this.sampleStack == null)
-                    {
-                        this.sampleStack = new ItemStack(dataStream.readInt(), dataStream.readInt(), dataStream.readInt());
-                    }
-                    else
-                    {
-                        this.sampleStack.itemID = dataStream.readInt();
-                        this.sampleStack.stackSize = dataStream.readInt();
-                        this.sampleStack.setItemDamage(dataStream.readInt());
-                    }
+                    this.sampleStack = ItemStack.loadItemStackFromNBT(PacketManager.readNBTTagCompound(dataStream));
+                    this.sampleStack.stackSize = dataStream.readInt();
                 }
                 else
                 {
@@ -216,11 +215,11 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
     @Override
     public Packet getDescriptionPacket()
     {
-        this.buildSampleStack(false);
+        this.buildSampleStack();
         ItemStack stack = this.getSampleStack();
         if (stack != null)
         {
-            return PacketManager.getPacket(AssemblyLine.CHANNEL, this, true, stack.itemID, stack.stackSize, stack.getItemDamage());
+            return PacketManager.getPacket(AssemblyLine.CHANNEL, this, true, stack.writeToNBT(new NBTTagCompound()), stack.stackSize);
         }
         else
         {
@@ -233,18 +232,19 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
     public void readFromNBT(NBTTagCompound nbt)
     {
         super.readFromNBT(nbt);
-        /* Load inventory old data if present */
-        this.getInventory().loadInv(nbt);
         /* Load current two inv methods */
         ItemStack stack = null;
-        if (!nbt.hasKey("Items") && nbt.hasKey("itemID") && nbt.hasKey("itemMeta"))
+        int count = nbt.getInteger("Count");
+        if (nbt.hasKey("itemID"))
         {
-            stack = new ItemStack(nbt.getInteger("itemID"), nbt.getInteger("Count"), nbt.getInteger("itemMeta"));
+            stack = new ItemStack(nbt.getInteger("itemID"), count, nbt.getInteger("itemMeta"));
         }
         else
         {
             stack = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("stack"));
+            stack.stackSize = count;
         }
+
         /* Only load sample stack if the read stack is valid */
         if (stack != null && stack.itemID != 0 && stack.stackSize > 0)
         {
@@ -259,13 +259,13 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
     {
         super.writeToNBT(nbt);
         /* Re-Build sample stack for saving */
-        this.buildSampleStack(false);
+        this.buildSampleStack();
+        ItemStack stack = this.getSampleStack();
         /* Save sample stack */
-        if (this.getSampleStack() != null)
+        if (stack != null)
         {
-            NBTTagCompound tag = new NBTTagCompound();
-            this.getSampleStack().writeToNBT(tag);
-            nbt.setCompoundTag("stack", tag);
+            nbt.setInteger("Count", stack.stackSize);
+            nbt.setCompoundTag("stack", stack.writeToNBT(new NBTTagCompound()));
         }
 
     }
