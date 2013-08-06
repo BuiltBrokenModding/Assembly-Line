@@ -15,7 +15,6 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import dark.api.IExternalInv;
-import dark.api.IInvBox;
 import dark.assembly.common.AssemblyLine;
 import dark.core.blocks.TileEntityInv;
 
@@ -28,13 +27,13 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
     public long prevClickTime = -1000;
 
     @Override
-    public IInvBox getInventory()
+    public InventoryCrate getInventory()
     {
         if (this.inventory == null)
         {
             inventory = new InventoryCrate(this);
         }
-        return this.inventory;
+        return (InventoryCrate) this.inventory;
     }
 
     @Override
@@ -234,16 +233,24 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
     public void readFromNBT(NBTTagCompound nbt)
     {
         super.readFromNBT(nbt);
+        /* Crate data */
+        this.blockMetadata = nbt.getInteger("size");
+        /* Load inventory old data if present */
         this.getInventory().loadInv(nbt);
-        if (nbt.hasKey("Items"))
+        /* Load current two inv methods */
+        ItemStack stack = null;
+        if (!nbt.hasKey("Items") && nbt.hasKey("itemID") && nbt.hasKey("itemMeta"))
         {
-            ItemStack stack = new ItemStack(nbt.getInteger("itemID"), nbt.getInteger("Count"), nbt.getInteger("itemMeta"));
-            this.blockMetadata = nbt.getInteger("size");
-            if (stack != null && stack.itemID != 0 && stack.stackSize > 0)
-            {
-                this.sampleStack = stack;
-                this.getInventory().buildInventory(this.sampleStack);
-            }
+            stack = new ItemStack(nbt.getInteger("itemID"), nbt.getInteger("Count"), nbt.getInteger("itemMeta"));
+        }
+        else
+        {
+            stack = ItemStack.loadItemStackFromNBT(nbt);
+        }
+        if (stack != null && stack.itemID != 0 && stack.stackSize > 0)
+        {
+            this.sampleStack = stack;
+            this.getInventory().buildInventory(this.sampleStack);
         }
 
     }
@@ -252,15 +259,16 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
     public void writeToNBT(NBTTagCompound nbt)
     {
         super.writeToNBT(nbt);
+        /* Re-Build sample stack for saving */
         this.buildSampleStack(false);
-        ItemStack stack = this.getSampleStack();
-        nbt.setInteger("size", this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
-        if (stack != null)
+        /* Save sample stack */
+        if (this.getSampleStack() != null)
         {
-            nbt.setInteger("itemID", stack.itemID);
-            nbt.setInteger("itemMeta", stack.getItemDamage());
-            nbt.setInteger("Count", stack.stackSize);
+            this.getSampleStack().writeToNBT(nbt);
         }
+        /* save metadata to improve loading conditions */
+        nbt.setInteger("size", this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
+
     }
 
 }
