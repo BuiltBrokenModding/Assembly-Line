@@ -3,6 +3,7 @@ package dark.core.blocks;
 import java.util.Random;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -21,23 +22,27 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.IDisableable;
+import dark.api.IExternalInv;
+import dark.api.IInvBox;
 import dark.api.IPowerLess;
 import dark.api.PowerSystems;
 import dark.core.DarkMain;
 
-public abstract class TileEntityMachine extends TileEntityUniversalElectrical implements IDisableable, IPacketReceiver, IPowerLess
+public abstract class TileEntityMachine extends TileEntityUniversalElectrical implements ISidedInventory, IExternalInv, IDisableable, IPacketReceiver, IPowerLess
 {
 
     /** Forge Ore Directory name of the item to toggle power */
     public static String powerToggleItemID = "battery";
 
     protected Random random = new Random();
-
+    /** ticks to act dead or disabled */
     protected int ticksDisabled = 0;
 
     protected float WATTS_PER_TICK, MAX_WATTS;
 
     protected boolean unpowered, running;
+    /** Inventory used by this machine */
+    protected IInvBox inventory;
 
     public TileEntityMachine()
     {
@@ -242,5 +247,120 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
         super.writeToNBT(nbt);
         nbt.setInteger("disabledTicks", this.ticksDisabled);
         nbt.setBoolean("shouldPower", this.unpowered);
+    }
+
+    @Override
+    public IInvBox getInventory()
+    {
+        if (inventory == null)
+        {
+            inventory = new InvChest(this, 1);
+        }
+        return inventory;
+    }
+
+    @Override
+    public int getSizeInventory()
+    {
+        return this.getInventory().getSizeInventory();
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int i)
+    {
+        return this.getInventory().getStackInSlot(i);
+    }
+
+    @Override
+    public ItemStack decrStackSize(int i, int j)
+    {
+        return this.getInventory().decrStackSize(i, j);
+    }
+
+    @Override
+    public ItemStack getStackInSlotOnClosing(int i)
+    {
+        return this.getInventory().getStackInSlotOnClosing(i);
+    }
+
+    @Override
+    public void setInventorySlotContents(int i, ItemStack itemstack)
+    {
+        this.getInventory().setInventorySlotContents(i, itemstack);
+
+    }
+
+    @Override
+    public String getInvName()
+    {
+        return this.getInventory().getInvName();
+    }
+
+    @Override
+    public boolean isInvNameLocalized()
+    {
+        return this.getInventory().isInvNameLocalized();
+    }
+
+    @Override
+    public int getInventoryStackLimit()
+    {
+        return this.getInventory().getInventoryStackLimit();
+    }
+
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer entityplayer)
+    {
+        return this.getInventory().isUseableByPlayer(entityplayer);
+    }
+
+    @Override
+    public void openChest()
+    {
+        this.getInventory().openChest();
+
+    }
+
+    @Override
+    public void closeChest()
+    {
+        this.getInventory().closeChest();
+
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int i, ItemStack itemstack)
+    {
+        return this.getInventory().isItemValidForSlot(i, itemstack);
+    }
+
+    @Override
+    public int[] getAccessibleSlotsFromSide(int var1)
+    {
+        return this.getInventory().getAccessibleSlotsFromSide(var1);
+    }
+
+    @Override
+    public boolean canInsertItem(int i, ItemStack itemstack, int j)
+    {
+        return this.getInventory().canInsertItem(i, itemstack, j);
+    }
+
+    @Override
+    public boolean canExtractItem(int i, ItemStack itemstack, int j)
+    {
+        return this.getInventory().canExtractItem(i, itemstack, j);
+    }
+
+    @Override
+    public boolean canStore(ItemStack stack, int slot, ForgeDirection side)
+    {
+        return false;
+    }
+
+    @Override
+    public boolean canRemove(ItemStack stack, int slot, ForgeDirection side)
+    {
+        return false;
     }
 }
