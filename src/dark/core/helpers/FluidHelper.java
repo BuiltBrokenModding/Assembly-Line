@@ -1,7 +1,10 @@
 package dark.core.helpers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;
@@ -12,6 +15,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
@@ -272,5 +276,40 @@ public class FluidHelper
             return ((IFluidHandler) entity).fill(direction.getOpposite(), stack, doFill);
         }
         return 0;
+    }
+
+    /** Builds a list of fluidStacks from FluidTankInfo general taken from an instanceof
+     * IFluidHandler */
+    public static List<FluidStack> getFluidList(FluidTankInfo... fluidTankInfos)
+    {
+        List<FluidStack> stackList = new ArrayList<FluidStack>();
+        HashMap<FluidStack, Integer> map = new HashMap<FluidStack, Integer>();
+        if (fluidTankInfos != null)
+        {
+            for (int i = 0; i < fluidTankInfos.length; i++)
+            {
+                FluidTankInfo info = fluidTankInfos[i];
+                if (info != null && info.fluid != null)
+                {
+                    FluidStack stack = info.fluid;
+                    if (map.containsKey(FluidHelper.getStack(stack, 0)))
+                    {
+                        map.put(FluidHelper.getStack(stack, 0), map.get(FluidHelper.getStack(stack, 0)) + stack.amount);
+                    }
+                    else
+                    {
+                        map.put(FluidHelper.getStack(stack, 0), stack.amount);
+                    }
+                }
+            }
+            Iterator<Entry<FluidStack, Integer>> it = map.entrySet().iterator();
+            while (it.hasNext())
+            {
+                Entry<FluidStack, Integer> entry = it.next();
+                stackList.add(FluidHelper.getStack(entry.getKey(), entry.getValue()));
+            }
+        }
+        return stackList;
+
     }
 }
