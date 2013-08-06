@@ -118,10 +118,10 @@ public class ItemBlockCrate extends ItemBlock
                     TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
                     int count = containingItem.stackSize;
 
-                    for (int slot = 0; slot < tileEntity.getSizeInventory(); slot++)
+                    for (int slot = 0; slot < tileEntity.getInventory().getSizeInventory(); slot++)
                     {
                         int stackSize = Math.min(64, count);
-                        tileEntity.setInventorySlotContents(slot, new ItemStack(containingItem.itemID, stackSize, containingItem.getItemDamage()));
+                        tileEntity.getInventory().setInventorySlotContents(slot, new ItemStack(containingItem.itemID, stackSize, containingItem.getItemDamage()));
                         count -= stackSize;
 
                         if (count <= 0)

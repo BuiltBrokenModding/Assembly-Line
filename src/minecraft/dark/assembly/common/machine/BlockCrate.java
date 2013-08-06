@@ -19,7 +19,7 @@ import dark.assembly.common.AssemblyLine;
 
 /** A block that allows the placement of mass amount of a specific item within it. It will be allowed
  * to go on Conveyor Belts
- * 
+ *
  * @author Calclavia */
 public class BlockCrate extends BlockAssembly
 {
@@ -208,7 +208,7 @@ public class BlockCrate extends BlockAssembly
     }
 
     /** Inserts all items of the same type this player has into the crate.
-     * 
+     *
      * @return True on success */
     public boolean insertAllItems(TileEntityCrate tileEntity, EntityPlayer player)
     {
@@ -253,7 +253,7 @@ public class BlockCrate extends BlockAssembly
     }
 
     /** Ejects and item out of the crate and spawn it under the player entity.
-     * 
+     *
      * @param tileEntity
      * @param player
      * @param requestSize - The maximum stack size to take out. Default should be 64.
@@ -267,9 +267,9 @@ public class BlockCrate extends BlockAssembly
             int ammountEjected = 0;
             if (sampleStack != null && requestSize > 0)
             {
-                for (int slot = 0; slot < tileEntity.getSizeInventory(); slot++)
+                for (int slot = 0; slot < tileEntity.getInventory().getSizeInventory(); slot++)
                 {
-                    ItemStack slotStack = tileEntity.getStackInSlot(slot);
+                    ItemStack slotStack = tileEntity.getInventory().getStackInSlot(slot);
 
                     if (slotStack != null && slotStack.stackSize > 0)
                     {
@@ -288,7 +288,7 @@ public class BlockCrate extends BlockAssembly
                         {
                             slotStack = null;
                         }
-                        tileEntity.setInventorySlotContents(slot, slotStack);
+                        tileEntity.getInventory().setInventorySlotContents(slot, slotStack);
 
                     }
                     if (ammountEjected >= requestSize)
@@ -305,7 +305,7 @@ public class BlockCrate extends BlockAssembly
     }
 
     /** Puts an itemStack into the crate.
-     * 
+     *
      * @param tileEntity
      * @param itemStack */
     public static ItemStack addStackToCrate(TileEntityCrate tileEntity, ItemStack itemStack)
@@ -319,7 +319,7 @@ public class BlockCrate extends BlockAssembly
 
         if (containingStack == null || containingStack != null && containingStack.isItemEqual(itemStack))
         {
-            int room = (tileEntity.getSizeInventory() * 64) - (containingStack != null ? containingStack.stackSize : 0);
+            int room = (tileEntity.getInventory().getSizeInventory() * 64) - (containingStack != null ? containingStack.stackSize : 0);
             if (itemStack.stackSize <= room)
             {
                 tileEntity.addToStack(itemStack);
@@ -367,9 +367,9 @@ public class BlockCrate extends BlockAssembly
                     var13.delayBeforeCanPickup = 10;
                     world.spawnEntityInWorld(var13);
 
-                    for (int i = 0; i < tileEntity.getSizeInventory(); i++)
+                    for (int i = 0; i < tileEntity.getInventory().getSizeInventory(); i++)
                     {
-                        tileEntity.setInventorySlotContents(i, null);
+                        tileEntity.getInventory().setInventorySlotContents(i, null);
                     }
                     world.setBlock(x, y, z, 0, 0, 3);
                     return true;
