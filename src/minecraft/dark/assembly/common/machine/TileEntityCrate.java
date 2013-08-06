@@ -233,8 +233,6 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
     public void readFromNBT(NBTTagCompound nbt)
     {
         super.readFromNBT(nbt);
-        /* Crate data */
-        this.blockMetadata = nbt.getInteger("size");
         /* Load inventory old data if present */
         this.getInventory().loadInv(nbt);
         /* Load current two inv methods */
@@ -245,8 +243,9 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
         }
         else
         {
-            stack = ItemStack.loadItemStackFromNBT(nbt);
+            stack = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("stack"));
         }
+        /* Only load sample stack if the read stack is valid */
         if (stack != null && stack.itemID != 0 && stack.stackSize > 0)
         {
             this.sampleStack = stack;
@@ -264,10 +263,10 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
         /* Save sample stack */
         if (this.getSampleStack() != null)
         {
-            this.getSampleStack().writeToNBT(nbt);
+            NBTTagCompound tag = new NBTTagCompound();
+            this.getSampleStack().writeToNBT(tag);
+            nbt.setCompoundTag("stack", tag);
         }
-        /* save metadata to improve loading conditions */
-        nbt.setInteger("size", this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
 
     }
 
