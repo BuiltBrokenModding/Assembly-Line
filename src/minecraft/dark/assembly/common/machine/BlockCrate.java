@@ -93,7 +93,9 @@ public class BlockCrate extends BlockAssembly
                 {
                     if (current != null && tileEntity.getSampleStack() == null)
                     {
-                        BlockCrate.addStackToCrate(tileEntity, new ItemStack(current.itemID, TileEntityCrate.getSlotCount(world.getBlockMetadata(x, y, z)) * 64, current.getItemDamage()));
+                        ItemStack cStack = current.copy();
+                        cStack.stackSize = TileEntityCrate.getSlotCount(world.getBlockMetadata(x, y, z)) * 64;
+                        BlockCrate.addStackToCrate(tileEntity, cStack);
                     }
                 }
                 // Add items
