@@ -50,7 +50,7 @@ public class UniversalNetwork extends ElectricityNetwork
 			{
 				continue;
 			}
-			
+
 			if (tileEntity instanceof IElectrical)
 			{
 				if (!tileEntity.isInvalid())

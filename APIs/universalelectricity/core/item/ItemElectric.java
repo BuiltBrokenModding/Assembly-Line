@@ -127,7 +127,7 @@ public abstract class ItemElectric extends Item implements IItemElectric
 	{
 		if (itemStack.getTagCompound() == null)
 		{
-			return 0;
+			itemStack.setTagCompound(new NBTTagCompound());
 		}
 
 		float electricityStored = itemStack.getTagCompound().getFloat("electricity");

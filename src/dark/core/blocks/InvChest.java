@@ -12,19 +12,19 @@ import dark.api.IInvBox;
 public class InvChest implements IInvBox
 {
     /** Access able slots side all */
-    private int[] chestSlots;
+    protected int[] openSlots;
     /** Items contained in this inv */
-    private ItemStack[] items;
+    protected ItemStack[] items;
     /** Host tileEntity */
-    private TileEntity hostChest;
+    protected TileEntity hostTile;
     /** Host tileEntity as external inv */
-    private IExternalInv inv;
+    protected IExternalInv inv;
     /** Default slot max count */
-    private final int slots;
+    protected final int slots;
 
     public InvChest(TileEntity chest, IExternalInv inv, int slots)
     {
-        this.hostChest = chest;
+        this.hostTile = chest;
         this.slots = slots;
         this.inv = inv;
     }
@@ -134,21 +134,25 @@ public class InvChest implements IInvBox
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack)
     {
+        if(i >= this.getSizeInventory())
+        {
+            return false;
+        }
         return true;
     }
 
     @Override
     public int[] getAccessibleSlotsFromSide(int var1)
     {
-        if (chestSlots == null)
+        if (openSlots == null || openSlots.length != this.getSizeInventory())
         {
-            this.chestSlots = new int[this.getSizeInventory()];
-            for (int i = 0; i < this.chestSlots.length; i++)
+            this.openSlots = new int[this.getSizeInventory()];
+            for (int i = 0; i < this.openSlots.length; i++)
             {
-                chestSlots[i] = i;
+                openSlots[i] = i;
             }
         }
-        return this.chestSlots;
+        return this.openSlots;
     }
 
     @Override
@@ -172,13 +176,13 @@ public class InvChest implements IInvBox
     @Override
     public void onInventoryChanged()
     {
-        this.hostChest.onInventoryChanged();
+        this.hostTile.onInventoryChanged();
     }
 
     @Override
     public boolean isUseableByPlayer(EntityPlayer par1EntityPlayer)
     {
-        return this.hostChest.worldObj.getBlockTileEntity(this.hostChest.xCoord, this.hostChest.yCoord, this.hostChest.zCoord) != this.hostChest ? false : par1EntityPlayer.getDistanceSq((double) this.hostChest.xCoord + 0.5D, (double) this.hostChest.yCoord + 0.5D, (double) this.hostChest.zCoord + 0.5D) <= 64.0D;
+        return this.hostTile.worldObj.getBlockTileEntity(this.hostTile.xCoord, this.hostTile.yCoord, this.hostTile.zCoord) != this.hostTile ? false : par1EntityPlayer.getDistanceSq((double) this.hostTile.xCoord + 0.5D, (double) this.hostTile.yCoord + 0.5D, (double) this.hostTile.zCoord + 0.5D) <= 64.0D;
     }
 
     @Override

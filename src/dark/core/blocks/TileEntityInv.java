@@ -128,19 +128,18 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
         return false;
     }
 
+    @Override
     public void readFromNBT(NBTTagCompound nbt)
     {
         super.readFromNBT(nbt);
         this.getInventory().loadInv(nbt);
     }
 
-    /**
-     * Writes a tile entity to NBT.
-     */
+    @Override
     public void writeToNBT(NBTTagCompound nbt)
     {
-       super.writeToNBT(nbt);
-       this.getInventory().saveInv(nbt);
+        super.writeToNBT(nbt);
+        this.getInventory().saveInv(nbt);
     }
 
 }

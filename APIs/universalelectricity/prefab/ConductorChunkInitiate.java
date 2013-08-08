@@ -1,5 +1,8 @@
 package universalelectricity.prefab;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
@@ -41,7 +44,10 @@ public class ConductorChunkInitiate
 	{
 		if (event.getChunk() != null)
 		{
-			for (Object obj : event.getChunk().chunkTileEntityMap.values())
+			Collection<?> collection = new ArrayList();
+			collection.addAll(event.getChunk().chunkTileEntityMap.values());
+
+			for (Object obj : collection)
 			{
 				if (obj instanceof TileEntity)
 				{

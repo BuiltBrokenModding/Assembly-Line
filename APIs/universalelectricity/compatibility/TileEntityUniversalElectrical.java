@@ -7,11 +7,16 @@ import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergySource;
 import ic2.api.energy.tile.IEnergyTile;
+import ic2.api.item.IElectricItemManager;
+import ic2.api.item.ISpecialElectricItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
+import thermalexpansion.api.item.IChargeableItem;
 import universalelectricity.core.electricity.ElectricityPack;
+import universalelectricity.core.item.IItemElectric;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.tile.TileEntityElectrical;
 import buildcraft.api.power.IPowerReceptor;
@@ -33,12 +38,73 @@ public abstract class TileEntityUniversalElectrical extends TileEntityElectrical
 	protected boolean isAddedToEnergyNet;
 	public PowerHandler bcPowerHandler;
 	public Type bcBlockType = Type.MACHINE;
+	public float maxInputEnergy = 100;
 
+	/**
+	 * Recharges electric item.
+	 */
+	@Override
+	public void recharge(ItemStack itemStack)
+	{
+		if (itemStack != null)
+		{
+			if (itemStack.getItem() instanceof IItemElectric)
+			{
+				super.recharge(itemStack);
+			}
+			else if (itemStack.getItem() instanceof ISpecialElectricItem)
+			{
+				ISpecialElectricItem electricItem = (ISpecialElectricItem) itemStack.getItem();
+				IElectricItemManager manager = electricItem.getManager(itemStack);
+				float energy = Math.max(this.getProvide(ForgeDirection.UNKNOWN) * Compatibility.IC2_RATIO, 0);
+				energy = manager.charge(itemStack, (int) (energy * Compatibility.TO_IC2_RATIO), 0, false, false) * Compatibility.IC2_RATIO;
+				this.provideElectricity(energy, true);
+			}
+			else if (itemStack.getItem() instanceof IChargeableItem)
+			{
+				float accepted = ((IChargeableItem) itemStack.getItem()).receiveEnergy(itemStack, this.getProvide(ForgeDirection.UNKNOWN) * Compatibility.BC3_RATIO, true);
+				this.provideElectricity(accepted, true);
+			}
+		}
+	}
+
+	/**
+	 * Discharges electric item.
+	 */
+	@Override
+	public void discharge(ItemStack itemStack)
+	{
+		if (itemStack != null)
+		{
+			if (itemStack.getItem() instanceof IItemElectric)
+			{
+				super.discharge(itemStack);
+			}
+			else if (itemStack.getItem() instanceof ISpecialElectricItem)
+			{
+				ISpecialElectricItem electricItem = (ISpecialElectricItem) itemStack.getItem();
+
+				if (electricItem.canProvideEnergy(itemStack))
+				{
+					IElectricItemManager manager = electricItem.getManager(itemStack);
+					float energy = Math.max(this.getRequest(ForgeDirection.UNKNOWN) * Compatibility.IC2_RATIO, 0);
+					energy = manager.discharge(itemStack, (int) (energy * Compatibility.TO_IC2_RATIO), 0, false, false);
+					this.receiveElectricity(energy, true);
+				}
+			}
+			else if (itemStack.getItem() instanceof IChargeableItem)
+			{
+				float given = ((IChargeableItem) itemStack.getItem()).transferEnergy(itemStack, this.getRequest(ForgeDirection.UNKNOWN) * Compatibility.BC3_RATIO, true);
+				this.receiveElectricity(given, true);
+			}
+		}
+	}
+
+	@Override
 	public void initiate()
 	{
 		super.initiate();
-		this.bcPowerHandler = new PowerHandler(this, this.bcBlockType);
-		this.bcPowerHandler.configure(0, 100, 0, (int) Math.ceil(this.getMaxEnergyStored() * Compatibility.BC3_RATIO));
+		this.initBuildCraft();
 	}
 
 	@Override
@@ -47,17 +113,30 @@ public abstract class TileEntityUniversalElectrical extends TileEntityElectrical
 		super.updateEntity();
 
 		// Register to the IC2 Network
-		if (!this.worldObj.isRemote && !this.isAddedToEnergyNet)
+		if (!this.worldObj.isRemote)
 		{
-			if (Compatibility.isIndustrialCraft2Loaded())
+			if (!this.isAddedToEnergyNet)
 			{
-				MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
+				this.initIC();
 			}
 
-			this.isAddedToEnergyNet = true;
-		}
+			if (this.bcPowerHandler == null)
+			{
+				this.initBuildCraft();
+			}
 
-		this.produce();
+			if (Compatibility.isBuildcraftLoaded())
+			{
+				if (this.bcPowerHandler.getEnergyStored() > 0)
+				{
+					/**
+					 * Cheat BuildCraft powerHandler and always empty energy inside of it.
+					 */
+					this.receiveElectricity(this.bcPowerHandler.getEnergyStored() * Compatibility.BC3_RATIO, true);
+					this.bcPowerHandler.setEnergy(0);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -72,20 +151,11 @@ public abstract class TileEntityUniversalElectrical extends TileEntityElectrical
 				this.produceBuildCraft(outputDirection);
 			}
 		}
-
-		if (Compatibility.isBuildcraftLoaded())
-		{
-			/**
-			 * Cheat BuildCraft powerHandler and always empty energy inside of it.
-			 */
-			this.receiveElectricity(this.bcPowerHandler.getEnergyStored(), true);
-			this.bcPowerHandler.setEnergy(0);
-		}
 	}
 
 	public void produceIC2(ForgeDirection outputDirection)
 	{
-		if (!this.worldObj.isRemote)
+		if (!this.worldObj.isRemote && outputDirection != null && outputDirection != ForgeDirection.UNKNOWN)
 		{
 			float provide = this.getProvide(outputDirection);
 
@@ -94,11 +164,9 @@ public abstract class TileEntityUniversalElectrical extends TileEntityElectrical
 				if (Compatibility.isIndustrialCraft2Loaded())
 				{
 					int ic2Provide = (int) Math.ceil(provide * Compatibility.TO_IC2_RATIO);
-
 					EnergyTileSourceEvent event = new EnergyTileSourceEvent(this, ic2Provide);
 					MinecraftForge.EVENT_BUS.post(event);
-					this.setEnergyStored(this.getEnergyStored() - ((ic2Provide * Compatibility.IC2_RATIO) - (event.amount * Compatibility.IC2_RATIO)));
-
+					this.provideElectricity((ic2Provide * Compatibility.IC2_RATIO) - (event.amount * Compatibility.IC2_RATIO), true);
 				}
 			}
 		}
@@ -106,7 +174,7 @@ public abstract class TileEntityUniversalElectrical extends TileEntityElectrical
 
 	public void produceBuildCraft(ForgeDirection outputDirection)
 	{
-		if (!this.worldObj.isRemote)
+		if (!this.worldObj.isRemote && outputDirection != null && outputDirection != ForgeDirection.UNKNOWN)
 		{
 			float provide = this.getProvide(outputDirection);
 
@@ -124,7 +192,7 @@ public abstract class TileEntityUniversalElectrical extends TileEntityElectrical
 						{
 							float bc3Provide = provide * Compatibility.TO_BC_RATIO;
 							float energyUsed = Math.min(receiver.receiveEnergy(this.bcBlockType, bc3Provide, outputDirection.getOpposite()), bc3Provide);
-							this.setEnergyStored(this.getEnergyStored() - (bc3Provide - (energyUsed * Compatibility.TO_BC_RATIO)));
+							this.provideElectricity((bc3Provide - (energyUsed * Compatibility.TO_BC_RATIO)), true);
 						}
 					}
 				}
@@ -161,6 +229,16 @@ public abstract class TileEntityUniversalElectrical extends TileEntityElectrical
 		super.onChunkUnload();
 	}
 
+	protected void initIC()
+	{
+		if (Compatibility.isIndustrialCraft2Loaded())
+		{
+			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
+		}
+
+		this.isAddedToEnergyNet = true;
+	}
+
 	private void unloadTileIC2()
 	{
 		if (this.isAddedToEnergyNet && this.worldObj != null)
@@ -183,20 +261,18 @@ public abstract class TileEntityUniversalElectrical extends TileEntityElectrical
 	@Override
 	public int injectEnergy(Direction directionFrom, int amount)
 	{
-		if (!directionFrom.toForgeDirection().equals(this.getInputDirections()))
+		if (this.getInputDirections().contains(directionFrom.toForgeDirection()))
 		{
-			return amount;
+			float convertedEnergy = amount * Compatibility.IC2_RATIO;
+			ElectricityPack toSend = ElectricityPack.getFromWatts(convertedEnergy, this.getVoltage());
+			float receive = this.receiveElectricity(directionFrom.toForgeDirection(), toSend, true);
+
+			// Return the difference, since injectEnergy returns left over energy, and
+			// receiveElectricity returns energy used.
+			return Math.round(amount - (receive * Compatibility.TO_IC2_RATIO));
 		}
 
-		float convertedEnergy = amount * Compatibility.IC2_RATIO;
-
-		ElectricityPack toSend = ElectricityPack.getFromWatts(convertedEnergy, this.getVoltage());
-
-		int receive = (int) Math.floor(this.receiveElectricity(directionFrom.toForgeDirection(), toSend, true));
-
-		// Return the difference, since injectEnergy returns left over energy, and
-		// receiveElectricity returns energy used.
-		return (int) Math.floor(amount - receive * Compatibility.TO_IC2_RATIO);
+		return amount;
 	}
 
 	@Override
@@ -220,9 +296,19 @@ public abstract class TileEntityUniversalElectrical extends TileEntityElectrical
 	/**
 	 * BuildCraft power support
 	 */
+	public void initBuildCraft()
+	{
+		if (this.bcPowerHandler == null)
+		{
+			this.bcPowerHandler = new PowerHandler(this, this.bcBlockType);
+		}
+		this.bcPowerHandler.configure(0, this.maxInputEnergy, 0, (int) Math.ceil(this.getMaxEnergyStored() * Compatibility.BC3_RATIO));
+	}
+
 	@Override
 	public PowerReceiver getPowerReceiver(ForgeDirection side)
 	{
+		this.initBuildCraft();
 		return this.bcPowerHandler.getPowerReceiver();
 	}
 

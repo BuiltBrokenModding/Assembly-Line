@@ -77,7 +77,7 @@ public class TranslationHelper
 		{
 			text = LanguageRegistry.instance().getStringLocalization(key);
 		}
-		
+
 		if (text == null || text == "")
 		{
 			text = LanguageRegistry.instance().getStringLocalization(key, "en_US");
