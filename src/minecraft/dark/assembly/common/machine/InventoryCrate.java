@@ -15,17 +15,17 @@ public class InventoryCrate extends InvChest
     /** Clones the single stack into an inventory format for automation interaction */
     public void buildInventory(ItemStack sampleStack)
     {
-        this.items = new ItemStack[this.getSizeInventory()];
+        this.containedItems= new ItemStack[this.getSizeInventory()];
         if (sampleStack != null)
         {
             ItemStack baseStack = sampleStack.copy();
             int itemsLeft = baseStack.stackSize;
 
-            for (int slot = 0; slot < this.items.length; slot++)
+            for (int slot = 0; slot < this.getContainedItems().length; slot++)
             {
                 int stackL = Math.min(Math.min(itemsLeft, baseStack.getMaxStackSize()), this.getInventoryStackLimit());
-                this.items[slot] = baseStack.copy();
-                this.items[slot].stackSize = stackL;
+                this.getContainedItems()[slot] = baseStack.copy();
+                this.getContainedItems()[slot].stackSize = stackL;
                 itemsLeft -= stackL;
                 if (baseStack.stackSize <= 0)
                 {
