@@ -6,9 +6,6 @@ import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.mech.steam.boiler.TileEntityBoiler;
-import dark.mech.steam.firebox.ContainerFireBox;
-import dark.mech.steam.firebox.GUIFireBox;
-import dark.mech.steam.firebox.TileEntityFireBox;
 import dark.mech.steam.steamengine.TileEntitySteamPiston;
 
 public class SteamProxy implements IGuiHandler
@@ -22,7 +19,7 @@ public class SteamProxy implements IGuiHandler
     public void init()
     {
         GameRegistry.registerTileEntity(TileEntityBoiler.class, "boiler");
-        GameRegistry.registerTileEntity(TileEntityFireBox.class, "fireBox");
+        //GameRegistry.registerTileEntity(TileEntityFireBox.class, "fireBox");
         GameRegistry.registerTileEntity(TileEntitySteamPiston.class, "steamPiston");
 
     }
@@ -42,7 +39,7 @@ public class SteamProxy implements IGuiHandler
             switch (ID)
             {
                 case 0:
-                    return new GUIFireBox(player.inventory, ((TileEntityFireBox) tileEntity));
+                    //return new GUIFireBox(player.inventory, ((TileEntityFireBox) tileEntity));
                     //case 1: return new GuiBoiler(player.inventory, ((TileEntityBoiler)tileEntity));
                     //case 2: return new GUISteamPiston(player.inventory, ((TileEntitySteamPiston)tileEntity));
             }
@@ -61,7 +58,7 @@ public class SteamProxy implements IGuiHandler
             switch (ID)
             {
                 case 0:
-                    return new ContainerFireBox(player.inventory, ((TileEntityFireBox) tileEntity));
+                    //return new ContainerFireBox(player.inventory, ((TileEntityFireBox) tileEntity));
                     //default: return new ContainerFake(player.inventory, (IInventory) tileEntity);
             }
         }

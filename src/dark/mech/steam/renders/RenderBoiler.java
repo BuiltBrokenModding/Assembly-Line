@@ -2,12 +2,16 @@ package dark.mech.steam.renders;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import dark.core.client.RenderMachine;
+import dark.core.helpers.ConnectionHelper;
+import dark.mech.steam.SteamPowerMain;
 import dark.mech.steam.boiler.TileEntityBoiler;
 
-public class RenderBoiler extends TileEntitySpecialRenderer
+public class RenderBoiler extends RenderMachine
 {
     int type = 0;
     private ModelTank model;
@@ -32,18 +36,18 @@ public class RenderBoiler extends TileEntitySpecialRenderer
         int meta = 0;
         if (connected[5] == null && connected[3] == null && connected[4] == null && connected[2] == null || ((TileEntityBoiler) tileEntity).tankCount < 2)
         {
-            bindTextureByName(dark.mech.steam + "tankTexture.png");
+            bindTextureByName(SteamPowerMain.instance.PREFIX, SteamPowerMain.MODEL_DIRECTORY + "tankTexture.png");
             model.generalRender(0.0625F);
         }
-        else if (MHelper.corner(tileEntity) == 0 || ((TileEntityBoiler) tileEntity).tankCount > 2)
+        else if (ConnectionHelper.corner(tileEntity) == 0 || ((TileEntityBoiler) tileEntity).tankCount > 2)
         {
-            bindTextureByName(dark.mech.steam + "tankBlock.png");
+            bindTextureByName(SteamPowerMain.instance.PREFIX, SteamPowerMain.MODEL_DIRECTORY + "tankBlock.png");
             model2.renderBlock(0.0625F);
         }
         else
         {
-            int corner = MHelper.corner(tileEntity);
-            bindTextureByName(dark.mech.steam + "CornerTank.png");
+            int corner = ConnectionHelper.corner(tileEntity);
+            bindTextureByName(SteamPowerMain.instance.PREFIX, SteamPowerMain.MODEL_DIRECTORY + "CornerTank.png");
             switch (corner)
             {
                 case 1:
@@ -63,6 +67,13 @@ public class RenderBoiler extends TileEntitySpecialRenderer
 
         }
         GL11.glPopMatrix();
+    }
+
+    @Override
+    public ResourceLocation getTexture(int block, int meta)
+    {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

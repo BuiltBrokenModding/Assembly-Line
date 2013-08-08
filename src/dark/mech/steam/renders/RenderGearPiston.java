@@ -2,12 +2,15 @@ package dark.mech.steam.renders;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import dark.core.client.RenderMachine;
+import dark.mech.steam.SteamPowerMain;
 import dark.mech.steam.steamengine.TileEntitySteamPiston;
 
-public class RenderGearPiston extends TileEntitySpecialRenderer
+public class RenderGearPiston extends RenderMachine
 {
     private ModelGearPiston model;
 
@@ -18,7 +21,7 @@ public class RenderGearPiston extends TileEntitySpecialRenderer
 
     public void renderTileEntityAt(TileEntitySteamPiston tileEntity, double d, double d1, double d2, float d3)
     {
-        bindTextureByName(dark.mech.steam + "GearShaftPiston.png");
+        bindTextureByName(SteamPowerMain.instance.PREFIX, SteamPowerMain.MODEL_DIRECTORY + "GearShaftPiston.png");
         GL11.glPushMatrix();
         GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
         GL11.glScalef(1.0F, -1F, -1F);
@@ -40,7 +43,7 @@ public class RenderGearPiston extends TileEntitySpecialRenderer
                 break;
         }
         model.renderGear(0.0625F);
-        model.renderR(0.0625F, tileEntity.pos);
+        model.renderR(0.0625F, 0);//TODO fix
         model.renderBody(0.0625F);
         model.renderBack(0.0625F);
         model.renderFront(0.0625F);
@@ -54,6 +57,13 @@ public class RenderGearPiston extends TileEntitySpecialRenderer
     {
         this.renderTileEntityAt(((TileEntitySteamPiston) var1), d, d1, d2, d3);
 
+    }
+
+    @Override
+    public ResourceLocation getTexture(int block, int meta)
+    {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

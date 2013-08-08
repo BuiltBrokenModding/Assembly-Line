@@ -2,6 +2,7 @@ package dark.mech.steam;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
 
 import org.lwjgl.opengl.GL11;
@@ -25,21 +26,21 @@ public class ItemRenderHelperS implements ISimpleBlockRenderingHandler
     @Override
     public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
     {
-        if (block.blockID == SteamPowerMain.boilers.blockID && metadata >= 0 && metadata <= 3)
+        if (block.blockID == SteamPowerMain.blockBoiler.blockID && metadata >= 0 && metadata <= 3)
         {
             GL11.glPushMatrix();
             GL11.glTranslatef((float) 0.0F, (float) 1F, (float) 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(SteamPowerMain.textureFile + "tankTexture.png"));
+            FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(SteamPowerMain.instance.PREFIX,SteamPowerMain.GUI_DIRECTORY + "tankTexture.png"));
             modelTank.generalRender(0.0625F);
             GL11.glPopMatrix();
         }
-        if (block.blockID == SteamPowerMain.heaters.blockID && metadata >= 0 && metadata <= 3)
+        if (block.blockID == SteamPowerMain.blockHeater.blockID && metadata >= 0 && metadata <= 3)
         {
             GL11.glPushMatrix();
             GL11.glTranslatef((float) 0.0F, (float) 1F, (float) 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(SteamPowerMain.textureFile + "Furnace.png"));
+            FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(SteamPowerMain.instance.PREFIX,SteamPowerMain.GUI_DIRECTORY  + "Furnace.png"));
             modelFurnace.genRender(0.0625F);
             GL11.glPopMatrix();
         }

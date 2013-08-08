@@ -1,11 +1,14 @@
 package dark.mech.steam.renders;
 
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-public class RenderFurnace extends TileEntitySpecialRenderer
+import dark.core.client.RenderMachine;
+import dark.mech.steam.SteamPowerMain;
+
+public class RenderFurnace extends RenderMachine
 {
     int type = 0;
     private ModelFurnace model;
@@ -18,7 +21,7 @@ public class RenderFurnace extends TileEntitySpecialRenderer
     @Override
     public void renderTileEntityAt(TileEntity te, double d, double d1, double d2, float d3)
     {
-        bindTextureByName(dark.mech.steam + "Furnace.png");
+        bindTextureByName(SteamPowerMain.instance.PREFIX, SteamPowerMain.MODEL_DIRECTORY + "Furnace.png");
         GL11.glPushMatrix();
         GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
         GL11.glScalef(1.0F, -1F, -1F);
@@ -40,6 +43,13 @@ public class RenderFurnace extends TileEntitySpecialRenderer
         }
         model.genRender(0.0625F);
         GL11.glPopMatrix();
+    }
+
+    @Override
+    public ResourceLocation getTexture(int block, int meta)
+    {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
