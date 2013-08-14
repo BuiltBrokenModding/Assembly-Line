@@ -1,8 +1,14 @@
 package dark.core.blocks;
 
+import java.util.Random;
+
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
@@ -17,7 +23,7 @@ import dark.core.DarkMain;
 /** Basic TileEntity Container class designed to be used by generic machines. It is suggested that
  * each mod using this create there own basic block extending this to reduce need to input config
  * file each time
- * 
+ *
  * @author Rseifert */
 public abstract class BlockMachine extends BlockAdvanced implements ITileEntityProvider
 {
@@ -96,8 +102,53 @@ public abstract class BlockMachine extends BlockAdvanced implements ITileEntityP
         return tileentity != null ? tileentity.receiveClientEvent(blockID, eventID) : false;
     }
 
-    public void dropEntireInventory(World par1World, int x, int y, int z, int par5, int par6)
+    public void dropEntireInventory(World world, int x, int y, int z, int par5, int par6)
     {
+        TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+        if (tileEntity != null)
+        {
+            if (tileEntity instanceof IInventory)
+            {
+                IInventory inventory = (IInventory) tileEntity;
+
+                for (int slot = 0; slot < inventory.getSizeInventory(); ++slot)
+                {
+                    ItemStack itemStack = inventory.getStackInSlot(slot);
+
+                    if (itemStack != null)
+                    {
+                        float deltaX = world.rand.nextFloat() * 0.8F + 0.1F;
+                        float deltaY = world.rand.nextFloat() * 0.8F + 0.1F;
+                        float deltaZ = world.rand.nextFloat() * 0.8F + 0.1F;
+
+                        while (itemStack.stackSize > 0)
+                        {
+                            int stackSplit = world.rand.nextInt(21) + 10;
+
+                            if (stackSplit > itemStack.stackSize)
+                            {
+                                stackSplit = itemStack.stackSize;
+                            }
+
+                            itemStack.stackSize -= stackSplit;
+                            EntityItem entityItem = new EntityItem(world, (x + deltaX), (y + deltaY), (z + deltaZ), new ItemStack(itemStack.itemID, stackSplit, itemStack.getItemDamage()));
+
+                            if (itemStack.hasTagCompound())
+                            {
+                                entityItem.getEntityItem().setTagCompound((NBTTagCompound) itemStack.getTagCompound().copy());
+                            }
+
+                            float var13 = 0.05F;
+                            entityItem.motionX = ((float) world.rand.nextGaussian() * var13);
+                            entityItem.motionY = ((float) world.rand.nextGaussian() * var13 + 0.2F);
+                            entityItem.motionZ = ((float) world.rand.nextGaussian() * var13);
+                            world.spawnEntityInWorld(entityItem);
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }

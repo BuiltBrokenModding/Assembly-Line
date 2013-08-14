@@ -14,7 +14,7 @@ public class InvChest implements IInvBox
     /** Access able slots side all */
     protected int[] openSlots;
     /** Items contained in this inv */
-    protected ItemStack[] items;
+    protected ItemStack[] containedItems;
     /** Host tileEntity */
     protected TileEntity hostTile;
     /** Host tileEntity as external inv */
@@ -43,30 +43,30 @@ public class InvChest implements IInvBox
     @Override
     public ItemStack getStackInSlot(int slot)
     {
-        return this.items[slot];
+        return this.getContainedItems()[slot];
     }
 
     @Override
     public ItemStack decrStackSize(int slot, int ammount)
     {
-        if (this.items[slot] != null)
+        if (this.getContainedItems()[slot] != null)
         {
             ItemStack var3;
 
-            if (this.items[slot].stackSize <= ammount)
+            if (this.getContainedItems()[slot].stackSize <= ammount)
             {
-                var3 = this.items[slot];
-                this.items[slot] = null;
+                var3 = this.getContainedItems()[slot];
+                this.getContainedItems()[slot] = null;
                 this.onInventoryChanged();
                 return var3;
             }
             else
             {
-                var3 = this.items[slot].splitStack(ammount);
+                var3 = this.getContainedItems()[slot].splitStack(ammount);
 
-                if (this.items[slot].stackSize == 0)
+                if (this.getContainedItems()[slot].stackSize == 0)
                 {
-                    this.items[slot] = null;
+                    this.getContainedItems()[slot] = null;
                 }
 
                 this.onInventoryChanged();
@@ -82,10 +82,10 @@ public class InvChest implements IInvBox
     @Override
     public ItemStack getStackInSlotOnClosing(int par1)
     {
-        if (this.items[par1] != null)
+        if (this.getContainedItems()[par1] != null)
         {
-            ItemStack var2 = this.items[par1];
-            this.items[par1] = null;
+            ItemStack var2 = this.getContainedItems()[par1];
+            this.getContainedItems()[par1] = null;
             return var2;
         }
         else
@@ -97,7 +97,7 @@ public class InvChest implements IInvBox
     @Override
     public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
     {
-        this.items[par1] = par2ItemStack;
+        this.getContainedItems()[par1] = par2ItemStack;
 
         if (par2ItemStack != null && par2ItemStack.stackSize > this.getInventoryStackLimit())
         {
@@ -188,45 +188,44 @@ public class InvChest implements IInvBox
     @Override
     public ItemStack[] getContainedItems()
     {
-        if (this.items == null)
+        if (this.containedItems == null)
         {
-            this.items = new ItemStack[this.getSizeInventory()];
+            this.containedItems = new ItemStack[this.getSizeInventory()];
         }
-        return this.items;
+        return this.containedItems;
     }
 
     @Override
     public void saveInv(NBTTagCompound nbt)
     {
-        NBTTagList var2 = new NBTTagList();
-        for (int var3 = 0; var3 < this.items.length; ++var3)
+        NBTTagList itemList = new NBTTagList();
+        for (int s = 0; s < this.getContainedItems().length; ++s)
         {
-            if (this.items[var3] != null)
+            if (this.getContainedItems()[s] != null)
             {
-                NBTTagCompound var4 = new NBTTagCompound();
-                var4.setByte("Slot", (byte) var3);
-                this.items[var3].writeToNBT(var4);
-                var2.appendTag(var4);
+                NBTTagCompound tag = new NBTTagCompound();
+                tag.setByte("Slot", (byte) s);
+                this.getContainedItems()[s].writeToNBT(tag);
+                itemList.appendTag(tag);
             }
         }
-        nbt.setTag("Items", var2);
+        nbt.setTag("Items", itemList);
     }
 
     @Override
     public void loadInv(NBTTagCompound nbt)
     {
         // chest inv reading
-        NBTTagList var2 = nbt.getTagList("Items");
-        this.items = new ItemStack[this.getSizeInventory()];
+        NBTTagList itemList = nbt.getTagList("Items");
 
-        for (int var3 = 0; var3 < var2.tagCount(); ++var3)
+        for (int s = 0; s < itemList.tagCount(); ++s)
         {
-            NBTTagCompound var4 = (NBTTagCompound) var2.tagAt(var3);
-            int var5 = var4.getByte("Slot") & 255;
+            NBTTagCompound tag = (NBTTagCompound) itemList.tagAt(s);
+            int slotID = tag.getByte("Slot") & 255;
 
-            if (var5 >= 0 && var5 < this.items.length)
+            if (slotID >= 0 && slotID < this.getContainedItems().length)
             {
-                this.items[var5] = ItemStack.loadItemStackFromNBT(var4);
+                this.getContainedItems()[slotID] = ItemStack.loadItemStackFromNBT(tag);
             }
         }
 

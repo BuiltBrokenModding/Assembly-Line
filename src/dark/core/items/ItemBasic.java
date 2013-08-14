@@ -15,13 +15,13 @@ public class ItemBasic extends Item
     public ItemBasic(int itemID, String name, Configuration config)
     {
         super(config.getItem(name, itemID).getInt());
-        this.setUnlocalizedName(DarkMain.getInstance().PREFIX + name);
+        this.setUnlocalizedName(name);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
     public void registerIcons(IconRegister iconRegister)
     {
-        this.itemIcon = iconRegister.registerIcon(this.getUnlocalizedName().replace("item.", ""));
+        this.itemIcon = iconRegister.registerIcon(DarkMain.getInstance().PREFIX + this.getUnlocalizedName().replace("item.", ""));
     }
 }
