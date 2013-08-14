@@ -1,10 +1,6 @@
 package dark.core.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.DarkMain;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -12,21 +8,20 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
 import buildcraft.api.tools.IToolWrench;
+import dark.core.DarkMain;
 
 public class ItemWrench extends ItemBasic implements IToolWrench
 {
+    static boolean damageWrench = false;
+
     public ItemWrench(int id, Configuration config)
     {
         super(id, "wrench", config);
+        damageWrench = config.get("general", "DamageWrench", false).getBoolean(false);
         this.setMaxStackSize(1);
+        this.setMaxDamage(500 + config.get("general", "AddedWrenchUses", 500).getInt());
         this.setCreativeTab(CreativeTabs.tabTools);
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerIcons(IconRegister iconRegister)
-    {
-        this.itemIcon = iconRegister.registerIcon(DarkMain.getInstance().PREFIX + "wrench");
+        this.func_111206_d(DarkMain.getInstance().PREFIX + "wrench");
     }
 
     @Override
@@ -75,7 +70,14 @@ public class ItemWrench extends ItemBasic implements IToolWrench
     @Override
     public void wrenchUsed(EntityPlayer player, int x, int y, int z)
     {
-        // TODO Auto-generated method stub
+        if(damageWrench && player != null && !player.worldObj.isRemote)
+        {
+            ItemStack stack = player.getHeldItem();
+            if(stack != null && stack.itemID == this.itemID)
+            {
+                stack.damageItem(1, player);
+            }
+        }
 
     }
 }

@@ -1,7 +1,5 @@
 package dark.core.blocks;
 
-import java.util.Random;
-
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;

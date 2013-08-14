@@ -142,8 +142,14 @@ public class DarkMain extends ModPrefab
         CONFIGURATION.load();
         /* BLOCKS */
         blockMulti = new BlockMulti(DarkMain.CONFIGURATION.getBlock("MultiBlock", getNextID()).getInt());
-        CoreRecipeLoader.battery = new ItemBattery("Battery", ITEM_ID_PREFIX++);
-        CoreRecipeLoader.wrench = new ItemWrench(ITEM_ID_PREFIX++, DarkMain.CONFIGURATION);
+        if (CONFIGURATION.get("general", "EnableBattery", true).getBoolean(true))
+        {
+            CoreRecipeLoader.battery = new ItemBattery("Battery", ITEM_ID_PREFIX++);
+        }
+        if (CONFIGURATION.get("general", "EnableWrench", true).getBoolean(true))
+        {
+            CoreRecipeLoader.wrench = new ItemWrench(ITEM_ID_PREFIX++, DarkMain.CONFIGURATION);
+        }
         if (CONFIGURATION.get("general", "LoadOre", true).getBoolean(true))
         {
             CoreRecipeLoader.blockOre = new BlockOre(getNextID(), CONFIGURATION);
@@ -153,10 +159,7 @@ public class DarkMain extends ModPrefab
         {
             CoreRecipeLoader.itemMetals = new ItemOreDirv(ITEM_ID_PREFIX++, CONFIGURATION);
         }
-        if (CONFIGURATION.hasChanged())
-        {
-            CONFIGURATION.save();
-        }
+        CONFIGURATION.save();
         /* CONFIG END */
 
     }
