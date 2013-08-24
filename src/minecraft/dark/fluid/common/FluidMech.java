@@ -193,10 +193,7 @@ public class FluidMech extends ModPrefab
         /* ITEM DECLARATION */
         FMRecipeLoader.itemParts = new ItemParts(FluidMech.CONFIGURATION.getItem("Parts", ITEM_ID_PREFIX++).getInt());
         FMRecipeLoader.itemGauge = new ItemTools(FluidMech.CONFIGURATION.getItem("PipeGuage", ITEM_ID_PREFIX++).getInt());
-        if (CONFIGURATION.hasChanged())
-        {
-            CONFIGURATION.save();
-        }
+        CONFIGURATION.save();
 
     }
 

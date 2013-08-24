@@ -19,6 +19,7 @@ import dark.api.fluid.IDrain;
 import dark.core.blocks.TileEntityMachine;
 import dark.core.helpers.FluidHelper;
 import dark.core.helpers.Pair;
+import dark.fluid.common.FluidMech;
 
 public class TileEntityStarterPump extends TileEntityMachine implements IToolReadOut, ITileConnector
 {
@@ -216,6 +217,12 @@ public class TileEntityStarterPump extends TileEntityMachine implements IToolRea
     public boolean canTileConnect(TileEntity entity, ForgeDirection direction)
     {
         return direction != ForgeDirection.DOWN;
+    }
+
+    @Override
+    public String getChannel()
+    {
+        return FluidMech.CHANNEL;
     }
 
 }

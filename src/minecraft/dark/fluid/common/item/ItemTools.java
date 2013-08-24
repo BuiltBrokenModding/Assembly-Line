@@ -54,7 +54,6 @@ public class ItemTools extends ItemBasic
             // pipe Guage
             if (meta == 0)
             {
-
                 if (blockEntity instanceof IToolReadOut)
                 {
                     String output = ((IToolReadOut) blockEntity).getMeterReading(player, ForgeDirection.getOrientation(side), EnumTools.PIPE_GUAGE);
