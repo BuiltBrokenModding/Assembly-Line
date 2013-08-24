@@ -109,13 +109,27 @@ public class NetworkSharedPower extends NetworkTileEntities implements IElectric
     @Override
     public float getEnergyStored()
     {
+        if (this.energy < 0)
+        {
+            this.energy = 0;
+        }
         return this.energy;
     }
 
     @Override
     public float getMaxEnergyStored()
     {
+        if (this.energyMax < 0)
+        {
+            this.energyMax = Math.abs(this.energyMax);
+        }
         return this.energyMax;
+    }
+
+    /** Space left to store more energy */
+    public float getEnergySpace()
+    {
+        return Math.max(this.getMaxEnergyStored() - this.getEnergyStored(), 0);
     }
 
     @Override
