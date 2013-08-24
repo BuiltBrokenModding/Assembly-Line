@@ -271,7 +271,7 @@ public class InvInteractionHelper
                     ItemStack slotStack = inventory.getStackInSlot(slot);
                     if (inventory.canExtractItem(slot, slotStack, direction.ordinal()))
                     {
-                        ItemStack itemStack = this.removeStackFromInventory(i, inventory, ammount);
+                        ItemStack itemStack = this.removeStackFromInventory(slot, inventory, ammount);
                         if (itemStack != null)
                         {
                             returnStack = itemStack;
