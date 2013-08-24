@@ -5,22 +5,24 @@ import java.util.List;
 import java.util.Random;
 
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.block.IConductor;
-import universalelectricity.core.grid.IElectricityNetwork;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
-import dark.api.INetworkPart;
+import dark.api.INetworkEnergyPart;
 import dark.assembly.common.AssemblyLine;
 import dark.core.blocks.TileEntityMachine;
+import dark.core.tile.network.NetworkSharedPower;
 import dark.core.tile.network.NetworkTileEntities;
 
 /** A class to be inherited by all machines on the assembly line. This class acts as a single peace
  * in a network of similar tiles allowing all to share power from one or more sources
  *
  * @author DarkGuardsman */
-public abstract class TileEntityAssembly extends TileEntityMachine implements INetworkPart, IPacketReceiver, IConductor
+public abstract class TileEntityAssembly extends TileEntityMachine implements IPacketReceiver, INetworkEnergyPart
 {
+    public static int refresh_min_rate = 20;
+    public static int refresh_diff = 9;
     /** Network used to link assembly machines together */
     private NetworkAssembly assemblyNetwork;
     /** Tiles that are connected to this */
@@ -54,13 +56,14 @@ public abstract class TileEntityAssembly extends TileEntityMachine implements IN
     @Override
     public void updateEntity()
     {
+        super.updateEntity();
         if (!this.worldObj.isRemote)
         {
             this.prevRunning = this.running;
-            super.updateEntity();
+
             if (ticks % updateTick == 0)
             {
-                this.updateTick = ((int) random.nextInt(10) + 20);
+                this.updateTick = ((int) random.nextInt(1 + refresh_diff) + refresh_min_rate);
                 this.refresh();
             }
             this.running = this.canRun();
@@ -157,46 +160,62 @@ public abstract class TileEntityAssembly extends TileEntityMachine implements IN
     }
 
     @Override
+    public boolean consumePower(float watts, boolean doDrain)
+    {
+        return ((NetworkSharedPower) this.getTileNetwork()).drainPower(this, watts, doDrain);
+    }
+
+    @Override
+    public float getRequest(ForgeDirection direction)
+    {
+        return this.WATTS_PER_TICK;
+    }
+
+    @Override
+    public void togglePowerMode()
+    {
+        ((NetworkSharedPower) this.getTileNetwork()).setPowerLess(this.runPowerLess());
+    }
+
+    @Override
+    public float getEnergyStored()
+    {
+        return ((NetworkSharedPower) this.getTileNetwork()).getEnergyStored();
+    }
+
+    @Override
+    public float getPartEnergy()
+    {
+        return this.energyStored;
+    }
+
+    @Override
+    public float getPartMaxEnergy()
+    {
+        return this.MAX_WATTS;
+    }
+
+    @Override
+    public void setPartEnergy(float energy)
+    {
+        this.energyStored = energy;
+    }
+
+    @Override
     public boolean mergeDamage(String effect)
     {
         this.onDisable(20);
         return true;
     }
 
+    @Override
+    public AxisAlignedBB getRenderBoundingBox()
+    {
+        return INFINITE_EXTENT_AABB;
+    }
+
     public String toString()
     {
         return "[AssemblyTile]@" + (new Vector3(this).toString());
     }
-
-    @Override
-    public IElectricityNetwork getNetwork()
-    {
-        return (this.getTileNetwork() instanceof IElectricityNetwork ? (IElectricityNetwork) this.getTileNetwork() : null);
-    }
-
-    @Override
-    public void setNetwork(IElectricityNetwork network)
-    {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public TileEntity[] getAdjacentConnections()
-    {
-        return this.connectedTiles.toArray(new TileEntity[this.connectedTiles.size()]);
-    }
-
-    @Override
-    public float getResistance()
-    {
-        return 0.01f;
-    }
-
-    @Override
-    public float getCurrentCapacity()
-    {
-        return 1000;
-    }
-
 }
