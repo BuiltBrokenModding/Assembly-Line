@@ -1,6 +1,8 @@
 package dark.core.blocks;
 
-import java.util.Random;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
@@ -26,7 +28,6 @@ import dark.api.IExternalInv;
 import dark.api.IInvBox;
 import dark.api.IPowerLess;
 import dark.api.PowerSystems;
-import dark.core.DarkMain;
 
 public abstract class TileEntityMachine extends TileEntityUniversalElectrical implements ISidedInventory, IExternalInv, IDisableable, IPacketReceiver, IPowerLess
 {
@@ -34,15 +35,27 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
     /** Forge Ore Directory name of the item to toggle power */
     public static String powerToggleItemID = "battery";
 
-    protected Random random = new Random();
     /** ticks to act dead or disabled */
     protected int ticksDisabled = 0;
 
     protected float WATTS_PER_TICK, MAX_WATTS;
 
-    protected boolean unpowered, running;
+    protected boolean unpowered, running, prevRunning;
     /** Inventory used by this machine */
     protected IInvBox inventory;
+
+    /** Default generic packet types used by all machines */
+    public static enum TilePacketTypes
+    {
+        /** Normal packet data of any kind */
+        GENERIC(),
+        /** Power updates */
+        POWER(),
+        /** GUI display data update */
+        GUI(),
+        /** Full tile read/write data from tile NBT */
+        NBT();
+    }
 
     public TileEntityMachine()
     {
@@ -147,11 +160,11 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
         {
             // Only do voltage disable if the voltage is higher than the peek voltage and if random chance
             //TODO replace random with timed damage to only disable after so many ticks
-            if (receive != null && receive.voltage > (Math.sqrt(2) * this.getVoltage()) && this.random.nextBoolean())
+            if (receive != null && receive.voltage > (Math.sqrt(2) * this.getVoltage()) && this.worldObj.rand.nextBoolean())
             {
                 if (doReceive)
                 {
-                    this.onDisable(20 + this.random.nextInt(100));
+                    this.onDisable(20 + this.worldObj.rand.nextInt(100));
                 }
                 return 0;
             }
@@ -207,26 +220,96 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
     }
 
     @Override
-    public Packet getDescriptionPacket()
+    public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
     {
-        return PacketManager.getPacket(DarkMain.CHANNEL, this, this.running);
-    }
-
-    @Override
-    public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput data)
-    {
+        boolean packetSize = false;
         try
         {
-            if (worldObj.isRemote)
+            ByteArrayInputStream bis = new ByteArrayInputStream(packet.data);
+            DataInputStream dis = new DataInputStream(bis);
+
+            int id = dis.readInt();
+            int x = dis.readInt();
+            int y = dis.readInt();
+            int z = dis.readInt();
+            int pId = dis.readInt();
+
+            this.simplePacket(pId, dis, player);
+
+            /** DEBUG PACKET SIZE AND INFO */
+            if (packetSize)
             {
-                this.running = data.readBoolean();
+                System.out.println("Tile>" + this.toString() + ">>>Debug>>Packet" + pId + ">>Size>>bytes>>" + packet.data.length);
             }
         }
         catch (Exception e)
         {
+            System.out.println("Error Reading Packet for a TileEntityAssembly");
             e.printStackTrace();
         }
 
+    }
+
+    /** Handles reduced data from the main packet method
+     *
+     * @param id - packet ID
+     * @param dis - data
+     * @param player - player
+     * @return true if the packet was used */
+    public boolean simplePacket(int id, DataInputStream dis, EntityPlayer player)
+    {
+        try
+        {
+            if (this.worldObj.isRemote)
+            {
+                if (id == TilePacketTypes.POWER.ordinal())
+                {
+                    this.running = dis.readBoolean();
+                    return true;
+                }
+                if (id == TilePacketTypes.NBT.ordinal())
+                {
+                    this.readFromNBT(Packet.readNBTTagCompound(dis));
+                }
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /** NetworkMod channel name */
+    public abstract String getChannel();
+
+    /** Sends a simple true/false am running power update */
+    public void sendPowerUpdate()
+    {
+        if (!this.worldObj.isRemote)
+        {
+            Packet packet = PacketManager.getPacket(this.getChannel(), this, TilePacketTypes.POWER.ordinal(), this.running);
+            PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 64);
+        }
+    }
+
+    /** Sends the tileEntity save data to the client */
+    public void sendNBTPacket()
+    {
+        if (!this.worldObj.isRemote)
+        {
+            NBTTagCompound tag = new NBTTagCompound();
+            this.writeToNBT(tag);
+            PacketManager.sendPacketToClients(PacketManager.getPacket(this.getChannel(), this, TilePacketTypes.NBT.ordinal(), tag), worldObj, new Vector3(this), 64);
+        }
+    }
+
+    @Override
+    public Packet getDescriptionPacket()
+    {
+        NBTTagCompound tag = new NBTTagCompound();
+        this.writeToNBT(tag);
+        return PacketManager.getPacket(this.getChannel(), this, TilePacketTypes.NBT.ordinal(), tag);
     }
 
     @Override
@@ -363,4 +446,5 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
     {
         return false;
     }
+
 }

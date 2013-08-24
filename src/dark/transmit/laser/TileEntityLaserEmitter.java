@@ -1,6 +1,7 @@
 package dark.transmit.laser;
 
 import net.minecraftforge.common.ForgeDirection;
+import dark.core.DarkMain;
 import dark.core.blocks.TileEntityMachine;
 
 public class TileEntityLaserEmitter extends TileEntityMachine
@@ -34,6 +35,12 @@ public class TileEntityLaserEmitter extends TileEntityMachine
     {
         // TODO Auto-generated method stub
         return 0;
+    }
+
+    @Override
+    public String getChannel()
+    {
+        return DarkMain.CHANNEL;
     }
 
 }
