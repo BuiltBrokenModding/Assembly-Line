@@ -44,7 +44,7 @@ import dark.core.DarkMain;
 import dark.core.blocks.IMultiBlock;
 import dark.core.helpers.ItemFindingHelper;
 
-public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IInventory, IPacketReceiver, IArmbot, IPeripheral
+public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IPacketReceiver, IArmbot, IPeripheral
 {
     private final CommandManager commandManager = new CommandManager();
     /** The items this container contains. */
@@ -588,7 +588,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     {
         if (DarkMain.blockMulti != null)
         {
-            DarkMain.blockMulti.makeFakeBlock(this.worldObj, Vector3.add(placedPosition, new Vector3(0, 1, 0)), placedPosition);
+            DarkMain.blockMulti.makeFakeBlock(this.worldObj, Vector3.translate(placedPosition, new Vector3(0, 1, 0)), placedPosition);
         }
     }
 
@@ -919,28 +919,6 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack)
     {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public float getCurrentCapacity()
-    {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
-    public void setNetwork(IElectricityNetwork network)
-    {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void refresh()
-    {
-        // TODO Auto-generated method stub
-
+        return itemstack != null && itemstack.itemID == AssemblyLine.recipeLoader.itemDisk.itemID;
     }
 }

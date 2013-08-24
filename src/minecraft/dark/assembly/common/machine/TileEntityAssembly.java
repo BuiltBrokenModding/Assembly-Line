@@ -87,7 +87,11 @@ public abstract class TileEntityAssembly extends TileEntityMachine implements IN
     }
 
     /** Same as updateEntity */
-    public abstract void onUpdate();
+    @Deprecated
+    public void onUpdate()
+    {
+
+    }
 
     /** Checks to see if this assembly tile can run using several methods */
     public boolean isRunning()
