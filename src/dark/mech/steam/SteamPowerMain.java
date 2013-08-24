@@ -21,14 +21,14 @@ import dark.mech.steam.boiler.BlockBoiler;
 import dark.mech.steam.steamengine.BlockSteamPiston;
 
 @Mod(modid = SteamPowerMain.MOD_NAME, name = SteamPowerMain.MOD_ID, version = DarkMain.VERSION, dependencies = ("after:" + DarkMain.MOD_ID))
-@NetworkMod(channels = { SteamPowerMain.channel }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
+@NetworkMod(channels = { SteamPowerMain.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
 public class SteamPowerMain extends ModPrefab
 {
     public static Configuration config = new Configuration((new File(cpw.mods.fml.common.Loader.instance().getConfigDir(), "SteamPower.cfg")));
 
     public static final String MOD_ID = "SteamPower";
     public static final String MOD_NAME = "Steam Power";
-    public static final String channel = MOD_ID;
+    public static final String CHANNEL = MOD_ID;
 
     // Blocks and items
     public static Block blockHeater, blockPiston, blockBoiler;
