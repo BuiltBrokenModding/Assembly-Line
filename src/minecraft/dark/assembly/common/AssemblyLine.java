@@ -162,10 +162,8 @@ public class AssemblyLine extends ModPrefab
 
         AssemblyLine.REQUIRE_NO_POWER = !CONFIGURATION.get("general", "requirePower", true).getBoolean(true);
         AssemblyLine.VINALLA_RECIPES = CONFIGURATION.get("general", "Vinalla_Recipes", false).getBoolean(false);
-        if (CONFIGURATION.hasChanged())
-        {
-            CONFIGURATION.save();
-        }
+
+        CONFIGURATION.save();
 
     }
 

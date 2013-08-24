@@ -288,15 +288,6 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
         return delta;
     }
 
-    /** Data */
-    @Override
-    public Packet getDescriptionPacket()
-    {
-        NBTTagCompound nbt = new NBTTagCompound();
-        this.writeToNBT(nbt);
-        return PacketManager.getPacket(AssemblyLine.CHANNEL, this, AssemblyTilePacket.NBT, nbt);
-    }
-
     /** Inventory */
     @Override
     public int getSizeInventory()

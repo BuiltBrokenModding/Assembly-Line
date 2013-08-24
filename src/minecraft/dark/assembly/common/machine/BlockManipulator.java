@@ -3,6 +3,7 @@ package dark.assembly.common.machine;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
 import cpw.mods.fml.relauncher.Side;
@@ -12,7 +13,7 @@ import dark.assembly.common.TabAssemblyLine;
 import dark.assembly.common.imprinter.prefab.BlockImprintable;
 
 /** A block that manipulates item movement between inventories.
- * 
+ *
  * @author Calclavia */
 public class BlockManipulator extends BlockImprintable
 {
@@ -36,13 +37,14 @@ public class BlockManipulator extends BlockImprintable
         if (tileEntity instanceof TileEntityManipulator)
         {
             ((TileEntityManipulator) tileEntity).setSelfPulse(!((TileEntityManipulator) tileEntity).isSelfPulse());
+            entityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("Manip. set to " + (((TileEntityManipulator) tileEntity).isSelfPulse() ? "auto pulse" : "not pulse")));
         }
 
         return true;
     }
 
     @Override
-    public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
+    public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
     {
         TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
@@ -69,6 +71,8 @@ public class BlockManipulator extends BlockImprintable
                 manip.toggleOutput();
                 manip.toggleInversion();
             }
+            entityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("Manip. outputing =  "+manip.isOutput()));
+
         }
 
         return true;

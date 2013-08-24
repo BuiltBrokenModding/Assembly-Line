@@ -98,22 +98,6 @@ public abstract class TileEntityFilterable extends TileEntityAssembly implements
         this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, facingDirection.ordinal(), 3);
     }
 
-    /** Don't override this! Override getPackData() instead! */
-    @Override
-    public Packet getDescriptionPacket()
-    {
-        return PacketManager.getPacket(AssemblyLine.CHANNEL, this, AssemblyTilePacket.NBT.ordinal(), this.getPacketData().toArray());
-    }
-
-    public ArrayList getPacketData()
-    {
-        ArrayList array = new ArrayList();
-        NBTTagCompound tag = new NBTTagCompound();
-        writeToNBT(tag);
-        array.add(tag);
-        return array;
-    }
-
     @Override
     public void writeToNBT(NBTTagCompound nbt)
     {
@@ -121,7 +105,9 @@ public abstract class TileEntityFilterable extends TileEntityAssembly implements
 
         NBTTagCompound filter = new NBTTagCompound();
         if (getFilter() != null)
+        {
             getFilter().writeToNBT(filter);
+        }
         nbt.setTag("filter", filter);
         nbt.setBoolean("inverted", inverted);
     }
