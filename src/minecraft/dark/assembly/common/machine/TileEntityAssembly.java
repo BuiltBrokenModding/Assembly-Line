@@ -102,11 +102,6 @@ public abstract class TileEntityAssembly extends TileEntityMachine implements IP
         return this.running;
     }
 
-    /** Amount of energy this tile runs on per tick */
-    public double getWattLoad()
-    {
-        return 1;
-    }
 
     @Override
     public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
@@ -140,7 +135,7 @@ public abstract class TileEntityAssembly extends TileEntityMachine implements IP
     }
 
     @Override
-    public NetworkTileEntities getTileNetwork()
+    public NetworkAssembly getTileNetwork()
     {
         if (this.assemblyNetwork == null)
         {
@@ -165,10 +160,16 @@ public abstract class TileEntityAssembly extends TileEntityMachine implements IP
         return ((NetworkSharedPower) this.getTileNetwork()).drainPower(this, watts, doDrain);
     }
 
+    /** Amount of energy this tile runs on per tick */
+    public double getWattLoad()
+    {
+        return 1;
+    }
+
     @Override
     public float getRequest(ForgeDirection direction)
     {
-        return this.WATTS_PER_TICK;
+        return this.getTileNetwork().getEnergySpace();
     }
 
     @Override
