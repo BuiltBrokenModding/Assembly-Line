@@ -35,6 +35,7 @@ import dark.assembly.common.machine.BlockManipulator;
 import dark.assembly.common.machine.BlockRejector;
 import dark.assembly.common.machine.BlockTurntable;
 import dark.assembly.common.machine.ItemBlockCrate;
+import dark.assembly.common.machine.TileEntityAssembly;
 import dark.assembly.common.machine.TileEntityCrate;
 import dark.assembly.common.machine.TileEntityDetector;
 import dark.assembly.common.machine.TileEntityManipulator;
@@ -160,8 +161,11 @@ public class AssemblyLine extends ModPrefab
         recipeLoader.itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", ITEM_ID_PREFIX).getInt());
         recipeLoader.itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", ITEM_ID_PREFIX + 1).getInt());
 
-        AssemblyLine.REQUIRE_NO_POWER = !CONFIGURATION.get("general", "requirePower", true).getBoolean(true);
         AssemblyLine.VINALLA_RECIPES = CONFIGURATION.get("general", "Vinalla_Recipes", false).getBoolean(false);
+
+        AssemblyLine.REQUIRE_NO_POWER = !CONFIGURATION.get("TileSettings", "requirePower", true).getBoolean(true);
+        TileEntityAssembly.refresh_diff = CONFIGURATION.get("TileSettings", "RefreshRandomRange", 9, "n = value of config, 1 + n, random number range from 1 to n that will be added to the lowest refresh value").getInt();
+        TileEntityAssembly.refresh_min_rate = CONFIGURATION.get("TileSettings", "RefreshLowestValue", 20, "Lowest value the refresh rate of the tile network will be").getInt();
 
         CONFIGURATION.save();
 
