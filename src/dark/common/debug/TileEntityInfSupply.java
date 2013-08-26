@@ -1,11 +1,12 @@
 package dark.common.debug;
 
+import java.util.EnumSet;
+
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.compatibility.TileEntityUniversalElectrical;
-import universalelectricity.core.block.IElectrical;
 import universalelectricity.core.electricity.ElectricityPack;
 
-public class TileEntityInfSupply extends TileEntityUniversalElectrical implements IElectrical
+public class TileEntityInfSupply extends TileEntityUniversalElectrical
 {
 
     @Override
@@ -15,9 +16,25 @@ public class TileEntityInfSupply extends TileEntityUniversalElectrical implement
 
         if (!this.worldObj.isRemote)
         {
-            System.out.println("Inf power supply cycle " + this.ticks);
+            //System.out.println("Inf power supply cycle " + this.ticks);
             this.produce();
+            if (this.ticks % 10 == 0)
+            {
+                this.setEnergyStored(this.getEnergyStored() + (this.getProvide(ForgeDirection.UNKNOWN) * 10));
+            }
         }
+    }
+
+    @Override
+    public EnumSet<ForgeDirection> getOutputDirections()
+    {
+        return EnumSet.allOf(ForgeDirection.class);
+    }
+
+    @Override
+    public boolean canUpdate()
+    {
+        return true;
     }
 
     @Override
@@ -27,16 +44,10 @@ public class TileEntityInfSupply extends TileEntityUniversalElectrical implement
     }
 
     @Override
-    public ElectricityPack provideElectricity(ForgeDirection from, ElectricityPack request, boolean doProvide)
-    {
-        return this.canConnect(from) ? request : null;
-    }
-
-    @Override
     public float getProvide(ForgeDirection direction)
     {
         // TODO Auto-generated method stub
-        return Integer.MAX_VALUE;
+        return 1000;
     }
 
     @Override
@@ -47,12 +58,6 @@ public class TileEntityInfSupply extends TileEntityUniversalElectrical implement
 
     @Override
     public float getMaxEnergyStored()
-    {
-        return Integer.MAX_VALUE;
-    }
-
-    @Override
-    public float getEnergyStored()
     {
         return Integer.MAX_VALUE;
     }

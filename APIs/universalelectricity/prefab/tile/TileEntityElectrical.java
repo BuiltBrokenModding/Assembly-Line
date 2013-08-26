@@ -51,17 +51,19 @@ public abstract class TileEntityElectrical extends TileEntityAdvanced implements
 
 	/**
 	 * Produces UE power towards a specific direction.
-	 * 
+	 *
 	 * @param outputDirection - The output direction.
 	 */
 	public void produceUE(ForgeDirection outputDirection)
 	{
+	    System.out.println("Outputing to side " +outputDirection.toString());
 		if (!this.worldObj.isRemote && outputDirection != null && outputDirection != ForgeDirection.UNKNOWN)
 		{
 			float provide = this.getProvide(outputDirection);
 
 			if (provide > 0)
 			{
+			    System.out.println("Outputing " +provide +"W");
 				TileEntity outputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), outputDirection);
 				IElectricityNetwork outputNetwork = ElectricityHelper.getNetworkFromTileEntity(outputTile, outputDirection);
 
@@ -71,6 +73,7 @@ public abstract class TileEntityElectrical extends TileEntityAdvanced implements
 
 					if (powerRequest.getWatts() > 0)
 					{
+					    System.out.println("Request " +powerRequest +"W");
 						ElectricityPack sendPack = ElectricityPack.min(ElectricityPack.getFromWatts(this.getEnergyStored(), this.getVoltage()), ElectricityPack.getFromWatts(provide, this.getVoltage()));
 						float rejectedPower = outputNetwork.produce(sendPack, this);
 						this.provideElectricity(sendPack.getWatts() - rejectedPower, true);
@@ -82,7 +85,7 @@ public abstract class TileEntityElectrical extends TileEntityAdvanced implements
 
 	/**
 	 * The electrical input direction.
-	 * 
+	 *
 	 * @return The direction that electricity is entered into the tile. Return null for no input. By
 	 * default you can accept power from all sides.
 	 */
@@ -93,7 +96,7 @@ public abstract class TileEntityElectrical extends TileEntityAdvanced implements
 
 	/**
 	 * The electrical output direction.
-	 * 
+	 *
 	 * @return The direction that electricity is output from the tile. Return null for no output. By
 	 * default it will return an empty EnumSet.
 	 */

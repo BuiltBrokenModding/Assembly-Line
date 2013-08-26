@@ -1,12 +1,31 @@
 package dark.common.debug;
 
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.block.IElectrical;
+import universalelectricity.compatibility.TileEntityUniversalElectrical;
 import universalelectricity.core.electricity.ElectricityPack;
 
-public class TileEntityInfLoad extends TileEntity implements IElectrical
+public class TileEntityInfLoad extends TileEntityUniversalElectrical
 {
+
+    @Override
+    public void updateEntity()
+    {
+        super.updateEntity();
+
+        if (!this.worldObj.isRemote)
+        {
+            if (this.ticks % 1000 == 0)
+            {
+                this.setEnergyStored(0);
+            }
+        }
+    }
+
+    @Override
+    public boolean canUpdate()
+    {
+        return true;
+    }
 
     @Override
     public boolean canConnect(ForgeDirection direction)
@@ -16,27 +35,10 @@ public class TileEntityInfLoad extends TileEntity implements IElectrical
     }
 
     @Override
-    public float receiveElectricity(ForgeDirection from, ElectricityPack receive, boolean doReceive)
-    {
-        if(receive != null)
-        {
-            System.out.println("Burning off "+receive.getWatts()+" watts of energy");
-        }
-        return this.canConnect(from) && receive != null ? receive.getWatts() : 0;
-    }
-
-    @Override
-    public ElectricityPack provideElectricity(ForgeDirection from, ElectricityPack request, boolean doProvide)
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public float getRequest(ForgeDirection direction)
     {
         //TODO add config options to change this for testing
-        return Integer.MAX_VALUE;
+        return 10000;
     }
 
     @Override
@@ -49,6 +51,12 @@ public class TileEntityInfLoad extends TileEntity implements IElectrical
     public float getVoltage()
     {
         return 120;
+    }
+
+    @Override
+    public float getMaxEnergyStored()
+    {
+        return Integer.MAX_VALUE;
     }
 
 }

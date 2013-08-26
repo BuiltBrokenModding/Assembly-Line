@@ -145,17 +145,19 @@ public class ItemTools extends ItemBasic
                     }
                     if (tileEntity instanceof IElectricalStorage)
                     {
-                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   EnergyStored> %1$.2fW of %1$.2fW max", ((IElectricalStorage) tileEntity).getEnergyStored(), ((IElectricalStorage) tileEntity).getMaxEnergyStored())));
+                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   EnergyStored> %1$.2fW of %2$.2fW max", ((IElectricalStorage) tileEntity).getEnergyStored(), ((IElectricalStorage) tileEntity).getMaxEnergyStored())));
                         out = true;
                     }
                     if (tileEntity instanceof IConductor)
                     {
                         out = true;
-                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   Resistance> %1$.2fW | AmpMax>     %1$.2fW", ((IConductor) tileEntity).getResistance(), ((IConductor) tileEntity).getCurrentCapacity())));
+                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   Resistance> %1$.2fW | AmpMax>     %2$.2fW", ((IConductor) tileEntity).getResistance(), ((IConductor) tileEntity).getCurrentCapacity())));
 
                         if (((IConductor) tileEntity).getNetwork() != null)
                         {
-                            player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   Network>WattRequired> %1$.2fW | TotalResistance> %1$.2fW", (((IConductor) tileEntity).getNetwork().getRequest() != null ? ((IConductor) tileEntity).getNetwork().getRequest().getWatts() : 0), ((IConductor) tileEntity).getNetwork().getTotalResistance())));
+                            player.sendChatToPlayer(ChatMessageComponent.func_111066_d("   Network>" + ((IConductor) tileEntity).getNetwork().toString()));
+
+                            player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   Network>WattRequired> %1$.2fW | TotalResistance> %2$.2fW", (((IConductor) tileEntity).getNetwork().getRequest() != null ? ((IConductor) tileEntity).getNetwork().getRequest().getWatts() : 0), ((IConductor) tileEntity).getNetwork().getTotalResistance())));
                         }
                     }
                     if (!out)
