@@ -1,4 +1,4 @@
-package dark.core.client;
+package dark.core.helpers;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;

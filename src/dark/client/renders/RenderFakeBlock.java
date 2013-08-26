@@ -5,7 +5,7 @@
  * 1.0, or MMPL. Please check the contents of the license located in
  * http://www.mod-buildcraft.com/MMPL-1.0.txt
  */
-package dark.core.client;
+package dark.client.renders;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.Tessellator;
@@ -17,6 +17,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
+
+import dark.core.helpers.BlockRenderInfo;
+import dark.core.helpers.EntityFakeBlock;
 
 import universalelectricity.core.vector.Vector3;
 

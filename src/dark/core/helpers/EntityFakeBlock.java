@@ -1,4 +1,4 @@
-package dark.core.client;
+package dark.core.helpers;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;

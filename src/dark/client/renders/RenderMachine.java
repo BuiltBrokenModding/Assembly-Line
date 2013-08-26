@@ -1,4 +1,4 @@
-package dark.core.client;
+package dark.client.renders;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;

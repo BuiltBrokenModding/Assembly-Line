@@ -1,4 +1,4 @@
-package dark.core.client;
+package dark.client;
 
 import java.awt.Color;
 
@@ -17,7 +17,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 import dark.core.DarkMain;
 
 /** Based off Thaumcraft's Beam Renderer.
- * 
+ *
  * @author Calclavia, Azanor */
 public class FXBeam extends EntityFX
 {

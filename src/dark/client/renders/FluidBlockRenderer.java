@@ -1,4 +1,4 @@
-package dark.core.client;
+package dark.client.renders;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +13,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
+
+import dark.core.helpers.BlockRenderInfo;
 
 import universalelectricity.core.vector.Vector3;
 
