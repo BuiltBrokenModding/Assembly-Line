@@ -123,6 +123,7 @@ public class ItemTools extends ItemBasic
                         }
                     }
                 }
+                //TODO add shift click support to bring up a easier to read GUI or link to the block and add an on screen gui so the player can toy with a design and be updated
                 if (tool == EnumTools.MULTI_METER)
                 {
                     player.sendChatToPlayer(ChatMessageComponent.func_111066_d("Side>" + ForgeDirection.getOrientation(side).toString()));
@@ -149,11 +150,12 @@ public class ItemTools extends ItemBasic
                     }
                     if (tileEntity instanceof IConductor)
                     {
+                        out = true;
                         player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   Resistance> %1$.2fW | AmpMax>     %1$.2fW", ((IConductor) tileEntity).getResistance(), ((IConductor) tileEntity).getCurrentCapacity())));
 
                         if (((IConductor) tileEntity).getNetwork() != null)
                         {
-                            player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   Network>WattRequired> %1$.2fW | TotalResistance> %1$.2fW", ((IConductor) tileEntity).getNetwork().getRequest(), ((IConductor) tileEntity).getNetwork().getTotalResistance())));
+                            player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   Network>WattRequired> %1$.2fW | TotalResistance> %1$.2fW", (((IConductor) tileEntity).getNetwork().getRequest() != null ? ((IConductor) tileEntity).getNetwork().getRequest().getWatts() : 0), ((IConductor) tileEntity).getNetwork().getTotalResistance())));
                         }
                     }
                     if (!out)
