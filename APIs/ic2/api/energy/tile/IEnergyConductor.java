@@ -3,6 +3,8 @@ package ic2.api.energy.tile;
 /**
  * Tile entities which conduct energy pulses without buffering (mostly cables) have to implement
  * this interface.
+ * 
+ * See ic2/api/energy/usage.txt for an overall description of the energy net api.
  */
 public interface IEnergyConductor extends IEnergyAcceptor, IEnergyEmitter
 {
