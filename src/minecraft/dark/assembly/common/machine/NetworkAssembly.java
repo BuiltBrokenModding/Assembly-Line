@@ -30,10 +30,55 @@ public class NetworkAssembly extends NetworkSharedPower
     }
 
     @Override
+    public boolean addTile(TileEntity tileEntity, boolean member)
+    {
+        boolean higher = super.addTile(tileEntity, member);
+        if (!higher && !member && tileEntity instanceof IElectrical)
+        {
+            Vector3 vec = new Vector3(tileEntity);
+            for (int side = 0; side < 6; side++)
+            {
+                ForgeDirection dir = ForgeDirection.getOrientation(side);
+                TileEntity ent = vec.clone().modifyPositionFromSide(dir).getTileEntity(tileEntity.worldObj);
+                if (ent instanceof INetworkEnergyPart && ((INetworkEnergyPart) ent).getTileNetwork().equals(this))
+                {
+                    if (((IElectrical) tileEntity).canConnect(dir.getOpposite()))
+                    {
+                        if (!this.powerSources.contains(tileEntity) && ((IElectrical) tileEntity).getProvide(dir.getOpposite()) <= 0)
+                        {
+                            this.powerSources.add(tileEntity);
+                            higher = true;
+                        }
+                        if (!this.powerLoads.contains(tileEntity) && ((IElectrical) tileEntity).getRequest(dir.getOpposite()) <= 0)
+                        {
+                            this.powerLoads.add(tileEntity);
+                            higher = true;
+                        }
+                    }
+                }
+            }
+        }
+        return higher;
+    }
+
+    @Override
+    public boolean isPartOfNetwork(TileEntity ent)
+    {
+        //TODO check how this is used since it might only want network parts and not connections
+        return this.networkMember.contains(ent);
+    }
+
+    @Override
+    public boolean removeTile(TileEntity ent)
+    {
+        return this.networkMember.remove(ent) || this.powerLoads.remove(ent) || this.powerSources.remove(ent);
+    }
+
+    @Override
     public void cleanUpMembers()
     {
         Iterator<TileEntity> it = powerSources.iterator();
-        for (int t = 0; t < 2; t++)
+        for (int set = 0; set < 2; set++)
         {
             while (it.hasNext())
             {
@@ -53,11 +98,11 @@ public class NetworkAssembly extends NetworkSharedPower
                 else
                 {
                     Vector3 vec = new Vector3(te);
-                    int b = 0;
+                    int failedConnections = 0;
 
-                    for (int i = 0; i < 6; i++)
+                    for (int side = 0; side < 6; side++)
                     {
-                        ForgeDirection dir = ForgeDirection.getOrientation(i);
+                        ForgeDirection dir = ForgeDirection.getOrientation(side);
                         TileEntity ent = vec.clone().modifyPositionFromSide(dir).getTileEntity(te.worldObj);
                         if (ent instanceof INetworkEnergyPart && ((INetworkEnergyPart) ent).getTileNetwork() != null)
                         {
@@ -67,19 +112,19 @@ public class NetworkAssembly extends NetworkSharedPower
                             }
                             if (!((IElectrical) te).canConnect(dir.getOpposite()))
                             {
-                                b++;
+                                failedConnections++;
                             }
-                            else if (t == 0 && ((IElectrical) te).getProvide(dir.getOpposite()) <= 0)
+                            else if (set == 0 && ((IElectrical) te).getProvide(dir.getOpposite()) <= 0)
                             {
-                                b++;
+                                failedConnections++;
                             }
-                            else if (t == 1 && ((IElectrical) te).getRequest(dir.getOpposite()) <= 0)
+                            else if (set == 1 && ((IElectrical) te).getRequest(dir.getOpposite()) <= 0)
                             {
-                                b++;
+                                failedConnections++;
                             }
                         }
                     }
-                    if (b >= 6)
+                    if (failedConnections >= 6)
                     {
                         it.remove();
                     }
