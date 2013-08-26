@@ -8,11 +8,11 @@ import java.util.Set;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.block.IElectrical;
+import universalelectricity.core.block.IElectricalStorage;
 import universalelectricity.core.vector.Vector3;
 import dark.api.INetworkEnergyPart;
 import dark.api.INetworkPart;
 import dark.core.tile.network.NetworkSharedPower;
-import dark.core.tile.network.NetworkTileEntities;
 
 public class NetworkAssembly extends NetworkSharedPower
 {
@@ -56,13 +56,39 @@ public class NetworkAssembly extends NetworkSharedPower
         float currentDemand = 0;
         long lastTime = lastDemandCalcTime;
         long time = date.getTime();
-        if(lastTime == 0)
+        if (lastTime == 0)
         {
             lastTime = time;
         }
+
         currentDemand += getNetworkPartsDemand();
+        Iterator<TileEntity> it = this.powerLoads.iterator();
+        while (it.hasNext())
+        {
+            currentDemand += this.getDemandTile(it.next());
+        }
 
-
+        /* Average calculations */
+        this.lastDemandCalcTime = time;
+        this.lastNetDemand = currentDemand;
+        //TODO calculate the averages over time to produce a better number
+        if(this.minDemand == 0)
+        {
+            this.minDemand = currentDemand;
+        }
+        if(this.averageDemand == 0)
+        {
+            this.averageDemand = currentDemand;
+        }
+        if(currentDemand > this.maxDemand)
+        {
+            this.maxDemand = currentDemand;
+        }
+        if(currentDemand < this.minDemand)
+        {
+            this.minDemand = currentDemand;
+        }
+        this.averageDemand = (averageDemand + currentDemand) / 2;
         return currentDemand;
     }
 
@@ -73,14 +99,14 @@ public class NetworkAssembly extends NetworkSharedPower
         float currentDemand = 0;
         long lastTime = lastDemandPCalcTime;
         long time = date.getTime();
-        if(lastTime == 0)
+        if (lastTime == 0)
         {
             lastTime = time;
         }
 
-        for(INetworkPart part : this.getNetworkMemebers())
+        for (INetworkPart part : this.getNetworkMemebers())
         {
-            if(part instanceof TileEntityAssembly)
+            if (part instanceof TileEntityAssembly)
             {
                 currentDemand += ((TileEntityAssembly) part).getWattLoad();
             }
@@ -90,6 +116,32 @@ public class NetworkAssembly extends NetworkSharedPower
         lastNetPartsDemand = currentDemand;
         //TODO calculate average
         return currentDemand;
+    }
+
+    public float getDemandTile(TileEntity te)
+    {
+        float demand = 0;
+        if (te instanceof IElectrical)
+        {
+            Vector3 vec = new Vector3(te);
+            for (int side = 0; side < 6; side++)
+            {
+                ForgeDirection dir = ForgeDirection.getOrientation(side);
+                TileEntity ent = vec.clone().modifyPositionFromSide(dir).getTileEntity(te.worldObj);
+                if (ent instanceof INetworkEnergyPart && ((INetworkEnergyPart) ent).getTileNetwork().equals(this))
+                {
+                    if (((IElectrical) te).canConnect(dir.getOpposite()))
+                    {
+                        demand += (((IElectrical) te).getRequest(dir.getOpposite()));
+                    }
+                }
+            }
+            if (te instanceof IElectricalStorage)
+            {
+                demand = Math.min(((IElectricalStorage) te).getMaxEnergyStored(), Math.min(((IElectricalStorage) te).getMaxEnergyStored() - ((IElectricalStorage) te).getEnergyStored(), demand));
+            }
+        }
+        return demand;
     }
 
     /** Called when the network gets more power then its parts need. Also called after all parts in

@@ -7,6 +7,7 @@ import java.util.Random;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 import dark.api.INetworkEnergyPart;
@@ -102,7 +103,6 @@ public abstract class TileEntityAssembly extends TileEntityMachine implements IP
         return this.running;
     }
 
-
     @Override
     public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
     {
@@ -160,6 +160,17 @@ public abstract class TileEntityAssembly extends TileEntityMachine implements IP
         return ((NetworkSharedPower) this.getTileNetwork()).drainPower(this, watts, doDrain);
     }
 
+    @Override
+    public float receiveElectricity(ForgeDirection from, ElectricityPack receive, boolean doReceive)
+    {
+        if (this.getInputDirections().contains(from))
+        {
+            return this.getTileNetwork().dumpPower(this, receive.getWatts(), doReceive);
+        }
+
+        return 0;
+    }
+
     /** Amount of energy this tile runs on per tick */
     public double getWattLoad()
     {
@@ -169,7 +180,7 @@ public abstract class TileEntityAssembly extends TileEntityMachine implements IP
     @Override
     public float getRequest(ForgeDirection direction)
     {
-        return this.getTileNetwork().getEnergySpace();
+        return this.getTileNetwork().getNetworkDemand();
     }
 
     @Override
