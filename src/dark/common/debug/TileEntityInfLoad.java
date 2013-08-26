@@ -20,7 +20,7 @@ public class TileEntityInfLoad extends TileEntity implements IElectrical
     {
         if(receive != null)
         {
-            System.out.print("Burning off "+receive.getWatts()+" watts of energy");
+            System.out.println("Burning off "+receive.getWatts()+" watts of energy");
         }
         return this.canConnect(from) && receive != null ? receive.getWatts() : 0;
     }

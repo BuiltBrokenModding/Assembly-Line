@@ -1,6 +1,5 @@
 package dark.core.items;
 
-import java.util.HashMap;
 import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -82,7 +81,7 @@ public class ItemTools extends ItemBasic
                         FluidTankInfo[] tanks = ((IFluidHandler) tileEntity).getTankInfo(ForgeDirection.getOrientation(side));
                         if (tanks != null)
                         {
-                            player.sendChatToPlayer(ChatMessageComponent.func_111066_d("FluidHandler> Side:"+ForgeDirection.getOrientation(side).toString()+" Tanks:" + tanks.length));
+                            player.sendChatToPlayer(ChatMessageComponent.func_111066_d("FluidHandler> Side:" + ForgeDirection.getOrientation(side).toString() + " Tanks:" + tanks.length));
                             for (FluidStack stack : FluidHelper.getFluidList(tanks))
                             {
                                 player.sendChatToPlayer(ChatMessageComponent.func_111066_d("Fluid>" + stack.amount + "mb of " + stack.getFluid().getName()));

@@ -4,25 +4,28 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import dark.core.RecipeLoader.RecipeGrid;
 import dark.core.items.EnumMeterials;
 import dark.core.items.EnumOreParts;
+import dark.core.items.ItemTools;
 import dark.core.items.ItemWrench;
 
 public class CoreRecipeLoader extends RecipeLoader
 {
 
     /* BLOCKS */
-    public static Block blockOre, blockDebug;
+    public static Block blockOre, blockDebug, blockWire;
 
     /* ITEMS */
-    public static Item itemMetals;
+    public static Item itemMetals, battery, itemTool;
     public static ItemWrench wrench;
-    public static Item battery;
 
     @Override
     public void loadRecipes()
     {
         super.loadRecipes();
+        new RecipeGrid(new ItemStack(itemTool, 1, 0), 3, 2).setRowOne("ironTube", "valvePart", "ironTube").setRowTwo(null, "ironTube", null).RegisterRecipe();
+
         loadSmeltingRecipes();
     }
 

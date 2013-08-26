@@ -25,6 +25,8 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.common.debug.BlockDebug;
 import dark.common.debug.BlockDebug.debugBlocks;
+import dark.common.transmit.BlockWire;
+import dark.common.transmit.TileEntityWire;
 import dark.core.blocks.BlockMulti;
 import dark.core.blocks.BlockOre;
 import dark.core.blocks.TileEntityMulti;
@@ -34,6 +36,7 @@ import dark.core.items.ItemBattery;
 import dark.core.items.ItemBlockHolder;
 import dark.core.items.ItemOre;
 import dark.core.items.ItemOreDirv;
+import dark.core.items.ItemTools;
 import dark.core.items.ItemWrench;
 
 /** @author HangCow, DarkGuardsman */
@@ -104,6 +107,24 @@ public class DarkMain extends ModPrefab
         if (CoreRecipeLoader.blockOre != null)
         {
             GameRegistry.registerBlock(CoreRecipeLoader.blockOre, ItemOre.class, "DMOre");
+            BlockOre.regiserOreNames();
+
+            for (int i = 0; i < EnumMeterials.values().length; i++)
+            {
+                if (EnumMeterials.values()[i].doWorldGen)
+                {
+                    OreGenReplaceStone gen = EnumMeterials.values()[i].getGeneratorSettings();
+                    if (gen != null && gen.shouldGenerate)
+                    {
+                        OreGenerator.addOre(gen);
+                    }
+                }
+            }
+        }
+        if (CoreRecipeLoader.blockWire != null)
+        {
+            GameRegistry.registerBlock(CoreRecipeLoader.blockWire, ItemBlockHolder.class, "DMWire");
+            GameRegistry.registerTileEntity(TileEntityWire.class, "DMWire");
         }
         if (CoreRecipeLoader.blockDebug != null)
         {
@@ -113,23 +134,10 @@ public class DarkMain extends ModPrefab
                 GameRegistry.registerTileEntity(debugBlocks.values()[i].clazz, "DMDebug" + i);
             }
         }
+        //TODO look at possibility of having this only be enabled if needed but still no option to disable manually
         GameRegistry.registerBlock(blockMulti, "multiBlock");
-
         GameRegistry.registerTileEntity(TileEntityMulti.class, "DMMultiBlock");
 
-        BlockOre.regiserOreNames();
-
-        for (int i = 0; i < EnumMeterials.values().length; i++)
-        {
-            if (EnumMeterials.values()[i].doWorldGen)
-            {
-                OreGenReplaceStone gen = EnumMeterials.values()[i].getGeneratorSettings();
-                if (gen != null && gen.shouldGenerate)
-                {
-                    OreGenerator.addOre(gen);
-                }
-            }
-        }
         proxy.init();
     }
 
@@ -156,17 +164,14 @@ public class DarkMain extends ModPrefab
         CONFIGURATION.load();
         /* BLOCKS */
         blockMulti = new BlockMulti(DarkMain.CONFIGURATION.getBlock("MultiBlock", getNextID()).getInt());
-        if (CONFIGURATION.get("general", "EnableBattery", true).getBoolean(true))
-        {
-            CoreRecipeLoader.battery = new ItemBattery("Battery", ITEM_ID_PREFIX++);
-        }
-        if (CONFIGURATION.get("general", "EnableWrench", true).getBoolean(true))
-        {
-            CoreRecipeLoader.wrench = new ItemWrench(ITEM_ID_PREFIX++, DarkMain.CONFIGURATION);
-        }
+
         if (CONFIGURATION.get("general", "LoadOre", true).getBoolean(true))
         {
             CoreRecipeLoader.blockOre = new BlockOre(getNextID(), CONFIGURATION);
+        }
+        if (CONFIGURATION.get("general", "EnableWires", true).getBoolean(true))
+        {
+            CoreRecipeLoader.blockWire = new BlockWire(CONFIGURATION, getNextID());
         }
         if (CONFIGURATION.get("general", "enableDebugBlocks", false).getBoolean(false))
         {
@@ -176,6 +181,18 @@ public class DarkMain extends ModPrefab
         if (CONFIGURATION.get("general", "LoadOreItems", true).getBoolean(true))
         {
             CoreRecipeLoader.itemMetals = new ItemOreDirv(ITEM_ID_PREFIX++, CONFIGURATION);
+        }
+        if (CONFIGURATION.get("general", "EnableBattery", true).getBoolean(true))
+        {
+            CoreRecipeLoader.battery = new ItemBattery("Battery", ITEM_ID_PREFIX++);
+        }
+        if (CONFIGURATION.get("general", "EnableWrench", true).getBoolean(true))
+        {
+            CoreRecipeLoader.wrench = new ItemWrench(ITEM_ID_PREFIX++, DarkMain.CONFIGURATION);
+        }
+        if (CONFIGURATION.get("general", "EnableWrench", true).getBoolean(true))
+        {
+            CoreRecipeLoader.itemTool = new ItemTools(ITEM_ID_PREFIX++, DarkMain.CONFIGURATION);
         }
 
         CONFIGURATION.save();
