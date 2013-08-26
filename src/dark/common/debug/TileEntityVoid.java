@@ -1,5 +1,7 @@
 package dark.common.debug;
 
+import java.util.HashMap;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -13,13 +15,16 @@ import net.minecraftforge.fluids.IFluidHandler;
  * @author DarkGuardsman */
 public class TileEntityVoid extends TileEntity implements IFluidHandler
 {
+    //TODO later add to this to make it actually have an ingame use other than debug
+    public static HashMap<FluidStack,Long> storage = new HashMap<FluidStack, Long>();
+
     FluidTank tank = new FluidTank(1000000);
 
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
     {
         //TODO add wrench toggle options to change amount actually drained
-        return resource != null && this.canDrain(from, resource.getFluid()) ? resource.amount : 0;
+        return resource != null && this.canFill(from, resource.getFluid()) ? resource.amount : 0;
     }
 
     @Override

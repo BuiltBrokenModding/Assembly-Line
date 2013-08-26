@@ -41,14 +41,8 @@ public abstract class BlockMachine extends BlockAdvanced implements ITileEntityP
     @Override
     public void registerIcons(IconRegister iconReg)
     {
-        this.blockIcon = iconReg.registerIcon(DarkMain.getInstance().PREFIX + "machine");
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public Icon getBlockTexture(IBlockAccess par1iBlockAccess, int par2, int par3, int par4, int par5)
-    {
-        return this.blockIcon;
+        if (this.blockIcon == null)
+            this.blockIcon = iconReg.registerIcon(DarkMain.getInstance().PREFIX + "machine");
     }
 
     @Override

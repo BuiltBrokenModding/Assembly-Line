@@ -24,6 +24,7 @@ import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.common.debug.BlockDebug;
+import dark.common.debug.BlockDebug.debugBlocks;
 import dark.core.blocks.BlockMulti;
 import dark.core.blocks.BlockOre;
 import dark.core.blocks.TileEntityMulti;
@@ -106,11 +107,15 @@ public class DarkMain extends ModPrefab
         }
         if (CoreRecipeLoader.blockDebug != null)
         {
-            GameRegistry.registerBlock(CoreRecipeLoader.blockDebug, ItemBlockHolder.class, "DMOre");
+            GameRegistry.registerBlock(CoreRecipeLoader.blockDebug, ItemBlockHolder.class, "DMDebug");
+            for (int i = 0; i < debugBlocks.values().length; i++)
+            {
+                GameRegistry.registerTileEntity(debugBlocks.values()[i].clazz, "DMDebug" + i);
+            }
         }
         GameRegistry.registerBlock(blockMulti, "multiBlock");
 
-        GameRegistry.registerTileEntity(TileEntityMulti.class, "ALMulti");
+        GameRegistry.registerTileEntity(TileEntityMulti.class, "DMMultiBlock");
 
         BlockOre.regiserOreNames();
 

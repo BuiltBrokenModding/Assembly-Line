@@ -18,6 +18,10 @@ public class TileEntityInfLoad extends TileEntity implements IElectrical
     @Override
     public float receiveElectricity(ForgeDirection from, ElectricityPack receive, boolean doReceive)
     {
+        if(receive != null)
+        {
+            System.out.print("Burning off "+receive.getWatts()+" watts of energy");
+        }
         return this.canConnect(from) && receive != null ? receive.getWatts() : 0;
     }
 
