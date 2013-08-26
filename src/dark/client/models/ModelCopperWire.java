@@ -2,7 +2,7 @@ package dark.client.models;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.entity.Entity;
+import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -66,53 +66,37 @@ public class ModelCopperWire extends ModelBase
         setRotation(Bottom, 0F, 0F, 0F);
     }
 
-    @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
+    public void renderSide(int i)
     {
-        super.render(entity, f, f1, f2, f3, f4, f5);
-        this.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
-        this.renderMiddle();
-        this.renderBottom();
-        this.renderTop();
-        this.renderLeft();
-        this.renderRight();
-        this.renderBack();
-        this.renderFront();
+        this.renderSide(ForgeDirection.getOrientation(i));
     }
 
-    public void renderMiddle()
+    public void renderSide(ForgeDirection side)
     {
-        Middle.render(0.0625F);
-    }
-
-    public void renderBottom()
-    {
-        Bottom.render(0.0625F);
-    }
-
-    public void renderTop()
-    {
-        Top.render(0.0625F);
-    }
-
-    public void renderLeft()
-    {
-        Left.render(0.0625F);
-    }
-
-    public void renderRight()
-    {
-        Right.render(0.0625F);
-    }
-
-    public void renderBack()
-    {
-        Back.render(0.0625F);
-    }
-
-    public void renderFront()
-    {
-        Front.render(0.0625F);
+        switch (side)
+        {
+            case UP:
+                Top.render(0.0625F);
+                break;
+            case DOWN:
+                Bottom.render(0.0625F);
+                break;
+            case NORTH:
+                Back.render(0.0625F);
+                break;
+            case SOUTH:
+                Front.render(0.0625F);
+                break;
+            case WEST:
+                Left.render(0.0625F);
+                break;
+            case EAST:
+                Right.render(0.0625F);
+                break;
+            default:
+                Middle.render(0.0625F);
+                break;
+        }
     }
 
     private void setRotation(ModelRenderer model, float x, float y, float z)
@@ -120,11 +104,5 @@ public class ModelCopperWire extends ModelBase
         model.rotateAngleX = x;
         model.rotateAngleY = y;
         model.rotateAngleZ = z;
-    }
-
-    @Override
-    public void setRotationAngles(float x, float y, float z, float f3, float f4, float f5, Entity entity)
-    {
-        super.setRotationAngles(x, y, z, f3, f4, f5, entity);
     }
 }
