@@ -15,6 +15,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import universalelectricity.core.block.IConductor;
 import universalelectricity.core.block.IElectrical;
 import universalelectricity.core.block.IElectricalStorage;
 import cpw.mods.fml.relauncher.Side;
@@ -125,6 +126,7 @@ public class ItemTools extends ItemBasic
                 if (tool == EnumTools.MULTI_METER)
                 {
                     player.sendChatToPlayer(ChatMessageComponent.func_111066_d("Side>" + ForgeDirection.getOrientation(side).toString()));
+                    boolean out = false;
                     if (tileEntity instanceof IElectrical)
                     {
                         float demand = ((IElectrical) tileEntity).getRequest(ForgeDirection.getOrientation(side).getOpposite());
@@ -138,10 +140,26 @@ public class ItemTools extends ItemBasic
                         {
                             player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   AvailableWatts> %1$.2fW", provide)));
                         }
+                        out = true;
                     }
                     if (tileEntity instanceof IElectricalStorage)
                     {
                         player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   EnergyStored> %1$.2fW of %1$.2fW max", ((IElectricalStorage) tileEntity).getEnergyStored(), ((IElectricalStorage) tileEntity).getMaxEnergyStored())));
+                        out = true;
+                    }
+                    if (tileEntity instanceof IConductor)
+                    {
+                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   Resistance> %1$.2fW | AmpMax>     %1$.2fW", ((IConductor) tileEntity).getResistance(), ((IConductor) tileEntity).getCurrentCapacity())));
+
+                        if (((IConductor) tileEntity).getNetwork() != null)
+                        {
+                            player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   Network>WattRequired> %1$.2fW | TotalResistance> %1$.2fW", ((IConductor) tileEntity).getNetwork().getRequest(), ((IConductor) tileEntity).getNetwork().getTotalResistance())));
+                        }
+                    }
+                    if (!out)
+                    {
+                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d("   Error failed to find wire connections nodes"));
+
                     }
                 }
             }
