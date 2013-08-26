@@ -6,17 +6,21 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 
-/** Parts that are used for crafting higher up items and block. These parts have no use other that
- * crafting
- * 
- * @author DarkGuardsman */
+/** A metadata item containing parts of various machines in Liquid Mechanics Mod.
+ *
+ * @author Rs */
 public class ItemParts extends ItemBasic
 {
-
     public enum Parts
     {
-        VALVE("Valve"),
-        SERVO("Servo");
+        Bronze("BronzeTube"),
+        Iron("IronTube"),
+        Obby("ObbyTube"),
+        Nether("NetherTube"),
+        Seal("LeatherSeal"),
+        SlimeSeal("SlimeSeal"),
+        Tank("UnfinishedTank"),
+        Valve("ValvePart");
 
         public String name;
 
@@ -26,9 +30,9 @@ public class ItemParts extends ItemBasic
         }
     }
 
-    public ItemParts(int itemID, Configuration config)
+    public ItemParts(int par1, Configuration config)
     {
-        super(itemID, "lmPart", config);
+        super(par1,"DMParts",  config);
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
         this.setMaxStackSize(64);
@@ -55,5 +59,4 @@ public class ItemParts extends ItemBasic
             par3List.add(new ItemStack(this, 1, i));
         }
     }
-
 }

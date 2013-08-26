@@ -3,10 +3,12 @@ package dark.core;
 import java.io.File;
 import java.util.Arrays;
 
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.ore.OreGenReplaceStone;
 import universalelectricity.prefab.ore.OreGenerator;
@@ -36,6 +38,8 @@ import dark.core.items.ItemBattery;
 import dark.core.items.ItemBlockHolder;
 import dark.core.items.ItemOre;
 import dark.core.items.ItemOreDirv;
+import dark.core.items.ItemParts;
+import dark.core.items.ItemParts.Parts;
 import dark.core.items.ItemTools;
 import dark.core.items.ItemWrench;
 
@@ -134,6 +138,20 @@ public class DarkMain extends ModPrefab
                 GameRegistry.registerTileEntity(debugBlocks.values()[i].clazz, "DMDebug" + i);
             }
         }
+        if (CoreRecipeLoader.itemParts != null)
+        {
+            /* ORE DIRECTORY REGISTER */
+            OreDictionary.registerOre("bronzeTube", new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Bronze.ordinal()));
+            OreDictionary.registerOre("ironTube", new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Iron.ordinal()));
+            OreDictionary.registerOre("netherTube", new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Nether.ordinal()));
+            OreDictionary.registerOre("obbyTube", new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Obby.ordinal()));
+            OreDictionary.registerOre("leatherSeal", new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Seal.ordinal()));
+            OreDictionary.registerOre("leatherSlimeSeal", new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.SlimeSeal.ordinal()));
+            OreDictionary.registerOre("valvePart", new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Valve.ordinal()));
+            OreDictionary.registerOre("bronzeTube", new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Bronze.ordinal()));
+            OreDictionary.registerOre("unfinishedTank", new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Tank.ordinal()));
+
+        }
         //TODO look at possibility of having this only be enabled if needed but still no option to disable manually
         GameRegistry.registerBlock(blockMulti, "multiBlock");
         GameRegistry.registerTileEntity(TileEntityMulti.class, "DMMultiBlock");
@@ -182,6 +200,8 @@ public class DarkMain extends ModPrefab
         {
             CoreRecipeLoader.itemMetals = new ItemOreDirv(ITEM_ID_PREFIX++, CONFIGURATION);
         }
+        CoreRecipeLoader.itemParts = new ItemParts(ITEM_ID_PREFIX++, CONFIGURATION);
+
         if (CONFIGURATION.get("general", "EnableBattery", true).getBoolean(true))
         {
             CoreRecipeLoader.battery = new ItemBattery("Battery", ITEM_ID_PREFIX++);
