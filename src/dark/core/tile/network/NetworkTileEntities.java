@@ -74,6 +74,7 @@ public abstract class NetworkTileEntities
         return this.networkMember.contains(ent);
     }
 
+    /** removes a tile from all parts of the network */
     public boolean removeTile(TileEntity ent)
     {
         return this.networkMember.remove(ent);
@@ -133,13 +134,14 @@ public abstract class NetworkTileEntities
         return this.networkMember;
     }
 
-    /** Override this to write any data to the time. Called before a merge, split, or major edit of the
-     * network */
+    /** Override this to write any data to the tile. Called before a merge, split, or major edit of
+     * the network */
     public void writeDataToTiles()
     {
 
     }
-    /** Override this to write any data to the time. Called after a merge, split, or major edit of the
+
+    /** Override this to read any data to the tile. Called after a merge, split, or major edit of the
      * network */
     public void readDataFromTiles()
     {

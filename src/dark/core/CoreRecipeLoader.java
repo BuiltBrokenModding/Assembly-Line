@@ -12,7 +12,7 @@ public class CoreRecipeLoader extends RecipeLoader
 {
 
     /* BLOCKS */
-    public static Block blockOre;
+    public static Block blockOre, blockDebug;
 
     /* ITEMS */
     public static Item itemMetals;

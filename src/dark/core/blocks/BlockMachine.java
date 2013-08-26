@@ -22,13 +22,13 @@ import dark.core.DarkMain;
  * each mod using this create there own basic block extending this to reduce need to input config
  * file each time
  *
- * @author Rseifert */
+ * @author Darkguardsman */
 public abstract class BlockMachine extends BlockAdvanced implements ITileEntityProvider
 {
     /** @param name - The name the block will use for both the config and translation file
      * @param config - configuration reference used to pull blockID from
      * @param blockID - Default block id to be used for the config
-     * @param material - Block material used for tool refrence? */
+     * @param material - Block material used for tool reference? */
     public BlockMachine(String name, Configuration config, int blockID, Material material)
     {
         super(config.getBlock(name, blockID).getInt(), material);

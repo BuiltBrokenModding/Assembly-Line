@@ -1,4 +1,4 @@
-package dark.transmit.laser;
+package dark.common.transmit;
 
 import net.minecraft.block.material.Material;
 import universalelectricity.prefab.block.BlockAdvanced;

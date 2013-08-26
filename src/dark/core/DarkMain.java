@@ -23,12 +23,14 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
+import dark.common.debug.BlockDebug;
 import dark.core.blocks.BlockMulti;
 import dark.core.blocks.BlockOre;
 import dark.core.blocks.TileEntityMulti;
 import dark.core.helpers.FluidRestrictionHandler;
 import dark.core.items.EnumMeterials;
 import dark.core.items.ItemBattery;
+import dark.core.items.ItemBlockHolder;
 import dark.core.items.ItemOre;
 import dark.core.items.ItemOreDirv;
 import dark.core.items.ItemWrench;
@@ -98,7 +100,14 @@ public class DarkMain extends ModPrefab
     {
         super.init(event);
 
-        GameRegistry.registerBlock(CoreRecipeLoader.blockOre, ItemOre.class, "DMOre");
+        if (CoreRecipeLoader.blockOre != null)
+        {
+            GameRegistry.registerBlock(CoreRecipeLoader.blockOre, ItemOre.class, "DMOre");
+        }
+        if (CoreRecipeLoader.blockDebug != null)
+        {
+            GameRegistry.registerBlock(CoreRecipeLoader.blockDebug, ItemBlockHolder.class, "DMOre");
+        }
         GameRegistry.registerBlock(blockMulti, "multiBlock");
 
         GameRegistry.registerTileEntity(TileEntityMulti.class, "ALMulti");
@@ -154,11 +163,16 @@ public class DarkMain extends ModPrefab
         {
             CoreRecipeLoader.blockOre = new BlockOre(getNextID(), CONFIGURATION);
         }
+        if (CONFIGURATION.get("general", "enableDebugBlocks", false).getBoolean(false))
+        {
+            CoreRecipeLoader.blockDebug = new BlockDebug(getNextID(), CONFIGURATION);
+        }
         /* ITEMS */
         if (CONFIGURATION.get("general", "LoadOreItems", true).getBoolean(true))
         {
             CoreRecipeLoader.itemMetals = new ItemOreDirv(ITEM_ID_PREFIX++, CONFIGURATION);
         }
+
         CONFIGURATION.save();
         /* CONFIG END */
 
