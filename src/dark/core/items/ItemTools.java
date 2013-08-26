@@ -2,30 +2,62 @@ package dark.core.items;
 
 import java.util.List;
 
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import universalelectricity.core.block.IElectrical;
+import universalelectricity.core.block.IElectricalStorage;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.IToolReadOut;
 import dark.api.IToolReadOut.EnumTools;
+import dark.core.DarkMain;
 import dark.core.helpers.FluidHelper;
 
 public class ItemTools extends ItemBasic
 {
+    Icon pipeGuage, multiMeter;
+
     public ItemTools(int id, Configuration config)
     {
-        super(id, "lmTool", config);
-        this.setMaxDamage(0);
+        super(id, "DMTools", config);
         this.setHasSubtypes(true);
         this.setCreativeTab(CreativeTabs.tabTools);
         this.setMaxStackSize(1);
+
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void registerIcons(IconRegister iconRegister)
+    {
+        this.pipeGuage = iconRegister.registerIcon(DarkMain.getInstance().PREFIX + "PipeGauge");
+        this.multiMeter = iconRegister.registerIcon(DarkMain.getInstance().PREFIX + "multi-Meter");
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public Icon getIconFromDamage(int meta)
+    {
+        if (meta == 0)
+        {
+            return pipeGuage;
+        }
+        if (meta == 1)
+        {
+            return multiMeter;
+        }
+        return null;
     }
 
     @Override
@@ -92,7 +124,25 @@ public class ItemTools extends ItemBasic
                 }
                 if (tool == EnumTools.MULTI_METER)
                 {
-
+                    player.sendChatToPlayer(ChatMessageComponent.func_111066_d("Side>" + ForgeDirection.getOrientation(side).toString()));
+                    if (tileEntity instanceof IElectrical)
+                    {
+                        float demand = ((IElectrical) tileEntity).getRequest(ForgeDirection.getOrientation(side).getOpposite());
+                        float provide = ((IElectrical) tileEntity).getProvide(ForgeDirection.getOrientation(side).getOpposite());
+                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d("   Voltage>" + ((IElectrical) tileEntity).getVoltage()));
+                        if (demand > 0)
+                        {
+                            player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   RequiredWatts> %1$.2fW", demand)));
+                        }
+                        if (provide > 0)
+                        {
+                            player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   AvailableWatts> %1$.2fW", provide)));
+                        }
+                    }
+                    if (tileEntity instanceof IElectricalStorage)
+                    {
+                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   EnergyStored> %1$.2fW of %1$.2fW max", ((IElectricalStorage) tileEntity).getEnergyStored(), ((IElectricalStorage) tileEntity).getMaxEnergyStored())));
+                    }
                 }
             }
 
