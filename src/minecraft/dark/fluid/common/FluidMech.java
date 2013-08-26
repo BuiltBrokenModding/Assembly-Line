@@ -30,9 +30,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import dark.core.DarkMain;
 import dark.core.ModPrefab;
 import dark.core.items.ItemBlockHolder;
-import dark.fluid.common.item.ItemParts;
-import dark.fluid.common.item.ItemParts.Parts;
-import dark.fluid.common.item.ItemTools;
+import dark.core.items.ItemParts;
+import dark.core.items.ItemParts.Parts;
 import dark.fluid.common.machines.BlockFluid;
 import dark.fluid.common.machines.BlockReleaseValve;
 import dark.fluid.common.machines.BlockSink;
@@ -44,7 +43,6 @@ import dark.fluid.common.pipes.BlockPipe;
 import dark.fluid.common.pipes.ItemBlockPipe;
 import dark.fluid.common.pipes.TileEntityGenericPipe;
 import dark.fluid.common.pipes.TileEntityPipe;
-import dark.fluid.common.pipes.addon.TileEntityPipeWindow;
 import dark.fluid.common.pump.BlockConstructionPump;
 import dark.fluid.common.pump.BlockDrain;
 import dark.fluid.common.pump.BlockPumpMachine;
@@ -130,16 +128,6 @@ public class FluidMech extends ModPrefab
 
         /* LANG LOADING */
         FMLog.info(" Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
-        /* ORE DIRECTORY REGISTER */
-        OreDictionary.registerOre("bronzeTube", new ItemStack(FMRecipeLoader.itemParts, 1, Parts.Bronze.ordinal()));
-        OreDictionary.registerOre("ironTube", new ItemStack(FMRecipeLoader.itemParts, 1, Parts.Iron.ordinal()));
-        OreDictionary.registerOre("netherTube", new ItemStack(FMRecipeLoader.itemParts, 1, Parts.Nether.ordinal()));
-        OreDictionary.registerOre("obbyTube", new ItemStack(FMRecipeLoader.itemParts, 1, Parts.Obby.ordinal()));
-        OreDictionary.registerOre("leatherSeal", new ItemStack(FMRecipeLoader.itemParts, 1, Parts.Seal.ordinal()));
-        OreDictionary.registerOre("leatherSlimeSeal", new ItemStack(FMRecipeLoader.itemParts, 1, Parts.SlimeSeal.ordinal()));
-        OreDictionary.registerOre("valvePart", new ItemStack(FMRecipeLoader.itemParts, 1, Parts.Valve.ordinal()));
-        OreDictionary.registerOre("bronzeTube", new ItemStack(FMRecipeLoader.itemParts, 1, Parts.Bronze.ordinal()));
-        OreDictionary.registerOre("unfinishedTank", new ItemStack(FMRecipeLoader.itemParts, 1, Parts.Tank.ordinal()));
 
     }
 
@@ -191,9 +179,7 @@ public class FluidMech extends ModPrefab
         FMRecipeLoader.blockPipe = new BlockPipe(getNextID(), "RestrictedPipe");
 
         /* ITEM DECLARATION */
-        FMRecipeLoader.itemParts = new ItemParts(FluidMech.CONFIGURATION.getItem("Parts", ITEM_ID_PREFIX++).getInt());
-        FMRecipeLoader.itemGauge = new ItemTools(FluidMech.CONFIGURATION.getItem("PipeGuage", ITEM_ID_PREFIX++).getInt());
-        CONFIGURATION.save();
+       CONFIGURATION.save();
 
     }
 
