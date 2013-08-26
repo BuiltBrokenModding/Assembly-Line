@@ -36,7 +36,7 @@ import dark.core.helpers.FluidRestrictionHandler;
 import dark.core.items.EnumMeterials;
 import dark.core.items.ItemBattery;
 import dark.core.items.ItemBlockHolder;
-import dark.core.items.ItemOre;
+import dark.core.items.ItemBlockOre;
 import dark.core.items.ItemOreDirv;
 import dark.core.items.ItemParts;
 import dark.core.items.ItemParts.Parts;
@@ -110,7 +110,7 @@ public class DarkMain extends ModPrefab
 
         if (CoreRecipeLoader.blockOre != null)
         {
-            GameRegistry.registerBlock(CoreRecipeLoader.blockOre, ItemOre.class, "DMOre");
+            GameRegistry.registerBlock(CoreRecipeLoader.blockOre, ItemBlockOre.class, "DMOre");
             BlockOre.regiserOreNames();
 
             for (int i = 0; i < EnumMeterials.values().length; i++)

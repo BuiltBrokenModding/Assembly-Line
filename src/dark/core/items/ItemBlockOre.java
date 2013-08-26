@@ -4,10 +4,10 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import dark.core.DarkMain;
 
-public class ItemOre extends ItemBlock
+public class ItemBlockOre extends ItemBlock
 {
 
-    public ItemOre(int par1)
+    public ItemBlockOre(int par1)
     {
         super(par1);
         this.setMaxDamage(0);
