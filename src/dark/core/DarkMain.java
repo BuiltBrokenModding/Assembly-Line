@@ -183,7 +183,7 @@ public class DarkMain extends ModPrefab
         /* BLOCKS */
         blockMulti = new BlockMulti(DarkMain.CONFIGURATION.getBlock("MultiBlock", getNextID()).getInt());
 
-        if (CONFIGURATION.get("general", "LoadOre", true).getBoolean(true))
+        if (CONFIGURATION.get("general", "LoadOre", true, "Disabling this also disabled the items that go with the ores").getBoolean(true))
         {
             CoreRecipeLoader.blockOre = new BlockOre(getNextID(), CONFIGURATION);
         }
@@ -191,17 +191,19 @@ public class DarkMain extends ModPrefab
         {
             CoreRecipeLoader.blockWire = new BlockWire(CONFIGURATION, getNextID());
         }
-        if (CONFIGURATION.get("general", "enableDebugBlocks", false).getBoolean(false))
+        if (CONFIGURATION.get("general", "EnableDebugBlocks", true, "Enable this to use the creative mode only infinite power, load, fluid, and void blocks").getBoolean(true))
         {
             CoreRecipeLoader.blockDebug = new BlockDebug(getNextID(), CONFIGURATION);
         }
         /* ITEMS */
-        if (CONFIGURATION.get("general", "LoadOreItems", true).getBoolean(true))
+        if (CONFIGURATION.get("general", "LoadOreItems", true, "Only disable ore items if you have another mod that provides metal dust, ingots, and plates").getBoolean(true))
         {
             CoreRecipeLoader.itemMetals = new ItemOreDirv(ITEM_ID_PREFIX++, CONFIGURATION);
         }
-        CoreRecipeLoader.itemParts = new ItemParts(ITEM_ID_PREFIX++, CONFIGURATION);
-
+        if (CONFIGURATION.get("general", "LoadCraftingParts", true, "Only disable this if you do not plan to craft, or are not using any mods that need these parts.").getBoolean(true))
+        {
+            CoreRecipeLoader.itemParts = new ItemParts(ITEM_ID_PREFIX++, CONFIGURATION);
+        }
         if (CONFIGURATION.get("general", "EnableBattery", true).getBoolean(true))
         {
             CoreRecipeLoader.battery = new ItemBattery("Battery", ITEM_ID_PREFIX++);
@@ -210,10 +212,7 @@ public class DarkMain extends ModPrefab
         {
             CoreRecipeLoader.wrench = new ItemWrench(ITEM_ID_PREFIX++, DarkMain.CONFIGURATION);
         }
-        if (CONFIGURATION.get("general", "EnableWrench", true).getBoolean(true))
-        {
-            CoreRecipeLoader.itemTool = new ItemTools(ITEM_ID_PREFIX++, DarkMain.CONFIGURATION);
-        }
+        CoreRecipeLoader.itemTool = new ItemTools(ITEM_ID_PREFIX++, DarkMain.CONFIGURATION);
 
         CONFIGURATION.save();
         /* CONFIG END */
