@@ -11,7 +11,7 @@ import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.ColorCode;
-import dark.core.client.RenderMachine;
+import dark.client.renders.RenderMachine;
 import dark.core.helpers.FluidRestrictionHandler;
 import dark.fluid.client.model.ModelLargePipe;
 import dark.fluid.common.FluidMech;
