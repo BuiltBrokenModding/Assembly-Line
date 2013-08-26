@@ -1,5 +1,6 @@
 package dark.common.transmit;
 
+import universalelectricity.prefab.block.BlockConductor;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -10,12 +11,13 @@ import net.minecraftforge.common.Configuration;
 import dark.core.DarkMain;
 import dark.core.blocks.BlockMachine;
 
-public class BlockWire extends BlockMachine
+public class BlockWire extends BlockConductor
 {
 
     public BlockWire(Configuration config, int blockID)
     {
-        super("DMWire", config, blockID, Material.cloth);
+        super(config.getBlock("DMWire", blockID).getInt(), Material.cloth);
+        this.setUnlocalizedName("DMWire");
         this.setStepSound(soundClothFootstep);
         this.setResistance(0.2F);
         this.setHardness(0.1f);

@@ -15,6 +15,7 @@ public class TileEntityInfSupply extends TileEntityUniversalElectrical implement
 
         if (!this.worldObj.isRemote)
         {
+            System.out.println("Inf power supply cycle " + this.ticks);
             this.produce();
         }
     }
@@ -51,9 +52,14 @@ public class TileEntityInfSupply extends TileEntityUniversalElectrical implement
     }
 
     @Override
+    public float getEnergyStored()
+    {
+        return Integer.MAX_VALUE;
+    }
+
+    @Override
     public float getRequest(ForgeDirection direction)
     {
-        // TODO Auto-generated method stub
         return 0;
     }
 

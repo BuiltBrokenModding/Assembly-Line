@@ -15,15 +15,8 @@ public abstract class RenderMachine extends TileEntitySpecialRenderer
 
     }
 
-    @Override
-    public void renderTileEntityAt(TileEntity tileentity, double d0, double d1, double d2, float f)
-    {
-        // TODO Auto-generated method stub
-
-    }
-
     /** Sudo method for setting the texture for current render
-     * 
+     *
      * @param name */
     public void bindTextureByName(String domain, String name)
     {

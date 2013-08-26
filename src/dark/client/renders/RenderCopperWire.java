@@ -2,7 +2,6 @@ package dark.client.renders;
 
 import ic2.api.energy.tile.IEnergyAcceptor;
 import ic2.api.energy.tile.IEnergyTile;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeDirection;
@@ -14,34 +13,33 @@ import universalelectricity.core.block.IConnector;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import buildcraft.api.power.IPowerReceptor;
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.client.models.ModelCopperWire;
-import dark.common.transmit.TileEntityWire;
 import dark.core.DarkMain;
 
 @SideOnly(Side.CLIENT)
-public class RenderCopperWire extends TileEntitySpecialRenderer
+public class RenderCopperWire extends RenderMachine
 {
-    private static final ResourceLocation copperWireTexture = new ResourceLocation(DarkMain.TEXTURE_DIRECTORY, "textures/models/copperWire.png");
+    private static final ResourceLocation copperWireTexture = new ResourceLocation(DarkMain.getInstance().DOMAIN, "textures/models/copperWire.png");
 
     public static final ModelCopperWire model = new ModelCopperWire();
 
-    public void renderModelAt(TileEntityWire wire, double d, double d1, double d2, float f)
+    @Override
+    public void renderTileEntityAt(TileEntity tileEntity, double d, double d1, double d2, float f)
     {
         // Texture file
-        FMLClientHandler.instance().getClient().renderEngine.func_110577_a(copperWireTexture);
+        this.bindTextureByName(this.getTexture(tileEntity.getBlockType().blockID, tileEntity.getBlockMetadata()));
         GL11.glPushMatrix();
         GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
         GL11.glScalef(1.0F, -1F, -1F);
 
-        Boolean[] renderSide = new Boolean[6];
+        boolean[] renderSide = new boolean[6];
 
         for (byte i = 0; i < 6; i++)
         {
             ForgeDirection dir = ForgeDirection.getOrientation(i);
-            TileEntity ent = VectorHelper.getTileEntityFromSide(wire.worldObj, new Vector3(wire), dir);
+            TileEntity ent = VectorHelper.getTileEntityFromSide(tileEntity.worldObj, new Vector3(tileEntity), dir);
 
             if (ent instanceof IConnector)
             {
@@ -54,7 +52,7 @@ public class RenderCopperWire extends TileEntitySpecialRenderer
             {
                 if (ent instanceof IEnergyAcceptor)
                 {
-                    if (((IEnergyAcceptor) ent).acceptsEnergyFrom(wire, dir.getOpposite()))
+                    if (((IEnergyAcceptor) ent).acceptsEnergyFrom(tileEntity, dir.getOpposite()))
                     {
                         renderSide[i] = true;
                     }
@@ -70,10 +68,9 @@ public class RenderCopperWire extends TileEntitySpecialRenderer
             }
         }
 
-
-        for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
+        for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
         {
-            if(renderSide[side.ordinal()])
+            if (renderSide[side.ordinal()])
             {
                 model.renderSide(side);
             }
@@ -83,8 +80,8 @@ public class RenderCopperWire extends TileEntitySpecialRenderer
     }
 
     @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double var2, double var4, double var6, float var8)
+    public ResourceLocation getTexture(int block, int meta)
     {
-        this.renderModelAt((TileEntityWire) tileEntity, var2, var4, var6, var8);
+        return copperWireTexture;
     }
 }

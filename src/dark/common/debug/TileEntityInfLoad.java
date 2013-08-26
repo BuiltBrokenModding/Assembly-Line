@@ -48,7 +48,7 @@ public class TileEntityInfLoad extends TileEntity implements IElectrical
     @Override
     public float getVoltage()
     {
-        return 10000;
+        return 120;
     }
 
 }
