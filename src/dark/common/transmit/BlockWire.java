@@ -1,6 +1,8 @@
 package dark.common.transmit;
 
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -16,9 +18,11 @@ import universalelectricity.core.block.IConductor;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.tile.TileEntityConductor;
 import dark.core.DarkMain;
+import dark.core.IExtraObjectInfo;
+import dark.core.helpers.Pair;
 import dark.prefab.BlockMachine;
 
-public class BlockWire extends BlockMachine
+public class BlockWire extends BlockMachine implements IExtraObjectInfo
 {
 
     public boolean isWireCollision = true;
@@ -66,7 +70,6 @@ public class BlockWire extends BlockMachine
         return new TileEntityWire();
     }
 
-
     @Override
     public void onBlockAdded(World world, int x, int y, int z)
     {
@@ -80,7 +83,6 @@ public class BlockWire extends BlockMachine
         }
     }
 
-
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
     {
@@ -91,7 +93,6 @@ public class BlockWire extends BlockMachine
             ((IConductor) tileEntity).refresh();
         }
     }
-
 
     @Override
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
@@ -221,5 +222,38 @@ public class BlockWire extends BlockMachine
         {
             super.addCollisionBoxesToList(world, x, y, z, axisalignedbb, list, entity);
         }
+    }
+
+    @Override
+    public void loadRecipes()
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void getTileEntities(int blockID, Set<Pair<String, TileEntity>> list)
+    {
+        list.add(new Pair<String, TileEntity>("DMWireTile", new TileEntityWire()));
+    }
+
+    @Override
+    public boolean hasExtraConfigs()
+    {
+        return false;
+    }
+
+    @Override
+    public void loadExtraConfigs(Configuration config)
+    {
+        //TODO add config options for max amps, and resistance
+
+    }
+
+    @Override
+    public void loadOreNames()
+    {
+        // TODO Auto-generated method stub
+
     }
 }

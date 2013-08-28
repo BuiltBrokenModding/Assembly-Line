@@ -1,5 +1,7 @@
 package dark.prefab;
 
+import java.util.List;
+
 import net.minecraft.block.Block;
 
 import org.modstats.Modstats;
@@ -10,6 +12,8 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
+import dark.core.BlockRegistry;
+import dark.core.BlockRegistry.BlockData;
 
 public abstract class ModPrefab
 {
@@ -58,13 +62,13 @@ public abstract class ModPrefab
     {
         this.loadModMeta();
         Modstats.instance().getReporter().registerMod(this);
-        this.loadConfig();
+        BlockRegistry.addBlocks(this.getBlocks());
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-
+        BlockRegistry.registerAllBlocks();
     }
 
     @EventHandler
@@ -79,7 +83,10 @@ public abstract class ModPrefab
         System.out.println(" " + data);
     }
 
-    public abstract void loadConfig();
+    /** Grabs a list of all the mods block Data used to register the block, tileEntities, and extra
+     * configs */
+    public abstract List<BlockData> getBlocks();
 
+    /** Loads the settings that tell what this mod is named, about, and other info to the user */
     public abstract void loadModMeta();
 }

@@ -1,7 +1,9 @@
 package dark.core;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
@@ -29,6 +31,7 @@ import dark.common.debug.BlockDebug;
 import dark.common.debug.BlockDebug.debugBlocks;
 import dark.common.transmit.BlockWire;
 import dark.common.transmit.TileEntityWire;
+import dark.core.BlockRegistry.BlockData;
 import dark.core.blocks.BlockOre;
 import dark.core.helpers.FluidRestrictionHandler;
 import dark.core.helpers.SaveManager;
@@ -112,9 +115,6 @@ public class DarkMain extends ModPrefab
 
         if (CoreRecipeLoader.blockOre != null)
         {
-            GameRegistry.registerBlock(CoreRecipeLoader.blockOre, ItemBlockOre.class, "DMOre");
-            BlockOre.regiserOreNames();
-
             for (int i = 0; i < EnumMeterials.values().length; i++)
             {
                 if (EnumMeterials.values()[i].doWorldGen)
@@ -174,8 +174,9 @@ public class DarkMain extends ModPrefab
     }
 
     @Override
-    public void loadConfig()
+    public List<BlockData> getBlocks()
     {
+        List<BlockData> dataList = new ArrayList<BlockData>();
         if (recipeLoader == null)
         {
             recipeLoader = new CoreRecipeLoader();
@@ -188,6 +189,7 @@ public class DarkMain extends ModPrefab
         if (CONFIGURATION.get("general", "LoadOre", true, "Disabling this also disabled the items that go with the ores").getBoolean(true))
         {
             CoreRecipeLoader.blockOre = new BlockOre(getNextID(), CONFIGURATION);
+            dataList.add(new BlockData(CoreRecipeLoader.blockOre, ItemBlockOre.class, "DMOre"));
         }
         if (CONFIGURATION.get("general", "EnableWires", true).getBoolean(true))
         {
@@ -218,7 +220,7 @@ public class DarkMain extends ModPrefab
 
         CONFIGURATION.save();
         /* CONFIG END */
-
+        return dataList;
     }
 
     @Override
