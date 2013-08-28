@@ -5,7 +5,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import dark.core.client.RenderMachine;
+import dark.client.renders.RenderMachine;
 import dark.mech.steam.SteamPowerMain;
 
 public class RenderFurnace extends RenderMachine

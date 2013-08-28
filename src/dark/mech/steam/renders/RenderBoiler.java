@@ -6,7 +6,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import dark.core.client.RenderMachine;
+import dark.client.renders.RenderMachine;
 import dark.core.helpers.ConnectionHelper;
 import dark.mech.steam.SteamPowerMain;
 import dark.mech.steam.boiler.TileEntityBoiler;
