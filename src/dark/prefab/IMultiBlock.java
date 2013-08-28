@@ -1,4 +1,4 @@
-package dark.core.blocks;
+package dark.prefab;
 
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.core.vector.Vector3;

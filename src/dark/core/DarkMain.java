@@ -29,9 +29,7 @@ import dark.common.debug.BlockDebug;
 import dark.common.debug.BlockDebug.debugBlocks;
 import dark.common.transmit.BlockWire;
 import dark.common.transmit.TileEntityWire;
-import dark.core.blocks.BlockMulti;
 import dark.core.blocks.BlockOre;
-import dark.core.blocks.TileEntityMulti;
 import dark.core.helpers.FluidRestrictionHandler;
 import dark.core.helpers.SaveManager;
 import dark.core.items.EnumMeterials;
@@ -43,7 +41,9 @@ import dark.core.items.ItemParts;
 import dark.core.items.ItemParts.Parts;
 import dark.core.items.ItemTools;
 import dark.core.items.ItemWrench;
+import dark.prefab.BlockMulti;
 import dark.prefab.ModPrefab;
+import dark.prefab.TileEntityMulti;
 
 /** @author HangCow, DarkGuardsman */
 @Mod(modid = DarkMain.MOD_ID, name = DarkMain.MOD_NAME, version = DarkMain.VERSION, dependencies = "after:BuildCraft|Energy", useMetadata = true)

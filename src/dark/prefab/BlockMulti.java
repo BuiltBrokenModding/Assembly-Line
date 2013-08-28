@@ -1,4 +1,4 @@
-package dark.core.blocks;
+package dark.prefab;
 
 import java.util.Random;
 
