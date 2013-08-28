@@ -1,8 +1,5 @@
 package dark.fluid.client.render;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeDirection;

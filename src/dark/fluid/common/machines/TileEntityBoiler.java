@@ -1,4 +1,4 @@
-package dark.mech.steam.boiler;
+package dark.fluid.common.machines;
 
 import net.minecraft.tileentity.TileEntity;
 

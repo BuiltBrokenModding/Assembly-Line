@@ -1,14 +1,14 @@
-package dark.mech.steam.renders;
+package dark.fluid.client.render;
 
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
 import dark.client.renders.RenderMachine;
-import dark.mech.steam.SteamPowerMain;
-import dark.mech.steam.steamengine.TileEntitySteamPiston;
+import dark.fluid.client.model.ModelGearPiston;
+import dark.fluid.common.FluidMech;
+import dark.fluid.common.machines.TileEntitySteamPiston;
 
 public class RenderGearPiston extends RenderMachine
 {
@@ -21,7 +21,7 @@ public class RenderGearPiston extends RenderMachine
 
     public void renderTileEntityAt(TileEntitySteamPiston tileEntity, double d, double d1, double d2, float d3)
     {
-        bindTextureByName(SteamPowerMain.instance.PREFIX, SteamPowerMain.MODEL_DIRECTORY + "GearShaftPiston.png");
+        bindTextureByName(FluidMech.instance.PREFIX, FluidMech.MODEL_DIRECTORY + "GearShaftPiston.png");
         GL11.glPushMatrix();
         GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
         GL11.glScalef(1.0F, -1F, -1F);

@@ -1,7 +1,7 @@
-package dark.mech.steam.steamengine;
+package dark.fluid.common.machines;
 
 import dark.core.blocks.TileEntityMachine;
-import dark.mech.steam.SteamPowerMain;
+import dark.fluid.common.FluidMech;
 
 public class TileEntitySteamPiston extends TileEntityMachine
 {
@@ -9,6 +9,6 @@ public class TileEntitySteamPiston extends TileEntityMachine
     @Override
     public String getChannel()
     {
-        return SteamPowerMain.CHANNEL;
+        return FluidMech.CHANNEL;
     }
 }

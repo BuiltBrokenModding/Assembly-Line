@@ -1,6 +1,5 @@
-package dark.mech.steam.renders;
+package dark.fluid.client.render;
 
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
@@ -8,8 +7,11 @@ import org.lwjgl.opengl.GL11;
 
 import dark.client.renders.RenderMachine;
 import dark.core.helpers.ConnectionHelper;
-import dark.mech.steam.SteamPowerMain;
-import dark.mech.steam.boiler.TileEntityBoiler;
+import dark.fluid.client.model.ModelCenterTank;
+import dark.fluid.client.model.ModelCornerTank;
+import dark.fluid.client.model.ModelTank;
+import dark.fluid.common.FluidMech;
+import dark.fluid.common.machines.TileEntityBoiler;
 
 public class RenderBoiler extends RenderMachine
 {
@@ -36,18 +38,18 @@ public class RenderBoiler extends RenderMachine
         int meta = 0;
         if (connected[5] == null && connected[3] == null && connected[4] == null && connected[2] == null || ((TileEntityBoiler) tileEntity).tankCount < 2)
         {
-            bindTextureByName(SteamPowerMain.instance.PREFIX, SteamPowerMain.MODEL_DIRECTORY + "tankTexture.png");
+            bindTextureByName(FluidMech.instance.PREFIX, FluidMech.MODEL_DIRECTORY + "tankTexture.png");
             model.generalRender(0.0625F);
         }
         else if (ConnectionHelper.corner(tileEntity) == 0 || ((TileEntityBoiler) tileEntity).tankCount > 2)
         {
-            bindTextureByName(SteamPowerMain.instance.PREFIX, SteamPowerMain.MODEL_DIRECTORY + "tankBlock.png");
+            bindTextureByName(FluidMech.instance.PREFIX, FluidMech.MODEL_DIRECTORY + "tankBlock.png");
             model2.renderBlock(0.0625F);
         }
         else
         {
             int corner = ConnectionHelper.corner(tileEntity);
-            bindTextureByName(SteamPowerMain.instance.PREFIX, SteamPowerMain.MODEL_DIRECTORY + "CornerTank.png");
+            bindTextureByName(FluidMech.instance.PREFIX, FluidMech.MODEL_DIRECTORY + "CornerTank.png");
             switch (corner)
             {
                 case 1:

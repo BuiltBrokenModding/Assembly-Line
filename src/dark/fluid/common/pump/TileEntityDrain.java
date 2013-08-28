@@ -16,7 +16,6 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
-import dark.api.IToolReadOut.EnumTools;
 import dark.api.fluid.IDrain;
 import dark.core.helpers.FluidHelper;
 import dark.core.helpers.Pair;

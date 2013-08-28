@@ -15,7 +15,7 @@ import dark.core.tile.network.NetworkTileEntities;
 /** Side note: the network should act like this when done {@link http
  * ://www.e4training.com/hydraulic_calculators/B1.htm} as well as stay compatible with the forge
  * Liquids
- *
+ * 
  * @author Rseifert */
 public class NetworkFluidContainers extends NetworkFluidTiles
 {
@@ -34,7 +34,7 @@ public class NetworkFluidContainers extends NetworkFluidTiles
     @Override
     public void writeDataToTiles()
     {
-        if(this.combinedStorage() == null || this.combinedStorage().getFluid() == null)
+        if (this.combinedStorage() == null || this.combinedStorage().getFluid() == null)
         {
             return;
         }

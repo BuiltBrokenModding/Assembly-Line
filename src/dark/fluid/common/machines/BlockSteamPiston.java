@@ -1,4 +1,4 @@
-package dark.mech.steam.steamengine;
+package dark.fluid.common.machines;
 
 import java.util.Random;
 
@@ -7,15 +7,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import dark.core.blocks.BlockMachine;
-import dark.mech.steam.SteamPowerMain;
+import dark.fluid.common.BlockFM;
 
-public class BlockSteamPiston extends BlockMachine
+public class BlockSteamPiston extends BlockFM
 {
 
     public BlockSteamPiston(int par1)
     {
-        super("SteamEngine", SteamPowerMain.config, par1, Material.iron);
+        super("SteamEngine", par1, Material.iron);
 
     }
 

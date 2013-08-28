@@ -1,23 +1,20 @@
-package dark.mech.steam.boiler;
+package dark.fluid.common.machines;
 
 import java.util.List;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import dark.core.blocks.BlockMachine;
-import dark.mech.steam.ItemRenderHelperS;
-import dark.mech.steam.SteamPowerMain;
+import dark.fluid.common.BlockFM;
 
-public class BlockBoiler extends BlockMachine
+public class BlockBoiler extends BlockFM
 {
 
     public BlockBoiler(int par1)
     {
-        super("Boilers", SteamPowerMain.config, par1, Material.iron);
+        super("Boilers", par1, Material.iron);
         this.setCreativeTab(CreativeTabs.tabBlock);
         this.setHardness(1f);
         this.setResistance(3f);
@@ -50,7 +47,7 @@ public class BlockBoiler extends BlockMachine
     @Override
     public int getRenderType()
     {
-        return ItemRenderHelperS.renderID;
+        return -1;
     }
 
     @Override

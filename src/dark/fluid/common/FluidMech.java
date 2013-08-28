@@ -9,7 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.oredict.OreDictionary;
 
 import org.modstats.ModstatInfo;
 
@@ -30,14 +29,16 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import dark.core.DarkMain;
 import dark.core.ModPrefab;
 import dark.core.items.ItemBlockHolder;
-import dark.core.items.ItemParts;
-import dark.core.items.ItemParts.Parts;
+import dark.fluid.common.machines.BlockBoiler;
 import dark.fluid.common.machines.BlockFluid;
 import dark.fluid.common.machines.BlockReleaseValve;
 import dark.fluid.common.machines.BlockSink;
+import dark.fluid.common.machines.BlockSteamPiston;
 import dark.fluid.common.machines.BlockTank;
+import dark.fluid.common.machines.TileEntityBoiler;
 import dark.fluid.common.machines.TileEntityReleaseValve;
 import dark.fluid.common.machines.TileEntitySink;
+import dark.fluid.common.machines.TileEntitySteamPiston;
 import dark.fluid.common.machines.TileEntityTank;
 import dark.fluid.common.pipes.BlockPipe;
 import dark.fluid.common.pipes.ItemBlockPipe;
@@ -104,6 +105,9 @@ public class FluidMech extends ModPrefab
         GameRegistry.registerBlock(FMRecipeLoader.blockSink, "lmSink");
         GameRegistry.registerBlock(FMRecipeLoader.blockDrain, "lmDrain");
         GameRegistry.registerBlock(FMRecipeLoader.blockConPump, "lmConPump");
+        GameRegistry.registerBlock(FMRecipeLoader.blockHeater, "SPHeater");
+        GameRegistry.registerBlock(FMRecipeLoader.blockPiston, "SPPiston");
+        GameRegistry.registerBlock(FMRecipeLoader.blockBoiler, "SPBoiler");
 
         proxy.preInit();
     }
@@ -125,6 +129,10 @@ public class FluidMech extends ModPrefab
         GameRegistry.registerTileEntity(TileEntitySink.class, "FluidSink");
         GameRegistry.registerTileEntity(TileEntityDrain.class, "FluidDrain");
         GameRegistry.registerTileEntity(TileEntityConstructionPump.class, "ConstructionPump");
+
+        GameRegistry.registerTileEntity(TileEntityBoiler.class, "FMSteamBoiler");
+        //GameRegistry.registerTileEntity(TileEntityFireBox.class, "FMFireBox");
+        GameRegistry.registerTileEntity(TileEntitySteamPiston.class, "FMSteamPiston");
 
         /* LANG LOADING */
         FMLog.info(" Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
@@ -168,6 +176,7 @@ public class FluidMech extends ModPrefab
         }
         /* BLOCK DECLARATION -- CONFIG LOADER */
         FMRecipeLoader.blockGenPipe = new BlockPipe(getNextID(), "GenericPipe");
+        FMRecipeLoader.blockPipe = new BlockPipe(getNextID(), "RestrictedPipe");
         FMRecipeLoader.blockMachine = new BlockPumpMachine(getNextID());
         FMRecipeLoader.blockRod = new BlockRod(getNextID());
         FMRecipeLoader.blockGenerator = new BlockGenerator(getNextID());
@@ -176,10 +185,11 @@ public class FluidMech extends ModPrefab
         FMRecipeLoader.blockSink = new BlockSink(getNextID());
         FMRecipeLoader.blockDrain = new BlockDrain(getNextID());
         FMRecipeLoader.blockConPump = new BlockConstructionPump(getNextID());
-        FMRecipeLoader.blockPipe = new BlockPipe(getNextID(), "RestrictedPipe");
+        FMRecipeLoader.blockPiston = new BlockSteamPiston(getNextID());
+        FMRecipeLoader.blockBoiler = new BlockBoiler(getNextID());
 
         /* ITEM DECLARATION */
-       CONFIGURATION.save();
+        CONFIGURATION.save();
 
     }
 

@@ -1,4 +1,4 @@
-package dark.mech.steam.renders;
+package dark.fluid.client.render;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -6,7 +6,8 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import dark.client.renders.RenderMachine;
-import dark.mech.steam.SteamPowerMain;
+import dark.fluid.client.model.ModelFurnace;
+import dark.fluid.common.FluidMech;
 
 public class RenderFurnace extends RenderMachine
 {
@@ -21,7 +22,7 @@ public class RenderFurnace extends RenderMachine
     @Override
     public void renderTileEntityAt(TileEntity te, double d, double d1, double d2, float d3)
     {
-        bindTextureByName(SteamPowerMain.instance.PREFIX, SteamPowerMain.MODEL_DIRECTORY + "Furnace.png");
+        bindTextureByName(FluidMech.instance.PREFIX, FluidMech.MODEL_DIRECTORY + "Furnace.png");
         GL11.glPushMatrix();
         GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
         GL11.glScalef(1.0F, -1F, -1F);

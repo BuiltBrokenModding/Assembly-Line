@@ -4,11 +4,9 @@ import java.util.Random;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.ForgeDirection;
-
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import dark.api.ITileConnector;
 import dark.api.IToolReadOut;
-import dark.api.IToolReadOut.EnumTools;
 import dark.core.network.fluid.HydraulicNetworkHelper;
 
 public abstract class TileEntityFluidDevice extends TileEntityAdvanced implements IToolReadOut, ITileConnector
@@ -27,7 +25,7 @@ public abstract class TileEntityFluidDevice extends TileEntityAdvanced implement
     {
         if (tool != null && tool == EnumTools.PIPE_GUAGE)
         {
-            return " IndirectlyPower:"+this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+            return " IndirectlyPower:" + this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
         }
         return null;
     }

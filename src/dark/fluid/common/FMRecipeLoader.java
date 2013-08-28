@@ -24,6 +24,9 @@ public class FMRecipeLoader extends RecipeLoader
     public static Block blockSink;
     public static Block blockDrain;
     public static Block blockConPump;
+    public static Block blockHeater;
+    public static Block blockPiston;
+    public static Block blockBoiler;
 
     public static BlockFluid blockWasteLiquid;
     public static BlockFluid blockOilLiquid;
@@ -71,6 +74,7 @@ public class FMRecipeLoader extends RecipeLoader
         GameRegistry.addRecipe(new ItemStack(blockSink, 1), new Object[] { "I I", "SIS", "SPS", 'P', new ItemStack(blockPipe, 1), 'I', Item.ingotIron, 'S', Block.stone });
         GameRegistry.addRecipe(new ItemStack(blockSink, 1), new Object[] { "I I", "SIS", "SPS", 'P', new ItemStack(blockGenPipe, 1), 'I', Item.ingotIron, 'S', Block.stone });
     }
+
     public void registerTanks()
     {
         // lava tank
