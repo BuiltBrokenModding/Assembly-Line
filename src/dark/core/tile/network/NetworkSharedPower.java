@@ -2,9 +2,9 @@ package dark.core.tile.network;
 
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.core.block.IElectricalStorage;
-import dark.api.INetworkEnergyPart;
-import dark.api.INetworkPart;
-import dark.api.IPowerLess;
+import dark.interfaces.INetworkEnergyPart;
+import dark.interfaces.INetworkPart;
+import dark.interfaces.IPowerLess;
 
 /** Used for tile networks that only need to share power or act like a group battery that doesn't
  * store power on world save

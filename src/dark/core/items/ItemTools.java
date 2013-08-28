@@ -20,10 +20,10 @@ import universalelectricity.core.block.IElectrical;
 import universalelectricity.core.block.IElectricalStorage;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.api.IToolReadOut;
-import dark.api.IToolReadOut.EnumTools;
 import dark.core.DarkMain;
 import dark.core.helpers.FluidHelper;
+import dark.interfaces.IToolReadOut;
+import dark.interfaces.IToolReadOut.EnumTools;
 
 public class ItemTools extends ItemBasic
 {

@@ -19,9 +19,9 @@ import universalelectricity.core.vector.Vector2;
 import universalelectricity.prefab.vector.Region2;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.api.IScroll;
 import dark.core.DarkMain;
 import dark.core.access.UserAccess;
+import dark.interfaces.IScroll;
 
 @SideOnly(Side.CLIENT)
 public class GuiGlobalList extends GuiContainer implements IScroll

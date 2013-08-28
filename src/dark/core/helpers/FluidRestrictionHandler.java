@@ -8,7 +8,7 @@ import net.minecraftforge.fluids.FluidRegistry.FluidRegisterEvent;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
-import dark.api.ColorCode;
+import dark.interfaces.ColorCode;
 
 public class FluidRestrictionHandler
 {

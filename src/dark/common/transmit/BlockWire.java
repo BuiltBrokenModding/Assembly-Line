@@ -16,7 +16,7 @@ import universalelectricity.core.block.IConductor;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.tile.TileEntityConductor;
 import dark.core.DarkMain;
-import dark.core.blocks.BlockMachine;
+import dark.prefab.BlockMachine;
 
 public class BlockWire extends BlockMachine
 {

@@ -2,7 +2,7 @@ package dark.core.blocks;
 
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.core.vector.Vector3;
-import dark.api.IBlockActivate;
+import dark.interfaces.IBlockActivate;
 
 /** Interface to be applied to tile entity blocks that occupies more than one block space. Useful for
  * large machines.

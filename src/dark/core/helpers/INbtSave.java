@@ -1,4 +1,4 @@
-package dark.core;
+package dark.core.helpers;
 
 import net.minecraft.nbt.NBTTagCompound;
 

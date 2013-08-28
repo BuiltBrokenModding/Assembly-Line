@@ -1,7 +1,8 @@
-package dark.core;
+package dark.core.helpers;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 import net.minecraftforge.common.MinecraftForge;
 

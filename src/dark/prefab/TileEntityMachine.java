@@ -1,4 +1,4 @@
-package dark.core.blocks;
+package dark.prefab;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -23,11 +23,11 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.api.IDisableable;
-import dark.api.IExternalInv;
-import dark.api.IInvBox;
-import dark.api.IPowerLess;
-import dark.api.PowerSystems;
+import dark.interfaces.IDisableable;
+import dark.interfaces.IExternalInv;
+import dark.interfaces.IInvBox;
+import dark.interfaces.IPowerLess;
+import dark.interfaces.PowerSystems;
 
 public abstract class TileEntityMachine extends TileEntityUniversalElectrical implements ISidedInventory, IExternalInv, IDisableable, IPacketReceiver, IPowerLess
 {

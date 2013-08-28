@@ -14,7 +14,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import dark.core.DarkMain;
-import dark.core.blocks.BlockMachine;
+import dark.prefab.BlockMachine;
 
 public class BlockDebug extends BlockMachine
 {

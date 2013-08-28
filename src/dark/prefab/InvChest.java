@@ -1,4 +1,4 @@
-package dark.core.blocks;
+package dark.prefab;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -6,8 +6,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import dark.api.IExternalInv;
-import dark.api.IInvBox;
+import dark.interfaces.IExternalInv;
+import dark.interfaces.IInvBox;
 
 public class InvChest implements IInvBox
 {

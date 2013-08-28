@@ -8,7 +8,7 @@ import net.minecraft.world.World;
 import universalelectricity.core.path.IPathCallBack;
 import universalelectricity.core.path.Pathfinder;
 import universalelectricity.core.vector.Vector3;
-import dark.api.INetworkPart;
+import dark.interfaces.INetworkPart;
 
 /** Check if a conductor connects with another. */
 public class NetworkPathFinder extends Pathfinder

@@ -4,8 +4,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.Mod.ServerStarting;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import dark.core.INbtSave;
-import dark.core.SaveManager;
+import dark.core.helpers.INbtSave;
+import dark.core.helpers.SaveManager;
 
 public class GlobalAccessLoader implements INbtSave
 {

@@ -1,4 +1,4 @@
-package dark.api;
+package dark.interfaces;
 
 /** This class should be applied to all tile entities (mainly machines) that can be disabled (by
  * things like EMP, short circuit etc.).

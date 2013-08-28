@@ -12,8 +12,8 @@ import universalelectricity.core.path.Pathfinder;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import cpw.mods.fml.common.FMLLog;
-import dark.api.INetworkPart;
 import dark.core.helpers.ConnectionHelper;
+import dark.interfaces.INetworkPart;
 
 public abstract class NetworkTileEntities
 {

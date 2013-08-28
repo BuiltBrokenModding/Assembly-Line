@@ -1,4 +1,4 @@
-package dark.api;
+package dark.interfaces;
 
 import java.util.List;
 

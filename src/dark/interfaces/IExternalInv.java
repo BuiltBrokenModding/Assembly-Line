@@ -1,4 +1,4 @@
-package dark.api;
+package dark.interfaces;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;

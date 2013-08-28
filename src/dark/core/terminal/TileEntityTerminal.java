@@ -20,11 +20,11 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
-import dark.api.ISpecialAccess;
-import dark.api.ITerminal;
 import dark.core.access.AccessLevel;
 import dark.core.access.UserAccess;
-import dark.core.blocks.TileEntityMachine;
+import dark.interfaces.ISpecialAccess;
+import dark.interfaces.ITerminal;
+import dark.prefab.TileEntityMachine;
 
 /** @author Calclavia, DarkGuardsman */
 public abstract class TileEntityTerminal extends TileEntityMachine implements ISpecialAccess, IPacketReceiver, ITerminal

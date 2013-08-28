@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
-import dark.api.ITerminal;
+import dark.interfaces.ITerminal;
 
 /** @author Calclavia, DarkGuardsman */
 public class CommandRegistry

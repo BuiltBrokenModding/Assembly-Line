@@ -1,4 +1,4 @@
-package dark.core.blocks;
+package dark.prefab;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
@@ -6,8 +6,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
-import dark.api.IExternalInv;
-import dark.api.IInvBox;
+import dark.interfaces.IExternalInv;
+import dark.interfaces.IInvBox;
 
 public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, ISidedInventory
 {
