@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -15,6 +16,7 @@ import universalelectricity.core.block.IConductor;
 import universalelectricity.core.block.IElectrical;
 import universalelectricity.core.block.INetworkConnection;
 import universalelectricity.core.block.INetworkProvider;
+import universalelectricity.core.electricity.ElectricalEvent.ElectricityProductionEvent;
 import universalelectricity.core.electricity.ElectricalEvent.ElectricityRequestEvent;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.grid.ElectricityNetwork;
@@ -35,6 +37,88 @@ import cpw.mods.fml.common.FMLLog;
 public class UniversalNetwork extends ElectricityNetwork
 {
 	@Override
+	public float produce(ElectricityPack electricity, TileEntity... ignoreTiles)
+	{
+		ElectricityProductionEvent evt = new ElectricityProductionEvent(this, electricity, ignoreTiles);
+		MinecraftForge.EVENT_BUS.post(evt);
+
+		float totalEnergy = electricity.getWatts();
+		float networkResistance = getTotalResistance();
+		float proportionWasted = getTotalResistance() / (getTotalResistance() + acceptorResistance);
+		float energyWasted = totalEnergy * proportionWasted;
+		float totalUsableEnergy = totalEnergy - energyWasted;
+		float remainingUsableEnergy = totalUsableEnergy;
+		float voltage = electricity.voltage;
+
+		if (!evt.isCanceled())
+		{
+			Set<TileEntity> avaliableEnergyTiles = this.getAcceptors();
+
+			if (!avaliableEnergyTiles.isEmpty())
+			{
+				final float totalEnergyRequest = this.getRequest(ignoreTiles).getWatts();
+
+				if (totalEnergyRequest > 0)
+				{
+					for (TileEntity tileEntity : avaliableEnergyTiles)
+					{
+						if (tileEntity != null && !tileEntity.isInvalid())
+						{
+							if (remainingUsableEnergy > 0 && !Arrays.asList(ignoreTiles).contains(tileEntity))
+							{
+								if (tileEntity instanceof IElectrical)
+								{
+									IElectrical electricalTile = (IElectrical) tileEntity;
+
+									for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+									{
+										if (electricalTile.canConnect(direction) && this.getConductors().contains(VectorHelper.getConnectorFromSide(tileEntity.worldObj, new Vector3(tileEntity), direction)))
+										{
+											float energyToSend = totalUsableEnergy * (Math.min(electricalTile.getRequest(direction), totalEnergyRequest) / totalEnergyRequest);
+
+											if (energyToSend > 0)
+											{
+												ElectricityPack electricityToSend = ElectricityPack.getFromWatts(energyToSend, voltage);
+												remainingUsableEnergy -= electricalTile.receiveElectricity(direction, electricityToSend, true);
+											}
+										}
+									}
+								}
+								else if (Compatibility.isIndustrialCraft2Loaded() && tileEntity instanceof IEnergySink)
+								{
+									IEnergySink electricalTile = (IEnergySink) tileEntity;
+
+									for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+									{
+										TileEntity conductor = VectorHelper.getConnectorFromSide(tileEntity.worldObj, new Vector3(tileEntity), direction);
+
+										if (this.getConductors().contains(conductor) && electricalTile.acceptsEnergyFrom(conductor, direction))
+										{
+											float energyToSend = (float) Math.min(totalUsableEnergy * ((electricalTile.demandedEnergyUnits() * Compatibility.IC2_RATIO) / totalEnergyRequest), electricalTile.getMaxSafeInput() * Compatibility.IC2_RATIO);
+
+											if (energyToSend > 0)
+											{
+												remainingUsableEnergy -= electricalTile.injectEnergyUnits(direction, energyToSend * Compatibility.TO_IC2_RATIO);
+											}
+										}
+									}
+								}
+							}
+						}
+						else
+						{
+							this.refresh();
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		return remainingUsableEnergy;
+	}
+
+	@Override
 	public ElectricityPack getRequest(TileEntity... ignoreTiles)
 	{
 		List<ElectricityPack> requests = new ArrayList<ElectricityPack>();
@@ -50,11 +134,11 @@ public class UniversalNetwork extends ElectricityNetwork
 				continue;
 			}
 
-			if (tileEntity instanceof IElectrical)
+			if (tileEntity != null && !tileEntity.isInvalid())
 			{
-				if (!tileEntity.isInvalid())
+				if (tileEntity.worldObj.getBlockTileEntity(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord) == tileEntity)
 				{
-					if (tileEntity.worldObj.getBlockTileEntity(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord) == tileEntity)
+					if (tileEntity instanceof IElectrical)
 					{
 						for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 						{
@@ -65,14 +149,8 @@ public class UniversalNetwork extends ElectricityNetwork
 						}
 						continue;
 					}
-				}
-			}
 
-			if (Compatibility.isIndustrialCraft2Loaded() && tileEntity instanceof IEnergySink)
-			{
-				if (!tileEntity.isInvalid())
-				{
-					if (tileEntity.worldObj.getBlockTileEntity(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord) == tileEntity)
+					if (Compatibility.isIndustrialCraft2Loaded() && tileEntity instanceof IEnergySink)
 					{
 						for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 						{
@@ -84,22 +162,22 @@ public class UniversalNetwork extends ElectricityNetwork
 
 						continue;
 					}
-				}
-			}
 
-			if (Compatibility.isBuildcraftLoaded() && tileEntity instanceof IPowerReceptor)
-			{
-				if (!tileEntity.isInvalid())
-				{
-					if (tileEntity.worldObj.getBlockTileEntity(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord) == tileEntity)
+					if (Compatibility.isBuildcraftLoaded() && tileEntity instanceof IPowerReceptor)
 					{
-						/*
-						 * TODO: Fix unkown direction
-						 * 
-						 * TODO: Fix inaccurate BuildCraft request calculation.
-						 */
-						requests.add(ElectricityPack.getFromWatts(((IPowerReceptor) tileEntity).getPowerReceiver(ForgeDirection.UNKNOWN).getActivationEnergy() * Compatibility.BC3_RATIO, 120));
+						for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+						{
+							ElectricityPack pack = ElectricityPack.getFromWatts(((IPowerReceptor) tileEntity).getPowerReceiver(direction).powerRequest() * Compatibility.BC3_RATIO, 120);
+
+							if (pack.getWatts() > 0)
+							{
+								requests.add(pack);
+								break;
+							}
+						}
+
 						continue;
+
 					}
 				}
 			}

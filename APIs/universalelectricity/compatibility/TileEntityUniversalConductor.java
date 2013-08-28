@@ -29,8 +29,8 @@ import buildcraft.api.power.IPowerReceptor;
  */
 public abstract class TileEntityUniversalConductor extends TileEntityConductor implements IEnergySink
 {
-    protected boolean isAddedToEnergyNet;
-    
+	protected boolean isAddedToEnergyNet;
+
 	@Override
 	public TileEntity[] getAdjacentConnections()
 	{
@@ -62,14 +62,14 @@ public abstract class TileEntityUniversalConductor extends TileEntityConductor i
 					}
 
 					if (tileEntity instanceof IEnergyEmitter)
-	                {
-	                    if (((IEnergyEmitter) tileEntity).emitsEnergyTo(tileEntity, side.getOpposite()))
-	                    {
-                            this.adjacentConnections[i] = tileEntity;
-                            continue;
-	                    }
-	                }
-					
+					{
+						if (((IEnergyEmitter) tileEntity).emitsEnergyTo(tileEntity, side.getOpposite()))
+						{
+							this.adjacentConnections[i] = tileEntity;
+							continue;
+						}
+					}
+
 					this.adjacentConnections[i] = tileEntity;
 				}
 				else if (Compatibility.isBuildcraftLoaded() && tileEntity instanceof IPowerReceptor)
@@ -82,88 +82,89 @@ public abstract class TileEntityUniversalConductor extends TileEntityConductor i
 		return this.adjacentConnections;
 	}
 
-    @Override
-    public boolean canUpdate()
-    {
-        return !this.isAddedToEnergyNet;
-    }
+	@Override
+	public boolean canUpdate()
+	{
+		return !this.isAddedToEnergyNet;
+	}
 
-    @Override
-    public void updateEntity()
-    {
-        if (!this.worldObj.isRemote)
-        {
-            if (!this.isAddedToEnergyNet)
-            {
-                this.initIC();
-            }
-        }
-    }
+	@Override
+	public void updateEntity()
+	{
+		if (!this.worldObj.isRemote)
+		{
+			if (!this.isAddedToEnergyNet)
+			{
+				this.initIC();
+			}
+		}
+	}
 
-    @Override
-    public void invalidate()
-    {
-        this.unloadTileIC2();
-        super.invalidate();
-    }
+	@Override
+	public void invalidate()
+	{
+		this.unloadTileIC2();
+		super.invalidate();
+	}
 
-    @Override
-    public void onChunkUnload()
-    {
-        this.unloadTileIC2();
-        super.onChunkUnload();
-    }
+	@Override
+	public void onChunkUnload()
+	{
+		this.unloadTileIC2();
+		super.onChunkUnload();
+	}
 
-    protected void initIC()
-    {
-        if (Compatibility.isIndustrialCraft2Loaded())
-        {
-            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
-        }
+	protected void initIC()
+	{
+		if (Compatibility.isIndustrialCraft2Loaded())
+		{
+			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
+		}
 
-        this.isAddedToEnergyNet = true;
-    }
+		this.isAddedToEnergyNet = true;
+	}
 
-    private void unloadTileIC2()
-    {
-        if (this.isAddedToEnergyNet && this.worldObj != null)
-        {
-            if (Compatibility.isIndustrialCraft2Loaded())
-            {
-                MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
-            }
+	private void unloadTileIC2()
+	{
+		if (this.isAddedToEnergyNet && this.worldObj != null)
+		{
+			if (Compatibility.isIndustrialCraft2Loaded())
+			{
+				MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
+			}
 
-            this.isAddedToEnergyNet = false;
-        }
-    }
+			this.isAddedToEnergyNet = false;
+		}
+	}
 
-    @Override
-    public double demandedEnergyUnits()
-    {
-        if (this.getNetwork() == null)
-        {
-            return 0.0;
-        }
-        
-        return this.getNetwork().getRequest(this).getWatts() * Compatibility.TO_IC2_RATIO;
-    }
+	@Override
+	public double demandedEnergyUnits()
+	{
+		if (this.getNetwork() == null)
+		{
+			return 0.0;
+		}
 
-    @Override
-    public double injectEnergyUnits(ForgeDirection directionFrom, double amount)
-    {
-        TileEntity tile = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), directionFrom);
-        return this.getNetwork().produce(ElectricityPack.getFromWatts((float) (amount * Compatibility.IC2_RATIO), 120.0F / 1000.0F), this, tile);
-    }
+		return this.getNetwork().getRequest(this).getWatts() * Compatibility.TO_IC2_RATIO;
+	}
 
-    @Override
-    public int getMaxSafeInput()
-    {
-        return Integer.MAX_VALUE;
-    }
+	@Override
+	public double injectEnergyUnits(ForgeDirection directionFrom, double amount)
+	{
+		TileEntity tile = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), directionFrom);
+		ElectricityPack pack = ElectricityPack.getFromWatts((float) (amount * Compatibility.IC2_RATIO), 120);
+		return this.getNetwork().produce(pack, this, tile) * Compatibility.TO_IC2_RATIO;
+	}
 
-    @Override
-    public boolean acceptsEnergyFrom(TileEntity emitter, ForgeDirection direction)
-    {
-        return true;
-    }
+	@Override
+	public int getMaxSafeInput()
+	{
+		return Integer.MAX_VALUE;
+	}
+
+	@Override
+	public boolean acceptsEnergyFrom(TileEntity emitter, ForgeDirection direction)
+	{
+		return true;
+	}
 }
