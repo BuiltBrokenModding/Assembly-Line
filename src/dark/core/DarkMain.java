@@ -61,7 +61,7 @@ public class DarkMain extends ModPrefab
 
     // @Mod
     public static final String MOD_ID = "DarkCore";
-    public static final String MOD_NAME = "Dark Heart";
+    public static final String MOD_NAME = "Darks CoreMachine";
     public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + REVIS_VERSION + "." + BUILD_VERSION;
 
     @SidedProxy(clientSide = "dark.core.ClientProxy", serverSide = "dark.core.CommonProxy")
@@ -111,6 +111,7 @@ public class DarkMain extends ModPrefab
     @Override
     public void init(FMLInitializationEvent event)
     {
+        BlockRegistry.registerAllBlocks();
         super.init(event);
 
         if (CoreRecipeLoader.blockOre != null)
@@ -127,19 +128,6 @@ public class DarkMain extends ModPrefab
                 }
             }
         }
-        if (CoreRecipeLoader.blockWire != null)
-        {
-            GameRegistry.registerBlock(CoreRecipeLoader.blockWire, ItemBlockHolder.class, "DMWire");
-            GameRegistry.registerTileEntity(TileEntityWire.class, "DMWire");
-        }
-        if (CoreRecipeLoader.blockDebug != null)
-        {
-            GameRegistry.registerBlock(CoreRecipeLoader.blockDebug, ItemBlockHolder.class, "DMDebug");
-            for (int i = 0; i < debugBlocks.values().length; i++)
-            {
-                GameRegistry.registerTileEntity(debugBlocks.values()[i].clazz, "DMDebug" + i);
-            }
-        }
         if (CoreRecipeLoader.itemParts != null)
         {
             /* ORE DIRECTORY REGISTER */
@@ -154,9 +142,6 @@ public class DarkMain extends ModPrefab
             OreDictionary.registerOre("unfinishedTank", new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Tank.ordinal()));
 
         }
-        //TODO look at possibility of having this only be enabled if needed but still no option to disable manually
-        GameRegistry.registerBlock(blockMulti, "multiBlock");
-        GameRegistry.registerTileEntity(TileEntityMulti.class, "DMMultiBlock");
 
         proxy.init();
     }
@@ -185,20 +170,14 @@ public class DarkMain extends ModPrefab
         CONFIGURATION.load();
         /* BLOCKS */
         blockMulti = new BlockMulti(DarkMain.CONFIGURATION.getBlock("MultiBlock", getNextID()).getInt());
+        CoreRecipeLoader.blockOre = new BlockOre(getNextID(), CONFIGURATION);
+        CoreRecipeLoader.blockWire = new BlockWire(CONFIGURATION, getNextID());
+        CoreRecipeLoader.blockDebug = new BlockDebug(getNextID(), CONFIGURATION);
 
-        if (CONFIGURATION.get("general", "LoadOre", true, "Disabling this also disabled the items that go with the ores").getBoolean(true))
-        {
-            CoreRecipeLoader.blockOre = new BlockOre(getNextID(), CONFIGURATION);
-            dataList.add(new BlockData(CoreRecipeLoader.blockOre, ItemBlockOre.class, "DMOre"));
-        }
-        if (CONFIGURATION.get("general", "EnableWires", true).getBoolean(true))
-        {
-            CoreRecipeLoader.blockWire = new BlockWire(CONFIGURATION, getNextID());
-        }
-        if (CONFIGURATION.get("general", "EnableDebugBlocks", true, "Enable this to use the creative mode only infinite power, load, fluid, and void blocks").getBoolean(true))
-        {
-            CoreRecipeLoader.blockDebug = new BlockDebug(getNextID(), CONFIGURATION);
-        }
+        dataList.add(new BlockData(CoreRecipeLoader.blockOre, ItemBlockOre.class, "DMOre"));
+        dataList.add(new BlockData(CoreRecipeLoader.blockWire, "DMWire"));
+        dataList.add(new BlockData(CoreRecipeLoader.blockDebug, "DMDebug"));
+        dataList.add(new BlockData(blockMulti, "DMDMultiBlock").addTileEntity("DMMultiBlock", TileEntityMulti.class).canDisable(false));
         /* ITEMS */
         if (CONFIGURATION.get("general", "LoadOreItems", true, "Only disable ore items if you have another mod that provides metal dust, ingots, and plates").getBoolean(true))
         {

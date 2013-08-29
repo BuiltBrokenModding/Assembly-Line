@@ -1,7 +1,9 @@
 package dark.common.debug;
 
 import java.util.List;
+import java.util.Set;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -14,9 +16,11 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import dark.core.DarkMain;
+import dark.core.IExtraObjectInfo;
+import dark.core.helpers.Pair;
 import dark.prefab.BlockMachine;
 
-public class BlockDebug extends BlockMachine
+public class BlockDebug extends BlockMachine implements IExtraObjectInfo
 {
     Icon load, source, vod, fluid;
 
@@ -104,6 +108,44 @@ public class BlockDebug extends BlockMachine
         {
             par3List.add(new ItemStack(par1, 1, i));
         }
+    }
+
+    @Override
+    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+    {
+        for (int i = 0; i < debugBlocks.values().length; i++)
+        {
+            list.add(new Pair<String,Class<? extends TileEntity>>("DMDebug" + i,debugBlocks.values()[i].clazz));
+        }
+
+    }
+
+    @Override
+    public boolean hasExtraConfigs()
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void loadExtraConfigs(Configuration config)
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void loadRecipes()
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void loadOreNames()
+    {
+        // TODO Auto-generated method stub
+
     }
 
 }

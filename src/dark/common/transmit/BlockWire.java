@@ -232,9 +232,9 @@ public class BlockWire extends BlockMachine implements IExtraObjectInfo
     }
 
     @Override
-    public void getTileEntities(int blockID, Set<Pair<String, TileEntity>> list)
+    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
     {
-        list.add(new Pair<String, TileEntity>("DMWireTile", new TileEntityWire()));
+        list.add(new Pair<String, Class<? extends TileEntity>>("DMWireTile", TileEntityWire.class));
     }
 
     @Override

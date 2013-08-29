@@ -69,7 +69,7 @@ public class BlockOre extends Block implements IExtraObjectInfo
     }
 
     @Override
-    public void getTileEntities(int blockID, Set<Pair<String, TileEntity>> list)
+    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
     {
     }
 

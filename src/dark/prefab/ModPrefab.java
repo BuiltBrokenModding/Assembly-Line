@@ -68,7 +68,7 @@ public abstract class ModPrefab
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-        BlockRegistry.registerAllBlocks();
+
     }
 
     @EventHandler

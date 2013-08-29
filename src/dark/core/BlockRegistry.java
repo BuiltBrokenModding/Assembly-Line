@@ -49,7 +49,7 @@ public class BlockRegistry
         masterBlockConfig.load();
         synchronized (blockMap)
         {
-            HashMap<String, TileEntity> tileList = new HashMap<String, TileEntity>();
+            HashMap<String, Class<? extends TileEntity>> tileList = new HashMap<String, Class<? extends TileEntity>>();
             for (Entry<Block, BlockData> entry : blockMap.entrySet())
             {
                 BlockData blockData = entry.getValue();
@@ -74,22 +74,44 @@ public class BlockRegistry
                             extraBlockConfig.save();
                         }
                         ((IExtraObjectInfo) block).loadOreNames();
-                        Set<Pair<String, TileEntity>> tileListNew = new HashSet<Pair<String, TileEntity>>();
+                        Set<Pair<String, Class<? extends TileEntity>>> tileListNew = new HashSet<Pair<String, Class<? extends TileEntity>>>();
                         ((IExtraObjectInfo) block).getTileEntities(block.blockID, tileListNew);
-                        for (Pair<String, TileEntity> par : tileListNew)
+                        for (Pair<String, Class<? extends TileEntity>> par : tileListNew)
                         {
                             if (!tileList.containsKey(par.getKey()) && !tileList.containsValue(par.getValue()))
                             {
                                 tileList.put(par.getKey(), par.getValue());
                             }
-                            else if(par.getValue() != null)
+                            else if (par.getValue() != null)
                             {
                                 System.out.println("BlockRegistry tried to list a tile or tileName that was already listed");
                                 System.out.println("Tile>" + par.getValue().toString() + " | Name>" + par.getKey());
                             }
                         }
                     }
+                    else
+                    {
+                        if (blockData.tiles != null)
+                        {
+                            for (Pair<String, Class<? extends TileEntity>> pr : blockData.tiles)
+                            {
+                                if (!tileList.containsKey(pr.getKey()) && !tileList.containsValue(pr.getValue()))
+                                {
+                                    tileList.put(pr.getKey(), pr.getValue());
+                                }
+                                else if (pr.getValue() != null)
+                                {
+                                    System.out.println("BlockRegistry tried to list a tile or tileName that was already listed");
+                                    System.out.println("Tile>" + pr.getValue().toString() + " | Name>" + pr.getKey());
+                                }
+                            }
+                        }
+                    }
                 }
+            }
+            for (Entry<String, Class<? extends TileEntity>> entry : tileList.entrySet())
+            {
+                GameRegistry.registerTileEntity(entry.getValue(), entry.getKey());
             }
         }
         masterBlockConfig.save();
@@ -101,7 +123,7 @@ public class BlockRegistry
         public Block block;
         public Class<? extends ItemBlock> itemBlock;
         public String modBlockID;
-        public HashMap<String, TileEntity> tiles = new HashMap<String, TileEntity>();
+        public Set<Pair<String, Class<? extends TileEntity>>> tiles = new HashSet<Pair<String, Class<? extends TileEntity>>>();
         public boolean allowDisable = true;
 
         public BlockData(Block block, String name)
@@ -116,17 +138,33 @@ public class BlockRegistry
             this.itemBlock = itemBlock;
         }
 
+        /** Should there be an option to allow the user to disable this block */
+        public BlockData canDisable(boolean yes)
+        {
+            this.allowDisable = yes;
+            return this;
+        }
+
         /** Adds a tileEntity to be registered when this block is registered
          *
          * @param name - mod name for the tileEntity, should be unique
-         * @param tile - new instance of the TileEntity to register */
-        public BlockData addTileEntity(String name, TileEntity tile)
+         * @param class1 - new instance of the TileEntity to register */
+        public BlockData addTileEntity(String name, Class<? extends TileEntity> class1)
         {
-            if (!this.tiles.containsKey(name))
+            if (name != null && class1 != null)
             {
-                this.tiles.put(name, tile);
+                Pair<String, Class<? extends TileEntity>> pair = new Pair<String, Class<? extends TileEntity>>(name, class1);
+                if (!this.tiles.contains(pair))
+                {
+                    this.tiles.add(pair);
+                }
             }
             return this;
+        }
+
+        public BlockData addTileEntity(Class<? extends TileEntity> class1, String string)
+        {
+            return addTileEntity(string, class1);
         }
     }
 }

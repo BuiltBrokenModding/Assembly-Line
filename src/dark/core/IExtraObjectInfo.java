@@ -17,7 +17,7 @@ public interface IExtraObjectInfo
 {
 
     /** List of all tileEntities this block needs */
-    public void getTileEntities(int blockID, Set<Pair<String, TileEntity>> list);
+    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list);
 
     /** True will cause a config file to be generated for this block */
     public boolean hasExtraConfigs();
