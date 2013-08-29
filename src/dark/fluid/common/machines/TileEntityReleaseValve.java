@@ -10,14 +10,14 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
-import dark.api.ColorCode;
-import dark.api.IColorCoded;
-import dark.api.ITileConnector;
-import dark.api.IToolReadOut;
 import dark.api.fluid.INetworkPipe;
 import dark.core.helpers.ConnectionHelper;
 import dark.core.network.fluid.NetworkPipes;
 import dark.fluid.common.prefab.TileEntityFluidDevice;
+import dark.interfaces.ColorCode;
+import dark.interfaces.IColorCoded;
+import dark.interfaces.ITileConnector;
+import dark.interfaces.IToolReadOut;
 
 public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITileConnector, IToolReadOut
 {

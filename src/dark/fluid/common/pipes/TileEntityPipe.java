@@ -33,16 +33,16 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.api.ColorCode;
-import dark.api.IColorCoded;
-import dark.api.ITileConnector;
-import dark.api.IToolReadOut;
 import dark.api.fluid.INetworkPipe;
 import dark.core.helpers.FluidRestrictionHandler;
 import dark.core.network.fluid.NetworkPipes;
 import dark.core.tile.network.NetworkTileEntities;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.pipes.addon.IPipeExtention;
+import dark.interfaces.ColorCode;
+import dark.interfaces.IColorCoded;
+import dark.interfaces.ITileConnector;
+import dark.interfaces.IToolReadOut;
 
 public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler, IToolReadOut, IColorCoded, INetworkPipe, IPacketReceiver
 {

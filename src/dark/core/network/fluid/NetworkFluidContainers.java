@@ -7,10 +7,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
-import dark.api.ColorCode;
-import dark.api.INetworkPart;
 import dark.api.fluid.INetworkFluidPart;
 import dark.core.tile.network.NetworkTileEntities;
+import dark.interfaces.ColorCode;
+import dark.interfaces.INetworkPart;
 
 /** Side note: the network should act like this when done {@link http
  * ://www.e4training.com/hydraulic_calculators/B1.htm} as well as stay compatible with the forge

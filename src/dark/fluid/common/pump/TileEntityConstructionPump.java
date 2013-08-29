@@ -14,13 +14,13 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
-import dark.api.ITileConnector;
 import dark.api.fluid.IDrain;
 import dark.api.fluid.INetworkPipe;
 import dark.core.helpers.MetaGroup;
 import dark.core.helpers.Pair;
 import dark.core.network.fluid.HydraulicNetworkHelper;
 import dark.core.network.fluid.NetworkFluidTiles;
+import dark.interfaces.ITileConnector;
 
 public class TileEntityConstructionPump extends TileEntityStarterPump implements IFluidHandler, ITileConnector
 {

@@ -18,8 +18,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
-import dark.api.ColorCode;
-import dark.api.INetworkPart;
 import dark.api.fluid.AdvancedFluidEvent;
 import dark.api.fluid.AdvancedFluidEvent.FluidMergeEvent;
 import dark.api.fluid.INetworkFluidPart;
@@ -28,6 +26,8 @@ import dark.core.helpers.Pair;
 import dark.core.tile.network.NetworkTileEntities;
 import dark.fluid.common.machines.TileEntityTank;
 import dark.fluid.common.pipes.TileEntityPipe;
+import dark.interfaces.ColorCode;
+import dark.interfaces.INetworkPart;
 
 public class NetworkFluidTiles extends NetworkTileEntities
 {

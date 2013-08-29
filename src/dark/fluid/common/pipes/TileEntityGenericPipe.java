@@ -7,8 +7,8 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
-import dark.api.ColorCode;
 import dark.core.network.fluid.NetworkPipes;
+import dark.interfaces.ColorCode;
 
 public class TileEntityGenericPipe extends TileEntityPipe
 {

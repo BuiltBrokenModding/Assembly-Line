@@ -11,9 +11,9 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import dark.api.IColorCoded;
 import dark.core.helpers.FluidHelper;
 import dark.core.helpers.FluidRestrictionHandler;
+import dark.interfaces.IColorCoded;
 
 public abstract class TileEntityFluidStorage extends TileEntityFluidDevice implements IFluidHandler, IColorCoded
 {

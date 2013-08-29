@@ -1,7 +1,9 @@
 package dark.fluid.common;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -26,9 +28,11 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
+import dark.core.CoreRecipeLoader;
 import dark.core.DarkMain;
-import dark.core.ModPrefab;
+import dark.core.BlockRegistry.BlockData;
 import dark.core.items.ItemBlockHolder;
+import dark.core.items.ItemBlockOre;
 import dark.fluid.common.machines.BlockBoiler;
 import dark.fluid.common.machines.BlockFluid;
 import dark.fluid.common.machines.BlockReleaseValve;
@@ -52,6 +56,7 @@ import dark.fluid.common.pump.TileEntityDrain;
 import dark.fluid.common.pump.TileEntityStarterPump;
 import dark.mech.common.machines.BlockGenerator;
 import dark.mech.common.machines.BlockRod;
+import dark.prefab.ModPrefab;
 
 @ModstatInfo(prefix = "fluidmech")
 @Mod(modid = FluidMech.MOD_ID, name = FluidMech.MOD_NAME, version = DarkMain.VERSION, dependencies = "after:DarkCore", useMetadata = true)
@@ -95,19 +100,7 @@ public class FluidMech extends ModPrefab
         super.preInit(event);
 
         /* BLOCK REGISTER CALLS */
-        GameRegistry.registerBlock(FMRecipeLoader.blockPipe, ItemBlockPipe.class, "lmPipe");
-        GameRegistry.registerBlock(FMRecipeLoader.blockGenPipe, ItemBlockPipe.class, "lmGenPipe");
-        GameRegistry.registerBlock(FMRecipeLoader.blockReleaseValve, ItemBlockHolder.class, "eValve");
-        GameRegistry.registerBlock(FMRecipeLoader.blockRod, "mechRod");
-        GameRegistry.registerBlock(FMRecipeLoader.blockGenerator, "lmGen");
-        GameRegistry.registerBlock(FMRecipeLoader.blockMachine, ItemBlockHolder.class, "lmMachines");
-        GameRegistry.registerBlock(FMRecipeLoader.blockTank, ItemBlockHolder.class, "lmTank");
-        GameRegistry.registerBlock(FMRecipeLoader.blockSink, "lmSink");
-        GameRegistry.registerBlock(FMRecipeLoader.blockDrain, "lmDrain");
-        GameRegistry.registerBlock(FMRecipeLoader.blockConPump, "lmConPump");
-        GameRegistry.registerBlock(FMRecipeLoader.blockHeater, "SPHeater");
-        GameRegistry.registerBlock(FMRecipeLoader.blockPiston, "SPPiston");
-        GameRegistry.registerBlock(FMRecipeLoader.blockBoiler, "SPBoiler");
+
 
         proxy.preInit();
     }
@@ -116,23 +109,7 @@ public class FluidMech extends ModPrefab
     public void init(FMLInitializationEvent event)
     {
         super.init(event);
-        /* LOGGER */
-        FMLog.info("Loading...");
         proxy.Init();
-
-        /* TILE ENTITY REGISTER CALLS */
-        GameRegistry.registerTileEntity(TileEntityPipe.class, "FluidPipe");
-        GameRegistry.registerTileEntity(TileEntityGenericPipe.class, "ColoredPipe");
-        GameRegistry.registerTileEntity(TileEntityStarterPump.class, "starterPump");
-        GameRegistry.registerTileEntity(TileEntityReleaseValve.class, "ReleaseValve");
-        GameRegistry.registerTileEntity(TileEntityTank.class, "FluidTank");
-        GameRegistry.registerTileEntity(TileEntitySink.class, "FluidSink");
-        GameRegistry.registerTileEntity(TileEntityDrain.class, "FluidDrain");
-        GameRegistry.registerTileEntity(TileEntityConstructionPump.class, "ConstructionPump");
-
-        GameRegistry.registerTileEntity(TileEntityBoiler.class, "FMSteamBoiler");
-        //GameRegistry.registerTileEntity(TileEntityFireBox.class, "FMFireBox");
-        GameRegistry.registerTileEntity(TileEntitySteamPiston.class, "FMSteamPiston");
 
         /* LANG LOADING */
         FMLog.info(" Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
@@ -143,8 +120,6 @@ public class FluidMech extends ModPrefab
     public void postInit(FMLPostInitializationEvent event)
     {
         super.postInit(event);
-        /* LOGGER */
-        FMLog.info("Finalizing...");
         proxy.postInit();
 
         /* /******** RECIPES ************* */
@@ -154,8 +129,9 @@ public class FluidMech extends ModPrefab
     }
 
     @Override
-    public void loadConfig()
+    public List<BlockData> getBlocks()
     {
+        List<BlockData> dataList = new ArrayList<BlockData>();
         if (recipeLoader == null)
         {
             recipeLoader = new FMRecipeLoader();
@@ -188,9 +164,23 @@ public class FluidMech extends ModPrefab
         FMRecipeLoader.blockPiston = new BlockSteamPiston(getNextID());
         FMRecipeLoader.blockBoiler = new BlockBoiler(getNextID());
 
+        dataList.add(new BlockData(FMRecipeLoader.blockPipe, ItemBlockPipe.class, "lmPipe").addTileEntity(TileEntityPipe.class, "FluidPipe"));
+        dataList.add(new BlockData(FMRecipeLoader.blockGenPipe, ItemBlockPipe.class, "lmGenPipe").addTileEntity(TileEntityGenericPipe.class, "ColoredPipe"));
+        dataList.add(new BlockData(FMRecipeLoader.blockReleaseValve, ItemBlockHolder.class, "eValve").addTileEntity(TileEntityReleaseValve.class, "ReleaseValve"));
+        dataList.add(new BlockData(FMRecipeLoader.blockRod, "mechRod"));
+        dataList.add(new BlockData(FMRecipeLoader.blockGenerator, "mechGenerator"));
+        dataList.add(new BlockData(FMRecipeLoader.blockMachine, ItemBlockHolder.class, "lmMachines").addTileEntity(TileEntityStarterPump.class, "starterPump"));
+        dataList.add(new BlockData(FMRecipeLoader.blockTank, ItemBlockHolder.class, "lmTank").addTileEntity(TileEntityTank.class, "FluidTank"));
+        dataList.add(new BlockData(FMRecipeLoader.blockSink, "lmSink").addTileEntity(TileEntitySink.class, "FluidSink"));
+        dataList.add(new BlockData(FMRecipeLoader.blockDrain, "lmDrain").addTileEntity(TileEntityDrain.class, "FluidDrain"));
+        dataList.add(new BlockData(FMRecipeLoader.blockConPump, "lmConPump").addTileEntity(TileEntityConstructionPump.class, "ConstructionPump"));
+        dataList.add(new BlockData(FMRecipeLoader.blockHeater, "SPHeater"));
+        dataList.add(new BlockData(FMRecipeLoader.blockPiston, "SPPiston").addTileEntity(TileEntitySteamPiston.class, "FMSteamPiston"));
+        dataList.add(new BlockData(FMRecipeLoader.blockBoiler, "SPBoiler").addTileEntity(TileEntityBoiler.class, "FMSteamBoiler"));
+
         /* ITEM DECLARATION */
         CONFIGURATION.save();
-
+        return dataList;
     }
 
     @Override
@@ -211,7 +201,7 @@ public class FluidMech extends ModPrefab
 
     }
 
-    public static final CreativeTabs TabFluidMech = new CreativeTabs("Fluid Mechanics")
+    public static final CreativeTabs TabFluidMech = new CreativeTabs("Hydraulics")
     {
         public ItemStack getIconItemStack()
         {

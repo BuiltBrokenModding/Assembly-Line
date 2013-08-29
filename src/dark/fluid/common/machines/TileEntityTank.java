@@ -29,9 +29,6 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.api.ColorCode;
-import dark.api.IColorCoded;
-import dark.api.IToolReadOut;
 import dark.api.fluid.INetworkFluidPart;
 import dark.api.fluid.INetworkPipe;
 import dark.core.helpers.FluidRestrictionHandler;
@@ -40,6 +37,9 @@ import dark.core.network.fluid.NetworkFluidTiles;
 import dark.core.tile.network.NetworkTileEntities;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.prefab.TileEntityFluidStorage;
+import dark.interfaces.ColorCode;
+import dark.interfaces.IColorCoded;
+import dark.interfaces.IToolReadOut;
 
 public class TileEntityTank extends TileEntityFluidStorage implements IFluidHandler, IToolReadOut, IColorCoded, INetworkFluidPart, IPacketReceiver
 {
