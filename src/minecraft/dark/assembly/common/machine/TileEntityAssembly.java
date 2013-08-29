@@ -10,11 +10,11 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
-import dark.api.INetworkEnergyPart;
 import dark.assembly.common.AssemblyLine;
-import dark.core.blocks.TileEntityMachine;
 import dark.core.tile.network.NetworkSharedPower;
 import dark.core.tile.network.NetworkTileEntities;
+import dark.interfaces.INetworkEnergyPart;
+import dark.prefab.TileEntityMachine;
 
 /** A class to be inherited by all machines on the assembly line. This class acts as a single peace
  * in a network of similar tiles allowing all to share power from one or more sources
@@ -22,7 +22,9 @@ import dark.core.tile.network.NetworkTileEntities;
  * @author DarkGuardsman */
 public abstract class TileEntityAssembly extends TileEntityMachine implements IPacketReceiver, INetworkEnergyPart
 {
+    /** lowest value the network can update at */
     public static int refresh_min_rate = 20;
+    /** range by which the network can update at */
     public static int refresh_diff = 9;
     /** Network used to link assembly machines together */
     private NetworkAssembly assemblyNetwork;
@@ -30,7 +32,7 @@ public abstract class TileEntityAssembly extends TileEntityMachine implements IP
     public List<TileEntity> connectedTiles = new ArrayList<TileEntity>();
     /** Random instance */
     public Random random = new Random();
-    /** Random rate by which this tile updates its connections */
+    /** Random rate by which this tile updates its network connections */
     private int updateTick = 1;
 
     public TileEntityAssembly(float wattsPerTick)

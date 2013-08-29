@@ -6,8 +6,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import dark.assembly.api.ICraneStructure;
-import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.machine.TileEntityAssembly;
+import dark.core.DarkMain;
 
 public class TileEntityCraneController extends TileEntityAssembly implements ICraneStructure
 {
@@ -58,7 +58,7 @@ public class TileEntityCraneController extends TileEntityAssembly implements ICr
     {
         if (this.worldObj.isRemote && armPos != null)
         {
-            AssemblyLine.proxy.renderBeam(this.worldObj, new Vector3(this), armPos, Color.BLUE, 1);
+            DarkMain.proxy.renderBeam(this.worldObj, new Vector3(this), armPos, Color.BLUE, 1);
         }
         super.updateEntity();
         if (ticks % 60 == 0)

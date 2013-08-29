@@ -10,9 +10,9 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.block.IElectrical;
 import universalelectricity.core.block.IElectricalStorage;
 import universalelectricity.core.vector.Vector3;
-import dark.api.INetworkEnergyPart;
-import dark.api.INetworkPart;
 import dark.core.tile.network.NetworkSharedPower;
+import dark.interfaces.INetworkEnergyPart;
+import dark.interfaces.INetworkPart;
 
 public class NetworkAssembly extends NetworkSharedPower
 {
@@ -88,7 +88,7 @@ public class NetworkAssembly extends NetworkSharedPower
         {
             this.minDemand = currentDemand;
         }
-        this.averageDemand = (averageDemand + currentDemand) / 2;
+        this.averageDemand = (lastDemand + currentDemand + averageDemand) / 3;
         return currentDemand;
     }
 

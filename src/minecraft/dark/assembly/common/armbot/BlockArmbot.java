@@ -12,7 +12,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.common.machine.BlockAssembly;
-import dark.core.blocks.IMultiBlock;
+import dark.prefab.IMultiBlock;
 
 public class BlockArmbot extends BlockAssembly
 {

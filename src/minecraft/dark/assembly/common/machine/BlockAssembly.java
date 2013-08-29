@@ -4,7 +4,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.util.Icon;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.TabAssemblyLine;
-import dark.core.blocks.BlockMachine;
+import dark.prefab.BlockMachine;
 
 public abstract class BlockAssembly extends BlockMachine
 {
