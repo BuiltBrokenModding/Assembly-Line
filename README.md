@@ -3,8 +3,11 @@
 ### Brief
 Simple yet open addition to Dark's Core Machine provind advancement and automation in farming
 
+Based off biotech mod created by LiQuiD
+
 ### Project Team
 * Darkguardsman - Lead-Dev
+* LiQuiD(liquidgithub) - Dev
 
 
 ### License
