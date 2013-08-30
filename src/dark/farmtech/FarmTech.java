@@ -21,6 +21,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import dark.api.farm.DecayMatterList;
 import dark.core.BlockRegistry;
 import dark.core.BlockRegistry.BlockData;
 import dark.core.DarkMain;
@@ -79,6 +80,7 @@ public class FarmTech extends ModPrefab
     {
         super.postInit(event);
         proxy.postInit();
+        DecayMatterList.triggerPostBlockAddition();
     }
 
     @Override

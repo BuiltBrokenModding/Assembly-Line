@@ -11,9 +11,13 @@ import dark.core.helpers.Pair;
 import dark.farmtech.FarmTech;
 import dark.prefab.BlockMachine;
 
+/** Prefab class for all farm blocks to remove the need for some configuration of the super class
+ *
+ * @author Darkguardsman */
 public abstract class BlockFT extends BlockMachine implements IExtraObjectInfo
 {
     private boolean hasConfigFile = false;
+
     public BlockFT(String name, int blockID, Material material)
     {
         super(name, FarmTech.CONFIGURATION, blockID, material);
