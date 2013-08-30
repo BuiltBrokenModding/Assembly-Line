@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,8 +21,11 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import dark.core.BlockRegistry;
 import dark.core.BlockRegistry.BlockData;
 import dark.core.DarkMain;
+import dark.core.items.ItemBlockHolder;
+import dark.farmtech.machines.BlockFarmSoil;
 import dark.prefab.ModPrefab;
 
 public class FarmTech extends ModPrefab
@@ -43,6 +47,7 @@ public class FarmTech extends ModPrefab
     public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir() + "/Dark/", MOD_NAME + ".cfg"));
 
     /* BLOCKS */
+    public static Block blockFarmSoil;
 
     @SidedProxy(clientSide = "dark.farmtech.client.ClientProxy", serverSide = "dark.farmtech.CommonProxy")
     public static CommonProxy proxy;
@@ -86,7 +91,8 @@ public class FarmTech extends ModPrefab
     public List<BlockData> getBlocks()
     {
         List<BlockData> dataList = new ArrayList<BlockData>();
-
+        blockFarmSoil = new BlockFarmSoil(this.getNextID());
+        BlockRegistry.addBlockToRegister(new BlockData(blockFarmSoil, ItemBlockHolder.class, "FTFarmSoil"));
         return dataList;
     }
 
