@@ -9,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import dark.farmtech.FarmTech;
 
@@ -26,7 +27,7 @@ import dark.farmtech.FarmTech;
  * @author darkguardsman */
 public class BlockFarmSoil extends Block
 {
-    Icon mulch, mulch_top, fertilizer, fertilizer_top, fertileDirt_top, mud, mud_top;
+    Icon mulch, mulch_top, fertilizer, fertileDirt, fertileDirt_top, mud, mud_top;
 
     public BlockFarmSoil(int blockID)
     {
@@ -40,7 +41,8 @@ public class BlockFarmSoil extends Block
     public void registerIcons(IconRegister iconReg)
     {
         super.registerIcons(iconReg);
-        //this.source = iconReg.registerIcon(DarkMain.getInstance().PREFIX + "infSource");
+        this.mud = iconReg.registerIcon(FarmTech.instance.PREFIX + "mud");
+        this.fertilizer = iconReg.registerIcon(FarmTech.instance.PREFIX + "fertiliser");
     }
 
     @Override
@@ -49,6 +51,11 @@ public class BlockFarmSoil extends Block
     {
         switch (meta)
         {
+
+            //0 = mulch
+            case 1: return this.fertilizer;
+            //2 = fertileDirt;
+            case 3: return this.mud;
             default:
                 return this.blockIcon;
         }
@@ -57,7 +64,8 @@ public class BlockFarmSoil extends Block
     @Override
     public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {
-
+        par3List.add(new ItemStack(this.blockID, 1, 1));
+        par3List.add(new ItemStack(this.blockID, 1, 3));
     }
 
 }

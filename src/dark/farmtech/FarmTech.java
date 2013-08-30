@@ -11,8 +11,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import universalelectricity.prefab.TranslationHelper;
+import universalelectricity.prefab.network.PacketManager;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.Metadata;
@@ -21,6 +23,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.NetworkMod;
 import dark.api.farm.DecayMatterList;
 import dark.core.BlockRegistry;
 import dark.core.BlockRegistry.BlockData;
@@ -28,6 +31,9 @@ import dark.core.DarkMain;
 import dark.core.items.ItemBlockHolder;
 import dark.farmtech.machines.BlockFarmSoil;
 import dark.prefab.ModPrefab;
+
+@Mod(modid = FarmTech.MOD_ID, name = FarmTech.MOD_NAME, version = DarkMain.VERSION, dependencies = "after:DarkCore", useMetadata = true)
+@NetworkMod(channels = { FarmTech.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
 
 public class FarmTech extends ModPrefab
 {
@@ -114,7 +120,7 @@ public class FarmTech extends ModPrefab
 
     }
 
-    public static final CreativeTabs TabFarmTech = new CreativeTabs("Farming")
+    public static final CreativeTabs TabFarmTech = new CreativeTabs("FarmTech")
     {
         public ItemStack getIconItemStack()
         {

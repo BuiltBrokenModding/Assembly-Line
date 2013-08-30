@@ -7,14 +7,14 @@ import dark.core.helpers.Pair;
 
 public class DecayMatterList
 {
-    //TODO handle special cases of single stack items that have non-meta damage values
+    //TODO handle special cases like single stack items that have non-meta damage values, or zombie flesh that needs to poison the compost.
     public static HashMap<Pair<Integer, Integer>, Pair<Integer, Integer>> compostList = new HashMap<Pair<Integer, Integer>, Pair<Integer, Integer>>();
     static
     {
         //TODO add some items here but leave most of the work to some of the sub methods that will ID and upload all crop like blocks
     }
 
-    /** Used to flag and itemStack as decayable matter for the compost box and later real time world
+    /** Used to flag an itemStack as decayable matter for the compost box and later real time world
      * decay
      *
      * @param stack - itemID and meta to check against
