@@ -15,15 +15,18 @@ public class EntityFarmDrone extends EntityLiving implements IElectricalStorage
     private float wattPerTick = 0.1f;
     /** current inv slots of the drone */
     private int slots = 1;
+    public Vector3 location;
     /** Drone inv */
     public ItemStack[] inv = new ItemStack[3];
 
     TileEntityFarmBox home;
+    private DroneTask task;
 
     public EntityFarmDrone(World par1World)
     {
         super(par1World);
         this.energy = 10;
+        location = new Vector3(this);
     }
 
     public EntityFarmDrone(World world, TileEntityFarmBox tileController)
@@ -36,11 +39,16 @@ public class EntityFarmDrone extends EntityLiving implements IElectricalStorage
     public void onEntityUpdate()
     {
         super.onEntityUpdate();
+        location = new Vector3(this);
         //TODO update AI logic
         float homeCost = getTimeToHome() * this.wattPerTick;
-        if (this.getEnergyStored() < (this.getMaxEnergyStored() / 4) || this.getEnergyStored() <= homeCost + 1)
+        if (this.getEnergyStored() < (this.getMaxEnergyStored() / 4) || this.getEnergyStored() <= homeCost + 1 || this.isInvFull())
         {
-            //TODO stop work and return home for recharge
+            //TODO stop work and return home
+        }
+        if (this.home == null)
+        {
+            //TODO turn into block, or have go dormant
         }
     }
 
@@ -48,7 +56,7 @@ public class EntityFarmDrone extends EntityLiving implements IElectricalStorage
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
-        //TODO update energy info
+        this.energy -= this.wattPerTick;
     }
 
     /** Get the amount of time it takes the drone to get home. Used by AI logic to stop work and
@@ -63,6 +71,63 @@ public class EntityFarmDrone extends EntityLiving implements IElectricalStorage
             return (int) Math.ceil(distance / speed) + 1;
         }
         return 1;
+    }
+
+    public void setTask(DroneTask task)
+    {
+        this.task = task;
+    }
+
+    public DroneTask getDroneTask()
+    {
+        return this.task;
+    }
+
+    /** Adds an item to the drones inventory or drops it on the ground if the drone is full
+     *
+     * @param stack */
+    public void pickUpItem(ItemStack stack)
+    {
+        ItemStack itemStack = stack.copy();
+        if (stack != null)
+        {
+            for (int i = 0; i < this.inv.length; i++)
+            {
+                if (this.inv[i] == null)
+                {
+                    itemStack = null;
+                    this.inv[i] = itemStack;
+                }
+                else if (this.inv[i].equals(itemStack))
+                {
+                    int room = this.inv[i].getMaxStackSize() - this.inv[i].stackSize;
+                    if (room >= itemStack.stackSize)
+                    {
+                        this.inv[i].stackSize += itemStack.stackSize;
+                        itemStack = null;
+                    }
+                    else if (room <= itemStack.stackSize)
+                    {
+                        this.inv[i].stackSize += room;
+                        itemStack.stackSize -= room;
+                    }
+                }
+                if (itemStack == null || itemStack.stackSize <= 0)
+                {
+                    break;
+                }
+            }
+            if (itemStack != null)
+            {
+                //TODO drop item on the ground for later pickup
+            }
+        }
+    }
+
+    /** Check if the inventory has items in all slots rather than if its actually 100% full */
+    public boolean isInvFull()
+    {
+        return this.inv[0] != null && this.inv[1] != null && this.inv[2] != null;
     }
 
     @Override
