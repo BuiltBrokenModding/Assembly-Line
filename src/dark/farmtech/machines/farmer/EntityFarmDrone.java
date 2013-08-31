@@ -1,5 +1,6 @@
 package dark.farmtech.machines.farmer;
 
+import dark.core.helpers.ItemWorldHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -85,9 +86,15 @@ public class EntityFarmDrone extends EntityLiving implements IElectricalStorage
 
     /** Adds an item to the drones inventory or drops it on the ground if the drone is full
      *
-     * @param stack */
-    public void pickUpItem(ItemStack stack)
+     * @param location - location were the item was so to drop it there if the drone can't pick it
+     * up
+     * @param stack - stack to store or drop */
+    public ItemStack pickUpItem(Vector3 location, ItemStack stack, boolean drop)
     {
+        if (location == null)
+        {
+            location = this.location.clone();
+        }
         ItemStack itemStack = stack.copy();
         if (stack != null)
         {
@@ -114,14 +121,15 @@ public class EntityFarmDrone extends EntityLiving implements IElectricalStorage
                 }
                 if (itemStack == null || itemStack.stackSize <= 0)
                 {
-                    break;
+                    return null;
                 }
             }
-            if (itemStack != null)
+            if (drop && itemStack != null && itemStack.stackSize > 0)
             {
-                //TODO drop item on the ground for later pickup
+                return  ItemWorldHelper.dropItemStack(this.worldObj, location, itemStack, true);
             }
         }
+        return itemStack;
     }
 
     /** Check if the inventory has items in all slots rather than if its actually 100% full */

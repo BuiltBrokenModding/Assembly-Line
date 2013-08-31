@@ -47,9 +47,10 @@ public class HarvestTask extends DroneTask
                 ArrayList<ItemStack> items = block.getBlockDropped(drone.worldObj, location.intX(), location.intY(), location.intZ(), metaData, 1);
                 for (ItemStack stack : items)
                 {
-                    drone.pickUpItem(stack);
+                    drone.pickUpItem(location, stack, true);
                 }
             }
+            drone.worldObj.playAuxSFX(2001, location.intX(), location.intY(), location.intZ(), blockID + (metaData << 12));
             //TODO do a few checks and method calls to simulate player like block harvesting as much as possible
             location.setBlock(drone.worldObj, 0);
         }

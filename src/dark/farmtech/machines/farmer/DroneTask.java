@@ -1,5 +1,8 @@
 package dark.farmtech.machines.farmer;
 
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
 
 public class DroneTask
