@@ -1,4 +1,4 @@
-package dark.farmtech.machines;
+package dark.farmtech.blocks;
 
 import java.util.List;
 
