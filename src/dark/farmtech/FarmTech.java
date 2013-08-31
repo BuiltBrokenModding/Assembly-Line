@@ -25,16 +25,16 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import dark.api.farm.DecayMatterList;
+import dark.api.farm.CropAutomationHandler;
 import dark.core.BlockRegistry;
 import dark.core.BlockRegistry.BlockData;
 import dark.core.DarkMain;
 import dark.core.items.ItemBlockHolder;
-import dark.farmtech.machines.BlockFarmSoil;
+import dark.farmtech.blocks.BlockFarmSoil;
 import dark.prefab.ModPrefab;
 
 @Mod(modid = FarmTech.MOD_ID, name = FarmTech.MOD_NAME, version = DarkMain.VERSION, dependencies = "after:DarkCore", useMetadata = true)
 @NetworkMod(channels = { FarmTech.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
-
 public class FarmTech extends ModPrefab
 {
 
@@ -87,6 +87,7 @@ public class FarmTech extends ModPrefab
         super.postInit(event);
         proxy.postInit();
         DecayMatterList.triggerPostBlockAddition();
+        CropAutomationHandler.triggerPostBlockAddition();
     }
 
     @Override
