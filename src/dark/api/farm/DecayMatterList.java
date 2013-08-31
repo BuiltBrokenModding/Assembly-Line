@@ -33,7 +33,7 @@ public class DecayMatterList
         }
     }
 
-    public boolean isDecayMatter(ItemStack stack)
+    public static boolean isDecayMatter(ItemStack stack)
     {
         return stack != null && compostList.containsKey(new Pair<Integer, Integer>(stack.itemID, stack.getItemDamage()));
     }
