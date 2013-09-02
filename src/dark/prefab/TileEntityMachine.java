@@ -333,6 +333,10 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
         nbt.setBoolean("shouldPower", this.unpowered);
     }
 
+    /*--------------------------------------------------------------
+     * IInventory stuff
+     * ------------------------------------------------------------- */
+
     @Override
     public IInvBox getInventory()
     {

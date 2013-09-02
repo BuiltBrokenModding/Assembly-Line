@@ -59,7 +59,7 @@ public class DarkMain extends ModPrefab
     public static final String MOD_NAME = "Darks CoreMachine";
     public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + REVIS_VERSION + "." + BUILD_VERSION;
 
-    @SidedProxy(clientSide = "dark.core.ClientProxy", serverSide = "dark.core.CommonProxy")
+    @SidedProxy(clientSide = "dark.client.ClientProxy", serverSide = "dark.common.CommonProxy")
     public static CommonProxy proxy;
 
     public static final String CHANNEL = "DarkPackets";
