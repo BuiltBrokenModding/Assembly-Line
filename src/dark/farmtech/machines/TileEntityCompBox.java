@@ -2,7 +2,7 @@ package dark.farmtech.machines;
 
 import dark.api.farm.DecayMatterList;
 import dark.interfaces.IInvBox;
-import dark.prefab.InvChest;
+import dark.prefab.invgui.InvChest;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
 

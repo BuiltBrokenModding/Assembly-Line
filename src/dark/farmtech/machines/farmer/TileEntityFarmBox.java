@@ -1,5 +1,6 @@
 package dark.farmtech.machines.farmer;
 
+import universalelectricity.core.vector.Vector3;
 import dark.farmtech.machines.TileEntityFT;
 import dark.farmtech.machines.farmer.EntityFarmDrone.DroneData;
 
@@ -21,5 +22,32 @@ public class TileEntityFarmBox extends TileEntityFT
     public void updateEntity()
     {
         super.updateEntity();
+
+        //TODO generate field map
+        //Calculate crop status
+        //Set workers into motion
+    }
+
+    public void spawnDrone(int droneID)
+    {
+        if (droneID < droneData.length && droneID < drones.length)
+        {
+            if (drones[droneID] == null && droneData[droneID] != null)
+            {
+                EntityFarmDrone drone = new EntityFarmDrone(this.worldObj, this);
+
+            }
+        }
+    }
+
+    public Vector3 getClearSpot()
+    {
+        Vector3 loc = new Vector3(this);
+        return loc;
+    }
+
+    public void setTask(int droneID, DroneTask task)
+    {
+
     }
 }

@@ -3,7 +3,7 @@ package dark.api.farm;
 import java.util.HashMap;
 
 import net.minecraft.item.ItemStack;
-import dark.core.helpers.Pair;
+import dark.prefab.helpers.Pair;
 
 public class DecayMatterList
 {

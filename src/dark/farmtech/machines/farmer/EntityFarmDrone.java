@@ -1,6 +1,6 @@
 package dark.farmtech.machines.farmer;
 
-import dark.core.helpers.ItemWorldHelper;
+import dark.prefab.helpers.ItemWorldHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -88,7 +88,9 @@ public class EntityFarmDrone extends EntityLiving implements IElectricalStorage
      *
      * @param location - location were the item was so to drop it there if the drone can't pick it
      * up
-     * @param stack - stack to store or drop */
+     * @param stack - stack to store or drop
+     *
+     * @return the itemstack if any of it is left */
     public ItemStack pickUpItem(Vector3 location, ItemStack stack, boolean drop)
     {
         if (location == null)
@@ -126,7 +128,7 @@ public class EntityFarmDrone extends EntityLiving implements IElectricalStorage
             }
             if (drop && itemStack != null && itemStack.stackSize > 0)
             {
-                return  ItemWorldHelper.dropItemStack(this.worldObj, location, itemStack, true);
+                return ItemWorldHelper.dropItemStack(this.worldObj, location, itemStack, true);
             }
         }
         return itemStack;

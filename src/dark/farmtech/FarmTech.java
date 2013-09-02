@@ -26,12 +26,12 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import dark.api.farm.DecayMatterList;
 import dark.api.farm.CropAutomationHandler;
-import dark.core.BlockRegistry;
-import dark.core.BlockRegistry.BlockData;
-import dark.core.DarkMain;
-import dark.core.items.ItemBlockHolder;
+import dark.common.BlockRegistry;
+import dark.common.DarkMain;
+import dark.common.BlockRegistry.BlockData;
 import dark.farmtech.blocks.BlockFarmSoil;
 import dark.prefab.ModPrefab;
+import dark.prefab.items.ItemBlockHolder;
 
 @Mod(modid = FarmTech.MOD_ID, name = FarmTech.MOD_NAME, version = DarkMain.VERSION, dependencies = "after:DarkCore", useMetadata = true)
 @NetworkMod(channels = { FarmTech.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
