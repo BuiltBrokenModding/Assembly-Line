@@ -15,7 +15,7 @@ import net.minecraftforge.common.Configuration;
 import universalelectricity.prefab.block.BlockAdvanced;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.DarkMain;
+import dark.common.DarkMain;
 import dark.interfaces.INetworkPart;
 
 /** Basic TileEntity Container class designed to be used by generic machines. It is suggested that

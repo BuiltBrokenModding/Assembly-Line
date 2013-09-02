@@ -18,8 +18,8 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
-import dark.core.helpers.BlockRenderInfo;
-import dark.core.helpers.EntityFakeBlock;
+import dark.prefab.helpers.BlockRenderInfo;
+import dark.prefab.helpers.EntityFakeBlock;
 
 import universalelectricity.core.vector.Vector3;
 

@@ -15,10 +15,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
-import dark.core.DarkMain;
-import dark.core.IExtraObjectInfo;
-import dark.core.helpers.Pair;
+import dark.common.DarkMain;
 import dark.prefab.BlockMachine;
+import dark.prefab.IExtraObjectInfo;
+import dark.prefab.helpers.Pair;
 
 public class BlockDebug extends BlockMachine implements IExtraObjectInfo
 {

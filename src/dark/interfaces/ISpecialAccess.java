@@ -2,8 +2,8 @@ package dark.interfaces;
 
 import java.util.List;
 
-import dark.core.access.AccessLevel;
-import dark.core.access.UserAccess;
+import dark.prefab.access.AccessLevel;
+import dark.prefab.access.UserAccess;
 
 /** Used by any object that needs to restrict access to it by a set of usernames
  * 

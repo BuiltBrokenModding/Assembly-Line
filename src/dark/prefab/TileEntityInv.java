@@ -8,6 +8,7 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import dark.interfaces.IExternalInv;
 import dark.interfaces.IInvBox;
+import dark.prefab.invgui.InvChest;
 
 public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, ISidedInventory
 {

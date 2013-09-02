@@ -28,6 +28,7 @@ import dark.interfaces.IExternalInv;
 import dark.interfaces.IInvBox;
 import dark.interfaces.IPowerLess;
 import dark.interfaces.PowerSystems;
+import dark.prefab.invgui.InvChest;
 
 public abstract class TileEntityMachine extends TileEntityUniversalElectrical implements ISidedInventory, IExternalInv, IDisableable, IPacketReceiver, IPowerLess
 {

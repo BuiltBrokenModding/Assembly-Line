@@ -10,9 +10,9 @@ import cpw.mods.fml.common.Loader;
 
 /**
  * General Universal Electricity class.
- * 
+ *
  * @author Calclavia
- * 
+ *
  */
 public class UniversalElectricity
 {
@@ -60,6 +60,7 @@ public class UniversalElectricity
 	{
 		if (!INIT)
 		{
+		    System.out.println("[UniversalElectricity] Loading core API version " + UniversalElectricity.VERSION);
 			/**
 			 * Loads the configuration and sets all the values.
 			 */
@@ -78,6 +79,6 @@ public class UniversalElectricity
 			}
 		}
 
-		INIT = true;
-	}
+        INIT = true;
+    }
 }

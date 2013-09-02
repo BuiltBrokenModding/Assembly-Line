@@ -16,7 +16,7 @@ import buildcraft.api.power.IPowerReceptor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.client.models.ModelCopperWire;
-import dark.core.DarkMain;
+import dark.common.DarkMain;
 
 @SideOnly(Side.CLIENT)
 public class RenderCopperWire extends RenderMachine

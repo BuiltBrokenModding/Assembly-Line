@@ -12,8 +12,8 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
-import dark.core.BlockRegistry;
-import dark.core.BlockRegistry.BlockData;
+import dark.common.BlockRegistry;
+import dark.common.BlockRegistry.BlockData;
 
 public abstract class ModPrefab
 {

@@ -17,10 +17,10 @@ import net.minecraftforge.common.Configuration;
 import universalelectricity.core.block.IConductor;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.tile.TileEntityConductor;
-import dark.core.DarkMain;
-import dark.core.IExtraObjectInfo;
-import dark.core.helpers.Pair;
+import dark.common.DarkMain;
 import dark.prefab.BlockMachine;
+import dark.prefab.IExtraObjectInfo;
+import dark.prefab.helpers.Pair;
 
 public class BlockWire extends BlockMachine implements IExtraObjectInfo
 {

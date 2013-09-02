@@ -3,7 +3,7 @@ package dark.interfaces;
 import java.util.List;
 
 import net.minecraft.tileentity.TileEntity;
-import dark.core.tile.network.NetworkTileEntities;
+import dark.prefab.tilenetwork.NetworkTileEntities;
 
 public interface INetworkPart extends ITileConnector
 {

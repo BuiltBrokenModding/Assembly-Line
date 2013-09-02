@@ -1,7 +1,7 @@
 package dark.common.transmit;
 
 import net.minecraftforge.common.ForgeDirection;
-import dark.core.DarkMain;
+import dark.common.DarkMain;
 import dark.prefab.TileEntityMachine;
 
 public class TileEntityLaserEmitter extends TileEntityMachine

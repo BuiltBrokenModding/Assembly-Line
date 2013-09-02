@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.client.FMLClientHandler;
-import dark.core.DarkMain;
+import dark.common.DarkMain;
 
 /** Based off Thaumcraft's Beam Renderer.
  *
