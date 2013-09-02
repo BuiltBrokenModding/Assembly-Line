@@ -32,7 +32,7 @@ public enum ColorCode
     }
 
     /** gets a ColorCode from any of the following
-     * 
+     *
      * @param obj - Integer,String,LiquidData,ColorCode
      * @return Color NONE if it can't find it */
     public static ColorCode get(Object obj)
@@ -56,6 +56,15 @@ public enum ColorCode
             }
         }
         return NONE;
+    }
+
+    public static interface IColorCoded
+    {
+        /** Returns the ColorCode of the object */
+        public ColorCode getColor();
+
+        /** Sets the ColorCode of the Object */
+        public void setColor(Object obj);
     }
 
 }
