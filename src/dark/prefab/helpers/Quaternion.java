@@ -4,7 +4,7 @@ import universalelectricity.core.vector.Vector3;
 
 /** This code is converted from C code to java based off of this tutorial
  * http://content.gpwiki.org/index.php/OpenGL:Tutorials:Using_Quaternions_to_represent_rotation
- * 
+ *
  * @author DarkGuardsman */
 public class Quaternion
 {
@@ -142,7 +142,7 @@ public class Quaternion
         normalise();
     }
 
-    // Convert to Matrix
+    /* Convert to Matrix
     public Matrix4 getMatrix()
     {
         float x2 = (float) (x * x);
@@ -160,7 +160,7 @@ public class Quaternion
         // by
         // OpenGL
         return new Matrix4(1.0f - 2.0f * (y2 + z2), 2.0f * (xy - wz), 2.0f * (xz + wy), 0.0f, 2.0f * (xy + wz), 1.0f - 2.0f * (x2 + z2), 2.0f * (yz - wx), 0.0f, 2.0f * (xz - wy), 2.0f * (yz + wx), 1.0f - 2.0f * (x2 + y2), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-    }
+    }*/
 
     // Convert to Axis/Angles
     public void getAxisAngle(Vector3 axis, float angle)
