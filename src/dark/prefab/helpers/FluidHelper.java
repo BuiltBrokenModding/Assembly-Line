@@ -6,11 +6,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+
+import dark.interfaces.ColorCode;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -18,6 +24,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.FluidRegistry.FluidRegisterEvent;
 import universalelectricity.core.vector.Vector3;
 
 public class FluidHelper
@@ -25,9 +32,15 @@ public class FluidHelper
     public static List<Pair<Integer, Integer>> replacableBlockMeta = new ArrayList<Pair<Integer, Integer>>();
     public static List<Block> replacableBlocks = new ArrayList<Block>();
     public static List<Block> nonBlockDropList = new ArrayList<Block>();
+    private static BiMap<ColorCode, Fluid> restrictedStacks = HashBiMap.create();
 
     static
     {
+        /* ADD DEFAULT LIQUIDS */
+        restrictedStacks.put(ColorCode.BLUE, FluidRegistry.WATER);
+        restrictedStacks.put(ColorCode.RED, FluidRegistry.LAVA);
+
+        /* Adds default fluid replaceable blocks */
         replacableBlocks.add(Block.crops);
         replacableBlocks.add(Block.deadBush);
         nonBlockDropList.add(Block.deadBush);
@@ -311,5 +324,57 @@ public class FluidHelper
         }
         return stackList;
 
+    }
+
+    @ForgeSubscribe
+    public void onLiquidRegistered(FluidRegisterEvent event)
+    {
+        if (event != null && event.fluidName != null)
+        {
+            Fluid fluid = FluidRegistry.getFluid(event.fluidName);
+            if (event.fluidName.equalsIgnoreCase("Fuel") && !restrictedStacks.containsKey(ColorCode.YELLOW))
+            {
+                restrictedStacks.put(ColorCode.YELLOW, fluid);
+            }
+            else if (event.fluidName.equalsIgnoreCase("Oil") && !restrictedStacks.containsKey(ColorCode.BLACK))
+            {
+                restrictedStacks.put(ColorCode.BLACK, fluid);
+            }
+            else if (event.fluidName.equalsIgnoreCase("Milk") && !restrictedStacks.containsKey(ColorCode.WHITE))
+            {
+                restrictedStacks.put(ColorCode.WHITE, fluid);
+            }
+        }
+    }
+
+    /** Checks too see if a color has a restricted stack */
+    public static boolean hasRestrictedStack(int meta)
+    {
+        return restrictedStacks.containsKey(ColorCode.get(meta));
+    }
+
+    public static boolean hasRestrictedStack(Fluid stack)
+    {
+        return stack != null && restrictedStacks.inverse().containsKey(stack);
+    }
+
+    /** gets the liquid stack that is restricted to this color */
+    public static Fluid getStackForColor(ColorCode color)
+    {
+        return restrictedStacks.get(color);
+    }
+
+    /** checks to see if the liquidStack is valid for the given color */
+    public static boolean isValidLiquid(ColorCode color, Fluid stack)
+    {
+        if (stack == null)
+        {
+            return false;
+        }
+        if (!FluidHelper.hasRestrictedStack(color.ordinal()))
+        {
+            return true;
+        }
+        return FluidHelper.hasRestrictedStack(color.ordinal()) && FluidHelper.getStackForColor(color).equals(stack);
     }
 }

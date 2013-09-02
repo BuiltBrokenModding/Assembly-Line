@@ -41,7 +41,7 @@ import dark.common.transmit.BlockWire;
 import dark.prefab.BlockMulti;
 import dark.prefab.ModPrefab;
 import dark.prefab.TileEntityMulti;
-import dark.prefab.helpers.FluidRestrictionHandler;
+import dark.prefab.helpers.FluidHelper;
 
 /** @author HangCow, DarkGuardsman */
 @Mod(modid = DarkMain.MOD_ID, name = DarkMain.MOD_NAME, version = DarkMain.VERSION, dependencies = "after:BuildCraft|Energy", useMetadata = true)
@@ -97,7 +97,7 @@ public class DarkMain extends ModPrefab
         super.preInit(event);
 
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(new FluidRestrictionHandler());
+        MinecraftForge.EVENT_BUS.register(new FluidHelper());
 
         proxy.preInit();
     }
