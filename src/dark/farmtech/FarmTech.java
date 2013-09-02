@@ -100,8 +100,12 @@ public class FarmTech extends ModPrefab
     public List<BlockData> getBlocks()
     {
         List<BlockData> dataList = new ArrayList<BlockData>();
+        CONFIGURATION.load();
+
         blockFarmSoil = new BlockFarmSoil(this.getNextID());
         BlockRegistry.addBlockToRegister(new BlockData(blockFarmSoil, ItemBlockHolder.class, "FTFarmSoil"));
+
+        CONFIGURATION.save();
         return dataList;
     }
 
