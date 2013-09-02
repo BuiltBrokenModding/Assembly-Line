@@ -20,7 +20,7 @@ public class DecayMatterList
      * @param stack - itemID and meta to check against
      * @param output - how many buckets of compost are created. Accepts part buckets
      * @param time - time in which to decay the matter */
-    public void addDecayMatter(ItemStack stack, float output, int time)
+    public static void addDecayMatter(ItemStack stack, float output, int time)
     {
         if (stack != null)
         {
@@ -71,6 +71,7 @@ public class DecayMatterList
         //TODO parse the list of blocks and auto add all crop blocks.
     }
 
+    /** Loads user settings for items that validate for decay matter */
     public static void parseConfigString(String string)
     {
         if (string != null && !string.isEmpty())
@@ -85,6 +86,24 @@ public class DecayMatterList
                         String[] split = str.split(":");
                         String ID = split[0];
                         String meta = split[1];
+                        String decayT = split[2];
+                        String decayO = split[3];
+                        try
+                        {
+                            int blockID = Integer.parseInt(ID);
+                            int metaID = Integer.parseInt(meta);
+                            int decayTime = Integer.parseInt(decayT);
+                            int decayV = Integer.parseInt(decayO);
+                            DecayMatterList.addDecayMatter(new ItemStack(blockID, 1, metaID), decayV, decayTime);
+                        }
+                        catch (Exception e)
+                        {
+                            //TODO add a string based system that will allow for full item or block names
+                            //eg tile.stone:0, tile.wood:2,
+                            System.out.println("[FarmTech] Entries for compost list must be Integers");
+                            e.printStackTrace();
+                        }
+
                     }
                     catch (Exception e)
                     {
