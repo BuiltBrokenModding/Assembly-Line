@@ -26,27 +26,22 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
-import cpw.mods.fml.common.registry.GameRegistry;
 import dark.common.BlockRegistry.BlockData;
 import dark.common.blocks.BlockOre;
 import dark.common.debug.BlockDebug;
-import dark.common.debug.BlockDebug.debugBlocks;
 import dark.common.items.EnumMeterials;
 import dark.common.items.ItemBattery;
 import dark.common.items.ItemBlockOre;
 import dark.common.items.ItemOreDirv;
 import dark.common.items.ItemParts;
+import dark.common.items.ItemParts.Parts;
 import dark.common.items.ItemTools;
 import dark.common.items.ItemWrench;
-import dark.common.items.ItemParts.Parts;
 import dark.common.transmit.BlockWire;
-import dark.common.transmit.TileEntityWire;
 import dark.prefab.BlockMulti;
 import dark.prefab.ModPrefab;
 import dark.prefab.TileEntityMulti;
 import dark.prefab.helpers.FluidRestrictionHandler;
-import dark.prefab.helpers.SaveManager;
-import dark.prefab.items.ItemBlockHolder;
 
 /** @author HangCow, DarkGuardsman */
 @Mod(modid = DarkMain.MOD_ID, name = DarkMain.MOD_NAME, version = DarkMain.VERSION, dependencies = "after:BuildCraft|Energy", useMetadata = true)
@@ -221,13 +216,13 @@ public class DarkMain extends ModPrefab
     @ForgeSubscribe
     public void onWorldSave(WorldEvent.Save event)
     {
-        SaveManager.save(!event.world.isRemote);
+        //SaveManager.save(!event.world.isRemote);
     }
 
     @EventHandler
     public void serverStopping(FMLServerStoppingEvent event)
     {
-        SaveManager.save(true);
+        //SaveManager.save(true);
     }
 
     @Override
