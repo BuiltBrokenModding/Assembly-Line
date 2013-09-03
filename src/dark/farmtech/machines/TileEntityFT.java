@@ -1,7 +1,7 @@
 package dark.farmtech.machines;
 
+import dark.core.prefab.TileEntityMachine;
 import dark.farmtech.FarmTech;
-import dark.prefab.TileEntityMachine;
 
 /** Prefab class for all farm blocks to remove the need for some configuration of the super class
  *

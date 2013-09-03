@@ -6,10 +6,10 @@ import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
+import dark.core.prefab.BlockMachine;
+import dark.core.prefab.IExtraObjectInfo;
+import dark.core.prefab.helpers.Pair;
 import dark.farmtech.FarmTech;
-import dark.prefab.BlockMachine;
-import dark.prefab.IExtraObjectInfo;
-import dark.prefab.helpers.Pair;
 
 /** Prefab class for all farm blocks to remove the need for some configuration of the super class
  *

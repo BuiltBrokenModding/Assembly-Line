@@ -5,6 +5,7 @@ import java.util.List;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import cpw.mods.fml.relauncher.Side;
@@ -14,11 +15,11 @@ import dark.farmtech.FarmTech;
 /** Bucket containing compost for farming
  *
  * @author DarkGuardsman */
-public class ItemBucketCompost extends Item
+public class ItemFarmBucket extends ItemBucket
 {
-    public ItemBucketCompost(int itemID)
+    public ItemFarmBucket(int itemID, int blockID)
     {
-        super(FarmTech.CONFIGURATION.getItem("Bucket", itemID).getInt());
+        super(FarmTech.CONFIGURATION.getItem("Bucket", itemID).getInt(), blockID);
         this.setCreativeTab(FarmTech.TabFarmTech);
         this.setHasSubtypes(true);
         this.setContainerItem(Item.bucketEmpty);

@@ -1,6 +1,6 @@
 package dark.farmtech.machines.farmer;
 
-import dark.prefab.helpers.ItemWorldHelper;
+import dark.core.prefab.helpers.ItemWorldHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

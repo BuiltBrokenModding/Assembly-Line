@@ -3,8 +3,8 @@ package dark.farmtech.machines;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
 import dark.api.farm.DecayMatterList;
-import dark.interfaces.IInvBox;
-import dark.prefab.invgui.InvChest;
+import dark.core.interfaces.IInvBox;
+import dark.core.prefab.invgui.InvChest;
 
 /** Simple box that turns matter into compost to grow plants with
  *
