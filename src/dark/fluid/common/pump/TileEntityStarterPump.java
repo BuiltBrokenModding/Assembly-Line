@@ -12,12 +12,12 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
 import dark.api.fluid.IDrain;
-import dark.core.helpers.FluidHelper;
-import dark.core.helpers.Pair;
+import dark.core.interfaces.ITileConnector;
+import dark.core.interfaces.IToolReadOut;
+import dark.core.prefab.TileEntityMachine;
+import dark.core.prefab.helpers.FluidHelper;
+import dark.core.prefab.helpers.Pair;
 import dark.fluid.common.FluidMech;
-import dark.interfaces.ITileConnector;
-import dark.interfaces.IToolReadOut;
-import dark.prefab.TileEntityMachine;
 
 public class TileEntityStarterPump extends TileEntityMachine implements IToolReadOut, ITileConnector
 {

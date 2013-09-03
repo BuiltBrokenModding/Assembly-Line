@@ -16,11 +16,11 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import dark.api.fluid.IDrain;
 import dark.api.fluid.INetworkPipe;
-import dark.core.helpers.MetaGroup;
-import dark.core.helpers.Pair;
+import dark.core.interfaces.ITileConnector;
 import dark.core.network.fluid.HydraulicNetworkHelper;
 import dark.core.network.fluid.NetworkFluidTiles;
-import dark.interfaces.ITileConnector;
+import dark.core.prefab.helpers.MetaGroup;
+import dark.core.prefab.helpers.Pair;
 
 public class TileEntityConstructionPump extends TileEntityStarterPump implements IFluidHandler, ITileConnector
 {

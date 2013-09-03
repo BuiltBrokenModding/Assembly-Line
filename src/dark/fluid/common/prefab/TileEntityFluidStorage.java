@@ -11,9 +11,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import dark.core.helpers.FluidHelper;
-import dark.core.helpers.FluidRestrictionHandler;
-import dark.interfaces.IColorCoded;
+import dark.core.interfaces.ColorCode.IColorCoded;
+import dark.core.prefab.helpers.FluidHelper;
 
 public abstract class TileEntityFluidStorage extends TileEntityFluidDevice implements IFluidHandler, IColorCoded
 {
@@ -43,7 +42,7 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
     {
-        if (resource == null || resource.getFluid() == null || !FluidRestrictionHandler.isValidLiquid(getColor(), resource.getFluid()))
+        if (resource == null || resource.getFluid() == null || !FluidHelper.isValidLiquid(getColor(), resource.getFluid()))
         {
             return 0;
         }

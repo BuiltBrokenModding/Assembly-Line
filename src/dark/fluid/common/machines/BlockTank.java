@@ -13,12 +13,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import dark.core.helpers.AutoCraftingManager;
-import dark.core.helpers.FluidHelper;
-import dark.core.helpers.FluidRestrictionHandler;
+import dark.core.interfaces.INetworkPart;
+import dark.core.prefab.helpers.AutoCraftingManager;
+import dark.core.prefab.helpers.FluidHelper;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.BlockFM;
-import dark.interfaces.INetworkPart;
 
 public class BlockTank extends BlockFM
 {
@@ -199,7 +198,7 @@ public class BlockTank extends BlockFM
         par3List.add(new ItemStack(par1, 1, 15));
         for (int i = 0; i < 16; i++)
         {
-            if (FluidRestrictionHandler.hasRestrictedStack(i))
+            if (FluidHelper.hasRestrictedStack(i))
             {
                 par3List.add(new ItemStack(par1, 1, i));
             }

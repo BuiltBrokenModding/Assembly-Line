@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidTank;
 import dark.api.fluid.INetworkPipe;
-import dark.core.helpers.FluidRestrictionHandler;
+import dark.core.prefab.helpers.FluidHelper;
 import dark.fluid.common.BlockFM;
 import dark.fluid.common.FluidMech;
 
@@ -98,7 +98,7 @@ public class BlockPipe extends BlockFM
     {
         for (int i = 0; i < 16; i++)
         {
-            if (this.blockID == FluidMech.recipeLoader.blockGenPipe.blockID || FluidRestrictionHandler.hasRestrictedStack(i))
+            if (this.blockID == FluidMech.recipeLoader.blockGenPipe.blockID || FluidHelper.hasRestrictedStack(i))
             {
                 par3List.add(new ItemStack(par1, 1, i));
             }

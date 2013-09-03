@@ -10,17 +10,16 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import dark.api.fluid.INetworkPipe;
-import dark.core.helpers.ConnectionHelper;
-import dark.core.helpers.FluidHelper;
-import dark.core.helpers.FluidRestrictionHandler;
-import dark.core.tile.network.NetworkTileEntities;
-import dark.interfaces.ColorCode;
-import dark.interfaces.INetworkPart;
+import dark.core.interfaces.ColorCode;
+import dark.core.interfaces.INetworkPart;
+import dark.core.prefab.helpers.ConnectionHelper;
+import dark.core.prefab.helpers.FluidHelper;
+import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
 /** Side note: the network should act like this when done {@link http
  * ://www.e4training.com/hydraulic_calculators/B1.htm} as well as stay compatible with the forge
  * Liquids
- * 
+ *
  * @author Rseifert */
 public class NetworkPipes extends NetworkFluidTiles
 {
@@ -164,7 +163,7 @@ public class NetworkPipes extends NetworkFluidTiles
     }
 
     /** Adds FLuid to this network from one of the connected Pipes
-     * 
+     *
      * @param source - Were this liquid came from
      * @param stack - LiquidStack to be sent
      * @param doFill - actually fill the tank or just check numbers
@@ -175,7 +174,7 @@ public class NetworkPipes extends NetworkFluidTiles
     }
 
     /** Adds FLuid to this network from one of the connected Pipes
-     * 
+     *
      * @param source - Were this liquid came from
      * @param stack - LiquidStack to be sent
      * @param doFill - actually fill the tank or just check numbers
@@ -187,7 +186,7 @@ public class NetworkPipes extends NetworkFluidTiles
         FluidStack prevCombined = this.combinedStorage().getFluid();
         FluidStack stack = sta.copy();
 
-        if (!this.processingRequest && stack != null && FluidRestrictionHandler.isValidLiquid(color, stack.getFluid()))
+        if (!this.processingRequest && stack != null && FluidHelper.isValidLiquid(color, stack.getFluid()))
         {
             this.processingRequest = true;
 

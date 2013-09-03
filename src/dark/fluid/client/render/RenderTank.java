@@ -9,12 +9,12 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.client.renders.FluidBlockRenderer;
-import dark.client.renders.RenderMachine;
+import dark.core.client.renders.FluidBlockRenderer;
+import dark.core.client.renders.RenderMachine;
+import dark.core.interfaces.ColorCode;
 import dark.fluid.client.model.ModelTankSide;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.machines.TileEntityTank;
-import dark.interfaces.ColorCode;
 
 @SideOnly(Side.CLIENT)
 public class RenderTank extends RenderMachine

@@ -5,7 +5,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import dark.client.renders.RenderMachine;
+import dark.core.client.renders.RenderMachine;
 import dark.fluid.client.model.ModelFurnace;
 import dark.fluid.common.FluidMech;
 

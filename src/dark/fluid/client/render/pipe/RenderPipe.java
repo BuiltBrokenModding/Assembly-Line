@@ -10,13 +10,13 @@ import org.lwjgl.opengl.GL11;
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.client.renders.RenderMachine;
-import dark.core.helpers.FluidRestrictionHandler;
+import dark.core.client.renders.RenderMachine;
+import dark.core.interfaces.ColorCode;
+import dark.core.prefab.helpers.FluidHelper;
 import dark.fluid.client.model.ModelLargePipe;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.pipes.TileEntityPipe;
 import dark.fluid.common.pipes.addon.IPipeExtention;
-import dark.interfaces.ColorCode;
 
 @SideOnly(Side.CLIENT)
 public class RenderPipe extends RenderMachine
@@ -87,7 +87,7 @@ public class RenderPipe extends RenderMachine
         String name = "";
         if (block == FluidMech.recipeLoader.blockPipe.blockID)
         {
-            Fluid stack = FluidRestrictionHandler.getStackForColor(ColorCode.get(meta));
+            Fluid stack = FluidHelper.getStackForColor(ColorCode.get(meta));
             name = stack != null ? stack.getName() : "";
         }
         else

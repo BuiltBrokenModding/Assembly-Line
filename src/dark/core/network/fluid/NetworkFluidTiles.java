@@ -21,13 +21,13 @@ import universalelectricity.core.vector.Vector3;
 import dark.api.fluid.AdvancedFluidEvent;
 import dark.api.fluid.AdvancedFluidEvent.FluidMergeEvent;
 import dark.api.fluid.INetworkFluidPart;
-import dark.core.helpers.FluidHelper;
-import dark.core.helpers.Pair;
-import dark.core.tile.network.NetworkTileEntities;
+import dark.core.interfaces.ColorCode;
+import dark.core.interfaces.INetworkPart;
+import dark.core.prefab.helpers.FluidHelper;
+import dark.core.prefab.helpers.Pair;
+import dark.core.prefab.tilenetwork.NetworkTileEntities;
 import dark.fluid.common.machines.TileEntityTank;
 import dark.fluid.common.pipes.TileEntityPipe;
-import dark.interfaces.ColorCode;
-import dark.interfaces.INetworkPart;
 
 public class NetworkFluidTiles extends NetworkTileEntities
 {

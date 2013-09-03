@@ -1,7 +1,7 @@
 package dark.fluid.common.machines;
 
+import dark.core.prefab.TileEntityMachine;
 import dark.fluid.common.FluidMech;
-import dark.prefab.TileEntityMachine;
 
 public class TileEntitySteamPiston extends TileEntityMachine
 {

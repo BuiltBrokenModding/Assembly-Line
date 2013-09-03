@@ -5,9 +5,9 @@ import java.util.Random;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
+import dark.core.interfaces.ITileConnector;
+import dark.core.interfaces.IToolReadOut;
 import dark.core.network.fluid.HydraulicNetworkHelper;
-import dark.interfaces.ITileConnector;
-import dark.interfaces.IToolReadOut;
 
 public abstract class TileEntityFluidDevice extends TileEntityAdvanced implements IToolReadOut, ITileConnector
 {

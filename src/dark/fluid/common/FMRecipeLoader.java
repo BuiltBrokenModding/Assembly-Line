@@ -5,11 +5,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
-import dark.core.CoreRecipeLoader;
-import dark.core.RecipeLoader;
-import dark.core.items.ItemParts.Parts;
+import dark.core.common.CoreRecipeLoader;
+import dark.core.common.RecipeLoader;
+import dark.core.common.items.ItemParts.Parts;
+import dark.core.interfaces.ColorCode;
 import dark.fluid.common.machines.BlockFluid;
-import dark.interfaces.ColorCode;
 
 public class FMRecipeLoader extends RecipeLoader
 {

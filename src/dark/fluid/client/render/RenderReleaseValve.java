@@ -7,12 +7,12 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.client.renders.RenderMachine;
+import dark.core.client.renders.RenderMachine;
+import dark.core.interfaces.ColorCode;
 import dark.fluid.client.model.ModelLargePipe;
 import dark.fluid.client.model.ModelReleaseValve;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.machines.TileEntityReleaseValve;
-import dark.interfaces.ColorCode;
 
 @SideOnly(Side.CLIENT)
 public class RenderReleaseValve extends RenderMachine

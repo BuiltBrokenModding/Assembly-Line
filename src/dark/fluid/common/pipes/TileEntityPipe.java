@@ -34,15 +34,15 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.fluid.INetworkPipe;
-import dark.core.helpers.FluidRestrictionHandler;
+import dark.core.interfaces.ColorCode;
+import dark.core.interfaces.ITileConnector;
+import dark.core.interfaces.IToolReadOut;
+import dark.core.interfaces.ColorCode.IColorCoded;
 import dark.core.network.fluid.NetworkPipes;
-import dark.core.tile.network.NetworkTileEntities;
+import dark.core.prefab.helpers.FluidHelper;
+import dark.core.prefab.tilenetwork.NetworkTileEntities;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.pipes.addon.IPipeExtention;
-import dark.interfaces.ColorCode;
-import dark.interfaces.IColorCoded;
-import dark.interfaces.ITileConnector;
-import dark.interfaces.IToolReadOut;
 
 public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler, IToolReadOut, IColorCoded, INetworkPipe, IPacketReceiver
 {
@@ -397,7 +397,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
     {
-        if (resource == null || !FluidRestrictionHandler.isValidLiquid(this.getColor(), resource.getFluid()))
+        if (resource == null || !FluidHelper.isValidLiquid(this.getColor(), resource.getFluid()))
         {
             return 0;
         }
@@ -418,7 +418,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     }
 
     /** Checks to make sure the connection is valid to the tileEntity
-     * 
+     *
      * @param tileEntity - the tileEntity being checked
      * @param side - side the connection is too
      * @return */

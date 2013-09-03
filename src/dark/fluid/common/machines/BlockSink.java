@@ -9,7 +9,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
-import dark.core.helpers.MetaGroup;
+import dark.core.prefab.helpers.MetaGroup;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.BlockFM;
 

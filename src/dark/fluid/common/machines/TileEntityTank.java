@@ -31,15 +31,15 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.fluid.INetworkFluidPart;
 import dark.api.fluid.INetworkPipe;
-import dark.core.helpers.FluidRestrictionHandler;
+import dark.core.interfaces.ColorCode;
+import dark.core.interfaces.IToolReadOut;
+import dark.core.interfaces.ColorCode.IColorCoded;
 import dark.core.network.fluid.NetworkFluidContainers;
 import dark.core.network.fluid.NetworkFluidTiles;
-import dark.core.tile.network.NetworkTileEntities;
+import dark.core.prefab.helpers.FluidHelper;
+import dark.core.prefab.tilenetwork.NetworkTileEntities;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.prefab.TileEntityFluidStorage;
-import dark.interfaces.ColorCode;
-import dark.interfaces.IColorCoded;
-import dark.interfaces.IToolReadOut;
 
 public class TileEntityTank extends TileEntityFluidStorage implements IFluidHandler, IToolReadOut, IColorCoded, INetworkFluidPart, IPacketReceiver
 {
@@ -165,7 +165,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
     {
-        if (resource == null || !FluidRestrictionHandler.isValidLiquid(this.getColor(), resource.getFluid()) || this.worldObj.isRemote)
+        if (resource == null || !FluidHelper.isValidLiquid(this.getColor(), resource.getFluid()) || this.worldObj.isRemote)
         {
             return 0;
         }
@@ -199,7 +199,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
     }
 
     /** Checks to make sure the connection is valid to the tileEntity
-     * 
+     *
      * @param tileEntity - the tileEntity being checked
      * @param side - side the connection is too */
     public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)
