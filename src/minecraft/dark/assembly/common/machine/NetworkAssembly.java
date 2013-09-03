@@ -10,9 +10,9 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.block.IElectrical;
 import universalelectricity.core.block.IElectricalStorage;
 import universalelectricity.core.vector.Vector3;
-import dark.interfaces.INetworkEnergyPart;
-import dark.interfaces.INetworkPart;
-import dark.prefab.tilenetwork.NetworkSharedPower;
+import dark.core.interfaces.INetworkEnergyPart;
+import dark.core.interfaces.INetworkPart;
+import dark.core.prefab.tilenetwork.NetworkSharedPower;
 
 public class NetworkAssembly extends NetworkSharedPower
 {
@@ -60,10 +60,6 @@ public class NetworkAssembly extends NetworkSharedPower
         if (lastTime == 0)
         {
             lastTime = time;
-        }
-        if(time - lastTime < damandUpdateDelay)
-        {
-            return lastDemand;
         }
         currentDemand += getNetworkPartsDemand();
         Iterator<TileEntity> it = this.powerLoads.iterator();

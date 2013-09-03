@@ -15,8 +15,8 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import dark.assembly.common.AssemblyLine;
-import dark.interfaces.IExternalInv;
-import dark.prefab.TileEntityInv;
+import dark.core.interfaces.IExternalInv;
+import dark.core.prefab.TileEntityInv;
 
 public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, IExternalInv
 {

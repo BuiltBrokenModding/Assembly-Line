@@ -10,10 +10,10 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
 import dark.assembly.common.AssemblyLine;
-import dark.interfaces.INetworkEnergyPart;
-import dark.prefab.TileEntityMachine;
-import dark.prefab.tilenetwork.NetworkSharedPower;
-import dark.prefab.tilenetwork.NetworkTileEntities;
+import dark.core.interfaces.INetworkEnergyPart;
+import dark.core.prefab.TileEntityMachine;
+import dark.core.prefab.tilenetwork.NetworkSharedPower;
+import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
 /** A class to be inherited by all machines on the assembly line. This class acts as a single peace
  * in a network of similar tiles allowing all to share power from one or more sources
@@ -67,11 +67,6 @@ public abstract class TileEntityAssembly extends TileEntityMachine implements IN
             {
                 this.updateTick = ((int) random.nextInt(1 + refresh_diff) + refresh_min_rate);
                 this.refresh();
-            }
-            this.running = this.canRun();
-            if (running != prevRunning)
-            {
-                this.sendPowerUpdate();
             }
         }
 
@@ -152,7 +147,6 @@ public abstract class TileEntityAssembly extends TileEntityMachine implements IN
         {
             this.assemblyNetwork = (NetworkAssembly) network;
         }
-
     }
 
     @Override
@@ -164,7 +158,6 @@ public abstract class TileEntityAssembly extends TileEntityMachine implements IN
     @Override
     public float receiveElectricity(ForgeDirection from, ElectricityPack receive, boolean doReceive)
     {
-        System.out.println("AssemblyTile has recieve power packet: " + (receive != null ? receive.toString() : "null"));
         return this.getTileNetwork().dumpPower(this, receive.getWatts(), doReceive);
     }
 

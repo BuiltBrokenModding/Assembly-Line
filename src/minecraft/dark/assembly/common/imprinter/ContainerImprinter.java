@@ -6,10 +6,10 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import dark.assembly.common.AssemblyLine;
-import dark.prefab.invgui.ISlotWatcher;
-import dark.prefab.invgui.SlotCraftingResult;
-import dark.prefab.invgui.SlotRestricted;
-import dark.prefab.invgui.WatchedSlot;
+import dark.core.prefab.invgui.ISlotWatcher;
+import dark.core.prefab.invgui.SlotCraftingResult;
+import dark.core.prefab.invgui.SlotRestricted;
+import dark.core.prefab.invgui.WatchedSlot;
 
 public class ContainerImprinter extends Container implements ISlotWatcher
 {

@@ -8,7 +8,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.TabAssemblyLine;
-import dark.prefab.BlockMachine;
+import dark.core.prefab.BlockMachine;
 
 public abstract class BlockAssembly extends BlockMachine
 {

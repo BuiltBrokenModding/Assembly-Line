@@ -40,9 +40,9 @@ import dark.assembly.common.armbot.command.CommandRotateTo;
 import dark.assembly.common.armbot.command.CommandUse;
 import dark.assembly.common.machine.TileEntityAssembly;
 import dark.assembly.common.machine.encoder.ItemDisk;
-import dark.common.DarkMain;
-import dark.prefab.IMultiBlock;
-import dark.prefab.helpers.ItemWorldHelper;
+import dark.core.common.DarkMain;
+import dark.core.prefab.IMultiBlock;
+import dark.core.prefab.helpers.ItemWorldHelper;
 
 public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IPacketReceiver, IArmbot, IPeripheral
 {

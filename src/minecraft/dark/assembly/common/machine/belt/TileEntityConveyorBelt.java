@@ -20,6 +20,9 @@ import dark.assembly.api.IBelt;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.machine.TileEntityAssembly;
 
+/** Conveyer belt TileEntity that allows entities of all kinds to be moved
+ *
+ * @author DarkGuardsman */
 public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacketReceiver, IBelt, IRotatable
 {
 
@@ -33,12 +36,16 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
 
     public static final int MAX_FRAME = 13;
     public static final int MAX_SLANT_FRAME = 23;
-
+    /** Packet name to ID the packet containing info on the angle of the belt */
+    public static final String slantPacketID = "slantPacket";
+    /** Acceleration of entities on the belt */
     public final float acceleration = 0.01f;
+    /** max speed of entities on the belt */
     public final float maxSpeed = 0.1f;
     /** Current rotation of the model wheels */
     public float wheelRotation = 0;
-    private int animFrame = 0; // this is from 0 to 15
+    /** Frame count for texture animation from 0 - maxFrame */
+    private int animFrame = 0;
     private SlantType slantType = SlantType.NONE;
     /** Entities that are ignored allowing for other tiles to interact with them */
     public List<Entity> IgnoreList = new ArrayList<Entity>();
@@ -49,8 +56,9 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
     }
 
     @Override
-    public void onUpdate()
+    public void updateEntity()
     {
+        super.updateEntity();
         /* PROCESSES IGNORE LIST AND REMOVES UNNEED ENTRIES */
         Iterator<Entity> it = this.IgnoreList.iterator();
         while (it.hasNext())
@@ -60,8 +68,7 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
                 it.remove();
             }
         }
-
-        if (this.worldObj.isRemote && this.isRunning() && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
+        if (this.worldObj.isRemote && this.isRunning())
         {
             if (this.ticks % 10 == 0 && this.worldObj.isRemote && this.worldObj.getBlockId(this.xCoord - 1, this.yCoord, this.zCoord) != AssemblyLine.recipeLoader.blockConveyorBelt.blockID && this.worldObj.getBlockId(xCoord, yCoord, zCoord - 1) != AssemblyLine.recipeLoader.blockConveyorBelt.blockID)
             {
@@ -94,9 +101,15 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
     }
 
     @Override
+    public boolean canRun()
+    {
+        return super.canRun() && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord);
+    }
+
+    @Override
     public Packet getDescriptionPacket()
     {
-        return PacketManager.getPacket(AssemblyLine.CHANNEL, this, "beltSlant", this.slantType.ordinal());
+        return PacketManager.getPacket(AssemblyLine.CHANNEL, this, slantPacketID, this.slantType.ordinal());
     }
 
     public SlantType getSlant()
@@ -161,7 +174,7 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
         {
             try
             {
-                if (id.equalsIgnoreCase("beltSlant"))
+                if (id.equalsIgnoreCase(slantPacketID))
                 {
                     this.slantType = SlantType.values()[dis.readInt()];
                     return true;

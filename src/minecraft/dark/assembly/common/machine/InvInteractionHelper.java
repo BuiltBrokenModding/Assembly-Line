@@ -12,7 +12,7 @@ import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
-import dark.prefab.TileEntityMulti;
+import dark.core.prefab.TileEntityMulti;
 
 public class InvInteractionHelper
 {

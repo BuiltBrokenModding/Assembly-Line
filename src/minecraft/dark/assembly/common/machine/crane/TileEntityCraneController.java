@@ -7,7 +7,7 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import dark.assembly.api.ICraneStructure;
 import dark.assembly.common.machine.TileEntityAssembly;
-import dark.common.DarkMain;
+import dark.core.common.DarkMain;
 
 public class TileEntityCraneController extends TileEntityAssembly implements ICraneStructure
 {
