@@ -11,6 +11,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.oredict.OreDictionary;
+import universalelectricity.compatibility.Compatibility;
+import universalelectricity.core.UniversalElectricity;
 import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.ore.OreGenReplaceStone;
 import universalelectricity.prefab.ore.OreGenerator;
@@ -98,6 +100,8 @@ public class DarkMain extends ModPrefab
 
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new FluidHelper());
+        UniversalElectricity.initiate();
+        Compatibility.initiate();
 
         proxy.preInit();
     }
