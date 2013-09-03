@@ -95,7 +95,6 @@ public abstract class NetworkTileEntities
             else
             {
                 part.setTileNetwork(this);
-
             }
         }
 

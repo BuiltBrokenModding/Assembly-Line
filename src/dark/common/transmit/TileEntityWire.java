@@ -20,13 +20,13 @@ public class TileEntityWire extends TileEntityUniversalConductor
     @Override
     public float getResistance()
     {
-        return 0.001f;
+        return BlockWire.wireResistance;
     }
 
     @Override
     public float getCurrentCapacity()
     {
-        return 10000f;
+        return BlockWire.ampMax;
     }
 
     @Override

@@ -24,7 +24,8 @@ import dark.prefab.helpers.Pair;
 
 public class BlockWire extends BlockMachine implements IExtraObjectInfo
 {
-
+    public static float wireResistance = 0.001f;
+    public static float ampMax = 10000f;
     public boolean isWireCollision = true;
     public Vector3 minVector = new Vector3(0.3, 0.3, 0.3);
     public Vector3 maxVector = new Vector3(0.7, 0.7, 0.7);
@@ -240,13 +241,14 @@ public class BlockWire extends BlockMachine implements IExtraObjectInfo
     @Override
     public boolean hasExtraConfigs()
     {
-        return false;
+        return true;
     }
 
     @Override
     public void loadExtraConfigs(Configuration config)
     {
-        //TODO add config options for max amps, and resistance
+        this.wireResistance = config.get("Settings", "miliOhms", 1,"Resistance of the wire in 1/1000 of an ohm").getInt()/1000;
+        this.ampMax = config.get("Settings", "maxAmps", 10000,"Amp limit of the wire").getInt();
 
     }
 
