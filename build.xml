@@ -81,42 +81,42 @@
 		
 		<!-- Copy compiled files into folders to be zipped -->
 		<copy todir="core">
-			<fileset dir="${dir.mcp}/reobf/../dark/core/" excludes=".git/**" />
-			<fileset dir="${dir.mcp}/reobf/../dark/api/" excludes=".git/**" />
+			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/core" />
+			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/api" />
             <fileset dir="${dir.development}/resources" excludes=".git/**" />
 		</copy>
 		<copy todir="fm">
-			<fileset dir="${dir.mcp}/reobf/../dark/fluid/" excludes=".git/**" />
-			<fileset dir="${dir.mcp}/reobf/../dark/mech/" excludes=".git/**" />
+			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/fluid/" />
+			<fileset dir="${dir.mcp}/reobf/minecraft" includes="darj/mech" />
             <fileset dir="${dir.development}/Fluid-Mechanics/resources" excludes=".git/**" />
 		</copy>
 		<copy todir="al">
-			<fileset dir="${dir.mcp}/reobf/../dark/assembly/" excludes=".git/**" />
+			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/assembly/" />
             <fileset dir="${dir.development}/Assembly-Line/resources" excludes=".git/**" />
 		</copy>
 		<copy todir="ft">
-			<fileset dir="${dir.mcp}/reobf/../dark/farmtech/" excludes=".git/**" />
+			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/farmtech" />
             <fileset dir="${dir.development}/FarmTech/resources" excludes=".git/**" />
 		</copy>
 		<copy todir="gs">
-			<fileset dir="${dir.mcp}/reobf/../dark/security/" excludes=".git/**" />
+			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/security/" />
             <fileset dir="${dir.development}/Greater-Security/resources" excludes=".git/**" />
 		</copy>		
 		
 		<!-- OUTPUT LATEST JAR AND ZIP FILES -->
-		<jar destfile="${file.core}">
+		<jar destfile="output/${file.core}">
 			<fileset dir="core" />
 		</jar>
-		<jar destfile="${file.fm}">
+		<jar destfile="output/${file.fm}">
 			<fileset dir="fm" />
 		</jar>
-		<jar destfile="${file.al}">
+		<jar destfile="output/${file.al}">
 			<fileset dir="al" />
 		</jar>
-		<jar destfile="${file.ft}">
+		<jar destfile="output/${file.ft}">
 			<fileset dir="ft" />
 		</jar>
-		<jar destfile="${file.gs}">
+		<jar destfile="output/${file.gs}">
 			<fileset dir="gs" />
 		</jar>
 		
