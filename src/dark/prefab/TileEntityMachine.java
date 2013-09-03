@@ -49,13 +49,20 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
     public static enum TilePacketTypes
     {
         /** Normal packet data of any kind */
-        GENERIC(),
+        GENERIC("generic"),
         /** Power updates */
-        POWER(),
+        POWER("isRunning"),
         /** GUI display data update */
-        GUI(),
+        GUI("guiGeneral"),
         /** Full tile read/write data from tile NBT */
-        NBT();
+        NBT("nbtAll");
+
+        public String name;
+
+        private TilePacketTypes(String name)
+        {
+            this.name = name;
+        }
     }
 
     public TileEntityMachine()
@@ -233,7 +240,7 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
             int x = dis.readInt();
             int y = dis.readInt();
             int z = dis.readInt();
-            int pId = dis.readInt();
+            String pId = dis.readUTF();
 
             this.simplePacket(pId, dis, player);
 
@@ -257,18 +264,18 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
      * @param dis - data
      * @param player - player
      * @return true if the packet was used */
-    public boolean simplePacket(int id, DataInputStream dis, EntityPlayer player)
+    public boolean simplePacket(String id, DataInputStream dis, EntityPlayer player)
     {
         try
         {
             if (this.worldObj.isRemote)
             {
-                if (id == TilePacketTypes.POWER.ordinal())
+                if (id.equalsIgnoreCase(TilePacketTypes.POWER.name))
                 {
                     this.running = dis.readBoolean();
                     return true;
                 }
-                if (id == TilePacketTypes.NBT.ordinal())
+                if (id.equalsIgnoreCase(TilePacketTypes.NBT.name))
                 {
                     this.readFromNBT(Packet.readNBTTagCompound(dis));
                 }
@@ -301,7 +308,7 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
         {
             NBTTagCompound tag = new NBTTagCompound();
             this.writeToNBT(tag);
-            PacketManager.sendPacketToClients(PacketManager.getPacket(this.getChannel(), this, TilePacketTypes.NBT.ordinal(), tag), worldObj, new Vector3(this), 64);
+            PacketManager.sendPacketToClients(PacketManager.getPacket(this.getChannel(), this, TilePacketTypes.NBT.name, tag), worldObj, new Vector3(this), 64);
         }
     }
 
@@ -310,7 +317,7 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
     {
         NBTTagCompound tag = new NBTTagCompound();
         this.writeToNBT(tag);
-        return PacketManager.getPacket(this.getChannel(), this, TilePacketTypes.NBT.ordinal(), tag);
+        return PacketManager.getPacket(this.getChannel(), this, TilePacketTypes.NBT.name, tag);
     }
 
     @Override
