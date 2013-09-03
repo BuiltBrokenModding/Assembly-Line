@@ -93,7 +93,7 @@
 		</copy>
 		<copy todir="fm">
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/fluid/" />
-			<fileset dir="${dir.mcp}/reobf/minecraft" includes="darj/mech/" />
+			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/mech/" />
             <fileset dir="${dir.development}/Fluid-Mechanics/resources" excludes=".git/**" />
 		</copy>
 		<copy todir="al">
