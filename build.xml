@@ -34,6 +34,22 @@
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
+            <fileset dir="${dir.development}Asembly-Line/src/minecraft">
+				<exclude name=".git/**"/>
+				<exclude name="**/*.xml"/>
+			</fileset>
+            <fileset dir="${dir.development}FarmTech/src">
+				<exclude name=".git/**"/>
+				<exclude name="**/*.xml"/>
+			</fileset>
+            <fileset dir="${dir.development}Fluid-Mechanics/src">
+				<exclude name=".git/**"/>
+				<exclude name="**/*.xml"/>
+			</fileset>
+            <fileset dir="${dir.development}Greater-Security/src">
+				<exclude name=".git/**"/>
+				<exclude name="**/*.xml"/>
+			</fileset>
 			
 		</copy>
 		
