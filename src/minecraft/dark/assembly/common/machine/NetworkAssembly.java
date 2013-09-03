@@ -10,12 +10,13 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.block.IElectrical;
 import universalelectricity.core.block.IElectricalStorage;
 import universalelectricity.core.vector.Vector3;
-import dark.core.tile.network.NetworkSharedPower;
 import dark.interfaces.INetworkEnergyPart;
 import dark.interfaces.INetworkPart;
+import dark.prefab.tilenetwork.NetworkSharedPower;
 
 public class NetworkAssembly extends NetworkSharedPower
 {
+    public static final int damandUpdateDelay = 100;
     /** Set of tiles that count as power sources */
     private Set<TileEntity> powerSources = new HashSet<TileEntity>();
     /** Set of tiles that count as power loads */
@@ -60,7 +61,10 @@ public class NetworkAssembly extends NetworkSharedPower
         {
             lastTime = time;
         }
-
+        if(time - lastTime < damandUpdateDelay)
+        {
+            return lastDemand;
+        }
         currentDemand += getNetworkPartsDemand();
         Iterator<TileEntity> it = this.powerLoads.iterator();
         while (it.hasNext())
@@ -199,6 +203,7 @@ public class NetworkAssembly extends NetworkSharedPower
     @Override
     public void cleanUpMembers()
     {
+        super.cleanUpMembers();
         Iterator<TileEntity> it = powerSources.iterator();
         for (int set = 0; set < 2; set++)
         {
