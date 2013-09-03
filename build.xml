@@ -12,6 +12,14 @@
 
 	<target name="build">
 
+        <!-- Download other git repos -->
+		<exec dir="${dir.mcp}" executable="cmd" osfamily="windows">
+			<arg line="git.bat" />
+		</exec>
+		<exec dir="${dir.mcp}" executable="bash" osfamily="unix">
+			<arg line="git.sh" />
+		</exec>
+        
 		<copy todir="${dir.development}">
 			<fileset dir="../Minecraft Forge Latest/" />
 		</copy>
@@ -22,19 +30,17 @@
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
+            <fileset dir="${dir.development}APIs">
+				<exclude name=".git/**"/>
+				<exclude name="**/*.xml"/>
+			</fileset>
 			
 		</copy>
 		
 		<!-- Make all directories -->
 		<mkdir dir="output" />
 
-		<!-- Download other git repos -->
-		<exec dir="${dir.mcp}" executable="cmd" osfamily="windows">
-			<arg line="git.bat" />
-		</exec>
-		<exec dir="${dir.mcp}" executable="bash" osfamily="unix">
-			<arg line="git.sh" />
-		</exec>
+		
 		
 		
 		<!-- Replace version numbers -->
