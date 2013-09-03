@@ -7,7 +7,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.assembly.common.machine.BlockCrate;
-import dark.core.RecipeLoader;
+import dark.common.RecipeLoader;
 
 public class ALRecipeLoader extends RecipeLoader
 {

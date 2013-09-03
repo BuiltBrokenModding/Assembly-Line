@@ -6,10 +6,10 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import universalelectricity.core.vector.Vector3;
-import dark.core.helpers.ItemFindingHelper;
+import dark.prefab.helpers.ItemWorldHelper;
 
 /** Used by arms to break a specific block in a position.
- * 
+ *
  * @author Calclavia */
 public class CommandBreak extends Command
 {
@@ -33,7 +33,7 @@ public class CommandBreak extends Command
 
             if (!this.keep || items.size() > 1)
             {
-                ItemFindingHelper.dropBlockAsItem(this.world, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ());
+                ItemWorldHelper.dropBlockAsItem(this.world, serachPosition);
             }
             else
             {

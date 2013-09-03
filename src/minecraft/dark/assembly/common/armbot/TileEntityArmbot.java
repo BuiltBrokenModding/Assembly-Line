@@ -40,9 +40,9 @@ import dark.assembly.common.armbot.command.CommandRotateTo;
 import dark.assembly.common.armbot.command.CommandUse;
 import dark.assembly.common.machine.TileEntityAssembly;
 import dark.assembly.common.machine.encoder.ItemDisk;
-import dark.core.DarkMain;
-import dark.core.helpers.ItemFindingHelper;
+import dark.common.DarkMain;
 import dark.prefab.IMultiBlock;
+import dark.prefab.helpers.ItemWorldHelper;
 
 public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IPacketReceiver, IArmbot, IPeripheral
 {
@@ -842,7 +842,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
         if (object instanceof ItemStack)
         {
             Vector3 handPosition = this.getHandPosition();
-            ItemFindingHelper.dropItemStackExact(worldObj, handPosition.x, handPosition.y, handPosition.z, (ItemStack) object);
+            ItemWorldHelper.dropItemStack(worldObj, handPosition, (ItemStack) object, false);
             this.grabbedItems.remove((ItemStack) object);
         }
         if (object instanceof String)
@@ -855,7 +855,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
                 while (it.hasNext())
                 {
-                    ItemFindingHelper.dropItemStackExact(worldObj, handPosition.x, handPosition.y, handPosition.z, it.next());
+                    ItemWorldHelper.dropItemStack(worldObj, handPosition, it.next(),false);
                 }
 
                 this.grabbedEntities.clear();
@@ -911,9 +911,9 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     {
         if (this.getCurrentCommand() != null)
         {
-            return 2;
+            return .4;//400w
         }
-        return .1;
+        return .03;//30w
     }
 
     @Override

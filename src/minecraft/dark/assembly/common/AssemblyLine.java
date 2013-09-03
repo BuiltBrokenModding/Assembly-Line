@@ -51,8 +51,8 @@ import dark.assembly.common.machine.crane.TileEntityCraneRail;
 import dark.assembly.common.machine.encoder.BlockEncoder;
 import dark.assembly.common.machine.encoder.ItemDisk;
 import dark.assembly.common.machine.encoder.TileEntityEncoder;
-import dark.core.BlockRegistry.BlockData;
-import dark.core.DarkMain;
+import dark.common.DarkMain;
+import dark.common.BlockRegistry.BlockData;
 import dark.prefab.ModPrefab;
 
 @ModstatInfo(prefix = "asmline")

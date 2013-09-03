@@ -96,7 +96,7 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketManager.getPacket(AssemblyLine.CHANNEL, this, 3, this.slantType.ordinal());
+        return PacketManager.getPacket(AssemblyLine.CHANNEL, this, "beltSlant", this.slantType.ordinal());
     }
 
     public SlantType getSlant()
@@ -155,13 +155,13 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
     }
 
     @Override
-    public boolean simplePacket(int id, DataInputStream dis, EntityPlayer player)
+    public boolean simplePacket(String id, DataInputStream dis, EntityPlayer player)
     {
         if (!super.simplePacket(id, dis, player) && this.worldObj.isRemote)
         {
             try
             {
-                if (id == 3)
+                if (id.equalsIgnoreCase("beltSlant"))
                 {
                     this.slantType = SlantType.values()[dis.readInt()];
                     return true;
@@ -241,13 +241,13 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
             TileEntity front, rear;
             if (this.slantType == SlantType.DOWN)
             {
-                face.add(new Vector3(0, -1, 0));
-                back.add(new Vector3(0, 1, 0));
+                face.translate(new Vector3(0, -1, 0));
+                back.translate(new Vector3(0, 1, 0));
             }
             else if (this.slantType == SlantType.UP)
             {
-                face.add(new Vector3(0, 1, 0));
-                back.add(new Vector3(0, -1, 0));
+                face.translate(new Vector3(0, 1, 0));
+                back.translate(new Vector3(0, -1, 0));
             }
             else
             {
@@ -272,7 +272,7 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
     @Override
     public double getWattLoad()
     {
-        return 0.1 + (0.1 * this.getAffectedEntities().size());
+        return 0.05 + (0.01 * this.getAffectedEntities().size());//50w + (10w * loadSize)
     }
 
 }

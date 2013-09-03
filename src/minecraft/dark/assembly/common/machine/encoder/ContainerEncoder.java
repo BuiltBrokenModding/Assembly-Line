@@ -6,7 +6,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import dark.assembly.common.AssemblyLine;
-import dark.core.gui.SlotRestricted;
+import dark.prefab.invgui.SlotRestricted;
 
 public class ContainerEncoder extends Container
 {

@@ -3,7 +3,7 @@ package dark.assembly.common.machine;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import dark.prefab.InvChest;
+import dark.prefab.invgui.InvChest;
 
 public class InventoryCrate extends InvChest
 {

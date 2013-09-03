@@ -27,11 +27,11 @@ import com.google.common.io.ByteArrayDataInput;
 import dark.assembly.api.IArmbot;
 import dark.assembly.api.IArmbotUseable;
 import dark.assembly.common.AssemblyLine;
-import dark.core.gui.ISlotPickResult;
-import dark.core.helpers.AutoCraftingManager;
-import dark.core.helpers.IAutoCrafter;
-import dark.core.helpers.Pair;
 import dark.prefab.TileEntityMulti;
+import dark.prefab.helpers.AutoCraftingManager;
+import dark.prefab.helpers.AutoCraftingManager.IAutoCrafter;
+import dark.prefab.helpers.Pair;
+import dark.prefab.invgui.ISlotPickResult;
 
 public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInventory, IArmbotUseable, IPacketReceiver, ISlotPickResult, IAutoCrafter
 {
@@ -190,7 +190,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
     }
 
     /** Construct an InventoryCrafting Matrix on the fly.
-     * 
+     *
      * @return */
     public InventoryCrafting getCraftingMatrix()
     {

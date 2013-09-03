@@ -9,18 +9,17 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.network.IPacketReceiver;
 import dark.assembly.common.AssemblyLine;
-import dark.core.tile.network.NetworkSharedPower;
-import dark.core.tile.network.NetworkTileEntities;
 import dark.interfaces.INetworkEnergyPart;
 import dark.prefab.TileEntityMachine;
+import dark.prefab.tilenetwork.NetworkSharedPower;
+import dark.prefab.tilenetwork.NetworkTileEntities;
 
 /** A class to be inherited by all machines on the assembly line. This class acts as a single peace
  * in a network of similar tiles allowing all to share power from one or more sources
  *
  * @author DarkGuardsman */
-public abstract class TileEntityAssembly extends TileEntityMachine implements IPacketReceiver, INetworkEnergyPart
+public abstract class TileEntityAssembly extends TileEntityMachine implements INetworkEnergyPart
 {
     /** lowest value the network can update at */
     public static int refresh_min_rate = 20;
@@ -108,7 +107,7 @@ public abstract class TileEntityAssembly extends TileEntityMachine implements IP
     @Override
     public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
     {
-        return entity != null && entity instanceof TileEntityAssembly;
+        return true;
     }
 
     @Override
@@ -165,18 +164,14 @@ public abstract class TileEntityAssembly extends TileEntityMachine implements IP
     @Override
     public float receiveElectricity(ForgeDirection from, ElectricityPack receive, boolean doReceive)
     {
-        if (this.getInputDirections().contains(from))
-        {
-            return this.getTileNetwork().dumpPower(this, receive.getWatts(), doReceive);
-        }
-
-        return 0;
+        System.out.println("AssemblyTile has recieve power packet: " + (receive != null ? receive.toString() : "null"));
+        return this.getTileNetwork().dumpPower(this, receive.getWatts(), doReceive);
     }
 
     /** Amount of energy this tile runs on per tick */
     public double getWattLoad()
     {
-        return 1;
+        return .1;//100w
     }
 
     @Override
