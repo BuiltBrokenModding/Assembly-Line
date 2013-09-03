@@ -81,26 +81,26 @@
 		
 		<!-- Copy compiled files into folders to be zipped -->
 		<copy todir="core">
-			<fileset dir="${dir.mcp}/reobf/minecraft/dark/core" excludes=".git/**" />
-			<fileset dir="${dir.mcp}/reobf/minecraft/dark/api" excludes=".git/**" />
-            <fileset dir="${dir.development}/resources/assets" excludes=".git/**" />
+			<fileset dir="${dir.mcp}/reobf/minecraft/dark/core/" excludes=".git/**" />
+			<fileset dir="${dir.mcp}/reobf/minecraft/dark/api/" excludes=".git/**" />
+            <fileset dir="${dir.development}/resources" excludes=".git/**" />
 		</copy>
 		<copy todir="fm">
-			<fileset dir="${dir.mcp}/reobf/minecraft/dark/fluid" excludes=".git/**" />
-			<fileset dir="${dir.mcp}/reobf/minecraft/dark/mech" excludes=".git/**" />
-            <fileset dir="${dir.development}/Fluid-Mechanics/resources/assets" excludes=".git/**" />
+			<fileset dir="${dir.mcp}/reobf/minecraft/dark/fluid/" excludes=".git/**" />
+			<fileset dir="${dir.mcp}/reobf/minecraft/dark/mech/" excludes=".git/**" />
+            <fileset dir="${dir.development}/Fluid-Mechanics/resources" excludes=".git/**" />
 		</copy>
 		<copy todir="al">
-			<fileset dir="${dir.mcp}/reobf/minecraft/dark/assembly" excludes=".git/**" />
-            <fileset dir="${dir.development}/Assembly-Line/resources/assets" excludes=".git/**" />
+			<fileset dir="${dir.mcp}/reobf/minecraft/dark/assembly/" excludes=".git/**" />
+            <fileset dir="${dir.development}/Assembly-Line/resources" excludes=".git/**" />
 		</copy>
 		<copy todir="ft">
-			<fileset dir="${dir.mcp}/reobf/minecraft/dark/farmtech" excludes=".git/**" />
-            <fileset dir="${dir.development}/FarmTech/resources/assets" excludes=".git/**" />
+			<fileset dir="${dir.mcp}/reobf/minecraft/dark/farmtech/" excludes=".git/**" />
+            <fileset dir="${dir.development}/FarmTech/resources" excludes=".git/**" />
 		</copy>
 		<copy todir="gs">
-			<fileset dir="${dir.mcp}/reobf/minecraft/dark/security" excludes=".git/**" />
-            <fileset dir="${dir.development}/Greater-Security/resources/assets" excludes=".git/**" />
+			<fileset dir="${dir.mcp}/reobf/minecraft/dark/security/" excludes=".git/**" />
+            <fileset dir="${dir.development}/Greater-Security/resources" excludes=".git/**" />
 		</copy>		
 		
 		<!-- OUTPUT LATEST JAR AND ZIP FILES -->
