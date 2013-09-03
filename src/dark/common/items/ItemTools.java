@@ -127,6 +127,7 @@ public class ItemTools extends ItemBasic
                 //TODO add shift click support to bring up a easier to read GUI or link to the block and add an on screen gui so the player can toy with a design and be updated
                 if (tool == EnumTools.MULTI_METER)
                 {
+                    //TODO filter all units threw UE unit helper to created nicer looking output text
                     player.sendChatToPlayer(ChatMessageComponent.func_111066_d("Side>" + ForgeDirection.getOrientation(side).toString()));
                     boolean out = false;
                     if (tileEntity instanceof IElectrical)
@@ -136,29 +137,29 @@ public class ItemTools extends ItemBasic
                         player.sendChatToPlayer(ChatMessageComponent.func_111066_d("   Voltage>" + ((IElectrical) tileEntity).getVoltage()));
                         if (demand > 0)
                         {
-                            player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   RequiredWatts> %1$.2fW", demand)));
+                            player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   RequiredWatts> %1$.2fKW", demand)));
                         }
                         if (provide > 0)
                         {
-                            player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   AvailableWatts> %1$.2fW", provide)));
+                            player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   AvailableWatts> %1$.2fKW", provide)));
                         }
                         out = true;
                     }
                     if (tileEntity instanceof IElectricalStorage)
                     {
-                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   EnergyStored> %1$.2fW of %2$.2fW max", ((IElectricalStorage) tileEntity).getEnergyStored(), ((IElectricalStorage) tileEntity).getMaxEnergyStored())));
+                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   EnergyStored> %1$.2fKW of %2$.2fW max", ((IElectricalStorage) tileEntity).getEnergyStored(), ((IElectricalStorage) tileEntity).getMaxEnergyStored())));
                         out = true;
                     }
                     if (tileEntity instanceof IConductor)
                     {
                         out = true;
-                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   Resistance> %1$.2fW | AmpMax>     %2$.2fW", ((IConductor) tileEntity).getResistance(), ((IConductor) tileEntity).getCurrentCapacity())));
+                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   Resistance> %1$.2fKW | AmpMax>     %2$.2fW", ((IConductor) tileEntity).getResistance(), ((IConductor) tileEntity).getCurrentCapacity())));
 
                         if (((IConductor) tileEntity).getNetwork() != null)
                         {
                             player.sendChatToPlayer(ChatMessageComponent.func_111066_d("   Network>" + ((IConductor) tileEntity).getNetwork().toString()));
 
-                            player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   Network>WattRequired> %1$.2fW | TotalResistance> %2$.2fW", (((IConductor) tileEntity).getNetwork().getRequest() != null ? ((IConductor) tileEntity).getNetwork().getRequest().getWatts() : 0), ((IConductor) tileEntity).getNetwork().getTotalResistance())));
+                            player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   Network>WattRequired> %1$.2fKW | TotalResistance> %2$.2fW", (((IConductor) tileEntity).getNetwork().getRequest() != null ? ((IConductor) tileEntity).getNetwork().getRequest().getWatts() : 0), ((IConductor) tileEntity).getNetwork().getTotalResistance())));
                         }
                     }
                     if (!out)

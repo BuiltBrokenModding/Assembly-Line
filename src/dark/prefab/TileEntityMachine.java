@@ -30,19 +30,24 @@ import dark.interfaces.IPowerLess;
 import dark.interfaces.PowerSystems;
 import dark.prefab.invgui.InvChest;
 
+/** Prefab for most machines in the CoreMachine set. Provides basic power updates, packet updates,
+ * inventory handling, and other handy methods.
+ *
+ * @author DarkGuardsman */
 public abstract class TileEntityMachine extends TileEntityUniversalElectrical implements ISidedInventory, IExternalInv, IDisableable, IPacketReceiver, IPowerLess
 {
+    //TODO add support for attaching multi-meter to side of machine
 
-    /** Forge Ore Directory name of the item to toggle power */
+    /** Forge Ore Directory name of the item to toggle infinite power mode */
     public static String powerToggleItemID = "battery";
 
-    /** ticks to act dead or disabled */
+    /** ticks to act dead, disabled, or not function at all */
     protected int ticksDisabled = 0;
 
     protected float WATTS_PER_TICK, MAX_WATTS;
 
-    protected boolean unpowered, running, prevRunning;
-    /** Inventory used by this machine */
+    protected boolean unpowered = false, running = false, prevRunning = false;
+    /** Inventory manager used by this machine */
     protected IInvBox inventory;
 
     /** Default generic packet types used by all machines */
@@ -92,7 +97,8 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
             this.running = this.canRun() && this.consumePower(this.WATTS_PER_TICK, true);
             if (prevRun != this.running)
             {
-                PacketManager.sendPacketToClients(this.getDescriptionPacket(), worldObj, new Vector3(this), 64);
+                System.out.println("\n\nPower update packet sent to client\n\n\n");
+                this.sendPowerUpdate();
             }
         }
 
@@ -120,7 +126,7 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
     /** Does this tile have power to run and do work */
     public boolean canRun()
     {
-        return !this.isDisabled() && (this.runPowerLess() || this.getEnergyStored() >= this.WATTS_PER_TICK);
+        return !this.isDisabled() && (this.runPowerLess() || this.consumePower(this.WATTS_PER_TICK, false));
     }
 
     @Override
@@ -230,7 +236,7 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
     @Override
     public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
     {
-        boolean packetSize = false;
+        boolean packetSize = true;
         try
         {
             ByteArrayInputStream bis = new ByteArrayInputStream(packet.data);
@@ -273,11 +279,13 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
                 if (id.equalsIgnoreCase(TilePacketTypes.POWER.name))
                 {
                     this.running = dis.readBoolean();
+                    System.out.println("Received isRunning packet");
                     return true;
                 }
                 if (id.equalsIgnoreCase(TilePacketTypes.NBT.name))
                 {
                     this.readFromNBT(Packet.readNBTTagCompound(dis));
+                    return true;
                 }
             }
         }
@@ -296,8 +304,7 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
     {
         if (!this.worldObj.isRemote)
         {
-            Packet packet = PacketManager.getPacket(this.getChannel(), this, TilePacketTypes.POWER.ordinal(), this.running);
-            PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 64);
+            PacketManager.sendPacketToClients(PacketManager.getPacket(this.getChannel(), this, TilePacketTypes.POWER.name, this.running), worldObj, new Vector3(this), 64);
         }
     }
 
@@ -326,6 +333,7 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
         super.readFromNBT(nbt);
         this.ticksDisabled = nbt.getInteger("disabledTicks");
         this.unpowered = nbt.getBoolean("shouldPower");
+        this.running = nbt.getBoolean("isRunning");
         if (nbt.hasKey("wattsReceived"))
         {
             this.energyStored = (float) nbt.getDouble("wattsReceived");
@@ -338,6 +346,7 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
         super.writeToNBT(nbt);
         nbt.setInteger("disabledTicks", this.ticksDisabled);
         nbt.setBoolean("shouldPower", this.unpowered);
+        nbt.setBoolean("isRunning",this.running);
     }
 
     /*--------------------------------------------------------------
