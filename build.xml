@@ -83,19 +83,24 @@
 		<copy todir="core">
 			<fileset dir="${dir.mcp}/reobf/minecraft/dark/core" excludes=".git/**" />
 			<fileset dir="${dir.mcp}/reobf/minecraft/dark/api" excludes=".git/**" />
+            <fileset dir="${dir.mcp}/resources/assets" excludes=".git/**" />
 		</copy>
 		<copy todir="fm">
 			<fileset dir="${dir.mcp}/reobf/minecraft/dark/fluid" excludes=".git/**" />
 			<fileset dir="${dir.mcp}/reobf/minecraft/dark/mech" excludes=".git/**" />
+            <fileset dir="${dir.mcp}/Fluid-Mechanics/resources/assets" excludes=".git/**" />
 		</copy>
 		<copy todir="al">
 			<fileset dir="${dir.mcp}/reobf/minecraft/dark/assembly" excludes=".git/**" />
+            <fileset dir="${dir.mcp}/Assembly-Line/resources/assets" excludes=".git/**" />
 		</copy>
 		<copy todir="ft">
 			<fileset dir="${dir.mcp}/reobf/minecraft/dark/farmtech" excludes=".git/**" />
+            <fileset dir="${dir.mcp}/FarmTech/resources/assets" excludes=".git/**" />
 		</copy>
 		<copy todir="gs">
 			<fileset dir="${dir.mcp}/reobf/minecraft/dark/security" excludes=".git/**" />
+            <fileset dir="${dir.mcp}/Greater-Security/resources/assets" excludes=".git/**" />
 		</copy>		
 		
 		<!-- OUTPUT LATEST JAR AND ZIP FILES -->
