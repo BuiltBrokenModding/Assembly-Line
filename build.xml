@@ -82,7 +82,13 @@
 		<!-- Copy compiled files into folders to be zipped -->
 		<copy todir="core">
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/core/" />
-			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/api/" />
+            <fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/api/" />
+			<fileset dir="${dir.mcp}/reobf/minecraft" includes="buildcraft/" />
+            <fileset dir="${dir.mcp}/reobf/minecraft" includes="dan200/" />
+            <fileset dir="${dir.mcp}/reobf/minecraft" includes="ic2/" />
+            <fileset dir="${dir.mcp}/reobf/minecraft" includes="org/" />
+            <fileset dir="${dir.mcp}/reobf/minecraft" includes="themalexpansion/" />
+            <fileset dir="${dir.mcp}/reobf/minecraft" includes="universalelectricity/" />
             <fileset dir="${dir.development}/resources" excludes=".git/**" />
 		</copy>
 		<copy todir="fm">
