@@ -32,13 +32,11 @@ public class BlockSink extends BlockFM
     public boolean onUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
     {
         int meta = par1World.getBlockMetadata(x, y, z);
-        int g = MetaGroup.getGrouping(meta);
-        TileEntity ent = par1World.getBlockTileEntity(x, y, z);
-        int angle = MathHelper.floor_double((par5EntityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+        int metaGroup = MetaGroup.getGrouping(meta);
 
-        if (meta == (g * 4) + 3)
+        if (meta == (metaGroup * 4) + 3)
         {
-            par1World.setBlockMetadataWithNotify(x, y, z, (g * 4), 3);
+            par1World.setBlockMetadataWithNotify(x, y, z, (metaGroup * 4), 3);
             return true;
         }
         else

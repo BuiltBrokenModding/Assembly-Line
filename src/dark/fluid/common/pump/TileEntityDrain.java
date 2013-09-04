@@ -188,7 +188,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
     }
 
     @Override
-    public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
+    public boolean canTileConnect(Connection type, ForgeDirection dir)
     {
         return dir != this.getDirection();
     }

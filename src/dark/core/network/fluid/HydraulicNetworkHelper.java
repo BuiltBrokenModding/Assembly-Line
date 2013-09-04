@@ -4,7 +4,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
-import dark.core.interfaces.INetworkPart;
+import dark.api.parts.INetworkPart;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
 public class HydraulicNetworkHelper

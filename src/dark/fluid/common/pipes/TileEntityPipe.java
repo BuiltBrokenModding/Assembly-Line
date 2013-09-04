@@ -33,10 +33,10 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.api.IToolReadOut;
 import dark.api.fluid.INetworkPipe;
+import dark.api.parts.ITileConnector;
 import dark.core.interfaces.ColorCode;
-import dark.core.interfaces.ITileConnector;
-import dark.core.interfaces.IToolReadOut;
 import dark.core.interfaces.ColorCode.IColorCoded;
 import dark.core.network.fluid.NetworkPipes;
 import dark.core.prefab.helpers.FluidHelper;
@@ -432,7 +432,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
             }
             if (tileEntity instanceof ITileConnector)
             {
-                if (((ITileConnector) tileEntity).canTileConnect(this, side.getOpposite()))
+                if (((ITileConnector) tileEntity).canTileConnect(Connection.NETWORK, side.getOpposite()))
                 {
                     if (tileEntity instanceof INetworkPipe)
                     {
@@ -505,8 +505,9 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     }
 
     @Override
-    public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
+    public boolean canTileConnect(Connection type, ForgeDirection dir)
     {
+        TileEntity entity = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
         return entity != null && this.subEntities[dir.ordinal()] == null;
     }
 

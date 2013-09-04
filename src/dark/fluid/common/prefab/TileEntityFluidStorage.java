@@ -1,5 +1,6 @@
 package dark.fluid.common.prefab;
 
+import universalelectricity.core.vector.Vector3;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -34,8 +35,9 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
     }
 
     @Override
-    public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
+    public boolean canTileConnect(Connection type, ForgeDirection dir)
     {
+        TileEntity entity = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
         return entity instanceof IFluidHandler;
     }
 

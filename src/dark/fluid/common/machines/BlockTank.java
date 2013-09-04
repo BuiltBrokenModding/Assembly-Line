@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import dark.core.interfaces.INetworkPart;
+import dark.api.parts.INetworkPart;
 import dark.core.prefab.helpers.AutoCraftingManager;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.fluid.client.render.BlockRenderHelper;

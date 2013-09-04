@@ -24,8 +24,9 @@ public class TileEntityGenericPipe extends TileEntityPipe
     }
 
     @Override
-    public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
+    public boolean canTileConnect(Connection type, ForgeDirection dir)
     {
+        TileEntity entity = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
         Vector3 vec = new Vector3(entity);
         int meta = vec.getBlockMetadata(this.worldObj);
         int blockID = vec.getBlockID(this.worldObj);
@@ -35,7 +36,7 @@ public class TileEntityGenericPipe extends TileEntityPipe
             return meta == this.getBlockMetadata();
         }
 
-        return super.canTileConnect(entity, dir);
+        return super.canTileConnect(type, dir);
     }
 
     @Override

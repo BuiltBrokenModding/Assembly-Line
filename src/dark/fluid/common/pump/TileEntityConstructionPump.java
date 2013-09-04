@@ -16,7 +16,7 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import dark.api.fluid.IDrain;
 import dark.api.fluid.INetworkPipe;
-import dark.core.interfaces.ITileConnector;
+import dark.api.parts.ITileConnector;
 import dark.core.network.fluid.HydraulicNetworkHelper;
 import dark.core.network.fluid.NetworkFluidTiles;
 import dark.core.prefab.helpers.MetaGroup;
@@ -36,7 +36,7 @@ public class TileEntityConstructionPump extends TileEntityStarterPump implements
     }
 
     /** Gets the facing direction
-     * 
+     *
      * @param input true for input side, false for output side
      * @return */
     public ForgeDirection getFacing(boolean input)
@@ -78,7 +78,7 @@ public class TileEntityConstructionPump extends TileEntityStarterPump implements
     }
 
     /** Gets the nextDrain in the list
-     * 
+     *
      * @param inputTile - input tile must be an instance of INetworkPipe
      * @param outputTile - output tile must be an instance of IFluidHandler
      * @param ignoreList - list of drains to ignore so that the next one is selected
@@ -162,8 +162,9 @@ public class TileEntityConstructionPump extends TileEntityStarterPump implements
     }
 
     @Override
-    public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
+    public boolean canTileConnect(Connection type, ForgeDirection dir)
     {
+        TileEntity entity = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
         return entity instanceof IFluidHandler && (dir == this.getFacing(false) || dir == this.getFacing(true));
     }
 

@@ -3,6 +3,8 @@ package dark.fluid.common.machines;
 import java.util.ArrayList;
 import java.util.List;
 
+import universalelectricity.core.vector.Vector3;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -10,10 +12,10 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
+import dark.api.IToolReadOut;
 import dark.api.fluid.INetworkPipe;
+import dark.api.parts.ITileConnector;
 import dark.core.interfaces.ColorCode;
-import dark.core.interfaces.ITileConnector;
-import dark.core.interfaces.IToolReadOut;
 import dark.core.interfaces.ColorCode.IColorCoded;
 import dark.core.network.fluid.NetworkPipes;
 import dark.core.prefab.helpers.ConnectionHelper;
@@ -105,7 +107,7 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITi
     }
 
     /** if any of allowed list is true
-     * 
+     *
      * @return true */
     public boolean isRestricted()
     {
@@ -159,8 +161,9 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITi
     }
 
     @Override
-    public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
+    public boolean canTileConnect(Connection type, ForgeDirection dir)
     {
+        TileEntity entity = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
         return entity != null && entity instanceof IFluidHandler && entity instanceof IColorCoded && this.canConnect(((IColorCoded) entity).getColor());
     }
 

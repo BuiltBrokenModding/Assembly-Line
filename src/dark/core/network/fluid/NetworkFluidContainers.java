@@ -8,8 +8,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import dark.api.fluid.INetworkFluidPart;
+import dark.api.parts.INetworkPart;
 import dark.core.interfaces.ColorCode;
-import dark.core.interfaces.INetworkPart;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
 /** Side note: the network should act like this when done {@link http

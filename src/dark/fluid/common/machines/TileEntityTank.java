@@ -22,6 +22,7 @@ import net.minecraftforge.fluids.IFluidTank;
 
 import org.bouncycastle.util.Arrays;
 
+import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 
@@ -29,10 +30,10 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.api.IToolReadOut;
 import dark.api.fluid.INetworkFluidPart;
 import dark.api.fluid.INetworkPipe;
 import dark.core.interfaces.ColorCode;
-import dark.core.interfaces.IToolReadOut;
 import dark.core.interfaces.ColorCode.IColorCoded;
 import dark.core.network.fluid.NetworkFluidContainers;
 import dark.core.network.fluid.NetworkFluidTiles;
@@ -250,8 +251,9 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
     }
 
     @Override
-    public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
+    public boolean canTileConnect(Connection type, ForgeDirection dir)
     {
+        TileEntity entity = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
         return entity != null && entity instanceof IFluidHandler;
     }
 

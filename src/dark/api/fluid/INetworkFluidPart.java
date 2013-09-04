@@ -3,7 +3,7 @@ package dark.api.fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
-import dark.core.interfaces.INetworkPart;
+import dark.api.parts.INetworkPart;
 import dark.core.interfaces.ColorCode.IColorCoded;
 
 public interface INetworkFluidPart extends IColorCoded, IFluidHandler, INetworkPart

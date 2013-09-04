@@ -11,9 +11,9 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
+import dark.api.IToolReadOut;
 import dark.api.fluid.IDrain;
-import dark.core.interfaces.ITileConnector;
-import dark.core.interfaces.IToolReadOut;
+import dark.api.parts.ITileConnector;
 import dark.core.prefab.TileEntityMachine;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.helpers.Pair;
@@ -86,7 +86,7 @@ public class TileEntityStarterPump extends TileEntityMachine implements IToolRea
     }
 
     /** Drains an area starting at the given location
-     * 
+     *
      * @param world - world to drain in, most cases will be the TileEntities world
      * @param loc - origin to start the path finder with. If this is an instance of IDrain this
      * method will act different */
@@ -212,7 +212,7 @@ public class TileEntityStarterPump extends TileEntityMachine implements IToolRea
     }
 
     @Override
-    public boolean canTileConnect(TileEntity entity, ForgeDirection direction)
+    public boolean canTileConnect(Connection type, ForgeDirection direction)
     {
         return direction != ForgeDirection.DOWN;
     }
