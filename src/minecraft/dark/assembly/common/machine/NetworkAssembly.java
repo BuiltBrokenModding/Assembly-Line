@@ -10,8 +10,8 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.block.IElectrical;
 import universalelectricity.core.block.IElectricalStorage;
 import universalelectricity.core.vector.Vector3;
-import dark.core.interfaces.INetworkEnergyPart;
-import dark.core.interfaces.INetworkPart;
+import dark.api.parts.INetworkEnergyPart;
+import dark.api.parts.INetworkPart;
 import dark.core.prefab.tilenetwork.NetworkSharedPower;
 
 public class NetworkAssembly extends NetworkSharedPower

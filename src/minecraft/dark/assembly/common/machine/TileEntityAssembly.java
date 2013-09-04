@@ -9,8 +9,8 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
+import dark.api.parts.INetworkEnergyPart;
 import dark.assembly.common.AssemblyLine;
-import dark.core.interfaces.INetworkEnergyPart;
 import dark.core.prefab.TileEntityMachine;
 import dark.core.prefab.tilenetwork.NetworkSharedPower;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
@@ -100,7 +100,7 @@ public abstract class TileEntityAssembly extends TileEntityMachine implements IN
     }
 
     @Override
-    public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
+    public boolean canTileConnect(Connection type, ForgeDirection dir)
     {
         return true;
     }
@@ -115,7 +115,7 @@ public abstract class TileEntityAssembly extends TileEntityMachine implements IN
             for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
             {
                 TileEntity tileEntity = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
-                if (tileEntity instanceof TileEntityAssembly && ((TileEntityAssembly) tileEntity).canTileConnect(this, dir.getOpposite()))
+                if (tileEntity instanceof TileEntityAssembly && ((TileEntityAssembly) tileEntity).canTileConnect(Connection.NETWORK, dir.getOpposite()))
                 {
                     this.getTileNetwork().merge(((TileEntityAssembly) tileEntity).getTileNetwork(), this);
                     connectedTiles.add(tileEntity);
