@@ -65,6 +65,11 @@ public class FluidMech extends ModPrefab
     public static final String MOD_ID = "FluidMech";
     public static final String MOD_NAME = "Fluid_Mechanics";
 
+    public static final String WASTE_FLUID_NAME = "mixedWaste";
+    public static final String OIL_FLUID_NAME = "oil";
+    public static final String FUEL_FLUID_NAME = "fuel";
+    public static final String BIO_FUEL_Name = "";
+
     // @NetworkMod
     public static final String CHANNEL = "FluidMech";
 
@@ -137,15 +142,17 @@ public class FluidMech extends ModPrefab
         CONFIGURATION.load();
         if (FluidMech.CONFIGURATION.get("general", "EnableWasteFluid", true).getBoolean(true))
         {
-            Fluid waste = new Fluid("waste");
-            FMRecipeLoader.blockWasteLiquid = new BlockFluid(waste, getNextID());
+            Fluid waste = new Fluid("mixedWaste").setUnlocalizedName("fluid.mixedWaste.name").setDensity(5000).setViscosity(1800);
             FluidRegistry.registerFluid(waste);
+            FMRecipeLoader.blockWasteLiquid = new BlockFluid(waste, getNextID());
+
         }
-        if (FluidMech.CONFIGURATION.get("general", "EnableOilFluid", true).getBoolean(true))
+        if (FluidMech.CONFIGURATION.get("general", "EnableOilFluid", true).getBoolean(true) && FluidRegistry.getFluid("oil") == null)
         {
-            Fluid oil = new Fluid("oil");
-            FMRecipeLoader.blockWasteLiquid = new BlockFluid(oil, getNextID());
+            Fluid oil = new Fluid("oil").setUnlocalizedName("fluid.oil.name").setDensity(4000).setViscosity(4700);
             FluidRegistry.registerFluid(oil);
+            FMRecipeLoader.blockWasteLiquid = new BlockFluid(oil, getNextID());
+
         }
         /* BLOCK DECLARATION -- CONFIG LOADER */
         FMRecipeLoader.blockGenPipe = new BlockPipe(getNextID(), "GenericPipe");

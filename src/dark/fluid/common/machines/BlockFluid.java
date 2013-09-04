@@ -17,6 +17,7 @@ public class BlockFluid extends BlockFluidFinite
     {
         super(FluidMech.CONFIGURATION.getBlock(fluid.getName(), id).getInt(), fluid, Material.water);
         this.fluid = fluid;
+
     }
 
     @Override
