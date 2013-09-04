@@ -90,29 +90,32 @@
             <fileset dir="${dir.mcp}/reobf/minecraft" includes="themalexpansion/" />
             <fileset dir="${dir.mcp}/reobf/minecraft" includes="universalelectricity/" />
             <fileset dir="${dir.development}/resources" excludes=".git/**" />
-            <fileset dir="${dir.development}LICENSE.txt" excludes=".git/**" />
 		</copy>
 		<copy todir="fm">
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/fluid/" />
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/mech/" />
             <fileset dir="${dir.development}/Fluid-Mechanics/resources" excludes=".git/**" />
-            <fileset dir="${dir.development}LICENSE.txt" excludes=".git/**" />
 		</copy>
 		<copy todir="al">
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/assembly/" />
             <fileset dir="${dir.development}/Assembly-Line/resources" excludes=".git/**" />
-            <fileset dir="${dir.development}LICENSE.txt" excludes=".git/**" />
 		</copy>
 		<copy todir="ft">
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/farmtech" />
             <fileset dir="${dir.development}/FarmTech/resources" excludes=".git/**" />
-            <fileset dir="${dir.development}LICENSE.txt" excludes=".git/**" />
 		</copy>
 		<copy todir="gs">
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/security/" />
             <fileset dir="${dir.development}/Greater-Security/resources" excludes=".git/**" />
-            <fileset dir="${dir.development}LICENSE.txt" excludes=".git/**" />
-		</copy>		
+		</copy>
+        
+        <copy todir="gs" file="LICENSE.txt" />
+        <copy todir="ft" file="LICENSE.txt" />
+        <copy todir="al" file="LICENSE.txt" />
+        <copy todir="fm" file="LICENSE.txt" />
+        <copy todir="core" file="LICENSE.txt" />
+        <copy todir="output" file="LICENSE.txt" />
+        <copy todir="output" file="build.properties" />
 		
 		<!-- OUTPUT LATEST JAR AND ZIP FILES -->
 		<jar destfile="output/${file.core}">
@@ -132,10 +135,8 @@
 		</jar>
         <zip destfile="${file.all}">
 			<fileset dir="output/" />
-		</zip>
+		</zip>		
 		
-		<copy todir="output" file="build.properties" />
         <copy todir="output" file="${file.all}" />
-        <copy todir="output" file="LICENSE.txt" />
 	</target>
 </project>
