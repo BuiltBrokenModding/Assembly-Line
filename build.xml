@@ -126,7 +126,7 @@
 			<fileset dir="gs" />
 		</jar>
         <zip destfile="${file.all}">
-			<fileset dir="output/*" />
+			<fileset dir="output/" />
 		</zip>
 		
 		<copy todir="output" file="build.properties" />
