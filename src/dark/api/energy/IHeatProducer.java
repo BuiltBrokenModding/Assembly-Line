@@ -1,4 +1,4 @@
-package dark.core.interfaces;
+package dark.api.energy;
 
 import net.minecraftforge.common.ForgeDirection;
 

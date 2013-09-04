@@ -1,6 +1,6 @@
-package dark.core.interfaces;
+package dark.api;
 
-import dark.core.interfaces.IToolReadOut.EnumTools;
+import dark.api.IToolReadOut.EnumTools;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.ForgeDirection;
 

@@ -3,8 +3,8 @@ package dark.core.prefab.terminal;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
-import dark.core.interfaces.ISpecialAccess;
-import dark.core.interfaces.ITerminal;
+import dark.api.ISpecialAccess;
+import dark.api.ITerminal;
 
 /** @author Calclavia, DarkGuardsman */
 public abstract class TerminalCommand

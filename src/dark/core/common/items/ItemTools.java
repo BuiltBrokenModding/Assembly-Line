@@ -20,9 +20,9 @@ import universalelectricity.core.block.IElectrical;
 import universalelectricity.core.block.IElectricalStorage;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.api.IToolReadOut;
+import dark.api.IToolReadOut.EnumTools;
 import dark.core.common.DarkMain;
-import dark.core.interfaces.IToolReadOut;
-import dark.core.interfaces.IToolReadOut.EnumTools;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.items.ItemBasic;
 

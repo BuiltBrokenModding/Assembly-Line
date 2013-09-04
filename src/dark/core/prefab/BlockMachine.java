@@ -10,8 +10,8 @@ import net.minecraftforge.common.Configuration;
 import universalelectricity.prefab.block.BlockTile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.api.parts.INetworkPart;
 import dark.core.common.DarkMain;
-import dark.core.interfaces.INetworkPart;
 
 /** Basic TileEntity Container class designed to be used by generic machines. It is suggested that
  * each mod using this create there own basic block extending this to reduce need to input config

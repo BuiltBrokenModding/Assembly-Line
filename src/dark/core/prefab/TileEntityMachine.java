@@ -23,11 +23,11 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.interfaces.IDisableable;
+import dark.api.IDisableable;
+import dark.api.energy.IPowerLess;
+import dark.api.energy.PowerSystems;
 import dark.core.interfaces.IExternalInv;
 import dark.core.interfaces.IInvBox;
-import dark.core.interfaces.IPowerLess;
-import dark.core.interfaces.PowerSystems;
 import dark.core.prefab.invgui.InvChest;
 
 /** Prefab for most machines in the CoreMachine set. Provides basic power updates, packet updates,
