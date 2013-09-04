@@ -4,11 +4,11 @@
 
 	<property file="build.properties" />
 	<property environment="env" />
-	<property name="file.core" value="Dark:CoreMachine_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar"/>
-	<property name="file.fm" value="Dark:FluidMechanics_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar">
+	<property name="file.core" value="Dark:CoreMachine_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
+	<property name="file.fm" value="Dark:FluidMechanics_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
     <property name="file.al" value="Dark:AssemblyLine_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
     <property name="file.ft" value="Dark:FarmTech_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
-    <property name="file.gs" value="Dark:GreaterSecurity_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar"/>	   <property name="file.all" value="DarkBoxSet_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.zip"/>	
+    <property name="file.gs" value="Dark:GreaterSecurity_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />	   <property name="file.all" value="DarkBoxSet_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.zip" />	
 
 	<target name="build">
 
