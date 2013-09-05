@@ -5,7 +5,7 @@ import java.util.List;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import dark.core.interfaces.INetworkEnergyPart;
+import dark.api.parts.INetworkEnergyPart;
 import dark.core.prefab.tilenetwork.NetworkSharedPower;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
@@ -61,9 +61,9 @@ public class TileEntityMechCompBox extends TileEntityCompBox implements INetwork
     }
 
     @Override
-    public boolean canTileConnect(TileEntity entity, ForgeDirection dir)
+    public boolean canTileConnect(Connection type, ForgeDirection dir)
     {
-        return false;
+        return type != null && type == Connection.NETWORK;
     }
 
     @Override
