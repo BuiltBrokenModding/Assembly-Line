@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
+import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
@@ -27,8 +28,8 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
-import dark.core.common.DarkMain;
 import dark.core.common.BlockRegistry.BlockData;
+import dark.core.common.DarkMain;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.items.ItemBlockHolder;
 import dark.fluid.common.machines.BlockBoiler;
@@ -70,6 +71,9 @@ public class FluidMech extends ModPrefab
     public static final String FUEL_FLUID_NAME = "fuel";
     public static final String BIO_FUEL_Name = "";
 
+    public static Fluid fmWaste, fmOil, fmFuel, fmBio;
+    public static Fluid waste, oil, fuel, bio;
+
     // @NetworkMod
     public static final String CHANNEL = "FluidMech";
 
@@ -102,7 +106,6 @@ public class FluidMech extends ModPrefab
         super.preInit(event);
 
         /* BLOCK REGISTER CALLS */
-
 
         proxy.preInit();
     }
@@ -142,17 +145,38 @@ public class FluidMech extends ModPrefab
         CONFIGURATION.load();
         if (FluidMech.CONFIGURATION.get("general", "EnableWasteFluid", true).getBoolean(true))
         {
-            Fluid waste = new Fluid("mixedWaste").setUnlocalizedName("fluid.mixedWaste.name").setDensity(5000).setViscosity(1800);
+            fmWaste = new Fluid("mixedWaste").setUnlocalizedName("fluid.waste.name").setDensity(1300).setViscosity(1800);
             FluidRegistry.registerFluid(waste);
-            FMRecipeLoader.blockWasteLiquid = new BlockFluid(waste, getNextID());
+            waste = FluidRegistry.getFluid("mixedWaste");
+
+            if (waste.getBlockID() == -1)
+            {
+                FMRecipeLoader.blockWasteLiquid = new BlockFluid(waste, getNextID());
+                FMRecipeLoader.blockWasteLiquid.setUnlocalizedName("FluidWaste");
+                dataList.add(new BlockData(FMRecipeLoader.blockWasteLiquid, "lmWaste"));
+            }
+            else
+            {
+                FMRecipeLoader.blockWasteLiquid = Block.blocksList[waste.getBlockID()];
+            }
 
         }
         if (FluidMech.CONFIGURATION.get("general", "EnableOilFluid", true).getBoolean(true) && FluidRegistry.getFluid("oil") == null)
         {
-            Fluid oil = new Fluid("oil").setUnlocalizedName("fluid.oil.name").setDensity(4000).setViscosity(4700);
-            FluidRegistry.registerFluid(oil);
-            FMRecipeLoader.blockWasteLiquid = new BlockFluid(oil, getNextID());
+            fmOil = new Fluid("oil").setUnlocalizedName("fluid.oil.name").setDensity(1500).setViscosity(4700);
+            FluidRegistry.registerFluid(fmOil);
+            oil = FluidRegistry.getFluid("oil");
 
+            if (oil.getBlockID() == -1)
+            {
+                FMRecipeLoader.blockOilLiquid = new BlockFluid(oil, getNextID());
+                FMRecipeLoader.blockOilLiquid.setUnlocalizedName("FluidOil");
+                dataList.add(new BlockData(FMRecipeLoader.blockOilLiquid, "lmOil"));
+            }
+            else
+            {
+                FMRecipeLoader.blockOilLiquid = Block.blocksList[oil.getBlockID()];
+            }
         }
         /* BLOCK DECLARATION -- CONFIG LOADER */
         FMRecipeLoader.blockGenPipe = new BlockPipe(getNextID(), "GenericPipe");

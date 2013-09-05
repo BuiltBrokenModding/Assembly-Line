@@ -28,9 +28,9 @@ public class FMRecipeLoader extends RecipeLoader
     public static Block blockPiston;
     public static Block blockBoiler;
 
-    public static BlockFluid blockWasteLiquid;
-    public static BlockFluid blockOilLiquid;
-    public static BlockFluid blockFuelLiquid;
+    public static Block blockWasteLiquid;
+    public static Block blockOilLiquid;
+    public static Block blockFuelLiquid;
 
     /* ITEMS */
 
