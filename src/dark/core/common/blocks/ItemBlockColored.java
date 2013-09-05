@@ -1,9 +1,9 @@
-package dark.illus.blocks.colored;
+package dark.core.common.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import dark.illus.IllustriousElements;
+import dark.core.common.DarkMain;
 
 public class ItemBlockColored extends ItemBlock
 {
@@ -23,7 +23,7 @@ public class ItemBlockColored extends ItemBlock
     @Override
     public String getUnlocalizedName(ItemStack par1ItemStack)
     {
-        return Block.blocksList[this.getBlockID()].getUnlocalizedName() + "." + IllustriousElements.dyeColorNames[par1ItemStack.getItemDamage()];
+        return Block.blocksList[this.getBlockID()].getUnlocalizedName() + "." + DarkMain.dyeColorNames[par1ItemStack.getItemDamage()];
     }
 
     @Override

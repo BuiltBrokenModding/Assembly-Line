@@ -1,4 +1,4 @@
-package dark.illus.blocks.colored;
+package dark.core.prefab;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.illus.IllustriousElements;
+import dark.core.common.DarkMain;
 
 public class BlockColored extends Block
 {
@@ -61,7 +61,7 @@ public class BlockColored extends Block
     {
         if (colorized)
         {
-            this.singleIcon = iconReg.registerIcon(IllustriousElements.TEXTURE_NAME_PREFIX + this.getUnlocalizedName().replace("tile.", ""));
+            this.singleIcon = iconReg.registerIcon(DarkMain.getInstance().PREFIX + this.getUnlocalizedName().replace("tile.", ""));
         }
         else
         {
@@ -69,7 +69,7 @@ public class BlockColored extends Block
 
             for (int i = 0; i < this.icons.length; ++i)
             {
-                this.icons[i] = iconReg.registerIcon(IllustriousElements.TEXTURE_NAME_PREFIX + IllustriousElements.dyeColorNames[~i & 15] + this.getUnlocalizedName().replace("tile.", ""));
+                this.icons[i] = iconReg.registerIcon(DarkMain.getInstance().PREFIX + DarkMain.dyeColorNames[~i & 15] + this.getUnlocalizedName().replace("tile.", ""));
             }
         }
     }
@@ -88,7 +88,7 @@ public class BlockColored extends Block
         if (this.colorized)
         {
 
-            return IllustriousElements.dyeColors[meta & 15].getRGB();
+            return DarkMain.dyeColors[meta & 15].getRGB();
         }
         return super.getRenderColor(meta);
     }

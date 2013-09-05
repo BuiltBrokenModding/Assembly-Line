@@ -1,4 +1,4 @@
-package dark.illus.blocks.colored;
+package dark.core.common.blocks;
 
 import java.util.Random;
 
@@ -9,7 +9,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.Icon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.illus.IllustriousElements;
+import dark.core.common.DarkMain;
 
 public class BlockBasalt extends Block
 {
@@ -35,7 +35,7 @@ public class BlockBasalt extends Block
 
     public BlockBasalt(int par1)
     {
-        super(par1, Material.rock);
+        super(DarkMain.CONFIGURATION.getBlock("basalt", par1).getInt(), Material.rock);
         this.setCreativeTab(CreativeTabs.tabDecorations);
         this.setHardness(2f);
         this.setResistance(2f);
@@ -80,7 +80,7 @@ public class BlockBasalt extends Block
 
         for (int i = 0; i < this.blockNames.length; ++i)
         {
-            this.icons[i] = iconReg.registerIcon(IllustriousElements.TEXTURE_NAME_PREFIX + this.blockNames[i]);
+            this.icons[i] = iconReg.registerIcon(DarkMain.getInstance().PREFIX + this.blockNames[i]);
         }
     }
 

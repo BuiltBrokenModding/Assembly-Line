@@ -1,6 +1,9 @@
-package dark.illus.blocks.colored;
+package dark.core.common.blocks;
 
 import java.util.Random;
+
+import dark.core.common.DarkMain;
+import dark.core.prefab.BlockColored;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -11,7 +14,7 @@ public class BlockColorSand extends BlockColored
 {
     public BlockColorSand(int par1)
     {
-        super("colorSand", par1, Material.sand);
+        super("colorSand", DarkMain.CONFIGURATION.getBlock("colorSand", par1).getInt(), Material.sand);
         this.setCreativeTab(CreativeTabs.tabDecorations);
         this.setHardness(1f);
         this.setResistance(.5f);

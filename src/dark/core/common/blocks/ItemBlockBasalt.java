@@ -1,4 +1,4 @@
-package dark.illus.blocks.colored;
+package dark.core.common.blocks;
 
 import java.util.List;
 

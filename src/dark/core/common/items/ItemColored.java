@@ -1,4 +1,4 @@
-package dark.illus.items;
+package dark.core.common.items;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.illus.IllustriousElements;
+import dark.core.common.DarkMain;
 
 public class ItemColored extends Item
 {
@@ -29,7 +29,7 @@ public class ItemColored extends Item
     @SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack par1ItemStack, int par2)
     {
-        return IllustriousElements.dyeColors[par1ItemStack.getItemDamage() % 16].getRGB();
+        return DarkMain.dyeColors[par1ItemStack.getItemDamage() % 16].getRGB();
     }
 
     @Override
@@ -48,7 +48,7 @@ public class ItemColored extends Item
     @Override
     public void registerIcons(IconRegister par1IconRegister)
     {
-        this.itemIcon = par1IconRegister.registerIcon(IllustriousElements.TEXTURE_NAME_PREFIX + "dust");
+        this.itemIcon = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + "dust");
         this.theIcon = par1IconRegister.registerIcon("glowingPowder_overlay");
     }
 
@@ -61,13 +61,13 @@ public class ItemColored extends Item
     @Override
     public final String getUnlocalizedName(ItemStack par1ItemStack)
     {
-        return this.getUnlocalizedName() + "." + IllustriousElements.dyeColorNames[par1ItemStack.getItemDamage()];
+        return this.getUnlocalizedName() + "." + DarkMain.dyeColorNames[par1ItemStack.getItemDamage()];
     }
 
     @Override
     public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {
-        for (int i = 0; i < IllustriousElements.dyeColorNames.length; i++)
+        for (int i = 0; i < DarkMain.dyeColorNames.length; i++)
         {
             par3List.add(new ItemStack(par1, 1, i));
         }

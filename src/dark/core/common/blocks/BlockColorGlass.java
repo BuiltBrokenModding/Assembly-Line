@@ -1,4 +1,4 @@
-package dark.illus.blocks.colored;
+package dark.core.common.blocks;
 
 import java.util.Random;
 
@@ -6,13 +6,15 @@ import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.core.common.DarkMain;
+import dark.core.prefab.BlockColored;
 
 public class BlockColorGlass extends BlockColored
 {
 
     public BlockColorGlass(int id, String name)
     {
-        super(name, id, Material.glass);
+        super(name, DarkMain.CONFIGURATION.getBlock(name, id).getInt(), Material.glass);
         this.setCreativeTab(CreativeTabs.tabDecorations);
         this.setHardness(.5f);
         this.setResistance(.5f);

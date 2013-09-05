@@ -1,8 +1,9 @@
-package dark.core.common.items;
+package dark.core.common.blocks;
 
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import dark.core.common.DarkMain;
+import dark.core.common.items.EnumMeterials;
 
 public class ItemBlockOre extends ItemBlock
 {

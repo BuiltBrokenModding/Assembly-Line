@@ -1,5 +1,6 @@
 package dark.core.common;
 
+import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,12 +29,19 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.registry.GameRegistry;
 import dark.core.common.BlockRegistry.BlockData;
+import dark.core.common.blocks.BlockBasalt;
+import dark.core.common.blocks.BlockColorGlass;
+import dark.core.common.blocks.BlockColorSand;
 import dark.core.common.blocks.BlockOre;
+import dark.core.common.blocks.ItemBlockBasalt;
+import dark.core.common.blocks.ItemBlockColored;
+import dark.core.common.blocks.ItemBlockOre;
 import dark.core.common.debug.BlockDebug;
 import dark.core.common.items.EnumMeterials;
 import dark.core.common.items.ItemBattery;
-import dark.core.common.items.ItemBlockOre;
+import dark.core.common.items.ItemColored;
 import dark.core.common.items.ItemOreDirv;
 import dark.core.common.items.ItemParts;
 import dark.core.common.items.ItemTools;
@@ -81,6 +89,10 @@ public class DarkMain extends ModPrefab
     private static DarkMain instance;
 
     public static CoreRecipeLoader recipeLoader;
+
+    public static final String[] dyeColorNames = new String[] { "Black", "Red", "Green", "Brown", "Blue", "Purple", "Cyan", "Silver", "Gray", "Pink", "Lime", "Yellow", "LightBlue", "Magenta", "Orange", "White" };
+    public static final Color[] dyeColors = new Color[] { Color.black, Color.red, Color.green, new Color(139, 69, 19), Color.BLUE, new Color(75, 0, 130), Color.cyan, new Color(192, 192, 192), Color.gray, Color.pink, new Color(0, 255, 0), Color.yellow, new Color(135, 206, 250), Color.magenta, Color.orange, Color.white };
+
 
     public static DarkMain getInstance()
     {
@@ -172,7 +184,17 @@ public class DarkMain extends ModPrefab
         CoreRecipeLoader.blockOre = new BlockOre(getNextID(), CONFIGURATION);
         CoreRecipeLoader.blockWire = new BlockWire(CONFIGURATION, getNextID());
         CoreRecipeLoader.blockDebug = new BlockDebug(getNextID(), CONFIGURATION);
+        CoreRecipeLoader.blockStainGlass = new BlockColorGlass(getNextID(), "StainedGlass");
+        CoreRecipeLoader.blockColorSand = new BlockColorSand(getNextID());
+        CoreRecipeLoader.blockBasalt = new BlockBasalt(getNextID());
+        CoreRecipeLoader.blockGlowGlass = new BlockColorGlass(getNextID(), "GlowGlass").setLightOpacity(2).setLightValue(1);
 
+
+        // // Registration ////
+        dataList.add(new BlockData(CoreRecipeLoader.blockStainGlass, ItemBlockColored.class, "stainGlass"));
+        dataList.add(new BlockData(CoreRecipeLoader.blockColorSand, ItemBlockColored.class, "stainSand"));
+        dataList.add(new BlockData(CoreRecipeLoader.blockBasalt, ItemBlockBasalt.class, "extraBlocks"));
+        dataList.add(new BlockData(CoreRecipeLoader.blockGlowGlass, ItemBlockColored.class, "stainGlowGlass"));
         dataList.add(new BlockData(CoreRecipeLoader.blockOre, ItemBlockOre.class, "DMOre"));
         dataList.add(new BlockData(CoreRecipeLoader.blockWire, "DMWire"));
         dataList.add(new BlockData(CoreRecipeLoader.blockDebug, "DMDebug"));
@@ -185,6 +207,9 @@ public class DarkMain extends ModPrefab
         if (CONFIGURATION.get("general", "LoadCraftingParts", true, "Only disable this if you do not plan to craft, or are not using any mods that need these parts.").getBoolean(true))
         {
             CoreRecipeLoader.itemParts = new ItemParts(ITEM_ID_PREFIX++, CONFIGURATION);
+            CoreRecipeLoader.itemRefinedSand = new ItemColored(CONFIGURATION.getItem(Configuration.CATEGORY_ITEM, "RefinedSandItemID", ITEM_ID_PREFIX++).getInt(), "RefinedSand");
+            CoreRecipeLoader.itemGlowingSand = new ItemColored(CONFIGURATION.getItem(Configuration.CATEGORY_ITEM, "GlowingRefinedSandItemID", ITEM_ID_PREFIX++).getInt(), "GlowRefinedSand");
+
         }
         if (CONFIGURATION.get("general", "EnableBattery", true).getBoolean(true))
         {
