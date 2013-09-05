@@ -71,10 +71,10 @@ public class ItemWrench extends ItemBasic implements IToolWrench
     @Override
     public void wrenchUsed(EntityPlayer player, int x, int y, int z)
     {
-        if(damageWrench && player != null && !player.worldObj.isRemote)
+        if (damageWrench && player != null && !player.worldObj.isRemote)
         {
             ItemStack stack = player.getHeldItem();
-            if(stack != null && stack.itemID == this.itemID)
+            if (stack != null && stack.itemID == this.itemID)
             {
                 stack.damageItem(1, player);
             }

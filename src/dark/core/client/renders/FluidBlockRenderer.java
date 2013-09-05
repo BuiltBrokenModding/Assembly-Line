@@ -14,9 +14,8 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
-import dark.core.prefab.helpers.BlockRenderInfo;
-
 import universalelectricity.core.vector.Vector3;
+import dark.core.prefab.helpers.BlockRenderInfo;
 
 /** @author CovertJaguar <railcraft.wikispaces.com> from BuildCraft , modified by DarkGuardsman */
 public class FluidBlockRenderer

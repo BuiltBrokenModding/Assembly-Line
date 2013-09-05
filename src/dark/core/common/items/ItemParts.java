@@ -2,14 +2,13 @@ package dark.core.common.items;
 
 import java.util.List;
 
-import dark.core.prefab.items.ItemBasic;
-
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
+import dark.core.prefab.items.ItemBasic;
 
 /** A metadata item containing parts of various machines in Liquid Mechanics Mod.
- *
+ * 
  * @author Rs */
 public class ItemParts extends ItemBasic
 {
@@ -34,7 +33,7 @@ public class ItemParts extends ItemBasic
 
     public ItemParts(int par1, Configuration config)
     {
-        super(par1,"DMParts",  config);
+        super(par1, "DMParts", config);
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
         this.setMaxStackSize(64);

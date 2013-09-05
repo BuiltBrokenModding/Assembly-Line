@@ -134,7 +134,7 @@ public class InvChest implements IInvBox
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack)
     {
-        if(i >= this.getSizeInventory())
+        if (i >= this.getSizeInventory())
         {
             return false;
         }

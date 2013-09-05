@@ -16,7 +16,7 @@ import dark.core.common.DarkMain;
 /** Basic TileEntity Container class designed to be used by generic machines. It is suggested that
  * each mod using this create there own basic block extending this to reduce need to input config
  * file each time
- *
+ * 
  * @author Darkguardsman */
 public abstract class BlockMachine extends BlockTile implements ITileEntityProvider
 {

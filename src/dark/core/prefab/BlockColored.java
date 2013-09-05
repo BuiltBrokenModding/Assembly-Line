@@ -13,13 +13,17 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
 
+/** Prefab class to make any block have 16 separate color instances similar to wool block
+ * 
+ * @author DarkGuardsman */
 public class BlockColored extends Block
 {
     @SideOnly(Side.CLIENT)
     private Icon[] icons;
+    @SideOnly(Side.CLIENT)
     private Icon singleIcon;
 
-    /* IS THIS BLOCK ABLE TO BE COLORED */
+    /** Use a single icon to create all 16 colors */
     boolean colorized = true;
 
     public BlockColored(String name, int id, Material par2Material)

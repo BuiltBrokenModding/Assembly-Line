@@ -2,7 +2,6 @@ package dark.core.common.debug;
 
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.compatibility.TileEntityUniversalElectrical;
-import universalelectricity.core.electricity.ElectricityPack;
 
 public class TileEntityInfLoad extends TileEntityUniversalElectrical
 {

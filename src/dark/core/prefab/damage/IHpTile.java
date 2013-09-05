@@ -5,12 +5,12 @@ import net.minecraft.util.DamageSource;
 
 /** Used by tiles that want to pretend to be living objects. Will require the use of this interface
  * as well spawning a EntityTileDamage entity as its location
- *
+ * 
  * @author DarkGuardsman */
 public interface IHpTile
 {
     /** Same as attackEntityFrom in Entity.class
-     *
+     * 
      * @param source - DamageSource/DamageType
      * @param ammount - amount of damage
      * @return */
@@ -24,7 +24,7 @@ public interface IHpTile
     public int hp();
 
     /** Sets the tiles hp
-     *
+     * 
      * @param i - amount
      * @param increase - increase instead of replace */
     public void setHp(int i, boolean increase);

@@ -17,7 +17,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 import dark.core.common.DarkMain;
 
 /** Based off Thaumcraft's Beam Renderer.
- *
+ * 
  * @author Calclavia, Azanor */
 public class FXBeam extends EntityFX
 {

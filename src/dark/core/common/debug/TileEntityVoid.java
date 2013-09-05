@@ -11,12 +11,12 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
 /** Designed to debug fluid devices by draining everything that comes in at one time
- *
+ * 
  * @author DarkGuardsman */
 public class TileEntityVoid extends TileEntity implements IFluidHandler
 {
     //TODO later add to this to make it actually have an ingame use other than debug
-    public static HashMap<FluidStack,Long> storage = new HashMap<FluidStack, Long>();
+    public static HashMap<FluidStack, Long> storage = new HashMap<FluidStack, Long>();
 
     FluidTank tank = new FluidTank(1000000);
 

@@ -3,10 +3,6 @@ package dark.core.common.debug;
 import java.util.List;
 import java.util.Set;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -15,6 +11,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
 import dark.core.prefab.BlockMachine;
 import dark.core.prefab.IExtraObjectInfo;
@@ -115,7 +113,7 @@ public class BlockDebug extends BlockMachine implements IExtraObjectInfo
     {
         for (int i = 0; i < debugBlocks.values().length; i++)
         {
-            list.add(new Pair<String,Class<? extends TileEntity>>("DMDebug" + i,debugBlocks.values()[i].clazz));
+            list.add(new Pair<String, Class<? extends TileEntity>>("DMDebug" + i, debugBlocks.values()[i].clazz));
         }
 
     }

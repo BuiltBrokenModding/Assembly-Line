@@ -17,7 +17,7 @@ import dark.core.prefab.IExtraObjectInfo;
 import dark.core.prefab.helpers.Pair;
 
 /** Handler to make registering all parts of a block a bit easier
- *
+ * 
  * @author DarkGuardsman */
 public class BlockRegistry
 {
@@ -147,7 +147,7 @@ public class BlockRegistry
         }
 
         /** Adds a tileEntity to be registered when this block is registered
-         *
+         * 
          * @param name - mod name for the tileEntity, should be unique
          * @param class1 - new instance of the TileEntity to register */
         public BlockData addTileEntity(String name, Class<? extends TileEntity> class1)

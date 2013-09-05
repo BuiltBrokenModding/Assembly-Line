@@ -1,7 +1,6 @@
 package dark.core.common.transmit;
 
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import net.minecraft.block.Block;
@@ -247,8 +246,8 @@ public class BlockWire extends BlockMachine implements IExtraObjectInfo
     @Override
     public void loadExtraConfigs(Configuration config)
     {
-        this.wireResistance = config.get("Settings", "miliOhms", 1,"Resistance of the wire in 1/1000 of an ohm").getInt()/1000;
-        this.ampMax = config.get("Settings", "maxAmps", 10000,"Amp limit of the wire").getInt();
+        this.wireResistance = config.get("Settings", "miliOhms", 1, "Resistance of the wire in 1/1000 of an ohm").getInt() / 1000;
+        this.ampMax = config.get("Settings", "maxAmps", 10000, "Amp limit of the wire").getInt();
 
     }
 

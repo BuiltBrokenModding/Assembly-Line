@@ -4,7 +4,7 @@ import universalelectricity.core.vector.Vector3;
 
 /** This code is converted from C code to java based off of this tutorial
  * http://content.gpwiki.org/index.php/OpenGL:Tutorials:Using_Quaternions_to_represent_rotation
- *
+ * 
  * @author DarkGuardsman */
 public class Quaternion
 {

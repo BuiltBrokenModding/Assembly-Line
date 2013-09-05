@@ -18,10 +18,9 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
+import universalelectricity.core.vector.Vector3;
 import dark.core.prefab.helpers.BlockRenderInfo;
 import dark.core.prefab.helpers.EntityFakeBlock;
-
-import universalelectricity.core.vector.Vector3;
 
 public class RenderFakeBlock extends Render
 {

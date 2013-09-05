@@ -11,12 +11,12 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
 
-public class ItemColored extends Item
+public class ItemColoredDust extends Item
 {
+    @SideOnly(Side.CLIENT)
     private Icon theIcon;
 
-    @SideOnly(Side.CLIENT)
-    public ItemColored(int par1, String name)
+    public ItemColoredDust(int par1, String name)
     {
         super(par1);
         this.setMaxDamage(0);
@@ -39,11 +39,6 @@ public class ItemColored extends Item
         return true;
     }
 
-    /*
-     * @SideOnly(Side.CLIENT) public Icon getIconFromDamageForRenderPass(int par1, int par2) {
-     * return par2 > 0 ? this.theIcon : super.getIconFromDamageForRenderPass(par1, par2); }
-     */
-
     @SideOnly(Side.CLIENT)
     @Override
     public void registerIcons(IconRegister par1IconRegister)
@@ -53,9 +48,9 @@ public class ItemColored extends Item
     }
 
     @Override
-    public int getMetadata(int par1)
+    public int getMetadata(int meta)
     {
-        return par1;
+        return meta;
     }
 
     @Override

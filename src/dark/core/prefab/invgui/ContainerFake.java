@@ -6,7 +6,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 
 /** Allows the use of a tile inv without the need for a container class
- *
+ * 
  * @author DarkGuardsman */
 public class ContainerFake extends Container
 {

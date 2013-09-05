@@ -2,14 +2,14 @@ package dark.core.common.blocks;
 
 import java.util.Random;
 
-import dark.core.common.DarkMain;
-import dark.core.prefab.BlockColored;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.world.World;
+import dark.core.common.DarkMain;
+import dark.core.prefab.BlockColored;
 
+//TODO fix instant falling sand
 public class BlockColorSand extends BlockColored
 {
     public BlockColorSand(int par1)

@@ -4,7 +4,6 @@ import java.util.EnumSet;
 
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.compatibility.TileEntityUniversalElectrical;
-import universalelectricity.core.electricity.ElectricityPack;
 
 public class TileEntityInfSupply extends TileEntityUniversalElectrical
 {

@@ -6,11 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-
-import dark.core.interfaces.ColorCode;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;
 import net.minecraft.tileentity.TileEntity;
@@ -20,12 +15,17 @@ import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidRegistry.FluidRegisterEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.IFluidHandler;
-import net.minecraftforge.fluids.FluidRegistry.FluidRegisterEvent;
 import universalelectricity.core.vector.Vector3;
+
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+
+import dark.core.interfaces.ColorCode;
 
 public class FluidHelper
 {
@@ -59,7 +59,7 @@ public class FluidHelper
     }
 
     /** Gets the block's fluid if it has one
-     *
+     * 
      * @param world - world we are working in
      * @param vector - 3D location in world
      * @return @Fluid that the block is */
@@ -96,10 +96,10 @@ public class FluidHelper
     }
 
     /** Drains a block of fluid
-     *
+     * 
      * @Note sets the block with a client update only. Doesn't tick the block allowing for better
      * placement of fluid that can flow infinitely
-     *
+     * 
      * @param doDrain - do the action
      * @return FluidStack drained from the block */
     public static FluidStack drainBlock(World world, Vector3 node, boolean doDrain)
@@ -108,7 +108,7 @@ public class FluidHelper
     }
 
     /** Drains a block of fluid
-     *
+     * 
      * @param doDrain - do the action
      * @param update - block update flag to use
      * @return FluidStack drained from the block */
@@ -207,9 +207,9 @@ public class FluidHelper
     }
 
     /** Helper method to fill a location with a fluid
-     *
+     * 
      * Note: This does not update the block to prevent the liquid from flowing
-     *
+     * 
      * @return */
     public static int fillBlock(World world, Vector3 node, FluidStack stack, boolean doFill)
     {
@@ -243,7 +243,7 @@ public class FluidHelper
     }
 
     /** Fills all instances of IFluidHandler surrounding the origin
-     *
+     * 
      * @param stack - FluidStack that will be filled into the tanks
      * @param doFill - Actually perform the action or simulate action
      * @param ignore - ForgeDirections to ignore
@@ -276,7 +276,7 @@ public class FluidHelper
     }
 
     /** Fills an instance of IFluidHandler in the given direction
-     *
+     * 
      * @param stack - FluidStack to fill the tank will
      * @param doFill - Actually perform the action or simulate action
      * @param direction - direction to fill in from the origin
