@@ -26,8 +26,7 @@ import dark.illus.blocks.colored.ItemBlockBasalt;
 import dark.illus.blocks.colored.ItemBlockColored;
 import dark.illus.items.ItemColored;
 
-@Mod(modid = IllustriousElements.MOD_ID, name = IllustriousElements.MOD_NAME, version = IllustriousElements.VERSION)
-@NetworkMod(clientSideRequired = true, serverSideRequired = false)
+
 public class IllustriousElements
 {
     // @Mod Prerequisites
