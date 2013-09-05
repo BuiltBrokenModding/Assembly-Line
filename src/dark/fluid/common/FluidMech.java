@@ -156,7 +156,7 @@ public class FluidMech extends ModPrefab
             {
                 FMRecipeLoader.blockWasteLiquid = new BlockFluid(waste, getNextID());
                 FMRecipeLoader.blockWasteLiquid.setUnlocalizedName("FluidWaste");
-                dataList.add(new BlockData(FMRecipeLoader.blockWasteLiquid, "lmWaste"));
+                dataList.add(new BlockData(FMRecipeLoader.blockWasteLiquid, "lmWaste").canDisable(false));
             }
             else
             {
@@ -178,7 +178,7 @@ public class FluidMech extends ModPrefab
             {
                 FMRecipeLoader.blockOilLiquid = new BlockFluid(oil, getNextID());
                 FMRecipeLoader.blockOilLiquid.setUnlocalizedName("FluidOil");
-                dataList.add(new BlockData(FMRecipeLoader.blockOilLiquid, "lmOil"));
+                dataList.add(new BlockData(FMRecipeLoader.blockOilLiquid, "lmOil").canDisable(false));
             }
             else
             {
