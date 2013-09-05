@@ -11,10 +11,11 @@ public interface ITileConnector
     {
         Eletricity(),
         FLUIDS(),
+        FORCE(),
+        PRESSURE(),
         ITEMS(),
         DATA(),
         TILE(),
         NETWORK();
-
     }
 }
