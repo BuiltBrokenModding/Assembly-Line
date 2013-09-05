@@ -145,10 +145,13 @@ public class FluidMech extends ModPrefab
         CONFIGURATION.load();
         if (FluidMech.CONFIGURATION.get("general", "EnableWasteFluid", true).getBoolean(true))
         {
-            fmWaste = new Fluid("mixedWaste").setUnlocalizedName("fluid.waste.name").setDensity(1300).setViscosity(1800);
-            FluidRegistry.registerFluid(waste);
-            waste = FluidRegistry.getFluid("mixedWaste");
-
+            fmWaste = new Fluid(WASTE_FLUID_NAME).setUnlocalizedName("fluid.waste.name").setDensity(1300).setViscosity(1800);
+            FluidRegistry.registerFluid(fmWaste);
+            waste = FluidRegistry.getFluid(WASTE_FLUID_NAME);
+            if(waste == null)
+            {
+                waste = fmWaste;
+            }
             if (waste.getBlockID() == -1)
             {
                 FMRecipeLoader.blockWasteLiquid = new BlockFluid(waste, getNextID());
@@ -163,10 +166,14 @@ public class FluidMech extends ModPrefab
         }
         if (FluidMech.CONFIGURATION.get("general", "EnableOilFluid", true).getBoolean(true) && FluidRegistry.getFluid("oil") == null)
         {
-            fmOil = new Fluid("oil").setUnlocalizedName("fluid.oil.name").setDensity(1500).setViscosity(4700);
+            fmOil = new Fluid(OIL_FLUID_NAME).setUnlocalizedName("fluid.oil.name").setDensity(1500).setViscosity(4700);
             FluidRegistry.registerFluid(fmOil);
-            oil = FluidRegistry.getFluid("oil");
+            oil = FluidRegistry.getFluid(OIL_FLUID_NAME);
 
+            if(oil == null)
+            {
+                oil = fmOil;
+            }
             if (oil.getBlockID() == -1)
             {
                 FMRecipeLoader.blockOilLiquid = new BlockFluid(oil, getNextID());
