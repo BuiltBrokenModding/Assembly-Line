@@ -71,7 +71,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
     public TileEntityArmbot()
     {
-        super(20);
+        super(.02f);
         // TODO Auto-generated constructor stub
     }
 
