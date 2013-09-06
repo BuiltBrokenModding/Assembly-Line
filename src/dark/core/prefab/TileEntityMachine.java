@@ -25,14 +25,14 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.IDisableable;
 import dark.api.energy.IPowerLess;
-import dark.api.energy.PowerSystems;
+import dark.core.common.ExternalModHandler;
 import dark.core.interfaces.IExternalInv;
 import dark.core.interfaces.IInvBox;
 import dark.core.prefab.invgui.InvChest;
 
 /** Prefab for most machines in the CoreMachine set. Provides basic power updates, packet updates,
  * inventory handling, and other handy methods.
- * 
+ *
  * @author DarkGuardsman */
 public abstract class TileEntityMachine extends TileEntityUniversalElectrical implements ISidedInventory, IExternalInv, IDisableable, IPacketReceiver, IPowerLess
 {
@@ -94,6 +94,7 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
         if (!this.worldObj.isRemote)
         {
             boolean prevRun = this.running;
+
             this.running = this.canRun() && this.consumePower(this.WATTS_PER_TICK, true);
             if (prevRun != this.running)
             {
@@ -107,6 +108,15 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
             this.ticksDisabled--;
             this.whileDisable();
         }
+    }
+
+    public void doPowerDebug()
+    {
+        System.out.println("\n  CanRun: " + this.canRun());
+        System.out.println("  RedPower: " + this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord));
+        System.out.println(" IsDisabled: " + this.isDisabled());//TODO i'm going to kick myself if this is it, yep disabled
+        System.out.println("  HasPower: " + this.consumePower(WATTS_PER_TICK, false));
+        System.out.println("  IsRunning: " + this.running + " \n");
     }
 
     /** Called to consume power from the internal storage */
@@ -132,7 +142,7 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
     @Override
     public boolean runPowerLess()
     {
-        return this.unpowered || PowerSystems.runPowerLess(PowerSystems.UE_SUPPORTED_SYSTEMS);
+        return this.unpowered || ExternalModHandler.runPowerLess();
     }
 
     @Override
@@ -172,8 +182,6 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
     {
         if (!this.runPowerLess() && receive != null && this.canConnect(from))
         {
-            // Only do voltage disable if the voltage is higher than the peek voltage and if random chance
-            //TODO replace random with timed damage to only disable after so many ticks
             if (receive != null && receive.voltage > (Math.sqrt(2) * this.getVoltage()) && this.worldObj.rand.nextBoolean())
             {
                 if (doReceive)
@@ -265,7 +273,7 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
     }
 
     /** Handles reduced data from the main packet method
-     * 
+     *
      * @param id - packet ID
      * @param dis - data
      * @param player - player

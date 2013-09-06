@@ -124,6 +124,7 @@ public class DarkMain extends ModPrefab
     public void init(FMLInitializationEvent event)
     {
         BlockRegistry.registerAllBlocks();
+        ExternalModHandler.init();
         super.init(event);
 
         if (CoreRecipeLoader.blockOre != null)

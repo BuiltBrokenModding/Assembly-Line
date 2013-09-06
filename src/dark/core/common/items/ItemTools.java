@@ -96,7 +96,7 @@ public class ItemTools extends ItemBasic
             {
                 if (tileEntity instanceof IToolReadOut)
                 {
-                    String output = ((IToolReadOut) tileEntity).getMeterReading(player, ForgeDirection.getOrientation(side), EnumTools.PIPE_GUAGE);
+                    String output = ((IToolReadOut) tileEntity).getMeterReading(player, ForgeDirection.getOrientation(side), tool);
                     if (output != null && !output.isEmpty())
                     {
                         if (output.length() > 100)
@@ -134,7 +134,7 @@ public class ItemTools extends ItemBasic
                     {
                         float demand = ((IElectrical) tileEntity).getRequest(ForgeDirection.getOrientation(side).getOpposite());
                         float provide = ((IElectrical) tileEntity).getProvide(ForgeDirection.getOrientation(side).getOpposite());
-                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d("   Voltage>" + ((IElectrical) tileEntity).getVoltage()));
+                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d("   Voltage>" + ((IElectrical) tileEntity).getVoltage()*1000));
                         if (demand > 0)
                         {
                             player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   RequiredWatts> %1$.2fKW", demand)));
@@ -147,13 +147,13 @@ public class ItemTools extends ItemBasic
                     }
                     if (tileEntity instanceof IElectricalStorage)
                     {
-                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   EnergyStored> %1$.2fKW of %2$.2fW max", ((IElectricalStorage) tileEntity).getEnergyStored(), ((IElectricalStorage) tileEntity).getMaxEnergyStored())));
+                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   EnergyStored> %1$.2fKW of %2$.2fKW max", ((IElectricalStorage) tileEntity).getEnergyStored(), ((IElectricalStorage) tileEntity).getMaxEnergyStored())));
                         out = true;
                     }
                     if (tileEntity instanceof IConductor)
                     {
                         out = true;
-                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   Resistance> %1$.2fKW | AmpMax>     %2$.2fW", ((IConductor) tileEntity).getResistance(), ((IConductor) tileEntity).getCurrentCapacity())));
+                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   Resistance> %1$.2fKW | AmpMax>     %2$.2fA", ((IConductor) tileEntity).getResistance(), ((IConductor) tileEntity).getCurrentCapacity())));
 
                         if (((IConductor) tileEntity).getNetwork() != null)
                         {

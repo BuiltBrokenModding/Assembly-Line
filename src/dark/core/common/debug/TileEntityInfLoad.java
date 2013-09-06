@@ -47,12 +47,6 @@ public class TileEntityInfLoad extends TileEntityUniversalElectrical
     }
 
     @Override
-    public float getVoltage()
-    {
-        return 120;
-    }
-
-    @Override
     public float getMaxEnergyStored()
     {
         return Integer.MAX_VALUE;

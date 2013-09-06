@@ -59,7 +59,7 @@ public class FluidHelper
     }
 
     /** Gets the block's fluid if it has one
-     * 
+     *
      * @param world - world we are working in
      * @param vector - 3D location in world
      * @return @Fluid that the block is */
@@ -96,10 +96,10 @@ public class FluidHelper
     }
 
     /** Drains a block of fluid
-     * 
+     *
      * @Note sets the block with a client update only. Doesn't tick the block allowing for better
      * placement of fluid that can flow infinitely
-     * 
+     *
      * @param doDrain - do the action
      * @return FluidStack drained from the block */
     public static FluidStack drainBlock(World world, Vector3 node, boolean doDrain)
@@ -108,7 +108,7 @@ public class FluidHelper
     }
 
     /** Drains a block of fluid
-     * 
+     *
      * @param doDrain - do the action
      * @param update - block update flag to use
      * @return FluidStack drained from the block */
@@ -128,7 +128,7 @@ public class FluidHelper
             {
                 return ((IFluidBlock) block).drain(world, node.intX(), node.intY(), node.intZ(), doDrain);
             }
-            else if (block.blockID == Block.waterStill.blockID && node.getBlockMetadata(world) == 0)
+            else if ((block.blockID == Block.waterStill.blockID || block.blockID == Block.waterMoving.blockID) && node.getBlockMetadata(world) == 0)
             {
                 if (doDrain)
                 {
@@ -145,7 +145,7 @@ public class FluidHelper
                 }
                 return new FluidStack(FluidRegistry.getFluid("water"), FluidContainerRegistry.BUCKET_VOLUME);
             }
-            else if (block.blockID == Block.lavaStill.blockID && node.getBlockMetadata(world) == 0)
+            else if ((block.blockID == Block.lavaStill.blockID || block.blockID == Block.lavaMoving.blockID) && node.getBlockMetadata(world) == 0)
             {
                 if (doDrain)
                 {
@@ -207,9 +207,9 @@ public class FluidHelper
     }
 
     /** Helper method to fill a location with a fluid
-     * 
+     *
      * Note: This does not update the block to prevent the liquid from flowing
-     * 
+     *
      * @return */
     public static int fillBlock(World world, Vector3 node, FluidStack stack, boolean doFill)
     {
@@ -243,7 +243,7 @@ public class FluidHelper
     }
 
     /** Fills all instances of IFluidHandler surrounding the origin
-     * 
+     *
      * @param stack - FluidStack that will be filled into the tanks
      * @param doFill - Actually perform the action or simulate action
      * @param ignore - ForgeDirections to ignore
@@ -276,7 +276,7 @@ public class FluidHelper
     }
 
     /** Fills an instance of IFluidHandler in the given direction
-     * 
+     *
      * @param stack - FluidStack to fill the tank will
      * @param doFill - Actually perform the action or simulate action
      * @param direction - direction to fill in from the origin
