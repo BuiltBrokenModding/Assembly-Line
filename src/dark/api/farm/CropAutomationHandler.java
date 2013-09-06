@@ -7,7 +7,7 @@ import dark.core.prefab.helpers.Pair;
 
 /** Tracks a list of all crops that can be auto farmed. Does some guessing on block to avoid having
  * each mod register all its crops
- *
+ * 
  * @author DarkGuardsman */
 public class CropAutomationHandler
 {

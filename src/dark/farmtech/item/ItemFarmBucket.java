@@ -13,7 +13,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.farmtech.FarmTech;
 
 /** Bucket containing compost for farming
- *
+ * 
  * @author DarkGuardsman */
 public class ItemFarmBucket extends ItemBucket
 {
@@ -24,7 +24,7 @@ public class ItemFarmBucket extends ItemBucket
         this.setHasSubtypes(true);
         this.setContainerItem(Item.bucketEmpty);
         this.setUnlocalizedName("farmBucket");
-        this.func_111206_d(FarmTech.instance.PREFIX+"farmBucket");
+        this.func_111206_d(FarmTech.instance.PREFIX + "farmBucket");
     }
 
     @Override

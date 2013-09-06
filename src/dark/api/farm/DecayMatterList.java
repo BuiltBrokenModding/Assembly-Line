@@ -16,7 +16,7 @@ public class DecayMatterList
 
     /** Used to flag an itemStack as decayable matter for the compost box and later real time world
      * decay
-     *
+     * 
      * @param stack - itemID and meta to check against
      * @param output - how many buckets of compost are created. Accepts part buckets
      * @param time - time in which to decay the matter */
@@ -34,7 +34,7 @@ public class DecayMatterList
     }
 
     /** Gets the time in ticks that the item will decay into compost matter
-     *
+     * 
      * @param stack
      * @return -1 if the list doesn't contain the ID */
     public static int getDecayTime(ItemStack stack)
@@ -47,7 +47,7 @@ public class DecayMatterList
     }
 
     /** Gets the amount of compost matter the itemStack creates on decay
-     *
+     * 
      * @param stack
      * @return -1 if the list doesn't contain the ID */
     public static float getDecayOuput(ItemStack stack)
