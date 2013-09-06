@@ -104,7 +104,7 @@ public class BlockDebug extends BlockMachine implements IExtraObjectInfo
     {
         for (DebugBlocks block : DebugBlocks.values())
         {
-            if (block.enabled)
+            if (block.enabled && block.clazz != null && block.name != null)
             {
                 list.add(new Pair<String, Class<? extends TileEntity>>(block.name, block.clazz));
             }
@@ -157,6 +157,7 @@ public class BlockDebug extends BlockMachine implements IExtraObjectInfo
         private DebugBlocks(String name, Class<? extends TileEntity> clazz)
         {
             this.name = name;
+            this.clazz = clazz;
         }
 
         private DebugBlocks(String name, Class<? extends TileEntity> clazz, String texture)

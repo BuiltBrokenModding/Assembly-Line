@@ -24,6 +24,10 @@ public class Pair<L, R>
     @Override
     public int hashCode()
     {
+        if(left == null || right == null)
+        {
+           super.hashCode();
+        }
         return left.hashCode() ^ right.hashCode();
     }
 
