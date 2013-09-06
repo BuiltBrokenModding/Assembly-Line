@@ -8,15 +8,15 @@ import net.minecraftforge.common.ForgeDirection;
  * for force for the tile, and should return the actually force the machine is using. Supply is when
  * the code asks for your tile to output force on the side, just return the force value don't try to
  * apply the force to other machines.
- *
+ * 
  * Tip Supply should never equal load as everything will stop moving since the load equals the
  * amount of force. The supply of force should be greater
- *
+ * 
  * @author DarkGuardsman */
 public interface IForceDevice extends ITileConnector
 {
     /** Applies force to this tile
-     *
+     * 
      * @param side - side its coming from
      * @param force - amount of force
      * @return amount of force actually loaded down */

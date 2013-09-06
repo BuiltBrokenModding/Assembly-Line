@@ -107,7 +107,7 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITi
     }
 
     /** if any of allowed list is true
-     *
+     * 
      * @return true */
     public boolean isRestricted()
     {

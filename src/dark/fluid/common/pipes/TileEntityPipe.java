@@ -418,7 +418,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     }
 
     /** Checks to make sure the connection is valid to the tileEntity
-     *
+     * 
      * @param tileEntity - the tileEntity being checked
      * @param side - side the connection is too
      * @return */
