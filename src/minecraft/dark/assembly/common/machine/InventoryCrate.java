@@ -15,7 +15,7 @@ public class InventoryCrate extends InvChest
     /** Clones the single stack into an inventory format for automation interaction */
     public void buildInventory(ItemStack sampleStack)
     {
-        this.containedItems= new ItemStack[this.getSizeInventory()];
+        this.containedItems = new ItemStack[this.getSizeInventory()];
         if (sampleStack != null)
         {
             ItemStack baseStack = sampleStack.copy();

@@ -19,7 +19,7 @@ import dark.assembly.common.AssemblyLine;
 
 /** A block that allows the placement of mass amount of a specific item within it. It will be allowed
  * to go on Conveyor Belts
- *
+ * 
  * @author Calclavia */
 public class BlockCrate extends BlockAssembly
 {
@@ -210,7 +210,7 @@ public class BlockCrate extends BlockAssembly
     }
 
     /** Inserts all items of the same type this player has into the crate.
-     *
+     * 
      * @return True on success */
     public boolean insertAllItems(TileEntityCrate tileEntity, EntityPlayer player)
     {
@@ -255,7 +255,7 @@ public class BlockCrate extends BlockAssembly
     }
 
     /** Ejects and item out of the crate and spawn it under the player entity.
-     *
+     * 
      * @param tileEntity
      * @param player
      * @param requestSize - The maximum stack size to take out. Default should be 64.
@@ -307,7 +307,7 @@ public class BlockCrate extends BlockAssembly
     }
 
     /** Puts an itemStack into the crate.
-     *
+     * 
      * @param tileEntity
      * @param itemStack */
     public static ItemStack addStackToCrate(TileEntityCrate tileEntity, ItemStack itemStack)

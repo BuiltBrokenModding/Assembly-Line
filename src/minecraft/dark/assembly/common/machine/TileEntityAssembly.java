@@ -17,7 +17,7 @@ import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
 /** A class to be inherited by all machines on the assembly line. This class acts as a single peace
  * in a network of similar tiles allowing all to share power from one or more sources
- *
+ * 
  * @author DarkGuardsman */
 public abstract class TileEntityAssembly extends TileEntityMachine implements INetworkEnergyPart
 {

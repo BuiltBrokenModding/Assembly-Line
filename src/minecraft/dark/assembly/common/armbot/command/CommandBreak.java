@@ -9,7 +9,7 @@ import universalelectricity.core.vector.Vector3;
 import dark.core.prefab.helpers.ItemWorldHelper;
 
 /** Used by arms to break a specific block in a position.
- *
+ * 
  * @author Calclavia */
 public class CommandBreak extends Command
 {

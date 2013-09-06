@@ -72,19 +72,19 @@ public class NetworkAssembly extends NetworkSharedPower
         this.lastDemandCalcTime = time;
         this.lastNetDemand = currentDemand;
         //TODO calculate the averages over time to produce a better number
-        if(this.minDemand == 0)
+        if (this.minDemand == 0)
         {
             this.minDemand = currentDemand;
         }
-        if(this.averageDemand == 0)
+        if (this.averageDemand == 0)
         {
             this.averageDemand = currentDemand;
         }
-        if(currentDemand > this.maxDemand)
+        if (currentDemand > this.maxDemand)
         {
             this.maxDemand = currentDemand;
         }
-        if(currentDemand < this.minDemand)
+        if (currentDemand < this.minDemand)
         {
             this.minDemand = currentDemand;
         }

@@ -855,7 +855,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
                 while (it.hasNext())
                 {
-                    ItemWorldHelper.dropItemStack(worldObj, handPosition, it.next(),false);
+                    ItemWorldHelper.dropItemStack(worldObj, handPosition, it.next(), false);
                 }
 
                 this.grabbedEntities.clear();

@@ -13,7 +13,7 @@ import dark.assembly.common.TabAssemblyLine;
 import dark.assembly.common.imprinter.prefab.BlockImprintable;
 
 /** A block that manipulates item movement between inventories.
- *
+ * 
  * @author Calclavia */
 public class BlockManipulator extends BlockImprintable
 {
@@ -71,7 +71,7 @@ public class BlockManipulator extends BlockImprintable
                 manip.toggleOutput();
                 manip.toggleInversion();
             }
-            entityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("Manip. outputing =  "+manip.isOutput()));
+            entityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("Manip. outputing =  " + manip.isOutput()));
 
         }
 

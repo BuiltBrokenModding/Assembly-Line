@@ -23,10 +23,10 @@ public abstract class BlockAssembly extends BlockMachine
 
     public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
     {
-        if(entityPlayer != null && entityPlayer.getHeldItem() != null && entityPlayer.getHeldItem().itemID == Item.stick.itemID)
+        if (entityPlayer != null && entityPlayer.getHeldItem() != null && entityPlayer.getHeldItem().itemID == Item.stick.itemID)
         {
             TileEntity entity = world.getBlockTileEntity(x, y, z);
-            if(entity instanceof TileEntityAssembly)
+            if (entity instanceof TileEntityAssembly)
             {
                 System.out.println(((TileEntityAssembly) entity).getTileNetwork().toString());
             }
