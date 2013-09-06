@@ -35,7 +35,10 @@ public class BlockDebug extends BlockMachine implements IExtraObjectInfo
         super.registerIcons(iconReg);
         for (DebugBlocks block : DebugBlocks.values())
         {
-            block.icon = iconReg.registerIcon(DarkMain.getInstance().PREFIX + block.getTextureName());
+            if (block.enabled)
+            {
+                block.icon = iconReg.registerIcon(DarkMain.getInstance().PREFIX + block.getTextureName());
+            }
         }
     }
 
