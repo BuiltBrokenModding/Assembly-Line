@@ -5,6 +5,9 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import dark.core.client.renders.RenderMachine;
 import dark.core.prefab.helpers.ConnectionHelper;
 import dark.fluid.client.model.ModelCenterTank;
@@ -12,7 +15,7 @@ import dark.fluid.client.model.ModelCornerTank;
 import dark.fluid.client.model.ModelTank;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.machines.TileEntityBoiler;
-
+@SideOnly(Side.CLIENT)
 public class RenderBoiler extends RenderMachine
 {
     int type = 0;

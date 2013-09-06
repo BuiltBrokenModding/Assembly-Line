@@ -5,8 +5,11 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
-import dark.mech.client.model.ModelGearRod;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+import dark.mech.client.model.ModelGearRod;
+@SideOnly(Side.CLIENT)
 public class RenderGearRod extends TileEntitySpecialRenderer
 {
     private ModelGearRod model;

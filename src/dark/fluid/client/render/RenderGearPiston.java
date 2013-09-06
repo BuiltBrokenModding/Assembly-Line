@@ -5,11 +5,14 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import dark.core.client.renders.RenderMachine;
 import dark.fluid.client.model.ModelGearPiston;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.machines.TileEntitySteamPiston;
-
+@SideOnly(Side.CLIENT)
 public class RenderGearPiston extends RenderMachine
 {
     private ModelGearPiston model;

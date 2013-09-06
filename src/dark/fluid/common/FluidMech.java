@@ -148,7 +148,7 @@ public class FluidMech extends ModPrefab
             fmWaste = new Fluid(WASTE_FLUID_NAME).setUnlocalizedName("fluid.waste.name").setDensity(1300).setViscosity(1800);
             FluidRegistry.registerFluid(fmWaste);
             waste = FluidRegistry.getFluid(WASTE_FLUID_NAME);
-            if(waste == null)
+            if (waste == null)
             {
                 waste = fmWaste;
             }
@@ -170,7 +170,7 @@ public class FluidMech extends ModPrefab
             FluidRegistry.registerFluid(fmOil);
             oil = FluidRegistry.getFluid(OIL_FLUID_NAME);
 
-            if(oil == null)
+            if (oil == null)
             {
                 oil = fmOil;
             }

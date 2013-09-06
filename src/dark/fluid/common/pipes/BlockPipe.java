@@ -2,6 +2,9 @@ package dark.fluid.common.pipes;
 
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -34,6 +37,7 @@ public class BlockPipe extends BlockFM
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public boolean renderAsNormalBlock()
     {
         return false;
@@ -46,6 +50,7 @@ public class BlockPipe extends BlockFM
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public int getRenderType()
     {
         return -1;

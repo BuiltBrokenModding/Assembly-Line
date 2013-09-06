@@ -9,6 +9,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.BlockFM;
 import dark.fluid.common.FluidMech;
@@ -30,12 +32,14 @@ public class BlockPumpMachine extends BlockFM
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public int getRenderType()
     {
         return BlockRenderHelper.renderID;

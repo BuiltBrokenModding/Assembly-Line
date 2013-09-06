@@ -2,6 +2,9 @@ package dark.fluid.common.machines;
 
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
@@ -38,13 +41,13 @@ public class BlockBoiler extends BlockFM
         return false;
     }
 
-    @Override
+    @Override @SideOnly(Side.CLIENT)
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
-    @Override
+    @Override @SideOnly(Side.CLIENT)
     public int getRenderType()
     {
         return -1;

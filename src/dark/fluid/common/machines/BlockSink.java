@@ -1,5 +1,7 @@
 package dark.fluid.common.machines;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -78,13 +80,13 @@ public class BlockSink extends BlockFM
         return false;
     }
 
-    @Override
+    @Override @SideOnly(Side.CLIENT)
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
-    @Override
+    @Override @SideOnly(Side.CLIENT)
     public int getRenderType()
     {
         return BlockRenderHelper.renderID;

@@ -2,6 +2,9 @@ package dark.fluid.common.pump;
 
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -34,6 +37,7 @@ public class BlockConstructionPump extends BlockFM
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister par1IconRegister)
     {
         this.blockIcon = par1IconRegister.registerIcon(FluidMech.instance.PREFIX + "ironMachineSide");
@@ -42,6 +46,7 @@ public class BlockConstructionPump extends BlockFM
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
     {
         TileEntity entity = world.getBlockTileEntity(x, y, z);
@@ -68,6 +73,7 @@ public class BlockConstructionPump extends BlockFM
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public boolean renderAsNormalBlock()
     {
         return false;
@@ -80,6 +86,7 @@ public class BlockConstructionPump extends BlockFM
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public int getRenderType()
     {
         return BlockRenderHelper.instance.renderID;

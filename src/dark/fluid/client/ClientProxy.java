@@ -3,6 +3,8 @@ package dark.fluid.client;
 import net.minecraftforge.client.MinecraftForgeClient;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.client.render.ItemRenderHelper;
 import dark.fluid.client.render.RenderConstructionPump;
@@ -20,7 +22,7 @@ import dark.fluid.common.pipes.TileEntityGenericPipe;
 import dark.fluid.common.pipes.TileEntityPipe;
 import dark.fluid.common.pump.TileEntityConstructionPump;
 import dark.fluid.common.pump.TileEntityStarterPump;
-
+@SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy
 {
     @Override
