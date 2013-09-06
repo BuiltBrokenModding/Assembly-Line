@@ -51,6 +51,7 @@ public class BlockBasalt extends Block
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public boolean renderAsNormalBlock()
     {
         return true;
@@ -62,6 +63,8 @@ public class BlockBasalt extends Block
         return true;
     }
 
+    @Override
+    @SideOnly(Side.CLIENT)
     public Icon getIcon(int side, int meta)
     {
         if (meta < this.icons.length)

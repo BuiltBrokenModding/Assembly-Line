@@ -22,16 +22,19 @@ public class BlockColorSand extends BlockColored
 
     public static boolean fallInstantly = true;
 
+    @Override
     public void onBlockAdded(World par1World, int par2, int par3, int par4)
     {
         par1World.scheduleBlockUpdate(par2, par3, par4, this.blockID, this.tickRate());
     }
 
+    @Override
     public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
     {
         par1World.scheduleBlockUpdate(par2, par3, par4, this.blockID, this.tickRate());
     }
 
+    @Override
     public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)
     {
         if (!par1World.isRemote)

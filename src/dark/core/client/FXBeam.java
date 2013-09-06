@@ -14,11 +14,14 @@ import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
 
 /** Based off Thaumcraft's Beam Renderer.
- * 
+ *
  * @author Calclavia, Azanor */
+@SideOnly(Side.CLIENT)
 public class FXBeam extends EntityFX
 {
     double movX = 0.0D;

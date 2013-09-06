@@ -14,10 +14,14 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import universalelectricity.core.vector.Vector3;
 import dark.core.prefab.helpers.BlockRenderInfo;
 
 /** @author CovertJaguar <railcraft.wikispaces.com> from BuildCraft , modified by DarkGuardsman */
+@SideOnly(Side.CLIENT)
 public class FluidBlockRenderer
 {
     private static Map<Fluid, int[]> flowingRenderCache = new HashMap<Fluid, int[]>();

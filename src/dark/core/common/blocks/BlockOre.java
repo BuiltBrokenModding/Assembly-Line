@@ -3,6 +3,9 @@ package dark.core.common.blocks;
 import java.util.List;
 import java.util.Set;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -40,7 +43,7 @@ public class BlockOre extends Block implements IExtraObjectInfo
         }
     }
 
-    @Override
+    @Override @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister par1IconRegister)
     {
         for (int i = 0; i < EnumMeterials.values().length; i++)
@@ -52,7 +55,7 @@ public class BlockOre extends Block implements IExtraObjectInfo
         }
     }
 
-    @Override
+    @Override @SideOnly(Side.CLIENT)
     public Icon getIcon(int side, int metadata)
     {
         if (this.icons[metadata] != null)

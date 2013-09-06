@@ -18,10 +18,13 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import universalelectricity.core.vector.Vector3;
 import dark.core.prefab.helpers.BlockRenderInfo;
 import dark.core.prefab.helpers.EntityFakeBlock;
-
+@SideOnly(Side.CLIENT)
 public class RenderFakeBlock extends Render
 {
     /** Render instance */
@@ -86,7 +89,7 @@ public class RenderFakeBlock extends Render
     }
 
     /** Renders a block at given location
-     * 
+     *
      * @param blockInterface - class used to store info for the render process
      * @param world - world rendering in
      * @param x - position on x axis

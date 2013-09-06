@@ -28,6 +28,7 @@ public class BlockColorGlass extends BlockColored
     }
 
     @SideOnly(Side.CLIENT)
+    @Override
     public int getRenderBlockPass()
     {
         return 1;
@@ -39,7 +40,7 @@ public class BlockColorGlass extends BlockColored
         return false;
     }
 
-    @Override
+    @Override @SideOnly(Side.CLIENT)
     public boolean renderAsNormalBlock()
     {
         return false;

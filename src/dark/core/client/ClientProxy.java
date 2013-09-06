@@ -8,17 +8,18 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.client.renders.RenderCopperWire;
 import dark.core.common.CommonProxy;
 import dark.core.common.CoreRecipeLoader;
 import dark.core.common.DarkMain;
 import dark.core.common.transmit.TileEntityWire;
-
+@SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy
 {
 
     /** Renders a laser beam from one power to another by a set color for a set time
-     * 
+     *
      * @param world - world this laser is to be rendered in
      * @param position - start vector3
      * @param target - end vector3
