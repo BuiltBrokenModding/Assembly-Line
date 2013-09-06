@@ -16,7 +16,7 @@ import universalelectricity.core.vector.Vector3;
 import dark.core.prefab.helpers.FluidHelper;
 
 /** A simpler path Finder used to find drainable or fillable tiles
- * 
+ *
  * @author DarkGuardsman */
 public class LiquidPathFinder
 {
@@ -80,7 +80,7 @@ public class LiquidPathFinder
     }
 
     /** Searches for nodes attached to the given node
-     * 
+     *
      * @return True on success finding, false on failure. */
     public boolean findNodes(Vector3 node)
     {
@@ -132,7 +132,7 @@ public class LiquidPathFinder
     }
 
     /** Find all node attached to the origin mode in the given direction
-     * 
+     *
      * Note: Calls findNode if the next code is valid */
     public boolean find(ForgeDirection direction, Vector3 origin)
     {
@@ -167,7 +167,7 @@ public class LiquidPathFinder
     /** Checks to see if this node is valid to path find threw */
     public boolean isValidNode(Vector3 pos)
     {
-        if (pos == null || this.nodeList.contains(pos))
+        if (pos == null)
         {
             return false;
         }
@@ -262,12 +262,12 @@ public class LiquidPathFinder
 
     /** Used to sort a list of vector3 locations using the vector3's distance from one point and
      * elevation in the y axis
-     * 
+     *
      * @param start - start location to measure distance from
      * @param results2 - list of vectors to sort
      * @param closest - sort closest distance to the top
      * @param highest - sort highest y value to the top.
-     * 
+     *
      * Note: highest takes priority over closest */
     public void sortBlockList(final Vector3 start, final Set<Vector3> set, final boolean closest, final boolean highest)
     {

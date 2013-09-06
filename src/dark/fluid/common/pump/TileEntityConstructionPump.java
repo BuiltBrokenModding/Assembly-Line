@@ -3,6 +3,7 @@ package dark.fluid.common.pump;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -32,11 +33,11 @@ public class TileEntityConstructionPump extends TileEntityStarterPump implements
 
     public TileEntityConstructionPump()
     {
-        super(5, 10, 30);
+        super(.05f/*50W/t */, .005f/* 5W/drain*/, 30);
     }
 
     /** Gets the facing direction
-     * 
+     *
      * @param input true for input side, false for output side
      * @return */
     public ForgeDirection getFacing(boolean input)
@@ -78,7 +79,7 @@ public class TileEntityConstructionPump extends TileEntityStarterPump implements
     }
 
     /** Gets the nextDrain in the list
-     * 
+     *
      * @param inputTile - input tile must be an instance of INetworkPipe
      * @param outputTile - output tile must be an instance of IFluidHandler
      * @param ignoreList - list of drains to ignore so that the next one is selected
@@ -173,6 +174,28 @@ public class TileEntityConstructionPump extends TileEntityStarterPump implements
     {
         super.invalidate();
         HydraulicNetworkHelper.invalidate(this);
+    }
+
+    @Override
+    public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
+    {
+        if (tool == EnumTools.PIPE_GUAGE)
+        {
+            TileEntity inputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), getFacing(true));
+            if (inputTile instanceof INetworkPipe && ((INetworkPipe) inputTile).getTileNetwork() instanceof NetworkFluidTiles)
+            {
+                int count = 0;
+                for (IFluidHandler tank : ((NetworkFluidTiles) ((INetworkPipe) inputTile).getTileNetwork()).connectedTanks)
+                {
+                    if (tank instanceof IDrain)
+                    {
+                        count++;
+                    }
+                }
+                return "Drains conencted to input : " + count;
+            }
+        }
+        return null;
     }
 
 }

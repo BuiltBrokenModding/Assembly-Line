@@ -14,6 +14,7 @@ import universalelectricity.core.vector.Vector3;
 import dark.api.IToolReadOut;
 import dark.api.fluid.IDrain;
 import dark.api.parts.ITileConnector;
+import dark.core.common.ExternalModHandler;
 import dark.core.prefab.TileEntityMachine;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.helpers.Pair;
@@ -32,16 +33,21 @@ public class TileEntityStarterPump extends TileEntityMachine implements IToolRea
 
     public TileEntityStarterPump()
     {
-        this(1, 5, 5);
+        this(.01f/*10W/t */, .05f/* 50W/drain */, 5);
     }
 
+    /** @param wattTick - cost in watts per tick to run the tile
+     * @param wattDrain - cost in watts to drain or fill one block
+     * @param maxEdits - max world edits per update (1/2 second) */
     public TileEntityStarterPump(float wattTick, float wattDrain, int maxEdits)
     {
+        //Power calculation for max power (worldEdits  * watts per edit) + (watts per tick * one second)
         super(wattTick, (maxEdits * wattDrain) + (wattTick * 20));
         this.MAX_WORLD_EDITS_PER_PROCESS = maxEdits;
         this.ENERGY_PER_DRAIN = wattDrain;
     }
 
+    /** Liquid path finder used by this tile. Retrieve the path finder if using IDrain block */
     public LiquidPathFinder getLiquidFinder()
     {
         if (pathLiquid == null)
@@ -86,7 +92,7 @@ public class TileEntityStarterPump extends TileEntityMachine implements IToolRea
     }
 
     /** Drains an area starting at the given location
-     * 
+     *
      * @param world - world to drain in, most cases will be the TileEntities world
      * @param loc - origin to start the path finder with. If this is an instance of IDrain this
      * method will act different */
@@ -109,7 +115,6 @@ public class TileEntityStarterPump extends TileEntityMachine implements IToolRea
         TileEntity entity = null;
 
         Set<Vector3> drainList = null;
-
         if (drain instanceof IDrain)
         {
             if (!((IDrain) drain).canDrain(((IDrain) drain).getDirection()))
@@ -127,12 +132,17 @@ public class TileEntityStarterPump extends TileEntityMachine implements IToolRea
                     ((IFluidHandler) entity).drain(ForgeDirection.UP, FluidHelper.fillTanksAllSides(worldObj, new Vector3(this), draStack, true, ForgeDirection.DOWN), true);
 
                 }
-                return;
+                return;//TODO check why return is here
             }
             else
             {
                 drainList = ((IDrain) drain).getFluidList();
             }
+        }
+
+        if (ExternalModHandler.isBCFluidPipe(drain))
+        {
+            //TODO add resource pathfinder
         }
 
         if (drainList == null)
@@ -194,15 +204,13 @@ public class TileEntityStarterPump extends TileEntityMachine implements IToolRea
     }
 
     @Override
-    public float getRequest(ForgeDirection side)
-    {
-        return WATTS_PER_TICK;
-    }
-
-    @Override
     public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
     {
-        return String.format("%.2f/%.2fWatts  %d SourceBlocks", this.getEnergyStored(), this.getMaxEnergyStored(), this.getLiquidFinder().results.size());
+        if(tool == EnumTools.PIPE_GUAGE)
+        {
+            return "Source Blocks: "+this.getLiquidFinder().results.size();
+        }
+        return null;
     }
 
     @Override
