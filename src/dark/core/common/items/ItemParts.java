@@ -2,34 +2,21 @@ package dark.core.common.items;
 
 import java.util.List;
 
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Icon;
 import net.minecraftforge.common.Configuration;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import dark.core.common.DarkMain;
 import dark.core.prefab.items.ItemBasic;
 
 /** A metadata item containing parts of various machines in Liquid Mechanics Mod.
- * 
+ *
  * @author Rs */
 public class ItemParts extends ItemBasic
 {
-    public enum Parts
-    {
-        Bronze("BronzeTube"),
-        Iron("IronTube"),
-        Obby("ObbyTube"),
-        Nether("NetherTube"),
-        Seal("LeatherSeal"),
-        SlimeSeal("SlimeSeal"),
-        Tank("UnfinishedTank"),
-        Valve("ValvePart");
-
-        public String name;
-
-        private Parts(String name)
-        {
-            this.name = name;
-        }
-    }
 
     public ItemParts(int par1, Configuration config)
     {
@@ -43,7 +30,33 @@ public class ItemParts extends ItemBasic
     @Override
     public String getUnlocalizedName(ItemStack itemStack)
     {
-        return "item." + Parts.values()[itemStack.getItemDamage()].name;
+        if (itemStack != null && itemStack.getItemDamage() < Parts.values().length)
+        {
+            return "item." + Parts.values()[itemStack.getItemDamage()].name;
+        }
+        return super.getUnlocalizedName();
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public Icon getIconFromDamage(int meta)
+    {
+        if (meta < Parts.values().length)
+        {
+            return Parts.values()[meta].icon;
+        }
+        return this.itemIcon;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IconRegister iconRegister)
+    {
+        super.registerIcons(iconRegister);
+        for (Parts part : Parts.values())
+        {
+            part.icon = iconRegister.registerIcon(DarkMain.getInstance().PREFIX + part.name);
+        }
     }
 
     @Override
@@ -53,11 +66,31 @@ public class ItemParts extends ItemBasic
     }
 
     @Override
-    public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
+    public void getSubItems(int blockID, CreativeTabs tab, List itemStackList)
     {
-        for (int i = 0; i < Parts.values().length; i++)
+        for (int meta = 0; meta < Parts.values().length; meta++)
         {
-            par3List.add(new ItemStack(this, 1, i));
+            itemStackList.add(new ItemStack(this, 1, meta));
+        }
+    }
+
+    public static enum Parts
+    {
+        Bronze("BronzeTube"),
+        Iron("IronTube"),
+        Obby("ObbyTube"),
+        Nether("NetherTube"),
+        Seal("LeatherSeal"),
+        SlimeSeal("SlimeSeal"),
+        Tank("UnfinishedTank"),
+        Valve("ValvePart");
+
+        public String name;
+        public Icon icon;
+
+        private Parts(String name)
+        {
+            this.name = name;
         }
     }
 }
