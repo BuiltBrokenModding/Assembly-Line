@@ -6,11 +6,14 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import universalelectricity.prefab.TranslationHelper;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.imprinter.ContainerImprinter;
 import dark.assembly.common.imprinter.TileEntityImprinter;
-
+@SideOnly(Side.CLIENT)
 public class GuiImprinter extends GuiContainer
 {
     private int containerWidth;

@@ -24,12 +24,14 @@ import org.lwjgl.opengl.GL11;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.network.PacketManager;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.machine.encoder.ContainerEncoder;
 import dark.assembly.common.machine.encoder.IInventoryWatcher;
 import dark.assembly.common.machine.encoder.ItemDisk;
 import dark.assembly.common.machine.encoder.TileEntityEncoder;
-
+@SideOnly(Side.CLIENT)
 public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 {
     private static final int MAX_COMMANDS = 6;

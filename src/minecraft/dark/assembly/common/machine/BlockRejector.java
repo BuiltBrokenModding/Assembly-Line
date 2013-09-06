@@ -28,7 +28,7 @@ public class BlockRejector extends BlockImprintable
         return false;
     }
 
-    @Override
+    @Override@SideOnly(Side.CLIENT)
     public boolean renderAsNormalBlock()
     {
         return false;

@@ -5,10 +5,13 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import dark.assembly.client.model.ModelManipulator;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.machine.TileEntityManipulator;
-
+@SideOnly(Side.CLIENT)
 public class RenderManipulator extends RenderImprintable
 {
     private ModelManipulator model = new ModelManipulator();

@@ -6,6 +6,9 @@ import net.minecraft.entity.Entity;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+@SideOnly(Side.CLIENT)
 public class ModelArmbot extends ModelBase
 {
     // fields
@@ -141,7 +144,7 @@ public class ModelArmbot extends ModelBase
          * clampClawLower.rotationPointY, baseRotation.rotationPointX);
          * clampClawLower2.setRotationPoint(baseRotation.rotationPointX,
          * clampClawLower2.rotationPointY, baseRotation.rotationPointX);
-         * 
+         *
          * armMountRight.rotateAngleY = armBot.rotationYaw; armMountLeft.rotateAngleY =
          * armBot.rotationYaw; armLower.rotateAngleY = armBot.rotationYaw; armUpper.rotateAngleY =
          * armBot.rotationYaw; baseRotation.rotateAngleY = armBot.rotationYaw;

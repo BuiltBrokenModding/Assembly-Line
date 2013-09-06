@@ -7,7 +7,11 @@ import net.minecraft.client.renderer.entity.RenderManager;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 /** @author Briman0094 */
+@SideOnly(Side.CLIENT)
 public class RenderHelper
 {
     public static void renderFloatingText(String text, float x, float y, float z)

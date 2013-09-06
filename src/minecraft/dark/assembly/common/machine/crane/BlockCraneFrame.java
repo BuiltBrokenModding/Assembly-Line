@@ -139,7 +139,7 @@ public class BlockCraneFrame extends BlockAssembly
         return new TileEntityCraneRail();
     }
 
-    @Override
+    @Override@SideOnly(Side.CLIENT)
     public boolean renderAsNormalBlock()
     {
         return false;

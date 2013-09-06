@@ -6,6 +6,8 @@ import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTranslated;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -14,7 +16,7 @@ import dark.assembly.client.model.ModelCraneRail;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.machine.crane.CraneHelper;
 import dark.assembly.common.machine.crane.TileEntityCraneRail;
-
+@SideOnly(Side.CLIENT)
 public class RenderCraneFrame extends TileEntitySpecialRenderer
 {
     public static final String TEXTURE = "crane_frame.png";

@@ -17,9 +17,12 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import universalelectricity.core.vector.Vector3;
 import dark.assembly.common.machine.TileEntityCrate;
-
+@SideOnly(Side.CLIENT)
 public class RenderCrate extends TileEntitySpecialRenderer
 {
     private final RenderBlocks renderBlocks = new RenderBlocks();
@@ -96,7 +99,7 @@ public class RenderCrate extends TileEntitySpecialRenderer
                 /*
                  * switch (tileEntity.getTier()) { default: { itemName = "\u00a7a" + itemName;
                  * break; } case 1: { itemName = "\u00a74" + itemName;
-                 * 
+                 *
                  * break; } case 2: { itemName = "\u00a79" + itemName; break; } }
                  */
 

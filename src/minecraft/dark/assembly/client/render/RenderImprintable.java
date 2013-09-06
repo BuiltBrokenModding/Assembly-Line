@@ -2,6 +2,9 @@ package dark.assembly.client.render;
 
 import java.util.ArrayList;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +15,7 @@ import dark.assembly.common.imprinter.ItemImprinter;
 import dark.assembly.common.imprinter.prefab.TileEntityFilterable;
 
 /** @author Briman0094 */
+@SideOnly(Side.CLIENT)
 public abstract class RenderImprintable extends TileEntitySpecialRenderer
 {
     @Override

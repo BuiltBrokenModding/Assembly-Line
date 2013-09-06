@@ -5,10 +5,13 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import dark.assembly.client.model.ModelRejectorPiston;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.machine.TileEntityRejector;
-
+@SideOnly(Side.CLIENT)
 public class RenderRejector extends RenderImprintable
 {
     private ModelRejectorPiston model = new ModelRejectorPiston();

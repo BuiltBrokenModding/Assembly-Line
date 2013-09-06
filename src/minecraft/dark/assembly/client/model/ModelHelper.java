@@ -5,9 +5,11 @@ import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glVertex3d;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.ForgeDirection;
-
+@SideOnly(Side.CLIENT)
 public class ModelHelper
 {
     private static int gTexWidth = 64;
@@ -184,7 +186,7 @@ public class ModelHelper
     }
 
     /** Sets whether or not to clip the texture.
-     * 
+     *
      * @param clip If true, textures on blocks less than 1x1x1 will be clipped. If false, they will
      * be scaled. */
     public static void setTextureClip(boolean clip)

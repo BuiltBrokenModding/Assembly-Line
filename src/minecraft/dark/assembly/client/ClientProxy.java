@@ -7,6 +7,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.client.gui.GuiEncoder;
 import dark.assembly.client.gui.GuiImprinter;
 import dark.assembly.client.render.BlockRenderingHandler;
@@ -29,7 +31,7 @@ import dark.assembly.common.machine.belt.TileEntityConveyorBelt;
 import dark.assembly.common.machine.crane.TileEntityCraneController;
 import dark.assembly.common.machine.crane.TileEntityCraneRail;
 import dark.assembly.common.machine.encoder.TileEntityEncoder;
-
+@SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy
 {
 
