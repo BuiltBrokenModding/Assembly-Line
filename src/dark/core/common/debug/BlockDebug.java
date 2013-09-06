@@ -20,24 +20,7 @@ import dark.core.prefab.helpers.Pair;
 
 public class BlockDebug extends BlockMachine implements IExtraObjectInfo
 {
-    Icon load, source, vod, fluid;
-
-    public static enum debugBlocks
-    {
-        INF_POWER("infSource", TileEntityInfSupply.class),
-        INF_FLUID("infFluid", TileEntityInfFluid.class),
-        VOID("void", TileEntityVoid.class),
-        INF_LOAD("infLoad", TileEntityInfLoad.class);
-
-        public String name;
-        public Class<? extends TileEntity> clazz;
-
-        private debugBlocks(String name, Class<? extends TileEntity> clazz)
-        {
-            this.name = name;
-            this.clazz = clazz;
-        }
-    }
+    public static float DebugWattOut, DebugWattDemand;
 
     public BlockDebug(int blockID, Configuration config)
     {
@@ -45,44 +28,36 @@ public class BlockDebug extends BlockMachine implements IExtraObjectInfo
         this.setCreativeTab(CreativeTabs.tabRedstone);
     }
 
-    @SideOnly(Side.CLIENT)
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister iconReg)
     {
         super.registerIcons(iconReg);
-        this.source = iconReg.registerIcon(DarkMain.getInstance().PREFIX + "infSource");
-        this.load = iconReg.registerIcon(DarkMain.getInstance().PREFIX + "infLoad");
-        this.vod = iconReg.registerIcon(DarkMain.getInstance().PREFIX + "void");
-        this.fluid = iconReg.registerIcon(DarkMain.getInstance().PREFIX + "infFluid");
+        for (DebugBlocks block : DebugBlocks.values())
+        {
+            block.icon = iconReg.registerIcon(DarkMain.getInstance().PREFIX + block.getTextureName());
+        }
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public Icon getIcon(int side, int meta)
     {
-        switch (meta)
+        if (meta < DebugBlocks.values().length)
         {
-            case 0:
-                return this.source;
-            case 1:
-                return this.fluid;
-            case 2:
-                return this.vod;
-            case 3:
-                return this.load;
-            default:
-                return this.blockIcon;
+            return DebugBlocks.values()[meta].icon;
         }
+        return this.blockIcon;
     }
 
     @Override
     public TileEntity createTileEntity(World world, int metadata)
     {
-        if (metadata < debugBlocks.values().length)
+        if (metadata < DebugBlocks.values().length)
         {
             try
             {
-                return debugBlocks.values()[metadata].clazz.newInstance();
+                return DebugBlocks.values()[metadata].clazz.newInstance();
             }
             catch (Exception e)
             {
@@ -95,25 +70,41 @@ public class BlockDebug extends BlockMachine implements IExtraObjectInfo
     @Override
     public TileEntity createNewTileEntity(World world)
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
+    public void onBlockAdded(World world, int x, int y, int z)
     {
-        for (int i = 0; i < debugBlocks.values().length; i++)
+        super.onBlockAdded(world, x, y, z);
+        int meta = world.getBlockMetadata(x, y, z);
+        if (meta >= DebugBlocks.values().length || !DebugBlocks.values()[meta].enabled)
         {
-            par3List.add(new ItemStack(par1, 1, i));
+            world.setBlock(x, y, z, 0);
+        }
+    }
+
+    @Override
+    public void getSubBlocks(int blockID, CreativeTabs tab, List creativeTabList)
+    {
+        for (DebugBlocks block : DebugBlocks.values())
+        {
+            if (block.enabled)
+            {
+                creativeTabList.add(new ItemStack(blockID, 1, block.ordinal()));
+            }
         }
     }
 
     @Override
     public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
     {
-        for (int i = 0; i < debugBlocks.values().length; i++)
+        for (DebugBlocks block : DebugBlocks.values())
         {
-            list.add(new Pair<String, Class<? extends TileEntity>>("DMDebug" + i, debugBlocks.values()[i].clazz));
+            if (block.enabled)
+            {
+                list.add(new Pair<String, Class<? extends TileEntity>>(block.name, block.clazz));
+            }
         }
 
     }
@@ -121,14 +112,16 @@ public class BlockDebug extends BlockMachine implements IExtraObjectInfo
     @Override
     public boolean hasExtraConfigs()
     {
-        // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override
     public void loadExtraConfigs(Configuration config)
     {
-        // TODO Auto-generated method stub
+        for (DebugBlocks block : DebugBlocks.values())
+        {
+            block.enabled = config.get("Blocks", "Enable" + block.name + "Block", true).getBoolean(true);
+        }
 
     }
 
@@ -143,6 +136,40 @@ public class BlockDebug extends BlockMachine implements IExtraObjectInfo
     public void loadOreNames()
     {
         // TODO Auto-generated method stub
+
+    }
+
+    public static enum DebugBlocks
+    {
+        SOURCE("UnlimitedPower", TileEntityInfSupply.class, "infSource"),
+        FLUID("UnlimitedFluid", TileEntityInfFluid.class, "infFluid"),
+        VOID("FluidVoid", TileEntityVoid.class, "void"),
+        LOAD("PowerVampire", TileEntityInfLoad.class, "infLoad");
+        public Icon icon;
+        public String name;
+        public String texture;
+        public boolean enabled;
+        Class<? extends TileEntity> clazz;
+
+        private DebugBlocks(String name, Class<? extends TileEntity> clazz)
+        {
+            this.name = name;
+        }
+
+        private DebugBlocks(String name, Class<? extends TileEntity> clazz, String texture)
+        {
+            this(name, clazz);
+            this.texture = texture;
+        }
+
+        public String getTextureName()
+        {
+            if (texture == null || texture.isEmpty())
+            {
+                return name;
+            }
+            return texture;
+        }
 
     }
 
