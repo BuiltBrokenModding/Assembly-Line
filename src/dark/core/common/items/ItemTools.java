@@ -18,6 +18,8 @@ import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.block.IConductor;
 import universalelectricity.core.block.IElectrical;
 import universalelectricity.core.block.IElectricalStorage;
+import universalelectricity.core.electricity.ElectricityDisplay;
+import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.IToolReadOut;
@@ -130,41 +132,43 @@ public class ItemTools extends ItemBasic
                     //TODO filter all units threw UE unit helper to created nicer looking output text
                     player.sendChatToPlayer(ChatMessageComponent.func_111066_d("Side>" + ForgeDirection.getOrientation(side).toString()));
                     boolean out = false;
+                    // Output electrical info
                     if (tileEntity instanceof IElectrical)
                     {
-                        float demand = ((IElectrical) tileEntity).getRequest(ForgeDirection.getOrientation(side).getOpposite());
-                        float provide = ((IElectrical) tileEntity).getProvide(ForgeDirection.getOrientation(side).getOpposite());
-                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d("   Voltage>" + ((IElectrical) tileEntity).getVoltage()*1000));
-                        if (demand > 0)
+                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d("   Voltage> " + ElectricityDisplay.getDisplay(((IElectrical) tileEntity).getVoltage(), ElectricUnit.VOLTAGE, 2, true)));
+                        if (((IElectrical) tileEntity).getRequest(ForgeDirection.getOrientation(side).getOpposite()) > 0)
                         {
-                            player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   RequiredWatts> %1$.2fKW", demand)));
+                            player.sendChatToPlayer(ChatMessageComponent.func_111066_d("   RequiredWatts> " + ElectricityDisplay.getDisplay(((IElectrical) tileEntity).getRequest(ForgeDirection.getOrientation(side).getOpposite()), ElectricUnit.WATT, 2, true)));
                         }
-                        if (provide > 0)
+                        if (((IElectrical) tileEntity).getProvide(ForgeDirection.getOrientation(side).getOpposite()) > 0)
                         {
-                            player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   AvailableWatts> %1$.2fKW", provide)));
+                            player.sendChatToPlayer(ChatMessageComponent.func_111066_d("   AvailableWatts> " + ElectricityDisplay.getDisplay(((IElectrical) tileEntity).getProvide(ForgeDirection.getOrientation(side).getOpposite()), ElectricUnit.WATT, 2, true)));
                         }
                         out = true;
                     }
+                    //Output battery info
                     if (tileEntity instanceof IElectricalStorage)
                     {
-                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   EnergyStored> %1$.2fKW of %2$.2fKW max", ((IElectricalStorage) tileEntity).getEnergyStored(), ((IElectricalStorage) tileEntity).getMaxEnergyStored())));
+                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d("   EnergyStored> " + ElectricityDisplay.getDisplay(((IElectricalStorage) tileEntity).getEnergyStored(), ElectricUnit.WATT, 2, true) + " out of " + ElectricityDisplay.getDisplay(((IElectricalStorage) tileEntity).getMaxEnergyStored(), ElectricUnit.WATT, 2, true) + " Max"));
                         out = true;
                     }
+                    //Output wire info
                     if (tileEntity instanceof IConductor)
                     {
                         out = true;
-                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   Resistance> %1$.2fKW | AmpMax>     %2$.2fA", ((IConductor) tileEntity).getResistance(), ((IConductor) tileEntity).getCurrentCapacity())));
+                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d("   Resistance> " + ElectricityDisplay.getDisplay(((IConductor) tileEntity).getResistance(), ElectricUnit.RESISTANCE, 2, true) + " | " + "AmpMax> " + ElectricityDisplay.getDisplay(((IConductor) tileEntity).getCurrentCapacity(), ElectricUnit.AMPERE, 2, true)));
 
                         if (((IConductor) tileEntity).getNetwork() != null)
                         {
                             player.sendChatToPlayer(ChatMessageComponent.func_111066_d("   Network>" + ((IConductor) tileEntity).getNetwork().toString()));
 
-                            player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   Network>WattRequired> %1$.2fKW | TotalResistance> %2$.2fW", (((IConductor) tileEntity).getNetwork().getRequest() != null ? ((IConductor) tileEntity).getNetwork().getRequest().getWatts() : 0), ((IConductor) tileEntity).getNetwork().getTotalResistance())));
+                            player.sendChatToPlayer(ChatMessageComponent.func_111066_d(String.format("   Network>WattRequired> " + (((IConductor) tileEntity).getNetwork().getRequest() != null ? ElectricityDisplay.getDisplay(((IConductor) tileEntity).getNetwork().getRequest().getWatts(), ElectricUnit.WATT, 2, true) : "Error") + " | " + "TotalResistance> " + ElectricityDisplay.getDisplay(((IConductor) tileEntity).getNetwork().getTotalResistance(), ElectricUnit.RESISTANCE, 2, true))));
                         }
                     }
+                    //If no ouput was created suggest that the block is not valid for connection
                     if (!out)
                     {
-                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d("   Error failed to find wire connections nodes"));
+                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d("   Error failed to connect to block"));
 
                     }
                 }
