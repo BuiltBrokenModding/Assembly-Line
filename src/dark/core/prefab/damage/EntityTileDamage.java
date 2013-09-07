@@ -48,9 +48,9 @@ public class EntityTileDamage extends EntityLiving implements IEntityAdditionalS
     @Override
     public boolean attackEntityFrom(DamageSource source, float ammount)
     {
-        if (this.host instanceof IHpTile)
+        if (this.host instanceof IDamageableTile)
         {
-            return ((IHpTile) this.host).onDamageTaken(source, ammount);
+            return ((IDamageableTile) this.host).onDamageTaken(source, ammount);
         }
         else
         {
@@ -78,9 +78,9 @@ public class EntityTileDamage extends EntityLiving implements IEntityAdditionalS
     @Override
     public boolean isPotionApplicable(PotionEffect par1PotionEffect)
     {
-        if (par1PotionEffect != null && this.host instanceof IHpTile)
+        if (par1PotionEffect != null && this.host instanceof IDamageableTile)
         {
-            return ((IHpTile) this.host).canApplyPotion(par1PotionEffect);
+            return ((IDamageableTile) this.host).canApplyPotion(par1PotionEffect);
         }
         return false;
     }
@@ -124,7 +124,7 @@ public class EntityTileDamage extends EntityLiving implements IEntityAdditionalS
             {
                 this.setDead();
             }
-            else if (this.host instanceof IHpTile && !((IHpTile) this.host).isAlive())
+            else if (this.host instanceof IDamageableTile && !((IDamageableTile) this.host).isAlive())
             {
                 this.setDead();
             }

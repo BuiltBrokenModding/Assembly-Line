@@ -1,16 +1,17 @@
 package dark.core.prefab.damage;
 
+import dark.core.interfaces.IBlockActivated;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 
 /** Used by tiles that want to pretend to be living objects. Will require the use of this interface
  * as well spawning a EntityTileDamage entity as its location
- * 
+ *
  * @author DarkGuardsman */
-public interface IHpTile
+public interface IDamageableTile extends IBlockActivated
 {
     /** Same as attackEntityFrom in Entity.class
-     * 
+     *
      * @param source - DamageSource/DamageType
      * @param ammount - amount of damage
      * @return */
@@ -20,16 +21,16 @@ public interface IHpTile
      * considered dead */
     public boolean isAlive();
 
-    /** Current hp of the tile */
-    public int hp();
+    /** Current health of the tile */
+    public float health();
 
-    /** Sets the tiles hp
-     * 
-     * @param i - amount
+    /** Sets the tiles heath
+     *
+     * @param health - amount hit points
      * @param increase - increase instead of replace */
-    public void setHp(int i, boolean increase);
+    public void setHealth(float health);
 
-    /** Max hp of the object */
+    /** Max hit points of the object */
     public int getMaxHealth();
 
     /** Can the potion be used on the Entity that is translating damage for the TileEntity */

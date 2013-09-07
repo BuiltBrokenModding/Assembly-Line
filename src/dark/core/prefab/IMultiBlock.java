@@ -2,13 +2,13 @@ package dark.core.prefab;
 
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.core.vector.Vector3;
-import dark.core.interfaces.IBlockActivate;
+import dark.core.interfaces.IBlockActivated;
 
 /** Interface to be applied to tile entity blocks that occupies more than one block space. Useful for
  * large machines.
  * 
  * @author Calclavia */
-public interface IMultiBlock extends IBlockActivate
+public interface IMultiBlock extends IBlockActivated
 {
     /** Called when this multiblock is created
      * 
