@@ -1,1 +1,0 @@
-git log --pretty="%s" --since="`date -r ./../lastSuccessful/build.xml "+%F %T"`" >> changeLog.txt

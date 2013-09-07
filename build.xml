@@ -19,16 +19,16 @@
 		</copy>
         <!-- Download other git repos -->
 		<exec dir="${dir.development}bin" executable="cmd" osfamily="windows">
-			<arg line="git.bat" />
+			<arg line="GitClone.bat" />
 		</exec>
 		<exec dir="${dir.development}bin" executable="bash" osfamily="unix">
-			<arg line="git.sh" />
+			<arg line="GitClone.sh" />
 		</exec>
         <exec dir="${dir.development}bin" executable="cmd" osfamily="windows">
-            <arg line="gitLog.bat" />
+            <arg line="GitChangeLog.bat" />
 		</exec>
 		<exec dir="${dir.development}bin" executable="bash" osfamily="unix">
-			<arg line="gitLog.sh" />
+			<arg line="GitChangeLog.sh" />
 		</exec>
 		<copy todir="${dir.mcp}/src/minecraft">
 			
