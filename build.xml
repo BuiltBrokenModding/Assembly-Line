@@ -18,16 +18,16 @@
 			<fileset dir="../Minecraft Forge Latest/" />
 		</copy>
         <!-- Download other git repos -->
-		<exec dir="${dir.development}/bin" executable="cmd" osfamily="windows">
+		<exec dir="${dir.development}bin" executable="cmd" osfamily="windows">
 			<arg line="git.bat" />
 		</exec>
-		<exec dir="${dir.development}/bin" executable="bash" osfamily="unix">
+		<exec dir="${dir.development}bin" executable="bash" osfamily="unix">
 			<arg line="git.sh" />
 		</exec>
-        <exec dir="${dir.development}/bin" executable="cmd" osfamily="windows">
+        <exec dir="${dir.development}bin" executable="cmd" osfamily="windows">
             <arg line="gitLog.bat" />
 		</exec>
-		<exec dir="${dir.development}/bin" executable="bash" osfamily="unix">
+		<exec dir="${dir.development}bin" executable="bash" osfamily="unix">
 			<arg line="gitLog.sh" />
 		</exec>
 		<copy todir="${dir.mcp}/src/minecraft">
@@ -40,19 +40,19 @@
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
-            <fileset dir="${dir.development}Assembly-Line/src/minecraft">
+            <fileset dir="${dir.development}downloads/Assembly-Line/src/minecraft">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
-            <fileset dir="${dir.development}FarmTech/src">
+            <fileset dir="${dir.development}downloads/FarmTech/src">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
-            <fileset dir="${dir.development}Fluid-Mechanics/src">
+            <fileset dir="${dir.development}downloads/Fluid-Mechanics/src">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
-            <fileset dir="${dir.development}Greater-Security/src">
+            <fileset dir="${dir.development}downloads/Greater-Security/src">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
@@ -95,24 +95,24 @@
             <fileset dir="${dir.mcp}/reobf/minecraft" includes="org/" />
             <fileset dir="${dir.mcp}/reobf/minecraft" includes="themalexpansion/" />
             <fileset dir="${dir.mcp}/reobf/minecraft" includes="universalelectricity/" />
-            <fileset dir="${dir.development}/resources" excludes=".git/**" />
+            <fileset dir="${dir.development}downloads/resources" excludes=".git/**" />
 		</copy>
 		<copy todir="fm">
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/fluid/" />
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/mech/" />
-            <fileset dir="${dir.development}/Fluid-Mechanics/resources" excludes=".git/**" />
+            <fileset dir="${dir.development}downloads/Fluid-Mechanics/resources" excludes=".git/**" />
 		</copy>
 		<copy todir="al">
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/assembly/" />
-            <fileset dir="${dir.development}/Assembly-Line/resources" excludes=".git/**" />
+            <fileset dir="${dir.development}downloads/Assembly-Line/resources" excludes=".git/**" />
 		</copy>
 		<copy todir="ft">
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/farmtech" />
-            <fileset dir="${dir.development}/FarmTech/resources" excludes=".git/**" />
+            <fileset dir="${dir.development}downloads/FarmTech/resources" excludes=".git/**" />
 		</copy>
 		<copy todir="gs">
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/security/" />
-            <fileset dir="${dir.development}/Greater-Security/resources" excludes=".git/**" />
+            <fileset dir="${dir.development}downloads/Greater-Security/resources" excludes=".git/**" />
 		</copy>
         
         <copy todir="gs" file="LICENSE.txt" />
