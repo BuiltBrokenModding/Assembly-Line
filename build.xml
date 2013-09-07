@@ -95,7 +95,7 @@
             <fileset dir="${dir.mcp}/reobf/minecraft" includes="org/" />
             <fileset dir="${dir.mcp}/reobf/minecraft" includes="themalexpansion/" />
             <fileset dir="${dir.mcp}/reobf/minecraft" includes="universalelectricity/" />
-            <fileset dir="${dir.development}downloads/resources" excludes=".git/**" />
+            <fileset dir="${dir.development}resources" excludes=".git/**" />
 		</copy>
 		<copy todir="fm">
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/fluid/" />
