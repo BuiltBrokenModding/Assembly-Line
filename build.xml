@@ -18,16 +18,16 @@
 			<fileset dir="../Minecraft Forge Latest/" />
 		</copy>
         <!-- Download other git repos -->
-		<exec dir="${dir.development}" executable="cmd" osfamily="windows">
+		<exec dir="${dir.development}/bin" executable="cmd" osfamily="windows">
 			<arg line="git.bat" />
 		</exec>
-		<exec dir="${dir.development}" executable="bash" osfamily="unix">
+		<exec dir="${dir.development}/bin" executable="bash" osfamily="unix">
 			<arg line="git.sh" />
 		</exec>
-        <exec dir="${dir.development}" executable="cmd" osfamily="windows">
+        <exec dir="${dir.development}/bin" executable="cmd" osfamily="windows">
             <arg line="gitLog.bat" />
 		</exec>
-		<exec dir="${dir.development}" executable="bash" osfamily="unix">
+		<exec dir="${dir.development}/bin" executable="bash" osfamily="unix">
 			<arg line="gitLog.sh" />
 		</exec>
 		<copy todir="${dir.mcp}/src/minecraft">
