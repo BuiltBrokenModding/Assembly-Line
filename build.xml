@@ -24,6 +24,12 @@
 		<exec dir="${dir.development}" executable="bash" osfamily="unix">
 			<arg line="git.sh" />
 		</exec>
+        <exec dir="${dir.development}" executable="cmd" osfamily="windows">
+            <arg line="gitLog.bat" />
+		</exec>
+		<exec dir="${dir.development}" executable="bash" osfamily="unix">
+			<arg line="gitLog.sh" />
+		</exec>
 		<copy todir="${dir.mcp}/src/minecraft">
 			
 			<fileset dir="${dir.development}src">
