@@ -42,7 +42,8 @@ public class BlockOre extends Block implements IExtraObjectInfo
         }
     }
 
-    @Override @SideOnly(Side.CLIENT)
+    @Override
+    @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister par1IconRegister)
     {
         for (int i = 0; i < EnumMeterials.values().length; i++)
@@ -54,7 +55,8 @@ public class BlockOre extends Block implements IExtraObjectInfo
         }
     }
 
-    @Override @SideOnly(Side.CLIENT)
+    @Override
+    @SideOnly(Side.CLIENT)
     public Icon getIcon(int side, int metadata)
     {
         if (this.icons[metadata] != null)

@@ -39,16 +39,19 @@ public class FluidBlockRenderer
         Icon icon = fluid.getStillIcon();
         if (icon == null)
         {
-            Block block = Block.blocksList[fluid.getBlockID()];
-            if (block != null)
+            if (fluid.getBlockID() > 0)
             {
-                if (block.blockID == Block.waterStill.blockID)
+                Block block = Block.blocksList[fluid.getBlockID()];
+                if (block != null)
                 {
-                    icon = Block.waterStill.getIcon(0, 0);
-                }
-                if (block.blockID == Block.lavaStill.blockID)
-                {
-                    icon = Block.lavaStill.getIcon(0, 0);
+                    if (block.blockID == Block.waterStill.blockID)
+                    {
+                        icon = Block.waterStill.getIcon(0, 0);
+                    }
+                    if (block.blockID == Block.lavaStill.blockID)
+                    {
+                        icon = Block.lavaStill.getIcon(0, 0);
+                    }
                 }
             }
             if (icon == null)

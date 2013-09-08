@@ -15,7 +15,7 @@ import com.google.common.io.ByteArrayDataInput;
 import dark.core.network.PacketHandler;
 
 /** This is a multiblock to be used for blocks that are bigger than one block.
- *
+ * 
  * @author Calclavia */
 public class TileEntityMulti extends TileEntity implements IPacketReceiver
 {
@@ -117,7 +117,7 @@ public class TileEntityMulti extends TileEntity implements IPacketReceiver
     }
 
     /** Determines if this TileEntity requires update calls.
-     *
+     * 
      * @return True if you want updateEntity() to be called, false if not */
     @Override
     public boolean canUpdate()

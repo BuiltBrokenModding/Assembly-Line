@@ -35,12 +35,14 @@ public class PacketManagerEffects implements IPacketManager
     {
         try
         {
+            System.out.println("Effect packet being handled");
             World world = ((EntityPlayer) player).worldObj;
             String effectName = data.readUTF();
             if (world != null)
             {
                 if (effectName.equalsIgnoreCase("laser"))
                 {
+                    System.out.println("Received laser packet");
                     DarkMain.proxy.renderBeam(world, PacketHandler.readVector3(data), PacketHandler.readVector3(data), new Color(data.readInt(), data.readInt(), data.readInt()), data.readInt());
                 }
             }
@@ -55,8 +57,9 @@ public class PacketManagerEffects implements IPacketManager
 
     public static void sendClientLaserEffect(World world, Vector3 position, Vector3 target, Color color, int age)
     {
-        Packet packet = PacketHandler.instance().getPacketWithID(DarkMain.CHANNEL, packetID, position, target, color.getRed(), color.getBlue(), color.getGreen(), age);
+        Packet packet = PacketHandler.instance().getPacketWithID(DarkMain.CHANNEL, packetID, "laser", position, target, color.getRed(), color.getBlue(), color.getGreen(), age);
         PacketHandler.instance().sendPacketToClients(packet, world, position, position.distance(target));
+        System.out.println("Sent laser render packet to client");
     }
 
 }

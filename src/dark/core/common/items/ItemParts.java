@@ -13,7 +13,7 @@ import dark.core.common.DarkMain;
 import dark.core.prefab.items.ItemBasic;
 
 /** A metadata item containing parts of various machines in Liquid Mechanics Mod.
- *
+ * 
  * @author Rs */
 public class ItemParts extends ItemBasic
 {

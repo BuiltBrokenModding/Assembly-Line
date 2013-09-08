@@ -23,6 +23,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.prefab.helpers.BlockRenderInfo;
 import dark.core.prefab.helpers.EntityFakeBlock;
+
 @SideOnly(Side.CLIENT)
 public class RenderFakeBlock extends Render
 {
@@ -88,7 +89,7 @@ public class RenderFakeBlock extends Render
     }
 
     /** Renders a block at given location
-     *
+     * 
      * @param blockInterface - class used to store info for the render process
      * @param world - world rendering in
      * @param x - position on x axis

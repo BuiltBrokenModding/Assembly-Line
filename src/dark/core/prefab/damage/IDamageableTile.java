@@ -6,12 +6,12 @@ import dark.core.interfaces.IBlockActivated;
 
 /** Used by tiles that want to pretend to be living objects. Will require the use of this interface
  * as well spawning a EntityTileDamage entity as its location
- *
+ * 
  * @author DarkGuardsman */
 public interface IDamageableTile extends IBlockActivated
 {
     /** Same as attackEntityFrom in Entity.class
-     *
+     * 
      * @param source - DamageSource/DamageType
      * @param ammount - amount of damage
      * @return */
@@ -25,7 +25,7 @@ public interface IDamageableTile extends IBlockActivated
     public float health();
 
     /** Sets the tiles heath
-     *
+     * 
      * @param health - amount hit points
      * @param increase - increase instead of replace */
     public void setHealth(float health);

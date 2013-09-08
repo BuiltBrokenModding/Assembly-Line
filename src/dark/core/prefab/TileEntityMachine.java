@@ -99,7 +99,6 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
             this.running = this.canRun() && this.consumePower(this.WATTS_PER_TICK, true);
             if (prevRun != this.running)
             {
-                System.out.println("\n\nPower update packet sent to client\n\n\n");
                 this.sendPowerUpdate();
             }
         }
@@ -117,7 +116,7 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
         System.out.println("  RedPower: " + this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord));
         System.out.println(" IsDisabled: " + this.isDisabled());//TODO i'm going to kick myself if this is it, yep disabled
         System.out.println("  HasPower: " + this.consumePower(WATTS_PER_TICK, false));
-        System.out.println("  IsRunning: " + this.running + " \n");
+        System.out.println("  IsRunning: " + this.running);
     }
 
     /** Called to consume power from the internal storage */
@@ -288,7 +287,6 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
                 if (id.equalsIgnoreCase(TilePacketTypes.POWER.name))
                 {
                     this.running = dis.readBoolean();
-                    System.out.println("Received isRunning packet");
                     return true;
                 }
                 if (id.equalsIgnoreCase(TilePacketTypes.NBT.name))

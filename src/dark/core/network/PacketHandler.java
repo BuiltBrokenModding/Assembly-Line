@@ -26,14 +26,13 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
 /** Packet manager based off the PacketManager from UE created by Calclavia
- *
+ * 
  * @author DarkGuardsman */
 public class PacketHandler implements IPacketHandler, IPacketReceiver
 {
     public static PacketHandler instance;
 
     public static HashMap<Integer, IPacketManager> packetTypes = new HashMap();
-
 
     public static PacketManagerTile tile = new PacketManagerTile();
     public static PacketManagerEffects effects = new PacketManagerEffects();
@@ -137,7 +136,6 @@ public class PacketHandler implements IPacketHandler, IPacketReceiver
         return new Vector3(data.readDouble(), data.readDouble(), data.readDouble());
     }
 
-
     @SuppressWarnings("resource")
     public Packet getPacketWithID(String channelName, int id, Object... sendData)
     {
@@ -171,7 +169,7 @@ public class PacketHandler implements IPacketHandler, IPacketReceiver
     }
 
     /** Gets a packet for the tile entity.
-     *
+     * 
      * @return */
     @SuppressWarnings("resource")
     public Packet getPacket(String channelName, TileEntity sender, Object... sendData)
@@ -307,7 +305,6 @@ public class PacketHandler implements IPacketHandler, IPacketReceiver
         return data;
     }
 
-
     @Override
     public void onPacketData(INetworkManager network, Packet250CustomPayload packet, Player player)
     {
@@ -321,7 +318,7 @@ public class PacketHandler implements IPacketHandler, IPacketReceiver
 
             if (packetType != null)
             {
-               packetType.handlePacket(network, packet, player, data);
+                packetType.handlePacket(network, packet, player, data);
             }
             else
             {

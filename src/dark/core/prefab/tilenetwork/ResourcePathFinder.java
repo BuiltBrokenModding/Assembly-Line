@@ -74,7 +74,7 @@ public abstract class ResourcePathFinder
     }
 
     /** Searches for nodes attached to the given node
-     *
+     * 
      * @return True on success finding, false on failure. */
     public boolean findNodes(Vector3 node)
     {
@@ -125,7 +125,7 @@ public abstract class ResourcePathFinder
     }
 
     /** Finds a node in a give direction
-     *
+     * 
      * Note: Calls findNode if the next code is valid */
     public boolean find(ForgeDirection direction, Vector3 origin)
     {
@@ -148,7 +148,7 @@ public abstract class ResourcePathFinder
 
     /** Called when the pathfinder jumps to the next block. Use this to inject other processes into
      * the find method
-     *
+     * 
      * @return true if you found results, or just want the calling method to return true */
     public boolean onFind()
     {

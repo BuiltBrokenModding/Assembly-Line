@@ -6,7 +6,7 @@ import buildcraft.api.transport.IPipeTile.PipeType;
 import cpw.mods.fml.common.Loader;
 
 /** Handles working with other mod without or without the need of the APIs.
- *
+ * 
  * @author DarkGuardsman */
 public class ExternalModHandler
 {
@@ -37,7 +37,7 @@ public class ExternalModHandler
     }
 
     /** Checks to see if something can run powerless based on mods loaded
-     *
+     * 
      * @param optional - power system that the device can use
      * @return true if free power is to be generated */
     public static boolean runPowerLess()

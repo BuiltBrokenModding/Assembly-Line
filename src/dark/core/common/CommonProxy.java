@@ -27,7 +27,7 @@ public class CommonProxy
     }
 
     /** Renders a laser beam from one power to another by a set color for a set time
-     *
+     * 
      * @param world - world this laser is to be rendered in
      * @param position - start vector3
      * @param target - end vector3
