@@ -26,7 +26,6 @@ import org.bouncycastle.util.Arrays;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.network.IPacketReceiver;
-import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -36,12 +35,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.IToolReadOut;
 import dark.api.fluid.INetworkPipe;
 import dark.api.parts.ITileConnector;
+import dark.core.common.DarkMain;
 import dark.core.interfaces.ColorCode;
 import dark.core.interfaces.ColorCode.IColorCoded;
+import dark.core.network.PacketHandler;
 import dark.core.network.fluid.NetworkPipes;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
-import dark.fluid.common.FluidMech;
 import dark.fluid.common.pipes.addon.IPipeExtention;
 
 public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler, IToolReadOut, IColorCoded, INetworkPipe, IPacketReceiver
@@ -130,8 +130,8 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
                     ((TileEntity) extention).updateEntity();
                     if (extention.shouldSendPacket(!this.worldObj.isRemote) && extention.getExtentionPacketData(!this.worldObj.isRemote) != null)
                     {
-                        Packet packet = PacketManager.getPacket(FluidMech.CHANNEL, this, PacketID.EXTENTION_UPDATE.ordinal(), ForgeDirection.getOrientation(i), extention.getExtentionPacketData(!this.worldObj.isRemote));
-                        PacketManager.sendPacketToClients(packet, worldObj, new Vector3(this), 50);
+                        Packet packet =  PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, PacketID.EXTENTION_UPDATE.ordinal(), ForgeDirection.getOrientation(i), extention.getExtentionPacketData(!this.worldObj.isRemote));
+                        PacketHandler.instance().sendPacketToClients(packet, worldObj, new Vector3(this), 50);
                     }
                 }
             }
@@ -170,7 +170,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
                 {
                     System.out.println("Handling Packet for Pipe addon");
                     int side = dataStream.readInt();
-                    NBTTagCompound tag = PacketManager.readNBTTagCompound(dataStream);
+                    NBTTagCompound tag =  PacketHandler.instance().readNBTTagCompound(dataStream);
                     this.loadOrCreateSubTile(side, tag);
 
                 }
@@ -194,7 +194,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketManager.getPacket(FluidMech.CHANNEL, this, PacketID.PIPE_CONNECTIONS.ordinal(), this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
+        return  PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, PacketID.PIPE_CONNECTIONS.ordinal(), this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
     }
 
     /** Reads a tile entity from NBT. */
@@ -317,8 +317,8 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
             if (tag != null && tag.hasKey("id"))
             {
                 System.out.println("Sending TileEntity to Client");
-                Packet packet = PacketManager.getPacket(FluidMech.CHANNEL, this, PacketID.EXTENTION_CREATE.ordinal(), ForgeDirection.getOrientation(side), tag);
-                PacketManager.sendPacketToClients(packet, this.worldObj, new Vector3(this), 50);
+                Packet packet =  PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, PacketID.EXTENTION_CREATE.ordinal(), ForgeDirection.getOrientation(side), tag);
+                PacketHandler.instance().sendPacketToClients(packet, this.worldObj, new Vector3(this), 50);
             }
         }
     }
@@ -418,7 +418,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     }
 
     /** Checks to make sure the connection is valid to the tileEntity
-     * 
+     *
      * @param tileEntity - the tileEntity being checked
      * @param side - side the connection is too
      * @return */

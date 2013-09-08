@@ -16,7 +16,6 @@ import net.minecraftforge.fluids.FluidRegistry;
 import org.modstats.ModstatInfo;
 
 import universalelectricity.prefab.TranslationHelper;
-import universalelectricity.prefab.network.PacketManager;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -58,7 +57,7 @@ import dark.mech.common.machines.BlockRod;
 
 @ModstatInfo(prefix = "fluidmech")
 @Mod(modid = FluidMech.MOD_ID, name = FluidMech.MOD_NAME, version = DarkMain.VERSION, dependencies = "after:DarkCore", useMetadata = true)
-@NetworkMod(channels = { FluidMech.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
+@NetworkMod(clientSideRequired = true, serverSideRequired = false)
 public class FluidMech extends ModPrefab
 {
 
@@ -74,8 +73,6 @@ public class FluidMech extends ModPrefab
     public static Fluid fmWaste, fmOil, fmFuel, fmBio;
     public static Fluid waste, oil, fuel, bio;
 
-    // @NetworkMod
-    public static final String CHANNEL = "FluidMech";
 
     @Metadata(FluidMech.MOD_ID)
     public static ModMetadata meta;

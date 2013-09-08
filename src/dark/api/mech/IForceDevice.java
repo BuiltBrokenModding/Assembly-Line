@@ -1,7 +1,7 @@
 package dark.api.mech;
 
-import dark.api.parts.ITileConnector;
 import net.minecraftforge.common.ForgeDirection;
+import dark.api.parts.ITileConnector;
 
 /** Think of this in the same way as an electrical device from UE. getforce methods are designed to
  * get the idea amount of foce that a side should be outputing at the time. Apply force is the input

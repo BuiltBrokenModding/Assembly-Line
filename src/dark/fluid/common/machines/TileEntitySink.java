@@ -11,12 +11,12 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import universalelectricity.prefab.network.IPacketReceiver;
-import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
+import dark.core.common.DarkMain;
 import dark.core.interfaces.ColorCode;
-import dark.fluid.common.FluidMech;
+import dark.core.network.PacketHandler;
 import dark.fluid.common.prefab.TileEntityFluidStorage;
 
 public class TileEntitySink extends TileEntityFluidStorage implements IPacketReceiver
@@ -47,7 +47,7 @@ public class TileEntitySink extends TileEntityFluidStorage implements IPacketRec
         {
             stack = this.getTank().getFluid();
         }
-        return PacketManager.getPacket(FluidMech.CHANNEL, this, stack.writeToNBT(new NBTTagCompound()));
+        return  PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, stack.writeToNBT(new NBTTagCompound()));
     }
 
     @Override
@@ -55,7 +55,7 @@ public class TileEntitySink extends TileEntityFluidStorage implements IPacketRec
     {
         try
         {
-            this.getTank().setFluid(FluidStack.loadFluidStackFromNBT(PacketManager.readNBTTagCompound(data)));
+            this.getTank().setFluid(FluidStack.loadFluidStackFromNBT( PacketHandler.instance().readNBTTagCompound(data)));
         }
         catch (Exception e)
         {

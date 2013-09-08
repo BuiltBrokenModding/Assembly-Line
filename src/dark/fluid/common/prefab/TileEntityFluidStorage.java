@@ -1,6 +1,5 @@
 package dark.fluid.common.prefab;
 
-import universalelectricity.core.vector.Vector3;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -12,6 +11,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import universalelectricity.core.vector.Vector3;
 import dark.core.interfaces.ColorCode.IColorCoded;
 import dark.core.prefab.helpers.FluidHelper;
 

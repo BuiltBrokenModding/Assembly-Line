@@ -9,7 +9,6 @@ import dark.core.common.CoreRecipeLoader;
 import dark.core.common.RecipeLoader;
 import dark.core.common.items.ItemParts.Parts;
 import dark.core.interfaces.ColorCode;
-import dark.fluid.common.machines.BlockFluid;
 
 public class FMRecipeLoader extends RecipeLoader
 {

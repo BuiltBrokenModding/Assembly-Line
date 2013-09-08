@@ -18,7 +18,6 @@ import dark.core.common.ExternalModHandler;
 import dark.core.prefab.TileEntityMachine;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.helpers.Pair;
-import dark.fluid.common.FluidMech;
 
 public class TileEntityStarterPump extends TileEntityMachine implements IToolReadOut, ITileConnector
 {
@@ -223,12 +222,6 @@ public class TileEntityStarterPump extends TileEntityMachine implements IToolRea
     public boolean canTileConnect(Connection type, ForgeDirection direction)
     {
         return direction != ForgeDirection.DOWN;
-    }
-
-    @Override
-    public String getChannel()
-    {
-        return FluidMech.CHANNEL;
     }
 
 }

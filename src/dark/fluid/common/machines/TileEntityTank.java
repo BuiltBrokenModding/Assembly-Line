@@ -24,7 +24,6 @@ import org.bouncycastle.util.Arrays;
 
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
-import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -33,13 +32,14 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.IToolReadOut;
 import dark.api.fluid.INetworkFluidPart;
 import dark.api.fluid.INetworkPipe;
+import dark.core.common.DarkMain;
 import dark.core.interfaces.ColorCode;
 import dark.core.interfaces.ColorCode.IColorCoded;
+import dark.core.network.PacketHandler;
 import dark.core.network.fluid.NetworkFluidContainers;
 import dark.core.network.fluid.NetworkFluidTiles;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
-import dark.fluid.common.FluidMech;
 import dark.fluid.common.prefab.TileEntityFluidStorage;
 
 public class TileEntityTank extends TileEntityFluidStorage implements IFluidHandler, IToolReadOut, IColorCoded, INetworkFluidPart, IPacketReceiver
@@ -95,7 +95,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
                 {
                     if (id == 0)
                     {
-                        this.getTank().setFluid(FluidStack.loadFluidStackFromNBT(PacketManager.readNBTTagCompound(dataStream)));
+                        this.getTank().setFluid(FluidStack.loadFluidStackFromNBT( PacketHandler.instance().readNBTTagCompound(dataStream)));
                     }
                     else
                     {
@@ -126,7 +126,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
         {
             stack = this.getTank().getFluid();
         }
-        return PacketManager.getPacket(FluidMech.CHANNEL, this, stack != null ? 0 : 1, stack != null ? stack.writeToNBT(new NBTTagCompound()) : 1, this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
+        return  PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, stack != null ? 0 : 1, stack != null ? stack.writeToNBT(new NBTTagCompound()) : 1, this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
     }
 
     /** gets the current color mark of the pipe */
@@ -200,7 +200,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
     }
 
     /** Checks to make sure the connection is valid to the tileEntity
-     * 
+     *
      * @param tileEntity - the tileEntity being checked
      * @param side - side the connection is too */
     public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)

@@ -7,7 +7,6 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
 import dark.mech.client.model.ModelGenerator;
 @SideOnly(Side.CLIENT)
 public class RenderGenerator extends TileEntitySpecialRenderer
