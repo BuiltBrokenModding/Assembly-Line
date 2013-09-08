@@ -13,7 +13,6 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import universalelectricity.prefab.network.IPacketReceiver;
-import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -22,6 +21,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import dark.api.ISpecialAccess;
 import dark.api.ITerminal;
+import dark.core.network.PacketHandler;
 import dark.core.prefab.TileEntityMachine;
 import dark.core.prefab.access.AccessLevel;
 import dark.core.prefab.access.UserAccess;
@@ -84,16 +84,13 @@ public abstract class TileEntityTerminal extends TileEntityMachine implements IS
         }
     }
 
-    /** Channel to be used for packets */
-    public abstract String getChannel();
-
     /** Sends all NBT data. Server -> Client */
     @Override
     public Packet getDescriptionPacket()
     {
         NBTTagCompound nbt = new NBTTagCompound();
         this.writeToNBT(nbt);
-        return PacketManager.getPacket(this.getChannel(), this, PacketType.DESCRIPTION_DATA.ordinal(), nbt);
+        return PacketHandler.instance().getPacket(this.getChannel(), this, PacketType.DESCRIPTION_DATA.ordinal(), nbt);
     }
 
     /** Sends all Terminal data Server -> Client */
@@ -104,7 +101,7 @@ public abstract class TileEntityTerminal extends TileEntityMachine implements IS
         data.add(this.getTerminalOuput().size());
         data.addAll(this.getTerminalOuput());
 
-        Packet packet = PacketManager.getPacket(this.getChannel(), this, data.toArray());
+        Packet packet = PacketHandler.instance().getPacket(this.getChannel(), this, data.toArray());
 
         for (EntityPlayer player : this.playersUsing)
         {
@@ -117,7 +114,7 @@ public abstract class TileEntityTerminal extends TileEntityMachine implements IS
     {
         if (this.worldObj.isRemote)
         {
-            Packet packet = PacketManager.getPacket(this.getChannel(), this, PacketType.GUI_COMMAND.ordinal(), entityPlayer.username, cmdInput);
+            Packet packet = PacketHandler.instance().getPacket(this.getChannel(), this, PacketType.GUI_COMMAND.ordinal(), entityPlayer.username, cmdInput);
             PacketDispatcher.sendPacketToServer(packet);
         }
     }

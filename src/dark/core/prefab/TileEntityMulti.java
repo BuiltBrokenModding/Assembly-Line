@@ -9,9 +9,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
-import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
+
+import dark.core.network.PacketHandler;
 
 /** This is a multiblock to be used for blocks that are bigger than one block.
  *
@@ -52,7 +53,7 @@ public class TileEntityMulti extends TileEntity implements IPacketReceiver
                 this.channel = ((BlockMulti) this.getBlockType()).channel;
             }
 
-            return PacketManager.getPacket(this.channel, this, this.mainBlockPosition.intX(), this.mainBlockPosition.intY(), this.mainBlockPosition.intZ());
+            return PacketHandler.instance().getPacket(this.channel, this, this.mainBlockPosition.intX(), this.mainBlockPosition.intY(), this.mainBlockPosition.intZ());
 
         }
 

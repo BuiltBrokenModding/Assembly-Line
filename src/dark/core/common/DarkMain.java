@@ -15,7 +15,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.compatibility.Compatibility;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.prefab.TranslationHelper;
-import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.ore.OreGenReplaceStone;
 import universalelectricity.prefab.ore.OreGenerator;
 import cpw.mods.fml.common.FMLLog;
@@ -49,6 +48,7 @@ import dark.core.common.items.ItemParts.Parts;
 import dark.core.common.items.ItemTools;
 import dark.core.common.items.ItemWrench;
 import dark.core.common.transmit.BlockWire;
+import dark.core.network.PacketHandler;
 import dark.core.prefab.BlockMulti;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.TileEntityMulti;
@@ -57,7 +57,7 @@ import dark.core.prefab.items.ItemBlockHolder;
 
 /** @author HangCow, DarkGuardsman */
 @Mod(modid = DarkMain.MOD_ID, name = DarkMain.MOD_NAME, version = DarkMain.VERSION, dependencies = "after:BuildCraft|Energy", useMetadata = true)
-@NetworkMod(channels = { DarkMain.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
+@NetworkMod(channels = { DarkMain.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class DarkMain extends ModPrefab
 {
     // @Mod Prerequisites

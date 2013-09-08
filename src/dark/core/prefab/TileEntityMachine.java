@@ -17,7 +17,6 @@ import universalelectricity.compatibility.TileEntityUniversalElectrical;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
-import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -25,9 +24,11 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.IDisableable;
 import dark.api.energy.IPowerLess;
+import dark.core.common.DarkMain;
 import dark.core.common.ExternalModHandler;
 import dark.core.interfaces.IExternalInv;
 import dark.core.interfaces.IInvBox;
+import dark.core.network.PacketHandler;
 import dark.core.prefab.invgui.InvChest;
 
 /** Prefab for most machines in the CoreMachine set. Provides basic power updates, packet updates,
@@ -305,14 +306,17 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
     }
 
     /** NetworkMod channel name */
-    public abstract String getChannel();
+    public String getChannel()
+    {
+        return DarkMain.CHANNEL;
+    }
 
     /** Sends a simple true/false am running power update */
     public void sendPowerUpdate()
     {
         if (!this.worldObj.isRemote)
         {
-            PacketManager.sendPacketToClients(PacketManager.getPacket(this.getChannel(), this, TilePacketTypes.POWER.name, this.running), worldObj, new Vector3(this), 64);
+            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getPacket(this.getChannel(), this, TilePacketTypes.POWER.name, this.running), worldObj, new Vector3(this), 64);
         }
     }
 
@@ -323,7 +327,7 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
         {
             NBTTagCompound tag = new NBTTagCompound();
             this.writeToNBT(tag);
-            PacketManager.sendPacketToClients(PacketManager.getPacket(this.getChannel(), this, TilePacketTypes.NBT.name, tag), worldObj, new Vector3(this), 64);
+            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getPacket(this.getChannel(), this, TilePacketTypes.NBT.name, tag), worldObj, new Vector3(this), 64);
         }
     }
 
@@ -332,7 +336,7 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
     {
         NBTTagCompound tag = new NBTTagCompound();
         this.writeToNBT(tag);
-        return PacketManager.getPacket(this.getChannel(), this, TilePacketTypes.NBT.name, tag);
+        return PacketHandler.instance().getPacket(this.getChannel(), this, TilePacketTypes.NBT.name, tag);
     }
 
     @Override

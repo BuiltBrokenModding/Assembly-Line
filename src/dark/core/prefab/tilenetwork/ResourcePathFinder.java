@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Set;
 
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 

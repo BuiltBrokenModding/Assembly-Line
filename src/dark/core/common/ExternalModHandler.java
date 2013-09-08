@@ -1,9 +1,9 @@
 package dark.core.common;
 
-import cpw.mods.fml.common.Loader;
 import net.minecraft.tileentity.TileEntity;
 import buildcraft.api.transport.IPipeTile;
 import buildcraft.api.transport.IPipeTile.PipeType;
+import cpw.mods.fml.common.Loader;
 
 /** Handles working with other mod without or without the need of the APIs.
  *
