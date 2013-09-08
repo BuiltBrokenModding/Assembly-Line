@@ -4,13 +4,10 @@ import java.util.ArrayList;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.network.IPacketReceiver;
-import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.IRotatable;
 import dark.assembly.api.IFilterable;
-import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.imprinter.ItemImprinter;
 import dark.assembly.common.machine.TileEntityAssembly;
 

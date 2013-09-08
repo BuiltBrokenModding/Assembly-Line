@@ -22,7 +22,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.prefab.TranslationHelper;
-import universalelectricity.prefab.network.PacketManager;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -31,6 +30,9 @@ import dark.assembly.common.machine.encoder.ContainerEncoder;
 import dark.assembly.common.machine.encoder.IInventoryWatcher;
 import dark.assembly.common.machine.encoder.ItemDisk;
 import dark.assembly.common.machine.encoder.TileEntityEncoder;
+import dark.core.common.DarkMain;
+import dark.core.network.PacketHandler;
+
 @SideOnly(Side.CLIENT)
 public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 {
@@ -103,7 +105,7 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 
                         if (disk != null)
                         {
-                            PacketDispatcher.sendPacketToServer(PacketManager.getPacket(AssemblyLine.CHANNEL, this.tileEntity, true, (String) this.commandField.getText()));
+                            PacketDispatcher.sendPacketToServer(PacketHandler.instance().getPacket(DarkMain.CHANNEL, this.tileEntity, true, (String) this.commandField.getText()));
                         }
                     }
 
@@ -124,7 +126,7 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 
                     if (disk != null && this.selCommand >= 0 && this.selCommand < this.commands.size())
                     {
-                        PacketDispatcher.sendPacketToServer(PacketManager.getPacket(AssemblyLine.CHANNEL, this.tileEntity, false, this.selCommand));
+                        PacketDispatcher.sendPacketToServer(PacketHandler.instance().getPacket(DarkMain.CHANNEL, this.tileEntity, false, this.selCommand));
                     }
 
                     this.selCommand = -1;

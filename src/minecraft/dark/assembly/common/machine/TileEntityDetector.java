@@ -8,9 +8,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.prefab.network.PacketManager;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.imprinter.prefab.TileEntityFilterable;
+import dark.core.network.PacketHandler;
 
 public class TileEntityDetector extends TileEntityFilterable
 {
@@ -71,7 +71,7 @@ public class TileEntityDetector extends TileEntityFilterable
                     }
                 }
 
-                PacketManager.sendPacketToClients(getDescriptionPacket());
+                PacketHandler.instance().sendPacketToClients(getDescriptionPacket());
             }
         }
     }

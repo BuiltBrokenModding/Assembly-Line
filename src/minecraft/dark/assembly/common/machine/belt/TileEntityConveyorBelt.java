@@ -14,14 +14,14 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
-import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.IRotatable;
 import dark.assembly.api.IBelt;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.machine.TileEntityAssembly;
+import dark.core.network.PacketHandler;
 
 /** Conveyer belt TileEntity that allows entities of all kinds to be moved
- * 
+ *
  * @author DarkGuardsman */
 public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacketReceiver, IBelt, IRotatable
 {
@@ -109,7 +109,7 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketManager.getPacket(AssemblyLine.CHANNEL, this, slantPacketID, this.slantType.ordinal());
+        return PacketHandler.instance().getPacket(this.getChannel(), this, slantPacketID, this.slantType.ordinal());
     }
 
     public SlantType getSlant()

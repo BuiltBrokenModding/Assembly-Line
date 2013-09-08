@@ -12,7 +12,6 @@ import net.minecraftforge.common.Configuration;
 import org.modstats.ModstatInfo;
 
 import universalelectricity.prefab.TranslationHelper;
-import universalelectricity.prefab.network.PacketManager;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -51,13 +50,13 @@ import dark.assembly.common.machine.crane.TileEntityCraneRail;
 import dark.assembly.common.machine.encoder.BlockEncoder;
 import dark.assembly.common.machine.encoder.ItemDisk;
 import dark.assembly.common.machine.encoder.TileEntityEncoder;
-import dark.core.common.DarkMain;
 import dark.core.common.BlockRegistry.BlockData;
+import dark.core.common.DarkMain;
 import dark.core.prefab.ModPrefab;
 
 @ModstatInfo(prefix = "asmline")
-@Mod(modid = AssemblyLine.CHANNEL, name = AssemblyLine.MOD_NAME, version = DarkMain.VERSION, dependencies = "required-after:DarkCore", useMetadata = true)
-@NetworkMod(channels = { AssemblyLine.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
+@Mod(modid = AssemblyLine.MOD_ID, name = AssemblyLine.MOD_NAME, version = DarkMain.VERSION, dependencies = "required-after:DarkCore", useMetadata = true)
+@NetworkMod( clientSideRequired = true, serverSideRequired = false)
 public class AssemblyLine extends ModPrefab
 {
 
@@ -65,13 +64,11 @@ public class AssemblyLine extends ModPrefab
     public static final String MOD_ID = "AssemblyLine";
     public static final String MOD_NAME = "Assembly Line";
 
-    // @NetworkMod
-    public static final String CHANNEL = "AssemblyLine";
 
     @SidedProxy(clientSide = "dark.assembly.client.ClientProxy", serverSide = "dark.assembly.common.CommonProxy")
     public static CommonProxy proxy;
 
-    @Instance(AssemblyLine.CHANNEL)
+    @Instance(AssemblyLine.MOD_ID)
     public static AssemblyLine instance;
 
     public static ALRecipeLoader recipeLoader;

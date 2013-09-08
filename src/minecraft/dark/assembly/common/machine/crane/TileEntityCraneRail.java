@@ -1,9 +1,8 @@
 package dark.assembly.common.machine.crane;
 
-import universalelectricity.prefab.tile.TileEntityAdvanced;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.prefab.tile.TileEntityAdvanced;
 import dark.assembly.api.ICraneStructure;
-import dark.assembly.common.machine.TileEntityAssembly;
 
 public class TileEntityCraneRail extends TileEntityAdvanced implements ICraneStructure
 {

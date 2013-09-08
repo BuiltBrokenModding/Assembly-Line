@@ -8,14 +8,14 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.network.IPacketReceiver;
-import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
-import dark.assembly.common.AssemblyLine;
+import dark.core.common.DarkMain;
 import dark.core.interfaces.IExternalInv;
+import dark.core.network.PacketHandler;
 import dark.core.prefab.TileEntityInv;
 
 public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, IExternalInv
@@ -51,7 +51,7 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
     /** Turns the inventory array into a single stack of matching items. This assumes that all items
      * in the crate are the same TODO eject minority items and only keep the majority that are the
      * same to prevent duplication issues
-     * 
+     *
      * @param force - force a rebuild of the inventory from the single stack created */
     public void buildSampleStack()
     {
@@ -137,7 +137,7 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
         {
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
             {
-                PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj);
+                PacketHandler.instance().sendPacketToClients(this.getDescriptionPacket(), this.worldObj);
             }
         }
     }
@@ -197,7 +197,7 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
             {
                 if (dataStream.readBoolean())
                 {
-                    this.sampleStack = ItemStack.loadItemStackFromNBT(PacketManager.readNBTTagCompound(dataStream));
+                    this.sampleStack = ItemStack.loadItemStackFromNBT(PacketHandler.instance().readNBTTagCompound(dataStream));
                     this.sampleStack.stackSize = dataStream.readInt();
                 }
                 else
@@ -219,11 +219,11 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
         ItemStack stack = this.getSampleStack();
         if (stack != null)
         {
-            return PacketManager.getPacket(AssemblyLine.CHANNEL, this, true, stack.writeToNBT(new NBTTagCompound()), stack.stackSize);
+            return PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, true, stack.writeToNBT(new NBTTagCompound()), stack.stackSize);
         }
         else
         {
-            return PacketManager.getPacket(AssemblyLine.CHANNEL, this, false);
+            return PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, false);
         }
     }
 

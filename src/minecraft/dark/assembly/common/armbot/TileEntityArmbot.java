@@ -8,20 +8,16 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.grid.IElectricityNetwork;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.network.IPacketReceiver;
-import universalelectricity.prefab.network.PacketManager;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import dan200.computer.api.IComputerAccess;
@@ -41,6 +37,7 @@ import dark.assembly.common.armbot.command.CommandUse;
 import dark.assembly.common.machine.TileEntityAssembly;
 import dark.assembly.common.machine.encoder.ItemDisk;
 import dark.core.common.DarkMain;
+import dark.core.network.PacketHandler;
 import dark.core.prefab.IMultiBlock;
 import dark.core.prefab.helpers.ItemWorldHelper;
 
@@ -253,7 +250,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && this.ticks % 20 == 0)
         {
-            PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 50);
+            PacketHandler.instance().sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 50);
         }
     }
 
@@ -570,7 +567,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
         this.commandManager.addCommand(this, command);
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
         {
-            PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 50);
+            PacketHandler.instance().sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 50);
         }
     }
 
@@ -579,7 +576,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
         this.commandManager.addCommand(this, command, parameters);
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
         {
-            PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 50);
+            PacketHandler.instance().sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 50);
         }
     }
 

@@ -19,18 +19,18 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.network.IPacketReceiver;
-import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
 
 import dark.assembly.api.IArmbot;
 import dark.assembly.api.IArmbotUseable;
-import dark.assembly.common.AssemblyLine;
+import dark.core.common.DarkMain;
+import dark.core.network.PacketHandler;
 import dark.core.prefab.TileEntityMulti;
 import dark.core.prefab.helpers.AutoCraftingManager;
-import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.helpers.AutoCraftingManager.IAutoCrafter;
+import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.invgui.ISlotPickResult;
 
 public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInventory, IArmbotUseable, IPacketReceiver, ISlotPickResult, IAutoCrafter
@@ -190,7 +190,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
     }
 
     /** Construct an InventoryCrafting Matrix on the fly.
-     * 
+     *
      * @return */
     public InventoryCrafting getCraftingMatrix()
     {
@@ -467,7 +467,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketManager.getPacket(AssemblyLine.CHANNEL, this, this.searchInventories);
+        return PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, this.searchInventories);
     }
 
     // ///////////////////////////////////////
