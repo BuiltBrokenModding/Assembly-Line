@@ -107,7 +107,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 
             fillVolume = resource.amount;
 
-            System.out.println("Drain>>FillArea>>Targets>> " + getFillFinder().results.size());
+            //System.out.println("Drain>>FillArea>>Targets>> " + getFillFinder().results.size());
 
             List<Vector3> fluids = new ArrayList<Vector3>();
             List<Vector3> blocks = new ArrayList<Vector3>();
@@ -141,7 +141,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
                 {
 
                     fillVolume -= FluidHelper.fillBlock(worldObj, loc, FluidHelper.getStack(resource, fillVolume), doFill);
-                    System.out.println("Drain>>FillArea>>Filling>>" + (doFill ? "" : "Sim>>") + ">>Fluid>" + loc.toString());
+                    //System.out.println("Drain>>FillArea>>Filling>>" + (doFill ? "" : "Sim>>") + ">>Fluid>" + loc.toString());
 
                     if (doFill)
                     {
@@ -181,7 +181,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
                 }
             }
             this.getLiquidFinder().results.removeAll(filled);
-            System.out.println("Drain>>FillArea>>Filling>>Filled>>" + (doFill ? "" : "Sim>>") + (resource.amount - fillVolume) + "mb");
+            //System.out.println("Drain>>FillArea>>Filling>>Filled>>" + (doFill ? "" : "Sim>>") + (resource.amount - fillVolume) + "mb");
             return Math.max(resource.amount - fillVolume, 0);
         }
         return 0;
