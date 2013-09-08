@@ -29,9 +29,9 @@ public class BlockWire extends BlockMachine implements IExtraObjectInfo
     public Vector3 minVector = new Vector3(0.3, 0.3, 0.3);
     public Vector3 maxVector = new Vector3(0.7, 0.7, 0.7);
 
-    public BlockWire(Configuration config, int blockID)
+    public BlockWire(int blockID)
     {
-        super("DMWire", config, blockID, Material.cloth);
+        super("DMWire", DarkMain.CONFIGURATION, blockID, Material.cloth);
         this.setStepSound(soundClothFootstep);
         this.setResistance(0.2F);
         this.setHardness(0.1f);

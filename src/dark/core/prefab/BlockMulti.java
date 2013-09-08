@@ -14,6 +14,7 @@ import universalelectricity.core.UniversalElectricity;
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.core.common.DarkMain;
 
 public class BlockMulti extends BlockContainer
 {
@@ -22,7 +23,7 @@ public class BlockMulti extends BlockContainer
 
     public BlockMulti(int id)
     {
-        super(id, UniversalElectricity.machine);
+        super(DarkMain.CONFIGURATION.getBlock("MultiBlock", id).getInt(), UniversalElectricity.machine);
         this.setHardness(0.8F);
         this.setUnlocalizedName("multiBlock");
     }

@@ -182,10 +182,10 @@ public class DarkMain extends ModPrefab
         /* CONFIGS */
         CONFIGURATION.load();
         /* BLOCKS */
-        blockMulti = new BlockMulti(DarkMain.CONFIGURATION.getBlock("MultiBlock", getNextID()).getInt());
-        CoreRecipeLoader.blockOre = new BlockOre(getNextID(), CONFIGURATION);
-        CoreRecipeLoader.blockWire = new BlockWire(CONFIGURATION, getNextID());
-        CoreRecipeLoader.blockDebug = new BlockDebug(getNextID(), CONFIGURATION);
+        blockMulti = new BlockMulti(getNextID());
+        CoreRecipeLoader.blockOre = new BlockOre(getNextID());
+        CoreRecipeLoader.blockWire = new BlockWire(getNextID());
+        CoreRecipeLoader.blockDebug = new BlockDebug(getNextID());
         CoreRecipeLoader.blockStainGlass = new BlockColorGlass(getNextID(), "StainedGlass");
         CoreRecipeLoader.blockColorSand = new BlockColorSand(getNextID());
         CoreRecipeLoader.blockBasalt = new BlockBasalt(getNextID());

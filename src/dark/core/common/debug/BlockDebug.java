@@ -22,9 +22,9 @@ public class BlockDebug extends BlockMachine implements IExtraObjectInfo
 {
     public static float DebugWattOut, DebugWattDemand;
 
-    public BlockDebug(int blockID, Configuration config)
+    public BlockDebug(int blockID)
     {
-        super("DebugBlock", config, blockID, Material.clay);
+        super("DebugBlock", DarkMain.CONFIGURATION, blockID, Material.clay);
         this.setCreativeTab(CreativeTabs.tabRedstone);
     }
 
