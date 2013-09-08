@@ -1,8 +1,8 @@
 package dark.farmtech.machines.farmer;
 
-import universalelectricity.core.vector.Vector3;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import universalelectricity.core.vector.Vector3;
 
 public class CropHandlerCactus extends CropHandler
 {

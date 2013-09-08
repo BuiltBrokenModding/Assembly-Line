@@ -11,7 +11,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import universalelectricity.prefab.TranslationHelper;
-import universalelectricity.prefab.network.PacketManager;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -24,25 +23,22 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
-import dark.api.farm.DecayMatterList;
 import dark.api.farm.CropAutomationHandler;
+import dark.api.farm.DecayMatterList;
 import dark.core.common.BlockRegistry;
-import dark.core.common.DarkMain;
 import dark.core.common.BlockRegistry.BlockData;
+import dark.core.common.DarkMain;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.items.ItemBlockHolder;
 import dark.farmtech.blocks.BlockFarmSoil;
 
 @Mod(modid = FarmTech.MOD_ID, name = FarmTech.MOD_NAME, version = DarkMain.VERSION, dependencies = "after:DarkCore", useMetadata = true)
-@NetworkMod(channels = { FarmTech.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketManager.class)
+@NetworkMod(clientSideRequired = true, serverSideRequired = false)
 public class FarmTech extends ModPrefab
 {
 
     public static final String MOD_ID = "FarmTech";
     public static final String MOD_NAME = "Farm Tech";
-
-    // @NetworkMod
-    public static final String CHANNEL = MOD_ID;
 
     @Metadata(FarmTech.MOD_ID)
     public static ModMetadata meta;

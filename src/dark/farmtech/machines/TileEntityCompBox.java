@@ -4,14 +4,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
 import dark.api.farm.DecayMatterList;
 import dark.core.interfaces.IInvBox;
+import dark.core.prefab.TileEntityMachine;
 import dark.core.prefab.invgui.InvChest;
 
 /** Simple box that turns matter into compost to grow plants with
- * 
+ *
  * 6 slot input stores output as an float that then need to be converted to a bucket of compost
- * 
+ *
  * @author DarkGuardsman */
-public class TileEntityCompBox extends TileEntityFT
+public class TileEntityCompBox extends TileEntityMachine
 {
     /** Allow undead parts to be compost */
     public static final boolean undeadCompost = false;
@@ -32,7 +33,7 @@ public class TileEntityCompBox extends TileEntityFT
     }
 
     /** Converts one item in the slot into compost
-     * 
+     *
      * @param slot 0-5 */
     public void process(int slot)
     {
@@ -48,7 +49,7 @@ public class TileEntityCompBox extends TileEntityFT
     }
 
     /** Tests if the item in the slot is read to be processed
-     * 
+     *
      * @param slot 0-5 */
     public boolean canProcess(int slot)
     {

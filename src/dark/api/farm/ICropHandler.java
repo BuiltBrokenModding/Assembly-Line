@@ -1,9 +1,8 @@
 package dark.api.farm;
 
-import dark.farmtech.machines.farmer.EntityFarmDrone;
-import universalelectricity.core.vector.Vector3;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import universalelectricity.core.vector.Vector3;
+import dark.farmtech.machines.farmer.EntityFarmDrone;
 
 /** Special case handling for crops so the farm automatons know to do a few extra steps to care for
  * and harvest a crop block
