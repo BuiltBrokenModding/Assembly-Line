@@ -14,7 +14,7 @@ import universalelectricity.prefab.network.PacketManager;
 import com.google.common.io.ByteArrayDataInput;
 
 /** This is a multiblock to be used for blocks that are bigger than one block.
- * 
+ *
  * @author Calclavia */
 public class TileEntityMulti extends TileEntity implements IPacketReceiver
 {
@@ -100,7 +100,7 @@ public class TileEntityMulti extends TileEntity implements IPacketReceiver
     public void readFromNBT(NBTTagCompound nbt)
     {
         super.readFromNBT(nbt);
-        this.mainBlockPosition = Vector3.readFromNBT(nbt.getCompoundTag("mainBlockPosition"));
+        this.mainBlockPosition = new Vector3(nbt.getCompoundTag("mainBlockPosition"));
     }
 
     /** Writes a tile entity to NBT. */
@@ -116,7 +116,7 @@ public class TileEntityMulti extends TileEntity implements IPacketReceiver
     }
 
     /** Determines if this TileEntity requires update calls.
-     * 
+     *
      * @return True if you want updateEntity() to be called, false if not */
     @Override
     public boolean canUpdate()

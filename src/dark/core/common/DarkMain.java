@@ -182,7 +182,7 @@ public class DarkMain extends ModPrefab
         /* CONFIGS */
         CONFIGURATION.load();
         /* BLOCKS */
-        blockMulti = new BlockMulti(getNextID());
+        blockMulti = new BlockMulti(getNextID()).setChannel(CHANNEL);
         CoreRecipeLoader.blockOre = new BlockOre(getNextID());
         CoreRecipeLoader.blockWire = new BlockWire(getNextID());
         CoreRecipeLoader.blockDebug = new BlockDebug(getNextID());
