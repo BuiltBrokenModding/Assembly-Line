@@ -242,7 +242,10 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
         else
         {
             stack = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("stack"));
-            stack.stackSize = count;
+            if (stack != null)
+            {
+                stack.stackSize = count;
+            }
         }
 
         /* Only load sample stack if the read stack is valid */
