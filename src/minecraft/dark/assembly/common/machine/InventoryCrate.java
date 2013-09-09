@@ -16,7 +16,7 @@ public class InventoryCrate extends InvChest
     public void buildInventory(ItemStack sampleStack)
     {
         this.containedItems = new ItemStack[this.getSizeInventory()];
-        if (sampleStack != null)
+        if (sampleStack != null && sampleStack.getItem() != null)
         {
             ItemStack baseStack = sampleStack.copy();
             int itemsLeft = baseStack.stackSize;
