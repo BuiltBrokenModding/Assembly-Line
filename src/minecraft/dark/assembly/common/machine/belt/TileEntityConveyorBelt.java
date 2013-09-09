@@ -109,7 +109,11 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketHandler.instance().getPacket(this.getChannel(), this, slantPacketID, this.slantType.ordinal());
+        if (this.slantType != SlantType.NONE)
+        {
+            return PacketHandler.instance().getPacket(this.getChannel(), this, slantPacketID, this.slantType.ordinal());
+        }
+        return null;
     }
 
     public SlantType getSlant()
