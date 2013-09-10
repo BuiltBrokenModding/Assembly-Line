@@ -130,7 +130,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
                     ((TileEntity) extention).updateEntity();
                     if (extention.shouldSendPacket(!this.worldObj.isRemote) && extention.getExtentionPacketData(!this.worldObj.isRemote) != null)
                     {
-                        Packet packet =  PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, PacketID.EXTENTION_UPDATE.ordinal(), ForgeDirection.getOrientation(i), extention.getExtentionPacketData(!this.worldObj.isRemote));
+                        Packet packet = PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, PacketID.EXTENTION_UPDATE.ordinal(), ForgeDirection.getOrientation(i), extention.getExtentionPacketData(!this.worldObj.isRemote));
                         PacketHandler.instance().sendPacketToClients(packet, worldObj, new Vector3(this), 50);
                     }
                 }
@@ -170,7 +170,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
                 {
                     System.out.println("Handling Packet for Pipe addon");
                     int side = dataStream.readInt();
-                    NBTTagCompound tag =  PacketHandler.instance().readNBTTagCompound(dataStream);
+                    NBTTagCompound tag = PacketHandler.instance().readNBTTagCompound(dataStream);
                     this.loadOrCreateSubTile(side, tag);
 
                 }
@@ -194,7 +194,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     @Override
     public Packet getDescriptionPacket()
     {
-        return  PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, PacketID.PIPE_CONNECTIONS.ordinal(), this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
+        return PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, PacketID.PIPE_CONNECTIONS.ordinal(), this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
     }
 
     /** Reads a tile entity from NBT. */
@@ -317,7 +317,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
             if (tag != null && tag.hasKey("id"))
             {
                 System.out.println("Sending TileEntity to Client");
-                Packet packet =  PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, PacketID.EXTENTION_CREATE.ordinal(), ForgeDirection.getOrientation(side), tag);
+                Packet packet = PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, PacketID.EXTENTION_CREATE.ordinal(), ForgeDirection.getOrientation(side), tag);
                 PacketHandler.instance().sendPacketToClients(packet, this.worldObj, new Vector3(this), 50);
             }
         }
@@ -414,7 +414,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     @Override
     public FluidTankInfo[] getTankInfo(ForgeDirection direction)
     {
-        return new FluidTankInfo[] { new FluidTankInfo(this.getTank()) };
+        return new FluidTankInfo[] { new FluidTankInfo(this.getTank(0)) };
     }
 
     /** Checks to make sure the connection is valid to the tileEntity
@@ -567,7 +567,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     }
 
     @Override
-    public FluidTank getTank()
+    public FluidTank getTank(int index)
     {
         if (this.fakeTank == null)
         {
@@ -577,9 +577,23 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     }
 
     @Override
-    public void setTankContent(FluidStack stack)
+    public int fillTankContent(int index, FluidStack stack, boolean doFill)
     {
-        this.getTank().setFluid(stack);
+        if (this.getTank(index) != null)
+        {
+            return this.getTank(index).fill(stack, doFill);
+        }
+        return 0;
+    }
+
+    @Override
+    public FluidStack drainTankContent(int index, int volume, boolean doDrain)
+    {
+        if (this.getTank(index) != null)
+        {
+            return this.getTank(index).drain(volume, doDrain);
+        }
+        return null;
     }
 
     @Override
@@ -607,6 +621,12 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    @Override
+    public int getNumberOfTanks()
+    {
+        return 1;
     }
 
 }

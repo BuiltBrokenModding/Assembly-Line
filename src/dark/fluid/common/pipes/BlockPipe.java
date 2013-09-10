@@ -116,7 +116,7 @@ public class BlockPipe extends BlockFM
         TileEntity entity = world.getBlockTileEntity(x, y, z);
         if (entity instanceof TileEntityPipe)
         {
-            IFluidTank tank = ((TileEntityPipe) entity).getTank();
+            IFluidTank tank = ((TileEntityPipe) entity).getTank(0);
             if (tank != null && tank.getFluid() != null && tank.getFluid().getFluid() != null && tank.getFluid().amount > 0)
             {
                 if (tank.getFluid().getFluid().getName().equalsIgnoreCase("water"))

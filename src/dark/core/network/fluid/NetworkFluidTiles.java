@@ -23,6 +23,7 @@ import dark.api.fluid.AdvancedFluidEvent.FluidMergeEvent;
 import dark.api.fluid.INetworkFluidPart;
 import dark.api.parts.INetworkPart;
 import dark.core.interfaces.ColorCode;
+import dark.core.prefab.FluidSelectiveTank;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
@@ -132,7 +133,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
         if (this.combinedStorage().getFluid() != null && this.networkMember.size() > 0)
         {
             //TODO change this to percent based system so tiles get volume that they can store
-            int volume = this.combinedStorage().getFluid().amount / this.networkMember.size();
+            int vol = this.combinedStorage().getFluid().amount;
             int fluid = this.combinedStorage().getFluid().fluidID;
             NBTTagCompound tag = this.combinedStorage().getFluid().tag;
 
@@ -140,9 +141,27 @@ public class NetworkFluidTiles extends NetworkTileEntities
             {
                 if (par instanceof INetworkFluidPart)
                 {
+                    int fillVolume = this.combinedStorage().getFluid().amount / this.networkMember.size();
                     INetworkFluidPart part = ((INetworkFluidPart) par);
-                    part.setTankContent(null);
-                    part.setTankContent(new FluidStack(fluid, volume, tag));
+                    for (int tank = 0; tank < part.getNumberOfTanks(); tank++)
+                    {
+                        if (part.getTank(tank) != null)
+                        {
+                            if (part.getTank(tank) instanceof FluidSelectiveTank)
+                            {
+                                if (((FluidSelectiveTank) part.getTank(tank)).canAcceptFluid(FluidRegistry.getFluid(fluid)))
+                                {
+                                    part.drainTankContent(tank, Integer.MAX_VALUE, true);
+                                    vol -= part.fillTankContent(tank, new FluidStack(fluid, fillVolume, tag), true);
+                                }
+                            }
+                            else
+                            {
+                                part.setTankContent(tank, null);
+                                part.setTankContent(tank, new FluidStack(fluid, volume, tag));
+                            }
+                        }
+                    }
                 }
             }
         }

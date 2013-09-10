@@ -95,7 +95,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
                 {
                     if (id == 0)
                     {
-                        this.getTank().setFluid(FluidStack.loadFluidStackFromNBT( PacketHandler.instance().readNBTTagCompound(dataStream)));
+                        this.getTank().setFluid(FluidStack.loadFluidStackFromNBT(PacketHandler.instance().readNBTTagCompound(dataStream)));
                     }
                     else
                     {
@@ -126,7 +126,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
         {
             stack = this.getTank().getFluid();
         }
-        return  PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, stack != null ? 0 : 1, stack != null ? stack.writeToNBT(new NBTTagCompound()) : 1, this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
+        return PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, stack != null ? 0 : 1, stack != null ? stack.writeToNBT(new NBTTagCompound()) : 1, this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
     }
 
     /** gets the current color mark of the pipe */
@@ -294,9 +294,23 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
     }
 
     @Override
-    public void setTankContent(FluidStack stack)
+    public int fillTankContent(int index, FluidStack stack, boolean doFill)
     {
-        this.getTank().setFluid(stack);
+        if (this.getTank() != null)
+        {
+            return this.getTank().fill(stack, doFill);
+        }
+        return 0;
+    }
+
+    @Override
+    public FluidStack drainTankContent(int index, int volume, boolean doDrain)
+    {
+        if (this.getTank(index) != null)
+        {
+            return this.getTank(index).drain(volume, doDrain);
+        }
+        return null;
     }
 
     public int getRedstoneLevel()
@@ -331,5 +345,17 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
     public boolean mergeDamage(String result)
     {
         return false;
+    }
+
+    @Override
+    public int getNumberOfTanks()
+    {
+        return 1;
+    }
+
+    @Override
+    public IFluidTank getTank(int index)
+    {
+        return this.getTank();
     }
 }
