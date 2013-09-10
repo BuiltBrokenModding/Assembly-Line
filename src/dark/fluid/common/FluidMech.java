@@ -35,12 +35,10 @@ import dark.fluid.common.machines.BlockBoiler;
 import dark.fluid.common.machines.BlockFluid;
 import dark.fluid.common.machines.BlockReleaseValve;
 import dark.fluid.common.machines.BlockSink;
-import dark.fluid.common.machines.BlockSteamPiston;
 import dark.fluid.common.machines.BlockTank;
 import dark.fluid.common.machines.TileEntityBoiler;
 import dark.fluid.common.machines.TileEntityReleaseValve;
 import dark.fluid.common.machines.TileEntitySink;
-import dark.fluid.common.machines.TileEntitySteamPiston;
 import dark.fluid.common.machines.TileEntityTank;
 import dark.fluid.common.pipes.BlockPipe;
 import dark.fluid.common.pipes.ItemBlockPipe;
@@ -54,6 +52,8 @@ import dark.fluid.common.pump.TileEntityDrain;
 import dark.fluid.common.pump.TileEntityStarterPump;
 import dark.mech.common.machines.BlockGenerator;
 import dark.mech.common.machines.BlockRod;
+import dark.mech.common.machines.BlockSteamPiston;
+import dark.mech.common.machines.TileEntitySteamPiston;
 
 @ModstatInfo(prefix = "fluidmech")
 @Mod(modid = FluidMech.MOD_ID, name = FluidMech.MOD_NAME, version = DarkMain.VERSION, dependencies = "after:DarkCore", useMetadata = true)

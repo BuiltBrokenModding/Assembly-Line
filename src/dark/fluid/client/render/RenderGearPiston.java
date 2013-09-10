@@ -10,7 +10,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.client.renders.RenderMachine;
 import dark.fluid.client.model.ModelGearPiston;
 import dark.fluid.common.FluidMech;
-import dark.fluid.common.machines.TileEntitySteamPiston;
+import dark.mech.common.machines.TileEntitySteamPiston;
 @SideOnly(Side.CLIENT)
 public class RenderGearPiston extends RenderMachine
 {
