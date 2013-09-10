@@ -2,8 +2,11 @@ package dark.core.network.fluid;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
@@ -23,7 +26,6 @@ import dark.api.fluid.AdvancedFluidEvent.FluidMergeEvent;
 import dark.api.fluid.INetworkFluidPart;
 import dark.api.parts.INetworkPart;
 import dark.core.interfaces.ColorCode;
-import dark.core.prefab.FluidSelectiveTank;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
@@ -34,14 +36,17 @@ public class NetworkFluidTiles extends NetworkTileEntities
 {
     /** Fluid Tanks that are connected to the network but not part of it ** */
     public final List<IFluidHandler> connectedTanks = new ArrayList<IFluidHandler>();
+
     /** Collective storage of all fluid tiles */
-    public FluidTank sharedTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
+    public FluidTank[] sharedTanks = new FluidTank[] { new FluidTank(FluidContainerRegistry.BUCKET_VOLUME) };
     /** Map of results of two different liquids merging */
     public static HashMap<Pair<Fluid, Fluid>, Object> mergeResult = new HashMap<Pair<Fluid, Fluid>, Object>();
+
     /** Color code of the network, mainly used for connection rules */
     public ColorCode color = ColorCode.NONE;
     /** Has the collective tank been loaded yet */
     protected boolean loadedLiquids = false;
+
     static
     {
         mergeResult.put(new Pair<Fluid, Fluid>(FluidRegistry.WATER, FluidRegistry.LAVA), Block.obsidian);
@@ -63,12 +68,25 @@ public class NetworkFluidTiles extends NetworkTileEntities
     /** Gets the collective tank of the network */
     public FluidTank combinedStorage()
     {
-        if (this.sharedTank == null)
+        if (this.sharedTanks[0] == null)
         {
-            this.sharedTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
+            this.sharedTanks[0] = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
             this.readDataFromTiles();
         }
-        return this.sharedTank;
+        return this.sharedTanks[0];
+    }
+
+    public FluidTank combinedStorage(int index)
+    {
+        if (index < this.sharedTanks.length)
+        {
+            if (this.sharedTanks[index] == null)
+            {
+                this.sharedTanks[index] = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
+            }
+            return this.sharedTanks[index];
+        }
+        return null;
     }
 
     /** Stores Fluid in this network's collective tank */
@@ -130,6 +148,8 @@ public class NetworkFluidTiles extends NetworkTileEntities
     @Override
     public void writeDataToTiles()
     {
+        HashMap<INetworkFluidPart, Set<Integer>> indexUsed = new HashMap<INetworkFluidPart, Set<Integer>>();
+
         if (this.combinedStorage().getFluid() != null && this.networkMember.size() > 0)
         {
             //TODO change this to percent based system so tiles get volume that they can store
@@ -143,22 +163,29 @@ public class NetworkFluidTiles extends NetworkTileEntities
                 {
                     int fillVolume = this.combinedStorage().getFluid().amount / this.networkMember.size();
                     INetworkFluidPart part = ((INetworkFluidPart) par);
+
                     for (int tank = 0; tank < part.getNumberOfTanks(); tank++)
                     {
                         if (part.getTank(tank) != null)
                         {
-                            if (part.getTank(tank) instanceof FluidSelectiveTank)
+                            if (indexUsed.containsKey(part))
                             {
-                                if (((FluidSelectiveTank) part.getTank(tank)).canAcceptFluid(FluidRegistry.getFluid(fluid)))
+                                Set<Integer> usedIndexes = indexUsed.get(part);
+                                if (!usedIndexes.contains(tank))
                                 {
                                     part.drainTankContent(tank, Integer.MAX_VALUE, true);
-                                    vol -= part.fillTankContent(tank, new FluidStack(fluid, fillVolume, tag), true);
+                                    vol -= part.fillTankContent(tank, new FluidStack(fluid, fillVolume), true);
+                                    usedIndexes.add(tank);
+                                    indexUsed.put(part, usedIndexes);
                                 }
                             }
                             else
                             {
-                                part.setTankContent(tank, null);
-                                part.setTankContent(tank, new FluidStack(fluid, volume, tag));
+                                Set<Integer> usedIndexes = new HashSet<Integer>();
+                                part.drainTankContent(tank, Integer.MAX_VALUE, true);
+                                vol -= part.fillTankContent(tank, new FluidStack(fluid, fillVolume), true);
+                                usedIndexes.add(tank);
+                                indexUsed.put(part, usedIndexes);
                             }
                         }
                     }
@@ -170,33 +197,51 @@ public class NetworkFluidTiles extends NetworkTileEntities
     @Override
     public void readDataFromTiles()
     {
-        int fluid = -1;
-        NBTTagCompound tag = new NBTTagCompound();
-        int volume = 0;
-        //TODO change this to map out all the liquids too do a merge conflict or reject fluids
+        HashMap<FluidStack, FluidStack> fluids = new HashMap<FluidStack, FluidStack>();
+        HashMap<FluidStack, Integer> tankSize = new HashMap<FluidStack, Integer>();
         for (INetworkPart par : this.networkMember)
         {
             if (par instanceof INetworkFluidPart)
             {
                 INetworkFluidPart part = ((INetworkFluidPart) par);
-                if (part.getTank() != null && part.getTank().getFluid() != null)
+                for (int tank = 0; tank < part.getNumberOfTanks(); tank++)
                 {
-                    if (fluid == -1)
+                    if (part.getTank(tank) != null)
                     {
-                        fluid = part.getTank().getFluid().fluidID;
-                        tag = part.getTank().getFluid().tag;
+                        FluidStack stack = part.getTank(tank).getFluid();
+                        if (stack != null)
+                        {
+                            FluidStack sampleStack = FluidHelper.getStack(stack, 1);
+                            if (fluids.containsKey(sampleStack))
+                            {
+                                FluidStack buildStack = fluids.get(sampleStack);
+                                fluids.put(sampleStack, FluidHelper.getStack(buildStack, buildStack.amount + stack.amount));
+                            }
+                            else
+                            {
+                                fluids.put(sampleStack, stack);
+                            }
+                            if (tankSize.containsKey(sampleStack))
+                            {
+                                tankSize.put(sampleStack, tankSize.get(sampleStack) + part.getTank(tank).getCapacity());
+                            }
+                            else
+                            {
+                                tankSize.put(sampleStack, part.getTank(tank).getCapacity());
+                            }
+                        }
                     }
-                    volume += part.getTank().getFluid().amount;
                 }
             }
         }
-        if (fluid != -1)
+        this.sharedTanks = new FluidTank[fluids.entrySet().size()];
+        int i = 0;
+        for (Entry<FluidStack, FluidStack> entry : fluids.entrySet())
         {
-            this.combinedStorage().setFluid(new FluidStack(fluid, volume, tag));
-        }
-        else
-        {
-            this.combinedStorage().setFluid(null);
+
+            sharedTanks[i] = new FluidTank(tankSize.get(entry.getKey()));
+            sharedTanks[i].setFluid(entry.getValue());
+            i++;
         }
         this.loadedLiquids = true;
     }
@@ -467,7 +512,6 @@ public class NetworkFluidTiles extends NetworkTileEntities
             this.readDataFromTiles();
         }
         Iterator<INetworkPart> it = this.networkMember.iterator();
-        int capacity = 0;
         while (it.hasNext())
         {
             INetworkPart part = it.next();
@@ -475,16 +519,8 @@ public class NetworkFluidTiles extends NetworkTileEntities
             {
                 it.remove();
             }
-            else
-            {
-                part.setTileNetwork(this);
-                if (part instanceof INetworkFluidPart)
-                {
-                    capacity += ((INetworkFluidPart) part).getTank().getCapacity();
-                }
-            }
+
         }
-        this.combinedStorage().setCapacity(capacity);
     }
 
     @Override
