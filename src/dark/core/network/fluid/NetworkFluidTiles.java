@@ -68,6 +68,10 @@ public class NetworkFluidTiles extends NetworkTileEntities
     /** Gets the collective tank of the network */
     public FluidTank combinedStorage()
     {
+        if(this.sharedTanks == null)
+        {
+            this.sharedTanks = new FluidTank[1];
+        }
         if (this.sharedTanks[0] == null)
         {
             this.sharedTanks[0] = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
@@ -78,7 +82,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
 
     public FluidTank combinedStorage(int index)
     {
-        if (index < this.sharedTanks.length)
+        if (this.sharedTanks != null && index < this.sharedTanks.length)
         {
             if (this.sharedTanks[index] == null)
             {
