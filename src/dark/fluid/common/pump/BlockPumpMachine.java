@@ -1,6 +1,7 @@
 package dark.fluid.common.pump;
 
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -11,6 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.core.prefab.helpers.Pair;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.BlockFM;
 import dark.fluid.common.FluidMech;
@@ -83,4 +85,10 @@ public class BlockPumpMachine extends BlockFM
         par3List.add(new ItemStack(par1, 1, 0));
     }
 
+    @Override
+    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+    {
+        list.add(new Pair<String, Class<? extends TileEntity>>("starterPump", TileEntityStarterPump.class));
+
+    }
 }

@@ -1,6 +1,7 @@
 package dark.fluid.common.machines;
 
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -9,6 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.core.prefab.helpers.Pair;
 import dark.fluid.common.BlockFM;
 
 public class BlockBoiler extends BlockFM
@@ -40,13 +42,15 @@ public class BlockBoiler extends BlockFM
         return false;
     }
 
-    @Override @SideOnly(Side.CLIENT)
+    @Override
+    @SideOnly(Side.CLIENT)
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
-    @Override @SideOnly(Side.CLIENT)
+    @Override
+    @SideOnly(Side.CLIENT)
     public int getRenderType()
     {
         return -1;
@@ -56,5 +60,12 @@ public class BlockBoiler extends BlockFM
     public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {
         par3List.add(new ItemStack(par1, 1, 0));
+    }
+
+    @Override
+    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+    {
+        list.add(new Pair<String, Class<? extends TileEntity>>("FMSteamBoiler", TileEntityBoiler.class));
+
     }
 }

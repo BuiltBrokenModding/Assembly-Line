@@ -1,6 +1,7 @@
 package dark.fluid.common.pipes;
 
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -15,6 +16,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.fluid.INetworkPipe;
 import dark.core.prefab.helpers.FluidHelper;
+import dark.core.prefab.helpers.Pair;
 import dark.fluid.common.BlockFM;
 import dark.fluid.common.FluidMech;
 
@@ -145,5 +147,12 @@ public class BlockPipe extends BlockFM
             }
         }
         return false;
+    }
+
+    @Override
+    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+    {
+        list.add(new Pair<String, Class<? extends TileEntity>>("FluidPipe", TileEntityPipe.class));
+        list.add(new Pair<String, Class<? extends TileEntity>>("ColoredPipe", TileEntityGenericPipe.class));
     }
 }

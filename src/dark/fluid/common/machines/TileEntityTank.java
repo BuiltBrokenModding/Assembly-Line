@@ -290,7 +290,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
 
     public int getTankSize()
     {
-        return FluidContainerRegistry.BUCKET_VOLUME * 8;
+        return FluidContainerRegistry.BUCKET_VOLUME * (BlockTank.tankVolume > 0 ? BlockTank.tankVolume : 1);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package dark.fluid.common.machines;
 
+import java.util.Set;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +14,7 @@ import universalelectricity.prefab.tile.TileEntityAdvanced;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.prefab.helpers.MetaGroup;
+import dark.core.prefab.helpers.Pair;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.BlockFM;
 
@@ -80,15 +83,24 @@ public class BlockSink extends BlockFM
         return false;
     }
 
-    @Override @SideOnly(Side.CLIENT)
+    @Override
+    @SideOnly(Side.CLIENT)
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
-    @Override @SideOnly(Side.CLIENT)
+    @Override
+    @SideOnly(Side.CLIENT)
     public int getRenderType()
     {
         return BlockRenderHelper.renderID;
+    }
+
+    @Override
+    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+    {
+        list.add(new Pair<String, Class<? extends TileEntity>>("FluidSink", TileEntitySink.class));
+
     }
 }

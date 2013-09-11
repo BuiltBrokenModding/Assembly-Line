@@ -1,5 +1,7 @@
 package dark.mech.common.machines;
 
+import java.util.Set;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,6 +13,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.core.prefab.helpers.Pair;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.BlockFM;
 import dark.fluid.common.FluidMech;
@@ -107,6 +110,13 @@ public class BlockRod extends BlockFM
     {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+    {
+        // TODO Auto-generated method stub
+
     }
 
 }

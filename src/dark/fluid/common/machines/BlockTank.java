@@ -1,6 +1,7 @@
 package dark.fluid.common.machines;
 
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -10,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -18,12 +20,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.parts.INetworkPart;
 import dark.core.prefab.helpers.AutoCraftingManager;
 import dark.core.prefab.helpers.FluidHelper;
+import dark.core.prefab.helpers.Pair;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.BlockFM;
 
 public class BlockTank extends BlockFM
 {
-
+    public static int tankVolume = 8;
     public BlockTank(int id)
     {
         super("FluidTank", id, Material.rock);
@@ -37,13 +40,15 @@ public class BlockTank extends BlockFM
         return false;
     }
 
-    @Override @SideOnly(Side.CLIENT)
+    @Override
+    @SideOnly(Side.CLIENT)
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
-    @Override @SideOnly(Side.CLIENT)
+    @Override
+    @SideOnly(Side.CLIENT)
     public int getRenderType()
     {
         return BlockRenderHelper.renderID;
@@ -205,6 +210,27 @@ public class BlockTank extends BlockFM
                 par3List.add(new ItemStack(par1, 1, i));
             }
         }
+    }
+
+    @Override
+    public boolean hasExtraConfigs()
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void loadExtraConfigs(Configuration config)
+    {
+        BlockTank.tankVolume = config.get("settings", "TankBucketVolume", 8, "Number of buckets each tank block can store, Settings this to zero is the same as one").getInt();
+
+    }
+
+    @Override
+    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+    {
+        list.add(new Pair<String, Class<? extends TileEntity>>("FluidTank", TileEntityTank.class));
+
     }
 
 }

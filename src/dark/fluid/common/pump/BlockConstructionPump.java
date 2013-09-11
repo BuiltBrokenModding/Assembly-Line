@@ -1,6 +1,7 @@
 package dark.fluid.common.pump;
 
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -18,6 +19,7 @@ import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.network.fluid.HydraulicNetworkHelper;
+import dark.core.prefab.helpers.Pair;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.BlockFM;
 import dark.fluid.common.FluidMech;
@@ -139,6 +141,13 @@ public class BlockConstructionPump extends BlockFM
             return true;
         }
         return this.onUseWrench(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ);
+    }
+
+    @Override
+    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+    {
+        list.add(new Pair<String, Class<? extends TileEntity>>("ConstructionPump", TileEntityConstructionPump.class));
+
     }
 
 }

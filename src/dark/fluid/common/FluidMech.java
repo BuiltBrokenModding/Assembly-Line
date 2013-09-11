@@ -196,19 +196,19 @@ public class FluidMech extends ModPrefab
         FMRecipeLoader.blockPiston = new BlockSteamPiston(getNextID());
         FMRecipeLoader.blockBoiler = new BlockBoiler(getNextID());
 
-        dataList.add(new BlockData(FMRecipeLoader.blockPipe, ItemBlockPipe.class, "lmPipe").addTileEntity(TileEntityPipe.class, "FluidPipe"));
-        dataList.add(new BlockData(FMRecipeLoader.blockGenPipe, ItemBlockPipe.class, "lmGenPipe").addTileEntity(TileEntityGenericPipe.class, "ColoredPipe"));
-        dataList.add(new BlockData(FMRecipeLoader.blockReleaseValve, ItemBlockHolder.class, "eValve").addTileEntity(TileEntityReleaseValve.class, "ReleaseValve"));
+        dataList.add(new BlockData(FMRecipeLoader.blockPipe, ItemBlockPipe.class, "lmPipe"));
+        dataList.add(new BlockData(FMRecipeLoader.blockGenPipe, ItemBlockPipe.class, "lmGenPipe"));
+        dataList.add(new BlockData(FMRecipeLoader.blockReleaseValve, ItemBlockHolder.class, "eValve"));
         dataList.add(new BlockData(FMRecipeLoader.blockRod, "mechRod"));
         dataList.add(new BlockData(FMRecipeLoader.blockGenerator, "mechGenerator"));
-        dataList.add(new BlockData(FMRecipeLoader.blockMachine, ItemBlockHolder.class, "lmMachines").addTileEntity(TileEntityStarterPump.class, "starterPump"));
-        dataList.add(new BlockData(FMRecipeLoader.blockTank, ItemBlockHolder.class, "lmTank").addTileEntity(TileEntityTank.class, "FluidTank"));
-        dataList.add(new BlockData(FMRecipeLoader.blockSink, "lmSink").addTileEntity(TileEntitySink.class, "FluidSink"));
-        dataList.add(new BlockData(FMRecipeLoader.blockDrain, "lmDrain").addTileEntity(TileEntityDrain.class, "FluidDrain"));
-        dataList.add(new BlockData(FMRecipeLoader.blockConPump, "lmConPump").addTileEntity(TileEntityConstructionPump.class, "ConstructionPump"));
+        dataList.add(new BlockData(FMRecipeLoader.blockMachine, ItemBlockHolder.class, "lmMachines"));
+        dataList.add(new BlockData(FMRecipeLoader.blockTank, ItemBlockHolder.class, "lmTank"));
+        dataList.add(new BlockData(FMRecipeLoader.blockSink, "lmSink"));
+        dataList.add(new BlockData(FMRecipeLoader.blockDrain, "lmDrain"));
+        dataList.add(new BlockData(FMRecipeLoader.blockConPump, "lmConPump"));
         dataList.add(new BlockData(FMRecipeLoader.blockHeater, "SPHeater"));
-        dataList.add(new BlockData(FMRecipeLoader.blockPiston, "SPPiston").addTileEntity(TileEntitySteamPiston.class, "FMSteamPiston"));
-        dataList.add(new BlockData(FMRecipeLoader.blockBoiler, "SPBoiler").addTileEntity(TileEntityBoiler.class, "FMSteamBoiler"));
+        dataList.add(new BlockData(FMRecipeLoader.blockPiston, "SPPiston"));
+        dataList.add(new BlockData(FMRecipeLoader.blockBoiler, "SPBoiler"));
 
         /* ITEM DECLARATION */
         CONFIGURATION.save();

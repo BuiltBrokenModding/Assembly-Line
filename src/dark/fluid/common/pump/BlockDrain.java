@@ -1,5 +1,7 @@
 package dark.fluid.common.pump;
 
+import java.util.Set;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLivingBase;
@@ -12,6 +14,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import dark.core.prefab.helpers.Pair;
 import dark.fluid.common.BlockFM;
 import dark.fluid.common.FluidMech;
 
@@ -116,6 +119,13 @@ public class BlockDrain extends BlockFM
             return true;
         }
         return true;
+    }
+
+    @Override
+    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+    {
+        list.add(new Pair<String, Class<? extends TileEntity>>("FluidDrain", TileEntityDrain.class));
+
     }
 
 }
