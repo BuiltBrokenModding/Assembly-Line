@@ -60,6 +60,11 @@ import dark.core.prefab.ModPrefab;
 public class AssemblyLine extends ModPrefab
 {
 
+    public static final String MAJOR_VERSION = "@MAJOR@";
+    public static final String MINOR_VERSION = "@MINOR@";
+    public static final String REVIS_VERSION = "@REVIS@";
+    public static final String BUILD_VERSION = "@BUILD@";
+    public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + REVIS_VERSION + "." + BUILD_VERSION;
     // @Mod
     public static final String MOD_ID = "AssemblyLine";
     public static final String MOD_NAME = "Assembly Line";
