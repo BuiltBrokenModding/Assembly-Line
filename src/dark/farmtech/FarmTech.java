@@ -32,10 +32,15 @@ import dark.core.prefab.ModPrefab;
 import dark.core.prefab.items.ItemBlockHolder;
 import dark.farmtech.blocks.BlockFarmSoil;
 
-@Mod(modid = FarmTech.MOD_ID, name = FarmTech.MOD_NAME, version = DarkMain.VERSION, dependencies = "after:DarkCore", useMetadata = true)
+@Mod(modid = FarmTech.MOD_ID, name = FarmTech.MOD_NAME, version = FarmTech.VERSION, dependencies = "after:DarkCore", useMetadata = true)
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
 public class FarmTech extends ModPrefab
 {
+    public static final String MAJOR_VERSION = "@MAJOR@";
+    public static final String MINOR_VERSION = "@MINOR@";
+    public static final String REVIS_VERSION = "@REVIS@";
+    public static final String BUILD_VERSION = "@BUILD@";
+    public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + REVIS_VERSION + "." + BUILD_VERSION;
 
     public static final String MOD_ID = "FarmTech";
     public static final String MOD_NAME = "Farm Tech";
