@@ -38,7 +38,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
     public final List<IFluidHandler> connectedTanks = new ArrayList<IFluidHandler>();
 
     /** Collective storage of all fluid tiles */
-    public FluidTank[] sharedTanks = new FluidTank[] { new FluidTank(FluidContainerRegistry.BUCKET_VOLUME) };
+    protected FluidTank[] sharedTanks;
     /** Map of results of two different liquids merging */
     public static HashMap<Pair<Fluid, Fluid>, Object> mergeResult = new HashMap<Pair<Fluid, Fluid>, Object>();
 
@@ -68,7 +68,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
     /** Gets the collective tank of the network */
     public FluidTank combinedStorage()
     {
-        if(this.sharedTanks == null)
+        if (this.sharedTanks == null)
         {
             this.sharedTanks = new FluidTank[1];
         }
@@ -238,12 +238,12 @@ public class NetworkFluidTiles extends NetworkTileEntities
                 }
             }
         }
-        this.sharedTanks = new FluidTank[fluids.entrySet().size()];
+        this.sharedTanks = new FluidTank[fluids.entrySet().size() > 0 ? fluids.entrySet().size() : 1];
         int i = 0;
         for (Entry<FluidStack, FluidStack> entry : fluids.entrySet())
         {
 
-            sharedTanks[i] = new FluidTank(tankSize.get(entry.getKey()));
+            sharedTanks[i] = new FluidTank(tankSize.get(entry.getKey()) > 0 ? tankSize.get(entry.getKey()) : 1);
             sharedTanks[i].setFluid(entry.getValue());
             i++;
         }
@@ -419,7 +419,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
 
             this.readDataFromTiles();
             network.readDataFromTiles();
-            Object result = this.canMergeFluids(this.combinedStorage().getFluid(), network.combinedStorage().getFluid());
+            Object result = this.canMergeFluids(this.combinedStorage() == null ? null : this.combinedStorage().getFluid(), network.combinedStorage() == null ? null : network.combinedStorage().getFluid());
             if (mergePoint instanceof TileEntity)
             {
                 World world = ((TileEntity) mergePoint).worldObj;
@@ -494,8 +494,8 @@ public class NetworkFluidTiles extends NetworkTileEntities
     protected void mergeDo(NetworkTileEntities network)
     {
         NetworkFluidTiles newNetwork = (NetworkFluidTiles) this.newInstance();
-        FluidStack one = this.combinedStorage().getFluid();
-        FluidStack two = ((NetworkFluidTiles) network).combinedStorage().getFluid();
+        FluidStack one = this.combinedStorage() == null ? null : this.combinedStorage().getFluid();
+        FluidStack two = ((NetworkFluidTiles) network).combinedStorage() == null ? null :((NetworkFluidTiles) network).combinedStorage().getFluid();
 
         this.combinedStorage().setFluid(null);
         ((NetworkFluidTiles) network).combinedStorage().setFluid(null);

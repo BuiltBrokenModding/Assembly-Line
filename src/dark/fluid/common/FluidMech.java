@@ -56,11 +56,16 @@ import dark.mech.common.machines.BlockSteamPiston;
 import dark.mech.common.machines.TileEntitySteamPiston;
 
 @ModstatInfo(prefix = "fluidmech")
-@Mod(modid = FluidMech.MOD_ID, name = FluidMech.MOD_NAME, version = DarkMain.VERSION, dependencies = "after:DarkCore", useMetadata = true)
+@Mod(modid = FluidMech.MOD_ID, name = FluidMech.MOD_NAME, version = FluidMech.VERSION, dependencies = "after:DarkCore", useMetadata = true)
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
 public class FluidMech extends ModPrefab
 {
 
+    public static final String MAJOR_VERSION = "@MAJOR@";
+    public static final String MINOR_VERSION = "@MINOR@";
+    public static final String REVIS_VERSION = "@REVIS@";
+    public static final String BUILD_VERSION = "@BUILD@";
+    public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + REVIS_VERSION + "." + BUILD_VERSION;
     // @Mod
     public static final String MOD_ID = "FluidMech";
     public static final String MOD_NAME = "Fluid_Mechanics";
