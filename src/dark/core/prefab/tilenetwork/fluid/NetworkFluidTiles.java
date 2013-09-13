@@ -1,9 +1,7 @@
 package dark.core.prefab.tilenetwork.fluid;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import net.minecraft.tileentity.TileEntity;
@@ -22,7 +20,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
     /** Fluid Tanks that are connected to the network but not part of it ** */
     public final Set<IFluidHandler> connectedTanks = new HashSet<IFluidHandler>();
     /** Collective storage of all fluid tiles */
-    public FluidTank sharedTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
+    public FluidTank sharedTank;
 
     /** Color code of the network, mainly used for connection rules */
     public ColorCode color = ColorCode.NONE;
@@ -113,7 +111,6 @@ public class NetworkFluidTiles extends NetworkTileEntities
     @Override
     public void writeDataToTiles()
     {
-        super.writeDataToTiles();
         if (this.combinedStorage().getFluid() != null && this.networkMember.size() > 0)
         {
             FluidStack stack = this.combinedStorage().getFluid() == null ? null : this.combinedStorage().getFluid().copy();
@@ -138,15 +135,14 @@ public class NetworkFluidTiles extends NetworkTileEntities
                 }
             }
         }
+        this.cleanUpMembers();
     }
 
     @Override
     public void readDataFromTiles()
     {
-        super.readDataFromTiles();
-        System.out.println("Debug>>FluidTiles>>Reading fluid stack from tiles");
         FluidStack stack = null;
-
+        this.cleanUpMembers();
         for (INetworkPart par : this.networkMember)
         {
             if (par instanceof INetworkFluidPart)
@@ -239,7 +235,6 @@ public class NetworkFluidTiles extends NetworkTileEntities
         newNetwork.refresh();
         newNetwork.combinedStorage().setFluid(FluidCraftingHandler.mergeFluidStacks(one, two));
         newNetwork.writeDataToTiles();
-
 
     }
 

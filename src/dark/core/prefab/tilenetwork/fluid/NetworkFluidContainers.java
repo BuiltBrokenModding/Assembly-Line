@@ -99,8 +99,7 @@ public class NetworkFluidContainers extends NetworkFluidTiles
             {
                 if (part instanceof TileEntity)
                 {
-                    TileEntity ent = ((TileEntity) part);
-                    ent.worldObj.markBlockForUpdate(ent.xCoord, ent.yCoord, ent.zCoord);
+                    ((TileEntity) part).worldObj.markBlockForUpdate(((TileEntity) part).xCoord, ((TileEntity) part).yCoord, ((TileEntity) part).zCoord);
                 }
             }
         }

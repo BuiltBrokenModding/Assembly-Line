@@ -16,7 +16,6 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
@@ -357,10 +356,6 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
     @Override
     public IFluidTank getTank(int index)
     {
-        if (index == 0)
-        {
-            return this.getTank();
-        }
-        return null;
+        return this.getTank();
     }
 }
