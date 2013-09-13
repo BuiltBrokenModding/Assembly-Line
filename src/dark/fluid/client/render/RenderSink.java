@@ -68,7 +68,7 @@ public class RenderSink extends RenderMachine
                 break;
         }
         model.render(0.0625F);
-        renderWater(te.getStoredLiquid());
+        renderWater(te.getTank().getFluid());
         GL11.glPopMatrix();
 
     }

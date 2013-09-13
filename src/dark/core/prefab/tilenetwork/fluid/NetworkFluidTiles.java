@@ -1,38 +1,26 @@
 package dark.core.prefab.tilenetwork.fluid;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidHandler;
-import universalelectricity.core.vector.Vector3;
-import dark.api.fluid.AdvancedFluidEvent;
-import dark.api.fluid.AdvancedFluidEvent.FluidMergeEvent;
 import dark.api.fluid.INetworkFluidPart;
 import dark.api.parts.INetworkPart;
 import dark.core.interfaces.ColorCode;
 import dark.core.prefab.helpers.FluidHelper;
-import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
-import dark.fluid.common.machines.TileEntityTank;
-import dark.fluid.common.pipes.TileEntityPipe;
 
 public class NetworkFluidTiles extends NetworkTileEntities
 {
     /** Fluid Tanks that are connected to the network but not part of it ** */
-    public final List<IFluidHandler> connectedTanks = new ArrayList<IFluidHandler>();
+    public final Set<IFluidHandler> connectedTanks = new HashSet<IFluidHandler>();
     /** Collective storage of all fluid tiles */
     public FluidTank sharedTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 
@@ -40,7 +28,6 @@ public class NetworkFluidTiles extends NetworkTileEntities
     public ColorCode color = ColorCode.NONE;
     /** Has the collective tank been loaded yet */
     protected boolean loadedLiquids = false;
-
 
     public NetworkFluidTiles(ColorCode color, INetworkPart... parts)
     {
@@ -68,21 +55,22 @@ public class NetworkFluidTiles extends NetworkTileEntities
     /** Stores Fluid in this network's collective tank */
     public int storeFluidInSystem(FluidStack stack, boolean doFill)
     {
-        if (stack == null || this.combinedStorage() != null && (this.combinedStorage().getFluid() != null && !this.combinedStorage().getFluid().isFluidEqual(stack)))
+        if (stack == null || this.combinedStorage() == null)
         {
+
             return 0;
         }
+        int prevVolume = this.combinedStorage().getFluidAmount();
+
         if (!loadedLiquids)
         {
             this.readDataFromTiles();
         }
-        if (this.combinedStorage().getFluid() == null || this.combinedStorage().getFluid().amount < this.combinedStorage().getCapacity())
+
+        int filled = this.combinedStorage().fill(stack, doFill);
+        if (doFill)
         {
-            int filled = this.combinedStorage().fill(stack, doFill);
-            if (doFill)
-            {
-                this.writeDataToTiles();
-            }
+            this.writeDataToTiles();
             return filled;
         }
         return 0;
@@ -91,6 +79,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
     /** Drains the network's collective tank */
     public FluidStack drainFluidFromSystem(int maxDrain, boolean doDrain)
     {
+        int prevVolume = this.combinedStorage().getFluidAmount();
         if (!loadedLiquids)
         {
             this.readDataFromTiles();
@@ -127,22 +116,25 @@ public class NetworkFluidTiles extends NetworkTileEntities
         super.writeDataToTiles();
         if (this.combinedStorage().getFluid() != null && this.networkMember.size() > 0)
         {
-            FluidStack stack = this.combinedStorage().getFluid().copy();
+            FluidStack stack = this.combinedStorage().getFluid() == null ? null : this.combinedStorage().getFluid().copy();
             int membersFilled = 0;
 
             for (INetworkPart par : this.networkMember)
             {
                 //UPDATE FILL VOLUME
-                int fillVol = stack.amount / (this.networkMember.size() - membersFilled);
+                int fillVol = stack == null ? 0 : (stack.amount / (this.networkMember.size() - membersFilled));
 
                 if (par instanceof INetworkFluidPart)
                 {
                     //EMPTY TANK
-                    ((INetworkFluidPart) par).drainTankContent(0, fillVol, true);
+                    ((INetworkFluidPart) par).drainTankContent(0, Integer.MAX_VALUE, true);
 
                     //FILL TANK
-                    stack.amount -= ((INetworkFluidPart) par).fillTankContent(0, FluidHelper.getStack(stack, fillVol), true);
-                    membersFilled++;
+                    if (stack != null)
+                    {
+                        stack.amount -= ((INetworkFluidPart) par).fillTankContent(0, FluidHelper.getStack(stack, fillVol), true);
+                        membersFilled++;
+                    }
                 }
             }
         }
@@ -152,7 +144,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
     public void readDataFromTiles()
     {
         super.readDataFromTiles();
-
+        System.out.println("Debug>>FluidTiles>>Reading fluid stack from tiles");
         FluidStack stack = null;
 
         for (INetworkPart par : this.networkMember)
@@ -163,7 +155,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
                 {
                     if (stack == null)
                     {
-                        stack = ((INetworkFluidPart) par).getTank(0).getFluid();
+                        stack = ((INetworkFluidPart) par).getTank(0).getFluid().copy();
                     }
                     else
                     {
@@ -206,8 +198,6 @@ public class NetworkFluidTiles extends NetworkTileEntities
         return this.connectedTanks.contains(tileEntity);
     }
 
-
-
     @Override
     public void init()
     {
@@ -220,75 +210,13 @@ public class NetworkFluidTiles extends NetworkTileEntities
     {
         if (mergingNetwork instanceof NetworkFluidTiles && ((NetworkFluidTiles) mergingNetwork).color == this.color)
         {
-            NetworkFluidTiles network = (NetworkFluidTiles) mergingNetwork;
-
-            this.readDataFromTiles();
-            network.readDataFromTiles();
-            Object result = FluidCraftingHandler.getMergeResult(this.combinedStorage().getFluid(), network.combinedStorage().getFluid());
-            if (mergePoint instanceof TileEntity)
+            if (!((NetworkFluidTiles) mergingNetwork).loadedLiquids)
             {
-                World world = ((TileEntity) mergePoint).worldObj;
-                int x = ((TileEntity) mergePoint).xCoord;
-                int y = ((TileEntity) mergePoint).xCoord;
-                int z = ((TileEntity) mergePoint).xCoord;
-                try
-                {
-                    if (result != null)
-                    {
-                        if (result instanceof Block)
-                        {
-                            if (mergePoint instanceof TileEntityPipe)
-                            {
-                                //TODO in-case pipe in the block
-                            }
-                            else if (mergePoint instanceof TileEntityTank)
-                            {
-                                //TODO in-case tank in the block
-                                //for tank set the render Entity to the block at full size
-                            }
-                            else
-                            {
-                                world.setBlock(x, y, z, 0);
-                                world.setBlock(x, y, z, ((Block) result).blockID);
-                            }
-                        }
-                        else if (result instanceof ItemStack)
-                        {
-                            world.setBlock(x, y, z, 0);
-
-                            if (((ItemStack) result).itemID >= Block.blocksList.length)
-                            {
-                                EntityItem item = new EntityItem(world, x, y, z, (ItemStack) result);
-                                //TODO add some effect to this
-                                world.spawnEntityInWorld(item);
-                            }
-                            else
-                            {
-                                world.setBlock(x, y, z, ((ItemStack) result).itemID, ((ItemStack) result).getItemDamage(), 3);
-                            }
-                        }
-                        else if (result instanceof String)
-                        {
-
-                            String string = (String) result;
-                            if (string.startsWith("explosion:"))
-                            {
-                                int size = Integer.parseInt(string.replace("explosion:", ""));
-                                world.setBlock(x, y, z, 0);
-                                world.createExplosion(null, x, y, z, size, false);
-
-                            }
-
-                        }
-                        AdvancedFluidEvent.fireEvent(new FluidMergeEvent(this.combinedStorage().getFluid(), network.combinedStorage().getFluid(), world, new Vector3(x, y, z)));
-                        return false;
-                    }
-                }
-                catch (Exception e)
-                {
-
-                }
-
+                ((NetworkFluidTiles) mergingNetwork).readDataFromTiles();
+            }
+            if (!this.loadedLiquids)
+            {
+                this.readDataFromTiles();
             }
             return true;
         }
@@ -308,18 +236,16 @@ public class NetworkFluidTiles extends NetworkTileEntities
         newNetwork.getNetworkMemebers().addAll(this.getNetworkMemebers());
         newNetwork.getNetworkMemebers().addAll(network.getNetworkMemebers());
 
-        newNetwork.cleanUpMembers();
+        newNetwork.refresh();
         newNetwork.combinedStorage().setFluid(FluidCraftingHandler.mergeFluidStacks(one, two));
         newNetwork.writeDataToTiles();
+
+
     }
 
     @Override
     public void cleanUpMembers()
     {
-        if (!loadedLiquids)
-        {
-            this.readDataFromTiles();
-        }
         Iterator<INetworkPart> it = this.networkMember.iterator();
         int capacity = 0;
         while (it.hasNext())

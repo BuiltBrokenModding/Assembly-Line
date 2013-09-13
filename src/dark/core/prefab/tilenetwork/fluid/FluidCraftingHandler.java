@@ -101,7 +101,27 @@ public class FluidCraftingHandler
                 receivedVolume = ((ItemStack) input).stackSize;
                 ((ItemStack) input).stackSize = 1;
             }
+
+            //Get result
             Object result = fluidMergeResults.containsKey(new Pair<Object, Object>(crafter.getReceivingObjectStack(), crafter.getInputObjectStack()));
+
+            //reset stack sized
+            if (received instanceof FluidStack)
+            {
+                ((FluidStack) received).amount = receivedVolume;
+            }
+            if (received instanceof ItemStack)
+            {
+                ((ItemStack) received).stackSize = receivedVolume;
+            }
+            if (input instanceof FluidStack)
+            {
+                ((FluidStack) input).amount = inputVolume;
+            }
+            if (input instanceof ItemStack)
+            {
+                ((ItemStack) input).stackSize = inputVolume;
+            }
             if (result != null)
             {
                 if (result instanceof SimpleFluidRecipe)

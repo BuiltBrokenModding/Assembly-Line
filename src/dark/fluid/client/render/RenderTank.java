@@ -37,11 +37,9 @@ public class RenderTank extends RenderMachine
     public void renderTank(TileEntity tileEntity, double x, double y, double z, int meta, FluidStack liquid)
     {
         int[] render = new int[6];
-        ColorCode color = ColorCode.get(meta >= 0 && meta < ColorCode.values().length ? meta : 0);
         if (tileEntity instanceof TileEntityTank)
         {
             render = ((TileEntityTank) tileEntity).renderConnection;
-            color = ((TileEntityTank) tileEntity).getColor();
         }
         if (liquid != null && liquid.amount > 100)
         {
@@ -126,6 +124,6 @@ public class RenderTank extends RenderMachine
         {
             texture = "textures/blocks/iron_block.png";
         }
-        return new ResourceLocation(FluidMech.instance.getDomain(), texture);
+        return new ResourceLocation(texture);
     }
 }

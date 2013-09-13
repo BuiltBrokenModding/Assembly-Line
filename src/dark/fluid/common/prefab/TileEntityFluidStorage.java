@@ -18,7 +18,7 @@ import dark.core.prefab.helpers.FluidHelper;
 public abstract class TileEntityFluidStorage extends TileEntityFluidDevice implements IFluidHandler, IColorCoded
 {
 
-    public FluidTank fluidTank = new FluidTank(this.getTankSize());
+    public FluidTank fluidTank;
 
     @Override
     public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
@@ -120,13 +120,7 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
     /** Is the internal tank full */
     public boolean isFull()
     {
-        return this.getTank().getFluid() != null && this.getTank().getFluid().amount >= this.getTank().getCapacity();
-    }
-
-    /** gets the liquidStack stored in the internal tank */
-    public FluidStack getStoredLiquid()
-    {
-        return this.getTank().getFluid();
+        return this.getTank().getFluidAmount() >= this.getTank().getCapacity();
     }
 
     public FluidTank getTank()

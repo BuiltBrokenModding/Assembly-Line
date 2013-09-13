@@ -16,6 +16,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
@@ -122,7 +123,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
     public Packet getDescriptionPacket()
     {
         FluidStack stack = null;
-        if (this.getTank().getFluid() != null && this.getTank().getFluid().getFluid() != null)
+        if (this.getTank().getFluid() != null)
         {
             stack = this.getTank().getFluid();
         }
@@ -296,9 +297,9 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
     @Override
     public int fillTankContent(int index, FluidStack stack, boolean doFill)
     {
-        if (this.getTank() != null)
+        if (this.getTank(index) != null)
         {
-            return this.getTank().fill(stack, doFill);
+            return this.getTank(index).fill(stack, doFill);
         }
         return 0;
     }
@@ -356,6 +357,10 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
     @Override
     public IFluidTank getTank(int index)
     {
-        return this.getTank();
+        if (index == 0)
+        {
+            return this.getTank();
+        }
+        return null;
     }
 }

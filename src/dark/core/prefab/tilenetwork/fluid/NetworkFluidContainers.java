@@ -10,6 +10,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 import dark.api.fluid.INetworkFluidPart;
 import dark.api.parts.INetworkPart;
 import dark.core.interfaces.ColorCode;
+import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
 /** Side note: the network should act like this when done {@link http
@@ -34,18 +35,15 @@ public class NetworkFluidContainers extends NetworkFluidTiles
     @Override
     public void writeDataToTiles()
     {
+        this.cleanUpMembers();
+
         if (this.combinedStorage() == null || this.combinedStorage().getFluid() == null)
         {
             return;
         }
-        int fluid = this.combinedStorage().getFluid().fluidID;
-        int volume = Math.abs(this.combinedStorage().getFluid().amount);
-        NBTTagCompound tag = this.combinedStorage().getFluid().tag;
+        FluidStack fillStack = this.combinedStorage().getFluid().copy();
 
-        int lowestY = 255;
-        int highestY = 0;
-
-        this.cleanUpMembers();
+        int lowestY = 255, highestY = 0;
 
         if (this.combinedStorage().getFluid() != null && this.getNetworkMemebers().size() > 0)
         {
@@ -82,32 +80,21 @@ public class NetworkFluidContainers extends NetworkFluidTiles
                 if (!parts.isEmpty())
                 {
                     /* Div out the volume for this level. TODO change this to use a percent system for even filling */
-                    int fillvolume = Math.abs(volume / parts.size());
+                    int fillvolume = Math.abs(fillStack.amount / parts.size());
 
                     /* Fill all tanks on this level */
                     for (INetworkFluidPart part : parts)
                     {
-                        int fill = Math.min(fillvolume, part.getTank(0).getCapacity());
-                        volume -= part.fillTankContent(0, new FluidStack(fluid, fill, tag), true);
+                        fillStack.amount -= part.fillTankContent(0, FluidHelper.getStack(fillStack, fillvolume), true);
                     }
                 }
 
-                if (volume <= 0)
+                if (fillStack == null || fillStack.amount <= 0)
                 {
                     break;
                 }
             }
-        }
 
-    }
-
-    @Override
-    public int storeFluidInSystem(FluidStack stack, boolean doFill)
-    {
-        int vol = this.combinedStorage().getFluid() != null ? this.combinedStorage().getFluid().amount : 0;
-        int filled = super.storeFluidInSystem(stack, doFill);
-        if (vol != filled)
-        {
             for (INetworkPart part : this.getNetworkMemebers())
             {
                 if (part instanceof TileEntity)
@@ -117,38 +104,6 @@ public class NetworkFluidContainers extends NetworkFluidTiles
                 }
             }
         }
-        return filled;
-    }
 
-    @Override
-    public FluidStack drainFluidFromSystem(int maxDrain, boolean doDrain)
-    {
-        FluidStack vol = this.combinedStorage().getFluid();
-        FluidStack stack = super.drainFluidFromSystem(maxDrain, doDrain);
-        boolean flag = false;
-        if (vol != null)
-        {
-            if (stack == null)
-            {
-                flag = true;
-            }
-            else if (stack.amount != vol.amount)
-            {
-                flag = true;
-            }
-        }
-        if (flag)
-        {
-            for (INetworkPart part : this.getNetworkMemebers())
-            {
-                if (part instanceof TileEntity)
-                {
-                    TileEntity ent = ((TileEntity) part);
-                    ent.worldObj.markBlockForUpdate(ent.xCoord, ent.yCoord, ent.zCoord);
-                }
-            }
-        }
-        return stack;
     }
-
 }
