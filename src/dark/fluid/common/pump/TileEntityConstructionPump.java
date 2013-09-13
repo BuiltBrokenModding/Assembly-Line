@@ -18,7 +18,7 @@ import universalelectricity.core.vector.VectorHelper;
 import dark.api.fluid.IDrain;
 import dark.api.fluid.INetworkPipe;
 import dark.api.parts.ITileConnector;
-import dark.core.network.fluid.HydraulicNetworkHelper;
+import dark.core.network.fluid.FluidNetworkHelper;
 import dark.core.network.fluid.NetworkFluidTiles;
 import dark.core.prefab.helpers.MetaGroup;
 import dark.core.prefab.helpers.Pair;
@@ -173,7 +173,7 @@ public class TileEntityConstructionPump extends TileEntityStarterPump implements
     public void invalidate()
     {
         super.invalidate();
-        HydraulicNetworkHelper.invalidate(this);
+        FluidNetworkHelper.invalidate(this);
     }
 
     @Override

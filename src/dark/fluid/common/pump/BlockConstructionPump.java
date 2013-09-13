@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.network.fluid.HydraulicNetworkHelper;
+import dark.core.network.fluid.FluidNetworkHelper;
 import dark.core.prefab.helpers.Pair;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.BlockFM;
@@ -126,7 +126,7 @@ public class BlockConstructionPump extends BlockFM
             TileEntity entity = world.getBlockTileEntity(x, y, z);
             if (entity instanceof TileEntityConstructionPump)
             {
-                HydraulicNetworkHelper.invalidate(entity);
+                FluidNetworkHelper.invalidate(entity);
             }
 
             if (meta == 3)
