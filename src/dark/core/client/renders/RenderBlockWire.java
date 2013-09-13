@@ -19,7 +19,7 @@ import dark.core.client.models.ModelCopperWire;
 import dark.core.common.DarkMain;
 
 @SideOnly(Side.CLIENT)
-public class RenderCopperWire extends RenderMachine
+public class RenderBlockWire extends RenderTileMachine
 {
     private static final ResourceLocation copperWireTexture = new ResourceLocation(DarkMain.getInstance().DOMAIN, "textures/models/copperWire.png");
 

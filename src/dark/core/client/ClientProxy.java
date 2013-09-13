@@ -9,7 +9,7 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.client.renders.RenderCopperWire;
+import dark.core.client.renders.RenderBlockWire;
 import dark.core.common.CommonProxy;
 import dark.core.common.CoreRecipeLoader;
 import dark.core.common.DarkMain;
@@ -40,7 +40,7 @@ public class ClientProxy extends CommonProxy
     {
         if (CoreRecipeLoader.blockWire != null)
         {
-            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWire.class, new RenderCopperWire());
+            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWire.class, new RenderBlockWire());
         }
     }
 }

@@ -1,4 +1,4 @@
-package dark.core.prefab.helpers;
+package dark.core.client.renders;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;

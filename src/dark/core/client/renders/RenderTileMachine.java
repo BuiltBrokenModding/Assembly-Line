@@ -6,10 +6,10 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public abstract class RenderMachine extends TileEntitySpecialRenderer
+public abstract class RenderTileMachine extends TileEntitySpecialRenderer
 {
 
-    public RenderMachine()
+    public RenderTileMachine()
     {
 
     }
