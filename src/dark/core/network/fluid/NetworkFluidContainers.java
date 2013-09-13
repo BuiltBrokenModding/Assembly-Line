@@ -1,25 +1,22 @@
 package dark.core.network.fluid;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
-import universalelectricity.core.vector.Vector2;
-import universalelectricity.core.vector.Vector3;
-
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import dark.api.fluid.INetworkFluidPart;
 import dark.api.parts.INetworkPart;
 import dark.core.interfaces.ColorCode;
-import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
-/** Designed to be used by fluid containers with only one internal tank */
+/** Side note: the network should act like this when done {@link http
+ * ://www.e4training.com/hydraulic_calculators/B1.htm} as well as stay compatible with the forge
+ * Liquids
+ *
+ * @author Rseifert */
 public class NetworkFluidContainers extends NetworkFluidTiles
 {
 
@@ -41,8 +38,9 @@ public class NetworkFluidContainers extends NetworkFluidTiles
         {
             return;
         }
-        FluidStack tankStack = this.combinedStorage().getFluid();
-        int volume = tankStack.amount;
+        int fluid = this.combinedStorage().getFluid().fluidID;
+        int volume = Math.abs(this.combinedStorage().getFluid().amount);
+        NBTTagCompound tag = this.combinedStorage().getFluid().tag;
 
         int lowestY = 255;
         int highestY = 0;
@@ -84,13 +82,13 @@ public class NetworkFluidContainers extends NetworkFluidTiles
                 if (!parts.isEmpty())
                 {
                     /* Div out the volume for this level. TODO change this to use a percent system for even filling */
-                    int fillVolume = Math.abs(volume / parts.size());
+                    int fillvolume = Math.abs(volume / parts.size());
 
                     /* Fill all tanks on this level */
                     for (INetworkFluidPart part : parts)
                     {
-                        int fill = Math.min(fillVolume, part.getTank(0).getCapacity());
-                        volume -= part.fillTankContent(0, FluidHelper.getStack(tankStack, fillVolume), true);
+                        int fill = Math.min(fillvolume, part.getTank(0).getCapacity());
+                        volume -= part.fillTankContent(0, new FluidStack(fluid, fill, tag), true);
                     }
                 }
 
@@ -151,45 +149,6 @@ public class NetworkFluidContainers extends NetworkFluidTiles
             }
         }
         return stack;
-    }
-
-    public void sortBlockList(final Set<INetworkPart> set)
-    {
-        try
-        {
-            List<INetworkPart> list = new ArrayList<INetworkPart>();
-            Iterator<INetworkPart> it = list.iterator();
-            while (it.hasNext())
-            {
-                if (!(it.next() instanceof TileEntity))
-                {
-                    it.remove();
-                }
-            }
-            Collections.sort(list, new Comparator<INetworkPart>()
-            {
-                @Override
-                public int compare(INetworkPart partA, INetworkPart partB)
-                {
-                    Vector3 vecA = new Vector3((TileEntity) partA);
-                    Vector3 vecB = new Vector3((TileEntity) partB);
-                    //Though unlikely always return zero for equal vectors
-                    if (vecA.equals(vecB) || vecA.intY() == vecB.intY())
-                    {
-                        return 0;
-                    }
-
-                    return Integer.compare(vecA.intY(), vecB.intY());
-                }
-            });
-            set.clear();
-            set.addAll(list);
-        }
-        catch (Exception e)
-        {
-            System.out.println("FluidMech>>>BlockDrain>>FillArea>>Error>>CollectionSorter");
-            e.printStackTrace();
-        }
     }
 
 }
