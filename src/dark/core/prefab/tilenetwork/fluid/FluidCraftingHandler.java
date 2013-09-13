@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -29,6 +30,9 @@ public class FluidCraftingHandler
         registerRecipe(FluidRegistry.WATER, FluidRegistry.LAVA, Block.cobblestone);
     }
 
+    /** Creates a very basic A + B = C result for mixing two objects together. Suggest that the use
+     * of a SimpleFluidRecipe i used instead to create a more refined fluid mixing that takes into
+     * account ratios, and fluid volumes */
     public static void registerRecipe(Object a, Object b, Object c)
     {
         if (a != null && b != null && c != null)
@@ -58,6 +62,56 @@ public class FluidCraftingHandler
     public static void loadPotionRecipes()
     {
         //TODO load the process by which a potion would be created threw fliud crafting
+    }
+
+    /** Does the fluid recipe crafting for the crafter object. Requires that the object fully use all
+     * methods from the #IFluidRecipeCrafter
+     *
+     * @param crafter - crafting object, recommend it be a tile but can be anything as long as the
+     * method are used correctly. In some recipe cases when the setRecipeObjectContent nothing will
+     * be used. If result is null assume not crafting was performed. If there is a result the
+     * crafter couldn't use the output to reduce the input values. From here the IFluidRecipeCrafter
+     * will need to process the output and decress the input values correctly */
+    public static void craft(IFluidRecipeCrafter crafter)
+    {
+        Object received = crafter.getReceivingObjectStack();
+        int receivedVolume = 0;
+        Object input = crafter.getInputObjectStack();
+        int inputVolume = 0;
+        if (crafter != null && received != null && input != null)
+        {
+            //Trip input values so they will match the correct mapped values
+            if (received instanceof FluidStack)
+            {
+                receivedVolume = ((FluidStack) received).amount;
+                received = FluidHelper.getStack((FluidStack) received, 1);
+            }
+            if (received instanceof ItemStack)
+            {
+                receivedVolume = ((ItemStack) received).stackSize;
+                ((ItemStack) received).stackSize = 1;
+            }
+            if (input instanceof FluidStack)
+            {
+                inputVolume = ((FluidStack) input).amount;
+                input = FluidHelper.getStack((FluidStack) input, 1);
+            }
+            if (input instanceof ItemStack)
+            {
+                receivedVolume = ((ItemStack) input).stackSize;
+                ((ItemStack) input).stackSize = 1;
+            }
+            Object result = fluidMergeResults.containsKey(new Pair<Object, Object>(crafter.getReceivingObjectStack(), crafter.getInputObjectStack()));
+            if (result != null)
+            {
+                if (result instanceof SimpleFluidRecipe)
+                {
+                    Triple<Integer, Integer, Pair<Object, Integer>> re = ((SimpleFluidRecipe) result).mix(crafter.getInputObjectStack(), crafter.getInputObjectStack());
+                    crafter.setRecipeObjectContent(received, re.getA(), input, re.getB(), re.getC().getKey(), re.getC().getValue());
+                }
+            }
+            crafter.setRecipeObjectContent(received, 0, input, 0, result, 0);
+        }
     }
 
     /** Merges two fluids together that don't result in damage to the network */
