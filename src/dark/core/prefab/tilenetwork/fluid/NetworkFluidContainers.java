@@ -39,6 +39,7 @@ public class NetworkFluidContainers extends NetworkFluidTiles
 
         if (this.combinedStorage() == null || this.combinedStorage().getFluid() == null)
         {
+            super.writeDataToTiles();
             return;
         }
         FluidStack fillStack = this.combinedStorage().getFluid().copy();
@@ -85,6 +86,7 @@ public class NetworkFluidContainers extends NetworkFluidTiles
                     /* Fill all tanks on this level */
                     for (INetworkFluidPart part : parts)
                     {
+                        ((INetworkFluidPart) part).drainTankContent(0, Integer.MAX_VALUE, true);
                         fillStack.amount -= part.fillTankContent(0, FluidHelper.getStack(fillStack, fillvolume), true);
                     }
                 }

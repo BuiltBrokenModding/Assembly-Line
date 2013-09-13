@@ -16,6 +16,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
@@ -96,7 +97,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
                     if (id == 0)
                     {
                         this.getTank().setFluid(FluidStack.loadFluidStackFromNBT(PacketHandler.instance().readNBTTagCompound(dataStream)));
-                        System.out.println("Received Fluid Packet Fluid = " + this.getTank().getFluid().getFluid().getName() + "@" + this.getTank().getFluid().amount);
+                        //System.out.println("Received Fluid Packet Fluid = " + this.getTank().getFluid().getFluid().getName() + "@" + this.getTank().getFluid().amount);
                     }
                     else
                     {
@@ -355,7 +356,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
     }
 
     @Override
-    public IFluidTank getTank(int index)
+    public FluidTank getTank(int index)
     {
         return this.getTank();
     }

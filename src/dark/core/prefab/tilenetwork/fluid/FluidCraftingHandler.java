@@ -154,10 +154,12 @@ public class FluidCraftingHandler
         }
         else if (stackTwo != null && stackOne != null && !stackOne.isFluidEqual(stackTwo))
         {
+            System.out.println("preforming fluid merge event");
             Object result = fluidMergeResults.get(new Pair<Fluid, Fluid>(stackOne.getFluid(), stackTwo.getFluid()));
             /* Try to merge fluids by mod defined rules first */
             if (result != null)
             {
+                System.out.println("result = " + result.toString());
                 if (result instanceof Fluid)
                 {
                     resultStack = new FluidStack(((Fluid) result).getID(), stackOne.amount + stackTwo.amount);
@@ -186,6 +188,7 @@ public class FluidCraftingHandler
             }
             if (resultStack == null)
             {
+                System.out.println("Merging fluids into a waste fluid stack");
                 Fluid waste = FluidRegistry.getFluid("waste");
                 if (waste == null)
                 {

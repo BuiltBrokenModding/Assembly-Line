@@ -111,6 +111,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
     @Override
     public void writeDataToTiles()
     {
+        this.cleanUpMembers();
         if (this.combinedStorage().getFluid() != null && this.networkMember.size() > 0)
         {
             FluidStack stack = this.combinedStorage().getFluid() == null ? null : this.combinedStorage().getFluid().copy();
@@ -125,7 +126,6 @@ public class NetworkFluidTiles extends NetworkTileEntities
                 {
                     //EMPTY TANK
                     ((INetworkFluidPart) par).drainTankContent(0, Integer.MAX_VALUE, true);
-
                     //FILL TANK
                     if (stack != null)
                     {
@@ -135,7 +135,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
                 }
             }
         }
-        this.cleanUpMembers();
+
     }
 
     @Override
@@ -232,10 +232,9 @@ public class NetworkFluidTiles extends NetworkTileEntities
         newNetwork.getNetworkMemebers().addAll(this.getNetworkMemebers());
         newNetwork.getNetworkMemebers().addAll(network.getNetworkMemebers());
 
-        newNetwork.refresh();
+        newNetwork.cleanUpMembers();
         newNetwork.combinedStorage().setFluid(FluidCraftingHandler.mergeFluidStacks(one, two));
         newNetwork.writeDataToTiles();
-
     }
 
     @Override
