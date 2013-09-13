@@ -108,26 +108,6 @@ public abstract class NetworkTileEntities
         return part != null && part instanceof TileEntity && !((TileEntity) part).isInvalid();
     }
 
-    /** Refreshes the network... mainly the network member list */
-    public void refresh()
-    {
-        this.cleanUpMembers();
-        try
-        {
-            Iterator<INetworkPart> it = this.networkMember.iterator();
-
-            while (it.hasNext())
-            {
-                INetworkPart conductor = it.next();
-                conductor.refresh();
-            }
-        }
-        catch (Exception e)
-        {
-            FMLLog.severe("TileNetwork>>>Refresh>>>Critical Error.");
-            e.printStackTrace();
-        }
-    }
 
     /** Gets the list of network members */
     public Set<INetworkPart> getNetworkMemebers()
