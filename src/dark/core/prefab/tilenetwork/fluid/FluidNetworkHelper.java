@@ -1,4 +1,4 @@
-package dark.core.network.fluid;
+package dark.core.prefab.tilenetwork.fluid;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;

@@ -36,10 +36,10 @@ import dark.core.common.DarkMain;
 import dark.core.interfaces.ColorCode;
 import dark.core.interfaces.ColorCode.IColorCoded;
 import dark.core.network.PacketHandler;
-import dark.core.network.fluid.NetworkFluidContainers;
-import dark.core.network.fluid.NetworkFluidTiles;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
+import dark.core.prefab.tilenetwork.fluid.NetworkFluidContainers;
+import dark.core.prefab.tilenetwork.fluid.NetworkFluidTiles;
 import dark.fluid.common.prefab.TileEntityFluidStorage;
 
 public class TileEntityTank extends TileEntityFluidStorage implements IFluidHandler, IToolReadOut, IColorCoded, INetworkFluidPart, IPacketReceiver

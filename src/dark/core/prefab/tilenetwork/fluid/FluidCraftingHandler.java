@@ -1,4 +1,4 @@
-package dark.core.network.fluid;
+package dark.core.prefab.tilenetwork.fluid;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,10 +9,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import dark.core.network.fluid.FluidRecipeInfo.SimpleFluidRecipe;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.helpers.Triple;
+import dark.core.prefab.tilenetwork.fluid.FluidRecipeInfo.SimpleFluidRecipe;
 
 /** Handles all kinds of process involving mixing Fluids with other fluids and/or Items, Blocks,
  * ItemStack, or Liquids

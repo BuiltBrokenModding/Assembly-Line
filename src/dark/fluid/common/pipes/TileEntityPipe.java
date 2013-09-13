@@ -39,9 +39,9 @@ import dark.core.common.DarkMain;
 import dark.core.interfaces.ColorCode;
 import dark.core.interfaces.ColorCode.IColorCoded;
 import dark.core.network.PacketHandler;
-import dark.core.network.fluid.NetworkPipes;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
+import dark.core.prefab.tilenetwork.fluid.NetworkPipes;
 import dark.fluid.common.pipes.addon.IPipeExtention;
 
 public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler, IToolReadOut, IColorCoded, INetworkPipe, IPacketReceiver
