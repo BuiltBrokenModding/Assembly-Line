@@ -224,7 +224,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
 
             this.readDataFromTiles();
             network.readDataFromTiles();
-            Object result = FluidNetworkHelper.canMergeFluids(this.combinedStorage().getFluid(), network.combinedStorage().getFluid());
+            Object result = FluidNetworkHelper.getMergeResult(this.combinedStorage().getFluid(), network.combinedStorage().getFluid());
             if (mergePoint instanceof TileEntity)
             {
                 World world = ((TileEntity) mergePoint).worldObj;
@@ -309,7 +309,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
         newNetwork.getNetworkMemebers().addAll(network.getNetworkMemebers());
 
         newNetwork.cleanUpMembers();
-        newNetwork.combinedStorage().setFluid(FluidNetworkHelper.mergeFluids(one, two));
+        newNetwork.combinedStorage().setFluid(FluidNetworkHelper.mergeFluidStacks(one, two));
         newNetwork.writeDataToTiles();
     }
 

@@ -49,61 +49,66 @@ public class FluidNetworkHelper
     }
 
     /** Merges two fluids together that don't result in damage to the network */
-    public static FluidStack mergeFluids(FluidStack stackOne, FluidStack stackTwo)
+    public static FluidStack mergeFluidStacks(FluidStack stackOne, FluidStack stackTwo)
     {
-        FluidStack stack = null;
+        FluidStack resultStack = null;
 
         if (stackTwo != null && stackOne != null && stackOne.isFluidEqual(stackTwo))
         {
-            stack = stackOne.copy();
-            stack.amount += stackTwo.amount;
+            resultStack = stackOne.copy();
+            resultStack.amount += stackTwo.amount;
         }
         else if (stackOne == null && stackTwo != null)
         {
-            stack = stackTwo.copy();
+            resultStack = stackTwo.copy();
         }
         else if (stackOne != null && stackTwo == null)
         {
-            stack = stackOne.copy();
+            resultStack = stackOne.copy();
         }
         else if (stackTwo != null && stackOne != null && !stackOne.isFluidEqual(stackTwo))
         {
-            Fluid waste = FluidRegistry.getFluid("waste");
             /* Try to merge fluids by mod defined rules first */
             if (fluidMergeResults.containsKey(new Pair<Fluid, Fluid>(stackOne.getFluid(), stackTwo.getFluid())))
             {
                 Object result = fluidMergeResults.get(new Pair<Fluid, Fluid>(stackOne.getFluid(), stackTwo.getFluid()));
                 if (result instanceof Fluid)
                 {
-                    stack = new FluidStack(((Fluid) result).getID(), stackOne.amount + stackTwo.amount);
+                    resultStack = new FluidStack(((Fluid) result).getID(), stackOne.amount + stackTwo.amount);
                 }
                 else if (result instanceof FluidStack)
                 {
-                    stack = ((FluidStack) result).copy();
-                    stack.amount = stackOne.amount + stackTwo.amount;
+                    resultStack = ((FluidStack) result).copy();
+                    resultStack.amount = stackOne.amount + stackTwo.amount;
                 }
                 else if (result instanceof String && ((String) result).startsWith("Liquid:"))
                 {
-                    stack = new FluidStack(FluidRegistry.getFluid(((String) result).replace("Liquid:", "")), stackOne.amount + stackTwo.amount);
+                    resultStack = new FluidStack(FluidRegistry.getFluid(((String) result).replace("Liquid:", "")), stackOne.amount + stackTwo.amount);
                 }
             }
-            if (stack != null)
+            if (resultStack == null)
             {
+                Fluid waste = FluidRegistry.getFluid("waste");
+                if (waste == null)
+                {
+                    System.out.println("[FluidNetworkHelper] Attempted to merge two fluids into a waste fluid stack but Forge fluid registry return null for waste. Possible that waste fluid was disabled or not registered correctly.");
+                    return null;
+                }
                 /* If both liquids are waste then copy fluidStack lists then merge */
                 if (stackTwo.fluidID == waste.getID() && stackOne.fluidID == waste.getID())
                 {
                     List<FluidStack> stacks = new ArrayList<FluidStack>();
                     stacks.addAll(getStacksFromWaste(stackOne.copy()));
                     stacks.addAll(getStacksFromWaste(stackTwo.copy()));
-                    stack = createNewWasteStack(stacks.toArray(new FluidStack[stacks.size()]));
+                    resultStack = createNewWasteStack(stacks.toArray(new FluidStack[stacks.size()]));
                 }
                 else
                 {
-                    stack = createNewWasteStack(stackOne.copy(), stackTwo.copy());
+                    resultStack = createNewWasteStack(stackOne.copy(), stackTwo.copy());
                 }
             }
         }
-        return stack;
+        return resultStack;
     }
 
     /** Gets the fluidStacks that make up a waste FluidStack */
@@ -158,8 +163,14 @@ public class FluidNetworkHelper
         return stack;
     }
 
-    /** Checks if the liquid can be merged without damage */
-    public static Object canMergeFluids(FluidStack stackOne, FluidStack stackTwo)
+    /** Gets the result of the merge of the two fluids, order of merge does matter and will produce
+     * diffrent results.
+     *
+     * @param stackOne - Receiving fluid, eg the one that is not moving
+     * @param stackTwo - Flowing fluid, eg the one moving into the first fluid
+     * @return Object result of the merge, can be anything from string, ItemStack, Item, Block, or
+     * enum action */
+    public static Object getMergeResult(FluidStack stackOne, FluidStack stackTwo)
     {
         if (stackOne != null && stackTwo != null && !stackOne.equals(stackTwo))
         {
