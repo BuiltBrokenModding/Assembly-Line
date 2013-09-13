@@ -8,7 +8,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 
 /** Selective fluid version of the FluidTank
- *
+ * 
  * @author DarkGuardsman */
 public class FluidSelectiveTank extends FluidTank
 {

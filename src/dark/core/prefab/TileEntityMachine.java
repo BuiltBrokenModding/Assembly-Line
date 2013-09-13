@@ -33,7 +33,7 @@ import dark.core.prefab.invgui.InvChest;
 
 /** Prefab for most machines in the CoreMachine set. Provides basic power updates, packet updates,
  * inventory handling, and other handy methods.
- *
+ * 
  * @author DarkGuardsman */
 public abstract class TileEntityMachine extends TileEntityUniversalElectrical implements ISidedInventory, IExternalInv, IDisableable, IPacketReceiver, IPowerLess
 {
@@ -273,7 +273,7 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
     }
 
     /** Handles reduced data from the main packet method
-     *
+     * 
      * @param id - packet ID
      * @param dis - data
      * @param player - player

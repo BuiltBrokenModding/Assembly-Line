@@ -5,7 +5,8 @@ import net.minecraft.util.DamageSource;
 import dark.core.interfaces.IBlockActivated;
 
 /** Used by tiles that want to pretend to be living objects. Will require the use of this interface
- * as well spawning a EntityTileDamage entity as its location
+ * as well spawning a EntityTileDamage entity as its location. Then entity if larger than the tile
+ * will pass all interaction events to the block
  * 
  * @author DarkGuardsman */
 public interface IDamageableTile extends IBlockActivated
