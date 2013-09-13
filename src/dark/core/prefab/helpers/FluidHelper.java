@@ -88,9 +88,11 @@ public class FluidHelper
 
     public static FluidStack getStack(FluidStack stack, int amount)
     {
-        if (stack != null && stack.getFluid() != null)
+        if (stack != null)
         {
-            return new FluidStack(stack.getFluid().getID(), amount, stack.tag);
+            FluidStack newStack = stack.copy();
+            newStack.amount = amount;
+            return newStack;
         }
         return stack;
     }

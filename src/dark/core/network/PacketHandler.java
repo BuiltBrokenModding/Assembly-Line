@@ -26,13 +26,13 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
 /** Packet manager based off the PacketManager from UE created by Calclavia
- * 
+ *
  * @author DarkGuardsman */
 public class PacketHandler implements IPacketHandler, IPacketReceiver
 {
     public static PacketHandler instance;
 
-    public static HashMap<Integer, IPacketManager> packetTypes = new HashMap();
+    public static HashMap<Integer, IPacketManager> packetTypes = new HashMap<Integer, IPacketManager>();
 
     public static PacketManagerTile tile = new PacketManagerTile();
     public static PacketManagerEffects effects = new PacketManagerEffects();
@@ -169,7 +169,7 @@ public class PacketHandler implements IPacketHandler, IPacketReceiver
     }
 
     /** Gets a packet for the tile entity.
-     * 
+     *
      * @return */
     @SuppressWarnings("resource")
     public Packet getPacket(String channelName, TileEntity sender, Object... sendData)

@@ -2,8 +2,10 @@ package dark.core.prefab.tilenetwork;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -18,7 +20,7 @@ import dark.core.prefab.helpers.ConnectionHelper;
 public abstract class NetworkTileEntities
 {
     /* BLOCK THAT ACT AS FLUID CONVEYORS ** */
-    public final List<INetworkPart> networkMember = new ArrayList<INetworkPart>();
+    public final Set<INetworkPart> networkMember = new HashSet<INetworkPart>();
 
     public NetworkTileEntities(INetworkPart... parts)
     {
@@ -33,13 +35,13 @@ public abstract class NetworkTileEntities
 
     /** Creates a new instance of this network to be used to merge or split networks while still
      * maintaining each class that extends the base network class
-     * 
+     *
      * @return - new network instance using the current networks properties */
     public abstract NetworkTileEntities newInstance();
 
     /** Adds a TileEntity to the network. extends this to catch non-network parts and add them to
      * other tile lists
-     * 
+     *
      * @param tileEntity - tileEntity instance
      * @param member - add to network member list
      * @return */
@@ -128,7 +130,7 @@ public abstract class NetworkTileEntities
     }
 
     /** Gets the list of network members */
-    public List<INetworkPart> getNetworkMemebers()
+    public Set<INetworkPart> getNetworkMemebers()
     {
         return this.networkMember;
     }
@@ -149,7 +151,7 @@ public abstract class NetworkTileEntities
 
     /** Combines two networks together into one. Calls to preMerge and doMerge instead of doing the
      * merge process itself
-     * 
+     *
      * @param network
      * @param mergePoint */
     public void merge(NetworkTileEntities network, INetworkPart mergePoint)
@@ -165,17 +167,17 @@ public abstract class NetworkTileEntities
 
     /** Processing that needs too be done before the network merges. Use this to do final network
      * merge calculations and to cause network merge failure
-     * 
+     *
      * @param network the network that is to merge with this one
      * @param part the part at which started the network merge. Use this to cause damage if two
      * networks merge with real world style failures
-     * 
+     *
      * @return false if the merge needs to be canceled.
-     * 
+     *
      * Cases in which the network should fail to merge are were the two networks merge with error.
      * Or, in the case of pipes the two networks merge and the merge point was destroyed by
      * combination of liquids.
-     * 
+     *
      * Ex Lava and water */
     public boolean preMergeProcessing(NetworkTileEntities network, INetworkPart part)
     {
@@ -267,7 +269,7 @@ public abstract class NetworkTileEntities
     }
 
     /** invalidates/remove a tile from the networks that surround and connect to it
-     * 
+     *
      * @param tileEntity - tile */
     public static void invalidate(TileEntity tileEntity)
     {
