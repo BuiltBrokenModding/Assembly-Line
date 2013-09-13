@@ -12,20 +12,43 @@ import dark.core.prefab.helpers.Triple;
  * @author DarkGuardsman */
 public class FluidRecipeInfo
 {
+    /** A + Energy = C, simple recipe designed to tell a boiler like machine how to handle input to
+     * output process */
     public static class BoilingFluidRecipe
     {
-        Object boiledObject;
-        Object boiledResult;
+        /** Unboiled object */
+        public Object boiledObject;
+        /** Boiled object */
+        public Object boiledResult;
+        /** In kelvin tempature units only */
+        public float heatLevel = 0;
+        /** Energy in jouls need to turn convert A to B */
+        public float energyPerMb = 1;
+
+        public BoilingFluidRecipe(Object unboiled, Object boiled, float boilingTempature, float energyPerUnitBoiled)
+        {
+            this.boiledObject = unboiled;
+            this.boiledResult = boiled;
+            this.heatLevel = boilingTempature;
+            this.energyPerMb = energyPerUnitBoiled;
+        }
+
+        @Override
+        public String toString()
+        {
+            return "[BoilingFluidRecipe] UnboiledObject: " + (this.boiledObject != null ? this.boiledObject.toString() : "null") + " | BoiledObject: " + (this.boiledResult != null ? this.boiledResult.toString() : "null") + " | BoilingTemp: " + this.heatLevel + "k | EnergyPerUnit: " + this.energyPerMb + "j";
+        }
     }
 
     /** Basic A + B = C recipe result that should involve fluids but can be used as a 2 item crafting
      * system if needed */
     public static class SimpleFluidRecipe
     {
-        Object recipeObjectA, recipeObjectB, recipeObjectC;
-        int ratioOfA = 1, ratioOfB = 1, ratioOfC = 1;
+        public Object recipeObjectA, recipeObjectB, recipeObjectC;
+        public int ratioOfA = 1, ratioOfB = 1, ratioOfC = 1;
         /** Size compared to the largest volume that the smallest volume can be */
-        float mixingPercentMin = .1f;
+        public float mixingPercentMin = .1f;
+        public boolean canBeReversed = false;
 
         /** receiving & input object must be either be an instance of a class extending Item,
          * ItemStack, Block, Fluid, FluidStack, or OreNames. Anything else and the mixing will never
@@ -40,6 +63,20 @@ public class FluidRecipeInfo
             this.recipeObjectA = receiving;
             this.recipeObjectB = input;
             this.recipeObjectC = output;
+        }
+
+        public SimpleFluidRecipe setRatio(int receivingVolume, int inputVolume, int result)
+        {
+            this.ratioOfA = receivingVolume;
+            this.ratioOfB = inputVolume;
+            this.ratioOfC = result;
+            return this;
+        }
+
+        public SimpleFluidRecipe setIsReversable(boolean canBeReversed)
+        {
+            this.canBeReversed = canBeReversed;
+            return this;
         }
 
         public Object getResult()
@@ -137,12 +174,13 @@ public class FluidRecipeInfo
         }
     }
 
-    /** Stores the list of process need to complete a long step process of creating a complex fluid
-     * based mixing recipe */
+    /** Stores the list of processes needed to complete a fluid recipe that require more than one
+     * step to complete. Only used by brewing factories, and is suggest too still register result as
+     * a SimpleFluidRecipe unless the result can't be stored or moved easily. */
     public static class ComplexFluidRecipe
     {
-        int numberOfSteps;
-        SimpleFluidRecipe[] stepArray;
+        public int numberOfSteps;
+        public SimpleFluidRecipe[] stepArray;
 
         public ComplexFluidRecipe(int numberOfSteps)
         {
@@ -154,18 +192,27 @@ public class FluidRecipeInfo
         {
             if (step < numberOfSteps)
             {
-
+                stepArray[step] = stepRecipe;
             }
             return this;
         }
 
         public boolean canCompleteStep(int step, Object receiving, Object input)
         {
-            if (step < numberOfSteps)
+            if (this.getStep(step) != null)
             {
-
+                return this.getStep(step).canComplete(receiving, input);
             }
             return false;
+        }
+
+        public SimpleFluidRecipe getStep(int step)
+        {
+            if (step < numberOfSteps)
+            {
+                return stepArray[step];
+            }
+            return null;
         }
     }
 }
