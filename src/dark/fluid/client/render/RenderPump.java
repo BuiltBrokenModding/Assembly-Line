@@ -7,13 +7,13 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.client.renders.RenderMachine;
+import dark.core.client.renders.RenderTileMachine;
 import dark.fluid.client.model.ModelPump;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.pump.TileEntityStarterPump;
 
 @SideOnly(Side.CLIENT)
-public class RenderPump extends RenderMachine
+public class RenderPump extends RenderTileMachine
 {
     int type = 0;
     private ModelPump model;

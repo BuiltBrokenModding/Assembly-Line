@@ -9,15 +9,16 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.client.renders.FluidBlockRenderer;
-import dark.core.client.renders.RenderMachine;
+import dark.core.client.renders.RenderBlockFluid;
+import dark.core.client.renders.RenderBlockFluid;
+import dark.core.client.renders.RenderTileMachine;
 import dark.core.interfaces.ColorCode;
 import dark.fluid.client.model.ModelTankSide;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.machines.TileEntityTank;
 
 @SideOnly(Side.CLIENT)
-public class RenderTank extends RenderMachine
+public class RenderTank extends RenderTileMachine
 {
     private ModelTankSide model;
 
@@ -44,7 +45,7 @@ public class RenderTank extends RenderMachine
         if (liquid != null && liquid.amount > 100)
         {
 
-            int[] displayList = FluidBlockRenderer.getFluidDisplayLists(liquid, tileEntity.worldObj, false);
+            int[] displayList = RenderBlockFluid.getFluidDisplayLists(liquid, tileEntity.worldObj, false);
 
             GL11.glPushMatrix();
             GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
@@ -53,12 +54,12 @@ public class RenderTank extends RenderMachine
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-            func_110628_a(FluidBlockRenderer.getFluidSheet(liquid));
+            func_110628_a(RenderBlockFluid.getFluidSheet(liquid));
 
             GL11.glTranslatef((float) x, (float) y, (float) z);
             GL11.glScalef(1.01F, 1.01F, 1.01F);
             int cap = tileEntity instanceof TileEntityTank ? ((TileEntityTank) tileEntity).getTankSize() : liquid.amount;
-            GL11.glCallList(displayList[(int) ((float) liquid.amount / (float) (cap) * (FluidBlockRenderer.DISPLAY_STAGES - 1))]);
+            GL11.glCallList(displayList[(int) ((float) liquid.amount / (float) (cap) * (RenderBlockFluid.DISPLAY_STAGES - 1))]);
 
             GL11.glPopAttrib();
             GL11.glPopMatrix();

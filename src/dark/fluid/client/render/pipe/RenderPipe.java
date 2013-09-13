@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.client.renders.RenderMachine;
+import dark.core.client.renders.RenderTileMachine;
 import dark.core.interfaces.ColorCode;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.fluid.client.model.ModelLargePipe;
@@ -19,7 +19,7 @@ import dark.fluid.common.pipes.TileEntityPipe;
 import dark.fluid.common.pipes.addon.IPipeExtention;
 
 @SideOnly(Side.CLIENT)
-public class RenderPipe extends RenderMachine
+public class RenderPipe extends RenderTileMachine
 {
     public ModelLargePipe SixPipe;
     private boolean[] renderSide = new boolean[6];

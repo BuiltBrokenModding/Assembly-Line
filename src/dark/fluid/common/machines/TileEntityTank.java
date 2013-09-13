@@ -96,6 +96,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
                     if (id == 0)
                     {
                         this.getTank().setFluid(FluidStack.loadFluidStackFromNBT(PacketHandler.instance().readNBTTagCompound(dataStream)));
+                        System.out.println("Received Fluid Packet Fluid = " + this.getTank().getFluid().getFluid().getName() + "@" + this.getTank().getFluid().amount);
                     }
                     else
                     {
