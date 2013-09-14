@@ -1,20 +1,29 @@
 package dark.core.prefab;
 
+import ic2.api.item.IElectricItemManager;
+import ic2.api.item.ISpecialElectricItem;
+
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
+import thermalexpansion.api.item.IChargeableItem;
+import universalelectricity.compatibility.Compatibility;
 import universalelectricity.compatibility.TileEntityUniversalElectrical;
 import universalelectricity.core.electricity.ElectricityPack;
+import universalelectricity.core.item.IItemElectric;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 
@@ -33,12 +42,13 @@ import dark.core.prefab.invgui.InvChest;
 
 /** Prefab for most machines in the CoreMachine set. Provides basic power updates, packet updates,
  * inventory handling, and other handy methods.
- * 
+ *
  * @author DarkGuardsman */
 public abstract class TileEntityMachine extends TileEntityUniversalElectrical implements ISidedInventory, IExternalInv, IDisableable, IPacketReceiver, IPowerLess
 {
     //TODO add support for attaching multi-meter to side of machine
 
+    public int playersUsingMachine = 0;
     /** Forge Ore Directory name of the item to toggle infinite power mode */
     public static String powerToggleItemID = "battery";
 
@@ -47,7 +57,7 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
 
     protected float WATTS_PER_TICK, MAX_WATTS;
 
-    protected boolean unpowered = false, running = false, prevRunning = false;
+    protected boolean unpowered = false, running = false, prevRunning = false, hasGUI = false;
     /** Inventory manager used by this machine */
     protected IInvBox inventory;
 
@@ -101,6 +111,18 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
             {
                 this.sendPowerUpdate();
             }
+            if (this.hasGUI && this.getContainer() != null && this.ticks % 5 == 0)
+            {
+                this.playersUsingMachine = 0;
+                for (Object entity : this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(xCoord - 10, yCoord - 10, zCoord - 10, xCoord + 10, yCoord + 10, zCoord + 10)))
+                {
+                    if (entity instanceof EntityPlayer && ((EntityPlayer) entity).openContainer.getClass().equals(this.getContainer()))
+                    {
+                        this.playersUsingMachine += 1;
+                        this.sendGUIPacket(((EntityPlayer) entity));
+                    }
+                }
+            }
         }
 
         if (this.ticksDisabled > 0)
@@ -114,7 +136,7 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
     {
         System.out.println("\n  CanRun: " + this.canRun());
         System.out.println("  RedPower: " + this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord));
-        System.out.println(" IsDisabled: " + this.isDisabled());//TODO i'm going to kick myself if this is it, yep disabled
+        System.out.println("  IsDisabled: " + this.isDisabled());//TODO i'm going to kick myself if this is it, yep disabled
         System.out.println("  HasPower: " + this.consumePower(WATTS_PER_TICK, false));
         System.out.println("  IsRunning: " + this.running);
     }
@@ -273,7 +295,7 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
     }
 
     /** Handles reduced data from the main packet method
-     * 
+     *
      * @param id - packet ID
      * @param dis - data
      * @param player - player
@@ -327,6 +349,11 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
             this.writeToNBT(tag);
             PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getPacket(this.getChannel(), this, TilePacketTypes.NBT.name, tag), worldObj, new Vector3(this), 64);
         }
+    }
+
+    public void sendGUIPacket(EntityPlayer entity)
+    {
+
     }
 
     @Override
@@ -432,14 +459,14 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
     public void openChest()
     {
         this.getInventory().openChest();
-
+        this.playersUsingMachine++;
     }
 
     @Override
     public void closeChest()
     {
         this.getInventory().closeChest();
-
+        this.playersUsingMachine--;
     }
 
     @Override
@@ -475,6 +502,36 @@ public abstract class TileEntityMachine extends TileEntityUniversalElectrical im
     @Override
     public boolean canRemove(ItemStack stack, int slot, ForgeDirection side)
     {
+        return false;
+    }
+
+    public Class<? extends Container> getContainer()
+    {
+        return null;
+    }
+
+    public boolean isBattery(ItemStack itemStack)
+    {
+        if (itemStack != null)
+        {
+            if (itemStack.getItem() instanceof IItemElectric)
+            {
+                return true;
+            }
+            else if (itemStack.getItem() instanceof ISpecialElectricItem)
+            {
+                ISpecialElectricItem electricItem = (ISpecialElectricItem) itemStack.getItem();
+
+                if (electricItem.canProvideEnergy(itemStack))
+                {
+                    return true;
+                }
+            }
+            else if (itemStack.getItem() instanceof IChargeableItem)
+            {
+                return true;
+            }
+        }
         return false;
     }
 
