@@ -2,19 +2,21 @@ package dark.assembly.common.machine.processor;
 
 import java.util.HashMap;
 
+import dark.core.prefab.helpers.Pair;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class ProcessorRecipes
 {
-    public static HashMap<ItemStack, ItemStack> crusherRecipes = new HashMap();
-    public static HashMap<ItemStack, ItemStack> grinderrRecipes = new HashMap();
-    public static HashMap<ItemStack, ItemStack> pressRecipes = new HashMap();
+    public static HashMap<Pair<Integer, Integer>, ItemStack> crusherRecipes = new HashMap();
+    public static HashMap<Pair<Integer, Integer>, ItemStack> grinderrRecipes = new HashMap();
+    public static HashMap<Pair<Integer, Integer>, ItemStack> pressRecipes = new HashMap();
 
     static
     {
-        createABRecipe(ProcessorType.CRUSHER, Block.stone, Block.cobblestone);
+        createABRecipe(ProcessorType.CRUSHER, new ItemStack(Block.stone.blockID, 1, 0), new ItemStack(Block.cobblestone.blockID, 1, 0));
     }
 
     public static void createABRecipe(ProcessorType type, Object in, Object out)
@@ -25,7 +27,7 @@ public class ProcessorRecipes
             ItemStack output = convert(out);
             if (input != null && output != null)
             {
-                HashMap<ItemStack, ItemStack> map = null;
+                HashMap<Pair<Integer, Integer>, ItemStack> map = null;
                 switch (type)
                 {
                     case CRUSHER:
@@ -40,7 +42,7 @@ public class ProcessorRecipes
                 }
                 if (map != null && !crusherRecipes.containsKey(input))
                 {
-                    crusherRecipes.put(input, output);
+                    crusherRecipes.put(new Pair<Integer, Integer>(input.itemID, input.getItemDamage()), output);
                 }
             }
         }
@@ -54,11 +56,11 @@ public class ProcessorRecipes
         }
         if (object instanceof Block)
         {
-            return new ItemStack((Block) object, 1);
+            return new ItemStack(((Block) object).blockID, 1, -1);
         }
         if (object instanceof Item)
         {
-            return new ItemStack((Item) object, 1);
+            return new ItemStack(((Item) object).itemID, 1, -1);
         }
         return null;
     }
@@ -69,7 +71,9 @@ public class ProcessorRecipes
         {
             return null;
         }
-        HashMap<ItemStack, ItemStack> map = null;
+        HashMap<Pair<Integer, Integer>, ItemStack> map = null;
+        ItemStack testStack = stack.copy();
+        testStack.stackSize = 1;
         switch (type)
         {
             case CRUSHER:
@@ -82,7 +86,16 @@ public class ProcessorRecipes
                 map = pressRecipes;
                 break;
         }
-        return map == null ? null : map.get(stack);
+        if (map == null)
+        {
+            return null;
+        }
+        ItemStack re = map.get(new Pair<Integer, Integer>(stack.itemID, -1));
+        if (re != null)
+        {
+            return re;
+        }
+        return map.get(new Pair<Integer, Integer>(stack.itemID, stack.getItemDamage()));
     }
 
     public static class oreReceipe

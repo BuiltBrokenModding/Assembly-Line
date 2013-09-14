@@ -4,7 +4,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import dark.assembly.common.machine.processor.ProcessorRecipes.ProcessorType;
-import dark.core.interfaces.IInvBox;
 import dark.core.prefab.TileEntityMachine;
 import dark.core.prefab.invgui.InvChest;
 
@@ -13,10 +12,10 @@ import dark.core.prefab.invgui.InvChest;
  * @author DarkGuardsman */
 public class TileEntityProcessor extends TileEntityMachine
 {
-    private int slotInput = 0, slotOutput = 1, slotBatteryCharge = 2, slotBatteryDrain = 3;
+    public int slotInput = 0, slotOutput = 1, slotBatteryCharge = 2, slotBatteryDrain = 3;
 
-    private int processingTicks = 0;
-    private int processingTime = 100;
+    public int processingTicks = 0;
+    public int processingTime = 100;
     public int renderStage = 1;
 
     public ProcessorType type;
@@ -63,19 +62,25 @@ public class TileEntityProcessor extends TileEntityMachine
     /** Can the machine process the itemStack */
     public boolean canProcess()
     {
-        ItemStack processResult = ProcessorRecipes.getOuput(this.type, this.getInventory().getStackInSlot(this.slotInput));
+        ItemStack inputStack = this.getInventory().getStackInSlot(this.slotInput);
         ItemStack outputStack = this.getInventory().getStackInSlot(this.slotOutput);
-        if (processResult != null)
+        if (inputStack != null)
         {
-            if (outputStack == null)
+            inputStack = inputStack.copy();
+            inputStack.stackSize = 1;
+            ItemStack outputResult = ProcessorRecipes.getOuput(this.type, inputStack);
+            if (outputResult != null)
             {
-                return true;
-            }
-            else if (outputStack.equals(processResult))
-            {
-                if (Math.min(outputStack.getMaxStackSize() - outputStack.stackSize, this.getInventoryStackLimit()) >= processResult.stackSize)
+                if (outputStack == null)
                 {
                     return true;
+                }
+                else if (ItemStack.areItemStacksEqual(outputResult, outputStack))
+                {
+                    if (Math.min(outputStack.getMaxStackSize() - outputStack.stackSize, this.getInventoryStackLimit()) >= outputResult.stackSize)
+                    {
+                        return true;
+                    }
                 }
             }
         }
@@ -85,25 +90,40 @@ public class TileEntityProcessor extends TileEntityMachine
     /** Processes the itemStack */
     public void process()
     {
-        ItemStack output = ProcessorRecipes.getOuput(this.type, this.getInventory().getStackInSlot(this.slotInput));
-        ItemStack outputSlot = this.getInventory().getStackInSlot(this.slotOutput);
-        if (output != null && outputSlot != null && output.equals(outputSlot))
+        System.out.println("Processing stack");
+        ItemStack inputSlotStack = this.getInventory().getStackInSlot(this.slotInput);
+        ItemStack outputSlotStack = this.getInventory().getStackInSlot(this.slotOutput);
+        if (inputSlotStack != null)
         {
-            ItemStack outputStack = outputSlot.copy();
-            outputStack.stackSize += outputSlot.stackSize;
-            this.getInventory().decrStackSize(this.slotInput, 1);
-            this.getInventory().setInventorySlotContents(this.slotOutput, outputStack);
+
+            inputSlotStack = inputSlotStack.copy();
+            inputSlotStack.stackSize = 1;
+            ItemStack receipeResult = ProcessorRecipes.getOuput(this.type, inputSlotStack);
+            System.out.println("Input = " + inputSlotStack.toString());
+            System.out.println("Output = " + (outputSlotStack == null ? "Null" : outputSlotStack.toString()));
+            System.out.println("Result = " + (receipeResult == null ? "Null" : receipeResult.toString()));
+            if (receipeResult != null && (outputSlotStack == null || ItemStack.areItemStacksEqual(outputSlotStack, receipeResult)))
+            {
+
+                ItemStack outputStack = outputSlotStack == null ? receipeResult : outputSlotStack.copy();
+                if (outputSlotStack != null)
+                {
+                    outputStack.stackSize += receipeResult.stackSize;
+                }
+                this.getInventory().decrStackSize(this.slotInput, 1);
+                this.getInventory().setInventorySlotContents(this.slotOutput, outputStack);
+            }
         }
     }
 
     @Override
-    public IInvBox getInventory()
+    public InvChest getInventory()
     {
         if (inventory == null)
         {
             inventory = new InvChest(this, 4);
         }
-        return inventory;
+        return (InvChest) inventory;
     }
 
     @Override
@@ -150,6 +170,30 @@ public class TileEntityProcessor extends TileEntityMachine
         return ForgeDirection.EAST;
     }
 
+    @Override
+    public String getInvName()
+    {
+        if (this.type == ProcessorType.CRUSHER)
+        {
+            return "gui.crushor.name";
+        }
+        if (this.type == ProcessorType.GRINDER)
+        {
+            return "gui.grinder.name";
+        }
+        if (this.type == ProcessorType.PRESS)
+        {
+            return "gui.press.name";
+        }
+        return "gui.processor.name";
+    }
+
+    @Override
+    public boolean isInvNameLocalized()
+    {
+        return false;
+    }
+
     /** NBT Data */
     @Override
     public void readFromNBT(NBTTagCompound nbt)
@@ -157,6 +201,7 @@ public class TileEntityProcessor extends TileEntityMachine
         super.readFromNBT(nbt);
         this.processingTicks = nbt.getInteger("processingTicks");
         this.renderStage = nbt.getInteger("renderStage");
+        this.getInventory().loadInv(nbt);
 
     }
 
@@ -166,6 +211,7 @@ public class TileEntityProcessor extends TileEntityMachine
         super.writeToNBT(nbt);
         nbt.setInteger("processingTicks", this.processingTicks);
         nbt.setInteger("renderStage", this.renderStage);
+        this.getInventory().saveInv(nbt);
 
     }
 

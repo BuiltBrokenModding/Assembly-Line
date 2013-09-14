@@ -15,11 +15,14 @@ import dark.assembly.common.imprinter.ContainerImprinter;
 import dark.assembly.common.imprinter.TileEntityImprinter;
 import dark.assembly.common.machine.encoder.ContainerEncoder;
 import dark.assembly.common.machine.encoder.TileEntityEncoder;
+import dark.assembly.common.machine.processor.ContainerProcessor;
+import dark.assembly.common.machine.processor.TileEntityProcessor;
 
 public class CommonProxy implements IGuiHandler
 {
     public static final int GUI_IMPRINTER = 1;
     public static final int GUI_ENCODER = 2;
+    public static final int GUI_CRUSHER = 3;
 
     public void preInit()
     {
@@ -107,6 +110,10 @@ public class CommonProxy implements IGuiHandler
                 {
                     if (tileEntity != null && tileEntity instanceof TileEntityEncoder)
                         return new ContainerEncoder(player.inventory, (TileEntityEncoder) tileEntity);
+                }
+                case GUI_CRUSHER:
+                {
+                    return new ContainerProcessor(player.inventory, (TileEntityProcessor) tileEntity);
                 }
             }
         }

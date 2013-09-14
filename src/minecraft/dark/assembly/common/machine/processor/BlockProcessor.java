@@ -13,6 +13,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.common.AssemblyLine;
+import dark.assembly.common.CommonProxy;
 import dark.assembly.common.TabAssemblyLine;
 import dark.core.common.DarkMain;
 import dark.core.prefab.BlockMachine;
@@ -34,8 +35,11 @@ public class BlockProcessor extends BlockMachine implements IExtraObjectInfo
     @Override
     public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
     {
-        //TODO activate GUI, and if GS is installed do user lock protection
-        //Maybe later add support for button activation to cause animation of the crusher to activate
+        if (!world.isRemote)
+        {
+            entityPlayer.openGui(AssemblyLine.instance, CommonProxy.GUI_CRUSHER, world, x, y, z);
+            return true;
+        }
         return false;
     }
 
