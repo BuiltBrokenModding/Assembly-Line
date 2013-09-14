@@ -21,14 +21,16 @@ public class TileEntityProcessor extends TileEntityMachine
 
     public ProcessorType type;
 
-    public TileEntityProcessor(ProcessorType type)
-    {
-        this.type = type;
-    }
-
     @Override
     public void updateEntity()
     {
+        if (this.type == null)
+        {
+            if (this.getBlockMetadata() == 0 || this.getBlockMetadata() == 1)
+            {
+                this.type = ProcessorType.CRUSHER;
+            }
+        }
         super.updateEntity();
         if (this.running)
         {

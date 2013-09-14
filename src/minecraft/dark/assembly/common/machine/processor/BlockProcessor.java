@@ -11,9 +11,9 @@ import net.minecraftforge.common.Configuration;
 import universalelectricity.core.UniversalElectricity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.TabAssemblyLine;
-import dark.assembly.common.machine.processor.ProcessorRecipes.ProcessorType;
 import dark.core.common.DarkMain;
 import dark.core.prefab.BlockMachine;
 import dark.core.prefab.IExtraObjectInfo;
@@ -21,6 +21,9 @@ import dark.core.prefab.helpers.Pair;
 
 public class BlockProcessor extends BlockMachine implements IExtraObjectInfo
 {
+    public static float crusherWattPerTick = .125f;
+    public static float grinderWattPerTick = .125f;
+    public static float pressWattPerTick = .2f;
 
     public BlockProcessor(int blockID)
     {
@@ -86,25 +89,21 @@ public class BlockProcessor extends BlockMachine implements IExtraObjectInfo
     @Override
     public TileEntity createTileEntity(World world, int metadata)
     {
-        if (metadata == 0 || metadata == 1)
-        {
-            return new TileEntityProcessor(ProcessorType.CRUSHER);
-        }
-        return super.createTileEntity(world, metadata);
+        return new TileEntityProcessor();
     }
 
     @Override
     public boolean hasExtraConfigs()
     {
-        // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override
     public void loadExtraConfigs(Configuration config)
     {
-        // TODO Auto-generated method stub
-
+        crusherWattPerTick = (float) (config.get("settings", "CrusherWattPerTick", 125).getDouble(125) / 1000);
+        grinderWattPerTick = (float) (config.get("settings", "GrinderWattPerTick", 125).getDouble(125) / 1000);
+        pressWattPerTick = (float) (config.get("settings", "PressWattPerTick", 200).getDouble(200) / 1000);
     }
 
     @Override
@@ -119,6 +118,26 @@ public class BlockProcessor extends BlockMachine implements IExtraObjectInfo
     {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public boolean isOpaqueCube()
+    {
+        return false;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean renderAsNormalBlock()
+    {
+        return false;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public int getRenderType()
+    {
+        return BlockRenderingHandler.BLOCK_RENDER_ID;
     }
 
 }

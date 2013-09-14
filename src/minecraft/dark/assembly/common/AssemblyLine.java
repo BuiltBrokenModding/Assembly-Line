@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 
@@ -50,13 +51,15 @@ import dark.assembly.common.machine.crane.TileEntityCraneRail;
 import dark.assembly.common.machine.encoder.BlockEncoder;
 import dark.assembly.common.machine.encoder.ItemDisk;
 import dark.assembly.common.machine.encoder.TileEntityEncoder;
+import dark.assembly.common.machine.processor.BlockProcessor;
 import dark.core.common.BlockRegistry.BlockData;
 import dark.core.common.DarkMain;
 import dark.core.prefab.ModPrefab;
+import dark.core.prefab.items.ItemBlockHolder;
 
 @ModstatInfo(prefix = "asmline")
 @Mod(modid = AssemblyLine.MOD_ID, name = AssemblyLine.MOD_NAME, version = DarkMain.VERSION, dependencies = "required-after:DarkCore", useMetadata = true)
-@NetworkMod( clientSideRequired = true, serverSideRequired = false)
+@NetworkMod(clientSideRequired = true, serverSideRequired = false)
 public class AssemblyLine extends ModPrefab
 {
 
@@ -68,7 +71,6 @@ public class AssemblyLine extends ModPrefab
     // @Mod
     public static final String MOD_ID = "AssemblyLine";
     public static final String MOD_NAME = "Assembly Line";
-
 
     @SidedProxy(clientSide = "dark.assembly.client.ClientProxy", serverSide = "dark.assembly.common.CommonProxy")
     public static CommonProxy proxy;
@@ -93,6 +95,8 @@ public class AssemblyLine extends ModPrefab
     public static final boolean DEBUG = false;
     public static boolean REQUIRE_NO_POWER = false;
     public static boolean VINALLA_RECIPES = false;
+
+    public static Block processorMachine;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
@@ -164,6 +168,8 @@ public class AssemblyLine extends ModPrefab
         recipeLoader.blockCraneController = new BlockCraneController(getNextID());
         recipeLoader.blockCraneFrame = new BlockCraneFrame(getNextID());
         recipeLoader.blockTurntable = new BlockTurntable(getNextID());
+        this.processorMachine = new BlockProcessor(getNextID());
+        dataList.add(new BlockData(this.processorMachine, ItemBlockHolder.class, "OreProcessor"));
 
         recipeLoader.itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", ITEM_ID_PREFIX).getInt());
         recipeLoader.itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", ITEM_ID_PREFIX + 1).getInt());
