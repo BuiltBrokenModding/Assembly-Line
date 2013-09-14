@@ -3,10 +3,14 @@ package dark.api;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.ForgeDirection;
 
+/** Simple way to control the read-out display over several tools when they are used on the
+ * tileEntity
+ *
+ * @author DarkGuardsman */
 public interface IToolReadOut
 {
-    /** Grabs the message displayed to the user on right click of the machine with the pipe gauge
-     * 
+    /** Grabs the message displayed to the user on right click of the machine with the given tool
+     *
      * @param user
      * @param side - may not work correctly yet but should give you a side
      * @return - a string to be displayed to the player for a reading. automatically adds ReadOut:

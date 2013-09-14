@@ -19,11 +19,10 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
-import dark.api.ISpecialAccess;
-import dark.api.ITerminal;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.TileEntityMachine;
 import dark.core.prefab.access.AccessLevel;
+import dark.core.prefab.access.ISpecialAccess;
 import dark.core.prefab.access.UserAccess;
 
 /** @author Calclavia, DarkGuardsman */

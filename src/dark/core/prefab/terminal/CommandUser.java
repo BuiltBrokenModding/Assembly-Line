@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
-import dark.api.ISpecialAccess;
-import dark.api.ITerminal;
 import dark.core.prefab.access.AccessLevel;
+import dark.core.prefab.access.ISpecialAccess;
 
 public class CommandUser extends TerminalCommand
 {
