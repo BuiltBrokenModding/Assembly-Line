@@ -42,11 +42,39 @@ public class TileEntityProcessor extends TileEntityMachine
                 this.type = ProcessorType.CRUSHER;
                 this.WATTS_PER_TICK = BlockProcessor.crusherWattPerTick;
             }
+            else if (this.getBlockMetadata() == 4 || this.getBlockMetadata() == 5)
+            {
+                this.type = ProcessorType.GRINDER;
+                this.WATTS_PER_TICK = BlockProcessor.grinderWattPerTick;
+            }
+            else if (this.getBlockMetadata() == 8 || this.getBlockMetadata() == 9)
+            {
+                this.type = ProcessorType.PRESS;
+                this.WATTS_PER_TICK = BlockProcessor.pressWattPerTick;
+            }
 
             this.MAX_WATTS = this.WATTS_PER_TICK * 20;
         }
         super.updateEntity();
         if (this.running)
+        {
+            this.doAnimation();
+
+            if (!this.worldObj.isRemote)
+            {
+
+                if (this.processingTicks++ >= this.processingTime)
+                {
+                    this.processingTicks = 0;
+                    this.process();
+                }
+            }
+        }
+    }
+
+    public void doAnimation()
+    {
+        if (this.type == ProcessorType.CRUSHER || this.type == ProcessorType.PRESS)
         {
             if (invertPiston)
             {
@@ -63,13 +91,11 @@ public class TileEntityProcessor extends TileEntityMachine
                 }
             }
         }
-        if (!this.worldObj.isRemote)
+        else
         {
-
-            if (this.processingTicks++ >= this.processingTime)
+            if (renderStage++ >= 8)
             {
-                this.processingTicks = 0;
-                this.process();
+                renderStage = 1;
             }
         }
     }
@@ -189,25 +215,11 @@ public class TileEntityProcessor extends TileEntityMachine
     @Override
     public String getInvName()
     {
-        if (this.type == ProcessorType.CRUSHER)
+        if (this.type != null)
         {
-            return "gui.crushor.name";
-        }
-        if (this.type == ProcessorType.GRINDER)
-        {
-            return "gui.grinder.name";
-        }
-        if (this.type == ProcessorType.PRESS)
-        {
-            return "gui.press.name";
+            return type.unlocalizedContainerName;
         }
         return "gui.processor.name";
-    }
-
-    @Override
-    public boolean isInvNameLocalized()
-    {
-        return false;
     }
 
     @Override
