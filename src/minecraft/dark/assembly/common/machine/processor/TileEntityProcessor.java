@@ -1,10 +1,20 @@
 package dark.assembly.common.machine.processor;
 
+import java.io.DataInputStream;
+import java.io.IOException;
+
+import universalelectricity.core.vector.Vector3;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
-import dark.assembly.common.machine.processor.ProcessorRecipes.ProcessorType;
+import dark.api.ProcessorRecipes;
+import dark.api.ProcessorRecipes.ProcessorType;
+import dark.core.network.PacketHandler;
 import dark.core.prefab.TileEntityMachine;
+import dark.core.prefab.TileEntityMachine.TilePacketTypes;
 import dark.core.prefab.invgui.InvChest;
 
 /** Basic A -> B recipe processor machine designed mainly to handle ore blocks
@@ -20,6 +30,8 @@ public class TileEntityProcessor extends TileEntityMachine
 
     public ProcessorType type;
 
+    public boolean invertPiston = false;
+
     @Override
     public void updateEntity()
     {
@@ -28,27 +40,36 @@ public class TileEntityProcessor extends TileEntityMachine
             if (this.getBlockMetadata() == 0 || this.getBlockMetadata() == 1)
             {
                 this.type = ProcessorType.CRUSHER;
+                this.WATTS_PER_TICK = BlockProcessor.crusherWattPerTick;
             }
+
+            this.MAX_WATTS = this.WATTS_PER_TICK * 20;
         }
         super.updateEntity();
         if (this.running)
         {
-            if (this.ticks % 5 == 0)
+            if (invertPiston)
             {
-                renderStage = renderStage++;
-                if (renderStage >= 8)
+                if (renderStage-- <= 0)
                 {
-                    renderStage = 1;
+                    invertPiston = false;
                 }
             }
-            if (!this.worldObj.isRemote)
+            else
             {
-
-                if (this.processingTicks++ >= this.processingTime)
+                if (renderStage++ >= 8)
                 {
-                    this.processingTicks = 0;
-                    this.process();
+                    invertPiston = true;
                 }
+            }
+        }
+        if (!this.worldObj.isRemote)
+        {
+
+            if (this.processingTicks++ >= this.processingTime)
+            {
+                this.processingTicks = 0;
+                this.process();
             }
         }
     }
@@ -75,7 +96,7 @@ public class TileEntityProcessor extends TileEntityMachine
                 {
                     return true;
                 }
-                else if (ItemStack.areItemStacksEqual(outputResult, outputStack))
+                else if (outputResult.isItemEqual(outputStack))
                 {
                     if (Math.min(outputStack.getMaxStackSize() - outputStack.stackSize, this.getInventoryStackLimit()) >= outputResult.stackSize)
                     {
@@ -90,7 +111,6 @@ public class TileEntityProcessor extends TileEntityMachine
     /** Processes the itemStack */
     public void process()
     {
-        System.out.println("Processing stack");
         ItemStack inputSlotStack = this.getInventory().getStackInSlot(this.slotInput);
         ItemStack outputSlotStack = this.getInventory().getStackInSlot(this.slotOutput);
         if (inputSlotStack != null)
@@ -99,10 +119,7 @@ public class TileEntityProcessor extends TileEntityMachine
             inputSlotStack = inputSlotStack.copy();
             inputSlotStack.stackSize = 1;
             ItemStack receipeResult = ProcessorRecipes.getOuput(this.type, inputSlotStack);
-            System.out.println("Input = " + inputSlotStack.toString());
-            System.out.println("Output = " + (outputSlotStack == null ? "Null" : outputSlotStack.toString()));
-            System.out.println("Result = " + (receipeResult == null ? "Null" : receipeResult.toString()));
-            if (receipeResult != null && (outputSlotStack == null || ItemStack.areItemStacksEqual(outputSlotStack, receipeResult)))
+            if (receipeResult != null && (outputSlotStack == null || outputSlotStack.isItemEqual(receipeResult)))
             {
 
                 ItemStack outputStack = outputSlotStack == null ? receipeResult : outputSlotStack.copy();
@@ -157,13 +174,12 @@ public class TileEntityProcessor extends TileEntityMachine
         {
             return new int[] { slotInput };
         }
-        return new int[] { slotBatteryDrain };
+        return new int[] { slotBatteryDrain, slotInput, slotOutput };
     }
 
     public ForgeDirection getDirection()
     {
-        int meta = this.worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-        if (meta == 0)
+        if (this.worldObj.getBlockMetadata(xCoord, yCoord, zCoord) == 0)
         {
             return ForgeDirection.NORTH;
         }
@@ -191,6 +207,40 @@ public class TileEntityProcessor extends TileEntityMachine
     @Override
     public boolean isInvNameLocalized()
     {
+        return false;
+    }
+
+    @Override
+    public void sendGUIPacket(EntityPlayer entity)
+    {
+        if (!this.worldObj.isRemote && entity instanceof EntityPlayerMP)
+        {
+            ((EntityPlayerMP) entity).playerNetServerHandler.sendPacketToPlayer(PacketHandler.instance().getPacket(this.getChannel(), this, TilePacketTypes.GUI.name, this.processingTicks, this.processingTime, this.energyStored));
+        }
+    }
+
+    public boolean simplePacket(String id, DataInputStream dis, EntityPlayer player)
+    {
+        if (!super.simplePacket(id, dis, player))
+        {
+            try
+            {
+                if (this.worldObj.isRemote)
+                {
+                    if (id.equalsIgnoreCase(TilePacketTypes.GUI.name))
+                    {
+                        this.processingTicks = dis.readInt();
+                        this.processingTime = dis.readInt();
+                        this.setEnergyStored(dis.readFloat());
+                        return true;
+                    }
+                }
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
         return false;
     }
 

@@ -149,18 +149,15 @@ public class ModelCrusher extends ModelBase
         {
             pos = 0;
         }
-        int delta = 0;
-        switch (pos / 2)
+        float delta = pos / 4;
+
+        if (delta < 0)
         {
-            case 1:
-                delta = 1;
-                break;
-            case 2:
-                delta = 2;
-                break;
-            default:
-                delta = 0;
-                break;
+            delta = 0;
+        }
+        if (delta > 2)
+        {
+            delta = 2;
         }
         leftCrusher.setRotationPoint(-3F + delta, 11F, -5F);
         rightCrusher.setRotationPoint(1F - delta, 11F, -5F);

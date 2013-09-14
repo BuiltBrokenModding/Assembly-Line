@@ -11,6 +11,7 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.tileentity.TileEntityFurnace;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.api.ProcessorRecipes;
 
 public class ContainerProcessor extends Container
 {

@@ -8,10 +8,10 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.api.ProcessorRecipes.ProcessorType;
 import dark.assembly.client.model.ModelCrusher;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.machine.processor.TileEntityProcessor;
-import dark.assembly.common.machine.processor.ProcessorRecipes.ProcessorType;
 import dark.core.client.renders.RenderTileMachine;
 
 @SideOnly(Side.CLIENT)
