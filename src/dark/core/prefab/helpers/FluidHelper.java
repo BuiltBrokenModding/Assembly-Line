@@ -8,6 +8,9 @@ import java.util.Map.Entry;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -59,7 +62,7 @@ public class FluidHelper
     }
 
     /** Gets the block's fluid if it has one
-     * 
+     *
      * @param world - world we are working in
      * @param vector - 3D location in world
      * @return @Fluid that the block is */
@@ -98,10 +101,10 @@ public class FluidHelper
     }
 
     /** Drains a block of fluid
-     * 
+     *
      * @Note sets the block with a client update only. Doesn't tick the block allowing for better
      * placement of fluid that can flow infinitely
-     * 
+     *
      * @param doDrain - do the action
      * @return FluidStack drained from the block */
     public static FluidStack drainBlock(World world, Vector3 node, boolean doDrain)
@@ -110,7 +113,7 @@ public class FluidHelper
     }
 
     /** Drains a block of fluid
-     * 
+     *
      * @param doDrain - do the action
      * @param update - block update flag to use
      * @return FluidStack drained from the block */
@@ -209,9 +212,9 @@ public class FluidHelper
     }
 
     /** Helper method to fill a location with a fluid
-     * 
+     *
      * Note: This does not update the block to prevent the liquid from flowing
-     * 
+     *
      * @return */
     public static int fillBlock(World world, Vector3 node, FluidStack stack, boolean doFill)
     {
@@ -245,7 +248,7 @@ public class FluidHelper
     }
 
     /** Fills all instances of IFluidHandler surrounding the origin
-     * 
+     *
      * @param stack - FluidStack that will be filled into the tanks
      * @param doFill - Actually perform the action or simulate action
      * @param ignore - ForgeDirections to ignore
@@ -278,7 +281,7 @@ public class FluidHelper
     }
 
     /** Fills an instance of IFluidHandler in the given direction
-     * 
+     *
      * @param stack - FluidStack to fill the tank will
      * @param doFill - Actually perform the action or simulate action
      * @param direction - direction to fill in from the origin
@@ -291,6 +294,97 @@ public class FluidHelper
             return ((IFluidHandler) entity).fill(direction.getOpposite(), stack, doFill);
         }
         return 0;
+    }
+
+    /** Does all the work needed to fill or drain an item of fluid when a player clicks on the block. */
+    public static boolean playerActivatedFluidItem(World world, int x, int y, int z, EntityPlayer entityplayer, int side)
+    {
+        if (entityplayer != null && !entityplayer.isSneaking())
+        {
+            ItemStack current = entityplayer.inventory.getCurrentItem().copy();
+
+            if (current != null && world.getBlockTileEntity(x, y, z) instanceof IFluidHandler)
+            {
+                IFluidHandler tank = (IFluidHandler) world.getBlockTileEntity(x, y, z);
+                ItemStack reStack = FluidHelper.drainItem(current, tank, ForgeDirection.getOrientation(side), !entityplayer.capabilities.isCreativeMode);
+                if (reStack != null && reStack.isItemEqual(current))
+                {
+                    reStack = FluidHelper.fillItem(current, tank, ForgeDirection.getOrientation(side), !entityplayer.capabilities.isCreativeMode);
+                }
+                if (!entityplayer.capabilities.isCreativeMode && (reStack == null || !reStack.isItemEqual(current)))
+                {
+                    if (current.stackSize > 1)
+                    {
+                        if (reStack != null && !entityplayer.inventory.addItemStackToInventory(reStack))
+                        {
+                            ItemWorldHelper.dropItemStack(world, new Vector3(x, y, z), reStack, true);
+                        }
+                        entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, AutoCraftingManager.consumeItem(current, 1));
+
+                    }
+                    else
+                    {
+                        entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, reStack);
+                    }
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Drains an item of fluid and fills the tank with what was drained
+     *
+     * @param consumeItem - should it consume the item. Used mainly for creative mode players. This
+     * does effect the return of the method
+     * @return Item stack that would be returned if the item was drain of its fluid. Water bucket ->
+     * empty bucket */
+    public static ItemStack drainItem(ItemStack stack, IFluidHandler tank, ForgeDirection side, boolean consumeItem)
+    {
+        if (stack != null && tank != null)
+        {
+            FluidStack liquid = FluidContainerRegistry.getFluidForFilledItem(stack);
+            if (liquid != null)
+            {
+                int fill = tank.fill(side, liquid, true);
+                if (fill > 0 && consumeItem)
+                {
+                    return AutoCraftingManager.consumeItem(stack.copy(), 1);
+                }
+            }
+        }
+        return stack;
+    }
+
+    /** Fills an item with fluid from the tank
+     *
+     * @param consumeItem - should it consume the item. Used mainly for creative mode players. This
+     * does effect the return of the method
+     * @return Item stack that would be returned if the item was filled with fluid. empty bucket ->
+     * water bucket */
+    public static ItemStack fillItem(ItemStack stack, IFluidHandler tank, ForgeDirection side, boolean consumeItem)
+    {
+        if (stack != null && tank != null)
+        {
+            FluidStack liquid = FluidContainerRegistry.getFluidForFilledItem(stack);
+            FluidStack drainStack = tank.drain(side, Integer.MAX_VALUE, false);
+            if (liquid == null && drainStack != null)
+            {
+                ItemStack liquidItem = FluidContainerRegistry.fillFluidContainer(drainStack, stack);
+                liquid = FluidContainerRegistry.getFluidForFilledItem(liquidItem);
+                tank.drain(side, liquid, true);
+
+                if (liquid != null)
+                {
+                    if (consumeItem)
+                    {
+                        return liquidItem;
+                    }
+
+                }
+            }
+        }
+        return stack;
     }
 
     /** Builds a list of fluidStacks from FluidTankInfo general taken from an instanceof
@@ -327,6 +421,10 @@ public class FluidHelper
         return stackList;
 
     }
+
+    /*
+     * Fluid restriction handler for color codes
+     */
 
     @ForgeSubscribe
     public void onLiquidRegistered(FluidRegisterEvent event)
