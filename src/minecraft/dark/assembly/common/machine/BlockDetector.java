@@ -71,7 +71,8 @@ public class BlockDetector extends BlockImprintable
         this.eye_red = iconReg.registerIcon(AssemblyLine.instance.PREFIX + "detector_red");
     }
 
-    @Override@SideOnly(Side.CLIENT)
+    @Override
+    @SideOnly(Side.CLIENT)
     public Icon getBlockTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side)
     {
         TileEntity tileEntity = iBlockAccess.getBlockTileEntity(x, y, z);
@@ -94,7 +95,8 @@ public class BlockDetector extends BlockImprintable
         return this.machine_icon;
     }
 
-    @Override@SideOnly(Side.CLIENT)
+    @Override
+    @SideOnly(Side.CLIENT)
     public Icon getIcon(int side, int metadata)
     {
         if (side == ForgeDirection.SOUTH.ordinal())
@@ -146,7 +148,8 @@ public class BlockDetector extends BlockImprintable
         return false;
     }
 
-    @Override@SideOnly(Side.CLIENT)
+    @Override
+    @SideOnly(Side.CLIENT)
     public boolean renderAsNormalBlock()
     {
         return false;

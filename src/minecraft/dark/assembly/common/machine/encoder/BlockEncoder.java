@@ -34,14 +34,16 @@ public class BlockEncoder extends BlockAssembly
     }
 
     /** Returns the block texture based on the side being looked at. Args: side */
-    @Override@SideOnly(Side.CLIENT)
+    @Override
+    @SideOnly(Side.CLIENT)
     public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
     {
         return getIcon(side, 0);
     }
 
     /** Returns the block texture based on the side being looked at. Args: side */
-    @Override@SideOnly(Side.CLIENT)
+    @Override
+    @SideOnly(Side.CLIENT)
     public Icon getIcon(int side, int meta)
     {
         if (side == 1)

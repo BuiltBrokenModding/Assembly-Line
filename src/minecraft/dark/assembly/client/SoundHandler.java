@@ -5,6 +5,7 @@ import net.minecraftforge.event.ForgeSubscribe;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.common.AssemblyLine;
+
 @SideOnly(Side.CLIENT)
 public class SoundHandler
 {

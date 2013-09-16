@@ -3,22 +3,19 @@ package dark.assembly.common.machine.processor;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-import universalelectricity.core.vector.Vector3;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
 import dark.api.ProcessorRecipes;
 import dark.api.ProcessorRecipes.ProcessorType;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.TileEntityMachine;
-import dark.core.prefab.TileEntityMachine.TilePacketTypes;
 import dark.core.prefab.invgui.InvChest;
 
 /** Basic A -> B recipe processor machine designed mainly to handle ore blocks
- *
+ * 
  * @author DarkGuardsman */
 public class TileEntityProcessor extends TileEntityMachine
 {

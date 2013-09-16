@@ -13,7 +13,7 @@ import dark.assembly.common.TabAssemblyLine;
 import dark.assembly.common.imprinter.prefab.BlockImprintable;
 
 /** A block that manipulates item movement between inventories.
- *
+ * 
  * @author Calclavia */
 public class BlockManipulator extends BlockImprintable
 {
@@ -97,7 +97,8 @@ public class BlockManipulator extends BlockImprintable
         return false;
     }
 
-    @Override@SideOnly(Side.CLIENT)
+    @Override
+    @SideOnly(Side.CLIENT)
     public boolean renderAsNormalBlock()
     {
         return false;

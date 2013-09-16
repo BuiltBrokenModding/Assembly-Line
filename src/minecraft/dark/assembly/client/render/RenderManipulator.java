@@ -10,6 +10,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.client.model.ModelManipulator;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.machine.TileEntityManipulator;
+
 @SideOnly(Side.CLIENT)
 public class RenderManipulator extends RenderImprintable
 {

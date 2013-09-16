@@ -16,6 +16,7 @@ import dark.assembly.client.model.ModelCraneRail;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.machine.crane.CraneHelper;
 import dark.assembly.common.machine.crane.TileEntityCraneRail;
+
 @SideOnly(Side.CLIENT)
 public class RenderCraneFrame extends TileEntitySpecialRenderer
 {

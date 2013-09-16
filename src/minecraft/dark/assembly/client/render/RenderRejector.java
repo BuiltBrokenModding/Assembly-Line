@@ -10,6 +10,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.client.model.ModelRejectorPiston;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.machine.TileEntityRejector;
+
 @SideOnly(Side.CLIENT)
 public class RenderRejector extends RenderImprintable
 {

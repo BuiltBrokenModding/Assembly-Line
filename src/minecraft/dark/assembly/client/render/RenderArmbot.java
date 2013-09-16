@@ -20,6 +20,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.client.model.ModelArmbot;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.armbot.TileEntityArmbot;
+
 @SideOnly(Side.CLIENT)
 public class RenderArmbot extends TileEntitySpecialRenderer
 {

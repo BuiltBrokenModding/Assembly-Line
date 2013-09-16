@@ -15,6 +15,7 @@ import dark.assembly.client.model.ModelCraneController;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.machine.crane.CraneHelper;
 import dark.assembly.common.machine.crane.TileEntityCraneController;
+
 @SideOnly(Side.CLIENT)
 public class RenderCraneController extends RenderImprintable
 {

@@ -22,7 +22,7 @@ import dark.assembly.common.machine.BlockAssembly;
 import dark.assembly.common.machine.belt.TileEntityConveyorBelt.SlantType;
 
 /** The block for the actual conveyor belt!
- *
+ * 
  * @author Calclavia, DarkGuardsman */
 public class BlockConveyorBelt extends BlockAssembly
 {
@@ -343,7 +343,8 @@ public class BlockConveyorBelt extends BlockAssembly
         return false;
     }
 
-    @Override@SideOnly(Side.CLIENT)
+    @Override
+    @SideOnly(Side.CLIENT)
     public boolean renderAsNormalBlock()
     {
         return false;

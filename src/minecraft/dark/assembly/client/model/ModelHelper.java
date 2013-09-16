@@ -9,6 +9,7 @@ import net.minecraft.util.Vec3;
 import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+
 @SideOnly(Side.CLIENT)
 public class ModelHelper
 {
@@ -186,7 +187,7 @@ public class ModelHelper
     }
 
     /** Sets whether or not to clip the texture.
-     *
+     * 
      * @param clip If true, textures on blocks less than 1x1x1 will be clipped. If false, they will
      * be scaled. */
     public static void setTextureClip(boolean clip)

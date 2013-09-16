@@ -34,6 +34,7 @@ import dark.assembly.common.machine.crane.TileEntityCraneController;
 import dark.assembly.common.machine.crane.TileEntityCraneRail;
 import dark.assembly.common.machine.encoder.TileEntityEncoder;
 import dark.assembly.common.machine.processor.TileEntityProcessor;
+
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy
 {

@@ -12,6 +12,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.imprinter.ContainerImprinter;
 import dark.assembly.common.imprinter.TileEntityImprinter;
+
 @SideOnly(Side.CLIENT)
 public class GuiImprinter extends GuiContainer
 {

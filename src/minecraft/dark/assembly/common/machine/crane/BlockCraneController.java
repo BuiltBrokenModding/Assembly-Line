@@ -24,7 +24,8 @@ public class BlockCraneController extends BlockAssembly
         return false;
     }
 
-    @Override@SideOnly(Side.CLIENT)
+    @Override
+    @SideOnly(Side.CLIENT)
     public boolean renderAsNormalBlock()
     {
         return false;
