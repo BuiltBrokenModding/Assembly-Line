@@ -126,17 +126,13 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
     {
         this.isRedstonePowered = false;
         /** input location up */
-        Vector3 inputUp = new Vector3(this);
-        inputUp.modifyPositionFromSide(ForgeDirection.UP);
+        Vector3 inputUp = new Vector3(this).modifyPositionFromSide(ForgeDirection.UP);
         /** input location down */
-        Vector3 inputDown = new Vector3(this);
-        inputDown.modifyPositionFromSide(ForgeDirection.DOWN);
+        Vector3 inputDown = new Vector3(this).modifyPositionFromSide(ForgeDirection.DOWN);
         /** input location facing */
-        Vector3 inputPosition = new Vector3(this);
-        inputPosition.modifyPositionFromSide(this.getDirection().getOpposite());
+        Vector3 inputPosition = new Vector3(this).modifyPositionFromSide(this.getDirection().getOpposite());
         /** output location facing */
-        Vector3 outputPosition = new Vector3(this);
-        outputPosition.modifyPositionFromSide(this.getDirection());
+        Vector3 outputPosition = new Vector3(this).modifyPositionFromSide(this.getDirection());
 
         ItemStack itemStack = invHelper().tryGrabFromPosition(inputUp, ForgeDirection.UP, 1);
 

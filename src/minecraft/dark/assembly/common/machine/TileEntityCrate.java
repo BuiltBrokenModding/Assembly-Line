@@ -18,7 +18,7 @@ import dark.core.interfaces.IExternalInv;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.TileEntityInv;
 
-public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, IExternalInv
+public class TileEntityCrate extends TileEntityInv implements IPacketReceiver
 {
     /** Collective total stack of all inv slots */
     private ItemStack sampleStack;
