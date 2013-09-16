@@ -10,12 +10,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import dark.api.ProcessorRecipes;
 import dark.api.ProcessorRecipes.ProcessorType;
+import dark.core.interfaces.IInvBox;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.TileEntityMachine;
 import dark.core.prefab.invgui.InvChest;
 
 /** Basic A -> B recipe processor machine designed mainly to handle ore blocks
- * 
+ *
  * @author DarkGuardsman */
 public class TileEntityProcessor extends TileEntityMachine
 {
@@ -145,7 +146,7 @@ public class TileEntityProcessor extends TileEntityMachine
             if (receipeResult != null && (outputSlotStack == null || outputSlotStack.isItemEqual(receipeResult)))
             {
 
-                ItemStack outputStack = outputSlotStack == null ? receipeResult : outputSlotStack.copy();
+                ItemStack outputStack = outputSlotStack == null ? receipeResult.copy() : outputSlotStack.copy();
                 if (outputSlotStack != null)
                 {
                     outputStack.stackSize += receipeResult.stackSize;
@@ -157,13 +158,13 @@ public class TileEntityProcessor extends TileEntityMachine
     }
 
     @Override
-    public InvChest getInventory()
+    public IInvBox getInventory()
     {
         if (inventory == null)
         {
             inventory = new InvChest(this, 4);
         }
-        return (InvChest) inventory;
+        return inventory;
     }
 
     @Override
