@@ -2,14 +2,13 @@ package dark.api;
 
 import java.util.HashMap;
 
-import dark.core.prefab.helpers.Pair;
-
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import dark.core.prefab.helpers.Pair;
 
 /** Recipes for ore processor machines
- *
+ * 
  * @author DarkGuardsman */
 public class ProcessorRecipes
 {
