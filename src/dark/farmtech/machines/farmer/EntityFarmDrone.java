@@ -47,7 +47,7 @@ public class EntityFarmDrone extends EntityLiving implements IElectricalStorage
         {
             //TODO stop work and return home
         }
-        if (this.home == null)
+        if (this.home == null || this.getEnergyStored() <= 0)
         {
             //TODO turn into block, or have go dormant
         }
