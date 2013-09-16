@@ -19,7 +19,7 @@ import dark.core.prefab.tilenetwork.NetworkTileEntities;
 /** Side note: the network should act like this when done {@link http
  * ://www.e4training.com/hydraulic_calculators/B1.htm} as well as stay compatible with the forge
  * Liquids
- *
+ * 
  * @author Rseifert */
 public class NetworkPipes extends NetworkFluidTiles
 {
@@ -163,7 +163,7 @@ public class NetworkPipes extends NetworkFluidTiles
     }
 
     /** Adds FLuid to this network from one of the connected Pipes
-     *
+     * 
      * @param source - Were this liquid came from
      * @param stack - LiquidStack to be sent
      * @param doFill - actually fill the tank or just check numbers
@@ -174,7 +174,7 @@ public class NetworkPipes extends NetworkFluidTiles
     }
 
     /** Adds FLuid to this network from one of the connected Pipes
-     *
+     * 
      * @param source - Were this liquid came from
      * @param stack - LiquidStack to be sent
      * @param doFill - actually fill the tank or just check numbers

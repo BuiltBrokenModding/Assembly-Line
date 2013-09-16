@@ -8,7 +8,7 @@ import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.helpers.Triple;
 
 /** Used to store more complex info, than A + B = C, on two FluidStack mixing behavior
- *
+ * 
  * @author DarkGuardsman */
 public class FluidRecipeInfo
 {
@@ -53,7 +53,7 @@ public class FluidRecipeInfo
         /** receiving & input object must be either be an instance of a class extending Item,
          * ItemStack, Block, Fluid, FluidStack, or OreNames. Anything else and the mixing will never
          * work
-         *
+         * 
          * @param receiving - receiving object that is waiting to be mixed
          * @param input - object being added to the receiving object
          * @param output - result of mixing the object together. Can be anything but not all
@@ -86,7 +86,7 @@ public class FluidRecipeInfo
 
         /** Can the mixing be complete in anyway. Does a basic volume check but does not check for
          * volume wasted in mixing
-         *
+         * 
          * @param receiving - Object stored and waiting for mixing
          * @param input - Object being added to the receiving object
          * @return true if the process can be completed */
@@ -142,7 +142,7 @@ public class FluidRecipeInfo
          * later, However to prevent 4 different methods be created for mixing this is the best
          * output design. As well this doesn't consume the object but does the calculations of the
          * recipe out at the given object volumes
-         *
+         * 
          * First value is amount of the first object used. Second value is the amount of the second
          * object used. Third value Pair containing object output then amount of output */
         public Triple<Integer, Integer, Pair<Object, Integer>> mix(Object receiving, Object input)

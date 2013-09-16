@@ -27,6 +27,7 @@ import dark.fluid.common.BlockFM;
 public class BlockTank extends BlockFM
 {
     public static int tankVolume = 8;
+
     public BlockTank(int id)
     {
         super("FluidTank", id, Material.rock);

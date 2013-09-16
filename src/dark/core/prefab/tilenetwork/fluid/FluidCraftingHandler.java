@@ -17,7 +17,7 @@ import dark.core.prefab.tilenetwork.fluid.FluidRecipeInfo.SimpleFluidRecipe;
 
 /** Handles all kinds of process involving mixing Fluids with other fluids and/or Items, Blocks,
  * ItemStack, or Liquids
- *
+ * 
  * @author DarkGuardsman */
 public class FluidCraftingHandler
 {
@@ -66,7 +66,7 @@ public class FluidCraftingHandler
 
     /** Does the fluid recipe crafting for the crafter object. Requires that the object fully use all
      * methods from the #IFluidRecipeCrafter
-     *
+     * 
      * @param crafter - crafting object, recommend it be a tile but can be anything as long as the
      * method are used correctly. In some recipe cases when the setRecipeObjectContent nothing will
      * be used. If result is null assume not crafting was performed. If there is a result the
@@ -266,7 +266,7 @@ public class FluidCraftingHandler
 
     /** Gets the result of the merge of the two fluids, order of merge does matter and will produce
      * different results.
-     *
+     * 
      * @param stackOne - Receiving fluid, eg the one that is not moving
      * @param stackTwo - Flowing fluid, eg the one moving into the first fluid
      * @return Object result of the merge, can be anything from string, ItemStack, Item, Block, or

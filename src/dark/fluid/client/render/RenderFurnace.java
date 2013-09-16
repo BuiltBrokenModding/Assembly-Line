@@ -10,6 +10,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.client.renders.RenderTileMachine;
 import dark.fluid.client.model.ModelFurnace;
 import dark.fluid.common.FluidMech;
+
 @SideOnly(Side.CLIENT)
 public class RenderFurnace extends RenderTileMachine
 {

@@ -2,7 +2,7 @@ package dark.core.prefab.tilenetwork.fluid;
 
 /** Use this if you want to take advantage of the {@link #FluidCraftingHandler} 's auto crafting
  * methods to do as little as work as possible to create recipe results
- *
+ * 
  * @author DarkGuardsman */
 public interface IFluidRecipeCrafter
 {

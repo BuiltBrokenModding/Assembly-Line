@@ -91,7 +91,7 @@ public class TileEntityStarterPump extends TileEntityMachine implements IToolRea
     }
 
     /** Drains an area starting at the given location
-     *
+     * 
      * @param world - world to drain in, most cases will be the TileEntities world
      * @param loc - origin to start the path finder with. If this is an instance of IDrain this
      * method will act different */
@@ -205,9 +205,9 @@ public class TileEntityStarterPump extends TileEntityMachine implements IToolRea
     @Override
     public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
     {
-        if(tool == EnumTools.PIPE_GUAGE)
+        if (tool == EnumTools.PIPE_GUAGE)
         {
-            return "Source Blocks: "+this.getLiquidFinder().results.size();
+            return "Source Blocks: " + this.getLiquidFinder().results.size();
         }
         return null;
     }

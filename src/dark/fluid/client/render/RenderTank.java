@@ -10,11 +10,9 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.client.renders.RenderBlockFluid;
-import dark.core.client.renders.RenderBlockFluid;
 import dark.core.client.renders.RenderTileMachine;
 import dark.core.interfaces.ColorCode;
 import dark.fluid.client.model.ModelTankSide;
-import dark.fluid.common.FluidMech;
 import dark.fluid.common.machines.TileEntityTank;
 
 @SideOnly(Side.CLIENT)

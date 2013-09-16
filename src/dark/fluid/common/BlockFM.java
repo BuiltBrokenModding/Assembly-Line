@@ -1,13 +1,9 @@
 package dark.fluid.common;
 
-import java.util.Set;
-
 import net.minecraft.block.material.Material;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.Configuration;
 import dark.core.prefab.BlockMachine;
 import dark.core.prefab.IExtraObjectInfo;
-import dark.core.prefab.helpers.Pair;
 
 public abstract class BlockFM extends BlockMachine implements IExtraObjectInfo
 {

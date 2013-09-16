@@ -22,7 +22,8 @@ public class BlockFluid extends BlockFluidFinite
 
     }
 
-    @Override @SideOnly(Side.CLIENT)
+    @Override
+    @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister par1IconRegister)
     {
         this.flowing = par1IconRegister.registerIcon(FluidMech.instance.PREFIX + this.getUnlocalizedName().replace("tile.", "") + "_flowing");
@@ -30,7 +31,8 @@ public class BlockFluid extends BlockFluidFinite
         fluid.setIcons(still, flowing);
     }
 
-    @Override @SideOnly(Side.CLIENT)
+    @Override
+    @SideOnly(Side.CLIENT)
     public Icon getIcon(int par1, int par2)
     {
         return still;

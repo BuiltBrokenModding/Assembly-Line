@@ -10,6 +10,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+
 @SideOnly(Side.CLIENT)
 public class ModelTankSide extends ModelBase
 {
@@ -128,7 +129,7 @@ public class ModelTankSide extends ModelBase
      * @param right - "" to the right
      * @param bot - "" to the bot
      * @param top - "" to the top
-     *
+     * 
      * Not this only renders one side of the block. You will need to rotate it to face another
      * direction then render it. If rotating up or down you will need to translate it a bit */
     public void render(float size, boolean left, boolean right, boolean bot, boolean top)

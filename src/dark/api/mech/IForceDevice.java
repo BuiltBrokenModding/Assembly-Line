@@ -8,16 +8,16 @@ import dark.api.parts.ITileConnector;
  * input for force for the tile, and should return the actually force the machine is using. Supply
  * is when the code asks for your tile to output force on the side, just return the force value
  * don't try to apply the force to other machines.
- *
+ * 
  * Tip Supply should never equal load as everything will stop moving since your need more force to
  * move an object than it creates as a load, 100Power - 100Load = 0Force/0Movement. The supply of
  * force should be greater than the load required to do the work
- *
+ * 
  * @author DarkGuardsman */
 public interface IForceDevice extends ITileConnector
 {
     /** Applies force to this tile
-     *
+     * 
      * @param side - side its coming from
      * @param force - amount of force
      * @return amount of force actually loaded down */
