@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.helpers.MetaGroup;
 import dark.core.prefab.helpers.Pair;
 import dark.fluid.client.render.BlockRenderHelper;
@@ -31,6 +32,12 @@ public class BlockSink extends BlockFM
     public TileEntity createNewTileEntity(World var1)
     {
         return new TileEntitySink();
+    }
+
+    @Override
+    public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int side, float hitX, float hitY, float hitZ)
+    {
+        return FluidHelper.playerActivatedFluidItem(world, x, y, z, entityplayer, side);
     }
 
     @Override
