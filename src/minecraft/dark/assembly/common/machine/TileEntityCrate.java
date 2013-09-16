@@ -51,7 +51,7 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
     /** Turns the inventory array into a single stack of matching items. This assumes that all items
      * in the crate are the same TODO eject minority items and only keep the majority that are the
      * same to prevent duplication issues
-     * 
+     *
      * @param force - force a rebuild of the inventory from the single stack created */
     public void buildSampleStack()
     {
@@ -145,17 +145,7 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
     @Override
     public boolean canStore(ItemStack stack, int slot, ForgeDirection side)
     {
-        return this.sampleStack == null || stack != null && stack.equals(sampleStack);
-    }
-
-    @Override
-    public boolean canRemove(ItemStack stack, int slot, ForgeDirection side)
-    {
-        if (slot >= this.getSlotCount())
-        {
-            return false;
-        }
-        return true;
+        return this.sampleStack == null || stack != null && stack.isItemEqual(sampleStack);
     }
 
     /** Gets the current slot count for the crate */
