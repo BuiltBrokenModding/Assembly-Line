@@ -6,6 +6,7 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import dark.core.prefab.helpers.AutoCraftingManager;
 import dark.core.prefab.helpers.Pair;
 
@@ -152,11 +153,15 @@ public class ProcessorRecipes
             {
                 if (recipeList[i] != null && random.nextFloat() >= chance)
                 {
-                    if (recipeList[i].getItemDamage() == 32767)
+                    int meta = recipeList[i].getItemDamage();
+                    NBTTagCompound tag = recipeList[i].getTagCompound();
+                    if (recipeList[i].itemID < Block.blocksList.length && Block.blocksList[recipeList[i].itemID] != null && recipeList[i].getItemDamage() > 16)
                     {
-                        recipeList[i] = new ItemStack(recipeList[i].itemID, recipeList[i].stackSize, recipeList[i].getItemDamage());
+                        meta = 0;
+
                     }
-                    reList[i] = recipeList[i];
+                    reList[i] = new ItemStack(recipeList[i].itemID, recipeList[i].stackSize, meta);
+                    reList[i].setTagCompound(tag);
                 }
             }
         }

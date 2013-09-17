@@ -351,7 +351,7 @@ public class AutoCraftingManager
             if (checkStack != null)
             {
                 this.printDebug("ResourceChecker", " -----Item in slot0" + i + " = " + checkStack.toString());
-                if (this.areStacksEqual(recipeItem, checkStack))
+                if (AutoCraftingManager.areStacksEqual(recipeItem, checkStack))
                 {
                     this.printDebug("ResourceChecker", "Found matching item " + checkStack.toString());
                     return i;
