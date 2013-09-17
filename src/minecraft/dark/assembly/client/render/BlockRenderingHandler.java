@@ -14,6 +14,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.client.model.ModelConveyorBelt;
 import dark.assembly.client.model.ModelCrusher;
+import dark.assembly.client.model.ModelGrinder;
 import dark.assembly.client.model.ModelManipulator;
 import dark.assembly.client.model.ModelRejectorPiston;
 import dark.assembly.common.AssemblyLine;
@@ -27,6 +28,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
     private ModelRejectorPiston modelEjector = new ModelRejectorPiston();
     private ModelManipulator modelInjector = new ModelManipulator();
     private ModelCrusher modelCrushor = new ModelCrusher();
+    private ModelGrinder grinderModel = new ModelGrinder();
 
     @Override
     public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
@@ -101,6 +103,17 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
             GL11.glRotatef(-90f, 0f, 1f, 0f);
             this.modelCrushor.renderBody(0.0625f);
             this.modelCrushor.renderPiston(0.0625f, 4);
+            GL11.glPopMatrix();
+        }
+        else if (block.blockID == AssemblyLine.processorMachine.blockID && metadata == 4)
+        {
+            FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "GrinderBlock.png"));
+            GL11.glPushMatrix();
+            GL11.glTranslatef(0f, 1f, 0f);
+            GL11.glRotatef(180f, 0f, 0f, 1f);
+            GL11.glRotatef(-90f, 0f, 1f, 0f);
+            this.grinderModel.renderBody(0.0625f);
+            this.grinderModel.renderRotation(0.0625f, 0);
             GL11.glPopMatrix();
         }
     }

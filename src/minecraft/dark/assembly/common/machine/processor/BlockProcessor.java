@@ -1,21 +1,27 @@
 package dark.assembly.common.machine.processor;
 
+import java.util.List;
 import java.util.Set;
 
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.core.UniversalElectricity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.api.ProcessorRecipes.ProcessorType;
 import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.CommonProxy;
 import dark.assembly.common.TabAssemblyLine;
 import dark.core.common.DarkMain;
+import dark.core.common.items.EnumMeterials;
 import dark.core.prefab.BlockMachine;
 import dark.core.prefab.IExtraObjectInfo;
 import dark.core.prefab.helpers.Pair;
@@ -54,34 +60,17 @@ public class BlockProcessor extends BlockMachine implements IExtraObjectInfo
     public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
     {
         int meta = world.getBlockMetadata(x, y, z);
-        if (meta == 0)
+        int g = meta % 4;
+        if (g < 3)
         {
-            world.setBlockMetadataWithNotify(x, y, z, 1, 3);
+            world.setBlockMetadataWithNotify(x, y, z, meta + 1, 3);
             return true;
         }
-        if (meta == 1)
+        else
         {
-            world.setBlockMetadataWithNotify(x, y, z, 0, 3);
+            world.setBlockMetadataWithNotify(x, y, z, meta - 3, 3);
             return true;
         }
-        return false;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister iconReg)
-    {
-        if (this.blockIcon == null)
-        {
-            this.blockIcon = iconReg.registerIcon(DarkMain.getInstance().PREFIX + "machine");
-        }
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public Icon getIcon(int par1, int par2)
-    {
-        return this.blockIcon;
     }
 
     @Override
@@ -105,9 +94,13 @@ public class BlockProcessor extends BlockMachine implements IExtraObjectInfo
     @Override
     public void loadExtraConfigs(Configuration config)
     {
-        crusherWattPerTick = (float) (config.get("settings", "CrusherWattPerTick", 125).getDouble(125) / 1000);
-        grinderWattPerTick = (float) (config.get("settings", "GrinderWattPerTick", 125).getDouble(125) / 1000);
-        pressWattPerTick = (float) (config.get("settings", "PressWattPerTick", 200).getDouble(200) / 1000);
+        for (ProcessorData data : ProcessorData.values())
+        {
+            data.enabled = config.get(data.unlocalizedName, "Enabled", true).getBoolean(true);
+            data.allowCrafting = config.get(data.unlocalizedName, "CanCraft", true).getBoolean(true);
+            data.wattPerTick = (float) (config.get(data.unlocalizedName, "WattPerTick", data.wattPerTick).getDouble(data.wattPerTick) / 1000);
+            data.processingTicks = config.get(data.unlocalizedName, "ProcessingTicks", data.processingTicks).getInt();
+        }
     }
 
     @Override
@@ -120,8 +113,10 @@ public class BlockProcessor extends BlockMachine implements IExtraObjectInfo
     @Override
     public void loadOreNames()
     {
-        // TODO Auto-generated method stub
-
+        for (ProcessorData data : ProcessorData.values())
+        {
+            OreDictionary.registerOre(data.unlocalizedName + "OreProcessor", new ItemStack(this.blockID, 1, data.startMeta));
+        }
     }
 
     @Override
@@ -142,6 +137,40 @@ public class BlockProcessor extends BlockMachine implements IExtraObjectInfo
     public int getRenderType()
     {
         return BlockRenderingHandler.BLOCK_RENDER_ID;
+    }
+
+    @Override
+    public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List list)
+    {
+        for (ProcessorData data : ProcessorData.values())
+        {
+            if (data.enabled)
+            {
+                list.add(new ItemStack(par1, 1, data.startMeta));
+            }
+        }
+    }
+
+    public static enum ProcessorData
+    {
+        CRUSHER(ProcessorType.CRUSHER, "crusher", 125, 100, 0),
+        GRINDER(ProcessorType.GRINDER, "grinder", 125, 120, 4),
+        PRESS(ProcessorType.PRESS, "press", 200, 50, 8);
+        public ProcessorType type;
+        public String unlocalizedName;
+        public float wattPerTick;
+        public int processingTicks, startMeta;
+        public boolean enabled = true;
+        public boolean allowCrafting = true;
+
+        private ProcessorData(ProcessorType type, String name, float watts, int ticks, int meta)
+        {
+            this.type = type;
+            this.unlocalizedName = name;
+            this.wattPerTick = watts;
+            this.processingTicks = ticks;
+            this.startMeta = meta;
+        }
     }
 
 }

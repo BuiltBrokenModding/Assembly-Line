@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import dark.api.ProcessorRecipes;
 import dark.api.ProcessorRecipes.ProcessorType;
+import dark.assembly.common.machine.processor.BlockProcessor.ProcessorData;
 import dark.core.interfaces.IInvBox;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.TileEntityMachine;
@@ -35,23 +36,13 @@ public class TileEntityProcessor extends TileEntityMachine
     {
         if (this.type == null)
         {
-            if (this.getBlockMetadata() == 0 || this.getBlockMetadata() == 1)
-            {
-                this.type = ProcessorType.CRUSHER;
-                this.WATTS_PER_TICK = BlockProcessor.crusherWattPerTick;
-            }
-            else if (this.getBlockMetadata() == 4 || this.getBlockMetadata() == 5)
-            {
-                this.type = ProcessorType.GRINDER;
-                this.WATTS_PER_TICK = BlockProcessor.grinderWattPerTick;
-            }
-            else if (this.getBlockMetadata() == 8 || this.getBlockMetadata() == 9)
-            {
-                this.type = ProcessorType.PRESS;
-                this.WATTS_PER_TICK = BlockProcessor.pressWattPerTick;
-            }
+            int g = this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) / 4;
+            ProcessorData data = ProcessorData.values()[g];
 
+            this.WATTS_PER_TICK = data.wattPerTick;
             this.MAX_WATTS = this.WATTS_PER_TICK * 20;
+
+            this.processingTicks = data.processingTicks;
         }
         super.updateEntity();
         if (this.running)
