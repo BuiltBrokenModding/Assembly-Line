@@ -30,6 +30,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import dark.api.ProcessorRecipes;
 import dark.core.common.BlockRegistry.BlockData;
 import dark.core.common.blocks.BlockBasalt;
 import dark.core.common.blocks.BlockColorGlass;
@@ -126,7 +127,7 @@ public class DarkMain extends ModPrefab
         BlockRegistry.registerAllBlocks();
         ExternalModHandler.init();
         super.init(event);
-
+        ProcessorRecipes.parseOreNames();
         if (CoreRecipeLoader.blockOre != null)
         {
             for (int i = 0; i < EnumMeterials.values().length; i++)
