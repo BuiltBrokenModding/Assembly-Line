@@ -51,21 +51,22 @@ public class RenderProcessor extends RenderTileMachine
             GL11.glRotatef(270f, 0f, 1f, 0f);
         }
 
-        if (tileEntity.blockMetadata >= 0 && tileEntity.blockMetadata <= 3)
+        int g = tileEntity.blockMetadata / 4;
+        if (g == 0)
         {
             crusherModel.renderBody(0.0625F);
             crusherModel.renderPiston(0.0625F, tileEntity.renderStage);
         }
-        else if (tileEntity.blockMetadata >= 4 && tileEntity.blockMetadata <= 7)
+        else if (g == 1)
         {
             grinderModel.renderBody(0.0625F);
             grinderModel.renderRotation(0.0625F, tileEntity.renderStage);
         }
-        else if (tileEntity.blockMetadata >= 8 && tileEntity.blockMetadata <= 11)
+        else if (g == 2)
         {
 
         }
-        else if (tileEntity.blockMetadata >= 12 && tileEntity.blockMetadata <= 15)
+        else if (g == 3)
         {
 
         }
@@ -83,7 +84,16 @@ public class RenderProcessor extends RenderTileMachine
     @Override
     public ResourceLocation getTexture(int block, int meta)
     {
-        return new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "CrusherBlock.png");
-    }
+        int g = meta / 4;
+        if (g == 0)
+        {
+            return new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "CrusherBlock.png");
+        }
+        else if (g == 1)
+        {
+            return new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "GrinderBlock.png");
+        }
+        return null;
 
+    }
 }

@@ -27,23 +27,29 @@ public class TileEntityProcessor extends TileEntityMachine
     public int processingTime = 100;
     public int renderStage = 1;
 
-    public ProcessorType type;
+    public ProcessorData processorData;
 
     public boolean invertPiston = false;
+    protected ItemStack[] outputBuffer;
+
+    public ProcessorData getProcessorData()
+    {
+        if (this.processorData == null)
+        {
+            int g = this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) / 4;
+            this.processorData = ProcessorData.values()[g];
+            this.WATTS_PER_TICK = processorData.wattPerTick;
+            this.MAX_WATTS = this.WATTS_PER_TICK * 20;
+
+            this.processingTime = processorData.processingTicks;
+        }
+        return processorData;
+    }
 
     @Override
     public void updateEntity()
     {
-        if (this.type == null)
-        {
-            int g = this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) / 4;
-            ProcessorData data = ProcessorData.values()[g];
-
-            this.WATTS_PER_TICK = data.wattPerTick;
-            this.MAX_WATTS = this.WATTS_PER_TICK * 20;
-
-            this.processingTicks = data.processingTicks;
-        }
+        this.getProcessorData();
         super.updateEntity();
         if (this.running)
         {
@@ -51,11 +57,52 @@ public class TileEntityProcessor extends TileEntityMachine
 
             if (!this.worldObj.isRemote)
             {
-
-                if (this.processingTicks++ >= this.processingTime)
+                if (this.outputBuffer != null)
                 {
-                    this.processingTicks = 0;
+                    int nullCount = 0;
+                    for (int i = 0; i < outputBuffer.length; i++)
+                    {
+                        ItemStack outputStack = this.getInventory().getStackInSlot(this.slotOutput);
+
+                        if (outputBuffer[i] == null)
+                        {
+                            nullCount += 1;
+                        }
+                        else if (outputStack == null)
+                        {
+                            this.getInventory().setInventorySlotContents(this.slotOutput, outputBuffer[i].copy());
+                            outputBuffer[i] = null;
+                        }
+                        else if (outputBuffer[i] != null && outputBuffer[i].isItemEqual(outputStack))
+                        {
+                            ItemStack outStack = outputStack.copy();
+                            int room = Math.min(outputStack.getMaxStackSize() - outputStack.stackSize, this.getInventoryStackLimit());
+                            if (room >= outputBuffer[i].stackSize)
+                            {
+
+                                outStack.stackSize += outputBuffer[i].stackSize;
+                                outputBuffer[i] = null;
+                            }
+                            else
+                            {
+                                int extract = outputBuffer[i].stackSize - (outputBuffer[i].stackSize - room);
+                                outputBuffer[i].stackSize -= extract;
+                                outStack.stackSize += extract;
+
+                            }
+
+                            this.getInventory().setInventorySlotContents(this.slotOutput, outStack);
+                        }
+                    }
+                    if (nullCount >= outputBuffer.length)
+                    {
+                        outputBuffer = null;
+                    }
+                }
+                if (outputBuffer == null && this.processingTicks++ >= this.processingTime)
+                {
                     this.process();
+                    this.processingTicks = 0;
                 }
             }
         }
@@ -63,7 +110,7 @@ public class TileEntityProcessor extends TileEntityMachine
 
     public void doAnimation()
     {
-        if (this.type == ProcessorType.CRUSHER || this.type == ProcessorType.PRESS)
+        if (this.getProcessorData().type == ProcessorType.CRUSHER || this.getProcessorData().type == ProcessorType.PRESS)
         {
             if (invertPiston)
             {
@@ -104,18 +151,24 @@ public class TileEntityProcessor extends TileEntityMachine
         {
             inputStack = inputStack.copy();
             inputStack.stackSize = 1;
-            ItemStack outputResult = ProcessorRecipes.getOuput(this.type, inputStack);
+            ItemStack[] outputResult = ProcessorRecipes.getOuput(this.getProcessorData().type, inputStack);
             if (outputResult != null)
             {
                 if (outputStack == null)
                 {
                     return true;
                 }
-                else if (outputResult.isItemEqual(outputStack))
+                else
                 {
-                    if (Math.min(outputStack.getMaxStackSize() - outputStack.stackSize, this.getInventoryStackLimit()) >= outputResult.stackSize)
+                    for (int i = 0; i < outputResult.length; i++)
                     {
-                        return true;
+                        if (outputResult[i] != null && outputResult[i].isItemEqual(outputStack))
+                        {
+                            if (Math.min(outputStack.getMaxStackSize() - outputStack.stackSize, this.getInventoryStackLimit()) >= outputResult[i].stackSize)
+                            {
+                                return true;
+                            }
+                        }
                     }
                 }
             }
@@ -127,23 +180,16 @@ public class TileEntityProcessor extends TileEntityMachine
     public void process()
     {
         ItemStack inputSlotStack = this.getInventory().getStackInSlot(this.slotInput);
-        ItemStack outputSlotStack = this.getInventory().getStackInSlot(this.slotOutput);
         if (inputSlotStack != null)
         {
 
             inputSlotStack = inputSlotStack.copy();
             inputSlotStack.stackSize = 1;
-            ItemStack receipeResult = ProcessorRecipes.getOuput(this.type, inputSlotStack);
-            if (receipeResult != null && (outputSlotStack == null || outputSlotStack.isItemEqual(receipeResult)))
+            ItemStack[] receipeResult = ProcessorRecipes.getOuput(this.getProcessorData().type, inputSlotStack);
+            if (receipeResult != null && this.outputBuffer == null)
             {
-
-                ItemStack outputStack = outputSlotStack == null ? receipeResult.copy() : outputSlotStack.copy();
-                if (outputSlotStack != null)
-                {
-                    outputStack.stackSize += receipeResult.stackSize;
-                }
                 this.getInventory().decrStackSize(this.slotInput, 1);
-                this.getInventory().setInventorySlotContents(this.slotOutput, outputStack);
+                this.outputBuffer = receipeResult;
             }
         }
     }
@@ -161,7 +207,7 @@ public class TileEntityProcessor extends TileEntityMachine
     @Override
     public boolean canStore(ItemStack stack, int slot, ForgeDirection side)
     {
-        if (slotInput == slot && ProcessorRecipes.getOuput(this.type, stack) != null)
+        if (slotInput == slot && ProcessorRecipes.getOuput(this.getProcessorData().type, stack) != null)
         {
             return true;
         }
@@ -204,9 +250,9 @@ public class TileEntityProcessor extends TileEntityMachine
     @Override
     public String getInvName()
     {
-        if (this.type != null)
+        if (this.getProcessorData() != null)
         {
-            return type.unlocalizedContainerName;
+            return "gui." + getProcessorData().unlocalizedName + ".name";
         }
         return "gui.processor.name";
     }

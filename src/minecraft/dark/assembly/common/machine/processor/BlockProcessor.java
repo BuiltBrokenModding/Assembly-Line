@@ -41,18 +41,18 @@ public class BlockProcessor extends BlockMachine implements IExtraObjectInfo
     @Override
     public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
     {
-        if (!world.isRemote)
+        if (entityPlayer != null)
         {
-            entityPlayer.openGui(AssemblyLine.instance, CommonProxy.GUI_CRUSHER, world, x, y, z);
-            return true;
+            if (world.isRemote)
+            {
+                return true;
+            }
+            else
+            {
+                entityPlayer.openGui(AssemblyLine.instance, CommonProxy.GUI_CRUSHER, world, x, y, z);
+                return true;
+            }
         }
-        return false;
-    }
-
-    @Override
-    public boolean onSneakMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
-    {
-        //Open machine calibration menu
         return false;
     }
 
@@ -76,7 +76,7 @@ public class BlockProcessor extends BlockMachine implements IExtraObjectInfo
     @Override
     public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
     {
-        list.add(new Pair<String, Class<? extends TileEntity>>("ALProcessor", TileEntityProcessor.class));
+        list.add(new Pair<String, Class<? extends TileEntity>>("ALOreProcessor", TileEntityProcessor.class));
     }
 
     @Override

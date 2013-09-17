@@ -171,8 +171,8 @@ public class ModelGrinder extends ModelBase
         //Set new rotation angle
         for (int i = 0; i < 6; i++)
         {
-            topDiskSet[i].offsetX += rotation;
-            bottomDiskSet[i].offsetX -= rotation;
+            topDiskSet[i].rotateAngleX += rotation;
+            bottomDiskSet[i].rotateAngleX -= rotation;
         }
 
         //render
@@ -191,22 +191,22 @@ public class ModelGrinder extends ModelBase
         {
             if (i == 0 || i % 2 == 0)
             {
-                topDiskSet[i].offsetX = 0.7853982F;
+                topDiskSet[i].rotateAngleX = 0.7853982F;
             }
             else
             {
-                topDiskSet[i].offsetX = 0F;
+                topDiskSet[i].rotateAngleX = 0F;
             }
         }
         for (int i = 0; i < bottomDiskSet.length; i++)
         {
             if (i != 0 && i % 2 != 0)
             {
-                bottomDiskSet[i].offsetX = 0.7853982F;
+                bottomDiskSet[i].rotateAngleX = 0.7853982F;
             }
             else
             {
-                bottomDiskSet[i].offsetX = 0F;
+                bottomDiskSet[i].rotateAngleX = 0F;
             }
         }
 
