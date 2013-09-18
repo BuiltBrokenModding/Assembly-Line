@@ -14,6 +14,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.util.AxisAlignedBB;
 import universalelectricity.prefab.network.IPacketReceiver;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -41,8 +42,6 @@ public abstract class TileEntityTerminal extends TileEntityEnergyMachine impleme
     /** Used on client side to determine the scroll of the terminal. */
     private int scroll = 0;
 
-    public final Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
-
     public TileEntityTerminal()
     {
         super(0, 0);
@@ -60,11 +59,12 @@ public abstract class TileEntityTerminal extends TileEntityEnergyMachine impleme
 
     public void senGUIPacket(EntityPlayer entity)
     {
-        if(!this.worldObj.isRemote)
+        if (!this.worldObj.isRemote)
         {
             PacketDispatcher.sendPacketToPlayer(this.getDescriptionPacket(), (Player) entity);
         }
     }
+
     /** Sends all NBT data. Server -> Client */
     @Override
     public Packet getDescriptionPacket()
@@ -84,9 +84,12 @@ public abstract class TileEntityTerminal extends TileEntityEnergyMachine impleme
 
         Packet packet = PacketHandler.instance().getPacket(this.getChannel(), this, data.toArray());
 
-        for (EntityPlayer player : this.playersUsing)
+        for (Object entity : this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(xCoord - 10, yCoord - 10, zCoord - 10, xCoord + 10, yCoord + 10, zCoord + 10)))
         {
-            PacketDispatcher.sendPacketToPlayer(packet, (Player) player);
+            if (entity instanceof EntityPlayer && ((EntityPlayer) entity).openContainer.getClass().equals(this.getContainer()))
+            {
+                PacketDispatcher.sendPacketToPlayer(packet, (Player) entity);
+            }
         }
     }
 
@@ -109,7 +112,7 @@ public abstract class TileEntityTerminal extends TileEntityEnergyMachine impleme
             {
                 if (this.worldObj.isRemote)
                 {
-                    if(id.equalsIgnoreCase(SimplePacketTypes.TERMINAL_OUTPUT.name))
+                    if (id.equalsIgnoreCase(SimplePacketTypes.TERMINAL_OUTPUT.name))
                     {
                         int size = dis.readInt();
 
@@ -130,20 +133,7 @@ public abstract class TileEntityTerminal extends TileEntityEnergyMachine impleme
                 }
                 else
                 {
-                    if (id.equalsIgnoreCase("GuiClosed"))
-                    {
-                        if (dis.readBoolean())
-                        {
-                            this.playersUsing.add(player);
-                            this.sendTerminalOutputToClients();
-                        }
-                        else
-                        {
-                            this.playersUsing.remove(player);
-                        }
-                        return true;
-                    }
-                    else if (id.equalsIgnoreCase(SimplePacketTypes.GUI_COMMAND.name))
+                    if (id.equalsIgnoreCase(SimplePacketTypes.GUI_COMMAND.name))
                     {
                         CommandRegistry.onCommand(this.worldObj.getPlayerEntityByName(dis.readUTF()), this, dis.readUTF());
                         this.sendTerminalOutputToClients();
