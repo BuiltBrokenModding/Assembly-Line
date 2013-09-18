@@ -15,6 +15,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.prefab.helpers.Pair;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.BlockFM;
+import dark.fluid.common.FMRecipeLoader;
 import dark.fluid.common.FluidMech;
 
 public class BlockPumpMachine extends BlockFM
@@ -67,7 +68,7 @@ public class BlockPumpMachine extends BlockFM
 
         if (meta < 4)
         {
-            return new ItemStack(FluidMech.recipeLoader.blockMachine, 1, 0);
+            return new ItemStack(FMRecipeLoader.blockMachine, 1, 0);
         }
 
         return null;

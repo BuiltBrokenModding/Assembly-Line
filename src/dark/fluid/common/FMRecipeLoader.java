@@ -53,7 +53,7 @@ public class FMRecipeLoader extends RecipeLoader
         this.registerTanks();
 
         // generator
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this.blockGenerator, 1), new Object[] { "@T@", "OVO", "@T@", 'T', new ItemStack(blockRod, 1), '@', "plateSteel", 'O', "basicCircuit", 'V', "motor" }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FMRecipeLoader.blockGenerator, 1), new Object[] { "@T@", "OVO", "@T@", 'T', new ItemStack(blockRod, 1), '@', "plateSteel", 'O', "basicCircuit", 'V', "motor" }));
         // mechanical rod
         GameRegistry.addRecipe(new ItemStack(blockRod, 1), new Object[] { "I@I", 'I', Item.ingotIron, '@', new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Iron.ordinal()) });
 

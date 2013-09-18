@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.client.renders.RenderTileMachine;
+import dark.core.prefab.ModPrefab;
 import dark.core.prefab.helpers.ConnectionHelper;
 import dark.fluid.client.model.ModelCenterTank;
 import dark.fluid.client.model.ModelCornerTank;
@@ -41,18 +42,18 @@ public class RenderBoiler extends RenderTileMachine
         int meta = 0;
         if (connected[5] == null && connected[3] == null && connected[4] == null && connected[2] == null || ((TileEntityBoiler) tileEntity).tankCount < 2)
         {
-            bindTextureByName(FluidMech.instance.PREFIX, FluidMech.MODEL_DIRECTORY + "tankTexture.png");
+            bindTextureByName(FluidMech.instance.PREFIX, ModPrefab.MODEL_DIRECTORY + "tankTexture.png");
             model.generalRender(0.0625F);
         }
         else if (ConnectionHelper.corner(tileEntity) == 0 || ((TileEntityBoiler) tileEntity).tankCount > 2)
         {
-            bindTextureByName(FluidMech.instance.PREFIX, FluidMech.MODEL_DIRECTORY + "tankBlock.png");
+            bindTextureByName(FluidMech.instance.PREFIX, ModPrefab.MODEL_DIRECTORY + "tankBlock.png");
             model2.renderBlock(0.0625F);
         }
         else
         {
             int corner = ConnectionHelper.corner(tileEntity);
-            bindTextureByName(FluidMech.instance.PREFIX, FluidMech.MODEL_DIRECTORY + "CornerTank.png");
+            bindTextureByName(FluidMech.instance.PREFIX, ModPrefab.MODEL_DIRECTORY + "CornerTank.png");
             switch (corner)
             {
                 case 1:

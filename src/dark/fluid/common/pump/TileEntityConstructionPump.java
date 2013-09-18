@@ -99,7 +99,7 @@ public class TileEntityConstructionPump extends TileEntityStarterPump implements
             {
                 for (IFluidHandler tank : ((NetworkFluidTiles) ((INetworkPipe) inputTile).getTileNetwork()).connectedTanks)
                 {
-                    if (tank instanceof IDrain && !ignoreList.contains((IDrain) tank))
+                    if (tank instanceof IDrain && !ignoreList.contains(tank))
                     {
                         drain = (IDrain) tank;
                         break;

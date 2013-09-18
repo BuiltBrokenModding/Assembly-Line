@@ -22,6 +22,7 @@ import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.tilenetwork.fluid.FluidNetworkHelper;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.BlockFM;
+import dark.fluid.common.FMRecipeLoader;
 import dark.fluid.common.FluidMech;
 
 public class BlockConstructionPump extends BlockFM
@@ -90,13 +91,13 @@ public class BlockConstructionPump extends BlockFM
     @SideOnly(Side.CLIENT)
     public int getRenderType()
     {
-        return BlockRenderHelper.instance.renderID;
+        return BlockRenderHelper.renderID;
     }
 
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
-        return new ItemStack(FluidMech.recipeLoader.blockConPump, 1, 0);
+        return new ItemStack(FMRecipeLoader.blockConPump, 1, 0);
     }
 
     @Override
@@ -116,6 +117,7 @@ public class BlockConstructionPump extends BlockFM
         par3List.add(new ItemStack(par1, 1, 0));
     }
 
+    @Override
     public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
     {
         if (!world.isRemote)

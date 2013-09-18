@@ -10,8 +10,10 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.core.prefab.ModPrefab;
 import dark.fluid.client.model.ModelReleaseValve;
 import dark.fluid.client.render.pipe.RenderPipe;
+import dark.fluid.common.FMRecipeLoader;
 import dark.fluid.common.FluidMech;
 
 @SideOnly(Side.CLIENT)
@@ -35,11 +37,11 @@ public class ItemRenderHelper implements IItemRenderer
     @Override
     public void renderItem(ItemRenderType type, ItemStack item, Object... data)
     {
-        if (item.itemID == FluidMech.recipeLoader.blockPipe.blockID || item.itemID == FluidMech.recipeLoader.blockGenPipe.blockID)
+        if (item.itemID == FMRecipeLoader.blockPipe.blockID || item.itemID == FMRecipeLoader.blockGenPipe.blockID)
         {
             this.renderPipeItem((RenderBlocks) data[0], item, type == ItemRenderType.EQUIPPED);
         }
-        if (item.itemID == FluidMech.recipeLoader.blockReleaseValve.blockID)
+        if (item.itemID == FMRecipeLoader.blockReleaseValve.blockID)
         {
             this.renderReleaseValve((RenderBlocks) data[0], item.getItemDamage(), type == ItemRenderType.EQUIPPED);
         }
@@ -73,7 +75,7 @@ public class ItemRenderHelper implements IItemRenderer
     public void renderReleaseValve(RenderBlocks renderer, int meta, boolean equ)
     {
         GL11.glPushMatrix();
-        FMLClientHandler.instance().getClient().renderEngine.func_110577_a(pipe.getTexture(FluidMech.recipeLoader.blockPipe.blockID, 15));
+        FMLClientHandler.instance().getClient().renderEngine.func_110577_a(pipe.getTexture(FMRecipeLoader.blockPipe.blockID, 15));
         if (!equ)
         {
             GL11.glTranslatef(0.5F, -0.5F, 0.5F);
@@ -88,7 +90,7 @@ public class ItemRenderHelper implements IItemRenderer
             pipe.SixPipe.renderBack();
             pipe.SixPipe.renderMiddle();
         }
-        FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(FluidMech.instance.DOMAIN, FluidMech.MODEL_DIRECTORY + "ReleaseValve.png"));
+        FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(FluidMech.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "ReleaseValve.png"));
         GL11.glRotatef(180f, 0f, 0f, 1f);
         if (!equ)
         {

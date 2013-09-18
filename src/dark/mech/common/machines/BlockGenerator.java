@@ -16,6 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.prefab.helpers.Pair;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.BlockFM;
+import dark.fluid.common.FMRecipeLoader;
 import dark.fluid.common.FluidMech;
 
 public class BlockGenerator extends BlockFM
@@ -38,7 +39,7 @@ public class BlockGenerator extends BlockFM
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
 
-        return new ItemStack(FluidMech.recipeLoader.blockGenerator, 1);
+        return new ItemStack(FMRecipeLoader.blockGenerator, 1);
     }
 
     @Override

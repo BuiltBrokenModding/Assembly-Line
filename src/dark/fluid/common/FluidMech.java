@@ -90,6 +90,7 @@ public class FluidMech extends ModPrefab
     /* LOGGER - EXTENDS FORGE'S LOG SYSTEM */
     public static Logger FMLog = Logger.getLogger(FluidMech.MOD_NAME);
 
+    @Override
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
@@ -101,6 +102,7 @@ public class FluidMech extends ModPrefab
         proxy.preInit();
     }
 
+    @Override
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
@@ -112,6 +114,7 @@ public class FluidMech extends ModPrefab
 
     }
 
+    @Override
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
@@ -219,7 +222,7 @@ public class FluidMech extends ModPrefab
 
         meta.url = "http://www.universalelectricity.com/fluidmechanics";
 
-        meta.logoFile = FluidMech.TEXTURE_DIRECTORY + "FM_Banner.png";
+        meta.logoFile = ModPrefab.TEXTURE_DIRECTORY + "FM_Banner.png";
         meta.version = DarkMain.VERSION;
         meta.authorList = Arrays.asList(new String[] { "DarkGuardsman AKA DarkCow" });
         meta.credits = "Please see the website.";
@@ -229,6 +232,7 @@ public class FluidMech extends ModPrefab
 
     public static final CreativeTabs TabFluidMech = new CreativeTabs("Hydraulics")
     {
+        @Override
         public ItemStack getIconItemStack()
         {
             return new ItemStack(FMRecipeLoader.blockPipe, 1, 4);

@@ -61,7 +61,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
         {
             if (ticks % refreshRate == 0)
             {
-                this.refreshRate = ((int) random.nextInt(5) * 40) + 20;
+                this.refreshRate = (random.nextInt(5) * 40) + 20;
                 this.refresh();
             }
         }
@@ -278,6 +278,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
         }
     }
 
+    @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox()
     {
@@ -290,6 +291,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
         return this.connectedBlocks;
     }
 
+    @Override
     public int getTankSize()
     {
         return FluidContainerRegistry.BUCKET_VOLUME * (BlockTank.tankVolume > 0 ? BlockTank.tankVolume : 1);

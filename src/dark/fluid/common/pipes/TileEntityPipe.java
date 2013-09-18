@@ -99,11 +99,11 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
         }
         if (!worldObj.isRemote)
         {
-            if (ticks % ((int) random.nextInt(5) * 40 + 20) == 0)
+            if (ticks % (random.nextInt(5) * 40 + 20) == 0)
             {
                 this.refresh();
             }
-            if (ticks % ((int) random.nextInt(5) * 60 + 20) == 0)
+            if (ticks % (random.nextInt(5) * 60 + 20) == 0)
             {
                 for (int i = 0; i < 6; i++)
                 {
@@ -554,6 +554,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
         return false;
     }
 
+    @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox()
     {

@@ -12,8 +12,10 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.client.renders.RenderTileMachine;
 import dark.core.interfaces.ColorCode;
+import dark.core.prefab.ModPrefab;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.fluid.client.model.ModelLargePipe;
+import dark.fluid.common.FMRecipeLoader;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.pipes.TileEntityPipe;
 import dark.fluid.common.pipes.addon.IPipeExtention;
@@ -37,7 +39,7 @@ public class RenderPipe extends RenderTileMachine
         GL11.glScalef(1.0F, -1F, -1F);
 
         int meta = 0;
-        int blockID = FluidMech.recipeLoader.blockPipe.blockID;
+        int blockID = FMRecipeLoader.blockPipe.blockID;
 
         if (te instanceof TileEntityPipe)
         {
@@ -50,7 +52,7 @@ public class RenderPipe extends RenderTileMachine
             // Pipes extension rendering
             for (int i = 0; i < 6; i++)
             {
-                IPipeExtention extention = (IPipeExtention) pipe.subEntities[i];
+                IPipeExtention extention = pipe.subEntities[i];
                 if (extention != null)
                 {
                     Object ob;
@@ -85,7 +87,7 @@ public class RenderPipe extends RenderTileMachine
     public ResourceLocation getTexture(int block, int meta)
     {
         String name = "";
-        if (block == FluidMech.recipeLoader.blockPipe.blockID)
+        if (block == FMRecipeLoader.blockPipe.blockID)
         {
             Fluid stack = FluidHelper.getStackForColor(ColorCode.get(meta));
             name = stack != null ? stack.getName() : "";
@@ -94,7 +96,7 @@ public class RenderPipe extends RenderTileMachine
         {
             name = ColorCode.get(meta).getName();
         }
-        return new ResourceLocation(FluidMech.instance.DOMAIN, FluidMech.MODEL_DIRECTORY + "pipes/" + name + "Pipe.png");
+        return new ResourceLocation(FluidMech.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "pipes/" + name + "Pipe.png");
     }
 
     public void render(int blockID, int meta, boolean[] side)

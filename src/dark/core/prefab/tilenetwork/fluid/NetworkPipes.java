@@ -45,6 +45,7 @@ public class NetworkPipes extends NetworkFluidTiles
         return new NetworkPipes(this.color);
     }
 
+    @Override
     public boolean isPartOfNetwork(TileEntity ent)
     {
         return super.isPartOfNetwork(ent) || this.pressureLoads.containsKey(ent) || this.pressureProducers.containsKey(ent);

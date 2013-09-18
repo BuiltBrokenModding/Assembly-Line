@@ -3,6 +3,7 @@ package dark.fluid.common.pipes;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import dark.fluid.common.FMRecipeLoader;
 import dark.fluid.common.FluidMech;
 
 public class ItemBlockPipe extends ItemBlock
@@ -24,7 +25,7 @@ public class ItemBlockPipe extends ItemBlock
     @Override
     public String getUnlocalizedName(ItemStack itemStack)
     {
-        if (itemStack.itemID == FluidMech.recipeLoader.blockPipe.blockID)
+        if (itemStack.itemID == FMRecipeLoader.blockPipe.blockID)
         {
             return "tile.rpipe." + itemStack.getItemDamage();
         }

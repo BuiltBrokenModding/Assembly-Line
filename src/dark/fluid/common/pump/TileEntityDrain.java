@@ -204,6 +204,7 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
         return ForgeDirection.getOrientation(meta);
     }
 
+    @Override
     public void setDirection(ForgeDirection direction)
     {
         if (direction != null && direction != this.getDirection())

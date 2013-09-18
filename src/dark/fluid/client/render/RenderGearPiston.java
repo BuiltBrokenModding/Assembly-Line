@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.client.renders.RenderTileMachine;
+import dark.core.prefab.ModPrefab;
 import dark.fluid.client.model.ModelGearPiston;
 import dark.fluid.common.FluidMech;
 import dark.mech.common.machines.TileEntitySteamPiston;
@@ -24,7 +25,7 @@ public class RenderGearPiston extends RenderTileMachine
 
     public void renderTileEntityAt(TileEntitySteamPiston tileEntity, double d, double d1, double d2, float d3)
     {
-        bindTextureByName(FluidMech.instance.PREFIX, FluidMech.MODEL_DIRECTORY + "GearShaftPiston.png");
+        bindTextureByName(FluidMech.instance.PREFIX, ModPrefab.MODEL_DIRECTORY + "GearShaftPiston.png");
         GL11.glPushMatrix();
         GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
         GL11.glScalef(1.0F, -1F, -1F);

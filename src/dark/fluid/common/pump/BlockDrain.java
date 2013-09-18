@@ -81,6 +81,7 @@ public class BlockDrain extends BlockFM
         TileEntity entity = world.getBlockTileEntity(x, y, z);
     }
 
+    @Override
     public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
     {
         if (!world.isRemote)
@@ -106,6 +107,7 @@ public class BlockDrain extends BlockFM
         return true;
     }
 
+    @Override
     public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
     {
         if (!world.isRemote)
