@@ -1,10 +1,10 @@
 package dark.farmtech.machines.farmer;
 
 import universalelectricity.core.vector.Vector3;
-import dark.core.prefab.TileEntityMachine;
+import dark.core.prefab.machine.TileEntityEnergyMachine;
 import dark.farmtech.machines.farmer.EntityFarmDrone.DroneData;
 
-public class TileEntityFarmBox extends TileEntityMachine
+public class TileEntityFarmBox extends TileEntityEnergyMachine
 {
     /** Current amount of drone slots this box has */
     private int droneSlots = 1;
