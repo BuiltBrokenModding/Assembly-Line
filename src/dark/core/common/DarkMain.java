@@ -202,16 +202,11 @@ public class DarkMain extends ModPrefab
         dataList.add(new BlockData(CoreRecipeLoader.blockDebug, ItemBlockHolder.class, "DMDebug"));
         dataList.add(new BlockData(blockMulti, "DMDMultiBlock").addTileEntity("DMMultiBlock", TileEntityMulti.class).canDisable(false));
         /* ITEMS */
+        CoreRecipeLoader.itemTool = new ItemTools(ITEM_ID_PREFIX++, DarkMain.CONFIGURATION);
+
         if (CONFIGURATION.get("general", "LoadOreItems", true, "Only disable ore items if you have another mod that provides metal dust, ingots, and plates").getBoolean(true))
         {
             CoreRecipeLoader.itemMetals = new ItemOreDirv(ITEM_ID_PREFIX++, CONFIGURATION);
-        }
-        if (CONFIGURATION.get("general", "LoadCraftingParts", true, "Only disable this if you do not plan to craft, or are not using any mods that need these parts.").getBoolean(true))
-        {
-            CoreRecipeLoader.itemParts = new ItemParts(ITEM_ID_PREFIX++, CONFIGURATION);
-            CoreRecipeLoader.itemRefinedSand = new ItemColoredDust(CONFIGURATION.getItem(Configuration.CATEGORY_ITEM, "RefinedSandItemID", ITEM_ID_PREFIX++).getInt(), "RefinedSand");
-            CoreRecipeLoader.itemGlowingSand = new ItemColoredDust(CONFIGURATION.getItem(Configuration.CATEGORY_ITEM, "GlowingRefinedSandItemID", ITEM_ID_PREFIX++).getInt(), "GlowRefinedSand");
-
         }
         if (CONFIGURATION.get("general", "EnableBattery", true).getBoolean(true))
         {
@@ -221,8 +216,13 @@ public class DarkMain extends ModPrefab
         {
             CoreRecipeLoader.wrench = new ItemWrench(ITEM_ID_PREFIX++, DarkMain.CONFIGURATION);
         }
-        CoreRecipeLoader.itemTool = new ItemTools(ITEM_ID_PREFIX++, DarkMain.CONFIGURATION);
+        if (CONFIGURATION.get("general", "LoadCraftingParts", true, "Only disable this if you do not plan to craft, or are not using any mods that need these parts.").getBoolean(true))
+        {
+            CoreRecipeLoader.itemParts = new ItemParts(ITEM_ID_PREFIX++, CONFIGURATION);
+            CoreRecipeLoader.itemRefinedSand = new ItemColoredDust(CONFIGURATION.getItem(Configuration.CATEGORY_ITEM, "RefinedSandItemID", ITEM_ID_PREFIX++).getInt(), "RefinedSand");
+            CoreRecipeLoader.itemGlowingSand = new ItemColoredDust(CONFIGURATION.getItem(Configuration.CATEGORY_ITEM, "GlowingRefinedSandItemID", ITEM_ID_PREFIX++).getInt(), "GlowRefinedSand");
 
+        }
         CONFIGURATION.save();
         /* CONFIG END */
         return dataList;

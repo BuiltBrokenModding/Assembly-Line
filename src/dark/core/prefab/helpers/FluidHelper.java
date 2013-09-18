@@ -307,11 +307,13 @@ public class FluidHelper
             {
                 IFluidHandler tank = (IFluidHandler) world.getBlockTileEntity(x, y, z);
                 ItemStack reStack = FluidHelper.drainItem(current, tank, ForgeDirection.getOrientation(side), !entityplayer.capabilities.isCreativeMode);
+                boolean stackChanged = false;
                 if (reStack != null && reStack.isItemEqual(current))
                 {
                     reStack = FluidHelper.fillItem(current, tank, ForgeDirection.getOrientation(side), !entityplayer.capabilities.isCreativeMode);
                 }
-                if (!entityplayer.capabilities.isCreativeMode && (reStack == null || !reStack.isItemEqual(current)))
+                stackChanged = reStack == null || !reStack.isItemEqual(current);
+                if (!entityplayer.capabilities.isCreativeMode && stackChanged)
                 {
                     if (current.stackSize > 1)
                     {
@@ -327,7 +329,7 @@ public class FluidHelper
                         entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, reStack);
                     }
                 }
-                return true;
+                return stackChanged;
             }
         }
         return false;
