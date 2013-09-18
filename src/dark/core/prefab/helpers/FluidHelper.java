@@ -299,18 +299,22 @@ public class FluidHelper
     /** Does all the work needed to fill or drain an item of fluid when a player clicks on the block. */
     public static boolean playerActivatedFluidItem(World world, int x, int y, int z, EntityPlayer entityplayer, int side)
     {
-        if (entityplayer != null && !entityplayer.isSneaking())
+        if (world.isRemote)
+        {
+            return true;
+        }
+        else if (entityplayer != null && !entityplayer.isSneaking())
         {
             ItemStack current = entityplayer.inventory.getCurrentItem().copy();
 
             if (current != null && world.getBlockTileEntity(x, y, z) instanceof IFluidHandler)
             {
                 IFluidHandler tank = (IFluidHandler) world.getBlockTileEntity(x, y, z);
-                ItemStack reStack = FluidHelper.drainItem(current, tank, ForgeDirection.getOrientation(side), !entityplayer.capabilities.isCreativeMode);
+                ItemStack reStack = FluidHelper.drainItem(current, tank, ForgeDirection.getOrientation(side));
                 boolean stackChanged = false;
                 if (reStack != null && reStack.isItemEqual(current))
                 {
-                    reStack = FluidHelper.fillItem(current, tank, ForgeDirection.getOrientation(side), !entityplayer.capabilities.isCreativeMode);
+                    reStack = FluidHelper.fillItem(current, tank, ForgeDirection.getOrientation(side));
                 }
                 stackChanged = reStack == null || !reStack.isItemEqual(current);
                 if (!entityplayer.capabilities.isCreativeMode && stackChanged)
@@ -328,6 +332,7 @@ public class FluidHelper
                     {
                         entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, reStack);
                     }
+                    entityplayer.inventoryContainer.detectAndSendChanges();
                 }
                 return stackChanged;
             }
@@ -341,17 +346,16 @@ public class FluidHelper
      * does effect the return of the method
      * @return Item stack that would be returned if the item was drain of its fluid. Water bucket ->
      * empty bucket */
-    public static ItemStack drainItem(ItemStack stack, IFluidHandler tank, ForgeDirection side, boolean consumeItem)
+    public static ItemStack drainItem(ItemStack stack, IFluidHandler tank, ForgeDirection side)
     {
         if (stack != null && tank != null)
         {
             FluidStack liquid = FluidContainerRegistry.getFluidForFilledItem(stack);
             if (liquid != null)
             {
-                int fill = tank.fill(side, liquid, true);
-                if (fill > 0 && consumeItem)
+                if (tank.fill(side, liquid, true) > 0)
                 {
-                    return AutoCraftingManager.consumeItem(stack.copy(), 1);
+                    return stack.getItem().getContainerItemStack(stack);
                 }
             }
         }
@@ -364,7 +368,7 @@ public class FluidHelper
      * does effect the return of the method
      * @return Item stack that would be returned if the item was filled with fluid. empty bucket ->
      * water bucket */
-    public static ItemStack fillItem(ItemStack stack, IFluidHandler tank, ForgeDirection side, boolean consumeItem)
+    public static ItemStack fillItem(ItemStack stack, IFluidHandler tank, ForgeDirection side)
     {
         if (stack != null && tank != null)
         {
@@ -373,16 +377,9 @@ public class FluidHelper
             if (liquid == null && drainStack != null)
             {
                 ItemStack liquidItem = FluidContainerRegistry.fillFluidContainer(drainStack, stack);
-                liquid = FluidContainerRegistry.getFluidForFilledItem(liquidItem);
-                tank.drain(side, liquid, true);
-
-                if (liquid != null)
+                if (tank.drain(side, FluidContainerRegistry.getFluidForFilledItem(liquidItem), true) != null)
                 {
-                    if (consumeItem)
-                    {
-                        return liquidItem;
-                    }
-
+                    return liquidItem;
                 }
             }
         }
