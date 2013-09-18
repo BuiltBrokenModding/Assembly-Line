@@ -1,5 +1,6 @@
 package dark.core.common.machines;
 
+import java.io.DataInputStream;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,8 +25,7 @@ import dark.core.prefab.machine.TileEntityEnergyMachine;
 
 public class TileEntityElectricFurnace extends TileEntityEnergyMachine
 {
-    /** The amount of watts required every TICK. */
-    public static final float WATTS_PER_TICK = 0.5f;
+    int batterySlot = 0, inputSlot = 1, outputSlot = 2;
 
     /** The amount of processing time required. */
     public static final int PROCESS_TIME_REQUIRED = 130;
@@ -33,18 +33,17 @@ public class TileEntityElectricFurnace extends TileEntityEnergyMachine
     /** The amount of ticks this machine has been processing. */
     public int processTicks = 0;
 
-    /** The ItemStacks that hold the items currently being used in the battery box */
-    private ItemStack[] containingItems = new ItemStack[3];
-
-    /** The amount of players using the electric furnace. */
-    public final Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
+    public TileEntityElectricFurnace()
+    {
+        super(0.5f);
+    }
 
     @Override
     public void updateEntity()
     {
         super.updateEntity();
 
-        this.discharge(this.containingItems[0]);
+        this.discharge(this.getInventory().getStackInSlot(this.batterySlot));
 
         /** Attempts to smelt an item. */
         if (!this.worldObj.isRemote)
@@ -84,14 +83,6 @@ public class TileEntityElectricFurnace extends TileEntityEnergyMachine
             {
                 this.processTicks = 0;
             }
-
-            if (this.ticks % 3 == 0)
-            {
-                for (EntityPlayer player : this.playersUsing)
-                {
-                    PacketDispatcher.sendPacketToPlayer(getDescriptionPacket(), (Player) player);
-                }
-            }
         }
     }
 
@@ -111,53 +102,59 @@ public class TileEntityElectricFurnace extends TileEntityEnergyMachine
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketHandler.instance().getPacket(this.getChannel(), this, this.processTicks);
+        return PacketHandler.instance().getPacket(this.getChannel(), this, "processTicks", this.processTicks);
     }
 
     @Override
-    public void handlePacketData(INetworkManager network, int type, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
+    public void sendGUIPacket(EntityPlayer player)
+    {
+        if (!this.worldObj.isRemote)
+        {
+            PacketDispatcher.sendPacketToPlayer(getDescriptionPacket(), (Player) player);
+        }
+    }
+
+    @Override
+    public boolean simplePacket(String id, DataInputStream dis, EntityPlayer player)
     {
         try
         {
-            this.processTicks = dataStream.readInt();
+            if (this.worldObj.isRemote)
+            {
+                if (id.equalsIgnoreCase("processTicks"))
+                {
+                    this.processTicks = dis.readInt();
+                }
+            }
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void openChest()
-    {
-    }
-
-    @Override
-    public void closeChest()
-    {
+        return false;
     }
 
     /** @return Is this machine able to process its specific task? */
     public boolean canProcess()
     {
-        if (FurnaceRecipes.smelting().getSmeltingResult(this.containingItems[1]) == null)
+        if (FurnaceRecipes.smelting().getSmeltingResult(this.getInventory().getStackInSlot(1)) == null)
         {
             return false;
         }
 
-        if (this.containingItems[1] == null)
+        if (this.getInventory().getStackInSlot(1) == null)
         {
             return false;
         }
 
-        if (this.containingItems[2] != null)
+        if (this.getInventory().getStackInSlot(this.outputSlot) != null)
         {
-            if (!this.containingItems[2].isItemEqual(FurnaceRecipes.smelting().getSmeltingResult(this.containingItems[1])))
+            if (!this.getInventory().getStackInSlot(this.outputSlot).isItemEqual(FurnaceRecipes.smelting().getSmeltingResult(this.getInventory().getStackInSlot(1))))
             {
                 return false;
             }
 
-            if (this.containingItems[2].stackSize + 1 > 64)
+            if (this.getInventory().getStackInSlot(this.outputSlot).stackSize + 1 > 64)
             {
                 return false;
             }
@@ -172,22 +169,22 @@ public class TileEntityElectricFurnace extends TileEntityEnergyMachine
     {
         if (this.canProcess())
         {
-            ItemStack resultItemStack = FurnaceRecipes.smelting().getSmeltingResult(this.containingItems[1]);
+            ItemStack resultItemStack = FurnaceRecipes.smelting().getSmeltingResult(this.getInventory().getStackInSlot(this.inputSlot));
 
-            if (this.containingItems[2] == null)
+            if (this.getInventory().getStackInSlot(this.outputSlot) == null)
             {
-                this.containingItems[2] = resultItemStack.copy();
+                this.getInventory().getContainedItems()[this.outputSlot] = resultItemStack.copy();
             }
-            else if (this.containingItems[2].isItemEqual(resultItemStack))
+            else if (this.getInventory().getStackInSlot(this.outputSlot).isItemEqual(resultItemStack))
             {
-                this.containingItems[2].stackSize++;
+                this.getInventory().getContainedItems()[this.outputSlot].stackSize++;
             }
 
-            this.containingItems[1].stackSize--;
+            this.getInventory().getStackInSlot(1).stackSize--;
 
-            if (this.containingItems[1].stackSize <= 0)
+            if (this.getInventory().getStackInSlot(this.inputSlot).stackSize <= 0)
             {
-                this.containingItems[1] = null;
+                this.getInventory().getContainedItems()[this.inputSlot] = null;
             }
         }
     }
@@ -198,19 +195,6 @@ public class TileEntityElectricFurnace extends TileEntityEnergyMachine
     {
         super.readFromNBT(par1NBTTagCompound);
         this.processTicks = par1NBTTagCompound.getInteger("smeltingTicks");
-        NBTTagList var2 = par1NBTTagCompound.getTagList("Items");
-        this.containingItems = new ItemStack[this.getSizeInventory()];
-
-        for (int var3 = 0; var3 < var2.tagCount(); ++var3)
-        {
-            NBTTagCompound var4 = (NBTTagCompound) var2.tagAt(var3);
-            byte var5 = var4.getByte("Slot");
-
-            if (var5 >= 0 && var5 < this.containingItems.length)
-            {
-                this.containingItems[var5] = ItemStack.loadItemStackFromNBT(var4);
-            }
-        }
     }
 
     /** Writes a tile entity to NBT. */
@@ -219,113 +203,12 @@ public class TileEntityElectricFurnace extends TileEntityEnergyMachine
     {
         super.writeToNBT(par1NBTTagCompound);
         par1NBTTagCompound.setInteger("smeltingTicks", this.processTicks);
-        NBTTagList var2 = new NBTTagList();
-
-        for (int var3 = 0; var3 < this.containingItems.length; ++var3)
-        {
-            if (this.containingItems[var3] != null)
-            {
-                NBTTagCompound var4 = new NBTTagCompound();
-                var4.setByte("Slot", (byte) var3);
-                this.containingItems[var3].writeToNBT(var4);
-                var2.appendTag(var4);
-            }
-        }
-
-        par1NBTTagCompound.setTag("Items", var2);
-    }
-
-    @Override
-    public int getSizeInventory()
-    {
-        return this.containingItems.length;
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int par1)
-    {
-        return this.containingItems[par1];
-    }
-
-    @Override
-    public ItemStack decrStackSize(int par1, int par2)
-    {
-        if (this.containingItems[par1] != null)
-        {
-            ItemStack var3;
-
-            if (this.containingItems[par1].stackSize <= par2)
-            {
-                var3 = this.containingItems[par1];
-                this.containingItems[par1] = null;
-                return var3;
-            }
-            else
-            {
-                var3 = this.containingItems[par1].splitStack(par2);
-
-                if (this.containingItems[par1].stackSize == 0)
-                {
-                    this.containingItems[par1] = null;
-                }
-
-                return var3;
-            }
-        }
-        else
-        {
-            return null;
-        }
-    }
-
-    @Override
-    public ItemStack getStackInSlotOnClosing(int par1)
-    {
-        if (this.containingItems[par1] != null)
-        {
-            ItemStack var2 = this.containingItems[par1];
-            this.containingItems[par1] = null;
-            return var2;
-        }
-        else
-        {
-            return null;
-        }
-    }
-
-    @Override
-    public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
-    {
-        this.containingItems[par1] = par2ItemStack;
-
-        if (par2ItemStack != null && par2ItemStack.stackSize > this.getInventoryStackLimit())
-        {
-            par2ItemStack.stackSize = this.getInventoryStackLimit();
-        }
     }
 
     @Override
     public String getInvName()
     {
         return LanguageRegistry.instance().getStringLocalization("gui.electricfurnace.name");
-    }
-
-    @Override
-    public int getInventoryStackLimit()
-    {
-        return 64;
-    }
-
-    @Override
-    public boolean isUseableByPlayer(EntityPlayer par1EntityPlayer)
-    {
-        return this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord) != this ? false : par1EntityPlayer.getDistanceSq(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D) <= 64.0D;
-    }
-
-    @Override
-    public boolean isInvNameLocalized()
-    {
-        return true;
     }
 
     /** Returns true if automation is allowed to insert the given stack (ignoring stack size) into
@@ -359,11 +242,5 @@ public class TileEntityElectricFurnace extends TileEntityEnergyMachine
     public float getProvide(ForgeDirection direction)
     {
         return 0;
-    }
-
-    @Override
-    public float getMaxEnergyStored()
-    {
-        return WATTS_PER_TICK;
     }
 }
