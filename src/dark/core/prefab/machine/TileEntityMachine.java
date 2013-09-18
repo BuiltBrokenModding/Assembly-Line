@@ -42,7 +42,10 @@ public class TileEntityMachine extends TileEntityInv implements ISidedInventory,
         /** GUI display data update */
         GUI("guiGeneral"),
         /** Full tile read/write data from tile NBT */
-        NBT("nbtAll");
+        NBT("nbtAll"),
+        GUI_EVENT("clientGui"),
+        GUI_COMMAND("clientCommand"),
+        TERMINAL_OUTPUT("serverTerminal");
 
         public String name;
 

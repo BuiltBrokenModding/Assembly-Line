@@ -1,22 +1,32 @@
 package dark.core.prefab.machine;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import dark.core.interfaces.IExternalInv;
 import dark.core.interfaces.IInvBox;
+import dark.core.prefab.access.AccessLevel;
+import dark.core.prefab.access.ISpecialAccess;
+import dark.core.prefab.access.UserAccess;
 import dark.core.prefab.invgui.InvChest;
 
 /** Prefab for simple object who only need basic inv support and nothing more
  *
  * @author Darkguardsman */
-public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, ISidedInventory
+public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, ISidedInventory, ISpecialAccess
 {
     protected IInvBox inventory;
+    protected boolean lockInv;
+    /** A list of user access data. */
+    protected final List<UserAccess> users = new ArrayList<UserAccess>();
 
     @Override
     public IInvBox getInventory()
@@ -143,11 +153,98 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
         return true;
     }
 
+    /*
+     * User access
+     */
+
+    @Override
+    public AccessLevel getUserAccess(String username)
+    {
+        for (int i = 0; i < this.users.size(); i++)
+        {
+            if (this.users.get(i).username.equalsIgnoreCase(username))
+            {
+                return this.users.get(i).level;
+            }
+        }
+        return AccessLevel.NONE;
+    }
+
+    public boolean canUserAccess(String username)
+    {
+        return (this.getUserAccess(username).ordinal() > AccessLevel.BASIC.ordinal());
+    }
+
+    @Override
+    public List<UserAccess> getUsers()
+    {
+        return this.users;
+    }
+
+    @Override
+    public List<UserAccess> getUsersWithAcess(AccessLevel level)
+    {
+        List<UserAccess> players = new ArrayList<UserAccess>();
+
+        for (int i = 0; i < this.users.size(); i++)
+        {
+            UserAccess ref = this.users.get(i);
+
+            if (ref.level == level)
+            {
+                players.add(ref);
+            }
+        }
+        return players;
+
+    }
+
+    @Override
+    public boolean addUserAccess(String player, AccessLevel lvl, boolean save)
+    {
+        this.removeUserAccess(player);
+        boolean bool = this.users.add(new UserAccess(player, lvl, save));
+        this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+        return bool;
+    }
+
+    @Override
+    public boolean removeUserAccess(String player)
+    {
+        List<UserAccess> removeList = new ArrayList<UserAccess>();
+        for (int i = 0; i < this.users.size(); i++)
+        {
+            UserAccess ref = this.users.get(i);
+            if (ref.username.equalsIgnoreCase(player))
+            {
+                removeList.add(ref);
+            }
+        }
+        if (removeList != null && removeList.size() > 0)
+        {
+
+            boolean bool = this.users.removeAll(removeList);
+            this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+            return bool;
+        }
+        return false;
+    }
+
     @Override
     public void readFromNBT(NBTTagCompound nbt)
     {
         super.readFromNBT(nbt);
         this.getInventory().loadInv(nbt);
+        // Read user list
+        this.users.clear();
+
+        NBTTagList userList = nbt.getTagList("Users");
+
+        for (int i = 0; i < userList.tagCount(); ++i)
+        {
+            NBTTagCompound var4 = (NBTTagCompound) userList.tagAt(i);
+            this.users.add(UserAccess.loadFromNBT(var4));
+        }
     }
 
     @Override
@@ -155,6 +252,19 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
     {
         super.writeToNBT(nbt);
         this.getInventory().saveInv(nbt);
-    }
+        // Write user list
+        NBTTagList usersTag = new NBTTagList();
+        for (int player = 0; player < this.users.size(); ++player)
+        {
+            UserAccess access = this.users.get(player);
+            if (access != null && access.shouldSave)
+            {
+                NBTTagCompound accessData = new NBTTagCompound();
+                access.writeToNBT(accessData);
+                usersTag.appendTag(accessData);
+            }
+        }
 
+        nbt.setTag("Users", usersTag);
+    }
 }

@@ -1,5 +1,7 @@
 package dark.core.prefab.terminal;
 
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,24 +26,14 @@ import dark.core.prefab.access.AccessLevel;
 import dark.core.prefab.access.ISpecialAccess;
 import dark.core.prefab.access.UserAccess;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
+import dark.core.prefab.machine.TileEntityMachine.SimplePacketTypes;
 
 /** @author Calclavia, DarkGuardsman */
-public abstract class TileEntityTerminal extends TileEntityEnergyMachine implements ISpecialAccess, IPacketReceiver, ITerminal
+public abstract class TileEntityTerminal extends TileEntityEnergyMachine implements IPacketReceiver, ITerminal
 {
-
-    public enum PacketType
-    {
-        GUI_EVENT,
-        GUI_COMMAND,
-        TERMINAL_OUTPUT,
-        DESCRIPTION_DATA;
-    }
 
     /** A list of everything typed inside the terminal */
     private final List<String> terminalOutput = new ArrayList<String>();
-
-    /** A list of user access data. */
-    private final List<UserAccess> users = new ArrayList<UserAccess>();
 
     /** The amount of lines the terminal can store. */
     public static final int SCROLL_SIZE = 15;
@@ -66,37 +58,27 @@ public abstract class TileEntityTerminal extends TileEntityEnergyMachine impleme
         super(wattsPerTick, maxEnergy);
     }
 
-    @Override
-    public void updateEntity()
+    public void senGUIPacket(EntityPlayer entity)
     {
-        super.updateEntity();
-
-        if (!this.worldObj.isRemote)
+        if(!this.worldObj.isRemote)
         {
-            if (this.ticks % 3 == 0)
-            {
-                for (EntityPlayer player : this.playersUsing)
-                {
-                    PacketDispatcher.sendPacketToPlayer(this.getDescriptionPacket(), (Player) player);
-                }
-            }
+            PacketDispatcher.sendPacketToPlayer(this.getDescriptionPacket(), (Player) entity);
         }
     }
-
     /** Sends all NBT data. Server -> Client */
     @Override
     public Packet getDescriptionPacket()
     {
         NBTTagCompound nbt = new NBTTagCompound();
         this.writeToNBT(nbt);
-        return PacketHandler.instance().getPacket(this.getChannel(), this, PacketType.DESCRIPTION_DATA.ordinal(), nbt);
+        return PacketHandler.instance().getPacket(this.getChannel(), this, SimplePacketTypes.NBT.name, nbt);
     }
 
     /** Sends all Terminal data Server -> Client */
     public void sendTerminalOutputToClients()
     {
         List data = new ArrayList();
-        data.add(PacketType.TERMINAL_OUTPUT.ordinal());
+        data.add(SimplePacketTypes.TERMINAL_OUTPUT.name);
         data.add(this.getTerminalOuput().size());
         data.addAll(this.getTerminalOuput());
 
@@ -113,50 +95,44 @@ public abstract class TileEntityTerminal extends TileEntityEnergyMachine impleme
     {
         if (this.worldObj.isRemote)
         {
-            Packet packet = PacketHandler.instance().getPacket(this.getChannel(), this, PacketType.GUI_COMMAND.ordinal(), entityPlayer.username, cmdInput);
+            Packet packet = PacketHandler.instance().getPacket(this.getChannel(), this, SimplePacketTypes.GUI_COMMAND.name, entityPlayer.username, cmdInput);
             PacketDispatcher.sendPacketToServer(packet);
         }
     }
 
     @Override
-    public void handlePacketData(INetworkManager network, int packetID, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
+    public boolean simplePacket(String id, DataInputStream dis, EntityPlayer player)
     {
         try
         {
-            PacketType packetType = PacketType.values()[dataStream.readInt()];
-
-            switch (packetType)
+            if (!super.simplePacket(id, dis, player))
             {
-                case DESCRIPTION_DATA:
+                if (this.worldObj.isRemote)
                 {
-                    if (this.worldObj.isRemote)
+                    if(id.equalsIgnoreCase(SimplePacketTypes.TERMINAL_OUTPUT.name))
                     {
-                        short size = dataStream.readShort();
+                        int size = dis.readInt();
 
-                        if (size > 0)
+                        List<String> oldTerminalOutput = new ArrayList(this.terminalOutput);
+                        this.terminalOutput.clear();
+
+                        for (int i = 0; i < size; i++)
                         {
-                            byte[] byteCode = new byte[size];
-                            dataStream.readFully(byteCode);
-                            this.readFromNBT(CompressedStreamTools.decompress(byteCode));
+                            this.terminalOutput.add(dis.readUTF());
                         }
-                    }
 
-                    break;
-                }
-                case GUI_COMMAND:
-                {
-                    if (!this.worldObj.isRemote)
-                    {
-                        CommandRegistry.onCommand(this.worldObj.getPlayerEntityByName(dataStream.readUTF()), this, dataStream.readUTF());
-                        this.sendTerminalOutputToClients();
+                        if (!this.terminalOutput.equals(oldTerminalOutput) && this.terminalOutput.size() != oldTerminalOutput.size())
+                        {
+                            this.setScroll(this.getTerminalOuput().size() - SCROLL_SIZE);
+                        }
+                        return true;
                     }
-                    break;
                 }
-                case GUI_EVENT:
+                else
                 {
-                    if (!this.worldObj.isRemote)
+                    if (id.equalsIgnoreCase("GuiClosed"))
                     {
-                        if (dataStream.readBoolean())
+                        if (dis.readBoolean())
                         {
                             this.playersUsing.add(player);
                             this.sendTerminalOutputToClients();
@@ -165,111 +141,20 @@ public abstract class TileEntityTerminal extends TileEntityEnergyMachine impleme
                         {
                             this.playersUsing.remove(player);
                         }
+                        return true;
                     }
-                    break;
-                }
-                case TERMINAL_OUTPUT:
-                {
-                    if (this.worldObj.isRemote)
+                    else if (id.equalsIgnoreCase(SimplePacketTypes.GUI_COMMAND.name))
                     {
-                        int size = dataStream.readInt();
-
-                        List<String> oldTerminalOutput = new ArrayList(this.terminalOutput);
-                        this.terminalOutput.clear();
-
-                        for (int i = 0; i < size; i++)
-                        {
-                            this.terminalOutput.add(dataStream.readUTF());
-                        }
-
-                        if (!this.terminalOutput.equals(oldTerminalOutput) && this.terminalOutput.size() != oldTerminalOutput.size())
-                        {
-                            this.setScroll(this.getTerminalOuput().size() - SCROLL_SIZE);
-                        }
+                        CommandRegistry.onCommand(this.worldObj.getPlayerEntityByName(dis.readUTF()), this, dis.readUTF());
+                        this.sendTerminalOutputToClients();
+                        return true;
                     }
-
-                    break;
                 }
-                default:
-                    break;
             }
         }
-        catch (Exception e)
+        catch (IOException e)
         {
-            FMLLog.severe("DarkLib>>>TerminalInstance>>>PacketReadError>>>ForTile>>>" + this.toString());
             e.printStackTrace();
-        }
-    }
-
-    @Override
-    public AccessLevel getUserAccess(String username)
-    {
-        for (int i = 0; i < this.users.size(); i++)
-        {
-            if (this.users.get(i).username.equalsIgnoreCase(username))
-            {
-                return this.users.get(i).level;
-            }
-        }
-        return AccessLevel.NONE;
-    }
-
-    public boolean canUserAccess(String username)
-    {
-        return (this.getUserAccess(username).ordinal() > AccessLevel.BASIC.ordinal());
-    }
-
-    @Override
-    public List<UserAccess> getUsers()
-    {
-        return this.users;
-    }
-
-    @Override
-    public List<UserAccess> getUsersWithAcess(AccessLevel level)
-    {
-        List<UserAccess> players = new ArrayList<UserAccess>();
-
-        for (int i = 0; i < this.users.size(); i++)
-        {
-            UserAccess ref = this.users.get(i);
-
-            if (ref.level == level)
-            {
-                players.add(ref);
-            }
-        }
-        return players;
-
-    }
-
-    @Override
-    public boolean addUserAccess(String player, AccessLevel lvl, boolean save)
-    {
-        this.removeUserAccess(player);
-        boolean bool = this.users.add(new UserAccess(player, lvl, save));
-        this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
-        return bool;
-    }
-
-    @Override
-    public boolean removeUserAccess(String player)
-    {
-        List<UserAccess> removeList = new ArrayList<UserAccess>();
-        for (int i = 0; i < this.users.size(); i++)
-        {
-            UserAccess ref = this.users.get(i);
-            if (ref.username.equalsIgnoreCase(player))
-            {
-                removeList.add(ref);
-            }
-        }
-        if (removeList != null && removeList.size() > 0)
-        {
-
-            boolean bool = this.users.removeAll(removeList);
-            this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
-            return bool;
         }
         return false;
     }
@@ -319,41 +204,4 @@ public abstract class TileEntityTerminal extends TileEntityEnergyMachine impleme
         return this.scroll;
     }
 
-    @Override
-    public void readFromNBT(NBTTagCompound nbt)
-    {
-        super.readFromNBT(nbt);
-
-        // Read user list
-        this.users.clear();
-
-        NBTTagList userList = nbt.getTagList("Users");
-
-        for (int i = 0; i < userList.tagCount(); ++i)
-        {
-            NBTTagCompound var4 = (NBTTagCompound) userList.tagAt(i);
-            this.users.add(UserAccess.loadFromNBT(var4));
-        }
-    }
-
-    @Override
-    public void writeToNBT(NBTTagCompound nbt)
-    {
-        super.writeToNBT(nbt);
-
-        // Write user list
-        NBTTagList usersTag = new NBTTagList();
-        for (int player = 0; player < this.users.size(); ++player)
-        {
-            UserAccess access = this.users.get(player);
-            if (access != null && access.shouldSave)
-            {
-                NBTTagCompound accessData = new NBTTagCompound();
-                access.writeToNBT(accessData);
-                usersTag.appendTag(accessData);
-            }
-        }
-
-        nbt.setTag("Users", usersTag);
-    }
 }
