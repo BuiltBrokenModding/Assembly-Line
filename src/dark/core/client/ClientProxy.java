@@ -12,7 +12,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.client.renders.RenderBlockWire;
 import dark.core.common.CommonProxy;
 import dark.core.common.CoreRecipeLoader;
-import dark.core.common.DarkMain;
 import dark.core.common.transmit.TileEntityWire;
 import dark.core.prefab.ModPrefab;
 

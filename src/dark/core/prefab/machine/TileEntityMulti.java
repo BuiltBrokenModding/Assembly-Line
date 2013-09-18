@@ -1,4 +1,4 @@
-package dark.core.prefab;
+package dark.core.prefab.machine;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,6 +13,7 @@ import universalelectricity.prefab.network.IPacketReceiver;
 import com.google.common.io.ByteArrayDataInput;
 
 import dark.core.network.PacketHandler;
+import dark.core.prefab.IMultiBlock;
 
 /** This is a multiblock to be used for blocks that are bigger than one block.
  * 

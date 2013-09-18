@@ -14,9 +14,9 @@ import net.minecraftforge.common.Configuration;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
-import dark.core.prefab.BlockMachine;
 import dark.core.prefab.IExtraObjectInfo;
 import dark.core.prefab.helpers.Pair;
+import dark.core.prefab.machine.BlockMachine;
 
 public class BlockDebug extends BlockMachine implements IExtraObjectInfo
 {

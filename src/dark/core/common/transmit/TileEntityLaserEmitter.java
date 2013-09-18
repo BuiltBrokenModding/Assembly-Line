@@ -8,9 +8,9 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import dark.core.common.DarkMain;
-import dark.core.prefab.TileEntityMachine;
+import dark.core.prefab.machine.TileEntityEnergyMachine;
 
-public class TileEntityLaserEmitter extends TileEntityMachine
+public class TileEntityLaserEmitter extends TileEntityEnergyMachine
 {
     /** Is tile set up to receive power */
     private boolean receiver = false;
@@ -45,7 +45,7 @@ public class TileEntityLaserEmitter extends TileEntityMachine
     public void updateEntity()
     {
         super.updateEntity();
-        if (this.running)
+        if (this.isFunctioning())
         {
             this.updateRotation();
             if (this.linkedEmitter != null && ticks % 20 == 0)

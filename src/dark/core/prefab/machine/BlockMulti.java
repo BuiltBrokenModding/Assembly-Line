@@ -1,4 +1,4 @@
-package dark.core.prefab;
+package dark.core.prefab.machine;
 
 import java.util.Random;
 

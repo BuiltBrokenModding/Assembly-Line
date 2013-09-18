@@ -50,11 +50,11 @@ import dark.core.common.items.ItemTools;
 import dark.core.common.items.ItemWrench;
 import dark.core.common.transmit.BlockWire;
 import dark.core.network.PacketHandler;
-import dark.core.prefab.BlockMulti;
 import dark.core.prefab.ModPrefab;
-import dark.core.prefab.TileEntityMulti;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.items.ItemBlockHolder;
+import dark.core.prefab.machine.BlockMulti;
+import dark.core.prefab.machine.TileEntityMulti;
 
 /** @author HangCow, DarkGuardsman */
 @Mod(modid = DarkMain.MOD_ID, name = DarkMain.MOD_NAME, version = DarkMain.VERSION, dependencies = "after:BuildCraft|Energy", useMetadata = true)

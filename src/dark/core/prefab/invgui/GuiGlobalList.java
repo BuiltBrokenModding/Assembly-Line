@@ -19,7 +19,6 @@ import universalelectricity.core.vector.Vector2;
 import universalelectricity.prefab.vector.Region2;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.common.DarkMain;
 import dark.core.interfaces.IScroll;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.access.UserAccess;

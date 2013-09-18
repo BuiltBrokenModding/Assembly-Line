@@ -20,13 +20,13 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import dark.core.network.PacketHandler;
-import dark.core.prefab.TileEntityMachine;
 import dark.core.prefab.access.AccessLevel;
 import dark.core.prefab.access.ISpecialAccess;
 import dark.core.prefab.access.UserAccess;
+import dark.core.prefab.machine.TileEntityEnergyMachine;
 
 /** @author Calclavia, DarkGuardsman */
-public abstract class TileEntityTerminal extends TileEntityMachine implements ISpecialAccess, IPacketReceiver, ITerminal
+public abstract class TileEntityTerminal extends TileEntityEnergyMachine implements ISpecialAccess, IPacketReceiver, ITerminal
 {
 
     public enum PacketType

@@ -1,6 +1,7 @@
-package dark.core.prefab;
+package dark.core.prefab.machine;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -11,7 +12,7 @@ import dark.core.interfaces.IInvBox;
 import dark.core.prefab.invgui.InvChest;
 
 /** Prefab for simple object who only need basic inv support and nothing more
- * 
+ *
  * @author Darkguardsman */
 public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, ISidedInventory
 {
@@ -25,6 +26,12 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
             inventory = new InvChest(this, 1);
         }
         return inventory;
+    }
+
+    /** Gets the container class that goes with this tileEntity when creating a gui */
+    public Class<? extends Container> getContainer()
+    {
+        return null;
     }
 
     @Override
