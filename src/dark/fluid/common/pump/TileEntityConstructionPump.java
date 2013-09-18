@@ -36,7 +36,7 @@ public class TileEntityConstructionPump extends TileEntityStarterPump implements
     }
 
     /** Gets the facing direction
-     *
+     * 
      * @param input true for input side, false for output side
      * @return */
     public ForgeDirection getFacing(boolean input)
@@ -66,7 +66,7 @@ public class TileEntityConstructionPump extends TileEntityStarterPump implements
     }
 
     /** Gets the nextDrain in the list
-     *
+     * 
      * @param inputTile - input tile must be an instance of INetworkPipe
      * @param outputTile - output tile must be an instance of IFluidHandler
      * @param ignoreList - list of drains to ignore so that the next one is selected
