@@ -1,9 +1,9 @@
 package dark.core.common.debug;
 
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.compatibility.TileEntityUniversalElectrical;
+import dark.core.prefab.machine.TileEntityEnergyMachine;
 
-public class TileEntityInfLoad extends TileEntityUniversalElectrical
+public class TileEntityInfLoad extends TileEntityEnergyMachine
 {
 
     @Override

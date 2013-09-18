@@ -3,9 +3,9 @@ package dark.core.common.debug;
 import java.util.EnumSet;
 
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.compatibility.TileEntityUniversalElectrical;
+import dark.core.prefab.machine.TileEntityEnergyMachine;
 
-public class TileEntityInfSupply extends TileEntityUniversalElectrical
+public class TileEntityInfSupply extends TileEntityEnergyMachine
 {
 
     @Override
@@ -16,7 +16,7 @@ public class TileEntityInfSupply extends TileEntityUniversalElectrical
         if (!this.worldObj.isRemote)
         {
             //System.out.println("Inf power supply cycle " + this.ticks);
-            this.produce();
+            this.produceAllSides();
             if (this.ticks % 10 == 0)
             {
                 this.setEnergyStored(this.getEnergyStored() + (this.getProvide(ForgeDirection.UNKNOWN) * 10));
