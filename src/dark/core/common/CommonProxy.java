@@ -8,6 +8,8 @@ import dark.core.network.PacketManagerEffects;
 
 public class CommonProxy
 {
+    public static final int GUI_COAL_GEN = 0, GUI_FUEL_GEN = 1, GUI_FURNACE_ELEC = 2, GUI_BATTERY_BOX = 3;
+
     public void preInit()
     {
         // TODO Auto-generated method stub

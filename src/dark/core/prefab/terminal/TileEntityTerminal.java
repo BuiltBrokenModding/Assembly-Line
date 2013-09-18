@@ -3,31 +3,18 @@ package dark.core.prefab.terminal;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.util.AxisAlignedBB;
 import universalelectricity.prefab.network.IPacketReceiver;
-
-import com.google.common.io.ByteArrayDataInput;
-
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
+import dark.api.ITerminal;
 import dark.core.network.PacketHandler;
-import dark.core.prefab.access.AccessLevel;
-import dark.core.prefab.access.ISpecialAccess;
-import dark.core.prefab.access.UserAccess;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
-import dark.core.prefab.machine.TileEntityMachine.SimplePacketTypes;
 
 /** @author Calclavia, DarkGuardsman */
 public abstract class TileEntityTerminal extends TileEntityEnergyMachine implements IPacketReceiver, ITerminal

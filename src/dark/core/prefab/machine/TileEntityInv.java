@@ -11,20 +11,21 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
+import dark.api.AccessLevel;
+import dark.api.ISpecialAccess;
 import dark.core.interfaces.IExternalInv;
 import dark.core.interfaces.IInvBox;
-import dark.core.prefab.access.AccessLevel;
-import dark.core.prefab.access.ISpecialAccess;
 import dark.core.prefab.access.UserAccess;
 import dark.core.prefab.invgui.InvChest;
 
 /** Prefab for simple object who only need basic inv support and nothing more
- *
+ * 
  * @author Darkguardsman */
 public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, ISidedInventory, ISpecialAccess
 {
     protected IInvBox inventory;
     protected boolean lockInv;
+    protected int invSlots = 1;
     /** A list of user access data. */
     protected final List<UserAccess> users = new ArrayList<UserAccess>();
 
@@ -33,7 +34,7 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
     {
         if (inventory == null)
         {
-            inventory = new InvChest(this, 1);
+            inventory = new InvChest(this, this.invSlots);
         }
         return inventory;
     }

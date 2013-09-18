@@ -30,7 +30,7 @@ import cpw.mods.fml.common.network.Player;
  * @author DarkGuardsman */
 public class PacketHandler implements IPacketHandler, IPacketReceiver
 {
-    public static PacketHandler instance;
+    protected static PacketHandler instance;
 
     public static HashMap<Integer, IPacketManager> packetTypes = new HashMap<Integer, IPacketManager>();
 

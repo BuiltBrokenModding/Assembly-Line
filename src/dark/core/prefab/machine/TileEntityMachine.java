@@ -206,7 +206,7 @@ public class TileEntityMachine extends TileEntityInv implements ISidedInventory,
     }
 
     /** Handles reduced data from the main packet method
-     *
+     * 
      * @param id - packet ID
      * @param dis - data
      * @param player - player
