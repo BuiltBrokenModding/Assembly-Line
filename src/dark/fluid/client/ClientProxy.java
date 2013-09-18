@@ -15,7 +15,6 @@ import dark.fluid.client.render.RenderTank;
 import dark.fluid.client.render.pipe.RenderPipe;
 import dark.fluid.common.CommonProxy;
 import dark.fluid.common.FMRecipeLoader;
-import dark.fluid.common.FluidMech;
 import dark.fluid.common.machines.TileEntityReleaseValve;
 import dark.fluid.common.machines.TileEntitySink;
 import dark.fluid.common.machines.TileEntityTank;

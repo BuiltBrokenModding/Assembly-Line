@@ -17,7 +17,6 @@ import dark.core.prefab.helpers.Pair;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.BlockFM;
 import dark.fluid.common.FMRecipeLoader;
-import dark.fluid.common.FluidMech;
 
 public class BlockGenerator extends BlockFM
 {

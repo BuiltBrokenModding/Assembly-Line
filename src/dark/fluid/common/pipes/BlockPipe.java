@@ -19,7 +19,6 @@ import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.helpers.Pair;
 import dark.fluid.common.BlockFM;
 import dark.fluid.common.FMRecipeLoader;
-import dark.fluid.common.FluidMech;
 
 public class BlockPipe extends BlockFM
 {

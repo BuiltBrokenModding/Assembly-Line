@@ -18,7 +18,6 @@ import universalelectricity.core.vector.VectorHelper;
 import dark.api.fluid.IDrain;
 import dark.api.fluid.INetworkPipe;
 import dark.api.parts.ITileConnector;
-import dark.core.prefab.helpers.MetaGroup;
 import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.tilenetwork.fluid.FluidNetworkHelper;
 import dark.core.prefab.tilenetwork.fluid.NetworkFluidTiles;
@@ -37,25 +36,13 @@ public class TileEntityConstructionPump extends TileEntityStarterPump implements
     }
 
     /** Gets the facing direction
-     * 
+     *
      * @param input true for input side, false for output side
      * @return */
     public ForgeDirection getFacing(boolean input)
     {
-        int meta = 0;
-        if (worldObj != null)
-        {
-            meta = MetaGroup.getFacingMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
-        }
-        if (input)
-        {
-            return ForgeDirection.getOrientation(meta);
-        }
-        else
-        {
-            return ForgeDirection.getOrientation(meta).getOpposite();
-        }
 
+        return input ? this.getDirection() : this.getDirection().getOpposite();
     }
 
     @Override
@@ -79,7 +66,7 @@ public class TileEntityConstructionPump extends TileEntityStarterPump implements
     }
 
     /** Gets the nextDrain in the list
-     * 
+     *
      * @param inputTile - input tile must be an instance of INetworkPipe
      * @param outputTile - output tile must be an instance of IFluidHandler
      * @param ignoreList - list of drains to ignore so that the next one is selected

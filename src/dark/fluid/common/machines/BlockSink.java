@@ -14,7 +14,6 @@ import universalelectricity.prefab.tile.TileEntityAdvanced;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.prefab.helpers.FluidHelper;
-import dark.core.prefab.helpers.MetaGroup;
 import dark.core.prefab.helpers.Pair;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.BlockFM;
@@ -44,7 +43,7 @@ public class BlockSink extends BlockFM
     public boolean onUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
     {
         int meta = par1World.getBlockMetadata(x, y, z);
-        int metaGroup = MetaGroup.getGrouping(meta);
+        int metaGroup = meta % 4;
 
         if (meta == (metaGroup * 4) + 3)
         {
@@ -66,7 +65,7 @@ public class BlockSink extends BlockFM
         int angle = MathHelper.floor_double((par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
         TileEntity ent = world.getBlockTileEntity(x, y, z);
 
-        world.setBlockMetadataWithNotify(x, y, z, angle + MetaGroup.getGroupStartMeta(MetaGroup.getGrouping(meta)), 3);
+        world.setBlockMetadataWithNotify(x, y, z, angle * 4, 3);
         if (ent instanceof TileEntityAdvanced)
         {
             ((TileEntityAdvanced) world.getBlockTileEntity(x, y, z)).initiate();

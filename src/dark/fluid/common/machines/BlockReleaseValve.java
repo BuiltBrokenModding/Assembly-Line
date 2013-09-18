@@ -14,7 +14,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.prefab.helpers.Pair;
 import dark.fluid.common.BlockFM;
 import dark.fluid.common.FMRecipeLoader;
-import dark.fluid.common.FluidMech;
 
 public class BlockReleaseValve extends BlockFM
 {

@@ -2,8 +2,8 @@ package dark.fluid.common;
 
 import net.minecraft.block.material.Material;
 import net.minecraftforge.common.Configuration;
-import dark.core.prefab.BlockMachine;
 import dark.core.prefab.IExtraObjectInfo;
+import dark.core.prefab.machine.BlockMachine;
 
 public abstract class BlockFM extends BlockMachine implements IExtraObjectInfo
 {

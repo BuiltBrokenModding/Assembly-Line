@@ -15,11 +15,11 @@ import dark.api.IToolReadOut;
 import dark.api.fluid.IDrain;
 import dark.api.parts.ITileConnector;
 import dark.core.common.ExternalModHandler;
-import dark.core.prefab.TileEntityMachine;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.helpers.Pair;
+import dark.core.prefab.machine.TileEntityEnergyMachine;
 
-public class TileEntityStarterPump extends TileEntityMachine implements IToolReadOut, ITileConnector
+public class TileEntityStarterPump extends TileEntityEnergyMachine implements IToolReadOut, ITileConnector
 {
     private int currentWorldEdits, MAX_WORLD_EDITS_PER_PROCESS;
 
@@ -65,7 +65,7 @@ public class TileEntityStarterPump extends TileEntityMachine implements IToolRea
         {
             this.currentWorldEdits = 0;
 
-            if (this.running)
+            if (this.isFunctioning())
             {
                 this.rotation = Math.max(Math.min(this.rotation + 1, 7), 0);
 
@@ -91,7 +91,7 @@ public class TileEntityStarterPump extends TileEntityMachine implements IToolRea
     }
 
     /** Drains an area starting at the given location
-     * 
+     *
      * @param world - world to drain in, most cases will be the TileEntities world
      * @param loc - origin to start the path finder with. If this is an instance of IDrain this
      * method will act different */
@@ -197,9 +197,9 @@ public class TileEntityStarterPump extends TileEntityMachine implements IToolRea
     }
 
     @Override
-    public boolean canRun()
+    public boolean canFunction()
     {
-        return super.canRun() && worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+        return super.canFunction() && worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
     }
 
     @Override
