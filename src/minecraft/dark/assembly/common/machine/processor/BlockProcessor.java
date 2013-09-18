@@ -5,8 +5,10 @@ import java.util.Set;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
@@ -55,16 +57,14 @@ public class BlockProcessor extends BlockMachine implements IExtraObjectInfo
     @Override
     public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
     {
-        int meta = world.getBlockMetadata(x, y, z);
-        int g = meta % 4;
-        if (g < 3)
+        if (world.getBlockMetadata(x, y, z) % 4 < 3)
         {
-            world.setBlockMetadataWithNotify(x, y, z, meta + 1, 3);
+            world.setBlockMetadataWithNotify(x, y, z, world.getBlockMetadata(x, y, z) + 1, 3);
             return true;
         }
         else
         {
-            world.setBlockMetadataWithNotify(x, y, z, meta - 3, 3);
+            world.setBlockMetadataWithNotify(x, y, z, world.getBlockMetadata(x, y, z) - 3, 3);
             return true;
         }
     }
@@ -133,6 +133,34 @@ public class BlockProcessor extends BlockMachine implements IExtraObjectInfo
     public int getRenderType()
     {
         return BlockRenderingHandler.BLOCK_RENDER_ID;
+    }
+
+    @Override
+    public int damageDropped(int metadata)
+    {
+        return metadata / 4;
+    }
+
+    @Override
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+    {
+        int id = idPicked(world, x, y, z);
+
+        if (id == 0)
+        {
+            return null;
+        }
+
+        Item item = Item.itemsList[id];
+
+        if (item == null)
+        {
+            return null;
+        }
+
+        int metadata = getDamageValue(world, x, y, z);
+
+        return new ItemStack(id, 1, metadata);
     }
 
     @Override

@@ -17,7 +17,7 @@ import dark.core.prefab.invgui.InvChest;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
 
 /** Basic A -> B recipe processor machine designed mainly to handle ore blocks
- *
+ * 
  * @author DarkGuardsman */
 public class TileEntityProcessor extends TileEntityEnergyMachine
 {
@@ -238,6 +238,7 @@ public class TileEntityProcessor extends TileEntityEnergyMachine
         return new int[] { slotBatteryDrain, slotInput, slotOutput };
     }
 
+    @Override
     public ForgeDirection getDirection()
     {
         if (this.worldObj.getBlockMetadata(xCoord, yCoord, zCoord) == 0)
