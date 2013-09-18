@@ -8,9 +8,9 @@ import dark.core.prefab.invgui.InvChest;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
 
 /** Simple box that turns matter into compost to grow plants with
- *
+ * 
  * 6 slot input stores output as an float that then need to be converted to a bucket of compost
- *
+ * 
  * @author DarkGuardsman */
 public class TileEntityCompBox extends TileEntityEnergyMachine
 {
@@ -33,7 +33,7 @@ public class TileEntityCompBox extends TileEntityEnergyMachine
     }
 
     /** Converts one item in the slot into compost
-     *
+     * 
      * @param slot 0-5 */
     public void process(int slot)
     {
@@ -49,7 +49,7 @@ public class TileEntityCompBox extends TileEntityEnergyMachine
     }
 
     /** Tests if the item in the slot is read to be processed
-     *
+     * 
      * @param slot 0-5 */
     public boolean canProcess(int slot)
     {
