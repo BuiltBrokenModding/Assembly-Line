@@ -122,11 +122,11 @@ public class ItemWorldHelper
             double zz = 0;
             if (random)
             {
-                xx = (double) (world.rand.nextFloat() * f) + (double) (1.0F - f) * 0.5D;
-                yy = (double) (world.rand.nextFloat() * f) + (double) (1.0F - f) * 0.5D;
-                zz = (double) (world.rand.nextFloat() * f) + (double) (1.0F - f) * 0.5D;
+                xx = (world.rand.nextFloat() * f) + (1.0F - f) * 0.5D;
+                yy = (world.rand.nextFloat() * f) + (1.0F - f) * 0.5D;
+                zz = (world.rand.nextFloat() * f) + (1.0F - f) * 0.5D;
             }
-            EntityItem entityitem = new EntityItem(world, (double) location.x + xx, (double) location.y + yy, (double) location.z + zz, itemStack);
+            EntityItem entityitem = new EntityItem(world, location.x + xx, location.y + yy, location.z + zz, itemStack);
             entityitem.delayBeforeCanPickup = 10;
             world.spawnEntityInWorld(entityitem);
             return null;

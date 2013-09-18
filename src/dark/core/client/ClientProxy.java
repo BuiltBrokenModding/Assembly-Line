@@ -14,6 +14,7 @@ import dark.core.common.CommonProxy;
 import dark.core.common.CoreRecipeLoader;
 import dark.core.common.DarkMain;
 import dark.core.common.transmit.TileEntityWire;
+import dark.core.prefab.ModPrefab;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy
@@ -31,7 +32,7 @@ public class ClientProxy extends CommonProxy
     {
         if (world.isRemote || FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
         {
-            FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXBeam(world, position, target, color, DarkMain.TEXTURE_DIRECTORY + "", age));
+            FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXBeam(world, position, target, color, ModPrefab.TEXTURE_DIRECTORY + "", age));
         }
     }
 

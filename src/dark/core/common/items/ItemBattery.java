@@ -17,6 +17,7 @@ public class ItemBattery extends ItemElectric
         this.setCreativeTab(CreativeTabs.tabRedstone);
     }
 
+    @Override
     public String getUnlocalizedName(ItemStack par1ItemStack)
     {
         return "item." + this.getUnlocalizedName();

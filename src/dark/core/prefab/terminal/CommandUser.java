@@ -20,7 +20,7 @@ public class CommandUser extends TerminalCommand
     {
         if (args[0].equalsIgnoreCase("users") && args.length > 1 && args[1] != null && terminal instanceof ISpecialAccess)
         {
-            ISpecialAccess turret = (ISpecialAccess) terminal;
+            ISpecialAccess turret = terminal;
 
             // ILockable
             if (args[1].equalsIgnoreCase("List"))

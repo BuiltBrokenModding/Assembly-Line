@@ -118,7 +118,7 @@ public class GlobalAccessManager
             return false;
         }
 
-        List<UserAccess> userList = this.getList(listName);
+        List<UserAccess> userList = GlobalAccessManager.getList(listName);
 
         if (userList != null)
         {
@@ -129,8 +129,8 @@ public class GlobalAccessManager
             if (userList.add(user))
             {
                 globalUserLists.put(listName, userList);
-                this.saveList(listName, userList);
-                this.needsSaving = true;
+                GlobalAccessManager.saveList(listName, userList);
+                GlobalAccessManager.needsSaving = true;
                 return true;
             }
         }
@@ -149,7 +149,7 @@ public class GlobalAccessManager
             return false;
         }
 
-        List<UserAccess> userList = this.getList(listName);
+        List<UserAccess> userList = GlobalAccessManager.getList(listName);
 
         if (userList != null)
         {
@@ -157,8 +157,8 @@ public class GlobalAccessManager
             {
                 userList = UserAccess.removeUserAccess(user.username, userList);
                 globalUserLists.put(listName, userList);
-                this.saveList(listName, userList);
-                this.needsSaving = true;
+                GlobalAccessManager.saveList(listName, userList);
+                GlobalAccessManager.needsSaving = true;
                 return true;
             }
         }

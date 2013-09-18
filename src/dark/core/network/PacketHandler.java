@@ -179,7 +179,7 @@ public class PacketHandler implements IPacketHandler, IPacketReceiver
 
         try
         {
-            data.writeInt(this.tile.getID());
+            data.writeInt(PacketHandler.tile.getID());
 
             data.writeInt(sender.xCoord);
             data.writeInt(sender.yCoord);

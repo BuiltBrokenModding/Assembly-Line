@@ -21,6 +21,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
 import dark.core.interfaces.IScroll;
+import dark.core.prefab.ModPrefab;
 import dark.core.prefab.access.UserAccess;
 
 @SideOnly(Side.CLIENT)
@@ -132,7 +133,7 @@ public class GuiGlobalList extends GuiContainer implements IScroll
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
-        ResourceLocation name = new ResourceLocation(DarkMain.GUI_DIRECTORY + ":gui_access_base.png");
+        ResourceLocation name = new ResourceLocation(ModPrefab.GUI_DIRECTORY + ":gui_access_base.png");
         this.mc.renderEngine.func_110577_a(name);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 

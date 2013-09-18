@@ -17,6 +17,7 @@ public class ContainerFake extends Container
         this.entity = entity;
     }
 
+    @Override
     public boolean canInteractWith(EntityPlayer par1EntityPlayer)
     {
         if (entity instanceof IInventory)

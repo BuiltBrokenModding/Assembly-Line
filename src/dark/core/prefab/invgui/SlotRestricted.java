@@ -17,6 +17,7 @@ public class SlotRestricted extends Slot
         this.itemStacks = itemStacks;
     }
 
+    @Override
     public boolean isItemValid(ItemStack itemStack)
     {
         if (itemStack != null && this.itemStacks != null)

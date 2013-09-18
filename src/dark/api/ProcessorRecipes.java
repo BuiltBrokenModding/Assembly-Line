@@ -11,7 +11,7 @@ import dark.core.prefab.helpers.AutoCraftingManager;
 import dark.core.prefab.helpers.Pair;
 
 /** Recipes for ore processor machines
- *
+ * 
  * @author DarkGuardsman */
 public class ProcessorRecipes
 {

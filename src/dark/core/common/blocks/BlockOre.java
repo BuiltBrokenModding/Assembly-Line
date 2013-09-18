@@ -14,6 +14,7 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.core.common.CoreRecipeLoader;
 import dark.core.common.DarkMain;
 import dark.core.common.items.EnumMeterials;
 import dark.core.prefab.IExtraObjectInfo;
@@ -96,7 +97,7 @@ public class BlockOre extends Block implements IExtraObjectInfo
         {
             if (EnumMeterials.values()[i].doWorldGen)
             {
-                OreDictionary.registerOre(EnumMeterials.values()[i].name + "Ore", new ItemStack(DarkMain.recipeLoader.blockOre.blockID, 1, i));
+                OreDictionary.registerOre(EnumMeterials.values()[i].name + "Ore", new ItemStack(CoreRecipeLoader.blockOre.blockID, 1, i));
             }
         }
 

@@ -81,9 +81,9 @@ public class BlockBasalt extends Block
     {
         this.icons = new Icon[16];
 
-        for (int i = 0; i < this.blockNames.length; ++i)
+        for (int i = 0; i < BlockBasalt.blockNames.length; ++i)
         {
-            this.icons[i] = iconReg.registerIcon(DarkMain.getInstance().PREFIX + this.blockNames[i]);
+            this.icons[i] = iconReg.registerIcon(DarkMain.getInstance().PREFIX + BlockBasalt.blockNames[i]);
         }
     }
 

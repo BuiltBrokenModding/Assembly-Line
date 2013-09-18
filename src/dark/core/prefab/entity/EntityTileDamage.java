@@ -144,6 +144,7 @@ public class EntityTileDamage extends EntityLiving implements IEntityAdditionalS
 
     }
 
+    @Override
     public void moveEntity(double par1, double par3, double par5)
     {
 
