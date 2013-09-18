@@ -63,6 +63,7 @@ public class FarmTech extends ModPrefab
     @Instance(FarmTech.MOD_NAME)
     public static FarmTech instance;
 
+    @Override
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
@@ -71,6 +72,7 @@ public class FarmTech extends ModPrefab
         proxy.preInit();
     }
 
+    @Override
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
@@ -82,6 +84,7 @@ public class FarmTech extends ModPrefab
 
     }
 
+    @Override
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
@@ -131,6 +134,7 @@ public class FarmTech extends ModPrefab
 
     public static final CreativeTabs TabFarmTech = new CreativeTabs("FarmTech")
     {
+        @Override
         public ItemStack getIconItemStack()
         {
             return new ItemStack(Item.wheat.itemID, 1, 0);

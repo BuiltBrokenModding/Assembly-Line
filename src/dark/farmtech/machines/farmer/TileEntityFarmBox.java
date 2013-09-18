@@ -19,6 +19,7 @@ public class TileEntityFarmBox extends TileEntityMachine
         this.WATTS_PER_TICK = 5;
     }
 
+    @Override
     public void updateEntity()
     {
         super.updateEntity();
