@@ -18,9 +18,9 @@ import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.CommonProxy;
 import dark.assembly.common.TabAssemblyLine;
-import dark.core.prefab.BlockMachine;
 import dark.core.prefab.IExtraObjectInfo;
 import dark.core.prefab.helpers.Pair;
+import dark.core.prefab.machine.BlockMachine;
 
 public class BlockProcessor extends BlockMachine implements IExtraObjectInfo
 {

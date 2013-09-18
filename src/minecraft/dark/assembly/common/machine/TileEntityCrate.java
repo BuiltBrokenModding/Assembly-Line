@@ -15,7 +15,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import dark.core.common.DarkMain;
 import dark.core.network.PacketHandler;
-import dark.core.prefab.TileEntityInv;
+import dark.core.prefab.machine.TileEntityInv;
 
 public class TileEntityCrate extends TileEntityInv implements IPacketReceiver
 {

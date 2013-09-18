@@ -22,7 +22,7 @@ import dark.assembly.common.machine.BlockAssembly;
 import dark.assembly.common.machine.belt.TileEntityConveyorBelt.SlantType;
 
 /** The block for the actual conveyor belt!
- * 
+ *
  * @author Calclavia, DarkGuardsman */
 public class BlockConveyorBelt extends BlockAssembly
 {
@@ -245,7 +245,7 @@ public class BlockConveyorBelt extends BlockAssembly
         {
             return;
         }
-        if (tileEntity.isRunning() && !world.isBlockIndirectlyGettingPowered(x, y, z))
+        if (tileEntity.isFunctioning() && !world.isBlockIndirectlyGettingPowered(x, y, z))
         {
             float acceleration = tileEntity.acceleration;
             float maxSpeed = tileEntity.maxSpeed;

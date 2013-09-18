@@ -35,7 +35,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
     {
         if (!this.worldObj.isRemote)
         {
-            if (!this.isDisabled() && this.isRunning())
+            if (this.isFunctioning())
             {
                 if (!this.isOutput)
                 {

@@ -13,13 +13,13 @@ import dark.api.ProcessorRecipes.ProcessorType;
 import dark.assembly.common.machine.processor.BlockProcessor.ProcessorData;
 import dark.core.interfaces.IInvBox;
 import dark.core.network.PacketHandler;
-import dark.core.prefab.TileEntityMachine;
 import dark.core.prefab.invgui.InvChest;
+import dark.core.prefab.machine.TileEntityEnergyMachine;
 
 /** Basic A -> B recipe processor machine designed mainly to handle ore blocks
- * 
+ *
  * @author DarkGuardsman */
-public class TileEntityProcessor extends TileEntityMachine
+public class TileEntityProcessor extends TileEntityEnergyMachine
 {
     public int slotInput = 0, slotOutput = 1, slotBatteryCharge = 2, slotBatteryDrain = 3;
 
@@ -51,7 +51,7 @@ public class TileEntityProcessor extends TileEntityMachine
     {
         this.getProcessorData();
         super.updateEntity();
-        if (this.running)
+        if (this.isFunctioning())
         {
             this.doAnimation();
 
@@ -137,9 +137,9 @@ public class TileEntityProcessor extends TileEntityMachine
     }
 
     @Override
-    public boolean canRun()
+    public boolean canFunction()
     {
-        return super.canRun() && this.canProcess();
+        return super.canFunction() && this.canProcess();
     }
 
     /** Can the machine process the itemStack */
@@ -211,7 +211,7 @@ public class TileEntityProcessor extends TileEntityMachine
         {
             return true;
         }
-        if (slotBatteryDrain == slot && this.isBattery(stack))
+        if (slotBatteryDrain == slot && this.isBatteryItem(stack))
         {
             return true;
         }
@@ -262,7 +262,7 @@ public class TileEntityProcessor extends TileEntityMachine
     {
         if (!this.worldObj.isRemote && entity instanceof EntityPlayerMP)
         {
-            ((EntityPlayerMP) entity).playerNetServerHandler.sendPacketToPlayer(PacketHandler.instance().getPacket(this.getChannel(), this, TilePacketTypes.GUI.name, this.processingTicks, this.processingTime, this.energyStored));
+            ((EntityPlayerMP) entity).playerNetServerHandler.sendPacketToPlayer(PacketHandler.instance().getPacket(this.getChannel(), this, SimplePacketTypes.GUI.name, this.processingTicks, this.processingTime, this.energyStored));
         }
     }
 
@@ -275,7 +275,7 @@ public class TileEntityProcessor extends TileEntityMachine
             {
                 if (this.worldObj.isRemote)
                 {
-                    if (id.equalsIgnoreCase(TilePacketTypes.GUI.name))
+                    if (id.equalsIgnoreCase(SimplePacketTypes.GUI.name))
                     {
                         this.processingTicks = dis.readInt();
                         this.processingTime = dis.readInt();

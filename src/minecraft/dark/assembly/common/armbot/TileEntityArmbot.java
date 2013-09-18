@@ -104,7 +104,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
             }
         }
 
-        if (this.isRunning())
+        if (this.isFunctioning())
         {
             if (!this.worldObj.isRemote)
             {

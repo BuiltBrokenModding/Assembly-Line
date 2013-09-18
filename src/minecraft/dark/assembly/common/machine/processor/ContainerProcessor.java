@@ -135,7 +135,7 @@ public class ContainerProcessor extends Container
                         return null;
                     }
                 }
-                else if (tileEntity.isBattery(slotStack))
+                else if (tileEntity.isBatteryItem(slotStack))
                 {
                     if (!this.mergeItemStack(slotStack, tileEntity.slotBatteryCharge, 2, false))
                     {

@@ -21,7 +21,7 @@ import dark.assembly.common.machine.TileEntityAssembly;
 import dark.core.network.PacketHandler;
 
 /** Conveyer belt TileEntity that allows entities of all kinds to be moved
- * 
+ *
  * @author DarkGuardsman */
 public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacketReceiver, IBelt, IRotatable
 {
@@ -68,7 +68,7 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
                 it.remove();
             }
         }
-        if (this.worldObj.isRemote && this.isRunning())
+        if (this.worldObj.isRemote && this.isFunctioning())
         {
             if (this.ticks % 10 == 0 && this.worldObj.isRemote && this.worldObj.getBlockId(this.xCoord - 1, this.yCoord, this.zCoord) != AssemblyLine.recipeLoader.blockConveyorBelt.blockID && this.worldObj.getBlockId(xCoord, yCoord, zCoord - 1) != AssemblyLine.recipeLoader.blockConveyorBelt.blockID)
             {
@@ -101,9 +101,9 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
     }
 
     @Override
-    public boolean canRun()
+    public boolean canFunction()
     {
-        return super.canRun() && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord);
+        return super.canFunction() && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord);
     }
 
     @Override

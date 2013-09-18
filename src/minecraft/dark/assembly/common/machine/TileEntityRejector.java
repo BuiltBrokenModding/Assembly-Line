@@ -38,7 +38,7 @@ public class TileEntityRejector extends TileEntityFilterable
 
             try
             {
-                if (this.isRunning())
+                if (this.isFunctioning())
                 {
                     /** Find all entities in the position in which this block is facing and attempt
                      * to push it out of the way. */

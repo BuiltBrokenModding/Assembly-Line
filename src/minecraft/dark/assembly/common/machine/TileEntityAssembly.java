@@ -11,15 +11,15 @@ import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
 import dark.api.parts.INetworkEnergyPart;
 import dark.assembly.common.AssemblyLine;
-import dark.core.prefab.TileEntityMachine;
+import dark.core.prefab.machine.TileEntityEnergyMachine;
 import dark.core.prefab.tilenetwork.NetworkSharedPower;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
 /** A class to be inherited by all machines on the assembly line. This class acts as a single peace
  * in a network of similar tiles allowing all to share power from one or more sources
- * 
+ *
  * @author DarkGuardsman */
-public abstract class TileEntityAssembly extends TileEntityMachine implements INetworkEnergyPart
+public abstract class TileEntityAssembly extends TileEntityEnergyMachine implements INetworkEnergyPart
 {
     /** lowest value the network can update at */
     public static int refresh_min_rate = 20;
@@ -61,7 +61,6 @@ public abstract class TileEntityAssembly extends TileEntityMachine implements IN
         super.updateEntity();
         if (!this.worldObj.isRemote)
         {
-            this.prevRunning = this.running;
 
             if (ticks % updateTick == 0)
             {
@@ -74,10 +73,10 @@ public abstract class TileEntityAssembly extends TileEntityMachine implements IN
     }
 
     @Override
-    public boolean canRun()
+    public boolean canFunction()
     {
         //TODO add check for network power
-        return super.canRun() || AssemblyLine.REQUIRE_NO_POWER;
+        return super.canFunction() || AssemblyLine.REQUIRE_NO_POWER;
     }
 
     /** Same as updateEntity */
@@ -85,12 +84,6 @@ public abstract class TileEntityAssembly extends TileEntityMachine implements IN
     public void onUpdate()
     {
 
-    }
-
-    /** Checks to see if this assembly tile can run using several methods */
-    public boolean isRunning()
-    {
-        return this.running;
     }
 
     @Override
