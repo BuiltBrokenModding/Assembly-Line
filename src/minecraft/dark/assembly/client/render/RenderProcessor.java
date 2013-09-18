@@ -13,6 +13,7 @@ import dark.assembly.client.model.ModelGrinder;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.machine.processor.TileEntityProcessor;
 import dark.core.client.renders.RenderTileMachine;
+import dark.core.prefab.ModPrefab;
 
 @SideOnly(Side.CLIENT)
 public class RenderProcessor extends RenderTileMachine
@@ -87,11 +88,11 @@ public class RenderProcessor extends RenderTileMachine
         int g = meta / 4;
         if (g == 0)
         {
-            return new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "CrusherBlock.png");
+            return new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "CrusherBlock.png");
         }
         else if (g == 1)
         {
-            return new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "GrinderBlock.png");
+            return new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "GrinderBlock.png");
         }
         return null;
 

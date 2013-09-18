@@ -17,7 +17,7 @@ import dark.core.prefab.TileEntityMachine;
 import dark.core.prefab.invgui.InvChest;
 
 /** Basic A -> B recipe processor machine designed mainly to handle ore blocks
- *
+ * 
  * @author DarkGuardsman */
 public class TileEntityProcessor extends TileEntityMachine
 {
@@ -266,6 +266,7 @@ public class TileEntityProcessor extends TileEntityMachine
         }
     }
 
+    @Override
     public boolean simplePacket(String id, DataInputStream dis, EntityPlayer player)
     {
         if (!super.simplePacket(id, dis, player))

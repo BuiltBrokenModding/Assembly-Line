@@ -360,14 +360,14 @@ public class BlockCrate extends BlockAssembly
                 if (containingStack.stackSize > 0)
                 {
                     float area = 0.7F;
-                    double dropX = (double) (world.rand.nextFloat() * area) + (double) (1.0F - area) * 0.5D;
-                    double dropY = (double) (world.rand.nextFloat() * area) + (double) (1.0F - area) * 0.5D;
-                    double dropZ = (double) (world.rand.nextFloat() * area) + (double) (1.0F - area) * 0.5D;
+                    double dropX = (world.rand.nextFloat() * area) + (1.0F - area) * 0.5D;
+                    double dropY = (world.rand.nextFloat() * area) + (1.0F - area) * 0.5D;
+                    double dropZ = (world.rand.nextFloat() * area) + (1.0F - area) * 0.5D;
 
                     ItemStack dropStack = new ItemStack(this, 1, tileEntity.getBlockMetadata());
                     ItemBlockCrate.setContainingItemStack(dropStack, containingStack);
 
-                    EntityItem var13 = new EntityItem(world, (double) x + dropX, (double) y + dropY, (double) z + dropZ, dropStack);
+                    EntityItem var13 = new EntityItem(world, x + dropX, y + dropY, z + dropZ, dropStack);
                     var13.delayBeforeCanPickup = 10;
                     world.spawnEntityInWorld(var13);
 

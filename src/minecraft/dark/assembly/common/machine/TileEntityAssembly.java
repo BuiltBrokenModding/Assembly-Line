@@ -47,7 +47,7 @@ public abstract class TileEntityAssembly extends TileEntityMachine implements IN
     @Override
     public void invalidate()
     {
-        NetworkAssembly.invalidate(this);
+        NetworkTileEntities.invalidate(this);
         if (this.getTileNetwork() != null)
         {
             this.getTileNetwork().splitNetwork(this.worldObj, this);
@@ -65,7 +65,7 @@ public abstract class TileEntityAssembly extends TileEntityMachine implements IN
 
             if (ticks % updateTick == 0)
             {
-                this.updateTick = ((int) random.nextInt(1 + refresh_diff) + refresh_min_rate);
+                this.updateTick = (random.nextInt(1 + refresh_diff) + refresh_min_rate);
                 this.refresh();
             }
         }
@@ -210,6 +210,7 @@ public abstract class TileEntityAssembly extends TileEntityMachine implements IN
         return INFINITE_EXTENT_AABB;
     }
 
+    @Override
     public String toString()
     {
         return "[AssemblyTile]@" + (new Vector3(this).toString());

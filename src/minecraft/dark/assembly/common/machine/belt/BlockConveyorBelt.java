@@ -65,15 +65,15 @@ public class BlockConveyorBelt extends BlockAssembly
 
             if (tileEntity.getSlant() == SlantType.UP || tileEntity.getSlant() == SlantType.DOWN)
             {
-                return AxisAlignedBB.getAABBPool().getAABB((double) x + this.minX, (double) y + this.minY, (double) z + this.minZ, (double) x + 1, (double) y + 1, (double) z + 1);
+                return AxisAlignedBB.getAABBPool().getAABB(x + this.minX, y + this.minY, z + this.minZ, (double) x + 1, (double) y + 1, (double) z + 1);
             }
             if (tileEntity.getSlant() == SlantType.TOP)
             {
-                return AxisAlignedBB.getAABBPool().getAABB((double) x + this.minX, (double) y + 0.68f, (double) z + this.minZ, (double) x + this.maxX, (double) y + 0.98f, (double) z + this.maxZ);
+                return AxisAlignedBB.getAABBPool().getAABB(x + this.minX, (double) y + 0.68f, z + this.minZ, x + this.maxX, (double) y + 0.98f, z + this.maxZ);
             }
         }
 
-        return AxisAlignedBB.getAABBPool().getAABB((double) x + this.minX, (double) y + this.minY, (double) z + this.minZ, (double) x + this.maxX, (double) y + this.maxY, (double) z + this.maxZ);
+        return AxisAlignedBB.getAABBPool().getAABB(x + this.minX, y + this.minY, z + this.minZ, x + this.maxX, y + this.maxY, z + this.maxZ);
     }
 
     @Override

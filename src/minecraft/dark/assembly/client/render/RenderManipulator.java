@@ -10,6 +10,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.client.model.ModelManipulator;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.machine.TileEntityManipulator;
+import dark.core.prefab.ModPrefab;
 
 @SideOnly(Side.CLIENT)
 public class RenderManipulator extends RenderImprintable
@@ -26,12 +27,12 @@ public class RenderManipulator extends RenderImprintable
 
         if (tileEntity.isOutput())
         {
-            ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "manipulator1.png");
+            ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "manipulator1.png");
             func_110628_a(name);
         }
         else
         {
-            ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "manipulator2.png");
+            ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "manipulator2.png");
             func_110628_a(name);
         }
 

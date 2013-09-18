@@ -66,37 +66,37 @@ public class GuiCommandList extends GuiScrollingList
         {
             // background
             tesselator.startDrawingQuads();
-            tesselator.addVertex((double) x1, (double) y2, 0.0D);
-            tesselator.addVertex((double) x2, (double) y2, 0.0D);
-            tesselator.addVertex((double) x2, (double) y1, 0.0D);
-            tesselator.addVertex((double) x1, (double) y1, 0.0D);
+            tesselator.addVertex(x1, y2, 0.0D);
+            tesselator.addVertex(x2, y2, 0.0D);
+            tesselator.addVertex(x2, y1, 0.0D);
+            tesselator.addVertex(x1, y1, 0.0D);
             tesselator.draw();
         }
         // outline
         GL11.glColor4f(lR, lG, lB, 1f);
         tesselator.startDrawingQuads();
-        tesselator.addVertex((double) x1, (double) y1, 0.0D);
-        tesselator.addVertex((double) x1, (double) y2, 0.0D);
-        tesselator.addVertex((double) x1 + 1, (double) y2, 0.0D);
-        tesselator.addVertex((double) x1 + 1, (double) y1, 0.0D);
+        tesselator.addVertex(x1, y1, 0.0D);
+        tesselator.addVertex(x1, y2, 0.0D);
+        tesselator.addVertex((double) x1 + 1, y2, 0.0D);
+        tesselator.addVertex((double) x1 + 1, y1, 0.0D);
         tesselator.draw();
         tesselator.startDrawingQuads();
-        tesselator.addVertex((double) x2 - 1, (double) y1, 0.0D);
-        tesselator.addVertex((double) x2 - 1, (double) y2, 0.0D);
-        tesselator.addVertex((double) x2, (double) y2, 0.0D);
-        tesselator.addVertex((double) x2, (double) y1, 0.0D);
+        tesselator.addVertex((double) x2 - 1, y1, 0.0D);
+        tesselator.addVertex((double) x2 - 1, y2, 0.0D);
+        tesselator.addVertex(x2, y2, 0.0D);
+        tesselator.addVertex(x2, y1, 0.0D);
         tesselator.draw();
         tesselator.startDrawingQuads();
-        tesselator.addVertex((double) x1, (double) y1, 0.0D);
-        tesselator.addVertex((double) x1, (double) y1 + 1, 0.0D);
-        tesselator.addVertex((double) x2, (double) y1 + 1, 0.0D);
-        tesselator.addVertex((double) x2, (double) y1, 0.0D);
+        tesselator.addVertex(x1, y1, 0.0D);
+        tesselator.addVertex(x1, (double) y1 + 1, 0.0D);
+        tesselator.addVertex(x2, (double) y1 + 1, 0.0D);
+        tesselator.addVertex(x2, y1, 0.0D);
         tesselator.draw();
         tesselator.startDrawingQuads();
-        tesselator.addVertex((double) x1, (double) y2 - 1, 0.0D);
-        tesselator.addVertex((double) x1, (double) y2, 0.0D);
-        tesselator.addVertex((double) x2, (double) y2, 0.0D);
-        tesselator.addVertex((double) x2, (double) y2 - 1, 0.0D);
+        tesselator.addVertex(x1, (double) y2 - 1, 0.0D);
+        tesselator.addVertex(x1, y2, 0.0D);
+        tesselator.addVertex(x2, y2, 0.0D);
+        tesselator.addVertex(x2, (double) y2 - 1, 0.0D);
         tesselator.draw();
 
         GL11.glEnable(GL11.GL_TEXTURE_2D);

@@ -13,6 +13,7 @@ public class CommandRepeat extends Command
     private int curReps;
     private boolean initialized = false;
 
+    @Override
     public void onTaskStart()
     {
         this.tasksToRepeat = Math.max(this.getIntArg(0), 0);

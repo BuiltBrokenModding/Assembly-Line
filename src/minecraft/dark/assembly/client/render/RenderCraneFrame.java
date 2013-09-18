@@ -16,6 +16,7 @@ import dark.assembly.client.model.ModelCraneRail;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.machine.crane.CraneHelper;
 import dark.assembly.common.machine.crane.TileEntityCraneRail;
+import dark.core.prefab.ModPrefab;
 
 @SideOnly(Side.CLIENT)
 public class RenderCraneFrame extends TileEntitySpecialRenderer
@@ -45,7 +46,7 @@ public class RenderCraneFrame extends TileEntitySpecialRenderer
             boolean renderFoot = tileEntity.worldObj.isBlockSolidOnSide(tX, tY - 1, tZ, ForgeDirection.UP);
             if ((renderLeft && renderRight) || (renderFront && renderBack))
                 renderFoot = false;
-            ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY + TEXTURE);
+            ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + TEXTURE);
             func_110628_a(name);
             glPushMatrix();
             glTranslated(x + 0.5, y + 1.5, z + 0.5);

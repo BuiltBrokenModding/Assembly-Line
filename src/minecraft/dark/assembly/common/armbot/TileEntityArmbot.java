@@ -834,13 +834,13 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     {
         if (object instanceof Entity)
         {
-            this.grabbedEntities.remove((Entity) object);
+            this.grabbedEntities.remove(object);
         }
         if (object instanceof ItemStack)
         {
             Vector3 handPosition = this.getHandPosition();
             ItemWorldHelper.dropItemStack(worldObj, handPosition, (ItemStack) object, false);
-            this.grabbedItems.remove((ItemStack) object);
+            this.grabbedItems.remove(object);
         }
         if (object instanceof String)
         {

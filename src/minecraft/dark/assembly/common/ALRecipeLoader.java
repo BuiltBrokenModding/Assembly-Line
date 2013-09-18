@@ -38,21 +38,21 @@ public class ALRecipeLoader extends RecipeLoader
     private void createUERecipes()
     {
         // Armbot
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockArmbot, new Object[] { "II ", "SIS", "MCM", 'S', ALRecipeLoader.steelPlate, 'C', ALRecipeLoader.circuit2, 'I', ALRecipeLoader.steel, 'M', ALRecipeLoader.motor }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockArmbot, new Object[] { "II ", "SIS", "MCM", 'S', RecipeLoader.steelPlate, 'C', RecipeLoader.circuit2, 'I', RecipeLoader.steel, 'M', RecipeLoader.motor }));
         // Disk
-        GameRegistry.addRecipe(new ShapedOreRecipe(itemDisk, new Object[] { "III", "ICI", "III", 'I', itemImprint, 'C', ALRecipeLoader.circuit2 }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(itemDisk, new Object[] { "III", "ICI", "III", 'I', itemImprint, 'C', RecipeLoader.circuit2 }));
         // Encoder
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockEncoder, new Object[] { "SIS", "SCS", "SSS", 'I', itemImprint, 'S', ALRecipeLoader.steel, 'C', ALRecipeLoader.circuit2 }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockEncoder, new Object[] { "SIS", "SCS", "SSS", 'I', itemImprint, 'S', RecipeLoader.steel, 'C', RecipeLoader.circuit2 }));
         // Detector
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, new Object[] { "SES", "SCS", "S S", 'S', ALRecipeLoader.steel, 'C', ALRecipeLoader.circuit, 'E', Item.eyeOfEnder }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, new Object[] { "SES", "SCS", "S S", 'S', RecipeLoader.steel, 'C', RecipeLoader.circuit, 'E', Item.eyeOfEnder }));
         // Conveyor Belt
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 10), new Object[] { "III", "WMW", 'I', ALRecipeLoader.steel, 'W', Block.planks, 'M', ALRecipeLoader.motor }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 10), new Object[] { "III", "WMW", 'I', RecipeLoader.steel, 'W', Block.planks, 'M', RecipeLoader.motor }));
         // Rejector
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockRejector, new Object[] { "CPC", "@R@", '@', steel, 'R', Item.redstone, 'P', Block.pistonBase, 'C', ALRecipeLoader.circuit }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockRejector, new Object[] { "CPC", "@R@", '@', steel, 'R', Item.redstone, 'P', Block.pistonBase, 'C', RecipeLoader.circuit }));
         // Turntable
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, new Object[] { "IMI", " P ", 'M', ALRecipeLoader.motor, 'P', Block.pistonBase, 'I', ALRecipeLoader.steel }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, new Object[] { "IMI", " P ", 'M', RecipeLoader.motor, 'P', Block.pistonBase, 'I', RecipeLoader.steel }));
         // Manipulator
-        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockManipulator, 2), new Object[] { Block.dispenser, ALRecipeLoader.circuit }));
+        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockManipulator, 2), new Object[] { Block.dispenser, RecipeLoader.circuit }));
     }
 
     private void createStandardRecipes()
@@ -63,7 +63,7 @@ public class ALRecipeLoader extends RecipeLoader
         GameRegistry.addRecipe(new ShapedOreRecipe(blockImprinter, new Object[] { "SIS", "SPS", "WCW", 'S', Item.ingotIron, 'C', Block.chest, 'W', Block.workbench, 'P', Block.pistonBase, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
         // Crate
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 0), new Object[] { "TST", "S S", "TST", 'S', Item.ingotIron, 'T', Block.planks }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 1), new Object[] { "TST", "SCS", "TST", 'C', new ItemStack(blockCrate, 1, 0), 'S', ALRecipeLoader.steel, 'T', Block.wood }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 2), new Object[] { "TST", "SCS", "TST", 'C', new ItemStack(blockCrate, 1, 1), 'S', ALRecipeLoader.steelPlate, 'T', Block.wood }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 1), new Object[] { "TST", "SCS", "TST", 'C', new ItemStack(blockCrate, 1, 0), 'S', RecipeLoader.steel, 'T', Block.wood }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 2), new Object[] { "TST", "SCS", "TST", 'C', new ItemStack(blockCrate, 1, 1), 'S', RecipeLoader.steelPlate, 'T', Block.wood }));
     }
 }

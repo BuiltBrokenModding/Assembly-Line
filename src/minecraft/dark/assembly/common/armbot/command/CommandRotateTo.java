@@ -48,7 +48,7 @@ public class CommandRotateTo extends Command
 
         int totalTicksYaw = (int) (Math.abs(this.targetRotationYaw - this.tileEntity.renderYaw) / this.tileEntity.ROTATION_SPEED);
         int totalTicksPitch = (int) (Math.abs(this.targetRotationPitch - this.tileEntity.renderPitch) / this.tileEntity.ROTATION_SPEED);
-        this.totalTicks = (int) Math.max(totalTicksYaw, totalTicksPitch);
+        this.totalTicks = Math.max(totalTicksYaw, totalTicksPitch);
     }
 
     @Override

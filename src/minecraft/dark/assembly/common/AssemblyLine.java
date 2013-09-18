@@ -98,6 +98,7 @@ public class AssemblyLine extends ModPrefab
 
     public static Block processorMachine;
 
+    @Override
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
@@ -168,8 +169,8 @@ public class AssemblyLine extends ModPrefab
         recipeLoader.blockCraneController = new BlockCraneController(getNextID());
         recipeLoader.blockCraneFrame = new BlockCraneFrame(getNextID());
         recipeLoader.blockTurntable = new BlockTurntable(getNextID());
-        this.processorMachine = new BlockProcessor(getNextID());
-        dataList.add(new BlockData(this.processorMachine, ItemBlockHolder.class, "OreProcessor"));
+        AssemblyLine.processorMachine = new BlockProcessor(getNextID());
+        dataList.add(new BlockData(AssemblyLine.processorMachine, ItemBlockHolder.class, "OreProcessor"));
 
         recipeLoader.itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", ITEM_ID_PREFIX).getInt());
         recipeLoader.itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", ITEM_ID_PREFIX + 1).getInt());

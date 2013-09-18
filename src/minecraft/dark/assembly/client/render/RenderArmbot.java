@@ -20,6 +20,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.client.model.ModelArmbot;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.armbot.TileEntityArmbot;
+import dark.core.prefab.ModPrefab;
 
 @SideOnly(Side.CLIENT)
 public class RenderArmbot extends TileEntitySpecialRenderer
@@ -46,7 +47,7 @@ public class RenderArmbot extends TileEntitySpecialRenderer
                     }
                 }
             }
-            ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY + TEXTURE);
+            ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + TEXTURE);
             func_110628_a(name);
 
             GL11.glPushMatrix();

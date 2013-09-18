@@ -179,7 +179,7 @@ public class RenderCrate extends TileEntitySpecialRenderer
         float scaler = 0.8f;
         float scaleX = (displayWidth / requiredWidth);
         float scaleY = (displayHeight / requiredHeight);
-        float scale = (float) scaleX * scaler;
+        float scale = scaleX * scaler;
 
         if (maxScale > 0)
         {

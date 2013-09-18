@@ -21,6 +21,7 @@ public abstract class BlockAssembly extends BlockMachine
         this.setCreativeTab(TabAssemblyLine.INSTANCE);
     }
 
+    @Override
     public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
     {
         if (entityPlayer != null && entityPlayer.getHeldItem() != null && entityPlayer.getHeldItem().itemID == Item.stick.itemID)

@@ -10,6 +10,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.client.model.ModelRejectorPiston;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.machine.TileEntityRejector;
+import dark.core.prefab.ModPrefab;
 
 @SideOnly(Side.CLIENT)
 public class RenderRejector extends RenderImprintable
@@ -26,7 +27,7 @@ public class RenderRejector extends RenderImprintable
         {
             pos = 8;
         }
-        ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "rejector.png");
+        ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "rejector.png");
         func_110628_a(name);
         GL11.glPushMatrix();
         GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);

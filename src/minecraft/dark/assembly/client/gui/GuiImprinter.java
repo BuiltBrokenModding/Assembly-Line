@@ -12,6 +12,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.imprinter.ContainerImprinter;
 import dark.assembly.common.imprinter.TileEntityImprinter;
+import dark.core.prefab.ModPrefab;
 
 @SideOnly(Side.CLIENT)
 public class GuiImprinter extends GuiContainer
@@ -40,7 +41,7 @@ public class GuiImprinter extends GuiContainer
     @Override
     protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
     {
-        this.mc.func_110434_K().func_110577_a(new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.GUI_DIRECTORY + "gui_imprinter.png"));
+        this.mc.func_110434_K().func_110577_a(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.GUI_DIRECTORY + "gui_imprinter.png"));
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.containerWidth = (this.width - this.xSize) / 2;
         this.containerHeight = (this.height - this.ySize) / 2;

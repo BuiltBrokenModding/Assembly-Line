@@ -43,7 +43,7 @@ public class ContainerImprinter extends Container implements ISlotWatcher
         {
             for (int i = 0; i < 9; i++)
             {
-                this.addSlotToContainer(new WatchedSlot(this.tileEntity, (i + ii * 9) + this.tileEntity.INVENTORY_START, 8 + i * 18, 80 + ii * 18, this));
+                this.addSlotToContainer(new WatchedSlot(this.tileEntity, (i + ii * 9) + TileEntityImprinter.INVENTORY_START, 8 + i * 18, 80 + ii * 18, this));
             }
         }
 
@@ -91,22 +91,22 @@ public class ContainerImprinter extends Container implements ISlotWatcher
             ItemStack slotStack = slotObj.getStack();
             copyStack = slotStack.copy();
 
-            if (slot == this.tileEntity.INVENTORY_START - 1)
+            if (slot == TileEntityImprinter.INVENTORY_START - 1)
             {
                 // Prevents filter from being duplicated
-                this.tileEntity.setInventorySlotContents(this.tileEntity.INVENTORY_START - 1, null);
+                this.tileEntity.setInventorySlotContents(TileEntityImprinter.INVENTORY_START - 1, null);
             }
 
             if (slot > this.tileEntity.getSizeInventory() - 1)
             {
-                if (this.getSlot(this.tileEntity.IMPRINTER_MATRIX_START).isItemValid(slotStack))
+                if (this.getSlot(TileEntityImprinter.IMPRINTER_MATRIX_START).isItemValid(slotStack))
                 {
-                    if (!this.mergeItemStack(slotStack, this.tileEntity.IMPRINTER_MATRIX_START, this.tileEntity.IMPRINTER_MATRIX_START + 1, true))
+                    if (!this.mergeItemStack(slotStack, TileEntityImprinter.IMPRINTER_MATRIX_START, TileEntityImprinter.IMPRINTER_MATRIX_START + 1, true))
                     {
                         return null;
                     }
                 }
-                else if (!this.mergeItemStack(slotStack, this.tileEntity.INVENTORY_START, this.tileEntity.getSizeInventory(), false))
+                else if (!this.mergeItemStack(slotStack, TileEntityImprinter.INVENTORY_START, this.tileEntity.getSizeInventory(), false))
                 {
                     return null;
                 }

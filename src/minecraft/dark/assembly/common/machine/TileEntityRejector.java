@@ -66,9 +66,9 @@ public class TileEntityRejector extends TileEntityFilterable
     {
         this.firePiston = true;
         //TODO add config to adjust the motion magnitude per rejector
-        entity.motionX = (double) side.offsetX * 0.1;
+        entity.motionX = side.offsetX * 0.1;
         entity.motionY += 0.10000000298023224D;
-        entity.motionZ = (double) side.offsetZ * 0.1;
+        entity.motionZ = side.offsetZ * 0.1;
 
         if (!this.worldObj.isRemote && tileEntity instanceof IBelt)
         {

@@ -32,6 +32,7 @@ import dark.assembly.common.machine.encoder.ItemDisk;
 import dark.assembly.common.machine.encoder.TileEntityEncoder;
 import dark.core.common.DarkMain;
 import dark.core.network.PacketHandler;
+import dark.core.prefab.ModPrefab;
 
 @SideOnly(Side.CLIENT)
 public class GuiEncoder extends GuiContainer implements IInventoryWatcher
@@ -105,7 +106,7 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
 
                         if (disk != null)
                         {
-                            PacketDispatcher.sendPacketToServer(PacketHandler.instance().getPacket(DarkMain.CHANNEL, this.tileEntity, true, (String) this.commandField.getText()));
+                            PacketDispatcher.sendPacketToServer(PacketHandler.instance().getPacket(DarkMain.CHANNEL, this.tileEntity, true, this.commandField.getText()));
                         }
                     }
 
@@ -310,7 +311,7 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
     @Override
     protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
     {
-        this.mc.func_110434_K().func_110577_a(new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.GUI_DIRECTORY + "gui_encoder.png"));
+        this.mc.func_110434_K().func_110577_a(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.GUI_DIRECTORY + "gui_encoder.png"));
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         this.drawTexturedModalRect(containerWidth, containerHeight + ContainerEncoder.Y_OFFSET, 0, 0, this.xSize, this.ySize);
@@ -328,37 +329,37 @@ public class GuiEncoder extends GuiContainer implements IInventoryWatcher
         {
             // background
             tesselator.startDrawingQuads();
-            tesselator.addVertex((double) x1, (double) y2, 0.0D);
-            tesselator.addVertex((double) x2, (double) y2, 0.0D);
-            tesselator.addVertex((double) x2, (double) y1, 0.0D);
-            tesselator.addVertex((double) x1, (double) y1, 0.0D);
+            tesselator.addVertex(x1, y2, 0.0D);
+            tesselator.addVertex(x2, y2, 0.0D);
+            tesselator.addVertex(x2, y1, 0.0D);
+            tesselator.addVertex(x1, y1, 0.0D);
             tesselator.draw();
         }
         // outline
         GL11.glColor4f(lR, lG, lB, 1f);
         tesselator.startDrawingQuads();
-        tesselator.addVertex((double) x1, (double) y1, 0.0D);
-        tesselator.addVertex((double) x1, (double) y2, 0.0D);
-        tesselator.addVertex((double) x1 + 1, (double) y2, 0.0D);
-        tesselator.addVertex((double) x1 + 1, (double) y1, 0.0D);
+        tesselator.addVertex(x1, y1, 0.0D);
+        tesselator.addVertex(x1, y2, 0.0D);
+        tesselator.addVertex((double) x1 + 1, y2, 0.0D);
+        tesselator.addVertex((double) x1 + 1, y1, 0.0D);
         tesselator.draw();
         tesselator.startDrawingQuads();
-        tesselator.addVertex((double) x2 - 1, (double) y1, 0.0D);
-        tesselator.addVertex((double) x2 - 1, (double) y2, 0.0D);
-        tesselator.addVertex((double) x2, (double) y2, 0.0D);
-        tesselator.addVertex((double) x2, (double) y1, 0.0D);
+        tesselator.addVertex((double) x2 - 1, y1, 0.0D);
+        tesselator.addVertex((double) x2 - 1, y2, 0.0D);
+        tesselator.addVertex(x2, y2, 0.0D);
+        tesselator.addVertex(x2, y1, 0.0D);
         tesselator.draw();
         tesselator.startDrawingQuads();
-        tesselator.addVertex((double) x1, (double) y1, 0.0D);
-        tesselator.addVertex((double) x1, (double) y1 + 1, 0.0D);
-        tesselator.addVertex((double) x2, (double) y1 + 1, 0.0D);
-        tesselator.addVertex((double) x2, (double) y1, 0.0D);
+        tesselator.addVertex(x1, y1, 0.0D);
+        tesselator.addVertex(x1, (double) y1 + 1, 0.0D);
+        tesselator.addVertex(x2, (double) y1 + 1, 0.0D);
+        tesselator.addVertex(x2, y1, 0.0D);
         tesselator.draw();
         tesselator.startDrawingQuads();
-        tesselator.addVertex((double) x1, (double) y2 - 1, 0.0D);
-        tesselator.addVertex((double) x1, (double) y2, 0.0D);
-        tesselator.addVertex((double) x2, (double) y2, 0.0D);
-        tesselator.addVertex((double) x2, (double) y2 - 1, 0.0D);
+        tesselator.addVertex(x1, (double) y2 - 1, 0.0D);
+        tesselator.addVertex(x1, y2, 0.0D);
+        tesselator.addVertex(x2, y2, 0.0D);
+        tesselator.addVertex(x2, (double) y2 - 1, 0.0D);
         tesselator.draw();
 
         GL11.glEnable(GL11.GL_TEXTURE_2D);

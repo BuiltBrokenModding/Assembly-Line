@@ -13,6 +13,7 @@ public class SlotDisk extends Slot
         super(par1iInventory, par2, par3, par4);
     }
 
+    @Override
     public boolean isItemValid(ItemStack itemStack)
     {
         return itemStack.itemID == AssemblyLine.recipeLoader.itemDisk.itemID;

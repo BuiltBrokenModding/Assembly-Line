@@ -40,7 +40,7 @@ public class InvInteractionHelper
     }
 
     /** Throws the items from the manipulator into the world.
-     *
+     * 
      * @param outputPosition
      * @param items */
     public void throwItem(Vector3 outputPosition, ItemStack items)
@@ -57,7 +57,7 @@ public class InvInteractionHelper
     }
 
     /** Tries to place an itemStack in a specific position if it is an inventory.
-     *
+     * 
      * @return The ItemStack remained after place attempt */
     public ItemStack tryPlaceInPosition(ItemStack itemStack, Vector3 position, ForgeDirection dir)
     {
@@ -194,7 +194,7 @@ public class InvInteractionHelper
     }
 
     /** Tries to get an item from a position
-     *
+     * 
      * @param position - location of item
      * @param direction - direction this item is from the original
      * @param ammount - amount up to one stack to grab

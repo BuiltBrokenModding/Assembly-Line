@@ -15,6 +15,7 @@ import dark.assembly.client.model.ModelCraneController;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.machine.crane.CraneHelper;
 import dark.assembly.common.machine.crane.TileEntityCraneController;
+import dark.core.prefab.ModPrefab;
 
 @SideOnly(Side.CLIENT)
 public class RenderCraneController extends RenderImprintable
@@ -28,7 +29,7 @@ public class RenderCraneController extends RenderImprintable
     {
         if (tileEntity != null && tileEntity instanceof TileEntityCraneController)
         {
-            ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY + (((TileEntityCraneController) tileEntity).isCraneValid() ? TEXTURE_VALID : TEXTURE));
+            ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + (((TileEntityCraneController) tileEntity).isCraneValid() ? TEXTURE_VALID : TEXTURE));
             func_110628_a(name);
             ForgeDirection front = ForgeDirection.getOrientation(tileEntity.worldObj.getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord));
             ForgeDirection right = CraneHelper.rotateClockwise(front);

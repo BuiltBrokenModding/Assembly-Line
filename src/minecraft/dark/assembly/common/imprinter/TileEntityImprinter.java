@@ -495,7 +495,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
     @Override
     public boolean isUseableByPlayer(EntityPlayer entityplayer)
     {
-        return this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord) != this ? false : entityplayer.getDistanceSq((double) this.xCoord + 0.5D, (double) this.yCoord + 0.5D, (double) this.zCoord + 0.5D) <= 64.0D;
+        return this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord) != this ? false : entityplayer.getDistanceSq(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D) <= 64.0D;
 
     }
 
@@ -520,9 +520,9 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
     @Override
     public int[] getCraftingInv()
     {
-        if (this.inventorySlots == null)
+        if (TileEntityImprinter.inventorySlots == null)
         {
-            this.inventorySlots = new int[18];
+            TileEntityImprinter.inventorySlots = new int[18];
             for (int i = 0; i < inventorySlots.length; i++)
             {
                 inventorySlots[i] = TileEntityImprinter.INVENTORY_START + i;
