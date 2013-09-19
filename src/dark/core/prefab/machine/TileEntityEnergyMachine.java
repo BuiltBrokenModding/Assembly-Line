@@ -37,16 +37,16 @@ import dark.api.energy.IPowerLess;
 import dark.core.common.ExternalModHandler;
 
 /** Basic energy tile that can consume power
- * 
+ *
  * Based off both UE universal electrical tile, and electrical tile prefabs
- * 
+ *
  * @author DarkGuardsman */
 public class TileEntityEnergyMachine extends TileEntityMachine implements IElectrical, IElectricalStorage, IEnergySink, IEnergySource, IPowerReceptor, IPowerLess
 {
     /** Forge Ore Directory name of the item to toggle infinite power mode */
     public static String powerToggleItemID = "battery";
 
-    protected float WATTS_PER_TICK, MAX_WATTS, maxInputEnergy = 100, energyStored = 0;
+    public float WATTS_PER_TICK, MAX_WATTS, maxInputEnergy = 100, energyStored = 0;
     protected boolean isAddedToEnergyNet, consumeEnergy = true;
     public PowerHandler bcPowerHandler;
     public Type bcBlockType = Type.MACHINE;
@@ -413,7 +413,7 @@ public class TileEntityEnergyMachine extends TileEntityMachine implements IElect
     }
 
     /** Produces UE power towards a specific direction.
-     * 
+     *
      * @param outputDirection - The output direction. */
     public void produceUE(ForgeDirection outputDirection)
     {
@@ -442,7 +442,7 @@ public class TileEntityEnergyMachine extends TileEntityMachine implements IElect
     }
 
     /** The electrical input direction.
-     * 
+     *
      * @return The direction that electricity is entered into the tile. Return null for no input. By
      * default you can accept power from all sides. */
     public EnumSet<ForgeDirection> getInputDirections()
@@ -451,7 +451,7 @@ public class TileEntityEnergyMachine extends TileEntityMachine implements IElect
     }
 
     /** The electrical output direction.
-     * 
+     *
      * @return The direction that electricity is output from the tile. Return null for no output. By
      * default it will return an empty EnumSet. */
     public EnumSet<ForgeDirection> getOutputDirections()

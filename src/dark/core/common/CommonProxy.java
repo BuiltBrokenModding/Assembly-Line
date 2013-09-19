@@ -2,11 +2,20 @@ package dark.core.common;
 
 import java.awt.Color;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
+import cpw.mods.fml.common.network.IGuiHandler;
+import dark.core.common.machines.ContainerBatteryBox;
+import dark.core.common.machines.ContainerCoalGenerator;
+import dark.core.common.machines.ContainerElectricFurnace;
+import dark.core.common.machines.TileEntityBatteryBox;
+import dark.core.common.machines.TileEntityCoalGenerator;
+import dark.core.common.machines.TileEntityElectricFurnace;
 import dark.core.network.PacketManagerEffects;
 
-public class CommonProxy
+public class CommonProxy implements IGuiHandler
 {
     public static final int GUI_COAL_GEN = 0, GUI_FUEL_GEN = 1, GUI_FURNACE_ELEC = 2, GUI_BATTERY_BOX = 3;
 
@@ -29,7 +38,7 @@ public class CommonProxy
     }
 
     /** Renders a laser beam from one power to another by a set color for a set time
-     * 
+     *
      * @param world - world this laser is to be rendered in
      * @param position - start vector3
      * @param target - end vector3
@@ -38,6 +47,37 @@ public class CommonProxy
     public void renderBeam(World world, Vector3 position, Vector3 target, Color color, int age)
     {
         PacketManagerEffects.sendClientLaserEffect(world, position, target, color, age);
+    }
+
+    @Override
+    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+    {
+
+        return null;
+    }
+
+    @Override
+    public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+    {
+        TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+        if (tileEntity != null)
+        {
+            if (tileEntity instanceof TileEntityBatteryBox)
+            {
+                return new ContainerBatteryBox(player.inventory, ((TileEntityBatteryBox) tileEntity));
+            }
+            else if (tileEntity instanceof TileEntityCoalGenerator)
+            {
+                return new ContainerCoalGenerator(player.inventory, ((TileEntityCoalGenerator) tileEntity));
+            }
+            else if (tileEntity instanceof TileEntityElectricFurnace)
+            {
+                return new ContainerElectricFurnace(player.inventory, ((TileEntityElectricFurnace) tileEntity));
+            }
+        }
+
+        return null;
     }
 
 }

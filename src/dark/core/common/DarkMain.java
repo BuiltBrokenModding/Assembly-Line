@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
@@ -30,6 +31,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import dark.api.ProcessorRecipes;
 import dark.core.common.BlockRegistry.BlockData;
 import dark.core.common.blocks.BlockBasalt;
@@ -87,6 +89,7 @@ public class DarkMain extends ModPrefab
     public static boolean overPressureDamage;
 
     public static BlockMulti blockMulti;
+    public static Block basicMachine;
 
     @Instance(MOD_ID)
     private static DarkMain instance;
@@ -114,9 +117,10 @@ public class DarkMain extends ModPrefab
 
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new FluidHelper());
+
         UniversalElectricity.initiate();
         Compatibility.initiate();
-
+        NetworkRegistry.instance().registerGuiHandler(this, proxy);
         proxy.preInit();
     }
 
