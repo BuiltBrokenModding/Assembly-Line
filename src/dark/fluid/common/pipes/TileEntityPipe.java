@@ -41,6 +41,7 @@ import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 import dark.core.prefab.tilenetwork.fluid.NetworkPipes;
 import dark.fluid.common.FMRecipeLoader;
+import dark.fluid.common.pipes.BlockPipe.PipeData;
 
 public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler, IToolReadOut, IColorCoded, INetworkPipe, IPacketReceiver
 {
@@ -55,12 +56,12 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
 
     /** Network that links the collective pipes together to work */
     private NetworkPipes pipeNetwork;
+    protected PipeData pipeData = PipeData.IRON_PIPE;
 
-    protected ColorCode colorCode = ColorCode.UNKOWN;
-
-    protected boolean flagForColorCodeUpdate = false, isRestricted = false, resetting = false;
+    protected boolean flagForColorCodeUpdate = false, resetting = false;
 
     protected int updateTick = 1;
+    String refClassID = "";
 
     public enum PipePacketID
     {
@@ -77,32 +78,13 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
             if (this.flagForColorCodeUpdate)
             {
                 int meta = this.worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-                if (meta == 15 || this.worldObj.getBlockId(xCoord, yCoord, zCoord) == FMRecipeLoader.blockGenPipe.blockID)
+                if (!this.refClassID.equalsIgnoreCase("ColoredPipe"))
                 {
-                    this.colorCode = ColorCode.UNKOWN;
+                    meta += 16;
                 }
-                else
-                {
-                    this.colorCode = ColorCode.get(meta);
-                }
+                this.pipeData = PipeData.values()[meta & 31];
                 this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 3);
                 this.flagForColorCodeUpdate = false;
-                if (this.worldObj.getBlockId(xCoord, yCoord, zCoord) == FMRecipeLoader.blockPipe.blockID)
-                {
-                    this.isRestricted = true;
-                }
-            }
-            if (this.worldObj.getBlockId(xCoord, yCoord, zCoord) == FMRecipeLoader.blockGenPipe.blockID)
-            {
-                this.resetting = true;
-                NBTTagCompound tag = new NBTTagCompound();
-                this.writeToNBT(tag);
-                this.worldObj.setBlock(xCoord, yCoord, zCoord, FMRecipeLoader.blockPipe.blockID, 0, 2);
-                TileEntity tile = this.worldObj.getBlockTileEntity(xCoord, yCoord, zCoord);
-                if (tile instanceof TileEntityPipe)
-                {
-                    tile.readFromNBT(tag);
-                }
             }
         }
     }
@@ -139,8 +121,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
         {
             if (this.worldObj.isRemote)
             {
-                this.colorCode = ColorCode.get(dataStream.readInt());
-                this.isRestricted = dataStream.readBoolean();
+                this.pipeData = PipeData.values()[dataStream.readInt()];
                 this.renderConnection[0] = dataStream.readBoolean();
                 this.renderConnection[1] = dataStream.readBoolean();
                 this.renderConnection[2] = dataStream.readBoolean();
@@ -159,89 +140,31 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, this.colorCode.ordinal(), this.isRestricted(), this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
-    }
-
-    /** Reads a tile entity from NBT. */
-    @Override
-    public void readFromNBT(NBTTagCompound nbt)
-    {
-        super.readFromNBT(nbt);
-        //Load color code from nbt
-        if (nbt.hasKey("ColorCode"))
-        {
-            this.colorCode = ColorCode.get(nbt.getInteger("ColorCode"));
-        }
-        else
-        {
-            this.flagForColorCodeUpdate = true;
-        }
-        this.isRestricted = nbt.getBoolean("isRestricted");
-
-        //Load fluid tank
-        FluidStack liquid = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("FluidTank"));
-        if (nbt.hasKey("stored"))
-        {
-            NBTTagCompound tag = nbt.getCompoundTag("stored");
-            String name = tag.getString("LiquidName");
-            int amount = nbt.getInteger("Amount");
-            Fluid fluid = FluidRegistry.getFluid(name);
-            if (fluid != null)
-            {
-                liquid = new FluidStack(fluid, amount);
-            }
-        }
-        if (liquid != null)
-        {
-            this.tank.setFluid(liquid);
-        }
-    }
-
-    /** Writes a tile entity to NBT. */
-    @Override
-    public void writeToNBT(NBTTagCompound nbt)
-    {
-        super.writeToNBT(nbt);
-        nbt.setInteger("ColorCode", this.colorCode.ordinal());
-        nbt.setBoolean("isRestricted", this.isRestricted());
-        if (this.tank != null && this.tank.getFluid() != null)
-        {
-            nbt.setTag("FluidTank", this.tank.getFluid().writeToNBT(new NBTTagCompound()));
-        }
+        return PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, this.pipeData.ordinal(), this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
     }
 
     /** gets the current color mark of the pipe */
     @Override
     public ColorCode getColor()
     {
-        return this.colorCode;
+        return this.pipeData.colorCode;
     }
 
     /** sets the current color mark of the pipe */
     @Override
     public void setColor(Object cc)
     {
-        if (!worldObj.isRemote)
+        if (!worldObj.isRemote && (this.pipeData.colorCode != ColorCode.UNKOWN || this.pipeData == PipeData.IRON_PIPE))
         {
-            this.colorCode = ColorCode.get(cc);
+            this.pipeData = PipeData.get(ColorCode.get(cc).ordinal());
         }
-    }
-
-    public void setRestricted(boolean bo)
-    {
-        this.isRestricted = bo;
-    }
-
-    public boolean isRestricted()
-    {
-        return this.isRestricted;
     }
 
     @Override
     public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
     {
         /* DEBUG CODE ACTIVATERS */
-        boolean testConnections = false, testNetwork = true;
+        boolean testConnections = false, testNetwork = false;
 
         /* NORMAL OUTPUT */
         String string = ((NetworkPipes) this.getTileNetwork()).pressureProduced + "p " + ((NetworkPipes) this.getTileNetwork()).getNetworkFluid() + " Extra";
@@ -301,8 +224,19 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
                     {
                         if (((INetworkPipe) tileEntity).getColor() == this.getColor())
                         {
-                            this.getTileNetwork().merge(((INetworkPipe) tileEntity).getTileNetwork(), this);
-                            return connectedBlocks.add(tileEntity);
+                            if (tileEntity instanceof TileEntityPipe)
+                            {
+                                if (((TileEntityPipe) tileEntity).pipeData == this.pipeData)
+                                {
+                                    this.getTileNetwork().merge(((INetworkPipe) tileEntity).getTileNetwork(), this);
+                                    return connectedBlocks.add(tileEntity);
+                                }
+                            }
+                            else
+                            {
+                                this.getTileNetwork().merge(((INetworkPipe) tileEntity).getTileNetwork(), this);
+                                return connectedBlocks.add(tileEntity);
+                            }
 
                         }
                     }
@@ -370,7 +304,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     @Override
     public boolean canTileConnect(Connection type, ForgeDirection dir)
     {
-        return new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj) != null;
+        return new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj) instanceof IFluidHandler;
     }
 
     @Override
@@ -508,6 +442,58 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     public int getNumberOfTanks()
     {
         return 1;
+    }
+
+    /** Reads a tile entity from NBT. */
+    @Override
+    public void readFromNBT(NBTTagCompound nbt)
+    {
+        super.readFromNBT(nbt);
+        //Load color code from nbt
+        this.refClassID = nbt.getString("id");
+        if (nbt.hasKey("PipeID"))
+        {
+            this.pipeData = PipeData.get(nbt.getInteger("PipeID"));
+        }
+        else
+        {
+            this.flagForColorCodeUpdate = true;
+        }
+
+        //Load fluid tank
+        FluidStack liquid = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("FluidTank"));
+        if (nbt.hasKey("stored"))
+        {
+            NBTTagCompound tag = nbt.getCompoundTag("stored");
+            String name = tag.getString("LiquidName");
+            int amount = nbt.getInteger("Amount");
+            Fluid fluid = FluidRegistry.getFluid(name);
+            if (fluid != null)
+            {
+                liquid = new FluidStack(fluid, amount);
+            }
+        }
+        if (liquid != null)
+        {
+            this.tank.setFluid(liquid);
+        }
+    }
+
+    /** Writes a tile entity to NBT. */
+    @Override
+    public void writeToNBT(NBTTagCompound nbt)
+    {
+        super.writeToNBT(nbt);
+        nbt.setInteger("PipeID", this.pipeData.ordinal());
+        if (this.tank != null && this.tank.getFluid() != null)
+        {
+            nbt.setTag("FluidTank", this.tank.getFluid().writeToNBT(new NBTTagCompound()));
+        }
+    }
+
+    public void setPipeID(int itemDamage)
+    {
+        this.pipeData = PipeData.get(itemDamage);
     }
 
 }

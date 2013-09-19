@@ -145,7 +145,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
         if (this.flagForColorCodeUpdate)
         {
             int meta = this.worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-            if (meta == 15 || this.worldObj.getBlockId(xCoord, yCoord, zCoord) == FMRecipeLoader.blockGenPipe.blockID)
+            if (meta == 15)
             {
                 this.colorCode = ColorCode.UNKOWN;
             }

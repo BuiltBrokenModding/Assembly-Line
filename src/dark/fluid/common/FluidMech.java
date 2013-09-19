@@ -180,8 +180,7 @@ public class FluidMech extends ModPrefab
             }
         }
         /* BLOCK DECLARATION -- CONFIG LOADER */
-        FMRecipeLoader.blockGenPipe = new BlockPipe(getNextID(), "GenericPipe");
-        FMRecipeLoader.blockPipe = new BlockPipe(getNextID(), "RestrictedPipe");
+        FMRecipeLoader.blockPipe = new BlockPipe(getNextID());
         FMRecipeLoader.blockMachine = new BlockPumpMachine(getNextID());
         FMRecipeLoader.blockRod = new BlockRod(getNextID());
         FMRecipeLoader.blockGenerator = new BlockGenerator(getNextID());

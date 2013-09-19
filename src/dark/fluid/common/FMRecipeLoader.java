@@ -9,12 +9,12 @@ import dark.api.ColorCode;
 import dark.core.common.CoreRecipeLoader;
 import dark.core.common.RecipeLoader;
 import dark.core.common.items.ItemParts.Parts;
+import dark.fluid.common.pipes.BlockPipe.PipeData;
 
 public class FMRecipeLoader extends RecipeLoader
 {
 
     public static Block blockPipe;
-    public static Block blockGenPipe;
     public static Block blockTank;
     public static Block blockMachine;
     public static Block blockRod;
@@ -31,23 +31,10 @@ public class FMRecipeLoader extends RecipeLoader
     public static Block blockOilLiquid;
     public static Block blockFuelLiquid;
 
-    /* ITEMS */
-
-    public static ItemStack ironPipe;
-    public static ItemStack bronzePipe;
-
-    public static ItemStack fuelPipe;
-    public static ItemStack lavePipe;
-    public static ItemStack oilPipe;
-    public static ItemStack bioPipe;
-    public static ItemStack wastePipe;
 
     @Override
     public void loadRecipes()
     {
-
-        ironPipe = new ItemStack(blockGenPipe, 1, 15);
-        bronzePipe = new ItemStack(blockPipe, 4, ColorCode.ORANGE.ordinal());
 
         this.registerPipes();
         this.registerTanks();
@@ -56,9 +43,6 @@ public class FMRecipeLoader extends RecipeLoader
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FMRecipeLoader.blockGenerator, 1), new Object[] { "@T@", "OVO", "@T@", 'T', new ItemStack(blockRod, 1), '@', "plateSteel", 'O', "basicCircuit", 'V', "motor" }));
         // mechanical rod
         GameRegistry.addRecipe(new ItemStack(blockRod, 1), new Object[] { "I@I", 'I', Item.ingotIron, '@', new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Iron.ordinal()) });
-
-        // white pipe crafting -- has to be separate since iron pipe is #15 instead of white
-        GameRegistry.addRecipe(new ItemStack(blockGenPipe, 4, ColorCode.WHITE.ordinal()), new Object[] { " P ", "PCP", " P ", 'P', blockGenPipe, 'C', new ItemStack(Item.dyePowder, 1, 15) });
 
         // pump
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockMachine, 1, 0), new Object[] { "C@C", "BMB", "@X@", '@', "plateSteel", 'X', new ItemStack(blockPipe, 1), 'B', new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Valve.ordinal()), 'C', "basicCircuit", 'M', "motor" }));
@@ -71,7 +55,6 @@ public class FMRecipeLoader extends RecipeLoader
         GameRegistry.addRecipe(new ItemStack(blockReleaseValve, 1), new Object[] { "RPR", "PVP", "RPR", 'P', new ItemStack(blockPipe, 1), 'V', new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Valve.ordinal()), 'R', Item.redstone });
         // sink
         GameRegistry.addRecipe(new ItemStack(blockSink, 1), new Object[] { "I I", "SIS", "SPS", 'P', new ItemStack(blockPipe, 1), 'I', Item.ingotIron, 'S', Block.stone });
-        GameRegistry.addRecipe(new ItemStack(blockSink, 1), new Object[] { "I I", "SIS", "SPS", 'P', new ItemStack(blockGenPipe, 1), 'I', Item.ingotIron, 'S', Block.stone });
     }
 
     public void registerTanks()
@@ -89,30 +72,27 @@ public class FMRecipeLoader extends RecipeLoader
     public void registerPipes()
     {
         // Iron Pipe
-        GameRegistry.addShapelessRecipe(ironPipe, new Object[] { CoreRecipeLoader.ironTube, CoreRecipeLoader.leatherSeal });
+        GameRegistry.addShapelessRecipe(PipeData.IRON_PIPE.itemStack, new Object[] { CoreRecipeLoader.ironTube, CoreRecipeLoader.leatherSeal });
         // Lava Tube
         new RecipeGrid(new ItemStack(blockPipe, 1, ColorCode.RED.ordinal()), 3, 1).setRowOne(CoreRecipeLoader.netherTube, CoreRecipeLoader.obbyTube, CoreRecipeLoader.netherTube).RegisterRecipe();
         // fuel pipe
-        GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, ColorCode.YELLOW.ordinal()), new Object[] { new ItemStack(blockGenPipe, 1, ColorCode.YELLOW.ordinal()), new ItemStack(blockGenPipe, 1, ColorCode.YELLOW.ordinal()), new ItemStack(blockGenPipe, 1, ColorCode.YELLOW.ordinal()), new ItemStack(blockGenPipe, 1, ColorCode.YELLOW.ordinal()), new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.SlimeSeal.ordinal()) });
+        GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, ColorCode.YELLOW.ordinal()), new Object[] { PipeData.YELLOW_PIPE.itemStack, PipeData.YELLOW_PIPE.itemStack, PipeData.YELLOW_PIPE.itemStack, PipeData.YELLOW_PIPE.itemStack, new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.SlimeSeal.ordinal()) });
 
         // oil pipe
-        GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, ColorCode.BLACK.ordinal()), new Object[] { new ItemStack(blockGenPipe, 1, ColorCode.BLACK.ordinal()), new ItemStack(blockGenPipe, 1, ColorCode.BLACK.ordinal()), new ItemStack(blockGenPipe, 1, ColorCode.BLACK.ordinal()), new ItemStack(blockGenPipe, 1, ColorCode.BLACK.ordinal()), new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.SlimeSeal.ordinal()) });
+        GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, ColorCode.BLACK.ordinal()), new Object[] { PipeData.BLACK_PIPE.itemStack, PipeData.BLACK_PIPE.itemStack, PipeData.BLACK_PIPE.itemStack, PipeData.BLACK_PIPE.itemStack, new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.SlimeSeal.ordinal()) });
 
         // water pipe
-        GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, ColorCode.BLUE.ordinal()), new Object[] { new ItemStack(blockGenPipe, 1, ColorCode.BLUE.ordinal()), new ItemStack(blockGenPipe, 1, ColorCode.BLUE.ordinal()), new ItemStack(blockGenPipe, 1, ColorCode.BLUE.ordinal()), new ItemStack(blockGenPipe, 1, ColorCode.BLUE.ordinal()), new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.SlimeSeal.ordinal()) });
+        GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, ColorCode.BLUE.ordinal()), new Object[] { PipeData.BLUE_PIPE.itemStack, PipeData.BLUE_PIPE.itemStack, PipeData.BLUE_PIPE.itemStack, PipeData.BLUE_PIPE.itemStack, new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.SlimeSeal.ordinal()) });
 
         // bronze pipes
-        GameRegistry.addShapelessRecipe(bronzePipe, new Object[] { CoreRecipeLoader.bronzeTube, CoreRecipeLoader.slimeSeal });
+        //GameRegistry.addShapelessRecipe(PipeData., new Object[] { CoreRecipeLoader.bronzeTube, CoreRecipeLoader.slimeSeal });
         // generic pipe crafting
         for (int pipeMeta = 0; pipeMeta < 15; pipeMeta++)
         {
-            if (pipeMeta != ColorCode.WHITE.ordinal() && pipeMeta != 15)
-            {
-                new RecipeGrid(new ItemStack(blockGenPipe, 4, pipeMeta)).setRowOne(null, blockGenPipe, null).setRowTwo(blockGenPipe, new ItemStack(Item.dyePowder, 1, pipeMeta), blockGenPipe).setRowOne(null, blockGenPipe, null).RegisterRecipe();
-            }
+            new RecipeGrid(new ItemStack(blockPipe, 4, pipeMeta)).setRowOne(null, blockPipe, null).setRowTwo(blockPipe, new ItemStack(Item.dyePowder, 1, pipeMeta), blockPipe).setRowOne(null, blockPipe, null).RegisterRecipe();
+
         }
-        new RecipeGrid(ironPipe, 1, 1).setRowOne(blockGenPipe).RegisterRecipe();
-        new RecipeGrid(ironPipe, 1, 1).setRowOne(blockPipe).RegisterRecipe();
+        new RecipeGrid(PipeData.IRON_PIPE.itemStack, 1, 1).setRowOne(blockPipe).RegisterRecipe();
 
     }
 }

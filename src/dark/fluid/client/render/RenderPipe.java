@@ -1,4 +1,4 @@
-package dark.fluid.client.render.pipe;
+package dark.fluid.client.render;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -56,7 +56,7 @@ public class RenderPipe extends RenderTileMachine
     public ResourceLocation getTexture(int block, int meta)
     {
         String name = "";
-        if (block == FMRecipeLoader.blockPipe.blockID)
+        if (meta < 16)
         {
             Fluid stack = FluidHelper.getStackForColor(ColorCode.get(meta));
             name = stack != null ? stack.getName() : "";

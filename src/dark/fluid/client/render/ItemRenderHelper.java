@@ -12,7 +12,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.prefab.ModPrefab;
 import dark.fluid.client.model.ModelReleaseValve;
-import dark.fluid.client.render.pipe.RenderPipe;
 import dark.fluid.common.FMRecipeLoader;
 import dark.fluid.common.FluidMech;
 
@@ -37,7 +36,7 @@ public class ItemRenderHelper implements IItemRenderer
     @Override
     public void renderItem(ItemRenderType type, ItemStack item, Object... data)
     {
-        if (item.itemID == FMRecipeLoader.blockPipe.blockID || item.itemID == FMRecipeLoader.blockGenPipe.blockID)
+        if (item.itemID == FMRecipeLoader.blockPipe.blockID)
         {
             this.renderPipeItem((RenderBlocks) data[0], item, type == ItemRenderType.EQUIPPED);
         }

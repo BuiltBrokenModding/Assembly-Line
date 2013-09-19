@@ -38,10 +38,14 @@ public class ItemBlockPipe extends ItemBlock
             TileEntity tile = world.getBlockTileEntity(x, y, z);
             if (tile instanceof IColorCoded)
             {
-                ((IColorCoded) tile).setColor((stack.getItemDamage() % 16) & 15);
-                if (tile instanceof TileEntityPipe && stack.getItemDamage() < 16)
+
+                if (tile instanceof TileEntityPipe)
                 {
-                    ((TileEntityPipe) tile).setRestricted(true);
+                    ((TileEntityPipe) tile).setPipeID(stack.getItemDamage());
+                }
+                else
+                {
+                    ((IColorCoded) tile).setColor((stack.getItemDamage() % 16) & 15);
                 }
             }
             return true;
