@@ -10,8 +10,8 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
+import dark.api.ColorCode;
 import dark.api.fluid.INetworkFluidPart;
-import dark.core.interfaces.ColorCode;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 import dark.fluid.common.prefab.TileEntityFluidDevice;
 

@@ -12,7 +12,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
-import dark.core.interfaces.ColorCode.IColorCoded;
+import dark.api.ColorCode.IColorCoded;
 import dark.core.prefab.helpers.FluidHelper;
 
 public abstract class TileEntityFluidStorage extends TileEntityFluidDevice implements IFluidHandler, IColorCoded

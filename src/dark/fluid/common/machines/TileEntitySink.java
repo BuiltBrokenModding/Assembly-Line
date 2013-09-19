@@ -14,8 +14,8 @@ import universalelectricity.prefab.network.IPacketReceiver;
 
 import com.google.common.io.ByteArrayDataInput;
 
+import dark.api.ColorCode;
 import dark.core.common.DarkMain;
-import dark.core.interfaces.ColorCode;
 import dark.core.network.PacketHandler;
 import dark.fluid.common.prefab.TileEntityFluidStorage;
 

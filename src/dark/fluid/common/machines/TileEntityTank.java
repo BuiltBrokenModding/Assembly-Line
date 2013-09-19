@@ -30,12 +30,12 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.api.ColorCode;
 import dark.api.IToolReadOut;
+import dark.api.ColorCode.IColorCoded;
 import dark.api.fluid.INetworkFluidPart;
 import dark.api.fluid.INetworkPipe;
 import dark.core.common.DarkMain;
-import dark.core.interfaces.ColorCode;
-import dark.core.interfaces.ColorCode.IColorCoded;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
@@ -137,7 +137,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
     {
         if (this.worldObj == null)
         {
-            return ColorCode.NONE;
+            return ColorCode.UNKOWN;
         }
         return ColorCode.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
     }
@@ -202,7 +202,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
     }
 
     /** Checks to make sure the connection is valid to the tileEntity
-     * 
+     *
      * @param tileEntity - the tileEntity being checked
      * @param side - side the connection is too */
     public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)

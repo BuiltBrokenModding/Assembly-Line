@@ -7,8 +7,8 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.api.ColorCode;
 import dark.core.client.renders.RenderTileMachine;
-import dark.core.interfaces.ColorCode;
 import dark.core.prefab.ModPrefab;
 import dark.fluid.client.model.ModelLargePipe;
 import dark.fluid.client.model.ModelReleaseValve;

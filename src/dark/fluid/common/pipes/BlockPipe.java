@@ -14,6 +14,8 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidTank;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.api.ColorCode;
+import dark.api.ColorCode.IColorCoded;
 import dark.api.fluid.INetworkPipe;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.helpers.Pair;
@@ -138,12 +140,9 @@ public class BlockPipe extends BlockFM
     {
         if (this.blockID == FMRecipeLoader.blockGenPipe.blockID)
         {
-            int meta = world.getBlockMetadata(x, y, z);
-            if (meta != colour)
+            if (world.getBlockTileEntity(x, y, z) instanceof IColorCoded)
             {
-                world.setBlockMetadataWithNotify(x, y, z, colour, 3);
-                this.onNeighborBlockChange(world, x, y, z, world.getBlockId(x, y, z));
-                return true;
+                ((IColorCoded) world.getBlockTileEntity(x, y, z)).setColor(ColorCode.get(colour));
             }
         }
         return false;

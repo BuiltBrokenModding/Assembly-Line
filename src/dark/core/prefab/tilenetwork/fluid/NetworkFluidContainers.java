@@ -6,9 +6,9 @@ import java.util.List;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
+import dark.api.ColorCode;
 import dark.api.fluid.INetworkFluidPart;
 import dark.api.parts.INetworkPart;
-import dark.core.interfaces.ColorCode;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 

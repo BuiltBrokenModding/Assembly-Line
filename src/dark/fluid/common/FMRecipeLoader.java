@@ -5,10 +5,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
+import dark.api.ColorCode;
 import dark.core.common.CoreRecipeLoader;
 import dark.core.common.RecipeLoader;
 import dark.core.common.items.ItemParts.Parts;
-import dark.core.interfaces.ColorCode;
 
 public class FMRecipeLoader extends RecipeLoader
 {
@@ -79,11 +79,11 @@ public class FMRecipeLoader extends RecipeLoader
         // lava tank
         new RecipeGrid(new ItemStack(blockTank, 4, ColorCode.RED.ordinal())).setRowOne(Block.netherrack, Block.obsidian, Block.netherrack).setRowTwo(Block.obsidian, null, Block.obsidian).setRowThree(Block.netherrack, Block.obsidian, Block.netherrack).RegisterRecipe();
         // water tank
-        GameRegistry.addShapelessRecipe(new ItemStack(blockTank, 1, ColorCode.BLUE.ordinal()), new Object[] { new ItemStack(blockTank, 4, ColorCode.NONE.ordinal()), new ItemStack(Item.dyePowder, 1, ColorCode.BLUE.ordinal()) });
+        GameRegistry.addShapelessRecipe(new ItemStack(blockTank, 1, ColorCode.BLUE.ordinal()), new Object[] { new ItemStack(blockTank, 4, 15), new ItemStack(Item.dyePowder, 1, ColorCode.BLUE.ordinal()) });
         // milk tank
         new RecipeGrid(new ItemStack(blockTank, 4, ColorCode.WHITE.ordinal())).setRowOne(Block.planks, Block.glass, Block.planks).setRowTwo(Block.glass, null, Block.glass).setRowThree(Block.planks, Block.glass, Block.planks).RegisterRecipe();
         // generic Tank
-        new RecipeGrid(new ItemStack(blockTank, 4, ColorCode.NONE.ordinal())).setRowOne(Item.ingotIron, Block.glass, Item.ingotIron).setRowTwo(Block.glass, null, Block.glass).setRowThree(Item.ingotIron, Block.glass, Item.ingotIron).RegisterRecipe();
+        new RecipeGrid(new ItemStack(blockTank, 4, 15)).setRowOne(Item.ingotIron, Block.glass, Item.ingotIron).setRowTwo(Block.glass, null, Block.glass).setRowThree(Item.ingotIron, Block.glass, Item.ingotIron).RegisterRecipe();
     }
 
     public void registerPipes()
@@ -106,7 +106,7 @@ public class FMRecipeLoader extends RecipeLoader
         // generic pipe crafting
         for (int pipeMeta = 0; pipeMeta < 15; pipeMeta++)
         {
-            if (pipeMeta != ColorCode.WHITE.ordinal() && pipeMeta != ColorCode.NONE.ordinal())
+            if (pipeMeta != ColorCode.WHITE.ordinal() && pipeMeta != 15)
             {
                 new RecipeGrid(new ItemStack(blockGenPipe, 4, pipeMeta)).setRowOne(null, blockGenPipe, null).setRowTwo(blockGenPipe, new ItemStack(Item.dyePowder, 1, pipeMeta), blockGenPipe).setRowOne(null, blockGenPipe, null).RegisterRecipe();
             }

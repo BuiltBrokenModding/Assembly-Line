@@ -2,23 +2,20 @@ package dark.fluid.client.render.pipe;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 
 import org.lwjgl.opengl.GL11;
 
-import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.api.ColorCode;
 import dark.core.client.renders.RenderTileMachine;
-import dark.core.interfaces.ColorCode;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.fluid.client.model.ModelLargePipe;
 import dark.fluid.common.FMRecipeLoader;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.pipes.TileEntityPipe;
-import dark.fluid.common.pipes.addon.IPipeExtention;
 
 @SideOnly(Side.CLIENT)
 public class RenderPipe extends RenderTileMachine
@@ -49,34 +46,6 @@ public class RenderPipe extends RenderTileMachine
             TileEntityPipe pipe = ((TileEntityPipe) te);
             this.renderSide = pipe.renderConnection;
 
-            // Pipes extension rendering
-            for (int i = 0; i < 6; i++)
-            {
-                IPipeExtention extention = pipe.subEntities[i];
-                if (extention != null)
-                {
-                    Object ob;
-                    try
-                    {
-                        ob = extention.getExtentionRenderClass().newInstance();
-
-                        if (ob instanceof IPipeExtentionRender)
-                        {
-                            IPipeExtentionRender render = (IPipeExtentionRender) ob;
-                            if (render != null)
-                            {
-                                System.out.println("Rendering Pipe Addon side " + i);
-                                render.renderAModelAt(this, pipe, new Vector3(0, 0, 0), f, ForgeDirection.getOrientation(i));
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        System.out.println("Failed to render a pipe extention");
-                        e.printStackTrace();
-                    }
-                }
-            }
         }
         this.render(blockID, meta, renderSide);
         GL11.glPopMatrix();

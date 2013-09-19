@@ -9,9 +9,9 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidHandler;
+import dark.api.ColorCode;
 import dark.api.fluid.INetworkFluidPart;
 import dark.api.parts.INetworkPart;
-import dark.core.interfaces.ColorCode;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
@@ -23,7 +23,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
     public FluidTank sharedTank;
 
     /** Color code of the network, mainly used for connection rules */
-    public ColorCode color = ColorCode.NONE;
+    public ColorCode color = ColorCode.UNKOWN;
     /** Has the collective tank been loaded yet */
     protected boolean loadedLiquids = false;
 
