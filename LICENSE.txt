@@ -45,6 +45,8 @@ The user is allowed to install this Mod on a client or a server and to play with
 
 The user may modify the original code for private use, learning experience, or to make a contribution to the original project source code. This does not give the right to redistrubute any part of the original or modified code.
 
+Mod creators that desire to create mods for the universal electricity api are given an exception to the above. That is they are allowed to copy, modify, redistribute, and include parts of the core in thier mods. This doesn't give them the right to include all parts, or include the mod as thier own work. Credit must be given for all parts used, part changed, and any content used in general. Code should only be modified as needed. For normal use the code should be called from the APIs and not actually changed. This right can be taken away at the authors discretion and is avised to still request permision in some cases. 
+
 5. Distribution of original or modified copy rights
 ---------------------------------------------------
 
@@ -55,10 +57,10 @@ includes:
 - patches to its source or binary files
 - any copy of a portion of its binary source files
 
-A) The user is NOT allowed to redistribute this Mod partially, in totality, or included in a distribution without explict permissions from the owner. 
+A) The user is NOT allowed to redistribute this Mod partially, in totality, or included in a distribution without explict permissions from the owner. With the only exceptions being for universal electricity mod developers as stated in section 4 and for the case in section 5 part B.
 
 B) Distrubution of this mod in a mod pack is allowed as long as the user obeys the following rules:
-   1) The mod pack should not contain a major version release of the mod within one week of the mod version release to allow for bug fixes
+   1) The mod pack should not contain a major version release of the mod within one week of the mod version release to allow for bug fixes. Nor can it contain any release that is marked as test only, or dev.
    2) The mod pack should not contain a modified version of the mod unless to change the texture look of parts of the mod
    3) The mod pack owner or contributors must redirect errors and bug reports to the issue area of the mod's original github repo
    4) The mod pack needs full public permission from all parts of the mod pack including mods, assets, and textures.
