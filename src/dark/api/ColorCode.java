@@ -1,29 +1,35 @@
-package dark.core.interfaces;
+package dark.api;
+
+import java.awt.Color;
 
 public enum ColorCode
 {
-    BLACK("Black"),
-    RED("Red"),
-    GREEN("Green"),
-    BROWN("Brown"),
-    BLUE("Blue"),
-    PURPLE("Purple"),
-    CYAN("Cyan"),
-    SILVER("Silver"),
-    GREY("Grey"),
-    PINK("Pink"),
-    LIME("Lime"),
-    YELLOW("Yellow"),
-    LIGHTBLUE("LightBlue"),
-    WHITE("White"),
-    ORANGE("Orange"),
-    NONE("");
 
-    String name;
+    BLACK("Black", Color.black),
+    RED("Red", Color.red),
+    GREEN("Green", Color.green),
+    BROWN("Brown", new Color(139, 69, 19)),
+    BLUE("Blue", Color.BLUE),
+    PURPLE("Purple", new Color(75, 0, 130)),
+    CYAN("Cyan", Color.cyan),
+    SILVER("Silver", new Color(192, 192, 192)),
+    GREY("Grey", Color.gray),
+    PINK("Pink", Color.pink),
+    LIME("Lime", new Color(0, 255, 0)),
+    YELLOW("Yellow", Color.yellow),
+    LIGHTBLUE("LightBlue", new Color(135, 206, 250)),
+    MAGENTA("Magenta", Color.magenta),
+    ORANGE("Orange", Color.orange),
+    WHITE("White", Color.white),
+    UNKOWN("", Color.BLACK);
 
-    private ColorCode(String name)
+    public String name;
+    public Color color;
+
+    private ColorCode(String name, Color color)
     {
         this.name = name;
+        this.color = color;
     }
 
     public String getName()
@@ -32,7 +38,7 @@ public enum ColorCode
     }
 
     /** gets a ColorCode from any of the following
-     * 
+     *
      * @param obj - Integer,String,LiquidData,ColorCode
      * @return Color NONE if it can't find it */
     public static ColorCode get(Object obj)
@@ -55,9 +61,10 @@ public enum ColorCode
                 }
             }
         }
-        return NONE;
+        return UNKOWN;
     }
 
+    /** Used on anything that is coded for a set color for varies reasons */
     public static interface IColorCoded
     {
         /** Returns the ColorCode of the object */

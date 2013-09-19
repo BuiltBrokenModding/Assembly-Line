@@ -27,7 +27,7 @@ import universalelectricity.core.vector.Vector3;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
-import dark.core.interfaces.ColorCode;
+import dark.api.ColorCode;
 
 public class FluidHelper
 {
