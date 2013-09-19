@@ -40,6 +40,7 @@ import dark.core.network.PacketHandler;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 import dark.core.prefab.tilenetwork.fluid.NetworkPipes;
+import dark.fluid.common.FMRecipeLoader;
 
 public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler, IToolReadOut, IColorCoded, INetworkPipe, IPacketReceiver
 {
@@ -57,7 +58,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
 
     protected ColorCode colorCode = ColorCode.UNKOWN;
 
-    protected boolean flagForColorCodeUpdate = false;
+    protected boolean flagForColorCodeUpdate = false, isRestricted = false, resetting = false;
 
     protected int updateTick = 1;
 
@@ -66,6 +67,44 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
         PIPE_CONNECTIONS,
         EXTENTION_CREATE,
         EXTENTION_UPDATE;
+    }
+
+    @Override
+    public void initiate()
+    {
+        if (!this.worldObj.isRemote)
+        {
+            if (this.flagForColorCodeUpdate)
+            {
+                int meta = this.worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+                if (meta == 15 || this.worldObj.getBlockId(xCoord, yCoord, zCoord) == FMRecipeLoader.blockGenPipe.blockID)
+                {
+                    this.colorCode = ColorCode.UNKOWN;
+                }
+                else
+                {
+                    this.colorCode = ColorCode.get(meta);
+                }
+                this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 3);
+                this.flagForColorCodeUpdate = false;
+                if (this.worldObj.getBlockId(xCoord, yCoord, zCoord) == FMRecipeLoader.blockPipe.blockID)
+                {
+                    this.isRestricted = true;
+                }
+            }
+            if (this.worldObj.getBlockId(xCoord, yCoord, zCoord) == FMRecipeLoader.blockGenPipe.blockID)
+            {
+                this.resetting = true;
+                NBTTagCompound tag = new NBTTagCompound();
+                this.writeToNBT(tag);
+                this.worldObj.setBlock(xCoord, yCoord, zCoord, FMRecipeLoader.blockPipe.blockID, 0, 2);
+                TileEntity tile = this.worldObj.getBlockTileEntity(xCoord, yCoord, zCoord);
+                if (tile instanceof TileEntityPipe)
+                {
+                    tile.readFromNBT(tag);
+                }
+            }
+        }
     }
 
     @Override
@@ -86,7 +125,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     public void invalidate()
     {
         super.invalidate();
-        if (!this.worldObj.isRemote)
+        if (!this.worldObj.isRemote && !this.resetting)
         {
             this.getTileNetwork().splitNetwork(this.worldObj, this);
         }
@@ -101,6 +140,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
             if (this.worldObj.isRemote)
             {
                 this.colorCode = ColorCode.get(dataStream.readInt());
+                this.isRestricted = dataStream.readBoolean();
                 this.renderConnection[0] = dataStream.readBoolean();
                 this.renderConnection[1] = dataStream.readBoolean();
                 this.renderConnection[2] = dataStream.readBoolean();
@@ -119,7 +159,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, this.colorCode.ordinal(), this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
+        return PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, this.colorCode.ordinal(), this.isRestricted(), this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
     }
 
     /** Reads a tile entity from NBT. */
@@ -136,6 +176,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
         {
             this.flagForColorCodeUpdate = true;
         }
+        this.isRestricted = nbt.getBoolean("isRestricted");
 
         //Load fluid tank
         FluidStack liquid = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("FluidTank"));
@@ -162,6 +203,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     {
         super.writeToNBT(nbt);
         nbt.setInteger("ColorCode", this.colorCode.ordinal());
+        nbt.setBoolean("isRestricted", this.isRestricted());
         if (this.tank != null && this.tank.getFluid() != null)
         {
             nbt.setTag("FluidTank", this.tank.getFluid().writeToNBT(new NBTTagCompound()));
@@ -183,6 +225,16 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
         {
             this.colorCode = ColorCode.get(cc);
         }
+    }
+
+    public void setRestricted(boolean bo)
+    {
+        this.isRestricted = bo;
+    }
+
+    public boolean isRestricted()
+    {
+        return this.isRestricted;
     }
 
     @Override
@@ -217,8 +269,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
         {
             return 0;
         }
-        TileEntity tile = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), from);
-        return ((NetworkPipes) this.getTileNetwork()).addFluidToNetwork(tile, resource, doFill);
+        return ((NetworkPipes) this.getTileNetwork()).addFluidToNetwork(VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), from), resource, doFill);
     }
 
     @Override
@@ -348,10 +399,30 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     }
 
     @Override
-    public int getMaxFlowRate(Fluid stack, ForgeDirection side)
+    public int getMaxFlowRate(FluidStack stack, ForgeDirection side)
     {
-        //TODO change this to get info from stack
-        return 1000 * 3;
+        if (stack != null)
+        {
+            return this.calculateFlowRate(stack, 40, 20);
+        }
+        return BlockPipe.waterFlowRate;
+    }
+
+    /** Calculates flow rate based on viscosity & temp of the fluid as all other factors are know
+     *
+     * @param fluid - fluidStack
+     * @param temp = tempature of the fluid
+     * @param pressure - pressure difference of were the fluid is flowing too.
+     * @return flow rate in mili-Buckets */
+    public int calculateFlowRate(FluidStack fluid, float pressure, float temp)
+    {
+        if (fluid != null & fluid.getFluid() != null)
+        {
+            float f = .012772f * pressure;
+            f = f / (8 * (fluid.getFluid().getViscosity() / 1000));
+            return (int) (f * 1000);
+        }
+        return BlockPipe.waterFlowRate;
     }
 
     @Override

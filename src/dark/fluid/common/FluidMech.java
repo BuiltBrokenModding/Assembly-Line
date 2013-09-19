@@ -194,12 +194,12 @@ public class FluidMech extends ModPrefab
         FMRecipeLoader.blockBoiler = new BlockBoiler(getNextID());
 
         dataList.add(new BlockData(FMRecipeLoader.blockPipe, ItemBlockPipe.class, "lmPipe"));
-        dataList.add(new BlockData(FMRecipeLoader.blockGenPipe, ItemBlockPipe.class, "lmGenPipe"));
+        dataList.add(new BlockData(FMRecipeLoader.blockPipe, ItemBlockPipe.class, "lmGenPipe"));
         dataList.add(new BlockData(FMRecipeLoader.blockReleaseValve, ItemBlockHolder.class, "eValve"));
         dataList.add(new BlockData(FMRecipeLoader.blockRod, "mechRod"));
         dataList.add(new BlockData(FMRecipeLoader.blockGenerator, "mechGenerator"));
         dataList.add(new BlockData(FMRecipeLoader.blockMachine, ItemBlockHolder.class, "lmMachines"));
-        dataList.add(new BlockData(FMRecipeLoader.blockTank, ItemBlockHolder.class, "lmTank"));
+        dataList.add(new BlockData(FMRecipeLoader.blockTank, ItemBlockPipe.class, "lmTank"));
         dataList.add(new BlockData(FMRecipeLoader.blockSink, "lmSink"));
         dataList.add(new BlockData(FMRecipeLoader.blockDrain, "lmDrain"));
         dataList.add(new BlockData(FMRecipeLoader.blockConPump, "lmConPump"));

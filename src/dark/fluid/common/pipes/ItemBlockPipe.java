@@ -1,8 +1,12 @@
 package dark.fluid.common.pipes;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import dark.api.ColorCode.IColorCoded;
 import dark.fluid.common.FMRecipeLoader;
 
 public class ItemBlockPipe extends ItemBlock
@@ -18,16 +22,30 @@ public class ItemBlockPipe extends ItemBlock
     @Override
     public int getMetadata(int damage)
     {
-        return damage;
+        return 0;
     }
 
     @Override
     public String getUnlocalizedName(ItemStack itemStack)
     {
-        if (itemStack.itemID == FMRecipeLoader.blockPipe.blockID)
-        {
-            return "tile.rpipe." + itemStack.getItemDamage();
-        }
         return Block.blocksList[this.getBlockID()].getUnlocalizedName() + "." + itemStack.getItemDamage();
+    }
+
+    public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata)
+    {
+        if (super.placeBlockAt(stack, player, world, x, y, z, side, hitX, hitY, hitZ, metadata))
+        {
+            TileEntity tile = world.getBlockTileEntity(x, y, z);
+            if (tile instanceof IColorCoded)
+            {
+                ((IColorCoded) tile).setColor((stack.getItemDamage() % 16) & 15);
+                if (tile instanceof TileEntityPipe && stack.getItemDamage() < 16)
+                {
+                    ((TileEntityPipe) tile).setRestricted(true);
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }

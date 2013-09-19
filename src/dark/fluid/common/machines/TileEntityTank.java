@@ -15,6 +15,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -41,6 +42,7 @@ import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 import dark.core.prefab.tilenetwork.fluid.NetworkFluidContainers;
 import dark.core.prefab.tilenetwork.fluid.NetworkFluidTiles;
+import dark.fluid.common.FMRecipeLoader;
 import dark.fluid.common.prefab.TileEntityFluidStorage;
 
 public class TileEntityTank extends TileEntityFluidStorage implements IFluidHandler, IToolReadOut, IColorCoded, INetworkFluidPart, IPacketReceiver
@@ -52,6 +54,10 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
     /* NETWORK INSTANCE THAT THIS PIPE USES */
     private NetworkFluidContainers fluidNetwork;
     private int refreshRate = 1;
+
+    protected ColorCode colorCode = ColorCode.UNKOWN;
+
+    protected boolean flagForColorCodeUpdate = false;
 
     @Override
     public void updateEntity()
@@ -104,6 +110,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
                         this.getTank().setFluid(null);
                         dataStream.readInt();
                     }
+                    this.colorCode = ColorCode.get(dataStream.readInt());
                     this.renderConnection[0] = dataStream.readInt();
                     this.renderConnection[1] = dataStream.readInt();
                     this.renderConnection[2] = dataStream.readInt();
@@ -128,24 +135,38 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
         {
             stack = this.getTank().getFluid();
         }
-        return PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, stack != null ? 0 : 1, stack != null ? stack.writeToNBT(new NBTTagCompound()) : 1, this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
+        return PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, stack != null ? 0 : 1, stack != null ? stack.writeToNBT(new NBTTagCompound()) : 1, this.colorCode.ordinal(), this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
     }
 
     /** gets the current color mark of the pipe */
     @Override
     public ColorCode getColor()
     {
-        if (this.worldObj == null)
+        if (this.flagForColorCodeUpdate)
         {
-            return ColorCode.UNKOWN;
+            int meta = this.worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+            if (meta == 15 || this.worldObj.getBlockId(xCoord, yCoord, zCoord) == FMRecipeLoader.blockGenPipe.blockID)
+            {
+                this.colorCode = ColorCode.UNKOWN;
+            }
+            else
+            {
+                this.colorCode = ColorCode.get(meta);
+            }
+            this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 3);
+            this.flagForColorCodeUpdate = false;
         }
-        return ColorCode.get(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+        return this.colorCode;
     }
 
     /** sets the current color mark of the pipe */
     @Override
     public void setColor(Object cc)
     {
+        if (!worldObj.isRemote)
+        {
+            this.colorCode = ColorCode.get(cc);
+        }
     }
 
     @Override
@@ -253,13 +274,6 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
     }
 
     @Override
-    public boolean canTileConnect(Connection type, ForgeDirection dir)
-    {
-        TileEntity entity = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
-        return entity != null && entity instanceof IFluidHandler;
-    }
-
-    @Override
     public NetworkTileEntities getTileNetwork()
     {
         if (this.fluidNetwork == null)
@@ -361,5 +375,31 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
     public FluidTank getTank(int index)
     {
         return this.getTank();
+    }
+
+    /** Reads a tile entity from NBT. */
+    @Override
+    public void readFromNBT(NBTTagCompound nbt)
+    {
+        super.readFromNBT(nbt);
+        //Load color code from nbt
+        if (nbt.hasKey("ColorCode"))
+        {
+            this.colorCode = ColorCode.get(nbt.getInteger("ColorCode"));
+        }
+        else
+        {
+            this.flagForColorCodeUpdate = true;
+        }
+
+    }
+
+    /** Writes a tile entity to NBT. */
+    @Override
+    public void writeToNBT(NBTTagCompound nbt)
+    {
+        super.writeToNBT(nbt);
+        nbt.setInteger("ColorCode", this.colorCode.ordinal());
+
     }
 }

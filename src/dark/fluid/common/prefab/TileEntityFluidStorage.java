@@ -37,14 +37,13 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
     @Override
     public boolean canTileConnect(Connection type, ForgeDirection dir)
     {
-        TileEntity entity = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
-        return entity instanceof IFluidHandler;
+        return type == Connection.FLUIDS;
     }
 
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
     {
-        if (resource == null || resource.getFluid() == null || !FluidHelper.isValidLiquid(getColor(), resource.getFluid()))
+        if (resource == null || resource.getFluid() == null || !FluidHelper.isValidLiquid(this.getColor(), resource.getFluid()))
         {
             return 0;
         }

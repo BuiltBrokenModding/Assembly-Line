@@ -18,7 +18,6 @@ import dark.fluid.common.FMRecipeLoader;
 import dark.fluid.common.machines.TileEntityReleaseValve;
 import dark.fluid.common.machines.TileEntitySink;
 import dark.fluid.common.machines.TileEntityTank;
-import dark.fluid.common.pipes.TileEntityGenericPipe;
 import dark.fluid.common.pipes.TileEntityPipe;
 import dark.fluid.common.pump.TileEntityConstructionPump;
 import dark.fluid.common.pump.TileEntityStarterPump;
@@ -36,7 +35,6 @@ public class ClientProxy extends CommonProxy
     public void Init()
     {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPipe.class, new RenderPipe());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGenericPipe.class, new RenderPipe());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityStarterPump.class, new RenderPump());
         //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRod.class, new RenderGearRod());
         //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGenerator.class, new RenderGenerator());

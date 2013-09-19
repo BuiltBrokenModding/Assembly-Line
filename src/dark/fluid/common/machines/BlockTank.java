@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.api.ColorCode.IColorCoded;
 import dark.api.parts.INetworkPart;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.helpers.Pair;
@@ -51,12 +52,6 @@ public class BlockTank extends BlockFM
     }
 
     @Override
-    public int damageDropped(int meta)
-    {
-        return meta;
-    }
-
-    @Override
     public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int side, float hitX, float hitY, float hitZ)
     {
         return FluidHelper.playerActivatedFluidItem(world, x, y, z, entityplayer, side);
@@ -66,30 +61,6 @@ public class BlockTank extends BlockFM
     public TileEntity createNewTileEntity(World var1)
     {
         return new TileEntityTank();
-    }
-
-    @Override
-    public void onBlockAdded(World world, int x, int y, int z)
-    {
-        super.onBlockAdded(world, x, y, z);
-
-        TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-
-        if (tileEntity instanceof INetworkPart)
-        {
-            ((INetworkPart) tileEntity).refresh();
-        }
-    }
-
-    @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
-    {
-        TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-
-        if (tileEntity instanceof INetworkPart)
-        {
-            ((INetworkPart) tileEntity).refresh();
-        }
     }
 
     @Override
@@ -113,7 +84,10 @@ public class BlockTank extends BlockFM
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
         int meta = world.getBlockMetadata(x, y, z);
-
+        if (world.getBlockTileEntity(x, y, z) instanceof TileEntityTank)
+        {
+            meta = ((TileEntityTank) world.getBlockTileEntity(x, y, z)).getColor().ordinal() & 15;
+        }
         return new ItemStack(this, 1, meta);
 
     }
@@ -150,6 +124,23 @@ public class BlockTank extends BlockFM
     {
         list.add(new Pair<String, Class<? extends TileEntity>>("FluidTank", TileEntityTank.class));
 
+    }
+
+    @Override
+    public void dropBlockAsItemWithChance(World par1World, int par2, int par3, int par4, int par5, float par6, int par7)
+    {
+        if (!par1World.isRemote)
+        {
+            if (par1World.rand.nextFloat() <= par6)
+            {
+                int meta = 0;
+                if (par1World.getBlockTileEntity(par2, par3, par4) instanceof IColorCoded)
+                {
+                    meta = ((IColorCoded) par1World.getBlockTileEntity(par2, par3, par4)).getColor().ordinal() & 15;
+                }
+                this.dropBlockAsItem_do(par1World, par2, par3, par4, new ItemStack(this.blockID, 1, meta));
+            }
+        }
     }
 
 }
