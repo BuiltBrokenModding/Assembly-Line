@@ -14,8 +14,8 @@ import universalelectricity.core.UniversalElectricity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.common.AssemblyLine;
-import dark.assembly.common.TabAssemblyLine;
 import dark.assembly.common.imprinter.prefab.BlockImprintable;
+import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 /** @author Briman0094 */
 public class BlockDetector extends BlockImprintable
@@ -23,9 +23,9 @@ public class BlockDetector extends BlockImprintable
     Icon eye_red;
     Icon eye_green;
 
-    public BlockDetector(int blockID)
+    public BlockDetector()
     {
-        super("detector", blockID, UniversalElectricity.machine, TabAssemblyLine.INSTANCE);
+        super(new BlockBuildData(BlockDetector.class, "detector", UniversalElectricity.machine));
     }
 
     @Override

@@ -17,6 +17,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.CommonProxy;
 import dark.assembly.common.machine.BlockAssembly;
+import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 public class BlockImprinter extends BlockAssembly
 {
@@ -24,9 +25,9 @@ public class BlockImprinter extends BlockAssembly
     Icon imprinter_top;
     Icon imprinter_bottom;
 
-    public BlockImprinter(int id)
+    public BlockImprinter()
     {
-        super(id, Material.wood, "imprinter");
+        super(new BlockBuildData(BlockImprinter.class, "imprinter", Material.wood));
     }
 
     @SideOnly(Side.CLIENT)

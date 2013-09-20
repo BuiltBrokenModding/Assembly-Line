@@ -13,12 +13,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.common.machine.BlockAssembly;
 import dark.core.prefab.IMultiBlock;
+import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 public class BlockArmbot extends BlockAssembly
 {
-    public BlockArmbot(int id)
+    public BlockArmbot()
     {
-        super(id, UniversalElectricity.machine, "armbot");
+        super(new BlockBuildData(BlockArmbot.class, "armbot", UniversalElectricity.machine));
     }
 
     @Override

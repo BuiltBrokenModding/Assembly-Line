@@ -12,6 +12,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.CommonProxy;
 import dark.assembly.common.machine.BlockAssembly;
+import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 public class BlockEncoder extends BlockAssembly
 {
@@ -19,9 +20,9 @@ public class BlockEncoder extends BlockAssembly
     Icon encoder_top;
     Icon encoder_bottom;
 
-    public BlockEncoder(int id)
+    public BlockEncoder()
     {
-        super(id, Material.wood, "encoder");
+        super(new BlockBuildData(BlockEncoder.class, "encoder", Material.wood));
     }
 
     @SideOnly(Side.CLIENT)

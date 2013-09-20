@@ -1,7 +1,5 @@
 package dark.assembly.common.imprinter.prefab;
 
-import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,16 +10,16 @@ import net.minecraft.world.World;
 import dark.assembly.api.IFilterable;
 import dark.assembly.common.imprinter.ItemImprinter;
 import dark.assembly.common.machine.BlockAssembly;
+import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 /** Extend this block class if a filter is allowed to be placed inside of this block.
- * 
+ *
  * @author Calclavia */
 public abstract class BlockImprintable extends BlockAssembly
 {
-    public BlockImprintable(String name, int id, Material material, CreativeTabs creativeTab)
+    public BlockImprintable(BlockBuildData data)
     {
-        super(id, material, name);
-        this.setCreativeTab(creativeTab);
+        super(data);
     }
 
     /** Allows filters to be placed inside of this block. */

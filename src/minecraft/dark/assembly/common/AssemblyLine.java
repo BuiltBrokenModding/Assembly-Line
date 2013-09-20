@@ -1,9 +1,7 @@
 package dark.assembly.common;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
@@ -44,18 +42,14 @@ import dark.assembly.common.machine.TileEntityManipulator;
 import dark.assembly.common.machine.TileEntityRejector;
 import dark.assembly.common.machine.belt.BlockConveyorBelt;
 import dark.assembly.common.machine.belt.TileEntityConveyorBelt;
-import dark.assembly.common.machine.crane.BlockCraneController;
-import dark.assembly.common.machine.crane.BlockCraneFrame;
-import dark.assembly.common.machine.crane.TileEntityCraneController;
-import dark.assembly.common.machine.crane.TileEntityCraneRail;
 import dark.assembly.common.machine.encoder.BlockEncoder;
 import dark.assembly.common.machine.encoder.ItemDisk;
 import dark.assembly.common.machine.encoder.TileEntityEncoder;
 import dark.assembly.common.machine.processor.BlockProcessor;
-import dark.core.common.BlockRegistry.BlockData;
 import dark.core.common.DarkMain;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.items.ItemBlockHolder;
+import dark.core.registration.ModObjectRegistry;
 
 @ModstatInfo(prefix = "asmline")
 @Mod(modid = AssemblyLine.MOD_ID, name = AssemblyLine.MOD_NAME, version = DarkMain.VERSION, dependencies = "required-after:DarkCore", useMetadata = true)
@@ -127,8 +121,6 @@ public class AssemblyLine extends ModPrefab
         GameRegistry.registerTileEntity(TileEntityDetector.class, "ALDetector");
         GameRegistry.registerTileEntity(TileEntityEncoder.class, "ALEncoder");
         GameRegistry.registerTileEntity(TileEntityArmbot.class, "ALArmbot");
-        GameRegistry.registerTileEntity(TileEntityCraneController.class, "ALCraneController");
-        GameRegistry.registerTileEntity(TileEntityCraneRail.class, "ALCraneRail");
         GameRegistry.registerTileEntity(TileEntityImprinter.class, "ALImprinter");
 
         TabAssemblyLine.itemStack = new ItemStack(recipeLoader.blockConveyorBelt);
@@ -149,28 +141,23 @@ public class AssemblyLine extends ModPrefab
     }
 
     @Override
-    public List<BlockData> getBlocks()
+    public void registerObjects()
     {
-        List<BlockData> dataList = new ArrayList<BlockData>();
         if (recipeLoader == null)
         {
             recipeLoader = new ALRecipeLoader();
         }
         CONFIGURATION.load();
-        recipeLoader.blockConveyorBelt = new BlockConveyorBelt(getNextID());
-        dataList.add(new BlockData(recipeLoader.blockConveyorBelt, "ConveyorBelt"));
-        recipeLoader.blockManipulator = new BlockManipulator(getNextID());
-        recipeLoader.blockCrate = new BlockCrate(getNextID());
-        recipeLoader.blockImprinter = new BlockImprinter(getNextID());
-        recipeLoader.blockDetector = new BlockDetector(getNextID());
-        recipeLoader.blockRejector = new BlockRejector(getNextID());
-        recipeLoader.blockEncoder = new BlockEncoder(getNextID());
-        recipeLoader.blockArmbot = new BlockArmbot(getNextID());
-        recipeLoader.blockCraneController = new BlockCraneController(getNextID());
-        recipeLoader.blockCraneFrame = new BlockCraneFrame(getNextID());
-        recipeLoader.blockTurntable = new BlockTurntable(getNextID());
-        AssemblyLine.processorMachine = new BlockProcessor(getNextID());
-        dataList.add(new BlockData(AssemblyLine.processorMachine, ItemBlockHolder.class, "OreProcessor"));
+        recipeLoader.blockConveyorBelt = ModObjectRegistry.createNewBlock(AssemblyLine.MOD_ID, BlockConveyorBelt.class);
+        recipeLoader.blockManipulator = new BlockManipulator();
+        recipeLoader.blockCrate = new BlockCrate();
+        recipeLoader.blockImprinter = new BlockImprinter();
+        recipeLoader.blockDetector = new BlockDetector();
+        recipeLoader.blockRejector = new BlockRejector();
+        recipeLoader.blockEncoder = new BlockEncoder();
+        recipeLoader.blockArmbot = new BlockArmbot();
+        recipeLoader.blockTurntable = new BlockTurntable();
+        AssemblyLine.processorMachine = ModObjectRegistry.createNewBlock(AssemblyLine.MOD_ID, BlockProcessor.class, ItemBlockHolder.class);
 
         recipeLoader.itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", ITEM_ID_PREFIX).getInt());
         recipeLoader.itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", ITEM_ID_PREFIX + 1).getInt());
@@ -182,7 +169,6 @@ public class AssemblyLine extends ModPrefab
         TileEntityAssembly.refresh_min_rate = CONFIGURATION.get("TileSettings", "RefreshLowestValue", 20, "Lowest value the refresh rate of the tile network will be").getInt();
 
         CONFIGURATION.save();
-        return dataList;
     }
 
     @Override

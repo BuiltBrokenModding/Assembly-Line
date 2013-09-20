@@ -15,8 +15,6 @@ import dark.assembly.client.gui.GuiProcessor;
 import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.client.render.RenderArmbot;
 import dark.assembly.client.render.RenderConveyorBelt;
-import dark.assembly.client.render.RenderCraneController;
-import dark.assembly.client.render.RenderCraneFrame;
 import dark.assembly.client.render.RenderCrate;
 import dark.assembly.client.render.RenderDetector;
 import dark.assembly.client.render.RenderManipulator;
@@ -30,8 +28,6 @@ import dark.assembly.common.machine.TileEntityDetector;
 import dark.assembly.common.machine.TileEntityManipulator;
 import dark.assembly.common.machine.TileEntityRejector;
 import dark.assembly.common.machine.belt.TileEntityConveyorBelt;
-import dark.assembly.common.machine.crane.TileEntityCraneController;
-import dark.assembly.common.machine.crane.TileEntityCraneRail;
 import dark.assembly.common.machine.encoder.TileEntityEncoder;
 import dark.assembly.common.machine.processor.TileEntityProcessor;
 
@@ -57,8 +53,8 @@ public class ClientProxy extends CommonProxy
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrate.class, new RenderCrate());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmbot.class, new RenderArmbot());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDetector.class, new RenderDetector());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCraneController.class, new RenderCraneController());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCraneRail.class, new RenderCraneFrame());
+        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCraneController.class, new RenderCraneController());
+        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCraneRail.class, new RenderCraneFrame());
     }
 
     @Override

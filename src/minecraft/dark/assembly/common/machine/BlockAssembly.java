@@ -1,24 +1,21 @@
 package dark.assembly.common.machine;
 
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.TabAssemblyLine;
 import dark.core.prefab.machine.BlockMachine;
+import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 public abstract class BlockAssembly extends BlockMachine
 {
     public Icon machine_icon;
 
-    public BlockAssembly(int id, Material material, String name)
+    public BlockAssembly(BlockBuildData buildBuildData)
     {
-        super(name, AssemblyLine.CONFIGURATION, id, material);
-        this.setUnlocalizedName(name);
-        this.setCreativeTab(TabAssemblyLine.INSTANCE);
+        super(buildBuildData.setCreativeTab(TabAssemblyLine.INSTANCE));
     }
 
     @Override

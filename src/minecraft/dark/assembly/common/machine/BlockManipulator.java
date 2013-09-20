@@ -9,17 +9,17 @@ import universalelectricity.core.UniversalElectricity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.client.render.BlockRenderingHandler;
-import dark.assembly.common.TabAssemblyLine;
 import dark.assembly.common.imprinter.prefab.BlockImprintable;
+import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 /** A block that manipulates item movement between inventories.
- * 
+ *
  * @author Calclavia */
 public class BlockManipulator extends BlockImprintable
 {
-    public BlockManipulator(int id)
+    public BlockManipulator()
     {
-        super("manipulator", id, UniversalElectricity.machine, TabAssemblyLine.INSTANCE);
+        super(new BlockBuildData(BlockManipulator.class, "manipulator", UniversalElectricity.machine));
         this.setBlockBounds(0, 0, 0, 1, 0.29f, 1);
     }
 

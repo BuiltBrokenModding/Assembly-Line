@@ -16,18 +16,19 @@ import universalelectricity.core.UniversalElectricity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.common.AssemblyLine;
+import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 /** A block that allows the placement of mass amount of a specific item within it. It will be allowed
  * to go on Conveyor Belts
- * 
- * @author Calclavia */
+ *
+ * @author DarkGuardsman */
 public class BlockCrate extends BlockAssembly
 {
     Icon crate_icon;
 
-    public BlockCrate(int id)
+    public BlockCrate()
     {
-        super(id, UniversalElectricity.machine, "crate");
+        super(new BlockBuildData(BlockCrate.class, "crate", UniversalElectricity.machine));
     }
 
     @SideOnly(Side.CLIENT)
@@ -212,7 +213,7 @@ public class BlockCrate extends BlockAssembly
     }
 
     /** Inserts all items of the same type this player has into the crate.
-     * 
+     *
      * @return True on success */
     public boolean insertAllItems(TileEntityCrate tileEntity, EntityPlayer player)
     {
@@ -257,7 +258,7 @@ public class BlockCrate extends BlockAssembly
     }
 
     /** Ejects and item out of the crate and spawn it under the player entity.
-     * 
+     *
      * @param tileEntity
      * @param player
      * @param requestSize - The maximum stack size to take out. Default should be 64.
@@ -309,7 +310,7 @@ public class BlockCrate extends BlockAssembly
     }
 
     /** Puts an itemStack into the crate.
-     * 
+     *
      * @param tileEntity
      * @param itemStack */
     public static ItemStack addStackToCrate(TileEntityCrate tileEntity, ItemStack itemStack)

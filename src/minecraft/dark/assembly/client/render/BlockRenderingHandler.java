@@ -75,26 +75,6 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
             RenderArmbot.MODEL.render(0.0625F, 0, 0);
             GL11.glPopMatrix();
         }
-        else if (block.blockID == AssemblyLine.recipeLoader.blockCraneController.blockID)
-        {
-            FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + RenderCraneController.TEXTURE));
-            GL11.glPushMatrix();
-            GL11.glTranslatef(0f, 1f, 0f);
-            GL11.glRotatef(180f, 0f, 0f, 1f);
-            GL11.glRotatef(-90f, 0f, 1f, 0f);
-            RenderCraneController.MODEL.render(0.0625f, false, false);
-            GL11.glPopMatrix();
-        }
-        else if (block.blockID == AssemblyLine.recipeLoader.blockCraneFrame.blockID)
-        {
-            FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + RenderCraneFrame.TEXTURE));
-            GL11.glPushMatrix();
-            GL11.glTranslatef(0f, 1f, 0f);
-            GL11.glRotatef(180f, 0f, 0f, 1f);
-            GL11.glRotatef(-90f, 0f, 1f, 0f);
-            RenderCraneFrame.MODEL.render(true, true, false, false, false, false, false);
-            GL11.glPopMatrix();
-        }
         else if (block.blockID == AssemblyLine.processorMachine.blockID && metadata == 0)
         {
             FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "CrusherBlock.png"));

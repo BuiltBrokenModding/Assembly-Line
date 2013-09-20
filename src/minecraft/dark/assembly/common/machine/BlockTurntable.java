@@ -19,14 +19,15 @@ import universalelectricity.prefab.tile.IRotatable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.common.AssemblyLine;
+import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 public class BlockTurntable extends BlockAssembly
 {
     private Icon top;
 
-    public BlockTurntable(int par1)
+    public BlockTurntable()
     {
-        super(par1, Material.piston, "turntable");
+        super(new BlockBuildData(BlockTurntable.class, "turntable", Material.piston));
     }
 
     @Override
