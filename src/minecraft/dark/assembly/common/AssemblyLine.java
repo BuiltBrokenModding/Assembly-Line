@@ -46,6 +46,7 @@ import dark.assembly.common.machine.encoder.BlockEncoder;
 import dark.assembly.common.machine.encoder.ItemDisk;
 import dark.assembly.common.machine.encoder.TileEntityEncoder;
 import dark.assembly.common.machine.processor.BlockProcessor;
+import dark.core.common.DMCreativeTab;
 import dark.core.common.DarkMain;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.items.ItemBlockHolder;
@@ -111,8 +112,6 @@ public class AssemblyLine extends ModPrefab
         GameRegistry.registerBlock(recipeLoader.blockRejector, "Rejector");
         GameRegistry.registerBlock(recipeLoader.blockArmbot, "Armbot");
         GameRegistry.registerBlock(recipeLoader.blockTurntable, "Turntable");
-        GameRegistry.registerBlock(recipeLoader.blockCraneController, "CraneController");
-        GameRegistry.registerBlock(recipeLoader.blockCraneFrame, "Crane Frame");
 
         GameRegistry.registerTileEntity(TileEntityConveyorBelt.class, "ALConveyorBelt");
         GameRegistry.registerTileEntity(TileEntityRejector.class, "ALSorter");
@@ -123,7 +122,7 @@ public class AssemblyLine extends ModPrefab
         GameRegistry.registerTileEntity(TileEntityArmbot.class, "ALArmbot");
         GameRegistry.registerTileEntity(TileEntityImprinter.class, "ALImprinter");
 
-        TabAssemblyLine.itemStack = new ItemStack(recipeLoader.blockConveyorBelt);
+        DMCreativeTab.tabAutomation.setIconItemStack(new ItemStack(recipeLoader.blockConveyorBelt));
 
         proxy.preInit();
     }
@@ -148,7 +147,7 @@ public class AssemblyLine extends ModPrefab
             recipeLoader = new ALRecipeLoader();
         }
         CONFIGURATION.load();
-        recipeLoader.blockConveyorBelt = ModObjectRegistry.createNewBlock(AssemblyLine.MOD_ID, BlockConveyorBelt.class);
+        recipeLoader.blockConveyorBelt = ModObjectRegistry.createNewBlock("ALBlockConveyor", AssemblyLine.MOD_ID, BlockConveyorBelt.class);
         recipeLoader.blockManipulator = new BlockManipulator();
         recipeLoader.blockCrate = new BlockCrate();
         recipeLoader.blockImprinter = new BlockImprinter();
@@ -157,7 +156,7 @@ public class AssemblyLine extends ModPrefab
         recipeLoader.blockEncoder = new BlockEncoder();
         recipeLoader.blockArmbot = new BlockArmbot();
         recipeLoader.blockTurntable = new BlockTurntable();
-        AssemblyLine.processorMachine = ModObjectRegistry.createNewBlock(AssemblyLine.MOD_ID, BlockProcessor.class, ItemBlockHolder.class);
+        AssemblyLine.processorMachine = ModObjectRegistry.createNewBlock("ALBlockProcessor", AssemblyLine.MOD_ID, BlockProcessor.class, ItemBlockHolder.class);
 
         recipeLoader.itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", ITEM_ID_PREFIX).getInt());
         recipeLoader.itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", ITEM_ID_PREFIX + 1).getInt());

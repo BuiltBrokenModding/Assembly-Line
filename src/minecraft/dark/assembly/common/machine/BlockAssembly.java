@@ -5,7 +5,8 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import dark.assembly.common.TabAssemblyLine;
+import dark.assembly.common.AssemblyLine;
+import dark.core.common.DMCreativeTab;
 import dark.core.prefab.machine.BlockMachine;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
@@ -15,7 +16,7 @@ public abstract class BlockAssembly extends BlockMachine
 
     public BlockAssembly(BlockBuildData buildBuildData)
     {
-        super(buildBuildData.setCreativeTab(TabAssemblyLine.INSTANCE));
+        super(buildBuildData.setCreativeTab(DMCreativeTab.tabAutomation).setConfigProvider(AssemblyLine.CONFIGURATION));
     }
 
     @Override

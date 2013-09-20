@@ -19,8 +19,7 @@ import dark.api.ProcessorRecipes.ProcessorType;
 import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.CommonProxy;
-import dark.assembly.common.TabAssemblyLine;
-import dark.core.common.DarkMain;
+import dark.core.common.DMCreativeTab;
 import dark.core.prefab.IExtraObjectInfo;
 import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.machine.BlockMachine;
@@ -28,14 +27,11 @@ import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 public class BlockProcessor extends BlockMachine implements IExtraObjectInfo
 {
-    public static float crusherWattPerTick = .125f;
-    public static float grinderWattPerTick = .125f;
-    public static float pressWattPerTick = .2f;
 
     public BlockProcessor()
     {
         super(new BlockBuildData(BlockProcessor.class, "OreProcessor", UniversalElectricity.machine).setConfigProvider(AssemblyLine.CONFIGURATION));
-        this.setCreativeTab(TabAssemblyLine.INSTANCE);
+        this.setCreativeTab(DMCreativeTab.tabIndustrial);
     }
 
     @Override

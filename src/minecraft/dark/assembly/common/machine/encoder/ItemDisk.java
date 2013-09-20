@@ -12,7 +12,7 @@ import net.minecraft.nbt.NBTTagList;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.common.AssemblyLine;
-import dark.assembly.common.TabAssemblyLine;
+import dark.core.common.DMCreativeTab;
 
 public class ItemDisk extends Item
 {
@@ -20,7 +20,7 @@ public class ItemDisk extends Item
     {
         super(id);
         this.setUnlocalizedName("disk");
-        this.setCreativeTab(TabAssemblyLine.INSTANCE);
+        this.setCreativeTab(DMCreativeTab.tabAutomation);
         this.setHasSubtypes(true);
     }
 
