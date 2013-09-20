@@ -33,9 +33,9 @@ public class BlockBasalt extends Block
 
     }
 
-    public BlockBasalt(int par1)
+    public BlockBasalt()
     {
-        super(DarkMain.CONFIGURATION.getBlock("basalt", par1).getInt(), Material.rock);
+        super(DarkMain.CONFIGURATION.getBlock("basalt", DarkMain.getNextID()).getInt(), Material.rock);
         this.setCreativeTab(CreativeTabs.tabDecorations);
         this.setHardness(2f);
         this.setResistance(2f);

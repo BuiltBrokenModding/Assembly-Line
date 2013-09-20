@@ -13,6 +13,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import universalelectricity.core.UniversalElectricity;
+import dark.core.common.ModObjectRegistry.BlockBuildData;
 import dark.core.common.CommonProxy;
 import dark.core.common.DarkMain;
 import dark.core.prefab.IExtraObjectInfo;
@@ -22,10 +23,9 @@ import dark.core.prefab.machine.BlockMachine;
 public class BlockBasicMachine extends BlockMachine implements IExtraObjectInfo
 {
 
-    public BlockBasicMachine(int id)
+    public BlockBasicMachine()
     {
-        super("BasicMachine", DarkMain.CONFIGURATION, id, UniversalElectricity.machine);
-        this.setCreativeTab(CreativeTabs.tabDecorations);
+        super(new BlockBuildData(BlockBasicMachine.class, "BasicMachine", UniversalElectricity.machine).setCreativeTab(DarkMain.tabIndustrial));
         this.setStepSound(soundMetalFootstep);
     }
 

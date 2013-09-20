@@ -24,9 +24,9 @@ public class BlockOre extends Block implements IExtraObjectInfo
 {
     Icon[] icons = new Icon[EnumMeterials.values().length];
 
-    public BlockOre(int par1)
+    public BlockOre()
     {
-        super(DarkMain.CONFIGURATION.getBlock("Ore", par1).getInt(), Material.rock);
+        super(DarkMain.CONFIGURATION.getBlock("Ore", DarkMain.getNextID()).getInt(), Material.rock);
         this.setCreativeTab(CreativeTabs.tabBlock);
         this.setUnlocalizedName(DarkMain.getInstance().PREFIX + "Ore");
     }

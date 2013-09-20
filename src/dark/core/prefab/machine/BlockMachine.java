@@ -3,6 +3,7 @@ package dark.core.prefab.machine;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
@@ -11,25 +12,27 @@ import universalelectricity.prefab.block.BlockTile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.parts.INetworkPart;
+import dark.core.common.ModObjectRegistry.BlockBuildData;
 import dark.core.common.DarkMain;
 
 /** Basic TileEntity Container class designed to be used by generic machines. It is suggested that
  * each mod using this create there own basic block extending this to reduce need to input config
  * file each time
- * 
+ *
  * @author Darkguardsman */
 public abstract class BlockMachine extends BlockTile implements ITileEntityProvider
 {
-    /** @param name - The name the block will use for both the config and translation file
-     * @param config - configuration reference used to pull blockID from
-     * @param blockID - Default block id to be used for the config
-     * @param material - Block material used for tool reference? */
-    public BlockMachine(String name, Configuration config, int blockID, Material material)
+    public BlockMachine(BlockBuildData data)
     {
-        super(config.getBlock(name, blockID).getInt(), material);
-        this.isBlockContainer = true;
-        this.setUnlocalizedName(name);
+        super(data.config.getBlock(data.blockName, DarkMain.getNextID()).getInt(), data.blockMaterial);
+        this.setUnlocalizedName(data.blockName);
+        if(data.creativeTab != null)
+        {
+            this.setCreativeTab(data.creativeTab);
+        }
     }
+
+
 
     @Override
     @SideOnly(Side.CLIENT)

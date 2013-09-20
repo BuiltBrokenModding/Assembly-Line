@@ -16,6 +16,7 @@ import net.minecraftforge.common.Configuration;
 import universalelectricity.core.block.IConductor;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.tile.TileEntityConductor;
+import dark.core.common.ModObjectRegistry.BlockBuildData;
 import dark.core.common.DarkMain;
 import dark.core.prefab.IExtraObjectInfo;
 import dark.core.prefab.helpers.Pair;
@@ -29,14 +30,13 @@ public class BlockWire extends BlockMachine implements IExtraObjectInfo
     public Vector3 minVector = new Vector3(0.3, 0.3, 0.3);
     public Vector3 maxVector = new Vector3(0.7, 0.7, 0.7);
 
-    public BlockWire(int blockID)
+    public BlockWire()
     {
-        super("DMWire", DarkMain.CONFIGURATION, blockID, Material.cloth);
+        super(new BlockBuildData(BlockWire.class, "DMWire", Material.cloth).setCreativeTab(DarkMain.tabIndustrial));
         this.setStepSound(soundClothFootstep);
         this.setResistance(0.2F);
         this.setHardness(0.1f);
         this.setBlockBounds(0.3f, 0.3f, 0.3f, 0.7f, 0.7f, 0.7f);
-        this.setCreativeTab(CreativeTabs.tabRedstone);
         Block.setBurnProperties(this.blockID, 30, 60);
     }
 

@@ -12,13 +12,18 @@ import dark.core.prefab.BlockColored;
 public class BlockColorGlass extends BlockColored
 {
 
-    public BlockColorGlass(int id, String name)
+    public BlockColorGlass(String name)
     {
-        super(name, DarkMain.CONFIGURATION.getBlock(name, id).getInt(), Material.glass);
+        super(name, DarkMain.CONFIGURATION.getBlock(name, DarkMain.getNextID()).getInt(), Material.glass);
         this.setCreativeTab(CreativeTabs.tabDecorations);
         this.setHardness(.5f);
         this.setResistance(.5f);
         this.setStepSound(soundGlassFootstep);
+    }
+
+    public BlockColorGlass()
+    {
+        this("StainedGlass");
     }
 
     @Override

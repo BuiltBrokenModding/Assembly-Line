@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.core.common.ModObjectRegistry.BlockBuildData;
 import dark.core.common.DarkMain;
 import dark.core.prefab.IExtraObjectInfo;
 import dark.core.prefab.helpers.Pair;
@@ -24,8 +25,7 @@ public class BlockDebug extends BlockMachine implements IExtraObjectInfo
 
     public BlockDebug(int blockID)
     {
-        super("DebugBlock", DarkMain.CONFIGURATION, blockID, Material.clay);
-        this.setCreativeTab(CreativeTabs.tabRedstone);
+        super(new BlockBuildData(BlockDebug.class, "DebugBlock", Material.clay).setCreativeTab(DarkMain.tabIndustrial));
     }
 
     @Override

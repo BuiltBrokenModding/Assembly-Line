@@ -1,31 +1,37 @@
 package dark.core.prefab.machine;
 
 import java.util.Random;
+import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import net.minecraftforge.common.Configuration;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
+import dark.core.prefab.IExtraObjectInfo;
+import dark.core.prefab.helpers.Pair;
 
-public class BlockMulti extends BlockContainer
+public class BlockMulti extends BlockContainer implements IExtraObjectInfo
 {
     public String textureName = null;
     public String channel = "";
 
-    public BlockMulti(int id)
+    public BlockMulti()
     {
-        super(DarkMain.CONFIGURATION.getBlock("MultiBlock", id).getInt(), UniversalElectricity.machine);
+        super(DarkMain.CONFIGURATION.getBlock("MultiBlock", DarkMain.getNextID()).getInt(), UniversalElectricity.machine);
         this.setHardness(0.8F);
         this.setUnlocalizedName("multiBlock");
+        this.setChannel(DarkMain.CHANNEL);
     }
 
     public BlockMulti setChannel(String channel)
@@ -131,5 +137,40 @@ public class BlockMulti extends BlockContainer
         }
 
         return null;
+    }
+
+    @Override
+    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+    {
+        list.add(new Pair<String, Class<? extends TileEntity>>("DMMultiBlock", TileEntityMulti.class));
+
+    }
+
+    @Override
+    public boolean hasExtraConfigs()
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void loadExtraConfigs(Configuration config)
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void loadRecipes()
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void loadOreNames()
+    {
+        // TODO Auto-generated method stub
+
     }
 }
