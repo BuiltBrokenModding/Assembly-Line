@@ -16,9 +16,9 @@ import dark.fluid.common.BlockFM;
 public class BlockBoiler extends BlockFM
 {
 
-    public BlockBoiler(int par1)
+    public BlockBoiler()
     {
-        super("Boilers", par1, Material.iron);
+        super(BlockBoiler.class, "Boilers", Material.iron);
         this.setCreativeTab(CreativeTabs.tabBlock);
         this.setHardness(1f);
         this.setResistance(3f);

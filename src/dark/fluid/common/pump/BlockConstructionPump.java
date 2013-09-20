@@ -30,9 +30,9 @@ public class BlockConstructionPump extends BlockFM
     Icon inputIcon;
     Icon outputIcon;
 
-    public BlockConstructionPump(int id)
+    public BlockConstructionPump()
     {
-        super("ConstructionPump", id, Material.iron);
+        super(BlockConstructionPump.class, "ConstructionPump", Material.iron);
         this.setHardness(1f);
         this.setResistance(5f);
 

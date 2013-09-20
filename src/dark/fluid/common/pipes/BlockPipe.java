@@ -28,9 +28,9 @@ public class BlockPipe extends BlockFM
 
     public static int waterFlowRate = 3000;
 
-    public BlockPipe(int id)
+    public BlockPipe()
     {
-        super("FluidPipe", id, Material.iron);
+        super(BlockPipe.class, "FluidPipe", Material.iron);
         this.setBlockBounds(0.30F, 0.30F, 0.30F, 0.70F, 0.70F, 0.70F);
         this.setHardness(1f);
         this.setResistance(3f);

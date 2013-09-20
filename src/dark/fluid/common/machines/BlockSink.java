@@ -20,9 +20,9 @@ import dark.fluid.common.BlockFM;
 
 public class BlockSink extends BlockFM
 {
-    public BlockSink(int par1)
+    public BlockSink()
     {
-        super("FluidSink", par1, Material.iron);
+        super(BlockSink.class, "FluidSink", Material.iron);
         this.setResistance(4f);
         this.setHardness(4f);
     }

@@ -17,9 +17,9 @@ import dark.fluid.common.FMRecipeLoader;
 
 public class BlockReleaseValve extends BlockFM
 {
-    public BlockReleaseValve(int par1)
+    public BlockReleaseValve()
     {
-        super("ReleaseValve", par1, Material.iron);
+        super(BlockReleaseValve.class, "ReleaseValve", Material.iron);
         this.setHardness(1f);
         this.setResistance(5f);
     }

@@ -24,9 +24,9 @@ public class BlockTank extends BlockFM
 {
     public static int tankVolume = 8;
 
-    public BlockTank(int id)
+    public BlockTank()
     {
-        super("FluidTank", id, Material.rock);
+        super(BlockTank.class, "FluidTank",Material.rock);
         this.setHardness(1f);
         this.setResistance(5f);
     }

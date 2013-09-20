@@ -1,17 +1,13 @@
 package dark.fluid.common;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.logging.Logger;
 
-import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 
 import org.modstats.ModstatInfo;
 
@@ -27,12 +23,10 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
-import dark.core.common.BlockRegistry.BlockData;
 import dark.core.common.DarkMain;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.items.ItemBlockHolder;
-import dark.fluid.common.machines.BlockBoiler;
-import dark.fluid.common.machines.BlockFluid;
+import dark.core.registration.ModObjectRegistry;
 import dark.fluid.common.machines.BlockReleaseValve;
 import dark.fluid.common.machines.BlockSink;
 import dark.fluid.common.machines.BlockTank;
@@ -41,9 +35,6 @@ import dark.fluid.common.pipes.ItemBlockPipe;
 import dark.fluid.common.pump.BlockConstructionPump;
 import dark.fluid.common.pump.BlockDrain;
 import dark.fluid.common.pump.BlockPumpMachine;
-import dark.mech.common.machines.BlockGenerator;
-import dark.mech.common.machines.BlockRod;
-import dark.mech.common.machines.BlockSteamPiston;
 
 @ModstatInfo(prefix = "fluidmech")
 @Mod(modid = FluidMech.MOD_ID, name = FluidMech.MOD_NAME, version = FluidMech.VERSION, dependencies = "after:DarkCore", useMetadata = true)
@@ -128,87 +119,25 @@ public class FluidMech extends ModPrefab
     }
 
     @Override
-    public List<BlockData> getBlocks()
+    public void registerObjects()
     {
-        List<BlockData> dataList = new ArrayList<BlockData>();
         if (recipeLoader == null)
         {
             recipeLoader = new FMRecipeLoader();
         }
-        /* CONFIGS */
         CONFIGURATION.load();
-        if (FluidMech.CONFIGURATION.get("general", "EnableWasteFluid", true).getBoolean(true))
-        {
-            fmWaste = new Fluid(WASTE_FLUID_NAME).setUnlocalizedName("fluid.waste.name").setDensity(1300).setViscosity(1800);
-            FluidRegistry.registerFluid(fmWaste);
-            waste = FluidRegistry.getFluid(WASTE_FLUID_NAME);
-            if (waste == null)
-            {
-                waste = fmWaste;
-            }
-            if (waste.getBlockID() == -1)
-            {
-                FMRecipeLoader.blockWasteLiquid = new BlockFluid(waste, getNextID());
-                FMRecipeLoader.blockWasteLiquid.setUnlocalizedName("FluidWaste");
-                dataList.add(new BlockData(FMRecipeLoader.blockWasteLiquid, "lmWaste").canDisable(false));
-            }
-            else
-            {
-                FMRecipeLoader.blockWasteLiquid = Block.blocksList[waste.getBlockID()];
-            }
 
-        }
-        if (FluidMech.CONFIGURATION.get("general", "EnableOilFluid", true).getBoolean(true) && FluidRegistry.getFluid("oil") == null)
-        {
-            fmOil = new Fluid(OIL_FLUID_NAME).setUnlocalizedName("fluid.oil.name").setDensity(1500).setViscosity(4700);
-            FluidRegistry.registerFluid(fmOil);
-            oil = FluidRegistry.getFluid(OIL_FLUID_NAME);
+        FMRecipeLoader.blockWasteLiquid = ModObjectRegistry.createNewFluidBlock(this.PREFIX, FluidMech.CONFIGURATION, new Fluid(WASTE_FLUID_NAME).setUnlocalizedName("fluid.waste.name").setDensity(1300).setViscosity(1800));
+        FMRecipeLoader.blockOilLiquid = ModObjectRegistry.createNewFluidBlock(this.PREFIX, FluidMech.CONFIGURATION, new Fluid(OIL_FLUID_NAME).setUnlocalizedName("fluid.oil.name").setDensity(1500).setViscosity(4700));
+        FMRecipeLoader.blockPipe = ModObjectRegistry.createNewBlock(FluidMech.MOD_ID, BlockPipe.class, ItemBlockPipe.class);
+        FMRecipeLoader.blockMachine = ModObjectRegistry.createNewBlock(FluidMech.MOD_ID, BlockPumpMachine.class, ItemBlockHolder.class);
+        FMRecipeLoader.blockReleaseValve = ModObjectRegistry.createNewBlock(FluidMech.MOD_ID, BlockReleaseValve.class, ItemBlockHolder.class);
+        FMRecipeLoader.blockTank = ModObjectRegistry.createNewBlock(FluidMech.MOD_ID, BlockTank.class, ItemBlockPipe.class);
+        FMRecipeLoader.blockSink = ModObjectRegistry.createNewBlock(FluidMech.MOD_ID, BlockSink.class, ItemBlockHolder.class);
+        FMRecipeLoader.blockDrain = ModObjectRegistry.createNewBlock(FluidMech.MOD_ID, BlockDrain.class, ItemBlockHolder.class);
+        FMRecipeLoader.blockConPump = ModObjectRegistry.createNewBlock(FluidMech.MOD_ID, BlockConstructionPump.class, ItemBlockHolder.class);
 
-            if (oil == null)
-            {
-                oil = fmOil;
-            }
-            if (oil.getBlockID() == -1)
-            {
-                FMRecipeLoader.blockOilLiquid = new BlockFluid(oil, getNextID());
-                FMRecipeLoader.blockOilLiquid.setUnlocalizedName("FluidOil");
-                dataList.add(new BlockData(FMRecipeLoader.blockOilLiquid, "lmOil").canDisable(false));
-            }
-            else
-            {
-                FMRecipeLoader.blockOilLiquid = Block.blocksList[oil.getBlockID()];
-            }
-        }
-        /* BLOCK DECLARATION -- CONFIG LOADER */
-        FMRecipeLoader.blockPipe = new BlockPipe(getNextID());
-        FMRecipeLoader.blockMachine = new BlockPumpMachine(getNextID());
-        FMRecipeLoader.blockRod = new BlockRod(getNextID());
-        FMRecipeLoader.blockGenerator = new BlockGenerator(getNextID());
-        FMRecipeLoader.blockReleaseValve = new BlockReleaseValve(getNextID());
-        FMRecipeLoader.blockTank = new BlockTank(getNextID());
-        FMRecipeLoader.blockSink = new BlockSink(getNextID());
-        FMRecipeLoader.blockDrain = new BlockDrain(getNextID());
-        FMRecipeLoader.blockConPump = new BlockConstructionPump(getNextID());
-        FMRecipeLoader.blockPiston = new BlockSteamPiston(getNextID());
-        FMRecipeLoader.blockBoiler = new BlockBoiler(getNextID());
-
-        dataList.add(new BlockData(FMRecipeLoader.blockPipe, ItemBlockPipe.class, "lmPipe"));
-        dataList.add(new BlockData(FMRecipeLoader.blockPipe, ItemBlockPipe.class, "lmGenPipe"));
-        dataList.add(new BlockData(FMRecipeLoader.blockReleaseValve, ItemBlockHolder.class, "eValve"));
-        dataList.add(new BlockData(FMRecipeLoader.blockRod, "mechRod"));
-        dataList.add(new BlockData(FMRecipeLoader.blockGenerator, "mechGenerator"));
-        dataList.add(new BlockData(FMRecipeLoader.blockMachine, ItemBlockHolder.class, "lmMachines"));
-        dataList.add(new BlockData(FMRecipeLoader.blockTank, ItemBlockPipe.class, "lmTank"));
-        dataList.add(new BlockData(FMRecipeLoader.blockSink, "lmSink"));
-        dataList.add(new BlockData(FMRecipeLoader.blockDrain, "lmDrain"));
-        dataList.add(new BlockData(FMRecipeLoader.blockConPump, "lmConPump"));
-        dataList.add(new BlockData(FMRecipeLoader.blockHeater, "SPHeater"));
-        dataList.add(new BlockData(FMRecipeLoader.blockPiston, "SPPiston"));
-        dataList.add(new BlockData(FMRecipeLoader.blockBoiler, "SPBoiler"));
-
-        /* ITEM DECLARATION */
         CONFIGURATION.save();
-        return dataList;
     }
 
     @Override

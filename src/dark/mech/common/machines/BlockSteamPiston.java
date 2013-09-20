@@ -16,9 +16,9 @@ import dark.fluid.common.BlockFM;
 public class BlockSteamPiston extends BlockFM
 {
 
-    public BlockSteamPiston(int par1)
+    public BlockSteamPiston()
     {
-        super("SteamEngine", par1, Material.iron);
+        super(BlockSteamPiston.class, "SteamEngine", Material.iron);
 
     }
 

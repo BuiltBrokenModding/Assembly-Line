@@ -24,9 +24,9 @@ public class BlockDrain extends BlockFM
     private Icon drainIcon;
     private Icon fillIcon;
 
-    public BlockDrain(int id)
+    public BlockDrain()
     {
-        super("FluidDrain", id, Material.iron);
+        super(BlockDrain.class, "FluidDrain",Material.iron);
     }
 
     @Override

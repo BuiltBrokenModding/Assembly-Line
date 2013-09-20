@@ -20,9 +20,9 @@ import dark.fluid.common.FMRecipeLoader;
 public class BlockPumpMachine extends BlockFM
 {
 
-    public BlockPumpMachine(int id)
+    public BlockPumpMachine()
     {
-        super("StarterPump", id, Material.iron);
+        super(BlockPumpMachine.class, "StarterPump", Material.iron);
         this.setHardness(1f);
         this.setResistance(5f);
     }

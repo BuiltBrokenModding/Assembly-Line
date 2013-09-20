@@ -21,9 +21,9 @@ import dark.fluid.common.FMRecipeLoader;
 public class BlockRod extends BlockFM
 {
 
-    public BlockRod(int par1)
+    public BlockRod()
     {
-        super("MechanicalRod", par1, Material.iron);
+        super(BlockRod.class, "MechanicalRod", Material.iron);
         this.setHardness(1f);
         this.setResistance(5f);
     }
