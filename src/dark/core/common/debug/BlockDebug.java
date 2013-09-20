@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.core.common.DMCreativeTab;
 import dark.core.common.DarkMain;
 import dark.core.prefab.IExtraObjectInfo;
 import dark.core.prefab.helpers.Pair;
@@ -23,9 +24,9 @@ public class BlockDebug extends BlockMachine implements IExtraObjectInfo
 {
     public static float DebugWattOut, DebugWattDemand;
 
-    public BlockDebug(int blockID)
+    public BlockDebug()
     {
-        super(new BlockBuildData(BlockDebug.class, "DebugBlock", Material.clay).setCreativeTab(DarkMain.tabIndustrial));
+        super(new BlockBuildData(BlockDebug.class, "DebugBlock", Material.clay).setCreativeTab(DMCreativeTab.tabIndustrial));
     }
 
     @Override

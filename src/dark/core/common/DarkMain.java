@@ -33,6 +33,7 @@ import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import dark.api.ProcessorRecipes;
+import dark.core.common.blocks.BlockBasalt;
 import dark.core.common.blocks.BlockColorGlass;
 import dark.core.common.blocks.BlockColorGlowGlass;
 import dark.core.common.blocks.BlockColorSand;
@@ -184,15 +185,19 @@ public class DarkMain extends ModPrefab
         /* CONFIGS */
         CONFIGURATION.load();
         /* BLOCKS */
-        blockMulti = (BlockMulti) ModObjectRegistry.createNewBlock(DarkMain.MOD_ID, BlockMulti.class, false);
-        basicMachine = ModObjectRegistry.createNewBlock(DarkMain.MOD_ID, BlockBasicMachine.class, ItemBlockHolder.class);
-        CoreRecipeLoader.blockOre = ModObjectRegistry.createNewBlock(DarkMain.MOD_ID, BlockOre.class, ItemBlockOre.class);
-        CoreRecipeLoader.blockWire = ModObjectRegistry.createNewBlock(DarkMain.MOD_ID, BlockWire.class, ItemBlockHolder.class);
-        CoreRecipeLoader.blockDebug = ModObjectRegistry.createNewBlock(DarkMain.MOD_ID, BlockDebug.class, ItemBlockHolder.class);
-        CoreRecipeLoader.blockStainGlass = ModObjectRegistry.createNewBlock(DarkMain.MOD_ID, BlockColorGlass.class, ItemBlockColored.class);
-        CoreRecipeLoader.blockColorSand = ModObjectRegistry.createNewBlock(DarkMain.MOD_ID, BlockColorSand.class, ItemBlockColored.class);
-        CoreRecipeLoader.blockBasalt = ModObjectRegistry.createNewBlock(DarkMain.MOD_ID, BlockColorSand.class, ItemBlockColored.class);
-        CoreRecipeLoader.blockGlowGlass = ModObjectRegistry.createNewBlock(DarkMain.MOD_ID, BlockColorGlowGlass.class, ItemBlockColored.class);
+        Block m = ModObjectRegistry.createNewBlock("DMBlockMulti", DarkMain.MOD_ID, BlockMulti.class, false);
+        if (m instanceof BlockMulti)
+        {
+            blockMulti = (BlockMulti) m;
+        }
+        basicMachine = ModObjectRegistry.createNewBlock("DMBlockBasicMachine", DarkMain.MOD_ID, BlockBasicMachine.class, ItemBlockHolder.class);
+        CoreRecipeLoader.blockOre = ModObjectRegistry.createNewBlock("DMBlockOre", DarkMain.MOD_ID, BlockOre.class, ItemBlockOre.class);
+        CoreRecipeLoader.blockWire = ModObjectRegistry.createNewBlock("DMBlockWire", DarkMain.MOD_ID, BlockWire.class, ItemBlockHolder.class);
+        CoreRecipeLoader.blockDebug = ModObjectRegistry.createNewBlock("DMBlockDebug", DarkMain.MOD_ID, BlockDebug.class, ItemBlockHolder.class);
+        CoreRecipeLoader.blockStainGlass = ModObjectRegistry.createNewBlock("DMBlockStainedGlass", DarkMain.MOD_ID, BlockColorGlass.class, ItemBlockColored.class);
+        CoreRecipeLoader.blockColorSand = ModObjectRegistry.createNewBlock("DMBlockColorSand", DarkMain.MOD_ID, BlockColorSand.class, ItemBlockColored.class);
+        CoreRecipeLoader.blockBasalt = ModObjectRegistry.createNewBlock("DMBlockBasalt", DarkMain.MOD_ID, BlockBasalt.class, ItemBlockColored.class);
+        CoreRecipeLoader.blockGlowGlass = ModObjectRegistry.createNewBlock("DMBlockGlowGlass", DarkMain.MOD_ID, BlockColorGlowGlass.class, ItemBlockColored.class);
 
         /* ITEMS */
         CoreRecipeLoader.itemTool = new ItemTools(ITEM_ID_PREFIX++, DarkMain.CONFIGURATION);
@@ -253,41 +258,6 @@ public class DarkMain extends ModPrefab
         return "dark";
     }
 
-    /** Creative tab for generic items and block that don't belong in any other tab */
-    public static CreativeTabs tabGSMGeneral = new CreativeTabs("AutomationMachines")
-    {
-        @Override
-        public ItemStack getIconItemStack()
-        {
-            return new ItemStack(Item.ingotIron, 1, 0);
-        }
-    };
-    /** Creative tab for High tech and industrial based items and blocks that don't belong in any
-     * other tab */
-    public static CreativeTabs tabIndustrial = new CreativeTabs("IndustrialMachines")
-    {
-        ItemStack tabItemStack = new ItemStack(Item.ingotIron, 1, 0);
 
-        @Override
-        public ItemStack getIconItemStack()
-        {
-            if (DarkMain.basicMachine != null)
-            {
-                new ItemStack(DarkMain.basicMachine.blockID, 1, 0);
-            }
-            return tabItemStack;
-        }
-    };
-    /** Creative tab for general castle and fortress related items and blocks that don't belong in
-     * any other tab */
-    public static CreativeTabs tabHydrualic = new CreativeTabs("HydraulicMachines")
-    {
-
-        @Override
-        public ItemStack getIconItemStack()
-        {
-            return new ItemStack(Item.ingotIron, 1, 0);
-        }
-    };
 
 }

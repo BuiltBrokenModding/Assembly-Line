@@ -31,25 +31,25 @@ public class ModObjectRegistry
 {
     public static Configuration masterBlockConfig = new Configuration(new File(Loader.instance().getConfigDir(), "Dark/EnabledBlocks.cfg"));
 
-    public static Block createNewBlock(String modID, Class<? extends Block> blockClass)
+    public static Block createNewBlock(String name, String modID, Class<? extends Block> blockClass)
     {
-        return ModObjectRegistry.createNewBlock(modID, blockClass, true);
+        return ModObjectRegistry.createNewBlock(name, modID, blockClass, true);
     }
 
-    public static Block createNewBlock(String modID, Class<? extends Block> blockClass, boolean canDisable)
+    public static Block createNewBlock(String name, String modID, Class<? extends Block> blockClass, boolean canDisable)
     {
-        return ModObjectRegistry.createNewBlock(modID, blockClass, null, canDisable);
+        return ModObjectRegistry.createNewBlock(name, modID, blockClass, null, canDisable);
     }
 
-    public static Block createNewBlock(String modID, Class<? extends Block> blockClass, Class<? extends ItemBlock> itemClass)
+    public static Block createNewBlock(String name, String modID, Class<? extends Block> blockClass, Class<? extends ItemBlock> itemClass)
     {
-        return createNewBlock(modID, blockClass, itemClass, true);
+        return createNewBlock(name, modID, blockClass, itemClass, true);
     }
 
-    public static Block createNewBlock(String modID, Class<? extends Block> blockClass, Class<? extends ItemBlock> itemClass, boolean canDisable)
+    public static Block createNewBlock(String name, String modID, Class<? extends Block> blockClass, Class<? extends ItemBlock> itemClass, boolean canDisable)
     {
         Block block = null;
-        if (blockClass != null && (!canDisable || canDisable && masterBlockConfig.get("Enabled_List", "Enabled_" + block.getUnlocalizedName().replace("tile.", ""), true).getBoolean(true)))
+        if (blockClass != null && (!canDisable || canDisable && masterBlockConfig.get("Enabled_List", "Enabled_" + name, true).getBoolean(true)))
         {
             try
             {
@@ -62,7 +62,7 @@ public class ModObjectRegistry
             if (block != null)
             {
                 ModObjectRegistry.finishCreation(block, null);
-                ModObjectRegistry.registerBlock(block, itemClass, block.getUnlocalizedName().replace("tile.", ""), modID);
+                ModObjectRegistry.registerBlock(block, itemClass, name, modID);
             }
         }
         return block;
@@ -91,14 +91,21 @@ public class ModObjectRegistry
                     {
 
                         constructor.setAccessible(true);
-                        block = (Block) constructor.newInstance(buildData.config.getBlock(buildData.blockName, DarkMain.getNextID()), buildData.blockMaterial);
-
+                        Object obj = (Block) constructor.newInstance(buildData.config.getBlock(buildData.blockName, DarkMain.getNextID()), buildData.blockMaterial);
+                        if (obj instanceof Block)
+                        {
+                            block = (Block) obj;
+                        }
                     }
                 }
                 else
                 {
                     constructor.setAccessible(true);
-                    block = (Block) constructor.newInstance(buildData);
+                    Object obj = constructor.newInstance(buildData);
+                    if (obj instanceof Block)
+                    {
+                        block = (Block) obj;
+                    }
 
                 }
                 ModObjectRegistry.finishCreation(block, buildData);
@@ -235,13 +242,13 @@ public class ModObjectRegistry
 
     public static void registerBlock(Block block, Class<? extends ItemBlock> itemClass, String name, String modID)
     {
-        if (block != null && name != null && !name.isEmpty())
+        if (block != null && name != null)
         {
-            if (itemClass == null)
-            {
-                itemClass = ItemBlock.class;
-            }
-            GameRegistry.registerBlock(block, itemClass, name, modID);
+
+            System.out.println("Block: " + (block == null ? "null" : block.toString()));
+            System.out.println("Item: " + (itemClass == null ? "null" : itemClass.toString()));
+            System.out.println("name: " + name.toString());
+            GameRegistry.registerBlock(block, itemClass == null ? ItemBlock.class : itemClass, name, modID);
         }
     }
 

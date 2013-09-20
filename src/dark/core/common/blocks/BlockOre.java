@@ -97,7 +97,7 @@ public class BlockOre extends Block implements IExtraObjectInfo
         {
             if (EnumMeterials.values()[i].doWorldGen)
             {
-                OreDictionary.registerOre(EnumMeterials.values()[i].name + "Ore", new ItemStack(CoreRecipeLoader.blockOre.blockID, 1, i));
+                OreDictionary.registerOre(EnumMeterials.values()[i].name + "Ore", new ItemStack(this.blockID, 1, i));
             }
         }
 

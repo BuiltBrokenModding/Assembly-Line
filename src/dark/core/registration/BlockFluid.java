@@ -19,7 +19,7 @@ public class BlockFluid extends BlockFluidFinite
 
     public BlockFluid(String prefix, Fluid fluid, Configuration config)
     {
-        super(config.getBlock(fluid.getName(), DarkMain.getNextID()).getInt(), fluid, Material.water);
+        super(config.getBlock("BlockFluid" + fluid.getName(), DarkMain.getNextID()).getInt(), fluid, Material.water);
         this.fluid = fluid;
         if (prefix != null && prefix.contains(":"))
         {
