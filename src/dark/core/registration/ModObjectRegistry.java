@@ -1,4 +1,4 @@
-package dark.core.common;
+package dark.core.registration;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -16,6 +16,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.Configuration;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
+import dark.core.common.DarkMain;
 import dark.core.prefab.IExtraObjectInfo;
 import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.machine.BlockMachine;
@@ -110,7 +111,7 @@ public class ModObjectRegistry
 
     public static void finishCreation(Block block, BlockBuildData data)
     {
-        if (data != null)
+        if (data != null && block != null)
         {
             if (data.tiles != null)
             {
@@ -118,6 +119,10 @@ public class ModObjectRegistry
                 {
                     GameRegistry.registerTileEntityWithAlternatives(par.getValue(), par.getKey(), "DM" + par.getKey());
                 }
+            }
+            if (data.creativeTab != null)
+            {
+                block.setCreativeTab(data.creativeTab);
             }
         }
         if (block instanceof IExtraObjectInfo)

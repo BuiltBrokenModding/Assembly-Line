@@ -55,6 +55,7 @@ import dark.core.prefab.ModPrefab;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.items.ItemBlockHolder;
 import dark.core.prefab.machine.BlockMulti;
+import dark.core.registration.ModObjectRegistry;
 
 /** @author HangCow, DarkGuardsman */
 @Mod(modid = DarkMain.MOD_ID, name = DarkMain.MOD_NAME, version = DarkMain.VERSION, dependencies = "after:BuildCraft|Energy", useMetadata = true)
