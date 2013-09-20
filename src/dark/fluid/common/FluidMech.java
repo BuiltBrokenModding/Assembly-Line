@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.fluids.Fluid;
 
@@ -129,13 +127,13 @@ public class FluidMech extends ModPrefab
 
         FMRecipeLoader.blockWasteLiquid = ModObjectRegistry.createNewFluidBlock(this.PREFIX, FluidMech.CONFIGURATION, new Fluid(WASTE_FLUID_NAME).setUnlocalizedName("fluid.waste.name").setDensity(1300).setViscosity(1800));
         FMRecipeLoader.blockOilLiquid = ModObjectRegistry.createNewFluidBlock(this.PREFIX, FluidMech.CONFIGURATION, new Fluid(OIL_FLUID_NAME).setUnlocalizedName("fluid.oil.name").setDensity(1500).setViscosity(4700));
-        FMRecipeLoader.blockPipe = ModObjectRegistry.createNewBlock("FMBlockPipe",FluidMech.MOD_ID, BlockPipe.class, ItemBlockPipe.class);
-        FMRecipeLoader.blockPumpMachine = ModObjectRegistry.createNewBlock("FMBlockPump",FluidMech.MOD_ID, BlockPumpMachine.class, ItemBlockHolder.class);
-        FMRecipeLoader.blockReleaseValve = ModObjectRegistry.createNewBlock("FMBlockReleaseValve",FluidMech.MOD_ID, BlockReleaseValve.class, ItemBlockHolder.class);
-        FMRecipeLoader.blockTank = ModObjectRegistry.createNewBlock("FMBlockTank",FluidMech.MOD_ID, BlockTank.class, ItemBlockPipe.class);
-        FMRecipeLoader.blockSink = ModObjectRegistry.createNewBlock("FMBlockSink",FluidMech.MOD_ID, BlockSink.class, ItemBlockHolder.class);
-        FMRecipeLoader.blockDrain = ModObjectRegistry.createNewBlock("FMBlockDrain",FluidMech.MOD_ID, BlockDrain.class, ItemBlockHolder.class);
-        FMRecipeLoader.blockConPump = ModObjectRegistry.createNewBlock("FMBlockConstructionPump",FluidMech.MOD_ID, BlockConstructionPump.class, ItemBlockHolder.class);
+        FMRecipeLoader.blockPipe = ModObjectRegistry.createNewBlock("FMBlockPipe", FluidMech.MOD_ID, BlockPipe.class, ItemBlockPipe.class);
+        FMRecipeLoader.blockPumpMachine = ModObjectRegistry.createNewBlock("FMBlockPump", FluidMech.MOD_ID, BlockPumpMachine.class, ItemBlockHolder.class);
+        FMRecipeLoader.blockReleaseValve = ModObjectRegistry.createNewBlock("FMBlockReleaseValve", FluidMech.MOD_ID, BlockReleaseValve.class, ItemBlockHolder.class);
+        FMRecipeLoader.blockTank = ModObjectRegistry.createNewBlock("FMBlockTank", FluidMech.MOD_ID, BlockTank.class, ItemBlockPipe.class);
+        FMRecipeLoader.blockSink = ModObjectRegistry.createNewBlock("FMBlockSink", FluidMech.MOD_ID, BlockSink.class, ItemBlockHolder.class);
+        FMRecipeLoader.blockDrain = ModObjectRegistry.createNewBlock("FMBlockDrain", FluidMech.MOD_ID, BlockDrain.class, ItemBlockHolder.class);
+        FMRecipeLoader.blockConPump = ModObjectRegistry.createNewBlock("FMBlockConstructionPump", FluidMech.MOD_ID, BlockConstructionPump.class, ItemBlockHolder.class);
 
         CONFIGURATION.save();
     }

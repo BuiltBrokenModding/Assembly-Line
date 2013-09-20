@@ -1,6 +1,5 @@
 package dark.fluid.common.pipes;
 
-import java.awt.Color;
 import java.util.List;
 import java.util.Set;
 
@@ -21,7 +20,6 @@ import dark.api.ColorCode.IColorCoded;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.helpers.Pair;
 import dark.fluid.common.BlockFM;
-import dark.fluid.common.FMRecipeLoader;
 
 public class BlockPipe extends BlockFM
 {

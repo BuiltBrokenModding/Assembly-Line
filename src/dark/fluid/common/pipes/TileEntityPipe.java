@@ -40,7 +40,6 @@ import dark.core.network.PacketHandler;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 import dark.core.prefab.tilenetwork.fluid.NetworkPipes;
-import dark.fluid.common.FMRecipeLoader;
 import dark.fluid.common.pipes.BlockPipe.PipeData;
 
 public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler, IToolReadOut, IColorCoded, INetworkPipe, IPacketReceiver
@@ -208,7 +207,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     }
 
     /** Checks to make sure the connection is valid to the tileEntity
-     *
+     * 
      * @param tileEntity - the tileEntity being checked
      * @param side - side the connection is too
      * @return */
@@ -343,7 +342,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     }
 
     /** Calculates flow rate based on viscosity & temp of the fluid as all other factors are know
-     *
+     * 
      * @param fluid - fluidStack
      * @param temp = tempature of the fluid
      * @param pressure - pressure difference of were the fluid is flowing too.

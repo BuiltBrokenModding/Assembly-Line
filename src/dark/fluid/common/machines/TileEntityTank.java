@@ -15,7 +15,6 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -24,7 +23,6 @@ import net.minecraftforge.fluids.IFluidTank;
 
 import org.bouncycastle.util.Arrays;
 
-import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -32,8 +30,8 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.ColorCode;
-import dark.api.IToolReadOut;
 import dark.api.ColorCode.IColorCoded;
+import dark.api.IToolReadOut;
 import dark.api.fluid.INetworkFluidPart;
 import dark.api.fluid.INetworkPipe;
 import dark.core.common.DarkMain;
@@ -42,7 +40,6 @@ import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 import dark.core.prefab.tilenetwork.fluid.NetworkFluidContainers;
 import dark.core.prefab.tilenetwork.fluid.NetworkFluidTiles;
-import dark.fluid.common.FMRecipeLoader;
 import dark.fluid.common.prefab.TileEntityFluidStorage;
 
 public class TileEntityTank extends TileEntityFluidStorage implements IFluidHandler, IToolReadOut, IColorCoded, INetworkFluidPart, IPacketReceiver
@@ -223,7 +220,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
     }
 
     /** Checks to make sure the connection is valid to the tileEntity
-     *
+     * 
      * @param tileEntity - the tileEntity being checked
      * @param side - side the connection is too */
     public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)

@@ -14,7 +14,6 @@ import net.minecraftforge.common.Configuration;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.ColorCode.IColorCoded;
-import dark.api.parts.INetworkPart;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.helpers.Pair;
 import dark.fluid.client.render.BlockRenderHelper;
@@ -26,7 +25,7 @@ public class BlockTank extends BlockFM
 
     public BlockTank()
     {
-        super(BlockTank.class, "FluidTank",Material.rock);
+        super(BlockTank.class, "FluidTank", Material.rock);
         this.setHardness(1f);
         this.setResistance(5f);
     }
