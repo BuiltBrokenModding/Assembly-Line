@@ -10,6 +10,7 @@ import net.minecraft.util.Icon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
+import dark.core.prefab.ModPrefab;
 
 public class BlockBasalt extends Block
 {
@@ -35,7 +36,7 @@ public class BlockBasalt extends Block
 
     public BlockBasalt()
     {
-        super(DarkMain.CONFIGURATION.getBlock("basalt", DarkMain.getNextID()).getInt(), Material.rock);
+        super(DarkMain.CONFIGURATION.getBlock("basalt", ModPrefab.getNextID()).getInt(), Material.rock);
         this.setCreativeTab(CreativeTabs.tabDecorations);
         this.setHardness(2f);
         this.setResistance(2f);

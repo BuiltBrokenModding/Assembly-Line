@@ -18,7 +18,7 @@ import dark.core.common.machines.TileEntityElectricFurnace;
 @SideOnly(Side.CLIENT)
 public class GuiElectricFurnace extends GuiContainer
 {
-    private static final ResourceLocation electricFurnaceTexture = new ResourceLocation(DarkMain.getInstance().DOMAIN,DarkMain.GUI_DIRECTORY+ "electric_furnace.png");
+    private static final ResourceLocation electricFurnaceTexture = new ResourceLocation(DarkMain.getInstance().DOMAIN, DarkMain.GUI_DIRECTORY + "electric_furnace.png");
 
     private TileEntityElectricFurnace tileEntity;
 

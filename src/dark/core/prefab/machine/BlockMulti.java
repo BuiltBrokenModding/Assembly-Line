@@ -5,7 +5,6 @@ import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -19,6 +18,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
 import dark.core.prefab.IExtraObjectInfo;
+import dark.core.prefab.ModPrefab;
 import dark.core.prefab.helpers.Pair;
 
 public class BlockMulti extends BlockContainer implements IExtraObjectInfo
@@ -28,7 +28,7 @@ public class BlockMulti extends BlockContainer implements IExtraObjectInfo
 
     public BlockMulti()
     {
-        super(DarkMain.CONFIGURATION.getBlock("MultiBlock", DarkMain.getNextID()).getInt(), UniversalElectricity.machine);
+        super(DarkMain.CONFIGURATION.getBlock("MultiBlock", ModPrefab.getNextID()).getInt(), UniversalElectricity.machine);
         this.setHardness(0.8F);
         this.setUnlocalizedName("multiBlock");
         this.setChannel(DarkMain.CHANNEL);

@@ -9,6 +9,7 @@ import net.minecraftforge.fluids.Fluid;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
+import dark.core.prefab.ModPrefab;
 
 public class BlockFluid extends BlockFluidFinite
 {
@@ -19,7 +20,7 @@ public class BlockFluid extends BlockFluidFinite
 
     public BlockFluid(String prefix, Fluid fluid, Configuration config)
     {
-        super(config.getBlock("BlockFluid" + fluid.getName(), DarkMain.getNextID()).getInt(), fluid, Material.water);
+        super(config.getBlock("BlockFluid" + fluid.getName(), ModPrefab.getNextID()).getInt(), fluid, Material.water);
         this.fluid = fluid;
         if (prefix != null && prefix.contains(":"))
         {

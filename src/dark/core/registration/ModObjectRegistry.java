@@ -21,11 +21,12 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.core.common.DarkMain;
 import dark.core.prefab.IExtraObjectInfo;
+import dark.core.prefab.ModPrefab;
 import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.machine.BlockMachine;
 
 /** Handler to make registering all parts of a mod's objects that are loaded into the game by forge
- *
+ * 
  * @author DarkGuardsman */
 public class ModObjectRegistry
 {
@@ -91,7 +92,7 @@ public class ModObjectRegistry
                     {
 
                         constructor.setAccessible(true);
-                        Object obj = (Block) constructor.newInstance(buildData.config.getBlock(buildData.blockName, DarkMain.getNextID()), buildData.blockMaterial);
+                        Object obj = constructor.newInstance(buildData.config.getBlock(buildData.blockName, ModPrefab.getNextID()), buildData.blockMaterial);
                         if (obj instanceof Block)
                         {
                             block = (Block) obj;
@@ -303,7 +304,7 @@ public class ModObjectRegistry
         }
 
         /** Adds a tileEntity to be registered when this block is registered
-         *
+         * 
          * @param name - mod name for the tileEntity, should be unique
          * @param class1 - new instance of the TileEntity to register */
         public BlockBuildData addTileEntity(String name, Class<? extends TileEntity> class1)

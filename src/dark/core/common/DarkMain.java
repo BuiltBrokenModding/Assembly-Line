@@ -5,8 +5,6 @@ import java.io.File;
 import java.util.Arrays;
 
 import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
@@ -257,7 +255,5 @@ public class DarkMain extends ModPrefab
     {
         return "dark";
     }
-
-
 
 }

@@ -18,7 +18,7 @@ import dark.core.common.machines.TileEntityCoalGenerator;
 @SideOnly(Side.CLIENT)
 public class GuiCoalGenerator extends GuiContainer
 {
-    private static final ResourceLocation coalGeneratorTexture = new ResourceLocation(DarkMain.getInstance().DOMAIN,DarkMain.GUI_DIRECTORY+ "coal_generator.png");
+    private static final ResourceLocation coalGeneratorTexture = new ResourceLocation(DarkMain.getInstance().DOMAIN, DarkMain.GUI_DIRECTORY + "coal_generator.png");
 
     private TileEntityCoalGenerator tileEntity;
 

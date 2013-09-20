@@ -84,7 +84,7 @@ public abstract class ModPrefab
 
     /** Grabs a list of all the mods block Data used to register the block, tileEntities, and extra
      * configs
-     *
+     * 
      * @return */
     public abstract void registerObjects();
 

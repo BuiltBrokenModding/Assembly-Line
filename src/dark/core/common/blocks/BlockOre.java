@@ -14,10 +14,10 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.common.CoreRecipeLoader;
 import dark.core.common.DarkMain;
 import dark.core.common.items.EnumMeterials;
 import dark.core.prefab.IExtraObjectInfo;
+import dark.core.prefab.ModPrefab;
 import dark.core.prefab.helpers.Pair;
 
 public class BlockOre extends Block implements IExtraObjectInfo
@@ -26,7 +26,7 @@ public class BlockOre extends Block implements IExtraObjectInfo
 
     public BlockOre()
     {
-        super(DarkMain.CONFIGURATION.getBlock("Ore", DarkMain.getNextID()).getInt(), Material.rock);
+        super(DarkMain.CONFIGURATION.getBlock("Ore", ModPrefab.getNextID()).getInt(), Material.rock);
         this.setCreativeTab(CreativeTabs.tabBlock);
         this.setUnlocalizedName(DarkMain.getInstance().PREFIX + "Ore");
     }
