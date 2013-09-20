@@ -9,7 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface TileEntityUser
+public @interface BlockTileEntityInfo
 {
     /** Array of tile entities this tile uses. Is a parallel array in combo with tileEntitiesName */
     Class<? extends TileEntity>[] tileEntities() default {};

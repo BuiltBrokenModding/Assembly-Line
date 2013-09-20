@@ -48,6 +48,7 @@ import dark.core.common.items.ItemParts.Parts;
 import dark.core.common.items.ItemTools;
 import dark.core.common.items.ItemWrench;
 import dark.core.common.machines.BlockBasicMachine;
+import dark.core.common.machines.BlockSolarPanel;
 import dark.core.common.transmit.BlockWire;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.ModPrefab;
@@ -87,7 +88,7 @@ public class DarkMain extends ModPrefab
     public static boolean overPressureDamage;
 
     public static BlockMulti blockMulti;
-    public static Block basicMachine;
+    public static Block basicMachine, blockSolar;
 
     @Instance(MOD_ID)
     private static DarkMain instance;
@@ -196,6 +197,8 @@ public class DarkMain extends ModPrefab
         CoreRecipeLoader.blockColorSand = ModObjectRegistry.createNewBlock("DMBlockColorSand", DarkMain.MOD_ID, BlockColorSand.class, ItemBlockColored.class);
         CoreRecipeLoader.blockBasalt = ModObjectRegistry.createNewBlock("DMBlockBasalt", DarkMain.MOD_ID, BlockBasalt.class, ItemBlockColored.class);
         CoreRecipeLoader.blockGlowGlass = ModObjectRegistry.createNewBlock("DMBlockGlowGlass", DarkMain.MOD_ID, BlockColorGlowGlass.class, ItemBlockColored.class);
+        blockSolar = ModObjectRegistry.createNewBlock("DMBlockSolar", DarkMain.MOD_ID, BlockSolarPanel.class, ItemBlockHolder.class);
+
 
         /* ITEMS */
         CoreRecipeLoader.itemTool = new ItemTools(ITEM_ID_PREFIX++, DarkMain.CONFIGURATION);

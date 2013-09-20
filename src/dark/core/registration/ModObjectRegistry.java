@@ -26,7 +26,7 @@ import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.machine.BlockMachine;
 
 /** Handler to make registering all parts of a mod's objects that are loaded into the game by forge
- * 
+ *
  * @author DarkGuardsman */
 public class ModObjectRegistry
 {
@@ -126,20 +126,18 @@ public class ModObjectRegistry
         {
             if (block != null)
             {
-                // Read block class annotions
-                for (Annotation annotian : block.getClass().getDeclaredAnnotations())
+                BlockTileEntityInfo blockTileEntityInfo = block.getClass().getAnnotation(BlockTileEntityInfo.class);
+                if (blockTileEntityInfo != null)
                 {
-                    if (annotian instanceof TileEntityUser)
-                    {
-                        Class<? extends TileEntity>[] tileEntities = ((TileEntityUser) annotian).tileEntities();
-                        String[] tileEntitiesNames = ((TileEntityUser) annotian).tileEntitiesNames();
+                    System.out.println("\n\n\n\n[ModObjectRegistry] Reading tile entities for " + block.getUnlocalizedName());
+                    Class<? extends TileEntity>[] tileEntities = blockTileEntityInfo.tileEntities();
+                    String[] tileEntitiesNames = blockTileEntityInfo.tileEntitiesNames();
 
-                        if (tileEntities != null && tileEntities.length > 0 && tileEntitiesNames != null && tileEntitiesNames.length > 0)
+                    if (tileEntities != null && tileEntities.length > 0 && tileEntitiesNames != null && tileEntitiesNames.length > 0)
+                    {
+                        for (int i = 0; i < tileEntities.length && i < tileEntitiesNames.length; i++)
                         {
-                            for (int i = 0; i < tileEntities.length && i < tileEntitiesNames.length; i++)
-                            {
-                                GameRegistry.registerTileEntityWithAlternatives(tileEntities[i], tileEntitiesNames[i], "DM" + tileEntitiesNames[i]);
-                            }
+                            GameRegistry.registerTileEntityWithAlternatives(tileEntities[i], tileEntitiesNames[i], "DM" + tileEntitiesNames[i]);
                         }
                     }
                 }
@@ -147,10 +145,14 @@ public class ModObjectRegistry
                 // Read threw the block class looking for annotions on fields
                 for (Method method : block.getClass().getMethods())
                 {
+                    System.out.println("[ModObjectRegistry] Reading class methods " + method.toGenericString());
                     for (Annotation annotian : method.getDeclaredAnnotations())
                     {
+                        System.out.println("[ModObjectRegistry] Reading annotion " + annotian.toString());
                         if (annotian instanceof BlockConfigFile)
                         {
+
+                            System.out.println("[ModObjectRegistry] Loading config file for " + block.getUnlocalizedName());
                             Type[] types = method.getParameterTypes();
                             if (types.length == 1 && types[0] instanceof Configuration)
                             {
@@ -159,7 +161,7 @@ public class ModObjectRegistry
                                 try
                                 {
                                     method.setAccessible(true);
-                                    method.invoke(null, extraBlockConfig);
+                                    method.invoke(extraBlockConfig);
                                 }
                                 catch (IllegalAccessException e)
                                 {
@@ -176,6 +178,7 @@ public class ModObjectRegistry
                                 extraBlockConfig.save();
 
                             }
+                            break;
                         }
                     }
                 }
@@ -245,10 +248,6 @@ public class ModObjectRegistry
     {
         if (block != null && name != null)
         {
-
-            System.out.println("Block: " + (block == null ? "null" : block.toString()));
-            System.out.println("Item: " + (itemClass == null ? "null" : itemClass.toString()));
-            System.out.println("name: " + name.toString());
             GameRegistry.registerBlock(block, itemClass == null ? ItemBlock.class : itemClass, name, modID);
         }
     }
@@ -304,7 +303,7 @@ public class ModObjectRegistry
         }
 
         /** Adds a tileEntity to be registered when this block is registered
-         * 
+         *
          * @param name - mod name for the tileEntity, should be unique
          * @param class1 - new instance of the TileEntity to register */
         public BlockBuildData addTileEntity(String name, Class<? extends TileEntity> class1)
