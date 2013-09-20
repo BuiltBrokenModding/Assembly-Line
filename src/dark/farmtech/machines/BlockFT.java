@@ -8,19 +8,19 @@ import net.minecraftforge.common.Configuration;
 import dark.core.prefab.IExtraObjectInfo;
 import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.machine.BlockMachine;
+import dark.core.registration.ModObjectRegistry.BlockBuildData;
 import dark.farmtech.FarmTech;
 
 /** Prefab class for all farm blocks to remove the need for some configuration of the super class
- * 
+ *
  * @author Darkguardsman */
 public abstract class BlockFT extends BlockMachine implements IExtraObjectInfo
 {
     private boolean hasConfigFile = false;
 
-    public BlockFT(String name, int blockID, Material material)
+    public BlockFT(Class<? extends BlockMachine> blockClass, String name, Material material)
     {
-        super(name, FarmTech.CONFIGURATION, blockID, material);
-        this.setCreativeTab(FarmTech.TabFarmTech);
+        super(new BlockBuildData(blockClass, name, material).setCreativeTab(FarmTech.TabFarmTech));
     }
 
     @Override

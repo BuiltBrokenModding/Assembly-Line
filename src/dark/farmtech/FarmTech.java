@@ -1,9 +1,7 @@
 package dark.farmtech;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -25,11 +23,10 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import dark.api.farm.CropAutomationHandler;
 import dark.api.farm.DecayMatterList;
-import dark.core.common.BlockRegistry;
-import dark.core.common.BlockRegistry.BlockData;
 import dark.core.common.DarkMain;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.items.ItemBlockHolder;
+import dark.core.registration.ModObjectRegistry;
 import dark.farmtech.blocks.BlockFarmSoil;
 
 @Mod(modid = FarmTech.MOD_ID, name = FarmTech.MOD_NAME, version = FarmTech.VERSION, dependencies = "after:DarkCore", useMetadata = true)
@@ -101,19 +98,16 @@ public class FarmTech extends ModPrefab
     }
 
     @Override
-    public List<BlockData> getBlocks()
+    public void registerObjects()
     {
-        List<BlockData> dataList = new ArrayList<BlockData>();
         CONFIGURATION.load();
 
-        blockFarmSoil = new BlockFarmSoil(this.getNextID());
-        BlockRegistry.addBlockToRegister(new BlockData(blockFarmSoil, ItemBlockHolder.class, "FTFarmSoil"));
+        blockFarmSoil = ModObjectRegistry.createNewBlock(FarmTech.MOD_ID, BlockFarmSoil.class, ItemBlockHolder.class);
 
-        String compostList = CONFIGURATION.get("DecayMatter", "List", "5::8000:1", "Items or blocks beyond the built in ones that can be turned into compost. Entries go BlockID:Meta:Time:Amount").getString();
-        DecayMatterList.parseConfigString(compostList);
+        //String compostList = CONFIGURATION.get("DecayMatter", "List", "5::8000:1", "Items or blocks beyond the built in ones that can be turned into compost. Entries go BlockID:Meta:Time:Amount").getString();
+        //DecayMatterList.parseConfigString(compostList);
 
         CONFIGURATION.save();
-        return dataList;
     }
 
     @Override

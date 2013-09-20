@@ -10,26 +10,27 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.core.common.DarkMain;
 import dark.farmtech.FarmTech;
 
 /** Generic block set containing farm blocks: mulch, fertilizer, fertile dirt, mud
- * 
+ *
  * mulch/fertilizer -> fertileDirt -> mud -> dirt
- * 
+ *
  * @mulch is a decor version of fertilizer made from wood. decays very slowly when actually used for
  * crops. Design is to be used with small plant for decor
- * 
+ *
  * @fertilizer enriches the soil and is used to grow crops faster fertilizer can be created from
  * anything using several means
- * 
+ *
  * @author darkguardsman */
 public class BlockFarmSoil extends Block
 {
     Icon mulch, mulch_top, fertilizer, fertileDirt, fertileDirt_top, mud, mud_top;
 
-    public BlockFarmSoil(int blockID)
+    public BlockFarmSoil()
     {
-        super(FarmTech.CONFIGURATION.getBlock("Soil", blockID).getInt(), Material.clay);
+        super(FarmTech.CONFIGURATION.getBlock("FarmSoil", DarkMain.getNextID()).getInt(), Material.clay);
         this.setUnlocalizedName("FarmBlock");
         this.setCreativeTab(FarmTech.TabFarmTech);
     }
