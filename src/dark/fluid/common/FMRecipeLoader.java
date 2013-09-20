@@ -16,7 +16,7 @@ public class FMRecipeLoader extends RecipeLoader
 
     public static Block blockPipe;
     public static Block blockTank;
-    public static Block blockMachine;
+    public static Block blockPumpMachine;
     public static Block blockRod;
     public static Block blockGenerator;
     public static Block blockReleaseValve;
@@ -42,12 +42,12 @@ public class FMRecipeLoader extends RecipeLoader
         this.registerTanks();
 
         // generator
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FMRecipeLoader.blockGenerator, 1), new Object[] { "@T@", "OVO", "@T@", 'T', new ItemStack(blockRod, 1), '@', "plateSteel", 'O', "basicCircuit", 'V', "motor" }));
+        //GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FMRecipeLoader.blockGenerator, 1), new Object[] { "@T@", "OVO", "@T@", 'T', new ItemStack(blockRod, 1), '@', "plateSteel", 'O', "basicCircuit", 'V', "motor" }));
         // mechanical rod
-        GameRegistry.addRecipe(new ItemStack(blockRod, 1), new Object[] { "I@I", 'I', Item.ingotIron, '@', new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Iron.ordinal()) });
+        //GameRegistry.addRecipe(new ItemStack(blockRod, 1), new Object[] { "I@I", 'I', Item.ingotIron, '@', new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Iron.ordinal()) });
 
         // pump
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockMachine, 1, 0), new Object[] { "C@C", "BMB", "@X@", '@', "plateSteel", 'X', new ItemStack(blockPipe, 1), 'B', new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Valve.ordinal()), 'C', "basicCircuit", 'M', "motor" }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockPumpMachine, 1, 0), new Object[] { "C@C", "BMB", "@X@", '@', "plateSteel", 'X', new ItemStack(blockPipe, 1), 'B', new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Valve.ordinal()), 'C', "basicCircuit", 'M', "motor" }));
         // construction pump
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConPump, 1, 0), new Object[] { "@C@", "BMB", "@@@", '@', "plateSteel", 'B', new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Valve.ordinal()), 'C', "advancedCircuit", 'M', "motor" }));
         // Drain

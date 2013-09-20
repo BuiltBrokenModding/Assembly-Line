@@ -67,7 +67,7 @@ public class BlockPumpMachine extends BlockFM
 
         if (meta < 4)
         {
-            return new ItemStack(FMRecipeLoader.blockMachine, 1, 0);
+            return new ItemStack(FMRecipeLoader.blockPumpMachine, 1, 0);
         }
 
         return null;

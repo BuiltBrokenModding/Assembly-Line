@@ -2,7 +2,7 @@ package dark.fluid.common;
 
 import net.minecraft.block.material.Material;
 import net.minecraftforge.common.Configuration;
-import dark.core.common.DarkMain;
+import dark.core.common.DMCreativeTab;
 import dark.core.prefab.IExtraObjectInfo;
 import dark.core.prefab.machine.BlockMachine;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
@@ -12,7 +12,7 @@ public abstract class BlockFM extends BlockMachine implements IExtraObjectInfo
 
     public BlockFM(Class<? extends BlockFM> blockClass, String name, Material material)
     {
-        super(new BlockBuildData(blockClass, name, material).setConfigProvider(FluidMech.CONFIGURATION).setCreativeTab(DarkMain.tabHydrualic));
+        super(new BlockBuildData(blockClass, name, material).setConfigProvider(FluidMech.CONFIGURATION).setCreativeTab(DMCreativeTab.tabHydrualic));
     }
 
     @Override
