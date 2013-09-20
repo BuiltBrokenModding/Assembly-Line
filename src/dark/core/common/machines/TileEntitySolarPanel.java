@@ -26,16 +26,11 @@ public class TileEntitySolarPanel extends TileEntityEnergyMachine
 
             if (this.worldObj.canBlockSeeTheSky(xCoord, yCoord + 1, zCoord) && !this.worldObj.provider.hasNoSky)
             {
-                System.out.println("DayPower: "+BlockSolarPanel.wattDay);
-                System.out.println("NightPower: "+BlockSolarPanel.wattNight);
-                System.out.println("StormPower: "+BlockSolarPanel.wattStorm);
                 if (this.worldObj.isDaytime())
                 {
-                    System.out.println("HasSunLight");
                     this.wattOutput = BlockSolarPanel.wattDay;
                     if (this.worldObj.isThundering() || this.worldObj.isRaining())
                     {
-                        System.out.println("Storming");
                         this.wattOutput = BlockSolarPanel.wattStorm;
                     }
                 }
