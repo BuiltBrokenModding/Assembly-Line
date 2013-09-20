@@ -1,11 +1,12 @@
 package dark.core.registration;
 
 import java.io.File;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import net.minecraft.block.Block;
@@ -111,18 +112,76 @@ public class ModObjectRegistry
 
     public static void finishCreation(Block block, BlockBuildData data)
     {
-        if (data != null && block != null)
+        if (data != null)
         {
-            if (data.tiles != null)
+            if (block != null)
             {
-                for (Pair<String, Class<? extends TileEntity>> par : data.tiles)
+                // Read block class annotions
+                for (Annotation annotian : block.getClass().getDeclaredAnnotations())
                 {
-                    GameRegistry.registerTileEntityWithAlternatives(par.getValue(), par.getKey(), "DM" + par.getKey());
+                    if (annotian instanceof TileEntityUser)
+                    {
+                        Class<? extends TileEntity>[] tileEntities = ((TileEntityUser) annotian).tileEntities();
+                        String[] tileEntitiesNames = ((TileEntityUser) annotian).tileEntitiesNames();
+
+                        if (tileEntities != null && tileEntities.length > 0 && tileEntitiesNames != null && tileEntitiesNames.length > 0)
+                        {
+                            for (int i = 0; i < tileEntities.length && i < tileEntitiesNames.length; i++)
+                            {
+                                GameRegistry.registerTileEntityWithAlternatives(tileEntities[i], tileEntitiesNames[i], "DM" + tileEntitiesNames[i]);
+                            }
+                        }
+                    }
                 }
-            }
-            if (data.creativeTab != null)
-            {
-                block.setCreativeTab(data.creativeTab);
+
+                // Read threw the block class looking for annotions on fields
+                for (Method method : block.getClass().getMethods())
+                {
+                    for (Annotation annotian : method.getDeclaredAnnotations())
+                    {
+                        if (annotian instanceof BlockConfigFile)
+                        {
+                            Type[] types = method.getParameterTypes();
+                            if (types.length == 1 && types[0] instanceof Configuration)
+                            {
+                                Configuration extraBlockConfig = new Configuration(new File(Loader.instance().getConfigDir(), "Dark/blocks/" + block.getUnlocalizedName() + ".cfg"));
+                                extraBlockConfig.load();
+                                try
+                                {
+                                    method.setAccessible(true);
+                                    method.invoke(null, extraBlockConfig);
+                                }
+                                catch (IllegalAccessException e)
+                                {
+                                    e.printStackTrace();
+                                }
+                                catch (IllegalArgumentException e)
+                                {
+                                    e.printStackTrace();
+                                }
+                                catch (InvocationTargetException e)
+                                {
+                                    e.printStackTrace();
+                                }
+                                extraBlockConfig.save();
+
+                            }
+                        }
+                    }
+                }
+
+                // Load data from BlockBuildData
+                if (data.tiles != null)
+                {
+                    for (Pair<String, Class<? extends TileEntity>> par : data.tiles)
+                    {
+                        GameRegistry.registerTileEntityWithAlternatives(par.getValue(), par.getKey(), "DM" + par.getKey());
+                    }
+                }
+                if (data.creativeTab != null)
+                {
+                    block.setCreativeTab(data.creativeTab);
+                }
             }
         }
         if (block instanceof IExtraObjectInfo)
@@ -142,6 +201,7 @@ public class ModObjectRegistry
                 GameRegistry.registerTileEntityWithAlternatives(par.getValue(), par.getKey(), "DM" + par.getKey());
             }
         }
+
     }
 
     public static void registerBlock(Block block, Class<? extends ItemBlock> itemClass, String name, String modID)

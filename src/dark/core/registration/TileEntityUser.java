@@ -16,5 +16,5 @@ public @interface TileEntityUser
 
     /** Array of tile entities names that are used to register the tile entity. Is a parallel array
      * in combo with tileEntities */
-    Class<? extends TileEntity>[] tileEntitiesNames() default {};
+    String[] tileEntitiesNames() default {};
 }
