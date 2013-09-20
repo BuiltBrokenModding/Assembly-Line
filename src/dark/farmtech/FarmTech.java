@@ -102,7 +102,7 @@ public class FarmTech extends ModPrefab
     {
         CONFIGURATION.load();
 
-        blockFarmSoil = ModObjectRegistry.createNewBlock(FarmTech.MOD_ID, BlockFarmSoil.class, ItemBlockHolder.class);
+        blockFarmSoil = ModObjectRegistry.createNewBlock("FTBlockFarmSoil", FarmTech.MOD_ID, BlockFarmSoil.class, ItemBlockHolder.class);
 
         //String compostList = CONFIGURATION.get("DecayMatter", "List", "5::8000:1", "Items or blocks beyond the built in ones that can be turned into compost. Entries go BlockID:Meta:Time:Amount").getString();
         //DecayMatterList.parseConfigString(compostList);
