@@ -97,8 +97,9 @@ public class BlockPipe extends BlockFM
     @Override
     public void breakBlock(World world, int x, int y, int z, int par5, int par6)
     {
-        super.breakBlock(world, x, y, z, par5, par6);
         TileEntity entity = world.getBlockTileEntity(x, y, z);
+        super.breakBlock(world, x, y, z, par5, par6);
+
         if (entity instanceof TileEntityPipe)
         {
             IFluidTank tank = ((TileEntityPipe) entity).getTank(0);
@@ -160,7 +161,8 @@ public class BlockPipe extends BlockFM
                 TileEntity tile = par1World.getBlockTileEntity(par2, par3, par4);
                 if (tile instanceof TileEntityPipe)
                 {
-                    meta = ((TileEntityPipe) tile).pipeData.ordinal();
+                    this.dropBlockAsItem_do(par1World, par2, par3, par4, ((TileEntityPipe) tile).pipeData.itemStack);
+                    return;
                 }
                 this.dropBlockAsItem_do(par1World, par2, par3, par4, new ItemStack(this.blockID, 1, meta));
             }

@@ -31,11 +31,13 @@ public class FMRecipeLoader extends RecipeLoader
     public static Block blockOilLiquid;
     public static Block blockFuelLiquid;
 
-
     @Override
     public void loadRecipes()
     {
-
+        for (PipeData data : PipeData.values())
+        {
+            data.itemStack = new ItemStack(blockPipe.blockID, 1, data.ordinal());
+        }
         this.registerPipes();
         this.registerTanks();
 
