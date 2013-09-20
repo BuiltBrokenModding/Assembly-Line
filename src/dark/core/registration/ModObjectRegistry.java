@@ -15,6 +15,8 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.core.common.DarkMain;
@@ -202,6 +204,33 @@ public class ModObjectRegistry
             }
         }
 
+    }
+
+    public static Block createNewFluidBlock(String modDomainPrefix, Configuration config, Fluid fluid)
+    {
+        Block fluidBlock = null;
+        Fluid fluidActual = null;
+        if (config != null && fluid != null && config.get("general", "EnableOilFluid", true).getBoolean(true) && FluidRegistry.getFluid(fluid.getName()) == null)
+        {
+            FluidRegistry.registerFluid(fluid);
+            fluidActual = FluidRegistry.getFluid(fluid.getName());
+            if (fluidActual == null)
+            {
+                fluidActual = fluid;
+            }
+
+            if (fluidActual.getBlockID() == -1 && masterBlockConfig.get("Enabled_List", "Enabled_" + fluid.getName() + "Block", true).getBoolean(true))
+            {
+                fluidBlock = new BlockFluid(modDomainPrefix, fluidActual, config).setUnlocalizedName("tile.Fluid." + fluid.getName());
+                GameRegistry.registerBlock(fluidBlock, "DMBlockFluid" + fluid.getName());
+            }
+            else
+            {
+                fluidBlock = Block.blocksList[fluid.getBlockID()];
+            }
+        }
+
+        return fluidBlock;
     }
 
     public static void registerBlock(Block block, Class<? extends ItemBlock> itemClass, String name, String modID)
