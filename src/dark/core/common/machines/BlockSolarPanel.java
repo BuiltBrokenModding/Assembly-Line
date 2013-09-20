@@ -15,13 +15,15 @@ import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 public class BlockSolarPanel extends BlockMachine implements IExtraObjectInfo
 {
-    public static float tickRate = 10;
-    public static float wattPerLightValue = .012f;
+    public static int tickRate = 10;
+    public static float wattDay = 0.120f;
+    public static float wattNight = 0.001f;
+    public static float wattStorm = 0.005f;
 
     public BlockSolarPanel()
     {
         super(new BlockBuildData(BlockSolarPanel.class, "BlockSolarPanel", UniversalElectricity.machine));
-        this.setBlockBounds(0, 0, 0, 1f, .3f, 1f);
+        this.setBlockBounds(0, 0, 0, 1f, .6f, 1f);
         this.setCreativeTab(DMCreativeTab.tabIndustrial);
     }
 
@@ -51,7 +53,7 @@ public class BlockSolarPanel extends BlockMachine implements IExtraObjectInfo
     @Override
     public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
     {
-       list.add(new Pair<String,Class<? extends TileEntity>>("DMSolarCell", TileEntitySolarPanel.class));
+        list.add(new Pair<String, Class<? extends TileEntity>>("DMSolarCell", TileEntitySolarPanel.class));
 
     }
 
@@ -65,7 +67,9 @@ public class BlockSolarPanel extends BlockMachine implements IExtraObjectInfo
     public void loadExtraConfigs(Configuration config)
     {
         tickRate = config.get("settings", "PanelUpdateRate", tickRate).getInt();
-        wattPerLightValue = (config.get("settings", "WattPerLightvalue", (int) wattPerLightValue * 1000, "Value * 15 equals full output").getInt() / 1000);
+        wattDay = (float) (config.get("settings", "WattDayLight", 120).getDouble(120) / 1000);
+        wattNight = (float) (config.get("settings", "WattMoonLight", 1).getDouble(1) / 1000);
+        wattStorm = (float) (config.get("settings", "WattStorm", 6).getDouble(6) / 1000);
     }
 
     @Override
