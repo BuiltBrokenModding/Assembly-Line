@@ -13,7 +13,7 @@ import dark.assembly.common.imprinter.prefab.BlockImprintable;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 /** A block that manipulates item movement between inventories.
- *
+ * 
  * @author Calclavia */
 public class BlockManipulator extends BlockImprintable
 {

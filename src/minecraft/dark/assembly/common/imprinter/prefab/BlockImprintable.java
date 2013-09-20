@@ -13,7 +13,7 @@ import dark.assembly.common.machine.BlockAssembly;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 /** Extend this block class if a filter is allowed to be placed inside of this block.
- *
+ * 
  * @author Calclavia */
 public abstract class BlockImprintable extends BlockAssembly
 {
