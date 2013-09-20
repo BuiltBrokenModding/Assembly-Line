@@ -2,6 +2,7 @@ rem set defaults:
 set "com=Auto-Sync"
 rem set parameters:
 IF NOT "a%1"=="a" (set "com=%1")
+
 cd ..\
 git commit -am "%com%"
 git push origin master
