@@ -104,13 +104,6 @@ public class BlockProcessor extends BlockMachine implements IExtraObjectInfo
     }
 
     @Override
-    public void loadRecipes()
-    {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void loadOreNames()
     {
         for (ProcessorData data : ProcessorData.values())

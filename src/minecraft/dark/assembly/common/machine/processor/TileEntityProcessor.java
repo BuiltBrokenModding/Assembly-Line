@@ -36,8 +36,7 @@ public class TileEntityProcessor extends TileEntityEnergyMachine
     {
         if (this.processorData == null)
         {
-            int g = this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) / 4;
-            this.processorData = ProcessorData.values()[g];
+            this.processorData = ProcessorData.values()[this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) / 4];
             this.WATTS_PER_TICK = processorData.wattPerTick;
             this.MAX_WATTS = this.WATTS_PER_TICK * 20;
 
