@@ -50,70 +50,77 @@ public class TileEntityProcessor extends TileEntityEnergyMachine
     {
         this.getProcessorData();
         super.updateEntity();
+        if (!this.worldObj.isRemote)
+        {
+            if (this.outputBuffer != null)
+            {
+                int nullCount = 0;
+                for (int i = 0; i < outputBuffer.length; i++)
+                {
+                    ItemStack outputStack = this.getInventory().getStackInSlot(this.slotOutput);
+
+                    if (outputBuffer[i] == null)
+                    {
+                        nullCount += 1;
+                    }
+                    else if (outputStack == null)
+                    {
+                        this.getInventory().setInventorySlotContents(this.slotOutput, outputBuffer[i].copy());
+                        outputBuffer[i] = null;
+                        this.onInventoryChanged();
+                    }
+                    else if (outputBuffer[i] != null && outputBuffer[i].isItemEqual(outputStack))
+                    {
+                        ItemStack outStack = outputStack.copy();
+                        int room = Math.min(outputStack.getMaxStackSize() - outputStack.stackSize, this.getInventoryStackLimit());
+                        if (room >= outputBuffer[i].stackSize)
+                        {
+
+                            outStack.stackSize += outputBuffer[i].stackSize;
+                            outputBuffer[i] = null;
+                        }
+                        else
+                        {
+                            int extract = outputBuffer[i].stackSize - (outputBuffer[i].stackSize - room);
+                            outputBuffer[i].stackSize -= extract;
+                            outStack.stackSize += extract;
+
+                        }
+
+                        this.getInventory().setInventorySlotContents(this.slotOutput, outStack);
+                        this.onInventoryChanged();
+                    }
+
+                }
+                if (nullCount >= outputBuffer.length)
+                {
+                    outputBuffer = null;
+                }
+            }
+        }
         if (this.isFunctioning())
         {
-            if (this.processorData.doAnimation)
-            {
-                this.doAnimation();
-            }
 
             if (!this.worldObj.isRemote)
             {
-                if (this.outputBuffer != null)
-                {
-                    int nullCount = 0;
-                    for (int i = 0; i < outputBuffer.length; i++)
-                    {
-                        ItemStack outputStack = this.getInventory().getStackInSlot(this.slotOutput);
-
-                        if (outputBuffer[i] == null)
-                        {
-                            nullCount += 1;
-                        }
-                        else if (outputStack == null)
-                        {
-                            this.getInventory().setInventorySlotContents(this.slotOutput, outputBuffer[i].copy());
-                            outputBuffer[i] = null;
-                            this.onInventoryChanged();
-                        }
-                        else if (outputBuffer[i] != null && outputBuffer[i].isItemEqual(outputStack))
-                        {
-                            ItemStack outStack = outputStack.copy();
-                            int room = Math.min(outputStack.getMaxStackSize() - outputStack.stackSize, this.getInventoryStackLimit());
-                            if (room >= outputBuffer[i].stackSize)
-                            {
-
-                                outStack.stackSize += outputBuffer[i].stackSize;
-                                outputBuffer[i] = null;
-                            }
-                            else
-                            {
-                                int extract = outputBuffer[i].stackSize - (outputBuffer[i].stackSize - room);
-                                outputBuffer[i].stackSize -= extract;
-                                outStack.stackSize += extract;
-
-                            }
-
-                            this.getInventory().setInventorySlotContents(this.slotOutput, outStack);
-                            this.onInventoryChanged();
-                        }
-
-                    }
-                    if (nullCount >= outputBuffer.length)
-                    {
-                        outputBuffer = null;
-                    }
-                }
                 if (outputBuffer == null && this.processingTicks++ >= this.processingTime)
                 {
                     this.process();
                     this.processingTicks = 0;
                 }
             }
+            else
+            {
+                if (this.processorData.doAnimation)
+                {
+                    this.updateAnimation();
+                }
+            }
         }
     }
 
-    public void doAnimation()
+    /** Updates the animation calculation for the renderer to use */
+    public void updateAnimation()
     {
         if (this.getProcessorData().type == ProcessorType.CRUSHER || this.getProcessorData().type == ProcessorType.PRESS)
         {
