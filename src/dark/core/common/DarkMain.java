@@ -200,7 +200,6 @@ public class DarkMain extends ModPrefab
         CoreRecipeLoader.blockGlowGlass = ModObjectRegistry.createNewBlock("DMBlockGlowGlass", DarkMain.MOD_ID, BlockColorGlowGlass.class, ItemBlockColored.class);
         blockSolar = ModObjectRegistry.createNewBlock("DMBlockSolar", DarkMain.MOD_ID, BlockSolarPanel.class, ItemBlockHolder.class);
 
-
         /* ITEMS */
         CoreRecipeLoader.itemTool = new ItemTools(ITEM_ID_PREFIX++, DarkMain.CONFIGURATION);
 
@@ -219,7 +218,6 @@ public class DarkMain extends ModPrefab
         if (CONFIGURATION.get("general", "LoadCraftingParts", true, "Only disable this if you do not plan to craft, or are not using any mods that need these parts.").getBoolean(true))
         {
             CoreRecipeLoader.itemParts = new ItemParts(ITEM_ID_PREFIX++, CONFIGURATION);
-            CoreRecipeLoader.itemRefinedSand = new ItemColoredDust(CONFIGURATION.getItem(Configuration.CATEGORY_ITEM, "RefinedSandItemID", ITEM_ID_PREFIX++).getInt(), "RefinedSand");
             CoreRecipeLoader.itemGlowingSand = new ItemColoredDust(CONFIGURATION.getItem(Configuration.CATEGORY_ITEM, "GlowingRefinedSandItemID", ITEM_ID_PREFIX++).getInt(), "GlowRefinedSand");
 
         }
