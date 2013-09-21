@@ -73,13 +73,6 @@ public class BlockSolarPanel extends BlockMachine implements IExtraObjectInfo
     }
 
     @Override
-    public void loadRecipes()
-    {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void loadOreNames()
     {
         // TODO Auto-generated method stub

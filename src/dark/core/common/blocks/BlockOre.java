@@ -74,20 +74,6 @@ public class BlockOre extends Block implements IExtraObjectInfo
     }
 
     @Override
-    public void loadRecipes()
-    {
-        for (OreData data : OreData.values())
-        {
-            if (CoreRecipeLoader.itemMetals instanceof ItemOreDirv)
-            {
-                ItemStack oreStack = new ItemStack(this.blockID, 1, data.ordinal());
-                FurnaceRecipes.smelting().addSmelting(this.blockID, data.ordinal(), EnumMaterial.getStack(data.mat, EnumOrePart.INGOTS, 1), 0.6f);
-                ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, oreStack, EnumMaterial.getStack(data.mat, EnumOrePart.RUBBLE, 1));
-            }
-        }
-    }
-
-    @Override
     public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
     {
     }

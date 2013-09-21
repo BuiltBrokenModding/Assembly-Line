@@ -225,13 +225,6 @@ public class BlockWire extends BlockMachine implements IExtraObjectInfo
     }
 
     @Override
-    public void loadRecipes()
-    {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
     {
         list.add(new Pair<String, Class<? extends TileEntity>>("DMWireTile", TileEntityWire.class));

@@ -161,13 +161,6 @@ public class BlockMulti extends BlockContainer implements IExtraObjectInfo
     }
 
     @Override
-    public void loadRecipes()
-    {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void loadOreNames()
     {
         // TODO Auto-generated method stub

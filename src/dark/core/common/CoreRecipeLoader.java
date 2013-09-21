@@ -8,6 +8,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import dark.api.ProcessorRecipes;
 import dark.api.ProcessorRecipes.ProcessorType;
 import dark.core.common.blocks.BlockBasalt;
+import dark.core.common.blocks.BlockOre;
+import dark.core.common.blocks.BlockOre.OreData;
 import dark.core.common.items.EnumMaterial;
 import dark.core.common.items.EnumOrePart;
 import dark.core.common.items.ItemOreDirv;
@@ -140,6 +142,18 @@ public class CoreRecipeLoader extends RecipeLoader
                 //ingot.stackSize = 3;
                 //ProcessorRecipes.createRecipe(ProcessorType.PRESS, ingot, plates);
 
+            }
+        }
+
+        if(blockOre instanceof BlockOre)
+        {
+            for (OreData data : OreData.values())
+            {
+                if (CoreRecipeLoader.itemMetals instanceof ItemOreDirv)
+                {
+                    FurnaceRecipes.smelting().addSmelting(blockOre.blockID, data.ordinal(), EnumMaterial.getStack(data.mat, EnumOrePart.INGOTS, 1), 0.6f);
+                    ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, new ItemStack(blockOre.blockID, 1, data.ordinal()), EnumMaterial.getStack(data.mat, EnumOrePart.RUBBLE, 1));
+                }
             }
         }
 

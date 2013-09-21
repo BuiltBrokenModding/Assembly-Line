@@ -62,8 +62,8 @@ public class ModObjectRegistry
             }
             if (block != null)
             {
-                ModObjectRegistry.finishCreation(block, null);
                 ModObjectRegistry.registerBlock(block, itemClass, name, modID);
+                ModObjectRegistry.finishCreation(block, null);
             }
         }
         return block;
@@ -109,8 +109,8 @@ public class ModObjectRegistry
                     }
 
                 }
-                ModObjectRegistry.finishCreation(block, buildData);
                 ModObjectRegistry.registerBlock(block, buildData.itemBlock, buildData.blockName, modID);
+                ModObjectRegistry.finishCreation(block, buildData);
             }
         }
         catch (Exception x)
@@ -207,7 +207,6 @@ public class ModObjectRegistry
                 extraBlockConfig.save();
             }
             ((IExtraObjectInfo) block).loadOreNames();
-            ((IExtraObjectInfo) block).loadRecipes();
             Set<Pair<String, Class<? extends TileEntity>>> tileListNew = new HashSet<Pair<String, Class<? extends TileEntity>>>();
             ((IExtraObjectInfo) block).getTileEntities(block.blockID, tileListNew);
             for (Pair<String, Class<? extends TileEntity>> par : tileListNew)
