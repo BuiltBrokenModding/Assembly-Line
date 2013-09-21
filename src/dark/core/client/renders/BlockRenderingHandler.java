@@ -13,6 +13,7 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.client.models.ModelSolarPanel;
+import dark.core.common.CoreRecipeLoader;
 import dark.core.common.DarkMain;
 import dark.core.prefab.ModPrefab;
 
@@ -27,7 +28,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
     public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
     {
         GL11.glPushMatrix();
-        if (DarkMain.blockSolar != null && block.blockID == DarkMain.blockSolar.blockID)
+        if (CoreRecipeLoader.blockSolar != null && block.blockID == CoreRecipeLoader.blockSolar.blockID)
         {
             FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(DarkMain.getInstance().DOMAIN, ModPrefab.MODEL_DIRECTORY + "solarPanel.png"));
             GL11.glTranslatef(0.0F, 1.5F, 0.0F);

@@ -83,6 +83,11 @@ public enum EnumMaterial
         return reStack;
     }
 
+    public ItemStack getStack(EnumOrePart part, int ammount)
+    {
+        return getStack(this, part, ammount);
+    }
+
     public static Icon getIcon(int metadata)
     {
         int mat = metadata / EnumMaterial.itemCountPerMaterial;

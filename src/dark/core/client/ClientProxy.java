@@ -59,7 +59,7 @@ public class ClientProxy extends CommonProxy
         {
             ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWire.class, new RenderBlockWire());
         }
-        if (DarkMain.blockSolar != null)
+        if (CoreRecipeLoader.blockSolar != null)
         {
             ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySolarPanel.class, new RenderBlockSolarPanel());
         }

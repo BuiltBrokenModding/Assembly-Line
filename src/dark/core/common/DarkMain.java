@@ -89,7 +89,6 @@ public class DarkMain extends ModPrefab
     public static boolean overPressureDamage;
 
     public static BlockMulti blockMulti;
-    public static Block basicMachine, blockSolar;
 
     @Instance(MOD_ID)
     private static DarkMain instance;
@@ -190,7 +189,7 @@ public class DarkMain extends ModPrefab
         {
             blockMulti = (BlockMulti) m;
         }
-        basicMachine = ModObjectRegistry.createNewBlock("DMBlockBasicMachine", DarkMain.MOD_ID, BlockBasicMachine.class, ItemBlockHolder.class);
+        CoreRecipeLoader.basicMachine = ModObjectRegistry.createNewBlock("DMBlockBasicMachine", DarkMain.MOD_ID, BlockBasicMachine.class, ItemBlockHolder.class);
         CoreRecipeLoader.blockOre = ModObjectRegistry.createNewBlock("DMBlockOre", DarkMain.MOD_ID, BlockOre.class, ItemBlockOre.class);
         CoreRecipeLoader.blockWire = ModObjectRegistry.createNewBlock("DMBlockWire", DarkMain.MOD_ID, BlockWire.class, ItemBlockHolder.class);
         CoreRecipeLoader.blockDebug = ModObjectRegistry.createNewBlock("DMBlockDebug", DarkMain.MOD_ID, BlockDebug.class, ItemBlockHolder.class);
@@ -198,7 +197,7 @@ public class DarkMain extends ModPrefab
         CoreRecipeLoader.blockColorSand = ModObjectRegistry.createNewBlock("DMBlockColorSand", DarkMain.MOD_ID, BlockColorSand.class, ItemBlockColored.class);
         CoreRecipeLoader.blockBasalt = ModObjectRegistry.createNewBlock("DMBlockBasalt", DarkMain.MOD_ID, BlockBasalt.class, ItemBlockColored.class);
         CoreRecipeLoader.blockGlowGlass = ModObjectRegistry.createNewBlock("DMBlockGlowGlass", DarkMain.MOD_ID, BlockColorGlowGlass.class, ItemBlockColored.class);
-        blockSolar = ModObjectRegistry.createNewBlock("DMBlockSolar", DarkMain.MOD_ID, BlockSolarPanel.class, ItemBlockHolder.class);
+        CoreRecipeLoader.blockSolar = ModObjectRegistry.createNewBlock("DMBlockSolar", DarkMain.MOD_ID, BlockSolarPanel.class, ItemBlockHolder.class);
 
         /* ITEMS */
         CoreRecipeLoader.itemTool = new ItemTools(ITEM_ID_PREFIX++, DarkMain.CONFIGURATION);
@@ -219,7 +218,6 @@ public class DarkMain extends ModPrefab
         {
             CoreRecipeLoader.itemParts = new ItemParts(ITEM_ID_PREFIX++, CONFIGURATION);
             CoreRecipeLoader.itemGlowingSand = new ItemColoredDust(CONFIGURATION.getItem(Configuration.CATEGORY_ITEM, "GlowingRefinedSandItemID", ITEM_ID_PREFIX++).getInt(), "GlowRefinedSand");
-
         }
         CONFIGURATION.save();
     }
