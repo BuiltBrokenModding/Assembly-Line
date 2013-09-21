@@ -128,7 +128,7 @@ public class ContainerProcessor extends Container
             }
             else if (slotID != 1 && slotID != 0)
             {
-                if (ProcessorRecipes.getOuput(tileEntity.getProcessorData().type, slotStack) != null)
+                if (ProcessorRecipes.getOuput(tileEntity.getProcessorData().type, slotStack, true) != null)
                 {
                     if (!this.mergeItemStack(slotStack, tileEntity.slotInput, 1, false))
                     {

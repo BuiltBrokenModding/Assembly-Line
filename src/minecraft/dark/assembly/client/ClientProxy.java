@@ -74,7 +74,7 @@ public class ClientProxy extends CommonProxy
                 {
                     return new GuiEncoder(player.inventory, (TileEntityEncoder) tileEntity);
                 }
-                case GUI_CRUSHER:
+                case GUI_PROCESSOR:
                 {
                     return new GuiProcessor(player.inventory, (TileEntityProcessor) tileEntity);
                 }

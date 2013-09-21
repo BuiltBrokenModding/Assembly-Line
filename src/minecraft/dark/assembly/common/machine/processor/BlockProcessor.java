@@ -13,6 +13,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.core.UniversalElectricity;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.ProcessorRecipes.ProcessorType;
@@ -45,7 +47,7 @@ public class BlockProcessor extends BlockMachine implements IExtraObjectInfo
             }
             else
             {
-                entityPlayer.openGui(AssemblyLine.instance, CommonProxy.GUI_CRUSHER, world, x, y, z);
+                entityPlayer.openGui(AssemblyLine.instance, CommonProxy.GUI_PROCESSOR, world, x, y, z);
                 return true;
             }
         }
@@ -94,6 +96,10 @@ public class BlockProcessor extends BlockMachine implements IExtraObjectInfo
             data.allowCrafting = config.get(data.unlocalizedName, "CanCraft", true).getBoolean(true);
             data.wattPerTick = (float) (config.get(data.unlocalizedName, "WattPerTick", data.wattPerTick).getDouble(data.wattPerTick) / 1000);
             data.processingTicks = config.get(data.unlocalizedName, "ProcessingTicks", data.processingTicks).getInt();
+            if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+            {
+                data.doAnimation = config.get(data.unlocalizedName, "DoAnimation", true).getBoolean(true);
+            }
         }
     }
 
@@ -176,14 +182,15 @@ public class BlockProcessor extends BlockMachine implements IExtraObjectInfo
     public static enum ProcessorData
     {
         CRUSHER(ProcessorType.CRUSHER, "crusher", 125, 100, 0),
-        GRINDER(ProcessorType.GRINDER, "grinder", 125, 120, 4),
-        PRESS(ProcessorType.PRESS, "press", 200, 50, 8);
+        GRINDER(ProcessorType.GRINDER, "grinder", 125, 120, 4);
+        //PRESS(ProcessorType.PRESS, "press", 200, 50, 8);
         public ProcessorType type;
         public String unlocalizedName;
         public float wattPerTick;
         public int processingTicks, startMeta;
         public boolean enabled = true;
         public boolean allowCrafting = true;
+        public boolean doAnimation = true;
 
         private ProcessorData(ProcessorType type, String name, float watts, int ticks, int meta)
         {

@@ -17,7 +17,7 @@ import dark.core.prefab.invgui.InvChest;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
 
 /** Basic A -> B recipe processor machine designed mainly to handle ore blocks
- * 
+ *
  * @author DarkGuardsman */
 public class TileEntityProcessor extends TileEntityEnergyMachine
 {
@@ -53,7 +53,10 @@ public class TileEntityProcessor extends TileEntityEnergyMachine
         super.updateEntity();
         if (this.isFunctioning())
         {
-            this.doAnimation();
+            if (this.processorData.doAnimation)
+            {
+                this.doAnimation();
+            }
 
             if (!this.worldObj.isRemote)
             {
@@ -72,6 +75,7 @@ public class TileEntityProcessor extends TileEntityEnergyMachine
                         {
                             this.getInventory().setInventorySlotContents(this.slotOutput, outputBuffer[i].copy());
                             outputBuffer[i] = null;
+                            this.onInventoryChanged();
                         }
                         else if (outputBuffer[i] != null && outputBuffer[i].isItemEqual(outputStack))
                         {
@@ -92,7 +96,9 @@ public class TileEntityProcessor extends TileEntityEnergyMachine
                             }
 
                             this.getInventory().setInventorySlotContents(this.slotOutput, outStack);
+                            this.onInventoryChanged();
                         }
+
                     }
                     if (nullCount >= outputBuffer.length)
                     {
@@ -151,7 +157,7 @@ public class TileEntityProcessor extends TileEntityEnergyMachine
         {
             inputStack = inputStack.copy();
             inputStack.stackSize = 1;
-            ItemStack[] outputResult = ProcessorRecipes.getOuput(this.getProcessorData().type, inputStack);
+            ItemStack[] outputResult = ProcessorRecipes.getOuput(this.getProcessorData().type, inputStack, true);
             if (outputResult != null)
             {
                 if (outputStack == null)
@@ -185,7 +191,7 @@ public class TileEntityProcessor extends TileEntityEnergyMachine
 
             inputSlotStack = inputSlotStack.copy();
             inputSlotStack.stackSize = 1;
-            ItemStack[] receipeResult = ProcessorRecipes.getOuput(this.getProcessorData().type, inputSlotStack);
+            ItemStack[] receipeResult = ProcessorRecipes.getOuput(this.getProcessorData().type, inputSlotStack, true);
             if (receipeResult != null && this.outputBuffer == null)
             {
                 this.getInventory().decrStackSize(this.slotInput, 1);
@@ -207,7 +213,7 @@ public class TileEntityProcessor extends TileEntityEnergyMachine
     @Override
     public boolean canStore(ItemStack stack, int slot, ForgeDirection side)
     {
-        if (slotInput == slot && ProcessorRecipes.getOuput(this.getProcessorData().type, stack) != null)
+        if (slotInput == slot && ProcessorRecipes.getOuput(this.getProcessorData().type, stack, true) != null)
         {
             return true;
         }
