@@ -29,17 +29,19 @@ public class BlockOre extends Block implements IExtraObjectInfo
         super(DarkMain.CONFIGURATION.getBlock("Ore", ModPrefab.getNextID()).getInt(), Material.rock);
         this.setCreativeTab(CreativeTabs.tabBlock);
         this.setUnlocalizedName(DarkMain.getInstance().PREFIX + "Ore");
+
+        for (OreData data : OreData.values())
+        {
+            data.stack = new ItemStack(this.blockID, 1, data.ordinal());
+        }
     }
 
     @Override
     public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {
-        for (int i = 0; i < EnumMeterials.values().length; i++)
+        for (OreData data : OreData.values())
         {
-            if (EnumMeterials.values()[i].doWorldGen)
-            {
-                par3List.add(new ItemStack(par1, 1, i));
-            }
+            par3List.add(data.stack);
         }
     }
 
@@ -47,12 +49,9 @@ public class BlockOre extends Block implements IExtraObjectInfo
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister par1IconRegister)
     {
-        for (int i = 0; i < EnumMeterials.values().length; i++)
+        for (OreData data : OreData.values())
         {
-            if (EnumMeterials.values()[i].doWorldGen)
-            {
-                this.icons[i] = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + EnumMeterials.values()[i].name + "Ore");
-            }
+            data.oreIcon = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + data.name + "Ore");
         }
     }
 
@@ -60,9 +59,9 @@ public class BlockOre extends Block implements IExtraObjectInfo
     @SideOnly(Side.CLIENT)
     public Icon getIcon(int side, int metadata)
     {
-        if (this.icons[metadata] != null)
+        if (metadata < OreData.values().length)
         {
-            return this.icons[metadata];
+            return OreData.values()[metadata].oreIcon;
         }
         return Block.stone.getIcon(side, metadata);
     }
@@ -93,13 +92,29 @@ public class BlockOre extends Block implements IExtraObjectInfo
     @Override
     public void loadOreNames()
     {
-        for (int i = 0; i < EnumMeterials.values().length; i++)
+        for (OreData data : OreData.values())
         {
-            if (EnumMeterials.values()[i].doWorldGen)
-            {
-                OreDictionary.registerOre(EnumMeterials.values()[i].name + "Ore", new ItemStack(this.blockID, 1, i));
-            }
+            OreDictionary.registerOre(data.oreName, data.stack);
         }
+    }
 
+    public static enum OreData
+    {
+        TIN("tin", "oreTin"),
+        COPPER("copper", "copperOre"),
+        SILVER("silver", "silverOre"),
+        LEAD("lead","leadOre"),
+        Bauxite("bauxite","bauxiteOre");
+
+        public String name, oreName;
+        public ItemStack stack;
+        @SideOnly(Side.CLIENT)
+        public Icon oreIcon;
+
+        private OreData(String name, String oreName)
+        {
+            this.name = name;
+            this.oreName = oreName;
+        }
     }
 }

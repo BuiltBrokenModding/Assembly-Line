@@ -3,6 +3,7 @@ package dark.core.common.blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import dark.core.common.DarkMain;
+import dark.core.common.blocks.BlockOre.OreData;
 import dark.core.common.items.EnumMeterials;
 
 public class ItemBlockOre extends ItemBlock
@@ -24,7 +25,11 @@ public class ItemBlockOre extends ItemBlock
     @Override
     public String getUnlocalizedName(ItemStack par1ItemStack)
     {
-        return "tile." + DarkMain.getInstance().PREFIX + EnumMeterials.values()[par1ItemStack.getItemDamage()].name + "Ore";
+        if (par1ItemStack != null && par1ItemStack.getItemDamage() < OreData.values().length)
+        {
+            return "tile." + DarkMain.getInstance().PREFIX + OreData.values()[par1ItemStack.getItemDamage()].name + "Ore";
+        }
+        return super.getUnlocalizedName();
     }
 
 }
