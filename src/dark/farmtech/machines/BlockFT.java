@@ -12,7 +12,7 @@ import dark.core.registration.ModObjectRegistry.BlockBuildData;
 import dark.farmtech.FarmTech;
 
 /** Prefab class for all farm blocks to remove the need for some configuration of the super class
- * 
+ *
  * @author Darkguardsman */
 public abstract class BlockFT extends BlockMachine implements IExtraObjectInfo
 {
@@ -37,12 +37,6 @@ public abstract class BlockFT extends BlockMachine implements IExtraObjectInfo
 
     @Override
     public void loadExtraConfigs(Configuration config)
-    {
-
-    }
-
-    @Override
-    public void loadRecipes()
     {
 
     }
