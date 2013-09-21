@@ -81,18 +81,8 @@ public class BlockOre extends Block implements IExtraObjectInfo
             if (CoreRecipeLoader.itemMetals instanceof ItemOreDirv)
             {
                 ItemStack oreStack = new ItemStack(this.blockID, 1, data.ordinal());
-                ItemStack dust = EnumMaterial.getStack(data.mat, EnumOrePart.DUST, 1);
-                ItemStack ingot = EnumMaterial.getStack(data.mat, EnumOrePart.INGOTS, 1);
-                FurnaceRecipes.smelting().addSmelting(this.blockID, data.ordinal(),ingot , 0.6f);
+                FurnaceRecipes.smelting().addSmelting(this.blockID, data.ordinal(), EnumMaterial.getStack(data.mat, EnumOrePart.INGOTS, 1), 0.6f);
                 ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, oreStack, EnumMaterial.getStack(data.mat, EnumOrePart.RUBBLE, 1));
-                dust.stackSize = 2;
-                ProcessorRecipes.createRecipe(ProcessorType.GRINDER, EnumMaterial.getStack(data.mat, EnumOrePart.RUBBLE, 1), dust);
-                dust.stackSize = 1;
-                ProcessorRecipes.createRecipe(ProcessorType.GRINDER, EnumMaterial.getStack(data.mat, EnumOrePart.SCRAPS, 1), dust);
-                ProcessorRecipes.createRecipe(ProcessorType.GRINDER, ingot, dust);
-                ProcessorRecipes.createRecipe(ProcessorType.GRINDER, EnumMaterial.getStack(data.mat, EnumOrePart.PLATES, 1), EnumMaterial.getStack(data.mat, EnumOrePart.SCRAPS, 2));
-                ProcessorRecipes.createRecipe(ProcessorType.PRESS, EnumMaterial.getStack(data.mat, EnumOrePart.INGOTS, 3), EnumMaterial.getStack(data.mat, EnumOrePart.PLATES, 1));
-                FurnaceRecipes.smelting().addSmelting(dust.itemID, dust.getItemDamage(), ingot, 0.6f);
             }
         }
     }

@@ -207,6 +207,7 @@ public class ModObjectRegistry
                 extraBlockConfig.save();
             }
             ((IExtraObjectInfo) block).loadOreNames();
+            ((IExtraObjectInfo) block).loadRecipes();
             Set<Pair<String, Class<? extends TileEntity>>> tileListNew = new HashSet<Pair<String, Class<? extends TileEntity>>>();
             ((IExtraObjectInfo) block).getTileEntities(block.blockID, tileListNew);
             for (Pair<String, Class<? extends TileEntity>> par : tileListNew)

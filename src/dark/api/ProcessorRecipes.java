@@ -11,7 +11,7 @@ import dark.core.prefab.helpers.AutoCraftingManager;
 import dark.core.prefab.helpers.Pair;
 
 /** Recipes for ore processor machines
- * 
+ *
  * @author DarkGuardsman */
 public class ProcessorRecipes
 {
@@ -25,6 +25,7 @@ public class ProcessorRecipes
         public HashMap<Pair<Integer, Integer>, ItemStack> recipes = new HashMap();
         public HashMap<Pair<Integer, Integer>, Pair<ItemStack, Float>> recipesChance = new HashMap();
         public HashMap<Pair<Integer, Integer>, Float> recipesChanceSalvage = new HashMap();
+        public HashMap<Pair<Integer, Integer>, ItemStack> damagedOutput = new HashMap();
 
     }
 
@@ -32,10 +33,16 @@ public class ProcessorRecipes
     {
         createRecipe(ProcessorType.CRUSHER, new ItemStack(Block.stone.blockID, 1, 0), new ItemStack(Block.cobblestone.blockID, 1, 0));
         createRecipe(ProcessorType.GRINDER, new ItemStack(Block.cobblestone.blockID, 1, 0), new ItemStack(Block.sand.blockID, 1, 0));
-        createSalvageRecipe(ProcessorType.CRUSHER, new ItemStack(Block.chest, 1), .8f);
-
+        markOutputSalavageWithChance(ProcessorType.CRUSHER, new ItemStack(Block.chest, 1), .8f);
+        markOutputSalavageWithChance(ProcessorType.CRUSHER, new ItemStack(Block.brick, 1), .7f);
     }
 
+    /** Creates a simple one itemStack in one ItemStack out. Itemstack output can actual have a stack
+     * size larger than one
+     *
+     * @param type - processor type
+     * @param in - input item, stacksize is ignored
+     * @param out - ouput item */
     public static void createRecipe(ProcessorType type, Object in, Object out)
     {
         if (in != null && out != null && type != null)
@@ -53,6 +60,12 @@ public class ProcessorRecipes
         }
     }
 
+    /** Creates a recipe that has a chance of failing
+     *
+     * @param type - processor type
+     * @param in - input item stack, stack size is ignored
+     * @param out - output item stack, stack size is used
+     * @param chance - chance to fail with 1 being zero chance and zero being 100% chance */
     public static void createRecipeWithChance(ProcessorType type, Object in, Object out, float chance)
     {
         if (in != null && out != null && type != null)
@@ -70,7 +83,9 @@ public class ProcessorRecipes
         }
     }
 
-    public static void createSalvageRecipe(ProcessorType type, Object in, float chance)
+    /** Not so much of a recipe but it applies a change on the item. TODO improve and control actual
+     * output of the recipe */
+    public static void markOutputSalavageWithChance(ProcessorType type, Object in, float chance)
     {
         if (in != null && type != null)
         {
@@ -86,6 +101,25 @@ public class ProcessorRecipes
         }
     }
 
+    /** Used to track items that should be converted to different items during salvaging. */
+    public static void createSalvageDamageOutput(ProcessorType type, Object in, Object out)
+    {
+        if (in != null && out != null && type != null)
+        {
+            ItemStack input = convert(in);
+            ItemStack output = convert(out);
+            if (input != null && output != null)
+            {
+                HashMap<Pair<Integer, Integer>, ItemStack> map = type.damagedOutput;
+                if (map != null && !map.containsKey(input))
+                {
+                    map.put(new Pair<Integer, Integer>(input.itemID, input.getItemDamage()), output);
+                }
+            }
+        }
+    }
+
+    /** Converts an object input into an itemstack for use */
     private static ItemStack convert(Object object)
     {
         if (object instanceof ItemStack)
@@ -103,7 +137,13 @@ public class ProcessorRecipes
         return null;
     }
 
-    public static ItemStack[] getOuput(ProcessorType type, ItemStack stack)
+    /** Gets the lit of items that are created from the input item stack. General this will be an
+     * array of one item. However, in salavaging cases it can be up to 8 items.
+     *
+     * @param type - Processor type
+     * @param stack - item stack input ignores stacksize
+     * @return array of itemStacks */
+    public static ItemStack[] getOuput(ProcessorType type, ItemStack stack, boolean damageSalvage)
     {
         if (stack == null || type == null || stack.getItem() == null)
         {
@@ -112,6 +152,7 @@ public class ProcessorRecipes
         HashMap<Pair<Integer, Integer>, ItemStack> map = type.recipes;
         HashMap<Pair<Integer, Integer>, Pair<ItemStack, Float>> mapChance = type.recipesChance;
         HashMap<Pair<Integer, Integer>, Float> mapSalvage = type.recipesChanceSalvage;
+        HashMap<Pair<Integer, Integer>, ItemStack> altSalvageMap = type.damagedOutput;
         Pair<Integer, Integer> blockSet = new Pair<Integer, Integer>(stack.itemID, stack.getItemDamage());
         if (map == null)
         {
@@ -162,6 +203,10 @@ public class ProcessorRecipes
                     }
                     reList[i] = new ItemStack(recipeList[i].itemID, recipeList[i].stackSize, meta);
                     reList[i].setTagCompound(tag);
+                    if (damageSalvage && altSalvageMap != null && altSalvageMap.containsKey(new Pair<Integer, Integer>(reList[i].itemID, reList[i].getItemDamage())))
+                    {
+                        reList[i] = altSalvageMap.get(new Pair<Integer, Integer>(reList[i].itemID, reList[i].getItemDamage()));
+                    }
                 }
             }
         }

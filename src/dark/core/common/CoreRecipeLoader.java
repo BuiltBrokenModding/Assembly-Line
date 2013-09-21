@@ -5,10 +5,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import cpw.mods.fml.common.registry.GameRegistry;
+import dark.api.ProcessorRecipes;
+import dark.api.ProcessorRecipes.ProcessorType;
 import dark.core.common.blocks.BlockBasalt;
-import dark.core.common.blocks.BlockOre.OreData;
 import dark.core.common.items.EnumMaterial;
 import dark.core.common.items.EnumOrePart;
+import dark.core.common.items.ItemOreDirv;
+import dark.core.common.items.ItemParts;
 import dark.core.common.items.ItemParts.Parts;
 import dark.core.common.items.ItemWrench;
 
@@ -39,13 +42,12 @@ public class CoreRecipeLoader extends RecipeLoader
         super.loadRecipes();
         new RecipeGrid(new ItemStack(itemTool, 1, 0), 3, 2).setRowOne("ironTube", "valvePart", "ironTube").setRowTwo(null, "ironTube", null).RegisterRecipe();
 
-        this.loadSmeltingRecipes();
         this.loadParts();
     }
 
     public void loadParts()
     {
-        if (itemParts != null)
+        if (itemParts instanceof ItemParts)
         {
             ironTube = new ItemStack(itemParts, 1, Parts.Iron.ordinal());
             bronzeTube = new ItemStack(itemParts, 1, Parts.Bronze.ordinal());
@@ -74,21 +76,69 @@ public class CoreRecipeLoader extends RecipeLoader
             new RecipeGrid(unfinishedTank).setRowOne(null, Item.ingotIron, null).setRowTwo(Item.ingotIron, null, Item.ingotIron).setRowThree(null, Item.ingotIron, null).RegisterRecipe();
             new RecipeGrid(unfinishedTank).setRowOne(null, bronze, null).setRowTwo(bronze, null, bronze).setRowThree(null, bronze, null).RegisterRecipe();
         }
-    }
 
-    public void loadSmeltingRecipes()
-    {
-        if (blockOre != null && itemMetals != null)
+        if (itemMetals instanceof ItemOreDirv)
         {
+            //Alt salvaging item list
+            ProcessorRecipes.createSalvageDamageOutput(ProcessorType.GRINDER, Block.wood, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.DUST, 3));
+            ProcessorRecipes.createSalvageDamageOutput(ProcessorType.GRINDER, Block.planks, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.DUST, 1));
+            ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, Block.wood, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.SCRAPS, 3));
+            ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, Block.planks, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.SCRAPS, 1));
 
-            for (int i = 0; i < EnumMaterial.values().length; i++)
+            //Stone recipes
+            ProcessorRecipes.createRecipe(ProcessorType.GRINDER, Block.stone, EnumMaterial.getStack(EnumMaterial.STONE, EnumOrePart.DUST, 1));
+
+            //Wood recipes
+            ProcessorRecipes.createRecipe(ProcessorType.GRINDER, Block.wood, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.DUST, 3));
+            ProcessorRecipes.createRecipe(ProcessorType.GRINDER, Block.planks, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.DUST, 1));
+            ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, Block.wood, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.SCRAPS, 3));
+            ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, Block.planks, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.SCRAPS, 1));
+
+            //Gold Recipes
+            ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, Block.blockIron, EnumMaterial.getStack(EnumMaterial.GOLD, EnumOrePart.SCRAPS, 8));
+
+            //Iron Recipes
+            ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, Block.blockGold, EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.SCRAPS, 8));
+
+            //Ore material recipe loop
+            for (EnumMaterial mat : EnumMaterial.values())
             {
-                if (EnumMaterial.values()[i].shouldCreateItem(EnumOrePart.DUST) && EnumMaterial.values()[i] != EnumMaterial.WOOD && EnumMaterial.values()[i] != EnumMaterial.COAL)
-                {
-                    FurnaceRecipes.smelting().addSmelting(itemMetals.itemID, i + 20, new ItemStack(itemMetals.itemID, 1, 40 + i), 0.6f);
-                }
+                ItemStack dust = EnumMaterial.getStack(mat, EnumOrePart.DUST, 2);
+                ItemStack ingot = EnumMaterial.getStack(mat, EnumOrePart.INGOTS, 1);
+                ItemStack scraps = EnumMaterial.getStack(mat, EnumOrePart.SCRAPS, 1);
+                ItemStack plates = EnumMaterial.getStack(mat, EnumOrePart.PLATES, 1);
+                ItemStack rubble = EnumMaterial.getStack(mat, EnumOrePart.RUBBLE, 1);
+
+                //Smelting recipes
+                FurnaceRecipes.smelting().addSmelting(dust.itemID, dust.getItemDamage(), ingot, 0.6f);
+                FurnaceRecipes.smelting().addSmelting(scraps.itemID, scraps.getItemDamage(), ingot, 0.6f);
+
+                //Dust recipes
+                ProcessorRecipes.createRecipe(ProcessorType.GRINDER, rubble, dust);
+                dust.stackSize = 1;
+                ProcessorRecipes.createRecipe(ProcessorType.GRINDER, scraps, dust);
+                ProcessorRecipes.createRecipe(ProcessorType.GRINDER, ingot, dust);
+                ProcessorRecipes.createSalvageDamageOutput(ProcessorType.GRINDER, ingot, dust);
+
+                // Salvaging recipe
+                scraps.stackSize = 3;
+                dust.stackSize = 2;
+                ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, plates, scraps);
+                ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, plates, scraps);
+                ProcessorRecipes.createRecipe(ProcessorType.GRINDER, plates, dust);
+                ProcessorRecipes.createSalvageDamageOutput(ProcessorType.GRINDER, plates, dust);
+                scraps.stackSize = 2;
+                ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, rubble, scraps);
+                scraps.stackSize = 1;
+                ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, ingot, scraps);
+
+                //Press recipes TODO set this up another way since input.stackSize can only equal 1
+                //ingot.stackSize = 3;
+                //ProcessorRecipes.createRecipe(ProcessorType.PRESS, ingot, plates);
+
             }
         }
+
     }
 
     public void loadStainGlass()

@@ -18,15 +18,16 @@ public enum EnumMaterial
 {
     WOOD("Wood", EnumOrePart.INGOTS, EnumOrePart.PLATES, EnumOrePart.RUBBLE, EnumOrePart.ROD),
     STONE("Stone", EnumOrePart.INGOTS),
-    COPPER("Copper"),
-    TIN("Tin", EnumOrePart.GEARS, EnumOrePart.TUBE),
     IRON("Iron", EnumOrePart.INGOTS),
     OBBY("Obby", EnumOrePart.INGOTS, EnumOrePart.RUBBLE),
+    GOLD("Gold", EnumOrePart.GEARS, EnumOrePart.INGOTS),
+    COAL("Coal", EnumOrePart.GEARS, EnumOrePart.TUBE, EnumOrePart.PLATES, EnumOrePart.RUBBLE),
+
+    COPPER("Copper"),
+    TIN("Tin", EnumOrePart.GEARS, EnumOrePart.TUBE),
     LEAD("Lead", EnumOrePart.GEARS, EnumOrePart.TUBE),
     ALUMINIUM("Aluminum", EnumOrePart.GEARS, EnumOrePart.TUBE),
     SILVER("Silver", EnumOrePart.GEARS),
-    GOLD("Gold", EnumOrePart.GEARS, EnumOrePart.INGOTS),
-    COAL("Coal", EnumOrePart.GEARS, EnumOrePart.TUBE, EnumOrePart.PLATES, EnumOrePart.RUBBLE),
     STEEL("Steel", EnumOrePart.RUBBLE),
     BRONZE("Bronze", EnumOrePart.RUBBLE);
 
@@ -66,12 +67,13 @@ public enum EnumMaterial
         {
             if (part == EnumOrePart.INGOTS)
             {
-                switch (EnumMaterial.IRON)
+                if (mat == EnumMaterial.IRON)
                 {
-                    case IRON:
-                        return new ItemStack(Item.ingotIron, 1);
-                    case GOLD:
-                        return new ItemStack(Item.ingotGold, 1);
+                    return new ItemStack(Item.ingotIron, 1);
+                }
+                else if (mat == EnumMaterial.GOLD)
+                {
+                    return new ItemStack(Item.ingotGold, 1);
                 }
             }
             int meta = mat.ordinal() * itemCountPerMaterial;
