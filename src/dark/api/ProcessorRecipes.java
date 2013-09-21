@@ -32,7 +32,13 @@ public class ProcessorRecipes
     static
     {
         createRecipe(ProcessorType.CRUSHER, new ItemStack(Block.stone.blockID, 1, 0), new ItemStack(Block.cobblestone.blockID, 1, 0));
+        createRecipe(ProcessorType.CRUSHER, new ItemStack(Block.oreDiamond.blockID, 1, 0), new ItemStack(Item.diamond.itemID, 1, 0));
+        createRecipe(ProcessorType.CRUSHER, new ItemStack(Block.oreLapis.blockID, 1, 0), new ItemStack(Item.dyePowder.itemID, 4, ColorCode.BLUE.ordinal()));
+        createRecipe(ProcessorType.CRUSHER, new ItemStack(Block.oreRedstone.blockID, 1, 0), new ItemStack(Item.redstone.itemID, 4, 0));
+        createRecipe(ProcessorType.CRUSHER, new ItemStack(Block.oreEmerald.blockID, 1, 0), new ItemStack(Item.redstone.itemID, 4, 0));
+
         createRecipe(ProcessorType.GRINDER, new ItemStack(Block.cobblestone.blockID, 1, 0), new ItemStack(Block.sand.blockID, 1, 0));
+
         markOutputSalavageWithChance(ProcessorType.CRUSHER, new ItemStack(Block.chest, 1), .8f);
         markOutputSalavageWithChance(ProcessorType.CRUSHER, new ItemStack(Block.brick, 1), .7f);
     }
