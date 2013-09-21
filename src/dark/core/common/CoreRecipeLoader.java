@@ -5,6 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import cpw.mods.fml.common.registry.GameRegistry;
+import dark.api.ColorCode;
 import dark.api.ProcessorRecipes;
 import dark.api.ProcessorRecipes.ProcessorType;
 import dark.core.common.blocks.BlockBasalt;
@@ -35,7 +36,6 @@ public class CoreRecipeLoader extends RecipeLoader
     public static ItemStack leatherSeal, slimeSeal;
     public static ItemStack valvePart;
     public static ItemStack unfinishedTank;
-    public static Item itemRefinedSand;
     public static Item itemGlowingSand;
 
     @Override
@@ -88,7 +88,6 @@ public class CoreRecipeLoader extends RecipeLoader
             ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, Block.wood, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.SCRAPS, 3));
             ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, Block.planks, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.SCRAPS, 1));
 
-
             //Stone recipes
             ProcessorRecipes.createRecipe(ProcessorType.GRINDER, Block.stone, EnumMaterial.getStack(EnumMaterial.STONE, EnumOrePart.DUST, 1));
 
@@ -104,7 +103,6 @@ public class CoreRecipeLoader extends RecipeLoader
             //Iron Recipes
             ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, Block.blockGold, EnumMaterial.getStack(EnumMaterial.GOLD, EnumOrePart.SCRAPS, 8));
             ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, Block.oreGold, EnumMaterial.getStack(EnumMaterial.GOLD, EnumOrePart.RUBBLE, 1));
-
 
             //Ore material recipe loop
             for (EnumMaterial mat : EnumMaterial.values())
@@ -145,7 +143,7 @@ public class CoreRecipeLoader extends RecipeLoader
             }
         }
 
-        if(blockOre instanceof BlockOre)
+        if (blockOre instanceof BlockOre)
         {
             for (OreData data : OreData.values())
             {
@@ -161,44 +159,45 @@ public class CoreRecipeLoader extends RecipeLoader
 
     public void loadStainGlass()
     {
-        // Stained Glass //
-        if (itemRefinedSand != null)
+        for (ColorCode code : ColorCode.values())
         {
-            for (int i = 0; i < DarkMain.dyeColorNames.length; i++)
+            // Stained Glass //
+            if (blockColorSand != null)
             {
-                FurnaceRecipes.smelting().addSmelting(itemRefinedSand.itemID, i, new ItemStack(blockStainGlass, 1, i), 10F);
+
+                if (blockStainGlass != null)
+                {
+                    FurnaceRecipes.smelting().addSmelting(blockColorSand.blockID, code.ordinal(), new ItemStack(blockStainGlass, 1, code.ordinal()), 10F);
+                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, new ItemStack(blockStainGlass, 1, code.ordinal()), new ItemStack(blockColorSand.blockID, 1, code.ordinal()));
+                }
+                GameRegistry.addShapelessRecipe(new ItemStack(blockColorSand.blockID, 1, code.ordinal()), new Object[] { new ItemStack(blockColorSand, 1, code.ordinal()) });
+                ProcessorRecipes.createRecipe(ProcessorType.GRINDER, new ItemStack(blockColorSand, 1, code.ordinal()), new ItemStack(itemGlowingSand, 1, code.ordinal()));
+
             }
 
-            for (int j = 0; j < DarkMain.dyeColorNames.length; j++)
+            // Glowing Glass //
+            if (itemGlowingSand != null)
             {
-                GameRegistry.addShapelessRecipe(new ItemStack(itemRefinedSand, 1, j), new Object[] { new ItemStack(blockColorSand, 1, j) });
+                if (blockGlowGlass != null)
+                {
+                    FurnaceRecipes.smelting().addSmelting(itemGlowingSand.itemID, code.ordinal(), new ItemStack(blockGlowGlass, 1, code.ordinal()), 10F);
+                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, new ItemStack(blockGlowGlass, 1, code.ordinal()), new ItemStack(itemGlowingSand, 1, code.ordinal()));
+                }
+                if (blockColorSand != null)
+                {
+                    GameRegistry.addShapelessRecipe(new ItemStack(itemGlowingSand, 1, code.ordinal()), new Object[] { new ItemStack(blockColorSand.blockID, 1, code.ordinal()), Item.redstone });
+                    GameRegistry.addShapelessRecipe(new ItemStack(itemGlowingSand, 1, code.ordinal()), new Object[] { new ItemStack(blockColorSand.blockID, 1, code.ordinal()), Item.glowstone });
+                    ProcessorRecipes.markUnsalvagable(new ItemStack(itemGlowingSand, 1, code.ordinal()));
+                }
+            }
+
+            // Colored Sand //
+            if (blockColorSand != null)
+            {
+                GameRegistry.addRecipe(new ItemStack(blockColorSand, 8, code.ordinal()), new Object[] { "SSS", "SDS", "SSS", 'S', Block.sand, 'D', new ItemStack(Item.dyePowder, 1, code.ordinal()) });
+
             }
         }
-
-        // Glowing Glass //
-        if (itemGlowingSand != null)
-        {
-            for (int i = 0; i < DarkMain.dyeColorNames.length; i++)
-            {
-                FurnaceRecipes.smelting().addSmelting(itemGlowingSand.itemID, i, new ItemStack(blockGlowGlass, 1, i), 10F);
-            }
-            for (int j = 0; j < DarkMain.dyeColorNames.length; j++)
-            {
-                GameRegistry.addShapelessRecipe(new ItemStack(itemGlowingSand, 1, j), new Object[] { new ItemStack(itemRefinedSand, 1, j), Item.redstone });
-                GameRegistry.addShapelessRecipe(new ItemStack(itemGlowingSand, 1, j), new Object[] { new ItemStack(itemRefinedSand, 1, j), Item.glowstone });
-
-            }
-        }
-
-        // Colored Sand //
-        if (blockColorSand != null)
-        {
-            for (int j = 0; j < DarkMain.dyeColorNames.length; j++)
-            {
-                GameRegistry.addRecipe(new ItemStack(blockColorSand, 8, j), new Object[] { "SSS", "SDS", "SSS", 'S', Block.sand, 'D', new ItemStack(Item.dyePowder, 1, j) });
-            }
-        }
-
         // Extra Block //
         if (blockBasalt != null)
         {
