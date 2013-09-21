@@ -1,12 +1,13 @@
 package dark.api;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import dark.core.prefab.helpers.AutoCraftingManager;
 import dark.core.prefab.helpers.Pair;
 
@@ -26,6 +27,7 @@ public class ProcessorRecipes
         public HashMap<Pair<Integer, Integer>, Pair<ItemStack, Float>> recipesChance = new HashMap();
         public HashMap<Pair<Integer, Integer>, Float> recipesChanceSalvage = new HashMap();
         public HashMap<Pair<Integer, Integer>, ItemStack> damagedOutput = new HashMap();
+        public List<Pair<Integer, Integer>> canSalvage = new ArrayList();
 
     }
 
@@ -71,7 +73,7 @@ public class ProcessorRecipes
             if (input != null && output != null)
             {
                 HashMap<Pair<Integer, Integer>, ItemStack> map = type.recipes;
-                if (map != null && !map.containsKey(new Pair<Integer,Integer>(input.itemID, input.getItemDamage())))
+                if (map != null && !map.containsKey(new Pair<Integer, Integer>(input.itemID, input.getItemDamage())))
                 {
                     map.put(new Pair<Integer, Integer>(input.itemID, input.getItemDamage()), output);
                 }
@@ -94,7 +96,7 @@ public class ProcessorRecipes
             if (input != null && output != null)
             {
                 HashMap<Pair<Integer, Integer>, Pair<ItemStack, Float>> map = type.recipesChance;
-                if (map != null && !map.containsKey(new Pair<Integer,Integer>(input.itemID, input.getItemDamage())))
+                if (map != null && !map.containsKey(new Pair<Integer, Integer>(input.itemID, input.getItemDamage())))
                 {
                     map.put(new Pair<Integer, Integer>(input.itemID, input.getItemDamage()), new Pair<ItemStack, Float>(output, chance));
                 }
@@ -112,7 +114,7 @@ public class ProcessorRecipes
             if (input != null && input != null)
             {
                 HashMap<Pair<Integer, Integer>, Float> map = type.recipesChanceSalvage;
-                if (map != null && !map.containsKey(new Pair<Integer,Integer>(input.itemID, input.getItemDamage())))
+                if (map != null && !map.containsKey(new Pair<Integer, Integer>(input.itemID, input.getItemDamage())))
                 {
                     map.put(new Pair<Integer, Integer>(input.itemID, input.getItemDamage()), chance);
                 }
@@ -132,16 +134,36 @@ public class ProcessorRecipes
                 HashMap<Pair<Integer, Integer>, ItemStack> map = type.damagedOutput;
                 if (map != null)
                 {
-                    if (!map.containsKey(new Pair<Integer,Integer>(input.itemID, input.getItemDamage())))
+                    if (!map.containsKey(new Pair<Integer, Integer>(input.itemID, input.getItemDamage())))
                     {
                         map.put(new Pair<Integer, Integer>(input.itemID, input.getItemDamage()), output);
                     }
-                    else if (map.get(new Pair<Integer,Integer>(input.itemID, input.getItemDamage())) == null)
+                    else if (map.get(new Pair<Integer, Integer>(input.itemID, input.getItemDamage())) == null)
                     {
                         map.put(new Pair<Integer, Integer>(input.itemID, input.getItemDamage()), output);
                     }
                 }
             }
+        }
+    }
+
+    /** Marks an itemstack as unsalvagable by all processors */
+    public static void markUnsalvagable(ItemStack stack)
+    {
+        if (stack != null)
+        {
+            for (ProcessorType type : ProcessorType.values())
+            {
+                markUnsalvagable(type, stack);
+            }
+        }
+    }
+    /** Marks an itemstack as unsalvagable by processors */
+    public static void markUnsalvagable(ProcessorType type, ItemStack stack)
+    {
+        if (type != null && stack != null)
+        {
+            type.canSalvage.add(new Pair<Integer, Integer>(stack.itemID, stack.getItemDamage()));
         }
     }
 
