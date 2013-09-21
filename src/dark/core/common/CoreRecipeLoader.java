@@ -6,8 +6,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.core.common.blocks.BlockBasalt;
-import dark.core.common.items.EnumMeterials;
-import dark.core.common.items.EnumOreParts;
+import dark.core.common.blocks.BlockOre.OreData;
+import dark.core.common.items.EnumMaterial;
+import dark.core.common.items.EnumOrePart;
 import dark.core.common.items.ItemParts.Parts;
 import dark.core.common.items.ItemWrench;
 
@@ -79,13 +80,10 @@ public class CoreRecipeLoader extends RecipeLoader
     {
         if (blockOre != null && itemMetals != null)
         {
-            for (int i = 0; i < EnumMeterials.values().length; i++)
+
+            for (int i = 0; i < EnumMaterial.values().length; i++)
             {
-                if (EnumMeterials.values()[i].doWorldGen)
-                {
-                    FurnaceRecipes.smelting().addSmelting(blockOre.blockID, i, new ItemStack(itemMetals.itemID, 1, 40 + i), 0.6f);
-                }
-                if (EnumMeterials.values()[i].shouldCreateItem(EnumOreParts.DUST) && EnumMeterials.values()[i] != EnumMeterials.WOOD && EnumMeterials.values()[i] != EnumMeterials.COAL)
+                if (EnumMaterial.values()[i].shouldCreateItem(EnumOrePart.DUST) && EnumMaterial.values()[i] != EnumMaterial.WOOD && EnumMaterial.values()[i] != EnumMaterial.COAL)
                 {
                     FurnaceRecipes.smelting().addSmelting(itemMetals.itemID, i + 20, new ItemStack(itemMetals.itemID, 1, 40 + i), 0.6f);
                 }

@@ -4,7 +4,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import dark.core.common.DarkMain;
 import dark.core.common.blocks.BlockOre.OreData;
-import dark.core.common.items.EnumMeterials;
+import dark.core.common.items.EnumMaterial;
 
 public class ItemBlockOre extends ItemBlock
 {

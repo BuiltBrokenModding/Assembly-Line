@@ -36,10 +36,11 @@ import dark.core.common.blocks.BlockColorGlass;
 import dark.core.common.blocks.BlockColorGlowGlass;
 import dark.core.common.blocks.BlockColorSand;
 import dark.core.common.blocks.BlockOre;
+import dark.core.common.blocks.BlockOre.OreData;
 import dark.core.common.blocks.ItemBlockColored;
 import dark.core.common.blocks.ItemBlockOre;
 import dark.core.common.debug.BlockDebug;
-import dark.core.common.items.EnumMeterials;
+import dark.core.common.items.EnumMaterial;
 import dark.core.common.items.ItemBattery;
 import dark.core.common.items.ItemColoredDust;
 import dark.core.common.items.ItemOreDirv;
@@ -132,12 +133,12 @@ public class DarkMain extends ModPrefab
         ProcessorRecipes.parseOreNames();
         if (CoreRecipeLoader.blockOre != null)
         {
-            for (int i = 0; i < EnumMeterials.values().length; i++)
+            for (OreData data : OreData.values())
             {
-                if (EnumMeterials.values()[i].doWorldGen)
+                if (data.doWorldGen)
                 {
-                    OreGenReplaceStone gen = EnumMeterials.values()[i].getGeneratorSettings();
-                    if (gen != null && gen.shouldGenerate)
+                    OreGenReplaceStone gen = data.getGeneratorSettings();
+                    if (gen != null)
                     {
                         OreGenerator.addOre(gen);
                     }
