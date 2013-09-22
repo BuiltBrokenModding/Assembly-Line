@@ -24,7 +24,7 @@ import dark.core.common.DarkMain;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 /** The block for the actual conveyor belt!
- *
+ * 
  * @author Calclavia, DarkGuardsman */
 public class BlockConveyorBelt extends BlockAssembly
 {
