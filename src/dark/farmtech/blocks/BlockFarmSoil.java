@@ -10,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.common.DarkMain;
 import dark.core.prefab.ModPrefab;
 import dark.farmtech.FarmTech;
 
