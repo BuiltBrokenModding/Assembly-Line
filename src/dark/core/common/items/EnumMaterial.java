@@ -16,12 +16,12 @@ import dark.core.common.CoreRecipeLoader;
  * @author DarkGuardsman */
 public enum EnumMaterial
 {
-    WOOD("Wood", EnumOrePart.INGOTS, EnumOrePart.PLATES, EnumOrePart.RUBBLE, EnumOrePart.ROD),
-    STONE("Stone", EnumOrePart.INGOTS),
+    WOOD("Wood", EnumOrePart.INGOTS, EnumOrePart.PLATES, EnumOrePart.RUBBLE, EnumOrePart.ROD, EnumOrePart.GEARS),
+    STONE("Stone", EnumOrePart.INGOTS, EnumOrePart.SCRAPS),
     IRON("Iron", EnumOrePart.INGOTS),
-    OBBY("Obby", EnumOrePart.INGOTS, EnumOrePart.RUBBLE),
+    OBBY("Obby", EnumOrePart.INGOTS, EnumOrePart.RUBBLE, EnumOrePart.SCRAPS, EnumOrePart.PLATES),
     GOLD("Gold", EnumOrePart.GEARS, EnumOrePart.INGOTS),
-    COAL("Coal", EnumOrePart.GEARS, EnumOrePart.TUBE, EnumOrePart.PLATES, EnumOrePart.RUBBLE),
+    COAL("Coal", EnumOrePart.GEARS, EnumOrePart.TUBE, EnumOrePart.PLATES, EnumOrePart.RUBBLE, EnumOrePart.SCRAPS),
 
     COPPER("Copper"),
     TIN("Tin", EnumOrePart.GEARS, EnumOrePart.TUBE),
@@ -100,7 +100,7 @@ public enum EnumMaterial
 
     public boolean shouldCreateItem(EnumOrePart part)
     {
-        if (part == EnumOrePart.ROD || part == EnumOrePart.TUBE || part == EnumOrePart.RUBBLE)
+        if (part == EnumOrePart.ROD || part == EnumOrePart.TUBE)
         {
             return false;
         }
