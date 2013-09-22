@@ -1,25 +1,34 @@
 package dark.core.prefab.machine;
 
+import java.util.Set;
+
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import net.minecraftforge.common.Configuration;
 import universalelectricity.prefab.block.BlockTile;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.parts.INetworkPart;
 import dark.core.common.DarkMain;
+import dark.core.prefab.IExtraInfo.IExtraBlockInfo;
 import dark.core.prefab.ModPrefab;
+import dark.core.prefab.helpers.Pair;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 /** Basic TileEntity Container class designed to be used by generic machines. It is suggested that
  * each mod using this create there own basic block extending this to reduce need to input config
  * file each time
- * 
+ *
  * @author Darkguardsman */
-public abstract class BlockMachine extends BlockTile implements ITileEntityProvider
+public abstract class BlockMachine extends BlockTile implements ITileEntityProvider, IExtraBlockInfo
 {
+
+    public boolean zeroAnimation, zeroSound, zeroRendering;
+
     public BlockMachine(BlockBuildData data)
     {
         super(data.config.getBlock(data.blockName, ModPrefab.getNextID()).getInt(), data.blockMaterial);
@@ -75,6 +84,37 @@ public abstract class BlockMachine extends BlockTile implements ITileEntityProvi
     public TileEntity createTileEntity(World world, int metadata)
     {
         return super.createTileEntity(world, metadata);
+    }
+
+    @Override
+    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public boolean hasExtraConfigs()
+    {
+        return true;
+    }
+
+    @Override
+    public void loadExtraConfigs(Configuration config)
+    {
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+        {
+            this.zeroAnimation = config.get("Effects--Not_Supported_By_All_Blocks", "disableAnimation", false, "Turns off animations of the block").getBoolean(false);
+            this.zeroRendering = config.get("Effects--Not_Supported_By_All_Blocks", "disableRender", false, "Turns off the block render replacing it with a normal block").getBoolean(false);
+            this.zeroSound = config.get("Effects--Not_Supported_By_All_Blocks", "disableSound", false, "Turns of sound of the block for any or its actions").getBoolean(false);
+        }
+    }
+
+    @Override
+    public void loadOreNames()
+    {
+        // TODO Auto-generated method stub
+
     }
 
 }

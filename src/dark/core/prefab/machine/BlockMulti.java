@@ -17,11 +17,11 @@ import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
-import dark.core.prefab.IExtraObjectInfo;
+import dark.core.prefab.IExtraInfo.IExtraBlockInfo;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.helpers.Pair;
 
-public class BlockMulti extends BlockContainer implements IExtraObjectInfo
+public class BlockMulti extends BlockContainer implements IExtraBlockInfo
 {
     public String textureName = null;
     public String channel = "";

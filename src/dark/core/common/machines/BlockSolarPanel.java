@@ -2,18 +2,19 @@ package dark.core.common.machines;
 
 import java.util.Set;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.core.UniversalElectricity;
 import dark.core.client.renders.BlockRenderingHandler;
 import dark.core.common.DMCreativeTab;
-import dark.core.prefab.IExtraObjectInfo;
 import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.machine.BlockMachine;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
-public class BlockSolarPanel extends BlockMachine implements IExtraObjectInfo
+public class BlockSolarPanel extends BlockMachine
 {
     public static int tickRate = 10;
     public static float wattDay = 0.120f;
@@ -58,14 +59,9 @@ public class BlockSolarPanel extends BlockMachine implements IExtraObjectInfo
     }
 
     @Override
-    public boolean hasExtraConfigs()
-    {
-        return true;
-    }
-
-    @Override
     public void loadExtraConfigs(Configuration config)
     {
+        super.loadExtraConfigs(config);
         tickRate = config.get("settings", "PanelUpdateRate", tickRate).getInt();
         wattDay = (float) (config.get("settings", "WattDayLight", 120).getDouble(120) / 1000);
         wattNight = (float) (config.get("settings", "WattMoonLight", 1).getDouble(1) / 1000);
@@ -75,7 +71,7 @@ public class BlockSolarPanel extends BlockMachine implements IExtraObjectInfo
     @Override
     public void loadOreNames()
     {
-        // TODO Auto-generated method stub
+        OreDictionary.registerOre("SolarPanel", new ItemStack(this, 1, 0));
 
     }
 }

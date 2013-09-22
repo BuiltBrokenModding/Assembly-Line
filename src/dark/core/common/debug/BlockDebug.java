@@ -15,12 +15,11 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DMCreativeTab;
 import dark.core.common.DarkMain;
-import dark.core.prefab.IExtraObjectInfo;
 import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.machine.BlockMachine;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
-public class BlockDebug extends BlockMachine implements IExtraObjectInfo
+public class BlockDebug extends BlockMachine
 {
     public static float DebugWattOut, DebugWattDemand;
 
@@ -110,29 +109,16 @@ public class BlockDebug extends BlockMachine implements IExtraObjectInfo
                 list.add(new Pair<String, Class<? extends TileEntity>>(block.name, block.clazz));
             }
         }
-
-    }
-
-    @Override
-    public boolean hasExtraConfigs()
-    {
-        return true;
     }
 
     @Override
     public void loadExtraConfigs(Configuration config)
     {
+        super.loadExtraConfigs(config);
         for (DebugBlocks block : DebugBlocks.values())
         {
             block.enabled = config.get("Blocks", "Enable" + block.name + "Block", true).getBoolean(true);
         }
-
-    }
-
-    @Override
-    public void loadOreNames()
-    {
-        // TODO Auto-generated method stub
 
     }
 

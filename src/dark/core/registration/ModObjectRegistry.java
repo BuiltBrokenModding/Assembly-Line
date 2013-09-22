@@ -20,7 +20,8 @@ import net.minecraftforge.fluids.FluidRegistry;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.core.common.DarkMain;
-import dark.core.prefab.IExtraObjectInfo;
+import dark.core.prefab.IExtraInfo;
+import dark.core.prefab.IExtraInfo.IExtraBlockInfo;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.machine.BlockMachine;
@@ -197,21 +198,24 @@ public class ModObjectRegistry
                 }
             }
         }
-        if (block instanceof IExtraObjectInfo)
+        if (block instanceof IExtraInfo)
         {
-            if (((IExtraObjectInfo) block).hasExtraConfigs())
+            if (((IExtraInfo) block).hasExtraConfigs())
             {
                 Configuration extraBlockConfig = new Configuration(new File(Loader.instance().getConfigDir(), "Dark/blocks/" + block.getUnlocalizedName() + ".cfg"));
                 extraBlockConfig.load();
-                ((IExtraObjectInfo) block).loadExtraConfigs(extraBlockConfig);
+                ((IExtraInfo) block).loadExtraConfigs(extraBlockConfig);
                 extraBlockConfig.save();
             }
-            ((IExtraObjectInfo) block).loadOreNames();
-            Set<Pair<String, Class<? extends TileEntity>>> tileListNew = new HashSet<Pair<String, Class<? extends TileEntity>>>();
-            ((IExtraObjectInfo) block).getTileEntities(block.blockID, tileListNew);
-            for (Pair<String, Class<? extends TileEntity>> par : tileListNew)
+            if (block instanceof IExtraBlockInfo)
             {
-                GameRegistry.registerTileEntityWithAlternatives(par.getValue(), par.getKey(), "DM" + par.getKey());
+                ((IExtraBlockInfo) block).loadOreNames();
+                Set<Pair<String, Class<? extends TileEntity>>> tileListNew = new HashSet<Pair<String, Class<? extends TileEntity>>>();
+                ((IExtraBlockInfo) block).getTileEntities(block.blockID, tileListNew);
+                for (Pair<String, Class<? extends TileEntity>> par : tileListNew)
+                {
+                    GameRegistry.registerTileEntityWithAlternatives(par.getValue(), par.getKey(), "DM" + par.getKey());
+                }
             }
         }
 

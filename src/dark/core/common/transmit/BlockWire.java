@@ -17,12 +17,11 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.tile.TileEntityConductor;
 import dark.core.common.DMCreativeTab;
 import dark.core.common.DarkMain;
-import dark.core.prefab.IExtraObjectInfo;
 import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.machine.BlockMachine;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
-public class BlockWire extends BlockMachine implements IExtraObjectInfo
+public class BlockWire extends BlockMachine
 {
     public static float wireResistance = 0.001f;
     public static float ampMax = 10000f;
@@ -239,6 +238,7 @@ public class BlockWire extends BlockMachine implements IExtraObjectInfo
     @Override
     public void loadExtraConfigs(Configuration config)
     {
+        super.loadExtraConfigs(config);
         BlockWire.wireResistance = config.get("Settings", "miliOhms", 1, "Resistance of the wire in 1/1000 of an ohm").getInt() / 1000;
         BlockWire.ampMax = config.get("Settings", "maxAmps", 10000, "Amp limit of the wire").getInt();
 

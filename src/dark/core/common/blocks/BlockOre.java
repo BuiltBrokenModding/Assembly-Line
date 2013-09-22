@@ -8,26 +8,22 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
+import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.prefab.ore.OreGenReplaceStone;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.api.ProcessorRecipes;
-import dark.api.ProcessorRecipes.ProcessorType;
 import dark.core.common.CoreRecipeLoader;
 import dark.core.common.DarkMain;
 import dark.core.common.items.EnumMaterial;
-import dark.core.common.items.EnumOrePart;
-import dark.core.common.items.ItemOreDirv;
-import dark.core.prefab.IExtraObjectInfo;
+import dark.core.prefab.IExtraInfo.IExtraBlockInfo;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.helpers.Pair;
 
-public class BlockOre extends Block implements IExtraObjectInfo
+public class BlockOre extends Block implements IExtraBlockInfo
 {
     Icon[] icons = new Icon[EnumMaterial.values().length];
 
@@ -71,24 +67,6 @@ public class BlockOre extends Block implements IExtraObjectInfo
             return OreData.values()[metadata].oreIcon;
         }
         return Block.stone.getIcon(side, metadata);
-    }
-
-    @Override
-    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
-    {
-    }
-
-    @Override
-    public boolean hasExtraConfigs()
-    {
-        return false;
-    }
-
-    @Override
-    public void loadExtraConfigs(Configuration config)
-    {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -139,5 +117,33 @@ public class BlockOre extends Block implements IExtraObjectInfo
             }
             return null;
         }
+    }
+
+    @Override
+    public boolean hasExtraConfigs()
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void loadExtraConfigs(Configuration config)
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public TileEntity createNewTileEntity(World world)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+    {
+        // TODO Auto-generated method stub
+
     }
 }
