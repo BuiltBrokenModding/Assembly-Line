@@ -16,6 +16,7 @@ import universalelectricity.core.UniversalElectricity;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.ore.OreGenReplaceStone;
 import universalelectricity.prefab.ore.OreGenerator;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -30,6 +31,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.relauncher.Side;
 import dark.api.ProcessorRecipes;
 import dark.core.common.blocks.BlockBasalt;
 import dark.core.common.blocks.BlockColorGlass;
@@ -40,7 +42,6 @@ import dark.core.common.blocks.BlockOre.OreData;
 import dark.core.common.blocks.ItemBlockColored;
 import dark.core.common.blocks.ItemBlockOre;
 import dark.core.common.debug.BlockDebug;
-import dark.core.common.items.EnumMaterial;
 import dark.core.common.items.ItemBattery;
 import dark.core.common.items.ItemColoredDust;
 import dark.core.common.items.ItemOreDirv;
@@ -86,7 +87,7 @@ public class DarkMain extends ModPrefab
     public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "Dark/TheDarkMachine.cfg"));
     private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US" };
     /** Can over pressure of devices do area damage */
-    public static boolean overPressureDamage;
+    public static boolean overPressureDamage, zeroRendering, zeroAnimation, zeroGraphics;
 
     public static BlockMulti blockMulti;
 
@@ -183,6 +184,13 @@ public class DarkMain extends ModPrefab
         }
         /* CONFIGS */
         CONFIGURATION.load();
+
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+        {
+            this.zeroAnimation = CONFIGURATION.get("Graphics", "DisableAllAnimation", false, "Disables active animations by any non-active models").getBoolean(false);
+            this.zeroRendering = CONFIGURATION.get("Graphics", "DisableAllRendering", false, "Replaces all model renderers with single block forms").getBoolean(false);
+            this.zeroGraphics = CONFIGURATION.get("Graphics", "DisableAllGraphics", false, "Disables extra effects that models and renders have. Such as particles, and text").getBoolean(false);
+        }
         /* BLOCKS */
         Block m = ModObjectRegistry.createNewBlock("DMBlockMulti", DarkMain.MOD_ID, BlockMulti.class, false);
         if (m instanceof BlockMulti)
