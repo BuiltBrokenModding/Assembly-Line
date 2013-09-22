@@ -97,7 +97,7 @@ public abstract class RecipeLoader
 
         /** 3x3 Crafting grid. Each Triple is a row. Input for the triples should be any of { Item,
          * Block, ItemStack, String}
-         *
+         * 
          * @param one - top row
          * @param two - middle row
          * @param three - bottom row */
@@ -111,7 +111,7 @@ public abstract class RecipeLoader
 
         /** 2x2 Crafting grid. Each Pair is a row. Input for the pairs should be any of { Item,
          * Block, ItemStack, String}
-         *
+         * 
          * @param one - top row
          * @param two - middle row */
         public RecipeGrid(Object stack, Pair one, Pair two)

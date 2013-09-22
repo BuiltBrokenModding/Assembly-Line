@@ -44,7 +44,7 @@ public class CoreRecipeLoader extends RecipeLoader
     {
         super.loadRecipes();
         new RecipeGrid(new ItemStack(itemTool, 1, 0), 3, 2).setRowOne("ironTube", "valvePart", "ironTube").setRowTwo(null, "ironTube", null).RegisterRecipe();
-        new RecipeGrid(new ItemStack(blockSolar, 1, 0), 3, 3).setRowOne(Block.glass, Block.glass, Block.glass).setRowTwo(this.steel, this.circuit, this.steel).setRowThree(this.steel, "copperWire", this.steel).RegisterRecipe();
+        new RecipeGrid(new ItemStack(blockSolar, 1, 0), 3, 3).setRowOne(Block.glass, Block.glass, Block.glass).setRowTwo(RecipeLoader.steel, RecipeLoader.circuit, RecipeLoader.steel).setRowThree(RecipeLoader.steel, "copperWire", RecipeLoader.steel).RegisterRecipe();
         this.loadParts();
     }
 

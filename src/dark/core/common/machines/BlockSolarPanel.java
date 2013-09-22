@@ -28,6 +28,7 @@ public class BlockSolarPanel extends BlockMachine
         this.setCreativeTab(DMCreativeTab.tabIndustrial);
     }
 
+    @Override
     public TileEntity createNewTileEntity(World world)
     {
         return new TileEntitySolarPanel();

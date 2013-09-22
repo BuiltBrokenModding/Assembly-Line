@@ -12,7 +12,7 @@ import dark.core.prefab.helpers.AutoCraftingManager;
 import dark.core.prefab.helpers.Pair;
 
 /** Recipes for ore processor machines
- *
+ * 
  * @author DarkGuardsman */
 public class ProcessorRecipes
 {
@@ -60,7 +60,7 @@ public class ProcessorRecipes
 
     /** Creates a simple one itemStack in one ItemStack out. Itemstack output can actual have a stack
      * size larger than one
-     *
+     * 
      * @param type - processor type
      * @param in - input item, stacksize is ignored
      * @param out - ouput item */
@@ -82,7 +82,7 @@ public class ProcessorRecipes
     }
 
     /** Creates a recipe that has a chance of failing
-     *
+     * 
      * @param type - processor type
      * @param in - input item stack, stack size is ignored
      * @param out - output item stack, stack size is used
@@ -158,6 +158,7 @@ public class ProcessorRecipes
             }
         }
     }
+
     /** Marks an itemstack as unsalvagable by processors */
     public static void markUnsalvagable(ProcessorType type, ItemStack stack)
     {
@@ -187,7 +188,7 @@ public class ProcessorRecipes
 
     /** Gets the lit of items that are created from the input item stack. General this will be an
      * array of one item. However, in salavaging cases it can be up to 8 items.
-     *
+     * 
      * @param type - Processor type
      * @param stack - item stack input ignores stacksize
      * @return array of itemStacks */

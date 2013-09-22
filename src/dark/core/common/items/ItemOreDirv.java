@@ -13,7 +13,7 @@ import dark.core.common.DarkMain;
 import dark.core.prefab.items.ItemBasic;
 
 /** A series of items that are derived from a basic material
- *
+ * 
  * @author DarkGuardsman */
 public class ItemOreDirv extends ItemBasic
 {
@@ -67,7 +67,7 @@ public class ItemOreDirv extends ItemBasic
         {
             for (EnumOrePart part : EnumOrePart.values())
             {
-                ItemStack stack = mat.getStack(mat, part, 1);
+                ItemStack stack = EnumMaterial.getStack(mat, part, 1);
                 if (stack != null && mat.shouldCreateItem(part) && mat.itemIcons[part.ordinal()] != null)
                 {
                     par3List.add(stack);

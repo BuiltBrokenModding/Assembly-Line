@@ -39,7 +39,7 @@ public class TileEntitySolarPanel extends TileEntityEnergyMachine
                     this.wattOutput = BlockSolarPanel.wattNight;
                     if (this.worldObj.isThundering() || this.worldObj.isRaining())
                     {
-                        this. wattOutput = 0;
+                        this.wattOutput = 0;
                     }
                 }
 
@@ -55,6 +55,7 @@ public class TileEntitySolarPanel extends TileEntityEnergyMachine
 
     }
 
+    @Override
     public EnumSet<ForgeDirection> getOutputDirections()
     {
         return EnumSet.allOf(ForgeDirection.class);

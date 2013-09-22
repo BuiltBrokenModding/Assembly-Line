@@ -11,8 +11,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.CoreRecipeLoader;
 
 /** Class for storing materials, there icon names, sub items to be made from them or there sub ores
- *
- *
+ * 
+ * 
  * @author DarkGuardsman */
 public enum EnumMaterial
 {
@@ -56,7 +56,7 @@ public enum EnumMaterial
 
     /** Creates a new item stack using material and part given. Uses a preset length of 50 for parts
      * enum so to prevent any unwanted changes in loading of itemStacks metadata.
-     *
+     * 
      * @param mat - material
      * @param part - part
      * @return new ItemStack created from the two enums as long as everything goes right */
