@@ -18,10 +18,11 @@ import universalelectricity.prefab.tile.IRotatable;
 import dark.assembly.api.IBelt;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.machine.TileEntityAssembly;
+import dark.core.common.DarkMain;
 import dark.core.network.PacketHandler;
 
 /** Conveyer belt TileEntity that allows entities of all kinds to be moved
- * 
+ *
  * @author DarkGuardsman */
 public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacketReceiver, IBelt, IRotatable
 {
@@ -74,27 +75,29 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
             {
                 this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "mods.assemblyline.conveyor", 0.5f, 0.7f, true);
             }
-
-            this.wheelRotation = (40 + this.wheelRotation) % 360;
-
-            float wheelRotPct = wheelRotation / 360f;
-
-            // Sync the animation. Slant belts are slower.
-            if (this.getSlant() == SlantType.NONE || this.getSlant() == SlantType.TOP)
+            if (!DarkMain.zeroAnimation)
             {
-                this.animFrame = (int) (wheelRotPct * MAX_FRAME);
-                if (this.animFrame < 0)
-                    this.animFrame = 0;
-                if (this.animFrame > MAX_FRAME)
-                    this.animFrame = MAX_FRAME;
-            }
-            else
-            {
-                this.animFrame = (int) (wheelRotPct * MAX_SLANT_FRAME);
-                if (this.animFrame < 0)
-                    this.animFrame = 0;
-                if (this.animFrame > MAX_SLANT_FRAME)
-                    this.animFrame = MAX_SLANT_FRAME;
+                this.wheelRotation = (40 + this.wheelRotation) % 360;
+
+                float wheelRotPct = wheelRotation / 360f;
+
+                // Sync the animation. Slant belts are slower.
+                if (this.getSlant() == SlantType.NONE || this.getSlant() == SlantType.TOP)
+                {
+                    this.animFrame = (int) (wheelRotPct * MAX_FRAME);
+                    if (this.animFrame < 0)
+                        this.animFrame = 0;
+                    if (this.animFrame > MAX_FRAME)
+                        this.animFrame = MAX_FRAME;
+                }
+                else
+                {
+                    this.animFrame = (int) (wheelRotPct * MAX_SLANT_FRAME);
+                    if (this.animFrame < 0)
+                        this.animFrame = 0;
+                    if (this.animFrame > MAX_SLANT_FRAME)
+                        this.animFrame = MAX_SLANT_FRAME;
+                }
             }
         }
 

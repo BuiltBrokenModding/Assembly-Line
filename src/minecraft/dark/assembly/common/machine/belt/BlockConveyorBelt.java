@@ -20,10 +20,11 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.common.machine.BlockAssembly;
 import dark.assembly.common.machine.belt.TileEntityConveyorBelt.SlantType;
+import dark.core.common.DarkMain;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 /** The block for the actual conveyor belt!
- * 
+ *
  * @author Calclavia, DarkGuardsman */
 public class BlockConveyorBelt extends BlockAssembly
 {
@@ -335,7 +336,7 @@ public class BlockConveyorBelt extends BlockAssembly
     @Override
     public int getRenderType()
     {
-        return BlockRenderingHandler.BLOCK_RENDER_ID;
+        return DarkMain.zeroRendering ? 0 : BlockRenderingHandler.BLOCK_RENDER_ID;
     }
 
     @Override

@@ -14,7 +14,6 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.core.UniversalElectricity;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.ProcessorRecipes.ProcessorType;
@@ -22,12 +21,11 @@ import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.CommonProxy;
 import dark.core.common.DMCreativeTab;
-import dark.core.prefab.IExtraObjectInfo;
 import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.machine.BlockMachine;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
-public class BlockProcessor extends BlockMachine implements IExtraObjectInfo
+public class BlockProcessor extends BlockMachine
 {
 
     public BlockProcessor()
@@ -90,6 +88,7 @@ public class BlockProcessor extends BlockMachine implements IExtraObjectInfo
     @Override
     public void loadExtraConfigs(Configuration config)
     {
+        super.loadExtraConfigs(config);
         for (ProcessorData data : ProcessorData.values())
         {
             data.enabled = config.get(data.unlocalizedName, "Enabled", true).getBoolean(true);

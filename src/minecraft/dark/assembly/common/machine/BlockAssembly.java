@@ -10,7 +10,7 @@ import dark.core.common.DMCreativeTab;
 import dark.core.prefab.machine.BlockMachine;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
-public abstract class BlockAssembly extends BlockMachine
+public class BlockAssembly extends BlockMachine
 {
     public Icon machine_icon;
 
