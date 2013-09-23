@@ -2,10 +2,11 @@ package dark.core.common.debug;
 
 import java.util.EnumSet;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.ForgeDirection;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
 
-public class TileEntityInfSupply extends TileEntityEnergyMachine
+public class TileEntityInfSupply extends TileEntityEnergyMachine implements IDebugTile
 {
 
     @Override
@@ -59,6 +60,13 @@ public class TileEntityInfSupply extends TileEntityEnergyMachine
     public float getRequest(ForgeDirection direction)
     {
         return 0;
+    }
+
+    @Override
+    public boolean onActivated(EntityPlayer entityPlayer)
+    {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }

@@ -1,9 +1,10 @@
 package dark.core.common.debug;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.ForgeDirection;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
 
-public class TileEntityInfLoad extends TileEntityEnergyMachine
+public class TileEntityInfLoad extends TileEntityEnergyMachine implements IDebugTile
 {
 
     @Override
@@ -50,6 +51,13 @@ public class TileEntityInfLoad extends TileEntityEnergyMachine
     public float getMaxEnergyStored()
     {
         return Integer.MAX_VALUE;
+    }
+
+    @Override
+    public boolean onActivated(EntityPlayer entityPlayer)
+    {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }

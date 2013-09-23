@@ -2,6 +2,7 @@ package dark.core.common.debug;
 
 import java.util.HashMap;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -11,9 +12,9 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
 /** Designed to debug fluid devices by draining everything that comes in at one time
- * 
+ *
  * @author DarkGuardsman */
-public class TileEntityVoid extends TileEntity implements IFluidHandler
+public class TileEntityVoid extends TileEntity implements IFluidHandler, IDebugTile
 {
     //TODO later add to this to make it actually have an ingame use other than debug
     public static HashMap<FluidStack, Long> storage = new HashMap<FluidStack, Long>();
@@ -59,6 +60,13 @@ public class TileEntityVoid extends TileEntity implements IFluidHandler
     public FluidTankInfo[] getTankInfo(ForgeDirection from)
     {
         return new FluidTankInfo[] { this.tank.getInfo() };
+    }
+
+    @Override
+    public boolean onActivated(EntityPlayer entityPlayer)
+    {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }
