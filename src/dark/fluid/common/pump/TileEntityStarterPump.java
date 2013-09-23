@@ -3,6 +3,8 @@ package dark.fluid.common.pump;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.builtbroken.common.Pair;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -16,7 +18,6 @@ import dark.api.fluid.IDrain;
 import dark.api.parts.ITileConnector;
 import dark.core.common.ExternalModHandler;
 import dark.core.prefab.helpers.FluidHelper;
-import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
 
 public class TileEntityStarterPump extends TileEntityEnergyMachine implements IToolReadOut, ITileConnector

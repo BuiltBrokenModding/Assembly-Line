@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.builtbroken.common.Pair;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -18,7 +20,6 @@ import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
 import dark.api.fluid.IDrain;
 import dark.core.prefab.helpers.FluidHelper;
-import dark.core.prefab.helpers.Pair;
 import dark.fluid.common.prefab.TileEntityFluidDevice;
 
 public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHandler, IDrain

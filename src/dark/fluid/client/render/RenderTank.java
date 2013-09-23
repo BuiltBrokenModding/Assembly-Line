@@ -52,7 +52,7 @@ public class RenderTank extends RenderTileMachine
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-            func_110628_a(RenderBlockFluid.getFluidSheet(liquid));
+            bindTexture(RenderBlockFluid.getFluidSheet(liquid));
 
             GL11.glTranslatef((float) x, (float) y, (float) z);
             GL11.glScalef(1.01F, 1.01F, 1.01F);
@@ -103,7 +103,7 @@ public class RenderTank extends RenderTileMachine
                         right = south;
                         break;
                 }
-                func_110628_a(this.getTexture(tileEntity.getBlockType().blockID, tileEntity.getBlockMetadata()));
+                bindTexture(this.getTexture(tileEntity.getBlockType().blockID, tileEntity.getBlockMetadata()));
                 model.render(0.0625F, left, right, top, bot);
                 GL11.glPopMatrix();
             }

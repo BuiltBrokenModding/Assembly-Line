@@ -52,7 +52,7 @@ public class ItemRenderHelper implements IItemRenderer
 
         GL11.glPushMatrix();
 
-        FMLClientHandler.instance().getClient().renderEngine.func_110577_a(pipe.getTexture(item.itemID, item.getItemDamage()));
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture(pipe.getTexture(item.itemID, item.getItemDamage()));
         if (!equ)
         {
             GL11.glTranslatef(0.5F, -0.5F, 0.5F);
@@ -74,7 +74,7 @@ public class ItemRenderHelper implements IItemRenderer
     public void renderReleaseValve(RenderBlocks renderer, int meta, boolean equ)
     {
         GL11.glPushMatrix();
-        FMLClientHandler.instance().getClient().renderEngine.func_110577_a(pipe.getTexture(FMRecipeLoader.blockPipe.blockID, 15));
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture(pipe.getTexture(FMRecipeLoader.blockPipe.blockID, 15));
         if (!equ)
         {
             GL11.glTranslatef(0.5F, -0.5F, 0.5F);
@@ -89,7 +89,7 @@ public class ItemRenderHelper implements IItemRenderer
             pipe.SixPipe.renderBack();
             pipe.SixPipe.renderMiddle();
         }
-        FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(FluidMech.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "ReleaseValve.png"));
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(FluidMech.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "ReleaseValve.png"));
         GL11.glRotatef(180f, 0f, 0f, 1f);
         if (!equ)
         {

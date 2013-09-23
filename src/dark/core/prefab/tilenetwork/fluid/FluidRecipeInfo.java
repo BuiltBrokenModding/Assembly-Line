@@ -1,11 +1,12 @@
 package dark.core.prefab.tilenetwork.fluid;
 
+import com.builtbroken.common.Pair;
+import com.builtbroken.common.Triple;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import dark.core.prefab.helpers.Pair;
-import dark.core.prefab.helpers.Triple;
 
 /** Used to store more complex info, than A + B = C, on two FluidStack mixing behavior
  * 

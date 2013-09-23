@@ -2,6 +2,8 @@ package dark.fluid.common.pump;
 
 import java.util.Set;
 
+import com.builtbroken.common.Pair;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,7 +16,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import dark.core.prefab.helpers.Pair;
 import dark.fluid.common.BlockFM;
 import dark.fluid.common.FluidMech;
 
@@ -99,7 +100,7 @@ public class BlockDrain extends BlockFM
             TileEntity entity = world.getBlockTileEntity(x, y, z);
             if (entity instanceof TileEntityDrain)
             {
-                entityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("Draining Sources? " + ((TileEntityDrain) entity).canDrain()));
+                entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("Draining Sources? " + ((TileEntityDrain) entity).canDrain()));
 
             }
             return true;

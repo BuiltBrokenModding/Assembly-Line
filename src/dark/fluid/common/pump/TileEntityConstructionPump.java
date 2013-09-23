@@ -3,6 +3,8 @@ package dark.fluid.common.pump;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.builtbroken.common.Pair;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -18,7 +20,6 @@ import universalelectricity.core.vector.VectorHelper;
 import dark.api.fluid.IDrain;
 import dark.api.fluid.INetworkPipe;
 import dark.api.parts.ITileConnector;
-import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.tilenetwork.fluid.FluidNetworkHelper;
 import dark.core.prefab.tilenetwork.fluid.NetworkFluidTiles;
 
