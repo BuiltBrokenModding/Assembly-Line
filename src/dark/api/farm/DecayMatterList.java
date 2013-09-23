@@ -42,7 +42,7 @@ public class DecayMatterList
     {
         if (stack != null && compostList.containsKey(new Pair<Integer, Integer>(stack.itemID, stack.getItemDamage())))
         {
-            return compostList.get(new Pair<Integer, Integer>(stack.itemID, stack.getItemDamage())).getValue();
+            return compostList.get(new Pair<Integer, Integer>(stack.itemID, stack.getItemDamage())).right();
         }
         return -1;
     }
@@ -55,7 +55,7 @@ public class DecayMatterList
     {
         if (stack != null && compostList.containsKey(new Pair<Integer, Integer>(stack.itemID, stack.getItemDamage())))
         {
-            return compostList.get(new Pair<Integer, Integer>(stack.itemID, stack.getItemDamage())).getKey();
+            return compostList.get(new Pair<Integer, Integer>(stack.itemID, stack.getItemDamage())).left();
         }
         return -1;
     }
