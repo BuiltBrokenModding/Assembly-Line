@@ -73,9 +73,9 @@ public class TileEntityStarterPump extends TileEntityEnergyMachine implements IT
                 if (!this.worldObj.isRemote)
                 {
                     Pair<World, Vector3> pair = this.getDrainOrigin();
-                    if (pair != null && pair.getKey() != null && pair.getValue() != null)
+                    if (pair != null && pair.left() != null && pair.right() != null)
                     {
-                        this.drainAroundArea(pair.getKey(), pair.getValue(), 3);
+                        this.drainAroundArea(pair.left(), pair.right(), 3);
                     }
                 }
             }

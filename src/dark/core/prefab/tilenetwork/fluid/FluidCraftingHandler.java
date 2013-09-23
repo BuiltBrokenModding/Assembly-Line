@@ -128,7 +128,7 @@ public class FluidCraftingHandler
                 if (result instanceof SimpleFluidRecipe)
                 {
                     Triple<Integer, Integer, Pair<Object, Integer>> re = ((SimpleFluidRecipe) result).mix(crafter.getInputObjectStack(), crafter.getInputObjectStack());
-                    crafter.setRecipeObjectContent(received, re.getA(), input, re.getB(), re.getC().getKey(), re.getC().getValue());
+                    crafter.setRecipeObjectContent(received, re.getA(), input, re.getB(), re.getC().left(), re.getC().right());
                 }
             }
             crafter.setRecipeObjectContent(received, 0, input, 0, result, 0);
@@ -177,13 +177,13 @@ public class FluidCraftingHandler
                 else if (result instanceof SimpleFluidRecipe)
                 {
                     Triple<Integer, Integer, Pair<Object, Integer>> re = ((SimpleFluidRecipe) result).mix(stackOne, stackTwo);
-                    if (re.getC().getKey() instanceof FluidStack)
+                    if (re.getC().left() instanceof FluidStack)
                     {
-                        resultStack = FluidHelper.getStack((FluidStack) re.getC().getKey(), re.getC().getValue());
+                        resultStack = FluidHelper.getStack((FluidStack) re.getC().left(), re.getC().right());
                     }
-                    else if (re.getC().getKey() instanceof FluidStack)
+                    else if (re.getC().left() instanceof FluidStack)
                     {
-                        resultStack = new FluidStack((Fluid) re.getC().getKey(), re.getC().getValue());
+                        resultStack = new FluidStack((Fluid) re.getC().left(), re.getC().right());
                     }
                 }
             }
