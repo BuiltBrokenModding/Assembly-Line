@@ -2,8 +2,9 @@ package dark.api.farm;
 
 import java.util.HashMap;
 
+import com.builtbroken.common.Pair;
+
 import net.minecraft.item.ItemStack;
-import dark.core.prefab.helpers.Pair;
 
 /** Tracks a list of all crops that can be auto farmed. Does some guessing on block to avoid having
  * each mod register all its crops
