@@ -3,6 +3,8 @@ package dark.core.common.blocks;
 import java.util.List;
 import java.util.Set;
 
+import com.builtbroken.common.Pair;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -21,7 +23,6 @@ import dark.core.common.DarkMain;
 import dark.core.common.items.EnumMaterial;
 import dark.core.prefab.IExtraInfo.IExtraBlockInfo;
 import dark.core.prefab.ModPrefab;
-import dark.core.prefab.helpers.Pair;
 
 public class BlockOre extends Block implements IExtraBlockInfo
 {

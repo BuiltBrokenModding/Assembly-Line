@@ -19,7 +19,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
 
 /** Based off Thaumcraft's Beam Renderer.
- * 
+ *
  * @author Calclavia, Azanor */
 @SideOnly(Side.CLIENT)
 public class FXBeam extends EntityFX
@@ -165,7 +165,7 @@ public class FXBeam extends EntityFX
 
         }
 
-        FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(this.texture));
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(this.texture));
 
         GL11.glTexParameterf(3553, 10242, 10497.0F);
         GL11.glTexParameterf(3553, 10243, 10497.0F);
@@ -230,6 +230,6 @@ public class FXBeam extends EntityFX
         tessellator.startDrawingQuads();
         this.prevSize = size;
 
-        FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation("/particles.png"));
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation("/particles.png"));
     }
 }

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import com.builtbroken.common.Pair;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -16,7 +18,6 @@ import universalelectricity.core.UniversalElectricity;
 import dark.core.common.CommonProxy;
 import dark.core.common.DMCreativeTab;
 import dark.core.common.DarkMain;
-import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.machine.BlockMachine;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 

@@ -3,6 +3,8 @@ package dark.core.prefab.machine;
 import java.util.Random;
 import java.util.Set;
 
+import com.builtbroken.common.Pair;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -19,7 +21,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
 import dark.core.prefab.IExtraInfo.IExtraBlockInfo;
 import dark.core.prefab.ModPrefab;
-import dark.core.prefab.helpers.Pair;
 
 public class BlockMulti extends BlockContainer implements IExtraBlockInfo
 {

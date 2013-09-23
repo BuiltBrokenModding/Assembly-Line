@@ -3,6 +3,8 @@ package dark.core.common.debug;
 import java.util.List;
 import java.util.Set;
 
+import com.builtbroken.common.Pair;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -15,7 +17,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DMCreativeTab;
 import dark.core.common.DarkMain;
-import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.machine.BlockMachine;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 

@@ -2,10 +2,11 @@ package dark.core.prefab;
 
 import java.util.Set;
 
+import com.builtbroken.common.Pair;
+
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.Configuration;
-import dark.core.prefab.helpers.Pair;
 
 /** Used to handle info about the block that would normally be handled by the mod main class. Use the
  * BlockRegistry in order for these methods to be called on load of the mod.

@@ -1,13 +1,14 @@
 package dark.core.common;
 
+import com.builtbroken.common.Pair;
+import com.builtbroken.common.Triple;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
-import dark.core.prefab.helpers.Pair;
-import dark.core.prefab.helpers.Triple;
 
 public abstract class RecipeLoader
 {

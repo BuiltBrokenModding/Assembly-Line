@@ -2,6 +2,8 @@ package dark.core.common.machines;
 
 import java.util.Set;
 
+import com.builtbroken.common.Pair;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -10,7 +12,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.core.UniversalElectricity;
 import dark.core.client.renders.BlockRenderingHandler;
 import dark.core.common.DMCreativeTab;
-import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.machine.BlockMachine;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 

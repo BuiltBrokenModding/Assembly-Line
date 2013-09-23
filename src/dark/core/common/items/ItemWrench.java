@@ -22,7 +22,7 @@ public class ItemWrench extends ItemBasic implements IToolWrench
         this.setMaxStackSize(1);
         this.setMaxDamage(500 + config.get("general", "AddedWrenchUses", 500).getInt());
         this.setCreativeTab(CreativeTabs.tabTools);
-        this.func_111206_d(DarkMain.getInstance().PREFIX + "wrench");
+        this.setTextureName(DarkMain.getInstance().PREFIX + "wrench");
     }
 
     @Override

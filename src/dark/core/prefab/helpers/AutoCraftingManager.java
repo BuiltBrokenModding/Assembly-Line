@@ -3,6 +3,8 @@ package dark.core.prefab.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.builtbroken.common.Pair;
+
 import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;

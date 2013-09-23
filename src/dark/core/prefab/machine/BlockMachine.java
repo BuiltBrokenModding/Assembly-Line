@@ -2,6 +2,8 @@ package dark.core.prefab.machine;
 
 import java.util.Set;
 
+import com.builtbroken.common.Pair;
+
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;
@@ -17,7 +19,6 @@ import dark.api.parts.INetworkPart;
 import dark.core.common.DarkMain;
 import dark.core.prefab.IExtraInfo.IExtraBlockInfo;
 import dark.core.prefab.ModPrefab;
-import dark.core.prefab.helpers.Pair;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 /** Basic TileEntity Container class designed to be used by generic machines. It is suggested that

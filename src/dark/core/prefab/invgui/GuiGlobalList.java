@@ -133,7 +133,7 @@ public class GuiGlobalList extends GuiContainer implements IScroll
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
         ResourceLocation name = new ResourceLocation(ModPrefab.GUI_DIRECTORY + ":gui_access_base.png");
-        this.mc.renderEngine.func_110577_a(name);
+        this.mc.renderEngine.bindTexture(name);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         int containerWidth = (this.width - this.width) / 2;

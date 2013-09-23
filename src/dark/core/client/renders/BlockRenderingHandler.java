@@ -30,7 +30,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
         GL11.glPushMatrix();
         if (CoreRecipeLoader.blockSolar != null && block.blockID == CoreRecipeLoader.blockSolar.blockID)
         {
-            FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(DarkMain.getInstance().DOMAIN, ModPrefab.MODEL_DIRECTORY + "solarPanel.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(DarkMain.getInstance().DOMAIN, ModPrefab.MODEL_DIRECTORY + "solarPanel.png"));
             GL11.glTranslatef(0.0F, 1.5F, 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
             solarPanelModel.render(0.0625F);

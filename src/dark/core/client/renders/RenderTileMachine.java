@@ -15,16 +15,16 @@ public abstract class RenderTileMachine extends TileEntitySpecialRenderer
     }
 
     /** Sudo method for setting the texture for current render
-     * 
+     *
      * @param name */
     public void bindTextureByName(String domain, String name)
     {
-        func_110628_a(new ResourceLocation(domain, name));
+        this.bindTexture(new ResourceLocation(domain, name));
     }
 
     public void bindTextureByName(ResourceLocation name)
     {
-        func_110628_a(name);
+        this.bindTexture(name);
     }
 
     /** Gets the texture based on block and metadata mainly used by item/block inv render */

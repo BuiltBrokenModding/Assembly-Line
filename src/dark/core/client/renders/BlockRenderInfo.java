@@ -49,7 +49,7 @@ public class BlockRenderInfo
         }
         if (par1Icon == null)
         {
-            icon = ((TextureMap) Minecraft.getMinecraft().func_110434_K().func_110581_b(TextureMap.field_110575_b)).func_110572_b("missingno");
+            icon = ((TextureMap) Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.locationBlocksTexture)).getAtlasSprite("missingno");
         }
         return icon;
     }

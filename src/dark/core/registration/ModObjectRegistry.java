@@ -9,6 +9,8 @@ import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.builtbroken.common.Pair;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -23,7 +25,6 @@ import dark.core.common.DarkMain;
 import dark.core.prefab.IExtraInfo;
 import dark.core.prefab.IExtraInfo.IExtraBlockInfo;
 import dark.core.prefab.ModPrefab;
-import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.machine.BlockMachine;
 
 /** Handler to make registering all parts of a mod's objects that are loaded into the game by forge

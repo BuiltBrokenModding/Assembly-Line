@@ -5,11 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import com.builtbroken.common.Pair;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import dark.core.prefab.helpers.AutoCraftingManager;
-import dark.core.prefab.helpers.Pair;
 
 /** Recipes for ore processor machines
  * 

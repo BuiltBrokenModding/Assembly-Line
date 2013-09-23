@@ -18,11 +18,6 @@ public class RenderBlockEntity extends Render
 
     public static RenderBlockEntity INSTANCE = new RenderBlockEntity();
 
-    @Override
-    protected ResourceLocation func_110775_a(Entity entity)
-    {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 
     private RenderBlockEntity()
     {
@@ -43,7 +38,7 @@ public class RenderBlockEntity extends Render
         World world = entity.worldObj;
         BlockRenderInfo util = new BlockRenderInfo();
         util.texture = entity.texture;
-        func_110776_a(TextureMap.field_110575_b);
+        this.bindTexture(TextureMap.locationBlocksTexture);
 
         for (int iBase = 0; iBase < entity.iSize; ++iBase)
         {
@@ -190,5 +185,11 @@ public class RenderBlockEntity extends Render
         {
             tessellator.draw();
         }
+    }
+
+    @Override
+    protected ResourceLocation getEntityTexture(Entity entity)
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
