@@ -1,10 +1,11 @@
 package dark.core.common.debug;
 
-import dark.core.prefab.helpers.FluidHelper;
+import universalelectricity.core.vector.Vector3;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -14,10 +15,23 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
+import com.builtbroken.common.TextHelper.TextColor;
+
+import dark.core.prefab.helpers.FluidHelper;
+
 public class TileEntityInfFluid extends TileEntity implements IFluidHandler, IDebugTile
 {
     FluidTank tank = new FluidTank(Integer.MAX_VALUE);
     boolean autoEmpty = false;
+
+    @Override
+    public void updateEntity()
+    {
+        if (!this.worldObj.isRemote && autoEmpty && this.tank != null && this.tank.getFluid() != null)
+        {
+            FluidHelper.fillTanksAllSides(this.worldObj, new Vector3(this), FluidHelper.getStack(this.tank.getFluid(), 600), true);
+        }
+    }
 
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
@@ -78,6 +92,7 @@ public class TileEntityInfFluid extends TileEntity implements IFluidHandler, IDe
                 if (!this.worldObj.isRemote)
                 {
                     this.autoEmpty = !autoEmpty;
+                    entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("AutoPump > " + (autoEmpty ? TextColor.DARKGREEN + "On" : TextColor.RED + "Off")));
                 }
                 return true;
             }
@@ -89,6 +104,8 @@ public class TileEntityInfFluid extends TileEntity implements IFluidHandler, IDe
                     fluidStack = fluidStack.copy();
                     fluidStack.amount = Integer.MAX_VALUE;
                     this.tank.setFluid(fluidStack);
+                    entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("Fluid Set to > " + fluidStack.getFluid().getName()));
+
                 }
                 return true;
             }
