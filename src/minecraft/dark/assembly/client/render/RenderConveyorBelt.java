@@ -54,7 +54,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
             if (slantType == SlantType.UP)
             {
                 ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "slantedbelt/frame" + frame + ".png");
-                func_110628_a(name);
+                bindTexture(name);
 
                 GL11.glTranslatef(0f, 0.8f, -0.8f);
                 GL11.glRotatef(180f, 0f, 1f, 1f);
@@ -76,7 +76,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
             else if (slantType == SlantType.DOWN)
             {
                 ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "slantedbelt/frame" + frame + ".png");
-                func_110628_a(name);
+                bindTexture(name);
                 GL11.glRotatef(180f, 0f, 1f, 0f);
                 boolean slantAdjust = false;
                 TileEntity test = tileEntity.worldObj.getBlockTileEntity(tileEntity.xCoord - tileEntity.getDirection().offsetX, tileEntity.yCoord, tileEntity.zCoord - tileEntity.getDirection().offsetZ);
@@ -97,7 +97,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
             else
             {
                 ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "belt/frame" + frame + ".png");
-                func_110628_a(name);
+                bindTexture(name);
                 GL11.glRotatef(180, 0f, 1f, 0f);
                 GL11.glTranslatef(0f, -0.68f, 0f);
                 MODEL.render(0.0625f, (float) Math.toRadians(tileEntity.wheelRotation), tileEntity.getIsLastBelt(), tileEntity.getIsFirstBelt(), false, false);
@@ -121,7 +121,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
                     break;
             }
             ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "belt/frame" + frame + ".png");
-            func_110628_a(name);
+            bindTexture(name);
             MODEL.render(0.0625F, (float) Math.toRadians(tileEntity.wheelRotation), tileEntity.getIsLastBelt(), tileEntity.getIsFirstBelt(), false, true);
 
         }

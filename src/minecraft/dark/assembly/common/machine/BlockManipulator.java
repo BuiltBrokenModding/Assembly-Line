@@ -13,7 +13,7 @@ import dark.assembly.common.imprinter.prefab.BlockImprintable;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 /** A block that manipulates item movement between inventories.
- * 
+ *
  * @author Calclavia */
 public class BlockManipulator extends BlockImprintable
 {
@@ -37,7 +37,7 @@ public class BlockManipulator extends BlockImprintable
         if (tileEntity instanceof TileEntityManipulator)
         {
             ((TileEntityManipulator) tileEntity).setSelfPulse(!((TileEntityManipulator) tileEntity).isSelfPulse());
-            entityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("Manip. set to " + (((TileEntityManipulator) tileEntity).isSelfPulse() ? "auto pulse" : "not pulse")));
+            entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("Manip. set to " + (((TileEntityManipulator) tileEntity).isSelfPulse() ? "auto pulse" : "not pulse")));
         }
 
         return true;
@@ -71,7 +71,7 @@ public class BlockManipulator extends BlockImprintable
                 manip.toggleOutput();
                 manip.toggleInversion();
             }
-            entityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("Manip. outputing =  " + manip.isOutput()));
+            entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("Manip. outputing =  " + manip.isOutput()));
 
         }
 

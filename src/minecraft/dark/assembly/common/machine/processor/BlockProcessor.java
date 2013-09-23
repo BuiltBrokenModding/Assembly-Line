@@ -3,6 +3,8 @@ package dark.assembly.common.machine.processor;
 import java.util.List;
 import java.util.Set;
 
+import com.builtbroken.common.Pair;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -21,7 +23,6 @@ import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.CommonProxy;
 import dark.core.common.DMCreativeTab;
-import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.machine.BlockMachine;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 

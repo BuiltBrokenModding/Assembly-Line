@@ -28,12 +28,12 @@ public class RenderManipulator extends RenderImprintable
         if (tileEntity.isOutput())
         {
             ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "manipulator1.png");
-            func_110628_a(name);
+            bindTexture(name);
         }
         else
         {
             ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "manipulator2.png");
-            func_110628_a(name);
+            bindTexture(name);
         }
 
         if (face == 2)

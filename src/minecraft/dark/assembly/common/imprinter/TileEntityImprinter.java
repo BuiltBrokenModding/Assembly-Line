@@ -21,6 +21,7 @@ import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 
+import com.builtbroken.common.Pair;
 import com.google.common.io.ByteArrayDataInput;
 
 import dark.assembly.api.IArmbot;
@@ -29,7 +30,6 @@ import dark.core.common.DarkMain;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.helpers.AutoCraftingManager;
 import dark.core.prefab.helpers.AutoCraftingManager.IAutoCrafter;
-import dark.core.prefab.helpers.Pair;
 import dark.core.prefab.invgui.ISlotPickResult;
 import dark.core.prefab.machine.TileEntityMulti;
 

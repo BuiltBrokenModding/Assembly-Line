@@ -28,7 +28,7 @@ public class RenderRejector extends RenderImprintable
             pos = 8;
         }
         ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "rejector.png");
-        func_110628_a(name);
+        bindTexture(name);
         GL11.glPushMatrix();
         GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
         GL11.glScalef(1.0F, -1F, -1F);

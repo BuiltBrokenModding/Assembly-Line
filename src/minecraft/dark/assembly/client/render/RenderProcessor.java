@@ -29,7 +29,7 @@ public class RenderProcessor extends RenderTileMachine
 
     private void renderAModelAt(TileEntityProcessor tileEntity, double x, double y, double z, float f)
     {
-        func_110628_a(this.getTexture(tileEntity.getBlockType().blockID, tileEntity.getBlockMetadata()));
+        bindTexture(this.getTexture(tileEntity.getBlockType().blockID, tileEntity.getBlockMetadata()));
 
         GL11.glPushMatrix();
         GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);

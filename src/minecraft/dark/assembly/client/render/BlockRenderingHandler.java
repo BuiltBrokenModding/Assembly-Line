@@ -39,13 +39,13 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
             GL11.glPushMatrix();
             GL11.glTranslatef(0.0F, 1.5F, 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
-            FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "belt/frame0.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "belt/frame0.png"));
             modelConveyorBelt.render(0.0625F, 0, false, false, false, false);
             GL11.glPopMatrix();
         }
         else if (AssemblyLine.recipeLoader.blockRejector != null && block.blockID == AssemblyLine.recipeLoader.blockRejector.blockID)
         {
-            FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "rejector.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "rejector.png"));
             GL11.glPushMatrix();
             GL11.glTranslatef(0.6F, 1.5F, 0.6F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
@@ -56,7 +56,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
         }
         else if (AssemblyLine.recipeLoader.blockManipulator != null && block.blockID == AssemblyLine.recipeLoader.blockManipulator.blockID)
         {
-            FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "manipulator1.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "manipulator1.png"));
             GL11.glPushMatrix();
             GL11.glTranslatef(0.6F, 1.5F, 0.6F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
@@ -66,7 +66,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
         }
         else if (AssemblyLine.recipeLoader.blockArmbot != null && block.blockID == AssemblyLine.recipeLoader.blockArmbot.blockID)
         {
-            FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + RenderArmbot.TEXTURE));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + RenderArmbot.TEXTURE));
             GL11.glPushMatrix();
             GL11.glTranslatef(0.4f, 0.8f, 0f);
             GL11.glScalef(0.7f, 0.7f, 0.7f);
@@ -77,7 +77,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
         }
         else if (AssemblyLine.processorMachine != null && block.blockID == AssemblyLine.processorMachine.blockID && metadata == 0)
         {
-            FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "CrusherBlock.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "CrusherBlock.png"));
             GL11.glPushMatrix();
             GL11.glTranslatef(0f, 1f, 0f);
             GL11.glRotatef(180f, 0f, 0f, 1f);
@@ -88,7 +88,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
         }
         else if (AssemblyLine.processorMachine != null && block.blockID == AssemblyLine.processorMachine.blockID && metadata == 4)
         {
-            FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "GrinderBlock.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "GrinderBlock.png"));
             GL11.glPushMatrix();
             GL11.glTranslatef(0f, 1f, 0f);
             GL11.glRotatef(180f, 0f, 0f, 1f);

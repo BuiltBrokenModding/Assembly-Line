@@ -469,7 +469,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
             {
                 NBTTagCompound entityNBT = new NBTTagCompound();
                 entity.writeToNBT(entityNBT);
-                entity.addEntityID(entityNBT);
+                entity.writeToNBTOptional(entityNBT);
                 entities.appendTag(entityNBT);
             }
         }

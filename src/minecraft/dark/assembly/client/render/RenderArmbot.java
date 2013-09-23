@@ -48,7 +48,7 @@ public class RenderArmbot extends TileEntitySpecialRenderer
                 }
             }
             ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + TEXTURE);
-            func_110628_a(name);
+            bindTexture(name);
 
             GL11.glPushMatrix();
             GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
