@@ -307,7 +307,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
                                 {
                                     // System.out.println("Imprint: found ideal recipe for  " +
                                     // idealRecipe.getKey().toString());
-                                    ItemStack recipeOutput = idealRecipe.getKey();
+                                    ItemStack recipeOutput = idealRecipe.left();
                                     if (recipeOutput != null & recipeOutput.stackSize > 0)
                                     {
                                         this.imprinterMatrix[craftingOutputSlot] = recipeOutput;
@@ -343,7 +343,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
                 if (idealRecipeItem != null)
                 {
-                    this.getCraftingManager().consumeItems(idealRecipeItem.getValue().clone());
+                    this.getCraftingManager().consumeItems(idealRecipeItem.right().clone());
                 }
             }
         }
