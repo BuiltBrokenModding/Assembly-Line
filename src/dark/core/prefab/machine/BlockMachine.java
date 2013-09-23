@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.prefab.block.BlockTile;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -20,11 +21,11 @@ import dark.core.prefab.helpers.Pair;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 /** Basic TileEntity Container class designed to be used by generic machines. It is suggested that
- * each mod using this create there own basic block extending this to reduce need to input config
- * file each time
- * 
+ * each mod using this create there own basic block extending this to reduce need to use build
+ * data per block.
+ *
  * @author Darkguardsman */
-public abstract class BlockMachine extends BlockTile implements ITileEntityProvider, IExtraBlockInfo
+public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
 {
 
     public boolean zeroAnimation, zeroSound, zeroRendering;
@@ -33,6 +34,7 @@ public abstract class BlockMachine extends BlockTile implements ITileEntityProvi
     {
         super(data.config.getBlock(data.blockName, ModPrefab.getNextID()).getInt(), data.blockMaterial);
         this.setUnlocalizedName(data.blockName);
+        this.setResistance(100f);
         if (data.creativeTab != null)
         {
             this.setCreativeTab(data.creativeTab);
@@ -113,7 +115,7 @@ public abstract class BlockMachine extends BlockTile implements ITileEntityProvi
     @Override
     public void loadOreNames()
     {
-        // TODO Auto-generated method stub
+        OreDictionary.registerOre(this.getUnlocalizedName().replace("tile.", ""), this);
 
     }
 

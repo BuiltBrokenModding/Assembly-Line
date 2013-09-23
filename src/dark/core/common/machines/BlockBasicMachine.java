@@ -30,7 +30,7 @@ public class BlockBasicMachine extends BlockMachine
     }
 
     @Override
-    public void randomDisplayTick(World par1World, int x, int y, int z, Random par5Random)
+    public void randomDisplayTick(World par1World, int x, int y, int z, Random rand)
     {
         TileEntity tile = par1World.getBlockTileEntity(x, y, z);
 
@@ -39,32 +39,32 @@ public class BlockBasicMachine extends BlockMachine
             TileEntityCoalGenerator tileEntity = (TileEntityCoalGenerator) tile;
             if (tileEntity.generateWatts > 0)
             {
-                int metadata = par1World.getBlockMetadata(x, y, z);
-                float var7 = x + 0.5F;
-                float var8 = y + 0.0F + par5Random.nextFloat() * 6.0F / 16.0F;
-                float var9 = z + 0.5F;
-                float var10 = 0.52F;
-                float var11 = par5Random.nextFloat() * 0.6F - 0.3F;
+                int face = par1World.getBlockMetadata(x, y, z) % 4;
+                float xx = x + 0.5F;
+                float yy = y + 0.0F + rand.nextFloat() * 6.0F / 16.0F;
+                float zz = z + 0.5F;
+                float posTooner = 0.52F;
+                float randPosChange = rand.nextFloat() * 0.6F - 0.3F;
 
-                if (metadata == 3)
+                if (face == 3)
                 {
-                    par1World.spawnParticle("smoke", var7 - var10, var8, var9 + var11, 0.0D, 0.0D, 0.0D);
-                    par1World.spawnParticle("flame", var7 - var10, var8, var9 + var11, 0.0D, 0.0D, 0.0D);
+                    par1World.spawnParticle("smoke", xx - posTooner, yy, zz + randPosChange, 0.0D, 0.0D, 0.0D);
+                    par1World.spawnParticle("flame", xx - posTooner, yy, zz + randPosChange, 0.0D, 0.0D, 0.0D);
                 }
-                else if (metadata == 2)
+                else if (face == 2)
                 {
-                    par1World.spawnParticle("smoke", var7 + var10, var8, var9 + var11, 0.0D, 0.0D, 0.0D);
-                    par1World.spawnParticle("flame", var7 + var10, var8, var9 + var11, 0.0D, 0.0D, 0.0D);
+                    par1World.spawnParticle("smoke", xx + posTooner, yy, zz + randPosChange, 0.0D, 0.0D, 0.0D);
+                    par1World.spawnParticle("flame", xx + posTooner, yy, zz + randPosChange, 0.0D, 0.0D, 0.0D);
                 }
-                else if (metadata == 1)
+                else if (face == 1)
                 {
-                    par1World.spawnParticle("smoke", var7 + var11, var8, var9 - var10, 0.0D, 0.0D, 0.0D);
-                    par1World.spawnParticle("flame", var7 + var11, var8, var9 - var10, 0.0D, 0.0D, 0.0D);
+                    par1World.spawnParticle("smoke", xx + randPosChange, yy, zz - posTooner, 0.0D, 0.0D, 0.0D);
+                    par1World.spawnParticle("flame", xx + randPosChange, yy, zz - posTooner, 0.0D, 0.0D, 0.0D);
                 }
-                else if (metadata == 0)
+                else if (face == 0)
                 {
-                    par1World.spawnParticle("smoke", var7 + var11, var8, var9 + var10, 0.0D, 0.0D, 0.0D);
-                    par1World.spawnParticle("flame", var7 + var11, var8, var9 + var10, 0.0D, 0.0D, 0.0D);
+                    par1World.spawnParticle("smoke", xx + randPosChange, yy, zz + posTooner, 0.0D, 0.0D, 0.0D);
+                    par1World.spawnParticle("flame", xx + randPosChange, yy, zz + posTooner, 0.0D, 0.0D, 0.0D);
                 }
             }
         }
@@ -95,19 +95,9 @@ public class BlockBasicMachine extends BlockMachine
     }
 
     @Override
-    public boolean hasExtraConfigs()
-    {
-        return false;
-    }
-
-    @Override
     public void loadExtraConfigs(Configuration config)
     {
-    }
-
-    @Override
-    public void loadOreNames()
-    {
+        super.loadExtraConfigs(config);
     }
 
     /** Called when the block is right clicked by the player */
