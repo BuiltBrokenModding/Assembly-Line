@@ -118,8 +118,8 @@ public abstract class RecipeLoader
         public RecipeGrid(Object stack, Pair one, Pair two)
         {
             this(stack);
-            this.setRowOne(one.getKey(), one.getValue());
-            this.setRowTwo(two.getKey(), two.getValue());
+            this.setRowOne(one.left(), one.right());
+            this.setRowTwo(two.left(), two.right());
             this.hight = 2;
             this.width = 2;
         }

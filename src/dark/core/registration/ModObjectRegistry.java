@@ -190,7 +190,7 @@ public class ModObjectRegistry
                 {
                     for (Pair<String, Class<? extends TileEntity>> par : data.tiles)
                     {
-                        GameRegistry.registerTileEntityWithAlternatives(par.getValue(), par.getKey(), "DM" + par.getKey());
+                        GameRegistry.registerTileEntityWithAlternatives(par.right(), par.left(), "DM" + par.left());
                     }
                 }
                 if (data.creativeTab != null)
@@ -215,7 +215,7 @@ public class ModObjectRegistry
                 ((IExtraBlockInfo) block).getTileEntities(block.blockID, tileListNew);
                 for (Pair<String, Class<? extends TileEntity>> par : tileListNew)
                 {
-                    GameRegistry.registerTileEntityWithAlternatives(par.getValue(), par.getKey(), "DM" + par.getKey());
+                    GameRegistry.registerTileEntityWithAlternatives(par.right(), par.left(), "DM" + par.left());
                 }
             }
         }

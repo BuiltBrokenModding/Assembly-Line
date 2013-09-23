@@ -8,6 +8,7 @@ import com.builtbroken.common.Pair;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
@@ -121,6 +122,30 @@ public class BlockDebug extends BlockMachine
             block.enabled = config.get("Blocks", "Enable" + block.name + "Block", true).getBoolean(true);
         }
 
+    }
+
+    @Override
+    public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
+    {
+        return false;
+    }
+
+    @Override
+    public boolean onSneakMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
+    {
+        return false;
+    }
+
+    @Override
+    public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
+    {
+        return false;
+    }
+
+    @Override
+    public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
+    {
+        return this.onUseWrench(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ);
     }
 
     public static enum DebugBlocks

@@ -6,6 +6,7 @@ import com.builtbroken.common.Pair;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
@@ -17,13 +18,14 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.parts.INetworkPart;
 import dark.core.common.DarkMain;
+import dark.core.interfaces.IBlockActivated;
 import dark.core.prefab.IExtraInfo.IExtraBlockInfo;
 import dark.core.prefab.ModPrefab;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 /** Basic TileEntity Container class designed to be used by generic machines. It is suggested that
- * each mod using this create there own basic block extending this to reduce need to use build
- * data per block.
+ * each mod using this create there own basic block extending this to reduce need to use build data
+ * per block.
  *
  * @author Darkguardsman */
 public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
@@ -118,6 +120,17 @@ public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
     {
         OreDictionary.registerOre(this.getUnlocalizedName().replace("tile.", ""), this);
 
+    }
+
+    @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
+    {
+        TileEntity entity = world.getBlockTileEntity(x, y, z);
+        if (entity instanceof IBlockActivated && ((IBlockActivated) entity).onActivated(entityPlayer))
+        {
+            return true;
+        }
+        return super.onBlockActivated(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ);
     }
 
 }

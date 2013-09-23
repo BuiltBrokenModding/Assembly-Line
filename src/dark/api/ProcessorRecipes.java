@@ -222,9 +222,9 @@ public class ProcessorRecipes
 
         //Read chance output map
         Pair<ItemStack, Float> ree = mapChance.get(blockSet);
-        if (ree != null && random.nextFloat() >= ree.getValue())
+        if (ree != null && random.nextFloat() >= ree.right())
         {
-            return new ItemStack[] { convert(ree.getKey()) };
+            return new ItemStack[] { convert(ree.left()) };
         }
 
         //Start salvaging items
