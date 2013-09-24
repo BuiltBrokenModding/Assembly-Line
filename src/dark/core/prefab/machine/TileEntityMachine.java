@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.nbt.NBTTagCompound;
@@ -11,6 +12,7 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
@@ -23,8 +25,9 @@ import dark.core.common.DarkMain;
 import dark.core.interfaces.IExternalInv;
 import dark.core.interfaces.IInvBox;
 import dark.core.network.PacketHandler;
+import dark.core.prefab.IExtraInfo.IExtraTileEntityInfo;
 
-public class TileEntityMachine extends TileEntityInv implements ISidedInventory, IExternalInv, IDisableable, IPacketReceiver, IRotatable
+public abstract class TileEntityMachine extends TileEntityInv implements ISidedInventory, IExternalInv, IDisableable, IPacketReceiver, IRotatable, IExtraTileEntityInfo
 {
     protected int disabledTicks = 0, playersUsingMachine = 0;
     protected boolean functioning = false, prevFunctioning = false, hasGUI = false, rotateByMetaGroup = false, canBeDisabled = false;
@@ -206,7 +209,7 @@ public class TileEntityMachine extends TileEntityInv implements ISidedInventory,
     }
 
     /** Handles reduced data from the main packet method
-     * 
+     *
      * @param id - packet ID
      * @param dis - data
      * @param player - player
@@ -288,5 +291,25 @@ public class TileEntityMachine extends TileEntityInv implements ISidedInventory,
     public boolean isDisabled()
     {
         return !this.canBeDisabled && this.disabledTicks > 0;
+    }
+
+    @Override
+    public boolean hasExtraConfigs()
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void loadExtraConfigs(Configuration config)
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public TileEntitySpecialRenderer getClientTileEntityRenderer()
+    {
+        return null;
     }
 }

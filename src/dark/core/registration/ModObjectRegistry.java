@@ -1,15 +1,9 @@
 package dark.core.registration;
 
 import java.io.File;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.builtbroken.common.Pair;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -19,8 +13,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+
+import com.builtbroken.common.Pair;
+
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.SidedProxy;
 import dark.core.common.DarkMain;
 import dark.core.prefab.IExtraInfo;
 import dark.core.prefab.IExtraInfo.IExtraBlockInfo;
@@ -28,10 +25,14 @@ import dark.core.prefab.ModPrefab;
 import dark.core.prefab.machine.BlockMachine;
 
 /** Handler to make registering all parts of a mod's objects that are loaded into the game by forge
- * 
+ *
  * @author DarkGuardsman */
 public class ModObjectRegistry
 {
+
+    @SidedProxy(clientSide = "dark.core.registration.RegistryProxyClient", serverSide = "dark.core.registration.RegistryProxy")
+    public static RegistryProxy proxy;
+
     public static Configuration masterBlockConfig = new Configuration(new File(Loader.instance().getConfigDir(), "Dark/EnabledBlocks.cfg"));
 
     public static Block createNewBlock(String name, String modID, Class<? extends Block> blockClass)
@@ -64,7 +65,7 @@ public class ModObjectRegistry
             }
             if (block != null)
             {
-                ModObjectRegistry.registerBlock(block, itemClass, name, modID);
+                proxy.registerBlock(block, itemClass, name, modID);
                 ModObjectRegistry.finishCreation(block, null);
             }
         }
@@ -111,7 +112,7 @@ public class ModObjectRegistry
                     }
 
                 }
-                ModObjectRegistry.registerBlock(block, buildData.itemBlock, buildData.blockName, modID);
+                proxy.registerBlock(block, buildData.itemBlock, buildData.blockName, modID);
                 ModObjectRegistry.finishCreation(block, buildData);
             }
         }
@@ -128,69 +129,12 @@ public class ModObjectRegistry
         {
             if (block != null)
             {
-                BlockTileEntityInfo blockTileEntityInfo = block.getClass().getAnnotation(BlockTileEntityInfo.class);
-                if (blockTileEntityInfo != null)
-                {
-                    System.out.println("\n\n\n\n[ModObjectRegistry] Reading tile entities for " + block.getUnlocalizedName());
-                    Class<? extends TileEntity>[] tileEntities = blockTileEntityInfo.tileEntities();
-                    String[] tileEntitiesNames = blockTileEntityInfo.tileEntitiesNames();
-
-                    if (tileEntities != null && tileEntities.length > 0 && tileEntitiesNames != null && tileEntitiesNames.length > 0)
-                    {
-                        for (int i = 0; i < tileEntities.length && i < tileEntitiesNames.length; i++)
-                        {
-                            GameRegistry.registerTileEntityWithAlternatives(tileEntities[i], tileEntitiesNames[i], "DM" + tileEntitiesNames[i]);
-                        }
-                    }
-                }
-
-                // Read threw the block class looking for annotions on fields
-                for (Method method : block.getClass().getMethods())
-                {
-                    System.out.println("[ModObjectRegistry] Reading class methods " + method.toGenericString());
-                    for (Annotation annotian : method.getDeclaredAnnotations())
-                    {
-                        System.out.println("[ModObjectRegistry] Reading annotion " + annotian.toString());
-                        if (annotian instanceof BlockConfigFile)
-                        {
-
-                            System.out.println("[ModObjectRegistry] Loading config file for " + block.getUnlocalizedName());
-                            Type[] types = method.getParameterTypes();
-                            if (types.length == 1 && types[0] instanceof Configuration)
-                            {
-                                Configuration extraBlockConfig = new Configuration(new File(Loader.instance().getConfigDir(), "Dark/blocks/" + block.getUnlocalizedName() + ".cfg"));
-                                extraBlockConfig.load();
-                                try
-                                {
-                                    method.setAccessible(true);
-                                    method.invoke(extraBlockConfig);
-                                }
-                                catch (IllegalAccessException e)
-                                {
-                                    e.printStackTrace();
-                                }
-                                catch (IllegalArgumentException e)
-                                {
-                                    e.printStackTrace();
-                                }
-                                catch (InvocationTargetException e)
-                                {
-                                    e.printStackTrace();
-                                }
-                                extraBlockConfig.save();
-
-                            }
-                            break;
-                        }
-                    }
-                }
-
                 // Load data from BlockBuildData
                 if (data.tiles != null)
                 {
                     for (Pair<String, Class<? extends TileEntity>> par : data.tiles)
                     {
-                        GameRegistry.registerTileEntityWithAlternatives(par.right(), par.left(), "DM" + par.left());
+                        proxy.regiserTileEntity(par.left(), par.right());
                     }
                 }
                 if (data.creativeTab != null)
@@ -215,7 +159,7 @@ public class ModObjectRegistry
                 ((IExtraBlockInfo) block).getTileEntities(block.blockID, tileListNew);
                 for (Pair<String, Class<? extends TileEntity>> par : tileListNew)
                 {
-                    GameRegistry.registerTileEntityWithAlternatives(par.right(), par.left(), "DM" + par.left());
+                    proxy.regiserTileEntity(par.left(), par.right());
                 }
             }
         }
@@ -238,7 +182,7 @@ public class ModObjectRegistry
             if (fluidActual.getBlockID() == -1 && masterBlockConfig.get("Enabled_List", "Enabled_" + fluid.getName() + "Block", true).getBoolean(true))
             {
                 fluidBlock = new BlockFluid(modDomainPrefix, fluidActual, config).setUnlocalizedName("tile.Fluid." + fluid.getName());
-                GameRegistry.registerBlock(fluidBlock, "DMBlockFluid" + fluid.getName());
+                proxy.registerBlock(fluidBlock, null, "DMBlockFluid" + fluid.getName(), modDomainPrefix);
             }
             else
             {
@@ -247,14 +191,6 @@ public class ModObjectRegistry
         }
 
         return fluidBlock;
-    }
-
-    public static void registerBlock(Block block, Class<? extends ItemBlock> itemClass, String name, String modID)
-    {
-        if (block != null && name != null)
-        {
-            GameRegistry.registerBlock(block, itemClass == null ? ItemBlock.class : itemClass, name, modID);
-        }
     }
 
     public static class BlockBuildData
@@ -308,7 +244,7 @@ public class ModObjectRegistry
         }
 
         /** Adds a tileEntity to be registered when this block is registered
-         * 
+         *
          * @param name - mod name for the tileEntity, should be unique
          * @param class1 - new instance of the TileEntity to register */
         public BlockBuildData addTileEntity(String name, Class<? extends TileEntity> class1)

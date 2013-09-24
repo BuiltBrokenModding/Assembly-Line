@@ -3,9 +3,13 @@ package dark.core.common.machines;
 import java.util.EnumSet;
 
 import micdoodle8.mods.galacticraft.API.ISolarLevel;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityPack;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import dark.core.client.renders.RenderBlockSolarPanel;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
 
 public class TileEntitySolarPanel extends TileEntityEnergyMachine
@@ -83,5 +87,12 @@ public class TileEntitySolarPanel extends TileEntityEnergyMachine
     public float receiveElectricity(ElectricityPack receive, boolean doReceive)
     {
         return 0;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public TileEntitySpecialRenderer getClientTileEntityRenderer()
+    {
+        return new RenderBlockSolarPanel();
     }
 }

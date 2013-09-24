@@ -2,15 +2,19 @@ package dark.core.prefab;
 
 import java.util.Set;
 
-import com.builtbroken.common.Pair;
-
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.Configuration;
 
+import com.builtbroken.common.Pair;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 /** Used to handle info about the block that would normally be handled by the mod main class. Use the
  * BlockRegistry in order for these methods to be called on load of the mod.
- * 
+ *
  * @author DarkGuardsman */
 public interface IExtraInfo
 {
@@ -36,6 +40,8 @@ public interface IExtraInfo
 
     public static interface IExtraTileEntityInfo extends IExtraInfo
     {
+        @SideOnly(Side.CLIENT)
+        public TileEntitySpecialRenderer getClientTileEntityRenderer();
     }
 
 }
