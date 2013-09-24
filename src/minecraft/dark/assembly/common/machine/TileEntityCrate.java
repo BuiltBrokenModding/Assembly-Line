@@ -17,8 +17,22 @@ import dark.core.common.DarkMain;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.machine.TileEntityInv;
 
+/** Basic single stack inventory
+ *
+ * @author DarkGuardsman */
 public class TileEntityCrate extends TileEntityInv implements IPacketReceiver
 {
+    /* TODO
+     * Fix issues with ItemStacks with NBT tags having issues
+     * Fix possible render issues with some items
+     * Yell at MachineMuse for her items rendering threw walls
+     * Add support to disable sides of crates when rendering items are unwanted
+     * Simplify item rendering to decrease graphic lag
+     * Add crafting manger to prevent crafting with full crates
+     * As well keep item stacks when upgrade crate threw crafting
+     * Add upgrade item for crate
+     * Add crate swapping in which an advanced can trade place with a basic while keeping inventory at the locaiton
+     */
     /** Collective total stack of all inv slots */
     private ItemStack sampleStack;
 
@@ -50,7 +64,7 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver
     /** Turns the inventory array into a single stack of matching items. This assumes that all items
      * in the crate are the same TODO eject minority items and only keep the majority that are the
      * same to prevent duplication issues
-     * 
+     *
      * @param force - force a rebuild of the inventory from the single stack created */
     public void buildSampleStack()
     {
