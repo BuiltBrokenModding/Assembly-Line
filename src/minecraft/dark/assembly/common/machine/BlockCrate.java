@@ -7,10 +7,10 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
 import cpw.mods.fml.relauncher.Side;
@@ -20,11 +20,11 @@ import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 /** A block that allows the placement of mass amount of a specific item within it. It will be allowed
  * to go on Conveyor Belts
- * 
+ *
  * @author DarkGuardsman */
 public class BlockCrate extends BlockAssembly
 {
-    Icon crate_icon;
+    Icon adv, elt;
 
     public BlockCrate()
     {
@@ -35,21 +35,24 @@ public class BlockCrate extends BlockAssembly
     @Override
     public void registerIcons(IconRegister iconReg)
     {
-        this.crate_icon = iconReg.registerIcon(AssemblyLine.instance.PREFIX + "crate");
+        this.blockIcon = iconReg.registerIcon(AssemblyLine.instance.PREFIX + "crate");
+        this.adv = iconReg.registerIcon(AssemblyLine.instance.PREFIX + "crate_adv");
+        this.elt = iconReg.registerIcon(AssemblyLine.instance.PREFIX + "crate_elt");
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public Icon getBlockTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side)
+    public Icon getIcon(int side, int meta)
     {
-        return this.crate_icon;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public Icon getIcon(int side, int metadata)
-    {
-        return this.crate_icon;
+        if (meta == 1)
+        {
+            return adv;
+        }
+        else if (meta == 2)
+        {
+            return elt;
+        }
+        return this.blockIcon;
     }
 
     @Override
@@ -213,7 +216,7 @@ public class BlockCrate extends BlockAssembly
     }
 
     /** Inserts all items of the same type this player has into the crate.
-     * 
+     *
      * @return True on success */
     public boolean insertAllItems(TileEntityCrate tileEntity, EntityPlayer player)
     {
@@ -258,7 +261,7 @@ public class BlockCrate extends BlockAssembly
     }
 
     /** Ejects and item out of the crate and spawn it under the player entity.
-     * 
+     *
      * @param tileEntity
      * @param player
      * @param requestSize - The maximum stack size to take out. Default should be 64.
@@ -310,7 +313,7 @@ public class BlockCrate extends BlockAssembly
     }
 
     /** Puts an itemStack into the crate.
-     * 
+     *
      * @param tileEntity
      * @param itemStack */
     public static ItemStack addStackToCrate(TileEntityCrate tileEntity, ItemStack itemStack)
@@ -406,10 +409,11 @@ public class BlockCrate extends BlockAssembly
         }
         try
         {
-            ItemStack stack = new ItemStack(this);
+            ItemStack stack = new ItemStack(this, 1, 2);
             ItemBlockCrate.setContainingItemStack(stack, new ItemStack(1, 2048, 0));
             list.add(stack);
-            // 3903
+            ItemBlockCrate.setContainingItemStack(stack, new ItemStack(Item.coal, 2048, 1));
+            list.add(stack);
         }
         catch (Exception e)
         {
