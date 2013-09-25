@@ -76,7 +76,7 @@ public class RenderProcessor extends RenderTileMachine
     }
 
     @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double var2, double var4, double var6, float var8)
+    public void renderModel(TileEntity tileEntity, double var2, double var4, double var6, float var8)
     {
         if (tileEntity instanceof TileEntityProcessor)
             this.renderAModelAt((TileEntityProcessor) tileEntity, var2, var4, var6, var8);
