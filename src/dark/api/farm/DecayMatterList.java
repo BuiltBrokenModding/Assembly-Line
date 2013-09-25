@@ -2,9 +2,9 @@ package dark.api.farm;
 
 import java.util.HashMap;
 
-import com.builtbroken.common.Pair;
-
 import net.minecraft.item.ItemStack;
+
+import com.builtbroken.common.Pair;
 
 public class DecayMatterList
 {
