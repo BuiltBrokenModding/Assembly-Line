@@ -52,6 +52,7 @@ import dark.core.common.items.ItemWrench;
 import dark.core.common.machines.BlockBasicMachine;
 import dark.core.common.machines.BlockSolarPanel;
 import dark.core.common.transmit.BlockWire;
+import dark.core.common.transmit.ItemBlockWire;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.helpers.FluidHelper;
@@ -199,7 +200,7 @@ public class DarkMain extends ModPrefab
         }
         CoreRecipeLoader.basicMachine = ModObjectRegistry.createNewBlock("DMBlockBasicMachine", DarkMain.MOD_ID, BlockBasicMachine.class, ItemBlockHolder.class);
         CoreRecipeLoader.blockOre = ModObjectRegistry.createNewBlock("DMBlockOre", DarkMain.MOD_ID, BlockOre.class, ItemBlockOre.class);
-        CoreRecipeLoader.blockWire = ModObjectRegistry.createNewBlock("DMBlockWire", DarkMain.MOD_ID, BlockWire.class, ItemBlockHolder.class);
+        CoreRecipeLoader.blockWire = ModObjectRegistry.createNewBlock("DMBlockWire", DarkMain.MOD_ID, BlockWire.class, ItemBlockWire.class);
         CoreRecipeLoader.blockDebug = ModObjectRegistry.createNewBlock("DMBlockDebug", DarkMain.MOD_ID, BlockDebug.class, ItemBlockHolder.class);
         CoreRecipeLoader.blockStainGlass = ModObjectRegistry.createNewBlock("DMBlockStainedGlass", DarkMain.MOD_ID, BlockColorGlass.class, ItemBlockColored.class);
         CoreRecipeLoader.blockColorSand = ModObjectRegistry.createNewBlock("DMBlockColorSand", DarkMain.MOD_ID, BlockColorSand.class, ItemBlockColored.class);

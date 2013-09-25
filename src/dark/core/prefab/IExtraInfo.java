@@ -1,5 +1,6 @@
 package dark.core.prefab;
 
+import java.util.List;
 import java.util.Set;
 
 import net.minecraft.block.ITileEntityProvider;
@@ -36,12 +37,14 @@ public interface IExtraInfo
 
         /** List of all tileEntities this block needs */
         public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list);
+
+        @SideOnly(Side.CLIENT)
+        public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list);
     }
 
     public static interface IExtraTileEntityInfo extends IExtraInfo
     {
-        @SideOnly(Side.CLIENT)
-        public TileEntitySpecialRenderer getClientTileEntityRenderer();
+
     }
 
 }

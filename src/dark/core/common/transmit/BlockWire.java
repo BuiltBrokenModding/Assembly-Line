@@ -3,20 +3,28 @@ package dark.core.common.transmit;
 import java.util.List;
 import java.util.Set;
 
-import com.builtbroken.common.Pair;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import universalelectricity.core.block.IConductor;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.tile.TileEntityConductor;
+
+import com.builtbroken.common.Pair;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import dark.api.ColorCode;
+import dark.core.client.renders.RenderBlockWire;
+import dark.core.common.CoreRecipeLoader;
 import dark.core.common.DMCreativeTab;
 import dark.core.common.DarkMain;
 import dark.core.prefab.machine.BlockMachine;
@@ -29,6 +37,9 @@ public class BlockWire extends BlockMachine
     public boolean isWireCollision = true;
     public Vector3 minVector = new Vector3(0.3, 0.3, 0.3);
     public Vector3 maxVector = new Vector3(0.7, 0.7, 0.7);
+
+    @SideOnly(Side.CLIENT)
+    public Icon wireIcon;
 
     public BlockWire()
     {
@@ -43,7 +54,18 @@ public class BlockWire extends BlockMachine
     @Override
     public void registerIcons(IconRegister par1IconRegister)
     {
-        this.blockIcon = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + "CopperWire");
+        this.wireIcon = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + "CopperWire");
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public Icon getIcon(int side, int meta)
+    {
+        if (meta == 17)
+        {
+            return this.blockIcon;
+        }
+        return Block.blockRedstone.getIcon(side, 0);
     }
 
     @Override
@@ -53,15 +75,9 @@ public class BlockWire extends BlockMachine
     }
 
     @Override
-    public boolean renderAsNormalBlock()
-    {
-        return false;
-    }
-
-    @Override
     public int getRenderType()
     {
-        return -1;
+        return this.zeroRendering ? 0 : -1;
     }
 
     @Override
@@ -76,7 +92,7 @@ public class BlockWire extends BlockMachine
         super.onBlockAdded(world, x, y, z);
 
         TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-
+        setBlockBoundsBasedOnState(world, x, y, z);
         if (tileEntity instanceof IConductor)
         {
             ((IConductor) tileEntity).refresh();
@@ -87,7 +103,7 @@ public class BlockWire extends BlockMachine
     public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
     {
         TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-
+        setBlockBoundsBasedOnState(world, x, y, z);
         if (tileEntity instanceof IConductor)
         {
             ((IConductor) tileEntity).refresh();
@@ -228,6 +244,16 @@ public class BlockWire extends BlockMachine
     public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
     {
         list.add(new Pair<String, Class<? extends TileEntity>>("DMWireTile", TileEntityWire.class));
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
+    {
+        if (!this.zeroRendering)
+        {
+            list.add(new Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>(TileEntityWire.class, new RenderBlockWire()));
+        }
     }
 
     @Override

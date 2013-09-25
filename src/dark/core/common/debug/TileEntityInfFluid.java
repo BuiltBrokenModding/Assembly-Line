@@ -1,6 +1,5 @@
 package dark.core.common.debug;
 
-import universalelectricity.core.vector.Vector3;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -14,6 +13,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.TextHelper.TextColor;
 

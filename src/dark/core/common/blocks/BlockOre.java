@@ -3,11 +3,10 @@ package dark.core.common.blocks;
 import java.util.List;
 import java.util.Set;
 
-import com.builtbroken.common.Pair;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -16,6 +15,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.prefab.ore.OreGenReplaceStone;
+
+import com.builtbroken.common.Pair;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.CoreRecipeLoader;
@@ -143,6 +145,13 @@ public class BlockOre extends Block implements IExtraBlockInfo
 
     @Override
     public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
     {
         // TODO Auto-generated method stub
 

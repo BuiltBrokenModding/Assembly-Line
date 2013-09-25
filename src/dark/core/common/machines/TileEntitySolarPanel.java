@@ -10,6 +10,7 @@ import universalelectricity.core.electricity.ElectricityPack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.client.renders.RenderBlockSolarPanel;
+import dark.core.common.CoreRecipeLoader;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
 
 public class TileEntitySolarPanel extends TileEntityEnergyMachine
@@ -53,7 +54,6 @@ public class TileEntitySolarPanel extends TileEntityEnergyMachine
             {
                 wattOutput = 0;
             }
-            System.out.println("Watts: " + this.wattOutput);
             this.produceAllSides();
         }
 
@@ -90,9 +90,8 @@ public class TileEntitySolarPanel extends TileEntityEnergyMachine
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public TileEntitySpecialRenderer getClientTileEntityRenderer()
+    public float getVoltage()
     {
-        return new RenderBlockSolarPanel();
+        return 0.060F;
     }
 }

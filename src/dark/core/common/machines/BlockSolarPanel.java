@@ -1,17 +1,28 @@
 package dark.core.common.machines;
 
+import java.util.List;
 import java.util.Set;
 
-import com.builtbroken.common.Pair;
-
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.core.UniversalElectricity;
+
+import com.builtbroken.common.Pair;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import dark.core.client.renders.BlockRenderingHandler;
+import dark.core.client.renders.RenderBlockSolarPanel;
+import dark.core.client.renders.RenderBlockWire;
+import dark.core.common.CoreRecipeLoader;
 import dark.core.common.DMCreativeTab;
+import dark.core.common.transmit.BlockWire;
+import dark.core.common.transmit.TileEntityWire;
 import dark.core.prefab.machine.BlockMachine;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
@@ -57,7 +68,16 @@ public class BlockSolarPanel extends BlockMachine
     public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
     {
         list.add(new Pair<String, Class<? extends TileEntity>>("DMSolarCell", TileEntitySolarPanel.class));
+    }
 
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
+    {
+        if (!this.zeroRendering)
+        {
+            list.add(new Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>(TileEntitySolarPanel.class, new RenderBlockSolarPanel()));
+        }
     }
 
     @Override

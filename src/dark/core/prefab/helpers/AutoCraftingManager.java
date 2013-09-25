@@ -3,8 +3,6 @@ package dark.core.prefab.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.builtbroken.common.Pair;
-
 import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -19,6 +17,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+
+import com.builtbroken.common.Pair;
+
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
 /** Rewrite of the imprinter crafting system into its own manageable class

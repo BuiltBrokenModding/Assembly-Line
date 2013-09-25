@@ -29,7 +29,7 @@ public class ClientProxy extends CommonProxy
 {
 
     /** Renders a laser beam from one power to another by a set color for a set time
-     * 
+     *
      * @param world - world this laser is to be rendered in
      * @param position - start vector3
      * @param target - end vector3
@@ -49,19 +49,6 @@ public class ClientProxy extends CommonProxy
     {
         RenderingRegistry.registerBlockHandler(new BlockRenderingHandler());
         //MinecraftForge.EVENT_BUS.register(SoundHandler.INSTANCE);
-    }
-
-    @Override
-    public void init()
-    {
-        if (CoreRecipeLoader.blockWire != null)
-        {
-            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWire.class, new RenderBlockWire());
-        }
-        if (CoreRecipeLoader.blockSolar != null)
-        {
-            ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySolarPanel.class, new RenderBlockSolarPanel());
-        }
     }
 
     @Override

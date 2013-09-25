@@ -1,13 +1,13 @@
 package dark.core.prefab.machine;
 
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
-
-import com.builtbroken.common.Pair;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -16,6 +16,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.core.vector.Vector3;
+
+import com.builtbroken.common.Pair;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
@@ -144,6 +147,13 @@ public class BlockMulti extends BlockContainer implements IExtraBlockInfo
     public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
     {
         list.add(new Pair<String, Class<? extends TileEntity>>("DMMultiBlock", TileEntityMulti.class));
+
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
+    {
 
     }
 

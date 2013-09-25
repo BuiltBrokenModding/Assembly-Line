@@ -30,7 +30,7 @@ import dark.core.prefab.machine.BlockMachine;
 public class ModObjectRegistry
 {
 
-    @SidedProxy(clientSide = "dark.core.registration.RegistryProxyClient", serverSide = "dark.core.registration.RegistryProxy")
+    @SidedProxy(clientSide = "dark.core.registration.ClientRegistryProxy", serverSide = "dark.core.registration.RegistryProxy")
     public static RegistryProxy proxy;
 
     public static Configuration masterBlockConfig = new Configuration(new File(Loader.instance().getConfigDir(), "Dark/EnabledBlocks.cfg"));

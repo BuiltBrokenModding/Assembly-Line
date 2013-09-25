@@ -306,10 +306,4 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
         // TODO Auto-generated method stub
 
     }
-
-    @Override
-    public TileEntitySpecialRenderer getClientTileEntityRenderer()
-    {
-        return null;
-    }
 }

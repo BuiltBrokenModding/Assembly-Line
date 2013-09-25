@@ -1,8 +1,8 @@
 package dark.core;
 
 import java.awt.Desktop;
-import java.awt.Dimension;
 import java.awt.Dialog.ModalityType;
+import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
@@ -40,14 +40,12 @@ import javax.swing.WindowConstants;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
+import net.minecraft.launchwrapper.LaunchClassLoader;
 import argo.jdom.JdomParser;
 import argo.jdom.JsonNode;
 import argo.jdom.JsonRootNode;
 import argo.jdom.JsonStringNode;
 import argo.saj.InvalidSyntaxException;
-
-import net.minecraft.launchwrapper.LaunchClassLoader;
-
 import cpw.mods.fml.common.versioning.ComparableVersion;
 import cpw.mods.fml.relauncher.FMLInjectionData;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;

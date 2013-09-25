@@ -1,11 +1,10 @@
 package dark.core.prefab.machine;
 
+import java.util.List;
 import java.util.Set;
 
-import com.builtbroken.common.Pair;
-
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
@@ -13,6 +12,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.prefab.block.BlockTile;
+
+import com.builtbroken.common.Pair;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -56,9 +58,22 @@ public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
 
     @Override
     @SideOnly(Side.CLIENT)
-    public Icon getIcon(int par1, int par2)
+    public Icon getIcon(int side, int meta)
     {
         return this.blockIcon;
+    }
+
+    @Override
+    public boolean isOpaqueCube()
+    {
+        return this.zeroRendering;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean renderAsNormalBlock()
+    {
+        return this.zeroRendering;
     }
 
     /** Called whenever the block is added into the world. Args: world, x, y, z */
@@ -94,7 +109,13 @@ public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
     @Override
     public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
     {
-        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
+    {
 
     }
 
@@ -107,12 +128,9 @@ public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
     @Override
     public void loadExtraConfigs(Configuration config)
     {
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
-        {
-            this.zeroAnimation = config.get("Effects--Not_Supported_By_All_Blocks", "disableAnimation", false, "Turns off animations of the block").getBoolean(false);
-            this.zeroRendering = config.get("Effects--Not_Supported_By_All_Blocks", "disableRender", false, "Turns off the block render replacing it with a normal block").getBoolean(false);
-            this.zeroSound = config.get("Effects--Not_Supported_By_All_Blocks", "disableSound", false, "Turns of sound of the block for any or its actions").getBoolean(false);
-        }
+        this.zeroAnimation = config.get("Effects--Not_Supported_By_All_Blocks", "disableAnimation", false, "Turns off animations of the block").getBoolean(false);
+        this.zeroRendering = config.get("Effects--Not_Supported_By_All_Blocks", "disableRender", false, "Turns off the block render replacing it with a normal block").getBoolean(false);
+        this.zeroSound = config.get("Effects--Not_Supported_By_All_Blocks", "disableSound", false, "Turns of sound of the block for any or its actions").getBoolean(false);
     }
 
     @Override

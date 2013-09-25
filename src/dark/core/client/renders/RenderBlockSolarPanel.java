@@ -18,10 +18,10 @@ public class RenderBlockSolarPanel extends RenderTileMachine
     public static final ModelSolarPanel model = new ModelSolarPanel();
 
     @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double d, double d1, double d2, float f)
+    public void renderModel(TileEntity tileEntity, double d, double d1, double d2, float f)
     {
         // Texture file
-        this.bindTextureByName(this.getTexture(tileEntity.getBlockType().blockID, tileEntity.getBlockMetadata()));
+        this.bindTexture(this.getTexture(tileEntity.getBlockType().blockID, tileEntity.getBlockMetadata()));
         GL11.glPushMatrix();
         GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
         GL11.glScalef(1.0F, -1F, -1F);
