@@ -49,7 +49,7 @@ public class RenderSink extends RenderTileMachine
     {
         int meta = te.worldObj.getBlockMetadata(te.xCoord, te.yCoord, te.zCoord);
 
-        bindTextureByName(this.getTexture(te.getBlockType().blockID, te.getBlockMetadata()));
+        bindTexture(this.getTexture(te.getBlockType().blockID, te.getBlockMetadata()));
         GL11.glPushMatrix();
         GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
         GL11.glScalef(1.0F, -1F, -1F);
@@ -75,7 +75,7 @@ public class RenderSink extends RenderTileMachine
     }
 
     @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double var2, double var4, double var6, float var8)
+    public void renderModel(TileEntity tileEntity, double var2, double var4, double var6, float var8)
     {
         this.renderAModelAt((TileEntitySink) tileEntity, var2, var4, var6, var8);
     }

@@ -3,8 +3,6 @@ package dark.fluid.common.pipes;
 import java.util.List;
 import java.util.Set;
 
-import com.builtbroken.common.Pair;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -15,6 +13,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidTank;
+
+import com.builtbroken.common.Pair;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.ColorCode;

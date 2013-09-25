@@ -6,8 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.builtbroken.common.Pair;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -18,6 +16,9 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
+
+import com.builtbroken.common.Pair;
+
 import dark.api.fluid.IDrain;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.fluid.common.prefab.TileEntityFluidDevice;

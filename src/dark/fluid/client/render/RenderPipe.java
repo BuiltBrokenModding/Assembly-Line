@@ -70,7 +70,7 @@ public class RenderPipe extends RenderTileMachine
 
     public void render(int blockID, int meta, boolean[] side)
     {
-        bindTextureByName(this.getTexture(blockID, meta));
+        bindTexture(this.getTexture(blockID, meta));
         if (side[0])
         {
             SixPipe.renderBottom();
@@ -99,7 +99,7 @@ public class RenderPipe extends RenderTileMachine
     }
 
     @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double var2, double var4, double var6, float var8)
+    public void renderModel(TileEntity tileEntity, double var2, double var4, double var6, float var8)
     {
         this.renderAModelAt(tileEntity, var2, var4, var6, var8);
     }

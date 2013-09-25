@@ -32,7 +32,7 @@ public class RenderBoiler extends RenderTileMachine
     }
 
     @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double d, double d1, double d2, float d3)
+    public void renderModel(TileEntity tileEntity, double d, double d1, double d2, float d3)
     {
 
         GL11.glPushMatrix();

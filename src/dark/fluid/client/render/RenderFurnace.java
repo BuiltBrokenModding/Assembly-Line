@@ -24,7 +24,7 @@ public class RenderFurnace extends RenderTileMachine
     }
 
     @Override
-    public void renderTileEntityAt(TileEntity te, double d, double d1, double d2, float d3)
+    public void renderModel(TileEntity te, double d, double d1, double d2, float d3)
     {
         bindTextureByName(FluidMech.instance.PREFIX, ModPrefab.MODEL_DIRECTORY + "Furnace.png");
         GL11.glPushMatrix();

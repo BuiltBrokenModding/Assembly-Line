@@ -38,7 +38,7 @@ public class RenderReleaseValve extends RenderTileMachine
         {
             ents = ((TileEntityReleaseValve) te).connected;
         }
-        bindTextureByName(this.getTexture(te.getBlockType().blockID, te.getBlockMetadata()));
+        bindTexture(this.getTexture(te.getBlockType().blockID, te.getBlockMetadata()));
         if (ents[0] != null)
             SixPipe.renderBottom();
         if (ents[1] != null)
@@ -65,7 +65,7 @@ public class RenderReleaseValve extends RenderTileMachine
     }
 
     @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double var2, double var4, double var6, float var8)
+    public void renderModel(TileEntity tileEntity, double var2, double var4, double var6, float var8)
     {
         this.renderAModelAt(tileEntity, var2, var4, var6, var8);
     }

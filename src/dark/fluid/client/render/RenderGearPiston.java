@@ -57,7 +57,7 @@ public class RenderGearPiston extends RenderTileMachine
     }
 
     @Override
-    public void renderTileEntityAt(TileEntity var1, double d, double d1, double d2, float d3)
+    public void renderModel(TileEntity var1, double d, double d1, double d2, float d3)
     {
         this.renderTileEntityAt(((TileEntitySteamPiston) var1), d, d1, d2, d3);
 

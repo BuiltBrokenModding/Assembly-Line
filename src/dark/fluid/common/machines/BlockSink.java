@@ -2,8 +2,6 @@ package dark.fluid.common.machines;
 
 import java.util.Set;
 
-import com.builtbroken.common.Pair;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,6 +11,9 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
+
+import com.builtbroken.common.Pair;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.prefab.helpers.FluidHelper;

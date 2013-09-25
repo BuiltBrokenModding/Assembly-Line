@@ -125,4 +125,11 @@ public class RenderTank extends RenderTileMachine
         }
         return new ResourceLocation(texture);
     }
+
+    @Override
+    public void renderModel(TileEntity tileEntity, double x, double y, double z, float size)
+    {
+        // TODO Auto-generated method stub
+
+    }
 }

@@ -4,15 +4,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.builtbroken.common.Pair;
-import com.builtbroken.common.Triple;
-
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+
+import com.builtbroken.common.Pair;
+import com.builtbroken.common.Triple;
+
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.tilenetwork.fluid.FluidRecipeInfo.SimpleFluidRecipe;
 

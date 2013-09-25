@@ -3,8 +3,6 @@ package dark.fluid.common.pump;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.builtbroken.common.Pair;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -13,6 +11,9 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
+
+import com.builtbroken.common.Pair;
+
 import dark.api.IToolReadOut;
 import dark.api.fluid.IDrain;
 import dark.api.parts.ITileConnector;

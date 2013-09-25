@@ -3,8 +3,6 @@ package dark.mech.common.machines;
 import java.util.ArrayList;
 import java.util.Set;
 
-import com.builtbroken.common.Pair;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,6 +11,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+
+import com.builtbroken.common.Pair;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.fluid.client.render.BlockRenderHelper;

@@ -25,9 +25,9 @@ public class RenderConstructionPump extends RenderTileMachine
     }
 
     @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double d, double d1, double d2, float d3)
+    public void renderModel(TileEntity tileEntity, double d, double d1, double d2, float d3)
     {
-        bindTextureByName(this.getTexture(0, 0));
+        bindTexture(this.getTexture(0, 0));
         GL11.glPushMatrix();
         GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.45F, (float) d2 + 0.5F);
         GL11.glScalef(1.0F, -1F, -1F);

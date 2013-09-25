@@ -128,8 +128,8 @@ public class FluidMech extends ModPrefab
         }
         CONFIGURATION.load();
 
-        FMRecipeLoader.blockWasteLiquid = ModObjectRegistry.createNewFluidBlock(this.PREFIX, FluidMech.CONFIGURATION, new Fluid(WASTE_FLUID_NAME).setUnlocalizedName("fluid.waste.name").setDensity(1300).setViscosity(1800));
-        FMRecipeLoader.blockOilLiquid = ModObjectRegistry.createNewFluidBlock(this.PREFIX, FluidMech.CONFIGURATION, new Fluid(OIL_FLUID_NAME).setUnlocalizedName("fluid.oil.name").setDensity(1500).setViscosity(4700));
+        FMRecipeLoader.blockWasteLiquid = ModObjectRegistry.createNewFluidBlock(FluidMech.MOD_ID, FluidMech.CONFIGURATION, new Fluid(WASTE_FLUID_NAME).setUnlocalizedName("fluid.waste.name").setDensity(1300).setViscosity(1800));
+        FMRecipeLoader.blockOilLiquid = ModObjectRegistry.createNewFluidBlock(FluidMech.MOD_ID, FluidMech.CONFIGURATION, new Fluid(OIL_FLUID_NAME).setUnlocalizedName("fluid.oil.name").setDensity(1500).setViscosity(4700));
 
         FMRecipeLoader.blockPipe = ModObjectRegistry.createNewBlock("FMBlockPipe", FluidMech.MOD_ID, BlockPipe.class, ItemBlockPipe.class);
         FMRecipeLoader.blockPumpMachine = ModObjectRegistry.createNewBlock("FMBlockPump", FluidMech.MOD_ID, BlockPumpMachine.class, ItemBlockHolder.class);
