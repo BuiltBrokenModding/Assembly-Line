@@ -28,7 +28,7 @@ public abstract class TileEntityFilterable extends TileEntityAssembly implements
     }
 
     /** Looks through the things in the filter and finds out which item is being filtered.
-     * 
+     *
      * @return Is this filterable block filtering this specific ItemStack? */
     public boolean isFiltering(ItemStack itemStack)
     {
@@ -38,14 +38,11 @@ public abstract class TileEntityFilterable extends TileEntityAssembly implements
 
             if (checkStacks != null)
             {
-                for (int i = 0; i < checkStacks.size(); i++)
+                for (ItemStack stack : checkStacks)
                 {
-                    if (checkStacks.get(i) != null)
+                    if (stack.isItemEqual(itemStack))
                     {
-                        if (checkStacks.get(i).isItemEqual(itemStack))
-                        {
-                            return !inverted;
-                        }
+                        return !inverted;
                     }
                 }
             }

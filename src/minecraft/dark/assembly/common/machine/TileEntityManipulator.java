@@ -1,10 +1,14 @@
 package dark.assembly.common.machine;
 
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.util.List;
 
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
@@ -12,6 +16,7 @@ import universalelectricity.prefab.tile.IRotatable;
 import dark.assembly.api.IManipulator;
 import dark.assembly.common.imprinter.ItemImprinter;
 import dark.assembly.common.imprinter.prefab.TileEntityFilterable;
+import dark.core.network.PacketHandler;
 
 public class TileEntityManipulator extends TileEntityFilterable implements IRotatable, IManipulator
 {
@@ -31,8 +36,9 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
     }
 
     @Override
-    public void onUpdate()
+    public void updateEntity()
     {
+        super.updateEntity();
         if (!this.worldObj.isRemote)
         {
             if (this.isFunctioning())
@@ -170,6 +176,35 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
         super.writeToNBT(nbt);
         nbt.setBoolean("isOutput", this.isOutput);
         nbt.setBoolean("selfpulse", this.isSelfPulse());
+    }
+
+    @Override
+    public Packet getDescriptionPacket()
+    {
+        return PacketHandler.instance().getPacket(this.getChannel(), this, "manipulator", this.functioning, this.isInverted(), this.isSelfPulse(), this.isOutput());
+    }
+
+    public boolean simplePacket(String id, DataInputStream dis, EntityPlayer player)
+    {
+        try
+        {
+            if (this.worldObj.isRemote && !super.simplePacket(id, dis, player))
+            {
+                if (id.equalsIgnoreCase("manipulator"))
+                {
+                    this.functioning = dis.readBoolean();
+                    this.setInverted(dis.readBoolean());
+                    this.setSelfPulse(dis.readBoolean());
+                    this.setOutput(dis.readBoolean());
+                    return true;
+                }
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override

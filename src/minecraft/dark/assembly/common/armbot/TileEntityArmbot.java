@@ -1,5 +1,7 @@
 package dark.assembly.common.armbot;
 
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -11,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
@@ -40,6 +43,7 @@ import dark.core.common.DarkMain;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.IMultiBlock;
 import dark.core.prefab.helpers.ItemWorldHelper;
+import dark.core.prefab.machine.BlockMulti;
 
 public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IPacketReceiver, IArmbot, IPeripheral
 {
@@ -69,7 +73,6 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     public TileEntityArmbot()
     {
         super(.02f);
-        // TODO Auto-generated constructor stub
     }
 
     @Override
@@ -83,8 +86,10 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     }
 
     @Override
-    public void onUpdate()
+    //TODO separate out functions of this method to make it easier to read and work with
+    public void updateEntity()
     {
+        super.updateEntity();
         Vector3 handPosition = this.getHandPosition();
 
         for (Entity entity : this.grabbedEntities)
@@ -169,25 +174,37 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
             if (this.renderYaw > this.rotationYaw)
             {
                 if (Math.abs(this.renderYaw - this.rotationYaw) >= 180)
+                {
                     speedYaw = this.ROTATION_SPEED;
+                }
                 else
+                {
                     speedYaw = -this.ROTATION_SPEED;
+                }
             }
             else
             {
                 if (Math.abs(this.renderYaw - this.rotationYaw) >= 180)
+                {
                     speedYaw = -this.ROTATION_SPEED;
+                }
                 else
+                {
                     speedYaw = this.ROTATION_SPEED;
+                }
             }
 
             this.renderYaw += speedYaw;
 
             // keep it within 0 - 360 degrees so ROTATE commands work properly
             while (this.renderYaw < 0)
+            {
                 this.renderYaw += 360;
+            }
             while (this.renderYaw > 360)
+            {
                 this.renderYaw -= 360;
+            }
 
             if (this.ticks % 5 == 0 && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
             {
@@ -220,13 +237,20 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
             this.renderPitch += speedPitch;
 
+            //Clamp pitch between 0 - 60
             while (this.renderPitch < 0)
+            {
                 this.renderPitch += 60;
+            }
             while (this.renderPitch > 60)
+            {
                 this.renderPitch -= 60;
+            }
 
             if (this.ticks % 4 == 0 && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+            {
                 this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "mods.assemblyline.conveyor", 2f, 2.5f, true);
+            }
 
             if (Math.abs(this.renderPitch - this.rotationPitch) < this.ROTATION_SPEED + 0.1f)
             {
@@ -239,25 +263,37 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
             }
         }
 
+        //Clamp angles between 0 - 360
         while (this.rotationYaw < 0)
-            this.rotationYaw += 360;
-        while (this.rotationYaw > 360)
-            this.rotationYaw -= 360;
-        while (this.rotationPitch < 0)
-            this.rotationPitch += 60;
-        while (this.rotationPitch > 60)
-            this.rotationPitch -= 60;
-
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && this.ticks % 20 == 0)
         {
-            PacketHandler.instance().sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 50);
+            this.rotationYaw += 360;
+        }
+        while (this.rotationYaw > 360)
+        {
+            this.rotationYaw -= 360;
+        }
+        while (this.rotationPitch < 0)
+        {
+            this.rotationPitch += 60;
+        }
+        while (this.rotationPitch > 60)
+        {
+            this.rotationPitch -= 60;
+        }
+
+        //TODO reduce this to an event based system were it only updates the client when something changes
+        if (!this.worldObj.isRemote && this.ticks % 20 == 0)
+        {
+            this.sendRotationPacket();
         }
     }
 
     public Command getCurrentCommand()
     {
         if (this.commandManager.hasTasks() && this.commandManager.getCurrentTask() >= 0 && this.commandManager.getCurrentTask() < this.commandManager.getCommands().size())
+        {
             return this.commandManager.getCommands().get(this.commandManager.getCurrentTask());
+        }
         return null;
     }
 
@@ -265,8 +301,8 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     public Vector3 getHandPosition()
     {
         Vector3 position = new Vector3(this);
-        position.add(0.5);
-        position.add(this.getDeltaHandPosition());
+        position.translate(0.5);
+        position.translate(this.getDeltaHandPosition());
         return position;
     }
 
@@ -362,22 +398,6 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     public int getInventoryStackLimit()
     {
         return 1;
-    }
-
-    @Override
-    public boolean isUseableByPlayer(EntityPlayer par1EntityPlayer)
-    {
-        return this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord) != this ? false : par1EntityPlayer.getDistanceSq(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D) <= 64.0D;
-    }
-
-    @Override
-    public void openChest()
-    {
-    }
-
-    @Override
-    public void closeChest()
-    {
     }
 
     public String getCommandDisplayText()
@@ -492,6 +512,46 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     }
 
     @Override
+    public Packet getDescriptionPacket()
+    {
+        return PacketHandler.instance().getPacket(this.getChannel(), this, "armbot", this.functioning, this.rotationYaw, this.rotationPitch);
+    }
+
+    public void sendRotationPacket()
+    {
+        PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getPacket(this.getChannel(), "arbotRotation", this.rotationYaw, this.rotationPitch), worldObj, new Vector3(this).translate(new Vector3(.5f, 1f, .5f)), 40);
+    }
+
+    @Override
+    public boolean simplePacket(String id, DataInputStream dis, EntityPlayer player)
+    {
+        try
+        {
+            if (this.worldObj.isRemote && !super.simplePacket(id, dis, player))
+            {
+                if (id.equalsIgnoreCase("armbot"))
+                {
+                    this.functioning = dis.readBoolean();
+                    this.rotationYaw = dis.readFloat();
+                    this.rotationPitch = dis.readFloat();
+                    return true;
+                }
+                else if (id.equalsIgnoreCase("arbotRotation"))
+                {
+                    this.rotationYaw = dis.readFloat();
+                    this.rotationPitch = dis.readFloat();
+                    return true;
+                }
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
     public boolean onActivated(EntityPlayer player)
     {
         ItemStack containingStack = this.getStackInSlot(0);
@@ -583,7 +643,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     @Override
     public void onCreate(Vector3 placedPosition)
     {
-        if (DarkMain.blockMulti != null)
+        if (DarkMain.blockMulti instanceof BlockMulti)
         {
             DarkMain.blockMulti.makeFakeBlock(this.worldObj, Vector3.translate(placedPosition, new Vector3(0, 1, 0)), placedPosition);
         }

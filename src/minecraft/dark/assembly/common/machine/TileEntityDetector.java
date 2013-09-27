@@ -1,16 +1,21 @@
 package dark.assembly.common.machine;
 
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.imprinter.prefab.TileEntityFilterable;
 import dark.core.network.PacketHandler;
+import dark.core.prefab.machine.TileEntityMachine.SimplePacketTypes;
 
 public class TileEntityDetector extends TileEntityFilterable
 {
@@ -100,6 +105,33 @@ public class TileEntityDetector extends TileEntityFilterable
         tag.setBoolean("powering", this.powering);
     }
 
+    @Override
+    public Packet getDescriptionPacket()
+    {
+        return PacketHandler.instance().getPacket(this.getChannel(), this, "detector", this.functioning, this.isInverted());
+    }
+
+    public boolean simplePacket(String id, DataInputStream dis, EntityPlayer player)
+    {
+        try
+        {
+            if (this.worldObj.isRemote && !super.simplePacket(id, dis, player))
+            {
+                if (id.equalsIgnoreCase("detector"))
+                {
+                    this.functioning = dis.readBoolean();
+                    this.setInverted(dis.readBoolean());
+                    return true;
+                }
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public int isPoweringTo(ForgeDirection side)
     {
         return this.powering && this.getDirection() != side.getOpposite() ? 15 : 0;
@@ -114,13 +146,6 @@ public class TileEntityDetector extends TileEntityFilterable
     public boolean canConnect(ForgeDirection direction)
     {
         return direction != this.getDirection();
-    }
-
-    @Override
-    public void onUpdate()
-    {
-        // TODO Auto-generated method stub
-
     }
 
 }
