@@ -12,7 +12,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
 /** Designed to debug fluid devices by draining everything that comes in at one time
- *
+ * 
  * @author DarkGuardsman */
 public class TileEntityVoid extends TileEntity implements IFluidHandler, IDebugTile
 {

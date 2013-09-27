@@ -19,7 +19,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
 
 /** Based off Thaumcraft's Beam Renderer.
- *
+ * 
  * @author Calclavia, Azanor */
 @SideOnly(Side.CLIENT)
 public class FXBeam extends EntityFX

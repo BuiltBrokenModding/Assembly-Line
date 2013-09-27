@@ -21,7 +21,7 @@ public class ItemWorldHelper
     }
 
     /** Gets all EntityItems in an area and sorts them by a list of itemStacks
-     *
+     * 
      * @param world - world being worked in
      * @param start - start point
      * @param end - end point
@@ -68,7 +68,7 @@ public class ItemWorldHelper
     }
 
     /** filter a list of itemStack to another list of itemStacks
-     *
+     * 
      * @param totalItems - full list of items being filtered
      * @param desiredItems - list the of item that are being filtered too
      * @return a list of item from the original that are wanted */
@@ -91,7 +91,7 @@ public class ItemWorldHelper
     }
 
     /** grabs all the items that the block can drop then pass them onto dropBlockAsItem_do
-     *
+     * 
      * @param world
      * @param x
      * @param y

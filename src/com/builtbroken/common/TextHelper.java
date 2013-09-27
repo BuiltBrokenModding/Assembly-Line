@@ -35,7 +35,7 @@ public final class TextHelper
         }
 
         /** Retrieves the Hexadecimal integer value for the specified Color
-         *
+         * 
          * @return The Hexadecimal int for the Color **/
         public int getHexValue()
         {
@@ -43,7 +43,7 @@ public final class TextHelper
         }
 
         /** Retrieves the <code>java.awt.Color</code> instance for the Color
-         *
+         * 
          * @return the java.awt.Color instance for this color ***/
         public Color getColor()
         {
@@ -51,7 +51,7 @@ public final class TextHelper
         }
 
         /** Retrieves the String that specifies the color of Text within Minecraft
-         *
+         * 
          * @return String that can be added to the beginning of another String to specify coloration
          * in Minecraft **/
         public String getColorString()
@@ -61,7 +61,7 @@ public final class TextHelper
 
         /** Retrieves an int Array to retrieve the RGB values for the specified Color. Index 0 is the
          * Red value, Index 1 is the Green value, and Index 2 is the Blue value.
-         *
+         * 
          * @return Array of the primitive type int containing the RGB values for the specified color **/
         public int[] getRGBIntArray()
         {

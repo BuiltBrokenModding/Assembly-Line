@@ -25,7 +25,7 @@ import dark.core.prefab.ModPrefab;
 import dark.core.prefab.machine.BlockMachine;
 
 /** Handler to make registering all parts of a mod's objects that are loaded into the game by forge
- *
+ * 
  * @author DarkGuardsman */
 public class ModObjectRegistry
 {
@@ -244,7 +244,7 @@ public class ModObjectRegistry
         }
 
         /** Adds a tileEntity to be registered when this block is registered
-         *
+         * 
          * @param name - mod name for the tileEntity, should be unique
          * @param class1 - new instance of the TileEntity to register */
         public BlockBuildData addTileEntity(String name, Class<? extends TileEntity> class1)

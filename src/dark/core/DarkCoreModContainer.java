@@ -23,12 +23,12 @@ public class DarkCoreModContainer extends DummyModContainer
     {
         super(new ModMetadata());
         ModMetadata meta = getMetadata();
-        meta.modId       = "DarkCoreLoader";
-        meta.name        = "Dark Core Loader";
-        meta.version     = DarkMain.VERSION;
-        meta.authorList  = Arrays.asList("DarkGuardsman aka DarkCow");
+        meta.modId = "DarkCoreLoader";
+        meta.name = "Dark Core Loader";
+        meta.version = DarkMain.VERSION;
+        meta.authorList = Arrays.asList("DarkGuardsman aka DarkCow");
         meta.description = "Core mod loader and asm transformer for Dark's Core Machine.";
-        meta.url         = "www.BuiltBroken.com";
+        meta.url = "www.BuiltBroken.com";
     }
 
     @Override

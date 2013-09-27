@@ -15,14 +15,9 @@ import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
 import dark.core.client.renders.BlockRenderingHandler;
 import dark.core.client.renders.RenderBlockSolarPanel;
-import dark.core.client.renders.RenderBlockWire;
-import dark.core.common.CoreRecipeLoader;
 import dark.core.common.DMCreativeTab;
-import dark.core.common.transmit.BlockWire;
-import dark.core.common.transmit.TileEntityWire;
 import dark.core.prefab.machine.BlockMachine;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 

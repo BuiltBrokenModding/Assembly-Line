@@ -1,16 +1,16 @@
 package dark.core.common.machines;
 
-import java.io.DataInputStream;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.google.common.io.ByteArrayDataInput;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
+
+import com.google.common.io.ByteArrayDataInput;
+
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import dark.core.common.machines.BlockBasicMachine.BasicMachineData;

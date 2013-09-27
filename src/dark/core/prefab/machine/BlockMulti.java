@@ -44,6 +44,7 @@ public class BlockMulti extends BlockContainer implements IExtraBlockInfo
         return this;
     }
 
+    @Override
     public BlockMulti setTextureName(String name)
     {
         this.textureName = name;

@@ -12,6 +12,7 @@ public class ItemBlockWire extends ItemBlockHolder
         super(id);
     }
 
+    @Override
     public Icon getIconFromDamage(int par1)
     {
         return CoreRecipeLoader.blockWire instanceof BlockWire ? ((BlockWire) CoreRecipeLoader.blockWire).wireIcon : CoreRecipeLoader.blockWire.getIcon(0, par1);

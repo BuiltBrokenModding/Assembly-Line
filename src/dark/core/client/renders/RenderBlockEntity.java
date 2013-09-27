@@ -18,7 +18,6 @@ public class RenderBlockEntity extends Render
 
     public static RenderBlockEntity INSTANCE = new RenderBlockEntity();
 
-
     private RenderBlockEntity()
     {
     }

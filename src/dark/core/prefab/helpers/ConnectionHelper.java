@@ -9,7 +9,7 @@ public class ConnectionHelper
 {
     /** Used to find all tileEntities sounding the location you will have to filter for selective
      * tileEntities
-     *
+     * 
      * @param world - the world being searched threw
      * @param x
      * @param y

@@ -22,9 +22,7 @@ import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.api.ColorCode;
 import dark.core.client.renders.RenderBlockWire;
-import dark.core.common.CoreRecipeLoader;
 import dark.core.common.DMCreativeTab;
 import dark.core.common.DarkMain;
 import dark.core.prefab.machine.BlockMachine;

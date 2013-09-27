@@ -5,7 +5,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.prefab.machine.BlockMachine;
 
 @SideOnly(Side.CLIENT)
 public abstract class RenderTileMachine extends TileEntitySpecialRenderer
@@ -25,7 +24,7 @@ public abstract class RenderTileMachine extends TileEntitySpecialRenderer
     public abstract void renderModel(TileEntity tileEntity, double x, double y, double z, float size);
 
     /** Sudo method for setting the texture for current render
-     *
+     * 
      * @param name */
     public void bindTextureByName(String domain, String name)
     {
