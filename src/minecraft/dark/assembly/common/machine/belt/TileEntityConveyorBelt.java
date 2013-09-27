@@ -1,25 +1,21 @@
 package dark.assembly.common.machine.belt;
 
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.google.common.io.ByteArrayDataInput;
-
-import cpw.mods.fml.common.network.Player;
-
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.tile.IRotatable;
+
+import com.google.common.io.ByteArrayDataInput;
+
+import cpw.mods.fml.common.network.Player;
 import dark.assembly.api.IBelt;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.machine.TileEntityAssembly;
@@ -27,7 +23,7 @@ import dark.core.common.DarkMain;
 import dark.core.network.PacketHandler;
 
 /** Conveyer belt TileEntity that allows entities of all kinds to be moved
- *
+ * 
  * @author DarkGuardsman */
 public class TileEntityConveyorBelt extends TileEntityAssembly implements IBelt, IRotatable
 {

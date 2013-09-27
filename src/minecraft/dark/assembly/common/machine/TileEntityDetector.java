@@ -1,25 +1,21 @@
 package dark.assembly.common.machine;
 
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-
-import com.google.common.io.ByteArrayDataInput;
-
-import cpw.mods.fml.common.network.Player;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
+
+import com.google.common.io.ByteArrayDataInput;
+
+import cpw.mods.fml.common.network.Player;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.imprinter.prefab.TileEntityFilterable;
 import dark.core.network.PacketHandler;
-import dark.core.prefab.machine.TileEntityMachine.SimplePacketTypes;
 
 public class TileEntityDetector extends TileEntityFilterable
 {

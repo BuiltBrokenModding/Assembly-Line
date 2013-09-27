@@ -1,12 +1,8 @@
 package dark.assembly.common.armbot;
 
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import com.google.common.io.ByteArrayDataInput;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -21,7 +17,9 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
-import universalelectricity.prefab.network.IPacketReceiver;
+
+import com.google.common.io.ByteArrayDataInput;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
@@ -902,7 +900,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     /** gets the facing direction using the yaw angle */
     public ForgeDirection getFacingDirectionFromAngle()
     {
-        float angle = MathHelper.wrapAngleTo180_float(this.rotationYaw);
+        float angle = net.minecraft.util.MathHelper.wrapAngleTo180_float(this.rotationYaw);
         if (angle >= -45 && angle <= 45)
         {
             return ForgeDirection.SOUTH;

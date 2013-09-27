@@ -1,15 +1,8 @@
 package dark.assembly.common.machine;
 
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.util.List;
 
-import com.google.common.io.ByteArrayDataInput;
-
-import cpw.mods.fml.common.network.Player;
-
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
@@ -17,6 +10,10 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.tile.IRotatable;
+
+import com.google.common.io.ByteArrayDataInput;
+
+import cpw.mods.fml.common.network.Player;
 import dark.assembly.api.IManipulator;
 import dark.assembly.common.imprinter.ItemImprinter;
 import dark.assembly.common.imprinter.prefab.TileEntityFilterable;

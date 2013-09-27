@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.tile.IRotatable;
 import dark.assembly.api.IFilterable;
 import dark.assembly.common.imprinter.ItemImprinter;
@@ -28,7 +27,7 @@ public abstract class TileEntityFilterable extends TileEntityAssembly implements
     }
 
     /** Looks through the things in the filter and finds out which item is being filtered.
-     *
+     * 
      * @return Is this filterable block filtering this specific ItemStack? */
     public boolean isFiltering(ItemStack itemStack)
     {
