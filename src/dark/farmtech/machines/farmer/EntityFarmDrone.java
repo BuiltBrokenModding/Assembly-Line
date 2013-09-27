@@ -85,11 +85,11 @@ public class EntityFarmDrone extends EntityLiving implements IElectricalStorage
     }
 
     /** Adds an item to the drones inventory or drops it on the ground if the drone is full
-     *
+     * 
      * @param location - location were the item was so to drop it there if the drone can't pick it
      * up
      * @param stack - stack to store or drop
-     *
+     * 
      * @return the itemstack if any of it is left */
     public ItemStack pickUpItem(Vector3 location, ItemStack stack, boolean drop)
     {
@@ -167,7 +167,7 @@ public class EntityFarmDrone extends EntityLiving implements IElectricalStorage
     }
 
     /** Used to store data on a drone. Mainly for saving the drone when stored in a tileEntity
-     *
+     * 
      * @author DarkGuardsman */
     public static class DroneData
     {
