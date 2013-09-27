@@ -75,11 +75,11 @@ public class CommandRotateBy extends Command
             this.tileEntity.rotationPitch = this.targetRotationPitch;
 
         // if (this.ticks < this.totalTicks) { return true; }
-        if (Math.abs(this.tileEntity.renderPitch - this.tileEntity.rotationPitch) > 0.001f)
+        if (Math.abs(this.tileEntity.actualPitch - this.tileEntity.rotationPitch) > 0.001f)
         {
             return true;
         }
-        if (Math.abs(this.tileEntity.renderYaw - this.tileEntity.rotationYaw) > 0.001f)
+        if (Math.abs(this.tileEntity.actualYaw - this.tileEntity.rotationYaw) > 0.001f)
         {
             return true;
         }

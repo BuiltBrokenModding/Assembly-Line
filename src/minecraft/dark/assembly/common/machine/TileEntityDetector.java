@@ -4,6 +4,10 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.google.common.io.ByteArrayDataInput;
+
+import cpw.mods.fml.common.network.Player;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -111,7 +115,8 @@ public class TileEntityDetector extends TileEntityFilterable
         return PacketHandler.instance().getPacket(this.getChannel(), this, "detector", this.functioning, this.isInverted());
     }
 
-    public boolean simplePacket(String id, DataInputStream dis, EntityPlayer player)
+    @Override
+    public boolean simplePacket(String id, ByteArrayDataInput dis, Player player)
     {
         try
         {
@@ -125,7 +130,7 @@ public class TileEntityDetector extends TileEntityFilterable
                 }
             }
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }

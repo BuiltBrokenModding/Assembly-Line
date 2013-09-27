@@ -4,6 +4,10 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.List;
 
+import com.google.common.io.ByteArrayDataInput;
+
+import cpw.mods.fml.common.network.Player;
+
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -184,7 +188,8 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
         return PacketHandler.instance().getPacket(this.getChannel(), this, "manipulator", this.functioning, this.isInverted(), this.isSelfPulse(), this.isOutput());
     }
 
-    public boolean simplePacket(String id, DataInputStream dis, EntityPlayer player)
+    @Override
+    public boolean simplePacket(String id, ByteArrayDataInput dis, Player player)
     {
         try
         {
@@ -200,7 +205,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
                 }
             }
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.common.io.ByteArrayDataInput;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityItem;
@@ -16,12 +18,12 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.network.IPacketReceiver;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
@@ -43,9 +45,10 @@ import dark.core.common.DarkMain;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.IMultiBlock;
 import dark.core.prefab.helpers.ItemWorldHelper;
+import dark.core.prefab.helpers.MathHelper;
 import dark.core.prefab.machine.BlockMulti;
 
-public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IPacketReceiver, IArmbot, IPeripheral
+public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IArmbot, IPeripheral
 {
     private final CommandManager commandManager = new CommandManager();
     /** The items this container contains. */
@@ -55,8 +58,8 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     /** The rotation of the arms. In Degrees. */
     public float rotationPitch = 0;
     public float rotationYaw = 0;
-    public float renderPitch = 0;
-    public float renderYaw = 0;
+    public float actualPitch = 0;
+    public float actualYaw = 0;
     public final float ROTATION_SPEED = 2.0f;
 
     private String displayText = "";
@@ -168,12 +171,12 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
         // System.out.println("Ren: " + this.renderYaw + "; Rot: " +
         // this.rotationYaw);
-        if (Math.abs(this.renderYaw - this.rotationYaw) > 0.001f)
+        if (Math.abs(this.actualYaw - this.rotationYaw) > 0.001f)
         {
             float speedYaw;
-            if (this.renderYaw > this.rotationYaw)
+            if (this.actualYaw > this.rotationYaw)
             {
-                if (Math.abs(this.renderYaw - this.rotationYaw) >= 180)
+                if (Math.abs(this.actualYaw - this.rotationYaw) >= 180)
                 {
                     speedYaw = this.ROTATION_SPEED;
                 }
@@ -184,7 +187,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
             }
             else
             {
-                if (Math.abs(this.renderYaw - this.rotationYaw) >= 180)
+                if (Math.abs(this.actualYaw - this.rotationYaw) >= 180)
                 {
                     speedYaw = -this.ROTATION_SPEED;
                 }
@@ -194,17 +197,9 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
                 }
             }
 
-            this.renderYaw += speedYaw;
+            this.actualYaw += speedYaw;
 
-            // keep it within 0 - 360 degrees so ROTATE commands work properly
-            while (this.renderYaw < 0)
-            {
-                this.renderYaw += 360;
-            }
-            while (this.renderYaw > 360)
-            {
-                this.renderYaw -= 360;
-            }
+            this.rotationYaw = MathHelper.clampAngleTo360(this.rotationYaw);
 
             if (this.ticks % 5 == 0 && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
             {
@@ -212,21 +207,21 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
                 this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "mods.assemblyline.conveyor", 0.4f, 1.7f, true);
             }
 
-            if (Math.abs(this.renderYaw - this.rotationYaw) < this.ROTATION_SPEED + 0.1f)
+            if (Math.abs(this.actualYaw - this.rotationYaw) < this.ROTATION_SPEED + 0.1f)
             {
-                this.renderYaw = this.rotationYaw;
+                this.actualYaw = this.rotationYaw;
             }
 
             for (Entity e : (ArrayList<Entity>) this.worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord + 2, this.zCoord, this.xCoord + 1, this.yCoord + 3, this.zCoord + 1)))
             {
-                e.rotationYaw = this.renderYaw;
+                e.rotationYaw = this.actualYaw;
             }
         }
 
-        if (Math.abs(this.renderPitch - this.rotationPitch) > 0.001f)
+        if (Math.abs(this.actualPitch - this.rotationPitch) > 0.001f)
         {
             float speedPitch;
-            if (this.renderPitch > this.rotationPitch)
+            if (this.actualPitch > this.rotationPitch)
             {
                 speedPitch = -this.ROTATION_SPEED;
             }
@@ -235,51 +230,28 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
                 speedPitch = this.ROTATION_SPEED;
             }
 
-            this.renderPitch += speedPitch;
+            this.actualPitch += speedPitch;
 
-            //Clamp pitch between 0 - 60
-            while (this.renderPitch < 0)
-            {
-                this.renderPitch += 60;
-            }
-            while (this.renderPitch > 60)
-            {
-                this.renderPitch -= 60;
-            }
+            this.rotationPitch = MathHelper.clampAngle(this.rotationPitch, 0, 60);
 
             if (this.ticks % 4 == 0 && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
             {
                 this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "mods.assemblyline.conveyor", 2f, 2.5f, true);
             }
 
-            if (Math.abs(this.renderPitch - this.rotationPitch) < this.ROTATION_SPEED + 0.1f)
+            if (Math.abs(this.actualPitch - this.rotationPitch) < this.ROTATION_SPEED + 0.1f)
             {
-                this.renderPitch = this.rotationPitch;
+                this.actualPitch = this.rotationPitch;
             }
 
             for (Entity e : (ArrayList<Entity>) this.worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord + 2, this.zCoord, this.xCoord + 1, this.yCoord + 3, this.zCoord + 1)))
             {
-                e.rotationPitch = this.renderPitch;
+                e.rotationPitch = this.actualPitch;
             }
         }
 
-        //Clamp angles between 0 - 360
-        while (this.rotationYaw < 0)
-        {
-            this.rotationYaw += 360;
-        }
-        while (this.rotationYaw > 360)
-        {
-            this.rotationYaw -= 360;
-        }
-        while (this.rotationPitch < 0)
-        {
-            this.rotationPitch += 60;
-        }
-        while (this.rotationPitch > 60)
-        {
-            this.rotationPitch -= 60;
-        }
+        this.rotationYaw = MathHelper.clampAngleTo360(this.rotationYaw);
+        this.rotationPitch = MathHelper.clampAngle(this.rotationPitch, 0, 60);
 
         //TODO reduce this to an event based system were it only updates the client when something changes
         if (!this.worldObj.isRemote && this.ticks % 20 == 0)
@@ -312,12 +284,12 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
         double distance = 1f;
         Vector3 delta = new Vector3();
         // The delta Y of the hand.
-        delta.y = Math.sin(Math.toRadians(this.renderPitch)) * distance * 2;
+        delta.y = Math.sin(Math.toRadians(this.actualPitch)) * distance * 2;
         // The horizontal delta of the hand.
-        double dH = Math.cos(Math.toRadians(this.renderPitch)) * distance;
+        double dH = Math.cos(Math.toRadians(this.actualPitch)) * distance;
         // The delta X and Z.
-        delta.x = Math.sin(Math.toRadians(-this.renderYaw)) * dH;
-        delta.z = Math.cos(Math.toRadians(-this.renderYaw)) * dH;
+        delta.x = Math.sin(Math.toRadians(-this.actualYaw)) * dH;
+        delta.z = Math.cos(Math.toRadians(-this.actualYaw)) * dH;
         return delta;
     }
 
@@ -523,7 +495,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     }
 
     @Override
-    public boolean simplePacket(String id, DataInputStream dis, EntityPlayer player)
+    public boolean simplePacket(String id, ByteArrayDataInput dis, Player player)
     {
         try
         {
@@ -544,7 +516,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
                 }
             }
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }

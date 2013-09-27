@@ -3,6 +3,10 @@ package dark.assembly.common.machine.processor;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+import com.google.common.io.ByteArrayDataInput;
+
+import cpw.mods.fml.common.network.Player;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -17,7 +21,7 @@ import dark.core.prefab.invgui.InvChest;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
 
 /** Basic A -> B recipe processor machine designed mainly to handle ore blocks
- * 
+ *
  * @author DarkGuardsman */
 public class TileEntityProcessor extends TileEntityEnergyMachine
 {
@@ -280,7 +284,7 @@ public class TileEntityProcessor extends TileEntityEnergyMachine
     }
 
     @Override
-    public boolean simplePacket(String id, DataInputStream dis, EntityPlayer player)
+    public boolean simplePacket(String id, ByteArrayDataInput dis, Player player)
     {
         if (!super.simplePacket(id, dis, player))
         {
@@ -297,7 +301,7 @@ public class TileEntityProcessor extends TileEntityEnergyMachine
                     }
                 }
             }
-            catch (IOException e)
+            catch (Exception e)
             {
                 e.printStackTrace();
             }

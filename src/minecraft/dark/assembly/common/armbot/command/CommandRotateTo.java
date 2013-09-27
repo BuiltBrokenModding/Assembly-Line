@@ -46,8 +46,8 @@ public class CommandRotateTo extends Command
         while (this.targetRotationPitch > 60)
             this.targetRotationPitch -= 60;
 
-        int totalTicksYaw = (int) (Math.abs(this.targetRotationYaw - this.tileEntity.renderYaw) / this.tileEntity.ROTATION_SPEED);
-        int totalTicksPitch = (int) (Math.abs(this.targetRotationPitch - this.tileEntity.renderPitch) / this.tileEntity.ROTATION_SPEED);
+        int totalTicksYaw = (int) (Math.abs(this.targetRotationYaw - this.tileEntity.actualYaw) / this.tileEntity.ROTATION_SPEED);
+        int totalTicksPitch = (int) (Math.abs(this.targetRotationPitch - this.tileEntity.actualPitch) / this.tileEntity.ROTATION_SPEED);
         this.totalTicks = Math.max(totalTicksYaw, totalTicksPitch);
     }
 
@@ -71,11 +71,11 @@ public class CommandRotateTo extends Command
         this.tileEntity.rotationPitch = this.targetRotationPitch;
 
         // if (this.ticks < this.totalTicks) { return true; }
-        if (Math.abs(this.tileEntity.renderPitch - this.tileEntity.rotationPitch) > 0.001f)
+        if (Math.abs(this.tileEntity.actualPitch - this.tileEntity.rotationPitch) > 0.001f)
         {
             return true;
         }
-        if (Math.abs(this.tileEntity.renderYaw - this.tileEntity.rotationYaw) > 0.001f)
+        if (Math.abs(this.tileEntity.actualYaw - this.tileEntity.rotationYaw) > 0.001f)
         {
             return true;
         }

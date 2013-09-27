@@ -11,7 +11,7 @@ import dark.assembly.api.IFilterable;
 import dark.assembly.common.imprinter.ItemImprinter;
 import dark.assembly.common.machine.TileEntityAssembly;
 
-public abstract class TileEntityFilterable extends TileEntityAssembly implements IRotatable, IFilterable, IPacketReceiver
+public abstract class TileEntityFilterable extends TileEntityAssembly implements IRotatable, IFilterable
 {
 
     private ItemStack filterItem;

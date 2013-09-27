@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.common.io.ByteArrayDataInput;
+
+import cpw.mods.fml.common.network.Player;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,7 +29,7 @@ import dark.core.network.PacketHandler;
 /** Conveyer belt TileEntity that allows entities of all kinds to be moved
  *
  * @author DarkGuardsman */
-public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacketReceiver, IBelt, IRotatable
+public class TileEntityConveyorBelt extends TileEntityAssembly implements IBelt, IRotatable
 {
 
     public enum SlantType
@@ -176,7 +180,7 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IPacke
     }
 
     @Override
-    public boolean simplePacket(String id, DataInputStream dis, EntityPlayer player)
+    public boolean simplePacket(String id, ByteArrayDataInput dis, Player player)
     {
         if (!super.simplePacket(id, dis, player) && this.worldObj.isRemote)
         {

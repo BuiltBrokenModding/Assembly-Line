@@ -193,10 +193,4 @@ public abstract class TileEntityAssembly extends TileEntityEnergyMachine impleme
     {
         return INFINITE_EXTENT_AABB;
     }
-
-    @Override
-    public String toString()
-    {
-        return "[AssemblyTile]@" + (new Vector3(this).toString());
-    }
 }
