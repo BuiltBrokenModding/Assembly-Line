@@ -44,6 +44,11 @@ public class PacketManagerTile implements IPacketManager
 
                 if (tileEntity != null)
                 {
+                    if (tileEntity instanceof ISimplePacketReceiver)
+                    {
+                        String pId = data.readUTF();
+                        ((ISimplePacketReceiver) tileEntity).simplePacket(pId, data, player);
+                    }
                     if (tileEntity instanceof IPacketReceiver)
                     {
                         ((IPacketReceiver) tileEntity).handlePacketData(network, 0, packet, ((EntityPlayer) player), data);

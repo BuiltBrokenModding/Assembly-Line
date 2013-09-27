@@ -1,33 +1,30 @@
 package dark.core.prefab.machine;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
 import java.io.IOException;
 
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.tile.IRotatable;
 
 import com.google.common.io.ByteArrayDataInput;
+
+import cpw.mods.fml.common.network.Player;
 
 import dark.api.IDisableable;
 import dark.core.common.DarkMain;
 import dark.core.interfaces.IExternalInv;
 import dark.core.interfaces.IInvBox;
+import dark.core.network.ISimplePacketReceiver;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.IExtraInfo.IExtraTileEntityInfo;
 
-public abstract class TileEntityMachine extends TileEntityInv implements ISidedInventory, IExternalInv, IDisableable, IPacketReceiver, IRotatable, IExtraTileEntityInfo
+public abstract class TileEntityMachine extends TileEntityInv implements ISidedInventory, IExternalInv, IDisableable, ISimplePacketReceiver, IRotatable, IExtraTileEntityInfo
 {
     protected int disabledTicks = 0, playersUsingMachine = 0;
     protected boolean functioning = false, prevFunctioning = false, hasGUI = false, rotateByMetaGroup = false, canBeDisabled = false;
@@ -178,43 +175,7 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
     }
 
     @Override
-    public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
-    {
-        boolean packetSize = true;
-        try
-        {
-            ByteArrayInputStream bis = new ByteArrayInputStream(packet.data);
-            DataInputStream dis = new DataInputStream(bis);
-
-            int id = dis.readInt();
-            int x = dis.readInt();
-            int y = dis.readInt();
-            int z = dis.readInt();
-            String pId = dis.readUTF();
-
-            this.simplePacket(pId, dis, player);
-
-            /** DEBUG PACKET SIZE AND INFO */
-            if (packetSize)
-            {
-                System.out.println("Tile>" + this.toString() + ">>>Debug>>Packet" + pId + ">>Size>>bytes>>" + packet.data.length);
-            }
-        }
-        catch (Exception e)
-        {
-            System.out.println("Error Reading Packet for a TileEntityAssembly");
-            e.printStackTrace();
-        }
-
-    }
-
-    /** Handles reduced data from the main packet method
-     *
-     * @param id - packet ID
-     * @param dis - data
-     * @param player - player
-     * @return true if the packet was used */
-    public boolean simplePacket(String id, DataInputStream dis, EntityPlayer player)
+    public boolean simplePacket(String id, ByteArrayDataInput dis, Player player)
     {
         try
         {
@@ -259,6 +220,7 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
         }
     }
 
+    /** Sends a gui packet only to the given player */
     public void sendGUIPacket(EntityPlayer entity)
     {
 
@@ -267,9 +229,7 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
     @Override
     public Packet getDescriptionPacket()
     {
-        NBTTagCompound tag = new NBTTagCompound();
-        this.writeToNBT(tag);
-        return PacketHandler.instance().getPacket(this.getChannel(), this, SimplePacketTypes.NBT.name, tag);
+        return PacketHandler.instance().getPacket(this.getChannel(), this, SimplePacketTypes.RUNNING.name, this.functioning);
     }
 
     /** NetworkMod channel name */

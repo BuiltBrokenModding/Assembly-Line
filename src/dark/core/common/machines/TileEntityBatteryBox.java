@@ -5,6 +5,8 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.google.common.io.ByteArrayDataInput;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.Packet;
@@ -57,7 +59,7 @@ public class TileEntityBatteryBox extends TileEntityEnergyMachine
     }
 
     @Override
-    public boolean simplePacket(String id, DataInputStream dis, EntityPlayer player)
+    public boolean simplePacket(String id, ByteArrayDataInput dis, Player player)
     {
         try
         {

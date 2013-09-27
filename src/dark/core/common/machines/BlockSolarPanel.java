@@ -94,6 +94,5 @@ public class BlockSolarPanel extends BlockMachine
     public void loadOreNames()
     {
         OreDictionary.registerOre("SolarPanel", new ItemStack(this, 1, 0));
-
     }
 }

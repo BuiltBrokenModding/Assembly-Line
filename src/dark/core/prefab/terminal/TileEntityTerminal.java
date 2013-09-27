@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.io.ByteArrayDataInput;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
@@ -17,7 +19,7 @@ import dark.core.network.PacketHandler;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
 
 /** @author Calclavia, DarkGuardsman */
-public abstract class TileEntityTerminal extends TileEntityEnergyMachine implements IPacketReceiver, ITerminal
+public abstract class TileEntityTerminal extends TileEntityEnergyMachine implements ITerminal
 {
 
     /** A list of everything typed inside the terminal */
@@ -91,7 +93,7 @@ public abstract class TileEntityTerminal extends TileEntityEnergyMachine impleme
     }
 
     @Override
-    public boolean simplePacket(String id, DataInputStream dis, EntityPlayer player)
+    public boolean simplePacket(String id, ByteArrayDataInput dis, Player player)
     {
         try
         {
@@ -129,7 +131,7 @@ public abstract class TileEntityTerminal extends TileEntityEnergyMachine impleme
                 }
             }
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }

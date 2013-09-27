@@ -102,20 +102,24 @@ public class TileEntityCoalGenerator extends TileEntityEnergyMachine
     }
 
     @Override
-    public void handlePacketData(INetworkManager network, int type, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
+    public boolean simplePacket(String id, ByteArrayDataInput dataStream, Player player)
     {
         try
         {
-            if (this.worldObj.isRemote)
+            if (this.worldObj.isRemote && super.simplePacket(id, dataStream, player))
             {
-                this.generateWatts = dataStream.readFloat();
-                this.itemCookTime = dataStream.readInt();
+                if (id.equalsIgnoreCase("gen"))
+                {
+                    this.generateWatts = dataStream.readFloat();
+                    this.itemCookTime = dataStream.readInt();
+                }
             }
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
+        return false;
     }
 
     @Override

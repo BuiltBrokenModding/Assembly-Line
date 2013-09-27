@@ -2,6 +2,8 @@ package dark.core.common.machines;
 
 import java.io.DataInputStream;
 
+import com.google.common.io.ByteArrayDataInput;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
@@ -107,7 +109,7 @@ public class TileEntityElectricFurnace extends TileEntityEnergyMachine
     }
 
     @Override
-    public boolean simplePacket(String id, DataInputStream dis, EntityPlayer player)
+    public boolean simplePacket(String id, ByteArrayDataInput dis, Player player)
     {
         try
         {
