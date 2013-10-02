@@ -1,6 +1,9 @@
 package com.builtbroken.common;
 
-/** List of element from the periodic table of elements for any kind of use
+/** List of element from the periodic table of elements for any kind of use. Is not complete for all
+ * parts but each element should have a listed names, symbol, and atomic mass. Atomic number should
+ * be the placement # in the list. Var ZERO should not be used as its designed to offset the
+ * placement of all elements by one
  *
  * @Source http://www.periodictable.com/Properties/A/SpecificHeat.an.html
  * @source http://www.chemicalelements.com/
@@ -8,7 +11,9 @@ package com.builtbroken.common;
  * @author Robert Seifert */
 public enum ChemElement
 {
-    Hydrogen("Hydrogen", "H", 1.00794f, 0.08988f, 14.009985f, 20.280005f),
+    /** Placeholder so that hydrogen starts as number one */
+    ZERO("ZERO", "ZERO", 0, 0),
+    Hydrogen("Hydrogen", "H", 1.00794f, 0.08988f),
     Helium("Helium", "He", 4.002602f, 0.1785f),
     Lithium("Lithium", "Li", 6.941f, 0.53f),
     Beryllium("Beryllium", "Be", 9.012182f, 1.8477f),
@@ -124,37 +129,19 @@ public enum ChemElement
     Ununquadium("Ununquadium", "Uuq", 289f),
     Ununpentium("Ununpentium", "Uup", 288f),
     Ununhexium("Ununhexium", "Uuh", 292f);
-    ;
 
-    public float specificHeatSolid, specificHeatGas, specificHeatLiquid;
     /** g/cm^3 */
     public float density;
     /** amu */
     public float atomicMass;
 
-    /** Melting point in kelvin */
-    public float meltingPointKelvin;
-    /** boiling point in kelvin */
-    public float boilignPointKelving;
-
     public String elementName = "element";
     public String elementSymbol = "element";
 
-    private ChemElement()
-    {
-
-    }
-
-    private ChemElement(String name, String symbol)
-    {
-        this();
-        this.elementName = name;
-        this.elementSymbol = symbol;
-    }
-
     private ChemElement(String name, String symbol, float atomicMass)
     {
-        this(name, symbol);
+        this.elementName = name;
+        this.elementSymbol = symbol;
         this.atomicMass = atomicMass;
     }
 
@@ -162,13 +149,6 @@ public enum ChemElement
     {
         this(name, symbol, atomicMass);
         this.density = density;
-    }
-
-    private ChemElement(String name, String symbol, float atomicMass, float density, float meltingPointK, float boilingPointK)
-    {
-        this(name, symbol, atomicMass, density);
-        this.meltingPointKelvin = meltingPointK;
-        this.boilignPointKelving = boilingPointK;
     }
 
 }
