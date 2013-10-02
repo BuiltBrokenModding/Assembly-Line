@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityPack;
 
@@ -23,80 +24,63 @@ import dark.core.prefab.machine.TileEntityEnergyMachine;
 public class TileEntityCoalGenerator extends TileEntityEnergyMachine
 {
     /** Maximum amount of energy needed to generate electricity */
-    public static final float MAX_GENERATE_WATTS = 0.5f;
+    public static float MAX_GENERATE_WATTS = 0.5f;
 
     /** Amount of heat the coal generator needs before generating electricity. */
 
     public static final float MIN_GENERATE_WATTS = MAX_GENERATE_WATTS * 0.1f;
 
-    private static final float BASE_ACCELERATION = 0.000001f;
+    private static float BASE_ACCELERATION = 0.000001f;
+    private static float BASE_DECCELERATION = 0.008f;
 
     /** Per second */
-    public float prevGenerateWatts, generateWatts = 0;
+    public float generateWatts = 0;
 
     /** The number of ticks that a fresh copy of the currently-burning item would keep the furnace
      * burning for */
     public int itemCookTime = 0;
 
-    public final Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
-
     @Override
     public void updateEntity()
     {
-        this.setEnergyStored(this.generateWatts);
-
         super.updateEntity();
 
         if (!this.worldObj.isRemote)
         {
-            this.prevGenerateWatts = this.generateWatts;
-
-            if (this.itemCookTime > 0)
+            //Consume item if cook time is too low
+            if (this.getInventory().getStackInSlot(0) != null && this.itemCookTime <= 10)
             {
-                this.itemCookTime--;
-
-                if (this.getEnergyStored() < this.getMaxEnergyStored())
+                if (TileEntityFurnace.isItemFuel(this.getInventory().getStackInSlot(0)))
                 {
-                    this.generateWatts = Math.min(this.generateWatts + Math.min((this.generateWatts * 0.007F + BASE_ACCELERATION), 0.007F), TileEntityCoalGenerator.MAX_GENERATE_WATTS);
+                    this.itemCookTime += TileEntityFurnace.getItemBurnTime(this.getInventory().getStackInSlot(0));
+                    this.decrStackSize(0, 1);
                 }
             }
 
-            if (this.getInventory().getStackInSlot(0) != null && this.getEnergyStored() < this.getMaxEnergyStored())
+            //Update item cook time & power output
+            if (this.itemCookTime-- > 0)
             {
-                if (this.getInventory().getStackInSlot(0).getItem().itemID == Item.coal.itemID)
-                {
-                    if (this.itemCookTime <= 0)
-                    {
-                        this.itemCookTime = 320;
-                        this.decrStackSize(0, 1);
-                    }
-                }
+                this.generateWatts = Math.min(this.generateWatts + Math.min((this.generateWatts * 0.007F + BASE_ACCELERATION), 0.007F), TileEntityCoalGenerator.MAX_GENERATE_WATTS);
             }
 
+            //Decrease generator output if nothing is burning
             if (this.itemCookTime <= 0)
             {
-                this.generateWatts = Math.max(this.generateWatts - 0.008F, 0);
+                this.generateWatts = Math.max(this.generateWatts - BASE_DECCELERATION, 0);
             }
 
-            if (this.ticks % 3 == 0)
+            if(this.generateWatts >= MIN_GENERATE_WATTS)
             {
-                for (EntityPlayer player : this.playersUsing)
-                {
-                    PacketDispatcher.sendPacketToPlayer(getDescriptionPacket(), (Player) player);
-                }
-            }
-
-            if (this.prevGenerateWatts <= 0 && this.generateWatts > 0 || this.prevGenerateWatts > 0 && this.generateWatts <= 0)
-            {
-                PacketHandler.instance().sendPacketToClients(getDescriptionPacket(), this.worldObj);
+                this.produceAllSides();
             }
         }
     }
 
+    /** Does this tile have power to run and do work */
     @Override
-    public Packet getDescriptionPacket()
+    public boolean canFunction()
     {
-        return PacketHandler.instance().getPacket(this.getChannel(), this, "gen", this.generateWatts, this.itemCookTime);
+        return !this.isDisabled() && this.generateWatts > 0;
     }
 
     @Override
@@ -121,13 +105,12 @@ public class TileEntityCoalGenerator extends TileEntityEnergyMachine
     }
 
     @Override
-    public void openChest()
+    public void sendGUIPacket(EntityPlayer entity)
     {
-    }
-
-    @Override
-    public void closeChest()
-    {
+        if (entity != null)
+        {
+            PacketDispatcher.sendPacketToPlayer(PacketHandler.instance().getPacket(this.getChannel(), this, "gen", this.generateWatts, this.itemCookTime), (Player) entity);
+        }
     }
 
     /** Reads a tile entity from NBT. */
@@ -155,27 +138,19 @@ public class TileEntityCoalGenerator extends TileEntityEnergyMachine
     }
 
     @Override
-    public boolean isItemValidForSlot(int slotID, ItemStack itemstack)
+    public boolean canStore(ItemStack stack, int slot, ForgeDirection side)
     {
-        return itemstack.itemID == Item.coal.itemID;
+        return TileEntityFurnace.isItemFuel(stack);
     }
 
     @Override
-    public int[] getAccessibleSlotsFromSide(int var1)
+    public boolean canRemove(ItemStack stack, int slot, ForgeDirection side)
     {
-        return new int[] { 0 };
-    }
-
-    @Override
-    public boolean canInsertItem(int slotID, ItemStack itemstack, int j)
-    {
-        return this.isItemValidForSlot(slotID, itemstack);
-    }
-
-    @Override
-    public boolean canExtractItem(int slotID, ItemStack itemstack, int j)
-    {
-        return slotID == 0;
+        if (slot >= this.getSizeInventory())
+        {
+            return false;
+        }
+        return true;
     }
 
     @Override
