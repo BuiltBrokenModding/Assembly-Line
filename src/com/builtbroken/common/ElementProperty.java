@@ -1,6 +1,6 @@
 package com.builtbroken.common;
 
-public enum ElementClassifications
+public enum ElementProperty
 {
     nonmetal("Non-metal"),
     inertGas("Inert gas"),
@@ -15,7 +15,7 @@ public enum ElementClassifications
 
     final String name;
 
-    private ElementClassifications(String name)
+    private ElementProperty(String name)
     {
         this.name = name;
     }
