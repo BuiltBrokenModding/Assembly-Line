@@ -13,9 +13,10 @@ public enum ChemElement
 {
     /** Placeholder so that hydrogen starts as number one */
     ZERO("ZERO", "ZERO", 0, 0, null, null),
-    Hydrogen("Hydrogen", "H", 1.00794f, 0.08988f, ElementClassifications.nonmetal, MatterPhase.gas),
-    Helium("Helium", "He", 4.002602f, 0.1785f, ElementClassifications.inertGas, MatterPhase.gas),
-    Lithium("Lithium", "Li", 6.941f, 0.53f, ElementClassifications.inertGas, MatterPhase.gas),
+    Hydrogen("Hydrogen", "H", 1.00794f, 0.08988f, ElementClassifications.nonmetal, MatterPhase.gas, 14.01f, 20.28f, 0.558f, 0.558f, 14300f),
+    Helium("Helium", "He", 4.002602f, 0.1785f, ElementClassifications.inertGas, MatterPhase.gas, 0, 4.22f, 0.02f, 0.083f, 5193.1f),
+    Lithium("Lithium", "Li", 6.941f, 0.53f, ElementClassifications.inertGas, MatterPhase.gas, 543.69f, 1615f, 3f, 147f, 3570f),
+
     Beryllium("Beryllium", "Be", 9.012182f, 1.8477f, ElementClassifications.inertGas, MatterPhase.gas),
     Boron("Boron", "B", 10.811f, 2.46f, ElementClassifications.inertGas, MatterPhase.gas),
     Carbon("Carbon", "C", 12.0107f, 2.26f, ElementClassifications.inertGas, MatterPhase.gas),
@@ -142,7 +143,19 @@ public enum ChemElement
 
     public MatterPhase normalPhase;
 
-    private ChemElement(String name, String symbol, float atomicMass,float density, ElementClassifications type, MatterPhase defaultPhase)
+    public float meltingPointKelvin;
+    public float boilingPointKelvin;
+    /** kJ/mol */
+    public float heatOfFusion;
+    /** kJ/mol */
+    public float heatOfVaporization;
+    /** J/(kg K) */
+    public float specificHeat;
+    /** W/(m K) */
+    public float thermalConductivity;
+    public float thermalExpansion;
+
+    private ChemElement(String name, String symbol, float atomicMass, float density, ElementClassifications type, MatterPhase defaultPhase)
     {
         this.elementName = name;
         this.elementSymbol = symbol;
@@ -152,14 +165,15 @@ public enum ChemElement
         this.density = density;
     }
 
-    /** Returns the value in the ChemThermal enum that is linked with this enum value */
-    public ChemThermal thermals()
+    private ChemElement(String name, String symbol, float atomicMass, float density, ElementClassifications type, MatterPhase defaultPhase, float meltingPoint, float boilingPoint, float fisionHeat, float vaporHeat, float specificHeat)
     {
-        if (this.ordinal() >= ChemThermal.values().length)
-        {
-            return ChemThermal.ZERO;
-        }
-        return ChemThermal.values()[this.ordinal()];
+        this(name, symbol, atomicMass, density, type, defaultPhase);
+
+        this.meltingPointKelvin = meltingPoint;
+        this.boilingPointKelvin = boilingPoint;
+        this.heatOfFusion = fisionHeat;
+        this.heatOfVaporization = vaporHeat;
+        this.specificHeat = specificHeat;
     }
 
 }
