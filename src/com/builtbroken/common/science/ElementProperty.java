@@ -1,4 +1,4 @@
-package com.builtbroken.common;
+package com.builtbroken.common.science;
 
 public enum ElementProperty
 {

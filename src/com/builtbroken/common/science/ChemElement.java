@@ -1,4 +1,4 @@
-package com.builtbroken.common;
+package com.builtbroken.common.science;
 
 /** List of element from the periodic table of elements for any kind of use. Is not complete for all
  * parts but each element should have a listed names, symbol, and atomic mass. Atomic number should
