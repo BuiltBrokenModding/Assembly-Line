@@ -10,16 +10,15 @@ public enum ChemThermal
 {
     /** Placeholder so that hydrogen starts as number one */
     ZERO(),
-    Hydrogen(MatterPhase.Gas, 14.01f, 20.28f, 0.558f, 0.558f, 14300f),
-    Helium(MatterPhase.Gas, 0, 4.22f, 0.02f, 0.083f, 5193.1f),
-    Lithium(MatterPhase.Solid, 543.69f, 1615f, 3f, 147f, 3570f),
+    Hydrogen(14.01f, 20.28f, 0.558f, 0.558f, 14300f),
+    Helium(0, 4.22f, 0.02f, 0.083f, 5193.1f),
+    Lithium(543.69f, 1615f, 3f, 147f, 3570f),
     Beryllium(),
     Boron(),
     Carbon(),
     Nitrogen(),
     Oxygen();
 
-    public MatterPhase phase = MatterPhase.Solid;
     public float meltingPointKelvin;
     public float boilingPointKelvin;
     /** kJ/mol */
@@ -37,9 +36,8 @@ public enum ChemThermal
 
     }
 
-    private ChemThermal(MatterPhase phase, float meltingPoint, float boilingPoint, float fisionHeat, float vaporHeat, float specificHeat)
+    private ChemThermal(float meltingPoint, float boilingPoint, float fisionHeat, float vaporHeat, float specificHeat)
     {
-        this.phase = phase;
         this.meltingPointKelvin = meltingPoint;
         this.boilingPointKelvin = boilingPoint;
         this.heatOfFusion = fisionHeat;
