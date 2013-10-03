@@ -45,4 +45,14 @@ public enum ChemThermal
         this.specificHeat = specificHeat;
     }
 
+    /** Returns the value in the ChemElement enum that is linked with this enum value */
+    public ChemElement element()
+    {
+        if (this.ordinal() >= ChemElement.values().length)
+        {
+            return ChemElement.ZERO;
+        }
+        return ChemElement.values()[this.ordinal()];
+    }
+
 }
