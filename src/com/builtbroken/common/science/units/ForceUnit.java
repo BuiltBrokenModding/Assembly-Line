@@ -1,6 +1,6 @@
 package com.builtbroken.common.science.units;
 
-/** Units of messure for force
+/** Units of measure for force
  *
  * @author Rsobert Seifert */
 public enum ForceUnit

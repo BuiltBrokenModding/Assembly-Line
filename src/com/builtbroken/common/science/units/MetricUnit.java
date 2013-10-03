@@ -1,5 +1,8 @@
 package com.builtbroken.common.science.units;
 
+/** Metric measurement system units
+ *
+ * @author Robert Seifert */
 public enum MetricUnit
 {
     MICRO("Micro", "u", 0.000001f),

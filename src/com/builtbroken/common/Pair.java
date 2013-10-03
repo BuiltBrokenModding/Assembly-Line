@@ -1,5 +1,8 @@
 package com.builtbroken.common;
 
+/** Container for two objects
+ *
+ * @author Robert Seifert */
 public class Pair<L, R>
 {
     private final L left;

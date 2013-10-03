@@ -1,4 +1,4 @@
-package com.builtbroken.common;
+package com.builtbroken.common.lang;
 
 import java.awt.Color;
 

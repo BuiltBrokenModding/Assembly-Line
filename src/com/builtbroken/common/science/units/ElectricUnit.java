@@ -1,5 +1,8 @@
 package com.builtbroken.common.science.units;
 
+/** Units of measure for work with electricity
+ *
+ * @author Robert Seifert */
 public enum ElectricUnit
 {
     AMPERE("Amp", "I"),

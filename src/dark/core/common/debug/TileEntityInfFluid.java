@@ -15,7 +15,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
 
-import com.builtbroken.common.TextHelper.TextColor;
+import com.builtbroken.common.lang.TextHelper.TextColor;
 
 import dark.core.prefab.helpers.FluidHelper;
 

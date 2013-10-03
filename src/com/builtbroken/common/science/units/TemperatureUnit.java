@@ -1,5 +1,8 @@
 package com.builtbroken.common.science.units;
 
+/** Units of measure for temperature
+ *
+ * @author Robert Seifert */
 public enum TemperatureUnit
 {
     Fahrenheit("Fahrenheit", "F", new ITempConversion()
@@ -57,7 +60,6 @@ public enum TemperatureUnit
 
     public String name, symbol;
     public ITempConversion conversion;
-
 
     private TemperatureUnit(String name, String symbol, ITempConversion conversion)
     {
