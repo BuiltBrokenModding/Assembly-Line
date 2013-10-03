@@ -39,4 +39,16 @@ public enum ImperialUnits
         this.toFeet = toFeet;
     }
 
+    public static float convert(ImperialUnits a, ImperialUnits b, float value)
+    {
+        value *= a.toFeet;
+        value /= b.toFeet;
+        return value;
+    }
+
+    public float convert(ImperialUnits unit, float value)
+    {
+        return ImperialUnits.convert(this, unit, value);
+    }
+
 }

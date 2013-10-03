@@ -61,6 +61,18 @@ public enum MetricUnit
         return value < this.value;
     }
 
+    public static float convert(MetricUnit a, MetricUnit b, float value)
+    {
+        value *= a.value;
+        value /= b.value;
+        return value;
+    }
+
+    public float convert(MetricUnit unit, float value)
+    {
+        return MetricUnit.convert(this, unit, value);
+    }
+
     public static String applyUnits(float value, int decimalPlaces, float multiplier)
     {
         String prefix = "";
