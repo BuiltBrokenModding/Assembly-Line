@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import net.minecraft.nbt.NBTTagCompound;
 import dark.api.AccessLevel;
+import dark.api.UserAccess;
 import dark.core.prefab.helpers.NBTFileLoader;
 
 public class GlobalAccessManager

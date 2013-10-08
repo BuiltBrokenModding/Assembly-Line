@@ -2,7 +2,6 @@ package dark.api;
 
 import java.util.List;
 
-import dark.core.prefab.access.UserAccess;
 
 /** Used by any object that needs to restrict access to it by a set of usernames
  * 

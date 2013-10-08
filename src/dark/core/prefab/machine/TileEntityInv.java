@@ -13,9 +13,9 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import dark.api.AccessLevel;
 import dark.api.ISpecialAccess;
+import dark.api.UserAccess;
 import dark.core.interfaces.IExternalInv;
 import dark.core.interfaces.IInvBox;
-import dark.core.prefab.access.UserAccess;
 import dark.core.prefab.invgui.InvChest;
 
 /** Prefab for simple object who only need basic inv support and nothing more

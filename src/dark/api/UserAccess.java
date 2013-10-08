@@ -1,11 +1,10 @@
-package dark.core.prefab.access;
+package dark.api;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import dark.api.AccessLevel;
 
 public class UserAccess
 {

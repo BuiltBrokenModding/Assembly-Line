@@ -44,7 +44,10 @@ public class UnitHelper
         {
             String editedString = input;
             char[] chars = input.toCharArray();
-            String number = "";
+            Object unitEnumValue = null;
+
+            String numberAsString = "";
+            float number = 0;
             String units = "";
             int toPowerOf = 1;
             int timeTenToPowerOF = 1;
@@ -55,12 +58,20 @@ public class UnitHelper
                 char c = chars[i];
                 if (numbers.contains(c))
                 {
-                    number += c;
+                    numberAsString += c;
                 }
                 else
                 {
                     break;
                 }
+            }
+            try
+            {
+                number = Float.parseFloat(numberAsString);
+            }
+            catch (Exception e)
+            {
+
             }
             editedString.replaceAll("[0-9]", "");
             chars = editedString.toCharArray();
@@ -79,6 +90,8 @@ public class UnitHelper
                 }
             }
 
+            //TODO detect units
+            return new Pair<Object, Float>(unitEnumValue, number);
         }
 
         return def;
