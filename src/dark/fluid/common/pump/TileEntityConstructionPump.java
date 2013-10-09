@@ -34,7 +34,7 @@ public class TileEntityConstructionPump extends TileEntityStarterPump implements
 
     public TileEntityConstructionPump()
     {
-        super(.05f/*50W/t */, .005f/* 5W/drain*/, 30);
+        super(.05f/*50W/t */, .05f/* 5W/drain*/, 30);
     }
 
     /** Gets the facing direction
