@@ -27,7 +27,7 @@ public class TileEntityRejector extends TileEntityFilterable
 
     public TileEntityRejector()
     {
-        super(1);
+        super(.1f);
     }
 
     @Override

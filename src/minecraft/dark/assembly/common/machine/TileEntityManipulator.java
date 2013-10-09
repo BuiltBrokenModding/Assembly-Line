@@ -33,7 +33,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 
     public TileEntityManipulator()
     {
-        super(1);
+        super(.1f);
     }
 
     @Override
