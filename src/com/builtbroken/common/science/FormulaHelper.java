@@ -1,22 +1,21 @@
 package com.builtbroken.common.science;
 
 /** Helper class that does the work of basic formulas.
- *
+ * 
  * @Note: Unless stated other wise the formulas don't care what the units are as long as the match
  * up. Eg pressure can be in any unit as long as all pressures for the method are the same unit
- *
+ * 
  * @Note: Some of these methods are very simple but they remove the confusion involved in rewriting
  * the code for each use
- *
+ * 
  * @author Robert Seifert */
 public class FormulaHelper
 {
     public static final float ACCELERATION_EARTH = 9.80665f;
     public static final float ACCELERATION_MOON = 1.622f;
 
-
     /** Gay-Lussac's Law (P1/T1 = P2/T2)
-     *
+     * 
      * @param pressure - original pressure
      * @param temp - original tempature
      * @param newTemp - new tempature
@@ -42,7 +41,7 @@ public class FormulaHelper
     }
 
     /** Calculates change from original value to new value
-     *
+     * 
      * @param a - original value
      * @param b - new value
      * @return change in value from original to new */

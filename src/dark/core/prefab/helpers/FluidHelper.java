@@ -62,7 +62,7 @@ public class FluidHelper
     }
 
     /** Gets the block's fluid if it has one
-     *
+     * 
      * @param world - world we are working in
      * @param vector - 3D location in world
      * @return @Fluid that the block is */
@@ -101,10 +101,10 @@ public class FluidHelper
     }
 
     /** Drains a block of fluid
-     *
+     * 
      * @Note sets the block with a client update only. Doesn't tick the block allowing for better
      * placement of fluid that can flow infinitely
-     *
+     * 
      * @param doDrain - do the action
      * @return FluidStack drained from the block */
     public static FluidStack drainBlock(World world, Vector3 node, boolean doDrain)
@@ -113,7 +113,7 @@ public class FluidHelper
     }
 
     /** Drains a block of fluid
-     *
+     * 
      * @param doDrain - do the action
      * @param update - block update flag to use
      * @return FluidStack drained from the block */
@@ -212,9 +212,9 @@ public class FluidHelper
     }
 
     /** Helper method to fill a location with a fluid
-     *
+     * 
      * Note: This does not update the block to prevent the liquid from flowing
-     *
+     * 
      * @return */
     public static int fillBlock(World world, Vector3 node, FluidStack stack, boolean doFill)
     {
@@ -248,7 +248,7 @@ public class FluidHelper
     }
 
     /** Fills all instances of IFluidHandler surrounding the origin
-     *
+     * 
      * @param stack - FluidStack that will be filled into the tanks
      * @param doFill - Actually perform the action or simulate action
      * @param ignore - ForgeDirections to ignore
@@ -281,7 +281,7 @@ public class FluidHelper
     }
 
     /** Fills an instance of IFluidHandler in the given direction
-     *
+     * 
      * @param stack - FluidStack to fill the tank will
      * @param doFill - Actually perform the action or simulate action
      * @param direction - direction to fill in from the origin
@@ -299,6 +299,7 @@ public class FluidHelper
     /** Does all the work needed to fill or drain an item of fluid when a player clicks on the block. */
     public static boolean playerActivatedFluidItem(World world, int x, int y, int z, EntityPlayer entityplayer, int side)
     {
+        //TODO add double click support similar to the crates in assembly line
         ItemStack current = entityplayer.inventory.getCurrentItem();
         if (current != null && world.getBlockTileEntity(x, y, z) instanceof IFluidHandler)
         {
@@ -309,9 +310,7 @@ public class FluidHelper
 
             if (liquid != null)
             {
-                int qty = tank.fill(ForgeDirection.UNKNOWN, liquid, true);
-
-                if (qty != 0 && !entityplayer.capabilities.isCreativeMode)
+                if (tank.fill(ForgeDirection.UNKNOWN, liquid, true) != 0 && !entityplayer.capabilities.isCreativeMode)
                 {
                     entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, AutoCraftingManager.consumeItem(current, 1));
                 }
@@ -360,7 +359,7 @@ public class FluidHelper
     }
 
     /** Drains an item of fluid and fills the tank with what was drained
-     *
+     * 
      * @param consumeItem - should it consume the item. Used mainly for creative mode players. This
      * does effect the return of the method
      * @return Item stack that would be returned if the item was drain of its fluid. Water bucket ->
@@ -382,7 +381,7 @@ public class FluidHelper
     }
 
     /** Fills an item with fluid from the tank
-     *
+     * 
      * @param consumeItem - should it consume the item. Used mainly for creative mode players. This
      * does effect the return of the method
      * @return Item stack that would be returned if the item was filled with fluid. empty bucket ->

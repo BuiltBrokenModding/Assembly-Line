@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import com.builtbroken.common.User;
 
 /** Used to define a users access to a terminal based object.
- *
+ * 
  * @author DarkGuardsman */
 public class TerminalUser extends User
 {

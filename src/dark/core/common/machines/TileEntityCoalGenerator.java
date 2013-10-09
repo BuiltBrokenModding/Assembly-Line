@@ -1,14 +1,10 @@
 package dark.core.common.machines;
 
 import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityPack;
@@ -69,7 +65,7 @@ public class TileEntityCoalGenerator extends TileEntityEnergyMachine
                 this.generateWatts = Math.max(this.generateWatts - BASE_DECCELERATION, 0);
             }
 
-            if(this.generateWatts >= MIN_GENERATE_WATTS)
+            if (this.generateWatts >= MIN_GENERATE_WATTS)
             {
                 this.produceAllSides();
             }

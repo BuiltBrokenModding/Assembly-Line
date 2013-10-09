@@ -10,7 +10,7 @@ public class UnitHelper
     public static final float FEET_TO_METERS = 0.3048f;
     public static final float METERS_TO_FEET = 3.28084f;
 
-    public static List<Character> numbers = new ArrayList<>();
+    public static List<Character> numbers = new ArrayList<Character>();
 
     static
     {

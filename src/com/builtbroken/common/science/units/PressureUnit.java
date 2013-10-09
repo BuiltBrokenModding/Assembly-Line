@@ -1,7 +1,7 @@
 package com.builtbroken.common.science.units;
 
 /** Enum that stores common units used to measure pressure.
- *
+ * 
  * @source http://en.wikipedia.org/wiki/Atmosphere_(unit)
  * @source http://en.wikipedia.org/wiki/Dyne
  * @Source http://en.wikipedia.org/wiki/Kilogram-force

@@ -1,8 +1,5 @@
 package dark.api;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
@@ -10,7 +7,7 @@ import com.builtbroken.common.Group;
 
 /** Used by a terminal to track what users are part of each group. As well used to setup access
  * points to the terminal.
- *
+ * 
  * @author DarkGuardsman */
 public class TerminalGroup extends Group<TerminalUser>
 {

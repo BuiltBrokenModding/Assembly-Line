@@ -3,8 +3,6 @@ package dark.core.common.machines;
 import java.util.List;
 import java.util.Set;
 
-import com.builtbroken.common.Pair;
-
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -13,6 +11,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
+
+import com.builtbroken.common.Pair;
+
 import dark.core.common.CommonProxy;
 import dark.core.common.DarkMain;
 import dark.core.prefab.machine.BlockMachine;
@@ -20,7 +21,6 @@ import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 public class BlockHeater extends BlockMachine
 {
-
 
     public BlockHeater(BlockBuildData data)
     {

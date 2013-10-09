@@ -1,7 +1,7 @@
 package com.builtbroken.common.science.units;
 
 /** Metric measurement system units
- *
+ * 
  * @author Robert Seifert */
 public enum MetricUnit
 {
@@ -112,7 +112,7 @@ public enum MetricUnit
     }
 
     /** Rounds a number to a specific number place places
-     *
+     * 
      * @param The number
      * @return The rounded number */
     public static double roundDecimals(double d, int decimalPlaces)

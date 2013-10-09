@@ -1,17 +1,19 @@
 package com.builtbroken.common.science.units;
 
 /** Units of measure for temperature
- *
+ * 
  * @author Robert Seifert */
 public enum TemperatureUnit
 {
     Fahrenheit("Fahrenheit", "F", new ITempConversion()
     {
+        @Override
         public float toKelvin(float temp)
         {
             return (float) ((temp + 459.67) * (5 / 9));
         }
 
+        @Override
         public float fromKelvin(float temp)
         {
             return (float) ((temp * (9 / 5)) - 459.67);
@@ -20,11 +22,13 @@ public enum TemperatureUnit
     }),
     Celsius("Celsius", "C", new ITempConversion()
     {
+        @Override
         public float toKelvin(float temp)
         {
             return (float) (temp + 273.15);
         }
 
+        @Override
         public float fromKelvin(float temp)
         {
             return (float) (temp - 273.15);
@@ -33,11 +37,13 @@ public enum TemperatureUnit
     }),
     Rankine("Rankine", "R", new ITempConversion()
     {
+        @Override
         public float toKelvin(float temp)
         {
-            return (float) (temp * (5 / 9));
+            return (temp * (5 / 9));
         }
 
+        @Override
         public float fromKelvin(float temp)
         {
             return temp * (9 / 5);
@@ -46,11 +52,13 @@ public enum TemperatureUnit
     }),
     Kelvin("Degrees", "F", new ITempConversion()
     {
+        @Override
         public float toKelvin(float temp)
         {
             return temp;
         }
 
+        @Override
         public float fromKelvin(float temp)
         {
             return temp;

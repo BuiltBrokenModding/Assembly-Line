@@ -9,7 +9,7 @@ import com.builtbroken.common.Pair;
 
 /** Information about block not provided by minecraft such as density, mass, volume, tempature, etc
  * etc
- *
+ * 
  * @author DarkGuardsman */
 public class ExtraBlockData
 {

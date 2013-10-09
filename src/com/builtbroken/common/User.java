@@ -1,7 +1,7 @@
 package com.builtbroken.common;
 
 /** Class to track a user. Mainly used to create groups of users
- *
+ * 
  * @author Robert Seifert */
 public class User
 {

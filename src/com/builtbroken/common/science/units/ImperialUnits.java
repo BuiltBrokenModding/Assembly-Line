@@ -4,8 +4,8 @@ package com.builtbroken.common.science.units;
  * @author Robert Seifert */
 public enum ImperialUnits
 {
-    thou("thou", "th", (float) (1 / 12000)),
-    inch("inch", "in", (float) (1 / 12)),
+    thou("thou", "th", (1 / 12000)),
+    inch("inch", "in", (1 / 12)),
     foot("foot", "ft", 1),
     yard("yard", "yd", 3),
     chain("chain", "ch", 66),
@@ -23,9 +23,9 @@ public enum ImperialUnits
     nautical("nautical mile", "", 6080),
 
     /** Gunter's sruvey unit */
-    link("link", "", (float) (66 / 100)),
+    link("link", "", (66 / 100)),
     /** Gunter's sruvey unit */
-    rod("rod", "", (float) (66 / 4));
+    rod("rod", "", (66 / 4));
 
     public String name, symbol;
     float toFeet;
