@@ -23,7 +23,7 @@ public class TileEntityDetector extends TileEntityFilterable
 
     public TileEntityDetector()
     {
-        super(1);
+        super(.1f);
     }
 
     @Override

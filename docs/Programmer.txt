@@ -1,0 +1,7 @@
+The current system is down right crap and nearly useless compares to computer craft. As much as i will offer support for computer craft i need a system built in. So i've decided to make a system that uses code, and a flow chart. This system i hope will be 100% compatible with computer craft. As well i plan to make a way to translate between the two. 
+
+The main idea
+
+    To use a drag and drop flow chart system to create simple programs for the armbot. Basic commands will be created as blocks that can be reused. As well logic can be added with if statement. Even better vars can be added to track and manage actions from the bot. Pretty much standard flow chart creation that actually has functionality. 
+    
+    To support the computer craft side everything will have a backing in CC code. And users can define new command blocks to add to it. This will be translated into CC code the best the program can. If it doesn't work the player can manage it all in the command block properties as well. 
