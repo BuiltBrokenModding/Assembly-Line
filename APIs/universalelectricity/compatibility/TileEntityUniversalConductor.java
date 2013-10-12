@@ -6,7 +6,12 @@ import ic2.api.energy.tile.IEnergyAcceptor;
 import ic2.api.energy.tile.IEnergyEmitter;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergyTile;
+
+import java.util.HashSet;
+import java.util.Set;
+
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import universalelectricity.core.block.IConnector;
@@ -15,6 +20,9 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.tile.TileEntityConductor;
 import buildcraft.api.power.IPowerReceptor;
+import buildcraft.api.power.PowerHandler;
+import buildcraft.api.power.PowerHandler.PowerReceiver;
+import buildcraft.api.power.PowerHandler.Type;
 
 /**
  * A universal conductor class.
@@ -22,14 +30,21 @@ import buildcraft.api.power.IPowerReceptor;
  * Extend this class or use as a reference for your own implementation of compatible conductor
  * tiles.
  * 
- * TODO: Need working BuildCraft support!
- * 
- * @author micdoodle8
+ * @author Calclavia, micdoodle8
  * 
  */
-public abstract class TileEntityUniversalConductor extends TileEntityConductor implements IEnergySink
+public abstract class TileEntityUniversalConductor extends TileEntityConductor implements IEnergySink, IPowerReceptor
 {
 	protected boolean isAddedToEnergyNet;
+	public PowerHandler powerHandler;
+	public float buildcraftBuffer = Compatibility.BC3_RATIO * 50;
+
+	public TileEntityUniversalConductor()
+	{
+		this.powerHandler = new PowerHandler(this, Type.PIPE);
+		this.powerHandler.configure(0, this.buildcraftBuffer, this.buildcraftBuffer, this.buildcraftBuffer * 2);
+		this.powerHandler.configurePowerPerdition(0, 0);
+	}
 
 	@Override
 	public TileEntity[] getAdjacentConnections()
@@ -74,7 +89,10 @@ public abstract class TileEntityUniversalConductor extends TileEntityConductor i
 				}
 				else if (Compatibility.isBuildcraftLoaded() && tileEntity instanceof IPowerReceptor)
 				{
-					this.adjacentConnections[i] = tileEntity;
+					if (((IPowerReceptor) tileEntity).getPowerReceiver(side.getOpposite()) != null)
+					{
+						this.adjacentConnections[i] = tileEntity;
+					}
 				}
 			}
 		}
@@ -82,11 +100,9 @@ public abstract class TileEntityUniversalConductor extends TileEntityConductor i
 		return this.adjacentConnections;
 	}
 
-	@Override
-	public boolean canUpdate()
-	{
-		return !this.isAddedToEnergyNet;
-	}
+	/*
+	 * @Override public boolean canUpdate() { return !this.isAddedToEnergyNet; }
+	 */
 
 	@Override
 	public void updateEntity()
@@ -166,5 +182,36 @@ public abstract class TileEntityUniversalConductor extends TileEntityConductor i
 	public boolean acceptsEnergyFrom(TileEntity emitter, ForgeDirection direction)
 	{
 		return true;
+	}
+
+	/**
+	 * BuildCraft functions
+	 */
+	@Override
+	public PowerReceiver getPowerReceiver(ForgeDirection side)
+	{
+		return this.powerHandler.getPowerReceiver();
+	}
+
+	@Override
+	public void doWork(PowerHandler workProvider)
+	{
+		Set<TileEntity> ignoreTiles = new HashSet<TileEntity>();
+		ignoreTiles.add(this);
+
+		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+		{
+			TileEntity tile = new Vector3(this).modifyPositionFromSide(direction).getTileEntity(this.worldObj);
+			ignoreTiles.add(tile);
+		}
+
+		ElectricityPack pack = ElectricityPack.getFromWatts(workProvider.useEnergy(0, this.getNetwork().getRequest(this).getWatts() * Compatibility.TO_BC_RATIO, true) * Compatibility.BC3_RATIO, 120);
+		this.getNetwork().produce(pack, ignoreTiles.toArray(new TileEntity[0]));
+	}
+
+	@Override
+	public World getWorld()
+	{
+		return this.getWorldObj();
 	}
 }

@@ -47,7 +47,7 @@ public class TileEntityInfSupply extends TileEntityEnergyMachine implements IDeb
     public float getProvide(ForgeDirection direction)
     {
         // TODO Auto-generated method stub
-        return 1000;
+        return 10000;
     }
 
     @Override
