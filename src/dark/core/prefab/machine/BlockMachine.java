@@ -3,6 +3,7 @@ package dark.core.prefab.machine;
 import java.util.List;
 import java.util.Set;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,7 +28,7 @@ import dark.core.registration.ModObjectRegistry.BlockBuildData;
 /** Basic TileEntity Container class designed to be used by generic machines. It is suggested that
  * each mod using this create there own basic block extending this to reduce need to use build data
  * per block.
- * 
+ *
  * @author Darkguardsman */
 public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
 {
@@ -43,6 +44,13 @@ public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
         {
             this.setCreativeTab(data.creativeTab);
         }
+    }
+
+    public BlockMachine(Configuration config, String blockName, Material material)
+    {
+        super(config.getBlock(blockName, ModPrefab.getNextID()).getInt(), material);
+        this.setUnlocalizedName(blockName);
+        this.setResistance(100f);
     }
 
     @Override
