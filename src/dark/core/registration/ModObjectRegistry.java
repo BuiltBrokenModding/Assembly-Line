@@ -2,7 +2,10 @@ package dark.core.registration;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import net.minecraft.block.Block;
@@ -25,10 +28,11 @@ import dark.core.prefab.ModPrefab;
 import dark.core.prefab.machine.BlockMachine;
 
 /** Handler to make registering all parts of a mod's objects that are loaded into the game by forge
- * 
+ *
  * @author DarkGuardsman */
 public class ModObjectRegistry
 {
+    public static HashMap<Block, String> registredBlocks = new HashMap<Block, String>();
 
     @SidedProxy(clientSide = "dark.core.registration.ClientRegistryProxy", serverSide = "dark.core.registration.RegistryProxy")
     public static RegistryProxy proxy;
@@ -55,6 +59,7 @@ public class ModObjectRegistry
         Block block = null;
         if (blockClass != null && (!canDisable || canDisable && masterBlockConfig.get("Enabled_List", "Enabled_" + name, true).getBoolean(true)))
         {
+            //TODO redesign to catch blockID conflict
             try
             {
                 block = blockClass.newInstance();
@@ -65,6 +70,7 @@ public class ModObjectRegistry
             }
             if (block != null)
             {
+                registredBlocks.put(block, name);
                 proxy.registerBlock(block, itemClass, name, modID);
                 ModObjectRegistry.finishCreation(block, null);
             }
@@ -166,6 +172,39 @@ public class ModObjectRegistry
 
     }
 
+    /** Method to get block via name
+    *
+    * @param blockName
+    * @return Block requested */
+   public static Block getBlock(String blockName)
+   {
+       for (Entry<Block,String> entry : registredBlocks.entrySet())
+       {
+           String name = entry.getKey().getUnlocalizedName().replace("tile.", "");
+           if (name.equalsIgnoreCase(blockName))
+           {
+               return entry.getKey();
+           }
+       }
+       return null;
+   }
+
+   /** Method to get block via id
+    *
+    * @param blockID
+    * @return Block requested */
+   public static Block getBlock(int blockID)
+   {
+       for (Entry<Block,String> entry : registredBlocks.entrySet())
+       {
+           if (entry.getKey().blockID == blockID)
+           {
+               return entry.getKey();
+           }
+       }
+       return null;
+   }
+
     public static Block createNewFluidBlock(String modDomainPrefix, Configuration config, Fluid fluid)
     {
         Block fluidBlock = null;
@@ -244,7 +283,7 @@ public class ModObjectRegistry
         }
 
         /** Adds a tileEntity to be registered when this block is registered
-         * 
+         *
          * @param name - mod name for the tileEntity, should be unique
          * @param class1 - new instance of the TileEntity to register */
         public BlockBuildData addTileEntity(String name, Class<? extends TileEntity> class1)
