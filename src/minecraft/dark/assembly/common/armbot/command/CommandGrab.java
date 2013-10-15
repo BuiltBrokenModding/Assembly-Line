@@ -10,7 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import universalelectricity.core.vector.Vector3;
-import dark.assembly.common.armbot.Command;
+import dark.api.al.armbot.Command;
 import dark.assembly.common.armbot.GrabDictionary;
 import dark.assembly.common.machine.belt.TileEntityConveyorBelt;
 
@@ -68,11 +68,11 @@ public class CommandGrab extends Command
         }
 
         Vector3 serachPosition = this.tileEntity.getHandPosition();
-        List<Entity> found = this.world.getEntitiesWithinAABB(this.entityToInclude, AxisAlignedBB.getBoundingBox(serachPosition.x - radius, serachPosition.y - radius, serachPosition.z - radius, serachPosition.x + radius, serachPosition.y + radius, serachPosition.z + radius));
+        List<Entity> found = this.worldObj.getEntitiesWithinAABB(this.entityToInclude, AxisAlignedBB.getBoundingBox(serachPosition.x - radius, serachPosition.y - radius, serachPosition.z - radius, serachPosition.x + radius, serachPosition.y + radius, serachPosition.z + radius));
 
-        TileEntity ent = serachPosition.getTileEntity(world);
+        TileEntity ent = serachPosition.getTileEntity(worldObj);
         Vector3 searchPostion2 = Vector3.add(serachPosition, new Vector3(0, -1, 0));
-        TileEntity ent2 = searchPostion2.getTileEntity(world);
+        TileEntity ent2 = searchPostion2.getTileEntity(worldObj);
         if (ent instanceof TileEntityConveyorBelt)
         {
             this.belt = (TileEntityConveyorBelt) ent;
@@ -89,7 +89,7 @@ public class CommandGrab extends Command
                 if (found.get(i) != null && !(found.get(i) instanceof EntityArrow) && !(found.get(i) instanceof EntityPlayer) && found.get(i).ridingEntity == null && (!(found.get(i) instanceof EntityAgeable) || (found.get(i) instanceof EntityAgeable && child == ((EntityAgeable) found.get(i)).isChild())))
                 {
                     this.tileEntity.grabEntity(found.get(i));
-                    this.world.playSound(this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, "random.pop", 0.2F, ((this.tileEntity.worldObj.rand.nextFloat() - this.tileEntity.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.0F, true);
+                    this.worldObj.playSound(this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, "random.pop", 0.2F, ((this.tileEntity.worldObj.rand.nextFloat() - this.tileEntity.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.0F, true);
                     if (this.belt != null)
                     {
                         belt.ignoreEntity(found.get(i));

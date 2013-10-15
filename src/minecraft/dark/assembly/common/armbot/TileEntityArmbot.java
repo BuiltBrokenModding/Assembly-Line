@@ -26,6 +26,7 @@ import cpw.mods.fml.relauncher.Side;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
 import dan200.computer.api.IPeripheral;
+import dark.api.al.armbot.Command;
 import dark.api.al.armbot.IArmbot;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.armbot.command.CommandDrop;

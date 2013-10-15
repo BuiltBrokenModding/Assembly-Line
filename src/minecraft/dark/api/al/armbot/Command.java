@@ -1,4 +1,4 @@
-package dark.assembly.common.armbot;
+package dark.api.al.armbot;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -6,29 +6,87 @@ import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
-import dark.api.al.armbot.IArmbot;
-import dark.api.al.armbot.IArmbotTask;
 
-/** An AI Commands that is used by TileEntities with AI.
- *
- * @author Calclavia */
+/** Basic command prefab used by machines like an armbot. You are not required to use this in order
+ * to make armbot commands but it does help. Delete this if you don't plan to use it. */
 public abstract class Command implements IArmbotTask, Cloneable
 {
+    /** Program this is part of. Can be null while stores as a prefab waiting to be copied */
+    protected IProgram program;
     private String methodName;
     /** The amount of ticks this command has been running for. */
     protected int ticks = 0;
 
-    protected World world;
+    /** World current working in */
+    protected World worldObj;
+    /** Armbot instance */
     protected IArmbot armbot;
+    /** Armbot location */
+    protected Vector3 armbotPos;
+    /** Position in the coder is also used during loading to place everything together */
     protected Vector2 pos;
 
-    /** The parameters this command has, or the properties. Entered by the player in the disk.
-     * Parameters are entered like a Java function. idle(20) = Idles for 20 seconds. */
-    private String[] parameters;
+    /** The parameters this command */
+    private Object[] parameters;
 
     public Command(String name)
     {
         this.methodName = name;
+    }
+
+    @Override
+    public boolean onUpdate()
+    {
+        this.ticks++;
+        return false;
+    }
+
+    @Override
+    public boolean onMethodCalled(World world, Vector3 location, IArmbot armbot, Object[] arguments)
+    {
+        this.worldObj = world;
+        this.armbot = armbot;
+        this.parameters = arguments;
+        this.armbotPos = location;
+
+        return true;
+    }
+
+    @Override
+    public Object[] onCCMethodCalled(World world, Vector3 location, IArmbot armbot, IComputerAccess computer, ILuaContext context, Object[] arguments) throws Exception
+    {
+        this.worldObj = world;
+        this.armbot = armbot;
+        this.parameters = arguments;
+        this.armbotPos = location;
+
+        return null;
+    }
+
+    @Override
+    public void terminated()
+    {
+    }
+
+    public void setParameters(String[] strings)
+    {
+        this.parameters = strings;
+    }
+
+    public Object[] getArgs()
+    {
+        return this.parameters;
+    }
+
+    /** Some functions to help get parameter arguments. */
+    protected Object getArg(int i)
+    {
+        if (i >= 0 && i < this.parameters.length)
+        {
+            return this.parameters[i];
+        }
+
+        return null;
     }
 
     @Override
@@ -44,58 +102,10 @@ public abstract class Command implements IArmbotTask, Cloneable
     }
 
     @Override
-    public boolean onUpdate()
-    {
-        this.ticks++;
-        return false;
-    }
-
-    @Override
-    public boolean onMethodCalled(World world, Vector3 location, IArmbot armbot, Object[] arguments)
-    {
-        this.world = world;
-
-        return false;
-    }
-
-    @Override
-    public Object[] onCCMethodCalled(IComputerAccess computer, ILuaContext context, Object[] arguments) throws Exception
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void terminated()
-    {
-    }
-
-    public void setParameters(String[] strings)
-    {
-        this.parameters = strings;
-    }
-
-    public String[] getArgs()
-    {
-        return this.parameters;
-    }
-
-    /** Some functions to help get parameter arguments. */
-    protected String getArg(int i)
-    {
-        if (i >= 0 && i < this.parameters.length)
-        {
-            return this.parameters[i];
-        }
-
-        return null;
-    }
-
-    @Override
     public Command readFromNBT(NBTTagCompound nbt)
     {
         this.ticks = nbt.getInteger("ticks");
-        this.pos = new Vector2(nbt.getDouble("xx"),nbt.getDouble("yy"));
+        this.pos = new Vector2(nbt.getDouble("xx"), nbt.getDouble("yy"));
         return this;
     }
 

@@ -1,6 +1,6 @@
 package dark.assembly.common.armbot.command;
 
-import dark.assembly.common.armbot.Command;
+import dark.api.al.armbot.Command;
 
 public class CommandReturn extends Command
 {

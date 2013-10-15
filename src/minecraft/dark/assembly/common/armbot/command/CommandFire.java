@@ -2,7 +2,7 @@ package dark.assembly.common.armbot.command;
 
 import java.util.Random;
 
-import dark.assembly.common.armbot.Command;
+import dark.api.al.armbot.Command;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -68,7 +68,7 @@ public class CommandFire extends Command
             Entity held = this.tileEntity.getGrabbedEntities().get(0);
             if (held != null)
             {
-                this.world.playSound(this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, "random.bow", velocity, 2f - (velocity / 4f), true);
+                this.worldObj.playSound(this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, "random.bow", velocity, 2f - (velocity / 4f), true);
                 if (held instanceof EntityItem)
                 {
                     EntityItem item = (EntityItem) held;
@@ -83,26 +83,26 @@ public class CommandFire extends Command
                     else
                     {
                         this.commandManager.getNewCommand(this.tileEntity, CommandDrop.class, new String[] {}).onUpdate();
-                        if (!this.world.isRemote)
-                            this.world.removeEntity(held);
+                        if (!this.worldObj.isRemote)
+                            this.worldObj.removeEntity(held);
                     }
                     if (item.getEntityItem().itemID == Item.arrow.itemID)
                     {
-                        EntityArrow arrow = new EntityArrow(world, this.tileEntity.getHandPosition().x, this.tileEntity.getHandPosition().y, this.tileEntity.getHandPosition().z);
+                        EntityArrow arrow = new EntityArrow(worldObj, this.tileEntity.getHandPosition().x, this.tileEntity.getHandPosition().y, this.tileEntity.getHandPosition().z);
                         arrow.motionX = this.finalVelocity.x;
                         arrow.motionY = this.finalVelocity.y;
                         arrow.motionZ = this.finalVelocity.z;
-                        if (!this.world.isRemote)
-                            this.world.spawnEntityInWorld(arrow);
+                        if (!this.worldObj.isRemote)
+                            this.worldObj.spawnEntityInWorld(arrow);
                     }
                     else
                     {
-                        EntityItem item2 = new EntityItem(world, this.tileEntity.getHandPosition().x, this.tileEntity.getHandPosition().y, this.tileEntity.getHandPosition().z, thrown);
+                        EntityItem item2 = new EntityItem(worldObj, this.tileEntity.getHandPosition().x, this.tileEntity.getHandPosition().y, this.tileEntity.getHandPosition().z, thrown);
                         item2.motionX = this.finalVelocity.x;
                         item2.motionY = this.finalVelocity.y;
                         item2.motionZ = this.finalVelocity.z;
-                        if (!this.world.isRemote)
-                            this.world.spawnEntityInWorld(item2);
+                        if (!this.worldObj.isRemote)
+                            this.worldObj.spawnEntityInWorld(item2);
                     }
                 }
                 else

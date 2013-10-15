@@ -1,9 +1,9 @@
 package dark.assembly.common.armbot.command;
 
-import universalelectricity.core.vector.Vector2;
+import net.minecraft.nbt.NBTTagCompound;
+import dark.api.al.armbot.Command;
 import dark.api.al.armbot.IArmbotTask;
 import dark.api.al.armbot.ISplitArmbotTask;
-import dark.assembly.common.armbot.Command;
 
 public class CommandIF extends Command implements ISplitArmbotTask
 {
@@ -39,7 +39,7 @@ public class CommandIF extends Command implements ISplitArmbotTask
     @Override
     public IArmbotTask getExitPoint()
     {
-        if(this.isTrue)
+        if (this.isTrue)
         {
             return this.exitTruePoint;
         }
@@ -66,6 +66,18 @@ public class CommandIF extends Command implements ISplitArmbotTask
 
     }
 
+    @Override
+    public Command readFromNBT(NBTTagCompound nbt)
+    {
+        super.readFromNBT(nbt);
+        return this;
+    }
 
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+    {
+        super.writeToNBT(nbt);
+        return nbt;
+    }
 
 }

@@ -1,6 +1,6 @@
 package dark.assembly.common.armbot.command;
 
-import dark.assembly.common.armbot.Command;
+import dark.api.al.armbot.Command;
 import net.minecraft.nbt.NBTTagCompound;
 
 /** This task resets all previous tasks and does them again in a loop.

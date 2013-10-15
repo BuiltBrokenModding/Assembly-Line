@@ -9,7 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
-import dark.assembly.common.armbot.Command;
+import dark.api.al.armbot.Command;
 import dark.core.prefab.helpers.ItemWorldHelper;
 
 public class CommandPowerTo extends Command
@@ -46,12 +46,12 @@ public class CommandPowerTo extends Command
         else if (this.tileEntity.isProvidingPower)
         {
             Vector3 loc = this.tileEntity.getHandPosition();
-            world.spawnParticle("smoke", loc.x, loc.y, loc.z, 0.0D, 0.0D, 0.0D);
-            world.spawnParticle("flame", loc.x, loc.y, loc.z, 0.0D, 0.0D, 0.0D);
+            worldObj.spawnParticle("smoke", loc.x, loc.y, loc.z, 0.0D, 0.0D, 0.0D);
+            worldObj.spawnParticle("flame", loc.x, loc.y, loc.z, 0.0D, 0.0D, 0.0D);
         }
 
-        Block block = Block.blocksList[this.world.getBlockId(tileEntity.getHandPosition().intX(), tileEntity.getHandPosition().intY(), tileEntity.getHandPosition().intZ())];
-        TileEntity targetTile = this.tileEntity.getHandPosition().getTileEntity(this.world);
+        Block block = Block.blocksList[this.worldObj.getBlockId(tileEntity.getHandPosition().intX(), tileEntity.getHandPosition().intY(), tileEntity.getHandPosition().intZ())];
+        TileEntity targetTile = this.tileEntity.getHandPosition().getTileEntity(this.worldObj);
 
         if (this.tileEntity.getGrabbedItems().size() > 0)
         {
@@ -82,7 +82,7 @@ public class CommandPowerTo extends Command
         for (int i = 2; i < 6; i++)
         {
             ForgeDirection dir = ForgeDirection.getOrientation(i);
-            this.world.notifyBlocksOfNeighborChange(this.tileEntity.xCoord + dir.offsetX, this.tileEntity.yCoord + dir.offsetY, this.tileEntity.zCoord + dir.offsetZ, id);
+            this.worldObj.notifyBlocksOfNeighborChange(this.tileEntity.xCoord + dir.offsetX, this.tileEntity.yCoord + dir.offsetY, this.tileEntity.zCoord + dir.offsetZ, id);
         }
     }
 

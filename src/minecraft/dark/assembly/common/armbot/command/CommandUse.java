@@ -3,8 +3,8 @@ package dark.assembly.common.armbot.command;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import dark.api.al.armbot.Command;
 import dark.api.al.armbot.IArmbotUseable;
-import dark.assembly.common.armbot.Command;
 
 public class CommandUse extends Command
 {
@@ -29,8 +29,8 @@ public class CommandUse extends Command
     @Override
     protected boolean onUpdate()
     {
-        Block block = Block.blocksList[this.world.getBlockId(tileEntity.getHandPosition().intX(), tileEntity.getHandPosition().intY(), tileEntity.getHandPosition().intZ())];
-        TileEntity targetTile = this.tileEntity.getHandPosition().getTileEntity(this.world);
+        Block block = Block.blocksList[this.worldObj.getBlockId(tileEntity.getHandPosition().intX(), tileEntity.getHandPosition().intY(), tileEntity.getHandPosition().intZ())];
+        TileEntity targetTile = this.tileEntity.getHandPosition().getTileEntity(this.worldObj);
 
         if (targetTile != null)
         {
@@ -44,7 +44,7 @@ public class CommandUse extends Command
         {
             try
             {
-                boolean f = block.onBlockActivated(this.world, tileEntity.getHandPosition().intX(), tileEntity.getHandPosition().intY(), tileEntity.getHandPosition().intZ(), null, 0, 0, 0, 0);
+                boolean f = block.onBlockActivated(this.worldObj, tileEntity.getHandPosition().intX(), tileEntity.getHandPosition().intY(), tileEntity.getHandPosition().intZ(), null, 0, 0, 0, 0);
             }
             catch (Exception e)
             {

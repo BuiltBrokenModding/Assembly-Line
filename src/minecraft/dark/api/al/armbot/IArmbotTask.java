@@ -27,7 +27,7 @@ public interface IArmbotTask
 
     /** Passed in from both the armbot to the program manager then here after a Computer craft
      * machine calls a this commands method name. {@IPeripheral #callMethod()} */
-    public Object[] onCCMethodCalled(IComputerAccess computer, ILuaContext context, Object[] arguments) throws Exception;
+    public Object[] onCCMethodCalled(World world, Vector3 location, IArmbot armbot, IComputerAccess computer, ILuaContext context, Object[] arguments) throws Exception;
 
     /** Update the current part of the command */
     public boolean onUpdate();

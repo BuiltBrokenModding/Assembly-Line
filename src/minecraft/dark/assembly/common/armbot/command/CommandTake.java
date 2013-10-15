@@ -8,7 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
-import dark.assembly.common.armbot.Command;
+import dark.api.al.armbot.Command;
 import dark.assembly.common.machine.InvInteractionHelper;
 
 public class CommandTake extends Command
@@ -53,7 +53,7 @@ public class CommandTake extends Command
     @Override
     protected boolean onUpdate()
     {
-        TileEntity targetTile = this.tileEntity.getHandPosition().getTileEntity(this.world);
+        TileEntity targetTile = this.tileEntity.getHandPosition().getTileEntity(this.worldObj);
 
         if (targetTile != null && this.tileEntity.getGrabbedItems().size() <= 0)
         {
