@@ -4,13 +4,18 @@ import dark.api.al.armbot.Command;
 
 public class CommandDrop extends Command
 {
+    public CommandDrop()
+    {
+        super("drop");
+    }
+
     @Override
-    protected boolean onUpdate()
+    public boolean onUpdate()
     {
         super.onUpdate();
 
-        this.tileEntity.drop("all");
-        this.worldObj.playSound(this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, "random.pop", 0.2F, ((this.tileEntity.worldObj.rand.nextFloat() - this.tileEntity.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.0F, true);
+        this.armbot.drop("all");
+        this.worldObj.playSound(this.armbotPos.x, this.armbotPos.x, this.armbotPos.x, "random.pop", 0.2F, ((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.0F, true);
 
         return false;
     }
@@ -19,5 +24,11 @@ public class CommandDrop extends Command
     public String toString()
     {
         return "DROP";
+    }
+
+    @Override
+    public Command clone()
+    {
+        return new CommandDrop();
     }
 }

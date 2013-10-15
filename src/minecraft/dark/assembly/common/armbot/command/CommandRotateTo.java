@@ -1,108 +1,87 @@
 package dark.assembly.common.armbot.command;
 
+import universalelectricity.core.vector.Vector3;
+
+import com.builtbroken.common.science.units.UnitHelper;
+
 import dark.api.al.armbot.Command;
+import dark.api.al.armbot.IArmbot;
+import dark.core.prefab.helpers.MathHelper;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 
 /** Rotates the armbot to a specific direction. If not specified, it will turn right.
- * 
- * @author Calclavia */
+ *
+ * @author DarkGuardsman */
 public class CommandRotateTo extends Command
 {
-    float targetRotationYaw = 0;
-    float targetRotationPitch = 0;
-    int totalTicks = 0;
+    public CommandRotateTo()
+    {
+        super("RotateTo");
+    }
+
+    float targetRotationYaw = 0, targetRotationPitch = 0, currentRotationYaw, currentRotationPitch;
 
     @Override
-    public void onStart()
+    public boolean onMethodCalled(World world, Vector3 location, IArmbot armbot, Object[] arguments)
     {
-        super.onStart();
-
-        this.ticks = 0;
-        this.totalTicks = 0;
+        super.onMethodCalled(world, location, armbot, arguments);
 
         if (this.getArg(0) != null)
         {
-            this.targetRotationYaw = this.getFloatArg(0);
-        }
-        else
-        {
-            this.targetRotationYaw = 0;
+            this.targetRotationYaw = UnitHelper.tryToParseFloat("" + this.getArg(0));
         }
 
         if (this.getArg(1) != null)
         {
-            this.targetRotationPitch = this.getFloatArg(1);
-        }
-        else
-        {
-            this.targetRotationPitch = 0;
+            this.targetRotationPitch = UnitHelper.tryToParseFloat("" + this.getArg(1));
         }
 
-        while (this.targetRotationYaw < 0)
-            this.targetRotationYaw += 360;
-        while (this.targetRotationYaw > 360)
-            this.targetRotationYaw -= 360;
-        while (this.targetRotationPitch < -60)
-            this.targetRotationPitch += 60;
-        while (this.targetRotationPitch > 60)
-            this.targetRotationPitch -= 60;
+        MathHelper.clampAngleTo360(this.targetRotationPitch);
+        MathHelper.clampAngleTo360(this.targetRotationYaw);
 
-        int totalTicksYaw = (int) (Math.abs(this.targetRotationYaw - this.tileEntity.actualYaw) / this.tileEntity.ROTATION_SPEED);
-        int totalTicksPitch = (int) (Math.abs(this.targetRotationPitch - this.tileEntity.actualPitch) / this.tileEntity.ROTATION_SPEED);
-        this.totalTicks = Math.max(totalTicksYaw, totalTicksPitch);
+        return true;
     }
 
     @Override
-    protected boolean onUpdate()
+    public boolean onUpdate()
     {
         super.onUpdate();
-        /*
-         * float rotationalDifference = Math.abs(this.tileEntity.rotationYaw - this.targetRotation);
-         * 
-         * if (rotationalDifference < ROTATION_SPEED) { this.tileEntity.rotationYaw =
-         * this.targetRotation; } else { if (this.tileEntity.rotationYaw > this.targetRotation) {
-         * this.tileEntity.rotationYaw -= ROTATION_SPEED; } else { this.tileEntity.rotationYaw +=
-         * ROTATION_SPEED; } this.ticks = 0; }
-         */
 
-        // set the rotation to the target immediately and let the client handle animating it
-        // wait for the client to catch up
+        this.currentRotationYaw = (float) this.armbot.getRotation().x;
+        this.currentRotationPitch = (float) this.armbot.getRotation().y;
+        this.armbot.moveArmTo(this.targetRotationYaw, this.targetRotationPitch);
 
-        this.tileEntity.rotationYaw = this.targetRotationYaw;
-        this.tileEntity.rotationPitch = this.targetRotationPitch;
-
-        // if (this.ticks < this.totalTicks) { return true; }
-        if (Math.abs(this.tileEntity.actualPitch - this.tileEntity.rotationPitch) > 0.001f)
-        {
-            return true;
-        }
-        if (Math.abs(this.tileEntity.actualYaw - this.tileEntity.rotationYaw) > 0.001f)
-        {
-            return true;
-        }
-
-        return false;
+        return Math.abs(this.currentRotationPitch - this.targetRotationPitch) > 0.01f && Math.abs(this.currentRotationYaw - this.targetRotationYaw) > 0.01f;
     }
 
     @Override
     public String toString()
     {
-        return "ROTATETO " + Float.toString(this.targetRotationYaw) + " " + Float.toString(this.targetRotationPitch);
+        return super.toString() + " " + Float.toString(this.targetRotationYaw) + " " + Float.toString(this.targetRotationPitch);
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound taskCompound)
+    public Command readFromNBT(NBTTagCompound taskCompound)
     {
         super.readFromNBT(taskCompound);
         this.targetRotationPitch = taskCompound.getFloat("rotPitch");
         this.targetRotationYaw = taskCompound.getFloat("rotYaw");
+        return this;
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound taskCompound)
+    public NBTTagCompound writeToNBT(NBTTagCompound taskCompound)
     {
         super.writeToNBT(taskCompound);
         taskCompound.setFloat("rotPitch", this.targetRotationPitch);
         taskCompound.setFloat("rotYaw", this.targetRotationYaw);
+        return taskCompound;
+    }
+
+    @Override
+    public Command clone()
+    {
+        return new CommandRotateTo();
     }
 }

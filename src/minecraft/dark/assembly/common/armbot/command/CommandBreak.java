@@ -10,21 +10,29 @@ import dark.api.al.armbot.Command;
 import dark.core.prefab.helpers.ItemWorldHelper;
 
 /** Used by arms to break a specific block in a position.
- * 
+ *
  * @author Calclavia */
 public class CommandBreak extends Command
 {
-    private CommandRotateTo rotateToCommand;
+    public CommandBreak()
+    {
+        super("break");
+    }
+
+    public CommandBreak(String name)
+    {
+        super(name);
+    }
 
     int BREAK_TIME = 30;
     boolean keep = false;
 
     @Override
-    protected boolean onUpdate()
+    public boolean onUpdate()
     {
         super.onUpdate();
 
-        Vector3 serachPosition = this.tileEntity.getHandPosition();
+        Vector3 serachPosition = this.armbot.getHandPos();
 
         Block block = Block.blocksList[serachPosition.getBlockID(this.worldObj)];
 
@@ -38,7 +46,7 @@ public class CommandBreak extends Command
             }
             else
             {
-                this.tileEntity.grabEntity(new EntityItem(this.worldObj, serachPosition.intX() + 0.5D, serachPosition.intY() + 0.5D, serachPosition.intZ() + 0.5D, items.get(0)));
+                this.armbot.grab(new EntityItem(this.worldObj, serachPosition.intX() + 0.5D, serachPosition.intY() + 0.5D, serachPosition.intZ() + 0.5D, items.get(0)));
             }
 
             worldObj.setBlock(serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), 0, 0, 3);
@@ -50,8 +58,8 @@ public class CommandBreak extends Command
     }
 
     @Override
-    public String toString()
+    public Command clone()
     {
-        return "BREAK";
+        return new CommandBreak();
     }
 }

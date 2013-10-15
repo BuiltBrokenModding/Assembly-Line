@@ -9,28 +9,27 @@ public class CommandReturn extends Command
 
     private CommandRotateTo rotateToCommand;
 
-    @Override
-    public void onStart()
+    public CommandReturn()
     {
-        this.rotateToCommand = (CommandRotateTo) this.commandManager.getNewCommand(this.tileEntity, CommandRotateTo.class, new String[] { "0", "0" });
-        this.rotateToCommand.onStart();
+        super("Return");
     }
 
     @Override
-    protected boolean onUpdate()
+    public boolean onUpdate()
     {
         if (this.rotateToCommand == null)
         {
-            this.onStart();
+            this.rotateToCommand = (CommandRotateTo) this.commandManager.getNewCommand(this.tileEntity, CommandRotateTo.class, new String[] { "0", "0" });
+            this.rotateToCommand.onStart();
         }
 
         return this.rotateToCommand.onUpdate();
     }
 
     @Override
-    public void onEnd()
+    public void terminated()
     {
-        this.rotateToCommand.onEnd();
+        this.rotateToCommand.terminated();
     }
 
     @Override

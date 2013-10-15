@@ -1,5 +1,8 @@
 package dark.api.al.armbot;
 
+import com.builtbroken.common.science.units.UnitHelper;
+
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector2;
@@ -107,6 +110,30 @@ public abstract class Command implements IArmbotTask, Cloneable
         this.ticks = nbt.getInteger("ticks");
         this.pos = new Vector2(nbt.getDouble("xx"), nbt.getDouble("yy"));
         return this;
+    }
+
+    public ItemStack getItem(String string, int ammount)
+    {
+        int id = 0;
+        int meta = 32767;
+        if (string.contains(":"))
+        {
+            String[] blockID = string.split(":");
+            id = Integer.parseInt(blockID[0]);
+            meta = Integer.parseInt(blockID[1]);
+        }
+        else
+        {
+            id = UnitHelper.tryToParseInt(string);
+        }
+        if (id == 0)
+        {
+            return null;
+        }
+        else
+        {
+            return new ItemStack(id, ammount, meta);
+        }
     }
 
     @Override

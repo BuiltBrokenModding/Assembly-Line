@@ -2,7 +2,10 @@ package dark.assembly.common.armbot.command;
 
 import java.util.Random;
 
+import com.builtbroken.common.science.units.UnitHelper;
+
 import dark.api.al.armbot.Command;
+import dark.api.al.armbot.IArmbot;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -10,10 +13,12 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
 
 public class CommandFire extends Command
 {
+
     private static final float MIN_ACTUAL_PITCH = -80;
     private static final float MAX_ACTUAL_PITCH = 80;
 
@@ -22,19 +27,24 @@ public class CommandFire extends Command
     private float velocity;
     private Vector3 finalVelocity;
 
-    @Override
-    public void onStart()
+    public CommandFire()
     {
-        super.onStart();
+        super("throw");
+    }
 
-        this.velocity = this.getFloatArg(0);
+    @Override
+    public boolean onMethodCalled(World world, Vector3 location, IArmbot armbot, Object[] arguments)
+    {
+        super.onMethodCalled(world, location, armbot, arguments);
+
+        this.velocity = UnitHelper.tryToParseFloat("" + this.getArg(0));
         if (this.velocity > 2.5f)
             this.velocity = 2.5f;
         if (this.velocity < 0.125f)
             this.velocity = 1f;
 
-        this.actualYaw = this.tileEntity.rotationYaw;
-        this.actualPitch = ((MAX_ACTUAL_PITCH - MIN_ACTUAL_PITCH) * (this.tileEntity.rotationPitch / 60f)) + MIN_ACTUAL_PITCH;
+        this.actualYaw = (float) this.armbot.getRotation().x;
+        this.actualPitch = ((MAX_ACTUAL_PITCH - MIN_ACTUAL_PITCH) * ((float) this.armbot.getRotation().y / 60f)) + MIN_ACTUAL_PITCH;
 
         double x, y, z;
         double yaw, pitch;
@@ -53,22 +63,31 @@ public class CommandFire extends Command
         this.finalVelocity.y *= (1f - (1f / 200f)) + (random.nextFloat() * (1f / 100f));
         this.finalVelocity.z *= (1f - (1f / 200f)) + (random.nextFloat() * (1f / 100f));
 
-        this.finalVelocity.multiply(velocity);
+        this.finalVelocity.scale(velocity);
+        return true;
     }
 
     @Override
-    protected boolean onUpdate()
+    public boolean onUpdate()
     {
         if (this.finalVelocity == null) // something went wrong
         {
             this.finalVelocity = new Vector3(0, 0, 0);
         }
-        if (this.tileEntity.getGrabbedEntities().size() > 0)
+        if (this.armbot.getGrabbedObjects().size() > 0)
         {
-            Entity held = this.tileEntity.getGrabbedEntities().get(0);
+            Entity held = null;
+            for (Object obj : this.armbot.getGrabbedObjects())
+            {
+                if (obj instanceof Entity)
+                {
+                    held = (Entity) obj;
+                    break;
+                }
+            }
             if (held != null)
             {
-                this.worldObj.playSound(this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, "random.bow", velocity, 2f - (velocity / 4f), true);
+                this.worldObj.playSound(this.armbotPos.x, this.armbotPos.y, this.armbotPos.z, "random.bow", velocity, 2f - (velocity / 4f), true);
                 if (held instanceof EntityItem)
                 {
                     EntityItem item = (EntityItem) held;
@@ -82,13 +101,15 @@ public class CommandFire extends Command
                     }
                     else
                     {
-                        this.commandManager.getNewCommand(this.tileEntity, CommandDrop.class, new String[] {}).onUpdate();
+                        this.armbot.drop("all");
                         if (!this.worldObj.isRemote)
+                        {
                             this.worldObj.removeEntity(held);
+                        }
                     }
                     if (item.getEntityItem().itemID == Item.arrow.itemID)
                     {
-                        EntityArrow arrow = new EntityArrow(worldObj, this.tileEntity.getHandPosition().x, this.tileEntity.getHandPosition().y, this.tileEntity.getHandPosition().z);
+                        EntityArrow arrow = new EntityArrow(worldObj, this.armbot.getHandPos().x, this.armbot.getHandPos().y, this.armbot.getHandPos().z);
                         arrow.motionX = this.finalVelocity.x;
                         arrow.motionY = this.finalVelocity.y;
                         arrow.motionZ = this.finalVelocity.z;
@@ -97,7 +118,7 @@ public class CommandFire extends Command
                     }
                     else
                     {
-                        EntityItem item2 = new EntityItem(worldObj, this.tileEntity.getHandPosition().x, this.tileEntity.getHandPosition().y, this.tileEntity.getHandPosition().z, thrown);
+                        EntityItem item2 = new EntityItem(worldObj, this.armbot.getHandPos().x, this.armbot.getHandPos().y, this.armbot.getHandPos().z, thrown);
                         item2.motionX = this.finalVelocity.x;
                         item2.motionY = this.finalVelocity.y;
                         item2.motionZ = this.finalVelocity.z;
@@ -107,7 +128,7 @@ public class CommandFire extends Command
                 }
                 else
                 {
-                    this.commandManager.getNewCommand(this.tileEntity, CommandDrop.class, new String[] {}).onUpdate();
+                    this.armbot.drop("all");
                     held.motionX = this.finalVelocity.x;
                     held.motionY = this.finalVelocity.y;
                     held.motionZ = this.finalVelocity.z;
@@ -119,7 +140,7 @@ public class CommandFire extends Command
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound taskCompound)
+    public Command readFromNBT(NBTTagCompound taskCompound)
     {
         super.readFromNBT(taskCompound);
         this.actualYaw = taskCompound.getFloat("fireYaw");
@@ -129,10 +150,11 @@ public class CommandFire extends Command
         this.finalVelocity.x = taskCompound.getDouble("fireVectorX");
         this.finalVelocity.y = taskCompound.getDouble("fireVectorY");
         this.finalVelocity.z = taskCompound.getDouble("fireVectorZ");
+        return this;
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound taskCompound)
+    public NBTTagCompound writeToNBT(NBTTagCompound taskCompound)
     {
         super.writeToNBT(taskCompound);
         taskCompound.setFloat("fireYaw", this.actualYaw);
@@ -144,11 +166,18 @@ public class CommandFire extends Command
             taskCompound.setDouble("fireVectorY", this.finalVelocity.y);
             taskCompound.setDouble("fireVectorZ", this.finalVelocity.z);
         }
+        return taskCompound;
     }
 
     @Override
     public String toString()
     {
-        return "FIRE " + Float.toString(this.velocity);
+        return super.toString() + " " + Float.toString(this.velocity);
+    }
+
+    @Override
+    public Command clone()
+    {
+        return new CommandFire();
     }
 }

@@ -9,13 +9,15 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
 import dark.api.al.armbot.Command;
+import dark.api.al.armbot.IArmbot;
 import dark.assembly.common.armbot.GrabDictionary;
 import dark.assembly.common.machine.belt.TileEntityConveyorBelt;
 
 /** Used by arms to search for entities in a region
- * 
+ *
  * @author Calclavia */
 public class CommandGrab extends Command
 {
@@ -29,15 +31,20 @@ public class CommandGrab extends Command
     /** The item to be collected. */
     private Class<? extends Entity> entityToInclude;
 
-    @Override
-    public void onStart()
+    public CommandGrab()
     {
-        super.onStart();
+        super("Grab");
+    }
+
+    @Override
+    public boolean onMethodCalled(World world, Vector3 location, IArmbot armbot, Object[] arguments)
+    {
+        super.onMethodCalled(world, location, armbot, arguments);
         this.entityToInclude = Entity.class;
         if (this.getArgs() != null && this.getArgs().length > 0 && this.getArgs()[0] != null)
         {
 
-            if (this.getArg(0).equalsIgnoreCase("baby") || this.getArg(0).equalsIgnoreCase("child"))
+            if (this.getArg(0) instanceof String && (((String) this.getArg(0)).equalsIgnoreCase("baby") || ((String) this.getArg(0)).equalsIgnoreCase("child")))
             {
                 child = true;
                 if (this.getArgs().length > 1 && this.getArgs()[1] != null)
@@ -48,26 +55,27 @@ public class CommandGrab extends Command
             else
             {
                 this.entityToInclude = GrabDictionary.get(this.getArg(0)).getEntityClass();
-                if (this.getArgs().length > 1 && this.getArgs()[1] != null && (this.getArg(1).equalsIgnoreCase("baby") || this.getArg(0).equalsIgnoreCase("child")))
+                if (this.getArg(1) instanceof String && (((String) this.getArg(1)).equalsIgnoreCase("baby") || ((String) this.getArg(1)).equalsIgnoreCase("child")))
                 {
                     child = true;
                 }
             }
 
         }
+        return true;
     }
 
     @Override
-    protected boolean onUpdate()
+    public boolean onUpdate()
     {
         super.onUpdate();
 
-        if (this.tileEntity.getGrabbedEntities().size() > 0)
+        if (this.armbot.getGrabbedObjects().size() > 0)
         {
             return false;
         }
 
-        Vector3 serachPosition = this.tileEntity.getHandPosition();
+        Vector3 serachPosition = this.armbot.getHandPos();
         List<Entity> found = this.worldObj.getEntitiesWithinAABB(this.entityToInclude, AxisAlignedBB.getBoundingBox(serachPosition.x - radius, serachPosition.y - radius, serachPosition.z - radius, serachPosition.x + radius, serachPosition.y + radius, serachPosition.z + radius));
 
         TileEntity ent = serachPosition.getTileEntity(worldObj);
@@ -88,8 +96,7 @@ public class CommandGrab extends Command
             {
                 if (found.get(i) != null && !(found.get(i) instanceof EntityArrow) && !(found.get(i) instanceof EntityPlayer) && found.get(i).ridingEntity == null && (!(found.get(i) instanceof EntityAgeable) || (found.get(i) instanceof EntityAgeable && child == ((EntityAgeable) found.get(i)).isChild())))
                 {
-                    this.tileEntity.grabEntity(found.get(i));
-                    this.worldObj.playSound(this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, "random.pop", 0.2F, ((this.tileEntity.worldObj.rand.nextFloat() - this.tileEntity.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.0F, true);
+                    this.armbot.grab(found.get(i));
                     if (this.belt != null)
                     {
                         belt.ignoreEntity(found.get(i));
@@ -103,19 +110,21 @@ public class CommandGrab extends Command
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound taskCompound)
+    public Command readFromNBT(NBTTagCompound taskCompound)
     {
         super.readFromNBT(taskCompound);
         this.child = taskCompound.getBoolean("child");
         this.entityToInclude = GrabDictionary.get(taskCompound.getString("name")).getEntityClass();
+        return this;
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound taskCompound)
+    public NBTTagCompound writeToNBT(NBTTagCompound taskCompound)
     {
         super.writeToNBT(taskCompound);
         taskCompound.setBoolean("child", child);
         taskCompound.setString("name", ((this.entityToInclude != null) ? GrabDictionary.get(this.entityToInclude).getName() : ""));
+        return taskCompound;
     }
 
     @Override
@@ -133,5 +142,11 @@ public class CommandGrab extends Command
             }
         }
         return "GRAB " + baby + entity;
+    }
+
+    @Override
+    public Command clone()
+    {
+        return new CommandGrab();
     }
 }

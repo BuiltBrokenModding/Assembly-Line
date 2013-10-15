@@ -29,10 +29,10 @@ public interface IArmbotTask
      * machine calls a this commands method name. {@IPeripheral #callMethod()} */
     public Object[] onCCMethodCalled(World world, Vector3 location, IArmbot armbot, IComputerAccess computer, ILuaContext context, Object[] arguments) throws Exception;
 
-    /** Update the current part of the command */
+    /** Update the current segment of the task */
     public boolean onUpdate();
 
-    /** Called when the task is being run by the armbot
+    /** Called when the task is being run by the armbot. Used mainly to setup the task before actually doing the task.
      *
      * @param world - current world
      * @param location - current location
@@ -53,6 +53,6 @@ public interface IArmbotTask
     /** Used mainly for display purposes in the encoder */
     public static enum TaskType
     {
-
+        DATA(), PROCESS(), DECISION()
     }
 }

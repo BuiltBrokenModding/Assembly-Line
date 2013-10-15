@@ -4,59 +4,54 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.builtbroken.common.science.units.UnitHelper;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import dark.api.al.armbot.Command;
+import dark.api.al.armbot.IArmbot;
 import dark.assembly.common.machine.InvInteractionHelper;
 
 public class CommandGive extends Command
 {
+
     private ItemStack stack;
     private int ammount = -1;
 
-    @Override
-    public void onStart()
+    public CommandGive()
     {
-        int id = 0;
-        int meta = 32767;
-
-        if (this.getArgs().length > 0)
-        {
-            String block = this.getArg(0);
-            if (block.contains(":"))
-            {
-                String[] blockID = block.split(":");
-                id = Integer.parseInt(blockID[0]);
-                meta = Integer.parseInt(blockID[1]);
-            }
-            else
-            {
-                id = Integer.parseInt(block);
-            }
-        }
-        if (this.getArgs().length > 1)
-        {
-            ammount = this.getIntArg(1);
-        }
-        if (id == 0)
-        {
-            stack = null;
-        }
-        else
-        {
-            stack = new ItemStack(id, ammount == -1 ? 1 : ammount, meta);
-        }
+        super("give");
     }
 
     @Override
-    protected boolean onUpdate()
+    public boolean onMethodCalled(World world, Vector3 location, IArmbot armbot, Object[] arguments)
     {
-        TileEntity targetTile = this.tileEntity.getHandPosition().getTileEntity(this.worldObj);
+        super.onMethodCalled(world, location, armbot, arguments);
 
-        if (targetTile != null && this.tileEntity.getGrabbedItems().size() > 0)
+        if (this.getArgs().length > 1)
+        {
+            ammount = UnitHelper.tryToParseInt("" + this.getArg(1));
+        }
+
+        if (this.getArgs().length > 0)
+        {
+            stack = this.getItem("" + this.getArg(0), ammount == -1 ? 1 : ammount);
+        }
+
+        return true;
+
+    }
+
+    @Override
+    public boolean onUpdate()
+    {
+        TileEntity targetTile = this.armbot.getHandPos().getTileEntity(this.worldObj);
+
+        if (targetTile != null && this.armbot.getGrabbedObjects().size() > 0)
         {
             ForgeDirection direction = this.tileEntity.getFacingDirectionFromAngle();
             List<ItemStack> stacks = new ArrayList<ItemStack>();
@@ -85,24 +80,25 @@ public class CommandGive extends Command
             }
             return flag;
         }
-        return true;
+        return false;
     }
 
     @Override
     public String toString()
     {
-        return "give " + (stack != null ? stack.toString() : "1x???@???");
+        return super.toString() + " " + (stack != null ? stack.toString() : "1x???@???");
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound taskCompound)
+    public Command readFromNBT(NBTTagCompound taskCompound)
     {
         super.readFromNBT(taskCompound);
         this.stack = ItemStack.loadItemStackFromNBT(taskCompound.getCompoundTag("item"));
+        return this;
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound taskCompound)
+    public NBTTagCompound writeToNBT(NBTTagCompound taskCompound)
     {
         super.writeToNBT(taskCompound);
         if (stack != null)
@@ -111,5 +107,12 @@ public class CommandGive extends Command
             this.stack.writeToNBT(tag);
             taskCompound.setTag("item", tag);
         }
+        return taskCompound;
+    }
+
+    @Override
+    public Command clone()
+    {
+        return new CommandGive();
     }
 }
