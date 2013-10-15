@@ -49,4 +49,10 @@ public interface IArmbotTask
 
     /** Writes the command to the armbot save. Mainly only the current task is saved. */
     public NBTTagCompound writeToNBT(NBTTagCompound nbt);
+
+    /** Used mainly for display purposes in the encoder */
+    public static enum TaskType
+    {
+
+    }
 }
