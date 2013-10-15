@@ -1,5 +1,6 @@
 package dark.assembly.common.armbot.command;
 
+import universalelectricity.core.vector.Vector2;
 import net.minecraft.nbt.NBTTagCompound;
 import dark.api.al.armbot.Command;
 import dark.api.al.armbot.IArmbotTask;
@@ -17,10 +18,12 @@ public class CommandIF extends Command implements ISplitArmbotTask
         super("IF");
     }
 
-    public CommandIF(IArmbotTask entryPoint, IArmbotTask left, IArmbotTask right)
+    public CommandIF(IArmbotTask entryPoint, IArmbotTask trueExit, IArmbotTask falseExit)
     {
         this();
         this.setEntryPoint(this.entryPoint);
+        this.exitTruePoint = trueExit;
+        this.exitFalsePoint = falseExit;
 
     }
 
@@ -70,6 +73,9 @@ public class CommandIF extends Command implements ISplitArmbotTask
     public Command readFromNBT(NBTTagCompound nbt)
     {
         super.readFromNBT(nbt);
+        this.entryPoint = this.program.getTaskAt(new Vector2(nbt.getDouble("entryX"), (nbt.getDouble("entryY"))));
+        this.exitFalsePoint = this.program.getTaskAt(new Vector2(nbt.getDouble("exitFalseX"), (nbt.getDouble("exitFalseY"))));
+        this.exitTruePoint = this.program.getTaskAt(new Vector2(nbt.getDouble("exitTrueX"), (nbt.getDouble("exitTrueY"))));
         return this;
     }
 
@@ -77,6 +83,21 @@ public class CommandIF extends Command implements ISplitArmbotTask
     public NBTTagCompound writeToNBT(NBTTagCompound nbt)
     {
         super.writeToNBT(nbt);
+        if (this.entryPoint != null)
+        {
+            nbt.setDouble("entryX", this.entryPoint.getPosition().x);
+            nbt.setDouble("entryY", this.entryPoint.getPosition().y);
+        }
+        if (this.exitFalsePoint != null)
+        {
+            nbt.setDouble("exitFalseX", this.exitFalsePoint.getPosition().x);
+            nbt.setDouble("exitFalseY", this.exitFalsePoint.getPosition().y);
+        }
+        if (this.exitTruePoint != null)
+        {
+            nbt.setDouble("exitTrueX", this.exitTruePoint.getPosition().x);
+            nbt.setDouble("exitTrueY", this.exitTruePoint.getPosition().y);
+        }
         return nbt;
     }
 
