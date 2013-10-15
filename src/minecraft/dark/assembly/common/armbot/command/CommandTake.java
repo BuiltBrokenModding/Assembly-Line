@@ -9,11 +9,18 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import dark.api.al.armbot.Command;
+import dark.api.al.armbot.IArmbotTask.TaskType;
 import dark.assembly.common.machine.InvInteractionHelper;
 
 public class CommandTake extends Command
 {
+
     private ItemStack stack;
+
+    public CommandTake()
+    {
+        super("Take", TaskType.DEFINEDPROCESS);
+    }
 
     @Override
     public void onStart()
@@ -78,16 +85,16 @@ public class CommandTake extends Command
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound taskCompound)
+    public void loadProgress(NBTTagCompound taskCompound)
     {
-        super.readFromNBT(taskCompound);
+        super.loadProgress(taskCompound);
         this.stack = ItemStack.loadItemStackFromNBT(taskCompound.getCompoundTag("item"));
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound taskCompound)
+    public void saveProgress(NBTTagCompound taskCompound)
     {
-        super.writeToNBT(taskCompound);
+        super.saveProgress(taskCompound);
         if (stack != null)
         {
             NBTTagCompound tag = new NBTTagCompound();

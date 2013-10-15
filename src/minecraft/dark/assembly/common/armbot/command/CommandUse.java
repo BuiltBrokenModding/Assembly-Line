@@ -5,11 +5,18 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import dark.api.al.armbot.Command;
 import dark.api.al.armbot.IArmbotUseable;
+import dark.api.al.armbot.IArmbotTask.TaskType;
 
 public class CommandUse extends Command
 {
+
     private int times;
     private int curTimes;
+
+    public CommandUse()
+    {
+        super("use", TaskType.DEFINEDPROCESS);
+    }
 
     @Override
     public void onStart()
@@ -71,17 +78,17 @@ public class CommandUse extends Command
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound taskCompound)
+    public void loadProgress(NBTTagCompound taskCompound)
     {
-        super.readFromNBT(taskCompound);
+        super.loadProgress(taskCompound);
         this.times = taskCompound.getInteger("useTimes");
         this.curTimes = taskCompound.getInteger("useCurTimes");
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound taskCompound)
+    public void saveProgress(NBTTagCompound taskCompound)
     {
-        super.writeToNBT(taskCompound);
+        super.saveProgress(taskCompound);
         taskCompound.setInteger("useTimes", this.times);
         taskCompound.setInteger("useCurTimes", this.curTimes);
     }

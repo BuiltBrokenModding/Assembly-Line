@@ -23,4 +23,7 @@ public interface IProgram
 
     /** Gets a task at the given x y location in the program */
     public IArmbotTask getTaskAt(Vector2 vector2);
+
+    /** Return this program to its starting conditions */
+    public void reset();
 }

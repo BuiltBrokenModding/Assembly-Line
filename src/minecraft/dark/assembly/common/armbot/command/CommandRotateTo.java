@@ -6,6 +6,7 @@ import com.builtbroken.common.science.units.UnitHelper;
 
 import dark.api.al.armbot.Command;
 import dark.api.al.armbot.IArmbot;
+import dark.api.al.armbot.IArmbotTask.TaskType;
 import dark.core.prefab.helpers.MathHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -17,7 +18,7 @@ public class CommandRotateTo extends Command
 {
     public CommandRotateTo()
     {
-        super("RotateTo");
+        super("RotateTo", TaskType.DEFINEDPROCESS);
     }
 
     float targetRotationYaw = 0, targetRotationPitch = 0, currentRotationYaw, currentRotationPitch;
@@ -62,18 +63,18 @@ public class CommandRotateTo extends Command
     }
 
     @Override
-    public Command readFromNBT(NBTTagCompound taskCompound)
+    public Command loadProgress(NBTTagCompound taskCompound)
     {
-        super.readFromNBT(taskCompound);
+        super.loadProgress(taskCompound);
         this.targetRotationPitch = taskCompound.getFloat("rotPitch");
         this.targetRotationYaw = taskCompound.getFloat("rotYaw");
         return this;
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound taskCompound)
+    public NBTTagCompound saveProgress(NBTTagCompound taskCompound)
     {
-        super.writeToNBT(taskCompound);
+        super.saveProgress(taskCompound);
         taskCompound.setFloat("rotPitch", this.targetRotationPitch);
         taskCompound.setFloat("rotYaw", this.targetRotationYaw);
         return taskCompound;

@@ -4,17 +4,19 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.builtbroken.common.science.units.UnitHelper;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
+
+import com.builtbroken.common.science.units.UnitHelper;
+
 import dark.api.al.armbot.Command;
 import dark.api.al.armbot.IArmbot;
 import dark.assembly.common.machine.InvInteractionHelper;
+import dark.core.prefab.helpers.MathHelper;
 
 public class CommandGive extends Command
 {
@@ -24,13 +26,13 @@ public class CommandGive extends Command
 
     public CommandGive()
     {
-        super("give");
+        super("give", TaskType.DEFINEDPROCESS);
     }
 
     @Override
-    public boolean onMethodCalled(World world, Vector3 location, IArmbot armbot, Object[] arguments)
+    public boolean onMethodCalled(World world, Vector3 location, IArmbot armbot)
     {
-        super.onMethodCalled(world, location, armbot, arguments);
+        super.onMethodCalled(world, location, armbot);
 
         if (this.getArgs().length > 1)
         {
@@ -53,28 +55,32 @@ public class CommandGive extends Command
 
         if (targetTile != null && this.armbot.getGrabbedObjects().size() > 0)
         {
-            ForgeDirection direction = this.tileEntity.getFacingDirectionFromAngle();
+            ForgeDirection direction = MathHelper.getFacingDirectionFromAngle((float) this.armbot.getRotation().x);
             List<ItemStack> stacks = new ArrayList<ItemStack>();
             if (this.stack != null)
             {
                 stacks.add(stack);
             }
-            InvInteractionHelper invEx = new InvInteractionHelper(this.tileEntity.worldObj, new Vector3(this.tileEntity), stacks, false);
+            InvInteractionHelper invEx = new InvInteractionHelper(this.worldObj, this.armbotPos, stacks, false);
 
-            Iterator<ItemStack> targetIt = this.tileEntity.getGrabbedItems().iterator();
+            Iterator<Object> targetIt = this.armbot.getGrabbedObjects().iterator();
             boolean flag = true;
             while (targetIt.hasNext())
             {
-                ItemStack insertStack = targetIt.next();
-                if (insertStack != null)
+                Object object = targetIt.next();
+                if (object instanceof ItemStack)
                 {
-                    ItemStack original = insertStack.copy();
-                    insertStack = invEx.tryPlaceInPosition(insertStack, new Vector3(targetTile), direction.getOpposite());
-                    flag = insertStack != null && insertStack.stackSize == original.stackSize;
-                    if (insertStack == null || insertStack.stackSize <= 0)
+                    ItemStack insertStack = (ItemStack) object;
+                    if (insertStack != null)
                     {
-                        targetIt.remove();
-                        break;
+                        ItemStack original = insertStack.copy();
+                        insertStack = invEx.tryPlaceInPosition(insertStack, new Vector3(targetTile), direction.getOpposite());
+                        flag = insertStack != null && insertStack.stackSize == original.stackSize;
+                        if (insertStack == null || insertStack.stackSize <= 0)
+                        {
+                            targetIt.remove();
+                            break;
+                        }
                     }
                 }
             }
@@ -90,17 +96,17 @@ public class CommandGive extends Command
     }
 
     @Override
-    public Command readFromNBT(NBTTagCompound taskCompound)
+    public Command loadProgress(NBTTagCompound taskCompound)
     {
-        super.readFromNBT(taskCompound);
+        super.loadProgress(taskCompound);
         this.stack = ItemStack.loadItemStackFromNBT(taskCompound.getCompoundTag("item"));
         return this;
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound taskCompound)
+    public NBTTagCompound saveProgress(NBTTagCompound taskCompound)
     {
-        super.writeToNBT(taskCompound);
+        super.saveProgress(taskCompound);
         if (stack != null)
         {
             NBTTagCompound tag = new NBTTagCompound();

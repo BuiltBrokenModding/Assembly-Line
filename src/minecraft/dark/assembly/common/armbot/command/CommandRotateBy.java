@@ -1,17 +1,24 @@
 package dark.assembly.common.armbot.command;
 
 import dark.api.al.armbot.Command;
+import dark.api.al.armbot.IArmbotTask.TaskType;
 import net.minecraft.nbt.NBTTagCompound;
 
 /** Rotates the armbot to a specific direction. If not specified, it will turn right.
- * 
+ *
  * @author Calclavia */
 public class CommandRotateBy extends Command
 {
+
     float targetRotationYaw = 0;
     float targetRotationPitch = 0;
     float deltaPitch = 0, deltaYaw = 90;
     float totalTicks = 0f;
+
+    public CommandRotateBy()
+    {
+        super("RotateBy", TaskType.DEFINEDPROCESS);
+    }
 
     @Override
     public void onStart()
@@ -60,7 +67,7 @@ public class CommandRotateBy extends Command
         super.onUpdate();
         /*
          * float rotationalDifference = Math.abs(this.tileEntity.rotationYaw - this.targetRotation);
-         * 
+         *
          * if (rotationalDifference < ROTATION_SPEED) { this.tileEntity.rotationYaw =
          * this.targetRotation; } else { if (this.tileEntity.rotationYaw > this.targetRotation) {
          * this.tileEntity.rotationYaw -= ROTATION_SPEED; } else { this.tileEntity.rotationYaw +=
@@ -89,17 +96,17 @@ public class CommandRotateBy extends Command
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound taskCompound)
+    public void loadProgress(NBTTagCompound taskCompound)
     {
-        super.readFromNBT(taskCompound);
+        super.loadProgress(taskCompound);
         this.targetRotationPitch = taskCompound.getFloat("rotPitch");
         this.targetRotationYaw = taskCompound.getFloat("rotYaw");
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound taskCompound)
+    public void saveProgress(NBTTagCompound taskCompound)
     {
-        super.writeToNBT(taskCompound);
+        super.saveProgress(taskCompound);
         taskCompound.setFloat("rotPitch", this.targetRotationPitch);
         taskCompound.setFloat("rotYaw", this.targetRotationYaw);
     }

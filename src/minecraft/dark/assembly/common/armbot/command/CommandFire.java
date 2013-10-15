@@ -6,6 +6,7 @@ import com.builtbroken.common.science.units.UnitHelper;
 
 import dark.api.al.armbot.Command;
 import dark.api.al.armbot.IArmbot;
+import dark.api.al.armbot.IArmbotTask.TaskType;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -29,13 +30,13 @@ public class CommandFire extends Command
 
     public CommandFire()
     {
-        super("throw");
+        super("throw", TaskType.DEFINEDPROCESS);
     }
 
     @Override
-    public boolean onMethodCalled(World world, Vector3 location, IArmbot armbot, Object[] arguments)
+    public boolean onMethodCalled(World world, Vector3 location, IArmbot armbot)
     {
-        super.onMethodCalled(world, location, armbot, arguments);
+        super.onMethodCalled(world, location, armbot);
 
         this.velocity = UnitHelper.tryToParseFloat("" + this.getArg(0));
         if (this.velocity > 2.5f)
@@ -140,9 +141,9 @@ public class CommandFire extends Command
     }
 
     @Override
-    public Command readFromNBT(NBTTagCompound taskCompound)
+    public Command loadProgress(NBTTagCompound taskCompound)
     {
-        super.readFromNBT(taskCompound);
+        super.loadProgress(taskCompound);
         this.actualYaw = taskCompound.getFloat("fireYaw");
         this.actualPitch = taskCompound.getFloat("firePitch");
         this.velocity = taskCompound.getFloat("fireVelocity");
@@ -154,9 +155,9 @@ public class CommandFire extends Command
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound taskCompound)
+    public NBTTagCompound saveProgress(NBTTagCompound taskCompound)
     {
-        super.writeToNBT(taskCompound);
+        super.saveProgress(taskCompound);
         taskCompound.setFloat("fireYaw", this.actualYaw);
         taskCompound.setFloat("firePitch", this.actualPitch);
         taskCompound.setFloat("fireVelocity", this.velocity);

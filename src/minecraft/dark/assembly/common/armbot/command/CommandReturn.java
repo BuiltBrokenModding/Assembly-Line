@@ -1,6 +1,7 @@
 package dark.assembly.common.armbot.command;
 
 import dark.api.al.armbot.Command;
+import dark.api.al.armbot.IArmbotTask.TaskType;
 
 public class CommandReturn extends Command
 {
@@ -11,7 +12,7 @@ public class CommandReturn extends Command
 
     public CommandReturn()
     {
-        super("Return");
+        super("Return", TaskType.DEFINEDPROCESS);
     }
 
     @Override

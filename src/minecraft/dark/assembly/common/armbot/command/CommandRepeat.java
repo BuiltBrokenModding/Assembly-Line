@@ -1,18 +1,26 @@
 package dark.assembly.common.armbot.command;
 
 import dark.api.al.armbot.Command;
+import dark.api.al.armbot.IArmbotTask.TaskType;
 import net.minecraft.nbt.NBTTagCompound;
 
 /** This task resets all previous tasks and does them again in a loop.
- * 
+ *
  * @author Calclavia */
 public class CommandRepeat extends Command
 {
+
     /** The amount of tasks above this task to repeat. */
     private int tasksToRepeat;
     private int numReps;
     private int curReps;
     private boolean initialized = false;
+
+    public CommandRepeat()
+    {
+        super("repeat", TaskType.DEFINEDPROCESS);
+        // TODO Auto-generated constructor stub
+    }
 
     @Override
     public void onStart()
@@ -49,9 +57,9 @@ public class CommandRepeat extends Command
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound taskCompound)
+    public void loadProgress(NBTTagCompound taskCompound)
     {
-        super.readFromNBT(taskCompound);
+        super.loadProgress(taskCompound);
         this.initialized = taskCompound.getBoolean("repInitialized");
         this.tasksToRepeat = taskCompound.getInteger("repTasks");
         this.curReps = taskCompound.getInteger("repCur");
@@ -59,9 +67,9 @@ public class CommandRepeat extends Command
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound taskCompound)
+    public void saveProgress(NBTTagCompound taskCompound)
     {
-        super.writeToNBT(taskCompound);
+        super.saveProgress(taskCompound);
         taskCompound.setBoolean("repInitialized", this.initialized);
         taskCompound.setInteger("repTasks", this.tasksToRepeat);
         taskCompound.setInteger("repCur", this.curReps);

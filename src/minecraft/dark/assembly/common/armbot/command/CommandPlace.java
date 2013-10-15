@@ -1,6 +1,7 @@
 package dark.assembly.common.armbot.command;
 
 import dark.api.al.armbot.Command;
+import dark.api.al.armbot.IArmbotTask.TaskType;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -11,11 +12,17 @@ import net.minecraftforge.common.IPlantable;
 import universalelectricity.core.vector.Vector3;
 
 /** Used by arms to break a specific block in a position.
- * 
+ *
  * @author Calclavia */
 public class CommandPlace extends Command
 {
     int PLACE_TIME = 30;
+
+    public CommandPlace()
+    {
+        super("Place", TaskType.DEFINEDPROCESS);
+        // TODO Auto-generated constructor stub
+    }
 
     @Override
     public void onStart()

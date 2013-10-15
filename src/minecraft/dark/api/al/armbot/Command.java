@@ -9,6 +9,7 @@ import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
+import dark.api.al.armbot.IArmbotTask.TaskType;
 
 /** Basic command prefab used by machines like an armbot. You are not required to use this in order
  * to make armbot commands but it does help. Delete this if you don't plan to use it. */
@@ -19,6 +20,8 @@ public abstract class Command implements IArmbotTask, Cloneable
     private String methodName;
     /** The amount of ticks this command has been running for. */
     protected int ticks = 0;
+
+    protected TaskType taskType;
 
     /** World current working in */
     protected World worldObj;
@@ -32,9 +35,10 @@ public abstract class Command implements IArmbotTask, Cloneable
     /** The parameters this command */
     private Object[] parameters;
 
-    public Command(String name)
+    public Command(String name, TaskType tasktype)
     {
         this.methodName = name;
+        this.taskType = tasktype;
     }
 
     @Override
@@ -45,22 +49,20 @@ public abstract class Command implements IArmbotTask, Cloneable
     }
 
     @Override
-    public boolean onMethodCalled(World world, Vector3 location, IArmbot armbot, Object[] arguments)
+    public boolean onMethodCalled(World world, Vector3 location, IArmbot armbot)
     {
         this.worldObj = world;
         this.armbot = armbot;
-        this.parameters = arguments;
         this.armbotPos = location;
 
         return true;
     }
 
     @Override
-    public Object[] onCCMethodCalled(World world, Vector3 location, IArmbot armbot, IComputerAccess computer, ILuaContext context, Object[] arguments) throws Exception
+    public Object[] onCCMethodCalled(World world, Vector3 location, IArmbot armbot, IComputerAccess computer, ILuaContext context) throws Exception
     {
         this.worldObj = world;
         this.armbot = armbot;
-        this.parameters = arguments;
         this.armbotPos = location;
 
         return null;
@@ -104,14 +106,6 @@ public abstract class Command implements IArmbotTask, Cloneable
         this.pos = pos;
     }
 
-    @Override
-    public Command readFromNBT(NBTTagCompound nbt)
-    {
-        this.ticks = nbt.getInteger("ticks");
-        this.pos = new Vector2(nbt.getDouble("xx"), nbt.getDouble("yy"));
-        return this;
-    }
-
     public ItemStack getItem(String string, int ammount)
     {
         int id = 0;
@@ -137,14 +131,55 @@ public abstract class Command implements IArmbotTask, Cloneable
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+    public Command load(NBTTagCompound nbt)
     {
-        nbt.setInteger("ticks", this.ticks);
+        NBTTagCompound parmTag = nbt.getCompoundTag("parms");
+        int parms = parmTag.getInteger("parms");
+        if (parms > 0)
+        {
+            Object[] args = new Object[parms];
+            for (int i = 0; i < parms; i++)
+            {
+                args[i] = nbt.getString("parm" + i);
+            }
+        }
+        this.pos = new Vector2(nbt.getDouble("xx"), nbt.getDouble("yy"));
+        return this;
+    }
+
+    @Override
+    public NBTTagCompound save(NBTTagCompound nbt)
+    {
+        if (this.parameters != null)
+        {
+            NBTTagCompound parmTag = new NBTTagCompound();
+            parmTag.setInteger("parms", this.parameters.length);
+
+            for (int i = 0; i < this.parameters.length; i++)
+            {
+                parmTag.setString("parm" + i, "" + this.parameters[i]);
+            }
+            nbt.setCompoundTag("parms", parmTag);
+        }
         if (this.pos != null)
         {
             nbt.setDouble("xx", pos.x);
             nbt.setDouble("yy", pos.y);
         }
+        return nbt;
+    }
+
+    @Override
+    public IArmbotTask loadProgress(NBTTagCompound nbt)
+    {
+        this.ticks = nbt.getInteger("ticks");
+        return this;
+    }
+
+    @Override
+    public NBTTagCompound saveProgress(NBTTagCompound nbt)
+    {
+        nbt.setInteger("ticks", this.ticks);
         return nbt;
     }
 
@@ -164,6 +199,26 @@ public abstract class Command implements IArmbotTask, Cloneable
     public String getCCMethod()
     {
         return this.methodName;
+    }
+
+    @Override
+    public Object[] getCurrentParms()
+    {
+        return this.parameters;
+    }
+
+    @Override
+    public void setParms(Object... arguments)
+    {
+        this.parameters = arguments;
+    }
+
+
+
+    @Override
+    public TaskType getType()
+    {
+        return this.taskType;
     }
 
     @Override

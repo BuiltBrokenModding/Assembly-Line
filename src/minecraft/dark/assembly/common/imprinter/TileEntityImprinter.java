@@ -190,7 +190,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
     }
 
     /** Construct an InventoryCrafting Matrix on the fly.
-     * 
+     *
      * @return */
     public InventoryCrafting getCraftingMatrix()
     {
@@ -393,7 +393,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
         if (this.imprinterMatrix[craftingOutputSlot] != null)
         {
-            armbot.grabItem(this.imprinterMatrix[craftingOutputSlot].copy());
+            armbot.grab(this.imprinterMatrix[craftingOutputSlot].copy());
             this.onPickUpFromSlot(null, 2, this.imprinterMatrix[craftingOutputSlot]);
             this.imprinterMatrix[craftingOutputSlot] = null;
             return true;

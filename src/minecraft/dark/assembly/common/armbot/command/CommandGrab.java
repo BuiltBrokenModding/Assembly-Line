@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
 import dark.api.al.armbot.Command;
 import dark.api.al.armbot.IArmbot;
+import dark.api.al.armbot.IArmbotTask.TaskType;
 import dark.assembly.common.armbot.GrabDictionary;
 import dark.assembly.common.machine.belt.TileEntityConveyorBelt;
 
@@ -33,13 +34,13 @@ public class CommandGrab extends Command
 
     public CommandGrab()
     {
-        super("Grab");
+        super("Grab", TaskType.DEFINEDPROCESS);
     }
 
     @Override
-    public boolean onMethodCalled(World world, Vector3 location, IArmbot armbot, Object[] arguments)
+    public boolean onMethodCalled(World world, Vector3 location, IArmbot armbot)
     {
-        super.onMethodCalled(world, location, armbot, arguments);
+        super.onMethodCalled(world, location, armbot);
         this.entityToInclude = Entity.class;
         if (this.getArgs() != null && this.getArgs().length > 0 && this.getArgs()[0] != null)
         {
@@ -110,18 +111,18 @@ public class CommandGrab extends Command
     }
 
     @Override
-    public Command readFromNBT(NBTTagCompound taskCompound)
+    public Command loadProgress(NBTTagCompound taskCompound)
     {
-        super.readFromNBT(taskCompound);
+        super.loadProgress(taskCompound);
         this.child = taskCompound.getBoolean("child");
         this.entityToInclude = GrabDictionary.get(taskCompound.getString("name")).getEntityClass();
         return this;
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound taskCompound)
+    public NBTTagCompound saveProgress(NBTTagCompound taskCompound)
     {
-        super.writeToNBT(taskCompound);
+        super.saveProgress(taskCompound);
         taskCompound.setBoolean("child", child);
         taskCompound.setString("name", ((this.entityToInclude != null) ? GrabDictionary.get(this.entityToInclude).getName() : ""));
         return taskCompound;

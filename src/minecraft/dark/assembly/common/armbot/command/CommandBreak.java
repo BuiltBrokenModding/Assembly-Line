@@ -7,6 +7,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import universalelectricity.core.vector.Vector3;
 import dark.api.al.armbot.Command;
+import dark.api.al.armbot.IArmbotTask.TaskType;
 import dark.core.prefab.helpers.ItemWorldHelper;
 
 /** Used by arms to break a specific block in a position.
@@ -16,12 +17,12 @@ public class CommandBreak extends Command
 {
     public CommandBreak()
     {
-        super("break");
+        super("break", TaskType.DEFINEDPROCESS);
     }
 
     public CommandBreak(String name)
     {
-        super(name);
+        super(name, TaskType.DEFINEDPROCESS);
     }
 
     int BREAK_TIME = 30;

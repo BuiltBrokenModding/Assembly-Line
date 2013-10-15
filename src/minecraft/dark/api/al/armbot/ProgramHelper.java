@@ -1,25 +1,72 @@
 package dark.api.al.armbot;
 
-import java.util.Arrays;
 import java.util.HashMap;
 
-/** Basic class to handle a armbot like program for any object that uses the IArmbot class
+import net.minecraft.world.World;
+
+import universalelectricity.core.vector.Vector3;
+
+/** Basic class to handle a armbot like programs for any object that uses the IArmbot class
  *
  * @author DarkGuardsman */
-public class ProgramHandler
+public class ProgramHelper
 {
     /** Current Program */
     protected IProgram program;
+    protected IArmbot bot;
     /** Current task in program */
     protected IArmbotTask currentTask;
     /** Do we have a memory to store values */
     boolean hasMemory = false;
-    /**Max memorySize */
+    boolean hasTaskBeenCalled = false, nextTask = false;
+    /** Max memorySize */
     protected int memorySize = 0;
     /** Array of values to remember between commands */
     protected HashMap<String, Object> taskMemory = new HashMap<String, Object>();
 
-    public ProgramHandler(int varableLimit)
+    public ProgramHelper(IArmbot bot)
+    {
+        this.bot = bot;
+    }
+
+    /** Needs to be called by the armbot per tick.
+     *
+     * @return true if it is doing something */
+    public boolean onUpdate(World world, Vector3 botLocation)
+    {
+        if (program != null)
+        {
+            if (this.currentTask == null || this.nextTask)
+            {
+                this.nextTask();
+            }
+            if (this.currentTask != null)
+            {
+                if (!this.hasTaskBeenCalled && !this.currentTask.onMethodCalled(world, botLocation, bot))
+                {
+                    this.nextTask = true;
+                }
+                else
+                {
+                    if (!this.currentTask.onUpdate())
+                    {
+                        this.nextTask = true;
+                    }
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void nextTask()
+    {
+        this.currentTask = program.getNextTask();
+        this.hasTaskBeenCalled = false;
+        this.nextTask = false;
+    }
+
+    public ProgramHelper(int varableLimit)
     {
         if (varableLimit > 0)
         {
@@ -32,7 +79,7 @@ public class ProgramHandler
         }
     }
 
-    public ProgramHandler setProgram(IProgram program)
+    public ProgramHelper setProgram(IProgram program)
     {
         this.program = program;
         this.onProgramChanged();
@@ -45,10 +92,11 @@ public class ProgramHandler
         if (this.program != null)
         {
             HashMap<String, Object> memory = this.program.getDeclairedVarables();
-            if(memory.size() <= memorySize)
+            if (memory.size() <= memorySize)
             {
-
+                //TODO load in memory and throw error stopping machine if there is not enough
             }
+            this.program.init();
         }
     }
 

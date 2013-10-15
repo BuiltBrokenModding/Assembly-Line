@@ -15,7 +15,7 @@ public class CommandIF extends Command implements ISplitArmbotTask
 
     public CommandIF()
     {
-        super("IF");
+        super("IF", TaskType.DECISION);
     }
 
     public CommandIF(IArmbotTask entryPoint, IArmbotTask trueExit, IArmbotTask falseExit)
@@ -70,9 +70,9 @@ public class CommandIF extends Command implements ISplitArmbotTask
     }
 
     @Override
-    public Command readFromNBT(NBTTagCompound nbt)
+    public Command loadProgress(NBTTagCompound nbt)
     {
-        super.readFromNBT(nbt);
+        super.loadProgress(nbt);
         this.entryPoint = this.program.getTaskAt(new Vector2(nbt.getDouble("entryX"), (nbt.getDouble("entryY"))));
         this.exitFalsePoint = this.program.getTaskAt(new Vector2(nbt.getDouble("exitFalseX"), (nbt.getDouble("exitFalseY"))));
         this.exitTruePoint = this.program.getTaskAt(new Vector2(nbt.getDouble("exitTrueX"), (nbt.getDouble("exitTrueY"))));
@@ -80,9 +80,9 @@ public class CommandIF extends Command implements ISplitArmbotTask
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+    public NBTTagCompound saveProgress(NBTTagCompound nbt)
     {
-        super.writeToNBT(nbt);
+        super.saveProgress(nbt);
         if (this.entryPoint != null)
         {
             nbt.setDouble("entryX", this.entryPoint.getPosition().x);

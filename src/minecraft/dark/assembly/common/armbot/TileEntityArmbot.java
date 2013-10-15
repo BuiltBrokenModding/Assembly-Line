@@ -52,8 +52,8 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     /** The rotation of the arms. In Degrees. */
     protected float rotationPitch = 0;
     protected float rotationYaw = 0;
-    protected float actualPitch = 0;
-    protected float actualYaw = 0;
+    public float actualPitch = 0;
+    public float actualYaw = 0;
     protected final float ROTATION_SPEED = 2.0f;
 
     protected boolean hasTask = false;

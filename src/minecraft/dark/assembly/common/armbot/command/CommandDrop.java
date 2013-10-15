@@ -1,12 +1,13 @@
 package dark.assembly.common.armbot.command;
 
 import dark.api.al.armbot.Command;
+import dark.api.al.armbot.IArmbotTask.TaskType;
 
 public class CommandDrop extends Command
 {
     public CommandDrop()
     {
-        super("drop");
+        super("drop", TaskType.DEFINEDPROCESS);
     }
 
     @Override
