@@ -14,7 +14,7 @@ import universalelectricity.prefab.tile.IRotatable;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;
-import dark.assembly.api.IManipulator;
+import dark.api.al.IManipulator;
 import dark.assembly.common.imprinter.ItemImprinter;
 import dark.assembly.common.imprinter.prefab.TileEntityFilterable;
 import dark.core.network.PacketHandler;

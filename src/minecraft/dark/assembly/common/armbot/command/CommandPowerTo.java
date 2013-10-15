@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
+import dark.assembly.common.armbot.Command;
 import dark.core.prefab.helpers.ItemWorldHelper;
 
 public class CommandPowerTo extends Command
@@ -17,7 +18,7 @@ public class CommandPowerTo extends Command
     private int ticksRan;
 
     @Override
-    public void onTaskStart()
+    public void onStart()
     {
         this.duration = 0;
         this.ticksRan = 0;
@@ -34,9 +35,9 @@ public class CommandPowerTo extends Command
     }
 
     @Override
-    protected boolean doTask()
+    protected boolean onUpdate()
     {
-        super.doTask();
+        super.onUpdate();
         if (this.tileEntity.isProvidingPower && this.ticksRan >= duration)
         {
             powerBlock(false);

@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import dark.assembly.api.IFilterable;
+import dark.api.al.IFilterable;
 import dark.assembly.common.imprinter.ItemImprinter;
 import dark.assembly.common.machine.BlockAssembly;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;

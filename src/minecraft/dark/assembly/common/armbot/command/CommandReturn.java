@@ -1,5 +1,7 @@
 package dark.assembly.common.armbot.command;
 
+import dark.assembly.common.armbot.Command;
+
 public class CommandReturn extends Command
 {
     public static final float IDLE_ROTATION_PITCH = 0;
@@ -8,27 +10,27 @@ public class CommandReturn extends Command
     private CommandRotateTo rotateToCommand;
 
     @Override
-    public void onTaskStart()
+    public void onStart()
     {
         this.rotateToCommand = (CommandRotateTo) this.commandManager.getNewCommand(this.tileEntity, CommandRotateTo.class, new String[] { "0", "0" });
-        this.rotateToCommand.onTaskStart();
+        this.rotateToCommand.onStart();
     }
 
     @Override
-    protected boolean doTask()
+    protected boolean onUpdate()
     {
         if (this.rotateToCommand == null)
         {
-            this.onTaskStart();
+            this.onStart();
         }
 
-        return this.rotateToCommand.doTask();
+        return this.rotateToCommand.onUpdate();
     }
 
     @Override
-    public void onTaskEnd()
+    public void onEnd()
     {
-        this.rotateToCommand.onTaskEnd();
+        this.rotateToCommand.onEnd();
     }
 
     @Override

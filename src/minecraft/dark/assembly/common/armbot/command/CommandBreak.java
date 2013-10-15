@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import universalelectricity.core.vector.Vector3;
+import dark.assembly.common.armbot.Command;
 import dark.core.prefab.helpers.ItemWorldHelper;
 
 /** Used by arms to break a specific block in a position.
@@ -19,9 +20,9 @@ public class CommandBreak extends Command
     boolean keep = false;
 
     @Override
-    protected boolean doTask()
+    protected boolean onUpdate()
     {
-        super.doTask();
+        super.onUpdate();
 
         Vector3 serachPosition = this.tileEntity.getHandPosition();
 

@@ -2,6 +2,8 @@ package dark.assembly.common.armbot.command;
 
 import java.util.Random;
 
+import dark.assembly.common.armbot.Command;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.projectile.EntityArrow;
@@ -21,9 +23,9 @@ public class CommandFire extends Command
     private Vector3 finalVelocity;
 
     @Override
-    public void onTaskStart()
+    public void onStart()
     {
-        super.onTaskStart();
+        super.onStart();
 
         this.velocity = this.getFloatArg(0);
         if (this.velocity > 2.5f)
@@ -55,7 +57,7 @@ public class CommandFire extends Command
     }
 
     @Override
-    protected boolean doTask()
+    protected boolean onUpdate()
     {
         if (this.finalVelocity == null) // something went wrong
         {
@@ -80,7 +82,7 @@ public class CommandFire extends Command
                     }
                     else
                     {
-                        this.commandManager.getNewCommand(this.tileEntity, CommandDrop.class, new String[] {}).doTask();
+                        this.commandManager.getNewCommand(this.tileEntity, CommandDrop.class, new String[] {}).onUpdate();
                         if (!this.world.isRemote)
                             this.world.removeEntity(held);
                     }
@@ -105,7 +107,7 @@ public class CommandFire extends Command
                 }
                 else
                 {
-                    this.commandManager.getNewCommand(this.tileEntity, CommandDrop.class, new String[] {}).doTask();
+                    this.commandManager.getNewCommand(this.tileEntity, CommandDrop.class, new String[] {}).onUpdate();
                     held.motionX = this.finalVelocity.x;
                     held.motionY = this.finalVelocity.y;
                     held.motionZ = this.finalVelocity.z;

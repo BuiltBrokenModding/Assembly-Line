@@ -1,4 +1,5 @@
-package dark.assembly.api;
+package dark.api.al.armbot;
+
 
 /** The IUseable inteface is used by the ArmBot so that it may interact with Tile Entities. onUse
  * will be called on the block an ArmBot is touching whenever the USE command is run on it.

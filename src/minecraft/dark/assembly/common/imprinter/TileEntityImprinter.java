@@ -24,8 +24,8 @@ import universalelectricity.prefab.tile.TileEntityAdvanced;
 import com.builtbroken.common.Pair;
 import com.google.common.io.ByteArrayDataInput;
 
-import dark.assembly.api.IArmbot;
-import dark.assembly.api.IArmbotUseable;
+import dark.api.al.armbot.IArmbot;
+import dark.api.al.armbot.IArmbotUseable;
 import dark.core.common.DarkMain;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.helpers.AutoCraftingManager;

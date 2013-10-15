@@ -3,7 +3,8 @@ package dark.assembly.common.armbot.command;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import dark.assembly.api.IArmbotUseable;
+import dark.api.al.armbot.IArmbotUseable;
+import dark.assembly.common.armbot.Command;
 
 public class CommandUse extends Command
 {
@@ -11,7 +12,7 @@ public class CommandUse extends Command
     private int curTimes;
 
     @Override
-    public void onTaskStart()
+    public void onStart()
     {
         this.times = 0;
         this.curTimes = 0;
@@ -26,7 +27,7 @@ public class CommandUse extends Command
     }
 
     @Override
-    protected boolean doTask()
+    protected boolean onUpdate()
     {
         Block block = Block.blocksList[this.world.getBlockId(tileEntity.getHandPosition().intX(), tileEntity.getHandPosition().intY(), tileEntity.getHandPosition().intZ())];
         TileEntity targetTile = this.tileEntity.getHandPosition().getTileEntity(this.world);

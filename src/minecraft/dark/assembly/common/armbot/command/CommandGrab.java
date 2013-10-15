@@ -10,6 +10,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import universalelectricity.core.vector.Vector3;
+import dark.assembly.common.armbot.Command;
+import dark.assembly.common.armbot.GrabDictionary;
 import dark.assembly.common.machine.belt.TileEntityConveyorBelt;
 
 /** Used by arms to search for entities in a region
@@ -28,9 +30,9 @@ public class CommandGrab extends Command
     private Class<? extends Entity> entityToInclude;
 
     @Override
-    public void onTaskStart()
+    public void onStart()
     {
-        super.onTaskStart();
+        super.onStart();
         this.entityToInclude = Entity.class;
         if (this.getArgs() != null && this.getArgs().length > 0 && this.getArgs()[0] != null)
         {
@@ -56,9 +58,9 @@ public class CommandGrab extends Command
     }
 
     @Override
-    protected boolean doTask()
+    protected boolean onUpdate()
     {
-        super.doTask();
+        super.onUpdate();
 
         if (this.tileEntity.getGrabbedEntities().size() > 0)
         {

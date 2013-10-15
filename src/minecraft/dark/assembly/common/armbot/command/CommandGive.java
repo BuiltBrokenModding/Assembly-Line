@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
+import dark.assembly.common.armbot.Command;
 import dark.assembly.common.machine.InvInteractionHelper;
 
 public class CommandGive extends Command
@@ -17,7 +18,7 @@ public class CommandGive extends Command
     private int ammount = -1;
 
     @Override
-    public void onTaskStart()
+    public void onStart()
     {
         int id = 0;
         int meta = 32767;
@@ -51,7 +52,7 @@ public class CommandGive extends Command
     }
 
     @Override
-    protected boolean doTask()
+    protected boolean onUpdate()
     {
         TileEntity targetTile = this.tileEntity.getHandPosition().getTileEntity(this.world);
 

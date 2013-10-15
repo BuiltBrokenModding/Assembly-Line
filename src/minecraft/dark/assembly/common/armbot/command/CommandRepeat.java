@@ -1,5 +1,6 @@
 package dark.assembly.common.armbot.command;
 
+import dark.assembly.common.armbot.Command;
 import net.minecraft.nbt.NBTTagCompound;
 
 /** This task resets all previous tasks and does them again in a loop.
@@ -14,7 +15,7 @@ public class CommandRepeat extends Command
     private boolean initialized = false;
 
     @Override
-    public void onTaskStart()
+    public void onStart()
     {
         this.tasksToRepeat = Math.max(this.getIntArg(0), 0);
         this.numReps = this.getIntArg(1);
@@ -28,7 +29,7 @@ public class CommandRepeat extends Command
     }
 
     @Override
-    public void onTaskEnd()
+    public void onEnd()
     {
         if (this.curReps < this.numReps || this.numReps == -1)
         {

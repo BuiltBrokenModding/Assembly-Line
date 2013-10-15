@@ -1,4 +1,4 @@
-package dark.assembly.api;
+package dark.api.al;
 
 public interface ICraneStructure extends ICraneConnectable
 {

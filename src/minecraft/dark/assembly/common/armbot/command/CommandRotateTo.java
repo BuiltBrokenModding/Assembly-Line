@@ -1,5 +1,6 @@
 package dark.assembly.common.armbot.command;
 
+import dark.assembly.common.armbot.Command;
 import net.minecraft.nbt.NBTTagCompound;
 
 /** Rotates the armbot to a specific direction. If not specified, it will turn right.
@@ -12,9 +13,9 @@ public class CommandRotateTo extends Command
     int totalTicks = 0;
 
     @Override
-    public void onTaskStart()
+    public void onStart()
     {
-        super.onTaskStart();
+        super.onStart();
 
         this.ticks = 0;
         this.totalTicks = 0;
@@ -52,9 +53,9 @@ public class CommandRotateTo extends Command
     }
 
     @Override
-    protected boolean doTask()
+    protected boolean onUpdate()
     {
-        super.doTask();
+        super.onUpdate();
         /*
          * float rotationalDifference = Math.abs(this.tileEntity.rotationYaw - this.targetRotation);
          * 

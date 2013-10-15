@@ -1,4 +1,4 @@
-package dark.assembly.common.armbot.command;
+package dark.assembly.common.armbot;
 
 import java.util.ArrayList;
 import java.util.List;

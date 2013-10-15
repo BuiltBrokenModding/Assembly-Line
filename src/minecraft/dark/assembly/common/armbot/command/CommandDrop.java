@@ -1,11 +1,13 @@
 package dark.assembly.common.armbot.command;
 
+import dark.assembly.common.armbot.Command;
+
 public class CommandDrop extends Command
 {
     @Override
-    protected boolean doTask()
+    protected boolean onUpdate()
     {
-        super.doTask();
+        super.onUpdate();
 
         this.tileEntity.drop("all");
         this.world.playSound(this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, "random.pop", 0.2F, ((this.tileEntity.worldObj.rand.nextFloat() - this.tileEntity.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.0F, true);

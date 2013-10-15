@@ -8,7 +8,7 @@ public class CommandHarvest extends CommandBreak
     private CommandRotateTo rotateToCommand;
 
     @Override
-    public void onTaskStart()
+    public void onStart()
     {
         this.keep = true;
     }

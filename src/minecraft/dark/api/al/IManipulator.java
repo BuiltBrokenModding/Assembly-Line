@@ -1,4 +1,4 @@
-package dark.assembly.api;
+package dark.api.al;
 
 /** Interface applied to the manipulator.
  * 

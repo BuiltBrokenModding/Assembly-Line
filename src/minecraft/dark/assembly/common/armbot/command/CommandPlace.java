@@ -1,5 +1,6 @@
 package dark.assembly.common.armbot.command;
 
+import dark.assembly.common.armbot.Command;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -17,15 +18,15 @@ public class CommandPlace extends Command
     int PLACE_TIME = 30;
 
     @Override
-    public void onTaskStart()
+    public void onStart()
     {
-        super.onTaskStart();
+        super.onStart();
     }
 
     @Override
-    protected boolean doTask()
+    protected boolean onUpdate()
     {
-        super.doTask();
+        super.onUpdate();
 
         Vector3 serachPosition = this.tileEntity.getHandPosition();
 

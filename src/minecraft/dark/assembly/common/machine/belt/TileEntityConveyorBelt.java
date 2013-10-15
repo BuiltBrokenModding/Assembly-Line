@@ -16,7 +16,7 @@ import universalelectricity.prefab.tile.IRotatable;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;
-import dark.assembly.api.IBelt;
+import dark.api.al.IBelt;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.machine.TileEntityAssembly;
 import dark.core.common.DarkMain;

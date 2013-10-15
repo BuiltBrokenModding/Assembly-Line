@@ -14,7 +14,7 @@ import universalelectricity.core.vector.Vector3;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;
-import dark.assembly.api.IBelt;
+import dark.api.al.IBelt;
 import dark.assembly.common.imprinter.prefab.TileEntityFilterable;
 import dark.core.network.PacketHandler;
 

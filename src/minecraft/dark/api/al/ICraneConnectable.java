@@ -1,4 +1,4 @@
-package dark.assembly.api;
+package dark.api.al;
 
 import net.minecraftforge.common.ForgeDirection;
 

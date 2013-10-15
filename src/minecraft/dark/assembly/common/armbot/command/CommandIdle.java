@@ -1,5 +1,6 @@
 package dark.assembly.common.armbot.command;
 
+import dark.assembly.common.armbot.Command;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class CommandIdle extends Command
@@ -9,9 +10,9 @@ public class CommandIdle extends Command
     private int totalIdleTime = 80;
 
     @Override
-    public void onTaskStart()
+    public void onStart()
     {
-        super.onTaskStart();
+        super.onStart();
 
         if (this.getIntArg(0) > 0)
         {
@@ -21,7 +22,7 @@ public class CommandIdle extends Command
     }
 
     @Override
-    protected boolean doTask()
+    protected boolean onUpdate()
     {
         /** Randomly move the arm to simulate life in the arm if the arm is powered */
         // this.tileEntity.rotationPitch *= 0.98 * this.world.rand.nextFloat();

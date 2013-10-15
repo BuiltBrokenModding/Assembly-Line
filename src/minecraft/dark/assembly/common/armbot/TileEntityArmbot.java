@@ -26,13 +26,11 @@ import cpw.mods.fml.relauncher.Side;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
 import dan200.computer.api.IPeripheral;
-import dark.assembly.api.IArmbot;
+import dark.api.al.armbot.IArmbot;
 import dark.assembly.common.AssemblyLine;
-import dark.assembly.common.armbot.command.Command;
 import dark.assembly.common.armbot.command.CommandDrop;
 import dark.assembly.common.armbot.command.CommandFire;
 import dark.assembly.common.armbot.command.CommandGrab;
-import dark.assembly.common.armbot.command.CommandManager;
 import dark.assembly.common.armbot.command.CommandReturn;
 import dark.assembly.common.armbot.command.CommandRotateBy;
 import dark.assembly.common.armbot.command.CommandRotateTo;
@@ -49,8 +47,6 @@ import dark.core.prefab.machine.BlockMulti;
 public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IArmbot, IPeripheral
 {
     private final CommandManager commandManager = new CommandManager();
-    /** The items this container contains. */
-    protected ItemStack disk = null;
     private int computersAttached = 0;
     private List<IComputerAccess> connectedComputers = new ArrayList<IComputerAccess>();
     /** The rotation of the arms. In Degrees. */
@@ -232,7 +228,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
             this.rotationPitch = MathHelper.clampAngle(this.rotationPitch, 0, 60);
 
-            if (this.ticks % 4 == 0 && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+            if (this.ticks % 4 == 0 && this.worldObj.isRemote)
             {
                 this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "mods.assemblyline.conveyor", 2f, 2.5f, true);
             }
@@ -291,12 +287,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
         return delta;
     }
 
-    /** Inventory */
-    @Override
-    public int getSizeInventory()
-    {
-        return 1;
-    }
+
 
     @Override
     public String getInvName()
@@ -304,71 +295,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
         return TranslationHelper.getLocal("tile.armbot.name");
     }
 
-    /** Inventory functions. */
-    @Override
-    public ItemStack getStackInSlot(int par1)
-    {
-        return this.disk;
-    }
 
-    @Override
-    public ItemStack decrStackSize(int par1, int par2)
-    {
-        if (this.disk != null)
-        {
-            ItemStack var3;
-
-            if (this.disk.stackSize <= par2)
-            {
-                var3 = this.disk;
-                this.disk = null;
-                return var3;
-            }
-            else
-            {
-                var3 = this.disk.splitStack(par2);
-
-                if (this.disk.stackSize == 0)
-                {
-                    this.disk = null;
-                }
-
-                return var3;
-            }
-        }
-        else
-        {
-            return null;
-        }
-    }
-
-    @Override
-    public ItemStack getStackInSlotOnClosing(int par1)
-    {
-        if (this.disk != null)
-        {
-            ItemStack var2 = this.disk;
-            this.disk = null;
-            return var2;
-        }
-        else
-        {
-            return null;
-        }
-    }
-
-    @Override
-    public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
-    {
-        this.disk = par2ItemStack;
-        this.onInventoryChanged();
-    }
-
-    @Override
-    public int getInventoryStackLimit()
-    {
-        return 1;
-    }
 
     public String getCommandDisplayText()
     {
@@ -382,26 +309,14 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
         super.readFromNBT(nbt);
 
         NBTTagCompound diskNBT = nbt.getCompoundTag("disk");
-
+        ItemStack disk = null;
         if (diskNBT != null)
         {
-            this.disk = ItemStack.loadItemStackFromNBT(diskNBT);
-        }
-        else
-        {
-            this.disk = null;
+            disk = ItemStack.loadItemStackFromNBT(diskNBT);
         }
 
         this.rotationYaw = nbt.getFloat("yaw");
         this.rotationPitch = nbt.getFloat("pitch");
-
-        if (this.worldObj != null)
-        {
-            if (this.worldObj.isRemote)
-            {
-                this.displayText = nbt.getString("cmdText");
-            }
-        }
 
         this.commandManager.setCurrentTask(nbt.getInteger("curTask"));
 
@@ -436,18 +351,8 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     {
         super.writeToNBT(nbt);
 
-        NBTTagCompound diskNBT = new NBTTagCompound();
-
-        if (this.disk != null)
-        {
-            this.disk.writeToNBT(diskNBT);
-        }
-
-        nbt.setTag("disk", diskNBT);
         nbt.setFloat("yaw", this.rotationYaw);
         nbt.setFloat("pitch", this.rotationPitch);
-
-        nbt.setString("cmdText", this.displayText);
 
         nbt.setInteger("curTask", this.commandManager.getCurrentTask());
 
@@ -552,44 +457,6 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
         }
 
         return false;
-    }
-
-    @Override
-    public void onInventoryChanged()
-    {
-        this.commandManager.clear();
-
-        if (this.disk != null)
-        {
-            List<String> commands = ItemDisk.getCommands(this.disk);
-
-            for (String commandString : commands)
-            {
-                String commandName = commandString.split(" ")[0];
-
-                Class<? extends Command> command = Command.getCommand(commandName);
-
-                if (command != null)
-                {
-                    List<String> commandParameters = new ArrayList<String>();
-
-                    for (String param : commandString.split(" "))
-                    {
-                        if (!param.equals(commandName))
-                        {
-                            commandParameters.add(param);
-                        }
-                    }
-
-                    this.addCommand(command, commandParameters.toArray(new String[0]));
-                }
-            }
-        }
-        else
-        {
-            this.addCommand(Command.getCommand("DROP"));
-            this.addCommand(Command.getCommand("RETURN"));
-        }
     }
 
     public void addCommand(Class<? extends Command> command)

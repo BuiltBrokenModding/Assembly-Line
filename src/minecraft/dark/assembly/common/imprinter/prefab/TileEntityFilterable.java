@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.tile.IRotatable;
-import dark.assembly.api.IFilterable;
+import dark.api.al.IFilterable;
 import dark.assembly.common.imprinter.ItemImprinter;
 import dark.assembly.common.machine.TileEntityAssembly;
 

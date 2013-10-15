@@ -15,7 +15,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
-import dark.assembly.common.armbot.command.Command;
+import dark.assembly.common.armbot.Command;
 
 public class TileEntityEncoder extends TileEntityAdvanced implements IPacketReceiver, ISidedInventory
 {

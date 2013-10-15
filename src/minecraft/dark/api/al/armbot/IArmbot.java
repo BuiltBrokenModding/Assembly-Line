@@ -1,4 +1,4 @@
-package dark.assembly.api;
+package dark.api.al.armbot;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 
 /** Should be used to interact with the armbot and not to create a new armbot */
-public interface IArmbot
+public interface IArmbot extends Cloneable
 {
     /** Adds an entity to the Armbot's grab list. */
     public void grabEntity(Entity entity);
@@ -14,9 +14,9 @@ public interface IArmbot
     public void grabItem(ItemStack itemStack);
 
     /** Drops the given object
-     * 
+     *
      * @param object - Entity or ItemStack
-     * 
+     *
      * String "All" should cause the armbot to drop all items */
     public void drop(Object object);
 
