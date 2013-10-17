@@ -14,12 +14,12 @@ public class ArmbotTaskManager
     /** A class of all available commands.
      *
      * String - Command name. Command - The actual command class. */
-    private static final Set<IArmbotTask> COMMANDS = new HashSet<IArmbotTask>();
+    private static final Set<IDeviceTask> COMMANDS = new HashSet<IDeviceTask>();
 
     private static final HashMap<String, IArmbot> SUDO_BOTS = new HashMap<String, IArmbot>();
 
     /** Registers a command and tells armbots that it exists */
-    public static void registerCommand(IArmbotTask task)
+    public static void registerCommand(IDeviceTask task)
     {
         if (!COMMANDS.contains(task))
         {
@@ -28,9 +28,9 @@ public class ArmbotTaskManager
     }
 
     /** returns the first command with the same name */
-    public static IArmbotTask getCommand(String name)
+    public static IDeviceTask getCommand(String name)
     {
-        for (IArmbotTask command : COMMANDS)
+        for (IDeviceTask command : COMMANDS)
         {
             if (command.getMethodName().equalsIgnoreCase(name))
             {
@@ -41,10 +41,10 @@ public class ArmbotTaskManager
     }
 
     /** Gets all commands with the given name though there should only be one */
-    public static List<IArmbotTask> getCommands(String name)
+    public static List<IDeviceTask> getCommands(String name)
     {
-        List<IArmbotTask> tasks = new ArrayList<IArmbotTask>();
-        for (IArmbotTask command : COMMANDS)
+        List<IDeviceTask> tasks = new ArrayList<IDeviceTask>();
+        for (IDeviceTask command : COMMANDS)
         {
             if (command.getMethodName().equalsIgnoreCase(name))
             {

@@ -2,23 +2,24 @@ package dark.assembly.common.armbot.command;
 
 import universalelectricity.core.vector.Vector2;
 import net.minecraft.nbt.NBTTagCompound;
-import dark.api.al.armbot.Command;
-import dark.api.al.armbot.IArmbotTask;
+import dark.api.al.armbot.ILogicDevice;
+import dark.api.al.armbot.IDeviceTask;
 import dark.api.al.armbot.ISplitArmbotTask;
+import dark.assembly.common.armbot.TaskBase;
 
-public class CommandIF extends Command implements ISplitArmbotTask
+public class TaskIF extends TaskBase implements ISplitArmbotTask
 {
-    protected IArmbotTask entryPoint = null;
-    protected IArmbotTask exitTruePoint = null;
-    protected IArmbotTask exitFalsePoint = null;
+    protected IDeviceTask entryPoint = null;
+    protected IDeviceTask exitTruePoint = null;
+    protected IDeviceTask exitFalsePoint = null;
     protected boolean isTrue = false;
 
-    public CommandIF()
+    public TaskIF()
     {
         super("IF", TaskType.DECISION);
     }
 
-    public CommandIF(IArmbotTask entryPoint, IArmbotTask trueExit, IArmbotTask falseExit)
+    public TaskIF(IDeviceTask entryPoint, IDeviceTask trueExit, IDeviceTask falseExit)
     {
         this();
         this.setEntryPoint(this.entryPoint);
@@ -28,19 +29,19 @@ public class CommandIF extends Command implements ISplitArmbotTask
     }
 
     @Override
-    public Command clone()
+    public TaskBase clone()
     {
-        return new CommandIF(this.entryPoint, this.exitTruePoint, this.exitFalsePoint);
+        return new TaskIF(this.entryPoint, this.exitTruePoint, this.exitFalsePoint);
     }
 
     @Override
-    public IArmbotTask getEntryPoint()
+    public IDeviceTask getEntryPoint()
     {
         return this.entryPoint;
     }
 
     @Override
-    public IArmbotTask getExitPoint()
+    public IDeviceTask getExitPoint()
     {
         if (this.isTrue)
         {
@@ -56,21 +57,21 @@ public class CommandIF extends Command implements ISplitArmbotTask
     }
 
     @Override
-    public ISplitArmbotTask setEntryPoint(IArmbotTask task)
+    public ISplitArmbotTask setEntryPoint(IDeviceTask task)
     {
         this.entryPoint = task;
         return this;
     }
 
     @Override
-    public void addExitPoint(IArmbotTask task)
+    public void addExitPoint(IDeviceTask task)
     {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public Command loadProgress(NBTTagCompound nbt)
+    public TaskBase loadProgress(NBTTagCompound nbt)
     {
         super.loadProgress(nbt);
         this.entryPoint = this.program.getTaskAt(new Vector2(nbt.getDouble("entryX"), (nbt.getDouble("entryY"))));
@@ -99,6 +100,12 @@ public class CommandIF extends Command implements ISplitArmbotTask
             nbt.setDouble("exitTrueY", this.exitTruePoint.getPosition().y);
         }
         return nbt;
+    }
+
+    @Override
+    public boolean canUseTask(ILogicDevice device)
+    {
+        return true;
     }
 
 }

@@ -6,7 +6,7 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector2;
 
 /** Should be used to interact with the armbot and not to create a new armbot */
-public interface IArmbot extends Cloneable
+public interface IArmbot extends Cloneable, ILogicDevice
 {
     /** Location of the hand, or working location of the object */
     public universalelectricity.core.vector.Vector3 getHandPos();

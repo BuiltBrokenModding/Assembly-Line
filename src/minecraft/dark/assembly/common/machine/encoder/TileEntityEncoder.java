@@ -15,7 +15,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
-import dark.api.al.armbot.Command;
+import dark.assembly.common.armbot.TaskBase;
 
 public class TileEntityEncoder extends TileEntityAdvanced implements IPacketReceiver, ISidedInventory
 {
@@ -169,7 +169,7 @@ public class TileEntityEncoder extends TileEntityAdvanced implements IPacketRece
                         // Split commands that contains parameters
                         String commandName = newCommand.split(" ")[0];
 
-                        if (Command.getCommand(commandName) != null)
+                        if (TaskBase.getCommand(commandName) != null)
                             tempCmds.add(newCommand);
                     }
                     else

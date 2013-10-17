@@ -6,16 +6,23 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
-import dark.api.al.armbot.Command;
-import dark.api.al.armbot.IArmbotTask.TaskType;
-import dark.assembly.common.machine.InvInteractionHelper;
 
-public class CommandTake extends Command
+import com.builtbroken.common.science.units.UnitHelper;
+
+import dark.api.al.armbot.ILogicDevice;
+import dark.assembly.common.armbot.TaskArmbot;
+import dark.assembly.common.armbot.TaskBase;
+import dark.assembly.common.machine.InvInteractionHelper;
+import dark.core.prefab.helpers.MathHelper;
+
+public class CommandTake extends TaskArmbot
 {
 
-    private ItemStack stack;
+    protected ItemStack stack;
+    protected int ammount = -1;
 
     public CommandTake()
     {
@@ -23,76 +30,54 @@ public class CommandTake extends Command
     }
 
     @Override
-    public void onStart()
+    public ProcessReturn onMethodCalled(World world, Vector3 location, ILogicDevice armbot)
     {
-        int id = 0;
-        int meta = 32767;
-        int count = 1;
+        super.onMethodCalled(world, location, armbot);
 
-        if (this.getArgs().length > 0)
-        {
-            String block = this.getArg(0);
-            if (block.contains(":"))
-            {
-                String[] blockID = block.split(":");
-                id = Integer.parseInt(blockID[0]);
-                meta = Integer.parseInt(blockID[1]);
-            }
-            else
-            {
-                id = Integer.parseInt(block);
-            }
-        }
-        if (this.getArgs().length > 1)
-        {
-            count = this.getIntArg(1);
-        }
-        if (id == 0)
-        {
-            stack = null;
-        }
-        else
-        {
-            stack = new ItemStack(id, count, meta);
-        }
+        ammount = UnitHelper.tryToParseInt(this.getArg(1), -1);
+
+        stack = this.getItem(this.getArg(0), ammount == -1 ? 1 : ammount);
+
+        return ProcessReturn.CONTINUE;
     }
 
     @Override
-    protected boolean onUpdate()
+    public ProcessReturn onUpdate()
     {
-        TileEntity targetTile = this.tileEntity.getHandPosition().getTileEntity(this.worldObj);
+        TileEntity targetTile = this.armbot.getHandPos().getTileEntity(this.worldObj);
 
-        if (targetTile != null && this.tileEntity.getGrabbedItems().size() <= 0)
+        if (targetTile != null && this.armbot.getGrabbedObjects().size() <= 0)
         {
-            ForgeDirection direction = this.tileEntity.getFacingDirectionFromAngle();
+            ForgeDirection direction = MathHelper.getFacingDirectionFromAngle(this.armbot.getRotation().x);
             List<ItemStack> stacks = new ArrayList<ItemStack>();
             if (this.stack != null)
             {
                 stacks.add(stack);
             }
-            InvInteractionHelper invEx = new InvInteractionHelper(this.tileEntity.worldObj, new Vector3(this.tileEntity), stacks, false);
-            this.tileEntity.grabItem(invEx.tryGrabFromPosition(new Vector3(targetTile), direction, this.stack != null ? stack.stackSize : 1));
-            return !(this.tileEntity.getGrabbedItems().size() > 0);
+            InvInteractionHelper invEx = new InvInteractionHelper(this.worldObj, this.armbotPos, stacks, false);
+            this.armbot.grab(invEx.tryGrabFromPosition(new Vector3(targetTile), direction, this.stack != null ? stack.stackSize : 1));
+            return this.armbot.getGrabbedObjects().size() > 0 ? ProcessReturn.DONE : ProcessReturn.CONTINUE;
 
         }
-        return true;
+        return ProcessReturn.CONTINUE;
     }
 
     @Override
     public String toString()
     {
-        return "Take " + (stack != null ? stack.toString() : "1x???@???  ");
+        return super.toString() + " " + (stack != null ? stack.toString() : "1x???@???  ");
     }
 
     @Override
-    public void loadProgress(NBTTagCompound taskCompound)
+    public CommandTake load(NBTTagCompound taskCompound)
     {
         super.loadProgress(taskCompound);
         this.stack = ItemStack.loadItemStackFromNBT(taskCompound.getCompoundTag("item"));
+        return this;
     }
 
     @Override
-    public void saveProgress(NBTTagCompound taskCompound)
+    public NBTTagCompound save(NBTTagCompound taskCompound)
     {
         super.saveProgress(taskCompound);
         if (stack != null)
@@ -101,5 +86,12 @@ public class CommandTake extends Command
             this.stack.writeToNBT(tag);
             taskCompound.setTag("item", tag);
         }
+        return taskCompound;
+    }
+
+    @Override
+    public TaskBase clone()
+    {
+        return new CommandTake();
     }
 }

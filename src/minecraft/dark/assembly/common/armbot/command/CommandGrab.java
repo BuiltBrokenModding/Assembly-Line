@@ -11,16 +11,18 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
-import dark.api.al.armbot.Command;
 import dark.api.al.armbot.IArmbot;
-import dark.api.al.armbot.IArmbotTask.TaskType;
+import dark.api.al.armbot.ILogicDevice;
+import dark.api.al.armbot.IDeviceTask.TaskType;
+import dark.assembly.common.armbot.TaskBase;
+import dark.assembly.common.armbot.TaskArmbot;
 import dark.assembly.common.armbot.GrabDictionary;
 import dark.assembly.common.machine.belt.TileEntityConveyorBelt;
 
 /** Used by arms to search for entities in a region
  *
  * @author Calclavia */
-public class CommandGrab extends Command
+public class CommandGrab extends TaskArmbot
 {
 
     public static final float radius = 0.5f;
@@ -38,7 +40,7 @@ public class CommandGrab extends Command
     }
 
     @Override
-    public boolean onMethodCalled(World world, Vector3 location, IArmbot armbot)
+    public ProcessReturn onMethodCalled(World world, Vector3 location, ILogicDevice armbot)
     {
         super.onMethodCalled(world, location, armbot);
         this.entityToInclude = Entity.class;
@@ -63,17 +65,17 @@ public class CommandGrab extends Command
             }
 
         }
-        return true;
+        return ProcessReturn.CONTINUE;
     }
 
     @Override
-    public boolean onUpdate()
+    public ProcessReturn onUpdate()
     {
         super.onUpdate();
 
         if (this.armbot.getGrabbedObjects().size() > 0)
         {
-            return false;
+            return ProcessReturn.DONE;
         }
 
         Vector3 serachPosition = this.armbot.getHandPos();
@@ -102,16 +104,16 @@ public class CommandGrab extends Command
                     {
                         belt.ignoreEntity(found.get(i));
                     }
-                    return false;
+                    return ProcessReturn.DONE;
                 }
             }
         }
 
-        return true;
+        return ProcessReturn.CONTINUE;
     }
 
     @Override
-    public Command loadProgress(NBTTagCompound taskCompound)
+    public TaskBase loadProgress(NBTTagCompound taskCompound)
     {
         super.loadProgress(taskCompound);
         this.child = taskCompound.getBoolean("child");
@@ -146,7 +148,7 @@ public class CommandGrab extends Command
     }
 
     @Override
-    public Command clone()
+    public TaskBase clone()
     {
         return new CommandGrab();
     }

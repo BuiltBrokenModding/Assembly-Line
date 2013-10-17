@@ -5,19 +5,26 @@ import java.util.ArrayList;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import universalelectricity.core.vector.Vector3;
-import dark.api.al.armbot.Command;
-import dark.api.al.armbot.IArmbotTask.TaskType;
+import dark.api.al.armbot.IDeviceTask;
+import dark.api.al.armbot.IDeviceTask.TaskType;
+import dark.assembly.common.armbot.TaskBase;
+import dark.assembly.common.armbot.TaskArmbot;
 import dark.core.prefab.helpers.ItemWorldHelper;
 
 /** Used by arms to break a specific block in a position.
  *
  * @author Calclavia */
-public class CommandBreak extends Command
+public class CommandBreak extends TaskArmbot
 {
+    protected int breakTicks = 30;
+    protected boolean keep = false;
+
     public CommandBreak()
     {
         super("break", TaskType.DEFINEDPROCESS);
+        this.breakTicks = 30;
     }
 
     public CommandBreak(String name)
@@ -25,19 +32,18 @@ public class CommandBreak extends Command
         super(name, TaskType.DEFINEDPROCESS);
     }
 
-    int BREAK_TIME = 30;
-    boolean keep = false;
+
 
     @Override
-    public boolean onUpdate()
+    public ProcessReturn onUpdate()
     {
         super.onUpdate();
 
         Vector3 serachPosition = this.armbot.getHandPos();
 
         Block block = Block.blocksList[serachPosition.getBlockID(this.worldObj)];
-
-        if (block != null && BREAK_TIME <= this.ticks)
+        this.breakTicks--;
+        if (block != null && breakTicks <= 0)
         {
             ArrayList<ItemStack> items = block.getBlockDropped(this.worldObj, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), serachPosition.getBlockMetadata(worldObj), 0);
 
@@ -51,16 +57,30 @@ public class CommandBreak extends Command
             }
 
             worldObj.setBlock(serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), 0, 0, 3);
-            return false;
+            return ProcessReturn.DONE;
         }
 
         /** Notes on break command Beds Break Wrong Multi blocks don't work */
-        return true;
+        return ProcessReturn.CONTINUE;
     }
 
     @Override
-    public Command clone()
+    public TaskBase clone()
     {
         return new CommandBreak();
+    }
+
+    @Override
+    public IDeviceTask loadProgress(NBTTagCompound nbt)
+    {
+        this.breakTicks = nbt.getInteger("breakTicks");
+        return this;
+    }
+
+    @Override
+    public NBTTagCompound saveProgress(NBTTagCompound nbt)
+    {
+        nbt.setInteger("breakTicks", this.breakTicks);
+        return nbt;
     }
 }

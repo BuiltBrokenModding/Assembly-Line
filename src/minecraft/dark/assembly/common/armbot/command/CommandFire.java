@@ -4,9 +4,11 @@ import java.util.Random;
 
 import com.builtbroken.common.science.units.UnitHelper;
 
-import dark.api.al.armbot.Command;
 import dark.api.al.armbot.IArmbot;
-import dark.api.al.armbot.IArmbotTask.TaskType;
+import dark.api.al.armbot.ILogicDevice;
+import dark.api.al.armbot.IDeviceTask.TaskType;
+import dark.assembly.common.armbot.TaskBase;
+import dark.assembly.common.armbot.TaskArmbot;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -17,7 +19,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
 
-public class CommandFire extends Command
+public class CommandFire extends TaskArmbot
 {
 
     private static final float MIN_ACTUAL_PITCH = -80;
@@ -34,7 +36,7 @@ public class CommandFire extends Command
     }
 
     @Override
-    public boolean onMethodCalled(World world, Vector3 location, IArmbot armbot)
+    public ProcessReturn onMethodCalled(World world, Vector3 location, ILogicDevice armbot)
     {
         super.onMethodCalled(world, location, armbot);
 
@@ -65,11 +67,11 @@ public class CommandFire extends Command
         this.finalVelocity.z *= (1f - (1f / 200f)) + (random.nextFloat() * (1f / 100f));
 
         this.finalVelocity.scale(velocity);
-        return true;
+        return ProcessReturn.CONTINUE;
     }
 
     @Override
-    public boolean onUpdate()
+    public ProcessReturn onUpdate()
     {
         if (this.finalVelocity == null) // something went wrong
         {
@@ -137,11 +139,11 @@ public class CommandFire extends Command
             }
         }
 
-        return false;
+        return ProcessReturn.DONE;
     }
 
     @Override
-    public Command loadProgress(NBTTagCompound taskCompound)
+    public TaskBase loadProgress(NBTTagCompound taskCompound)
     {
         super.loadProgress(taskCompound);
         this.actualYaw = taskCompound.getFloat("fireYaw");
@@ -177,7 +179,7 @@ public class CommandFire extends Command
     }
 
     @Override
-    public Command clone()
+    public TaskBase clone()
     {
         return new CommandFire();
     }

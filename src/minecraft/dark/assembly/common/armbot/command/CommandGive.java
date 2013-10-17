@@ -13,12 +13,14 @@ import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.science.units.UnitHelper;
 
-import dark.api.al.armbot.Command;
 import dark.api.al.armbot.IArmbot;
+import dark.api.al.armbot.ILogicDevice;
+import dark.assembly.common.armbot.TaskBase;
+import dark.assembly.common.armbot.TaskArmbot;
 import dark.assembly.common.machine.InvInteractionHelper;
 import dark.core.prefab.helpers.MathHelper;
 
-public class CommandGive extends Command
+public class CommandGive extends TaskArmbot
 {
 
     private ItemStack stack;
@@ -30,7 +32,7 @@ public class CommandGive extends Command
     }
 
     @Override
-    public boolean onMethodCalled(World world, Vector3 location, IArmbot armbot)
+    public ProcessReturn onMethodCalled(World world, Vector3 location, ILogicDevice armbot)
     {
         super.onMethodCalled(world, location, armbot);
 
@@ -44,12 +46,12 @@ public class CommandGive extends Command
             stack = this.getItem("" + this.getArg(0), ammount == -1 ? 1 : ammount);
         }
 
-        return true;
+        return ProcessReturn.CONTINUE;
 
     }
 
     @Override
-    public boolean onUpdate()
+    public ProcessReturn onUpdate()
     {
         TileEntity targetTile = this.armbot.getHandPos().getTileEntity(this.worldObj);
 
@@ -64,29 +66,25 @@ public class CommandGive extends Command
             InvInteractionHelper invEx = new InvInteractionHelper(this.worldObj, this.armbotPos, stacks, false);
 
             Iterator<Object> targetIt = this.armbot.getGrabbedObjects().iterator();
-            boolean flag = true;
+            boolean itemsLeft = false;
             while (targetIt.hasNext())
             {
                 Object object = targetIt.next();
                 if (object instanceof ItemStack)
                 {
                     ItemStack insertStack = (ItemStack) object;
-                    if (insertStack != null)
+                    insertStack = invEx.tryPlaceInPosition(insertStack, new Vector3(targetTile), direction.getOpposite());
+                    itemsLeft = insertStack != null;
+                    if (insertStack == null || insertStack.stackSize <= 0)
                     {
-                        ItemStack original = insertStack.copy();
-                        insertStack = invEx.tryPlaceInPosition(insertStack, new Vector3(targetTile), direction.getOpposite());
-                        flag = insertStack != null && insertStack.stackSize == original.stackSize;
-                        if (insertStack == null || insertStack.stackSize <= 0)
-                        {
-                            targetIt.remove();
-                            break;
-                        }
+                        targetIt.remove();
+                        break;
                     }
                 }
             }
-            return flag;
+            return itemsLeft ? ProcessReturn.CONTINUE : ProcessReturn.DONE;
         }
-        return false;
+        return ProcessReturn.CONTINUE;
     }
 
     @Override
@@ -96,7 +94,7 @@ public class CommandGive extends Command
     }
 
     @Override
-    public Command loadProgress(NBTTagCompound taskCompound)
+    public TaskBase loadProgress(NBTTagCompound taskCompound)
     {
         super.loadProgress(taskCompound);
         this.stack = ItemStack.loadItemStackFromNBT(taskCompound.getCompoundTag("item"));
@@ -117,8 +115,15 @@ public class CommandGive extends Command
     }
 
     @Override
-    public Command clone()
+    public TaskBase clone()
     {
         return new CommandGive();
+    }
+
+    @Override
+    public boolean canUseTask(ILogicDevice device)
+    {
+        // TODO Auto-generated method stub
+        return false;
     }
 }

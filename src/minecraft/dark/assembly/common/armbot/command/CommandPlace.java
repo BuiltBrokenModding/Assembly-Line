@@ -1,7 +1,8 @@
 package dark.assembly.common.armbot.command;
 
-import dark.api.al.armbot.Command;
-import dark.api.al.armbot.IArmbotTask.TaskType;
+import dark.api.al.armbot.IDeviceTask.TaskType;
+import dark.assembly.common.armbot.TaskBase;
+import dark.assembly.common.armbot.TaskArmbot;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -14,7 +15,7 @@ import universalelectricity.core.vector.Vector3;
 /** Used by arms to break a specific block in a position.
  *
  * @author Calclavia */
-public class CommandPlace extends Command
+public class CommandPlace extends TaskArmbot
 {
     int PLACE_TIME = 30;
 
@@ -25,23 +26,17 @@ public class CommandPlace extends Command
     }
 
     @Override
-    public void onStart()
-    {
-        super.onStart();
-    }
-
-    @Override
-    protected boolean onUpdate()
+    public ProcessReturn onUpdate()
     {
         super.onUpdate();
 
-        Vector3 serachPosition = this.tileEntity.getHandPosition();
+        Vector3 serachPosition = this.armbot.getHandPos();
 
         Block block = Block.blocksList[serachPosition.getBlockID(this.worldObj)];
 
         if (block == null && ticks >= this.PLACE_TIME)
         {
-            for (Entity entity : this.tileEntity.getGrabbedEntities())
+            for (Object entity : this.armbot.getGrabbedObjects())
             {
                 if (entity instanceof EntityItem)
                 {
@@ -53,8 +48,8 @@ public class CommandPlace extends Command
                         {
                             ((ItemBlock) itemStack.getItem()).placeBlockAt(itemStack, null, this.worldObj, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), 0, 0.5f, 0.5f, 0.5f, itemStack.getItemDamage());
 
-                            this.tileEntity.drop(entity);
-                            return false;
+                            this.armbot.getGrabbedObjects().remove(entity);
+                            return ProcessReturn.DONE;
                         }
                         else if (itemStack.getItem() instanceof IPlantable)
                         {
@@ -74,8 +69,8 @@ public class CommandPlace extends Command
                                         {
                                             Block.blocksList[blockID].onBlockPlacedBy(worldObj, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), null, itemStack);
                                             Block.blocksList[blockID].onPostBlockPlaced(worldObj, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), blockMetadata);
-                                            this.tileEntity.drop(entity);
-                                            return false;
+                                            this.armbot.getGrabbedObjects().remove(entity);
+                                            return ProcessReturn.DONE;
                                         }
                                     }
                                 }
@@ -86,12 +81,18 @@ public class CommandPlace extends Command
             }
         }
 
-        return false;
+        return ProcessReturn.DONE;
     }
 
     @Override
     public String toString()
     {
         return "PLACE";
+    }
+
+    @Override
+    public TaskBase clone()
+    {
+        return new CommandPlace();
     }
 }

@@ -3,13 +3,14 @@ package dark.assembly.common.armbot.command;
 import com.builtbroken.common.science.units.UnitHelper;
 
 import universalelectricity.core.vector.Vector3;
-import dark.api.al.armbot.Command;
 import dark.api.al.armbot.IArmbot;
-import dark.api.al.armbot.IArmbotTask.TaskType;
+import dark.api.al.armbot.ILogicDevice;
+import dark.api.al.armbot.IDeviceTask.TaskType;
+import dark.assembly.common.armbot.TaskBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-public class CommandIdle extends Command
+public class CommandIdle extends TaskBase
 {
 
     /** The amount of time in which the machine will idle. */
@@ -23,7 +24,7 @@ public class CommandIdle extends Command
     }
 
     @Override
-    public boolean onMethodCalled(World world, Vector3 location, IArmbot armbot)
+    public ProcessReturn onMethodCalled(World world, Vector3 location, ILogicDevice armbot)
     {
         super.onMethodCalled(world, location, armbot);
 
@@ -31,13 +32,13 @@ public class CommandIdle extends Command
         {
             this.idleTime = UnitHelper.tryToParseInt("" + this.getArg(0));
             this.totalIdleTime = this.idleTime;
-            return true;
+            return ProcessReturn.CONTINUE;
         }
-        return false;
+        return ProcessReturn.ARGUMENT_ERROR;
     }
 
     @Override
-    public boolean onUpdate()
+    public ProcessReturn onUpdate()
     {
         /** Randomly move the arm to simulate life in the arm if the arm is powered */
         // this.tileEntity.rotationPitch *= 0.98 * this.world.rand.nextFloat();
@@ -45,14 +46,14 @@ public class CommandIdle extends Command
         if (this.idleTime > 0)
         {
             this.idleTime--;
-            return true;
+            return ProcessReturn.CONTINUE;
         }
 
-        return false;
+        return ProcessReturn.DONE;
     }
 
     @Override
-    public Command loadProgress(NBTTagCompound taskCompound)
+    public TaskBase loadProgress(NBTTagCompound taskCompound)
     {
         super.loadProgress(taskCompound);
         this.idleTime = taskCompound.getInteger("idleTime");
@@ -76,9 +77,15 @@ public class CommandIdle extends Command
     }
 
     @Override
-    public Command clone()
+    public TaskBase clone()
     {
         return new CommandIdle();
+    }
+
+    @Override
+    public boolean canUseTask(ILogicDevice device)
+    {
+        return true;
     }
 
 }

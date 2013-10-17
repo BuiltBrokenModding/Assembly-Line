@@ -19,10 +19,10 @@ public interface IProgram
     public HashMap<String, Object> getDeclairedVarables();
 
     /** Next task in the set. Its up to the program to increment down the list */
-    public IArmbotTask getNextTask();
+    public IDeviceTask getNextTask();
 
     /** Gets a task at the given x y location in the program */
-    public IArmbotTask getTaskAt(Vector2 vector2);
+    public IDeviceTask getTaskAt(Vector2 vector2);
 
     /** Return this program to its starting conditions */
     public void reset();

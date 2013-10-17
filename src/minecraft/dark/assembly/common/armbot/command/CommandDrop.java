@@ -1,9 +1,12 @@
 package dark.assembly.common.armbot.command;
 
-import dark.api.al.armbot.Command;
-import dark.api.al.armbot.IArmbotTask.TaskType;
+import net.minecraft.nbt.NBTTagCompound;
+import dark.api.al.armbot.IDeviceTask;
+import dark.api.al.armbot.IDeviceTask.TaskType;
+import dark.assembly.common.armbot.TaskBase;
+import dark.assembly.common.armbot.TaskArmbot;
 
-public class CommandDrop extends Command
+public class CommandDrop extends TaskArmbot
 {
     public CommandDrop()
     {
@@ -11,14 +14,14 @@ public class CommandDrop extends Command
     }
 
     @Override
-    public boolean onUpdate()
+    public ProcessReturn onUpdate()
     {
         super.onUpdate();
 
         this.armbot.drop("all");
         this.worldObj.playSound(this.armbotPos.x, this.armbotPos.x, this.armbotPos.x, "random.pop", 0.2F, ((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.0F, true);
 
-        return false;
+        return ProcessReturn.DONE;
     }
 
     @Override
@@ -28,8 +31,10 @@ public class CommandDrop extends Command
     }
 
     @Override
-    public Command clone()
+    public TaskBase clone()
     {
         return new CommandDrop();
     }
+
+
 }

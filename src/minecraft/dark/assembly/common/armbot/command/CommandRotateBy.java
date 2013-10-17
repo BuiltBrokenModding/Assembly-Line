@@ -1,19 +1,26 @@
 package dark.assembly.common.armbot.command;
 
-import dark.api.al.armbot.Command;
-import dark.api.al.armbot.IArmbotTask.TaskType;
+import universalelectricity.core.vector.Vector3;
+import dark.api.al.armbot.ILogicDevice;
+import dark.api.al.armbot.IDeviceTask.ProcessReturn;
+import dark.api.al.armbot.IDeviceTask.TaskType;
+import dark.assembly.common.armbot.TaskBase;
+import dark.assembly.common.armbot.TaskArmbot;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 
 /** Rotates the armbot to a specific direction. If not specified, it will turn right.
  *
  * @author Calclavia */
-public class CommandRotateBy extends Command
+public class CommandRotateBy extends TaskArmbot
 {
 
-    float targetRotationYaw = 0;
-    float targetRotationPitch = 0;
-    float deltaPitch = 0, deltaYaw = 90;
-    float totalTicks = 0f;
+    double targetRotationYaw = 0;
+    double targetRotationPitch = 0;
+    double deltaPitch = 0, deltaYaw = 90;
+    double totalTicks = 0f;
+
+    private CommandRotateTo rotateToCommand;
 
     public CommandRotateBy()
     {
@@ -21,9 +28,9 @@ public class CommandRotateBy extends Command
     }
 
     @Override
-    public void onStart()
+    public ProcessReturn onMethodCalled(World world, Vector3 location, ILogicDevice armbot)
     {
-        super.onStart();
+        super.onMethodCalled(world, location, armbot);
 
         this.ticks = 0;
 
@@ -44,17 +51,8 @@ public class CommandRotateBy extends Command
         }
         else
         {
-            this.targetRotationPitch = this.tileEntity.rotationPitch;
+            this.targetRotationPitch = this.armbot.getRotation().y;
         }
-
-        while (this.targetRotationYaw < 0)
-            this.targetRotationYaw += 360;
-        while (this.targetRotationYaw > 360)
-            this.targetRotationYaw -= 360;
-        while (this.targetRotationPitch < 0)
-            this.targetRotationPitch += 60;
-        while (this.targetRotationPitch > 60)
-            this.targetRotationPitch -= 60;
 
         float totalTicksYaw = Math.abs(this.targetRotationYaw - this.tileEntity.rotationYaw) / this.tileEntity.ROTATION_SPEED;
         float totalTicksPitch = Math.abs(this.targetRotationPitch - this.tileEntity.rotationPitch) / this.tileEntity.ROTATION_SPEED;
@@ -62,37 +60,16 @@ public class CommandRotateBy extends Command
     }
 
     @Override
-    protected boolean onUpdate()
+    public ProcessReturn onUpdate()
     {
-        super.onUpdate();
-        /*
-         * float rotationalDifference = Math.abs(this.tileEntity.rotationYaw - this.targetRotation);
-         *
-         * if (rotationalDifference < ROTATION_SPEED) { this.tileEntity.rotationYaw =
-         * this.targetRotation; } else { if (this.tileEntity.rotationYaw > this.targetRotation) {
-         * this.tileEntity.rotationYaw -= ROTATION_SPEED; } else { this.tileEntity.rotationYaw +=
-         * ROTATION_SPEED; } this.ticks = 0; }
-         */
-
-        // set the rotation to the target immediately and let the client handle animating it
-        // wait for the client to catch up
-
-        if (Math.abs(this.tileEntity.rotationYaw - this.targetRotationYaw) > 0.001f)
-            this.tileEntity.rotationYaw = this.targetRotationYaw;
-        if (Math.abs(this.tileEntity.rotationPitch - this.targetRotationPitch) > 0.001f)
-            this.tileEntity.rotationPitch = this.targetRotationPitch;
-
-        // if (this.ticks < this.totalTicks) { return true; }
-        if (Math.abs(this.tileEntity.actualPitch - this.tileEntity.rotationPitch) > 0.001f)
+        if (this.rotateToCommand == null)
         {
-            return true;
-        }
-        if (Math.abs(this.tileEntity.actualYaw - this.tileEntity.rotationYaw) > 0.001f)
-        {
-            return true;
+            this.rotateToCommand = new CommandRotateTo();
+            this.rotateToCommand.setParms(this.targetRotationYaw,this.targetRotationPitch);
+            this.rotateToCommand.onMethodCalled(this.worldObj, this.armbotPos, armbot);
         }
 
-        return false;
+        return this.rotateToCommand.onUpdate();
     }
 
     @Override

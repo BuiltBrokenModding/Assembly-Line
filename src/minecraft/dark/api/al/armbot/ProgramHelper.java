@@ -2,6 +2,8 @@ package dark.api.al.armbot;
 
 import java.util.HashMap;
 
+import dark.api.al.armbot.IDeviceTask.ProcessReturn;
+
 import net.minecraft.world.World;
 
 import universalelectricity.core.vector.Vector3;
@@ -13,9 +15,9 @@ public class ProgramHelper
 {
     /** Current Program */
     protected IProgram program;
-    protected IArmbot bot;
+    protected ILogicDevice bot;
     /** Current task in program */
-    protected IArmbotTask currentTask;
+    protected IDeviceTask currentTask;
     /** Do we have a memory to store values */
     boolean hasMemory = false;
     boolean hasTaskBeenCalled = false, nextTask = false;
@@ -24,7 +26,7 @@ public class ProgramHelper
     /** Array of values to remember between commands */
     protected HashMap<String, Object> taskMemory = new HashMap<String, Object>();
 
-    public ProgramHelper(IArmbot bot)
+    public ProgramHelper(ILogicDevice bot)
     {
         this.bot = bot;
     }
@@ -32,8 +34,9 @@ public class ProgramHelper
     /** Needs to be called by the armbot per tick.
      *
      * @return true if it is doing something */
-    public boolean onUpdate(World world, Vector3 botLocation)
+    public ProcessReturn onUpdate(World world, Vector3 botLocation)
     {
+        ProcessReturn re = ProcessReturn.DONE;
         if (program != null)
         {
             if (this.currentTask == null || this.nextTask)
@@ -42,21 +45,28 @@ public class ProgramHelper
             }
             if (this.currentTask != null)
             {
-                if (!this.hasTaskBeenCalled && !this.currentTask.onMethodCalled(world, botLocation, bot))
+                if (!this.hasTaskBeenCalled)
                 {
-                    this.nextTask = true;
-                }
-                else
-                {
-                    if (!this.currentTask.onUpdate())
+                    re = this.currentTask.onMethodCalled(world, botLocation, bot);
+                    if (re == ProcessReturn.DONE)
                     {
                         this.nextTask = true;
                     }
+                    else if (re != ProcessReturn.CONTINUE)
+                    {
+                        return re;
+                    }
                 }
-                return true;
+
+                re = this.currentTask.onUpdate();
+                if (re == ProcessReturn.DONE)
+                {
+                    this.nextTask = true;
+                }
+                return re;
             }
         }
-        return false;
+        return re;
     }
 
     public void nextTask()

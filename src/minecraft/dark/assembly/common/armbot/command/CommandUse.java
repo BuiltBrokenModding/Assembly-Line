@@ -1,13 +1,18 @@
 package dark.assembly.common.armbot.command;
 
+import universalelectricity.core.vector.Vector3;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import dark.api.al.armbot.Command;
+import net.minecraft.world.World;
 import dark.api.al.armbot.IArmbotUseable;
-import dark.api.al.armbot.IArmbotTask.TaskType;
+import dark.api.al.armbot.ILogicDevice;
+import dark.api.al.armbot.IDeviceTask.ProcessReturn;
+import dark.api.al.armbot.IDeviceTask.TaskType;
+import dark.assembly.common.armbot.TaskBase;
+import dark.assembly.common.armbot.TaskArmbot;
 
-public class CommandUse extends Command
+public class CommandUse extends TaskArmbot
 {
 
     private int times;
@@ -19,7 +24,7 @@ public class CommandUse extends Command
     }
 
     @Override
-    public void onStart()
+    public ProcessReturn onMethodCalled(World world, Vector3 location, ILogicDevice armbot)
     {
         this.times = 0;
         this.curTimes = 0;
@@ -34,7 +39,7 @@ public class CommandUse extends Command
     }
 
     @Override
-    protected boolean onUpdate()
+    public boolean onUpdate()
     {
         Block block = Block.blocksList[this.worldObj.getBlockId(tileEntity.getHandPosition().intX(), tileEntity.getHandPosition().intY(), tileEntity.getHandPosition().intZ())];
         TileEntity targetTile = this.tileEntity.getHandPosition().getTileEntity(this.worldObj);

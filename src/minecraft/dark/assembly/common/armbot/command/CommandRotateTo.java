@@ -4,9 +4,11 @@ import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.science.units.UnitHelper;
 
-import dark.api.al.armbot.Command;
 import dark.api.al.armbot.IArmbot;
-import dark.api.al.armbot.IArmbotTask.TaskType;
+import dark.api.al.armbot.ILogicDevice;
+import dark.api.al.armbot.IDeviceTask.TaskType;
+import dark.assembly.common.armbot.TaskBase;
+import dark.assembly.common.armbot.TaskArmbot;
 import dark.core.prefab.helpers.MathHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -14,7 +16,7 @@ import net.minecraft.world.World;
 /** Rotates the armbot to a specific direction. If not specified, it will turn right.
  *
  * @author DarkGuardsman */
-public class CommandRotateTo extends Command
+public class CommandRotateTo extends TaskArmbot
 {
     public CommandRotateTo()
     {
@@ -24,28 +26,31 @@ public class CommandRotateTo extends Command
     float targetRotationYaw = 0, targetRotationPitch = 0, currentRotationYaw, currentRotationPitch;
 
     @Override
-    public boolean onMethodCalled(World world, Vector3 location, IArmbot armbot, Object[] arguments)
+    public ProcessReturn onMethodCalled(World world, Vector3 location, ILogicDevice device)
     {
-        super.onMethodCalled(world, location, armbot, arguments);
+        super.onMethodCalled(world, location, device);
 
         if (this.getArg(0) != null)
         {
-            this.targetRotationYaw = UnitHelper.tryToParseFloat("" + this.getArg(0));
+            this.targetRotationYaw = UnitHelper.tryToParseFloat(this.getArg(0));
+        }else
+        {
+            return ProcessReturn.SYNTAX_ERROR;
         }
 
         if (this.getArg(1) != null)
         {
-            this.targetRotationPitch = UnitHelper.tryToParseFloat("" + this.getArg(1));
+            this.targetRotationPitch = UnitHelper.tryToParseFloat(this.getArg(1));
         }
 
         MathHelper.clampAngleTo360(this.targetRotationPitch);
         MathHelper.clampAngleTo360(this.targetRotationYaw);
 
-        return true;
+        return ProcessReturn.DONE;
     }
 
     @Override
-    public boolean onUpdate()
+    public ProcessReturn onUpdate()
     {
         super.onUpdate();
 
@@ -53,7 +58,7 @@ public class CommandRotateTo extends Command
         this.currentRotationPitch = (float) this.armbot.getRotation().y;
         this.armbot.moveArmTo(this.targetRotationYaw, this.targetRotationPitch);
 
-        return Math.abs(this.currentRotationPitch - this.targetRotationPitch) > 0.01f && Math.abs(this.currentRotationYaw - this.targetRotationYaw) > 0.01f;
+        return Math.abs(this.currentRotationPitch - this.targetRotationPitch) > 0.01f && Math.abs(this.currentRotationYaw - this.targetRotationYaw) > 0.01f ? ProcessReturn.CONTINUE : ProcessReturn.DONE;
     }
 
     @Override
@@ -63,7 +68,7 @@ public class CommandRotateTo extends Command
     }
 
     @Override
-    public Command loadProgress(NBTTagCompound taskCompound)
+    public TaskBase loadProgress(NBTTagCompound taskCompound)
     {
         super.loadProgress(taskCompound);
         this.targetRotationPitch = taskCompound.getFloat("rotPitch");
@@ -81,7 +86,7 @@ public class CommandRotateTo extends Command
     }
 
     @Override
-    public Command clone()
+    public TaskBase clone()
     {
         return new CommandRotateTo();
     }
