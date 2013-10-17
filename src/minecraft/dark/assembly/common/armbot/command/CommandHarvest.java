@@ -11,7 +11,6 @@ import dark.api.al.coding.IDeviceTask.TaskType;
  * @author Calclavia */
 public class CommandHarvest extends CommandBreak
 {
-    private CommandRotateTo rotateToCommand;
 
     public CommandHarvest()
     {

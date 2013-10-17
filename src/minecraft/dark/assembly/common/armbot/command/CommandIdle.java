@@ -6,6 +6,7 @@ import universalelectricity.core.vector.Vector3;
 import dark.api.al.coding.IArmbot;
 import dark.api.al.coding.ILogicDevice;
 import dark.api.al.coding.IDeviceTask.TaskType;
+import dark.api.al.coding.args.ArgumentData;
 import dark.assembly.common.armbot.TaskBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -20,7 +21,7 @@ public class CommandIdle extends TaskBase
     public CommandIdle()
     {
         super("wait", TaskType.DEFINEDPROCESS);
-        // TODO Auto-generated constructor stub
+        this.defautlArguments.add(new ArgumentData("idleTime", 20));
     }
 
     @Override
@@ -28,10 +29,9 @@ public class CommandIdle extends TaskBase
     {
         super.onMethodCalled(world, location, armbot);
 
-        if (UnitHelper.tryToParseInt("" + this.getArg(0)) > 0)
+        if (UnitHelper.tryToParseInt(this.getArg("idleTime")) > 0)
         {
-            this.idleTime = UnitHelper.tryToParseInt("" + this.getArg(0));
-            this.totalIdleTime = this.idleTime;
+            this.totalIdleTime = this.idleTime = UnitHelper.tryToParseInt(this.getArg("idleTime"));
             return ProcessReturn.CONTINUE;
         }
         return ProcessReturn.ARGUMENT_ERROR;
@@ -40,15 +40,11 @@ public class CommandIdle extends TaskBase
     @Override
     public ProcessReturn onUpdate()
     {
-        /** Randomly move the arm to simulate life in the arm if the arm is powered */
-        // this.tileEntity.rotationPitch *= 0.98 * this.world.rand.nextFloat();
-
         if (this.idleTime > 0)
         {
             this.idleTime--;
             return ProcessReturn.CONTINUE;
         }
-
         return ProcessReturn.DONE;
     }
 

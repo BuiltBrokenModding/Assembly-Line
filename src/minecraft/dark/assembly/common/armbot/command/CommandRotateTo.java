@@ -7,6 +7,7 @@ import com.builtbroken.common.science.units.UnitHelper;
 import dark.api.al.coding.IArmbot;
 import dark.api.al.coding.ILogicDevice;
 import dark.api.al.coding.IDeviceTask.TaskType;
+import dark.api.al.coding.args.ArgumentIntData;
 import dark.assembly.common.armbot.TaskBase;
 import dark.assembly.common.armbot.TaskArmbot;
 import dark.core.prefab.helpers.MathHelper;
@@ -18,35 +19,31 @@ import net.minecraft.world.World;
  * @author DarkGuardsman */
 public class CommandRotateTo extends TaskArmbot
 {
+    int targetRotationYaw = 0, targetRotationPitch = 0, currentRotationYaw, currentRotationPitch;
+
     public CommandRotateTo()
     {
         super("RotateTo", TaskType.DEFINEDPROCESS);
+        this.defautlArguments.add(new ArgumentIntData("yaw", 0, 360, 0));
+        this.defautlArguments.add(new ArgumentIntData("pitch", 0, 360, 0));
     }
 
-    float targetRotationYaw = 0, targetRotationPitch = 0, currentRotationYaw, currentRotationPitch;
+    public CommandRotateTo(int yaw, int pitch)
+    {
+        super("RotateTo", TaskType.DEFINEDPROCESS);
+        this.defautlArguments.add(new ArgumentIntData("yaw", yaw, 360, 0));
+        this.defautlArguments.add(new ArgumentIntData("pitch", pitch, 360, 0));
+    }
 
     @Override
     public ProcessReturn onMethodCalled(World world, Vector3 location, ILogicDevice device)
     {
         super.onMethodCalled(world, location, device);
 
-        if (this.getArg(0) != null)
-        {
-            this.targetRotationYaw = UnitHelper.tryToParseFloat(this.getArg(0));
-        }else
-        {
-            return ProcessReturn.SYNTAX_ERROR;
-        }
+        this.targetRotationYaw = (int) MathHelper.clampAngleTo360(UnitHelper.tryToParseInt(this.getArg("yaw")));
+        this.targetRotationPitch = (int) MathHelper.clampAngleTo360(UnitHelper.tryToParseInt(this.getArg("pitch")));
 
-        if (this.getArg(1) != null)
-        {
-            this.targetRotationPitch = UnitHelper.tryToParseFloat(this.getArg(1));
-        }
-
-        MathHelper.clampAngleTo360(this.targetRotationPitch);
-        MathHelper.clampAngleTo360(this.targetRotationYaw);
-
-        return ProcessReturn.DONE;
+        return ProcessReturn.CONTINUE;
     }
 
     @Override
@@ -54,11 +51,9 @@ public class CommandRotateTo extends TaskArmbot
     {
         super.onUpdate();
 
-        this.currentRotationYaw = (float) this.armbot.getRotation().x;
-        this.currentRotationPitch = (float) this.armbot.getRotation().y;
         this.armbot.moveArmTo(this.targetRotationYaw, this.targetRotationPitch);
 
-        return Math.abs(this.currentRotationPitch - this.targetRotationPitch) > 0.01f && Math.abs(this.currentRotationYaw - this.targetRotationYaw) > 0.01f ? ProcessReturn.CONTINUE : ProcessReturn.DONE;
+        return Math.abs(this.armbot.getRotation().y - this.targetRotationPitch) > 0 && Math.abs(this.armbot.getRotation().x - this.targetRotationYaw) > 0 ? ProcessReturn.CONTINUE : ProcessReturn.DONE;
     }
 
     @Override
@@ -68,20 +63,20 @@ public class CommandRotateTo extends TaskArmbot
     }
 
     @Override
-    public TaskBase loadProgress(NBTTagCompound taskCompound)
+    public CommandRotateTo load(NBTTagCompound taskCompound)
     {
         super.loadProgress(taskCompound);
-        this.targetRotationPitch = taskCompound.getFloat("rotPitch");
-        this.targetRotationYaw = taskCompound.getFloat("rotYaw");
+        this.targetRotationPitch = taskCompound.getInteger("rotPitch");
+        this.targetRotationYaw = taskCompound.getInteger("rotYaw");
         return this;
     }
 
     @Override
-    public NBTTagCompound saveProgress(NBTTagCompound taskCompound)
+    public NBTTagCompound save(NBTTagCompound taskCompound)
     {
         super.saveProgress(taskCompound);
-        taskCompound.setFloat("rotPitch", this.targetRotationPitch);
-        taskCompound.setFloat("rotYaw", this.targetRotationYaw);
+        taskCompound.setInteger("rotPitch", this.targetRotationPitch);
+        taskCompound.setInteger("rotYaw", this.targetRotationYaw);
         return taskCompound;
     }
 

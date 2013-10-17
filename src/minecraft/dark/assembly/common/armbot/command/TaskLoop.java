@@ -2,11 +2,13 @@ package dark.assembly.common.armbot.command;
 
 import com.builtbroken.common.science.units.UnitHelper;
 
+import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
 import dark.api.al.coding.IDeviceTask;
 import dark.api.al.coding.ILogicDevice;
 import dark.api.al.coding.ISplitArmbotTask;
 import dark.api.al.coding.IDeviceTask.TaskType;
+import dark.api.al.coding.args.ArgumentIntData;
 import dark.assembly.common.armbot.TaskBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -22,6 +24,7 @@ public class TaskLoop extends TaskBase implements ISplitArmbotTask
     public TaskLoop()
     {
         super("repeat", TaskType.DECISION);
+        this.defautlArguments.add(new ArgumentIntData("loop", 1, Integer.MAX_VALUE, -1));
     }
 
     public TaskLoop(IDeviceTask entry, IDeviceTask exit)
@@ -35,7 +38,7 @@ public class TaskLoop extends TaskBase implements ISplitArmbotTask
     public ProcessReturn onMethodCalled(World world, Vector3 location, ILogicDevice armbot)
     {
         super.onMethodCalled(world, location, armbot);
-        this.numReps = UnitHelper.tryToParseInt(this.getArg(0), -1);
+        this.numReps = UnitHelper.tryToParseInt(this.getArg("loop"), 1);
         return ProcessReturn.CONTINUE;
     }
 
@@ -48,56 +51,63 @@ public class TaskLoop extends TaskBase implements ISplitArmbotTask
     @Override
     public IDeviceTask getEntryPoint()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return this.entry;
     }
 
     @Override
     public IDeviceTask getExitPoint()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return this.exit;
     }
 
     @Override
     public int getMaxExitPoints()
     {
-        // TODO Auto-generated method stub
-        return 0;
+        return 1;
     }
 
     @Override
     public ISplitArmbotTask setEntryPoint(IDeviceTask task)
     {
-        // TODO Auto-generated method stub
-        return null;
+        this.entry = task;
+        return this;
     }
 
     @Override
     public void addExitPoint(IDeviceTask task)
     {
-        // TODO Auto-generated method stub
-
+        this.exit = task;
     }
 
     @Override
     public TaskBase clone()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return new TaskLoop();
     }
 
     @Override
-    public IDeviceTask loadProgress(NBTTagCompound nbt)
+    public TaskBase load(NBTTagCompound nbt)
     {
-        // TODO Auto-generated method stub
-        return null;
+        super.loadProgress(nbt);
+        this.entry = this.program.getTaskAt(new Vector2(nbt.getDouble("entryX"), (nbt.getDouble("entryY"))));
+        this.exit = this.program.getTaskAt(new Vector2(nbt.getDouble("exitX"), (nbt.getDouble("exitY"))));
+        return this;
     }
 
     @Override
-    public NBTTagCompound saveProgress(NBTTagCompound nbt)
+    public NBTTagCompound save(NBTTagCompound nbt)
     {
-        // TODO Auto-generated method stub
-        return null;
+        super.saveProgress(nbt);
+        if (this.entry != null)
+        {
+            nbt.setDouble("entryX", this.entry.getPosition().x);
+            nbt.setDouble("entryY", this.entry.getPosition().y);
+        }
+        if (this.exit != null)
+        {
+            nbt.setDouble("exitX", this.exit.getPosition().x);
+            nbt.setDouble("exitY", this.exit.getPosition().y);
+        }
+        return nbt;
     }
 }

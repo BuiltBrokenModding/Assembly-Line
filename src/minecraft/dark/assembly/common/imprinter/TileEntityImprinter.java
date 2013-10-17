@@ -1,6 +1,7 @@
 package dark.assembly.common.imprinter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -387,7 +388,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
     /** Tries to let the Armbot craft an item. */
     @Override
-    public boolean onUse(IArmbot armbot, String[] args)
+    public boolean onUse(IArmbot armbot, HashMap<String, Object> hashMap)
     {
         this.onInventoryChanged();
 

@@ -1,30 +1,33 @@
 package dark.assembly.common.armbot.command;
 
+import com.builtbroken.common.science.units.UnitHelper;
+
 import universalelectricity.core.vector.Vector3;
 import dark.api.al.coding.ILogicDevice;
 import dark.api.al.coding.IDeviceTask.ProcessReturn;
 import dark.api.al.coding.IDeviceTask.TaskType;
+import dark.api.al.coding.args.ArgumentIntData;
 import dark.assembly.common.armbot.TaskBase;
 import dark.assembly.common.armbot.TaskArmbot;
+import dark.core.prefab.helpers.MathHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-/** Rotates the armbot to a specific direction. If not specified, it will turn right.
+/** Rotates an armbot by a set amount
  *
- * @author Calclavia */
+ * @author DarkGuardsman */
 public class CommandRotateBy extends TaskArmbot
 {
 
-    double targetRotationYaw = 0;
-    double targetRotationPitch = 0;
-    double deltaPitch = 0, deltaYaw = 90;
-    double totalTicks = 0f;
+    int targetRotationYaw = 0, targetRotationPitch = 0, deltaPitch = 0, deltaYaw = 0;
 
     private CommandRotateTo rotateToCommand;
 
     public CommandRotateBy()
     {
         super("RotateBy", TaskType.DEFINEDPROCESS);
+        this.defautlArguments.add(new ArgumentIntData("yaw", 0, 360, 0));
+        this.defautlArguments.add(new ArgumentIntData("pitch", 0, 360, 0));
     }
 
     @Override
@@ -32,31 +35,10 @@ public class CommandRotateBy extends TaskArmbot
     {
         super.onMethodCalled(world, location, armbot);
 
-        this.ticks = 0;
+        this.targetRotationYaw = (int) MathHelper.clampAngleTo360((float) (this.armbot.getRotation().x + UnitHelper.tryToParseInt(this.getArg("yaw"))));
+        this.targetRotationYaw = (int) MathHelper.clampAngleTo360((float) (this.armbot.getRotation().x + UnitHelper.tryToParseInt(this.getArg("pitch"))));
 
-        if (this.getArg(0) != null)
-        {
-            this.targetRotationYaw = this.tileEntity.rotationYaw + this.getFloatArg(0);
-            this.deltaYaw = this.getFloatArg(0);
-        }
-        else
-        {
-            this.targetRotationYaw = this.tileEntity.rotationYaw + 90;
-        }
-
-        if (this.getArg(1) != null)
-        {
-            this.targetRotationPitch = this.tileEntity.rotationPitch + this.getFloatArg(1);
-            this.deltaPitch = this.getFloatArg(1);
-        }
-        else
-        {
-            this.targetRotationPitch = this.armbot.getRotation().y;
-        }
-
-        float totalTicksYaw = Math.abs(this.targetRotationYaw - this.tileEntity.rotationYaw) / this.tileEntity.ROTATION_SPEED;
-        float totalTicksPitch = Math.abs(this.targetRotationPitch - this.tileEntity.rotationPitch) / this.tileEntity.ROTATION_SPEED;
-        this.totalTicks = Math.max(totalTicksYaw, totalTicksPitch);
+        return ProcessReturn.CONTINUE;
     }
 
     @Override
@@ -64,33 +46,40 @@ public class CommandRotateBy extends TaskArmbot
     {
         if (this.rotateToCommand == null)
         {
-            this.rotateToCommand = new CommandRotateTo();
-            this.rotateToCommand.setParms(this.targetRotationYaw,this.targetRotationPitch);
-            this.rotateToCommand.onMethodCalled(this.worldObj, this.armbotPos, armbot);
+            this.rotateToCommand = new CommandRotateTo(this.targetRotationYaw, this.targetRotationPitch);
+            this.rotateToCommand.onMethodCalled(this.worldObj, this.devicePos, armbot);
         }
 
         return this.rotateToCommand.onUpdate();
     }
 
     @Override
-    public void loadProgress(NBTTagCompound taskCompound)
+    public CommandRotateBy load(NBTTagCompound taskCompound)
     {
         super.loadProgress(taskCompound);
-        this.targetRotationPitch = taskCompound.getFloat("rotPitch");
-        this.targetRotationYaw = taskCompound.getFloat("rotYaw");
+        this.targetRotationPitch = taskCompound.getInteger("rotPitch");
+        this.targetRotationYaw = taskCompound.getInteger("rotYaw");
+        return this;
     }
 
     @Override
-    public void saveProgress(NBTTagCompound taskCompound)
+    public NBTTagCompound save(NBTTagCompound taskCompound)
     {
         super.saveProgress(taskCompound);
-        taskCompound.setFloat("rotPitch", this.targetRotationPitch);
-        taskCompound.setFloat("rotYaw", this.targetRotationYaw);
+        taskCompound.setInteger("rotPitch", this.targetRotationPitch);
+        taskCompound.setInteger("rotYaw", this.targetRotationYaw);
+        return taskCompound;
     }
 
     @Override
     public String toString()
     {
-        return "ROTATE " + Float.toString(this.deltaYaw) + " " + Float.toString(this.deltaPitch);
+        return super.toString() + " " + Float.toString(this.deltaYaw) + " " + Float.toString(this.deltaPitch);
+    }
+
+    @Override
+    public TaskBase clone()
+    {
+        return new CommandRotateBy();
     }
 }

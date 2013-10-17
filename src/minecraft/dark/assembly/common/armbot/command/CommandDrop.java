@@ -19,7 +19,7 @@ public class CommandDrop extends TaskArmbot
         super.onUpdate();
 
         this.armbot.drop("all");
-        this.worldObj.playSound(this.armbotPos.x, this.armbotPos.x, this.armbotPos.x, "random.pop", 0.2F, ((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.0F, true);
+        this.worldObj.playSound(this.devicePos.x, this.devicePos.x, this.devicePos.x, "random.pop", 0.2F, ((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.0F, true);
 
         return ProcessReturn.DONE;
     }

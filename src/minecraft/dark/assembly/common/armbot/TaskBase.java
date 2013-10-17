@@ -41,7 +41,7 @@ public abstract class TaskBase implements IDeviceTask, Cloneable, IMemoryTask
     protected World worldObj;
 
     /** Armbot location */
-    protected Vector3 armbotPos;
+    protected Vector3 devicePos;
     /** Position in the coder is also used during loading to place everything together */
     protected Vector2 pos;
 
@@ -69,10 +69,10 @@ public abstract class TaskBase implements IDeviceTask, Cloneable, IMemoryTask
     @Override
     public ProcessReturn onMethodCalled(World world, Vector3 location, ILogicDevice armbot)
     {
-        if (location != null && armbotPos != null)
+        if (location != null && devicePos != null)
         {
             this.worldObj = world;
-            this.armbotPos = location;
+            this.devicePos = location;
             return ProcessReturn.CONTINUE;
         }
 
@@ -83,7 +83,7 @@ public abstract class TaskBase implements IDeviceTask, Cloneable, IMemoryTask
     public Object[] onCCMethodCalled(World world, Vector3 location, ILogicDevice armbot, IComputerAccess computer, ILuaContext context) throws Exception
     {
         this.worldObj = world;
-        this.armbotPos = location;
+        this.devicePos = location;
 
         return null;
     }

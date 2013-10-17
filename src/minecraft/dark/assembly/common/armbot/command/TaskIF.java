@@ -71,7 +71,7 @@ public class TaskIF extends TaskBase implements ISplitArmbotTask
     }
 
     @Override
-    public TaskBase loadProgress(NBTTagCompound nbt)
+    public TaskBase load(NBTTagCompound nbt)
     {
         super.loadProgress(nbt);
         this.entryPoint = this.program.getTaskAt(new Vector2(nbt.getDouble("entryX"), (nbt.getDouble("entryY"))));
@@ -81,7 +81,7 @@ public class TaskIF extends TaskBase implements ISplitArmbotTask
     }
 
     @Override
-    public NBTTagCompound saveProgress(NBTTagCompound nbt)
+    public NBTTagCompound save(NBTTagCompound nbt)
     {
         super.saveProgress(nbt);
         if (this.entryPoint != null)

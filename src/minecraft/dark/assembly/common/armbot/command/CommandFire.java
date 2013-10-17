@@ -91,7 +91,7 @@ public class CommandFire extends TaskArmbot
             }
             if (held != null)
             {
-                this.worldObj.playSound(this.armbotPos.x, this.armbotPos.y, this.armbotPos.z, "random.bow", velocity, 2f - (velocity / 4f), true);
+                this.worldObj.playSound(this.devicePos.x, this.devicePos.y, this.devicePos.z, "random.bow", velocity, 2f - (velocity / 4f), true);
                 if (held instanceof EntityItem)
                 {
                     EntityItem item = (EntityItem) held;

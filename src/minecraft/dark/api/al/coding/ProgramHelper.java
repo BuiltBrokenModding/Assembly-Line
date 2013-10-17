@@ -76,7 +76,7 @@ public class ProgramHelper
         this.nextTask = false;
     }
 
-    public ProgramHelper(int varableLimit)
+    public ProgramHelper setMemory(int varableLimit)
     {
         if (varableLimit > 0)
         {
@@ -87,6 +87,7 @@ public class ProgramHelper
         {
             this.taskMemory = null;
         }
+        return this;
     }
 
     public ProgramHelper setProgram(IProgram program)
@@ -94,6 +95,11 @@ public class ProgramHelper
         this.program = program;
         this.onProgramChanged();
         return this;
+    }
+
+    public IProgram getProgram()
+    {
+        return this.program;
     }
 
     public void onProgramChanged()

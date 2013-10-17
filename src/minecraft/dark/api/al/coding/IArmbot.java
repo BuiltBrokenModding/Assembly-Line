@@ -40,6 +40,9 @@ public interface IArmbot extends Cloneable, ILogicDevice
      * @return - true if the bot dropped the item */
     public boolean drop(Object object);
 
+    /** Same as deleting the object */
+    public boolean clear(Object object);
+
     /** Object currently held. In some cases this can be a list or array but is suggest to only be
      * one object */
     public Object getGrabbedObject();

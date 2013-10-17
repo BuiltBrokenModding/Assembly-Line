@@ -20,9 +20,8 @@ public class CommandReturn extends TaskArmbot
     {
         if (this.rotateToCommand == null)
         {
-            this.rotateToCommand = new CommandRotateTo();
-            this.rotateToCommand.setParms(0,0);
-            this.rotateToCommand.onMethodCalled(this.worldObj, this.armbotPos, armbot);
+            this.rotateToCommand = new CommandRotateTo(0, 0);
+            this.rotateToCommand.onMethodCalled(this.worldObj, this.devicePos, armbot);
         }
 
         return this.rotateToCommand.onUpdate();

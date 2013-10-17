@@ -3,6 +3,7 @@ package dark.assembly.common.armbot.command;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -13,6 +14,8 @@ import universalelectricity.core.vector.Vector3;
 import com.builtbroken.common.science.units.UnitHelper;
 
 import dark.api.al.coding.ILogicDevice;
+import dark.api.al.coding.IDeviceTask.ProcessReturn;
+import dark.api.al.coding.args.ArgumentIntData;
 import dark.assembly.common.armbot.TaskArmbot;
 import dark.assembly.common.armbot.TaskBase;
 import dark.assembly.common.machine.InvInteractionHelper;
@@ -27,6 +30,9 @@ public class CommandTake extends TaskArmbot
     public CommandTake()
     {
         super("Take", TaskType.DEFINEDPROCESS);
+        this.defautlArguments.add(new ArgumentIntData("blockID", -1, Block.blocksList.length - 1, -1));
+        this.defautlArguments.add(new ArgumentIntData("blockMeta", -1, 15, -1));
+        this.defautlArguments.add(new ArgumentIntData("stackSize", -1, 64, -1));
     }
 
     @Override
@@ -34,9 +40,14 @@ public class CommandTake extends TaskArmbot
     {
         super.onMethodCalled(world, location, armbot);
 
-        ammount = UnitHelper.tryToParseInt(this.getArg(1), -1);
+        ammount = UnitHelper.tryToParseInt(this.getArg("stackSize"), -1);
+        int blockID = UnitHelper.tryToParseInt(this.getArg("blockID"), -1);
+        int blockMeta = UnitHelper.tryToParseInt(this.getArg("blockMeta"), 32767);
 
-        stack = this.getItem(this.getArg(0), ammount == -1 ? 1 : ammount);
+        if (blockID > 0)
+        {
+            stack = new ItemStack(blockID, ammount <= 0 ? 1 : ammount, blockMeta == -1 ? 32767 : blockMeta);
+        }
 
         return ProcessReturn.CONTINUE;
     }
@@ -46,7 +57,7 @@ public class CommandTake extends TaskArmbot
     {
         TileEntity targetTile = this.armbot.getHandPos().getTileEntity(this.worldObj);
 
-        if (targetTile != null && this.armbot.getGrabbedObjects().size() <= 0)
+        if (targetTile != null && this.armbot.getGrabbedObject() instanceof ItemStack)
         {
             ForgeDirection direction = MathHelper.getFacingDirectionFromAngle(this.armbot.getRotation().x);
             List<ItemStack> stacks = new ArrayList<ItemStack>();
@@ -54,9 +65,9 @@ public class CommandTake extends TaskArmbot
             {
                 stacks.add(stack);
             }
-            InvInteractionHelper invEx = new InvInteractionHelper(this.worldObj, this.armbotPos, stacks, false);
+            InvInteractionHelper invEx = new InvInteractionHelper(this.worldObj, this.devicePos, stacks, false);
             this.armbot.grab(invEx.tryGrabFromPosition(new Vector3(targetTile), direction, this.stack != null ? stack.stackSize : 1));
-            return this.armbot.getGrabbedObjects().size() > 0 ? ProcessReturn.DONE : ProcessReturn.CONTINUE;
+            return this.armbot.getGrabbedObject() != null ? ProcessReturn.DONE : ProcessReturn.CONTINUE;
 
         }
         return ProcessReturn.CONTINUE;

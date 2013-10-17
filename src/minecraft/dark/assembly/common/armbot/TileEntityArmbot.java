@@ -1,7 +1,6 @@
 package dark.assembly.common.armbot;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
@@ -10,7 +9,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -28,14 +26,9 @@ import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
 import dan200.computer.api.IPeripheral;
 import dark.api.al.coding.IArmbot;
+import dark.api.al.coding.IProgram;
+import dark.api.al.coding.ProgramHelper;
 import dark.assembly.common.AssemblyLine;
-import dark.assembly.common.armbot.command.CommandDrop;
-import dark.assembly.common.armbot.command.CommandFire;
-import dark.assembly.common.armbot.command.CommandGrab;
-import dark.assembly.common.armbot.command.CommandReturn;
-import dark.assembly.common.armbot.command.CommandRotateBy;
-import dark.assembly.common.armbot.command.CommandRotateTo;
-import dark.assembly.common.armbot.command.CommandUse;
 import dark.assembly.common.machine.TileEntityAssembly;
 import dark.assembly.common.machine.encoder.ItemDisk;
 import dark.core.common.DarkMain;
@@ -47,34 +40,28 @@ import dark.core.prefab.machine.BlockMulti;
 
 public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IArmbot, IPeripheral
 {
-    protected List<IComputerAccess> connectedComputers = new ArrayList<IComputerAccess>();
-    /** The rotation of the arms. In Degrees. */
-    protected float rotationPitch = 0;
-    protected float rotationYaw = 0;
-    public float actualPitch = 0;
-    public float actualYaw = 0;
     protected final float ROTATION_SPEED = 2.0f;
 
+    /** The rotation of the arms. In Degrees. */
+    protected float rotationPitch = 0, rotationYaw = 0;
+    protected float actualPitch = 0, actualYaw = 0;
+
     protected boolean hasTask = false;
+    protected boolean spawnEntity = false;
 
     protected String displayText = "";
 
     /** An entity that the Armbot is grabbed onto. Entity Items are held separately. */
-    protected final List<Entity> grabbedEntities = new ArrayList<Entity>();
-    protected final List<ItemStack> grabbedItems = new ArrayList<ItemStack>();
+    protected Object grabbedObject = null;
 
-    /** Client Side Object Storage */
-    public EntityItem renderEntityItem = null;
+    protected List<IComputerAccess> connectedComputers = new ArrayList<IComputerAccess>();
+
+    protected ProgramHelper programHelper;
 
     public TileEntityArmbot()
     {
         super(.02f);
-    }
-
-    @Override
-    public void initiate()
-    {
-        super.initiate();
+        programHelper = new ProgramHelper(this).setMemory(20);
     }
 
     @Override
@@ -83,20 +70,22 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
         super.updateEntity();
         Vector3 handPosition = this.getHandPos();
 
-        for (Entity entity : this.grabbedEntities)
+        if (this.grabbedObject instanceof Entity)
         {
-            if (entity != null)
+            if (this.spawnEntity)
             {
-                entity.setPosition(handPosition.x, handPosition.y, handPosition.z);
-                entity.motionX = 0;
-                entity.motionY = 0;
-                entity.motionZ = 0;
+                this.worldObj.spawnEntityInWorld((Entity) this.grabbedObject);
+                this.spawnEntity = false;
+            }
+            ((Entity) this.grabbedObject).setPosition(handPosition.x, handPosition.y, handPosition.z);
+            ((Entity) this.grabbedObject).motionX = 0;
+            ((Entity) this.grabbedObject).motionY = 0;
+            ((Entity) this.grabbedObject).motionZ = 0;
 
-                if (entity instanceof EntityItem)
-                {
-                    ((EntityItem) entity).delayBeforeCanPickup = 20;
-                    ((EntityItem) entity).age = 0;
-                }
+            if (this.grabbedObject instanceof EntityItem)
+            {
+                ((EntityItem) this.grabbedObject).delayBeforeCanPickup = 20;
+                ((EntityItem) this.grabbedObject).age = 0;
             }
         }
 
@@ -117,7 +106,11 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
     public void updateLogic()
     {
-
+       if(this.programHelper == null)
+       {
+           this.programHelper = new ProgramHelper(this);
+       }
+       this.programHelper.onUpdate(this.worldObj, new Vector3(this));
     }
 
     public void updateRotation()
@@ -205,8 +198,6 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
         this.rotationPitch = MathHelper.clampAngle(this.rotationPitch, 0, 60);
     }
 
-
-
     @Override
     public String getInvName()
     {
@@ -224,37 +215,24 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     {
         super.readFromNBT(nbt);
 
-        NBTTagCompound diskNBT = nbt.getCompoundTag("disk");
-        ItemStack disk = null;
-        if (diskNBT != null)
-        {
-            disk = ItemStack.loadItemStackFromNBT(diskNBT);
-        }
-
         this.rotationYaw = nbt.getFloat("yaw");
         this.rotationPitch = nbt.getFloat("pitch");
 
-        NBTTagList entities = nbt.getTagList("entities");
-        this.grabbedEntities.clear();
-        for (int i = 0; i < entities.tagCount(); i++)
+        if (nbt.hasKey("grabbedEntity"))
         {
-            NBTTagCompound entityTag = (NBTTagCompound) entities.tagAt(i);
-            if (entityTag != null)
+            NBTTagCompound tag = nbt.getCompoundTag("grabbedEntity");
+            Entity entity = EntityList.createEntityFromNBT(tag, worldObj);
+            if (entity != null)
             {
-                Entity entity = EntityList.createEntityFromNBT(entityTag, worldObj);
-                this.grabbedEntities.add(entity);
+                this.grabbedObject = entity;
             }
         }
-
-        NBTTagList items = nbt.getTagList("items");
-        this.grabbedItems.clear();
-        for (int i = 0; i < items.tagCount(); i++)
+        else if (nbt.hasKey("grabbedItem"))
         {
-            NBTTagCompound itemTag = (NBTTagCompound) items.tagAt(i);
-            if (itemTag != null)
+            ItemStack stack = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("grabbedItem"));
+            if (stack != null)
             {
-                ItemStack item = ItemStack.loadItemStackFromNBT(itemTag);
-                this.grabbedItems.add(item);
+                this.grabbedObject = stack;
             }
         }
     }
@@ -268,34 +246,20 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
         nbt.setFloat("yaw", this.rotationYaw);
         nbt.setFloat("pitch", this.rotationPitch);
 
-        NBTTagList entities = new NBTTagList();
-
-        for (Entity entity : grabbedEntities)
+        if (this.grabbedObject instanceof Entity)
         {
-            if (entity != null)
-            {
-                NBTTagCompound entityNBT = new NBTTagCompound();
-                entity.writeToNBT(entityNBT);
-                entity.writeToNBTOptional(entityNBT);
-                entities.appendTag(entityNBT);
-            }
+            NBTTagCompound entityNBT = new NBTTagCompound();
+            ((Entity) this.grabbedObject).writeToNBT(entityNBT);
+            ((Entity) this.grabbedObject).writeToNBTOptional(entityNBT);
+            nbt.setCompoundTag("grabbedEntity", entityNBT);
+        }
+        else if (this.grabbedObject instanceof ItemStack)
+        {
+            NBTTagCompound itemTag = new NBTTagCompound();
+            ((Entity) this.grabbedObject).writeToNBT(itemTag);
+            nbt.setCompoundTag("grabbedItem", itemTag);
         }
 
-        nbt.setTag("entities", entities);
-
-        NBTTagList items = new NBTTagList();
-
-        for (ItemStack itemStack : grabbedItems)
-        {
-            if (itemStack != null)
-            {
-                NBTTagCompound entityNBT = new NBTTagCompound();
-                itemStack.writeToNBT(entityNBT);
-                items.appendTag(entityNBT);
-            }
-        }
-
-        nbt.setTag("items", items);
     }
 
     @Override
@@ -430,58 +394,53 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     }
 
     @Override
-    public List<Object> getGrabbedObjects()
+    public Object getGrabbedObject()
     {
-        List<Object> list = new ArrayList<Object>();
-        list.addAll(this.grabbedEntities);
-        list.addAll(this.grabbedItems);
-        return list;
+        return this.grabbedObject;
     }
 
     @Override
-    public void grab(Object entity)
+    public boolean grab(Object entity)
     {
-        if (entity instanceof EntityItem)
+        if (entity instanceof ItemStack)
         {
-            this.grabbedItems.add(((EntityItem) entity).getEntityItem());
+            this.grabbedObject = entity;
+            return true;
+        }
+        else if (entity instanceof EntityItem)
+        {
+            this.grabbedObject = ((EntityItem) entity).getEntityItem();
             ((EntityItem) entity).setDead();
+            return true;
         }
         else if (entity instanceof Entity)
         {
-            this.grabbedEntities.add((Entity) entity);
+            this.grabbedObject = entity;
+            return true;
         }
+        return false;
     }
 
     @Override
-    public void drop(Object object)
+    public boolean drop(Object object)
     {
-        if (object instanceof Entity)
+        if (object != null)
         {
-            this.grabbedEntities.remove(object);
-        }
-        if (object instanceof ItemStack)
-        {
-            Vector3 handPosition = this.getHandPos();
-            ItemWorldHelper.dropItemStack(worldObj, handPosition, (ItemStack) object, false);
-            this.grabbedItems.remove(object);
-        }
-        if (object instanceof String)
-        {
-            String string = ((String) object).toLowerCase();
-            if (string.equalsIgnoreCase("all"))
+            boolean drop = object instanceof String && ((String) object).equalsIgnoreCase("all");
+
+            if (object.equals(this.grabbedObject) || drop)
             {
-                Vector3 handPosition = this.getHandPos();
-                Iterator<ItemStack> it = this.grabbedItems.iterator();
-
-                while (it.hasNext())
+                if (object instanceof ItemStack && this.grabbedObject instanceof ItemStack)
                 {
-                    ItemWorldHelper.dropItemStack(worldObj, handPosition, it.next(), false);
+                    Vector3 handPosition = this.getHandPos();
+                    ItemWorldHelper.dropItemStack(worldObj, handPosition, (ItemStack) object, false);
                 }
-
-                this.grabbedEntities.clear();
-                this.grabbedItems.clear();
+                this.grabbedObject = null;
+                return true;
             }
+
         }
+        return false;
     }
 
     @Override
@@ -554,34 +513,62 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     }
 
     @Override
-    public void moveArmTo(float yaw, float pitch)
+    public boolean moveArmTo(float yaw, float pitch)
     {
         if (!this.worldObj.isRemote)
         {
             this.rotationYaw = yaw;
             this.rotationPitch = pitch;
+            return true;
         }
+        return false;
     }
 
     @Override
-    public void moveTo(ForgeDirection direction)
+    public boolean moveTo(ForgeDirection direction)
     {
         if (direction == ForgeDirection.SOUTH)
         {
             this.rotationYaw = 0;
+            return true;
         }
         else if (direction == ForgeDirection.EAST)
         {
             this.rotationYaw = 90;
+            return true;
         }
         else if (direction == ForgeDirection.NORTH)
         {
 
             this.rotationYaw = 180;
+            return true;
         }
         else if (direction == ForgeDirection.WEST)
         {
             this.rotationYaw = 270;
+            return true;
         }
+        return false;
+    }
+
+    @Override
+    public IProgram getCurrentProgram()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void setCurrentProgram(IProgram program)
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public boolean clear(Object object)
+    {
+        // TODO Auto-generated method stub
+        return false;
     }
 }
