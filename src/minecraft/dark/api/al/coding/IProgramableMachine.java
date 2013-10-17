@@ -1,6 +1,6 @@
 package dark.api.al.coding;
 
-public interface ILogicDevice
+public interface IProgramableMachine
 {
      public IProgram getCurrentProgram();
 

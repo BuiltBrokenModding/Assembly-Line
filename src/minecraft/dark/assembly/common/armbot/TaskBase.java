@@ -18,7 +18,7 @@ import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
 import dark.api.al.coding.IArmbot;
 import dark.api.al.coding.IDeviceTask;
-import dark.api.al.coding.ILogicDevice;
+import dark.api.al.coding.IProgramableMachine;
 import dark.api.al.coding.IMemoryTask;
 import dark.api.al.coding.IProgram;
 import dark.api.al.coding.IDeviceTask.TaskType;
@@ -27,7 +27,7 @@ import dark.core.prefab.helpers.NBTFileLoader;
 
 /** Basic command prefab used by machines like an armbot. You are not required to use this in order
  * to make armbot commands but it does help. Delete this if you don't plan to use it. */
-public abstract class TaskBase implements IDeviceTask, Cloneable, IMemoryTask
+public abstract class TaskBase implements IDeviceTask, IMemoryTask
 {
     /** Program this is part of. Can be null while stores as a prefab waiting to be copied */
     protected IProgram program;
@@ -67,7 +67,7 @@ public abstract class TaskBase implements IDeviceTask, Cloneable, IMemoryTask
     }
 
     @Override
-    public ProcessReturn onMethodCalled(World world, Vector3 location, ILogicDevice armbot)
+    public ProcessReturn onMethodCalled(World world, Vector3 location, IProgramableMachine armbot)
     {
         if (location != null && devicePos != null)
         {
@@ -80,7 +80,7 @@ public abstract class TaskBase implements IDeviceTask, Cloneable, IMemoryTask
     }
 
     @Override
-    public Object[] onCCMethodCalled(World world, Vector3 location, ILogicDevice armbot, IComputerAccess computer, ILuaContext context) throws Exception
+    public Object[] onCCMethodCalled(World world, Vector3 location, IProgramableMachine armbot, IComputerAccess computer, ILuaContext context) throws Exception
     {
         this.worldObj = world;
         this.devicePos = location;

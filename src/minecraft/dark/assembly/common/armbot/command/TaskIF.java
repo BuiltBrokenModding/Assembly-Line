@@ -3,7 +3,7 @@ package dark.assembly.common.armbot.command;
 import universalelectricity.core.vector.Vector2;
 import net.minecraft.nbt.NBTTagCompound;
 import dark.api.al.coding.IDeviceTask;
-import dark.api.al.coding.ILogicDevice;
+import dark.api.al.coding.IProgramableMachine;
 import dark.api.al.coding.ISplitArmbotTask;
 import dark.assembly.common.armbot.TaskBase;
 
@@ -103,7 +103,7 @@ public class TaskIF extends TaskBase implements ISplitArmbotTask
     }
 
     @Override
-    public boolean canUseTask(ILogicDevice device)
+    public boolean canUseTask(IProgramableMachine device)
     {
         return true;
     }

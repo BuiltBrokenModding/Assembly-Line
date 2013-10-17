@@ -5,7 +5,7 @@ import com.builtbroken.common.science.units.UnitHelper;
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
 import dark.api.al.coding.IDeviceTask;
-import dark.api.al.coding.ILogicDevice;
+import dark.api.al.coding.IProgramableMachine;
 import dark.api.al.coding.ISplitArmbotTask;
 import dark.api.al.coding.IDeviceTask.TaskType;
 import dark.api.al.coding.args.ArgumentIntData;
@@ -35,7 +35,7 @@ public class TaskLoop extends TaskBase implements ISplitArmbotTask
     }
 
     @Override
-    public ProcessReturn onMethodCalled(World world, Vector3 location, ILogicDevice armbot)
+    public ProcessReturn onMethodCalled(World world, Vector3 location, IProgramableMachine armbot)
     {
         super.onMethodCalled(world, location, armbot);
         this.numReps = UnitHelper.tryToParseInt(this.getArg("loop"), 1);
@@ -43,7 +43,7 @@ public class TaskLoop extends TaskBase implements ISplitArmbotTask
     }
 
     @Override
-    public boolean canUseTask(ILogicDevice device)
+    public boolean canUseTask(IProgramableMachine device)
     {
         return true;
     }

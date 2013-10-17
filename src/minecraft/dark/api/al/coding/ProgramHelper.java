@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import dark.api.al.coding.IDeviceTask.ProcessReturn;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 import universalelectricity.core.vector.Vector3;
@@ -15,7 +16,7 @@ public class ProgramHelper
 {
     /** Current Program */
     protected IProgram program;
-    protected ILogicDevice bot;
+    protected IProgramableMachine bot;
     /** Current task in program */
     protected IDeviceTask currentTask;
     /** Do we have a memory to store values */
@@ -26,7 +27,7 @@ public class ProgramHelper
     /** Array of values to remember between commands */
     protected HashMap<String, Object> taskMemory = new HashMap<String, Object>();
 
-    public ProgramHelper(ILogicDevice bot)
+    public ProgramHelper(IProgramableMachine bot)
     {
         this.bot = bot;
     }
@@ -152,5 +153,15 @@ public class ProgramHelper
             return this.taskMemory.put(var, object) != null;
         }
         return false;
+    }
+
+    public NBTTagCompound save(NBTTagCompound nbt)
+    {
+        return nbt;
+    }
+
+    public void load(NBTTagCompound nbt)
+    {
+
     }
 }

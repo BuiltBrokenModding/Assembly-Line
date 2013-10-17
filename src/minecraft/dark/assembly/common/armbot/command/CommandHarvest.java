@@ -3,7 +3,7 @@ package dark.assembly.common.armbot.command;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
 import dark.api.al.coding.IArmbot;
-import dark.api.al.coding.ILogicDevice;
+import dark.api.al.coding.IProgramableMachine;
 import dark.api.al.coding.IDeviceTask.TaskType;
 
 /** Used by arms to break a specific block in a position.
@@ -18,7 +18,7 @@ public class CommandHarvest extends CommandBreak
     }
 
     @Override
-    public ProcessReturn onMethodCalled(World world, Vector3 location, ILogicDevice armbot)
+    public ProcessReturn onMethodCalled(World world, Vector3 location, IProgramableMachine armbot)
     {
         this.keep = true;
         return super.onMethodCalled(world, location, armbot);

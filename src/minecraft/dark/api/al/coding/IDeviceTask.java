@@ -20,7 +20,7 @@ import dark.api.al.coding.args.ArgumentData;
  * the task. That way it can save values after the task has been refreshed or even deleted.
  *
  * @author DarkGuardsman */
-public interface IDeviceTask
+public interface IDeviceTask extends Cloneable
 {
     /** Location in the column and row format. */
     public Vector2 getPosition();
@@ -36,7 +36,7 @@ public interface IDeviceTask
 
     /** Passed in from the device to the program manager then here after a Computer craft machine
      * calls a this commands method name. {@IPeripheral #callMethod()} */
-    public Object[] onCCMethodCalled(World world, Vector3 location, ILogicDevice device, IComputerAccess computer, ILuaContext context) throws Exception;
+    public Object[] onCCMethodCalled(World world, Vector3 location, IProgramableMachine device, IComputerAccess computer, ILuaContext context) throws Exception;
 
     /** Called when the task is being run by the devices program manager. Used mainly to setup the
      * task before actually doing the task.
@@ -46,7 +46,7 @@ public interface IDeviceTask
      * @param armbot - armbot instance
      * @param arguments - arguments for command
      * @return false to stop the task here. */
-    public ProcessReturn onMethodCalled(World world, Vector3 location, ILogicDevice device);
+    public ProcessReturn onMethodCalled(World world, Vector3 location, IProgramableMachine device);
 
     /** Update the current segment of the task */
     public ProcessReturn onUpdate();
@@ -70,7 +70,7 @@ public interface IDeviceTask
     public TaskType getType();
 
     /** Can this task function for this machine */
-    public boolean canUseTask(ILogicDevice device);
+    public boolean canUseTask(IProgramableMachine device);
 
     /** ArgumentData used to both restrict and set values into the argument hashmap */
     public List<ArgumentData> getEncoderParms();
@@ -112,4 +112,6 @@ public interface IDeviceTask
             this.userOutput = userOutput;
         }
     }
+
+    public IDeviceTask clone();
 }

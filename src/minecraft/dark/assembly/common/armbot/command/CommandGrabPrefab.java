@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import dark.api.al.IBelt;
-import dark.api.al.coding.ILogicDevice;
+import dark.api.al.coding.IProgramableMachine;
 import dark.assembly.common.armbot.GrabDictionary;
 import dark.assembly.common.armbot.TaskArmbot;
 import dark.assembly.common.armbot.TaskBase;
@@ -35,7 +35,7 @@ public abstract class CommandGrabPrefab extends TaskArmbot
     }
 
     @Override
-    public ProcessReturn onMethodCalled(World world, Vector3 location, ILogicDevice armbot)
+    public ProcessReturn onMethodCalled(World world, Vector3 location, IProgramableMachine armbot)
     {
         ProcessReturn re = super.onMethodCalled(world, location, armbot);
         if (re == ProcessReturn.CONTINUE)

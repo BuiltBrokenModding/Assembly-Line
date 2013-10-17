@@ -58,6 +58,8 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
     protected ProgramHelper programHelper;
 
+    public EntityItem renderEntityItem;
+
     public TileEntityArmbot()
     {
         super(.02f);

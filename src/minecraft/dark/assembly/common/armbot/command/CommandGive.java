@@ -14,7 +14,7 @@ import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.science.units.UnitHelper;
 
-import dark.api.al.coding.ILogicDevice;
+import dark.api.al.coding.IProgramableMachine;
 import dark.api.al.coding.args.ArgumentIntData;
 import dark.assembly.common.armbot.TaskArmbot;
 import dark.assembly.common.armbot.TaskBase;
@@ -36,7 +36,7 @@ public class CommandGive extends TaskArmbot
     }
 
     @Override
-    public ProcessReturn onMethodCalled(World world, Vector3 location, ILogicDevice armbot)
+    public ProcessReturn onMethodCalled(World world, Vector3 location, IProgramableMachine armbot)
     {
         super.onMethodCalled(world, location, armbot);
 
@@ -111,7 +111,7 @@ public class CommandGive extends TaskArmbot
     }
 
     @Override
-    public boolean canUseTask(ILogicDevice device)
+    public boolean canUseTask(IProgramableMachine device)
     {
         // TODO Auto-generated method stub
         return false;

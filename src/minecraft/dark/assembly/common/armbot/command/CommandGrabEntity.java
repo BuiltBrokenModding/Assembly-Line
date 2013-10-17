@@ -10,7 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
-import dark.api.al.coding.ILogicDevice;
+import dark.api.al.coding.IProgramableMachine;
 import dark.api.al.coding.args.ArgumentData;
 import dark.api.al.coding.args.ArgumentListData;
 import dark.assembly.common.armbot.GrabDictionary;
@@ -33,7 +33,7 @@ public class CommandGrabEntity extends CommandGrabPrefab
     }
 
     @Override
-    public ProcessReturn onMethodCalled(World world, Vector3 location, ILogicDevice armbot)
+    public ProcessReturn onMethodCalled(World world, Vector3 location, IProgramableMachine armbot)
     {
         super.onMethodCalled(world, location, armbot);
         this.entityToInclude = Entity.class;

@@ -4,37 +4,46 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 
 /** Used to both register task and fake machines for the encoder to use to create new programs.
  *
  * @author DarkGuardsman */
-public class ArmbotTaskManager
+public class TaskRegistry
 {
     /** A class of all available commands.
      *
      * String - Command name. Command - The actual command class. */
-    private static final Set<IDeviceTask> COMMANDS = new HashSet<IDeviceTask>();
+    private static final HashMap<String, IDeviceTask> COMMANDS = new HashMap();
 
     private static final HashMap<String, IArmbot> SUDO_BOTS = new HashMap<String, IArmbot>();
 
     /** Registers a command and tells armbots that it exists */
     public static void registerCommand(IDeviceTask task)
     {
-        if (!COMMANDS.contains(task))
+        if (!COMMANDS.containsKey(task.getMethodName()))
         {
-            COMMANDS.add(task);
+            COMMANDS.put(task.getMethodName(), task);
+        }
+    }
+
+    public static void registerCommand(String registryName, IDeviceTask task)
+    {
+        if (!COMMANDS.containsKey(registryName))
+        {
+            COMMANDS.put(registryName, task);
         }
     }
 
     /** returns the first command with the same name */
     public static IDeviceTask getCommand(String name)
     {
-        for (IDeviceTask command : COMMANDS)
+        for (Entry<String, IDeviceTask> command : COMMANDS.entrySet())
         {
-            if (command.getMethodName().equalsIgnoreCase(name))
+            if (command.getKey().equalsIgnoreCase(name))
             {
-                return command;
+                return command.getValue();
             }
         }
         return null;
@@ -44,11 +53,11 @@ public class ArmbotTaskManager
     public static List<IDeviceTask> getCommands(String name)
     {
         List<IDeviceTask> tasks = new ArrayList<IDeviceTask>();
-        for (IDeviceTask command : COMMANDS)
+        for (Entry<String, IDeviceTask> command : COMMANDS.entrySet())
         {
-            if (command.getMethodName().equalsIgnoreCase(name))
+            if (command.getValue().getMethodName().equalsIgnoreCase(name))
             {
-                tasks.add(command);
+                tasks.add(command.getValue());
             }
         }
         return tasks;

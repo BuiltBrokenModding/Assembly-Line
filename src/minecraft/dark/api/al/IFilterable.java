@@ -2,8 +2,8 @@ package dark.api.al;
 
 import net.minecraft.item.ItemStack;
 
-/** Applied to TileEntities that can accept a filter.
- * 
+/** Applied to TileEntities that can accept a filter.z
+ *
  * @author Calclavia */
 public interface IFilterable
 {

@@ -5,7 +5,7 @@ import universalelectricity.core.vector.Vector3;
 import com.builtbroken.common.science.units.UnitHelper;
 
 import dark.api.al.coding.IArmbot;
-import dark.api.al.coding.ILogicDevice;
+import dark.api.al.coding.IProgramableMachine;
 import dark.api.al.coding.IDeviceTask.TaskType;
 import dark.api.al.coding.args.ArgumentIntData;
 import dark.assembly.common.armbot.TaskBase;
@@ -36,7 +36,7 @@ public class CommandRotateTo extends TaskArmbot
     }
 
     @Override
-    public ProcessReturn onMethodCalled(World world, Vector3 location, ILogicDevice device)
+    public ProcessReturn onMethodCalled(World world, Vector3 location, IProgramableMachine device)
     {
         super.onMethodCalled(world, location, device);
 

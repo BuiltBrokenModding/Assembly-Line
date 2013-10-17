@@ -1,82 +1,32 @@
 package dark.assembly.common.machine.encoder;
 
-import java.util.ArrayList;
+import java.io.IOException;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet250CustomPayload;
-import universalelectricity.prefab.network.IPacketReceiver;
-import universalelectricity.prefab.tile.TileEntityAdvanced;
+import universalelectricity.core.vector.Vector2;
+import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
-import dark.assembly.common.armbot.TaskBase;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
+import dark.api.al.coding.IDeviceTask;
+import dark.api.al.coding.IProgram;
+import dark.api.al.coding.TaskRegistry;
+import dark.assembly.common.armbot.Program;
+import dark.core.common.DarkMain;
+import dark.core.network.PacketHandler;
+import dark.core.prefab.machine.TileEntityMachine;
 
-public class TileEntityEncoder extends TileEntityAdvanced implements IPacketReceiver, ISidedInventory
+public class TileEntityEncoder extends TileEntityMachine implements ISidedInventory
 {
     private ItemStack disk;
     private IInventoryWatcher watcher;
-
-    public TileEntityEncoder()
-    {
-        super();
-    }
-
-    @Override
-    public int getSizeInventory()
-    {
-        return 1;
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int slot)
-    {
-        if (slot == 0)
-            return disk;
-        return null;
-    }
-
-    @Override
-    public ItemStack decrStackSize(int slot, int amount)
-    {
-        if (slot == 0)
-        {
-            if (amount >= 1)
-            {
-                ItemStack ret = disk.copy();
-                disk = null;
-                return ret;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public ItemStack getStackInSlotOnClosing(int slot)
-    {
-        return null;
-    }
-
-    @Override
-    public void setInventorySlotContents(int slot, ItemStack stack)
-    {
-        if (slot == 0)
-        {
-            if (stack != null)
-            {
-                if (stack.stackSize > 1)
-                {
-                    stack.stackSize = 1;
-                }
-            }
-            disk = stack;
-        }
-    }
+    public static final String PROGRAM_ID = "program", PROGRAM_CHANGE = "programChange", REMOVE_TASK = "removeTask";
+    protected IProgram program;
 
     @Override
     public void onInventoryChanged()
@@ -96,22 +46,6 @@ public class TileEntityEncoder extends TileEntityAdvanced implements IPacketRece
     public int getInventoryStackLimit()
     {
         return 1;
-    }
-
-    @Override
-    public boolean isUseableByPlayer(EntityPlayer player)
-    {
-        return this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord) != this ? false : player.getDistanceSq(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D) <= 64.0D;
-    }
-
-    @Override
-    public void openChest()
-    {
-    }
-
-    @Override
-    public void closeChest()
-    {
     }
 
     public void setWatcher(IInventoryWatcher watcher)
@@ -152,39 +86,88 @@ public class TileEntityEncoder extends TileEntityAdvanced implements IPacketRece
     }
 
     @Override
-    public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
+    public boolean simplePacket(String id, ByteArrayDataInput dis, Player player)
     {
         try
         {
-            if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+            boolean su = super.simplePacket(id, dis, player);
+            if (!su)
             {
-                if (this.disk != null)
+                if (this.worldObj.isRemote)
                 {
-                    ArrayList<String> tempCmds = ItemDisk.getCommands(this.disk);
-
-                    if (dataStream.readBoolean())
+                    if (id.equalsIgnoreCase(TileEntityEncoder.PROGRAM_ID))
                     {
-                        String newCommand = dataStream.readUTF();
-
-                        // Split commands that contains parameters
-                        String commandName = newCommand.split(" ")[0];
-
-                        if (TaskBase.getCommand(commandName) != null)
-                            tempCmds.add(newCommand);
+                        if (dis.readBoolean())
+                        {
+                            Program program = new Program();
+                            program.load(PacketManager.readNBTTagCompound(dis));
+                            this.program = program;
+                        }
+                        else
+                        {
+                            this.program = null;
+                        }
+                        return true;
                     }
-                    else
+                }
+                else
+                {
+                    if (id.equalsIgnoreCase(TileEntityEncoder.PROGRAM_CHANGE))
                     {
-                        int commandToRemove = dataStream.readInt();
-                        tempCmds.remove(commandToRemove);
-                    }
 
-                    ItemDisk.setCommands(this.disk, tempCmds);
+                        IDeviceTask task = TaskRegistry.getCommand(dis.readUTF());
+                        task.setPosition(new Vector2(dis.readInt(), dis.readInt()));
+                        task.load(PacketManager.readNBTTagCompound(dis));
+                        this.program.setTaskAt(task.getPosition(), task);
+                        this.sendGUIPacket();
+
+                        return true;
+                    }
+                    else if (id.equalsIgnoreCase(TileEntityEncoder.REMOVE_TASK))
+                    {
+                        this.program.setTaskAt(new Vector2(dis.readInt(), dis.readInt()), null);
+                        this.sendGUIPacket();
+                        return true;
+                    }
                 }
             }
+            return su;
         }
-        catch (Exception e)
+        catch (IOException e)
         {
             e.printStackTrace();
+            return true;
+        }
+    }
+
+    /** Sends a gui packet only to the given player */
+    public void sendGUIPacket(EntityPlayer entity)
+    {
+        if (entity != null)
+        {
+            NBTTagCompound tag = new NBTTagCompound();
+            boolean exists = this.program != null;
+            if (exists)
+            {
+                this.program.save(tag);
+            }
+            PacketDispatcher.sendPacketToPlayer(PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, this.program, exists, tag), (Player) entity);
+        }
+    }
+
+    public void removeTask(Vector2 vec)
+    {
+        if (vec != null)
+        {
+            PacketDispatcher.sendPacketToServer(PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, vec.intX(), vec.intY()));
+        }
+    }
+
+    public void updateTask(IDeviceTask task)
+    {
+        if (task != null)
+        {
+            PacketDispatcher.sendPacketToServer(PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, task.getPosition().intX(), task.getPosition().intY(), task.save(new NBTTagCompound())));
         }
     }
 
@@ -194,33 +177,4 @@ public class TileEntityEncoder extends TileEntityAdvanced implements IPacketRece
         //TODO ?
         return false;
     }
-
-    @Override
-    public boolean isItemValidForSlot(int i, ItemStack itemstack)
-    {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public int[] getAccessibleSlotsFromSide(int var1)
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public boolean canInsertItem(int i, ItemStack itemstack, int j)
-    {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public boolean canExtractItem(int i, ItemStack itemstack, int j)
-    {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
 }

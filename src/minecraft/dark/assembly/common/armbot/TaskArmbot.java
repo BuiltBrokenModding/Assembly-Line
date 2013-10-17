@@ -5,7 +5,7 @@ import universalelectricity.core.vector.Vector3;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
 import dark.api.al.coding.IArmbot;
-import dark.api.al.coding.ILogicDevice;
+import dark.api.al.coding.IProgramableMachine;
 
 public abstract class TaskArmbot extends TaskBase
 {
@@ -18,7 +18,7 @@ public abstract class TaskArmbot extends TaskBase
     }
 
     @Override
-    public ProcessReturn onMethodCalled(World world, Vector3 location, ILogicDevice armbot)
+    public ProcessReturn onMethodCalled(World world, Vector3 location, IProgramableMachine armbot)
     {
         super.onMethodCalled(world, location, armbot);
         if (armbot instanceof IArmbot)
@@ -31,7 +31,7 @@ public abstract class TaskArmbot extends TaskBase
     }
 
     @Override
-    public Object[] onCCMethodCalled(World world, Vector3 location, ILogicDevice armbot, IComputerAccess computer, ILuaContext context) throws Exception
+    public Object[] onCCMethodCalled(World world, Vector3 location, IProgramableMachine armbot, IComputerAccess computer, ILuaContext context) throws Exception
     {
         super.onCCMethodCalled(world, location, armbot, computer, context);
         if (armbot instanceof IArmbot)
@@ -43,7 +43,7 @@ public abstract class TaskArmbot extends TaskBase
     }
 
     @Override
-    public boolean canUseTask(ILogicDevice device)
+    public boolean canUseTask(IProgramableMachine device)
     {
         return device instanceof IArmbot;
     }

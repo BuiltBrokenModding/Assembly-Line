@@ -2,6 +2,7 @@ package dark.api.al.coding;
 
 import java.util.HashMap;
 
+import net.minecraft.nbt.NBTTagCompound;
 import universalelectricity.core.vector.Vector2;
 
 /** Flow chart style program. Each command in the program needs to have a stored location so it can
@@ -24,6 +25,20 @@ public interface IProgram
     /** Gets a task at the given x y location in the program */
     public IDeviceTask getTaskAt(Vector2 vector2);
 
-    /** Return this program to its starting conditions */
-    public void reset();
+    public void setTaskAt(Vector2 vector2, IDeviceTask task);
+
+    /** Return this program to its starting conditions
+     *
+     * @full - means full reset including memory clean */
+    public void reset(boolean full);
+
+    /** Sets the declared variable */
+    public void setVar(String name, Object object);
+
+    /** Gets a declared variable */
+    public Object getVar(String name);
+
+    public NBTTagCompound save(NBTTagCompound nbt);
+
+    public void load(NBTTagCompound nbt);
 }

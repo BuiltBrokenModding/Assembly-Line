@@ -11,7 +11,7 @@ import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.science.units.UnitHelper;
 
-import dark.api.al.coding.ILogicDevice;
+import dark.api.al.coding.IProgramableMachine;
 import dark.api.al.coding.args.ArgumentIntData;
 import dark.assembly.common.armbot.TaskBase;
 
@@ -28,7 +28,7 @@ public class CommandGrabItem extends CommandGrabPrefab
     }
 
     @Override
-    public ProcessReturn onMethodCalled(World world, Vector3 location, ILogicDevice armbot)
+    public ProcessReturn onMethodCalled(World world, Vector3 location, IProgramableMachine armbot)
     {
         super.onMethodCalled(world, location, armbot);
 
