@@ -96,4 +96,107 @@ public class UnitHelper
 
         return def;
     }
+
+    /** Tries to parse a value that may be anything.
+     *
+     * @param var - String, Integer, Float, Double
+     * @param suggestValue - Used by string parsing in case it fails and you want to return a
+     * default value */
+    public static int tryToParseInt(Object var, int suggestValue)
+    {
+        if (var instanceof String)
+        {
+            try
+            {
+                return Integer.parseInt((String) var);
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+        if (var instanceof Integer || var instanceof Float || var instanceof Double)
+        {
+            return (int) var;
+        }
+
+        return suggestValue;
+    }
+
+    /** Tries to parse a value that may be anything.
+     *
+     * @param var - String, Integer, Float, Double */
+    public static int tryToParseInt(Object var)
+    {
+        return tryToParseInt(var, 0);
+    }
+
+    /** Tries to parse a value that may be anything.
+     *
+     * @param var - String, Integer, Float, Double
+     * @param suggestValue - Used by string parsing in case it fails and you want to return a
+     * default value */
+    public static Double tryToParseDouble(Object var, double suggestValue)
+    {
+        if (var instanceof String)
+        {
+            try
+            {
+                return Double.parseDouble((String) var);
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+        if (var instanceof Integer || var instanceof Float || var instanceof Double)
+        {
+            return (Double) var;
+        }
+
+        return suggestValue;
+    }
+
+    /** Tries to parse a value that may be anything.
+     *
+     * @param var - String, Integer, Float, Double */
+    public static Double tryToParseDouble(Object var)
+    {
+        return tryToParseDouble(var, 0);
+    }
+
+    /** Tries to parse a value that may be anything.
+     *
+     * @param var - String, Integer, Float, Double
+     * @param suggestValue - Used by string parsing in case it fails and you want to return a
+     * default value */
+    public static Float tryToParseFloat(Object var, float suggestValue)
+    {
+        if (var instanceof String)
+        {
+            try
+            {
+                return Float.parseFloat((String) var);
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+        if (var instanceof Integer || var instanceof Float || var instanceof Double)
+        {
+            return (Float) var;
+        }
+
+        return suggestValue;
+    }
+
+    /** Tries to parse a value that may be anything.
+     *
+     * @param var - String, Integer, Float, Double
+     * @return Zero if it fails to parse the value */
+    public static Float tryToParseFloat(Object var)
+    {
+        return tryToParseFloat(var, 0);
+    }
 }
