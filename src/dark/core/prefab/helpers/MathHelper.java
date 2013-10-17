@@ -2,12 +2,14 @@ package dark.core.prefab.helpers;
 
 import java.util.Random;
 
+import net.minecraftforge.common.ForgeDirection;
+
 import universalelectricity.core.vector.Vector3;
 
 public class MathHelper extends net.minecraft.util.MathHelper
 {
     /** Generates an array of random numbers
-     * 
+     *
      * @param random - random instance to be used
      * @param maxNumber - max size of the int to use
      * @param arraySize - length of the array
@@ -18,7 +20,7 @@ public class MathHelper extends net.minecraft.util.MathHelper
     }
 
     /** Generates an array of random numbers
-     * 
+     *
      * @param random - random instance to be used
      * @param minNumber - smallest random Integer to use. Warning can lead to longer than normal
      * delay in returns
@@ -54,7 +56,7 @@ public class MathHelper extends net.minecraft.util.MathHelper
     }
 
     /** Turns radius and sphere cords into a vector3
-     * 
+     *
      * @param radius - sphere radius
      * @param inclination -
      * @param azimuth
@@ -107,5 +109,35 @@ public class MathHelper extends net.minecraft.util.MathHelper
         {
             return angle - angleGoal;
         }
+    }
+
+    /** gets the facing direction using the yaw angle */
+    public static ForgeDirection getFacingDirectionFromAngle(float yaw)
+    {
+        float angle = net.minecraft.util.MathHelper.wrapAngleTo180_float(yaw);
+        if (angle >= -45 && angle <= 45)
+        {
+            return ForgeDirection.SOUTH;
+        }
+        else if (angle >= 45 && angle <= 135)
+        {
+
+            return ForgeDirection.WEST;
+        }
+        else if (angle >= 135 && angle <= -135)
+        {
+
+            return ForgeDirection.NORTH;
+        }
+        else
+        {
+            return ForgeDirection.EAST;
+        }
+    }
+
+    /** gets the facing direction using the yaw angle */
+    public static ForgeDirection getFacingDirectionFromAngle(double yaw)
+    {
+        return getFacingDirectionFromAngle((float) yaw);
     }
 }
