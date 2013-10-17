@@ -1,6 +1,8 @@
 package dark.assembly.common.armbot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import com.builtbroken.common.science.units.UnitHelper;
@@ -14,12 +16,13 @@ import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
-import dark.api.al.armbot.IArmbot;
-import dark.api.al.armbot.ILogicDevice;
-import dark.api.al.armbot.IDeviceTask;
-import dark.api.al.armbot.IMemoryTask;
-import dark.api.al.armbot.IProgram;
-import dark.api.al.armbot.IDeviceTask.TaskType;
+import dark.api.al.coding.IArmbot;
+import dark.api.al.coding.IDeviceTask;
+import dark.api.al.coding.ILogicDevice;
+import dark.api.al.coding.IMemoryTask;
+import dark.api.al.coding.IProgram;
+import dark.api.al.coding.IDeviceTask.TaskType;
+import dark.api.al.coding.args.ArgumentData;
 import dark.core.prefab.helpers.NBTFileLoader;
 
 /** Basic command prefab used by machines like an armbot. You are not required to use this in order
@@ -43,8 +46,8 @@ public abstract class TaskBase implements IDeviceTask, Cloneable, IMemoryTask
     protected Vector2 pos;
 
     /** The parameters this command */
-    private HashMap<String, Object> parameters;
-
+    protected HashMap<String, Object> aruguments = new HashMap<String, Object>();
+    protected List<ArgumentData> defautlArguments = new ArrayList<ArgumentData>();
     protected HashMap<String, Object> activeMemory = new HashMap<String, Object>();
 
     public TaskBase(String name, TaskType tasktype)
@@ -133,11 +136,15 @@ public abstract class TaskBase implements IDeviceTask, Cloneable, IMemoryTask
     {
         if (this.getEncoderParms() != null)
         {
-            this.parameters = new HashMap();
+            this.aruguments = new HashMap();
             NBTTagCompound parms = nbt.getCompoundTag("args");
-            for (Entry<String, Object> entry : this.getEncoderParms().entrySet())
+            for (ArgumentData arg : this.getEncoderParms())
             {
-                this.parameters.put(entry.getKey(), NBTFileLoader.loadObject(parms, entry.getKey()));
+                Object obj = NBTFileLoader.loadObject(parms, arg.getName());
+                if (arg.isValid(obj))
+                {
+                    this.aruguments.put(arg.getName(), obj);
+                }
             }
         }
         this.pos = new Vector2(nbt.getDouble("xx"), nbt.getDouble("yy"));
@@ -148,7 +155,7 @@ public abstract class TaskBase implements IDeviceTask, Cloneable, IMemoryTask
     public NBTTagCompound save(NBTTagCompound nbt)
     {
         NBTTagCompound parms = new NBTTagCompound();
-        for (Entry<String, Object> entry : this.parameters.entrySet())
+        for (Entry<String, Object> entry : this.aruguments.entrySet())
         {
             NBTFileLoader.saveObject(parms, entry.getKey(), entry.getValue());
         }
@@ -219,15 +226,26 @@ public abstract class TaskBase implements IDeviceTask, Cloneable, IMemoryTask
     }
 
     @Override
+    public Object getArg(String name)
+    {
+        return this.aruguments.get(name);
+    }
+
+    @Override
+    public HashMap<String, Object> getArgs()
+    {
+        return this.aruguments;
+    }
+
+    @Override
     public HashMap<String, Object> getSavedData()
     {
         return null;
     }
 
     @Override
-    public HashMap<String, Object> getEncoderParms()
+    public List<ArgumentData> getEncoderParms()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return this.defautlArguments;
     }
 }

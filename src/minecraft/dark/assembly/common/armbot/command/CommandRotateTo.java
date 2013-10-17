@@ -4,9 +4,9 @@ import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.science.units.UnitHelper;
 
-import dark.api.al.armbot.IArmbot;
-import dark.api.al.armbot.ILogicDevice;
-import dark.api.al.armbot.IDeviceTask.TaskType;
+import dark.api.al.coding.IArmbot;
+import dark.api.al.coding.ILogicDevice;
+import dark.api.al.coding.IDeviceTask.TaskType;
 import dark.assembly.common.armbot.TaskBase;
 import dark.assembly.common.armbot.TaskArmbot;
 import dark.core.prefab.helpers.MathHelper;

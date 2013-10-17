@@ -4,8 +4,8 @@ import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
-import dark.api.al.armbot.IArmbot;
-import dark.api.al.armbot.ILogicDevice;
+import dark.api.al.coding.IArmbot;
+import dark.api.al.coding.ILogicDevice;
 
 public abstract class TaskArmbot extends TaskBase
 {

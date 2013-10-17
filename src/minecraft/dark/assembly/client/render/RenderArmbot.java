@@ -64,23 +64,19 @@ public class RenderArmbot extends TileEntitySpecialRenderer
             RenderItem renderItem = ((RenderItem) RenderManager.instance.getEntityClassRenderObject(EntityItem.class));
             TextureManager renderEngine = Minecraft.getMinecraft().renderEngine;
 
-            for (ItemStack itemStack : ((TileEntityArmbot) tileEntity).getGrabbedItems())
+            // Items don't move right, so we render them manually. Client side this can only be one object so the bot should return its preferred render item client side
+            if (((TileEntityArmbot) tileEntity).getGrabbedObject() instanceof ItemStack)
             {
-                // Items don't move right, so we render them manually
-                if (itemStack != null)
+                ItemStack itemStack = (ItemStack) ((TileEntityArmbot) tileEntity).getGrabbedObject();
+                if (((TileEntityArmbot) tileEntity).renderEntityItem == null)
                 {
-                    if (((TileEntityArmbot) tileEntity).renderEntityItem == null)
-                    {
-                        ((TileEntityArmbot) tileEntity).renderEntityItem = new EntityItem(tileEntity.worldObj, 0, 0, 0, itemStack);
-                    }
-                    else if (!itemStack.isItemEqual(((TileEntityArmbot) tileEntity).renderEntityItem.getEntityItem()))
-                    {
-                        ((TileEntityArmbot) tileEntity).renderEntityItem = new EntityItem(tileEntity.worldObj, 0, 0, 0, itemStack);
-                    }
-
-                    renderItem.doRenderItem(((TileEntityArmbot) tileEntity).renderEntityItem, handPosition.x, handPosition.y, handPosition.z, 0, f);
-                    break;
+                    ((TileEntityArmbot) tileEntity).renderEntityItem = new EntityItem(tileEntity.worldObj, 0, 0, 0, itemStack);
                 }
+                else if (!itemStack.isItemEqual(((TileEntityArmbot) tileEntity).renderEntityItem.getEntityItem()))
+                {
+                    ((TileEntityArmbot) tileEntity).renderEntityItem = new EntityItem(tileEntity.worldObj, 0, 0, 0, itemStack);
+                }
+                renderItem.doRenderItem(((TileEntityArmbot) tileEntity).renderEntityItem, handPosition.x, handPosition.y, handPosition.z, 0, f);
             }
         }
     }

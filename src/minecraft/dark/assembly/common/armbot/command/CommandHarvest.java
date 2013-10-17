@@ -2,9 +2,9 @@ package dark.assembly.common.armbot.command;
 
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
-import dark.api.al.armbot.IArmbot;
-import dark.api.al.armbot.ILogicDevice;
-import dark.api.al.armbot.IDeviceTask.TaskType;
+import dark.api.al.coding.IArmbot;
+import dark.api.al.coding.ILogicDevice;
+import dark.api.al.coding.IDeviceTask.TaskType;
 
 /** Used by arms to break a specific block in a position.
  *

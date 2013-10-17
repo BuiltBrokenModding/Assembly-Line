@@ -2,9 +2,9 @@ package dark.assembly.common.armbot.command;
 
 import universalelectricity.core.vector.Vector2;
 import net.minecraft.nbt.NBTTagCompound;
-import dark.api.al.armbot.ILogicDevice;
-import dark.api.al.armbot.IDeviceTask;
-import dark.api.al.armbot.ISplitArmbotTask;
+import dark.api.al.coding.IDeviceTask;
+import dark.api.al.coding.ILogicDevice;
+import dark.api.al.coding.ISplitArmbotTask;
 import dark.assembly.common.armbot.TaskBase;
 
 public class TaskIF extends TaskBase implements ISplitArmbotTask

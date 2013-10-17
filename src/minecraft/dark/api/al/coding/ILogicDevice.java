@@ -1,4 +1,4 @@
-package dark.api.al.armbot;
+package dark.api.al.coding;
 
 public interface ILogicDevice
 {

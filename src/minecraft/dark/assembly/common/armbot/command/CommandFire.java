@@ -1,12 +1,15 @@
 package dark.assembly.common.armbot.command;
 
+import java.util.HashMap;
 import java.util.Random;
 
 import com.builtbroken.common.science.units.UnitHelper;
 
-import dark.api.al.armbot.IArmbot;
-import dark.api.al.armbot.ILogicDevice;
-import dark.api.al.armbot.IDeviceTask.TaskType;
+import dark.api.al.coding.IArmbot;
+import dark.api.al.coding.ILogicDevice;
+import dark.api.al.coding.IDeviceTask.TaskType;
+import dark.api.al.coding.args.ArgumentData;
+import dark.api.al.coding.args.ArgumentFloatData;
 import dark.assembly.common.armbot.TaskBase;
 import dark.assembly.common.armbot.TaskArmbot;
 
@@ -33,6 +36,7 @@ public class CommandFire extends TaskArmbot
     public CommandFire()
     {
         super("throw", TaskType.DEFINEDPROCESS);
+        this.defautlArguments.add(new ArgumentFloatData("velocity", 1.0f, 2.5f, 1.0f));
     }
 
     @Override
@@ -40,7 +44,7 @@ public class CommandFire extends TaskArmbot
     {
         super.onMethodCalled(world, location, armbot);
 
-        this.velocity = UnitHelper.tryToParseFloat("" + this.getArg(0));
+        this.velocity = UnitHelper.tryToParseFloat(this.getArg("velocity"));
         if (this.velocity > 2.5f)
             this.velocity = 2.5f;
         if (this.velocity < 0.125f)
@@ -77,16 +81,13 @@ public class CommandFire extends TaskArmbot
         {
             this.finalVelocity = new Vector3(0, 0, 0);
         }
-        if (this.armbot.getGrabbedObjects().size() > 0)
+        if (this.armbot.getGrabbedObject() != null)
         {
             Entity held = null;
-            for (Object obj : this.armbot.getGrabbedObjects())
+            Object obj = this.armbot.getGrabbedObject();
+            if (obj instanceof Entity)
             {
-                if (obj instanceof Entity)
-                {
-                    held = (Entity) obj;
-                    break;
-                }
+                held = (Entity) obj;
             }
             if (held != null)
             {

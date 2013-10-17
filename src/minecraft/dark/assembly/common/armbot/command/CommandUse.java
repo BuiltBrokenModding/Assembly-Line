@@ -5,10 +5,10 @@ import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import dark.api.al.armbot.IArmbotUseable;
-import dark.api.al.armbot.ILogicDevice;
-import dark.api.al.armbot.IDeviceTask.ProcessReturn;
-import dark.api.al.armbot.IDeviceTask.TaskType;
+import dark.api.al.coding.IArmbotUseable;
+import dark.api.al.coding.ILogicDevice;
+import dark.api.al.coding.IDeviceTask.ProcessReturn;
+import dark.api.al.coding.IDeviceTask.TaskType;
 import dark.assembly.common.armbot.TaskBase;
 import dark.assembly.common.armbot.TaskArmbot;
 

@@ -12,7 +12,7 @@ import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.science.units.UnitHelper;
 
-import dark.api.al.armbot.ILogicDevice;
+import dark.api.al.coding.ILogicDevice;
 import dark.assembly.common.armbot.TaskArmbot;
 import dark.assembly.common.armbot.TaskBase;
 import dark.assembly.common.machine.InvInteractionHelper;

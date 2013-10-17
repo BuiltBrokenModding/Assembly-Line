@@ -1,15 +1,23 @@
-package dark.api.al.armbot;
+package dark.api.al.coding;
 
 import java.util.HashMap;
+import java.util.List;
 
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
+import dark.api.al.coding.args.ArgumentData;
 
-/** Use to construct a basic task that can be used in any device that supports this interface
+/** Use to construct a basic task that can be used in any device that supports this interface.
+ *
+ * @Note - there are several methods that look a like. GetArgs is used to get the programs arguments
+ * that were set by the encoder. GetEncoderParms should be a constant set of arguments that the
+ * device can support. GetMemory is a list of variables that the program needs to store outside of
+ * the task. That way it can save values after the task has been refreshed or even deleted.
  *
  * @author DarkGuardsman */
 public interface IDeviceTask
@@ -25,7 +33,6 @@ public interface IDeviceTask
 
     /** Should be the same as getMethodName() but can be different */
     public String getCCMethod();
-
 
     /** Passed in from the device to the program manager then here after a Computer craft machine
      * calls a this commands method name. {@IPeripheral #callMethod()} */
@@ -65,23 +72,44 @@ public interface IDeviceTask
     /** Can this task function for this machine */
     public boolean canUseTask(ILogicDevice device);
 
-    /** Hashmap to tell the encoder what params it will use in the encoder */
-    public HashMap<String, Object> getEncoderParms();
+    /** ArgumentData used to both restrict and set values into the argument hashmap */
+    public List<ArgumentData> getEncoderParms();
+
+    /** Get an argument by a given name */
+    public Object getArg(String name);
+
+    /** Get all given arguments */
+    public HashMap<String, Object> getArgs();
 
     /** Used mainly for display purposes in the encoder */
     public static enum TaskType
     {
-        DATA(),
-        DEFINEDPROCESS(),
-        DECISION()
+        DATA("Data"),
+        DEFINEDPROCESS("Defined Process"),
+        PROCESS("Process"),
+        DECISION("Decision");
+        public ResourceLocation blockTexure;
+        public String name;
+
+        private TaskType(String name)
+        {
+            this.name = name;
+        }
     }
 
     public static enum ProcessReturn
     {
-        CONTINUE(),
-        DONE(),
-        GENERAL_ERROR(),
-        SYNTAX_ERROR(),
-        ARGUMENT_ERROR();
+        CONTINUE("Continue", "Running"),
+        DONE("Done", "Done"),
+        GENERAL_ERROR("General Error", "Error program failure"),
+        SYNTAX_ERROR("Syntax Error", "Error incorrect syntax"),
+        ARGUMENT_ERROR("Arument error", "Error incorrect arguments");
+        public String name, userOutput;
+
+        private ProcessReturn(String name, String userOutput)
+        {
+            this.name = name;
+            this.userOutput = userOutput;
+        }
     }
 }
