@@ -18,7 +18,7 @@ public class ProgramHelper
 {
     /** Current Program */
     protected IProgram program;
-    protected IProgramableMachine bot;
+    protected IProgrammableMachine bot;
     /** Current task in program */
     protected ITask currentTask;
     /** Do we have a memory to store values */
@@ -29,7 +29,7 @@ public class ProgramHelper
     /** Array of values to remember between commands */
     protected HashMap<String, Object> taskMemory = new HashMap<String, Object>();
 
-    public ProgramHelper(IProgramableMachine bot)
+    public ProgramHelper(IProgrammableMachine bot)
     {
         this.bot = bot;
     }
@@ -48,12 +48,12 @@ public class ProgramHelper
             }
             if (this.currentTask != null)
             {
-                if (this.currentTask instanceof IProcessTask)
+                if (!this.hasTaskBeenCalled)
                 {
-                    if (!this.hasTaskBeenCalled)
+                    this.hasTaskBeenCalled = true;
+                    if (this.currentTask instanceof IProcessTask)
                     {
-                        this.hasTaskBeenCalled = true;
-                        re = ((IProcessTask) this.currentTask).onMethodCalled(world, botLocation, bot);
+                        re = ((IProcessTask) this.currentTask).onMethodCalled();
                         if (re == ProcessReturn.DONE)
                         {
                             this.nextTask = true;
@@ -63,7 +63,9 @@ public class ProgramHelper
                             return re;
                         }
                     }
-
+                }
+                if (this.currentTask instanceof IProcessTask)
+                {
                     re = ((IProcessTask) this.currentTask).onUpdate();
                     if (re == ProcessReturn.DONE)
                     {
@@ -82,12 +84,24 @@ public class ProgramHelper
 
     public void nextTask()
     {
-        this.currentTask = program.getNextTask();
         this.hasTaskBeenCalled = false;
         this.nextTask = false;
+        //Tell old task to clear itself
+        if (this.currentTask != null)
+        {
+            this.currentTask.reset();
+        }
+        //Set the new task as the current
+        this.currentTask = program.getNextTask();
+        //tell the new task to refresh and be ready
+        if (this.currentTask != null)
+        {
+            this.currentTask.refresh();
+        }
+
     }
 
-    public ProgramHelper setMemory(int varableLimit)
+    public ProgramHelper setMemoryLimit(int varableLimit)
     {
         if (varableLimit > 0)
         {
@@ -123,7 +137,7 @@ public class ProgramHelper
             {
                 //TODO load in memory and throw error stopping machine if there is not enough
             }
-            this.program.init();
+            this.program.init(this.bot);
         }
     }
 

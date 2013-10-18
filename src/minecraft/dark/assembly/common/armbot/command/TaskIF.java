@@ -1,47 +1,55 @@
 package dark.assembly.common.armbot.command;
 
-import universalelectricity.core.vector.Vector2;
 import net.minecraft.nbt.NBTTagCompound;
-import dark.api.al.coding.IProcessTask;
-import dark.api.al.coding.IProgramableMachine;
+import universalelectricity.core.vector.Vector2;
 import dark.api.al.coding.ILogicTask;
-import dark.assembly.common.armbot.TaskBase;
+import dark.api.al.coding.IProcessTask;
+import dark.api.al.coding.IProgrammableMachine;
+import dark.api.al.coding.ITask;
+import dark.api.al.coding.args.ArgumentData;
+import dark.assembly.common.armbot.TaskBaseLogic;
+import dark.assembly.common.armbot.TaskBaseProcess;
 
-public class TaskIF extends TaskBase implements ILogicTask
+/** @author DarkGuardsman */
+public class TaskIF extends TaskBaseLogic
 {
-    protected IProcessTask entryPoint = null;
-    protected IProcessTask exitTruePoint = null;
-    protected IProcessTask exitFalsePoint = null;
+    protected ITask exitTruePoint = null;
+    protected ITask exitFalsePoint = null;
     protected boolean isTrue = false;
 
     public TaskIF()
     {
-        super("IF", TaskType.DECISION);
+        super("IF");
+        this.defautlArguments.add(new ArgumentData("check", "statement"));
+        this.defautlArguments.add(new ArgumentData("compare", "statement"));
     }
 
-    public TaskIF(IProcessTask entryPoint, IProcessTask trueExit, IProcessTask falseExit)
+    public TaskIF(ITask trueExit, ITask falseExit)
     {
         this();
-        this.setEntryPoint(this.entryPoint);
         this.exitTruePoint = trueExit;
         this.exitFalsePoint = falseExit;
 
     }
 
     @Override
-    public TaskBase clone()
+    public void refresh()
     {
-        return new TaskIF(this.entryPoint, this.exitTruePoint, this.exitFalsePoint);
+        super.refresh();
+        if (this.getArg("check") != null && this.getArg("compare") != null)
+        {
+            this.isTrue = this.getArg("check").equals(this.getArg("compare"));
+        }
     }
 
     @Override
-    public IProcessTask getEntryPoint()
+    public TaskIF clone()
     {
-        return this.entryPoint;
+        return new TaskIF();
     }
 
     @Override
-    public IProcessTask getExitPoint()
+    public ITask getExitPoint()
     {
         if (this.isTrue)
         {
@@ -57,24 +65,22 @@ public class TaskIF extends TaskBase implements ILogicTask
     }
 
     @Override
-    public ILogicTask setEntryPoint(IProcessTask task)
+    public void setExitPoint(int i, ITask task)
     {
-        this.entryPoint = task;
-        return this;
+        if (i == 0)
+        {
+            this.exitFalsePoint = task;
+        }
+        else if (i == 1)
+        {
+            this.exitTruePoint = task;
+        }
     }
 
     @Override
-    public void addExitPoint(IProcessTask task)
-    {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public TaskBase load(NBTTagCompound nbt)
+    public TaskIF load(NBTTagCompound nbt)
     {
         super.loadProgress(nbt);
-        this.entryPoint = this.program.getTaskAt(new Vector2(nbt.getDouble("entryX"), (nbt.getDouble("entryY"))));
         this.exitFalsePoint = this.program.getTaskAt(new Vector2(nbt.getDouble("exitFalseX"), (nbt.getDouble("exitFalseY"))));
         this.exitTruePoint = this.program.getTaskAt(new Vector2(nbt.getDouble("exitTrueX"), (nbt.getDouble("exitTrueY"))));
         return this;
@@ -84,11 +90,6 @@ public class TaskIF extends TaskBase implements ILogicTask
     public NBTTagCompound save(NBTTagCompound nbt)
     {
         super.saveProgress(nbt);
-        if (this.entryPoint != null)
-        {
-            nbt.setDouble("entryX", this.entryPoint.getPosition().x);
-            nbt.setDouble("entryY", this.entryPoint.getPosition().y);
-        }
         if (this.exitFalsePoint != null)
         {
             nbt.setDouble("exitFalseX", this.exitFalsePoint.getPosition().x);
@@ -103,7 +104,7 @@ public class TaskIF extends TaskBase implements ILogicTask
     }
 
     @Override
-    public boolean canUseTask(IProgramableMachine device)
+    public boolean canUseTask(IProgrammableMachine device)
     {
         return true;
     }

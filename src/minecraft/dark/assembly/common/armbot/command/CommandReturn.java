@@ -1,9 +1,9 @@
 package dark.assembly.common.armbot.command;
 
-import dark.assembly.common.armbot.TaskBase;
-import dark.assembly.common.armbot.TaskArmbot;
+import dark.assembly.common.armbot.TaskBaseArmbot;
+import dark.assembly.common.armbot.TaskBaseProcess;
 
-public class CommandReturn extends TaskArmbot
+public class CommandReturn extends TaskBaseArmbot
 {
     public static final float IDLE_ROTATION_PITCH = 0;
     public static final float IDLE_ROTATION_YAW = 0;
@@ -12,7 +12,7 @@ public class CommandReturn extends TaskArmbot
 
     public CommandReturn()
     {
-        super("Return", TaskType.DEFINEDPROCESS);
+        super("Return");
     }
 
     @Override
@@ -21,7 +21,7 @@ public class CommandReturn extends TaskArmbot
         if (this.rotateToCommand == null)
         {
             this.rotateToCommand = new CommandRotateTo(0, 0);
-            this.rotateToCommand.onMethodCalled(this.worldObj, this.devicePos, armbot);
+            this.rotateToCommand.onMethodCalled();
         }
 
         return this.rotateToCommand.onUpdate();
@@ -40,7 +40,7 @@ public class CommandReturn extends TaskArmbot
     }
 
     @Override
-    public TaskBase clone()
+    public TaskBaseProcess clone()
     {
         return new CommandReturn();
     }

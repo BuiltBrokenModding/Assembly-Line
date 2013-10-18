@@ -2,76 +2,80 @@ package dark.assembly.common.armbot.command;
 
 import java.util.ArrayList;
 
+import com.builtbroken.common.Pair;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
-import dark.api.al.coding.IProcessTask;
-import dark.api.al.coding.IProcessTask.TaskType;
-import dark.assembly.common.armbot.TaskBase;
-import dark.assembly.common.armbot.TaskArmbot;
+import dark.api.al.coding.IArmbot;
+import dark.api.al.coding.ITask;
+import dark.assembly.common.armbot.TaskBaseArmbot;
+import dark.assembly.common.armbot.TaskBaseProcess;
 import dark.core.prefab.helpers.ItemWorldHelper;
 
 /** Used by arms to break a specific block in a position.
  *
  * @author Calclavia */
-public class CommandBreak extends TaskArmbot
+public class CommandBreak extends TaskBaseArmbot
 {
     protected int breakTicks = 30;
     protected boolean keep = false;
 
     public CommandBreak()
     {
-        super("break", TaskType.DEFINEDPROCESS);
-        this.breakTicks = 30;
+        this("break");
     }
 
     public CommandBreak(String name)
     {
-        super(name, TaskType.DEFINEDPROCESS);
+        super(name);
+        this.breakTicks = 30;
     }
-
-
 
     @Override
     public ProcessReturn onUpdate()
     {
-        super.onUpdate();
-
-        Vector3 serachPosition = this.armbot.getHandPos();
-
-        Block block = Block.blocksList[serachPosition.getBlockID(this.worldObj)];
-        this.breakTicks--;
-        if (block != null && breakTicks <= 0)
+        if (super.onUpdate() == ProcessReturn.CONTINUE)
         {
-            ArrayList<ItemStack> items = block.getBlockDropped(this.worldObj, serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), serachPosition.getBlockMetadata(worldObj), 0);
 
-            if (!this.keep || items.size() > 1)
+            Vector3 serachPosition = ((IArmbot) this.program.getMachine()).getHandPos();
+            Pair<World, Vector3> location = this.program.getMachine().getLocation();
+            Block block = Block.blocksList[serachPosition.getBlockID(location.left())];
+            this.breakTicks--;
+            if (block != null && breakTicks <= 0)
             {
-                ItemWorldHelper.dropBlockAsItem(this.worldObj, serachPosition);
-            }
-            else
-            {
-                this.armbot.grab(new EntityItem(this.worldObj, serachPosition.intX() + 0.5D, serachPosition.intY() + 0.5D, serachPosition.intZ() + 0.5D, items.get(0)));
-            }
+                ArrayList<ItemStack> items = block.getBlockDropped(location.left(), serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), serachPosition.getBlockMetadata(location.left()), 0);
 
-            worldObj.setBlock(serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), 0, 0, 3);
-            return ProcessReturn.DONE;
+                if (!this.keep || items.size() > 1)
+                {
+                    ItemWorldHelper.dropBlockAsItem(location.left(), serachPosition);
+                }
+                else
+                {
+                    ((IArmbot) this.program.getMachine()).grab(new EntityItem(location.left(), serachPosition.intX() + 0.5D, serachPosition.intY() + 0.5D, serachPosition.intZ() + 0.5D, items.get(0)));
+                }
+
+                location.left().setBlock(serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), 0, 0, 3);
+                return ProcessReturn.DONE;
+            }
         }
 
         /** Notes on break command Beds Break Wrong Multi blocks don't work */
-        return ProcessReturn.CONTINUE;
+        return ProcessReturn.GENERAL_ERROR;
     }
 
     @Override
-    public TaskBase clone()
+    public TaskBaseProcess clone()
     {
         return new CommandBreak();
     }
 
     @Override
-    public IProcessTask loadProgress(NBTTagCompound nbt)
+    public ITask loadProgress(NBTTagCompound nbt)
     {
         this.breakTicks = nbt.getInteger("breakTicks");
         return this;
@@ -83,4 +87,5 @@ public class CommandBreak extends TaskArmbot
         nbt.setInteger("breakTicks", this.breakTicks);
         return nbt;
     }
+
 }

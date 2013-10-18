@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import universalelectricity.core.vector.Vector2;
 import dark.api.al.coding.IProgram;
+import dark.api.al.coding.IProgrammableMachine;
 import dark.api.al.coding.ITask;
 import dark.api.al.coding.TaskRegistry;
 import dark.core.prefab.helpers.NBTFileHelper;
@@ -17,16 +18,51 @@ public class Program implements IProgram
 {
     protected Vector2 currentPos = new Vector2(0, 0);
     protected ITask currentTask;
+    protected IProgrammableMachine machine;
     protected HashMap<Vector2, ITask> tasks = new HashMap();
     protected HashMap<String, Object> varables = new HashMap();
     protected int width = 0, hight = 0;
     boolean started = false;
 
     @Override
-    public void init()
+    public void init(IProgrammableMachine machine)
     {
-        // TODO Auto-generated method stub
+        this.machine = machine;
+        int w = 0;
+        int h = 0;
+        List<Vector2> removeList = new ArrayList<Vector2>();
+        for (Entry<Vector2, ITask> entry : this.tasks.entrySet())
+        {
+            if (entry.getValue() != null)
+            {
+                entry.getValue().setProgram(this);
+                if (entry.getValue().getPosition().intX() > w)
+                {
+                    w = entry.getValue().getPosition().intX();
+                }
+                if (entry.getValue().getPosition().intY() > h)
+                {
+                    h = entry.getValue().getPosition().intY();
+                }
+            }
+            else
+            {
+                //Should be rare that one of the slots would be null
+                removeList.add(entry.getKey());
+            }
+        }
+        for (Vector2 vec : removeList)
+        {
+            this.tasks.remove(vec);
+        }
+        this.width = w;
+        this.hight = h;
+    }
 
+    @Override
+    public IProgrammableMachine getMachine()
+    {
+        return this.machine;
     }
 
     @Override
@@ -82,7 +118,7 @@ public class Program implements IProgram
             else if (this.tasks.containsKey(vector2))
             {
                 this.tasks.remove(vector2);
-                if (task.getPosition().intY() == this.hight && !this.isThereATaskInRow(this.hight))
+                if (vector2.intY() == this.hight && !this.isThereATaskInRow(this.hight))
                 {
                     this.hight--;
                 }

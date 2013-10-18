@@ -1,78 +1,84 @@
 package dark.assembly.common.armbot.command;
 
-import com.builtbroken.common.science.units.UnitHelper;
-
-import universalelectricity.core.vector.Vector3;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import universalelectricity.core.vector.Vector3;
+
+import com.builtbroken.common.science.units.UnitHelper;
+
+import dark.api.al.coding.IArmbot;
 import dark.api.al.coding.IArmbotUseable;
 import dark.api.al.coding.IProcessTask;
-import dark.api.al.coding.IProgramableMachine;
-import dark.api.al.coding.IProcessTask.ProcessReturn;
-import dark.api.al.coding.IProcessTask.TaskType;
-import dark.api.al.coding.args.ArgumentData;
+import dark.api.al.coding.IProgrammableMachine;
 import dark.api.al.coding.args.ArgumentIntData;
-import dark.assembly.common.armbot.TaskBase;
-import dark.assembly.common.armbot.TaskArmbot;
+import dark.assembly.common.armbot.TaskBaseArmbot;
+import dark.assembly.common.armbot.TaskBaseProcess;
 
-public class CommandUse extends TaskArmbot
+public class CommandUse extends TaskBaseArmbot
 {
 
     protected int times, curTimes;
 
     public CommandUse()
     {
-        super("use", TaskType.DEFINEDPROCESS);
+        super("use");
         this.defautlArguments.add(new ArgumentIntData("repeat", 1, Integer.MAX_VALUE, 1));
     }
 
     @Override
-    public ProcessReturn onMethodCalled(World world, Vector3 location, IProgramableMachine armbot)
+    public ProcessReturn onMethodCalled()
     {
-        super.onMethodCalled(world, location, armbot);
-        this.curTimes = 0;
-        this.times = UnitHelper.tryToParseInt(this.getArg("repeat"));
-        return ProcessReturn.CONTINUE;
+        if (super.onMethodCalled() == ProcessReturn.CONTINUE)
+        {
+            this.curTimes = 0;
+            this.times = UnitHelper.tryToParseInt(this.getArg("repeat"));
+            return ProcessReturn.CONTINUE;
+        }
+        return ProcessReturn.GENERAL_ERROR;
     }
 
     @Override
     public ProcessReturn onUpdate()
     {
-        Block block = Block.blocksList[this.armbot.getHandPos().getBlockID(this.worldObj)];
-        TileEntity targetTile = this.armbot.getHandPos().getTileEntity(this.worldObj);
-
-        if (targetTile != null)
+        if (super.onUpdate() == ProcessReturn.CONTINUE)
         {
-            if (targetTile instanceof IArmbotUseable)
+            Block block = Block.blocksList[((IArmbot) this.program.getMachine()).getHandPos().getBlockID(this.program.getMachine().getLocation().left())];
+            TileEntity targetTile = ((IArmbot) this.program.getMachine()).getHandPos().getTileEntity(this.program.getMachine().getLocation().left());
+
+            if (targetTile != null)
             {
-                ((IArmbotUseable) targetTile).onUse(this.armbot, this.getArgs());
+                if (targetTile instanceof IArmbotUseable)
+                {
+                    ((IArmbotUseable) targetTile).onUse(((IArmbot) this.program.getMachine()), this.getArgs());
+                }
+
+            }
+            else if (block != null)
+            {
+                try
+                {
+                    boolean f = block.onBlockActivated(this.program.getMachine().getLocation().left(), ((IArmbot) this.program.getMachine()).getHandPos().intX(), ((IArmbot) this.program.getMachine()).getHandPos().intY(), ((IArmbot) this.program.getMachine()).getHandPos().intZ(), null, 0, 0, 0, 0);
+                }
+                catch (Exception e)
+                {
+
+                    e.printStackTrace();
+                }
+
             }
 
-        }
-        else if (block != null)
-        {
-            try
-            {
-                boolean f = block.onBlockActivated(this.worldObj, this.armbot.getHandPos().intX(), this.armbot.getHandPos().intY(), this.armbot.getHandPos().intZ(), null, 0, 0, 0, 0);
-            }
-            catch (Exception e)
-            {
+            this.curTimes++;
 
-                e.printStackTrace();
+            if (this.curTimes >= this.times)
+            {
+                return ProcessReturn.DONE;
             }
 
+            return ProcessReturn.CONTINUE;
         }
-
-        this.curTimes++;
-
-        if (this.curTimes >= this.times)
-        {
-            return ProcessReturn.DONE;
-        }
-
-        return ProcessReturn.CONTINUE;
+        return ProcessReturn.GENERAL_ERROR;
     }
 
     @Override
@@ -114,7 +120,7 @@ public class CommandUse extends TaskArmbot
     }
 
     @Override
-    public TaskBase clone()
+    public TaskBaseProcess clone()
     {
         return new CommandUse();
     }

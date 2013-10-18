@@ -24,7 +24,7 @@ public interface IProcessTask extends ITask
 {
     /** Passed in from the device to the program manager then here after a Computer craft machine
      * calls a this commands method name. {@IPeripheral #callMethod()} */
-    public Object[] onCCMethodCalled(World world, Vector3 location, IProgramableMachine device, IComputerAccess computer, ILuaContext context) throws Exception;
+    public Object[] onCCMethodCalled(IComputerAccess computer, ILuaContext context) throws Exception;
 
     /** Called when the task is being run by the devices program manager. Used mainly to setup the
      * task before actually doing the task.
@@ -34,25 +34,13 @@ public interface IProcessTask extends ITask
      * @param armbot - armbot instance
      * @param arguments - arguments for command
      * @return false to stop the task here. */
-    public ProcessReturn onMethodCalled(World world, Vector3 location, IProgramableMachine device);
+    public ProcessReturn onMethodCalled();
 
     /** Update the current segment of the task */
     public ProcessReturn onUpdate();
 
     /** Called when the task is finish and then cleared */
     public void terminated();
-
-    /** ArgumentData used to both restrict and set values into the argument hashmap */
-    public List<ArgumentData> getEncoderParms();
-
-    /** Get an argument by a given name */
-    public Object getArg(String name);
-
-    /** Get all given arguments */
-    public HashMap<String, Object> getArgs();
-
-    /** Get all given arguments */
-    public void setArgs(HashMap<String, Object> args);
 
     public static enum ProcessReturn
     {

@@ -10,11 +10,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
-import dark.api.al.coding.IProgramableMachine;
+import dark.api.al.coding.IArmbot;
+import dark.api.al.coding.IProgrammableMachine;
 import dark.api.al.coding.args.ArgumentData;
 import dark.api.al.coding.args.ArgumentListData;
 import dark.assembly.common.armbot.GrabDictionary;
-import dark.assembly.common.armbot.TaskBase;
+import dark.assembly.common.armbot.TaskBaseProcess;
 
 public class CommandGrabEntity extends CommandGrabPrefab
 {
@@ -33,61 +34,66 @@ public class CommandGrabEntity extends CommandGrabPrefab
     }
 
     @Override
-    public ProcessReturn onMethodCalled(World world, Vector3 location, IProgramableMachine armbot)
+    public ProcessReturn onMethodCalled()
     {
-        super.onMethodCalled(world, location, armbot);
-        this.entityToInclude = Entity.class;
-        try
+        if (super.onMethodCalled() == ProcessReturn.CONTINUE)
         {
-            if (this.getArg("Entity") instanceof Class)
+            this.entityToInclude = Entity.class;
+            try
             {
-                this.entityToInclude = (Class<? extends Entity>) this.getArg("Entity");
+                if (this.getArg("Entity") instanceof Class)
+                {
+                    this.entityToInclude = (Class<? extends Entity>) this.getArg("Entity");
+                }
             }
-        }
-        catch (Exception e)
-        {
+            catch (Exception e)
+            {
 
-        }
-        if(this.getArg("child") instanceof Boolean)
-        {
-            this.child = (boolean) this.getArg("child");
-        }
+            }
+            if (this.getArg("child") instanceof Boolean)
+            {
+                this.child = (boolean) this.getArg("child");
+            }
 
-        return ProcessReturn.CONTINUE;
+            return ProcessReturn.CONTINUE;
+        }
+        return ProcessReturn.GENERAL_ERROR;
     }
 
     @Override
     public ProcessReturn onUpdate()
     {
-        super.onUpdate();
-
-        if (this.armbot.getGrabbedObject() != null)
+        if (super.onUpdate() == ProcessReturn.CONTINUE)
         {
-            return ProcessReturn.DONE;
-        }
-        List<Entity> found = this.worldObj.getEntitiesWithinAABB(entityToInclude, AxisAlignedBB.getBoundingBox(this.armPos.x - radius, this.armPos.y - radius, this.armPos.z - radius, this.armPos.x + radius, this.armPos.y + radius, this.armPos.z + radius));
-
-        if (found != null && found.size() > 0)
-        {
-            for (Entity entity : found)
+            if (((IArmbot) this.program.getMachine()).getGrabbedObject() != null)
             {
-                if ((entity != null && !(entity instanceof EntityArrow) && !(entity instanceof EntityPlayer) && (!(entity instanceof EntityAgeable) || (entity instanceof EntityAgeable && child == ((EntityAgeable) entity).isChild()))))
+                return ProcessReturn.DONE;
+            }
+            List<Entity> found = this.program.getMachine().getLocation().left().getEntitiesWithinAABB(entityToInclude, AxisAlignedBB.getBoundingBox(this.armPos.x - radius, this.armPos.y - radius, this.armPos.z - radius, this.armPos.x + radius, this.armPos.y + radius, this.armPos.z + radius));
+
+            if (found != null && found.size() > 0)
+            {
+                for (Entity entity : found)
                 {
-                    this.armbot.grab(entity);
-                    if (this.belt != null)
+                    if ((entity != null && !(entity instanceof EntityArrow) && !(entity instanceof EntityPlayer) && (!(entity instanceof EntityAgeable) || (entity instanceof EntityAgeable && child == ((EntityAgeable) entity).isChild()))))
                     {
-                        belt.ignoreEntity(entity);
+                        ((IArmbot) this.program.getMachine()).grab(entity);
+                        if (this.belt != null)
+                        {
+                            belt.ignoreEntity(entity);
+                        }
+                        return ProcessReturn.DONE;
                     }
-                    return ProcessReturn.DONE;
                 }
             }
-        }
 
-        return ProcessReturn.CONTINUE;
+            return ProcessReturn.CONTINUE;
+        }
+        return ProcessReturn.GENERAL_ERROR;
     }
 
     @Override
-    public TaskBase load(NBTTagCompound taskCompound)
+    public TaskBaseProcess load(NBTTagCompound taskCompound)
     {
         super.loadProgress(taskCompound);
         this.child = taskCompound.getBoolean("child");
@@ -122,7 +128,7 @@ public class CommandGrabEntity extends CommandGrabPrefab
     }
 
     @Override
-    public TaskBase clone()
+    public TaskBaseProcess clone()
     {
         return new CommandGrabEntity();
     }

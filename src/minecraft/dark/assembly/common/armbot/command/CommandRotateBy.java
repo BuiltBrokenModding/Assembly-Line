@@ -1,22 +1,22 @@
 package dark.assembly.common.armbot.command;
 
-import com.builtbroken.common.science.units.UnitHelper;
-
-import universalelectricity.core.vector.Vector3;
-import dark.api.al.coding.IProgramableMachine;
-import dark.api.al.coding.IProcessTask.ProcessReturn;
-import dark.api.al.coding.IProcessTask.TaskType;
-import dark.api.al.coding.args.ArgumentIntData;
-import dark.assembly.common.armbot.TaskBase;
-import dark.assembly.common.armbot.TaskArmbot;
-import dark.core.prefab.helpers.MathHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import universalelectricity.core.vector.Vector3;
+
+import com.builtbroken.common.science.units.UnitHelper;
+
+import dark.api.al.coding.IArmbot;
+import dark.api.al.coding.IProgrammableMachine;
+import dark.api.al.coding.args.ArgumentIntData;
+import dark.assembly.common.armbot.TaskBaseArmbot;
+import dark.assembly.common.armbot.TaskBaseProcess;
+import dark.core.prefab.helpers.MathHelper;
 
 /** Rotates an armbot by a set amount
  *
  * @author DarkGuardsman */
-public class CommandRotateBy extends TaskArmbot
+public class CommandRotateBy extends TaskBaseArmbot
 {
 
     int targetRotationYaw = 0, targetRotationPitch = 0, deltaPitch = 0, deltaYaw = 0;
@@ -25,20 +25,23 @@ public class CommandRotateBy extends TaskArmbot
 
     public CommandRotateBy()
     {
-        super("RotateBy", TaskType.DEFINEDPROCESS);
+        super("RotateBy");
         this.defautlArguments.add(new ArgumentIntData("yaw", 0, 360, 0));
         this.defautlArguments.add(new ArgumentIntData("pitch", 0, 360, 0));
     }
 
     @Override
-    public ProcessReturn onMethodCalled(World world, Vector3 location, IProgramableMachine armbot)
+    public ProcessReturn onMethodCalled()
     {
-        super.onMethodCalled(world, location, armbot);
+        if (super.onMethodCalled() == ProcessReturn.CONTINUE)
+        {
 
-        this.targetRotationYaw = (int) MathHelper.clampAngleTo360((float) (this.armbot.getRotation().x + UnitHelper.tryToParseInt(this.getArg("yaw"))));
-        this.targetRotationYaw = (int) MathHelper.clampAngleTo360((float) (this.armbot.getRotation().x + UnitHelper.tryToParseInt(this.getArg("pitch"))));
+            this.targetRotationYaw = (int) MathHelper.clampAngleTo360((float) (((IArmbot) this.program.getMachine()).getRotation().x + UnitHelper.tryToParseInt(this.getArg("yaw"))));
+            this.targetRotationYaw = (int) MathHelper.clampAngleTo360((float) (((IArmbot) this.program.getMachine()).getRotation().x + UnitHelper.tryToParseInt(this.getArg("pitch"))));
 
-        return ProcessReturn.CONTINUE;
+            return ProcessReturn.CONTINUE;
+        }
+        return ProcessReturn.GENERAL_ERROR;
     }
 
     @Override
@@ -47,7 +50,7 @@ public class CommandRotateBy extends TaskArmbot
         if (this.rotateToCommand == null)
         {
             this.rotateToCommand = new CommandRotateTo(this.targetRotationYaw, this.targetRotationPitch);
-            this.rotateToCommand.onMethodCalled(this.worldObj, this.devicePos, armbot);
+            this.rotateToCommand.onMethodCalled();
         }
 
         return this.rotateToCommand.onUpdate();
@@ -78,7 +81,7 @@ public class CommandRotateBy extends TaskArmbot
     }
 
     @Override
-    public TaskBase clone()
+    public TaskBaseProcess clone()
     {
         return new CommandRotateBy();
     }

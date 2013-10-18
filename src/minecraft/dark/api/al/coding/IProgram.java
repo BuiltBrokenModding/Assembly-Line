@@ -13,7 +13,9 @@ import universalelectricity.core.vector.Vector2;
 public interface IProgram extends Cloneable
 {
     /** Called when the program is added to an encoder, machine, or devices. */
-    public void init();
+    public void init(IProgrammableMachine machine);
+
+    public IProgrammableMachine getMachine();
 
     /** Variables this program has to operate. Is still limited by the actual machine. String is the
      * name, Object is the starting value and data type */

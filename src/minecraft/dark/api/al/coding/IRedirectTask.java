@@ -5,8 +5,8 @@ package dark.api.al.coding;
  * other than to help control the flow of the program
  *
  * @author DarkGuardsman */
-public interface IRedirectTask extends IProcessTask
+public interface IRedirectTask extends ILogicTask
 {
-    /** Were does this task redirect to */
-    public IProcessTask getExit();
+    /** Should we show this in the encoder. Useful if your using a task as part of another task */
+    public boolean render();
 }

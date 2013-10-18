@@ -11,9 +11,10 @@ import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.science.units.UnitHelper;
 
-import dark.api.al.coding.IProgramableMachine;
+import dark.api.al.coding.IArmbot;
+import dark.api.al.coding.IProgrammableMachine;
 import dark.api.al.coding.args.ArgumentIntData;
-import dark.assembly.common.armbot.TaskBase;
+import dark.assembly.common.armbot.TaskBaseProcess;
 
 public class CommandGrabItem extends CommandGrabPrefab
 {
@@ -28,54 +29,57 @@ public class CommandGrabItem extends CommandGrabPrefab
     }
 
     @Override
-    public ProcessReturn onMethodCalled(World world, Vector3 location, IProgramableMachine armbot)
+    public ProcessReturn onMethodCalled()
     {
-        super.onMethodCalled(world, location, armbot);
-
-        int ammount = UnitHelper.tryToParseInt(this.getArg("stackSize"), -1);
-        int blockID = UnitHelper.tryToParseInt(this.getArg("blockID"), -1);
-        int blockMeta = UnitHelper.tryToParseInt(this.getArg("blockMeta"), 32767);
-
-        if (blockID > 0)
+        if (super.onMethodCalled() == ProcessReturn.CONTINUE)
         {
-            stack = new ItemStack(blockID, ammount <= 0 ? 1 : ammount, blockMeta == -1 ? 32767 : blockMeta);
-        }
+            int ammount = UnitHelper.tryToParseInt(this.getArg("stackSize"), -1);
+            int blockID = UnitHelper.tryToParseInt(this.getArg("blockID"), -1);
+            int blockMeta = UnitHelper.tryToParseInt(this.getArg("blockMeta"), 32767);
 
-        return ProcessReturn.CONTINUE;
+            if (blockID > 0)
+            {
+                stack = new ItemStack(blockID, ammount <= 0 ? 1 : ammount, blockMeta == -1 ? 32767 : blockMeta);
+            }
+
+            return ProcessReturn.CONTINUE;
+        }
+        return ProcessReturn.GENERAL_ERROR;
     }
 
     @Override
     public ProcessReturn onUpdate()
     {
-        super.onUpdate();
-
-        if (this.armbot.getGrabbedObject() != null)
+        if (super.onUpdate() == ProcessReturn.CONTINUE)
         {
-            return ProcessReturn.DONE;
-        }
-        List<EntityItem> found = this.worldObj.getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(this.armPos.x - radius, this.armPos.y - radius, this.armPos.z - radius, this.armPos.x + radius, this.armPos.y + radius, this.armPos.z + radius));
-
-        if (found != null && found.size() > 0)
-        {
-            for (EntityItem item : found)
+            if (((IArmbot) this.program.getMachine()).getGrabbedObject() != null)
             {
-                if (stack == null || item.getEntityItem().isItemEqual(stack))
+                return ProcessReturn.DONE;
+            }
+            List<EntityItem> found = this.program.getMachine().getLocation().left().getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(this.armPos.x - radius, this.armPos.y - radius, this.armPos.z - radius, this.armPos.x + radius, this.armPos.y + radius, this.armPos.z + radius));
+
+            if (found != null && found.size() > 0)
+            {
+                for (EntityItem item : found)
                 {
-                    this.armbot.grab(item);
-                    if (this.belt != null)
+                    if (stack == null || item.getEntityItem().isItemEqual(stack))
                     {
-                        belt.ignoreEntity(item);
+                        ((IArmbot) this.program.getMachine()).grab(item);
+                        if (this.belt != null)
+                        {
+                            belt.ignoreEntity(item);
+                        }
+                        return ProcessReturn.DONE;
                     }
-                    return ProcessReturn.DONE;
                 }
             }
+            return ProcessReturn.CONTINUE;
         }
-
-        return ProcessReturn.CONTINUE;
+        return ProcessReturn.GENERAL_ERROR;
     }
 
     @Override
-    public TaskBase clone()
+    public TaskBaseProcess clone()
     {
         return new CommandGrabItem();
     }

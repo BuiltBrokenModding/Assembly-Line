@@ -12,11 +12,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
 
+import com.builtbroken.common.Pair;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -58,12 +60,14 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
     protected ProgramHelper programHelper;
 
+    protected Pair<World, Vector3> location;
+
     public EntityItem renderEntityItem;
 
     public TileEntityArmbot()
     {
         super(.02f);
-        programHelper = new ProgramHelper(this).setMemory(20);
+        programHelper = new ProgramHelper(this).setMemoryLimit(20);
     }
 
     @Override
@@ -71,7 +75,10 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     {
         super.updateEntity();
         Vector3 handPosition = this.getHandPos();
-
+        if (this.location == null || !this.location.left().equals(this.worldObj) || this.xCoord != this.location.right().intX() || this.yCoord != this.location.right().intY() || this.zCoord != this.location.right().intZ())
+        {
+            this.location = new Pair<World, Vector3>(this.worldObj, new Vector3(this));
+        }
         if (this.grabbedObject instanceof Entity)
         {
             if (this.spawnEntity)
@@ -108,11 +115,11 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
     public void updateLogic()
     {
-       if(this.programHelper == null)
-       {
-           this.programHelper = new ProgramHelper(this);
-       }
-       this.programHelper.onUpdate(this.worldObj, new Vector3(this));
+        if (this.programHelper == null)
+        {
+            this.programHelper = new ProgramHelper(this);
+        }
+        this.programHelper.onUpdate(this.worldObj, new Vector3(this));
     }
 
     public void updateRotation()
@@ -556,21 +563,44 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     @Override
     public IProgram getCurrentProgram()
     {
-        // TODO Auto-generated method stub
+        if (this.programHelper == null)
+        {
+            this.programHelper = new ProgramHelper(this);
+        }
+        if (this.programHelper != null)
+        {
+            return this.programHelper.getProgram();
+        }
         return null;
     }
 
     @Override
     public void setCurrentProgram(IProgram program)
     {
-        // TODO Auto-generated method stub
-
+        if (this.programHelper == null)
+        {
+            this.programHelper = new ProgramHelper(this);
+        }
+        if (this.programHelper != null)
+        {
+            this.programHelper.setProgram(program);
+        }
     }
 
     @Override
     public boolean clear(Object object)
     {
-        // TODO Auto-generated method stub
+        if (this.grabbedObject != null && this.grabbedObject.equals(object))
+        {
+            this.grabbedObject = null;
+            return true;
+        }
         return false;
+    }
+
+    @Override
+    public Pair<World, Vector3> getLocation()
+    {
+        return this.location;
     }
 }

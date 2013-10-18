@@ -1,17 +1,16 @@
 package dark.assembly.common.armbot.command;
 
-import com.builtbroken.common.science.units.UnitHelper;
-
-import universalelectricity.core.vector.Vector3;
-import dark.api.al.coding.IArmbot;
-import dark.api.al.coding.IProgramableMachine;
-import dark.api.al.coding.IProcessTask.TaskType;
-import dark.api.al.coding.args.ArgumentData;
-import dark.assembly.common.armbot.TaskBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import universalelectricity.core.vector.Vector3;
 
-public class CommandIdle extends TaskBase
+import com.builtbroken.common.science.units.UnitHelper;
+
+import dark.api.al.coding.IProgrammableMachine;
+import dark.api.al.coding.args.ArgumentData;
+import dark.assembly.common.armbot.TaskBaseProcess;
+
+public class CommandIdle extends TaskBaseProcess
 {
 
     /** The amount of time in which the machine will idle. */
@@ -20,21 +19,25 @@ public class CommandIdle extends TaskBase
 
     public CommandIdle()
     {
-        super("wait", TaskType.DEFINEDPROCESS);
+        super("wait");
         this.defautlArguments.add(new ArgumentData("idleTime", 20));
     }
 
     @Override
-    public ProcessReturn onMethodCalled(World world, Vector3 location, IProgramableMachine armbot)
+    public ProcessReturn onMethodCalled()
     {
-        super.onMethodCalled(world, location, armbot);
-
-        if (UnitHelper.tryToParseInt(this.getArg("idleTime")) > 0)
+        if (super.onMethodCalled() == ProcessReturn.CONTINUE)
         {
-            this.totalIdleTime = this.idleTime = UnitHelper.tryToParseInt(this.getArg("idleTime"));
-            return ProcessReturn.CONTINUE;
+
+            if (UnitHelper.tryToParseInt(this.getArg("idleTime")) > 0)
+            {
+                this.totalIdleTime = this.idleTime = UnitHelper.tryToParseInt(this.getArg("idleTime"));
+                return ProcessReturn.CONTINUE;
+            }
+
+            return ProcessReturn.ARGUMENT_ERROR;
         }
-        return ProcessReturn.ARGUMENT_ERROR;
+        return ProcessReturn.GENERAL_ERROR;
     }
 
     @Override
@@ -49,7 +52,7 @@ public class CommandIdle extends TaskBase
     }
 
     @Override
-    public TaskBase loadProgress(NBTTagCompound taskCompound)
+    public TaskBaseProcess loadProgress(NBTTagCompound taskCompound)
     {
         super.loadProgress(taskCompound);
         this.idleTime = taskCompound.getInteger("idleTime");
@@ -73,13 +76,13 @@ public class CommandIdle extends TaskBase
     }
 
     @Override
-    public TaskBase clone()
+    public TaskBaseProcess clone()
     {
         return new CommandIdle();
     }
 
     @Override
-    public boolean canUseTask(IProgramableMachine device)
+    public boolean canUseTask(IProgrammableMachine device)
     {
         return true;
     }

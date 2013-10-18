@@ -1,59 +1,63 @@
 package dark.assembly.common.armbot.command;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.science.units.UnitHelper;
 
 import dark.api.al.coding.IArmbot;
-import dark.api.al.coding.IProgramableMachine;
-import dark.api.al.coding.IProcessTask.TaskType;
+import dark.api.al.coding.IProgrammableMachine;
 import dark.api.al.coding.args.ArgumentIntData;
-import dark.assembly.common.armbot.TaskBase;
-import dark.assembly.common.armbot.TaskArmbot;
+import dark.assembly.common.armbot.TaskBaseArmbot;
+import dark.assembly.common.armbot.TaskBaseProcess;
 import dark.core.prefab.helpers.MathHelper;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
 
 /** Rotates the armbot to a specific direction. If not specified, it will turn right.
  *
  * @author DarkGuardsman */
-public class CommandRotateTo extends TaskArmbot
+public class CommandRotateTo extends TaskBaseArmbot
 {
     int targetRotationYaw = 0, targetRotationPitch = 0, currentRotationYaw, currentRotationPitch;
 
     public CommandRotateTo()
     {
-        super("RotateTo", TaskType.DEFINEDPROCESS);
+        super("RotateTo");
         this.defautlArguments.add(new ArgumentIntData("yaw", 0, 360, 0));
         this.defautlArguments.add(new ArgumentIntData("pitch", 0, 360, 0));
     }
 
     public CommandRotateTo(int yaw, int pitch)
     {
-        super("RotateTo", TaskType.DEFINEDPROCESS);
+        super("RotateTo");
         this.defautlArguments.add(new ArgumentIntData("yaw", yaw, 360, 0));
         this.defautlArguments.add(new ArgumentIntData("pitch", pitch, 360, 0));
     }
 
     @Override
-    public ProcessReturn onMethodCalled(World world, Vector3 location, IProgramableMachine device)
+    public ProcessReturn onMethodCalled()
     {
-        super.onMethodCalled(world, location, device);
+        if (super.onMethodCalled() == ProcessReturn.CONTINUE)
+        {
 
-        this.targetRotationYaw = (int) MathHelper.clampAngleTo360(UnitHelper.tryToParseInt(this.getArg("yaw")));
-        this.targetRotationPitch = (int) MathHelper.clampAngleTo360(UnitHelper.tryToParseInt(this.getArg("pitch")));
+            this.targetRotationYaw = (int) MathHelper.clampAngleTo360(UnitHelper.tryToParseInt(this.getArg("yaw")));
+            this.targetRotationPitch = (int) MathHelper.clampAngleTo360(UnitHelper.tryToParseInt(this.getArg("pitch")));
 
-        return ProcessReturn.CONTINUE;
+            return ProcessReturn.CONTINUE;
+        }
+        return ProcessReturn.GENERAL_ERROR;
     }
 
     @Override
     public ProcessReturn onUpdate()
     {
-        super.onUpdate();
+        if (super.onUpdate() == ProcessReturn.CONTINUE)
+        {
+            ((IArmbot) this.program.getMachine()).moveArmTo(this.targetRotationYaw, this.targetRotationPitch);
 
-        this.armbot.moveArmTo(this.targetRotationYaw, this.targetRotationPitch);
-
-        return Math.abs(this.armbot.getRotation().y - this.targetRotationPitch) > 0 && Math.abs(this.armbot.getRotation().x - this.targetRotationYaw) > 0 ? ProcessReturn.CONTINUE : ProcessReturn.DONE;
+            return Math.abs(((IArmbot) this.program.getMachine()).getRotation().y - this.targetRotationPitch) > 0 && Math.abs(((IArmbot) this.program.getMachine()).getRotation().x - this.targetRotationYaw) > 0 ? ProcessReturn.CONTINUE : ProcessReturn.DONE;
+        }
+        return ProcessReturn.GENERAL_ERROR;
     }
 
     @Override
@@ -81,7 +85,7 @@ public class CommandRotateTo extends TaskArmbot
     }
 
     @Override
-    public TaskBase clone()
+    public TaskBaseProcess clone()
     {
         return new CommandRotateTo();
     }

@@ -1,17 +1,6 @@
 package dark.assembly.common.armbot.command;
 
-import java.util.HashMap;
 import java.util.Random;
-
-import com.builtbroken.common.science.units.UnitHelper;
-
-import dark.api.al.coding.IArmbot;
-import dark.api.al.coding.IProgramableMachine;
-import dark.api.al.coding.IProcessTask.TaskType;
-import dark.api.al.coding.args.ArgumentData;
-import dark.api.al.coding.args.ArgumentFloatData;
-import dark.assembly.common.armbot.TaskBase;
-import dark.assembly.common.armbot.TaskArmbot;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -22,7 +11,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
 
-public class CommandFire extends TaskArmbot
+import com.builtbroken.common.Pair;
+import com.builtbroken.common.science.units.UnitHelper;
+
+import dark.api.al.coding.IArmbot;
+import dark.api.al.coding.IProgrammableMachine;
+import dark.api.al.coding.args.ArgumentFloatData;
+import dark.assembly.common.armbot.TaskBaseArmbot;
+import dark.assembly.common.armbot.TaskBaseProcess;
+
+public class CommandFire extends TaskBaseArmbot
 {
 
     private static final float MIN_ACTUAL_PITCH = -80;
@@ -35,116 +33,131 @@ public class CommandFire extends TaskArmbot
 
     public CommandFire()
     {
-        super("throw", TaskType.DEFINEDPROCESS);
+        super("throw");
         this.defautlArguments.add(new ArgumentFloatData("velocity", 1.0f, 2.5f, 1.0f));
     }
 
     @Override
-    public ProcessReturn onMethodCalled(World world, Vector3 location, IProgramableMachine armbot)
+    public ProcessReturn onMethodCalled()
     {
-        super.onMethodCalled(world, location, armbot);
+        if (super.onMethodCalled() == ProcessReturn.CONTINUE)
+        {
+            this.velocity = UnitHelper.tryToParseFloat(this.getArg("velocity"));
+            if (this.velocity > 2.5f)
+            {
+                this.velocity = 2.5f;
+            }
+            if (this.velocity < 0.125f)
+            {
+                this.velocity = 1f;
+            }
 
-        this.velocity = UnitHelper.tryToParseFloat(this.getArg("velocity"));
-        if (this.velocity > 2.5f)
-            this.velocity = 2.5f;
-        if (this.velocity < 0.125f)
-            this.velocity = 1f;
+            this.actualYaw = (float) ((IArmbot) this.program.getMachine()).getRotation().x;
+            this.actualPitch = ((MAX_ACTUAL_PITCH - MIN_ACTUAL_PITCH) * ((float) ((IArmbot) this.program.getMachine()).getRotation().y / 60f)) + MIN_ACTUAL_PITCH;
 
-        this.actualYaw = (float) this.armbot.getRotation().x;
-        this.actualPitch = ((MAX_ACTUAL_PITCH - MIN_ACTUAL_PITCH) * ((float) this.armbot.getRotation().y / 60f)) + MIN_ACTUAL_PITCH;
+            double x, y, z;
+            double yaw, pitch;
+            yaw = Math.toRadians(actualYaw);
+            pitch = Math.toRadians(actualPitch);
+            // yaw = actualYaw;
+            // pitch = actualPitch;
 
-        double x, y, z;
-        double yaw, pitch;
-        yaw = Math.toRadians(actualYaw);
-        pitch = Math.toRadians(actualPitch);
-        // yaw = actualYaw;
-        // pitch = actualPitch;
+            x = -Math.sin(yaw) * Math.cos(pitch);
+            y = Math.sin(pitch);
+            z = Math.cos(yaw) * Math.cos(pitch);
 
-        x = -Math.sin(yaw) * Math.cos(pitch);
-        y = Math.sin(pitch);
-        z = Math.cos(yaw) * Math.cos(pitch);
+            this.finalVelocity = new Vector3(x, y, z);
+            Random random = new Random(System.currentTimeMillis());
+            this.finalVelocity.x *= (1f - (1f / 200f)) + (random.nextFloat() * (1f / 100f));
+            this.finalVelocity.y *= (1f - (1f / 200f)) + (random.nextFloat() * (1f / 100f));
+            this.finalVelocity.z *= (1f - (1f / 200f)) + (random.nextFloat() * (1f / 100f));
 
-        this.finalVelocity = new Vector3(x, y, z);
-        Random random = new Random(System.currentTimeMillis());
-        this.finalVelocity.x *= (1f - (1f / 200f)) + (random.nextFloat() * (1f / 100f));
-        this.finalVelocity.y *= (1f - (1f / 200f)) + (random.nextFloat() * (1f / 100f));
-        this.finalVelocity.z *= (1f - (1f / 200f)) + (random.nextFloat() * (1f / 100f));
-
-        this.finalVelocity.scale(velocity);
-        return ProcessReturn.CONTINUE;
+            this.finalVelocity.scale(velocity);
+            return ProcessReturn.CONTINUE;
+        }
+        return ProcessReturn.GENERAL_ERROR;
     }
 
     @Override
     public ProcessReturn onUpdate()
     {
-        if (this.finalVelocity == null) // something went wrong
+        if (super.onUpdate() == ProcessReturn.CONTINUE)
         {
-            this.finalVelocity = new Vector3(0, 0, 0);
-        }
-        if (this.armbot.getGrabbedObject() != null)
-        {
-            Entity held = null;
-            Object obj = this.armbot.getGrabbedObject();
-            if (obj instanceof Entity)
+            if (this.finalVelocity == null) // something went wrong
             {
-                held = (Entity) obj;
+                this.finalVelocity = new Vector3(0, 0, 0);
             }
-            if (held != null)
+            if (((IArmbot) this.program.getMachine()).getGrabbedObject() != null)
             {
-                this.worldObj.playSound(this.devicePos.x, this.devicePos.y, this.devicePos.z, "random.bow", velocity, 2f - (velocity / 4f), true);
-                if (held instanceof EntityItem)
+                Entity held = null;
+                Object obj = ((IArmbot) this.program.getMachine()).getGrabbedObject();
+                Pair<World, Vector3> location = this.program.getMachine().getLocation();
+                if (obj instanceof Entity)
                 {
-                    EntityItem item = (EntityItem) held;
-                    ItemStack stack = item.getEntityItem();
-                    ItemStack thrown = stack.copy();
-                    thrown.stackSize = 1;
-                    if (item.getEntityItem().stackSize > 0)
+                    held = (Entity) obj;
+                }
+                if (held != null)
+                {
+                    location.left().playSound(location.right().x, location.right().y, location.right().z, "random.bow", velocity, 2f - (velocity / 4f), true);
+                    if (held instanceof EntityItem)
                     {
-                        stack.stackSize--;
-                        item.setEntityItemStack(stack);
-                    }
-                    else
-                    {
-                        this.armbot.drop("all");
-                        if (!this.worldObj.isRemote)
+                        EntityItem item = (EntityItem) held;
+                        ItemStack stack = item.getEntityItem();
+                        ItemStack thrown = stack.copy();
+                        thrown.stackSize = 1;
+                        if (item.getEntityItem().stackSize > 0)
                         {
-                            this.worldObj.removeEntity(held);
+                            stack.stackSize--;
+                            item.setEntityItemStack(stack);
+                        }
+                        else
+                        {
+                            ((IArmbot) this.program.getMachine()).drop("all");
+                            if (!location.left().isRemote)
+                            {
+                                location.left().removeEntity(held);
+                            }
+                        }
+                        if (item.getEntityItem().itemID == Item.arrow.itemID)
+                        {
+                            EntityArrow arrow = new EntityArrow(location.left(), ((IArmbot) this.program.getMachine()).getHandPos().x, ((IArmbot) this.program.getMachine()).getHandPos().y, ((IArmbot) this.program.getMachine()).getHandPos().z);
+                            arrow.motionX = this.finalVelocity.x;
+                            arrow.motionY = this.finalVelocity.y;
+                            arrow.motionZ = this.finalVelocity.z;
+                            if (!location.left().isRemote)
+                            {
+                                location.left().spawnEntityInWorld(arrow);
+                            }
+                        }
+                        else
+                        {
+                            EntityItem item2 = new EntityItem(location.left(), ((IArmbot) this.program.getMachine()).getHandPos().x, ((IArmbot) this.program.getMachine()).getHandPos().y, ((IArmbot) this.program.getMachine()).getHandPos().z, thrown);
+                            item2.motionX = this.finalVelocity.x;
+                            item2.motionY = this.finalVelocity.y;
+                            item2.motionZ = this.finalVelocity.z;
+                            if (!location.left().isRemote)
+                            {
+                                location.left().spawnEntityInWorld(item2);
+                            }
                         }
                     }
-                    if (item.getEntityItem().itemID == Item.arrow.itemID)
-                    {
-                        EntityArrow arrow = new EntityArrow(worldObj, this.armbot.getHandPos().x, this.armbot.getHandPos().y, this.armbot.getHandPos().z);
-                        arrow.motionX = this.finalVelocity.x;
-                        arrow.motionY = this.finalVelocity.y;
-                        arrow.motionZ = this.finalVelocity.z;
-                        if (!this.worldObj.isRemote)
-                            this.worldObj.spawnEntityInWorld(arrow);
-                    }
                     else
                     {
-                        EntityItem item2 = new EntityItem(worldObj, this.armbot.getHandPos().x, this.armbot.getHandPos().y, this.armbot.getHandPos().z, thrown);
-                        item2.motionX = this.finalVelocity.x;
-                        item2.motionY = this.finalVelocity.y;
-                        item2.motionZ = this.finalVelocity.z;
-                        if (!this.worldObj.isRemote)
-                            this.worldObj.spawnEntityInWorld(item2);
+                        ((IArmbot) this.program.getMachine()).drop("all");
+                        held.motionX = this.finalVelocity.x;
+                        held.motionY = this.finalVelocity.y;
+                        held.motionZ = this.finalVelocity.z;
                     }
                 }
-                else
-                {
-                    this.armbot.drop("all");
-                    held.motionX = this.finalVelocity.x;
-                    held.motionY = this.finalVelocity.y;
-                    held.motionZ = this.finalVelocity.z;
-                }
             }
+            return ProcessReturn.DONE;
         }
+        return ProcessReturn.GENERAL_ERROR;
 
-        return ProcessReturn.DONE;
     }
 
     @Override
-    public TaskBase loadProgress(NBTTagCompound taskCompound)
+    public TaskBaseProcess loadProgress(NBTTagCompound taskCompound)
     {
         super.loadProgress(taskCompound);
         this.actualYaw = taskCompound.getFloat("fireYaw");
@@ -180,7 +193,7 @@ public class CommandFire extends TaskArmbot
     }
 
     @Override
-    public TaskBase clone()
+    public TaskBaseProcess clone()
     {
         return new CommandFire();
     }

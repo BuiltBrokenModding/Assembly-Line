@@ -7,13 +7,8 @@ import java.util.HashMap;
  * should be is loops, items counts, and run conditions.
  *
  * @author DarkGuardsman */
-public interface IMemoryTask
+public interface IMemorySlot
 {
-    /** Number of memory locations this needs. One per variable with no set size at the moment.
-     * Though to keep the bit size down the types are limited at the moment. As well return zero to
-     * indicate there is no memory locations. Only called once when the task is run. */
-    public int getMemoryVars();
-
     /** Called per update to store the changes in memory. If return is null the memory location will
      * be released. Make sure to do this if the value is no longer needed. Memory is limited to
      * basic java variables, and will not accept arrays, or collections */
