@@ -5,29 +5,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import com.builtbroken.common.science.units.UnitHelper;
-
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
+
+import com.builtbroken.common.science.units.UnitHelper;
+
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
-import dark.api.al.coding.IArmbot;
-import dark.api.al.coding.IDeviceTask;
-import dark.api.al.coding.IProgramableMachine;
+import dark.api.al.coding.IProcessTask;
 import dark.api.al.coding.IMemoryTask;
 import dark.api.al.coding.IProgram;
-import dark.api.al.coding.IDeviceTask.TaskType;
+import dark.api.al.coding.IProgramableMachine;
 import dark.api.al.coding.args.ArgumentData;
-import dark.core.prefab.helpers.NBTFileLoader;
+import dark.core.prefab.helpers.NBTFileHelper;
 
 /** Basic command prefab used by machines like an armbot. You are not required to use this in order
  * to make armbot commands but it does help. Delete this if you don't plan to use it. */
-public abstract class TaskBase implements IDeviceTask, IMemoryTask
+public abstract class TaskBase implements IProcessTask, IMemoryTask
 {
     /** Program this is part of. Can be null while stores as a prefab waiting to be copied */
     protected IProgram program;
@@ -140,7 +137,7 @@ public abstract class TaskBase implements IDeviceTask, IMemoryTask
             NBTTagCompound parms = nbt.getCompoundTag("args");
             for (ArgumentData arg : this.getEncoderParms())
             {
-                Object obj = NBTFileLoader.loadObject(parms, arg.getName());
+                Object obj = NBTFileHelper.loadObject(parms, arg.getName());
                 if (arg.isValid(obj))
                 {
                     this.aruguments.put(arg.getName(), obj);
@@ -157,7 +154,7 @@ public abstract class TaskBase implements IDeviceTask, IMemoryTask
         NBTTagCompound parms = new NBTTagCompound();
         for (Entry<String, Object> entry : this.aruguments.entrySet())
         {
-            NBTFileLoader.saveObject(parms, entry.getKey(), entry.getValue());
+            NBTFileHelper.saveObject(parms, entry.getKey(), entry.getValue());
         }
         nbt.setCompoundTag("args", parms);
         if (this.pos != null)
@@ -169,7 +166,7 @@ public abstract class TaskBase implements IDeviceTask, IMemoryTask
     }
 
     @Override
-    public IDeviceTask loadProgress(NBTTagCompound nbt)
+    public IProcessTask loadProgress(NBTTagCompound nbt)
     {
         return this;
     }
@@ -188,12 +185,6 @@ public abstract class TaskBase implements IDeviceTask, IMemoryTask
 
     @Override
     public String getMethodName()
-    {
-        return this.methodName;
-    }
-
-    @Override
-    public String getCCMethod()
     {
         return this.methodName;
     }

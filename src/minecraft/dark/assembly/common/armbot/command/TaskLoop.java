@@ -4,10 +4,10 @@ import com.builtbroken.common.science.units.UnitHelper;
 
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
-import dark.api.al.coding.IDeviceTask;
+import dark.api.al.coding.IProcessTask;
 import dark.api.al.coding.IProgramableMachine;
-import dark.api.al.coding.ISplitArmbotTask;
-import dark.api.al.coding.IDeviceTask.TaskType;
+import dark.api.al.coding.ILogicTask;
+import dark.api.al.coding.IProcessTask.TaskType;
 import dark.api.al.coding.args.ArgumentIntData;
 import dark.assembly.common.armbot.TaskBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,10 +16,10 @@ import net.minecraft.world.World;
 /** Basic While loop that mainly handles number of repeats.
  *
  * @author DarkGuardsman */
-public class TaskLoop extends TaskBase implements ISplitArmbotTask
+public class TaskLoop extends TaskBase implements ILogicTask
 {
     protected int numReps = -1;
-    protected IDeviceTask entry, exit;
+    protected IProcessTask entry, exit;
 
     public TaskLoop()
     {
@@ -27,7 +27,7 @@ public class TaskLoop extends TaskBase implements ISplitArmbotTask
         this.defautlArguments.add(new ArgumentIntData("loop", 1, Integer.MAX_VALUE, -1));
     }
 
-    public TaskLoop(IDeviceTask entry, IDeviceTask exit)
+    public TaskLoop(IProcessTask entry, IProcessTask exit)
     {
         this();
         this.entry = entry;
@@ -49,13 +49,13 @@ public class TaskLoop extends TaskBase implements ISplitArmbotTask
     }
 
     @Override
-    public IDeviceTask getEntryPoint()
+    public IProcessTask getEntryPoint()
     {
         return this.entry;
     }
 
     @Override
-    public IDeviceTask getExitPoint()
+    public IProcessTask getExitPoint()
     {
         return this.exit;
     }
@@ -67,14 +67,14 @@ public class TaskLoop extends TaskBase implements ISplitArmbotTask
     }
 
     @Override
-    public ISplitArmbotTask setEntryPoint(IDeviceTask task)
+    public ILogicTask setEntryPoint(IProcessTask task)
     {
         this.entry = task;
         return this;
     }
 
     @Override
-    public void addExitPoint(IDeviceTask task)
+    public void addExitPoint(IProcessTask task)
     {
         this.exit = task;
     }

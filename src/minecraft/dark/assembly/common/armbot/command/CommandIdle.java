@@ -5,7 +5,7 @@ import com.builtbroken.common.science.units.UnitHelper;
 import universalelectricity.core.vector.Vector3;
 import dark.api.al.coding.IArmbot;
 import dark.api.al.coding.IProgramableMachine;
-import dark.api.al.coding.IDeviceTask.TaskType;
+import dark.api.al.coding.IProcessTask.TaskType;
 import dark.api.al.coding.args.ArgumentData;
 import dark.assembly.common.armbot.TaskBase;
 import net.minecraft.nbt.NBTTagCompound;

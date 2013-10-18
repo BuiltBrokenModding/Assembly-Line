@@ -1,6 +1,7 @@
-package dark.api.al.coding;
+package dark.api.al;
 
 import java.util.HashMap;
+
 
 /** Container like class to handle several servos in an object.
  *

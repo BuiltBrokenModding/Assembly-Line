@@ -20,20 +20,8 @@ import dark.api.al.coding.args.ArgumentData;
  * the task. That way it can save values after the task has been refreshed or even deleted.
  *
  * @author DarkGuardsman */
-public interface IDeviceTask extends Cloneable
+public interface IProcessTask extends ITask
 {
-    /** Location in the column and row format. */
-    public Vector2 getPosition();
-
-    public void setPosition(Vector2 pos);
-
-    /** Method name or rather command name this will be called. Uses both to ID this command, and do
-     * basic command structuring. */
-    public String getMethodName();
-
-    /** Should be the same as getMethodName() but can be different */
-    public String getCCMethod();
-
     /** Passed in from the device to the program manager then here after a Computer craft machine
      * calls a this commands method name. {@IPeripheral #callMethod()} */
     public Object[] onCCMethodCalled(World world, Vector3 location, IProgramableMachine device, IComputerAccess computer, ILuaContext context) throws Exception;
@@ -54,24 +42,6 @@ public interface IDeviceTask extends Cloneable
     /** Called when the task is finish and then cleared */
     public void terminated();
 
-    /** Read the command from the armbot save. */
-    public IDeviceTask load(NBTTagCompound nbt);
-
-    /** Writes the command to the armbot save. Should only be used to save the data used to recreate
-     * a new version of this command */
-    public NBTTagCompound save(NBTTagCompound nbt);
-
-    /** Saves the current progress of the current command */
-    public IDeviceTask loadProgress(NBTTagCompound nbt);
-
-    /** Reads the progress of the command if it was saved mid process */
-    public NBTTagCompound saveProgress(NBTTagCompound nbt);
-
-    public TaskType getType();
-
-    /** Can this task function for this machine */
-    public boolean canUseTask(IProgramableMachine device);
-
     /** ArgumentData used to both restrict and set values into the argument hashmap */
     public List<ArgumentData> getEncoderParms();
 
@@ -81,21 +51,8 @@ public interface IDeviceTask extends Cloneable
     /** Get all given arguments */
     public HashMap<String, Object> getArgs();
 
-    /** Used mainly for display purposes in the encoder */
-    public static enum TaskType
-    {
-        DATA("Data"),
-        DEFINEDPROCESS("Defined Process"),
-        PROCESS("Process"),
-        DECISION("Decision");
-        public ResourceLocation blockTexure;
-        public String name;
-
-        private TaskType(String name)
-        {
-            this.name = name;
-        }
-    }
+    /** Get all given arguments */
+    public void setArgs(HashMap<String, Object> args);
 
     public static enum ProcessReturn
     {
@@ -113,5 +70,4 @@ public interface IDeviceTask extends Cloneable
         }
     }
 
-    public IDeviceTask clone();
 }

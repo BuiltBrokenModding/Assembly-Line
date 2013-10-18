@@ -1,6 +1,6 @@
 package dark.assembly.common.armbot.command;
 
-import dark.api.al.coding.IDeviceTask.TaskType;
+import dark.api.al.coding.IProcessTask.TaskType;
 import dark.assembly.common.armbot.TaskBase;
 import dark.assembly.common.armbot.TaskArmbot;
 import net.minecraft.block.Block;

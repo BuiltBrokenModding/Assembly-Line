@@ -7,8 +7,8 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import universalelectricity.core.vector.Vector3;
-import dark.api.al.coding.IDeviceTask;
-import dark.api.al.coding.IDeviceTask.TaskType;
+import dark.api.al.coding.IProcessTask;
+import dark.api.al.coding.IProcessTask.TaskType;
 import dark.assembly.common.armbot.TaskBase;
 import dark.assembly.common.armbot.TaskArmbot;
 import dark.core.prefab.helpers.ItemWorldHelper;
@@ -71,7 +71,7 @@ public class CommandBreak extends TaskArmbot
     }
 
     @Override
-    public IDeviceTask loadProgress(NBTTagCompound nbt)
+    public IProcessTask loadProgress(NBTTagCompound nbt)
     {
         this.breakTicks = nbt.getInteger("breakTicks");
         return this;

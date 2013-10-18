@@ -4,8 +4,8 @@ import com.builtbroken.common.science.units.UnitHelper;
 
 import universalelectricity.core.vector.Vector3;
 import dark.api.al.coding.IProgramableMachine;
-import dark.api.al.coding.IDeviceTask.ProcessReturn;
-import dark.api.al.coding.IDeviceTask.TaskType;
+import dark.api.al.coding.IProcessTask.ProcessReturn;
+import dark.api.al.coding.IProcessTask.TaskType;
 import dark.api.al.coding.args.ArgumentIntData;
 import dark.assembly.common.armbot.TaskBase;
 import dark.assembly.common.armbot.TaskArmbot;

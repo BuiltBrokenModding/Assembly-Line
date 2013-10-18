@@ -4,7 +4,7 @@ import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
 import dark.api.al.coding.IArmbot;
 import dark.api.al.coding.IProgramableMachine;
-import dark.api.al.coding.IDeviceTask.TaskType;
+import dark.api.al.coding.IProcessTask.TaskType;
 
 /** Used by arms to break a specific block in a position.
  *

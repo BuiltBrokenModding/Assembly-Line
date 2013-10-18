@@ -13,7 +13,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
-import dark.api.al.coding.IDeviceTask;
+import dark.api.al.coding.IProcessTask;
 import dark.api.al.coding.IProgram;
 import dark.api.al.coding.TaskRegistry;
 import dark.assembly.common.armbot.Program;
@@ -115,7 +115,7 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
                     if (id.equalsIgnoreCase(TileEntityEncoder.PROGRAM_CHANGE))
                     {
 
-                        IDeviceTask task = TaskRegistry.getCommand(dis.readUTF());
+                        IProcessTask task = TaskRegistry.getCommand(dis.readUTF());
                         task.setPosition(new Vector2(dis.readInt(), dis.readInt()));
                         task.load(PacketManager.readNBTTagCompound(dis));
                         this.program.setTaskAt(task.getPosition(), task);
@@ -163,7 +163,7 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
         }
     }
 
-    public void updateTask(IDeviceTask task)
+    public void updateTask(IProcessTask task)
     {
         if (task != null)
         {

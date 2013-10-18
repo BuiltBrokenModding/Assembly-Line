@@ -15,12 +15,12 @@ public class TaskRegistry
     /** A class of all available commands.
      *
      * String - Command name. Command - The actual command class. */
-    private static final HashMap<String, IDeviceTask> COMMANDS = new HashMap();
+    private static final HashMap<String, IProcessTask> COMMANDS = new HashMap();
 
     private static final HashMap<String, IArmbot> SUDO_BOTS = new HashMap<String, IArmbot>();
 
     /** Registers a command and tells armbots that it exists */
-    public static void registerCommand(IDeviceTask task)
+    public static void registerCommand(IProcessTask task)
     {
         if (!COMMANDS.containsKey(task.getMethodName()))
         {
@@ -28,7 +28,7 @@ public class TaskRegistry
         }
     }
 
-    public static void registerCommand(String registryName, IDeviceTask task)
+    public static void registerCommand(String registryName, IProcessTask task)
     {
         if (!COMMANDS.containsKey(registryName))
         {
@@ -37,9 +37,9 @@ public class TaskRegistry
     }
 
     /** returns the first command with the same name */
-    public static IDeviceTask getCommand(String name)
+    public static IProcessTask getCommand(String name)
     {
-        for (Entry<String, IDeviceTask> command : COMMANDS.entrySet())
+        for (Entry<String, IProcessTask> command : COMMANDS.entrySet())
         {
             if (command.getKey().equalsIgnoreCase(name))
             {
@@ -50,10 +50,10 @@ public class TaskRegistry
     }
 
     /** Gets all commands with the given name though there should only be one */
-    public static List<IDeviceTask> getCommands(String name)
+    public static List<IProcessTask> getCommands(String name)
     {
-        List<IDeviceTask> tasks = new ArrayList<IDeviceTask>();
-        for (Entry<String, IDeviceTask> command : COMMANDS.entrySet())
+        List<IProcessTask> tasks = new ArrayList<IProcessTask>();
+        for (Entry<String, IProcessTask> command : COMMANDS.entrySet())
         {
             if (command.getValue().getMethodName().equalsIgnoreCase(name))
             {

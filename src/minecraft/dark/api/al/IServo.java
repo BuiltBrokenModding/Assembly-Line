@@ -1,4 +1,4 @@
-package dark.api.al.coding;
+package dark.api.al;
 
 import universalelectricity.core.vector.Vector2;
 /**

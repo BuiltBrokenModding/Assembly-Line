@@ -2,16 +2,16 @@ package dark.assembly.common.armbot.command;
 
 import universalelectricity.core.vector.Vector2;
 import net.minecraft.nbt.NBTTagCompound;
-import dark.api.al.coding.IDeviceTask;
+import dark.api.al.coding.IProcessTask;
 import dark.api.al.coding.IProgramableMachine;
-import dark.api.al.coding.ISplitArmbotTask;
+import dark.api.al.coding.ILogicTask;
 import dark.assembly.common.armbot.TaskBase;
 
-public class TaskIF extends TaskBase implements ISplitArmbotTask
+public class TaskIF extends TaskBase implements ILogicTask
 {
-    protected IDeviceTask entryPoint = null;
-    protected IDeviceTask exitTruePoint = null;
-    protected IDeviceTask exitFalsePoint = null;
+    protected IProcessTask entryPoint = null;
+    protected IProcessTask exitTruePoint = null;
+    protected IProcessTask exitFalsePoint = null;
     protected boolean isTrue = false;
 
     public TaskIF()
@@ -19,7 +19,7 @@ public class TaskIF extends TaskBase implements ISplitArmbotTask
         super("IF", TaskType.DECISION);
     }
 
-    public TaskIF(IDeviceTask entryPoint, IDeviceTask trueExit, IDeviceTask falseExit)
+    public TaskIF(IProcessTask entryPoint, IProcessTask trueExit, IProcessTask falseExit)
     {
         this();
         this.setEntryPoint(this.entryPoint);
@@ -35,13 +35,13 @@ public class TaskIF extends TaskBase implements ISplitArmbotTask
     }
 
     @Override
-    public IDeviceTask getEntryPoint()
+    public IProcessTask getEntryPoint()
     {
         return this.entryPoint;
     }
 
     @Override
-    public IDeviceTask getExitPoint()
+    public IProcessTask getExitPoint()
     {
         if (this.isTrue)
         {
@@ -57,14 +57,14 @@ public class TaskIF extends TaskBase implements ISplitArmbotTask
     }
 
     @Override
-    public ISplitArmbotTask setEntryPoint(IDeviceTask task)
+    public ILogicTask setEntryPoint(IProcessTask task)
     {
         this.entryPoint = task;
         return this;
     }
 
     @Override
-    public void addExitPoint(IDeviceTask task)
+    public void addExitPoint(IProcessTask task)
     {
         // TODO Auto-generated method stub
 

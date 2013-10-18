@@ -8,10 +8,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import dark.api.al.coding.IArmbotUseable;
-import dark.api.al.coding.IDeviceTask;
+import dark.api.al.coding.IProcessTask;
 import dark.api.al.coding.IProgramableMachine;
-import dark.api.al.coding.IDeviceTask.ProcessReturn;
-import dark.api.al.coding.IDeviceTask.TaskType;
+import dark.api.al.coding.IProcessTask.ProcessReturn;
+import dark.api.al.coding.IProcessTask.TaskType;
 import dark.api.al.coding.args.ArgumentData;
 import dark.api.al.coding.args.ArgumentIntData;
 import dark.assembly.common.armbot.TaskBase;
@@ -100,7 +100,7 @@ public class CommandUse extends TaskArmbot
     }
 
     @Override
-    public IDeviceTask loadProgress(NBTTagCompound nbt)
+    public IProcessTask loadProgress(NBTTagCompound nbt)
     {
         this.curTimes = nbt.getInteger("useCurTimes");
         return this;

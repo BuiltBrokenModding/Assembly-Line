@@ -10,7 +10,7 @@ import universalelectricity.core.vector.Vector2;
  * Column and row based system.
  *
  * @author DarkGuardsman */
-public interface IProgram
+public interface IProgram extends Cloneable
 {
     /** Called when the program is added to an encoder, machine, or devices. */
     public void init();
@@ -20,17 +20,23 @@ public interface IProgram
     public HashMap<String, Object> getDeclairedVarables();
 
     /** Next task in the set. Its up to the program to increment down the list */
-    public IDeviceTask getNextTask();
+    public ITask getNextTask();
 
     /** Gets a task at the given x y location in the program */
-    public IDeviceTask getTaskAt(Vector2 vector2);
+    public ITask getTaskAt(Vector2 vector2);
 
-    public void setTaskAt(Vector2 vector2, IDeviceTask task);
+    /** Returns the entire program as a map as grid locations and tasks. */
+    public HashMap<Vector2, ITask> getTaskMap();
 
-    /** Return this program to its starting conditions
-     *
-     * @full - means full reset including memory clean */
-    public void reset(boolean full);
+    /** Sets the task at the point overriding what was there. If the task is null remove it and shift
+     * everything up one */
+    public void setTaskAt(Vector2 vector2, ITask task);
+
+    /** Inserts a task at the point. If a task is already there everything should shift down 1 */
+    public void insertTask(Vector2 vector2, ITask task);
+
+    /** Return this program to its starting conditions */
+    public void reset();
 
     /** Sets the declared variable */
     public void setVar(String name, Object object);

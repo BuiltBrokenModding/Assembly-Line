@@ -2,14 +2,16 @@ package dark.api.al.coding;
 
 import java.util.HashMap;
 
-import dark.api.al.coding.IDeviceTask.ProcessReturn;
+import dark.api.al.coding.IProcessTask.ProcessReturn;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 import universalelectricity.core.vector.Vector3;
 
-/** Basic class to handle a armbot like programs for any object that uses the IArmbot class
+/** Basic class to handle a machine like programs for any object that uses the IProgramable
+ * interface. Doesn't actually do much then tell the program to function, and stores the programs
+ * active run time memory.
  *
  * @author DarkGuardsman */
 public class ProgramHelper
@@ -18,7 +20,7 @@ public class ProgramHelper
     protected IProgram program;
     protected IProgramableMachine bot;
     /** Current task in program */
-    protected IDeviceTask currentTask;
+    protected ITask currentTask;
     /** Do we have a memory to store values */
     boolean hasMemory = false;
     boolean hasTaskBeenCalled = false, nextTask = false;
@@ -46,23 +48,31 @@ public class ProgramHelper
             }
             if (this.currentTask != null)
             {
-                if (!this.hasTaskBeenCalled)
+                if (this.currentTask instanceof IProcessTask)
                 {
-                    re = this.currentTask.onMethodCalled(world, botLocation, bot);
+                    if (!this.hasTaskBeenCalled)
+                    {
+                        this.hasTaskBeenCalled = true;
+                        re = ((IProcessTask) this.currentTask).onMethodCalled(world, botLocation, bot);
+                        if (re == ProcessReturn.DONE)
+                        {
+                            this.nextTask = true;
+                        }
+                        else if (re != ProcessReturn.CONTINUE)
+                        {
+                            return re;
+                        }
+                    }
+
+                    re = ((IProcessTask) this.currentTask).onUpdate();
                     if (re == ProcessReturn.DONE)
                     {
                         this.nextTask = true;
                     }
-                    else if (re != ProcessReturn.CONTINUE)
-                    {
-                        return re;
-                    }
                 }
-
-                re = this.currentTask.onUpdate();
-                if (re == ProcessReturn.DONE)
+                else
                 {
-                    this.nextTask = true;
+                    re = ProcessReturn.CONTINUE;
                 }
                 return re;
             }
