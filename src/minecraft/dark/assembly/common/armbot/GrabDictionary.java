@@ -66,7 +66,7 @@ public class GrabDictionary
     }
 
     /** gets the name of the Entity
-     * 
+     *
      * @return "" if null */
     public String getName()
     {
@@ -78,7 +78,7 @@ public class GrabDictionary
     }
 
     /** gets the Entity Class
-     * 
+     *
      * @return Entity.class if null */
     public Class<? extends Entity> getEntityClass()
     {
@@ -107,27 +107,5 @@ public class GrabDictionary
         }
     }
 
-    static
-    {
-        registerGrabableEntity("chicken", EntityChicken.class);
-        registerGrabableEntity("cow", EntityCow.class);
-        registerGrabableEntity("sheep", EntitySheep.class);
-        registerGrabableEntity("pig", EntityPig.class);
-        registerGrabableEntity("player", EntityPlayer.class);
-        registerGrabableEntity("zombie", EntityZombie.class);
-        registerGrabableEntity("zomb", EntityZombie.class);
-        registerGrabableEntity("skeleton", EntitySkeleton.class);
-        registerGrabableEntity("skel", EntitySkeleton.class);
-        registerGrabableEntity("animal", EntityAnimal.class);
-        registerGrabableEntity("monster", EntityMob.class);
-        registerGrabableEntity("mob", EntityMob.class);
-        registerGrabableEntity("creeper", EntityCreeper.class);
-        registerGrabableEntity("spider", EntitySpider.class);
-        registerGrabableEntity("slime", EntitySlime.class);
-        registerGrabableEntity("items", EntityItem.class);
-        registerGrabableEntity("all", Entity.class);
-        registerGrabableEntity("everything", Entity.class);
-        registerGrabableEntity("boat", EntityBoat.class);
-        registerGrabableEntity("cart", EntityMinecart.class);
-    }
+
 }

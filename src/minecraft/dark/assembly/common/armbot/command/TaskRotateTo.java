@@ -16,18 +16,18 @@ import dark.core.prefab.helpers.MathHelper;
 /** Rotates the armbot to a specific direction. If not specified, it will turn right.
  *
  * @author DarkGuardsman */
-public class CommandRotateTo extends TaskBaseArmbot
+public class TaskRotateTo extends TaskBaseArmbot
 {
     int targetRotationYaw = 0, targetRotationPitch = 0, currentRotationYaw, currentRotationPitch;
 
-    public CommandRotateTo()
+    public TaskRotateTo()
     {
         super("RotateTo");
         this.defautlArguments.add(new ArgumentIntData("yaw", 0, 360, 0));
         this.defautlArguments.add(new ArgumentIntData("pitch", 0, 360, 0));
     }
 
-    public CommandRotateTo(int yaw, int pitch)
+    public TaskRotateTo(int yaw, int pitch)
     {
         super("RotateTo");
         this.defautlArguments.add(new ArgumentIntData("yaw", yaw, 360, 0));
@@ -67,7 +67,7 @@ public class CommandRotateTo extends TaskBaseArmbot
     }
 
     @Override
-    public CommandRotateTo load(NBTTagCompound taskCompound)
+    public TaskRotateTo load(NBTTagCompound taskCompound)
     {
         super.loadProgress(taskCompound);
         this.targetRotationPitch = taskCompound.getInteger("rotPitch");
@@ -87,6 +87,6 @@ public class CommandRotateTo extends TaskBaseArmbot
     @Override
     public TaskBaseProcess clone()
     {
-        return new CommandRotateTo();
+        return new TaskRotateTo();
     }
 }

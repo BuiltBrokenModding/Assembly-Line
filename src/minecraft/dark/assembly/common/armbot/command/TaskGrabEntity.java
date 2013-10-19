@@ -17,7 +17,7 @@ import dark.api.al.coding.args.ArgumentListData;
 import dark.assembly.common.armbot.GrabDictionary;
 import dark.assembly.common.armbot.TaskBaseProcess;
 
-public class CommandGrabEntity extends CommandGrabPrefab
+public class TaskGrabEntity extends TaskGrabPrefab
 {
     /** If the grab command is specific to one entity this tell whether or not to grab the child
      * version of that entity. */
@@ -26,7 +26,7 @@ public class CommandGrabEntity extends CommandGrabPrefab
     private Class<? extends Entity> entityToInclude;
 
     @SuppressWarnings("unchecked")
-    public CommandGrabEntity()
+    public TaskGrabEntity()
     {
         super("Grab-Entity");
         this.defautlArguments.add(new ArgumentData("child", false));
@@ -69,6 +69,7 @@ public class CommandGrabEntity extends CommandGrabPrefab
             {
                 return ProcessReturn.DONE;
             }
+            @SuppressWarnings("unchecked")
             List<Entity> found = this.program.getMachine().getLocation().left().getEntitiesWithinAABB(entityToInclude, AxisAlignedBB.getBoundingBox(this.armPos.x - radius, this.armPos.y - radius, this.armPos.z - radius, this.armPos.x + radius, this.armPos.y + radius, this.armPos.z + radius));
 
             if (found != null && found.size() > 0)
@@ -130,7 +131,7 @@ public class CommandGrabEntity extends CommandGrabPrefab
     @Override
     public TaskBaseProcess clone()
     {
-        return new CommandGrabEntity();
+        return new TaskGrabEntity();
     }
 
 }

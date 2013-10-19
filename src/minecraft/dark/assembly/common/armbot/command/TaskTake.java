@@ -21,13 +21,13 @@ import dark.assembly.common.armbot.TaskBaseProcess;
 import dark.assembly.common.machine.InvInteractionHelper;
 import dark.core.prefab.helpers.MathHelper;
 
-public class CommandTake extends TaskBaseArmbot
+public class TaskTake extends TaskBaseArmbot
 {
 
     protected ItemStack stack;
     protected int ammount = -1;
 
-    public CommandTake()
+    public TaskTake()
     {
         super("Take");
         this.defautlArguments.add(new ArgumentIntData("blockID", -1, Block.blocksList.length - 1, -1));
@@ -86,7 +86,7 @@ public class CommandTake extends TaskBaseArmbot
     }
 
     @Override
-    public CommandTake load(NBTTagCompound taskCompound)
+    public TaskTake load(NBTTagCompound taskCompound)
     {
         super.loadProgress(taskCompound);
         this.stack = ItemStack.loadItemStackFromNBT(taskCompound.getCompoundTag("item"));
@@ -109,6 +109,6 @@ public class CommandTake extends TaskBaseArmbot
     @Override
     public TaskBaseProcess clone()
     {
-        return new CommandTake();
+        return new TaskTake();
     }
 }

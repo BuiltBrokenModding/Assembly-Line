@@ -12,13 +12,13 @@ import dark.assembly.common.armbot.TaskBaseArmbot;
 /** Prefab for grab based commands
  *
  * @author DarkGuardsman */
-public abstract class CommandGrabPrefab extends TaskBaseArmbot
+public abstract class TaskGrabPrefab extends TaskBaseArmbot
 {
     public static final float radius = 0.5f;
     protected Vector3 armPos;
     protected IBelt belt;
 
-    public CommandGrabPrefab(String name)
+    public TaskGrabPrefab(String name)
     {
         super(name);
     }

@@ -16,12 +16,12 @@ import dark.api.al.coding.args.ArgumentIntData;
 import dark.assembly.common.armbot.TaskBaseArmbot;
 import dark.assembly.common.armbot.TaskBaseProcess;
 
-public class CommandUse extends TaskBaseArmbot
+public class TaskUse extends TaskBaseArmbot
 {
 
     protected int times, curTimes;
 
-    public CommandUse()
+    public TaskUse()
     {
         super("use");
         this.defautlArguments.add(new ArgumentIntData("repeat", 1, Integer.MAX_VALUE, 1));
@@ -88,7 +88,7 @@ public class CommandUse extends TaskBaseArmbot
     }
 
     @Override
-    public CommandUse load(NBTTagCompound taskCompound)
+    public TaskUse load(NBTTagCompound taskCompound)
     {
         super.loadProgress(taskCompound);
         this.times = taskCompound.getInteger("useTimes");
@@ -122,6 +122,6 @@ public class CommandUse extends TaskBaseArmbot
     @Override
     public TaskBaseProcess clone()
     {
-        return new CommandUse();
+        return new TaskUse();
     }
 }

@@ -20,7 +20,7 @@ import dark.api.al.coding.args.ArgumentFloatData;
 import dark.assembly.common.armbot.TaskBaseArmbot;
 import dark.assembly.common.armbot.TaskBaseProcess;
 
-public class CommandFire extends TaskBaseArmbot
+public class TaskFire extends TaskBaseArmbot
 {
 
     private static final float MIN_ACTUAL_PITCH = -80;
@@ -31,7 +31,7 @@ public class CommandFire extends TaskBaseArmbot
     private float velocity;
     private Vector3 finalVelocity;
 
-    public CommandFire()
+    public TaskFire()
     {
         super("throw");
         this.defautlArguments.add(new ArgumentFloatData("velocity", 1.0f, 2.5f, 1.0f));
@@ -195,6 +195,6 @@ public class CommandFire extends TaskBaseArmbot
     @Override
     public TaskBaseProcess clone()
     {
-        return new CommandFire();
+        return new TaskFire();
     }
 }

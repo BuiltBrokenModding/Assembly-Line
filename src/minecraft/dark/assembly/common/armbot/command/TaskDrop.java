@@ -4,9 +4,9 @@ import dark.api.al.coding.IArmbot;
 import dark.assembly.common.armbot.TaskBaseArmbot;
 import dark.assembly.common.armbot.TaskBaseProcess;
 
-public class CommandDrop extends TaskBaseArmbot
+public class TaskDrop extends TaskBaseArmbot
 {
-    public CommandDrop()
+    public TaskDrop()
     {
         super("drop");
     }
@@ -24,7 +24,7 @@ public class CommandDrop extends TaskBaseArmbot
     @Override
     public TaskBaseProcess clone()
     {
-        return new CommandDrop();
+        return new TaskDrop();
     }
 
 }

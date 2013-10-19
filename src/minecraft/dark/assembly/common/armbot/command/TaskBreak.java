@@ -20,17 +20,17 @@ import dark.core.prefab.helpers.ItemWorldHelper;
 /** Used by arms to break a specific block in a position.
  *
  * @author Calclavia */
-public class CommandBreak extends TaskBaseArmbot
+public class TaskBreak extends TaskBaseArmbot
 {
     protected int breakTicks = 30;
     protected boolean keep = false;
 
-    public CommandBreak()
+    public TaskBreak()
     {
         this("break");
     }
 
-    public CommandBreak(String name)
+    public TaskBreak(String name)
     {
         super(name);
         this.breakTicks = 30;
@@ -71,7 +71,7 @@ public class CommandBreak extends TaskBaseArmbot
     @Override
     public TaskBaseProcess clone()
     {
-        return new CommandBreak();
+        return new TaskBreak();
     }
 
     @Override

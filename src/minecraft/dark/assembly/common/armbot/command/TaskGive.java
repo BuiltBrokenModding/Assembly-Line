@@ -21,13 +21,13 @@ import dark.assembly.common.armbot.TaskBaseProcess;
 import dark.assembly.common.machine.InvInteractionHelper;
 import dark.core.prefab.helpers.MathHelper;
 
-public class CommandGive extends TaskBaseArmbot
+public class TaskGive extends TaskBaseArmbot
 {
 
     private ItemStack stack;
     private int ammount = -1;
 
-    public CommandGive()
+    public TaskGive()
     {
         super("give");
         this.defautlArguments.add(new ArgumentIntData("blockID", -1, Block.blocksList.length - 1, -1));
@@ -113,7 +113,7 @@ public class CommandGive extends TaskBaseArmbot
     @Override
     public TaskBaseProcess clone()
     {
-        return new CommandGive();
+        return new TaskGive();
     }
 
     @Override

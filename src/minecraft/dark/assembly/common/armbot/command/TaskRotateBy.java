@@ -16,14 +16,14 @@ import dark.core.prefab.helpers.MathHelper;
 /** Rotates an armbot by a set amount
  *
  * @author DarkGuardsman */
-public class CommandRotateBy extends TaskBaseArmbot
+public class TaskRotateBy extends TaskBaseArmbot
 {
 
     int targetRotationYaw = 0, targetRotationPitch = 0, deltaPitch = 0, deltaYaw = 0;
 
-    private CommandRotateTo rotateToCommand;
+    private TaskRotateTo rotateToCommand;
 
-    public CommandRotateBy()
+    public TaskRotateBy()
     {
         super("RotateBy");
         this.defautlArguments.add(new ArgumentIntData("yaw", 0, 360, 0));
@@ -49,7 +49,7 @@ public class CommandRotateBy extends TaskBaseArmbot
     {
         if (this.rotateToCommand == null)
         {
-            this.rotateToCommand = new CommandRotateTo(this.targetRotationYaw, this.targetRotationPitch);
+            this.rotateToCommand = new TaskRotateTo(this.targetRotationYaw, this.targetRotationPitch);
             this.rotateToCommand.onMethodCalled();
         }
 
@@ -57,7 +57,7 @@ public class CommandRotateBy extends TaskBaseArmbot
     }
 
     @Override
-    public CommandRotateBy load(NBTTagCompound taskCompound)
+    public TaskRotateBy load(NBTTagCompound taskCompound)
     {
         super.loadProgress(taskCompound);
         this.targetRotationPitch = taskCompound.getInteger("rotPitch");
@@ -83,6 +83,6 @@ public class CommandRotateBy extends TaskBaseArmbot
     @Override
     public TaskBaseProcess clone()
     {
-        return new CommandRotateBy();
+        return new TaskRotateBy();
     }
 }

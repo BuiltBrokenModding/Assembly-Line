@@ -16,11 +16,11 @@ import dark.api.al.coding.IProgrammableMachine;
 import dark.api.al.coding.args.ArgumentIntData;
 import dark.assembly.common.armbot.TaskBaseProcess;
 
-public class CommandGrabItem extends CommandGrabPrefab
+public class TaskGrabItem extends TaskGrabPrefab
 {
     ItemStack stack = null;
 
-    public CommandGrabItem()
+    public TaskGrabItem()
     {
         super("Grab-Item");
         this.defautlArguments.add(new ArgumentIntData("blockID", -1, Block.blocksList.length - 1, -1));
@@ -81,6 +81,6 @@ public class CommandGrabItem extends CommandGrabPrefab
     @Override
     public TaskBaseProcess clone()
     {
-        return new CommandGrabItem();
+        return new TaskGrabItem();
     }
 }

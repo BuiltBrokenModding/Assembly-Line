@@ -10,14 +10,14 @@ import dark.api.al.coding.IProgrammableMachine;
 import dark.api.al.coding.args.ArgumentData;
 import dark.assembly.common.armbot.TaskBaseProcess;
 
-public class CommandIdle extends TaskBaseProcess
+public class TaskIdle extends TaskBaseProcess
 {
 
     /** The amount of time in which the machine will idle. */
     public int idleTime = 80;
     private int totalIdleTime = 80;
 
-    public CommandIdle()
+    public TaskIdle()
     {
         super("wait");
         this.defautlArguments.add(new ArgumentData("idleTime", 20));
@@ -78,7 +78,7 @@ public class CommandIdle extends TaskBaseProcess
     @Override
     public TaskBaseProcess clone()
     {
-        return new CommandIdle();
+        return new TaskIdle();
     }
 
     @Override
