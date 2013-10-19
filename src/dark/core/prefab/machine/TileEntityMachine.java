@@ -67,17 +67,9 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
             {
                 this.sendPowerUpdate();
             }
-            if (this.hasGUI && this.getContainer() != null && this.ticks % 5 == 0)
+            if (this.ticks % 5 == 0)
             {
-                this.playersUsingMachine = 0;
-                for (Object entity : this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(xCoord - 10, yCoord - 10, zCoord - 10, xCoord + 10, yCoord + 10, zCoord + 10)))
-                {
-                    if (entity instanceof EntityPlayer && ((EntityPlayer) entity).openContainer.getClass().equals(this.getContainer()))
-                    {
-                        this.playersUsingMachine += 1;
-                        this.sendGUIPacket(((EntityPlayer) entity));
-                    }
-                }
+                this.sendGUIPacket();
             }
         }
 
@@ -223,6 +215,22 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
     public void sendGUIPacket(EntityPlayer entity)
     {
 
+    }
+
+    public void sendGUIPacket()
+    {
+        if (this.hasGUI && this.getContainer() != null && this.ticks % 5 == 0)
+        {
+            this.playersUsingMachine = 0;
+            for (Object entity : this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(xCoord - 10, yCoord - 10, zCoord - 10, xCoord + 10, yCoord + 10, zCoord + 10)))
+            {
+                if (entity instanceof EntityPlayer && ((EntityPlayer) entity).openContainer.getClass().equals(this.getContainer()))
+                {
+                    this.playersUsingMachine += 1;
+                    this.sendGUIPacket(((EntityPlayer) entity));
+                }
+            }
+        }
     }
 
     @Override

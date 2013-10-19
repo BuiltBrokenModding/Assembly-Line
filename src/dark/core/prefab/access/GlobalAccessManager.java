@@ -10,7 +10,7 @@ import java.util.Map.Entry;
 import net.minecraft.nbt.NBTTagCompound;
 import dark.api.AccessLevel;
 import dark.api.UserAccess;
-import dark.core.prefab.helpers.NBTFileLoader;
+import dark.core.prefab.helpers.NBTFileHelper;
 
 public class GlobalAccessManager
 {
@@ -206,7 +206,7 @@ public class GlobalAccessManager
             {
                 hasLoaded = true;
                 loading = true;
-                NBTFileLoader.loadData(GlobalAccessLoader.SAVE_NAME);
+                NBTFileHelper.loadNBTFile(GlobalAccessLoader.SAVE_NAME);
                 // TODO save the file
                 loading = false;
             }

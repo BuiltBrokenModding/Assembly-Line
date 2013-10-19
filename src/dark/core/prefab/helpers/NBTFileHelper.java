@@ -26,47 +26,68 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 
-public class NBTFileLoader
+/** Helper class used to work with minecraft's NBT file system.
+ *
+ * @author DarkGuardsman */
+public class NBTFileHelper
 {
-    /** Saves NBT data in the world folder.
-     *
-     * @return True on success. */
-    public static boolean saveData(File saveDirectory, String filename, NBTTagCompound data)
+    /** @param saveDirectory - file
+     * @param filename
+     * @param data
+     * @return */
+    public static boolean saveNBTFile(File saveDirectory, String filename, NBTTagCompound data)
     {
-        try
-        {
-            File tempFile = new File(saveDirectory, filename + "_tmp.dat");
-            File file = new File(saveDirectory, filename + ".dat");
-
-            CompressedStreamTools.writeCompressed(data, new FileOutputStream(tempFile));
-
-            if (file.exists())
-            {
-                file.delete();
-            }
-
-            tempFile.renameTo(file);
-
-            FMLLog.fine("Saved " + filename + " NBT data file successfully.");
-            return true;
-        }
-        catch (Exception e)
-        {
-            System.out.println("Failed to save " + filename + ".dat!");
-            e.printStackTrace();
-            return false;
-        }
+        return saveNBTFile(new File(saveDirectory, filename), data);
     }
 
-    public static boolean saveData(String filename, NBTTagCompound data)
+    /** Saves an NBT file
+     *
+     * @param file - exact File
+     * @param data - nbt data
+     * @return */
+    public static boolean saveNBTFile(File file, NBTTagCompound data)
     {
-        return saveData(getSaveDirectory(MinecraftServer.getServer().getFolderName()), filename, data);
+        if (file != null && data != null)
+        {
+            try
+            {
+                File tempFile = new File(file.getAbsoluteFile(), file.getName() + ".tmp");
+
+                CompressedStreamTools.writeCompressed(data, new FileOutputStream(tempFile));
+
+                if (file.exists())
+                {
+                    file.delete();
+                }
+
+                tempFile.renameTo(file);
+
+                FMLLog.fine("Saved " + file.getName() + " NBT data file successfully.");
+                return true;
+            }
+            catch (Exception e)
+            {
+                System.out.println("Failed to save " + file.getName() + ".dat!");
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    /** Uses the default world directory to save the data to file by the given name
+     *
+     * @param filename - file name
+     * @param data - nbt data
+     * @return true if everything goes well */
+    public static boolean saveNBTFile(String filename, NBTTagCompound data)
+    {
+        return saveNBTFile(getWorldSaveDirectory(MinecraftServer.getServer().getFolderName()), filename, data);
     }
 
     /** Reads NBT data from the world folder.
      *
      * @return The NBT data */
-    public static NBTTagCompound loadData(File saveDirectory, String filename)
+    public static NBTTagCompound loadNBTFile(File saveDirectory, String filename)
     {
         try
         {
@@ -91,12 +112,16 @@ public class NBTFileLoader
         }
     }
 
-    public static NBTTagCompound loadData(String filename)
+    /** Loads an NBT file from the current world file
+     *
+     * @param filename - name of the file
+     * @return NBTTagCompound that was stored in the file */
+    public static NBTTagCompound loadNBTFile(String filename)
     {
-        return loadData(getSaveDirectory(MinecraftServer.getServer().getFolderName()), filename);
+        return loadNBTFile(getWorldSaveDirectory(MinecraftServer.getServer().getFolderName()), filename);
     }
 
-    public static File getSaveDirectory(String worldName)
+    public static File getWorldSaveDirectory(String worldName)
     {
         File parent = getBaseDirectory();
 
@@ -195,6 +220,14 @@ public class NBTFileLoader
 
     }
 
+    /** @param key
+     * @param value
+     * @return NBTTagCompound that then can be added to save file */
+    public static NBTTagCompound saveObject(String key, Object value)
+    {
+        return NBTFileHelper.saveObject(new NBTTagCompound(), key, value);
+    }
+
     /** Reads an unknown object with a known name from NBT
      *
      * @param tag - tag to read the value from
@@ -284,4 +317,5 @@ public class NBTFileLoader
         }
         return null;
     }
+
 }
