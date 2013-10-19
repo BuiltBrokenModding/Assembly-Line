@@ -5,15 +5,16 @@ import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import dark.api.ITerminal;
+import dark.api.access.ITerminalCommand;
 
-/** @author Calclavia, DarkGuardsman */
-public class CommandRegistry
+/** @author DarkGuardsman */
+public class TerminalCommandRegistry
 {
-    public static final List<TerminalCommand> COMMANDS = new ArrayList<TerminalCommand>();
+    public static final List<ITerminalCommand> COMMANDS = new ArrayList<ITerminalCommand>();
 
     /** @param prefix - what the command starts with for example /time
      * @param cmd - Cmd instance that will execute the command */
-    public static void register(TerminalCommand cmd)
+    public static void register(ITerminalCommand cmd)
     {
         if (!COMMANDS.contains(cmd))
         {
@@ -22,40 +23,32 @@ public class CommandRegistry
     }
 
     /** When a player uses a command in any CMD machine it pass threw here first
-     * 
+     *
      * @param terminal - The terminal, can be cast to TileEntity. */
-    public static void onCommand(EntityPlayer player, ITerminal terminal, String cmd)
+    public static boolean onCommand(EntityPlayer player, ITerminal terminal, String cmd)
     {
         if (cmd != null && cmd != "")
         {
-            TerminalCommand currentCommand = null;
             String[] args = cmd.split(" ");
-            terminal.addToConsole("\u00a7A" + player.username + ": " + cmd);
 
             if (args[0] != null)
             {
-                for (TerminalCommand command : COMMANDS)
+                for (ITerminalCommand command : COMMANDS)
                 {
-                    if (command.getCommandPrefix().equalsIgnoreCase(args[0]))
+                    if (command.getCommandName().equalsIgnoreCase(args[0]))
                     {
-                        if (!command.canMachineUse(terminal))
+                        if (command.canSupport(terminal) && command.getNode(args) != null)
                         {
-                            terminal.addToConsole("N/A");
-                            return;
-                        }
-                        else
-                        {
-                            if (!command.canPlayerUse(player, terminal))
+                            if (!terminal.canUse(command.getNode(args), player))
                             {
                                 terminal.addToConsole("Access Denied.");
-                                return;
+                                return false;
                             }
                             else
                             {
-                                if (command.processCommand(player, terminal, args))
+                                if (command.called(player, terminal, args))
                                 {
-                                    currentCommand = command;
-                                    return;
+                                    return true;
                                 }
                             }
                         }
@@ -65,6 +58,7 @@ public class CommandRegistry
 
             terminal.addToConsole("Unknown Command.");
         }
+        return false;
     }
 
 }

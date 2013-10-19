@@ -1,23 +1,24 @@
 package dark.core.prefab.terminal;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
-import dark.api.AccessLevel;
-import dark.api.ISpecialAccess;
 import dark.api.ITerminal;
+import dark.api.access.AccessLevel;
+import dark.api.access.ISpecialAccess;
+import dark.api.access.ITerminalCommand;
 
-public class CommandUser extends TerminalCommand
+public class CommandUser implements ITerminalCommand
 {
     @Override
-    public String getCommandPrefix()
+    public String getCommandName()
     {
         return "users";
     }
 
     @Override
-    public boolean processCommand(EntityPlayer player, ITerminal terminal, String[] args)
+    public boolean called(EntityPlayer player, ITerminal terminal, String[] args)
     {
         if (args[0].equalsIgnoreCase("users") && args.length > 1 && args[1] != null && terminal instanceof ISpecialAccess)
         {
@@ -82,31 +83,46 @@ public class CommandUser extends TerminalCommand
     }
 
     @Override
-    public boolean canPlayerUse(EntityPlayer var1, ISpecialAccess mm)
+    public boolean canSupport(ITerminal mm)
     {
-        return mm.getUsers().size() <= 0 || mm.getUserAccess(var1.username).ordinal() >= AccessLevel.ADMIN.ordinal();
+        return mm != null;
     }
 
     @Override
-    public boolean showOnHelp(EntityPlayer player, ISpecialAccess mm)
+    public Set<String> getPermissionNodes()
     {
-        return this.canPlayerUse(player, mm);
+        Set<String> nodes = new HashSet<String>();
+        nodes.add("add");
+        nodes.add("remove");
+        nodes.add("list");
+        return nodes;
     }
 
     @Override
-    public List<String> getCmdUses(EntityPlayer player, ISpecialAccess mm)
+    public String getNode(String[] args)
     {
-        List<String> cmds = new ArrayList<String>();
-        cmds.add("users list");
-        cmds.add("users add [player]");
-        cmds.add("users remove [player]");
-        return cmds;
+        if (args != null && args.length >= 1)
+        {
+            if (args[0] != null && args[0].equalsIgnoreCase(this.getCommandName()))
+            {
+                if (args.length >= 2)
+                {
+                    if (args[1] != null && args[1].equalsIgnoreCase("add"))
+                    {
+                        return "users.add";
+                    }
+                    if (args[1] != null && args[1].equalsIgnoreCase("remove"))
+                    {
+                        return "users.remove";
+                    }
+                    if (args[1] != null && args[1].equalsIgnoreCase("list"))
+                    {
+                        return "users.list";
+                    }
+                }
+                return "users";
+            }
+        }
+        return null;
     }
-
-    @Override
-    public boolean canMachineUse(ISpecialAccess mm)
-    {
-        return mm instanceof ISpecialAccess;
-    }
-
 }

@@ -122,7 +122,7 @@ public abstract class TileEntityTerminal extends TileEntityEnergyMachine impleme
                 {
                     if (id.equalsIgnoreCase(SimplePacketTypes.GUI_COMMAND.name))
                     {
-                        CommandRegistry.onCommand(this.worldObj.getPlayerEntityByName(dis.readUTF()), this, dis.readUTF());
+                        TerminalCommandRegistry.onCommand(this.worldObj.getPlayerEntityByName(dis.readUTF()), this, dis.readUTF());
                         this.sendTerminalOutputToClients();
                         return true;
                     }

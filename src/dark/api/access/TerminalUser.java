@@ -1,4 +1,4 @@
-package dark.api;
+package dark.api.access;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;

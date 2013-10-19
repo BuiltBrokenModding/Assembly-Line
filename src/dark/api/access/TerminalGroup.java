@@ -1,4 +1,4 @@
-package dark.api;
+package dark.api.access;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
