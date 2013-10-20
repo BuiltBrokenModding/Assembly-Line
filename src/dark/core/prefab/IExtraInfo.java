@@ -15,7 +15,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 /** Used to handle info about the block that would normally be handled by the mod main class. Use the
  * BlockRegistry in order for these methods to be called on load of the mod.
- * 
+ *
  * @author DarkGuardsman */
 public interface IExtraInfo
 {
@@ -45,6 +45,12 @@ public interface IExtraInfo
     public static interface IExtraTileEntityInfo extends IExtraInfo
     {
 
+    }
+
+    public static interface IExtraItemInfo extends IExtraInfo
+    {
+        /** Loads the names used to reference this item in a recipe */
+        public void loadOreNames();
     }
 
 }

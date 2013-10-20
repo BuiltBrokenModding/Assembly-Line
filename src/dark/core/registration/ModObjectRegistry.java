@@ -2,7 +2,6 @@ package dark.core.registration;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
@@ -11,6 +10,7 @@ import java.util.Set;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.Configuration;
@@ -21,9 +21,11 @@ import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.registry.GameRegistry;
 import dark.core.common.DarkMain;
 import dark.core.prefab.IExtraInfo;
 import dark.core.prefab.IExtraInfo.IExtraBlockInfo;
+import dark.core.prefab.IExtraInfo.IExtraItemInfo;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.machine.BlockMachine;
 
@@ -33,6 +35,7 @@ import dark.core.prefab.machine.BlockMachine;
 public class ModObjectRegistry
 {
     public static HashMap<Block, String> registredBlocks = new HashMap<Block, String>();
+    public static HashMap<Item, String> registredItems = new HashMap<Item, String>();
 
     @SidedProxy(clientSide = "dark.core.registration.ClientRegistryProxy", serverSide = "dark.core.registration.RegistryProxy")
     public static RegistryProxy proxy;
@@ -74,57 +77,6 @@ public class ModObjectRegistry
                 proxy.registerBlock(block, itemClass, name, modID);
                 ModObjectRegistry.finishCreation(block, null);
             }
-        }
-        return block;
-    }
-
-    public static Block createNewBlock(String modID, BlockBuildData buildData)
-    {
-        Block block = null;
-        Constructor constructor = null;
-        try
-        {
-            if (buildData != null && (!buildData.allowDisable || buildData.allowDisable && masterBlockConfig.get("Enabled_List", "Enabled_" + buildData.blockName, true).getBoolean(true)))
-            {
-                try
-                {
-                    constructor = buildData.blockClass.getConstructor(BlockBuildData.class);
-                }
-                catch (Exception x)
-                {
-                    x.printStackTrace();
-                }
-                if (constructor == null)
-                {
-                    constructor = buildData.blockClass.getConstructor(Integer.class, Material.class);
-                    if (constructor != null)
-                    {
-
-                        constructor.setAccessible(true);
-                        Object obj = constructor.newInstance(buildData.config.getBlock(buildData.blockName, ModPrefab.getNextID()), buildData.blockMaterial);
-                        if (obj instanceof Block)
-                        {
-                            block = (Block) obj;
-                        }
-                    }
-                }
-                else
-                {
-                    constructor.setAccessible(true);
-                    Object obj = constructor.newInstance(buildData);
-                    if (obj instanceof Block)
-                    {
-                        block = (Block) obj;
-                    }
-
-                }
-                proxy.registerBlock(block, buildData.itemBlock, buildData.blockName, modID);
-                ModObjectRegistry.finishCreation(block, buildData);
-            }
-        }
-        catch (Exception x)
-        {
-            x.printStackTrace();
         }
         return block;
     }
@@ -173,37 +125,37 @@ public class ModObjectRegistry
     }
 
     /** Method to get block via name
-    *
-    * @param blockName
-    * @return Block requested */
-   public static Block getBlock(String blockName)
-   {
-       for (Entry<Block,String> entry : registredBlocks.entrySet())
-       {
-           String name = entry.getKey().getUnlocalizedName().replace("tile.", "");
-           if (name.equalsIgnoreCase(blockName))
-           {
-               return entry.getKey();
-           }
-       }
-       return null;
-   }
+     *
+     * @param blockName
+     * @return Block requested */
+    public static Block getBlock(String blockName)
+    {
+        for (Entry<Block, String> entry : registredBlocks.entrySet())
+        {
+            String name = entry.getKey().getUnlocalizedName().replace("tile.", "");
+            if (name.equalsIgnoreCase(blockName))
+            {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
 
-   /** Method to get block via id
-    *
-    * @param blockID
-    * @return Block requested */
-   public static Block getBlock(int blockID)
-   {
-       for (Entry<Block,String> entry : registredBlocks.entrySet())
-       {
-           if (entry.getKey().blockID == blockID)
-           {
-               return entry.getKey();
-           }
-       }
-       return null;
-   }
+    /** Method to get block via id
+     *
+     * @param blockID
+     * @return Block requested */
+    public static Block getBlock(int blockID)
+    {
+        for (Entry<Block, String> entry : registredBlocks.entrySet())
+        {
+            if (entry.getKey().blockID == blockID)
+            {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
 
     public static Block createNewFluidBlock(String modDomainPrefix, Configuration config, Fluid fluid)
     {
@@ -230,6 +182,51 @@ public class ModObjectRegistry
         }
 
         return fluidBlock;
+    }
+
+    /** Creates a new item using reflection as well runs it threw some check to activate any
+     * interface methods
+     *
+     * @param name - name to register the item with
+     * @param modid - mods that the item comes from
+     * @param clazz - item class
+     * @param canDisable - can a user disable this item
+     * @return the new item */
+    public static Item createNewItem(String name, String modid, Class<? extends Item> clazz, boolean canDisable)
+    {
+        Item item = null;
+        if (clazz != null && (!canDisable || canDisable && masterBlockConfig.get("Enabled_List", "Enabled_" + name, true).getBoolean(true)))
+        {
+            //TODO redesign to catch blockID conflict
+            try
+            {
+                item = clazz.newInstance();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            if (item != null)
+            {
+                registredItems.put(item, name);
+                GameRegistry.registerItem(item, name, modid);
+                if (item instanceof IExtraInfo)
+                {
+                    if (((IExtraInfo) item).hasExtraConfigs())
+                    {
+                        Configuration extraBlockConfig = new Configuration(new File(Loader.instance().getConfigDir(), "Dark/items/" + item.getUnlocalizedName() + ".cfg"));
+                        extraBlockConfig.load();
+                        ((IExtraInfo) item).loadExtraConfigs(extraBlockConfig);
+                        extraBlockConfig.save();
+                    }
+                    if (item instanceof IExtraItemInfo)
+                    {
+                        ((IExtraItemInfo) item).loadOreNames();
+                    }
+                }
+            }
+        }
+        return item;
     }
 
     public static class BlockBuildData
