@@ -135,4 +135,11 @@ public class FarmTech extends ModPrefab
         }
     };
 
+    @Override
+    public void loadRecipes()
+    {
+        // TODO Auto-generated method stub
+
+    }
+
 }
