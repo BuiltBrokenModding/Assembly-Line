@@ -11,6 +11,9 @@ import com.builtbroken.common.Triple;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 
+/** Recipe system to make it easier to load recipes for a mod
+ *
+ * @author DarkGuardsman */
 public abstract class RecipeLoader
 {
     protected static Object circuit;
@@ -38,7 +41,7 @@ public abstract class RecipeLoader
             motor = Block.pistonBase;
             bronze = Item.ingotIron;
             bronzePlate = Item.ingotGold;
-            /* Ore directory items load over teh vinalla ones if they are present */
+            /* Ore directory items load over the vinalla ones if they are present */
             if (OreDictionary.getOres("basicCircuit").size() > 0)
             {
                 circuit = "basicCircuit";
@@ -74,11 +77,16 @@ public abstract class RecipeLoader
     {
         if (stack != null)
         {
-            return new ItemStack(stack.itemID, amount, stack.getItemDamage());
+            ItemStack itemStack = stack.copy();
+            itemStack.stackSize = amount;
+            return itemStack;
         }
         return stack;
     }
 
+    /** An easier to read recipe system for the basic minecraft recipes
+     *
+     * @author DarkGaurdsman */
     public static class RecipeGrid
     {
         Object[] rl = new Object[9];
@@ -86,11 +94,15 @@ public abstract class RecipeLoader
         int width = 3;
         int hight = 3;
 
+        /** @param stack - output item */
         public RecipeGrid(Object stack)
         {
             out = stack;
         }
 
+        /** @param stack - output item
+         * @param w - width of grid
+         * @param h - height of grid */
         public RecipeGrid(Object stack, int w, int h)
         {
             this(stack);
@@ -99,7 +111,7 @@ public abstract class RecipeLoader
 
         /** 3x3 Crafting grid. Each Triple is a row. Input for the triples should be any of { Item,
          * Block, ItemStack, String}
-         * 
+         *
          * @param one - top row
          * @param two - middle row
          * @param three - bottom row */
@@ -113,7 +125,7 @@ public abstract class RecipeLoader
 
         /** 2x2 Crafting grid. Each Pair is a row. Input for the pairs should be any of { Item,
          * Block, ItemStack, String}
-         * 
+         *
          * @param one - top row
          * @param two - middle row */
         public RecipeGrid(Object stack, Pair one, Pair two)
@@ -218,13 +230,14 @@ public abstract class RecipeLoader
 
             for (int i = 0; i < r.length; i++)
             {
-                if (this.rl[i] == null)
+                if (this.rl[i] == null || this.rl[i] instanceof String && ((String) this.rl[i]).isEmpty())
                 {
                     r[i] = " ";
                     this.rl[i] = "";
                 }
                 else if (this.rl[i] instanceof ItemStack)
                 {
+                    //Automatically converts an itemstack to its orename so that recipes are more mod compatible
                     String s = OreDictionary.getOreName(OreDictionary.getOreID((ItemStack) this.rl[i]));
                     if (s != null)
                     {

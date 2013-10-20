@@ -1,8 +1,13 @@
 package dark.core.prefab;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraftforge.common.MinecraftForge;
 
 import org.modstats.Modstats;
+
+import universalelectricity.compatibility.Compatibility;
+import universalelectricity.core.UniversalElectricity;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -10,6 +15,9 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
+import dark.api.ProcessorRecipes;
+import dark.core.common.ExternalModHandler;
+import dark.core.prefab.helpers.FluidHelper;
 import dark.core.registration.ModObjectRegistry;
 
 public abstract class ModPrefab
@@ -41,10 +49,29 @@ public abstract class ModPrefab
     {
         int id = BLOCK_ID_PRE;
 
-        while (id > 255 && id < 4048)
+        while (id > 255 && id < (Block.blocksList.length - 1))
         {
             Block block = Block.blocksList[id];
             if (block == null)
+            {
+                break;
+            }
+            id++;
+        }
+        BLOCK_ID_PRE = id + 1;
+        return id;
+    }
+
+    /** Gets the next unused ID in the item list. Does not prevent config file issues after the file
+     * has been made */
+    public static int getNextItemId()
+    {
+        int id = BLOCK_ID_PRE;
+
+        while (id > 255 && id < (Item.itemsList.length - 1))
+        {
+            Item item = Item.itemsList[id];
+            if (item == null)
             {
                 break;
             }
@@ -59,21 +86,26 @@ public abstract class ModPrefab
     {
         this.loadModMeta();
         Modstats.instance().getReporter().registerMod(this);
-        ModObjectRegistry.masterBlockConfig.load();
-        this.registerObjects();
-
+        MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new FluidHelper());
+        UniversalElectricity.initiate();
+        Compatibility.initiate();
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
+        ExternalModHandler.init();
+        ModObjectRegistry.masterBlockConfig.load();
+        this.registerObjects();
         ModObjectRegistry.masterBlockConfig.save();
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-
+        ProcessorRecipes.parseOreNames();
+        this.loadRecipes();
     }
 
     public static void printSidedData(String data)
@@ -82,12 +114,13 @@ public abstract class ModPrefab
         System.out.println(" " + data);
     }
 
-    /** Grabs a list of all the mods block Data used to register the block, tileEntities, and extra
-     * configs
-     * 
-     * @return */
-    public abstract void registerObjects();
-
     /** Loads the settings that tell what this mod is named, about, and other info to the user */
     public abstract void loadModMeta();
+
+    /** Tells the mod to start registering its items and blocks */
+    public abstract void registerObjects();
+
+    /** Tells the mod to start registering its recipes */
+    public abstract void loadRecipes();
+
 }

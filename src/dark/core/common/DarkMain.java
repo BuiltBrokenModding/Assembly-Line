@@ -116,11 +116,6 @@ public class DarkMain extends ModPrefab
         instance = this;
         super.preInit(event);
 
-        MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(new FluidHelper());
-
-        UniversalElectricity.initiate();
-        Compatibility.initiate();
         NetworkRegistry.instance().registerGuiHandler(this, proxy);
         proxy.preInit();
     }
@@ -129,9 +124,7 @@ public class DarkMain extends ModPrefab
     @Override
     public void init(FMLInitializationEvent event)
     {
-        ExternalModHandler.init();
         super.init(event);
-        ProcessorRecipes.parseOreNames();
         if (CoreRecipeLoader.blockOre != null)
         {
             for (OreData data : OreData.values())
@@ -169,9 +162,6 @@ public class DarkMain extends ModPrefab
     public void postInit(FMLPostInitializationEvent event)
     {
         super.postInit(event);
-        //TODO load langs
-        recipeLoader.loadRecipes();
-
         proxy.postInit();
 
     }
@@ -263,6 +253,16 @@ public class DarkMain extends ModPrefab
     public String getDomain()
     {
         return "dark";
+    }
+
+    @Override
+    public void loadRecipes()
+    {
+        if (recipeLoader == null)
+        {
+            recipeLoader = new CoreRecipeLoader();
+        }
+        recipeLoader.loadRecipes();
     }
 
 }
