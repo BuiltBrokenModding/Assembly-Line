@@ -181,4 +181,11 @@ public abstract class TileEntityTerminal extends TileEntityEnergyMachine impleme
         return this.scroll;
     }
 
+    @Override
+    public boolean canUse(String node, EntityPlayer player)
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
 }

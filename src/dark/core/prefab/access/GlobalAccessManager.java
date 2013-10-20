@@ -8,15 +8,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import net.minecraft.nbt.NBTTagCompound;
-import dark.api.access.AccessLevel;
-import dark.api.access.UserAccess;
+import dark.api.access.AccessUser;
 import dark.core.prefab.helpers.NBTFileHelper;
 
 public class GlobalAccessManager
 {
 
     /** Hash map of loaded lists **/
-    private static Map<String, List<UserAccess>> globalUserLists = new HashMap<String, List<UserAccess>>();
+    private static Map<String, List<AccessUser>> globalUserLists = new HashMap<String, List<AccessUser>>();
     /** Master save NBT that gets saved **/
     private static NBTTagCompound masterSaveNbt = new NBTTagCompound();
     /** Used to check to see if file is in the process of being loaded **/
@@ -27,7 +26,7 @@ public class GlobalAccessManager
     public static boolean needsSaving = false;
 
     /** Gets or creates a userAccess list to be used for any reason
-     * 
+     *
      * @param name - name of the access list being created or loaded
      * @param owner - the player's name to be used to create a new list
      * @return - UserAccess list */
@@ -69,7 +68,7 @@ public class GlobalAccessManager
     }
 
     /** creates a new user access list
-     * 
+     *
      * @param name
      * @param owner
      * @return */
@@ -86,7 +85,7 @@ public class GlobalAccessManager
     }
 
     /** Loads up a UserAccess List
-     * 
+     *
      * @param name - name of the list
      * @return - the list */
     public static List<UserAccess> getList(String name)
@@ -109,7 +108,7 @@ public class GlobalAccessManager
     }
 
     /** adds a user to the global list
-     * 
+     *
      * @param listName - name of the list
      * @param user - user being added as a UserAccess instance
      * @return true if added */
@@ -140,7 +139,7 @@ public class GlobalAccessManager
     }
 
     /** Removes a user from the global list
-     * 
+     *
      * @param listName - name of the list
      * @param user - user being removed
      * @return true if removed */
@@ -168,7 +167,7 @@ public class GlobalAccessManager
     }
 
     /** Loads a given Global user list from the master save
-     * 
+     *
      * @param name - name given to the list for reference
      * @return - the list of user access levels to be used */
     private static List<UserAccess> loadList(String name)
@@ -183,7 +182,7 @@ public class GlobalAccessManager
     }
 
     /** Saves a given Global user list into the master save
-     * 
+     *
      * @param name - name to save the list as
      * @param list - list to be saved */
     private static void saveList(String name, List<UserAccess> list)

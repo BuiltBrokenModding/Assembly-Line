@@ -5,7 +5,6 @@ import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
 import dark.api.ITerminal;
-import dark.api.access.AccessLevel;
 import dark.api.access.ISpecialAccess;
 import dark.api.access.ITerminalCommand;
 
@@ -31,7 +30,7 @@ public class CommandUser implements ITerminalCommand
                 terminal.addToConsole("Listing Users");
                 for (int i = 0; i < turret.getUsers().size(); i++)
                 {
-                    terminal.addToConsole(" " + i + ") " + turret.getUsers().get(i).username);
+                    terminal.addToConsole(" " + i + ") " + turret.getUsers().get(i).getName());
                 }
                 return true;
             }
@@ -58,22 +57,30 @@ public class CommandUser implements ITerminalCommand
             }
             if (args[1].equalsIgnoreCase("add") && args.length > 2)
             {
-                if (args[2] != null)
+                if (args[2] != null && terminal.getGroup(args[2]) != null)
                 {
-                    if (turret.addUserAccess(args[2], AccessLevel.USER, true))
+                    if (args.length > 3)
                     {
-                        terminal.addToConsole("Added: " + args[2]);
-                        return true;
-                    }
-                    else
-                    {
-                        terminal.addToConsole("User already exists.");
-                        return true;
+                        if (terminal.getGroup(args[2]).isMemeber(args[3]))
+                        {
+                            terminal.addToConsole("User already exists.");
+                            return true;
+                        }
+                        else if (turret.setUserAccess(args[3], terminal.getGroup(args[2]), true))
+                        {
+                            terminal.addToConsole("Added: " + args[3] + " to group " + args[2]);
+                            return true;
+                        }
+                        else
+                        {
+                            terminal.addToConsole("Invalid username.");
+                            return true;
+                        }
                     }
                 }
                 else
                 {
-                    terminal.addToConsole("Invalid username.");
+                    terminal.addToConsole("Invalid group.");
                     return true;
                 }
             }

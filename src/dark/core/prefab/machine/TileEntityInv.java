@@ -11,15 +11,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
-import dark.api.access.AccessLevel;
+import dark.api.access.AccessGroup;
+import dark.api.access.AccessUser;
 import dark.api.access.ISpecialAccess;
-import dark.api.access.UserAccess;
 import dark.core.interfaces.IExternalInv;
 import dark.core.interfaces.IInvBox;
 import dark.core.prefab.invgui.InvChest;
 
 /** Prefab for simple object who only need basic inv support and nothing more
- * 
+ *
  * @author Darkguardsman */
 public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, ISidedInventory, ISpecialAccess
 {
@@ -27,7 +27,7 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
     protected boolean lockInv;
     protected int invSlots = 1;
     /** A list of user access data. */
-    protected final List<UserAccess> users = new ArrayList<UserAccess>();
+    protected List<AccessGroup> groups = new ArrayList<AccessGroup>();
 
     @Override
     public IInvBox getInventory()
@@ -159,52 +159,40 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
      */
 
     @Override
-    public AccessLevel getUserAccess(String username)
+    public AccessUser getUserAccess(String username)
     {
-        for (int i = 0; i < this.users.size(); i++)
+        for (AccessGroup group : this.groups)
         {
-            if (this.users.get(i).username.equalsIgnoreCase(username))
+            AccessUser user = group.getMember(username);
+            if (user != null)
             {
-                return this.users.get(i).level;
+                return user;
             }
         }
-        return AccessLevel.NONE;
+        return null;
     }
 
     public boolean canUserAccess(String username)
     {
-        return (this.getUserAccess(username).ordinal() > AccessLevel.BASIC.ordinal());
+        return this.getUserAccess(username) != null;
     }
 
     @Override
-    public List<UserAccess> getUsers()
+    public List<AccessUser> getUsers()
     {
-        return this.users;
-    }
-
-    @Override
-    public List<UserAccess> getUsersWithAcess(AccessLevel level)
-    {
-        List<UserAccess> players = new ArrayList<UserAccess>();
-
-        for (int i = 0; i < this.users.size(); i++)
+        List<AccessUser> users = new ArrayList<AccessUser>();
+        for (AccessGroup group : this.groups)
         {
-            UserAccess ref = this.users.get(i);
-
-            if (ref.level == level)
-            {
-                players.add(ref);
-            }
+            users.addAll(group.getMembers());
         }
-        return players;
-
+        return users;
     }
 
     @Override
-    public boolean addUserAccess(String player, AccessLevel lvl, boolean save)
+    public boolean setUserAccess(String player, AccessGroup g, boolean save)
     {
         this.removeUserAccess(player);
-        boolean bool = this.users.add(new UserAccess(player, lvl, save));
+        boolean bool = g.addMemeber(new AccessUser(player).setTempary(save));
         this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
         return bool;
     }
@@ -212,23 +200,42 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
     @Override
     public boolean removeUserAccess(String player)
     {
-        List<UserAccess> removeList = new ArrayList<UserAccess>();
-        for (int i = 0; i < this.users.size(); i++)
+        boolean re = false;
+        for (AccessGroup group : this.groups)
         {
-            UserAccess ref = this.users.get(i);
-            if (ref.username.equalsIgnoreCase(player))
+            AccessUser user = group.getMember(player);
+            if (user != null && group.removeMemeber(user))
             {
-                removeList.add(ref);
+                re = true;
             }
         }
-        if (removeList != null && removeList.size() > 0)
+        if (re)
         {
-
-            boolean bool = this.users.removeAll(removeList);
             this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
-            return bool;
         }
-        return false;
+        return re;
+    }
+
+    @Override
+    public AccessGroup getGroup(String name)
+    {
+        for (AccessGroup group : this.groups)
+        {
+            if (group.name().equalsIgnoreCase(name))
+            {
+                return group;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void addGroup(AccessGroup group)
+    {
+        if (!this.groups.contains(group))
+        {
+            this.groups.add(group);
+        }
     }
 
     @Override
@@ -237,14 +244,42 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
         super.readFromNBT(nbt);
         this.getInventory().loadInv(nbt);
         // Read user list
-        this.users.clear();
-
-        NBTTagList userList = nbt.getTagList("Users");
-
-        for (int i = 0; i < userList.tagCount(); ++i)
+        if (!nbt.hasKey("group"))
         {
-            NBTTagCompound var4 = (NBTTagCompound) userList.tagAt(i);
-            this.users.add(UserAccess.loadFromNBT(var4));
+            NBTTagList userList = nbt.getTagList("Users");
+            AccessGroup usr = new AccessGroup("user");
+            AccessGroup admin = new AccessGroup("admin");
+            AccessGroup owner = new AccessGroup("owner");
+            this.groups.add(usr);
+            this.groups.add(admin);
+            this.groups.add(owner);
+            for (int i = 0; i < userList.tagCount(); ++i)
+            {
+                AccessUser user = new AccessUser(((NBTTagCompound) userList.tagAt(i)).getString("username"));
+                switch (nbt.getInteger("ID"))
+                {
+                    case 1:
+                    case 2:
+                        usr.addMemeber(user);
+                        break;
+                    case 3:
+                        admin.addMemeber(user);
+                        break;
+                    case 4:
+                        owner.addMemeber(user);
+                        break;
+                }
+            }
+        }
+        else
+        {
+            NBTTagList userList = nbt.getTagList("groups");
+            for (int i = 0; i < userList.tagCount(); i++)
+            {
+                AccessGroup group = new AccessGroup("");
+                group.load((NBTTagCompound) userList.tagAt(i));
+                this.groups.add(group);
+            }
         }
     }
 
@@ -255,17 +290,10 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
         this.getInventory().saveInv(nbt);
         // Write user list
         NBTTagList usersTag = new NBTTagList();
-        for (int player = 0; player < this.users.size(); ++player)
+        for (AccessGroup group : this.groups)
         {
-            UserAccess access = this.users.get(player);
-            if (access != null && access.shouldSave)
-            {
-                NBTTagCompound accessData = new NBTTagCompound();
-                access.writeToNBT(accessData);
-                usersTag.appendTag(accessData);
-            }
+            usersTag.appendTag(group.save(new NBTTagCompound()));
         }
-
-        nbt.setTag("Users", usersTag);
+        nbt.setTag("groups", usersTag);
     }
 }

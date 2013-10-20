@@ -19,7 +19,7 @@ import universalelectricity.core.vector.Vector2;
 import universalelectricity.prefab.vector.Region2;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.api.access.UserAccess;
+import dark.api.access.AccessUser;
 import dark.core.interfaces.IScroll;
 import dark.core.prefab.ModPrefab;
 
@@ -156,10 +156,10 @@ public class GuiGlobalList extends GuiContainer implements IScroll
             {
                 Object object = getDisplayList().get(currentLine);
                 String line = "-----";
-                if (object instanceof UserAccess)
+                if (object instanceof AccessUser)
                 {
-                    UserAccess accesInfo = (UserAccess) object;
-                    line = accesInfo.username + " (" + accesInfo.level.displayName + ")";
+                    AccessUser accesInfo = (AccessUser) object;
+                    line = accesInfo.getName() + " (" + accesInfo.getGroup().name() + ")";
                 }
                 else if (object instanceof String)
                 {
