@@ -165,4 +165,11 @@ public class FluidMech extends ModPrefab
     {
         return "fm";
     }
+
+    @Override
+    public void loadRecipes()
+    {
+        // TODO Auto-generated method stub
+
+    }
 }
