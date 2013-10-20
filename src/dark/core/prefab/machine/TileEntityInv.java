@@ -174,7 +174,7 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
 
     public boolean canUserAccess(String username)
     {
-        return this.getUserAccess(username) != null;
+        return this.getUserAccess(username) != null || this.getOwnerGroup().getMembers().size() <= 0;
     }
 
     @Override
@@ -191,13 +191,29 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
     @Override
     public boolean setUserAccess(String player, AccessGroup g, boolean save)
     {
-        this.removeUserAccess(player);
-        boolean bool = g.addMemeber(new AccessUser(player).setTempary(save));
-        this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
-        return bool;
+        return setUserAccess(new AccessUser(player).setTempary(save), g);
     }
 
     @Override
+    public boolean setUserAccess(AccessUser user, AccessGroup group)
+    {
+        boolean bool = false;
+
+        if (user != null && user.getName() != null)
+        {
+            bool = this.removeUserAccess(user.getName()) && group == null;
+            if (group != null)
+            {
+                bool = group.addMemeber(user);
+            }
+            if (bool)
+            {
+                this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+            }
+        }
+        return bool;
+    }
+
     public boolean removeUserAccess(String player)
     {
         boolean re = false;
@@ -236,6 +252,18 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
         {
             this.groups.add(group);
         }
+    }
+
+    @Override
+    public AccessGroup getOwnerGroup()
+    {
+        return this.getGroup("owner");
+    }
+
+    @Override
+    public List<AccessGroup> getGroups()
+    {
+        return this.groups;
     }
 
     @Override
@@ -296,4 +324,5 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
         }
         nbt.setTag("groups", usersTag);
     }
+
 }

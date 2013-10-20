@@ -38,7 +38,7 @@ public class CommandUser implements ITerminalCommand
             {
                 if (args[2] != null)
                 {
-                    if (turret.removeUserAccess(args[2]))
+                    if (turret.setUserAccess(args[2], null, false))
                     {
                         terminal.addToConsole("Removed: " + args[2]);
                         return true;

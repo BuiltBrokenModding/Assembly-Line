@@ -34,9 +34,10 @@ public class AccessUser extends User
         return this.group;
     }
 
-    public void setGroup(AccessGroup group)
+    public AccessUser setGroup(AccessGroup group)
     {
         this.group = group;
+        return this;
     }
 
     public boolean hasNode(String node)

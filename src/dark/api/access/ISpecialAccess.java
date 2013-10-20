@@ -2,36 +2,36 @@ package dark.api.access;
 
 import java.util.List;
 
-/** Used by any object that needs to restrict access to it by a set of usernames
+/** Used by any object that needs to restrict access to it by a set of users or groups. Make sure to
+ * always use the default groups(user,admin,owner) so that things work smoothly.
  *
  * @author DarkGuardsman */
 public interface ISpecialAccess
 {
-    /** Gets the player's access level on the machine he is using
-     *
-     * @return access level of the player, make sure to return no access if the player doesn't have
-     * any */
+    /** Gets the user access instance */
     public AccessUser getUserAccess(String username);
 
-    /** gets the access list for the machine
-     *
-     * @return hasMap of players and there access levels */
+    /** gets the user access list for the machine */
     public List<AccessUser> getUsers();
 
-    /** sets the players access level in the access map
-     *
-     * @param player
-     * @return true if the level was set false if something went wrong */
+    /** sets the players access level in the access map. Make sure to remove the old user first. This
+     * can also be used to remove users if group is set to null. */
     public boolean setUserAccess(String username, AccessGroup group, boolean save);
 
-    /** Removes the user from the access list
-     *
-     * @param username
-     * @return */
-    public boolean removeUserAccess(String username);
+    /** Sets the players access by using a completed AccessUser instance. Make sure to set its group
+     * if there is none. As well remove the old user first. */
+    public boolean setUserAccess(AccessUser user, AccessGroup group);
 
+    /** Get a group by name */
     public AccessGroup getGroup(String name);
 
+    /** Get the master owner group */
+    public AccessGroup getOwnerGroup();
+
+    /** Get all groups linked this */
+    public List<AccessGroup> getGroups();
+
+    /** Add a group to the group list */
     public void addGroup(AccessGroup group);
 
 }
