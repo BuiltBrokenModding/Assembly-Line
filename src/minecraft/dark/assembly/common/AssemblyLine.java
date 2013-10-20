@@ -192,4 +192,11 @@ public class AssemblyLine extends ModPrefab
     {
         return "al";
     }
+
+    @Override
+    public void loadRecipes()
+    {
+        // TODO Auto-generated method stub
+
+    }
 }
