@@ -16,7 +16,7 @@ import dark.core.common.items.EnumOrePart;
 import dark.core.common.items.ItemOreDirv;
 import dark.core.common.items.ItemParts;
 import dark.core.common.items.ItemParts.Parts;
-import dark.core.common.items.ItemTool;
+import dark.core.common.items.ItemCommonTool;
 import dark.core.common.items.ItemWrench;
 
 public class CoreRecipeLoader extends RecipeLoader

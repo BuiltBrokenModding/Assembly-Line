@@ -1,10 +1,9 @@
 package dark.core.common.items;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -12,8 +11,8 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
 
 import com.google.common.collect.Multimap;
 
@@ -21,28 +20,18 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
 
-public class ItemTool extends Item
+public class ItemCommonTool extends Item
 {
-    protected List<Material> blocksEffectiveAgainstPick = new ArrayList<Material>();
-    protected List<Material> blocksEffectiveAgainstAx = new ArrayList<Material>();
-    protected List<Material> blocksEffectiveAgainstSpade = new ArrayList<Material>();
 
     public float efficiencyOnProperMaterial = 4.0F;
-    protected int maxUses, enchant;
+    protected int enchant = 5;
 
-    /** Damage versus entities. */
-    public float damageVsEntity;
-
-    public ItemTool(String name, int maxUses, float effective, int enchant)
+    public ItemCommonTool()
     {
-        super(DarkMain.CONFIGURATION.getItem("Items", "Tool:" + name, DarkMain.getNextItemId()).getInt());
+        super(DarkMain.CONFIGURATION.getItem("Items", "CommonTools", DarkMain.getNextItemId()).getInt());
         this.maxStackSize = 1;
         this.setCreativeTab(CreativeTabs.tabTools);
-        this.maxUses = maxUses;
-        this.enchant = enchant;
     }
-
-
 
     public void damage(ItemStack itemStack, int damage, EntityLivingBase entity)
     {
@@ -61,22 +50,9 @@ public class ItemTool extends Item
         {
             itemStack.setTagCompound(new NBTTagCompound());
         }
-        int meta = itemStack.getItemDamage();
-        int maxDamage = 1000;
-        switch (meta % 10)
-        {
-            case 0:
-                maxDamage = 450;
-                break;
-            case 1:
-                maxDamage = 900;
-                break;
-            case 2:
-                maxDamage = 100;
-                break;
-        }
+        EnumMaterial mat = EnumMaterial.getToolMatFromMeta(itemStack.getItemDamage());
 
-        damage = Math.max(Math.min(damage, maxDamage), 0);
+        damage = Math.max(Math.min(damage, mat.maxUses), 0);
         itemStack.getTagCompound().setInteger("toolDamage", damage);
     }
 
@@ -114,7 +90,7 @@ public class ItemTool extends Item
     @Override
     public boolean getIsRepairable(ItemStack par1ItemStack, ItemStack par2ItemStack)
     {
-        //We will have to check on how this is done to prevent issues
+        //TODO,, We will have to check on how this is done to prevent issues with the way damage is actually saved
         return false;
     }
 
@@ -122,19 +98,22 @@ public class ItemTool extends Item
     public Multimap getItemAttributeModifiers()
     {
         Multimap multimap = super.getItemAttributeModifiers();
-        multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(field_111210_e, "Tool modifier", (double) this.damageVsEntity, 0));
+        multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(field_111210_e, "Tool modifier", 3.0, 0));
         return multimap;
     }
 
     @Override
     public float getStrVsBlock(ItemStack par1ItemStack, Block par2Block)
     {
-        if (par1ItemStack.get)
-            if (this.blocksEffectiveAgainst.contains(par2Block.blockMaterial))
+        if (par1ItemStack != null)
+        {
+            EnumTool tool = EnumMaterial.getToolFromMeta(par1ItemStack.getItemDamage());
+            EnumMaterial mat = EnumMaterial.getToolMatFromMeta(par1ItemStack.getItemDamage());
+            if (tool.effecticVsMaterials.contains(par2Block.blockMaterial) || par2Block.blockMaterial.isToolNotRequired())
             {
-                return this.efficiencyOnProperMaterial;
+                return mat.materialEffectiveness;
             }
-
+        }
         return 1.0F;
     }
 
@@ -142,11 +121,65 @@ public class ItemTool extends Item
     @Override
     public float getStrVsBlock(ItemStack stack, Block block, int meta)
     {
-        if (ForgeHooks.isToolEffective(stack, block, meta))
-        {
-            return efficiencyOnProperMaterial;
-        }
         return getStrVsBlock(stack, block);
+    }
+
+    @Override
+    public String getUnlocalizedName(ItemStack itemStack)
+    {
+        if (itemStack != null)
+        {
+            return "item." + DarkMain.getInstance().PREFIX + EnumTool.getFullName(itemStack.getItemDamage());
+        }
+        else
+        {
+            return this.getUnlocalizedName();
+        }
+    }
+
+    @Override
+    public Icon getIconFromDamage(int i)
+    {
+        return EnumMaterial.getToolIcon(i);
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void registerIcons(IconRegister iconRegister)
+    {
+        for (EnumMaterial mat : EnumMaterial.values())
+        {
+            if (mat.hasTools)
+            {
+                mat.itemIcons = new Icon[EnumOrePart.values().length];
+                for (EnumTool tool : EnumTool.values())
+                {
+                    if (tool.enabled)
+                    {
+                        mat.itemIcons[tool.ordinal()] = iconRegister.registerIcon(DarkMain.getInstance().PREFIX + mat.simpleName + tool.name);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
+    {
+        for (EnumMaterial mat : EnumMaterial.values())
+        {
+            if (mat.hasTools)
+            {
+                for (EnumTool tool : EnumTool.values())
+                {
+                    ItemStack stack = EnumMaterial.getTool(tool, mat);
+                    if (tool.enabled && stack != null && mat.toolIcons[tool.ordinal()] != null)
+                    {
+                        par3List.add(stack);
+                    }
+                }
+            }
+        }
     }
 
 }

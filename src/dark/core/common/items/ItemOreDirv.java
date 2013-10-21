@@ -13,7 +13,7 @@ import dark.core.common.DarkMain;
 import dark.core.prefab.items.ItemBasic;
 
 /** A series of items that are derived from a basic material
- * 
+ *
  * @author DarkGuardsman */
 public class ItemOreDirv extends ItemBasic
 {

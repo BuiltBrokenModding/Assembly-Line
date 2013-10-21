@@ -8,9 +8,9 @@ import net.minecraft.block.material.Material;
 /** Enum to store tools that can be created from the material sheet.
  *
  * @author DarkGuardsman */
-public enum EnumTools
+public enum EnumTool
 {
-    PICKAX("Pick-Ax", Material.rock, Material.iron, Material.ice, Material.anvil, Material.glass, Material.tnt),
+    PICKAX("Pick-Ax", Material.rock, Material.iron, Material.ice, Material.anvil, Material.glass, Material.tnt, Material.piston),
     AX("Wood-Ax", Material.wood, Material.pumpkin, Material.plants, Material.vine),
     SPADE("Shade", Material.sand, Material.snow, Material.clay, Material.craftedSnow, Material.grass, Material.ground),
     NA3(),
@@ -23,15 +23,17 @@ public enum EnumTools
 
     public final List<Material> effecticVsMaterials = new ArrayList<Material>();
     public String name = "tool";
+    public boolean enabled = false;
 
-    private EnumTools()
+    private EnumTool()
     {
 
     }
 
-    private EnumTools(String name, Material... mats)
+    private EnumTool(String name, Material... mats)
     {
         this.name = name;
+        this.enabled = true;
         this.setEffectiveList(mats);
     }
 
@@ -49,5 +51,16 @@ public enum EnumTools
         {
             this.effecticVsMaterials.add(block);
         }
+    }
+
+    public static String getFullName(int meta)
+    {
+        int matID = meta / EnumMaterial.toolCountPerMaterial;
+        int partID = meta % EnumMaterial.toolCountPerMaterial;
+        if (matID < EnumMaterial.values().length && partID < EnumTool.values().length)
+        {
+            return EnumMaterial.values()[matID].simpleName + EnumTool.values()[partID].name;
+        }
+        return "CommonTool[" + matID + "][" + partID + "]";
     }
 }
