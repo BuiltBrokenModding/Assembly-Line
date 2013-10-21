@@ -150,7 +150,7 @@ public class FluidMech extends ModPrefab
         meta.name = FluidMech.MOD_NAME;
         meta.description = "Fluid Mechanics is a combination between supporting fluid handling and mechanical energy handling system. " + "Its designed to help other mods move there liquids using a universal liquid system managed by forge. As a bonus it also " + "comes with suppot to help mods move energy by means of mechanics motion along rods. This mod by itself doesn't offer much more " + "than basic liquid storage, placement, and removel in the world. Its suggest to download other mods that supports the Forge's " + "Fluid System. " + "\n\n" + "Suported Power systems: Universal Electric, BuildCraft, IndustrialCraft ";
 
-        meta.url = "http://www.universalelectricity.com/fluidmechanics";
+        meta.url = "http://www.universalelectricity.com/coremachine";
 
         meta.logoFile = ModPrefab.TEXTURE_DIRECTORY + "FM_Banner.png";
         meta.version = DarkMain.VERSION;
