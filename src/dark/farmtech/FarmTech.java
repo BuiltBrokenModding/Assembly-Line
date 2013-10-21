@@ -116,7 +116,7 @@ public class FarmTech extends ModPrefab
         meta.modId = MOD_ID;
         meta.name = MOD_NAME;
         meta.description = "Farming addon for Darks Core Machine";
-        meta.url = "http://www.http://universalelectricity.com/coremachine";
+        meta.url = "http://www.universalelectricity.com/coremachine";
 
         meta.logoFile = TEXTURE_DIRECTORY + "GP_Banner.png";
         meta.version = DarkMain.VERSION;
