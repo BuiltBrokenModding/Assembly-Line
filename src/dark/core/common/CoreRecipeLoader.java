@@ -16,6 +16,7 @@ import dark.core.common.items.EnumOrePart;
 import dark.core.common.items.ItemOreDirv;
 import dark.core.common.items.ItemParts;
 import dark.core.common.items.ItemParts.Parts;
+import dark.core.common.items.ItemTool;
 import dark.core.common.items.ItemWrench;
 
 public class CoreRecipeLoader extends RecipeLoader
@@ -38,6 +39,7 @@ public class CoreRecipeLoader extends RecipeLoader
     public static ItemStack valvePart;
     public static ItemStack unfinishedTank;
     public static Item itemGlowingSand;
+    public static Item itemDiggingTool;
 
     @Override
     public void loadRecipes()
