@@ -28,11 +28,11 @@ import dark.core.common.DarkMain;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.items.ItemBasic;
 
-public class ItemTools extends ItemBasic
+public class ItemReadoutTools extends ItemBasic
 {
     Icon pipeGuage, multiMeter;
 
-    public ItemTools(int id, Configuration config)
+    public ItemReadoutTools(int id, Configuration config)
     {
         super(id, "DMTools", config);
         this.setHasSubtypes(true);

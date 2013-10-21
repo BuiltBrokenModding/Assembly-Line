@@ -47,7 +47,7 @@ import dark.core.common.items.ItemColoredDust;
 import dark.core.common.items.ItemOreDirv;
 import dark.core.common.items.ItemParts;
 import dark.core.common.items.ItemParts.Parts;
-import dark.core.common.items.ItemTools;
+import dark.core.common.items.ItemReadoutTools;
 import dark.core.common.items.ItemWrench;
 import dark.core.common.machines.BlockBasicMachine;
 import dark.core.common.machines.BlockSolarPanel;
@@ -199,7 +199,7 @@ public class DarkMain extends ModPrefab
         CoreRecipeLoader.blockSolar = ModObjectRegistry.createNewBlock("DMBlockSolar", DarkMain.MOD_ID, BlockSolarPanel.class, ItemBlockHolder.class);
 
         /* ITEMS */
-        CoreRecipeLoader.itemTool = new ItemTools(ITEM_ID_PREFIX++, DarkMain.CONFIGURATION);
+        CoreRecipeLoader.itemTool = new ItemReadoutTools(ITEM_ID_PREFIX++, DarkMain.CONFIGURATION);
 
         if (CONFIGURATION.get("general", "LoadOreItems", true, "Only disable ore items if you have another mod that provides metal dust, ingots, and plates").getBoolean(true))
         {
