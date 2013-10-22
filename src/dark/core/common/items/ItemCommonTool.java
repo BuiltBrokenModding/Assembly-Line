@@ -18,23 +18,32 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
+import net.minecraftforge.oredict.OreDictionary;
+
+import buildcraft.api.tools.IToolWrench;
 
 import com.google.common.collect.Multimap;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
+import dark.core.prefab.IExtraInfo.IExtraItemInfo;
 
 /** Flexible tool class that uses NBT to store damage and effect rather than metadata. Metadata
  * instead is used to store sub items allowing several different tools to exist within the same item
  *
  * @author DarkGuardsman */
-public class ItemCommonTool extends Item
+public class ItemCommonTool extends Item implements IExtraItemInfo
 {
     protected int enchant = 5;
+    public static final String BROKEN_NBT = "broken";
+    public static final String REINFORCED_NBT = "reinforced";
+    public static final String HEATTREATED_NBT = "heattreated";
+    public static final String HANDLE_NBT = "handle";
 
     public ItemCommonTool()
     {
@@ -341,4 +350,37 @@ public class ItemCommonTool extends Item
         }
     }
 
+    @Override
+    public boolean hasExtraConfigs()
+    {
+        // TODO Add configs such as enable broken tools, and allow tools to be salvaged
+        return false;
+    }
+
+    @Override
+    public void loadExtraConfigs(Configuration config)
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void loadOreNames()
+    {
+        for (EnumMaterial mat : EnumMaterial.values())
+        {
+            if (mat.hasTools)
+            {
+                for (EnumTool tool : EnumTool.values())
+                {
+                    ItemStack stack = EnumMaterial.getTool(tool, mat);
+                    if (tool.enabled && stack != null)
+                    {
+                        OreDictionary.registerOre(EnumTool.getFullName(stack.getItemDamage()), stack);
+                    }
+                }
+            }
+        }
+
+    }
 }

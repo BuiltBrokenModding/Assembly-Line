@@ -10,19 +10,19 @@ import net.minecraft.util.Icon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
+import dark.core.prefab.items.ItemBasic;
 
-public class ItemColoredDust extends Item
+public class ItemColoredDust extends ItemBasic
 {
     @SideOnly(Side.CLIENT)
     private Icon theIcon;
 
-    public ItemColoredDust(int par1, String name)
+    public ItemColoredDust()
     {
-        super(par1);
+        super(DarkMain.getNextItemId(), "GlowRefinedSand", DarkMain.CONFIGURATION);
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
         this.setCreativeTab(CreativeTabs.tabMaterials);
-        this.setUnlocalizedName(name);
     }
 
     @Override

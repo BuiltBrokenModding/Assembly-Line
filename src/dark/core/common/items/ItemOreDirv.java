@@ -7,19 +7,21 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
+import dark.core.prefab.IExtraInfo.IExtraItemInfo;
 import dark.core.prefab.items.ItemBasic;
 
 /** A series of items that are derived from a basic material
  *
  * @author DarkGuardsman */
-public class ItemOreDirv extends ItemBasic
+public class ItemOreDirv extends ItemBasic implements IExtraItemInfo
 {
-    public ItemOreDirv(int itemID, Configuration config)
+    public ItemOreDirv()
     {
-        super(itemID, "Metal_Parts", config);
+        super(DarkMain.getNextItemId(), "Metal_Parts", DarkMain.CONFIGURATION);
         this.setHasSubtypes(true);
         this.setCreativeTab(CreativeTabs.tabMaterials);
     }
@@ -74,6 +76,36 @@ public class ItemOreDirv extends ItemBasic
                 }
             }
         }
+    }
+
+    @Override
+    public boolean hasExtraConfigs()
+    {
+        return false;
+    }
+
+    @Override
+    public void loadExtraConfigs(Configuration config)
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void loadOreNames()
+    {
+        for (EnumMaterial mat : EnumMaterial.values())
+        {
+            for (EnumOrePart part : EnumOrePart.values())
+            {
+                ItemStack stack = EnumMaterial.getStack(mat, part, 1);
+                if (stack != null && mat.shouldCreateItem(part) && mat.itemIcons[part.ordinal()] != null)
+                {
+                    OreDictionary.registerOre(EnumOrePart.getFullName(stack.getItemDamage()), stack);
+                }
+            }
+        }
+
     }
 
 }

@@ -8,12 +8,15 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
 
+/** Simple battery to store energy
+ *
+ * @author DarkGuardsman */
 public class ItemBattery extends ItemElectric
 {
-    public ItemBattery(String name, int id)
+    public ItemBattery()
     {
-        super(DarkMain.CONFIGURATION.getItem(name, id).getInt(id));
-        this.setUnlocalizedName(DarkMain.getInstance().PREFIX + name);
+        super(DarkMain.CONFIGURATION.getItem("Battery", DarkMain.getNextItemId()).getInt());
+        this.setUnlocalizedName(DarkMain.getInstance().PREFIX + "Battery");
         this.setCreativeTab(CreativeTabs.tabRedstone);
     }
 

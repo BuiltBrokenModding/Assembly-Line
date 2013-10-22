@@ -7,22 +7,23 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.oredict.OreDictionary;
 import buildcraft.api.tools.IToolWrench;
 import dark.core.common.DarkMain;
+import dark.core.prefab.IExtraInfo.IExtraItemInfo;
 import dark.core.prefab.items.ItemBasic;
 
-public class ItemWrench extends ItemBasic implements IToolWrench
+public class ItemWrench extends ItemBasic implements IToolWrench, IExtraItemInfo
 {
-    static boolean damageWrench = false;
+    public static boolean damageWrench = false;
 
-    public ItemWrench(int id, Configuration config)
+    public ItemWrench()
     {
-        super(id, "wrench", config);
-        damageWrench = config.get("general", "DamageWrench", false).getBoolean(false);
+        super(DarkMain.getNextItemId(), "wrench", DarkMain.CONFIGURATION);
         this.setMaxStackSize(1);
-        this.setMaxDamage(500 + config.get("general", "AddedWrenchUses", 500).getInt());
         this.setCreativeTab(CreativeTabs.tabTools);
         this.setTextureName(DarkMain.getInstance().PREFIX + "wrench");
+
     }
 
     @Override
@@ -71,7 +72,7 @@ public class ItemWrench extends ItemBasic implements IToolWrench
     @Override
     public void wrenchUsed(EntityPlayer player, int x, int y, int z)
     {
-        if (damageWrench && player != null && !player.worldObj.isRemote)
+        if (player != null && !player.worldObj.isRemote && !player.capabilities.isCreativeMode)
         {
             ItemStack stack = player.getHeldItem();
             if (stack != null && stack.itemID == this.itemID)
@@ -79,6 +80,30 @@ public class ItemWrench extends ItemBasic implements IToolWrench
                 stack.damageItem(1, player);
             }
         }
+    }
 
+    @Override
+    public boolean isDamageable()
+    {
+        return damageWrench;
+    }
+
+    @Override
+    public boolean hasExtraConfigs()
+    {
+        return true;
+    }
+
+    @Override
+    public void loadExtraConfigs(Configuration config)
+    {
+        damageWrench = config.get("general", "DamageWrench", false).getBoolean(false);
+        this.setMaxDamage(500 + config.get("general", "AddedWrenchUses", 500).getInt());
+    }
+
+    @Override
+    public void loadOreNames()
+    {
+        OreDictionary.registerOre("wench", this);
     }
 }

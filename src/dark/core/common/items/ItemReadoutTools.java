@@ -32,9 +32,9 @@ public class ItemReadoutTools extends ItemBasic
 {
     Icon pipeGuage, multiMeter;
 
-    public ItemReadoutTools(int id, Configuration config)
+    public ItemReadoutTools()
     {
-        super(id, "DMTools", config);
+        super(DarkMain.getNextItemId(), "DMTools", DarkMain.CONFIGURATION);
         this.setHasSubtypes(true);
         this.setCreativeTab(CreativeTabs.tabTools);
         this.setMaxStackSize(1);

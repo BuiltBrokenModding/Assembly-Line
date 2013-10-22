@@ -13,14 +13,13 @@ import dark.core.common.DarkMain;
 import dark.core.prefab.items.ItemBasic;
 
 /** A metadata item containing parts of various machines in Liquid Mechanics Mod.
- * 
- * @author Rs */
+ *
+ * @author DarkGuardsman */
 public class ItemParts extends ItemBasic
 {
-
-    public ItemParts(int par1, Configuration config)
+    public ItemParts()
     {
-        super(par1, "DMParts", config);
+        super(DarkMain.getNextItemId(), "DMParts", DarkMain.CONFIGURATION);
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
         this.setMaxStackSize(64);
@@ -76,10 +75,6 @@ public class ItemParts extends ItemBasic
 
     public static enum Parts
     {
-        Bronze("BronzeTube"),
-        Iron("IronTube"),
-        Obby("ObbyTube"),
-        Nether("NetherTube"),
         Seal("LeatherSeal"),
         SlimeSeal("SlimeSeal"),
         Tank("UnfinishedTank"),

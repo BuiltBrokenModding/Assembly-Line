@@ -5,14 +5,9 @@ import java.io.File;
 import java.util.Arrays;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.oredict.OreDictionary;
-import universalelectricity.compatibility.Compatibility;
-import universalelectricity.core.UniversalElectricity;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.ore.OreGenReplaceStone;
 import universalelectricity.prefab.ore.OreGenerator;
@@ -32,7 +27,6 @@ import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
-import dark.api.ProcessorRecipes;
 import dark.core.common.blocks.BlockBasalt;
 import dark.core.common.blocks.BlockColorGlass;
 import dark.core.common.blocks.BlockColorGlowGlass;
@@ -47,7 +41,6 @@ import dark.core.common.items.ItemColoredDust;
 import dark.core.common.items.ItemCommonTool;
 import dark.core.common.items.ItemOreDirv;
 import dark.core.common.items.ItemParts;
-import dark.core.common.items.ItemParts.Parts;
 import dark.core.common.items.ItemReadoutTools;
 import dark.core.common.items.ItemWrench;
 import dark.core.common.machines.BlockBasicMachine;
@@ -56,7 +49,6 @@ import dark.core.common.transmit.BlockWire;
 import dark.core.common.transmit.ItemBlockWire;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.ModPrefab;
-import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.items.ItemBlockHolder;
 import dark.core.prefab.machine.BlockMulti;
 import dark.core.registration.ModObjectRegistry;
@@ -140,20 +132,6 @@ public class DarkMain extends ModPrefab
                 }
             }
         }
-        if (CoreRecipeLoader.itemParts != null)
-        {
-            /* ORE DIRECTORY REGISTER */
-            OreDictionary.registerOre("bronzeTube", new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Bronze.ordinal()));
-            OreDictionary.registerOre("ironTube", new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Iron.ordinal()));
-            OreDictionary.registerOre("netherTube", new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Nether.ordinal()));
-            OreDictionary.registerOre("obbyTube", new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Obby.ordinal()));
-            OreDictionary.registerOre("leatherSeal", new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Seal.ordinal()));
-            OreDictionary.registerOre("leatherSlimeSeal", new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.SlimeSeal.ordinal()));
-            OreDictionary.registerOre("valvePart", new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Valve.ordinal()));
-            OreDictionary.registerOre("bronzeTube", new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Bronze.ordinal()));
-            OreDictionary.registerOre("unfinishedTank", new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Tank.ordinal()));
-
-        }
         FMLLog.info(" Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
         proxy.init();
     }
@@ -200,25 +178,12 @@ public class DarkMain extends ModPrefab
         CoreRecipeLoader.blockSolar = ModObjectRegistry.createNewBlock("DMBlockSolar", DarkMain.MOD_ID, BlockSolarPanel.class, ItemBlockHolder.class);
 
         /* ITEMS */
-        CoreRecipeLoader.itemTool = new ItemReadoutTools(ITEM_ID_PREFIX++, DarkMain.CONFIGURATION);
-
-        if (CONFIGURATION.get("general", "LoadOreItems", true, "Only disable ore items if you have another mod that provides metal dust, ingots, and plates").getBoolean(true))
-        {
-            CoreRecipeLoader.itemMetals = new ItemOreDirv(ITEM_ID_PREFIX++, CONFIGURATION);
-        }
-        if (CONFIGURATION.get("general", "EnableBattery", true).getBoolean(true))
-        {
-            CoreRecipeLoader.battery = new ItemBattery("Battery", ITEM_ID_PREFIX++);
-        }
-        if (CONFIGURATION.get("general", "EnableWrench", true).getBoolean(true))
-        {
-            CoreRecipeLoader.wrench = new ItemWrench(ITEM_ID_PREFIX++, DarkMain.CONFIGURATION);
-        }
-        if (CONFIGURATION.get("general", "LoadCraftingParts", true, "Only disable this if you do not plan to craft, or are not using any mods that need these parts.").getBoolean(true))
-        {
-            CoreRecipeLoader.itemParts = new ItemParts(ITEM_ID_PREFIX++, CONFIGURATION);
-            CoreRecipeLoader.itemGlowingSand = new ItemColoredDust(CONFIGURATION.getItem(Configuration.CATEGORY_ITEM, "GlowingRefinedSandItemID", ITEM_ID_PREFIX++).getInt(), "GlowRefinedSand");
-        }
+        CoreRecipeLoader.itemTool = ModObjectRegistry.createNewItem("DMReadoutTools", DarkMain.MOD_ID, ItemReadoutTools.class, true);
+        CoreRecipeLoader.itemMetals = ModObjectRegistry.createNewItem("DMOreDirvParts", DarkMain.MOD_ID, ItemOreDirv.class, true);
+        CoreRecipeLoader.battery = ModObjectRegistry.createNewItem("DMItemBattery", DarkMain.MOD_ID, ItemBattery.class, true);
+        CoreRecipeLoader.wrench = ModObjectRegistry.createNewItem("DMWrench", DarkMain.MOD_ID, ItemWrench.class, true);
+        CoreRecipeLoader.itemParts = ModObjectRegistry.createNewItem("DMCraftingParts", DarkMain.MOD_ID, ItemParts.class, true);
+        CoreRecipeLoader.itemGlowingSand = ModObjectRegistry.createNewItem("DMItemGlowingSand", DarkMain.MOD_ID, ItemColoredDust.class, true);
         CoreRecipeLoader.itemDiggingTool = ModObjectRegistry.createNewItem("ItemDiggingTools", DarkMain.MOD_ID, ItemCommonTool.class, true);
         CONFIGURATION.save();
     }
