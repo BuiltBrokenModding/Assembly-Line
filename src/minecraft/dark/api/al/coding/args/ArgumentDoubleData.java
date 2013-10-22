@@ -2,7 +2,7 @@ package dark.api.al.coding.args;
 
 /** Used to create argument data for the encoder. Should only be used if the value needs to be
  * clearly limited inside the encoder display.
- * 
+ *
  * @author DarkGuardsman */
 public class ArgumentDoubleData extends ArgumentData
 {
@@ -18,6 +18,6 @@ public class ArgumentDoubleData extends ArgumentData
     @Override
     public boolean isValid(Object object)
     {
-        return super.isValid() && object instanceof Double && ((double) object) >= min && ((double) object) <= max;
+        return super.isValid() && object instanceof Double && ((Double) object) >= min && ((Double) object) <= max;
     }
 }

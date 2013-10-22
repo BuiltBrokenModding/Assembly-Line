@@ -49,7 +49,7 @@ public class TaskGrabEntity extends TaskGrabPrefab
             }
             if (this.getArg("child") instanceof Boolean)
             {
-                this.child = (boolean) this.getArg("child");
+                this.child = (Boolean) this.getArg("child");
             }
 
             return ProcessReturn.CONTINUE;

@@ -101,7 +101,11 @@ public abstract class TaskBase implements ITask, IMemorySlot
     @Override
     public Object getArg(String name)
     {
-        return this.aruguments.get(name);
+        if (this.aruguments.containsKey(name))
+        {
+            return this.aruguments.get(name);
+        }
+        return null;
     }
 
     @Override
