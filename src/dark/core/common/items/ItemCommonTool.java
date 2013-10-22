@@ -57,6 +57,16 @@ public class ItemCommonTool extends Item
     }
 
     @Override
+    public boolean isDamaged(ItemStack stack)
+    {
+        if (stack.getTagCompound() == null)
+        {
+            stack.setTagCompound(new NBTTagCompound());
+        }
+        return stack.getTagCompound().getInteger("toolDamage") > 0;
+    }
+
+    @Override
     public boolean hitEntity(ItemStack itemStack, EntityLivingBase par2EntityLivingBase, EntityLivingBase par3EntityLivingBase)
     {
         this.damage(itemStack, 2, par2EntityLivingBase);
@@ -103,13 +113,13 @@ public class ItemCommonTool extends Item
     }
 
     @Override
-    public float getStrVsBlock(ItemStack par1ItemStack, Block par2Block)
+    public float getStrVsBlock(ItemStack itemStack, Block block)
     {
-        if (par1ItemStack != null)
+        if (itemStack != null && block != null)
         {
-            EnumTool tool = EnumMaterial.getToolFromMeta(par1ItemStack.getItemDamage());
-            EnumMaterial mat = EnumMaterial.getToolMatFromMeta(par1ItemStack.getItemDamage());
-            if (tool.effecticVsMaterials.contains(par2Block.blockMaterial) || par2Block.blockMaterial.isToolNotRequired())
+            EnumTool tool = EnumMaterial.getToolFromMeta(itemStack.getItemDamage());
+            EnumMaterial mat = EnumMaterial.getToolMatFromMeta(itemStack.getItemDamage());
+            if (tool.effecticVsMaterials.contains(block.blockMaterial))
             {
                 return mat.materialEffectiveness;
             }
@@ -117,11 +127,25 @@ public class ItemCommonTool extends Item
         return 1.0F;
     }
 
-    /** FORGE: Overridden to allow custom tool effectiveness */
     @Override
-    public float getStrVsBlock(ItemStack stack, Block block, int meta)
+    public boolean canHarvestBlock(Block par1Block)
     {
-        return getStrVsBlock(stack, block);
+        return true;
+    }
+
+    @Override
+    public boolean canHarvestBlock(Block block, ItemStack itemStack)
+    {
+        if (itemStack != null && block != null)
+        {
+            EnumTool tool = EnumMaterial.getToolFromMeta(itemStack.getItemDamage());
+            EnumMaterial mat = EnumMaterial.getToolMatFromMeta(itemStack.getItemDamage());
+            if (tool.effecticVsMaterials.contains(block.blockMaterial))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -138,6 +162,18 @@ public class ItemCommonTool extends Item
     }
 
     @Override
+    public int getDisplayDamage(ItemStack itemStack)
+    {
+        if (itemStack.getTagCompound() == null)
+        {
+            itemStack.setTagCompound(new NBTTagCompound());
+        }
+        int damage = itemStack.getTagCompound().getInteger("toolDamage");
+        EnumMaterial mat = EnumMaterial.getToolMatFromMeta(itemStack.getItemDamage());
+        return (damage / mat.maxUses) * 100;
+    }
+
+    @Override
     public Icon getIconFromDamage(int i)
     {
         return EnumMaterial.getToolIcon(i);
@@ -151,12 +187,12 @@ public class ItemCommonTool extends Item
         {
             if (mat.hasTools)
             {
-                mat.itemIcons = new Icon[EnumOrePart.values().length];
+                mat.toolIcons = new Icon[EnumOrePart.values().length];
                 for (EnumTool tool : EnumTool.values())
                 {
                     if (tool.enabled)
                     {
-                        mat.itemIcons[tool.ordinal()] = iconRegister.registerIcon(DarkMain.getInstance().PREFIX + mat.simpleName + tool.name);
+                        mat.toolIcons[tool.ordinal()] = iconRegister.registerIcon(DarkMain.getInstance().PREFIX + mat.simpleName + tool.name);
                     }
                 }
             }
@@ -173,7 +209,7 @@ public class ItemCommonTool extends Item
                 for (EnumTool tool : EnumTool.values())
                 {
                     ItemStack stack = EnumMaterial.getTool(tool, mat);
-                    if (tool.enabled && stack != null && mat.toolIcons[tool.ordinal()] != null)
+                    if (tool.enabled && stack != null)
                     {
                         par3List.add(stack);
                     }

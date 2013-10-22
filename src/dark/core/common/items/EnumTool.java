@@ -55,12 +55,12 @@ public enum EnumTool
 
     public static String getFullName(int meta)
     {
-        int matID = meta / EnumMaterial.toolCountPerMaterial;
-        int partID = meta % EnumMaterial.toolCountPerMaterial;
-        if (matID < EnumMaterial.values().length && partID < EnumTool.values().length)
+        EnumMaterial mat = EnumMaterial.getToolMatFromMeta(meta);
+        EnumTool tool = EnumMaterial.getToolFromMeta(meta);
+        if (mat != null && tool != null)
         {
-            return EnumMaterial.values()[matID].simpleName + EnumTool.values()[partID].name;
+            return mat.simpleName + tool.name;
         }
-        return "CommonTool[" + matID + "][" + partID + "]";
+        return "CommonTool[" + meta + "]";
     }
 }

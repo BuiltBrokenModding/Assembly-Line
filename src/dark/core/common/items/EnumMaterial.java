@@ -118,10 +118,18 @@ public enum EnumMaterial
 
     public static Icon getToolIcon(int metadata)
     {
-        int mat = metadata / EnumMaterial.toolCountPerMaterial;
+        int mat = getToolMatFromMeta(metadata).ordinal();
+        int tool = getToolFromMeta(metadata).ordinal();
         if (mat < EnumMaterial.values().length)
         {
-            return EnumMaterial.values()[metadata / EnumMaterial.toolCountPerMaterial].toolIcons[metadata % EnumMaterial.toolCountPerMaterial];
+            if (EnumMaterial.values()[mat].toolIcons == null)
+            {
+                EnumMaterial.values()[mat].toolIcons = new Icon[toolCountPerMaterial];
+            }
+            if (tool < EnumMaterial.values()[mat].toolIcons.length)
+            {
+                return EnumMaterial.values()[mat].toolIcons[tool];
+            }
         }
         return null;
     }
@@ -150,7 +158,7 @@ public enum EnumMaterial
         ItemStack stack = null;
         if (DarkMain.recipeLoader.itemDiggingTool instanceof ItemCommonTool)
         {
-            stack = new ItemStack(DarkMain.recipeLoader.itemDiggingTool.itemID, (this.ordinal() * toolCountPerMaterial) + tool.ordinal(), 1);
+            stack = new ItemStack(CoreRecipeLoader.itemDiggingTool.itemID, 1, (this.ordinal() * toolCountPerMaterial) + tool.ordinal());
         }
         return stack;
     }

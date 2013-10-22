@@ -44,6 +44,7 @@ import dark.core.common.blocks.ItemBlockOre;
 import dark.core.common.debug.BlockDebug;
 import dark.core.common.items.ItemBattery;
 import dark.core.common.items.ItemColoredDust;
+import dark.core.common.items.ItemCommonTool;
 import dark.core.common.items.ItemOreDirv;
 import dark.core.common.items.ItemParts;
 import dark.core.common.items.ItemParts.Parts;
@@ -218,6 +219,7 @@ public class DarkMain extends ModPrefab
             CoreRecipeLoader.itemParts = new ItemParts(ITEM_ID_PREFIX++, CONFIGURATION);
             CoreRecipeLoader.itemGlowingSand = new ItemColoredDust(CONFIGURATION.getItem(Configuration.CATEGORY_ITEM, "GlowingRefinedSandItemID", ITEM_ID_PREFIX++).getInt(), "GlowRefinedSand");
         }
+        CoreRecipeLoader.itemDiggingTool = ModObjectRegistry.createNewItem("ItemDiggingTools", DarkMain.MOD_ID, ItemCommonTool.class, true);
         CONFIGURATION.save();
     }
 
