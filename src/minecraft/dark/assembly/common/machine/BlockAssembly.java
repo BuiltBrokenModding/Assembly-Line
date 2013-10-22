@@ -12,7 +12,6 @@ import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 public class BlockAssembly extends BlockMachine
 {
-    public Icon machine_icon;
 
     public BlockAssembly(BlockBuildData buildBuildData)
     {

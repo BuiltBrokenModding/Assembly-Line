@@ -92,7 +92,7 @@ public class BlockDetector extends BlockImprintable
             }
         }
 
-        return this.machine_icon;
+        return this.blockIcon;
     }
 
     @Override
@@ -104,7 +104,7 @@ public class BlockDetector extends BlockImprintable
             return this.eye_green;
         }
 
-        return this.machine_icon;
+        return this.blockIcon;
     }
 
     @Override

@@ -50,7 +50,7 @@ public class BlockTurntable extends BlockAssembly
     {
         if (side == ForgeDirection.UP.ordinal())
             return this.top;
-        return this.machine_icon;
+        return this.blockIcon;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class BlockTurntable extends BlockAssembly
     {
         if (side == ForgeDirection.UP.ordinal())
             return this.top;
-        return this.machine_icon;
+        return this.blockIcon;
     }
 
     public static int determineOrientation(World world, int x, int y, int z, EntityPlayer entityPlayer)
