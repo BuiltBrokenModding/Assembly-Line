@@ -12,7 +12,7 @@ public enum EnumTool
 {
     PICKAX("pickaxe", Material.rock, Material.iron, Material.ice, Material.anvil, Material.glass, Material.tnt, Material.piston),
     AX("axe", Material.wood, Material.pumpkin, Material.plants, Material.vine),
-    SPADE("shoval", Material.sand, Material.snow, Material.clay, Material.craftedSnow, Material.grass, Material.ground),
+    SPADE("shovel", Material.sand, Material.snow, Material.clay, Material.craftedSnow, Material.grass, Material.ground),
     HOE("hoe"),
     NA4(),
     NA5(),

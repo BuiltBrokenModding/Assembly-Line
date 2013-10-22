@@ -101,7 +101,6 @@ public class ItemCommonTool extends Item
     /** Applies damage to the item using NBT as well uses the normal ItemStack damage checks */
     public void damage(ItemStack itemStack, int damage, EntityLivingBase entity)
     {
-        // Saves the frequency in the ItemStack
         if (itemStack.getTagCompound() == null)
         {
             itemStack.setTagCompound(new NBTTagCompound());
