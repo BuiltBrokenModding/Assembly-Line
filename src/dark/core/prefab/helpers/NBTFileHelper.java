@@ -28,7 +28,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 
 /** Helper class used to work with minecraft's NBT file system.
- * 
+ *
  * @author DarkGuardsman */
 public class NBTFileHelper
 {
@@ -42,7 +42,7 @@ public class NBTFileHelper
     }
 
     /** Saves an NBT file
-     * 
+     *
      * @param file - exact File
      * @param data - nbt data
      * @return */
@@ -76,7 +76,7 @@ public class NBTFileHelper
     }
 
     /** Uses the default world directory to save the data to file by the given name
-     * 
+     *
      * @param filename - file name
      * @param data - nbt data
      * @return true if everything goes well */
@@ -86,7 +86,7 @@ public class NBTFileHelper
     }
 
     /** Reads NBT data from the world folder.
-     * 
+     *
      * @return The NBT data */
     public static NBTTagCompound loadNBTFile(File saveDirectory, String filename)
     {
@@ -114,7 +114,7 @@ public class NBTFileHelper
     }
 
     /** Loads an NBT file from the current world file
-     * 
+     *
      * @param filename - name of the file
      * @return NBTTagCompound that was stored in the file */
     public static NBTTagCompound loadNBTFile(String filename)
@@ -150,7 +150,7 @@ public class NBTFileHelper
     /** Used to save an object without knowing what the object is exactly. Supports most
      * NBTTagCompound save methods including some special cases. Which includes boolean being saves
      * as a string so it can be loaded as a boolean from an object save.
-     * 
+     *
      * @param tag - NBTTagCompound to save the tag too
      * @param key - name to save the object as
      * @param value - the actual object
@@ -159,15 +159,15 @@ public class NBTFileHelper
     {
         if (value instanceof Float)
         {
-            tag.setFloat(key, (float) value);
+            tag.setFloat(key, (Float) value);
         }
         else if (value instanceof Double)
         {
-            tag.setDouble(key, (double) value);
+            tag.setDouble(key, (Double) value);
         }
         else if (value instanceof Integer)
         {
-            tag.setInteger(key, (int) value);
+            tag.setInteger(key, (Integer) value);
         }
         else if (value instanceof String)
         {
@@ -175,7 +175,7 @@ public class NBTFileHelper
         }
         else if (value instanceof Short)
         {
-            tag.setShort(key, (short) value);
+            tag.setShort(key, (Short) value);
         }
         else if (value instanceof Byte)
         {
@@ -183,7 +183,7 @@ public class NBTFileHelper
         }
         else if (value instanceof Long)
         {
-            tag.setLong(key, (long) value);
+            tag.setLong(key, (Long) value);
         }
         else if (value instanceof Boolean)
         {
@@ -230,7 +230,7 @@ public class NBTFileHelper
     }
 
     /** Reads an unknown object with a known name from NBT
-     * 
+     *
      * @param tag - tag to read the value from
      * @param key - name of the value
      * @param suggestionValue - value to return in case nothing is found

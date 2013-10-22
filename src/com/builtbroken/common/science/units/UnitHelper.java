@@ -98,7 +98,7 @@ public class UnitHelper
     }
 
     /** Tries to parse a value that may be anything.
-     * 
+     *
      * @param var - String, Integer, Float, Double
      * @param suggestValue - Used by string parsing in case it fails and you want to return a
      * default value */
@@ -117,14 +117,14 @@ public class UnitHelper
         }
         if (var instanceof Integer || var instanceof Float || var instanceof Double)
         {
-            return (int) var;
+            return (Integer) var;
         }
 
         return suggestValue;
     }
 
     /** Tries to parse a value that may be anything.
-     * 
+     *
      * @param var - String, Integer, Float, Double */
     public static int tryToParseInt(Object var)
     {
@@ -132,7 +132,7 @@ public class UnitHelper
     }
 
     /** Tries to parse a value that may be anything.
-     * 
+     *
      * @param var - String, Integer, Float, Double
      * @param suggestValue - Used by string parsing in case it fails and you want to return a
      * default value */
@@ -158,7 +158,7 @@ public class UnitHelper
     }
 
     /** Tries to parse a value that may be anything.
-     * 
+     *
      * @param var - String, Integer, Float, Double */
     public static Double tryToParseDouble(Object var)
     {
@@ -166,7 +166,7 @@ public class UnitHelper
     }
 
     /** Tries to parse a value that may be anything.
-     * 
+     *
      * @param var - String, Integer, Float, Double
      * @param suggestValue - Used by string parsing in case it fails and you want to return a
      * default value */
@@ -192,7 +192,7 @@ public class UnitHelper
     }
 
     /** Tries to parse a value that may be anything.
-     * 
+     *
      * @param var - String, Integer, Float, Double
      * @return Zero if it fails to parse the value */
     public static Float tryToParseFloat(Object var)
