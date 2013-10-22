@@ -10,10 +10,10 @@ import net.minecraft.block.material.Material;
  * @author DarkGuardsman */
 public enum EnumTool
 {
-    PICKAX("Pick-Ax", Material.rock, Material.iron, Material.ice, Material.anvil, Material.glass, Material.tnt, Material.piston),
-    AX("Wood-Ax", Material.wood, Material.pumpkin, Material.plants, Material.vine),
-    SPADE("Shade", Material.sand, Material.snow, Material.clay, Material.craftedSnow, Material.grass, Material.ground),
-    NA3(),
+    PICKAX("pickaxe", Material.rock, Material.iron, Material.ice, Material.anvil, Material.glass, Material.tnt, Material.piston),
+    AX("axe", Material.wood, Material.pumpkin, Material.plants, Material.vine),
+    SPADE("shoval", Material.sand, Material.snow, Material.clay, Material.craftedSnow, Material.grass, Material.ground),
+    HOE("hoe"),
     NA4(),
     NA5(),
     NA6(),

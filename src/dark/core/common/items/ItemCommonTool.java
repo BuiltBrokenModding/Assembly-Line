@@ -5,14 +5,22 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentDurability;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.stats.StatList;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.Event.Result;
+import net.minecraftforge.event.entity.player.UseHoeEvent;
 
 import com.google.common.collect.Multimap;
 
@@ -20,10 +28,12 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
 
+/** Flexible tool class that uses NBT to store damage and effect rather than metadata. Metadata
+ * instead is used to store sub items allowing several different tools to exist within the same item
+ *
+ * @author DarkGuardsman */
 public class ItemCommonTool extends Item
 {
-
-    public float efficiencyOnProperMaterial = 4.0F;
     protected int enchant = 5;
 
     public ItemCommonTool()
@@ -33,6 +43,62 @@ public class ItemCommonTool extends Item
         this.setCreativeTab(CreativeTabs.tabTools);
     }
 
+    @Override
+    public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
+    {
+        if (itemStack.getTagCompound() == null)
+        {
+            itemStack.setTagCompound(new NBTTagCompound());
+        }
+        if (itemStack.getTagCompound().getBoolean("broken"))
+        {
+            return false;
+        }
+        if (EnumMaterial.getToolFromMeta(itemStack.getItemDamage()) == EnumTool.HOE)
+        {
+            if (!player.canPlayerEdit(x, y, z, par7, itemStack))
+            {
+                return false;
+            }
+            else
+            {
+                UseHoeEvent event = new UseHoeEvent(player, itemStack, world, x, y, z);
+                if (MinecraftForge.EVENT_BUS.post(event))
+                {
+                    return false;
+                }
+
+                if (event.getResult() == Result.ALLOW)
+                {
+                    this.damage(itemStack, 1, player);
+                    return true;
+                }
+
+                int blockID = world.getBlockId(x, y, z);
+                boolean air = world.isAirBlock(x, y + 1, z);
+
+                if (par7 != 0 && air && (blockID == Block.grass.blockID || blockID == Block.dirt.blockID))
+                {
+                    Block block = Block.tilledField;
+                    world.playSoundEffect((double) ((float) x + 0.5F), (double) ((float) y + 0.5F), (double) ((float) z + 0.5F), block.stepSound.getStepSound(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
+
+                    if (world.isRemote)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        world.setBlock(x, y, z, block.blockID);
+                        this.damage(itemStack, 1, player);
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /** Applies damage to the item using NBT as well uses the normal ItemStack damage checks */
     public void damage(ItemStack itemStack, int damage, EntityLivingBase entity)
     {
         // Saves the frequency in the ItemStack
@@ -40,35 +106,75 @@ public class ItemCommonTool extends Item
         {
             itemStack.setTagCompound(new NBTTagCompound());
         }
-        this.setDamage(itemStack, itemStack.getTagCompound().getInteger("toolDamage") + damage);
+        EnumMaterial mat = EnumMaterial.getToolMatFromMeta(itemStack.getItemDamage());
+        if (!itemStack.isItemStackDamageable() || (entity instanceof EntityPlayer && ((EntityPlayer) entity).capabilities.isCreativeMode))
+        {
+            return;
+        }
+        else
+        {
+            if (damage > 0)
+            {
+                int j = EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, itemStack);
+                int k = 0;
+
+                for (int l = 0; j > 0 && l < damage; ++l)
+                {
+                    if (EnchantmentDurability.negateDamage(itemStack, j, entity.worldObj.rand))
+                    {
+                        ++k;
+                    }
+                }
+
+                damage -= k;
+
+                if (damage <= 0)
+                {
+                    return;
+                }
+            }
+            int currentDamage = itemStack.getTagCompound().getInteger("toolDamage") + damage;
+            damage = Math.max(Math.min(damage, mat.maxUses), 0);
+            itemStack.getTagCompound().setInteger("toolDamage", damage);
+            if (currentDamage > mat.maxUses)
+            {
+                entity.renderBrokenItemStack(itemStack);
+                itemStack.getTagCompound().setBoolean("broken", true);
+                if (entity instanceof EntityPlayer)
+                {
+                    EntityPlayer entityplayer = (EntityPlayer) entity;
+                    entityplayer.addStat(StatList.objectBreakStats[this.itemID], 1);
+                }
+            }
+        }
+
     }
 
-    public void setDamage(ItemStack itemStack, int damage)
+    @Override
+    public boolean isDamaged(ItemStack itemStack)
     {
-        // Saves the frequency in the ItemStack
         if (itemStack.getTagCompound() == null)
         {
             itemStack.setTagCompound(new NBTTagCompound());
         }
-        EnumMaterial mat = EnumMaterial.getToolMatFromMeta(itemStack.getItemDamage());
-
-        damage = Math.max(Math.min(damage, mat.maxUses), 0);
-        itemStack.getTagCompound().setInteger("toolDamage", damage);
-    }
-
-    @Override
-    public boolean isDamaged(ItemStack stack)
-    {
-        if (stack.getTagCompound() == null)
+        if (itemStack.getTagCompound().getBoolean("broken"))
         {
-            stack.setTagCompound(new NBTTagCompound());
+            return true;
         }
-        return stack.getTagCompound().getInteger("toolDamage") > 0;
+        return itemStack.getTagCompound().getInteger("toolDamage") > 0;
     }
 
     @Override
     public boolean hitEntity(ItemStack itemStack, EntityLivingBase par2EntityLivingBase, EntityLivingBase par3EntityLivingBase)
     {
+        if (itemStack.getTagCompound() == null)
+        {
+            itemStack.setTagCompound(new NBTTagCompound());
+        }
+        if (itemStack.getTagCompound().getBoolean("broken"))
+        {
+            return true;
+        }
         this.damage(itemStack, 2, par2EntityLivingBase);
         return true;
     }
@@ -117,14 +223,24 @@ public class ItemCommonTool extends Item
     {
         if (itemStack != null && block != null)
         {
+            if (itemStack.getTagCompound() == null)
+            {
+                itemStack.setTagCompound(new NBTTagCompound());
+            }
+            if (itemStack.getTagCompound().getBoolean("broken"))
+            {
+                return 0;
+            }
             EnumTool tool = EnumMaterial.getToolFromMeta(itemStack.getItemDamage());
             EnumMaterial mat = EnumMaterial.getToolMatFromMeta(itemStack.getItemDamage());
             if (tool.effecticVsMaterials.contains(block.blockMaterial))
             {
                 return mat.materialEffectiveness;
             }
+            return 1.0F;
         }
-        return 1.0F;
+        return 0;
+
     }
 
     @Override
@@ -138,6 +254,14 @@ public class ItemCommonTool extends Item
     {
         if (itemStack != null && block != null)
         {
+            if (itemStack.getTagCompound() == null)
+            {
+                itemStack.setTagCompound(new NBTTagCompound());
+            }
+            if (itemStack.getTagCompound().getBoolean("broken"))
+            {
+                return false;
+            }
             EnumTool tool = EnumMaterial.getToolFromMeta(itemStack.getItemDamage());
             EnumMaterial mat = EnumMaterial.getToolMatFromMeta(itemStack.getItemDamage());
             if (tool.effecticVsMaterials.contains(block.blockMaterial))
