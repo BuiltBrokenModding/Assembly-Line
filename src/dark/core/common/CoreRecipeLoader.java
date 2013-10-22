@@ -16,8 +16,6 @@ import dark.core.common.items.EnumOrePart;
 import dark.core.common.items.ItemOreDirv;
 import dark.core.common.items.ItemParts;
 import dark.core.common.items.ItemParts.Parts;
-import dark.core.common.items.ItemCommonTool;
-import dark.core.common.items.ItemWrench;
 
 public class CoreRecipeLoader extends RecipeLoader
 {
@@ -57,7 +55,6 @@ public class CoreRecipeLoader extends RecipeLoader
             slimeSeal = new ItemStack(itemParts, 1, Parts.SlimeSeal.ordinal());
             valvePart = new ItemStack(itemParts, 1, Parts.Tank.ordinal());
             unfinishedTank = new ItemStack(itemParts, 1, Parts.Tank.ordinal());
-
 
             // seal
             new RecipeGrid(this.setStackSize(leatherSeal, 16), 2, 2).setRowOne(Item.leather, Item.leather).setRowTwo(Item.leather, Item.leather).RegisterRecipe();

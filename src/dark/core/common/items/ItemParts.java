@@ -6,20 +6,20 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
-import net.minecraftforge.common.Configuration;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
+import dark.core.prefab.ModPrefab;
 import dark.core.prefab.items.ItemBasic;
 
 /** A metadata item containing parts of various machines in Liquid Mechanics Mod.
- *
+ * 
  * @author DarkGuardsman */
 public class ItemParts extends ItemBasic
 {
     public ItemParts()
     {
-        super(DarkMain.getNextItemId(), "DMParts", DarkMain.CONFIGURATION);
+        super(ModPrefab.getNextItemId(), "DMParts", DarkMain.CONFIGURATION);
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
         this.setMaxStackSize(64);

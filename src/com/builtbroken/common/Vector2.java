@@ -1,7 +1,7 @@
 package com.builtbroken.common;
 
 /** Simple class to plot a vector on a plane
- *
+ * 
  * @author Robert Seifert */
 public class Vector2 extends Vector
 {
@@ -26,6 +26,6 @@ public class Vector2 extends Vector
     @Override
     public String toString()
     {
-        return super.toString() +"["+y+"y]";
+        return super.toString() + "[" + y + "y]";
     }
 }

@@ -10,7 +10,7 @@ import net.minecraft.nbt.NBTTagList;
 import com.builtbroken.common.User;
 
 /** Used to define a users access to a terminal based object.
- *
+ * 
  * @author DarkGuardsman */
 public class AccessUser extends User
 {

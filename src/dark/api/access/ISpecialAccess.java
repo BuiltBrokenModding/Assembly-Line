@@ -4,7 +4,7 @@ import java.util.List;
 
 /** Used by any object that needs to restrict access to it by a set of users or groups. Make sure to
  * always use the default groups(user,admin,owner) so that things work smoothly.
- *
+ * 
  * @author DarkGuardsman */
 public interface ISpecialAccess
 {

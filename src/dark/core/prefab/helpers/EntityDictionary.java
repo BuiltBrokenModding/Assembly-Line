@@ -25,7 +25,7 @@ import net.minecraft.entity.player.EntityPlayer;
 
 /** Dictionary to track entities by several names to be used for anything. Current use is armbot task
  * so the user has an easy way to ID creatures.
- *
+ * 
  * @author DarkGuardsman */
 public class EntityDictionary
 {
@@ -148,6 +148,7 @@ public class EntityDictionary
     {
         grabMap.put(clazz, false);
     }
+
     public static void setCanBeGrabbed(Class<? extends Entity> clazz)
     {
         grabMap.put(clazz, true);

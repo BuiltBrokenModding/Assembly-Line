@@ -3,13 +3,12 @@ package dark.core.prefab.helpers;
 import java.util.Random;
 
 import net.minecraftforge.common.ForgeDirection;
-
 import universalelectricity.core.vector.Vector3;
 
 public class MathHelper extends net.minecraft.util.MathHelper
 {
     /** Generates an array of random numbers
-     *
+     * 
      * @param random - random instance to be used
      * @param maxNumber - max size of the int to use
      * @param arraySize - length of the array
@@ -20,7 +19,7 @@ public class MathHelper extends net.minecraft.util.MathHelper
     }
 
     /** Generates an array of random numbers
-     *
+     * 
      * @param random - random instance to be used
      * @param minNumber - smallest random Integer to use. Warning can lead to longer than normal
      * delay in returns
@@ -56,7 +55,7 @@ public class MathHelper extends net.minecraft.util.MathHelper
     }
 
     /** Turns radius and sphere cords into a vector3
-     *
+     * 
      * @param radius - sphere radius
      * @param inclination -
      * @param azimuth

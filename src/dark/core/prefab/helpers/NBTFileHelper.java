@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-import com.builtbroken.common.science.units.UnitHelper;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTBase;
@@ -22,12 +20,15 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraft.server.MinecraftServer;
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
+
+import com.builtbroken.common.science.units.UnitHelper;
+
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 
 /** Helper class used to work with minecraft's NBT file system.
- *
+ * 
  * @author DarkGuardsman */
 public class NBTFileHelper
 {
@@ -41,7 +42,7 @@ public class NBTFileHelper
     }
 
     /** Saves an NBT file
-     *
+     * 
      * @param file - exact File
      * @param data - nbt data
      * @return */
@@ -75,7 +76,7 @@ public class NBTFileHelper
     }
 
     /** Uses the default world directory to save the data to file by the given name
-     *
+     * 
      * @param filename - file name
      * @param data - nbt data
      * @return true if everything goes well */
@@ -85,7 +86,7 @@ public class NBTFileHelper
     }
 
     /** Reads NBT data from the world folder.
-     *
+     * 
      * @return The NBT data */
     public static NBTTagCompound loadNBTFile(File saveDirectory, String filename)
     {
@@ -113,7 +114,7 @@ public class NBTFileHelper
     }
 
     /** Loads an NBT file from the current world file
-     *
+     * 
      * @param filename - name of the file
      * @return NBTTagCompound that was stored in the file */
     public static NBTTagCompound loadNBTFile(String filename)
@@ -149,7 +150,7 @@ public class NBTFileHelper
     /** Used to save an object without knowing what the object is exactly. Supports most
      * NBTTagCompound save methods including some special cases. Which includes boolean being saves
      * as a string so it can be loaded as a boolean from an object save.
-     *
+     * 
      * @param tag - NBTTagCompound to save the tag too
      * @param key - name to save the object as
      * @param value - the actual object
@@ -229,7 +230,7 @@ public class NBTFileHelper
     }
 
     /** Reads an unknown object with a known name from NBT
-     *
+     * 
      * @param tag - tag to read the value from
      * @param key - name of the value
      * @param suggestionValue - value to return in case nothing is found

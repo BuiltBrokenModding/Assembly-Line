@@ -11,6 +11,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import buildcraft.api.tools.IToolWrench;
 import dark.core.common.DarkMain;
 import dark.core.prefab.IExtraInfo.IExtraItemInfo;
+import dark.core.prefab.ModPrefab;
 import dark.core.prefab.items.ItemBasic;
 
 public class ItemWrench extends ItemBasic implements IToolWrench, IExtraItemInfo
@@ -19,7 +20,7 @@ public class ItemWrench extends ItemBasic implements IToolWrench, IExtraItemInfo
 
     public ItemWrench()
     {
-        super(DarkMain.getNextItemId(), "wrench", DarkMain.CONFIGURATION);
+        super(ModPrefab.getNextItemId(), "wrench", DarkMain.CONFIGURATION);
         this.setMaxStackSize(1);
         this.setCreativeTab(CreativeTabs.tabTools);
         this.setTextureName(DarkMain.getInstance().PREFIX + "wrench");

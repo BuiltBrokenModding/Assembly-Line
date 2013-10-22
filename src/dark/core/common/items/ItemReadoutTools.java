@@ -10,7 +10,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -25,6 +24,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.IToolReadOut;
 import dark.api.IToolReadOut.EnumTools;
 import dark.core.common.DarkMain;
+import dark.core.prefab.ModPrefab;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.items.ItemBasic;
 
@@ -34,7 +34,7 @@ public class ItemReadoutTools extends ItemBasic
 
     public ItemReadoutTools()
     {
-        super(DarkMain.getNextItemId(), "DMTools", DarkMain.CONFIGURATION);
+        super(ModPrefab.getNextItemId(), "DMTools", DarkMain.CONFIGURATION);
         this.setHasSubtypes(true);
         this.setCreativeTab(CreativeTabs.tabTools);
         this.setMaxStackSize(1);

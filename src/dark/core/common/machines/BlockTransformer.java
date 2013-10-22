@@ -1,8 +1,8 @@
 package dark.core.common.machines;
 
-import universalelectricity.core.UniversalElectricity;
 import net.minecraft.block.material.Material;
 import net.minecraftforge.common.Configuration;
+import universalelectricity.core.UniversalElectricity;
 import dark.core.common.DMCreativeTab;
 import dark.core.common.DarkMain;
 import dark.core.prefab.machine.BlockMachine;

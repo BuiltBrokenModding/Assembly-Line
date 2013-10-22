@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** Generic class for link objects of the same class type to each other.
- *
+ * 
  * @author Robert Seifert */
 public class Group<J>
 {

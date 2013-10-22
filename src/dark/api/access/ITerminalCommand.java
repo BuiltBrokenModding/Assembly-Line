@@ -6,12 +6,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import dark.api.ITerminal;
 
 /** Prefab for creating commands that most terminal entities can use
- *
+ * 
  * @author DarkGuardsman */
 public interface ITerminalCommand
 {
     /** The command has been called by a player in a terminal.
-     *
+     * 
      * @return false if the call was not supported rather than failed. Used too allow several
      * commands with the same name to exist but each has its own sub calls */
     public boolean called(EntityPlayer player, ITerminal terminal, String[] args);

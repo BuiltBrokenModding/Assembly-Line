@@ -1,7 +1,7 @@
 package com.builtbroken.common;
 
 /** Simple class to plot a vector in a 3D space
- *
+ * 
  * @author Robert Seifert */
 public class Vector3 extends Vector2
 {
@@ -26,6 +26,6 @@ public class Vector3 extends Vector2
     @Override
     public String toString()
     {
-        return super.toString() +"["+z+"z]";
+        return super.toString() + "[" + z + "z]";
     }
 }

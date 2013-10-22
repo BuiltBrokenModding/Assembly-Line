@@ -6,7 +6,7 @@ import java.util.List;
 import net.minecraft.block.material.Material;
 
 /** Enum to store tools that can be created from the material sheet.
- *
+ * 
  * @author DarkGuardsman */
 public enum EnumTool
 {

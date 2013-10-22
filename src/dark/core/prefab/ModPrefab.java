@@ -8,7 +8,6 @@ import org.modstats.Modstats;
 
 import universalelectricity.compatibility.Compatibility;
 import universalelectricity.core.UniversalElectricity;
-
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;

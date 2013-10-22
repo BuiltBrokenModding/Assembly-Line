@@ -10,7 +10,7 @@ import com.builtbroken.common.Group;
 
 /** Used by a terminal to track what users are part of each group. As well used to setup access
  * points to the terminal.
- *
+ * 
  * @author DarkGuardsman */
 public class AccessGroup extends Group<AccessUser>
 {

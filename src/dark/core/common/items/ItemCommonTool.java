@@ -24,18 +24,17 @@ import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
-import buildcraft.api.tools.IToolWrench;
-
 import com.google.common.collect.Multimap;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
 import dark.core.prefab.IExtraInfo.IExtraItemInfo;
+import dark.core.prefab.ModPrefab;
 
 /** Flexible tool class that uses NBT to store damage and effect rather than metadata. Metadata
  * instead is used to store sub items allowing several different tools to exist within the same item
- *
+ * 
  * @author DarkGuardsman */
 public class ItemCommonTool extends Item implements IExtraItemInfo
 {
@@ -47,7 +46,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
 
     public ItemCommonTool()
     {
-        super(DarkMain.CONFIGURATION.getItem("Items", "CommonTools", DarkMain.getNextItemId()).getInt());
+        super(DarkMain.CONFIGURATION.getItem("Items", "CommonTools", ModPrefab.getNextItemId()).getInt());
         this.maxStackSize = 1;
         this.setCreativeTab(CreativeTabs.tabTools);
     }
@@ -89,7 +88,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
                 if (par7 != 0 && air && (blockID == Block.grass.blockID || blockID == Block.dirt.blockID))
                 {
                     Block block = Block.tilledField;
-                    world.playSoundEffect((double) ((float) x + 0.5F), (double) ((float) y + 0.5F), (double) ((float) z + 0.5F), block.stepSound.getStepSound(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
+                    world.playSoundEffect((x + 0.5F), (y + 0.5F), (z + 0.5F), block.stepSound.getStepSound(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
 
                     if (world.isRemote)
                     {
@@ -190,7 +189,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
     @Override
     public boolean onBlockDestroyed(ItemStack itemStack, World par2World, int par3, int par4, int par5, int par6, EntityLivingBase par7EntityLivingBase)
     {
-        if ((double) Block.blocksList[par3].getBlockHardness(par2World, par4, par5, par6) != 0.0D)
+        if (Block.blocksList[par3].getBlockHardness(par2World, par4, par5, par6) != 0.0D)
         {
             this.damage(itemStack, 1, par7EntityLivingBase);
         }

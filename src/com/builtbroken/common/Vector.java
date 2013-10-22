@@ -1,7 +1,7 @@
 package com.builtbroken.common;
 
 /** Simple class uses to plot a vector on a line
- *
+ * 
  * @author Robert seifert */
 public class Vector
 {

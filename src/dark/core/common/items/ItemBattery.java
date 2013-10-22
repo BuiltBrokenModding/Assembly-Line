@@ -7,15 +7,16 @@ import universalelectricity.core.item.ItemElectric;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
+import dark.core.prefab.ModPrefab;
 
 /** Simple battery to store energy
- *
+ * 
  * @author DarkGuardsman */
 public class ItemBattery extends ItemElectric
 {
     public ItemBattery()
     {
-        super(DarkMain.CONFIGURATION.getItem("Battery", DarkMain.getNextItemId()).getInt());
+        super(DarkMain.CONFIGURATION.getItem("Battery", ModPrefab.getNextItemId()).getInt());
         this.setUnlocalizedName(DarkMain.getInstance().PREFIX + "Battery");
         this.setCreativeTab(CreativeTabs.tabRedstone);
     }

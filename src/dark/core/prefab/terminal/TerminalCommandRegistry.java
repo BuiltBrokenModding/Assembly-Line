@@ -105,7 +105,7 @@ public class TerminalCommandRegistry
     }
 
     /** When a player uses a command in any CMD machine it pass threw here first
-     *
+     * 
      * @param terminal - The terminal, can be cast to TileEntity. */
     public static boolean onCommand(EntityPlayer player, ITerminal terminal, String cmd)
     {

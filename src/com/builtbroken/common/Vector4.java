@@ -1,7 +1,7 @@
 package com.builtbroken.common;
 
 /** class used to plot a point in a 3D space over time. Also used for ploting a vector in a 4D space
- *
+ * 
  * @author Robert seifert */
 public class Vector4 extends Vector3
 {
@@ -21,6 +21,6 @@ public class Vector4 extends Vector3
     @Override
     public String toString()
     {
-        return super.toString() +"["+time+"t]";
+        return super.toString() + "[" + time + "t]";
     }
 }

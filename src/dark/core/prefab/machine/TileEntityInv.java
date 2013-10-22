@@ -19,7 +19,7 @@ import dark.core.interfaces.IInvBox;
 import dark.core.prefab.invgui.InvChest;
 
 /** Prefab for simple object who only need basic inv support and nothing more
- *
+ * 
  * @author Darkguardsman */
 public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, ISidedInventory, ISpecialAccess
 {
