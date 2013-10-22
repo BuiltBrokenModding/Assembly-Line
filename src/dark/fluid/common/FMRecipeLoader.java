@@ -8,6 +8,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import dark.api.ColorCode;
 import dark.core.common.CoreRecipeLoader;
 import dark.core.common.RecipeLoader;
+import dark.core.common.items.EnumMaterial;
+import dark.core.common.items.EnumOrePart;
 import dark.core.common.items.ItemParts.Parts;
 import dark.fluid.common.pipes.BlockPipe.PipeData;
 
@@ -74,9 +76,9 @@ public class FMRecipeLoader extends RecipeLoader
     public void registerPipes()
     {
         // Iron Pipe
-        GameRegistry.addShapelessRecipe(PipeData.IRON_PIPE.itemStack, new Object[] { CoreRecipeLoader.ironTube, CoreRecipeLoader.leatherSeal });
+        GameRegistry.addShapelessRecipe(PipeData.IRON_PIPE.itemStack, new Object[] { EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.TUBE, 1), CoreRecipeLoader.leatherSeal });
         // Lava Tube
-        new RecipeGrid(new ItemStack(blockPipe, 1, ColorCode.RED.ordinal()), 3, 1).setRowOne(CoreRecipeLoader.netherTube, CoreRecipeLoader.obbyTube, CoreRecipeLoader.netherTube).RegisterRecipe();
+        new RecipeGrid(new ItemStack(blockPipe, 1, ColorCode.RED.ordinal()), 3, 1).setRowOne(Block.netherrack, EnumMaterial.getStack(EnumMaterial.OBBY, EnumOrePart.TUBE, 1), Block.netherrack).RegisterRecipe();
         // fuel pipe
         GameRegistry.addShapelessRecipe(new ItemStack(blockPipe, 4, ColorCode.YELLOW.ordinal()), new Object[] { PipeData.YELLOW_PIPE.itemStack, PipeData.YELLOW_PIPE.itemStack, PipeData.YELLOW_PIPE.itemStack, PipeData.YELLOW_PIPE.itemStack, new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.SlimeSeal.ordinal()) });
 
