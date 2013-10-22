@@ -2,13 +2,10 @@ package dark.assembly.common.armbot.command;
 
 import net.minecraft.nbt.NBTTagCompound;
 import universalelectricity.core.vector.Vector2;
-import dark.api.al.coding.ILogicTask;
-import dark.api.al.coding.IProcessTask;
 import dark.api.al.coding.IProgrammableMachine;
 import dark.api.al.coding.ITask;
 import dark.api.al.coding.args.ArgumentData;
 import dark.assembly.common.armbot.TaskBaseLogic;
-import dark.assembly.common.armbot.TaskBaseProcess;
 
 /** @author DarkGuardsman */
 public class TaskIF extends TaskBaseLogic

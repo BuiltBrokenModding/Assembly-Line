@@ -1,7 +1,7 @@
 package dark.api.al.coding.args;
 
 /** Used to store lists of data that the user can scroll threw to select one.
- *
+ * 
  * @author DarkGuardsman */
 public class ArgumentListData<O> extends ArgumentData
 {

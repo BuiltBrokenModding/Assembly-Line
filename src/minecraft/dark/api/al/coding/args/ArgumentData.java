@@ -1,7 +1,7 @@
 package dark.api.al.coding.args;
 
 /** Used to store arguments in a way that can be easier to read, limit, and understand
- *
+ * 
  * @author DarkGuardsman */
 public class ArgumentData
 {
@@ -15,7 +15,7 @@ public class ArgumentData
     }
 
     /** Sets the value
-     *
+     * 
      * @return true if the value was accepted */
     public boolean setData(Object object)
     {

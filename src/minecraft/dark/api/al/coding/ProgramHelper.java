@@ -2,17 +2,15 @@ package dark.api.al.coding;
 
 import java.util.HashMap;
 
-import dark.api.al.coding.IProcessTask.ProcessReturn;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-
 import universalelectricity.core.vector.Vector3;
+import dark.api.al.coding.IProcessTask.ProcessReturn;
 
 /** Basic class to handle a machine like programs for any object that uses the IProgramable
  * interface. Doesn't actually do much then tell the program to function, and stores the programs
  * active run time memory.
- *
+ * 
  * @author DarkGuardsman */
 public class ProgramHelper
 {
@@ -35,7 +33,7 @@ public class ProgramHelper
     }
 
     /** Needs to be called by the armbot per tick.
-     *
+     * 
      * @return true if it is doing something */
     public ProcessReturn onUpdate(World world, Vector3 botLocation)
     {

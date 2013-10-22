@@ -2,9 +2,8 @@ package dark.api.al;
 
 import java.util.HashMap;
 
-
 /** Container like class to handle several servos in an object.
- *
+ * 
  * @author DarkGuardsman */
 public interface IServoHandler
 {
@@ -13,7 +12,7 @@ public interface IServoHandler
     public HashMap<String, IServo> getServos();
 
     /** Ask the handler to rotation the servo.
-     *
+     * 
      * @return true if the handler will rotate the servo */
     public boolean updateRotation(String servo, float rotation);
 

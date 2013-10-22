@@ -1,8 +1,7 @@
 package dark.assembly.common.armbot.command;
 
-
 /** Used by arms to break a specific block in a position.
- *
+ * 
  * @author DarkGuardsman */
 public class TaskHarvest extends TaskBreak
 {

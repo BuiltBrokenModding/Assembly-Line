@@ -1,7 +1,5 @@
 package dark.api.al.coding;
 
-import java.util.List;
-
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector2;
 
@@ -18,24 +16,24 @@ public interface IArmbot extends Cloneable, IProgrammableMachine
     public void setRotation(float yaw, float pitch);
 
     /** Ask the armbot to rotate to face the given direction. Some bots may not support all angles
-     *
+     * 
      * @return true if the bot will comply. May return false if it can't */
     public boolean moveArmTo(float yaw, float pitch);
 
     /** Ask the armbot to rotate to face the given direction. Some bots may not support up and down
-     *
+     * 
      * @param direction - direction
      * @return true if the bot will comply. May return false if it can't */
     public boolean moveTo(ForgeDirection direction);
 
     /** Adds an entity to the Armbot's grab list. Entity or ItemStack
-     *
+     * 
      * @entity - object to grab, can be anything though is suggest to be an entity or itemstack
      * @return - true if the bot has grabbed the object */
     public boolean grab(Object entity);
 
     /** Drops an object. Does except strings with "All" resulting in dropping everything.
-     *
+     * 
      * @entity - can be anything though entity and itemstack are the main supported types
      * @return - true if the bot dropped the item */
     public boolean drop(Object object);

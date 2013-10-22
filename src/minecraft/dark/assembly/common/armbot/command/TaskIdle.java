@@ -1,8 +1,6 @@
 package dark.assembly.common.armbot.command;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
-import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.science.units.UnitHelper;
 

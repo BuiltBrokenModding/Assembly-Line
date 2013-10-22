@@ -2,15 +2,15 @@ package dark.assembly.common.armbot.command;
 
 import java.util.ArrayList;
 
-import com.builtbroken.common.Pair;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
+
+import com.builtbroken.common.Pair;
+
 import dark.api.al.coding.IArmbot;
 import dark.api.al.coding.ITask;
 import dark.assembly.common.armbot.TaskBaseArmbot;
@@ -18,7 +18,7 @@ import dark.assembly.common.armbot.TaskBaseProcess;
 import dark.core.prefab.helpers.ItemWorldHelper;
 
 /** Used by arms to break a specific block in a position.
- *
+ * 
  * @author Calclavia */
 public class TaskBreak extends TaskBaseArmbot
 {

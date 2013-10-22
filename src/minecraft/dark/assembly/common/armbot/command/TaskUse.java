@@ -3,15 +3,12 @@ package dark.assembly.common.armbot.command;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.science.units.UnitHelper;
 
 import dark.api.al.coding.IArmbot;
 import dark.api.al.coding.IArmbotUseable;
 import dark.api.al.coding.IProcessTask;
-import dark.api.al.coding.IProgrammableMachine;
 import dark.api.al.coding.args.ArgumentIntData;
 import dark.assembly.common.armbot.TaskBaseArmbot;
 import dark.assembly.common.armbot.TaskBaseProcess;

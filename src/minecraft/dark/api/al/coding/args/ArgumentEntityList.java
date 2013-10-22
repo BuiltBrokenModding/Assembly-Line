@@ -2,7 +2,7 @@ package dark.api.al.coding.args;
 
 import net.minecraft.entity.Entity;
 
-public class ArgumentEntityList extends ArgumentListData<Class< ? extends Entity>>
+public class ArgumentEntityList extends ArgumentListData<Class<? extends Entity>>
 {
 
     public ArgumentEntityList(String name, Object defaultvalue, Class<? extends Entity>... object)

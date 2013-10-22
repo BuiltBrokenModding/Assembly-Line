@@ -1,24 +1,15 @@
 package dark.api.al.coding;
 
-import java.util.HashMap;
-import java.util.List;
-
-import universalelectricity.core.vector.Vector2;
-import universalelectricity.core.vector.Vector3;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
-import dark.api.al.coding.args.ArgumentData;
 
 /** Use to construct a basic task that can be used in any device that supports this interface.
- *
+ * 
  * @Note - there are several methods that look a like. GetArgs is used to get the programs arguments
  * that were set by the encoder. GetEncoderParms should be a constant set of arguments that the
  * device can support. GetMemory is a list of variables that the program needs to store outside of
  * the task. That way it can save values after the task has been refreshed or even deleted.
- *
+ * 
  * @author DarkGuardsman */
 public interface IProcessTask extends ITask
 {
@@ -28,7 +19,7 @@ public interface IProcessTask extends ITask
 
     /** Called when the task is being run by the devices program manager. Used mainly to setup the
      * task before actually doing the task.
-     *
+     * 
      * @param world - current world
      * @param location - current location
      * @param armbot - armbot instance

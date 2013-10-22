@@ -1,16 +1,14 @@
 package dark.assembly.common.armbot.command;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import dark.api.al.IBelt;
 import dark.api.al.coding.IArmbot;
-import dark.api.al.coding.IProgrammableMachine;
 import dark.assembly.common.armbot.TaskBaseArmbot;
 
 /** Prefab for grab based commands
- *
+ * 
  * @author DarkGuardsman */
 public abstract class TaskGrabPrefab extends TaskBaseArmbot
 {

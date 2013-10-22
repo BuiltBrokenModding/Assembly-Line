@@ -5,7 +5,7 @@ import java.util.HashMap;
 /** Used by task to tell the program it needs to remember a value outside the task. Should only be
  * used by task that really need to save values beyond there local values. Cases were this is used
  * should be is loops, items counts, and run conditions.
- *
+ * 
  * @author DarkGuardsman */
 public interface IMemorySlot
 {
@@ -22,6 +22,6 @@ public interface IMemorySlot
     /** Any memory location that needs to be saved to the machines hard disk. Should only do this for
      * information that must be saved. Treat this as real world memory to hard drive saving. As well
      * if the machine is running between world saves its active memory will be save. However, if it
-     * turns off its active memory will clear. Called as the task is terminated.  */
+     * turns off its active memory will clear. Called as the task is terminated. */
     public HashMap<String, Object> getSavedData();
 }

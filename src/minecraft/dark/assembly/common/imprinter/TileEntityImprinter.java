@@ -191,7 +191,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
     }
 
     /** Construct an InventoryCrafting Matrix on the fly.
-     *
+     * 
      * @return */
     public InventoryCrafting getCraftingMatrix()
     {

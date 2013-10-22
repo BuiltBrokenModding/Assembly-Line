@@ -3,7 +3,7 @@ package dark.api.al.coding;
 import net.minecraft.nbt.NBTTagCompound;
 
 /** Used to ID that an item can support saving data to it NBT
- *
+ * 
  * @author DarkGuardsman */
 public interface IDataItem
 {

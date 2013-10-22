@@ -6,9 +6,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector2;
-import universalelectricity.core.vector.Vector3;
 import dark.api.al.coding.IMemorySlot;
 import dark.api.al.coding.IProgram;
 import dark.api.al.coding.IProgrammableMachine;

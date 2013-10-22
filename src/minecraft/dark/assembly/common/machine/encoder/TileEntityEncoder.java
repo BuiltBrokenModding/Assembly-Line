@@ -141,6 +141,7 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
     }
 
     /** Sends a gui packet only to the given player */
+    @Override
     public void sendGUIPacket(EntityPlayer entity)
     {
         if (entity != null)

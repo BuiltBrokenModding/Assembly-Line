@@ -2,18 +2,16 @@ package dark.api.al.coding;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
 
 /** Used to both register task and fake machines for the encoder to use to create new programs.
- *
+ * 
  * @author DarkGuardsman */
 public class TaskRegistry
 {
     /** A class of all available commands.
-     *
+     * 
      * String - Command name. Command - The actual command class. */
     private static final HashMap<String, IProcessTask> COMMANDS = new HashMap();
 
@@ -74,7 +72,7 @@ public class TaskRegistry
     }
 
     /** Do not edit the return or you will change the behavior of all machine that use this list
-     *
+     * 
      * @return The list of registered sudo machines for the encoder to check against */
     public static HashMap<String, IArmbot> getSudoMachines()
     {

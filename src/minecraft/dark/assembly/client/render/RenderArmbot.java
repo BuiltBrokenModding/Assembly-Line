@@ -54,7 +54,7 @@ public class RenderArmbot extends TileEntitySpecialRenderer
             GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
             GL11.glScalef(1.0F, -1F, -1F);
 
-            MODEL.render(0.0625f, (float)((TileEntityArmbot) tileEntity).getRotation().x, (float)((TileEntityArmbot) tileEntity).getRotation().y);
+            MODEL.render(0.0625f, (float) ((TileEntityArmbot) tileEntity).getRotation().x, (float) ((TileEntityArmbot) tileEntity).getRotation().y);
 
             GL11.glPopMatrix();
 

@@ -4,21 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityBoat;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityMinecart;
-import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.monster.EntitySkeleton;
-import net.minecraft.entity.monster.EntitySlime;
-import net.minecraft.entity.monster.EntitySpider;
-import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.entity.passive.EntityChicken;
-import net.minecraft.entity.passive.EntityCow;
-import net.minecraft.entity.passive.EntityPig;
-import net.minecraft.entity.passive.EntitySheep;
-import net.minecraft.entity.player.EntityPlayer;
 
 public class GrabDictionary
 {
@@ -66,7 +51,7 @@ public class GrabDictionary
     }
 
     /** gets the name of the Entity
-     *
+     * 
      * @return "" if null */
     public String getName()
     {
@@ -78,7 +63,7 @@ public class GrabDictionary
     }
 
     /** gets the Entity Class
-     *
+     * 
      * @return Entity.class if null */
     public Class<? extends Entity> getEntityClass()
     {
@@ -106,6 +91,5 @@ public class GrabDictionary
             GrabDictionary.getList().add(newGrab);
         }
     }
-
 
 }
