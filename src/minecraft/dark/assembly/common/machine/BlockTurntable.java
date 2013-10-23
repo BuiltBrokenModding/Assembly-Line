@@ -112,6 +112,9 @@ public class BlockTurntable extends BlockAssembly
                 else if (Block.blocksList[blockID] instanceof IRotatableBlock)
                 {
                     currentDirection = ((IRotatableBlock) Block.blocksList[blockID]).getDirection(world, position.intX(), position.intY(), position.intZ());
+                }else if(Block.blocksList[blockID] != null)
+                {
+                    Block.blocksList[blockID].rotateBlock(world, x, y, z, direction.getOpposite());
                 }
                 if (direction != null)
                 {
