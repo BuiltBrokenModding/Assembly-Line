@@ -2,6 +2,7 @@ package dark.assembly.common.machine;
 
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
@@ -20,7 +21,7 @@ import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 /** A block that allows the placement of mass amount of a specific item within it. It will be allowed
  * to go on Conveyor Belts
- * 
+ *
  * @author DarkGuardsman */
 public class BlockCrate extends BlockAssembly
 {
@@ -216,7 +217,7 @@ public class BlockCrate extends BlockAssembly
     }
 
     /** Inserts all items of the same type this player has into the crate.
-     * 
+     *
      * @return True on success */
     public boolean insertAllItems(TileEntityCrate tileEntity, EntityPlayer player)
     {
@@ -261,7 +262,7 @@ public class BlockCrate extends BlockAssembly
     }
 
     /** Ejects and item out of the crate and spawn it under the player entity.
-     * 
+     *
      * @param tileEntity
      * @param player
      * @param requestSize - The maximum stack size to take out. Default should be 64.
@@ -313,7 +314,7 @@ public class BlockCrate extends BlockAssembly
     }
 
     /** Puts an itemStack into the crate.
-     * 
+     *
      * @param tileEntity
      * @param itemStack */
     public static ItemStack addStackToCrate(TileEntityCrate tileEntity, ItemStack itemStack)
@@ -410,9 +411,10 @@ public class BlockCrate extends BlockAssembly
         try
         {
             ItemStack stack = new ItemStack(this, 1, 2);
-            ItemBlockCrate.setContainingItemStack(stack, new ItemStack(1, 2048, 0));
+            ItemBlockCrate.setContainingItemStack(stack, new ItemStack(Block.cobblestone, 2048, 0));
             list.add(stack);
-            ItemBlockCrate.setContainingItemStack(stack, new ItemStack(Item.coal, 2048, 1));
+            ItemStack stack2 = new ItemStack(this, 1, 2);
+            ItemBlockCrate.setContainingItemStack(stack2, new ItemStack(Item.coal, 2048, 1));
             list.add(stack);
         }
         catch (Exception e)
