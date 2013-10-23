@@ -47,48 +47,41 @@ public class BlockTurntable extends BlockAssembly
 
     @Override
     @SideOnly(Side.CLIENT)
-    public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
-    {
-        if (side == ForgeDirection.UP.ordinal())
-            return this.top;
-        return this.blockIcon;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
     public Icon getIcon(int side, int meta)
     {
-        if (side == ForgeDirection.UP.ordinal())
+        if (side == meta)
+        {
             return this.top;
+        }
         return this.blockIcon;
     }
 
-    public static int determineOrientation(World world, int x, int y, int z, EntityPlayer entityPlayer)
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack stack)
     {
-        if (MathHelper.abs((float) entityPlayer.posX - x) < 2.0F && MathHelper.abs((float) entityPlayer.posZ - z) < 2.0F)
+        int angle = MathHelper.floor_double((entityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+        int change = 3;
+
+        switch (angle)
         {
-            double var5 = entityPlayer.posY + 1.82D - entityPlayer.yOffset;
+            case 0:
+                change = 2;
+                break;
 
-            if (var5 - y > 2.0D)
-            {
-                return 1;
-            }
+            case 1:
+                change = 5;
+                break;
 
-            if (y - var5 > 0.0D)
-            {
-                return 0;
-            }
+            case 2:
+                change = 3;
+                break;
+
+            case 3:
+                change = 4;
+                break;
         }
 
-        int var7 = MathHelper.floor_double((entityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-        return var7 == 0 ? 2 : (var7 == 1 ? 5 : (var7 == 2 ? 3 : (var7 == 3 ? 4 : 0)));
-    }
-
-    @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase par5EntityLiving, ItemStack stack)
-    {
-        int metadata = determineOrientation(world, x, y, z, (EntityPlayer) par5EntityLiving);
-        world.setBlockMetadataWithNotify(x, y, z, metadata, 3);
+        world.setBlockMetadataWithNotify(x, y, z, change, 3);
 
         world.scheduleBlockUpdate(x, y, z, this.blockID, 20);
     }
@@ -115,7 +108,6 @@ public class BlockTurntable extends BlockAssembly
                 if (tileEntity instanceof IRotatable)
                 {
                     currentDirection = ((IRotatable) tileEntity).getDirection();
-
                 }
                 else if (Block.blocksList[blockID] instanceof IRotatableBlock)
                 {
