@@ -1,6 +1,7 @@
 package dark.core.prefab.helpers;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import net.minecraft.entity.Entity;
@@ -22,10 +23,11 @@ import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTBase;
 
 /** Dictionary to track entities by several names to be used for anything. Current use is armbot task
  * so the user has an easy way to ID creatures.
- * 
+ *
  * @author DarkGuardsman */
 public class EntityDictionary
 {
@@ -162,5 +164,23 @@ public class EntityDictionary
     public static void addName(String name, Class<? extends Entity> clazz)
     {
         addName(clazz, name);
+    }
+
+    public static List<Class<? extends Entity>> getList()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public static String get(Class<? extends Entity> entityToInclude)
+    {
+        for (Entry<String, Class<? extends Entity>> entry : entityMap.entrySet())
+        {
+            if (entry.getClass() != null && entry.getClass().equals(entityToInclude))
+            {
+                return entry.getKey();
+            }
+        }
+        return null;
     }
 }
