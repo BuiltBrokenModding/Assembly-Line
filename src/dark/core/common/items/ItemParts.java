@@ -12,8 +12,9 @@ import dark.core.common.DarkMain;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.items.ItemBasic;
 
-/** A metadata item containing parts of various machines in Liquid Mechanics Mod.
- * 
+/** A meta data item containing parts of various crafting recipes. These parts do not do anything but
+ * allow new crafting recipes to be created.
+ *
  * @author DarkGuardsman */
 public class ItemParts extends ItemBasic
 {
@@ -67,9 +68,12 @@ public class ItemParts extends ItemBasic
     @Override
     public void getSubItems(int blockID, CreativeTabs tab, List itemStackList)
     {
-        for (int meta = 0; meta < Parts.values().length; meta++)
+        for (Parts part : Parts.values())
         {
-            itemStackList.add(new ItemStack(this, 1, meta));
+            if (part.show)
+            {
+                itemStackList.add(new ItemStack(this, 1, part.ordinal()));
+            }
         }
     }
 
@@ -78,14 +82,22 @@ public class ItemParts extends ItemBasic
         Seal("LeatherSeal"),
         SlimeSeal("SlimeSeal"),
         Tank("UnfinishedTank"),
-        Valve("ValvePart");
+        Valve("ValvePart"),
+        MiningIcon("miningIcon", false);
 
         public String name;
         public Icon icon;
+        boolean show = true;
 
         private Parts(String name)
         {
             this.name = name;
+        }
+
+        private Parts(String name, boolean show)
+        {
+            this(name);
+            this.show = show;
         }
     }
 }

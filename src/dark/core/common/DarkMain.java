@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.Arrays;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
@@ -36,6 +37,8 @@ import dark.core.common.blocks.BlockOre.OreData;
 import dark.core.common.blocks.ItemBlockColored;
 import dark.core.common.blocks.ItemBlockOre;
 import dark.core.common.debug.BlockDebug;
+import dark.core.common.items.EnumMaterial;
+import dark.core.common.items.EnumOrePart;
 import dark.core.common.items.ItemBattery;
 import dark.core.common.items.ItemColoredDust;
 import dark.core.common.items.ItemCommonTool;
@@ -142,7 +145,14 @@ public class DarkMain extends ModPrefab
     {
         super.postInit(event);
         proxy.postInit();
-
+        if (CoreRecipeLoader.itemParts instanceof ItemParts)
+        {
+            DMCreativeTab.tabMining.itemStack = new ItemStack(CoreRecipeLoader.itemParts.itemID, 1, ItemParts.Parts.MiningIcon.ordinal());
+        }
+        if (CoreRecipeLoader.itemMetals instanceof ItemOreDirv)
+        {
+            DMCreativeTab.tabIndustrial.itemStack = EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.GEARS, 1);
+        }
     }
 
     @Override
