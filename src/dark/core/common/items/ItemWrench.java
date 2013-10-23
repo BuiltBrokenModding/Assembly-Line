@@ -4,10 +4,13 @@ import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
+import universalelectricity.prefab.block.IRotatableBlock;
+import universalelectricity.prefab.tile.IRotatable;
 import buildcraft.api.tools.IToolWrench;
 import dark.core.common.DarkMain;
 import dark.core.prefab.IExtraInfo.IExtraItemInfo;
@@ -28,27 +31,13 @@ public class ItemWrench extends ItemBasic implements IToolWrench, IExtraItemInfo
     }
 
     @Override
-    public boolean onItemUseFirst(ItemStack stack, EntityPlayer entityPlayer, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
+    public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
     {
-        int blockID = world.getBlockId(x, y, z);
-
-        if (blockID == Block.furnaceIdle.blockID || blockID == Block.furnaceBurning.blockID || blockID == Block.dropper.blockID || blockID == Block.hopperBlock.blockID || blockID == Block.dispenser.blockID || blockID == Block.pistonBase.blockID || blockID == Block.pistonStickyBase.blockID)
+        if (Block.blocksList[world.getBlockId(x, y, z)].rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side)))
         {
-            int metadata = world.getBlockMetadata(x, y, z);
-
-            int[] rotationMatrix = { 1, 2, 3, 4, 5, 0 };
-
-            if (blockID == Block.furnaceIdle.blockID || blockID == Block.furnaceBurning.blockID)
-            {
-                rotationMatrix = ForgeDirection.ROTATION_MATRIX[0];
-            }
-
-            world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(rotationMatrix[metadata]).ordinal(), 3);
-            this.wrenchUsed(entityPlayer, x, y, z);
-
+            this.wrenchUsed(player, x, y, z);
             return true;
         }
-
         return false;
     }
 
