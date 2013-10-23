@@ -15,6 +15,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
+import universalelectricity.prefab.block.IRotatableBlock;
 import universalelectricity.prefab.tile.IRotatable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -105,41 +106,58 @@ public class BlockTurntable extends BlockAssembly
             try
             {
                 ForgeDirection direction = ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z));
-                Vector3 position = new Vector3(x, y, z);
-                position.modifyPositionFromSide(direction);
+                ForgeDirection currentDirection = null;
 
-                IRotatable rotatable = null;
+                Vector3 position = new Vector3(x, y, z).modifyPositionFromSide(direction);
                 TileEntity tileEntity = position.getTileEntity(world);
                 int blockID = position.getBlockID(world);
 
                 if (tileEntity instanceof IRotatable)
                 {
-                    rotatable = ((IRotatable) tileEntity);
+                    currentDirection = ((IRotatable) tileEntity).getDirection();
+
                 }
-                else if (Block.blocksList[blockID] instanceof IRotatable)
+                else if (Block.blocksList[blockID] instanceof IRotatableBlock)
                 {
-                    rotatable = ((IRotatable) Block.blocksList[blockID]);
+                    currentDirection = ((IRotatableBlock) Block.blocksList[blockID]).getDirection(world, position.intX(), position.intY(), position.intZ());
                 }
-
-                if (rotatable != null)
+                if (direction == ForgeDirection.UP || direction == ForgeDirection.DOWN)
                 {
-                    int newDir = ((IRotatable) tileEntity).getDirection().ordinal();
-                    newDir++;
-
-                    while (newDir >= 6)
+                    if (currentDirection == ForgeDirection.NORTH)
                     {
-                        newDir -= 6;
+                        currentDirection = ForgeDirection.EAST;
                     }
-
-                    while (newDir < 0)
+                    else if (currentDirection == ForgeDirection.EAST)
                     {
-                        newDir += 6;
+                        currentDirection = ForgeDirection.SOUTH;
                     }
+                    else if (currentDirection == ForgeDirection.SOUTH)
+                    {
+                        currentDirection = ForgeDirection.WEST;
+                    }
+                    else if (currentDirection == ForgeDirection.WEST)
+                    {
+                        currentDirection = ForgeDirection.NORTH;
+                    }
+                }
+                else if (direction == ForgeDirection.EAST || direction == ForgeDirection.WEST)
+                {
 
-                    rotatable.setDirection(ForgeDirection.getOrientation(newDir));
+                }
+                else if (direction == ForgeDirection.NORTH || direction == ForgeDirection.SOUTH)
+                {
 
-                    world.markBlockForUpdate(position.intX(), position.intY(), position.intZ());
-                    world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "tile.piston.in", 0.5F, world.rand.nextFloat() * 0.15F + 0.6F);
+                }
+                world.markBlockForUpdate(position.intX(), position.intY(), position.intZ());
+                world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "tile.piston.in", 0.5F, world.rand.nextFloat() * 0.15F + 0.6F);
+                if (tileEntity instanceof IRotatable)
+                {
+                    ((IRotatable) tileEntity).setDirection(currentDirection);
+
+                }
+                else if (Block.blocksList[blockID] instanceof IRotatableBlock)
+                {
+                    ((IRotatableBlock) Block.blocksList[blockID]).setDirection(world, position.intX(), position.intY(), position.intZ(), currentDirection);
                 }
             }
             catch (Exception e)
