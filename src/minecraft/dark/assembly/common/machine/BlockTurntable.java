@@ -121,43 +121,76 @@ public class BlockTurntable extends BlockAssembly
                 {
                     currentDirection = ((IRotatableBlock) Block.blocksList[blockID]).getDirection(world, position.intX(), position.intY(), position.intZ());
                 }
-                if (direction == ForgeDirection.UP || direction == ForgeDirection.DOWN)
+                if (direction != null)
                 {
-                    if (currentDirection == ForgeDirection.NORTH)
+                    if (direction == ForgeDirection.UP || direction == ForgeDirection.DOWN)
                     {
-                        currentDirection = ForgeDirection.EAST;
+                        if (currentDirection == ForgeDirection.NORTH)
+                        {
+                            currentDirection = ForgeDirection.EAST;
+                        }
+                        else if (currentDirection == ForgeDirection.EAST)
+                        {
+                            currentDirection = ForgeDirection.SOUTH;
+                        }
+                        else if (currentDirection == ForgeDirection.SOUTH)
+                        {
+                            currentDirection = ForgeDirection.WEST;
+                        }
+                        else if (currentDirection == ForgeDirection.WEST)
+                        {
+                            currentDirection = ForgeDirection.NORTH;
+                        }
                     }
-                    else if (currentDirection == ForgeDirection.EAST)
+                    else if (direction == ForgeDirection.EAST || direction == ForgeDirection.WEST)
                     {
-                        currentDirection = ForgeDirection.SOUTH;
+                        if (currentDirection == ForgeDirection.NORTH)
+                        {
+                            currentDirection = ForgeDirection.UP;
+                        }
+                        else if (currentDirection == ForgeDirection.UP)
+                        {
+                            currentDirection = ForgeDirection.SOUTH;
+                        }
+                        else if (currentDirection == ForgeDirection.SOUTH)
+                        {
+                            currentDirection = ForgeDirection.DOWN;
+                        }
+                        else if (currentDirection == ForgeDirection.DOWN)
+                        {
+                            currentDirection = ForgeDirection.NORTH;
+                        }
                     }
-                    else if (currentDirection == ForgeDirection.SOUTH)
+                    else if (direction == ForgeDirection.NORTH || direction == ForgeDirection.SOUTH)
                     {
-                        currentDirection = ForgeDirection.WEST;
+                        if (currentDirection == ForgeDirection.EAST)
+                        {
+                            currentDirection = ForgeDirection.UP;
+                        }
+                        else if (currentDirection == ForgeDirection.UP)
+                        {
+                            currentDirection = ForgeDirection.WEST;
+                        }
+                        else if (currentDirection == ForgeDirection.WEST)
+                        {
+                            currentDirection = ForgeDirection.DOWN;
+                        }
+                        else if (currentDirection == ForgeDirection.DOWN)
+                        {
+                            currentDirection = ForgeDirection.EAST;
+                        }
                     }
-                    else if (currentDirection == ForgeDirection.WEST)
+                    world.markBlockForUpdate(position.intX(), position.intY(), position.intZ());
+                    world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "tile.piston.in", 0.5F, world.rand.nextFloat() * 0.15F + 0.6F);
+                    if (tileEntity instanceof IRotatable)
                     {
-                        currentDirection = ForgeDirection.NORTH;
-                    }
-                }
-                else if (direction == ForgeDirection.EAST || direction == ForgeDirection.WEST)
-                {
+                        ((IRotatable) tileEntity).setDirection(currentDirection);
 
-                }
-                else if (direction == ForgeDirection.NORTH || direction == ForgeDirection.SOUTH)
-                {
-
-                }
-                world.markBlockForUpdate(position.intX(), position.intY(), position.intZ());
-                world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "tile.piston.in", 0.5F, world.rand.nextFloat() * 0.15F + 0.6F);
-                if (tileEntity instanceof IRotatable)
-                {
-                    ((IRotatable) tileEntity).setDirection(currentDirection);
-
-                }
-                else if (Block.blocksList[blockID] instanceof IRotatableBlock)
-                {
-                    ((IRotatableBlock) Block.blocksList[blockID]).setDirection(world, position.intX(), position.intY(), position.intZ(), currentDirection);
+                    }
+                    else if (Block.blocksList[blockID] instanceof IRotatableBlock)
+                    {
+                        ((IRotatableBlock) Block.blocksList[blockID]).setDirection(world, position.intX(), position.intY(), position.intZ(), currentDirection);
+                    }
                 }
             }
             catch (Exception e)
