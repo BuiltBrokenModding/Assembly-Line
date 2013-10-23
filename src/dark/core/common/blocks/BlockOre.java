@@ -83,11 +83,11 @@ public class BlockOre extends Block implements IExtraBlockInfo
 
     public static enum OreData
     {
-        TIN(EnumMaterial.TIN, "tin", "oreTin", 70, 22, 10),
-        COPPER(EnumMaterial.COPPER, "copper", "copperOre", 70, 22, 10),
-        SILVER(EnumMaterial.SILVER, "silver", "silverOre", 40, 15, 6),
-        LEAD(EnumMaterial.LEAD, "lead", "leadOre", 50, 8, 3),
-        Bauxite(EnumMaterial.ALUMINIUM, "bauxite", "bauxiteOre", 50, 8, 3);
+        TIN(EnumMaterial.TIN, "tin", "oreTin", 30, 5, 128),
+        COPPER(EnumMaterial.COPPER, "copper", "copperOre", 30, 7, 128),
+        SILVER(EnumMaterial.SILVER, "silver", "silverOre", 10, 3, 45),
+        LEAD(EnumMaterial.LEAD, "lead", "leadOre", 16, 8, 30),
+        Bauxite(EnumMaterial.ALUMINIUM, "bauxite", "bauxiteOre", 100, 30, 128);
 
         public String name, oreName;
         public ItemStack stack;

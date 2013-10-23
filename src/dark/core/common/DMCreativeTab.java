@@ -11,6 +11,7 @@ public class DMCreativeTab extends CreativeTabs
     public static DMCreativeTab tabAutomation = new DMCreativeTab("Automation");
     public static DMCreativeTab tabIndustrial = new DMCreativeTab("Industrial");
     public static DMCreativeTab tabHydrualic = new DMCreativeTab("Hydrualic");
+    public static DMCreativeTab tabMining = new DMCreativeTab("Mining");
 
     public DMCreativeTab(String label)
     {
