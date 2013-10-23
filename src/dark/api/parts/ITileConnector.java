@@ -16,6 +16,7 @@ public interface ITileConnector
         ITEMS(),
         DATA(),
         TILE(),
-        NETWORK();
+        NETWORK(),
+        HEAT();
     }
 }

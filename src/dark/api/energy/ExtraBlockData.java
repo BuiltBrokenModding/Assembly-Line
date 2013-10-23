@@ -7,9 +7,9 @@ import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;
 
-/** Information about block not provided by minecraft such as density, mass, volume, tempature, etc
+/** Information about blocks not provided by minecraft such as density, mass, volume, heating values, chemical properties, etc
  * etc
- * 
+ *
  * @author DarkGuardsman */
 public class ExtraBlockData
 {
