@@ -194,6 +194,53 @@ public class BlockTurntable extends BlockAssembly
     }
 
     @Override
+    public boolean onSneakMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
+    {
+        if (world.isRemote)
+        {
+            return true;
+        }
+        world.setBlockMetadataWithNotify(x, y, z, side, 3);
+        return true;
+    }
+
+    @Override
+    public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
+    {
+        if (world.isRemote)
+        {
+            return true;
+        }
+        ForgeDirection currentDirection = ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z));
+        if (currentDirection == ForgeDirection.NORTH)
+        {
+            currentDirection = ForgeDirection.UP;
+        }
+        else if (currentDirection == ForgeDirection.UP)
+        {
+            currentDirection = ForgeDirection.DOWN;
+        }
+        else if (currentDirection == ForgeDirection.DOWN)
+        {
+            currentDirection = ForgeDirection.EAST;
+        }
+        else if (currentDirection == ForgeDirection.EAST)
+        {
+            currentDirection = ForgeDirection.SOUTH;
+        }
+        else if (currentDirection == ForgeDirection.SOUTH)
+        {
+            currentDirection = ForgeDirection.WEST;
+        }
+        else if (currentDirection == ForgeDirection.WEST)
+        {
+            currentDirection = ForgeDirection.NORTH;
+        }
+        world.setBlockMetadataWithNotify(x, y, z, currentDirection.ordinal(), 3);
+        return true;
+    }
+
+    @Override
     public TileEntity createNewTileEntity(World world)
     {
         // TODO Auto-generated method stub
