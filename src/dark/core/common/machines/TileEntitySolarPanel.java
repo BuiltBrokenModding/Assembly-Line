@@ -10,7 +10,7 @@ import dark.core.prefab.machine.TileEntityEnergyMachine;
 
 public class TileEntitySolarPanel extends TileEntityEnergyMachine
 {
-    float wattOutput = 0;
+    protected float wattOutput = 0;
 
     public TileEntitySolarPanel()
     {
@@ -42,7 +42,6 @@ public class TileEntitySolarPanel extends TileEntityEnergyMachine
                         this.wattOutput = 0;
                     }
                 }
-
                 this.wattOutput += this.wattOutput * (this.worldObj.provider instanceof ISolarLevel ? (int) ((ISolarLevel) this.worldObj.provider).getSolarEnergyMultiplier() : 0);
             }
             else

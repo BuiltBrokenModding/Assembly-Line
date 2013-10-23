@@ -1,12 +1,12 @@
 package dark.core.common.transmit;
 
-import net.minecraftforge.common.Configuration;
 import universalelectricity.compatibility.TileEntityUniversalConductor;
-import dark.core.prefab.IExtraInfo.IExtraTileEntityInfo;
+import dark.api.ColorCode;
 
-public class TileEntityWire extends TileEntityUniversalConductor implements IExtraTileEntityInfo
+public class TileEntityWire extends TileEntityUniversalConductor
 {
-    int updateTick = 0;
+    protected int updateTick = 0;
+    protected ColorCode color = ColorCode.BLACK;
 
     @Override
     public float getResistance()
@@ -18,18 +18,6 @@ public class TileEntityWire extends TileEntityUniversalConductor implements IExt
     public float getCurrentCapacity()
     {
         return BlockWire.ampMax;
-    }
-
-    @Override
-    public boolean hasExtraConfigs()
-    {
-        return false;
-    }
-
-    @Override
-    public void loadExtraConfigs(Configuration config)
-    {
-
     }
 
 }

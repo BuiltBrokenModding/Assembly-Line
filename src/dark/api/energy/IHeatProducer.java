@@ -8,5 +8,5 @@ public interface IHeatProducer
     public boolean getCanProduceHeat(ForgeDirection dir);
 
     /** Gets the amount of heat in joules this can output */
-    public double getHeatAmmount(ForgeDirection dir);
+    public float getHeatAmmount(ForgeDirection dir);
 }
