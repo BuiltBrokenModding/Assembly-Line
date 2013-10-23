@@ -11,8 +11,8 @@ import net.minecraft.util.AxisAlignedBB;
 import dark.api.al.coding.IArmbot;
 import dark.api.al.coding.args.ArgumentData;
 import dark.api.al.coding.args.ArgumentListData;
-import dark.assembly.common.armbot.GrabDictionary;
 import dark.assembly.common.armbot.TaskBaseProcess;
+import dark.core.prefab.helpers.EntityDictionary;
 
 public class TaskGrabEntity extends TaskGrabPrefab
 {
@@ -27,7 +27,7 @@ public class TaskGrabEntity extends TaskGrabPrefab
     {
         super("Grab-Entity");
         this.defautlArguments.add(new ArgumentData("child", false));
-        this.defautlArguments.add(new ArgumentListData("Entity", Entity.class, GrabDictionary.getList().toArray(new Object[1])));
+        this.defautlArguments.add(new ArgumentListData("Entity", Entity.class, EntityDictionary.getList().toArray(new Object[1])));
     }
 
     @Override
@@ -95,7 +95,7 @@ public class TaskGrabEntity extends TaskGrabPrefab
     {
         super.loadProgress(taskCompound);
         this.child = taskCompound.getBoolean("child");
-        this.entityToInclude = GrabDictionary.get(taskCompound.getString("name")).getEntityClass();
+        this.entityToInclude = EntityDictionary.get(taskCompound.getString("name"));
         return this;
     }
 
@@ -104,7 +104,7 @@ public class TaskGrabEntity extends TaskGrabPrefab
     {
         super.saveProgress(taskCompound);
         taskCompound.setBoolean("child", child);
-        taskCompound.setString("name", ((this.entityToInclude != null) ? GrabDictionary.get(this.entityToInclude).getName() : ""));
+        taskCompound.setString("name", ((this.entityToInclude != null) ? EntityDictionary.get(this.entityToInclude) : ""));
         return taskCompound;
     }
 
@@ -115,7 +115,7 @@ public class TaskGrabEntity extends TaskGrabPrefab
         String entity = "";
         if (this.entityToInclude != null)
         {
-            entity = GrabDictionary.get(this.entityToInclude).getName();
+            entity = EntityDictionary.get(this.entityToInclude);
             if (this.child)
             {
                 // TODO do check for EntityAgable

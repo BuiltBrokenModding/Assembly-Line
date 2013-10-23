@@ -17,7 +17,7 @@ import dark.core.common.DarkMain;
 public class GuiTask extends Gui
 {
     boolean isLeft = false;
-    private static final ResourceLocation gui_pic = new ResourceLocation(DarkMain.GUI_DIRECTORY + "gui@.png");
+    private ResourceLocation gui_pic = new ResourceLocation(DarkMain.GUI_DIRECTORY + "gui@.png");
     /** Button width in pixels */
     protected int width;
 
@@ -50,9 +50,25 @@ public class GuiTask extends Gui
         {
             this.drawButton = ((IRedirectTask) task).render();
         }
+        switch (task.getType())
+        {
+            case DATA:
+                gui_pic = new ResourceLocation(DarkMain.GUI_DIRECTORY + "logic/DATA.png");
+                break;
+            case PROCESS:
+                gui_pic = new ResourceLocation(DarkMain.GUI_DIRECTORY + "logic/PROCESS.png");
+                break;
+            case DEFINEDPROCESS:
+                gui_pic = new ResourceLocation(DarkMain.GUI_DIRECTORY + "logic/DEFINEDPROCESS.png");
+                break;
+            case DECISION:
+                gui_pic = new ResourceLocation(DarkMain.GUI_DIRECTORY + "logic/IF.png");
+                break;
+        }
     }
 
-    public void drawButton(Minecraft par1Minecraft, int par2, int par3)
+
+    public void drawTask(Minecraft par1Minecraft, int par2, int par3)
     {
         if (this.drawButton)
         {

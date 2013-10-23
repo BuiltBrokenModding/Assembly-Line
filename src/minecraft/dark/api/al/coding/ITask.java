@@ -75,7 +75,6 @@ public interface ITask extends Cloneable
         DEFINEDPROCESS("Defined Process"),
         PROCESS("Process"),
         DECISION("Decision");
-        public ResourceLocation blockTexure;
         public String name;
 
         private TaskType(String name)
