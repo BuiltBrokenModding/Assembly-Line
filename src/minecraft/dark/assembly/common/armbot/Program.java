@@ -105,6 +105,7 @@ public class Program implements IProgram
         {
             if (task != null)
             {
+                task.setPosition(vector2);
                 if (task.getPosition().x > this.width)
                 {
                     this.width = (int) task.getPosition().x;
@@ -161,7 +162,7 @@ public class Program implements IProgram
     }
 
     /** Move all tasks at the row and in the direction given.
-     * 
+     *
      * @param row - row number or Y value of the position from the task
      * @param up - true will move all the tasks up one, false will move all the tasks down one */
     public void moveAll(int row, boolean up)
@@ -327,6 +328,12 @@ public class Program implements IProgram
         program.load(this.save(new NBTTagCompound()));
         program.reset();
         return program;
+    }
+
+    @Override
+    public Vector2 getSize()
+    {
+        return new Vector2(this.width, this.hight);
     }
 
 }

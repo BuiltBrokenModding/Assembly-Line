@@ -15,7 +15,7 @@ public abstract class TaskBaseProcess extends TaskBase implements IProcessTask
 
     public TaskBaseProcess(String name)
     {
-        super(name, TaskType.PROCESS);
+        super(name, TaskType.DEFINEDPROCESS);
         this.ticks = 0;
     }
 

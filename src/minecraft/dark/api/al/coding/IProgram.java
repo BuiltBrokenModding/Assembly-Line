@@ -8,7 +8,7 @@ import universalelectricity.core.vector.Vector2;
 /** Flow chart style program. Each command in the program needs to have a stored location so it can
  * be saved and loaded with its correct connections. Though the location only need to be a simple
  * Column and row based system.
- * 
+ *
  * @author DarkGuardsman */
 public interface IProgram extends Cloneable
 {
@@ -45,6 +45,9 @@ public interface IProgram extends Cloneable
 
     /** Gets a declared variable */
     public Object getVar(String name);
+
+    /** return size in commands high and wide */
+    public Vector2 getSize();
 
     public NBTTagCompound save(NBTTagCompound nbt);
 

@@ -33,7 +33,9 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
     {
         super.onInventoryChanged();
         if (watcher != null)
+        {
             watcher.inventoryChanged();
+        }
     }
 
     @Override

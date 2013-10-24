@@ -9,7 +9,8 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.assembly.client.gui.GuiEncoder;
+import dark.assembly.client.gui.GuiEncoderCoder;
+import dark.assembly.client.gui.GuiEncoderInventory;
 import dark.assembly.client.gui.GuiImprinter;
 import dark.assembly.client.gui.GuiProcessor;
 import dark.assembly.client.render.BlockRenderingHandler;
@@ -72,7 +73,15 @@ public class ClientProxy extends CommonProxy
                 }
                 case GUI_ENCODER:
                 {
-                    return new GuiEncoder(player.inventory, (TileEntityEncoder) tileEntity);
+                    return new GuiEncoderInventory(player.inventory, (TileEntityEncoder) tileEntity);
+                }
+                case GUI_ENCODER_CODE:
+                {
+                    return new GuiEncoderCoder(player, (TileEntityEncoder) tileEntity);
+                }
+                case GUI_ENCODER_HELP:
+                {
+                    return new GuiEncoderCoder(player, (TileEntityEncoder) tileEntity);
                 }
                 case GUI_PROCESSOR:
                 {

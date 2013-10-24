@@ -22,7 +22,9 @@ public class CommonProxy implements IGuiHandler
 {
     public static final int GUI_IMPRINTER = 1;
     public static final int GUI_ENCODER = 2;
-    public static final int GUI_PROCESSOR = 3;
+    public static final int GUI_ENCODER_CODE = 3;
+    public static final int GUI_ENCODER_HELP = 4;
+    public static final int GUI_PROCESSOR = 5;
 
     public void preInit()
     {
@@ -109,7 +111,9 @@ public class CommonProxy implements IGuiHandler
                 case GUI_ENCODER:
                 {
                     if (tileEntity != null && tileEntity instanceof TileEntityEncoder)
+                    {
                         return new ContainerEncoder(player.inventory, (TileEntityEncoder) tileEntity);
+                    }
                 }
                 case GUI_PROCESSOR:
                 {

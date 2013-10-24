@@ -13,30 +13,28 @@ public class ContainerEncoder extends Container
     public static final int Y_OFFSET = 0;
 
     private ItemStack[] containingItems = new ItemStack[1];
-    private InventoryPlayer inventoryPlayer;
     private TileEntityEncoder tileEntity;
 
     public ContainerEncoder(InventoryPlayer inventoryPlayer, TileEntityEncoder encoder)
     {
-        this.inventoryPlayer = inventoryPlayer;
         this.tileEntity = encoder;
 
         // Disk
         this.addSlotToContainer(new SlotRestricted(encoder, 0, 80, 24 + Y_OFFSET, new ItemStack(AssemblyLine.recipeLoader.itemDisk)));
 
-        int var3;
+        int row;
 
-        for (var3 = 0; var3 < 3; ++var3)
+        // Player Inventory
+        for (row = 0; row < 3; ++row)
         {
-            for (int var4 = 0; var4 < 9; ++var4)
+            for (int slot = 0; slot < 9; ++slot)
             {
-                this.addSlotToContainer(new Slot(inventoryPlayer, var4 + var3 * 9 + 9, 8 + var4 * 18, 155 + var3 * 18 + Y_OFFSET));
+                this.addSlotToContainer(new Slot(inventoryPlayer, slot + row * 9 + 9, 8 + slot * 18, 97 + row * 18));
             }
         }
-
-        for (var3 = 0; var3 < 9; ++var3)
+        for (row = 0; row < 9; ++row)
         {
-            this.addSlotToContainer(new Slot(inventoryPlayer, var3, 8 + var3 * 18, 213 + Y_OFFSET));
+            this.addSlotToContainer(new Slot(inventoryPlayer, row, 8 + row * 18, 155));
         }
     }
 
