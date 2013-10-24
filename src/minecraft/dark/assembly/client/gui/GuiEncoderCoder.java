@@ -24,7 +24,7 @@ public class GuiEncoderCoder extends GuiEncoderBase
     {
         if (taskListGui == null)
         {
-            taskListGui = new GuiTaskList((this.width - this.xSize) / 2 + 20, (this.height - this.ySize) / 2 + 40);
+            taskListGui = new GuiTaskList();
         }
         super.drawBackgroundLayer(x, y, var1);
         FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE_CODE_BACK);
@@ -34,7 +34,7 @@ public class GuiEncoderCoder extends GuiEncoderBase
         int containerWidth = (this.width - this.xSize) / 2;
         int containerHeight = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(containerWidth, containerHeight, 0, 0, this.xSize, this.ySize);
-        taskListGui.drawConsole(this.fontRenderer);
+        taskListGui.drawConsole(this.mc, (this.width - this.xSize) / 2 + 20, (this.height - this.ySize) / 2 + 40);
     }
 
 }

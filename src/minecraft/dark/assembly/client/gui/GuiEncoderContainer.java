@@ -81,7 +81,7 @@ public abstract class GuiEncoderContainer extends GuiContainer
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y)
     {
-        this.fontRenderer.drawString("\u00a77" + "encoder", (int) (this.xSize / 2 - 7 * 2.5), 4, 4210752);
+        this.fontRenderer.drawString("\u00a77" + "Encoder", (int) (this.xSize / 2 - 7 * 2.5), 4, 4210752);
 
         /** Render Tool Tips */
         if (((GuiButtonImage) this.buttonList.get(0)).isIntersect(x, y))
