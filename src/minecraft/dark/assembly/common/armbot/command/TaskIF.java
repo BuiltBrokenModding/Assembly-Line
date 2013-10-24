@@ -1,5 +1,8 @@
 package dark.assembly.common.armbot.command;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.nbt.NBTTagCompound;
 import universalelectricity.core.vector.Vector2;
 import dark.api.al.coding.IProgrammableMachine;
@@ -12,6 +15,8 @@ public class TaskIF extends TaskBaseLogic
 {
     protected ITask exitTruePoint = null;
     protected ITask exitFalsePoint = null;
+    protected List<Vector2> exits = new ArrayList<Vector2>();
+    protected Vector2 exitA, exitB;
     protected boolean isTrue = false;
 
     public TaskIF()
@@ -29,6 +34,14 @@ public class TaskIF extends TaskBaseLogic
 
     }
 
+    public TaskIF(Vector2 exitA, Vector2 exitB)
+    {
+        this();
+        this.exitA = exitA;
+        this.exitB = exitB;
+
+    }
+
     @Override
     public void refresh()
     {
@@ -36,6 +49,24 @@ public class TaskIF extends TaskBaseLogic
         if (this.getArg("check") != null && this.getArg("compare") != null)
         {
             this.isTrue = this.getArg("check").equals(this.getArg("compare"));
+        }
+        if (exitTruePoint == null && exitA != null)
+        {
+            exitTruePoint = this.program.getTaskAt(exitA);
+        }
+        if (exitFalsePoint == null && exitB != null)
+        {
+            exitFalsePoint = this.program.getTaskAt(exitB);
+        }
+
+        this.exits.clear();
+        if (this.exitFalsePoint != null)
+        {
+            this.exits.add(this.exitFalsePoint.getPosition());
+        }
+        if (this.exitTruePoint != null)
+        {
+            this.exits.add(this.exitTruePoint.getPosition());
         }
     }
 
@@ -104,6 +135,12 @@ public class TaskIF extends TaskBaseLogic
     public boolean canUseTask(IProgrammableMachine device)
     {
         return true;
+    }
+
+    @Override
+    public List<Vector2> getExits()
+    {
+        return this.exits;
     }
 
 }

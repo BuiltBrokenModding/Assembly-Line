@@ -74,7 +74,9 @@ public interface ITask extends Cloneable
         DATA("Data"),
         DEFINEDPROCESS("Defined Process"),
         PROCESS("Process"),
-        DECISION("Decision");
+        DECISION("Decision"),
+        START("Start"),
+        END("End");
         public String name;
 
         private TaskType(String name)

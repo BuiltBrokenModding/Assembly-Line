@@ -34,7 +34,7 @@ public class GuiEncoderCoder extends GuiEncoderBase
         int containerWidth = (this.width - this.xSize) / 2;
         int containerHeight = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(containerWidth, containerHeight, 0, 0, this.xSize, this.ySize);
-        taskListGui.drawConsole(this.mc, (this.width - this.xSize) / 2 + 20, (this.height - this.ySize) / 2 + 40);
+        taskListGui.drawConsole(this.mc, (this.width - this.xSize) / 2 + 15, (this.height - this.ySize) / 2 + 20);
     }
 
 }
