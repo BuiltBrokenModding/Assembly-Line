@@ -5,10 +5,13 @@ import java.io.File;
 import java.util.Arrays;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.ore.OreGenReplaceStone;
 import universalelectricity.prefab.ore.OreGenerator;
@@ -28,6 +31,9 @@ import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
+import dark.api.ProcessorRecipes;
+import dark.api.ProcessorRecipes.ProcessorType;
+import dark.core.common.RecipeLoader.RecipeGrid;
 import dark.core.common.blocks.BlockBasalt;
 import dark.core.common.blocks.BlockColorGlass;
 import dark.core.common.blocks.BlockColorGlowGlass;
@@ -39,6 +45,7 @@ import dark.core.common.blocks.ItemBlockOre;
 import dark.core.common.debug.BlockDebug;
 import dark.core.common.items.EnumMaterial;
 import dark.core.common.items.EnumOrePart;
+import dark.core.common.items.EnumTool;
 import dark.core.common.items.ItemBattery;
 import dark.core.common.items.ItemColoredDust;
 import dark.core.common.items.ItemCommonTool;
@@ -133,6 +140,75 @@ public class DarkMain extends ModPrefab
                         OreGenerator.addOre(gen);
                     }
                 }
+            }
+        }
+        if (CoreRecipeLoader.blockWire instanceof BlockWire)
+        {
+            OreDictionary.registerOre("copperwire", new ItemStack(CoreRecipeLoader.blockWire, 1, 0));
+            OreDictionary.registerOre("wirecopper", new ItemStack(CoreRecipeLoader.blockWire, 1, 0));
+        }
+        if (CoreRecipeLoader.itemMetals instanceof ItemOreDirv)
+        {
+            //Ore material recipe loop
+            for (EnumMaterial mat : EnumMaterial.values())
+            {
+                ItemStack dust = EnumMaterial.getStack(mat, EnumOrePart.DUST, 1);
+                ItemStack ingot = EnumMaterial.getStack(mat, EnumOrePart.INGOTS, 1);
+                ItemStack scraps = EnumMaterial.getStack(mat, EnumOrePart.SCRAPS, 1);
+                ItemStack plates = EnumMaterial.getStack(mat, EnumOrePart.PLATES, 1);
+                ItemStack rubble = EnumMaterial.getStack(mat, EnumOrePart.RUBBLE, 1);
+                ItemStack rod = EnumMaterial.getStack(mat, EnumOrePart.ROD, 1);
+                ItemStack tube = EnumMaterial.getStack(mat, EnumOrePart.TUBE, 1);
+                if (mat.shouldCreateItem(EnumOrePart.INGOTS))
+                {
+                    OreDictionary.registerOre(mat.simpleName + "ingot", ingot);
+                    OreDictionary.registerOre("ingot" + mat.simpleName, ingot);
+                }
+                if (mat.shouldCreateItem(EnumOrePart.RUBBLE))
+                {
+                    OreDictionary.registerOre(mat.simpleName + "rubble", rubble);
+                    OreDictionary.registerOre("rubble" + mat.simpleName, rubble);
+                }
+                //Dust recipes
+                if (mat.shouldCreateItem(EnumOrePart.DUST))
+                {
+                    OreDictionary.registerOre(mat.simpleName + "dust", dust);
+                    OreDictionary.registerOre("dust" + mat.simpleName, dust);
+                }
+
+                // Salvaging recipe
+
+                if (mat.shouldCreateItem(EnumOrePart.SCRAPS))
+                {
+
+                    OreDictionary.registerOre(mat.simpleName + "scraps", scraps);
+                    OreDictionary.registerOre("scraps" + mat.simpleName, scraps);
+                }
+
+                ingot.stackSize = 1;
+                if (mat.shouldCreateItem(EnumOrePart.TUBE))
+                {
+                    OreDictionary.registerOre(mat.simpleName + "tube", tube);
+                    OreDictionary.registerOre("tube" + mat.simpleName, tube);
+
+                }
+                if (mat.shouldCreateItem(EnumOrePart.ROD))
+                {
+
+                    OreDictionary.registerOre(mat.simpleName + "rod", rod);
+                    OreDictionary.registerOre("rod" + mat.simpleName, rod);
+                }
+                if (mat.shouldCreateItem(EnumOrePart.PLATES))
+                {
+                    OreDictionary.registerOre(mat.simpleName + "plate", plates);
+                    OreDictionary.registerOre("plate" + mat.simpleName, plates);
+                }
+                if (mat.shouldCreateItem(EnumOrePart.GEARS))
+                {
+                    OreDictionary.registerOre(mat.simpleName + "gear", mat.getStack(EnumOrePart.GEARS, 1));
+                    OreDictionary.registerOre("gear" + mat.simpleName, mat.getStack(EnumOrePart.GEARS, 1));
+                }
+
             }
         }
         FMLLog.info(" Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");

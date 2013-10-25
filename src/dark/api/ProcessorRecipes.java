@@ -267,19 +267,22 @@ public class ProcessorRecipes
         {
             for (EnumMaterial mat : EnumMaterial.values())
             {
-
+                //Items
                 ItemStack dust = EnumMaterial.getStack(mat, EnumOrePart.DUST, 1);
                 ItemStack scraps = EnumMaterial.getStack(mat, EnumOrePart.SCRAPS, 1);
                 ItemStack plate = EnumMaterial.getStack(mat, EnumOrePart.PLATES, 1);
                 ItemStack rubble = EnumMaterial.getStack(mat, EnumOrePart.RUBBLE, 1);
                 ItemStack rod = EnumMaterial.getStack(mat, EnumOrePart.ROD, 1);
                 ItemStack tube = EnumMaterial.getStack(mat, EnumOrePart.TUBE, 1);
-
+                //Ingots
                 List<ItemStack> ingots = OreDictionary.getOres("ingot" + mat.simpleName);
                 ingots.addAll(OreDictionary.getOres(mat.simpleName + "ingot"));
-
+                //plate
                 List<ItemStack> plates = OreDictionary.getOres("plate" + mat.simpleName);
                 ingots.addAll(OreDictionary.getOres(mat.simpleName + "plate"));
+                //ore
+                List<ItemStack> ores = OreDictionary.getOres("ore" + mat.simpleName);
+                ingots.addAll(OreDictionary.getOres(mat.simpleName + "ore"));
 
                 for (ItemStack ing : ingots)
                 {
@@ -309,6 +312,21 @@ public class ProcessorRecipes
                         ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, pla, scraps);
                         ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, pla, scraps);
                         scraps.stackSize = 1;
+                    }
+                }
+                for (ItemStack ore : ores)
+                {
+                    if (mat.shouldCreateItem(EnumOrePart.RUBBLE))
+                    {
+                        rubble.stackSize = 2;
+                        ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, ore, rubble);
+                        rubble.stackSize = 1;
+                    }
+                    if(mat.shouldCreateItem(EnumOrePart.DUST))
+                    {
+                        dust.stackSize = 2;
+                        ProcessorRecipes.createRecipe(ProcessorType.GRINDER, ore, dust);
+                        dust.stackSize = 1;
                     }
                 }
 

@@ -35,11 +35,19 @@ public class BlockOre extends Block implements IExtraBlockInfo
         super(DarkMain.CONFIGURATION.getBlock("Ore", ModPrefab.getNextID()).getInt(), Material.rock);
         this.setCreativeTab(CreativeTabs.tabBlock);
         this.setUnlocalizedName(DarkMain.getInstance().PREFIX + "Ore");
+        this.setHardness(2.5f);
+        this.setResistance(5.0f);
 
         for (OreData data : OreData.values())
         {
             data.stack = new ItemStack(this.blockID, 1, data.ordinal());
         }
+    }
+
+    @Override
+    public int damageDropped(int par1)
+    {
+        return par1;
     }
 
     @Override
