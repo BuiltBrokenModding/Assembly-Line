@@ -2,7 +2,7 @@ package dark.core.common.machines;
 
 import java.util.EnumSet;
 
-import micdoodle8.mods.galacticraft.API.ISolarLevel;
+import micdoodle8.mods.galacticraft.api.world.ISolarLevel;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityPack;
