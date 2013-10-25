@@ -91,7 +91,7 @@ public class AssemblyLine extends ModPrefab
     public static boolean REQUIRE_NO_POWER = false;
     public static boolean VINALLA_RECIPES = false;
 
-    public static Block processorMachine;
+
 
     @Override
     @EventHandler
@@ -156,7 +156,7 @@ public class AssemblyLine extends ModPrefab
         recipeLoader.blockEncoder = new BlockEncoder();
         recipeLoader.blockArmbot = new BlockArmbot();
         recipeLoader.blockTurntable = new BlockTurntable();
-        AssemblyLine.processorMachine = ModObjectRegistry.createNewBlock("ALBlockProcessor", AssemblyLine.MOD_ID, BlockProcessor.class, ItemBlockHolder.class);
+        recipeLoader.processorMachine = ModObjectRegistry.createNewBlock("ALBlockProcessor", AssemblyLine.MOD_ID, BlockProcessor.class, ItemBlockHolder.class);
 
         recipeLoader.itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", ITEM_ID_PREFIX).getInt());
         recipeLoader.itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", ITEM_ID_PREFIX + 1).getInt());

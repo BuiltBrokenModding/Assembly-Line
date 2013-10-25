@@ -75,7 +75,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
             RenderArmbot.MODEL.render(0.0625F, 0, 0);
             GL11.glPopMatrix();
         }
-        else if (AssemblyLine.processorMachine != null && block.blockID == AssemblyLine.processorMachine.blockID && metadata == 0)
+        else if (AssemblyLine.recipeLoader.processorMachine != null && block.blockID == AssemblyLine.recipeLoader.processorMachine.blockID && metadata == 0)
         {
             FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "CrusherBlock.png"));
             GL11.glPushMatrix();
@@ -86,7 +86,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
             this.modelCrushor.renderPiston(0.0625f, 4);
             GL11.glPopMatrix();
         }
-        else if (AssemblyLine.processorMachine != null && block.blockID == AssemblyLine.processorMachine.blockID && metadata == 4)
+        else if (AssemblyLine.recipeLoader.processorMachine != null && block.blockID == AssemblyLine.recipeLoader.processorMachine.blockID && metadata == 4)
         {
             FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "GrinderBlock.png"));
             GL11.glPushMatrix();

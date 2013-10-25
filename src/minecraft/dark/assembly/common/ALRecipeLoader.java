@@ -7,25 +7,27 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.assembly.common.machine.BlockCrate;
+import dark.assembly.common.machine.processor.BlockProcessor;
 import dark.core.common.RecipeLoader;
 
 public class ALRecipeLoader extends RecipeLoader
 {
 
-    public Block blockConveyorBelt;
-    public Block blockManipulator;
-    public BlockCrate blockCrate;
-    public Block blockImprinter;
-    public Block blockEncoder;
-    public Block blockDetector;
-    public Block blockRejector;
-    public Block blockArmbot;
-    public Block blockCraneController;
-    public Block blockCraneFrame;
-    public Block blockTurntable;
+    public static Block blockConveyorBelt;
+    public static Block blockManipulator;
+    public static BlockCrate blockCrate;
+    public static Block blockImprinter;
+    public static Block blockEncoder;
+    public static Block blockDetector;
+    public static Block blockRejector;
+    public static Block blockArmbot;
+    public static Block blockCraneController;
+    public static Block blockCraneFrame;
+    public static Block blockTurntable;
+    public static Block processorMachine;
 
-    public Item itemImprint;
-    public Item itemDisk;
+    public static Item itemImprint;
+    public static Item itemDisk;
 
     @Override
     public void loadRecipes()
@@ -38,7 +40,7 @@ public class ALRecipeLoader extends RecipeLoader
     private void createUERecipes()
     {
         // Armbot
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockArmbot, new Object[] { "II ", "SIS", "MCM", 'S', RecipeLoader.steelPlate, 'C', RecipeLoader.circuit2, 'I', RecipeLoader.steel, 'M', RecipeLoader.motor }));
+        //GameRegistry.addRecipe(new ShapedOreRecipe(blockArmbot, new Object[] { "II ", "SIS", "MCM", 'S', RecipeLoader.steelPlate, 'C', RecipeLoader.circuit2, 'I', RecipeLoader.steel, 'M', RecipeLoader.motor }));
         // Disk
         GameRegistry.addRecipe(new ShapedOreRecipe(itemDisk, new Object[] { "III", "ICI", "III", 'I', itemImprint, 'C', RecipeLoader.circuit2 }));
         // Encoder
@@ -53,6 +55,12 @@ public class ALRecipeLoader extends RecipeLoader
         GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, new Object[] { "IMI", " P ", 'M', RecipeLoader.motor, 'P', Block.pistonBase, 'I', RecipeLoader.steel }));
         // Manipulator
         GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockManipulator, 2), new Object[] { Block.dispenser, RecipeLoader.circuit }));
+        if (processorMachine instanceof BlockProcessor)
+        {
+            new RecipeGrid(new ItemStack(processorMachine, 1, BlockProcessor.ProcessorData.GRINDER.startMeta), 3, 3).setRowOne(steel, steel, steel).setRowTwo(steelPlate, motor, steelPlate).setRowThree(steel, circuit2, steel).RegisterRecipe();
+            new RecipeGrid(new ItemStack(processorMachine, 1, BlockProcessor.ProcessorData.CRUSHER.startMeta), 3, 3).setRowOne(steel, steelPlate, steel).setRowTwo(Block.pistonBase, steelPlate, Block.pistonBase).setRowThree(steel, circuit2, steel).RegisterRecipe();
+
+        }
     }
 
     private void createStandardRecipes()
