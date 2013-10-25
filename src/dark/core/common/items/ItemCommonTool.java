@@ -3,8 +3,6 @@ package dark.core.common.items;
 import java.awt.Color;
 import java.util.List;
 
-import universalelectricity.core.electricity.ElectricityDisplay;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -26,6 +24,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.oredict.OreDictionary;
+import universalelectricity.core.electricity.ElectricityDisplay;
 
 import com.google.common.collect.Multimap;
 
@@ -37,7 +36,7 @@ import dark.core.prefab.ModPrefab;
 
 /** Flexible tool class that uses NBT to store damage and effect rather than metadata. Metadata
  * instead is used to store sub items allowing several different tools to exist within the same item
- *
+ * 
  * @author DarkGuardsman */
 public class ItemCommonTool extends Item implements IExtraItemInfo
 {

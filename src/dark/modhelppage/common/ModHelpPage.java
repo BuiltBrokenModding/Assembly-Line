@@ -14,7 +14,7 @@ public class ModHelpPage
     private static boolean init = false;
 
     /** Call this to setup mod page helper for the mod
-     *
+     * 
      * @param modID - mod's id used to track it, and register all xmls too
      * @param configFolder - location of the mods config folder for storing player crated xmls */
     public static void init(String modID, String configFolder)
@@ -33,7 +33,7 @@ public class ModHelpPage
     }
 
     /** Call this to load an xmlFile from within the mod package
-     *
+     * 
      * @param modID - mod's id used to track it, and register all xmls too
      * @param xmlFile - path to the file */
     public static void load(String modID, String xmlFile)

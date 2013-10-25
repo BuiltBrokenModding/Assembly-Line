@@ -1,22 +1,22 @@
 package dark.api.energy;
 
-import dark.api.parts.ITileConnector;
 import net.minecraftforge.common.ForgeDirection;
+import dark.api.parts.ITileConnector;
 
 /** Used by TileEntities or Entities to show heat stored and cooling rate of the object
- *
+ * 
  * @author DarkGuardsman */
 public interface IHeatObject extends ITileConnector
 {
 
     /** Amount of heat stored in the body of the object. Think of it as a battery for heat but
      * remember that heat is lost very fast
-     *
+     * 
      * @return amount of heat in generic units */
     public float getHeat(ForgeDirection side);
 
     /** Sets the heat level of the object or increase it
-     *
+     * 
      * @param amount - amount to set or increase by
      * @param incrase - true if should increase the current heat level */
     public void setHeat(double amount, boolean incrase);

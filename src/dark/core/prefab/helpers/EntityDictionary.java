@@ -23,11 +23,10 @@ import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTBase;
 
 /** Dictionary to track entities by several names to be used for anything. Current use is armbot task
  * so the user has an easy way to ID creatures.
- *
+ * 
  * @author DarkGuardsman */
 public class EntityDictionary
 {

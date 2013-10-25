@@ -10,7 +10,7 @@ import dark.api.parts.ITileConnector.Connection;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
 
 /** Machine that turns heat into usable electrical energy
- *
+ * 
  * @author DarkGuardsman */
 public class TileEntityHeatCouple extends TileEntityEnergyMachine
 {
@@ -71,6 +71,7 @@ public class TileEntityHeatCouple extends TileEntityEnergyMachine
         return this.outputWatts;
     }
 
+    @Override
     public EnumSet<ForgeDirection> getOutputDirections()
     {
         return EnumSet.allOf(ForgeDirection.class);

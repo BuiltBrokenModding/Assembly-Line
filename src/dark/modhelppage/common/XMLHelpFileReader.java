@@ -62,6 +62,5 @@ public class XMLHelpFileReader
     {
         String name;
 
-
     }
 }

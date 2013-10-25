@@ -14,7 +14,7 @@ import dark.core.prefab.items.ItemBasic;
 
 /** A meta data item containing parts of various crafting recipes. These parts do not do anything but
  * allow new crafting recipes to be created.
- *
+ * 
  * @author DarkGuardsman */
 public class ItemParts extends ItemBasic
 {

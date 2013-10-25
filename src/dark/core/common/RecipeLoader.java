@@ -12,7 +12,7 @@ import com.builtbroken.common.Triple;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 /** Recipe system to make it easier to load recipes for a mod
- *
+ * 
  * @author DarkGuardsman */
 public abstract class RecipeLoader
 {
@@ -97,7 +97,7 @@ public abstract class RecipeLoader
     }
 
     /** An easier to read recipe system for the basic minecraft recipes
-     *
+     * 
      * @author DarkGaurdsman */
     public static class RecipeGrid
     {
@@ -123,7 +123,7 @@ public abstract class RecipeLoader
 
         /** 3x3 Crafting grid. Each Triple is a row. Input for the triples should be any of { Item,
          * Block, ItemStack, String}
-         *
+         * 
          * @param one - top row
          * @param two - middle row
          * @param three - bottom row */
@@ -137,7 +137,7 @@ public abstract class RecipeLoader
 
         /** 2x2 Crafting grid. Each Pair is a row. Input for the pairs should be any of { Item,
          * Block, ItemStack, String}
-         *
+         * 
          * @param one - top row
          * @param two - middle row */
         public RecipeGrid(Object stack, Pair one, Pair two)
