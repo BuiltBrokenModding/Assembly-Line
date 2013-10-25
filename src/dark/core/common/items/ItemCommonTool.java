@@ -36,7 +36,7 @@ import dark.core.prefab.ModPrefab;
 
 /** Flexible tool class that uses NBT to store damage and effect rather than metadata. Metadata
  * instead is used to store sub items allowing several different tools to exist within the same item
- * 
+ *
  * @author DarkGuardsman */
 public class ItemCommonTool extends Item implements IExtraItemInfo
 {
@@ -182,6 +182,10 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
             int currentDamage = itemStack.getTagCompound().getInteger("toolDamage") + damage;
             damage = Math.max(Math.min(damage, mat.maxUses), 0);
             itemStack.getTagCompound().setInteger("toolDamage", damage);
+            if (entity instanceof EntityPlayer)
+            {
+                ((EntityPlayer) entity).inventory.onInventoryChanged();
+            }
             if (currentDamage > mat.maxUses)
             {
                 entity.renderBrokenItemStack(itemStack);
@@ -213,14 +217,6 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
     @Override
     public boolean hitEntity(ItemStack itemStack, EntityLivingBase par2EntityLivingBase, EntityLivingBase par3EntityLivingBase)
     {
-        if (itemStack.getTagCompound() == null)
-        {
-            itemStack.setTagCompound(new NBTTagCompound());
-        }
-        if (itemStack.getTagCompound().getBoolean("broken"))
-        {
-            return true;
-        }
         this.damage(itemStack, 2, par2EntityLivingBase);
         return true;
     }
