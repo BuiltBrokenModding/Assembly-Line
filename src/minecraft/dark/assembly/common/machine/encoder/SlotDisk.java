@@ -3,7 +3,7 @@ package dark.assembly.common.machine.encoder;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import dark.assembly.common.AssemblyLine;
+import dark.assembly.common.ALRecipeLoader;
 
 public class SlotDisk extends Slot
 {
@@ -16,7 +16,7 @@ public class SlotDisk extends Slot
     @Override
     public boolean isItemValid(ItemStack itemStack)
     {
-        return itemStack.itemID == AssemblyLine.recipeLoader.itemDisk.itemID;
+        return itemStack.itemID == ALRecipeLoader.itemDisk.itemID;
     }
 
 }

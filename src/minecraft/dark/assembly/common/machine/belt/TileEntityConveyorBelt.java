@@ -17,7 +17,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;
 import dark.api.al.IBelt;
-import dark.assembly.common.AssemblyLine;
+import dark.assembly.common.ALRecipeLoader;
 import dark.assembly.common.machine.TileEntityAssembly;
 import dark.core.common.DarkMain;
 import dark.core.network.PacketHandler;
@@ -72,7 +72,7 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IBelt,
         }
         if (this.worldObj.isRemote && this.isFunctioning())
         {
-            if (this.ticks % 10 == 0 && this.worldObj.isRemote && this.worldObj.getBlockId(this.xCoord - 1, this.yCoord, this.zCoord) != AssemblyLine.recipeLoader.blockConveyorBelt.blockID && this.worldObj.getBlockId(xCoord, yCoord, zCoord - 1) != AssemblyLine.recipeLoader.blockConveyorBelt.blockID)
+            if (this.ticks % 10 == 0 && this.worldObj.isRemote && this.worldObj.getBlockId(this.xCoord - 1, this.yCoord, this.zCoord) != ALRecipeLoader.blockConveyorBelt.blockID && this.worldObj.getBlockId(xCoord, yCoord, zCoord - 1) != ALRecipeLoader.blockConveyorBelt.blockID)
             {
                 this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "mods.assemblyline.conveyor", 0.5f, 0.7f, true);
             }

@@ -25,7 +25,7 @@ import dark.assembly.common.armbot.command.TaskStart;
 import dark.core.interfaces.IScroll;
 
 /** Not a gui itself but a component used to display task as a box inside of a gui
- *
+ * 
  * @author DarkGuardsman */
 public class GuiTaskList extends Gui implements IScroll
 {
@@ -271,7 +271,7 @@ public class GuiTaskList extends Gui implements IScroll
                                 vv = 128;
                                 break;
                         }
-                        FMLClientHandler.instance().getClient().renderEngine.bindTexture(this.TEXTURE_PROCESS);
+                        FMLClientHandler.instance().getClient().renderEngine.bindTexture(GuiTaskList.TEXTURE_PROCESS);
                         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                         Vector2 center = new Vector2((x + 35 - (xx / 2)) * sW + (spacingX * j), (y + 25 - (yy / 2)) * sh + (spacingY * i));
                         this.drawTexturedModalRect(center.intX(), center.intY(), uu, vv, xx, yy);

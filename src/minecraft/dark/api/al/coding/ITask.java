@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import universalelectricity.core.vector.Vector2;
 import dark.api.al.coding.args.ArgumentData;
 

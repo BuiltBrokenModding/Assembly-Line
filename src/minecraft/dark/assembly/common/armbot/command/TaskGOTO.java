@@ -38,7 +38,7 @@ public class TaskGOTO extends TaskBase implements IRedirectTask
     public void refresh()
     {
         super.refresh();
-        if(task == null && taskPos != null)
+        if (task == null && taskPos != null)
         {
             this.task = this.program.getTaskAt(taskPos);
         }

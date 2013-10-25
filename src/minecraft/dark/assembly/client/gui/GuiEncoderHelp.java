@@ -19,6 +19,6 @@ public class GuiEncoderHelp extends GuiEncoderBase
     protected void drawForegroundLayer(int x, int y, float var1)
     {
         String out = "Help for using the encoder is currently not ready";
-        this.fontRenderer.drawString("\u00a77" + out, (int) (this.xSize / 2 - out.length() * 2.5), 20, 4210752);
+        this.fontRenderer.drawString("\u00a77" + out, (int) (this.guiSize.intX() / 2 - out.length() * 2.5), 20, 4210752);
     }
 }

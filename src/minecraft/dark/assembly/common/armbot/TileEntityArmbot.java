@@ -30,7 +30,7 @@ import dan200.computer.api.IPeripheral;
 import dark.api.al.coding.IArmbot;
 import dark.api.al.coding.IProgram;
 import dark.api.al.coding.ProgramHelper;
-import dark.assembly.common.AssemblyLine;
+import dark.assembly.common.ALRecipeLoader;
 import dark.assembly.common.machine.TileEntityAssembly;
 import dark.assembly.common.machine.encoder.ItemDisk;
 import dark.core.common.DarkMain;
@@ -477,7 +477,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack)
     {
-        return itemstack != null && itemstack.itemID == AssemblyLine.recipeLoader.itemDisk.itemID;
+        return itemstack != null && itemstack.itemID == ALRecipeLoader.itemDisk.itemID;
     }
 
     @Override

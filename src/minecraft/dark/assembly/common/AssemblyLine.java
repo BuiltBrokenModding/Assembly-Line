@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 
@@ -91,8 +90,6 @@ public class AssemblyLine extends ModPrefab
     public static boolean REQUIRE_NO_POWER = false;
     public static boolean VINALLA_RECIPES = false;
 
-
-
     @Override
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
@@ -117,14 +114,14 @@ public class AssemblyLine extends ModPrefab
         recipeLoader.loadRecipes();
 
         //GameRegistry.registerBlock(recipeLoader.blockConveyorBelt, "ConveyorBelt");
-        GameRegistry.registerBlock(recipeLoader.blockCrate, ItemBlockCrate.class, "Crate");
-        GameRegistry.registerBlock(recipeLoader.blockManipulator, "Manipulator");
-        GameRegistry.registerBlock(recipeLoader.blockImprinter, "Imprinter");
-        GameRegistry.registerBlock(recipeLoader.blockEncoder, "Encoder");
-        GameRegistry.registerBlock(recipeLoader.blockDetector, "Detector");
-        GameRegistry.registerBlock(recipeLoader.blockRejector, "Rejector");
-        GameRegistry.registerBlock(recipeLoader.blockArmbot, "Armbot");
-        GameRegistry.registerBlock(recipeLoader.blockTurntable, "Turntable");
+        GameRegistry.registerBlock(ALRecipeLoader.blockCrate, ItemBlockCrate.class, "Crate");
+        GameRegistry.registerBlock(ALRecipeLoader.blockManipulator, "Manipulator");
+        GameRegistry.registerBlock(ALRecipeLoader.blockImprinter, "Imprinter");
+        GameRegistry.registerBlock(ALRecipeLoader.blockEncoder, "Encoder");
+        GameRegistry.registerBlock(ALRecipeLoader.blockDetector, "Detector");
+        GameRegistry.registerBlock(ALRecipeLoader.blockRejector, "Rejector");
+        GameRegistry.registerBlock(ALRecipeLoader.blockArmbot, "Armbot");
+        GameRegistry.registerBlock(ALRecipeLoader.blockTurntable, "Turntable");
 
         GameRegistry.registerTileEntity(TileEntityConveyorBelt.class, "ALConveyorBelt");
         GameRegistry.registerTileEntity(TileEntityRejector.class, "ALSorter");
@@ -135,7 +132,7 @@ public class AssemblyLine extends ModPrefab
         GameRegistry.registerTileEntity(TileEntityArmbot.class, "ALArmbot");
         GameRegistry.registerTileEntity(TileEntityImprinter.class, "ALImprinter");
 
-        DMCreativeTab.tabAutomation.setIconItemStack(new ItemStack(recipeLoader.blockConveyorBelt));
+        DMCreativeTab.tabAutomation.setIconItemStack(new ItemStack(ALRecipeLoader.blockConveyorBelt));
 
     }
 
@@ -147,19 +144,19 @@ public class AssemblyLine extends ModPrefab
             recipeLoader = new ALRecipeLoader();
         }
         CONFIGURATION.load();
-        recipeLoader.blockConveyorBelt = ModObjectRegistry.createNewBlock("ALBlockConveyor", AssemblyLine.MOD_ID, BlockConveyorBelt.class);
-        recipeLoader.blockManipulator = new BlockManipulator();
-        recipeLoader.blockCrate = new BlockCrate();
-        recipeLoader.blockImprinter = new BlockImprinter();
-        recipeLoader.blockDetector = new BlockDetector();
-        recipeLoader.blockRejector = new BlockRejector();
-        recipeLoader.blockEncoder = new BlockEncoder();
-        recipeLoader.blockArmbot = new BlockArmbot();
-        recipeLoader.blockTurntable = new BlockTurntable();
-        recipeLoader.processorMachine = ModObjectRegistry.createNewBlock("ALBlockProcessor", AssemblyLine.MOD_ID, BlockProcessor.class, ItemBlockHolder.class);
+        ALRecipeLoader.blockConveyorBelt = ModObjectRegistry.createNewBlock("ALBlockConveyor", AssemblyLine.MOD_ID, BlockConveyorBelt.class);
+        ALRecipeLoader.blockManipulator = new BlockManipulator();
+        ALRecipeLoader.blockCrate = new BlockCrate();
+        ALRecipeLoader.blockImprinter = new BlockImprinter();
+        ALRecipeLoader.blockDetector = new BlockDetector();
+        ALRecipeLoader.blockRejector = new BlockRejector();
+        ALRecipeLoader.blockEncoder = new BlockEncoder();
+        ALRecipeLoader.blockArmbot = new BlockArmbot();
+        ALRecipeLoader.blockTurntable = new BlockTurntable();
+        ALRecipeLoader.processorMachine = ModObjectRegistry.createNewBlock("ALBlockProcessor", AssemblyLine.MOD_ID, BlockProcessor.class, ItemBlockHolder.class);
 
-        recipeLoader.itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", ITEM_ID_PREFIX).getInt());
-        recipeLoader.itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", ITEM_ID_PREFIX + 1).getInt());
+        ALRecipeLoader.itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", ITEM_ID_PREFIX).getInt());
+        ALRecipeLoader.itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", ITEM_ID_PREFIX + 1).getInt());
 
         AssemblyLine.VINALLA_RECIPES = CONFIGURATION.get("general", "Vinalla_Recipes", false).getBoolean(false);
 

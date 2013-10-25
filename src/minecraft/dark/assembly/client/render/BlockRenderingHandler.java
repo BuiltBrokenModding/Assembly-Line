@@ -17,6 +17,7 @@ import dark.assembly.client.model.ModelCrusher;
 import dark.assembly.client.model.ModelGrinder;
 import dark.assembly.client.model.ModelManipulator;
 import dark.assembly.client.model.ModelRejectorPiston;
+import dark.assembly.common.ALRecipeLoader;
 import dark.assembly.common.AssemblyLine;
 import dark.core.prefab.ModPrefab;
 
@@ -34,7 +35,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
     @Override
     public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
     {
-        if (AssemblyLine.recipeLoader.blockConveyorBelt != null && block.blockID == AssemblyLine.recipeLoader.blockConveyorBelt.blockID)
+        if (ALRecipeLoader.blockConveyorBelt != null && block.blockID == ALRecipeLoader.blockConveyorBelt.blockID)
         {
             GL11.glPushMatrix();
             GL11.glTranslatef(0.0F, 1.5F, 0.0F);
@@ -43,7 +44,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
             modelConveyorBelt.render(0.0625F, 0, false, false, false, false);
             GL11.glPopMatrix();
         }
-        else if (AssemblyLine.recipeLoader.blockRejector != null && block.blockID == AssemblyLine.recipeLoader.blockRejector.blockID)
+        else if (ALRecipeLoader.blockRejector != null && block.blockID == ALRecipeLoader.blockRejector.blockID)
         {
             FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "rejector.png"));
             GL11.glPushMatrix();
@@ -54,7 +55,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
             modelEjector.renderPiston(0.0625F, 1);
             GL11.glPopMatrix();
         }
-        else if (AssemblyLine.recipeLoader.blockManipulator != null && block.blockID == AssemblyLine.recipeLoader.blockManipulator.blockID)
+        else if (ALRecipeLoader.blockManipulator != null && block.blockID == ALRecipeLoader.blockManipulator.blockID)
         {
             FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "manipulator1.png"));
             GL11.glPushMatrix();
@@ -64,7 +65,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
             modelInjector.render(0.0625F, true, 0);
             GL11.glPopMatrix();
         }
-        else if (AssemblyLine.recipeLoader.blockArmbot != null && block.blockID == AssemblyLine.recipeLoader.blockArmbot.blockID)
+        else if (ALRecipeLoader.blockArmbot != null && block.blockID == ALRecipeLoader.blockArmbot.blockID)
         {
             FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + RenderArmbot.TEXTURE));
             GL11.glPushMatrix();
@@ -75,7 +76,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
             RenderArmbot.MODEL.render(0.0625F, 0, 0);
             GL11.glPopMatrix();
         }
-        else if (AssemblyLine.recipeLoader.processorMachine != null && block.blockID == AssemblyLine.recipeLoader.processorMachine.blockID && metadata == 0)
+        else if (ALRecipeLoader.processorMachine != null && block.blockID == ALRecipeLoader.processorMachine.blockID && metadata == 0)
         {
             FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "CrusherBlock.png"));
             GL11.glPushMatrix();
@@ -86,7 +87,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
             this.modelCrushor.renderPiston(0.0625f, 4);
             GL11.glPopMatrix();
         }
-        else if (AssemblyLine.recipeLoader.processorMachine != null && block.blockID == AssemblyLine.recipeLoader.processorMachine.blockID && metadata == 4)
+        else if (ALRecipeLoader.processorMachine != null && block.blockID == ALRecipeLoader.processorMachine.blockID && metadata == 4)
         {
             FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "GrinderBlock.png"));
             GL11.glPushMatrix();

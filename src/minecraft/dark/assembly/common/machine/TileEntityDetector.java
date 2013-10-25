@@ -13,7 +13,7 @@ import net.minecraftforge.common.ForgeDirection;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;
-import dark.assembly.common.AssemblyLine;
+import dark.assembly.common.ALRecipeLoader;
 import dark.assembly.common.imprinter.prefab.TileEntityFilterable;
 import dark.core.network.PacketHandler;
 
@@ -66,13 +66,13 @@ public class TileEntityDetector extends TileEntityFilterable
             if (powerCheck != this.powering)
             {
                 this.powering = powerCheck;
-                this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, AssemblyLine.recipeLoader.blockDetector.blockID);
-                this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord + 1, this.zCoord, AssemblyLine.recipeLoader.blockDetector.blockID);
+                this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, ALRecipeLoader.blockDetector.blockID);
+                this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord + 1, this.zCoord, ALRecipeLoader.blockDetector.blockID);
                 for (int x = this.xCoord - 1; x <= this.xCoord + 1; x++)
                 {
                     for (int z = this.zCoord - 1; z <= this.zCoord + 1; z++)
                     {
-                        this.worldObj.notifyBlocksOfNeighborChange(x, this.yCoord + 1, z, AssemblyLine.recipeLoader.blockDetector.blockID);
+                        this.worldObj.notifyBlocksOfNeighborChange(x, this.yCoord + 1, z, ALRecipeLoader.blockDetector.blockID);
                     }
                 }
 
@@ -84,8 +84,8 @@ public class TileEntityDetector extends TileEntityFilterable
     @Override
     public void invalidate()
     {
-        this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, AssemblyLine.recipeLoader.blockDetector.blockID);
-        this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord + 1, this.zCoord, AssemblyLine.recipeLoader.blockDetector.blockID);
+        this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, ALRecipeLoader.blockDetector.blockID);
+        this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord + 1, this.zCoord, ALRecipeLoader.blockDetector.blockID);
         super.invalidate();
     }
 

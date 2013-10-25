@@ -8,7 +8,7 @@ import universalelectricity.core.vector.Vector2;
  * the entry point, and exit points. As well handle anything in between. Examples are IF statements
  * and loops. Do your logic in the refresh method as it should be called each time a new task is
  * selected.
- *
+ * 
  * @author DarkGuardsman */
 public interface ILogicTask extends ITask
 {

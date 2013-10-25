@@ -11,7 +11,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
@@ -112,7 +111,8 @@ public class BlockTurntable extends BlockAssembly
                 else if (Block.blocksList[blockID] instanceof IRotatableBlock)
                 {
                     currentDirection = ((IRotatableBlock) Block.blocksList[blockID]).getDirection(world, position.intX(), position.intY(), position.intZ());
-                }else if(Block.blocksList[blockID] != null)
+                }
+                else if (Block.blocksList[blockID] != null)
                 {
                     Block.blocksList[blockID].rotateBlock(world, x, y, z, direction.getOpposite());
                 }

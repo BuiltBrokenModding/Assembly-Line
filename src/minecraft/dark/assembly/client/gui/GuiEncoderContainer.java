@@ -19,7 +19,6 @@ import dark.assembly.common.machine.encoder.ContainerEncoder;
 import dark.assembly.common.machine.encoder.TileEntityEncoder;
 import dark.core.prefab.invgui.GuiButtonImage;
 
-
 @SideOnly(Side.CLIENT)
 public abstract class GuiEncoderContainer extends GuiContainer
 {

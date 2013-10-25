@@ -1,13 +1,13 @@
 package dark.assembly.client.gui;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
+
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.machine.encoder.TileEntityEncoder;
-import dark.core.prefab.invgui.GuiButtonImage;
 
 public class GuiEncoderCoder extends GuiEncoderBase
 {
@@ -31,10 +31,10 @@ public class GuiEncoderCoder extends GuiEncoderBase
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        int containerWidth = (this.width - this.xSize) / 2;
-        int containerHeight = (this.height - this.ySize) / 2;
-        this.drawTexturedModalRect(containerWidth, containerHeight, 0, 0, this.xSize, this.ySize);
-        taskListGui.drawConsole(this.mc, (this.width - this.xSize) / 2 + 15, (this.height - this.ySize) / 2 + 20);
+        int containerWidth = (this.width - this.guiSize.intX()) / 2;
+        int containerHeight = (this.height - this.guiSize.intY()) / 2;
+        this.drawTexturedModalRect(containerWidth, containerHeight, 0, 0, this.guiSize.intX(), this.guiSize.intY());
+        taskListGui.drawConsole(this.mc, (this.width - this.guiSize.intX()) / 2 + 15, (this.height - this.guiSize.intY()) / 2 + 20);
     }
 
 }

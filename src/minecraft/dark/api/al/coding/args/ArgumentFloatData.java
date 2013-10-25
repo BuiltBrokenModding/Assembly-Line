@@ -2,7 +2,7 @@ package dark.api.al.coding.args;
 
 /** Used to create argument data for the encoder. Should only be used if the value needs to be
  * clearly limited inside the encoder display.
- *
+ * 
  * @author DarkGuardsman */
 public class ArgumentFloatData extends ArgumentData
 {
