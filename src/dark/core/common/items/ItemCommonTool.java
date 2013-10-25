@@ -1,6 +1,9 @@
 package dark.core.common.items;
 
+import java.awt.Color;
 import java.util.List;
+
+import universalelectricity.core.electricity.ElectricityDisplay;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -34,7 +37,7 @@ import dark.core.prefab.ModPrefab;
 
 /** Flexible tool class that uses NBT to store damage and effect rather than metadata. Metadata
  * instead is used to store sub items allowing several different tools to exist within the same item
- * 
+ *
  * @author DarkGuardsman */
 public class ItemCommonTool extends Item implements IExtraItemInfo
 {
@@ -49,6 +52,43 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
         super(DarkMain.CONFIGURATION.getItem("Items", "CommonTools", ModPrefab.getNextItemId()).getInt());
         this.maxStackSize = 1;
         this.setCreativeTab(CreativeTabs.tabTools);
+    }
+
+    @Override
+    public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
+    {
+        if (itemStack != null)
+        {
+            if (itemStack.getTagCompound() == null)
+            {
+                itemStack.setTagCompound(new NBTTagCompound());
+            }
+            if (itemStack.getTagCompound().getBoolean("broken"))
+            {
+                par3List.add("Broken");
+            }
+            else
+            {
+                EnumMaterial mat = EnumMaterial.getToolMatFromMeta(itemStack.getItemDamage());
+                int currentDamage = itemStack.getTagCompound().getInteger("toolDamage");
+                par3List.add((ElectricityDisplay.roundDecimals((currentDamage / mat.maxUses)) + "%"));
+            }
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public int getColorFromItemStack(ItemStack itemStack, int par2)
+    {
+        if (itemStack.getTagCompound() == null)
+        {
+            itemStack.setTagCompound(new NBTTagCompound());
+        }
+        if (itemStack.getTagCompound().getBoolean("broken"))
+        {
+            return Color.RED.getRGB();
+        }
+        return super.getColorFromItemStack(itemStack, par2);
     }
 
     @Override

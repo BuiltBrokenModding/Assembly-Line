@@ -3,7 +3,9 @@ package dark.core.common;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTool;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.api.ColorCode;
 import dark.api.ProcessorRecipes;
@@ -13,9 +15,13 @@ import dark.core.common.blocks.BlockOre;
 import dark.core.common.blocks.BlockOre.OreData;
 import dark.core.common.items.EnumMaterial;
 import dark.core.common.items.EnumOrePart;
+import dark.core.common.items.EnumTool;
 import dark.core.common.items.ItemOreDirv;
 import dark.core.common.items.ItemParts;
 import dark.core.common.items.ItemParts.Parts;
+import dark.core.common.items.ItemWrench;
+import dark.core.common.machines.BlockSolarPanel;
+import dark.core.common.transmit.BlockWire;
 
 public class CoreRecipeLoader extends RecipeLoader
 {
@@ -42,8 +48,22 @@ public class CoreRecipeLoader extends RecipeLoader
     public void loadRecipes()
     {
         super.loadRecipes();
-        new RecipeGrid(new ItemStack(itemTool, 1, 0), 3, 2).setRowOne("ironTube", "valvePart", "ironTube").setRowTwo(null, "ironTube", null).RegisterRecipe();
-        new RecipeGrid(new ItemStack(blockSolar, 1, 0), 3, 3).setRowOne(Block.glass, Block.glass, Block.glass).setRowTwo(RecipeLoader.steel, RecipeLoader.circuit, RecipeLoader.steel).setRowThree(RecipeLoader.steel, "copperWire", RecipeLoader.steel).RegisterRecipe();
+        if (itemTool instanceof ItemTool)
+        {
+            new RecipeGrid(new ItemStack(itemTool, 1, 0), 3, 2).setRowOne("ironTube", "valvePart", "ironTube").setRowTwo(null, "ironTube", null).RegisterRecipe();
+        }
+        if (wrench instanceof ItemWrench)
+        {
+            new RecipeGrid(new ItemStack(wrench, 1, 0), 3, 3).setRowOne(steel, null, steel).setRowTwo(null, steel, null).setRowThree(null, steel, null).RegisterRecipe();
+        }
+        if (blockSolar instanceof BlockSolarPanel)
+        {
+            new RecipeGrid(new ItemStack(blockSolar, 1, 0), 3, 3).setRowOne(Block.glass, Block.glass, Block.glass).setRowTwo(RecipeLoader.steel, RecipeLoader.circuit, RecipeLoader.steel).setRowThree(RecipeLoader.steel, "copperWire", RecipeLoader.steel).RegisterRecipe();
+        }
+        if (blockWire instanceof BlockWire)
+        {
+            new RecipeGrid(new ItemStack(blockWire, 1, 0), 3, 1).setRowOne(Block.cloth, Block.cloth, Block.cloth).setRowTwo(copper, copper, copper).setRowThree(Block.cloth, Block.cloth, Block.cloth).RegisterRecipe();
+        }
         this.loadParts();
     }
 
@@ -102,7 +122,23 @@ public class CoreRecipeLoader extends RecipeLoader
                 ItemStack rubble = EnumMaterial.getStack(mat, EnumOrePart.RUBBLE, 1);
                 ItemStack rod = EnumMaterial.getStack(mat, EnumOrePart.ROD, 1);
                 ItemStack tube = EnumMaterial.getStack(mat, EnumOrePart.TUBE, 1);
-
+                if (mat.shouldCreateItem(EnumOrePart.INGOTS))
+                {
+                    OreDictionary.registerOre(mat.simpleName + "ingot", ingot);
+                    OreDictionary.registerOre("ingot" + mat.simpleName, ingot);
+                }
+                if (mat.shouldCreateItem(EnumOrePart.RUBBLE))
+                {
+                    OreDictionary.registerOre(mat.simpleName + "rubble", rubble);
+                    OreDictionary.registerOre("rubble" + mat.simpleName, rubble);
+                }
+                if (mat.shouldCreateTool())
+                {
+                    new RecipeGrid(mat.getTool(EnumTool.PICKAX)).setRowOne(ingot, ingot, ingot).setRowTwo(null, Item.stick, null).setRowThree(null, Item.stick, null).RegisterRecipe();
+                    new RecipeGrid(mat.getTool(EnumTool.AX)).setRowOne(ingot, ingot, null).setRowTwo(ingot, Item.stick, null).setRowThree(null, Item.stick, null).RegisterRecipe();
+                    new RecipeGrid(mat.getTool(EnumTool.HOE)).setRowOne(ingot, ingot, null).setRowTwo(null, Item.stick, null).setRowThree(null, Item.stick, null).RegisterRecipe();
+                    new RecipeGrid(mat.getTool(EnumTool.SPADE)).setRowOne(null, ingot, null).setRowTwo(null, Item.stick, null).setRowThree(null, Item.stick, null).RegisterRecipe();
+                }
                 //Dust recipes
                 if (mat.shouldCreateItem(EnumOrePart.DUST))
                 {
@@ -119,6 +155,8 @@ public class CoreRecipeLoader extends RecipeLoader
                     dust.stackSize = 1;
                     ProcessorRecipes.createRecipe(ProcessorType.GRINDER, rod, dust);
                     ProcessorRecipes.createRecipe(ProcessorType.GRINDER, tube, dust);
+                    OreDictionary.registerOre(mat.simpleName + "dust", dust);
+                    OreDictionary.registerOre("dust" + mat.simpleName, dust);
                 }
 
                 // Salvaging recipe
@@ -135,6 +173,8 @@ public class CoreRecipeLoader extends RecipeLoader
                     ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, ingot, scraps);
                     ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, rod, scraps);
                     ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, tube, scraps);
+                    OreDictionary.registerOre(mat.simpleName + "scraps", scraps);
+                    OreDictionary.registerOre("scraps" + mat.simpleName, scraps);
                 }
 
                 ingot.stackSize = 1;
@@ -144,6 +184,8 @@ public class CoreRecipeLoader extends RecipeLoader
                     new RecipeGrid(tube, 3, 1).setRowOne(ingot, ingot, ingot).RegisterRecipe();
                     tube.stackSize = 1;
                     new RecipeGrid(tube, 1, 1).setRowOne(rod).RegisterRecipe();
+                    OreDictionary.registerOre(mat.simpleName + "tube", tube);
+                    OreDictionary.registerOre("tube" + mat.simpleName, tube);
 
                 }
                 if (mat.shouldCreateItem(EnumOrePart.ROD))
@@ -151,14 +193,20 @@ public class CoreRecipeLoader extends RecipeLoader
                     rod.stackSize = 2;
                     new RecipeGrid(rod, 2, 1).setRowOne(ingot, ingot).RegisterRecipe();
                     rod.stackSize = 1;
+                    OreDictionary.registerOre(mat.simpleName + "rod", rod);
+                    OreDictionary.registerOre("rod" + mat.simpleName, rod);
                 }
                 if (mat.shouldCreateItem(EnumOrePart.PLATES))
                 {
                     new RecipeGrid(mat.getStack(EnumOrePart.PLATES, 1), 2, 2).setRowOne(ingot, ingot).setRowTwo(ingot, ingot).RegisterRecipe();
+                    OreDictionary.registerOre(mat.simpleName + "plate", plates);
+                    OreDictionary.registerOre("plate" + mat.simpleName, plates);
                 }
                 if (mat.shouldCreateItem(EnumOrePart.GEARS))
                 {
                     new RecipeGrid(mat.getStack(EnumOrePart.GEARS, 4), 3, 3).setRowOne(null, ingot, null).setRowTwo(ingot, (mat.shouldCreateItem(EnumOrePart.ROD) ? rod : Item.stick), ingot).setRowThree(null, ingot, null).RegisterRecipe();
+                    OreDictionary.registerOre(mat.simpleName + "gear", mat.getStack(EnumOrePart.GEARS, 1));
+                    OreDictionary.registerOre("gear" + mat.simpleName, mat.getStack(EnumOrePart.GEARS, 1));
                 }
 
             }
