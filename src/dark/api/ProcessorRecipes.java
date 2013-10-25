@@ -8,17 +8,24 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 import com.builtbroken.common.Pair;
 
+import dark.core.common.CoreRecipeLoader;
+import dark.core.common.DarkMain;
+import dark.core.common.items.EnumMaterial;
+import dark.core.common.items.EnumOrePart;
+import dark.core.common.items.ItemOreDirv;
 import dark.core.prefab.helpers.AutoCraftingManager;
 
 /** Recipes for ore processor machines
- * 
+ *
  * @author DarkGuardsman */
 public class ProcessorRecipes
 {
     private static Random random = new Random();
+    private static boolean loadedOres = false;
 
     public static enum ProcessorType
     {
@@ -62,7 +69,7 @@ public class ProcessorRecipes
 
     /** Creates a simple one itemStack in one ItemStack out. Itemstack output can actual have a stack
      * size larger than one
-     * 
+     *
      * @param type - processor type
      * @param in - input item, stacksize is ignored
      * @param out - ouput item */
@@ -84,7 +91,7 @@ public class ProcessorRecipes
     }
 
     /** Creates a recipe that has a chance of failing
-     * 
+     *
      * @param type - processor type
      * @param in - input item stack, stack size is ignored
      * @param out - output item stack, stack size is used
@@ -190,7 +197,7 @@ public class ProcessorRecipes
 
     /** Gets the lit of items that are created from the input item stack. General this will be an
      * array of one item. However, in salavaging cases it can be up to 8 items.
-     * 
+     *
      * @param type - Processor type
      * @param stack - item stack input ignores stacksize
      * @return array of itemStacks */
@@ -256,6 +263,57 @@ public class ProcessorRecipes
 
     public static void parseOreNames()
     {
+        if (!loadedOres && CoreRecipeLoader.itemMetals instanceof ItemOreDirv)
+        {
+            for (EnumMaterial mat : EnumMaterial.values())
+            {
 
+                ItemStack dust = EnumMaterial.getStack(mat, EnumOrePart.DUST, 1);
+                ItemStack scraps = EnumMaterial.getStack(mat, EnumOrePart.SCRAPS, 1);
+                ItemStack plate = EnumMaterial.getStack(mat, EnumOrePart.PLATES, 1);
+                ItemStack rubble = EnumMaterial.getStack(mat, EnumOrePart.RUBBLE, 1);
+                ItemStack rod = EnumMaterial.getStack(mat, EnumOrePart.ROD, 1);
+                ItemStack tube = EnumMaterial.getStack(mat, EnumOrePart.TUBE, 1);
+
+                List<ItemStack> ingots = OreDictionary.getOres("ingot" + mat.simpleName);
+                ingots.addAll(OreDictionary.getOres(mat.simpleName + "ingot"));
+
+                List<ItemStack> plates = OreDictionary.getOres("plate" + mat.simpleName);
+                ingots.addAll(OreDictionary.getOres(mat.simpleName + "plate"));
+
+                for (ItemStack ing : ingots)
+                {
+                    if (mat.shouldCreateItem(EnumOrePart.DUST))
+                    {
+                        ProcessorRecipes.createRecipe(ProcessorType.GRINDER, ing, dust);
+                        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.GRINDER, ing, dust);
+                    }
+                    if (mat.shouldCreateItem(EnumOrePart.SCRAPS))
+                    {
+                        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, ing, scraps);
+                        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, ing, scraps);
+                    }
+                }
+                for (ItemStack pla : plates)
+                {
+                    if (mat.shouldCreateItem(EnumOrePart.DUST))
+                    {
+                        dust.stackSize = 4;
+                        ProcessorRecipes.createRecipe(ProcessorType.GRINDER, pla, dust);
+                        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.GRINDER, pla, dust);
+                        dust.stackSize = 1;
+                    }
+                    if (mat.shouldCreateItem(EnumOrePart.SCRAPS))
+                    {
+                        scraps.stackSize = 3;
+                        ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, pla, scraps);
+                        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, pla, scraps);
+                        scraps.stackSize = 1;
+                    }
+                }
+
+            }
+            loadedOres = true;
+        }
     }
 }
