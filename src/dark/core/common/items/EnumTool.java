@@ -6,7 +6,7 @@ import java.util.List;
 import net.minecraft.block.material.Material;
 
 /** Enum to store tools that can be created from the material sheet.
- * 
+ *
  * @author DarkGuardsman */
 public enum EnumTool
 {
@@ -14,7 +14,7 @@ public enum EnumTool
     AX("axe", Material.wood, Material.pumpkin, Material.plants, Material.vine),
     SPADE("shovel", Material.sand, Material.snow, Material.clay, Material.craftedSnow, Material.grass, Material.ground),
     HOE("hoe"),
-    NA4(),
+    SHEAR("shear", Material.cloth, Material.circuits, Material.web),
     NA5(),
     NA6(),
     NA7(),

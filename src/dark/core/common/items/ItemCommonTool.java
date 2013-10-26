@@ -1,9 +1,12 @@
 package dark.core.common.items;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
@@ -12,6 +15,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,6 +24,7 @@ import net.minecraft.stats.StatList;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.IShearable;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
@@ -145,6 +150,69 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
         return false;
     }
 
+    @Override
+    public boolean itemInteractionForEntity(ItemStack itemstack, EntityPlayer player, EntityLivingBase entity)
+    {
+        if (entity.worldObj.isRemote)
+        {
+            return false;
+        }
+        if (entity instanceof IShearable && EnumMaterial.getToolFromMeta(itemstack.getItemDamage()) == EnumTool.SHEAR)
+        {
+            IShearable target = (IShearable) entity;
+            if (target.isShearable(itemstack, entity.worldObj, (int) entity.posX, (int) entity.posY, (int) entity.posZ))
+            {
+                ArrayList<ItemStack> drops = target.onSheared(itemstack, entity.worldObj, (int) entity.posX, (int) entity.posY, (int) entity.posZ, EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, itemstack));
+
+                Random rand = new Random();
+                for (ItemStack stack : drops)
+                {
+                    EntityItem ent = entity.entityDropItem(stack, 1.0F);
+                    ent.motionY += rand.nextFloat() * 0.05F;
+                    ent.motionX += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
+                    ent.motionZ += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
+                }
+                this.damage(itemstack, 1, entity);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onBlockStartBreak(ItemStack itemstack, int x, int y, int z, EntityPlayer player)
+    {
+        if (player.worldObj.isRemote)
+        {
+            return false;
+        }
+        int id = player.worldObj.getBlockId(x, y, z);
+        if (Block.blocksList[id] instanceof IShearable && EnumMaterial.getToolFromMeta(itemstack.getItemDamage()) == EnumTool.SHEAR)
+        {
+            IShearable target = (IShearable) Block.blocksList[id];
+            if (target.isShearable(itemstack, player.worldObj, x, y, z))
+            {
+                ArrayList<ItemStack> drops = target.onSheared(itemstack, player.worldObj, x, y, z, EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, itemstack));
+                Random rand = new Random();
+
+                for (ItemStack stack : drops)
+                {
+                    float f = 0.7F;
+                    double d = (double) (rand.nextFloat() * f) + (double) (1.0F - f) * 0.5D;
+                    double d1 = (double) (rand.nextFloat() * f) + (double) (1.0F - f) * 0.5D;
+                    double d2 = (double) (rand.nextFloat() * f) + (double) (1.0F - f) * 0.5D;
+                    EntityItem entityitem = new EntityItem(player.worldObj, (double) x + d, (double) y + d1, (double) z + d2, stack);
+                    entityitem.delayBeforeCanPickup = 10;
+                    player.worldObj.spawnEntityInWorld(entityitem);
+                }
+
+                itemstack.damageItem(1, player);
+                player.addStat(StatList.mineBlockStatArray[id], 1);
+            }
+        }
+        return false;
+    }
+
     /** Applies damage to the item using NBT as well uses the normal ItemStack damage checks */
     public void damage(ItemStack itemStack, int damage, EntityLivingBase entity)
     {
@@ -224,6 +292,10 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
     @Override
     public boolean onBlockDestroyed(ItemStack itemStack, World par2World, int par3, int par4, int par5, int par6, EntityLivingBase par7EntityLivingBase)
     {
+        if (EnumMaterial.getToolFromMeta(itemStack.getItemDamage()) == EnumTool.SHEAR && par3 != Block.leaves.blockID && par3 != Block.web.blockID && par3 != Block.tallGrass.blockID && par3 != Block.vine.blockID && par3 != Block.tripWire.blockID && !(Block.blocksList[par3] instanceof IShearable))
+        {
+            return false;
+        }
         if (Block.blocksList[par3].getBlockHardness(par2World, par4, par5, par6) != 0.0D)
         {
             this.damage(itemStack, 1, par7EntityLivingBase);
@@ -277,7 +349,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
             EnumMaterial mat = EnumMaterial.getToolMatFromMeta(itemStack.getItemDamage());
             if (tool.effecticVsMaterials.contains(block.blockMaterial))
             {
-                return mat.materialEffectiveness;
+                return mat.materialEffectiveness + (tool == EnumTool.SHEAR && block.blockMaterial == Material.leaves ? 9f : 0f);
             }
             return 1.0F;
         }
