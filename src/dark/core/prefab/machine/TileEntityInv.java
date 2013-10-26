@@ -17,6 +17,7 @@ import dark.api.access.ISpecialAccess;
 import dark.core.interfaces.IExternalInv;
 import dark.core.interfaces.IInvBox;
 import dark.core.prefab.invgui.InvChest;
+import dark.core.prefab.terminal.TerminalCommandRegistry;
 
 /** Prefab for simple object who only need basic inv support and nothing more
  *
@@ -28,6 +29,11 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
     protected int invSlots = 1;
     /** A list of user access data. */
     protected List<AccessGroup> groups = new ArrayList<AccessGroup>();
+
+    public TileEntityInv()
+    {
+        TerminalCommandRegistry.loadNewGroupSet(this);
+    }
 
     @Override
     public IInvBox getInventory()
