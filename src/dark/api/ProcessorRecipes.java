@@ -281,13 +281,13 @@ public class ProcessorRecipes
                 ingots.addAll(OreDictionary.getOres(mat.simpleName + "ingot"));
                 //plate
                 List<ItemStack> plates = OreDictionary.getOres("plate" + mat.simpleName);
-                ingots.addAll(OreDictionary.getOres(mat.simpleName + "plate"));
+                plates.addAll(OreDictionary.getOres(mat.simpleName + "plate"));
                 //ore
                 List<ItemStack> ores = OreDictionary.getOres("ore" + mat.simpleName);
-                ingots.addAll(OreDictionary.getOres(mat.simpleName + "ore"));
+                ores.addAll(OreDictionary.getOres(mat.simpleName + "ore"));
                 //dust
                 List<ItemStack> dusts = OreDictionary.getOres("dust" + mat.simpleName);
-                ingots.addAll(OreDictionary.getOres(mat.simpleName + "dust"));
+                dusts.addAll(OreDictionary.getOres(mat.simpleName + "dust"));
                 for (ItemStack du : dusts)
                 {
                     if (mat.shouldCreateItem(EnumOrePart.INGOTS) && config.get("OreParser", "OverrideDustSmelthing", true).getBoolean(true))
