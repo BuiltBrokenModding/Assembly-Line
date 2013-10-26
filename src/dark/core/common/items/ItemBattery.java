@@ -10,7 +10,7 @@ import dark.core.common.DarkMain;
 import dark.core.prefab.ModPrefab;
 
 /** Simple battery to store energy
- * 
+ *
  * @author DarkGuardsman */
 public class ItemBattery extends ItemElectric
 {
@@ -43,6 +43,6 @@ public class ItemBattery extends ItemElectric
     @Override
     public float getMaxElectricityStored(ItemStack theItem)
     {
-        return 1000000;
+        return 5000;
     }
 }
