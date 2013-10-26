@@ -78,6 +78,19 @@ public class BlockWire extends BlockMachine
         return this.zeroRendering ? 0 : -1;
     }
 
+    public TileEntity createTileEntity(World world, int metadata)
+    {
+        if (metadata == 1)
+        {
+            return new TileEntityDetectorWire();
+        }
+        else if (metadata == 2)
+        {
+            return new TileEntitySwitchWire();
+        }
+        return this.createNewTileEntity(world);
+    }
+
     @Override
     public TileEntity createNewTileEntity(World world)
     {
