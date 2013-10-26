@@ -103,7 +103,6 @@ public abstract class ModPrefab
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-        ProcessorRecipes.parseOreNames();
         this.loadRecipes();
     }
 

@@ -8,12 +8,14 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 
 import com.builtbroken.common.Pair;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import dark.core.common.CoreRecipeLoader;
-import dark.core.common.DarkMain;
 import dark.core.common.items.EnumMaterial;
 import dark.core.common.items.EnumOrePart;
 import dark.core.common.items.ItemOreDirv;
@@ -261,7 +263,7 @@ public class ProcessorRecipes
         return reList;
     }
 
-    public static void parseOreNames()
+    public static void parseOreNames(Configuration config)
     {
         if (!loadedOres && CoreRecipeLoader.itemMetals instanceof ItemOreDirv)
         {
@@ -283,6 +285,16 @@ public class ProcessorRecipes
                 //ore
                 List<ItemStack> ores = OreDictionary.getOres("ore" + mat.simpleName);
                 ingots.addAll(OreDictionary.getOres(mat.simpleName + "ore"));
+                //dust
+                List<ItemStack> dusts = OreDictionary.getOres("dust" + mat.simpleName);
+                ingots.addAll(OreDictionary.getOres(mat.simpleName + "dust"));
+                for (ItemStack du : dusts)
+                {
+                    if (mat.shouldCreateItem(EnumOrePart.INGOTS) && config.get("OreParser", "OverrideDustSmelthing", true).getBoolean(true))
+                    {
+                        FurnaceRecipes.smelting().addSmelting(du.itemID, du.getItemDamage(), mat.getStack(EnumOrePart.INGOTS, 1), 0.6f);
+                    }
+                }
 
                 for (ItemStack ing : ingots)
                 {
@@ -295,6 +307,10 @@ public class ProcessorRecipes
                     {
                         ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, ing, scraps);
                         ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, ing, scraps);
+                    }
+                    if (mat.shouldCreateItem(EnumOrePart.INGOTS))
+                    {
+                        GameRegistry.addShapelessRecipe(mat.getStack(EnumOrePart.INGOTS, 1), new Object[] { ing });
                     }
                 }
                 for (ItemStack pla : plates)
@@ -313,6 +329,14 @@ public class ProcessorRecipes
                         ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, pla, scraps);
                         scraps.stackSize = 1;
                     }
+                    if (mat.shouldCreateItem(EnumOrePart.PLATES))
+                    {
+                        GameRegistry.addShapelessRecipe(mat.getStack(EnumOrePart.PLATES, 1), new Object[] { pla });
+                        if (config.get("OreParser", "ForcePlateToIngotDM", true).getBoolean(true))
+                        {
+                            GameRegistry.addShapelessRecipe(mat.getStack(EnumOrePart.INGOTS, 4), new Object[] { pla });
+                        }
+                    }
                 }
                 for (ItemStack ore : ores)
                 {
@@ -322,11 +346,15 @@ public class ProcessorRecipes
                         ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, ore, rubble);
                         rubble.stackSize = 1;
                     }
-                    if(mat.shouldCreateItem(EnumOrePart.DUST))
+                    if (mat.shouldCreateItem(EnumOrePart.DUST))
                     {
                         dust.stackSize = 2;
                         ProcessorRecipes.createRecipe(ProcessorType.GRINDER, ore, dust);
                         dust.stackSize = 1;
+                    }
+                    if (mat.shouldCreateItem(EnumOrePart.INGOTS) && config.get("OreParser", "OverrideOreSmelthing", true).getBoolean(true))
+                    {
+                        FurnaceRecipes.smelting().addSmelting(ore.itemID, ore.getItemDamage(), mat.getStack(EnumOrePart.INGOTS, 1), 0.6f);
                     }
                 }
 

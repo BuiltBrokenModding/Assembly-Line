@@ -229,6 +229,7 @@ public class DarkMain extends ModPrefab
         {
             DMCreativeTab.tabIndustrial.itemStack = EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.GEARS, 1);
         }
+        ProcessorRecipes.parseOreNames(CONFIGURATION);
     }
 
     @Override
