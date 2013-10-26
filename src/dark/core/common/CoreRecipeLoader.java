@@ -111,6 +111,11 @@ public class CoreRecipeLoader extends RecipeLoader
             //Iron Recipes
             ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, Block.blockGold, EnumMaterial.getStack(EnumMaterial.GOLD, EnumOrePart.SCRAPS, 8));
             ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, Block.oreGold, EnumMaterial.getStack(EnumMaterial.GOLD, EnumOrePart.RUBBLE, 1));
+            //Dust recipes
+            new RecipeGrid(EnumMaterial.getStack(EnumMaterial.STEEL, EnumOrePart.DUST, 1), 3, 1).setRowOne(new ItemStack(Item.coal, 1, 0), EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.DUST, 1), new ItemStack(Item.coal, 1, 0)).RegisterRecipe();
+            new RecipeGrid(EnumMaterial.getStack(EnumMaterial.STEEL, EnumOrePart.DUST, 1), 3, 1).setRowOne(new ItemStack(Item.coal, 1, 1), EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.DUST, 1), new ItemStack(Item.coal, 1, 1)).RegisterRecipe();
+
+            GameRegistry.addShapelessRecipe(EnumMaterial.getStack(EnumMaterial.BRONZE, EnumOrePart.DUST, 4), new Object[] { EnumMaterial.getStack(EnumMaterial.COPPER, EnumOrePart.DUST, 1), EnumMaterial.getStack(EnumMaterial.COPPER, EnumOrePart.DUST, 1), EnumMaterial.getStack(EnumMaterial.COPPER, EnumOrePart.DUST, 1), EnumMaterial.getStack(EnumMaterial.TIN, EnumOrePart.DUST, 1) });
 
             //Ore material recipe loop
             for (EnumMaterial mat : EnumMaterial.values())
@@ -186,7 +191,7 @@ public class CoreRecipeLoader extends RecipeLoader
                 if (mat.shouldCreateItem(EnumOrePart.GEARS))
                 {
                     new RecipeGrid(mat.getStack(EnumOrePart.GEARS, 4), 3, 3).setRowOne(null, ingot, null).setRowTwo(ingot, (mat.shouldCreateItem(EnumOrePart.ROD) ? rod : Item.stick), ingot).setRowThree(null, ingot, null).RegisterRecipe();
-                    }
+                }
 
             }
         }
