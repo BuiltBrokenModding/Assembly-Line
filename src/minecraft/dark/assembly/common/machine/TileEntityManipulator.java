@@ -33,7 +33,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 
     public TileEntityManipulator()
     {
-        super(.1f);
+        super(.01f);
     }
 
     @Override
@@ -81,6 +81,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
         /** output location facing */
         Vector3 outputPosition = new Vector3(this);
         outputPosition.modifyPositionFromSide(this.getDirection().getOpposite());
+        this.consumePower(.001f, true);
 
         /** Prevents manipulators from spamming and duping items. */
         if (outputPosition.getTileEntity(this.worldObj) instanceof TileEntityManipulator)
@@ -140,6 +141,8 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
         Vector3 inputPosition = new Vector3(this).modifyPositionFromSide(this.getDirection().getOpposite());
         /** output location facing */
         Vector3 outputPosition = new Vector3(this).modifyPositionFromSide(this.getDirection());
+
+        this.consumePower(.001f, true);
 
         ItemStack itemStack = invHelper().tryGrabFromPosition(inputUp, ForgeDirection.UP, 1);
 
@@ -264,5 +267,10 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
     public void toggleOutput()
     {
         this.setOutput(!this.isOutput());
+    }
+
+    public double getExtraLoad()
+    {
+        return .01;//1J/t or 20J/t
     }
 }

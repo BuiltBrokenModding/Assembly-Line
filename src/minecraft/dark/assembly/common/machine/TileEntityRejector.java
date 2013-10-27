@@ -76,6 +76,7 @@ public class TileEntityRejector extends TileEntityFilterable
         entity.motionX = side.offsetX * 0.1;
         entity.motionY += 0.10000000298023224D;
         entity.motionZ = side.offsetZ * 0.1;
+        this.consumePower(.001f, true);
 
         if (!this.worldObj.isRemote && tileEntity instanceof IBelt)
         {

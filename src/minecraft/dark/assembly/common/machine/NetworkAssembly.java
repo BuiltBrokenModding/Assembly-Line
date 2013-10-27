@@ -109,13 +109,14 @@ public class NetworkAssembly extends NetworkSharedPower
             if (part instanceof TileEntityAssembly)
             {
                 currentDemand += ((TileEntityAssembly) part).getWattLoad();
+                currentDemand += ((TileEntityAssembly) part).getExtraLoad();
             }
         }
 
         lastDemandPCalcTime = time;
         lastNetPartsDemand = currentDemand;
         //TODO calculate average
-        return currentDemand;
+        return currentDemand * 2;
     }
 
     public float getDemandTile(TileEntity te)

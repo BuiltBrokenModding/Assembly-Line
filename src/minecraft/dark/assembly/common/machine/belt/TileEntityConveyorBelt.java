@@ -23,7 +23,7 @@ import dark.core.common.DarkMain;
 import dark.core.network.PacketHandler;
 
 /** Conveyer belt TileEntity that allows entities of all kinds to be moved
- * 
+ *
  * @author DarkGuardsman */
 public class TileEntityConveyorBelt extends TileEntityAssembly implements IBelt, IRotatable
 {
