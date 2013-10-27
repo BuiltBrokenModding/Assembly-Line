@@ -8,12 +8,14 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.core.block.IConductor;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.tile.TileEntityConductor;
@@ -285,7 +287,7 @@ public class BlockWire extends BlockMachine
     @Override
     public void loadOreNames()
     {
-        // TODO Auto-generated method stub
-
+        OreDictionary.registerOre("copperwire", new ItemStack(this, 1, 0));
+        OreDictionary.registerOre("wirecopper", new ItemStack(this, 1, 0));
     }
 }
