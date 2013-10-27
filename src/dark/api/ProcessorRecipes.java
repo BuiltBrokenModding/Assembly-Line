@@ -35,6 +35,7 @@ public class ProcessorRecipes
         GRINDER(),
         PRESS();
         public HashMap<Pair<Integer, Integer>, ItemStack> recipes = new HashMap();
+        public HashMap<Pair<Integer, Integer>, Pair<Integer, Integer>> output = new HashMap();
         public HashMap<Pair<Integer, Integer>, Pair<ItemStack, Float>> recipesChance = new HashMap();
         public HashMap<Pair<Integer, Integer>, Float> recipesChanceSalvage = new HashMap();
         public HashMap<Pair<Integer, Integer>, ItemStack> damagedOutput = new HashMap();
@@ -77,6 +78,11 @@ public class ProcessorRecipes
      * @param out - ouput item */
     public static void createRecipe(ProcessorType type, Object in, Object out)
     {
+        createRecipe(type, in, out, 1, 1);
+    }
+
+    public static void createRecipe(ProcessorType type, Object in, Object out, int min, int max)
+    {
         if (in != null && out != null && type != null)
         {
             ItemStack input = convert(in);
@@ -84,9 +90,11 @@ public class ProcessorRecipes
             if (input != null && output != null)
             {
                 HashMap<Pair<Integer, Integer>, ItemStack> map = type.recipes;
-                if (map != null && !map.containsKey(new Pair<Integer, Integer>(input.itemID, input.getItemDamage())))
+                HashMap<Pair<Integer, Integer>, Pair<Integer, Integer>> map2 = type.output;
+                if (map != null && output != null)
                 {
                     map.put(new Pair<Integer, Integer>(input.itemID, input.getItemDamage()), output);
+                    map2.put(new Pair<Integer, Integer>(input.itemID, input.getItemDamage()), new Pair<Integer, Integer>(min, max));
                 }
             }
         }
@@ -210,6 +218,7 @@ public class ProcessorRecipes
             return null;
         }
         HashMap<Pair<Integer, Integer>, ItemStack> map = type.recipes;
+        HashMap<Pair<Integer, Integer>, Pair<Integer, Integer>> map2 = type.output;
         HashMap<Pair<Integer, Integer>, Pair<ItemStack, Float>> mapChance = type.recipesChance;
         HashMap<Pair<Integer, Integer>, Float> mapSalvage = type.recipesChanceSalvage;
         HashMap<Pair<Integer, Integer>, ItemStack> altSalvageMap = type.damagedOutput;
@@ -219,14 +228,26 @@ public class ProcessorRecipes
         if (map != null)
         {
             ItemStack re = map.get(new Pair<Integer, Integer>(stack.itemID, -1));
+            Pair<Integer, Integer> range = map2.get(new Pair<Integer, Integer>(stack.itemID, -1));
             if (re != null)
             {
-                return new ItemStack[] { convert(re) };
+                ItemStack retm = convert(re);
+                if (!(range.left() == 1 && range.right() == 1))
+                {
+                    retm.stackSize = range.left() + random.nextInt(range.right());
+                }
+                return new ItemStack[] { retm };
             }
             re = map.get(blockSet);
+            range = map2.get(blockSet);
             if (re != null)
             {
-                return new ItemStack[] { convert(re) };
+                ItemStack retm = convert(re);
+                if (!(range.left() == 1 && range.right() == 1))
+                {
+                    retm.stackSize = range.left() + random.nextInt(range.right());
+                }
+                return new ItemStack[] { retm };
             }
         }
 

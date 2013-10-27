@@ -140,7 +140,7 @@ public class CoreRecipeLoader extends RecipeLoader
                 {
                     dust.stackSize = 2;
                     FurnaceRecipes.smelting().addSmelting(dust.itemID, dust.getItemDamage(), ingot, 0.6f);
-                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, rubble, dust);
+                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, rubble, dust, 1, 4);
                     dust.stackSize = 1;
                     ProcessorRecipes.createRecipe(ProcessorType.GRINDER, scraps, dust);
                     ProcessorRecipes.createRecipe(ProcessorType.GRINDER, ingot, dust);
