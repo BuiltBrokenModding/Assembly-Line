@@ -1,5 +1,6 @@
 package dark.fluid.common.pipes;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -22,6 +23,7 @@ import dark.api.ColorCode;
 import dark.api.ColorCode.IColorCoded;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.fluid.common.BlockFM;
+import dark.fluid.common.FMRecipeLoader;
 
 public class BlockPipe extends BlockFM
 {
@@ -44,7 +46,6 @@ public class BlockPipe extends BlockFM
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public boolean renderAsNormalBlock()
     {
         return false;
@@ -66,31 +67,15 @@ public class BlockPipe extends BlockFM
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
-        int meta = world.getBlockMetadata(x, y, z);
-        TileEntity tile = world.getBlockTileEntity(x, y, z);
-        if (tile instanceof TileEntityPipe)
-        {
-            meta = ((TileEntityPipe) tile).pipeData.ordinal();
-        }
-
-        return new ItemStack(blockID, 1, meta & 32);
+        return PipeMaterial.getDropItem(world, x, y, z);
     }
 
     @Override
     public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {
-        for (PipeData data : PipeData.values())
+        for (PipeMaterial data : PipeMaterial.values())
         {
-            if (data.restrictedCode != null)
-            {
-                data.enabled = FluidHelper.hasRestrictedStack(data.restrictedCode.ordinal());
-            }
-            if (data.enabled)
-            {
-                data.itemStack = new ItemStack(par1, 1, data.ordinal());
-                par3List.add(data.itemStack);
-
-            }
+            par3List.add(data.getStack());
         }
     }
 
@@ -150,92 +135,111 @@ public class BlockPipe extends BlockFM
 
     }
 
-    @Override
-    public void dropBlockAsItemWithChance(World par1World, int par2, int par3, int par4, int par5, float par6, int par7)
+    /** Enum to hold info about each pipe material. Values are by default and some can change with
+     * pipe upgrades.
+     *
+     * @Note unsupportedFluids should only be used by filters. All pipes should allow all fluid
+     * types. However, pipes that can't support the fluid should have an effect. Eg no gas support
+     * should cause the pipe to leak. No molten support should cause the pipe to take damage.
+     *
+     * @author DarkGuardsman */
+    public static enum PipeMaterial
     {
-        if (!par1World.isRemote)
+        /** Simple water only pipe. Should render open toped when it can */
+        WOOD("wood", false, true, false, 50, 200),
+        /** Gas only pipe */
+        GLASS("wood", true, false, false, 100, 300),
+        /** Another version of the wooden pipe */
+        STONE("wood", false, true, false, 200, 1000),
+        /** Cheap fluid pipe */
+        TIN("wood", false, true, false, 300, 1000),
+        /** Cheap fluid pipe */
+        COPPER("wood", false, true, false, 400, 1000),
+        /** First duel gas and fluid pipe */
+        IRON("wood", true, true, false, 500, 1000),
+        /** Fluid movement pipe that doesn't work well with pressure */
+        GOLD("wood", true, true, false, 200, 2000),
+        /** Cheap molten metal pipe */
+        OBBY("wood", false, true, true, 1000, 1000),
+        /** Very strong fluid and gas support pipe. Should also support molten metal as long as they
+         * don't stay in the pipe too long. */
+        STEEL("wood", true, true, false, 10000, 3000),
+        /** Weaker equal to steel pipes. Should also support steam very well */
+        BRONZE("wood", true, true, false, 6000, 2000),
+        /** Hell fluids only. Meaning lava, and molten metals. Water should turn to steam, fuel and
+         * oil should cause an explosion around the pipe */
+        HELL("wood", true, true, true, 10000, 5000, "water", "fuel", "oil");
+        public String matName = "material";
+        List<String> unsupportedFluids = new ArrayList<String>();
+        public boolean supportsAllFluids = false;
+        public boolean supportsAllGas = false;
+        public boolean canSupportGas = false;
+        public boolean canSupportFluids = false;
+        public boolean canSupportMoltenFluids = false;
+        public int maxPressure = 1000;
+        public int maxVolume = 2000;
+        /** Materials are stored as meta were there sub types are stored by NBT. Item versions of the
+         * pipes are still meta so there is a set spacing to allow for a large but defined range of
+         * sub pipes */
+        public static int spacing = 1000;
+
+        private PipeMaterial()
         {
-            if (par1World.rand.nextFloat() <= par6)
+            supportsAllFluids = true;
+            supportsAllGas = true;
+            canSupportMoltenFluids = true;
+        }
+
+        private PipeMaterial(String name, boolean gas, boolean fluid, boolean molten, String... strings)
+        {
+            this.matName = name;
+            this.canSupportGas = gas;
+            this.canSupportFluids = fluid;
+            this.canSupportMoltenFluids = molten;
+        }
+
+        private PipeMaterial(String name, boolean gas, boolean fluid, boolean molten, int pressure, int volume, String... strings)
+        {
+            this(name, gas, fluid, molten, strings);
+            this.maxPressure = pressure;
+            this.maxVolume = volume;
+        }
+
+        public ItemStack getStack()
+        {
+            return getStack(1);
+        }
+
+        public ItemStack getStack(ColorCode color)
+        {
+            return getStack(1, color);
+        }
+
+        public ItemStack getStack(int s)
+        {
+            return new ItemStack(FMRecipeLoader.blockPipe, s, (this.ordinal() * spacing));
+        }
+
+        public ItemStack getStack(int s, ColorCode color)
+        {
+            return new ItemStack(FMRecipeLoader.blockPipe, s, (this.ordinal() * spacing) + color.ordinal());
+        }
+
+        public static ItemStack getDropItem(World world, int x, int y, int z)
+        {
+            int meta = world.getBlockMetadata(x, y, z);
+            TileEntity ent = world.getBlockTileEntity(x, y, z);
+            if (ent instanceof IColorCoded)
             {
-                int meta = 0;
-                TileEntity tile = par1World.getBlockTileEntity(par2, par3, par4);
-                if (tile instanceof TileEntityPipe)
-                {
-                    this.dropBlockAsItem_do(par1World, par2, par3, par4, ((TileEntityPipe) tile).pipeData.itemStack);
-                    return;
-                }
-                this.dropBlockAsItem_do(par1World, par2, par3, par4, new ItemStack(this.blockID, 1, meta));
+                meta += ((IColorCoded) ent).getColor().ordinal();
             }
+            return new ItemStack(FMRecipeLoader.blockPipe, 1, meta);
         }
     }
 
-    public static enum PipeData
+    public static enum PipeSubType
     {
-        BLACK_PIPE(ColorCode.BLACK),
-        RED_PIPE(ColorCode.RED),
-        GREEN_PIPE(ColorCode.GREEN),
-        BROWN_PIPE(ColorCode.BROWN),
-        BLUE_PIPE(ColorCode.BLUE),
-        PURPLE_PIPE(ColorCode.PURPLE),
-        CYAN_PIPE(ColorCode.CYAN),
-        SILVER_PIPE(ColorCode.SILVER),
-        GREY_PIPE(ColorCode.GREY),
-        PINK_PIPE(ColorCode.PINK),
-        LIME_PIPE(ColorCode.LIME),
-        YELLOW_PIPE(ColorCode.YELLOW),
-        LIGHTBLUE_PIPE(ColorCode.LIGHTBLUE),
-        MAGENTA_PIPE(ColorCode.MAGENTA),
-        ORANGE_PIPE(ColorCode.ORANGE),
-        WHITE_PIPE(ColorCode.WHITE),
-        OIL_PIPE(true, ColorCode.BLACK),
-        FUEL_PIPE(true, ColorCode.YELLOW),
-        LAVA_PIPE(true, ColorCode.RED),
-        WATER_PIPE(true, ColorCode.BLUE),
-        WASTE_PIPE(true, ColorCode.BROWN),
-        PIPE6(false),
-        PIPE7(false),
-        PIPE8(false),
-        PIPE9(false),
-        PIPE10(false),
-        PIPE11(false),
-        PIPE12(false),
-        PIPE13(false),
-        PIPE14(false),
-        IRON_PIPE();
-
-        public boolean enabled = true;
-        public ColorCode colorCode, restrictedCode;
-        public ItemStack itemStack;
-
-        private PipeData(ColorCode color)
-        {
-            this.colorCode = color;
-        }
-
-        private PipeData()
-        {
-            this(ColorCode.UNKOWN);
-        }
-
-        private PipeData(Boolean enabled)
-        {
-            this(ColorCode.UNKOWN);
-            this.enabled = true;
-        }
-
-        private PipeData(Boolean enabled, ColorCode restrictedCode)
-        {
-            this(enabled);
-            this.restrictedCode = restrictedCode;
-        }
-
-        public static PipeData get(Object obj)
-        {
-            if (obj instanceof Integer && ((Integer) obj) < PipeData.values().length)
-            {
-                return PipeData.values()[((Integer) obj)];
-            }
-            return IRON_PIPE;
-        }
+        //TODO list sub types then create an enum interface to have each sub handle its own metadata
+        COLOR();
     }
 }
