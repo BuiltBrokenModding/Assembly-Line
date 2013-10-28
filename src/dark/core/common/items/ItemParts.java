@@ -6,17 +6,21 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
+import net.minecraftforge.common.Configuration;
+import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.core.common.CoreRecipeLoader;
 import dark.core.common.DarkMain;
+import dark.core.prefab.IExtraInfo.IExtraItemInfo;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.items.ItemBasic;
 
 /** A meta data item containing parts of various crafting recipes. These parts do not do anything but
  * allow new crafting recipes to be created.
- * 
+ *
  * @author DarkGuardsman */
-public class ItemParts extends ItemBasic
+public class ItemParts extends ItemBasic implements IExtraItemInfo
 {
     public ItemParts()
     {
@@ -80,7 +84,7 @@ public class ItemParts extends ItemBasic
     public static enum Parts
     {
         Seal("LeatherSeal"),
-        SlimeSeal("SlimeSeal"),
+        GasSeal("GasSeal"),
         Tank("UnfinishedTank"),
         Valve("ValvePart"),
         MiningIcon("miningIcon", false);
@@ -99,5 +103,33 @@ public class ItemParts extends ItemBasic
             this(name);
             this.show = show;
         }
+
+        public ItemStack getStack()
+        {
+            return new ItemStack(CoreRecipeLoader.itemParts,1,this.ordinal());
+        }
+    }
+
+    @Override
+    public boolean hasExtraConfigs()
+    {
+        return false;
+    }
+
+    @Override
+    public void loadExtraConfigs(Configuration config)
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void loadOreNames()
+    {
+        for (Parts part : Parts.values())
+        {
+            OreDictionary.registerOre(part.name, part.getStack());
+        }
+
     }
 }

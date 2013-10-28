@@ -4,7 +4,6 @@ import java.awt.Color;
 
 public enum ColorCode
 {
-
     BLACK("Black", Color.black),
     RED("Red", Color.red),
     GREEN("Green", Color.green),
@@ -38,7 +37,7 @@ public enum ColorCode
     }
 
     /** gets a ColorCode from any of the following
-     * 
+     *
      * @param obj - Integer,String,LiquidData,ColorCode
      * @return Color NONE if it can't find it */
     public static ColorCode get(Object obj)

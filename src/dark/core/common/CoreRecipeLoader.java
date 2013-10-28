@@ -64,7 +64,7 @@ public class CoreRecipeLoader extends RecipeLoader
         }
         if (blockWire instanceof BlockWire)
         {
-            new RecipeGrid(new ItemStack(blockWire, 1, 0), 3, 3).setRowOne(Block.cloth, Block.cloth, Block.cloth).setRowTwo(copper, copper, copper).setRowThree(Block.cloth, Block.cloth, Block.cloth).RegisterRecipe();
+            new RecipeGrid(new ItemStack(blockWire, 16, 1), 3, 3).setRowOne(Block.cloth, Block.cloth, Block.cloth).setRowTwo(copper, copper, copper).setRowThree(Block.cloth, Block.cloth, Block.cloth).RegisterRecipe();
         }
         if (itemDiggingTool instanceof ItemCommonTool)
         {
@@ -87,16 +87,16 @@ public class CoreRecipeLoader extends RecipeLoader
         if (itemParts instanceof ItemParts)
         {
             leatherSeal = new ItemStack(itemParts, 1, Parts.Seal.ordinal());
-            slimeSeal = new ItemStack(itemParts, 1, Parts.SlimeSeal.ordinal());
+            slimeSeal = new ItemStack(itemParts, 1, Parts.GasSeal.ordinal());
             valvePart = new ItemStack(itemParts, 1, Parts.Tank.ordinal());
             unfinishedTank = new ItemStack(itemParts, 1, Parts.Tank.ordinal());
 
             // seal
-            GameRegistry.addRecipe(new ShapedOreRecipe(this.setStackSize(leatherSeal, 16), new Object[] { "LL","LL", 'L', Item.leather }));
+            GameRegistry.addRecipe(this.setStackSize(leatherSeal, 16), new Object[] { "LL", "LL", 'L', Item.leather });
             // slime steal
             new RecipeGrid(this.setStackSize(slimeSeal, 4)).setRowOne(null, leatherSeal, null).setRowTwo(leatherSeal, Item.slimeBall, leatherSeal).setRowThree(null, leatherSeal, null).RegisterRecipe();
             // part valve
-            new RecipeGrid(valvePart, 3, 1).setRowOne(EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.TUBE, 1), Block.lever, EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.TUBE, 1)).RegisterRecipe();
+            GameRegistry.addRecipe(new ShapedOreRecipe(valvePart, new Object[] { "PLP", 'P', "ironPipe", 'L', Block.lever }));
             // unfinished tank
             new RecipeGrid(unfinishedTank).setRowOne(null, Item.ingotIron, null).setRowTwo(Item.ingotIron, null, Item.ingotIron).setRowThree(null, Item.ingotIron, null).RegisterRecipe();
             new RecipeGrid(unfinishedTank).setRowOne(null, bronze, null).setRowTwo(bronze, null, bronze).setRowThree(null, bronze, null).RegisterRecipe();

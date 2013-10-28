@@ -157,13 +157,11 @@ public class DarkMain extends ModPrefab
                     OreDictionary.registerOre(mat.simpleName + "rubble", mat.getStack(EnumOrePart.RUBBLE, 1));
                     OreDictionary.registerOre("rubble" + mat.simpleName, mat.getStack(EnumOrePart.RUBBLE, 1));
                 }
-                //Dust recipes
                 if (mat.shouldCreateItem(EnumOrePart.DUST))
                 {
                     OreDictionary.registerOre(mat.simpleName + "dust", mat.getStack(EnumOrePart.DUST, 1));
                     OreDictionary.registerOre("dust" + mat.simpleName, mat.getStack(EnumOrePart.DUST, 1));
                 }
-                // Salvaging recipe
                 if (mat.shouldCreateItem(EnumOrePart.SCRAPS))
                 {
 
