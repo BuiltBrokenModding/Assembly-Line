@@ -120,77 +120,56 @@ public class CoreRecipeLoader extends RecipeLoader
             //Ore material recipe loop
             for (EnumMaterial mat : EnumMaterial.values())
             {
-                ItemStack dust = EnumMaterial.getStack(mat, EnumOrePart.DUST, 1);
-                ItemStack ingot = EnumMaterial.getStack(mat, EnumOrePart.INGOTS, 1);
-                ItemStack scraps = EnumMaterial.getStack(mat, EnumOrePart.SCRAPS, 1);
-                ItemStack plates = EnumMaterial.getStack(mat, EnumOrePart.PLATES, 1);
-                ItemStack rubble = EnumMaterial.getStack(mat, EnumOrePart.RUBBLE, 1);
-                ItemStack rod = EnumMaterial.getStack(mat, EnumOrePart.ROD, 1);
-                ItemStack tube = EnumMaterial.getStack(mat, EnumOrePart.TUBE, 1);
-
                 if (mat.shouldCreateTool())
                 {
-                    new RecipeGrid(mat.getTool(EnumTool.PICKAX)).setRowOne(ingot, ingot, ingot).setRowTwo(null, Item.stick, null).setRowThree(null, Item.stick, null).RegisterRecipe();
-                    new RecipeGrid(mat.getTool(EnumTool.AX)).setRowOne(ingot, ingot, null).setRowTwo(ingot, Item.stick, null).setRowThree(null, Item.stick, null).RegisterRecipe();
-                    new RecipeGrid(mat.getTool(EnumTool.HOE)).setRowOne(ingot, ingot, null).setRowTwo(null, Item.stick, null).setRowThree(null, Item.stick, null).RegisterRecipe();
-                    new RecipeGrid(mat.getTool(EnumTool.SPADE)).setRowOne(null, ingot, null).setRowTwo(null, Item.stick, null).setRowThree(null, Item.stick, null).RegisterRecipe();
+                    new RecipeGrid(mat.getTool(EnumTool.PICKAX)).setRowOne(mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1)).setRowTwo(null, Item.stick, null).setRowThree(null, Item.stick, null).RegisterRecipe();
+                    new RecipeGrid(mat.getTool(EnumTool.AX)).setRowOne(mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1), null).setRowTwo(mat.getStack(EnumOrePart.INGOTS, 1), Item.stick, null).setRowThree(null, Item.stick, null).RegisterRecipe();
+                    new RecipeGrid(mat.getTool(EnumTool.HOE)).setRowOne(mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1), null).setRowTwo(null, Item.stick, null).setRowThree(null, Item.stick, null).RegisterRecipe();
+                    new RecipeGrid(mat.getTool(EnumTool.SPADE)).setRowOne(null, mat.getStack(EnumOrePart.INGOTS, 1), null).setRowTwo(null, Item.stick, null).setRowThree(null, Item.stick, null).RegisterRecipe();
                 }
                 //Dust recipes
                 if (mat.shouldCreateItem(EnumOrePart.DUST))
                 {
-                    dust.stackSize = 2;
-                    FurnaceRecipes.smelting().addSmelting(dust.itemID, dust.getItemDamage(), ingot, 0.6f);
-                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, rubble, dust, 1, 4);
-                    dust.stackSize = 1;
-                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, scraps, dust);
-                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, ingot, dust);
-                    ProcessorRecipes.createSalvageDamageOutput(ProcessorType.GRINDER, ingot, dust);
-                    dust.stackSize = 2;
-                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, plates, dust);
-                    ProcessorRecipes.createSalvageDamageOutput(ProcessorType.GRINDER, plates, dust);
-                    dust.stackSize = 1;
-                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, rod, dust);
-                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, tube, dust);
+                    FurnaceRecipes.smelting().addSmelting(mat.getStack(EnumOrePart.DUST, 1).itemID, mat.getStack(EnumOrePart.DUST, 1).getItemDamage(), mat.getStack(EnumOrePart.INGOTS, 1), 0.6f);
+                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, mat.getStack(EnumOrePart.RUBBLE, 1), mat.getStack(EnumOrePart.DUST, 1), 1, 4);
+                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, mat.getStack(EnumOrePart.SCRAPS, 1), mat.getStack(EnumOrePart.DUST, 1));
+                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.DUST, 1));
+                    ProcessorRecipes.createSalvageDamageOutput(ProcessorType.GRINDER, mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.DUST, 1));
+                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, mat.getStack(EnumOrePart.PLATES, 1), mat.getStack(EnumOrePart.DUST, 1), 2, 4);
+                    ProcessorRecipes.createSalvageDamageOutput(ProcessorType.GRINDER, mat.getStack(EnumOrePart.PLATES, 1), mat.getStack(EnumOrePart.DUST, 3));
+                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, mat.getStack(EnumOrePart.ROD, 1), mat.getStack(EnumOrePart.DUST, 1));
+                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, mat.getStack(EnumOrePart.TUBE, 1), mat.getStack(EnumOrePart.DUST, 1));
                 }
 
                 // Salvaging recipe
 
                 if (mat.shouldCreateItem(EnumOrePart.SCRAPS))
                 {
-                    FurnaceRecipes.smelting().addSmelting(scraps.itemID, scraps.getItemDamage(), ingot, 0.6f);
-                    scraps.stackSize = 3;
-                    ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, plates, scraps);
-                    ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, plates, scraps);
-                    scraps.stackSize = 2;
-                    ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, rubble, scraps);
-                    scraps.stackSize = 1;
-                    ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, ingot, scraps);
-                    ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, rod, scraps);
-                    ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, tube, scraps);
+                    FurnaceRecipes.smelting().addSmelting(mat.getStack(EnumOrePart.SCRAPS, 1).itemID, mat.getStack(EnumOrePart.SCRAPS, 1).getItemDamage(), mat.getStack(EnumOrePart.INGOTS, 1), 0.6f);
+                    ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, mat.getStack(EnumOrePart.PLATES, 1), mat.getStack(EnumOrePart.SCRAPS, 3));
+                    ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, mat.getStack(EnumOrePart.PLATES, 1), mat.getStack(EnumOrePart.SCRAPS, 3));
+                    ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, mat.getStack(EnumOrePart.RUBBLE, 1), mat.getStack(EnumOrePart.SCRAPS, 1), 1, 5);
+                    ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.SCRAPS, 1));
+                    ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, mat.getStack(EnumOrePart.ROD, 1), mat.getStack(EnumOrePart.SCRAPS, 1));
+                    ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, mat.getStack(EnumOrePart.TUBE, 1), mat.getStack(EnumOrePart.SCRAPS, 1));
                 }
-
-                ingot.stackSize = 1;
                 if (mat.shouldCreateItem(EnumOrePart.TUBE))
                 {
-                    tube.stackSize = 3;
-                    new RecipeGrid(tube, 3, 1).setRowOne(ingot, ingot, ingot).RegisterRecipe();
-                    tube.stackSize = 1;
-                    new RecipeGrid(tube, 1, 1).setRowOne(rod).RegisterRecipe();
+                    new RecipeGrid(mat.getStack(EnumOrePart.TUBE, 1), 3, 1).setRowOne(mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1)).RegisterRecipe();
+                    new RecipeGrid(mat.getStack(EnumOrePart.TUBE, 1), 1, 1).setRowOne(mat.getStack(EnumOrePart.ROD, 1)).RegisterRecipe();
 
                 }
                 if (mat.shouldCreateItem(EnumOrePart.ROD))
                 {
-                    rod.stackSize = 2;
-                    new RecipeGrid(rod, 2, 1).setRowOne(ingot, ingot).RegisterRecipe();
-                    rod.stackSize = 1;
+                    new RecipeGrid(mat.getStack(EnumOrePart.ROD, 1), 2, 1).setRowOne(mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1)).RegisterRecipe();
                 }
                 if (mat.shouldCreateItem(EnumOrePart.PLATES))
                 {
-                    new RecipeGrid(mat.getStack(EnumOrePart.PLATES, 1), 2, 2).setRowOne(ingot, ingot).setRowTwo(ingot, ingot).RegisterRecipe();
+                    new RecipeGrid(mat.getStack(EnumOrePart.PLATES, 1), 2, 2).setRowOne(mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1)).setRowTwo(mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1)).RegisterRecipe();
                 }
                 if (mat.shouldCreateItem(EnumOrePart.GEARS))
                 {
-                    new RecipeGrid(mat.getStack(EnumOrePart.GEARS, 4), 3, 3).setRowOne(null, ingot, null).setRowTwo(ingot, (mat.shouldCreateItem(EnumOrePart.ROD) ? rod : Item.stick), ingot).setRowThree(null, ingot, null).RegisterRecipe();
+                    new RecipeGrid(mat.getStack(EnumOrePart.GEARS, 4), 3, 3).setRowOne(null, mat.getStack(EnumOrePart.INGOTS, 1), null).setRowTwo(mat.getStack(EnumOrePart.INGOTS, 1), (mat.shouldCreateItem(EnumOrePart.ROD) ? mat.getStack(EnumOrePart.ROD, 1) : Item.stick), mat.getStack(EnumOrePart.INGOTS, 1)).setRowThree(null, mat.getStack(EnumOrePart.INGOTS, 1), null).RegisterRecipe();
                 }
 
             }
@@ -203,8 +182,8 @@ public class CoreRecipeLoader extends RecipeLoader
                 if (CoreRecipeLoader.itemMetals instanceof ItemOreDirv)
                 {
                     FurnaceRecipes.smelting().addSmelting(blockOre.blockID, data.ordinal(), EnumMaterial.getStack(data.mat, EnumOrePart.INGOTS, 1), 0.6f);
-                    ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, new ItemStack(blockOre.blockID, 1, data.ordinal()), EnumMaterial.getStack(data.mat, EnumOrePart.RUBBLE, 2));
-                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, new ItemStack(blockOre.blockID, 1, data.ordinal()), EnumMaterial.getStack(data.mat, EnumOrePart.DUST, 2));
+                    ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, new ItemStack(blockOre.blockID, 1, data.ordinal()), EnumMaterial.getStack(data.mat, EnumOrePart.RUBBLE, 1), 1, 2);
+                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, new ItemStack(blockOre.blockID, 1, data.ordinal()), EnumMaterial.getStack(data.mat, EnumOrePart.DUST, 1), 1, 3);
 
                 }
             }

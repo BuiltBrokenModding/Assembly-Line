@@ -94,7 +94,10 @@ public class ProcessorRecipes
                 if (map != null && output != null)
                 {
                     map.put(new Pair<Integer, Integer>(input.itemID, input.getItemDamage()), output);
-                    map2.put(new Pair<Integer, Integer>(input.itemID, input.getItemDamage()), new Pair<Integer, Integer>(min, max));
+                    if (!(min == 1 && max == 1))
+                    {
+                        map2.put(new Pair<Integer, Integer>(input.itemID, input.getItemDamage()), new Pair<Integer, Integer>(min, max));
+                    }
                 }
             }
         }
@@ -232,7 +235,7 @@ public class ProcessorRecipes
             if (re != null)
             {
                 ItemStack retm = convert(re);
-                if (!(range.left() == 1 && range.right() == 1))
+                if (range != null && !(range.left() == 1 && range.right() == 1))
                 {
                     retm.stackSize = range.left() + random.nextInt(range.right());
                 }
@@ -243,7 +246,7 @@ public class ProcessorRecipes
             if (re != null)
             {
                 ItemStack retm = convert(re);
-                if (!(range.left() == 1 && range.right() == 1))
+                if (range != null && !(range.left() == 1 && range.right() == 1))
                 {
                     retm.stackSize = range.left() + random.nextInt(range.right());
                 }
@@ -289,15 +292,7 @@ public class ProcessorRecipes
         if (!loadedOres && CoreRecipeLoader.itemMetals instanceof ItemOreDirv)
         {
             for (EnumMaterial mat : EnumMaterial.values())
-            {
-                //Items
-                ItemStack dust = EnumMaterial.getStack(mat, EnumOrePart.DUST, 1);
-                ItemStack scraps = EnumMaterial.getStack(mat, EnumOrePart.SCRAPS, 1);
-                ItemStack plate = EnumMaterial.getStack(mat, EnumOrePart.PLATES, 1);
-                ItemStack rubble = EnumMaterial.getStack(mat, EnumOrePart.RUBBLE, 1);
-                ItemStack rod = EnumMaterial.getStack(mat, EnumOrePart.ROD, 1);
-                ItemStack tube = EnumMaterial.getStack(mat, EnumOrePart.TUBE, 1);
-                //Ingots
+            {                //Ingots
                 List<ItemStack> ingots = OreDictionary.getOres("ingot" + mat.simpleName);
                 ingots.addAll(OreDictionary.getOres(mat.simpleName + "ingot"));
                 //plate
@@ -321,13 +316,13 @@ public class ProcessorRecipes
                 {
                     if (mat.shouldCreateItem(EnumOrePart.DUST))
                     {
-                        ProcessorRecipes.createRecipe(ProcessorType.GRINDER, ing, dust);
-                        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.GRINDER, ing, dust);
+                        ProcessorRecipes.createRecipe(ProcessorType.GRINDER, ing, mat.getStack(EnumOrePart.DUST, 1));
+                        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.GRINDER, ing, mat.getStack(EnumOrePart.DUST, 1));
                     }
                     if (mat.shouldCreateItem(EnumOrePart.SCRAPS))
                     {
-                        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, ing, scraps);
-                        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, ing, scraps);
+                        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, ing, mat.getStack(EnumOrePart.SCRAPS, 1));
+                        ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, ing, mat.getStack(EnumOrePart.SCRAPS, 1));
                     }
                     if (mat.shouldCreateItem(EnumOrePart.INGOTS))
                     {
@@ -338,17 +333,17 @@ public class ProcessorRecipes
                 {
                     if (mat.shouldCreateItem(EnumOrePart.DUST))
                     {
-                        dust.stackSize = 4;
-                        ProcessorRecipes.createRecipe(ProcessorType.GRINDER, pla, dust);
-                        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.GRINDER, pla, dust);
-                        dust.stackSize = 1;
+
+                        ProcessorRecipes.createRecipe(ProcessorType.GRINDER, pla, mat.getStack(EnumOrePart.DUST, 1));
+                        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.GRINDER, pla, mat.getStack(EnumOrePart.DUST, 1));
+
                     }
                     if (mat.shouldCreateItem(EnumOrePart.SCRAPS))
                     {
-                        scraps.stackSize = 3;
-                        ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, pla, scraps);
-                        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, pla, scraps);
-                        scraps.stackSize = 1;
+
+                        ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, pla, mat.getStack(EnumOrePart.SCRAPS, 1));
+                        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, pla, mat.getStack(EnumOrePart.SCRAPS, 1));
+
                     }
                     if (mat.shouldCreateItem(EnumOrePart.PLATES))
                     {
@@ -363,15 +358,11 @@ public class ProcessorRecipes
                 {
                     if (mat.shouldCreateItem(EnumOrePart.RUBBLE))
                     {
-                        rubble.stackSize = 2;
-                        ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, ore, rubble);
-                        rubble.stackSize = 1;
+                        ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, ore, mat.getStack(EnumOrePart.RUBBLE, 1), 1, 2);
                     }
                     if (mat.shouldCreateItem(EnumOrePart.DUST))
                     {
-                        dust.stackSize = 2;
-                        ProcessorRecipes.createRecipe(ProcessorType.GRINDER, ore, dust);
-                        dust.stackSize = 1;
+                        ProcessorRecipes.createRecipe(ProcessorType.GRINDER, ore, mat.getStack(EnumOrePart.DUST, 1), 1, 3);
                     }
                     if (mat.shouldCreateItem(EnumOrePart.INGOTS) && config.get("OreParser", "OverrideOreSmelthing", true).getBoolean(true))
                     {
