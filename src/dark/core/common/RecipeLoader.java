@@ -10,9 +10,10 @@ import com.builtbroken.common.Pair;
 import com.builtbroken.common.Triple;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import dark.core.prefab.helpers.AutoCraftingManager;
 
 /** Recipe system to make it easier to load recipes for a mod
- * 
+ *
  * @author DarkGuardsman */
 public abstract class RecipeLoader
 {
@@ -97,19 +98,20 @@ public abstract class RecipeLoader
     }
 
     /** An easier to read recipe system for the basic minecraft recipes
-     * 
+     *
      * @author DarkGaurdsman */
+    @Deprecated
     public static class RecipeGrid
     {
-        Object[] rl = new Object[9];
-        Object out;
+        Object[] items = new Object[9];
+        Object output;
         int width = 3;
         int hight = 3;
 
         /** @param stack - output item */
         public RecipeGrid(Object stack)
         {
-            out = stack;
+            output = stack;
         }
 
         /** @param stack - output item
@@ -123,7 +125,7 @@ public abstract class RecipeLoader
 
         /** 3x3 Crafting grid. Each Triple is a row. Input for the triples should be any of { Item,
          * Block, ItemStack, String}
-         * 
+         *
          * @param one - top row
          * @param two - middle row
          * @param three - bottom row */
@@ -137,7 +139,7 @@ public abstract class RecipeLoader
 
         /** 2x2 Crafting grid. Each Pair is a row. Input for the pairs should be any of { Item,
          * Block, ItemStack, String}
-         * 
+         *
          * @param one - top row
          * @param two - middle row */
         public RecipeGrid(Object stack, Pair one, Pair two)
@@ -160,7 +162,7 @@ public abstract class RecipeLoader
         /** Sets the grid recipe output */
         public RecipeGrid setOutput(Object stack)
         {
-            out = stack;
+            output = stack;
             return this;
         }
 
@@ -168,14 +170,14 @@ public abstract class RecipeLoader
         {
             if (objects != null)
             {
-                this.rl[0] = objects[0];
+                this.items[0] = objects[0];
                 if (objects.length > 1)
                 {
-                    this.rl[1] = objects[1];
+                    this.items[1] = objects[1];
                 }
                 if (objects.length > 2)
                 {
-                    this.rl[2] = objects[2];
+                    this.items[2] = objects[2];
                 }
             }
             return this;
@@ -185,14 +187,14 @@ public abstract class RecipeLoader
         {
             if (objects != null)
             {
-                this.rl[3] = objects[0];
+                this.items[3] = objects[0];
                 if (objects.length > 1)
                 {
-                    this.rl[4] = objects[1];
+                    this.items[4] = objects[1];
                 }
                 if (objects.length > 2)
                 {
-                    this.rl[5] = objects[2];
+                    this.items[5] = objects[2];
                 }
             }
             return this;
@@ -202,14 +204,14 @@ public abstract class RecipeLoader
         {
             if (objects != null)
             {
-                this.rl[6] = objects[0];
+                this.items[6] = objects[0];
                 if (objects.length > 1)
                 {
-                    this.rl[7] = objects[1];
+                    this.items[7] = objects[1];
                 }
                 if (objects.length > 2)
                 {
-                    this.rl[8] = objects[2];
+                    this.items[8] = objects[2];
                 }
             }
             return this;
@@ -226,90 +228,105 @@ public abstract class RecipeLoader
 
         public void RegisterRecipe()
         {
-            ShapedOreRecipe receipe = this.getShapedRecipe();
-            if (receipe != null)
-            {
-                GameRegistry.addRecipe(receipe);
-            }
-        }
-
-        public ShapedOreRecipe getShapedRecipe()
-        {
-            //TODO convert items to their ore names
-            ShapedOreRecipe re = null;
+            ShapedOreRecipe shapedOreRecipe = null;
             Object[] recipe = null;
-            String[] r = { "A", "B", "C", "D", "E", "F", "G", "H", "I" };
+            String[] slots = { "A", "B", "C", "D", "E", "F", "G", "H", "I" };
 
-            for (int i = 0; i < r.length; i++)
+            for (int i = 0; i < slots.length; i++)
             {
-                if (this.rl[i] == null || this.rl[i] instanceof String && ((String) this.rl[i]).isEmpty())
+                if (this.items[i] == null || this.items[i] instanceof String && ((String) this.items[i]).isEmpty())
                 {
-                    r[i] = " ";
-                    this.rl[i] = "";
-                }
-                else if (this.rl[i] instanceof ItemStack)
+                    slots[i] = " ";
+                    this.items[i] = "";
+                }//TODO include normal items and blocks
+                else if (this.items[i] instanceof ItemStack)
                 {
                     //Automatically converts an itemstack to its orename so that recipes are more mod compatible
-                    String s = OreDictionary.getOreName(OreDictionary.getOreID((ItemStack) this.rl[i]));
-                    if (s != null)
+                    String s = OreDictionary.getOreName(OreDictionary.getOreID((ItemStack) this.items[i]));
+                    if (s != null && !s.equals("Unknown"))
                     {
-                        this.rl[i] = s;
+                        this.items[i] = s;
                     }
                 }
             }
 
             if (width == 3 && hight == 3)
             {
-                recipe = new Object[] { r[0] + r[1] + r[2], r[3] + r[4] + r[5], r[6] + r[7] + r[8], 'A', rl[0], 'B', rl[1], 'C', rl[2], 'D', rl[3], 'E', rl[4], 'F', rl[5], 'G', rl[6], 'H', rl[7], 'I', rl[8] };
+                recipe = new Object[] { slots[0] + slots[1] + slots[2], slots[3] + slots[4] + slots[5], slots[6] + slots[7] + slots[8], 'A', items[0], 'B', items[1], 'C', items[2], 'D', items[3], 'E', items[4], 'F', items[5], 'G', items[6], 'H', items[7], 'I', items[8] };
             }
             else if (width == 2 && hight == 3)
             {
-                recipe = new Object[] { r[0] + r[1], r[3] + r[4], r[6] + r[7], 'A', rl[0], 'B', rl[1], 'D', rl[3], 'E', rl[4], 'G', rl[6], 'H', rl[7] };
+                recipe = new Object[] { slots[0] + slots[1], slots[3] + slots[4], slots[6] + slots[7], 'A', items[0], 'B', items[1], 'D', items[3], 'E', items[4], 'G', items[6], 'H', items[7] };
             }
             else if (width == 3 && hight == 2)
             {
-                recipe = new Object[] { r[0] + r[1] + r[2], r[3] + r[4] + r[5], 'A', rl[0], 'B', rl[1], 'C', rl[2], 'D', rl[3], 'E', rl[4], 'F', rl[5] };
+                recipe = new Object[] { slots[0] + slots[1] + slots[2], slots[3] + slots[4] + slots[5], 'A', items[0], 'B', items[1], 'C', items[2], 'D', items[3], 'E', items[4], 'F', items[5] };
             }
             else if (width == 1 && hight == 3)
             {
-                recipe = new Object[] { r[0], r[3], r[6], 'A', rl[0], 'D', rl[3], 'G', rl[6] };
+                recipe = new Object[] { slots[0], slots[3], slots[6], 'A', items[0], 'D', items[3], 'G', items[6] };
             }
             else if (width == 3 && hight == 1)
             {
-                recipe = new Object[] { r[0] + r[1] + r[2], 'A', rl[0], 'B', rl[1], 'C', rl[2] };
+                recipe = new Object[] { slots[0] + slots[1] + slots[2], 'A', items[0], 'B', items[1], 'C', items[2] };
             }
             else if (width == 2 && hight == 2)
             {
-                recipe = new Object[] { r[0] + r[1], r[3] + r[4], 'A', rl[0], 'B', rl[1], 'D', rl[2], 'E', rl[4] };
+                recipe = new Object[] { slots[0] + slots[1], slots[3] + slots[4], 'A', items[0], 'B', items[1], 'D', items[2], 'E', items[4] };
             }
             else if (width == 1 && hight == 2)
             {
-                recipe = new Object[] { r[0], r[3], 'A', rl[0], 'D', rl[3], };
+                recipe = new Object[] { slots[0], slots[3], 'A', items[0], 'D', items[3], };
             }
             else if (width == 2 && hight == 1)
             {
-                recipe = new Object[] { r[0] + r[1], 'A', rl[0], 'B', rl[1], };
+                recipe = new Object[] { slots[0] + slots[1], 'A', items[0], 'B', items[1], };
             }
             else if (width == 1 && hight == 1)
             {
-                recipe = new Object[] { r[0], 'A', rl[0] };
+                recipe = new Object[] { slots[0], 'A', items[0] };
+            }
+            else
+            {
+                System.out.println("Recipe was created with an out of bounds size");
+                System.out.println(this.toString());
             }
             if (recipe != null)
             {
-                if (out instanceof Block)
+                if (output instanceof Block)
                 {
-                    re = new ShapedOreRecipe(((Block) out), recipe);
+                    shapedOreRecipe = new ShapedOreRecipe(((Block) output), recipe);
                 }
-                else if (out instanceof Item)
+                else if (output instanceof Item)
                 {
-                    re = new ShapedOreRecipe(((Item) out), recipe);
+                    shapedOreRecipe = new ShapedOreRecipe(((Item) output), recipe);
                 }
-                else if (out instanceof ItemStack)
+                else if (output instanceof ItemStack)
                 {
-                    re = new ShapedOreRecipe(((ItemStack) out), recipe);
+                    shapedOreRecipe = new ShapedOreRecipe(((ItemStack) output), recipe);
+                }
+                else
+                {
+                    System.out.println("Recipe was created with a null output");
+                    System.out.println(this.toString());
                 }
             }
-            return re;
+            if (CoreRecipeLoader.debugOreItems)
+            {
+                System.out.println("\nRecipe created");
+                System.out.println(this.toString());
+                AutoCraftingManager.printRecipes(shapedOreRecipe.getRecipeOutput());
+            }
+            if (shapedOreRecipe != null)
+            {
+                GameRegistry.addRecipe(shapedOreRecipe);
+            }
+        }
+
+        @Override
+        public String toString()
+        {
+            return "RecipeGrid[Out: " + (output != null ? output.toString() : "null") + "\n In: " + " " + items[0] + "|  " + items[1] + "|  " + items[2] + "\n    " + items[3] + "|  " + items[4] + "|  " + items[5] + "\n    " + items[6] + "|  " + items[7] + "|  " + items[8];
         }
     }
 }

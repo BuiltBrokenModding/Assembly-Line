@@ -5,7 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.api.ColorCode;
 import dark.api.ProcessorRecipes;
@@ -16,6 +16,7 @@ import dark.core.common.blocks.BlockOre.OreData;
 import dark.core.common.items.EnumMaterial;
 import dark.core.common.items.EnumOrePart;
 import dark.core.common.items.EnumTool;
+import dark.core.common.items.ItemCommonTool;
 import dark.core.common.items.ItemOreDirv;
 import dark.core.common.items.ItemParts;
 import dark.core.common.items.ItemParts.Parts;
@@ -43,6 +44,7 @@ public class CoreRecipeLoader extends RecipeLoader
     public static ItemStack unfinishedTank;
     public static Item itemGlowingSand;
     public static Item itemDiggingTool;
+    public static boolean debugOreItems = true;
 
     @Override
     public void loadRecipes()
@@ -64,6 +66,19 @@ public class CoreRecipeLoader extends RecipeLoader
         {
             new RecipeGrid(new ItemStack(blockWire, 1, 0), 3, 3).setRowOne(Block.cloth, Block.cloth, Block.cloth).setRowTwo(copper, copper, copper).setRowThree(Block.cloth, Block.cloth, Block.cloth).RegisterRecipe();
         }
+        if (itemDiggingTool instanceof ItemCommonTool)
+        {
+            for (EnumMaterial mat : EnumMaterial.values())
+            {
+                if (mat.shouldCreateTool())
+                {
+                    new RecipeGrid(mat.getTool(EnumTool.PICKAX)).setRowOne(mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1)).setRowTwo(null, Item.stick, null).setRowThree(null, Item.stick, null).RegisterRecipe();
+                    new RecipeGrid(mat.getTool(EnumTool.AX)).setRowOne(mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1), null).setRowTwo(mat.getStack(EnumOrePart.INGOTS, 1), Item.stick, null).setRowThree(null, Item.stick, null).RegisterRecipe();
+                    new RecipeGrid(mat.getTool(EnumTool.HOE)).setRowOne(mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1), null).setRowTwo(null, Item.stick, null).setRowThree(null, Item.stick, null).RegisterRecipe();
+                    new RecipeGrid(mat.getTool(EnumTool.SPADE)).setRowOne(null, mat.getStack(EnumOrePart.INGOTS, 1), null).setRowTwo(null, Item.stick, null).setRowThree(null, Item.stick, null).RegisterRecipe();
+                }
+            }
+        }
         this.loadParts();
     }
 
@@ -77,7 +92,7 @@ public class CoreRecipeLoader extends RecipeLoader
             unfinishedTank = new ItemStack(itemParts, 1, Parts.Tank.ordinal());
 
             // seal
-            new RecipeGrid(this.setStackSize(leatherSeal, 16), 2, 2).setRowOne(Item.leather, Item.leather).setRowTwo(Item.leather, Item.leather).RegisterRecipe();
+            GameRegistry.addRecipe(new ShapedOreRecipe(this.setStackSize(leatherSeal, 16), new Object[] { "LL","LL", 'L', Item.leather }));
             // slime steal
             new RecipeGrid(this.setStackSize(slimeSeal, 4)).setRowOne(null, leatherSeal, null).setRowTwo(leatherSeal, Item.slimeBall, leatherSeal).setRowThree(null, leatherSeal, null).RegisterRecipe();
             // part valve
@@ -117,16 +132,25 @@ public class CoreRecipeLoader extends RecipeLoader
             GameRegistry.addShapelessRecipe(EnumMaterial.getStack(EnumMaterial.STEEL, EnumOrePart.DUST, 1), new Object[] { EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.DUST, 1), new ItemStack(Item.coal, 1, 1), new ItemStack(Item.coal, 1, 0) });
             GameRegistry.addShapelessRecipe(EnumMaterial.getStack(EnumMaterial.BRONZE, EnumOrePart.DUST, 4), new Object[] { EnumMaterial.getStack(EnumMaterial.COPPER, EnumOrePart.DUST, 1), EnumMaterial.getStack(EnumMaterial.COPPER, EnumOrePart.DUST, 1), EnumMaterial.getStack(EnumMaterial.COPPER, EnumOrePart.DUST, 1), EnumMaterial.getStack(EnumMaterial.TIN, EnumOrePart.DUST, 1) });
 
+            if (debugOreItems)
+            {
+                System.out.println("\n\nTesting material part returns");
+                for (EnumMaterial mat : EnumMaterial.values())
+                {
+                    System.out.println("\n-Material-> " + mat.simpleName);
+                    for (EnumOrePart part : EnumOrePart.values())
+                    {
+                        if (mat.shouldCreateItem(part))
+                        {
+                            System.out.println("--Part-> " + part.simpleName);
+                            System.out.println("----ItemStack-> " + mat.getStack(part, 1).toString());
+                        }
+                    }
+                }
+            }
             //Ore material recipe loop
             for (EnumMaterial mat : EnumMaterial.values())
             {
-                if (mat.shouldCreateTool())
-                {
-                    new RecipeGrid(mat.getTool(EnumTool.PICKAX)).setRowOne(mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1)).setRowTwo(null, Item.stick, null).setRowThree(null, Item.stick, null).RegisterRecipe();
-                    new RecipeGrid(mat.getTool(EnumTool.AX)).setRowOne(mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1), null).setRowTwo(mat.getStack(EnumOrePart.INGOTS, 1), Item.stick, null).setRowThree(null, Item.stick, null).RegisterRecipe();
-                    new RecipeGrid(mat.getTool(EnumTool.HOE)).setRowOne(mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1), null).setRowTwo(null, Item.stick, null).setRowThree(null, Item.stick, null).RegisterRecipe();
-                    new RecipeGrid(mat.getTool(EnumTool.SPADE)).setRowOne(null, mat.getStack(EnumOrePart.INGOTS, 1), null).setRowTwo(null, Item.stick, null).setRowThree(null, Item.stick, null).RegisterRecipe();
-                }
                 //Dust recipes
                 if (mat.shouldCreateItem(EnumOrePart.DUST))
                 {
@@ -155,17 +179,20 @@ public class CoreRecipeLoader extends RecipeLoader
                 }
                 if (mat.shouldCreateItem(EnumOrePart.TUBE))
                 {
-                    new RecipeGrid(mat.getStack(EnumOrePart.TUBE, 1), 3, 1).setRowOne(mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1)).RegisterRecipe();
-                    new RecipeGrid(mat.getStack(EnumOrePart.TUBE, 1), 1, 1).setRowOne(mat.getStack(EnumOrePart.ROD, 1)).RegisterRecipe();
-
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.TUBE, 6), new Object[] { "III", 'I', mat.simpleName + "ingot" }));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.TUBE, 6), new Object[] { "III", 'I', "ingot" + mat.simpleName }));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.TUBE, 1), new Object[] { "I", 'I', "rod" + mat.simpleName }));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.TUBE, 1), new Object[] { "I", 'I', mat.simpleName + "rod" }));
                 }
                 if (mat.shouldCreateItem(EnumOrePart.ROD))
                 {
-                    new RecipeGrid(mat.getStack(EnumOrePart.ROD, 1), 2, 1).setRowOne(mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1)).RegisterRecipe();
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.ROD, 4), new Object[] { "II", 'I', mat.simpleName + "rod" }));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.ROD, 4), new Object[] { "II", 'I', "rod" + mat.simpleName }));
                 }
                 if (mat.shouldCreateItem(EnumOrePart.PLATES))
                 {
-                    new RecipeGrid(mat.getStack(EnumOrePart.PLATES, 1), 2, 2).setRowOne(mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1)).setRowTwo(mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1)).RegisterRecipe();
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.PLATES, 1), new Object[] { "II", "II", 'I', mat.simpleName + "ingot" }));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.PLATES, 1), new Object[] { "II", "II", 'I', "ingot" + mat.simpleName }));
                 }
                 if (mat.shouldCreateItem(EnumOrePart.GEARS))
                 {

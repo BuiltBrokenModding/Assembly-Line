@@ -142,66 +142,50 @@ public class DarkMain extends ModPrefab
                 }
             }
         }
-        if (CoreRecipeLoader.blockWire instanceof BlockWire)
-        {
-            OreDictionary.registerOre("copperwire", new ItemStack(CoreRecipeLoader.blockWire, 1, 0));
-            OreDictionary.registerOre("wirecopper", new ItemStack(CoreRecipeLoader.blockWire, 1, 0));
-        }
         if (CoreRecipeLoader.itemMetals instanceof ItemOreDirv)
         {
             //Ore material recipe loop
             for (EnumMaterial mat : EnumMaterial.values())
             {
-                ItemStack dust = EnumMaterial.getStack(mat, EnumOrePart.DUST, 1);
-                ItemStack ingot = EnumMaterial.getStack(mat, EnumOrePart.INGOTS, 1);
-                ItemStack scraps = EnumMaterial.getStack(mat, EnumOrePart.SCRAPS, 1);
-                ItemStack plates = EnumMaterial.getStack(mat, EnumOrePart.PLATES, 1);
-                ItemStack rubble = EnumMaterial.getStack(mat, EnumOrePart.RUBBLE, 1);
-                ItemStack rod = EnumMaterial.getStack(mat, EnumOrePart.ROD, 1);
-                ItemStack tube = EnumMaterial.getStack(mat, EnumOrePart.TUBE, 1);
                 if (mat.shouldCreateItem(EnumOrePart.INGOTS))
                 {
-                    OreDictionary.registerOre(mat.simpleName + "ingot", ingot);
-                    OreDictionary.registerOre("ingot" + mat.simpleName, ingot);
+                    OreDictionary.registerOre(mat.simpleName + "ingot", mat.getStack(EnumOrePart.INGOTS, 1));
+                    OreDictionary.registerOre("ingot" + mat.simpleName, mat.getStack(EnumOrePart.INGOTS, 1));
                 }
                 if (mat.shouldCreateItem(EnumOrePart.RUBBLE))
                 {
-                    OreDictionary.registerOre(mat.simpleName + "rubble", rubble);
-                    OreDictionary.registerOre("rubble" + mat.simpleName, rubble);
+                    OreDictionary.registerOre(mat.simpleName + "rubble", mat.getStack(EnumOrePart.RUBBLE, 1));
+                    OreDictionary.registerOre("rubble" + mat.simpleName, mat.getStack(EnumOrePart.RUBBLE, 1));
                 }
                 //Dust recipes
                 if (mat.shouldCreateItem(EnumOrePart.DUST))
                 {
-                    OreDictionary.registerOre(mat.simpleName + "dust", dust);
-                    OreDictionary.registerOre("dust" + mat.simpleName, dust);
+                    OreDictionary.registerOre(mat.simpleName + "dust", mat.getStack(EnumOrePart.DUST, 1));
+                    OreDictionary.registerOre("dust" + mat.simpleName, mat.getStack(EnumOrePart.DUST, 1));
                 }
-
                 // Salvaging recipe
-
                 if (mat.shouldCreateItem(EnumOrePart.SCRAPS))
                 {
 
-                    OreDictionary.registerOre(mat.simpleName + "scraps", scraps);
-                    OreDictionary.registerOre("scraps" + mat.simpleName, scraps);
+                    OreDictionary.registerOre(mat.simpleName + "scraps", mat.getStack(EnumOrePart.SCRAPS, 1));
+                    OreDictionary.registerOre("scraps" + mat.simpleName, mat.getStack(EnumOrePart.SCRAPS, 1));
                 }
-
-                ingot.stackSize = 1;
                 if (mat.shouldCreateItem(EnumOrePart.TUBE))
                 {
-                    OreDictionary.registerOre(mat.simpleName + "tube", tube);
-                    OreDictionary.registerOre("tube" + mat.simpleName, tube);
+                    OreDictionary.registerOre(mat.simpleName + "tube", mat.getStack(EnumOrePart.TUBE, 1));
+                    OreDictionary.registerOre("tube" + mat.simpleName, mat.getStack(EnumOrePart.TUBE, 1));
 
                 }
                 if (mat.shouldCreateItem(EnumOrePart.ROD))
                 {
 
-                    OreDictionary.registerOre(mat.simpleName + "rod", rod);
-                    OreDictionary.registerOre("rod" + mat.simpleName, rod);
+                    OreDictionary.registerOre(mat.simpleName + "rod", mat.getStack(EnumOrePart.ROD, 1));
+                    OreDictionary.registerOre("rod" + mat.simpleName, mat.getStack(EnumOrePart.ROD, 1));
                 }
                 if (mat.shouldCreateItem(EnumOrePart.PLATES))
                 {
-                    OreDictionary.registerOre(mat.simpleName + "plate", plates);
-                    OreDictionary.registerOre("plate" + mat.simpleName, plates);
+                    OreDictionary.registerOre(mat.simpleName + "plate", mat.getStack(EnumOrePart.PLATES, 1));
+                    OreDictionary.registerOre("plate" + mat.simpleName, mat.getStack(EnumOrePart.PLATES, 1));
                 }
                 if (mat.shouldCreateItem(EnumOrePart.GEARS))
                 {
