@@ -20,33 +20,31 @@ import dark.fluid.common.FMRecipeLoader;
 public enum PipeMaterial
 {
     /** Simple water only pipe. Should render open toped when it can */
-    WOOD("wood", false, true, false, 50, 200),
+    WOOD("wood", false, true, false, -1, 200),
     /** Gas only pipe */
-    GLASS("wood", true, false, false, 100, 300),
+    GLASS("glass", true, false, false, 100, 300),
     /** Another version of the wooden pipe */
-    STONE("wood", false, true, false, 200, 1000),
+    STONE("stone", false, true, false, -1, 1000),
     /** Cheap fluid pipe */
-    TIN("wood", false, true, false, 300, 1000),
+    TIN("tin", false, true, false, 300, 1000),
     /** Cheap fluid pipe */
-    COPPER("wood", false, true, false, 400, 1000),
+    COPPER("copper", false, true, false, 400, 1000),
     /** First duel gas and fluid pipe */
-    IRON("wood", true, true, false, 500, 1000),
+    IRON("iron", true, true, false, 500, 1000),
     /** Fluid movement pipe that doesn't work well with pressure */
-    GOLD("wood", true, true, false, 200, 2000),
+    GOLD("gold", true, true, false, 200, 2000),
     /** Cheap molten metal pipe */
-    OBBY("wood", false, true, true, 1000, 1000),
+    OBBY("obby", false, true, true, 1000, 1000),
     /** Very strong fluid and gas support pipe. Should also support molten metal as long as they
      * don't stay in the pipe too long. */
-    STEEL("wood", true, true, false, 10000, 3000),
+    STEEL("steel", true, true, false, 10000, 3000),
     /** Weaker equal to steel pipes. Should also support steam very well */
-    BRONZE("wood", true, true, false, 6000, 2000),
+    BRONZE("bronze", true, true, false, 6000, 2000),
     /** Hell fluids only. Meaning lava, and molten metals. Water should turn to steam, fuel and oil
      * should cause an explosion around the pipe */
-    HELL("wood", true, true, true, 10000, 5000, "water", "fuel", "oil");
+    HELL("hell", true, true, true, 10000, 5000, "water", "fuel", "oil");
     public String matName = "material";
     List<String> unsupportedFluids = new ArrayList<String>();
-    public boolean supportsAllFluids = false;
-    public boolean supportsAllGas = false;
     public boolean canSupportGas = false;
     public boolean canSupportFluids = false;
     public boolean canSupportMoltenFluids = false;
@@ -59,8 +57,8 @@ public enum PipeMaterial
 
     private PipeMaterial()
     {
-        supportsAllFluids = true;
-        supportsAllGas = true;
+        this.canSupportGas = true;
+        this.canSupportFluids = true;
         canSupportMoltenFluids = true;
     }
 
@@ -100,7 +98,7 @@ public enum PipeMaterial
         {
             return PipeMaterial.values()[meta];
         }
-        return null;
+        return PipeMaterial.WOOD;
     }
 
     public ItemStack getStack()
@@ -142,7 +140,7 @@ public enum PipeMaterial
 
     public static int updateColor(Object cc, int pipeID)
     {
-        if(EnumPipeType.canColor(pipeID))
+        if (EnumPipeType.canColor(pipeID))
         {
             return EnumPipeType.getUpdatedID(pipeID, ColorCode.get(cc));
         }

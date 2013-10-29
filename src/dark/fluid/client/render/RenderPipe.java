@@ -2,26 +2,23 @@ package dark.fluid.client.render;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
 
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.api.ColorCode;
 import dark.core.client.renders.RenderTileMachine;
 import dark.core.prefab.ModPrefab;
-import dark.core.prefab.helpers.FluidHelper;
 import dark.fluid.client.model.ModelLargePipe;
-import dark.fluid.common.FMRecipeLoader;
 import dark.fluid.common.FluidMech;
+import dark.fluid.common.pipes.EnumPipeType;
+import dark.fluid.common.pipes.PipeMaterial;
 import dark.fluid.common.pipes.TileEntityPipe;
 
 @SideOnly(Side.CLIENT)
 public class RenderPipe extends RenderTileMachine
 {
     public ModelLargePipe SixPipe;
-    private boolean[] renderSide = new boolean[6];
 
     public RenderPipe()
     {
@@ -35,19 +32,21 @@ public class RenderPipe extends RenderTileMachine
         GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
         GL11.glScalef(1.0F, -1F, -1F);
 
-        int meta = 0;
-        int blockID = FMRecipeLoader.blockPipe.blockID;
+        PipeMaterial mat = PipeMaterial.IRON;
+        if (te.getBlockMetadata() < PipeMaterial.values().length)
+        {
+            System.out.println("Pipe meta " + te.getBlockMetadata());
+            mat = PipeMaterial.values()[te.getBlockMetadata()];
+        }
 
         if (te instanceof TileEntityPipe)
         {
-            meta = te.getBlockMetadata();
-            blockID = te.getBlockType().blockID;
-
-            TileEntityPipe pipe = ((TileEntityPipe) te);
-            this.renderSide = pipe.renderConnection;
-
+            this.render(mat, ((TileEntityPipe) te).getPipeID(), ((TileEntityPipe) te).renderConnection);
         }
-        this.render(blockID, meta, renderSide);
+        else
+        {
+            this.render(PipeMaterial.STONE, 0, new boolean[6]);
+        }
         GL11.glPopMatrix();
 
     }
@@ -55,22 +54,26 @@ public class RenderPipe extends RenderTileMachine
     @Override
     public ResourceLocation getTexture(int block, int meta)
     {
-        String name = "";
-        if (meta < 16)
-        {
-            Fluid stack = FluidHelper.getStackForColor(ColorCode.get(meta));
-            name = stack != null ? stack.getName() : "";
-        }
-        else
-        {
-            name = ColorCode.get(meta).getName();
-        }
-        return new ResourceLocation(FluidMech.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "pipes/" + name + "Pipe.png");
+        return new ResourceLocation(FluidMech.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "pipes/Pipe.png");
     }
 
-    public void render(int blockID, int meta, boolean[] side)
+    public static ResourceLocation getTexture(PipeMaterial mat, int pipeID)
     {
-        bindTexture(this.getTexture(blockID, meta));
+        if (mat != null)
+        {
+            String s = "";
+            if (EnumPipeType.get(pipeID) != null)
+            {
+                s = EnumPipeType.get(pipeID).getName(pipeID);
+            }
+            return new ResourceLocation(FluidMech.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "pipes/" + mat.matName + "/" + s + "Pipe.png");
+        }
+        return new ResourceLocation(FluidMech.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "pipes/Pipe.png");
+    }
+
+    public void render(PipeMaterial mat, int pipeID, boolean[] side)
+    {
+        bindTexture(RenderPipe.getTexture(mat, pipeID));
         if (side[0])
         {
             SixPipe.renderBottom();

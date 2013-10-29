@@ -203,11 +203,39 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
                 {
                     if (tileEntity instanceof INetworkPipe)
                     {
-                        if (((INetworkPipe) tileEntity).canTileConnect(Connection.NETWORK, side.getOpposite()))
+                        if (tileEntity instanceof TileEntityPipe)
+                        {
+                            int meta = new Vector3(this).getBlockMetadata(this.worldObj);
+                            int metaOther = new Vector3(tileEntity).getBlockMetadata(this.worldObj);
+                            if (meta < PipeMaterial.values().length && metaOther < PipeMaterial.values().length)
+                            {
+                                PipeMaterial pipeMat = PipeMaterial.values()[meta];
+                                PipeMaterial pipeMatOther = PipeMaterial.values()[metaOther];
+                                //Same pipe types can connect
+                                if (pipeMat == pipeMatOther)
+                                {
+                                    this.getTileNetwork().merge(((INetworkPipe) tileEntity).getTileNetwork(), this);
+                                    return connectedBlocks.add(tileEntity);
+                                }//Wood and stone pipes can connect to each other but not other pipe types since they are more like a trough than a pipe
+                                else if ((pipeMat == PipeMaterial.WOOD || pipeMat == PipeMaterial.STONE) && (pipeMatOther == PipeMaterial.WOOD || pipeMatOther == PipeMaterial.STONE))
+                                {
+                                    this.getTileNetwork().merge(((INetworkPipe) tileEntity).getTileNetwork(), this);
+                                    return connectedBlocks.add(tileEntity);
+                                }//Any other pipe can connect to each other as long as the color matches except for glass which only works with itself at the moment
+                                else if (pipeMat != PipeMaterial.WOOD && pipeMat != PipeMaterial.STONE && pipeMatOther != PipeMaterial.WOOD && pipeMatOther != PipeMaterial.STONE && pipeMat != PipeMaterial.GLASS && pipeMatOther != PipeMaterial.GLASS)
+                                {
+                                    this.getTileNetwork().merge(((INetworkPipe) tileEntity).getTileNetwork(), this);
+                                    return connectedBlocks.add(tileEntity);
+                                }
+                            }
+                            return false;
+                        }
+                        else
                         {
                             this.getTileNetwork().merge(((INetworkPipe) tileEntity).getTileNetwork(), this);
                             return connectedBlocks.add(tileEntity);
                         }
+
                     }
                     else
                     {
@@ -242,34 +270,6 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
         }//All Fluid connections are supported
         else if (type == Connection.FLUIDS)
         {
-            return true;
-        }//Network connections are only supported for if pipe materials match
-        else if (type == Connection.NETWORK && entity instanceof INetworkPipe)
-        {
-            if (entity instanceof TileEntityPipe)
-            {
-                int meta = new Vector3(this).getBlockMetadata(this.worldObj);
-                int metaOther = connection.getBlockMetadata(this.worldObj);
-                if (meta < PipeMaterial.values().length && metaOther < PipeMaterial.values().length)
-                {
-                    PipeMaterial pipeMat = PipeMaterial.values()[meta];
-                    PipeMaterial pipeMatOther = PipeMaterial.values()[metaOther];
-                    //Same pipe types can connect
-                    if (pipeMat == pipeMatOther)
-                    {
-                        return true;
-                    }//Wood and stone pipes can connect to each other but not other pipe types since they are more like a trough than a pipe
-                    else if ((pipeMat == PipeMaterial.WOOD || pipeMat == PipeMaterial.STONE) && (pipeMatOther == PipeMaterial.WOOD || pipeMatOther == PipeMaterial.STONE))
-                    {
-                        return true;
-                    }//Any other pipe can connect to each other as long as the color matches except for glass which only works with itself at the moment
-                    else if (pipeMat != PipeMaterial.WOOD && pipeMat != PipeMaterial.STONE && pipeMatOther != PipeMaterial.WOOD && pipeMatOther != PipeMaterial.STONE && pipeMat != PipeMaterial.GLASS && pipeMatOther != PipeMaterial.GLASS)
-                    {
-                        return true;
-                    }
-                }
-                return false;
-            }
             return true;
         }
         return false;
@@ -317,6 +317,11 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     @Override
     public double getMaxPressure(ForgeDirection side)
     {
+        int meta = this.worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+        if (meta < PipeMaterial.values().length)
+        {
+            return PipeMaterial.values()[meta].maxPressure;
+        }
         return 350;
     }
 
@@ -357,6 +362,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
      * @return flow rate in mili-Buckets */
     public int calculateFlowRate(FluidStack fluid, float pressure, float temp)
     {
+        //TODO recalculate this based on pipe material for friction
         if (fluid != null & fluid.getFluid() != null)
         {
             float f = .012772f * pressure;

@@ -15,11 +15,15 @@ public enum EnumPipeType implements IColoredId
         }
 
         @Override
-        public String getName()
+        public String getName(int pipeID)
         {
-            return "Colored Pipe";
+            if (pipeID < 16 && pipeID > 0)
+            {
+                return ColorCode.get(pipeID - 1).name;
+            }
+            return "";
         }
-    }, 0, 15, true);
+    }, 1, 16, true);
 
     private IPipeType type;
     public int metaStart = 1;
@@ -69,7 +73,7 @@ public enum EnumPipeType implements IColoredId
 
     public static int getUpdatedID(int pipeID, ColorCode newColor)
     {
-        if(pipeID == 0)
+        if (pipeID == 0)
         {
             return 1 + newColor.ordinal();
         }
@@ -96,12 +100,12 @@ public enum EnumPipeType implements IColoredId
         return ColorCode.UNKOWN;
     }
 
-    public String getName()
+    public String getName(int pipeID)
     {
         if (type != null)
         {
-            return type.getName();
+            return type.getName(pipeID);
         }
-        return "PipeType" + this.ordinal();
+        return "";
     }
 }

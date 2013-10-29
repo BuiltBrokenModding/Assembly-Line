@@ -4,5 +4,5 @@ import dark.api.ColorCode.IColoredId;
 
 public interface IPipeType extends IColoredId
 {
-    public String getName();
+    public String getName(int pipeID);
 }
