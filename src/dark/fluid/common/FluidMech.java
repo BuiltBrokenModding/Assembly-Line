@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.fluids.Fluid;
 
@@ -31,8 +30,8 @@ import dark.fluid.common.machines.BlockReleaseValve;
 import dark.fluid.common.machines.BlockSink;
 import dark.fluid.common.machines.BlockTank;
 import dark.fluid.common.pipes.BlockPipe;
-import dark.fluid.common.pipes.BlockPipe.PipeData;
 import dark.fluid.common.pipes.ItemBlockPipe;
+import dark.fluid.common.pipes.PipeMaterial;
 import dark.fluid.common.pump.BlockConstructionPump;
 import dark.fluid.common.pump.BlockDrain;
 import dark.fluid.common.pump.BlockPumpMachine;
@@ -103,7 +102,10 @@ public class FluidMech extends ModPrefab
 
         /* LANG LOADING */
         FMLog.info(" Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
-        DMCreativeTab.tabHydrualic.setIconItemStack(new ItemStack(FMRecipeLoader.blockPipe, 1, PipeData.IRON_PIPE.ordinal()));
+        if (FMRecipeLoader.blockPipe instanceof BlockPipe)
+        {
+            DMCreativeTab.tabHydrualic.setIconItemStack(PipeMaterial.IRON.getStack());
+        }
     }
 
     @Override

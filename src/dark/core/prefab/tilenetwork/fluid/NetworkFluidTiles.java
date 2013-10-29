@@ -282,6 +282,6 @@ public class NetworkFluidTiles extends NetworkTileEntities
             String name = combinedStorage().getFluid().getFluid().getLocalizedName();
             return String.format("%d/%d %S Stored", vol, cap, name);
         }
-        return ("As far as you can tell it is empty");
+        return ("Empty");
     }
 }

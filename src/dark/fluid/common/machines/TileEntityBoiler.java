@@ -107,9 +107,9 @@ public class TileEntityBoiler extends TileEntityFluidDevice implements IFluidHan
     }
 
     @Override
-    public void setColor(Object obj)
+    public boolean setColor(Object obj)
     {
-        // TODO Auto-generated method stub
+        return false;
 
     }
 

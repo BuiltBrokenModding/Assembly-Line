@@ -97,8 +97,9 @@ public class TileEntitySink extends TileEntityFluidStorage implements IPacketRec
     }
 
     @Override
-    public void setColor(Object obj)
+    public boolean setColor(Object obj)
     {
+        return false;
     }
 
     @Override

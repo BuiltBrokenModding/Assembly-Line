@@ -158,12 +158,14 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
 
     /** sets the current color mark of the pipe */
     @Override
-    public void setColor(Object cc)
+    public boolean setColor(Object cc)
     {
         if (!worldObj.isRemote)
         {
             this.colorCode = ColorCode.get(cc);
+            return true;
         }
+        return false;
     }
 
     @Override
@@ -220,7 +222,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
     }
 
     /** Checks to make sure the connection is valid to the tileEntity
-     * 
+     *
      * @param tileEntity - the tileEntity being checked
      * @param side - side the connection is too */
     public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)

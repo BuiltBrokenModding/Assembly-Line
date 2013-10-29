@@ -10,7 +10,7 @@ import dark.api.ColorCode;
 import dark.core.common.CoreRecipeLoader;
 import dark.core.common.RecipeLoader;
 import dark.core.common.items.ItemParts.Parts;
-import dark.fluid.common.pipes.BlockPipe.PipeMaterial;
+import dark.fluid.common.pipes.PipeMaterial;
 
 public class FMRecipeLoader extends RecipeLoader
 {

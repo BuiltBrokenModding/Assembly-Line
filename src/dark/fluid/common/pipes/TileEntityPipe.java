@@ -40,7 +40,6 @@ import dark.core.network.PacketHandler;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 import dark.core.prefab.tilenetwork.fluid.NetworkPipes;
-import dark.fluid.common.pipes.BlockPipe.PipeData;
 
 public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler, IToolReadOut, IColorCoded, INetworkPipe, IPacketReceiver
 {
@@ -55,11 +54,9 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
 
     /** Network that links the collective pipes together to work */
     private NetworkPipes pipeNetwork;
-    protected PipeData pipeData = PipeData.IRON_PIPE;
-
-    protected boolean flagForColorCodeUpdate = false, resetting = false;
 
     protected int updateTick = 1;
+    protected int pipeID = 0;
     String refClassID = "";
 
     public enum PipePacketID
@@ -67,25 +64,6 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
         PIPE_CONNECTIONS,
         EXTENTION_CREATE,
         EXTENTION_UPDATE;
-    }
-
-    @Override
-    public void initiate()
-    {
-        if (!this.worldObj.isRemote)
-        {
-            if (this.flagForColorCodeUpdate)
-            {
-                int meta = this.worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-                if (!this.refClassID.equalsIgnoreCase("ColoredPipe"))
-                {
-                    meta += 16;
-                }
-                this.pipeData = PipeData.values()[meta & 31];
-                this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 3);
-                this.flagForColorCodeUpdate = false;
-            }
-        }
     }
 
     @Override
@@ -106,7 +84,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     public void invalidate()
     {
         super.invalidate();
-        if (!this.worldObj.isRemote && !this.resetting)
+        if (!this.worldObj.isRemote)
         {
             this.getTileNetwork().splitNetwork(this.worldObj, this);
         }
@@ -120,7 +98,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
         {
             if (this.worldObj.isRemote)
             {
-                this.pipeData = PipeData.values()[dataStream.readInt()];
+                this.pipeID = dataStream.readInt();
                 this.renderConnection[0] = dataStream.readBoolean();
                 this.renderConnection[1] = dataStream.readBoolean();
                 this.renderConnection[2] = dataStream.readBoolean();
@@ -139,49 +117,53 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, this.pipeData.ordinal(), this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
+        return PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, this.pipeID, this.renderConnection[0], this.renderConnection[1], this.renderConnection[2], this.renderConnection[3], this.renderConnection[4], this.renderConnection[5]);
     }
 
     /** gets the current color mark of the pipe */
     @Override
     public ColorCode getColor()
     {
-        return this.pipeData.colorCode;
+        return PipeMaterial.getColor(this.pipeID);
     }
 
     /** sets the current color mark of the pipe */
     @Override
-    public void setColor(Object cc)
+    public boolean setColor(Object cc)
     {
-        if (!worldObj.isRemote && (this.pipeData.colorCode != ColorCode.UNKOWN || this.pipeData == PipeData.IRON_PIPE))
+        if (!worldObj.isRemote)
         {
-            this.pipeData = PipeData.get(ColorCode.get(cc).ordinal());
+            int p = this.pipeID;
+            this.pipeID = PipeMaterial.updateColor(cc, pipeID);
+            return p != this.pipeID;
         }
+        return false;
     }
 
     @Override
     public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
     {
-        /* DEBUG CODE ACTIVATERS */
-        boolean testConnections = false, testNetwork = false;
-
-        /* NORMAL OUTPUT */
-        String string = ((NetworkPipes) this.getTileNetwork()).pressureProduced + "p " + ((NetworkPipes) this.getTileNetwork()).getNetworkFluid() + " Extra";
-
-        /* DEBUG CODE */
-        if (testConnections)
+        if (tool == EnumTools.PIPE_GUAGE)
         {
-            for (int i = 0; i < 6; i++)
+            /* DEBUG CODE ACTIVATERS */
+            boolean testConnections = true;
+
+            /* NORMAL OUTPUT */
+            String string = ((NetworkPipes) this.getTileNetwork()).pressureProduced + "p " + ((NetworkPipes) this.getTileNetwork()).getNetworkFluid();
+
+            /* DEBUG CODE */
+            if (testConnections)
             {
-                string += ":" + (this.renderConnection[i] ? "T" : "F") + (this.renderConnection[i] ? "T" : "F");
+                for (int i = 0; i < 6; i++)
+                {
+                    string += "||" + (this.renderConnection[i] ? "T" : "F");
+                }
             }
-        }
-        if (testNetwork)
-        {
             string += " " + this.getTileNetwork().toString();
-        }
 
-        return string;
+            return string;
+        }
+        return null;
     }
 
     @Override
@@ -207,7 +189,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     }
 
     /** Checks to make sure the connection is valid to the tileEntity
-     * 
+     *
      * @param tileEntity - the tileEntity being checked
      * @param side - side the connection is too
      * @return */
@@ -217,26 +199,14 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
         {
             if (tileEntity instanceof ITileConnector)
             {
-                if (((ITileConnector) tileEntity).canTileConnect(Connection.NETWORK, side.getOpposite()))
+                if (((ITileConnector) tileEntity).canTileConnect(Connection.FLUIDS, side.getOpposite()))
                 {
                     if (tileEntity instanceof INetworkPipe)
                     {
-                        if (((INetworkPipe) tileEntity).getColor() == this.getColor())
+                        if (((INetworkPipe) tileEntity).canTileConnect(Connection.NETWORK, side.getOpposite()))
                         {
-                            if (tileEntity instanceof TileEntityPipe)
-                            {
-                                if (((TileEntityPipe) tileEntity).pipeData == this.pipeData)
-                                {
-                                    this.getTileNetwork().merge(((INetworkPipe) tileEntity).getTileNetwork(), this);
-                                    return connectedBlocks.add(tileEntity);
-                                }
-                            }
-                            else
-                            {
-                                this.getTileNetwork().merge(((INetworkPipe) tileEntity).getTileNetwork(), this);
-                                return connectedBlocks.add(tileEntity);
-                            }
-
+                            this.getTileNetwork().merge(((INetworkPipe) tileEntity).getTileNetwork(), this);
+                            return connectedBlocks.add(tileEntity);
                         }
                     }
                     else
@@ -261,9 +231,53 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     }
 
     @Override
+    public boolean canTileConnect(Connection type, ForgeDirection dir)
+    {
+        Vector3 connection = new Vector3(this).modifyPositionFromSide(dir.getOpposite());
+        TileEntity entity = connection.getTileEntity(this.worldObj);
+        //Unknown color codes can connect to any color, however two different colors can connect to support better pipe layouts
+        if (entity instanceof IColorCoded && ((IColorCoded) entity).getColor() != this.getColor() && ((IColorCoded) entity).getColor() != ColorCode.UNKOWN)
+        {
+            return false;
+        }//All Fluid connections are supported
+        else if (type == Connection.FLUIDS)
+        {
+            return true;
+        }//Network connections are only supported for if pipe materials match
+        else if (type == Connection.NETWORK && entity instanceof INetworkPipe)
+        {
+            if (entity instanceof TileEntityPipe)
+            {
+                int meta = new Vector3(this).getBlockMetadata(this.worldObj);
+                int metaOther = connection.getBlockMetadata(this.worldObj);
+                if (meta < PipeMaterial.values().length && metaOther < PipeMaterial.values().length)
+                {
+                    PipeMaterial pipeMat = PipeMaterial.values()[meta];
+                    PipeMaterial pipeMatOther = PipeMaterial.values()[metaOther];
+                    //Same pipe types can connect
+                    if (pipeMat == pipeMatOther)
+                    {
+                        return true;
+                    }//Wood and stone pipes can connect to each other but not other pipe types since they are more like a trough than a pipe
+                    else if ((pipeMat == PipeMaterial.WOOD || pipeMat == PipeMaterial.STONE) && (pipeMatOther == PipeMaterial.WOOD || pipeMatOther == PipeMaterial.STONE))
+                    {
+                        return true;
+                    }//Any other pipe can connect to each other as long as the color matches except for glass which only works with itself at the moment
+                    else if (pipeMat != PipeMaterial.WOOD && pipeMat != PipeMaterial.STONE && pipeMatOther != PipeMaterial.WOOD && pipeMatOther != PipeMaterial.STONE && pipeMat != PipeMaterial.GLASS && pipeMatOther != PipeMaterial.GLASS)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void refresh()
     {
-
         if (this.worldObj != null && !this.worldObj.isRemote)
         {
 
@@ -298,12 +312,6 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
                 this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
             }
         }
-    }
-
-    @Override
-    public boolean canTileConnect(Connection type, ForgeDirection dir)
-    {
-        return new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj) instanceof IFluidHandler;
     }
 
     @Override
@@ -342,7 +350,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     }
 
     /** Calculates flow rate based on viscosity & temp of the fluid as all other factors are know
-     * 
+     *
      * @param fluid - fluidStack
      * @param temp = tempature of the fluid
      * @param pressure - pressure difference of were the fluid is flowing too.
@@ -450,14 +458,8 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
         super.readFromNBT(nbt);
         //Load color code from nbt
         this.refClassID = nbt.getString("id");
-        if (nbt.hasKey("PipeID"))
-        {
-            this.pipeData = PipeData.get(nbt.getInteger("PipeID"));
-        }
-        else
-        {
-            this.flagForColorCodeUpdate = true;
-        }
+
+        this.pipeID = nbt.getInteger("PipeItemId");
 
         //Load fluid tank
         FluidStack liquid = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("FluidTank"));
@@ -483,7 +485,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     public void writeToNBT(NBTTagCompound nbt)
     {
         super.writeToNBT(nbt);
-        nbt.setInteger("PipeID", this.pipeData.ordinal());
+        nbt.setInteger("PipeItemId", this.pipeID);
         if (this.tank != null && this.tank.getFluid() != null)
         {
             nbt.setTag("FluidTank", this.tank.getFluid().writeToNBT(new NBTTagCompound()));
@@ -492,7 +494,11 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
 
     public void setPipeID(int itemDamage)
     {
-        this.pipeData = PipeData.get(itemDamage);
+        this.pipeID = itemDamage;
     }
 
+    public int getPipeID()
+    {
+        return this.pipeID;
+    }
 }
