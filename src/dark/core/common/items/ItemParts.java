@@ -103,11 +103,6 @@ public class ItemParts extends ItemBasic implements IExtraItemInfo
             this(name);
             this.show = show;
         }
-
-        public ItemStack getStack()
-        {
-            return new ItemStack(CoreRecipeLoader.itemParts,1,this.ordinal());
-        }
     }
 
     @Override
@@ -128,7 +123,7 @@ public class ItemParts extends ItemBasic implements IExtraItemInfo
     {
         for (Parts part : Parts.values())
         {
-            OreDictionary.registerOre(part.name, part.getStack());
+            OreDictionary.registerOre(part.name, new ItemStack(this, 1, part.ordinal()));
         }
 
     }

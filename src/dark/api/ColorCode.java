@@ -2,6 +2,9 @@ package dark.api;
 
 import java.awt.Color;
 
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+
 public enum ColorCode
 {
     BLACK("Black", Color.black),
@@ -70,7 +73,31 @@ public enum ColorCode
         public ColorCode getColor();
 
         /** Sets the ColorCode of the Object */
-        public void setColor(Object obj);
+        public boolean setColor(Object obj);
+    }
+
+    public static interface IColoredItem
+    {
+        /** Returns the ColorCode of the object */
+        public ColorCode getColor(ItemStack stack);
+
+        /** Sets the ColorCode of the Object */
+        public boolean setColor(ItemStack stack, Object obj);
+    }
+
+    public static interface IColoredId
+    {
+        /** Returns the ColorCode of the object */
+        public ColorCode getColor(int i);
+    }
+
+    public static interface IColoredBlock
+    {
+        /** Returns the ColorCode of the object */
+        public ColorCode getColor(World world, int x, int y, int z);
+
+        /** Sets the ColorCode of the Object */
+        public void setColor(World world, int x, int y, int z, Object obj);
     }
 
 }
