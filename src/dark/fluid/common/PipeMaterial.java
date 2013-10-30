@@ -1,4 +1,4 @@
-package dark.fluid.common.pipes;
+package dark.fluid.common;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import dark.api.ColorCode;
-import dark.fluid.common.FMRecipeLoader;
+import dark.fluid.common.prefab.TileEntityFluidNetworkTile;
 
 /** Enum to hold info about each pipe material. Values are by default and some can change with pipe
  * upgrades.
@@ -131,30 +131,16 @@ public enum PipeMaterial
         return new ItemStack(FMRecipeLoader.blockPipe, s, (this.ordinal() * spacing) + color.ordinal() + 1);
     }
 
-    public static ItemStack getDropItem(World world, int x, int y, int z)
+    public static int getDropItemMeta(World world, int x, int y, int z)
     {
         int meta = world.getBlockMetadata(x, y, z);
         TileEntity ent = world.getBlockTileEntity(x, y, z);
         meta *= spacing;
-        if (ent instanceof TileEntityPipe)
+        if (ent instanceof TileEntityFluidNetworkTile)
         {
-            meta += ((TileEntityPipe) ent).getPipeID();
+            meta += ((TileEntityFluidNetworkTile) ent).getSubID();
         }
-        return new ItemStack(FMRecipeLoader.blockPipe, 1, meta);
-    }
-
-    public static ColorCode getColor(int pipeID)
-    {
-        return EnumPipeType.getColorCode(pipeID % spacing);
-    }
-
-    public static int updateColor(Object cc, int pipeID)
-    {
-        if (EnumPipeType.canColor(pipeID))
-        {
-            return EnumPipeType.getUpdatedID(pipeID, ColorCode.get(cc));
-        }
-        return pipeID;
+        return meta;
     }
 
     public boolean canSupport(FluidStack fluid)

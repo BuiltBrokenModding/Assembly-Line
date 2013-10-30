@@ -13,7 +13,7 @@ import dark.api.parts.INetworkPart;
  * the parts in a set way to function correctly
  *
  * @author DarkGuardsman */
-public interface INetworkFluidPart extends IColorCoded, IFluidHandler, INetworkPart
+public interface INetworkFluidPart extends IFluidHandler, INetworkPart
 {
 
     /** Gets information about the tanks internal storage that the network has access to. */

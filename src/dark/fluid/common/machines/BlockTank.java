@@ -1,5 +1,6 @@
 package dark.fluid.common.machines;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -20,6 +21,8 @@ import dark.api.ColorCode.IColorCoded;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.BlockFM;
+import dark.fluid.common.PipeMaterial;
+import dark.fluid.common.pipes.TileEntityPipe;
 
 public class BlockTank extends BlockFM
 {
@@ -74,9 +77,9 @@ public class BlockTank extends BlockFM
     public int getComparatorInputOverride(World world, int x, int y, int z, int par5)
     {
         TileEntityTank tileEntity = (TileEntityTank) world.getBlockTileEntity(x, y, z);
-        if (tileEntity != null)
+        if (tileEntity != null && tileEntity.getTileNetwork().getNetworkTankInfo().fluid != null)
         {
-            return tileEntity.getRedstoneLevel();
+            return 15 * (tileEntity.getTileNetwork().getNetworkTankInfo().fluid.amount / tileEntity.getTileNetwork().getNetworkTankInfo().capacity);
         }
         return 0;
     }
@@ -84,13 +87,19 @@ public class BlockTank extends BlockFM
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
-        int meta = world.getBlockMetadata(x, y, z);
-        if (world.getBlockTileEntity(x, y, z) instanceof TileEntityTank)
-        {
-            meta = ((TileEntityTank) world.getBlockTileEntity(x, y, z)).getColor().ordinal() & 15;
-        }
-        return new ItemStack(this, 1, meta);
+        return new ItemStack(this, 1, PipeMaterial.getDropItemMeta(world, x, y, z));
+    }
 
+    @Override
+    public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune)
+    {
+        ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
+        TileEntity entity = world.getBlockTileEntity(x, y, z);
+        if (entity instanceof TileEntityPipe)
+        {
+            ret.add(new ItemStack(this, 1, PipeMaterial.getDropItemMeta(world, x, y, z)));
+        }
+        return ret;
     }
 
     @Override

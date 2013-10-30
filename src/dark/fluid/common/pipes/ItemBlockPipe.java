@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import dark.api.ColorCode.IColorCoded;
+import dark.fluid.common.PipeMaterial;
 
 public class ItemBlockPipe extends ItemBlock
 {

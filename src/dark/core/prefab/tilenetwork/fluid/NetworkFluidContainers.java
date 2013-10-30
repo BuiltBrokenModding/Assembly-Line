@@ -36,16 +36,16 @@ public class NetworkFluidContainers extends NetworkFluidTiles
     {
         this.cleanUpMembers();
 
-        if (this.combinedStorage() == null || this.combinedStorage().getFluid() == null)
+        if (this.getNetworkTank() == null || this.getNetworkTank().getFluid() == null)
         {
             super.writeDataToTiles();
             return;
         }
-        FluidStack fillStack = this.combinedStorage().getFluid().copy();
+        FluidStack fillStack = this.getNetworkTank().getFluid().copy();
 
         int lowestY = 255, highestY = 0;
 
-        if (this.combinedStorage().getFluid() != null && this.getNetworkMemebers().size() > 0)
+        if (this.getNetworkTank().getFluid() != null && this.getNetworkMemebers().size() > 0)
         {
             for (INetworkPart part : this.getNetworkMemebers())
             {

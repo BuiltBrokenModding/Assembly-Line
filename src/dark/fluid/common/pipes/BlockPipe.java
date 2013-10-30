@@ -27,6 +27,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.ColorCode;
 import dark.api.ColorCode.IColorCoded;
 import dark.fluid.common.BlockFM;
+import dark.fluid.common.PipeMaterial;
 
 public class BlockPipe extends BlockFM
 {
@@ -59,7 +60,7 @@ public class BlockPipe extends BlockFM
         TileEntity entity = world.getBlockTileEntity(x, y, z);
         if (entity instanceof TileEntityPipe)
         {
-            ret.add(new ItemStack(this, 1, (world.getBlockMetadata(x, y, z) * PipeMaterial.spacing) + ((TileEntityPipe) entity).getPipeID()));
+            ret.add(new ItemStack(this, 1, PipeMaterial.getDropItemMeta(world, x, y, z)));
         }
         return ret;
     }
@@ -92,7 +93,7 @@ public class BlockPipe extends BlockFM
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
-        return PipeMaterial.getDropItem(world, x, y, z);
+        return new ItemStack(this, 1, PipeMaterial.getDropItemMeta(world, x, y, z));
     }
 
     @Override

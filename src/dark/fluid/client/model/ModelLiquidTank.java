@@ -359,7 +359,7 @@ public class ModelLiquidTank extends ModelBase
 
     public void renderMeter(TileEntity tee, float f5)
     {
-        int[] conenctedTiles = new int[6];
+        byte[] conenctedTiles = new byte[6];
         if (tee instanceof TileEntityTank)
         {
             conenctedTiles = ((TileEntityTank) tee).renderConnection;

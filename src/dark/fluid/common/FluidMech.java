@@ -31,7 +31,6 @@ import dark.fluid.common.machines.BlockSink;
 import dark.fluid.common.machines.BlockTank;
 import dark.fluid.common.pipes.BlockPipe;
 import dark.fluid.common.pipes.ItemBlockPipe;
-import dark.fluid.common.pipes.PipeMaterial;
 import dark.fluid.common.pump.BlockConstructionPump;
 import dark.fluid.common.pump.BlockDrain;
 import dark.fluid.common.pump.BlockPumpMachine;

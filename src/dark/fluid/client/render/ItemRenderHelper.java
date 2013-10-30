@@ -14,7 +14,7 @@ import dark.core.prefab.ModPrefab;
 import dark.fluid.client.model.ModelReleaseValve;
 import dark.fluid.common.FMRecipeLoader;
 import dark.fluid.common.FluidMech;
-import dark.fluid.common.pipes.PipeMaterial;
+import dark.fluid.common.PipeMaterial;
 
 @SideOnly(Side.CLIENT)
 public class ItemRenderHelper implements IItemRenderer

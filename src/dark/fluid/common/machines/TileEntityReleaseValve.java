@@ -106,7 +106,7 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITi
     }
 
     /** if any of allowed list is true
-     * 
+     *
      * @return true */
     public boolean isRestricted()
     {
@@ -135,7 +135,7 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITi
             if (tileEntity instanceof INetworkPipe)
             {
                 INetworkPipe pipe = (INetworkPipe) tileEntity;
-                if (this.canConnect(pipe.getColor()))
+                if (this.canTileConnect(Connection.FLUIDS, dir.getOpposite()))
                 {
                     this.output.add(pipe);
                 }

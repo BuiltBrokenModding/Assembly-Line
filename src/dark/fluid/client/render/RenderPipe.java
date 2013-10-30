@@ -11,8 +11,8 @@ import dark.core.client.renders.RenderTileMachine;
 import dark.core.prefab.ModPrefab;
 import dark.fluid.client.model.ModelLargePipe;
 import dark.fluid.common.FluidMech;
+import dark.fluid.common.PipeMaterial;
 import dark.fluid.common.pipes.EnumPipeType;
-import dark.fluid.common.pipes.PipeMaterial;
 import dark.fluid.common.pipes.TileEntityPipe;
 
 @SideOnly(Side.CLIENT)
@@ -45,7 +45,7 @@ public class RenderPipe extends RenderTileMachine
         }
         else
         {
-            this.render(PipeMaterial.STONE, 0, new boolean[6]);
+            this.render(PipeMaterial.STONE, 0, new byte[6]);
         }
         GL11.glPopMatrix();
 
@@ -71,30 +71,30 @@ public class RenderPipe extends RenderTileMachine
         return new ResourceLocation(FluidMech.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "pipes/Pipe.png");
     }
 
-    public void render(PipeMaterial mat, int pipeID, boolean[] side)
+    public void render(PipeMaterial mat, int pipeID, byte[] side)
     {
         bindTexture(RenderPipe.getTexture(mat, pipeID));
-        if (side[0])
+        if (side[0] != 0 && side[0] != 3)
         {
             SixPipe.renderBottom();
         }
-        if (side[1])
+        if (side[1] != 0 && side[1] != 3)
         {
             SixPipe.renderTop();
         }
-        if (side[3])
+        if (side[3] != 0 && side[3] != 3)
         {
             SixPipe.renderFront();
         }
-        if (side[2])
+        if (side[2] != 0 && side[2] != 3)
         {
             SixPipe.renderBack();
         }
-        if (side[5])
+        if (side[5] != 0 && side[05] != 3)
         {
             SixPipe.renderRight();
         }
-        if (side[4])
+        if (side[4] != 0 && side[4] != 3)
         {
             SixPipe.renderLeft();
         }

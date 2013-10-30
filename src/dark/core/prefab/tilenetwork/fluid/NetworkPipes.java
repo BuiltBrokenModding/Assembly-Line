@@ -64,14 +64,14 @@ public class NetworkPipes extends NetworkFluidTiles
     public int addFluidToNetwork(TileEntity source, FluidStack sta, boolean doFill, boolean allowStore)
     {
         int used = 0;
-        FluidStack prevCombined = this.combinedStorage().getFluid();
+        FluidStack prevCombined = this.getNetworkTank().getFluid();
         FluidStack stack = sta.copy();
 
         if (!this.processingRequest && stack != null)
         {
             this.processingRequest = true;
 
-            if (this.combinedStorage().getFluid() != null && !stack.isFluidEqual(this.combinedStorage().getFluid()))
+            if (this.getNetworkTank().getFluid() != null && !stack.isFluidEqual(this.getNetworkTank().getFluid()))
             {
                 //this.causingMixing(null, this.combinedStorage().getFluid(), stack);
             }
@@ -156,33 +156,33 @@ public class NetworkPipes extends NetworkFluidTiles
             }
             else if (allowStore)
             {
-                used = this.storeFluidInSystem(stack, doFill);
+                used = this.fillNetworkTank(stack, doFill);
                 // System.out.println("Network Target filled for " + used + doFill);
                 filledMain = true;
             }
 
             /* IF THE COMBINED STORAGE OF THE PIPES HAS LIQUID MOVE IT FIRST */
-            if (!filledMain && used > 0 && this.combinedStorage().getFluid() != null && this.combinedStorage().getFluid().amount > 0)
+            if (!filledMain && used > 0 && this.getNetworkTank().getFluid() != null && this.getNetworkTank().getFluid().amount > 0)
             {
 
                 FluidStack drainStack = new FluidStack(0, 0);
-                if (this.combinedStorage().getFluid().amount >= used)
+                if (this.getNetworkTank().getFluid().amount >= used)
                 {
-                    drainStack = this.combinedStorage().drain(used, doFill);
+                    drainStack = this.drainNetworkTank(used, doFill);
                     used = 0;
                 }
                 else
                 {
                     int pUsed = used;
-                    used = Math.min(used, Math.max(used - this.combinedStorage().getFluid().amount, 0));
-                    drainStack = this.combinedStorage().drain(pUsed - used, doFill);
+                    used = Math.min(used, Math.max(used - this.getNetworkTank().getFluid().amount, 0));
+                    drainStack = this.drainNetworkTank(pUsed - used, doFill);
                 }
                 // System.out.println("Pulling " + (drainStack != null ? drainStack.amount : 0) +
                 // " from combined leaving " + (this.combinedStorage.getLiquid() != null ?
                 // this.combinedStorage.getLiquid().amount : 0));
 
             }
-            if (prevCombined != null && this.combinedStorage().getFluid() != null && prevCombined.amount != this.combinedStorage().getFluid().amount)
+            if (prevCombined != null && this.getNetworkTank().getFluid() != null && prevCombined.amount != this.getNetworkTank().getFluid().amount)
             {
                 this.writeDataToTiles();
             }
