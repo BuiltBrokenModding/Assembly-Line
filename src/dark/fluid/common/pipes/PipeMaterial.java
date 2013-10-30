@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
 import dark.api.ColorCode;
 import dark.fluid.common.FMRecipeLoader;
 
@@ -82,16 +83,25 @@ public enum PipeMaterial
         return get(world.getBlockMetadata(x, y, z));
     }
 
-    public static PipeMaterial get(ItemStack stack)
+    public static PipeMaterial get(int i)
     {
-        if (stack != null)
+        if(i < PipeMaterial.values().length)
         {
-            return get(stack.getItemDamage());
+            return PipeMaterial.values()[i];
         }
         return null;
     }
 
-    public static PipeMaterial get(int meta)
+    public static PipeMaterial get(ItemStack stack)
+    {
+        if (stack != null)
+        {
+            return getFromItemMeta(stack.getItemDamage());
+        }
+        return null;
+    }
+
+    public static PipeMaterial getFromItemMeta(int meta)
     {
         meta = meta / spacing;
         if (meta < PipeMaterial.values().length)
@@ -145,5 +155,21 @@ public enum PipeMaterial
             return EnumPipeType.getUpdatedID(pipeID, ColorCode.get(cc));
         }
         return pipeID;
+    }
+
+    public boolean canSupport(FluidStack fluid)
+    {
+        if(fluid != null && fluid.getFluid() != null)
+        {
+            if(fluid.getFluid().isGaseous(fluid) && this.canSupportGas)
+            {
+                return true;
+            }
+            else if(!fluid.getFluid().isGaseous(fluid) && this.canSupportFluids)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

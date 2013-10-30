@@ -67,7 +67,7 @@ public class NetworkPipes extends NetworkFluidTiles
         FluidStack prevCombined = this.combinedStorage().getFluid();
         FluidStack stack = sta.copy();
 
-        if (!this.processingRequest && stack != null && FluidHelper.isValidLiquid(color, stack.getFluid()))
+        if (!this.processingRequest && stack != null)
         {
             this.processingRequest = true;
 

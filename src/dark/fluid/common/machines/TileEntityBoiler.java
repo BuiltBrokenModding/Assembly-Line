@@ -149,7 +149,7 @@ public class TileEntityBoiler extends TileEntityFluidDevice implements IFluidHan
     }
 
     @Override
-    public IFluidTank getTank(int index)
+    public FluidTankInfo[] getTankInfo()
     {
         // TODO Auto-generated method stub
         return null;
@@ -158,28 +158,29 @@ public class TileEntityBoiler extends TileEntityFluidDevice implements IFluidHan
     @Override
     public int fillTankContent(int index, FluidStack stack, boolean doFill)
     {
-        if (this.getTank(index) != null)
-        {
-            return this.getTank(index).fill(stack, doFill);
-        }
+        // TODO Auto-generated method stub
         return 0;
-
     }
 
     @Override
     public FluidStack drainTankContent(int index, int volume, boolean doDrain)
     {
-        if (this.getTank(index) != null)
-        {
-            return this.getTank(index).drain(volume, doDrain);
-        }
+        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public int getNumberOfTanks()
+    public boolean canPassThrew(FluidStack fluid, ForgeDirection from, ForgeDirection to)
     {
-        return 2;
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean onPassThrew(FluidStack fluid, ForgeDirection from, ForgeDirection to)
+    {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }

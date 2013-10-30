@@ -32,6 +32,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.ColorCode;
 import dark.api.ColorCode.IColorCoded;
 import dark.api.IToolReadOut;
+import dark.api.fluid.FluidMasterList;
 import dark.api.fluid.INetworkFluidPart;
 import dark.api.fluid.INetworkPipe;
 import dark.core.common.DarkMain;
@@ -40,6 +41,7 @@ import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 import dark.core.prefab.tilenetwork.fluid.NetworkFluidContainers;
 import dark.core.prefab.tilenetwork.fluid.NetworkFluidTiles;
+import dark.fluid.common.pipes.PipeMaterial;
 import dark.fluid.common.prefab.TileEntityFluidStorage;
 
 public class TileEntityTank extends TileEntityFluidStorage implements IFluidHandler, IToolReadOut, IColorCoded, INetworkFluidPart, IPacketReceiver
@@ -313,9 +315,9 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
     @Override
     public int fillTankContent(int index, FluidStack stack, boolean doFill)
     {
-        if (this.getTank(index) != null)
+        if (index == 0)
         {
-            return this.getTank(index).fill(stack, doFill);
+            return this.getTank().fill(stack, doFill);
         }
         return 0;
     }
@@ -323,9 +325,9 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
     @Override
     public FluidStack drainTankContent(int index, int volume, boolean doDrain)
     {
-        if (this.getTank(index) != null)
+        if (index == 0)
         {
-            return this.getTank(index).drain(volume, doDrain);
+            return this.getTank().drain(volume, doDrain);
         }
         return null;
     }
@@ -365,15 +367,9 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
     }
 
     @Override
-    public int getNumberOfTanks()
+    public FluidTankInfo[] getTankInfo()
     {
-        return 1;
-    }
-
-    @Override
-    public FluidTank getTank(int index)
-    {
-        return this.getTank();
+        return new FluidTankInfo[] { this.getTank().getInfo() };
     }
 
     /** Reads a tile entity from NBT. */
@@ -400,5 +396,34 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
         super.writeToNBT(nbt);
         nbt.setInteger("ColorCode", this.colorCode.ordinal());
 
+    }
+
+    @Override
+    public boolean canPassThrew(FluidStack fluid, ForgeDirection from, ForgeDirection to)
+    {
+        return this.connectedBlocks.get(from.ordinal()) != null && this.connectedBlocks.get(to.ordinal()) != null;
+    }
+
+    @Override
+    public boolean onPassThrew(FluidStack fluid, ForgeDirection from, ForgeDirection to)
+    {
+        PipeMaterial mat = PipeMaterial.get(this.getBlockMetadata());
+        if (fluid != null && fluid.getFluid() != null && mat != null)
+        {
+            if (fluid.getFluid().isGaseous(fluid) && !mat.canSupportGas)
+            {
+                //TODO lose 25% of the gas, and render the lost
+            }
+            else if (FluidMasterList.isMolten(fluid.getFluid()) && !mat.canSupportMoltenFluids)
+            {
+                //TODO start to heat up the pipe to melting point. When it hits melting point turn the pipe to its molten metal equal
+                //TODO also once it reaches a set heat level start burning up blocks around the pipe. Eg wood
+            }
+            else if (!fluid.getFluid().isGaseous(fluid) && !mat.canSupportFluids)
+            {
+                //Slowly start damaging the pipe as its can support the fluid due to how the pipe is made
+            }
+        }
+        return false;
     }
 }

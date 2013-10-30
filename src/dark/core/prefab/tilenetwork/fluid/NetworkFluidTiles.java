@@ -145,15 +145,15 @@ public class NetworkFluidTiles extends NetworkTileEntities
         {
             if (par instanceof INetworkFluidPart)
             {
-                if (((INetworkFluidPart) par).getTank(0) != null && ((INetworkFluidPart) par).getTank(0).getFluid() != null)
+                if (((INetworkFluidPart) par).getTankInfo()[0] != null && ((INetworkFluidPart) par).getTankInfo()[0].fluid != null)
                 {
                     if (stack == null)
                     {
-                        stack = ((INetworkFluidPart) par).getTank(0).getFluid().copy();
+                        stack = ((INetworkFluidPart) par).getTankInfo()[0].fluid.copy();
                     }
                     else
                     {
-                        stack.amount += ((INetworkFluidPart) par).getTank(0).getFluid().amount;
+                        stack.amount += ((INetworkFluidPart) par).getTankInfo()[0].fluid.amount;
                     }
                 }
             }
@@ -252,7 +252,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
                 part.setTileNetwork(this);
                 if (part instanceof INetworkFluidPart)
                 {
-                    capacity += ((INetworkFluidPart) part).getTank(0).getCapacity();
+                    capacity += ((INetworkFluidPart) part).getTankInfo()[0].capacity;
                 }
             }
         }

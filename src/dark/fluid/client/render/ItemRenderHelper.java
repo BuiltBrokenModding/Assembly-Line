@@ -53,7 +53,7 @@ public class ItemRenderHelper implements IItemRenderer
 
         GL11.glPushMatrix();
 
-        FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderPipe.getTexture(PipeMaterial.get(item.getItemDamage()), item.getItemDamage() % PipeMaterial.spacing));
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderPipe.getTexture(PipeMaterial.getFromItemMeta(item.getItemDamage()), item.getItemDamage() % PipeMaterial.spacing));
         if (!equ)
         {
             GL11.glTranslatef(0.5F, -0.5F, 0.5F);

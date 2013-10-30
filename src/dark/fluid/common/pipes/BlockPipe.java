@@ -17,6 +17,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
 
 import com.builtbroken.common.Pair;
@@ -133,14 +134,14 @@ public class BlockPipe extends BlockFM
 
         if (entity instanceof TileEntityPipe)
         {
-            IFluidTank tank = ((TileEntityPipe) entity).getTank(0);
-            if (tank != null && tank.getFluid() != null && tank.getFluid().getFluid() != null && tank.getFluid().amount > 0)
+            FluidTankInfo tank = ((TileEntityPipe) entity).getTankInfo()[0];
+            if (tank != null && tank.fluid != null && tank.fluid.getFluid() != null && tank.fluid.amount > 0)
             {
-                if (tank.getFluid().getFluid().getName().equalsIgnoreCase("water"))
+                if (tank.fluid.getFluid().getName().equalsIgnoreCase("water"))
                 {
                     world.setBlock(x, y, z, Block.waterStill.blockID);
                 }
-                if (tank.getFluid().getFluid().getName().equalsIgnoreCase("lava"))
+                if (tank.fluid.getFluid().getName().equalsIgnoreCase("lava"))
                 {
                     world.setBlock(x, y, z, Block.lavaStill.blockID);
                 }

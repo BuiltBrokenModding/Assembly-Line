@@ -33,6 +33,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.ColorCode;
 import dark.api.ColorCode.IColorCoded;
 import dark.api.IToolReadOut;
+import dark.api.fluid.FluidMasterList;
 import dark.api.fluid.INetworkPipe;
 import dark.api.parts.ITileConnector;
 import dark.core.common.DarkMain;
@@ -185,7 +186,11 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     @Override
     public FluidTankInfo[] getTankInfo(ForgeDirection direction)
     {
-        return new FluidTankInfo[] { new FluidTankInfo(this.getTank(0)) };
+        if (this.getTileNetwork() instanceof NetworkPipes)
+        {
+            return new FluidTankInfo[] { ((NetworkPipes) this.getTileNetwork()).combinedStorage().getInfo() };
+        }
+        return null;
     }
 
     /** Checks to make sure the connection is valid to the tileEntity
@@ -271,6 +276,35 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
         else if (type == Connection.FLUIDS)
         {
             return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean canPassThrew(FluidStack fluid, ForgeDirection from, ForgeDirection to)
+    {
+        return this.renderConnection[from.ordinal()] && this.renderConnection[to.ordinal()];
+    }
+
+    @Override
+    public boolean onPassThrew(FluidStack fluid, ForgeDirection from, ForgeDirection to)
+    {
+        PipeMaterial mat = PipeMaterial.get(this.getBlockMetadata());
+        if (fluid != null && fluid.getFluid() != null && mat != null)
+        {
+            if (fluid.getFluid().isGaseous(fluid) && !mat.canSupportGas)
+            {
+                //TODO lose 25% of the gas, and render the lost
+            }
+            else if (FluidMasterList.isMolten(fluid.getFluid()) && !mat.canSupportMoltenFluids)
+            {
+                //TODO start to heat up the pipe to melting point. When it hits melting point turn the pipe to its molten metal equal
+                //TODO also once it reaches a set heat level start burning up blocks around the pipe. Eg wood
+            }
+            else if (!fluid.getFluid().isGaseous(fluid) && !mat.canSupportFluids)
+            {
+                //Slowly start damaging the pipe as its can support the fluid due to how the pipe is made
+            }
         }
         return false;
     }
@@ -397,21 +431,17 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     }
 
     @Override
-    public FluidTank getTank(int index)
+    public FluidTankInfo[] getTankInfo()
     {
-        if (this.tank == null)
-        {
-            this.tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
-        }
-        return this.tank;
+        return new FluidTankInfo[] { this.tank.getInfo() };
     }
 
     @Override
     public int fillTankContent(int index, FluidStack stack, boolean doFill)
     {
-        if (this.getTank(index) != null)
+        if (index == 0)
         {
-            return this.getTank(index).fill(stack, doFill);
+            return this.tank.fill(stack, doFill);
         }
         return 0;
     }
@@ -419,9 +449,9 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     @Override
     public FluidStack drainTankContent(int index, int volume, boolean doDrain)
     {
-        if (this.getTank(index) != null)
+        if (index == 0)
         {
-            return this.getTank(index).drain(volume, doDrain);
+            return this.tank.drain(volume, doDrain);
         }
         return null;
     }
@@ -449,12 +479,6 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     public boolean mergeDamage(String result)
     {
         return false;
-    }
-
-    @Override
-    public int getNumberOfTanks()
-    {
-        return 1;
     }
 
     /** Reads a tile entity from NBT. */
@@ -507,4 +531,5 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     {
         return this.pipeID;
     }
+
 }
