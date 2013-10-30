@@ -6,8 +6,20 @@ package com.builtbroken.common.science;
  * @author DarkGuardsman */
 public class HeatingData
 {
-
-    public float meltingPoint, boilingPoint, fisionHeat, vaporHeat, specificHeat, thermalExpasion, thermalConductivity;
+    /**(K) temperature kelvin that this material goes from solid to liquid, or back */
+    public float meltingPoint;
+    /**(K) temperature kelvin that this material goes from liquid to gas, or back */
+    public float boilingPoint;
+    /**(kJ/mol) Energy per gram needed to make the final leap from solid to liquid */
+    public float fisionHeat;
+    /**(kJ/mol) Energy per gram needed to make the final leap from liquid to gas */
+    public float vaporHeat;
+    /** (j/kg K) Rate at which the material heats at in its default matter stage. This does change per phase */
+    public float specificHeat;
+    /** How much the material expands */
+    public float thermalExpasion;
+    /**(W/(m K)) How well does the material conduct heat */
+    public float thermalConductivity;
 
     public HeatingData(float meltingPoint, float boilingPoint, float fisionHeat, float vaporHeat, float specificHeat)
     {
