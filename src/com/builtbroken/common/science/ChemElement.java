@@ -4,7 +4,7 @@ package com.builtbroken.common.science;
  * parts but each element should have a listed names, symbol, and atomic mass. Atomic number should
  * be the placement # in the list. Var ZERO should not be used as its designed to offset the
  * placement of all elements by one. As well is returned instead of null.
- * 
+ *
  * @Source http://www.periodictable.com/Properties/A/SpecificHeat.an.html
  * @source http://www.chemicalelements.com/
  * @source http://www.lenntech.com/periodic/periodic-chart.htm
@@ -13,17 +13,17 @@ public enum ChemElement
 {
     /** Placeholder so that hydrogen starts as number one */
     ZERO("ZERO", "ZERO", 0, 0, null, null),
-    Hydrogen("Hydrogen", "H", 1.00794f, 0.08988f, ElementProperty.nonmetal, MatterPhase.gas, 14.01f, 20.28f, 0.558f, 0.558f, 14300f),
-    Helium("Helium", "He", 4.002602f, 0.1785f, ElementProperty.inertGas, MatterPhase.gas, 0, 4.22f, 0.02f, 0.083f, 5193.1f),
-    Lithium("Lithium", "Li", 6.941f, 0.53f, ElementProperty.inertGas, MatterPhase.gas, 543.69f, 1615f, 3f, 147f, 3570f),
-    Beryllium("Beryllium", "Be", 9.012182f, 1.8477f, ElementProperty.inertGas, MatterPhase.gas, 1560f, 2743f, 7.95f, 297f, 1820f),
-    Boron("Boron", "B", 10.811f, 2.46f, ElementProperty.inertGas, MatterPhase.gas, 2348f, 4273f, 50f, 507f, 1030f),
-    Carbon("Carbon", "C", 12.0107f, 2.26f, ElementProperty.inertGas, MatterPhase.gas, 3823f, 4300f, 105f, 715f, 710f),
-    Nitrogen("Nitrogen", "N", 14.0067f, 1.251f, ElementProperty.inertGas, MatterPhase.gas, 63.05f, 77.36f, 0.36f, 2.79f, 1040),
-    Oxygen("Oxygen", "O", 15.9994f, 1.429f, ElementProperty.inertGas, MatterPhase.gas, 54.8f, 90.2f, 0.222f, 3.41f, 919f),
-    Fluorine("Fluorine", "F", 18.9994f, 1.696f, ElementProperty.inertGas, MatterPhase.gas, 53.5f, 85.03f, 0.26f, 3.27f, 824f),
-    Neon("Neon", "Ne", 20.1797f, 0.9f, ElementProperty.inertGas, MatterPhase.gas, 24.56f, 27.07f, 0.34f, 1.75f, 1030f),
-    Sodium("Sodium", "Na", 22.98976928f, 0.968f, ElementProperty.alkaliMetal, MatterPhase.solid, 370.87f, 1156f, 2.6f, 97.7f, 1230f),
+    Hydrogen("Hydrogen", "H", 1.00794f, 0.08988f, ElementProperty.nonmetal, MatterPhase.gas, new HeatingData(14.01f, 20.28f, 0.558f, 0.558f, 14300f)),
+    Helium("Helium", "He", 4.002602f, 0.1785f, ElementProperty.inertGas, MatterPhase.gas, new HeatingData(0, 4.22f, 0.02f, 0.083f, 5193.1f)),
+    Lithium("Lithium", "Li", 6.941f, 0.53f, ElementProperty.inertGas, MatterPhase.gas, new HeatingData(543.69f, 1615f, 3f, 147f, 3570f)),
+    Beryllium("Beryllium", "Be", 9.012182f, 1.8477f, ElementProperty.inertGas, MatterPhase.gas, new HeatingData(1560f, 2743f, 7.95f, 297f, 1820f)),
+    Boron("Boron", "B", 10.811f, 2.46f, ElementProperty.inertGas, MatterPhase.gas, new HeatingData(2348f, 4273f, 50f, 507f, 1030f)),
+    Carbon("Carbon", "C", 12.0107f, 2.26f, ElementProperty.inertGas, MatterPhase.gas, new HeatingData(3823f, 4300f, 105f, 715f, 710f)),
+    Nitrogen("Nitrogen", "N", 14.0067f, 1.251f, ElementProperty.inertGas, MatterPhase.gas, new HeatingData(63.05f, 77.36f, 0.36f, 2.79f, 1040)),
+    Oxygen("Oxygen", "O", 15.9994f, 1.429f, ElementProperty.inertGas, MatterPhase.gas, new HeatingData(54.8f, 90.2f, 0.222f, 3.41f, 919f)),
+    Fluorine("Fluorine", "F", 18.9994f, 1.696f, ElementProperty.inertGas, MatterPhase.gas, new HeatingData(53.5f, 85.03f, 0.26f, 3.27f, 824f)),
+    Neon("Neon", "Ne", 20.1797f, 0.9f, ElementProperty.inertGas, MatterPhase.gas, new HeatingData(24.56f, 27.07f, 0.34f, 1.75f, 1030f)),
+    Sodium("Sodium", "Na", 22.98976928f, 0.968f, ElementProperty.alkaliMetal, MatterPhase.solid, new HeatingData(370.87f, 1156f, 2.6f, 97.7f, 1230f)),
 
     Magnesium("Magnesium", "Mg", 24.305f, 1.738f, ElementProperty.alkalineEarthMetal, MatterPhase.solid),
     aluminium("aluminium", "Al", 26.9815386f, 2.7f, ElementProperty.otherMetal, MatterPhase.solid),
@@ -178,17 +178,7 @@ public enum ChemElement
 
     public MatterPhase normalPhase;
 
-    public float meltingPointKelvin;
-    public float boilingPointKelvin;
-    /** kJ/mol */
-    public float heatOfFusion;
-    /** kJ/mol */
-    public float heatOfVaporization;
-    /** J/(kg K) */
-    public float specificHeat;
-    /** W/(m K) */
-    public float thermalConductivity;
-    public float thermalExpansion;
+    public HeatingData heatData;
 
     private ChemElement(String[] name, String symbol, float atomicMass, float density, ElementProperty type, MatterPhase defaultPhase)
     {
@@ -206,21 +196,11 @@ public enum ChemElement
         this.density = density;
     }
 
-    private ChemElement(String[] name, String symbol, float atomicMass, float density, ElementProperty type, MatterPhase defaultPhase, float meltingPoint, float boilingPoint, float fisionHeat, float vaporHeat, float specificHeat)
-    {
-        this(name[0], symbol, atomicMass, density, type, defaultPhase, meltingPoint, boilingPoint, fisionHeat, vaporHeat, specificHeat);
-        this.elementNames = name;
-    }
-
-    private ChemElement(String name, String symbol, float atomicMass, float density, ElementProperty type, MatterPhase defaultPhase, float meltingPoint, float boilingPoint, float fisionHeat, float vaporHeat, float specificHeat)
+    private ChemElement(String name, String symbol, float atomicMass, float density, ElementProperty type, MatterPhase defaultPhase, HeatingData heatData)
     {
         this(name, symbol, atomicMass, density, type, defaultPhase);
+        this.heatData = heatData;
 
-        this.meltingPointKelvin = meltingPoint;
-        this.boilingPointKelvin = boilingPoint;
-        this.heatOfFusion = fisionHeat;
-        this.heatOfVaporization = vaporHeat;
-        this.specificHeat = specificHeat;
     }
 
 }

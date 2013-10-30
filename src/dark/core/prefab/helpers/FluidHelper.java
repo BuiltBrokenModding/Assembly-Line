@@ -62,7 +62,7 @@ public class FluidHelper
     }
 
     /** Gets the block's fluid if it has one
-     * 
+     *
      * @param world - world we are working in
      * @param vector - 3D location in world
      * @return @Fluid that the block is */
@@ -101,10 +101,10 @@ public class FluidHelper
     }
 
     /** Drains a block of fluid
-     * 
+     *
      * @Note sets the block with a client update only. Doesn't tick the block allowing for better
      * placement of fluid that can flow infinitely
-     * 
+     *
      * @param doDrain - do the action
      * @return FluidStack drained from the block */
     public static FluidStack drainBlock(World world, Vector3 node, boolean doDrain)
@@ -113,7 +113,7 @@ public class FluidHelper
     }
 
     /** Drains a block of fluid
-     * 
+     *
      * @param doDrain - do the action
      * @param update - block update flag to use
      * @return FluidStack drained from the block */
@@ -212,9 +212,9 @@ public class FluidHelper
     }
 
     /** Helper method to fill a location with a fluid
-     * 
+     *
      * Note: This does not update the block to prevent the liquid from flowing
-     * 
+     *
      * @return */
     public static int fillBlock(World world, Vector3 node, FluidStack stack, boolean doFill)
     {
@@ -248,7 +248,7 @@ public class FluidHelper
     }
 
     /** Fills all instances of IFluidHandler surrounding the origin
-     * 
+     *
      * @param stack - FluidStack that will be filled into the tanks
      * @param doFill - Actually perform the action or simulate action
      * @param ignore - ForgeDirections to ignore
@@ -281,7 +281,7 @@ public class FluidHelper
     }
 
     /** Fills an instance of IFluidHandler in the given direction
-     * 
+     *
      * @param stack - FluidStack to fill the tank will
      * @param doFill - Actually perform the action or simulate action
      * @param direction - direction to fill in from the origin
@@ -359,7 +359,7 @@ public class FluidHelper
     }
 
     /** Drains an item of fluid and fills the tank with what was drained
-     * 
+     *
      * @param consumeItem - should it consume the item. Used mainly for creative mode players. This
      * does effect the return of the method
      * @return Item stack that would be returned if the item was drain of its fluid. Water bucket ->
@@ -381,7 +381,7 @@ public class FluidHelper
     }
 
     /** Fills an item with fluid from the tank
-     * 
+     *
      * @param consumeItem - should it consume the item. Used mainly for creative mode players. This
      * does effect the return of the method
      * @return Item stack that would be returned if the item was filled with fluid. empty bucket ->
@@ -437,61 +437,5 @@ public class FluidHelper
         }
         return stackList;
 
-    }
-
-    /*
-     * Fluid restriction handler for color codes
-     */
-
-    @ForgeSubscribe
-    public void onLiquidRegistered(FluidRegisterEvent event)
-    {
-        if (event != null && event.fluidName != null)
-        {
-            Fluid fluid = FluidRegistry.getFluid(event.fluidName);
-            if (event.fluidName.equalsIgnoreCase("Fuel") && !restrictedStacks.containsKey(ColorCode.YELLOW))
-            {
-                restrictedStacks.put(ColorCode.YELLOW, fluid);
-            }
-            else if (event.fluidName.equalsIgnoreCase("Oil") && !restrictedStacks.containsKey(ColorCode.BLACK))
-            {
-                restrictedStacks.put(ColorCode.BLACK, fluid);
-            }
-            else if (event.fluidName.equalsIgnoreCase("Milk") && !restrictedStacks.containsKey(ColorCode.WHITE))
-            {
-                restrictedStacks.put(ColorCode.WHITE, fluid);
-            }
-        }
-    }
-
-    /** Checks too see if a color has a restricted stack */
-    public static boolean hasRestrictedStack(int meta)
-    {
-        return restrictedStacks.containsKey(ColorCode.get(meta));
-    }
-
-    public static boolean hasRestrictedStack(Fluid stack)
-    {
-        return stack != null && restrictedStacks.inverse().containsKey(stack);
-    }
-
-    /** gets the liquid stack that is restricted to this color */
-    public static Fluid getStackForColor(ColorCode color)
-    {
-        return restrictedStacks.get(color);
-    }
-
-    /** checks to see if the liquidStack is valid for the given color */
-    public static boolean isValidLiquid(ColorCode color, Fluid stack)
-    {
-        if (stack == null)
-        {
-            return false;
-        }
-        if (!FluidHelper.hasRestrictedStack(color.ordinal()))
-        {
-            return true;
-        }
-        return FluidHelper.hasRestrictedStack(color.ordinal()) && FluidHelper.getStackForColor(color).equals(stack);
     }
 }
