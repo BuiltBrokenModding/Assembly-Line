@@ -15,20 +15,20 @@ import dark.core.prefab.tilenetwork.NetworkTileEntities;
 /** Side note: the network should act like this when done {@link http
  * ://www.e4training.com/hydraulic_calculators/B1.htm} as well as stay compatible with the forge
  * Liquids
- * 
+ *
  * @author Rseifert */
 public class NetworkFluidContainers extends NetworkFluidTiles
 {
 
-    public NetworkFluidContainers(ColorCode color, INetworkPart... parts)
+    public NetworkFluidContainers(INetworkPart... parts)
     {
-        super(color, parts);
+        super(parts);
     }
 
     @Override
     public NetworkTileEntities newInstance()
     {
-        return new NetworkFluidContainers(this.color);
+        return new NetworkFluidContainers();
     }
 
     @Override

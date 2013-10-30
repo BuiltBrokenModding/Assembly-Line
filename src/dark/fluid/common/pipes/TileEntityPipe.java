@@ -169,7 +169,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
     {
-        if (resource == null || !FluidHelper.isValidLiquid(this.getColor(), resource.getFluid()))
+        if (resource == null)
         {
             return 0;
         }
@@ -330,7 +330,7 @@ public class TileEntityPipe extends TileEntityAdvanced implements IFluidHandler,
     {
         if (this.pipeNetwork == null)
         {
-            this.setTileNetwork(new NetworkPipes(this.getColor(), this));
+            this.setTileNetwork(new NetworkPipes(this));
         }
         return this.pipeNetwork;
     }

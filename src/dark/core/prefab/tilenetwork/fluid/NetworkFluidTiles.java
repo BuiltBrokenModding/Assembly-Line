@@ -22,21 +22,19 @@ public class NetworkFluidTiles extends NetworkTileEntities
     /** Collective storage of all fluid tiles */
     public FluidTank sharedTank;
 
-    /** Color code of the network, mainly used for connection rules */
-    public ColorCode color = ColorCode.UNKOWN;
+
     /** Has the collective tank been loaded yet */
     protected boolean loadedLiquids = false;
 
-    public NetworkFluidTiles(ColorCode color, INetworkPart... parts)
+    public NetworkFluidTiles(INetworkPart... parts)
     {
         super(parts);
-        this.color = color;
     }
 
     @Override
     public NetworkTileEntities newInstance()
     {
-        return new NetworkFluidTiles(this.color);
+        return new NetworkFluidTiles();
     }
 
     /** Gets the collective tank of the network */
@@ -204,7 +202,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
     @Override
     public boolean preMergeProcessing(NetworkTileEntities mergingNetwork, INetworkPart mergePoint)
     {
-        if (mergingNetwork instanceof NetworkFluidTiles && ((NetworkFluidTiles) mergingNetwork).color == this.color)
+        if (mergingNetwork instanceof NetworkFluidTiles && ((NetworkFluidTiles) mergingNetwork).getClass() == this.getClass())
         {
             if (!((NetworkFluidTiles) mergingNetwork).loadedLiquids)
             {
@@ -264,7 +262,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
     @Override
     public boolean isValidMember(INetworkPart part)
     {
-        return super.isValidMember(part) && part instanceof INetworkFluidPart && ((INetworkFluidPart) part).getColor() == this.color;
+        return super.isValidMember(part) && part instanceof INetworkFluidPart;
     }
 
     @Override

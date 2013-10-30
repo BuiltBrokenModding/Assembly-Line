@@ -97,13 +97,6 @@ public class BlockTank extends BlockFM
     public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {
         par3List.add(new ItemStack(par1, 1, 15));
-        for (int i = 0; i < 16; i++)
-        {
-            if (FluidHelper.hasRestrictedStack(i))
-            {
-                par3List.add(new ItemStack(par1, 1, i));
-            }
-        }
     }
 
     @Override

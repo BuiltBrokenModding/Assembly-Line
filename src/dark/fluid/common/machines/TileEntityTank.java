@@ -188,7 +188,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
     {
-        if (resource == null || !FluidHelper.isValidLiquid(this.getColor(), resource.getFluid()) || this.worldObj.isRemote)
+        if (resource == null || this.worldObj.isRemote)
         {
             return 0;
         }
@@ -277,7 +277,7 @@ public class TileEntityTank extends TileEntityFluidStorage implements IFluidHand
     {
         if (this.fluidNetwork == null)
         {
-            this.setTileNetwork(new NetworkFluidContainers(this.getColor(), this));
+            this.setTileNetwork(new NetworkFluidContainers(this));
         }
         return this.fluidNetwork;
     }

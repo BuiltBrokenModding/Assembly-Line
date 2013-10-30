@@ -41,7 +41,7 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
     {
-        if (resource == null || resource.getFluid() == null || !FluidHelper.isValidLiquid(this.getColor(), resource.getFluid()))
+        if (resource == null || resource.getFluid() == null)
         {
             return 0;
         }

@@ -56,7 +56,7 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
         }
         else if (FMRecipeLoader.blockTank != null && block.blockID == FMRecipeLoader.blockTank.blockID)
         {
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(FluidMech.instance.getDomain(), metadata == 1 ? "/textures/blocks/obsidian.png" : "/textures/blocks/iron_block.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(FluidMech.instance.DOMAIN, metadata == 1 ? "textures/blocks/obsidian.png" : "textures/blocks/iron_block.png"));
             GL11.glTranslatef(0.0F, -0.9F, 0.0F);
             tank.render(0.0625F, false, false, false, false);
             GL11.glRotatef(90f, 0f, 1f, 0f);
