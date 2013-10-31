@@ -37,19 +37,16 @@ import dark.core.prefab.tilenetwork.NetworkTileEntities;
 import dark.core.prefab.tilenetwork.fluid.NetworkFluidTiles;
 import dark.fluid.common.FluidPartsMaterial;
 
-public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements INetworkFluidPart, ISimplePacketReceiver
+public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements INetworkFluidPart, ISimplePacketReceiver
 {
     private int updateTick = 1;
-    protected static final byte NO_CONENCTION = 0, PIPE_CONENCTION = 1, NETWORK_CONNECTION = 2;
-    protected FluidTank[] internalTanks = new FluidTank[1];;
+    protected FluidTank tank;
     protected FluidTankInfo[] internalTanksInfo = new FluidTankInfo[1];
     protected List<TileEntity> connectedBlocks = new ArrayList<TileEntity>();
     public boolean[] renderConnection = new boolean[6];
     public boolean[] canConnectSide = new boolean[] { true, true, true, true, true, true, true };
-    protected int heat = 0;
-    protected int maxHeat = 20000;
-    protected int damage = 0;
-    protected int maxDamage = 1000;
+    protected int heat = 0, maxHeat = 20000;
+    protected int damage = 0, maxDamage = 1000;
     protected int subID = 0;
     protected int tankCap;
 
@@ -57,7 +54,7 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
 
     public TileEntityFluidNetworkTile()
     {
-        this(2);
+        this(1);
     }
 
     public TileEntityFluidNetworkTile(int tankCap)
@@ -67,8 +64,18 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
             tankCap = 1;
         }
         this.tankCap = tankCap;
-        this.internalTanks[0] = new FluidTank(this.tankCap * FluidContainerRegistry.BUCKET_VOLUME);
-        this.internalTanksInfo[0] = this.internalTanks[0].getInfo();
+        this.tank = new FluidTank(this.tankCap * FluidContainerRegistry.BUCKET_VOLUME);
+        this.internalTanksInfo[0] = this.tank.getInfo();
+    }
+
+    public FluidTank getTank()
+    {
+        if (tank == null)
+        {
+            this.tank = new FluidTank(this.tankCap * FluidContainerRegistry.BUCKET_VOLUME);
+            this.internalTanksInfo[0] = this.tank.getInfo();
+        }
+        return tank;
     }
 
     @Override
@@ -97,7 +104,7 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
     {
         if (this.getTileNetwork() != null && this.canConnectSide[from.ordinal()] && resource != null)
         {
-            return this.getTileNetwork().fillNetworkTank(resource, doFill);
+            return this.getTileNetwork().fillNetworkTank(this.worldObj, resource, doFill);
         }
         return 0;
     }
@@ -109,7 +116,7 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
         {
             if (this.getTileNetwork().getNetworkTank() != null && this.getTileNetwork().getNetworkTank().getFluid() != null && this.getTileNetwork().getNetworkTank().getFluid().isFluidEqual(resource))
             {
-                this.getTileNetwork().drainNetworkTank(resource.amount, doDrain);
+                this.getTileNetwork().drainNetworkTank(this.worldObj, resource.amount, doDrain);
             }
 
         }
@@ -121,7 +128,7 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
     {
         if (this.getTileNetwork() != null && this.canConnectSide[from.ordinal()])
         {
-            this.getTileNetwork().drainNetworkTank(maxDrain, doDrain);
+            this.getTileNetwork().drainNetworkTank(this.worldObj, maxDrain, doDrain);
         }
         return null;
     }
@@ -223,14 +230,7 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
     {
         if (this.internalTanksInfo == null)
         {
-            this.internalTanksInfo = new FluidTankInfo[this.internalTanks.length];
-            for (int i = 0; i < this.internalTanks.length; i++)
-            {
-                if (this.internalTanks[i] != null)
-                {
-                    this.internalTanksInfo[i] = this.internalTanks[i].getInfo();
-                }
-            }
+            this.internalTanksInfo = new FluidTankInfo[] { this.getTank().getInfo() };
         }
         return this.internalTanksInfo;
     }
@@ -238,20 +238,15 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
     @Override
     public int fillTankContent(int index, FluidStack stack, boolean doFill)
     {
-        if (index < this.internalTanks.length)
+        if (index == 0)
         {
-            if (this.internalTanks[index] == null)
-            {
-                this.internalTanks[index] = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * this.tankCap);
-                this.internalTanksInfo[index] = this.internalTanks[index].getInfo();
-            }
-            int p = this.internalTanks[index].getFluid() != null ? this.internalTanks[index].getFluid().amount : 0;
-            int fill = this.internalTanks[index].fill(stack, doFill);
+            int p = this.getTank().getFluid() != null ? this.getTank().getFluid().amount : 0;
+            int fill = this.getTank().fill(stack, doFill);
             if (p != fill)
             {
                 //TODO add a catch to this so we don't send a dozen packets for one updates
                 this.sendTankUpdate(index);
-                this.internalTanksInfo[index] = this.internalTanks[index].getInfo();
+                this.internalTanksInfo[index] = this.getTank().getInfo();
             }
             return fill;
         }
@@ -261,19 +256,14 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
     @Override
     public FluidStack drainTankContent(int index, int volume, boolean doDrain)
     {
-        if (index < this.internalTanks.length)
+        if (index == 0)
         {
-            if (this.internalTanks[index] == null)
-            {
-                this.internalTanks[index] = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * this.tankCap);
-                this.internalTanksInfo[index] = this.internalTanks[index].getInfo();
-            }
-            FluidStack prev = this.internalTanks[index].getFluid();
-            FluidStack stack = this.internalTanks[index].drain(volume, doDrain);
+            FluidStack prev = this.getTank().getFluid();
+            FluidStack stack = this.getTank().drain(volume, doDrain);
             if (prev != null && (stack == null || prev.amount != stack.amount))
             {
                 this.sendTankUpdate(index);
-                this.internalTanksInfo[index] = this.internalTanks[index].getInfo();
+                this.internalTanksInfo[index] = this.getTank().getInfo();
             }
             return stack;
         }
@@ -348,40 +338,14 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
             if (fluid != null)
             {
                 FluidStack liquid = new FluidStack(fluid, amount);
-                internalTanks[0].setFluid(liquid);
-                internalTanksInfo[0] = internalTanks[0].getInfo();
+                this.getTank().setFluid(liquid);
+                internalTanksInfo[0] = this.getTank().getInfo();
             }
-        }
-        else if (nbt.hasKey("FluidTank"))
-        {
-            internalTanks[0].readFromNBT(nbt.getCompoundTag("FluidTank"));
-            internalTanksInfo[0] = internalTanks[0].getInfo();
         }
         else
         {
-            int tankCount = nbt.getByte("InternalTanks");
-
-            if (tankCount > 0)
-            {
-                this.internalTanks = new FluidTank[tankCount];
-                for (int i = 0; i < this.internalTanks.length; i++)
-                {
-                    FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
-                    if (this.internalTanksInfo != null && i < this.internalTanksInfo.length && this.internalTanksInfo[i] != null)
-                    {
-                        tank = new FluidTank(this.internalTanksInfo[i].capacity);
-                    }
-                    tank.readFromNBT(nbt.getCompoundTag("FluidTank" + i));
-                }
-                this.internalTanksInfo = new FluidTankInfo[tankCount];
-                for (int i = 0; i < this.internalTanksInfo.length; i++)
-                {
-                    if (this.internalTanks[i] != null)
-                    {
-                        this.internalTanksInfo[i] = this.internalTanks[i].getInfo();
-                    }
-                }
-            }
+            this.getTank().readFromNBT(nbt.getCompoundTag("FluidTank"));
+            internalTanksInfo[0] = this.getTank().getInfo();
         }
     }
 
@@ -392,17 +356,7 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
         nbt.setInteger("damage", this.damage);
         nbt.setInteger("heat", this.heat);
         nbt.setInteger("subID", this.subID);
-        if (this.internalTanks != null)
-        {
-            nbt.setByte("InternalTanks", (byte) this.internalTanks.length);
-            for (byte i = 0; i < this.internalTanks.length; i++)
-            {
-                if (this.internalTanks[i] != null)
-                {
-                    nbt.setCompoundTag("FluidTank" + i, this.internalTanks[i].writeToNBT(new NBTTagCompound()));
-                }
-            }
-        }
+        nbt.setCompoundTag("FluidTank", this.getTank().writeToNBT(new NBTTagCompound()));
     }
 
     @Override
@@ -421,13 +375,9 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
                     this.renderConnection[3] = data.readBoolean();
                     this.renderConnection[4] = data.readBoolean();
                     this.renderConnection[5] = data.readBoolean();
-                    int tanks = data.readInt();
-                    this.internalTanks = new FluidTank[tanks];
-                    for (int i = 0; i < tanks; i++)
-                    {
-                        this.internalTanks[i] = new FluidTank(data.readInt());
-                        this.internalTanks[i].readFromNBT(PacketHandler.instance().readNBTTagCompound(data));
-                    }
+                    this.tank = new FluidTank(data.readInt());
+                    this.getTank().readFromNBT(PacketHandler.instance().readNBTTagCompound(data));
+                    this.internalTanksInfo[0] = this.getTank().getInfo();
                     return true;
                 }
                 else if (id.equalsIgnoreCase("RenderPacket"))
@@ -441,24 +391,11 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
                     this.renderConnection[5] = data.readBoolean();
                     return true;
                 }
-                else if (id.equalsIgnoreCase("TankPacket"))
-                {
-                    int tanks = data.readInt();
-                    this.internalTanks = new FluidTank[tanks];
-                    for (int i = 0; i < tanks; i++)
-                    {
-                        this.internalTanks[i] = new FluidTank(data.readInt());
-                        this.internalTanks[i].readFromNBT(PacketHandler.instance().readNBTTagCompound(data));
-                        this.internalTanksInfo[i] = this.internalTanks[i].getInfo();
-                    }
-                    return true;
-                }
                 else if (id.equalsIgnoreCase("SingleTank"))
                 {
-                    int index = data.readInt();
-                    this.internalTanks[index] = new FluidTank(data.readInt());
-                    this.internalTanks[index].readFromNBT(PacketHandler.instance().readNBTTagCompound(data));
-                    this.internalTanksInfo[index] = this.internalTanks[index].getInfo();
+                    this.tank = new FluidTank(data.readInt());
+                    this.getTank().readFromNBT(PacketHandler.instance().readNBTTagCompound(data));
+                    this.internalTanksInfo[0] = this.getTank().getInfo();
                     return true;
                 }
             }
@@ -475,7 +412,7 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
     @Override
     public Packet getDescriptionPacket()
     {
-        Object[] data = new Object[(this.internalTanks != null ? (this.internalTanks.length * 2) : 2) + 9];
+        Object[] data = new Object[10];
         data[0] = "DescriptionPacket";
         data[1] = this.subID;
         data[2] = this.renderConnection[0];
@@ -484,18 +421,8 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
         data[5] = this.renderConnection[3];
         data[6] = this.renderConnection[4];
         data[7] = this.renderConnection[5];
-        data[8] = (this.internalTanks != null ? (this.internalTanks.length) : 1);
-        int place = 9;
-        for (int i = 0; i < this.internalTanks.length; i++)
-        {
-            if (this.internalTanks[i] == null)
-            {
-                this.internalTanks[i] = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * this.tankCap);
-            }
-            data[place] = this.internalTanks[i].getCapacity();
-            data[place + 1] = this.internalTanks[i].writeToNBT(new NBTTagCompound());
-            place += 2;
-        }
+        data[8] = this.getTank().getCapacity();
+        data[9] = this.getTank().writeToNBT(new NBTTagCompound());
         return PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, data);
     }
 
@@ -515,13 +442,9 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
 
     public void sendTankUpdate(int index)
     {
-        if (this.internalTanks != null && index < this.internalTanks.length)
+        if (this.getTank() != null && index == 0)
         {
-            if (this.internalTanks[index] == null)
-            {
-                this.internalTanks[index] = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * this.tankCap);
-            }
-            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, "SingleTank", index, this.internalTanks[index].getCapacity(), this.internalTanks[index].writeToNBT(new NBTTagCompound())));
+            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, "SingleTank", this.getTank().getCapacity(), this.getTank().writeToNBT(new NBTTagCompound())));
         }
     }
 

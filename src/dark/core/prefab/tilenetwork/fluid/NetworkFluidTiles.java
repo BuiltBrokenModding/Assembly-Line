@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -58,21 +59,21 @@ public class NetworkFluidTiles extends NetworkTileEntities
         return this.sharedTankInfo;
     }
 
-    public int fillNetworkTank(FluidStack stack, boolean doFill)
+    public int fillNetworkTank(World world, FluidStack stack, boolean doFill)
     {
-
         if (!this.loadedLiquids)
         {
             this.readDataFromTiles();
             this.loadedLiquids = true;
         }
-        if (this.getNetworkTank() != null)
+        if (!world.isRemote && this.getNetworkTank() != null && stack != null)
         {
             int p = this.getNetworkTank().getFluidAmount();
             int r = this.getNetworkTank().fill(stack, doFill);
+            System.out.println((world.isRemote ? "Client" : "Server") + " Network Fill: B:" + p + "  A:" + this.getNetworkTank().getFluidAmount());
             if (doFill)
             {
-                if (p != r)
+                if (p != this.getNetworkTank().getFluidAmount())
                 {
                     this.sharedTankInfo = this.getNetworkTank().getInfo();
                     this.writeDataToTiles();
@@ -83,7 +84,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
         return 0;
     }
 
-    public FluidStack drainNetworkTank(int volume, boolean doDrain)
+    public FluidStack drainNetworkTank(World world, int volume, boolean doDrain)
     {
 
         if (!this.loadedLiquids)
@@ -91,18 +92,22 @@ public class NetworkFluidTiles extends NetworkTileEntities
             this.readDataFromTiles();
             this.loadedLiquids = true;
         }
-        if (this.getNetworkTank() != null)
+        if (!world.isRemote && this.getNetworkTank() != null)
         {
             FluidStack p = this.getNetworkTank().getFluid();
             FluidStack r = this.getNetworkTank().drain(volume, doDrain);
+            FluidStack n = this.getNetworkTank().getFluid();
+            System.out.println((world.isRemote ? "Client" : "Server") + " Network Drain: B:" + (p != null ? p.amount : 0) + "  A:" + (n != null ? n.amount : 0));
             if (doDrain)
             {
                 //Has the tank changed any. If yes then update all info and do a client update
-                if (!p.isFluidEqual(r) || (p != null && r != null && p.amount != r.amount))
+                if (!p.isFluidEqual(n) || (p != null && n != null && p.amount != n.amount))
                 {
                     this.sharedTankInfo = this.getNetworkTank().getInfo();
                     this.writeDataToTiles();
                     //TODO do a client update from the network rather than each pipe updating itself.
+                    //This will save on packet size but will increase the CPU load of the client since it
+                    //will need to do network calculations
                 }
             }
             return r;

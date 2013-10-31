@@ -156,7 +156,7 @@ public class NetworkPipes extends NetworkFluidTiles
             }
             else if (allowStore)
             {
-                used = this.fillNetworkTank(stack, doFill);
+                used = this.fillNetworkTank(source.worldObj, stack, doFill);
                 // System.out.println("Network Target filled for " + used + doFill);
                 filledMain = true;
             }
@@ -168,14 +168,14 @@ public class NetworkPipes extends NetworkFluidTiles
                 FluidStack drainStack = new FluidStack(0, 0);
                 if (this.getNetworkTank().getFluid().amount >= used)
                 {
-                    drainStack = this.drainNetworkTank(used, doFill);
+                    drainStack = this.drainNetworkTank(source.worldObj, used, doFill);
                     used = 0;
                 }
                 else
                 {
                     int pUsed = used;
                     used = Math.min(used, Math.max(used - this.getNetworkTank().getFluid().amount, 0));
-                    drainStack = this.drainNetworkTank(pUsed - used, doFill);
+                    drainStack = this.drainNetworkTank(source.worldObj, pUsed - used, doFill);
                 }
                 // System.out.println("Pulling " + (drainStack != null ? drainStack.amount : 0) +
                 // " from combined leaving " + (this.combinedStorage.getLiquid() != null ?
