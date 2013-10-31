@@ -164,6 +164,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
         {
             boolean[] previousConnections = this.renderConnection.clone();
             this.connectedBlocks.clear();
+            this.renderConnection = new boolean[6];
 
             for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
             {
@@ -429,7 +430,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
     public void sendRenderUpdate()
     {
         Object[] data = new Object[8];
-        data[0] = "renderPacket";
+        data[0] = "RenderPacket";
         data[1] = this.subID;
         data[2] = this.renderConnection[0];
         data[3] = this.renderConnection[1];
