@@ -8,7 +8,7 @@ public class TileEntityTank extends TileEntityFluidNetworkTile
 {
     public TileEntityTank()
     {
-        super(16);
+        super(BlockTank.tankVolume);
     }
 
     @Override

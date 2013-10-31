@@ -25,7 +25,7 @@ import dark.fluid.common.pipes.TileEntityPipe;
 
 public class BlockTank extends BlockFM
 {
-    public static int tankVolume = 8;
+    public static int tankVolume = 16;
 
     public BlockTank()
     {
@@ -101,23 +101,20 @@ public class BlockTank extends BlockFM
         return ret;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {
-        par3List.add(new ItemStack(par1, 1, 15));
-    }
-
-    @Override
-    public boolean hasExtraConfigs()
-    {
-        // TODO Auto-generated method stub
-        return false;
+        for (FluidPartsMaterial data : FluidPartsMaterial.values())
+        {
+            par3List.add(new ItemStack(this, 1, data.ordinal() * FluidPartsMaterial.spacing));
+        }
     }
 
     @Override
     public void loadExtraConfigs(Configuration config)
     {
-        BlockTank.tankVolume = config.get("settings", "TankBucketVolume", 8, "Number of buckets each tank block can store, Settings this to zero is the same as one").getInt();
+        BlockTank.tankVolume = config.get("settings", "TankBucketVolume", 16, "Number of buckets each tank block can store, Settings this to zero is the same as one").getInt();
 
     }
 
@@ -127,22 +124,4 @@ public class BlockTank extends BlockFM
         list.add(new Pair<String, Class<? extends TileEntity>>("FluidTank", TileEntityTank.class));
 
     }
-
-    @Override
-    public void dropBlockAsItemWithChance(World par1World, int par2, int par3, int par4, int par5, float par6, int par7)
-    {
-        if (!par1World.isRemote)
-        {
-            if (par1World.rand.nextFloat() <= par6)
-            {
-                int meta = 0;
-                if (par1World.getBlockTileEntity(par2, par3, par4) instanceof IColorCoded)
-                {
-                    meta = ((IColorCoded) par1World.getBlockTileEntity(par2, par3, par4)).getColor().ordinal() & 15;
-                }
-                this.dropBlockAsItem_do(par1World, par2, par3, par4, new ItemStack(this.blockID, 1, meta));
-            }
-        }
-    }
-
 }
