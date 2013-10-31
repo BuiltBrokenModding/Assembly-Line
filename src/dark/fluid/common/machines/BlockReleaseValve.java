@@ -14,7 +14,6 @@ import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.fluid.common.BlockFM;
 import dark.fluid.common.FMRecipeLoader;
 
 public class BlockReleaseValve extends BlockFM

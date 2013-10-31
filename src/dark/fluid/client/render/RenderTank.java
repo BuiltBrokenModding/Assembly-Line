@@ -35,7 +35,7 @@ public class RenderTank extends RenderTileMachine
 
     public void renderTank(TileEntity tileEntity, double x, double y, double z, int meta, FluidStack liquid)
     {
-        byte[] render = new byte[6];
+        boolean[] render = new boolean[6];
         if (tileEntity instanceof TileEntityTank)
         {
             render = ((TileEntityTank) tileEntity).renderConnection;
@@ -63,16 +63,16 @@ public class RenderTank extends RenderTileMachine
             GL11.glPopMatrix();
         }
 
-        boolean bot = render[1] == 2;
-        boolean top = render[0] == 2;
-        boolean north = render[2] == 2;
-        boolean south = render[3] == 2;
-        boolean east = render[5] == 2;
-        boolean west = render[4] == 2;
+        boolean bot = render[1];
+        boolean top = render[0];
+        boolean north = render[2];
+        boolean south = render[3];
+        boolean east = render[5];
+        boolean west = render[4];
         for (int i = 0; i < 4; i++)
         {
             ForgeDirection dir = ForgeDirection.getOrientation(i + 2);
-            if (render[dir.getOpposite().ordinal()] != 2)
+            if (!render[dir.getOpposite().ordinal()])
             {
                 GL11.glPushMatrix();
 

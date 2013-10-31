@@ -11,7 +11,7 @@ import dark.core.client.renders.RenderTileMachine;
 import dark.core.prefab.ModPrefab;
 import dark.fluid.client.model.ModelLargePipe;
 import dark.fluid.common.FluidMech;
-import dark.fluid.common.PipeMaterial;
+import dark.fluid.common.FluidPartsMaterial;
 import dark.fluid.common.pipes.EnumPipeType;
 import dark.fluid.common.pipes.TileEntityPipe;
 
@@ -32,20 +32,19 @@ public class RenderPipe extends RenderTileMachine
         GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
         GL11.glScalef(1.0F, -1F, -1F);
 
-        PipeMaterial mat = PipeMaterial.IRON;
-        if (te.getBlockMetadata() < PipeMaterial.values().length)
+        FluidPartsMaterial mat = FluidPartsMaterial.IRON;
+        if (te.getBlockMetadata() < FluidPartsMaterial.values().length)
         {
-            System.out.println("Pipe meta " + te.getBlockMetadata());
-            mat = PipeMaterial.values()[te.getBlockMetadata()];
+            mat = FluidPartsMaterial.values()[te.getBlockMetadata()];
         }
 
         if (te instanceof TileEntityPipe)
         {
-            this.render(mat, ((TileEntityPipe) te).getPipeID(), ((TileEntityPipe) te).renderConnection);
+            this.render(mat, ((TileEntityPipe) te).getSubID(), ((TileEntityPipe) te).renderConnection);
         }
         else
         {
-            this.render(PipeMaterial.STONE, 0, new byte[6]);
+            this.render(FluidPartsMaterial.STONE, 0, new boolean[6]);
         }
         GL11.glPopMatrix();
 
@@ -57,7 +56,7 @@ public class RenderPipe extends RenderTileMachine
         return new ResourceLocation(FluidMech.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "pipes/Pipe.png");
     }
 
-    public static ResourceLocation getTexture(PipeMaterial mat, int pipeID)
+    public static ResourceLocation getTexture(FluidPartsMaterial mat, int pipeID)
     {
         if (mat != null)
         {
@@ -71,30 +70,30 @@ public class RenderPipe extends RenderTileMachine
         return new ResourceLocation(FluidMech.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "pipes/Pipe.png");
     }
 
-    public void render(PipeMaterial mat, int pipeID, byte[] side)
+    public void render(FluidPartsMaterial mat, int pipeID, boolean[] side)
     {
         bindTexture(RenderPipe.getTexture(mat, pipeID));
-        if (side[0] != 0 && side[0] != 3)
+        if (side[0])
         {
             SixPipe.renderBottom();
         }
-        if (side[1] != 0 && side[1] != 3)
+        if (side[1])
         {
             SixPipe.renderTop();
         }
-        if (side[3] != 0 && side[3] != 3)
+        if (side[3])
         {
             SixPipe.renderFront();
         }
-        if (side[2] != 0 && side[2] != 3)
+        if (side[2])
         {
             SixPipe.renderBack();
         }
-        if (side[5] != 0 && side[05] != 3)
+        if (side[5])
         {
             SixPipe.renderRight();
         }
-        if (side[4] != 0 && side[4] != 3)
+        if (side[4])
         {
             SixPipe.renderLeft();
         }

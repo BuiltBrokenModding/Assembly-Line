@@ -17,8 +17,8 @@ import net.minecraftforge.common.ForgeDirection;
 
 import com.builtbroken.common.Pair;
 
-import dark.fluid.common.BlockFM;
 import dark.fluid.common.FluidMech;
+import dark.fluid.common.machines.BlockFM;
 
 public class BlockDrain extends BlockFM
 {

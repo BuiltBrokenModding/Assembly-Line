@@ -44,11 +44,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
         if (this.sharedTank == null)
         {
             this.sharedTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
-            this.readDataFromTiles();
-        }
-        if (!loadedLiquids)
-        {
-            this.readDataFromTiles();
+            this.getNetworkTankInfo();
         }
         return this.sharedTank;
     }
@@ -64,6 +60,12 @@ public class NetworkFluidTiles extends NetworkTileEntities
 
     public int fillNetworkTank(FluidStack stack, boolean doFill)
     {
+
+        if (!this.loadedLiquids)
+        {
+            this.readDataFromTiles();
+            this.loadedLiquids = true;
+        }
         if (this.getNetworkTank() != null)
         {
             int p = this.getNetworkTank().getFluid() != null ? this.getNetworkTank().getFluid().amount : 0;
@@ -83,6 +85,12 @@ public class NetworkFluidTiles extends NetworkTileEntities
 
     public FluidStack drainNetworkTank(int volume, boolean doDrain)
     {
+
+        if (!this.loadedLiquids)
+        {
+            this.readDataFromTiles();
+            this.loadedLiquids = true;
+        }
         if (this.getNetworkTank() != null)
         {
             FluidStack p = this.getNetworkTank().getFluid();
@@ -247,7 +255,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
             else
             {
                 part.setTileNetwork(this);
-                if (part instanceof INetworkFluidPart)
+                if (part instanceof INetworkFluidPart && ((INetworkFluidPart) part).getTankInfo()[0] != null)
                 {
                     capacity += ((INetworkFluidPart) part).getTankInfo()[0].capacity;
                 }

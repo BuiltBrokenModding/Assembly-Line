@@ -18,7 +18,7 @@ import dark.fluid.common.prefab.TileEntityFluidNetworkTile;
  * the pipe to leak. No molten support should cause the pipe to take damage.
  *
  * @author DarkGuardsman */
-public enum PipeMaterial
+public enum FluidPartsMaterial
 {
     /** Simple water only pipe. Should render open toped when it can */
     WOOD("wood", false, true, false, -1, 200),
@@ -56,14 +56,14 @@ public enum PipeMaterial
      * pipes */
     public static int spacing = 1000;
 
-    private PipeMaterial()
+    private FluidPartsMaterial()
     {
         this.canSupportGas = true;
         this.canSupportFluids = true;
         canSupportMoltenFluids = true;
     }
 
-    private PipeMaterial(String name, boolean gas, boolean fluid, boolean molten, String... strings)
+    private FluidPartsMaterial(String name, boolean gas, boolean fluid, boolean molten, String... strings)
     {
         this.matName = name;
         this.canSupportGas = gas;
@@ -71,28 +71,28 @@ public enum PipeMaterial
         this.canSupportMoltenFluids = molten;
     }
 
-    private PipeMaterial(String name, boolean gas, boolean fluid, boolean molten, int pressure, int volume, String... strings)
+    private FluidPartsMaterial(String name, boolean gas, boolean fluid, boolean molten, int pressure, int volume, String... strings)
     {
         this(name, gas, fluid, molten, strings);
         this.maxPressure = pressure;
         this.maxVolume = volume;
     }
 
-    public static PipeMaterial get(World world, int x, int y, int z)
+    public static FluidPartsMaterial get(World world, int x, int y, int z)
     {
         return get(world.getBlockMetadata(x, y, z));
     }
 
-    public static PipeMaterial get(int i)
+    public static FluidPartsMaterial get(int i)
     {
-        if(i < PipeMaterial.values().length)
+        if(i < FluidPartsMaterial.values().length)
         {
-            return PipeMaterial.values()[i];
+            return FluidPartsMaterial.values()[i];
         }
         return null;
     }
 
-    public static PipeMaterial get(ItemStack stack)
+    public static FluidPartsMaterial get(ItemStack stack)
     {
         if (stack != null)
         {
@@ -101,14 +101,14 @@ public enum PipeMaterial
         return null;
     }
 
-    public static PipeMaterial getFromItemMeta(int meta)
+    public static FluidPartsMaterial getFromItemMeta(int meta)
     {
         meta = meta / spacing;
-        if (meta < PipeMaterial.values().length)
+        if (meta < FluidPartsMaterial.values().length)
         {
-            return PipeMaterial.values()[meta];
+            return FluidPartsMaterial.values()[meta];
         }
-        return PipeMaterial.WOOD;
+        return FluidPartsMaterial.WOOD;
     }
 
     public ItemStack getStack()

@@ -59,7 +59,7 @@ public class FMRecipeLoader extends RecipeLoader
     @SuppressWarnings("deprecation")
     public void registerPipes()
     {
-        for (PipeMaterial mat : PipeMaterial.values())
+        for (FluidPartsMaterial mat : FluidPartsMaterial.values())
         {
             if (mat.canSupportFluids && !mat.canSupportGas && !mat.canSupportMoltenFluids)
             {
@@ -71,11 +71,11 @@ public class FMRecipeLoader extends RecipeLoader
             }
             else if (mat.canSupportMoltenFluids)
             {
-                if (mat == PipeMaterial.OBBY)
+                if (mat == FluidPartsMaterial.OBBY)
                 {
                     GameRegistry.addRecipe(new ShapelessOreRecipe(mat.getStack(2), new Object[] { mat.matName + "tube", Block.netherBrick, Block.netherBrick }));
                 }
-                if (mat == PipeMaterial.HELL)
+                if (mat == FluidPartsMaterial.HELL)
                 {
                     GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(4), new Object[] { "OOO", "BNB", "OOO", 'N', Block.netherBrick, 'B', Item.blazeRod, 'O', Block.obsidian }));
                 }

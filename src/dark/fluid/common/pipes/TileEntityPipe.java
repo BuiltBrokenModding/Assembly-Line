@@ -41,7 +41,7 @@ import dark.core.network.PacketHandler;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 import dark.core.prefab.tilenetwork.fluid.NetworkPipes;
-import dark.fluid.common.PipeMaterial;
+import dark.fluid.common.FluidPartsMaterial;
 import dark.fluid.common.prefab.TileEntityFluidNetworkTile;
 
 public class TileEntityPipe extends TileEntityFluidNetworkTile implements IColorCoded, INetworkPipe
@@ -75,35 +75,35 @@ public class TileEntityPipe extends TileEntityFluidNetworkTile implements IColor
         {
             int meta = new Vector3(this).getBlockMetadata(this.worldObj);
             int metaOther = new Vector3(tileEntity).getBlockMetadata(this.worldObj);
-            if (meta < PipeMaterial.values().length && metaOther < PipeMaterial.values().length)
+            if (meta < FluidPartsMaterial.values().length && metaOther < FluidPartsMaterial.values().length)
             {
-                PipeMaterial pipeMat = PipeMaterial.values()[meta];
-                PipeMaterial pipeMatOther = PipeMaterial.values()[metaOther];
+                FluidPartsMaterial pipeMat = FluidPartsMaterial.values()[meta];
+                FluidPartsMaterial pipeMatOther = FluidPartsMaterial.values()[metaOther];
                 //Same pipe types can connect
                 if (pipeMat == pipeMatOther)
                 {
                     this.getTileNetwork().merge(((INetworkPipe) tileEntity).getTileNetwork(), this);
                     connectedBlocks.add(tileEntity);
-                    this.renderConnection[side.ordinal()] = TileEntityFluidNetworkTile.NETWORK_CONNECTION;
-                    return;
+                    this.renderConnection[side.ordinal()] = true;
                 }//Wood and stone pipes can connect to each other but not other pipe types since they are more like a trough than a pipe
-                else if ((pipeMat == PipeMaterial.WOOD || pipeMat == PipeMaterial.STONE) && (pipeMatOther == PipeMaterial.WOOD || pipeMatOther == PipeMaterial.STONE))
+                else if ((pipeMat == FluidPartsMaterial.WOOD || pipeMat == FluidPartsMaterial.STONE) && (pipeMatOther == FluidPartsMaterial.WOOD || pipeMatOther == FluidPartsMaterial.STONE))
                 {
                     this.getTileNetwork().merge(((INetworkPipe) tileEntity).getTileNetwork(), this);
                     connectedBlocks.add(tileEntity);
-                    this.renderConnection[side.ordinal()] = TileEntityFluidNetworkTile.NETWORK_CONNECTION;
-                    return;
+                    this.renderConnection[side.ordinal()] = true;
                 }//Any other pipe can connect to each other as long as the color matches except for glass which only works with itself at the moment
-                else if (pipeMat != PipeMaterial.WOOD && pipeMat != PipeMaterial.STONE && pipeMatOther != PipeMaterial.WOOD && pipeMatOther != PipeMaterial.STONE && pipeMat != PipeMaterial.GLASS && pipeMatOther != PipeMaterial.GLASS)
+                else if (pipeMat != FluidPartsMaterial.WOOD && pipeMat != FluidPartsMaterial.STONE && pipeMatOther != FluidPartsMaterial.WOOD && pipeMatOther != FluidPartsMaterial.STONE && pipeMat != FluidPartsMaterial.GLASS && pipeMatOther != FluidPartsMaterial.GLASS)
                 {
                     this.getTileNetwork().merge(((INetworkPipe) tileEntity).getTileNetwork(), this);
                     connectedBlocks.add(tileEntity);
-                    this.renderConnection[side.ordinal()] = TileEntityFluidNetworkTile.NETWORK_CONNECTION;
-                    return;
+                    this.renderConnection[side.ordinal()] = true;
                 }
             }
-            this.connectedBlocks.remove(tileEntity);
-            this.renderConnection[side.ordinal()] = TileEntityFluidNetworkTile.NO_CONENCTION;
+        }
+        else if (tileEntity instanceof IFluidHandler)
+        {
+            connectedBlocks.add(tileEntity);
+            this.renderConnection[side.ordinal()] = true;
         }
 
     }
@@ -119,9 +119,9 @@ public class TileEntityPipe extends TileEntityFluidNetworkTile implements IColor
     public double getMaxPressure(ForgeDirection side)
     {
         int meta = this.worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-        if (meta < PipeMaterial.values().length)
+        if (meta < FluidPartsMaterial.values().length)
         {
-            return PipeMaterial.values()[meta].maxPressure;
+            return FluidPartsMaterial.values()[meta].maxPressure;
         }
         return 350;
     }
@@ -129,7 +129,7 @@ public class TileEntityPipe extends TileEntityFluidNetworkTile implements IColor
     @Override
     public NetworkPipes getTileNetwork()
     {
-        if (this.network == null || !(this.network instanceof NetworkPipes))
+        if (!(this.network instanceof NetworkPipes))
         {
             this.setTileNetwork(new NetworkPipes(this));
         }
@@ -183,15 +183,4 @@ public class TileEntityPipe extends TileEntityFluidNetworkTile implements IColor
         }
         return false;
     }
-
-    public void setPipeID(int itemDamage)
-    {
-        this.subID = itemDamage;
-    }
-
-    public int getPipeID()
-    {
-        return this.subID;
-    }
-
 }

@@ -14,7 +14,7 @@ import dark.core.prefab.ModPrefab;
 import dark.fluid.client.model.ModelReleaseValve;
 import dark.fluid.common.FMRecipeLoader;
 import dark.fluid.common.FluidMech;
-import dark.fluid.common.PipeMaterial;
+import dark.fluid.common.FluidPartsMaterial;
 
 @SideOnly(Side.CLIENT)
 public class ItemRenderHelper implements IItemRenderer
@@ -53,7 +53,7 @@ public class ItemRenderHelper implements IItemRenderer
 
         GL11.glPushMatrix();
 
-        FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderPipe.getTexture(PipeMaterial.getFromItemMeta(item.getItemDamage()), item.getItemDamage() % PipeMaterial.spacing));
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderPipe.getTexture(FluidPartsMaterial.getFromItemMeta(item.getItemDamage()), item.getItemDamage() % FluidPartsMaterial.spacing));
         if (!equ)
         {
             GL11.glTranslatef(0.5F, -0.5F, 0.5F);

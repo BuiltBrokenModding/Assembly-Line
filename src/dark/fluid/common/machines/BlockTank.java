@@ -20,8 +20,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.ColorCode.IColorCoded;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.fluid.client.render.BlockRenderHelper;
-import dark.fluid.common.BlockFM;
-import dark.fluid.common.PipeMaterial;
+import dark.fluid.common.FluidPartsMaterial;
 import dark.fluid.common.pipes.TileEntityPipe;
 
 public class BlockTank extends BlockFM
@@ -87,7 +86,7 @@ public class BlockTank extends BlockFM
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
-        return new ItemStack(this, 1, PipeMaterial.getDropItemMeta(world, x, y, z));
+        return new ItemStack(this, 1, FluidPartsMaterial.getDropItemMeta(world, x, y, z));
     }
 
     @Override
@@ -97,7 +96,7 @@ public class BlockTank extends BlockFM
         TileEntity entity = world.getBlockTileEntity(x, y, z);
         if (entity instanceof TileEntityPipe)
         {
-            ret.add(new ItemStack(this, 1, PipeMaterial.getDropItemMeta(world, x, y, z)));
+            ret.add(new ItemStack(this, 1, FluidPartsMaterial.getDropItemMeta(world, x, y, z)));
         }
         return ret;
     }

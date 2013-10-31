@@ -26,8 +26,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.ColorCode;
 import dark.api.ColorCode.IColorCoded;
-import dark.fluid.common.BlockFM;
-import dark.fluid.common.PipeMaterial;
+import dark.fluid.common.FluidPartsMaterial;
+import dark.fluid.common.machines.BlockFM;
 
 public class BlockPipe extends BlockFM
 {
@@ -47,7 +47,7 @@ public class BlockPipe extends BlockFM
     public void fillWithRain(World world, int x, int y, int z)
     {
         int meta = world.getBlockMetadata(x, y, z);
-        if (meta == PipeMaterial.WOOD.ordinal() || meta == PipeMaterial.STONE.ordinal())
+        if (meta == FluidPartsMaterial.WOOD.ordinal() || meta == FluidPartsMaterial.STONE.ordinal())
         {
             //TODO fill pipe since it will have an open top and can gather rain
         }
@@ -60,7 +60,7 @@ public class BlockPipe extends BlockFM
         TileEntity entity = world.getBlockTileEntity(x, y, z);
         if (entity instanceof TileEntityPipe)
         {
-            ret.add(new ItemStack(this, 1, PipeMaterial.getDropItemMeta(world, x, y, z)));
+            ret.add(new ItemStack(this, 1, FluidPartsMaterial.getDropItemMeta(world, x, y, z)));
         }
         return ret;
     }
@@ -93,7 +93,7 @@ public class BlockPipe extends BlockFM
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
-        return new ItemStack(this, 1, PipeMaterial.getDropItemMeta(world, x, y, z));
+        return new ItemStack(this, 1, FluidPartsMaterial.getDropItemMeta(world, x, y, z));
     }
 
     @Override
@@ -105,7 +105,7 @@ public class BlockPipe extends BlockFM
     @Override
     public int getLightValue(IBlockAccess world, int x, int y, int z)
     {
-        if (world.getBlockMetadata(x, y, z) == PipeMaterial.HELL.ordinal())
+        if (world.getBlockMetadata(x, y, z) == FluidPartsMaterial.HELL.ordinal())
         {
             return 5;
         }
@@ -121,7 +121,7 @@ public class BlockPipe extends BlockFM
     @Override
     public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {
-        for (PipeMaterial data : PipeMaterial.values())
+        for (FluidPartsMaterial data : FluidPartsMaterial.values())
         {
             par3List.add(data.getStack());
         }

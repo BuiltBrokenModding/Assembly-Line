@@ -23,9 +23,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.prefab.tilenetwork.fluid.FluidNetworkHelper;
 import dark.fluid.client.render.BlockRenderHelper;
-import dark.fluid.common.BlockFM;
 import dark.fluid.common.FMRecipeLoader;
 import dark.fluid.common.FluidMech;
+import dark.fluid.common.machines.BlockFM;
 
 public class BlockConstructionPump extends BlockFM
 {

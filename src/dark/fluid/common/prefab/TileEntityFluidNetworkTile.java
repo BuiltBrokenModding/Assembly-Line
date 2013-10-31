@@ -32,6 +32,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import universalelectricity.core.vector.Vector3;
 import dark.api.ColorCode;
 import dark.api.ColorCode.IColorCoded;
+import dark.api.IToolReadOut.EnumTools;
+import dark.api.IToolReadOut;
 import dark.api.fluid.FluidMasterList;
 import dark.api.fluid.INetworkFluidPart;
 import dark.api.parts.INetworkPart;
@@ -42,18 +44,18 @@ import dark.core.network.PacketHandler;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 import dark.core.prefab.tilenetwork.fluid.NetworkFluidTiles;
 import dark.core.prefab.tilenetwork.fluid.NetworkPipes;
-import dark.fluid.common.PipeMaterial;
+import dark.fluid.common.FluidPartsMaterial;
 import dark.fluid.common.machines.TileEntityTank;
 
 public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements INetworkFluidPart, ISimplePacketReceiver
 {
     private int updateTick = 1;
-    protected static final byte NO_CONENCTION = 0, PIPE_CONENCTION = 1, NETWORK_CONNECTION = 2, TILE_ENTITY_CONENCTION = 3;
+    protected static final byte NO_CONENCTION = 0, PIPE_CONENCTION = 1, NETWORK_CONNECTION = 2;
     protected FluidTank[] internalTanks = new FluidTank[] { new FluidTank(FluidContainerRegistry.BUCKET_VOLUME) };
     protected FluidTankInfo[] internalTanksInfo = new FluidTankInfo[] { new FluidTankInfo(null, FluidContainerRegistry.BUCKET_VOLUME) };
     protected List<TileEntity> connectedBlocks = new ArrayList<TileEntity>();
-    public byte[] renderConnection = new byte[6];
-    public boolean[] canConnectSide = new boolean[] { true, true, true, true, true, true };
+    public boolean[] renderConnection = new boolean[6];
+    public boolean[] canConnectSide = new boolean[] { true, true, true, true, true, true, true };
     protected int heat = 0;
     protected int maxHeat = 20000;
     protected int damage = 0;
@@ -80,7 +82,7 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
     public void invalidate()
     {
         super.invalidate();
-        if (!this.worldObj.isRemote)
+        if (!this.worldObj.isRemote && this.getTileNetwork() != null)
         {
             this.getTileNetwork().splitNetwork(this.worldObj, this);
         }
@@ -150,7 +152,7 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
     {
         if (this.worldObj != null && !this.worldObj.isRemote)
         {
-            byte[] previousConnections = this.renderConnection.clone();
+            boolean[] previousConnections = this.renderConnection.clone();
             this.connectedBlocks.clear();
 
             for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
@@ -175,37 +177,13 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
     {
         if (!this.worldObj.isRemote)
         {
-
-            this.renderConnection[side.ordinal()] = TileEntityFluidNetworkTile.NO_CONENCTION;
-
-            if (tileEntity != null)
+            if (tileEntity instanceof INetworkFluidPart)
             {
-                this.renderConnection[side.ordinal()] = TileEntityFluidNetworkTile.TILE_ENTITY_CONENCTION;
-                if (tileEntity instanceof ITileConnector && !((ITileConnector) tileEntity).canTileConnect(Connection.FLUIDS, side.getOpposite()))
+                if (this.canTileConnect(Connection.NETWORK, side.getOpposite()))
                 {
-                    this.renderConnection[side.ordinal()] = TileEntityFluidNetworkTile.NO_CONENCTION;
-                }
-                else if (tileEntity instanceof INetworkFluidPart)
-                {
-                    if (this.canTileConnect(Connection.NETWORK, side.getOpposite()))
-                    {
-                        this.getTileNetwork().merge(((INetworkFluidPart) tileEntity).getTileNetwork(), (INetworkPart) tileEntity);
-                        this.renderConnection[side.ordinal()] = TileEntityFluidNetworkTile.NETWORK_CONNECTION;
-                        connectedBlocks.add(tileEntity);
-                    }
-                }
-                else if (tileEntity instanceof IFluidHandler)
-                {
-                    this.getTileNetwork().merge(((TileEntityTank) tileEntity).getTileNetwork(), this);
+                    this.getTileNetwork().merge(((INetworkFluidPart) tileEntity).getTileNetwork(), (INetworkPart) tileEntity);
+                    this.renderConnection[side.ordinal()] = true;
                     connectedBlocks.add(tileEntity);
-                    if (this.getTileNetwork() instanceof NetworkPipes)
-                    {
-                        ((NetworkPipes) this.getTileNetwork()).addTile(tileEntity, false);
-                    }
-                }
-                else
-                {
-                    this.renderConnection[side.ordinal()] = TileEntityFluidNetworkTile.TILE_ENTITY_CONENCTION;
                 }
             }
         }
@@ -214,7 +192,7 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
     @Override
     public NetworkFluidTiles getTileNetwork()
     {
-        if (this.network == null)
+        if (!(this.network instanceof NetworkFluidTiles))
         {
             this.network = new NetworkFluidTiles(this);
         }
@@ -245,7 +223,10 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
             this.internalTanksInfo = new FluidTankInfo[this.internalTanks.length];
             for (int i = 0; i < this.internalTanks.length; i++)
             {
-                this.internalTanksInfo[i] = this.internalTanks[i].getInfo();
+                if (this.internalTanks[i] != null)
+                {
+                    this.internalTanksInfo[i] = this.internalTanks[i].getInfo();
+                }
             }
         }
         return this.internalTanksInfo;
@@ -302,18 +283,7 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
         {
             return false;
         }
-        Vector3 connection = new Vector3(this).modifyPositionFromSide(dir.getOpposite());
-        TileEntity entity = connection.getTileEntity(this.worldObj);
-        //Unknown color codes can connect to any color, however two different colors can connect to support better pipe layouts
-        if (entity instanceof IColorCoded && this instanceof IColorCoded && ((IColorCoded) entity).getColor() != ((IColorCoded) this).getColor() && ((IColorCoded) this).getColor() != ColorCode.UNKOWN && ((IColorCoded) entity).getColor() != ColorCode.UNKOWN)
-        {
-            return false;
-        }//All Fluid connections are supported
-        else if (type == Connection.FLUIDS)
-        {
-            return true;
-        }
-        return false;
+        return type == Connection.FLUIDS || type == Connection.NETWORK;
     }
 
     @Override
@@ -325,7 +295,7 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
     @Override
     public boolean onPassThrew(FluidStack fluid, ForgeDirection from, ForgeDirection to)
     {
-        PipeMaterial mat = PipeMaterial.get(this.getBlockMetadata());
+        FluidPartsMaterial mat = FluidPartsMaterial.get(this.getBlockMetadata());
         if (fluid != null && fluid.getFluid() != null && mat != null)
         {
             if (fluid.getFluid().isGaseous(fluid) && !mat.canSupportGas)
@@ -402,7 +372,10 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
                 this.internalTanksInfo = new FluidTankInfo[tankCount];
                 for (int i = 0; i < this.internalTanksInfo.length; i++)
                 {
-                    this.internalTanksInfo[i] = this.internalTanks[i].getInfo();
+                    if (this.internalTanks[i] != null)
+                    {
+                        this.internalTanksInfo[i] = this.internalTanks[i].getInfo();
+                    }
                 }
             }
         }
@@ -435,15 +408,15 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
         {
             if (this.worldObj.isRemote)
             {
-                if (id == "DescriptionPacket")
+                if (id.equalsIgnoreCase("DescriptionPacket"))
                 {
                     this.subID = data.readInt();
-                    this.renderConnection[0] = data.readByte();
-                    this.renderConnection[1] = data.readByte();
-                    this.renderConnection[2] = data.readByte();
-                    this.renderConnection[3] = data.readByte();
-                    this.renderConnection[4] = data.readByte();
-                    this.renderConnection[5] = data.readByte();
+                    this.renderConnection[0] = data.readBoolean();
+                    this.renderConnection[1] = data.readBoolean();
+                    this.renderConnection[2] = data.readBoolean();
+                    this.renderConnection[3] = data.readBoolean();
+                    this.renderConnection[4] = data.readBoolean();
+                    this.renderConnection[5] = data.readBoolean();
                     int tanks = data.readInt();
                     this.internalTanks = new FluidTank[tanks];
                     for (int i = 0; i < tanks; i++)
@@ -453,18 +426,18 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
                     }
                     return true;
                 }
-                else if (id == "TankPacket")
+                else if (id.equalsIgnoreCase("RenderPacket"))
                 {
                     this.subID = data.readInt();
-                    this.renderConnection[0] = data.readByte();
-                    this.renderConnection[1] = data.readByte();
-                    this.renderConnection[2] = data.readByte();
-                    this.renderConnection[3] = data.readByte();
-                    this.renderConnection[4] = data.readByte();
-                    this.renderConnection[5] = data.readByte();
+                    this.renderConnection[0] = data.readBoolean();
+                    this.renderConnection[1] = data.readBoolean();
+                    this.renderConnection[2] = data.readBoolean();
+                    this.renderConnection[3] = data.readBoolean();
+                    this.renderConnection[4] = data.readBoolean();
+                    this.renderConnection[5] = data.readBoolean();
                     return true;
                 }
-                else if (id == "RenderPacket")
+                else if (id.equalsIgnoreCase("TankPacket"))
                 {
                     int tanks = data.readInt();
                     this.internalTanks = new FluidTank[tanks];
@@ -475,7 +448,7 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
                     }
                     return true;
                 }
-                else if (id == "SingleTank")
+                else if (id.equalsIgnoreCase("SingleTank"))
                 {
                     int index = data.readInt();
                     this.internalTanks[index] = new FluidTank(data.readInt());
@@ -496,7 +469,7 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
     @Override
     public Packet getDescriptionPacket()
     {
-        Object[] data = new Object[(this.internalTanks != null ? (this.internalTanks.length * 2) : 2) + 7];
+        Object[] data = new Object[(this.internalTanks != null ? (this.internalTanks.length * 2) : 2) + 9];
         data[0] = "DescriptionPacket";
         data[1] = this.subID;
         data[2] = this.renderConnection[0];
@@ -522,7 +495,7 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
 
     public void sendRenderUpdate()
     {
-        Object[] data = new Object[7];
+        Object[] data = new Object[8];
         data[0] = "renderPacket";
         data[1] = this.subID;
         data[2] = this.renderConnection[0];
@@ -569,6 +542,22 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
     }
 
     @Override
+    public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
+    {
+        if (tool == EnumTools.PIPE_GUAGE)
+        {
+            String out = "Debug: " + this.getTileNetwork().toString();
+            out += "   ";
+            for (boolean b : this.renderConnection)
+            {
+                out += "|" + (b ? "T" : "F");
+            }
+            return out;
+        }
+        return null;
+    }
+
+    @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox()
     {
@@ -578,6 +567,11 @@ public class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements
     public int getSubID()
     {
         return this.subID;
+    }
+
+    public void setSubID(int id)
+    {
+        this.subID = id;
     }
 
 }
