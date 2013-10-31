@@ -68,7 +68,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
         }
         if (this.getNetworkTank() != null)
         {
-            int p = this.getNetworkTank().getFluid() != null ? this.getNetworkTank().getFluid().amount : 0;
+            int p = this.getNetworkTank().getFluidAmount();
             int r = this.getNetworkTank().fill(stack, doFill);
             if (doFill)
             {
@@ -98,7 +98,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
             if (doDrain)
             {
                 //Has the tank changed any. If yes then update all info and do a client update
-                if (!p.isFluidEqual(r) && (p == null || r == null || p.amount != r.amount))
+                if (!p.isFluidEqual(r) || (p != null && r != null && p.amount != r.amount))
                 {
                     this.sharedTankInfo = this.getNetworkTank().getInfo();
                     this.writeDataToTiles();
