@@ -97,7 +97,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
             FluidStack p = this.getNetworkTank().getFluid();
             FluidStack r = this.getNetworkTank().drain(volume, doDrain);
             FluidStack n = this.getNetworkTank().getFluid();
-            System.out.println((world.isRemote ? "Client" : "Server") + " Network Drain: B:" + (p != null ? p.amount : 0) + "  A:" + (n != null ? n.amount : 0));
+            //System.out.println((world.isRemote ? "Client" : "Server") + " Network Drain: B:" + (p != null ? p.amount : 0) + "  A:" + (n != null ? n.amount : 0));
             if (doDrain)
             {
                 //Has the tank changed any. If yes then update all info and do a client update
