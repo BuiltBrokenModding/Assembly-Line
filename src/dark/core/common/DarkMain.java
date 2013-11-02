@@ -53,6 +53,7 @@ import dark.core.common.items.ItemOreDirv;
 import dark.core.common.items.ItemParts;
 import dark.core.common.items.ItemReadoutTools;
 import dark.core.common.items.ItemWrench;
+import dark.core.common.items.ItemParts.Parts;
 import dark.core.common.machines.BlockBasicMachine;
 import dark.core.common.machines.BlockSolarPanel;
 import dark.core.common.transmit.BlockWire;
@@ -142,7 +143,14 @@ public class DarkMain extends ModPrefab
                 }
             }
         }
-        if (CoreRecipeLoader.itemMetals instanceof ItemOreDirv)
+        if (CoreRecipeLoader.itemParts instanceof ItemParts)
+        {
+            for (Parts part : Parts.values())
+            {
+                OreDictionary.registerOre(part.name, new ItemStack(CoreRecipeLoader.itemParts, 1, part.ordinal()));
+            }
+        }
+        if (CoreRecipeLoader.itemMetals != null)
         {
             //Ore material recipe loop
             for (EnumMaterial mat : EnumMaterial.values())

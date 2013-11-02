@@ -28,7 +28,7 @@ import dark.core.registration.ModObjectRegistry.BlockBuildData;
 /** Basic TileEntity Container class designed to be used by generic machines. It is suggested that
  * each mod using this create there own basic block extending this to reduce need to use build data
  * per block.
- * 
+ *
  * @author Darkguardsman */
 public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
 {
@@ -102,6 +102,24 @@ public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
         {
             ((INetworkPart) tileEntity).refresh();
         }
+    }
+
+    @Override
+    public void onNeighborTileChange(World world, int x, int y, int z, int tileX, int tileY, int tileZ)
+    {
+        super.onNeighborTileChange(world, x, y, z, tileX, tileY, tileZ);
+        TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+        if (tileEntity instanceof INetworkPart)
+        {
+            ((INetworkPart) tileEntity).refresh();
+        }
+    }
+
+    public void breakBlock(World world, int x, int y, int z, int par5, int par6)
+    {
+        super.breakBlock(world, x, y, z, par5, par6);
+        world.notifyBlockChange(x, y, z, world.getBlockId(x, y, z));
     }
 
     @Override

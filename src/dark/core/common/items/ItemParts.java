@@ -83,11 +83,16 @@ public class ItemParts extends ItemBasic implements IExtraItemInfo
 
     public static enum Parts
     {
-        Seal("LeatherSeal"),
-        GasSeal("GasSeal"),
-        Tank("UnfinishedTank"),
-        Valve("ValvePart"),
-        MiningIcon("miningIcon", false);
+        Seal("leatherSeal"),
+        GasSeal("gasSeal"),
+        Tank("unfinishedTank"),
+        Valve("valvePart"),
+        MiningIcon("miningIcon", false),
+        CircuitBasic("circuitBasic"),
+        CircuitAdvanced("circuitAdvanced"),
+        CircuitElite("circuitElite"),
+        Motor("motor"),
+        IC("IC_Chip");
 
         public String name;
         public Icon icon;

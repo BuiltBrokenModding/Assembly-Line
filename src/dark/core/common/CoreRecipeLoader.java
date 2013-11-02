@@ -44,7 +44,7 @@ public class CoreRecipeLoader extends RecipeLoader
     public static ItemStack unfinishedTank;
     public static Item itemGlowingSand;
     public static Item itemDiggingTool;
-    public static boolean debugOreItems = true;
+    public static boolean debugOreItems = false;
 
     @Override
     public void loadRecipes()
@@ -94,12 +94,21 @@ public class CoreRecipeLoader extends RecipeLoader
             // seal
             GameRegistry.addRecipe(this.setStackSize(leatherSeal, 16), new Object[] { "LL", "LL", 'L', Item.leather });
             // slime steal
-            new RecipeGrid(this.setStackSize(slimeSeal, 4)).setRowOne(null, leatherSeal, null).setRowTwo(leatherSeal, Item.slimeBall, leatherSeal).setRowThree(null, leatherSeal, null).RegisterRecipe();
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 4, Parts.GasSeal.ordinal()), " # ", "#S#", " # ", '#', "leatherSeal", 'S', Item.slimeBall));
             // part valve
             GameRegistry.addRecipe(new ShapedOreRecipe(valvePart, new Object[] { "PLP", 'P', "ironPipe", 'L', Block.lever }));
+            //Basic Circuit
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.CircuitBasic.ordinal()), "!#!", "#@#", "!#!", '@', "plateCopper", '#', Block.glass, '!', "copperWire"));
+            //Advanced Circuit
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.CircuitAdvanced.ordinal()), "!#!", "#@#", "!#!", '@', "plateCopper", '#', Item.redstone, '!', "copperWire"));
+            //Elite Circuit
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.CircuitElite.ordinal()), "!#!", "#@#", "!#!", '@', "plateGold", '#', Item.redstone, '!', "copperWire"));
+
             // unfinished tank
-            new RecipeGrid(unfinishedTank).setRowOne(null, Item.ingotIron, null).setRowTwo(Item.ingotIron, null, Item.ingotIron).setRowThree(null, Item.ingotIron, null).RegisterRecipe();
-            new RecipeGrid(unfinishedTank).setRowOne(null, bronze, null).setRowTwo(bronze, null, bronze).setRowThree(null, bronze, null).RegisterRecipe();
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.Tank.ordinal()), " # ", "# #", " # ", '#', bronze));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.Tank.ordinal()), " # ", "# #", " # ", '#', steel));
+            //Motor
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.Motor.ordinal()), new Object[] { "@!@", "!#!", "@!@", '!', "ingotSteel", '#', Item.ingotIron, '@', "copperWire" }));
         }
 
         if (itemMetals instanceof ItemOreDirv)

@@ -65,7 +65,7 @@ public abstract class ModPrefab
      * has been made */
     public static int getNextItemId()
     {
-        int id = BLOCK_ID_PRE;
+        int id = ITEM_ID_PREFIX;
 
         while (id > 255 && id < (Item.itemsList.length - 1))
         {
@@ -76,7 +76,7 @@ public abstract class ModPrefab
             }
             id++;
         }
-        BLOCK_ID_PRE = id + 1;
+        ITEM_ID_PREFIX = id + 1;
         return id;
     }
 
