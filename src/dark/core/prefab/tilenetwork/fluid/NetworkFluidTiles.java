@@ -132,11 +132,11 @@ public class NetworkFluidTiles extends NetworkTileEntities
                 if (par instanceof INetworkFluidPart)
                 {
                     //EMPTY TANK
-                    ((INetworkFluidPart) par).drainTankContent(0, Integer.MAX_VALUE, true);
+                    ((INetworkFluidPart) par).drainTankContent(0, Integer.MAX_VALUE, true, false);
                     //FILL TANK
                     if (stack != null)
                     {
-                        stack.amount -= ((INetworkFluidPart) par).fillTankContent(0, FluidHelper.getStack(stack, fillVol), true);
+                        stack.amount -= ((INetworkFluidPart) par).fillTankContent(0, FluidHelper.getStack(stack, fillVol), true, true);
                         membersFilled++;
                     }
                 }

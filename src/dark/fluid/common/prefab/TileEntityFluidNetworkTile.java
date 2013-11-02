@@ -237,7 +237,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
     }
 
     @Override
-    public int fillTankContent(int index, FluidStack stack, boolean doFill)
+    public int fillTankContent(int index, FluidStack stack, boolean doFill, boolean update)
     {
         if (index == 0)
         {
@@ -246,7 +246,10 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
             if (p != fill)
             {
                 //TODO add a catch to this so we don't send a dozen packets for one updates
-                this.sendTankUpdate(index);
+                if (update)
+                {
+                    this.sendTankUpdate(index);
+                }
                 this.internalTanksInfo[index] = this.getTank().getInfo();
             }
             return fill;
@@ -255,7 +258,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
     }
 
     @Override
-    public FluidStack drainTankContent(int index, int volume, boolean doDrain)
+    public FluidStack drainTankContent(int index, int volume, boolean doDrain, boolean update)
     {
         if (index == 0)
         {
@@ -263,7 +266,10 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
             FluidStack stack = this.getTank().drain(volume, doDrain);
             if (prev != null && (stack == null || prev.amount != stack.amount))
             {
-                this.sendTankUpdate(index);
+                if (update)
+                {
+                    this.sendTankUpdate(index);
+                }
                 this.internalTanksInfo[index] = this.getTank().getInfo();
             }
             return stack;

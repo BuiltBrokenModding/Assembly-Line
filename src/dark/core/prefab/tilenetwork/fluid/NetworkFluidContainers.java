@@ -51,7 +51,7 @@ public class NetworkFluidContainers extends NetworkFluidTiles
             {
                 if (part instanceof IFluidHandler)
                 {
-                    ((INetworkFluidPart) part).drainTankContent(0, Integer.MAX_VALUE, true);
+                    ((INetworkFluidPart) part).drainTankContent(0, Integer.MAX_VALUE, true, false);
                 }
                 if (part instanceof TileEntity && ((TileEntity) part).yCoord < lowestY)
                 {
@@ -85,8 +85,8 @@ public class NetworkFluidContainers extends NetworkFluidTiles
                     /* Fill all tanks on this level */
                     for (INetworkFluidPart part : parts)
                     {
-                        part.drainTankContent(0, Integer.MAX_VALUE, true);
-                        fillStack.amount -= part.fillTankContent(0, FluidHelper.getStack(fillStack, fillvolume), true);
+                        part.drainTankContent(0, Integer.MAX_VALUE, true, false);
+                        fillStack.amount -= part.fillTankContent(0, FluidHelper.getStack(fillStack, fillvolume), true, true);
                     }
                 }
 
