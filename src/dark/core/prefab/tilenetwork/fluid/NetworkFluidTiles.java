@@ -70,7 +70,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
         {
             int p = this.getNetworkTank().getFluidAmount();
             int r = this.getNetworkTank().fill(stack, doFill);
-            System.out.println((world.isRemote ? "Client" : "Server") + " Network Fill: B:" + p + "  A:" + this.getNetworkTank().getFluidAmount());
+            //System.out.println((world.isRemote ? "Client" : "Server") + " Network Fill: B:" + p + "  A:" + this.getNetworkTank().getFluidAmount());
             if (doFill)
             {
                 if (p != this.getNetworkTank().getFluidAmount())
