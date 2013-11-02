@@ -183,4 +183,10 @@ public class TileEntityPipe extends TileEntityFluidNetworkTile implements IColor
         }
         return false;
     }
+
+    @Override
+    public void sendTankUpdate(int index)
+    {
+        //TODO only send tank update for pipes that need to visually render the fluid, eg glass, stone, wood
+    }
 }
