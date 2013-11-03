@@ -45,8 +45,6 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
     protected FluidTankInfo[] internalTanksInfo = new FluidTankInfo[1];
     protected List<TileEntity> connectedBlocks = new ArrayList<TileEntity>();
     public boolean[] renderConnection = new boolean[6];
-    public boolean[] canConnectSide = new boolean[] { true, true, true, true, true, true, true };
-    public boolean updateTank = false;
     protected int heat = 0, maxHeat = 20000;
     protected int damage = 0, maxDamage = 1000;
     protected int subID = 0;
@@ -94,7 +92,6 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
             }
             if (ticks % TileEntityFluidNetworkTile.refreshRate == 0)
             {
-                this.updateTank = false;
                 if (this.getTank().getFluid() == null && this.prevStack == null)
                 {
                     //Do nothing
@@ -118,7 +115,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
     {
-        if (this.getTileNetwork() != null && this.canConnectSide[from.ordinal()] && resource != null)
+        if (this.getTileNetwork() != null && resource != null)
         {
             return this.getTileNetwork().fillNetworkTank(this.worldObj, resource, doFill);
         }
@@ -128,11 +125,11 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
     @Override
     public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
     {
-        if (this.getTileNetwork() != null && this.canConnectSide[from.ordinal()] && resource != null)
+        if (this.getTileNetwork() != null  && resource != null)
         {
             if (this.getTileNetwork().getNetworkTank() != null && this.getTileNetwork().getNetworkTank().getFluid() != null && this.getTileNetwork().getNetworkTank().getFluid().isFluidEqual(resource))
             {
-                this.getTileNetwork().drainNetworkTank(this.worldObj, resource.amount, doDrain);
+                return this.getTileNetwork().drainNetworkTank(this.worldObj, resource.amount, doDrain);
             }
 
         }
@@ -142,9 +139,9 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
     @Override
     public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
     {
-        if (this.getTileNetwork() != null && this.canConnectSide[from.ordinal()])
+        if (this.getTileNetwork() != null)
         {
-            this.getTileNetwork().drainNetworkTank(this.worldObj, maxDrain, doDrain);
+            return this.getTileNetwork().drainNetworkTank(this.worldObj, maxDrain, doDrain);
         }
         return null;
     }
@@ -152,13 +149,13 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
     @Override
     public boolean canFill(ForgeDirection from, Fluid fluid)
     {
-        return this.canConnectSide[from.ordinal()] && this.damage < this.maxDamage;
+        return true;
     }
 
     @Override
     public boolean canDrain(ForgeDirection from, Fluid fluid)
     {
-        return this.canConnectSide[from.ordinal()] && this.damage < this.maxDamage;
+        return true;
     }
 
     @Override
@@ -253,7 +250,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
     }
 
     @Override
-    public int fillTankContent(int index, FluidStack stack, boolean doFill, boolean update)
+    public int fillTankContent(int index, FluidStack stack, boolean doFill)
     {
         if (index == 0)
         {
@@ -261,11 +258,6 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
             int fill = this.getTank().fill(stack, doFill);
             if (p != fill && doFill)
             {
-                //TODO add a catch to this so we don't send a dozen packets for one updates
-                if (update)
-                {
-                    this.updateTank = true;
-                }
                 this.internalTanksInfo[index] = this.getTank().getInfo();
             }
             return fill;
@@ -274,7 +266,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
     }
 
     @Override
-    public FluidStack drainTankContent(int index, int volume, boolean doDrain, boolean update)
+    public FluidStack drainTankContent(int index, int volume, boolean doDrain)
     {
         if (index == 0)
         {
@@ -282,10 +274,6 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
             FluidStack stack = this.getTank().drain(volume, doDrain);
             if (prev != null && (stack == null || prev.amount != stack.amount) && doDrain)
             {
-                if (update)
-                {
-                    this.updateTank = true;
-                }
                 this.internalTanksInfo[index] = this.getTank().getInfo();
             }
             return stack;
@@ -401,6 +389,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
                     this.tank = new FluidTank(data.readInt());
                     this.getTank().readFromNBT(PacketHandler.instance().readNBTTagCompound(data));
                     this.internalTanksInfo[0] = this.getTank().getInfo();
+                    System.out.println("DescriptionPacket");
                     return true;
                 }
                 else if (id.equalsIgnoreCase("RenderPacket"))
@@ -412,6 +401,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
                     this.renderConnection[3] = data.readBoolean();
                     this.renderConnection[4] = data.readBoolean();
                     this.renderConnection[5] = data.readBoolean();
+                    System.out.println("RenderPacket");
                     return true;
                 }
                 else if (id.equalsIgnoreCase("SingleTank"))
@@ -419,6 +409,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
                     this.tank = new FluidTank(data.readInt());
                     this.getTank().readFromNBT(PacketHandler.instance().readNBTTagCompound(data));
                     this.internalTanksInfo[0] = this.getTank().getInfo();
+                    System.out.println("TankPacket");
                     return true;
                 }
             }

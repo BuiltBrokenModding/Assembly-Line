@@ -11,7 +11,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import dark.api.ColorCode;
 import dark.api.fluid.INetworkFluidPart;
 import dark.api.parts.INetworkPart;
 import dark.core.prefab.helpers.FluidHelper;
@@ -92,25 +91,25 @@ public class NetworkFluidTiles extends NetworkTileEntities
             this.readDataFromTiles();
             this.loadedLiquids = true;
         }
-        if (!world.isRemote && this.getNetworkTank() != null)
+        FluidStack before = this.getNetworkTank().getFluid();
+        if (!world.isRemote && this.getNetworkTank() != null && before != null)
         {
-            FluidStack p = this.getNetworkTank().getFluid();
-            FluidStack r = this.getNetworkTank().drain(volume, doDrain);
-            FluidStack n = this.getNetworkTank().getFluid();
-            //System.out.println((world.isRemote ? "Client" : "Server") + " Network Drain: B:" + (p != null ? p.amount : 0) + "  A:" + (n != null ? n.amount : 0));
+            FluidStack drain = this.getNetworkTank().drain(volume, doDrain);
+            FluidStack after = this.getNetworkTank().getFluid();
+            // System.out.println((doDrain ? "" : "Fake") + " Network Drain for " + volume + " B:" + (before != null ? before.amount : 0) + "  A:" + (after != null ? after.amount : 0) + "  D:" + (drain != null ? drain.amount : 0));
             if (doDrain)
             {
                 //Has the tank changed any. If yes then update all info and do a client update
-                if (!p.isFluidEqual(n) || (p != null && n != null && p.amount != n.amount))
+                if (!before.isFluidEqual(after) || (before != null && after != null && before.amount != after.amount))
                 {
                     this.sharedTankInfo = this.getNetworkTank().getInfo();
                     this.writeDataToTiles();
-                    //TODO do a client update from the network rather than each pipe updating itself.
-                    //This will save on packet size but will increase the CPU load of the client since it
-                    //will need to do network calculations
+                    /*TODO do a client update from the network rather than each pipe updating itself.
+                     *This will save on packet size but will increase the CPU load of the client since the client
+                     *will need to do network calculations */
                 }
             }
-            return r;
+            return drain;
         }
         return null;
     }
@@ -132,11 +131,11 @@ public class NetworkFluidTiles extends NetworkTileEntities
                 if (par instanceof INetworkFluidPart)
                 {
                     //EMPTY TANK
-                    ((INetworkFluidPart) par).drainTankContent(0, Integer.MAX_VALUE, true, false);
+                    ((INetworkFluidPart) par).drainTankContent(0, Integer.MAX_VALUE, true);
                     //FILL TANK
                     if (stack != null)
                     {
-                        stack.amount -= ((INetworkFluidPart) par).fillTankContent(0, FluidHelper.getStack(stack, fillVol), true, true);
+                        stack.amount -= ((INetworkFluidPart) par).fillTankContent(0, FluidHelper.getStack(stack, fillVol), true);
                         membersFilled++;
                     }
                 }

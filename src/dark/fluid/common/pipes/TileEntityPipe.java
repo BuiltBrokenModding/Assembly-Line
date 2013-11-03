@@ -189,4 +189,10 @@ public class TileEntityPipe extends TileEntityFluidNetworkTile implements IColor
     {
         //TODO only send tank update for pipes that need to visually render the fluid, eg glass, stone, wood
     }
+
+    @Override
+    public boolean canDrain(ForgeDirection from, Fluid fluid)
+    {
+        return false;
+    }
 }

@@ -21,11 +21,11 @@ public interface INetworkFluidPart extends IFluidHandler, INetworkPart
 
     /** Fills the pipe in the same way that fill method is called in IFluidHandler. This is used so
      * the network has a direct method to access the pipes internal fluid storage */
-    public int fillTankContent(int index, FluidStack stack, boolean doFill, boolean update);
+    public int fillTankContent(int index, FluidStack stack, boolean doFill);
 
     /** Removes from from the pipe in the same way that drain method is called in IFluidHandler. This
      * is used so the network has a direct method to access the pipes internal fluid storage */
-    public FluidStack drainTankContent(int index, int volume, boolean doDrain, boolean update);
+    public FluidStack drainTankContent(int index, int volume, boolean doDrain);
 
     /** Can the fluid pass from one side to the next. Used by path finder to see if the fluid can
      * move threw the pipes.

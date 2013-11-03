@@ -51,7 +51,7 @@ public class NetworkFluidContainers extends NetworkFluidTiles
             {
                 if (part instanceof IFluidHandler)
                 {
-                    ((INetworkFluidPart) part).drainTankContent(0, Integer.MAX_VALUE, true, false);
+                    ((INetworkFluidPart) part).drainTankContent(0, Integer.MAX_VALUE, true);
                 }
                 if (part instanceof TileEntity && ((TileEntity) part).yCoord < lowestY)
                 {
@@ -85,22 +85,14 @@ public class NetworkFluidContainers extends NetworkFluidTiles
                     /* Fill all tanks on this level */
                     for (INetworkFluidPart part : parts)
                     {
-                        part.drainTankContent(0, Integer.MAX_VALUE, true, false);
-                        fillStack.amount -= part.fillTankContent(0, FluidHelper.getStack(fillStack, fillvolume), true, true);
+                        part.drainTankContent(0, Integer.MAX_VALUE, true);
+                        fillStack.amount -= part.fillTankContent(0, FluidHelper.getStack(fillStack, fillvolume), true);
                     }
                 }
 
                 if (fillStack == null || fillStack.amount <= 0)
                 {
                     break;
-                }
-            }
-
-            for (INetworkPart part : this.getNetworkMemebers())
-            {
-                if (part instanceof TileEntity)
-                {
-                    ((TileEntity) part).worldObj.markBlockForUpdate(((TileEntity) part).xCoord, ((TileEntity) part).yCoord, ((TileEntity) part).zCoord);
                 }
             }
         }
