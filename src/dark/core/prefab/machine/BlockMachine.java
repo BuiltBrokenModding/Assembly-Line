@@ -104,18 +104,6 @@ public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
         }
     }
 
-    @Override
-    public void onNeighborTileChange(World world, int x, int y, int z, int tileX, int tileY, int tileZ)
-    {
-        super.onNeighborTileChange(world, x, y, z, tileX, tileY, tileZ);
-        TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-
-        if (tileEntity instanceof INetworkPart)
-        {
-            ((INetworkPart) tileEntity).refresh();
-        }
-    }
-
     public void breakBlock(World world, int x, int y, int z, int par5, int par6)
     {
         super.breakBlock(world, x, y, z, par5, par6);
