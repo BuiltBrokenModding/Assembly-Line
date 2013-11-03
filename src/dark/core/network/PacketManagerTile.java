@@ -1,5 +1,7 @@
 package dark.core.network;
 
+import java.lang.reflect.Method;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
@@ -10,6 +12,7 @@ import universalelectricity.prefab.network.IPacketReceiver;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;
+import dark.core.prefab.helpers.PacketDataWatcher;
 
 public class PacketManagerTile implements IPacketManager
 {
@@ -44,6 +47,7 @@ public class PacketManagerTile implements IPacketManager
 
                 if (tileEntity != null)
                 {
+                    PacketDataWatcher.instance.onPacketData(tileEntity, packet, System.currentTimeMillis());
                     if (tileEntity instanceof ISimplePacketReceiver)
                     {
                         String pId = data.readUTF();
@@ -63,5 +67,4 @@ public class PacketManagerTile implements IPacketManager
         }
 
     }
-
 }

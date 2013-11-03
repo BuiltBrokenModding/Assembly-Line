@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.oredict.OreDictionary;
@@ -30,6 +31,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import dark.api.ProcessorRecipes;
 import dark.api.ProcessorRecipes.ProcessorType;
@@ -60,6 +62,7 @@ import dark.core.common.transmit.BlockWire;
 import dark.core.common.transmit.ItemBlockWire;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.ModPrefab;
+import dark.core.prefab.helpers.PacketDataWatcher;
 import dark.core.prefab.items.ItemBlockHolder;
 import dark.core.prefab.machine.BlockMulti;
 import dark.core.registration.ModObjectRegistry;
@@ -119,8 +122,8 @@ public class DarkMain extends ModPrefab
     {
         instance = this;
         super.preInit(event);
-
         NetworkRegistry.instance().registerGuiHandler(this, proxy);
+        MinecraftForge.EVENT_BUS.register(PacketDataWatcher.instance);
         proxy.preInit();
     }
 

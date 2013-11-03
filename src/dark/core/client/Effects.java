@@ -29,13 +29,14 @@ public class Effects
         double dy = y - cy;
         double dz = z - cz;
         double ratio = Math.sqrt(dx * dx + dy * dy + dz * dz);
-
-        while (Math.abs(cx - x) > Math.abs(dx / ratio))
+        int i = 0;
+        while (Math.abs(cx - x) > Math.abs(dx / ratio) && i < 100)
         {
             world.spawnParticle("townaura", cx, cy, cz, 0.0D, 0.0D, 0.0D);
             cx += dx * 0.1 / ratio;
             cy += dy * 0.1 / ratio;
             cz += dz * 0.1 / ratio;
+            i++;
         }
     }
 }
