@@ -40,11 +40,13 @@ import dark.fluid.common.FluidPartsMaterial;
 public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements INetworkFluidPart, ISimplePacketReceiver
 {
     private int updateTick = 1;
+    public static int refreshRate = 20;
     protected FluidTank tank;
     protected FluidTankInfo[] internalTanksInfo = new FluidTankInfo[1];
     protected List<TileEntity> connectedBlocks = new ArrayList<TileEntity>();
     public boolean[] renderConnection = new boolean[6];
     public boolean[] canConnectSide = new boolean[] { true, true, true, true, true, true, true };
+    public boolean updateTank = false;
     protected int heat = 0, maxHeat = 20000;
     protected int damage = 0, maxDamage = 1000;
     protected int subID = 0;
@@ -88,6 +90,11 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
             {
                 this.updateTick = this.worldObj.rand.nextInt(5) * 40 + 20;
                 this.refresh();
+            }
+            if (ticks % this.refreshRate == 0)
+            {
+                this.updateTank = false;
+                this.sendTankUpdate(0);
             }
         }
     }
@@ -248,7 +255,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
                 //TODO add a catch to this so we don't send a dozen packets for one updates
                 if (update)
                 {
-                    this.sendTankUpdate(index);
+                    this.updateTank = true;
                 }
                 this.internalTanksInfo[index] = this.getTank().getInfo();
             }
@@ -268,7 +275,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
             {
                 if (update)
                 {
-                    this.sendTankUpdate(index);
+                    this.updateTank = true;
                 }
                 this.internalTanksInfo[index] = this.getTank().getInfo();
             }
