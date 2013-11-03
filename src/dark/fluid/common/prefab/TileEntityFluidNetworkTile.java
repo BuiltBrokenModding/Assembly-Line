@@ -40,7 +40,7 @@ import dark.fluid.common.FluidPartsMaterial;
 public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements INetworkFluidPart, ISimplePacketReceiver
 {
     private int updateTick = 1;
-    public static int refreshRate = 20;
+    public static int refreshRate = 40;
     protected FluidTank tank;
     protected FluidTankInfo[] internalTanksInfo = new FluidTankInfo[1];
     protected List<TileEntity> connectedBlocks = new ArrayList<TileEntity>();
@@ -51,6 +51,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
     protected int damage = 0, maxDamage = 1000;
     protected int subID = 0;
     protected int tankCap;
+    protected FluidStack prevStack = null;
 
     protected NetworkFluidTiles network;
 
@@ -91,10 +92,18 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
                 this.updateTick = this.worldObj.rand.nextInt(5) * 40 + 20;
                 this.refresh();
             }
-            if (ticks % this.refreshRate == 0)
+            if (ticks % TileEntityFluidNetworkTile.refreshRate == 0)
             {
                 this.updateTank = false;
-                this.sendTankUpdate(0);
+                if (this.getTank().getFluid() == null && this.prevStack == null)
+                {
+                    //Do nothing
+                }
+                else if ((this.getTank().getFluid() == null && this.prevStack != null) || (this.getTank().getFluid() != null && this.prevStack == null) || (this.getTank().getFluid().amount != this.prevStack.amount))
+                {
+                    this.sendTankUpdate(0);
+                }
+                this.prevStack = this.tank.getFluid();
             }
         }
     }
@@ -250,7 +259,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
         {
             int p = this.getTank().getFluid() != null ? this.getTank().getFluid().amount : 0;
             int fill = this.getTank().fill(stack, doFill);
-            if (p != fill)
+            if (p != fill && doFill)
             {
                 //TODO add a catch to this so we don't send a dozen packets for one updates
                 if (update)
@@ -271,7 +280,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
         {
             FluidStack prev = this.getTank().getFluid();
             FluidStack stack = this.getTank().drain(volume, doDrain);
-            if (prev != null && (stack == null || prev.amount != stack.amount))
+            if (prev != null && (stack == null || prev.amount != stack.amount) && doDrain)
             {
                 if (update)
                 {
