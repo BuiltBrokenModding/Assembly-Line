@@ -18,29 +18,29 @@ public class InvInteractionHelper
 {
     World world;
     Vector3 location;
-    List<ItemStack> filterItems;
+    List<ItemStack> filteredItems;
     boolean inverted;
 
     public InvInteractionHelper(World world, Vector3 location, List<ItemStack> filters, boolean inverted)
     {
         this.world = world;
         this.location = location;
-        this.filterItems = filters;
-        if (filterItems == null)
+        this.filteredItems = filters;
+        if (filteredItems == null)
         {
-            filterItems = new ArrayList<ItemStack>();
+            filteredItems = new ArrayList<ItemStack>();
         }
         this.inverted = inverted;
     }
 
     public void setFilter(List<ItemStack> filters, boolean inverted)
     {
-        this.filterItems = filters;
+        this.filteredItems = filters;
         this.inverted = inverted;
     }
 
     /** Throws the items from the manipulator into the world.
-     * 
+     *
      * @param outputPosition
      * @param items */
     public void throwItem(Vector3 outputPosition, ItemStack items)
@@ -57,7 +57,7 @@ public class InvInteractionHelper
     }
 
     /** Tries to place an itemStack in a specific position if it is an inventory.
-     * 
+     *
      * @return The ItemStack remained after place attempt */
     public ItemStack tryPlaceInPosition(ItemStack itemStack, Vector3 position, ForgeDirection dir)
     {
@@ -194,7 +194,7 @@ public class InvInteractionHelper
     }
 
     /** Tries to get an item from a position
-     * 
+     *
      * @param position - location of item
      * @param direction - direction this item is from the original
      * @param ammount - amount up to one stack to grab
@@ -304,7 +304,7 @@ public class InvInteractionHelper
         {
             ItemStack itemStack = inventory.getStackInSlot(slotIndex).copy();
 
-            if (this.filterItems.size() == 0 || this.isFiltering(itemStack))
+            if (this.getFilters().size() == 0 || this.isFiltering(itemStack))
             {
                 amount = Math.min(amount, itemStack.stackSize);
                 itemStack.stackSize = amount;
@@ -319,13 +319,13 @@ public class InvInteractionHelper
     /** is the item being restricted to a filter set */
     public boolean isFiltering(ItemStack itemStack)
     {
-        if (this.filterItems != null && itemStack != null)
+        if (this.getFilters() != null && itemStack != null)
         {
-            for (int i = 0; i < filterItems.size(); i++)
+            for (int i = 0; i < getFilters().size(); i++)
             {
-                if (filterItems.get(i) != null)
+                if (getFilters().get(i) != null)
                 {
-                    if (filterItems.get(i).isItemEqual(itemStack))
+                    if (getFilters().get(i).isItemEqual(itemStack))
                     {
                         return !inverted;
                     }
@@ -334,6 +334,15 @@ public class InvInteractionHelper
         }
 
         return inverted;
+    }
+
+    public List<ItemStack> getFilters()
+    {
+        if (this.filteredItems == null)
+        {
+            this.filteredItems = new ArrayList<ItemStack>();
+        }
+        return this.filteredItems;
     }
 
 }
