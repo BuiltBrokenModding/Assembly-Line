@@ -389,7 +389,6 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
                     this.tank = new FluidTank(data.readInt());
                     this.getTank().readFromNBT(PacketHandler.instance().readNBTTagCompound(data));
                     this.internalTanksInfo[0] = this.getTank().getInfo();
-                    System.out.println("DescriptionPacket");
                     return true;
                 }
                 else if (id.equalsIgnoreCase("RenderPacket"))
@@ -401,7 +400,6 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
                     this.renderConnection[3] = data.readBoolean();
                     this.renderConnection[4] = data.readBoolean();
                     this.renderConnection[5] = data.readBoolean();
-                    System.out.println("RenderPacket");
                     return true;
                 }
                 else if (id.equalsIgnoreCase("SingleTank"))
@@ -409,7 +407,6 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
                     this.tank = new FluidTank(data.readInt());
                     this.getTank().readFromNBT(PacketHandler.instance().readNBTTagCompound(data));
                     this.internalTanksInfo[0] = this.getTank().getInfo();
-                    System.out.println("TankPacket");
                     return true;
                 }
             }
