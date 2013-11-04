@@ -1,10 +1,15 @@
 package dark.core.prefab;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 
 import org.modstats.Modstats;
+
+import com.builtbroken.common.Triple;
 
 import universalelectricity.compatibility.Compatibility;
 import universalelectricity.core.UniversalElectricity;
@@ -39,6 +44,8 @@ public abstract class ModPrefab
     /* START IDS */
     public static int BLOCK_ID_PRE = 3100;
     public static int ITEM_ID_PREFIX = 13200;
+
+    private static Triple<Integer, Integer, Integer> date;
 
     public abstract String getDomain();
 
@@ -110,6 +117,19 @@ public abstract class ModPrefab
     {
         System.out.print(FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT ? "[C]" : "[S]");
         System.out.println(" " + data);
+    }
+
+    @SuppressWarnings("deprecation")
+    public static Triple<Integer, Integer, Integer> getDate()
+    {
+        Calendar cal = Calendar.getInstance();
+        Date d = cal.getTime();
+
+        if (date == null || date.getB() != d.getDay())
+        {
+            date = new Triple<Integer, Integer, Integer>(d.getMonth(), d.getDay(), d.getYear());
+        }
+        return date;
     }
 
     /** Loads the settings that tell what this mod is named, about, and other info to the user */
