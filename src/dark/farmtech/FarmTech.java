@@ -142,20 +142,10 @@ public class FarmTech extends ModPrefab
 
     }
 
-    public static final CreativeTabs TabFarmTech = new CreativeTabs("FarmTech")
-    {
-        @Override
-        public ItemStack getIconItemStack()
-        {
-            return new ItemStack(Item.wheat.itemID, 1, 0);
-        }
-    };
-
     @Override
     public void loadRecipes()
     {
-        // TODO Auto-generated method stub
-
+        FTRecipeLoader.instance().loadRecipes();
     }
 
 }
