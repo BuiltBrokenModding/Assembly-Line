@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Arrays;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDispenser;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -21,6 +22,8 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 import dark.api.farm.CropAutomationHandler;
 import dark.api.farm.DecayMatterList;
 import dark.core.common.DarkMain;
@@ -28,6 +31,9 @@ import dark.core.prefab.ModPrefab;
 import dark.core.prefab.items.ItemBlockHolder;
 import dark.core.registration.ModObjectRegistry;
 import dark.farmtech.blocks.BlockFarmSoil;
+import dark.farmtech.entities.EntityFarmEgg;
+import dark.farmtech.item.BehaviorDispenseEgg;
+import dark.farmtech.item.ItemFarmEgg;
 
 @Mod(modid = FarmTech.MOD_ID, name = FarmTech.MOD_NAME, version = FarmTech.VERSION, dependencies = "after:DarkCore", useMetadata = true)
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
@@ -106,6 +112,16 @@ public class FarmTech extends ModPrefab
 
         //String compostList = CONFIGURATION.get("DecayMatter", "List", "5::8000:1", "Items or blocks beyond the built in ones that can be turned into compost. Entries go BlockID:Meta:Time:Amount").getString();
         //DecayMatterList.parseConfigString(compostList);
+        if (this.CONFIGURATION.get("Override", "Eggs", true).getBoolean(true))
+        {
+            Item.itemsList[Item.egg.itemID] = null;
+            Item.egg = null;
+            Item.egg = new ItemFarmEgg(88);
+            GameRegistry.registerItem(Item.egg, "FTEgg", MOD_ID);
+            EntityRegistry.registerGlobalEntityID(EntityFarmEgg.class, "FarmEgg", EntityRegistry.findGlobalUniqueEntityId());
+            EntityRegistry.registerModEntity(EntityFarmEgg.class, "FarmEgg", 60, this, 64, 1, true);
+            BlockDispenser.dispenseBehaviorRegistry.putObject(Item.egg, new BehaviorDispenseEgg());
+        }
 
         CONFIGURATION.save();
     }
