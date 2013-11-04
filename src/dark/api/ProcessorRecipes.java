@@ -34,11 +34,8 @@ public class ProcessorRecipes
         CRUSHER(),
         GRINDER(),
         PRESS();
-        public HashMap<Pair<Integer, Integer>, ItemStack> recipes = new HashMap();
-        public HashMap<Pair<Integer, Integer>, Pair<Integer, Integer>> output = new HashMap();
-        public HashMap<Pair<Integer, Integer>, Pair<ItemStack, Float>> recipesChance = new HashMap();
-        public HashMap<Pair<Integer, Integer>, Float> recipesChanceSalvage = new HashMap();
-        public HashMap<Pair<Integer, Integer>, ItemStack> damagedOutput = new HashMap();
+        public HashMap<Pair<Integer, Integer>, ProcessorRecipe> itemRecipes = new HashMap();
+        public HashMap<Pair<Integer, Integer>, ItemStack> altOutput = new HashMap();
         public List<Pair<Integer, Integer>> canSalvage = new ArrayList();
 
     }
@@ -54,20 +51,17 @@ public class ProcessorRecipes
         createRecipe(ProcessorType.GRINDER, new ItemStack(Block.cobblestone.blockID, 1, 0), new ItemStack(Block.sand.blockID, 1, 0));
         createRecipe(ProcessorType.GRINDER, Block.glass, Block.sand);
 
-        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.GRINDER, Block.stone, Block.cobblestone);
-        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.GRINDER, Block.cobblestoneMossy, Block.cobblestone);
-        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.GRINDER, Block.glass, Block.sand);
-        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, Item.stick, null);
+        ProcessorRecipes.setAltOutput(ProcessorType.GRINDER, Block.stone, Block.cobblestone);
+        ProcessorRecipes.setAltOutput(ProcessorType.GRINDER, Block.cobblestoneMossy, Block.cobblestone);
+        ProcessorRecipes.setAltOutput(ProcessorType.GRINDER, Block.glass, Block.sand);
+        ProcessorRecipes.setAltOutput(ProcessorType.CRUSHER, Item.stick, null);
 
-        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, Block.stone, Block.cobblestone);
-        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, Block.cobblestoneMossy, Block.cobblestone);
-        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, Item.stick, null);
+        ProcessorRecipes.setAltOutput(ProcessorType.CRUSHER, Block.stone, Block.cobblestone);
+        ProcessorRecipes.setAltOutput(ProcessorType.CRUSHER, Block.cobblestoneMossy, Block.cobblestone);
+        ProcessorRecipes.setAltOutput(ProcessorType.CRUSHER, Item.stick, null);
 
         //TODO replace these with ItemOreDirv
-        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, Block.glass, Block.sand);
-
-        markOutputSalavageWithChance(ProcessorType.CRUSHER, new ItemStack(Block.chest, 1), .8f);
-        markOutputSalavageWithChance(ProcessorType.CRUSHER, new ItemStack(Block.brick, 1), .7f);
+        ProcessorRecipes.setAltOutput(ProcessorType.CRUSHER, Block.glass, Block.sand);
     }
 
     /** Creates a simple one itemStack in one ItemStack out. Itemstack output can actual have a stack
@@ -78,7 +72,7 @@ public class ProcessorRecipes
      * @param out - ouput item */
     public static void createRecipe(ProcessorType type, Object in, Object out)
     {
-        createRecipe(type, in, out, 1, 1);
+        createRecipe(type, in, out, -1, -1);
     }
 
     public static void createRecipe(ProcessorType type, Object in, Object out, int min, int max)
@@ -87,84 +81,31 @@ public class ProcessorRecipes
         {
             ItemStack input = convert(in);
             ItemStack output = convert(out);
-            if (input != null && output != null)
+            if (input != null && output != null && type.itemRecipes != null)
             {
-                HashMap<Pair<Integer, Integer>, ItemStack> map = type.recipes;
-                HashMap<Pair<Integer, Integer>, Pair<Integer, Integer>> map2 = type.output;
-                if (map != null && output != null)
+                if (min == -1)
                 {
-                    map.put(new Pair<Integer, Integer>(input.itemID, input.getItemDamage()), output);
-                    if (!(min == 1 && max == 1))
-                    {
-                        map2.put(new Pair<Integer, Integer>(input.itemID, input.getItemDamage()), new Pair<Integer, Integer>(min, max));
-                    }
+                    min = output.stackSize;
                 }
-            }
-        }
-    }
-
-    /** Creates a recipe that has a chance of failing
-     *
-     * @param type - processor type
-     * @param in - input item stack, stack size is ignored
-     * @param out - output item stack, stack size is used
-     * @param chance - chance to fail with 1 being zero chance and zero being 100% chance */
-    public static void createRecipeWithChance(ProcessorType type, Object in, Object out, float chance)
-    {
-        if (in != null && out != null && type != null)
-        {
-            ItemStack input = convert(in);
-            ItemStack output = convert(out);
-            if (input != null && output != null)
-            {
-                HashMap<Pair<Integer, Integer>, Pair<ItemStack, Float>> map = type.recipesChance;
-                if (map != null && !map.containsKey(new Pair<Integer, Integer>(input.itemID, input.getItemDamage())))
+                if (max == -1 || max < min)
                 {
-                    map.put(new Pair<Integer, Integer>(input.itemID, input.getItemDamage()), new Pair<ItemStack, Float>(output, chance));
+                    max = output.stackSize;
                 }
-            }
-        }
-    }
-
-    /** Not so much of a recipe but it applies a change on the item. TODO improve and control actual
-     * output of the recipe */
-    public static void markOutputSalavageWithChance(ProcessorType type, Object in, float chance)
-    {
-        if (in != null && type != null)
-        {
-            ItemStack input = convert(in);
-            if (input != null && input != null)
-            {
-                HashMap<Pair<Integer, Integer>, Float> map = type.recipesChanceSalvage;
-                if (map != null && !map.containsKey(new Pair<Integer, Integer>(input.itemID, input.getItemDamage())))
-                {
-                    map.put(new Pair<Integer, Integer>(input.itemID, input.getItemDamage()), chance);
-                }
+                type.itemRecipes.put(new Pair<Integer, Integer>(input.itemID, input.getItemDamage()), new ProcessorRecipe(output, min, max));
             }
         }
     }
 
     /** Used to track items that should be converted to different items during salvaging. */
-    public static void createSalvageDamageOutput(ProcessorType type, Object in, Object out)
+    public static void setAltOutput(ProcessorType type, Object in, Object out)
     {
         if (in != null && out != null && type != null)
         {
             ItemStack input = convert(in);
             ItemStack output = convert(out);
-            if (input != null && output != null)
+            if (input != null && output != null && type.altOutput != null)
             {
-                HashMap<Pair<Integer, Integer>, ItemStack> map = type.damagedOutput;
-                if (map != null)
-                {
-                    if (!map.containsKey(new Pair<Integer, Integer>(input.itemID, input.getItemDamage())))
-                    {
-                        map.put(new Pair<Integer, Integer>(input.itemID, input.getItemDamage()), output);
-                    }
-                    else if (map.get(new Pair<Integer, Integer>(input.itemID, input.getItemDamage())) == null)
-                    {
-                        map.put(new Pair<Integer, Integer>(input.itemID, input.getItemDamage()), output);
-                    }
-                }
+                type.altOutput.put(new Pair<Integer, Integer>(input.itemID, input.getItemDamage()), output);
             }
         }
     }
@@ -220,37 +161,27 @@ public class ProcessorRecipes
         {
             return null;
         }
-        HashMap<Pair<Integer, Integer>, ItemStack> map = type.recipes;
-        HashMap<Pair<Integer, Integer>, Pair<Integer, Integer>> map2 = type.output;
-        HashMap<Pair<Integer, Integer>, Pair<ItemStack, Float>> mapChance = type.recipesChance;
-        HashMap<Pair<Integer, Integer>, Float> mapSalvage = type.recipesChanceSalvage;
-        HashMap<Pair<Integer, Integer>, ItemStack> altSalvageMap = type.damagedOutput;
         Pair<Integer, Integer> blockSet = new Pair<Integer, Integer>(stack.itemID, stack.getItemDamage());
 
+        HashMap<Pair<Integer, Integer>, ItemStack> altSalvageMap = type.altOutput;
+
         //Read normal recipe map for outputs
-        if (map != null)
+        if (type.itemRecipes != null)
         {
-            ItemStack re = map.get(new Pair<Integer, Integer>(stack.itemID, -1));
-            Pair<Integer, Integer> range = map2.get(new Pair<Integer, Integer>(stack.itemID, -1));
-            if (re != null)
+            ProcessorRecipe re = type.itemRecipes.get(new Pair<Integer, Integer>(stack.itemID, -1));
+            if (re == null || re.output == null)
             {
-                ItemStack retm = convert(re);
-                if (range != null && !(range.left() == 1 && range.right() == 1))
-                {
-                    retm.stackSize = range.left() + random.nextInt(range.right());
-                }
-                return new ItemStack[] { retm };
+                re = type.itemRecipes.get(new Pair<Integer, Integer>(stack.itemID, stack.getItemDamage()));
             }
-            re = map.get(blockSet);
-            range = map2.get(blockSet);
-            if (re != null)
+            if (re != null && re.output != null)
             {
-                ItemStack retm = convert(re);
-                if (range != null && !(range.left() == 1 && range.right() == 1))
+                ItemStack output = re.output.copy();
+                output.stackSize = Math.min(re.maxItemsOut, re.minItemsOut + random.nextInt(re.minItemsOut));
+                if (re.chancePerItem < 1.0f)
                 {
-                    retm.stackSize = range.left() + random.nextInt(range.right());
+
                 }
-                return new ItemStack[] { retm };
+                return new ItemStack[] { output };
             }
         }
 
@@ -287,6 +218,17 @@ public class ProcessorRecipes
         return reList;
     }
 
+    public static ItemStack[] getOuputNormal(ProcessorType type, ItemStack stack, boolean damageSalvage)
+    {
+        if (stack == null || type == null || stack.getItem() == null)
+        {
+            return null;
+        }
+        ItemStack[] reList = null;
+
+        return reList;
+    }
+
     public static void parseOreNames(Configuration config)
     {
         if (!loadedOres && CoreRecipeLoader.itemMetals instanceof ItemOreDirv)
@@ -317,11 +259,11 @@ public class ProcessorRecipes
                     if (mat.shouldCreateItem(EnumOrePart.DUST))
                     {
                         ProcessorRecipes.createRecipe(ProcessorType.GRINDER, ing, mat.getStack(EnumOrePart.DUST, 1));
-                        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.GRINDER, ing, mat.getStack(EnumOrePart.DUST, 1));
+                        ProcessorRecipes.setAltOutput(ProcessorType.GRINDER, ing, mat.getStack(EnumOrePart.DUST, 1));
                     }
                     if (mat.shouldCreateItem(EnumOrePart.SCRAPS))
                     {
-                        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, ing, mat.getStack(EnumOrePart.SCRAPS, 1));
+                        ProcessorRecipes.setAltOutput(ProcessorType.CRUSHER, ing, mat.getStack(EnumOrePart.SCRAPS, 1));
                         ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, ing, mat.getStack(EnumOrePart.SCRAPS, 1));
                     }
                     if (mat.shouldCreateItem(EnumOrePart.INGOTS))
@@ -335,14 +277,14 @@ public class ProcessorRecipes
                     {
 
                         ProcessorRecipes.createRecipe(ProcessorType.GRINDER, pla, mat.getStack(EnumOrePart.DUST, 1));
-                        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.GRINDER, pla, mat.getStack(EnumOrePart.DUST, 1));
+                        ProcessorRecipes.setAltOutput(ProcessorType.GRINDER, pla, mat.getStack(EnumOrePart.DUST, 1));
 
                     }
                     if (mat.shouldCreateItem(EnumOrePart.SCRAPS))
                     {
 
                         ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, pla, mat.getStack(EnumOrePart.SCRAPS, 1));
-                        ProcessorRecipes.createSalvageDamageOutput(ProcessorType.CRUSHER, pla, mat.getStack(EnumOrePart.SCRAPS, 1));
+                        ProcessorRecipes.setAltOutput(ProcessorType.CRUSHER, pla, mat.getStack(EnumOrePart.SCRAPS, 1));
 
                     }
                     if (mat.shouldCreateItem(EnumOrePart.PLATES))
