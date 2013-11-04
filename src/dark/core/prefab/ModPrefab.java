@@ -19,7 +19,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
-import dark.api.ProcessorRecipes;
+import dark.api.reciepes.ProcessorRecipes;
 import dark.core.common.ExternalModHandler;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.registration.ModObjectRegistry;

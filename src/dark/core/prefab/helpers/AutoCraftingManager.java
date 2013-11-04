@@ -96,7 +96,7 @@ public class AutoCraftingManager
                     {
                         ShapelessOreRecipe oreRecipe = (ShapelessOreRecipe) recipe;
                         ArrayList oreRecipeInput = (ArrayList) ReflectionHelper.getPrivateValue(ShapelessOreRecipe.class, oreRecipe, "input");
-                        for(Object obj : oreRecipeInput)
+                        for (Object obj : oreRecipeInput)
                         {
                             System.out.println(obj);
                         }
@@ -194,7 +194,7 @@ public class AutoCraftingManager
 
     /** Gets a basic array containing all items that were used to craft the given item. Doesn't sort
      * threw the recipes and will return the first possible recipe */
-    public static ItemStack[] getReverseRecipe(ItemStack outputItem)
+    public static ItemStack[] getReverseRecipe(ItemStack outputItem, int outputSize)
     {
 
         for (Object object : CraftingManager.getInstance().getRecipeList())
@@ -203,7 +203,7 @@ public class AutoCraftingManager
             {
                 if (((IRecipe) object).getRecipeOutput() != null)
                 {
-                    if (((IRecipe) object).getRecipeOutput().isItemEqual(outputItem))
+                    if (((IRecipe) object).getRecipeOutput().isItemEqual(outputItem) && (outputSize == -1 || ((IRecipe) object).getRecipeOutput().stackSize == outputItem.stackSize))
                     {
                         if (object instanceof ShapedRecipes)
                         {
@@ -239,7 +239,7 @@ public class AutoCraftingManager
                                             {
                                                 ItemStack recipeItem = (ItemStack) ingredientsArray[x];
                                                 actualResources.add(recipeItem.copy());
-
+                                                break;
                                             }
                                         }
                                     }

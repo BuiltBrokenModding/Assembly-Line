@@ -1,4 +1,4 @@
-package dark.api;
+package dark.api.reciepes;
 
 import net.minecraft.item.ItemStack;
 /** Processor Recipe output Container. Input is controlled by the processor recipes class. */

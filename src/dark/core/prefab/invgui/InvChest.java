@@ -1,5 +1,6 @@
 package dark.core.prefab.invgui;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -32,6 +33,12 @@ public class InvChest implements IInvBox
     public InvChest(TileEntity chest, int slots)
     {
         this(chest, ((IExternalInv) chest), slots);
+    }
+
+    public InvChest(Entity entity, int i)
+    {
+        this.slots = i;
+        this.inv = (IExternalInv) entity;
     }
 
     @Override
@@ -176,13 +183,19 @@ public class InvChest implements IInvBox
     @Override
     public void onInventoryChanged()
     {
+        if(this.hostTile != null){
         this.hostTile.onInventoryChanged();
+        }
     }
 
     @Override
     public boolean isUseableByPlayer(EntityPlayer par1EntityPlayer)
     {
+        if(this.hostTile != null)
+        {
         return this.hostTile.worldObj.getBlockTileEntity(this.hostTile.xCoord, this.hostTile.yCoord, this.hostTile.zCoord) != this.hostTile ? false : par1EntityPlayer.getDistanceSq(this.hostTile.xCoord + 0.5D, this.hostTile.yCoord + 0.5D, this.hostTile.zCoord + 0.5D) <= 64.0D;
+    }
+        return true;
     }
 
     @Override
@@ -196,7 +209,7 @@ public class InvChest implements IInvBox
     }
 
     @Override
-    public void saveInv(NBTTagCompound nbt)
+    public NBTTagCompound saveInv(NBTTagCompound nbt)
     {
         NBTTagList itemList = new NBTTagList();
         for (int s = 0; s < this.getContainedItems().length; ++s)
@@ -210,6 +223,7 @@ public class InvChest implements IInvBox
             }
         }
         nbt.setTag("Items", itemList);
+        return nbt;
     }
 
     @Override

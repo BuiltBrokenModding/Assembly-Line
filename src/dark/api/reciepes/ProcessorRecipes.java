@@ -1,4 +1,4 @@
-package dark.api;
+package dark.api.reciepes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +15,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import dark.api.ColorCode;
 import dark.core.common.CoreRecipeLoader;
 import dark.core.common.items.EnumMaterial;
 import dark.core.common.items.EnumOrePart;
@@ -157,21 +158,53 @@ public class ProcessorRecipes
      * @return array of itemStacks */
     public static ItemStack[] getOuput(ProcessorType type, ItemStack stack, boolean damageSalvage)
     {
-        if (stack == null || type == null || stack.getItem() == null)
+        if (stack != null && type != null)
         {
-            return null;
+            ItemStack[] reList = getOuputNormal(type, stack);
+            if (reList == null)
+            {
+                reList = salvageItem(type, stack);
+            }
+            return reList;
         }
-        Pair<Integer, Integer> blockSet = new Pair<Integer, Integer>(stack.itemID, stack.getItemDamage());
+        return null;
+    }
 
-        HashMap<Pair<Integer, Integer>, ItemStack> altSalvageMap = type.altOutput;
+    public static ItemStack[] salvageItem(ProcessorType type, ItemStack stack)
+    {
+        //TODO find a way around having to force single output size salvaging
+        ItemStack[] recipeList = AutoCraftingManager.getReverseRecipe(stack.copy(), 1);
+        ItemStack[] reList = new ItemStack[recipeList.length];
+        for (int i = 0; i < recipeList.length; i++)
+        {
+            if (recipeList[i] != null && random.nextFloat() >= .3f)
+            {
+                reList[i] = recipeList[i];
+                if (recipeList[i].itemID < Block.blocksList.length && Block.blocksList[recipeList[i].itemID] != null && recipeList[i].getItemDamage() > 16)
+                {
+                    reList[i].setItemDamage(0);
+                }
+                if (type.altOutput != null && type.altOutput.containsKey(new Pair<Integer, Integer>(reList[i].itemID, reList[i].getItemDamage())))
+                {
+                    reList[i] = convert(type.altOutput.get(new Pair<Integer, Integer>(reList[i].itemID, reList[i].getItemDamage())));
+                }
+            }
+        }
+        return reList;
+    }
 
-        //Read normal recipe map for outputs
+    public static ItemStack[] getOuputNormal(ProcessorType type, ItemStack stack)
+    {
         if (type.itemRecipes != null)
         {
             ProcessorRecipe re = type.itemRecipes.get(new Pair<Integer, Integer>(stack.itemID, -1));
             if (re == null || re.output == null)
             {
                 re = type.itemRecipes.get(new Pair<Integer, Integer>(stack.itemID, stack.getItemDamage()));
+            }
+            if (type.altOutput != null && (re == null || re.output == null))
+            {
+                return new ItemStack[] { type.altOutput.get(new Pair<Integer, Integer>(stack.itemID, stack.getItemDamage())) };
             }
             if (re != null && re.output != null)
             {
@@ -185,48 +218,7 @@ public class ProcessorRecipes
             }
         }
 
-        //Read chance output map
-        Pair<ItemStack, Float> ree = mapChance.get(blockSet);
-        if (ree != null && random.nextFloat() >= ree.right())
-        {
-            return new ItemStack[] { convert(ree.left()) };
-        }
-
-        //Start salvaging items
-        ItemStack[] recipeList = AutoCraftingManager.getReverseRecipe(stack.copy());
-        ItemStack[] reList = null;
-        if (recipeList != null)
-        {
-            reList = new ItemStack[recipeList.length];
-            for (int i = 0; i < recipeList.length; i++)
-            {
-                if (recipeList[i] != null && random.nextFloat() >= .3f)
-                {
-                    int meta = recipeList[i].getItemDamage();
-                    reList[i] = recipeList[i];
-                    if (recipeList[i].itemID < Block.blocksList.length && Block.blocksList[recipeList[i].itemID] != null && recipeList[i].getItemDamage() > 16)
-                    {
-                        reList[i].setItemDamage(0);
-                    }
-                    if (damageSalvage && altSalvageMap != null && altSalvageMap.containsKey(new Pair<Integer, Integer>(reList[i].itemID, reList[i].getItemDamage())))
-                    {
-                        reList[i] = convert(altSalvageMap.get(new Pair<Integer, Integer>(reList[i].itemID, reList[i].getItemDamage())));
-                    }
-                }
-            }
-        }
-        return reList;
-    }
-
-    public static ItemStack[] getOuputNormal(ProcessorType type, ItemStack stack, boolean damageSalvage)
-    {
-        if (stack == null || type == null || stack.getItem() == null)
-        {
-            return null;
-        }
-        ItemStack[] reList = null;
-
-        return reList;
+        return null;
     }
 
     public static void parseOreNames(Configuration config)
