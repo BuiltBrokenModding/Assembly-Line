@@ -8,6 +8,9 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
+import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.IPlantable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.prefab.ModPrefab;
@@ -33,6 +36,33 @@ public class BlockFarmSoil extends Block
         super(FarmTech.CONFIGURATION.getBlock("FarmSoil", ModPrefab.getNextID()).getInt(), Material.clay);
         this.setUnlocalizedName("FarmBlock");
         this.setCreativeTab(CreativeTabs.tabBlock);
+    }
+
+    @Override
+    public boolean canSustainPlant(World world, int x, int y, int z, ForgeDirection direction, IPlantable plant)
+    {
+        //TODO change this a bit
+        return true;
+    }
+
+    @Override
+    public boolean isFertile(World world, int x, int y, int z)
+    {
+        if (blockID == tilledField.blockID)
+        {
+            return world.getBlockMetadata(x, y, z) > 0;
+        }
+
+        return false;
+    }
+
+    @Override
+    public void onPlantGrow(World world, int x, int y, int z, int sourceX, int sourceY, int sourceZ)
+    {
+        if (blockID == grass.blockID)
+        {
+            world.setBlock(x, y, z, dirt.blockID, 0, 2);
+        }
     }
 
     @SideOnly(Side.CLIENT)
