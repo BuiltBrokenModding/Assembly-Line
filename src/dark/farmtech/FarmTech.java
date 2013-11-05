@@ -5,9 +5,7 @@ import java.util.Arrays;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import universalelectricity.prefab.TranslationHelper;
 import cpw.mods.fml.common.FMLLog;
@@ -112,7 +110,7 @@ public class FarmTech extends ModPrefab
 
         //String compostList = CONFIGURATION.get("DecayMatter", "List", "5::8000:1", "Items or blocks beyond the built in ones that can be turned into compost. Entries go BlockID:Meta:Time:Amount").getString();
         //DecayMatterList.parseConfigString(compostList);
-        if (this.CONFIGURATION.get("Override", "Eggs", true).getBoolean(true))
+        if (FarmTech.CONFIGURATION.get("Override", "Eggs", true).getBoolean(true))
         {
             Item.itemsList[Item.egg.itemID] = null;
             Item.egg = null;

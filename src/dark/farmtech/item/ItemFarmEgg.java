@@ -1,11 +1,11 @@
 package dark.farmtech.item;
 
-import dark.farmtech.entities.EntityFarmEgg;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import dark.farmtech.entities.EntityFarmEgg;
 
 public class ItemFarmEgg extends Item
 {
@@ -21,6 +21,7 @@ public class ItemFarmEgg extends Item
 
     /** Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack,
      * world, entityPlayer */
+    @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player)
     {
         if (!player.capabilities.isCreativeMode)

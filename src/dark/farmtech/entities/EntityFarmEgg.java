@@ -31,6 +31,7 @@ public class EntityFarmEgg extends EntityThrowable
     }
 
     /** Called when this EntityThrowable hits a block or entity. */
+    @Override
     protected void onImpact(MovingObjectPosition mop)
     {
         if (mop.entityHit != null)
@@ -41,9 +42,11 @@ public class EntityFarmEgg extends EntityThrowable
         if (!this.worldObj.isRemote && this.rand.nextInt(8) == 0)
         {
             EntityAnimal animal;
-            switch(id)
+            switch (id)
             {
-                default: animal = new EntityChicken(this.worldObj); break;
+                default:
+                    animal = new EntityChicken(this.worldObj);
+                    break;
             }
             if (animal != null)
             {

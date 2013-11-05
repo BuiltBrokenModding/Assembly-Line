@@ -17,15 +17,15 @@ import dark.core.prefab.ModPrefab;
 import dark.farmtech.FarmTech;
 
 /** Generic block set containing farm blocks: mulch, fertilizer, fertile dirt, mud
- *
+ * 
  * mulch/fertilizer -> fertileDirt -> mud -> dirt
- *
+ * 
  * @mulch is a decor version of fertilizer made from wood. decays very slowly when actually used for
  * crops. Design is to be used with small plant for decor
- *
+ * 
  * @fertilizer enriches the soil and is used to grow crops faster fertilizer can be created from
  * anything using several means
- *
+ * 
  * @author darkguardsman */
 public class BlockFarmSoil extends Block
 {

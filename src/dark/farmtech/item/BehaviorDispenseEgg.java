@@ -1,6 +1,5 @@
 package dark.farmtech.item;
 
-import dark.farmtech.entities.EntityFarmEgg;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
 import net.minecraft.dispenser.IBlockSource;
@@ -10,6 +9,7 @@ import net.minecraft.entity.IProjectile;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import dark.farmtech.entities.EntityFarmEgg;
 
 public class BehaviorDispenseEgg extends BehaviorDefaultDispenseItem
 {
@@ -20,7 +20,7 @@ public class BehaviorDispenseEgg extends BehaviorDefaultDispenseItem
         IPosition iposition = BlockDispenser.getIPositionFromBlockSource(par1IBlockSource);
         EnumFacing enumfacing = BlockDispenser.getFacing(par1IBlockSource.getBlockMetadata());
         IProjectile iprojectile = this.getProjectileEntity(world, iposition, par2ItemStack.getItemDamage());
-        iprojectile.setThrowableHeading((double) enumfacing.getFrontOffsetX(), (double) ((float) enumfacing.getFrontOffsetY() + 0.1F), (double) enumfacing.getFrontOffsetZ(), this.func_82500_b(), this.func_82498_a());
+        iprojectile.setThrowableHeading(enumfacing.getFrontOffsetX(), (enumfacing.getFrontOffsetY() + 0.1F), enumfacing.getFrontOffsetZ(), this.func_82500_b(), this.func_82498_a());
         world.spawnEntityInWorld((Entity) iprojectile);
         par2ItemStack.splitStack(1);
         return par2ItemStack;

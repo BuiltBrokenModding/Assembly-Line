@@ -2,8 +2,6 @@ package dark.farmtech.item;
 
 import java.util.List;
 
-import universalelectricity.core.vector.Vector3;
-
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,15 +14,17 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
+import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.prefab.IExtraInfo.IExtraItemInfo;
+import dark.core.prefab.ModPrefab;
 import dark.core.prefab.helpers.ItemWorldHelper;
 import dark.farmtech.FarmTech;
 
 /** Item for storing all kinds of food based items including meats, fruits, pies, cakes, breads, etc
  * we have 1000s of meta to work with :)
- *
+ * 
  * @author DarkGuardsman */
 public class ItemFarmFood extends Item implements IExtraItemInfo
 {
@@ -33,7 +33,7 @@ public class ItemFarmFood extends Item implements IExtraItemInfo
 
     public ItemFarmFood(int par1)
     {
-        super(FarmTech.CONFIGURATION.getItem("Food", FarmTech.getNextID()).getInt());
+        super(FarmTech.CONFIGURATION.getItem("Food", ModPrefab.getNextID()).getInt());
         this.setHasSubtypes(true);
         this.setCreativeTab(CreativeTabs.tabFood);
         this.setUnlocalizedName("FarmFood");
@@ -131,7 +131,7 @@ public class ItemFarmFood extends Item implements IExtraItemInfo
     {
         for (FarmFood food : FarmFood.values())
         {
-            if (food.type != FoodType.ILLEGAL_DRUGS || this.loadIllegalDrugs)
+            if (food.type != FoodType.ILLEGAL_DRUGS || ItemFarmFood.loadIllegalDrugs)
             {
                 list.add(new ItemStack(this.itemID, 1, food.ordinal()));
             }
@@ -167,7 +167,7 @@ public class ItemFarmFood extends Item implements IExtraItemInfo
     }
 
     /** enum that stores data for each meta value that represents a food object for the item
-     *
+     * 
      * @Source http://urbanext.illinois.edu/herbs/list.cfm
      * @author DarkGuardsman */
     public static enum FarmFood
@@ -248,7 +248,7 @@ public class ItemFarmFood extends Item implements IExtraItemInfo
     }
 
     /** IDs what the item is and determines how its used
-     *
+     * 
      * @author DarkGuardsman */
     public static enum FoodType
     {
@@ -285,6 +285,7 @@ public class ItemFarmFood extends Item implements IExtraItemInfo
 
     }
 
+    @Override
     public int getItemStackLimit(ItemStack stack)
     {
         FarmFood food = FarmFood.get(stack);
