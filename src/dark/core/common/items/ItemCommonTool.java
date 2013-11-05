@@ -46,6 +46,7 @@ import dark.core.prefab.ModPrefab;
 public class ItemCommonTool extends Item implements IExtraItemInfo
 {
     protected int enchant = 5;
+    public static final String TOOL_DAMAGE = "toolDamage";
     public static final String BROKEN_NBT = "broken";
     public static final String REINFORCED_NBT = "reinforced";
     public static final String HEATTREATED_NBT = "heattreated";
@@ -59,7 +60,18 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
     }
 
     @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
+    public void onCreated(ItemStack itemStack, World par2World, EntityPlayer entityPlayer)
+    {
+        if (itemStack.stackTagCompound == null)
+        {
+            itemStack.setTagCompound(new NBTTagCompound());
+        }
+        itemStack.getTagCompound().setString("Creator", entityPlayer.username);
+        itemStack.getTagCompound().setInteger("ToolID", itemStack.getItemDamage());
+    }
+
+    @Override
+    public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4)
     {
         if (itemStack != null)
         {
@@ -67,15 +79,19 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
             {
                 itemStack.setTagCompound(new NBTTagCompound());
             }
-            if (itemStack.getTagCompound().getBoolean("broken"))
+            if (itemStack.getTagCompound().hasKey("Creator"))
             {
-                par3List.add("Broken");
+                list.add("Created by " + itemStack.getTagCompound().getString("Creator"));
+            }
+            if (itemStack.getTagCompound().getBoolean(BROKEN_NBT))
+            {
+                list.add("Broken");
             }
             else
             {
                 EnumMaterial mat = EnumMaterial.getToolMatFromMeta(itemStack.getItemDamage());
-                int currentDamage = itemStack.getTagCompound().getInteger("toolDamage");
-                par3List.add((ElectricityDisplay.roundDecimals((currentDamage / mat.maxUses)) + "%"));
+                int currentDamage = itemStack.getTagCompound().getInteger(TOOL_DAMAGE);
+                list.add("D: " + currentDamage + "/" + mat.maxUses);
             }
         }
     }
@@ -88,7 +104,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
         {
             itemStack.setTagCompound(new NBTTagCompound());
         }
-        if (itemStack.getTagCompound().getBoolean("broken"))
+        if (itemStack.getTagCompound().getBoolean(BROKEN_NBT))
         {
             return Color.RED.getRGB();
         }
@@ -102,7 +118,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
         {
             itemStack.setTagCompound(new NBTTagCompound());
         }
-        if (itemStack.getTagCompound().getBoolean("broken"))
+        if (itemStack.getTagCompound().getBoolean(BROKEN_NBT))
         {
             return false;
         }
@@ -221,48 +237,45 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
             itemStack.setTagCompound(new NBTTagCompound());
         }
         EnumMaterial mat = EnumMaterial.getToolMatFromMeta(itemStack.getItemDamage());
-        if (!itemStack.isItemStackDamageable() || (entity instanceof EntityPlayer && ((EntityPlayer) entity).capabilities.isCreativeMode))
+        if (entity instanceof EntityPlayer && ((EntityPlayer) entity).capabilities.isCreativeMode)
         {
             return;
         }
-        else
+        if (damage > 0)
         {
-            if (damage > 0)
+            int j = EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, itemStack);
+            int k = 0;
+
+            for (int l = 0; j > 0 && l < damage; ++l)
             {
-                int j = EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, itemStack);
-                int k = 0;
-
-                for (int l = 0; j > 0 && l < damage; ++l)
+                if (EnchantmentDurability.negateDamage(itemStack, j, entity.worldObj.rand))
                 {
-                    if (EnchantmentDurability.negateDamage(itemStack, j, entity.worldObj.rand))
-                    {
-                        ++k;
-                    }
-                }
-
-                damage -= k;
-
-                if (damage <= 0)
-                {
-                    return;
+                    ++k;
                 }
             }
-            int currentDamage = itemStack.getTagCompound().getInteger("toolDamage") + damage;
-            damage = Math.max(Math.min(damage, mat.maxUses), 0);
-            itemStack.getTagCompound().setInteger("toolDamage", damage);
+
+            damage -= k;
+
+            if (damage <= 0)
+            {
+                return;
+            }
+        }
+        int currentDamage = itemStack.getTagCompound().getInteger(TOOL_DAMAGE) + damage;
+        damage = Math.max(Math.min(damage, mat.maxUses), 0);
+        itemStack.getTagCompound().setInteger(TOOL_DAMAGE, currentDamage);
+        if (entity instanceof EntityPlayer)
+        {
+            ((EntityPlayer) entity).inventory.onInventoryChanged();
+        }
+        if (currentDamage > mat.maxUses)
+        {
+            entity.renderBrokenItemStack(itemStack);
+            itemStack.getTagCompound().setBoolean(BROKEN_NBT, true);
             if (entity instanceof EntityPlayer)
             {
-                ((EntityPlayer) entity).inventory.onInventoryChanged();
-            }
-            if (currentDamage > mat.maxUses)
-            {
-                entity.renderBrokenItemStack(itemStack);
-                itemStack.getTagCompound().setBoolean("broken", true);
-                if (entity instanceof EntityPlayer)
-                {
-                    EntityPlayer entityplayer = (EntityPlayer) entity;
-                    entityplayer.addStat(StatList.objectBreakStats[this.itemID], 1);
-                }
+                EntityPlayer entityplayer = (EntityPlayer) entity;
+                entityplayer.addStat(StatList.objectBreakStats[this.itemID], 1);
             }
         }
 
@@ -275,11 +288,11 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
         {
             itemStack.setTagCompound(new NBTTagCompound());
         }
-        if (itemStack.getTagCompound().getBoolean("broken"))
+        if (itemStack.getTagCompound().getBoolean(BROKEN_NBT))
         {
             return true;
         }
-        return itemStack.getTagCompound().getInteger("toolDamage") > 0;
+        return itemStack.getTagCompound().getInteger(TOOL_DAMAGE) > 0;
     }
 
     @Override
@@ -341,7 +354,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
             {
                 itemStack.setTagCompound(new NBTTagCompound());
             }
-            if (itemStack.getTagCompound().getBoolean("broken"))
+            if (itemStack.getTagCompound().getBoolean(BROKEN_NBT))
             {
                 return 0;
             }
@@ -372,7 +385,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
             {
                 itemStack.setTagCompound(new NBTTagCompound());
             }
-            if (itemStack.getTagCompound().getBoolean("broken"))
+            if (itemStack.getTagCompound().getBoolean(BROKEN_NBT))
             {
                 return false;
             }
@@ -406,7 +419,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
         {
             itemStack.setTagCompound(new NBTTagCompound());
         }
-        int damage = itemStack.getTagCompound().getInteger("toolDamage");
+        int damage = itemStack.getTagCompound().getInteger(TOOL_DAMAGE);
         EnumMaterial mat = EnumMaterial.getToolMatFromMeta(itemStack.getItemDamage());
         return (damage / mat.maxUses) * 100;
     }
