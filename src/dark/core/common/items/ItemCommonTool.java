@@ -1,6 +1,7 @@
 package dark.core.common.items;
 
 import java.awt.Color;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -17,9 +18,11 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
@@ -30,6 +33,7 @@ import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 import cpw.mods.fml.relauncher.Side;
@@ -40,7 +44,7 @@ import dark.core.prefab.ModPrefab;
 
 /** Flexible tool class that uses NBT to store damage and effect rather than metadata. Metadata
  * instead is used to store sub items allowing several different tools to exist within the same item
- * 
+ *
  * @author DarkGuardsman */
 public class ItemCommonTool extends Item implements IExtraItemInfo
 {
@@ -59,14 +63,22 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
     }
 
     @Override
-    public void onCreated(ItemStack itemStack, World par2World, EntityPlayer entityPlayer)
+    public void onCreated(ItemStack itemStack, World world, EntityPlayer entityPlayer)
     {
         if (itemStack.stackTagCompound == null)
         {
             itemStack.setTagCompound(new NBTTagCompound());
         }
-        itemStack.getTagCompound().setString("Creator", entityPlayer.username);
+        itemStack.getTagCompound().setString("Creator", (entityPlayer != null ? entityPlayer.username : "Magical Dwarfs"));
         itemStack.getTagCompound().setInteger("ToolID", itemStack.getItemDamage());
+    }
+
+    @Override
+    public Multimap getItemAttributeModifiers()
+    {
+        Multimap multimap = super.getItemAttributeModifiers();
+        multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(field_111210_e, "Tool modifier", 6, 0));
+        return multimap;
     }
 
     @Override
@@ -163,6 +175,36 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
             }
         }
         return false;
+    }
+
+    @Override
+    public EnumAction getItemUseAction(ItemStack par1ItemStack)
+    {
+        if (EnumMaterial.getToolFromMeta(par1ItemStack.getItemDamage()) == EnumTool.SWORD)
+        {
+            return EnumAction.block;
+        }
+        return super.getItemUseAction(par1ItemStack);
+    }
+
+    @Override
+    public int getMaxItemUseDuration(ItemStack par1ItemStack)
+    {
+        if (EnumMaterial.getToolFromMeta(par1ItemStack.getItemDamage()) == EnumTool.SWORD)
+        {
+            return 72000;
+        }
+        return super.getMaxItemUseDuration(par1ItemStack);
+    }
+
+    @Override
+    public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
+    {
+        if (EnumMaterial.getToolFromMeta(par1ItemStack.getItemDamage()) == EnumTool.SWORD)
+        {
+            par3EntityPlayer.setItemInUse(par1ItemStack, this.getMaxItemUseDuration(par1ItemStack));
+        }
+        return par1ItemStack;
     }
 
     @Override
@@ -297,7 +339,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
     @Override
     public boolean hitEntity(ItemStack itemStack, EntityLivingBase par2EntityLivingBase, EntityLivingBase par3EntityLivingBase)
     {
-        this.damage(itemStack, 2, par2EntityLivingBase);
+        this.damage(itemStack, EnumMaterial.getToolFromMeta(itemStack.getItemDamage()) == EnumTool.SWORD ? 1 : 2, par2EntityLivingBase);
         return true;
     }
 
@@ -310,7 +352,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
         }
         if (Block.blocksList[par3].getBlockHardness(par2World, par4, par5, par6) != 0.0D)
         {
-            this.damage(itemStack, 1, par7EntityLivingBase);
+            this.damage(itemStack, EnumMaterial.getToolFromMeta(itemStack.getItemDamage()) == EnumTool.SWORD ? 2 : 1, par7EntityLivingBase);
         }
 
         return true;
@@ -334,14 +376,6 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
     {
         //TODO,, We will have to check on how this is done to prevent issues with the way damage is actually saved
         return false;
-    }
-
-    @Override
-    public Multimap getItemAttributeModifiers()
-    {
-        Multimap multimap = super.getItemAttributeModifiers();
-        multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(field_111210_e, "Tool modifier", 3.0, 0));
-        return multimap;
     }
 
     @Override
@@ -461,7 +495,9 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
                     ItemStack stack = EnumMaterial.getTool(tool, mat);
                     if (tool.enabled && stack != null)
                     {
+                        this.onCreated(stack, null, null);
                         par3List.add(stack);
+
                     }
                 }
             }

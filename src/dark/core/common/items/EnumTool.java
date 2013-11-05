@@ -6,16 +6,16 @@ import java.util.List;
 import net.minecraft.block.material.Material;
 
 /** Enum to store tools that can be created from the material sheet.
- * 
+ *
  * @author DarkGuardsman */
 public enum EnumTool
 {
     PICKAX("pickaxe", Material.rock, Material.iron, Material.ice, Material.anvil, Material.glass, Material.tnt, Material.piston),
     AX("axe", Material.wood, Material.pumpkin, Material.plants, Material.vine),
     SPADE("shovel", Material.sand, Material.snow, Material.clay, Material.craftedSnow, Material.grass, Material.ground),
-    HOE("hoe"),
+    HOE("hoe", Material.plants, Material.pumpkin),
     SHEAR("shear", Material.cloth, Material.circuits, Material.web),
-    NA5(),
+    SWORD("sword", false, Material.web, Material.vine, Material.coral, Material.pumpkin, Material.leaves, Material.plants),
     NA6(),
     NA7(),
     NA8(),
@@ -30,11 +30,16 @@ public enum EnumTool
 
     }
 
-    private EnumTool(String name, Material... mats)
+    private EnumTool(String name, boolean enabled, Material... mats)
     {
         this.name = name;
         this.enabled = true;
         this.setEffectiveList(mats);
+    }
+
+    private EnumTool(String name, Material... mats)
+    {
+        this(name, true, mats);
     }
 
     public void setEffectiveList(Material... blocks)
