@@ -23,7 +23,7 @@ import com.builtbroken.common.Pair;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
 /** Rewrite of the imprinter crafting system into its own manageable class
- * 
+ *
  * @author DarkGuardsman */
 public class AutoCraftingManager
 {
@@ -127,7 +127,7 @@ public class AutoCraftingManager
     }
 
     /** Does this player's inventory contain the required resources to craft this item?
-     * 
+     *
      * @return Required items to make the desired item. */
     public Pair<ItemStack, ItemStack[]> getIdealRecipe(ItemStack outputItem)
     {
@@ -212,45 +212,44 @@ public class AutoCraftingManager
                         }
                         else if (object instanceof ShapelessRecipes)
                         {
-                            return (ItemStack[]) ((ShapelessRecipes) object).recipeItems.toArray(new ItemStack[1]).clone();
+                            return (ItemStack[]) ((ShapelessRecipes) object).recipeItems.toArray(new ItemStack[9]).clone();
 
                         }
                         else if (object instanceof ShapedOreRecipe)
                         {
                             ShapedOreRecipe oreRecipe = (ShapedOreRecipe) object;
                             Object[] recipeItems = (Object[]) ReflectionHelper.getPrivateValue(ShapedOreRecipe.class, oreRecipe, "input");
-                            List<ItemStack> actualResources = new ArrayList<ItemStack>();
+                            ItemStack[] actualResources;
                             if (recipeItems != null)
                             {
-                                for (Object obj : recipeItems)
+                                actualResources = new ItemStack[recipeItems.length];
+                                for (int i = 0; i < recipeItems.length; i++)
                                 {
-                                    if (obj instanceof ItemStack)
+                                    if (recipeItems[i] instanceof ItemStack)
                                     {
-                                        ItemStack recipeItem = (ItemStack) obj;
-                                        actualResources.add(recipeItem.copy());
+                                        actualResources[i] = ((ItemStack)recipeItems[i]).copy();
                                     }
-                                    else if (obj instanceof ArrayList)
+                                    else if (recipeItems[i] instanceof ArrayList)
                                     {
-                                        Object[] ingredientsArray = ((ArrayList) obj).toArray();
+                                        Object[] ingredientsArray = ((ArrayList) recipeItems[i]).toArray();
 
                                         for (int x = 0; x < ingredientsArray.length; x++)
                                         {
                                             if (ingredientsArray[x] != null && ingredientsArray[x] instanceof ItemStack)
                                             {
-                                                ItemStack recipeItem = (ItemStack) ingredientsArray[x];
-                                                actualResources.add(recipeItem.copy());
+                                                actualResources[i] = ((ItemStack)ingredientsArray[x]).copy();
                                                 break;
                                             }
                                         }
                                     }
                                 }
-                                return actualResources.toArray(new ItemStack[1]);
+                                return actualResources;
                             }
                         }
                         else if (object instanceof ShapelessOreRecipe)
                         {
                             ShapelessOreRecipe oreRecipe = (ShapelessOreRecipe) object;
-                            return (ItemStack[]) ((ArrayList) ReflectionHelper.getPrivateValue(ShapelessOreRecipe.class, oreRecipe, "input")).toArray(new ItemStack[1]).clone();
+                            return (ItemStack[]) ((ArrayList) ReflectionHelper.getPrivateValue(ShapelessOreRecipe.class, oreRecipe, "input")).toArray(new ItemStack[9]).clone();
                         }
                     }
                 }
@@ -261,7 +260,7 @@ public class AutoCraftingManager
     }
 
     /** Gets the itemStacks in the inv based on slots
-     * 
+     *
      * @param inv - @IInventory instance
      * @param slots - slot # to be used
      * @return array of itemStack the same size as the slots input array */
@@ -281,7 +280,7 @@ public class AutoCraftingManager
     }
 
     /** Returns if the following inventory has the following resource required.
-     * 
+     *
      * @param recipeItems - The items to be checked for the recipes. */
     public ArrayList<ItemStack> hasResource(Object[] recipeItems)
     {
@@ -369,7 +368,7 @@ public class AutoCraftingManager
     }
 
     /** Decreases the stack by a set amount
-     * 
+     *
      * @param stack - starting stack
      * @param amount - amount of items
      * @return the edited stack */
@@ -400,7 +399,7 @@ public class AutoCraftingManager
     }
 
     /** Checks if an item exist within the inv array
-     * 
+     *
      * @param recipeItem - itemstack being searched for
      * @param containingItems - inv array containing the search bounds
      * @return the point in the array the item was found -1 = the item was null or not valid -2 =
@@ -432,14 +431,14 @@ public class AutoCraftingManager
 
     /** Checks if itemstack are equal based on crafting result rather than normal itemstack this is
      * done so that if the itemstack returns with
-     * 
+     *
      * @param recipeItem - itemstack being compared
      * @param checkStack - itemstack being comparted
      * @return true if the items are a match for each other
-     * 
+     *
      * If the item can't be stack and is able to take damage the item will be check on damaged
      * status
-     * 
+     *
      * If the item's meta data is not normal or in other words equals 32767 the meta data will be
      * ignored */
     public static boolean areStacksEqual(ItemStack recipeItem, ItemStack checkStack)
@@ -460,7 +459,7 @@ public class AutoCraftingManager
     }
 
     /** Consumes an item checking for extra conditions like container items
-     * 
+     *
      * @param stack - starting itemStack
      * @param ammount - amount to consume
      * @return what is left of the itemStack if any */
@@ -505,7 +504,7 @@ public class AutoCraftingManager
     }
 
     /** Used to automatically remove selected items from crafting inv
-     * 
+     *
      * @param requiredItems - items that are to be removed */
     public void consumeItems(ItemStack... requiredItems)
     {

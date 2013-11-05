@@ -5,7 +5,9 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTool;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
@@ -21,7 +23,7 @@ import dark.core.common.items.ItemOreDirv;
 import dark.core.prefab.helpers.AutoCraftingManager;
 
 /** Recipes for ore processor machines
- * 
+ *
  * @author DarkGuardsman */
 public class MachineRecipeHandler
 {
@@ -48,12 +50,12 @@ public class MachineRecipeHandler
         MachineRecipeHandler.newAltProcessorOutput(ProcessorType.CRUSHER, Block.cobblestoneMossy, Block.cobblestone);
         MachineRecipeHandler.newAltProcessorOutput(ProcessorType.CRUSHER, Item.stick, null);
 
-        //TODO replace these with ItemOreDirv
+        //TODO replace these with ItemOreDirv glass shards
         MachineRecipeHandler.newAltProcessorOutput(ProcessorType.CRUSHER, Block.glass, Block.sand);
     }
 
     /** Creates a new recipe for the type of processor machine
-     * 
+     *
      * @param type - machine type
      * @param in - input item, stacksize is ignored
      * @param out - output item */
@@ -63,7 +65,7 @@ public class MachineRecipeHandler
     }
 
     /** Creates a new recipe for the type of processor machine
-     * 
+     *
      * @param type - machine type
      * @param in - input item, stacksize is ignored
      * @param out - output item
@@ -75,7 +77,7 @@ public class MachineRecipeHandler
     }
 
     /** Creates a new recipe for the type of processor machine
-     * 
+     *
      * @param type - machine type
      * @param in - input item, stacksize is ignored
      * @param out - output item
@@ -171,7 +173,7 @@ public class MachineRecipeHandler
 
     /** Gets the lit of items that are created from the input item stack. General this will be an
      * array of one item. However, in salavaging cases it can be up to 8 items.
-     * 
+     *
      * @param type - Processor type
      * @param inputStack - item stack input ignores stacksize
      * @return array of itemStacks */
@@ -194,7 +196,8 @@ public class MachineRecipeHandler
             }
             if (reList == null)
             {
-                reList = salvageItem(type, inputStack);
+                //TODO Disabled due to bug and needs to be fixed to make the processors more functional
+                //reList = salvageItem(type, inputStack);
             }
             return reList;
         }
@@ -202,7 +205,7 @@ public class MachineRecipeHandler
     }
 
     /** Salvages an itemStack for the items used to craft it
-     * 
+     *
      * @param type - processor type used to determine damage results
      * @param stack - itemStack being salvaged
      * @return Array of all items salvaged */
@@ -212,16 +215,16 @@ public class MachineRecipeHandler
     }
 
     /** Salvages an itemStack for the items used to craft it
-     * 
+     *
      * @param type - processor type used to determine damage results
      * @param stack - itemStack being salvaged
      * @param damage - damage the output items. Eg ironIngot becomes ironDust, or ironScraps
      * @return Array of all items salvaged */
     public static ItemStack[] salvageItem(ProcessorType type, ItemStack stack, boolean damage)
     {
-        float bar = 0.3f;
+        float bar = 0.1f;
         //Allow tools and armor to be salvaged but at a very low rate
-        if (stack.isItemDamaged())
+        if ((stack.getItem() instanceof ItemArmor || stack.getItem() instanceof ItemTool) && stack.isItemDamaged())
         {
             bar = (stack.getItemDamage() / stack.getMaxDamage());
         }
@@ -240,7 +243,7 @@ public class MachineRecipeHandler
     }
 
     /** Salvages an itemStack for the items used to craft it
-     * 
+     *
      * @param stack - itemStack being salvaged
      * @param bar - chance per item that the random must be above inorder to salvage the output
      * @return Array of all items salvaged */
@@ -248,20 +251,26 @@ public class MachineRecipeHandler
     {
         //TODO find a way around having to force recipe to be the same stack size of the salvage. Maybe percentage based salvaging or min stacksize from machine?
         ItemStack[] recipeList = AutoCraftingManager.getReverseRecipe(stack.copy(), stack.stackSize);
-        ItemStack[] reList = new ItemStack[recipeList.length];
-        for (int i = 0; i < recipeList.length; i++)
+        if (recipeList != null)
         {
-            if (recipeList[i] != null && random.nextFloat() >= bar)
+            ItemStack[] reList = new ItemStack[recipeList.length];
+            boolean items = false;
+            for (int i = 0; i < recipeList.length; i++)
             {
-                reList[i] = recipeList[i];
-                if (recipeList[i].itemID < Block.blocksList.length && Block.blocksList[recipeList[i].itemID] != null && recipeList[i].getItemDamage() > 16)
+                if (random.nextFloat() >= bar)
                 {
-                    reList[i].setItemDamage(0);
-                }
+                    reList[i] = recipeList[i].copy();
+                    items = true;
+                    if (recipeList[i].itemID < Block.blocksList.length && Block.blocksList[recipeList[i].itemID] != null && recipeList[i].getItemDamage() > 16)
+                    {
+                        reList[i].setItemDamage(0);
+                    }
 
+                }
             }
+            return items ? reList : null;
         }
-        return reList;
+        return null;
     }
 
     public static ItemStack[] getOuputNormal(ProcessorType type, ItemStack stack)
