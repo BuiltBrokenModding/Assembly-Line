@@ -9,8 +9,8 @@ import net.minecraftforge.common.ForgeDirection;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;
-import dark.api.ProcessorRecipes;
-import dark.api.ProcessorRecipes.ProcessorType;
+import dark.api.reciepes.MachineRecipeHandler;
+import dark.api.reciepes.ProcessorType;
 import dark.assembly.common.machine.processor.BlockProcessor.ProcessorData;
 import dark.core.interfaces.IInvBox;
 import dark.core.network.PacketHandler;
@@ -123,7 +123,7 @@ public class TileEntityProcessor extends TileEntityEnergyMachine
     /** Updates the animation calculation for the renderer to use */
     public void updateAnimation()
     {
-        if (this.getProcessorData().type == ProcessorType.CRUSHER || this.getProcessorData().type == ProcessorType.PRESS)
+        if (this.getProcessorData().type == ProcessorType.CRUSHER)
         {
             if (invertPiston)
             {
@@ -164,7 +164,7 @@ public class TileEntityProcessor extends TileEntityEnergyMachine
         {
             inputStack = inputStack.copy();
             inputStack.stackSize = 1;
-            ItemStack[] outputResult = ProcessorRecipes.getOuput(this.getProcessorData().type, inputStack, true);
+            ItemStack[] outputResult = MachineRecipeHandler.getProcessorOutput(this.getProcessorData().type, inputStack);
             if (outputResult != null)
             {
                 if (outputStack == null)
@@ -198,7 +198,7 @@ public class TileEntityProcessor extends TileEntityEnergyMachine
 
             inputSlotStack = inputSlotStack.copy();
             inputSlotStack.stackSize = 1;
-            ItemStack[] receipeResult = ProcessorRecipes.getOuput(this.getProcessorData().type, inputSlotStack, true);
+            ItemStack[] receipeResult = MachineRecipeHandler.getProcessorOutput(this.getProcessorData().type, inputSlotStack);
             if (receipeResult != null && this.outputBuffer == null)
             {
                 this.getInventory().decrStackSize(this.slotInput, 1);
@@ -220,7 +220,7 @@ public class TileEntityProcessor extends TileEntityEnergyMachine
     @Override
     public boolean canStore(ItemStack stack, int slot, ForgeDirection side)
     {
-        if (slotInput == slot && ProcessorRecipes.getOuput(this.getProcessorData().type, stack, true) != null)
+        if (slotInput == slot && MachineRecipeHandler.getProcessorOutput(this.getProcessorData().type, stack) != null)
         {
             return true;
         }

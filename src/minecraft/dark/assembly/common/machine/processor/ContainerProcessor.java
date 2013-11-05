@@ -9,7 +9,7 @@ import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.item.ItemStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.api.ProcessorRecipes;
+import dark.api.reciepes.MachineRecipeHandler;
 
 public class ContainerProcessor extends Container
 {
@@ -128,7 +128,7 @@ public class ContainerProcessor extends Container
             }
             else if (slotID != 1 && slotID != 0)
             {
-                if (ProcessorRecipes.getOuput(tileEntity.getProcessorData().type, slotStack, true) != null)
+                if (MachineRecipeHandler.getProcessorOutput(tileEntity.getProcessorData().type, slotStack) != null)
                 {
                     if (!this.mergeItemStack(slotStack, tileEntity.slotInput, 1, false))
                     {

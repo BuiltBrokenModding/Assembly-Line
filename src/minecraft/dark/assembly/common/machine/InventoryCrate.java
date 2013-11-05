@@ -53,10 +53,9 @@ public class InventoryCrate extends InvChest
     }
 
     @Override
-    public void saveInv(NBTTagCompound nbt)
+    public NBTTagCompound saveInv(NBTTagCompound nbt)
     {
-        // TODO Auto-generated method stub
-
+        return nbt;
     }
 
     @Override

@@ -18,7 +18,7 @@ import dark.core.prefab.invgui.GuiBase;
 import dark.core.prefab.invgui.GuiButtonImage;
 
 /** A base class for all ICBM Sentry GUIs.
- *
+ * 
  * @author Calclavia */
 @SideOnly(Side.CLIENT)
 public abstract class GuiEncoderBase extends GuiBase

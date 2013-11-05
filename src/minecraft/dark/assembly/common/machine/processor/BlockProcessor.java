@@ -19,7 +19,7 @@ import com.builtbroken.common.Pair;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.api.ProcessorRecipes.ProcessorType;
+import dark.api.reciepes.ProcessorType;
 import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.common.AssemblyLine;
 import dark.assembly.common.CommonProxy;
