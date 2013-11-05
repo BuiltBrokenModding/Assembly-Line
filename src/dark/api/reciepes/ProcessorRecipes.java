@@ -1,7 +1,5 @@
 package dark.api.reciepes;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -29,17 +27,6 @@ public class ProcessorRecipes
 {
     private static Random random = new Random();
     private static boolean loadedOres = false;
-
-    public static enum ProcessorType
-    {
-        CRUSHER(),
-        GRINDER(),
-        PRESS();
-        public HashMap<Pair<Integer, Integer>, ProcessorRecipe> itemRecipes = new HashMap();
-        public HashMap<Pair<Integer, Integer>, ItemStack> altOutput = new HashMap();
-        public List<Pair<Integer, Integer>> canSalvage = new ArrayList();
-
-    }
 
     static
     {
@@ -82,7 +69,7 @@ public class ProcessorRecipes
         {
             ItemStack input = convert(in);
             ItemStack output = convert(out);
-            if (input != null && output != null && type.itemRecipes != null)
+            if (input != null && output != null && type.recipes != null)
             {
                 if (min == -1)
                 {
@@ -92,7 +79,7 @@ public class ProcessorRecipes
                 {
                     max = output.stackSize;
                 }
-                type.itemRecipes.put(new Pair<Integer, Integer>(input.itemID, input.getItemDamage()), new ProcessorRecipe(output, min, max));
+                type.recipes.put(new Pair<Integer, Integer>(input.itemID, input.getItemDamage()), new ProcessorRecipe(output, min, max));
             }
         }
     }
@@ -128,7 +115,7 @@ public class ProcessorRecipes
     {
         if (type != null && stack != null)
         {
-            type.canSalvage.add(new Pair<Integer, Integer>(stack.itemID, stack.getItemDamage()));
+            type.banList.add(new Pair<Integer, Integer>(stack.itemID, stack.getItemDamage()));
         }
     }
 
@@ -195,12 +182,12 @@ public class ProcessorRecipes
 
     public static ItemStack[] getOuputNormal(ProcessorType type, ItemStack stack)
     {
-        if (type.itemRecipes != null)
+        if (type.recipes != null)
         {
-            ProcessorRecipe re = type.itemRecipes.get(new Pair<Integer, Integer>(stack.itemID, -1));
+            ProcessorRecipe re = type.recipes.get(new Pair<Integer, Integer>(stack.itemID, -1));
             if (re == null || re.output == null)
             {
-                re = type.itemRecipes.get(new Pair<Integer, Integer>(stack.itemID, stack.getItemDamage()));
+                re = type.recipes.get(new Pair<Integer, Integer>(stack.itemID, stack.getItemDamage()));
             }
             if (type.altOutput != null && (re == null || re.output == null))
             {

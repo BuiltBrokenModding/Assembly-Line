@@ -9,17 +9,17 @@ import net.minecraftforge.common.MinecraftForge;
 
 import org.modstats.Modstats;
 
-import com.builtbroken.common.Triple;
-
 import universalelectricity.compatibility.Compatibility;
 import universalelectricity.core.UniversalElectricity;
+
+import com.builtbroken.common.Triple;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
-import dark.api.reciepes.ProcessorRecipes;
 import dark.core.common.ExternalModHandler;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.registration.ModObjectRegistry;

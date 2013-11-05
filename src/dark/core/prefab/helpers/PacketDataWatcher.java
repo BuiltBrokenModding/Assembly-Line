@@ -1,13 +1,9 @@
 package dark.core.prefab.helpers;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
@@ -19,9 +15,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;
-
-import cpw.mods.fml.common.IScheduledTickHandler;
-import cpw.mods.fml.common.TickType;
 
 public class PacketDataWatcher
 {

@@ -29,7 +29,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.oredict.OreDictionary;
-import universalelectricity.core.electricity.ElectricityDisplay;
 
 import com.google.common.collect.Multimap;
 

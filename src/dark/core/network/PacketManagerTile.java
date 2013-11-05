@@ -1,7 +1,5 @@
 package dark.core.network;
 
-import java.lang.reflect.Method;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;

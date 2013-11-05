@@ -9,7 +9,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.api.ColorCode;
 import dark.api.reciepes.ProcessorRecipes;
-import dark.api.reciepes.ProcessorRecipes.ProcessorType;
+import dark.api.reciepes.ProcessorType;
 import dark.core.common.blocks.BlockBasalt;
 import dark.core.common.blocks.BlockOre;
 import dark.core.common.blocks.BlockOre.OreData;
