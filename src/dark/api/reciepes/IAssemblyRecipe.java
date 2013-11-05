@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 /** WIP feature to allow an item/block to be slowly built one step at a time. Object can be an
  * ItemStack, Entity, or even an object just for this purpose. Though if its not world based you'll
  * need to inform the assembler that it exists
- *
+ * 
  * @author Darkgaurdsman */
 public interface IAssemblyRecipe
 {

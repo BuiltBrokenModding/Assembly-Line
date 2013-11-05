@@ -21,7 +21,7 @@ public class TileEntitySwitchWire extends TileEntityWire
     {
         boolean p = this.activated;
         this.activated = yes;
-        if(p != this.activated)
+        if (p != this.activated)
         {
             this.refresh();
         }

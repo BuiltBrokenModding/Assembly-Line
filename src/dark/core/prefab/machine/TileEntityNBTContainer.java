@@ -5,7 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 
 /** NBT Container blocks to use that don't really need a tileEntity for anything other than to record
  * a few values
- *
+ * 
  * @author DarkGuardsman */
 public class TileEntityNBTContainer extends TileEntity
 {

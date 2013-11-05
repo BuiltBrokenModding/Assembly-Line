@@ -80,6 +80,7 @@ public class BlockWire extends BlockMachine
         return this.zeroRendering ? 0 : -1;
     }
 
+    @Override
     public TileEntity createTileEntity(World world, int metadata)
     {
         if (metadata == 1)

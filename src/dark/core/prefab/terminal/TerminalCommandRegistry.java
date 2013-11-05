@@ -46,7 +46,7 @@ public class TerminalCommandRegistry
 
     /** Creates a default group for all machines to use. Only add a group if there is no option to
      * really manage the group's settings
-     *
+     * 
      * @param name - group name
      * @param prefabGroup - group this should extend. Make sure it exists.
      * @param nodes - all commands or custom nodes */
@@ -61,7 +61,7 @@ public class TerminalCommandRegistry
 
     /** Creates a default group for all machines to use. Only add a group if there is no option to
      * really manage the group's settings
-     *
+     * 
      * @param name - group name
      * @param prefabGroup - group this should extend. Make sure it exists.
      * @param nodes - all commands or custom nodes */
@@ -136,7 +136,7 @@ public class TerminalCommandRegistry
     }
 
     /** When a player uses a command in any CMD machine it pass threw here first
-     *
+     * 
      * @param terminal - The terminal, can be cast to TileEntity. */
     public static boolean onCommand(EntityPlayer player, ITerminal terminal, String cmd)
     {

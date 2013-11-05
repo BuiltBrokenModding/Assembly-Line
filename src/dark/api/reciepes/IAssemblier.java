@@ -3,7 +3,7 @@ package dark.api.reciepes;
 /** Machine or entity that is creating a AssemblyObject. Avoid actually storing the recipe item if
  * there is one. Instead do what a few other mods do an give the illusion of the recipe being
  * imprinted into the machine while letting the player keep the item
- *
+ * 
  * @author DarkGuardsman */
 public interface IAssemblier
 {
@@ -27,7 +27,7 @@ public interface IAssemblier
 
     /** Checks if the recipe can be created by this assembler. Should be used in cases were an
      * assembler is designed for one task type
-     *
+     * 
      * @param assembler - this, used in the case that an item is the assembler, or even a block
      * without a tileEntiy. Eg a Workbench is an example of this as it has no tileEntiy but supports
      * crafting

@@ -10,7 +10,7 @@ import com.builtbroken.common.Pair;
 
 /** Enum of machines that support a simple A -> B processor recipe format. More complex machine will
  * have there own recipe handlers
- *
+ * 
  * @author Darkguardsman */
 public enum ProcessorType
 {

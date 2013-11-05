@@ -183,18 +183,19 @@ public class InvChest implements IInvBox
     @Override
     public void onInventoryChanged()
     {
-        if(this.hostTile != null){
-        this.hostTile.onInventoryChanged();
+        if (this.hostTile != null)
+        {
+            this.hostTile.onInventoryChanged();
         }
     }
 
     @Override
     public boolean isUseableByPlayer(EntityPlayer par1EntityPlayer)
     {
-        if(this.hostTile != null)
+        if (this.hostTile != null)
         {
-        return this.hostTile.worldObj.getBlockTileEntity(this.hostTile.xCoord, this.hostTile.yCoord, this.hostTile.zCoord) != this.hostTile ? false : par1EntityPlayer.getDistanceSq(this.hostTile.xCoord + 0.5D, this.hostTile.yCoord + 0.5D, this.hostTile.zCoord + 0.5D) <= 64.0D;
-    }
+            return this.hostTile.worldObj.getBlockTileEntity(this.hostTile.xCoord, this.hostTile.yCoord, this.hostTile.zCoord) != this.hostTile ? false : par1EntityPlayer.getDistanceSq(this.hostTile.xCoord + 0.5D, this.hostTile.yCoord + 0.5D, this.hostTile.zCoord + 0.5D) <= 64.0D;
+        }
         return true;
     }
 

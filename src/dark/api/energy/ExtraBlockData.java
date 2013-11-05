@@ -11,7 +11,7 @@ import com.builtbroken.common.science.ChemElement;
 
 /** Information about blocks not provided by minecraft such as density, mass, volume, heating values,
  * chemical properties, etc etc
- *
+ * 
  * @author DarkGuardsman */
 public class ExtraBlockData
 {
@@ -39,7 +39,7 @@ public class ExtraBlockData
     }
 
     /** Returns a temp at the given location in kelvin
-     *
+     * 
      * @param world
      * @param vec
      * @return */

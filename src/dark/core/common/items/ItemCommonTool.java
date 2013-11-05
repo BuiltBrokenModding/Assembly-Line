@@ -40,7 +40,7 @@ import dark.core.prefab.ModPrefab;
 
 /** Flexible tool class that uses NBT to store damage and effect rather than metadata. Metadata
  * instead is used to store sub items allowing several different tools to exist within the same item
- *
+ * 
  * @author DarkGuardsman */
 public class ItemCommonTool extends Item implements IExtraItemInfo
 {
@@ -213,10 +213,10 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
                 for (ItemStack stack : drops)
                 {
                     float f = 0.7F;
-                    double d = (double) (rand.nextFloat() * f) + (double) (1.0F - f) * 0.5D;
-                    double d1 = (double) (rand.nextFloat() * f) + (double) (1.0F - f) * 0.5D;
-                    double d2 = (double) (rand.nextFloat() * f) + (double) (1.0F - f) * 0.5D;
-                    EntityItem entityitem = new EntityItem(player.worldObj, (double) x + d, (double) y + d1, (double) z + d2, stack);
+                    double d = (rand.nextFloat() * f) + (1.0F - f) * 0.5D;
+                    double d1 = (rand.nextFloat() * f) + (1.0F - f) * 0.5D;
+                    double d2 = (rand.nextFloat() * f) + (1.0F - f) * 0.5D;
+                    EntityItem entityitem = new EntityItem(player.worldObj, x + d, y + d1, z + d2, stack);
                     entityitem.delayBeforeCanPickup = 10;
                     player.worldObj.spawnEntityInWorld(entityitem);
                 }

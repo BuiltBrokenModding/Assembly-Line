@@ -28,7 +28,7 @@ import dark.core.registration.ModObjectRegistry.BlockBuildData;
 /** Basic TileEntity Container class designed to be used by generic machines. It is suggested that
  * each mod using this create there own basic block extending this to reduce need to use build data
  * per block.
- *
+ * 
  * @author Darkguardsman */
 public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
 {
@@ -104,6 +104,7 @@ public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
         }
     }
 
+    @Override
     public void breakBlock(World world, int x, int y, int z, int par5, int par6)
     {
         super.breakBlock(world, x, y, z, par5, par6);

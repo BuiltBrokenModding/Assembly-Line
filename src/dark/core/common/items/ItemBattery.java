@@ -10,7 +10,7 @@ import dark.core.common.DarkMain;
 import dark.core.prefab.ModPrefab;
 
 /** Simple battery to store energy
- *
+ * 
  * @author DarkGuardsman */
 public class ItemBattery extends ItemElectric
 {

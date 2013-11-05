@@ -28,7 +28,7 @@ public class FluidMasterList
     }
 
     /** Registers a fluid, by fluid name, as a molten fluids so pipes will interact with it different
-     *
+     * 
      * @param name - fluid name
      * @param heatValue - temperature of the fluid */
     public static void registerMoltenFluid(String name, float heatValue)
@@ -41,7 +41,7 @@ public class FluidMasterList
 
     /** Try to only register very simple items as a reverse recipe system will be used to get to the
      * items used to craft the object
-     *
+     * 
      * @param id - item id
      * @param meta - item meta
      * @param stack - fluid stack to return */

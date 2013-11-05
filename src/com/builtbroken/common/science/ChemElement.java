@@ -4,7 +4,7 @@ package com.builtbroken.common.science;
  * parts but each element should have a listed names, symbol, and atomic mass. Atomic number should
  * be the placement # in the list. Var ZERO should not be used as its designed to offset the
  * placement of all elements by one. As well is returned instead of null.
- *
+ * 
  * @Source http://www.periodictable.com/Properties/A/SpecificHeat.an.html
  * @source http://www.chemicalelements.com/
  * @source http://www.lenntech.com/periodic/periodic-chart.htm

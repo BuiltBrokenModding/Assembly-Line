@@ -9,7 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
  * automation. As well this is not designed to replace the need for IInventory support of a tile but
  * to make it easier to manage. Suggested use it to create a prefab manager for several tiles. Then
  * have those tiles use the prefab as an extermal inventory manager to reduce code size per class.
- *
+ * 
  * @author DarkGuardsman */
 public interface IInvBox extends ISidedInventory
 {
