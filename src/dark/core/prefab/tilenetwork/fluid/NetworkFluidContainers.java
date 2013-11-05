@@ -6,7 +6,6 @@ import java.util.List;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
-import dark.api.ColorCode;
 import dark.api.fluid.INetworkFluidPart;
 import dark.api.parts.INetworkPart;
 import dark.core.prefab.helpers.FluidHelper;
@@ -15,7 +14,7 @@ import dark.core.prefab.tilenetwork.NetworkTileEntities;
 /** Side note: the network should act like this when done {@link http
  * ://www.e4training.com/hydraulic_calculators/B1.htm} as well as stay compatible with the forge
  * Liquids
- *
+ * 
  * @author Rseifert */
 public class NetworkFluidContainers extends NetworkFluidTiles
 {

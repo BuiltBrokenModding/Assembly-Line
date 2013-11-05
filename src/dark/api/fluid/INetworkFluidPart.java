@@ -4,14 +4,12 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import net.minecraftforge.fluids.IFluidTank;
-import dark.api.ColorCode.IColorCoded;
 import dark.api.parts.INetworkPart;
 
 /** Interface used by part that are members of a fluid tile network. Parts in the network will act as
  * one entity and will be controlled by the network. This means the network need the part to access
  * the parts in a set way to function correctly
- *
+ * 
  * @author DarkGuardsman */
 public interface INetworkFluidPart extends IFluidHandler, INetworkPart
 {
@@ -29,11 +27,11 @@ public interface INetworkFluidPart extends IFluidHandler, INetworkPart
 
     /** Can the fluid pass from one side to the next. Used by path finder to see if the fluid can
      * move threw the pipes.
-     *
+     * 
      * @param fluid - fluid that is trying to pass threw
      * @param from - direction the fluid is coming from
      * @param to - direction the fluid is going to
-     *
+     * 
      * @Note only do logic in the method as it may be called many times and expect no change from
      * the pipes or world.
      * @return true will let the fluid pass. */
@@ -41,7 +39,7 @@ public interface INetworkFluidPart extends IFluidHandler, INetworkPart
 
     /** Called while the fluid is passing threw the pipe. This is the pipes chance to modify the
      * fluid or react to the fluid
-     *
+     * 
      * @param fluid - fluid that is trying to pass threw
      * @param from - direction the fluid is coming from
      * @param to - direction the fluid is going to

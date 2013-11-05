@@ -12,11 +12,11 @@ import dark.fluid.common.prefab.TileEntityFluidNetworkTile;
 
 /** Enum to hold info about each pipe material. Values are by default and some can change with pipe
  * upgrades.
- *
+ * 
  * @Note unsupportedFluids should only be used by filters. All pipes should allow all fluid types.
  * However, pipes that can't support the fluid should have an effect. Eg no gas support should cause
  * the pipe to leak. No molten support should cause the pipe to take damage.
- *
+ * 
  * @author DarkGuardsman */
 public enum FluidPartsMaterial
 {
@@ -85,7 +85,7 @@ public enum FluidPartsMaterial
 
     public static FluidPartsMaterial get(int i)
     {
-        if(i < FluidPartsMaterial.values().length)
+        if (i < FluidPartsMaterial.values().length)
         {
             return FluidPartsMaterial.values()[i];
         }
@@ -145,13 +145,13 @@ public enum FluidPartsMaterial
 
     public boolean canSupport(FluidStack fluid)
     {
-        if(fluid != null && fluid.getFluid() != null)
+        if (fluid != null && fluid.getFluid() != null)
         {
-            if(fluid.getFluid().isGaseous(fluid) && this.canSupportGas)
+            if (fluid.getFluid().isGaseous(fluid) && this.canSupportGas)
             {
                 return true;
             }
-            else if(!fluid.getFluid().isGaseous(fluid) && this.canSupportFluids)
+            else if (!fluid.getFluid().isGaseous(fluid) && this.canSupportFluids)
             {
                 return true;
             }

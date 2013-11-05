@@ -1,44 +1,14 @@
 package dark.fluid.common.pipes;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-
-import org.bouncycastle.util.Arrays;
-
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.core.vector.VectorHelper;
-import universalelectricity.prefab.network.IPacketReceiver;
-import universalelectricity.prefab.tile.TileEntityAdvanced;
-
-import com.google.common.io.ByteArrayDataInput;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.ColorCode;
 import dark.api.ColorCode.IColorCoded;
-import dark.api.IToolReadOut;
-import dark.api.fluid.FluidMasterList;
 import dark.api.fluid.INetworkPipe;
-import dark.api.parts.ITileConnector;
-import dark.core.common.DarkMain;
-import dark.core.network.PacketHandler;
-import dark.core.prefab.helpers.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 import dark.core.prefab.tilenetwork.fluid.NetworkPipes;
 import dark.fluid.common.FluidPartsMaterial;
@@ -156,7 +126,7 @@ public class TileEntityPipe extends TileEntityFluidNetworkTile implements IColor
     }
 
     /** Calculates flow rate based on viscosity & temp of the fluid as all other factors are know
-     *
+     * 
      * @param fluid - fluidStack
      * @param temp = tempature of the fluid
      * @param pressure - pressure difference of were the fluid is flowing too.

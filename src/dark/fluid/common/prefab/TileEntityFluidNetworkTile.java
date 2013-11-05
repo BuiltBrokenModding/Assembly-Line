@@ -125,7 +125,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
     @Override
     public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
     {
-        if (this.getTileNetwork() != null  && resource != null)
+        if (this.getTileNetwork() != null && resource != null)
         {
             if (this.getTileNetwork().getNetworkTank() != null && this.getTileNetwork().getNetworkTank().getFluid() != null && this.getTileNetwork().getNetworkTank().getFluid().isFluidEqual(resource))
             {
@@ -194,7 +194,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
     }
 
     /** Checks to make sure the connection is valid to the tileEntity
-     *
+     * 
      * @param tileEntity - the tileEntity being checked
      * @param side - side the connection is too */
     public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)
