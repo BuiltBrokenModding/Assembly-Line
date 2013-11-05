@@ -7,9 +7,13 @@ package dark.api.reciepes;
 public interface IAssemblyObject
 {
     /** Gets the recipe that this object is being build from */
-    public IAssemblyRecipe getRecipe();
+    public IAssemblyRecipe getRecipe(Object object);
 
     /** Called each time the assembler makes a change to the object. Use this to trigger render
      * updates of the object */
-    public void onChanged();
+    public void onChanged(Object object);
+
+    public void setStep(Object object, int step);
+
+    public int getStep(Object object);
 }

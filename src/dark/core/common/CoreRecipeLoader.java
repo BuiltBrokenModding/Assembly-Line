@@ -8,7 +8,7 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.api.ColorCode;
-import dark.api.reciepes.ProcessorRecipes;
+import dark.api.reciepes.MachineRecipeHandler;
 import dark.api.reciepes.ProcessorType;
 import dark.core.common.blocks.BlockBasalt;
 import dark.core.common.blocks.BlockOre;
@@ -114,27 +114,27 @@ public class CoreRecipeLoader extends RecipeLoader
         if (itemMetals instanceof ItemOreDirv)
         {
             //Alt salvaging item list
-            ProcessorRecipes.setAltOutput(ProcessorType.GRINDER, Block.wood, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.DUST, 3));
-            ProcessorRecipes.setAltOutput(ProcessorType.GRINDER, Block.planks, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.DUST, 1));
+            MachineRecipeHandler.newAltProcessorOutput(ProcessorType.GRINDER, Block.wood, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.DUST, 3));
+            MachineRecipeHandler.newAltProcessorOutput(ProcessorType.GRINDER, Block.planks, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.DUST, 1));
 
-            ProcessorRecipes.setAltOutput(ProcessorType.CRUSHER, Block.wood, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.SCRAPS, 3));
-            ProcessorRecipes.setAltOutput(ProcessorType.CRUSHER, Block.planks, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.SCRAPS, 1));
+            MachineRecipeHandler.newAltProcessorOutput(ProcessorType.CRUSHER, Block.wood, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.SCRAPS, 3));
+            MachineRecipeHandler.newAltProcessorOutput(ProcessorType.CRUSHER, Block.planks, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.SCRAPS, 1));
 
             //Stone recipes
-            ProcessorRecipes.createRecipe(ProcessorType.GRINDER, Block.stone, EnumMaterial.getStack(EnumMaterial.STONE, EnumOrePart.DUST, 1));
+            MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, Block.stone, EnumMaterial.getStack(EnumMaterial.STONE, EnumOrePart.DUST, 1));
 
             //Wood recipes
-            ProcessorRecipes.createRecipe(ProcessorType.GRINDER, Block.wood, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.DUST, 3));
-            ProcessorRecipes.createRecipe(ProcessorType.GRINDER, Block.planks, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.DUST, 1));
-            ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, Block.wood, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.SCRAPS, 3));
-            ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, Block.planks, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.SCRAPS, 1));
+            MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, Block.wood, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.DUST, 3));
+            MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, Block.planks, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.DUST, 1));
+            MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, Block.wood, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.SCRAPS, 3));
+            MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, Block.planks, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.SCRAPS, 1));
 
             //Gold Recipes
-            ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, Block.blockIron, EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.SCRAPS, 8));
-            ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, Block.oreIron, EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.RUBBLE, 1));
+            MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, Block.blockIron, EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.SCRAPS, 8));
+            MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, Block.oreIron, EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.RUBBLE, 1));
             //Iron Recipes
-            ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, Block.blockGold, EnumMaterial.getStack(EnumMaterial.GOLD, EnumOrePart.SCRAPS, 8));
-            ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, Block.oreGold, EnumMaterial.getStack(EnumMaterial.GOLD, EnumOrePart.RUBBLE, 1));
+            MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, Block.blockGold, EnumMaterial.getStack(EnumMaterial.GOLD, EnumOrePart.SCRAPS, 8));
+            MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, Block.oreGold, EnumMaterial.getStack(EnumMaterial.GOLD, EnumOrePart.RUBBLE, 1));
             //Dust recipes
             GameRegistry.addShapelessRecipe(EnumMaterial.getStack(EnumMaterial.STEEL, EnumOrePart.DUST, 1), new Object[] { EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.DUST, 1), new ItemStack(Item.coal, 1, 0), new ItemStack(Item.coal, 1, 0) });
             GameRegistry.addShapelessRecipe(EnumMaterial.getStack(EnumMaterial.STEEL, EnumOrePart.DUST, 1), new Object[] { EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.DUST, 1), new ItemStack(Item.coal, 1, 1), new ItemStack(Item.coal, 1, 1) });
@@ -164,14 +164,14 @@ public class CoreRecipeLoader extends RecipeLoader
                 if (mat.shouldCreateItem(EnumOrePart.DUST))
                 {
                     FurnaceRecipes.smelting().addSmelting(mat.getStack(EnumOrePart.DUST, 1).itemID, mat.getStack(EnumOrePart.DUST, 1).getItemDamage(), mat.getStack(EnumOrePart.INGOTS, 1), 0.6f);
-                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, mat.getStack(EnumOrePart.RUBBLE, 1), mat.getStack(EnumOrePart.DUST, 1), 1, 4);
-                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, mat.getStack(EnumOrePart.SCRAPS, 1), mat.getStack(EnumOrePart.DUST, 1));
-                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.DUST, 1));
-                    ProcessorRecipes.setAltOutput(ProcessorType.GRINDER, mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.DUST, 1));
-                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, mat.getStack(EnumOrePart.PLATES, 1), mat.getStack(EnumOrePart.DUST, 1), 2, 4);
-                    ProcessorRecipes.setAltOutput(ProcessorType.GRINDER, mat.getStack(EnumOrePart.PLATES, 1), mat.getStack(EnumOrePart.DUST, 3));
-                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, mat.getStack(EnumOrePart.ROD, 1), mat.getStack(EnumOrePart.DUST, 1));
-                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, mat.getStack(EnumOrePart.TUBE, 1), mat.getStack(EnumOrePart.DUST, 1));
+                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, mat.getStack(EnumOrePart.RUBBLE, 1), mat.getStack(EnumOrePart.DUST, 1), 1, 4);
+                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, mat.getStack(EnumOrePart.SCRAPS, 1), mat.getStack(EnumOrePart.DUST, 1));
+                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.DUST, 1));
+                    MachineRecipeHandler.newAltProcessorOutput(ProcessorType.GRINDER, mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.DUST, 1));
+                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, mat.getStack(EnumOrePart.PLATES, 1), mat.getStack(EnumOrePart.DUST, 1), 2, 4);
+                    MachineRecipeHandler.newAltProcessorOutput(ProcessorType.GRINDER, mat.getStack(EnumOrePart.PLATES, 1), mat.getStack(EnumOrePart.DUST, 3));
+                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, mat.getStack(EnumOrePart.ROD, 1), mat.getStack(EnumOrePart.DUST, 1));
+                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, mat.getStack(EnumOrePart.TUBE, 1), mat.getStack(EnumOrePart.DUST, 1));
                 }
 
                 // Salvaging recipe
@@ -179,12 +179,12 @@ public class CoreRecipeLoader extends RecipeLoader
                 if (mat.shouldCreateItem(EnumOrePart.SCRAPS))
                 {
                     FurnaceRecipes.smelting().addSmelting(mat.getStack(EnumOrePart.SCRAPS, 1).itemID, mat.getStack(EnumOrePart.SCRAPS, 1).getItemDamage(), mat.getStack(EnumOrePart.INGOTS, 1), 0.6f);
-                    ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, mat.getStack(EnumOrePart.PLATES, 1), mat.getStack(EnumOrePart.SCRAPS, 3));
-                    ProcessorRecipes.setAltOutput(ProcessorType.CRUSHER, mat.getStack(EnumOrePart.PLATES, 1), mat.getStack(EnumOrePart.SCRAPS, 3));
-                    ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, mat.getStack(EnumOrePart.RUBBLE, 1), mat.getStack(EnumOrePart.SCRAPS, 1), 1, 5);
-                    ProcessorRecipes.setAltOutput(ProcessorType.CRUSHER, mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.SCRAPS, 1));
-                    ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, mat.getStack(EnumOrePart.ROD, 1), mat.getStack(EnumOrePart.SCRAPS, 1));
-                    ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, mat.getStack(EnumOrePart.TUBE, 1), mat.getStack(EnumOrePart.SCRAPS, 1));
+                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, mat.getStack(EnumOrePart.PLATES, 1), mat.getStack(EnumOrePart.SCRAPS, 3));
+                    MachineRecipeHandler.newAltProcessorOutput(ProcessorType.CRUSHER, mat.getStack(EnumOrePart.PLATES, 1), mat.getStack(EnumOrePart.SCRAPS, 3));
+                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, mat.getStack(EnumOrePart.RUBBLE, 1), mat.getStack(EnumOrePart.SCRAPS, 1), 1, 5);
+                    MachineRecipeHandler.newAltProcessorOutput(ProcessorType.CRUSHER, mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.SCRAPS, 1));
+                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, mat.getStack(EnumOrePart.ROD, 1), mat.getStack(EnumOrePart.SCRAPS, 1));
+                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, mat.getStack(EnumOrePart.TUBE, 1), mat.getStack(EnumOrePart.SCRAPS, 1));
                 }
                 if (mat.shouldCreateItem(EnumOrePart.TUBE))
                 {
@@ -218,8 +218,8 @@ public class CoreRecipeLoader extends RecipeLoader
                 if (CoreRecipeLoader.itemMetals instanceof ItemOreDirv)
                 {
                     FurnaceRecipes.smelting().addSmelting(blockOre.blockID, data.ordinal(), EnumMaterial.getStack(data.mat, EnumOrePart.INGOTS, 1), 0.6f);
-                    ProcessorRecipes.createRecipe(ProcessorType.CRUSHER, new ItemStack(blockOre.blockID, 1, data.ordinal()), EnumMaterial.getStack(data.mat, EnumOrePart.RUBBLE, 1), 1, 2);
-                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, new ItemStack(blockOre.blockID, 1, data.ordinal()), EnumMaterial.getStack(data.mat, EnumOrePart.DUST, 1), 1, 3);
+                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, new ItemStack(blockOre.blockID, 1, data.ordinal()), EnumMaterial.getStack(data.mat, EnumOrePart.RUBBLE, 1), 1, 2);
+                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, new ItemStack(blockOre.blockID, 1, data.ordinal()), EnumMaterial.getStack(data.mat, EnumOrePart.DUST, 1), 1, 3);
 
                 }
             }
@@ -238,10 +238,10 @@ public class CoreRecipeLoader extends RecipeLoader
                 if (blockStainGlass != null)
                 {
                     FurnaceRecipes.smelting().addSmelting(blockColorSand.blockID, code.ordinal(), new ItemStack(blockStainGlass, 1, code.ordinal()), 10F);
-                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, new ItemStack(blockStainGlass, 1, code.ordinal()), new ItemStack(blockColorSand.blockID, 1, code.ordinal()));
+                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, new ItemStack(blockStainGlass, 1, code.ordinal()), new ItemStack(blockColorSand.blockID, 1, code.ordinal()));
                 }
                 GameRegistry.addShapelessRecipe(new ItemStack(blockColorSand.blockID, 1, code.ordinal()), new Object[] { new ItemStack(blockColorSand, 1, code.ordinal()) });
-                ProcessorRecipes.createRecipe(ProcessorType.GRINDER, new ItemStack(blockColorSand, 1, code.ordinal()), new ItemStack(itemGlowingSand, 1, code.ordinal()));
+                MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, new ItemStack(blockColorSand, 1, code.ordinal()), new ItemStack(itemGlowingSand, 1, code.ordinal()));
 
             }
 
@@ -251,13 +251,13 @@ public class CoreRecipeLoader extends RecipeLoader
                 if (blockGlowGlass != null)
                 {
                     FurnaceRecipes.smelting().addSmelting(itemGlowingSand.itemID, code.ordinal(), new ItemStack(blockGlowGlass, 1, code.ordinal()), 10F);
-                    ProcessorRecipes.createRecipe(ProcessorType.GRINDER, new ItemStack(blockGlowGlass, 1, code.ordinal()), new ItemStack(itemGlowingSand, 1, code.ordinal()));
+                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, new ItemStack(blockGlowGlass, 1, code.ordinal()), new ItemStack(itemGlowingSand, 1, code.ordinal()));
                 }
                 if (blockColorSand != null)
                 {
                     GameRegistry.addShapelessRecipe(new ItemStack(itemGlowingSand, 1, code.ordinal()), new Object[] { new ItemStack(blockColorSand.blockID, 1, code.ordinal()), Item.redstone });
                     GameRegistry.addShapelessRecipe(new ItemStack(itemGlowingSand, 1, code.ordinal()), new Object[] { new ItemStack(blockColorSand.blockID, 1, code.ordinal()), Item.glowstone });
-                    ProcessorRecipes.markUnsalvagable(new ItemStack(itemGlowingSand, 1, code.ordinal()));
+                    MachineRecipeHandler.banProcessingOfItem(new ItemStack(itemGlowingSand, 1, code.ordinal()));
                 }
             }
 

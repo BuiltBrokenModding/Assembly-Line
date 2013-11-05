@@ -30,7 +30,7 @@ import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
-import dark.api.reciepes.ProcessorRecipes;
+import dark.api.reciepes.MachineRecipeHandler;
 import dark.core.common.blocks.BlockBasalt;
 import dark.core.common.blocks.BlockColorGlass;
 import dark.core.common.blocks.BlockColorGlowGlass;
@@ -216,7 +216,7 @@ public class DarkMain extends ModPrefab
         {
             DMCreativeTab.tabIndustrial.itemStack = EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.GEARS, 1);
         }
-        ProcessorRecipes.parseOreNames(CONFIGURATION);
+        MachineRecipeHandler.parseOreNames(CONFIGURATION);
     }
 
     @Override

@@ -14,10 +14,14 @@ import com.builtbroken.common.Pair;
  * @author Darkguardsman */
 public enum ProcessorType
 {
+    /** Pistons that smash the object */
     CRUSHER(),
+    /** Several disks that shred the item up */
     GRINDER(),
-    METAL_PRESS(),
-    SHARPENING_STONE();
+    /** Grinds the edge or surface of the item sharpening it */
+    SHARPENING_STONE(),
+    /** Breaks down an item carefully giving an almost complete output of item used to craft it */
+    SALVAGER();
     public HashMap<Pair<Integer, Integer>, ProcessorRecipe> recipes = new HashMap();
     public HashMap<Pair<Integer, Integer>, ItemStack> altOutput = new HashMap();
     public List<Pair<Integer, Integer>> banList = new ArrayList();
