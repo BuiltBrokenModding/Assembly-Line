@@ -21,7 +21,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.parts.INetworkPart;
 import dark.core.common.DarkMain;
 import dark.core.interfaces.IBlockActivated;
-import dark.core.prefab.IExtraInfo.IExtraBlockInfo;
+import dark.core.interfaces.IExtraInfo.IExtraBlockInfo;
 import dark.core.prefab.ModPrefab;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 

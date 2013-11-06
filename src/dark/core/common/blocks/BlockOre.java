@@ -23,7 +23,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.CoreRecipeLoader;
 import dark.core.common.DarkMain;
 import dark.core.common.items.EnumMaterial;
-import dark.core.prefab.IExtraInfo.IExtraBlockInfo;
+import dark.core.interfaces.IExtraInfo.IExtraBlockInfo;
 import dark.core.prefab.ModPrefab;
 
 public class BlockOre extends Block implements IExtraBlockInfo

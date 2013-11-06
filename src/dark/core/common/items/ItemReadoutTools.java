@@ -24,9 +24,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.IToolReadOut;
 import dark.api.IToolReadOut.EnumTools;
 import dark.core.common.DarkMain;
+import dark.core.prefab.ItemBasic;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.helpers.FluidHelper;
-import dark.core.prefab.items.ItemBasic;
 
 public class ItemReadoutTools extends ItemBasic
 {

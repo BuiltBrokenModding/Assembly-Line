@@ -1,4 +1,4 @@
-package dark.core.prefab.entity;
+package dark.core.prefab;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -20,7 +20,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.prefab.damage.IDamageableTile;
+import dark.core.interfaces.IDamageableTile;
 
 /** Entity designed to take damage and apply it to the tile from an Entity. Simulates the tile is
  * alive and can be harmed by normal AIs without additional code.

@@ -55,9 +55,9 @@ import dark.core.common.machines.BlockSolarPanel;
 import dark.core.common.transmit.BlockWire;
 import dark.core.common.transmit.ItemBlockWire;
 import dark.core.network.PacketHandler;
+import dark.core.prefab.ItemBlockHolder;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.helpers.PacketDataWatcher;
-import dark.core.prefab.items.ItemBlockHolder;
 import dark.core.prefab.machine.BlockMulti;
 import dark.core.registration.ModObjectRegistry;
 

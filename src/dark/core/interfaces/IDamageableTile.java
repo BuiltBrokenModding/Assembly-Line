@@ -1,8 +1,7 @@
-package dark.core.prefab.damage;
+package dark.core.interfaces;
 
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import dark.core.interfaces.IBlockActivated;
 
 /** Used by tiles that want to pretend to be living objects. Will require the use of this interface
  * as well spawning a EntityTileDamage entity as its location. Then entity if larger than the tile

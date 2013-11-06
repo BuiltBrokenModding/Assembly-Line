@@ -1,4 +1,4 @@
-package dark.core.prefab;
+package dark.core.interfaces;
 
 import java.util.List;
 import java.util.Set;

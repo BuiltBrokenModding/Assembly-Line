@@ -13,7 +13,7 @@ import com.builtbroken.common.Pair;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.prefab.IExtraInfo.IExtraBlockInfo;
+import dark.core.interfaces.IExtraInfo.IExtraBlockInfo;
 
 @SideOnly(Side.CLIENT)
 public class ClientRegistryProxy extends RegistryProxy

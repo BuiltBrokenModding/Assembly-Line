@@ -22,9 +22,9 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.core.common.DarkMain;
-import dark.core.prefab.IExtraInfo;
-import dark.core.prefab.IExtraInfo.IExtraBlockInfo;
-import dark.core.prefab.IExtraInfo.IExtraItemInfo;
+import dark.core.interfaces.IExtraInfo;
+import dark.core.interfaces.IExtraInfo.IExtraBlockInfo;
+import dark.core.interfaces.IExtraInfo.IExtraItemInfo;
 import dark.core.prefab.machine.BlockMachine;
 
 /** Handler to make registering all parts of a mod's objects that are loaded into the game by forge

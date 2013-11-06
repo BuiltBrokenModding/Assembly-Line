@@ -19,9 +19,9 @@ import dark.api.IDisableable;
 import dark.core.common.DarkMain;
 import dark.core.interfaces.IExternalInv;
 import dark.core.interfaces.IInvBox;
+import dark.core.interfaces.IExtraInfo.IExtraTileEntityInfo;
 import dark.core.network.ISimplePacketReceiver;
 import dark.core.network.PacketHandler;
-import dark.core.prefab.IExtraInfo.IExtraTileEntityInfo;
 
 public abstract class TileEntityMachine extends TileEntityInv implements ISidedInventory, IExternalInv, IDisableable, ISimplePacketReceiver, IRotatable, IExtraTileEntityInfo
 {

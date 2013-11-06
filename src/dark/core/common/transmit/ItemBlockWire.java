@@ -2,7 +2,7 @@ package dark.core.common.transmit;
 
 import net.minecraft.util.Icon;
 import dark.core.common.CoreRecipeLoader;
-import dark.core.prefab.items.ItemBlockHolder;
+import dark.core.prefab.ItemBlockHolder;
 
 public class ItemBlockWire extends ItemBlockHolder
 {

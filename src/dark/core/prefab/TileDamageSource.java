@@ -1,4 +1,4 @@
-package dark.core.prefab.damage;
+package dark.core.prefab;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;

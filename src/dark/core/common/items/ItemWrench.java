@@ -10,9 +10,9 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
 import buildcraft.api.tools.IToolWrench;
 import dark.core.common.DarkMain;
-import dark.core.prefab.IExtraInfo.IExtraItemInfo;
+import dark.core.interfaces.IExtraInfo.IExtraItemInfo;
+import dark.core.prefab.ItemBasic;
 import dark.core.prefab.ModPrefab;
-import dark.core.prefab.items.ItemBasic;
 
 public class ItemWrench extends ItemBasic implements IToolWrench, IExtraItemInfo
 {

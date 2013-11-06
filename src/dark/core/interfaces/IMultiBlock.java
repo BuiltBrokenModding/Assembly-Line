@@ -1,8 +1,7 @@
-package dark.core.prefab;
+package dark.core.interfaces;
 
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.core.vector.Vector3;
-import dark.core.interfaces.IBlockActivated;
 
 /** Interface to be applied to tile entity blocks that occupies more than one block space. Useful for
  * large machines.

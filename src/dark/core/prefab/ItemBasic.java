@@ -1,4 +1,4 @@
-package dark.core.prefab.items;
+package dark.core.prefab;
 
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.item.Item;

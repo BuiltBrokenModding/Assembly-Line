@@ -1,4 +1,4 @@
-package dark.core.prefab.entity;
+package dark.core.prefab;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;

@@ -1,4 +1,4 @@
-package dark.core.prefab.items;
+package dark.core.prefab;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;

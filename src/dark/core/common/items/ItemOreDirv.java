@@ -11,9 +11,9 @@ import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
-import dark.core.prefab.IExtraInfo.IExtraItemInfo;
+import dark.core.interfaces.IExtraInfo.IExtraItemInfo;
+import dark.core.prefab.ItemBasic;
 import dark.core.prefab.ModPrefab;
-import dark.core.prefab.items.ItemBasic;
 
 /** A series of items that are derived from a basic material
  * 
