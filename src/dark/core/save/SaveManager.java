@@ -19,6 +19,16 @@ public class SaveManager
     private static HashMap<Class<?>, String> classToIDMap = new HashMap<Class<?>, String>();
     private static List<Object> saveList = new ArrayList<Object>();
     private static List<Object> objects = new ArrayList<Object>();
+    private static SaveManager instance;
+
+    public static SaveManager instance()
+    {
+        if(instance == null)
+        {
+            instance = new SaveManager();
+        }
+        return instance;
+    }
 
     /** Called when the object wants to be save only on the next save call. Will be removed from the
      * save manager after */

@@ -52,7 +52,7 @@ public class NBTFileHelper
         {
             try
             {
-                File tempFile = new File(file.getAbsoluteFile(), file.getName() + ".tmp");
+                File tempFile = new File(file.getParent(), file.getName() + ".tmp");
 
                 CompressedStreamTools.writeCompressed(data, new FileOutputStream(tempFile));
 
@@ -68,7 +68,7 @@ public class NBTFileHelper
             }
             catch (Exception e)
             {
-                System.out.println("Failed to save " + file.getName() + ".dat!");
+                System.out.println("Failed to save " + file.getName());
                 e.printStackTrace();
             }
         }
@@ -82,7 +82,7 @@ public class NBTFileHelper
      * @return true if everything goes well */
     public static boolean saveNBTFile(String filename, NBTTagCompound data)
     {
-        return saveNBTFile(getWorldSaveDirectory(MinecraftServer.getServer().getFolderName()), filename, data);
+        return saveNBTFile(getWorldSaveDirectory(MinecraftServer.getServer().getFolderName()), filename + ".dat", data);
     }
 
     /** Reads NBT data from the world folder.
@@ -92,7 +92,7 @@ public class NBTFileHelper
     {
         if (saveDirectory != null && filename != null)
         {
-            if(create && !saveDirectory.exists())
+            if (create && !saveDirectory.exists())
             {
                 saveDirectory.mkdirs();
             }

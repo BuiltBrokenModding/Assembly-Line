@@ -23,6 +23,7 @@ import cpw.mods.fml.relauncher.Side;
 import dark.core.common.ExternalModHandler;
 import dark.core.prefab.helpers.FluidHelper;
 import dark.core.registration.ModObjectRegistry;
+import dark.core.save.SaveManager;
 
 public abstract class ModPrefab
 {
@@ -94,6 +95,7 @@ public abstract class ModPrefab
         Modstats.instance().getReporter().registerMod(this);
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new FluidHelper());
+        MinecraftForge.EVENT_BUS.register(SaveManager.instance());
         UniversalElectricity.initiate();
         Compatibility.initiate();
     }
