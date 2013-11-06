@@ -90,26 +90,41 @@ public class NBTFileHelper
      * @return The NBT data */
     public static NBTTagCompound loadNBTFile(File saveDirectory, String filename, boolean create)
     {
-        try
+        if (saveDirectory != null && filename != null)
         {
-            File file = new File(saveDirectory, filename + ".dat");
-
-            if (file.exists())
+            if(create && !saveDirectory.exists())
             {
-                FMLLog.fine("Loaded " + filename + " data.");
-                return CompressedStreamTools.readCompressed(new FileInputStream(file));
+                saveDirectory.mkdirs();
             }
-            else if (create)
-            {
-                FMLLog.fine("Created new " + filename + " data.");
-                return new NBTTagCompound();
-            }
+            return loadNBTFile(new File(saveDirectory, filename + ".dat"), create);
         }
-        catch (Exception e)
+        return null;
+    }
+
+    public static NBTTagCompound loadNBTFile(File file, boolean create)
+    {
+        if (file != null)
         {
-            System.out.println("Failed to load " + filename + ".dat!");
-            e.printStackTrace();
-            return null;
+            try
+            {
+
+                if (file.exists())
+                {
+                    FMLLog.fine("Loaded " + file.getName() + " data.");
+                    return CompressedStreamTools.readCompressed(new FileInputStream(file));
+                }
+                else if (create)
+                {
+                    FMLLog.fine("Created new " + file.getName() + " data.");
+                    return new NBTTagCompound();
+                }
+            }
+            catch (Exception e)
+            {
+                System.out.println("Failed to load " + file.getName() + ".dat!");
+                e.printStackTrace();
+                return null;
+            }
         }
         return null;
     }
