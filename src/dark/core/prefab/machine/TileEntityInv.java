@@ -18,9 +18,10 @@ import dark.core.interfaces.IExternalInv;
 import dark.core.interfaces.IInvBox;
 import dark.core.prefab.invgui.InvChest;
 import dark.core.prefab.terminal.TerminalCommandRegistry;
+import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
 /** Prefab for simple object who only need basic inv support and nothing more
- * 
+ *
  * @author Darkguardsman */
 public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, ISidedInventory, ISpecialAccess
 {
@@ -33,6 +34,13 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
     public TileEntityInv()
     {
         TerminalCommandRegistry.loadNewGroupSet(this);
+    }
+
+    @Override
+    public void invalidate()
+    {
+        super.initiate();
+        NetworkTileEntities.invalidate(this);
     }
 
     @Override

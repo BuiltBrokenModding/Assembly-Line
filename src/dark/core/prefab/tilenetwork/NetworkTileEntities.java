@@ -1,88 +1,104 @@
 package dark.core.prefab.tilenetwork;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.path.Pathfinder;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import dark.api.parts.INetworkPart;
-import dark.core.prefab.helpers.ConnectionHelper;
+import dark.api.parts.ITileNetwork;
 
-public abstract class NetworkTileEntities
+public class NetworkTileEntities implements ITileNetwork
 {
-    /* BLOCK THAT ACT AS FLUID CONVEYORS ** */
-    public final Set<INetworkPart> networkMember = new HashSet<INetworkPart>();
+    protected final Set<INetworkPart> networkMembers = new HashSet<INetworkPart>();
+
+    public NetworkTileEntities()
+    {
+
+    }
 
     public NetworkTileEntities(INetworkPart... parts)
     {
-        this.networkMember.addAll(Arrays.asList(parts));
+        if (parts != null)
+        {
+            for (INetworkPart part : parts)
+            {
+                if (this.isValidMember(part))
+                {
+                    part.setTileNetwork(this);
+                    networkMembers.add(part);
+                }
+            }
+        }
     }
 
-    /** Should be called after a network is created from a split or merge */
-    public void init()
+    @Override
+    public String getName()
     {
-        cleanUpMembers();
+        return "TileNetwork";
     }
 
-    /** Creates a new instance of this network to be used to merge or split networks while still
-     * maintaining each class that extends the base network class
-     * 
-     * @return - new network instance using the current networks properties */
-    public abstract NetworkTileEntities newInstance();
-
-    /** Adds a TileEntity to the network. extends this to catch non-network parts and add them to
-     * other tile lists
-     * 
-     * @param tileEntity - tileEntity instance
-     * @param member - add to network member list
-     * @return */
-    public boolean addTile(TileEntity tileEntity, boolean member)
+    @Override
+    public Set<INetworkPart> getMembers()
     {
-        if (tileEntity == null || this.isPartOfNetwork(tileEntity))
+        return networkMembers;
+    }
+
+    @Override
+    public void onCreated()
+    {
+        this.load();
+        this.cleanUpMembers();
+    }
+
+    @Override
+    public void updateTick()
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void refreshTick()
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public boolean addTile(TileEntity ent, boolean member)
+    {
+        if (ent == null || ent.isInvalid())
         {
             return false;
         }
-        else if (tileEntity instanceof INetworkPart && member)
+        else if (ent instanceof INetworkPart && this.isValidMember((INetworkPart) ent) && member)
         {
-            return this.addNetworkPart((INetworkPart) tileEntity);
+            ((INetworkPart) ent).setTileNetwork(this);
+            if (this.networkMembers.contains((INetworkPart) ent))
+            {
+                return true;
+            }
+            return this.networkMembers.add((INetworkPart) ent);
         }
         return false;
     }
 
-    /** Adds a new part to the network member list */
-    public boolean addNetworkPart(INetworkPart part)
-    {
-        if (!networkMember.contains(part) && this.isValidMember(part))
-        {
-            networkMember.add(part);
-            part.setTileNetwork(this);
-            this.cleanUpMembers();
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isPartOfNetwork(TileEntity ent)
-    {
-        return this.networkMember.contains(ent);
-    }
-
-    /** removes a tile from all parts of the network */
+    @Override
     public boolean removeTile(TileEntity ent)
     {
-        return this.networkMember.remove(ent);
+        return this.networkMembers.remove(ent);
     }
 
     /** Cleans the list of networkMembers and remove those that no longer belong */
     public void cleanUpMembers()
     {
-        Iterator<INetworkPart> it = this.networkMember.iterator();
+        Iterator<INetworkPart> it = this.networkMembers.iterator();
 
         while (it.hasNext())
         {
@@ -105,32 +121,22 @@ public abstract class NetworkTileEntities
         return part != null && part instanceof TileEntity && !((TileEntity) part).isInvalid();
     }
 
-    /** Gets the list of network members */
-    public Set<INetworkPart> getNetworkMemebers()
+    @Override
+    public void save()
     {
-        return this.networkMember;
-    }
-
-    /** Override this to write any data to the tile. Called before a merge, split, or major edit of
-     * the network */
-    public void writeDataToTiles()
-    {
+        // TODO Auto-generated method stub
 
     }
 
-    /** Override this to read any data to the tile. Called after a merge, split, or major edit of the
-     * network */
-    public void readDataFromTiles()
+    @Override
+    public void load()
     {
+        // TODO Auto-generated method stub
 
     }
 
-    /** Combines two networks together into one. Calls to preMerge and doMerge instead of doing the
-     * merge process itself
-     * 
-     * @param network
-     * @param mergePoint */
-    public void merge(NetworkTileEntities network, INetworkPart mergePoint)
+    @Override
+    public void mergeNetwork(ITileNetwork network, INetworkPart mergePoint)
     {
         if (network != null && network != this && network.getClass().equals(this.getClass()))
         {
@@ -143,112 +149,102 @@ public abstract class NetworkTileEntities
 
     /** Processing that needs too be done before the network merges. Use this to do final network
      * merge calculations and to cause network merge failure
-     * 
+     *
      * @param network the network that is to merge with this one
      * @param part the part at which started the network merge. Use this to cause damage if two
      * networks merge with real world style failures
-     * 
+     *
      * @return false if the merge needs to be canceled.
-     * 
+     *
      * Cases in which the network should fail to merge are were the two networks merge with error.
      * Or, in the case of pipes the two networks merge and the merge point was destroyed by
      * combination of liquids.
-     * 
+     *
      * Ex Lava and water */
-    public boolean preMergeProcessing(NetworkTileEntities network, INetworkPart part)
+    public boolean preMergeProcessing(ITileNetwork network, INetworkPart part)
     {
-        this.writeDataToTiles();
+        this.save();
         return true;
     }
 
     /** Merges the two networks together */
-    protected void mergeDo(NetworkTileEntities network)
+    protected void mergeDo(ITileNetwork network)
     {
-        NetworkTileEntities newNetwork = this.newInstance();
-        newNetwork.getNetworkMemebers().addAll(this.getNetworkMemebers());
-        newNetwork.getNetworkMemebers().addAll(network.getNetworkMemebers());
-        newNetwork.readDataFromTiles();
-        newNetwork.init();
+        ITileNetwork newNetwork = NetworkHandler.createNewNetwork(NetworkHandler.getID(this.getClass()));
+        newNetwork.getMembers().addAll(this.getMembers());
+        newNetwork.getMembers().addAll(network.getMembers());
+        newNetwork.onCreated();
     }
 
-    /** Called when a peace of the network is remove from the network. Will split the network if it
-     * can no longer find a valid connection too all parts */
-    public void splitNetwork(World world, INetworkPart splitPoint)
+    @Override
+    public void splitNetwork(INetworkPart splitPoint)
     {
+        this.getMembers().remove(splitPoint);
         if (splitPoint instanceof TileEntity)
         {
-            this.getNetworkMemebers().remove(splitPoint);
-            /** Loop through the connected blocks and attempt to see if there are connections between
-             * the two points elsewhere. */
-            TileEntity[] connectedBlocks = ConnectionHelper.getSurroundingTileEntities((TileEntity) splitPoint);
+            List<TileEntity> connections = splitPoint.getNetworkConnections();
 
-            for (int i = 0; i < connectedBlocks.length; i++)
+            for (final TileEntity connectionStart : connections)
             {
-                TileEntity connectedBlockA = connectedBlocks[i];
-
-                if (connectedBlockA instanceof INetworkPart)
+                if (connectionStart instanceof INetworkPart)
                 {
-                    for (int pipeCount = 0; pipeCount < connectedBlocks.length; pipeCount++)
+                    for (final TileEntity connectionEnd : connections)
                     {
-                        final TileEntity connectedBlockB = connectedBlocks[pipeCount];
-
-                        if (connectedBlockA != connectedBlockB && connectedBlockB instanceof INetworkPart)
+                        if (connectionStart != connectionEnd && connectionEnd instanceof INetworkPart)
                         {
-                            Pathfinder finder = new NetworkPathFinder(world, (INetworkPart) connectedBlockB, splitPoint);
-                            finder.init(new Vector3(connectedBlockA));
+                            Pathfinder finder = new NetworkPathFinder(connectionEnd.worldObj, (INetworkPart) connectionEnd, splitPoint);
+                            finder.init(new Vector3(connectionStart));
 
-                            if (finder.results.size() > 0)
+                            if (finder.results.size() <= 0)
                             {
-                                /* STILL CONNECTED SOMEWHERE ELSE */
-                                for (Vector3 node : finder.closedSet)
-                                {
-                                    TileEntity entity = node.getTileEntity(world);
-                                    if (entity instanceof INetworkPart)
-                                    {
-                                        if (node != splitPoint)
-                                        {
-                                            ((INetworkPart) entity).setTileNetwork(this);
-                                        }
-                                    }
-                                }
-                            }
-                            else
-                            {
+                                this.save();
                                 /* NO LONGER CONNECTED ELSE WHERE SO SPLIT AND REFRESH */
-                                NetworkTileEntities newNetwork = this.newInstance();
-                                int parts = 0;
-                                for (Vector3 node : finder.closedSet)
+                                ITileNetwork newNetwork = NetworkHandler.createNewNetwork(NetworkHandler.getID(this.getClass()));
+                                if (newNetwork != null)
                                 {
-                                    TileEntity entity = node.getTileEntity(world);
-                                    if (entity instanceof INetworkPart)
+                                    for (Vector3 node : finder.closedSet)
                                     {
-                                        if (node != splitPoint)
+                                        TileEntity entity = node.getTileEntity(connectionEnd.worldObj);
+                                        if (entity instanceof INetworkPart)
                                         {
-                                            newNetwork.getNetworkMemebers().add((INetworkPart) entity);
-                                            parts++;
+                                            if (node != splitPoint)
+                                            {
+                                                newNetwork.getMembers().add((INetworkPart) entity);
+                                            }
                                         }
                                     }
+                                    newNetwork.onCreated();
                                 }
-                                newNetwork.init();
+                                this.cleanUpMembers();
+                                this.load();
                             }
                         }
                     }
                 }
             }
-            this.cleanUpMembers();
 
         }
+
     }
 
     @Override
     public String toString()
     {
-        return "TileNetwork[" + this.hashCode() + "| Parts:" + this.networkMember.size() + "]";
+        return this.getName() + "[" + this.hashCode() + "| Parts:" + this.networkMembers.size() + "]";
     }
 
-    /** invalidates/remove a tile from the networks that surround and connect to it
-     * 
-     * @param tileEntity - tile */
+    @Override
+    public boolean isInvalid()
+    {
+        return this.networkMembers.isEmpty();
+    }
+
+    @Override
+    public void invalidate()
+    {
+        this.networkMembers.clear();
+    }
+
     public static void invalidate(TileEntity tileEntity)
     {
         for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
@@ -261,4 +257,5 @@ public abstract class NetworkTileEntities
             }
         }
     }
+
 }

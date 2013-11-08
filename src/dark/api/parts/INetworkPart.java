@@ -3,7 +3,6 @@ package dark.api.parts;
 import java.util.List;
 
 import net.minecraft.tileentity.TileEntity;
-import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
 public interface INetworkPart extends ITileConnector
 {
@@ -14,10 +13,8 @@ public interface INetworkPart extends ITileConnector
     public void refresh();
 
     /** Gets the networkPart's primary network */
-    public NetworkTileEntities getTileNetwork();
+    public ITileNetwork getTileNetwork();
 
     /** Sets the networkPart's primary network */
-    public void setTileNetwork(NetworkTileEntities fluidNetwork);
-
-    public boolean mergeDamage(String result);
+    public void setTileNetwork(ITileNetwork network);
 }

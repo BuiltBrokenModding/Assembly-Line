@@ -8,7 +8,7 @@ import dark.api.parts.INetworkPart;
 
 /** Used for tile networks that only need to share power or act like a group battery that doesn't
  * store power on world save
- * 
+ *
  * @author DarkGuardsman */
 public class NetworkSharedPower extends NetworkTileEntities implements IElectricalStorage, IPowerLess
 {
@@ -21,12 +21,6 @@ public class NetworkSharedPower extends NetworkTileEntities implements IElectric
     }
 
     @Override
-    public NetworkTileEntities newInstance()
-    {
-        return new NetworkSharedPower();
-    }
-
-    @Override
     public boolean isValidMember(INetworkPart part)
     {
         return super.isValidMember(part) && part instanceof INetworkEnergyPart;
@@ -35,7 +29,7 @@ public class NetworkSharedPower extends NetworkTileEntities implements IElectric
     public float dumpPower(TileEntity source, float power, boolean doFill)
     {
         float room = (this.getMaxEnergyStored() - this.getEnergyStored());
-        if (!this.runPowerLess && this.networkMember.contains(source) && Math.ceil(room) > 0)
+        if (!this.runPowerLess && this.networkMembers.contains(source) && Math.ceil(room) > 0)
         {
             if (doFill)
             {
@@ -48,7 +42,7 @@ public class NetworkSharedPower extends NetworkTileEntities implements IElectric
 
     public boolean drainPower(TileEntity source, float power, boolean doDrain)
     {
-        if (this.networkMember.contains(source) && (this.getEnergyStored() >= power || this.runPowerLess))
+        if (this.networkMembers.contains(source) && (this.getEnergyStored() >= power || this.runPowerLess))
         {
             if (doDrain && !this.runPowerLess)
             {
@@ -65,7 +59,7 @@ public class NetworkSharedPower extends NetworkTileEntities implements IElectric
         super.cleanUpMembers();
         boolean set = false;
         this.energyMax = 0;
-        for (INetworkPart part : this.networkMember)
+        for (INetworkPart part : this.networkMembers)
         {
             if (!set && part instanceof IPowerLess && ((IPowerLess) part).runPowerLess())
             {
@@ -90,7 +84,7 @@ public class NetworkSharedPower extends NetworkTileEntities implements IElectric
     public void setPowerLess(boolean bool)
     {
         this.runPowerLess = bool;
-        for (INetworkPart part : this.networkMember)
+        for (INetworkPart part : this.networkMembers)
         {
             if (part instanceof IPowerLess)
             {
@@ -133,13 +127,13 @@ public class NetworkSharedPower extends NetworkTileEntities implements IElectric
     }
 
     @Override
-    public void writeDataToTiles()
+    public void save()
     {
         this.cleanUpMembers();
         float energyRemaining = this.getEnergyStored();
-        for (INetworkPart part : this.getNetworkMemebers())
+        for (INetworkPart part : this.getMembers())
         {
-            float watts = energyRemaining / this.getNetworkMemebers().size();
+            float watts = energyRemaining / this.getMembers().size();
             if (part instanceof INetworkEnergyPart)
             {
                 ((INetworkEnergyPart) part).setEnergyStored(Math.min(watts, ((INetworkEnergyPart) part).getMaxEnergyStored()));
@@ -149,11 +143,11 @@ public class NetworkSharedPower extends NetworkTileEntities implements IElectric
     }
 
     @Override
-    public void readDataFromTiles()
+    public void load()
     {
         this.setEnergyStored(0);
         this.cleanUpMembers();
-        for (INetworkPart part : this.getNetworkMemebers())
+        for (INetworkPart part : this.getMembers())
         {
             if (part instanceof INetworkEnergyPart)
             {
