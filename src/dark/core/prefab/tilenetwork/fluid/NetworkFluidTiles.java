@@ -13,7 +13,9 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import dark.api.fluid.INetworkFluidPart;
 import dark.api.parts.INetworkPart;
+import dark.api.parts.ITileNetwork;
 import dark.core.prefab.helpers.FluidHelper;
+import dark.core.prefab.tilenetwork.NetworkHandler;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
 public class NetworkFluidTiles extends NetworkTileEntities
@@ -27,15 +29,14 @@ public class NetworkFluidTiles extends NetworkTileEntities
     /** Has the collective tank been loaded yet */
     protected boolean loadedLiquids = false;
 
+    static
+    {
+        NetworkHandler.registerNetworkClass("FluidTiles", NetworkFluidTiles.class);
+    }
+
     public NetworkFluidTiles(INetworkPart... parts)
     {
         super(parts);
-    }
-
-    @Override
-    public NetworkTileEntities newInstance()
-    {
-        return new NetworkFluidTiles();
     }
 
     /** Gets the collective tank of the network */
@@ -62,7 +63,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
     {
         if (!this.loadedLiquids)
         {
-            this.readDataFromTiles();
+            this.load();
             this.loadedLiquids = true;
         }
         if (!world.isRemote && this.getNetworkTank() != null && stack != null)
@@ -75,7 +76,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
                 if (p != this.getNetworkTank().getFluidAmount())
                 {
                     this.sharedTankInfo = this.getNetworkTank().getInfo();
-                    this.writeDataToTiles();
+                    this.save();
                 }
             }
             return r;
@@ -88,7 +89,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
 
         if (!this.loadedLiquids)
         {
-            this.readDataFromTiles();
+            this.load();
             this.loadedLiquids = true;
         }
         FluidStack before = this.getNetworkTank().getFluid();
@@ -103,7 +104,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
                 if (!before.isFluidEqual(after) || (before != null && after != null && before.amount != after.amount))
                 {
                     this.sharedTankInfo = this.getNetworkTank().getInfo();
-                    this.writeDataToTiles();
+                    this.save();
                     /*TODO do a client update from the network rather than each pipe updating itself.
                      *This will save on packet size but will increase the CPU load of the client since the client
                      *will need to do network calculations */
@@ -115,18 +116,18 @@ public class NetworkFluidTiles extends NetworkTileEntities
     }
 
     @Override
-    public void writeDataToTiles()
+    public void save()
     {
         this.cleanUpMembers();
-        if (this.getNetworkTank().getFluid() != null && this.networkMember.size() > 0)
+        if (this.getNetworkTank().getFluid() != null && this.getMembers().size() > 0)
         {
             FluidStack stack = this.getNetworkTank().getFluid() == null ? null : this.getNetworkTank().getFluid().copy();
             int membersFilled = 0;
 
-            for (INetworkPart par : this.networkMember)
+            for (INetworkPart par : this.getMembers())
             {
                 //UPDATE FILL VOLUME
-                int fillVol = stack == null ? 0 : (stack.amount / (this.networkMember.size() - membersFilled));
+                int fillVol = stack == null ? 0 : (stack.amount / (this.getMembers().size() - membersFilled));
 
                 if (par instanceof INetworkFluidPart)
                 {
@@ -145,11 +146,11 @@ public class NetworkFluidTiles extends NetworkTileEntities
     }
 
     @Override
-    public void readDataFromTiles()
+    public void load()
     {
         FluidStack stack = null;
         this.cleanUpMembers();
-        for (INetworkPart par : this.networkMember)
+        for (INetworkPart par : this.getMembers())
         {
             if (par instanceof INetworkFluidPart)
             {
@@ -201,53 +202,47 @@ public class NetworkFluidTiles extends NetworkTileEntities
     }
 
     @Override
-    public void init()
+    public boolean preMergeProcessing(ITileNetwork mergingNetwork, INetworkPart mergePoint)
     {
-        super.init();
-        this.readDataFromTiles();
-    }
-
-    @Override
-    public boolean preMergeProcessing(NetworkTileEntities mergingNetwork, INetworkPart mergePoint)
-    {
-        if (mergingNetwork instanceof NetworkFluidTiles && ((NetworkFluidTiles) mergingNetwork).getClass() == this.getClass())
+        if (mergingNetwork instanceof NetworkFluidTiles)
         {
             if (!((NetworkFluidTiles) mergingNetwork).loadedLiquids)
             {
-                ((NetworkFluidTiles) mergingNetwork).readDataFromTiles();
+                ((NetworkFluidTiles) mergingNetwork).load();
             }
             if (!this.loadedLiquids)
             {
-                this.readDataFromTiles();
+                this.load();
             }
-            return true;
         }
-        return false;
+        return super.preMergeProcessing(mergingNetwork, mergePoint);
+
     }
 
     @Override
-    protected void mergeDo(NetworkTileEntities network)
+    protected void mergeDo(ITileNetwork network)
     {
-        NetworkFluidTiles newNetwork = (NetworkFluidTiles) this.newInstance();
-        FluidStack one = this.getNetworkTank().getFluid();
-        FluidStack two = ((NetworkFluidTiles) network).getNetworkTank().getFluid();
+        ITileNetwork newNetwork = NetworkHandler.createNewNetwork(NetworkHandler.getID(this.getClass()));
+        if (newNetwork instanceof NetworkFluidTiles)
+        {
+            FluidStack one = this.getNetworkTank().getFluid();
+            FluidStack two = ((NetworkFluidTiles) network).getNetworkTank().getFluid();
 
-        this.getNetworkTank().setFluid(null);
-        ((NetworkFluidTiles) network).getNetworkTank().setFluid(null);
+            this.getNetworkTank().setFluid(null);
+            ((NetworkFluidTiles) network).getNetworkTank().setFluid(null);
 
-        newNetwork.getNetworkMemebers().addAll(this.getNetworkMemebers());
-        newNetwork.getNetworkMemebers().addAll(network.getNetworkMemebers());
-
-        newNetwork.cleanUpMembers();
-        newNetwork.getNetworkTank().setFluid(FluidCraftingHandler.mergeFluidStacks(one, two));
-        newNetwork.sharedTankInfo = newNetwork.getNetworkTank().getInfo();
-        newNetwork.writeDataToTiles();
+            ((NetworkFluidTiles) newNetwork).getNetworkTank().setFluid(FluidCraftingHandler.mergeFluidStacks(one, two));
+            ((NetworkFluidTiles) newNetwork).sharedTankInfo = ((NetworkFluidTiles) newNetwork).getNetworkTank().getInfo();
+        }
+        newNetwork.getMembers().addAll(this.getMembers());
+        newNetwork.getMembers().addAll(network.getMembers());
+        newNetwork.onCreated();
     }
 
     @Override
     public void cleanUpMembers()
     {
-        Iterator<INetworkPart> it = this.networkMember.iterator();
+        Iterator<INetworkPart> it = this.getMembers().iterator();
         int capacity = 0;
         while (it.hasNext())
         {
@@ -278,7 +273,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
     @Override
     public String toString()
     {
-        return "FluidNetwork[" + this.hashCode() + "|parts:" + this.networkMember.size() + "]";
+        return "FluidNetwork[" + this.hashCode() + "|parts:" + this.getMembers().size() + "]";
     }
 
     public String getNetworkFluid()

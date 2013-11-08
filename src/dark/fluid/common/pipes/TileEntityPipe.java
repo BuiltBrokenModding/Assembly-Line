@@ -9,7 +9,7 @@ import universalelectricity.core.vector.Vector3;
 import dark.api.ColorCode;
 import dark.api.ColorCode.IColorCoded;
 import dark.api.fluid.INetworkPipe;
-import dark.core.prefab.tilenetwork.NetworkTileEntities;
+import dark.api.parts.ITileNetwork;
 import dark.core.prefab.tilenetwork.fluid.NetworkPipes;
 import dark.fluid.common.FluidPartsMaterial;
 import dark.fluid.common.prefab.TileEntityFluidNetworkTile;
@@ -52,19 +52,19 @@ public class TileEntityPipe extends TileEntityFluidNetworkTile implements IColor
                 //Same pipe types can connect
                 if (pipeMat == pipeMatOther)
                 {
-                    this.getTileNetwork().merge(((INetworkPipe) tileEntity).getTileNetwork(), this);
+                    this.getTileNetwork().mergeNetwork(((INetworkPipe) tileEntity).getTileNetwork(), this);
                     connectedBlocks.add(tileEntity);
                     this.renderConnection[side.ordinal()] = true;
                 }//Wood and stone pipes can connect to each other but not other pipe types since they are more like a trough than a pipe
                 else if ((pipeMat == FluidPartsMaterial.WOOD || pipeMat == FluidPartsMaterial.STONE) && (pipeMatOther == FluidPartsMaterial.WOOD || pipeMatOther == FluidPartsMaterial.STONE))
                 {
-                    this.getTileNetwork().merge(((INetworkPipe) tileEntity).getTileNetwork(), this);
+                    this.getTileNetwork().mergeNetwork(((INetworkPipe) tileEntity).getTileNetwork(), this);
                     connectedBlocks.add(tileEntity);
                     this.renderConnection[side.ordinal()] = true;
                 }//Any other pipe can connect to each other as long as the color matches except for glass which only works with itself at the moment
                 else if (pipeMat != FluidPartsMaterial.WOOD && pipeMat != FluidPartsMaterial.STONE && pipeMatOther != FluidPartsMaterial.WOOD && pipeMatOther != FluidPartsMaterial.STONE && pipeMat != FluidPartsMaterial.GLASS && pipeMatOther != FluidPartsMaterial.GLASS)
                 {
-                    this.getTileNetwork().merge(((INetworkPipe) tileEntity).getTileNetwork(), this);
+                    this.getTileNetwork().mergeNetwork(((INetworkPipe) tileEntity).getTileNetwork(), this);
                     connectedBlocks.add(tileEntity);
                     this.renderConnection[side.ordinal()] = true;
                 }
@@ -107,7 +107,7 @@ public class TileEntityPipe extends TileEntityFluidNetworkTile implements IColor
     }
 
     @Override
-    public void setTileNetwork(NetworkTileEntities network)
+    public void setTileNetwork(ITileNetwork network)
     {
         if (network instanceof NetworkPipes)
         {
@@ -126,7 +126,7 @@ public class TileEntityPipe extends TileEntityFluidNetworkTile implements IColor
     }
 
     /** Calculates flow rate based on viscosity & temp of the fluid as all other factors are know
-     * 
+     *
      * @param fluid - fluidStack
      * @param temp = tempature of the fluid
      * @param pressure - pressure difference of were the fluid is flowing too.

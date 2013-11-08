@@ -21,7 +21,7 @@ import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.prefab.tilenetwork.fluid.FluidNetworkHelper;
+import dark.core.prefab.tilenetwork.NetworkTileEntities;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.FMRecipeLoader;
 import dark.fluid.common.FluidMech;
@@ -130,7 +130,7 @@ public class BlockConstructionPump extends BlockFM
             TileEntity entity = world.getBlockTileEntity(x, y, z);
             if (entity instanceof TileEntityConstructionPump)
             {
-                FluidNetworkHelper.invalidate(entity);
+                NetworkTileEntities.invalidate(entity);
             }
 
             if (meta == 3)

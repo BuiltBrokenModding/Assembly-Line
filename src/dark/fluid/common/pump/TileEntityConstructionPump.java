@@ -21,7 +21,6 @@ import com.builtbroken.common.Pair;
 import dark.api.fluid.IDrain;
 import dark.api.fluid.INetworkPipe;
 import dark.api.parts.ITileConnector;
-import dark.core.prefab.tilenetwork.fluid.FluidNetworkHelper;
 import dark.core.prefab.tilenetwork.fluid.NetworkFluidTiles;
 
 public class TileEntityConstructionPump extends TileEntityStarterPump implements IFluidHandler, ITileConnector
@@ -38,7 +37,7 @@ public class TileEntityConstructionPump extends TileEntityStarterPump implements
     }
 
     /** Gets the facing direction
-     * 
+     *
      * @param input true for input side, false for output side
      * @return */
     public ForgeDirection getFacing(boolean input)
@@ -68,7 +67,7 @@ public class TileEntityConstructionPump extends TileEntityStarterPump implements
     }
 
     /** Gets the nextDrain in the list
-     * 
+     *
      * @param inputTile - input tile must be an instance of INetworkPipe
      * @param outputTile - output tile must be an instance of IFluidHandler
      * @param ignoreList - list of drains to ignore so that the next one is selected
@@ -162,7 +161,6 @@ public class TileEntityConstructionPump extends TileEntityStarterPump implements
     public void invalidate()
     {
         super.invalidate();
-        FluidNetworkHelper.invalidate(this);
     }
 
     @Override

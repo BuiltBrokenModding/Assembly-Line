@@ -1,6 +1,6 @@
 package dark.fluid.common.machines;
 
-import dark.core.prefab.tilenetwork.NetworkTileEntities;
+import dark.api.parts.ITileNetwork;
 import dark.core.prefab.tilenetwork.fluid.NetworkFluidContainers;
 import dark.fluid.common.prefab.TileEntityFluidNetworkTile;
 
@@ -22,7 +22,7 @@ public class TileEntityTank extends TileEntityFluidNetworkTile
     }
 
     @Override
-    public void setTileNetwork(NetworkTileEntities network)
+    public void setTileNetwork(ITileNetwork network)
     {
         if (network instanceof NetworkFluidContainers)
         {

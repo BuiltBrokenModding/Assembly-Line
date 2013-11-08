@@ -9,37 +9,31 @@ import dark.api.fluid.INetworkPipe;
 import dark.api.parts.INetworkPart;
 import dark.core.prefab.helpers.ConnectionHelper;
 import dark.core.prefab.helpers.FluidHelper;
+import dark.core.prefab.tilenetwork.NetworkHandler;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
-/** Side note: the network should act like this when done {@link http
- * ://www.e4training.com/hydraulic_calculators/B1.htm} as well as stay compatible with the forge
- * Liquids
- * 
+/** Extension on the fluid container network to provide a more advanced reaction to fluid passing
+ * threw each pipe. As well this doubled as a pressure network for those machines that support the
+ * use of pressure.
+ *
  * @author Rseifert */
 public class NetworkPipes extends NetworkFluidTiles
 {
     private boolean processingRequest;
     public float pressureProduced;
 
+    static
+    {
+        NetworkHandler.registerNetworkClass("FluidPipes", NetworkPipes.class);
+    }
+
     public NetworkPipes(INetworkPart... parts)
     {
         super(parts);
     }
 
-    @Override
-    public NetworkTileEntities newInstance()
-    {
-        return new NetworkPipes();
-    }
-
-    @Override
-    public boolean removeTile(TileEntity ent)
-    {
-        return super.removeTile(ent);
-    }
-
     /** Adds FLuid to this network from one of the connected Pipes
-     * 
+     *
      * @param source - Were this liquid came from
      * @param stack - LiquidStack to be sent
      * @param doFill - actually fill the tank or just check numbers
@@ -50,7 +44,7 @@ public class NetworkPipes extends NetworkFluidTiles
     }
 
     /** Adds FLuid to this network from one of the connected Pipes
-     * 
+     *
      * @param source - Were this liquid came from
      * @param stack - LiquidStack to be sent
      * @param doFill - actually fill the tank or just check numbers
@@ -176,10 +170,6 @@ public class NetworkPipes extends NetworkFluidTiles
                 // " from combined leaving " + (this.combinedStorage.getLiquid() != null ?
                 // this.combinedStorage.getLiquid().amount : 0));
 
-            }
-            if (prevCombined != null && this.getNetworkTank().getFluid() != null && prevCombined.amount != this.getNetworkTank().getFluid().amount)
-            {
-                this.writeDataToTiles();
             }
         }
         this.processingRequest = false;

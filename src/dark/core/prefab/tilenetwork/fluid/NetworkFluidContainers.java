@@ -9,15 +9,20 @@ import net.minecraftforge.fluids.IFluidHandler;
 import dark.api.fluid.INetworkFluidPart;
 import dark.api.parts.INetworkPart;
 import dark.core.prefab.helpers.FluidHelper;
+import dark.core.prefab.tilenetwork.NetworkHandler;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
-/** Side note: the network should act like this when done {@link http
- * ://www.e4training.com/hydraulic_calculators/B1.htm} as well as stay compatible with the forge
- * Liquids
- * 
- * @author Rseifert */
+/** Basically the same as network Fluid tiles class with the only difference being in how it stores
+ * the fluid. When it goes to sort the fluid it will use the fluid properties to adjust its position
+ * in the over all tank. Eg water goes down air goes up.
+ *
+ * @author DarkGuardsman */
 public class NetworkFluidContainers extends NetworkFluidTiles
 {
+    static
+    {
+        NetworkHandler.registerNetworkClass("FluidContainers", NetworkFluidContainers.class);
+    }
 
     public NetworkFluidContainers(INetworkPart... parts)
     {
@@ -25,28 +30,22 @@ public class NetworkFluidContainers extends NetworkFluidTiles
     }
 
     @Override
-    public NetworkTileEntities newInstance()
-    {
-        return new NetworkFluidContainers();
-    }
-
-    @Override
-    public void writeDataToTiles()
+    public void save()
     {
         this.cleanUpMembers();
 
         if (this.getNetworkTank() == null || this.getNetworkTank().getFluid() == null)
         {
-            super.writeDataToTiles();
+            super.save();
             return;
         }
         FluidStack fillStack = this.getNetworkTank().getFluid().copy();
 
         int lowestY = 255, highestY = 0;
 
-        if (this.getNetworkTank().getFluid() != null && this.getNetworkMemebers().size() > 0)
+        if (this.getNetworkTank().getFluid() != null && this.getMembers().size() > 0)
         {
-            for (INetworkPart part : this.getNetworkMemebers())
+            for (INetworkPart part : this.getMembers())
             {
                 if (part instanceof IFluidHandler)
                 {
@@ -69,7 +68,7 @@ public class NetworkFluidContainers extends NetworkFluidTiles
                 List<INetworkFluidPart> parts = new ArrayList<INetworkFluidPart>();
 
                 /* Grab all parts that share this Y level*/
-                for (INetworkPart part : this.getNetworkMemebers())
+                for (INetworkPart part : this.getMembers())
                 {
                     if (part instanceof INetworkFluidPart && ((TileEntity) part).yCoord == y)
                     {

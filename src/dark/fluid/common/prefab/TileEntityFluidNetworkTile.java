@@ -30,10 +30,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.fluid.FluidMasterList;
 import dark.api.fluid.INetworkFluidPart;
 import dark.api.parts.INetworkPart;
+import dark.api.parts.ITileNetwork;
 import dark.core.common.DarkMain;
 import dark.core.network.ISimplePacketReceiver;
 import dark.core.network.PacketHandler;
-import dark.core.prefab.tilenetwork.NetworkTileEntities;
 import dark.core.prefab.tilenetwork.fluid.NetworkFluidTiles;
 import dark.fluid.common.FluidPartsMaterial;
 
@@ -108,7 +108,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
     @Override
     public void invalidate()
     {
-        this.getTileNetwork().splitNetwork(this.worldObj, this);
+        this.getTileNetwork().splitNetwork(this);
         super.invalidate();
     }
 
@@ -194,7 +194,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
     }
 
     /** Checks to make sure the connection is valid to the tileEntity
-     * 
+     *
      * @param tileEntity - the tileEntity being checked
      * @param side - side the connection is too */
     public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)
@@ -205,7 +205,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
             {
                 if (this.canTileConnect(Connection.NETWORK, side.getOpposite()))
                 {
-                    this.getTileNetwork().merge(((INetworkFluidPart) tileEntity).getTileNetwork(), (INetworkPart) tileEntity);
+                    this.getTileNetwork().mergeNetwork(((INetworkFluidPart) tileEntity).getTileNetwork(), (INetworkPart) tileEntity);
                     this.renderConnection[side.ordinal()] = true;
                     connectedBlocks.add(tileEntity);
                 }
@@ -224,19 +224,13 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
     }
 
     @Override
-    public void setTileNetwork(NetworkTileEntities fluidNetwork)
+    public void setTileNetwork(ITileNetwork fluidNetwork)
     {
         if (fluidNetwork instanceof NetworkFluidTiles)
         {
             this.network = (NetworkFluidTiles) fluidNetwork;
         }
 
-    }
-
-    @Override
-    public boolean mergeDamage(String result)
-    {
-        return false;
     }
 
     @Override

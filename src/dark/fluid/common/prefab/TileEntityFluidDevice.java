@@ -7,7 +7,7 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import dark.api.IToolReadOut;
 import dark.api.parts.ITileConnector;
-import dark.core.prefab.tilenetwork.fluid.FluidNetworkHelper;
+import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
 public abstract class TileEntityFluidDevice extends TileEntityAdvanced implements IToolReadOut, ITileConnector
 {
@@ -17,7 +17,7 @@ public abstract class TileEntityFluidDevice extends TileEntityAdvanced implement
     public void invalidate()
     {
         super.invalidate();
-        FluidNetworkHelper.invalidate(this);
+        NetworkTileEntities.invalidate(this);
     }
 
     @Override
