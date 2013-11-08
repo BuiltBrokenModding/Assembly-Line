@@ -12,6 +12,7 @@ import universalelectricity.core.block.IElectricalStorage;
 import universalelectricity.core.vector.Vector3;
 import dark.api.parts.INetworkEnergyPart;
 import dark.api.parts.INetworkPart;
+import dark.core.prefab.tilenetwork.NetworkHandler;
 import dark.core.prefab.tilenetwork.NetworkSharedPower;
 
 public class NetworkAssembly extends NetworkSharedPower
@@ -38,16 +39,14 @@ public class NetworkAssembly extends NetworkSharedPower
     public float maxDemand = 0;
     /** lowest demand the network has seen */
     public float minDemand = 0;
+    static
+    {
+        NetworkHandler.registerNetworkClass("AssemblyNet", NetworkAssembly.class);
+    }
 
     public NetworkAssembly(INetworkPart... parts)
     {
         super(parts);
-    }
-
-    @Override
-    public NetworkAssembly newInstance()
-    {
-        return new NetworkAssembly();
     }
 
     /** Gets the demand of all parts of the network including network parts */
@@ -104,7 +103,7 @@ public class NetworkAssembly extends NetworkSharedPower
             lastTime = time;
         }
 
-        for (INetworkPart part : this.getNetworkMemebers())
+        for (INetworkPart part : this.getMembers())
         {
             if (part instanceof TileEntityAssembly)
             {
@@ -185,16 +184,9 @@ public class NetworkAssembly extends NetworkSharedPower
     }
 
     @Override
-    public boolean isPartOfNetwork(TileEntity ent)
-    {
-        //TODO check how this is used since it might only want network parts and not connections
-        return this.networkMember.contains(ent);
-    }
-
-    @Override
     public boolean removeTile(TileEntity ent)
     {
-        return this.networkMember.remove(ent) || this.powerLoads.remove(ent) || this.powerSources.remove(ent);
+        return super.removeTile(ent) || this.powerLoads.remove(ent) || this.powerSources.remove(ent);
     }
 
     @Override
@@ -264,12 +256,6 @@ public class NetworkAssembly extends NetworkSharedPower
     public boolean isValidMember(INetworkPart part)
     {
         return super.isValidMember(part) && part instanceof TileEntityAssembly;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "AssemblyNetwork[" + this.hashCode() + "][parts:" + this.networkMember.size() + "]";
     }
 
 }

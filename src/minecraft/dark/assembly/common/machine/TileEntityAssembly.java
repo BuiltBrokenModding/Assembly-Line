@@ -10,6 +10,7 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
 import dark.api.parts.INetworkEnergyPart;
+import dark.api.parts.ITileNetwork;
 import dark.assembly.common.AssemblyLine;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
 import dark.core.prefab.tilenetwork.NetworkSharedPower;
@@ -17,7 +18,7 @@ import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
 /** A class to be inherited by all machines on the assembly line. This class acts as a single peace
  * in a network of similar tiles allowing all to share power from one or more sources
- * 
+ *
  * @author DarkGuardsman */
 public abstract class TileEntityAssembly extends TileEntityEnergyMachine implements INetworkEnergyPart
 {
@@ -50,7 +51,7 @@ public abstract class TileEntityAssembly extends TileEntityEnergyMachine impleme
         NetworkTileEntities.invalidate(this);
         if (this.getTileNetwork() != null)
         {
-            this.getTileNetwork().splitNetwork(this.worldObj, this);
+            this.getTileNetwork().splitNetwork(this);
         }
         super.invalidate();
     }
@@ -95,7 +96,7 @@ public abstract class TileEntityAssembly extends TileEntityEnergyMachine impleme
                 TileEntity tileEntity = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
                 if (tileEntity instanceof TileEntityAssembly && ((TileEntityAssembly) tileEntity).canTileConnect(Connection.NETWORK, dir.getOpposite()))
                 {
-                    this.getTileNetwork().merge(((TileEntityAssembly) tileEntity).getTileNetwork(), this);
+                    this.getTileNetwork().mergeNetwork(((TileEntityAssembly) tileEntity).getTileNetwork(), this);
                     connectedTiles.add(tileEntity);
                 }
             }
@@ -119,7 +120,7 @@ public abstract class TileEntityAssembly extends TileEntityEnergyMachine impleme
     }
 
     @Override
-    public void setTileNetwork(NetworkTileEntities network)
+    public void setTileNetwork(ITileNetwork network)
     {
         if (network instanceof NetworkAssembly)
         {
@@ -184,13 +185,6 @@ public abstract class TileEntityAssembly extends TileEntityEnergyMachine impleme
     public void setPartEnergy(float energy)
     {
         this.energyStored = energy;
-    }
-
-    @Override
-    public boolean mergeDamage(String effect)
-    {
-        this.onDisable(20);
-        return true;
     }
 
     @Override
