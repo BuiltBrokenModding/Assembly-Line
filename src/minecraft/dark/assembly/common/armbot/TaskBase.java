@@ -12,7 +12,7 @@ import dark.api.al.coding.IProgram;
 import dark.api.al.coding.IProgrammableMachine;
 import dark.api.al.coding.ITask;
 import dark.api.al.coding.args.ArgumentData;
-import dark.core.prefab.helpers.NBTFileHelper;
+import dark.core.save.NBTFileHelper;
 
 /** @author DarkGuardsman */
 public abstract class TaskBase implements ITask, IMemorySlot

@@ -47,8 +47,8 @@ import dark.assembly.common.machine.encoder.TileEntityEncoder;
 import dark.assembly.common.machine.processor.BlockProcessor;
 import dark.core.common.DMCreativeTab;
 import dark.core.common.DarkMain;
+import dark.core.prefab.ItemBlockHolder;
 import dark.core.prefab.ModPrefab;
-import dark.core.prefab.items.ItemBlockHolder;
 import dark.core.registration.ModObjectRegistry;
 
 @ModstatInfo(prefix = "asmline")
