@@ -6,12 +6,13 @@ import java.util.List;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import dark.api.parts.INetworkEnergyPart;
+import dark.api.parts.ITileNetwork;
 import dark.core.prefab.tilenetwork.NetworkSharedPower;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
 /** Advanced version of the compBox that can link to other boxes and process matter at a higher rate.
  * Cost some minor power and will have some mechanical animation of flipping dirt & items
- * 
+ *
  * @author DarkGuardsman */
 public class TileEntityMechCompBox extends TileEntityCompBox implements INetworkEnergyPart
 {
@@ -48,16 +49,10 @@ public class TileEntityMechCompBox extends TileEntityCompBox implements INetwork
     }
 
     @Override
-    public void setTileNetwork(NetworkTileEntities fluidNetwok)
+    public void setTileNetwork(ITileNetwork fluidNetwok)
     {
         // TODO Auto-generated method stub
 
-    }
-
-    @Override
-    public boolean mergeDamage(String result)
-    {
-        return false;
     }
 
     @Override
