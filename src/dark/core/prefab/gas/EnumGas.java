@@ -8,38 +8,60 @@ import com.builtbroken.common.science.ChemicalCompound;
  * @author DarkGuardsman */
 public enum EnumGas
 {
-    C2O("Carbon DiOxide"),
-    O2("Oxygen"),
-    C4H10(ChemicalCompound.BUTANE),
-    METHANE("Methane"),
-    NATURAL_GAS("Natural Gas"),
-    PROPANE("Propane");
+    C2O("Carbon DiOxide", false),
+    O2(ChemElement.Oxygen, 2f, true),
+    C4H10(ChemicalCompound.BUTANE, true),
+    METHANE(ChemicalCompound.METHANE, true),
+    NATURAL_GAS("Natural Gas", false),
+    PROPANE("Propane", false);
     /** Name used when creating this as a fluid */
-    final String fluidName;
+    public final String fluidName;
     /** Name used to display to the players */
-    final String name;
+    public final String name;
     /** Object data reference that was used to create this gas, can be a ChemicalCompound, Element,
      * or Fluid */
-    final Object data;
+    public final Object data;
+    public boolean enabled = false;
+    /** Only used for elements since when used as a gas they sometimes bind together */
+    private float molePerGasMolecule = 1.0f;
+    /** Local instance of the gas used when the getGas method is called */
+    private Gas gas;
 
-    private EnumGas(String name)
+    private EnumGas(String name, boolean enabled)
     {
-        this.fluidName = "gas:" + name.replace(" ", "").toLowerCase();
+        this.fluidName = name.replace(" ", "").toLowerCase();
         this.name = name;
         data = null;
+        this.enabled = enabled;
     }
 
-    private EnumGas(ChemicalCompound compound)
+    private EnumGas(ChemicalCompound compound, boolean enabled)
     {
         this.fluidName = "gas:" + compound.compoundName.replace(" ", "").toLowerCase();
         this.name = compound.compoundName;
         data = compound;
+        this.enabled = enabled;
     }
 
-    private EnumGas(ChemElement element)
+    private EnumGas(ChemElement element, float molesPerGasMolecule, boolean enabled)
     {
         this.fluidName = "gas:" + element.elementName.replace(" ", "").toLowerCase();
         this.name = element.elementName;
         data = element;
+        this.enabled = enabled;
+        this.molePerGasMolecule = molesPerGasMolecule;
+    }
+
+    public Gas getGas()
+    {
+        if (gas == null)
+        {
+            gas = new Gas(fluidName);
+            if (data instanceof ChemElement)
+            {
+                gas.setDensity((int) ((ChemElement) data).density);
+            }
+        }
+        return gas;
     }
 }
