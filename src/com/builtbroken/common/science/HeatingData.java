@@ -2,7 +2,7 @@ package com.builtbroken.common.science;
 
 /** Used to store values related to temperature and heat of a material. Temperatures are in kelvin,
  * and heat in joules
- * 
+ *
  * @author DarkGuardsman */
 public class HeatingData
 {
@@ -14,8 +14,7 @@ public class HeatingData
     public float fisionHeat;
     /** (kJ/mol) Energy per gram needed to make the final leap from liquid to gas */
     public float vaporHeat;
-    /** (j/kg K) Rate at which the material heats at in its default matter stage. This does change
-     * per phase */
+    /** (j/kg K) Heating rate, at constant volume if gas */
     public float specificHeat;
     /** How much the material expands */
     public float thermalExpasion;
