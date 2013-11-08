@@ -17,7 +17,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.prefab.IExtraInfo.IExtraItemInfo;
+import dark.core.interfaces.IExtraInfo.IExtraItemInfo;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.helpers.ItemWorldHelper;
 import dark.farmtech.FarmTech;
