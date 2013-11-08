@@ -23,7 +23,7 @@ import dark.core.common.items.ItemOreDirv;
 import dark.core.prefab.helpers.AutoCraftingManager;
 
 /** Recipes for ore processor machines
- *
+ * 
  * @author DarkGuardsman */
 public class MachineRecipeHandler
 {
@@ -55,7 +55,7 @@ public class MachineRecipeHandler
     }
 
     /** Creates a new recipe for the type of processor machine
-     *
+     * 
      * @param type - machine type
      * @param in - input item, stacksize is ignored
      * @param out - output item */
@@ -65,7 +65,7 @@ public class MachineRecipeHandler
     }
 
     /** Creates a new recipe for the type of processor machine
-     *
+     * 
      * @param type - machine type
      * @param in - input item, stacksize is ignored
      * @param out - output item
@@ -77,7 +77,7 @@ public class MachineRecipeHandler
     }
 
     /** Creates a new recipe for the type of processor machine
-     *
+     * 
      * @param type - machine type
      * @param in - input item, stacksize is ignored
      * @param out - output item
@@ -173,7 +173,7 @@ public class MachineRecipeHandler
 
     /** Gets the lit of items that are created from the input item stack. General this will be an
      * array of one item. However, in salavaging cases it can be up to 8 items.
-     *
+     * 
      * @param type - Processor type
      * @param inputStack - item stack input ignores stacksize
      * @return array of itemStacks */
@@ -205,7 +205,7 @@ public class MachineRecipeHandler
     }
 
     /** Salvages an itemStack for the items used to craft it
-     *
+     * 
      * @param type - processor type used to determine damage results
      * @param stack - itemStack being salvaged
      * @return Array of all items salvaged */
@@ -215,7 +215,7 @@ public class MachineRecipeHandler
     }
 
     /** Salvages an itemStack for the items used to craft it
-     *
+     * 
      * @param type - processor type used to determine damage results
      * @param stack - itemStack being salvaged
      * @param damage - damage the output items. Eg ironIngot becomes ironDust, or ironScraps
@@ -243,7 +243,7 @@ public class MachineRecipeHandler
     }
 
     /** Salvages an itemStack for the items used to craft it
-     *
+     * 
      * @param stack - itemStack being salvaged
      * @param bar - chance per item that the random must be above inorder to salvage the output
      * @return Array of all items salvaged */

@@ -23,6 +23,7 @@ public class GasTank extends FluidTank
         super(fluid, amount, capacity);
     }
 
+    @Override
     public int fill(FluidStack resource, boolean doFill)
     {
         if (resource != null && resource.getFluid() != null && resource.getFluid().isGaseous())

@@ -2,7 +2,7 @@ package com.builtbroken.common.science;
 
 /** Used to store values related to temperature and heat of a material. Temperatures are in kelvin,
  * and heat in joules
- *
+ * 
  * @author DarkGuardsman */
 public class HeatingData
 {

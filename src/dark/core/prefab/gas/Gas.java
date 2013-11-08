@@ -3,7 +3,7 @@ package dark.core.prefab.gas;
 import net.minecraftforge.fluids.Fluid;
 
 /** These is an extension of the Fluid system forcing it to be a gas on creation
- *
+ * 
  * @author Archadia, DarkGuardsman */
 public class Gas extends Fluid
 {

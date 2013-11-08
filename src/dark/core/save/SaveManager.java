@@ -23,7 +23,7 @@ public class SaveManager
 
     public static SaveManager instance()
     {
-        if(instance == null)
+        if (instance == null)
         {
             instance = new SaveManager();
         }

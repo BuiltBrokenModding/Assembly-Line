@@ -18,8 +18,8 @@ import cpw.mods.fml.common.network.Player;
 import dark.api.IDisableable;
 import dark.core.common.DarkMain;
 import dark.core.interfaces.IExternalInv;
-import dark.core.interfaces.IInvBox;
 import dark.core.interfaces.IExtraInfo.IExtraTileEntityInfo;
+import dark.core.interfaces.IInvBox;
 import dark.core.network.ISimplePacketReceiver;
 import dark.core.network.PacketHandler;
 

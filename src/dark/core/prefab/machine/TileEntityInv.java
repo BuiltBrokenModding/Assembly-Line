@@ -21,7 +21,7 @@ import dark.core.prefab.terminal.TerminalCommandRegistry;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
 /** Prefab for simple object who only need basic inv support and nothing more
- *
+ * 
  * @author Darkguardsman */
 public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, ISidedInventory, ISpecialAccess
 {

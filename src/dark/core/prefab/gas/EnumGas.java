@@ -4,7 +4,7 @@ import com.builtbroken.common.science.ChemElement;
 import com.builtbroken.common.science.ChemicalCompound;
 
 /** Enum of gases used to create all the gas fluids
- *
+ * 
  * @author DarkGuardsman */
 public enum EnumGas
 {

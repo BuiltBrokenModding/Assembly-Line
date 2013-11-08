@@ -11,7 +11,7 @@ import cpw.mods.fml.common.TickType;
 import dark.api.parts.ITileNetwork;
 
 /** Manages all the tile networks making sure they get world save events, and updates every so often
- *
+ * 
  * @author DarkGuardsman */
 public class NetworkHandler implements IScheduledTickHandler
 {

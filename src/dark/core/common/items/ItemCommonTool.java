@@ -1,7 +1,6 @@
 package dark.core.common.items;
 
 import java.awt.Color;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -22,7 +21,6 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
@@ -33,7 +31,6 @@ import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 import cpw.mods.fml.relauncher.Side;
@@ -44,7 +41,7 @@ import dark.core.prefab.ModPrefab;
 
 /** Flexible tool class that uses NBT to store damage and effect rather than metadata. Metadata
  * instead is used to store sub items allowing several different tools to exist within the same item
- *
+ * 
  * @author DarkGuardsman */
 public class ItemCommonTool extends Item implements IExtraItemInfo
 {

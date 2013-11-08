@@ -80,7 +80,7 @@ public class NetworkTileEntities implements ITileNetwork
         else if (ent instanceof INetworkPart && this.isValidMember((INetworkPart) ent) && member)
         {
             ((INetworkPart) ent).setTileNetwork(this);
-            if (this.networkMembers.contains((INetworkPart) ent))
+            if (this.networkMembers.contains(ent))
             {
                 return true;
             }
@@ -149,17 +149,17 @@ public class NetworkTileEntities implements ITileNetwork
 
     /** Processing that needs too be done before the network merges. Use this to do final network
      * merge calculations and to cause network merge failure
-     *
+     * 
      * @param network the network that is to merge with this one
      * @param part the part at which started the network merge. Use this to cause damage if two
      * networks merge with real world style failures
-     *
+     * 
      * @return false if the merge needs to be canceled.
-     *
+     * 
      * Cases in which the network should fail to merge are were the two networks merge with error.
      * Or, in the case of pipes the two networks merge and the merge point was destroyed by
      * combination of liquids.
-     *
+     * 
      * Ex Lava and water */
     public boolean preMergeProcessing(ITileNetwork network, INetworkPart part)
     {
