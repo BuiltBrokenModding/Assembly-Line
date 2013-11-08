@@ -8,11 +8,10 @@ import net.minecraftforge.common.ForgeDirection;
 import dark.api.parts.INetworkEnergyPart;
 import dark.api.parts.ITileNetwork;
 import dark.core.prefab.tilenetwork.NetworkSharedPower;
-import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
 /** Advanced version of the compBox that can link to other boxes and process matter at a higher rate.
  * Cost some minor power and will have some mechanical animation of flipping dirt & items
- *
+ * 
  * @author DarkGuardsman */
 public class TileEntityMechCompBox extends TileEntityCompBox implements INetworkEnergyPart
 {
