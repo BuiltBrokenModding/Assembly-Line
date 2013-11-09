@@ -14,6 +14,7 @@ import universalelectricity.core.UniversalElectricity;
 
 import com.builtbroken.common.Triple;
 
+import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -22,6 +23,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import dark.core.common.ExternalModHandler;
+import dark.core.common.PlayerKeyHandler;
 import dark.core.prefab.fluids.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkUpdateHandler;
 import dark.core.registration.ModObjectRegistry;
@@ -104,6 +106,7 @@ public abstract class ModPrefab
             MinecraftForge.EVENT_BUS.register(new FluidHelper());
             MinecraftForge.EVENT_BUS.register(SaveManager.instance());
             TickRegistry.registerTickHandler(NetworkUpdateHandler.instance(), Side.SERVER);
+            TickRegistry.registerTickHandler(new PlayerKeyHandler(), Side.CLIENT);
             UniversalElectricity.initiate();
             Compatibility.initiate();
             preInit = true;

@@ -1,10 +1,10 @@
 package dark.core.prefab.vehicles;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import cpw.mods.fml.client.FMLClientHandler;
 import dark.core.interfaces.IControlReceiver;
@@ -24,6 +24,7 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver
         this.preventEntitySpawning = true;
         this.ignoreFrustumCheck = true;
         this.isImmuneToFire = true;
+        this.yOffset = 1.0f;
     }
 
     public EntityDrivable(World world, double xx, double yy, double zz)
@@ -33,9 +34,37 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver
     }
 
     @Override
-    public boolean keyTyped(EntityPlayer player, char character, int keycode)
+    public boolean keyTyped(EntityPlayer player, int keycode)
     {
-        //TODO lay out WASD keys as well as R & F for auto move
+        if (this.ridingEntity != null && this.ridingEntity.equals(player))
+        {
+            //TODO add auto forward and backwards keys like those in WoT
+            if (keycode == Minecraft.getMinecraft().gameSettings.keyBindForward.keyCode)
+            {
+                this.accelerate(true);
+            }
+            if (keycode == Minecraft.getMinecraft().gameSettings.keyBindBack.keyCode)
+            {
+                this.accelerate(false);
+            }
+            if (keycode == Minecraft.getMinecraft().gameSettings.keyBindLeft.keyCode)
+            {
+                this.rotationYaw += 5;
+            }
+            if (keycode == Minecraft.getMinecraft().gameSettings.keyBindRight.keyCode)
+            {
+                this.rotationYaw -= 5;
+            }
+            //Power brakes
+            if (keycode == Minecraft.getMinecraft().gameSettings.keyBindJump.keyCode)
+            {
+                this.speed -= 2.f;
+                if (speed <= 0)
+                {
+                    speed = 0;
+                }
+            }
+        }
         return false;
     }
 
@@ -47,7 +76,7 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver
             //Changes the player's position based on the boats rotation
             double deltaX = Math.cos(this.rotationYaw * Math.PI / 180.0D + 114.8) * -0.5D;
             double deltaZ = Math.sin(this.rotationYaw * Math.PI / 180.0D + 114.8) * -0.5D;
-            this.riddenByEntity.setPosition(this.posX + deltaX, this.posY - 2 + this.riddenByEntity.getYOffset(), this.posZ + deltaZ);
+            this.riddenByEntity.setPosition(this.posX + deltaX, this.posY + this.riddenByEntity.getYOffset(), this.posZ + deltaZ);
         }
     }
 
@@ -59,7 +88,6 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver
         if (this.worldObj.isRemote)
         {
             this.worldObj.spawnParticle("mobSpell", this.posX, this.posY, this.posZ, 0, 0, 0);
-
         }
 
         if (this.isCollidedHorizontally)
@@ -67,7 +95,7 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver
             this.motionY = 0.1D;
         }
 
-        this.applyFrication();
+        this.applyFriction();
 
         this.motionX = -(this.speed * Math.cos((this.rotationYaw - 90F) * Math.PI / 180.0D));
         this.motionZ = -(this.speed * Math.sin((this.rotationYaw - 90F) * Math.PI / 180.0D));
@@ -83,9 +111,24 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver
         this.prevPosZ = this.posZ;
     }
 
+    /** Increases the speed by a determined amount per tick the player holds the forward key down
+     * 
+     * @param forward */
+    public void accelerate(boolean forward)
+    {
+        if (forward)
+        {
+            this.speed += 1;
+        }
+        else
+        {
+            this.speed -= 1;
+        }
+    }
+
     /** By default this slows the vehicle down with a constant. However this can be used to apply
      * advanced friction based on materials */
-    public void applyFrication()
+    public void applyFriction()
     {
         if (this.inWater)
         {

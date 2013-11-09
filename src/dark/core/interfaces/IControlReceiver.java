@@ -12,5 +12,5 @@ public interface IControlReceiver
      * @param player - client player
      * @param character - character code
      * @param keycode - keyboard code */
-    public boolean keyTyped(EntityPlayer player, char character, int keycode);
+    public boolean keyTyped(EntityPlayer player, int keycode);
 }
