@@ -29,6 +29,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.relauncher.Side;
 import dark.api.reciepes.MachineRecipeHandler;
 import dark.core.common.blocks.BlockBasalt;
@@ -59,6 +60,7 @@ import dark.core.network.PacketHandler;
 import dark.core.prefab.ItemBlockHolder;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.machine.BlockMulti;
+import dark.core.prefab.vehicles.EntityDrivable;
 import dark.core.registration.ModObjectRegistry;
 
 /** @author HangCow, DarkGuardsman */
@@ -126,6 +128,8 @@ public class DarkMain extends ModPrefab
     public void init(FMLInitializationEvent event)
     {
         super.init(event);
+        EntityRegistry.registerGlobalEntityID(EntityDrivable.class, "TestCar", EntityRegistry.findGlobalUniqueEntityId());
+        EntityRegistry.registerModEntity(EntityDrivable.class, "TestCar", 60, this, 64, 1, true);
         if (CoreRecipeLoader.blockOre != null)
         {
             for (OreData data : OreData.values())

@@ -15,11 +15,13 @@ import dark.core.client.gui.GuiBatteryBox;
 import dark.core.client.gui.GuiCoalGenerator;
 import dark.core.client.gui.GuiElectricFurnace;
 import dark.core.client.renders.BlockRenderingHandler;
+import dark.core.client.renders.RenderTestCar;
 import dark.core.common.CommonProxy;
 import dark.core.common.machines.TileEntityBatteryBox;
 import dark.core.common.machines.TileEntityCoalGenerator;
 import dark.core.common.machines.TileEntityElectricFurnace;
 import dark.core.prefab.ModPrefab;
+import dark.core.prefab.vehicles.EntityDrivable;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy
@@ -46,6 +48,7 @@ public class ClientProxy extends CommonProxy
     {
         RenderingRegistry.registerBlockHandler(new BlockRenderingHandler());
         //MinecraftForge.EVENT_BUS.register(SoundHandler.INSTANCE);
+        RenderingRegistry.registerEntityRenderingHandler(EntityDrivable.class, new RenderTestCar());
     }
 
     @Override
