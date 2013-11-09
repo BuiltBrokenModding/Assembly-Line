@@ -7,42 +7,49 @@ import java.util.Iterator;
 import java.util.Set;
 
 import cpw.mods.fml.common.IScheduledTickHandler;
+import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 import dark.api.parts.ITileNetwork;
 
 /** Manages all the tile networks making sure they get world save events, and updates every so often
- * 
+ *
  * @author DarkGuardsman */
-public class NetworkHandler implements IScheduledTickHandler
+public class NetworkUpdateHandler implements ITickHandler
 {
     private static HashMap<String, Class<?>> nameToClassMap = new HashMap<String, Class<?>>();
     private static HashMap<Class<?>, String> classToNameMap = new HashMap<Class<?>, String>();
 
-    private byte count = 0;
+    private int count = 0;
+    private static int refreshTicks = 6000;
 
-    private Set<ITileNetwork> networks = new HashSet();
+    private Set<ITileNetwork> activeNetworks = new HashSet();
+    private Set<ITileNetwork> allNetworks = new HashSet();
 
-    private static NetworkHandler instance;
+    private static NetworkUpdateHandler instance;
 
     static
     {
         registerNetworkClass("base", NetworkTileEntities.class);
     }
 
-    public static NetworkHandler instance()
+    public static NetworkUpdateHandler instance()
     {
         if (instance == null)
         {
-            instance = new NetworkHandler();
+            instance = new NetworkUpdateHandler();
         }
         return instance;
     }
 
     public void registerNetwork(ITileNetwork network)
     {
-        if (!networks.contains(network))
+        if (network != null && !activeNetworks.contains(network))
         {
-            this.networks.add(network);
+            this.allNetworks.add(network);
+            if (network.getUpdateRate() > 0)
+            {
+                this.activeNetworks.add(network);
+            }
         }
     }
 
@@ -95,10 +102,10 @@ public class NetworkHandler implements IScheduledTickHandler
     @Override
     public void tickStart(EnumSet<TickType> type, Object... tickData)
     {
-        if (count + 1 >= Byte.MAX_VALUE)
+        if (count + 1 >= this.refreshTicks)
         {
             count = 0;
-            for (ITileNetwork network : networks)
+            for (ITileNetwork network : allNetworks)
             {
                 if (!network.isInvalid())
                 {
@@ -109,7 +116,7 @@ public class NetworkHandler implements IScheduledTickHandler
         else
         {
             count++;
-            for (ITileNetwork network : networks)
+            for (ITileNetwork network : activeNetworks)
             {
                 if (!network.isInvalid())
                 {
@@ -123,7 +130,7 @@ public class NetworkHandler implements IScheduledTickHandler
     @Override
     public void tickEnd(EnumSet<TickType> type, Object... tickData)
     {
-        Iterator<ITileNetwork> it = networks.iterator();
+        Iterator<ITileNetwork> it = activeNetworks.iterator();
         while (it.hasNext())
         {
             ITileNetwork network = it.next();
@@ -131,6 +138,7 @@ public class NetworkHandler implements IScheduledTickHandler
             {
                 network.invalidate();
                 it.remove();
+                allNetworks.remove(network);
             }
         }
 
@@ -146,11 +154,5 @@ public class NetworkHandler implements IScheduledTickHandler
     public String getLabel()
     {
         return "[CoreMachine]TileNetworkHandler";
-    }
-
-    @Override
-    public int nextTickSpacing()
-    {
-        return 20;
     }
 }

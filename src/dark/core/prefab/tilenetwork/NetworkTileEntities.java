@@ -19,11 +19,12 @@ public class NetworkTileEntities implements ITileNetwork
 
     public NetworkTileEntities()
     {
-
+        NetworkUpdateHandler.instance().registerNetwork(this);
     }
 
     public NetworkTileEntities(INetworkPart... parts)
     {
+        this();
         if (parts != null)
         {
             for (INetworkPart part : parts)
@@ -54,6 +55,12 @@ public class NetworkTileEntities implements ITileNetwork
     {
         this.load();
         this.cleanUpMembers();
+    }
+
+    @Override
+    public int getUpdateRate()
+    {
+        return -1;
     }
 
     @Override
@@ -170,7 +177,7 @@ public class NetworkTileEntities implements ITileNetwork
     /** Merges the two networks together */
     protected void mergeDo(ITileNetwork network)
     {
-        ITileNetwork newNetwork = NetworkHandler.createNewNetwork(NetworkHandler.getID(this.getClass()));
+        ITileNetwork newNetwork = NetworkUpdateHandler.createNewNetwork(NetworkUpdateHandler.getID(this.getClass()));
         newNetwork.getMembers().addAll(this.getMembers());
         newNetwork.getMembers().addAll(network.getMembers());
         newNetwork.onCreated();
@@ -200,7 +207,7 @@ public class NetworkTileEntities implements ITileNetwork
                             {
                                 this.save();
                                 /* NO LONGER CONNECTED ELSE WHERE SO SPLIT AND REFRESH */
-                                ITileNetwork newNetwork = NetworkHandler.createNewNetwork(NetworkHandler.getID(this.getClass()));
+                                ITileNetwork newNetwork = NetworkUpdateHandler.createNewNetwork(NetworkUpdateHandler.getID(this.getClass()));
                                 if (newNetwork != null)
                                 {
                                     for (Vector3 node : finder.closedSet)

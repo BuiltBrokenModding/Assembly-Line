@@ -28,6 +28,9 @@ public interface ITileNetwork
     /** Called when this network is just created */
     public void onCreated();
 
+    /** How many ticks should base between updates, return 0 or bellow for no ticks */
+    public int getUpdateRate();
+
     /** Called every so many ticks so the network has a chance to update */
     public void updateTick();
 

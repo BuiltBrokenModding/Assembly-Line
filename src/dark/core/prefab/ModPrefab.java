@@ -19,9 +19,11 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import dark.core.common.ExternalModHandler;
 import dark.core.prefab.helpers.FluidHelper;
+import dark.core.prefab.tilenetwork.NetworkUpdateHandler;
 import dark.core.registration.ModObjectRegistry;
 import dark.core.save.SaveManager;
 
@@ -47,6 +49,8 @@ public abstract class ModPrefab
     public static int ITEM_ID_PREFIX = 13200;
 
     private static Triple<Integer, Integer, Integer> date;
+
+    private static boolean preInit, init, postInit;
 
     public abstract String getDomain();
 
@@ -92,26 +96,41 @@ public abstract class ModPrefab
     public void preInit(FMLPreInitializationEvent event)
     {
         this.loadModMeta();
+
         Modstats.instance().getReporter().registerMod(this);
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(new FluidHelper());
-        MinecraftForge.EVENT_BUS.register(SaveManager.instance());
-        UniversalElectricity.initiate();
-        Compatibility.initiate();
+        if (!preInit)
+        {
+            MinecraftForge.EVENT_BUS.register(new FluidHelper());
+            MinecraftForge.EVENT_BUS.register(SaveManager.instance());
+            TickRegistry.registerTickHandler(NetworkUpdateHandler.instance(), Side.SERVER);
+            UniversalElectricity.initiate();
+            Compatibility.initiate();
+            preInit = true;
+        }
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-        ExternalModHandler.init();
-        ModObjectRegistry.masterBlockConfig.load();
+        if (!init)
+        {
+            ExternalModHandler.init();
+            ModObjectRegistry.masterBlockConfig.load();
+            init = true;
+        }
         this.registerObjects();
-        ModObjectRegistry.masterBlockConfig.save();
+
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
+        if (!postInit)
+        {
+            ModObjectRegistry.masterBlockConfig.save();
+            postInit = true;
+        }
         this.loadRecipes();
     }
 
