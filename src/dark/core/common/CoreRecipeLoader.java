@@ -44,6 +44,7 @@ public class CoreRecipeLoader extends RecipeLoader
     public static ItemStack unfinishedTank;
     public static Item itemGlowingSand;
     public static Item itemDiggingTool;
+    public static Item itemVehicleTest;
     public static boolean debugOreItems = false;
 
     @Override

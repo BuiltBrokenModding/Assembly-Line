@@ -12,6 +12,7 @@ import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import dark.core.common.DMCreativeTab;
 import dark.core.common.DarkMain;
 import dark.core.helpers.MathHelper;
 
@@ -24,6 +25,7 @@ public class ItemVehicleSpawn extends Item
     {
         super(DarkMain.getNextItemId());
         this.setUnlocalizedName("Vehicle");
+        this.setCreativeTab(DMCreativeTab.tabIndustrial);
     }
 
     @Override

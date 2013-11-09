@@ -61,6 +61,7 @@ import dark.core.prefab.ItemBlockHolder;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.machine.BlockMulti;
 import dark.core.prefab.vehicles.EntityDrivable;
+import dark.core.prefab.vehicles.ItemVehicleSpawn;
 import dark.core.registration.ModObjectRegistry;
 
 /** @author HangCow, DarkGuardsman */
@@ -263,6 +264,7 @@ public class DarkMain extends ModPrefab
         CoreRecipeLoader.itemParts = ModObjectRegistry.createNewItem("DMCraftingParts", DarkMain.MOD_ID, ItemParts.class, true);
         CoreRecipeLoader.itemGlowingSand = ModObjectRegistry.createNewItem("DMItemGlowingSand", DarkMain.MOD_ID, ItemColoredDust.class, true);
         CoreRecipeLoader.itemDiggingTool = ModObjectRegistry.createNewItem("ItemDiggingTools", DarkMain.MOD_ID, ItemCommonTool.class, true);
+        CoreRecipeLoader.itemVehicleTest = ModObjectRegistry.createNewItem("ItemVehicleTest", DarkMain.MOD_ID, ItemVehicleSpawn.class, true);
         CONFIGURATION.save();
     }
 
