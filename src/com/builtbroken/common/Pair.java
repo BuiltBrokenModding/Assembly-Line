@@ -1,12 +1,12 @@
 package com.builtbroken.common;
 
 /** Container for two objects
- * 
+ *
  * @author Robert Seifert */
 public class Pair<L, R>
 {
-    private final L left;
-    private final R right;
+    private L left;
+    private R right;
 
     public Pair(L left, R right)
     {
@@ -22,6 +22,16 @@ public class Pair<L, R>
     public R right()
     {
         return right;
+    }
+
+    public void setLeft(L l)
+    {
+        left = l;
+    }
+
+    public void setRight(R r)
+    {
+        right = r;
     }
 
     @Override
