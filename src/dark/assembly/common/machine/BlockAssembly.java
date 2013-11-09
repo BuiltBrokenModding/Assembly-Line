@@ -1,9 +1,11 @@
 package dark.assembly.common.machine;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.Configuration;
 import dark.assembly.common.AssemblyLine;
 import dark.core.common.DMCreativeTab;
 import dark.core.prefab.machine.BlockMachine;
@@ -15,6 +17,12 @@ public class BlockAssembly extends BlockMachine
     public BlockAssembly(BlockBuildData buildBuildData)
     {
         super(buildBuildData.setCreativeTab(DMCreativeTab.tabAutomation).setConfigProvider(AssemblyLine.CONFIGURATION));
+    }
+
+    public BlockAssembly(String blockName, Material material)
+    {
+        super(AssemblyLine.CONFIGURATION, blockName, material);
+        this.setCreativeTab(DMCreativeTab.tabAutomation);
     }
 
     @Override
