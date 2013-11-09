@@ -27,7 +27,7 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
  * @author DarkGuardsman */
 public class AutoCraftingManager
 {
-    final static boolean doDebug = false;
+    static boolean doDebug = false;
     TileEntity craftingEntity;
     IInventory craftingInv;
 
@@ -68,7 +68,7 @@ public class AutoCraftingManager
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static void printRecipes(ItemStack stack)
     {
         List<IRecipe> recipes = getRecipes(stack);
@@ -129,6 +129,7 @@ public class AutoCraftingManager
     /** Does this player's inventory contain the required resources to craft this item?
      * 
      * @return Required items to make the desired item. */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public Pair<ItemStack, ItemStack[]> getIdealRecipe(ItemStack outputItem)
     {
         this.printDebug("IdealRecipe", outputItem.toString());
@@ -194,6 +195,7 @@ public class AutoCraftingManager
 
     /** Gets a basic array containing all items that were used to craft the given item. Doesn't sort
      * threw the recipes and will return the first possible recipe */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public static ItemStack[] getReverseRecipe(ItemStack outputItem, int outputSize)
     {
 
@@ -282,6 +284,7 @@ public class AutoCraftingManager
     /** Returns if the following inventory has the following resource required.
      * 
      * @param recipeItems - The items to be checked for the recipes. */
+    @SuppressWarnings("rawtypes")
     public ArrayList<ItemStack> hasResource(Object[] recipeItems)
     {
         try
