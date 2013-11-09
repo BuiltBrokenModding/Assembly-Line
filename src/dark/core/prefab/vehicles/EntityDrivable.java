@@ -8,6 +8,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import cpw.mods.fml.client.FMLClientHandler;
 import dark.core.interfaces.IControlReceiver;
+import dark.core.network.PacketManagerKeyEvent;
 import dark.core.prefab.EntityAdvanced;
 
 public class EntityDrivable extends EntityAdvanced implements IControlReceiver
@@ -25,6 +26,7 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver
         this.ignoreFrustumCheck = true;
         this.isImmuneToFire = true;
         this.yOffset = 1.0f;
+        PacketManagerKeyEvent.instance().register(this);
     }
 
     public EntityDrivable(World world, double xx, double yy, double zz)

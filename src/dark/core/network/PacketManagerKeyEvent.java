@@ -66,7 +66,6 @@ public class PacketManagerKeyEvent implements IPacketManager
         try
         {
             int key = data.readInt();
-
             for (IControlReceiver receiver : receivers)
             {
                 receiver.keyTyped((EntityPlayer) player, key);
@@ -74,7 +73,6 @@ public class PacketManagerKeyEvent implements IPacketManager
         }
         catch (Exception e)
         {
-            System.out.println("[CoreMachine] Error reading packet at tile packet manager");
             e.printStackTrace();
         }
 
