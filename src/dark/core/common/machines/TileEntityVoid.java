@@ -1,4 +1,4 @@
-package dark.core.common.debug;
+package dark.core.common.machines;
 
 import java.util.HashMap;
 

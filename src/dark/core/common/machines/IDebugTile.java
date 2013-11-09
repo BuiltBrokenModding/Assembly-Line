@@ -1,4 +1,4 @@
-package dark.core.common.debug;
+package dark.core.common.machines;
 
 import dark.core.interfaces.IBlockActivated;
 
