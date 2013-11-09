@@ -1,4 +1,4 @@
-package dark.core.prefab.helpers;
+package dark.core.helpers;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;

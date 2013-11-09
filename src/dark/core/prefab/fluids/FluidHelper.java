@@ -1,4 +1,4 @@
-package dark.core.prefab.helpers;
+package dark.core.prefab.fluids;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +27,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 import dark.api.ColorCode;
+import dark.core.helpers.AutoCraftingManager;
 
 public class FluidHelper
 {

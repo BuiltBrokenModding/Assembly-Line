@@ -17,7 +17,7 @@ import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.lang.TextHelper.TextColor;
 
-import dark.core.prefab.helpers.FluidHelper;
+import dark.core.prefab.fluids.FluidHelper;
 
 public class TileEntityInfFluid extends TileEntity implements IFluidHandler, IDebugTile
 {

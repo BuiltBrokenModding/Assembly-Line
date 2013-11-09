@@ -22,7 +22,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import dark.core.common.ExternalModHandler;
-import dark.core.prefab.helpers.FluidHelper;
+import dark.core.prefab.fluids.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkUpdateHandler;
 import dark.core.registration.ModObjectRegistry;
 import dark.core.save.SaveManager;

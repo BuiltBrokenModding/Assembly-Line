@@ -20,7 +20,7 @@ import dark.core.common.CoreRecipeLoader;
 import dark.core.common.items.EnumMaterial;
 import dark.core.common.items.EnumOrePart;
 import dark.core.common.items.ItemOreDirv;
-import dark.core.prefab.helpers.AutoCraftingManager;
+import dark.core.helpers.AutoCraftingManager;
 
 /** Recipes for ore processor machines
  * 

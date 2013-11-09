@@ -1,4 +1,4 @@
-package dark.core.prefab.gas;
+package dark.core.prefab.fluids;
 
 import net.minecraftforge.fluids.Fluid;
 

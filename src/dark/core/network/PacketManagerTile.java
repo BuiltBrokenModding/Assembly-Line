@@ -10,7 +10,7 @@ import universalelectricity.prefab.network.IPacketReceiver;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;
-import dark.core.prefab.helpers.PacketDataWatcher;
+import dark.core.helpers.PacketDataWatcher;
 
 public class PacketManagerTile implements IPacketManager
 {

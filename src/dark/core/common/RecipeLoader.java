@@ -10,7 +10,7 @@ import com.builtbroken.common.Pair;
 import com.builtbroken.common.Triple;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import dark.core.prefab.helpers.AutoCraftingManager;
+import dark.core.helpers.AutoCraftingManager;
 
 /** Recipe system to make it easier to load recipes for a mod
  * 

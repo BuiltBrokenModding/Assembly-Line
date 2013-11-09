@@ -1,4 +1,4 @@
-package dark.core.prefab.gas;
+package dark.core.prefab.fluids;
 
 import com.builtbroken.common.science.ChemElement;
 import com.builtbroken.common.science.ChemicalCompound;

@@ -1,4 +1,4 @@
-package dark.core.prefab.helpers;
+package dark.core.helpers;
 
 import java.util.Iterator;
 import java.util.List;

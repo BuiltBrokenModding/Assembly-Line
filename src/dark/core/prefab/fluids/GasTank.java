@@ -1,10 +1,12 @@
-package dark.core.prefab.gas;
+package dark.core.prefab.fluids;
 
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 
-/** Version of the fluid tank that is restricted to gases only */
+/** Version of the fluid tank that is restricted to gases only
+ * 
+ * @author DarkGuardsman */
 public class GasTank extends FluidTank
 {
 
