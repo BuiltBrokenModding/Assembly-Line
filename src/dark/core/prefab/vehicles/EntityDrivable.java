@@ -15,6 +15,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.Player;
+import dark.core.common.CoreRecipeLoader;
 import dark.core.helpers.MathHelper;
 import dark.core.interfaces.IControlReceiver;
 import dark.core.network.ISimplePacketReceiver;
@@ -329,19 +330,30 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver, 
     @Override
     public void performHurtAnimation()
     {
-        this.setHealth(this.getHealth() + this.getHealth() * 10.0F);
+        this.setForwardDirection(-this.getForwardDirection());
+        this.setTimeSinceHit(10);
+        this.setHealth(this.getHealth() * 11.0F);
     }
 
     @Override
     public boolean attackEntityFrom(DamageSource source, float damage)
     {
+        //TODO take fire damage as heat then slowly damage the vehicle once it over heats
+        //TODO reflect some arrow, and bullet damage
+        //TODO reflect fall damage when we have only fell 6 blocks or bellow
+        //TODO reflect most meele damage that is not from weapons
+        //TODO take extra damage from explosion including damaging vehicle parts. As well knock player out of vehicle if it was right next to the vehicle
+        //TODO on damage over X amount lose cargo
+        //TODO ignore most spell damage as this is made of metal
+        //TODO ignore all potions except those that are acids
+        //TODO on radiation damage have the vehicle carry the radiation to damage players who use the vehicle
         if (this.isEntityInvulnerable() || source == DamageSource.cactus)
         {
             return false;
         }
         else if (!this.worldObj.isRemote && !this.isDead)
         {
-            //this.setForwardDirection(-this.getForwardDirection());
+            this.setForwardDirection(-this.getForwardDirection());
             this.setTimeSinceHit(10);
             this.setHealth(this.getHealth() + damage * 10.0F);
             this.setBeenAttacked();
@@ -356,7 +368,7 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver, 
 
                 if (!flag)
                 {
-                    //this.dropItemWithOffset(Item.boat.itemID, 1, 0.0F);
+                    this.dropItemWithOffset(CoreRecipeLoader.itemVehicleTest.itemID, 1, 0.0F);
                 }
 
                 this.setDead();
