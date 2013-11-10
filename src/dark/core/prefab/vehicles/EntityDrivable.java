@@ -1,19 +1,30 @@
 package dark.core.prefab.vehicles;
 
+import java.util.List;
+
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+
+import com.google.common.io.ByteArrayDataInput;
+
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.network.Player;
 import dark.core.helpers.MathHelper;
 import dark.core.interfaces.IControlReceiver;
+import dark.core.network.ISimplePacketReceiver;
+import dark.core.network.PacketManagerEntity;
 import dark.core.network.PacketManagerKeyEvent;
 import dark.core.prefab.EntityAdvanced;
 
-public class EntityDrivable extends EntityAdvanced implements IControlReceiver
+public class EntityDrivable extends EntityAdvanced implements IControlReceiver, ISimplePacketReceiver
 {
     public double speed = 0.0D, maxSpeed = 0.5D;
 
@@ -40,13 +51,13 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver
     @Override
     public boolean keyTyped(EntityPlayer player, int keycode)
     {
-        System.out.println("Key: "+keycode+"  P: " + (player != null ? player.username : "null"));
+        System.out.println("Key: " + keycode + "  P: " + (player != null ? player.username : "null"));
         if (player != null && this.riddenByEntity instanceof EntityPlayer && ((EntityPlayer) this.riddenByEntity).username.equalsIgnoreCase(player.username))
         {
+            boolean flag = false;
             //TODO add auto forward and backwards keys like those in WoT
             if (keycode == Minecraft.getMinecraft().gameSettings.keyBindForward.keyCode)
             {
-                player.sendChatToPlayer(ChatMessageComponent.createFromText("Forward we go!"));
                 this.accelerate(true);
             }
             if (keycode == Minecraft.getMinecraft().gameSettings.keyBindBack.keyCode)
@@ -55,21 +66,22 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver
             }
             if (keycode == Minecraft.getMinecraft().gameSettings.keyBindLeft.keyCode)
             {
-                this.rotationYaw += 6;
+                this.turn(true);
             }
             if (keycode == Minecraft.getMinecraft().gameSettings.keyBindRight.keyCode)
             {
-                this.rotationYaw -= 6;
+                this.turn(false);
             }
             //Power brakes
             if (keycode == Minecraft.getMinecraft().gameSettings.keyBindJump.keyCode)
             {
                 this.speed -= 2.f;
                 if (speed <= 0)
-                {
+                {                  
                     speed = 0;
                 }
             }
+            return flag;
         }
         return false;
     }
@@ -83,6 +95,15 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver
             double deltaX = Math.cos(this.rotationYaw * Math.PI / 180.0D + 114.8) * -0.5D;
             double deltaZ = Math.sin(this.rotationYaw * Math.PI / 180.0D + 114.8) * -0.5D;
             this.riddenByEntity.setPosition(this.posX + deltaX, this.posY + this.riddenByEntity.getYOffset(), this.posZ + deltaZ);
+            
+            if(this.riddenByEntity.rotationYaw > this.rotationYaw + 30)
+            {
+                this.riddenByEntity.rotationYaw = this.rotationYaw + 30;
+            }
+            if(this.riddenByEntity.rotationYaw < this.rotationYaw - 30)
+            {
+                this.riddenByEntity.rotationYaw = this.rotationYaw - 30;
+            }
         }
     }
 
@@ -157,6 +178,75 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
+        if (ticks % 5 == 0)
+        {
+            if (this.worldObj.isRemote && Minecraft.getMinecraft().thePlayer == this.riddenByEntity)
+            {
+                PacketManagerEntity.sendEntityUpdatePacket(this, true, "Desc", this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch, this.motionX, this.motionY, this.motionZ);
+            }
+            else
+            {
+                //TODO send generic vehicle settings to clients
+            }
+        }
+
+    }
+
+    @Override
+    public boolean simplePacket(String id, ByteArrayDataInput data, Player player)
+    {
+        if (id.equalsIgnoreCase("Desc") && player == this.riddenByEntity)
+        {
+            this.setPositionAndRotation(data.readDouble(), data.readDouble(), data.readDouble(), data.readFloat(), data.readFloat());
+            this.motionX = data.readDouble();
+            this.motionY = data.readDouble();
+            this.motionZ = data.readDouble();
+            return true;
+        }
+        return false;
+    }
+
+    public void checkCollisions()
+    {
+        if (!this.worldObj.isRemote)
+        {
+            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
+            int l;
+
+            if (list != null && !list.isEmpty())
+            {
+                for (l = 0; l < list.size(); ++l)
+                {
+                    Entity entity = (Entity) list.get(l);
+
+                    if (entity != this.riddenByEntity && entity.canBePushed())
+                    {
+                        entity.applyEntityCollision(this);
+                    }
+                }
+            }
+
+            for (l = 0; l < 4; ++l)
+            {
+                int i1 = MathHelper.floor_double(this.posX + ((double) (l % 2) - 0.5D) * 0.8D);
+                int j1 = MathHelper.floor_double(this.posZ + ((double) (l / 2) - 0.5D) * 0.8D);
+
+                for (int k1 = 0; k1 < 2; ++k1)
+                {
+                    int l1 = MathHelper.floor_double(this.posY) + k1;
+                    int i2 = this.worldObj.getBlockId(i1, l1, j1);
+
+                    if (i2 == Block.snow.blockID)
+                    {
+                        this.worldObj.setBlockToAir(i1, l1, j1);
+                    }
+                    else if (i2 == Block.waterlily.blockID)
+                    {
+                        this.worldObj.destroyBlock(i1, l1, j1, true);
+                    }
+                }
+            }
+        }
     }
 
     /** Increases the speed by a determined amount per tick the player holds the forward key down
@@ -167,10 +257,32 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver
         if (forward)
         {
             this.speed += 1;
+            if (this.speed > this.maxSpeed)
+            {
+                this.speed = this.maxSpeed;
+            }
+
         }
         else
         {
             this.speed -= 1;
+            if (this.speed < -this.maxSpeed)
+            {
+                this.speed = -this.maxSpeed;
+            }
+
+        }
+    }
+
+    public void turn(boolean left)
+    {
+        if (left)
+        {
+            this.rotationYaw -= 6;
+        }
+        else
+        {
+            this.rotationYaw += 6;
         }
     }
 
@@ -178,18 +290,18 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver
      * advanced friction based on materials */
     public void applyFriction()
     {
+        this.motionY -= 0.03;
         if (this.inWater)
         {
-            this.speed *= 0.8D;
+            this.speed *= 0.8;
         }
         if (this.isCollidedHorizontally)
         {
-            this.speed *= 0.9;
+            this.speed *= 0.91;
         }
         else
         {
-            this.speed *= 0.98D;
-            this.motionY -= 0.04D;
+            this.speed *= 0.98;
         }
 
     }
@@ -221,41 +333,39 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource var1, float var2)
+    public boolean attackEntityFrom(DamageSource source, float damage)
     {
-        if (this.isDead || var1.equals(DamageSource.cactus))
+        if (this.isEntityInvulnerable() || source == DamageSource.cactus)
         {
-            return true;
+            return false;
         }
-        else
+        else if (!this.worldObj.isRemote && !this.isDead)
         {
+            //this.setForwardDirection(-this.getForwardDirection());
+            this.setTimeSinceHit(10);
+            this.setHealth(this.getHealth() + damage * 10.0F);
             this.setBeenAttacked();
-            this.setHealth(this.getHealth() + this.getHealth() * 10.0F);
-            this.setBeenAttacked();
+            boolean flag = source.getEntity() instanceof EntityPlayer && ((EntityPlayer) source.getEntity()).capabilities.isCreativeMode;
 
-            if (var1.getEntity() instanceof EntityPlayer && ((EntityPlayer) var1.getEntity()).capabilities.isCreativeMode)
-            {
-                this.setHealth(100);
-            }
-
-            if (this.getHealth() > this.getMaxHealth())
+            if (flag || this.getHealth() > 40.0F)
             {
                 if (this.riddenByEntity != null)
                 {
                     this.riddenByEntity.mountEntity(this);
                 }
 
-                if (!this.worldObj.isRemote)
+                if (!flag)
                 {
-                    if (this.riddenByEntity != null)
-                    {
-                        this.riddenByEntity.mountEntity(this);
-                    }
+                    //this.dropItemWithOffset(Item.boat.itemID, 1, 0.0F);
                 }
-                //TODO set vehicle in a unusable state rather than destroy it like a boat
 
+                this.setDead();
             }
 
+            return true;
+        }
+        else
+        {
             return true;
         }
     }
