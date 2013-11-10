@@ -13,6 +13,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
+import cpw.mods.fml.common.IScheduledTickHandler;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 import dark.core.network.PacketManagerKeyEvent;
@@ -20,10 +21,8 @@ import dark.core.network.PacketManagerKeyEvent;
 /** This class handles keys already binded to the game so to avoid creating new key bindings
  * 
  * @author DarkGuardsman */
-public class PlayerKeyHandler implements ITickHandler
+public class PlayerKeyHandler implements IScheduledTickHandler
 {
-    protected boolean[] keyDown;
-    protected boolean[] repeatings;
 
     @Override
     public final void tickStart(EnumSet<TickType> type, Object... tickData)
@@ -61,5 +60,11 @@ public class PlayerKeyHandler implements ITickHandler
     public String getLabel()
     {
         return "[CoreMachine]KeyBindingCatcher";
+    }
+
+    @Override
+    public int nextTickSpacing()
+    {
+        return 2;
     }
 }

@@ -4,9 +4,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import cpw.mods.fml.client.FMLClientHandler;
+import dark.core.helpers.MathHelper;
 import dark.core.interfaces.IControlReceiver;
 import dark.core.network.PacketManagerKeyEvent;
 import dark.core.prefab.EntityAdvanced;
@@ -38,11 +40,13 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver
     @Override
     public boolean keyTyped(EntityPlayer player, int keycode)
     {
-        if (this.ridingEntity != null && this.ridingEntity.equals(player))
+        System.out.println("Key: "+keycode+"  P: " + (player != null ? player.username : "null"));
+        if (player != null && this.riddenByEntity instanceof EntityPlayer && ((EntityPlayer) this.riddenByEntity).username.equalsIgnoreCase(player.username))
         {
             //TODO add auto forward and backwards keys like those in WoT
             if (keycode == Minecraft.getMinecraft().gameSettings.keyBindForward.keyCode)
             {
+                player.sendChatToPlayer(ChatMessageComponent.createFromText("Forward we go!"));
                 this.accelerate(true);
             }
             if (keycode == Minecraft.getMinecraft().gameSettings.keyBindBack.keyCode)
@@ -51,11 +55,11 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver
             }
             if (keycode == Minecraft.getMinecraft().gameSettings.keyBindLeft.keyCode)
             {
-                this.rotationYaw += 5;
+                this.rotationYaw += 6;
             }
             if (keycode == Minecraft.getMinecraft().gameSettings.keyBindRight.keyCode)
             {
-                this.rotationYaw -= 5;
+                this.rotationYaw -= 6;
             }
             //Power brakes
             if (keycode == Minecraft.getMinecraft().gameSettings.keyBindJump.keyCode)
@@ -92,17 +96,59 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver
             this.worldObj.spawnParticle("mobSpell", this.posX, this.posY, this.posZ, 0, 0, 0);
         }
 
+        if (this.worldObj.isRemote && (this.riddenByEntity == null || !(this.riddenByEntity instanceof EntityPlayer) || !FMLClientHandler.instance().getClient().thePlayer.equals(this.riddenByEntity)))
+        {
+            double x, y, z;
+            if (this.boatPosRotationIncrements > 0)
+            {
+                x = this.posX + (this.boatX - this.posX) / this.boatPosRotationIncrements;
+                y = this.posY + (this.boatY - this.posY) / this.boatPosRotationIncrements;
+                z = this.posZ + (this.boatZ - this.posZ) / this.boatPosRotationIncrements;
+
+                this.rotationYaw = (float) (this.rotationYaw + MathHelper.wrapAngleTo180_double(this.boatYaw - this.rotationYaw) / this.boatPosRotationIncrements);
+                this.rotationPitch = (float) (this.rotationPitch + (this.boatPitch - this.rotationPitch) / this.boatPosRotationIncrements);
+                --this.boatPosRotationIncrements;
+                this.setPosition(x, y, z);
+                this.setRotation(this.rotationYaw, this.rotationPitch);
+            }
+            else
+            {
+                x = this.posX + this.motionX;
+                y = this.posY + this.motionY;
+                z = this.posZ + this.motionZ;
+                if (this.riddenByEntity != null)
+                {
+                    this.setPosition(x, y, z);
+                }
+
+                if (this.onGround)
+                {
+                    this.motionX *= 0.5D;
+                    this.motionY *= 0.5D;
+                    this.motionZ *= 0.5D;
+                }
+
+                this.motionX *= 0.9900000095367432D;
+                this.motionY *= 0.949999988079071D;
+                this.motionZ *= 0.9900000095367432D;
+            }
+            return;
+        }
+
         if (this.isCollidedHorizontally)
         {
+            this.speed *= 0.9;
             this.motionY = 0.1D;
         }
 
+        if (this.worldObj.isRemote)
+        {
+            this.motionX = -(this.speed * Math.cos((this.rotationYaw - 90F) * Math.PI / 180.0D));
+            this.motionZ = -(this.speed * Math.sin((this.rotationYaw - 90F) * Math.PI / 180.0D));
+            this.moveEntity(this.motionX, this.motionY, this.motionZ);
+        }
+
         this.applyFriction();
-
-        this.motionX = -(this.speed * Math.cos((this.rotationYaw - 90F) * Math.PI / 180.0D));
-        this.motionZ = -(this.speed * Math.sin((this.rotationYaw - 90F) * Math.PI / 180.0D));
-        this.moveEntity(this.motionX, this.motionY, this.motionZ);
-
         if (this.speed > this.maxSpeed)
         {
             this.speed = this.maxSpeed;

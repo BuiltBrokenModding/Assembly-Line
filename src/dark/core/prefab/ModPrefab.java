@@ -106,7 +106,7 @@ public abstract class ModPrefab
             MinecraftForge.EVENT_BUS.register(new FluidHelper());
             MinecraftForge.EVENT_BUS.register(SaveManager.instance());
             TickRegistry.registerTickHandler(NetworkUpdateHandler.instance(), Side.SERVER);
-            TickRegistry.registerTickHandler(new PlayerKeyHandler(), Side.CLIENT);
+            TickRegistry.registerScheduledTickHandler(new PlayerKeyHandler(), Side.CLIENT);
             UniversalElectricity.initiate();
             Compatibility.initiate();
             preInit = true;
