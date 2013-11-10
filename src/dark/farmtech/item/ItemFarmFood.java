@@ -19,7 +19,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.interfaces.IExtraInfo.IExtraItemInfo;
 import dark.core.prefab.ModPrefab;
-import dark.core.prefab.helpers.ItemWorldHelper;
+import dark.core.helpers.ItemWorldHelper;
 import dark.farmtech.FarmTech;
 
 /** Item for storing all kinds of food based items including meats, fruits, pies, cakes, breads, etc
