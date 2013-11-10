@@ -11,6 +11,7 @@ import dark.api.ColorCode;
 import dark.api.reciepes.MachineRecipeHandler;
 import dark.api.reciepes.ProcessorType;
 import dark.core.common.blocks.BlockBasalt;
+import dark.core.common.blocks.BlockGasOre;
 import dark.core.common.blocks.BlockOre;
 import dark.core.common.blocks.BlockOre.OreData;
 import dark.core.common.items.EnumMaterial;
@@ -34,6 +35,7 @@ public class CoreRecipeLoader extends RecipeLoader
     public static Block blockBasalt;
     public static Block blockGlowGlass;
     public static Block basicMachine, blockSolar;
+    public static BlockGasOre blockGas;
 
     /* ITEMS */
     public static Item itemMetals, battery, itemTool, itemParts;

@@ -22,6 +22,7 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.core.common.DarkMain;
+import dark.core.common.blocks.BlockGasOre;
 import dark.core.interfaces.IExtraInfo;
 import dark.core.interfaces.IExtraInfo.IExtraBlockInfo;
 import dark.core.interfaces.IExtraInfo.IExtraItemInfo;
@@ -159,7 +160,7 @@ public class ModObjectRegistry
     {
         Block fluidBlock = null;
         Fluid fluidActual = null;
-        if (config != null && fluid != null && config.get("general", "EnableOilFluid", true).getBoolean(true) && FluidRegistry.getFluid(fluid.getName()) == null)
+        if (config != null && fluid != null && config.get("general", "EnableFluid_" + fluid.getName(), true).getBoolean(true) && FluidRegistry.getFluid(fluid.getName()) == null)
         {
             FluidRegistry.registerFluid(fluid);
             fluidActual = FluidRegistry.getFluid(fluid.getName());

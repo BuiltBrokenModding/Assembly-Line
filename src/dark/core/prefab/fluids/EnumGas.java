@@ -59,7 +59,7 @@ public enum EnumGas
             gas = new Gas(fluidName);
             if (data instanceof ChemElement)
             {
-                gas.setDensity((int) ((ChemElement) data).density);
+                gas.setDensity((int) ((ChemElement) data).density * 1000);
             }
         }
         return gas;

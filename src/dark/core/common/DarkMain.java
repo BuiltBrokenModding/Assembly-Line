@@ -10,6 +10,7 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.ore.OreGenReplaceStone;
@@ -59,6 +60,7 @@ import dark.core.helpers.PacketDataWatcher;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.ItemBlockHolder;
 import dark.core.prefab.ModPrefab;
+import dark.core.prefab.fluids.EnumGas;
 import dark.core.prefab.machine.BlockMulti;
 import dark.core.prefab.vehicles.EntityDrivable;
 import dark.core.prefab.vehicles.ItemVehicleSpawn;
@@ -131,6 +133,15 @@ public class DarkMain extends ModPrefab
         super.init(event);
         EntityRegistry.registerGlobalEntityID(EntityDrivable.class, "TestCar", EntityRegistry.findGlobalUniqueEntityId());
         EntityRegistry.registerModEntity(EntityDrivable.class, "TestCar", 60, this, 64, 1, true);
+
+        for (EnumGas gas : EnumGas.values())
+        {
+            FluidRegistry.registerFluid(gas.getGas());
+            if (CoreRecipeLoader.blockGas != null)
+            {
+                gas.getGas().setBlockID(CoreRecipeLoader.blockGas);
+            }
+        }
         if (CoreRecipeLoader.blockOre != null)
         {
             for (OreData data : OreData.values())
