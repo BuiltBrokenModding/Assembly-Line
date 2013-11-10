@@ -5,11 +5,9 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
@@ -26,7 +24,9 @@ import dark.core.prefab.EntityAdvanced;
 
 public class EntityDrivable extends EntityAdvanced implements IControlReceiver, ISimplePacketReceiver
 {
-    public double speed = 0.0D, maxSpeed = 0.5D;
+    //1m/tick is 80km/h or 50mi/h
+    //0.5/tick is 40km/h
+    public double speed = 0.0, maxSpeed = 0.32;
 
     public double boatX, boatY, boatZ, boatYaw, boatPitch;
     public int boatPosRotationIncrements;
@@ -77,7 +77,7 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver, 
             {
                 this.speed -= 2.f;
                 if (speed <= 0)
-                {                  
+                {
                     speed = 0;
                 }
             }
@@ -95,12 +95,12 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver, 
             double deltaX = Math.cos(this.rotationYaw * Math.PI / 180.0D + 114.8) * -0.5D;
             double deltaZ = Math.sin(this.rotationYaw * Math.PI / 180.0D + 114.8) * -0.5D;
             this.riddenByEntity.setPosition(this.posX + deltaX, this.posY + this.riddenByEntity.getYOffset(), this.posZ + deltaZ);
-            
-            if(this.riddenByEntity.rotationYaw > this.rotationYaw + 30)
+
+            if (this.riddenByEntity.rotationYaw > this.rotationYaw + 30)
             {
                 this.riddenByEntity.rotationYaw = this.rotationYaw + 30;
             }
-            if(this.riddenByEntity.rotationYaw < this.rotationYaw - 30)
+            if (this.riddenByEntity.rotationYaw < this.rotationYaw - 30)
             {
                 this.riddenByEntity.rotationYaw = this.rotationYaw - 30;
             }
