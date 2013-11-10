@@ -40,7 +40,7 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver
     @Override
     public boolean keyTyped(EntityPlayer player, int keycode)
     {
-        System.out.println("Key: " + keycode + "  P: " + (player != null ? player.username : "null"));
+        System.out.println("Key: "+keycode+"  P: " + (player != null ? player.username : "null"));
         if (player != null && this.riddenByEntity instanceof EntityPlayer && ((EntityPlayer) this.riddenByEntity).username.equalsIgnoreCase(player.username))
         {
             //TODO add auto forward and backwards keys like those in WoT
@@ -48,22 +48,18 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver
             {
                 player.sendChatToPlayer(ChatMessageComponent.createFromText("Forward we go!"));
                 this.accelerate(true);
-                return true;
             }
             if (keycode == Minecraft.getMinecraft().gameSettings.keyBindBack.keyCode)
             {
                 this.accelerate(false);
-                return true;
             }
             if (keycode == Minecraft.getMinecraft().gameSettings.keyBindLeft.keyCode)
             {
-                this.turn(true);
-                return true;
+                this.rotationYaw += 6;
             }
             if (keycode == Minecraft.getMinecraft().gameSettings.keyBindRight.keyCode)
             {
-                this.turn(false);
-                return true;
+                this.rotationYaw -= 6;
             }
             //Power brakes
             if (keycode == Minecraft.getMinecraft().gameSettings.keyBindJump.keyCode)
@@ -73,7 +69,6 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver
                 {
                     speed = 0;
                 }
-                return true;
             }
         }
         return false;
@@ -88,8 +83,6 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver
             double deltaX = Math.cos(this.rotationYaw * Math.PI / 180.0D + 114.8) * -0.5D;
             double deltaZ = Math.sin(this.rotationYaw * Math.PI / 180.0D + 114.8) * -0.5D;
             this.riddenByEntity.setPosition(this.posX + deltaX, this.posY + this.riddenByEntity.getYOffset(), this.posZ + deltaZ);
-
-            this.riddenByEntity.rotationYaw = this.rotationYaw;
         }
     }
 
@@ -178,18 +171,6 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver
         else
         {
             this.speed -= 1;
-        }
-    }
-
-    public void turn(boolean left)
-    {
-        if (left)
-        {
-            this.rotationYaw -= 6;
-        }
-        else
-        {
-            this.rotationYaw += 6;
         }
     }
 
