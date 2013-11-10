@@ -14,8 +14,8 @@ import net.minecraftforge.fluids.IFluidHandler;
 import dark.api.fluid.INetworkFluidPart;
 import dark.api.parts.INetworkPart;
 import dark.api.parts.ITileNetwork;
-import dark.core.prefab.helpers.FluidHelper;
-import dark.core.prefab.tilenetwork.NetworkHandler;
+import dark.core.prefab.fluids.FluidHelper;
+import dark.core.prefab.tilenetwork.NetworkUpdateHandler;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
 public class NetworkFluidTiles extends NetworkTileEntities
@@ -31,7 +31,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
 
     static
     {
-        NetworkHandler.registerNetworkClass("FluidTiles", NetworkFluidTiles.class);
+        NetworkUpdateHandler.registerNetworkClass("FluidTiles", NetworkFluidTiles.class);
     }
 
     public NetworkFluidTiles(INetworkPart... parts)
@@ -222,7 +222,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
     @Override
     protected void mergeDo(ITileNetwork network)
     {
-        ITileNetwork newNetwork = NetworkHandler.createNewNetwork(NetworkHandler.getID(this.getClass()));
+        ITileNetwork newNetwork = NetworkUpdateHandler.createNewNetwork(NetworkUpdateHandler.getID(this.getClass()));
         if (newNetwork instanceof NetworkFluidTiles)
         {
             FluidStack one = this.getNetworkTank().getFluid();

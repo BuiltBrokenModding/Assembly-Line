@@ -18,7 +18,7 @@ import dark.api.IToolReadOut;
 import dark.api.fluid.IDrain;
 import dark.api.parts.ITileConnector;
 import dark.core.common.ExternalModHandler;
-import dark.core.prefab.helpers.FluidHelper;
+import dark.core.prefab.fluids.FluidHelper;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
 
 public class TileEntityStarterPump extends TileEntityEnergyMachine implements IToolReadOut, ITileConnector

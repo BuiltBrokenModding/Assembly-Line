@@ -14,7 +14,7 @@ import net.minecraftforge.fluids.FluidStack;
 import com.builtbroken.common.Pair;
 import com.builtbroken.common.Triple;
 
-import dark.core.prefab.helpers.FluidHelper;
+import dark.core.prefab.fluids.FluidHelper;
 import dark.core.prefab.tilenetwork.fluid.FluidRecipeInfo.SimpleFluidRecipe;
 
 /** Handles all kinds of process involving mixing Fluids with other fluids and/or Items, Blocks,

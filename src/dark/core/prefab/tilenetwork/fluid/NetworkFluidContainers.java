@@ -8,8 +8,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import dark.api.fluid.INetworkFluidPart;
 import dark.api.parts.INetworkPart;
-import dark.core.prefab.helpers.FluidHelper;
-import dark.core.prefab.tilenetwork.NetworkHandler;
+import dark.core.prefab.fluids.FluidHelper;
+import dark.core.prefab.tilenetwork.NetworkUpdateHandler;
 
 /** Basically the same as network Fluid tiles class with the only difference being in how it stores
  * the fluid. When it goes to sort the fluid it will use the fluid properties to adjust its position
@@ -20,7 +20,7 @@ public class NetworkFluidContainers extends NetworkFluidTiles
 {
     static
     {
-        NetworkHandler.registerNetworkClass("FluidContainers", NetworkFluidContainers.class);
+        NetworkUpdateHandler.registerNetworkClass("FluidContainers", NetworkFluidContainers.class);
     }
 
     public NetworkFluidContainers(INetworkPart... parts)

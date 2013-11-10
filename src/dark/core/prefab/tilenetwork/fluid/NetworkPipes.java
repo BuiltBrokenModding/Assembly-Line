@@ -7,9 +7,9 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import dark.api.fluid.INetworkPipe;
 import dark.api.parts.INetworkPart;
-import dark.core.prefab.helpers.ConnectionHelper;
-import dark.core.prefab.helpers.FluidHelper;
-import dark.core.prefab.tilenetwork.NetworkHandler;
+import dark.core.helpers.ConnectionHelper;
+import dark.core.prefab.fluids.FluidHelper;
+import dark.core.prefab.tilenetwork.NetworkUpdateHandler;
 
 /** Extension on the fluid container network to provide a more advanced reaction to fluid passing
  * threw each pipe. As well this doubled as a pressure network for those machines that support the
@@ -23,7 +23,7 @@ public class NetworkPipes extends NetworkFluidTiles
 
     static
     {
-        NetworkHandler.registerNetworkClass("FluidPipes", NetworkPipes.class);
+        NetworkUpdateHandler.registerNetworkClass("FluidPipes", NetworkPipes.class);
     }
 
     public NetworkPipes(INetworkPart... parts)

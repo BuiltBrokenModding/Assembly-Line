@@ -17,7 +17,7 @@ import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.prefab.helpers.FluidHelper;
+import dark.core.prefab.fluids.FluidHelper;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.FluidPartsMaterial;
 import dark.fluid.common.pipes.TileEntityPipe;
