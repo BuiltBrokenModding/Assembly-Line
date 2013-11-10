@@ -39,7 +39,7 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
     @Override
     public void invalidate()
     {
-        super.initiate();
+        super.invalidate();
         NetworkTileEntities.invalidate(this);
     }
 
