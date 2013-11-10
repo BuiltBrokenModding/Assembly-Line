@@ -25,7 +25,11 @@ import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
-/** Packet manager based off the PacketManager from UE created by Calclavia
+/** Packet manager based off the PacketManager from UE created by Calclavia. However changed so it
+ * can easily be extended without changing the base handler file. Instead of changing the base file
+ * manager can be registered to the handle that pickup on ids and then handle there own data from
+ * those ids. This lets new and complex handling to be created without many overlap or long methods
+ * in the packet handler
  * 
  * @author DarkGuardsman */
 public class PacketHandler implements IPacketHandler, IPacketReceiver
@@ -43,6 +47,7 @@ public class PacketHandler implements IPacketHandler, IPacketReceiver
         registerManager(new PacketManagerTile());
         registerManager(new PacketManagerEffects());
         registerManager(PacketManagerKeyEvent.instance());
+        registerManager(new PacketManagerEntity());
     }
 
     public static void registerManager(IPacketManager manager)

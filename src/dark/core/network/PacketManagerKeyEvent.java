@@ -6,16 +6,12 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import universalelectricity.prefab.network.IPacketReceiver;
 
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import dark.core.common.DarkMain;
-import dark.core.helpers.PacketDataWatcher;
 import dark.core.interfaces.IControlReceiver;
 
 public class PacketManagerKeyEvent implements IPacketManager
@@ -68,7 +64,7 @@ public class PacketManagerKeyEvent implements IPacketManager
             int key = data.readInt();
             for (IControlReceiver receiver : instance().receivers)
             {
-                if(receiver.keyTyped((EntityPlayer) player, key))
+                if (receiver.keyTyped((EntityPlayer) player, key))
                 {
                     break;
                 }
