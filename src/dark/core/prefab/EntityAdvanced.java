@@ -5,18 +5,19 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-/** Extended version of the entity
+/** Extended version of the entity, used in the case that an entity needs to be created that can't
+ * extend entity living base
  * 
  * @author DarkGuardsman */
 public abstract class EntityAdvanced extends Entity
 {
-    protected float maxDamage = 20;
+    protected float maxDamage = 50;
     protected long ticks = 1;
-    protected static final  int DAMAGE_ID = 6, HIT_TICK_ID = 7, ROLL_DIRECTION_ID = 8, ROLL_AMP_ID = 9,  FORWARD_DIRECTION_ID = 10;
+    protected static final int DAMAGE_ID = 6, HIT_TICK_ID = 7, ROLL_DIRECTION_ID = 8, ROLL_AMP_ID = 9, FORWARD_DIRECTION_ID = 10;
 
     public EntityAdvanced(World world)
     {
-        super(world);      
+        super(world);
         this.setHealth(this.getMaxHealth());
     }
 

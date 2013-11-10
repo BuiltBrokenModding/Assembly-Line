@@ -23,11 +23,11 @@ import dark.core.network.PacketManagerEntity;
 import dark.core.network.PacketManagerKeyEvent;
 import dark.core.prefab.EntityAdvanced;
 
-public class EntityDrivable extends EntityAdvanced implements IControlReceiver, ISimplePacketReceiver
+public abstract class EntityDrivable extends EntityAdvanced implements IControlReceiver, ISimplePacketReceiver
 {
     //1m/tick is 80km/h or 50mi/h
     //0.5/tick is 40km/h
-    public double speed = 0.0, maxSpeed = 0.32;
+    public double speed = 0.0, maxSpeed = 0.32, turnRate = 3, acceration = .1;
 
     public double boatX, boatY, boatZ, boatYaw, boatPitch;
     public int boatPosRotationIncrements;
@@ -165,8 +165,11 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver, 
 
         if (this.worldObj.isRemote)
         {
-            this.motionX = -(this.speed * Math.cos((this.rotationYaw - 90F) * Math.PI / 180.0D));
-            this.motionZ = -(this.speed * Math.sin((this.rotationYaw - 90F) * Math.PI / 180.0D));
+            if (this.canMove())
+            {
+                this.motionX = -(this.speed * Math.cos((this.rotationYaw - 90F) * Math.PI / 180.0D));
+                this.motionZ = -(this.speed * Math.sin((this.rotationYaw - 90F) * Math.PI / 180.0D));
+            }
             this.moveEntity(this.motionX, this.motionY, this.motionZ);
         }
 
@@ -187,11 +190,14 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver, 
             }
             else
             {
-                //TODO send generic vehicle settings to clients
+                this.updateClients();
             }
         }
 
     }
+
+    /** Called to update all the clients with new information */
+    public abstract void updateClients();
 
     @Override
     public boolean simplePacket(String id, ByteArrayDataInput data, Player player)
@@ -257,7 +263,7 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver, 
     {
         if (forward)
         {
-            this.speed += 1;
+            this.speed += this.acceration;
             if (this.speed > this.maxSpeed)
             {
                 this.speed = this.maxSpeed;
@@ -266,7 +272,7 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver, 
         }
         else
         {
-            this.speed -= 1;
+            this.speed -= this.acceration;
             if (this.speed < -this.maxSpeed)
             {
                 this.speed = -this.maxSpeed;
@@ -279,11 +285,11 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver, 
     {
         if (left)
         {
-            this.rotationYaw -= 6;
+            this.rotationYaw -= this.turnRate;
         }
         else
         {
-            this.rotationYaw += 6;
+            this.rotationYaw += this.turnRate;
         }
     }
 
@@ -359,7 +365,7 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver, 
             this.setBeenAttacked();
             boolean flag = source.getEntity() instanceof EntityPlayer && ((EntityPlayer) source.getEntity()).capabilities.isCreativeMode;
 
-            if (flag || this.getHealth() > 40.0F)
+            if (flag || this.getHealth() > this.maxDamage)
             {
                 if (this.riddenByEntity != null)
                 {
@@ -368,7 +374,8 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver, 
 
                 if (!flag)
                 {
-                    this.dropItemWithOffset(CoreRecipeLoader.itemVehicleTest.itemID, 1, 0.0F);
+                    //this.dropItemWithOffset(CoreRecipeLoader.itemVehicleTest.itemID, 1, 0.0F);
+                    this.dropAsItem();
                 }
 
                 this.setDead();
@@ -381,6 +388,9 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver, 
             return true;
         }
     }
+
+    /** Called whe the vehicle is destory and should be dropped */
+    public abstract void dropAsItem();
 
     /** Checks if the vehicle can move, use this to check for fuel */
     public boolean canMove()

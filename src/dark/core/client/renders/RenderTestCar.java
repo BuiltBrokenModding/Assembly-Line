@@ -34,7 +34,7 @@ public class RenderTestCar extends Render
     {
 
         GL11.glPushMatrix();
-        GL11.glTranslatef((float) rx, (float) ry, (float) rz);
+        GL11.glTranslatef((float) rx, (float) ry + .8f, (float) rz);
         GL11.glRotatef(180.0F - rYaw, 0.0F, 1.0F, 0.0F);
         if (entity instanceof EntityAdvanced)
         {
