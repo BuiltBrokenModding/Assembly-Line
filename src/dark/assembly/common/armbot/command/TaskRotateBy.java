@@ -8,7 +8,7 @@ import dark.api.al.coding.IArmbot;
 import dark.api.al.coding.args.ArgumentIntData;
 import dark.assembly.common.armbot.TaskBaseArmbot;
 import dark.assembly.common.armbot.TaskBaseProcess;
-import dark.core.prefab.helpers.MathHelper;
+import dark.core.helpers.MathHelper;
 
 /** Rotates an armbot by a set amount
  * 

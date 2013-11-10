@@ -28,9 +28,9 @@ import com.google.common.io.ByteArrayDataInput;
 import dark.api.al.coding.IArmbot;
 import dark.api.al.coding.IArmbotUseable;
 import dark.core.common.DarkMain;
+import dark.core.helpers.AutoCraftingManager;
+import dark.core.helpers.AutoCraftingManager.IAutoCrafter;
 import dark.core.network.PacketHandler;
-import dark.core.prefab.helpers.AutoCraftingManager;
-import dark.core.prefab.helpers.AutoCraftingManager.IAutoCrafter;
 import dark.core.prefab.invgui.ISlotPickResult;
 import dark.core.prefab.machine.TileEntityMulti;
 

@@ -15,7 +15,7 @@ import dark.api.al.coding.IArmbot;
 import dark.api.al.coding.ITask;
 import dark.assembly.common.armbot.TaskBaseArmbot;
 import dark.assembly.common.armbot.TaskBaseProcess;
-import dark.core.prefab.helpers.ItemWorldHelper;
+import dark.core.helpers.ItemWorldHelper;
 
 /** Used by arms to break a specific block in a position.
  * 

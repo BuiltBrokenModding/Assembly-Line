@@ -34,10 +34,10 @@ import dark.assembly.common.ALRecipeLoader;
 import dark.assembly.common.machine.TileEntityAssembly;
 import dark.assembly.common.machine.encoder.ItemDisk;
 import dark.core.common.DarkMain;
+import dark.core.helpers.ItemWorldHelper;
+import dark.core.helpers.MathHelper;
 import dark.core.interfaces.IMultiBlock;
 import dark.core.network.PacketHandler;
-import dark.core.prefab.helpers.ItemWorldHelper;
-import dark.core.prefab.helpers.MathHelper;
 import dark.core.prefab.machine.BlockMulti;
 
 public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IArmbot, IPeripheral

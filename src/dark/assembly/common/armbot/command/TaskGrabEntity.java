@@ -12,7 +12,7 @@ import dark.api.al.coding.IArmbot;
 import dark.api.al.coding.args.ArgumentData;
 import dark.api.al.coding.args.ArgumentListData;
 import dark.assembly.common.armbot.TaskBaseProcess;
-import dark.core.prefab.helpers.EntityDictionary;
+import dark.core.helpers.EntityDictionary;
 
 public class TaskGrabEntity extends TaskGrabPrefab
 {
@@ -27,7 +27,7 @@ public class TaskGrabEntity extends TaskGrabPrefab
     {
         super("Grab-Entity");
         this.defautlArguments.add(new ArgumentData("child", false));
-        this.defautlArguments.add(new ArgumentListData("Entity", Entity.class, EntityDictionary.getList().toArray(new Object[1])));
+        this.defautlArguments.add(new ArgumentListData<Class<? extends Entity>>("Entity", Entity.class, (Class<? extends Entity>[]) EntityDictionary.getList().toArray(new Object[1])));
     }
 
     @Override
