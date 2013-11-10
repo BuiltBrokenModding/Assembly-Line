@@ -41,7 +41,7 @@ import dark.core.common.ExternalModHandler;
  * Based off both UE universal electrical tile, and electrical tile prefabs
  * 
  * @author DarkGuardsman */
-public class TileEntityEnergyMachine extends TileEntityMachine implements IElectrical, IElectricalStorage, IEnergySink, IEnergySource, IPowerReceptor, IPowerLess
+public class TileEntityEnergyMachine extends TileEntityMachine implements IElectrical, IElectricalStorage, IPowerLess
 {
     /** Forge Ore Directory name of the item to toggle infinite power mode */
     public static String powerToggleItemID = "battery";
@@ -187,7 +187,7 @@ public class TileEntityEnergyMachine extends TileEntityMachine implements IElect
     {
         if (itemStack != null)
         {
-            if (itemStack.getItem() instanceof IItemElectric)
+            if (itemStack.getItem() instanceof IItemElectric || itemStack.getItem() instanceof IChargeableItem)
             {
                 return true;
             }
@@ -200,51 +200,19 @@ public class TileEntityEnergyMachine extends TileEntityMachine implements IElect
                     return true;
                 }
             }
-            else if (itemStack.getItem() instanceof IChargeableItem)
-            {
-                return true;
-            }
         }
         return false;
-    }
-
-    @Override
-    public void initiate()
-    {
-        super.initiate();
-        this.initBuildCraft();
     }
 
     @Override
     public void updateEntity()
     {
         super.updateEntity();
-
-        // Register to the IC2 Network
         if (!this.worldObj.isRemote)
         {
             if (this.isFunctioning())
             {
                 this.consumePower(this.WATTS_PER_TICK, true);
-            }
-            if (!this.isAddedToEnergyNet)
-            {
-                this.initIC();
-            }
-
-            if (this.bcPowerHandler == null)
-            {
-                this.initBuildCraft();
-            }
-
-            if (Compatibility.isBuildcraftLoaded())
-            {
-                if (this.bcPowerHandler.getEnergyStored() > 0)
-                {
-                    /** Cheat BuildCraft powerHandler and always empty energy inside of it. */
-                    this.receiveElectricity(this.bcPowerHandler.getEnergyStored() * Compatibility.BC3_RATIO, true);
-                    this.bcPowerHandler.setEnergy(0);
-                }
             }
         }
     }
@@ -262,164 +230,7 @@ public class TileEntityEnergyMachine extends TileEntityMachine implements IElect
     }
 
     /** Produces energy only on the given side */
-    public void produceDirection(ForgeDirection side)
-    {
-        this.produceUE(side);
-        this.produceBuildCraft(side);
-    }
-
-    public void produceBuildCraft(ForgeDirection outputDirection)
-    {
-        if (!this.worldObj.isRemote && outputDirection != null && outputDirection != ForgeDirection.UNKNOWN)
-        {
-            float provide = this.getProvide(outputDirection);
-
-            if (this.getEnergyStored() >= provide && provide > 0)
-            {
-                if (Compatibility.isBuildcraftLoaded())
-                {
-                    TileEntity tileEntity = new Vector3(this).modifyPositionFromSide(outputDirection).getTileEntity(this.worldObj);
-
-                    if (tileEntity instanceof IPowerReceptor)
-                    {
-                        PowerReceiver receiver = ((IPowerReceptor) tileEntity).getPowerReceiver(outputDirection.getOpposite());
-
-                        if (receiver != null)
-                        {
-                            float bc3Provide = provide * Compatibility.TO_BC_RATIO;
-                            float energyUsed = Math.min(receiver.receiveEnergy(this.bcBlockType, bc3Provide, outputDirection.getOpposite()), bc3Provide);
-                            this.provideElectricity((bc3Provide - (energyUsed * Compatibility.TO_BC_RATIO)), true);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /** IC2 Methods */
-    @Override
-    public boolean acceptsEnergyFrom(TileEntity emitter, ForgeDirection direction)
-    {
-        return this.getInputDirections().contains(direction);
-    }
-
-    @Override
-    public double getOfferedEnergy()
-    {
-        return this.getProvide(ForgeDirection.UNKNOWN) * Compatibility.TO_IC2_RATIO;
-    }
-
-    @Override
-    public void drawEnergy(double amount)
-    {
-        this.provideElectricity((float) amount * Compatibility.IC2_RATIO, true);
-    }
-
-    @Override
-    public void invalidate()
-    {
-        this.unloadTileIC2();
-        super.invalidate();
-    }
-
-    @Override
-    public void onChunkUnload()
-    {
-        this.unloadTileIC2();
-        super.onChunkUnload();
-    }
-
-    protected void initIC()
-    {
-        if (Compatibility.isIndustrialCraft2Loaded())
-        {
-            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
-        }
-
-        this.isAddedToEnergyNet = true;
-    }
-
-    private void unloadTileIC2()
-    {
-        if (this.isAddedToEnergyNet && this.worldObj != null)
-        {
-            if (Compatibility.isIndustrialCraft2Loaded())
-            {
-                MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
-            }
-
-            this.isAddedToEnergyNet = false;
-        }
-    }
-
-    @Override
-    public double demandedEnergyUnits()
-    {
-        return Math.ceil(this.getRequest(ForgeDirection.UNKNOWN) * Compatibility.TO_IC2_RATIO);
-    }
-
-    @Override
-    public double injectEnergyUnits(ForgeDirection direction, double amount)
-    {
-        if (this.getInputDirections().contains(direction))
-        {
-            float convertedEnergy = (float) (amount * Compatibility.IC2_RATIO);
-            ElectricityPack toSend = ElectricityPack.getFromWatts(convertedEnergy, this.getVoltage());
-            float receive = this.receiveElectricity(direction, toSend, true);
-
-            // Return the difference, since injectEnergy returns left over energy, and
-            // receiveElectricity returns energy used.
-            return Math.round(amount - (receive * Compatibility.TO_IC2_RATIO));
-        }
-
-        return amount;
-    }
-
-    @Override
-    public boolean emitsEnergyTo(TileEntity receiver, ForgeDirection direction)
-    {
-        return receiver instanceof IEnergyTile && this.getOutputDirections().contains(direction);
-    }
-
-    @Override
-    public int getMaxSafeInput()
-    {
-        return Integer.MAX_VALUE;
-    }
-
-    /** BuildCraft power support */
-    public void initBuildCraft()
-    {
-        if (this.bcPowerHandler == null)
-        {
-            this.bcPowerHandler = new PowerHandler(this, this.bcBlockType);
-        }
-        this.bcPowerHandler.configure(0, this.maxInputEnergy, 0, (int) Math.ceil(this.getMaxEnergyStored() * Compatibility.BC3_RATIO));
-    }
-
-    @Override
-    public PowerReceiver getPowerReceiver(ForgeDirection side)
-    {
-        this.initBuildCraft();
-        return this.bcPowerHandler.getPowerReceiver();
-    }
-
-    @Override
-    public void doWork(PowerHandler workProvider)
-    {
-
-    }
-
-    @Override
-    public World getWorld()
-    {
-        return this.getWorldObj();
-    }
-
-    /** Produces UE power towards a specific direction.
-     * 
-     * @param outputDirection - The output direction. */
-    public void produceUE(ForgeDirection outputDirection)
+    public void produceDirection(ForgeDirection outputDirection)
     {
         if (!this.worldObj.isRemote && outputDirection != null && outputDirection != ForgeDirection.UNKNOWN)
         {
