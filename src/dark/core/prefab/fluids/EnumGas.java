@@ -3,14 +3,16 @@ package dark.core.prefab.fluids;
 import com.builtbroken.common.science.ChemElement;
 import com.builtbroken.common.science.ChemicalCompound;
 
+import dark.core.common.blocks.OreGenFluid;
+
 /** Enum of gases used to create all the gas fluids
  * 
  * @author DarkGuardsman */
 public enum EnumGas
 {
-    C2O("Carbon DiOxide", false),
-    O2(ChemElement.Oxygen, 2f, true),
-    C4H10(ChemicalCompound.BUTANE, true),
+    CarbonDiOxide("Carbon DiOxide", false),
+    Oxygen(ChemElement.Oxygen, 2f, true),
+    BUTANE(ChemicalCompound.BUTANE, true),
     METHANE(ChemicalCompound.METHANE, true),
     NATURAL_GAS("Natural Gas", false),
     PROPANE("Propane", false);
@@ -26,6 +28,8 @@ public enum EnumGas
     private float molePerGasMolecule = 1.0f;
     /** Local instance of the gas used when the getGas method is called */
     private Gas gas;
+
+    public OreGenFluid gen;
 
     private EnumGas(String name, boolean enabled)
     {
@@ -60,6 +64,14 @@ public enum EnumGas
             if (data instanceof ChemElement)
             {
                 gas.setDensity((int) ((ChemElement) data).density * 1000);
+            }
+            else if (data instanceof ChemicalCompound)
+            {
+                gas.setDensity((int) ((ChemicalCompound) data).density * 1000);
+            }
+            else
+            {
+                gas.setDensity(-1000);
             }
         }
         return gas;

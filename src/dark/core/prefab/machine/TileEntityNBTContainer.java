@@ -24,14 +24,14 @@ public class TileEntityNBTContainer extends TileEntity
     public void readFromNBT(NBTTagCompound nbt)
     {
         super.readFromNBT(nbt);
-        nbt.setCompoundTag("saveData", this.getSaveData());
+        this.saveData = nbt.getCompoundTag("saveData");
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbt)
     {
         super.writeToNBT(nbt);
-        this.saveData = nbt.getCompoundTag("saveData");
+        nbt.setCompoundTag("saveData", this.getSaveData());
     }
 
     @Override

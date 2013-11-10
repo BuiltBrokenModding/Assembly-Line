@@ -11,6 +11,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.ore.OreGenReplaceStone;
@@ -31,16 +32,19 @@ import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import dark.api.reciepes.MachineRecipeHandler;
 import dark.core.common.blocks.BlockBasalt;
 import dark.core.common.blocks.BlockColorGlass;
 import dark.core.common.blocks.BlockColorGlowGlass;
 import dark.core.common.blocks.BlockColorSand;
+import dark.core.common.blocks.BlockGasOre;
 import dark.core.common.blocks.BlockOre;
 import dark.core.common.blocks.BlockOre.OreData;
 import dark.core.common.blocks.ItemBlockColored;
 import dark.core.common.blocks.ItemBlockOre;
+import dark.core.common.blocks.OreGenFluid;
 import dark.core.common.items.EnumMaterial;
 import dark.core.common.items.EnumOrePart;
 import dark.core.common.items.ItemBattery;
@@ -62,6 +66,7 @@ import dark.core.prefab.ItemBlockHolder;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.fluids.EnumGas;
 import dark.core.prefab.machine.BlockMulti;
+import dark.core.prefab.machine.TileEntityNBTContainer;
 import dark.core.prefab.vehicles.EntityDrivable;
 import dark.core.prefab.vehicles.ItemVehicleSpawn;
 import dark.core.registration.ModObjectRegistry;
@@ -141,6 +146,10 @@ public class DarkMain extends ModPrefab
             {
                 gas.getGas().setBlockID(CoreRecipeLoader.blockGas);
             }
+        }
+        if (CoreRecipeLoader.blockGas != null)
+        {
+            OreGenerator.addOre(new OreGenFluid("METHANE", "GasMETHANE", new FluidStack(EnumGas.NATURAL_GAS.getGas(), 1000), 1, 3, 50, 10, 8));
         }
         if (CoreRecipeLoader.blockOre != null)
         {
@@ -245,6 +254,8 @@ public class DarkMain extends ModPrefab
         /* CONFIGS */
         CONFIGURATION.load();
 
+        GameRegistry.registerTileEntity(TileEntityNBTContainer.class, "DMNBTSaveBlock");
+
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
         {
             DarkMain.zeroAnimation = CONFIGURATION.get("Graphics", "DisableAllAnimation", false, "Disables active animations by any non-active models").getBoolean(false);
@@ -266,6 +277,11 @@ public class DarkMain extends ModPrefab
         CoreRecipeLoader.blockBasalt = ModObjectRegistry.createNewBlock("DMBlockBasalt", DarkMain.MOD_ID, BlockBasalt.class, ItemBlockColored.class);
         CoreRecipeLoader.blockGlowGlass = ModObjectRegistry.createNewBlock("DMBlockGlowGlass", DarkMain.MOD_ID, BlockColorGlowGlass.class, ItemBlockColored.class);
         CoreRecipeLoader.blockSolar = ModObjectRegistry.createNewBlock("DMBlockSolar", DarkMain.MOD_ID, BlockSolarPanel.class, ItemBlockHolder.class);
+        Block block = ModObjectRegistry.createNewBlock("DMBlockGas", DarkMain.MOD_ID, BlockGasOre.class, ItemBlockHolder.class);
+        if (block instanceof BlockGasOre)
+        {
+            CoreRecipeLoader.blockDebug = block;
+        }
 
         /* ITEMS */
         CoreRecipeLoader.itemTool = ModObjectRegistry.createNewItem("DMReadoutTools", DarkMain.MOD_ID, ItemReadoutTools.class, true);
