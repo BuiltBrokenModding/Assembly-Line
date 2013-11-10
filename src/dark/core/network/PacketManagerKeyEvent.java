@@ -68,7 +68,10 @@ public class PacketManagerKeyEvent implements IPacketManager
             int key = data.readInt();
             for (IControlReceiver receiver : instance().receivers)
             {
-                receiver.keyTyped((EntityPlayer) player, key);
+                if(receiver.keyTyped((EntityPlayer) player, key))
+                {
+                    break;
+                }
             }
         }
         catch (Exception e)

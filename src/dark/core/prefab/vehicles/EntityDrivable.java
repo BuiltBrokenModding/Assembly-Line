@@ -48,18 +48,22 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver
             {
                 player.sendChatToPlayer(ChatMessageComponent.createFromText("Forward we go!"));
                 this.accelerate(true);
+                return true;
             }
             if (keycode == Minecraft.getMinecraft().gameSettings.keyBindBack.keyCode)
             {
                 this.accelerate(false);
+                return true;
             }
             if (keycode == Minecraft.getMinecraft().gameSettings.keyBindLeft.keyCode)
             {
                 this.turn(true);
+                return true;
             }
             if (keycode == Minecraft.getMinecraft().gameSettings.keyBindRight.keyCode)
             {
                 this.turn(false);
+                return true;
             }
             //Power brakes
             if (keycode == Minecraft.getMinecraft().gameSettings.keyBindJump.keyCode)
@@ -69,6 +73,7 @@ public class EntityDrivable extends EntityAdvanced implements IControlReceiver
                 {
                     speed = 0;
                 }
+                return true;
             }
         }
         return false;
