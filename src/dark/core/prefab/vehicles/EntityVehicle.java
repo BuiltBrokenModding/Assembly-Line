@@ -52,7 +52,7 @@ public abstract class EntityVehicle extends EntityAdvanced implements IControlRe
     @Override
     public boolean keyTyped(EntityPlayer player, int keycode)
     {
-        System.out.println("Key: " + keycode + "  P: " + (player != null ? player.username : "null"));
+        // System.out.println("Key: " + keycode + "  P: " + (player != null ? player.username : "null"));
         if (player != null && this.riddenByEntity instanceof EntityPlayer && ((EntityPlayer) this.riddenByEntity).username.equalsIgnoreCase(player.username))
         {
             boolean flag = false;
