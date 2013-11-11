@@ -112,7 +112,7 @@ public abstract class EntityVehicle extends EntityAdvanced implements IControlRe
     public void onUpdate()
     {
         super.onUpdate();
-        this.applyFriction();
+
         if (this.worldObj.isRemote)
         {
             this.worldObj.spawnParticle("mobSpell", this.posX, this.posY, this.posZ, 0, 0, 0);
@@ -120,14 +120,17 @@ public abstract class EntityVehicle extends EntityAdvanced implements IControlRe
 
         if (this.worldObj.isRemote && (this.riddenByEntity == null || !(this.riddenByEntity instanceof EntityPlayer) || !FMLClientHandler.instance().getClient().thePlayer.equals(this.riddenByEntity)))
         {
-            double x, y, z;
+            double x;
+            double y;
+            double var12;
+            double z;
             if (this.boatPosRotationIncrements > 0)
             {
                 x = this.posX + (this.boatX - this.posX) / this.boatPosRotationIncrements;
                 y = this.posY + (this.boatY - this.posY) / this.boatPosRotationIncrements;
                 z = this.posZ + (this.boatZ - this.posZ) / this.boatPosRotationIncrements;
-
-                this.rotationYaw = (float) (this.rotationYaw + MathHelper.wrapAngleTo180_double(this.boatYaw - this.rotationYaw) / this.boatPosRotationIncrements);
+                var12 = MathHelper.wrapAngleTo180_double(this.boatYaw - this.rotationYaw);
+                this.rotationYaw = (float) (this.rotationYaw + var12 / this.boatPosRotationIncrements);
                 this.rotationPitch = (float) (this.rotationPitch + (this.boatPitch - this.rotationPitch) / this.boatPosRotationIncrements);
                 --this.boatPosRotationIncrements;
                 this.setPosition(x, y, z);
@@ -156,10 +159,13 @@ public abstract class EntityVehicle extends EntityAdvanced implements IControlRe
             }
             return;
         }
-
+        this.applyFriction();
+        if (this.speed > this.maxSpeed)
+        {
+            this.speed = this.maxSpeed;
+        }
         if (this.isCollidedHorizontally)
         {
-            this.speed *= 0.9;
             this.motionY = 0.1D;
         }
 
@@ -173,25 +179,18 @@ public abstract class EntityVehicle extends EntityAdvanced implements IControlRe
             this.moveEntity(this.motionX, this.motionY, this.motionZ);
         }
 
-        if (this.speed > this.maxSpeed)
-        {
-            this.speed = this.maxSpeed;
-        }
-
-        this.prevPosX = this.posX;
-        this.prevPosY = this.posY;
-        this.prevPosZ = this.posZ;
         if (ticks % 5 == 0)
         {
-            if (this.worldObj.isRemote && Minecraft.getMinecraft().thePlayer == this.riddenByEntity)
-            {
-                PacketManagerEntity.sendEntityUpdatePacket(this, true, "Desc", this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch, this.motionX, this.motionY, this.motionZ);
-            }
-            else
+            PacketManagerEntity.sendEntityUpdatePacket(this, this.worldObj.isRemote, "Desc", this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch, this.motionX, this.motionY, this.motionZ);
+
+            if (!this.worldObj.isRemote)
             {
                 this.updateClients();
             }
         }
+        this.prevPosX = this.posX;
+        this.prevPosY = this.posY;
+        this.prevPosZ = this.posZ;
 
     }
 
@@ -201,15 +200,37 @@ public abstract class EntityVehicle extends EntityAdvanced implements IControlRe
     @Override
     public boolean simplePacket(String id, ByteArrayDataInput data, Player player)
     {
-        if (id.equalsIgnoreCase("Desc") && player == this.riddenByEntity)
+        if (id.equalsIgnoreCase("Desc"))
         {
-            this.setPositionAndRotation(data.readDouble(), data.readDouble(), data.readDouble(), data.readFloat(), data.readFloat());
-            this.motionX = data.readDouble();
-            this.motionY = data.readDouble();
-            this.motionZ = data.readDouble();
+            this.setPositionRotationAndMotion(data.readDouble(), data.readDouble(), data.readDouble(), data.readFloat(), data.readFloat(), data.readDouble(), data.readDouble(), data.readDouble());
+
             return true;
         }
         return false;
+    }
+
+    public void setPositionRotationAndMotion(double x, double y, double z, float yaw, float pitch, double motX, double motY, double motZ)
+    {
+        if (this.worldObj.isRemote)
+        {
+            this.boatX = x;
+            this.boatY = y;
+            this.boatZ = z;
+            this.boatYaw = yaw;
+            this.boatPitch = pitch;
+            this.motionX = motX;
+            this.motionY = motY;
+            this.motionZ = motZ;
+            this.boatPosRotationIncrements = 5;
+        }
+        else
+        {
+            this.setPosition(x, y, z);
+            this.setRotation(yaw, pitch);
+            this.motionX = motX;
+            this.motionY = motY;
+            this.motionZ = motZ;
+        }
     }
 
     public void checkCollisions()
