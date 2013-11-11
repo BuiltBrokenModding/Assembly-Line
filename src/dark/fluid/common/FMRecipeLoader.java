@@ -3,6 +3,7 @@ package dark.fluid.common;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -48,7 +49,7 @@ public class FMRecipeLoader extends RecipeLoader
         // release valve
         GameRegistry.addRecipe(new ItemStack(blockReleaseValve, 1), new Object[] { "RPR", "PVP", "RPR", 'P', new ItemStack(blockPipe, 1), 'V', new ItemStack(CoreRecipeLoader.itemParts, 1, Parts.Valve.ordinal()), 'R', Item.redstone });
         // sink
-        GameRegistry.addRecipe(new ItemStack(blockSink, 1), new Object[] { "I I", "SIS", "SPS", 'P', new ItemStack(blockPipe, 1), 'I', Item.ingotIron, 'S', Block.stone });
+        //GameRegistry.addRecipe(new ItemStack(blockSink, 1), new Object[] { "I I", "SIS", "SPS", 'P', new ItemStack(blockPipe, 1), 'I', Item.ingotIron, 'S', Block.stone });
     }
 
     public void registerTanks()
@@ -83,7 +84,7 @@ public class FMRecipeLoader extends RecipeLoader
             for (ColorCode color : ColorCode.values())
             {
                 GameRegistry.addRecipe(mat.getStack(color), new Object[] { " X ", "XIX", " X ", 'I', new ItemStack(Item.dyePowder, 1, color.ordinal()), 'X', blockPipe });
-                new RecipeGrid(mat.getStack(), 1, 1).setRowOne(mat.getStack(color)).RegisterRecipe();
+                GameRegistry.addShapelessRecipe(mat.getStack(), new Object[]{mat.getStack(color)});
             }
 
         }
