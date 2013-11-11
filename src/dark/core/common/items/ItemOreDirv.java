@@ -2,14 +2,17 @@ package dark.core.common.items;
 
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.api.events.LaserEvent;
 import dark.core.common.DarkMain;
 import dark.core.interfaces.IExtraInfo.IExtraItemInfo;
 import dark.core.prefab.ItemBasic;
@@ -109,4 +112,50 @@ public class ItemOreDirv extends ItemBasic implements IExtraItemInfo
 
     }
 
+    @ForgeSubscribe
+    public void LaserSmeltEvent(LaserEvent.LaserDropItemEvent event)
+    {
+        if (event.items != null)
+        {
+
+            for (int i = 0; i < event.items.size(); i++)
+            {
+                if (event.items.get(i).itemID == Block.blockIron.blockID)
+                {
+                    event.items.set(i, EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.MOLTEN_SCRAPS, event.items.get(i).stackSize * 9));
+                }
+                else if (event.items.get(i).itemID == Block.blockGold.blockID)
+                {
+                    event.items.set(i, EnumMaterial.getStack(EnumMaterial.GOLD, EnumOrePart.MOLTEN_SCRAPS, event.items.get(i).stackSize * 9));
+                }
+                else if (event.items.get(i).itemID == Block.oreIron.blockID)
+                {
+                    event.items.set(i, EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.MOLTEN_SCRAPS, event.items.get(i).stackSize));
+                }
+                else if (event.items.get(i).itemID == Block.oreGold.blockID)
+                {
+                    event.items.set(i, EnumMaterial.getStack(EnumMaterial.GOLD, EnumOrePart.MOLTEN_SCRAPS, event.items.get(i).stackSize));
+                }
+
+                String oreName = OreDictionary.getOreName(OreDictionary.getOreID(event.items.get(i)));
+
+                if (oreName != null)
+                {
+                    for (EnumMaterial mat : EnumMaterial.values())
+                    {
+                        if (oreName.equalsIgnoreCase("ore" + mat.simpleName) || oreName.equalsIgnoreCase(mat.simpleName + "ore"))
+                        {
+                            event.items.set(i, mat.getStack(EnumOrePart.MOLTEN_SCRAPS, event.items.get(i).stackSize + 1 + event.world.rand.nextInt(3)));
+                            break;
+                        }
+                        else if (oreName.equalsIgnoreCase("ingot" + mat.simpleName) || oreName.equalsIgnoreCase(mat.simpleName + "ingot"))
+                        {
+                            event.items.set(i, mat.getStack(EnumOrePart.MOLTEN_SCRAPS, event.items.get(i).stackSize));
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

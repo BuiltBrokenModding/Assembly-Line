@@ -101,9 +101,9 @@ public class CoreRecipeLoader extends RecipeLoader
             // part valve
             GameRegistry.addRecipe(new ShapedOreRecipe(valvePart, new Object[] { "PLP", 'P', "ironPipe", 'L', Block.lever }));
             //Basic Circuit
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.CircuitBasic.ordinal()), "!#!", "#@#", "!#!", '@', "plateCopper", '#', Block.glass, '!', "copperWire"));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.CircuitBasic.ordinal()), "!#!", "#@#", "!#!", '@', copperPlate, '#', Block.glass, '!', "copperWire"));
             //Advanced Circuit
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.CircuitAdvanced.ordinal()), "!#!", "#@#", "!#!", '@', "plateCopper", '#', Item.redstone, '!', "copperWire"));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.CircuitAdvanced.ordinal()), "!#!", "#@#", "!#!", '@', copperPlate, '#', Item.redstone, '!', "copperWire"));
             //Elite Circuit
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.CircuitElite.ordinal()), "!#!", "#@#", "!#!", '@', "plateGold", '#', Item.redstone, '!', "copperWire"));
 
@@ -111,7 +111,12 @@ public class CoreRecipeLoader extends RecipeLoader
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.Tank.ordinal()), " # ", "# #", " # ", '#', bronze));
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.Tank.ordinal()), " # ", "# #", " # ", '#', steel));
             //Motor
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.Motor.ordinal()), new Object[] { "@!@", "!#!", "@!@", '!', "ingotSteel", '#', Item.ingotIron, '@', "copperWire" }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.Motor.ordinal()), new Object[] { "@!@", "!#!", "@!@", '!', steel, '#', Item.ingotIron, '@', new ItemStack(itemParts, 8, Parts.COIL.ordinal()) }));
+            //Laser Diode
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 4, Parts.LASER.ordinal()), new Object[] { " G ", "!S!", " C ", '!', "copperWire", 'G', Block.glass, 'S', Block.sand, 'C', RecipeLoader.circuit }));
+            //Coil
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 8, Parts.COIL.ordinal()), new Object[] { "WWW", "W W", "WWW", 'W', "copperWire" }));
+
         }
 
         if (itemMetals instanceof ItemOreDirv)

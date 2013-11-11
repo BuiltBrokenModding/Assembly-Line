@@ -7,6 +7,9 @@ import net.minecraftforge.event.Cancelable;
 import net.minecraftforge.event.Event;
 import universalelectricity.core.vector.Vector3;
 
+/** Events called when an automated crafter is working on crafting an item
+ * 
+ * @author DarkGuardsman */
 public class AutoCraftEvent extends Event
 {
     World world;

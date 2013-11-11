@@ -176,6 +176,7 @@ public class DarkMain extends ModPrefab
         }
         if (CoreRecipeLoader.itemMetals != null)
         {
+            MinecraftForge.EVENT_BUS.register(CoreRecipeLoader.itemMetals);
             //Ore material recipe loop
             for (EnumMaterial mat : EnumMaterial.values())
             {

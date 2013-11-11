@@ -10,7 +10,8 @@ public enum EnumOrePart
     GEARS("Gears"),
     TUBE("Tube"),
     ROD("Rod"),
-    SCRAPS("Scraps");
+    SCRAPS("Scraps"),
+    MOLTEN_SCRAPS("MoltenScraps");
 
     public String simpleName;
 
