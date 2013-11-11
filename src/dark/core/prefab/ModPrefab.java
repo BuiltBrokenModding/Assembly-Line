@@ -105,6 +105,7 @@ public abstract class ModPrefab
         {
             MinecraftForge.EVENT_BUS.register(new FluidHelper());
             MinecraftForge.EVENT_BUS.register(SaveManager.instance());
+            MinecraftForge.EVENT_BUS.register(new LaserEntityDamageSource(null));
             TickRegistry.registerTickHandler(NetworkUpdateHandler.instance(), Side.SERVER);
             TickRegistry.registerScheduledTickHandler(new PlayerKeyHandler(), Side.CLIENT);
             UniversalElectricity.initiate();
