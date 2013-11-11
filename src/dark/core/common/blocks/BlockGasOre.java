@@ -25,10 +25,10 @@ import dark.core.interfaces.IExtraInfo.IExtraBlockInfo;
 import dark.core.prefab.fluids.EnumGas;
 
 /** Gas that is designed to generate underground in the same way as an ore
- * 
+ *
  * TODO code actual gas behavior such as expanding to fill an area but at the same time losing
  * volume
- * 
+ *
  * @author DarkGuardsman */
 public class BlockGasOre extends BlockTile implements IGasBlock, IExtraBlockInfo
 {

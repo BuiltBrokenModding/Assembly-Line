@@ -56,7 +56,7 @@ public class PacketManagerEntity implements IPacketManager
 
     }
 
-    public static void sendEntityUpdatePacket(Entity entity, boolean server, String id, Object... objects)
+    public static void sendEntityUpdatePacket(Entity entity, boolean toServer, String id, Object... objects)
     {
         Object[] obj = new Object[2 + objects.length];
         obj[0] = entity.entityId;
@@ -66,7 +66,7 @@ public class PacketManagerEntity implements IPacketManager
             obj[2 + i] = objects[i];
         }
         Packet packet = PacketHandler.instance().getPacketWithID(DarkMain.CHANNEL, packetID, obj);
-        if (server)
+        if (toServer)
         {
             PacketDispatcher.sendPacketToServer(packet);
         }

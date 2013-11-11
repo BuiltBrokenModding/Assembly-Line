@@ -3,9 +3,12 @@ package dark.core.prefab.vehicles;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
@@ -27,7 +30,7 @@ public abstract class EntityVehicle extends EntityAdvanced implements IControlRe
 {
     //1m/tick is 80km/h or 50mi/h
     //0.5/tick is 40km/h
-    public double speed = 0.0, maxSpeed = 0.32, turnRate = 3, acceration = .1;
+    public double speed = 0.0, maxSpeed = 0.5, turnRate = 3, acceration = .1;
 
     public double boatX, boatY, boatZ, boatYaw, boatPitch;
     public int boatPosRotationIncrements;
@@ -122,16 +125,15 @@ public abstract class EntityVehicle extends EntityAdvanced implements IControlRe
         {
             double x;
             double y;
-            double var12;
             double z;
             if (this.boatPosRotationIncrements > 0)
             {
-                x = this.posX + (this.boatX - this.posX) / this.boatPosRotationIncrements;
-                y = this.posY + (this.boatY - this.posY) / this.boatPosRotationIncrements;
-                z = this.posZ + (this.boatZ - this.posZ) / this.boatPosRotationIncrements;
-                var12 = MathHelper.wrapAngleTo180_double(this.boatYaw - this.rotationYaw);
-                this.rotationYaw = (float) (this.rotationYaw + var12 / this.boatPosRotationIncrements);
-                this.rotationPitch = (float) (this.rotationPitch + (this.boatPitch - this.rotationPitch) / this.boatPosRotationIncrements);
+                x = this.posX + (this.boatX - this.posX) / (double) this.boatPosRotationIncrements;
+                y = this.posY + (this.boatY - this.posY) / (double) this.boatPosRotationIncrements;
+                z = this.posZ + (this.boatZ - this.posZ) / (double) this.boatPosRotationIncrements;
+
+                this.rotationYaw = (float) ((double) this.rotationYaw + MathHelper.wrapAngleTo180_double(this.boatYaw - (double) this.rotationYaw) / (double) this.boatPosRotationIncrements);
+                this.rotationPitch = (float) ((double) this.rotationPitch + (this.boatPitch - (double) this.rotationPitch) / (double) this.boatPosRotationIncrements);
                 --this.boatPosRotationIncrements;
                 this.setPosition(x, y, z);
                 this.setRotation(this.rotationYaw, this.rotationPitch);
@@ -141,10 +143,7 @@ public abstract class EntityVehicle extends EntityAdvanced implements IControlRe
                 x = this.posX + this.motionX;
                 y = this.posY + this.motionY;
                 z = this.posZ + this.motionZ;
-                if (this.riddenByEntity != null)
-                {
-                    this.setPosition(x, y, z);
-                }
+                this.setPosition(x, y, z);
 
                 if (this.onGround)
                 {
@@ -157,28 +156,48 @@ public abstract class EntityVehicle extends EntityAdvanced implements IControlRe
                 this.motionY *= 0.949999988079071D;
                 this.motionZ *= 0.9900000095367432D;
             }
-            return;
         }
-        this.applyFriction();
-        if (this.speed > this.maxSpeed)
+        else
         {
-            this.speed = this.maxSpeed;
-        }
-        if (this.isCollidedHorizontally)
-        {
-            this.motionY = 0.1D;
-        }
+            double currentVel;
 
-        if (this.worldObj.isRemote)
-        {
-            if (this.canMove())
+            if (this.speed != 0.0D)
             {
-                this.motionX = -(this.speed * Math.cos((this.rotationYaw - 90F) * Math.PI / 180.0D));
-                this.motionZ = -(this.speed * Math.sin((this.rotationYaw - 90F) * Math.PI / 180.0D));
+                this.motionX = -Math.sin((double) (this.rotationYaw * (float) Math.PI / 180.0F)) * this.speed;
+                this.motionZ = Math.cos((double) (this.rotationYaw * (float) Math.PI / 180.0F)) * this.speed;
             }
-            this.moveEntity(this.motionX, this.motionY, this.motionZ);
-        }
 
+            currentVel = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
+
+            if (currentVel > this.maxSpeed)
+            {
+                double d = this.maxSpeed / currentVel;
+                this.motionX *= d;
+                this.motionZ *= d;
+                currentVel = this.maxSpeed;
+            }
+            this.applyFriction();
+            if (this.onGround)
+            {
+                this.motionX *= 0.5D;
+                this.motionY *= 0.5D;
+                this.motionZ *= 0.5D;
+            }
+
+            this.moveEntity(this.motionX, this.motionY, this.motionZ);
+
+            if (this.isCollidedHorizontally && this.speed > .1)
+            {
+                this.motionY = .1;
+            }
+            else
+            {
+                this.motionX *= 0.9900000095367432D;
+                this.motionY *= 0.949999988079071D;
+                this.motionZ *= 0.9900000095367432D;
+            }
+
+        }
         if (ticks % 5 == 0)
         {
             PacketManagerEntity.sendEntityUpdatePacket(this, this.worldObj.isRemote, "Desc", this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch, this.motionX, this.motionY, this.motionZ);
@@ -188,9 +207,6 @@ public abstract class EntityVehicle extends EntityAdvanced implements IControlRe
                 this.updateClients();
             }
         }
-        this.prevPosX = this.posX;
-        this.prevPosY = this.posY;
-        this.prevPosZ = this.posZ;
 
     }
 
@@ -277,7 +293,7 @@ public abstract class EntityVehicle extends EntityAdvanced implements IControlRe
     }
 
     /** Increases the speed by a determined amount per tick the player holds the forward key down
-     * 
+     *
      * @param forward */
     public void accelerate(boolean forward)
     {
