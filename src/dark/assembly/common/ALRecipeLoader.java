@@ -57,9 +57,8 @@ public class ALRecipeLoader extends RecipeLoader
         GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockManipulator, 2), new Object[] { Block.dispenser, RecipeLoader.circuit }));
         if (processorMachine instanceof BlockProcessor)
         {
-            new RecipeGrid(new ItemStack(processorMachine, 1, BlockProcessor.ProcessorData.GRINDER.startMeta), 3, 3).setRowOne(steel, steel, steel).setRowTwo(steelPlate, motor, steelPlate).setRowThree(steel, circuit2, steel).RegisterRecipe();
-            new RecipeGrid(new ItemStack(processorMachine, 1, BlockProcessor.ProcessorData.CRUSHER.startMeta), 3, 3).setRowOne(steel, steelPlate, steel).setRowTwo(Block.pistonBase, steelPlate, Block.pistonBase).setRowThree(steel, circuit2, steel).RegisterRecipe();
-
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(processorMachine, 1, BlockProcessor.ProcessorData.GRINDER.startMeta), new Object[] { "SSS", "PMP", "SCS", 'M', motor, 'P', steelPlate, 'S', steel, 'C', circuit }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(processorMachine, 1, BlockProcessor.ProcessorData.CRUSHER.startMeta), new Object[] { "SPS", "RPR", "SCS", 'R', Block.pistonBase, 'P', steelPlate, 'S', steel, 'C', circuit }));
         }
     }
 
