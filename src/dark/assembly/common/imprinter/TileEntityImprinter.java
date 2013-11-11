@@ -27,6 +27,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 import dark.api.al.coding.IArmbot;
 import dark.api.al.coding.IArmbotUseable;
+import dark.api.events.AutoCraftEvent;
 import dark.core.common.DarkMain;
 import dark.core.helpers.AutoCraftingManager;
 import dark.core.helpers.AutoCraftingManager.IAutoCrafter;
@@ -394,10 +395,14 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
         if (this.imprinterMatrix[craftingOutputSlot] != null)
         {
-            armbot.grab(this.imprinterMatrix[craftingOutputSlot].copy());
-            this.onPickUpFromSlot(null, 2, this.imprinterMatrix[craftingOutputSlot]);
-            this.imprinterMatrix[craftingOutputSlot] = null;
-            return true;
+            AutoCraftEvent.PreCraft event = new AutoCraftEvent.PreCraft(this.worldObj, new Vector3(this), this, this.imprinterMatrix[craftingOutputSlot]);
+            if (!event.isCanceled())
+            {
+                armbot.grab(this.imprinterMatrix[craftingOutputSlot].copy());
+                this.onPickUpFromSlot(null, 2, this.imprinterMatrix[craftingOutputSlot]);
+                this.imprinterMatrix[craftingOutputSlot] = null;
+                return true;
+            }
         }
 
         return false;
