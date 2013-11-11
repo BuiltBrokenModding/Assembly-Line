@@ -6,9 +6,11 @@
 	<property environment="env" />
 	<property name="file.core" value="Dark-CoreMachine_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
 	<property name="file.fm" value="Dark-FluidMechanics_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
-    <property name="file.al" value="Dark-AssemblyLine_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
-    <property name="file.ft" value="Dark-FarmTech_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
-    <property name="file.gs" value="Dark-GreaterSecurity_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />	   <property name="file.all" value="DarkBoxSet_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.zip" />	
+    	<property name="file.al" value="Dark-AssemblyLine_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
+    	<property name="file.ft" value="Dark-FarmTech_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
+    	<property name="file.gs" value="Dark-GreaterSecurity_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />	   
+	<property name="file.mm" value="Dark-MechanizedMining_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
+	<property name="file.all" value="DarkBoxSet_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.zip" />	
 
 	<target name="build">
 
@@ -40,7 +42,7 @@
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
-            <fileset dir="${dir.development}downloads/Assembly-Line/src/minecraft">
+            <fileset dir="${dir.development}downloads/Assembly-Line/src">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
@@ -53,6 +55,10 @@
 				<exclude name="**/*.xml"/>
 			</fileset>
             <fileset dir="${dir.development}downloads/Greater-Security/src">
+				<exclude name=".git/**"/>
+				<exclude name="**/*.xml"/>
+			</fileset>
+ 	   <fileset dir="${dir.development}downloads/MechanizedMining/src">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
@@ -88,35 +94,40 @@
 		<!-- Copy compiled files into folders to be zipped -->
 		<copy todir="core">
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/core/" />
-            <fileset dir="${dir.mcp}/reobf/minecraft" includes="com/builtbroken/common/" />
-            <fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/api/" />
+            		<fileset dir="${dir.mcp}/reobf/minecraft" includes="com/builtbroken/common/" />
+           		 <fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/api/" />
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="buildcraft/" />
-            <fileset dir="${dir.mcp}/reobf/minecraft" includes="dan200/" />
-            <fileset dir="${dir.mcp}/reobf/minecraft" includes="ic2/" />
-            <fileset dir="${dir.mcp}/reobf/minecraft" includes="org/" />
-            <fileset dir="${dir.mcp}/reobf/minecraft" includes="themalexpansion/" />
-            <fileset dir="${dir.mcp}/reobf/minecraft" includes="universalelectricity/" />
-            <fileset dir="${dir.development}resources" excludes=".git/**" />
+            		<fileset dir="${dir.mcp}/reobf/minecraft" includes="dan200/" />
+            		<fileset dir="${dir.mcp}/reobf/minecraft" includes="ic2/" />
+            		<fileset dir="${dir.mcp}/reobf/minecraft" includes="org/" />
+            		<fileset dir="${dir.mcp}/reobf/minecraft" includes="themalexpansion/" />
+            		<fileset dir="${dir.mcp}/reobf/minecraft" includes="universalelectricity/" />
+            		<fileset dir="${dir.development}resources" excludes=".git/**" />
 		</copy>
 		<copy todir="fm">
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/fluid/" />
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/mech/" />
-            <fileset dir="${dir.development}downloads/Fluid-Mechanics/resources" excludes=".git/**" />
+            		<fileset dir="${dir.development}downloads/Fluid-Mechanics/resources" excludes=".git/**" />
 		</copy>
 		<copy todir="al">
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/assembly/" />
-            <fileset dir="${dir.development}downloads/Assembly-Line/resources" excludes=".git/**" />
+            		<fileset dir="${dir.development}downloads/Assembly-Line/resources" excludes=".git/**" />
 		</copy>
 		<copy todir="ft">
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/farmtech/" />
-            <fileset dir="${dir.development}downloads/FarmTech/resources" excludes=".git/**" />
+            		<fileset dir="${dir.development}downloads/FarmTech/resources" excludes=".git/**" />
 		</copy>
 		<copy todir="gs">
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/security/" />
-            <fileset dir="${dir.development}downloads/Greater-Security/resources" excludes=".git/**" />
+            		<fileset dir="${dir.development}downloads/Greater-Security/resources" excludes=".git/**" />
+		</copy>
+		<copy todir="mm">
+			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/mining/" />
+            		<fileset dir="${dir.development}downloads/MechanizedMining/resources" excludes=".git/**" />
 		</copy>
         
         <copy todir="gs" file="LICENSE.txt" />
+	<copy todir="mm" file="LICENSE.txt" />
         <copy todir="ft" file="LICENSE.txt" />
         <copy todir="al" file="LICENSE.txt" />
         <copy todir="fm" file="LICENSE.txt" />
@@ -130,6 +141,9 @@
 		</jar>
 		<jar destfile="output/${file.fm}">
 			<fileset dir="fm" />
+		</jar>
+		<jar destfile="output/${file.mm}">
+			<fileset dir="mm" />
 		</jar>
 		<jar destfile="output/${file.al}">
 			<fileset dir="al" />

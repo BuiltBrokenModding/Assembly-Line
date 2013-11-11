@@ -2,23 +2,21 @@ package dark.core.prefab.vehicles;
 
 import java.util.List;
 
+import com.google.common.io.ByteArrayDataInput;
+
+
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
-import com.google.common.io.ByteArrayDataInput;
-
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.Player;
-import dark.core.common.CoreRecipeLoader;
 import dark.core.helpers.MathHelper;
 import dark.core.interfaces.IControlReceiver;
 import dark.core.network.ISimplePacketReceiver;
@@ -115,7 +113,18 @@ public abstract class EntityVehicle extends EntityAdvanced implements IControlRe
     public void onUpdate()
     {
         super.onUpdate();
+        if (this.riddenByEntity instanceof EntityPlayer)
+        {
 
+            if (this.worldObj.isRemote)
+            {
+                ((EntityPlayer)this.riddenByEntity).sendChatToPlayer(ChatMessageComponent.createFromText("Client:RotationYaw: "+this.rotationYaw));
+            }
+            else
+            {
+                ((EntityPlayer)this.riddenByEntity).sendChatToPlayer(ChatMessageComponent.createFromText("Server:RotationYaw: "+this.rotationYaw));
+            }
+        }
         if (this.worldObj.isRemote)
         {
             this.worldObj.spawnParticle("mobSpell", this.posX, this.posY, this.posZ, 0, 0, 0);
@@ -196,16 +205,17 @@ public abstract class EntityVehicle extends EntityAdvanced implements IControlRe
                 this.motionY *= 0.949999988079071D;
                 this.motionZ *= 0.9900000095367432D;
             }
-
-        }
-        if (ticks % 5 == 0)
-        {
-            PacketManagerEntity.sendEntityUpdatePacket(this, this.worldObj.isRemote, "Desc", this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch, this.motionX, this.motionY, this.motionZ);
-
-            if (!this.worldObj.isRemote)
+            if (ticks % 5 == 0)
             {
-                this.updateClients();
+                if (worldObj.isRemote)
+                    PacketManagerEntity.sendEntityUpdatePacket(this, this.worldObj.isRemote, "Desc", this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch, this.motionX, this.motionY, this.motionZ);
+
+                if (!this.worldObj.isRemote)
+                {
+                    this.updateClients();
+                }
             }
+
         }
 
     }
