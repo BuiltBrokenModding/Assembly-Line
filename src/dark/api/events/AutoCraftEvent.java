@@ -1,0 +1,35 @@
+package dark.api.events;
+
+import dark.core.helpers.AutoCraftingManager.IAutoCrafter;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import net.minecraftforge.event.Cancelable;
+import net.minecraftforge.event.Event;
+import universalelectricity.core.vector.Vector3;
+
+public class AutoCraftEvent extends Event
+{
+    World world;
+    Vector3 spot;
+    IAutoCrafter crafter;
+    ItemStack craftingResult;
+
+    public AutoCraftEvent(World world, Vector3 spot, IAutoCrafter craft, ItemStack stack)
+    {
+        this.world = world;
+        this.spot = spot;
+        this.crafter = craft;
+        this.craftingResult = stack;
+    }
+
+    @Cancelable
+    /** Called before a crafter checks if it can craft. Use this to cancel crafting */
+    public static class PreCraft extends AutoCraftEvent
+    {
+        public PreCraft(World world, Vector3 spot, IAutoCrafter craft, ItemStack stack)
+        {
+            super(world, spot, craft, stack);
+        }
+    }
+
+}
