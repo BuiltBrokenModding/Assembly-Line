@@ -6,13 +6,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
+import dark.api.IExtendedStorage;
 import dark.core.common.DarkMain;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.machine.TileEntityInv;
@@ -20,7 +23,7 @@ import dark.core.prefab.machine.TileEntityInv;
 /** Basic single stack inventory
  * 
  * @author DarkGuardsman */
-public class TileEntityCrate extends TileEntityInv implements IPacketReceiver
+public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, IExtendedStorage
 {
     /* TODO
      * Fix issues with ItemStacks with NBT tags having issues
@@ -274,6 +277,12 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver
             nbt.setCompoundTag("stack", stack.writeToNBT(new NBTTagCompound()));
         }
 
+    }
+
+    @Override
+    public ItemStack addStackToStorage(ItemStack stack)
+    {
+        return BlockCrate.addStackToCrate(this, stack);
     }
 
 }
