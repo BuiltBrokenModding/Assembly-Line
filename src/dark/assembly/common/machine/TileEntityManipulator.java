@@ -17,6 +17,7 @@ import cpw.mods.fml.common.network.Player;
 import dark.api.al.IManipulator;
 import dark.assembly.common.imprinter.ItemImprinter;
 import dark.assembly.common.imprinter.prefab.TileEntityFilterable;
+import dark.core.helpers.InvInteractionHelper;
 import dark.core.network.PacketHandler;
 
 public class TileEntityManipulator extends TileEntityFilterable implements IRotatable, IManipulator

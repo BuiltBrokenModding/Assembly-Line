@@ -17,7 +17,7 @@ import dark.api.al.coding.IProgrammableMachine;
 import dark.api.al.coding.args.ArgumentIntData;
 import dark.assembly.common.armbot.TaskBaseArmbot;
 import dark.assembly.common.armbot.TaskBaseProcess;
-import dark.assembly.common.machine.InvInteractionHelper;
+import dark.core.helpers.InvInteractionHelper;
 import dark.core.helpers.MathHelper;
 
 public class TaskGive extends TaskBaseArmbot
