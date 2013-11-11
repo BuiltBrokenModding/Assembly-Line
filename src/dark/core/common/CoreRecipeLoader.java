@@ -215,7 +215,7 @@ public class CoreRecipeLoader extends RecipeLoader
                 }
                 if (mat.shouldCreateItem(EnumOrePart.GEARS))
                 {
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.GEARS, 4), new Object[] { " I", "IRI", " I ", 'I', "ingot" + mat.simpleName, 'R', mat.shouldCreateItem(EnumOrePart.ROD) ? mat.getStack(EnumOrePart.ROD) : Item.stick }));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.GEARS, 4), new Object[] { " I ", "IRI", " I ", 'I', "ingot" + mat.simpleName, 'R', mat.shouldCreateItem(EnumOrePart.ROD) ? mat.getStack(EnumOrePart.ROD) : Item.stick }));
                 }
 
             }
