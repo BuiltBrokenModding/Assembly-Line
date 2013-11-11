@@ -132,7 +132,7 @@ public class InvInteractionHelper
             }
             else if (tileEntity instanceof IExtendedStorage)
             {
-                return ((IExtendedStorage) tileEntity).addStackToCrate(world, location, itemStack);
+                return ((IExtendedStorage) tileEntity).addStackToStorage(itemStack);
             }
             else if (tileEntity instanceof ISidedInventory)
             {

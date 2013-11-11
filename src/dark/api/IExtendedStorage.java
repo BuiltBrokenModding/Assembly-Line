@@ -9,5 +9,5 @@ import universalelectricity.core.vector.Vector3;
  * @author DarkGuardsman */
 public interface IExtendedStorage
 {
-    public ItemStack addStackToCrate(World world, Vector3 loc, ItemStack stack);
+    public ItemStack addStackToStorage(ItemStack stack);
 }
