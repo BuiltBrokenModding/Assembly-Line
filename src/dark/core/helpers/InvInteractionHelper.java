@@ -166,7 +166,7 @@ public class InvInteractionHelper
             }
         }
 
-        if (itemStack.stackSize <= 0)
+        if (itemStack == null || itemStack.stackSize <= 0)
         {
             return null;
         }
