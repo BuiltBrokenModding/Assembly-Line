@@ -1,55 +1,51 @@
 package dark.core.common.blocks;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
-import dark.core.common.CoreRecipeLoader;
-
 import net.minecraft.block.Block;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderEnd;
 import net.minecraft.world.gen.ChunkProviderGenerate;
 import net.minecraft.world.gen.ChunkProviderHell;
 import net.minecraftforge.fluids.FluidStack;
 import universalelectricity.prefab.ore.OreGenBase;
+import cpw.mods.fml.common.IWorldGenerator;
+import cpw.mods.fml.common.registry.GameRegistry;
 
-/** Used to generate very small pockets of fluid underground
- * 
- * @author DarkGuardsman */
-public class OreGenFluid extends OreGenBase
+public class GasOreGenerator implements IWorldGenerator
 {
 
-    public int minGenerateLevel;
-    public int maxGenerateLevel;
-    public int amountPerChunk;
-    public int amountPerBranch;
-    public int replaceID;
+    public int minGenerateLevel = 6;
+    public int maxGenerateLevel = 50;
+    public int amountPerChunk = 3;
+    public int amountPerBranch = 10;
+    public int replaceID = 1;
 
     public FluidStack stack;
 
-    /** Dimensions to ignore ore generation */
-    public boolean ignoreSurface = false;
-    public boolean ignoreNether = true;
-    public boolean ignoreEnd = true;
-
-    public OreGenFluid(String name, String oreDiectionaryName, FluidStack stack, int replaceID, int minGenerateLevel, int maxGenerateLevel, int amountPerChunk, int amountPerBranch)
+    @Override
+    public void generate(Random rand, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
     {
-        super(name, oreDiectionaryName, new ItemStack(CoreRecipeLoader.blockGas, 1), "", 0);
-        this.stack = stack;
-        this.minGenerateLevel = minGenerateLevel;
-        this.maxGenerateLevel = maxGenerateLevel;
-        this.amountPerChunk = amountPerChunk;
-        this.amountPerBranch = amountPerBranch;
-        this.replaceID = replaceID;
+        chunkX = chunkX << 4;
+        chunkZ = chunkZ << 4;
+
+        if (this.isOreGeneratedInWorld(world, chunkGenerator))
+        {
+            this.generate(world, rand, chunkX, chunkZ);
+        }
     }
 
-    @Override
     public void generate(World world, Random random, int varX, int varZ)
     {
         try
         {
+            //TODO get the biome of the chunk and generate more gas in swamp biomes
+            // chunk = world.getChunkFromChunkCoords(varX, varZ);
             for (int i = 0; i < this.amountPerChunk; i++)
             {
                 int x = varX + random.nextInt(16);
@@ -60,7 +56,7 @@ public class OreGenFluid extends OreGenBase
         }
         catch (Exception e)
         {
-            System.out.println("Error generating ore: " + this.name);
+            System.out.println("[CoreMachine]Error generating natural gas");
             e.printStackTrace();
         }
     }
@@ -123,22 +119,17 @@ public class OreGenFluid extends OreGenBase
         return true;
     }
 
-    @Override
     public boolean isOreGeneratedInWorld(World world, IChunkProvider chunkGenerator)
     {
-        if (!this.shouldGenerate)
+        if (chunkGenerator instanceof ChunkProviderGenerate)
         {
             return false;
         }
-        if (this.ignoreSurface && chunkGenerator instanceof ChunkProviderGenerate)
+        if (chunkGenerator instanceof ChunkProviderHell)
         {
             return false;
         }
-        if (this.ignoreNether && chunkGenerator instanceof ChunkProviderHell)
-        {
-            return false;
-        }
-        if (this.ignoreEnd && chunkGenerator instanceof ChunkProviderEnd)
+        if (chunkGenerator instanceof ChunkProviderEnd)
         {
             return false;
         }

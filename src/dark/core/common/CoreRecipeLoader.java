@@ -35,7 +35,7 @@ public class CoreRecipeLoader extends RecipeLoader
     public static Block blockBasalt;
     public static Block blockGlowGlass;
     public static Block basicMachine, blockSolar;
-    public static BlockGasOre blockGas;
+    public static Block blockGas;
 
     /* ITEMS */
     public static Item itemMetals, battery, itemTool, itemParts;
