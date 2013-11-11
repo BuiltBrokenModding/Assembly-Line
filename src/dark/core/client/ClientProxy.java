@@ -21,7 +21,6 @@ import dark.core.common.machines.TileEntityBatteryBox;
 import dark.core.common.machines.TileEntityCoalGenerator;
 import dark.core.common.machines.TileEntityElectricFurnace;
 import dark.core.prefab.ModPrefab;
-import dark.core.prefab.vehicles.EntityDrivable;
 import dark.core.prefab.vehicles.EntityTestCar;
 
 @SideOnly(Side.CLIENT)

@@ -74,22 +74,22 @@ public class RayTraceHelper
 
         AxisAlignedBB boxToScan = AxisAlignedBB.getBoundingBox(start.xCoord, start.zCoord, start.yCoord, end.xCoord, end.yCoord, end.zCoord);
         MovingObjectPosition pickedEntity = null;
-        List<Entity> entitiesHit;
+        List<Entity> entities;
         if (exclude == null)
         {
-            entitiesHit = world.getEntitiesWithinAABB(Entity.class, boxToScan);
+            entities = world.getEntitiesWithinAABB(Entity.class, boxToScan);
         }
         else
         {
-            entitiesHit = world.getEntitiesWithinAABBExcludingEntity(exclude, boxToScan);
+            entities = world.getEntitiesWithinAABBExcludingEntity(exclude, boxToScan);
         }
         double closestEntity = start.distanceTo(end);
 
-        if (entitiesHit == null || entitiesHit.isEmpty())
+        if (entities == null || entities.isEmpty())
         {
             return null;
         }
-        for (Entity entityHit : entitiesHit)
+        for (Entity entityHit : entities)
         {
             if (entityHit != null && entityHit.canBeCollidedWith() && entityHit.boundingBox != null)
             {

@@ -68,7 +68,8 @@ import dark.core.prefab.ModPrefab;
 import dark.core.prefab.fluids.EnumGas;
 import dark.core.prefab.machine.BlockMulti;
 import dark.core.prefab.machine.TileEntityNBTContainer;
-import dark.core.prefab.vehicles.EntityDrivable;
+import dark.core.prefab.vehicles.EntityTestCar;
+import dark.core.prefab.vehicles.EntityVehicle;
 import dark.core.prefab.vehicles.ItemVehicleSpawn;
 import dark.core.registration.ModObjectRegistry;
 
@@ -137,8 +138,8 @@ public class DarkMain extends ModPrefab
     public void init(FMLInitializationEvent event)
     {
         super.init(event);
-        EntityRegistry.registerGlobalEntityID(EntityDrivable.class, "TestCar", EntityRegistry.findGlobalUniqueEntityId());
-        EntityRegistry.registerModEntity(EntityDrivable.class, "TestCar", 60, this, 64, 1, true);
+        EntityRegistry.registerGlobalEntityID(EntityTestCar.class, "TestCar", EntityRegistry.findGlobalUniqueEntityId());
+        EntityRegistry.registerModEntity(EntityTestCar.class, "TestCar", 60, this, 64, 1, true);
 
         for (EnumGas gas : EnumGas.values())
         {

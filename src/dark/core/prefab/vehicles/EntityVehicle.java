@@ -23,7 +23,7 @@ import dark.core.network.PacketManagerEntity;
 import dark.core.network.PacketManagerKeyEvent;
 import dark.core.prefab.EntityAdvanced;
 
-public abstract class EntityDrivable extends EntityAdvanced implements IControlReceiver, ISimplePacketReceiver
+public abstract class EntityVehicle extends EntityAdvanced implements IControlReceiver, ISimplePacketReceiver
 {
     //1m/tick is 80km/h or 50mi/h
     //0.5/tick is 40km/h
@@ -32,18 +32,18 @@ public abstract class EntityDrivable extends EntityAdvanced implements IControlR
     public double boatX, boatY, boatZ, boatYaw, boatPitch;
     public int boatPosRotationIncrements;
 
-    public EntityDrivable(World world)
+    public EntityVehicle(World world)
     {
         super(world);
         this.setSize(0.98F, 0.7F);
         this.preventEntitySpawning = true;
         this.ignoreFrustumCheck = true;
         this.isImmuneToFire = true;
-        this.yOffset = 1.0f;
+        this.yOffset = 0.45f;
         PacketManagerKeyEvent.instance().register(this);
     }
 
-    public EntityDrivable(World world, double xx, double yy, double zz)
+    public EntityVehicle(World world, double xx, double yy, double zz)
     {
         this(world);
         this.setPosition(xx, yy + this.yOffset, zz);
@@ -93,8 +93,8 @@ public abstract class EntityDrivable extends EntityAdvanced implements IControlR
         if (this.riddenByEntity != null)
         {
             //Changes the player's position based on the boats rotation
-            double deltaX = Math.cos(this.rotationYaw * Math.PI / 180.0D + 114.8) * -0.5D;
-            double deltaZ = Math.sin(this.rotationYaw * Math.PI / 180.0D + 114.8) * -0.5D;
+            double deltaX = Math.cos(this.rotationYaw * Math.PI / 180.0D + 114.8) * -0.23D;
+            double deltaZ = Math.sin(this.rotationYaw * Math.PI / 180.0D + 114.8) * -0.23D;
             this.riddenByEntity.setPosition(this.posX + deltaX, this.posY + this.riddenByEntity.getYOffset(), this.posZ + deltaZ);
 
             if (this.riddenByEntity.rotationYaw > this.rotationYaw + 30)
@@ -112,7 +112,7 @@ public abstract class EntityDrivable extends EntityAdvanced implements IControlR
     public void onUpdate()
     {
         super.onUpdate();
-
+        this.applyFriction();
         if (this.worldObj.isRemote)
         {
             this.worldObj.spawnParticle("mobSpell", this.posX, this.posY, this.posZ, 0, 0, 0);
@@ -173,7 +173,6 @@ public abstract class EntityDrivable extends EntityAdvanced implements IControlR
             this.moveEntity(this.motionX, this.motionY, this.motionZ);
         }
 
-        this.applyFriction();
         if (this.speed > this.maxSpeed)
         {
             this.speed = this.maxSpeed;
@@ -419,7 +418,7 @@ public abstract class EntityDrivable extends EntityAdvanced implements IControlR
     @Override
     public double getMountedYOffset()
     {
-        return -.3;
+        return -.2;
     }
 
     @Override

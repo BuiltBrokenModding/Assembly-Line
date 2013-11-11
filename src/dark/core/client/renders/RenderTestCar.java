@@ -1,7 +1,6 @@
 package dark.core.client.renders;
 
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelBoat;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
@@ -12,13 +11,13 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.client.models.ModelTestCar;
+import dark.core.common.DarkMain;
 import dark.core.prefab.EntityAdvanced;
-import dark.core.prefab.vehicles.EntityDrivable;
 
 @SideOnly(Side.CLIENT)
 public class RenderTestCar extends Render
 {
-    private static final ResourceLocation TEXTURE = new ResourceLocation("textures/entity/boat.pn");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, DarkMain.MODEL_DIRECTORY + "TestCar.png");
 
     /** instance of ModelBoat for rendering */
     protected ModelBase modelBoat;
@@ -34,7 +33,7 @@ public class RenderTestCar extends Render
     {
 
         GL11.glPushMatrix();
-        GL11.glTranslatef((float) rx, (float) ry + .8f, (float) rz);
+        GL11.glTranslatef((float) rx, (float) ry + 1.2f, (float) rz);
         GL11.glRotatef(180.0F - rYaw, 0.0F, 1.0F, 0.0F);
         if (entity instanceof EntityAdvanced)
         {

@@ -3,7 +3,7 @@ package dark.core.prefab.vehicles;
 import dark.core.common.CoreRecipeLoader;
 import net.minecraft.world.World;
 
-public class EntityTestCar extends EntityDrivable
+public class EntityTestCar extends EntityVehicle
 {
 
     public EntityTestCar(World world)

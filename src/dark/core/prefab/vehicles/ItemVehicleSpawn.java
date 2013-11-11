@@ -97,7 +97,7 @@ public class ItemVehicleSpawn extends Item
                         --y;
                     }
 
-                    EntityDrivable spawnedEntity = new EntityTestCar(world, hitObj.blockX + 0.5F, y + 1.0F, hitObj.blockZ + 0.5F);
+                    EntityTestCar spawnedEntity = new EntityTestCar(world, hitObj.blockX + 0.5F, y + 1.0F, hitObj.blockZ + 0.5F);
 
                     //Last collision check using the entities collision box
                     if (!world.getCollidingBoundingBoxes(spawnedEntity, spawnedEntity.boundingBox.expand(-0.1D, -0.1D, -0.1D)).isEmpty())
