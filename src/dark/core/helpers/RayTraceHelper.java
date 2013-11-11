@@ -23,14 +23,14 @@ public class RayTraceHelper
         double playerBorder = 1.1 * reachDistance;
         AxisAlignedBB boxToScan = entity.boundingBox.expand(playerBorder, playerBorder, playerBorder);
 
-        List entitiesHit = world.getEntitiesWithinAABBExcludingEntity(entity, boxToScan);
+        List<Entity> entitiesHit = world.getEntitiesWithinAABBExcludingEntity(entity, boxToScan);
         double closestEntity = reachDistance;
 
         if (entitiesHit == null || entitiesHit.isEmpty())
         {
             return null;
         }
-        for (Entity entityHit : (Iterable<Entity>) entitiesHit)
+        for (Entity entityHit : entitiesHit)
         {
             if (entityHit != null && entityHit.canBeCollidedWith() && entityHit.boundingBox != null)
             {
@@ -69,13 +69,86 @@ public class RayTraceHelper
         return pickedEntity;
     }
 
+    public static MovingObjectPosition raytraceEntities(World world, Vec3 start, Vec3 end, boolean collisionFlag, Entity exclude)
+    {
+
+        AxisAlignedBB boxToScan = AxisAlignedBB.getBoundingBox(start.xCoord, start.zCoord, start.yCoord, end.xCoord, end.yCoord, end.zCoord);
+        MovingObjectPosition pickedEntity = null;
+        List<Entity> entitiesHit;
+        if (exclude == null)
+        {
+            entitiesHit = world.getEntitiesWithinAABB(Entity.class, boxToScan);
+        }
+        else
+        {
+            entitiesHit = world.getEntitiesWithinAABBExcludingEntity(exclude, boxToScan);
+        }
+        double closestEntity = start.distanceTo(end);
+
+        if (entitiesHit == null || entitiesHit.isEmpty())
+        {
+            return null;
+        }
+        for (Entity entityHit : entitiesHit)
+        {
+            if (entityHit != null && entityHit.canBeCollidedWith() && entityHit.boundingBox != null)
+            {
+                float border = entityHit.getCollisionBorderSize();
+                AxisAlignedBB aabb = entityHit.boundingBox.expand(border, border, border);
+                MovingObjectPosition hitMOP = aabb.calculateIntercept(start, end);
+
+                if (hitMOP != null)
+                {
+                    if (aabb.isVecInside(start))
+                    {
+                        if (0.0D < closestEntity || closestEntity == 0.0D)
+                        {
+                            pickedEntity = new MovingObjectPosition(entityHit);
+                            if (pickedEntity != null)
+                            {
+                                pickedEntity.hitVec = hitMOP.hitVec;
+                                closestEntity = 0.0D;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        double distance = start.distanceTo(hitMOP.hitVec);
+
+                        if (distance < closestEntity || closestEntity == 0.0D)
+                        {
+                            pickedEntity = new MovingObjectPosition(entityHit);
+                            pickedEntity.hitVec = hitMOP.hitVec;
+                            closestEntity = distance;
+                        }
+                    }
+                }
+            }
+        }
+        return pickedEntity;
+    }
+
     public static MovingObjectPosition raytraceBlocks(World world, Entity entity, Vec3 error, double reachDistance, boolean collisionFlag)
     {
         Vec3 playerPosition = Vec3.createVectorHelper(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
         Vec3 playerLook = entity.getLookVec();
 
         Vec3 playerViewOffset = Vec3.createVectorHelper(playerPosition.xCoord + playerLook.xCoord * reachDistance + error.xCoord, playerPosition.yCoord + playerLook.yCoord * reachDistance + error.yCoord, playerPosition.zCoord + playerLook.zCoord * reachDistance + error.zCoord);
-        return world.rayTraceBlocks_do_do(playerPosition, playerViewOffset, collisionFlag, !collisionFlag);
+        return raytraceBlocks(world, playerPosition, playerViewOffset, collisionFlag);
+    }
+
+    public static MovingObjectPosition raytraceBlocks(World world, Entity entity, double reachDistance, boolean collisionFlag)
+    {
+        Vec3 playerPosition = Vec3.createVectorHelper(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
+        Vec3 playerLook = entity.getLookVec();
+
+        Vec3 playerViewOffset = Vec3.createVectorHelper(playerPosition.xCoord + playerLook.xCoord * reachDistance, playerPosition.yCoord + playerLook.yCoord * reachDistance, playerPosition.zCoord + playerLook.zCoord * reachDistance);
+        return raytraceBlocks(world, playerPosition, playerViewOffset, collisionFlag);
+    }
+
+    public static MovingObjectPosition raytraceBlocks(World world, Vec3 start, Vec3 end, boolean collisionFlag)
+    {
+        return world.rayTraceBlocks_do_do(start, end, collisionFlag, !collisionFlag);
     }
 
     public static MovingObjectPosition ray_trace_do(World world, Entity entity, Vec3 e, double reachDistance, boolean collisionFlag)
