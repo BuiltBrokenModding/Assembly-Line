@@ -66,6 +66,10 @@ public class ModObjectRegistry
             {
                 block = blockClass.newInstance();
             }
+            catch (IllegalArgumentException e)
+            {
+                throw e;
+            }
             catch (Exception e)
             {
                 e.printStackTrace();
