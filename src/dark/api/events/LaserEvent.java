@@ -85,6 +85,6 @@ public class LaserEvent extends Event
     {
         LaserEvent event = new LaserMineBlockEvent(player.worldObj, new Vector3(player), hit, player);
         MinecraftForge.EVENT_BUS.post(event);
-        return event.isCanceled();
+        return !event.isCanceled();
     }
 }
