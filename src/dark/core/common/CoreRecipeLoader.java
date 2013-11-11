@@ -3,15 +3,14 @@ package dark.core.common;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTool;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.api.ColorCode;
+import dark.api.IToolReadOut.EnumTools;
 import dark.api.reciepes.MachineRecipeHandler;
 import dark.api.reciepes.ProcessorType;
 import dark.core.common.blocks.BlockBasalt;
-import dark.core.common.blocks.BlockGasOre;
 import dark.core.common.blocks.BlockOre;
 import dark.core.common.blocks.BlockOre.OreData;
 import dark.core.common.items.EnumMaterial;
@@ -21,6 +20,7 @@ import dark.core.common.items.ItemCommonTool;
 import dark.core.common.items.ItemOreDirv;
 import dark.core.common.items.ItemParts;
 import dark.core.common.items.ItemParts.Parts;
+import dark.core.common.items.ItemReadoutTools;
 import dark.core.common.items.ItemWrench;
 import dark.core.common.machines.BlockSolarPanel;
 import dark.core.common.transmit.BlockWire;
@@ -53,21 +53,22 @@ public class CoreRecipeLoader extends RecipeLoader
     public void loadRecipes()
     {
         super.loadRecipes();
-        if (itemTool instanceof ItemTool)
+        if (itemTool instanceof ItemReadoutTools)
         {
-            new RecipeGrid(new ItemStack(itemTool, 1, 0), 3, 2).setRowOne("ironTube", "valvePart", "ironTube").setRowTwo(null, "ironTube", null).RegisterRecipe();
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTool, 1, EnumTools.PIPE_GUAGE.ordinal()), "TVT", " T ", 'T', "ironTube", 'V', "valvePart"));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTool, 1, EnumTools.MULTI_METER.ordinal()), "PGP", "WCW", "PRP", 'P', Block.planks, 'G', Block.glass, 'C', circuit, 'W', "copperWire", 'R', "CopperCoil"));
         }
         if (wrench instanceof ItemWrench)
         {
-            new RecipeGrid(new ItemStack(wrench, 1, 0), 3, 3).setRowOne(steel, null, steel).setRowTwo(null, steel, null).setRowThree(null, steel, null).RegisterRecipe();
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(wrench, 1), "S S", " S ", " S ", 'S', steel));
         }
         if (blockSolar instanceof BlockSolarPanel)
         {
-            new RecipeGrid(new ItemStack(blockSolar, 1, 0), 3, 3).setRowOne(Block.glass, Block.glass, Block.glass).setRowTwo(RecipeLoader.steel, RecipeLoader.circuit, RecipeLoader.steel).setRowThree(RecipeLoader.steel, "copperWire", RecipeLoader.steel).RegisterRecipe();
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockSolar, 1), "GGG", "SCS", "SWS", 'G', Block.glass, 'W', "copperWire", 'C', circuit, 'S', steel));
         }
         if (blockWire instanceof BlockWire)
         {
-            new RecipeGrid(new ItemStack(blockWire, 16, 1), 3, 3).setRowOne(Block.cloth, Block.cloth, Block.cloth).setRowTwo(copper, copper, copper).setRowThree(Block.cloth, Block.cloth, Block.cloth).RegisterRecipe();
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 16, 1), "III", "WWW", "III", 'I', Block.cloth, 'W', copper));
         }
         if (itemDiggingTool instanceof ItemCommonTool)
         {
@@ -75,10 +76,11 @@ public class CoreRecipeLoader extends RecipeLoader
             {
                 if (mat.shouldCreateTool())
                 {
-                    new RecipeGrid(mat.getTool(EnumTool.PICKAX)).setRowOne(mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1)).setRowTwo(null, Item.stick, null).setRowThree(null, Item.stick, null).RegisterRecipe();
-                    new RecipeGrid(mat.getTool(EnumTool.AX)).setRowOne(mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1), null).setRowTwo(mat.getStack(EnumOrePart.INGOTS, 1), Item.stick, null).setRowThree(null, Item.stick, null).RegisterRecipe();
-                    new RecipeGrid(mat.getTool(EnumTool.HOE)).setRowOne(mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.INGOTS, 1), null).setRowTwo(null, Item.stick, null).setRowThree(null, Item.stick, null).RegisterRecipe();
-                    new RecipeGrid(mat.getTool(EnumTool.SPADE)).setRowOne(null, mat.getStack(EnumOrePart.INGOTS, 1), null).setRowTwo(null, Item.stick, null).setRowThree(null, Item.stick, null).RegisterRecipe();
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getTool(EnumTool.PICKAX), "III", " S ", " S ", 'I', mat.getStack(EnumOrePart.INGOTS, 1), 'S', Item.stick));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getTool(EnumTool.HOE), "II ", " S ", " S ", 'I', mat.getStack(EnumOrePart.INGOTS, 1), 'S', Item.stick));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getTool(EnumTool.SPADE), " I ", " S ", " S ", 'I', mat.getStack(EnumOrePart.INGOTS, 1), 'S', Item.stick));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getTool(EnumTool.AX), "II ", "IS ", " S ", 'I', mat.getStack(EnumOrePart.INGOTS, 1), 'S', Item.stick));
+                    //GameRegistry.addRecipe(new ShapedOreRecipe(mat.getTool(EnumTool.SHEAR), "III", " S ", 'I', mat.getStack(EnumOrePart.INGOTS, 1)));
                 }
             }
         }
@@ -213,7 +215,7 @@ public class CoreRecipeLoader extends RecipeLoader
                 }
                 if (mat.shouldCreateItem(EnumOrePart.GEARS))
                 {
-                    new RecipeGrid(mat.getStack(EnumOrePart.GEARS, 4), 3, 3).setRowOne(null, mat.getStack(EnumOrePart.INGOTS, 1), null).setRowTwo(mat.getStack(EnumOrePart.INGOTS, 1), (mat.shouldCreateItem(EnumOrePart.ROD) ? mat.getStack(EnumOrePart.ROD, 1) : Item.stick), mat.getStack(EnumOrePart.INGOTS, 1)).setRowThree(null, mat.getStack(EnumOrePart.INGOTS, 1), null).RegisterRecipe();
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.GEARS, 4), new Object[] { " I", "IRI", " I ", 'I', "ingot" + mat.simpleName, 'R', mat.shouldCreateItem(EnumOrePart.ROD) ? mat.getStack(EnumOrePart.ROD) : Item.stick }));
                 }
 
             }

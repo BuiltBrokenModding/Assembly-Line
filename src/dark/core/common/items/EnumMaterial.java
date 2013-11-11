@@ -102,6 +102,11 @@ public enum EnumMaterial
         return reStack;
     }
 
+    public ItemStack getStack(EnumOrePart part)
+    {
+        return this.getStack(part, 1);
+    }
+
     public ItemStack getStack(EnumOrePart part, int ammount)
     {
         return getStack(this, part, ammount);
@@ -173,4 +178,5 @@ public enum EnumMaterial
     {
         return EnumMaterial.values()[meta / EnumMaterial.toolCountPerMaterial];
     }
+
 }

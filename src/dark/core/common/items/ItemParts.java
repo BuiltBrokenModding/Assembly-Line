@@ -92,7 +92,7 @@ public class ItemParts extends ItemBasic implements IExtraItemInfo
         CircuitElite("circuitElite"),
         Motor("motor"),
         IC("IC_Chip"),
-        COIL("Coil"),
+        COIL("copperCoil"),
         LASER("LaserDiode");
 
         public String name;
