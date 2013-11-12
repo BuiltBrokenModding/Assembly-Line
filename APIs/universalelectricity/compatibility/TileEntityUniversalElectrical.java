@@ -174,9 +174,12 @@ public abstract class TileEntityUniversalElectrical extends TileEntityElectrical
 
 						if (receiver != null)
 						{
-							float bc3Provide = provide * Compatibility.TO_BC_RATIO;
-							float energyUsed = Math.min(receiver.receiveEnergy(this.bcBlockType, bc3Provide, outputDirection.getOpposite()), bc3Provide);
-							this.provideElectricity((bc3Provide - (energyUsed * Compatibility.TO_BC_RATIO)), true);
+							if (receiver.powerRequest() > 0)
+							{
+								float bc3Provide = provide * Compatibility.TO_BC_RATIO;
+								float energyUsed = Math.min(receiver.receiveEnergy(this.bcBlockType, bc3Provide, outputDirection.getOpposite()), bc3Provide);
+								this.provideElectricity(energyUsed * Compatibility.TO_BC_RATIO, true);
+							}
 						}
 
 						return true;
