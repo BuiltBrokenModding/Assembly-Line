@@ -69,14 +69,12 @@ public class MachineMiningEvent extends Event
             List<ItemStack> items = block.getBlockDropped(world, target.intX(), target.intY(), target.intZ(), target.getBlockMetadata(world), 1);
             if (items != null)
             {
-                System.out.println("Items");
                 MiningDrop event = new MiningDrop(world, target, machine, items);
                 MinecraftForge.EVENT_BUS.post(event);
                 items = event.items;
                 return items;
             }
         }
-        System.out.println("no Items");
         return null;
     }
 }
