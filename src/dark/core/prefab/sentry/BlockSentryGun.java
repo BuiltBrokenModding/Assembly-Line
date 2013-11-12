@@ -2,11 +2,12 @@ package dark.core.prefab.sentry;
 
 import java.util.Set;
 
-import com.builtbroken.common.Pair;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
+
+import com.builtbroken.common.Pair;
+
 import dark.core.common.DarkMain;
 import dark.core.prefab.machine.BlockMachine;
 import dark.core.registration.ModObjectRegistry;
@@ -93,10 +94,6 @@ public class BlockSentryGun extends BlockMachine
                     Block block = ModObjectRegistry.createNewBlock("DMSentryGun" + b, DarkMain.MOD_ID, BlockSentryGun.class);
                     sentryBlockIds[b] = block.blockID;
                 }
-            }
-            for (int t = 0; t < sentryGuns.length; t++)
-            {
-
             }
         }
     }

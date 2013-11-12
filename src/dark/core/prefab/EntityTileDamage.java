@@ -29,7 +29,7 @@ import dark.core.interfaces.IDamageableTile;
 public class EntityTileDamage extends EntityLiving implements IEntityAdditionalSpawnData
 {
 
-    private TileEntity host;
+    public TileEntity host;
     int hp = 100;
 
     public EntityTileDamage(World par1World)
@@ -44,6 +44,18 @@ public class EntityTileDamage extends EntityLiving implements IEntityAdditionalS
         this(c.worldObj);
         this.setPosition(c.xCoord + 0.5, c.yCoord, c.zCoord + 0.5);
         this.host = c;
+    }
+
+    public EntityTileDamage(Vector3 v, TileEntity c)
+    {
+        this(c.worldObj);
+        this.setPosition(v);
+        this.host = c;
+    }
+
+    public void setPosition(Vector3 vec)
+    {
+        this.setPosition(vec.x, vec.y, vec.z);
     }
 
     @Override
