@@ -2,6 +2,9 @@ package dark.core.helpers;
 
 import java.util.List;
 
+import universalelectricity.core.vector.Quaternion;
+import universalelectricity.core.vector.Vector3;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
@@ -149,6 +152,46 @@ public class RayTraceHelper
     public static MovingObjectPosition raytraceBlocks(World world, Vec3 start, Vec3 end, boolean collisionFlag)
     {
         return world.rayTraceBlocks_do_do(start, end, collisionFlag, !collisionFlag);
+    }
+
+    public static Vector3 getPosFromRotation(Vector3 center, Vector3 spot, float yaw, float pitch)
+    {
+        double reachDistance = center.distance(spot);
+        return getPosFromRotation(spot, reachDistance, pitch, pitch);
+    }
+
+    public static Vector3 getPosFromRotation(Vector3 center, double reachDistance, float yaw, float pitch)
+    {
+        Quaternion q = new Quaternion();
+        q.FromEuler(yaw, pitch, 0);
+        return center.clone().translate(q.multi(Vector3.NORTH().scale(reachDistance)));
+    }
+
+    public static MovingObjectPosition ray_trace_do(World world, Vec3 start, float yaw, float pitch, double reachDistance, boolean collisionFlag)
+    {
+
+        Vec3 end = getPosFromRotation(new Vector3(start), reachDistance, yaw, pitch).toVec3();
+        MovingObjectPosition hitBlock = raytraceBlocks(world, start, end, collisionFlag);
+        MovingObjectPosition hitEntity = raytraceEntities(world, start, end, collisionFlag, null);
+        if (hitEntity == null)
+        {
+            return hitBlock;
+        }
+        else if (hitBlock == null)
+        {
+            return hitEntity;
+        }
+        else
+        {
+            if (hitEntity.hitVec.distanceTo(start) < hitBlock.hitVec.distanceTo(start))
+            {
+                return hitEntity;
+            }
+            else
+            {
+                return hitBlock;
+            }
+        }
     }
 
     public static MovingObjectPosition ray_trace_do(World world, Entity entity, Vec3 e, double reachDistance, boolean collisionFlag)

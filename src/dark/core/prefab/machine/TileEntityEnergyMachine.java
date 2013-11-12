@@ -41,7 +41,7 @@ import dark.core.common.ExternalModHandler;
  * Based off both UE universal electrical tile, and electrical tile prefabs
  * 
  * @author DarkGuardsman */
-public class TileEntityEnergyMachine extends TileEntityMachine implements IElectrical, IElectricalStorage, IPowerLess
+public abstract class TileEntityEnergyMachine extends TileEntityMachine implements IElectrical, IElectricalStorage, IPowerLess
 {
     /** Forge Ore Directory name of the item to toggle infinite power mode */
     public static String powerToggleItemID = "battery";
