@@ -1,12 +1,23 @@
 package dark.api.events;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import dark.core.common.items.EnumTool;
+import dark.core.helpers.ItemWorldHelper;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Cancelable;
 import net.minecraftforge.event.Event;
@@ -100,10 +111,166 @@ public class LaserEvent extends Event
 
     }
 
-    public static boolean doLaserHarvestCheck(EntityPlayer player, Vector3 hit)
+    public static boolean doLaserHarvestCheck(World world, Vector3 pos, Object player, Vector3 hit)
     {
-        LaserEvent event = new LaserMineBlockEvent(player.worldObj, new Vector3(player), hit, player);
+        LaserEvent event = new LaserMineBlockEvent(world, pos, hit, player);
         MinecraftForge.EVENT_BUS.post(event);
         return !event.isCanceled();
+    }
+
+    /** Called while the block is being mined */
+    public static void onLaserHitBlock(World world, Object player, Vector3 vec, ForgeDirection side)
+    {
+        int id = vec.getBlockID(world);
+        int meta = vec.getBlockID(world);
+        Block block = Block.blocksList[id];
+
+        Vector3 faceVec = vec.clone().modifyPositionFromSide(side);
+        int id2 = faceVec.getBlockID(world);
+        Block block2 = Block.blocksList[id2];
+
+        Vector3 start = null;
+
+        if (player instanceof Entity)
+        {
+            start = new Vector3((Entity) player);
+        }
+        else if (player instanceof TileEntity)
+        {
+            start = new Vector3((TileEntity) player);
+        }
+        if (block != null)
+        {
+            float chance = world.rand.nextFloat();
+
+            int fireChance = block.getFlammability(world, vec.intX(), vec.intY(), vec.intZ(), meta, side);
+            if ((fireChance / 300) >= chance && (block2 == null || block2.isAirBlock(world, vec.intX(), vec.intY(), vec.intZ())))
+            {
+                world.setBlock(vec.intX(), vec.intY(), vec.intZ(), Block.fire.blockID, 0, 3);
+                return;
+            }
+            if (block.blockID == Block.grass.blockID && (block2 == null || block2.isAirBlock(world, vec.intX(), vec.intY() + 1, vec.intZ())))
+            {
+                world.setBlock(vec.intX(), vec.intY() + 1, vec.intZ(), Block.fire.blockID, 0, 3);
+                world.setBlock(vec.intX(), vec.intY(), vec.intZ(), Block.dirt.blockID, 0, 3);
+                return;
+            }
+            if (chance > 0.8f)
+            {
+                //TODO turn water into steam
+                if (block.blockID == Block.sand.blockID)
+                {
+                    world.setBlock(vec.intX(), vec.intY(), vec.intZ(), Block.glass.blockID, 0, 3);
+                    return;
+                }
+                else if (block.blockID == Block.cobblestone.blockID)
+                {
+                    world.setBlock(vec.intX(), vec.intY(), vec.intZ(), 1, 0, 3);
+                    return;
+                }
+                else if (block.blockID == Block.ice.blockID)
+                {
+                    world.setBlock(vec.intX(), vec.intY(), vec.intZ(), Block.waterStill.blockID, 15, 3);
+                    return;
+                }
+                else if (block.blockID == Block.obsidian.blockID)
+                {
+                    world.setBlock(vec.intX(), vec.intY(), vec.intZ(), Block.lavaStill.blockID, 15, 3);
+                    return;
+                }
+                else if (block.blockID == Block.tnt.blockID)
+                {
+                    world.setBlock(vec.intX(), vec.intY(), vec.intZ(), 0, 0, 3);
+                    EntityTNTPrimed entitytntprimed = new EntityTNTPrimed(world, (double) ((float) vec.intX() + 0.5F), (double) ((float) vec.intY() + 0.5F), (double) ((float) vec.intZ() + 0.5F), player instanceof EntityLivingBase ? ((EntityLivingBase) player) : null);
+                    entitytntprimed.fuse = world.rand.nextInt(entitytntprimed.fuse / 4) + entitytntprimed.fuse / 8;
+                    world.spawnEntityInWorld(entitytntprimed);
+                    return;
+                }
+            }
+            MinecraftForge.EVENT_BUS.post(new LaserEvent.LaserMeltBlockEvent(world, start, vec, player));
+        }
+    }
+
+    /** Called when the block is actually mined */
+    public static void onBlockMinedByLaser(World world, Object player, Vector3 vec)
+    {
+        int id = vec.getBlockID(world);
+        int meta = vec.getBlockID(world);
+        Block block = Block.blocksList[id];
+
+        Vector3 start = null;
+        if (player instanceof Entity)
+        {
+            start = new Vector3((Entity) player);
+        }
+        else if (player instanceof TileEntity)
+        {
+            start = new Vector3((TileEntity) player);
+        }
+
+        //TODO make this use or call to the correct methods, and events so it can be canceled
+        if (block != null && block.getBlockHardness(world, vec.intX(), vec.intY(), vec.intZ()) >= 0 && doLaserHarvestCheck(world, start, player, vec))
+        {
+            try
+            {
+
+                int id2 = vec.clone().modifyPositionFromSide(ForgeDirection.UP).getBlockID(world);
+                Block block2 = Block.blocksList[id2];
+                if (block != null)
+                {
+                    if (EnumTool.AX.effecticVsMaterials.contains(block.blockMaterial) || block.blockMaterial == Material.plants || block.blockMaterial == Material.pumpkin || block.blockMaterial == Material.cloth || block.blockMaterial == Material.web)
+                    {
+                        //TODO turn tilled dirt into dirt
+                        world.setBlock(vec.intX(), vec.intY(), vec.intZ(), Block.fire.blockID, 0, 3);
+                        return;
+                    }
+                    List<ItemStack> items = block.getBlockDropped(world, vec.intX(), vec.intY(), vec.intZ(), meta, 1);
+                    if (items == null)
+                    {
+                        items = new ArrayList<ItemStack>();
+                    }
+                    if (id == Block.glass.blockID)
+                    {
+                        items.add(new ItemStack(Block.glass, 1, meta));
+                    }
+                    if (id == Block.thinGlass.blockID)
+                    {
+                        items.add(new ItemStack(Block.thinGlass, 1));
+                    }
+                    List<ItemStack> removeList = new ArrayList<ItemStack>();
+                    for (int i = 0; i < items.size(); i++)
+                    {
+                        if (items.get(i).itemID == Block.wood.blockID)
+                        {
+                            items.set(i, new ItemStack(Item.coal, 1, 1));
+                        }
+                        else if (items.get(i).itemID == Block.wood.blockID)
+                        {
+                            if (world.rand.nextFloat() < .25f)
+                            {
+                                items.set(i, new ItemStack(Item.coal, 1, 1));
+                            }
+                            else
+                            {
+                                removeList.add(items.get(i));
+                            }
+                        }
+                    }
+                    items.removeAll(removeList);
+                    LaserEvent.LaserDropItemEvent event = new LaserEvent.LaserDropItemEvent(world, start, vec, items);
+                    MinecraftForge.EVENT_BUS.post(event);
+                    items = event.items;
+                    for (ItemStack stack : items)
+                    {
+                        ItemWorldHelper.dropItemStack(world, vec.translate(0.5), stack, false);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            world.setBlockToAir(vec.intX(), vec.intY(), vec.intZ());
+        }
     }
 }
