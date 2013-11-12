@@ -1,179 +1,213 @@
 package universalelectricity.core.vector;
 
-import universalelectricity.core.vector.Vector3;
-
-/** Simple quaternion class designed to be used for rotation of objects.
- *
- * @author DarkGuardsman */
-public class Quaternion
+/**
+ * Quaternion class designed to be used for the rotation of objects.
+ * 
+ * Do not use in MC 1.6.4, subject to change!
+ * 
+ * @author DarkGuardsman, Calclavia
+ */
+public class Quaternion implements Cloneable
 {
-    public static final float TOLERANCE = 0.00001f;
-    float x, y, z, w;
+	public static final float TOLERANCE = 0.00001f;
+	public double x, y, z, w;
 
-    public Quaternion()
-    {
-        this(0, 0, 0, 1);
-    }
+	public Quaternion()
+	{
+		this(0, 0, 0, 1);
+	}
 
-    public Quaternion(float x, float y, float z, float w)
-    {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.w = w;
-    }
+	public Quaternion(Quaternion copy)
+	{
+		this(copy.x, copy.y, copy.z, copy.w);
+	}
 
-    public Quaternion(Vector3 vec, float w)
-    {
-        this((float) vec.x, (float) vec.y, (float) vec.z, w);
-    }
+	public Quaternion(double x, double y, double z, double w)
+	{
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.w = w;
+	}
 
-    public void set(Quaternion quaternion)
-    {
-        w = quaternion.w;
-        x = quaternion.x;
-        y = quaternion.y;
-        z = quaternion.z;
-    }
+	/**
+	 * Convert from Euler Angles. Basically we create 3 Quaternions, one for pitch, one for yaw, one
+	 * for roll and multiply those together. the calculation below does the same, just shorter
+	 */
+	public Quaternion(float pitch, float yaw, float roll)
+	{
+		float p = (float) (pitch * (Math.PI / 180) / 2.0);
+		float y = (float) (yaw * (Math.PI / 180) / 2.0);
+		float r = (float) (roll * (Math.PI / 180) / 2.0);
 
-    public void set(float x, float y, float z, float w)
-    {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.w = w;
-    }
+		float sinp = (float) Math.sin(p);
+		float siny = (float) Math.sin(y);
+		float sinr = (float) Math.sin(r);
+		float cosp = (float) Math.cos(p);
+		float cosy = (float) Math.cos(y);
+		float cosr = (float) Math.cos(r);
 
-    /** Normalizes the Quaternion only if its outside the min errors range */
-    public void normalise()
-    {
-        // Don't normalize if we don't have to
-        double mag2 = w * w + x * x + y * y + z * z;
-        if (Math.abs(mag2) > TOLERANCE && Math.abs(mag2 - 1.0f) > TOLERANCE)
-        {
-            float mag = (float) Math.sqrt(mag2);
-            w /= mag;
-            x /= mag;
-            y /= mag;
-            z /= mag;
-        }
-    }
+		this.x = sinr * cosp * cosy - cosr * sinp * siny;
+		this.y = cosr * sinp * cosy + sinr * cosp * siny;
+		this.z = cosr * cosp * siny - sinr * sinp * cosy;
+		this.w = cosr * cosp * cosy + sinr * sinp * siny;
 
-    /** Gets the inverse of this Quaternion */
-    public Quaternion getConj()
-    {
-        return new Quaternion(-x, -y, -z, w);
-    }
+		this.normalize();
+	}
 
-    public void conj()
-    {
-        x = -x;
-        y = -y;
-        z = -z;
-    }
+	public Quaternion(Vector3 vector, double w)
+	{
+		this(vector.x, vector.y, vector.z, w);
+	}
 
-    /** Multiplying q1 with q2 applies the rotation q2 to q1 */
-    public Quaternion multi(Quaternion rq)
-    {
-        return new Quaternion(w * rq.x + x * rq.w + y * rq.z - z * rq.y, w * rq.y + y * rq.w + z * rq.x - x * rq.z, w * rq.z + z * rq.w + x * rq.y - y * rq.x, w * rq.w - x * rq.x - y * rq.y - z * rq.z);
-    }
+	public static Quaternion IDENTITY()
+	{
+		return new Quaternion();
+	}
 
-    public void multLocal(Quaternion q)
-    {
-        Quaternion temp = this.multi(q);
-        this.set(temp);
-    }
+	public Quaternion set(Quaternion quaternion)
+	{
+		this.w = quaternion.w;
+		this.x = quaternion.x;
+		this.y = quaternion.y;
+		this.z = quaternion.z;
+		return this;
+	}
 
-    /** Multi a vector against this in other words applying rotation */
-    public Vector3 multi(Vector3 vec)
-    {
-        Vector3 vn = vec.clone();
+	public Quaternion set(double x, double y, double z, double w)
+	{
+		return this.set(new Quaternion(x, y, z, w));
+	}
 
-        Quaternion vecQuat = new Quaternion(0, 0, 0, 1), resQuat;
-        vecQuat.x = (float) vn.x;
-        vecQuat.y = (float) vn.y;
-        vecQuat.z = (float) vn.z;
-        vecQuat.w = 0.0f;
+	public Quaternion normalize()
+	{
+		double magnitude = this.magnitude();
+		this.x /= magnitude;
+		this.y /= magnitude;
+		this.z /= magnitude;
+		this.w /= magnitude;
+		return this;
+	}
 
-        resQuat = vecQuat.multi(this.getConj());
-        resQuat = this.multi(resQuat);
+	public double magnitude()
+	{
+		return Math.sqrt(this.magnitudeSquared());
+	}
 
-        return new Vector3(resQuat.x, resQuat.y, resQuat.z);
-    }
+	public double magnitudeSquared()
+	{
+		return this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w;
+	}
 
-    public void FromAxis(Vector3 v, float angle)
-    {
-        angle *= 0.5f;
-        Vector3 vn = v.clone();
-        vn.normalize();
+	public Quaternion inverse()
+	{
+		double d = this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w;
+		return new Quaternion(this.x / d, -this.y / d, -this.z / d, -this.w / d);
+	}
 
-        float sinAngle = (float) Math.sin(angle);
+	/**
+	 * Gets the conjugate of this Quaternion
+	 */
+	public Quaternion getConjugate()
+	{
+		return this.clone().conjugate();
+	}
 
-        x = (float) (vn.x * sinAngle);
-        y = (float) (vn.y * sinAngle);
-        z = (float) (vn.z * sinAngle);
-        w = (float) Math.cos(angle);
-    }
+	public Quaternion conjugate()
+	{
+		this.y = -this.y;
+		this.z = -this.z;
+		this.w = -this.w;
+		return this;
+	}
 
-    // Convert from Euler Angles
-    public void FromEuler(float pitch, float yaw, float roll)
-    {
-        // Basically we create 3 Quaternions, one for pitch, one for yaw, one for roll
-        // and multiply those together.
-        // the calculation below does the same, just shorter
+	/**
+	 * Let the current quaternion be "a". Multiplying the a with b applies the rotation a to b.
+	 */
+	public Quaternion getMultiply(Quaternion b)
+	{
+		return this.clone().multiply(b);
+	}
 
-        float p = (float) (pitch * (Math.PI / 180) / 2.0);
-        float y = (float) (yaw * (Math.PI / 180) / 2.0);
-        float r = (float) (roll * (Math.PI / 180) / 2.0);
+	public Quaternion multiply(Quaternion b)
+	{
+		Quaternion a = this;
+		double newX = a.x * b.x - a.y * b.y - a.z * b.z - a.w * b.w;
+		double newY = a.x * b.y + a.y * b.x + a.z * b.w - a.w * b.z;
+		double newZ = a.x * b.z - a.y * b.w + a.z * b.x + a.w * b.y;
+		double newW = a.x * b.w + a.y * b.z - a.z * b.y + a.w * b.x;
+		this.set(newX, newY, newZ, newW);
+		return this;
+	}
 
-        float sinp = (float) Math.sin(p);
-        float siny = (float) Math.sin(y);
-        float sinr = (float) Math.sin(r);
-        float cosp = (float) Math.cos(p);
-        float cosy = (float) Math.cos(y);
-        float cosr = (float) Math.cos(r);
+	public Quaternion divide(Quaternion b)
+	{
+		Quaternion a = this;
+		return a.inverse().multiply(b);
+	}
 
-        x = sinr * cosp * cosy - cosr * sinp * siny;
-        y = cosr * sinp * cosy + sinr * cosp * siny;
-        z = cosr * cosp * siny - sinr * sinp * cosy;
-        w = cosr * cosp * cosy + sinr * sinp * siny;
+	/** Multi a vector against this in other words applying rotation */
+	public Vector3 multi(Vector3 vec)
+	{
+		Vector3 vn = vec.clone();
 
-        normalise();
-    }
+		Quaternion vecQuat = new Quaternion(0, 0, 0, 1), resQuat;
+		vecQuat.x = (float) vn.x;
+		vecQuat.y = (float) vn.y;
+		vecQuat.z = (float) vn.z;
+		vecQuat.w = 0.0f;
 
-    /* Convert to Matrix
-    public Matrix4 getMatrix()
-    {
-        float x2 = (float) (x * x);
-        float y2 = (float) (y * y);
-        float z2 = (float) (z * z);
-        float xy = (float) (x * y);
-        float xz = (float) (x * z);
-        float yz = (float) (y * z);
-        float wx = (float) (w * x);
-        float wy = (float) (w * y);
-        float wz = (float) (w * z);
+		resQuat = vecQuat.multiply(this.getConjugate());
+		resQuat = this.multiply(resQuat);
 
-        // This calculation would be a lot more complicated for non-unit length quaternions
-        // Note: The constructor of Matrix4 expects the Matrix in column-major format like expected
-        // by
-        // OpenGL
-        return new Matrix4(1.0f - 2.0f * (y2 + z2), 2.0f * (xy - wz), 2.0f * (xz + wy), 0.0f, 2.0f * (xy + wz), 1.0f - 2.0f * (x2 + z2), 2.0f * (yz - wx), 0.0f, 2.0f * (xz - wy), 2.0f * (yz + wx), 1.0f - 2.0f * (x2 + y2), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-    }*/
+		return new Vector3(resQuat.x, resQuat.y, resQuat.z);
+	}
 
-    // Convert to Axis/Angles
-    public void getAxisAngle(Vector3 axis, float angle)
-    {
-        float scale = (float) Math.sqrt(x * x + y * y + z * z);
-        x = x / scale;
-        y = y / scale;
-        z = z / scale;
-        angle = (float) (Math.acos(w) * 2.0f);
-    }
+	public static Quaternion fromAxis(Vector3 vector, double angle)
+	{
+		angle *= 0.5f;
+		Vector3 vn = vector.clone().normalize();
+		float sinAngle = (float) Math.sin(angle);
+		return new Quaternion(vn.x * sinAngle, vn.y * sinAngle, vn.z * sinAngle, Math.cos(angle));
+	}
 
-    @Override
-    public String toString()
-    {
-        return "<" + x + "x " + y + "y " + z + "z @" + w + ">";
-    }
+	/*
+	 * Convert to Matrix public Matrix4 getMatrix() { float x2 = (float) (x * x); float y2 = (float)
+	 * (y * y); float z2 = (float) (z * z); float xy = (float) (x * y); float xz = (float) (x * z);
+	 * float yz = (float) (y * z); float wx = (float) (w * x); float wy = (float) (w * y); float wz
+	 * = (float) (w * z);
+	 * 
+	 * // This calculation would be a lot more complicated for non-unit length quaternions // Note:
+	 * The constructor of Matrix4 expects the Matrix in column-major format like expected // by //
+	 * OpenGL return new Matrix4(1.0f - 2.0f * (y2 + z2), 2.0f * (xy - wz), 2.0f * (xz + wy), 0.0f,
+	 * 2.0f * (xy + wz), 1.0f - 2.0f * (x2 + z2), 2.0f * (yz - wx), 0.0f, 2.0f * (xz - wy), 2.0f *
+	 * (yz + wx), 1.0f - 2.0f * (x2 + y2), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f); }
+	 */
+
+	/**
+	 * Convert to Axis/Angles
+	 * 
+	 * @param axis - The axis of rotation
+	 * @param angle - The angle of rotation
+	 */
+	public void getAxisAngle(Vector3 axis, float angle)
+	{
+		float scale = (float) axis.getMagnitude();
+		this.x = this.x / scale;
+		this.y = this.y / scale;
+		this.z = this.z / scale;
+		angle = (float) (Math.acos(this.w) * 2.0f);
+	}
+
+	@Override
+	public Quaternion clone()
+	{
+		return new Quaternion(this);
+	}
+
+	@Override
+	public String toString()
+	{
+		return "Quaternion [" + x + ", " + y + ", " + z + ", " + w + "]";
+	}
 }
