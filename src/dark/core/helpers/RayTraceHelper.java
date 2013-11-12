@@ -154,23 +154,26 @@ public class RayTraceHelper
         return world.rayTraceBlocks_do_do(start, end, collisionFlag, !collisionFlag);
     }
 
-    public static Vector3 getPosFromRotation(Vector3 center, Vector3 spot, float yaw, float pitch)
+    /** @param center - vector3 by which the spot rotates around
+     * @param spot - distance away from center as a vector
+     * @param yaw - yaw to rotate spot by
+     * @param pitch - pitch to rotate spot by */
+    public static Vector3 getPosFromRotation(World world, Vector3 center, Vector3 spot, float yaw, float pitch)
     {
         double reachDistance = center.distance(spot);
-        return getPosFromRotation(spot, reachDistance, pitch, pitch);
+        return getPosFromRotation(world, spot, reachDistance, pitch, pitch);
     }
 
-    public static Vector3 getPosFromRotation(Vector3 center, double reachDistance, float yaw, float pitch)
+    public static Vector3 getPosFromRotation(World world, Vector3 center, double reachDistance, float yaw, float pitch)
     {
-        Quaternion q = new Quaternion();
-        q.FromEuler(yaw, pitch, 0);
-        return center.clone().translate(q.multi(Vector3.NORTH().scale(reachDistance)));
+        Vec3 look = getLook(world, yaw, pitch, 1.0f);
+        return center.clone().translate(new Vector3(look).scale(reachDistance));
     }
 
     public static MovingObjectPosition ray_trace_do(World world, Vec3 start, float yaw, float pitch, double reachDistance, boolean collisionFlag)
     {
 
-        Vec3 end = getPosFromRotation(new Vector3(start), reachDistance, yaw, pitch).toVec3();
+        Vec3 end = getPosFromRotation(world, new Vector3(start), reachDistance, yaw, pitch).toVec3();
         MovingObjectPosition hitBlock = raytraceBlocks(world, start, end, collisionFlag);
         MovingObjectPosition hitEntity = raytraceEntities(world, start, end, collisionFlag, null);
         if (hitEntity == null)
@@ -246,5 +249,18 @@ public class RayTraceHelper
             float f6 = MathHelper.sin(-f1 * 0.017453292F);
             return entity.worldObj.getWorldVec3Pool().getVecFromPool((f4 * f5), f6, (f3 * f5));
         }
+    }
+
+    public static Vec3 getLook(World world, float yaw, float pitch, float par1)
+    {
+        float f1, f2, f3, f4;
+
+        f1 = pitch * par1;
+        f2 = yaw * par1;
+        f3 = MathHelper.cos(-f2 * 0.017453292F - (float) Math.PI);
+        f4 = MathHelper.sin(-f2 * 0.017453292F - (float) Math.PI);
+        float f5 = -MathHelper.cos(-f1 * 0.017453292F);
+        float f6 = MathHelper.sin(-f1 * 0.017453292F);
+        return world.getWorldVec3Pool().getVecFromPool((f4 * f5), f6, (f3 * f5));
     }
 }
