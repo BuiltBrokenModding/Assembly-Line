@@ -84,6 +84,22 @@ public class MathHelper extends net.minecraft.util.MathHelper
         return var;
     }
 
+    public static float clamp(float var, float min, float max)
+    {
+        if (var < min)
+        {
+            return min;
+        }
+        else if (var > max)
+        {
+            return max;
+        }
+        else
+        {
+            return var;
+        }
+    }
+
     /** Clamps an angle to 360 degree circle */
     public static float clampAngleTo360(float var)
     {
@@ -108,6 +124,54 @@ public class MathHelper extends net.minecraft.util.MathHelper
         {
             return angle - angleGoal;
         }
+    }
+
+    public static double updateRotation(double from, double to, double speed)
+    {
+        from = MathHelper.wrapAngleTo180_double(from);
+        to = MathHelper.wrapAngleTo180_double(to);
+        double delta = Math.abs(from - to);
+        if (delta > 0.001f)
+        {
+            if (from > to)
+            {
+                from += (delta >= 0) ? speed : -speed;
+            }
+            else
+            {
+                from += (delta >= 0) ? -speed : speed;
+            }
+
+            if (delta < speed + 0.1f)
+            {
+                from = to;
+            }
+        }
+        return from;
+    }
+
+    public static double updateRotation(float from, float to, float speed)
+    {
+        from = MathHelper.wrapAngleTo180_float(from);
+        to = MathHelper.wrapAngleTo180_float(to);
+        double delta = Math.abs(from - to);
+        if (delta > 0.001f)
+        {
+            if (from > to)
+            {
+                from += (delta >= 0) ? speed : -speed;
+            }
+            else
+            {
+                from += (delta >= 0) ? -speed : speed;
+            }
+
+            if (delta < speed + 0.1f)
+            {
+                from = to;
+            }
+        }
+        return from;
     }
 
     /** gets the facing direction using the yaw angle */

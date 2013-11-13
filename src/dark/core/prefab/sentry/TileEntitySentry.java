@@ -1,7 +1,12 @@
 package dark.core.prefab.sentry;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
@@ -9,11 +14,18 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.tile.TileEntityAdvanced;
 import dark.api.ISentryGun;
+import dark.core.helpers.MathHelper;
 import dark.core.prefab.EntityTileDamage;
 import dark.core.prefab.machine.TileEntityMachine;
 
+/** Prefab tileEntity for creating senty guns that can be of type aimed, mounted, or automated.
+ * Contains most of the code for a sentry gun to operate short of aiming and operating logic. This
+ * means the classes that extend this still need to tell the sentry were to aim. As well this
+ * doesn't handle any firing events or damage events. This is only a shell for the sentry to be
+ * created. Everything else is up to the sub classes of this class.
+ * 
+ * @author DarkGuardsman */
 public abstract class TileEntitySentry extends TileEntityMachine implements ISentryGun
 {
     protected EntityTileDamage entitySentry = null;
@@ -25,6 +37,7 @@ public abstract class TileEntitySentry extends TileEntityMachine implements ISen
     private final float maxDamage;
 
     private Vector3 rotation = new Vector3(), newRotation = new Vector3(), prevRotation = new Vector3();
+    protected float roationSpeed = 10f, minPitch = -30, maxPitch = 30, minYaw = -180, maxYaw = 180, size = 1.0f;
 
     public TileEntitySentry(float maxDamage)
     {
@@ -37,7 +50,7 @@ public abstract class TileEntitySentry extends TileEntityMachine implements ISen
     @Override
     public void updateEntity()
     {
-        super.updateEntity();        
+        super.updateEntity();
         if (this.isFunctioning())
         {
             if (this.entitySentry == null)
@@ -84,7 +97,9 @@ public abstract class TileEntitySentry extends TileEntityMachine implements ISen
      * ****************************************************** */
     public void updateRotation()
     {
-
+        this.prevRotation = this.getRotation();
+        this.rotation.x = MathHelper.clamp((float) MathHelper.updateRotation(this.rotation.x, this.newRotation.x, this.roationSpeed), this.minPitch, this.maxPitch);
+        this.rotation.y = MathHelper.clamp((float) MathHelper.updateRotation(this.rotation.y, this.newRotation.y, this.roationSpeed), this.minYaw, this.maxYaw);
     }
 
     @Override
