@@ -276,7 +276,7 @@ public class TileEntityProcessor extends TileEntityEnergyMachine
     {
         if (!this.worldObj.isRemote && entity instanceof EntityPlayerMP)
         {
-            ((EntityPlayerMP) entity).playerNetServerHandler.sendPacketToPlayer(PacketHandler.instance().getPacket(this.getChannel(), this, SimplePacketTypes.GUI.name, this.processingTicks, this.processingTime, this.energyStored));
+            ((EntityPlayerMP) entity).playerNetServerHandler.sendPacketToPlayer(PacketHandler.instance().getTilePacket(this.getChannel(), this, SimplePacketTypes.GUI.name, this.processingTicks, this.processingTime, this.energyStored));
         }
     }
 

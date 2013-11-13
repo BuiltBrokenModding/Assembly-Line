@@ -115,7 +115,7 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IBelt,
     {
         if (this.slantType != SlantType.NONE)
         {
-            return PacketHandler.instance().getPacket(this.getChannel(), this, slantPacketID, this.slantType.ordinal());
+            return PacketHandler.instance().getTilePacket(this.getChannel(), this, slantPacketID, this.slantType.ordinal());
         }
         return null;
     }

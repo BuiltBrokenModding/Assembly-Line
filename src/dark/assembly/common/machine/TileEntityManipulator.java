@@ -186,7 +186,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketHandler.instance().getPacket(this.getChannel(), this, "manipulator", this.functioning, this.isInverted(), this.isSelfPulse(), this.isOutput());
+        return PacketHandler.instance().getTilePacket(this.getChannel(), this, "manipulator", this.functioning, this.isInverted(), this.isSelfPulse(), this.isOutput());
     }
 
     @Override

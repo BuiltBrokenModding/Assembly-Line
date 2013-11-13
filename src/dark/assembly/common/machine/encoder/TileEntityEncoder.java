@@ -154,7 +154,7 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
             {
                 this.program.save(tag);
             }
-            PacketDispatcher.sendPacketToPlayer(PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, this.program, exists, tag), (Player) entity);
+            PacketDispatcher.sendPacketToPlayer(PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, this.program, exists, tag), (Player) entity);
         }
     }
 
@@ -162,7 +162,7 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
     {
         if (vec != null)
         {
-            PacketDispatcher.sendPacketToServer(PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, vec.intX(), vec.intY()));
+            PacketDispatcher.sendPacketToServer(PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, vec.intX(), vec.intY()));
         }
     }
 
@@ -170,7 +170,7 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
     {
         if (task != null)
         {
-            PacketDispatcher.sendPacketToServer(PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, task.getPosition().intX(), task.getPosition().intY(), task.save(new NBTTagCompound())));
+            PacketDispatcher.sendPacketToServer(PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, task.getPosition().intX(), task.getPosition().intY(), task.save(new NBTTagCompound())));
         }
     }
 

@@ -225,11 +225,11 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
         ItemStack stack = this.getSampleStack();
         if (stack != null)
         {
-            return PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, true, stack.writeToNBT(new NBTTagCompound()), stack.stackSize);
+            return PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, true, stack.writeToNBT(new NBTTagCompound()), stack.stackSize);
         }
         else
         {
-            return PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, false);
+            return PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, false);
         }
     }
 

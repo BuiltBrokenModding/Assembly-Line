@@ -473,7 +473,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, this.searchInventories);
+        return PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, this.searchInventories);
     }
 
     // ///////////////////////////////////////

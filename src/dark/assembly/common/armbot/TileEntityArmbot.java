@@ -274,7 +274,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketHandler.instance().getPacket(this.getChannel(), this, "armbot", this.functioning, this.rotationYaw, this.rotationPitch);
+        return PacketHandler.instance().getTilePacket(this.getChannel(), this, "armbot", this.functioning, this.rotationYaw, this.rotationPitch);
     }
 
     public void sendRotationPacket()

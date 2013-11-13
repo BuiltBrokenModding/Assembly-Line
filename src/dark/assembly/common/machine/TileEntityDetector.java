@@ -108,7 +108,7 @@ public class TileEntityDetector extends TileEntityFilterable
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketHandler.instance().getPacket(this.getChannel(), this, "detector", this.functioning, this.isInverted());
+        return PacketHandler.instance().getTilePacket(this.getChannel(), this, "detector", this.functioning, this.isInverted());
     }
 
     @Override
