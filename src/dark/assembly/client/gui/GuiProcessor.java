@@ -9,9 +9,9 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.assembly.common.AssemblyLine;
-import dark.assembly.common.machine.processor.ContainerProcessor;
-import dark.assembly.common.machine.processor.TileEntityProcessor;
+import dark.assembly.AssemblyLine;
+import dark.assembly.machine.processor.ContainerProcessor;
+import dark.assembly.machine.processor.TileEntityProcessor;
 
 @SideOnly(Side.CLIENT)
 public class GuiProcessor extends GuiContainer

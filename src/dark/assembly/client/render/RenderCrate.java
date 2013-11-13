@@ -20,7 +20,7 @@ import org.lwjgl.opengl.GL11;
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.assembly.common.machine.TileEntityCrate;
+import dark.assembly.machine.TileEntityCrate;
 
 @SideOnly(Side.CLIENT)
 public class RenderCrate extends TileEntitySpecialRenderer

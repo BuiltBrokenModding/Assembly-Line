@@ -2,8 +2,8 @@ package dark.assembly.client.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import dark.assembly.common.AssemblyLine;
-import dark.assembly.common.machine.encoder.TileEntityEncoder;
+import dark.assembly.AssemblyLine;
+import dark.assembly.machine.encoder.TileEntityEncoder;
 
 public class GuiEncoderHelp extends GuiEncoderBase
 {

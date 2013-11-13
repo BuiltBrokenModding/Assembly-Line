@@ -8,10 +8,10 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.assembly.AssemblyLine;
 import dark.assembly.client.model.ModelCrusher;
 import dark.assembly.client.model.ModelGrinder;
-import dark.assembly.common.AssemblyLine;
-import dark.assembly.common.machine.processor.TileEntityProcessor;
+import dark.assembly.machine.processor.TileEntityProcessor;
 import dark.core.client.renders.RenderTileMachine;
 import dark.core.prefab.ModPrefab;
 

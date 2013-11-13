@@ -6,8 +6,8 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import dark.assembly.common.AssemblyLine;
-import dark.assembly.common.machine.encoder.TileEntityEncoder;
+import dark.assembly.AssemblyLine;
+import dark.assembly.machine.encoder.TileEntityEncoder;
 
 public class GuiEncoderCoder extends GuiEncoderBase
 {

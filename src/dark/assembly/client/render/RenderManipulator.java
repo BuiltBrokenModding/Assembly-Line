@@ -7,9 +7,9 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.assembly.AssemblyLine;
 import dark.assembly.client.model.ModelManipulator;
-import dark.assembly.common.AssemblyLine;
-import dark.assembly.common.machine.TileEntityManipulator;
+import dark.assembly.machine.TileEntityManipulator;
 import dark.core.prefab.ModPrefab;
 
 @SideOnly(Side.CLIENT)

@@ -8,11 +8,11 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.assembly.AssemblyLine;
 import dark.assembly.client.model.ModelAngledBelt;
 import dark.assembly.client.model.ModelConveyorBelt;
-import dark.assembly.common.AssemblyLine;
-import dark.assembly.common.machine.belt.TileEntityConveyorBelt;
-import dark.assembly.common.machine.belt.TileEntityConveyorBelt.SlantType;
+import dark.assembly.machine.belt.TileEntityConveyorBelt;
+import dark.assembly.machine.belt.TileEntityConveyorBelt.SlantType;
 import dark.core.prefab.ModPrefab;
 
 @SideOnly(Side.CLIENT)

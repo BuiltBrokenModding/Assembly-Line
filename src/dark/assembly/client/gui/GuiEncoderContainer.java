@@ -13,10 +13,10 @@ import org.lwjgl.opengl.GL12;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.assembly.common.AssemblyLine;
-import dark.assembly.common.CommonProxy;
-import dark.assembly.common.machine.encoder.ContainerEncoder;
-import dark.assembly.common.machine.encoder.TileEntityEncoder;
+import dark.assembly.AssemblyLine;
+import dark.assembly.CommonProxy;
+import dark.assembly.machine.encoder.ContainerEncoder;
+import dark.assembly.machine.encoder.TileEntityEncoder;
 import dark.core.prefab.invgui.GuiButtonImage;
 
 @SideOnly(Side.CLIENT)

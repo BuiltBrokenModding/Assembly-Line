@@ -8,8 +8,8 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.assembly.common.AssemblyLine;
-import dark.assembly.common.machine.encoder.TileEntityEncoder;
+import dark.assembly.AssemblyLine;
+import dark.assembly.machine.encoder.TileEntityEncoder;
 
 @SideOnly(Side.CLIENT)
 public class GuiEncoderInventory extends GuiEncoderContainer

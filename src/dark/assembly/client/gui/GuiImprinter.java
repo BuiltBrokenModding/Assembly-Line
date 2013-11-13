@@ -9,9 +9,9 @@ import org.lwjgl.opengl.GL11;
 import universalelectricity.prefab.TranslationHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.assembly.common.AssemblyLine;
-import dark.assembly.common.imprinter.ContainerImprinter;
-import dark.assembly.common.imprinter.TileEntityImprinter;
+import dark.assembly.AssemblyLine;
+import dark.assembly.imprinter.ContainerImprinter;
+import dark.assembly.imprinter.TileEntityImprinter;
 import dark.core.prefab.ModPrefab;
 
 @SideOnly(Side.CLIENT)

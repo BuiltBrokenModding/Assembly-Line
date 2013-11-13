@@ -12,13 +12,13 @@ import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.assembly.ALRecipeLoader;
+import dark.assembly.AssemblyLine;
 import dark.assembly.client.model.ModelConveyorBelt;
 import dark.assembly.client.model.ModelCrusher;
 import dark.assembly.client.model.ModelGrinder;
 import dark.assembly.client.model.ModelManipulator;
 import dark.assembly.client.model.ModelRejectorPiston;
-import dark.assembly.common.ALRecipeLoader;
-import dark.assembly.common.AssemblyLine;
 import dark.core.prefab.ModPrefab;
 
 @SideOnly(Side.CLIENT)

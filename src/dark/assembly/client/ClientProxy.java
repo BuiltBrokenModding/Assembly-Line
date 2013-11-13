@@ -9,6 +9,8 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.assembly.CommonProxy;
+import dark.assembly.armbot.TileEntityArmbot;
 import dark.assembly.client.gui.GuiEncoderCoder;
 import dark.assembly.client.gui.GuiEncoderHelp;
 import dark.assembly.client.gui.GuiEncoderInventory;
@@ -22,16 +24,14 @@ import dark.assembly.client.render.RenderDetector;
 import dark.assembly.client.render.RenderManipulator;
 import dark.assembly.client.render.RenderProcessor;
 import dark.assembly.client.render.RenderRejector;
-import dark.assembly.common.CommonProxy;
-import dark.assembly.common.armbot.TileEntityArmbot;
-import dark.assembly.common.imprinter.TileEntityImprinter;
-import dark.assembly.common.machine.TileEntityCrate;
-import dark.assembly.common.machine.TileEntityDetector;
-import dark.assembly.common.machine.TileEntityManipulator;
-import dark.assembly.common.machine.TileEntityRejector;
-import dark.assembly.common.machine.belt.TileEntityConveyorBelt;
-import dark.assembly.common.machine.encoder.TileEntityEncoder;
-import dark.assembly.common.machine.processor.TileEntityProcessor;
+import dark.assembly.imprinter.TileEntityImprinter;
+import dark.assembly.machine.TileEntityCrate;
+import dark.assembly.machine.TileEntityDetector;
+import dark.assembly.machine.TileEntityManipulator;
+import dark.assembly.machine.TileEntityRejector;
+import dark.assembly.machine.belt.TileEntityConveyorBelt;
+import dark.assembly.machine.encoder.TileEntityEncoder;
+import dark.assembly.machine.processor.TileEntityProcessor;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy

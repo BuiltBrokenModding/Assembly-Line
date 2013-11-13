@@ -17,9 +17,9 @@ import org.lwjgl.opengl.GL11;
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.assembly.AssemblyLine;
+import dark.assembly.armbot.TileEntityArmbot;
 import dark.assembly.client.model.ModelArmbot;
-import dark.assembly.common.AssemblyLine;
-import dark.assembly.common.armbot.TileEntityArmbot;
 import dark.core.prefab.ModPrefab;
 
 @SideOnly(Side.CLIENT)

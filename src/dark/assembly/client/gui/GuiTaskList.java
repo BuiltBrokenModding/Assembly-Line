@@ -15,13 +15,13 @@ import dark.api.al.coding.ILogicTask;
 import dark.api.al.coding.IProgram;
 import dark.api.al.coding.IRedirectTask;
 import dark.api.al.coding.ITask;
-import dark.assembly.common.AssemblyLine;
-import dark.assembly.common.armbot.Program;
-import dark.assembly.common.armbot.command.TaskEnd;
-import dark.assembly.common.armbot.command.TaskGOTO;
-import dark.assembly.common.armbot.command.TaskGive;
-import dark.assembly.common.armbot.command.TaskIF;
-import dark.assembly.common.armbot.command.TaskStart;
+import dark.assembly.AssemblyLine;
+import dark.assembly.armbot.Program;
+import dark.assembly.armbot.command.TaskEnd;
+import dark.assembly.armbot.command.TaskGOTO;
+import dark.assembly.armbot.command.TaskGive;
+import dark.assembly.armbot.command.TaskIF;
+import dark.assembly.armbot.command.TaskStart;
 import dark.core.interfaces.IScroll;
 
 /** Not a gui itself but a component used to display task as a box inside of a gui
