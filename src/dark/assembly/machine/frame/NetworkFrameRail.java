@@ -9,7 +9,7 @@ import dark.core.prefab.tilenetwork.NetworkTileEntities;
 public class NetworkFrameRail extends NetworkTileEntities
 {
     /** Animation rotation of the frame wheels */
-    private float getRotation = 0;
+    public float rotation = 0;
 
     public NetworkFrameRail(INetworkPart... frames)
     {

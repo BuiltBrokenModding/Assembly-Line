@@ -3,14 +3,34 @@ package dark.assembly.machine.frame;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.io.ByteArrayDataInput;
+
+import cpw.mods.fml.common.network.Player;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.tile.IRotatable;
 import dark.api.parts.INetworkPart;
 import dark.api.parts.ITileNetwork;
+import dark.core.common.DarkMain;
+import dark.core.interfaces.IBlockActivated;
+import dark.core.network.ISimplePacketReceiver;
+import dark.core.network.PacketHandler;
 
-public class TileEntityFrame extends TileEntity implements INetworkPart, IRotatable
+/** A non-updating tileEntity that represents the logic behind the frame. It contains rotation and
+ * connection information. As well provides a way for a tile network to be created to provide a
+ * uniform existence between all frame blocks in the rail
+ *
+ * @author DarkGuardsman */
+public class TileEntityFrame extends TileEntity implements INetworkPart, IRotatable, ISimplePacketReceiver, IBlockActivated
 {
     /** Do we have blocks connected to the side */
     private boolean[] hasConnectionSide = new boolean[6];
@@ -20,6 +40,53 @@ public class TileEntityFrame extends TileEntity implements INetworkPart, IRotata
 
     private NetworkFrameRail network;
 
+    @SideOnly(Side.CLIENT)
+    private float renderRotation = 0;
+
+    /** Adds a connection side. Connections are items that link a block to the rail. This way the
+     * rail knows to move the block when it moves */
+    public void addConnectorSide(ForgeDirection side)
+    {
+        this.hasConnectionSide[side.ordinal()] = true;
+    }
+
+    /** Removes a connection side */
+    public void removeConnectionSide(ForgeDirection side)
+    {
+        this.hasConnectionSide[side.ordinal()] = true;
+    }
+
+    /** Do we have a connection on the side */
+    public boolean hasConnectionSide(ForgeDirection side)
+    {
+        return this.hasConnectionSide[side.ordinal()];
+    }
+
+    /** Called from the block when the player right clicks with a connector item */
+    public boolean attachConnection(ForgeDirection side)
+    {
+        if (!hasConnectionSide(side))
+        {
+            this.addConnectorSide(side);
+            return this.hasConnectionSide(side);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onActivated(EntityPlayer entityPlayer)
+    {
+        if (entityPlayer != null && entityPlayer.getHeldItem() != null)
+        {
+            //TODO check for connector item then call attachConnection
+            //If connection call returns true remove item from player inv
+        }
+        return false;
+    }
+
+    /* ***********************************************
+     * Tile Network Code
+     ************************************************/
     @Override
     public boolean canTileConnect(Connection type, ForgeDirection dir)
     {
@@ -42,7 +109,7 @@ public class TileEntityFrame extends TileEntity implements INetworkPart, IRotata
         if (ent instanceof TileEntityFrame && (this.getFace == ((TileEntityFrame) ent).getDirection() || this.getFace.getOpposite() == ((TileEntityFrame) ent).getDirection()))
         {
             this.tileConnections.add(ent);
-            if(((INetworkPart) ent).getTileNetwork() != this.getTileNetwork())
+            if (((INetworkPart) ent).getTileNetwork() != this.getTileNetwork())
             {
                 this.getTileNetwork().mergeNetwork(((INetworkPart) ent).getTileNetwork(), this);
             }
@@ -50,7 +117,7 @@ public class TileEntityFrame extends TileEntity implements INetworkPart, IRotata
         if (ent2 instanceof TileEntityFrame && (this.getFace == ((TileEntityFrame) ent2).getDirection() || this.getFace.getOpposite() == ((TileEntityFrame) ent2).getDirection()))
         {
             this.tileConnections.add(ent2);
-            if(((INetworkPart) ent2).getTileNetwork() != this.getTileNetwork())
+            if (((INetworkPart) ent2).getTileNetwork() != this.getTileNetwork())
             {
                 this.getTileNetwork().mergeNetwork(((INetworkPart) ent2).getTileNetwork(), this);
             }
@@ -76,6 +143,10 @@ public class TileEntityFrame extends TileEntity implements INetworkPart, IRotata
         }
     }
 
+    /* ***********************************************
+     * Rotation code
+     ************************************************/
+
     @Override
     public ForgeDirection getDirection()
     {
@@ -86,6 +157,55 @@ public class TileEntityFrame extends TileEntity implements INetworkPart, IRotata
     public void setDirection(ForgeDirection direection)
     {
         this.getFace = direection;
+    }
+
+    /* ***********************************************
+     * Load/Save/Packet code
+     ************************************************/
+    @Override
+    public void readFromNBT(NBTTagCompound nbt)
+    {
+        super.readFromNBT(nbt);
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt)
+    {
+        super.writeToNBT(nbt);
+    }
+
+    @Override
+    public Packet getDescriptionPacket()
+    {
+        return PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, "Desc", this.getTileNetwork().rotation, (byte) this.getFace.ordinal());
+    }
+
+    @Override
+    public boolean simplePacket(String id, ByteArrayDataInput data, Player player)
+    {
+        if (this.worldObj.isRemote)
+        {
+            if (id.equalsIgnoreCase("Desc"))
+            {
+                this.renderRotation = data.readFloat();
+                this.getFace = ForgeDirection.getOrientation(data.readByte());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean canUpdate()
+    {
+        return false;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public AxisAlignedBB getRenderBoundingBox()
+    {
+        return AxisAlignedBB.getAABBPool().getAABB(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
     }
 
 }
