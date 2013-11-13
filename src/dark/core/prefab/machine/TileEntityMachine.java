@@ -198,7 +198,7 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
         {
             NBTTagCompound tag = new NBTTagCompound();
             this.writeToNBT(tag);
-            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getPacket(this.getChannel(), this, SimplePacketTypes.NBT.name, tag), worldObj, new Vector3(this), 64);
+            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(this.getChannel(), this, SimplePacketTypes.NBT.name, tag), worldObj, new Vector3(this), 64);
         }
     }
 
@@ -207,7 +207,7 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
     {
         if (!this.worldObj.isRemote)
         {
-            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getPacket(this.getChannel(), this, SimplePacketTypes.RUNNING.name, this.functioning), worldObj, new Vector3(this), 64);
+            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(this.getChannel(), this, SimplePacketTypes.RUNNING.name, this.functioning), worldObj, new Vector3(this), 64);
         }
     }
 
@@ -236,7 +236,7 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketHandler.instance().getPacket(this.getChannel(), this, SimplePacketTypes.RUNNING.name, this.functioning);
+        return PacketHandler.instance().getTilePacket(this.getChannel(), this, SimplePacketTypes.RUNNING.name, this.functioning);
     }
 
     /** NetworkMod channel name */

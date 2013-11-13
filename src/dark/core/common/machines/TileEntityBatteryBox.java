@@ -55,7 +55,7 @@ public class TileEntityBatteryBox extends TileEntityEnergyMachine
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketHandler.instance().getPacket(this.getChannel(), this, "energy", this.getEnergyStored());
+        return PacketHandler.instance().getTilePacket(this.getChannel(), this, "energy", this.getEnergyStored());
     }
 
     @Override

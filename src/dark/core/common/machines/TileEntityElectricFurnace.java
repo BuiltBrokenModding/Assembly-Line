@@ -95,7 +95,7 @@ public class TileEntityElectricFurnace extends TileEntityEnergyMachine
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketHandler.instance().getPacket(this.getChannel(), this, "processTicks", this.processTicks);
+        return PacketHandler.instance().getTilePacket(this.getChannel(), this, "processTicks", this.processTicks);
     }
 
     @Override

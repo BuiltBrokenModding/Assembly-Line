@@ -105,7 +105,7 @@ public class TileEntityCoalGenerator extends TileEntityEnergyMachine
     {
         if (entity != null)
         {
-            PacketDispatcher.sendPacketToPlayer(PacketHandler.instance().getPacket(this.getChannel(), this, "gen", this.generateWatts, this.itemCookTime), (Player) entity);
+            PacketDispatcher.sendPacketToPlayer(PacketHandler.instance().getTilePacket(this.getChannel(), this, "gen", this.generateWatts, this.itemCookTime), (Player) entity);
         }
     }
 

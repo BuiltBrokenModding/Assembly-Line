@@ -178,7 +178,7 @@ public class PacketHandler implements IPacketHandler, IPacketReceiver
      * 
      * @return */
     @SuppressWarnings("resource")
-    public Packet getPacket(String channelName, TileEntity sender, Object... sendData)
+    public Packet getTilePacket(String channelName, TileEntity sender, Object... sendData)
     {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         DataOutputStream data = new DataOutputStream(bytes);

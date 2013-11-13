@@ -22,13 +22,13 @@ public interface IDamageableTile extends IBlockActivated
     public boolean isAlive();
 
     /** Current health of the tile */
-    public float health();
+    public float getDamage();
 
     /** Sets the tiles heath
      * 
      * @param health - amount hit points
      * @param increase - increase instead of replace */
-    public void setHealth(float health);
+    public void setDamage(float health);
 
     /** Max hit points of the object */
     public float getMaxHealth();

@@ -71,7 +71,7 @@ public class TileEntityGasBlock extends TileEntity implements ISimplePacketRecei
     {
         if (this.stack != null)
         {
-            return PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, "Desc", this.stack.writeToNBT(new NBTTagCompound()));
+            return PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, "Desc", this.stack.writeToNBT(new NBTTagCompound()));
         }
         return null;
     }

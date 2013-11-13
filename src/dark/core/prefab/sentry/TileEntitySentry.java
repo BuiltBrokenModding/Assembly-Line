@@ -1,13 +1,15 @@
 package dark.core.prefab.sentry;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
+import com.google.common.io.ByteArrayDataInput;
 
-import net.minecraft.entity.Entity;
+import cpw.mods.fml.common.network.Player;
+
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -15,9 +17,13 @@ import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import dark.api.ISentryGun;
+import dark.core.common.DarkMain;
 import dark.core.helpers.MathHelper;
+import dark.core.helpers.RayTraceHelper;
+import dark.core.network.PacketHandler;
 import dark.core.prefab.EntityTileDamage;
 import dark.core.prefab.machine.TileEntityMachine;
+import dark.core.prefab.machine.TileEntityMachine.SimplePacketTypes;
 
 /** Prefab tileEntity for creating senty guns that can be of type aimed, mounted, or automated.
  * Contains most of the code for a sentry gun to operate short of aiming and operating logic. This
@@ -36,7 +42,7 @@ public abstract class TileEntitySentry extends TileEntityMachine implements ISen
     private float damage = 0.0f;
     private final float maxDamage;
 
-    private Vector3 rotation = new Vector3(), newRotation = new Vector3(), prevRotation = new Vector3();
+    private Vector3 rotation = new Vector3(), targetRotation = new Vector3(), prevRotation = new Vector3();
     protected float roationSpeed = 10f, minPitch = -30, maxPitch = 30, minYaw = -180, maxYaw = 180, size = 1.0f;
 
     public TileEntitySentry(float maxDamage)
@@ -98,15 +104,15 @@ public abstract class TileEntitySentry extends TileEntityMachine implements ISen
     public void updateRotation()
     {
         this.prevRotation = this.getRotation();
-        this.rotation.x = MathHelper.clamp((float) MathHelper.updateRotation(this.rotation.x, this.newRotation.x, this.roationSpeed), this.minPitch, this.maxPitch);
-        this.rotation.y = MathHelper.clamp((float) MathHelper.updateRotation(this.rotation.y, this.newRotation.y, this.roationSpeed), this.minYaw, this.maxYaw);
+        this.rotation.x = MathHelper.clamp((float) MathHelper.updateRotation(this.rotation.x, this.targetRotation.x, this.roationSpeed), this.minPitch, this.maxPitch);
+        this.rotation.y = MathHelper.clamp((float) MathHelper.updateRotation(this.rotation.y, this.targetRotation.y, this.roationSpeed), this.minYaw, this.maxYaw);
     }
 
     @Override
     public Vector3 getLook()
     {
-        // TODO Auto-generated method stub
-        return null;
+        //TODO store this value so a new vector is not created each call
+        return new Vector3(RayTraceHelper.getLook(this.worldObj, this.getRotation().floatX(), this.getRotation().floatY(), this.size));
     }
 
     @Override
@@ -122,13 +128,13 @@ public abstract class TileEntitySentry extends TileEntityMachine implements ISen
     @Override
     public void updateRotation(float pitch, float yaw, float roll)
     {
-        if (this.newRotation == null)
+        if (this.targetRotation == null)
         {
-            this.newRotation = this.getRotation();
+            this.targetRotation = this.getRotation();
         }
-        this.newRotation.x += pitch;
-        this.newRotation.y += yaw;
-        this.newRotation.z += roll;
+        this.targetRotation.x += pitch;
+        this.targetRotation.y += yaw;
+        this.targetRotation.z += roll;
     }
 
     @Override
@@ -146,7 +152,31 @@ public abstract class TileEntitySentry extends TileEntityMachine implements ISen
     @Override
     public boolean onDamageTaken(DamageSource source, float ammount)
     {
-        // TODO Auto-generated method stub
+        if (source != null && ammount > 0)
+        {
+            if (source.equals(DamageSource.onFire))
+            {
+                //TODO cause heat damage slowly but not right away
+                //TODO check for heat sources around the sentry
+                //TODO mess with the sentries abilities when over heated
+                return false;
+            }
+            else
+            {
+                this.setDamage(this.getDamage() - ammount);
+
+                if (this.getDamage() <= 0)
+                {
+                    this.isAlive = false;
+                    if (this.entitySentry != null)
+                    {
+                        this.entitySentry.setDead();
+                    }
+                    this.entitySentry = null;
+                }
+                return true;
+            }
+        }
         return false;
     }
 
@@ -157,13 +187,13 @@ public abstract class TileEntitySentry extends TileEntityMachine implements ISen
     }
 
     @Override
-    public float health()
+    public float getDamage()
     {
         return this.damage;
     }
 
     @Override
-    public void setHealth(float health)
+    public void setDamage(float health)
     {
         this.damage = health;
     }
@@ -171,7 +201,6 @@ public abstract class TileEntitySentry extends TileEntityMachine implements ISen
     @Override
     public float getMaxHealth()
     {
-
         return this.maxDamage;
     }
 
@@ -223,6 +252,73 @@ public abstract class TileEntitySentry extends TileEntityMachine implements ISen
     public boolean keyTyped(EntityPlayer player, int keycode)
     {
         // TODO Auto-generated method stub
+        return false;
+    }
+
+    /* ******************************************************
+     *  Save/Load/PacketHandling
+     * ****************************************************** */
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt)
+    {
+        super.writeToNBT(nbt);
+        if (this.getRotation() != null)
+        {
+            nbt.setFloat("pitch", this.getRotation().floatX());
+            nbt.setFloat("yaw", this.getRotation().floatY());
+            nbt.setFloat("roll", this.getRotation().floatZ());
+        }
+        if (this.targetRotation != null)
+        {
+            nbt.setFloat("npitch", this.targetRotation.floatX());
+            nbt.setFloat("nyaw", this.targetRotation.floatY());
+            nbt.setFloat("nroll", this.targetRotation.floatZ());
+        }
+        nbt.setFloat("damage", this.getDamage());
+        nbt.setByte("mountSide", (byte) this.mountingSide.ordinal());
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbt)
+    {
+        super.readFromNBT(nbt);
+        this.getRotation().x = nbt.getFloat("pitch");
+        this.getRotation().y = nbt.getFloat("yaw");
+        this.getRotation().z = nbt.getFloat("roll");
+        this.targetRotation = new Vector3();
+        this.targetRotation.x = nbt.getFloat("pitch");
+        this.targetRotation.y = nbt.getFloat("yaw");
+        this.targetRotation.z = nbt.getFloat("roll");
+        this.setDamage(nbt.getFloat("damage"));
+        this.mountingSide = ForgeDirection.getOrientation(nbt.getByte("mountSide"));
+    }
+
+    @Override
+    public Packet getDescriptionPacket()
+    {
+        return PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, "Desc", this.isRunning, this.rotation);
+    }
+    
+    @Override
+    public boolean simplePacket(String id, ByteArrayDataInput dis, Player player)
+    {
+        try
+        {
+            if (this.worldObj.isRemote && !super.simplePacket(id, dis, player))
+            {
+                if (id.equalsIgnoreCase("Desc"))
+                {
+                    this.functioning = dis.readBoolean();
+                    this.rotation = PacketHandler.readVector3(dis);
+                    return true;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         return false;
     }
 }

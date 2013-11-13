@@ -54,7 +54,7 @@ public class TileEntityMulti extends TileEntity implements IPacketReceiver
                 this.channel = ((BlockMulti) this.getBlockType()).channel;
             }
 
-            return PacketHandler.instance().getPacket(this.channel, this, this.mainBlockPosition.intX(), this.mainBlockPosition.intY(), this.mainBlockPosition.intZ());
+            return PacketHandler.instance().getTilePacket(this.channel, this, this.mainBlockPosition.intX(), this.mainBlockPosition.intY(), this.mainBlockPosition.intZ());
 
         }
 
