@@ -47,7 +47,7 @@ public class TileEntitySink extends TileEntityFluidStorage implements IPacketRec
         {
             stack = this.getTank().getFluid();
         }
-        return PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, stack.writeToNBT(new NBTTagCompound()));
+        return PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, stack.writeToNBT(new NBTTagCompound()));
     }
 
     @Override

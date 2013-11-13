@@ -428,7 +428,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
         data[7] = this.renderConnection[5];
         data[8] = this.getTank().getCapacity();
         data[9] = this.getTank().writeToNBT(new NBTTagCompound());
-        return PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, data);
+        return PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, data);
     }
 
     public void sendRenderUpdate()
@@ -442,14 +442,14 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
         data[5] = this.renderConnection[3];
         data[6] = this.renderConnection[4];
         data[7] = this.renderConnection[5];
-        PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, data));
+        PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, data));
     }
 
     public void sendTankUpdate(int index)
     {
         if (this.getTank() != null && index == 0)
         {
-            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getPacket(DarkMain.CHANNEL, this, "SingleTank", this.getTank().getCapacity(), this.getTank().writeToNBT(new NBTTagCompound())));
+            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, "SingleTank", this.getTank().getCapacity(), this.getTank().writeToNBT(new NBTTagCompound())));
         }
     }
 

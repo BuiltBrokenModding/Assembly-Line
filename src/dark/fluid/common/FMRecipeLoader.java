@@ -56,8 +56,7 @@ public class FMRecipeLoader extends RecipeLoader
     {
         GameRegistry.addRecipe(new ItemStack(blockPumpMachine, 1, 0), new Object[] { "IXI", "X X", "IXI", 'I', Item.ingotIron, 'X', Block.glass });
     }
-
-    @SuppressWarnings("deprecation")
+   
     public void registerPipes()
     {
         for (FluidPartsMaterial mat : FluidPartsMaterial.values())
