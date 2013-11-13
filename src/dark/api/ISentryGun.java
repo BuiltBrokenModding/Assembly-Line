@@ -1,11 +1,14 @@
 package dark.api;
 
 import net.minecraft.tileentity.TileEntity;
+import dark.core.interfaces.IBlockActivated;
+import dark.core.interfaces.IControlReceiver;
+import dark.core.interfaces.IDamageableTile;
 
 /** Applied to tile entities that are sentry guns
  * 
  * @author DarkGuardsman */
-public interface ISentryGun
+public interface ISentryGun extends IAimable, IDamageableTile, IControlReceiver, IBlockActivated
 {
     /** Gets the type of sentry */
     public SentryType getType();

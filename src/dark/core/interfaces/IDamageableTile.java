@@ -31,7 +31,7 @@ public interface IDamageableTile extends IBlockActivated
     public void setHealth(float health);
 
     /** Max hit points of the object */
-    public int getMaxHealth();
+    public float getMaxHealth();
 
     /** Can the potion be used on the Entity that is translating damage for the TileEntity */
     public boolean canApplyPotion(PotionEffect par1PotionEffect);

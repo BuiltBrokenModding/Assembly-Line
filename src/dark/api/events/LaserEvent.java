@@ -18,6 +18,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Cancelable;
 import net.minecraftforge.event.Event;
@@ -178,14 +179,6 @@ public class LaserEvent extends Event
                     world.setBlock(vec.intX(), vec.intY(), vec.intZ(), Block.lavaStill.blockID, 15, 3);
                     return;
                 }
-                else if (block.blockID == Block.tnt.blockID)
-                {
-                    world.setBlock(vec.intX(), vec.intY(), vec.intZ(), 0, 0, 3);
-                    EntityTNTPrimed entitytntprimed = new EntityTNTPrimed(world, (double) ((float) vec.intX() + 0.5F), (double) ((float) vec.intY() + 0.5F), (double) ((float) vec.intZ() + 0.5F), player instanceof EntityLivingBase ? ((EntityLivingBase) player) : null);
-                    entitytntprimed.fuse = world.rand.nextInt(entitytntprimed.fuse / 4) + entitytntprimed.fuse / 8;
-                    world.spawnEntityInWorld(entitytntprimed);
-                    return;
-                }
             }
             MinecraftForge.EVENT_BUS.post(new LaserEvent.LaserMeltBlockEvent(world, start, vec, player));
         }
@@ -214,14 +207,24 @@ public class LaserEvent extends Event
             try
             {
 
-                int id2 = vec.clone().modifyPositionFromSide(ForgeDirection.UP).getBlockID(world);
-                Block block2 = Block.blocksList[id2];
+                Block blockBellow = Block.blocksList[vec.clone().modifyPositionFromSide(ForgeDirection.DOWN).getBlockID(world)];
                 if (block != null)
                 {
+                    if (block.blockID == Block.tnt.blockID)
+                    {
+                        world.setBlock(vec.intX(), vec.intY(), vec.intZ(), 0, 0, 3);
+                        EntityTNTPrimed entitytntprimed = new EntityTNTPrimed(world, (double) ((float) vec.intX() + 0.5F), (double) ((float) vec.intY() + 0.5F), (double) ((float) vec.intZ() + 0.5F), player instanceof EntityLivingBase ? ((EntityLivingBase) player) : null);
+                        entitytntprimed.fuse = world.rand.nextInt(entitytntprimed.fuse / 4) + entitytntprimed.fuse / 8;
+                        world.spawnEntityInWorld(entitytntprimed);
+                        return;
+                    }
                     if (EnumTool.AX.effecticVsMaterials.contains(block.blockMaterial) || block.blockMaterial == Material.plants || block.blockMaterial == Material.pumpkin || block.blockMaterial == Material.cloth || block.blockMaterial == Material.web)
                     {
-                        //TODO turn tilled dirt into dirt
-                        world.setBlock(vec.intX(), vec.intY(), vec.intZ(), Block.fire.blockID, 0, 3);
+                        if (blockBellow != null && blockBellow.blockID == Block.tilledField.blockID && block instanceof IPlantable)
+                        {
+                            vec.clone().translate(new Vector3(0, -1, 0)).setBlock(world, Block.dirt.blockID, 0, 3);
+                        }
+                        vec.setBlock(world, Block.fire.blockID, 0, 3);
                         return;
                     }
                     List<ItemStack> items = block.getBlockDropped(world, vec.intX(), vec.intY(), vec.intZ(), meta, 1);
@@ -229,6 +232,7 @@ public class LaserEvent extends Event
                     {
                         items = new ArrayList<ItemStack>();
                     }
+                    //TODO have glass refract the laser causing it to hit random things
                     if (id == Block.glass.blockID)
                     {
                         items.add(new ItemStack(Block.glass, 1, meta));

@@ -24,18 +24,13 @@ import dark.core.common.DarkMain;
 @SideOnly(Side.CLIENT)
 public class FXBeam extends EntityFX
 {
-    double movX = 0.0D;
-    double movY = 0.0D;
-    double movZ = 0.0D;
+    double movX = 0.0D, movY = 0.0D, movZ = 0.0D;
 
     private float length = 0.0F;
 
-    private float rotYaw = 0.0F;
-    private float rotPitch = 0.0F;
-    private int rotSpeed = 20;
+    private float rotYaw = 0.0F, rotPitch = 0.0F, rotSpeed = 20;
 
-    private float prevYaw = 0.0F;
-    private float prevPitch = 0.0F;
+    private float prevYaw = 0.0F, prevPitch = 0.0F;
 
     private Vector3 endLocation = new Vector3();
 
@@ -77,7 +72,7 @@ public class FXBeam extends EntityFX
         float xd = (float) (this.posX - this.endLocation.x);
         float yd = (float) (this.posY - this.endLocation.y);
         float zd = (float) (this.posZ - this.endLocation.z);
-        this.length = (float) new Vector3(this).distanceTo(this.endLocation);
+        this.length = (float) new Vector3(this).distance(this.endLocation);
         double var7 = MathHelper.sqrt_double(xd * xd + zd * zd);
         this.rotYaw = ((float) (Math.atan2(xd, zd) * 180.0D / 3.141592653589793D));
         this.rotPitch = ((float) (Math.atan2(yd, var7) * 180.0D / 3.141592653589793D));
@@ -230,6 +225,6 @@ public class FXBeam extends EntityFX
         tessellator.startDrawingQuads();
         this.prevSize = size;
 
-        FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation("/particles.png"));
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation("textures/particle/particles.png"));
     }
 }
