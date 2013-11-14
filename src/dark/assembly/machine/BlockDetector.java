@@ -1,6 +1,11 @@
 package dark.assembly.machine;
 
+import java.util.List;
+
+import com.builtbroken.common.Pair;
+
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -14,6 +19,10 @@ import universalelectricity.core.UniversalElectricity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
+import dark.assembly.armbot.TileEntityArmbot;
+import dark.assembly.client.render.RenderArmbot;
+import dark.assembly.client.render.RenderDetector;
+import dark.assembly.client.render.RenderManipulator;
 import dark.assembly.imprinter.prefab.BlockImprintable;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
@@ -171,6 +180,13 @@ public class BlockDetector extends BlockImprintable
     public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int direction)
     {
         return isProvidingStrongPower(world, x, y, z, direction);
+    }
+    
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
+    {
+        list.add(new Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>(TileEntityDetector.class, new RenderDetector()));
     }
 
     @Override

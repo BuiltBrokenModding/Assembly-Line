@@ -51,23 +51,6 @@ public class ClientProxy extends CommonProxy
     public void init()
     {
         super.init();
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConveyorBelt.class, new RenderConveyorBelt());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRejector.class, new RenderRejector());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityManipulator.class, new RenderManipulator());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrate.class, new RenderCrate());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmbot.class, new RenderArmbot());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDetector.class, new RenderDetector());
-
-        if (ALRecipeLoader.processorMachine != null)
-        {
-            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityProcessor.class, new RenderProcessor());
-        }
-        if (ALRecipeLoader.blockAdvancedHopper != null)
-        {
-            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAdvancedHopper.class, new RenderAdvancedHopper());
-        }
-        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCraneController.class, new RenderCraneController());
-        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCraneRail.class, new RenderCraneFrame());
     }
 
     @Override

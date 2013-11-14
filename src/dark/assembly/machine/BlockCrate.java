@@ -2,8 +2,11 @@ package dark.assembly.machine;
 
 import java.util.List;
 
+import com.builtbroken.common.Pair;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,6 +20,8 @@ import universalelectricity.core.UniversalElectricity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
+import dark.assembly.client.render.RenderCrate;
+import dark.assembly.client.render.RenderManipulator;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 /** A block that allows the placement of mass amount of a specific item within it. It will be allowed
@@ -393,6 +398,13 @@ public class BlockCrate extends BlockAssembly
     public int damageDropped(int metadata)
     {
         return metadata;
+    }
+    
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
+    {
+        list.add(new Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>(TileEntityCrate.class, new RenderCrate()));
     }
 
     @Override

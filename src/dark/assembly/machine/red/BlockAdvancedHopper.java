@@ -8,6 +8,7 @@ import com.builtbroken.common.Pair;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,9 +22,11 @@ import net.minecraft.util.Facing;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
+import dark.assembly.client.render.RenderAdvancedHopper;
 import dark.core.common.DMCreativeTab;
 import dark.core.common.DarkMain;
 import dark.core.prefab.machine.BlockMachine;
@@ -99,6 +102,13 @@ public class BlockAdvancedHopper extends BlockMachine
     public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
     {
         list.add(new Pair<String, Class<? extends TileEntity>>("DMTileHopper", TileEntityAdvancedHopper.class));
+    }
+    
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
+    {
+        list.add(new Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>(TileEntityAdvancedHopper.class, new RenderAdvancedHopper()));
     }
 
     /** The type of render function that is called for this block */

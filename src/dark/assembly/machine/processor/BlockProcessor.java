@@ -3,6 +3,7 @@ package dark.assembly.machine.processor;
 import java.util.List;
 import java.util.Set;
 
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -16,6 +17,7 @@ import universalelectricity.core.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -23,6 +25,7 @@ import dark.api.reciepes.ProcessorType;
 import dark.assembly.AssemblyLine;
 import dark.assembly.CommonProxy;
 import dark.assembly.client.render.BlockRenderingHandler;
+import dark.assembly.client.render.RenderProcessor;
 import dark.core.common.DMCreativeTab;
 import dark.core.prefab.machine.BlockMachine;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
@@ -73,6 +76,13 @@ public class BlockProcessor extends BlockMachine
     public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
     {
         list.add(new Pair<String, Class<? extends TileEntity>>("ALOreProcessor", TileEntityProcessor.class));
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
+    {
+        list.add(new Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>(TileEntityProcessor.class, new RenderProcessor()));
     }
 
     @Override

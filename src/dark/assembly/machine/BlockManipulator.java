@@ -1,5 +1,10 @@
 package dark.assembly.machine;
 
+import java.util.List;
+
+import com.builtbroken.common.Pair;
+
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -9,6 +14,8 @@ import universalelectricity.core.UniversalElectricity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.client.render.BlockRenderingHandler;
+import dark.assembly.client.render.RenderManipulator;
+import dark.assembly.client.render.RenderRejector;
 import dark.assembly.imprinter.prefab.BlockImprintable;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
@@ -76,6 +83,13 @@ public class BlockManipulator extends BlockImprintable
         }
 
         return true;
+    }
+    
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
+    {
+        list.add(new Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>(TileEntityManipulator.class, new RenderManipulator()));
     }
 
     @Override
