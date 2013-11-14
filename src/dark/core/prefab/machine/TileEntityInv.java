@@ -2,7 +2,6 @@ package dark.core.prefab.machine;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ISidedInventory;
@@ -10,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import dark.api.access.AccessGroup;
 import dark.api.access.AccessUser;
@@ -21,19 +21,34 @@ import dark.core.prefab.terminal.TerminalCommandRegistry;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
 /** Prefab for simple object who only need basic inv support and nothing more
- * 
+ *
  * @author Darkguardsman */
 public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, ISidedInventory, ISpecialAccess
 {
     protected IInvBox inventory;
     protected boolean lockInv;
     protected int invSlots = 1;
+    private Vector3 thisPos;
     /** A list of user access data. */
     protected List<AccessGroup> groups = new ArrayList<AccessGroup>();
 
     public TileEntityInv()
     {
         TerminalCommandRegistry.loadNewGroupSet(this);
+    }
+
+    public void initiate()
+    {
+        thisPos = new Vector3(this);
+    }
+
+    public Vector3 getThisPos()
+    {
+        if (this.thisPos == null || this.thisPos.intX() != xCoord || this.thisPos.intY() != yCoord || this.thisPos.intZ() != zCoord)
+        {
+            this.thisPos = new Vector3(this);
+        }
+        return this.thisPos;
     }
 
     @Override

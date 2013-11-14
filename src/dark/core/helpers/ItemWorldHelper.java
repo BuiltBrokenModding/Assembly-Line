@@ -4,24 +4,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 
 public class ItemWorldHelper
 {
 
     /** gets all EntityItems in a location using a start and end point */
-    public static List<EntityItem> findAllItemIn(World world, Vector3 start, Vector3 end)
+    public static List<EntityItem> findAllItemsIn(World world, Vector3 start, Vector3 end)
     {
         return world.getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(start.x, start.y, start.z, end.x, end.y, end.z));
     }
 
+    public static List<EntityItem> getEntitiesInDirection(World world, Vector3 center, ForgeDirection dir)
+    {
+        List<EntityItem> list = world.selectEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getAABBPool().getAABB(center.x + dir.offsetX, center.y + dir.offsetY, center.z + dir.offsetZ, center.x + dir.offsetX + 1, center.y + dir.offsetY + 1, center.z + dir.offsetZ + 1), IEntitySelector.selectAnything);
+        return list.size() > 0 ? list : null;
+    }
+
     /** Gets all EntityItems in an area and sorts them by a list of itemStacks
-     * 
+     *
      * @param world - world being worked in
      * @param start - start point
      * @param end - end point
@@ -29,7 +37,7 @@ public class ItemWorldHelper
      * @return a list of EntityItem that match the itemStacks desired */
     public static List<EntityItem> findSelectItems(World world, Vector3 start, Vector3 end, List<ItemStack> disiredItems)
     {
-        List<EntityItem> entityItems = ItemWorldHelper.findAllItemIn(world, start, end);
+        List<EntityItem> entityItems = ItemWorldHelper.findAllItemsIn(world, start, end);
         return filterEntityItemsList(entityItems, disiredItems);
     }
 
@@ -68,7 +76,7 @@ public class ItemWorldHelper
     }
 
     /** filter a list of itemStack to another list of itemStacks
-     * 
+     *
      * @param totalItems - full list of items being filtered
      * @param desiredItems - list the of item that are being filtered too
      * @return a list of item from the original that are wanted */
@@ -91,7 +99,7 @@ public class ItemWorldHelper
     }
 
     /** grabs all the items that the block can drop then pass them onto dropBlockAsItem_do
-     * 
+     *
      * @param world
      * @param x
      * @param y

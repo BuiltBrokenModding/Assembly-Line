@@ -7,6 +7,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
@@ -109,6 +111,17 @@ public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
     {
         super.breakBlock(world, x, y, z, par5, par6);
         world.notifyBlockChange(x, y, z, world.getBlockId(x, y, z));
+    }
+    
+    @Override
+    public int getComparatorInputOverride(World world, int x, int y, int z, int side)
+    {
+        TileEntity entity = world.getBlockTileEntity(x, y, z);
+        if (entity instanceof IInventory)
+        {
+            return Container.calcRedstoneFromInventory((IInventory) entity);
+        }
+        return 0;
     }
 
     @Override
