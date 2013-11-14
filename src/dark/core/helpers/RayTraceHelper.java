@@ -74,8 +74,8 @@ public class RayTraceHelper
 
     public static MovingObjectPosition raytraceEntities(World world, Vec3 start, Vec3 end, boolean collisionFlag, Entity exclude)
     {
-
-        AxisAlignedBB boxToScan = AxisAlignedBB.getBoundingBox(start.xCoord, start.zCoord, start.yCoord, end.xCoord, end.yCoord, end.zCoord);
+        double distance = start.distanceTo(end);
+        AxisAlignedBB boxToScan = AxisAlignedBB.getBoundingBox(start.xCoord, start.zCoord, start.yCoord, start.xCoord + 1, start.zCoord + 1, start.yCoord + 1).expand(distance, distance, distance);
         MovingObjectPosition pickedEntity = null;
         List<Entity> entities;
         if (exclude == null)
@@ -116,13 +116,13 @@ public class RayTraceHelper
                     }
                     else
                     {
-                        double distance = start.distanceTo(hitMOP.hitVec);
+                        double d= start.distanceTo(hitMOP.hitVec);
 
-                        if (distance < closestEntity || closestEntity == 0.0D)
+                        if (d < closestEntity || closestEntity == 0.0D)
                         {
                             pickedEntity = new MovingObjectPosition(entityHit);
                             pickedEntity.hitVec = hitMOP.hitVec;
-                            closestEntity = distance;
+                            closestEntity = d;
                         }
                     }
                 }
@@ -170,10 +170,32 @@ public class RayTraceHelper
         return center.clone().translate(new Vector3(look).scale(reachDistance));
     }
 
+    /** Does a ray trace from the starting point out X distance using two angles to adjust were the
+     * end point is
+     * 
+     * @param world - world to do the ray trace in
+     * @param start - starting point clear of any collisions from its caster
+     * @param yaw - caster's yaw
+     * @param pitch - caster's pitch
+     * @param reachDistance - distance to trace
+     * @param collisionFlag
+     * @return */
     public static MovingObjectPosition ray_trace_do(World world, Vec3 start, float yaw, float pitch, double reachDistance, boolean collisionFlag)
     {
 
         Vec3 end = getPosFromRotation(world, new Vector3(start), reachDistance, yaw, pitch).toVec3();
+        return ray_trace_do(world, start, end, collisionFlag);
+    }
+
+    /** Does a ray trace from start to end vector
+     * 
+     * @param world - world to do the ray trace in
+     * @param start - starting point clear of any collisions from its caster
+     * @param end - end point
+     * @param collisionFlag
+     * @return */
+    public static MovingObjectPosition ray_trace_do(World world, Vec3 start, Vec3 end, boolean collisionFlag)
+    {
         MovingObjectPosition hitBlock = raytraceBlocks(world, start, end, collisionFlag);
         MovingObjectPosition hitEntity = raytraceEntities(world, start, end, collisionFlag, null);
         if (hitEntity == null)
@@ -197,11 +219,20 @@ public class RayTraceHelper
         }
     }
 
-    public static MovingObjectPosition ray_trace_do(World world, Entity entity, Vec3 e, double reachDistance, boolean collisionFlag)
+    /** Does a ray trace from an entities look angle out to a set distance from the entity
+     * 
+     * @param entity - entity who's view angles will be used for finding the start and end points of
+     * the ray
+     * @param e - error(or adjustments) to add to it if this ray is being used for weapon
+     * calculations
+     * @param reachDistance - distance the ray will extend to
+     * @param collisionFlag
+     * @return */
+    public static MovingObjectPosition do_rayTraceFromEntity(Entity entity, Vec3 e, double reachDistance, boolean collisionFlag)
     {
 
-        MovingObjectPosition hitBlock = raytraceBlocks(world, entity, e, reachDistance, collisionFlag);
-        MovingObjectPosition hitEntity = raytraceEntities(world, entity, e, reachDistance, collisionFlag);
+        MovingObjectPosition hitBlock = raytraceBlocks(entity.worldObj, entity, e, reachDistance, collisionFlag);
+        MovingObjectPosition hitEntity = raytraceEntities(entity.worldObj, entity, e, reachDistance, collisionFlag);
         if (hitEntity == null)
         {
             return hitBlock;
