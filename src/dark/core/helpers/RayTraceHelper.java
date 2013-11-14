@@ -72,41 +72,40 @@ public class RayTraceHelper
         return pickedEntity;
     }
 
-    public static MovingObjectPosition raytraceEntities(World world, Vec3 start, Vec3 end, double distance, boolean collisionFlag, Entity exclude)
+    @SuppressWarnings("unchecked")
+    public static MovingObjectPosition raytraceEntities(World world, Vec3 start, Vec3 end, double range, boolean collisionFlag, Entity exclude)
     {
-        System.out.println("Starting entity ray trace");
-        System.out.println("--Distance = " + distance);
-        AxisAlignedBB boxToScan = AxisAlignedBB.getBoundingBox(start.xCoord, start.zCoord, start.yCoord, start.xCoord + 1, start.zCoord + 1, start.yCoord + 1).expand(distance, distance, distance);
-        MovingObjectPosition pickedEntity = null;
-        List<Entity> entities;
-        if (exclude == null)
+        AxisAlignedBB boxToScan = AxisAlignedBB.getBoundingBox(start.xCoord, start.yCoord, start.zCoord, end.xCoord, end.yCoord, end.zCoord);
+
+        List<Entity> entitiesHit = null;
+        if (exclude != null)
         {
-            entities = world.getEntitiesWithinAABB(Entity.class, boxToScan);
+            entitiesHit = world.getEntitiesWithinAABBExcludingEntity(exclude, boxToScan);
         }
         else
         {
-            entities = world.getEntitiesWithinAABBExcludingEntity(exclude, boxToScan);
+            entitiesHit = world.getEntitiesWithinAABB(Entity.class, boxToScan);
         }
-        double closestEntity = distance;
-        System.out.println("--Entities in box = " + (entities == null ? "null" : entities.size()));
+        MovingObjectPosition pickedEntity = null;
+        double closestEntity = range;
 
-        if (entities == null || entities.isEmpty())
+        if (entitiesHit == null || entitiesHit.isEmpty())
         {
             return null;
         }
-        for (Entity entityHit : entities)
+        for (Entity entityHit : entitiesHit)
         {
-            System.out.println("----NextEntity");
+            System.out.println("---NextEntity"+entityHit.toString());
             if (entityHit != null && entityHit.canBeCollidedWith() && entityHit.boundingBox != null)
             {
-                System.out.println("------CanCollideWith");
+                System.out.println("---canCollide");
                 float border = entityHit.getCollisionBorderSize();
                 AxisAlignedBB aabb = entityHit.boundingBox.expand(border, border, border);
                 MovingObjectPosition hitMOP = aabb.calculateIntercept(start, end);
 
                 if (hitMOP != null)
                 {
-                    System.out.println("------Is in intercept");
+                    System.out.println("---Hit");
                     if (aabb.isVecInside(start))
                     {
                         if (0.0D < closestEntity || closestEntity == 0.0D)
@@ -121,13 +120,13 @@ public class RayTraceHelper
                     }
                     else
                     {
-                        double d = start.distanceTo(hitMOP.hitVec);
+                        double distance = start.distanceTo(hitMOP.hitVec);
 
-                        if (d < closestEntity || closestEntity == 0.0D)
+                        if (distance < closestEntity || closestEntity == 0.0D)
                         {
                             pickedEntity = new MovingObjectPosition(entityHit);
                             pickedEntity.hitVec = hitMOP.hitVec;
-                            closestEntity = d;
+                            closestEntity = distance;
                         }
                     }
                 }
@@ -186,10 +185,10 @@ public class RayTraceHelper
      * @param end - end point
      * @param collisionFlag
      * @return */
-    public static MovingObjectPosition ray_trace_do(World world, Vec3 start, Vec3 end, double distance, boolean collisionFlag)
+    public static MovingObjectPosition ray_trace_do(World world, final Vec3 start, final Vec3 end, double range, boolean collisionFlag)
     {
         MovingObjectPosition hitBlock = raytraceBlocks(world, start, end, collisionFlag);
-        MovingObjectPosition hitEntity = raytraceEntities(world, start, end, distance, collisionFlag, null);
+        MovingObjectPosition hitEntity = raytraceEntities(world, start, end, range, collisionFlag, null);
         if (hitEntity == null)
         {
             return hitBlock;
