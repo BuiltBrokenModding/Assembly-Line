@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 
 public class RayTraceHelper
 {
-    public static MovingObjectPosition raytraceEntities(World world, Entity entity, Vec3 error, double reachDistance, boolean collisionFlag)
+    public static MovingObjectPosition raytraceEntities_fromAnEntity(World world, Entity entity, Vec3 error, double reachDistance, boolean collisionFlag)
     {
 
         MovingObjectPosition pickedEntity = null;
@@ -72,9 +72,10 @@ public class RayTraceHelper
         return pickedEntity;
     }
 
-    public static MovingObjectPosition raytraceEntities(World world, Vec3 start, Vec3 end, boolean collisionFlag, Entity exclude)
+    public static MovingObjectPosition raytraceEntities(World world, Vec3 start, Vec3 end, double distance, boolean collisionFlag, Entity exclude)
     {
-        double distance = start.distanceTo(end);
+        System.out.println("Starting entity ray trace");
+        System.out.println("--Distance = " + distance);
         AxisAlignedBB boxToScan = AxisAlignedBB.getBoundingBox(start.xCoord, start.zCoord, start.yCoord, start.xCoord + 1, start.zCoord + 1, start.yCoord + 1).expand(distance, distance, distance);
         MovingObjectPosition pickedEntity = null;
         List<Entity> entities;
@@ -86,7 +87,8 @@ public class RayTraceHelper
         {
             entities = world.getEntitiesWithinAABBExcludingEntity(exclude, boxToScan);
         }
-        double closestEntity = start.distanceTo(end);
+        double closestEntity = distance;
+        System.out.println("--Entities in box = " + (entities == null ? "null" : entities.size()));
 
         if (entities == null || entities.isEmpty())
         {
@@ -94,14 +96,17 @@ public class RayTraceHelper
         }
         for (Entity entityHit : entities)
         {
+            System.out.println("----NextEntity");
             if (entityHit != null && entityHit.canBeCollidedWith() && entityHit.boundingBox != null)
             {
+                System.out.println("------CanCollideWith");
                 float border = entityHit.getCollisionBorderSize();
                 AxisAlignedBB aabb = entityHit.boundingBox.expand(border, border, border);
                 MovingObjectPosition hitMOP = aabb.calculateIntercept(start, end);
 
                 if (hitMOP != null)
                 {
+                    System.out.println("------Is in intercept");
                     if (aabb.isVecInside(start))
                     {
                         if (0.0D < closestEntity || closestEntity == 0.0D)
@@ -116,7 +121,7 @@ public class RayTraceHelper
                     }
                     else
                     {
-                        double d= start.distanceTo(hitMOP.hitVec);
+                        double d = start.distanceTo(hitMOP.hitVec);
 
                         if (d < closestEntity || closestEntity == 0.0D)
                         {
@@ -131,7 +136,7 @@ public class RayTraceHelper
         return pickedEntity;
     }
 
-    public static MovingObjectPosition raytraceBlocks(World world, Entity entity, Vec3 error, double reachDistance, boolean collisionFlag)
+    public static MovingObjectPosition raytraceBlocks_fromAnEntity(World world, Entity entity, Vec3 error, double reachDistance, boolean collisionFlag)
     {
         Vec3 playerPosition = Vec3.createVectorHelper(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
         Vec3 playerLook = entity.getLookVec();
@@ -140,7 +145,7 @@ public class RayTraceHelper
         return raytraceBlocks(world, playerPosition, playerViewOffset, collisionFlag);
     }
 
-    public static MovingObjectPosition raytraceBlocks(World world, Entity entity, double reachDistance, boolean collisionFlag)
+    public static MovingObjectPosition raytraceBlocks_fromAnEntity(World world, Entity entity, double reachDistance, boolean collisionFlag)
     {
         Vec3 playerPosition = Vec3.createVectorHelper(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
         Vec3 playerLook = entity.getLookVec();
@@ -154,20 +159,9 @@ public class RayTraceHelper
         return world.rayTraceBlocks_do_do(start, end, collisionFlag, !collisionFlag);
     }
 
-    /** @param center - vector3 by which the spot rotates around
-     * @param spot - distance away from center as a vector
-     * @param yaw - yaw to rotate spot by
-     * @param pitch - pitch to rotate spot by */
-    public static Vector3 getPosFromRotation(World world, Vector3 center, Vector3 spot, float yaw, float pitch)
+    public static Vector3 getPosFromRotation(Vector3 center, double reachDistance, float yaw, float pitch)
     {
-        double reachDistance = center.distance(spot);
-        return getPosFromRotation(world, spot, reachDistance, pitch, pitch);
-    }
-
-    public static Vector3 getPosFromRotation(World world, Vector3 center, double reachDistance, float yaw, float pitch)
-    {
-        Vec3 look = getLook(world, yaw, pitch, 1.0f);
-        return center.clone().translate(new Vector3(look).scale(reachDistance));
+        return center.clone().translate(getLook(yaw, pitch, 1.0f).scale(reachDistance));
     }
 
     /** Does a ray trace from the starting point out X distance using two angles to adjust were the
@@ -182,9 +176,7 @@ public class RayTraceHelper
      * @return */
     public static MovingObjectPosition ray_trace_do(World world, Vec3 start, float yaw, float pitch, double reachDistance, boolean collisionFlag)
     {
-
-        Vec3 end = getPosFromRotation(world, new Vector3(start), reachDistance, yaw, pitch).toVec3();
-        return ray_trace_do(world, start, end, collisionFlag);
+        return ray_trace_do(world, start, getPosFromRotation(new Vector3(start), reachDistance, yaw, pitch).toVec3(), reachDistance, collisionFlag);
     }
 
     /** Does a ray trace from start to end vector
@@ -194,10 +186,10 @@ public class RayTraceHelper
      * @param end - end point
      * @param collisionFlag
      * @return */
-    public static MovingObjectPosition ray_trace_do(World world, Vec3 start, Vec3 end, boolean collisionFlag)
+    public static MovingObjectPosition ray_trace_do(World world, Vec3 start, Vec3 end, double distance, boolean collisionFlag)
     {
         MovingObjectPosition hitBlock = raytraceBlocks(world, start, end, collisionFlag);
-        MovingObjectPosition hitEntity = raytraceEntities(world, start, end, collisionFlag, null);
+        MovingObjectPosition hitEntity = raytraceEntities(world, start, end, distance, collisionFlag, null);
         if (hitEntity == null)
         {
             return hitBlock;
@@ -231,8 +223,8 @@ public class RayTraceHelper
     public static MovingObjectPosition do_rayTraceFromEntity(Entity entity, Vec3 e, double reachDistance, boolean collisionFlag)
     {
 
-        MovingObjectPosition hitBlock = raytraceBlocks(entity.worldObj, entity, e, reachDistance, collisionFlag);
-        MovingObjectPosition hitEntity = raytraceEntities(entity.worldObj, entity, e, reachDistance, collisionFlag);
+        MovingObjectPosition hitBlock = raytraceBlocks_fromAnEntity(entity.worldObj, entity, e, reachDistance, collisionFlag);
+        MovingObjectPosition hitEntity = raytraceEntities_fromAnEntity(entity.worldObj, entity, e, reachDistance, collisionFlag);
         if (hitEntity == null)
         {
             return hitBlock;
@@ -282,7 +274,7 @@ public class RayTraceHelper
         }
     }
 
-    public static Vec3 getLook(World world, float yaw, float pitch, float par1)
+    public static Vector3 getLook(float yaw, float pitch, float par1)
     {
         float f1, f2, f3, f4;
 
@@ -292,6 +284,6 @@ public class RayTraceHelper
         f4 = MathHelper.sin(-f2 * 0.017453292F - (float) Math.PI);
         float f5 = -MathHelper.cos(-f1 * 0.017453292F);
         float f6 = MathHelper.sin(-f1 * 0.017453292F);
-        return world.getWorldVec3Pool().getVecFromPool((f4 * f5), f6, (f3 * f5));
+        return new Vector3((f4 * f5), f6, (f3 * f5));
     }
 }

@@ -112,7 +112,7 @@ public abstract class TileEntitySentry extends TileEntityMachine implements ISen
     public Vector3 getLook()
     {
         //TODO store this value so a new vector is not created each call
-        return new Vector3(RayTraceHelper.getLook(this.worldObj, this.getRotation().floatX(), this.getRotation().floatY(), this.size));
+        return new Vector3(RayTraceHelper.getLook(this.getRotation().floatX(), this.getRotation().floatY(), this.size));
     }
 
     @Override
