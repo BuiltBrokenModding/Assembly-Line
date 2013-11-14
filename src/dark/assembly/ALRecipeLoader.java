@@ -21,10 +21,9 @@ public class ALRecipeLoader extends RecipeLoader
     public static Block blockDetector;
     public static Block blockRejector;
     public static Block blockArmbot;
-    public static Block blockCraneController;
-    public static Block blockCraneFrame;
     public static Block blockTurntable;
     public static Block processorMachine;
+    public static Block blockAdvancedHopper;
 
     public static Item itemImprint;
     public static Item itemDisk;

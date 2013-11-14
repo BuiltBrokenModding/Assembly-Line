@@ -9,6 +9,7 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.assembly.ALRecipeLoader;
 import dark.assembly.CommonProxy;
 import dark.assembly.armbot.TileEntityArmbot;
 import dark.assembly.client.gui.GuiEncoderCoder;
@@ -17,6 +18,7 @@ import dark.assembly.client.gui.GuiEncoderInventory;
 import dark.assembly.client.gui.GuiImprinter;
 import dark.assembly.client.gui.GuiProcessor;
 import dark.assembly.client.render.BlockRenderingHandler;
+import dark.assembly.client.render.RenderAdvancedHopper;
 import dark.assembly.client.render.RenderArmbot;
 import dark.assembly.client.render.RenderConveyorBelt;
 import dark.assembly.client.render.RenderCrate;
@@ -32,6 +34,7 @@ import dark.assembly.machine.TileEntityRejector;
 import dark.assembly.machine.belt.TileEntityConveyorBelt;
 import dark.assembly.machine.encoder.TileEntityEncoder;
 import dark.assembly.machine.processor.TileEntityProcessor;
+import dark.assembly.machine.red.TileEntityAdvancedHopper;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy
@@ -50,11 +53,19 @@ public class ClientProxy extends CommonProxy
         super.init();
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConveyorBelt.class, new RenderConveyorBelt());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRejector.class, new RenderRejector());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityProcessor.class, new RenderProcessor());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityManipulator.class, new RenderManipulator());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrate.class, new RenderCrate());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmbot.class, new RenderArmbot());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDetector.class, new RenderDetector());
+
+        if (ALRecipeLoader.processorMachine != null)
+        {
+            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityProcessor.class, new RenderProcessor());
+        }
+        if (ALRecipeLoader.blockAdvancedHopper != null)
+        {
+            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAdvancedHopper.class, new RenderAdvancedHopper());
+        }
         //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCraneController.class, new RenderCraneController());
         //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCraneRail.class, new RenderCraneFrame());
     }

@@ -45,6 +45,7 @@ import dark.assembly.machine.encoder.BlockEncoder;
 import dark.assembly.machine.encoder.ItemDisk;
 import dark.assembly.machine.encoder.TileEntityEncoder;
 import dark.assembly.machine.processor.BlockProcessor;
+import dark.assembly.machine.red.BlockAdvancedHopper;
 import dark.core.common.DMCreativeTab;
 import dark.core.common.DarkMain;
 import dark.core.prefab.ItemBlockHolder;
@@ -154,6 +155,7 @@ public class AssemblyLine extends ModPrefab
         ALRecipeLoader.blockArmbot = new BlockArmbot();
         ALRecipeLoader.blockTurntable = new BlockTurntable();
         ALRecipeLoader.processorMachine = ModObjectRegistry.createNewBlock("ALBlockProcessor", AssemblyLine.MOD_ID, BlockProcessor.class, ItemBlockHolder.class);
+        ALRecipeLoader.blockAdvancedHopper = ModObjectRegistry.createNewBlock("ALBlockHopper", AssemblyLine.MOD_ID, BlockAdvancedHopper.class, ItemBlockHolder.class);
 
         ALRecipeLoader.itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", ITEM_ID_PREFIX).getInt());
         ALRecipeLoader.itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", ITEM_ID_PREFIX + 1).getInt());

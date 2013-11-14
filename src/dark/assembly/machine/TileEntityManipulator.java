@@ -47,7 +47,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
             {
                 if (!this.isOutput)
                 {
-                    this.inject();
+                    this.enject();
                 }
                 else
                 {
@@ -60,7 +60,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
                     /** Finds the connected inventory and outputs the items upon a redstone pulse. */
                     if (this.isRedstonePowered)
                     {
-                        this.eject();
+                        this.inject();
                     }
                 }
             }
@@ -70,7 +70,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
     /** Find items going into the manipulator and input them into an inventory behind this
      * manipulator. */
     @Override
-    public void inject()
+    public void enject()
     {
         Vector3 inputPosition = new Vector3(this);
         /** output location up */
@@ -131,7 +131,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 
     /** Inject items */
     @Override
-    public void eject()
+    public void inject()
     {
         this.isRedstonePowered = false;
         /** input location up */

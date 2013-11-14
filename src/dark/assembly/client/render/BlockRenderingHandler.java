@@ -1,7 +1,10 @@
 package dark.assembly.client.render;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockHopper;
+import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
 
@@ -19,6 +22,7 @@ import dark.assembly.client.model.ModelCrusher;
 import dark.assembly.client.model.ModelGrinder;
 import dark.assembly.client.model.ModelManipulator;
 import dark.assembly.client.model.ModelRejectorPiston;
+import dark.assembly.machine.red.BlockAdvancedHopper;
 import dark.core.prefab.ModPrefab;
 
 @SideOnly(Side.CLIENT)
@@ -103,6 +107,10 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
     @Override
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
     {
+        if (block instanceof BlockAdvancedHopper)
+        {
+            return true;
+        }
         return false;
     }
 
