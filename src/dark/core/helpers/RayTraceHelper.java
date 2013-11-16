@@ -76,7 +76,8 @@ public class RayTraceHelper
     public static MovingObjectPosition raytraceEntities(World world, Vec3 start, Vec3 end, double range, boolean collisionFlag, Entity exclude)
     {
         AxisAlignedBB boxToScan = AxisAlignedBB.getBoundingBox(start.xCoord, start.yCoord, start.zCoord, end.xCoord, end.yCoord, end.zCoord);
-
+        System.out.println("Start: " + start.toString());
+        System.out.println("End:   " + end.toString());
         List<Entity> entitiesHit = null;
         if (exclude != null)
         {
@@ -95,7 +96,7 @@ public class RayTraceHelper
         }
         for (Entity entityHit : entitiesHit)
         {
-            System.out.println("---NextEntity"+entityHit.toString());
+            System.out.println("---NextEntity" + entityHit.toString());
             if (entityHit != null && entityHit.canBeCollidedWith() && entityHit.boundingBox != null)
             {
                 System.out.println("---canCollide");
@@ -158,24 +159,9 @@ public class RayTraceHelper
         return world.rayTraceBlocks_do_do(start, end, collisionFlag, !collisionFlag);
     }
 
-    public static Vector3 getPosFromRotation(Vector3 center, double reachDistance, float yaw, float pitch)
+    public static Vector3 getPosFromRotation(final Vector3 center, float reachDistance, float yaw, float pitch)
     {
-        return center.clone().translate(getLook(yaw, pitch, 1.0f).scale(reachDistance));
-    }
-
-    /** Does a ray trace from the starting point out X distance using two angles to adjust were the
-     * end point is
-     * 
-     * @param world - world to do the ray trace in
-     * @param start - starting point clear of any collisions from its caster
-     * @param yaw - caster's yaw
-     * @param pitch - caster's pitch
-     * @param reachDistance - distance to trace
-     * @param collisionFlag
-     * @return */
-    public static MovingObjectPosition ray_trace_do(World world, Vec3 start, float yaw, float pitch, double reachDistance, boolean collisionFlag)
-    {
-        return ray_trace_do(world, start, getPosFromRotation(new Vector3(start), reachDistance, yaw, pitch).toVec3(), reachDistance, collisionFlag);
+        return center.clone().translate(getLook(yaw, pitch, 1.0F).scale(reachDistance));
     }
 
     /** Does a ray trace from start to end vector
@@ -185,9 +171,9 @@ public class RayTraceHelper
      * @param end - end point
      * @param collisionFlag
      * @return */
-    public static MovingObjectPosition ray_trace_do(World world, final Vec3 start, final Vec3 end, double range, boolean collisionFlag)
+    public static MovingObjectPosition ray_trace_do(final World world, final Vec3 start, final Vec3 end, final float range, boolean collisionFlag)
     {
-        MovingObjectPosition hitBlock = raytraceBlocks(world, start, end, collisionFlag);
+        MovingObjectPosition hitBlock = raytraceBlocks(world, new Vector3(start).toVec3(), new Vector3(end).toVec3(), collisionFlag);
         MovingObjectPosition hitEntity = raytraceEntities(world, start, end, range, collisionFlag, null);
         if (hitEntity == null)
         {
@@ -273,16 +259,27 @@ public class RayTraceHelper
         }
     }
 
-    public static Vector3 getLook(float yaw, float pitch, float par1)
+    public static Vector3 getLook(float yaw, float pitch, float distance)
     {
         float f1, f2, f3, f4;
 
-        f1 = pitch * par1;
-        f2 = yaw * par1;
-        f3 = MathHelper.cos(-f2 * 0.017453292F - (float) Math.PI);
-        f4 = MathHelper.sin(-f2 * 0.017453292F - (float) Math.PI);
-        float f5 = -MathHelper.cos(-f1 * 0.017453292F);
-        float f6 = MathHelper.sin(-f1 * 0.017453292F);
-        return new Vector3((f4 * f5), f6, (f3 * f5));
+        if (distance == 1.0F)
+        {
+            f1 = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
+            f2 = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
+            f3 = -MathHelper.cos(-pitch * 0.017453292F);
+            f4 = MathHelper.sin(-pitch * 0.017453292F);
+            return new Vector3((f2 * f3), f4, (f1 * f3));
+        }
+        else
+        {
+            f1 = pitch * distance;
+            f2 = yaw * distance;
+            f3 = MathHelper.cos(-f2 * 0.017453292F - (float) Math.PI);
+            f4 = MathHelper.sin(-f2 * 0.017453292F - (float) Math.PI);
+            float f5 = -MathHelper.cos(-f1 * 0.017453292F);
+            float f6 = MathHelper.sin(-f1 * 0.017453292F);
+            return new Vector3((f4 * f5), f6, (f3 * f5));
+        }
     }
 }
