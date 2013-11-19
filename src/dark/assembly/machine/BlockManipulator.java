@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.assembly.CommonProxy;
 import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.client.render.RenderManipulator;
 import dark.assembly.client.render.RenderRejector;
@@ -20,14 +21,15 @@ import dark.assembly.imprinter.prefab.BlockImprintable;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 /** A block that manipulates item movement between inventories.
- * 
- * @author Calclavia */
+ *
+ * @author Calclavia, DarkGuardsman */
 public class BlockManipulator extends BlockImprintable
 {
     public BlockManipulator()
     {
         super(new BlockBuildData(BlockManipulator.class, "manipulator", UniversalElectricity.machine));
         this.setBlockBounds(0, 0, 0, 1, 0.29f, 1);
+        this.guiID = CommonProxy.GUI_MANIPULATOR;
     }
 
     @Override
@@ -84,7 +86,7 @@ public class BlockManipulator extends BlockImprintable
 
         return true;
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
