@@ -1,5 +1,6 @@
 package dark.assembly.client.gui;
 
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
@@ -25,7 +26,7 @@ public class GuiEncoderCoder extends GuiEncoderBase
     {
         if (taskListGui == null)
         {
-            taskListGui = new GuiTaskList();
+            taskListGui = new GuiTaskList((this.width - this.guiSize.intX()) / 2 + 25, (this.height - this.guiSize.intY()) / 2 + 30);
         }
         super.drawBackgroundLayer(x, y, var1);
         FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE_CODE_BACK);
@@ -35,7 +36,17 @@ public class GuiEncoderCoder extends GuiEncoderBase
         int containerWidth = (this.width - this.guiSize.intX()) / 2;
         int containerHeight = (this.height - this.guiSize.intY()) / 2;
         this.drawTexturedModalRect(containerWidth, containerHeight, 0, 0, this.guiSize.intX(), this.guiSize.intY());
-        taskListGui.drawConsole(this.mc, (this.width - this.guiSize.intX()) / 2 + 15, (this.height - this.guiSize.intY()) / 2 + 20);
+        taskListGui.drawConsole();
+    }
+
+    @Override
+    protected void mouseClicked(int par1, int par2, int par3)
+    {
+        super.mouseClicked(par1, par2, par3);
+        if (par3 == 0)
+        {
+           this.taskListGui.mousePressed(par1, par2);
+        }
     }
 
 }

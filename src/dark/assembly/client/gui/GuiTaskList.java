@@ -39,8 +39,13 @@ public class GuiTaskList extends Gui implements IScroll
     /** The string displayed on this control. */
     public String displayString;
 
-    public GuiTaskList()
+    int x, y;
+
+    public GuiTaskList(int x, int y)
     {
+        this.x = x;
+        this.y = y;
+
         program = new Program();
         program.setTaskAt(new Vector2(0, 0), new TaskGive());
         program.setTaskAt(new Vector2(0, 1), new TaskIF(new Vector2(0, 2), new Vector2(1, 1)));
@@ -98,7 +103,7 @@ public class GuiTaskList extends Gui implements IScroll
         return this.scroll;
     }
 
-    public void drawConsole(Minecraft minecraft, int x, int y)
+    public void drawConsole()
     {
         //Draw icons for task
         FMLClientHandler.instance().getClient().renderEngine.bindTexture(ITask.TaskType.TEXTURE);
@@ -121,15 +126,35 @@ public class GuiTaskList extends Gui implements IScroll
                     }
                     if (task != null && (!(task instanceof IRedirectTask) || task instanceof IRedirectTask && ((IRedirectTask) task).render()))
                     {
-                        this.drawTexturedModalRect(x + 10 + (20 * j), y + 10 + (20 * i), 20 * task.getType().vv, 20 * task.getType().uu, 20, 20);
+                        this.drawTexturedModalRect(x + (20 * j), y + (20 * i), 20 * task.getType().vv, 20 * task.getType().uu, 20, 20);
                     }
                     else
                     {
-                        this.drawTexturedModalRect(x + 10 + (20 * j), y + 10 + (20 * i), 0, 40, 20, 20);
+                        this.drawTexturedModalRect(x + (20 * j), y + (20 * i), 0, 40, 20, 20);
                     }
                 }
             }
 
+        }
+    }
+
+    public void mousePressed(int cx, int cz)
+    {
+        System.out.println("Player clicked at " + cx + "x " + cz + "z ");
+        if (cx >= this.x && cz >= this.y && cx < (this.x + (20 * 7) + 10) && cz < (this.y + (20 * 6) + 10))
+        {
+            int row = (cz / 20)-4;
+            int col = (cx / 20)-7;
+            System.out.println("Player clicked at " + row + "r " + col + "c ");
+            if (this.program != null)
+            {
+                ITask task = this.program.getTaskAt(new Vector2(col, row));
+                if (task != null)
+                {
+                    //TODO open editing options
+                    System.out.println("Player tried to edit task - " + task.getMethodName());
+                }
+            }
         }
     }
 }
