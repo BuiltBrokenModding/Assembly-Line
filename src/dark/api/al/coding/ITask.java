@@ -4,8 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import universalelectricity.core.vector.Vector2;
 import dark.api.al.coding.args.ArgumentData;
+import dark.core.common.DarkMain;
 
 /** @author DarkGuardsman */
 public interface ITask extends Cloneable
@@ -70,17 +72,22 @@ public interface ITask extends Cloneable
     /** Used mainly for display purposes in the encoder */
     public static enum TaskType
     {
-        DATA("Data"),
-        DEFINEDPROCESS("Defined Process"),
-        PROCESS("Process"),
-        DECISION("Decision"),
-        START("Start"),
-        END("End");
-        public String name;
+        DATA("Data", 4, 2),
+        DEFINEDPROCESS("Defined Process", 2, 1),
+        PROCESS("Process", 2, 2),
+        DECISION("Decision", 2, 3),
+        START("Start", 3, 5),
+        END("End", 3, 5);
+        public final String name;
+        public final int uu, vv;
 
-        private TaskType(String name)
+        public static final ResourceLocation TEXTURE = new ResourceLocation("dark", "textures/gui/gui_coder_icons.png");
+
+        private TaskType(String name, int uu, int vv)
         {
             this.name = name;
+            this.uu = uu;
+            this.vv = vv;
         }
     }
 }

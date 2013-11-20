@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.client.FMLClientHandler;
 import dark.assembly.AssemblyLine;
 import dark.assembly.machine.encoder.TileEntityEncoder;
+import dark.core.client.gui.GuiMachineBase;
 
 public class GuiEncoderCoder extends GuiEncoderBase
 {
