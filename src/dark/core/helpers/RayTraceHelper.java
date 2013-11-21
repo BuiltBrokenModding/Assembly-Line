@@ -75,9 +75,7 @@ public class RayTraceHelper
     @SuppressWarnings("unchecked")
     public static MovingObjectPosition raytraceEntities(World world, Vec3 start, Vec3 end, double range, boolean collisionFlag, Entity exclude)
     {
-        AxisAlignedBB boxToScan = AxisAlignedBB.getBoundingBox(start.xCoord, start.yCoord, start.zCoord, end.xCoord, end.yCoord, end.zCoord);
-        System.out.println("Start: " + start.toString());
-        System.out.println("End:   " + end.toString());
+        AxisAlignedBB boxToScan = AxisAlignedBB.getBoundingBox(start.xCoord, start.yCoord, start.zCoord, end.xCoord, end.yCoord, end.zCoord);       
         List<Entity> entitiesHit = null;
         if (exclude != null)
         {
@@ -95,18 +93,15 @@ public class RayTraceHelper
             return null;
         }
         for (Entity entityHit : entitiesHit)
-        {
-            System.out.println("---NextEntity" + entityHit.toString());
+        {            
             if (entityHit != null && entityHit.canBeCollidedWith() && entityHit.boundingBox != null)
-            {
-                System.out.println("---canCollide");
+            {               
                 float border = entityHit.getCollisionBorderSize();
                 AxisAlignedBB aabb = entityHit.boundingBox.expand(border, border, border);
                 MovingObjectPosition hitMOP = aabb.calculateIntercept(start, end);
 
                 if (hitMOP != null)
                 {
-                    System.out.println("---Hit");
                     if (aabb.isVecInside(start))
                     {
                         if (0.0D < closestEntity || closestEntity == 0.0D)

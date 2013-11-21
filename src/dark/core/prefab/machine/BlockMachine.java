@@ -30,12 +30,13 @@ import dark.core.registration.ModObjectRegistry.BlockBuildData;
 /** Basic TileEntity Container class designed to be used by generic machines. It is suggested that
  * each mod using this create there own basic block extending this to reduce need to use build data
  * per block.
- * 
+ *
  * @author Darkguardsman */
 public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
 {
 
     public boolean zeroAnimation, zeroSound, zeroRendering;
+    public int guiID = -1;
 
     public BlockMachine(BlockBuildData data)
     {
@@ -112,7 +113,7 @@ public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
         super.breakBlock(world, x, y, z, par5, par6);
         world.notifyBlockChange(x, y, z, world.getBlockId(x, y, z));
     }
-    
+
     @Override
     public int getComparatorInputOverride(World world, int x, int y, int z, int side)
     {
@@ -154,14 +155,13 @@ public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
     {
         this.zeroAnimation = config.get("Effects--Not_Supported_By_All_Blocks", "disableAnimation", false, "Turns off animations of the block").getBoolean(false);
         this.zeroRendering = config.get("Effects--Not_Supported_By_All_Blocks", "disableRender", false, "Turns off the block render replacing it with a normal block").getBoolean(false);
-        this.zeroSound = config.get("Effects--Not_Supported_By_All_Blocks", "disableSound", false, "Turns of sound of the block for any or its actions").getBoolean(false);
+        this.zeroSound = config.get("Effects--Not_Supported_By_All_Blocks", "disableSound", false, "Turns of sound of the block for any of its actions").getBoolean(false);
     }
 
     @Override
     public void loadOreNames()
     {
         OreDictionary.registerOre(this.getUnlocalizedName().replace("tile.", ""), this);
-
     }
 
     @Override
@@ -171,6 +171,10 @@ public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
         if (entity instanceof IBlockActivated && ((IBlockActivated) entity).onActivated(entityPlayer))
         {
             return true;
+        }
+        if (!world.isRemote && guiID != -1)
+        {
+            entityPlayer.openGui(DarkMain.getInstance(), guiID, world, x, y, z);
         }
         return super.onBlockActivated(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ);
     }

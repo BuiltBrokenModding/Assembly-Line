@@ -1,26 +1,24 @@
 package dark.core.client.gui;
 
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
-import dark.core.common.DarkMain;
-import dark.core.prefab.invgui.GuiBase;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.prefab.invgui.GuiButtonImage;
 import dark.core.prefab.machine.TileEntityMachine;
 
-/** To be used with all machine that have a gui to allow generic settings and feature all all devices
- *
- * @author DarkGuardsman */
-public class GuiMachineBase extends GuiBase
+@SideOnly(Side.CLIENT)
+public abstract class GuiMachineContainer extends GuiContainer
 {
-
-    public static final ResourceLocation TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, DarkMain.GUI_DIRECTORY + "gui_base_machine.png");
-
     protected static final int MAX_BUTTON_ID = 3;
     protected TileEntityMachine tileEntity;
     protected EntityPlayer entityPlayer;
@@ -28,11 +26,12 @@ public class GuiMachineBase extends GuiBase
     protected int guiID = -1, guiID2 = -1, guiID3 = -1;
     protected String invName = "Home", invName2 = "2", invName3 = "3";
 
-    public GuiMachineBase(Object mod, EntityPlayer player, TileEntityMachine tileEntity)
+    public GuiMachineContainer(Object mod, Container container, InventoryPlayer inventoryPlayer, TileEntityMachine tileEntity)
     {
+        super(container);
         this.tileEntity = tileEntity;
-        this.entityPlayer = player;
-        this.guiSize.y = 380 / 2;
+        this.entityPlayer = inventoryPlayer.player;
+        this.ySize = 380 / 2;
         this.mod = mod;
     }
 
@@ -42,16 +41,12 @@ public class GuiMachineBase extends GuiBase
         super.initGui();
         this.buttonList.clear();
 
-        // Inventory, Should be the Gui the machine opens to unless it has no inventory
         if (guiID != -1)
-            this.buttonList.add(new GuiButtonImage(0, (this.width - this.guiSize.intX()) / 2 - 22, (this.height - this.guiSize.intY()) / 2 + 0, 3));
-
-        // Machine settings
+            this.buttonList.add(new GuiButtonImage(0, (this.width - this.xSize) / 2 - 22, (this.height - this.ySize) / 2 + 0, 3));
         if (guiID2 != -1)
-            this.buttonList.add(new GuiButtonImage(1, (this.width - this.guiSize.intX()) / 2 - 22, (this.height - this.guiSize.intY()) / 2 + 22, 0));
-
+            this.buttonList.add(new GuiButtonImage(1, (this.width - this.xSize) / 2 - 22, (this.height - this.ySize) / 2 + 22, 0));
         if (guiID3 != -1)
-            this.buttonList.add(new GuiButtonImage(2, (this.width - this.guiSize.intX()) / 2 - 22, (this.height - this.guiSize.intY()) / 2 + 44, 2));
+            this.buttonList.add(new GuiButtonImage(2, (this.width - this.xSize) / 2 - 22, (this.height - this.ySize) / 2 + 44, 2));
 
     }
 
@@ -63,19 +58,19 @@ public class GuiMachineBase extends GuiBase
             case 0:
             {
                 if (guiID != -1)
-                    entityPlayer.openGui(mod, guiID, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
+                    this.entityPlayer.openGui(mod, guiID, this.tileEntity.worldObj, this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord);
                 break;
             }
             case 1:
             {
                 if (guiID2 != -1)
-                    entityPlayer.openGui(mod, guiID2, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
+                    this.entityPlayer.openGui(mod, guiID2, this.tileEntity.worldObj, this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord);
                 break;
             }
             case 2:
             {
                 if (guiID3 != -1)
-                    entityPlayer.openGui(mod, guiID3, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
+                    this.entityPlayer.openGui(mod, guiID3, this.tileEntity.worldObj, this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord);
                 break;
             }
         }
@@ -83,38 +78,38 @@ public class GuiMachineBase extends GuiBase
 
     /** Draw the foreground layer for the GuiContainer (everything in front of the items) */
     @Override
-    protected void drawForegroundLayer(int x, int y, float var1)
+    protected void drawGuiContainerForegroundLayer(int x, int y)
     {
-        this.fontRenderer.drawString("\u00a77" + tileEntity.getInvName(), (int) (this.guiSize.intX() / 2 - 7 * 2.5), 4, 4210752);
+        this.fontRenderer.drawString("\u00a77" + tileEntity.getInvName(), (int) (this.xSize / 2 - 7 * 2.5), 4, 4210752);
+
         /** Render Tool Tips */
-        if (((GuiButtonImage) this.buttonList.get(0)).isIntersect(x, y) && guiID != -1)
+        if (((GuiButtonImage) this.buttonList.get(0)).isIntersect(x, y))
         {
-            this.drawTooltip(x - this.guiTopLeftCorner.intX(), y - this.guiTopLeftCorner.intY() + 10, invName);
+            this.drawTooltip(x - this.guiLeft, y - this.guiTop + 10, invName);
         }
-        else if (((GuiButtonImage) this.buttonList.get(1)).isIntersect(x, y) && guiID2 != -1)
+        else if (((GuiButtonImage) this.buttonList.get(1)).isIntersect(x, y))
         {
-            this.drawTooltip(x - this.guiTopLeftCorner.intX(), y - this.guiTopLeftCorner.intY() + 10, invName2);
+            this.drawTooltip(x - this.guiLeft, y - this.guiTop + 10, invName2);
         }
-        else if (((GuiButtonImage) this.buttonList.get(2)).isIntersect(x, y) && guiID3 != -1)
+        else if (((GuiButtonImage) this.buttonList.get(2)).isIntersect(x, y))
         {
-            this.drawTooltip(x - this.guiTopLeftCorner.intX(), y - this.guiTopLeftCorner.intY() + 10, invName3);
+            this.drawTooltip(x - this.guiLeft, y - this.guiTop + 10, invName3);
         }
     }
 
     /** Draw the background layer for the GuiContainer (everything behind the items) */
     @Override
-    protected void drawBackgroundLayer(int x, int y, float var1)
+    protected void drawGuiContainerBackgroundLayer(float par1, int x, int y)
     {
-        FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE);
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture(GuiMachineBase.TEXTURE);
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        int containerWidth = (this.width - this.guiSize.intX()) / 2;
-        int containerHeight = (this.height - this.guiSize.intY()) / 2;
-        this.drawTexturedModalRect(containerWidth, containerHeight, 0, 0, this.guiSize.intX(), this.guiSize.intY());
+        int containerWidth = (this.width - this.xSize) / 2;
+        int containerHeight = (this.height - this.ySize) / 2;
+        this.drawTexturedModalRect(containerWidth, containerHeight, 0, 0, this.xSize, this.ySize);
     }
 
-    @Override
     public void drawTooltip(int x, int y, String... toolTips)
     {
         GL11.glDisable(GL12.GL_RESCALE_NORMAL);
@@ -147,9 +142,9 @@ public class GuiMachineBase extends GuiBase
                 var9 += 2 + (toolTips.length - 1) * 10;
             }
 
-            if (this.guiTopLeftCorner.intY() + var7 + var9 + 6 > this.height)
+            if (this.guiTop + var7 + var9 + 6 > this.height)
             {
-                var7 = this.height - var9 - this.guiTopLeftCorner.intY() - 6;
+                var7 = this.height - var9 - this.guiTop - 6;
             }
 
             this.zLevel = 300.0F;
@@ -183,5 +178,4 @@ public class GuiMachineBase extends GuiBase
             this.zLevel = 0.0F;
         }
     }
-
 }
