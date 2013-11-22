@@ -87,33 +87,17 @@ public class BlockGasOre extends Block implements IGasBlock
         }
     }
 
-    @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
-    {
-        TileEntity entity = world.getBlockTileEntity(x, y, z);
-        if (entity instanceof TileEntityGasBlock)
-        {
-            FluidStack fluid = ((TileEntityGasBlock) entity).getFluidStack();
-            entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("Gas Stack: " + (fluid != null ? fluid.getFluid().getName() : "null")));
-        }
-        return true;
-    }
-
     /* IFluidBlock */
     @Override
     public FluidStack drain(World world, int x, int y, int z, boolean doDrain)
     {
-        TileEntity entity = world.getBlockTileEntity(x, y, z);
-        if (entity instanceof TileEntityGasBlock)
+        int meta = world.getBlockMetadata(x, y, z);
+        FluidStack fluid = new FluidStack(EnumGas.NATURAL_GAS.getGas(), volumePerMeta[meta]);
+        if (doDrain || fluid == null)
         {
-            FluidStack fluid = ((TileEntityGasBlock) entity).getFluidStack();
-            if (doDrain || fluid == null)
-            {
-                world.setBlockToAir(x, y, z);
-            }
-            return fluid;
+            world.setBlockToAir(x, y, z);
         }
-        return null;
+        return fluid;
     }
 
     @Override

@@ -107,7 +107,6 @@ public class GasOreGenerator implements IWorldGenerator
                                 Block block = Block.blocksList[blockid];
                                 if (var39 * var39 + var42 * var42 + var45 * var45 < 1.0D && (block == null || block.isAirBlock(world, x, y, z) || block.canBeReplacedByLeaves(world, x, y, z) || blockid == this.replaceID))
                                 {
-                                    System.out.println("Generated a gas at " + x + "x " + y + "y " + z + "z ");
                                     world.setBlock(x, y, z, CoreRecipeLoader.blockGas.blockID, 10 + world.rand.nextInt(5), 2);
                                 }
                             }
@@ -122,10 +121,6 @@ public class GasOreGenerator implements IWorldGenerator
 
     public boolean isOreGeneratedInWorld(World world, IChunkProvider chunkGenerator)
     {
-        if (chunkGenerator instanceof ChunkProviderGenerate)
-        {
-            return false;
-        }
         if (chunkGenerator instanceof ChunkProviderHell)
         {
             return false;
