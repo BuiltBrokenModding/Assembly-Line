@@ -16,13 +16,14 @@ import net.minecraftforge.fluids.FluidStack;
 import universalelectricity.prefab.ore.OreGenBase;
 import cpw.mods.fml.common.IWorldGenerator;
 import cpw.mods.fml.common.registry.GameRegistry;
+import dark.core.common.CoreRecipeLoader;
 
 public class GasOreGenerator implements IWorldGenerator
 {
 
     public int minGenerateLevel = 6;
     public int maxGenerateLevel = 50;
-    public int amountPerChunk = 3;
+    public int amountPerChunk = 10;
     public int amountPerBranch = 10;
     public int replaceID = 1;
 
@@ -107,7 +108,7 @@ public class GasOreGenerator implements IWorldGenerator
                                 if (var39 * var39 + var42 * var42 + var45 * var45 < 1.0D && (block == null || block.isAirBlock(world, x, y, z) || block.canBeReplacedByLeaves(world, x, y, z) || blockid == this.replaceID))
                                 {
                                     System.out.println("Generated a gas at " + x + "x " + y + "y " + z + "z ");
-                                    BlockGasOre.placeAndCreate(world, x, y, z, stack);
+                                    world.setBlock(x, y, z, CoreRecipeLoader.blockGas.blockID, 10 + world.rand.nextInt(5), 2);
                                 }
                             }
                         }

@@ -3,8 +3,6 @@ package dark.core.prefab.fluids;
 import com.builtbroken.common.science.ChemElement;
 import com.builtbroken.common.science.ChemicalCompound;
 
-import dark.core.common.blocks.OreGenFluid;
-
 /** Enum of gases used to create all the gas fluids
  * 
  * @author DarkGuardsman */
@@ -28,8 +26,6 @@ public enum EnumGas
     private float molePerGasMolecule = 1.0f;
     /** Local instance of the gas used when the getGas method is called */
     private Gas gas;
-
-    public OreGenFluid gen;
 
     private EnumGas(String name, boolean enabled)
     {

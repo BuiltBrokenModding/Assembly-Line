@@ -1,43 +1,90 @@
 package dark.core.common.blocks;
 
-import java.util.List;
-import java.util.Set;
+import java.awt.Color;
+import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.world.ColorizerGrass;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import universalelectricity.prefab.block.BlockTile;
-
-import com.builtbroken.common.Pair;
-
+import universalelectricity.core.vector.Vector3;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.IGasBlock;
-import dark.core.common.CoreRecipeLoader;
 import dark.core.common.DMCreativeTab;
 import dark.core.common.DarkMain;
-import dark.core.interfaces.IExtraInfo.IExtraBlockInfo;
+import dark.core.prefab.ModPrefab;
 import dark.core.prefab.fluids.EnumGas;
 
 /** Gas that is designed to generate underground in the same way as an ore
- *
+ * 
  * TODO code actual gas behavior such as expanding to fill an area but at the same time losing
  * volume
- *
+ * 
  * @author DarkGuardsman */
-public class BlockGasOre extends BlockTile implements IGasBlock, IExtraBlockInfo
+public class BlockGasOre extends Block implements IGasBlock
 {
+    public static final int[] volumePerMeta = new int[] { 10, 35, 75, 125, 250, 500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 12800, 256000, 512000 };
 
     public BlockGasOre()
     {
-        super(DarkMain.CONFIGURATION.getBlock("GasBlock", DarkMain.getNextID()).getInt(), Material.air);
+        super(DarkMain.CONFIGURATION.getBlock("GasBlock", ModPrefab.getNextID()).getInt(), Material.air);
         this.setUnlocalizedName("DMBlockGas");
         this.setCreativeTab(DMCreativeTab.tabIndustrial);
+        this.setTickRandomly(true);
+    }
+
+    @Override
+    public void updateTick(World world, int x, int y, int z, Random rand)
+    {
+        if (!world.isRemote)
+        {
+            if (rand.nextFloat() > 0.5f)
+            {
+
+                final Vector3 vec = new Vector3(x, y, z);
+                for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+                {
+                    int meta = world.getBlockMetadata(x, y, z);
+
+                    Vector3 sVec = vec.clone().modifyPositionFromSide(dir);
+                    int sMeta = sVec.getBlockMetadata(world);
+                    int blockID = sVec.getBlockID(world);
+                    Block block = Block.blocksList[blockID];
+
+                    if (block != null && block.isAirBlock(world, x, y, z) && blockID != this.blockID)
+                    {
+                        if (meta == 0)
+                        {
+                            world.setBlockToAir(x, y, z);
+                            break;
+                        }
+                        else
+                        {
+                            world.setBlock(x, y, z, this.blockID, meta / 2, 2);
+                            sVec.setBlock(world, this.blockID, meta / 2, 2);
+                            break;
+                        }
+                    }
+                    else if (blockID == this.blockID && meta > sMeta)
+                    {
+                        meta += sMeta;
+                        world.setBlock(x, y, z, this.blockID, meta / 2, 2);
+                        sVec.setBlock(world, this.blockID, meta / 2, 2);
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -50,19 +97,6 @@ public class BlockGasOre extends BlockTile implements IGasBlock, IExtraBlockInfo
             entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("Gas Stack: " + (fluid != null ? fluid.getFluid().getName() : "null")));
         }
         return true;
-    }
-
-    public static void placeAndCreate(World world, int x, int y, int z, FluidStack stack)
-    {
-        if (stack != null)
-        {
-            world.setBlock(x, y, z, CoreRecipeLoader.blockGas.blockID, 0, 2);
-            TileEntity entity = world.getBlockTileEntity(x, y, z);
-            if (entity instanceof TileEntityGasBlock)
-            {
-                ((TileEntityGasBlock) entity).setStack(stack);
-            }
-        }
     }
 
     /* IFluidBlock */
@@ -101,43 +135,69 @@ public class BlockGasOre extends BlockTile implements IGasBlock, IExtraBlockInfo
     }
 
     @Override
-    public TileEntity createNewTileEntity(World var1)
+    public int idDropped(int par1, Random par2Random, int par3)
     {
-        return new TileEntityGasBlock();
+        return 0;
     }
 
     @Override
-    public boolean hasExtraConfigs()
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
+    {
+        return null;
+    }
+
+    @Override
+    public void registerIcons(IconRegister par1IconRegister)
+    {
+        this.blockIcon = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + "gas");
+    }
+
+    @Override
+    public boolean isOpaqueCube()
     {
         return false;
     }
 
     @Override
-    public void loadExtraConfigs(Configuration config)
+    @SideOnly(Side.CLIENT)
+    public int getBlockColor()
     {
-        //TODO add configs for spread rate,and update rate
-
+        return Color.GREEN.getRGB();
     }
 
     @Override
-    public void loadOreNames()
+    @SideOnly(Side.CLIENT)
+    public int getRenderColor(int par1)
     {
-        // TODO Auto-generated method stub
-
+        return this.getBlockColor();
     }
 
     @Override
-    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+    public boolean shouldSideBeRendered(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
     {
-        list.add(new Pair<String, Class<? extends TileEntity>>("DMTileGas", TileEntityGasBlock.class));
-
+        return true;
     }
 
     @Override
-    public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
+    @SideOnly(Side.CLIENT)
+    public int colorMultiplier(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
-        // TODO Auto-generated method stub
+        int l = 0;
+        int i1 = 0;
+        int j1 = 0;
 
+        for (int k1 = -1; k1 <= 1; ++k1)
+        {
+            for (int l1 = -1; l1 <= 1; ++l1)
+            {
+                int i2 = par1IBlockAccess.getBiomeGenForCoords(par2 + l1, par4 + k1).getBiomeGrassColor();
+                l += (i2 & 16711680) >> 16;
+                i1 += (i2 & 65280) >> 8;
+                j1 += i2 & 255;
+            }
+        }
+
+        return (l / 9 & 255) << 16 | (i1 / 9 & 255) << 8 | j1 / 9 & 255;
     }
 
 }

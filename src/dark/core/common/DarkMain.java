@@ -11,7 +11,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.ore.OreGenReplaceStone;
@@ -45,7 +44,6 @@ import dark.core.common.blocks.BlockOre.OreData;
 import dark.core.common.blocks.GasOreGenerator;
 import dark.core.common.blocks.ItemBlockColored;
 import dark.core.common.blocks.ItemBlockOre;
-import dark.core.common.blocks.OreGenFluid;
 import dark.core.common.items.EnumMaterial;
 import dark.core.common.items.EnumOrePart;
 import dark.core.common.items.ItemBattery;
@@ -69,7 +67,6 @@ import dark.core.prefab.fluids.EnumGas;
 import dark.core.prefab.machine.BlockMulti;
 import dark.core.prefab.machine.TileEntityNBTContainer;
 import dark.core.prefab.vehicles.EntityTestCar;
-import dark.core.prefab.vehicles.EntityVehicle;
 import dark.core.prefab.vehicles.ItemVehicleSpawn;
 import dark.core.registration.ModObjectRegistry;
 
@@ -281,7 +278,6 @@ public class DarkMain extends ModPrefab
         CoreRecipeLoader.blockGlowGlass = ModObjectRegistry.createNewBlock("DMBlockGlowGlass", DarkMain.MOD_ID, BlockColorGlowGlass.class, ItemBlockColored.class);
         CoreRecipeLoader.blockSolar = ModObjectRegistry.createNewBlock("DMBlockSolar", DarkMain.MOD_ID, BlockSolarPanel.class, ItemBlockHolder.class);
         CoreRecipeLoader.blockGas = ModObjectRegistry.createNewBlock("DMBlockGas", DarkMain.MOD_ID, BlockGasOre.class, ItemBlockHolder.class);
-       
 
         /* ITEMS */
         CoreRecipeLoader.itemTool = ModObjectRegistry.createNewItem("DMReadoutTools", DarkMain.MOD_ID, ItemReadoutTools.class, true);
