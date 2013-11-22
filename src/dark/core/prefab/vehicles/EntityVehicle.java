@@ -22,7 +22,7 @@ import dark.core.interfaces.IControlReceiver;
 import dark.core.network.ISimplePacketReceiver;
 import dark.core.network.PacketManagerEntity;
 import dark.core.network.PacketManagerKeyEvent;
-import dark.core.prefab.EntityAdvanced;
+import dark.core.prefab.entities.EntityAdvanced;
 
 public abstract class EntityVehicle extends EntityAdvanced implements IControlReceiver, ISimplePacketReceiver
 {

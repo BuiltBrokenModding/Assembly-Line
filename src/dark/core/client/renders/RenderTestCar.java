@@ -12,7 +12,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.client.models.ModelTestCar;
 import dark.core.common.DarkMain;
-import dark.core.prefab.EntityAdvanced;
+import dark.core.prefab.entities.EntityAdvanced;
 
 @SideOnly(Side.CLIENT)
 public class RenderTestCar extends Render
