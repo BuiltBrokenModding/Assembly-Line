@@ -20,8 +20,6 @@ public class BlockColored extends Block
 {
     @SideOnly(Side.CLIENT)
     private Icon[] icons;
-    @SideOnly(Side.CLIENT)
-    private Icon singleIcon;
 
     /** Use a single icon to create all 16 colors */
     boolean colorized = true;
@@ -38,7 +36,7 @@ public class BlockColored extends Block
     {
         if (colorized)
         {
-            return this.singleIcon;
+            return this.blockIcon;
         }
         return this.icons[~meta & 15];
     }
@@ -65,7 +63,7 @@ public class BlockColored extends Block
     {
         if (colorized)
         {
-            this.singleIcon = iconReg.registerIcon(DarkMain.getInstance().PREFIX + this.getUnlocalizedName().replace("tile.", ""));
+            this.blockIcon = iconReg.registerIcon(DarkMain.getInstance().PREFIX + this.getUnlocalizedName().replace("tile.", ""));
         }
         else
         {
@@ -91,7 +89,6 @@ public class BlockColored extends Block
     {
         if (this.colorized)
         {
-
             return DarkMain.dyeColors[meta & 15].getRGB();
         }
         return super.getRenderColor(meta);

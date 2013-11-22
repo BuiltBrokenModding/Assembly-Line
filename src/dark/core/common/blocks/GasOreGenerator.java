@@ -23,8 +23,8 @@ public class GasOreGenerator implements IWorldGenerator
 
     public int minGenerateLevel = 6;
     public int maxGenerateLevel = 50;
-    public int amountPerChunk = 10;
-    public int amountPerBranch = 10;
+    public int amountPerChunk = 3;
+    public int amountPerBranch = 15;
     public int replaceID = 1;
 
     public FluidStack stack;

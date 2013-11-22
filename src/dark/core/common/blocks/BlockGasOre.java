@@ -1,16 +1,17 @@
 package dark.core.common.blocks;
 
 import java.awt.Color;
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.world.ColorizerGrass;
+import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -42,46 +43,48 @@ public class BlockGasOre extends Block implements IGasBlock
         this.setCreativeTab(DMCreativeTab.tabIndustrial);
         this.setTickRandomly(true);
     }
+    
+    public int tickRate(World par1World)
+    {
+        return 1;
+    }
 
     @Override
     public void updateTick(World world, int x, int y, int z, Random rand)
     {
         if (!world.isRemote)
         {
-            if (rand.nextFloat() > 0.5f)
+
+            final Vector3 vec = new Vector3(x, y, z);
+            for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
             {
+                int meta = world.getBlockMetadata(x, y, z);
 
-                final Vector3 vec = new Vector3(x, y, z);
-                for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+                Vector3 sVec = vec.clone().modifyPositionFromSide(dir);
+                int sMeta = sVec.getBlockMetadata(world);
+                int blockID = sVec.getBlockID(world);
+                Block block = Block.blocksList[blockID];
+
+                if (blockID == 0 || block == null || block != null && block.isAirBlock(world, x, y, z) && blockID != this.blockID)
                 {
-                    int meta = world.getBlockMetadata(x, y, z);
-
-                    Vector3 sVec = vec.clone().modifyPositionFromSide(dir);
-                    int sMeta = sVec.getBlockMetadata(world);
-                    int blockID = sVec.getBlockID(world);
-                    Block block = Block.blocksList[blockID];
-
-                    if (block != null && block.isAirBlock(world, x, y, z) && blockID != this.blockID)
+                    if (meta == 0)
                     {
-                        if (meta == 0)
-                        {
-                            world.setBlockToAir(x, y, z);
-                            break;
-                        }
-                        else
-                        {
-                            world.setBlock(x, y, z, this.blockID, meta / 2, 2);
-                            sVec.setBlock(world, this.blockID, meta / 2, 2);
-                            break;
-                        }
+                        world.setBlockToAir(x, y, z);
+                        break;
                     }
-                    else if (blockID == this.blockID && meta > sMeta)
+                    else
                     {
-                        meta += sMeta;
                         world.setBlock(x, y, z, this.blockID, meta / 2, 2);
                         sVec.setBlock(world, this.blockID, meta / 2, 2);
                         break;
                     }
+                }
+                else if (blockID == this.blockID && meta > sMeta)
+                {
+                    meta += sMeta;
+                    world.setBlock(x, y, z, this.blockID, meta / 2, 2);
+                    sVec.setBlock(world, this.blockID, meta / 2, 2);
+                    break;
                 }
             }
         }
@@ -103,7 +106,7 @@ public class BlockGasOre extends Block implements IGasBlock
     @Override
     public boolean canDrain(World world, int x, int y, int z)
     {
-        return true;
+        return false;
     }
 
     @Override
@@ -129,11 +132,28 @@ public class BlockGasOre extends Block implements IGasBlock
     {
         return null;
     }
+    
+    public boolean isCollidable()
+    {
+        return false;
+    }
+
+    @Override
+    public Icon getIcon(int par1, int par2)
+    {
+        return this.blockIcon;
+    }
 
     @Override
     public void registerIcons(IconRegister par1IconRegister)
     {
         this.blockIcon = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + "gas");
+    }
+
+    @Override
+    public int getRenderBlockPass()
+    {
+        return 1;
     }
 
     @Override
@@ -143,45 +163,36 @@ public class BlockGasOre extends Block implements IGasBlock
     }
 
     @Override
+    public boolean renderAsNormalBlock()
+    {
+        return false;
+    }
+
+    @Override
     @SideOnly(Side.CLIENT)
     public int getBlockColor()
     {
-        return Color.GREEN.getRGB();
+        return Color.orange.getRGB();
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public int getRenderColor(int par1)
     {
+        //TODO make the color darker as the meta value goes higher
         return this.getBlockColor();
     }
 
-    @Override
-    public boolean shouldSideBeRendered(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
-    {
-        return true;
-    }
-
-    @Override
     @SideOnly(Side.CLIENT)
-    public int colorMultiplier(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
+    @Override
+    public int colorMultiplier(IBlockAccess world, int x, int y, int z)
     {
-        int l = 0;
-        int i1 = 0;
-        int j1 = 0;
-
-        for (int k1 = -1; k1 <= 1; ++k1)
-        {
-            for (int l1 = -1; l1 <= 1; ++l1)
-            {
-                int i2 = par1IBlockAccess.getBiomeGenForCoords(par2 + l1, par4 + k1).getBiomeGrassColor();
-                l += (i2 & 16711680) >> 16;
-                i1 += (i2 & 65280) >> 8;
-                j1 += i2 & 255;
-            }
-        }
-
-        return (l / 9 & 255) << 16 | (i1 / 9 & 255) << 8 | j1 / 9 & 255;
+        return this.getRenderColor(world.getBlockMetadata(x, y, z));
     }
 
+    @Override
+    public void getSubBlocks(int blockID, CreativeTabs tab, List creativeTabList)
+    {
+        creativeTabList.add(new ItemStack(blockID, 1, 15));
+    }
 }
