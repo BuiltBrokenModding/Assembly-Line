@@ -14,7 +14,6 @@ import universalelectricity.core.UniversalElectricity;
 
 import com.builtbroken.common.Triple;
 
-import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;

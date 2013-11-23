@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialTransparent;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
@@ -35,15 +37,17 @@ import dark.core.prefab.fluids.EnumGas;
 public class BlockGasOre extends Block implements IGasBlock
 {
     public static final int[] volumePerMeta = new int[] { 10, 35, 75, 125, 250, 500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 12800, 256000, 512000 };
+    public static final Material gas = new MaterialTransparent(MapColor.airColor).setReplaceable();
 
     public BlockGasOre()
     {
-        super(DarkMain.CONFIGURATION.getBlock("GasBlock", ModPrefab.getNextID()).getInt(), Material.air);
+        super(DarkMain.CONFIGURATION.getBlock("GasBlock", ModPrefab.getNextID()).getInt(), gas);
         this.setUnlocalizedName("DMBlockGas");
         this.setCreativeTab(DMCreativeTab.tabIndustrial);
         this.setTickRandomly(true);
     }
-    
+
+    @Override
     public int tickRate(World par1World)
     {
         return 1;
@@ -132,7 +136,7 @@ public class BlockGasOre extends Block implements IGasBlock
     {
         return null;
     }
-    
+
     public boolean isCollidable()
     {
         return false;
@@ -172,7 +176,7 @@ public class BlockGasOre extends Block implements IGasBlock
     @SideOnly(Side.CLIENT)
     public int getBlockColor()
     {
-        return Color.orange.getRGB();
+        return Color.red.getRGB();
     }
 
     @Override

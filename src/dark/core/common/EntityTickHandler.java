@@ -16,6 +16,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
+import dark.core.common.blocks.BlockGasOre;
 
 /** Tick handler that takes care of things like decreasing air supply while in gas block
  * 
@@ -36,24 +37,16 @@ public class EntityTickHandler implements ITickHandler
 
                     boolean flag = entity instanceof EntityPlayer && ((EntityPlayer) entity).capabilities.disableDamage;
 
-                    if (entity.isEntityAlive() && entity.isInsideOfMaterial(Material.water))
+                    if (entity.isEntityAlive() && entity.isInsideOfMaterial(BlockGasOre.gas))
                     {
-                        if (!entity.canBreatheUnderwater() && !entity.isPotionActive(Potion.waterBreathing.id) && !flag)
+                        //TODO check for air supply or other parms to ignore damage
+                        if (!flag)
                         {
                             entity.setAir(this.decreaseAirSupply(entity, entity.getAir()));
 
                             if (entity.getAir() == -20)
                             {
                                 entity.setAir(0);
-
-                                for (int i = 0; i < 8; ++i)
-                                {
-                                    float f = entity.worldObj.rand.nextFloat() - entity.worldObj.rand.nextFloat();
-                                    float f1 = entity.worldObj.rand.nextFloat() - entity.worldObj.rand.nextFloat();
-                                    float f2 = entity.worldObj.rand.nextFloat() - entity.worldObj.rand.nextFloat();
-                                    entity.worldObj.spawnParticle("bubble", entity.posX + (double) f, entity.posY + (double) f1, entity.posZ + (double) f2, entity.motionX, entity.motionY, entity.motionZ);
-                                }
-
                                 entity.attackEntityFrom(DamageSource.drown, 2.0F);
                             }
                         }

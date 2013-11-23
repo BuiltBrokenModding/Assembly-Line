@@ -198,7 +198,7 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
                 return user;
             }
         }
-        return null;
+        return new AccessUser(username);
     }
 
     public boolean canUserAccess(String username)
