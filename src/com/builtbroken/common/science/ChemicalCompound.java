@@ -14,7 +14,7 @@ public enum ChemicalCompound
     public final String compoundName;
     /** g/mol */
     public final float molarMass;
-    /** g/cm³ */
+    /** g/cm^3 */
     public final float density;
 
     public final MatterPhase defaultPhase;

@@ -15,7 +15,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public abstract class GuiBase extends GuiScreen
 {
 
-    protected Vector2 guiTopLeftCorner;
+    protected Vector2 c;
     protected Vector2 guiSize = new Vector2(176, 166);
 
     /** Adds the buttons (and other controls) to the screen in question. */
@@ -23,7 +23,7 @@ public abstract class GuiBase extends GuiScreen
     public void initGui()
     {
         super.initGui();
-        guiTopLeftCorner = new Vector2((this.width - this.guiSize.intX()) / 2, (this.height - this.guiSize.intY()) / 2);
+        c = new Vector2((this.width - this.guiSize.intX()) / 2, (this.height - this.guiSize.intY()) / 2);
     }
 
     /** Draws the screen and all the components in it. */
@@ -31,8 +31,8 @@ public abstract class GuiBase extends GuiScreen
     public void drawScreen(int par1, int par2, float par3)
     {
         this.drawDefaultBackground();
-        int var4 = (int) this.guiTopLeftCorner.x;
-        int var5 = (int) this.guiTopLeftCorner.y;
+        int var4 = (int) this.c.x;
+        int var5 = (int) this.c.y;
         this.drawBackgroundLayer(par1, par2, par3);
         GL11.glPushMatrix();
         GL11.glTranslatef(var4, var5, 0.0F);
@@ -123,9 +123,9 @@ public abstract class GuiBase extends GuiScreen
                 var9 += 2 + (toolTips.length - 1) * 10;
             }
 
-            if (this.guiTopLeftCorner.intY() + var7 + var9 + 6 > this.height)
+            if (this.c.intY() + var7 + var9 + 6 > this.height)
             {
-                var7 = this.height - var9 - this.guiTopLeftCorner.intY() - 6;
+                var7 = this.height - var9 - this.c.intY() - 6;
             }
 
             this.zLevel = 300.0F;

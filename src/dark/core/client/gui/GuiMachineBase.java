@@ -19,7 +19,7 @@ import dark.core.prefab.machine.TileEntityMachine;
 public class GuiMachineBase extends GuiBase
 {
 
-    public static final ResourceLocation TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, DarkMain.GUI_DIRECTORY + "gui_base_machine.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, DarkMain.GUI_DIRECTORY + "gui_grey.png");
 
     protected static final int MAX_BUTTON_ID = 3;
     protected TileEntityMachine tileEntity;
@@ -89,15 +89,15 @@ public class GuiMachineBase extends GuiBase
         /** Render Tool Tips */
         if (((GuiButtonImage) this.buttonList.get(0)).isIntersect(x, y) && guiID != -1)
         {
-            this.drawTooltip(x - this.guiTopLeftCorner.intX(), y - this.guiTopLeftCorner.intY() + 10, invName);
+            this.drawTooltip(x - this.c.intX(), y - this.c.intY() + 10, invName);
         }
         else if (((GuiButtonImage) this.buttonList.get(1)).isIntersect(x, y) && guiID2 != -1)
         {
-            this.drawTooltip(x - this.guiTopLeftCorner.intX(), y - this.guiTopLeftCorner.intY() + 10, invName2);
+            this.drawTooltip(x - this.c.intX(), y - this.c.intY() + 10, invName2);
         }
         else if (((GuiButtonImage) this.buttonList.get(2)).isIntersect(x, y) && guiID3 != -1)
         {
-            this.drawTooltip(x - this.guiTopLeftCorner.intX(), y - this.guiTopLeftCorner.intY() + 10, invName3);
+            this.drawTooltip(x - this.c.intX(), y - this.c.intY() + 10, invName3);
         }
     }
 
@@ -147,9 +147,9 @@ public class GuiMachineBase extends GuiBase
                 var9 += 2 + (toolTips.length - 1) * 10;
             }
 
-            if (this.guiTopLeftCorner.intY() + var7 + var9 + 6 > this.height)
+            if (this.c.intY() + var7 + var9 + 6 > this.height)
             {
-                var7 = this.height - var9 - this.guiTopLeftCorner.intY() - 6;
+                var7 = this.height - var9 - this.c.intY() - 6;
             }
 
             this.zLevel = 300.0F;
