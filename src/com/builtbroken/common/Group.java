@@ -30,7 +30,7 @@ public class Group<J>
 
     protected boolean isValid(J obj)
     {
-        return obj != null && memebers.contains(obj);
+        return obj != null && !memebers.contains(obj);
     }
 
     public boolean addMemeber(J obj)
