@@ -8,26 +8,35 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
+/** Override version of the vanilla egg to allow additional bird types to exist with the same item
+ *
+ * @author DarkGuardsman */
 public class EntityFarmEgg extends EntityThrowable
 {
-    int id = 0;
+    protected int spawnEntityId = 0;
+
+    public EntityFarmEgg(World world)
+    {
+        super(world);
+        this.spawnEntityId = 0;
+    }
 
     public EntityFarmEgg(World world, int id)
     {
         super(world);
-        this.id = id;
+        this.spawnEntityId = id;
     }
 
     public EntityFarmEgg(World world, EntityLivingBase entityLivingBase, int id)
     {
         super(world, entityLivingBase);
-        this.id = id;
+        this.spawnEntityId = id;
     }
 
     public EntityFarmEgg(World world, double x, double y, double z, int id)
     {
         super(world, x, y, z);
-        this.id = id;
+        this.spawnEntityId = id;
     }
 
     /** Called when this EntityThrowable hits a block or entity. */
@@ -42,7 +51,7 @@ public class EntityFarmEgg extends EntityThrowable
         if (!this.worldObj.isRemote && this.rand.nextInt(8) == 0)
         {
             EntityAnimal animal;
-            switch (id)
+            switch (spawnEntityId)
             {
                 default:
                     animal = new EntityChicken(this.worldObj);

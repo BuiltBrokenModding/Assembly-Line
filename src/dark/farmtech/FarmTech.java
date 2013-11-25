@@ -30,6 +30,7 @@ import dark.core.prefab.ModPrefab;
 import dark.core.registration.ModObjectRegistry;
 import dark.farmtech.blocks.BlockFarmSoil;
 import dark.farmtech.entities.EntityFarmEgg;
+import dark.farmtech.entities.EnumBird;
 import dark.farmtech.item.BehaviorDispenseEgg;
 import dark.farmtech.item.ItemFarmEgg;
 
@@ -63,6 +64,8 @@ public class FarmTech extends ModPrefab
 
     @Instance(FarmTech.MOD_NAME)
     public static FarmTech instance;
+
+    public static int entitiesIds = 60;
 
     @Override
     @EventHandler
@@ -119,6 +122,14 @@ public class FarmTech extends ModPrefab
             EntityRegistry.registerGlobalEntityID(EntityFarmEgg.class, "FarmEgg", EntityRegistry.findGlobalUniqueEntityId());
             EntityRegistry.registerModEntity(EntityFarmEgg.class, "FarmEgg", 60, this, 64, 1, true);
             BlockDispenser.dispenseBehaviorRegistry.putObject(Item.egg, new BehaviorDispenseEgg());
+        }
+
+        for (EnumBird bird : EnumBird.values())
+        {
+            if (bird != EnumBird.VANILLA_CHICKEN && CONFIGURATION.get("Entities", "Enable_" + bird.name(), true).getBoolean(true))
+            {
+                bird.register();
+            }
         }
 
         CONFIGURATION.save();
