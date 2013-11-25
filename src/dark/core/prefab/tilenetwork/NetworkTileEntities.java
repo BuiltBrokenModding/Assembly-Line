@@ -15,7 +15,7 @@ import dark.api.parts.ITileNetwork;
 
 public class NetworkTileEntities implements ITileNetwork
 {
-    protected final Set<INetworkPart> networkMembers = new HashSet<INetworkPart>();
+    protected Set<INetworkPart> networkMembers = new HashSet<INetworkPart>();
 
     public NetworkTileEntities()
     {
@@ -47,6 +47,10 @@ public class NetworkTileEntities implements ITileNetwork
     @Override
     public Set<INetworkPart> getMembers()
     {
+        if(this.networkMembers == null)
+        {
+            this.networkMembers = new HashSet<INetworkPart>();
+        }
         return networkMembers;
     }
 

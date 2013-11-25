@@ -76,10 +76,10 @@ public class CoreRecipeLoader extends RecipeLoader
             {
                 if (mat.shouldCreateTool())
                 {
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getTool(EnumTool.PICKAX), "III", " S ", " S ", 'I', mat.getStack(EnumOrePart.INGOTS, 1), 'S', Item.stick));
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getTool(EnumTool.HOE), "II ", " S ", " S ", 'I', mat.getStack(EnumOrePart.INGOTS, 1), 'S', Item.stick));
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getTool(EnumTool.SPADE), " I ", " S ", " S ", 'I', mat.getStack(EnumOrePart.INGOTS, 1), 'S', Item.stick));
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getTool(EnumTool.AX), "II ", "IS ", " S ", 'I', mat.getStack(EnumOrePart.INGOTS, 1), 'S', Item.stick));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getTool(EnumTool.PICKAX), "III", " S ", " S ", 'I', mat.getOreName(EnumOrePart.INGOTS), 'S', Item.stick));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getTool(EnumTool.HOE), "II ", " S ", " S ", 'I', mat.getOreName(EnumOrePart.INGOTS), 'S', Item.stick));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getTool(EnumTool.SPADE), " I ", " S ", " S ", 'I', mat.getOreName(EnumOrePart.INGOTS), 'S', Item.stick));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getTool(EnumTool.AX), "II ", "IS ", " S ", 'I', mat.getOreName(EnumOrePart.INGOTS), 'S', Item.stick));
                     //GameRegistry.addRecipe(new ShapedOreRecipe(mat.getTool(EnumTool.SHEAR), "III", " S ", 'I', mat.getStack(EnumOrePart.INGOTS, 1)));
                 }
             }
@@ -99,7 +99,7 @@ public class CoreRecipeLoader extends RecipeLoader
             // seal
             GameRegistry.addRecipe(this.setStackSize(leatherSeal, 16), new Object[] { "LL", "LL", 'L', Item.leather });
             // slime steal
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 4, Parts.GasSeal.ordinal()), " # ", "#S#", " # ", '#', "leatherSeal", 'S', Item.slimeBall));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 4, Parts.GasSeal.ordinal()), " # ", "#S#", " # ", '#', Parts.Seal.name, 'S', Item.slimeBall));
             // part valve
             GameRegistry.addRecipe(new ShapedOreRecipe(valvePart, new Object[] { "PLP", 'P', "ironPipe", 'L', Block.lever }));
             //Basic Circuit
@@ -198,24 +198,24 @@ public class CoreRecipeLoader extends RecipeLoader
                 }
                 if (mat.shouldCreateItem(EnumOrePart.TUBE))
                 {
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.TUBE, 6), new Object[] { "III", 'I', mat.simpleName + "ingot" }));
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.TUBE, 6), new Object[] { "III", 'I', "ingot" + mat.simpleName }));
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.TUBE, 1), new Object[] { "I", 'I', "rod" + mat.simpleName }));
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.TUBE, 1), new Object[] { "I", 'I', mat.simpleName + "rod" }));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.TUBE, 6), new Object[] { "I", "I", "I", 'I', mat.getOreName(EnumOrePart.INGOTS) }));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.TUBE, 6), new Object[] { "I", "I", "I", 'I', mat.getOreNameReverse(EnumOrePart.INGOTS) }));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.TUBE, 1), new Object[] { "I", 'I', mat.getOreName(EnumOrePart.ROD) }));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.TUBE, 1), new Object[] { "I", 'I', mat.getOreNameReverse(EnumOrePart.ROD) }));
                 }
                 if (mat.shouldCreateItem(EnumOrePart.ROD))
                 {
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.ROD, 4), new Object[] { "II", 'I', mat.simpleName + "rod" }));
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.ROD, 4), new Object[] { "II", 'I', "rod" + mat.simpleName }));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.ROD, 4), new Object[] { "I", "I", 'I', mat.getOreName(EnumOrePart.ROD) }));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.ROD, 4), new Object[] { "I", "I", 'I', mat.getOreNameReverse(EnumOrePart.ROD) }));
                 }
                 if (mat.shouldCreateItem(EnumOrePart.PLATES))
                 {
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.PLATES, 1), new Object[] { "II", "II", 'I', mat.simpleName + "ingot" }));
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.PLATES, 1), new Object[] { "II", "II", 'I', "ingot" + mat.simpleName }));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.PLATES, 1), new Object[] { "II", "II", 'I', mat.getOreName(EnumOrePart.INGOTS) }));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.PLATES, 1), new Object[] { "II", "II", 'I', mat.getOreNameReverse(EnumOrePart.INGOTS) }));
                 }
                 if (mat.shouldCreateItem(EnumOrePart.GEARS))
                 {
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.GEARS, 4), new Object[] { " I ", "IRI", " I ", 'I', "ingot" + mat.simpleName, 'R', mat.shouldCreateItem(EnumOrePart.ROD) ? mat.getStack(EnumOrePart.ROD) : Item.stick }));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.GEARS, 4), new Object[] { " I ", "IRI", " I ", 'I', mat.getOreName(EnumOrePart.INGOTS), 'R', mat.shouldCreateItem(EnumOrePart.ROD) ? mat.getOreName(EnumOrePart.ROD) : Item.stick }));
                 }
 
             }
