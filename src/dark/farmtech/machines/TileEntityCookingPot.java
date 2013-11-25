@@ -2,6 +2,7 @@ package dark.farmtech.machines;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import dark.core.interfaces.IBlockActivated;
 import dark.core.prefab.machine.TileEntityMachine;
@@ -30,14 +31,24 @@ public class TileEntityCookingPot extends TileEntityMachine implements IBlockAct
     @Override
     public boolean onActivated(EntityPlayer entityPlayer)
     {
-        if(entityPlayer != null)
+        if (entityPlayer != null)
         {
             ItemStack stack = entityPlayer.getHeldItem();
-            if(stack != null)
+            if (stack != null)
             {
-                if((!this.hasWood || fuelLeft < 10) && stack.getItem().itemID == Block.wood.blockID)
+                if ((!this.hasWood || fuelLeft < 10) && stack.getItem().itemID == Block.wood.blockID)
                 {
-
+                    //TODO add wood to fire under pot
+                    return true;
+                }
+                else if (stack.getItem().itemID == Item.bowlEmpty.itemID && this.getStackInSlot(output) != null)
+                {
+                    //TODO fill bowl
+                    return true;
+                }
+                else
+                {
+                    //TODO check item and see if its a valid ingredient to cook food, as well see if its valid to add but will destroy the food
                 }
             }
         }
