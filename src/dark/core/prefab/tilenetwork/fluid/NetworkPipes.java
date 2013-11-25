@@ -14,7 +14,7 @@ import dark.core.prefab.tilenetwork.NetworkUpdateHandler;
 /** Extension on the fluid container network to provide a more advanced reaction to fluid passing
  * threw each pipe. As well this doubled as a pressure network for those machines that support the
  * use of pressure.
- * 
+ *
  * @author Rseifert */
 public class NetworkPipes extends NetworkFluidTiles
 {
@@ -26,13 +26,18 @@ public class NetworkPipes extends NetworkFluidTiles
         NetworkUpdateHandler.registerNetworkClass("FluidPipes", NetworkPipes.class);
     }
 
+    public NetworkPipes()
+    {
+        super();
+    }
+
     public NetworkPipes(INetworkPart... parts)
     {
         super(parts);
     }
 
     /** Adds FLuid to this network from one of the connected Pipes
-     * 
+     *
      * @param source - Were this liquid came from
      * @param stack - LiquidStack to be sent
      * @param doFill - actually fill the tank or just check numbers
@@ -43,7 +48,7 @@ public class NetworkPipes extends NetworkFluidTiles
     }
 
     /** Adds FLuid to this network from one of the connected Pipes
-     * 
+     *
      * @param source - Were this liquid came from
      * @param stack - LiquidStack to be sent
      * @param doFill - actually fill the tank or just check numbers

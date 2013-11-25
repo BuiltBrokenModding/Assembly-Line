@@ -34,6 +34,11 @@ public class NetworkFluidTiles extends NetworkTileEntities
         NetworkUpdateHandler.registerNetworkClass("FluidTiles", NetworkFluidTiles.class);
     }
 
+    public NetworkFluidTiles()
+    {
+        super();
+    }
+
     public NetworkFluidTiles(INetworkPart... parts)
     {
         super(parts);
@@ -223,20 +228,27 @@ public class NetworkFluidTiles extends NetworkTileEntities
     protected void mergeDo(ITileNetwork network)
     {
         ITileNetwork newNetwork = NetworkUpdateHandler.createNewNetwork(NetworkUpdateHandler.getID(this.getClass()));
-        if (newNetwork instanceof NetworkFluidTiles)
+        if (newNetwork != null)
         {
-            FluidStack one = this.getNetworkTank().getFluid();
-            FluidStack two = ((NetworkFluidTiles) network).getNetworkTank().getFluid();
+            if (newNetwork instanceof NetworkFluidTiles)
+            {
+                FluidStack one = this.getNetworkTank().getFluid();
+                FluidStack two = ((NetworkFluidTiles) network).getNetworkTank().getFluid();
 
-            this.getNetworkTank().setFluid(null);
-            ((NetworkFluidTiles) network).getNetworkTank().setFluid(null);
+                this.getNetworkTank().setFluid(null);
+                ((NetworkFluidTiles) network).getNetworkTank().setFluid(null);
 
-            ((NetworkFluidTiles) newNetwork).getNetworkTank().setFluid(FluidCraftingHandler.mergeFluidStacks(one, two));
-            ((NetworkFluidTiles) newNetwork).sharedTankInfo = ((NetworkFluidTiles) newNetwork).getNetworkTank().getInfo();
+                ((NetworkFluidTiles) newNetwork).getNetworkTank().setFluid(FluidCraftingHandler.mergeFluidStacks(one, two));
+                ((NetworkFluidTiles) newNetwork).sharedTankInfo = ((NetworkFluidTiles) newNetwork).getNetworkTank().getInfo();
+            }
+            newNetwork.getMembers().addAll(this.getMembers());
+            newNetwork.getMembers().addAll(network.getMembers());
+            newNetwork.onCreated();
         }
-        newNetwork.getMembers().addAll(this.getMembers());
-        newNetwork.getMembers().addAll(network.getMembers());
-        newNetwork.onCreated();
+        else
+        {
+            System.out.println("[NetworkFluidTiles] Failed to merge network due to the new network returned null");
+        }
     }
 
     @Override
