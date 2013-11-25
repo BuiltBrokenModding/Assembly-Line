@@ -164,7 +164,7 @@ public class DarkMain extends ModPrefab
                 }
             }
         }
-        if (CoreRecipeLoader.itemParts instanceof ItemParts)
+        if (CoreRecipeLoader.itemParts != null)
         {
             for (Parts part : Parts.values())
             {
@@ -200,8 +200,8 @@ public class DarkMain extends ModPrefab
                 }
                 if (mat.shouldCreateItem(EnumOrePart.TUBE))
                 {
-                    OreDictionary.registerOre(mat.simpleName + "tube", mat.getStack(EnumOrePart.TUBE, 1));
-                    OreDictionary.registerOre("tube" + mat.simpleName, mat.getStack(EnumOrePart.TUBE, 1));
+                    OreDictionary.registerOre(mat.getOreName(EnumOrePart.TUBE), mat.getStack(EnumOrePart.TUBE, 1));
+                    OreDictionary.registerOre(mat.getOreNameReverse(EnumOrePart.TUBE), mat.getStack(EnumOrePart.TUBE, 1));
 
                 }
                 if (mat.shouldCreateItem(EnumOrePart.ROD))

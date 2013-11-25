@@ -219,7 +219,7 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
 
     public void sendGUIPacket()
     {
-        if (this.hasGUI && this.getContainer() != null && this.ticks % 5 == 0)
+        if (this.hasGUI && this.getContainer() != null)
         {
             this.playersUsingMachine = 0;
             for (Object entity : this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(xCoord - 10, yCoord - 10, zCoord - 10, xCoord + 10, yCoord + 10, zCoord + 10)))

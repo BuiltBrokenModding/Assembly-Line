@@ -10,6 +10,9 @@ import net.minecraft.inventory.Container;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import universalelectricity.core.vector.Vector2;
+import universalelectricity.core.vector.Vector3;
+
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -28,7 +31,7 @@ public abstract class GuiMachineContainer extends GuiContainer
 
     public GuiMachineContainer(Object mod, Container container, InventoryPlayer inventoryPlayer, TileEntityMachine tileEntity)
     {
-        super(container);
+        super(container);        
         this.tileEntity = tileEntity;
         this.entityPlayer = inventoryPlayer.player;
         this.ySize = 380 / 2;

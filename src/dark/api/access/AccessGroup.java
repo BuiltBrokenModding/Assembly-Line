@@ -30,10 +30,20 @@ public class AccessGroup extends Group<AccessUser>
     @Override
     public boolean addMemeber(AccessUser obj)
     {
-        if (super.addMemeber(obj))
+        if (obj != null)
         {
-            obj.setGroup(this);
-            return true;
+            for (AccessUser user : this.memebers)
+            {
+                if (user.getName().equalsIgnoreCase(obj.getName()))
+                {
+                    return false;
+                }
+            }
+            if (super.addMemeber(obj))
+            {
+                obj.setGroup(this);
+                return true;
+            }
         }
         return false;
     }
@@ -64,14 +74,14 @@ public class AccessGroup extends Group<AccessUser>
             }
         }
         nbt.setTag("Users", usersTag);
-        usersTag = new NBTTagList();
+        NBTTagList nodesTag = new NBTTagList();
         for (String str : this.nodes)
         {
             NBTTagCompound accessData = new NBTTagCompound();
             accessData.setString("name", str);
-            usersTag.appendTag(accessData);
+            nodesTag.appendTag(accessData);
         }
-        nbt.setTag("nodes", usersTag);
+        nbt.setTag("nodes", nodesTag);
         return nbt;
     }
 

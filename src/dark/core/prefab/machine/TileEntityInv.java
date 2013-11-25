@@ -21,7 +21,7 @@ import dark.core.prefab.terminal.TerminalCommandRegistry;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
 /** Prefab for simple object who only need basic inv support and nothing more
- *
+ * 
  * @author Darkguardsman */
 public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, ISidedInventory, ISpecialAccess
 {
@@ -32,14 +32,14 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
     /** A list of user access data. */
     protected List<AccessGroup> groups = new ArrayList<AccessGroup>();
 
-    public TileEntityInv()
-    {
-        TerminalCommandRegistry.loadNewGroupSet(this);
-    }
-
+    @Override
     public void initiate()
     {
         thisPos = new Vector3(this);
+        if (this.groups == null || this.groups.isEmpty())
+        {
+            TerminalCommandRegistry.loadNewGroupSet(this);
+        }
     }
 
     public Vector3 getThisPos()
@@ -275,12 +275,20 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
     }
 
     @Override
-    public void addGroup(AccessGroup group)
+    public boolean addGroup(AccessGroup group)
     {
         if (!this.groups.contains(group))
         {
-            this.groups.add(group);
+            for (AccessGroup g : this.groups)
+            {
+                if (group.name().equalsIgnoreCase(g.name()))
+                {
+                    return false;
+                }
+            }
+            return this.groups.add(group);
         }
+        return false;
     }
 
     @Override

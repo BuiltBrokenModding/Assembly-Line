@@ -31,7 +31,8 @@ public interface ISpecialAccess
     /** Get all groups linked this */
     public List<AccessGroup> getGroups();
 
-    /** Add a group to the group list */
-    public void addGroup(AccessGroup group);
+    /** Add a group to the group list 
+     * @return */
+    public boolean addGroup(AccessGroup group);
 
 }
