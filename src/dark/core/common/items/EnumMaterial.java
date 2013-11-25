@@ -17,12 +17,12 @@ import dark.core.common.CoreRecipeLoader;
  * @author DarkGuardsman */
 public enum EnumMaterial
 {
-    WOOD("Wood", EnumToolMaterial.WOOD, EnumOrePart.INGOTS, EnumOrePart.PLATES, EnumOrePart.RUBBLE, EnumOrePart.ROD, EnumOrePart.GEARS),
-    STONE("Stone", EnumToolMaterial.STONE, EnumOrePart.INGOTS, EnumOrePart.SCRAPS),
+    WOOD("Wood", EnumToolMaterial.WOOD, EnumOrePart.INGOTS, EnumOrePart.PLATES, EnumOrePart.RUBBLE, EnumOrePart.ROD, EnumOrePart.GEARS, EnumOrePart.MOLTEN),
+    STONE("Stone", EnumToolMaterial.STONE, EnumOrePart.INGOTS, EnumOrePart.SCRAPS, EnumOrePart.MOLTEN),
     IRON("Iron", EnumToolMaterial.IRON, EnumOrePart.INGOTS),
-    OBBY("Obby", true, 7.0f, 500, 4, EnumOrePart.INGOTS, EnumOrePart.RUBBLE, EnumOrePart.SCRAPS, EnumOrePart.PLATES),
+    OBBY("Obby", true, 7.0f, 500, 4, EnumOrePart.INGOTS, EnumOrePart.RUBBLE, EnumOrePart.SCRAPS, EnumOrePart.PLATES, EnumOrePart.MOLTEN),
     GOLD("Gold", EnumToolMaterial.GOLD, EnumOrePart.GEARS, EnumOrePart.INGOTS),
-    COAL("Coal", EnumToolMaterial.WOOD, EnumOrePart.GEARS, EnumOrePart.TUBE, EnumOrePart.PLATES, EnumOrePart.RUBBLE, EnumOrePart.SCRAPS),
+    COAL("Coal", EnumToolMaterial.WOOD, EnumOrePart.GEARS, EnumOrePart.TUBE, EnumOrePart.PLATES, EnumOrePart.RUBBLE, EnumOrePart.SCRAPS, EnumOrePart.MOLTEN),
 
     COPPER("Copper", true, 3.5f, 79, 1),
     TIN("Tin", true, 2.0f, 50, 1, EnumOrePart.GEARS, EnumOrePart.TUBE),

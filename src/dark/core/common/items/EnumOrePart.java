@@ -11,7 +11,7 @@ public enum EnumOrePart
     TUBE("Tube"),
     ROD("Rod"),
     SCRAPS("Scraps"),
-    MOLTEN_SCRAPS("MoltenScraps");
+    MOLTEN("Molten");
 
     public String simpleName;
 

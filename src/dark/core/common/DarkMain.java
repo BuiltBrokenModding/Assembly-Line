@@ -141,10 +141,10 @@ public class DarkMain extends ModPrefab
         for (EnumGas gas : EnumGas.values())
         {
             FluidRegistry.registerFluid(gas.getGas());
-            if (CoreRecipeLoader.blockGas != null)
-            {
-                gas.getGas().setBlockID(CoreRecipeLoader.blockGas);
-            }
+        }
+        if (CoreRecipeLoader.blockGas != null)
+        {
+            EnumGas.NATURAL_GAS.getGas().setBlockID(CoreRecipeLoader.blockGas);
         }
         if (CoreRecipeLoader.blockGas != null)
         {

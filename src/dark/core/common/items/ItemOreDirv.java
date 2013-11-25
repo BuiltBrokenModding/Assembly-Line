@@ -19,7 +19,7 @@ import dark.core.prefab.ItemBasic;
 import dark.core.prefab.ModPrefab;
 
 /** A series of items that are derived from a basic material
- * 
+ *
  * @author DarkGuardsman */
 public class ItemOreDirv extends ItemBasic implements IExtraItemInfo
 {
@@ -122,19 +122,19 @@ public class ItemOreDirv extends ItemBasic implements IExtraItemInfo
             {
                 if (event.items.get(i).itemID == Block.blockIron.blockID)
                 {
-                    event.items.set(i, EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.MOLTEN_SCRAPS, event.items.get(i).stackSize * 9));
+                    event.items.set(i, EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.MOLTEN, event.items.get(i).stackSize * 9));
                 }
                 else if (event.items.get(i).itemID == Block.blockGold.blockID)
                 {
-                    event.items.set(i, EnumMaterial.getStack(EnumMaterial.GOLD, EnumOrePart.MOLTEN_SCRAPS, event.items.get(i).stackSize * 9));
+                    event.items.set(i, EnumMaterial.getStack(EnumMaterial.GOLD, EnumOrePart.MOLTEN, event.items.get(i).stackSize * 9));
                 }
                 else if (event.items.get(i).itemID == Block.oreIron.blockID)
                 {
-                    event.items.set(i, EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.MOLTEN_SCRAPS, event.items.get(i).stackSize));
+                    event.items.set(i, EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.MOLTEN, event.items.get(i).stackSize));
                 }
                 else if (event.items.get(i).itemID == Block.oreGold.blockID)
                 {
-                    event.items.set(i, EnumMaterial.getStack(EnumMaterial.GOLD, EnumOrePart.MOLTEN_SCRAPS, event.items.get(i).stackSize));
+                    event.items.set(i, EnumMaterial.getStack(EnumMaterial.GOLD, EnumOrePart.MOLTEN, event.items.get(i).stackSize));
                 }
 
                 String oreName = OreDictionary.getOreName(OreDictionary.getOreID(event.items.get(i)));
@@ -145,12 +145,12 @@ public class ItemOreDirv extends ItemBasic implements IExtraItemInfo
                     {
                         if (oreName.equalsIgnoreCase("ore" + mat.simpleName) || oreName.equalsIgnoreCase(mat.simpleName + "ore"))
                         {
-                            event.items.set(i, mat.getStack(EnumOrePart.MOLTEN_SCRAPS, event.items.get(i).stackSize + 1 + event.world.rand.nextInt(3)));
+                            event.items.set(i, mat.getStack(EnumOrePart.MOLTEN, event.items.get(i).stackSize + 1 + event.world.rand.nextInt(3)));
                             break;
                         }
                         else if (oreName.equalsIgnoreCase("ingot" + mat.simpleName) || oreName.equalsIgnoreCase(mat.simpleName + "ingot"))
                         {
-                            event.items.set(i, mat.getStack(EnumOrePart.MOLTEN_SCRAPS, event.items.get(i).stackSize));
+                            event.items.set(i, mat.getStack(EnumOrePart.MOLTEN, event.items.get(i).stackSize));
                             break;
                         }
                     }
