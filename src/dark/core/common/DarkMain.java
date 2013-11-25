@@ -179,24 +179,24 @@ public class DarkMain extends ModPrefab
             {
                 if (mat.shouldCreateItem(EnumOrePart.INGOTS))
                 {
-                    OreDictionary.registerOre(mat.simpleName + "ingot", mat.getStack(EnumOrePart.INGOTS, 1));
-                    OreDictionary.registerOre("ingot" + mat.simpleName, mat.getStack(EnumOrePart.INGOTS, 1));
+                    OreDictionary.registerOre(mat.getOreName(EnumOrePart.INGOTS), mat.getStack(EnumOrePart.INGOTS, 1));
+                    OreDictionary.registerOre(mat.getOreNameReverse(EnumOrePart.INGOTS), mat.getStack(EnumOrePart.INGOTS, 1));
                 }
                 if (mat.shouldCreateItem(EnumOrePart.RUBBLE))
                 {
-                    OreDictionary.registerOre(mat.simpleName + "rubble", mat.getStack(EnumOrePart.RUBBLE, 1));
-                    OreDictionary.registerOre("rubble" + mat.simpleName, mat.getStack(EnumOrePart.RUBBLE, 1));
+                    OreDictionary.registerOre(mat.getOreName(EnumOrePart.RUBBLE), mat.getStack(EnumOrePart.RUBBLE, 1));
+                    OreDictionary.registerOre(mat.getOreNameReverse(EnumOrePart.RUBBLE), mat.getStack(EnumOrePart.RUBBLE, 1));
                 }
                 if (mat.shouldCreateItem(EnumOrePart.DUST))
                 {
-                    OreDictionary.registerOre(mat.simpleName + "dust", mat.getStack(EnumOrePart.DUST, 1));
-                    OreDictionary.registerOre("dust" + mat.simpleName, mat.getStack(EnumOrePart.DUST, 1));
+                    OreDictionary.registerOre(mat.getOreName(EnumOrePart.DUST), mat.getStack(EnumOrePart.DUST, 1));
+                    OreDictionary.registerOre(mat.getOreNameReverse(EnumOrePart.DUST), mat.getStack(EnumOrePart.DUST, 1));
                 }
                 if (mat.shouldCreateItem(EnumOrePart.SCRAPS))
                 {
 
-                    OreDictionary.registerOre(mat.simpleName + "scraps", mat.getStack(EnumOrePart.SCRAPS, 1));
-                    OreDictionary.registerOre("scraps" + mat.simpleName, mat.getStack(EnumOrePart.SCRAPS, 1));
+                    OreDictionary.registerOre(mat.getOreName(EnumOrePart.SCRAPS), mat.getStack(EnumOrePart.SCRAPS, 1));
+                    OreDictionary.registerOre(mat.getOreNameReverse(EnumOrePart.SCRAPS), mat.getStack(EnumOrePart.SCRAPS, 1));
                 }
                 if (mat.shouldCreateItem(EnumOrePart.TUBE))
                 {
@@ -207,18 +207,18 @@ public class DarkMain extends ModPrefab
                 if (mat.shouldCreateItem(EnumOrePart.ROD))
                 {
 
-                    OreDictionary.registerOre(mat.simpleName + "rod", mat.getStack(EnumOrePart.ROD, 1));
-                    OreDictionary.registerOre("rod" + mat.simpleName, mat.getStack(EnumOrePart.ROD, 1));
+                    OreDictionary.registerOre(mat.getOreName(EnumOrePart.ROD), mat.getStack(EnumOrePart.ROD, 1));
+                    OreDictionary.registerOre(mat.getOreNameReverse(EnumOrePart.ROD), mat.getStack(EnumOrePart.ROD, 1));
                 }
                 if (mat.shouldCreateItem(EnumOrePart.PLATES))
                 {
-                    OreDictionary.registerOre(mat.simpleName + "plate", mat.getStack(EnumOrePart.PLATES, 1));
-                    OreDictionary.registerOre("plate" + mat.simpleName, mat.getStack(EnumOrePart.PLATES, 1));
+                    OreDictionary.registerOre(mat.getOreName(EnumOrePart.PLATES), mat.getStack(EnumOrePart.PLATES, 1));
+                    OreDictionary.registerOre(mat.getOreNameReverse(EnumOrePart.PLATES), mat.getStack(EnumOrePart.PLATES, 1));
                 }
                 if (mat.shouldCreateItem(EnumOrePart.GEARS))
                 {
-                    OreDictionary.registerOre(mat.simpleName + "gear", mat.getStack(EnumOrePart.GEARS, 1));
-                    OreDictionary.registerOre("gear" + mat.simpleName, mat.getStack(EnumOrePart.GEARS, 1));
+                    OreDictionary.registerOre(mat.getOreName(EnumOrePart.GEARS), mat.getStack(EnumOrePart.GEARS, 1));
+                    OreDictionary.registerOre(mat.getOreNameReverse(EnumOrePart.GEARS), mat.getStack(EnumOrePart.GEARS, 1));
                 }
 
             }
