@@ -10,6 +10,9 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import dark.api.ColorCode;
 import dark.core.common.CoreRecipeLoader;
 import dark.core.common.RecipeLoader;
+import dark.core.common.items.EnumMaterial;
+import dark.core.common.items.EnumOrePart;
+import dark.core.common.items.ItemParts;
 import dark.core.common.items.ItemParts.Parts;
 
 public class FMRecipeLoader extends RecipeLoader
@@ -56,34 +59,25 @@ public class FMRecipeLoader extends RecipeLoader
     {
         GameRegistry.addRecipe(new ItemStack(blockPumpMachine, 1, 0), new Object[] { "IXI", "X X", "IXI", 'I', Item.ingotIron, 'X', Block.glass });
     }
-   
+
     public void registerPipes()
     {
+        GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.IRON.getStack(2), new Object[] { EnumMaterial.IRON.getOreName(EnumOrePart.TUBE), ItemParts.Parts.Seal.name }));
+        GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.GOLD.getStack(2), new Object[] { EnumMaterial.GOLD.getOreName(EnumOrePart.TUBE), ItemParts.Parts.Seal.name }));
+        GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.TIN.getStack(2), new Object[] { EnumMaterial.TIN.getOreName(EnumOrePart.TUBE), ItemParts.Parts.Seal.name }));
+        GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.COPPER.getStack(2), new Object[] { EnumMaterial.COPPER.getOreName(EnumOrePart.TUBE), ItemParts.Parts.Seal.name }));
+        GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.BRONZE.getStack(2), new Object[] { EnumMaterial.BRONZE.getOreName(EnumOrePart.TUBE), ItemParts.Parts.GasSeal.name }));
+        GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.STEEL.getStack(2), new Object[] { EnumMaterial.STEEL.getOreName(EnumOrePart.TUBE), ItemParts.Parts.GasSeal.name }));
+
+        GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.OBBY.getStack(2), new Object[] { EnumMaterial.OBBY.getOreName(EnumOrePart.TUBE), Block.netherBrick, Block.netherBrick }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(FluidPartsMaterial.HELL.getStack(4), new Object[] { "OOO", "BNB", "OOO", 'N', Block.netherBrick, 'B', Item.blazeRod, 'O', Block.obsidian }));
+
         for (FluidPartsMaterial mat : FluidPartsMaterial.values())
         {
-            if (mat.canSupportFluids && !mat.canSupportGas && !mat.canSupportMoltenFluids)
-            {
-                GameRegistry.addRecipe(new ShapelessOreRecipe(mat.getStack(2), new Object[] { mat.matName + "tube", "LetherSeal" }));
-            }
-            else if (mat.canSupportGas)
-            {
-                GameRegistry.addRecipe(new ShapelessOreRecipe(mat.getStack(2), new Object[] { mat.matName + "tube", "GasSeal" }));
-            }
-            else if (mat.canSupportMoltenFluids)
-            {
-                if (mat == FluidPartsMaterial.OBBY)
-                {
-                    GameRegistry.addRecipe(new ShapelessOreRecipe(mat.getStack(2), new Object[] { mat.matName + "tube", Block.netherBrick, Block.netherBrick }));
-                }
-                if (mat == FluidPartsMaterial.HELL)
-                {
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(4), new Object[] { "OOO", "BNB", "OOO", 'N', Block.netherBrick, 'B', Item.blazeRod, 'O', Block.obsidian }));
-                }
-            }
             for (ColorCode color : ColorCode.values())
             {
                 GameRegistry.addRecipe(mat.getStack(color), new Object[] { " X ", "XIX", " X ", 'I', new ItemStack(Item.dyePowder, 1, color.ordinal()), 'X', blockPipe });
-                GameRegistry.addShapelessRecipe(mat.getStack(), new Object[]{mat.getStack(color)});
+                GameRegistry.addShapelessRecipe(mat.getStack(), new Object[] { mat.getStack(color) });
             }
 
         }
