@@ -67,7 +67,7 @@ public class AssemblyLine extends ModPrefab
     public static final String MOD_ID = "AssemblyLine";
     public static final String MOD_NAME = "Assembly Line";
 
-    @SidedProxy(clientSide = "dark.assembly.client.ClientProxy", serverSide = "dark.assembly.common.CommonProxy")
+    @SidedProxy(clientSide = "dark.assembly.client.ClientProxy", serverSide = "dark.assembly.CommonProxy")
     public static CommonProxy proxy;
 
     @Instance(AssemblyLine.MOD_ID)
