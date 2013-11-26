@@ -169,7 +169,7 @@ public class BlockBasicMachine extends BlockMachine
         }
         else
         {
-            world.setBlockMetadataWithNotify(x, y, z, BasicMachineData.GENERATOR_COAL.startMeta + change, 3);
+            world.setBlockMetadataWithNotify(x, y, z, BasicMachineData.STEAM_FAN.startMeta + change, 3);
         }
     }
 
@@ -315,29 +315,15 @@ public class BlockBasicMachine extends BlockMachine
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
-        int id = idPicked(world, x, y, z);
-
-        if (id == 0)
-        {
-            return null;
-        }
-
-        Item item = Item.itemsList[id];
-
-        if (item == null)
-        {
-            return null;
-        }
-
-        int metadata = getDamageValue(world, x, y, z);
-
-        return new ItemStack(id, 1, metadata);
+        return new ItemStack(this, 1, world.getBlockMetadata(x, y, z) / 4);
     }
 
     public static enum BasicMachineData
     {
-        GENERATOR_COAL("coalgen", 0, CommonProxy.GUI_COAL_GEN, TileEntityBasicGenerator.class),
-        GENERATOR_FUEL("fuelgen", 4, CommonProxy.GUI_FUEL_GEN, TileEntityBasicGenerator.class),
+        /** Procures power from steam returning extra water back to the steam generator bellow it */
+        STEAM_FAN("steamfan", 0, CommonProxy.GUI_COAL_GEN, TileEntityBasicGenerator.class),
+        /** Procures power from steam returning extra water back to the steam generator bellow it */
+        STEAM_PISTON("steampiston", 4, CommonProxy.GUI_FUEL_GEN, TileEntityBasicGenerator.class),
         BATTERY_BOX("batterybox", 8, CommonProxy.GUI_BATTERY_BOX, TileEntityBatteryBox.class),
         ELECTRIC_FURNACE("electricfurnace", 12, CommonProxy.GUI_FURNACE_ELEC, TileEntityElectricFurnace.class);
 
