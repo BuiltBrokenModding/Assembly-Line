@@ -9,7 +9,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
 /** Override version of the vanilla egg to allow additional bird types to exist with the same item
- *
+ * 
  * @author DarkGuardsman */
 public class EntityFarmEgg extends EntityThrowable
 {

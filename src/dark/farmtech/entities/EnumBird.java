@@ -1,16 +1,11 @@
 package dark.farmtech.entities;
 
-import cpw.mods.fml.common.registry.EntityRegistry;
-import dark.farmtech.FarmTech;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
 
 /** Enum of different birds that can be spawned by an egg or in the world threw normal spawning
- *
+ * 
  * @author DarkGuardsman */
 public enum EnumBird
 {

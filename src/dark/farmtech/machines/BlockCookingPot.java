@@ -21,8 +21,8 @@ import dark.farmtech.FarmTech;
  * amounts of soup. This cooking pot should operate without a gui. Instead of using a gui a player
  * will need to click the pot with the items. This also means adding wood to the bottom and starting
  * it with a lighter. Water and food must also be added by hand.
- *
- *
+ * 
+ * 
  * @author DarkGuardsman */
 public class BlockCookingPot extends BlockMachine
 {
