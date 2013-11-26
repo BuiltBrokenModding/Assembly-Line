@@ -2,15 +2,13 @@ package dark.core.helpers;
 
 import java.util.List;
 
-import universalelectricity.core.vector.Quaternion;
-import universalelectricity.core.vector.Vector3;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import universalelectricity.core.vector.Vector3;
 
 public class RayTraceHelper
 {
@@ -75,7 +73,7 @@ public class RayTraceHelper
     @SuppressWarnings("unchecked")
     public static MovingObjectPosition raytraceEntities(World world, Vec3 start, Vec3 end, double range, boolean collisionFlag, Entity exclude)
     {
-        AxisAlignedBB boxToScan = AxisAlignedBB.getBoundingBox(start.xCoord, start.yCoord, start.zCoord, end.xCoord, end.yCoord, end.zCoord);       
+        AxisAlignedBB boxToScan = AxisAlignedBB.getBoundingBox(start.xCoord, start.yCoord, start.zCoord, end.xCoord, end.yCoord, end.zCoord);
         List<Entity> entitiesHit = null;
         if (exclude != null)
         {
@@ -93,9 +91,9 @@ public class RayTraceHelper
             return null;
         }
         for (Entity entityHit : entitiesHit)
-        {            
+        {
             if (entityHit != null && entityHit.canBeCollidedWith() && entityHit.boundingBox != null)
-            {               
+            {
                 float border = entityHit.getCollisionBorderSize();
                 AxisAlignedBB aabb = entityHit.boundingBox.expand(border, border, border);
                 MovingObjectPosition hitMOP = aabb.calculateIntercept(start, end);

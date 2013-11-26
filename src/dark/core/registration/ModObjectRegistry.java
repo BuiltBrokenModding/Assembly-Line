@@ -22,7 +22,6 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.core.common.DarkMain;
-import dark.core.common.blocks.BlockGasOre;
 import dark.core.interfaces.IExtraInfo;
 import dark.core.interfaces.IExtraInfo.IExtraBlockInfo;
 import dark.core.interfaces.IExtraInfo.IExtraItemInfo;

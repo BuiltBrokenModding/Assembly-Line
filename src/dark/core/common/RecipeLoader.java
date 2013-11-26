@@ -4,13 +4,6 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-
-import com.builtbroken.common.Pair;
-import com.builtbroken.common.Triple;
-
-import cpw.mods.fml.common.registry.GameRegistry;
-import dark.core.helpers.AutoCraftingManager;
 
 /** Recipe system to make it easier to load recipes for a mod
  * 
@@ -95,5 +88,5 @@ public abstract class RecipeLoader
             return itemStack;
         }
         return stack;
-    } 
+    }
 }

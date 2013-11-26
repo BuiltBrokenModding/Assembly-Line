@@ -1,21 +1,15 @@
 package dark.core.common.blocks;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderEnd;
-import net.minecraft.world.gen.ChunkProviderGenerate;
 import net.minecraft.world.gen.ChunkProviderHell;
 import net.minecraftforge.fluids.FluidStack;
-import universalelectricity.prefab.ore.OreGenBase;
 import cpw.mods.fml.common.IWorldGenerator;
-import cpw.mods.fml.common.registry.GameRegistry;
 import dark.core.common.CoreRecipeLoader;
 
 public class GasOreGenerator implements IWorldGenerator

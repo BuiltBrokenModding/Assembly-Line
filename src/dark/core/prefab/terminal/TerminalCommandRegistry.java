@@ -105,7 +105,7 @@ public class TerminalCommandRegistry
             List<AccessGroup> groups = getNewGroupSet();
             for (AccessGroup group : groups)
             {
-               terminal.addGroup(group);
+                terminal.addGroup(group);
             }
         }
     }

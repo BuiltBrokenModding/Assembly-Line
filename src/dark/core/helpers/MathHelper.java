@@ -128,8 +128,8 @@ public class MathHelper extends net.minecraft.util.MathHelper
 
     public static double updateRotation(double from, double to, double speed)
     {
-        from = MathHelper.wrapAngleTo180_double(from);
-        to = MathHelper.wrapAngleTo180_double(to);
+        from = net.minecraft.util.MathHelper.wrapAngleTo180_double(from);
+        to = net.minecraft.util.MathHelper.wrapAngleTo180_double(to);
         double delta = Math.abs(from - to);
         if (delta > 0.001f)
         {
@@ -152,8 +152,8 @@ public class MathHelper extends net.minecraft.util.MathHelper
 
     public static double updateRotation(float from, float to, float speed)
     {
-        from = MathHelper.wrapAngleTo180_float(from);
-        to = MathHelper.wrapAngleTo180_float(to);
+        from = net.minecraft.util.MathHelper.wrapAngleTo180_float(from);
+        to = net.minecraft.util.MathHelper.wrapAngleTo180_float(to);
         double delta = Math.abs(from - to);
         if (delta > 0.001f)
         {

@@ -19,7 +19,7 @@ import dark.core.prefab.ItemBasic;
 import dark.core.prefab.ModPrefab;
 
 /** A series of items that are derived from a basic material
- *
+ * 
  * @author DarkGuardsman */
 public class ItemOreDirv extends ItemBasic implements IExtraItemInfo
 {

@@ -5,7 +5,7 @@ import java.util.Set;
 import net.minecraft.tileentity.TileEntity;
 
 /** Applied to network entities that don't exist in the world but manage its tiles
- *
+ * 
  * @author DarkGuardsman */
 public interface ITileNetwork
 {
@@ -16,7 +16,7 @@ public interface ITileNetwork
     public Set<INetworkPart> getMembers();
 
     /** Called when something want the network to add the tile
-     *
+     * 
      * @param entity - tile in question
      * @param member - add it as a member if true
      * @return true if added without issue */

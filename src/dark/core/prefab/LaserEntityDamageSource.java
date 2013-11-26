@@ -45,7 +45,7 @@ public class LaserEntityDamageSource extends EntityDamageSource
         {
             if (((EntityPlayer) event.entity).inventory.armorItemInSlot(3) == new ItemStack(Item.plateDiamond, 1))
             {
-                if(event.isCancelable())
+                if (event.isCancelable())
                 {
                     event.setCanceled(true);
                 }

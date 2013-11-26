@@ -4,8 +4,8 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import dark.core.prefab.ItemBlockHolder;
 
-/** Item block that is the unplaced sentry gun. All sentry gun data is held by NBT to allow the sentry
- * gun to exist without metadata limits.
+/** Item block that is the unplaced sentry gun. All sentry gun data is held by NBT to allow the
+ * sentry gun to exist without metadata limits.
  * 
  * @author DarkGuardsman */
 public class ItemBlockSentry extends ItemBlockHolder

@@ -2,9 +2,6 @@ package dark.core.prefab.vehicles;
 
 import java.util.List;
 
-import com.google.common.io.ByteArrayDataInput;
-
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -14,6 +11,8 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+
+import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.Player;
@@ -118,11 +117,11 @@ public abstract class EntityVehicle extends EntityAdvanced implements IControlRe
 
             if (this.worldObj.isRemote)
             {
-                ((EntityPlayer)this.riddenByEntity).sendChatToPlayer(ChatMessageComponent.createFromText("Client:RotationYaw: "+this.rotationYaw));
+                ((EntityPlayer) this.riddenByEntity).sendChatToPlayer(ChatMessageComponent.createFromText("Client:RotationYaw: " + this.rotationYaw));
             }
             else
             {
-                ((EntityPlayer)this.riddenByEntity).sendChatToPlayer(ChatMessageComponent.createFromText("Server:RotationYaw: "+this.rotationYaw));
+                ((EntityPlayer) this.riddenByEntity).sendChatToPlayer(ChatMessageComponent.createFromText("Server:RotationYaw: " + this.rotationYaw));
             }
         }
         if (this.worldObj.isRemote)
@@ -137,12 +136,12 @@ public abstract class EntityVehicle extends EntityAdvanced implements IControlRe
             double z;
             if (this.boatPosRotationIncrements > 0)
             {
-                x = this.posX + (this.boatX - this.posX) / (double) this.boatPosRotationIncrements;
-                y = this.posY + (this.boatY - this.posY) / (double) this.boatPosRotationIncrements;
-                z = this.posZ + (this.boatZ - this.posZ) / (double) this.boatPosRotationIncrements;
+                x = this.posX + (this.boatX - this.posX) / this.boatPosRotationIncrements;
+                y = this.posY + (this.boatY - this.posY) / this.boatPosRotationIncrements;
+                z = this.posZ + (this.boatZ - this.posZ) / this.boatPosRotationIncrements;
 
-                this.rotationYaw = (float) ((double) this.rotationYaw + MathHelper.wrapAngleTo180_double(this.boatYaw - (double) this.rotationYaw) / (double) this.boatPosRotationIncrements);
-                this.rotationPitch = (float) ((double) this.rotationPitch + (this.boatPitch - (double) this.rotationPitch) / (double) this.boatPosRotationIncrements);
+                this.rotationYaw = (float) (this.rotationYaw + net.minecraft.util.MathHelper.wrapAngleTo180_double(this.boatYaw - this.rotationYaw) / this.boatPosRotationIncrements);
+                this.rotationPitch = (float) (this.rotationPitch + (this.boatPitch - this.rotationPitch) / this.boatPosRotationIncrements);
                 --this.boatPosRotationIncrements;
                 this.setPosition(x, y, z);
                 this.setRotation(this.rotationYaw, this.rotationPitch);
@@ -172,8 +171,8 @@ public abstract class EntityVehicle extends EntityAdvanced implements IControlRe
 
             if (this.speed != 0.0D)
             {
-                this.motionX = -Math.sin((double) (this.rotationYaw * (float) Math.PI / 180.0F)) * this.speed;
-                this.motionZ = Math.cos((double) (this.rotationYaw * (float) Math.PI / 180.0F)) * this.speed;
+                this.motionX = -Math.sin((this.rotationYaw * (float) Math.PI / 180.0F)) * this.speed;
+                this.motionZ = Math.cos((this.rotationYaw * (float) Math.PI / 180.0F)) * this.speed;
             }
 
             currentVel = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
@@ -281,12 +280,12 @@ public abstract class EntityVehicle extends EntityAdvanced implements IControlRe
 
             for (l = 0; l < 4; ++l)
             {
-                int i1 = MathHelper.floor_double(this.posX + ((double) (l % 2) - 0.5D) * 0.8D);
-                int j1 = MathHelper.floor_double(this.posZ + ((double) (l / 2) - 0.5D) * 0.8D);
+                int i1 = net.minecraft.util.MathHelper.floor_double(this.posX + ((l % 2) - 0.5D) * 0.8D);
+                int j1 = net.minecraft.util.MathHelper.floor_double(this.posZ + ((l / 2) - 0.5D) * 0.8D);
 
                 for (int k1 = 0; k1 < 2; ++k1)
                 {
-                    int l1 = MathHelper.floor_double(this.posY) + k1;
+                    int l1 = net.minecraft.util.MathHelper.floor_double(this.posY) + k1;
                     int i2 = this.worldObj.getBlockId(i1, l1, j1);
 
                     if (i2 == Block.snow.blockID)
@@ -303,7 +302,7 @@ public abstract class EntityVehicle extends EntityAdvanced implements IControlRe
     }
 
     /** Increases the speed by a determined amount per tick the player holds the forward key down
-     *
+     * 
      * @param forward */
     public void accelerate(boolean forward)
     {

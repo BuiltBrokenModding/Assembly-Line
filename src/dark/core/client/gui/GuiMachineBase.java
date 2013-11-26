@@ -1,20 +1,21 @@
 package dark.core.client.gui;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
-import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+
+import cpw.mods.fml.client.FMLClientHandler;
 import dark.core.common.DarkMain;
 import dark.core.prefab.invgui.GuiBase;
 import dark.core.prefab.invgui.GuiButtonImage;
 import dark.core.prefab.machine.TileEntityMachine;
 
 /** To be used with all machine that have a gui to allow generic settings and feature all all devices
- *
+ * 
  * @author DarkGuardsman */
 public class GuiMachineBase extends GuiBase
 {

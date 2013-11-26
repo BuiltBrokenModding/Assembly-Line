@@ -2,13 +2,13 @@ package dark.core.prefab.invgui;
 
 import java.awt.Color;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
+
 import universalelectricity.core.vector.Vector2;
 import dark.core.common.DarkMain;
 

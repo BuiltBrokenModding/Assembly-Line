@@ -37,7 +37,7 @@ public class RenderTestCar extends Render
         GL11.glRotatef(180.0F - rYaw, 0.0F, 1.0F, 0.0F);
         if (entity instanceof EntityAdvanced)
         {
-            float f2 = (float) ((EntityAdvanced) entity).getTimeSinceHit() - rPitch;
+            float f2 = ((EntityAdvanced) entity).getTimeSinceHit() - rPitch;
             float f3 = ((EntityAdvanced) entity).getHealth() - rPitch;
 
             if (f3 < 0.0F)
@@ -47,7 +47,7 @@ public class RenderTestCar extends Render
 
             if (f2 > 0.0F)
             {
-                GL11.glRotatef(MathHelper.sin(f2) * f2 * f3 / 10.0F * (float) ((EntityAdvanced) entity).getForwardDirection(), 1.0F, 0.0F, 0.0F);
+                GL11.glRotatef(MathHelper.sin(f2) * f2 * f3 / 10.0F * ((EntityAdvanced) entity).getForwardDirection(), 1.0F, 0.0F, 0.0F);
             }
         }
 

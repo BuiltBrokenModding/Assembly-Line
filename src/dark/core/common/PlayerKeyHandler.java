@@ -3,18 +3,12 @@ package dark.core.common;
 import java.util.EnumSet;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
-import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.util.StatCollector;
-import net.minecraft.world.World;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
 import cpw.mods.fml.common.IScheduledTickHandler;
-import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 import dark.core.network.PacketManagerKeyEvent;
 

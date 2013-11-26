@@ -1,8 +1,7 @@
 package dark.api.parts;
 
-import universalelectricity.core.vector.Vector3;
 import net.minecraft.entity.Entity;
-import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.core.vector.Vector3;
 
 public interface IMotionPath
 {
@@ -14,7 +13,7 @@ public interface IMotionPath
      * the tile as the controller doesn't know the range of control of the tile. Though it does
      * limit itself to blocks around the entity. So if your tile only effects entities above it
      * within its bound then make sure the tile is inside those bounds
-     *
+     * 
      * @param entity - entity in question
      * @param from - direction the entity came from
      * @return true if it can, false if something is wrong like no power, or solid side */

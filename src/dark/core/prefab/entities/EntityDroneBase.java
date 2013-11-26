@@ -1,9 +1,5 @@
 package dark.core.prefab.entities;
 
-import universalelectricity.core.block.IElectrical;
-import universalelectricity.core.block.IElectricalStorage;
-import universalelectricity.core.electricity.ElectricityPack;
-import dark.api.IDrone;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.Attribute;
@@ -11,11 +7,15 @@ import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.core.block.IElectrical;
+import universalelectricity.core.block.IElectricalStorage;
+import universalelectricity.core.electricity.ElectricityPack;
+import dark.api.IDrone;
 
 public class EntityDroneBase extends EntityCreature implements IDrone, IElectrical, IElectricalStorage
 {
     private float energyStored = 0.0f;
-    
+
     public static final Attribute maxEnergy = (new RangedAttribute("drone.maxEnergy", 100.0D, 0.0D, Double.MAX_VALUE)).func_111117_a("Max Energy").setShouldWatch(true);
 
     public EntityDroneBase(World par1World)
@@ -24,6 +24,7 @@ public class EntityDroneBase extends EntityCreature implements IDrone, IElectric
         this.getNavigator().setAvoidsWater(true);
     }
 
+    @Override
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
@@ -54,8 +55,7 @@ public class EntityDroneBase extends EntityCreature implements IDrone, IElectric
     {
         return false;
     }
-    
-    
+
     public boolean consumePower(float watts, boolean doDrain)
     {
         if (this.getEnergyStored() >= watts)
@@ -79,7 +79,7 @@ public class EntityDroneBase extends EntityCreature implements IDrone, IElectric
     public void setEnergyStored(float energy)
     {
         this.energyStored = energy;
-        
+
     }
 
     @Override
@@ -103,7 +103,7 @@ public class EntityDroneBase extends EntityCreature implements IDrone, IElectric
         }
         return 0;
     }
-    
+
     /** A non-side specific version of receiveElectricity for you to optionally use it internally. */
     public float receiveElectricity(ElectricityPack receive, boolean doReceive)
     {
@@ -126,7 +126,6 @@ public class EntityDroneBase extends EntityCreature implements IDrone, IElectric
     {
         return this.receiveElectricity(ElectricityPack.getFromWatts(energy, this.getVoltage()), doReceive);
     }
-
 
     @Override
     public ElectricityPack provideElectricity(ForgeDirection from, ElectricityPack request, boolean doProvide)
@@ -151,8 +150,7 @@ public class EntityDroneBase extends EntityCreature implements IDrone, IElectric
     {
         return 30;
     }
-    
-    
+
     @Override
     public void readFromNBT(NBTTagCompound nbt)
     {

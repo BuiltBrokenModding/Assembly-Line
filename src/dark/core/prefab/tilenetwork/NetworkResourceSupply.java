@@ -8,7 +8,7 @@ import net.minecraftforge.common.ForgeDirection;
 import dark.api.parts.INetworkPart;
 
 /** Network that supplies resources to tiles that demand a set resource
- *
+ * 
  * @param C - Storage class used to handle what the network transports
  * @param I - Base acceptor class
  * @author DarkGuardsman */

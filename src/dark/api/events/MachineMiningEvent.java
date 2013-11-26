@@ -10,7 +10,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Cancelable;
 import net.minecraftforge.event.Event;
 import universalelectricity.core.vector.Vector3;
-import dark.core.prefab.machine.TileEntityMachine;
 
 public class MachineMiningEvent extends Event
 {

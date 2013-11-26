@@ -3,9 +3,6 @@ package dark.api.events;
 import java.util.ArrayList;
 import java.util.List;
 
-import dark.core.common.items.EnumTool;
-import dark.core.helpers.ItemWorldHelper;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -23,6 +20,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Cancelable;
 import net.minecraftforge.event.Event;
 import universalelectricity.core.vector.Vector3;
+import dark.core.common.items.EnumTool;
+import dark.core.helpers.ItemWorldHelper;
 
 /** An event triggered by entities or tiles that create lasers
  * 
@@ -213,7 +212,7 @@ public class LaserEvent extends Event
                     if (block.blockID == Block.tnt.blockID)
                     {
                         world.setBlock(vec.intX(), vec.intY(), vec.intZ(), 0, 0, 3);
-                        EntityTNTPrimed entitytntprimed = new EntityTNTPrimed(world, (double) ((float) vec.intX() + 0.5F), (double) ((float) vec.intY() + 0.5F), (double) ((float) vec.intZ() + 0.5F), player instanceof EntityLivingBase ? ((EntityLivingBase) player) : null);
+                        EntityTNTPrimed entitytntprimed = new EntityTNTPrimed(world, (vec.intX() + 0.5F), (vec.intY() + 0.5F), (vec.intZ() + 0.5F), player instanceof EntityLivingBase ? ((EntityLivingBase) player) : null);
                         entitytntprimed.fuse = world.rand.nextInt(entitytntprimed.fuse / 4) + entitytntprimed.fuse / 8;
                         world.spawnEntityInWorld(entitytntprimed);
                         return;

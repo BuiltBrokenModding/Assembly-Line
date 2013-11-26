@@ -6,13 +6,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import cpw.mods.fml.common.IScheduledTickHandler;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 import dark.api.parts.ITileNetwork;
 
 /** Manages all the tile networks making sure they get world save events, and updates every so often
- *
+ * 
  * @author DarkGuardsman */
 public class NetworkUpdateHandler implements ITickHandler
 {
@@ -102,7 +101,7 @@ public class NetworkUpdateHandler implements ITickHandler
     @Override
     public void tickStart(EnumSet<TickType> type, Object... tickData)
     {
-        if (count + 1 >= this.refreshTicks)
+        if (count + 1 >= NetworkUpdateHandler.refreshTicks)
         {
             count = 0;
             for (ITileNetwork network : allNetworks)

@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import dark.core.common.DMCreativeTab;
 import dark.core.common.DarkMain;
 import dark.core.helpers.MathHelper;
+import dark.core.prefab.ModPrefab;
 
 /** Basic item used to spawn a vehicle
  * 
@@ -23,7 +24,7 @@ public class ItemVehicleSpawn extends Item
 {
     public ItemVehicleSpawn()
     {
-        super(DarkMain.getNextItemId());
+        super(ModPrefab.getNextItemId());
         this.setUnlocalizedName("Vehicle");
         this.setCreativeTab(DMCreativeTab.tabIndustrial);
     }
@@ -44,9 +45,9 @@ public class ItemVehicleSpawn extends Item
 
         //Find the vector X blocks away from the player in the same direction as the player is looking 
         double searchRange = 5.0D;
-        float deltaX = MathHelper.sin(-playerYaw * 0.017453292F - (float) Math.PI) * -MathHelper.cos(-playerPitch * 0.017453292F);
-        float deltaY = MathHelper.sin(-playerPitch * 0.017453292F);
-        float deltaZ = MathHelper.cos(-playerYaw * 0.017453292F - (float) Math.PI) * -MathHelper.cos(-playerPitch * 0.017453292F);
+        float deltaX = net.minecraft.util.MathHelper.sin(-playerYaw * 0.017453292F - (float) Math.PI) * -net.minecraft.util.MathHelper.cos(-playerPitch * 0.017453292F);
+        float deltaY = net.minecraft.util.MathHelper.sin(-playerPitch * 0.017453292F);
+        float deltaZ = net.minecraft.util.MathHelper.cos(-playerYaw * 0.017453292F - (float) Math.PI) * -net.minecraft.util.MathHelper.cos(-playerPitch * 0.017453292F);
 
         Vec3 end = start.addVector(deltaX * searchRange, deltaY * searchRange, deltaZ * searchRange);
 

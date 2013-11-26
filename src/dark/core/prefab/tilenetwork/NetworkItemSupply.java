@@ -16,14 +16,15 @@ import dark.api.parts.INetworkPart;
 
 /** Class that acts like the redpower pipes system. Each item is marked with a destination. Intended
  * use it to improve the assembly line network
- *
+ * 
  * @author DarkGuardsman */
 public class NetworkItemSupply extends NetworkTileEntities
 {
     List<Pair<Entity, Vector3>> trackingList = new ArrayList<Pair<Entity, Vector3>>();
     List<Entity> ignoreList = new ArrayList<Entity>();
-    /** Same as valid directions from forge direction enum but Unknown was added so that is gets check and checked first  */
-    public static final ForgeDirection[] VALID_DIRECTIONS = {ForgeDirection.UNKNOWN, ForgeDirection.DOWN, ForgeDirection.UP, ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.WEST, ForgeDirection.EAST};
+    /** Same as valid directions from forge direction enum but Unknown was added so that is gets
+     * check and checked first */
+    public static final ForgeDirection[] VALID_DIRECTIONS = { ForgeDirection.UNKNOWN, ForgeDirection.DOWN, ForgeDirection.UP, ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.WEST, ForgeDirection.EAST };
 
     public NetworkItemSupply(INetworkPart... parts)
     {
@@ -98,7 +99,7 @@ public class NetworkItemSupply extends NetworkTileEntities
         {
             Vector3 ent = new Vector3(entity);
             //Check all directions including the current position of the entity
-            for (ForgeDirection direction : this.VALID_DIRECTIONS)
+            for (ForgeDirection direction : NetworkItemSupply.VALID_DIRECTIONS)
             {
                 TileEntity a = ent.clone().modifyPositionFromSide(direction).getTileEntity(entity.worldObj);
                 if (a instanceof IMotionPath && ((IMotionPath) a).canMoveEntity(entity) && this.networkMembers.contains(a))

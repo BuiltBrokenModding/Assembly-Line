@@ -1,7 +1,5 @@
 package dark.api.access;
 
-import net.minecraft.entity.player.EntityPlayer;
-
 /** Container of access groups that can be used by anything. Only the core machine should load/save
  * global access collections to prevent conflicts.
  * 

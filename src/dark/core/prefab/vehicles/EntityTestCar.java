@@ -1,14 +1,14 @@
 package dark.core.prefab.vehicles;
 
-import dark.core.common.CoreRecipeLoader;
 import net.minecraft.world.World;
+import dark.core.common.CoreRecipeLoader;
 
 public class EntityTestCar extends EntityVehicle
 {
 
     public EntityTestCar(World world)
     {
-        super(world);       
+        super(world);
     }
 
     public EntityTestCar(World world, float xx, float yy, float zz)

@@ -1,11 +1,6 @@
 package dark.core.prefab.sentry;
 
-import java.io.IOException;
 import java.util.List;
-
-import com.google.common.io.ByteArrayDataInput;
-
-import cpw.mods.fml.common.network.Player;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,6 +11,10 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
+
+import com.google.common.io.ByteArrayDataInput;
+
+import cpw.mods.fml.common.network.Player;
 import dark.api.ISentryGun;
 import dark.core.common.DarkMain;
 import dark.core.helpers.MathHelper;
@@ -23,7 +22,6 @@ import dark.core.helpers.RayTraceHelper;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.EntityTileDamage;
 import dark.core.prefab.machine.TileEntityMachine;
-import dark.core.prefab.machine.TileEntityMachine.SimplePacketTypes;
 
 /** Prefab tileEntity for creating senty guns that can be of type aimed, mounted, or automated.
  * Contains most of the code for a sentry gun to operate short of aiming and operating logic. This
@@ -299,7 +297,7 @@ public abstract class TileEntitySentry extends TileEntityMachine implements ISen
     {
         return PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, "Desc", this.isRunning, this.rotation);
     }
-    
+
     @Override
     public boolean simplePacket(String id, ByteArrayDataInput dis, Player player)
     {

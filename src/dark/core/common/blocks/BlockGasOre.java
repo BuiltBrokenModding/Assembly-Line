@@ -137,6 +137,7 @@ public class BlockGasOre extends Block implements IGasBlock
         return null;
     }
 
+    @Override
     public boolean isCollidable()
     {
         return false;
