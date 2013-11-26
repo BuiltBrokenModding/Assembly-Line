@@ -17,7 +17,6 @@ import universalelectricity.core.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
 
-import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

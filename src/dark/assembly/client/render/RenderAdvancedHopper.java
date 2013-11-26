@@ -10,8 +10,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
 import dark.assembly.client.model.ModelAdvancedHopper;
-import dark.assembly.client.model.ModelManipulator;
-import dark.assembly.machine.TileEntityManipulator;
 import dark.assembly.machine.red.TileEntityAdvancedHopper;
 import dark.core.prefab.ModPrefab;
 

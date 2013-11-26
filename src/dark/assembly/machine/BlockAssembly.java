@@ -5,7 +5,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.Configuration;
 import dark.assembly.AssemblyLine;
 import dark.core.common.DMCreativeTab;
 import dark.core.prefab.machine.BlockMachine;

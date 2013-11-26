@@ -1,34 +1,26 @@
 package dark.assembly.machine.red;
 
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
-
-import com.builtbroken.common.Pair;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Facing;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import cpw.mods.fml.client.registry.ClientRegistry;
+
+import com.builtbroken.common.Pair;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
 import dark.assembly.client.render.RenderAdvancedHopper;
 import dark.core.common.DMCreativeTab;
-import dark.core.common.DarkMain;
 import dark.core.prefab.machine.BlockMachine;
 
 /** Block for an advanced version of the vanilla minecraft hopper
@@ -103,7 +95,7 @@ public class BlockAdvancedHopper extends BlockMachine
     {
         list.add(new Pair<String, Class<? extends TileEntity>>("DMTileHopper", TileEntityAdvancedHopper.class));
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)

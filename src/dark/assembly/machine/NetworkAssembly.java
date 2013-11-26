@@ -12,8 +12,8 @@ import universalelectricity.core.block.IElectricalStorage;
 import universalelectricity.core.vector.Vector3;
 import dark.api.parts.INetworkEnergyPart;
 import dark.api.parts.INetworkPart;
-import dark.core.prefab.tilenetwork.NetworkUpdateHandler;
 import dark.core.prefab.tilenetwork.NetworkSharedPower;
+import dark.core.prefab.tilenetwork.NetworkUpdateHandler;
 
 public class NetworkAssembly extends NetworkSharedPower
 {

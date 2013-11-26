@@ -3,13 +3,6 @@ package dark.assembly.machine.frame;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.io.ByteArrayDataInput;
-
-import cpw.mods.fml.common.network.Player;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
@@ -18,6 +11,12 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.tile.IRotatable;
+
+import com.google.common.io.ByteArrayDataInput;
+
+import cpw.mods.fml.common.network.Player;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.parts.INetworkPart;
 import dark.api.parts.ITileNetwork;
 import dark.core.common.DarkMain;
@@ -28,7 +27,7 @@ import dark.core.network.PacketHandler;
 /** A non-updating tileEntity that represents the logic behind the frame. It contains rotation and
  * connection information. As well provides a way for a tile network to be created to provide a
  * uniform existence between all frame blocks in the rail
- *
+ * 
  * @author DarkGuardsman */
 public class TileEntityFrame extends TileEntity implements INetworkPart, IRotatable, ISimplePacketReceiver, IBlockActivated
 {

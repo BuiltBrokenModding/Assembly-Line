@@ -2,8 +2,6 @@ package dark.assembly.machine;
 
 import java.util.List;
 
-import com.builtbroken.common.Pair;
-
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -11,17 +9,19 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
+
+import com.builtbroken.common.Pair;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.CommonProxy;
 import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.client.render.RenderManipulator;
-import dark.assembly.client.render.RenderRejector;
 import dark.assembly.imprinter.prefab.BlockImprintable;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 /** A block that manipulates item movement between inventories.
- *
+ * 
  * @author Calclavia, DarkGuardsman */
 public class BlockManipulator extends BlockImprintable
 {

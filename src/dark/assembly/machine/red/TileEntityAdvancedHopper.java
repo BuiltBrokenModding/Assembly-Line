@@ -2,31 +2,15 @@ package dark.assembly.machine.red;
 
 import java.util.List;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockChest;
-import net.minecraft.command.IEntitySelector;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.Hopper;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Facing;
-import net.minecraft.util.MathHelper;
-import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
-import dark.api.al.IManipulator;
 import dark.assembly.imprinter.ItemImprinter;
 import dark.assembly.imprinter.prefab.TileEntityFilterable;
-import dark.assembly.machine.TileEntityManipulator;
 import dark.core.helpers.InvInteractionHelper;
 import dark.core.helpers.ItemWorldHelper;
-import dark.core.prefab.machine.TileEntityMachine;
 
 /** Advanced version of the hopper with features such as redstone control, sorting, filtering, and
  * crate version.

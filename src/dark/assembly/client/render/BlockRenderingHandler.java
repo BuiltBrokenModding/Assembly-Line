@@ -1,10 +1,7 @@
 package dark.assembly.client.render;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockHopper;
-import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
 

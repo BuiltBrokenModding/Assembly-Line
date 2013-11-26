@@ -3,20 +3,17 @@ package dark.assembly.machine.belt;
 import java.util.ArrayList;
 import java.util.List;
 
-import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.tile.IRotatable;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.core.vector.Vector3;
 import dark.api.al.IBelt;
 import dark.api.parts.IMotionPath;
 import dark.api.parts.INetworkPart;
 import dark.api.parts.ITileNetwork;
-import dark.api.parts.ITileConnector.Connection;
 import dark.assembly.machine.TileEntityAssembly;
-import dark.assembly.machine.belt.TileEntityConveyorBelt.SlantType;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
 import dark.core.prefab.tilenetwork.NetworkItemSupply;
 
@@ -45,6 +42,7 @@ public class TileEntityConveyor extends TileEntityEnergyMachine implements IMoti
         super(0.001f);
     }
 
+    @Override
     public boolean canFunction()
     {
         return super.canFunction() && !this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);

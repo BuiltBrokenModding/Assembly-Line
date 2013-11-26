@@ -7,7 +7,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import universalelectricity.core.vector.Vector2;
 import dark.api.al.coding.args.ArgumentData;
-import dark.core.common.DarkMain;
 
 /** @author DarkGuardsman */
 public interface ITask extends Cloneable

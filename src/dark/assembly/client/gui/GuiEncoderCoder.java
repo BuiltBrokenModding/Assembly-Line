@@ -1,6 +1,5 @@
 package dark.assembly.client.gui;
 
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
@@ -9,7 +8,6 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.client.FMLClientHandler;
 import dark.assembly.AssemblyLine;
 import dark.assembly.machine.encoder.TileEntityEncoder;
-import dark.core.client.gui.GuiMachineBase;
 
 public class GuiEncoderCoder extends GuiEncoderBase
 {
@@ -45,7 +43,7 @@ public class GuiEncoderCoder extends GuiEncoderBase
         super.mouseClicked(par1, par2, par3);
         if (par3 == 0)
         {
-           this.taskListGui.mousePressed(par1, par2);
+            this.taskListGui.mousePressed(par1, par2);
         }
     }
 

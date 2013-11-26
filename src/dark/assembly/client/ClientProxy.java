@@ -5,36 +5,19 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.assembly.ALRecipeLoader;
 import dark.assembly.CommonProxy;
-import dark.assembly.armbot.TileEntityArmbot;
 import dark.assembly.client.gui.GuiEncoderCoder;
 import dark.assembly.client.gui.GuiEncoderHelp;
 import dark.assembly.client.gui.GuiEncoderInventory;
 import dark.assembly.client.gui.GuiImprinter;
 import dark.assembly.client.gui.GuiProcessor;
 import dark.assembly.client.render.BlockRenderingHandler;
-import dark.assembly.client.render.RenderAdvancedHopper;
-import dark.assembly.client.render.RenderArmbot;
-import dark.assembly.client.render.RenderConveyorBelt;
-import dark.assembly.client.render.RenderCrate;
-import dark.assembly.client.render.RenderDetector;
-import dark.assembly.client.render.RenderManipulator;
-import dark.assembly.client.render.RenderProcessor;
-import dark.assembly.client.render.RenderRejector;
 import dark.assembly.imprinter.TileEntityImprinter;
-import dark.assembly.machine.TileEntityCrate;
-import dark.assembly.machine.TileEntityDetector;
-import dark.assembly.machine.TileEntityManipulator;
-import dark.assembly.machine.TileEntityRejector;
-import dark.assembly.machine.belt.TileEntityConveyorBelt;
 import dark.assembly.machine.encoder.TileEntityEncoder;
 import dark.assembly.machine.processor.TileEntityProcessor;
-import dark.assembly.machine.red.TileEntityAdvancedHopper;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy

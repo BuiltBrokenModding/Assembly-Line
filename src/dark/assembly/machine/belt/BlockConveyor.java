@@ -36,14 +36,14 @@ public class BlockConveyor extends BlockAssembly
         TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
         if (tileEntity instanceof TileEntityConveyor)
         {
-            if (((TileEntityConveyor)tileEntity).getTileNetwork() instanceof NetworkItemSupply)
+            if (((TileEntityConveyor) tileEntity).getTileNetwork() instanceof NetworkItemSupply)
             {
-                if(((NetworkItemSupply)((TileEntityConveyor)tileEntity).getTileNetwork()).isTrackingEntity(entity))
+                if (((TileEntityConveyor) tileEntity).getTileNetwork().isTrackingEntity(entity))
                 {
                     return;
                 }
             }
-            if (((TileEntityConveyor)tileEntity).isFunctioning())
+            if (((TileEntityConveyor) tileEntity).isFunctioning())
             {
             }
         }

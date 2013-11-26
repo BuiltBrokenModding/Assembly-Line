@@ -1,32 +1,24 @@
 package dark.assembly.client.gui;
 
-import java.awt.Color;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.vector.Vector2;
 import cpw.mods.fml.client.FMLClientHandler;
-import dark.api.al.coding.ILogicTask;
 import dark.api.al.coding.IProgram;
 import dark.api.al.coding.IRedirectTask;
 import dark.api.al.coding.ITask;
-import dark.assembly.AssemblyLine;
 import dark.assembly.armbot.Program;
 import dark.assembly.armbot.command.TaskEnd;
 import dark.assembly.armbot.command.TaskGOTO;
 import dark.assembly.armbot.command.TaskGive;
 import dark.assembly.armbot.command.TaskIF;
 import dark.assembly.armbot.command.TaskStart;
-import dark.core.common.DarkMain;
 import dark.core.interfaces.IScroll;
 
 /** Not a gui itself but a component used to display task as a box inside of a gui
- *
+ * 
  * @author DarkGuardsman */
 public class GuiTaskList extends Gui implements IScroll
 {
@@ -143,8 +135,8 @@ public class GuiTaskList extends Gui implements IScroll
         System.out.println("Player clicked at " + cx + "x " + cz + "z ");
         if (cx >= this.x && cz >= this.y && cx < (this.x + (20 * 7) + 10) && cz < (this.y + (20 * 6) + 10))
         {
-            int row = (cz / 20)-4;
-            int col = (cx / 20)-7;
+            int row = (cz / 20) - 4;
+            int col = (cx / 20) - 7;
             System.out.println("Player clicked at " + row + "r " + col + "c ");
             if (this.program != null)
             {

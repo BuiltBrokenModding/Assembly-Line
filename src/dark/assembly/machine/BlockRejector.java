@@ -2,22 +2,21 @@ package dark.assembly.machine;
 
 import java.util.List;
 
-import com.builtbroken.common.Pair;
-
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
+
+import com.builtbroken.common.Pair;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
 import dark.assembly.client.render.BlockRenderingHandler;
-import dark.assembly.client.render.RenderConveyorBelt;
 import dark.assembly.client.render.RenderRejector;
 import dark.assembly.imprinter.prefab.BlockImprintable;
-import dark.assembly.machine.belt.TileEntityConveyorBelt;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 public class BlockRejector extends BlockImprintable
@@ -29,7 +28,7 @@ public class BlockRejector extends BlockImprintable
     {
         super(new BlockBuildData(BlockRejector.class, "rejector", UniversalElectricity.machine));
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
