@@ -4,19 +4,15 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
-import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
@@ -25,22 +21,13 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.client.renders.BlockRenderingHandler;
 import dark.core.client.renders.RenderBasicMachine;
-import dark.core.common.CommonProxy;
 import dark.core.common.DMCreativeTab;
-import dark.core.common.DarkMain;
 import dark.core.helpers.MathHelper;
 import dark.core.prefab.machine.BlockMachine;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 public class BlockBasicMachine extends BlockMachine
 {
-    private Icon iconMachineSide;
-    private Icon iconInput;
-    private Icon iconOutput;
-
-    private Icon iconCoalGenerator;
-    private Icon iconBatteryBox;
-    private Icon iconElectricFurnace;
 
     public BlockBasicMachine()
     {
@@ -49,128 +36,12 @@ public class BlockBasicMachine extends BlockMachine
     }
 
     @Override
-    public void registerIcons(IconRegister par1IconRegister)
-    {
-        this.blockIcon = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + "machine");
-        this.iconInput = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + "machine_input");
-        this.iconOutput = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + "machine_output");
-
-        this.iconMachineSide = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + "machine_side");
-        this.iconCoalGenerator = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + "coalGenerator");
-        this.iconBatteryBox = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + "batteryBox");
-        this.iconElectricFurnace = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + "electricFurnace");
-    }
-
-    @Override
-    public Icon getIcon(int side, int metadata)
-    {
-        if (side == 0 || side == 1)
-        {
-            return this.blockIcon;
-        }
-
-        if (metadata >= BasicMachineData.ELECTRIC_FURNACE.startMeta)
-        {
-            metadata -= BasicMachineData.ELECTRIC_FURNACE.startMeta;
-
-            // If it is the front side
-            if (side == metadata + 2)
-            {
-                return this.iconInput;
-            }
-            // If it is the back side
-            else if (side == ForgeDirection.getOrientation(metadata + 2).getOpposite().ordinal())
-            {
-                return this.iconElectricFurnace;
-            }
-        }
-        else if (metadata >= BasicMachineData.BATTERY_BOX.startMeta)
-        {
-            metadata -= BasicMachineData.BATTERY_BOX.startMeta;
-
-            // If it is the front side
-            if (side == metadata + 2)
-            {
-                return this.iconOutput;
-            }
-            // If it is the back side
-            else if (side == ForgeDirection.getOrientation(metadata + 2).getOpposite().ordinal())
-            {
-                return this.iconInput;
-            }
-
-            return this.iconBatteryBox;
-        }
-        else
-        {
-            // If it is the front side
-            if (side == metadata + 2)
-            {
-                return this.iconOutput;
-            }
-            // If it is the back side
-            else if (side == ForgeDirection.getOrientation(metadata + 2).getOpposite().ordinal())
-            {
-                return this.iconCoalGenerator;
-            }
-        }
-
-        return this.iconMachineSide;
-    }
-
-    @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack)
     {
         super.onBlockPlacedBy(world, x, y, z, entityLiving, itemStack);
         int metadata = world.getBlockMetadata(x, y, z);
-
         int angle = MathHelper.floor_double((entityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-        int change = 0;
-
-        switch (angle)
-        {
-            case 0:
-                change = 1;
-                break;
-            case 1:
-                change = 2;
-                break;
-            case 2:
-                change = 0;
-                break;
-            case 3:
-                change = 3;
-                break;
-        }
-
-        if (metadata >= BasicMachineData.ELECTRIC_FURNACE.startMeta)
-        {
-            world.setBlockMetadataWithNotify(x, y, z, BasicMachineData.ELECTRIC_FURNACE.startMeta + change, 3);
-        }
-        else if (metadata >= BasicMachineData.BATTERY_BOX.startMeta)
-        {
-            switch (angle)
-            {
-                case 0:
-                    change = 3;
-                    break;
-                case 1:
-                    change = 1;
-                    break;
-                case 2:
-                    change = 2;
-                    break;
-                case 3:
-                    change = 0;
-                    break;
-            }
-
-            world.setBlockMetadataWithNotify(x, y, z, BasicMachineData.BATTERY_BOX.startMeta + change, 3);
-        }
-        else
-        {
-            world.setBlockMetadataWithNotify(x, y, z, BasicMachineData.STEAM_FAN.startMeta + change, 3);
-        }
+        world.setBlockMetadataWithNotify(x, y, z, (metadata / 4) + angle, 3);
     }
 
     @Override
@@ -178,10 +49,10 @@ public class BlockBasicMachine extends BlockMachine
     {
         TileEntity tile = par1World.getBlockTileEntity(x, y, z);
 
-        if (tile instanceof TileEntityBasicGenerator)
+        if (tile instanceof TileEntitySteamGen)
         {
-            TileEntityBasicGenerator tileEntity = (TileEntityBasicGenerator) tile;
-            if (tileEntity.generateWatts > 0)
+            TileEntitySteamGen tileEntity = (TileEntitySteamGen) tile;
+            if (tileEntity.isFunctioning())
             {
                 int face = par1World.getBlockMetadata(x, y, z) % 4;
                 float xx = x + 0.5F;
@@ -232,18 +103,16 @@ public class BlockBasicMachine extends BlockMachine
     @Override
     public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
     {
-        for (BasicMachineData data : BasicMachineData.values())
-        {
-            list.add(new Pair<String, Class<? extends TileEntity>>("DC" + data.unlocalizedName, data.clazz));
-        }
+        list.add(new Pair<String, Class<? extends TileEntity>>("DCTileSteamFan", TileEntitySteamFan.class));
+        list.add(new Pair<String, Class<? extends TileEntity>>("DCTileSteamPiston", TileEntitySteamPiston.class));
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
     {
-        list.add(new Pair(TileEntityBasicGenerator.class, new RenderBasicMachine()));
-        list.add(new Pair(TileEntityElectricFurnace.class, new RenderBasicMachine()));
+        list.add(new Pair(TileEntitySteamPiston.class, new RenderBasicMachine()));
+        list.add(new Pair(TileEntitySteamFan.class, new RenderBasicMachine()));
     }
 
     @Override
@@ -256,12 +125,6 @@ public class BlockBasicMachine extends BlockMachine
     @Override
     public boolean onMachineActivated(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
     {
-
-        if (!par1World.isRemote)
-        {
-            par5EntityPlayer.openGui(DarkMain.getInstance(), BasicMachineData.values()[par1World.getBlockMetadata(x, y, z) / 4].guiID, par1World, x, y, z);
-        }
-
         return true;
     }
 
@@ -286,15 +149,19 @@ public class BlockBasicMachine extends BlockMachine
     @Override
     public TileEntity createTileEntity(World world, int metadata)
     {
-        try
+        switch (metadata / 4)
         {
-            return BasicMachineData.values()[metadata / 4].clazz.newInstance();
+            case 0:
+                return new TileEntitySteamFan();
+            case 1:
+                return new TileEntitySteamPiston();
+            case 2:
+                return new TileEntitySteamFan();
+            case 3:
+                return new TileEntitySteamFan();
+
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return null;
+        return super.createTileEntity(world, metadata);
 
     }
 
@@ -316,29 +183,5 @@ public class BlockBasicMachine extends BlockMachine
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
         return new ItemStack(this, 1, world.getBlockMetadata(x, y, z) / 4);
-    }
-
-    public static enum BasicMachineData
-    {
-        /** Procures power from steam returning extra water back to the steam generator bellow it */
-        STEAM_FAN("steamfan", 0, CommonProxy.GUI_COAL_GEN, TileEntityBasicGenerator.class),
-        /** Procures power from steam returning extra water back to the steam generator bellow it */
-        STEAM_PISTON("steampiston", 4, CommonProxy.GUI_FUEL_GEN, TileEntityBasicGenerator.class),
-        BATTERY_BOX("batterybox", 8, CommonProxy.GUI_BATTERY_BOX, TileEntityBatteryBox.class),
-        ELECTRIC_FURNACE("electricfurnace", 12, CommonProxy.GUI_FURNACE_ELEC, TileEntityElectricFurnace.class);
-
-        public String unlocalizedName;
-        public int startMeta, guiID;
-        public boolean enabled = true;
-        public boolean allowCrafting = true;
-        public Class<? extends TileEntity> clazz;
-
-        private BasicMachineData(String name, int meta, int guiID, Class<? extends TileEntity> clazz)
-        {
-            this.unlocalizedName = name;
-            this.startMeta = meta;
-            this.guiID = guiID;
-            this.clazz = clazz;
-        }
     }
 }

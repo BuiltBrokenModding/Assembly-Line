@@ -9,9 +9,9 @@ import net.minecraft.item.ItemStack;
 
 public class ContainerCoalGenerator extends Container
 {
-    private TileEntityBasicGenerator tileEntity;
+    private TileEntitySteamGen tileEntity;
 
-    public ContainerCoalGenerator(InventoryPlayer par1InventoryPlayer, TileEntityBasicGenerator tileEntity)
+    public ContainerCoalGenerator(InventoryPlayer par1InventoryPlayer, TileEntitySteamGen tileEntity)
     {
         this.tileEntity = tileEntity;
         this.addSlotToContainer(new Slot(tileEntity, 0, 33, 34));

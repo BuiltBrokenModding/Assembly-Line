@@ -7,12 +7,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.common.network.IGuiHandler;
-import dark.core.common.machines.ContainerBatteryBox;
 import dark.core.common.machines.ContainerCoalGenerator;
-import dark.core.common.machines.ContainerElectricFurnace;
-import dark.core.common.machines.TileEntityBatteryBox;
-import dark.core.common.machines.TileEntityBasicGenerator;
-import dark.core.common.machines.TileEntityElectricFurnace;
+import dark.core.common.machines.TileEntitySteamGen;
 import dark.core.network.PacketManagerEffects;
 
 public class CommonProxy implements IGuiHandler
@@ -63,17 +59,9 @@ public class CommonProxy implements IGuiHandler
 
         if (tileEntity != null)
         {
-            if (tileEntity instanceof TileEntityBatteryBox)
+            if (tileEntity instanceof TileEntitySteamGen)
             {
-                return new ContainerBatteryBox(player.inventory, ((TileEntityBatteryBox) tileEntity));
-            }
-            else if (tileEntity instanceof TileEntityBasicGenerator)
-            {
-                return new ContainerCoalGenerator(player.inventory, ((TileEntityBasicGenerator) tileEntity));
-            }
-            else if (tileEntity instanceof TileEntityElectricFurnace)
-            {
-                return new ContainerElectricFurnace(player.inventory, ((TileEntityElectricFurnace) tileEntity));
+                return new ContainerCoalGenerator(player.inventory, ((TileEntitySteamGen) tileEntity));
             }
         }
 

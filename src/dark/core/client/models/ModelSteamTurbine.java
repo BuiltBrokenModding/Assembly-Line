@@ -10,7 +10,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-public class ModelCoalGenerator extends ModelMachine
+public class ModelSteamTurbine extends ModelMachine
 {
     //fields
     ModelRenderer base;
@@ -36,7 +36,7 @@ public class ModelCoalGenerator extends ModelMachine
     ModelRenderer gaugeFrame3;
     ModelRenderer gaugeDieal;
 
-    public ModelCoalGenerator()
+    public ModelSteamTurbine()
     {
         textureWidth = 256;
         textureHeight = 256;

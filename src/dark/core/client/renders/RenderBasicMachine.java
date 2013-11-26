@@ -8,25 +8,24 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.client.models.ModelCoalGenerator;
+import dark.core.client.models.ModelSteamGen;
+import dark.core.client.models.ModelSteamTurbine;
 import dark.core.client.models.ModelElecFurnace;
 import dark.core.client.models.ModelMachine;
 import dark.core.common.DarkMain;
+import dark.core.common.machines.BlockBasicMachine;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.machine.TileEntityMachine;
 
 @SideOnly(Side.CLIENT)
 public class RenderBasicMachine extends RenderTileMachine
 {
-    public static final ModelCoalGenerator COAL_GEN_MODEL = new ModelCoalGenerator();
-    public static final ModelElecFurnace ELEC_FURNACE_MODEL = new ModelElecFurnace();
+    public static final ModelSteamTurbine TURBINE_MODEL = new ModelSteamTurbine();
+    public static final ModelSteamGen COAL_GEN_MODEL = new ModelSteamGen();
 
-    public static final ResourceLocation COAL_GEN_TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, ModPrefab.MODEL_DIRECTORY + "CoalGenerator.png");
-    public static final ResourceLocation FUEL_GEN_TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, ModPrefab.MODEL_DIRECTORY + ".png");
-    public static final ResourceLocation ELEC_FURNACE_TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, ModPrefab.MODEL_DIRECTORY + "ElecFurnace.png");
-    public static final ResourceLocation BAT_BOX_TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, ModPrefab.MODEL_DIRECTORY + ".png");
+    public static final ResourceLocation TURBINE_TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, ModPrefab.MODEL_DIRECTORY + "SmallSteamFan.png");
+    public static final ResourceLocation COAL_GEN_TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, ModPrefab.MODEL_DIRECTORY + "SteamGenerator.png");
     private static float rot1 = 0;
-    private static float rot2 = 45;
 
     @Override
     public void renderModel(TileEntity tileEntity, double x, double y, double z, float size)
@@ -36,7 +35,6 @@ public class RenderBasicMachine extends RenderTileMachine
         int type = meta / 4;
 
         rot1 = MathHelper.wrapAngleTo180_float(rot1 + 1);
-        rot2 = MathHelper.wrapAngleTo180_float(rot1 + 2);
         ModelMachine model = null;
         switch (type)
         {
@@ -45,12 +43,14 @@ public class RenderBasicMachine extends RenderTileMachine
                 model = COAL_GEN_MODEL;
                 break;
             case 1:
+                bindTexture(COAL_GEN_TEXTURE);
+                model = COAL_GEN_MODEL;
                 break;
             case 2:
+                bindTexture(TURBINE_TEXTURE);
+                model = TURBINE_MODEL;
                 break;
             case 3:
-                bindTexture(ELEC_FURNACE_TEXTURE);
-                model = ELEC_FURNACE_MODEL;
                 break;
         }
 
@@ -76,13 +76,13 @@ public class RenderBasicMachine extends RenderTileMachine
         model.render(0.0625F);
         if (tileEntity instanceof TileEntityMachine)
         {
-            if (model instanceof ModelCoalGenerator)
+            if (model instanceof ModelSteamTurbine)
             {
                 if (((TileEntityMachine) tileEntity).isFunctioning())
                 {
                     GL11.glRotatef(this.rot1, 0f, 1f, 0f);
                 }
-                ((ModelCoalGenerator) model).renderFan(0.0625F);
+                ((ModelSteamTurbine) model).renderFan(0.0625F);
             }
         }
         GL11.glPopMatrix();

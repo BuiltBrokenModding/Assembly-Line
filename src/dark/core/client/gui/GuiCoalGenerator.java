@@ -13,19 +13,19 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.common.DarkMain;
 import dark.core.common.machines.ContainerCoalGenerator;
-import dark.core.common.machines.TileEntityBasicGenerator;
+import dark.core.common.machines.TileEntitySteamGen;
 
 @SideOnly(Side.CLIENT)
 public class GuiCoalGenerator extends GuiContainer
 {
     private static final ResourceLocation coalGeneratorTexture = new ResourceLocation(DarkMain.getInstance().DOMAIN, DarkMain.GUI_DIRECTORY + "coal_generator.png");
 
-    private TileEntityBasicGenerator tileEntity;
+    private TileEntitySteamGen tileEntity;
 
     private int containerWidth;
     private int containerHeight;
 
-    public GuiCoalGenerator(InventoryPlayer par1InventoryPlayer, TileEntityBasicGenerator tileEntity)
+    public GuiCoalGenerator(InventoryPlayer par1InventoryPlayer, TileEntitySteamGen tileEntity)
     {
         super(new ContainerCoalGenerator(par1InventoryPlayer, tileEntity));
         this.tileEntity = tileEntity;
@@ -43,9 +43,9 @@ public class GuiCoalGenerator extends GuiContainer
         {
             displayText = "Not Generating";
         }
-        else if (this.tileEntity.generateWatts < TileEntityBasicGenerator.MIN_GENERATE_WATTS)
+        else if (this.tileEntity.generateWatts < TileEntitySteamGen.MIN_GENERATE_WATTS)
         {
-            displayText = "Hull Heat: " + (int) (this.tileEntity.generateWatts / TileEntityBasicGenerator.MIN_GENERATE_WATTS * 100) + "%";
+            displayText = "Hull Heat: " + (int) (this.tileEntity.generateWatts / TileEntitySteamGen.MIN_GENERATE_WATTS * 100) + "%";
         }
         else
         {
