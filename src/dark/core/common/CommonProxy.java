@@ -11,7 +11,7 @@ import dark.core.common.machines.ContainerBatteryBox;
 import dark.core.common.machines.ContainerCoalGenerator;
 import dark.core.common.machines.ContainerElectricFurnace;
 import dark.core.common.machines.TileEntityBatteryBox;
-import dark.core.common.machines.TileEntityCoalGenerator;
+import dark.core.common.machines.TileEntityBasicGenerator;
 import dark.core.common.machines.TileEntityElectricFurnace;
 import dark.core.network.PacketManagerEffects;
 
@@ -67,9 +67,9 @@ public class CommonProxy implements IGuiHandler
             {
                 return new ContainerBatteryBox(player.inventory, ((TileEntityBatteryBox) tileEntity));
             }
-            else if (tileEntity instanceof TileEntityCoalGenerator)
+            else if (tileEntity instanceof TileEntityBasicGenerator)
             {
-                return new ContainerCoalGenerator(player.inventory, ((TileEntityCoalGenerator) tileEntity));
+                return new ContainerCoalGenerator(player.inventory, ((TileEntityBasicGenerator) tileEntity));
             }
             else if (tileEntity instanceof TileEntityElectricFurnace)
             {

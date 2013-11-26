@@ -135,8 +135,8 @@ public class BlockHeater extends BlockMachine
 
     public static enum HeatMachineData
     {
-        HEAT_COUPLE("themalcouple", 0, CommonProxy.GUI_COAL_GEN, TileEntityCoalGenerator.class),
-        HEAT_EXCHANGE("heatexchanger", 4, CommonProxy.GUI_FUEL_GEN, TileEntityCoalGenerator.class),
+        HEAT_COUPLE("themalcouple", 0, CommonProxy.GUI_COAL_GEN, TileEntityBasicGenerator.class),
+        HEAT_EXCHANGE("heatexchanger", 4, CommonProxy.GUI_FUEL_GEN, TileEntityBasicGenerator.class),
         HEAT_PLATE("heatplate", 8, CommonProxy.GUI_BATTERY_BOX, TileEntityBatteryBox.class);
 
         public String unlocalizedName;

@@ -29,6 +29,7 @@ public class TileEntityElectricFurnace extends TileEntityEnergyMachine
     public TileEntityElectricFurnace()
     {
         super(0.5f);
+        this.invSlots = 3;
     }
 
     @Override

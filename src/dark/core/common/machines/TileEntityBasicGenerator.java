@@ -17,13 +17,15 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
 
-public class TileEntityCoalGenerator extends TileEntityEnergyMachine
+/** Simple compact generator designed to only power a few machines at a time
+ * 
+ * @author DarkGuardsman */
+public class TileEntityBasicGenerator extends TileEntityEnergyMachine
 {
     /** Maximum amount of energy needed to generate electricity */
     public static float MAX_GENERATE_WATTS = 0.5f;
 
     /** Amount of heat the coal generator needs before generating electricity. */
-
     public static final float MIN_GENERATE_WATTS = MAX_GENERATE_WATTS * 0.1f;
 
     private static float BASE_ACCELERATION = 0.000001f;
@@ -56,7 +58,7 @@ public class TileEntityCoalGenerator extends TileEntityEnergyMachine
             //Update item cook time & power output
             if (this.itemCookTime-- > 0)
             {
-                this.generateWatts = Math.min(this.generateWatts + Math.min((this.generateWatts * 0.007F + BASE_ACCELERATION), 0.007F), TileEntityCoalGenerator.MAX_GENERATE_WATTS);
+                this.generateWatts = Math.min(this.generateWatts + Math.min((this.generateWatts * 0.007F + BASE_ACCELERATION), 0.007F), TileEntityBasicGenerator.MAX_GENERATE_WATTS);
             }
 
             //Decrease generator output if nothing is burning
@@ -166,7 +168,7 @@ public class TileEntityCoalGenerator extends TileEntityEnergyMachine
     {
         if (direction == ForgeDirection.getOrientation(this.getBlockMetadata() + 2))
         {
-            return this.generateWatts < TileEntityCoalGenerator.MIN_GENERATE_WATTS ? 0 : this.generateWatts;
+            return this.generateWatts < TileEntityBasicGenerator.MIN_GENERATE_WATTS ? 0 : this.generateWatts;
         }
 
         return 0.0F;

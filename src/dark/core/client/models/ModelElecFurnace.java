@@ -9,7 +9,7 @@ package dark.core.client.models;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 
-public class ModelElecFurnace extends ModelBase
+public class ModelElecFurnace extends ModelMachine
 {
     //fields
     ModelRenderer body;

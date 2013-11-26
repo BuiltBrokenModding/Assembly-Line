@@ -18,7 +18,7 @@ import dark.core.client.renders.BlockRenderingHandler;
 import dark.core.client.renders.RenderTestCar;
 import dark.core.common.CommonProxy;
 import dark.core.common.machines.TileEntityBatteryBox;
-import dark.core.common.machines.TileEntityCoalGenerator;
+import dark.core.common.machines.TileEntityBasicGenerator;
 import dark.core.common.machines.TileEntityElectricFurnace;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.vehicles.EntityTestCar;
@@ -62,9 +62,9 @@ public class ClientProxy extends CommonProxy
             {
                 return new GuiBatteryBox(player.inventory, ((TileEntityBatteryBox) tileEntity));
             }
-            else if (tileEntity instanceof TileEntityCoalGenerator)
+            else if (tileEntity instanceof TileEntityBasicGenerator)
             {
-                return new GuiCoalGenerator(player.inventory, ((TileEntityCoalGenerator) tileEntity));
+                return new GuiCoalGenerator(player.inventory, ((TileEntityBasicGenerator) tileEntity));
             }
             else if (tileEntity instanceof TileEntityElectricFurnace)
             {

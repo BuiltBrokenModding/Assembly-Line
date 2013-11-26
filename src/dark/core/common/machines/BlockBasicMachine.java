@@ -4,26 +4,43 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import dark.core.client.renders.BlockRenderingHandler;
+import dark.core.client.renders.RenderBasicMachine;
 import dark.core.common.CommonProxy;
 import dark.core.common.DMCreativeTab;
 import dark.core.common.DarkMain;
+import dark.core.helpers.MathHelper;
 import dark.core.prefab.machine.BlockMachine;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 public class BlockBasicMachine extends BlockMachine
 {
+    private Icon iconMachineSide;
+    private Icon iconInput;
+    private Icon iconOutput;
+
+    private Icon iconCoalGenerator;
+    private Icon iconBatteryBox;
+    private Icon iconElectricFurnace;
 
     public BlockBasicMachine()
     {
@@ -32,13 +49,138 @@ public class BlockBasicMachine extends BlockMachine
     }
 
     @Override
+    public void registerIcons(IconRegister par1IconRegister)
+    {
+        this.blockIcon = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + "machine");
+        this.iconInput = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + "machine_input");
+        this.iconOutput = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + "machine_output");
+
+        this.iconMachineSide = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + "machine_side");
+        this.iconCoalGenerator = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + "coalGenerator");
+        this.iconBatteryBox = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + "batteryBox");
+        this.iconElectricFurnace = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + "electricFurnace");
+    }
+
+    @Override
+    public Icon getIcon(int side, int metadata)
+    {
+        if (side == 0 || side == 1)
+        {
+            return this.blockIcon;
+        }
+
+        if (metadata >= BasicMachineData.ELECTRIC_FURNACE.startMeta)
+        {
+            metadata -= BasicMachineData.ELECTRIC_FURNACE.startMeta;
+
+            // If it is the front side
+            if (side == metadata + 2)
+            {
+                return this.iconInput;
+            }
+            // If it is the back side
+            else if (side == ForgeDirection.getOrientation(metadata + 2).getOpposite().ordinal())
+            {
+                return this.iconElectricFurnace;
+            }
+        }
+        else if (metadata >= BasicMachineData.BATTERY_BOX.startMeta)
+        {
+            metadata -= BasicMachineData.BATTERY_BOX.startMeta;
+
+            // If it is the front side
+            if (side == metadata + 2)
+            {
+                return this.iconOutput;
+            }
+            // If it is the back side
+            else if (side == ForgeDirection.getOrientation(metadata + 2).getOpposite().ordinal())
+            {
+                return this.iconInput;
+            }
+
+            return this.iconBatteryBox;
+        }
+        else
+        {
+            // If it is the front side
+            if (side == metadata + 2)
+            {
+                return this.iconOutput;
+            }
+            // If it is the back side
+            else if (side == ForgeDirection.getOrientation(metadata + 2).getOpposite().ordinal())
+            {
+                return this.iconCoalGenerator;
+            }
+        }
+
+        return this.iconMachineSide;
+    }
+
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack)
+    {
+        super.onBlockPlacedBy(world, x, y, z, entityLiving, itemStack);
+        int metadata = world.getBlockMetadata(x, y, z);
+
+        int angle = MathHelper.floor_double((entityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+        int change = 0;
+
+        switch (angle)
+        {
+            case 0:
+                change = 1;
+                break;
+            case 1:
+                change = 2;
+                break;
+            case 2:
+                change = 0;
+                break;
+            case 3:
+                change = 3;
+                break;
+        }
+
+        if (metadata >= BasicMachineData.ELECTRIC_FURNACE.startMeta)
+        {
+            world.setBlockMetadataWithNotify(x, y, z, BasicMachineData.ELECTRIC_FURNACE.startMeta + change, 3);
+        }
+        else if (metadata >= BasicMachineData.BATTERY_BOX.startMeta)
+        {
+            switch (angle)
+            {
+                case 0:
+                    change = 3;
+                    break;
+                case 1:
+                    change = 1;
+                    break;
+                case 2:
+                    change = 2;
+                    break;
+                case 3:
+                    change = 0;
+                    break;
+            }
+
+            world.setBlockMetadataWithNotify(x, y, z, BasicMachineData.BATTERY_BOX.startMeta + change, 3);
+        }
+        else
+        {
+            world.setBlockMetadataWithNotify(x, y, z, BasicMachineData.GENERATOR_COAL.startMeta + change, 3);
+        }
+    }
+
+    @Override
     public void randomDisplayTick(World par1World, int x, int y, int z, Random rand)
     {
         TileEntity tile = par1World.getBlockTileEntity(x, y, z);
 
-        if (tile instanceof TileEntityCoalGenerator)
+        if (tile instanceof TileEntityBasicGenerator)
         {
-            TileEntityCoalGenerator tileEntity = (TileEntityCoalGenerator) tile;
+            TileEntityBasicGenerator tileEntity = (TileEntityBasicGenerator) tile;
             if (tileEntity.generateWatts > 0)
             {
                 int face = par1World.getBlockMetadata(x, y, z) % 4;
@@ -97,6 +239,14 @@ public class BlockBasicMachine extends BlockMachine
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
+    public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
+    {
+        list.add(new Pair(TileEntityBasicGenerator.class, new RenderBasicMachine()));
+        list.add(new Pair(TileEntityElectricFurnace.class, new RenderBasicMachine()));
+    }
+
+    @Override
     public void loadExtraConfigs(Configuration config)
     {
         super.loadExtraConfigs(config);
@@ -125,6 +275,12 @@ public class BlockBasicMachine extends BlockMachine
     public boolean renderAsNormalBlock()
     {
         return false;
+    }
+
+    @Override
+    public int getRenderType()
+    {
+        return BlockRenderingHandler.BLOCK_RENDER_ID;
     }
 
     @Override
@@ -180,8 +336,8 @@ public class BlockBasicMachine extends BlockMachine
 
     public static enum BasicMachineData
     {
-        GENERATOR_COAL("coalgen", 0, CommonProxy.GUI_COAL_GEN, TileEntityCoalGenerator.class),
-        GENERATOR_FUEL("fuelgen", 4, CommonProxy.GUI_FUEL_GEN, TileEntityCoalGenerator.class),
+        GENERATOR_COAL("coalgen", 0, CommonProxy.GUI_COAL_GEN, TileEntityBasicGenerator.class),
+        GENERATOR_FUEL("fuelgen", 4, CommonProxy.GUI_FUEL_GEN, TileEntityBasicGenerator.class),
         BATTERY_BOX("batterybox", 8, CommonProxy.GUI_BATTERY_BOX, TileEntityBatteryBox.class),
         ELECTRIC_FURNACE("electricfurnace", 12, CommonProxy.GUI_FURNACE_ELEC, TileEntityElectricFurnace.class);
 
