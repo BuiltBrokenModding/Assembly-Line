@@ -67,10 +67,7 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
             {
                 this.sendPowerUpdate();
             }
-            if (this.ticks % 5 == 0)
-            {
-                this.sendGUIPacket();
-            }
+            this.sendGUIPacket();
         }
 
         if (this.disabledTicks > 0)
@@ -179,7 +176,7 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
                 }
                 if (id.equalsIgnoreCase(SimplePacketTypes.NBT.name))
                 {
-                    this.readFromNBT(Packet.readNBTTagCompound(dis));
+                    this.readFromNBT(PacketHandler.instance().readNBTTagCompound(dis));
                     return true;
                 }
             }
@@ -219,15 +216,18 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
 
     public void sendGUIPacket()
     {
-        if (this.hasGUI && this.getContainer() != null)
+        if (this.hasGUI && this.getContainer() != null && this.ticks % 5 == 0)
         {
             this.playersUsingMachine = 0;
-            for (Object entity : this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(xCoord - 10, yCoord - 10, zCoord - 10, xCoord + 10, yCoord + 10, zCoord + 10)))
+            for (Object entity : this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1).expand(10, 10, 10)))
             {
-                if (entity instanceof EntityPlayer && ((EntityPlayer) entity).openContainer.getClass().equals(this.getContainer()))
+                if (entity instanceof EntityPlayer && ((EntityPlayer) entity).openContainer != null)
                 {
-                    this.playersUsingMachine += 1;
-                    this.sendGUIPacket(((EntityPlayer) entity));
+                    if (((EntityPlayer) entity).openContainer.getClass().isAssignableFrom(this.getContainer()))
+                    {
+                        this.playersUsingMachine += 1;
+                        this.sendGUIPacket(((EntityPlayer) entity));
+                    }
                 }
             }
         }

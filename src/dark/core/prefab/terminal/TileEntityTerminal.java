@@ -44,7 +44,8 @@ public abstract class TileEntityTerminal extends TileEntityEnergyMachine impleme
         super(wattsPerTick, maxEnergy);
     }
 
-    public void senGUIPacket(EntityPlayer entity)
+    @Override
+    public void sendGUIPacket(EntityPlayer entity)
     {
         if (!this.worldObj.isRemote)
         {

@@ -62,7 +62,7 @@ public class AccessGroup extends Group<AccessUser>
 
     public NBTTagCompound save(NBTTagCompound nbt)
     {
-        nbt.setString("groupName", this.name());
+        nbt.setString("groupName", this.getName());
         NBTTagList usersTag = new NBTTagList();
         for (AccessUser user : this.memebers)
         {
@@ -73,7 +73,7 @@ public class AccessGroup extends Group<AccessUser>
                 usersTag.appendTag(accessData);
             }
         }
-        nbt.setTag("Users", usersTag);
+        nbt.setTag("users", usersTag);
         NBTTagList nodesTag = new NBTTagList();
         for (String str : this.nodes)
         {
@@ -91,12 +91,12 @@ public class AccessGroup extends Group<AccessUser>
         NBTTagList userList = nbt.getTagList("users");
         for (int i = 0; i < userList.tagCount(); ++i)
         {
-            memebers.add(AccessUser.loadFromNBT((NBTTagCompound) userList.tagAt(i)));
+            this.addMemeber(AccessUser.loadFromNBT((NBTTagCompound) userList.tagAt(i)));
         }
-        userList = nbt.getTagList("nodes");
-        for (int i = 0; i < userList.tagCount(); ++i)
+        NBTTagList nodeList = nbt.getTagList("nodes");
+        for (int i = 0; i < nodeList.tagCount(); ++i)
         {
-            this.nodes.add(((NBTTagCompound) userList.tagAt(i)).getString("name"));
+            this.nodes.add(((NBTTagCompound) nodeList.tagAt(i)).getString("name"));
         }
     }
 

@@ -159,7 +159,7 @@ public class GuiGlobalList extends GuiContainer implements IScroll
                 if (object instanceof AccessUser)
                 {
                     AccessUser accesInfo = (AccessUser) object;
-                    line = accesInfo.getName() + " (" + accesInfo.getGroup().name() + ")";
+                    line = accesInfo.getName() + " (" + accesInfo.getGroup().getName() + ")";
                 }
                 else if (object instanceof String)
                 {

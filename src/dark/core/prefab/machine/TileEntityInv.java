@@ -36,10 +36,6 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
     public void initiate()
     {
         thisPos = new Vector3(this);
-        if (this.groups == null || this.groups.isEmpty())
-        {
-            TerminalCommandRegistry.loadNewGroupSet(this);
-        }
     }
 
     public Vector3 getThisPos()
@@ -264,9 +260,9 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
     @Override
     public AccessGroup getGroup(String name)
     {
-        for (AccessGroup group : this.groups)
+        for (AccessGroup group : this.getGroups())
         {
-            if (group.name().equalsIgnoreCase(name))
+            if (group.getName().equalsIgnoreCase(name))
             {
                 return group;
             }
@@ -281,7 +277,7 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
         {
             for (AccessGroup g : this.groups)
             {
-                if (group.name().equalsIgnoreCase(g.name()))
+                if (group.getName().equalsIgnoreCase(g.getName()))
                 {
                     return false;
                 }
@@ -294,16 +290,16 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
     @Override
     public AccessGroup getOwnerGroup()
     {
-        if (this.getGroup("owner") == null)
-        {
-            this.groups.add(new AccessGroup("owner"));
-        }
         return this.getGroup("owner");
     }
 
     @Override
     public List<AccessGroup> getGroups()
     {
+        if (this.groups == null || this.groups.isEmpty())
+        {
+            TerminalCommandRegistry.loadNewGroupSet(this);
+        }
         return this.groups;
     }
 
@@ -312,37 +308,10 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
     {
         super.readFromNBT(nbt);
         this.getInventory().loadInv(nbt);
-        // Read user list
-        if (!nbt.hasKey("group"))
+        NBTTagList userList = nbt.getTagList("groups");
+        if (userList != null && userList.tagCount() > 0)
         {
-            NBTTagList userList = nbt.getTagList("Users");
-            AccessGroup usr = new AccessGroup("user");
-            AccessGroup admin = new AccessGroup("admin");
-            AccessGroup owner = new AccessGroup("owner");
-            this.groups.add(usr);
-            this.groups.add(admin);
-            this.groups.add(owner);
-            for (int i = 0; i < userList.tagCount(); ++i)
-            {
-                AccessUser user = new AccessUser(((NBTTagCompound) userList.tagAt(i)).getString("username"));
-                switch (nbt.getInteger("ID"))
-                {
-                    case 1:
-                    case 2:
-                        usr.addMemeber(user);
-                        break;
-                    case 3:
-                        admin.addMemeber(user);
-                        break;
-                    case 4:
-                        owner.addMemeber(user);
-                        break;
-                }
-            }
-        }
-        else
-        {
-            NBTTagList userList = nbt.getTagList("groups");
+            this.groups.clear();
             for (int i = 0; i < userList.tagCount(); i++)
             {
                 AccessGroup group = new AccessGroup("");
@@ -357,9 +326,9 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
     {
         super.writeToNBT(nbt);
         this.getInventory().saveInv(nbt);
-        // Write user list
+
         NBTTagList usersTag = new NBTTagList();
-        for (AccessGroup group : this.groups)
+        for (AccessGroup group : this.getGroups())
         {
             usersTag.appendTag(group.save(new NBTTagCompound()));
         }

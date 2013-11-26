@@ -52,7 +52,7 @@ public class Group<J>
         return memebers.contains(obj);
     }
 
-    public String name()
+    public String getName()
     {
         return this.groupName;
     }
