@@ -15,8 +15,8 @@ import dark.api.fluid.INetworkFluidPart;
 import dark.api.parts.INetworkPart;
 import dark.api.parts.ITileNetwork;
 import dark.core.prefab.fluids.FluidHelper;
-import dark.core.prefab.tilenetwork.NetworkUpdateHandler;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
+import dark.core.prefab.tilenetwork.NetworkUpdateHandler;
 
 public class NetworkFluidTiles extends NetworkTileEntities
 {
