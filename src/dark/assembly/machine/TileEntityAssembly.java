@@ -72,13 +72,6 @@ public abstract class TileEntityAssembly extends TileEntityEnergyMachine impleme
     }
 
     @Override
-    public boolean canFunction()
-    {
-        //TODO add check for network power
-        return super.canFunction() || AssemblyLine.REQUIRE_NO_POWER;
-    }
-
-    @Override
     public boolean canTileConnect(Connection type, ForgeDirection dir)
     {
         return true;

@@ -86,9 +86,6 @@ public class AssemblyLine extends ModPrefab
 
     public static Logger FMLog = Logger.getLogger(AssemblyLine.MOD_NAME);
 
-    // TODO: MAKE THIS FALSE EVERY BUILD!
-    public static final boolean DEBUG = false;
-    public static boolean REQUIRE_NO_POWER = false;
     public static boolean VINALLA_RECIPES = false;
 
     @Override
@@ -162,7 +159,6 @@ public class AssemblyLine extends ModPrefab
 
         AssemblyLine.VINALLA_RECIPES = CONFIGURATION.get("general", "Vinalla_Recipes", false).getBoolean(false);
 
-        AssemblyLine.REQUIRE_NO_POWER = !CONFIGURATION.get("TileSettings", "requirePower", true).getBoolean(true);
         TileEntityAssembly.refresh_diff = CONFIGURATION.get("TileSettings", "RefreshRandomRange", 9, "n = value of config, 1 + n, random number range from 1 to n that will be added to the lowest refresh value").getInt();
         TileEntityAssembly.refresh_min_rate = CONFIGURATION.get("TileSettings", "RefreshLowestValue", 20, "Lowest value the refresh rate of the tile network will be").getInt();
 
