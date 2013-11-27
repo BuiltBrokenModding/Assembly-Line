@@ -32,15 +32,15 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
         if (CoreRecipeLoader.blockSolar != null && block.blockID == CoreRecipeLoader.blockSolar.blockID)
         {
             FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(DarkMain.getInstance().DOMAIN, ModPrefab.MODEL_DIRECTORY + "solarPanel.png"));
-            GL11.glTranslatef(0.0F, 1.5F, 0.0F);
+            GL11.glTranslatef(0.0F, 1.1F, 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
             solarPanelModel.render(0.0625F);
         }
-        if (CoreRecipeLoader.basicMachine != null && block.blockID == CoreRecipeLoader.basicMachine.blockID)
+        else if (CoreRecipeLoader.basicMachine != null && block.blockID == CoreRecipeLoader.basicMachine.blockID)
         {
             ModelMachine model = RenderSteamGen.getModel(metadata);
             FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderSteamGen.getTexture(metadata));
-            GL11.glTranslatef(0.0F, 1.5F, 0.0F);
+            GL11.glTranslatef(0.0F, 1.1F, 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
             model.render(0.0625F);
         }
