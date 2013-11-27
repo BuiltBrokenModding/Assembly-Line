@@ -61,14 +61,17 @@ public class ItemRenderFluidCan implements IItemRenderer
                 {
                     GL11.glTranslatef(-.5F, 0F, -.5F);
                 }
-                else if (type != ItemRenderType.EQUIPPED)
+                else if (type == ItemRenderType.EQUIPPED_FIRST_PERSON)
                 {
-                    GL11.glTranslatef(0.6F, 0F, 0.6F);
-
+                    GL11.glTranslatef(1.8F, 0.25F, 1.8F);
                 }
                 else if (type == ItemRenderType.EQUIPPED)
                 {
                     GL11.glTranslatef(0.9F, 0.4F, 1.2F);
+                }
+                else
+                {
+                    GL11.glTranslatef(0.6F, 0F, 0.6F);
                 }
 
                 FMLClientHandler.instance().getClient().renderEngine.bindTexture((RenderBlockFluid.getFluidSheet(liquid)));
