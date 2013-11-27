@@ -36,7 +36,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
             GL11.glRotatef(180f, 0f, 0f, 1f);
             solarPanelModel.render(0.0625F);
         }
-        else if (CoreRecipeLoader.basicMachine != null && block.blockID == CoreRecipeLoader.basicMachine.blockID)
+        else if (CoreRecipeLoader.blockSteamGen != null && block.blockID == CoreRecipeLoader.blockSteamGen.blockID)
         {
             ModelMachine model = RenderSteamGen.getModel(metadata);
             FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderSteamGen.getTexture(metadata));

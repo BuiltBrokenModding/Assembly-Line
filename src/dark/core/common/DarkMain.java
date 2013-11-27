@@ -49,6 +49,7 @@ import dark.core.common.items.EnumOrePart;
 import dark.core.common.items.ItemBattery;
 import dark.core.common.items.ItemColoredDust;
 import dark.core.common.items.ItemCommonTool;
+import dark.core.common.items.ItemFluidCan;
 import dark.core.common.items.ItemOreDirv;
 import dark.core.common.items.ItemParts;
 import dark.core.common.items.ItemParts.Parts;
@@ -268,7 +269,7 @@ public class DarkMain extends ModPrefab
         {
             blockMulti = (BlockMulti) m;
         }
-        CoreRecipeLoader.basicMachine = ModObjectRegistry.createNewBlock("DMBlockBasicMachine", DarkMain.MOD_ID, BlockSmallSteamGen.class, ItemBlockHolder.class);
+        CoreRecipeLoader.blockSteamGen = ModObjectRegistry.createNewBlock("DMBlockSteamMachine", DarkMain.MOD_ID, BlockSmallSteamGen.class, ItemBlockHolder.class);
         CoreRecipeLoader.blockOre = ModObjectRegistry.createNewBlock("DMBlockOre", DarkMain.MOD_ID, BlockOre.class, ItemBlockOre.class);
         CoreRecipeLoader.blockWire = ModObjectRegistry.createNewBlock("DMBlockWire", DarkMain.MOD_ID, BlockWire.class, ItemBlockWire.class);
         CoreRecipeLoader.blockDebug = ModObjectRegistry.createNewBlock("DMBlockDebug", DarkMain.MOD_ID, BlockDebug.class, ItemBlockHolder.class);
@@ -288,6 +289,8 @@ public class DarkMain extends ModPrefab
         CoreRecipeLoader.itemGlowingSand = ModObjectRegistry.createNewItem("DMItemGlowingSand", DarkMain.MOD_ID, ItemColoredDust.class, true);
         CoreRecipeLoader.itemDiggingTool = ModObjectRegistry.createNewItem("ItemDiggingTools", DarkMain.MOD_ID, ItemCommonTool.class, true);
         CoreRecipeLoader.itemVehicleTest = ModObjectRegistry.createNewItem("ItemVehicleTest", DarkMain.MOD_ID, ItemVehicleSpawn.class, true);
+        CoreRecipeLoader.itemFluidCan = ModObjectRegistry.createNewItem("ItemFluidCan", DarkMain.MOD_ID, ItemFluidCan.class, true);
+
         CONFIGURATION.save();
     }
 

@@ -34,7 +34,7 @@ public class CoreRecipeLoader extends RecipeLoader
     public static Block blockColorSand;
     public static Block blockBasalt;
     public static Block blockGlowGlass;
-    public static Block basicMachine, blockSolar;
+    public static Block blockSteamGen, blockSolar;
     public static Block blockGas;
 
     /* ITEMS */
@@ -47,6 +47,7 @@ public class CoreRecipeLoader extends RecipeLoader
     public static Item itemGlowingSand;
     public static Item itemDiggingTool;
     public static Item itemVehicleTest;
+    public static Item itemFluidCan;
     public static boolean debugOreItems = false;
 
     @Override
