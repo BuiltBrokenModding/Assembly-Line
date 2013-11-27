@@ -60,12 +60,6 @@ public class TileEntitySolarPanel extends TileEntityEnergyMachine
     }
 
     @Override
-    public void discharge(ItemStack itemStack)
-    {
-
-    }
-
-    @Override
     public float getRequest(ForgeDirection direction)
     {
         return 0;

@@ -1,8 +1,5 @@
 package dark.core.prefab.machine;
 
-import ic2.api.item.IElectricItemManager;
-import ic2.api.item.ISpecialElectricItem;
-
 import java.util.EnumSet;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,15 +8,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
-import thermalexpansion.api.item.IChargeableItem;
-import universalelectricity.compatibility.Compatibility;
 import universalelectricity.core.block.IElectrical;
 import universalelectricity.core.block.IElectricalStorage;
 import universalelectricity.core.electricity.ElectricityHelper;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.grid.IElectricityNetwork;
-import universalelectricity.core.item.ElectricItemHelper;
-import universalelectricity.core.item.IItemElectric;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import buildcraft.api.power.PowerHandler;
@@ -28,9 +21,9 @@ import dark.api.energy.IPowerLess;
 import dark.core.common.ExternalModHandler;
 
 /** Basic energy tile that can consume power
- * 
+ *
  * Based off both UE universal electrical tile, and electrical tile prefabs
- * 
+ *
  * @author DarkGuardsman */
 public abstract class TileEntityEnergyMachine extends TileEntityMachine implements IElectrical, IElectricalStorage, IPowerLess
 {
@@ -118,83 +111,6 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
         return false;
     }
 
-    /** Recharges electric item. */
-    public void recharge(ItemStack itemStack)
-    {
-        if (itemStack != null)
-        {
-            if (itemStack.getItem() instanceof IItemElectric)
-            {
-                this.setEnergyStored(this.getEnergyStored() - ElectricItemHelper.chargeItem(itemStack, this.getProvide(ForgeDirection.UNKNOWN)));
-
-            }
-            else if (itemStack.getItem() instanceof ISpecialElectricItem)
-            {
-                ISpecialElectricItem electricItem = (ISpecialElectricItem) itemStack.getItem();
-                IElectricItemManager manager = electricItem.getManager(itemStack);
-                float energy = Math.max(this.getProvide(ForgeDirection.UNKNOWN) * Compatibility.IC2_RATIO, 0);
-                energy = manager.charge(itemStack, (int) (energy * Compatibility.TO_IC2_RATIO), 0, false, false) * Compatibility.IC2_RATIO;
-                this.provideElectricity(energy, true);
-            }
-            else if (itemStack.getItem() instanceof IChargeableItem)
-            {
-                float accepted = ((IChargeableItem) itemStack.getItem()).receiveEnergy(itemStack, this.getProvide(ForgeDirection.UNKNOWN) * Compatibility.BC3_RATIO, true);
-                this.provideElectricity(accepted, true);
-            }
-        }
-    }
-
-    /** Discharges electric item. */
-    public void discharge(ItemStack itemStack)
-    {
-        if (itemStack != null)
-        {
-            if (itemStack.getItem() instanceof IItemElectric)
-            {
-                this.setEnergyStored(this.getEnergyStored() + ElectricItemHelper.dischargeItem(itemStack, this.getRequest(ForgeDirection.UNKNOWN)));
-
-            }
-            else if (itemStack.getItem() instanceof ISpecialElectricItem)
-            {
-                ISpecialElectricItem electricItem = (ISpecialElectricItem) itemStack.getItem();
-
-                if (electricItem.canProvideEnergy(itemStack))
-                {
-                    IElectricItemManager manager = electricItem.getManager(itemStack);
-                    float energy = Math.max(this.getRequest(ForgeDirection.UNKNOWN) * Compatibility.IC2_RATIO, 0);
-                    energy = manager.discharge(itemStack, (int) (energy * Compatibility.TO_IC2_RATIO), 0, false, false);
-                    this.receiveElectricity(energy, true);
-                }
-            }
-            else if (itemStack.getItem() instanceof IChargeableItem)
-            {
-                float given = ((IChargeableItem) itemStack.getItem()).transferEnergy(itemStack, this.getRequest(ForgeDirection.UNKNOWN) * Compatibility.BC3_RATIO, true);
-                this.receiveElectricity(given, true);
-            }
-        }
-    }
-
-    public boolean isBatteryItem(ItemStack itemStack)
-    {
-        if (itemStack != null)
-        {
-            if (itemStack.getItem() instanceof IItemElectric || itemStack.getItem() instanceof IChargeableItem)
-            {
-                return true;
-            }
-            else if (itemStack.getItem() instanceof ISpecialElectricItem)
-            {
-                ISpecialElectricItem electricItem = (ISpecialElectricItem) itemStack.getItem();
-
-                if (electricItem.canProvideEnergy(itemStack))
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     @Override
     public void updateEntity()
     {
@@ -223,6 +139,7 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     /** Produces energy only on the given side */
     public void produceDirection(ForgeDirection outputDirection)
     {
+        //TODO detect machines and power them if they are directly next to this machine
         if (!this.worldObj.isRemote && outputDirection != null && outputDirection != ForgeDirection.UNKNOWN)
         {
             float provide = this.getProvide(outputDirection);
@@ -248,7 +165,7 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     }
 
     /** The electrical input direction.
-     * 
+     *
      * @return The direction that electricity is entered into the tile. Return null for no input. By
      * default you can accept power from all sides. */
     public EnumSet<ForgeDirection> getInputDirections()
@@ -257,7 +174,7 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     }
 
     /** The electrical output direction.
-     * 
+     *
      * @return The direction that electricity is output from the tile. Return null for no output. By
      * default it will return an empty EnumSet. */
     public EnumSet<ForgeDirection> getOutputDirections()

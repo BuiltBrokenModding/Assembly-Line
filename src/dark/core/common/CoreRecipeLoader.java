@@ -34,7 +34,7 @@ public class CoreRecipeLoader extends RecipeLoader
     public static Block blockColorSand;
     public static Block blockBasalt;
     public static Block blockGlowGlass;
-    public static Block blockSteamGen, blockSolar;
+    public static Block blockSteamGen, blockSolar, blockBatBox;
     public static Block blockGas;
 
     /* ITEMS */

@@ -91,14 +91,13 @@ public class ItemRenderFluidCan implements IItemRenderer
             {
                 GL11.glTranslatef(0F, -1F, 0F);
             }
-            else if (type != ItemRenderType.EQUIPPED)
-            {
-                GL11.glTranslatef(0.5F, -0.8F, 0.5F);
-
-            }
             else if (type == ItemRenderType.EQUIPPED)
             {
                 GL11.glTranslatef(0.3F, -0.7F, 0.37F);
+            }
+            else
+            {
+                GL11.glTranslatef(0.5F, -0.8F, 0.5F);
             }
             CAN_MODEL.render(0.0625F);
             GL11.glPopMatrix();

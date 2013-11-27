@@ -30,13 +30,15 @@ import dark.core.registration.ModObjectRegistry.BlockBuildData;
 /** Basic TileEntity Container class designed to be used by generic machines. It is suggested that
  * each mod using this create there own basic block extending this to reduce need to use build data
  * per block.
- * 
+ *
  * @author Darkguardsman */
 public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
 {
 
     public boolean zeroAnimation, zeroSound, zeroRendering;
     public int guiID = -1;
+
+    public Icon iconInput, iconOutput;
 
     public BlockMachine(BlockBuildData data)
     {
@@ -61,6 +63,8 @@ public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
     public void registerIcons(IconRegister iconReg)
     {
         this.blockIcon = iconReg.registerIcon(DarkMain.getInstance().PREFIX + "machine");
+        this.iconInput = iconReg.registerIcon(DarkMain.getInstance().PREFIX + "machine_input");
+        this.iconOutput = iconReg.registerIcon(DarkMain.getInstance().PREFIX + "machine_output");
     }
 
     @Override
