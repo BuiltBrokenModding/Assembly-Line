@@ -15,7 +15,7 @@ import dark.core.prefab.machine.TileEntityMachine;
  * it. Doesn't actually make steam fluid but rather simple functions. The machines above it will
  * need to call to this machines and do a check for steam. If this machines is creating steam then
  * the machine above it should function
- * 
+ *
  * @author DarkGuardsman */
 public class TileEntitySteamGen extends TileEntityMachine implements IFluidHandler
 {
@@ -34,42 +34,31 @@ public class TileEntitySteamGen extends TileEntityMachine implements IFluidHandl
     public void updateEntity()
     {
         super.updateEntity();
-
-        TileEntity entity = this.worldObj.getBlockTileEntity(xCoord, yCoord + 1, zCoord);
         this.creatingSteam = false;
-        steamMachineConnected = false;
-
-        if (itemCookTime > 0)
+        if (itemCookTime < 10)
         {
-            itemCookTime--;
-        }
-        else
-        {
-            heatTicks--;
-        }
-        if (entity instanceof TileEntitySteamPiston)
-        {
-            steamMachineConnected = true;
-            if (itemCookTime < 10)
+            this.consumeFuel();
+            if (itemCookTime <= 0)
             {
-                this.consumeFuel();
+                if (heatTicks > 0)
+                    heatTicks--;
             }
-            if (itemCookTime > 0 && this.heatTicks < HEAT_TIME)
+        }
+        else if (this.heatTicks < HEAT_TIME)
+        {
+            heatTicks++;
+        }
+        if (this.isFunctioning())
+        {
+            if (this.tank != null && this.tank.getFluid() != null && this.tank.getFluidAmount() > 1 && this.tank.getFluid().isFluidEqual(new FluidStack(FluidRegistry.WATER, 1000)))
             {
-                heatTicks++;
+                this.tank.drain(1, true);
+                this.creatingSteam = true;
             }
-            if (this.isFunctioning())
+            else
             {
-                if (this.tank != null && this.tank.getFluid() != null && this.tank.getFluidAmount() > 1 && this.tank.getFluid().getFluid() == FluidRegistry.WATER)
-                {
-                    this.tank.drain(1, true);
-                    this.creatingSteam = true;
-                }
-                else
-                {
-                    //TODO start heating up machine and blow it up if left without water for too long
-                    this.tank.fill(new FluidStack(FluidRegistry.WATER, 1000), true);
-                }
+                //TODO start heating up machine and blow it up if left without water for too long
+                this.tank.fill(new FluidStack(FluidRegistry.WATER, 1000), true);
             }
         }
     }
