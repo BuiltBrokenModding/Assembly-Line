@@ -12,6 +12,7 @@ import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.core.client.models.ModelMachine;
 import dark.core.client.models.ModelSolarPanel;
 import dark.core.common.CoreRecipeLoader;
 import dark.core.common.DarkMain;
@@ -34,6 +35,14 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
             GL11.glTranslatef(0.0F, 1.5F, 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
             solarPanelModel.render(0.0625F);
+        }
+        if (CoreRecipeLoader.basicMachine != null && block.blockID == CoreRecipeLoader.basicMachine.blockID)
+        {
+            ModelMachine model = RenderSteamGen.getModel(metadata);
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderSteamGen.getTexture(metadata));
+            GL11.glTranslatef(0.0F, 1.5F, 0.0F);
+            GL11.glRotatef(180f, 0f, 0f, 1f);
+            model.render(0.0625F);
         }
         GL11.glPopMatrix();
     }

@@ -18,7 +18,7 @@ import dark.core.prefab.ModPrefab;
 import dark.core.prefab.machine.TileEntityMachine;
 
 @SideOnly(Side.CLIENT)
-public class RenderBasicMachine extends RenderTileMachine
+public class RenderSteamGen extends RenderTileMachine
 {
     public static final ModelSteamTurbine TURBINE_MODEL = new ModelSteamTurbine();
     public static final ModelSteamGen STEAM_GEN_MODEL = new ModelSteamGen();
@@ -32,35 +32,17 @@ public class RenderBasicMachine extends RenderTileMachine
     {
         int meta = tileEntity.worldObj.getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
         int face = meta % 4;
-        int type = meta / 4;
+        ModelMachine model = getModel(meta);
 
-        rot1 = MathHelper.wrapAngleTo180_float(rot1 + 1);
-        ModelMachine model = null;
-        switch (type)
-        {
-            
-            case 0:
-                bindTexture(TURBINE_TEXTURE);
-                model = TURBINE_MODEL;
-                break;
-            case 1:
-                bindTexture(TURBINE_TEXTURE);
-                model = TURBINE_MODEL;
-                break;
-            case 2:
-                bindTexture(STEAM_GEN_TEXTURE);
-                model = STEAM_GEN_MODEL;
-                break;
-            case 3:
-                bindTexture(STEAM_GEN_TEXTURE);
-                model = STEAM_GEN_MODEL;
-                break;
-        }
         if (model != null)
         {
+            bindTexture(this.getTexture(tileEntity.getBlockType().blockID, meta));
+            rot1 = MathHelper.wrapAngleTo180_float(rot1 + 1);
+
             GL11.glPushMatrix();
             GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
             GL11.glScalef(1.0F, -1F, -1F);
+
             if (face == 0)
             {
                 GL11.glRotatef(180f, 0f, 1f, 0f);
@@ -77,7 +59,9 @@ public class RenderBasicMachine extends RenderTileMachine
             {
                 GL11.glRotatef(270f, 0f, 1f, 0f);
             }
+
             model.render(0.0625F);
+
             if (tileEntity instanceof TileEntityMachine)
             {
                 if (model instanceof ModelSteamTurbine)
@@ -89,16 +73,50 @@ public class RenderBasicMachine extends RenderTileMachine
                     ((ModelSteamTurbine) model).renderFan(0.0625F);
                 }
             }
+
             GL11.glPopMatrix();
         }
 
     }
 
+    public static ModelMachine getModel(int meta)
+    {
+        switch (meta / 4)
+        {
+
+            case 0:
+                return TURBINE_MODEL;
+            case 1:
+                return TURBINE_MODEL;
+            case 2:
+                return STEAM_GEN_MODEL;
+            case 3:
+                return STEAM_GEN_MODEL;
+        }
+        return null;
+    }
+
+    public static ResourceLocation getTexture(int meta)
+    {
+        switch (meta / 4)
+        {
+
+            case 0:
+                return TURBINE_TEXTURE;
+            case 1:
+                return TURBINE_TEXTURE;
+            case 2:
+                return STEAM_GEN_TEXTURE;
+            case 3:
+                return STEAM_GEN_TEXTURE;
+        }
+        return null;
+    }
+
     @Override
     public ResourceLocation getTexture(int block, int meta)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return getTexture(meta);
     }
 
 }

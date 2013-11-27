@@ -20,7 +20,7 @@ import com.builtbroken.common.Pair;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.client.renders.BlockRenderingHandler;
-import dark.core.client.renders.RenderBasicMachine;
+import dark.core.client.renders.RenderSteamGen;
 import dark.core.common.DMCreativeTab;
 import dark.core.helpers.MathHelper;
 import dark.core.prefab.machine.BlockMachine;
@@ -118,9 +118,9 @@ public class BlockSmallSteamGen extends BlockMachine
     @SideOnly(Side.CLIENT)
     public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
     {
-        list.add(new Pair(TileEntitySteamPiston.class, new RenderBasicMachine()));
-        list.add(new Pair(TileEntitySteamFan.class, new RenderBasicMachine()));
-        list.add(new Pair(TileEntitySteamGen.class, new RenderBasicMachine()));
+        list.add(new Pair(TileEntitySteamPiston.class, new RenderSteamGen()));
+        list.add(new Pair(TileEntitySteamFan.class, new RenderSteamGen()));
+        list.add(new Pair(TileEntitySteamGen.class, new RenderSteamGen()));
     }
 
     @Override
