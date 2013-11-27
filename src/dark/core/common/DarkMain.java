@@ -54,7 +54,7 @@ import dark.core.common.items.ItemParts;
 import dark.core.common.items.ItemParts.Parts;
 import dark.core.common.items.ItemReadoutTools;
 import dark.core.common.items.ItemWrench;
-import dark.core.common.machines.BlockBasicMachine;
+import dark.core.common.machines.BlockSmallSteamGen;
 import dark.core.common.machines.BlockDebug;
 import dark.core.common.machines.BlockSolarPanel;
 import dark.core.common.transmit.BlockWire;
@@ -268,7 +268,7 @@ public class DarkMain extends ModPrefab
         {
             blockMulti = (BlockMulti) m;
         }
-        CoreRecipeLoader.basicMachine = ModObjectRegistry.createNewBlock("DMBlockBasicMachine", DarkMain.MOD_ID, BlockBasicMachine.class, ItemBlockHolder.class);
+        CoreRecipeLoader.basicMachine = ModObjectRegistry.createNewBlock("DMBlockBasicMachine", DarkMain.MOD_ID, BlockSmallSteamGen.class, ItemBlockHolder.class);
         CoreRecipeLoader.blockOre = ModObjectRegistry.createNewBlock("DMBlockOre", DarkMain.MOD_ID, BlockOre.class, ItemBlockOre.class);
         CoreRecipeLoader.blockWire = ModObjectRegistry.createNewBlock("DMBlockWire", DarkMain.MOD_ID, BlockWire.class, ItemBlockWire.class);
         CoreRecipeLoader.blockDebug = ModObjectRegistry.createNewBlock("DMBlockDebug", DarkMain.MOD_ID, BlockDebug.class, ItemBlockHolder.class);

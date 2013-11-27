@@ -11,7 +11,10 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import dark.core.prefab.machine.TileEntityMachine;
 
-/** Simple steam gen designed to burn items to create steam to power a steam device directly above it
+/** Simple steam gen designed to burn items to create steam to power a steam device directly above
+ * it. Doesn't actually make steam fluid but rather simple functions. The machines above it will
+ * need to call to this machines and do a check for steam. If this machines is creating steam then
+ * the machine above it should function
  * 
  * @author DarkGuardsman */
 public class TileEntitySteamGen extends TileEntityMachine implements IFluidHandler
@@ -20,8 +23,8 @@ public class TileEntitySteamGen extends TileEntityMachine implements IFluidHandl
      * burning for */
     public int itemCookTime = 0;
 
-    protected final int HEAT_TIME = 100, WATER_CONSUME_TIME = 100, WATER_CONSUME_SUM = 10;
-    protected int heatTicks = 0, waterTicks = 0;
+    protected final int HEAT_TIME = 100;
+    protected int heatTicks = 0;
 
     protected boolean steamMachineConnected = false, isHeated = false, creatingSteam = false;
 
@@ -33,6 +36,9 @@ public class TileEntitySteamGen extends TileEntityMachine implements IFluidHandl
         super.updateEntity();
 
         TileEntity entity = this.worldObj.getBlockTileEntity(xCoord, yCoord + 1, zCoord);
+        this.creatingSteam = false;
+        steamMachineConnected = false;
+
         if (itemCookTime > 0)
         {
             itemCookTime--;
@@ -46,7 +52,7 @@ public class TileEntitySteamGen extends TileEntityMachine implements IFluidHandl
             steamMachineConnected = true;
             if (itemCookTime < 10)
             {
-                //TODO consume an item to keep us running
+                this.consumeFuel();
             }
             if (itemCookTime > 0 && this.heatTicks < HEAT_TIME)
             {
@@ -54,26 +60,28 @@ public class TileEntitySteamGen extends TileEntityMachine implements IFluidHandl
             }
             if (this.isFunctioning())
             {
-                if (this.tank != null && this.tank.getFluid() != null && this.tank.getFluidAmount() > WATER_CONSUME_SUM && this.tank.getFluid().getFluid() == FluidRegistry.WATER)
+                if (this.tank != null && this.tank.getFluid() != null && this.tank.getFluidAmount() > 1 && this.tank.getFluid().getFluid() == FluidRegistry.WATER)
                 {
-                    waterTicks++;
-                    if (waterTicks % WATER_CONSUME_TIME == 0)
-                    {
-                        this.tank.drain(10, true);
-                    }
+                    this.tank.drain(1, true);
+                    this.creatingSteam = true;
                 }
                 else
                 {
                     //TODO start heating up machine and blow it up if left without water for too long
+                    this.tank.fill(new FluidStack(FluidRegistry.WATER, 1000), true);
                 }
             }
         }
-        else
-        {
-            steamMachineConnected = false;
-        }
     }
 
+    /** Called when the generator is running low on energy and needs to burn more fuel to keep going */
+    public void consumeFuel()
+    {
+        //TODO consume an item to keep us running
+        itemCookTime += 20;
+    }
+
+    /** Is the machines running and making steam */
     public boolean isCreatingSteam()
     {
         return creatingSteam;
@@ -82,13 +90,14 @@ public class TileEntitySteamGen extends TileEntityMachine implements IFluidHandl
     @Override
     public boolean canFunction()
     {
-        return super.canFunction() && itemCookTime > 0 && steamMachineConnected && isHeated;
+        TileEntity ent = this.worldObj.getBlockTileEntity(xCoord, yCoord + 1, zCoord);
+        return super.canFunction() && ent instanceof TileEntitySteamPiston && this.itemCookTime > 0 && this.isHeated;
     }
 
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
     {
-        if(resource != null && resource.getFluid().equals(FluidRegistry.WATER))
+        if (resource != null && resource.getFluid().equals(FluidRegistry.WATER))
         {
             this.tank.fill(resource, doFill);
         }
