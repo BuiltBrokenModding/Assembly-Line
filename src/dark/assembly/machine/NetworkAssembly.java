@@ -44,6 +44,11 @@ public class NetworkAssembly extends NetworkSharedPower
         NetworkUpdateHandler.registerNetworkClass("AssemblyNet", NetworkAssembly.class);
     }
 
+    public NetworkAssembly()
+    {
+        super();
+    }
+
     public NetworkAssembly(INetworkPart... parts)
     {
         super(parts);
