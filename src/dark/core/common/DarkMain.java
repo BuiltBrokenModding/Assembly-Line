@@ -59,6 +59,7 @@ import dark.core.common.machines.BlockEnergyStorage;
 import dark.core.common.machines.BlockSmallSteamGen;
 import dark.core.common.machines.BlockDebug;
 import dark.core.common.machines.BlockSolarPanel;
+import dark.core.common.machines.ItemBlockEnergyStorage;
 import dark.core.common.transmit.BlockWire;
 import dark.core.common.transmit.ItemBlockWire;
 import dark.core.helpers.PacketDataWatcher;
@@ -280,7 +281,7 @@ public class DarkMain extends ModPrefab
         CoreRecipeLoader.blockGlowGlass = ModObjectRegistry.createNewBlock("DMBlockGlowGlass", DarkMain.MOD_ID, BlockColorGlowGlass.class, ItemBlockColored.class);
         CoreRecipeLoader.blockSolar = ModObjectRegistry.createNewBlock("DMBlockSolar", DarkMain.MOD_ID, BlockSolarPanel.class, ItemBlockHolder.class);
         CoreRecipeLoader.blockGas = ModObjectRegistry.createNewBlock("DMBlockGas", DarkMain.MOD_ID, BlockGasOre.class, ItemBlockHolder.class);
-        CoreRecipeLoader.blockBatBox = ModObjectRegistry.createNewBlock("DMBlockBatBox", DarkMain.MOD_ID, BlockEnergyStorage.class, ItemBlockHolder.class);
+        CoreRecipeLoader.blockBatBox = ModObjectRegistry.createNewBlock("DMBlockBatBox", DarkMain.MOD_ID, BlockEnergyStorage.class, ItemBlockEnergyStorage.class);
 
         /* ITEMS */
         CoreRecipeLoader.itemTool = ModObjectRegistry.createNewItem("DMReadoutTools", DarkMain.MOD_ID, ItemReadoutTools.class, true);

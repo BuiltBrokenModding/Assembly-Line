@@ -41,7 +41,7 @@ public class TileEntityBatteryBox extends TileEntityEnergyMachine
                 /** Decharge electric item. */
                 EnergyHelper.discharge(this.getStackInSlot(1), this);
 
-                ForgeDirection outputDirection = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockEnergyStorage.BATTERY_BOX_METADATA + 2);
+                ForgeDirection outputDirection = ForgeDirection.getOrientation(this.getBlockMetadata());
                 TileEntity inputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), outputDirection.getOpposite());
                 TileEntity outputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), outputDirection);
 
@@ -83,13 +83,13 @@ public class TileEntityBatteryBox extends TileEntityEnergyMachine
     @Override
     public boolean canConnect(ForgeDirection direction)
     {
-        return direction == ForgeDirection.getOrientation(this.getBlockMetadata() - BlockEnergyStorage.BATTERY_BOX_METADATA + 2) || direction == ForgeDirection.getOrientation(this.getBlockMetadata() - BlockEnergyStorage.BATTERY_BOX_METADATA + 2).getOpposite();
+        return true;
     }
 
     @Override
     public EnumSet<ForgeDirection> getOutputDirections()
     {
-        return EnumSet.of(ForgeDirection.getOrientation(this.getBlockMetadata() - BlockEnergyStorage.BATTERY_BOX_METADATA + 2).getOpposite());
+        return EnumSet.of(ForgeDirection.getOrientation(this.getBlockMetadata()).getOpposite());
     }
 
     @Override

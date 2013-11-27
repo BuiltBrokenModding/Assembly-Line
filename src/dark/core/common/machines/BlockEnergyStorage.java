@@ -15,6 +15,7 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.core.block.IConductor;
 import universalelectricity.core.vector.Vector3;
+import dark.core.common.DMCreativeTab;
 import dark.core.common.DarkMain;
 import dark.core.helpers.MathHelper;
 import dark.core.prefab.machine.BlockMachine;
@@ -24,22 +25,17 @@ import dark.core.prefab.machine.BlockMachine;
  * @author Rseifert */
 public class BlockEnergyStorage extends BlockMachine
 {
-    public static final int BATTERY_BOX_METADATA = 0;
-
     public BlockEnergyStorage()
     {
         super(DarkMain.CONFIGURATION, "DMEnergyStorage", UniversalElectricity.machine);
+        this.setCreativeTab(DMCreativeTab.tabIndustrial);
     }
 
     public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
     {
         Vector3 vec = new Vector3(x, y, z);
         int meta = vec.getBlockMetadata(world);
-        if (side == 0 || side == 1)
-        {
-            return this.blockIcon;
-        }
-        if(side == (meta - BlockEnergyStorage.BATTERY_BOX_METADATA + 2))
+        if (side == (meta))
         {
             return this.iconOutput;
         }
@@ -48,27 +44,10 @@ public class BlockEnergyStorage extends BlockMachine
     }
 
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack)
-    {
-        super.onBlockPlacedBy(world, x, y, z, entityLiving, itemStack);
-        int metadata = world.getBlockMetadata(x, y, z);
-        int angle = MathHelper.floor_double((entityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-        world.setBlockMetadataWithNotify(x, y, z, ((metadata / 4) * 4) + angle, 3);
-    }
-
-    @Override
     public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
     {
-        if (world.getBlockMetadata(x, y, z) % 4 < 3)
-        {
-            world.setBlockMetadataWithNotify(x, y, z, world.getBlockMetadata(x, y, z) + 1, 3);
-            return true;
-        }
-        else
-        {
-            world.setBlockMetadataWithNotify(x, y, z, world.getBlockMetadata(x, y, z) - 3, 3);
-            return true;
-        }
+        world.setBlockMetadataWithNotify(x, y, z, side, 3);
+        return true;
     }
 
     @Override
@@ -93,13 +72,13 @@ public class BlockEnergyStorage extends BlockMachine
     @Override
     public int damageDropped(int metadata)
     {
-        return metadata / 4;
+        return 0;
     }
 
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
-        return new ItemStack(this, 1, (world.getBlockMetadata(x, y, z) / 4) * 4);
+        return new ItemStack(this, 1, 0);
     }
 
 }
