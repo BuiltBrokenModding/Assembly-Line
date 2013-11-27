@@ -18,7 +18,7 @@ import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
 /** A class to be inherited by all machines on the assembly line. This class acts as a single peace
  * in a network of similar tiles allowing all to share power from one or more sources
- * 
+ *
  * @author DarkGuardsman */
 public abstract class TileEntityAssembly extends TileEntityEnergyMachine implements INetworkEnergyPart
 {
@@ -130,7 +130,7 @@ public abstract class TileEntityAssembly extends TileEntityEnergyMachine impleme
     @Override
     public float receiveElectricity(ForgeDirection from, ElectricityPack receive, boolean doReceive)
     {
-        return this.getTileNetwork().dumpPower(this, receive.getWatts(), doReceive);
+        return this.getTileNetwork().receiveElectricity(this, receive.getWatts(), doReceive);
     }
 
     /** Amount of energy this tile runs on per tick */
@@ -160,6 +160,12 @@ public abstract class TileEntityAssembly extends TileEntityEnergyMachine impleme
     public float getEnergyStored()
     {
         return ((NetworkSharedPower) this.getTileNetwork()).getEnergyStored();
+    }
+
+    @Override
+    public float getMaxEnergyStored()
+    {
+        return ((NetworkSharedPower) this.getTileNetwork()).getMaxEnergyStored();
     }
 
     @Override
