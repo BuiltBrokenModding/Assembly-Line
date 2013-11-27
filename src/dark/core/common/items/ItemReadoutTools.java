@@ -138,18 +138,18 @@ public class ItemReadoutTools extends ItemBasic
                         player.sendChatToPlayer(ChatMessageComponent.createFromText("   Voltage> " + ElectricityDisplay.getDisplay(((IElectrical) tileEntity).getVoltage(), ElectricUnit.VOLTAGE, 2, true)));
                         if (((IElectrical) tileEntity).getRequest(ForgeDirection.getOrientation(side).getOpposite()) > 0)
                         {
-                            player.sendChatToPlayer(ChatMessageComponent.createFromText("   RequiredWatts> " + ElectricityDisplay.getDisplay(((IElectrical) tileEntity).getRequest(ForgeDirection.getOrientation(side).getOpposite()), ElectricUnit.WATT, 2, true)));
+                            player.sendChatToPlayer(ChatMessageComponent.createFromText("   RequiredWatts> " + ElectricityDisplay.getDisplay(((IElectrical) tileEntity).getRequest(ForgeDirection.getOrientation(side).getOpposite()), ElectricUnit.JOULES, 2, true)));
                         }
                         if (((IElectrical) tileEntity).getProvide(ForgeDirection.getOrientation(side).getOpposite()) > 0)
                         {
-                            player.sendChatToPlayer(ChatMessageComponent.createFromText("   AvailableWatts> " + ElectricityDisplay.getDisplay(((IElectrical) tileEntity).getProvide(ForgeDirection.getOrientation(side).getOpposite()), ElectricUnit.WATT, 2, true)));
+                            player.sendChatToPlayer(ChatMessageComponent.createFromText("   AvailableWatts> " + ElectricityDisplay.getDisplay(((IElectrical) tileEntity).getProvide(ForgeDirection.getOrientation(side).getOpposite()), ElectricUnit.JOULES, 2, true)));
                         }
                         out = true;
                     }
                     //Output battery info
-                    if (tileEntity instanceof IElectricalStorage)
+                    if (tileEntity instanceof IElectricalStorage && ((IElectricalStorage) tileEntity).getMaxEnergyStored() > 0)
                     {
-                        player.sendChatToPlayer(ChatMessageComponent.createFromText("   EnergyStored> " + ElectricityDisplay.getDisplay(((IElectricalStorage) tileEntity).getEnergyStored(), ElectricUnit.WATT, 2, true) + " out of " + ElectricityDisplay.getDisplay(((IElectricalStorage) tileEntity).getMaxEnergyStored(), ElectricUnit.WATT, 2, true) + " Max"));
+                        player.sendChatToPlayer(ChatMessageComponent.createFromText("   EnergyStored> " + ElectricityDisplay.getDisplay(((IElectricalStorage) tileEntity).getEnergyStored(), ElectricUnit.JOULES, 2, true) + " out of " + ElectricityDisplay.getDisplay(((IElectricalStorage) tileEntity).getMaxEnergyStored(), ElectricUnit.JOULES, 2, true) + " Max"));
                         out = true;
                     }
                     //Output wire info
