@@ -2,13 +2,14 @@ package dark.core.prefab.tilenetwork;
 
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.core.block.IElectricalStorage;
+import universalelectricity.core.electricity.ElectricityPack;
 import dark.api.energy.IPowerLess;
 import dark.api.parts.INetworkEnergyPart;
 import dark.api.parts.INetworkPart;
 
 /** Used for tile networks that only need to share power or act like a group battery that doesn't
  * store power on world save
- * 
+ *
  * @author DarkGuardsman */
 public class NetworkSharedPower extends NetworkTileEntities implements IElectricalStorage, IPowerLess
 {
@@ -26,18 +27,35 @@ public class NetworkSharedPower extends NetworkTileEntities implements IElectric
         return super.isValidMember(part) && part instanceof INetworkEnergyPart;
     }
 
-    public float dumpPower(TileEntity source, float power, boolean doFill)
+    public float receiveElectricity(TileEntity source, float power, boolean doFill)
     {
-        float room = (this.getMaxEnergyStored() - this.getEnergyStored());
-        if (!this.runPowerLess && this.networkMembers.contains(source) && Math.ceil(room) > 0)
+        if (!this.runPowerLess && this.networkMembers.contains(source))
         {
-            if (doFill)
-            {
-                this.setEnergyStored(Math.max(this.getEnergyStored() + power, this.getMaxEnergyStored()));
-            }
-            return Math.max(Math.min(Math.abs(room - power), power), 0);
+           return this.receiveElectricity(power, doFill);
         }
         return 0;
+    }
+
+    public float receiveElectricity(ElectricityPack receive, boolean doReceive)
+    {
+        if (receive != null)
+        {
+            float prevEnergyStored = this.getEnergyStored();
+            float newStoredEnergy = Math.min(this.getEnergyStored() + receive.getWatts(), this.getMaxEnergyStored());
+
+            if (doReceive)
+            {
+                this.setEnergyStored(newStoredEnergy);
+            }
+
+            return Math.max(newStoredEnergy - prevEnergyStored, 0);
+        }
+        return 0;
+    }
+
+    public float receiveElectricity(float energy, boolean doReceive)
+    {
+        return this.receiveElectricity(ElectricityPack.getFromWatts(energy, .120f), doReceive);
     }
 
     public boolean drainPower(TileEntity source, float power, boolean doDrain)
@@ -98,6 +116,10 @@ public class NetworkSharedPower extends NetworkTileEntities implements IElectric
     public void setEnergyStored(float energy)
     {
         this.energy = energy;
+        if(this.energy > this.getMaxEnergyStored())
+        {
+            this.energy = this.getMaxEnergyStored();
+        }
     }
 
     @Override
