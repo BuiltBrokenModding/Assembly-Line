@@ -1,6 +1,9 @@
 package dark.core.common.machines;
 
 import java.util.List;
+import java.util.Set;
+
+import com.builtbroken.common.Pair;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
@@ -21,7 +24,7 @@ import dark.core.helpers.MathHelper;
 import dark.core.prefab.machine.BlockMachine;
 
 /** Block for energy storage devices
- *
+ * 
  * @author Rseifert */
 public class BlockEnergyStorage extends BlockMachine
 {
@@ -48,6 +51,13 @@ public class BlockEnergyStorage extends BlockMachine
     {
         world.setBlockMetadataWithNotify(x, y, z, side, 3);
         return true;
+    }
+
+    @Override
+    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+    {
+        list.add(new Pair<String, Class<? extends TileEntity>>("DCTileBatBox", TileEntityBatteryBox.class));
+
     }
 
     @Override

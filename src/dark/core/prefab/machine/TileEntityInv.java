@@ -15,6 +15,7 @@ import universalelectricity.prefab.tile.TileEntityAdvanced;
 import dark.api.access.AccessGroup;
 import dark.api.access.AccessUser;
 import dark.api.access.ISpecialAccess;
+import dark.api.access.Nodes;
 import dark.core.interfaces.IExternalInv;
 import dark.core.interfaces.IInvBox;
 import dark.core.prefab.invgui.InvChest;
@@ -198,9 +199,9 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
         return new AccessUser(username);
     }
 
-    public boolean canUserAccess(String username)
+    public boolean canOpen(String username)
     {
-        return this.getUserAccess(username) != null || this.getOwnerGroup().getMembers().size() <= 0;
+        return this.getUserAccess(username) != null && this.getUserAccess(username).hasNode(Nodes.INV_OPEN_NODE) || this.getOwnerGroup().getMembers().size() <= 0;
     }
 
     @Override

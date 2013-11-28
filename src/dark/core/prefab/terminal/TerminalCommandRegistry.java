@@ -10,6 +10,7 @@ import dark.api.ITerminal;
 import dark.api.access.AccessGroup;
 import dark.api.access.ISpecialAccess;
 import dark.api.access.ITerminalCommand;
+import dark.api.access.Nodes;
 
 /** @author DarkGuardsman */
 public class TerminalCommandRegistry
@@ -19,28 +20,29 @@ public class TerminalCommandRegistry
     public static final HashMap<String, List<String>> groupDefaultNodes = new HashMap();
     public static final HashMap<String, String> groupDefaultExtends = new HashMap();
 
+    
     static
     {
         List<String> list = new ArrayList<String>();
         //Owner group defaults
-        list.add("group.owner");
-        list.add("inv.disable");
-        list.add("inv.enable");
+        list.add(Nodes.GROUP_OWNER_NODE);
+        list.add(Nodes.INV_DISABLE_NODE);
+        list.add(Nodes.INV_ENABLE_NODE);
         createDefaultGroup("owner", "admin", list);
         //Admin group defaults
         list.clear();
-        list.add("group.admin");
-        list.add("inv.edit");
-        list.add("inv.lock");
-        list.add("inv.unlock");
-        list.add("inv.change");
+        list.add(Nodes.GROUP_ADMIN_NODE);
+        list.add(Nodes.INV_EDIT_NODE);
+        list.add(Nodes.INV_LOCK_NODE);
+        list.add(Nodes.INV_UNLOCK_NODE);
+        list.add(Nodes.INV_CHANGE_NODE);
         createDefaultGroup("admin", "user", list);
         //User group defaults
         list.clear();
-        list.add("group.user");
-        list.add("inv.open");
-        list.add("inv.take");
-        list.add("inv.give");
+        list.add(Nodes.GROUP_USER_NODE);
+        list.add(Nodes.INV_OPEN_NODE);
+        list.add(Nodes.INV_TAKE_NODE);
+        list.add(Nodes.INV_GIVE_NODE);
         createDefaultGroup("user", null, list);
     }
 

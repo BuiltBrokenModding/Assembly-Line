@@ -114,10 +114,6 @@ public class ModelSmallFluidCan extends ModelBase
         edge2.render(f5);
         edge3.render(f5);
         edge4.render(f5);
-        glass1.render(f5);
-        glass2.render(f5);
-        glass3.render(f5);
-        glass4.render(f5);
     }
 
     private void setRotation(ModelRenderer model, float x, float y, float z)
