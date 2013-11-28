@@ -1,8 +1,12 @@
 package dark.farmtech.entities;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
+import cpw.mods.fml.common.registry.EntityRegistry;
+import dark.farmtech.FarmTech;
 
 /** Enum of different birds that can be spawned by an egg or in the world threw normal spawning
  * 
@@ -30,9 +34,9 @@ public enum EnumBird
         @Override
         public void register()
         {
-            //EntityRegistry.registerGlobalEntityID(EntityTurkey.class, "FTTurkey", EntityRegistry.findGlobalUniqueEntityId());
-            //EntityRegistry.registerModEntity(EntityTurkey.class, "FTTurkey", FarmTech.entitiesIds++, this, 64, 1, true);
-            //EntityRegistry.addSpawn(EntityTurkey.class, 3, 1, 3, EnumCreatureType.creature, BiomeGenBase.forest, BiomeGenBase.river);
+            EntityRegistry.registerGlobalEntityID(EntityTurkey.class, "FTTurkey", EntityRegistry.findGlobalUniqueEntityId());
+            EntityRegistry.registerModEntity(EntityTurkey.class, "FTTurkey", FarmTech.entitiesIds++, this, 64, 1, true);
+            EntityRegistry.addSpawn(EntityTurkey.class, 3, 1, 3, EnumCreatureType.creature, BiomeGenBase.forest, BiomeGenBase.river);
         }
 
         @Override
