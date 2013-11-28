@@ -22,12 +22,12 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
+import dark.api.save.SaveManager;
 import dark.core.common.ExternalModHandler;
 import dark.core.common.PlayerKeyHandler;
 import dark.core.prefab.fluids.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkUpdateHandler;
 import dark.core.registration.ModObjectRegistry;
-import dark.core.save.SaveManager;
 
 public abstract class ModPrefab
 {

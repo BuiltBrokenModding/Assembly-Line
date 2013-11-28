@@ -1,4 +1,4 @@
-package dark.core.prefab.terminal;
+package dark.api.access;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,13 +7,9 @@ import java.util.Map.Entry;
 
 import net.minecraft.entity.player.EntityPlayer;
 import dark.api.ITerminal;
-import dark.api.access.AccessGroup;
-import dark.api.access.ISpecialAccess;
-import dark.api.access.ITerminalCommand;
-import dark.api.access.Nodes;
 
 /** @author DarkGuardsman */
-public class TerminalCommandRegistry
+public class GroupRegistry
 {
     public static final List<ITerminalCommand> COMMANDS = new ArrayList<ITerminalCommand>();
     public static final List<String> nodes = new ArrayList<String>();

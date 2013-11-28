@@ -10,10 +10,14 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import dark.api.IVirtualObject;
-import dark.core.prefab.terminal.TerminalCommandRegistry;
-import dark.core.save.NBTFileHelper;
-import dark.core.save.SaveManager;
+import dark.api.save.NBTFileHelper;
+import dark.api.save.SaveManager;
 
+/** Designed to be used as a container for AccessGroups and AccessUser. If you plan to use this make
+ * sure to use it correctly. This is designed to be saved separate from the world save if marked for
+ * global access. Which means it can save/load at will from the world file.
+ * 
+ * @author DarkGuardsman */
 public class AccessProfile implements ISpecialAccess, IVirtualObject
 {
     /** A list of user access data. */
@@ -59,7 +63,7 @@ public class AccessProfile implements ISpecialAccess, IVirtualObject
 
     public AccessProfile generateNew(String name, Object object)
     {
-        TerminalCommandRegistry.loadNewGroupSet(this);
+        GroupRegistry.loadNewGroupSet(this);
         this.profileName = name;
         name.replaceAll(" ", "");
         String id = null;
@@ -215,7 +219,7 @@ public class AccessProfile implements ISpecialAccess, IVirtualObject
     {
         if (this.groups == null || this.groups.isEmpty())
         {
-            TerminalCommandRegistry.loadNewGroupSet(this);
+            GroupRegistry.loadNewGroupSet(this);
         }
         return this.groups;
     }

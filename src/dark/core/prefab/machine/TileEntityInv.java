@@ -16,10 +16,10 @@ import dark.api.access.AccessGroup;
 import dark.api.access.AccessUser;
 import dark.api.access.ISpecialAccess;
 import dark.api.access.Nodes;
+import dark.api.access.GroupRegistry;
 import dark.core.interfaces.IExternalInv;
 import dark.core.interfaces.IInvBox;
 import dark.core.prefab.invgui.InvChest;
-import dark.core.prefab.terminal.TerminalCommandRegistry;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
 /** Prefab for simple object who only need basic inv support and nothing more
@@ -299,7 +299,7 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
     {
         if (this.groups == null || this.groups.isEmpty())
         {
-            TerminalCommandRegistry.loadNewGroupSet(this);
+            GroupRegistry.loadNewGroupSet(this);
         }
         return this.groups;
     }
