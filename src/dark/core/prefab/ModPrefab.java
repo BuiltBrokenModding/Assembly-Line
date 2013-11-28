@@ -5,6 +5,7 @@ import java.util.Date;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 
 import org.modstats.Modstats;
@@ -154,6 +155,18 @@ public abstract class ModPrefab
             date = new Triple<Integer, Integer, Integer>(d.getMonth(), d.getDay(), d.getYear());
         }
         return date;
+    }
+    
+    public static boolean isOp(String username)
+    {
+        MinecraftServer theServer = FMLCommonHandler.instance().getMinecraftServerInstance();
+
+        if (theServer != null)
+        {
+            return theServer.getConfigurationManager().getOps().contains(username.trim().toLowerCase());
+        }
+
+        return false;
     }
 
     /** Loads the settings that tell what this mod is named, about, and other info to the user */

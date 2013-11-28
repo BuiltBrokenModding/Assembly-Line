@@ -25,8 +25,24 @@ import dark.core.network.PacketHandler;
 
 public abstract class TileEntityMachine extends TileEntityInv implements ISidedInventory, IExternalInv, IDisableable, ISimplePacketReceiver, IRotatable, IExtraTileEntityInfo
 {
-    protected int disabledTicks = 0, playersUsingMachine = 0;
-    protected boolean functioning = false, prevFunctioning = false, hasGUI = false, rotateByMetaGroup = false, canBeDisabled = false;
+    /** Tick by which this machine stops working */
+    protected int disabledTicks = 0;
+    /** Number of players with the machine's gui container open */
+    protected int playersUsingMachine = 0;
+    /** Is the machine functioning normally */
+    protected boolean functioning = false;
+    /** Prev state of function of last update */
+    protected boolean prevFunctioning = false;
+    /** Does the machine have a gui */
+    protected boolean hasGUI = false;
+    /** Does teh machine rotate in meta groups of four */
+    protected boolean rotateByMetaGroup = false;
+    /** Can the machine be temp disabled */
+    protected boolean canBeDisabled = false;
+    /** Is the machine enabled by the player */
+    protected boolean enabled = true;
+    /** Is the machine locked by the player */
+    protected boolean locked = false;
 
     /** Inventory manager used by this machine */
     protected IInvBox inventory;

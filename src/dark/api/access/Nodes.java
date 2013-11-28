@@ -1,5 +1,7 @@
 package dark.api.access;
 
+import mffs.api.security.Permission;
+
 /** Constants that represent nodes by which machines and entities used in combination with
  * ISpecialAccess to limit users on what they can do. These nodes should be used in the same way by
  * all machines, entities, and other mods. Too change the meaning of the node will make it difficult
@@ -34,8 +36,7 @@ public class Nodes
      * 
      * 
      */
-    
-    
+
     //Inventory only nodes, overrided by machine nodes
     public static final String INV_OPEN_NODE = "inv.open";
     public static final String INV_TAKE_NODE = "inv.take";
@@ -82,4 +83,13 @@ public class Nodes
     public static final String GROUP_OWNER_NODE = "group.owner";
     public static final String GROUP_ADMIN_NODE = "group.admin";
     public static final String GROUP_USER_NODE = "group.user";
+
+    //MFFS nodes
+    public static final String MFFS_WARP_NODE = "mffs.warp";
+    public static final String MFFS_PLACE_NODE = "mffs.blockPlaceAccess";
+    public static final String MFFS_BLOCK_ACCESS_NODE = "mffs.blockAccess";
+    public static final String MFFS_SECURITY_CENTER_CONFIGURE_NODE = "mffs.configure";
+    public static final String MFFS_BYPASS_INTERDICTION_MATRIX_NODE = "mffs.bypassDefense";
+    public static final String MFFS_DEFENSE_STATION_CONFISCATION_NODE = "mffs.bypassConfiscation";
+    public static final String MFFS_REMOTE_CONTROL_NODE = "mffs.remoteControl";
 }
