@@ -3,7 +3,6 @@ package dark.api.access;
 import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
-import dark.api.ITerminal;
 
 /** Prefab for creating commands that most terminal entities can use
  * 

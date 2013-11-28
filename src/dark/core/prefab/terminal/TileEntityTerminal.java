@@ -12,8 +12,8 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
-import dark.api.ITerminal;
 import dark.api.access.GroupRegistry;
+import dark.api.access.ITerminal;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
 

@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
-import dark.api.ITerminal;
 import dark.api.access.ISpecialAccess;
+import dark.api.access.ITerminal;
 import dark.api.access.ITerminalCommand;
 
 public class CommandUser implements ITerminalCommand

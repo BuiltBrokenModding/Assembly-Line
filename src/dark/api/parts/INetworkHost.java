@@ -1,9 +1,8 @@
-package dark.api;
+package dark.api.parts;
 
 import java.util.List;
 
 import net.minecraft.tileentity.TileEntity;
-import dark.api.parts.ITileConnector;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
 public interface INetworkHost extends ITileConnector

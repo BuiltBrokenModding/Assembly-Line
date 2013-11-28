@@ -11,7 +11,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
 import cpw.mods.fml.common.FMLLog;
-import dark.api.IVirtualObject;
 
 public class SaveManager
 {

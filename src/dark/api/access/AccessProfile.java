@@ -9,7 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import dark.api.IVirtualObject;
+import dark.api.save.IVirtualObject;
 import dark.api.save.NBTFileHelper;
 import dark.api.save.SaveManager;
 

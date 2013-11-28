@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import net.minecraft.entity.player.EntityPlayer;
-import dark.api.ITerminal;
 
 /** @author DarkGuardsman */
 public class GroupRegistry
