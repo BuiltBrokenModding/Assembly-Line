@@ -184,6 +184,10 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
     /*
      * User access
      */
+    public boolean canOpen(String username)
+    {
+        return this.getUserAccess(username) != null && this.getUserAccess(username).hasNode(Nodes.INV_OPEN_NODE) || this.getOwnerGroup().getMembers().size() <= 0;
+    }
 
     @Override
     public AccessUser getUserAccess(String username)
@@ -197,11 +201,6 @@ public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, I
             }
         }
         return new AccessUser(username);
-    }
-
-    public boolean canOpen(String username)
-    {
-        return this.getUserAccess(username) != null && this.getUserAccess(username).hasNode(Nodes.INV_OPEN_NODE) || this.getOwnerGroup().getMembers().size() <= 0;
     }
 
     @Override

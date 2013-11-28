@@ -77,6 +77,10 @@ public class ItemRenderFluidCan implements IItemRenderer
                 FMLClientHandler.instance().getClient().renderEngine.bindTexture((RenderBlockFluid.getFluidSheet(liquid)));
 
                 int cap = ((ItemFluidCan) CoreRecipeLoader.itemFluidCan).getCapacity(item);
+                if(liquid.getFluid().isGaseous())
+                {
+                    cap = liquid.amount;
+                }
                 GL11.glCallList(displayList[(int) ((float) liquid.amount / (float) (cap) * (RenderBlockFluid.DISPLAY_STAGES - 1))]);
 
                 GL11.glPopAttrib();

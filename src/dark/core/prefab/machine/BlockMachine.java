@@ -6,9 +6,11 @@ import java.util.Set;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
@@ -20,6 +22,8 @@ import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.api.access.AccessUser;
+import dark.api.access.ISpecialAccess;
 import dark.api.parts.INetworkPart;
 import dark.core.common.DarkMain;
 import dark.core.interfaces.IBlockActivated;
@@ -30,7 +34,7 @@ import dark.core.registration.ModObjectRegistry.BlockBuildData;
 /** Basic TileEntity Container class designed to be used by generic machines. It is suggested that
  * each mod using this create there own basic block extending this to reduce need to use build data
  * per block.
- *
+ * 
  * @author Darkguardsman */
 public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
 {
@@ -96,6 +100,16 @@ public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
         if (tileEntity instanceof INetworkPart)
         {
             ((INetworkPart) tileEntity).refresh();
+        }
+    }
+
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack)
+    {
+        TileEntity tile = world.getBlockTileEntity(x, y, z);
+        if (tile instanceof ISpecialAccess && entity instanceof EntityPlayer)
+        {
+            ((ISpecialAccess) tile).setUserAccess(new AccessUser((EntityPlayer) entity), ((ISpecialAccess) tile).getOwnerGroup());
         }
     }
 
