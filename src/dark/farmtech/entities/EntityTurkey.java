@@ -55,7 +55,7 @@ public class EntityTurkey extends EntityAnimal
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(4.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(6.0D);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.25D);
     }
 
@@ -151,6 +151,7 @@ public class EntityTurkey extends EntityAnimal
         {
             this.dropItem(Item.feather.itemID, 1);
         }
+        
 
         if (this.isBurning())
         {
@@ -173,7 +174,7 @@ public class EntityTurkey extends EntityAnimal
     @Override
     public EntityAgeable createChild(EntityAgeable par1EntityAgeable)
     {
-        return new EntityChicken(this.worldObj);
+        return new EntityTurkey(this.worldObj);
     }
 
 }

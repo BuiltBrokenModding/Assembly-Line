@@ -134,6 +134,7 @@ public class ModelTurkey extends ModelBase
             this.chin.render(par7);
             this.body.render(par7);
             this.body2.render(par7);
+            this.fan.render(par7);
             this.rightLeg.render(par7);
             this.leftLeg.render(par7);
             this.rightWing.render(par7);
@@ -156,10 +157,10 @@ public class ModelTurkey extends ModelBase
         this.bill.rotateAngleY = this.head.rotateAngleY;
         this.chin.rotateAngleX = this.head.rotateAngleX;
         this.chin.rotateAngleY = this.head.rotateAngleY;
-        this.body.rotateAngleX = ((float)Math.PI / 2F);
-        this.body2.rotateAngleX = ((float)Math.PI / 2F);
-        this.fan.rotateAngleX = ((float)Math.PI / 2F);
-        this.neck.rotateAngleX = ((float)Math.PI / 2F);
+        //this.body.rotateAngleX = ((float)Math.PI / 2F);
+        //this.body2.rotateAngleX = ((float)Math.PI / 2F);
+        //this.fan.rotateAngleX = ((float)Math.PI / 2F);
+        //this.neck.rotateAngleX = ((float)Math.PI / 2F);
         this.rightLeg.rotateAngleX = MathHelper.cos(par1 * 0.6662F) * 1.4F * par2;
         this.leftLeg.rotateAngleX = MathHelper.cos(par1 * 0.6662F + (float)Math.PI) * 1.4F * par2;
         this.rightWing.rotateAngleZ = par3;

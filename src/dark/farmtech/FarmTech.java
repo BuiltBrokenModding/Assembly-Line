@@ -120,7 +120,7 @@ public class FarmTech extends ModPrefab
             Item.egg = new ItemFarmEgg(88);
             GameRegistry.registerItem(Item.egg, "FTEgg", MOD_ID);
             EntityRegistry.registerGlobalEntityID(EntityFarmEgg.class, "FarmEgg", EntityRegistry.findGlobalUniqueEntityId());
-            EntityRegistry.registerModEntity(EntityFarmEgg.class, "FarmEgg", 60, this, 64, 1, true);
+            EntityRegistry.registerModEntity(EntityFarmEgg.class, "FarmEgg", entitiesIds++, this, 64, 1, true);
             BlockDispenser.dispenseBehaviorRegistry.putObject(Item.egg, new BehaviorDispenseEgg());
         }
 

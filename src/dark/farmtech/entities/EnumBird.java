@@ -1,5 +1,7 @@
 package dark.farmtech.entities;
 
+import java.awt.Color;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.passive.EntityChicken;
@@ -34,9 +36,9 @@ public enum EnumBird
         @Override
         public void register()
         {
-            EntityRegistry.registerGlobalEntityID(EntityTurkey.class, "FTTurkey", EntityRegistry.findGlobalUniqueEntityId());
-            EntityRegistry.registerModEntity(EntityTurkey.class, "FTTurkey", FarmTech.entitiesIds++, this, 64, 1, true);
-            EntityRegistry.addSpawn(EntityTurkey.class, 3, 1, 3, EnumCreatureType.creature, BiomeGenBase.forest, BiomeGenBase.river);
+            EntityRegistry.registerGlobalEntityID(EntityTurkey.class, "FTTurkey", EntityRegistry.findGlobalUniqueEntityId(), 5651507, Color.red.getRGB());
+            EntityRegistry.registerModEntity(EntityTurkey.class, "FTTurkey", FarmTech.entitiesIds++, FarmTech.instance, 64, 1, true);
+            EntityRegistry.addSpawn(EntityTurkey.class, 3, 1, 10, EnumCreatureType.creature, BiomeGenBase.forest, BiomeGenBase.river);
         }
 
         @Override
