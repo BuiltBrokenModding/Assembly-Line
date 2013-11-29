@@ -62,7 +62,6 @@ public abstract class TileEntityAssembly extends TileEntityEnergyMachine impleme
         super.updateEntity();
         if (!this.worldObj.isRemote)
         {
-
             if (ticks % updateTick == 0)
             {
                 this.updateTick = (random.nextInt(1 + refresh_diff) + refresh_min_rate);

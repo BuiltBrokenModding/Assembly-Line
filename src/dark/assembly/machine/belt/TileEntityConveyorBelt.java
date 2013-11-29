@@ -115,9 +115,31 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IBelt,
     {
         if (this.slantType != SlantType.NONE)
         {
-            return PacketHandler.instance().getTilePacket(this.getChannel(), this, slantPacketID, this.slantType.ordinal());
+            return PacketHandler.instance().getTilePacket(this.getChannel(), this, slantPacketID, this.isFunctioning(), this.slantType.ordinal());
         }
-        return null;
+        return super.getDescriptionPacket();
+    }
+
+    @Override
+    public boolean simplePacket(String id, ByteArrayDataInput dis, Player player)
+    {
+        if (!super.simplePacket(id, dis, player) && this.worldObj.isRemote)
+        {
+            try
+            {
+                if (id.equalsIgnoreCase(slantPacketID))
+                {
+                    this.functioning = dis.readBoolean();
+                    this.slantType = SlantType.values()[dis.readInt()];
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+        return false;
     }
 
     public SlantType getSlant()
@@ -171,27 +193,6 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IBelt,
         if (bBelt instanceof TileEntityConveyorBelt && !(fBelt instanceof TileEntityConveyorBelt))
         {
             return ((TileEntityConveyorBelt) bBelt).getDirection() == this.getDirection().getOpposite();
-        }
-        return false;
-    }
-
-    @Override
-    public boolean simplePacket(String id, ByteArrayDataInput dis, Player player)
-    {
-        if (!super.simplePacket(id, dis, player) && this.worldObj.isRemote)
-        {
-            try
-            {
-                if (id.equalsIgnoreCase(slantPacketID))
-                {
-                    this.slantType = SlantType.values()[dis.readInt()];
-                    return true;
-                }
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
         }
         return false;
     }
