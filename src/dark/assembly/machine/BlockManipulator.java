@@ -1,6 +1,7 @@
 package dark.assembly.machine;
 
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -85,6 +86,12 @@ public class BlockManipulator extends BlockImprintable
         }
 
         return true;
+    }
+    
+    @Override
+    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+    {
+        list.add(new Pair("ALManipulator", TileEntityManipulator.class));
     }
 
     @Override

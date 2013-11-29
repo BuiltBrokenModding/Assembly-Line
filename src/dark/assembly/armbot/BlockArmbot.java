@@ -2,6 +2,7 @@ package dark.assembly.armbot;
 
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,6 +19,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.client.render.RenderArmbot;
 import dark.assembly.machine.BlockAssembly;
+import dark.assembly.machine.TileEntityRejector;
 import dark.core.interfaces.IMultiBlock;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
@@ -71,6 +73,12 @@ public class BlockArmbot extends BlockAssembly
     public int quantityDropped(Random par1Random)
     {
         return 0;
+    }
+    
+    @Override
+    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+    {
+        list.add(new Pair("ALArmbot", TileEntityArmbot.class));
     }
 
     @Override

@@ -31,9 +31,11 @@ public class RenderCrate extends TileEntitySpecialRenderer
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)
     {
         Vector3 vec = new Vector3(x, y, z);
-        double distance = vec.distanceTo(new Vector3(0, 0, 0));
-        if (tileEntity instanceof TileEntityCrate && distance < 35)
+        double distance = vec.distance(new Vector3(0, 0, 0));
+        System.out.println("Rendering Crate");
+        if (tileEntity instanceof TileEntityCrate)
         {
+            
             TileEntityCrate tileCrate = (TileEntityCrate) tileEntity;
 
             RenderItem renderItem = ((RenderItem) RenderManager.instance.getEntityClassRenderObject(EntityItem.class));
@@ -96,19 +98,9 @@ public class RenderCrate extends TileEntitySpecialRenderer
 
                     GL11.glPopMatrix();
                 }
-                /*
-                 * switch (tileEntity.getTier()) { default: { itemName = "\u00a7a" + itemName;
-                 * break; } case 1: { itemName = "\u00a74" + itemName;
-                 *
-                 * break; } case 2: { itemName = "\u00a79" + itemName; break; } }
-                 */
 
                 this.renderText(itemName, side, 0.02f, x, y - 0.35f, z);
-
-                if (amount != "")
-                {
-                    this.renderText(amount, side, 0.02f, x, y - 0.15f, z);
-                }
+                this.renderText(amount, side, 0.02f, x, y - 0.15f, z);
             }
         }
     }

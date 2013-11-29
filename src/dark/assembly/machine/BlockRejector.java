@@ -1,6 +1,7 @@
 package dark.assembly.machine;
 
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -11,6 +12,7 @@ import universalelectricity.core.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
@@ -27,6 +29,11 @@ public class BlockRejector extends BlockImprintable
     public BlockRejector()
     {
         super(new BlockBuildData(BlockRejector.class, "rejector", UniversalElectricity.machine));
+    }
+    @Override
+    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+    {
+        list.add(new Pair("ALRejector", TileEntityRejector.class));
     }
 
     @Override

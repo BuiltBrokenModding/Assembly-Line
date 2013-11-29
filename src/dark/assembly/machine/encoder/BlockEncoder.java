@@ -1,5 +1,9 @@
 package dark.assembly.machine.encoder;
 
+import java.util.Set;
+
+import com.builtbroken.common.Pair;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
 import dark.assembly.CommonProxy;
 import dark.assembly.machine.BlockAssembly;
+import dark.assembly.machine.TileEntityRejector;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 public class BlockEncoder extends BlockAssembly
@@ -72,6 +77,12 @@ public class BlockEncoder extends BlockAssembly
 
         return true;
 
+    }
+    
+    @Override
+    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+    {
+        list.add(new Pair("ALEncoder", TileEntityEncoder.class));
     }
 
     @Override

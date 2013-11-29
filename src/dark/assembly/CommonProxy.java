@@ -36,6 +36,11 @@ public class CommonProxy implements IGuiHandler
     {
 
     }
+    
+    public void postInit()
+    {       
+        
+    }
 
     private void extractZipToLocation(File zipFile, String sourceFolder, String destFolder)
     {
@@ -142,4 +147,6 @@ public class CommonProxy implements IGuiHandler
     {
         return false;
     }
+
+    
 }

@@ -12,13 +12,14 @@ import cpw.mods.fml.common.network.Player;
 import dark.api.reciepes.MachineRecipeHandler;
 import dark.api.reciepes.ProcessorType;
 import dark.assembly.machine.processor.BlockProcessor.ProcessorData;
+import dark.core.helpers.EnergyHelper;
 import dark.core.interfaces.IInvBox;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.invgui.InvChest;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
 
 /** Basic A -> B recipe processor machine designed mainly to handle ore blocks
- * 
+ *
  * @author DarkGuardsman */
 public class TileEntityProcessor extends TileEntityEnergyMachine
 {
@@ -224,7 +225,7 @@ public class TileEntityProcessor extends TileEntityEnergyMachine
         {
             return true;
         }
-        if (slotBatteryDrain == slot && this.isBatteryItem(stack))
+        if (slotBatteryDrain == slot && EnergyHelper.isBatteryItem(stack))
         {
             return true;
         }

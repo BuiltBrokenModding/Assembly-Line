@@ -1,6 +1,9 @@
 package dark.assembly.imprinter;
 
 import java.util.Random;
+import java.util.Set;
+
+import com.builtbroken.common.Pair;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -17,6 +20,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
 import dark.assembly.CommonProxy;
 import dark.assembly.machine.BlockAssembly;
+import dark.assembly.machine.TileEntityRejector;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 public class BlockImprinter extends BlockAssembly
@@ -146,6 +150,12 @@ public class BlockImprinter extends BlockAssembly
         }
 
         return false;
+    }
+    
+    @Override
+    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+    {
+        list.add(new Pair("ALImprinter", TileEntityImprinter.class));
     }
 
     @Override

@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.reciepes.MachineRecipeHandler;
+import dark.core.helpers.EnergyHelper;
 
 public class ContainerProcessor extends Container
 {
@@ -135,7 +136,7 @@ public class ContainerProcessor extends Container
                         return null;
                     }
                 }
-                else if (tileEntity.isBatteryItem(slotStack))
+                else if (EnergyHelper.isBatteryItem(slotStack))
                 {
                     if (!this.mergeItemStack(slotStack, tileEntity.slotBatteryCharge, 2, false))
                     {

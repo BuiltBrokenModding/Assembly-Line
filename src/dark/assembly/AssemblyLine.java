@@ -19,6 +19,7 @@ import cpw.mods.fml.common.Mod.Metadata;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -101,37 +102,23 @@ public class AssemblyLine extends ModPrefab
         proxy.preInit();
     }
 
+    @Override
     @EventHandler
-    public void load(FMLInitializationEvent evt)
+    public void init(FMLInitializationEvent event)
     {
-        super.init(evt);
+        super.init(event);
         proxy.init();
 
         FMLog.info("Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
-
-        recipeLoader.loadRecipes();
-
-        //GameRegistry.registerBlock(recipeLoader.blockConveyorBelt, "ConveyorBelt");
-        GameRegistry.registerBlock(ALRecipeLoader.blockCrate, ItemBlockCrate.class, "Crate");
-        GameRegistry.registerBlock(ALRecipeLoader.blockManipulator, "Manipulator");
-        GameRegistry.registerBlock(ALRecipeLoader.blockImprinter, "Imprinter");
-        GameRegistry.registerBlock(ALRecipeLoader.blockEncoder, "Encoder");
-        GameRegistry.registerBlock(ALRecipeLoader.blockDetector, "Detector");
-        GameRegistry.registerBlock(ALRecipeLoader.blockRejector, "Rejector");
-        GameRegistry.registerBlock(ALRecipeLoader.blockArmbot, "Armbot");
-        GameRegistry.registerBlock(ALRecipeLoader.blockTurntable, "Turntable");
-
-        GameRegistry.registerTileEntity(TileEntityConveyorBelt.class, "ALConveyorBelt");
-        GameRegistry.registerTileEntity(TileEntityRejector.class, "ALSorter");
-        GameRegistry.registerTileEntity(TileEntityManipulator.class, "ALManipulator");
-        GameRegistry.registerTileEntity(TileEntityCrate.class, "ALCrate");
-        GameRegistry.registerTileEntity(TileEntityDetector.class, "ALDetector");
-        GameRegistry.registerTileEntity(TileEntityEncoder.class, "ALEncoder");
-        GameRegistry.registerTileEntity(TileEntityArmbot.class, "ALArmbot");
-        GameRegistry.registerTileEntity(TileEntityImprinter.class, "ALImprinter");
-
         DMCreativeTab.tabAutomation.setIconItemStack(new ItemStack(ALRecipeLoader.blockConveyorBelt));
-
+    }
+    
+    @Override
+    @EventHandler
+    public void postInit(FMLPostInitializationEvent event)
+    {
+        super.postInit(event);
+        proxy.postInit();
     }
 
     @Override
@@ -143,14 +130,14 @@ public class AssemblyLine extends ModPrefab
         }
         CONFIGURATION.load();
         ALRecipeLoader.blockConveyorBelt = ModObjectRegistry.createNewBlock("ALBlockConveyor", AssemblyLine.MOD_ID, BlockConveyorBelt.class);
-        ALRecipeLoader.blockManipulator = new BlockManipulator();
-        ALRecipeLoader.blockCrate = new BlockCrate();
-        ALRecipeLoader.blockImprinter = new BlockImprinter();
-        ALRecipeLoader.blockDetector = new BlockDetector();
-        ALRecipeLoader.blockRejector = new BlockRejector();
-        ALRecipeLoader.blockEncoder = new BlockEncoder();
-        ALRecipeLoader.blockArmbot = new BlockArmbot();
-        ALRecipeLoader.blockTurntable = new BlockTurntable();
+        ALRecipeLoader.blockManipulator = ModObjectRegistry.createNewBlock("Manipulator", AssemblyLine.MOD_ID, BlockManipulator.class);
+        ALRecipeLoader.blockCrate = (BlockCrate) ModObjectRegistry.createNewBlock("Crate", AssemblyLine.MOD_ID, BlockCrate.class, ItemBlockCrate.class);
+        ALRecipeLoader.blockImprinter = ModObjectRegistry.createNewBlock("Imprinter", AssemblyLine.MOD_ID, BlockImprinter.class);
+        ALRecipeLoader.blockDetector = ModObjectRegistry.createNewBlock("Detector", AssemblyLine.MOD_ID, BlockDetector.class);
+        ALRecipeLoader.blockRejector = ModObjectRegistry.createNewBlock("Rejector", AssemblyLine.MOD_ID, BlockRejector.class);
+        ALRecipeLoader.blockEncoder = ModObjectRegistry.createNewBlock("Encoder", AssemblyLine.MOD_ID, BlockEncoder.class);
+        ALRecipeLoader.blockArmbot = ModObjectRegistry.createNewBlock("Armbot", AssemblyLine.MOD_ID, BlockArmbot.class);
+        ALRecipeLoader.blockTurntable = ModObjectRegistry.createNewBlock("Turntable", AssemblyLine.MOD_ID, BlockTurntable.class);
         ALRecipeLoader.processorMachine = ModObjectRegistry.createNewBlock("ALBlockProcessor", AssemblyLine.MOD_ID, BlockProcessor.class, ItemBlockHolder.class);
         ALRecipeLoader.blockAdvancedHopper = ModObjectRegistry.createNewBlock("ALBlockHopper", AssemblyLine.MOD_ID, BlockAdvancedHopper.class, ItemBlockHolder.class);
 
@@ -191,7 +178,6 @@ public class AssemblyLine extends ModPrefab
     @Override
     public void loadRecipes()
     {
-        // TODO Auto-generated method stub
-
+        recipeLoader.loadRecipes();
     }
 }

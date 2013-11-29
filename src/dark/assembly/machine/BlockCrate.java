@@ -1,6 +1,7 @@
 package dark.assembly.machine;
 
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -22,6 +23,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
 import dark.assembly.client.render.RenderCrate;
+import dark.assembly.machine.belt.TileEntityConveyorBelt;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 /** A block that allows the placement of mass amount of a specific item within it. It will be allowed
@@ -401,9 +403,16 @@ public class BlockCrate extends BlockAssembly
     }
 
     @Override
+    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+    {
+        list.add(new Pair<String, Class<? extends TileEntity>>("ALConveyorBelt", TileEntityConveyorBelt.class));
+    }
+
+    @Override
     @SideOnly(Side.CLIENT)
     public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
     {
+        System.out.println("Registering crate render");
         list.add(new Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>(TileEntityCrate.class, new RenderCrate()));
     }
 

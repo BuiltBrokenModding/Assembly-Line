@@ -1,6 +1,7 @@
 package dark.assembly.machine;
 
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -178,6 +179,12 @@ public class BlockDetector extends BlockImprintable
     public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int direction)
     {
         return isProvidingStrongPower(world, x, y, z, direction);
+    }
+    
+    @Override
+    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+    {
+        list.add(new Pair("ALDetector", TileEntityDetector.class));
     }
 
     @Override
