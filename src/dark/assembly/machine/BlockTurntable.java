@@ -28,6 +28,13 @@ public class BlockTurntable extends BlockAssembly
     public BlockTurntable()
     {
         super(new BlockBuildData(BlockTurntable.class, "turntable", Material.piston));
+        this.setTickRandomly(true);
+    }
+
+    @Override
+    public int tickRate(World par1World)
+    {
+        return 5;
     }
 
     @Override
@@ -81,7 +88,6 @@ public class BlockTurntable extends BlockAssembly
         }
 
         world.setBlockMetadataWithNotify(x, y, z, change, 3);
-
         world.scheduleBlockUpdate(x, y, z, this.blockID, 20);
     }
 
@@ -98,7 +104,7 @@ public class BlockTurntable extends BlockAssembly
             try
             {
                 ForgeDirection direction = ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z));
-                ForgeDirection currentDirection = null;
+                ForgeDirection blockRotation = null;
 
                 Vector3 position = new Vector3(x, y, z).modifyPositionFromSide(direction);
                 TileEntity tileEntity = position.getTileEntity(world);
@@ -106,91 +112,93 @@ public class BlockTurntable extends BlockAssembly
 
                 if (tileEntity instanceof IRotatable)
                 {
-                    currentDirection = ((IRotatable) tileEntity).getDirection();
+                    blockRotation = ((IRotatable) tileEntity).getDirection();
                 }
                 else if (Block.blocksList[blockID] instanceof IRotatableBlock)
                 {
-                    currentDirection = ((IRotatableBlock) Block.blocksList[blockID]).getDirection(world, position.intX(), position.intY(), position.intZ());
+                    blockRotation = ((IRotatableBlock) Block.blocksList[blockID]).getDirection(world, position.intX(), position.intY(), position.intZ());
                 }
                 else if (Block.blocksList[blockID] != null)
                 {
-                    Block.blocksList[blockID].rotateBlock(world, x, y, z, direction.getOpposite());
+                    Block.blocksList[blockID].rotateBlock(world, position.intX(), position.intY(), position.intZ(), direction.getOpposite());
                 }
                 if (direction != null)
                 {
                     if (direction == ForgeDirection.UP || direction == ForgeDirection.DOWN)
                     {
-                        if (currentDirection == ForgeDirection.NORTH)
+                        if (blockRotation == ForgeDirection.NORTH)
                         {
-                            currentDirection = ForgeDirection.EAST;
+                            blockRotation = ForgeDirection.EAST;
                         }
-                        else if (currentDirection == ForgeDirection.EAST)
+                        else if (blockRotation == ForgeDirection.EAST)
                         {
-                            currentDirection = ForgeDirection.SOUTH;
+                            blockRotation = ForgeDirection.SOUTH;
                         }
-                        else if (currentDirection == ForgeDirection.SOUTH)
+                        else if (blockRotation == ForgeDirection.SOUTH)
                         {
-                            currentDirection = ForgeDirection.WEST;
+                            blockRotation = ForgeDirection.WEST;
                         }
-                        else if (currentDirection == ForgeDirection.WEST)
+                        else if (blockRotation == ForgeDirection.WEST)
                         {
-                            currentDirection = ForgeDirection.NORTH;
+                            blockRotation = ForgeDirection.NORTH;
                         }
                     }
                     else if (direction == ForgeDirection.EAST || direction == ForgeDirection.WEST)
                     {
-                        if (currentDirection == ForgeDirection.NORTH)
+                        if (blockRotation == ForgeDirection.NORTH)
                         {
-                            currentDirection = ForgeDirection.UP;
+                            blockRotation = ForgeDirection.UP;
                         }
-                        else if (currentDirection == ForgeDirection.UP)
+                        else if (blockRotation == ForgeDirection.UP)
                         {
-                            currentDirection = ForgeDirection.SOUTH;
+                            blockRotation = ForgeDirection.SOUTH;
                         }
-                        else if (currentDirection == ForgeDirection.SOUTH)
+                        else if (blockRotation == ForgeDirection.SOUTH)
                         {
-                            currentDirection = ForgeDirection.DOWN;
+                            blockRotation = ForgeDirection.DOWN;
                         }
-                        else if (currentDirection == ForgeDirection.DOWN)
+                        else if (blockRotation == ForgeDirection.DOWN)
                         {
-                            currentDirection = ForgeDirection.NORTH;
+                            blockRotation = ForgeDirection.NORTH;
                         }
                     }
                     else if (direction == ForgeDirection.NORTH || direction == ForgeDirection.SOUTH)
                     {
-                        if (currentDirection == ForgeDirection.EAST)
+                        if (blockRotation == ForgeDirection.EAST)
                         {
-                            currentDirection = ForgeDirection.UP;
+                            blockRotation = ForgeDirection.UP;
                         }
-                        else if (currentDirection == ForgeDirection.UP)
+                        else if (blockRotation == ForgeDirection.UP)
                         {
-                            currentDirection = ForgeDirection.WEST;
+                            blockRotation = ForgeDirection.WEST;
                         }
-                        else if (currentDirection == ForgeDirection.WEST)
+                        else if (blockRotation == ForgeDirection.WEST)
                         {
-                            currentDirection = ForgeDirection.DOWN;
+                            blockRotation = ForgeDirection.DOWN;
                         }
-                        else if (currentDirection == ForgeDirection.DOWN)
+                        else if (blockRotation == ForgeDirection.DOWN)
                         {
-                            currentDirection = ForgeDirection.EAST;
+                            blockRotation = ForgeDirection.EAST;
                         }
                     }
                     world.markBlockForUpdate(position.intX(), position.intY(), position.intZ());
                     world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "tile.piston.in", 0.5F, world.rand.nextFloat() * 0.15F + 0.6F);
                     if (tileEntity instanceof IRotatable)
                     {
-                        ((IRotatable) tileEntity).setDirection(currentDirection);
+                        ((IRotatable) tileEntity).setDirection(blockRotation);
+                        world.scheduleBlockUpdate(position.intX(), position.intY(), position.intZ(), this.blockID, 20);
 
                     }
                     else if (Block.blocksList[blockID] instanceof IRotatableBlock)
                     {
-                        ((IRotatableBlock) Block.blocksList[blockID]).setDirection(world, position.intX(), position.intY(), position.intZ(), currentDirection);
+                        ((IRotatableBlock) Block.blocksList[blockID]).setDirection(world, position.intX(), position.intY(), position.intZ(), blockRotation);
+                        world.scheduleBlockUpdate(position.intX(), position.intY(), position.intZ(), this.blockID, 20);
                     }
                 }
             }
             catch (Exception e)
             {
-                System.out.println("Failed to rotate:");
+                System.out.println("Error while rotating a block near " + x + "x " + y + "y " + z + "z " + (world != null && world.provider != null ? world.provider.dimensionId + "d" : "null:world"));
                 e.printStackTrace();
             }
         }
@@ -208,7 +216,7 @@ public class BlockTurntable extends BlockAssembly
     }
 
     @Override
-    public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
+    public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
     {
         if (world.isRemote)
         {
