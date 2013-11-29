@@ -1,6 +1,7 @@
 package dark.assembly.machine.belt;
 
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
@@ -24,6 +25,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.client.render.RenderConveyorBelt;
 import dark.assembly.machine.BlockAssembly;
+import dark.assembly.machine.TileEntityCrate;
 import dark.assembly.machine.belt.TileEntityConveyorBelt.SlantType;
 import dark.core.common.DarkMain;
 import dark.core.registration.ModObjectRegistry.BlockBuildData;
@@ -335,6 +337,12 @@ public class BlockConveyorBelt extends BlockAssembly
     public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
     {
         list.add(new Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>(TileEntityConveyorBelt.class, new RenderConveyorBelt()));
+    }
+    
+    @Override
+    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+    {
+        list.add(new Pair<String, Class<? extends TileEntity>>("ALConveyorBelt", TileEntityConveyorBelt.class));
     }
 
     /** Returns the TileEntity used by this block. */

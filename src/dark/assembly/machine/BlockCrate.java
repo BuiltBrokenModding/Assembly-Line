@@ -405,14 +405,13 @@ public class BlockCrate extends BlockAssembly
     @Override
     public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
     {
-        list.add(new Pair<String, Class<? extends TileEntity>>("ALConveyorBelt", TileEntityConveyorBelt.class));
+        list.add(new Pair<String, Class<? extends TileEntity>>("ALCrate", TileEntityCrate.class));
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
     {
-        System.out.println("Registering crate render");
         list.add(new Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>(TileEntityCrate.class, new RenderCrate()));
     }
 

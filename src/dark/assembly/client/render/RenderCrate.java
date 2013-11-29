@@ -31,8 +31,7 @@ public class RenderCrate extends TileEntitySpecialRenderer
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)
     {
         Vector3 vec = new Vector3(x, y, z);
-        double distance = vec.distance(new Vector3(0, 0, 0));
-        System.out.println("Rendering Crate");
+        double distance = vec.distance(new Vector3(0, 0, 0));        
         if (tileEntity instanceof TileEntityCrate)
         {
             
