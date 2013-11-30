@@ -98,13 +98,23 @@ public class GuiEncoderCoder extends GuiEncoderBase
         {
             this.mc.thePlayer.closeScreen();
         }
-        else if (keycode == 200) // PAGE UP (no constant)
+        else if (keycode == Keyboard.KEY_UP) // PAGE UP (no constant)
         {
             this.getTaskListElement().scroll(-1);
         }
-        else if (keycode == 208) // PAGE DOWN (no constant)
+        else if (keycode == Keyboard.KEY_DOWN) // PAGE DOWN (no constant)
         {
             this.getTaskListElement().scroll(1);
+        }
+        else if (keycode == Keyboard.KEY_LEFT) // PAGE LEFT (no constant)
+        {
+            if (this.getTaskListElement().scrollX > -5)
+                this.getTaskListElement().scrollSide(-1);
+        }
+        else if (keycode == Keyboard.KEY_RIGHT) // PAGE RIGHT (no constant)
+        {
+            if (this.getTaskListElement().scrollX < ((TileEntityEncoder) tileEntity).getProgram().getSize().intX())
+                this.getTaskListElement().scrollSide(1);
         }
     }
 

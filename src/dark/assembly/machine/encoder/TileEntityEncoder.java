@@ -17,6 +17,12 @@ import dark.api.al.coding.IProcessTask;
 import dark.api.al.coding.IProgram;
 import dark.api.al.coding.TaskRegistry;
 import dark.assembly.armbot.Program;
+import dark.assembly.armbot.command.TaskDrop;
+import dark.assembly.armbot.command.TaskGOTO;
+import dark.assembly.armbot.command.TaskGive;
+import dark.assembly.armbot.command.TaskGrabItem;
+import dark.assembly.armbot.command.TaskIF;
+import dark.assembly.armbot.command.TaskRotateTo;
 import dark.core.common.DarkMain;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.machine.TileEntityMachine;
@@ -27,6 +33,23 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
     private IInventoryWatcher watcher;
     public static final String PROGRAM_ID = "program", PROGRAM_CHANGE = "programChange", REMOVE_TASK = "removeTask";
     protected IProgram program;
+
+    public TileEntityEncoder()
+    {
+        super();
+        program = new Program();
+        program.setTaskAt(0, 0, new TaskRotateTo());
+        program.setTaskAt(0, 1, new TaskDrop());
+        program.setTaskAt(0, 2, new TaskRotateTo());
+        program.setTaskAt(0, 3, new TaskGrabItem());
+        program.setTaskAt(0, 4, new TaskIF());
+        program.setTaskAt(0, 5, new TaskRotateTo());
+        program.setTaskAt(0, 6, new TaskGive());
+
+        program.setTaskAt(1, 4, new TaskRotateTo());
+        program.setTaskAt(1, 5, new TaskGive());
+        program.setTaskAt(1, 6, new TaskGOTO(0, 6));
+    }
 
     @Override
     public void onInventoryChanged()
@@ -179,5 +202,10 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
     {
         //TODO ?
         return false;
+    }
+
+    public IProgram getProgram()
+    {
+        return this.program;
     }
 }

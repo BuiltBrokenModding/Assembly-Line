@@ -11,15 +11,9 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import dark.api.al.coding.IProgram;
 import dark.api.al.coding.IRedirectTask;
 import dark.api.al.coding.ITask;
-import dark.assembly.armbot.Program;
-import dark.assembly.armbot.command.TaskDrop;
 import dark.assembly.armbot.command.TaskEnd;
-import dark.assembly.armbot.command.TaskGOTO;
-import dark.assembly.armbot.command.TaskGive;
-import dark.assembly.armbot.command.TaskGrabItem;
-import dark.assembly.armbot.command.TaskIF;
-import dark.assembly.armbot.command.TaskRotateTo;
 import dark.assembly.armbot.command.TaskStart;
+import dark.assembly.machine.encoder.TileEntityEncoder;
 import dark.core.interfaces.IScroll;
 
 /** Not a gui itself but a component used to display task as a box inside of a gui
@@ -27,7 +21,6 @@ import dark.core.interfaces.IScroll;
  * @author DarkGuardsman */
 public class GuiTaskList extends Gui implements IScroll
 {
-    protected IProgram program;
     protected int scrollY = 0, scrollX;
 
     protected TileEntity entity;
@@ -45,33 +38,27 @@ public class GuiTaskList extends Gui implements IScroll
         this.yPos = y;
         this.coder = coder;
 
-        program = new Program();
-        program.setTaskAt(0, 0, new TaskRotateTo());
-        program.setTaskAt(0, 1, new TaskDrop());
-        program.setTaskAt(0, 2, new TaskRotateTo());
-        program.setTaskAt(0, 3, new TaskGrabItem());
-        program.setTaskAt(0, 4, new TaskIF());
-        program.setTaskAt(0, 5, new TaskRotateTo());
-        program.setTaskAt(0, 6, new TaskGive());
-
-        program.setTaskAt(1, 4, new TaskRotateTo());
-        program.setTaskAt(1, 5, new TaskGive());
-        program.setTaskAt(1, 6, new TaskGOTO(0, 6));
-
-        if (program.getSize().intX() < (this.countX / 2))
+        if (entity instanceof TileEntityEncoder && ((TileEntityEncoder) entity).getProgram() != null)
         {
-            this.scrollX = -2;
-        }
-        else
-        {
-            this.scrollX = 0;
+            if (((TileEntityEncoder) entity).getProgram().getSize().intX() < (this.countX / 2))
+            {
+                this.scrollX = -2;
+            }
+            else
+            {
+                this.scrollX = 0;
+            }
         }
 
     }
 
-    public void setProgram(IProgram program)
+    public IProgram getProgram()
     {
-        this.program = program;
+        if (entity instanceof TileEntityEncoder)
+        {
+            return ((TileEntityEncoder) entity).getProgram();
+        }
+        return null;
     }
 
     @Override
@@ -106,14 +93,14 @@ public class GuiTaskList extends Gui implements IScroll
             for (int row = 0; row < countY; row++)
             {
                 int actualRow = row + this.scrollY - 1;
-                if (actualRow <= this.program.getSize().intY() + 1 && actualRow >= -1)
+                if (actualRow <= this.getProgram().getSize().intY() + 1 && actualRow >= -1)
                 {
-                    ITask task = this.program.getTaskAt(actualCol, actualRow);
+                    ITask task = this.getProgram().getTaskAt(actualCol, actualRow);
                     if (actualRow == -1 && colume + this.scrollX - 1 == -1)
                     {
                         task = new TaskStart();
                     }
-                    if (actualRow == this.program.getSize().intY() + 1 && colume + this.scrollX - 1 == -1)
+                    if (actualRow == this.getProgram().getSize().intY() + 1 && colume + this.scrollX - 1 == -1)
                     {
                         task = new TaskEnd();
                     }
@@ -157,9 +144,9 @@ public class GuiTaskList extends Gui implements IScroll
         {
             int col = ((cx - this.xPos) / 20) + this.scrollX;
             int row = ((cz - this.yPos) / 20) + this.scrollY;
-            if (this.program != null)
+            if (this.getProgram() != null)
             {
-                return this.program.getTaskAt(col, row - 1);
+                return this.getProgram().getTaskAt(col, row - 1);
             }
         }
         return null;
