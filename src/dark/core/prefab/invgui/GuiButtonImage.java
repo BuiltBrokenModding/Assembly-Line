@@ -42,7 +42,7 @@ public class GuiButtonImage extends GuiButton
                 vv += this.height;
             }
 
-            this.drawTexturedModalRect(this.xPosition, this.yPosition, uu, vv, this.width, this.height);
+            this.drawTexturedModalRect(this.xPosition, this.yPosition, this.buttonIcon.uu, this.buttonIcon.vv, this.width, this.height);
         }
     }
 
@@ -55,10 +55,10 @@ public class GuiButtonImage extends GuiButton
     public static enum ButtonIcon
     {
         PERSON(0, 0),
-        ARROW_LEFT(30, 0),
-        ARROW_RIGHT(20, 0),
-        ARROW_DOWN(30, 20),
-        ARROW_UP(20, 20),
+        ARROW_LEFT(30, 0, 10, 10),
+        ARROW_RIGHT(20, 0, 10, 10),
+        ARROW_DOWN(30, 20, 10, 10),
+        ARROW_UP(20, 20, 10, 10),
         CHEST(60, 0),
         LOCKED(80, 0),
         UNLOCKED(100, 0),
@@ -73,8 +73,8 @@ public class GuiButtonImage extends GuiButton
 
         private ButtonIcon(int xx, int yy)
         {
-            this.vv = xx;
-            this.uu = yy;
+            this.vv = yy;
+            this.uu = xx;
         }
 
         private ButtonIcon(int xx, int yy, int cx, int cy)

@@ -35,7 +35,6 @@ public class PacketManagerEffects implements IPacketManager
     {
         try
         {
-            System.out.println("Effect packet being handled");
             World world = ((EntityPlayer) player).worldObj;
             String effectName = data.readUTF();
             if (world != null)

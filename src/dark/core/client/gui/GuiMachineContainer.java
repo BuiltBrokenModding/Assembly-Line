@@ -28,6 +28,9 @@ public abstract class GuiMachineContainer extends GuiContainer
     protected ButtonIcon guiIcon = ButtonIcon.CHEST, guiIcon2 = ButtonIcon.PERSON, guiIcon3 = ButtonIcon.BLANK;
     protected String invName = "Home", invName2 = "2", invName3 = "3";
 
+    protected int containerWidth;
+    protected int containerHeight;
+
     public GuiMachineContainer(Object mod, Container container, InventoryPlayer inventoryPlayer, TileEntityMachine tileEntity)
     {
         super(container);
@@ -37,24 +40,27 @@ public abstract class GuiMachineContainer extends GuiContainer
         this.mod = mod;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void initGui()
     {
         super.initGui();
         this.buttonList.clear();
-
+        containerWidth = (this.width - this.xSize) / 2;
+        containerHeight = (this.height - this.ySize) / 2;
         if (guiID != -1)
-            this.buttonList.add(new GuiButtonImage(0, (this.width - this.xSize) / 2 - 22, (this.height - this.ySize) / 2 + 0, guiIcon));
+            this.buttonList.add(new GuiButtonImage(0, containerWidth - 22, containerHeight + 0, guiIcon));
         if (guiID2 != -1)
-            this.buttonList.add(new GuiButtonImage(1, (this.width - this.xSize) / 2 - 22, (this.height - this.ySize) / 2 + 22, guiIcon2));
+            this.buttonList.add(new GuiButtonImage(1, containerWidth - 22, containerHeight + 22, guiIcon2));
         if (guiID3 != -1)
-            this.buttonList.add(new GuiButtonImage(2, (this.width - this.xSize) / 2 - 22, (this.height - this.ySize) / 2 + 44, guiIcon3));
+            this.buttonList.add(new GuiButtonImage(2, containerWidth - 22, containerHeight + 44, guiIcon3));
 
     }
 
     @Override
     protected void actionPerformed(GuiButton button)
     {
+        super.actionPerformed(button);
         switch (button.id)
         {
             case 0:
@@ -179,5 +185,15 @@ public abstract class GuiMachineContainer extends GuiContainer
 
             this.zLevel = 0.0F;
         }
+    }
+
+    public int getGuiTop()
+    {
+       return this.guiTop;
+    }
+
+    public int getGuiLeft()
+    {
+       return this.guiLeft;
     }
 }
