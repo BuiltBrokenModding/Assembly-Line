@@ -1,10 +1,19 @@
 package dark.core.prefab.invgui;
 
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
+import dark.core.common.DarkMain;
 
 public class GuiMessageBox extends GuiBase
 {
-    GuiBase returnGui;
+    public static final ResourceLocation TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, DarkMain.GUI_DIRECTORY + "gui_message_box.png");
+
+    GuiBase returnGuiYes, returnGuiNo;
     int id;
     String title;
     String message;
@@ -12,7 +21,17 @@ public class GuiMessageBox extends GuiBase
     public GuiMessageBox(GuiBase returnGui, int id, String title, String message)
     {
         this.guiSize.y = 380 / 2;
-        this.returnGui = returnGui;
+        this.returnGuiYes = returnGui;
+        this.returnGuiNo = returnGui;
+        this.id = id;
+        this.title = title;
+        this.message = message;
+    }
+
+    public GuiMessageBox(GuiBase returnGui, GuiBase returnGuiNo, int id, String title, String message)
+    {
+        this(returnGui, id, title, message);
+        this.returnGuiNo = returnGuiNo;
     }
 
     @SuppressWarnings("unchecked")
@@ -20,10 +39,10 @@ public class GuiMessageBox extends GuiBase
     public void initGui()
     {
         super.initGui();
+        this.buttonList.clear();
+        this.buttonList.add(new GuiButton(0, (this.width - this.guiSize.intX()) / 2 + 25, (this.height - this.guiSize.intY()) / 2 + 35, 50, 20, "Yes"));
 
-        this.buttonList.add(new GuiButton(0, (this.width - this.guiSize.intX()) / 2 + 13, (this.height - this.guiSize.intY()) / 2 + 135, 50, 20, "Yes"));
-
-        this.buttonList.add(new GuiButton(1, (this.width - this.guiSize.intX()) / 2 + 68, (this.height - this.guiSize.intY()) / 2 + 135, 50, 20, "no"));
+        this.buttonList.add(new GuiButton(1, (this.width - this.guiSize.intX()) / 2 + 80, (this.height - this.guiSize.intY()) / 2 + 35, 50, 20, "no"));
 
     }
 
@@ -34,29 +53,57 @@ public class GuiMessageBox extends GuiBase
     }
 
     @Override
+    protected void actionPerformed(GuiButton button)
+    {
+        super.actionPerformed(button);
+        switch (button.id)
+        {
+            case 0:
+                this.exit(true);
+                break;
+            case 1:
+                this.exit(false);
+                break;
+        }
+    }
+
+    @Override
     protected void drawForegroundLayer(int var2, int var3, float var1)
     {
-        // TODO Auto-generated method stub
-
+        this.fontRenderer.drawString("" + this.title, (int) (this.guiSize.intX() / 2 - 30), 5, 4210752);
+        this.fontRenderer.drawString("\u00a77" + this.message, (int) ((this.guiSize.intX() / 2) - 50), 20, 4210752);
     }
 
     @Override
     protected void drawBackgroundLayer(int var2, int var3, float var1)
     {
-        // TODO Auto-generated method stub
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE);
 
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+        int containerWidth = (this.width - this.guiSize.intX()) / 2;
+        int containerHeight = (this.height - this.guiSize.intY()) / 2;
+        this.drawTexturedModalRect(containerWidth, containerHeight, 0, 0, this.guiSize.intX(), this.guiSize.intY());
     }
 
     public void show()
     {
-
+        FMLCommonHandler.instance().showGuiScreen(this);
     }
 
     public void exit(boolean yes)
     {
-        if (this.returnGui instanceof IMessageBoxDialog)
+        if (yes)
         {
-            ((IMessageBoxDialog) this.returnGui).onMessageBoxClosed(this.id, yes);
+            FMLCommonHandler.instance().showGuiScreen(this.returnGuiYes);
+        }
+        else
+        {
+            FMLCommonHandler.instance().showGuiScreen(this.returnGuiNo);
+        }
+        if (this.returnGuiYes instanceof IMessageBoxDialog)
+        {
+            ((IMessageBoxDialog) this.returnGuiYes).onMessageBoxClosed(this.id, yes);
         }
     }
 }
