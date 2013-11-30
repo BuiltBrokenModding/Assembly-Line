@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -189,11 +190,16 @@ public abstract class GuiMachineContainer extends GuiContainer
 
     public int getGuiTop()
     {
-       return this.guiTop;
+        return this.guiTop;
     }
 
     public int getGuiLeft()
     {
-       return this.guiLeft;
+        return this.guiLeft;
+    }
+
+    public TileEntity getTile()
+    {
+        return this.tileEntity;
     }
 }
