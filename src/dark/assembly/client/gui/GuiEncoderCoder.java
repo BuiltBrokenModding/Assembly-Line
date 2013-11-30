@@ -5,6 +5,7 @@ import org.lwjgl.input.Mouse;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import dark.assembly.AssemblyLine;
 import dark.assembly.machine.encoder.TileEntityEncoder;
@@ -42,20 +43,23 @@ public class GuiEncoderCoder extends GuiEncoderBase
     protected void actionPerformed(GuiButton button)
     {
         super.actionPerformed(button);
-        switch (button.id)
+        if (((TileEntityEncoder) tileEntity).getProgram() != null)
         {
-            case 3:
-                getTaskListElement().scrollSide(-1);
-                break;
-            case 4:
-                getTaskListElement().scrollSide(1);
-                break;
-            case 5:
-                getTaskListElement().scroll(-1);
-                break;
-            case 6:
-                getTaskListElement().scroll(1);
-                break;
+            switch (button.id)
+            {
+                case 3:
+                    getTaskListElement().scrollSide(-1);
+                    break;
+                case 4:
+                    getTaskListElement().scrollSide(1);
+                    break;
+                case 5:
+                    getTaskListElement().scroll(-1);
+                    break;
+                case 6:
+                    getTaskListElement().scroll(1);
+                    break;
+            }
         }
     }
 
@@ -81,13 +85,16 @@ public class GuiEncoderCoder extends GuiEncoderBase
     {
         super.handleMouseInput();
         int wheel = Mouse.getEventDWheel();
-        if (wheel > 0)
+        if (((TileEntityEncoder) tileEntity).getProgram() != null)
         {
-            this.getTaskListElement().scroll(-2);
-        }
-        else if (wheel < 0)
-        {
-            this.getTaskListElement().scroll(2);
+            if (wheel > 0)
+            {
+                this.getTaskListElement().scroll(-2);
+            }
+            else if (wheel < 0)
+            {
+                this.getTaskListElement().scroll(2);
+            }
         }
     }
 
@@ -98,23 +105,27 @@ public class GuiEncoderCoder extends GuiEncoderBase
         {
             this.mc.thePlayer.closeScreen();
         }
-        else if (keycode == Keyboard.KEY_UP) // PAGE UP (no constant)
+        else if (((TileEntityEncoder) tileEntity).getProgram() != null)
         {
-            this.getTaskListElement().scroll(-1);
-        }
-        else if (keycode == Keyboard.KEY_DOWN) // PAGE DOWN (no constant)
-        {
-            this.getTaskListElement().scroll(1);
-        }
-        else if (keycode == Keyboard.KEY_LEFT) // PAGE LEFT (no constant)
-        {
-            if (this.getTaskListElement().scrollX > -5)
-                this.getTaskListElement().scrollSide(-1);
-        }
-        else if (keycode == Keyboard.KEY_RIGHT) // PAGE RIGHT (no constant)
-        {
-            if (this.getTaskListElement().scrollX < ((TileEntityEncoder) tileEntity).getProgram().getSize().intX())
-                this.getTaskListElement().scrollSide(1);
+
+            if (keycode == Keyboard.KEY_UP) // PAGE UP (no constant)
+            {
+                this.getTaskListElement().scroll(-1);
+            }
+            else if (keycode == Keyboard.KEY_DOWN) // PAGE DOWN (no constant)
+            {
+                this.getTaskListElement().scroll(1);
+            }
+            else if (keycode == Keyboard.KEY_LEFT) // PAGE LEFT (no constant)
+            {
+                if (this.getTaskListElement().scrollX > -5)
+                    this.getTaskListElement().scrollSide(-1);
+            }
+            else if (keycode == Keyboard.KEY_RIGHT) // PAGE RIGHT (no constant)
+            {
+                if (this.getTaskListElement().scrollX < ((TileEntityEncoder) tileEntity).getProgram().getSize().intX())
+                    this.getTaskListElement().scrollSide(1);
+            }
         }
     }
 
@@ -145,6 +156,12 @@ public class GuiEncoderCoder extends GuiEncoderBase
         {
             this.taskListGui.mousePressed(par1, par2);
         }
+    }
+
+    @Override
+    public TileEntityEncoder getTile()
+    {
+        return (TileEntityEncoder) this.tileEntity;
     }
 
 }

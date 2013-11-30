@@ -248,14 +248,12 @@ public class Program implements IProgram
         {
             entry.getValue().setPosition(entry.getKey().intX(), entry.getKey().intY());
             NBTTagCompound task = entry.getValue().save(new NBTTagCompound());
-            if (entry.getKey().equals(new Vector2(this.currentTask.getCol(), this.currentTask.getRow())))
+            if (this.currentTask != null && entry.getKey().equals(new Vector2(this.currentTask.getCol(), this.currentTask.getRow())))
             {
                 task.setBoolean("currentTask", true);
                 entry.getValue().saveProgress(task);
             }
             task.setString("methodName", entry.getValue().getMethodName());
-            task.setInteger("positionX", entry.getKey().intX());
-            task.setInteger("positionY", entry.getKey().intY());
             taskList.appendTag(task);
         }
         nbt.setTag("tasks", taskList);
@@ -277,29 +275,35 @@ public class Program implements IProgram
         for (int s = 0; s < taskList.tagCount(); ++s)
         {
             NBTTagCompound tag = (NBTTagCompound) taskList.tagAt(s);
-            ITask task = TaskRegistry.getCommand(tag.getString("methodName"));
-            if (task != null)
+            if (tag.hasKey("methodName"))
             {
-                task = task.clone();
+                ITask task = TaskRegistry.getCommand(tag.getString("methodName"));
                 if (task != null)
                 {
-                    task.load(tag);
-                    task.setPosition(nbt.getInteger("positionX"), nbt.getInteger("positionY"));
-                    this.tasks.put(new Vector2(task.getCol(), task.getRow()), task);
-                    if (tag.getBoolean("currentTask"))
+                    task = task.clone();
+                    if (task != null)
                     {
-                        this.currentTask = task;
-                        task.loadProgress(tag);
-                        this.currentPos = new Vector2(task.getCol(), task.getRow());
+                        task.load(tag);
+                        if (tag.getBoolean("currentTask"))
+                        {
+                            this.currentTask = task;
+                            task.loadProgress(tag);
+                            this.currentPos = new Vector2(task.getCol(), task.getRow());
+                        }
+                        this.tasks.put(new Vector2(task.getCol(), task.getRow()), task);
+                        if (task.getCol() > this.width)
+                        {
+                            this.width = task.getCol();
+                        }
+                        if (task.getRow() > this.hight)
+                        {
+                            this.hight = task.getRow();
+                        }
                     }
-                    if (task.getCol() > this.width)
-                    {
-                        this.width = task.getCol();
-                    }
-                    if (task.getRow() > this.hight)
-                    {
-                        this.hight = task.getRow();
-                    }
+                }
+                else
+                {
+                    System.out.println("[CoreMachine]Error: failed to load task " + tag.getString("methodName"));
                 }
             }
         }

@@ -52,11 +52,26 @@ public class TaskIdle extends TaskBaseProcess
     }
 
     @Override
+    public TaskBaseProcess load(NBTTagCompound taskCompound)
+    {
+        super.load(taskCompound);
+        this.totalIdleTime = taskCompound.getInteger("idleTotal");
+        return this;
+    }
+
+    @Override
+    public NBTTagCompound save(NBTTagCompound taskCompound)
+    {
+        super.save(taskCompound);
+        taskCompound.setInteger("idleTotal", this.totalIdleTime);
+        return taskCompound;
+    }
+
+    @Override
     public TaskBaseProcess loadProgress(NBTTagCompound taskCompound)
     {
         super.loadProgress(taskCompound);
         this.idleTime = taskCompound.getInteger("idleTime");
-        this.totalIdleTime = taskCompound.getInteger("idleTotal");
         return this;
     }
 
@@ -65,7 +80,6 @@ public class TaskIdle extends TaskBaseProcess
     {
         super.saveProgress(taskCompound);
         taskCompound.setInteger("idleTime", this.idleTime);
-        taskCompound.setInteger("idleTotal", this.totalIdleTime);
         return taskCompound;
     }
 

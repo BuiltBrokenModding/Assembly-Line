@@ -6,19 +6,19 @@ import java.util.List;
 import java.util.Map.Entry;
 
 /** Used to both register task and fake machines for the encoder to use to create new programs.
- * 
+ *
  * @author DarkGuardsman */
 public class TaskRegistry
 {
     /** A class of all available commands.
-     * 
+     *
      * String - Command name. Command - The actual command class. */
-    private static final HashMap<String, IProcessTask> COMMANDS = new HashMap();
+    private static final HashMap<String, ITask> COMMANDS = new HashMap();
 
     private static final HashMap<String, IArmbot> SUDO_BOTS = new HashMap<String, IArmbot>();
 
     /** Registers a command and tells armbots that it exists */
-    public static void registerCommand(IProcessTask task)
+    public static void registerCommand(ITask task)
     {
         if (!COMMANDS.containsKey(task.getMethodName()))
         {
@@ -35,9 +35,9 @@ public class TaskRegistry
     }
 
     /** returns the first command with the same name */
-    public static IProcessTask getCommand(String name)
+    public static ITask getCommand(String name)
     {
-        for (Entry<String, IProcessTask> command : COMMANDS.entrySet())
+        for (Entry<String, ITask> command : COMMANDS.entrySet())
         {
             if (command.getKey().equalsIgnoreCase(name))
             {
@@ -48,10 +48,10 @@ public class TaskRegistry
     }
 
     /** Gets all commands with the given name though there should only be one */
-    public static List<IProcessTask> getCommands(String name)
+    public static List<ITask> getCommands(String name)
     {
-        List<IProcessTask> tasks = new ArrayList<IProcessTask>();
-        for (Entry<String, IProcessTask> command : COMMANDS.entrySet())
+        List<ITask> tasks = new ArrayList<ITask>();
+        for (Entry<String, ITask> command : COMMANDS.entrySet())
         {
             if (command.getValue().getMethodName().equalsIgnoreCase(name))
             {
@@ -72,7 +72,7 @@ public class TaskRegistry
     }
 
     /** Do not edit the return or you will change the behavior of all machine that use this list
-     * 
+     *
      * @return The list of registered sudo machines for the encoder to check against */
     public static HashMap<String, IArmbot> getSudoMachines()
     {

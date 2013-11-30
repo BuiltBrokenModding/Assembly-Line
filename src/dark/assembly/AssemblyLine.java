@@ -23,12 +23,28 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
+import dark.api.al.coding.TaskRegistry;
 import dark.assembly.armbot.BlockArmbot;
-import dark.assembly.armbot.TileEntityArmbot;
+import dark.assembly.armbot.command.TaskBreak;
+import dark.assembly.armbot.command.TaskDrop;
+import dark.assembly.armbot.command.TaskEnd;
+import dark.assembly.armbot.command.TaskFire;
+import dark.assembly.armbot.command.TaskGOTO;
+import dark.assembly.armbot.command.TaskGive;
+import dark.assembly.armbot.command.TaskGrabEntity;
+import dark.assembly.armbot.command.TaskGrabItem;
+import dark.assembly.armbot.command.TaskHarvest;
+import dark.assembly.armbot.command.TaskIF;
+import dark.assembly.armbot.command.TaskIdle;
+import dark.assembly.armbot.command.TaskPlace;
+import dark.assembly.armbot.command.TaskReturn;
+import dark.assembly.armbot.command.TaskRotateBy;
+import dark.assembly.armbot.command.TaskRotateTo;
+import dark.assembly.armbot.command.TaskStart;
+import dark.assembly.armbot.command.TaskTake;
+import dark.assembly.armbot.command.TaskUse;
 import dark.assembly.imprinter.BlockImprinter;
 import dark.assembly.imprinter.ItemImprinter;
-import dark.assembly.imprinter.TileEntityImprinter;
 import dark.assembly.machine.BlockCrate;
 import dark.assembly.machine.BlockDetector;
 import dark.assembly.machine.BlockManipulator;
@@ -36,15 +52,9 @@ import dark.assembly.machine.BlockRejector;
 import dark.assembly.machine.BlockTurntable;
 import dark.assembly.machine.ItemBlockCrate;
 import dark.assembly.machine.TileEntityAssembly;
-import dark.assembly.machine.TileEntityCrate;
-import dark.assembly.machine.TileEntityDetector;
-import dark.assembly.machine.TileEntityManipulator;
-import dark.assembly.machine.TileEntityRejector;
 import dark.assembly.machine.belt.BlockConveyorBelt;
-import dark.assembly.machine.belt.TileEntityConveyorBelt;
 import dark.assembly.machine.encoder.BlockEncoder;
 import dark.assembly.machine.encoder.ItemDisk;
-import dark.assembly.machine.encoder.TileEntityEncoder;
 import dark.assembly.machine.processor.BlockProcessor;
 import dark.assembly.machine.red.BlockAdvancedHopper;
 import dark.core.common.DMCreativeTab;
@@ -100,6 +110,25 @@ public class AssemblyLine extends ModPrefab
         NetworkRegistry.instance().registerGuiHandler(this, proxy);
 
         proxy.preInit();
+
+        TaskRegistry.registerCommand(new TaskDrop());
+        TaskRegistry.registerCommand(new TaskGive());
+        TaskRegistry.registerCommand(new TaskTake());
+        TaskRegistry.registerCommand(new TaskGrabItem());
+        TaskRegistry.registerCommand(new TaskGrabEntity());
+        TaskRegistry.registerCommand(new TaskRotateBy());
+        TaskRegistry.registerCommand(new TaskRotateTo());
+        TaskRegistry.registerCommand(new TaskUse());
+        TaskRegistry.registerCommand(new TaskIF());
+        TaskRegistry.registerCommand(new TaskGOTO());
+        TaskRegistry.registerCommand(new TaskReturn());
+        TaskRegistry.registerCommand(new TaskEnd());
+        TaskRegistry.registerCommand(new TaskFire());
+        TaskRegistry.registerCommand(new TaskHarvest());
+        TaskRegistry.registerCommand(new TaskPlace());
+        TaskRegistry.registerCommand(new TaskBreak());
+        TaskRegistry.registerCommand(new TaskStart());
+        TaskRegistry.registerCommand(new TaskIdle());
     }
 
     @Override
@@ -112,7 +141,7 @@ public class AssemblyLine extends ModPrefab
         FMLog.info("Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
         DMCreativeTab.tabAutomation.setIconItemStack(new ItemStack(ALRecipeLoader.blockConveyorBelt));
     }
-    
+
     @Override
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)

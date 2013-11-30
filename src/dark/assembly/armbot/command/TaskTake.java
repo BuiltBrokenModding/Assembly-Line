@@ -88,7 +88,7 @@ public class TaskTake extends TaskBaseArmbot
     @Override
     public TaskTake load(NBTTagCompound taskCompound)
     {
-        super.loadProgress(taskCompound);
+        super.load(taskCompound);
         this.stack = ItemStack.loadItemStackFromNBT(taskCompound.getCompoundTag("item"));
         return this;
     }
@@ -96,7 +96,7 @@ public class TaskTake extends TaskBaseArmbot
     @Override
     public NBTTagCompound save(NBTTagCompound taskCompound)
     {
-        super.saveProgress(taskCompound);
+        super.save(taskCompound);
         if (stack != null)
         {
             NBTTagCompound tag = new NBTTagCompound();

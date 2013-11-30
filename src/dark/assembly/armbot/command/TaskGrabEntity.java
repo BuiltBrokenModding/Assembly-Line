@@ -27,7 +27,7 @@ public class TaskGrabEntity extends TaskGrabPrefab
     {
         super("Grab-Entity");
         this.defautlArguments.add(new ArgumentData("child", false));
-        this.defautlArguments.add(new ArgumentListData<Class<? extends Entity>>("Entity", Entity.class, (Class<? extends Entity>[]) EntityDictionary.getList().toArray(new Object[1])));
+        //this.defautlArguments.add(new ArgumentListData<Class<? extends Entity>>("Entity", Entity.class, (Class<? extends Entity>[]) EntityDictionary.getList().toArray(new Object[1])));
     }
 
     @Override

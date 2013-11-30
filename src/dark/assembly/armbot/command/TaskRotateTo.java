@@ -72,7 +72,7 @@ public class TaskRotateTo extends TaskBaseArmbot
     @Override
     public TaskRotateTo load(NBTTagCompound taskCompound)
     {
-        super.loadProgress(taskCompound);
+        super.load(taskCompound);
         this.targetRotationPitch = taskCompound.getInteger("rotPitch");
         this.targetRotationYaw = taskCompound.getInteger("rotYaw");
         return this;
@@ -81,7 +81,7 @@ public class TaskRotateTo extends TaskBaseArmbot
     @Override
     public NBTTagCompound save(NBTTagCompound taskCompound)
     {
-        super.saveProgress(taskCompound);
+        super.save(taskCompound);
         taskCompound.setInteger("rotPitch", this.targetRotationPitch);
         taskCompound.setInteger("rotYaw", this.targetRotationYaw);
         return taskCompound;

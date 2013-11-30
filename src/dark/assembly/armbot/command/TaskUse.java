@@ -89,7 +89,7 @@ public class TaskUse extends TaskBaseArmbot
     @Override
     public TaskUse load(NBTTagCompound taskCompound)
     {
-        super.loadProgress(taskCompound);
+        super.load(taskCompound);
         this.times = taskCompound.getInteger("useTimes");
 
         return this;
@@ -98,7 +98,7 @@ public class TaskUse extends TaskBaseArmbot
     @Override
     public NBTTagCompound save(NBTTagCompound taskCompound)
     {
-        super.saveProgress(taskCompound);
+        super.save(taskCompound);
         taskCompound.setInteger("useTimes", this.times);
 
         return taskCompound;

@@ -11,14 +11,17 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import universalelectricity.core.vector.Vector2;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import dark.api.al.coding.ITask;
 import dark.api.al.coding.args.ArgumentData;
 import dark.assembly.AssemblyLine;
 import dark.core.prefab.invgui.GuiBase;
+import dark.core.prefab.invgui.GuiMessageBox;
+import dark.core.prefab.invgui.IMessageBoxDialog;
 
-public class GuiEditTask extends GuiBase
+public class GuiEditTask extends GuiBase implements IMessageBoxDialog
 {
     public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.GUI_DIRECTORY + "gui_task_edit.png");
 
@@ -38,7 +41,6 @@ public class GuiEditTask extends GuiBase
         this.editTask.load(task.save(new NBTTagCompound()));
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void initGui()
     {
@@ -47,6 +49,7 @@ public class GuiEditTask extends GuiBase
         Keyboard.enableRepeatEvents(true);
     }
 
+    @SuppressWarnings("unchecked")
     public void drawButtons()
     {
         this.buttonList.clear();
@@ -151,16 +154,15 @@ public class GuiEditTask extends GuiBase
         {
             case 0:
             case 1:
-            case 2:
+
                 if (button.id == 0)
                 {
-                    //TODO save task
-                }
-                else if (button.id == 2)
-                {
-                    //TODO del task, first open a yes/no gui
+                    this.gui.getTile().updateTask(this.editTask);
                 }
                 FMLCommonHandler.instance().showGuiScreen(this.gui);
+                break;
+            case 2:
+                new GuiMessageBox(this, 0, "Remove Task", "Are you sure?").show();
                 break;
         }
     }
@@ -169,7 +171,6 @@ public class GuiEditTask extends GuiBase
     @Override
     protected void drawBackgroundLayer(int x, int y, float var1)
     {
-        this.drawButtons();
         FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE);
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -216,5 +217,15 @@ public class GuiEditTask extends GuiBase
 
         }
 
+    }
+
+    @Override
+    public void onMessageBoxClosed(int id, boolean yes)
+    {
+        if (id == 0 && yes)
+        {
+            this.gui.getTile().removeTask(new Vector2(this.editTask.getCol(), this.editTask.getRow()));
+            FMLCommonHandler.instance().showGuiScreen(this.gui);
+        }
     }
 }

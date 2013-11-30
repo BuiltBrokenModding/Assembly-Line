@@ -3,9 +3,11 @@ package dark.assembly.machine.encoder;
 import java.io.IOException;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.packet.Packet;
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.prefab.network.PacketManager;
 
@@ -15,6 +17,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import dark.api.al.coding.IProcessTask;
 import dark.api.al.coding.IProgram;
+import dark.api.al.coding.ITask;
 import dark.api.al.coding.TaskRegistry;
 import dark.assembly.armbot.Program;
 import dark.assembly.armbot.command.TaskDrop;
@@ -26,29 +29,40 @@ import dark.assembly.armbot.command.TaskRotateTo;
 import dark.core.common.DarkMain;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.machine.TileEntityMachine;
+import dark.core.prefab.machine.TileEntityMachine.SimplePacketTypes;
 
 public class TileEntityEncoder extends TileEntityMachine implements ISidedInventory
 {
     private ItemStack disk;
     private IInventoryWatcher watcher;
-    public static final String PROGRAM_ID = "program", PROGRAM_CHANGE = "programChange", REMOVE_TASK = "removeTask";
+    public static final String PROGRAM_PACKET_ID = "program", PROGRAM_CHANGE_PACKET_ID = "programChange", REMOVE_TASK_PACKET_ID = "removeTask";
     protected IProgram program;
 
     public TileEntityEncoder()
     {
         super();
-        program = new Program();
-        program.setTaskAt(0, 0, new TaskRotateTo());
-        program.setTaskAt(0, 1, new TaskDrop());
-        program.setTaskAt(0, 2, new TaskRotateTo());
-        program.setTaskAt(0, 3, new TaskGrabItem());
-        program.setTaskAt(0, 4, new TaskIF());
-        program.setTaskAt(0, 5, new TaskRotateTo());
-        program.setTaskAt(0, 6, new TaskGive());
+        this.hasGUI = true;
+    }
 
-        program.setTaskAt(1, 4, new TaskRotateTo());
-        program.setTaskAt(1, 5, new TaskGive());
-        program.setTaskAt(1, 6, new TaskGOTO(0, 6));
+    @Override
+    public void initiate()
+    {
+        super.initiate();
+        if (!this.worldObj.isRemote)
+        {
+            program = new Program();
+            program.setTaskAt(0, 0, new TaskRotateTo());
+            program.setTaskAt(0, 1, new TaskDrop());
+            program.setTaskAt(0, 2, new TaskRotateTo());
+            program.setTaskAt(0, 3, new TaskGrabItem());
+            program.setTaskAt(0, 4, new TaskIF());
+            program.setTaskAt(0, 5, new TaskRotateTo());
+            program.setTaskAt(0, 6, new TaskGive());
+
+            program.setTaskAt(1, 4, new TaskRotateTo());
+            program.setTaskAt(1, 5, new TaskGive());
+            program.setTaskAt(1, 6, new TaskGOTO(0, 6));
+        }
     }
 
     @Override
@@ -120,8 +134,9 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
             {
                 if (this.worldObj.isRemote)
                 {
-                    if (id.equalsIgnoreCase(TileEntityEncoder.PROGRAM_ID))
+                    if (id.equalsIgnoreCase(TileEntityEncoder.PROGRAM_PACKET_ID))
                     {
+
                         if (dis.readBoolean())
                         {
                             Program program = new Program();
@@ -137,10 +152,10 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
                 }
                 else
                 {
-                    if (id.equalsIgnoreCase(TileEntityEncoder.PROGRAM_CHANGE))
+                    if (id.equalsIgnoreCase(TileEntityEncoder.PROGRAM_CHANGE_PACKET_ID))
                     {
 
-                        IProcessTask task = TaskRegistry.getCommand(dis.readUTF());
+                        ITask task = TaskRegistry.getCommand(dis.readUTF());
                         task.setPosition(dis.readInt(), dis.readInt());
                         task.load(PacketManager.readNBTTagCompound(dis));
                         this.program.setTaskAt(task.getCol(), task.getRow(), task);
@@ -148,7 +163,7 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
 
                         return true;
                     }
-                    else if (id.equalsIgnoreCase(TileEntityEncoder.REMOVE_TASK))
+                    else if (id.equalsIgnoreCase(TileEntityEncoder.REMOVE_TASK_PACKET_ID))
                     {
                         this.program.setTaskAt(dis.readInt(), dis.readInt(), null);
                         this.sendGUIPacket();
@@ -171,30 +186,52 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
     {
         if (entity != null)
         {
-            NBTTagCompound tag = new NBTTagCompound();
-            boolean exists = this.program != null;
-            if (exists)
-            {
-                this.program.save(tag);
-            }
-            PacketDispatcher.sendPacketToPlayer(PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, this.program, exists, tag), (Player) entity);
+            PacketDispatcher.sendPacketToPlayer(this.getDescriptionPacket(), (Player) entity);
         }
+    }
+
+    @Override
+    public Packet getDescriptionPacket()
+    {
+        NBTTagCompound tag = new NBTTagCompound();
+        boolean exists = this.program != null;
+        if (exists)
+        {
+            this.program.save(tag);
+        }
+        return PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, TileEntityEncoder.PROGRAM_PACKET_ID, exists, tag);
+
     }
 
     public void removeTask(Vector2 vec)
     {
         if (vec != null)
         {
-            PacketDispatcher.sendPacketToServer(PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, vec.intX(), vec.intY()));
+            if (this.worldObj.isRemote)
+            {
+                PacketDispatcher.sendPacketToServer(PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, TileEntityEncoder.REMOVE_TASK_PACKET_ID, vec.intX(), vec.intY()));
+            }
+            else
+            {
+                this.program.setTaskAt(vec.intX(), vec.intY(), null);
+            }
         }
     }
 
-    public void updateTask(IProcessTask task)
+    public void updateTask(ITask editTask)
     {
-        if (task != null)
+        if (editTask != null)
         {
-            PacketDispatcher.sendPacketToServer(PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, task.getCol(), task.getRow(), task.save(new NBTTagCompound())));
+            if (this.worldObj.isRemote)
+            {
+                PacketDispatcher.sendPacketToServer(PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, TileEntityEncoder.PROGRAM_CHANGE_PACKET_ID, editTask.getMethodName(), editTask.getCol(), editTask.getRow(), editTask.save(new NBTTagCompound())));
+            }
+            else
+            {
+                this.program.setTaskAt(editTask.getCol(), editTask.getRow(), editTask);
+            }
         }
+
     }
 
     @Override
@@ -207,5 +244,11 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
     public IProgram getProgram()
     {
         return this.program;
+    }
+
+    @Override
+    public Class<? extends Container> getContainer()
+    {
+        return ContainerEncoder.class;
     }
 }

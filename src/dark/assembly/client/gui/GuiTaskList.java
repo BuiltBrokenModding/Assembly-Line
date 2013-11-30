@@ -37,10 +37,11 @@ public class GuiTaskList extends Gui implements IScroll
         this.xPos = x;
         this.yPos = y;
         this.coder = coder;
+        this.entity = entity;
 
-        if (entity instanceof TileEntityEncoder && ((TileEntityEncoder) entity).getProgram() != null)
+        if (this.getProgram() != null)
         {
-            if (((TileEntityEncoder) entity).getProgram().getSize().intX() < (this.countX / 2))
+            if (this.getProgram().getSize().intX() < (this.countX / 2))
             {
                 this.scrollX = -2;
             }
@@ -48,6 +49,11 @@ public class GuiTaskList extends Gui implements IScroll
             {
                 this.scrollX = 0;
             }
+        }
+        else
+        {
+            this.scrollX = 0;
+            this.scrollY = 0;
         }
 
     }
@@ -93,27 +99,30 @@ public class GuiTaskList extends Gui implements IScroll
             for (int row = 0; row < countY; row++)
             {
                 int actualRow = row + this.scrollY - 1;
-                if (actualRow <= this.getProgram().getSize().intY() + 1 && actualRow >= -1)
+                boolean drawnButton = false;
+
+                if (this.getProgram() != null)
                 {
                     ITask task = this.getProgram().getTaskAt(actualCol, actualRow);
                     if (actualRow == -1 && colume + this.scrollX - 1 == -1)
                     {
-                        task = new TaskStart();
+                       task = new TaskStart();
                     }
-                    if (actualRow == this.getProgram().getSize().intY() + 1 && colume + this.scrollX - 1 == -1)
+                    else if (actualRow == this.getProgram().getSize().intY() + 1 && colume + this.scrollX - 1 == -1)
                     {
                         task = new TaskEnd();
                     }
                     if (task != null && (!(task instanceof IRedirectTask) || task instanceof IRedirectTask && ((IRedirectTask) task).render()))
                     {
+                        drawnButton = true;
                         FMLClientHandler.instance().getClient().renderEngine.bindTexture(task.getTextureSheet());
                         this.drawTexturedModalRect(xPos + (20 * colume), yPos + (20 * row), task.getTextureUV().intX(), task.getTextureUV().intY(), 20, 20);
                     }
-                    else
-                    {
-                        FMLClientHandler.instance().getClient().renderEngine.bindTexture(ITask.TaskType.TEXTURE);
-                        this.drawTexturedModalRect(xPos + (20 * colume), yPos + (20 * row), 0, 40, 20, 20);
-                    }
+                }
+                if (!drawnButton)
+                {
+                    FMLClientHandler.instance().getClient().renderEngine.bindTexture(ITask.TaskType.TEXTURE);
+                    this.drawTexturedModalRect(xPos + (20 * colume), yPos + (20 * row), 0, 40, 20, 20);
                 }
             }
 
