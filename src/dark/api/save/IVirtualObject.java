@@ -6,9 +6,9 @@ import net.minecraft.nbt.NBTTagCompound;
 
 /** Used in combination with the save manager and other managers to say this object needs to be save
  * since its not connected with the world
- * 
+ *
  * @author DarkGuardsman */
-public interface IVirtualObject
+public interface IVirtualObject extends ISaveObj
 {
     /** File this is saved as, don't create anything here as the manager will do that for you */
     public File getSaveFile();
@@ -17,9 +17,5 @@ public interface IVirtualObject
      * loaded from and decide if it wants to use the location as its getSaveFile return */
     public void setSaveFile(File file);
 
-    /** Saves the object to NBT */
-    public void save(NBTTagCompound nbt);
 
-    /** Load the object from NBT */
-    public void load(NBTTagCompound nbt);
 }

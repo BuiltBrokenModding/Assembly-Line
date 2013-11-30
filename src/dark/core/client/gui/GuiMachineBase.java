@@ -12,6 +12,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 import dark.core.common.DarkMain;
 import dark.core.prefab.invgui.GuiBase;
 import dark.core.prefab.invgui.GuiButtonImage;
+import dark.core.prefab.invgui.GuiButtonImage.ButtonIcon;
 import dark.core.prefab.machine.TileEntityMachine;
 
 /** To be used with all machine that have a gui to allow generic settings and feature all all devices
@@ -27,6 +28,7 @@ public class GuiMachineBase extends GuiBase
     protected EntityPlayer entityPlayer;
     protected Object mod;
     protected int guiID = -1, guiID2 = -1, guiID3 = -1;
+    protected ButtonIcon guiIcon = ButtonIcon.CHEST, guiIcon2 = ButtonIcon.PERSON, guiIcon3 = ButtonIcon.BLANK;
     protected String invName = "Home", invName2 = "2", invName3 = "3";
 
     public GuiMachineBase(Object mod, EntityPlayer player, TileEntityMachine tileEntity)
@@ -37,6 +39,7 @@ public class GuiMachineBase extends GuiBase
         this.mod = mod;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void initGui()
     {
@@ -45,14 +48,14 @@ public class GuiMachineBase extends GuiBase
 
         // Inventory, Should be the Gui the machine opens to unless it has no inventory
         if (guiID != -1)
-            this.buttonList.add(new GuiButtonImage(0, (this.width - this.guiSize.intX()) / 2 - 22, (this.height - this.guiSize.intY()) / 2 + 0, 3));
+            this.buttonList.add(new GuiButtonImage(0, (this.width - this.guiSize.intX()) / 2 - 22, (this.height - this.guiSize.intY()) / 2 + 0, guiIcon));
 
         // Machine settings
         if (guiID2 != -1)
-            this.buttonList.add(new GuiButtonImage(1, (this.width - this.guiSize.intX()) / 2 - 22, (this.height - this.guiSize.intY()) / 2 + 22, 0));
+            this.buttonList.add(new GuiButtonImage(1, (this.width - this.guiSize.intX()) / 2 - 22, (this.height - this.guiSize.intY()) / 2 + 22, guiIcon2));
 
         if (guiID3 != -1)
-            this.buttonList.add(new GuiButtonImage(2, (this.width - this.guiSize.intX()) / 2 - 22, (this.height - this.guiSize.intY()) / 2 + 44, 2));
+            this.buttonList.add(new GuiButtonImage(2, (this.width - this.guiSize.intX()) / 2 - 22, (this.height - this.guiSize.intY()) / 2 + 44, guiIcon3));
 
     }
 

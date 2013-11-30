@@ -16,45 +16,33 @@ public class GuiButtonImage extends GuiButton
 {
     public static final ResourceLocation TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, DarkMain.GUI_DIRECTORY + "gui_button.png");
 
-    private int type = 0;
+    private ButtonIcon buttonIcon = ButtonIcon.BLANK;
 
-    public GuiButtonImage(int par1, int par2, int par3, int type)
+    public GuiButtonImage(int buttonID, int xx, int yy, ButtonIcon icon)
     {
-        super(par1, par2, par3, 20, 20, "");
-        this.type = type;
+        super(buttonID, xx, yy, 20, 20, "");
+        this.buttonIcon = icon;
+        this.width = icon.sizeX;
+        this.height = icon.sizeY;
     }
 
     /** Draws this button to the screen. */
     @Override
-    public void drawButton(Minecraft par1Minecraft, int width, int hight)
+    public void drawButton(Minecraft mc, int width, int hight)
     {
         if (this.drawButton)
         {
             FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            boolean var4 = width >= this.xPosition && hight >= this.yPosition && width < this.xPosition + this.width && hight < this.yPosition + this.height;
-            int var5 = 106;
-            int var6 = 0;
-            if (var4)
+            boolean hovering = width >= this.xPosition && hight >= this.yPosition && width < this.xPosition + this.width && hight < this.yPosition + this.height;
+            int vv = buttonIcon.vv;
+            int uu = buttonIcon.uu;
+            if (hovering)
             {
-                var5 += this.height;
-            }
-            switch (type)
-            {
-                case 0:
-                    var5 += 40;
-                    break;
-                case 1:
-                    var5 += 40;
-                    var6 += 20;
-                    break;
-                case 2:
-                    var5 += 40;
-                    var6 += 40;
-                    break;
+                vv += this.height;
             }
 
-            this.drawTexturedModalRect(this.xPosition, this.yPosition, var6, var5, this.width, this.height);
+            this.drawTexturedModalRect(this.xPosition, this.yPosition, uu, vv, this.width, this.height);
         }
     }
 
@@ -62,6 +50,38 @@ public class GuiButtonImage extends GuiButton
     public boolean isIntersect(int x, int y)
     {
         return x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;
+    }
 
+    public static enum ButtonIcon
+    {
+        PERSON(0, 0),
+        ARROW_LEFT(30, 0),
+        ARROW_RIGHT(20, 0),
+        ARROW_DOWN(30, 20),
+        ARROW_UP(20, 20),
+        CHEST(60, 0),
+        LOCKED(80, 0),
+        UNLOCKED(100, 0),
+        BLANK(120, 0),
+        RED_ON(140, 0),
+        RED_OFF(160, 0),
+        FURNACE_OFF(180, 0),
+        FURNACE_ON(200, 0);
+
+        int vv, uu;
+        int sizeX = 20, sizeY = 20;
+
+        private ButtonIcon(int xx, int yy)
+        {
+            this.vv = xx;
+            this.uu = yy;
+        }
+
+        private ButtonIcon(int xx, int yy, int cx, int cy)
+        {
+            this(xx, yy);
+            this.sizeX = cx;
+            this.sizeY = cy;
+        }
     }
 }

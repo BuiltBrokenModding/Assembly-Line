@@ -14,6 +14,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.prefab.invgui.GuiButtonImage;
+import dark.core.prefab.invgui.GuiButtonImage.ButtonIcon;
 import dark.core.prefab.machine.TileEntityMachine;
 
 @SideOnly(Side.CLIENT)
@@ -24,6 +25,7 @@ public abstract class GuiMachineContainer extends GuiContainer
     protected EntityPlayer entityPlayer;
     protected Object mod;
     protected int guiID = -1, guiID2 = -1, guiID3 = -1;
+    protected ButtonIcon guiIcon = ButtonIcon.CHEST, guiIcon2 = ButtonIcon.PERSON, guiIcon3 = ButtonIcon.BLANK;
     protected String invName = "Home", invName2 = "2", invName3 = "3";
 
     public GuiMachineContainer(Object mod, Container container, InventoryPlayer inventoryPlayer, TileEntityMachine tileEntity)
@@ -42,11 +44,11 @@ public abstract class GuiMachineContainer extends GuiContainer
         this.buttonList.clear();
 
         if (guiID != -1)
-            this.buttonList.add(new GuiButtonImage(0, (this.width - this.xSize) / 2 - 22, (this.height - this.ySize) / 2 + 0, 3));
+            this.buttonList.add(new GuiButtonImage(0, (this.width - this.xSize) / 2 - 22, (this.height - this.ySize) / 2 + 0, guiIcon));
         if (guiID2 != -1)
-            this.buttonList.add(new GuiButtonImage(1, (this.width - this.xSize) / 2 - 22, (this.height - this.ySize) / 2 + 22, 0));
+            this.buttonList.add(new GuiButtonImage(1, (this.width - this.xSize) / 2 - 22, (this.height - this.ySize) / 2 + 22, guiIcon2));
         if (guiID3 != -1)
-            this.buttonList.add(new GuiButtonImage(2, (this.width - this.xSize) / 2 - 22, (this.height - this.ySize) / 2 + 44, 2));
+            this.buttonList.add(new GuiButtonImage(2, (this.width - this.xSize) / 2 - 22, (this.height - this.ySize) / 2 + 44, guiIcon3));
 
     }
 

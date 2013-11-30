@@ -4,9 +4,9 @@ import java.util.List;
 
 /**
  * A simple way to store electrical data.
- * 
+ *
  * @author Calclavia
- * 
+ *
  */
 public class ElectricityPack implements Cloneable
 {
@@ -193,4 +193,6 @@ public class ElectricityPack implements Cloneable
 	{
 		return this.amperes == electricityPack.amperes && this.voltage == electricityPack.voltage;
 	}
+
+
 }

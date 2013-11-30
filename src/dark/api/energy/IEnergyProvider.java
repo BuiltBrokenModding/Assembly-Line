@@ -4,7 +4,7 @@ import net.minecraftforge.common.ForgeDirection;
 
 public interface IEnergyProvider extends IEnergyDevice
 {
-    public EnergyPacket provideEnergy(ForgeDirection from, EnergyPacket request, boolean doProvide);
+    public EnergyPack provideEnergy(ForgeDirection from, EnergyPack request, boolean doProvide);
 
-    public EnergyPacket getEnergyProduce(ForgeDirection direction);
+    public EnergyPack getEnergyProduce(ForgeDirection direction);
 }
