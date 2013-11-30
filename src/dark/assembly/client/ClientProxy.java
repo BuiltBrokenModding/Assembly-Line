@@ -55,11 +55,11 @@ public class ClientProxy extends CommonProxy
                 }
                 case GUI_ENCODER_CODE:
                 {
-                    return new GuiEncoderCoder(player, (TileEntityEncoder) tileEntity);
+                    return new GuiEncoderCoder(player.inventory, (TileEntityEncoder) tileEntity);
                 }
                 case GUI_ENCODER_HELP:
                 {
-                    return new GuiEncoderHelp(player, (TileEntityEncoder) tileEntity);
+                    return new GuiEncoderHelp(player.inventory, (TileEntityEncoder) tileEntity);
                 }
                 case GUI_PROCESSOR:
                 {

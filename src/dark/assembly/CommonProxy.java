@@ -17,6 +17,7 @@ import dark.assembly.machine.encoder.ContainerEncoder;
 import dark.assembly.machine.encoder.TileEntityEncoder;
 import dark.assembly.machine.processor.ContainerProcessor;
 import dark.assembly.machine.processor.TileEntityProcessor;
+import dark.core.prefab.invgui.ContainerFake;
 
 public class CommonProxy implements IGuiHandler
 {
@@ -36,10 +37,10 @@ public class CommonProxy implements IGuiHandler
     {
 
     }
-    
+
     public void postInit()
-    {       
-        
+    {
+
     }
 
     private void extractZipToLocation(File zipFile, String sourceFolder, String destFolder)
@@ -131,6 +132,8 @@ public class CommonProxy implements IGuiHandler
                 {
                     return new ContainerProcessor(player.inventory, (TileEntityProcessor) tileEntity);
                 }
+                default:
+                    return new ContainerFake(tileEntity);
             }
         }
 
@@ -148,5 +151,4 @@ public class CommonProxy implements IGuiHandler
         return false;
     }
 
-    
 }

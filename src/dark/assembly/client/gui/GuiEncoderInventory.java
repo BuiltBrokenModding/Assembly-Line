@@ -9,25 +9,17 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
-import dark.assembly.CommonProxy;
 import dark.assembly.machine.encoder.ContainerEncoder;
 import dark.assembly.machine.encoder.TileEntityEncoder;
-import dark.core.client.gui.GuiMachineContainer;
 
 @SideOnly(Side.CLIENT)
-public class GuiEncoderInventory extends GuiMachineContainer
+public class GuiEncoderInventory extends GuiEncoderBase
 {
     public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.GUI_DIRECTORY + "gui_encoder_slot.png");
 
     public GuiEncoderInventory(InventoryPlayer inventoryPlayer, TileEntityEncoder tileEntity)
     {
-        super(AssemblyLine.instance, new ContainerEncoder(inventoryPlayer, tileEntity), inventoryPlayer, tileEntity);
-        this.guiID = CommonProxy.GUI_ENCODER;
-        this.guiID2 = CommonProxy.GUI_ENCODER_CODE;
-        this.guiID3 = CommonProxy.GUI_ENCODER_HELP;
-        this.invName = "Main";
-        this.invName2 = "Coder";
-        this.invName3 = "Help";
+        super(inventoryPlayer, tileEntity, new ContainerEncoder(inventoryPlayer, tileEntity));
     }
 
     /** Draw the background layer for the GuiContainer (everything behind the items) */
