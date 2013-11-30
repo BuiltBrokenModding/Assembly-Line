@@ -21,10 +21,12 @@ public interface ITask extends Cloneable
     public void setProgram(IProgram program);
 
     /** Location in the program */
-    public Vector2 getPosition();
+    public int getRow();
+
+    public int getCol();
 
     /** Sets the tasks position in the program */
-    public void setPosition(Vector2 pos);
+    public void setPosition(int col, int row);
 
     /** Method name or rather command name this will be called. Uses both to ID this command, and do
      * basic command structuring. */
@@ -67,6 +69,13 @@ public interface ITask extends Cloneable
      * This includes no arguments, progress, variables, etc. As this is used to make new tasks from
      * the TaskRegistry */
     public ITask clone();
+
+    /** Texture to be used make sure to use a reference as creating a new one each call with memory
+     * leak the game */
+    public ResourceLocation getTextureSheet();
+
+    /** Location of the texture in the sheet */
+    public Vector2 getTextureUV();
 
     /** Used mainly for display purposes in the encoder */
     public static enum TaskType

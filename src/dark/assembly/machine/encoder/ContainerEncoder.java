@@ -29,12 +29,12 @@ public class ContainerEncoder extends Container
         {
             for (int slot = 0; slot < 9; ++slot)
             {
-                this.addSlotToContainer(new Slot(inventoryPlayer, slot + row * 9 + 9, 8 + slot * 18, 97 + row * 18));
+                this.addSlotToContainer(new Slot(inventoryPlayer, slot + row * 9 + 9, 8 + slot * 18, 97 + row * 8));
             }
         }
         for (row = 0; row < 9; ++row)
         {
-            this.addSlotToContainer(new Slot(inventoryPlayer, row, 8 + row * 18, 155));
+            this.addSlotToContainer(new Slot(inventoryPlayer, row, 8 + row * 18, 145));
         }
     }
 

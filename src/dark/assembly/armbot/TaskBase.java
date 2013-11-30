@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import universalelectricity.core.vector.Vector2;
 import dark.api.al.coding.IMemorySlot;
 import dark.api.al.coding.IProgram;
@@ -25,7 +26,8 @@ public abstract class TaskBase implements ITask, IMemorySlot
 
     protected TaskType taskType;
 
-    protected Vector2 pos;
+    protected int col;
+    protected int row;
 
     /** The parameters this command */
     protected HashMap<String, Object> aruguments = new HashMap<String, Object>();
@@ -75,15 +77,22 @@ public abstract class TaskBase implements ITask, IMemorySlot
     }
 
     @Override
-    public Vector2 getPosition()
+    public int getCol()
     {
-        return pos;
+        return this.col;
     }
 
     @Override
-    public void setPosition(Vector2 pos)
+    public int getRow()
     {
-        this.pos = pos;
+        return this.row;
+    }
+
+    @Override
+    public void setPosition(int col, int row)
+    {
+        this.col = col;
+        this.row = row;
     }
 
     @Override
@@ -136,7 +145,8 @@ public abstract class TaskBase implements ITask, IMemorySlot
     @Override
     public TaskBase load(NBTTagCompound nbt)
     {
-        this.pos = new Vector2(nbt.getDouble("xx"), nbt.getDouble("yy"));
+        this.col = nbt.getInteger("col");
+        this.row = nbt.getInteger("row");
         if (this.getEncoderParms() != null)
         {
             this.aruguments = new HashMap();
@@ -156,11 +166,9 @@ public abstract class TaskBase implements ITask, IMemorySlot
     @Override
     public NBTTagCompound save(NBTTagCompound nbt)
     {
-        if (this.pos != null)
-        {
-            nbt.setDouble("xx", pos.x);
-            nbt.setDouble("yy", pos.y);
-        }
+
+        nbt.setInteger("col", this.col);
+        nbt.setInteger("row", this.row);
         NBTTagCompound parms = new NBTTagCompound();
         for (Entry<String, Object> entry : this.aruguments.entrySet())
         {
@@ -193,6 +201,20 @@ public abstract class TaskBase implements ITask, IMemorySlot
     public String toString()
     {
         return "COMMAND[" + super.toString() + "]:" + this.methodName;
+    }
+
+    @Override
+    public ResourceLocation getTextureSheet()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Vector2 getTextureUV()
+    {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

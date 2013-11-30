@@ -13,7 +13,7 @@ public class GuiEncoderBase extends GuiMachineContainer
     //
     public GuiEncoderBase(InventoryPlayer player, TileEntityMachine tileEntity, Container container)
     {
-        super(AssemblyLine.MOD_ID, container, player, tileEntity);
+        super(AssemblyLine.instance, container, player, tileEntity);
         this.guiID = CommonProxy.GUI_ENCODER;
         this.guiID2 = CommonProxy.GUI_ENCODER_CODE;
         this.guiID3 = CommonProxy.GUI_ENCODER_HELP;

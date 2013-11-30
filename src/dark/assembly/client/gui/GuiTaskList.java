@@ -1,8 +1,12 @@
 package dark.assembly.client.gui;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import universalelectricity.core.vector.Vector2;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -18,56 +22,56 @@ import dark.assembly.armbot.command.TaskStart;
 import dark.core.interfaces.IScroll;
 
 /** Not a gui itself but a component used to display task as a box inside of a gui
- * 
+ *
  * @author DarkGuardsman */
 public class GuiTaskList extends Gui implements IScroll
 {
     protected IProgram program;
     protected int scroll = 0;
-    private final float scale = 0.52f;
 
-    private int color = 14737632;
+    protected TileEntity entity;
 
     /** The string displayed on this control. */
     public String displayString;
 
-    int x, y;
+    int xPos, yPos;
+    int countX = 6, countY = 7;
 
-    public GuiTaskList(int x, int y)
+    public GuiTaskList(TileEntity entity, int x, int y)
     {
-        this.x = x;
-        this.y = y;
+        this.xPos = x;
+        this.yPos = y;
 
         program = new Program();
-        program.setTaskAt(new Vector2(0, 0), new TaskGive());
-        program.setTaskAt(new Vector2(0, 1), new TaskIF(new Vector2(0, 2), new Vector2(1, 1)));
-        program.setTaskAt(new Vector2(0, 2), new TaskGive());
-        program.setTaskAt(new Vector2(0, 3), new TaskGive());
-        program.setTaskAt(new Vector2(0, 4), new TaskGive());
-        program.setTaskAt(new Vector2(0, 5), new TaskGive());
-        program.setTaskAt(new Vector2(0, 6), new TaskGive());
-        program.setTaskAt(new Vector2(0, 7), new TaskGive());
-        program.setTaskAt(new Vector2(0, 8), new TaskGive());
-        program.setTaskAt(new Vector2(0, 9), new TaskGive());
+        program.setTaskAt(0, 0, new TaskGive());
+        program.setTaskAt(0, 1, new TaskIF());
+        program.setTaskAt(0, 2, new TaskGive());
+        program.setTaskAt(0, 3, new TaskGive());
+        program.setTaskAt(0, 4, new TaskGive());
+        program.setTaskAt(0, 5, new TaskGive());
+        program.setTaskAt(0, 6, new TaskGive());
+        program.setTaskAt(0, 7, new TaskGive());
+        program.setTaskAt(0, 8, new TaskGive());
+        program.setTaskAt(0, 9, new TaskGive());
 
-        program.setTaskAt(new Vector2(1, 1), new TaskGive());
-        program.setTaskAt(new Vector2(1, 2), new TaskIF(new Vector2(1, 3), new Vector2(2, 2)));
-        program.setTaskAt(new Vector2(1, 3), new TaskGive());
-        program.setTaskAt(new Vector2(1, 4), new TaskGive());
-        program.setTaskAt(new Vector2(1, 5), new TaskGive());
+        program.setTaskAt(1, 1, new TaskGive());
+        program.setTaskAt(1, 2, new TaskIF());
+        program.setTaskAt(1, 3, new TaskGive());
+        program.setTaskAt(1, 4, new TaskGive());
+        program.setTaskAt(1, 5, new TaskGive());
         TaskGOTO ifEixt = new TaskGOTO();
         ifEixt.setExitPoint(0, new Vector2(0, 6));
-        program.setTaskAt(new Vector2(1, 6), ifEixt);
+        program.setTaskAt(1, 6, ifEixt);
 
-        program.setTaskAt(new Vector2(2, 2), new TaskGive());
-        program.setTaskAt(new Vector2(2, 3), new TaskGive());
-        program.setTaskAt(new Vector2(2, 4), new TaskGive());
-        program.setTaskAt(new Vector2(2, 5), new TaskGive());
-        program.setTaskAt(new Vector2(2, 6), new TaskGive());
-        program.setTaskAt(new Vector2(2, 7), new TaskGive());
+        program.setTaskAt(2, 2, new TaskGive());
+        program.setTaskAt(2, 3, new TaskGive());
+        program.setTaskAt(2, 4, new TaskGive());
+        program.setTaskAt(2, 5, new TaskGive());
+        program.setTaskAt(2, 6, new TaskGive());
+        program.setTaskAt(2, 7, new TaskGive());
         TaskGOTO ifEixt2 = new TaskGOTO();
         ifEixt2.setExitPoint(0, new Vector2(1, 8));
-        program.setTaskAt(new Vector2(2, 8), ifEixt2);
+        program.setTaskAt(2, 8, ifEixt2);
         program.init(null);
 
     }
@@ -95,34 +99,35 @@ public class GuiTaskList extends Gui implements IScroll
         return this.scroll;
     }
 
-    public void drawConsole()
+    public void drawConsole(Minecraft mc)
     {
         //Draw icons for task
         FMLClientHandler.instance().getClient().renderEngine.bindTexture(ITask.TaskType.TEXTURE);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        for (int j = 0; j < 6; j++)
+        for (int colume = 0; colume < countX; colume++)
         {
-            for (int i = 0; i < 7; i++)
+            for (int row = 0; row < countY; row++)
             {
-                int currentLine = i + this.scroll - 1;
-                if (currentLine <= this.program.getSize().intY() + 1 && currentLine >= -1)
+                int actualRow = row + this.scroll - 1;
+                if (actualRow <= this.program.getSize().intY() + 1 && actualRow >= -1)
                 {
-                    ITask task = this.program.getTaskAt(new Vector2(j, currentLine));
-                    if (currentLine == -1 && j == 0)
+                    ITask task = this.program.getTaskAt(colume, actualRow);
+                    if (actualRow == -1 && colume == 0)
                     {
                         task = new TaskStart();
                     }
-                    if (currentLine == this.program.getSize().intY() + 1 && j == 0)
+                    if (actualRow == this.program.getSize().intY() + 1 && colume == 0)
                     {
                         task = new TaskEnd();
                     }
                     if (task != null && (!(task instanceof IRedirectTask) || task instanceof IRedirectTask && ((IRedirectTask) task).render()))
                     {
-                        this.drawTexturedModalRect(x + (20 * j), y + (20 * i), 20 * task.getType().vv, 20 * task.getType().uu, 20, 20);
+                        FMLClientHandler.instance().getClient().renderEngine.bindTexture(task.getTextureSheet());
+                        this.drawTexturedModalRect(xPos + (20 * colume), yPos + (20 * row), task.getTextureUV().intX(), task.getTextureUV().intY(), 20, 20);
                     }
                     else
                     {
-                        this.drawTexturedModalRect(x + (20 * j), y + (20 * i), 0, 40, 20, 20);
+                        this.drawTexturedModalRect(xPos + (20 * colume), yPos + (20 * row), 0, 40, 20, 20);
                     }
                 }
             }
@@ -130,23 +135,106 @@ public class GuiTaskList extends Gui implements IScroll
         }
     }
 
-    public void mousePressed(int cx, int cz)
+    protected void drawGuiContainerForegroundLayer(Minecraft mc, int cx, int cy)
     {
-        System.out.println("Player clicked at " + cx + "x " + cz + "z ");
-        if (cx >= this.x && cz >= this.y && cx < (this.x + (20 * 7) + 10) && cz < (this.y + (20 * 6) + 10))
+        ITask task = this.getTaskAt(cx, cy);
+        if (task != null)
         {
-            int row = (cz / 20) - 4;
-            int col = (cx / 20) - 7;
-            System.out.println("Player clicked at " + row + "r " + col + "c ");
+            this.drawTooltip(mc, xPos - cy, yPos - cx + 10, "Task At: " + task.getMethodName());
+        }
+
+    }
+
+    public void mousePressed(int cx, int cy)
+    {
+        System.out.println("Player clicked at " + cx + "x " + cy + "y ");
+        ITask task = this.getTaskAt(cx, cy);
+        if (task != null)
+        {
+            System.out.println("Task is at " + task.getRow() + "r " + task.getCol() + "c " + task.getMethodName());
+        }
+    }
+
+    public ITask getTaskAt(int cx, int cz)
+    {
+        if (cx >= this.xPos && cz >= this.yPos && cx < this.xPos + (this.countX * 20) + 20 && cz < this.yPos + (this.countX * 20) + 20)
+        {
+            int row = (cx - this.xPos) / 20;
+            int col = (cz - this.yPos) / 20;
             if (this.program != null)
             {
-                ITask task = this.program.getTaskAt(new Vector2(col, row));
-                if (task != null)
+                return this.program.getTaskAt(col, row);
+            }
+        }
+        return null;
+    }
+
+    public void drawTooltip(Minecraft mc, int x, int y, String... toolTips)
+    {
+        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+        RenderHelper.disableStandardItemLighting();
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+
+        if (toolTips != null)
+        {
+            int var5 = 0;
+            int var6;
+            int var7;
+
+            for (var6 = 0; var6 < toolTips.length; ++var6)
+            {
+                var7 = mc.fontRenderer.getStringWidth(toolTips[var6]);
+
+                if (var7 > var5)
                 {
-                    //TODO open editing options
-                    System.out.println("Player tried to edit task - " + task.getMethodName());
+                    var5 = var7;
                 }
             }
+
+            var6 = x + 12;
+            var7 = y - 12;
+            int var9 = 8;
+
+            if (toolTips.length > 1)
+            {
+                var9 += 2 + (toolTips.length - 1) * 10;
+            }
+
+            if (y + var7 + var9 + 6 > 20)
+            {
+                var7 = 20 - var9 - y - 6;
+            }
+
+            this.zLevel = 300.0F;
+            int var10 = -267386864;
+            this.drawGradientRect(var6 - 3, var7 - 4, var6 + var5 + 3, var7 - 3, var10, var10);
+            this.drawGradientRect(var6 - 3, var7 + var9 + 3, var6 + var5 + 3, var7 + var9 + 4, var10, var10);
+            this.drawGradientRect(var6 - 3, var7 - 3, var6 + var5 + 3, var7 + var9 + 3, var10, var10);
+            this.drawGradientRect(var6 - 4, var7 - 3, var6 - 3, var7 + var9 + 3, var10, var10);
+            this.drawGradientRect(var6 + var5 + 3, var7 - 3, var6 + var5 + 4, var7 + var9 + 3, var10, var10);
+            int var11 = 1347420415;
+            int var12 = (var11 & 16711422) >> 1 | var11 & -16777216;
+            this.drawGradientRect(var6 - 3, var7 - 3 + 1, var6 - 3 + 1, var7 + var9 + 3 - 1, var11, var12);
+            this.drawGradientRect(var6 + var5 + 2, var7 - 3 + 1, var6 + var5 + 3, var7 + var9 + 3 - 1, var11, var12);
+            this.drawGradientRect(var6 - 3, var7 - 3, var6 + var5 + 3, var7 - 3 + 1, var11, var11);
+            this.drawGradientRect(var6 - 3, var7 + var9 + 2, var6 + var5 + 3, var7 + var9 + 3, var12, var12);
+
+            for (int var13 = 0; var13 < toolTips.length; ++var13)
+            {
+                String var14 = "\u00a77" + toolTips[var13];
+
+                mc.fontRenderer.drawStringWithShadow(var14, var6, var7, -1);
+
+                if (var13 == 0)
+                {
+                    var7 += 2;
+                }
+
+                var7 += 10;
+            }
+
+            this.zLevel = 0.0F;
         }
     }
 }

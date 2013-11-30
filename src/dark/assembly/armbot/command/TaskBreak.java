@@ -6,7 +6,9 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;
@@ -18,7 +20,7 @@ import dark.assembly.armbot.TaskBaseProcess;
 import dark.core.helpers.ItemWorldHelper;
 
 /** Used by arms to break a specific block in a position.
- * 
+ *
  * @author Calclavia */
 public class TaskBreak extends TaskBaseArmbot
 {
@@ -87,5 +89,7 @@ public class TaskBreak extends TaskBaseArmbot
         nbt.setInteger("breakTicks", this.breakTicks);
         return nbt;
     }
+
+
 
 }

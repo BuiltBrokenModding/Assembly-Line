@@ -40,12 +40,12 @@ public class TaskGOTO extends TaskBase implements IRedirectTask
         super.refresh();
         if (task == null && taskPos != null)
         {
-            this.task = this.program.getTaskAt(taskPos);
+            this.task = this.program.getTaskAt(taskPos.intX(), taskPos.intY());
         }
         this.exits.clear();
         if (this.task != null)
         {
-            this.exits.add(this.task.getPosition());
+            this.exits.add(new Vector2(this.task.getCol(), this.task.getRow()));
         }
     }
 
@@ -92,8 +92,8 @@ public class TaskGOTO extends TaskBase implements IRedirectTask
         super.saveProgress(nbt);
         if (this.task != null)
         {
-            nbt.setDouble("entryX", this.task.getPosition().x);
-            nbt.setDouble("entryY", this.task.getPosition().y);
+            nbt.setDouble("entryX", this.task.getCol());
+            nbt.setDouble("entryY", this.task.getRow());
         }
         return nbt;
     }

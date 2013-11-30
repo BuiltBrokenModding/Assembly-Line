@@ -36,13 +36,13 @@ public class Program implements IProgram
             if (entry.getValue() != null)
             {
                 entry.getValue().setProgram(this);
-                if (entry.getValue().getPosition().intX() > w)
+                if (entry.getValue().getCol() > w)
                 {
-                    w = entry.getValue().getPosition().intX();
+                    w = entry.getValue().getCol();
                 }
-                if (entry.getValue().getPosition().intY() > h)
+                if (entry.getValue().getRow() > h)
                 {
-                    h = entry.getValue().getPosition().intY();
+                    h = entry.getValue().getRow();
                 }
             }
             else
@@ -76,20 +76,16 @@ public class Program implements IProgram
     {
         if (!started)
         {
-            this.currentTask = this.getTaskAt(currentPos);
+            this.currentTask = this.getTaskAt(currentPos.intX(), currentPos.intY());
             this.currentPos.add(new Vector2(1, 0));
         }
         return this.currentTask;
     }
 
     @Override
-    public ITask getTaskAt(Vector2 vector2)
+    public ITask getTaskAt(int col, int row)
     {
-        if (vector2 != null)
-        {
-            return this.tasks.get(new Vector2(vector2.intX(), vector2.intY()));
-        }
-        return null;
+        return this.tasks.get(new Vector2(col, row));
     }
 
     @Override
@@ -99,76 +95,71 @@ public class Program implements IProgram
     }
 
     @Override
-    public void setTaskAt(Vector2 vector2, ITask task)
+    public void setTaskAt(int col, int row, ITask task)
     {
-        if (vector2 != null)
+        if (task != null)
         {
-            if (task != null)
+            task.setPosition(col, row);
+            if (task.getRow() > this.width)
             {
-                task.setPosition(vector2);
-                if (task.getPosition().x > this.width)
-                {
-                    this.width = (int) task.getPosition().x;
-                }
-                if (task.getPosition().y > this.hight)
-                {
-                    this.hight = (int) task.getPosition().y;
-                }
-                this.tasks.put(new Vector2(vector2.intX(), vector2.intY()), task);
+                this.width = task.getRow();
             }
-            else if (this.tasks.containsKey(vector2))
+            if (task.getCol() > this.hight)
             {
-                this.tasks.remove(vector2);
-                if (vector2.intY() == this.hight && !this.isThereATaskInRow(this.hight))
-                {
-                    this.hight--;
-                }
-                else if (!this.isThereATaskInRow(vector2.intY()))
-                {
-                    this.moveAll(vector2.intY(), true);
-                }
+                this.hight = task.getCol();
+            }
+            this.tasks.put(new Vector2(col, row), task);
+        }
+        else if (this.tasks.containsKey(new Vector2(col, row)))
+        {
+            this.tasks.remove(new Vector2(col, row));
+            if (col == this.hight && !this.isThereATaskInRow(this.hight))
+            {
+                this.hight--;
+            }
+            else if (!this.isThereATaskInRow(col))
+            {
+                this.moveAll(col, true);
             }
         }
     }
 
     public boolean isThereATaskInRow(int row)
     {
-        Vector2 vec = new Vector2(0, row);
-        Vector2 slide = new Vector2(1, 0);
+        int colume = 0;
         for (int x = 0; x <= this.width; x++)
         {
-            if (this.getTaskAt(vec) != null)
+            if (this.getTaskAt(colume, row) != null)
             {
                 return true;
             }
-            vec.add(slide);
+            colume++;
         }
         return false;
     }
 
     public boolean isThereATaskInColume(int colume)
     {
-        Vector2 vec = new Vector2(colume, 0);
-        Vector2 slide = new Vector2(0, 1);
+        int row = 0;
         for (int y = 0; y <= this.width; y++)
         {
-            if (this.getTaskAt(vec) != null)
+            if (this.getTaskAt(row, colume) != null)
             {
                 return true;
             }
-            vec.add(slide);
+            row++;
         }
         return false;
     }
 
     /** Move all tasks at the row and in the direction given.
-     * 
+     *
      * @param row - row number or Y value of the position from the task
      * @param up - true will move all the tasks up one, false will move all the tasks down one */
     public void moveAll(int row, boolean up)
     {
         List<ITask> moveList = new ArrayList<ITask>();
-        final Vector2 moveDown = up ? new Vector2(-1, 0) : new Vector2(1, 0);
+        final int move = up ? -1 : 1;
         Vector2 targetPos;
         ITask tagetTask;
         /* Gather all task and remove them so they can be re-added wither there new positions */
@@ -177,7 +168,7 @@ public class Program implements IProgram
             for (int y = row; y <= this.hight; y++)
             {
                 targetPos = new Vector2(x, y);
-                tagetTask = this.getTaskAt(targetPos);
+                tagetTask = this.getTaskAt(x, y);
                 if (tagetTask != null)
                 {
                     //Add the task to the move list
@@ -190,24 +181,23 @@ public class Program implements IProgram
         /* Update all the task locations */
         for (ITask moveTask : moveList)
         {
-            moveTask.setPosition(moveTask.getPosition().add(moveDown));
-            this.setTaskAt(moveTask.getPosition(), moveTask);
+            this.setTaskAt(moveTask.getCol(), moveTask.getRow() + move, moveTask);
         }
         //TODO send to the client the updates map and key to unlock the delete button
     }
 
     @Override
-    public void insertTask(Vector2 vector2, ITask task)
+    public void insertTask(int col, int row, ITask task)
     {
-        if (vector2 != null && task != null)
+        if (task != null)
         {
-            if (this.getTaskAt(vector2) != null)
+            if (this.getTaskAt(col, row) != null)
             {
-                this.moveAll(vector2.intY(), false);
+                this.moveAll(row, false);
             }
             else
             {
-                this.setTaskAt(vector2, task);
+                this.setTaskAt(col, row, task);
             }
         }
     }
@@ -220,7 +210,7 @@ public class Program implements IProgram
             NBTTagCompound tag = this.currentTask.save(new NBTTagCompound());
             this.currentTask = TaskRegistry.getCommand(this.currentTask.getMethodName()).clone();
             this.currentTask.load(tag);
-            this.setTaskAt(this.currentTask.getPosition(), this.currentTask);
+            this.setTaskAt(this.currentTask.getCol(), this.currentTask.getRow(), this.currentTask);
             this.currentTask = null;
         }
         this.currentPos = new Vector2(0, 0);
@@ -256,9 +246,9 @@ public class Program implements IProgram
         NBTTagList taskList = new NBTTagList();
         for (Entry<Vector2, ITask> entry : this.tasks.entrySet())
         {
-            entry.getValue().setPosition(entry.getKey());
+            entry.getValue().setPosition(entry.getKey().intX(), entry.getKey().intY());
             NBTTagCompound task = entry.getValue().save(new NBTTagCompound());
-            if (entry.getKey().equals(this.currentTask.getPosition()))
+            if (entry.getKey().equals(new Vector2(this.currentTask.getCol(), this.currentTask.getRow())))
             {
                 task.setBoolean("currentTask", true);
                 entry.getValue().saveProgress(task);
@@ -294,21 +284,21 @@ public class Program implements IProgram
                 if (task != null)
                 {
                     task.load(tag);
-                    task.setPosition(new Vector2(nbt.getInteger("positionX"), nbt.getInteger("positionY")));
-                    this.tasks.put(task.getPosition(), task);
+                    task.setPosition(nbt.getInteger("positionX"), nbt.getInteger("positionY"));
+                    this.tasks.put(new Vector2(task.getCol(), task.getRow()), task);
                     if (tag.getBoolean("currentTask"))
                     {
                         this.currentTask = task;
                         task.loadProgress(tag);
-                        this.currentPos = task.getPosition();
+                        this.currentPos = new Vector2(task.getCol(), task.getRow());
                     }
-                    if (task.getPosition().x > this.width)
+                    if (task.getCol() > this.width)
                     {
-                        this.width = (int) task.getPosition().x;
+                        this.width = task.getCol();
                     }
-                    if (task.getPosition().y > this.hight)
+                    if (task.getRow() > this.hight)
                     {
-                        this.hight = (int) task.getPosition().y;
+                        this.hight = task.getRow();
                     }
                 }
             }

@@ -16,7 +16,6 @@ public class TaskIF extends TaskBaseLogic
     protected ITask exitTruePoint = null;
     protected ITask exitFalsePoint = null;
     protected List<Vector2> exits = new ArrayList<Vector2>();
-    protected Vector2 exitA, exitB;
     protected boolean isTrue = false;
 
     public TaskIF()
@@ -34,14 +33,6 @@ public class TaskIF extends TaskBaseLogic
 
     }
 
-    public TaskIF(Vector2 exitA, Vector2 exitB)
-    {
-        this();
-        this.exitA = exitA;
-        this.exitB = exitB;
-
-    }
-
     @Override
     public void refresh()
     {
@@ -50,23 +41,14 @@ public class TaskIF extends TaskBaseLogic
         {
             this.isTrue = this.getArg("check").equals(this.getArg("compare"));
         }
-        if (exitTruePoint == null && exitA != null)
+        if (exitTruePoint == null)
         {
-            exitTruePoint = this.program.getTaskAt(exitA);
+            exitTruePoint = this.program.getTaskAt(this.getCol() + 1, this.getRow());
         }
-        if (exitFalsePoint == null && exitB != null)
+        if (exitFalsePoint == null)
         {
-            exitFalsePoint = this.program.getTaskAt(exitB);
-        }
-
-        this.exits.clear();
-        if (this.exitFalsePoint != null)
-        {
-            this.exits.add(this.exitFalsePoint.getPosition());
-        }
-        if (this.exitTruePoint != null)
-        {
-            this.exits.add(this.exitTruePoint.getPosition());
+            exitFalsePoint = this.program.getTaskAt(this.getCol(), this.getRow() + 1);
+            ;
         }
     }
 
@@ -103,32 +85,6 @@ public class TaskIF extends TaskBaseLogic
         {
             this.exitTruePoint = task;
         }
-    }
-
-    @Override
-    public TaskIF load(NBTTagCompound nbt)
-    {
-        super.loadProgress(nbt);
-        this.exitFalsePoint = this.program.getTaskAt(new Vector2(nbt.getDouble("exitFalseX"), (nbt.getDouble("exitFalseY"))));
-        this.exitTruePoint = this.program.getTaskAt(new Vector2(nbt.getDouble("exitTrueX"), (nbt.getDouble("exitTrueY"))));
-        return this;
-    }
-
-    @Override
-    public NBTTagCompound save(NBTTagCompound nbt)
-    {
-        super.saveProgress(nbt);
-        if (this.exitFalsePoint != null)
-        {
-            nbt.setDouble("exitFalseX", this.exitFalsePoint.getPosition().x);
-            nbt.setDouble("exitFalseY", this.exitFalsePoint.getPosition().y);
-        }
-        if (this.exitTruePoint != null)
-        {
-            nbt.setDouble("exitTrueX", this.exitTruePoint.getPosition().x);
-            nbt.setDouble("exitTrueY", this.exitTruePoint.getPosition().y);
-        }
-        return nbt;
     }
 
     @Override

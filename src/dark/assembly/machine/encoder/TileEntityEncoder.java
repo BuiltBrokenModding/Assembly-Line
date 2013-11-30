@@ -118,16 +118,16 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
                     {
 
                         IProcessTask task = TaskRegistry.getCommand(dis.readUTF());
-                        task.setPosition(new Vector2(dis.readInt(), dis.readInt()));
+                        task.setPosition(dis.readInt(), dis.readInt());
                         task.load(PacketManager.readNBTTagCompound(dis));
-                        this.program.setTaskAt(task.getPosition(), task);
+                        this.program.setTaskAt(task.getCol(), task.getRow(), task);
                         this.sendGUIPacket();
 
                         return true;
                     }
                     else if (id.equalsIgnoreCase(TileEntityEncoder.REMOVE_TASK))
                     {
-                        this.program.setTaskAt(new Vector2(dis.readInt(), dis.readInt()), null);
+                        this.program.setTaskAt(dis.readInt(), dis.readInt(), null);
                         this.sendGUIPacket();
                         return true;
                     }
@@ -170,7 +170,7 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
     {
         if (task != null)
         {
-            PacketDispatcher.sendPacketToServer(PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, task.getPosition().intX(), task.getPosition().intY(), task.save(new NBTTagCompound())));
+            PacketDispatcher.sendPacketToServer(PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, task.getCol(), task.getRow(), task.save(new NBTTagCompound())));
         }
     }
 

@@ -33,6 +33,6 @@ public class GuiEncoderInventory extends GuiEncoderBase
 
         int containerWidth = (this.width - this.xSize) / 2;
         int containerHeight = (this.height - this.ySize) / 2;
-        this.drawTexturedModalRect(containerWidth, containerHeight, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(containerWidth, containerHeight-10, 0, 0, this.xSize, this.ySize);
     }
 }
