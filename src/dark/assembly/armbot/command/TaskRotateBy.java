@@ -1,5 +1,7 @@
 package dark.assembly.armbot.command;
 
+import java.util.List;
+
 import universalelectricity.core.vector.Vector2;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -83,5 +85,13 @@ public class TaskRotateBy extends TaskBaseArmbot
     public TaskBaseProcess clone()
     {
         return new TaskRotateBy();
+    }
+
+    @Override
+    public void getToolTips(List<String> list)
+    {
+        super.getToolTips(list);
+        list.add(" Yaw:   " + this.targetRotationYaw);
+        list.add(" Pitch: " + this.targetRotationPitch);
     }
 }

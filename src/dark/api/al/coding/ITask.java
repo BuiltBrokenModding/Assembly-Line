@@ -77,6 +77,9 @@ public interface ITask extends Cloneable
     /** Location of the texture in the sheet */
     public Vector2 getTextureUV();
 
+    /** Passes in a list so that the task can add to the tool tip render */
+    public void getToolTips(List<String> list);
+
     /** Used mainly for display purposes in the encoder */
     public static enum TaskType
     {

@@ -1,7 +1,7 @@
 package dark.api.al.coding.args;
 
 /** Used to store arguments in a way that can be easier to read, limit, and understand
- * 
+ *
  * @author DarkGuardsman */
 public class ArgumentData
 {
@@ -15,7 +15,7 @@ public class ArgumentData
     }
 
     /** Sets the value
-     * 
+     *
      * @return true if the value was accepted */
     public boolean setData(Object object)
     {
@@ -48,5 +48,11 @@ public class ArgumentData
     {
         //Null is invalide since the object is used to understand data types. Without data the encoder can't use the value and will remove it
         return storedValue != null;
+    }
+
+    /** Used by things like a gui to give a warning such as limits of data this can accept */
+    public String warning()
+    {
+        return "";
     }
 }

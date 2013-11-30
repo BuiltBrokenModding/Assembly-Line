@@ -1,5 +1,7 @@
 package dark.assembly.armbot.command;
 
+import java.util.List;
+
 import net.minecraft.nbt.NBTTagCompound;
 
 import com.builtbroken.common.science.units.UnitHelper;
@@ -83,6 +85,13 @@ public class TaskIdle extends TaskBaseProcess
     public boolean canUseTask(IProgrammableMachine device)
     {
         return true;
+    }
+
+    @Override
+    public void getToolTips(List<String> list)
+    {
+        super.getToolTips(list);
+        list.add(" Wait: " + this.totalIdleTime);
     }
 
 }

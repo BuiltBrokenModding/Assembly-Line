@@ -237,4 +237,9 @@ public abstract class TaskBase implements ITask, IMemorySlot
         return this.UV;
     }
 
+    public void getToolTips(List<String> list)
+    {
+        list.add(this.getMethodName());
+    }
+
 }

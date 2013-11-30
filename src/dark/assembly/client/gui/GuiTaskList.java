@@ -2,13 +2,10 @@ package dark.assembly.client.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
-import universalelectricity.core.vector.Vector2;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import dark.api.al.coding.IProgram;
@@ -116,7 +113,7 @@ public class GuiTaskList extends Gui implements IScroll
                     {
                         task = new TaskStart();
                     }
-                    if (actualRow == this.program.getSize().intY() + 1 && colume == 0)
+                    if (actualRow == this.program.getSize().intY() + 1 && colume + this.scrollX - 1 == -1)
                     {
                         task = new TaskEnd();
                     }
@@ -139,11 +136,10 @@ public class GuiTaskList extends Gui implements IScroll
     protected void drawGuiContainerForegroundLayer(Minecraft mc, int cx, int cy)
     {
         ITask task = this.getTaskAt(cx, cy);
-        if (task != null)
+        if (task != null && coder != null)
         {
-            this.drawTooltip(mc, xPos - cy, yPos - cx + 10, "Task At: " + task.getMethodName());
+            coder.drawTooltip(cx - coder.getGuiLeft(), cy - coder.getGuiTop() + 10, task.getMethodName());
         }
-
     }
 
     public void mousePressed(int cx, int cy)
@@ -151,7 +147,6 @@ public class GuiTaskList extends Gui implements IScroll
         ITask task = this.getTaskAt(cx, cy);
         if (task != null)
         {
-            System.out.println("Task: " + task.getMethodName());
             FMLCommonHandler.instance().showGuiScreen(new GuiEditTask(this.coder, task));
         }
     }
@@ -169,74 +164,4 @@ public class GuiTaskList extends Gui implements IScroll
         }
         return null;
     }
-
-    public void drawTooltip(Minecraft mc, int x, int y, String... toolTips)
-    {
-        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-        RenderHelper.disableStandardItemLighting();
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
-
-        if (toolTips != null)
-        {
-            int var5 = 0;
-            int var6;
-            int var7;
-
-            for (var6 = 0; var6 < toolTips.length; ++var6)
-            {
-                var7 = mc.fontRenderer.getStringWidth(toolTips[var6]);
-
-                if (var7 > var5)
-                {
-                    var5 = var7;
-                }
-            }
-
-            var6 = x + 12;
-            var7 = y - 12;
-            int var9 = 8;
-
-            if (toolTips.length > 1)
-            {
-                var9 += 2 + (toolTips.length - 1) * 10;
-            }
-
-            if (y + var7 + var9 + 6 > 20)
-            {
-                var7 = 20 - var9 - y - 6;
-            }
-
-            this.zLevel = 300.0F;
-            int var10 = -267386864;
-            this.drawGradientRect(var6 - 3, var7 - 4, var6 + var5 + 3, var7 - 3, var10, var10);
-            this.drawGradientRect(var6 - 3, var7 + var9 + 3, var6 + var5 + 3, var7 + var9 + 4, var10, var10);
-            this.drawGradientRect(var6 - 3, var7 - 3, var6 + var5 + 3, var7 + var9 + 3, var10, var10);
-            this.drawGradientRect(var6 - 4, var7 - 3, var6 - 3, var7 + var9 + 3, var10, var10);
-            this.drawGradientRect(var6 + var5 + 3, var7 - 3, var6 + var5 + 4, var7 + var9 + 3, var10, var10);
-            int var11 = 1347420415;
-            int var12 = (var11 & 16711422) >> 1 | var11 & -16777216;
-            this.drawGradientRect(var6 - 3, var7 - 3 + 1, var6 - 3 + 1, var7 + var9 + 3 - 1, var11, var12);
-            this.drawGradientRect(var6 + var5 + 2, var7 - 3 + 1, var6 + var5 + 3, var7 + var9 + 3 - 1, var11, var12);
-            this.drawGradientRect(var6 - 3, var7 - 3, var6 + var5 + 3, var7 - 3 + 1, var11, var11);
-            this.drawGradientRect(var6 - 3, var7 + var9 + 2, var6 + var5 + 3, var7 + var9 + 3, var12, var12);
-
-            for (int var13 = 0; var13 < toolTips.length; ++var13)
-            {
-                String var14 = "\u00a77" + toolTips[var13];
-
-                mc.fontRenderer.drawStringWithShadow(var14, var6, var7, -1);
-
-                if (var13 == 0)
-                {
-                    var7 += 2;
-                }
-
-                var7 += 10;
-            }
-
-            this.zLevel = 0.0F;
-        }
-    }
-
 }

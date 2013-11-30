@@ -44,6 +44,7 @@ public class GuiEditTask extends GuiBase
     {
         super.initGui();
         this.drawButtons();
+        Keyboard.enableRepeatEvents(true);
     }
 
     public void drawButtons()
@@ -61,12 +62,13 @@ public class GuiEditTask extends GuiBase
 
         if (eArgs != null && !eArgs.isEmpty())
         {
-            int i = 0;
             this.argTextBoxes = new GuiTextField[eArgs.size()];
-            for (ArgumentData arg : eArgs)
+            for (int i = 0; i < this.argTextBoxes.length; i++)
             {
-                this.argTextBoxes[i] = new GuiTextField(this.fontRenderer, width + 12, height + 165, 135, 11);
+                ArgumentData arg = eArgs.get(i);
+                this.argTextBoxes[i] = new GuiTextField(this.fontRenderer, (this.width - this.guiSize.intX()) / 2 + 60, (this.height - this.guiSize.intY()) / 2 + 64 + (i * this.ySpacing), 30, 10);
                 this.argTextBoxes[i].setMaxStringLength(30);
+                this.argTextBoxes[i].setVisible(true);
                 if (args.containsKey(arg.getName()))
                 {
                     this.argTextBoxes[i].setText("" + args.get(arg.getName()));
@@ -75,10 +77,9 @@ public class GuiEditTask extends GuiBase
                 {
                     this.argTextBoxes[i].setText("" + arg.getData());
                 }
-                i++;
             }
         }
-        Keyboard.enableRepeatEvents(true);
+
     }
 
     @Override
@@ -176,12 +177,15 @@ public class GuiEditTask extends GuiBase
         int containerWidth = (this.width - this.guiSize.intX()) / 2;
         int containerHeight = (this.height - this.guiSize.intY()) / 2;
         this.drawTexturedModalRect(containerWidth, containerHeight, 0, 0, this.guiSize.intX(), this.guiSize.intY());
-        for (int i = 0; i < this.argTextBoxes.length; i++)
+        if (this.argTextBoxes != null)
         {
-            GuiTextField box = this.argTextBoxes[i];
-            if (box != null)
+            for (int i = 0; i < this.argTextBoxes.length; i++)
             {
-                box.drawTextBox();
+                GuiTextField box = this.argTextBoxes[i];
+                if (box != null)
+                {
+                    box.drawTextBox();
+                }
             }
         }
     }
@@ -203,6 +207,7 @@ public class GuiEditTask extends GuiBase
             {
                 i++;
                 this.fontRenderer.drawString(arg.getName() + ":", (int) ((this.guiSize.intX() / 2) - 70), 45 + (i * this.ySpacing), 4210752);
+                this.fontRenderer.drawString(arg.warning(), (int) ((this.guiSize.intX() / 2) + 11), 45 + (i * this.ySpacing), 4210752);
             }
         }
         else

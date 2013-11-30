@@ -1,8 +1,10 @@
 package dark.api.al.coding.args;
 
+import universalelectricity.core.electricity.ElectricityDisplay;
+
 /** Used to create argument data for the encoder. Should only be used if the value needs to be
  * clearly limited inside the encoder display.
- * 
+ *
  * @author DarkGuardsman */
 public class ArgumentIntData extends ArgumentData
 {
@@ -19,5 +21,11 @@ public class ArgumentIntData extends ArgumentData
     public boolean isValid(Object object)
     {
         return super.isValid() && object instanceof Integer && ((Integer) object) >= min && ((Integer) object) <= max;
+    }
+
+    @Override
+    public String warning()
+    {
+        return "" + min + " - " + max;
     }
 }

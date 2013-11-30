@@ -1,5 +1,7 @@
 package dark.assembly.armbot.command;
 
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -120,5 +122,12 @@ public class TaskUse extends TaskBaseArmbot
     public TaskBaseProcess clone()
     {
         return new TaskUse();
+    }
+
+    @Override
+    public void getToolTips(List<String> list)
+    {
+        super.getToolTips(list);
+        list.add(" Repeat:   " + this.times);
     }
 }
