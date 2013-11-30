@@ -1,14 +1,21 @@
 package dark.assembly.client.gui;
 
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import dark.assembly.AssemblyLine;
 import dark.assembly.machine.encoder.TileEntityEncoder;
+import dark.core.prefab.invgui.GuiButtonImage;
+import dark.core.prefab.invgui.GuiButtonImage.ButtonIcon;
 
 public class GuiEncoderCoder extends GuiEncoderBase
 {
     public static final ResourceLocation TEXTURE_CODE_BACK = new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.GUI_DIRECTORY + "gui_encoder_coder.png");
     private GuiTaskList taskListGui;
+    GuiButtonImage left, right, up, down;
 
     public GuiEncoderCoder(InventoryPlayer player, TileEntityEncoder tileEntity)
     {
@@ -20,16 +27,85 @@ public class GuiEncoderCoder extends GuiEncoderBase
     {
         super.initGui();
         this.getTaskListElement(true);
+        left = new GuiButtonImage(3, containerWidth + 13, containerHeight + 140, ButtonIcon.ARROW_LEFT);
+        this.buttonList.add(left);
+        right = new GuiButtonImage(4, containerWidth + 147, containerHeight + 140, ButtonIcon.ARROW_RIGHT);
+        this.buttonList.add(right);
+        up = new GuiButtonImage(5, containerWidth + 147, containerHeight + 75, ButtonIcon.ARROW_UP);
+        this.buttonList.add(up);
+        down = new GuiButtonImage(6, containerWidth + 147, containerHeight + 90, ButtonIcon.ARROW_DOWN);
+        this.buttonList.add(down);
 
+    }
+
+    @Override
+    protected void actionPerformed(GuiButton button)
+    {
+        super.actionPerformed(button);
+        switch (button.id)
+        {
+            case 3:
+                getTaskListElement().scrollSide(-1);
+                break;
+            case 4:
+                getTaskListElement().scrollSide(1);
+                break;
+            case 5:
+                getTaskListElement().scroll(-1);
+                break;
+            case 6:
+                getTaskListElement().scroll(1);
+                break;
+        }
     }
 
     protected GuiTaskList getTaskListElement(boolean renew)
     {
         if (taskListGui == null || renew)
         {
-            taskListGui = new GuiTaskList(this.tileEntity, this.containerWidth + 25, this.containerHeight + 15);
+            if (taskListGui != null)
+            {
+                taskListGui.xPos = this.containerWidth + 25;
+                taskListGui.yPos = this.containerHeight + 15;
+            }
+            else
+            {
+                taskListGui = new GuiTaskList(this.tileEntity, this, this.containerWidth + 25, this.containerHeight + 15);
+            }
         }
         return this.taskListGui;
+    }
+
+    @Override
+    public void handleMouseInput()
+    {
+        super.handleMouseInput();
+        int wheel = Mouse.getEventDWheel();
+        if (wheel > 0)
+        {
+            this.getTaskListElement().scroll(-2);
+        }
+        else if (wheel < 0)
+        {
+            this.getTaskListElement().scroll(2);
+        }
+    }
+
+    @Override
+    protected void keyTyped(char character, int keycode)
+    {
+        if (keycode == Keyboard.KEY_ESCAPE)
+        {
+            this.mc.thePlayer.closeScreen();
+        }
+        else if (keycode == 200) // PAGE UP (no constant)
+        {
+            this.getTaskListElement().scroll(-1);
+        }
+        else if (keycode == 208) // PAGE DOWN (no constant)
+        {
+            this.getTaskListElement().scroll(1);
+        }
     }
 
     protected GuiTaskList getTaskListElement()

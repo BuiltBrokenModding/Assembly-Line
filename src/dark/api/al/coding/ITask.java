@@ -55,10 +55,10 @@ public interface ITask extends Cloneable
      * a new version of this command */
     public NBTTagCompound save(NBTTagCompound nbt);
 
-    /** Saves the current progress of the current command */
+    /** Reads the progress of the command if it was saved mid process */
     public ITask loadProgress(NBTTagCompound nbt);
 
-    /** Reads the progress of the command if it was saved mid process */
+    /** Saves the current progress of the current command */
     public NBTTagCompound saveProgress(NBTTagCompound nbt);
 
     /** Can this task function for this machine. Only do basic checks here as its only used to make
@@ -80,22 +80,21 @@ public interface ITask extends Cloneable
     /** Used mainly for display purposes in the encoder */
     public static enum TaskType
     {
-        DATA("Data", 4, 2),
-        DEFINEDPROCESS("Defined Process", 2, 1),
-        PROCESS("Process", 2, 2),
-        DECISION("Decision", 2, 3),
-        START("Start", 3, 5),
-        END("End", 3, 5);
+        DATA("Data", 120, 40),
+        DEFINEDPROCESS("Defined Process", 40, 40),
+        PROCESS("Process", 60, 40),
+        DECISION("Decision", 80, 40),
+        START("Start", 20, 40),
+        END("End", 100, 40);
         public final String name;
-        public final int uu, vv;
+        public final Vector2 UV;
 
         public static final ResourceLocation TEXTURE = new ResourceLocation("dark", "textures/gui/gui_coder_icons.png");
 
         private TaskType(String name, int uu, int vv)
         {
             this.name = name;
-            this.uu = uu;
-            this.vv = vv;
+            this.UV = new Vector2(uu, vv);
         }
     }
 }

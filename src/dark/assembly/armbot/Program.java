@@ -100,13 +100,13 @@ public class Program implements IProgram
         if (task != null)
         {
             task.setPosition(col, row);
-            if (task.getRow() > this.width)
+            if (task.getCol() > this.width)
             {
-                this.width = task.getRow();
+                this.width = task.getCol();
             }
-            if (task.getCol() > this.hight)
+            if (task.getRow() > this.hight)
             {
-                this.hight = task.getCol();
+                this.hight = task.getRow();
             }
             this.tasks.put(new Vector2(col, row), task);
         }

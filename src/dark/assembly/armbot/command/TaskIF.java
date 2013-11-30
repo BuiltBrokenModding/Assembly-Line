@@ -23,6 +23,7 @@ public class TaskIF extends TaskBaseLogic
         super("IF");
         this.defautlArguments.add(new ArgumentData("check", "statement"));
         this.defautlArguments.add(new ArgumentData("compare", "statement"));
+        this.UV = new Vector2(0, 120);
     }
 
     public TaskIF(ITask trueExit, ITask falseExit)

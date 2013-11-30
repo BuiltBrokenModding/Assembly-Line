@@ -10,14 +10,18 @@ import org.lwjgl.opengl.GL12;
 
 import universalelectricity.core.vector.Vector2;
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
 import dark.api.al.coding.IProgram;
 import dark.api.al.coding.IRedirectTask;
 import dark.api.al.coding.ITask;
 import dark.assembly.armbot.Program;
+import dark.assembly.armbot.command.TaskDrop;
 import dark.assembly.armbot.command.TaskEnd;
 import dark.assembly.armbot.command.TaskGOTO;
 import dark.assembly.armbot.command.TaskGive;
+import dark.assembly.armbot.command.TaskGrabItem;
 import dark.assembly.armbot.command.TaskIF;
+import dark.assembly.armbot.command.TaskRotateTo;
 import dark.assembly.armbot.command.TaskStart;
 import dark.core.interfaces.IScroll;
 
@@ -27,7 +31,7 @@ import dark.core.interfaces.IScroll;
 public class GuiTaskList extends Gui implements IScroll
 {
     protected IProgram program;
-    protected int scroll = 0;
+    protected int scrollY = 0, scrollX;
 
     protected TileEntity entity;
 
@@ -36,43 +40,35 @@ public class GuiTaskList extends Gui implements IScroll
 
     int xPos, yPos;
     int countX = 6, countY = 7;
+    GuiEncoderCoder coder;
 
-    public GuiTaskList(TileEntity entity, int x, int y)
+    public GuiTaskList(TileEntity entity, GuiEncoderCoder coder, int x, int y)
     {
         this.xPos = x;
         this.yPos = y;
+        this.coder = coder;
 
         program = new Program();
-        program.setTaskAt(0, 0, new TaskGive());
-        program.setTaskAt(0, 1, new TaskIF());
-        program.setTaskAt(0, 2, new TaskGive());
-        program.setTaskAt(0, 3, new TaskGive());
-        program.setTaskAt(0, 4, new TaskGive());
-        program.setTaskAt(0, 5, new TaskGive());
+        program.setTaskAt(0, 0, new TaskRotateTo());
+        program.setTaskAt(0, 1, new TaskDrop());
+        program.setTaskAt(0, 2, new TaskRotateTo());
+        program.setTaskAt(0, 3, new TaskGrabItem());
+        program.setTaskAt(0, 4, new TaskIF());
+        program.setTaskAt(0, 5, new TaskRotateTo());
         program.setTaskAt(0, 6, new TaskGive());
-        program.setTaskAt(0, 7, new TaskGive());
-        program.setTaskAt(0, 8, new TaskGive());
-        program.setTaskAt(0, 9, new TaskGive());
 
-        program.setTaskAt(1, 1, new TaskGive());
-        program.setTaskAt(1, 2, new TaskIF());
-        program.setTaskAt(1, 3, new TaskGive());
-        program.setTaskAt(1, 4, new TaskGive());
+        program.setTaskAt(1, 4, new TaskRotateTo());
         program.setTaskAt(1, 5, new TaskGive());
-        TaskGOTO ifEixt = new TaskGOTO();
-        ifEixt.setExitPoint(0, new Vector2(0, 6));
-        program.setTaskAt(1, 6, ifEixt);
+        program.setTaskAt(1, 6, new TaskGOTO(0, 6));
 
-        program.setTaskAt(2, 2, new TaskGive());
-        program.setTaskAt(2, 3, new TaskGive());
-        program.setTaskAt(2, 4, new TaskGive());
-        program.setTaskAt(2, 5, new TaskGive());
-        program.setTaskAt(2, 6, new TaskGive());
-        program.setTaskAt(2, 7, new TaskGive());
-        TaskGOTO ifEixt2 = new TaskGOTO();
-        ifEixt2.setExitPoint(0, new Vector2(1, 8));
-        program.setTaskAt(2, 8, ifEixt2);
-        program.init(null);
+        if (program.getSize().intX() < (this.countX / 2))
+        {
+            this.scrollX = -2;
+        }
+        else
+        {
+            this.scrollX = 0;
+        }
 
     }
 
@@ -84,35 +80,39 @@ public class GuiTaskList extends Gui implements IScroll
     @Override
     public void scroll(int amount)
     {
-        this.scroll += amount;
+        this.scrollY += amount;
+    }
+
+    public void scrollSide(int i)
+    {
+        this.scrollX += i;
     }
 
     @Override
     public void setScroll(int length)
     {
-        this.scroll = length;
+        this.scrollY = length;
     }
 
     @Override
     public int getScroll()
     {
-        return this.scroll;
+        return this.scrollY;
     }
 
     public void drawConsole(Minecraft mc)
     {
-        //Draw icons for task
-        FMLClientHandler.instance().getClient().renderEngine.bindTexture(ITask.TaskType.TEXTURE);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         for (int colume = 0; colume < countX; colume++)
         {
+            int actualCol = colume + this.scrollX;
             for (int row = 0; row < countY; row++)
             {
-                int actualRow = row + this.scroll - 1;
+                int actualRow = row + this.scrollY - 1;
                 if (actualRow <= this.program.getSize().intY() + 1 && actualRow >= -1)
                 {
-                    ITask task = this.program.getTaskAt(colume, actualRow);
-                    if (actualRow == -1 && colume == 0)
+                    ITask task = this.program.getTaskAt(actualCol, actualRow);
+                    if (actualRow == -1 && colume + this.scrollX - 1 == -1)
                     {
                         task = new TaskStart();
                     }
@@ -127,6 +127,7 @@ public class GuiTaskList extends Gui implements IScroll
                     }
                     else
                     {
+                        FMLClientHandler.instance().getClient().renderEngine.bindTexture(ITask.TaskType.TEXTURE);
                         this.drawTexturedModalRect(xPos + (20 * colume), yPos + (20 * row), 0, 40, 20, 20);
                     }
                 }
@@ -147,11 +148,11 @@ public class GuiTaskList extends Gui implements IScroll
 
     public void mousePressed(int cx, int cy)
     {
-        System.out.println("Player clicked at " + cx + "x " + cy + "y ");
         ITask task = this.getTaskAt(cx, cy);
         if (task != null)
         {
-            System.out.println("Task is at " + task.getRow() + "r " + task.getCol() + "c " + task.getMethodName());
+            System.out.println("Task: " + task.getMethodName());
+            FMLCommonHandler.instance().showGuiScreen(new GuiEditTask(this.coder, task));
         }
     }
 
@@ -159,11 +160,11 @@ public class GuiTaskList extends Gui implements IScroll
     {
         if (cx >= this.xPos && cz >= this.yPos && cx < this.xPos + (this.countX * 20) + 20 && cz < this.yPos + (this.countX * 20) + 20)
         {
-            int row = (cx - this.xPos) / 20;
-            int col = (cz - this.yPos) / 20;
+            int col = ((cx - this.xPos) / 20) + this.scrollX;
+            int row = ((cz - this.yPos) / 20) + this.scrollY;
             if (this.program != null)
             {
-                return this.program.getTaskAt(col, row);
+                return this.program.getTaskAt(col, row - 1);
             }
         }
         return null;
@@ -237,4 +238,5 @@ public class GuiTaskList extends Gui implements IScroll
             this.zLevel = 0.0F;
         }
     }
+
 }

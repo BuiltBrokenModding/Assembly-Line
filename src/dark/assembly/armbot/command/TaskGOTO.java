@@ -22,6 +22,12 @@ public class TaskGOTO extends TaskBase implements IRedirectTask
         super("GoTo", TaskType.DECISION);
     }
 
+    public TaskGOTO(int x, int y)
+    {
+        this();
+        this.taskPos = new Vector2(x, y);
+    }
+
     public TaskGOTO(boolean render)
     {
         this();

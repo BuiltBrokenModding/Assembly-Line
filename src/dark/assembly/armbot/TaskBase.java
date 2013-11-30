@@ -29,6 +29,8 @@ public abstract class TaskBase implements ITask, IMemorySlot
     protected int col;
     protected int row;
 
+    protected Vector2 UV;
+
     /** The parameters this command */
     protected HashMap<String, Object> aruguments = new HashMap<String, Object>();
     protected List<ArgumentData> defautlArguments = new ArrayList<ArgumentData>();
@@ -38,6 +40,7 @@ public abstract class TaskBase implements ITask, IMemorySlot
     {
         this.methodName = name;
         this.taskType = tasktype;
+        this.UV = this.taskType.UV;
     }
 
     @Override
@@ -110,26 +113,45 @@ public abstract class TaskBase implements ITask, IMemorySlot
     @Override
     public Object getArg(String name)
     {
-        if (this.aruguments.containsKey(name))
+        if (this.getArgs().containsKey(name))
         {
-            return this.aruguments.get(name);
+            return this.getArgs().get(name);
         }
         return null;
+    }
+
+    public void setArg(String argName, Object obj)
+    {
+        if (this.getArgs() != null && this.getArgs().containsKey(argName))
+        {
+            this.getArgs().put(argName, obj);
+        }
     }
 
     @Override
     public void setArgs(HashMap<String, Object> args)
     {
-        this.aruguments = args;
         if (this.aruguments == null)
         {
             this.aruguments = new HashMap();
         }
+        this.aruguments = args;
     }
 
     @Override
     public HashMap<String, Object> getArgs()
     {
+        if (this.aruguments == null)
+        {
+            this.aruguments = new HashMap();
+            if (this.defautlArguments != null && !this.defautlArguments.isEmpty())
+            {
+                for (ArgumentData obj : this.defautlArguments)
+                {
+                    this.aruguments.put(obj.getName(), obj.getData());
+                }
+            }
+        }
         return this.aruguments;
     }
 
@@ -206,15 +228,13 @@ public abstract class TaskBase implements ITask, IMemorySlot
     @Override
     public ResourceLocation getTextureSheet()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return ITask.TaskType.TEXTURE;
     }
 
     @Override
     public Vector2 getTextureUV()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return this.UV;
     }
 
 }

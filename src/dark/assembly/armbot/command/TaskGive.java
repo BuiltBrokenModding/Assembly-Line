@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.science.units.UnitHelper;
@@ -32,6 +33,7 @@ public class TaskGive extends TaskBaseArmbot
         this.defautlArguments.add(new ArgumentIntData("blockID", -1, Block.blocksList.length - 1, -1));
         this.defautlArguments.add(new ArgumentIntData("blockMeta", -1, 15, -1));
         this.defautlArguments.add(new ArgumentIntData("stackSize", -1, 64, -1));
+        this.UV = new Vector2(60, 80);
     }
 
     @Override

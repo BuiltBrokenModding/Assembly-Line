@@ -1,5 +1,6 @@
 package dark.assembly.armbot.command;
 
+import universalelectricity.core.vector.Vector2;
 import net.minecraft.nbt.NBTTagCompound;
 
 import com.builtbroken.common.science.units.UnitHelper;
@@ -11,7 +12,7 @@ import dark.assembly.armbot.TaskBaseProcess;
 import dark.core.helpers.MathHelper;
 
 /** Rotates the armbot to a specific direction. If not specified, it will turn right.
- * 
+ *
  * @author DarkGuardsman */
 public class TaskRotateTo extends TaskBaseArmbot
 {
@@ -22,13 +23,16 @@ public class TaskRotateTo extends TaskBaseArmbot
         super("RotateTo");
         this.defautlArguments.add(new ArgumentIntData("yaw", 0, 360, 0));
         this.defautlArguments.add(new ArgumentIntData("pitch", 0, 360, 0));
+        this.UV = new Vector2(100, 80);
     }
 
     public TaskRotateTo(int yaw, int pitch)
     {
-        super("RotateTo");
-        this.defautlArguments.add(new ArgumentIntData("yaw", yaw, 360, 0));
-        this.defautlArguments.add(new ArgumentIntData("pitch", pitch, 360, 0));
+        this();
+        this.targetRotationYaw = yaw;
+        this.targetRotationPitch = pitch;
+        this.setArg("yaw", yaw);
+        this.setArg("pitch", pitch);
     }
 
     @Override

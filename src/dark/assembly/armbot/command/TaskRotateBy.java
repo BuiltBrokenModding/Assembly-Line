@@ -1,5 +1,6 @@
 package dark.assembly.armbot.command;
 
+import universalelectricity.core.vector.Vector2;
 import net.minecraft.nbt.NBTTagCompound;
 
 import com.builtbroken.common.science.units.UnitHelper;
@@ -11,7 +12,7 @@ import dark.assembly.armbot.TaskBaseProcess;
 import dark.core.helpers.MathHelper;
 
 /** Rotates an armbot by a set amount
- * 
+ *
  * @author DarkGuardsman */
 public class TaskRotateBy extends TaskBaseArmbot
 {
@@ -25,6 +26,7 @@ public class TaskRotateBy extends TaskBaseArmbot
         super("RotateBy");
         this.defautlArguments.add(new ArgumentIntData("yaw", 0, 360, 0));
         this.defautlArguments.add(new ArgumentIntData("pitch", 0, 360, 0));
+        this.UV = new Vector2(80, 80);
     }
 
     @Override
