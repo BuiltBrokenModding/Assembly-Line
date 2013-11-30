@@ -177,7 +177,7 @@ public class BlockGasOre extends Block implements IGasBlock
     @SideOnly(Side.CLIENT)
     public int getBlockColor()
     {
-        return Color.red.getRGB();
+        return Color.yellow.getRGB();
     }
 
     @Override
