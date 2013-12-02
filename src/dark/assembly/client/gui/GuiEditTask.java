@@ -32,9 +32,11 @@ public class GuiEditTask extends GuiBase implements IMessageBoxDialog
     int xStart = 13, yStart = 50;
     protected GuiTextField[] argTextBoxes;
     int getFocus = -1;
+    boolean newTask = false;
 
-    public GuiEditTask(GuiEncoderCoder gui, ITask task)
+    public GuiEditTask(GuiEncoderCoder gui, ITask task, boolean newTask)
     {
+        this.newTask = newTask;
         this.guiSize.y = 380 / 2;
         this.gui = gui;
         this.task = task;
@@ -60,8 +62,8 @@ public class GuiEditTask extends GuiBase implements IMessageBoxDialog
         this.buttonList.add(new GuiButton(0, (this.width - this.guiSize.intX()) / 2 + 13, (this.height - this.guiSize.intY()) / 2 + 135, 50, 20, "Save"));
 
         this.buttonList.add(new GuiButton(1, (this.width - this.guiSize.intX()) / 2 + 68, (this.height - this.guiSize.intY()) / 2 + 135, 50, 20, "Cancel"));
-
-        this.buttonList.add(new GuiButton(2, (this.width - this.guiSize.intX()) / 2 + 125, (this.height - this.guiSize.intY()) / 2 + 135, 40, 20, "Del"));
+        if (!this.newTask)
+            this.buttonList.add(new GuiButton(2, (this.width - this.guiSize.intX()) / 2 + 125, (this.height - this.guiSize.intY()) / 2 + 135, 40, 20, "Del"));
 
         if (task.getArgs() != null)
         {
@@ -170,9 +172,21 @@ public class GuiEditTask extends GuiBase implements IMessageBoxDialog
                             i++;
                         }
                     }
-                    this.gui.getTile().updateTask(this.editTask);
+                    if (!this.newTask)
+                    {
+                        this.gui.getTile().updateTask(this.editTask);
+                        FMLCommonHandler.instance().showGuiScreen(this.gui);
+                    }
+                    else
+                    {
+                        new GuiMessageBox(this, 1, "Create new Task", "Are you sure?").show();
+                    }
                 }
-                FMLCommonHandler.instance().showGuiScreen(this.gui);
+                else
+                {
+                    FMLCommonHandler.instance().showGuiScreen(this.gui);
+                }
+
                 break;
             case 2:
                 new GuiMessageBox(this, 0, "Remove Task", "Are you sure?").show();
@@ -237,6 +251,15 @@ public class GuiEditTask extends GuiBase implements IMessageBoxDialog
         {
             this.gui.getTile().removeTask(new Vector2(this.editTask.getCol(), this.editTask.getRow()));
             FMLCommonHandler.instance().showGuiScreen(this.gui);
+        }
+        if (id == 1)
+        {
+            if (yes)
+            {
+                this.gui.getTile().insertTask(this.editTask);
+                FMLCommonHandler.instance().showGuiScreen(this.gui);
+            }
+            this.gui.insertingTask = false;
         }
     }
 }

@@ -12,6 +12,7 @@ import dark.api.al.coding.IProgram;
 import dark.api.al.coding.IRedirectTask;
 import dark.api.al.coding.ITask;
 import dark.assembly.armbot.command.TaskEnd;
+import dark.assembly.armbot.command.TaskIdle;
 import dark.assembly.armbot.command.TaskStart;
 import dark.assembly.machine.encoder.TileEntityEncoder;
 import dark.core.interfaces.IScroll;
@@ -29,7 +30,7 @@ public class GuiTaskList extends Gui implements IScroll
     public String displayString;
 
     int xPos, yPos;
-    int countX = 6, countY = 7;
+    int countX = 6, countY = 6;
     GuiEncoderCoder coder;
 
     public GuiTaskList(TileEntity entity, GuiEncoderCoder coder, int x, int y)
@@ -106,7 +107,7 @@ public class GuiTaskList extends Gui implements IScroll
                     ITask task = this.getProgram().getTaskAt(actualCol, actualRow);
                     if (actualRow == -1 && colume + this.scrollX - 1 == -1)
                     {
-                       task = new TaskStart();
+                        task = new TaskStart();
                     }
                     else if (actualRow == this.getProgram().getSize().intY() + 1 && colume + this.scrollX - 1 == -1)
                     {
@@ -143,7 +144,14 @@ public class GuiTaskList extends Gui implements IScroll
         ITask task = this.getTaskAt(cx, cy);
         if (task != null)
         {
-            FMLCommonHandler.instance().showGuiScreen(new GuiEditTask(this.coder, task));
+            if (this.coder.insertingTask)
+            {
+                FMLCommonHandler.instance().showGuiScreen(new GuiEditTask(this.coder, new TaskIdle(), true));
+            }
+            else
+            {
+                FMLCommonHandler.instance().showGuiScreen(new GuiEditTask(this.coder, task, false));
+            }
         }
     }
 

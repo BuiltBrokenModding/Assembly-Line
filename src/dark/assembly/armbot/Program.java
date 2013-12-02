@@ -189,16 +189,14 @@ public class Program implements IProgram
     @Override
     public void insertTask(int col, int row, ITask task)
     {
+        System.out.println("Program inserting task");
         if (task != null)
         {
             if (this.getTaskAt(col, row) != null)
             {
                 this.moveAll(row, false);
             }
-            else
-            {
-                this.setTaskAt(col, row, task);
-            }
+            this.setTaskAt(col, row, task);
         }
     }
 

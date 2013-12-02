@@ -17,6 +17,9 @@ public class GuiEncoderCoder extends GuiEncoderBase
     public static final ResourceLocation TEXTURE_CODE_BACK = new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.GUI_DIRECTORY + "gui_encoder_coder.png");
     private GuiTaskList taskListGui;
     GuiButtonImage left, right, up, down;
+    GuiButton newTask;
+    String helpMessage = "";
+    boolean insertingTask = false;
 
     public GuiEncoderCoder(InventoryPlayer player, TileEntityEncoder tileEntity)
     {
@@ -28,14 +31,16 @@ public class GuiEncoderCoder extends GuiEncoderBase
     {
         super.initGui();
         this.getTaskListElement(true);
-        left = new GuiButtonImage(3, containerWidth + 13, containerHeight + 140, ButtonIcon.ARROW_LEFT);
+        left = new GuiButtonImage(3, containerWidth + 13, containerHeight + 120, ButtonIcon.ARROW_LEFT);
         this.buttonList.add(left);
-        right = new GuiButtonImage(4, containerWidth + 147, containerHeight + 140, ButtonIcon.ARROW_RIGHT);
+        right = new GuiButtonImage(4, containerWidth + 147, containerHeight + 120, ButtonIcon.ARROW_RIGHT);
         this.buttonList.add(right);
-        up = new GuiButtonImage(5, containerWidth + 147, containerHeight + 75, ButtonIcon.ARROW_UP);
+        up = new GuiButtonImage(5, containerWidth + 147, containerHeight + 30, ButtonIcon.ARROW_UP);
         this.buttonList.add(up);
-        down = new GuiButtonImage(6, containerWidth + 147, containerHeight + 90, ButtonIcon.ARROW_DOWN);
+        down = new GuiButtonImage(6, containerWidth + 147, containerHeight + 100, ButtonIcon.ARROW_DOWN);
         this.buttonList.add(down);
+        newTask = new GuiButton(7, containerWidth + 60, containerHeight + 135, 60, 10, "Add Task");
+        this.buttonList.add(newTask);
 
     }
 
@@ -58,6 +63,9 @@ public class GuiEncoderCoder extends GuiEncoderBase
                     break;
                 case 6:
                     getTaskListElement().scroll(1);
+                    break;
+                case 7:
+                    this.insertingTask = true;
                     break;
             }
         }
@@ -146,6 +154,15 @@ public class GuiEncoderCoder extends GuiEncoderBase
     {
         super.drawGuiContainerForegroundLayer(x, y);
         taskListGui.drawGuiContainerForegroundLayer(this.mc, x, y);
+        if(this.insertingTask)
+        {
+            this.helpMessage = "Click a task to create a new task";
+        }else
+        {
+            this.helpMessage = "";
+        }
+        this.fontRenderer.drawString(this.helpMessage, (int) (this.xSize / 2 - 82), 150, 4210752);
+
     }
 
     @Override
