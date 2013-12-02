@@ -17,9 +17,10 @@ public class GuiEncoderCoder extends GuiEncoderBase
     public static final ResourceLocation TEXTURE_CODE_BACK = new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.GUI_DIRECTORY + "gui_encoder_coder.png");
     private GuiTaskList taskListGui;
     GuiButtonImage left, right, up, down;
-    GuiButton newTask;
+    GuiButton newTask, newTask2;
     String helpMessage = "";
     boolean insertingTask = false;
+    boolean bellow = true;
 
     public GuiEncoderCoder(InventoryPlayer player, TileEntityEncoder tileEntity)
     {
@@ -39,8 +40,11 @@ public class GuiEncoderCoder extends GuiEncoderBase
         this.buttonList.add(up);
         down = new GuiButtonImage(6, containerWidth + 147, containerHeight + 100, ButtonIcon.ARROW_DOWN);
         this.buttonList.add(down);
-        newTask = new GuiButton(7, containerWidth + 60, containerHeight + 135, 60, 10, "Add Task");
+        newTask = new GuiButton(7, containerWidth + 15, containerHeight + 135, 70, 10, "Insert bellow");
         this.buttonList.add(newTask);
+        newTask2 = new GuiButton(8, containerWidth + 90, containerHeight + 135, 70, 10, "Insert Above");
+        newTask2.enabled = false; //TODO fix
+        this.buttonList.add(newTask2);
 
     }
 
@@ -66,6 +70,13 @@ public class GuiEncoderCoder extends GuiEncoderBase
                     break;
                 case 7:
                     this.insertingTask = true;
+                    this.bellow = true;
+                    this.helpMessage = "Click a task to create a new task";
+                    break;
+                case 8:
+                    this.insertingTask = true;
+                    this.bellow = false;
+                    this.helpMessage = "Click a task to create a new task";
                     break;
             }
         }
@@ -154,10 +165,7 @@ public class GuiEncoderCoder extends GuiEncoderBase
     {
         super.drawGuiContainerForegroundLayer(x, y);
         taskListGui.drawGuiContainerForegroundLayer(this.mc, x, y);
-        if(this.insertingTask)
-        {
-            this.helpMessage = "Click a task to create a new task";
-        }else
+        if(!this.insertingTask)
         {
             this.helpMessage = "";
         }

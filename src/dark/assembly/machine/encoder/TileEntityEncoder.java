@@ -153,7 +153,6 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
                     }
                     else if (id.equalsIgnoreCase(TileEntityEncoder.NEW_TASK_PACKET_ID))
                     {
-                        System.out.println("New task packet");
                         ITask task = TaskRegistry.getCommand(dis.readUTF());
                         task.setPosition(dis.readInt(), dis.readInt());
                         task.load(PacketHandler.instance().readNBTTagCompound(dis));
@@ -241,7 +240,6 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
         {
             if (this.worldObj.isRemote)
             {
-                System.out.println("New task request");
                 NBTTagCompound nbt = new NBTTagCompound();
                 editTask.save(nbt);
                 PacketDispatcher.sendPacketToServer(PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, TileEntityEncoder.NEW_TASK_PACKET_ID, editTask.getMethodName(), editTask.getCol(), editTask.getRow(), nbt));

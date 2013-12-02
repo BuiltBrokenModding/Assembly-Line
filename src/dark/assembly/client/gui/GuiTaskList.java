@@ -135,7 +135,7 @@ public class GuiTaskList extends Gui implements IScroll
         ITask task = this.getTaskAt(cx, cy);
         if (task != null && coder != null)
         {
-            coder.drawTooltip(cx - coder.getGuiLeft(), cy - coder.getGuiTop() + 10, task.getMethodName());
+            coder.drawTooltip(cx - coder.getGuiLeft(), cy - coder.getGuiTop() + 10, "[" + task.getRow() + "," + task.getCol() + "] " + task.getMethodName());
         }
     }
 
@@ -146,7 +146,27 @@ public class GuiTaskList extends Gui implements IScroll
         {
             if (this.coder.insertingTask)
             {
-                FMLCommonHandler.instance().showGuiScreen(new GuiEditTask(this.coder, new TaskIdle(), true));
+                ITask t = new TaskIdle();
+                if (this.coder.bellow)
+                {
+                    if (task instanceof TaskEnd)
+                    {
+                        this.coder.helpMessage = "Can't insert bellow end";
+                        return;
+                    }
+                    t.setPosition(task.getCol(), task.getRow() + 1);
+                }
+                else
+                {
+                    if (task instanceof TaskStart)
+                    {
+                        this.coder.helpMessage = "Can't insert above start";
+                        return;
+                    }
+                    t.setPosition(task.getCol(), task.getRow());
+                }
+
+                FMLCommonHandler.instance().showGuiScreen(new GuiEditTask(this.coder, t, true));
             }
             else
             {
@@ -161,7 +181,15 @@ public class GuiTaskList extends Gui implements IScroll
         {
             int col = ((cx - this.xPos) / 20) + this.scrollX;
             int row = ((cz - this.yPos) / 20) + this.scrollY;
-            if (this.getProgram() != null)
+            if (row == 0 && col == 0)
+            {
+                return new TaskStart();
+            }
+            else if (row == this.getProgram().getSize().intY() + 2 && col == 0)
+            {
+                return new TaskEnd();
+            }
+            else if (this.getProgram() != null)
             {
                 return this.getProgram().getTaskAt(col, row - 1);
             }

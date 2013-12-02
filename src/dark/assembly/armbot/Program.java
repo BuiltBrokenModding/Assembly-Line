@@ -22,7 +22,7 @@ public class Program implements IProgram
     protected HashMap<Vector2, ITask> tasks = new HashMap();
     protected HashMap<String, Object> varables = new HashMap();
     protected int width = 0, hight = 0;
-    boolean started = false;
+    boolean started = false, editing = false;
 
     @Override
     public void init(IProgrammableMachine machine)
@@ -97,29 +97,32 @@ public class Program implements IProgram
     @Override
     public void setTaskAt(int col, int row, ITask task)
     {
-        if (task != null)
+        if (!this.editing)
         {
-            task.setPosition(col, row);
-            if (task.getCol() > this.width)
+            if (task != null)
             {
-                this.width = task.getCol();
+                task.setPosition(col, row);
+                if (task.getCol() > this.width)
+                {
+                    this.width = task.getCol();
+                }
+                if (task.getRow() > this.hight)
+                {
+                    this.hight = task.getRow();
+                }
+                this.tasks.put(new Vector2(col, row), task);
             }
-            if (task.getRow() > this.hight)
+            else if (this.tasks.containsKey(new Vector2(col, row)))
             {
-                this.hight = task.getRow();
-            }
-            this.tasks.put(new Vector2(col, row), task);
-        }
-        else if (this.tasks.containsKey(new Vector2(col, row)))
-        {
-            this.tasks.remove(new Vector2(col, row));
-            if (col == this.hight && !this.isThereATaskInRow(this.hight))
-            {
-                this.hight--;
-            }
-            else if (!this.isThereATaskInRow(col))
-            {
-                this.moveAll(col, true);
+                this.tasks.remove(new Vector2(col, row));
+                if (col == this.hight && !this.isThereATaskInRow(this.hight))
+                {
+                    this.hight--;
+                }
+                else if (!this.isThereATaskInRow(col))
+                {
+                    this.moveAll(col, true);
+                }
             }
         }
     }
@@ -158,45 +161,53 @@ public class Program implements IProgram
      * @param up - true will move all the tasks up one, false will move all the tasks down one */
     public void moveAll(int row, boolean up)
     {
-        List<ITask> moveList = new ArrayList<ITask>();
-        final int move = up ? -1 : 1;
-        Vector2 targetPos;
-        ITask tagetTask;
-        /* Gather all task and remove them so they can be re-added wither there new positions */
-        for (int x = 0; x <= this.width; x++)
+        if (!this.editing)
         {
-            for (int y = row; y <= this.hight; y++)
+            this.editing = true;
+            List<ITask> moveList = new ArrayList<ITask>();
+            final int move = up ? -1 : 1;
+            Vector2 targetPos;
+            ITask tagetTask;
+            /* Gather all task and remove them so they can be re-added wither there new positions */
+            for (int x = 0; x <= this.width; x++)
             {
-                targetPos = new Vector2(x, y);
-                tagetTask = this.getTaskAt(x, y);
-                if (tagetTask != null)
+                for (int y = row; y <= this.hight; y++)
                 {
-                    //Add the task to the move list
-                    moveList.add(tagetTask);
-                    //Removes the task
-                    this.tasks.remove(targetPos);
+                    targetPos = new Vector2(x, y);
+                    tagetTask = this.getTaskAt(x, y);
+                    if (tagetTask != null)
+                    {
+                        //Add the task to the move list
+                        moveList.add(tagetTask);
+                        //Removes the task
+                        this.tasks.remove(targetPos);
+                    }
                 }
             }
+            /* Update all the task locations */
+            for (ITask moveTask : moveList)
+            {
+                this.setTaskAt(moveTask.getCol(), moveTask.getRow() + move, moveTask);
+            }
+            this.editing = false;
         }
-        /* Update all the task locations */
-        for (ITask moveTask : moveList)
-        {
-            this.setTaskAt(moveTask.getCol(), moveTask.getRow() + move, moveTask);
-        }
-        //TODO send to the client the updates map and key to unlock the delete button
     }
 
     @Override
     public void insertTask(int col, int row, ITask task)
     {
-        System.out.println("Program inserting task");
-        if (task != null)
+        if (task != null && !this.editing)
         {
             if (this.getTaskAt(col, row) != null)
             {
                 this.moveAll(row, false);
+                this.setTaskAt(col, row, task);
             }
-            this.setTaskAt(col, row, task);
+            else
+            {
+                this.setTaskAt(col, row, task);
+            }
+
         }
     }
 
