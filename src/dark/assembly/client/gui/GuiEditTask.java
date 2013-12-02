@@ -167,6 +167,7 @@ public class GuiEditTask extends GuiBase implements IMessageBoxDialog
                                     this.argTextBoxes[i].setText("");
                                 }
                             }
+                            i++;
                         }
                     }
                     this.gui.getTile().updateTask(this.editTask);

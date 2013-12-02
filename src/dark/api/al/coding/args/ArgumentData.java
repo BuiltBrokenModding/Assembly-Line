@@ -18,6 +18,7 @@ public class ArgumentData implements ISaveObj
     {
         this.name = name;
         this.defaultValue = defaultValue;
+        this.currentValue = defaultValue;
     }
 
     /** Sets the value

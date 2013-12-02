@@ -135,17 +135,14 @@ public abstract class TaskBase implements ITask
     {
         this.col = nbt.getInteger("col");
         this.row = nbt.getInteger("row");
-        System.out.println("\nLoading task data");
         if (this.getArgs() != null)
         {
             NBTTagCompound parms = nbt.getCompoundTag("args");
             for (ArgumentData arg : this.getArgs())
             {
-                System.out.println("Loading data for " + arg.getName());
                 Object obj = NBTFileHelper.loadObject(parms, arg.getName());
                 if (arg.isValid(obj))
                 {
-                    System.out.println("data is valid " + obj.toString());
                     arg.setData(obj);
                 }
             }
@@ -155,7 +152,6 @@ public abstract class TaskBase implements ITask
     @Override
     public void save(NBTTagCompound nbt)
     {
-        System.out.println("\nSaving task data");
         nbt.setInteger("col", this.col);
         nbt.setInteger("row", this.row);
         NBTTagCompound parms = new NBTTagCompound();
