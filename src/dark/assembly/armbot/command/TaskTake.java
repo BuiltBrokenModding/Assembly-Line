@@ -29,9 +29,9 @@ public class TaskTake extends TaskBaseArmbot
     public TaskTake()
     {
         super("Take");
-        this.defautlArguments.add(new ArgumentIntData("blockID", -1, Block.blocksList.length - 1, -1));
-        this.defautlArguments.add(new ArgumentIntData("blockMeta", -1, 15, -1));
-        this.defautlArguments.add(new ArgumentIntData("stackSize", -1, 64, -1));
+        this.args.add(new ArgumentIntData("blockID", -1, Block.blocksList.length - 1, -1));
+        this.args.add(new ArgumentIntData("blockMeta", -1, 15, -1));
+        this.args.add(new ArgumentIntData("stackSize", -1, 64, -1));
         this.UV = new Vector2(40, 80);
     }
 
@@ -86,15 +86,15 @@ public class TaskTake extends TaskBaseArmbot
     }
 
     @Override
-    public TaskTake load(NBTTagCompound taskCompound)
+    public void load(NBTTagCompound taskCompound)
     {
         super.load(taskCompound);
         this.stack = ItemStack.loadItemStackFromNBT(taskCompound.getCompoundTag("item"));
-        return this;
+
     }
 
     @Override
-    public NBTTagCompound save(NBTTagCompound taskCompound)
+    public void save(NBTTagCompound taskCompound)
     {
         super.save(taskCompound);
         if (stack != null)
@@ -103,7 +103,7 @@ public class TaskTake extends TaskBaseArmbot
             this.stack.writeToNBT(tag);
             taskCompound.setTag("item", tag);
         }
-        return taskCompound;
+
     }
 
     @Override

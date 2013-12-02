@@ -21,8 +21,8 @@ public class TaskIF extends TaskBaseLogic
     public TaskIF()
     {
         super("IF");
-        this.defautlArguments.add(new ArgumentData("check", "statement"));
-        this.defautlArguments.add(new ArgumentData("compare", "statement"));
+        this.args.add(new ArgumentData("check", "statement"));
+        this.args.add(new ArgumentData("compare", "statement"));
         this.UV = new Vector2(0, 120);
     }
 

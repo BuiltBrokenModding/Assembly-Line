@@ -85,15 +85,14 @@ public class TaskGOTO extends TaskBase implements IRedirectTask
     }
 
     @Override
-    public TaskGOTO load(NBTTagCompound nbt)
+    public void load(NBTTagCompound nbt)
     {
         super.loadProgress(nbt);
         this.taskPos = new Vector2(nbt.getDouble("entryX"), (nbt.getDouble("entryY")));
-        return this;
     }
 
     @Override
-    public NBTTagCompound save(NBTTagCompound nbt)
+    public void save(NBTTagCompound nbt)
     {
         super.saveProgress(nbt);
         if (this.task != null)
@@ -101,7 +100,6 @@ public class TaskGOTO extends TaskBase implements IRedirectTask
             nbt.setDouble("entryX", this.task.getCol());
             nbt.setDouble("entryY", this.task.getRow());
         }
-        return nbt;
     }
 
     @Override

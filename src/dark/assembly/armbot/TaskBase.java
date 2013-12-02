@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import universalelectricity.core.vector.Vector2;
-import dark.api.al.coding.IMemorySlot;
 import dark.api.al.coding.IProgram;
 import dark.api.al.coding.IProgrammableMachine;
 import dark.api.al.coding.ITask;
@@ -16,7 +15,7 @@ import dark.api.al.coding.args.ArgumentData;
 import dark.api.save.NBTFileHelper;
 
 /** @author DarkGuardsman */
-public abstract class TaskBase implements ITask, IMemorySlot
+public abstract class TaskBase implements ITask
 {
     /** Program this is part of. Can be null while stores as a prefab waiting to be copied */
     protected IProgram program;
@@ -32,9 +31,7 @@ public abstract class TaskBase implements ITask, IMemorySlot
     protected Vector2 UV;
 
     /** The parameters this command */
-    protected HashMap<String, Object> aruguments = new HashMap<String, Object>();
-    protected List<ArgumentData> defautlArguments = new ArrayList<ArgumentData>();
-    protected HashMap<String, Object> activeMemory = new HashMap<String, Object>();
+    protected List<ArgumentData> args = new ArrayList<ArgumentData>();
 
     public TaskBase(String name, TaskType tasktype)
     {
@@ -52,25 +49,7 @@ public abstract class TaskBase implements ITask, IMemorySlot
     @Override
     public void reset()
     {
-        this.activeMemory.clear();
-    }
 
-    @Override
-    public Object getMemory(String name)
-    {
-        return this.activeMemory.get(name);
-    }
-
-    @Override
-    public HashMap<String, Object> getMemory()
-    {
-        return this.activeMemory;
-    }
-
-    @Override
-    public HashMap<String, Object> getSavedData()
-    {
-        return null;
     }
 
     @Override
@@ -113,91 +92,78 @@ public abstract class TaskBase implements ITask, IMemorySlot
     @Override
     public Object getArg(String name)
     {
-        if (this.getArgs().containsKey(name))
+        if (this.getArgs() != null)
         {
-            return this.getArgs().get(name);
+            for (ArgumentData arg : this.getArgs())
+            {
+                if (arg.getName().equalsIgnoreCase(name))
+                {
+                    return arg.getData();
+                }
+            }
         }
         return null;
     }
 
+    @Override
     public void setArg(String argName, Object obj)
     {
-        if (this.getArgs() != null && this.getArgs().containsKey(argName))
+        if (this.getArgs() != null)
         {
-            this.getArgs().put(argName, obj);
-        }
-    }
-
-    @Override
-    public void setArgs(HashMap<String, Object> args)
-    {
-        if (this.aruguments == null)
-        {
-            this.aruguments = new HashMap();
-        }
-        this.aruguments = args;
-    }
-
-    @Override
-    public HashMap<String, Object> getArgs()
-    {
-        if (this.aruguments == null)
-        {
-            this.aruguments = new HashMap();
-            if (this.defautlArguments != null && !this.defautlArguments.isEmpty())
+            for (ArgumentData arg : this.getArgs())
             {
-                for (ArgumentData obj : this.defautlArguments)
+                if (arg.getName().equalsIgnoreCase(argName))
                 {
-                    this.aruguments.put(obj.getName(), obj.getData());
+                    arg.setData(obj);
+                    break;
                 }
             }
         }
-        return this.aruguments;
     }
 
     @Override
-    public List<ArgumentData> getEncoderParms()
+    public List<ArgumentData> getArgs()
     {
-        return this.defautlArguments;
+        return this.args;
     }
 
     @Override
     public abstract TaskBase clone();
 
     @Override
-    public TaskBase load(NBTTagCompound nbt)
+    public void load(NBTTagCompound nbt)
     {
         this.col = nbt.getInteger("col");
         this.row = nbt.getInteger("row");
-        if (this.getEncoderParms() != null)
+        System.out.println("\nLoading task data");
+        if (this.getArgs() != null)
         {
-            this.aruguments = new HashMap();
             NBTTagCompound parms = nbt.getCompoundTag("args");
-            for (ArgumentData arg : this.getEncoderParms())
+            for (ArgumentData arg : this.getArgs())
             {
+                System.out.println("Loading data for " + arg.getName());
                 Object obj = NBTFileHelper.loadObject(parms, arg.getName());
                 if (arg.isValid(obj))
                 {
-                    this.aruguments.put(arg.getName(), obj);
+                    System.out.println("data is valid " + obj.toString());
+                    arg.setData(obj);
                 }
             }
         }
-        return this;
     }
 
     @Override
-    public NBTTagCompound save(NBTTagCompound nbt)
+    public void save(NBTTagCompound nbt)
     {
-
+        System.out.println("\nSaving task data");
         nbt.setInteger("col", this.col);
         nbt.setInteger("row", this.row);
         NBTTagCompound parms = new NBTTagCompound();
-        for (Entry<String, Object> entry : this.aruguments.entrySet())
+        for (ArgumentData arg : this.getArgs())
         {
-            NBTFileHelper.saveObject(parms, entry.getKey(), entry.getValue());
+            NBTFileHelper.saveObject(parms, arg.getName(), arg.getData());
         }
         nbt.setCompoundTag("args", parms);
-        return nbt;
     }
 
     @Override

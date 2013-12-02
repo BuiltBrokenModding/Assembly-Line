@@ -23,7 +23,7 @@ public class TaskUse extends TaskBaseArmbot
     public TaskUse()
     {
         super("use");
-        this.defautlArguments.add(new ArgumentIntData("repeat", 1, Integer.MAX_VALUE, 1));
+        this.args.add(new ArgumentIntData("repeat", 1, Integer.MAX_VALUE, 1));
     }
 
     @Override
@@ -87,21 +87,17 @@ public class TaskUse extends TaskBaseArmbot
     }
 
     @Override
-    public TaskUse load(NBTTagCompound taskCompound)
+    public void load(NBTTagCompound taskCompound)
     {
         super.load(taskCompound);
         this.times = taskCompound.getInteger("useTimes");
-
-        return this;
     }
 
     @Override
-    public NBTTagCompound save(NBTTagCompound taskCompound)
+    public void save(NBTTagCompound taskCompound)
     {
         super.save(taskCompound);
         taskCompound.setInteger("useTimes", this.times);
-
-        return taskCompound;
     }
 
     @Override

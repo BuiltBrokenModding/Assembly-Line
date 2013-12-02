@@ -23,8 +23,8 @@ public class TaskRotateTo extends TaskBaseArmbot
     public TaskRotateTo()
     {
         super("RotateTo");
-        this.defautlArguments.add(new ArgumentIntData("yaw", 0, 360, 0));
-        this.defautlArguments.add(new ArgumentIntData("pitch", 0, 360, 0));
+        this.args.add(new ArgumentIntData("yaw", 0, 360, 0));
+        this.args.add(new ArgumentIntData("pitch", 0, 360, 0));
         this.UV = new Vector2(100, 80);
     }
 
@@ -70,21 +70,19 @@ public class TaskRotateTo extends TaskBaseArmbot
     }
 
     @Override
-    public TaskRotateTo load(NBTTagCompound taskCompound)
+    public void load(NBTTagCompound taskCompound)
     {
         super.load(taskCompound);
         this.targetRotationPitch = taskCompound.getInteger("rotPitch");
         this.targetRotationYaw = taskCompound.getInteger("rotYaw");
-        return this;
     }
 
     @Override
-    public NBTTagCompound save(NBTTagCompound taskCompound)
+    public void save(NBTTagCompound taskCompound)
     {
         super.save(taskCompound);
         taskCompound.setInteger("rotPitch", this.targetRotationPitch);
         taskCompound.setInteger("rotYaw", this.targetRotationYaw);
-        return taskCompound;
     }
 
     @Override

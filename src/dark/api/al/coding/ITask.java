@@ -7,9 +7,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import universalelectricity.core.vector.Vector2;
 import dark.api.al.coding.args.ArgumentData;
+import dark.api.save.ISaveObj;
 
 /** @author DarkGuardsman */
-public interface ITask extends Cloneable
+public interface ITask extends Cloneable, ISaveObj
 {
     /** Called each time the program is loaded or changed */
     public void refresh();
@@ -35,25 +36,13 @@ public interface ITask extends Cloneable
     /** Type of task used mainly for GUI displays */
     public TaskType getType();
 
-    /** ArgumentData used to both restrict and set values into the argument hashmap. As tells the
-     * encoder what varables that the user has access to */
-    public List<ArgumentData> getEncoderParms();
-
     /** Get an argument by a given name */
     public Object getArg(String name);
 
     /** Get all given arguments */
-    public HashMap<String, Object> getArgs();
+    public List<ArgumentData> getArgs();
 
-    /** Get all given arguments */
-    public void setArgs(HashMap<String, Object> args);
-
-    /** Read the command from the armbot save. */
-    public ITask load(NBTTagCompound nbt);
-
-    /** Writes the command to the armbot save. Should only be used to save the data used to recreate
-     * a new version of this command */
-    public NBTTagCompound save(NBTTagCompound nbt);
+    public void setArg(String arg, Object data);
 
     /** Reads the progress of the command if it was saved mid process */
     public ITask loadProgress(NBTTagCompound nbt);
@@ -70,8 +59,9 @@ public interface ITask extends Cloneable
      * the TaskRegistry */
     public ITask clone();
 
-    /** Texture to be used make sure to use a reference as creating a new one each call with memory
-     * leak the game */
+    /** Texture used by encoder's to render the icon for the task. Make sure not to create a new
+     * instance of the resource location each call. Doing so will cause the client to experience
+     * increase RAM usage */
     public ResourceLocation getTextureSheet();
 
     /** Location of the texture in the sheet */

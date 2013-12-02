@@ -2,6 +2,7 @@ package dark.assembly.client.gui;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -38,7 +39,9 @@ public class GuiEditTask extends GuiBase implements IMessageBoxDialog
         this.gui = gui;
         this.task = task;
         this.editTask = task.clone();
-        this.editTask.load(task.save(new NBTTagCompound()));
+        NBTTagCompound nbt = new NBTTagCompound();
+        task.save(nbt);
+        this.editTask.load(nbt);
     }
 
     @Override
@@ -60,26 +63,17 @@ public class GuiEditTask extends GuiBase implements IMessageBoxDialog
 
         this.buttonList.add(new GuiButton(2, (this.width - this.guiSize.intX()) / 2 + 125, (this.height - this.guiSize.intY()) / 2 + 135, 40, 20, "Del"));
 
-        HashMap<String, Object> args = task.getArgs();
-        List<ArgumentData> eArgs = task.getEncoderParms();
-
-        if (eArgs != null && !eArgs.isEmpty())
+        if (task.getArgs() != null)
         {
-            this.argTextBoxes = new GuiTextField[eArgs.size()];
-            for (int i = 0; i < this.argTextBoxes.length; i++)
+            this.argTextBoxes = new GuiTextField[task.getArgs().size()];
+            int i = 0;
+            for (ArgumentData arg : task.getArgs())
             {
-                ArgumentData arg = eArgs.get(i);
                 this.argTextBoxes[i] = new GuiTextField(this.fontRenderer, (this.width - this.guiSize.intX()) / 2 + 60, (this.height - this.guiSize.intY()) / 2 + 64 + (i * this.ySpacing), 30, 10);
                 this.argTextBoxes[i].setMaxStringLength(30);
                 this.argTextBoxes[i].setVisible(true);
-                if (args.containsKey(arg.getName()))
-                {
-                    this.argTextBoxes[i].setText("" + args.get(arg.getName()));
-                }
-                else
-                {
-                    this.argTextBoxes[i].setText("" + arg.getData());
-                }
+                this.argTextBoxes[i].setText("" + arg.getData());
+                i++;
             }
         }
 
@@ -157,6 +151,24 @@ public class GuiEditTask extends GuiBase implements IMessageBoxDialog
 
                 if (button.id == 0)
                 {
+                    if (this.argTextBoxes != null)
+                    {
+                        int i = 0;
+                        for (ArgumentData arg : task.getArgs())
+                        {
+                            if (this.argTextBoxes[i] != null)
+                            {
+                                if (arg.isValid(this.argTextBoxes[i].getText()))
+                                {
+                                    editTask.setArg(arg.getName(), this.argTextBoxes[i].getText());
+                                }
+                                else
+                                {
+                                    this.argTextBoxes[i].setText("");
+                                }
+                            }
+                        }
+                    }
                     this.gui.getTile().updateTask(this.editTask);
                 }
                 FMLCommonHandler.instance().showGuiScreen(this.gui);
@@ -198,17 +210,15 @@ public class GuiEditTask extends GuiBase implements IMessageBoxDialog
         this.fontRenderer.drawString("Task: " + "\u00a77" + this.task.getMethodName(), (int) ((this.guiSize.intX() / 2) - 70), 20, 4210752);
         this.fontRenderer.drawString("----Task Arguments---- ", (int) ((this.guiSize.intX() / 2) - 70), 50, 4210752);
 
-        HashMap<String, Object> args = task.getArgs();
-        List<ArgumentData> eArgs = task.getEncoderParms();
-
-        if (eArgs != null && !eArgs.isEmpty())
+        int i = 0;
+        if (task.getArgs() != null)
         {
-            int i = 0;
-            for (ArgumentData arg : eArgs)
+            for (ArgumentData arg : task.getArgs())
             {
                 i++;
                 this.fontRenderer.drawString(arg.getName() + ":", (int) ((this.guiSize.intX() / 2) - 70), 45 + (i * this.ySpacing), 4210752);
                 this.fontRenderer.drawString(arg.warning(), (int) ((this.guiSize.intX() / 2) + 11), 45 + (i * this.ySpacing), 4210752);
+
             }
         }
         else

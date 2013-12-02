@@ -26,7 +26,7 @@ public class TaskGrabEntity extends TaskGrabPrefab
     public TaskGrabEntity()
     {
         super("Grab-Entity");
-        this.defautlArguments.add(new ArgumentData("child", false));
+        this.args.add(new ArgumentData("child", false));
         //this.defautlArguments.add(new ArgumentListData<Class<? extends Entity>>("Entity", Entity.class, (Class<? extends Entity>[]) EntityDictionary.getList().toArray(new Object[1])));
     }
 
@@ -91,21 +91,19 @@ public class TaskGrabEntity extends TaskGrabPrefab
     }
 
     @Override
-    public TaskBaseProcess load(NBTTagCompound taskCompound)
+    public void load(NBTTagCompound taskCompound)
     {
         super.loadProgress(taskCompound);
         this.child = taskCompound.getBoolean("child");
         this.entityToInclude = EntityDictionary.get(taskCompound.getString("name"));
-        return this;
     }
 
     @Override
-    public NBTTagCompound save(NBTTagCompound taskCompound)
+    public void save(NBTTagCompound taskCompound)
     {
         super.saveProgress(taskCompound);
         taskCompound.setBoolean("child", child);
         taskCompound.setString("name", ((this.entityToInclude != null) ? EntityDictionary.get(this.entityToInclude) : ""));
-        return taskCompound;
     }
 
     @Override

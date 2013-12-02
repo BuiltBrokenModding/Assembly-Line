@@ -1,7 +1,7 @@
 package dark.assembly.imprinter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -27,6 +27,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 import dark.api.al.coding.IArmbot;
 import dark.api.al.coding.IArmbotUseable;
+import dark.api.al.coding.args.ArgumentData;
 import dark.api.events.AutoCraftEvent;
 import dark.core.common.DarkMain;
 import dark.core.helpers.AutoCraftingManager;
@@ -192,7 +193,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
     }
 
     /** Construct an InventoryCrafting Matrix on the fly.
-     * 
+     *
      * @return */
     public InventoryCrafting getCraftingMatrix()
     {
@@ -389,7 +390,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 
     /** Tries to let the Armbot craft an item. */
     @Override
-    public boolean onUse(IArmbot armbot, HashMap<String, Object> hashMap)
+    public boolean onUse(IArmbot armbot, List<ArgumentData> data)
     {
         this.onInventoryChanged();
 

@@ -207,11 +207,7 @@ public class Program implements IProgram
     {
         if (this.currentTask != null)
         {
-            NBTTagCompound tag = this.currentTask.save(new NBTTagCompound());
-            this.currentTask = TaskRegistry.getCommand(this.currentTask.getMethodName()).clone();
-            this.currentTask.load(tag);
-            this.setTaskAt(this.currentTask.getCol(), this.currentTask.getRow(), this.currentTask);
-            this.currentTask = null;
+            this.currentTask.reset();
         }
         this.currentPos = new Vector2(0, 0);
     }
@@ -247,7 +243,8 @@ public class Program implements IProgram
         for (Entry<Vector2, ITask> entry : this.tasks.entrySet())
         {
             entry.getValue().setPosition(entry.getKey().intX(), entry.getKey().intY());
-            NBTTagCompound task = entry.getValue().save(new NBTTagCompound());
+            NBTTagCompound task = new NBTTagCompound();
+            entry.getValue().save(task);
             if (this.currentTask != null && entry.getKey().equals(new Vector2(this.currentTask.getCol(), this.currentTask.getRow())))
             {
                 task.setBoolean("currentTask", true);

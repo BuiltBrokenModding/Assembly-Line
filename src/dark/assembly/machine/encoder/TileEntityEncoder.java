@@ -52,16 +52,6 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
         {
             program = new Program();
             program.setTaskAt(0, 0, new TaskRotateTo());
-            program.setTaskAt(0, 1, new TaskDrop());
-            program.setTaskAt(0, 2, new TaskRotateTo());
-            program.setTaskAt(0, 3, new TaskGrabItem());
-            program.setTaskAt(0, 4, new TaskIF());
-            program.setTaskAt(0, 5, new TaskRotateTo());
-            program.setTaskAt(0, 6, new TaskGive());
-
-            program.setTaskAt(1, 4, new TaskRotateTo());
-            program.setTaskAt(1, 5, new TaskGive());
-            program.setTaskAt(1, 6, new TaskGOTO(0, 6));
         }
     }
 
@@ -154,18 +144,18 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
                 {
                     if (id.equalsIgnoreCase(TileEntityEncoder.PROGRAM_CHANGE_PACKET_ID))
                     {
-
+                        System.out.println("Update task packet");
                         ITask task = TaskRegistry.getCommand(dis.readUTF());
                         task.setPosition(dis.readInt(), dis.readInt());
-                        task.load(PacketManager.readNBTTagCompound(dis));
-                        this.program.setTaskAt(task.getCol(), task.getRow(), task);
+                        task.load(PacketHandler.instance().readNBTTagCompound(dis));
+                        this.getProgram().setTaskAt(task.getCol(), task.getRow(), task);
                         this.sendGUIPacket();
 
                         return true;
                     }
                     else if (id.equalsIgnoreCase(TileEntityEncoder.REMOVE_TASK_PACKET_ID))
                     {
-                        this.program.setTaskAt(dis.readInt(), dis.readInt(), null);
+                        this.getProgram().setTaskAt(dis.readInt(), dis.readInt(), null);
                         this.sendGUIPacket();
                         return true;
                     }
@@ -220,11 +210,14 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
 
     public void updateTask(ITask editTask)
     {
+
         if (editTask != null)
         {
             if (this.worldObj.isRemote)
             {
-                PacketDispatcher.sendPacketToServer(PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, TileEntityEncoder.PROGRAM_CHANGE_PACKET_ID, editTask.getMethodName(), editTask.getCol(), editTask.getRow(), editTask.save(new NBTTagCompound())));
+                NBTTagCompound nbt = new NBTTagCompound();
+                editTask.save(nbt);
+                PacketDispatcher.sendPacketToServer(PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, TileEntityEncoder.PROGRAM_CHANGE_PACKET_ID, editTask.getMethodName(), editTask.getCol(), editTask.getRow(), nbt));
             }
             else
             {

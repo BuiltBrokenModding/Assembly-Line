@@ -33,7 +33,7 @@ public class TaskFire extends TaskBaseArmbot
     public TaskFire()
     {
         super("throw");
-        this.defautlArguments.add(new ArgumentFloatData("velocity", 1.0f, 2.5f, 1.0f));
+        this.args.add(new ArgumentFloatData("velocity", 1.0f, 2.5f, 1.0f));
     }
 
     @Override

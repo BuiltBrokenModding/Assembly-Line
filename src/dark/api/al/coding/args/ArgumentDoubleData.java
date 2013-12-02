@@ -1,5 +1,6 @@
 package dark.api.al.coding.args;
 
+import net.minecraft.util.MathHelper;
 import universalelectricity.core.electricity.ElectricityDisplay;
 
 /** Used to create argument data for the encoder. Should only be used if the value needs to be
@@ -20,7 +21,12 @@ public class ArgumentDoubleData extends ArgumentData
     @Override
     public boolean isValid(Object object)
     {
-        return super.isValid() && object instanceof Double && ((Double) object) >= min && ((Double) object) <= max;
+        if (super.isValid())
+        {
+            double value = MathHelper.parseDoubleWithDefault("" + object, min - 100);
+            return value != min - 100 && value >= min && value <= max;
+        }
+        return false;
     }
 
     @Override

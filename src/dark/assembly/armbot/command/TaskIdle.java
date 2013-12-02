@@ -20,7 +20,7 @@ public class TaskIdle extends TaskBaseProcess
     public TaskIdle()
     {
         super("wait");
-        this.defautlArguments.add(new ArgumentData("idleTime", 20));
+        this.args.add(new ArgumentData("idleTime", 20));
     }
 
     @Override
@@ -52,19 +52,17 @@ public class TaskIdle extends TaskBaseProcess
     }
 
     @Override
-    public TaskBaseProcess load(NBTTagCompound taskCompound)
+    public void load(NBTTagCompound taskCompound)
     {
         super.load(taskCompound);
         this.totalIdleTime = taskCompound.getInteger("idleTotal");
-        return this;
     }
 
     @Override
-    public NBTTagCompound save(NBTTagCompound taskCompound)
+    public void save(NBTTagCompound taskCompound)
     {
         super.save(taskCompound);
         taskCompound.setInteger("idleTotal", this.totalIdleTime);
-        return taskCompound;
     }
 
     @Override

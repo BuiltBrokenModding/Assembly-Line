@@ -1,6 +1,6 @@
 package dark.api.al.coding.args;
 
-import universalelectricity.core.electricity.ElectricityDisplay;
+import net.minecraft.util.MathHelper;
 
 /** Used to create argument data for the encoder. Should only be used if the value needs to be
  * clearly limited inside the encoder display.
@@ -20,7 +20,12 @@ public class ArgumentIntData extends ArgumentData
     @Override
     public boolean isValid(Object object)
     {
-        return super.isValid() && object instanceof Integer && ((Integer) object) >= min && ((Integer) object) <= max;
+        if (super.isValid())
+        {
+            int value = MathHelper.parseIntWithDefault("" + object, min - 100);
+            return value != min - 100 && value >= min && value <= max;
+        }
+        return false;
     }
 
     @Override

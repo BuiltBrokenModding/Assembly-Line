@@ -20,9 +20,9 @@ public class TaskGrabItem extends TaskGrabPrefab
     public TaskGrabItem()
     {
         super("Grab-Item");
-        this.defautlArguments.add(new ArgumentIntData("blockID", -1, Block.blocksList.length - 1, -1));
-        this.defautlArguments.add(new ArgumentIntData("blockMeta", -1, 15, -1));
-        this.defautlArguments.add(new ArgumentIntData("stackSize", -1, 64, -1));
+        this.args.add(new ArgumentIntData("blockID", -1, Block.blocksList.length - 1, -1));
+        this.args.add(new ArgumentIntData("blockMeta", -1, 15, -1));
+        this.args.add(new ArgumentIntData("stackSize", -1, 64, -1));
     }
 
     @Override
