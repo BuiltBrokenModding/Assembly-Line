@@ -31,7 +31,7 @@ public class TileEntitySteamPiston extends TileEntityEnergyMachine
             {
                 heatTicks++;
             }
-            this.wattsOut = this.MAX_JOULES_STORED * (heatTicks / heatUpTime);
+            this.wattsOut = this.maxWattOutput * (heatTicks / heatUpTime);
             this.produceAllSides();
         }
         else

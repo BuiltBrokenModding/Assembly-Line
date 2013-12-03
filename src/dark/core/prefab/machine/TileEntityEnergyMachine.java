@@ -2,6 +2,7 @@ package dark.core.prefab.machine;
 
 import java.util.EnumSet;
 
+import mffs.api.IActivatable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,13 +31,13 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     /** Forge Ore Directory name of the item to toggle infinite power mode */
     public static String powerToggleItemID = "battery";
     /** Demand per tick in watts */
-    public float JOULES_PER_TICK;
+    protected float JOULES_PER_TICK;
     /** Max limit of the internal battery/buffer of the machine */
-    public float MAX_JOULES_STORED;
+    protected float MAX_JOULES_STORED;
     /** Current energy stored in the machine's battery/buffer */
-    public float energyStored = 0;
+    protected float energyStored = 0;
     /** Should we run without power */
-    protected boolean runWithoutPower = true;
+    private boolean runWithoutPower = true;
 
     public TileEntityEnergyMachine()
     {
@@ -55,18 +56,17 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
         this.MAX_JOULES_STORED = maxEnergy;
     }
 
-    /** Called to consume power from the internal storage */
-    public boolean consumePower(float watts, boolean doDrain)
+    @Override
+    public void updateEntity()
     {
-        if (!this.runPowerLess() && this.getEnergyStored() >= watts)
+        super.updateEntity();
+        if (!this.worldObj.isRemote)
         {
-            if (doDrain)
+            if (this.isFunctioning())
             {
-                this.setEnergyStored(this.getEnergyStored() - watts);
+                this.consumePower(this.JOULES_PER_TICK, true);
             }
-            return true;
         }
-        return this.runPowerLess();
     }
 
     /** Does this tile have power to run and do work */
@@ -74,23 +74,6 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     public boolean canFunction()
     {
         return !this.isDisabled() && (this.runPowerLess() || this.consumePower(this.JOULES_PER_TICK, false));
-    }
-
-    @Override
-    public boolean runPowerLess()
-    {
-        return !runWithoutPower || ExternalModHandler.runPowerLess();
-    }
-
-    @Override
-    public void setPowerLess(boolean bool)
-    {
-        runWithoutPower = !bool;
-    }
-
-    public void togglePowerMode()
-    {
-        this.setPowerLess(!this.runPowerLess());
     }
 
     /** Called when a player activates the tile's block */
@@ -114,17 +97,104 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
         return false;
     }
 
+    /* ********************************************
+     * Electricity reception logic
+     ***********************************************/
+
     @Override
-    public void updateEntity()
+    public float receiveElectricity(ForgeDirection from, ElectricityPack receive, boolean doReceive)
     {
-        super.updateEntity();
-        if (!this.worldObj.isRemote)
+        if (!this.runPowerLess() && receive != null && this.canConnect(from))
         {
-            if (this.isFunctioning())
+            if (receive != null && receive.voltage > (Math.sqrt(2) * this.getVoltage()) && this.worldObj.rand.nextBoolean())
             {
-                this.consumePower(this.JOULES_PER_TICK, true);
+                if (doReceive)
+                {
+                    this.onDisable(20 + this.worldObj.rand.nextInt(100));
+                }
+                return 0;
             }
+            return this.receiveElectricity(receive.getWatts(), doReceive);
+
         }
+        return 0;
+    }
+
+    /** A non-side specific version of receiveElectricity for you to optionally use it internally. */
+    public float receiveElectricity(ElectricityPack receive, boolean doReceive)
+    {
+
+        if (receive != null)
+        {
+            float prevEnergyStored = this.getEnergyStored();
+            float newStoredEnergy = Math.min(this.getEnergyStored() + receive.getWatts(), this.getMaxEnergyStored());
+
+            if (doReceive)
+            {
+                this.setEnergyStored(newStoredEnergy);
+            }
+
+            return Math.max(newStoredEnergy - prevEnergyStored, 0);
+        }
+
+        return 0;
+    }
+
+    public float receiveElectricity(float energy, boolean doReceive)
+    {
+        return this.receiveElectricity(ElectricityPack.getFromWatts(energy, this.getVoltage()), doReceive);
+    }
+
+    /* ********************************************
+     * Electricity transmition logic
+     ***********************************************/
+
+    /** Called to consume power from the internal storage */
+    public boolean consumePower(float watts, boolean doDrain)
+    {
+        if (!this.runPowerLess() && this.getEnergyStored() >= watts)
+        {
+            if (doDrain)
+            {
+                this.setEnergyStored(this.getEnergyStored() - watts);
+            }
+            return true;
+        }
+        return this.runPowerLess();
+    }
+
+    @Override
+    public ElectricityPack provideElectricity(ForgeDirection from, ElectricityPack request, boolean doProvide)
+    {
+        if (this.getOutputDirections().contains(from))
+        {
+            return this.provideElectricity(request, doProvide);
+        }
+
+        return new ElectricityPack();
+    }
+
+    /** A non-side specific version of provideElectricity for you to optionally use it internally. */
+    public ElectricityPack provideElectricity(ElectricityPack request, boolean doProvide)
+    {
+        if (request != null)
+        {
+            float requestedEnergy = Math.min(request.getWatts(), this.energyStored);
+
+            if (doProvide)
+            {
+                this.setEnergyStored(this.energyStored - requestedEnergy);
+            }
+
+            return ElectricityPack.getFromWatts(requestedEnergy, this.getVoltage());
+        }
+
+        return new ElectricityPack();
+    }
+
+    public ElectricityPack provideElectricity(float energy, boolean doProvide)
+    {
+        return this.provideElectricity(ElectricityPack.getFromWatts(energy, this.getVoltage()), doProvide);
     }
 
     /** Produces energy on all sides */
@@ -167,6 +237,21 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
         }
     }
 
+    /* ********************************************
+     * Electricity connection logic
+     ***********************************************/
+
+    @Override
+    public boolean canConnect(ForgeDirection direction)
+    {
+        if (direction == null || direction.equals(ForgeDirection.UNKNOWN))
+        {
+            return false;
+        }
+
+        return this.getInputDirections().contains(direction) || this.getOutputDirections().contains(direction);
+    }
+
     /** The electrical input direction.
      * 
      * @return The direction that electricity is entered into the tile. Return null for no input. By
@@ -185,82 +270,25 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
         return EnumSet.noneOf(ForgeDirection.class);
     }
 
-    @Override
-    public float receiveElectricity(ForgeDirection from, ElectricityPack receive, boolean doReceive)
-    {
-        if (!this.runPowerLess() && receive != null && this.canConnect(from))
-        {
-            if (receive != null && receive.voltage > (Math.sqrt(2) * this.getVoltage()) && this.worldObj.rand.nextBoolean())
-            {
-                if (doReceive)
-                {
-                    this.onDisable(20 + this.worldObj.rand.nextInt(100));
-                }
-                return 0;
-            }
-            return this.receiveElectricity(receive.getWatts(), doReceive);
+    /* ********************************************
+     * Machine energy parms
+     ***********************************************/
 
-        }
-        return 0;
+    @Override
+    public float getVoltage()
+    {
+        return 0.120F;
     }
 
     @Override
-    public ElectricityPack provideElectricity(ForgeDirection from, ElectricityPack request, boolean doProvide)
+    public float getMaxEnergyStored()
     {
-        if (this.getOutputDirections().contains(from))
-        {
-            return this.provideElectricity(request, doProvide);
-        }
-
-        return new ElectricityPack();
+        return this.MAX_JOULES_STORED;
     }
 
-    /** A non-side specific version of receiveElectricity for you to optionally use it internally. */
-    public float receiveElectricity(ElectricityPack receive, boolean doReceive)
+    public void setMaxEnergyStored(float energy)
     {
-
-        if (receive != null)
-        {
-            float prevEnergyStored = this.getEnergyStored();
-            float newStoredEnergy = Math.min(this.getEnergyStored() + receive.getWatts(), this.getMaxEnergyStored());
-
-            if (doReceive)
-            {
-                this.setEnergyStored(newStoredEnergy);
-            }
-
-            return Math.max(newStoredEnergy - prevEnergyStored, 0);
-        }
-
-        return 0;
-    }
-
-    public float receiveElectricity(float energy, boolean doReceive)
-    {
-        return this.receiveElectricity(ElectricityPack.getFromWatts(energy, this.getVoltage()), doReceive);
-    }
-
-    /** A non-side specific version of provideElectricity for you to optionally use it internally. */
-    public ElectricityPack provideElectricity(ElectricityPack request, boolean doProvide)
-    {
-        if (request != null)
-        {
-            float requestedEnergy = Math.min(request.getWatts(), this.energyStored);
-
-            if (doProvide)
-            {
-                this.setEnergyStored(this.energyStored - requestedEnergy);
-            }
-
-            return ElectricityPack.getFromWatts(requestedEnergy, this.getVoltage());
-        }
-
-        return new ElectricityPack();
-    }
-
-    public ElectricityPack provideElectricity(float energy, boolean doProvide)
-    {
-        return this.provideElectricity(ElectricityPack.getFromWatts(energy, this.getVoltage()), doProvide);
+        this.MAX_JOULES_STORED = energy;
     }
 
     @Override
@@ -276,21 +304,37 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     }
 
     @Override
-    public boolean canConnect(ForgeDirection direction)
+    public float getRequest(ForgeDirection direction)
     {
-        if (direction == null || direction.equals(ForgeDirection.UNKNOWN))
-        {
-            return false;
-        }
-
-        return this.getInputDirections().contains(direction) || this.getOutputDirections().contains(direction);
+        return Math.max(this.getMaxEnergyStored() - this.getEnergyStored(), 0);
     }
 
     @Override
-    public float getVoltage()
+    public float getProvide(ForgeDirection direction)
     {
-        return 0.120F;
+        return 0;
     }
+
+    @Override
+    public boolean runPowerLess()
+    {
+        return !runWithoutPower || ExternalModHandler.runPowerLess();
+    }
+
+    @Override
+    public void setPowerLess(boolean bool)
+    {
+        runWithoutPower = !bool;
+    }
+
+    public void togglePowerMode()
+    {
+        this.setPowerLess(!this.runPowerLess());
+    }
+
+    /* ********************************************
+     * DATA/SAVE/LOAD
+     ***********************************************/
 
     @Override
     public void readFromNBT(NBTTagCompound nbt)
@@ -315,21 +359,4 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
         nbt.setBoolean("isRunning", this.functioning);
     }
 
-    @Override
-    public float getMaxEnergyStored()
-    {
-        return this.MAX_JOULES_STORED;
-    }
-
-    @Override
-    public float getRequest(ForgeDirection direction)
-    {
-        return Math.max(this.getMaxEnergyStored() - this.getEnergyStored(), 0);
-    }
-
-    @Override
-    public float getProvide(ForgeDirection direction)
-    {
-        return 0;
-    }
 }

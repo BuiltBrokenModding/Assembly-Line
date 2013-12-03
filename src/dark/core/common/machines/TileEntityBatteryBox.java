@@ -111,7 +111,7 @@ public class TileEntityBatteryBox extends TileEntityEnergyMachine
                 if (id.equalsIgnoreCase("desc"))
                 {
                     this.setEnergyStored(dis.readFloat());
-                    this.MAX_JOULES_STORED = dis.readFloat();
+                    this.setMaxEnergyStored(dis.readFloat());
                     return true;
                 }
             }

@@ -14,7 +14,7 @@ public class TileEntitySolarPanel extends TileEntityEnergyMachine
 
     public TileEntitySolarPanel()
     {
-        this.MAX_JOULES_STORED = 1;
+        super(0, 1);
     }
 
     @Override
