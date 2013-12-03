@@ -7,7 +7,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.common.network.IGuiHandler;
+import dark.core.common.machines.ContainerBatteryBox;
 import dark.core.common.machines.ContainerCoalGenerator;
+import dark.core.common.machines.TileEntityBatteryBox;
 import dark.core.common.machines.TileEntitySteamGen;
 import dark.core.network.PacketManagerEffects;
 
@@ -62,6 +64,10 @@ public class CommonProxy implements IGuiHandler
             if (tileEntity instanceof TileEntitySteamGen)
             {
                 return new ContainerCoalGenerator(player.inventory, ((TileEntitySteamGen) tileEntity));
+            }
+            else if (ID == GUI_BATTERY_BOX && tileEntity instanceof TileEntityBatteryBox)
+            {
+                return new ContainerBatteryBox(player.inventory, (TileEntityBatteryBox) tileEntity);
             }
         }
 

@@ -38,6 +38,10 @@
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
+             <fileset dir="${dir.development}Built-Broken-Lib">
+				<exclude name=".git/**"/>
+				<exclude name="**/*.xml"/>
+			</fileset>
             <fileset dir="${dir.development}APIs">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>

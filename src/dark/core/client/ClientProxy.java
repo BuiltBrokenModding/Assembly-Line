@@ -12,11 +12,13 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.core.client.gui.GuiBatteryBox;
 import dark.core.client.renders.BlockRenderingHandler;
 import dark.core.client.renders.ItemRenderFluidCan;
 import dark.core.client.renders.RenderTestCar;
 import dark.core.common.CommonProxy;
 import dark.core.common.CoreRecipeLoader;
+import dark.core.common.machines.TileEntityBatteryBox;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.vehicles.EntityTestCar;
 
@@ -25,7 +27,7 @@ public class ClientProxy extends CommonProxy
 {
 
     /** Renders a laser beam from one power to another by a set color for a set time
-     *
+     * 
      * @param world - world this laser is to be rendered in
      * @param position - start vector3
      * @param target - end vector3
@@ -61,6 +63,10 @@ public class ClientProxy extends CommonProxy
 
         if (tileEntity != null)
         {
+            if (ID == GUI_BATTERY_BOX && tileEntity instanceof TileEntityBatteryBox)
+            {
+                return new GuiBatteryBox(player.inventory, (TileEntityBatteryBox) tileEntity);
+            }
         }
 
         return null;

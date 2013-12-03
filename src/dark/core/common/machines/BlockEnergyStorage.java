@@ -18,6 +18,7 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.core.block.IConductor;
 import universalelectricity.core.vector.Vector3;
+import dark.core.common.CommonProxy;
 import dark.core.common.DMCreativeTab;
 import dark.core.common.DarkMain;
 import dark.core.helpers.MathHelper;
@@ -47,6 +48,19 @@ public class BlockEnergyStorage extends BlockMachine
     }
 
     @Override
+    public boolean onMachineActivated(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
+    {
+        int metadata = par1World.getBlockMetadata(x, y, z);
+
+        if (!par1World.isRemote)
+        {
+            par5EntityPlayer.openGui(DarkMain.getInstance(), CommonProxy.GUI_BATTERY_BOX, par1World, x, y, z);
+
+        }
+        return true;
+    }
+
+    @Override
     public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
     {
         world.setBlockMetadataWithNotify(x, y, z, side, 3);
@@ -63,14 +77,7 @@ public class BlockEnergyStorage extends BlockMachine
     @Override
     public TileEntity createTileEntity(World world, int metadata)
     {
-        switch (metadata / 4)
-        {
-            case 0:
-                return new TileEntityBatteryBox();
-
-        }
-        return super.createTileEntity(world, metadata);
-
+        return new TileEntityBatteryBox();
     }
 
     @Override

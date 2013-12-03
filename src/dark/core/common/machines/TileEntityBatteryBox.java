@@ -1,6 +1,9 @@
 package dark.core.common.machines;
 
+import java.io.IOException;
 import java.util.EnumSet;
+
+import com.google.common.io.ByteArrayDataInput;
 
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
@@ -12,19 +15,23 @@ import universalelectricity.core.grid.IElectricityNetwork;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.network.PacketManager;
+import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import dark.core.helpers.EnergyHelper;
+import dark.core.network.PacketHandler;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
+import dark.core.prefab.machine.TileEntityMachine.SimplePacketTypes;
 
 /** Simple in out battery box
- *
+ * 
  * @author DarkGuardsman */
 public class TileEntityBatteryBox extends TileEntityEnergyMachine
 {
-
     public TileEntityBatteryBox()
     {
+        super(0, 5000);
         this.invSlots = 2;
+        this.hasGUI = true;
     }
 
     @Override
@@ -32,7 +39,7 @@ public class TileEntityBatteryBox extends TileEntityEnergyMachine
     {
         super.updateEntity();
 
-        if (!this.isDisabled())
+        if (!this.canFunction())
         {
             if (!this.worldObj.isRemote)
             {
@@ -77,7 +84,7 @@ public class TileEntityBatteryBox extends TileEntityEnergyMachine
         }
 
         /** Gradually lose energy. */
-        this.setEnergyStored(this.getEnergyStored() - 0.00005f);
+        this.consumePower(0.000005f, true);
     }
 
     @Override
@@ -93,9 +100,33 @@ public class TileEntityBatteryBox extends TileEntityEnergyMachine
     }
 
     @Override
+    public boolean simplePacket(String id, ByteArrayDataInput dis, Player player)
+    {
+        boolean r = super.simplePacket(id, dis, player);
+        try
+        {
+
+            if (this.worldObj.isRemote && !r)
+            {
+                if (id.equalsIgnoreCase("desc"))
+                {
+                    this.setEnergyStored(dis.readFloat());
+                    this.MAX_JOULES_STORED = dis.readFloat();
+                    return true;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return r;
+    }
+
+    @Override
     public Packet getDescriptionPacket()
     {
-        return PacketManager.getPacket(this.getChannel(), this, this.getEnergyStored(), this.disabledTicks);
+        return PacketHandler.instance().getTilePacket(this.getChannel(), this, "desc", this.getEnergyStored(), this.getMaxEnergyStored());
     }
 
     @Override
@@ -108,12 +139,6 @@ public class TileEntityBatteryBox extends TileEntityEnergyMachine
     public int getInventoryStackLimit()
     {
         return 1;
-    }
-
-    @Override
-    public float getMaxEnergyStored()
-    {
-        return 5000;
     }
 
     @Override
