@@ -2,7 +2,6 @@ package dark.core.prefab.machine;
 
 import java.util.EnumSet;
 
-import mffs.api.IActivatable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,8 +15,6 @@ import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.grid.IElectricityNetwork;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
-import buildcraft.api.power.PowerHandler;
-import buildcraft.api.power.PowerHandler.Type;
 import dark.api.energy.IPowerLess;
 import dark.core.common.ExternalModHandler;
 
@@ -38,21 +35,29 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     protected float energyStored = 0;
     /** Should we run without power */
     private boolean runWithoutPower = true;
+    /** Point by which this machines suffers low voltage damage */
+    protected float brownOutVoltage = -1;
+    /** Point by which this machines suffers over voltage damage */
+    protected float shortOutVoltage = -1;
+    /** Voltage by which the machine was designed and rated for */
+    protected float ratedVoltage = 240;
 
     public TileEntityEnergyMachine()
     {
-
+        this.brownOutVoltage = this.getVoltage() / 2;
+        this.shortOutVoltage = (float) ((Math.sqrt(2) * this.getVoltage()) + 0.05 * this.getVoltage());
     }
 
     public TileEntityEnergyMachine(float wattsPerTick)
     {
+        this();
         this.JOULES_PER_TICK = wattsPerTick;
         this.MAX_JOULES_STORED = wattsPerTick * 20;
     }
 
     public TileEntityEnergyMachine(float wattsPerTick, float maxEnergy)
     {
-        this.JOULES_PER_TICK = wattsPerTick;
+        this(wattsPerTick);
         this.MAX_JOULES_STORED = maxEnergy;
     }
 
@@ -60,12 +65,9 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     public void updateEntity()
     {
         super.updateEntity();
-        if (!this.worldObj.isRemote)
+        if (!this.worldObj.isRemote && this.isFunctioning())
         {
-            if (this.isFunctioning())
-            {
-                this.consumePower(this.JOULES_PER_TICK, true);
-            }
+            this.consumePower(this.JOULES_PER_TICK, true);
         }
     }
 
@@ -73,7 +75,7 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     @Override
     public boolean canFunction()
     {
-        return !this.isDisabled() && (this.runPowerLess() || this.consumePower(this.JOULES_PER_TICK, false));
+        return super.canFunction() && (this.runPowerLess() || this.consumePower(this.JOULES_PER_TICK, false));
     }
 
     /** Called when a player activates the tile's block */
@@ -106,7 +108,7 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     {
         if (!this.runPowerLess() && receive != null && this.canConnect(from))
         {
-            if (receive != null && receive.voltage > (Math.sqrt(2) * this.getVoltage()) && this.worldObj.rand.nextBoolean())
+            if (receive != null && receive.voltage > this.shortOutVoltage)
             {
                 if (doReceive)
                 {
@@ -204,7 +206,10 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
         {
             for (ForgeDirection outputDirection : this.getOutputDirections())
             {
-                this.produceDirection(outputDirection);
+                if (this.getOutputDirections().contains(outputDirection))
+                {
+                    this.produceDirection(outputDirection);
+                }
             }
         }
     }
@@ -277,7 +282,13 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     @Override
     public float getVoltage()
     {
-        return 0.120F;
+        return this.ratedVoltage;
+    }
+
+    public TileEntityEnergyMachine setVoltage(float volts)
+    {
+        this.ratedVoltage = volts;
+        return this;
     }
 
     @Override
@@ -330,6 +341,24 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     public void togglePowerMode()
     {
         this.setPowerLess(!this.runPowerLess());
+    }
+
+    public TileEntityEnergyMachine setJoulesPerTick(float energy)
+    {
+        this.JOULES_PER_TICK = energy;
+        return this;
+    }
+
+    public TileEntityEnergyMachine setJoulesPerSecound(float energy)
+    {
+        this.JOULES_PER_TICK = energy / 20;
+        return this;
+    }
+
+    public TileEntityEnergyMachine setJoulesPerHour(float energy)
+    {
+        this.JOULES_PER_TICK = energy / 1200;
+        return this;
     }
 
     /* ********************************************

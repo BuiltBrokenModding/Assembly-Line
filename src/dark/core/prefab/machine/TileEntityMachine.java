@@ -96,7 +96,7 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
     /** Can this tile function, or run threw normal processes */
     public boolean canFunction()
     {
-        return !this.isDisabled();
+        return !this.isDisabled() && this.enabled;
     }
 
     public boolean isFunctioning()
