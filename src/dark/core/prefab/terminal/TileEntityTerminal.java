@@ -46,12 +46,9 @@ public abstract class TileEntityTerminal extends TileEntityEnergyMachine impleme
     }
 
     @Override
-    public void sendGUIPacket(EntityPlayer entity)
+    public Packet getGUIPacket()
     {
-        if (!this.worldObj.isRemote)
-        {
-            PacketDispatcher.sendPacketToPlayer(this.getDescriptionPacket(), (Player) entity);
-        }
+        return this.getDescriptionPacket();
     }
 
     /** Sends all NBT data. Server -> Client */

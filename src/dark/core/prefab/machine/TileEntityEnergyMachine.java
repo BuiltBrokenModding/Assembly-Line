@@ -154,6 +154,10 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     /** Called to consume power from the internal storage */
     public boolean consumePower(float watts, boolean doDrain)
     {
+        if (watts <= 0)
+        {
+            return true;
+        }
         if (!this.runPowerLess() && this.getEnergyStored() >= watts)
         {
             if (doDrain)
