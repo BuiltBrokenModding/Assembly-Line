@@ -1,11 +1,8 @@
 package dark.core.common.machines;
 
-import java.io.IOException;
 import java.util.EnumSet;
 
-import com.google.common.io.ByteArrayDataInput;
-
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -15,13 +12,14 @@ import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.grid.IElectricityNetwork;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
-import universalelectricity.prefab.network.PacketManager;
+
+import com.google.common.io.ByteArrayDataInput;
+
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import dark.core.helpers.EnergyHelper;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
-import dark.core.prefab.machine.TileEntityMachine.SimplePacketTypes;
 
 /** Simple in out battery box
  * 
@@ -40,46 +38,42 @@ public class TileEntityBatteryBox extends TileEntityEnergyMachine
     {
         super.updateEntity();
 
-        if (!this.canFunction())
+        if (!this.worldObj.isRemote && this.enabled && !this.isDisabled())
         {
-            if (!this.worldObj.isRemote)
+            /** Recharges electric item. */
+            EnergyHelper.recharge(this.getStackInSlot(0), this);
+            /** Decharge electric item. */
+            EnergyHelper.discharge(this.getStackInSlot(1), this);
+
+            ForgeDirection outputDirection = ForgeDirection.getOrientation(this.getBlockMetadata());
+            TileEntity inputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), outputDirection.getOpposite());
+            TileEntity outputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), outputDirection);
+
+            IElectricityNetwork outputNetwork = ElectricityHelper.getNetworkFromTileEntity(outputTile, outputDirection);
+            IElectricityNetwork inputNetwork = ElectricityHelper.getNetworkFromTileEntity(inputTile, outputDirection.getOpposite());
+
+            if (outputNetwork != null)
             {
-                /** Recharges electric item. */
-                EnergyHelper.recharge(this.getStackInSlot(0), this);
-                /** Decharge electric item. */
-                EnergyHelper.discharge(this.getStackInSlot(1), this);
-
-                ForgeDirection outputDirection = ForgeDirection.getOrientation(this.getBlockMetadata());
-                TileEntity inputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), outputDirection.getOpposite());
-                TileEntity outputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), outputDirection);
-
-                IElectricityNetwork outputNetwork = ElectricityHelper.getNetworkFromTileEntity(outputTile, outputDirection);
-                IElectricityNetwork inputNetwork = ElectricityHelper.getNetworkFromTileEntity(inputTile, outputDirection.getOpposite());
-
-                if (outputNetwork != null)
+                if (inputNetwork != outputNetwork)
                 {
-                    if (inputNetwork != outputNetwork)
-                    {
-                        ElectricityPack powerRequest = outputNetwork.getRequest(this);
-                        float outputWatts = Math.min(outputNetwork.getRequest(this).getWatts(), Math.min(this.getEnergyStored(), 10000));
-                        if (powerRequest.getWatts() > 0)
-                        {
-                            ElectricityPack sendPack = ElectricityPack.min(ElectricityPack.getFromWatts(this.getEnergyStored(), this.getVoltage()), ElectricityPack.getFromWatts(outputWatts, this.getVoltage()));
-                            float rejectedPower = outputNetwork.produce(sendPack, this);
-                            this.provideElectricity(sendPack.getWatts() - rejectedPower, true);
-                        }
-                    }
-                }
-                else if (outputTile instanceof IElectrical)
-                {
-                    float powerRequest = ((IElectrical) outputTile).getRequest(outputDirection.getOpposite());
-                    float outputWatts = Math.min(powerRequest, Math.min(this.getEnergyStored(), 10000));
-                    if (powerRequest > 0)
+                    ElectricityPack powerRequest = outputNetwork.getRequest(this);
+                    float outputWatts = Math.min(outputNetwork.getRequest(this).getWatts(), Math.min(this.getEnergyStored(), 100));
+                    if (powerRequest.getWatts() > 0)
                     {
                         ElectricityPack sendPack = ElectricityPack.min(ElectricityPack.getFromWatts(this.getEnergyStored(), this.getVoltage()), ElectricityPack.getFromWatts(outputWatts, this.getVoltage()));
-                        float rejectedPower = ((IElectrical) outputTile).receiveElectricity(outputDirection.getOpposite(), sendPack, true);
-                        this.provideElectricity(sendPack.getWatts() - rejectedPower, true);
+
+                        this.setEnergyStored(this.getEnergyStored() - (sendPack.getWatts() - outputNetwork.produce(sendPack, this)));
                     }
+                }
+            }
+            else if (outputTile instanceof IElectrical)
+            {
+                float powerRequest = ((IElectrical) outputTile).getRequest(outputDirection.getOpposite());
+                float outputWatts = Math.min(powerRequest, Math.min(this.getEnergyStored(), 100));
+                if (powerRequest > 0)
+                {
+                    ElectricityPack sendPack = ElectricityPack.min(ElectricityPack.getFromWatts(this.getEnergyStored(), this.getVoltage()), ElectricityPack.getFromWatts(outputWatts, this.getVoltage()));
+                    this.setEnergyStored(this.getEnergyStored() - ((IElectrical) outputTile).receiveElectricity(outputDirection.getOpposite(), sendPack, true));
                 }
             }
         }
@@ -129,10 +123,17 @@ public class TileEntityBatteryBox extends TileEntityEnergyMachine
     {
         return PacketHandler.instance().getTilePacket(this.getChannel(), this, "desc", this.getEnergyStored(), this.getMaxEnergyStored());
     }
-    
-    public void sendGUIPacket(EntityPlayer entity)
+
+    @Override
+    public Packet getGUIPacket()
     {
-        
+        return this.getDescriptionPacket();
+    }
+
+    @Override
+    public Class<? extends Container> getContainer()
+    {
+        return ContainerBatteryBox.class;
     }
 
     @Override
