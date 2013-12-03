@@ -8,12 +8,13 @@ import com.builtbroken.common.science.ChemicalCompound;
  * @author DarkGuardsman */
 public enum EnumGas
 {
-    CarbonDiOxide("Carbon DiOxide", false),
-    Oxygen(ChemElement.Oxygen, 2f, true),
+    CARBONDIOXIDE("Carbon DiOxide", false),
+    OXYGEN(ChemElement.Oxygen, 2f, true),
     BUTANE(ChemicalCompound.BUTANE, true),
     METHANE(ChemicalCompound.METHANE, true),
     NATURAL_GAS("Natural Gas", false),
     PROPANE("Propane", false);
+    
     /** Name used when creating this as a fluid */
     public final String fluidName;
     /** Name used to display to the players */

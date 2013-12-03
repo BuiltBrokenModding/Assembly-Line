@@ -242,7 +242,7 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
                     if (((EntityPlayer) entity).openContainer.getClass().isAssignableFrom(this.getContainer()))
                     {
                         this.playersUsingMachine += 1;
-                        this.sendGUIPacket(((EntityPlayer) entity));
+                        this.sendGUIPacket((EntityPlayer) entity);
                     }
                 }
             }
