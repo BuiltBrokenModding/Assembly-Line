@@ -6,7 +6,22 @@ import universalelectricity.core.electricity.ElectricityPack;
 public abstract class TileEntityGenerator extends TileEntityEnergyMachine
 {
     /** Run time left */
-    int burnTime = 0;
+    protected int burnTime = 0;
+
+    public TileEntityGenerator()
+    {
+        super();
+    }
+
+    public TileEntityGenerator(float wattsPerTick)
+    {
+        super(wattsPerTick);
+    }
+
+    public TileEntityGenerator(float wattsPerTick, float maxEnergy)
+    {
+        super(wattsPerTick, maxEnergy);
+    }
 
     @Override
     public void updateEntity()
@@ -14,7 +29,7 @@ public abstract class TileEntityGenerator extends TileEntityEnergyMachine
         super.updateEntity();
         if (!this.worldObj.isRemote && this.enabled)
         {
-            if (this.burnTime <= 10)
+            if (this.burnTime <= 0)
             {
                 this.consumeFuel();
             }

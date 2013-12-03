@@ -14,6 +14,7 @@ import universalelectricity.prefab.tile.IRotatable;
 
 import com.google.common.io.ByteArrayDataInput;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import dark.api.IDisableable;
 import dark.core.common.DarkMain;
@@ -225,14 +226,15 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
     }
 
     /** Sends a gui packet only to the given player */
-    public void sendGUIPacket(EntityPlayer entity)
+    public Packet getGUIPacket()
     {
-
+        return null;
     }
 
     public void sendGUIPacket()
     {
-        if (this.hasGUI && this.getContainer() != null && this.ticks % 5 == 0)
+        Packet packet = this.getGUIPacket();
+        if (this.hasGUI && this.getContainer() != null && packet != null)
         {
             this.playersUsingMachine = 0;
             for (Object entity : this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1).expand(10, 10, 10)))
@@ -242,7 +244,7 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
                     if (((EntityPlayer) entity).openContainer.getClass().isAssignableFrom(this.getContainer()))
                     {
                         this.playersUsingMachine += 1;
-                        this.sendGUIPacket((EntityPlayer) entity);
+                        PacketDispatcher.sendPacketToPlayer(packet, (Player) entity);
                     }
                 }
             }

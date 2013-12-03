@@ -7,50 +7,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityPack;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
+import dark.core.prefab.machine.TileEntityGenerator;
 
-public class TileEntitySolarPanel extends TileEntityEnergyMachine
+public class TileEntitySolarPanel extends TileEntityGenerator
 {
-    protected float wattOutput = 0;
-
     public TileEntitySolarPanel()
     {
         super(0, 1);
-    }
-
-    @Override
-    public void updateEntity()
-    {
-        super.updateEntity();
-        if (!this.worldObj.isRemote && this.ticks % BlockSolarPanel.tickRate == 0)
-        {
-
-            if (this.worldObj.canBlockSeeTheSky(xCoord, yCoord + 1, zCoord) && !this.worldObj.provider.hasNoSky)
-            {
-                if (this.worldObj.isDaytime())
-                {
-                    this.wattOutput = BlockSolarPanel.wattDay;
-                    if (this.worldObj.isThundering() || this.worldObj.isRaining())
-                    {
-                        this.wattOutput = BlockSolarPanel.wattStorm;
-                    }
-                }
-                else
-                {
-                    this.wattOutput = BlockSolarPanel.wattNight;
-                    if (this.worldObj.isThundering() || this.worldObj.isRaining())
-                    {
-                        this.wattOutput = 0;
-                    }
-                }
-                this.wattOutput += this.wattOutput * (this.worldObj.provider instanceof ISolarLevel ? (int) ((ISolarLevel) this.worldObj.provider).getSolarEnergyMultiplier() : 0);
-            }
-            else
-            {
-                wattOutput = 0;
-            }
-            this.produceAllSides();
-        }
-
     }
 
     @Override
@@ -60,26 +23,38 @@ public class TileEntitySolarPanel extends TileEntityEnergyMachine
     }
 
     @Override
-    public float getRequest(ForgeDirection direction)
+    public void consumeFuel()
     {
-        return 0;
-    }
+        this.burnTime = BlockSolarPanel.tickRate;
+        if (!this.worldObj.isRemote && this.ticks % BlockSolarPanel.tickRate == 0)
+        {
 
-    @Override
-    public float getProvide(ForgeDirection direction)
-    {
-        return this.wattOutput;
-    }
+            if (this.worldObj.canBlockSeeTheSky(xCoord, yCoord + 1, zCoord) && !this.worldObj.provider.hasNoSky)
+            {
+                if (this.worldObj.isDaytime())
+                {
+                    this.setJoulesPerTick(BlockSolarPanel.wattDay);
+                    if (this.worldObj.isThundering() || this.worldObj.isRaining())
+                    {
+                        this.setJoulesPerTick(BlockSolarPanel.wattStorm);
+                    }
+                }
+                else
+                {
+                    this.setJoulesPerTick(BlockSolarPanel.wattNight);
+                    if (this.worldObj.isThundering() || this.worldObj.isRaining())
+                    {
+                        this.setJoulesPerTick(0);
+                    }
+                }
+                this.setJoulesPerTick(this.JOULES_PER_TICK + this.JOULES_PER_TICK * (this.worldObj.provider instanceof ISolarLevel ? (int) ((ISolarLevel) this.worldObj.provider).getSolarEnergyMultiplier() : 0));
+            }
+            else
+            {
+                this.setJoulesPerTick(0);
+            }
+            this.produceAllSides();
+        }
 
-    @Override
-    public float receiveElectricity(ElectricityPack receive, boolean doReceive)
-    {
-        return 0;
-    }
-
-    @Override
-    public float getVoltage()
-    {
-        return 0.060F;
     }
 }

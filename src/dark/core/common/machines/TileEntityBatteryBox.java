@@ -5,6 +5,7 @@ import java.util.EnumSet;
 
 import com.google.common.io.ByteArrayDataInput;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -127,6 +128,11 @@ public class TileEntityBatteryBox extends TileEntityEnergyMachine
     public Packet getDescriptionPacket()
     {
         return PacketHandler.instance().getTilePacket(this.getChannel(), this, "desc", this.getEnergyStored(), this.getMaxEnergyStored());
+    }
+    
+    public void sendGUIPacket(EntityPlayer entity)
+    {
+        
     }
 
     @Override
