@@ -21,19 +21,22 @@ import dark.api.energy.IPowerLess;
 import dark.core.common.ExternalModHandler;
 
 /** Basic energy tile that can consume power
- *
+ * 
  * Based off both UE universal electrical tile, and electrical tile prefabs
- *
+ * 
  * @author DarkGuardsman */
 public abstract class TileEntityEnergyMachine extends TileEntityMachine implements IElectrical, IElectricalStorage, IPowerLess
 {
     /** Forge Ore Directory name of the item to toggle infinite power mode */
     public static String powerToggleItemID = "battery";
-
-    public float WATTS_PER_TICK, MAX_WATTS, maxInputEnergy = 100, energyStored = 0;
-    protected boolean isAddedToEnergyNet, consumeEnergy = true;
-    public PowerHandler bcPowerHandler;
-    public Type bcBlockType = Type.MACHINE;
+    /** Demand per tick in watts */
+    public float JOULES_PER_TICK;
+    /** Max limit of the internal battery/buffer of the machine */
+    public float MAX_JOULES_STORED;
+    /** Current energy stored in the machine's battery/buffer */
+    public float energyStored = 0;
+    /** Should we run without power */
+    protected boolean runWithoutPower = true;
 
     public TileEntityEnergyMachine()
     {
@@ -42,14 +45,14 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
 
     public TileEntityEnergyMachine(float wattsPerTick)
     {
-        this.WATTS_PER_TICK = wattsPerTick;
-        this.MAX_WATTS = wattsPerTick * 20;
+        this.JOULES_PER_TICK = wattsPerTick;
+        this.MAX_JOULES_STORED = wattsPerTick * 20;
     }
 
     public TileEntityEnergyMachine(float wattsPerTick, float maxEnergy)
     {
-        this.WATTS_PER_TICK = wattsPerTick;
-        this.MAX_WATTS = maxEnergy;
+        this.JOULES_PER_TICK = wattsPerTick;
+        this.MAX_JOULES_STORED = maxEnergy;
     }
 
     /** Called to consume power from the internal storage */
@@ -70,19 +73,19 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     @Override
     public boolean canFunction()
     {
-        return !this.isDisabled() && (this.runPowerLess() || this.consumePower(this.WATTS_PER_TICK, false));
+        return !this.isDisabled() && (this.runPowerLess() || this.consumePower(this.JOULES_PER_TICK, false));
     }
 
     @Override
     public boolean runPowerLess()
     {
-        return !consumeEnergy || ExternalModHandler.runPowerLess();
+        return !runWithoutPower || ExternalModHandler.runPowerLess();
     }
 
     @Override
     public void setPowerLess(boolean bool)
     {
-        consumeEnergy = !bool;
+        runWithoutPower = !bool;
     }
 
     public void togglePowerMode()
@@ -119,7 +122,7 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
         {
             if (this.isFunctioning())
             {
-                this.consumePower(this.WATTS_PER_TICK, true);
+                this.consumePower(this.JOULES_PER_TICK, true);
             }
         }
     }
@@ -165,7 +168,7 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     }
 
     /** The electrical input direction.
-     *
+     * 
      * @return The direction that electricity is entered into the tile. Return null for no input. By
      * default you can accept power from all sides. */
     public EnumSet<ForgeDirection> getInputDirections()
@@ -174,7 +177,7 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     }
 
     /** The electrical output direction.
-     *
+     * 
      * @return The direction that electricity is output from the tile. Return null for no output. By
      * default it will return an empty EnumSet. */
     public EnumSet<ForgeDirection> getOutputDirections()
@@ -294,7 +297,7 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     {
         super.readFromNBT(nbt);
         this.energyStored = nbt.getFloat("energyStored");
-        consumeEnergy = !nbt.getBoolean("shouldPower");
+        runWithoutPower = !nbt.getBoolean("shouldPower");
         this.functioning = nbt.getBoolean("isRunning");
 
         if (nbt.hasKey("wattsReceived"))
@@ -307,7 +310,7 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     public void writeToNBT(NBTTagCompound nbt)
     {
         super.writeToNBT(nbt);
-        nbt.setBoolean("shouldPower", !consumeEnergy);
+        nbt.setBoolean("shouldPower", !runWithoutPower);
         nbt.setFloat("energyStored", this.energyStored);
         nbt.setBoolean("isRunning", this.functioning);
     }
@@ -315,7 +318,7 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     @Override
     public float getMaxEnergyStored()
     {
-        return this.MAX_WATTS;
+        return this.MAX_JOULES_STORED;
     }
 
     @Override
