@@ -23,6 +23,7 @@ cd GreaterProtection
 git commit -am "%com%"
 git push origin master
 cd ..\
-cd GSM
+cd Empire-Engine
+git submodule foreach git pull origin master
 git commit -am "%com%"
 git push origin master
