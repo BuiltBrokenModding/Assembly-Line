@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
-import dark.machines.common.DarkMain;
+import dark.machines.DarkMain;
 
 public class GuiMessageBox extends GuiBase
 {

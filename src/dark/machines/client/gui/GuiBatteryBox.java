@@ -11,9 +11,9 @@ import universalelectricity.core.electricity.ElectricityDisplay;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.common.DarkMain;
-import dark.machines.common.machines.ContainerBatteryBox;
-import dark.machines.common.machines.TileEntityBatteryBox;
+import dark.machines.DarkMain;
+import dark.machines.machines.ContainerBatteryBox;
+import dark.machines.machines.TileEntityBatteryBox;
 
 @SideOnly(Side.CLIENT)
 public class GuiBatteryBox extends GuiContainer

@@ -8,7 +8,7 @@ import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.common.DarkMain;
+import dark.machines.DarkMain;
 
 public class BlockFluid extends BlockFluidFinite
 {

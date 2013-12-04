@@ -13,10 +13,10 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.prefab.ModPrefab;
+import dark.machines.CoreRecipeLoader;
+import dark.machines.DarkMain;
 import dark.machines.client.models.ModelMachine;
 import dark.machines.client.models.ModelSolarPanel;
-import dark.machines.common.CoreRecipeLoader;
-import dark.machines.common.DarkMain;
 
 @SideOnly(Side.CLIENT)
 public class BlockRenderingHandler implements ISimpleBlockRenderingHandler

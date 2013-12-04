@@ -10,10 +10,10 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.machine.TileEntityMachine;
+import dark.machines.DarkMain;
 import dark.machines.client.models.ModelMachine;
 import dark.machines.client.models.ModelSteamGen;
 import dark.machines.client.models.ModelSteamTurbine;
-import dark.machines.common.DarkMain;
 
 @SideOnly(Side.CLIENT)
 public class RenderSteamGen extends RenderTileMachine

@@ -11,10 +11,10 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.machines.CoreRecipeLoader;
+import dark.machines.DarkMain;
 import dark.machines.client.models.ModelSmallFluidCan;
-import dark.machines.common.CoreRecipeLoader;
-import dark.machines.common.DarkMain;
-import dark.machines.common.items.ItemFluidCan;
+import dark.machines.items.ItemFluidCan;
 
 @SideOnly(Side.CLIENT)
 public class ItemRenderFluidCan implements IItemRenderer

@@ -1,7 +1,7 @@
 package dark.core.prefab.entities;
 
 import net.minecraft.world.World;
-import dark.machines.common.CoreRecipeLoader;
+import dark.machines.CoreRecipeLoader;
 
 public class EntityTestCar extends EntityVehicle
 {

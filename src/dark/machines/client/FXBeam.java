@@ -16,7 +16,7 @@ import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.common.DarkMain;
+import dark.machines.DarkMain;
 
 /** Based off Thaumcraft's Beam Renderer.
  * 

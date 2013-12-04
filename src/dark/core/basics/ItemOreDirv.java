@@ -16,7 +16,7 @@ import dark.api.events.LaserEvent;
 import dark.core.interfaces.IExtraInfo.IExtraItemInfo;
 import dark.core.prefab.ItemBasic;
 import dark.core.prefab.ModPrefab;
-import dark.machines.common.DarkMain;
+import dark.machines.DarkMain;
 
 /** A series of items that are derived from a basic material
  * 

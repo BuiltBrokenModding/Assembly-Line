@@ -23,10 +23,10 @@ import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.IGasBlock;
+import dark.core.DMCreativeTab;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.fluids.EnumGas;
-import dark.machines.common.DMCreativeTab;
-import dark.machines.common.DarkMain;
+import dark.machines.DarkMain;
 
 /** Gas that is designed to generate underground in the same way as an ore
  * 

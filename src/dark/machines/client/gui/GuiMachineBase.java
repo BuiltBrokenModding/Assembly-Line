@@ -13,7 +13,7 @@ import dark.core.prefab.invgui.GuiBase;
 import dark.core.prefab.invgui.GuiButtonImage;
 import dark.core.prefab.invgui.GuiButtonImage.ButtonIcon;
 import dark.core.prefab.machine.TileEntityMachine;
-import dark.machines.common.DarkMain;
+import dark.machines.DarkMain;
 
 /** To be used with all machine that have a gui to allow generic settings and feature all all devices
  * 

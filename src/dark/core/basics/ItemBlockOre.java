@@ -3,7 +3,7 @@ package dark.core.basics;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import dark.core.basics.BlockOre.OreData;
-import dark.machines.common.DarkMain;
+import dark.machines.DarkMain;
 
 public class ItemBlockOre extends ItemBlock
 {

@@ -11,8 +11,8 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.prefab.entities.EntityAdvanced;
+import dark.machines.DarkMain;
 import dark.machines.client.models.ModelTestCar;
-import dark.machines.common.DarkMain;
 
 @SideOnly(Side.CLIENT)
 public class RenderTestCar extends Render

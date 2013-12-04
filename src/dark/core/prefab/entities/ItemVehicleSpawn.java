@@ -12,8 +12,8 @@ import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import dark.core.DMCreativeTab;
 import dark.core.prefab.ModPrefab;
-import dark.machines.common.DMCreativeTab;
 
 /** Basic item used to spawn a vehicle
  * 

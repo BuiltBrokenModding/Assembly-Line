@@ -13,7 +13,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.interfaces.IExtraInfo.IExtraItemInfo;
 import dark.core.prefab.ItemBasic;
 import dark.core.prefab.ModPrefab;
-import dark.machines.common.DarkMain;
+import dark.machines.DarkMain;
 
 /** A meta data item containing parts of various crafting recipes. These parts do not do anything but
  * allow new crafting recipes to be created.

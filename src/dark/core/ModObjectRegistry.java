@@ -26,7 +26,7 @@ import dark.core.interfaces.IExtraInfo.IExtraBlockInfo;
 import dark.core.interfaces.IExtraInfo.IExtraItemInfo;
 import dark.core.prefab.BlockFluid;
 import dark.core.prefab.machine.BlockMachine;
-import dark.machines.common.DarkMain;
+import dark.machines.DarkMain;
 
 /** Handler to make registering all parts of a mod's objects that are loaded into the game by forge
  * 

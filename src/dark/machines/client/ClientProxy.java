@@ -14,13 +14,13 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.entities.EntityTestCar;
+import dark.machines.CommonProxy;
+import dark.machines.CoreRecipeLoader;
 import dark.machines.client.gui.GuiBatteryBox;
 import dark.machines.client.renders.BlockRenderingHandler;
 import dark.machines.client.renders.ItemRenderFluidCan;
 import dark.machines.client.renders.RenderTestCar;
-import dark.machines.common.CommonProxy;
-import dark.machines.common.CoreRecipeLoader;
-import dark.machines.common.machines.TileEntityBatteryBox;
+import dark.machines.machines.TileEntityBatteryBox;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy

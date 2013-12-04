@@ -11,7 +11,7 @@ import com.builtbroken.common.Pair;
 import dark.core.ModObjectRegistry;
 import dark.core.prefab.ItemBlockHolder;
 import dark.core.prefab.machine.BlockMachine;
-import dark.machines.common.DarkMain;
+import dark.machines.DarkMain;
 
 /** Actual block that is the sentry gun. Mainly a place holder as the sentry guns need something to
  * exist threw that is not an entity. Renders need to still be handled by the respective mod.

@@ -29,7 +29,7 @@ import dark.core.ModObjectRegistry.BlockBuildData;
 import dark.core.interfaces.IBlockActivated;
 import dark.core.interfaces.IExtraInfo.IExtraBlockInfo;
 import dark.core.prefab.ModPrefab;
-import dark.machines.common.DarkMain;
+import dark.machines.DarkMain;
 
 /** Basic TileEntity Container class designed to be used by generic machines. It is suggested that
  * each mod using this create there own basic block extending this to reduce need to use build data

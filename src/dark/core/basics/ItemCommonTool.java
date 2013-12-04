@@ -37,7 +37,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.interfaces.IExtraInfo.IExtraItemInfo;
 import dark.core.prefab.ModPrefab;
-import dark.machines.common.DarkMain;
+import dark.machines.DarkMain;
 
 /** Flexible tool class that uses NBT to store damage and effect rather than metadata. Metadata
  * instead is used to store sub items allowing several different tools to exist within the same item

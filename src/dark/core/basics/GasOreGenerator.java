@@ -10,7 +10,7 @@ import net.minecraft.world.gen.ChunkProviderEnd;
 import net.minecraft.world.gen.ChunkProviderHell;
 import net.minecraftforge.fluids.FluidStack;
 import cpw.mods.fml.common.IWorldGenerator;
-import dark.machines.common.CoreRecipeLoader;
+import dark.machines.CoreRecipeLoader;
 
 public class GasOreGenerator implements IWorldGenerator
 {

@@ -24,11 +24,11 @@ import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import dark.api.save.SaveManager;
 import dark.core.CoreMachine;
+import dark.core.ExternalModHandler;
 import dark.core.ModObjectRegistry;
+import dark.core.PlayerKeyHandler;
 import dark.core.prefab.fluids.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkUpdateHandler;
-import dark.machines.common.ExternalModHandler;
-import dark.machines.common.PlayerKeyHandler;
 
 public abstract class ModPrefab
 {

@@ -246,4 +246,11 @@ public class InvChest implements IInvBox
 
     }
 
+    @Override
+    public void clear()
+    {
+        this.containedItems = null;
+        this.getContainedItems();
+    }
+
 }

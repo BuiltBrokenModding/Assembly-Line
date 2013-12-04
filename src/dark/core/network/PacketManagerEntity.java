@@ -12,7 +12,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
-import dark.machines.common.DarkMain;
+import dark.machines.DarkMain;
 
 public class PacketManagerEntity implements IPacketManager
 {

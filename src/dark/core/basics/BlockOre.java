@@ -22,8 +22,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.interfaces.IExtraInfo.IExtraBlockInfo;
 import dark.core.prefab.ModPrefab;
-import dark.machines.common.CoreRecipeLoader;
-import dark.machines.common.DarkMain;
+import dark.machines.CoreRecipeLoader;
+import dark.machines.DarkMain;
 
 public class BlockOre extends Block implements IExtraBlockInfo
 {
