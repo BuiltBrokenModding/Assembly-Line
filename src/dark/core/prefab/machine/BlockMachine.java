@@ -24,17 +24,17 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.access.AccessUser;
 import dark.api.access.ISpecialAccess;
-import dark.api.parts.INetworkPart;
-import dark.core.common.DarkMain;
+import dark.api.tilenetwork.INetworkPart;
+import dark.core.ModObjectRegistry.BlockBuildData;
 import dark.core.interfaces.IBlockActivated;
 import dark.core.interfaces.IExtraInfo.IExtraBlockInfo;
 import dark.core.prefab.ModPrefab;
-import dark.core.registration.ModObjectRegistry.BlockBuildData;
+import dark.machines.common.DarkMain;
 
 /** Basic TileEntity Container class designed to be used by generic machines. It is suggested that
  * each mod using this create there own basic block extending this to reduce need to use build data
  * per block.
- * 
+ *
  * @author Darkguardsman */
 public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
 {

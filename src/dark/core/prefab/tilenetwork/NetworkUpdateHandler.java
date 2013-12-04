@@ -8,7 +8,7 @@ import java.util.Set;
 
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
-import dark.api.parts.ITileNetwork;
+import dark.api.tilenetwork.ITileNetwork;
 
 /** Manages all the tile networks making sure they get world save events, and updates every so often
  * 

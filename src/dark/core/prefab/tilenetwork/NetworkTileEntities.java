@@ -10,8 +10,8 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.path.Pathfinder;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
-import dark.api.parts.INetworkPart;
-import dark.api.parts.ITileNetwork;
+import dark.api.tilenetwork.INetworkPart;
+import dark.api.tilenetwork.ITileNetwork;
 
 public class NetworkTileEntities implements ITileNetwork
 {

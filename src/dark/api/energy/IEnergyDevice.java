@@ -1,6 +1,6 @@
 package dark.api.energy;
 
-import dark.api.parts.ITileConnector;
+import dark.api.tilenetwork.ITileConnector;
 
 public interface IEnergyDevice extends ITileConnector
 {

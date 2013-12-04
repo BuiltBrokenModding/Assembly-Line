@@ -11,8 +11,8 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
-import dark.core.common.DarkMain;
 import dark.core.interfaces.IControlReceiver;
+import dark.machines.common.DarkMain;
 
 public class PacketManagerKeyEvent implements IPacketManager
 {

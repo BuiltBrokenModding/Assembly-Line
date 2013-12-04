@@ -1,10 +1,9 @@
 package dark.core.prefab.machine;
 
-import universalelectricity.core.block.IElectricalStorage;
-import universalelectricity.core.electricity.ElectricityPack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.core.block.IElectricalStorage;
+import universalelectricity.core.electricity.ElectricityPack;
 
 /** Basic energy bank class designed to remove most of the energy buffer code from a machine */
 public class EnergyBank implements IElectricalStorage

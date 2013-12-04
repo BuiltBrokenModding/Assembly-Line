@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.vector.Vector2;
-import dark.core.common.DarkMain;
+import dark.machines.common.DarkMain;
 
 /** When done should be a prefab that can be used to render a power bar on the screen
  * 

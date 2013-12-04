@@ -11,8 +11,8 @@ import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;
 
-import dark.api.parts.IMotionPath;
-import dark.api.parts.INetworkPart;
+import dark.api.tilenetwork.IMotionPath;
+import dark.api.tilenetwork.INetworkPart;
 
 /** Class that acts like the redpower pipes system. Each item is marked with a destination. Intended
  * use it to improve the assembly line network

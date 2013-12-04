@@ -1,8 +1,6 @@
 package dark.api;
 
-import universalelectricity.core.electricity.ElectricityPack;
 import net.minecraft.nbt.NBTTagCompound;
-import dark.api.energy.EnergyPack;
 import dark.api.save.ISaveObj;
 import dark.api.save.NBTFileHelper;
 

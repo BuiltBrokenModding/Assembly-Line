@@ -8,9 +8,9 @@ import net.minecraft.tileentity.TileEntity;
 
 import com.builtbroken.common.Pair;
 
-import dark.core.common.DarkMain;
+import dark.core.ModObjectRegistry;
 import dark.core.prefab.machine.BlockMachine;
-import dark.core.registration.ModObjectRegistry;
+import dark.machines.common.DarkMain;
 
 /** Actual block that is the sentry gun. Mainly a place holder as the sentry guns need something to
  * exist threw that is not an entity.

@@ -16,6 +16,7 @@ import dark.api.access.GroupRegistry;
 import dark.api.access.ITerminal;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
+import dark.core.prefab.machine.TileEntityMachine.SimplePacketTypes;
 
 /** @author Calclavia, DarkGuardsman */
 public abstract class TileEntityTerminal extends TileEntityEnergyMachine implements ITerminal

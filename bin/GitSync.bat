@@ -5,6 +5,7 @@ IF NOT "a%1"=="a" (set "com=%1")
 
 cd ..\
 git commit -am "%com%"
+git submodule foreach git pull origin master
 git push origin master
 cd ..\
 cd Assembly-Line

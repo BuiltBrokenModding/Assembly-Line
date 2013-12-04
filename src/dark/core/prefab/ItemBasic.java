@@ -6,7 +6,7 @@ import net.minecraft.util.Icon;
 import net.minecraftforge.common.Configuration;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.common.DarkMain;
+import dark.machines.common.DarkMain;
 
 public class ItemBasic extends Item
 {

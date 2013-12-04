@@ -16,12 +16,12 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;
 import dark.api.ISentryGun;
-import dark.core.common.DarkMain;
 import dark.core.helpers.MathHelper;
 import dark.core.helpers.RayTraceHelper;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.EntityTileDamage;
 import dark.core.prefab.machine.TileEntityMachine;
+import dark.machines.common.DarkMain;
 
 /** Prefab tileEntity for creating senty guns that can be of type aimed, mounted, or automated.
  * Contains most of the code for a sentry gun to operate short of aiming and operating logic. This

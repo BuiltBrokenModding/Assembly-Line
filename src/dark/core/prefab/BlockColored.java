@@ -11,7 +11,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.common.DarkMain;
+import dark.machines.common.DarkMain;
 
 /** Prefab class to make any block have 16 separate color instances similar to wool block
  * 

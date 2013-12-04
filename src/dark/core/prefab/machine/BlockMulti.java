@@ -21,9 +21,9 @@ import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.common.DarkMain;
 import dark.core.interfaces.IExtraInfo.IExtraBlockInfo;
 import dark.core.prefab.ModPrefab;
+import dark.machines.common.DarkMain;
 
 public class BlockMulti extends BlockContainer implements IExtraBlockInfo
 {

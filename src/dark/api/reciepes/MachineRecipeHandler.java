@@ -16,11 +16,11 @@ import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.api.ColorCode;
-import dark.core.common.CoreRecipeLoader;
-import dark.core.common.items.EnumMaterial;
-import dark.core.common.items.EnumOrePart;
-import dark.core.common.items.ItemOreDirv;
 import dark.core.helpers.AutoCraftingManager;
+import dark.machines.common.CoreRecipeLoader;
+import dark.machines.common.items.EnumMaterial;
+import dark.machines.common.items.EnumOrePart;
+import dark.machines.common.items.ItemOreDirv;
 
 /** Recipes for ore processor machines
  * 

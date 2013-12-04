@@ -16,12 +16,12 @@ import universalelectricity.core.grid.IElectricityNetwork;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import dark.api.energy.IPowerLess;
-import dark.core.common.ExternalModHandler;
+import dark.machines.common.ExternalModHandler;
 
 /** Basic energy tile that can consume power
- * 
+ *
  * Based off both UE universal electrical tile, and electrical tile prefabs
- * 
+ *
  * @author DarkGuardsman */
 public abstract class TileEntityEnergyMachine extends TileEntityMachine implements IElectrical, IElectricalStorage, IPowerLess
 {
@@ -262,7 +262,7 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     }
 
     /** The electrical input direction.
-     * 
+     *
      * @return The direction that electricity is entered into the tile. Return null for no input. By
      * default you can accept power from all sides. */
     public EnumSet<ForgeDirection> getInputDirections()
@@ -271,7 +271,7 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     }
 
     /** The electrical output direction.
-     * 
+     *
      * @return The direction that electricity is output from the tile. Return null for no output. By
      * default it will return an empty EnumSet. */
     public EnumSet<ForgeDirection> getOutputDirections()

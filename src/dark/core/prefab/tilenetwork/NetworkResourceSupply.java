@@ -5,7 +5,7 @@ import java.util.List;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import dark.api.parts.INetworkPart;
+import dark.api.tilenetwork.INetworkPart;
 
 /** Network that supplies resources to tiles that demand a set resource
  * 

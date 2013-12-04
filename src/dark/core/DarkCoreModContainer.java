@@ -15,7 +15,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.versioning.ArtifactVersion;
 import cpw.mods.fml.common.versioning.VersionParser;
 import cpw.mods.fml.common.versioning.VersionRange;
-import dark.core.common.DarkMain;
+import dark.machines.common.DarkMain;
 
 public class DarkCoreModContainer extends DummyModContainer
 {

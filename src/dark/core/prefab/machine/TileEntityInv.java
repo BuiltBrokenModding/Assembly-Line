@@ -14,16 +14,16 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import dark.api.access.AccessGroup;
 import dark.api.access.AccessUser;
+import dark.api.access.GroupRegistry;
 import dark.api.access.ISpecialAccess;
 import dark.api.access.Nodes;
-import dark.api.access.GroupRegistry;
 import dark.core.interfaces.IExternalInv;
 import dark.core.interfaces.IInvBox;
 import dark.core.prefab.invgui.InvChest;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
 /** Prefab for simple object who only need basic inv support and nothing more
- * 
+ *
  * @author Darkguardsman */
 public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, ISidedInventory, ISpecialAccess
 {

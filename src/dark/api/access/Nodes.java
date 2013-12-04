@@ -1,6 +1,5 @@
 package dark.api.access;
 
-import mffs.api.security.Permission;
 
 /** Constants that represent nodes by which machines and entities used in combination with
  * ISpecialAccess to limit users on what they can do. These nodes should be used in the same way by

@@ -1,7 +1,7 @@
 package dark.api.energy;
 
 import net.minecraftforge.common.ForgeDirection;
-import dark.api.parts.ITileConnector;
+import dark.api.tilenetwork.ITileConnector;
 
 /** Think of this in the same way as an electrical device from UE. getforce methods are designed to
  * get the idea amount of force that a side should be outputting at the time. Apply force is the

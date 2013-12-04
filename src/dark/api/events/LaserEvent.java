@@ -20,8 +20,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Cancelable;
 import net.minecraftforge.event.Event;
 import universalelectricity.core.vector.Vector3;
-import dark.core.common.items.EnumTool;
 import dark.core.helpers.ItemWorldHelper;
+import dark.machines.common.items.EnumTool;
 
 /** An event triggered by entities or tiles that create lasers
  * 

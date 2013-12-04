@@ -1,7 +1,7 @@
 package dark.api.energy;
 
 import net.minecraftforge.common.ForgeDirection;
-import dark.api.parts.ITileConnector;
+import dark.api.tilenetwork.ITileConnector;
 
 /** Used by TileEntities or Entities to show heat stored and cooling rate of the object
  * 
