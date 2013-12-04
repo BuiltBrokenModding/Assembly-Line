@@ -32,6 +32,7 @@ public class ItemFluidCan extends ItemFluidContainer
     public ItemFluidCan()
     {
         super(DarkMain.CONFIGURATION.getItem("FluidCan", ModPrefab.getNextItemId()).getInt());
+        this.setUnlocalizedName("FluidCan");
         this.setCreativeTab(DMCreativeTab.tabHydrualic);
         this.setMaxStackSize(1);
         this.setMaxDamage(100);
@@ -63,6 +64,7 @@ public class ItemFluidCan extends ItemFluidContainer
         return ("" + (fluid + " " + StatCollector.translateToLocal(this.getUnlocalizedNameInefficiently(par1ItemStack) + ".name"))).trim();
     }
 
+    @Override
     public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
     {
         FluidStack fluidStack = this.drain(par1ItemStack, Integer.MAX_VALUE, false);

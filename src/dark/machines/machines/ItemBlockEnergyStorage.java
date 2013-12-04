@@ -1,5 +1,7 @@
 package dark.machines.machines;
 
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
@@ -7,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
 import universalelectricity.core.vector.Vector3;
 import dark.machines.CoreRecipeLoader;
 
@@ -26,6 +29,15 @@ public class ItemBlockEnergyStorage extends ItemBlock
     public int getMetadata(int damage)
     {
         return damage;
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
+    {
+        if (stack.getTagCompound() != null && stack.getTagCompound().hasKey("wrenched"))
+        {
+            list.add("Energy: " + stack.getTagCompound().getFloat("energy"));
+        }
     }
 
     @Override
