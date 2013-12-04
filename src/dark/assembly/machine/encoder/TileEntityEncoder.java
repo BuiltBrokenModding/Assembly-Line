@@ -2,7 +2,6 @@ package dark.assembly.machine.encoder;
 
 import java.io.IOException;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -15,21 +14,14 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
-import dark.api.al.coding.IProcessTask;
 import dark.api.al.coding.IProgram;
 import dark.api.al.coding.ITask;
 import dark.api.al.coding.TaskRegistry;
 import dark.assembly.armbot.Program;
-import dark.assembly.armbot.command.TaskDrop;
-import dark.assembly.armbot.command.TaskGOTO;
-import dark.assembly.armbot.command.TaskGive;
-import dark.assembly.armbot.command.TaskGrabItem;
-import dark.assembly.armbot.command.TaskIF;
 import dark.assembly.armbot.command.TaskRotateTo;
 import dark.core.common.DarkMain;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.machine.TileEntityMachine;
-import dark.core.prefab.machine.TileEntityMachine.SimplePacketTypes;
 
 public class TileEntityEncoder extends TileEntityMachine implements ISidedInventory
 {
@@ -179,12 +171,9 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
 
     /** Sends a gui packet only to the given player */
     @Override
-    public void sendGUIPacket(EntityPlayer entity)
+    public Packet getGUIPacket()
     {
-        if (entity != null)
-        {
-            PacketDispatcher.sendPacketToPlayer(this.getDescriptionPacket(), (Player) entity);
-        }
+        return this.getDescriptionPacket();
     }
 
     @Override

@@ -1,9 +1,8 @@
 package dark.assembly.machine.processor;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -19,7 +18,7 @@ import dark.core.prefab.invgui.InvChest;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
 
 /** Basic A -> B recipe processor machine designed mainly to handle ore blocks
- *
+ * 
  * @author DarkGuardsman */
 public class TileEntityProcessor extends TileEntityEnergyMachine
 {
@@ -39,8 +38,8 @@ public class TileEntityProcessor extends TileEntityEnergyMachine
         if (this.processorData == null)
         {
             this.processorData = ProcessorData.values()[this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) / 4];
-            this.WATTS_PER_TICK = processorData.wattPerTick;
-            this.MAX_WATTS = this.WATTS_PER_TICK * 20;
+            this.JOULES_PER_TICK = processorData.wattPerTick;
+            this.MAX_JOULES_STORED = this.JOULES_PER_TICK * 20;
 
             this.processingTime = processorData.processingTicks;
         }
@@ -273,12 +272,10 @@ public class TileEntityProcessor extends TileEntityEnergyMachine
     }
 
     @Override
-    public void sendGUIPacket(EntityPlayer entity)
+    public Packet getGUIPacket()
     {
-        if (!this.worldObj.isRemote && entity instanceof EntityPlayerMP)
-        {
-            ((EntityPlayerMP) entity).playerNetServerHandler.sendPacketToPlayer(PacketHandler.instance().getTilePacket(this.getChannel(), this, SimplePacketTypes.GUI.name, this.processingTicks, this.processingTime, this.energyStored));
-        }
+        return PacketHandler.instance().getTilePacket(this.getChannel(), this, SimplePacketTypes.GUI.name, this.processingTicks, this.processingTime, this.energyStored);
+
     }
 
     @Override

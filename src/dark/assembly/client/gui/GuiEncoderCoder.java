@@ -14,7 +14,6 @@ import dark.core.prefab.invgui.GuiButtonImage.ButtonIcon;
 
 public class GuiEncoderCoder extends GuiEncoderBase
 {
-    public static final ResourceLocation TEXTURE_CODE_BACK = new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.GUI_DIRECTORY + "gui_encoder_coder.png");
     private GuiTaskList taskListGui;
     GuiButtonImage left, right, up, down;
     GuiButton newTask, newTask2;
@@ -165,7 +164,7 @@ public class GuiEncoderCoder extends GuiEncoderBase
     {
         super.drawGuiContainerForegroundLayer(x, y);
         taskListGui.drawGuiContainerForegroundLayer(this.mc, x, y);
-        if(!this.insertingTask)
+        if (!this.insertingTask)
         {
             this.helpMessage = "";
         }

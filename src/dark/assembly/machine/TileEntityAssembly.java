@@ -176,7 +176,7 @@ public abstract class TileEntityAssembly extends TileEntityEnergyMachine impleme
     @Override
     public float getPartMaxEnergy()
     {
-        return this.MAX_WATTS;
+        return this.MAX_JOULES_STORED;
     }
 
     @Override
