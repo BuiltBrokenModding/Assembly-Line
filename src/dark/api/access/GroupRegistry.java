@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import dark.api.ITerminal;
+import dark.api.ITerminalCommand;
+
 import net.minecraft.entity.player.EntityPlayer;
 
 /** @author DarkGuardsman */

@@ -1,8 +1,9 @@
-package dark.api.access;
+package dark.api;
 
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
+import dark.api.access.ISpecialAccess;
 import dark.core.interfaces.IScroll;
 
 /** Basic methods to make it easier to construct or interact with a terminal based tile. Recommend to

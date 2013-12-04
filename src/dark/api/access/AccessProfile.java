@@ -16,7 +16,7 @@ import dark.api.save.SaveManager;
 /** Designed to be used as a container for AccessGroups and AccessUser. If you plan to use this make
  * sure to use it correctly. This is designed to be saved separate from the world save if marked for
  * global access. Which means it can save/load at will from the world file.
- * 
+ *
  * @author DarkGuardsman */
 public class AccessProfile implements ISpecialAccess, IVirtualObject
 {
@@ -27,9 +27,15 @@ public class AccessProfile implements ISpecialAccess, IVirtualObject
     /** Only used by global profiles that have no defined container. Also LocalHost means it was
      * created by a tileEntity */
     protected String profileID = "LocalHost";
-
+    /** Is this profile global */
     protected boolean global = false;
+    /** Save file by which this was loaded from. Mainly used to save it in the same location again. */
     protected File saveFile;
+
+    static
+    {
+        SaveManager.registerClass("AccessProfile", AccessProfile.class);
+    }
 
     public AccessProfile()
     {

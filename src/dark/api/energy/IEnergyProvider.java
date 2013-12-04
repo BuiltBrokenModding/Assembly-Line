@@ -8,11 +8,11 @@ import net.minecraftforge.common.ForgeDirection;
 public interface IEnergyProvider extends IEnergyDevice
 {
     /** Called to have the tile provide energy */
-    public EnergyPack provideEnergy(ForgeDirection from, EnergyPack request, boolean doProvide);
+    public EnergyPack requestEnergy(ForgeDirection from, EnergyPack request, boolean doProvide);
 
     /** Gets the energy provided at the given time on the given side */
-    public EnergyPack getEnergyProduce(ForgeDirection direction, String type);
+    public EnergyPack getEnergyOutput(ForgeDirection direction, String type);
 
     /** Can the device provide energy on the given side */
-    public boolean canProviderEnergy(ForgeDirection side, String type);
+    public boolean canOutputEnergy(ForgeDirection side, String type);
 }

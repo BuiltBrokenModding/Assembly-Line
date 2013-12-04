@@ -1,6 +1,7 @@
-package dark.api.access;
+package dark.api;
 
 import java.util.Set;
+
 
 import net.minecraft.entity.player.EntityPlayer;
 
