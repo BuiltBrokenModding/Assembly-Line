@@ -4,9 +4,9 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import dark.assembly.AssemblyLine;
 import dark.assembly.CommonProxy;
-import dark.core.client.gui.GuiMachineContainer;
 import dark.core.prefab.invgui.ContainerFake;
 import dark.core.prefab.machine.TileEntityMachine;
+import dark.machines.client.gui.GuiMachineContainer;
 
 public class GuiEncoderBase extends GuiMachineContainer
 {

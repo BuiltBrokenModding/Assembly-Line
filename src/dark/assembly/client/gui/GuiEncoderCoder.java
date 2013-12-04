@@ -1,13 +1,11 @@
 package dark.assembly.client.gui;
 
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.entity.player.InventoryPlayer;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import dark.assembly.AssemblyLine;
 import dark.assembly.machine.encoder.TileEntityEncoder;
 import dark.core.prefab.invgui.GuiButtonImage;
 import dark.core.prefab.invgui.GuiButtonImage.ButtonIcon;

@@ -11,8 +11,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.al.coding.IRedirectTask;
 import dark.api.al.coding.ITask;
-import dark.core.common.DarkMain;
 import dark.core.prefab.ModPrefab;
+import dark.machines.common.DarkMain;
 
 @SideOnly(Side.CLIENT)
 public class GuiTask extends Gui

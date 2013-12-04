@@ -25,10 +25,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.client.render.RenderConveyorBelt;
 import dark.assembly.machine.BlockAssembly;
-import dark.assembly.machine.TileEntityCrate;
 import dark.assembly.machine.belt.TileEntityConveyorBelt.SlantType;
-import dark.core.common.DarkMain;
-import dark.core.registration.ModObjectRegistry.BlockBuildData;
+import dark.core.ModObjectRegistry.BlockBuildData;
+import dark.machines.common.DarkMain;
 
 /** The block for the actual conveyor belt!
  * 

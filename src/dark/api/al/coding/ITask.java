@@ -1,6 +1,5 @@
 package dark.api.al.coding;
 
-import java.util.HashMap;
 import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;

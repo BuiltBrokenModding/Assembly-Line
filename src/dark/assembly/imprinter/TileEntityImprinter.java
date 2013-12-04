@@ -29,12 +29,12 @@ import dark.api.al.coding.IArmbot;
 import dark.api.al.coding.IArmbotUseable;
 import dark.api.al.coding.args.ArgumentData;
 import dark.api.events.AutoCraftEvent;
-import dark.core.common.DarkMain;
 import dark.core.helpers.AutoCraftingManager;
 import dark.core.helpers.AutoCraftingManager.IAutoCrafter;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.invgui.ISlotPickResult;
 import dark.core.prefab.machine.TileEntityMulti;
+import dark.machines.common.DarkMain;
 
 public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInventory, IArmbotUseable, IPacketReceiver, ISlotPickResult, IAutoCrafter
 {

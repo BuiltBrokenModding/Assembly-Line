@@ -16,6 +16,7 @@ import dark.core.interfaces.IInvBox;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.invgui.InvChest;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
+import dark.core.prefab.machine.TileEntityMachine.SimplePacketTypes;
 
 /** Basic A -> B recipe processor machine designed mainly to handle ore blocks
  * 

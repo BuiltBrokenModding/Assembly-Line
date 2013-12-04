@@ -17,12 +17,12 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.api.parts.INetworkPart;
-import dark.api.parts.ITileNetwork;
-import dark.core.common.DarkMain;
+import dark.api.tilenetwork.INetworkPart;
+import dark.api.tilenetwork.ITileNetwork;
 import dark.core.interfaces.IBlockActivated;
 import dark.core.network.ISimplePacketReceiver;
 import dark.core.network.PacketHandler;
+import dark.machines.common.DarkMain;
 
 /** A non-updating tileEntity that represents the logic behind the frame. It contains rotation and
  * connection information. As well provides a way for a tile network to be created to provide a

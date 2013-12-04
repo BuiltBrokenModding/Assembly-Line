@@ -14,9 +14,9 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import dark.api.IExtendedStorage;
-import dark.core.common.DarkMain;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.machine.TileEntityInv;
+import dark.machines.common.DarkMain;
 
 /** Basic single stack inventory
  * 

@@ -3,7 +3,6 @@ package dark.assembly.armbot.command;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.nbt.NBTTagCompound;
 import universalelectricity.core.vector.Vector2;
 import dark.api.al.coding.IProgrammableMachine;
 import dark.api.al.coding.ITask;

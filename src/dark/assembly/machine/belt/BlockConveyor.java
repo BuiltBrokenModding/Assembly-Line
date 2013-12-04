@@ -2,8 +2,6 @@ package dark.assembly.machine.belt;
 
 import java.util.List;
 
-import com.builtbroken.common.Pair;
-
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -15,17 +13,18 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+
+import com.builtbroken.common.Pair;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.client.render.RenderConveyorBelt;
-import dark.assembly.client.render.RenderCrate;
 import dark.assembly.machine.BlockAssembly;
-import dark.assembly.machine.TileEntityCrate;
 import dark.assembly.machine.belt.TileEntityConveyorBelt.SlantType;
-import dark.core.common.DarkMain;
+import dark.core.ModObjectRegistry.BlockBuildData;
 import dark.core.prefab.tilenetwork.NetworkItemSupply;
-import dark.core.registration.ModObjectRegistry.BlockBuildData;
+import dark.machines.common.DarkMain;
 
 public class BlockConveyor extends BlockAssembly
 {

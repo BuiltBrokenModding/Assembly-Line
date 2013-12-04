@@ -2,8 +2,8 @@ package dark.assembly.armbot.command;
 
 import java.util.List;
 
-import universalelectricity.core.vector.Vector2;
 import net.minecraft.nbt.NBTTagCompound;
+import universalelectricity.core.vector.Vector2;
 
 import com.builtbroken.common.science.units.UnitHelper;
 

@@ -57,11 +57,11 @@ import dark.assembly.machine.encoder.BlockEncoder;
 import dark.assembly.machine.encoder.ItemDisk;
 import dark.assembly.machine.processor.BlockProcessor;
 import dark.assembly.machine.red.BlockAdvancedHopper;
-import dark.core.common.DMCreativeTab;
-import dark.core.common.DarkMain;
+import dark.core.ModObjectRegistry;
 import dark.core.prefab.ItemBlockHolder;
 import dark.core.prefab.ModPrefab;
-import dark.core.registration.ModObjectRegistry;
+import dark.machines.common.DMCreativeTab;
+import dark.machines.common.DarkMain;
 
 @ModstatInfo(prefix = "asmline")
 @Mod(modid = AssemblyLine.MOD_ID, name = AssemblyLine.MOD_NAME, version = DarkMain.VERSION, dependencies = "required-after:DarkCore", useMetadata = true)

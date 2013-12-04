@@ -3,7 +3,6 @@ package dark.api.al.coding.args;
 import net.minecraft.nbt.NBTTagCompound;
 import dark.api.save.ISaveObj;
 import dark.api.save.NBTFileHelper;
-import dark.api.save.SaveManager;
 
 /** Used to store arguments in a way that can be easier to read, limit, and understand
  *

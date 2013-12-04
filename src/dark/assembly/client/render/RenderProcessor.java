@@ -12,8 +12,8 @@ import dark.assembly.AssemblyLine;
 import dark.assembly.client.model.ModelCrusher;
 import dark.assembly.client.model.ModelGrinder;
 import dark.assembly.machine.processor.TileEntityProcessor;
-import dark.core.client.renders.RenderTileMachine;
 import dark.core.prefab.ModPrefab;
+import dark.machines.client.renders.RenderTileMachine;
 
 @SideOnly(Side.CLIENT)
 public class RenderProcessor extends RenderTileMachine

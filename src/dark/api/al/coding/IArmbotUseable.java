@@ -1,6 +1,5 @@
 package dark.api.al.coding;
 
-import java.util.HashMap;
 import java.util.List;
 
 import dark.api.al.coding.args.ArgumentData;

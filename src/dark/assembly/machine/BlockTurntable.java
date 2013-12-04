@@ -19,7 +19,7 @@ import universalelectricity.prefab.tile.IRotatable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
-import dark.core.registration.ModObjectRegistry.BlockBuildData;
+import dark.core.ModObjectRegistry.BlockBuildData;
 
 public class BlockTurntable extends BlockAssembly
 {

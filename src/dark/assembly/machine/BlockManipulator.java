@@ -19,7 +19,7 @@ import dark.assembly.CommonProxy;
 import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.client.render.RenderManipulator;
 import dark.assembly.imprinter.prefab.BlockImprintable;
-import dark.core.registration.ModObjectRegistry.BlockBuildData;
+import dark.core.ModObjectRegistry.BlockBuildData;
 
 /** A block that manipulates item movement between inventories.
  * 

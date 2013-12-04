@@ -6,9 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;

@@ -1,9 +1,5 @@
 package dark.assembly.client.gui;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.nbt.NBTTagCompound;

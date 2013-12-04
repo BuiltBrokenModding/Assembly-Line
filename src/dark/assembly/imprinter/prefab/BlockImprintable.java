@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 import dark.api.al.IFilterable;
 import dark.assembly.imprinter.ItemImprinter;
 import dark.assembly.machine.BlockAssembly;
-import dark.core.registration.ModObjectRegistry.BlockBuildData;
+import dark.core.ModObjectRegistry.BlockBuildData;
 
 /** Extend this block class if a filter is allowed to be placed inside of this block.
  * 

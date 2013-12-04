@@ -19,9 +19,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.client.render.RenderArmbot;
 import dark.assembly.machine.BlockAssembly;
-import dark.assembly.machine.TileEntityRejector;
+import dark.core.ModObjectRegistry.BlockBuildData;
 import dark.core.interfaces.IMultiBlock;
-import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 public class BlockArmbot extends BlockAssembly
 {
