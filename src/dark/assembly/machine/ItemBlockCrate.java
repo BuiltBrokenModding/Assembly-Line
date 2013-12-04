@@ -16,7 +16,6 @@ public class ItemBlockCrate extends ItemBlock
     public ItemBlockCrate(int par1)
     {
         super(par1);
-        this.setMaxStackSize(1);
     }
 
     @Override
@@ -35,10 +34,17 @@ public class ItemBlockCrate extends ItemBlock
             par3List.add(containingStack.getDisplayName());
             par3List.add("Amount: " + containingStack.stackSize);
         }
-        else
+    }
+
+    @Override
+    public int getItemStackLimit(ItemStack stack)
+    {
+        ItemStack containingStack = getContainingItemStack(stack);
+        if (containingStack != null)
         {
-            par3List.add("Empty");
+            return 1;
         }
+        return super.getItemStackLimit();
     }
 
     @Override
