@@ -93,7 +93,15 @@ public class BlockEnergyStorage extends BlockMachine
     {
         if (!world.isRemote)
         {
-            ItemWorldHelper.dropItemStack(world, new Vector3(x, y, z), ItemBlockEnergyStorage.getWrenchedBatteryBox(world, new Vector3(x, y, z)), false);
+            ItemStack batBoxStack = ItemBlockEnergyStorage.getWrenchedBatteryBox(world, new Vector3(x, y, z));
+            if (entityPlayer.getHeldItem() == null)
+            {
+                entityPlayer.inventory.setInventorySlotContents(entityPlayer.inventory.currentItem, batBoxStack);
+            }
+            else
+            {
+                ItemWorldHelper.dropItemStack(world, new Vector3(x, y, z), batBoxStack, false);
+            }
             world.setBlockToAir(x, y, z);
         }
         return true;
