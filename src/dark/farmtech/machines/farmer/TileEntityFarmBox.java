@@ -15,8 +15,8 @@ public class TileEntityFarmBox extends TileEntityEnergyMachine
 
     public TileEntityFarmBox()
     {
-        this.MAX_WATTS = 100;
-        this.WATTS_PER_TICK = 5;
+        this.MAX_JOULES_STORED = 100;
+        this.JOULES_PER_TICK = 5;
     }
 
     @Override

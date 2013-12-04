@@ -19,8 +19,8 @@ public class TileEntityMechCompBox extends TileEntityCompBox implements INetwork
 
     public TileEntityMechCompBox()
     {
-        this.MAX_WATTS = 100;
-        this.WATTS_PER_TICK = .001f; //1w
+        this.MAX_JOULES_STORED = 100;
+        this.JOULES_PER_TICK = .001f; //1w
     }
 
     @Override
@@ -69,7 +69,7 @@ public class TileEntityMechCompBox extends TileEntityCompBox implements INetwork
     @Override
     public float getPartMaxEnergy()
     {
-        return this.MAX_WATTS;
+        return this.MAX_JOULES_STORED;
     }
 
     @Override
