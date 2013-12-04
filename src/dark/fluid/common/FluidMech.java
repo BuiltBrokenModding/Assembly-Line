@@ -21,6 +21,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import dark.core.DMCreativeTab;
 import dark.core.ModObjectRegistry;
 import dark.core.prefab.ItemBlockHolder;
 import dark.core.prefab.ModPrefab;
@@ -32,8 +33,7 @@ import dark.fluid.common.pipes.ItemBlockPipe;
 import dark.fluid.common.pump.BlockConstructionPump;
 import dark.fluid.common.pump.BlockDrain;
 import dark.fluid.common.pump.BlockPumpMachine;
-import dark.machines.common.DMCreativeTab;
-import dark.machines.common.DarkMain;
+import dark.machines.DarkMain;
 
 @ModstatInfo(prefix = "fluidmech")
 @Mod(modid = FluidMech.MOD_ID, name = FluidMech.MOD_NAME, version = FluidMech.VERSION, dependencies = "after:DarkCore", useMetadata = true)

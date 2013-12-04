@@ -35,7 +35,7 @@ import dark.core.network.ISimplePacketReceiver;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.tilenetwork.fluid.NetworkFluidTiles;
 import dark.fluid.common.FluidPartsMaterial;
-import dark.machines.common.DarkMain;
+import dark.machines.DarkMain;
 
 public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements INetworkFluidPart, ISimplePacketReceiver
 {
