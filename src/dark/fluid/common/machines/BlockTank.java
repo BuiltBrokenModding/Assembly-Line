@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import universalelectricity.core.vector.Vector3;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,10 +19,13 @@ import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.core.helpers.ItemWorldHelper;
 import dark.core.prefab.fluids.FluidHelper;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.FluidPartsMaterial;
+import dark.fluid.common.pipes.ItemBlockPipe;
 import dark.fluid.common.pipes.TileEntityPipe;
+import dark.machines.machines.ItemBlockEnergyStorage;
 
 public class BlockTank extends BlockFM
 {
@@ -108,6 +113,28 @@ public class BlockTank extends BlockFM
         {
             par3List.add(new ItemStack(this, 1, data.ordinal() * FluidPartsMaterial.spacing));
         }
+    }
+
+    @Override
+    public boolean onSneakMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
+    {
+        if (!world.isRemote)
+        {
+            ItemStack dropStack = ItemBlockPipe.getWrenchedItem(world, new Vector3(x, y, z));
+            if (dropStack != null)
+            {
+                if (entityPlayer.getHeldItem() == null)
+                {
+                    entityPlayer.inventory.setInventorySlotContents(entityPlayer.inventory.currentItem, dropStack);
+                }
+                else
+                {
+                    ItemWorldHelper.dropItemStack(world, new Vector3(x, y, z), dropStack, false);
+                }
+                world.setBlockToAir(x, y, z);
+            }
+        }
+        return true;
     }
 
     @Override
