@@ -8,6 +8,11 @@ import dark.api.DataPack;
  * @author DarkGuardsman */
 public class EnergyPack extends DataPack
 {
+    // Contants used to better ID packets of the same type
+    public static final String ELECTRIC_ENERGY = "Elec";
+    public static final String THERMAL_ENERGY = "Heat";
+    public static final String MECHANICAL_ENERGY = "Mech";
+
     protected String energyType;
     protected float energyStored;
 

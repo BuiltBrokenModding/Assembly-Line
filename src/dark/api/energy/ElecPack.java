@@ -12,7 +12,7 @@ public class ElecPack extends EnergyPack
 
     public ElecPack(Object... data)
     {
-        super("Electric", 0, data);
+        super(EnergyPack.ELECTRIC_ENERGY, 0, data);
     }
 
     public ElecPack(float amps, float volts, Object... data)
