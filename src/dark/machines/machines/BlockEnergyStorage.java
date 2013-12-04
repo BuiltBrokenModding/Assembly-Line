@@ -19,12 +19,13 @@ import universalelectricity.core.vector.Vector3;
 import com.builtbroken.common.Pair;
 
 import dark.core.DMCreativeTab;
+import dark.core.helpers.ItemWorldHelper;
 import dark.core.prefab.machine.BlockMachine;
 import dark.machines.CommonProxy;
 import dark.machines.DarkMain;
 
 /** Block for energy storage devices
- * 
+ *
  * @author Rseifert */
 public class BlockEnergyStorage extends BlockMachine
 {
@@ -62,7 +63,39 @@ public class BlockEnergyStorage extends BlockMachine
     @Override
     public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
     {
-        world.setBlockMetadataWithNotify(x, y, z, side, 3);
+        if (!world.isRemote)
+        {
+            int metadata = world.getBlockMetadata(x, y, z);
+            if (metadata >= 5)
+            {
+                world.setBlockMetadataWithNotify(x, y, z, 0, 3);
+            }
+            else
+            {
+                world.setBlockMetadataWithNotify(x, y, z, metadata + 1, 3);
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
+    {
+        if (!world.isRemote)
+        {
+            world.setBlockMetadataWithNotify(x, y, z, side, 3);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onSneakMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
+    {
+        if (!world.isRemote)
+        {
+            ItemWorldHelper.dropItemStack(world, new Vector3(x, y, z), ItemBlockEnergyStorage.getWrenchedBatteryBox(world, new Vector3(x, y, z)), false);
+            world.setBlockToAir(x, y, z);
+        }
         return true;
     }
 
