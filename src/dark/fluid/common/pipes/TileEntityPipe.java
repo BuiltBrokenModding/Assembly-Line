@@ -9,6 +9,7 @@ import universalelectricity.core.vector.Vector3;
 import dark.api.ColorCode;
 import dark.api.ColorCode.IColorCoded;
 import dark.api.fluid.INetworkPipe;
+import dark.api.tilenetwork.ITileConnector;
 import dark.api.tilenetwork.ITileNetwork;
 import dark.core.prefab.tilenetwork.fluid.NetworkPipes;
 import dark.fluid.common.FluidPartsMaterial;
@@ -75,6 +76,11 @@ public class TileEntityPipe extends TileEntityFluidNetworkTile implements IColor
             connectedBlocks.add(tileEntity);
             this.renderConnection[side.ordinal()] = true;
         }
+        else if (tileEntity instanceof ITileConnector && ((ITileConnector) tileEntity).canTileConnect(Connection.FLUIDS, side.getOpposite()))
+        {
+            connectedBlocks.add(tileEntity);
+            this.renderConnection[side.ordinal()] = true;
+        }
 
     }
 
@@ -126,7 +132,7 @@ public class TileEntityPipe extends TileEntityFluidNetworkTile implements IColor
     }
 
     /** Calculates flow rate based on viscosity & temp of the fluid as all other factors are know
-     * 
+     *
      * @param fluid - fluidStack
      * @param temp = tempature of the fluid
      * @param pressure - pressure difference of were the fluid is flowing too.
