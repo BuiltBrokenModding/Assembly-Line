@@ -1,9 +1,9 @@
 package dark.farmtech.machines;
 
 import net.minecraft.block.material.Material;
-import dark.core.common.DMCreativeTab;
+import dark.core.DMCreativeTab;
+import dark.core.ModObjectRegistry.BlockBuildData;
 import dark.core.prefab.machine.BlockMachine;
-import dark.core.registration.ModObjectRegistry.BlockBuildData;
 
 /** Prefab class for all farm blocks to remove the need for some configuration of the super class
  * 

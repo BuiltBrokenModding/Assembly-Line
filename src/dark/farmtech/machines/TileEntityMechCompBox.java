@@ -5,8 +5,8 @@ import java.util.List;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import dark.api.parts.INetworkEnergyPart;
-import dark.api.parts.ITileNetwork;
+import dark.api.tilenetwork.INetworkEnergyPart;
+import dark.api.tilenetwork.ITileNetwork;
 import dark.core.prefab.tilenetwork.NetworkSharedPower;
 
 /** Advanced version of the compBox that can link to other boxes and process matter at a higher rate.

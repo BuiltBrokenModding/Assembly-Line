@@ -24,15 +24,15 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.api.farm.CropAutomationHandler;
 import dark.api.farm.DecayMatterList;
-import dark.core.common.DarkMain;
+import dark.core.ModObjectRegistry;
 import dark.core.prefab.ItemBlockHolder;
 import dark.core.prefab.ModPrefab;
-import dark.core.registration.ModObjectRegistry;
 import dark.farmtech.blocks.BlockFarmSoil;
 import dark.farmtech.entities.EntityFarmEgg;
 import dark.farmtech.entities.EnumBird;
 import dark.farmtech.item.BehaviorDispenseEgg;
 import dark.farmtech.item.ItemFarmEgg;
+import dark.machines.DarkMain;
 
 @Mod(modid = FarmTech.MOD_ID, name = FarmTech.MOD_NAME, version = FarmTech.VERSION, dependencies = "after:DarkCore", useMetadata = true)
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)

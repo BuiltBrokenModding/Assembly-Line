@@ -5,8 +5,6 @@ import net.minecraft.item.Item;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.client.renders.RenderTestCar;
-import dark.core.prefab.vehicles.EntityTestCar;
 import dark.farmtech.CommonProxy;
 import dark.farmtech.client.renders.RenderTurkey;
 import dark.farmtech.entities.EntityFarmEgg;

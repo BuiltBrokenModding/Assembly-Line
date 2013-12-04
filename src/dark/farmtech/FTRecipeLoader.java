@@ -5,8 +5,8 @@ import java.util.Calendar;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
-import dark.core.common.RecipeLoader;
 import dark.core.prefab.ModPrefab;
+import dark.core.prefab.RecipeLoader;
 import dark.farmtech.item.ItemFarmFood;
 import dark.farmtech.item.ItemFarmFood.FarmFood;
 
