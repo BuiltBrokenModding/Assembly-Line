@@ -20,7 +20,7 @@ import dark.api.al.IBelt;
 import dark.assembly.ALRecipeLoader;
 import dark.assembly.machine.TileEntityAssembly;
 import dark.core.network.PacketHandler;
-import dark.machines.common.DarkMain;
+import dark.machines.DarkMain;
 
 /** Conveyer belt TileEntity that allows entities of all kinds to be moved
  * 

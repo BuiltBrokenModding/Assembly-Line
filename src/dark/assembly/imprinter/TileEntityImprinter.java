@@ -34,7 +34,7 @@ import dark.core.helpers.AutoCraftingManager.IAutoCrafter;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.invgui.ISlotPickResult;
 import dark.core.prefab.machine.TileEntityMulti;
-import dark.machines.common.DarkMain;
+import dark.machines.DarkMain;
 
 public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInventory, IArmbotUseable, IPacketReceiver, ISlotPickResult, IAutoCrafter
 {

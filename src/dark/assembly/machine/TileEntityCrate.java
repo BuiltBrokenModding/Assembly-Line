@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.Side;
 import dark.api.IExtendedStorage;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.machine.TileEntityInv;
-import dark.machines.common.DarkMain;
+import dark.machines.DarkMain;
 
 /** Basic single stack inventory
  * 

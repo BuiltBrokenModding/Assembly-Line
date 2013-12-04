@@ -21,7 +21,7 @@ import dark.assembly.armbot.Program;
 import dark.assembly.armbot.command.TaskRotateTo;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.machine.TileEntityMachine;
-import dark.machines.common.DarkMain;
+import dark.machines.DarkMain;
 
 public class TileEntityEncoder extends TileEntityMachine implements ISidedInventory
 {

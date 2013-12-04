@@ -13,7 +13,7 @@ import com.builtbroken.common.Pair;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.prefab.machine.BlockMachine;
-import dark.machines.common.DarkMain;
+import dark.machines.DarkMain;
 
 public class BlockFrame extends BlockMachine
 {

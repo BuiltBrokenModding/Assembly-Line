@@ -24,7 +24,7 @@ import dark.assembly.machine.BlockAssembly;
 import dark.assembly.machine.belt.TileEntityConveyorBelt.SlantType;
 import dark.core.ModObjectRegistry.BlockBuildData;
 import dark.core.prefab.tilenetwork.NetworkItemSupply;
-import dark.machines.common.DarkMain;
+import dark.machines.DarkMain;
 
 public class BlockConveyor extends BlockAssembly
 {

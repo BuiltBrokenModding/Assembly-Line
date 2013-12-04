@@ -12,7 +12,7 @@ import net.minecraft.nbt.NBTTagList;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
-import dark.machines.common.DMCreativeTab;
+import dark.core.DMCreativeTab;
 
 public class ItemDisk extends Item
 {

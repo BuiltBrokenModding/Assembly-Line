@@ -6,9 +6,9 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import dark.assembly.AssemblyLine;
+import dark.core.DMCreativeTab;
 import dark.core.ModObjectRegistry.BlockBuildData;
 import dark.core.prefab.machine.BlockMachine;
-import dark.machines.common.DMCreativeTab;
 
 public class BlockAssembly extends BlockMachine
 {

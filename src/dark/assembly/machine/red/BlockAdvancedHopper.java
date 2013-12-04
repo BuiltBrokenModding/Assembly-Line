@@ -20,8 +20,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
 import dark.assembly.client.render.RenderAdvancedHopper;
+import dark.core.DMCreativeTab;
 import dark.core.prefab.machine.BlockMachine;
-import dark.machines.common.DMCreativeTab;
 
 /** Block for an advanced version of the vanilla minecraft hopper
  * 

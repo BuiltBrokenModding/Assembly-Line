@@ -22,7 +22,7 @@ import dark.api.tilenetwork.ITileNetwork;
 import dark.core.interfaces.IBlockActivated;
 import dark.core.network.ISimplePacketReceiver;
 import dark.core.network.PacketHandler;
-import dark.machines.common.DarkMain;
+import dark.machines.DarkMain;
 
 /** A non-updating tileEntity that represents the logic behind the frame. It contains rotation and
  * connection information. As well provides a way for a tile network to be created to provide a

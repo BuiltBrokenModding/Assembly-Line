@@ -38,7 +38,7 @@ import dark.core.helpers.MathHelper;
 import dark.core.interfaces.IMultiBlock;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.machine.BlockMulti;
-import dark.machines.common.DarkMain;
+import dark.machines.DarkMain;
 
 public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IArmbot, IPeripheral
 {
