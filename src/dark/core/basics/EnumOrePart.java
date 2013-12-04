@@ -1,4 +1,4 @@
-package dark.machines.common.items;
+package dark.core.basics;
 
 public enum EnumOrePart
 {

@@ -23,6 +23,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import dark.api.save.SaveManager;
+import dark.core.CoreMachine;
 import dark.core.ModObjectRegistry;
 import dark.core.prefab.fluids.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkUpdateHandler;
@@ -98,43 +99,22 @@ public abstract class ModPrefab
     public void preInit(FMLPreInitializationEvent event)
     {
         this.loadModMeta();
-
         Modstats.instance().getReporter().registerMod(this);
         MinecraftForge.EVENT_BUS.register(this);
-        if (!preInit)
-        {
-            MinecraftForge.EVENT_BUS.register(new FluidHelper());
-            MinecraftForge.EVENT_BUS.register(SaveManager.instance());
-            MinecraftForge.EVENT_BUS.register(new LaserEntityDamageSource(null));
-            TickRegistry.registerTickHandler(NetworkUpdateHandler.instance(), Side.SERVER);
-            TickRegistry.registerScheduledTickHandler(new PlayerKeyHandler(), Side.CLIENT);
-            UniversalElectricity.initiate();
-            Compatibility.initiate();
-            preInit = true;
-        }
+        CoreMachine.instance().preLoad();
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-        if (!init)
-        {
-            ExternalModHandler.init();
-            ModObjectRegistry.masterBlockConfig.load();
-            init = true;
-        }
+        CoreMachine.instance().Load();
         this.registerObjects();
-
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-        if (!postInit)
-        {
-            ModObjectRegistry.masterBlockConfig.save();
-            postInit = true;
-        }
+        CoreMachine.instance().postLoad();
         this.loadRecipes();
     }
 
@@ -156,7 +136,7 @@ public abstract class ModPrefab
         }
         return date;
     }
-    
+
     public static boolean isOp(String username)
     {
         MinecraftServer theServer = FMLCommonHandler.instance().getMinecraftServerInstance();

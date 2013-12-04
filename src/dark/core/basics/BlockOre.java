@@ -1,4 +1,4 @@
-package dark.machines.common.blocks;
+package dark.core.basics;
 
 import java.util.List;
 import java.util.Set;
@@ -24,7 +24,6 @@ import dark.core.interfaces.IExtraInfo.IExtraBlockInfo;
 import dark.core.prefab.ModPrefab;
 import dark.machines.common.CoreRecipeLoader;
 import dark.machines.common.DarkMain;
-import dark.machines.common.items.EnumMaterial;
 
 public class BlockOre extends Block implements IExtraBlockInfo
 {

@@ -10,7 +10,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
-import dark.machines.common.blocks.BlockGasOre;
+import dark.core.basics.BlockGasOre;
 
 /** Tick handler that takes care of things like decreasing air supply while in gas block
  * 

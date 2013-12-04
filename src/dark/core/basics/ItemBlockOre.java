@@ -1,9 +1,9 @@
-package dark.machines.common.blocks;
+package dark.core.basics;
 
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import dark.core.basics.BlockOre.OreData;
 import dark.machines.common.DarkMain;
-import dark.machines.common.blocks.BlockOre.OreData;
 
 public class ItemBlockOre extends ItemBlock
 {
