@@ -27,15 +27,15 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.api.fluid.FluidMasterList;
+import dark.api.FluidMasterList;
 import dark.api.fluid.INetworkFluidPart;
-import dark.api.parts.INetworkPart;
-import dark.api.parts.ITileNetwork;
-import dark.core.common.DarkMain;
+import dark.api.tilenetwork.INetworkPart;
+import dark.api.tilenetwork.ITileNetwork;
 import dark.core.network.ISimplePacketReceiver;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.tilenetwork.fluid.NetworkFluidTiles;
 import dark.fluid.common.FluidPartsMaterial;
+import dark.machines.common.DarkMain;
 
 public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements INetworkFluidPart, ISimplePacketReceiver
 {

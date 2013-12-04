@@ -16,10 +16,10 @@ import com.builtbroken.common.Pair;
 
 import dark.api.IToolReadOut;
 import dark.api.fluid.IDrain;
-import dark.api.parts.ITileConnector;
-import dark.core.common.ExternalModHandler;
+import dark.api.tilenetwork.ITileConnector;
 import dark.core.prefab.fluids.FluidHelper;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
+import dark.machines.common.ExternalModHandler;
 
 public class TileEntityStarterPump extends TileEntityEnergyMachine implements IToolReadOut, ITileConnector
 {

@@ -6,7 +6,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import dark.api.fluid.INetworkPipe;
-import dark.api.parts.INetworkPart;
+import dark.api.tilenetwork.INetworkPart;
 import dark.core.helpers.ConnectionHelper;
 import dark.core.prefab.fluids.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkUpdateHandler;

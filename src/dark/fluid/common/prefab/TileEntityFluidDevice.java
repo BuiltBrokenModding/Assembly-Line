@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import dark.api.IToolReadOut;
-import dark.api.parts.ITileConnector;
+import dark.api.tilenetwork.ITileConnector;
 import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
 public abstract class TileEntityFluidDevice extends TileEntityAdvanced implements IToolReadOut, ITileConnector

@@ -15,9 +15,9 @@ import universalelectricity.prefab.network.IPacketReceiver;
 import com.google.common.io.ByteArrayDataInput;
 
 import dark.api.ColorCode;
-import dark.core.common.DarkMain;
 import dark.core.network.PacketHandler;
 import dark.fluid.common.prefab.TileEntityFluidStorage;
+import dark.machines.common.DarkMain;
 
 public class TileEntitySink extends TileEntityFluidStorage implements IPacketReceiver
 {

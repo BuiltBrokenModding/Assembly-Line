@@ -7,11 +7,11 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.client.renders.RenderTileMachine;
 import dark.core.prefab.ModPrefab;
 import dark.fluid.client.model.ModelConstructionPump;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.pump.TileEntityConstructionPump;
+import dark.machines.client.renders.RenderTileMachine;
 
 @SideOnly(Side.CLIENT)
 public class RenderConstructionPump extends RenderTileMachine

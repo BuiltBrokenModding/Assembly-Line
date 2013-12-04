@@ -1,6 +1,6 @@
 package dark.fluid.common.machines;
 
-import dark.api.parts.ITileNetwork;
+import dark.api.tilenetwork.ITileNetwork;
 import dark.core.prefab.tilenetwork.fluid.NetworkFluidContainers;
 import dark.fluid.common.prefab.TileEntityFluidNetworkTile;
 

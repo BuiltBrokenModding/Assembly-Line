@@ -7,7 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import dark.api.fluid.INetworkFluidPart;
-import dark.api.parts.INetworkPart;
+import dark.api.tilenetwork.INetworkPart;
 import dark.core.prefab.fluids.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkUpdateHandler;
 

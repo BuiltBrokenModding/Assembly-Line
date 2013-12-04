@@ -7,12 +7,12 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.api.ColorCode;
-import dark.core.common.CoreRecipeLoader;
-import dark.core.common.RecipeLoader;
-import dark.core.common.items.EnumMaterial;
-import dark.core.common.items.EnumOrePart;
-import dark.core.common.items.ItemParts;
-import dark.core.common.items.ItemParts.Parts;
+import dark.machines.common.CoreRecipeLoader;
+import dark.machines.common.RecipeLoader;
+import dark.machines.common.items.EnumMaterial;
+import dark.machines.common.items.EnumOrePart;
+import dark.machines.common.items.ItemParts;
+import dark.machines.common.items.ItemParts.Parts;
 
 public class FMRecipeLoader extends RecipeLoader
 {

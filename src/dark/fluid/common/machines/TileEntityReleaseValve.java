@@ -15,7 +15,7 @@ import dark.api.ColorCode;
 import dark.api.ColorCode.IColorCoded;
 import dark.api.IToolReadOut;
 import dark.api.fluid.INetworkPipe;
-import dark.api.parts.ITileConnector;
+import dark.api.tilenetwork.ITileConnector;
 import dark.core.helpers.ConnectionHelper;
 import dark.core.prefab.tilenetwork.fluid.NetworkPipes;
 import dark.fluid.common.prefab.TileEntityFluidDevice;

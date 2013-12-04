@@ -9,7 +9,7 @@ import universalelectricity.core.vector.Vector3;
 import dark.api.ColorCode;
 import dark.api.ColorCode.IColorCoded;
 import dark.api.fluid.INetworkPipe;
-import dark.api.parts.ITileNetwork;
+import dark.api.tilenetwork.ITileNetwork;
 import dark.core.prefab.tilenetwork.fluid.NetworkPipes;
 import dark.fluid.common.FluidPartsMaterial;
 import dark.fluid.common.prefab.TileEntityFluidNetworkTile;
