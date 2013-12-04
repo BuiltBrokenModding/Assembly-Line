@@ -6,7 +6,8 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.fluid.client.render.BlockRenderHelper;
-import dark.fluid.client.render.ItemRenderHelper;
+import dark.fluid.client.render.ItemPipeRenderer;
+import dark.fluid.client.render.ItemTankRenderer;
 import dark.fluid.client.render.RenderConstructionPump;
 import dark.fluid.client.render.RenderPipe;
 import dark.fluid.client.render.RenderPump;
@@ -43,8 +44,9 @@ public class ClientProxy extends CommonProxy
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConstructionPump.class, new RenderConstructionPump());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTank.class, new RenderTank());
 
-        MinecraftForgeClient.registerItemRenderer(FMRecipeLoader.blockPipe.blockID, new ItemRenderHelper());
-        MinecraftForgeClient.registerItemRenderer(FMRecipeLoader.blockReleaseValve.blockID, new ItemRenderHelper());
+        MinecraftForgeClient.registerItemRenderer(FMRecipeLoader.blockPipe.blockID, new ItemPipeRenderer());
+        MinecraftForgeClient.registerItemRenderer(FMRecipeLoader.blockTank.blockID, new ItemTankRenderer());
+        MinecraftForgeClient.registerItemRenderer(FMRecipeLoader.blockReleaseValve.blockID, new ItemPipeRenderer());
 
         RenderingRegistry.registerBlockHandler(new BlockRenderHelper());
     }

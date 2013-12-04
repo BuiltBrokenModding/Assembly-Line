@@ -108,6 +108,10 @@ public class ItemBlockPipe extends ItemBlock
             if (tile instanceof TileEntityFluidNetworkTile)
             {
                 ((TileEntityFluidNetworkTile) tile).setSubID(stack.getItemDamage());
+                if (stack.getTagCompound() != null && stack.getTagCompound().hasKey("fluid"))
+                {
+                    ((TileEntityFluidNetworkTile) tile).fillTankContent(0, FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag("fluid")), true);
+                }
             }
             return true;
         }

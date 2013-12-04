@@ -30,7 +30,6 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
     private ModelPump modelPump = new ModelPump();
     private ModelGearRod modelRod = new ModelGearRod();
     private ModelGenerator modelGen = new ModelGenerator();
-    private ModelTankSide tank = new ModelTankSide();
     private ModelSink sink = new ModelSink();
     private ModelConstructionPump conPump = new ModelConstructionPump();
 
@@ -54,19 +53,7 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
             FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(FluidMech.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "Sink.png"));
             sink.render(0.0565F);
         }
-        else if (FMRecipeLoader.blockTank != null && block.blockID == FMRecipeLoader.blockTank.blockID)
-        {
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(FluidMech.instance.DOMAIN, metadata == 1 ? "textures/blocks/obsidian.png" : "textures/blocks/iron_block.png"));
-            GL11.glTranslatef(0.0F, -0.9F, 0.0F);
-            tank.render(0.0625F, false, false, false, false);
-            GL11.glRotatef(90f, 0f, 1f, 0f);
-            tank.render(0.0625F, false, false, false, false);
-            GL11.glRotatef(90f, 0f, 1f, 0f);
-            tank.render(0.0625F, false, false, false, false);
-            GL11.glRotatef(90f, 0f, 1f, 0f);
-            tank.render(0.0625F, false, false, false, false);
-        }
-        else if (FMRecipeLoader.blockRod != null && block.blockID == FMRecipeLoader.blockRod.blockID)
+        else  if (FMRecipeLoader.blockRod != null && block.blockID == FMRecipeLoader.blockRod.blockID)
         {
             GL11.glTranslatef(0.0F, 1.5F, 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);

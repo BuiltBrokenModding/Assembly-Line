@@ -17,7 +17,7 @@ import dark.fluid.common.FluidMech;
 import dark.fluid.common.FluidPartsMaterial;
 
 @SideOnly(Side.CLIENT)
-public class ItemRenderHelper implements IItemRenderer
+public class ItemPipeRenderer implements IItemRenderer
 {
     private ModelReleaseValve valve = new ModelReleaseValve();
     private RenderPipe pipe = new RenderPipe();
