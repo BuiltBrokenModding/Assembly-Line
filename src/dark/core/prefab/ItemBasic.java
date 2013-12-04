@@ -10,8 +10,6 @@ import dark.machines.common.DarkMain;
 
 public class ItemBasic extends Item
 {
-    public static final Icon[] ICONS = new Icon[256];
-
     public ItemBasic(int itemID, String name, Configuration config)
     {
         super(config.getItem(name, itemID).getInt());

@@ -1,4 +1,4 @@
-package dark.core;
+package dark.core.loader;
 
 import java.util.Arrays;
 import java.util.LinkedList;

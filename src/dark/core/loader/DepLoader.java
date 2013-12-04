@@ -1,4 +1,4 @@
-package dark.core;
+package dark.core.loader;
 
 import java.awt.Desktop;
 import java.awt.Dialog.ModalityType;

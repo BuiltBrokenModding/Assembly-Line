@@ -1,4 +1,4 @@
-package dark.core;
+package dark.core.prefab;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -8,7 +8,6 @@ import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.prefab.ModPrefab;
 import dark.machines.common.DarkMain;
 
 public class BlockFluid extends BlockFluidFinite

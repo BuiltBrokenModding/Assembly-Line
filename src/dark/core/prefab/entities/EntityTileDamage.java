@@ -1,4 +1,4 @@
-package dark.core.prefab;
+package dark.core.prefab.entities;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

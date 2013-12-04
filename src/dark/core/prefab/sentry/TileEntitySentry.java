@@ -19,7 +19,7 @@ import dark.api.ISentryGun;
 import dark.core.helpers.MathHelper;
 import dark.core.helpers.RayTraceHelper;
 import dark.core.network.PacketHandler;
-import dark.core.prefab.EntityTileDamage;
+import dark.core.prefab.entities.EntityTileDamage;
 import dark.core.prefab.machine.TileEntityMachine;
 import dark.machines.common.DarkMain;
 

@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.vector.Vector3;
-import dark.core.prefab.EntityBlock;
+import dark.core.prefab.entities.EntityFakeBlock;
 
 public class RenderBlockEntity extends Render
 {
@@ -25,10 +25,10 @@ public class RenderBlockEntity extends Render
     @Override
     public void doRender(Entity entity, double i, double j, double k, float f, float f1)
     {
-        doRenderBlock((EntityBlock) entity, i, j, k);
+        doRenderBlock((EntityFakeBlock) entity, i, j, k);
     }
 
-    public void doRenderBlock(EntityBlock entity, double i, double j, double k)
+    public void doRenderBlock(EntityFakeBlock entity, double i, double j, double k)
     {
         if (entity.isDead)
             return;
