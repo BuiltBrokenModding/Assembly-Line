@@ -1,5 +1,8 @@
 package dark.core.prefab.tilenetwork.fluid;
 
+import java.util.EnumSet;
+import java.util.Map.Entry;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
@@ -57,76 +60,38 @@ public class NetworkPipes extends NetworkFluidTiles
     public int addFluidToNetwork(TileEntity source, FluidStack sta, boolean doFill, boolean allowStore)
     {
         int used = 0;
-        FluidStack prevCombined = this.getNetworkTank().getFluid();
         FluidStack stack = sta.copy();
 
         if (!this.processingRequest && stack != null)
         {
             this.processingRequest = true;
-
-            if (this.getNetworkTank().getFluid() != null && !stack.isFluidEqual(this.getNetworkTank().getFluid()))
-            {
-                //this.causingMixing(null, this.combinedStorage().getFluid(), stack);
-            }
             if (stack.amount > this.getMaxFlow(stack))
             {
                 stack = FluidHelper.getStack(stack, this.getMaxFlow(stack));
             }
 
-            /* Main fill target to try to fill with the stack */
-            IFluidHandler primaryFill = null;
-            int volume = Integer.MAX_VALUE;
-            ForgeDirection fillDir = ForgeDirection.UNKNOWN;
-
             /* Secondary fill target if the main target is not found */
-            IFluidHandler secondayFill = null;
+            IFluidHandler tankToFill = null;
             int mostFill = 0;
-            ForgeDirection otherFillDir = ForgeDirection.UNKNOWN;
+            ForgeDirection fillDir = ForgeDirection.UNKNOWN;
 
             boolean found = false;
 
             /* FIND THE FILL TARGET FROM THE LIST OF FLUID RECIEVERS */
-            for (IFluidHandler tankContainer : connectedTanks)
+            for (Entry<IFluidHandler, EnumSet<ForgeDirection>> entry : this.connctedFluidHandlers.entrySet())
             {
+                IFluidHandler tankContainer = entry.getKey();
                 if (tankContainer instanceof TileEntity && tankContainer != source && !(tankContainer instanceof INetworkPipe))
                 {
-                    TileEntity[] connectedTiles = ConnectionHelper.getSurroundingTileEntities((TileEntity) tankContainer);
-
-                    for (int i = 0; i < 6; i++)
+                    for (ForgeDirection dir : entry.getValue())
                     {
-                        if (connectedTiles[i] instanceof INetworkPipe && ((INetworkPipe) connectedTiles[i]).getTileNetwork() == this)
-                        {
-                            ForgeDirection dir = ForgeDirection.getOrientation(i).getOpposite();
-                            FluidTankInfo[] targetTank = tankContainer.getTankInfo(dir);
-                            int fill = tankContainer.fill(dir, stack, false);
+                        int fill = tankContainer.fill(dir, stack, false);
 
-                            /* USE GET TANK FROM SIDE METHOD FIRST */
-                            if (targetTank != null)
-                            {
-                                for (int t = 0; t < targetTank.length; t++)
-                                {
-                                    FluidStack stackStored = targetTank[t].fluid;
-                                    int tankCap = targetTank[t].capacity;
-                                    if (stackStored == null)
-                                    {
-                                        primaryFill = tankContainer;
-                                        found = true;
-                                        fillDir = dir;
-                                        break;
-                                    }
-                                    else if (stackStored.isFluidEqual(sta) && stackStored.amount < tankCap && stackStored.amount < volume)
-                                    {
-                                        primaryFill = tankContainer;
-                                        volume = stackStored.amount;
-                                    }
-                                }
-                            }/* USE FILL METHOD IF GET TANK == NULL */
-                            else if (fill > 0 && fill > mostFill)
-                            {
-                                secondayFill = tankContainer;
-                                mostFill = fill;
-                                otherFillDir = dir;
-                            }
+                        if (fill > 0 && fill > mostFill)
+                        {
+                            tankToFill = tankContainer;
+                            mostFill = fill;
+                            fillDir = dir;
                         }
                     }
                 }
@@ -137,14 +102,9 @@ public class NetworkPipes extends NetworkFluidTiles
             }// End of tank finder
 
             boolean filledMain = false;
-            if (primaryFill != null)
+            if (tankToFill != null)
             {
-                used = primaryFill.fill(fillDir, stack, doFill);
-                // System.out.println("Primary Target " + used + doFill);
-            }
-            else if (secondayFill != null)
-            {
-                used = secondayFill.fill(fillDir, stack, doFill);
+                used = tankToFill.fill(fillDir, stack, doFill);
                 // System.out.println("Seconday Target " + used + doFill);
             }
             else if (allowStore)

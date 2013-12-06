@@ -1,11 +1,14 @@
 package dark.core.prefab.tilenetwork.fluid;
 
+import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -21,7 +24,7 @@ import dark.core.prefab.tilenetwork.NetworkUpdateHandler;
 public class NetworkFluidTiles extends NetworkTileEntities
 {
     /** Fluid Tanks that are connected to the network but not part of the network's main body */
-    public final Set<IFluidHandler> connectedTanks = new HashSet<IFluidHandler>();
+    public HashMap<IFluidHandler, EnumSet<ForgeDirection>> connctedFluidHandlers = new HashMap<IFluidHandler, EnumSet<ForgeDirection>>();
     /** Collective storage tank of all fluid tile that make up this networks main body */
     protected FluidTank sharedTank;
     protected FluidTankInfo sharedTankInfo;
@@ -186,24 +189,29 @@ public class NetworkFluidTiles extends NetworkTileEntities
     @Override
     public boolean removeTile(TileEntity ent)
     {
-        return super.removeTile(ent) || this.connectedTanks.remove(ent);
-    }
-
-    @Override
-    public boolean addTile(TileEntity ent, boolean member)
-    {
-        if (!(super.addTile(ent, member)) && ent instanceof IFluidHandler && !connectedTanks.contains(ent))
-        {
-            connectedTanks.add((IFluidHandler) ent);
-            return true;
-        }
-        return false;
+        return super.removeTile(ent) || this.connctedFluidHandlers.remove(ent) != null;
     }
 
     /** Checks too see if the tileEntity is part of or connected too the network */
     public boolean isConnected(TileEntity tileEntity)
     {
-        return this.connectedTanks.contains(tileEntity);
+        return this.connctedFluidHandlers.containsKey(tileEntity);
+    }
+
+    public void addTank(ForgeDirection side, IFluidHandler tank)
+    {
+        if (this.connctedFluidHandlers.containsKey(tank))
+        {
+            EnumSet<ForgeDirection> d = this.connctedFluidHandlers.get(tank);
+            d.add(side);
+            this.connctedFluidHandlers.put(tank, d);
+        }
+        else
+        {
+            EnumSet<ForgeDirection> d = EnumSet.noneOf(ForgeDirection.class);
+            d.add(side);
+            this.connctedFluidHandlers.put(tank, d);
+        }
     }
 
     @Override

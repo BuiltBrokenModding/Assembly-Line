@@ -1,7 +1,9 @@
 package dark.fluid.common.pump;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Map.Entry;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -85,11 +87,12 @@ public class TileEntityConstructionPump extends TileEntityStarterPump implements
         {
             if (outputTile instanceof IFluidHandler)
             {
-                for (IFluidHandler tank : ((NetworkFluidTiles) ((INetworkPipe) inputTile).getTileNetwork()).connectedTanks)
+                for (Entry<IFluidHandler, EnumSet<ForgeDirection>> entry : ((NetworkFluidTiles) ((INetworkPipe) inputTile).getTileNetwork()).connctedFluidHandlers.entrySet())
                 {
-                    if (tank instanceof IDrain && !ignoreList.contains(tank))
+                    
+                    if (entry.getKey() instanceof IDrain && !ignoreList.contains(entry.getKey()))
                     {
-                        drain = (IDrain) tank;
+                        drain = (IDrain) entry.getKey();
                         break;
                     }
                 }
@@ -172,9 +175,9 @@ public class TileEntityConstructionPump extends TileEntityStarterPump implements
             if (inputTile instanceof INetworkPipe && ((INetworkPipe) inputTile).getTileNetwork() instanceof NetworkFluidTiles)
             {
                 int count = 0;
-                for (IFluidHandler tank : ((NetworkFluidTiles) ((INetworkPipe) inputTile).getTileNetwork()).connectedTanks)
+                for (Entry<IFluidHandler, EnumSet<ForgeDirection>> entry : ((NetworkFluidTiles) ((INetworkPipe) inputTile).getTileNetwork()).connctedFluidHandlers.entrySet())
                 {
-                    if (tank instanceof IDrain)
+                    if (entry.getKey() instanceof IDrain)
                     {
                         count++;
                     }

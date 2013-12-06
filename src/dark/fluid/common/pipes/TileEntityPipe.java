@@ -75,6 +75,7 @@ public class TileEntityPipe extends TileEntityFluidNetworkTile implements IColor
         {
             connectedBlocks.add(tileEntity);
             this.renderConnection[side.ordinal()] = true;
+            this.getTileNetwork().addTank(side.getOpposite(), (IFluidHandler) tileEntity);
         }
         else if (tileEntity instanceof ITileConnector && ((ITileConnector) tileEntity).canTileConnect(Connection.FLUIDS, side.getOpposite()))
         {

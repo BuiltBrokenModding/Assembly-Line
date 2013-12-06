@@ -299,12 +299,13 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
         {
             if (fluid.getFluid().isGaseous(fluid) && !mat.canSupportGas)
             {
-                //TODO lose 25% of the gas, and render the lost
+                //TODO lose 25% of the gas, and render the escaping gas as a particle effect
+                this.getTileNetwork().drainNetworkTank(this.worldObj, (int) (fluid.amount * .25), true);
             }
             else if (FluidMasterList.isMolten(fluid.getFluid()) && !mat.canSupportMoltenFluids)
             {
                 //TODO start to heat up the pipe to melting point. When it hits melting point turn the pipe to its molten metal equal
-                //TODO also once it reaches a set heat level start burning up blocks around the pipe. Eg wood
+                //TODO also once it reaches a set heat level start burning up blocks around the pipe such as wood
                 this.heat += FluidMasterList.getHeatPerPass(fluid.getFluid());
                 if (heat >= this.maxHeat)
                 {

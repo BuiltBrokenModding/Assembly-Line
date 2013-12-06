@@ -141,11 +141,6 @@ public class TileEntityStarterPump extends TileEntityEnergyMachine implements IT
             }
         }
 
-        if (ExternalModHandler.isBCFluidPipe(drain))
-        {
-            //TODO add resource pathfinder
-        }
-
         if (drainList == null)
         {
             if (this.getLiquidFinder().results.size() < MAX_WORLD_EDITS_PER_PROCESS + 10)
@@ -170,7 +165,7 @@ public class TileEntityStarterPump extends TileEntityEnergyMachine implements IT
 
                 Vector3 drainLocation = fluidList.next();
                 FluidStack drainStack = FluidHelper.drainBlock(world, drainLocation, false, 3);
-                // System.out.println("StartPump>>DrainArea>>Draining>>NextFluidBlock>" + (drainStack == null ? "Null" : drainStack.amount + "mb of " + drainStack.getFluid().getName()));
+                //System.out.println("StartPump>>DrainArea>>Draining>>NextFluidBlock>" + (drainStack == null ? "Null" : drainStack.amount + "mb of " + drainStack.getFluid().getName()));
 
                 //int fillV = FluidHelper.fillTanksAllSides(worldObj, new Vector3(this), drainStack, false, ForgeDirection.DOWN);
                 //System.out.println("StartPump>>DrainArea>>Draining>>NextFluidBlock>Filled>" + fillV + "mb");
