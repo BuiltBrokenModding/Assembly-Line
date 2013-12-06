@@ -450,7 +450,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
     {
         if (this.getTank() != null && index == 0)
         {
-            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, "SingleTank", this.getTank().getCapacity(), this.getTank().writeToNBT(new NBTTagCompound())));
+            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, "SingleTank", this.getTank().getCapacity(), this.getTank().writeToNBT(new NBTTagCompound())), this.worldObj, new Vector3(this), 60);
         }
     }
 

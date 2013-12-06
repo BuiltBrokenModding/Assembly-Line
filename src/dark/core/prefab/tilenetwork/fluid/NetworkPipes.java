@@ -87,7 +87,7 @@ public class NetworkPipes extends NetworkFluidTiles
                     {
                         int fill = tankContainer.fill(dir, stack, false);
 
-                        if (fill > 0 && fill > mostFill)
+                        if (fill > mostFill)
                         {
                             tankToFill = tankContainer;
                             mostFill = fill;
