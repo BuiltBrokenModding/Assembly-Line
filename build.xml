@@ -98,8 +98,9 @@
 		<!-- Copy compiled files into folders to be zipped -->
 		<copy todir="core">
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/core/" />
+                        <fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/machines/" />
             		<fileset dir="${dir.mcp}/reobf/minecraft" includes="com/builtbroken/common/" />
-           		 <fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/api/" />
+           		<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/api/" />
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="buildcraft/" />
             		<fileset dir="${dir.mcp}/reobf/minecraft" includes="dan200/" />
             		<fileset dir="${dir.mcp}/reobf/minecraft" includes="ic2/" />
