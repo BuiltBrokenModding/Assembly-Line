@@ -116,7 +116,7 @@ public class ItemTankRenderer implements IItemRenderer
                 {
                     cap = liquid.amount;
                 }
-                GL11.glCallList(displayList[(int) ((float) liquid.amount / (float) (cap) * (RenderBlockFluid.DISPLAY_STAGES - 1))]);
+                GL11.glCallList(displayList[(int) Math.min(((float) liquid.amount / (float) (cap) * (RenderBlockFluid.DISPLAY_STAGES - 1)), displayList.length - 1)]);
 
                 GL11.glPopAttrib();
                 GL11.glPopMatrix();

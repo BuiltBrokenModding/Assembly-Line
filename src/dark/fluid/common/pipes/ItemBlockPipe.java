@@ -53,16 +53,18 @@ public class ItemBlockPipe extends ItemBlock
     public static ItemStack getWrenchedItem(World world, Vector3 vec)
     {
         TileEntity entity = vec.getTileEntity(world);
-        if (entity instanceof TileEntityTank)
+        if (entity instanceof TileEntityTank && ((TileEntityTank) entity).getTankInfo() != null && ((TileEntityTank) entity).getTankInfo()[0] != null)
         {
             ItemStack itemStack = new ItemStack(FMRecipeLoader.blockTank);
-            FluidStack stack = ((TileEntityTank) entity).drain(ForgeDirection.UNKNOWN, Integer.MAX_VALUE, false);
+            FluidStack stack = ((TileEntityTank) entity).getTankInfo()[0].fluid;
+            
             if (itemStack.getTagCompound() == null)
             {
                 itemStack.setTagCompound(new NBTTagCompound());
             }
             if (stack != null)
             {
+                ((TileEntityTank) entity).drain(ForgeDirection.UNKNOWN, stack.amount, true);
                 itemStack.getTagCompound().setCompoundTag("fluid", stack.writeToNBT(new NBTTagCompound()));
             }
             return itemStack;
