@@ -40,7 +40,7 @@ import dark.machines.DarkMain;
 public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements INetworkFluidPart, ISimplePacketReceiver
 {
     private int updateTick = 1;
-    public static int refreshRate = 40;
+    public static int refreshRate = 10;
     protected FluidTank tank;
     protected FluidTankInfo[] internalTanksInfo = new FluidTankInfo[1];
     protected List<TileEntity> connectedBlocks = new ArrayList<TileEntity>();

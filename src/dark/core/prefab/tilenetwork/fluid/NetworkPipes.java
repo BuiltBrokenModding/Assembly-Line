@@ -6,11 +6,9 @@ import java.util.Map.Entry;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import dark.api.fluid.INetworkPipe;
 import dark.api.tilenetwork.INetworkPart;
-import dark.core.helpers.ConnectionHelper;
 import dark.core.prefab.fluids.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkUpdateHandler;
 
@@ -85,13 +83,16 @@ public class NetworkPipes extends NetworkFluidTiles
                 {
                     for (ForgeDirection dir : entry.getValue())
                     {
-                        int fill = tankContainer.fill(dir, stack, false);
-
-                        if (fill > mostFill)
+                        if (tankContainer.canFill(dir, sta.getFluid()))
                         {
-                            tankToFill = tankContainer;
-                            mostFill = fill;
-                            fillDir = dir;
+                            int fill = tankContainer.fill(dir, stack, false);
+
+                            if (fill > mostFill)
+                            {
+                                tankToFill = tankContainer;
+                                mostFill = fill;
+                                fillDir = dir;
+                            }
                         }
                     }
                 }

@@ -89,7 +89,7 @@ public class TileEntityConstructionPump extends TileEntityStarterPump implements
             {
                 for (Entry<IFluidHandler, EnumSet<ForgeDirection>> entry : ((NetworkFluidTiles) ((INetworkPipe) inputTile).getTileNetwork()).connctedFluidHandlers.entrySet())
                 {
-                    
+
                     if (entry.getKey() instanceof IDrain && !ignoreList.contains(entry.getKey()))
                     {
                         drain = (IDrain) entry.getKey();

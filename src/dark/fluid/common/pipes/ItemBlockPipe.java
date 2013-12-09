@@ -57,7 +57,7 @@ public class ItemBlockPipe extends ItemBlock
         {
             ItemStack itemStack = new ItemStack(FMRecipeLoader.blockTank);
             FluidStack stack = ((TileEntityTank) entity).getTankInfo()[0].fluid;
-            
+
             if (itemStack.getTagCompound() == null)
             {
                 itemStack.setTagCompound(new NBTTagCompound());
@@ -86,6 +86,7 @@ public class ItemBlockPipe extends ItemBlock
         }
     }
 
+    @Override
     public int getItemStackLimit(ItemStack stack)
     {
         if (stack.getTagCompound() != null && stack.getTagCompound().hasKey("fluid"))
@@ -112,7 +113,7 @@ public class ItemBlockPipe extends ItemBlock
                 ((TileEntityFluidNetworkTile) tile).setSubID(stack.getItemDamage());
                 if (stack.getTagCompound() != null && stack.getTagCompound().hasKey("fluid"))
                 {
-                    ((TileEntityFluidNetworkTile) tile).fillTankContent(0, FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag("fluid")), true);
+                    ((TileEntityFluidNetworkTile) tile).fill(ForgeDirection.UNKNOWN, FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag("fluid")), true);
                 }
             }
             return true;

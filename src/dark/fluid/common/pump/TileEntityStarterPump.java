@@ -17,7 +17,6 @@ import com.builtbroken.common.Pair;
 import dark.api.IToolReadOut;
 import dark.api.fluid.IDrain;
 import dark.api.tilenetwork.ITileConnector;
-import dark.core.ExternalModHandler;
 import dark.core.prefab.fluids.FluidHelper;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
 

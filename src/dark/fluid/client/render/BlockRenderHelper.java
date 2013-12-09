@@ -16,7 +16,6 @@ import dark.core.prefab.ModPrefab;
 import dark.fluid.client.model.ModelConstructionPump;
 import dark.fluid.client.model.ModelPump;
 import dark.fluid.client.model.ModelSink;
-import dark.fluid.client.model.ModelTankSide;
 import dark.fluid.common.FMRecipeLoader;
 import dark.fluid.common.FluidMech;
 import dark.mech.client.model.ModelGearRod;
@@ -53,7 +52,7 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
             FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(FluidMech.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "Sink.png"));
             sink.render(0.0565F);
         }
-        else  if (FMRecipeLoader.blockRod != null && block.blockID == FMRecipeLoader.blockRod.blockID)
+        else if (FMRecipeLoader.blockRod != null && block.blockID == FMRecipeLoader.blockRod.blockID)
         {
             GL11.glTranslatef(0.0F, 1.5F, 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import universalelectricity.core.vector.Vector3;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,6 +12,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
+import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;
 
@@ -25,7 +24,6 @@ import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.FluidPartsMaterial;
 import dark.fluid.common.pipes.ItemBlockPipe;
 import dark.fluid.common.pipes.TileEntityPipe;
-import dark.machines.machines.ItemBlockEnergyStorage;
 
 public class BlockTank extends BlockFM
 {

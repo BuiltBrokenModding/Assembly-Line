@@ -16,7 +16,6 @@ import dark.fluid.client.model.ModelTankSide;
 import dark.fluid.common.FMRecipeLoader;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.machines.BlockTank;
-import dark.machines.CoreRecipeLoader;
 import dark.machines.client.renders.RenderBlockFluid;
 
 @SideOnly(Side.CLIENT)

@@ -2,9 +2,7 @@ package dark.core.prefab.tilenetwork.fluid;
 
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -252,6 +250,7 @@ public class NetworkFluidTiles extends NetworkTileEntities
             newNetwork.getMembers().addAll(this.getMembers());
             newNetwork.getMembers().addAll(network.getMembers());
             newNetwork.onCreated();
+            newNetwork.save();
         }
         else
         {
