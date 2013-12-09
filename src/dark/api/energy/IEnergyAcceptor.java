@@ -3,12 +3,12 @@ package dark.api.energy;
 import net.minecraftforge.common.ForgeDirection;
 
 /** Applied to objects that can accept energy. Normally TileEntities
- *
+ * 
  * @author DarkGuardsman */
 public interface IEnergyAcceptor extends IEnergyDevice
 {
     /** Called when this machines receives energy
-     *
+     * 
      * @param from - direction/side the energy came from
      * @param pack - packet of energy
      * @param doReceive - true to do the task, false to simulate

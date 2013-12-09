@@ -9,7 +9,7 @@ import dark.api.tilenetwork.INetworkPart;
 
 /** Used for tile networks that only need to share power or act like a group battery that doesn't
  * store power on world save
- *
+ * 
  * @author DarkGuardsman */
 public class NetworkSharedPower extends NetworkTileEntities implements IElectricalStorage, IPowerLess
 {
@@ -31,7 +31,7 @@ public class NetworkSharedPower extends NetworkTileEntities implements IElectric
     {
         if (!this.runPowerLess && this.networkMembers.contains(source))
         {
-           return this.receiveElectricity(power, doFill);
+            return this.receiveElectricity(power, doFill);
         }
         return 0;
     }
@@ -116,7 +116,7 @@ public class NetworkSharedPower extends NetworkTileEntities implements IElectric
     public void setEnergyStored(float energy)
     {
         this.energy = energy;
-        if(this.energy > this.getMaxEnergyStored())
+        if (this.energy > this.getMaxEnergyStored())
         {
             this.energy = this.getMaxEnergyStored();
         }

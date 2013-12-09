@@ -9,12 +9,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidStack;
 import universalelectricity.core.vector.Vector3;
 import dark.machines.CoreRecipeLoader;
 
 /** Item version of the enrgy storage block
- *
+ * 
  * @author Darkguardsman */
 public class ItemBlockEnergyStorage extends ItemBlock
 {
@@ -90,6 +89,7 @@ public class ItemBlockEnergyStorage extends ItemBlock
         return itemStack;
     }
 
+    @Override
     public int getItemStackLimit(ItemStack stack)
     {
         if (stack.getTagCompound() != null && stack.getTagCompound().hasKey("wrenched"))

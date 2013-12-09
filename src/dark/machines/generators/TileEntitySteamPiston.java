@@ -56,6 +56,7 @@ public class TileEntitySteamPiston extends TileEntityEnergyMachine
         return this.wattsOut;
     }
 
+    @Override
     public boolean consumePower(float watts, boolean doDrain)
     {
         return true;
@@ -73,11 +74,13 @@ public class TileEntitySteamPiston extends TileEntityEnergyMachine
 
     }
 
+    @Override
     public EnumSet<ForgeDirection> getInputDirections()
     {
         return EnumSet.noneOf(ForgeDirection.class);
     }
 
+    @Override
     public EnumSet<ForgeDirection> getOutputDirections()
     {
         return EnumSet.allOf(ForgeDirection.class);

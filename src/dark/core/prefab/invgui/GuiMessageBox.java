@@ -70,8 +70,8 @@ public class GuiMessageBox extends GuiBase
     @Override
     protected void drawForegroundLayer(int var2, int var3, float var1)
     {
-        this.fontRenderer.drawString("" + this.title, (int) (this.guiSize.intX() / 2 - 30), 5, 4210752);
-        this.fontRenderer.drawString("\u00a77" + this.message, (int) ((this.guiSize.intX() / 2) - 50), 20, 4210752);
+        this.fontRenderer.drawString("" + this.title, (this.guiSize.intX() / 2 - 30), 5, 4210752);
+        this.fontRenderer.drawString("\u00a77" + this.message, ((this.guiSize.intX() / 2) - 50), 20, 4210752);
     }
 
     @Override

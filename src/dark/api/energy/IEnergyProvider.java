@@ -3,7 +3,7 @@ package dark.api.energy;
 import net.minecraftforge.common.ForgeDirection;
 
 /** Applied to objects that can provide energy
- *
+ * 
  * @author DarkGuardsman */
 public interface IEnergyProvider extends IEnergyDevice
 {

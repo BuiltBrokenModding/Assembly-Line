@@ -16,7 +16,7 @@ import dark.machines.DarkMain;
 /** Actual block that is the sentry gun. Mainly a place holder as the sentry guns need something to
  * exist threw that is not an entity. Renders need to still be handled by the respective mod.
  * Especial item renders as this just creates the block and reservers the meta slot
- *
+ * 
  * @author DarkGuardsman */
 public class BlockSentryGun extends BlockMachine
 {

@@ -2,7 +2,7 @@ package dark.api.energy;
 
 /** Applied to devices that have the option to run without power. Normally this option is only shown
  * to creative mode players
- *
+ * 
  * @author DarkGuardsman */
 public interface IPowerLess
 {

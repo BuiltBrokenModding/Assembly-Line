@@ -1,6 +1,5 @@
 package dark.machines.machines;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.ForgeDirection;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
 

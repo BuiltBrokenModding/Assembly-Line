@@ -1,7 +1,7 @@
 package dark.api.access;
 
-/** Applied to tileEntities that contain an access profile that describes how the tile interacts
- * with users
+/** Applied to tileEntities that contain an access profile that describes how the tile interacts with
+ * users
  * 
  * @author DarkGuardsman */
 public interface IProfileContainer

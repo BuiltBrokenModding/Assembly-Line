@@ -68,6 +68,7 @@ public class ModelElecFurnace extends ModelMachine
         setRotation(tube3, 0F, 0F, 0F);
     }
 
+    @Override
     public void render(float f5)
     {
         body.render(f5);

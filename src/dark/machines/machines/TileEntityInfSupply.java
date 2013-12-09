@@ -2,7 +2,6 @@ package dark.machines.machines;
 
 import java.util.EnumSet;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.ForgeDirection;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
 

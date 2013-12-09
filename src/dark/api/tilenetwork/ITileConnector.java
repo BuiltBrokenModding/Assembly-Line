@@ -4,7 +4,7 @@ import net.minecraftforge.common.ForgeDirection;
 
 /** Used on tiles that want control over what can connect to there device. It is suggest that other
  * interfaces for connection be routed threw this to reduce the need to change things
- *
+ * 
  * @author DarkGuardsman */
 public interface ITileConnector
 {

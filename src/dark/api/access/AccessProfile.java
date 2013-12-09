@@ -16,7 +16,7 @@ import dark.api.save.SaveManager;
 /** Designed to be used as a container for AccessGroups and AccessUser. If you plan to use this make
  * sure to use it correctly. This is designed to be saved separate from the world save if marked for
  * global access. Which means it can save/load at will from the world file.
- *
+ * 
  * @author DarkGuardsman */
 public class AccessProfile implements ISpecialAccess, IVirtualObject
 {

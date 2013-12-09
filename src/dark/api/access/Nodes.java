@@ -1,6 +1,5 @@
 package dark.api.access;
 
-
 /** Constants that represent nodes by which machines and entities used in combination with
  * ISpecialAccess to limit users on what they can do. These nodes should be used in the same way by
  * all machines, entities, and other mods. Too change the meaning of the node will make it difficult

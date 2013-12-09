@@ -1,7 +1,7 @@
 package dark.api.energy;
 
 /** Applied to objects the store energy
- *
+ * 
  * @author DarkGaurdsman */
 public interface IEnergyBank
 {

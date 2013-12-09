@@ -15,7 +15,7 @@ import dark.core.prefab.machine.TileEntityMachine;
  * it. Doesn't actually make steam fluid but rather simple functions. The machines above it will
  * need to call to this machines and do a check for steam. If this machines is creating steam then
  * the machine above it should function
- *
+ * 
  * @author DarkGuardsman */
 public class TileEntitySteamGen extends TileEntityMachine implements IFluidHandler
 {

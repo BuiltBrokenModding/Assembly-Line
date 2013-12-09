@@ -4,7 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import universalelectricity.core.electricity.ElectricityPack;
 
 /** Wrapper for storing information about electricity packets
- *
+ * 
  * @author DarkGuardsman */
 public class ElecPack extends EnergyPack
 {

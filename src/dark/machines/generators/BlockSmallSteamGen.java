@@ -46,7 +46,7 @@ public class BlockSmallSteamGen extends BlockMachine
     {
         super.onBlockPlacedBy(world, x, y, z, entityLiving, itemStack);
         int metadata = world.getBlockMetadata(x, y, z);
-        int angle = MathHelper.floor_double((entityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+        int angle = net.minecraft.util.MathHelper.floor_double((entityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
         world.setBlockMetadataWithNotify(x, y, z, ((metadata / 4) * 4) + angle, 3);
     }
 

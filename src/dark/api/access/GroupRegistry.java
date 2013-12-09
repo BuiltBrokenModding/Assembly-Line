@@ -5,10 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import net.minecraft.entity.player.EntityPlayer;
 import dark.api.ITerminal;
 import dark.api.ITerminalCommand;
-
-import net.minecraft.entity.player.EntityPlayer;
 
 /** @author DarkGuardsman */
 public class GroupRegistry
@@ -18,7 +17,6 @@ public class GroupRegistry
     public static final HashMap<String, List<String>> groupDefaultNodes = new HashMap();
     public static final HashMap<String, String> groupDefaultExtends = new HashMap();
 
-    
     static
     {
         List<String> list = new ArrayList<String>();

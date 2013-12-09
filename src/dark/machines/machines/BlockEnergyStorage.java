@@ -25,7 +25,7 @@ import dark.machines.CommonProxy;
 import dark.machines.DarkMain;
 
 /** Block for energy storage devices
- *
+ * 
  * @author Rseifert */
 public class BlockEnergyStorage extends BlockMachine
 {
@@ -35,6 +35,7 @@ public class BlockEnergyStorage extends BlockMachine
         this.setCreativeTab(DMCreativeTab.tabIndustrial);
     }
 
+    @Override
     public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
     {
         Vector3 vec = new Vector3(x, y, z);

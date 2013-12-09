@@ -4,7 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import dark.api.DataPack;
 
 /** Container for energy data
- *
+ * 
  * @author DarkGuardsman */
 public class EnergyPack extends DataPack
 {

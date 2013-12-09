@@ -2,7 +2,6 @@ package dark.machines.machines;
 
 import java.util.HashMap;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -12,7 +11,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
 /** Designed to debug fluid devices by draining everything that comes in at one time
- *
+ * 
  * @author DarkGuardsman */
 public class TileEntityVoid extends TileEntity implements IFluidHandler
 {

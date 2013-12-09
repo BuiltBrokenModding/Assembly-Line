@@ -29,7 +29,7 @@ import dark.core.prefab.machine.BlockMachine;
 import dark.machines.DarkMain;
 
 /** Handler to make registering all parts of a mod's objects that are loaded into the game by forge
- *
+ * 
  * @author DarkGuardsman */
 public class ModObjectRegistry
 {
@@ -128,7 +128,7 @@ public class ModObjectRegistry
     }
 
     /** Method to get block via name
-     *
+     * 
      * @param blockName
      * @return Block requested */
     public static Block getBlock(String blockName)
@@ -145,7 +145,7 @@ public class ModObjectRegistry
     }
 
     /** Method to get block via id
-     *
+     * 
      * @param blockID
      * @return Block requested */
     public static Block getBlock(int blockID)
@@ -189,7 +189,7 @@ public class ModObjectRegistry
 
     /** Creates a new item using reflection as well runs it threw some check to activate any
      * interface methods
-     *
+     * 
      * @param name - name to register the item with
      * @param modid - mods that the item comes from
      * @param clazz - item class
@@ -283,7 +283,7 @@ public class ModObjectRegistry
         }
 
         /** Adds a tileEntity to be registered when this block is registered
-         *
+         * 
          * @param name - mod name for the tileEntity, should be unique
          * @param class1 - new instance of the TileEntity to register */
         public BlockBuildData addTileEntity(String name, Class<? extends TileEntity> class1)

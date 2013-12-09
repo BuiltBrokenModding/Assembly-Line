@@ -5,7 +5,7 @@ import dark.api.save.ISaveObj;
 import dark.api.save.NBTFileHelper;
 
 /** Wrapper for data to be sent threw a network to a device
- *
+ * 
  * @author DarkGuardsman */
 public class DataPack implements ISaveObj, Cloneable
 {

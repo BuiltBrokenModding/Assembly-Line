@@ -76,7 +76,7 @@ public class ItemRenderFluidCan implements IItemRenderer
                 FMLClientHandler.instance().getClient().renderEngine.bindTexture((RenderBlockFluid.getFluidSheet(liquid)));
 
                 int cap = ((ItemFluidCan) CoreRecipeLoader.itemFluidCan).getCapacity(item);
-                if(liquid.getFluid().isGaseous())
+                if (liquid.getFluid().isGaseous())
                 {
                     cap = liquid.amount;
                 }

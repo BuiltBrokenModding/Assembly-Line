@@ -14,7 +14,7 @@ public enum EnumGas
     METHANE(ChemicalCompound.METHANE, true),
     NATURAL_GAS("Natural Gas", false),
     PROPANE("Propane", false);
-    
+
     /** Name used when creating this as a fluid */
     public final String fluidName;
     /** Name used to display to the players */

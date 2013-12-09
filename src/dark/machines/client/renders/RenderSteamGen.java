@@ -66,7 +66,7 @@ public class RenderSteamGen extends RenderTileMachine
                 {
                     if (((TileEntityMachine) tileEntity).isFunctioning())
                     {
-                        GL11.glRotatef(this.rot1, 0f, 1f, 0f);
+                        GL11.glRotatef(RenderSteamGen.rot1, 0f, 1f, 0f);
                     }
                     ((ModelSteamTurbine) model).renderFan(0.0625F);
                 }

@@ -20,7 +20,7 @@ import dark.machines.DarkMain;
 
 /** Small fluid can that is designed to store up to one bucket of fluid. Doesn't work like a bucket
  * as it is sealed with a pressure cap. This can is designed to work with tools or machines only.
- *
+ * 
  * @author DarkGuardsman */
 public class ItemFluidCan extends ItemFluidContainer
 {

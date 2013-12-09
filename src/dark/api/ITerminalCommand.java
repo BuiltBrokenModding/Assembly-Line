@@ -2,7 +2,6 @@ package dark.api;
 
 import java.util.Set;
 
-
 import net.minecraft.entity.player.EntityPlayer;
 
 /** Prefab for creating commands that most terminal entities can use
