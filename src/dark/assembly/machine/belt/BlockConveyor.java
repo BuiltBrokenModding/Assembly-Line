@@ -257,7 +257,7 @@ public class BlockConveyor extends BlockAssembly
 
         return true;
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)

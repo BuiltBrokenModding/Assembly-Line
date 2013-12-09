@@ -14,7 +14,7 @@ import dark.assembly.armbot.TaskBaseProcess;
 import dark.core.helpers.MathHelper;
 
 /** Rotates an armbot by a set amount
- *
+ * 
  * @author DarkGuardsman */
 public class TaskRotateBy extends TaskBaseArmbot
 {

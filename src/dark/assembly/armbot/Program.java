@@ -156,7 +156,7 @@ public class Program implements IProgram
     }
 
     /** Move all tasks at the row and in the direction given.
-     *
+     * 
      * @param row - row number or Y value of the position from the task
      * @param up - true will move all the tasks up one, false will move all the tasks down one */
     public void moveAll(int row, boolean up)

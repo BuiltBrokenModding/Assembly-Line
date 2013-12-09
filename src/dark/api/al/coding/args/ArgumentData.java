@@ -5,7 +5,7 @@ import dark.api.save.ISaveObj;
 import dark.api.save.NBTFileHelper;
 
 /** Used to store arguments in a way that can be easier to read, limit, and understand
- *
+ * 
  * @author DarkGuardsman */
 public class ArgumentData implements ISaveObj
 {
@@ -21,7 +21,7 @@ public class ArgumentData implements ISaveObj
     }
 
     /** Sets the value
-     *
+     * 
      * @return true if the value was accepted */
     public boolean setData(Object object)
     {

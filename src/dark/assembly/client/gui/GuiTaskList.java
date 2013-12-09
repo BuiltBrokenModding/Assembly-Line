@@ -18,7 +18,7 @@ import dark.assembly.machine.encoder.TileEntityEncoder;
 import dark.core.interfaces.IScroll;
 
 /** Not a gui itself but a component used to display task as a box inside of a gui
- *
+ * 
  * @author DarkGuardsman */
 public class GuiTaskList extends Gui implements IScroll
 {

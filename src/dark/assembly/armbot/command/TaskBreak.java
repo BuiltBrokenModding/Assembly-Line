@@ -18,7 +18,7 @@ import dark.assembly.armbot.TaskBaseProcess;
 import dark.core.helpers.ItemWorldHelper;
 
 /** Used by arms to break a specific block in a position.
- *
+ * 
  * @author Calclavia */
 public class TaskBreak extends TaskBaseArmbot
 {
@@ -87,7 +87,5 @@ public class TaskBreak extends TaskBaseArmbot
         nbt.setInteger("breakTicks", this.breakTicks);
         return nbt;
     }
-
-
 
 }

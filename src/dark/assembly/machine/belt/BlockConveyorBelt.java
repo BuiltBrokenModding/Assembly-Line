@@ -337,7 +337,7 @@ public class BlockConveyorBelt extends BlockAssembly
     {
         list.add(new Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>(TileEntityConveyorBelt.class, new RenderConveyorBelt()));
     }
-    
+
     @Override
     public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
     {

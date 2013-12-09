@@ -166,7 +166,7 @@ public class GuiEncoderCoder extends GuiEncoderBase
         {
             this.helpMessage = "";
         }
-        this.fontRenderer.drawString(this.helpMessage, (int) (this.xSize / 2 - 82), 150, 4210752);
+        this.fontRenderer.drawString(this.helpMessage, (this.xSize / 2 - 82), 150, 4210752);
 
     }
 

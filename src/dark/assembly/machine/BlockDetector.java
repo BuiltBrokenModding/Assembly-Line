@@ -180,7 +180,7 @@ public class BlockDetector extends BlockImprintable
     {
         return isProvidingStrongPower(world, x, y, z, direction);
     }
-    
+
     @Override
     public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
     {

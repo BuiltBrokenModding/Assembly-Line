@@ -1,7 +1,7 @@
 package dark.assembly.client.gui;
 
 /** Used to reference icons in the gui coder sheet
- *
+ * 
  * @author DarkGuardsman */
 public enum EnumTaskIcon
 {

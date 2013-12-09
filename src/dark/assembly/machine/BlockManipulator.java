@@ -87,7 +87,7 @@ public class BlockManipulator extends BlockImprintable
 
         return true;
     }
-    
+
     @Override
     public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
     {

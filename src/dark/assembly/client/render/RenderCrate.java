@@ -31,10 +31,10 @@ public class RenderCrate extends TileEntitySpecialRenderer
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)
     {
         Vector3 vec = new Vector3(x, y, z);
-        double distance = vec.distance(new Vector3(0, 0, 0));        
+        double distance = vec.distance(new Vector3(0, 0, 0));
         if (tileEntity instanceof TileEntityCrate)
         {
-            
+
             TileEntityCrate tileCrate = (TileEntityCrate) tileEntity;
 
             RenderItem renderItem = ((RenderItem) RenderManager.instance.getEntityClassRenderObject(EntityItem.class));

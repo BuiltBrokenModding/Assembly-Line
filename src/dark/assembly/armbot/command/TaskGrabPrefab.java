@@ -9,7 +9,7 @@ import dark.api.al.coding.IArmbot;
 import dark.assembly.armbot.TaskBaseArmbot;
 
 /** Prefab for grab based commands
- *
+ * 
  * @author DarkGuardsman */
 public abstract class TaskGrabPrefab extends TaskBaseArmbot
 {

@@ -73,7 +73,7 @@ public class BlockArmbot extends BlockAssembly
     {
         return 0;
     }
-    
+
     @Override
     public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
     {

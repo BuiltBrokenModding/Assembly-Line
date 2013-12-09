@@ -29,6 +29,7 @@ public class BlockRejector extends BlockImprintable
     {
         super(new BlockBuildData(BlockRejector.class, "rejector", UniversalElectricity.machine));
     }
+
     @Override
     public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
     {

@@ -14,7 +14,7 @@ import dark.assembly.armbot.TaskBaseProcess;
 import dark.core.helpers.MathHelper;
 
 /** Rotates the armbot to a specific direction. If not specified, it will turn right.
- *
+ * 
  * @author DarkGuardsman */
 public class TaskRotateTo extends TaskBaseArmbot
 {

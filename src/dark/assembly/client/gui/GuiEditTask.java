@@ -218,8 +218,8 @@ public class GuiEditTask extends GuiBase implements IMessageBoxDialog
     protected void drawForegroundLayer(int var2, int var3, float var1)
     {
         this.fontRenderer.drawString("Edit Task", (int) (this.guiSize.intX() / 2 - 7 * 2.5), 5, 4210752);
-        this.fontRenderer.drawString("Task: " + "\u00a77" + this.task.getMethodName(), (int) ((this.guiSize.intX() / 2) - 70), 20, 4210752);
-        this.fontRenderer.drawString("----Task Arguments---- ", (int) ((this.guiSize.intX() / 2) - 70), 50, 4210752);
+        this.fontRenderer.drawString("Task: " + "\u00a77" + this.task.getMethodName(), ((this.guiSize.intX() / 2) - 70), 20, 4210752);
+        this.fontRenderer.drawString("----Task Arguments---- ", ((this.guiSize.intX() / 2) - 70), 50, 4210752);
 
         int i = 0;
         if (task.getArgs() != null)
@@ -227,14 +227,14 @@ public class GuiEditTask extends GuiBase implements IMessageBoxDialog
             for (ArgumentData arg : task.getArgs())
             {
                 i++;
-                this.fontRenderer.drawString(arg.getName() + ":", (int) ((this.guiSize.intX() / 2) - 70), 45 + (i * this.ySpacing), 4210752);
-                this.fontRenderer.drawString(arg.warning(), (int) ((this.guiSize.intX() / 2) + 11), 45 + (i * this.ySpacing), 4210752);
+                this.fontRenderer.drawString(arg.getName() + ":", ((this.guiSize.intX() / 2) - 70), 45 + (i * this.ySpacing), 4210752);
+                this.fontRenderer.drawString(arg.warning(), ((this.guiSize.intX() / 2) + 11), 45 + (i * this.ySpacing), 4210752);
 
             }
         }
         else
         {
-            this.fontRenderer.drawString("\u00a77" + "     No editable args ", (int) ((this.guiSize.intX() / 2) - 70), 70, 4210752);
+            this.fontRenderer.drawString("\u00a77" + "     No editable args ", ((this.guiSize.intX() / 2) - 70), 70, 4210752);
 
         }
 
