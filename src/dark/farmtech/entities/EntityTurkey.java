@@ -150,7 +150,6 @@ public class EntityTurkey extends EntityAnimal
         {
             this.dropItem(Item.feather.itemID, 1);
         }
-        
 
         if (this.isBurning())
         {

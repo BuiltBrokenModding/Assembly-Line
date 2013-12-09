@@ -101,6 +101,7 @@ public class ModelTurkey extends ModelBase
         setRotation(fan, 0F, 0F, 0F);
     }
 
+    @Override
     public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7)
     {
         this.setRotationAngles(par2, par3, par4, par5, par6, par7, par1Entity);
@@ -148,11 +149,12 @@ public class ModelTurkey extends ModelBase
         model.rotateAngleY = y;
         model.rotateAngleZ = z;
     }
-    
+
+    @Override
     public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6, Entity par7Entity)
     {
-        this.head.rotateAngleX = par5 / (180F / (float)Math.PI);
-        this.head.rotateAngleY = par4 / (180F / (float)Math.PI);
+        this.head.rotateAngleX = par5 / (180F / (float) Math.PI);
+        this.head.rotateAngleY = par4 / (180F / (float) Math.PI);
         this.bill.rotateAngleX = this.head.rotateAngleX;
         this.bill.rotateAngleY = this.head.rotateAngleY;
         this.chin.rotateAngleX = this.head.rotateAngleX;
@@ -162,7 +164,7 @@ public class ModelTurkey extends ModelBase
         //this.fan.rotateAngleX = ((float)Math.PI / 2F);
         //this.neck.rotateAngleX = ((float)Math.PI / 2F);
         this.rightLeg.rotateAngleX = MathHelper.cos(par1 * 0.6662F) * 1.4F * par2;
-        this.leftLeg.rotateAngleX = MathHelper.cos(par1 * 0.6662F + (float)Math.PI) * 1.4F * par2;
+        this.leftLeg.rotateAngleX = MathHelper.cos(par1 * 0.6662F + (float) Math.PI) * 1.4F * par2;
         this.rightWing.rotateAngleZ = par3;
         this.leftWing.rotateAngleZ = -par3;
     }
