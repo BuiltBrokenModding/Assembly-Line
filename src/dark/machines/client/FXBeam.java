@@ -139,92 +139,101 @@ public class FXBeam extends EntityFX
     @Override
     public void renderParticle(Tessellator tessellator, float f, float f1, float f2, float f3, float f4, float f5)
     {
+        //Clear
         tessellator.draw();
-
         GL11.glPushMatrix();
-        float var9 = 1.0F;
-        float slide = this.worldObj.getTotalWorldTime();
-        float rot = this.worldObj.provider.getWorldTime() % (360 / this.rotSpeed) * this.rotSpeed + this.rotSpeed * f;
-
-        float size = 1.0F;
-        float alphaColor = 0.5F;
-
-        if (this.pulse)
+        
+        //Start drawing
+        try
         {
-            size = Math.min(this.particleAge / 4.0F, 1.0F);
-            size = this.prevSize + (size - this.prevSize) * f;
-            if ((this.particleMaxAge - this.particleAge <= 4))
+            float var9 = 1.0F;
+            float slide = this.worldObj.getTotalWorldTime();
+            float rot = this.worldObj.provider.getWorldTime() % (360 / this.rotSpeed) * this.rotSpeed + this.rotSpeed * f;
+
+            float size = 1.0F;
+            float alphaColor = 0.5F;
+
+            if (this.pulse)
             {
-                alphaColor = 0.5F - (4 - (this.particleMaxAge - this.particleAge)) * 0.1F;
+                size = Math.min(this.particleAge / 4.0F, 1.0F);
+                size = this.prevSize + (size - this.prevSize) * f;
+                if ((this.particleMaxAge - this.particleAge <= 4))
+                {
+                    alphaColor = 0.5F - (4 - (this.particleMaxAge - this.particleAge)) * 0.1F;
+                }
+
             }
 
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(this.texture));
+
+            GL11.glTexParameterf(3553, 10242, 10497.0F);
+            GL11.glTexParameterf(3553, 10243, 10497.0F);
+
+            GL11.glDisable(2884);
+
+            float var11 = slide + f;
+            if (this.reverse)
+            {
+                var11 *= -1.0F;
+            }
+            float var12 = -var11 * 0.2F - MathHelper.floor_float(-var11 * 0.1F);
+
+            GL11.glEnable(3042);
+            GL11.glBlendFunc(770, 1);
+            GL11.glDepthMask(false);
+
+            float xx = (float) (this.prevPosX + (this.posX - this.prevPosX) * f - interpPosX);
+            float yy = (float) (this.prevPosY + (this.posY - this.prevPosY) * f - interpPosY);
+            float zz = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * f - interpPosZ);
+            GL11.glTranslated(xx, yy, zz);
+
+            float yaw = this.prevYaw + (this.rotYaw - this.prevYaw) * f;
+            float pitch = this.prevPitch + (this.rotPitch - this.prevPitch) * f;
+            GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
+            GL11.glRotatef(180.0F + yaw, 0.0F, 0.0F, -1.0F);
+            GL11.glRotatef(pitch, 1.0F, 0.0F, 0.0F);
+
+            double negWidth = -beamD * size;
+            double posWidth = beamD * size;
+            //TODO test length without size to see if that will fix length render changes
+            double negLength = -beamD * size * this.endModifier;
+            double posLength = beamD * size * this.endModifier;
+
+            GL11.glRotatef(rot, 0.0F, 1.0F, 0.0F);
+            for (int t = 0; t < 3; t++)
+            {
+                double dist = this.length * size * var9;
+                double var31 = 0.0D;
+                double var33 = 1.0D;
+                double var35 = -1.0F + var12 + t / 3.0F;
+                double uvLength = this.length * size * var9 + var35;
+
+                GL11.glRotatef(60.0F, 0.0F, 1.0F, 0.0F);
+                tessellator.startDrawingQuads();
+                tessellator.setBrightness(200);
+                tessellator.setColorRGBA_F(this.particleRed, this.particleGreen, this.particleBlue, alphaColor);
+                tessellator.addVertexWithUV(negLength, dist, 0.0D, var33, uvLength);
+                tessellator.addVertexWithUV(negWidth, 0.0D, 0.0D, var33, var35);
+                tessellator.addVertexWithUV(posWidth, 0.0D, 0.0D, var31, var35);
+                tessellator.addVertexWithUV(posLength, dist, 0.0D, var31, uvLength);
+                tessellator.draw();
+            }
+
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            GL11.glDepthMask(true);
+            GL11.glDisable(3042);
+            GL11.glEnable(2884);
+
+            this.prevSize = size;
         }
-
-        FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(this.texture));
-
-        GL11.glTexParameterf(3553, 10242, 10497.0F);
-        GL11.glTexParameterf(3553, 10243, 10497.0F);
-
-        GL11.glDisable(2884);
-
-        float var11 = slide + f;
-        if (this.reverse)
+        catch (Exception e)
         {
-            var11 *= -1.0F;
+            e.printStackTrace();
         }
-        float var12 = -var11 * 0.2F - MathHelper.floor_float(-var11 * 0.1F);
-
-        GL11.glEnable(3042);
-        GL11.glBlendFunc(770, 1);
-        GL11.glDepthMask(false);
-
-        float xx = (float) (this.prevPosX + (this.posX - this.prevPosX) * f - interpPosX);
-        float yy = (float) (this.prevPosY + (this.posY - this.prevPosY) * f - interpPosY);
-        float zz = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * f - interpPosZ);
-        GL11.glTranslated(xx, yy, zz);
-
-        float yaw = this.prevYaw + (this.rotYaw - this.prevYaw) * f;
-        float pitch = this.prevPitch + (this.rotPitch - this.prevPitch) * f;
-        GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
-        GL11.glRotatef(180.0F + yaw, 0.0F, 0.0F, -1.0F);
-        GL11.glRotatef(pitch, 1.0F, 0.0F, 0.0F);
-
-        double negWidth = -beamD * size;
-        double posWidth = beamD * size;
-        //TODO test length without size to see if that will fix length render changes
-        double negLength = -beamD * size * this.endModifier;
-        double posLength = beamD * size * this.endModifier;
-
-        GL11.glRotatef(rot, 0.0F, 1.0F, 0.0F);
-        for (int t = 0; t < 3; t++)
-        {
-            double dist = this.length * size * var9;
-            double var31 = 0.0D;
-            double var33 = 1.0D;
-            double var35 = -1.0F + var12 + t / 3.0F;
-            double uvLength = this.length * size * var9 + var35;
-
-            GL11.glRotatef(60.0F, 0.0F, 1.0F, 0.0F);
-            tessellator.startDrawingQuads();
-            tessellator.setBrightness(200);
-            tessellator.setColorRGBA_F(this.particleRed, this.particleGreen, this.particleBlue, alphaColor);
-            tessellator.addVertexWithUV(negLength, dist, 0.0D, var33, uvLength);
-            tessellator.addVertexWithUV(negWidth, 0.0D, 0.0D, var33, var35);
-            tessellator.addVertexWithUV(posWidth, 0.0D, 0.0D, var31, var35);
-            tessellator.addVertexWithUV(posLength, dist, 0.0D, var31, uvLength);
-            tessellator.draw();
-        }
-
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        GL11.glDepthMask(true);
-        GL11.glDisable(3042);
-        GL11.glEnable(2884);
-
+        
+        //Reset
         GL11.glPopMatrix();
-
         tessellator.startDrawingQuads();
-        this.prevSize = size;
-
         FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation("textures/particle/particles.png"));
     }
 }
