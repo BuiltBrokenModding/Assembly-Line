@@ -91,7 +91,7 @@ public class AssemblyLine extends ModPrefab
 
     //public static final String TEXTURE_NAME_PREFIX = "assemblyline:";
 
-    private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US", "nl_NL", "fr_FR", "de_DE", "zh_CN" };
+    private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US", "nl_NL", "fr_FR", "de_DE", "zh_CN", "pt_BR" };
 
     public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "Dark/AssemblyLine.cfg"));
 
