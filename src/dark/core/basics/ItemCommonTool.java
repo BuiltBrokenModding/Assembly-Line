@@ -93,7 +93,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
             }
             if (itemStack.getTagCompound().getBoolean(BROKEN_NBT))
             {
-                list.add("Broken");
+                list.add("Blunted");
             }
             else
             {
@@ -473,7 +473,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
                 {
                     if (tool.enabled)
                     {
-                        mat.toolIcons[tool.ordinal()] = iconRegister.registerIcon(DarkMain.getInstance().PREFIX + mat.simpleName + tool.name);
+                        mat.toolIcons[tool.ordinal()] = iconRegister.registerIcon(DarkMain.getInstance().PREFIX + "tool." + mat.simpleName + tool.name);
                     }
                 }
             }

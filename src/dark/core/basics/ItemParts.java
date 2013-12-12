@@ -58,7 +58,7 @@ public class ItemParts extends ItemBasic implements IExtraItemInfo
         super.registerIcons(iconRegister);
         for (Parts part : Parts.values())
         {
-            part.icon = iconRegister.registerIcon(DarkMain.getInstance().PREFIX + part.name);
+            part.icon = iconRegister.registerIcon(DarkMain.getInstance().PREFIX + "part." + part.name);
         }
     }
 
@@ -91,9 +91,9 @@ public class ItemParts extends ItemBasic implements IExtraItemInfo
         CircuitAdvanced("circuitAdvanced"),
         CircuitElite("circuitElite"),
         Motor("motor"),
-        IC("IC_Chip"),
+        IC("ic_chip"),
         COIL("copperCoil"),
-        LASER("LaserDiode");
+        LASER("laserDiode");
 
         public String name;
         public Icon icon;

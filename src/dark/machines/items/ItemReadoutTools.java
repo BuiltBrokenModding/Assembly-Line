@@ -45,8 +45,8 @@ public class ItemReadoutTools extends ItemBasic
     @Override
     public void registerIcons(IconRegister iconRegister)
     {
-        this.pipeGuage = iconRegister.registerIcon(DarkMain.getInstance().PREFIX + "PipeGauge");
-        this.multiMeter = iconRegister.registerIcon(DarkMain.getInstance().PREFIX + "multi-Meter");
+        this.pipeGuage = iconRegister.registerIcon(DarkMain.getInstance().PREFIX + "readout.PipeGauge");
+        this.multiMeter = iconRegister.registerIcon(DarkMain.getInstance().PREFIX + "readout.multi-Meter");
     }
 
     @SideOnly(Side.CLIENT)

@@ -8,6 +8,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.core.item.ItemElectric;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.core.DMCreativeTab;
 import dark.core.interfaces.IExtraInfo.IExtraItemInfo;
 import dark.core.prefab.ModPrefab;
 import dark.machines.DarkMain;
@@ -21,13 +22,7 @@ public class ItemBattery extends ItemElectric implements IExtraItemInfo
     {
         super(DarkMain.CONFIGURATION.getItem("Battery", ModPrefab.getNextItemId()).getInt());
         this.setUnlocalizedName(DarkMain.getInstance().PREFIX + "Battery");
-        this.setCreativeTab(CreativeTabs.tabRedstone);
-    }
-
-    @Override
-    public String getUnlocalizedName(ItemStack par1ItemStack)
-    {
-        return "item." + this.getUnlocalizedName();
+        this.setCreativeTab(DMCreativeTab.tabIndustrial);
     }
 
     @SideOnly(Side.CLIENT)
