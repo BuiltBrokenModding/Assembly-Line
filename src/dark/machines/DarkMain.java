@@ -178,54 +178,6 @@ public class DarkMain extends ModPrefab
         if (CoreRecipeLoader.itemMetals != null)
         {
             MinecraftForge.EVENT_BUS.register(CoreRecipeLoader.itemMetals);
-            //Ore material recipe loop
-            for (EnumMaterial mat : EnumMaterial.values())
-            {
-                if (mat.shouldCreateItem(EnumOrePart.INGOTS))
-                {
-                    OreDictionary.registerOre(mat.getOreName(EnumOrePart.INGOTS), mat.getStack(EnumOrePart.INGOTS, 1));
-                    OreDictionary.registerOre(mat.getOreNameReverse(EnumOrePart.INGOTS), mat.getStack(EnumOrePart.INGOTS, 1));
-                }
-                if (mat.shouldCreateItem(EnumOrePart.RUBBLE))
-                {
-                    OreDictionary.registerOre(mat.getOreName(EnumOrePart.RUBBLE), mat.getStack(EnumOrePart.RUBBLE, 1));
-                    OreDictionary.registerOre(mat.getOreNameReverse(EnumOrePart.RUBBLE), mat.getStack(EnumOrePart.RUBBLE, 1));
-                }
-                if (mat.shouldCreateItem(EnumOrePart.DUST))
-                {
-                    OreDictionary.registerOre(mat.getOreName(EnumOrePart.DUST), mat.getStack(EnumOrePart.DUST, 1));
-                    OreDictionary.registerOre(mat.getOreNameReverse(EnumOrePart.DUST), mat.getStack(EnumOrePart.DUST, 1));
-                }
-                if (mat.shouldCreateItem(EnumOrePart.SCRAPS))
-                {
-
-                    OreDictionary.registerOre(mat.getOreName(EnumOrePart.SCRAPS), mat.getStack(EnumOrePart.SCRAPS, 1));
-                    OreDictionary.registerOre(mat.getOreNameReverse(EnumOrePart.SCRAPS), mat.getStack(EnumOrePart.SCRAPS, 1));
-                }
-                if (mat.shouldCreateItem(EnumOrePart.TUBE))
-                {
-                    OreDictionary.registerOre(mat.getOreName(EnumOrePart.TUBE), mat.getStack(EnumOrePart.TUBE, 1));
-                    OreDictionary.registerOre(mat.getOreNameReverse(EnumOrePart.TUBE), mat.getStack(EnumOrePart.TUBE, 1));
-
-                }
-                if (mat.shouldCreateItem(EnumOrePart.ROD))
-                {
-
-                    OreDictionary.registerOre(mat.getOreName(EnumOrePart.ROD), mat.getStack(EnumOrePart.ROD, 1));
-                    OreDictionary.registerOre(mat.getOreNameReverse(EnumOrePart.ROD), mat.getStack(EnumOrePart.ROD, 1));
-                }
-                if (mat.shouldCreateItem(EnumOrePart.PLATES))
-                {
-                    OreDictionary.registerOre(mat.getOreName(EnumOrePart.PLATES), mat.getStack(EnumOrePart.PLATES, 1));
-                    OreDictionary.registerOre(mat.getOreNameReverse(EnumOrePart.PLATES), mat.getStack(EnumOrePart.PLATES, 1));
-                }
-                if (mat.shouldCreateItem(EnumOrePart.GEARS))
-                {
-                    OreDictionary.registerOre(mat.getOreName(EnumOrePart.GEARS), mat.getStack(EnumOrePart.GEARS, 1));
-                    OreDictionary.registerOre(mat.getOreNameReverse(EnumOrePart.GEARS), mat.getStack(EnumOrePart.GEARS, 1));
-                }
-
-            }
         }
         FMLLog.info(" Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
         proxy.init();
@@ -246,6 +198,7 @@ public class DarkMain extends ModPrefab
             DMCreativeTab.tabIndustrial.itemStack = EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.GEARS, 1);
         }
         MachineRecipeHandler.parseOreNames(CONFIGURATION);
+        CONFIGURATION.save();
     }
 
     @Override
@@ -294,8 +247,8 @@ public class DarkMain extends ModPrefab
         CoreRecipeLoader.itemDiggingTool = ModObjectRegistry.createNewItem("ItemDiggingTools", DarkMain.MOD_ID, ItemCommonTool.class, true);
         CoreRecipeLoader.itemVehicleTest = ModObjectRegistry.createNewItem("ItemVehicleTest", DarkMain.MOD_ID, ItemVehicleSpawn.class, true);
         CoreRecipeLoader.itemFluidCan = ModObjectRegistry.createNewItem("ItemFluidCan", DarkMain.MOD_ID, ItemFluidCan.class, true);
-
-        CONFIGURATION.save();
+        //Config saves in post init to allow for other feature to access it
+       
     }
 
     @Override

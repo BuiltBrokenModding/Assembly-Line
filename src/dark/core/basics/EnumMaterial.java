@@ -79,10 +79,10 @@ public enum EnumMaterial
      * @param mat - material
      * @param part - part
      * @return new ItemStack created from the two enums as long as everything goes right */
-    public static ItemStack getStack(EnumMaterial mat, EnumOrePart part, int ammount)
+    public static ItemStack getStack(Item item, EnumMaterial mat, EnumOrePart part, int ammount)
     {
         ItemStack reStack = null;
-        if (CoreRecipeLoader.itemMetals instanceof ItemOreDirv && mat != null && part != null)
+        if (mat != null && part != null)
         {
             if (part == EnumOrePart.INGOTS)
             {
@@ -97,9 +97,14 @@ public enum EnumMaterial
             }
             int meta = mat.ordinal() * itemCountPerMaterial;
             meta += part.ordinal();
-            return new ItemStack(CoreRecipeLoader.itemMetals.itemID, ammount, meta);
+            return new ItemStack(item, ammount, meta);
         }
         return reStack;
+    }
+
+    public static ItemStack getStack(EnumMaterial mat, EnumOrePart part, int ammount)
+    {
+        return getStack(CoreRecipeLoader.itemMetals, mat, part, ammount);
     }
 
     public ItemStack getStack(EnumOrePart part)
@@ -110,6 +115,16 @@ public enum EnumMaterial
     public ItemStack getStack(EnumOrePart part, int ammount)
     {
         return getStack(this, part, ammount);
+    }
+
+    public ItemStack getStack(Item item, EnumOrePart part)
+    {
+        return this.getStack(item, part, 1);
+    }
+
+    public ItemStack getStack(Item item, EnumOrePart part, int ammount)
+    {
+        return getStack(item, this, part, ammount);
     }
 
     public static Icon getIcon(int metadata)
@@ -142,17 +157,22 @@ public enum EnumMaterial
 
     public static String getOreName(EnumMaterial mat, EnumOrePart part)
     {
-        return mat.simpleName + part.simpleName;
+        return mat.getOreName(part);
     }
 
     public String getOreName(EnumOrePart part)
     {
-        return this.simpleName + part.simpleName;
+        return this.simpleName.toLowerCase() + part.simpleName;
+    }
+
+    public static String getOreNameReverse(EnumMaterial mat, EnumOrePart part)
+    {
+        return mat.getOreNameReverse(part);
     }
 
     public String getOreNameReverse(EnumOrePart part)
     {
-        return part.simpleName + this.simpleName;
+        return part.simpleName.toLowerCase() + this.simpleName;
     }
 
     public boolean shouldCreateItem(EnumOrePart part)
