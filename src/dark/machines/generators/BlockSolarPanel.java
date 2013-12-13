@@ -32,7 +32,7 @@ public class BlockSolarPanel extends BlockMachine
     {
         super(new BlockBuildData(BlockSolarPanel.class, "BlockSolarPanel", UniversalElectricity.machine));
         this.setBlockBounds(0, 0, 0, 1f, .6f, 1f);
-        this.setCreativeTab(DMCreativeTab.tabIndustrial);
+        this.setCreativeTab(DMCreativeTab.tabIndustrial());
     }
 
     @Override

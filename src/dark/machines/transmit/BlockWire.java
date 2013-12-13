@@ -43,7 +43,7 @@ public class BlockWire extends BlockMachine
 
     public BlockWire()
     {
-        super(new BlockBuildData(BlockWire.class, "DMWire", Material.cloth).setCreativeTab(DMCreativeTab.tabIndustrial));
+        super(new BlockBuildData(BlockWire.class, "DMWire", Material.cloth).setCreativeTab(DMCreativeTab.tabIndustrial()));
         this.setStepSound(soundClothFootstep);
         this.setResistance(0.2F);
         this.setHardness(0.1f);

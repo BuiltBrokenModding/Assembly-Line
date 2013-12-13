@@ -37,7 +37,7 @@ public class BlockSmallSteamGen extends BlockMachine
 
     public BlockSmallSteamGen()
     {
-        super(new BlockBuildData(BlockSmallSteamGen.class, "StarterSteamGen", UniversalElectricity.machine).setCreativeTab(DMCreativeTab.tabIndustrial));
+        super(new BlockBuildData(BlockSmallSteamGen.class, "StarterSteamGen", UniversalElectricity.machine).setCreativeTab(DMCreativeTab.tabIndustrial()));
         this.setStepSound(soundMetalFootstep);
     }
 

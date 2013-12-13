@@ -8,10 +8,10 @@ public class DMCreativeTab extends CreativeTabs
 {
     public ItemStack itemStack = new ItemStack(Item.ingotIron, 1, 0);
 
-    public static DMCreativeTab tabAutomation = new DMCreativeTab("Automation");
-    public static DMCreativeTab tabIndustrial = new DMCreativeTab("Industrial");
-    public static DMCreativeTab tabHydrualic = new DMCreativeTab("Hydraulic");
-    public static DMCreativeTab tabMining = new DMCreativeTab("Mining");
+    private static DMCreativeTab tabAutomation = new DMCreativeTab("Automation");
+    private static DMCreativeTab tabIndustrial = new DMCreativeTab("Industrial");
+    private static DMCreativeTab tabHydrualic = new DMCreativeTab("Hydraulic");
+    private static DMCreativeTab tabMining = new DMCreativeTab("Mining");
 
     public DMCreativeTab(String label)
     {
@@ -27,6 +27,42 @@ public class DMCreativeTab extends CreativeTabs
     public void setIconItemStack(ItemStack stack)
     {
         this.itemStack = stack;
+    }
+
+    public static DMCreativeTab tabAutomation()
+    {
+        if (tabAutomation == null)
+        {
+            tabAutomation = new DMCreativeTab("Automation");
+        }
+        return tabAutomation;
+    }
+
+    public static DMCreativeTab tabIndustrial()
+    {
+        if (tabIndustrial == null)
+        {
+            tabIndustrial = new DMCreativeTab("Industrial");
+        }
+        return tabIndustrial;
+    }
+
+    public static DMCreativeTab tabHydraulic()
+    {
+        if (tabHydrualic == null)
+        {
+            tabHydrualic = new DMCreativeTab("Hydraulic");
+        }
+        return tabHydrualic;
+    }
+
+    public static DMCreativeTab tabMining()
+    {
+        if (tabMining == null)
+        {
+            tabMining = new DMCreativeTab("Mining");
+        }
+        return tabMining;
     }
 
 }

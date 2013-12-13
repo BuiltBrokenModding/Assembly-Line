@@ -24,7 +24,7 @@ public class ItemVehicleSpawn extends Item
     {
         super(ModPrefab.getNextItemId());
         this.setUnlocalizedName("Vehicle");
-        this.setCreativeTab(DMCreativeTab.tabIndustrial);
+        this.setCreativeTab(DMCreativeTab.tabIndustrial());
     }
 
     @Override

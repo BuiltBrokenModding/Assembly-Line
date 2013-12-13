@@ -22,7 +22,7 @@ public class ItemBattery extends ItemElectric implements IExtraItemInfo
     {
         super(DarkMain.CONFIGURATION.getItem("Battery", ModPrefab.getNextItemId()).getInt());
         this.setUnlocalizedName(DarkMain.getInstance().PREFIX + "Battery");
-        this.setCreativeTab(DMCreativeTab.tabIndustrial);
+        this.setCreativeTab(DMCreativeTab.tabIndustrial());
     }
 
     @SideOnly(Side.CLIENT)

@@ -43,7 +43,7 @@ public class BlockGasOre extends Block implements IGasBlock
     {
         super(DarkMain.CONFIGURATION.getBlock("GasBlock", ModPrefab.getNextID()).getInt(), gas);
         this.setUnlocalizedName("DMBlockGas");
-        this.setCreativeTab(DMCreativeTab.tabIndustrial);
+        this.setCreativeTab(DMCreativeTab.tabIndustrial());
         this.setTickRandomly(true);
     }
 

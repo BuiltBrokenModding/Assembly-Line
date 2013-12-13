@@ -28,7 +28,7 @@ public class BlockDebug extends BlockMachine
 
     public BlockDebug()
     {
-        super(new BlockBuildData(BlockDebug.class, "DebugBlock", Material.clay).setCreativeTab(DMCreativeTab.tabIndustrial));
+        super(new BlockBuildData(BlockDebug.class, "DebugBlock", Material.clay).setCreativeTab(DMCreativeTab.tabIndustrial()));
     }
 
     @Override

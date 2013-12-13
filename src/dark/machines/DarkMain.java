@@ -191,11 +191,11 @@ public class DarkMain extends ModPrefab
         proxy.postInit();
         if (CoreRecipeLoader.itemParts instanceof ItemParts)
         {
-            DMCreativeTab.tabMining.itemStack = new ItemStack(CoreRecipeLoader.itemParts.itemID, 1, ItemParts.Parts.MiningIcon.ordinal());
+            DMCreativeTab.tabMining().itemStack = new ItemStack(CoreRecipeLoader.itemParts.itemID, 1, ItemParts.Parts.MiningIcon.ordinal());
         }
         if (CoreRecipeLoader.itemMetals instanceof ItemOreDirv)
         {
-            DMCreativeTab.tabIndustrial.itemStack = EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.GEARS, 1);
+            DMCreativeTab.tabIndustrial().itemStack = EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.GEARS, 1);
         }
         MachineRecipeHandler.parseOreNames(CONFIGURATION);
         CONFIGURATION.save();

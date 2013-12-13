@@ -32,7 +32,7 @@ public class BlockEnergyStorage extends BlockMachine
     public BlockEnergyStorage()
     {
         super(DarkMain.CONFIGURATION, "DMEnergyStorage", UniversalElectricity.machine);
-        this.setCreativeTab(DMCreativeTab.tabIndustrial);
+        this.setCreativeTab(DMCreativeTab.tabIndustrial());
     }
 
     @Override

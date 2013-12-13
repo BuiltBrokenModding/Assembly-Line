@@ -33,7 +33,7 @@ public class ItemFluidCan extends ItemFluidContainer
     {
         super(DarkMain.CONFIGURATION.getItem("FluidCan", ModPrefab.getNextItemId()).getInt());
         this.setUnlocalizedName("FluidCan");
-        this.setCreativeTab(DMCreativeTab.tabHydrualic);
+        this.setCreativeTab(DMCreativeTab.tabHydraulic());
         this.setMaxStackSize(1);
         this.setMaxDamage(100);
         this.setNoRepair();
