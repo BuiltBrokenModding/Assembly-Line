@@ -35,7 +35,7 @@ public class BlockProcessor extends BlockMachine
     public BlockProcessor()
     {
         super(new BlockBuildData(BlockProcessor.class, "OreProcessor", UniversalElectricity.machine).setConfigProvider(AssemblyLine.CONFIGURATION));
-        this.setCreativeTab(DMCreativeTab.tabIndustrial);
+        this.setCreativeTab(DMCreativeTab.tabIndustrial());
     }
 
     @Override

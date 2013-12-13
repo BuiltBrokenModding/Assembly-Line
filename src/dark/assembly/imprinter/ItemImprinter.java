@@ -24,7 +24,7 @@ public class ItemImprinter extends Item
     {
         super(id);
         this.setUnlocalizedName("imprint");
-        this.setCreativeTab(DMCreativeTab.tabAutomation);
+        this.setCreativeTab(DMCreativeTab.tabAutomation());
         this.setHasSubtypes(true);
         this.maxStackSize = 1;
     }

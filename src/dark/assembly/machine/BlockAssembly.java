@@ -15,13 +15,13 @@ public class BlockAssembly extends BlockMachine
 
     public BlockAssembly(BlockBuildData buildBuildData)
     {
-        super(buildBuildData.setCreativeTab(DMCreativeTab.tabAutomation).setConfigProvider(AssemblyLine.CONFIGURATION));
+        super(buildBuildData.setCreativeTab(DMCreativeTab.tabAutomation()).setConfigProvider(AssemblyLine.CONFIGURATION));
     }
 
     public BlockAssembly(String blockName, Material material)
     {
         super(AssemblyLine.CONFIGURATION, blockName, material);
-        this.setCreativeTab(DMCreativeTab.tabAutomation);
+        this.setCreativeTab(DMCreativeTab.tabAutomation());
     }
 
     @Override

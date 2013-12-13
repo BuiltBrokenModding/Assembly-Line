@@ -139,7 +139,7 @@ public class AssemblyLine extends ModPrefab
         proxy.init();
 
         FMLog.info("Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
-        DMCreativeTab.tabAutomation.setIconItemStack(new ItemStack(ALRecipeLoader.blockConveyorBelt));
+        DMCreativeTab.tabAutomation().setIconItemStack(new ItemStack(ALRecipeLoader.blockConveyorBelt));
     }
 
     @Override

@@ -20,7 +20,7 @@ public class ItemDisk extends Item
     {
         super(id);
         this.setUnlocalizedName("disk");
-        this.setCreativeTab(DMCreativeTab.tabAutomation);
+        this.setCreativeTab(DMCreativeTab.tabAutomation());
         this.setHasSubtypes(true);
     }
 

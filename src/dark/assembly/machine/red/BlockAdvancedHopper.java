@@ -38,7 +38,7 @@ public class BlockAdvancedHopper extends BlockMachine
     public BlockAdvancedHopper()
     {
         super(AssemblyLine.CONFIGURATION, "DMHopper", Material.iron);
-        this.setCreativeTab(DMCreativeTab.tabAutomation);
+        this.setCreativeTab(DMCreativeTab.tabAutomation());
         this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
     }
 
