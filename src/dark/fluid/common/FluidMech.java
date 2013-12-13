@@ -103,7 +103,7 @@ public class FluidMech extends ModPrefab
         FMLog.info(" Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
         if (FMRecipeLoader.blockPipe instanceof BlockPipe)
         {
-            DMCreativeTab.tabHydrualic.setIconItemStack(FluidPartsMaterial.IRON.getStack());
+            DMCreativeTab.tabHydraulic().setIconItemStack(FluidPartsMaterial.IRON.getStack());
         }
     }
 

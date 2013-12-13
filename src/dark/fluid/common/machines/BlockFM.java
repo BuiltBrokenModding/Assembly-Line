@@ -11,6 +11,6 @@ public abstract class BlockFM extends BlockMachine
 
     public BlockFM(Class<? extends BlockFM> blockClass, String name, Material material)
     {
-        super(new BlockBuildData(blockClass, name, material).setConfigProvider(FluidMech.CONFIGURATION).setCreativeTab(DMCreativeTab.tabHydrualic));
+        super(new BlockBuildData(blockClass, name, material).setConfigProvider(FluidMech.CONFIGURATION).setCreativeTab(DMCreativeTab.tabHydraulic()));
     }
 }
