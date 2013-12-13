@@ -13,7 +13,7 @@ public abstract class BlockFT extends BlockMachine
 
     public BlockFT(Class<? extends BlockMachine> blockClass, String name, Material material)
     {
-        super(new BlockBuildData(blockClass, name, material).setCreativeTab(DMCreativeTab.tabIndustrial));
+        super(new BlockBuildData(blockClass, name, material).setCreativeTab(DMCreativeTab.tabIndustrial()));
     }
 
 }
