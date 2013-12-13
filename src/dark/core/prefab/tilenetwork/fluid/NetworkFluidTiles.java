@@ -65,14 +65,14 @@ public class NetworkFluidTiles extends NetworkTileEntities
         return this.sharedTankInfo;
     }
 
-    public int fillNetworkTank(World world, FluidStack stack, boolean doFill)
+    public int fillNetworkTank(TileEntity source, FluidStack stack, boolean doFill)
     {
         if (!this.loadedLiquids)
         {
             this.load();
             this.loadedLiquids = true;
         }
-        if (!world.isRemote && this.getNetworkTank() != null && stack != null)
+        if (!source.worldObj.isRemote && this.getNetworkTank() != null && stack != null)
         {
             int p = this.getNetworkTank().getFluidAmount();
             int r = this.getNetworkTank().fill(stack, doFill);

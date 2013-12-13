@@ -4,6 +4,7 @@ import java.util.EnumSet;
 import java.util.Map.Entry;
 
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
@@ -35,6 +36,17 @@ public class NetworkPipes extends NetworkFluidTiles
     public NetworkPipes(INetworkPart... parts)
     {
         super(parts);
+    }
+
+    @Override
+    public int fillNetworkTank(TileEntity source, FluidStack stack, boolean doFill)
+    {
+        int netFill = this.addFluidToNetwork(source, stack, doFill);
+        if (netFill > 0)
+        {
+            return netFill;
+        }
+        return super.fillNetworkTank(source, stack, doFill);
     }
 
     /** Adds FLuid to this network from one of the connected Pipes
@@ -101,40 +113,11 @@ public class NetworkPipes extends NetworkFluidTiles
                     break;
                 }
             }// End of tank finder
-
-            boolean filledMain = false;
             if (tankToFill != null)
             {
+                //TODO set up a list of tanks to actually fill rather than one at a time
                 used = tankToFill.fill(fillDir, stack, doFill);
                 // System.out.println("Seconday Target " + used + doFill);
-            }
-            else if (allowStore)
-            {
-                used = this.fillNetworkTank(source.worldObj, stack, doFill);
-                // System.out.println("Network Target filled for " + used + doFill);
-                filledMain = true;
-            }
-
-            /* IF THE COMBINED STORAGE OF THE PIPES HAS LIQUID MOVE IT FIRST */
-            if (!filledMain && used > 0 && this.getNetworkTank().getFluid() != null && this.getNetworkTank().getFluid().amount > 0)
-            {
-
-                FluidStack drainStack = new FluidStack(0, 0);
-                if (this.getNetworkTank().getFluid().amount >= used)
-                {
-                    drainStack = this.drainNetworkTank(source.worldObj, used, doFill);
-                    used = 0;
-                }
-                else
-                {
-                    int pUsed = used;
-                    used = Math.min(used, Math.max(used - this.getNetworkTank().getFluid().amount, 0));
-                    drainStack = this.drainNetworkTank(source.worldObj, pUsed - used, doFill);
-                }
-                // System.out.println("Pulling " + (drainStack != null ? drainStack.amount : 0) +
-                // " from combined leaving " + (this.combinedStorage.getLiquid() != null ?
-                // this.combinedStorage.getLiquid().amount : 0));
-
             }
         }
         this.processingRequest = false;

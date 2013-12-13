@@ -117,7 +117,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
     {
         if (this.getTileNetwork() != null && resource != null)
         {
-            return this.getTileNetwork().fillNetworkTank(this.worldObj, resource, doFill);
+            return this.getTileNetwork().fillNetworkTank(this, resource, doFill);
         }
         return 0;
     }
