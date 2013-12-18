@@ -3,13 +3,14 @@ package dark.core.prefab.tilenetwork.fluid;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dark.fluid.FluidHelper;
+import com.dark.prefab.tile.network.NetworkUpdateHandler;
+import com.dark.tile.network.INetworkPart;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import dark.api.fluid.INetworkFluidPart;
-import dark.api.tilenetwork.INetworkPart;
-import dark.core.prefab.fluids.FluidHelper;
-import dark.core.prefab.tilenetwork.NetworkUpdateHandler;
 
 /** Basically the same as network Fluid tiles class with the only difference being in how it stores
  * the fluid. When it goes to sort the fluid it will use the fluid properties to adjust its position

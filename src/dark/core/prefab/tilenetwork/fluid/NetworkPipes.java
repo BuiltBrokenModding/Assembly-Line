@@ -3,15 +3,16 @@ package dark.core.prefab.tilenetwork.fluid;
 import java.util.EnumSet;
 import java.util.Map.Entry;
 
+import com.dark.fluid.FluidHelper;
+import com.dark.prefab.tile.network.NetworkUpdateHandler;
+import com.dark.tile.network.INetworkPart;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import dark.api.fluid.INetworkPipe;
-import dark.api.tilenetwork.INetworkPart;
-import dark.core.prefab.fluids.FluidHelper;
-import dark.core.prefab.tilenetwork.NetworkUpdateHandler;
 
 /** Extension on the fluid container network to provide a more advanced reaction to fluid passing
  * threw each pipe. As well this doubled as a pressure network for those machines that support the

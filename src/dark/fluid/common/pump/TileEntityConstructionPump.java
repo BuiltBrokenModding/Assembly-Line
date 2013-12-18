@@ -19,10 +19,10 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 
 import com.builtbroken.common.Pair;
+import com.dark.tile.network.ITileConnector;
 
 import dark.api.fluid.IDrain;
 import dark.api.fluid.INetworkPipe;
-import dark.api.tilenetwork.ITileConnector;
 import dark.core.prefab.tilenetwork.fluid.NetworkFluidTiles;
 
 public class TileEntityConstructionPump extends TileEntityStarterPump implements IFluidHandler, ITileConnector

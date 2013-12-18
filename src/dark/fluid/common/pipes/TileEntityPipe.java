@@ -1,5 +1,8 @@
 package dark.fluid.common.pipes;
 
+import com.dark.tile.network.ITileConnector;
+import com.dark.tile.network.ITileNetwork;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -9,8 +12,6 @@ import universalelectricity.core.vector.Vector3;
 import dark.api.ColorCode;
 import dark.api.ColorCode.IColorCoded;
 import dark.api.fluid.INetworkPipe;
-import dark.api.tilenetwork.ITileConnector;
-import dark.api.tilenetwork.ITileNetwork;
 import dark.core.prefab.tilenetwork.fluid.NetworkPipes;
 import dark.fluid.common.FluidPartsMaterial;
 import dark.fluid.common.prefab.TileEntityFluidNetworkTile;

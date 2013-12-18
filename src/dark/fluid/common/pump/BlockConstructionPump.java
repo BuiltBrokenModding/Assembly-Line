@@ -18,10 +18,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
 import com.builtbroken.common.Pair;
+import com.dark.prefab.tile.network.NetworkTileEntities;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.prefab.tilenetwork.NetworkTileEntities;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.FMRecipeLoader;
 import dark.fluid.common.FluidMech;

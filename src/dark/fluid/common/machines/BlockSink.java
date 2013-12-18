@@ -13,10 +13,10 @@ import net.minecraft.world.World;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 import com.builtbroken.common.Pair;
+import com.dark.fluid.FluidHelper;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.prefab.fluids.FluidHelper;
 import dark.fluid.client.render.BlockRenderHelper;
 
 public class BlockSink extends BlockFM

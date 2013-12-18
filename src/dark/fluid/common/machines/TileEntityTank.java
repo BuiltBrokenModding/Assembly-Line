@@ -1,10 +1,11 @@
 package dark.fluid.common.machines;
 
+import com.dark.tile.network.INetworkPart;
+import com.dark.tile.network.ITileNetwork;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import dark.api.fluid.INetworkFluidPart;
-import dark.api.tilenetwork.INetworkPart;
-import dark.api.tilenetwork.ITileNetwork;
 import dark.core.prefab.tilenetwork.fluid.NetworkFluidContainers;
 import dark.fluid.common.prefab.TileEntityFluidNetworkTile;
 

@@ -12,7 +12,9 @@ import org.modstats.ModstatInfo;
 import universalelectricity.prefab.TranslationHelper;
 
 import com.dark.DarkCore;
-import com.dark.ModObjectRegistry;
+import com.dark.CoreRegistry;
+import com.dark.IndustryCreativeTab;
+import com.dark.prefab.ItemBlockHolder;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -25,8 +27,6 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
-import dark.core.DMCreativeTab;
-import dark.core.prefab.ItemBlockHolder;
 import dark.core.prefab.ModPrefab;
 import dark.fluid.common.machines.BlockReleaseValve;
 import dark.fluid.common.machines.BlockSink;
@@ -106,7 +106,7 @@ public class FluidMech extends ModPrefab
         FMLog.info(" Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
         if (FMRecipeLoader.blockPipe instanceof BlockPipe)
         {
-            DMCreativeTab.tabHydraulic().setIconItemStack(FluidPartsMaterial.IRON.getStack());
+            IndustryCreativeTab.tabHydraulic().setIconItemStack(FluidPartsMaterial.IRON.getStack());
         }
     }
 
@@ -132,16 +132,16 @@ public class FluidMech extends ModPrefab
         }
         CONFIGURATION.load();
 
-        FMRecipeLoader.blockWasteLiquid = ModObjectRegistry.createNewFluidBlock(FluidMech.MOD_ID, FluidMech.CONFIGURATION, new Fluid(WASTE_FLUID_NAME).setUnlocalizedName("fluid.waste.name").setDensity(1300).setViscosity(1800));
-        FMRecipeLoader.blockOilLiquid = ModObjectRegistry.createNewFluidBlock(FluidMech.MOD_ID, FluidMech.CONFIGURATION, new Fluid(OIL_FLUID_NAME).setUnlocalizedName("fluid.oil.name").setDensity(1500).setViscosity(4700));
+        FMRecipeLoader.blockWasteLiquid = CoreRegistry.createNewFluidBlock(FluidMech.MOD_ID, FluidMech.CONFIGURATION, new Fluid(WASTE_FLUID_NAME).setUnlocalizedName("fluid.waste.name").setDensity(1300).setViscosity(1800));
+        FMRecipeLoader.blockOilLiquid = CoreRegistry.createNewFluidBlock(FluidMech.MOD_ID, FluidMech.CONFIGURATION, new Fluid(OIL_FLUID_NAME).setUnlocalizedName("fluid.oil.name").setDensity(1500).setViscosity(4700));
 
-        FMRecipeLoader.blockPipe = ModObjectRegistry.createNewBlock("FMBlockPipe", FluidMech.MOD_ID, BlockPipe.class, ItemBlockPipe.class);
-        FMRecipeLoader.blockPumpMachine = ModObjectRegistry.createNewBlock("FMBlockPump", FluidMech.MOD_ID, BlockPumpMachine.class, ItemBlockHolder.class);
-        FMRecipeLoader.blockReleaseValve = ModObjectRegistry.createNewBlock("FMBlockReleaseValve", FluidMech.MOD_ID, BlockReleaseValve.class, ItemBlockHolder.class);
-        FMRecipeLoader.blockTank = ModObjectRegistry.createNewBlock("FMBlockTank", FluidMech.MOD_ID, BlockTank.class, ItemBlockPipe.class);
-        FMRecipeLoader.blockSink = ModObjectRegistry.createNewBlock("FMBlockSink", FluidMech.MOD_ID, BlockSink.class, ItemBlockHolder.class);
-        FMRecipeLoader.blockDrain = ModObjectRegistry.createNewBlock("FMBlockDrain", FluidMech.MOD_ID, BlockDrain.class, ItemBlockHolder.class);
-        FMRecipeLoader.blockConPump = ModObjectRegistry.createNewBlock("FMBlockConstructionPump", FluidMech.MOD_ID, BlockConstructionPump.class, ItemBlockHolder.class);
+        FMRecipeLoader.blockPipe = CoreRegistry.createNewBlock("FMBlockPipe", FluidMech.MOD_ID, BlockPipe.class, ItemBlockPipe.class);
+        FMRecipeLoader.blockPumpMachine = CoreRegistry.createNewBlock("FMBlockPump", FluidMech.MOD_ID, BlockPumpMachine.class, ItemBlockHolder.class);
+        FMRecipeLoader.blockReleaseValve = CoreRegistry.createNewBlock("FMBlockReleaseValve", FluidMech.MOD_ID, BlockReleaseValve.class, ItemBlockHolder.class);
+        FMRecipeLoader.blockTank = CoreRegistry.createNewBlock("FMBlockTank", FluidMech.MOD_ID, BlockTank.class, ItemBlockPipe.class);
+        FMRecipeLoader.blockSink = CoreRegistry.createNewBlock("FMBlockSink", FluidMech.MOD_ID, BlockSink.class, ItemBlockHolder.class);
+        FMRecipeLoader.blockDrain = CoreRegistry.createNewBlock("FMBlockDrain", FluidMech.MOD_ID, BlockDrain.class, ItemBlockHolder.class);
+        FMRecipeLoader.blockConPump = CoreRegistry.createNewBlock("FMBlockConstructionPump", FluidMech.MOD_ID, BlockConstructionPump.class, ItemBlockHolder.class);
 
         CONFIGURATION.save();
     }

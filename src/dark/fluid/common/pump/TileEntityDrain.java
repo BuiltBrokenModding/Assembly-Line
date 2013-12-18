@@ -18,9 +18,9 @@ import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;
+import com.dark.fluid.FluidHelper;
 
 import dark.api.fluid.IDrain;
-import dark.core.prefab.fluids.FluidHelper;
 import dark.fluid.common.prefab.TileEntityFluidDevice;
 
 public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHandler, IDrain

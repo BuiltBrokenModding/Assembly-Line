@@ -15,11 +15,11 @@ import net.minecraftforge.common.Configuration;
 import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;
+import com.dark.fluid.FluidHelper;
+import com.dark.helpers.ItemWorldHelper;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.helpers.ItemWorldHelper;
-import dark.core.prefab.fluids.FluidHelper;
 import dark.fluid.client.render.BlockRenderHelper;
 import dark.fluid.common.FluidPartsMaterial;
 import dark.fluid.common.pipes.ItemBlockPipe;

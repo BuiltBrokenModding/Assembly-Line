@@ -4,6 +4,12 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import com.dark.fluid.FluidHelper;
+import com.dark.prefab.tile.network.NetworkTileEntities;
+import com.dark.prefab.tile.network.NetworkUpdateHandler;
+import com.dark.tile.network.INetworkPart;
+import com.dark.tile.network.ITileNetwork;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -13,11 +19,6 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import dark.api.fluid.INetworkFluidPart;
-import dark.api.tilenetwork.INetworkPart;
-import dark.api.tilenetwork.ITileNetwork;
-import dark.core.prefab.fluids.FluidHelper;
-import dark.core.prefab.tilenetwork.NetworkTileEntities;
-import dark.core.prefab.tilenetwork.NetworkUpdateHandler;
 
 public class NetworkFluidTiles extends NetworkTileEntities
 {
