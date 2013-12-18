@@ -1,12 +1,13 @@
 package dark.assembly.machine;
 
+import com.dark.IndustryCreativeTab;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import dark.assembly.AssemblyLine;
-import dark.core.DMCreativeTab;
 import dark.core.prefab.machine.BlockMachine;
 
 public class BlockAssembly extends BlockMachine
@@ -14,7 +15,7 @@ public class BlockAssembly extends BlockMachine
     public BlockAssembly(String blockName, Material material)
     {
         super(AssemblyLine.CONFIGURATION, blockName, material);
-        this.setCreativeTab(DMCreativeTab.tabAutomation());
+        this.setCreativeTab(IndustryCreativeTab.tabAutomation());
     }
 
     @Override

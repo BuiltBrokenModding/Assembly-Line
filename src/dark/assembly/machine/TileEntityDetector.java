@@ -10,12 +10,12 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 
+import com.dark.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;
 import dark.assembly.ALRecipeLoader;
 import dark.assembly.imprinter.prefab.TileEntityFilterable;
-import dark.core.network.PacketHandler;
 
 public class TileEntityDetector extends TileEntityFilterable
 {

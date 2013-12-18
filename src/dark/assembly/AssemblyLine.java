@@ -12,7 +12,9 @@ import org.modstats.ModstatInfo;
 import universalelectricity.prefab.TranslationHelper;
 
 import com.dark.DarkCore;
-import com.dark.ModObjectRegistry;
+import com.dark.CoreRegistry;
+import com.dark.IndustryCreativeTab;
+import com.dark.prefab.ItemBlockHolder;
 
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -61,8 +63,6 @@ import dark.assembly.machine.encoder.BlockEncoder;
 import dark.assembly.machine.encoder.ItemDisk;
 import dark.assembly.machine.processor.BlockProcessor;
 import dark.assembly.machine.red.BlockAdvancedHopper;
-import dark.core.DMCreativeTab;
-import dark.core.prefab.ItemBlockHolder;
 import dark.core.prefab.ModPrefab;
 import dark.machines.DarkMain;
 
@@ -142,7 +142,7 @@ public class AssemblyLine extends ModPrefab
         proxy.init();
 
         FMLog.info("Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
-        DMCreativeTab.tabAutomation().setIconItemStack(new ItemStack(ALRecipeLoader.blockConveyorBelt));
+        IndustryCreativeTab.tabAutomation().setIconItemStack(new ItemStack(ALRecipeLoader.blockConveyorBelt));
     }
 
     @Override
@@ -161,17 +161,17 @@ public class AssemblyLine extends ModPrefab
             recipeLoader = new ALRecipeLoader();
         }
         CONFIGURATION.load();
-        ALRecipeLoader.blockConveyorBelt = ModObjectRegistry.createNewBlock("ALBlockConveyor", AssemblyLine.MOD_ID, BlockConveyorBelt.class);
-        ALRecipeLoader.blockManipulator = ModObjectRegistry.createNewBlock("Manipulator", AssemblyLine.MOD_ID, BlockManipulator.class);
-        ALRecipeLoader.blockCrate = (BlockCrate) ModObjectRegistry.createNewBlock("Crate", AssemblyLine.MOD_ID, BlockCrate.class, ItemBlockCrate.class);
-        ALRecipeLoader.blockImprinter = ModObjectRegistry.createNewBlock("Imprinter", AssemblyLine.MOD_ID, BlockImprinter.class);
-        ALRecipeLoader.blockDetector = ModObjectRegistry.createNewBlock("Detector", AssemblyLine.MOD_ID, BlockDetector.class);
-        ALRecipeLoader.blockRejector = ModObjectRegistry.createNewBlock("Rejector", AssemblyLine.MOD_ID, BlockRejector.class);
-        ALRecipeLoader.blockEncoder = ModObjectRegistry.createNewBlock("Encoder", AssemblyLine.MOD_ID, BlockEncoder.class);
-        ALRecipeLoader.blockArmbot = ModObjectRegistry.createNewBlock("Armbot", AssemblyLine.MOD_ID, BlockArmbot.class);
-        ALRecipeLoader.blockTurntable = ModObjectRegistry.createNewBlock("Turntable", AssemblyLine.MOD_ID, BlockTurntable.class);
-        ALRecipeLoader.processorMachine = ModObjectRegistry.createNewBlock("ALBlockProcessor", AssemblyLine.MOD_ID, BlockProcessor.class, ItemBlockHolder.class);
-        ALRecipeLoader.blockAdvancedHopper = ModObjectRegistry.createNewBlock("ALBlockHopper", AssemblyLine.MOD_ID, BlockAdvancedHopper.class, ItemBlockHolder.class);
+        ALRecipeLoader.blockConveyorBelt = CoreRegistry.createNewBlock("ALBlockConveyor", AssemblyLine.MOD_ID, BlockConveyorBelt.class);
+        ALRecipeLoader.blockManipulator = CoreRegistry.createNewBlock("Manipulator", AssemblyLine.MOD_ID, BlockManipulator.class);
+        ALRecipeLoader.blockCrate = (BlockCrate) CoreRegistry.createNewBlock("Crate", AssemblyLine.MOD_ID, BlockCrate.class, ItemBlockCrate.class);
+        ALRecipeLoader.blockImprinter = CoreRegistry.createNewBlock("Imprinter", AssemblyLine.MOD_ID, BlockImprinter.class);
+        ALRecipeLoader.blockDetector = CoreRegistry.createNewBlock("Detector", AssemblyLine.MOD_ID, BlockDetector.class);
+        ALRecipeLoader.blockRejector = CoreRegistry.createNewBlock("Rejector", AssemblyLine.MOD_ID, BlockRejector.class);
+        ALRecipeLoader.blockEncoder = CoreRegistry.createNewBlock("Encoder", AssemblyLine.MOD_ID, BlockEncoder.class);
+        ALRecipeLoader.blockArmbot = CoreRegistry.createNewBlock("Armbot", AssemblyLine.MOD_ID, BlockArmbot.class);
+        ALRecipeLoader.blockTurntable = CoreRegistry.createNewBlock("Turntable", AssemblyLine.MOD_ID, BlockTurntable.class);
+        ALRecipeLoader.processorMachine = CoreRegistry.createNewBlock("ALBlockProcessor", AssemblyLine.MOD_ID, BlockProcessor.class, ItemBlockHolder.class);
+        ALRecipeLoader.blockAdvancedHopper = CoreRegistry.createNewBlock("ALBlockHopper", AssemblyLine.MOD_ID, BlockAdvancedHopper.class, ItemBlockHolder.class);
 
         ALRecipeLoader.itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", DarkCore.getNextItemId()).getInt());
         ALRecipeLoader.itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", DarkCore.getNextItemId()).getInt());

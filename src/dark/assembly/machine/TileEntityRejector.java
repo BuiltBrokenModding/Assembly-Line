@@ -11,12 +11,12 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 
+import com.dark.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;
 import dark.api.al.IBelt;
 import dark.assembly.imprinter.prefab.TileEntityFilterable;
-import dark.core.network.PacketHandler;
 
 /** @author Darkguardsman */
 public class TileEntityRejector extends TileEntityFilterable

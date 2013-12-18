@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.reciepes.MachineRecipeHandler;
-import dark.core.helpers.EnergyHelper;
+import dark.core.prefab.machine.EnergyHelper;
 
 public class ContainerProcessor extends Container
 {

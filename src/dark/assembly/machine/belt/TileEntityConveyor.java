@@ -3,6 +3,11 @@ package dark.assembly.machine.belt;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dark.prefab.tile.network.NetworkItemSupply;
+import com.dark.tile.network.IMotionPath;
+import com.dark.tile.network.INetworkPart;
+import com.dark.tile.network.ITileNetwork;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -10,12 +15,8 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import dark.api.al.IBelt;
-import dark.api.tilenetwork.IMotionPath;
-import dark.api.tilenetwork.INetworkPart;
-import dark.api.tilenetwork.ITileNetwork;
 import dark.assembly.machine.TileEntityAssembly;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
-import dark.core.prefab.tilenetwork.NetworkItemSupply;
 
 public class TileEntityConveyor extends TileEntityEnergyMachine implements IMotionPath, IBelt, INetworkPart
 {

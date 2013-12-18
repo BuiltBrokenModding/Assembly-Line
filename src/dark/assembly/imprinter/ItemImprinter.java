@@ -3,6 +3,8 @@ package dark.assembly.imprinter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dark.IndustryCreativeTab;
+
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -16,7 +18,6 @@ import net.minecraft.nbt.NBTTagList;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
-import dark.core.DMCreativeTab;
 
 public class ItemImprinter extends Item
 {
@@ -24,7 +25,7 @@ public class ItemImprinter extends Item
     {
         super(id);
         this.setUnlocalizedName("imprint");
-        this.setCreativeTab(DMCreativeTab.tabAutomation());
+        this.setCreativeTab(IndustryCreativeTab.tabAutomation());
         this.setHasSubtypes(true);
         this.maxStackSize = 1;
     }

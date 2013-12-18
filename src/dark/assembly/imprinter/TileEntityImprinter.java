@@ -23,15 +23,15 @@ import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 import com.builtbroken.common.Pair;
+import com.dark.helpers.AutoCraftingManager;
+import com.dark.helpers.AutoCraftingManager.IAutoCrafter;
+import com.dark.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 
 import dark.api.al.coding.IArmbot;
 import dark.api.al.coding.IArmbotUseable;
 import dark.api.al.coding.args.ArgumentData;
 import dark.api.events.AutoCraftEvent;
-import dark.core.helpers.AutoCraftingManager;
-import dark.core.helpers.AutoCraftingManager.IAutoCrafter;
-import dark.core.network.PacketHandler;
 import dark.core.prefab.invgui.ISlotPickResult;
 import dark.core.prefab.machine.TileEntityMulti;
 import dark.machines.DarkMain;

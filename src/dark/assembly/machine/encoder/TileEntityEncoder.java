@@ -10,6 +10,7 @@ import net.minecraft.network.packet.Packet;
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.prefab.network.PacketManager;
 
+import com.dark.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -19,7 +20,6 @@ import dark.api.al.coding.ITask;
 import dark.api.al.coding.TaskRegistry;
 import dark.assembly.armbot.Program;
 import dark.assembly.armbot.command.TaskRotateTo;
-import dark.core.network.PacketHandler;
 import dark.core.prefab.machine.TileEntityMachine;
 import dark.machines.DarkMain;
 

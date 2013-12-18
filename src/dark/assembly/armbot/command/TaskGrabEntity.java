@@ -2,6 +2,8 @@ package dark.assembly.armbot.command;
 
 import java.util.List;
 
+import com.dark.helpers.EntityDictionary;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,7 +13,6 @@ import net.minecraft.util.AxisAlignedBB;
 import dark.api.al.coding.IArmbot;
 import dark.api.al.coding.args.ArgumentData;
 import dark.assembly.armbot.TaskBaseProcess;
-import dark.core.helpers.EntityDictionary;
 
 public class TaskGrabEntity extends TaskGrabPrefab
 {

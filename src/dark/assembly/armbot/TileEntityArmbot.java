@@ -19,6 +19,9 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
 
 import com.builtbroken.common.Pair;
+import com.dark.helpers.ItemWorldHelper;
+import com.dark.helpers.MathHelper;
+import com.dark.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -33,10 +36,7 @@ import dark.api.al.coding.ProgramHelper;
 import dark.assembly.ALRecipeLoader;
 import dark.assembly.machine.TileEntityAssembly;
 import dark.assembly.machine.encoder.ItemDisk;
-import dark.core.helpers.ItemWorldHelper;
-import dark.core.helpers.MathHelper;
 import dark.core.interfaces.IMultiBlock;
-import dark.core.network.PacketHandler;
 import dark.core.prefab.machine.BlockMulti;
 import dark.machines.DarkMain;
 

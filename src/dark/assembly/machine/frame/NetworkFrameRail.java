@@ -1,7 +1,8 @@
 package dark.assembly.machine.frame;
 
-import dark.api.tilenetwork.INetworkPart;
-import dark.core.prefab.tilenetwork.NetworkTileEntities;
+import com.dark.prefab.tile.network.NetworkTileEntities;
+import com.dark.tile.network.INetworkPart;
+
 
 /** This is a sub network for the frames that handles only one rail of frames
  * 

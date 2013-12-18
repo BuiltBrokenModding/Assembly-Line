@@ -9,12 +9,12 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.network.IPacketReceiver;
 
+import com.dark.interfaces.IExtendedStorage;
+import com.dark.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
-import dark.api.IExtendedStorage;
-import dark.core.network.PacketHandler;
 import dark.core.prefab.machine.TileEntityInv;
 import dark.machines.DarkMain;
 

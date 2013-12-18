@@ -13,13 +13,13 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.tile.IRotatable;
 
+import com.dark.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;
 import dark.api.al.IBelt;
 import dark.assembly.ALRecipeLoader;
 import dark.assembly.machine.TileEntityAssembly;
-import dark.core.network.PacketHandler;
 import dark.machines.DarkMain;
 
 /** Conveyer belt TileEntity that allows entities of all kinds to be moved

@@ -2,6 +2,9 @@ package dark.assembly.machine.red;
 
 import java.util.List;
 
+import com.dark.helpers.InvInteractionHelper;
+import com.dark.helpers.ItemWorldHelper;
+
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -9,8 +12,6 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import dark.assembly.imprinter.ItemImprinter;
 import dark.assembly.imprinter.prefab.TileEntityFilterable;
-import dark.core.helpers.InvInteractionHelper;
-import dark.core.helpers.ItemWorldHelper;
 
 /** Advanced version of the hopper with features such as redstone control, sorting, filtering, and
  * crate version.
