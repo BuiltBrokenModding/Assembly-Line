@@ -18,12 +18,12 @@ import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
+import com.dark.ModObjectRegistry.BlockBuildData;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
 import dark.assembly.client.render.RenderCrate;
-import dark.core.ModObjectRegistry.BlockBuildData;
 
 /** A block that allows the placement of mass amount of a specific item within it. It will be allowed
  * to go on Conveyor Belts

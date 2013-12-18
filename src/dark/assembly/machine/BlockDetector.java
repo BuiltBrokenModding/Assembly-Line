@@ -17,13 +17,13 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
+import com.dark.ModObjectRegistry.BlockBuildData;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
 import dark.assembly.client.render.RenderDetector;
 import dark.assembly.imprinter.prefab.BlockImprintable;
-import dark.core.ModObjectRegistry.BlockBuildData;
 
 /** @author Briman0094 */
 public class BlockDetector extends BlockImprintable

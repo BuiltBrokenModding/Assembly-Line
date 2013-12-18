@@ -1,5 +1,7 @@
 package dark.assembly.machine;
 
+import com.dark.ModObjectRegistry.BlockBuildData;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -7,7 +9,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import dark.assembly.AssemblyLine;
 import dark.core.DMCreativeTab;
-import dark.core.ModObjectRegistry.BlockBuildData;
 import dark.core.prefab.machine.BlockMachine;
 
 public class BlockAssembly extends BlockMachine

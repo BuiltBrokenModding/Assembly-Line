@@ -16,6 +16,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.core.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
+import com.dark.ModObjectRegistry.BlockBuildData;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -26,7 +27,6 @@ import dark.assembly.CommonProxy;
 import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.client.render.RenderProcessor;
 import dark.core.DMCreativeTab;
-import dark.core.ModObjectRegistry.BlockBuildData;
 import dark.core.prefab.machine.BlockMachine;
 
 public class BlockProcessor extends BlockMachine

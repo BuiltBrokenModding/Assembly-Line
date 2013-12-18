@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
 import com.builtbroken.common.Pair;
+import com.dark.ModObjectRegistry.BlockBuildData;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -22,7 +23,6 @@ import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.client.render.RenderConveyorBelt;
 import dark.assembly.machine.BlockAssembly;
 import dark.assembly.machine.belt.TileEntityConveyorBelt.SlantType;
-import dark.core.ModObjectRegistry.BlockBuildData;
 import dark.core.prefab.tilenetwork.NetworkItemSupply;
 import dark.machines.DarkMain;
 

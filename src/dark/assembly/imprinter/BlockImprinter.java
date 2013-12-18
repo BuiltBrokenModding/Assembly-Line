@@ -15,13 +15,13 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.builtbroken.common.Pair;
+import com.dark.ModObjectRegistry.BlockBuildData;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
 import dark.assembly.CommonProxy;
 import dark.assembly.machine.BlockAssembly;
-import dark.core.ModObjectRegistry.BlockBuildData;
 
 public class BlockImprinter extends BlockAssembly
 {

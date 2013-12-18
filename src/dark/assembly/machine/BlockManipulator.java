@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
+import com.dark.ModObjectRegistry.BlockBuildData;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -19,7 +20,6 @@ import dark.assembly.CommonProxy;
 import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.client.render.RenderManipulator;
 import dark.assembly.imprinter.prefab.BlockImprintable;
-import dark.core.ModObjectRegistry.BlockBuildData;
 
 /** A block that manipulates item movement between inventories.
  * 

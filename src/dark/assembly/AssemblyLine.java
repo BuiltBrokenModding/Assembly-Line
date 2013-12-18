@@ -9,6 +9,8 @@ import net.minecraftforge.common.Configuration;
 
 import org.modstats.ModstatInfo;
 
+import com.dark.ModObjectRegistry;
+
 import universalelectricity.prefab.TranslationHelper;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -58,7 +60,6 @@ import dark.assembly.machine.encoder.ItemDisk;
 import dark.assembly.machine.processor.BlockProcessor;
 import dark.assembly.machine.red.BlockAdvancedHopper;
 import dark.core.DMCreativeTab;
-import dark.core.ModObjectRegistry;
 import dark.core.prefab.ItemBlockHolder;
 import dark.core.prefab.ModPrefab;
 import dark.machines.DarkMain;

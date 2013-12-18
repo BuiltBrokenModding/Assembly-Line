@@ -1,5 +1,7 @@
 package dark.assembly.imprinter.prefab;
 
+import com.dark.ModObjectRegistry.BlockBuildData;
+
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,7 +12,6 @@ import net.minecraft.world.World;
 import dark.api.al.IFilterable;
 import dark.assembly.imprinter.ItemImprinter;
 import dark.assembly.machine.BlockAssembly;
-import dark.core.ModObjectRegistry.BlockBuildData;
 
 /** Extend this block class if a filter is allowed to be placed inside of this block.
  * 

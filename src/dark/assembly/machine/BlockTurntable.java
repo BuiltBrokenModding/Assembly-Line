@@ -2,6 +2,8 @@ package dark.assembly.machine;
 
 import java.util.Random;
 
+import com.dark.ModObjectRegistry.BlockBuildData;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -19,7 +21,6 @@ import universalelectricity.prefab.tile.IRotatable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
-import dark.core.ModObjectRegistry.BlockBuildData;
 
 public class BlockTurntable extends BlockAssembly
 {

@@ -13,13 +13,13 @@ import universalelectricity.core.UniversalElectricity;
 import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;
+import com.dark.ModObjectRegistry.BlockBuildData;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.client.render.RenderArmbot;
 import dark.assembly.machine.BlockAssembly;
-import dark.core.ModObjectRegistry.BlockBuildData;
 import dark.core.interfaces.IMultiBlock;
 
 public class BlockArmbot extends BlockAssembly

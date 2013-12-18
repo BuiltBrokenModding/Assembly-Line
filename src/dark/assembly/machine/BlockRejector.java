@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
+import com.dark.ModObjectRegistry.BlockBuildData;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -18,7 +19,6 @@ import dark.assembly.AssemblyLine;
 import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.client.render.RenderRejector;
 import dark.assembly.imprinter.prefab.BlockImprintable;
-import dark.core.ModObjectRegistry.BlockBuildData;
 
 public class BlockRejector extends BlockImprintable
 {
