@@ -7,6 +7,8 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import com.dark.DarkCore;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
@@ -16,7 +18,7 @@ import dark.assembly.machine.processor.TileEntityProcessor;
 @SideOnly(Side.CLIENT)
 public class GuiProcessor extends GuiContainer
 {
-    private static final ResourceLocation gui_texture = new ResourceLocation(AssemblyLine.instance.PREFIX + AssemblyLine.GUI_DIRECTORY + "processor.png");
+    private static final ResourceLocation gui_texture = new ResourceLocation(AssemblyLine.instance.PREFIX + DarkCore.GUI_DIRECTORY + "processor.png");
     private TileEntityProcessor tileEntity;
 
     public GuiProcessor(InventoryPlayer par1InventoryPlayer, TileEntityProcessor par2TileEntityFurnace)

@@ -17,7 +17,6 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
-import com.dark.ModObjectRegistry.BlockBuildData;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -33,7 +32,7 @@ public class BlockDetector extends BlockImprintable
 
     public BlockDetector()
     {
-        super(new BlockBuildData(BlockDetector.class, "detector", UniversalElectricity.machine));
+        super("detector", UniversalElectricity.machine);
     }
 
     @Override

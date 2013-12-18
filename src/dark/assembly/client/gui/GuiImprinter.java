@@ -7,12 +7,14 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.prefab.TranslationHelper;
+
+import com.dark.DarkCore;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
 import dark.assembly.imprinter.ContainerImprinter;
 import dark.assembly.imprinter.TileEntityImprinter;
-import dark.core.prefab.ModPrefab;
 
 @SideOnly(Side.CLIENT)
 public class GuiImprinter extends GuiContainer
@@ -41,7 +43,7 @@ public class GuiImprinter extends GuiContainer
     @Override
     protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
     {
-        this.mc.renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.GUI_DIRECTORY + "gui_imprinter.png"));
+        this.mc.renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, DarkCore.GUI_DIRECTORY + "gui_imprinter.png"));
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.containerWidth = (this.width - this.xSize) / 2;
         this.containerHeight = (this.height - this.ySize) / 2;

@@ -15,7 +15,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.builtbroken.common.Pair;
-import com.dark.ModObjectRegistry.BlockBuildData;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -31,7 +30,7 @@ public class BlockImprinter extends BlockAssembly
 
     public BlockImprinter()
     {
-        super(new BlockBuildData(BlockImprinter.class, "imprinter", Material.wood));
+        super("imprinter", Material.wood);
     }
 
     @SideOnly(Side.CLIENT)

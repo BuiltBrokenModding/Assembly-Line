@@ -2,12 +2,12 @@ package dark.api.al.coding;
 
 import java.util.List;
 
-import com.dark.save.ISaveObj;
-
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import universalelectricity.core.vector.Vector2;
+
+import com.dark.save.ISaveObj;
+
 import dark.api.al.coding.args.ArgumentData;
 
 /** @author DarkGuardsman */

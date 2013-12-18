@@ -11,7 +11,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.builtbroken.common.Pair;
-import com.dark.ModObjectRegistry.BlockBuildData;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -27,7 +26,7 @@ public class BlockEncoder extends BlockAssembly
 
     public BlockEncoder()
     {
-        super(new BlockBuildData(BlockEncoder.class, "encoder", Material.wood));
+        super("encoder", Material.wood);
     }
 
     @SideOnly(Side.CLIENT)

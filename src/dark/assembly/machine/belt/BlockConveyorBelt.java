@@ -19,7 +19,6 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
-import com.dark.ModObjectRegistry.BlockBuildData;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -30,13 +29,13 @@ import dark.assembly.machine.belt.TileEntityConveyorBelt.SlantType;
 import dark.machines.DarkMain;
 
 /** The block for the actual conveyor belt!
- * 
+ *
  * @author Calclavia, DarkGuardsman */
 public class BlockConveyorBelt extends BlockAssembly
 {
     public BlockConveyorBelt()
     {
-        super(new BlockBuildData(BlockConveyorBelt.class, "conveyorBelt", UniversalElectricity.machine));
+        super("conveyorBelt", UniversalElectricity.machine);
         this.setBlockBounds(0, 0, 0, 1, 0.3f, 1);
     }
 

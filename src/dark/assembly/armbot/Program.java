@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import com.dark.save.NBTFileHelper;
-
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import universalelectricity.core.vector.Vector2;
+
+import com.dark.save.NBTFileHelper;
+
 import dark.api.al.coding.IProgram;
 import dark.api.al.coding.IProgrammableMachine;
 import dark.api.al.coding.ITask;

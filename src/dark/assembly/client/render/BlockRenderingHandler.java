@@ -7,6 +7,8 @@ import net.minecraft.world.IBlockAccess;
 
 import org.lwjgl.opengl.GL11;
 
+import com.dark.DarkCore;
+
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -20,7 +22,6 @@ import dark.assembly.client.model.ModelGrinder;
 import dark.assembly.client.model.ModelManipulator;
 import dark.assembly.client.model.ModelRejectorPiston;
 import dark.assembly.machine.red.BlockAdvancedHopper;
-import dark.core.prefab.ModPrefab;
 
 @SideOnly(Side.CLIENT)
 public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
@@ -41,13 +42,13 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
             GL11.glPushMatrix();
             GL11.glTranslatef(0.0F, 1.5F, 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "belt/frame0.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "belt/frame0.png"));
             modelConveyorBelt.render(0.0625F, 0, false, false, false, false);
             GL11.glPopMatrix();
         }
         else if (ALRecipeLoader.blockRejector != null && block.blockID == ALRecipeLoader.blockRejector.blockID)
         {
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "rejector.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "rejector.png"));
             GL11.glPushMatrix();
             GL11.glTranslatef(0.6F, 1.5F, 0.6F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
@@ -58,7 +59,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
         }
         else if (ALRecipeLoader.blockManipulator != null && block.blockID == ALRecipeLoader.blockManipulator.blockID)
         {
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "manipulator1.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "manipulator1.png"));
             GL11.glPushMatrix();
             GL11.glTranslatef(0.6F, 1.5F, 0.6F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
@@ -68,7 +69,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
         }
         else if (ALRecipeLoader.blockArmbot != null && block.blockID == ALRecipeLoader.blockArmbot.blockID)
         {
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + RenderArmbot.TEXTURE));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + RenderArmbot.TEXTURE));
             GL11.glPushMatrix();
             GL11.glTranslatef(0.4f, 0.8f, 0f);
             GL11.glScalef(0.7f, 0.7f, 0.7f);
@@ -79,7 +80,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
         }
         else if (ALRecipeLoader.processorMachine != null && block.blockID == ALRecipeLoader.processorMachine.blockID && metadata == 0)
         {
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "CrusherBlock.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "CrusherBlock.png"));
             GL11.glPushMatrix();
             GL11.glTranslatef(0f, 1f, 0f);
             GL11.glRotatef(180f, 0f, 0f, 1f);
@@ -90,7 +91,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
         }
         else if (ALRecipeLoader.processorMachine != null && block.blockID == ALRecipeLoader.processorMachine.blockID && metadata == 4)
         {
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "GrinderBlock.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "GrinderBlock.png"));
             GL11.glPushMatrix();
             GL11.glTranslatef(0f, 1f, 0f);
             GL11.glRotatef(180f, 0f, 0f, 1f);

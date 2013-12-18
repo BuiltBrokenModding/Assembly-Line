@@ -9,6 +9,9 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.vector.Vector2;
+
+import com.dark.DarkCore;
+
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import dark.api.al.coding.ITask;
@@ -20,7 +23,7 @@ import dark.core.prefab.invgui.IMessageBoxDialog;
 
 public class GuiEditTask extends GuiBase implements IMessageBoxDialog
 {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.GUI_DIRECTORY + "gui_task_edit.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.instance.DOMAIN, DarkCore.GUI_DIRECTORY + "gui_task_edit.png");
 
     protected GuiEncoderCoder gui;
     protected ITask task, editTask;

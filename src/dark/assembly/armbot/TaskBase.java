@@ -3,12 +3,12 @@ package dark.assembly.armbot;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dark.save.NBTFileHelper;
-
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import universalelectricity.core.vector.Vector2;
+
+import com.dark.save.NBTFileHelper;
+
 import dark.api.al.coding.IProgram;
 import dark.api.al.coding.IProgrammableMachine;
 import dark.api.al.coding.ITask;

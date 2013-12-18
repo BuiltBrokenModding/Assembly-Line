@@ -6,13 +6,14 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
+import com.dark.DarkCore;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
 import dark.assembly.client.model.ModelCrusher;
 import dark.assembly.client.model.ModelGrinder;
 import dark.assembly.machine.processor.TileEntityProcessor;
-import dark.core.prefab.ModPrefab;
 import dark.machines.client.renders.RenderTileMachine;
 
 @SideOnly(Side.CLIENT)
@@ -88,11 +89,11 @@ public class RenderProcessor extends RenderTileMachine
         int g = meta / 4;
         if (g == 0)
         {
-            return new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "CrusherBlock.png");
+            return new ResourceLocation(AssemblyLine.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "CrusherBlock.png");
         }
         else if (g == 1)
         {
-            return new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "GrinderBlock.png");
+            return new ResourceLocation(AssemblyLine.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "GrinderBlock.png");
         }
         return null;
 

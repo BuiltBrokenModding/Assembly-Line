@@ -13,7 +13,6 @@ import universalelectricity.core.UniversalElectricity;
 import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;
-import com.dark.ModObjectRegistry.BlockBuildData;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -26,7 +25,7 @@ public class BlockArmbot extends BlockAssembly
 {
     public BlockArmbot()
     {
-        super(new BlockBuildData(BlockArmbot.class, "armbot", UniversalElectricity.machine));
+        super("armbot", UniversalElectricity.machine);
     }
 
     @Override

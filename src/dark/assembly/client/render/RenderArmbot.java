@@ -15,12 +15,14 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.vector.Vector3;
+
+import com.dark.DarkCore;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
 import dark.assembly.armbot.TileEntityArmbot;
 import dark.assembly.client.model.ModelArmbot;
-import dark.core.prefab.ModPrefab;
 
 @SideOnly(Side.CLIENT)
 public class RenderArmbot extends TileEntitySpecialRenderer
@@ -47,7 +49,7 @@ public class RenderArmbot extends TileEntitySpecialRenderer
                     }
                 }
             }
-            ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + TEXTURE);
+            ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + TEXTURE);
             bindTexture(name);
 
             GL11.glPushMatrix();

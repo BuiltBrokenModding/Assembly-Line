@@ -11,7 +11,6 @@ import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
-import com.dark.ModObjectRegistry.BlockBuildData;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -27,7 +26,7 @@ public class BlockRejector extends BlockImprintable
 
     public BlockRejector()
     {
-        super(new BlockBuildData(BlockRejector.class, "rejector", UniversalElectricity.machine));
+        super("rejector", UniversalElectricity.machine);
     }
 
     @Override

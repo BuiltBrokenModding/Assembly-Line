@@ -12,7 +12,6 @@ import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
-import com.dark.ModObjectRegistry.BlockBuildData;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -22,13 +21,13 @@ import dark.assembly.client.render.RenderManipulator;
 import dark.assembly.imprinter.prefab.BlockImprintable;
 
 /** A block that manipulates item movement between inventories.
- * 
+ *
  * @author Calclavia, DarkGuardsman */
 public class BlockManipulator extends BlockImprintable
 {
     public BlockManipulator()
     {
-        super(new BlockBuildData(BlockManipulator.class, "manipulator", UniversalElectricity.machine));
+        super("manipulator", UniversalElectricity.machine);
         this.setBlockBounds(0, 0, 0, 1, 0.29f, 1);
         this.guiID = CommonProxy.GUI_MANIPULATOR;
     }

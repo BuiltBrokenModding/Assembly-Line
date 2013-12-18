@@ -16,7 +16,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.core.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
-import com.dark.ModObjectRegistry.BlockBuildData;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -34,7 +33,7 @@ public class BlockProcessor extends BlockMachine
 
     public BlockProcessor()
     {
-        super(new BlockBuildData(BlockProcessor.class, "OreProcessor", UniversalElectricity.machine).setConfigProvider(AssemblyLine.CONFIGURATION));
+        super(AssemblyLine.CONFIGURATION, "OreProcessor", UniversalElectricity.machine);
         this.setCreativeTab(DMCreativeTab.tabIndustrial());
     }
 

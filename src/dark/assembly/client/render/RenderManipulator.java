@@ -5,12 +5,13 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import com.dark.DarkCore;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
 import dark.assembly.client.model.ModelManipulator;
 import dark.assembly.machine.TileEntityManipulator;
-import dark.core.prefab.ModPrefab;
 
 @SideOnly(Side.CLIENT)
 public class RenderManipulator extends RenderImprintable
@@ -27,12 +28,12 @@ public class RenderManipulator extends RenderImprintable
 
         if (tileEntity.isOutput())
         {
-            ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "manipulator1.png");
+            ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "manipulator1.png");
             bindTexture(name);
         }
         else
         {
-            ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "manipulator2.png");
+            ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "manipulator2.png");
             bindTexture(name);
         }
 

@@ -2,8 +2,6 @@ package dark.assembly.machine;
 
 import java.util.Random;
 
-import com.dark.ModObjectRegistry.BlockBuildData;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -28,7 +26,7 @@ public class BlockTurntable extends BlockAssembly
 
     public BlockTurntable()
     {
-        super(new BlockBuildData(BlockTurntable.class, "turntable", Material.piston));
+        super("turntable", Material.piston);
         this.setTickRandomly(true);
     }
 

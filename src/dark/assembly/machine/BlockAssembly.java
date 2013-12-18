@@ -1,7 +1,5 @@
 package dark.assembly.machine;
 
-import com.dark.ModObjectRegistry.BlockBuildData;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -13,12 +11,6 @@ import dark.core.prefab.machine.BlockMachine;
 
 public class BlockAssembly extends BlockMachine
 {
-
-    public BlockAssembly(BlockBuildData buildBuildData)
-    {
-        super(buildBuildData.setCreativeTab(DMCreativeTab.tabAutomation()).setConfigProvider(AssemblyLine.CONFIGURATION));
-    }
-
     public BlockAssembly(String blockName, Material material)
     {
         super(AssemblyLine.CONFIGURATION, blockName, material);

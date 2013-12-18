@@ -5,6 +5,8 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import com.dark.DarkCore;
+
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -15,7 +17,7 @@ import dark.assembly.machine.encoder.TileEntityEncoder;
 @SideOnly(Side.CLIENT)
 public class GuiEncoderInventory extends GuiEncoderBase
 {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.GUI_DIRECTORY + "gui_encoder_slot.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.instance.DOMAIN, DarkCore.GUI_DIRECTORY + "gui_encoder_slot.png");
 
     public GuiEncoderInventory(InventoryPlayer inventoryPlayer, TileEntityEncoder tileEntity)
     {

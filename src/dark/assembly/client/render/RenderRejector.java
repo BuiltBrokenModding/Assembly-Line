@@ -5,12 +5,13 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import com.dark.DarkCore;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
 import dark.assembly.client.model.ModelRejectorPiston;
 import dark.assembly.machine.TileEntityRejector;
-import dark.core.prefab.ModPrefab;
 
 @SideOnly(Side.CLIENT)
 public class RenderRejector extends RenderImprintable
@@ -27,7 +28,7 @@ public class RenderRejector extends RenderImprintable
         {
             pos = 8;
         }
-        ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "rejector.png");
+        ResourceLocation name = new ResourceLocation(AssemblyLine.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "rejector.png");
         bindTexture(name);
         GL11.glPushMatrix();
         GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
