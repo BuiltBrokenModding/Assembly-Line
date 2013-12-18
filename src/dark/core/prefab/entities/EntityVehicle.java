@@ -12,14 +12,14 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
+import com.dark.interfaces.IControlReceiver;
+import com.dark.network.ISimplePacketReceiver;
+import com.dark.network.PacketManagerEntity;
+import com.dark.network.PacketManagerKeyEvent;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.Player;
-import dark.core.interfaces.IControlReceiver;
-import dark.core.network.ISimplePacketReceiver;
-import dark.core.network.PacketManagerEntity;
-import dark.core.network.PacketManagerKeyEvent;
 
 public abstract class EntityVehicle extends EntityAdvanced implements IControlReceiver, ISimplePacketReceiver
 {

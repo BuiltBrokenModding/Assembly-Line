@@ -13,12 +13,12 @@ import universalelectricity.core.grid.IElectricityNetwork;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 
+import com.dark.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.common.registry.LanguageRegistry;
-import dark.core.helpers.EnergyHelper;
-import dark.core.network.PacketHandler;
+import dark.core.prefab.machine.EnergyHelper;
 import dark.core.prefab.machine.TileEntityEnergyMachine;
 
 /** Simple in out battery box

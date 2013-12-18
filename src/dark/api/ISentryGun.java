@@ -1,8 +1,9 @@
 package dark.api;
 
+import com.dark.interfaces.IControlReceiver;
+
 import net.minecraft.tileentity.TileEntity;
 import dark.core.interfaces.IBlockActivated;
-import dark.core.interfaces.IControlReceiver;
 import dark.core.interfaces.IDamageableTile;
 
 /** Applied to tile entities that are sentry guns

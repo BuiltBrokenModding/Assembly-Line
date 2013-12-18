@@ -13,11 +13,11 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import com.dark.DarkCore;
 import com.dark.IExtraInfo.IExtraItemInfo;
+import com.dark.prefab.ItemBasic;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.events.LaserEvent;
-import dark.core.prefab.ItemBasic;
 import dark.machines.DarkMain;
 
 /** A series of items that are derived from a basic material

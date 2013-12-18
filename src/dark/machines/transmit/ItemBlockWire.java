@@ -1,7 +1,8 @@
 package dark.machines.transmit;
 
+import com.dark.prefab.ItemBlockHolder;
+
 import net.minecraft.util.Icon;
-import dark.core.prefab.ItemBlockHolder;
 import dark.machines.CoreRecipeLoader;
 
 public class ItemBlockWire extends ItemBlockHolder

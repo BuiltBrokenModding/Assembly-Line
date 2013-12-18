@@ -17,9 +17,9 @@ import universalelectricity.core.block.IConductor;
 import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;
+import com.dark.IndustryCreativeTab;
+import com.dark.helpers.ItemWorldHelper;
 
-import dark.core.DMCreativeTab;
-import dark.core.helpers.ItemWorldHelper;
 import dark.core.prefab.machine.BlockMachine;
 import dark.machines.CommonProxy;
 import dark.machines.DarkMain;
@@ -32,7 +32,7 @@ public class BlockEnergyStorage extends BlockMachine
     public BlockEnergyStorage()
     {
         super(DarkMain.CONFIGURATION, "DMEnergyStorage", UniversalElectricity.machine);
-        this.setCreativeTab(DMCreativeTab.tabIndustrial());
+        this.setCreativeTab(IndustryCreativeTab.tabIndustrial());
     }
 
     @Override

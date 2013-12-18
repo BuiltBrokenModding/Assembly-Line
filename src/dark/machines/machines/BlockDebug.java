@@ -14,10 +14,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 
 import com.builtbroken.common.Pair;
+import com.dark.IndustryCreativeTab;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.DMCreativeTab;
 import dark.core.prefab.machine.BlockMachine;
 import dark.machines.DarkMain;
 
@@ -28,7 +28,7 @@ public class BlockDebug extends BlockMachine
     public BlockDebug()
     {
         super(DarkMain.CONFIGURATION, "DebugBlock", Material.clay);
-        this.setCreativeTab(DMCreativeTab.tabIndustrial());
+        this.setCreativeTab(IndustryCreativeTab.tabIndustrial());
     }
 
     @Override

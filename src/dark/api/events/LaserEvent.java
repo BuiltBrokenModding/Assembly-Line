@@ -3,6 +3,8 @@ package dark.api.events;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dark.helpers.ItemWorldHelper;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -21,7 +23,6 @@ import net.minecraftforge.event.Cancelable;
 import net.minecraftforge.event.Event;
 import universalelectricity.core.vector.Vector3;
 import dark.core.basics.EnumTool;
-import dark.core.helpers.ItemWorldHelper;
 
 /** An event triggered by entities or tiles that create lasers
  * 

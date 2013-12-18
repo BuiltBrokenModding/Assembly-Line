@@ -23,10 +23,10 @@ import com.dark.DarkCore;
 import com.dark.IExtraInfo.IExtraBlockInfo;
 import com.dark.access.AccessUser;
 import com.dark.access.ISpecialAccess;
+import com.dark.tile.network.INetworkPart;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.api.tilenetwork.INetworkPart;
 import dark.core.interfaces.IBlockActivated;
 import dark.machines.DarkMain;
 

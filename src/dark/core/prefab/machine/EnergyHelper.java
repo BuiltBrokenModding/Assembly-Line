@@ -1,4 +1,4 @@
-package dark.core.helpers;
+package dark.core.prefab.machine;
 
 import ic2.api.item.IElectricItemManager;
 import ic2.api.item.ISpecialElectricItem;
@@ -7,7 +7,6 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.compatibility.Compatibility;
 import universalelectricity.core.item.ElectricItemHelper;
 import universalelectricity.core.item.IItemElectric;
-import dark.core.prefab.machine.TileEntityEnergyMachine;
 
 public class EnergyHelper
 {

@@ -7,9 +7,9 @@ import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 
 import com.builtbroken.common.Pair;
-import com.dark.ModObjectRegistry;
+import com.dark.CoreRegistry;
+import com.dark.prefab.ItemBlockHolder;
 
-import dark.core.prefab.ItemBlockHolder;
 import dark.core.prefab.machine.BlockMachine;
 import dark.machines.DarkMain;
 
@@ -96,9 +96,9 @@ public class BlockSentryGun extends BlockMachine
                     Block block = new BlockSentryGun(b);
                     if (block != null)
                     {
-                        ModObjectRegistry.registredBlocks.put(block, "DMSentryGun" + b);
-                        ModObjectRegistry.proxy.registerBlock(block, ItemBlockHolder.class, "DMSentryGun" + b, DarkMain.MOD_ID);
-                        ModObjectRegistry.finishCreation(block);
+                        CoreRegistry.registredBlocks.put(block, "DMSentryGun" + b);
+                        CoreRegistry.proxy.registerBlock(block, ItemBlockHolder.class, "DMSentryGun" + b, DarkMain.MOD_ID);
+                        CoreRegistry.finishCreation(block);
                         sentryBlockIds[b] = block.blockID;
                     }
                 }

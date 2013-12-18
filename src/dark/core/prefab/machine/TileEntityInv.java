@@ -18,11 +18,11 @@ import com.dark.access.AccessUser;
 import com.dark.access.GroupRegistry;
 import com.dark.access.ISpecialAccess;
 import com.dark.access.Nodes;
+import com.dark.prefab.tile.network.NetworkTileEntities;
 
 import dark.core.interfaces.IExternalInv;
 import dark.core.interfaces.IInvBox;
 import dark.core.prefab.invgui.InvChest;
-import dark.core.prefab.tilenetwork.NetworkTileEntities;
 
 /** Prefab for simple object who only need basic inv support and nothing more
  * 

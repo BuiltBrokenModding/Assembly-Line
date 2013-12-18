@@ -14,10 +14,10 @@ import net.minecraftforge.fluids.ItemFluidContainer;
 import universalelectricity.core.item.ElectricItemHelper;
 
 import com.dark.DarkCore;
+import com.dark.IndustryCreativeTab;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.DMCreativeTab;
 import dark.machines.DarkMain;
 
 /** Small fluid can that is designed to store up to one bucket of fluid. Doesn't work like a bucket
@@ -35,7 +35,7 @@ public class ItemFluidCan extends ItemFluidContainer
     {
         super(DarkMain.CONFIGURATION.getItem("FluidCan", DarkCore.getNextItemId()).getInt());
         this.setUnlocalizedName("FluidCan");
-        this.setCreativeTab(DMCreativeTab.tabHydraulic());
+        this.setCreativeTab(IndustryCreativeTab.tabHydraulic());
         this.setMaxStackSize(1);
         this.setMaxDamage(100);
         this.setNoRepair();

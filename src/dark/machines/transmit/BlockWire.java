@@ -21,10 +21,10 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.tile.TileEntityConductor;
 
 import com.builtbroken.common.Pair;
+import com.dark.IndustryCreativeTab;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.DMCreativeTab;
 import dark.core.prefab.machine.BlockMachine;
 import dark.machines.DarkMain;
 import dark.machines.client.renders.RenderBlockWire;
@@ -48,7 +48,7 @@ public class BlockWire extends BlockMachine
         this.setHardness(0.1f);
         this.setBlockBounds(0.3f, 0.3f, 0.3f, 0.7f, 0.7f, 0.7f);
         Block.setBurnProperties(this.blockID, 30, 60);
-        this.setCreativeTab(DMCreativeTab.tabIndustrial());
+        this.setCreativeTab(IndustryCreativeTab.tabIndustrial());
     }
 
     @Override

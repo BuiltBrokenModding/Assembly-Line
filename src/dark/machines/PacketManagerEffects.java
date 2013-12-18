@@ -1,4 +1,4 @@
-package dark.core.network;
+package dark.machines;
 
 import java.awt.Color;
 
@@ -9,10 +9,12 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
 
+import com.dark.DarkCore;
+import com.dark.network.IPacketManager;
+import com.dark.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;
-import dark.machines.DarkMain;
 
 public class PacketManagerEffects implements IPacketManager
 {
@@ -56,7 +58,7 @@ public class PacketManagerEffects implements IPacketManager
 
     public static void sendClientLaserEffect(World world, Vector3 position, Vector3 target, Color color, int age)
     {
-        Packet packet = PacketHandler.instance().getPacketWithID(DarkMain.CHANNEL, packetID, "laser", position, target, color.getRed(), color.getBlue(), color.getGreen(), age);
+        Packet packet = PacketHandler.instance().getPacketWithID(DarkCore.CHANNEL, packetID, "laser", position, target, color.getRed(), color.getBlue(), color.getGreen(), age);
         PacketHandler.instance().sendPacketToClients(packet, world, position, position.distance(target));
         System.out.println("Sent laser render packet to client");
     }

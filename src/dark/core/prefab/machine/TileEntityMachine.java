@@ -13,6 +13,8 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.tile.IRotatable;
 
 import com.dark.IExtraInfo.IExtraTileEntityInfo;
+import com.dark.network.ISimplePacketReceiver;
+import com.dark.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -20,8 +22,6 @@ import cpw.mods.fml.common.network.Player;
 import dark.api.IDisableable;
 import dark.core.interfaces.IExternalInv;
 import dark.core.interfaces.IInvBox;
-import dark.core.network.ISimplePacketReceiver;
-import dark.core.network.PacketHandler;
 import dark.machines.DarkMain;
 
 public abstract class TileEntityMachine extends TileEntityInv implements ISidedInventory, IExternalInv, IDisableable, ISimplePacketReceiver, IRotatable, IExtraTileEntityInfo

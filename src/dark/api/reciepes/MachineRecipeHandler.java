@@ -13,12 +13,12 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 
 import com.builtbroken.common.Pair;
+import com.dark.helpers.AutoCraftingManager;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.api.ColorCode;
 import dark.core.basics.EnumMaterial;
 import dark.core.basics.EnumOrePart;
-import dark.core.helpers.AutoCraftingManager;
 import dark.machines.CoreRecipeLoader;
 
 /** Recipes for ore processor machines

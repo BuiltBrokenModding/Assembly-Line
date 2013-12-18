@@ -17,8 +17,8 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 
 import com.dark.ExternalModHandler;
+import com.dark.interfaces.IPowerLess;
 
-import dark.api.IPowerLess;
 
 /** Basic energy tile that can consume power
  * 

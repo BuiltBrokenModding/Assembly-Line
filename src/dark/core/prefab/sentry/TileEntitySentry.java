@@ -12,13 +12,13 @@ import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 
+import com.dark.helpers.MathHelper;
+import com.dark.helpers.RayTraceHelper;
+import com.dark.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;
 import dark.api.ISentryGun;
-import dark.core.helpers.MathHelper;
-import dark.core.helpers.RayTraceHelper;
-import dark.core.network.PacketHandler;
 import dark.core.prefab.entities.EntityTileDamage;
 import dark.core.prefab.machine.TileEntityMachine;
 import dark.machines.DarkMain;

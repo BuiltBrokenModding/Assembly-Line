@@ -12,8 +12,8 @@ import buildcraft.api.tools.IToolWrench;
 
 import com.dark.DarkCore;
 import com.dark.IExtraInfo.IExtraItemInfo;
+import com.dark.prefab.ItemBasic;
 
-import dark.core.prefab.ItemBasic;
 import dark.machines.DarkMain;
 
 public class ItemWrench extends ItemBasic implements IToolWrench, IExtraItemInfo

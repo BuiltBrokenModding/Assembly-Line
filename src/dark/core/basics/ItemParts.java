@@ -11,10 +11,10 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import com.dark.DarkCore;
 import com.dark.IExtraInfo.IExtraItemInfo;
+import com.dark.prefab.ItemBasic;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.prefab.ItemBasic;
 import dark.machines.DarkMain;
 
 /** A meta data item containing parts of various crafting recipes. These parts do not do anything but

@@ -9,6 +9,7 @@ import net.minecraftforge.common.MinecraftForge;
 import org.modstats.Modstats;
 
 import com.builtbroken.common.Triple;
+import com.dark.DarkCore;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -16,7 +17,6 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
-import dark.core.CoreMachine;
 
 public abstract class ModPrefab
 {
@@ -35,28 +35,27 @@ public abstract class ModPrefab
 
     public abstract String getDomain();
 
-
-
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
         this.loadModMeta();
         Modstats.instance().getReporter().registerMod(this);
         MinecraftForge.EVENT_BUS.register(this);
-        CoreMachine.instance().preLoad();
+        MinecraftForge.EVENT_BUS.register(new LaserEntityDamageSource(null));
+        DarkCore.instance().preLoad();
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-        CoreMachine.instance().Load();
+        DarkCore.instance().Load();
         this.registerObjects();
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-        CoreMachine.instance().postLoad();
+        DarkCore.instance().postLoad();
         this.loadRecipes();
     }
 
