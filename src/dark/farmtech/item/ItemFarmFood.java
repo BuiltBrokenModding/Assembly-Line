@@ -2,8 +2,6 @@ package dark.farmtech.item;
 
 import java.util.List;
 
-import com.dark.IExtraInfo.IExtraItemInfo;
-
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,15 +15,18 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.core.vector.Vector3;
+
+import com.dark.DarkCore;
+import com.dark.IExtraInfo.IExtraItemInfo;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.helpers.ItemWorldHelper;
-import dark.core.prefab.ModPrefab;
 import dark.farmtech.FarmTech;
 
 /** Item for storing all kinds of food based items including meats, fruits, pies, cakes, breads, etc
  * we have 1000s of meta to work with :)
- * 
+ *
  * @author DarkGuardsman */
 public class ItemFarmFood extends Item implements IExtraItemInfo
 {
@@ -34,7 +35,7 @@ public class ItemFarmFood extends Item implements IExtraItemInfo
 
     public ItemFarmFood(int par1)
     {
-        super(FarmTech.CONFIGURATION.getItem("Food", ModPrefab.getNextID()).getInt());
+        super(FarmTech.CONFIGURATION.getItem("Food", DarkCore.getNextID()).getInt());
         this.setHasSubtypes(true);
         this.setCreativeTab(CreativeTabs.tabFood);
         this.setUnlocalizedName("FarmFood");
@@ -168,7 +169,7 @@ public class ItemFarmFood extends Item implements IExtraItemInfo
     }
 
     /** enum that stores data for each meta value that represents a food object for the item
-     * 
+     *
      * @Source http://urbanext.illinois.edu/herbs/list.cfm
      * @author DarkGuardsman */
     public static enum FarmFood
@@ -249,7 +250,7 @@ public class ItemFarmFood extends Item implements IExtraItemInfo
     }
 
     /** IDs what the item is and determines how its used
-     * 
+     *
      * @author DarkGuardsman */
     public static enum FoodType
     {

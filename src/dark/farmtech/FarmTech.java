@@ -3,13 +3,15 @@ package dark.farmtech;
 import java.io.File;
 import java.util.Arrays;
 
-import com.dark.ModObjectRegistry;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.Configuration;
 import universalelectricity.prefab.TranslationHelper;
+
+import com.dark.DarkCore;
+import com.dark.ModObjectRegistry;
+
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -144,7 +146,7 @@ public class FarmTech extends ModPrefab
         meta.description = "Farming addon for Darks Core Machine";
         meta.url = "http://www.universalelectricity.com/coremachine";
 
-        meta.logoFile = TEXTURE_DIRECTORY + "GP_Banner.png";
+        meta.logoFile = DarkCore.TEXTURE_DIRECTORY + "GP_Banner.png";
         meta.version = DarkMain.VERSION;
         meta.authorList = Arrays.asList(new String[] { "DarkGuardsman", "LiQuiD" });
         meta.credits = "Please see the website.";

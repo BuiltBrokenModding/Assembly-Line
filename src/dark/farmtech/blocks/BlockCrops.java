@@ -5,7 +5,9 @@ import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
-import dark.core.prefab.ModPrefab;
+
+import com.dark.DarkCore;
+
 import dark.farmtech.FarmTech;
 
 public class BlockCrops extends Block implements IPlantable
@@ -13,7 +15,7 @@ public class BlockCrops extends Block implements IPlantable
 
     public BlockCrops()
     {
-        super(FarmTech.CONFIGURATION.getBlock("Crop", ModPrefab.getNextID()).getInt(), Material.vine);
+        super(FarmTech.CONFIGURATION.getBlock("Crop", DarkCore.getNextID()).getInt(), Material.vine);
         this.setUnlocalizedName("FarmCrops");
     }
 

@@ -6,6 +6,9 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+
+import com.dark.DarkCore;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.farmtech.FarmTech;
@@ -15,7 +18,7 @@ import dark.farmtech.entities.EntityTurkey;
 @SideOnly(Side.CLIENT)
 public class RenderTurkey extends RenderLiving
 {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(FarmTech.instance.DOMAIN, FarmTech.MODEL_DIRECTORY + "Turkey.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(FarmTech.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "Turkey.png");
 
     public RenderTurkey()
     {

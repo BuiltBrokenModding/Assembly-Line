@@ -26,9 +26,9 @@ public class BlockBasicFarmMachine extends BlockFT
 
     }
 
-    public BlockBasicFarmMachine(String name, int blockID, Material material)
+    public BlockBasicFarmMachine(String name, Material material)
     {
-        super(BlockBasicFarmMachine.class, name, material);
+        super(name, material);
     }
 
     @SideOnly(Side.CLIENT)
