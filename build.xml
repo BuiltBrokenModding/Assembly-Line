@@ -42,6 +42,10 @@
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
+              <fileset dir="${dir.development}CoreLibrary">
+				<exclude name=".git/**"/>
+				<exclude name="**/*.xml"/>
+			</fileset>
             <fileset dir="${dir.development}APIs">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
