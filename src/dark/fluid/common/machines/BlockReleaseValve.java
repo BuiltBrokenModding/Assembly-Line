@@ -20,7 +20,7 @@ public class BlockReleaseValve extends BlockFM
 {
     public BlockReleaseValve()
     {
-        super(BlockReleaseValve.class, "ReleaseValve", Material.iron);
+        super("ReleaseValve", Material.iron);
         this.setHardness(1f);
         this.setResistance(5f);
     }

@@ -28,7 +28,7 @@ public class BlockDrain extends BlockFM
 
     public BlockDrain()
     {
-        super(BlockDrain.class, "FluidDrain", Material.iron);
+        super("FluidDrain", Material.iron);
     }
 
     @Override

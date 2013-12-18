@@ -6,9 +6,10 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
+import com.dark.DarkCore;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.prefab.ModPrefab;
 import dark.fluid.client.model.ModelSink;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.machines.TileEntitySink;
@@ -83,7 +84,7 @@ public class RenderSink extends RenderTileMachine
     @Override
     public ResourceLocation getTexture(int block, int meta)
     {
-        return new ResourceLocation(FluidMech.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "Sink.png");
+        return new ResourceLocation(FluidMech.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "Sink.png");
     }
 
 }

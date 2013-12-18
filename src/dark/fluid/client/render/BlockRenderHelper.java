@@ -7,12 +7,13 @@ import net.minecraft.world.IBlockAccess;
 
 import org.lwjgl.opengl.GL11;
 
+import com.dark.DarkCore;
+
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.prefab.ModPrefab;
 import dark.fluid.client.model.ModelConstructionPump;
 import dark.fluid.client.model.ModelPump;
 import dark.fluid.client.model.ModelSink;
@@ -41,7 +42,7 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
             GL11.glTranslatef(0.0F, 1.1F, 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
 
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(FluidMech.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "pumps/WaterPump.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(FluidMech.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "pumps/WaterPump.png"));
             modelPump.render(0.0725F);
             modelPump.renderMotion(0.0725F, 0);
         }
@@ -49,28 +50,28 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
         {
             GL11.glTranslatef(0.0F, .8F, 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(FluidMech.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "Sink.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(FluidMech.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "Sink.png"));
             sink.render(0.0565F);
         }
         else if (FMRecipeLoader.blockRod != null && block.blockID == FMRecipeLoader.blockRod.blockID)
         {
             GL11.glTranslatef(0.0F, 1.5F, 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(FluidMech.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "mechanical/GearRod.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(FluidMech.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "mechanical/GearRod.png"));
             modelRod.render(0.0825F, 0);
         }
         else if (FMRecipeLoader.blockGenerator != null && block.blockID == FMRecipeLoader.blockGenerator.blockID)
         {
             GL11.glTranslatef(0.0F, 1.0F, 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(FluidMech.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "mechanical/Generator.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(FluidMech.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "mechanical/Generator.png"));
             modelGen.render(null);
         }
         else if (FMRecipeLoader.blockConPump != null && block.blockID == FMRecipeLoader.blockConPump.blockID && metadata < 4)
         {
             GL11.glTranslatef(0.0F, 1.2F, 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(FluidMech.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "ConstructionPump.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(FluidMech.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "ConstructionPump.png"));
             conPump.render(0.0725F);
             conPump.renderMotor(0.0725F);
 

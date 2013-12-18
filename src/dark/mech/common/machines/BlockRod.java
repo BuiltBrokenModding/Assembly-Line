@@ -25,7 +25,7 @@ public class BlockRod extends BlockFM
 
     public BlockRod()
     {
-        super(BlockRod.class, "MechanicalRod", Material.iron);
+        super("MechanicalRod", Material.iron);
         this.setHardness(1f);
         this.setResistance(5f);
     }

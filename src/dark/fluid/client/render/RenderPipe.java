@@ -5,9 +5,10 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import com.dark.DarkCore;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.prefab.ModPrefab;
 import dark.fluid.client.model.ModelLargePipe;
 import dark.fluid.common.FluidMech;
 import dark.fluid.common.FluidPartsMaterial;
@@ -53,7 +54,7 @@ public class RenderPipe extends RenderTileMachine
     @Override
     public ResourceLocation getTexture(int block, int meta)
     {
-        return new ResourceLocation(FluidMech.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "pipes/Pipe.png");
+        return new ResourceLocation(FluidMech.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "pipes/Pipe.png");
     }
 
     public static ResourceLocation getTexture(FluidPartsMaterial mat, int pipeID)
@@ -65,9 +66,9 @@ public class RenderPipe extends RenderTileMachine
             {
                 s = EnumPipeType.get(pipeID).getName(pipeID);
             }
-            return new ResourceLocation(FluidMech.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "pipes/" + mat.matName + "/" + s + "Pipe.png");
+            return new ResourceLocation(FluidMech.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "pipes/" + mat.matName + "/" + s + "Pipe.png");
         }
-        return new ResourceLocation(FluidMech.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "pipes/Pipe.png");
+        return new ResourceLocation(FluidMech.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "pipes/Pipe.png");
     }
 
     public void render(FluidPartsMaterial mat, int pipeID, boolean[] side)

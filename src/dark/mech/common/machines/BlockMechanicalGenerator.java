@@ -25,7 +25,7 @@ public class BlockMechanicalGenerator extends BlockFM
 
     public BlockMechanicalGenerator()
     {
-        super(BlockMechanicalGenerator.class, "MechanicalGenerator", Material.iron);
+        super("MechanicalGenerator", Material.iron);
         this.setHardness(1f);
         this.setResistance(5f);
     }

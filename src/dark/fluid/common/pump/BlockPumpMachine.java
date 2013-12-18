@@ -24,7 +24,7 @@ public class BlockPumpMachine extends BlockFM
 
     public BlockPumpMachine()
     {
-        super(BlockPumpMachine.class, "StarterPump", Material.iron);
+        super("StarterPump", Material.iron);
         this.setHardness(1f);
         this.setResistance(5f);
     }

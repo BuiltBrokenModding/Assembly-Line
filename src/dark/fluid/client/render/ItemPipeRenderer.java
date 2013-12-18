@@ -7,10 +7,11 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
+import com.dark.DarkCore;
+
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.prefab.ModPrefab;
 import dark.fluid.client.model.ModelReleaseValve;
 import dark.fluid.common.FMRecipeLoader;
 import dark.fluid.common.FluidMech;
@@ -90,7 +91,7 @@ public class ItemPipeRenderer implements IItemRenderer
             pipe.SixPipe.renderBack();
             pipe.SixPipe.renderMiddle();
         }
-        FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(FluidMech.instance.DOMAIN, ModPrefab.MODEL_DIRECTORY + "ReleaseValve.png"));
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(FluidMech.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "ReleaseValve.png"));
         GL11.glRotatef(180f, 0f, 0f, 1f);
         if (!equ)
         {

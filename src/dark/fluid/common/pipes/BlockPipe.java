@@ -34,7 +34,7 @@ public class BlockPipe extends BlockFM
 
     public BlockPipe()
     {
-        super(BlockPipe.class, "FluidPipe", Material.iron);
+        super("FluidPipe", Material.iron);
         this.setBlockBounds(0.30F, 0.30F, 0.30F, 0.70F, 0.70F, 0.70F);
         this.setHardness(1f);
         this.setResistance(3f);

@@ -31,7 +31,7 @@ public class BlockTank extends BlockFM
 
     public BlockTank()
     {
-        super(BlockTank.class, "FluidTank", Material.rock);
+        super("FluidTank", Material.rock);
         this.setHardness(1f);
         this.setResistance(5f);
     }

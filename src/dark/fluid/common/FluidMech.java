@@ -9,9 +9,11 @@ import net.minecraftforge.fluids.Fluid;
 
 import org.modstats.ModstatInfo;
 
+import universalelectricity.prefab.TranslationHelper;
+
+import com.dark.DarkCore;
 import com.dark.ModObjectRegistry;
 
-import universalelectricity.prefab.TranslationHelper;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -154,7 +156,7 @@ public class FluidMech extends ModPrefab
 
         meta.url = "http://www.universalelectricity.com/coremachine";
 
-        meta.logoFile = ModPrefab.TEXTURE_DIRECTORY + "FM_Banner.png";
+        meta.logoFile = DarkCore.TEXTURE_DIRECTORY + "FM_Banner.png";
         meta.version = DarkMain.VERSION;
         meta.authorList = Arrays.asList(new String[] { "DarkGuardsman AKA DarkCow" });
         meta.credits = "Please see the website.";

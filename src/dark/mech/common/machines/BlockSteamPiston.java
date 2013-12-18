@@ -20,7 +20,7 @@ public class BlockSteamPiston extends BlockFM
 
     public BlockSteamPiston()
     {
-        super(BlockSteamPiston.class, "SteamEngine", Material.iron);
+        super("SteamEngine", Material.iron);
 
     }
 

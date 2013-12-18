@@ -23,7 +23,7 @@ public class BlockSink extends BlockFM
 {
     public BlockSink()
     {
-        super(BlockSink.class, "FluidSink", Material.iron);
+        super("FluidSink", Material.iron);
         this.setResistance(4f);
         this.setHardness(4f);
     }

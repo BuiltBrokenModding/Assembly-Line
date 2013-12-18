@@ -34,7 +34,7 @@ public class BlockConstructionPump extends BlockFM
 
     public BlockConstructionPump()
     {
-        super(BlockConstructionPump.class, "ConstructionPump", Material.iron);
+        super("ConstructionPump", Material.iron);
         this.setHardness(1f);
         this.setResistance(5f);
 
