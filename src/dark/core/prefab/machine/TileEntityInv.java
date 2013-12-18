@@ -3,13 +3,6 @@ package dark.core.prefab.machine;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dark.access.AccessGroup;
-import com.dark.access.AccessUser;
-import com.dark.access.GroupRegistry;
-import com.dark.access.ISpecialAccess;
-import com.dark.access.Nodes;
-
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ISidedInventory;
@@ -19,6 +12,13 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
+
+import com.dark.access.AccessGroup;
+import com.dark.access.AccessUser;
+import com.dark.access.GroupRegistry;
+import com.dark.access.ISpecialAccess;
+import com.dark.access.Nodes;
+
 import dark.core.interfaces.IExternalInv;
 import dark.core.interfaces.IInvBox;
 import dark.core.prefab.invgui.InvChest;

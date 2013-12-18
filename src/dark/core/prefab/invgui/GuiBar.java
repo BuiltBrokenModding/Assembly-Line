@@ -10,14 +10,17 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.vector.Vector2;
+
+import com.dark.DarkCore;
+
 import dark.machines.DarkMain;
 
 /** When done should be a prefab that can be used to render a power bar on the screen
- * 
+ *
  * @author DarkGuardsman */
 public class GuiBar extends Gui
 {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, DarkMain.GUI_DIRECTORY + "bar.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, DarkCore.GUI_DIRECTORY + "bar.png");
 
     protected float currentLevel = 0;
     protected float maxLevel = 10;
@@ -45,7 +48,7 @@ public class GuiBar extends Gui
     }
 
     /** Sets the parms for the bar that determ the length of the bar
-     * 
+     *
      * @param current - current level of the reading
      * @param max - max level of the reading; */
     public GuiBar setMeter(float current, float max)

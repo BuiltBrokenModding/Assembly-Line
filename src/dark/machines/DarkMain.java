@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.io.File;
 import java.util.Arrays;
 
-import com.dark.ModObjectRegistry;
-
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
@@ -17,6 +15,10 @@ import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.ore.OreGenReplaceStone;
 import universalelectricity.prefab.ore.OreGenerator;
+
+import com.dark.DarkCore;
+import com.dark.ModObjectRegistry;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -249,7 +251,7 @@ public class DarkMain extends ModPrefab
         CoreRecipeLoader.itemVehicleTest = ModObjectRegistry.createNewItem("ItemVehicleTest", DarkMain.MOD_ID, ItemVehicleSpawn.class, true);
         CoreRecipeLoader.itemFluidCan = ModObjectRegistry.createNewItem("ItemFluidCan", DarkMain.MOD_ID, ItemFluidCan.class, true);
         //Config saves in post init to allow for other feature to access it
-       
+
     }
 
     @Override
@@ -261,7 +263,7 @@ public class DarkMain extends ModPrefab
         meta.description = "Main mod for several of the mods created by DarkGuardsman and his team. Adds basic features, functions, ores, items, and blocks";
         meta.url = "http://www.universalelectricity.com/coremachine";
 
-        meta.logoFile = TEXTURE_DIRECTORY + "GP_Banner.png";
+        meta.logoFile = DarkCore.TEXTURE_DIRECTORY + "GP_Banner.png";
         meta.version = VERSION;
         meta.authorList = Arrays.asList(new String[] { "DarkGuardsman", "HangCow", "Elrath18", "Archadia" });
         meta.credits = "Please see the website.";

@@ -12,17 +12,19 @@ import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+
+import com.dark.DarkCore;
+
 import dark.core.DMCreativeTab;
-import dark.core.prefab.ModPrefab;
 
 /** Basic item used to spawn a vehicle
- * 
+ *
  * @author DarkGuardsman */
 public class ItemVehicleSpawn extends Item
 {
     public ItemVehicleSpawn()
     {
-        super(ModPrefab.getNextItemId());
+        super(DarkCore.getNextItemId());
         this.setUnlocalizedName("Vehicle");
         this.setCreativeTab(DMCreativeTab.tabIndustrial());
     }
@@ -41,7 +43,7 @@ public class ItemVehicleSpawn extends Item
 
         Vec3 start = world.getWorldVec3Pool().getVecFromPool(lookX, lookY, lookZ);
 
-        //Find the vector X blocks away from the player in the same direction as the player is looking 
+        //Find the vector X blocks away from the player in the same direction as the player is looking
         double searchRange = 5.0D;
         float deltaX = net.minecraft.util.MathHelper.sin(-playerYaw * 0.017453292F - (float) Math.PI) * -net.minecraft.util.MathHelper.cos(-playerPitch * 0.017453292F);
         float deltaY = net.minecraft.util.MathHelper.sin(-playerPitch * 0.017453292F);

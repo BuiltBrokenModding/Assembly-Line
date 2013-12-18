@@ -31,17 +31,17 @@ import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
+import com.dark.DarkCore;
 import com.dark.IExtraInfo.IExtraItemInfo;
 import com.google.common.collect.Multimap;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.prefab.ModPrefab;
 import dark.machines.DarkMain;
 
 /** Flexible tool class that uses NBT to store damage and effect rather than metadata. Metadata
  * instead is used to store sub items allowing several different tools to exist within the same item
- * 
+ *
  * @author DarkGuardsman */
 public class ItemCommonTool extends Item implements IExtraItemInfo
 {
@@ -54,7 +54,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
 
     public ItemCommonTool()
     {
-        super(DarkMain.CONFIGURATION.getItem("Items", "CommonTools", ModPrefab.getNextItemId()).getInt());
+        super(DarkMain.CONFIGURATION.getItem("Items", "CommonTools", DarkCore.getNextItemId()).getInt());
         this.maxStackSize = 1;
         this.setCreativeTab(CreativeTabs.tabTools);
     }

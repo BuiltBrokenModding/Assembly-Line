@@ -1,7 +1,5 @@
 package dark.machines.items;
 
-import com.dark.IExtraInfo.IExtraItemInfo;
-
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,8 +9,11 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
 import buildcraft.api.tools.IToolWrench;
+
+import com.dark.DarkCore;
+import com.dark.IExtraInfo.IExtraItemInfo;
+
 import dark.core.prefab.ItemBasic;
-import dark.core.prefab.ModPrefab;
 import dark.machines.DarkMain;
 
 public class ItemWrench extends ItemBasic implements IToolWrench, IExtraItemInfo
@@ -21,7 +22,7 @@ public class ItemWrench extends ItemBasic implements IToolWrench, IExtraItemInfo
 
     public ItemWrench()
     {
-        super(ModPrefab.getNextItemId(), "wrench", DarkMain.CONFIGURATION);
+        super(DarkCore.getNextItemId(), "wrench", DarkMain.CONFIGURATION);
         this.setMaxStackSize(1);
         this.setCreativeTab(CreativeTabs.tabTools);
         this.setTextureName(DarkMain.getInstance().PREFIX + "wrench");

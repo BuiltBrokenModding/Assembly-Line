@@ -19,8 +19,8 @@ import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.prefab.block.BlockTile;
 
 import com.builtbroken.common.Pair;
+import com.dark.DarkCore;
 import com.dark.IExtraInfo.IExtraBlockInfo;
-import com.dark.ModObjectRegistry.BlockBuildData;
 import com.dark.access.AccessUser;
 import com.dark.access.ISpecialAccess;
 
@@ -28,13 +28,12 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.tilenetwork.INetworkPart;
 import dark.core.interfaces.IBlockActivated;
-import dark.core.prefab.ModPrefab;
 import dark.machines.DarkMain;
 
 /** Basic TileEntity Container class designed to be used by generic machines. It is suggested that
  * each mod using this create there own basic block extending this to reduce need to use build data
  * per block.
- * 
+ *
  * @author Darkguardsman */
 public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
 {
@@ -44,20 +43,9 @@ public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
 
     public Icon iconInput, iconOutput;
 
-    public BlockMachine(BlockBuildData data)
-    {
-        super(data.config.getBlock(data.blockName, ModPrefab.getNextID()).getInt(), data.blockMaterial);
-        this.setUnlocalizedName(data.blockName);
-        this.setResistance(100f);
-        if (data.creativeTab != null)
-        {
-            this.setCreativeTab(data.creativeTab);
-        }
-    }
-
     public BlockMachine(Configuration config, String blockName, Material material)
     {
-        super(config.getBlock(blockName, ModPrefab.getNextID()).getInt(), material);
+        super(config.getBlock(blockName, DarkCore.getNextID()).getInt(), material);
         this.setUnlocalizedName(blockName);
         this.setResistance(100f);
     }

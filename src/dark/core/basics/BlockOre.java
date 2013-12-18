@@ -17,11 +17,11 @@ import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.prefab.ore.OreGenReplaceStone;
 
 import com.builtbroken.common.Pair;
+import com.dark.DarkCore;
 import com.dark.IExtraInfo.IExtraBlockInfo;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.prefab.ModPrefab;
 import dark.machines.CoreRecipeLoader;
 import dark.machines.DarkMain;
 
@@ -31,7 +31,7 @@ public class BlockOre extends Block implements IExtraBlockInfo
 
     public BlockOre()
     {
-        super(DarkMain.CONFIGURATION.getBlock("Ore", ModPrefab.getNextID()).getInt(), Material.rock);
+        super(DarkMain.CONFIGURATION.getBlock("Ore", DarkCore.getNextID()).getInt(), Material.rock);
         this.setCreativeTab(CreativeTabs.tabBlock);
         this.setUnlocalizedName(DarkMain.getInstance().PREFIX + "Ore");
         this.setHardness(2.5f);

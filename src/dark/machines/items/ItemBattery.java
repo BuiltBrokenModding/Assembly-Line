@@ -1,26 +1,27 @@
 package dark.machines.items;
 
-import com.dark.IExtraInfo.IExtraItemInfo;
-
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.core.item.ItemElectric;
+
+import com.dark.DarkCore;
+import com.dark.IExtraInfo.IExtraItemInfo;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.DMCreativeTab;
-import dark.core.prefab.ModPrefab;
 import dark.machines.DarkMain;
 
 /** Simple battery to store energy
- * 
+ *
  * @author DarkGuardsman */
 public class ItemBattery extends ItemElectric implements IExtraItemInfo
 {
     public ItemBattery()
     {
-        super(DarkMain.CONFIGURATION.getItem("Battery", ModPrefab.getNextItemId()).getInt());
+        super(DarkMain.CONFIGURATION.getItem("Battery", DarkCore.getNextItemId()).getInt());
         this.setUnlocalizedName(DarkMain.getInstance().PREFIX + "Battery");
         this.setCreativeTab(DMCreativeTab.tabIndustrial());
     }

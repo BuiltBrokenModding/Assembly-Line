@@ -18,11 +18,11 @@ import universalelectricity.core.UniversalElectricity;
 import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;
+import com.dark.DarkCore;
 import com.dark.IExtraInfo.IExtraBlockInfo;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.prefab.ModPrefab;
 import dark.machines.DarkMain;
 
 public class BlockMulti extends BlockContainer implements IExtraBlockInfo
@@ -32,7 +32,7 @@ public class BlockMulti extends BlockContainer implements IExtraBlockInfo
 
     public BlockMulti()
     {
-        super(DarkMain.CONFIGURATION.getBlock("MultiBlock", ModPrefab.getNextID()).getInt(), UniversalElectricity.machine);
+        super(DarkMain.CONFIGURATION.getBlock("MultiBlock", DarkCore.getNextID()).getInt(), UniversalElectricity.machine);
         this.setHardness(0.8F);
         this.setUnlocalizedName("multiBlock");
         this.setChannel(DarkMain.CHANNEL);

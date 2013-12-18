@@ -19,12 +19,14 @@ import universalelectricity.core.block.IElectrical;
 import universalelectricity.core.block.IElectricalStorage;
 import universalelectricity.core.electricity.ElectricityDisplay;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
+
+import com.dark.DarkCore;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.IToolReadOut;
 import dark.api.IToolReadOut.EnumTools;
 import dark.core.prefab.ItemBasic;
-import dark.core.prefab.ModPrefab;
 import dark.core.prefab.fluids.FluidHelper;
 import dark.machines.DarkMain;
 
@@ -34,7 +36,7 @@ public class ItemReadoutTools extends ItemBasic
 
     public ItemReadoutTools()
     {
-        super(ModPrefab.getNextItemId(), "DMTools", DarkMain.CONFIGURATION);
+        super(DarkCore.getNextItemId(), "DMTools", DarkMain.CONFIGURATION);
         this.setHasSubtypes(true);
         this.setCreativeTab(CreativeTabs.tabTools);
         this.setMaxStackSize(1);

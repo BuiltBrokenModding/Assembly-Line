@@ -13,13 +13,15 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.vector.Vector3;
+
+import com.dark.DarkCore;
+
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.DarkMain;
 
 /** Based off Thaumcraft's Beam Renderer.
- * 
+ *
  * @author Calclavia, Azanor */
 @SideOnly(Side.CLIENT)
 public class FXBeam extends EntityFX
@@ -45,7 +47,7 @@ public class FXBeam extends EntityFX
     /** beam diameter */
     private float beamD = 0.08f;
 
-    private String texture = DarkMain.TEXTURE_DIRECTORY + "";
+    private String texture = DarkCore.TEXTURE_DIRECTORY + "";
 
     public FXBeam(World world, Vector3 start, Vector3 end, Color color, String texture, int age, boolean pulse)
     {
@@ -142,7 +144,7 @@ public class FXBeam extends EntityFX
         //Clear
         tessellator.draw();
         GL11.glPushMatrix();
-        
+
         //Start drawing
         try
         {
@@ -230,7 +232,7 @@ public class FXBeam extends EntityFX
         {
             e.printStackTrace();
         }
-        
+
         //Reset
         GL11.glPopMatrix();
         tessellator.startDrawingQuads();

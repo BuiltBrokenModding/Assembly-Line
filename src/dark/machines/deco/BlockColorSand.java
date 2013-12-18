@@ -6,7 +6,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.world.World;
-import dark.core.prefab.ModPrefab;
+
+import com.dark.DarkCore;
+
 import dark.machines.DarkMain;
 
 //TODO fix instant falling sand
@@ -14,7 +16,7 @@ public class BlockColorSand extends BlockColored
 {
     public BlockColorSand()
     {
-        super("colorSand", DarkMain.CONFIGURATION.getBlock("colorSand", ModPrefab.getNextID()).getInt(), Material.sand);
+        super("colorSand", DarkMain.CONFIGURATION.getBlock("colorSand", DarkCore.getNextID()).getInt(), Material.sand);
         this.setCreativeTab(CreativeTabs.tabDecorations);
         this.setHardness(1f);
         this.setResistance(.5f);

@@ -21,7 +21,6 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.tile.TileEntityConductor;
 
 import com.builtbroken.common.Pair;
-import com.dark.ModObjectRegistry.BlockBuildData;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -43,12 +42,13 @@ public class BlockWire extends BlockMachine
 
     public BlockWire()
     {
-        super(new BlockBuildData(BlockWire.class, "DMWire", Material.cloth).setCreativeTab(DMCreativeTab.tabIndustrial()));
+        super(DarkMain.CONFIGURATION, "DMWire", Material.cloth);
         this.setStepSound(soundClothFootstep);
         this.setResistance(0.2F);
         this.setHardness(0.1f);
         this.setBlockBounds(0.3f, 0.3f, 0.3f, 0.7f, 0.7f, 0.7f);
         Block.setBurnProperties(this.blockID, 30, 60);
+        this.setCreativeTab(DMCreativeTab.tabIndustrial());
     }
 
     @Override

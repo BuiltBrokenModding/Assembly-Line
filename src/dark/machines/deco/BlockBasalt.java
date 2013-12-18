@@ -7,9 +7,11 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.Icon;
+
+import com.dark.DarkCore;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.prefab.ModPrefab;
 import dark.machines.DarkMain;
 
 public class BlockBasalt extends Block
@@ -36,7 +38,7 @@ public class BlockBasalt extends Block
 
     public BlockBasalt()
     {
-        super(DarkMain.CONFIGURATION.getBlock("basalt", ModPrefab.getNextID()).getInt(), Material.rock);
+        super(DarkMain.CONFIGURATION.getBlock("basalt", DarkCore.getNextID()).getInt(), Material.rock);
         this.setCreativeTab(CreativeTabs.tabDecorations);
         this.setHardness(2f);
         this.setResistance(2f);

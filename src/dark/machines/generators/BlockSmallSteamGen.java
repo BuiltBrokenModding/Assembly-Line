@@ -16,12 +16,12 @@ import net.minecraftforge.common.Configuration;
 import universalelectricity.core.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
-import com.dark.ModObjectRegistry.BlockBuildData;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.DMCreativeTab;
 import dark.core.prefab.machine.BlockMachine;
+import dark.machines.DarkMain;
 import dark.machines.client.renders.BlockRenderingHandler;
 import dark.machines.client.renders.RenderSteamGen;
 
@@ -29,15 +29,16 @@ import dark.machines.client.renders.RenderSteamGen;
  * A) the generator B) the collector The generator creates the steam and burns the fuel. The
  * collector uses the steam to generate a small amount of constant power. This setup is not very
  * powerful but is easy to create and doesn't take much to keep running
- * 
+ *
  * @author DarkGuardsman */
 public class BlockSmallSteamGen extends BlockMachine
 {
 
     public BlockSmallSteamGen()
     {
-        super(new BlockBuildData(BlockSmallSteamGen.class, "StarterSteamGen", UniversalElectricity.machine).setCreativeTab(DMCreativeTab.tabIndustrial()));
+        super(DarkMain.CONFIGURATION, "StarterSteamGen", UniversalElectricity.machine);
         this.setStepSound(soundMetalFootstep);
+        this.setCreativeTab(DMCreativeTab.tabIndustrial());
     }
 
     @Override

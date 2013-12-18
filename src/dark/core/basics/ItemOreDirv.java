@@ -2,8 +2,6 @@ package dark.core.basics;
 
 import java.util.List;
 
-import com.dark.IExtraInfo.IExtraItemInfo;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -12,21 +10,24 @@ import net.minecraft.util.Icon;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.oredict.OreDictionary;
+
+import com.dark.DarkCore;
+import com.dark.IExtraInfo.IExtraItemInfo;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.events.LaserEvent;
 import dark.core.prefab.ItemBasic;
-import dark.core.prefab.ModPrefab;
 import dark.machines.DarkMain;
 
 /** A series of items that are derived from a basic material
- * 
+ *
  * @author DarkGuardsman */
 public class ItemOreDirv extends ItemBasic implements IExtraItemInfo
 {
     public ItemOreDirv()
     {
-        super(ModPrefab.getNextItemId(), "Metal_Parts", DarkMain.CONFIGURATION);
+        super(DarkCore.getNextItemId(), "Metal_Parts", DarkMain.CONFIGURATION);
         this.setHasSubtypes(true);
         this.setCreativeTab(CreativeTabs.tabMaterials);
     }

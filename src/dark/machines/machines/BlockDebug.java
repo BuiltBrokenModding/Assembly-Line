@@ -14,7 +14,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 
 import com.builtbroken.common.Pair;
-import com.dark.ModObjectRegistry.BlockBuildData;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -28,7 +27,8 @@ public class BlockDebug extends BlockMachine
 
     public BlockDebug()
     {
-        super(new BlockBuildData(BlockDebug.class, "DebugBlock", Material.clay).setCreativeTab(DMCreativeTab.tabIndustrial()));
+        super(DarkMain.CONFIGURATION, "DebugBlock", Material.clay);
+        this.setCreativeTab(DMCreativeTab.tabIndustrial());
     }
 
     @Override

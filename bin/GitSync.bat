@@ -1,5 +1,5 @@
 rem set defaults:
-set "com=Auto-Sync"
+set "com=Clean up and import changes"
 rem set parameters:
 IF NOT "a%1"=="a" (set "com=%1")
 
@@ -21,6 +21,9 @@ git commit -am "%com%"
 git push origin master
 cd ..\
 cd GreaterProtection
+git commit -am "%com%"
+git push origin master
+cd MechanizedMining
 git commit -am "%com%"
 git push origin master
 cd ..\

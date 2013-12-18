@@ -4,9 +4,11 @@ import java.util.Random;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+
+import com.dark.DarkCore;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.prefab.ModPrefab;
 import dark.machines.DarkMain;
 
 public class BlockColorGlass extends BlockColored
@@ -14,7 +16,7 @@ public class BlockColorGlass extends BlockColored
 
     public BlockColorGlass(String name)
     {
-        super(name, DarkMain.CONFIGURATION.getBlock(name, ModPrefab.getNextID()).getInt(), Material.glass);
+        super(name, DarkMain.CONFIGURATION.getBlock(name, DarkCore.getNextID()).getInt(), Material.glass);
         this.setCreativeTab(CreativeTabs.tabDecorations);
         this.setHardness(.5f);
         this.setResistance(.5f);

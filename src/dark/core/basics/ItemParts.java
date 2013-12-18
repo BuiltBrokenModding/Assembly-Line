@@ -2,29 +2,30 @@ package dark.core.basics;
 
 import java.util.List;
 
-import com.dark.IExtraInfo.IExtraItemInfo;
-
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
+
+import com.dark.DarkCore;
+import com.dark.IExtraInfo.IExtraItemInfo;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.prefab.ItemBasic;
-import dark.core.prefab.ModPrefab;
 import dark.machines.DarkMain;
 
 /** A meta data item containing parts of various crafting recipes. These parts do not do anything but
  * allow new crafting recipes to be created.
- * 
+ *
  * @author DarkGuardsman */
 public class ItemParts extends ItemBasic implements IExtraItemInfo
 {
     public ItemParts()
     {
-        super(ModPrefab.getNextItemId(), "DMParts", DarkMain.CONFIGURATION);
+        super(DarkCore.getNextItemId(), "DMParts", DarkMain.CONFIGURATION);
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
         this.setMaxStackSize(64);

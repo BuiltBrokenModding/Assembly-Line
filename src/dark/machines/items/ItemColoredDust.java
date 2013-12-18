@@ -6,10 +6,12 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
+
+import com.dark.DarkCore;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.prefab.ItemBasic;
-import dark.core.prefab.ModPrefab;
 import dark.machines.DarkMain;
 
 public class ItemColoredDust extends ItemBasic
@@ -19,7 +21,7 @@ public class ItemColoredDust extends ItemBasic
 
     public ItemColoredDust()
     {
-        super(ModPrefab.getNextItemId(), "GlowRefinedSand", DarkMain.CONFIGURATION);
+        super(DarkCore.getNextItemId(), "GlowRefinedSand", DarkMain.CONFIGURATION);
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
         this.setCreativeTab(CreativeTabs.tabMaterials);

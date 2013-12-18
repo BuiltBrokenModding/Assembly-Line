@@ -20,10 +20,12 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
 import universalelectricity.core.vector.Vector3;
+
+import com.dark.DarkCore;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.DMCreativeTab;
-import dark.core.prefab.ModPrefab;
 import dark.core.prefab.fluids.EnumGas;
 import dark.machines.DarkMain;
 
@@ -40,7 +42,7 @@ public class BlockGasOre extends Block implements IFluidBlock
 
     public BlockGasOre()
     {
-        super(DarkMain.CONFIGURATION.getBlock("GasBlock", ModPrefab.getNextID()).getInt(), gas);
+        super(DarkMain.CONFIGURATION.getBlock("GasBlock", DarkCore.getNextID()).getInt(), gas);
         this.setUnlocalizedName("DMBlockGas");
         this.setCreativeTab(DMCreativeTab.tabIndustrial());
         this.setTickRandomly(true);

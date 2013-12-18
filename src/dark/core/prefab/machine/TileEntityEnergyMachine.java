@@ -2,8 +2,6 @@ package dark.core.prefab.machine;
 
 import java.util.EnumSet;
 
-import com.dark.ExternalModHandler;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,6 +15,9 @@ import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.grid.IElectricityNetwork;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
+
+import com.dark.ExternalModHandler;
+
 import dark.api.IPowerLess;
 
 /** Basic energy tile that can consume power

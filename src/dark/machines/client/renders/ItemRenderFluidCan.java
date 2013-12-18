@@ -8,6 +8,8 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
+import com.dark.DarkCore;
+
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -21,7 +23,7 @@ public class ItemRenderFluidCan implements IItemRenderer
 {
     public static final ModelSmallFluidCan CAN_MODEL = new ModelSmallFluidCan();
 
-    public static final ResourceLocation CAN_TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, DarkMain.MODEL_DIRECTORY + "FluidCanA.png");
+    public static final ResourceLocation CAN_TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, DarkCore.MODEL_DIRECTORY + "FluidCanA.png");
 
     @Override
     public boolean handleRenderType(ItemStack item, ItemRenderType type)

@@ -8,6 +8,8 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import com.dark.DarkCore;
+
 import cpw.mods.fml.client.FMLClientHandler;
 import dark.core.prefab.invgui.GuiBase;
 import dark.core.prefab.invgui.GuiButtonImage;
@@ -16,12 +18,12 @@ import dark.core.prefab.machine.TileEntityMachine;
 import dark.machines.DarkMain;
 
 /** To be used with all machine that have a gui to allow generic settings and feature all all devices
- * 
+ *
  * @author DarkGuardsman */
 public class GuiMachineBase extends GuiBase
 {
 
-    public static final ResourceLocation TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, DarkMain.GUI_DIRECTORY + "gui_grey.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, DarkCore.GUI_DIRECTORY + "gui_grey.png");
 
     protected static final int MAX_BUTTON_ID = 3;
     protected TileEntityMachine tileEntity;

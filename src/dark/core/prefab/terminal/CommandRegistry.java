@@ -3,10 +3,10 @@ package dark.core.prefab.terminal;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.entity.player.EntityPlayer;
+
 import com.dark.access.GroupRegistry;
 
-
-import net.minecraft.entity.player.EntityPlayer;
 import dark.api.ITerminal;
 import dark.api.ITerminalCommand;
 

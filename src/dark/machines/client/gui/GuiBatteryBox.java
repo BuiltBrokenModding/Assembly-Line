@@ -9,6 +9,9 @@ import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.electricity.ElectricityDisplay;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
+
+import com.dark.DarkCore;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.machines.DarkMain;
@@ -18,7 +21,7 @@ import dark.machines.machines.TileEntityBatteryBox;
 @SideOnly(Side.CLIENT)
 public class GuiBatteryBox extends GuiContainer
 {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, DarkMain.GUI_DIRECTORY + "battery_box.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, DarkCore.GUI_DIRECTORY + "battery_box.png");
 
     private TileEntityBatteryBox tileEntity;
 
