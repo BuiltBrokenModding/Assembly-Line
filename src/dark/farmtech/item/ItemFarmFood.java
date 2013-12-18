@@ -2,6 +2,8 @@ package dark.farmtech.item;
 
 import java.util.List;
 
+import com.dark.IExtraInfo.IExtraItemInfo;
+
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,7 +20,6 @@ import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.helpers.ItemWorldHelper;
-import dark.core.interfaces.IExtraInfo.IExtraItemInfo;
 import dark.core.prefab.ModPrefab;
 import dark.farmtech.FarmTech;
 

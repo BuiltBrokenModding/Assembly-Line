@@ -3,6 +3,8 @@ package dark.farmtech;
 import java.io.File;
 import java.util.Arrays;
 
+import com.dark.ModObjectRegistry;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.item.Item;
@@ -24,7 +26,6 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.api.farm.CropAutomationHandler;
 import dark.api.farm.DecayMatterList;
-import dark.core.ModObjectRegistry;
 import dark.core.prefab.ItemBlockHolder;
 import dark.core.prefab.ModPrefab;
 import dark.farmtech.blocks.BlockFarmSoil;
