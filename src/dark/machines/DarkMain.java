@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.io.File;
 import java.util.Arrays;
 
+import com.dark.ModObjectRegistry;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
@@ -35,7 +37,6 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import dark.api.reciepes.MachineRecipeHandler;
 import dark.core.DMCreativeTab;
-import dark.core.ModObjectRegistry;
 import dark.core.basics.BlockGasOre;
 import dark.core.basics.BlockOre;
 import dark.core.basics.BlockOre.OreData;

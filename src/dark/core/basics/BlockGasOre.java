@@ -11,7 +11,6 @@ import net.minecraft.block.material.MaterialTransparent;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
@@ -19,22 +18,22 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidBlock;
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.api.IGasBlock;
 import dark.core.DMCreativeTab;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.fluids.EnumGas;
 import dark.machines.DarkMain;
 
 /** Gas that is designed to generate underground in the same way as an ore
- * 
+ *
  * TODO code actual gas behavior such as expanding to fill an area but at the same time losing
  * volume
- * 
+ *
  * @author DarkGuardsman */
-public class BlockGasOre extends Block implements IGasBlock
+public class BlockGasOre extends Block implements IFluidBlock
 {
     public static final int[] volumePerMeta = new int[] { 10, 35, 75, 125, 250, 500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 12800, 256000, 512000 };
     public static final Material gas = new MaterialTransparent(MapColor.airColor).setReplaceable();
@@ -111,12 +110,6 @@ public class BlockGasOre extends Block implements IGasBlock
     public boolean canDrain(World world, int x, int y, int z)
     {
         return false;
-    }
-
-    @Override
-    public boolean canFrackerHarvest(TileEntity entity)
-    {
-        return true;
     }
 
     @Override

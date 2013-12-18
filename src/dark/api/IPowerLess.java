@@ -1,4 +1,4 @@
-package dark.api.energy;
+package dark.api;
 
 /** Applied to devices that have the option to run without power. Normally this option is only shown
  * to creative mode players

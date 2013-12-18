@@ -31,11 +31,11 @@ import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
+import com.dark.IExtraInfo.IExtraItemInfo;
 import com.google.common.collect.Multimap;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.interfaces.IExtraInfo.IExtraItemInfo;
 import dark.core.prefab.ModPrefab;
 import dark.machines.DarkMain;
 

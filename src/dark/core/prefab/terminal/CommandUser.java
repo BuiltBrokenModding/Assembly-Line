@@ -3,10 +3,12 @@ package dark.core.prefab.terminal;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.dark.access.ISpecialAccess;
+
+
 import net.minecraft.entity.player.EntityPlayer;
 import dark.api.ITerminal;
 import dark.api.ITerminalCommand;
-import dark.api.access.ISpecialAccess;
 
 public class CommandUser implements ITerminalCommand
 {

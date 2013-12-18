@@ -12,13 +12,13 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.tile.IRotatable;
 
+import com.dark.IExtraInfo.IExtraTileEntityInfo;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import dark.api.IDisableable;
 import dark.core.interfaces.IExternalInv;
-import dark.core.interfaces.IExtraInfo.IExtraTileEntityInfo;
 import dark.core.interfaces.IInvBox;
 import dark.core.network.ISimplePacketReceiver;
 import dark.core.network.PacketHandler;

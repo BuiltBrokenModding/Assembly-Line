@@ -2,6 +2,8 @@ package dark.core.basics;
 
 import java.util.List;
 
+import com.dark.IExtraInfo.IExtraItemInfo;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -13,7 +15,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.events.LaserEvent;
-import dark.core.interfaces.IExtraInfo.IExtraItemInfo;
 import dark.core.prefab.ItemBasic;
 import dark.core.prefab.ModPrefab;
 import dark.machines.DarkMain;

@@ -17,10 +17,10 @@ import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.prefab.ore.OreGenReplaceStone;
 
 import com.builtbroken.common.Pair;
+import com.dark.IExtraInfo.IExtraBlockInfo;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.interfaces.IExtraInfo.IExtraBlockInfo;
 import dark.core.prefab.ModPrefab;
 import dark.machines.CoreRecipeLoader;
 import dark.machines.DarkMain;

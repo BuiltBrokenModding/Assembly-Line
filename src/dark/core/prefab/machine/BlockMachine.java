@@ -19,15 +19,15 @@ import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.prefab.block.BlockTile;
 
 import com.builtbroken.common.Pair;
+import com.dark.IExtraInfo.IExtraBlockInfo;
+import com.dark.ModObjectRegistry.BlockBuildData;
+import com.dark.access.AccessUser;
+import com.dark.access.ISpecialAccess;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.api.access.AccessUser;
-import dark.api.access.ISpecialAccess;
 import dark.api.tilenetwork.INetworkPart;
-import dark.core.ModObjectRegistry.BlockBuildData;
 import dark.core.interfaces.IBlockActivated;
-import dark.core.interfaces.IExtraInfo.IExtraBlockInfo;
 import dark.core.prefab.ModPrefab;
 import dark.machines.DarkMain;
 

@@ -18,10 +18,10 @@ import universalelectricity.core.UniversalElectricity;
 import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;
+import com.dark.IExtraInfo.IExtraBlockInfo;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.interfaces.IExtraInfo.IExtraBlockInfo;
 import dark.core.prefab.ModPrefab;
 import dark.machines.DarkMain;
 

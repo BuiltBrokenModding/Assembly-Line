@@ -1,8 +1,9 @@
 package dark.api;
 
+import com.dark.save.ISaveObj;
+import com.dark.save.NBTFileHelper;
+
 import net.minecraft.nbt.NBTTagCompound;
-import dark.api.save.ISaveObj;
-import dark.api.save.NBTFileHelper;
 
 /** Wrapper for data to be sent threw a network to a device
  * 

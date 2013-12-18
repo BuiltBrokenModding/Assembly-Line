@@ -3,7 +3,7 @@ package dark.core.prefab.tilenetwork;
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.core.block.IElectricalStorage;
 import universalelectricity.core.electricity.ElectricityPack;
-import dark.api.energy.IPowerLess;
+import dark.api.IPowerLess;
 import dark.api.tilenetwork.INetworkEnergyPart;
 import dark.api.tilenetwork.INetworkPart;
 

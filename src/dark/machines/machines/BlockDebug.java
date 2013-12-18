@@ -14,11 +14,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 
 import com.builtbroken.common.Pair;
+import com.dark.ModObjectRegistry.BlockBuildData;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.DMCreativeTab;
-import dark.core.ModObjectRegistry.BlockBuildData;
 import dark.core.prefab.machine.BlockMachine;
 import dark.machines.DarkMain;
 

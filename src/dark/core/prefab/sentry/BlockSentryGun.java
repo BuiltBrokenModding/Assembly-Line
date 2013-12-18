@@ -7,8 +7,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 
 import com.builtbroken.common.Pair;
+import com.dark.ModObjectRegistry;
 
-import dark.core.ModObjectRegistry;
 import dark.core.prefab.ItemBlockHolder;
 import dark.core.prefab.machine.BlockMachine;
 import dark.machines.DarkMain;

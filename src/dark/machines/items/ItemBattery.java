@@ -1,5 +1,7 @@
 package dark.machines.items;
 
+import com.dark.IExtraInfo.IExtraItemInfo;
+
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
@@ -8,7 +10,6 @@ import universalelectricity.core.item.ItemElectric;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.DMCreativeTab;
-import dark.core.interfaces.IExtraInfo.IExtraItemInfo;
 import dark.core.prefab.ModPrefab;
 import dark.machines.DarkMain;
 

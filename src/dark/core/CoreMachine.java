@@ -1,11 +1,14 @@
 package dark.core;
 
+import com.dark.ExternalModHandler;
+import com.dark.ModObjectRegistry;
+import com.dark.save.SaveManager;
+
 import net.minecraftforge.common.MinecraftForge;
 import universalelectricity.compatibility.Compatibility;
 import universalelectricity.core.UniversalElectricity;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
-import dark.api.save.SaveManager;
 import dark.core.prefab.LaserEntityDamageSource;
 import dark.core.prefab.fluids.FluidHelper;
 import dark.core.prefab.tilenetwork.NetworkUpdateHandler;

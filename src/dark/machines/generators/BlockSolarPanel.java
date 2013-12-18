@@ -12,11 +12,11 @@ import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.core.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
+import com.dark.ModObjectRegistry.BlockBuildData;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.DMCreativeTab;
-import dark.core.ModObjectRegistry.BlockBuildData;
 import dark.core.prefab.machine.BlockMachine;
 import dark.machines.client.renders.BlockRenderingHandler;
 import dark.machines.client.renders.RenderBlockSolarPanel;
