@@ -3,11 +3,12 @@ package dark.farmtech.machines;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dark.prefab.tile.network.NetworkSharedPower;
+import com.dark.tile.network.INetworkEnergyPart;
+import com.dark.tile.network.ITileNetwork;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import dark.api.tilenetwork.INetworkEnergyPart;
-import dark.api.tilenetwork.ITileNetwork;
-import dark.core.prefab.tilenetwork.NetworkSharedPower;
 
 /** Advanced version of the compBox that can link to other boxes and process matter at a higher rate.
  * Cost some minor power and will have some mechanical animation of flipping dirt & items

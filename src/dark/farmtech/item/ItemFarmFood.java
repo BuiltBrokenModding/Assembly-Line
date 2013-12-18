@@ -18,10 +18,10 @@ import universalelectricity.core.vector.Vector3;
 
 import com.dark.DarkCore;
 import com.dark.IExtraInfo.IExtraItemInfo;
+import com.dark.helpers.ItemWorldHelper;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.helpers.ItemWorldHelper;
 import dark.farmtech.FarmTech;
 
 /** Item for storing all kinds of food based items including meats, fruits, pies, cakes, breads, etc

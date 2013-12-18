@@ -10,7 +10,8 @@ import net.minecraftforge.common.Configuration;
 import universalelectricity.prefab.TranslationHelper;
 
 import com.dark.DarkCore;
-import com.dark.ModObjectRegistry;
+import com.dark.CoreRegistry;
+import com.dark.prefab.ItemBlockHolder;
 
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -28,7 +29,6 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.api.farm.CropAutomationHandler;
 import dark.api.farm.DecayMatterList;
-import dark.core.prefab.ItemBlockHolder;
 import dark.core.prefab.ModPrefab;
 import dark.farmtech.blocks.BlockFarmSoil;
 import dark.farmtech.entities.EntityFarmEgg;
@@ -112,7 +112,7 @@ public class FarmTech extends ModPrefab
     {
         CONFIGURATION.load();
 
-        blockFarmSoil = ModObjectRegistry.createNewBlock("FTBlockFarmSoil", FarmTech.MOD_ID, BlockFarmSoil.class, ItemBlockHolder.class);
+        blockFarmSoil = CoreRegistry.createNewBlock("FTBlockFarmSoil", FarmTech.MOD_ID, BlockFarmSoil.class, ItemBlockHolder.class);
 
         //String compostList = CONFIGURATION.get("DecayMatter", "List", "5::8000:1", "Items or blocks beyond the built in ones that can be turned into compost. Entries go BlockID:Meta:Time:Amount").getString();
         //DecayMatterList.parseConfigString(compostList);

@@ -1,12 +1,13 @@
 package dark.farmtech.machines.farmer;
 
+import com.dark.helpers.ItemWorldHelper;
+
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import universalelectricity.core.block.IElectricalStorage;
 import universalelectricity.core.vector.Vector3;
-import dark.core.helpers.ItemWorldHelper;
 
 public class EntityFarmDrone extends EntityLiving implements IElectricalStorage
 {
