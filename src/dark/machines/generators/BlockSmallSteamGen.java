@@ -21,7 +21,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.DMCreativeTab;
 import dark.core.ModObjectRegistry.BlockBuildData;
-import dark.core.helpers.MathHelper;
 import dark.core.prefab.machine.BlockMachine;
 import dark.machines.client.renders.BlockRenderingHandler;
 import dark.machines.client.renders.RenderSteamGen;

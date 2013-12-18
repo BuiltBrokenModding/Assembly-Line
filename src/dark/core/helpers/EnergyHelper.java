@@ -4,7 +4,6 @@ import ic2.api.item.IElectricItemManager;
 import ic2.api.item.ISpecialElectricItem;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
-import thermalexpansion.api.item.IChargeableItem;
 import universalelectricity.compatibility.Compatibility;
 import universalelectricity.core.item.ElectricItemHelper;
 import universalelectricity.core.item.IItemElectric;
@@ -31,11 +30,6 @@ public class EnergyHelper
                 energy = manager.charge(itemStack, (int) (energy * Compatibility.TO_IC2_RATIO), 0, false, false) * Compatibility.IC2_RATIO;
                 machine.provideElectricity(energy, true);
             }
-            else if (itemStack.getItem() instanceof IChargeableItem)
-            {
-                float accepted = ((IChargeableItem) itemStack.getItem()).receiveEnergy(itemStack, machine.getProvide(ForgeDirection.UNKNOWN) * Compatibility.BC3_RATIO, true);
-                machine.provideElectricity(accepted, true);
-            }
         }
     }
 
@@ -61,11 +55,6 @@ public class EnergyHelper
                     machine.receiveElectricity(energy, true);
                 }
             }
-            else if (itemStack.getItem() instanceof IChargeableItem)
-            {
-                float given = ((IChargeableItem) itemStack.getItem()).transferEnergy(itemStack, machine.getRequest(ForgeDirection.UNKNOWN) * Compatibility.BC3_RATIO, true);
-                machine.receiveElectricity(given, true);
-            }
         }
     }
 
@@ -73,7 +62,7 @@ public class EnergyHelper
     {
         if (itemStack != null)
         {
-            if (itemStack.getItem() instanceof IItemElectric || itemStack.getItem() instanceof IChargeableItem)
+            if (itemStack.getItem() instanceof IItemElectric)
             {
                 return true;
             }

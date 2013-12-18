@@ -18,7 +18,6 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import dark.api.ColorCode;
 import dark.core.basics.EnumMaterial;
 import dark.core.basics.EnumOrePart;
-import dark.core.basics.ItemOreDirv;
 import dark.core.helpers.AutoCraftingManager;
 import dark.machines.CoreRecipeLoader;
 

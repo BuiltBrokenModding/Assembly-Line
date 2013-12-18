@@ -1,12 +1,10 @@
 package dark.core;
 
 import net.minecraft.tileentity.TileEntity;
-import buildcraft.api.transport.IPipeTile;
-import buildcraft.api.transport.IPipeTile.PipeType;
 import cpw.mods.fml.common.Loader;
 
 /** Handles working with other mod without or without the need of the APIs.
- * 
+ *
  * @author DarkGuardsman */
 public class ExternalModHandler
 {
@@ -24,20 +22,8 @@ public class ExternalModHandler
         }
     }
 
-    /** Is the tileEntity an instanceof IPipeTile and of type fluid from BuildCraft */
-    public static boolean isBCFluidPipe(TileEntity entity)
-    {
-        return MOD_ID.BUILCRAFT_TRANSPORT_MOD.loaded && entity instanceof IPipeTile && ((IPipeTile) entity).getPipeType() == PipeType.FLUID;
-    }
-
-    /** Is the tileEntity an instanceof IPipeTile and of type power from BuildCraft */
-    public static boolean isBCPowerPipe(TileEntity entity)
-    {
-        return MOD_ID.BUILCRAFT_TRANSPORT_MOD.loaded && entity instanceof IPipeTile && ((IPipeTile) entity).getPipeType() == PipeType.POWER;
-    }
-
     /** Checks to see if something can run powerless based on mods loaded
-     * 
+     *
      * @param optional - power system that the device can use
      * @return true if free power is to be generated */
     public static boolean runPowerLess()
