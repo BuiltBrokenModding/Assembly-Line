@@ -1,8 +1,9 @@
 package dark.fluid.common.machines;
 
+import com.dark.ModObjectRegistry.BlockBuildData;
+
 import net.minecraft.block.material.Material;
 import dark.core.DMCreativeTab;
-import dark.core.ModObjectRegistry.BlockBuildData;
 import dark.core.prefab.machine.BlockMachine;
 import dark.fluid.common.FluidMech;
 

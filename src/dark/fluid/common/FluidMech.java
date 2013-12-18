@@ -9,6 +9,8 @@ import net.minecraftforge.fluids.Fluid;
 
 import org.modstats.ModstatInfo;
 
+import com.dark.ModObjectRegistry;
+
 import universalelectricity.prefab.TranslationHelper;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -22,7 +24,6 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import dark.core.DMCreativeTab;
-import dark.core.ModObjectRegistry;
 import dark.core.prefab.ItemBlockHolder;
 import dark.core.prefab.ModPrefab;
 import dark.fluid.common.machines.BlockReleaseValve;
