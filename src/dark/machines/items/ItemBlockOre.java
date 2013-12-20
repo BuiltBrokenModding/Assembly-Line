@@ -1,9 +1,10 @@
-package dark.core.basics;
+package dark.machines.items;
 
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import dark.core.basics.BlockOre.OreData;
 import dark.machines.CoreMachine;
+import dark.machines.blocks.BlockOre;
+import dark.machines.blocks.BlockOre.OreData;
 
 public class ItemBlockOre extends ItemBlock
 {

@@ -8,11 +8,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 
 import com.dark.DarkCore;
+import com.dark.helpers.ColorCode;
 import com.dark.prefab.ItemBasic;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.api.ColorCode;
 import dark.machines.CoreMachine;
 
 public class ItemColoredDust extends ItemBasic

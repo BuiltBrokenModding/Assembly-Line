@@ -1,4 +1,4 @@
-package dark.core.basics;
+package dark.machines.blocks;
 
 import java.util.List;
 import java.util.Set;
@@ -18,6 +18,7 @@ import universalelectricity.prefab.ore.OreGenReplaceStone;
 
 import com.builtbroken.common.Pair;
 import com.dark.DarkCore;
+import com.dark.EnumMaterial;
 import com.dark.IExtraInfo.IExtraBlockInfo;
 
 import cpw.mods.fml.relauncher.Side;

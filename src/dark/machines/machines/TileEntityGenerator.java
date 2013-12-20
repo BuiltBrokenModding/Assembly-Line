@@ -1,4 +1,4 @@
-package dark.core.prefab.machine;
+package dark.machines.machines;
 
 import com.dark.prefab.TileEntityEnergyMachine;
 

@@ -1,4 +1,4 @@
-package dark.core.prefab.entities;
+package dark.machines.prefab.entities;
 
 import net.minecraft.world.World;
 import dark.machines.CoreRecipeLoader;

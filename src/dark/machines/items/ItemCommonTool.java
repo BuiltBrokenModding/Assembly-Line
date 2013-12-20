@@ -1,4 +1,4 @@
-package dark.core.basics;
+package dark.machines.items;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -32,6 +32,8 @@ import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
 import com.dark.DarkCore;
+import com.dark.EnumMaterial;
+import com.dark.EnumOrePart;
 import com.dark.IExtraInfo.IExtraItemInfo;
 import com.google.common.collect.Multimap;
 
@@ -41,7 +43,7 @@ import dark.machines.CoreMachine;
 
 /** Flexible tool class that uses NBT to store damage and effect rather than metadata. Metadata
  * instead is used to store sub items allowing several different tools to exist within the same item
- *
+ * 
  * @author DarkGuardsman */
 public class ItemCommonTool extends Item implements IExtraItemInfo
 {
@@ -97,7 +99,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
             }
             else
             {
-                EnumMaterial mat = EnumMaterial.getToolMatFromMeta(itemStack.getItemDamage());
+                EnumMaterial mat = EnumTool.getToolMatFromMeta(itemStack.getItemDamage());
                 int currentDamage = itemStack.getTagCompound().getInteger(TOOL_DAMAGE);
                 list.add("D: " + currentDamage + "/" + mat.maxUses);
             }
@@ -130,7 +132,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
         {
             return false;
         }
-        if (EnumMaterial.getToolFromMeta(itemStack.getItemDamage()) == EnumTool.HOE)
+        if (EnumTool.getToolFromMeta(itemStack.getItemDamage()) == EnumTool.HOE)
         {
             if (!player.canPlayerEdit(x, y, z, par7, itemStack))
             {
@@ -177,7 +179,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
     @Override
     public EnumAction getItemUseAction(ItemStack par1ItemStack)
     {
-        if (EnumMaterial.getToolFromMeta(par1ItemStack.getItemDamage()) == EnumTool.SWORD)
+        if (EnumTool.getToolFromMeta(par1ItemStack.getItemDamage()) == EnumTool.SWORD)
         {
             return EnumAction.block;
         }
@@ -187,7 +189,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
     @Override
     public int getMaxItemUseDuration(ItemStack par1ItemStack)
     {
-        if (EnumMaterial.getToolFromMeta(par1ItemStack.getItemDamage()) == EnumTool.SWORD)
+        if (EnumTool.getToolFromMeta(par1ItemStack.getItemDamage()) == EnumTool.SWORD)
         {
             return 72000;
         }
@@ -197,7 +199,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
     @Override
     public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
     {
-        if (EnumMaterial.getToolFromMeta(par1ItemStack.getItemDamage()) == EnumTool.SWORD)
+        if (EnumTool.getToolFromMeta(par1ItemStack.getItemDamage()) == EnumTool.SWORD)
         {
             par3EntityPlayer.setItemInUse(par1ItemStack, this.getMaxItemUseDuration(par1ItemStack));
         }
@@ -211,7 +213,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
         {
             return false;
         }
-        if (entity instanceof IShearable && EnumMaterial.getToolFromMeta(itemstack.getItemDamage()) == EnumTool.SHEAR)
+        if (entity instanceof IShearable && EnumTool.getToolFromMeta(itemstack.getItemDamage()) == EnumTool.SHEAR)
         {
             IShearable target = (IShearable) entity;
             if (target.isShearable(itemstack, entity.worldObj, (int) entity.posX, (int) entity.posY, (int) entity.posZ))
@@ -241,7 +243,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
             return false;
         }
         int id = player.worldObj.getBlockId(x, y, z);
-        if (Block.blocksList[id] instanceof IShearable && EnumMaterial.getToolFromMeta(itemstack.getItemDamage()) == EnumTool.SHEAR)
+        if (Block.blocksList[id] instanceof IShearable && EnumTool.getToolFromMeta(itemstack.getItemDamage()) == EnumTool.SHEAR)
         {
             IShearable target = (IShearable) Block.blocksList[id];
             if (target.isShearable(itemstack, player.worldObj, x, y, z))
@@ -274,7 +276,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
         {
             itemStack.setTagCompound(new NBTTagCompound());
         }
-        EnumMaterial mat = EnumMaterial.getToolMatFromMeta(itemStack.getItemDamage());
+        EnumMaterial mat = EnumTool.getToolMatFromMeta(itemStack.getItemDamage());
         if (entity instanceof EntityPlayer && ((EntityPlayer) entity).capabilities.isCreativeMode)
         {
             return;
@@ -336,20 +338,20 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
     @Override
     public boolean hitEntity(ItemStack itemStack, EntityLivingBase par2EntityLivingBase, EntityLivingBase par3EntityLivingBase)
     {
-        this.damage(itemStack, EnumMaterial.getToolFromMeta(itemStack.getItemDamage()) == EnumTool.SWORD ? 1 : 2, par2EntityLivingBase);
+        this.damage(itemStack, EnumTool.getToolFromMeta(itemStack.getItemDamage()) == EnumTool.SWORD ? 1 : 2, par2EntityLivingBase);
         return true;
     }
 
     @Override
     public boolean onBlockDestroyed(ItemStack itemStack, World par2World, int par3, int par4, int par5, int par6, EntityLivingBase par7EntityLivingBase)
     {
-        if (EnumMaterial.getToolFromMeta(itemStack.getItemDamage()) == EnumTool.SHEAR && par3 != Block.leaves.blockID && par3 != Block.web.blockID && par3 != Block.tallGrass.blockID && par3 != Block.vine.blockID && par3 != Block.tripWire.blockID && !(Block.blocksList[par3] instanceof IShearable))
+        if (EnumTool.getToolFromMeta(itemStack.getItemDamage()) == EnumTool.SHEAR && par3 != Block.leaves.blockID && par3 != Block.web.blockID && par3 != Block.tallGrass.blockID && par3 != Block.vine.blockID && par3 != Block.tripWire.blockID && !(Block.blocksList[par3] instanceof IShearable))
         {
             return false;
         }
         if (Block.blocksList[par3].getBlockHardness(par2World, par4, par5, par6) != 0.0D)
         {
-            this.damage(itemStack, EnumMaterial.getToolFromMeta(itemStack.getItemDamage()) == EnumTool.SWORD ? 2 : 1, par7EntityLivingBase);
+            this.damage(itemStack, EnumTool.getToolFromMeta(itemStack.getItemDamage()) == EnumTool.SWORD ? 2 : 1, par7EntityLivingBase);
         }
 
         return true;
@@ -388,8 +390,8 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
             {
                 return 0;
             }
-            EnumTool tool = EnumMaterial.getToolFromMeta(itemStack.getItemDamage());
-            EnumMaterial mat = EnumMaterial.getToolMatFromMeta(itemStack.getItemDamage());
+            EnumTool tool = EnumTool.getToolFromMeta(itemStack.getItemDamage());
+            EnumMaterial mat = EnumTool.getToolMatFromMeta(itemStack.getItemDamage());
             if (tool.effecticVsMaterials.contains(block.blockMaterial))
             {
                 return mat.materialEffectiveness + (tool == EnumTool.SHEAR && block.blockMaterial == Material.leaves ? 9f : 0f);
@@ -419,8 +421,8 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
             {
                 return false;
             }
-            EnumTool tool = EnumMaterial.getToolFromMeta(itemStack.getItemDamage());
-            EnumMaterial mat = EnumMaterial.getToolMatFromMeta(itemStack.getItemDamage());
+            EnumTool tool = EnumTool.getToolFromMeta(itemStack.getItemDamage());
+            EnumMaterial mat = EnumTool.getToolMatFromMeta(itemStack.getItemDamage());
             if (tool.effecticVsMaterials.contains(block.blockMaterial))
             {
                 return true;
@@ -450,30 +452,31 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
             itemStack.setTagCompound(new NBTTagCompound());
         }
         int damage = itemStack.getTagCompound().getInteger(TOOL_DAMAGE);
-        EnumMaterial mat = EnumMaterial.getToolMatFromMeta(itemStack.getItemDamage());
+        EnumMaterial mat = EnumTool.getToolMatFromMeta(itemStack.getItemDamage());
         return (damage / mat.maxUses) * 100;
     }
 
     @Override
     public Icon getIconFromDamage(int i)
     {
-        return EnumMaterial.getToolIcon(i);
+        return EnumTool.getToolIcon(i);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
     public void registerIcons(IconRegister iconRegister)
     {
-        for (EnumMaterial mat : EnumMaterial.values())
+        for (EnumTool tool : EnumTool.values())
         {
-            if (mat.hasTools)
+            for (EnumMaterial mat : EnumMaterial.values())
             {
-                mat.toolIcons = new Icon[EnumOrePart.values().length];
-                for (EnumTool tool : EnumTool.values())
+                if (mat.hasTools)
                 {
+                    tool.toolIcons = new Icon[EnumMaterial.values().length];
+
                     if (tool.enabled)
                     {
-                        mat.toolIcons[tool.ordinal()] = iconRegister.registerIcon(CoreMachine.getInstance().PREFIX + "tool." + mat.simpleName + tool.name);
+                        tool.toolIcons[mat.ordinal()] = iconRegister.registerIcon(CoreMachine.getInstance().PREFIX + "tool." + mat.simpleName + tool.name);
                     }
                 }
             }
@@ -489,12 +492,11 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
             {
                 for (EnumTool tool : EnumTool.values())
                 {
-                    ItemStack stack = EnumMaterial.getTool(tool, mat);
+                    ItemStack stack = tool.getTool(mat);
                     if (tool.enabled && stack != null)
                     {
                         this.onCreated(stack, null, null);
                         par3List.add(stack);
-
                     }
                 }
             }
@@ -524,7 +526,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
             {
                 for (EnumTool tool : EnumTool.values())
                 {
-                    ItemStack stack = EnumMaterial.getTool(tool, mat);
+                    ItemStack stack = tool.getTool(mat);
                     if (tool.enabled && stack != null)
                     {
                         OreDictionary.registerOre(EnumTool.getFullName(stack.getItemDamage()), stack);

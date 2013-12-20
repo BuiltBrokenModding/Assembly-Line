@@ -2,8 +2,6 @@ package dark.machines;
 
 import java.util.List;
 
-import com.dark.prefab.RecipeLoader;
-
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -11,22 +9,20 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+
+import com.dark.EnumMaterial;
+import com.dark.EnumOrePart;
+import com.dark.helpers.ColorCode;
+import com.dark.interfaces.IToolReadOut.EnumTools;
+import com.dark.prefab.RecipeLoader;
+
 import cpw.mods.fml.common.registry.GameRegistry;
-import dark.api.ColorCode;
-import dark.api.IToolReadOut.EnumTools;
 import dark.api.reciepes.MachineRecipeHandler;
 import dark.api.reciepes.ProcessorType;
-import dark.core.basics.BlockOre;
-import dark.core.basics.BlockOre.OreData;
-import dark.core.basics.EnumMaterial;
-import dark.core.basics.EnumOrePart;
-import dark.core.basics.EnumTool;
-import dark.core.basics.ItemCommonTool;
-import dark.core.basics.ItemOreDirv;
-import dark.core.basics.ItemParts;
-import dark.core.basics.ItemParts.Parts;
 import dark.machines.deco.BlockBasalt;
 import dark.machines.generators.BlockSolarPanel;
+import dark.machines.items.EnumTool;
+import dark.machines.items.ItemCommonTool;
 import dark.machines.items.ItemReadoutTools;
 import dark.machines.items.ItemWrench;
 import dark.machines.transmit.BlockWire;
@@ -44,17 +40,14 @@ public class CoreRecipeLoader extends RecipeLoader
     public static Block blockGas;
 
     /* ITEMS */
-    public static Item itemMetals, battery, itemTool, itemParts;
+    public static Item battery;
     public static Item wrench;
 
-    public static ItemStack leatherSeal, slimeSeal;
-    public static ItemStack valvePart;
-    public static ItemStack unfinishedTank;
     public static Item itemGlowingSand;
     public static Item itemDiggingTool;
     public static Item itemVehicleTest;
-    public static Item itemFluidCan;
     public static boolean debugOreItems = false;
+    public static Item itemTool;
 
     @Override
     public void loadRecipes()
@@ -79,169 +72,19 @@ public class CoreRecipeLoader extends RecipeLoader
         }
         if (itemDiggingTool instanceof ItemCommonTool)
         {
+
             for (EnumMaterial mat : EnumMaterial.values())
             {
                 if (mat.shouldCreateTool())
                 {
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getTool(EnumTool.PICKAX), "III", " S ", " S ", 'I', mat.getOreName(EnumOrePart.INGOTS), 'S', Item.stick));
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getTool(EnumTool.HOE), "II ", " S ", " S ", 'I', mat.getOreName(EnumOrePart.INGOTS), 'S', Item.stick));
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getTool(EnumTool.SPADE), " I ", " S ", " S ", 'I', mat.getOreName(EnumOrePart.INGOTS), 'S', Item.stick));
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getTool(EnumTool.AX), "II ", "IS ", " S ", 'I', mat.getOreName(EnumOrePart.INGOTS), 'S', Item.stick));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(EnumTool.PICKAX.getTool(mat), "III", " S ", " S ", 'I', mat.getOreName(EnumOrePart.INGOTS), 'S', Item.stick));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(EnumTool.HOE.getTool(mat), "II ", " S ", " S ", 'I', mat.getOreName(EnumOrePart.INGOTS), 'S', Item.stick));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(EnumTool.SPADE.getTool(mat), " I ", " S ", " S ", 'I', mat.getOreName(EnumOrePart.INGOTS), 'S', Item.stick));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(EnumTool.AX.getTool(mat), "II ", "IS ", " S ", 'I', mat.getOreName(EnumOrePart.INGOTS), 'S', Item.stick));
                     //GameRegistry.addRecipe(new ShapedOreRecipe(mat.getTool(EnumTool.SHEAR), "III", " S ", 'I', mat.getStack(EnumOrePart.INGOTS, 1)));
                 }
             }
         }
-        this.loadParts();
-    }
-
-    public void loadParts()
-    {
-        if (itemParts instanceof ItemParts)
-        {
-            leatherSeal = new ItemStack(itemParts, 1, Parts.Seal.ordinal());
-            slimeSeal = new ItemStack(itemParts, 1, Parts.GasSeal.ordinal());
-            valvePart = new ItemStack(itemParts, 1, Parts.Tank.ordinal());
-            unfinishedTank = new ItemStack(itemParts, 1, Parts.Tank.ordinal());
-
-            // seal
-            GameRegistry.addRecipe(this.setStackSize(leatherSeal, 16), new Object[] { "LL", "LL", 'L', Item.leather });
-            // slime steal
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 4, Parts.GasSeal.ordinal()), " # ", "#S#", " # ", '#', Parts.Seal.name, 'S', Item.slimeBall));
-            // part valve
-            GameRegistry.addRecipe(new ShapedOreRecipe(valvePart, new Object[] { "PLP", 'P', "ironPipe", 'L', Block.lever }));
-            //Basic Circuit
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.CircuitBasic.ordinal()), "!#!", "#@#", "!#!", '@', copperPlate, '#', Block.glass, '!', "copperWire"));
-            //Advanced Circuit
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.CircuitAdvanced.ordinal()), "!#!", "#@#", "!#!", '@', copperPlate, '#', Item.redstone, '!', "copperWire"));
-            //Elite Circuit
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.CircuitElite.ordinal()), "!#!", "#@#", "!#!", '@', "plateGold", '#', Item.redstone, '!', "copperWire"));
-
-            // unfinished tank
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.Tank.ordinal()), " # ", "# #", " # ", '#', bronze));
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.Tank.ordinal()), " # ", "# #", " # ", '#', steel));
-            //Motor
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.Motor.ordinal()), new Object[] { "@!@", "!#!", "@!@", '!', steel, '#', Item.ingotIron, '@', new ItemStack(itemParts, 8, Parts.COIL.ordinal()) }));
-            //Laser Diode
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 4, Parts.LASER.ordinal()), new Object[] { " G ", "!S!", " C ", '!', "copperWire", 'G', Block.glass, 'S', Block.sand, 'C', RecipeLoader.circuit }));
-            //Coil
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 8, Parts.COIL.ordinal()), new Object[] { "WWW", "W W", "WWW", 'W', "copperWire" }));
-
-        }
-
-        if (itemMetals instanceof ItemOreDirv)
-        {
-            //Alt salvaging item list
-            MachineRecipeHandler.newAltProcessorOutput(ProcessorType.GRINDER, Block.wood, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.DUST, 3));
-            MachineRecipeHandler.newAltProcessorOutput(ProcessorType.GRINDER, Block.planks, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.DUST, 1));
-
-            MachineRecipeHandler.newAltProcessorOutput(ProcessorType.CRUSHER, Block.wood, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.SCRAPS, 3));
-            MachineRecipeHandler.newAltProcessorOutput(ProcessorType.CRUSHER, Block.planks, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.SCRAPS, 1));
-
-            //Stone recipes
-            MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, Block.stone, EnumMaterial.getStack(EnumMaterial.STONE, EnumOrePart.DUST, 1));
-
-            //Wood recipes
-            MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, Block.wood, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.DUST, 3));
-            MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, Block.planks, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.DUST, 1));
-            MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, Block.wood, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.SCRAPS, 3));
-            MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, Block.planks, EnumMaterial.getStack(EnumMaterial.WOOD, EnumOrePart.SCRAPS, 1));
-
-            //Gold Recipes
-            MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, Block.blockIron, EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.SCRAPS, 8));
-            MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, Block.oreIron, EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.RUBBLE, 1));
-            //Iron Recipes
-            MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, Block.blockGold, EnumMaterial.getStack(EnumMaterial.GOLD, EnumOrePart.SCRAPS, 8));
-            MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, Block.oreGold, EnumMaterial.getStack(EnumMaterial.GOLD, EnumOrePart.RUBBLE, 1));
-            //Dust recipes
-            GameRegistry.addShapelessRecipe(EnumMaterial.getStack(EnumMaterial.STEEL, EnumOrePart.DUST, 1), new Object[] { EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.DUST, 1), new ItemStack(Item.coal, 1, 0), new ItemStack(Item.coal, 1, 0) });
-            GameRegistry.addShapelessRecipe(EnumMaterial.getStack(EnumMaterial.STEEL, EnumOrePart.DUST, 1), new Object[] { EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.DUST, 1), new ItemStack(Item.coal, 1, 1), new ItemStack(Item.coal, 1, 1) });
-            GameRegistry.addShapelessRecipe(EnumMaterial.getStack(EnumMaterial.STEEL, EnumOrePart.DUST, 1), new Object[] { EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.DUST, 1), new ItemStack(Item.coal, 1, 1), new ItemStack(Item.coal, 1, 0) });
-            GameRegistry.addShapelessRecipe(EnumMaterial.getStack(EnumMaterial.BRONZE, EnumOrePart.DUST, 4), new Object[] { EnumMaterial.getStack(EnumMaterial.COPPER, EnumOrePart.DUST, 1), EnumMaterial.getStack(EnumMaterial.COPPER, EnumOrePart.DUST, 1), EnumMaterial.getStack(EnumMaterial.COPPER, EnumOrePart.DUST, 1), EnumMaterial.getStack(EnumMaterial.TIN, EnumOrePart.DUST, 1) });
-
-            if (debugOreItems)
-            {
-                System.out.println("\n\nTesting material part returns");
-                for (EnumMaterial mat : EnumMaterial.values())
-                {
-                    System.out.println("\n-Material-> " + mat.simpleName);
-                    for (EnumOrePart part : EnumOrePart.values())
-                    {
-                        if (mat.shouldCreateItem(part))
-                        {
-                            System.out.println("--Part-> " + part.simpleName);
-                            System.out.println("----ItemStack-> " + mat.getStack(part, 1).toString());
-                        }
-                    }
-                }
-            }
-            //Ore material recipe loop
-            for (EnumMaterial mat : EnumMaterial.values())
-            {
-                //Dust recipes
-                if (mat.shouldCreateItem(EnumOrePart.DUST))
-                {
-                    FurnaceRecipes.smelting().addSmelting(mat.getStack(EnumOrePart.DUST, 1).itemID, mat.getStack(EnumOrePart.DUST, 1).getItemDamage(), mat.getStack(EnumOrePart.INGOTS, 1), 0.6f);
-                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, mat.getStack(EnumOrePart.RUBBLE, 1), mat.getStack(EnumOrePart.DUST, 1), 1, 4);
-                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, mat.getStack(EnumOrePart.SCRAPS, 1), mat.getStack(EnumOrePart.DUST, 1));
-                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.DUST, 1));
-                    MachineRecipeHandler.newAltProcessorOutput(ProcessorType.GRINDER, mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.DUST, 1));
-                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, mat.getStack(EnumOrePart.PLATES, 1), mat.getStack(EnumOrePart.DUST, 1), 2, 4);
-                    MachineRecipeHandler.newAltProcessorOutput(ProcessorType.GRINDER, mat.getStack(EnumOrePart.PLATES, 1), mat.getStack(EnumOrePart.DUST, 3));
-                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, mat.getStack(EnumOrePart.ROD, 1), mat.getStack(EnumOrePart.DUST, 1));
-                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, mat.getStack(EnumOrePart.TUBE, 1), mat.getStack(EnumOrePart.DUST, 1));
-                }
-
-                // Salvaging recipe
-
-                if (mat.shouldCreateItem(EnumOrePart.SCRAPS))
-                {
-                    FurnaceRecipes.smelting().addSmelting(mat.getStack(EnumOrePart.SCRAPS, 1).itemID, mat.getStack(EnumOrePart.SCRAPS, 1).getItemDamage(), mat.getStack(EnumOrePart.INGOTS, 1), 0.6f);
-                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, mat.getStack(EnumOrePart.PLATES, 1), mat.getStack(EnumOrePart.SCRAPS, 3));
-                    MachineRecipeHandler.newAltProcessorOutput(ProcessorType.CRUSHER, mat.getStack(EnumOrePart.PLATES, 1), mat.getStack(EnumOrePart.SCRAPS, 3));
-                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, mat.getStack(EnumOrePart.RUBBLE, 1), mat.getStack(EnumOrePart.SCRAPS, 1), 1, 5);
-                    MachineRecipeHandler.newAltProcessorOutput(ProcessorType.CRUSHER, mat.getStack(EnumOrePart.INGOTS, 1), mat.getStack(EnumOrePart.SCRAPS, 1));
-                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, mat.getStack(EnumOrePart.ROD, 1), mat.getStack(EnumOrePart.SCRAPS, 1));
-                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, mat.getStack(EnumOrePart.TUBE, 1), mat.getStack(EnumOrePart.SCRAPS, 1));
-                }
-                if (mat.shouldCreateItem(EnumOrePart.TUBE))
-                {
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.TUBE, 6), new Object[] { "I", "I", "I", 'I', mat.getOreName(EnumOrePart.INGOTS) }));
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.TUBE, 6), new Object[] { "I", "I", "I", 'I', mat.getOreNameReverse(EnumOrePart.INGOTS) }));
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.TUBE, 1), new Object[] { "I", 'I', mat.getOreName(EnumOrePart.ROD) }));
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.TUBE, 1), new Object[] { "I", 'I', mat.getOreNameReverse(EnumOrePart.ROD) }));
-                }
-                if (mat.shouldCreateItem(EnumOrePart.ROD))
-                {
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.ROD, 4), new Object[] { "I", "I", 'I', mat.getOreName(EnumOrePart.ROD) }));
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.ROD, 4), new Object[] { "I", "I", 'I', mat.getOreNameReverse(EnumOrePart.ROD) }));
-                }
-                if (mat.shouldCreateItem(EnumOrePart.PLATES))
-                {
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.PLATES, 1), new Object[] { "II", "II", 'I', mat.getOreName(EnumOrePart.INGOTS) }));
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.PLATES, 1), new Object[] { "II", "II", 'I', mat.getOreNameReverse(EnumOrePart.INGOTS) }));
-                }
-                if (mat.shouldCreateItem(EnumOrePart.GEARS))
-                {
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(EnumOrePart.GEARS, 4), new Object[] { " I ", "IRI", " I ", 'I', mat.getOreName(EnumOrePart.INGOTS), 'R', mat.shouldCreateItem(EnumOrePart.ROD) ? mat.getOreName(EnumOrePart.ROD) : Item.stick }));
-                }
-
-            }
-        }
-
-        if (blockOre instanceof BlockOre)
-        {
-            for (OreData data : OreData.values())
-            {
-                if (CoreRecipeLoader.itemMetals instanceof ItemOreDirv)
-                {
-                    FurnaceRecipes.smelting().addSmelting(blockOre.blockID, data.ordinal(), EnumMaterial.getStack(data.mat, EnumOrePart.INGOTS, 1), 0.6f);
-                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, new ItemStack(blockOre.blockID, 1, data.ordinal()), EnumMaterial.getStack(data.mat, EnumOrePart.RUBBLE, 1), 1, 2);
-                    MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, new ItemStack(blockOre.blockID, 1, data.ordinal()), EnumMaterial.getStack(data.mat, EnumOrePart.DUST, 1), 1, 3);
-
-                }
-            }
-        }
-
     }
 
     public void loadStainGlass()
@@ -299,91 +142,6 @@ public class CoreRecipeLoader extends RecipeLoader
         }
 
     }
-    
-    public static void parseOreNames(Configuration config)
-    {
-        if (config.get("Ore", "processOreDictionary", true, "Scans the ore dictionary and adds other mods ore to the machine recipes").getBoolean(true))
-        {
-            for (EnumMaterial mat : EnumMaterial.values())
-            {                //Ingots
-                List<ItemStack> ingots = OreDictionary.getOres("ingot" + mat.simpleName);
-                ingots.addAll(OreDictionary.getOres(mat.simpleName + "ingot"));
-                //plate
-                List<ItemStack> plates = OreDictionary.getOres("plate" + mat.simpleName);
-                plates.addAll(OreDictionary.getOres(mat.simpleName + "plate"));
-                //ore
-                List<ItemStack> ores = OreDictionary.getOres("ore" + mat.simpleName);
-                ores.addAll(OreDictionary.getOres(mat.simpleName + "ore"));
-                //dust
-                List<ItemStack> dusts = OreDictionary.getOres("dust" + mat.simpleName);
-                dusts.addAll(OreDictionary.getOres(mat.simpleName + "dust"));
-                for (ItemStack du : dusts)
-                {
-                    if (mat.shouldCreateItem(EnumOrePart.INGOTS) && config.get("Ore", "OverrideDustSmelthing", true, "Overrides other mods dust smelting so the ingots smelt as the same item.").getBoolean(true))
-                    {
-                        FurnaceRecipes.smelting().addSmelting(du.itemID, du.getItemDamage(), mat.getStack(EnumOrePart.INGOTS, 1), 0.6f);
-                    }
-                }
 
-                for (ItemStack ing : ingots)
-                {
-                    if (mat.shouldCreateItem(EnumOrePart.DUST))
-                    {
-                        MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, ing, mat.getStack(EnumOrePart.DUST, 1));
-                        MachineRecipeHandler.newAltProcessorOutput(ProcessorType.GRINDER, ing, mat.getStack(EnumOrePart.DUST, 1));
-                    }
-                    if (mat.shouldCreateItem(EnumOrePart.SCRAPS))
-                    {
-                        MachineRecipeHandler.newAltProcessorOutput(ProcessorType.CRUSHER, ing, mat.getStack(EnumOrePart.SCRAPS, 1));
-                        MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, ing, mat.getStack(EnumOrePart.SCRAPS, 1));
-                    }
-                    if (mat.shouldCreateItem(EnumOrePart.INGOTS))
-                    {
-                        GameRegistry.addShapelessRecipe(mat.getStack(EnumOrePart.INGOTS, 1), new Object[] { ing });
-                    }
-                }
-                for (ItemStack pla : plates)
-                {
-                    if (mat.shouldCreateItem(EnumOrePart.DUST))
-                    {
-
-                        MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, pla, mat.getStack(EnumOrePart.DUST, 1));
-                        MachineRecipeHandler.newAltProcessorOutput(ProcessorType.GRINDER, pla, mat.getStack(EnumOrePart.DUST, 1));
-
-                    }
-                    if (mat.shouldCreateItem(EnumOrePart.SCRAPS))
-                    {
-
-                        MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, pla, mat.getStack(EnumOrePart.SCRAPS, 1));
-                        MachineRecipeHandler.newAltProcessorOutput(ProcessorType.CRUSHER, pla, mat.getStack(EnumOrePart.SCRAPS, 1));
-
-                    }
-                    if (mat.shouldCreateItem(EnumOrePart.PLATES))
-                    {
-                        GameRegistry.addShapelessRecipe(mat.getStack(EnumOrePart.PLATES, 1), new Object[] { pla });
-                        if (config.get("Ore", "OverridePlateCrafting", true, "Overrides other mods metal plate crafting. As well creates new recipes for mod ingots without plate crafting.").getBoolean(true))
-                        {
-                            GameRegistry.addShapelessRecipe(mat.getStack(EnumOrePart.INGOTS, 4), new Object[] { pla });
-                        }
-                    }
-                }
-                for (ItemStack ore : ores)
-                {
-                    if (mat.shouldCreateItem(EnumOrePart.RUBBLE))
-                    {
-                        MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, ore, mat.getStack(EnumOrePart.RUBBLE, 1), 1, 2);
-                    }
-                    if (mat.shouldCreateItem(EnumOrePart.DUST))
-                    {
-                        MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, ore, mat.getStack(EnumOrePart.DUST, 1), 1, 3);
-                    }
-                    if (mat.shouldCreateItem(EnumOrePart.INGOTS) && config.get("Ore", "OverrideOreSmelthing", true, "Overrides other mods smelting recipes for ingots").getBoolean(true))
-                    {
-                        FurnaceRecipes.smelting().addSmelting(ore.itemID, ore.getItemDamage(), mat.getStack(EnumOrePart.INGOTS, 1), 0.6f);
-                    }
-                }
-
-            }
-        }
-    }
+   
 }

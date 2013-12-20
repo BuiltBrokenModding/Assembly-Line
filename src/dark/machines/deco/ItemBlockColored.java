@@ -1,9 +1,10 @@
 package dark.machines.deco;
 
+import com.dark.helpers.ColorCode;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import dark.api.ColorCode;
 import dark.machines.CoreMachine;
 
 public class ItemBlockColored extends ItemBlock

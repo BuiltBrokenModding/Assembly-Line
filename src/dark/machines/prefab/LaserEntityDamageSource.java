@@ -1,4 +1,4 @@
-package dark.core.prefab;
+package dark.machines.prefab;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityCreeper;

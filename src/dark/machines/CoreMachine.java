@@ -1,28 +1,22 @@
 package dark.machines;
 
-import java.awt.Color;
 import java.io.File;
 import java.util.Arrays;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.ore.OreGenReplaceStone;
 import universalelectricity.prefab.ore.OreGenerator;
 
 import com.dark.CoreRegistry;
 import com.dark.DarkCore;
-import com.dark.IndustryTabs;
 import com.dark.fluid.EnumGas;
 import com.dark.network.PacketDataWatcher;
 import com.dark.network.PacketHandler;
-import com.dark.prefab.BlockMulti;
 import com.dark.prefab.ItemBlockHolder;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -43,21 +37,10 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
-import dark.api.reciepes.MachineRecipeHandler;
-import dark.core.basics.BlockGasOre;
-import dark.core.basics.BlockOre;
-import dark.core.basics.BlockOre.OreData;
-import dark.core.basics.EnumMaterial;
-import dark.core.basics.EnumOrePart;
-import dark.core.basics.GasOreGenerator;
-import dark.core.basics.ItemBlockOre;
-import dark.core.basics.ItemCommonTool;
-import dark.core.basics.ItemOreDirv;
-import dark.core.basics.ItemParts;
-import dark.core.basics.ItemParts.Parts;
-import dark.core.prefab.ModPrefab;
-import dark.core.prefab.entities.EntityTestCar;
-import dark.core.prefab.entities.ItemVehicleSpawn;
+import dark.machines.blocks.BlockGasOre;
+import dark.machines.blocks.BlockOre;
+import dark.machines.blocks.BlockOre.OreData;
+import dark.machines.blocks.GasOreGenerator;
 import dark.machines.deco.BlockBasalt;
 import dark.machines.deco.BlockColorGlass;
 import dark.machines.deco.BlockColorGlowGlass;
@@ -66,13 +49,17 @@ import dark.machines.deco.ItemBlockColored;
 import dark.machines.generators.BlockSmallSteamGen;
 import dark.machines.generators.BlockSolarPanel;
 import dark.machines.items.ItemBattery;
+import dark.machines.items.ItemBlockOre;
 import dark.machines.items.ItemColoredDust;
-import dark.machines.items.ItemFluidCan;
+import dark.machines.items.ItemCommonTool;
 import dark.machines.items.ItemReadoutTools;
 import dark.machines.items.ItemWrench;
 import dark.machines.machines.BlockDebug;
 import dark.machines.machines.BlockEnergyStorage;
 import dark.machines.machines.ItemBlockEnergyStorage;
+import dark.machines.prefab.ModPrefab;
+import dark.machines.prefab.entities.EntityTestCar;
+import dark.machines.prefab.entities.ItemVehicleSpawn;
 import dark.machines.transmit.BlockWire;
 import dark.machines.transmit.ItemBlockWire;
 
@@ -110,7 +97,7 @@ public class CoreMachine extends ModPrefab
     private static CoreMachine instance;
 
     public static CoreRecipeLoader recipeLoader;
-    
+
     public static CoreMachine getInstance()
     {
         if (instance == null)
@@ -165,17 +152,7 @@ public class CoreMachine extends ModPrefab
                 }
             }
         }
-        if (CoreRecipeLoader.itemParts != null)
-        {
-            for (Parts part : Parts.values())
-            {
-                OreDictionary.registerOre(part.name, new ItemStack(CoreRecipeLoader.itemParts, 1, part.ordinal()));
-            }
-        }
-        if (CoreRecipeLoader.itemMetals != null)
-        {
-            MinecraftForge.EVENT_BUS.register(CoreRecipeLoader.itemMetals);
-        }
+
         FMLLog.info(" Loaded: " + TranslationHelper.loadLanguages(DarkCore.LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
         proxy.init();
     }
@@ -186,17 +163,6 @@ public class CoreMachine extends ModPrefab
     {
         super.postInit(event);
         proxy.postInit();
-        if (CoreRecipeLoader.itemParts instanceof ItemParts)
-        {
-            IndustryTabs.tabMining().itemStack = new ItemStack(CoreRecipeLoader.itemParts.itemID, 1, ItemParts.Parts.MiningIcon.ordinal());
-        }
-        if (CoreRecipeLoader.itemMetals instanceof ItemOreDirv)
-        {
-            IndustryTabs.tabIndustrial().itemStack = EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.GEARS, 1); 
-            CoreRecipeLoader.parseOreNames(CONFIGURATION);
-        }
-       
-        CONFIGURATION.save();
     }
 
     @Override
@@ -215,7 +181,7 @@ public class CoreMachine extends ModPrefab
             CoreMachine.zeroRendering = CONFIGURATION.get("Graphics", "DisableAllRendering", false, "Replaces all model renderers with single block forms").getBoolean(false);
             CoreMachine.zeroGraphics = CONFIGURATION.get("Graphics", "DisableAllGraphics", false, "Disables extra effects that models and renders have. Such as particles, and text").getBoolean(false);
         }
-        /* BLOCKS */       
+        /* BLOCKS */
         CoreRecipeLoader.blockSteamGen = CoreRegistry.createNewBlock("DMBlockSteamMachine", CoreMachine.MOD_ID, BlockSmallSteamGen.class, ItemBlockHolder.class);
         CoreRecipeLoader.blockOre = CoreRegistry.createNewBlock("DMBlockOre", CoreMachine.MOD_ID, BlockOre.class, ItemBlockOre.class);
         CoreRecipeLoader.blockWire = CoreRegistry.createNewBlock("DMBlockWire", CoreMachine.MOD_ID, BlockWire.class, ItemBlockWire.class);
@@ -230,15 +196,12 @@ public class CoreMachine extends ModPrefab
 
         /* ITEMS */
         CoreRecipeLoader.itemTool = CoreRegistry.createNewItem("DMReadoutTools", CoreMachine.MOD_ID, ItemReadoutTools.class, true);
-        CoreRecipeLoader.itemMetals = CoreRegistry.createNewItem("DMOreDirvParts", CoreMachine.MOD_ID, ItemOreDirv.class, true);
         CoreRecipeLoader.battery = CoreRegistry.createNewItem("DMItemBattery", CoreMachine.MOD_ID, ItemBattery.class, true);
         CoreRecipeLoader.wrench = CoreRegistry.createNewItem("DMWrench", CoreMachine.MOD_ID, ItemWrench.class, true);
-        CoreRecipeLoader.itemParts = CoreRegistry.createNewItem("DMCraftingParts", CoreMachine.MOD_ID, ItemParts.class, true);
         CoreRecipeLoader.itemGlowingSand = CoreRegistry.createNewItem("DMItemGlowingSand", CoreMachine.MOD_ID, ItemColoredDust.class, true);
         CoreRecipeLoader.itemDiggingTool = CoreRegistry.createNewItem("ItemDiggingTools", CoreMachine.MOD_ID, ItemCommonTool.class, true);
         CoreRecipeLoader.itemVehicleTest = CoreRegistry.createNewItem("ItemVehicleTest", CoreMachine.MOD_ID, ItemVehicleSpawn.class, true);
-        CoreRecipeLoader.itemFluidCan = CoreRegistry.createNewItem("ItemFluidCan", CoreMachine.MOD_ID, ItemFluidCan.class, true);
-        //Config saves in post init to allow for other feature to access it
+        CONFIGURATION.save();
 
     }
 

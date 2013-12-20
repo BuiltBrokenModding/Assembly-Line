@@ -1,4 +1,4 @@
-package dark.core.basics;
+package dark.machines.blocks;
 
 import java.util.Random;
 

@@ -4,7 +4,7 @@ import java.util.EnumSet;
 
 import micdoodle8.mods.galacticraft.api.world.ISolarLevel;
 import net.minecraftforge.common.ForgeDirection;
-import dark.core.prefab.machine.TileEntityGenerator;
+import dark.machines.machines.TileEntityGenerator;
 
 public class TileEntitySolarPanel extends TileEntityGenerator
 {

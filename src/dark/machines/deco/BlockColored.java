@@ -2,6 +2,8 @@ package dark.machines.deco;
 
 import java.util.List;
 
+import com.dark.helpers.ColorCode;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -11,7 +13,6 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.api.ColorCode;
 import dark.machines.CoreMachine;
 
 /** Prefab class to make any block have 16 separate color instances similar to wool block

@@ -1,9 +1,16 @@
-package dark.core.basics;
+package dark.machines.items;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dark.EnumMaterial;
+
 import net.minecraft.block.material.Material;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Icon;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import dark.machines.CoreRecipeLoader;
 
 /** Enum to store tools that can be created from the material sheet.
  * 
@@ -24,6 +31,10 @@ public enum EnumTool
     public final List<Material> effecticVsMaterials = new ArrayList<Material>();
     public String name = "tool";
     public boolean enabled = false;
+    public static final int toolCountPerMaterial = 10;
+
+    @SideOnly(Side.CLIENT)
+    public Icon[] toolIcons;
 
     private EnumTool()
     {
@@ -60,12 +71,56 @@ public enum EnumTool
 
     public static String getFullName(int meta)
     {
-        EnumMaterial mat = EnumMaterial.getToolMatFromMeta(meta);
-        EnumTool tool = EnumMaterial.getToolFromMeta(meta);
+        EnumMaterial mat = getToolMatFromMeta(meta);
+        EnumTool tool = getToolFromMeta(meta);
         if (mat != null && tool != null)
         {
             return mat.simpleName + tool.name;
         }
         return "CommonTool[" + meta + "]";
     }
+
+    public static ItemStack getTool(EnumTool tool, EnumMaterial mat)
+    {
+        return tool.getTool(mat);
+    }
+
+    public ItemStack getTool(EnumMaterial mat)
+    {
+        ItemStack stack = null;
+        if (CoreRecipeLoader.itemDiggingTool instanceof ItemCommonTool)
+        {
+            stack = new ItemStack(CoreRecipeLoader.itemDiggingTool.itemID, 1, (mat.ordinal() * toolCountPerMaterial) + this.ordinal());
+        }
+        return stack;
+    }
+
+    public static EnumTool getToolFromMeta(int meta)
+    {
+        return EnumTool.values()[meta % toolCountPerMaterial];
+    }
+
+    public static EnumMaterial getToolMatFromMeta(int meta)
+    {
+        return EnumMaterial.values()[meta / toolCountPerMaterial];
+    }
+
+    public static Icon getToolIcon(int metadata)
+    {
+        int mat = getToolMatFromMeta(metadata).ordinal();
+        int tool = getToolFromMeta(metadata).ordinal();
+        if (mat < EnumMaterial.values().length)
+        {
+            if (EnumTool.values()[tool].toolIcons == null)
+            {
+                EnumTool.values()[tool].toolIcons = new Icon[EnumMaterial.values().length];
+            }
+            if (tool < EnumTool.values()[tool].toolIcons.length)
+            {
+                return EnumTool.values()[tool].toolIcons[mat];
+            }
+        }
+        return null;
+    }
+
 }

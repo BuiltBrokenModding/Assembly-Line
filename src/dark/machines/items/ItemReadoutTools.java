@@ -22,12 +22,12 @@ import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 
 import com.dark.DarkCore;
 import com.dark.fluid.FluidHelper;
+import com.dark.interfaces.IToolReadOut;
+import com.dark.interfaces.IToolReadOut.EnumTools;
 import com.dark.prefab.ItemBasic;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.api.IToolReadOut;
-import dark.api.IToolReadOut.EnumTools;
 import dark.machines.CoreMachine;
 
 public class ItemReadoutTools extends ItemBasic

@@ -5,7 +5,6 @@ import java.awt.Color;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.client.MinecraftForgeClient;
 import universalelectricity.core.vector.Vector3;
 
 import com.dark.DarkCore;
@@ -15,21 +14,19 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.prefab.entities.EntityTestCar;
 import dark.machines.CommonProxy;
-import dark.machines.CoreRecipeLoader;
 import dark.machines.client.gui.GuiBatteryBox;
 import dark.machines.client.renders.BlockRenderingHandler;
-import dark.machines.client.renders.ItemRenderFluidCan;
 import dark.machines.client.renders.RenderTestCar;
 import dark.machines.machines.TileEntityBatteryBox;
+import dark.machines.prefab.entities.EntityTestCar;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy
 {
 
     /** Renders a laser beam from one power to another by a set color for a set time
-     *
+     * 
      * @param world - world this laser is to be rendered in
      * @param position - start vector3
      * @param target - end vector3
@@ -54,8 +51,7 @@ public class ClientProxy extends CommonProxy
     public void init()
     {
         RenderingRegistry.registerBlockHandler(new BlockRenderingHandler());
-        if (CoreRecipeLoader.itemFluidCan != null)
-            MinecraftForgeClient.registerItemRenderer(CoreRecipeLoader.itemFluidCan.itemID, new ItemRenderFluidCan());
+
     }
 
     @Override
