@@ -15,7 +15,7 @@ import com.builtbroken.assemblyline.client.model.ModelGrinder;
 import com.builtbroken.assemblyline.client.model.ModelManipulator;
 import com.builtbroken.assemblyline.client.model.ModelRejectorPiston;
 import com.builtbroken.assemblyline.machine.red.BlockAdvancedHopper;
-import com.dark.DarkCore;
+import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;

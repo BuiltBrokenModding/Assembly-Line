@@ -1,9 +1,9 @@
 package dark.machines.machines;
 
-import com.dark.prefab.TileEntityEnergyMachine;
-
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityPack;
+
+import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 
 public abstract class TileEntityGenerator extends TileEntityEnergyMachine
 {

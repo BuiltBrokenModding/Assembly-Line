@@ -1,7 +1,8 @@
 package dark.machines.prefab.entities;
 
 import net.minecraft.world.World;
-import dark.machines.CoreRecipeLoader;
+
+import com.builtbroken.assemblyline.ALRecipeLoader;
 
 public class EntityTestCar extends EntityVehicle
 {
@@ -26,7 +27,7 @@ public class EntityTestCar extends EntityVehicle
     @Override
     public void dropAsItem()
     {
-        this.dropItemWithOffset(CoreRecipeLoader.itemVehicleTest.itemID, 1, 0.0F);
+        this.dropItemWithOffset(ALRecipeLoader.itemVehicleTest.itemID, 1, 0.0F);
     }
 
 }

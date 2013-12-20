@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.builtbroken.assemblyline.client.model.ModelTankSide;
 import com.builtbroken.assemblyline.machine.TileEntityTank;
-import com.dark.helpers.ColorCode;
+import com.builtbroken.minecraft.helpers.ColorCode;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

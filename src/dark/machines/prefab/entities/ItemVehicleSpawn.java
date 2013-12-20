@@ -13,8 +13,8 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-import com.dark.DarkCore;
-import com.dark.IndustryTabs;
+import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.IndustryTabs;
 
 
 /** Basic item used to spawn a vehicle

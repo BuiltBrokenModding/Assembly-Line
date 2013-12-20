@@ -14,7 +14,7 @@ import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 import com.builtbroken.assemblyline.client.render.BlockRenderHelper;
 import com.builtbroken.common.Pair;
-import com.dark.fluid.FluidHelper;
+import com.builtbroken.minecraft.fluid.FluidHelper;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

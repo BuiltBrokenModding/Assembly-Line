@@ -4,8 +4,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.core.vector.Vector3;
 
-import com.dark.interfaces.IMultiBlock;
-import com.dark.prefab.TileEntityMachine;
+import com.builtbroken.minecraft.interfaces.IMultiBlock;
+import com.builtbroken.minecraft.prefab.TileEntityMachine;
 
 public class TileEntityPistonPlus extends TileEntityMachine implements IMultiBlock
 {

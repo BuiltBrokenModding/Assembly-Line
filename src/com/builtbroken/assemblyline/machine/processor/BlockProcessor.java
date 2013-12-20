@@ -20,13 +20,13 @@ import com.builtbroken.assemblyline.CommonProxy;
 import com.builtbroken.assemblyline.client.render.BlockRenderingHandler;
 import com.builtbroken.assemblyline.client.render.RenderProcessor;
 import com.builtbroken.common.Pair;
-import com.dark.IndustryTabs;
-import com.dark.prefab.BlockMachine;
+import com.builtbroken.minecraft.IndustryTabs;
+import com.builtbroken.minecraft.prefab.BlockMachine;
+import com.builtbroken.minecraft.recipes.ProcessorType;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.api.reciepes.ProcessorType;
 
 public class BlockProcessor extends BlockMachine
 {

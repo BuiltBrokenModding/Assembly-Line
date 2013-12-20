@@ -9,9 +9,9 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import com.builtbroken.assemblyline.api.fluid.INetworkPipe;
-import com.dark.fluid.FluidHelper;
-import com.dark.tilenetwork.INetworkPart;
-import com.dark.tilenetwork.prefab.NetworkUpdateHandler;
+import com.builtbroken.minecraft.fluid.FluidHelper;
+import com.builtbroken.minecraft.tilenetwork.INetworkPart;
+import com.builtbroken.minecraft.tilenetwork.prefab.NetworkUpdateHandler;
 
 /** Extension on the fluid container network to provide a more advanced reaction to fluid passing
  * threw each pipe. As well this doubled as a pressure network for those machines that support the

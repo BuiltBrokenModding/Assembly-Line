@@ -17,8 +17,8 @@ import net.minecraft.world.World;
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.client.render.RenderAdvancedHopper;
 import com.builtbroken.common.Pair;
-import com.dark.IndustryTabs;
-import com.dark.prefab.BlockMachine;
+import com.builtbroken.minecraft.IndustryTabs;
+import com.builtbroken.minecraft.prefab.BlockMachine;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

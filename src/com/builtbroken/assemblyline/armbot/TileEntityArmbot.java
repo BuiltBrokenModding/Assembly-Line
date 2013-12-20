@@ -25,12 +25,12 @@ import com.builtbroken.assemblyline.api.coding.ProgramHelper;
 import com.builtbroken.assemblyline.machine.TileEntityAssembly;
 import com.builtbroken.assemblyline.machine.encoder.ItemDisk;
 import com.builtbroken.common.Pair;
-import com.dark.DarkCore;
-import com.dark.helpers.DarksHelper;
-import com.dark.helpers.MathHelper;
-import com.dark.interfaces.IMultiBlock;
-import com.dark.network.PacketHandler;
-import com.dark.prefab.BlockMulti;
+import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.helpers.DarksHelper;
+import com.builtbroken.minecraft.helpers.MathHelper;
+import com.builtbroken.minecraft.interfaces.IMultiBlock;
+import com.builtbroken.minecraft.network.PacketHandler;
+import com.builtbroken.minecraft.prefab.BlockMulti;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLCommonHandler;

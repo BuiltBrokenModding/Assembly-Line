@@ -14,8 +14,8 @@ import universalelectricity.prefab.tile.IRotatable;
 import com.builtbroken.assemblyline.api.IManipulator;
 import com.builtbroken.assemblyline.imprinter.ItemImprinter;
 import com.builtbroken.assemblyline.imprinter.prefab.TileEntityFilterable;
-import com.dark.helpers.InvInteractionHelper;
-import com.dark.network.PacketHandler;
+import com.builtbroken.minecraft.helpers.InvInteractionHelper;
+import com.builtbroken.minecraft.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;

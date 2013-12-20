@@ -1,6 +1,6 @@
 package com.builtbroken.assemblyline.fluid.pipes;
 
-import com.dark.helpers.ColorCode.IColoredId;
+import com.builtbroken.minecraft.helpers.ColorCode.IColoredId;
 
 public interface IPipeType extends IColoredId
 {

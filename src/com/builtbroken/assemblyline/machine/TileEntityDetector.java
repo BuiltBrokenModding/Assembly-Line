@@ -12,7 +12,7 @@ import net.minecraftforge.common.ForgeDirection;
 
 import com.builtbroken.assemblyline.ALRecipeLoader;
 import com.builtbroken.assemblyline.imprinter.prefab.TileEntityFilterable;
-import com.dark.network.PacketHandler;
+import com.builtbroken.minecraft.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;

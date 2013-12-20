@@ -1,4 +1,4 @@
-package dark.machines.blocks;
+package com.builtbroken.assemblyline.blocks;
 
 import java.util.List;
 import java.util.Set;
@@ -16,15 +16,15 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.prefab.ore.OreGenReplaceStone;
 
+import com.builtbroken.assemblyline.ALRecipeLoader;
+import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.common.Pair;
-import com.dark.DarkCore;
-import com.dark.EnumMaterial;
-import com.dark.IExtraInfo.IExtraBlockInfo;
+import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.EnumMaterial;
+import com.builtbroken.minecraft.IExtraInfo.IExtraBlockInfo;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.CoreRecipeLoader;
-import dark.machines.CoreMachine;
 
 public class BlockOre extends Block implements IExtraBlockInfo
 {
@@ -32,9 +32,9 @@ public class BlockOre extends Block implements IExtraBlockInfo
 
     public BlockOre()
     {
-        super(CoreMachine.CONFIGURATION.getBlock("Ore", DarkCore.getNextID()).getInt(), Material.rock);
+        super(AssemblyLine.CONFIGURATION.getBlock("Ore", DarkCore.getNextID()).getInt(), Material.rock);
         this.setCreativeTab(CreativeTabs.tabBlock);
-        this.setUnlocalizedName(CoreMachine.getInstance().PREFIX + "Ore");
+        this.setUnlocalizedName(AssemblyLine.PREFIX + "Ore");
         this.setHardness(2.5f);
         this.setResistance(5.0f);
 
@@ -65,7 +65,7 @@ public class BlockOre extends Block implements IExtraBlockInfo
     {
         for (OreData data : OreData.values())
         {
-            data.oreIcon = par1IconRegister.registerIcon(CoreMachine.getInstance().PREFIX + data.name + "Ore");
+            data.oreIcon = par1IconRegister.registerIcon(AssemblyLine.PREFIX + data.name + "Ore");
         }
     }
 
@@ -123,8 +123,8 @@ public class BlockOre extends Block implements IExtraBlockInfo
         {
             if (this.doWorldGen)
             {
-                ItemStack stack = new ItemStack(CoreRecipeLoader.blockOre, 1, this.ordinal());
-                return (OreGenReplaceStone) new OreGenReplaceStone(this.name, this.name + "Ore", stack, this.maxY, this.ammount, this.branch).enable(CoreMachine.getInstance().CONFIGURATION);
+                ItemStack stack = new ItemStack(ALRecipeLoader.blockOre, 1, this.ordinal());
+                return (OreGenReplaceStone) new OreGenReplaceStone(this.name, this.name + "Ore", stack, this.maxY, this.ammount, this.branch).enable(AssemblyLine.CONFIGURATION);
             }
             return null;
         }

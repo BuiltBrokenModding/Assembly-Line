@@ -11,10 +11,10 @@ import com.builtbroken.assemblyline.FluidPartsMaterial;
 import com.builtbroken.assemblyline.api.fluid.INetworkPipe;
 import com.builtbroken.assemblyline.fluid.network.NetworkPipes;
 import com.builtbroken.assemblyline.fluid.prefab.TileEntityFluidNetworkTile;
-import com.dark.helpers.ColorCode;
-import com.dark.helpers.ColorCode.IColorCoded;
-import com.dark.tilenetwork.ITileConnector;
-import com.dark.tilenetwork.ITileNetwork;
+import com.builtbroken.minecraft.helpers.ColorCode;
+import com.builtbroken.minecraft.helpers.ColorCode.IColorCoded;
+import com.builtbroken.minecraft.tilenetwork.ITileConnector;
+import com.builtbroken.minecraft.tilenetwork.ITileNetwork;
 
 public class TileEntityPipe extends TileEntityFluidNetworkTile implements IColorCoded, INetworkPipe
 {

@@ -14,11 +14,11 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import com.builtbroken.assemblyline.api.fluid.INetworkFluidPart;
-import com.dark.fluid.FluidHelper;
-import com.dark.tilenetwork.INetworkPart;
-import com.dark.tilenetwork.ITileNetwork;
-import com.dark.tilenetwork.prefab.NetworkTileEntities;
-import com.dark.tilenetwork.prefab.NetworkUpdateHandler;
+import com.builtbroken.minecraft.fluid.FluidHelper;
+import com.builtbroken.minecraft.tilenetwork.INetworkPart;
+import com.builtbroken.minecraft.tilenetwork.ITileNetwork;
+import com.builtbroken.minecraft.tilenetwork.prefab.NetworkTileEntities;
+import com.builtbroken.minecraft.tilenetwork.prefab.NetworkUpdateHandler;
 
 public class NetworkFluidTiles extends NetworkTileEntities
 {

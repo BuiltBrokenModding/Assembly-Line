@@ -2,6 +2,7 @@ package dark.machines.client.renders;
 
 import ic2.api.energy.tile.IEnergyAcceptor;
 import ic2.api.energy.tile.IEnergyTile;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeDirection;
@@ -13,23 +14,25 @@ import universalelectricity.core.block.IConnector;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import buildcraft.api.power.IPowerReceptor;
+
+import com.builtbroken.assemblyline.AssemblyLine;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.CoreMachine;
 import dark.machines.client.models.ModelCopperWire;
 
 @SideOnly(Side.CLIENT)
-public class RenderBlockWire extends RenderTileMachine
+public class RenderBlockWire extends TileEntitySpecialRenderer
 {
-    private static final ResourceLocation copperWireTexture = new ResourceLocation(CoreMachine.getInstance().DOMAIN, "textures/models/copperWire.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, "textures/models/copperWire.png");
 
     public static final ModelCopperWire model = new ModelCopperWire();
 
     @Override
-    public void renderModel(TileEntity tileEntity, double d, double d1, double d2, float f)
+    public void renderTileEntityAt(TileEntity tileEntity, double d, double d1, double d2, float f)
     {
         // Texture file
-        this.bindTexture(this.getTexture(tileEntity.getBlockType().blockID, tileEntity.getBlockMetadata()));
+        this.bindTexture(TEXTURE);
         GL11.glPushMatrix();
         GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
         GL11.glScalef(1.0F, -1F, -1F);
@@ -77,11 +80,5 @@ public class RenderBlockWire extends RenderTileMachine
         }
         model.renderSide(ForgeDirection.UNKNOWN);
         GL11.glPopMatrix();
-    }
-
-    @Override
-    public ResourceLocation getTexture(int block, int meta)
-    {
-        return copperWireTexture;
     }
 }

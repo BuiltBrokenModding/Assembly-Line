@@ -10,7 +10,7 @@ import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.client.model.ModelLargePipe;
 import com.builtbroken.assemblyline.client.model.ModelReleaseValve;
 import com.builtbroken.assemblyline.machine.TileEntityReleaseValve;
-import com.dark.DarkCore;
+import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

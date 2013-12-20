@@ -6,7 +6,7 @@ import net.minecraftforge.event.Cancelable;
 import net.minecraftforge.event.Event;
 import universalelectricity.core.vector.Vector3;
 
-import com.dark.helpers.AutoCraftingManager.IAutoCrafter;
+import com.builtbroken.minecraft.recipes.AutoCraftingManager.IAutoCrafter;
 
 /** Events called when an automated crafter is working on crafting an item
  * 

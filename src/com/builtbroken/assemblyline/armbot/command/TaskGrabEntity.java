@@ -12,7 +12,7 @@ import net.minecraft.util.AxisAlignedBB;
 import com.builtbroken.assemblyline.api.IArmbot;
 import com.builtbroken.assemblyline.api.coding.args.ArgumentData;
 import com.builtbroken.assemblyline.armbot.TaskBaseProcess;
-import com.dark.helpers.EntityDictionary;
+import com.builtbroken.minecraft.helpers.EntityDictionary;
 
 public class TaskGrabEntity extends TaskGrabPrefab
 {

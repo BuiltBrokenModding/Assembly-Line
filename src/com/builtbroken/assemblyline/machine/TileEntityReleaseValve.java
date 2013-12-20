@@ -10,9 +10,9 @@ import net.minecraftforge.fluids.IFluidHandler;
 import com.builtbroken.assemblyline.api.fluid.INetworkPipe;
 import com.builtbroken.assemblyline.fluid.network.NetworkPipes;
 import com.builtbroken.assemblyline.fluid.prefab.TileEntityFluidDevice;
-import com.dark.helpers.DarksHelper;
-import com.dark.interfaces.IToolReadOut;
-import com.dark.tilenetwork.ITileConnector;
+import com.builtbroken.minecraft.helpers.DarksHelper;
+import com.builtbroken.minecraft.interfaces.IToolReadOut;
+import com.builtbroken.minecraft.tilenetwork.ITileConnector;
 
 public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITileConnector, IToolReadOut
 {

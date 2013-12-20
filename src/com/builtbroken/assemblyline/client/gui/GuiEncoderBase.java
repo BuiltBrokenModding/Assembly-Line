@@ -5,9 +5,9 @@ import net.minecraft.inventory.Container;
 
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.CommonProxy;
-import com.dark.prefab.TileEntityMachine;
-import com.dark.prefab.invgui.ContainerFake;
-import com.dark.prefab.invgui.GuiMachineContainer;
+import com.builtbroken.minecraft.prefab.TileEntityMachine;
+import com.builtbroken.minecraft.prefab.invgui.ContainerFake;
+import com.builtbroken.minecraft.prefab.invgui.GuiMachineContainer;
 
 public class GuiEncoderBase extends GuiMachineContainer
 {

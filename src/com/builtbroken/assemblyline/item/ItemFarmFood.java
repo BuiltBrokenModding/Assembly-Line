@@ -17,9 +17,9 @@ import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.assemblyline.AssemblyLine;
-import com.dark.DarkCore;
-import com.dark.IExtraInfo.IExtraItemInfo;
-import com.dark.helpers.DarksHelper;
+import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.IExtraInfo.IExtraItemInfo;
+import com.builtbroken.minecraft.helpers.DarksHelper;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

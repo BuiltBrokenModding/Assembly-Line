@@ -2,8 +2,6 @@ package dark.machines.deco;
 
 import java.util.List;
 
-import com.dark.helpers.ColorCode;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -11,9 +9,12 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
+
+import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.minecraft.helpers.ColorCode;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.CoreMachine;
 
 /** Prefab class to make any block have 16 separate color instances similar to wool block
  * 
@@ -65,7 +66,7 @@ public class BlockColored extends Block
     {
         if (colorized)
         {
-            this.blockIcon = iconReg.registerIcon(CoreMachine.getInstance().PREFIX + this.getUnlocalizedName().replace("tile.", ""));
+            this.blockIcon = iconReg.registerIcon(AssemblyLine.PREFIX + this.getUnlocalizedName().replace("tile.", ""));
         }
         else
         {
@@ -73,7 +74,7 @@ public class BlockColored extends Block
 
             for (int i = 0; i < this.icons.length; ++i)
             {
-                this.icons[i] = iconReg.registerIcon(CoreMachine.getInstance().PREFIX + ColorCode.get(~i & 15).name + this.getUnlocalizedName().replace("tile.", ""));
+                this.icons[i] = iconReg.registerIcon(AssemblyLine.PREFIX + ColorCode.get(~i & 15).name + this.getUnlocalizedName().replace("tile.", ""));
             }
         }
     }

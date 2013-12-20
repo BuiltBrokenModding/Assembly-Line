@@ -16,10 +16,14 @@ import com.builtbroken.assemblyline.machine.encoder.ContainerEncoder;
 import com.builtbroken.assemblyline.machine.encoder.TileEntityEncoder;
 import com.builtbroken.assemblyline.machine.processor.ContainerProcessor;
 import com.builtbroken.assemblyline.machine.processor.TileEntityProcessor;
-import com.dark.prefab.invgui.ContainerFake;
+import com.builtbroken.minecraft.prefab.invgui.ContainerFake;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.IGuiHandler;
+import dark.machines.generators.ContainerCoalGenerator;
+import dark.machines.generators.TileEntitySteamGen;
+import dark.machines.machines.ContainerBatteryBox;
+import dark.machines.machines.TileEntityBatteryBox;
 
 public class CommonProxy implements IGuiHandler
 {
@@ -29,6 +33,10 @@ public class CommonProxy implements IGuiHandler
     public static final int GUI_ENCODER_HELP = 4;
     public static final int GUI_PROCESSOR = 5;
     public static final int GUI_MANIPULATOR = 6;
+    public static final int GUI_COAL_GEN = 7;
+    public static final int GUI_FUEL_GEN = 8;
+    public static final int GUI_FURNACE_ELEC = 9;
+    public static final int GUI_BATTERY_BOX = 10;
 
     public void preInit()
     {
@@ -121,7 +129,7 @@ public class CommonProxy implements IGuiHandler
                 }
                 case GUI_ENCODER:
                 {
-                    if (tileEntity != null && tileEntity instanceof TileEntityEncoder)
+                    if (tileEntity instanceof TileEntityEncoder)
                     {
                         return new ContainerEncoder(player.inventory, (TileEntityEncoder) tileEntity);
                     }
@@ -134,6 +142,16 @@ public class CommonProxy implements IGuiHandler
                 {
                     return new ContainerProcessor(player.inventory, (TileEntityProcessor) tileEntity);
                 }
+                case GUI_COAL_GEN:
+                    if (tileEntity instanceof TileEntitySteamGen)
+                    {
+                        return new ContainerCoalGenerator(player.inventory, ((TileEntitySteamGen) tileEntity));
+                    }
+                case GUI_BATTERY_BOX:
+                    if (tileEntity instanceof TileEntityBatteryBox)
+                    {
+                        return new ContainerBatteryBox(player.inventory, (TileEntityBatteryBox) tileEntity);
+                    }
                 default:
                     return new ContainerFake(tileEntity);
             }

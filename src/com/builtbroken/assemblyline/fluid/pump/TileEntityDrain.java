@@ -20,7 +20,7 @@ import universalelectricity.core.vector.Vector3;
 import com.builtbroken.assemblyline.api.fluid.IDrain;
 import com.builtbroken.assemblyline.fluid.prefab.TileEntityFluidDevice;
 import com.builtbroken.common.Pair;
-import com.dark.fluid.FluidHelper;
+import com.builtbroken.minecraft.fluid.FluidHelper;
 
 public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHandler, IDrain
 {

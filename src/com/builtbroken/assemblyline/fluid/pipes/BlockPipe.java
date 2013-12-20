@@ -21,8 +21,8 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import com.builtbroken.assemblyline.FluidPartsMaterial;
 import com.builtbroken.assemblyline.machine.BlockFM;
 import com.builtbroken.common.Pair;
-import com.dark.helpers.ColorCode;
-import com.dark.helpers.ColorCode.IColorCoded;
+import com.builtbroken.minecraft.helpers.ColorCode;
+import com.builtbroken.minecraft.helpers.ColorCode.IColorCoded;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

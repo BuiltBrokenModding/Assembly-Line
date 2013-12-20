@@ -13,7 +13,7 @@ import com.builtbroken.assemblyline.armbot.command.TaskEnd;
 import com.builtbroken.assemblyline.armbot.command.TaskIdle;
 import com.builtbroken.assemblyline.armbot.command.TaskStart;
 import com.builtbroken.assemblyline.machine.encoder.TileEntityEncoder;
-import com.dark.interfaces.IScroll;
+import com.builtbroken.minecraft.interfaces.IScroll;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;

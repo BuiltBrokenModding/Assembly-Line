@@ -14,7 +14,7 @@ import net.minecraftforge.fluids.FluidStack;
 import com.builtbroken.assemblyline.fluid.network.FluidRecipeInfo.SimpleFluidRecipe;
 import com.builtbroken.common.Pair;
 import com.builtbroken.common.Triple;
-import com.dark.fluid.FluidHelper;
+import com.builtbroken.minecraft.fluid.FluidHelper;
 
 /** Handles all kinds of process involving mixing Fluids with other fluids and/or Items, Blocks,
  * ItemStack, or Liquids

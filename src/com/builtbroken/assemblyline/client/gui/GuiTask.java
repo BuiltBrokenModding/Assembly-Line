@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.builtbroken.assemblyline.api.coding.IRedirectTask;
 import com.builtbroken.assemblyline.api.coding.ITask;
-import com.dark.DarkCore;
+import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

@@ -20,15 +20,15 @@ import universalelectricity.core.block.IElectricalStorage;
 import universalelectricity.core.electricity.ElectricityDisplay;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 
-import com.dark.DarkCore;
-import com.dark.fluid.FluidHelper;
-import com.dark.interfaces.IToolReadOut;
-import com.dark.interfaces.IToolReadOut.EnumTools;
-import com.dark.prefab.ItemBasic;
+import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.fluid.FluidHelper;
+import com.builtbroken.minecraft.interfaces.IToolReadOut;
+import com.builtbroken.minecraft.interfaces.IToolReadOut.EnumTools;
+import com.builtbroken.minecraft.prefab.ItemBasic;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.CoreMachine;
 
 public class ItemReadoutTools extends ItemBasic
 {
@@ -36,7 +36,7 @@ public class ItemReadoutTools extends ItemBasic
 
     public ItemReadoutTools()
     {
-        super(DarkCore.getNextItemId(), "DMTools", CoreMachine.CONFIGURATION);
+        super(DarkCore.getNextItemId(), "DMTools", AssemblyLine.CONFIGURATION);
         this.setHasSubtypes(true);
         this.setCreativeTab(CreativeTabs.tabTools);
         this.setMaxStackSize(1);
@@ -47,8 +47,8 @@ public class ItemReadoutTools extends ItemBasic
     @Override
     public void registerIcons(IconRegister iconRegister)
     {
-        this.pipeGuage = iconRegister.registerIcon(CoreMachine.getInstance().PREFIX + "readout.PipeGauge");
-        this.multiMeter = iconRegister.registerIcon(CoreMachine.getInstance().PREFIX + "readout.multi-Meter");
+        this.pipeGuage = iconRegister.registerIcon(AssemblyLine.PREFIX + "readout.PipeGauge");
+        this.multiMeter = iconRegister.registerIcon(AssemblyLine.PREFIX + "readout.multi-Meter");
     }
 
     @SideOnly(Side.CLIENT)

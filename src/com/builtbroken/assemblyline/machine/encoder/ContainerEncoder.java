@@ -7,7 +7,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import com.builtbroken.assemblyline.ALRecipeLoader;
-import com.dark.prefab.invgui.SlotRestricted;
+import com.builtbroken.minecraft.prefab.invgui.SlotRestricted;
 
 public class ContainerEncoder extends Container
 {

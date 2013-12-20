@@ -16,7 +16,7 @@ import com.builtbroken.assemblyline.client.render.BlockRenderingHandler;
 import com.builtbroken.assemblyline.client.render.RenderArmbot;
 import com.builtbroken.assemblyline.machine.BlockAssembly;
 import com.builtbroken.common.Pair;
-import com.dark.interfaces.IMultiBlock;
+import com.builtbroken.minecraft.interfaces.IMultiBlock;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

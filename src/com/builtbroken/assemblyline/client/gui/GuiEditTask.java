@@ -13,10 +13,10 @@ import universalelectricity.core.vector.Vector2;
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.api.coding.ITask;
 import com.builtbroken.assemblyline.api.coding.args.ArgumentData;
-import com.dark.DarkCore;
-import com.dark.prefab.invgui.GuiBase;
-import com.dark.prefab.invgui.GuiMessageBox;
-import com.dark.prefab.invgui.IMessageBoxDialog;
+import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.prefab.invgui.GuiBase;
+import com.builtbroken.minecraft.prefab.invgui.GuiMessageBox;
+import com.builtbroken.minecraft.prefab.invgui.IMessageBoxDialog;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;

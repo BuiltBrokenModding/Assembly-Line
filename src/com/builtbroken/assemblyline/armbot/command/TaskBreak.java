@@ -14,7 +14,7 @@ import com.builtbroken.assemblyline.api.coding.ITask;
 import com.builtbroken.assemblyline.armbot.TaskBaseArmbot;
 import com.builtbroken.assemblyline.armbot.TaskBaseProcess;
 import com.builtbroken.common.Pair;
-import com.dark.helpers.DarksHelper;
+import com.builtbroken.minecraft.helpers.DarksHelper;
 
 /** Used by arms to break a specific block in a position.
  * 

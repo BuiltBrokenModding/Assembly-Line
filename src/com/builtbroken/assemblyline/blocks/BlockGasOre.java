@@ -1,4 +1,4 @@
-package dark.machines.blocks;
+package com.builtbroken.assemblyline.blocks;
 
 import java.awt.Color;
 import java.util.List;
@@ -21,19 +21,19 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
 import universalelectricity.core.vector.Vector3;
 
-import com.dark.DarkCore;
-import com.dark.IndustryTabs;
-import com.dark.fluid.EnumGas;
+import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.IndustryTabs;
+import com.builtbroken.minecraft.fluid.EnumGas;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.CoreMachine;
 
 /** Gas that is designed to generate underground in the same way as an ore
- *
+ * 
  * TODO code actual gas behavior such as expanding to fill an area but at the same time losing
  * volume
- *
+ * 
  * @author DarkGuardsman */
 public class BlockGasOre extends Block implements IFluidBlock
 {
@@ -42,7 +42,7 @@ public class BlockGasOre extends Block implements IFluidBlock
 
     public BlockGasOre()
     {
-        super(CoreMachine.CONFIGURATION.getBlock("GasBlock", DarkCore.getNextID()).getInt(), gas);
+        super(AssemblyLine.CONFIGURATION.getBlock("GasBlock", DarkCore.getNextID()).getInt(), gas);
         this.setUnlocalizedName("DMBlockGas");
         this.setCreativeTab(IndustryTabs.tabIndustrial());
         this.setTickRandomly(true);
@@ -147,7 +147,7 @@ public class BlockGasOre extends Block implements IFluidBlock
     @Override
     public void registerIcons(IconRegister par1IconRegister)
     {
-        this.blockIcon = par1IconRegister.registerIcon(CoreMachine.getInstance().PREFIX + "gas");
+        this.blockIcon = par1IconRegister.registerIcon(AssemblyLine.PREFIX + "gas");
     }
 
     @Override

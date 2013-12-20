@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.machine.encoder.ContainerEncoder;
 import com.builtbroken.assemblyline.machine.encoder.TileEntityEncoder;
-import com.dark.DarkCore;
+import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;

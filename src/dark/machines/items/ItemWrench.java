@@ -10,11 +10,10 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
 import buildcraft.api.tools.IToolWrench;
 
-import com.dark.DarkCore;
-import com.dark.IExtraInfo.IExtraItemInfo;
-import com.dark.prefab.ItemBasic;
-
-import dark.machines.CoreMachine;
+import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.IExtraInfo.IExtraItemInfo;
+import com.builtbroken.minecraft.prefab.ItemBasic;
 
 public class ItemWrench extends ItemBasic implements IToolWrench, IExtraItemInfo
 {
@@ -22,10 +21,10 @@ public class ItemWrench extends ItemBasic implements IToolWrench, IExtraItemInfo
 
     public ItemWrench()
     {
-        super(DarkCore.getNextItemId(), "wrench", CoreMachine.CONFIGURATION);
+        super(DarkCore.getNextItemId(), "wrench", AssemblyLine.CONFIGURATION);
         this.setMaxStackSize(1);
         this.setCreativeTab(CreativeTabs.tabTools);
-        this.setTextureName(CoreMachine.getInstance().PREFIX + "wrench");
+        this.setTextureName(AssemblyLine.PREFIX + "wrench");
 
     }
 

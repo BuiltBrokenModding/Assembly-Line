@@ -8,18 +8,18 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import com.dark.DarkCore;
+import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.CoreMachine;
 import dark.machines.client.models.ModelTestCar;
 import dark.machines.prefab.entities.EntityAdvanced;
 
 @SideOnly(Side.CLIENT)
 public class RenderTestCar extends Render
 {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(CoreMachine.getInstance().DOMAIN, DarkCore.MODEL_DIRECTORY + "TestCar.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "TestCar.png");
 
     /** instance of ModelBoat for rendering */
     protected ModelBase modelBoat;

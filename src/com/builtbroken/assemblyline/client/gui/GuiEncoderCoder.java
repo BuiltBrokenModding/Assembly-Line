@@ -7,8 +7,8 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import com.builtbroken.assemblyline.machine.encoder.TileEntityEncoder;
-import com.dark.prefab.invgui.GuiButtonImage;
-import com.dark.prefab.invgui.GuiButtonImage.ButtonIcon;
+import com.builtbroken.minecraft.prefab.invgui.GuiButtonImage;
+import com.builtbroken.minecraft.prefab.invgui.GuiButtonImage.ButtonIcon;
 
 public class GuiEncoderCoder extends GuiEncoderBase
 {

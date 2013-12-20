@@ -27,12 +27,12 @@ import com.builtbroken.assemblyline.api.IArmbot;
 import com.builtbroken.assemblyline.api.IArmbotUseable;
 import com.builtbroken.assemblyline.api.coding.args.ArgumentData;
 import com.builtbroken.common.Pair;
-import com.dark.DarkCore;
-import com.dark.helpers.AutoCraftingManager;
-import com.dark.helpers.AutoCraftingManager.IAutoCrafter;
-import com.dark.network.PacketHandler;
-import com.dark.prefab.TileEntityMulti;
-import com.dark.prefab.invgui.ISlotPickResult;
+import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.network.PacketHandler;
+import com.builtbroken.minecraft.prefab.TileEntityMulti;
+import com.builtbroken.minecraft.prefab.invgui.ISlotPickResult;
+import com.builtbroken.minecraft.recipes.AutoCraftingManager;
+import com.builtbroken.minecraft.recipes.AutoCraftingManager.IAutoCrafter;
 import com.google.common.io.ByteArrayDataInput;
 
 public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInventory, IArmbotUseable, IPacketReceiver, ISlotPickResult, IAutoCrafter

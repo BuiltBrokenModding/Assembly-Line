@@ -9,10 +9,10 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.network.IPacketReceiver;
 
-import com.dark.DarkCore;
-import com.dark.interfaces.IExtendedStorage;
-import com.dark.network.PacketHandler;
-import com.dark.prefab.TileEntityInv;
+import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.interfaces.IExtendedStorage;
+import com.builtbroken.minecraft.network.PacketHandler;
+import com.builtbroken.minecraft.prefab.TileEntityInv;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLCommonHandler;

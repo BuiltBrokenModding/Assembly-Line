@@ -15,9 +15,9 @@ import com.builtbroken.assemblyline.api.coding.ITask;
 import com.builtbroken.assemblyline.api.coding.TaskRegistry;
 import com.builtbroken.assemblyline.armbot.Program;
 import com.builtbroken.assemblyline.armbot.command.TaskRotateTo;
-import com.dark.DarkCore;
-import com.dark.network.PacketHandler;
-import com.dark.prefab.TileEntityMachine;
+import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.network.PacketHandler;
+import com.builtbroken.minecraft.prefab.TileEntityMachine;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;

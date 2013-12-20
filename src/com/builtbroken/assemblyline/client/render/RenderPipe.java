@@ -14,7 +14,7 @@ import com.builtbroken.assemblyline.client.model.ModelLargePipe;
 import com.builtbroken.assemblyline.fluid.pipes.EnumPipeType;
 import com.builtbroken.assemblyline.fluid.pipes.TileEntityPipe;
 import com.builtbroken.common.Pair;
-import com.dark.DarkCore;
+import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

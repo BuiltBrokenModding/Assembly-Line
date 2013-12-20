@@ -13,9 +13,9 @@ import net.minecraftforge.fluids.FluidStack;
 import universalelectricity.prefab.network.IPacketReceiver;
 
 import com.builtbroken.assemblyline.fluid.prefab.TileEntityFluidStorage;
-import com.dark.DarkCore;
-import com.dark.helpers.ColorCode;
-import com.dark.network.PacketHandler;
+import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.helpers.ColorCode;
+import com.builtbroken.minecraft.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 
 public class TileEntitySink extends TileEntityFluidStorage implements IPacketReceiver

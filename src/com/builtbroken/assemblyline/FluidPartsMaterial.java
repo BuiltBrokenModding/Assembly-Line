@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
 import com.builtbroken.assemblyline.fluid.prefab.TileEntityFluidNetworkTile;
-import com.dark.helpers.ColorCode;
+import com.builtbroken.minecraft.helpers.ColorCode;
 
 /** Enum to hold info about each pipe material. Values are by default and some can change with pipe
  * upgrades.

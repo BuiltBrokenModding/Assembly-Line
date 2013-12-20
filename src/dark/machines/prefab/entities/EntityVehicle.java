@@ -12,10 +12,10 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
-import com.dark.interfaces.IControlReceiver;
-import com.dark.network.ISimplePacketReceiver;
-import com.dark.network.PacketManagerEntity;
-import com.dark.network.PacketManagerKeyEvent;
+import com.builtbroken.minecraft.interfaces.IControlReceiver;
+import com.builtbroken.minecraft.network.ISimplePacketReceiver;
+import com.builtbroken.minecraft.network.PacketManagerEntity;
+import com.builtbroken.minecraft.network.PacketManagerKeyEvent;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.client.FMLClientHandler;

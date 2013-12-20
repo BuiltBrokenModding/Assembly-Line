@@ -19,8 +19,8 @@ import com.builtbroken.assemblyline.client.render.BlockRenderHelper;
 import com.builtbroken.assemblyline.fluid.pipes.ItemBlockPipe;
 import com.builtbroken.assemblyline.fluid.pipes.TileEntityPipe;
 import com.builtbroken.common.Pair;
-import com.dark.fluid.FluidHelper;
-import com.dark.helpers.DarksHelper;
+import com.builtbroken.minecraft.fluid.FluidHelper;
+import com.builtbroken.minecraft.helpers.DarksHelper;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

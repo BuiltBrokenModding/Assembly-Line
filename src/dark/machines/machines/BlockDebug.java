@@ -13,13 +13,13 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 
+import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.common.Pair;
-import com.dark.IndustryTabs;
-import com.dark.prefab.BlockMachine;
+import com.builtbroken.minecraft.IndustryTabs;
+import com.builtbroken.minecraft.prefab.BlockMachine;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.CoreMachine;
 
 public class BlockDebug extends BlockMachine
 {
@@ -27,7 +27,7 @@ public class BlockDebug extends BlockMachine
 
     public BlockDebug()
     {
-        super(CoreMachine.CONFIGURATION, "DebugBlock", Material.clay);
+        super(AssemblyLine.CONFIGURATION, "DebugBlock", Material.clay);
         this.setCreativeTab(IndustryTabs.tabIndustrial());
     }
 
@@ -40,7 +40,7 @@ public class BlockDebug extends BlockMachine
         {
             if (block.enabled)
             {
-                block.icon = iconReg.registerIcon(CoreMachine.getInstance().PREFIX + block.getTextureName());
+                block.icon = iconReg.registerIcon(AssemblyLine.PREFIX + block.getTextureName());
             }
         }
     }

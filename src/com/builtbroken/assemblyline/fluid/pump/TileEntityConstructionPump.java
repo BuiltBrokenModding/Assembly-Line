@@ -22,7 +22,7 @@ import com.builtbroken.assemblyline.api.fluid.IDrain;
 import com.builtbroken.assemblyline.api.fluid.INetworkPipe;
 import com.builtbroken.assemblyline.fluid.network.NetworkFluidTiles;
 import com.builtbroken.common.Pair;
-import com.dark.tilenetwork.ITileConnector;
+import com.builtbroken.minecraft.tilenetwork.ITileConnector;
 
 public class TileEntityConstructionPump extends TileEntityStarterPump implements IFluidHandler, ITileConnector
 {

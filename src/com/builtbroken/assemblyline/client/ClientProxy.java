@@ -44,6 +44,10 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.machines.client.gui.GuiBatteryBox;
+import dark.machines.client.renders.RenderTestCar;
+import dark.machines.machines.TileEntityBatteryBox;
+import dark.machines.prefab.entities.EntityTestCar;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy
@@ -56,6 +60,7 @@ public class ClientProxy extends CommonProxy
         MinecraftForge.EVENT_BUS.register(SoundHandler.INSTANCE);
         RenderingRegistry.registerEntityRenderingHandler(EntityTurkey.class, new RenderTurkey());
         RenderingRegistry.registerEntityRenderingHandler(EntityFarmEgg.class, new RenderSnowball(Item.egg));
+        RenderingRegistry.registerEntityRenderingHandler(EntityTestCar.class, new RenderTestCar());
     }
 
     @Override
@@ -76,6 +81,7 @@ public class ClientProxy extends CommonProxy
         MinecraftForgeClient.registerItemRenderer(ALRecipeLoader.blockReleaseValve.blockID, new ItemPipeRenderer());
 
         RenderingRegistry.registerBlockHandler(new BlockRenderHelper());
+        RenderingRegistry.registerBlockHandler(new BlockRenderingHandler());
         if (ALRecipeLoader.itemFluidCan != null)
             MinecraftForgeClient.registerItemRenderer(ALRecipeLoader.itemFluidCan.itemID, new ItemRenderFluidCan());
     }
@@ -109,12 +115,13 @@ public class ClientProxy extends CommonProxy
                 {
                     return new GuiProcessor(player.inventory, (TileEntityProcessor) tileEntity);
                 }
+                case GUI_BATTERY_BOX:
+                    return new GuiBatteryBox(player.inventory, (TileEntityBatteryBox) tileEntity);
             }
         }
 
         return null;
     }
-
     @Override
     public boolean isCtrKeyDown()
     {

@@ -6,8 +6,8 @@ import net.minecraftforge.common.ForgeDirection;
 import com.builtbroken.assemblyline.api.fluid.INetworkFluidPart;
 import com.builtbroken.assemblyline.fluid.network.NetworkFluidContainers;
 import com.builtbroken.assemblyline.fluid.prefab.TileEntityFluidNetworkTile;
-import com.dark.tilenetwork.INetworkPart;
-import com.dark.tilenetwork.ITileNetwork;
+import com.builtbroken.minecraft.tilenetwork.INetworkPart;
+import com.builtbroken.minecraft.tilenetwork.ITileNetwork;
 
 public class TileEntityTank extends TileEntityFluidNetworkTile
 {

@@ -1,4 +1,4 @@
-package dark.machines.blocks;
+package com.builtbroken.assemblyline.blocks;
 
 import java.util.Random;
 
@@ -9,8 +9,10 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderEnd;
 import net.minecraft.world.gen.ChunkProviderHell;
 import net.minecraftforge.fluids.FluidStack;
+
+import com.builtbroken.assemblyline.ALRecipeLoader;
+
 import cpw.mods.fml.common.IWorldGenerator;
-import dark.machines.CoreRecipeLoader;
 
 public class GasOreGenerator implements IWorldGenerator
 {
@@ -101,7 +103,7 @@ public class GasOreGenerator implements IWorldGenerator
                                 Block block = Block.blocksList[blockid];
                                 if (var39 * var39 + var42 * var42 + var45 * var45 < 1.0D && (block == null || block.isAirBlock(world, x, y, z) || block.canBeReplacedByLeaves(world, x, y, z) || blockid == this.replaceID))
                                 {
-                                    world.setBlock(x, y, z, CoreRecipeLoader.blockGas.blockID, 10 + world.rand.nextInt(5), 2);
+                                    world.setBlock(x, y, z, ALRecipeLoader.blockGas.blockID, 10 + world.rand.nextInt(5), 2);
                                 }
                             }
                         }

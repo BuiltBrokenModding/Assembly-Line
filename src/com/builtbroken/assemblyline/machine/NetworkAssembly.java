@@ -11,10 +11,10 @@ import universalelectricity.core.block.IElectrical;
 import universalelectricity.core.block.IElectricalStorage;
 import universalelectricity.core.vector.Vector3;
 
-import com.dark.tilenetwork.INetworkEnergyPart;
-import com.dark.tilenetwork.INetworkPart;
-import com.dark.tilenetwork.prefab.NetworkSharedPower;
-import com.dark.tilenetwork.prefab.NetworkUpdateHandler;
+import com.builtbroken.minecraft.tilenetwork.INetworkEnergyPart;
+import com.builtbroken.minecraft.tilenetwork.INetworkPart;
+import com.builtbroken.minecraft.tilenetwork.prefab.NetworkSharedPower;
+import com.builtbroken.minecraft.tilenetwork.prefab.NetworkUpdateHandler;
 
 public class NetworkAssembly extends NetworkSharedPower
 {

@@ -1,33 +1,34 @@
 package dark.machines.client.renders;
 
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import com.dark.DarkCore;
-import com.dark.prefab.TileEntityMachine;
+import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.prefab.TileEntityMachine;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.CoreMachine;
 import dark.machines.client.models.ModelMachine;
 import dark.machines.client.models.ModelSteamGen;
 import dark.machines.client.models.ModelSteamTurbine;
 
 @SideOnly(Side.CLIENT)
-public class RenderSteamGen extends RenderTileMachine
+public class RenderSteamGen extends TileEntitySpecialRenderer
 {
     public static final ModelSteamTurbine TURBINE_MODEL = new ModelSteamTurbine();
     public static final ModelSteamGen STEAM_GEN_MODEL = new ModelSteamGen();
 
-    public static final ResourceLocation TURBINE_TEXTURE = new ResourceLocation(CoreMachine.getInstance().DOMAIN, DarkCore.MODEL_DIRECTORY + "SmallSteamFan.png");
-    public static final ResourceLocation STEAM_GEN_TEXTURE = new ResourceLocation(CoreMachine.getInstance().DOMAIN, DarkCore.MODEL_DIRECTORY + "SteamGenerator.png");
+    public static final ResourceLocation TURBINE_TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "SmallSteamFan.png");
+    public static final ResourceLocation STEAM_GEN_TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "SteamGenerator.png");
     private static float rot1 = 0;
 
     @Override
-    public void renderModel(TileEntity tileEntity, double x, double y, double z, float size)
+    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float size)
     {
         int meta = tileEntity.worldObj.getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
         int face = meta % 4;
@@ -35,7 +36,7 @@ public class RenderSteamGen extends RenderTileMachine
 
         if (model != null)
         {
-            bindTexture(this.getTexture(tileEntity.getBlockType().blockID, meta));
+            bindTexture(this.getTexture(meta));
             rot1 = MathHelper.wrapAngleTo180_float(rot1 + 1);
 
             GL11.glPushMatrix();
@@ -110,12 +111,6 @@ public class RenderSteamGen extends RenderTileMachine
                 return STEAM_GEN_TEXTURE;
         }
         return null;
-    }
-
-    @Override
-    public ResourceLocation getTexture(int block, int meta)
-    {
-        return getTexture(meta);
     }
 
 }

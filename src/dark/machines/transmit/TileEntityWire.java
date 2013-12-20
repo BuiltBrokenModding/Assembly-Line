@@ -1,8 +1,8 @@
 package dark.machines.transmit;
 
-import com.dark.helpers.ColorCode;
-
 import universalelectricity.compatibility.TileEntityUniversalConductor;
+
+import com.builtbroken.minecraft.helpers.ColorCode;
 
 public class TileEntityWire extends TileEntityUniversalConductor
 {

@@ -26,11 +26,11 @@ import com.builtbroken.assemblyline.FluidPartsMaterial;
 import com.builtbroken.assemblyline.api.fluid.FluidMasterList;
 import com.builtbroken.assemblyline.api.fluid.INetworkFluidPart;
 import com.builtbroken.assemblyline.fluid.network.NetworkFluidTiles;
-import com.dark.DarkCore;
-import com.dark.network.ISimplePacketReceiver;
-import com.dark.network.PacketHandler;
-import com.dark.tilenetwork.INetworkPart;
-import com.dark.tilenetwork.ITileNetwork;
+import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.network.ISimplePacketReceiver;
+import com.builtbroken.minecraft.network.PacketHandler;
+import com.builtbroken.minecraft.tilenetwork.INetworkPart;
+import com.builtbroken.minecraft.tilenetwork.ITileNetwork;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;

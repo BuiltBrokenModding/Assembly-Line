@@ -5,7 +5,7 @@ import net.minecraft.util.ResourceLocation;
 
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.machine.encoder.TileEntityEncoder;
-import com.dark.DarkCore;
+import com.builtbroken.minecraft.DarkCore;
 
 public class GuiEncoderHelp extends GuiEncoderBase
 {

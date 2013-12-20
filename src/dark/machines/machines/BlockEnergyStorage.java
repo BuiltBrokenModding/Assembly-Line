@@ -16,13 +16,12 @@ import universalelectricity.core.UniversalElectricity;
 import universalelectricity.core.block.IConductor;
 import universalelectricity.core.vector.Vector3;
 
+import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.assemblyline.CommonProxy;
 import com.builtbroken.common.Pair;
-import com.dark.IndustryTabs;
-import com.dark.helpers.DarksHelper;
-import com.dark.prefab.BlockMachine;
-
-import dark.machines.CommonProxy;
-import dark.machines.CoreMachine;
+import com.builtbroken.minecraft.IndustryTabs;
+import com.builtbroken.minecraft.helpers.DarksHelper;
+import com.builtbroken.minecraft.prefab.BlockMachine;
 
 /** Block for energy storage devices
  * 
@@ -31,7 +30,7 @@ public class BlockEnergyStorage extends BlockMachine
 {
     public BlockEnergyStorage()
     {
-        super(CoreMachine.CONFIGURATION, "DMEnergyStorage", UniversalElectricity.machine);
+        super(AssemblyLine.CONFIGURATION, "DMEnergyStorage", UniversalElectricity.machine);
         this.setCreativeTab(IndustryTabs.tabIndustrial());
     }
 
@@ -55,7 +54,7 @@ public class BlockEnergyStorage extends BlockMachine
 
         if (!par1World.isRemote)
         {
-            par5EntityPlayer.openGui(CoreMachine.getInstance(), CommonProxy.GUI_BATTERY_BOX, par1World, x, y, z);
+            par5EntityPlayer.openGui(AssemblyLine.instance, CommonProxy.GUI_BATTERY_BOX, par1World, x, y, z);
 
         }
         return true;

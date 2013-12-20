@@ -11,7 +11,7 @@ import universalelectricity.prefab.TranslationHelper;
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.imprinter.ContainerImprinter;
 import com.builtbroken.assemblyline.imprinter.TileEntityImprinter;
-import com.dark.DarkCore;
+import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

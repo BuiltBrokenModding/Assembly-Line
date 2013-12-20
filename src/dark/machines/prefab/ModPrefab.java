@@ -9,7 +9,7 @@ import net.minecraftforge.common.MinecraftForge;
 import org.modstats.Modstats;
 
 import com.builtbroken.common.Triple;
-import com.dark.DarkCore;
+import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod.EventHandler;

@@ -12,11 +12,11 @@ import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.assemblyline.api.IBelt;
 import com.builtbroken.assemblyline.machine.TileEntityAssembly;
-import com.dark.prefab.TileEntityEnergyMachine;
-import com.dark.tilenetwork.IMotionPath;
-import com.dark.tilenetwork.INetworkPart;
-import com.dark.tilenetwork.ITileNetwork;
-import com.dark.tilenetwork.prefab.NetworkItemSupply;
+import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
+import com.builtbroken.minecraft.tilenetwork.IMotionPath;
+import com.builtbroken.minecraft.tilenetwork.INetworkPart;
+import com.builtbroken.minecraft.tilenetwork.ITileNetwork;
+import com.builtbroken.minecraft.tilenetwork.prefab.NetworkItemSupply;
 
 public class TileEntityConveyor extends TileEntityEnergyMachine implements IMotionPath, IBelt, INetworkPart
 {

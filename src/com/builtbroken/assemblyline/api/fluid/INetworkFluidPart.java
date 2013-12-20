@@ -5,7 +5,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
-import com.dark.tilenetwork.INetworkPart;
+import com.builtbroken.minecraft.tilenetwork.INetworkPart;
 
 /** Interface used by part that are members of a fluid tile network. Parts in the network will act as
  * one entity and will be controlled by the network. This means the network need the part to access

@@ -8,11 +8,11 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.Icon;
 
-import com.dark.DarkCore;
+import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.CoreMachine;
 
 public class BlockBasalt extends Block
 {
@@ -38,7 +38,7 @@ public class BlockBasalt extends Block
 
     public BlockBasalt()
     {
-        super(CoreMachine.CONFIGURATION.getBlock("basalt", DarkCore.getNextID()).getInt(), Material.rock);
+        super(AssemblyLine.CONFIGURATION.getBlock("basalt", DarkCore.getNextID()).getInt(), Material.rock);
         this.setCreativeTab(CreativeTabs.tabDecorations);
         this.setHardness(2f);
         this.setResistance(2f);
@@ -86,7 +86,7 @@ public class BlockBasalt extends Block
 
         for (int i = 0; i < BlockBasalt.blockNames.length; ++i)
         {
-            this.icons[i] = iconReg.registerIcon(CoreMachine.getInstance().PREFIX + BlockBasalt.blockNames[i]);
+            this.icons[i] = iconReg.registerIcon(AssemblyLine.PREFIX + BlockBasalt.blockNames[i]);
         }
     }
 

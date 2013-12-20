@@ -7,15 +7,15 @@ import net.minecraft.world.IBlockAccess;
 
 import org.lwjgl.opengl.GL11;
 
-import com.dark.DarkCore;
+import com.builtbroken.assemblyline.ALRecipeLoader;
+import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.CoreRecipeLoader;
-import dark.machines.CoreMachine;
 import dark.machines.client.models.ModelMachine;
 import dark.machines.client.models.ModelSolarPanel;
 
@@ -30,14 +30,14 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
     public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
     {
         GL11.glPushMatrix();
-        if (CoreRecipeLoader.blockSolar != null && block.blockID == CoreRecipeLoader.blockSolar.blockID)
+        if (ALRecipeLoader.blockSolar != null && block.blockID == ALRecipeLoader.blockSolar.blockID)
         {
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(CoreMachine.getInstance().DOMAIN, DarkCore.MODEL_DIRECTORY + "solarPanel.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderBlockSolarPanel.TEXTURE);
             GL11.glTranslatef(0.0F, 1.1F, 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
             solarPanelModel.render(0.0625F);
         }
-        else if (CoreRecipeLoader.blockSteamGen != null && block.blockID == CoreRecipeLoader.blockSteamGen.blockID)
+        else if (ALRecipeLoader.blockSteamGen != null && block.blockID == ALRecipeLoader.blockSteamGen.blockID)
         {
             ModelMachine model = RenderSteamGen.getModel(metadata);
             FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderSteamGen.getTexture(metadata));

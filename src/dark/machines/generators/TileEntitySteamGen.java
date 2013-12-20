@@ -1,7 +1,5 @@
 package dark.machines.generators;
 
-import com.dark.prefab.TileEntityMachine;
-
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -11,6 +9,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+
+import com.builtbroken.minecraft.prefab.TileEntityMachine;
 
 /** Simple steam gen designed to burn items to create steam to power a steam device directly above
  * it. Doesn't actually make steam fluid but rather simple functions. The machines above it will

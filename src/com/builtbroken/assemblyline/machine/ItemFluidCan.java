@@ -14,8 +14,8 @@ import net.minecraftforge.fluids.ItemFluidContainer;
 import universalelectricity.core.item.ElectricItemHelper;
 
 import com.builtbroken.assemblyline.AssemblyLine;
-import com.dark.DarkCore;
-import com.dark.IndustryTabs;
+import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.IndustryTabs;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

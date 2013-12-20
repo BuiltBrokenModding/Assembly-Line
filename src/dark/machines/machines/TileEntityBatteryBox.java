@@ -13,9 +13,9 @@ import universalelectricity.core.grid.IElectricityNetwork;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 
-import com.dark.network.PacketHandler;
-import com.dark.prefab.EnergyHelper;
-import com.dark.prefab.TileEntityEnergyMachine;
+import com.builtbroken.minecraft.network.PacketHandler;
+import com.builtbroken.minecraft.prefab.EnergyHelper;
+import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;

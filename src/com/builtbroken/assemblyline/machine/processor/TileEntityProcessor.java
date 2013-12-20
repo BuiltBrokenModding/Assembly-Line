@@ -6,16 +6,16 @@ import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
 
 import com.builtbroken.assemblyline.machine.processor.BlockProcessor.ProcessorData;
-import com.dark.interfaces.IInvBox;
-import com.dark.network.PacketHandler;
-import com.dark.prefab.EnergyHelper;
-import com.dark.prefab.TileEntityEnergyMachine;
-import com.dark.prefab.invgui.InvChest;
+import com.builtbroken.minecraft.interfaces.IInvBox;
+import com.builtbroken.minecraft.network.PacketHandler;
+import com.builtbroken.minecraft.prefab.EnergyHelper;
+import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
+import com.builtbroken.minecraft.prefab.invgui.InvChest;
+import com.builtbroken.minecraft.recipes.MachineRecipeHandler;
+import com.builtbroken.minecraft.recipes.ProcessorType;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;
-import dark.api.reciepes.MachineRecipeHandler;
-import dark.api.reciepes.ProcessorType;
 
 /** Basic A -> B recipe processor machine designed mainly to handle ore blocks
  * 

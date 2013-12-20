@@ -6,23 +6,23 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.core.item.ItemElectric;
 
-import com.dark.DarkCore;
-import com.dark.IndustryTabs;
-import com.dark.IExtraInfo.IExtraItemInfo;
+import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.IExtraInfo.IExtraItemInfo;
+import com.builtbroken.minecraft.IndustryTabs;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.CoreMachine;
 
 /** Simple battery to store energy
- *
+ * 
  * @author DarkGuardsman */
 public class ItemBattery extends ItemElectric implements IExtraItemInfo
 {
     public ItemBattery()
     {
-        super(CoreMachine.CONFIGURATION.getItem("Battery", DarkCore.getNextItemId()).getInt());
-        this.setUnlocalizedName(CoreMachine.getInstance().PREFIX + "Battery");
+        super(AssemblyLine.CONFIGURATION.getItem("Battery", DarkCore.getNextItemId()).getInt());
+        this.setUnlocalizedName(AssemblyLine.PREFIX + "Battery");
         this.setCreativeTab(IndustryTabs.tabIndustrial());
     }
 

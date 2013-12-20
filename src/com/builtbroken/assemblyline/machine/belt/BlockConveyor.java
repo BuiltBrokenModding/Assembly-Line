@@ -20,7 +20,7 @@ import com.builtbroken.assemblyline.client.render.RenderConveyorBelt;
 import com.builtbroken.assemblyline.machine.BlockAssembly;
 import com.builtbroken.assemblyline.machine.belt.TileEntityConveyorBelt.SlantType;
 import com.builtbroken.common.Pair;
-import com.dark.tilenetwork.prefab.NetworkItemSupply;
+import com.builtbroken.minecraft.tilenetwork.prefab.NetworkItemSupply;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

@@ -7,10 +7,10 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import com.builtbroken.assemblyline.ALRecipeLoader;
-import com.dark.prefab.invgui.ISlotWatcher;
-import com.dark.prefab.invgui.SlotCraftingResult;
-import com.dark.prefab.invgui.SlotRestricted;
-import com.dark.prefab.invgui.WatchedSlot;
+import com.builtbroken.minecraft.prefab.invgui.ISlotWatcher;
+import com.builtbroken.minecraft.prefab.invgui.SlotCraftingResult;
+import com.builtbroken.minecraft.prefab.invgui.SlotRestricted;
+import com.builtbroken.minecraft.prefab.invgui.WatchedSlot;
 
 public class ContainerImprinter extends Container implements ISlotWatcher
 {

@@ -12,12 +12,12 @@ import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.oredict.OreDictionary;
 
 import com.builtbroken.assemblyline.AssemblyLine;
-import com.dark.DarkCore;
-import com.dark.EnumMaterial;
-import com.dark.EnumOrePart;
-import com.dark.IExtraInfo.IExtraItemInfo;
-import com.dark.LaserEvent;
-import com.dark.prefab.ItemBasic;
+import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.EnumMaterial;
+import com.builtbroken.minecraft.EnumOrePart;
+import com.builtbroken.minecraft.IExtraInfo.IExtraItemInfo;
+import com.builtbroken.minecraft.LaserEvent;
+import com.builtbroken.minecraft.prefab.ItemBasic;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

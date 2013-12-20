@@ -10,8 +10,8 @@ import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.assemblyline.imprinter.ItemImprinter;
 import com.builtbroken.assemblyline.imprinter.prefab.TileEntityFilterable;
-import com.dark.helpers.DarksHelper;
-import com.dark.helpers.InvInteractionHelper;
+import com.builtbroken.minecraft.helpers.DarksHelper;
+import com.builtbroken.minecraft.helpers.InvInteractionHelper;
 
 /** Advanced version of the hopper with features such as redstone control, sorting, filtering, and
  * crate version.

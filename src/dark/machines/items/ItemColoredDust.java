@@ -7,13 +7,13 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 
-import com.dark.DarkCore;
-import com.dark.helpers.ColorCode;
-import com.dark.prefab.ItemBasic;
+import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.helpers.ColorCode;
+import com.builtbroken.minecraft.prefab.ItemBasic;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.CoreMachine;
 
 public class ItemColoredDust extends ItemBasic
 {
@@ -22,7 +22,7 @@ public class ItemColoredDust extends ItemBasic
 
     public ItemColoredDust()
     {
-        super(DarkCore.getNextItemId(), "GlowRefinedSand", CoreMachine.CONFIGURATION);
+        super(DarkCore.getNextItemId(), "GlowRefinedSand", AssemblyLine.CONFIGURATION);
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
         this.setCreativeTab(CreativeTabs.tabMaterials);
@@ -46,7 +46,7 @@ public class ItemColoredDust extends ItemBasic
     @Override
     public void registerIcons(IconRegister par1IconRegister)
     {
-        this.itemIcon = par1IconRegister.registerIcon(CoreMachine.getInstance().PREFIX + "dust");
+        this.itemIcon = par1IconRegister.registerIcon(AssemblyLine.PREFIX + "dust");
         this.theIcon = par1IconRegister.registerIcon("glowingPowder_overlay");
     }
 

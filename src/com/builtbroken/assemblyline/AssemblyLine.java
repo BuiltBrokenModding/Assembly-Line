@@ -9,12 +9,15 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
 import universalelectricity.prefab.TranslationHelper;
+import universalelectricity.prefab.ore.OreGenReplaceStone;
+import universalelectricity.prefab.ore.OreGenerator;
 
 import com.builtbroken.assemblyline.api.coding.TaskRegistry;
 import com.builtbroken.assemblyline.armbot.BlockArmbot;
@@ -36,6 +39,10 @@ import com.builtbroken.assemblyline.armbot.command.TaskRotateTo;
 import com.builtbroken.assemblyline.armbot.command.TaskStart;
 import com.builtbroken.assemblyline.armbot.command.TaskTake;
 import com.builtbroken.assemblyline.armbot.command.TaskUse;
+import com.builtbroken.assemblyline.blocks.BlockGasOre;
+import com.builtbroken.assemblyline.blocks.BlockOre;
+import com.builtbroken.assemblyline.blocks.GasOreGenerator;
+import com.builtbroken.assemblyline.blocks.BlockOre.OreData;
 import com.builtbroken.assemblyline.entities.EntityFarmEgg;
 import com.builtbroken.assemblyline.entities.EnumBird;
 import com.builtbroken.assemblyline.fluid.pipes.BlockPipe;
@@ -66,12 +73,13 @@ import com.builtbroken.assemblyline.machine.encoder.BlockEncoder;
 import com.builtbroken.assemblyline.machine.encoder.ItemDisk;
 import com.builtbroken.assemblyline.machine.processor.BlockProcessor;
 import com.builtbroken.assemblyline.machine.red.BlockAdvancedHopper;
-import com.dark.CoreRegistry;
-import com.dark.DarkCore;
-import com.dark.EnumMaterial;
-import com.dark.EnumOrePart;
-import com.dark.IndustryTabs;
-import com.dark.prefab.ItemBlockHolder;
+import com.builtbroken.minecraft.CoreRegistry;
+import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.EnumMaterial;
+import com.builtbroken.minecraft.EnumOrePart;
+import com.builtbroken.minecraft.IndustryTabs;
+import com.builtbroken.minecraft.fluid.EnumGas;
+import com.builtbroken.minecraft.prefab.ItemBlockHolder;
 
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -88,6 +96,26 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import dark.machines.deco.BlockBasalt;
+import dark.machines.deco.BlockColorGlass;
+import dark.machines.deco.BlockColorGlowGlass;
+import dark.machines.deco.BlockColorSand;
+import dark.machines.deco.ItemBlockColored;
+import dark.machines.generators.BlockSmallSteamGen;
+import dark.machines.generators.BlockSolarPanel;
+import dark.machines.items.ItemBattery;
+import dark.machines.items.ItemBlockOre;
+import dark.machines.items.ItemColoredDust;
+import dark.machines.items.ItemCommonTool;
+import dark.machines.items.ItemReadoutTools;
+import dark.machines.items.ItemWrench;
+import dark.machines.machines.BlockDebug;
+import dark.machines.machines.BlockEnergyStorage;
+import dark.machines.machines.ItemBlockEnergyStorage;
+import dark.machines.prefab.entities.EntityTestCar;
+import dark.machines.prefab.entities.ItemVehicleSpawn;
+import dark.machines.transmit.BlockWire;
+import dark.machines.transmit.ItemBlockWire;
 
 @ModstatInfo(prefix = "asmline")
 @Mod(modid = AssemblyLine.MOD_ID, name = AssemblyLine.MOD_NAME, version = AssemblyLine.VERSION, dependencies = "required-after:DarkCore", useMetadata = true)
@@ -176,7 +204,35 @@ public class AssemblyLine
 
         FMLog.info("Loaded: " + TranslationHelper.loadLanguages(DarkCore.LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
         IndustryTabs.tabAutomation().setIconItemStack(new ItemStack(ALRecipeLoader.blockConveyorBelt));
+        EntityRegistry.registerGlobalEntityID(EntityTestCar.class, "TestCar", EntityRegistry.findGlobalUniqueEntityId());
+        EntityRegistry.registerModEntity(EntityTestCar.class, "TestCar", 60, this, 64, 1, true);
 
+        for (EnumGas gas : EnumGas.values())
+        {
+            FluidRegistry.registerFluid(gas.getGas());
+        }
+        if (ALRecipeLoader.blockGas != null)
+        {
+            EnumGas.NATURAL_GAS.getGas().setBlockID(ALRecipeLoader.blockGas);
+        }
+        if (ALRecipeLoader.blockGas != null)
+        {
+            GameRegistry.registerWorldGenerator(new GasOreGenerator());
+        }
+        if (ALRecipeLoader.blockOre != null)
+        {
+            for (OreData data : OreData.values())
+            {
+                if (data.doWorldGen)
+                {
+                    OreGenReplaceStone gen = data.getGeneratorSettings();
+                    if (gen != null)
+                    {
+                        OreGenerator.addOre(gen);
+                    }
+                }
+            }
+        }
         if (ALRecipeLoader.itemParts != null)
         {
             for (Parts part : Parts.values())
@@ -215,6 +271,7 @@ public class AssemblyLine
             recipeLoader = new ALRecipeLoader();
         }
         CONFIGURATION.load();
+        /* BLOCKS */
         ALRecipeLoader.blockConveyorBelt = CoreRegistry.createNewBlock("ALBlockConveyor", AssemblyLine.MOD_ID, BlockConveyorBelt.class);
         ALRecipeLoader.blockManipulator = CoreRegistry.createNewBlock("Manipulator", AssemblyLine.MOD_ID, BlockManipulator.class);
         ALRecipeLoader.blockCrate = (BlockCrate) CoreRegistry.createNewBlock("Crate", AssemblyLine.MOD_ID, BlockCrate.class, ItemBlockCrate.class);
@@ -233,6 +290,26 @@ public class AssemblyLine
         ALRecipeLoader.blockSink = CoreRegistry.createNewBlock("FMBlockSink", AssemblyLine.MOD_ID, BlockSink.class, ItemBlockHolder.class);
         ALRecipeLoader.blockDrain = CoreRegistry.createNewBlock("FMBlockDrain", AssemblyLine.MOD_ID, BlockDrain.class, ItemBlockHolder.class);
         ALRecipeLoader.blockConPump = CoreRegistry.createNewBlock("FMBlockConstructionPump", AssemblyLine.MOD_ID, BlockConstructionPump.class, ItemBlockHolder.class);
+
+        ALRecipeLoader.blockSteamGen = CoreRegistry.createNewBlock("DMBlockSteamMachine", AssemblyLine.MOD_ID, BlockSmallSteamGen.class, ItemBlockHolder.class);
+        ALRecipeLoader.blockOre = CoreRegistry.createNewBlock("DMBlockOre", AssemblyLine.MOD_ID, BlockOre.class, ItemBlockOre.class);
+        ALRecipeLoader.blockWire = CoreRegistry.createNewBlock("DMBlockWire", AssemblyLine.MOD_ID, BlockWire.class, ItemBlockWire.class);
+        ALRecipeLoader.blockDebug = CoreRegistry.createNewBlock("DMBlockDebug", AssemblyLine.MOD_ID, BlockDebug.class, ItemBlockHolder.class);
+        ALRecipeLoader.blockStainGlass = CoreRegistry.createNewBlock("DMBlockStainedGlass", AssemblyLine.MOD_ID, BlockColorGlass.class, ItemBlockColored.class);
+        ALRecipeLoader.blockColorSand = CoreRegistry.createNewBlock("DMBlockColorSand", AssemblyLine.MOD_ID, BlockColorSand.class, ItemBlockColored.class);
+        ALRecipeLoader.blockBasalt = CoreRegistry.createNewBlock("DMBlockBasalt", AssemblyLine.MOD_ID, BlockBasalt.class, ItemBlockColored.class);
+        ALRecipeLoader.blockGlowGlass = CoreRegistry.createNewBlock("DMBlockGlowGlass", AssemblyLine.MOD_ID, BlockColorGlowGlass.class, ItemBlockColored.class);
+        ALRecipeLoader.blockSolar = CoreRegistry.createNewBlock("DMBlockSolar", AssemblyLine.MOD_ID, BlockSolarPanel.class, ItemBlockHolder.class);
+        ALRecipeLoader.blockGas = CoreRegistry.createNewBlock("DMBlockGas", AssemblyLine.MOD_ID, BlockGasOre.class, ItemBlockHolder.class);
+        ALRecipeLoader.blockBatBox = CoreRegistry.createNewBlock("DMBlockBatBox", AssemblyLine.MOD_ID, BlockEnergyStorage.class, ItemBlockEnergyStorage.class);
+
+        /* ITEMS */
+        ALRecipeLoader.itemTool = CoreRegistry.createNewItem("DMReadoutTools", AssemblyLine.MOD_ID, ItemReadoutTools.class, true);
+        ALRecipeLoader.battery = CoreRegistry.createNewItem("DMItemBattery", AssemblyLine.MOD_ID, ItemBattery.class, true);
+        ALRecipeLoader.wrench = CoreRegistry.createNewItem("DMWrench", AssemblyLine.MOD_ID, ItemWrench.class, true);
+        ALRecipeLoader.itemGlowingSand = CoreRegistry.createNewItem("DMItemGlowingSand", AssemblyLine.MOD_ID, ItemColoredDust.class, true);
+        ALRecipeLoader.itemDiggingTool = CoreRegistry.createNewItem("ItemDiggingTools", AssemblyLine.MOD_ID, ItemCommonTool.class, true);
+        ALRecipeLoader.itemVehicleTest = CoreRegistry.createNewItem("ItemVehicleTest", AssemblyLine.MOD_ID, ItemVehicleSpawn.class, true);
 
         ALRecipeLoader.itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", DarkCore.getNextItemId()).getInt());
         ALRecipeLoader.itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", DarkCore.getNextItemId()).getInt());

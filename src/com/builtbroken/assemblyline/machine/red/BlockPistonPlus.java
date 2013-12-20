@@ -3,7 +3,7 @@ package com.builtbroken.assemblyline.machine.red;
 import net.minecraft.block.material.Material;
 
 import com.builtbroken.assemblyline.AssemblyLine;
-import com.dark.prefab.BlockMachine;
+import com.builtbroken.minecraft.prefab.BlockMachine;
 
 /** This will be a piston that can extend from 1 - 20 depending on teir and user settings
  * 

@@ -4,7 +4,7 @@
 
 	<property file="build.properties" />
 	<property environment="env" />
-	<property name="file.core" value="CoreMachine_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
+	<property name="file.core" value="AssemblyLine_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
 	<target name="build">
 		<copy todir="${dir.development}">
 			<fileset dir="../Minecraft Forge Latest/" />
@@ -57,16 +57,18 @@
 		
 		<!-- Copy compiled files into folders to be zipped -->
 		<copy todir="core">
-			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/core/" />
-            <fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/machines/" />
+			<fileset dir="${dir.mcp}/reobf/minecraft" includes="com/builtbroken/assemblyline/" />
             <fileset dir="${dir.mcp}/reobf/minecraft" includes="com/builtbroken/common/" />
-           	<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/api/" />
-			<fileset dir="${dir.mcp}/reobf/minecraft" includes="buildcraft/" />
+			<fileset dir="${dir.mcp}/reobf/minecraft" includes="com/builtbroken/minecraft/" />
+            <fileset dir="${dir.mcp}/reobf/minecraft" includes="buildcraft/" />
+            <fileset dir="${dir.mcp}/reobf/minecraft" includes="cofh/" />
             <fileset dir="${dir.mcp}/reobf/minecraft" includes="dan200/" />
             <fileset dir="${dir.mcp}/reobf/minecraft" includes="ic2/" />
-            <fileset dir="${dir.mcp}/reobf/minecraft" includes="org/" />
-            <fileset dir="${dir.mcp}/reobf/minecraft" includes="themalexpansion/" />
             <fileset dir="${dir.mcp}/reobf/minecraft" includes="universalelectricity/" />
+			<fileset dir="${dir.mcp}/reobf/minecraft" includes="micdoodle8/" />
+			<fileset dir="${dir.mcp}/reobf/minecraft" includes="mffs/" />
+			<fileset dir="${dir.mcp}/reobf/minecraft" includes="org/modstats/" />
+			<fileset dir="${dir.mcp}/reobf/minecraft" includes="icbm/" />
             <fileset dir="${dir.development}resources" excludes=".git/**" />
 		</copy>
         <copy todir="output" file="LICENSE.txt" />

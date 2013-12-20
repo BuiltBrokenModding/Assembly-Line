@@ -14,7 +14,7 @@ import com.builtbroken.assemblyline.client.model.ModelGearRod;
 import com.builtbroken.assemblyline.client.model.ModelGenerator;
 import com.builtbroken.assemblyline.client.model.ModelPump;
 import com.builtbroken.assemblyline.client.model.ModelSink;
-import com.dark.DarkCore;
+import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;

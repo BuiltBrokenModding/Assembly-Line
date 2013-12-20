@@ -31,15 +31,14 @@ import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
-import com.dark.DarkCore;
-import com.dark.EnumMaterial;
-import com.dark.EnumOrePart;
-import com.dark.IExtraInfo.IExtraItemInfo;
+import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.EnumMaterial;
+import com.builtbroken.minecraft.IExtraInfo.IExtraItemInfo;
 import com.google.common.collect.Multimap;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.CoreMachine;
 
 /** Flexible tool class that uses NBT to store damage and effect rather than metadata. Metadata
  * instead is used to store sub items allowing several different tools to exist within the same item
@@ -56,7 +55,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
 
     public ItemCommonTool()
     {
-        super(CoreMachine.CONFIGURATION.getItem("Items", "CommonTools", DarkCore.getNextItemId()).getInt());
+        super(AssemblyLine.CONFIGURATION.getItem("Items", "CommonTools", DarkCore.getNextItemId()).getInt());
         this.maxStackSize = 1;
         this.setCreativeTab(CreativeTabs.tabTools);
     }
@@ -436,7 +435,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
     {
         if (itemStack != null)
         {
-            return "item." + CoreMachine.getInstance().PREFIX + EnumTool.getFullName(itemStack.getItemDamage());
+            return "item." + AssemblyLine.PREFIX + EnumTool.getFullName(itemStack.getItemDamage());
         }
         else
         {
@@ -476,7 +475,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
 
                     if (tool.enabled)
                     {
-                        tool.toolIcons[mat.ordinal()] = iconRegister.registerIcon(CoreMachine.getInstance().PREFIX + "tool." + mat.simpleName + tool.name);
+                        tool.toolIcons[mat.ordinal()] = iconRegister.registerIcon(AssemblyLine.PREFIX + "tool." + mat.simpleName + tool.name);
                     }
                 }
             }

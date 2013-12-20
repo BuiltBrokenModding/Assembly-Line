@@ -3,8 +3,8 @@ package com.builtbroken.assemblyline.machine;
 import net.minecraft.block.material.Material;
 
 import com.builtbroken.assemblyline.AssemblyLine;
-import com.dark.IndustryTabs;
-import com.dark.prefab.BlockMachine;
+import com.builtbroken.minecraft.IndustryTabs;
+import com.builtbroken.minecraft.prefab.BlockMachine;
 
 public abstract class BlockFM extends BlockMachine
 {

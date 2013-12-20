@@ -10,7 +10,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
-import dark.machines.CoreRecipeLoader;
+
+import com.builtbroken.assemblyline.ALRecipeLoader;
 
 /** Item version of the enrgy storage block
  * 
@@ -73,7 +74,7 @@ public class ItemBlockEnergyStorage extends ItemBlock
 
     public static ItemStack getWrenchedBatteryBox(World world, Vector3 vec)
     {
-        ItemStack itemStack = new ItemStack(CoreRecipeLoader.blockBatBox);
+        ItemStack itemStack = new ItemStack(ALRecipeLoader.blockBatBox);
         TileEntity entity = vec.getTileEntity(world);
         if (entity instanceof TileEntityBatteryBox)
         {

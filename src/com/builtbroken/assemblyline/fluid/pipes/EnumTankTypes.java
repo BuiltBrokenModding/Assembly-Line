@@ -1,7 +1,7 @@
 package com.builtbroken.assemblyline.fluid.pipes;
 
-import com.dark.helpers.ColorCode;
-import com.dark.helpers.ColorCode.IColoredId;
+import com.builtbroken.minecraft.helpers.ColorCode;
+import com.builtbroken.minecraft.helpers.ColorCode.IColoredId;
 
 public enum EnumTankTypes implements IColoredId
 {

@@ -8,11 +8,11 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.item.ItemStack;
 
-import com.dark.prefab.EnergyHelper;
+import com.builtbroken.minecraft.prefab.EnergyHelper;
+import com.builtbroken.minecraft.recipes.MachineRecipeHandler;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.api.reciepes.MachineRecipeHandler;
 
 public class ContainerProcessor extends Container
 {

@@ -3,14 +3,15 @@ package dark.machines.items;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dark.EnumMaterial;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
+
+import com.builtbroken.assemblyline.ALRecipeLoader;
+import com.builtbroken.minecraft.EnumMaterial;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.CoreRecipeLoader;
 
 /** Enum to store tools that can be created from the material sheet.
  * 
@@ -88,9 +89,9 @@ public enum EnumTool
     public ItemStack getTool(EnumMaterial mat)
     {
         ItemStack stack = null;
-        if (CoreRecipeLoader.itemDiggingTool instanceof ItemCommonTool)
+        if (ALRecipeLoader.itemDiggingTool instanceof ItemCommonTool)
         {
-            stack = new ItemStack(CoreRecipeLoader.itemDiggingTool.itemID, 1, (mat.ordinal() * toolCountPerMaterial) + this.ordinal());
+            stack = new ItemStack(ALRecipeLoader.itemDiggingTool.itemID, 1, (mat.ordinal() * toolCountPerMaterial) + this.ordinal());
         }
         return stack;
     }

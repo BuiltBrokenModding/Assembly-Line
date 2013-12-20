@@ -19,7 +19,7 @@ import universalelectricity.core.vector.Vector3;
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.armbot.TileEntityArmbot;
 import com.builtbroken.assemblyline.client.model.ModelArmbot;
-import com.dark.DarkCore;
+import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import universalelectricity.core.vector.Vector2;
 
 import com.builtbroken.assemblyline.api.coding.args.ArgumentData;
-import com.dark.save.ISaveObj;
+import com.builtbroken.minecraft.save.ISaveObj;
 
 /** @author DarkGuardsman */
 public interface ITask extends Cloneable, ISaveObj

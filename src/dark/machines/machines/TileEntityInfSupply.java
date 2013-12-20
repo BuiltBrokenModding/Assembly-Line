@@ -2,9 +2,9 @@ package dark.machines.machines;
 
 import java.util.EnumSet;
 
-import com.dark.prefab.TileEntityEnergyMachine;
-
 import net.minecraftforge.common.ForgeDirection;
+
+import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 
 public class TileEntityInfSupply extends TileEntityEnergyMachine
 {

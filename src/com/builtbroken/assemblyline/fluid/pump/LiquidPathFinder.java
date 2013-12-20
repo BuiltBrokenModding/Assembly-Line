@@ -14,7 +14,7 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
 
-import com.dark.fluid.FluidHelper;
+import com.builtbroken.minecraft.fluid.FluidHelper;
 
 /** A simpler path Finder used to find drainable or fillable tiles
  * 

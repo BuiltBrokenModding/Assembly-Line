@@ -17,8 +17,8 @@ import com.builtbroken.assemblyline.api.coding.args.ArgumentIntData;
 import com.builtbroken.assemblyline.armbot.TaskBaseArmbot;
 import com.builtbroken.assemblyline.armbot.TaskBaseProcess;
 import com.builtbroken.common.science.units.UnitHelper;
-import com.dark.helpers.InvInteractionHelper;
-import com.dark.helpers.MathHelper;
+import com.builtbroken.minecraft.helpers.InvInteractionHelper;
+import com.builtbroken.minecraft.helpers.MathHelper;
 
 public class TaskGive extends TaskBaseArmbot
 {
