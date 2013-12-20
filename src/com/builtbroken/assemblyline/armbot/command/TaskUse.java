@@ -6,8 +6,8 @@ import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
-import com.builtbroken.assemblyline.api.coding.IArmbot;
-import com.builtbroken.assemblyline.api.coding.IArmbotUseable;
+import com.builtbroken.assemblyline.api.IArmbot;
+import com.builtbroken.assemblyline.api.IArmbotUseable;
 import com.builtbroken.assemblyline.api.coding.IProcessTask;
 import com.builtbroken.assemblyline.api.coding.args.ArgumentIntData;
 import com.builtbroken.assemblyline.armbot.TaskBaseArmbot;

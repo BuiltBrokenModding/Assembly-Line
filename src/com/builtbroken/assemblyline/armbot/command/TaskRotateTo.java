@@ -5,7 +5,7 @@ import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import universalelectricity.core.vector.Vector2;
 
-import com.builtbroken.assemblyline.api.coding.IArmbot;
+import com.builtbroken.assemblyline.api.IArmbot;
 import com.builtbroken.assemblyline.api.coding.args.ArgumentIntData;
 import com.builtbroken.assemblyline.armbot.TaskBaseArmbot;
 import com.builtbroken.assemblyline.armbot.TaskBaseProcess;

@@ -1,4 +1,6 @@
-package com.builtbroken.assemblyline.api.coding;
+package com.builtbroken.assemblyline.api;
+
+import com.builtbroken.assemblyline.api.coding.IProgrammableMachine;
 
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector2;

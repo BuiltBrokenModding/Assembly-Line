@@ -1,6 +1,6 @@
 package com.builtbroken.assemblyline.armbot.command;
 
-import com.builtbroken.assemblyline.api.coding.IArmbot;
+import com.builtbroken.assemblyline.api.IArmbot;
 import com.builtbroken.assemblyline.armbot.TaskBaseArmbot;
 import com.builtbroken.assemblyline.armbot.TaskBaseProcess;
 

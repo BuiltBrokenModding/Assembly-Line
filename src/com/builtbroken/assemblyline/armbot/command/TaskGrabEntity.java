@@ -9,7 +9,7 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 
-import com.builtbroken.assemblyline.api.coding.IArmbot;
+import com.builtbroken.assemblyline.api.IArmbot;
 import com.builtbroken.assemblyline.api.coding.args.ArgumentData;
 import com.builtbroken.assemblyline.armbot.TaskBaseProcess;
 import com.dark.helpers.EntityDictionary;

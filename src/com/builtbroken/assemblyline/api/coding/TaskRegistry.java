@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import com.builtbroken.assemblyline.api.IArmbot;
+
 /** Used to both register task and fake machines for the encoder to use to create new programs.
  * 
  * @author DarkGuardsman */

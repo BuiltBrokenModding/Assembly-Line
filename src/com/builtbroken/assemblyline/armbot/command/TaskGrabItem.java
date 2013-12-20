@@ -7,7 +7,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 
-import com.builtbroken.assemblyline.api.coding.IArmbot;
+import com.builtbroken.assemblyline.api.IArmbot;
 import com.builtbroken.assemblyline.api.coding.args.ArgumentIntData;
 import com.builtbroken.assemblyline.armbot.TaskBaseProcess;
 import com.builtbroken.common.science.units.UnitHelper;

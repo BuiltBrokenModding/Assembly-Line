@@ -1,4 +1,4 @@
-package com.builtbroken.assemblyline.api;
+package com.builtbroken.assemblyline.api.fluid;
 
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;

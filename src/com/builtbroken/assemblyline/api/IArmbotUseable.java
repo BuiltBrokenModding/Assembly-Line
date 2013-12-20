@@ -1,4 +1,4 @@
-package com.builtbroken.assemblyline.api.coding;
+package com.builtbroken.assemblyline.api;
 
 import java.util.List;
 

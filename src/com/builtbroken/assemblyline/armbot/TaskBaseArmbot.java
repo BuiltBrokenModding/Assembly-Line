@@ -1,6 +1,6 @@
 package com.builtbroken.assemblyline.armbot;
 
-import com.builtbroken.assemblyline.api.coding.IArmbot;
+import com.builtbroken.assemblyline.api.IArmbot;
 import com.builtbroken.assemblyline.api.coding.IProgrammableMachine;
 
 public abstract class TaskBaseArmbot extends TaskBaseProcess

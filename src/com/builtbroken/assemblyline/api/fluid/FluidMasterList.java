@@ -1,4 +1,4 @@
-package com.builtbroken.assemblyline.api;
+package com.builtbroken.assemblyline.api.fluid;
 
 import java.util.HashMap;
 

@@ -23,8 +23,8 @@ import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 import com.builtbroken.assemblyline.api.AutoCraftEvent;
-import com.builtbroken.assemblyline.api.coding.IArmbot;
-import com.builtbroken.assemblyline.api.coding.IArmbotUseable;
+import com.builtbroken.assemblyline.api.IArmbot;
+import com.builtbroken.assemblyline.api.IArmbotUseable;
 import com.builtbroken.assemblyline.api.coding.args.ArgumentData;
 import com.builtbroken.common.Pair;
 import com.dark.DarkCore;

@@ -23,7 +23,7 @@ import org.bouncycastle.util.Arrays;
 import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.assemblyline.FluidPartsMaterial;
-import com.builtbroken.assemblyline.api.FluidMasterList;
+import com.builtbroken.assemblyline.api.fluid.FluidMasterList;
 import com.builtbroken.assemblyline.api.fluid.INetworkFluidPart;
 import com.builtbroken.assemblyline.fluid.network.NetworkFluidTiles;
 import com.dark.DarkCore;

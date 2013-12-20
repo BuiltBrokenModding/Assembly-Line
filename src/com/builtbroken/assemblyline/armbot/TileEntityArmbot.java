@@ -19,7 +19,7 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
 
 import com.builtbroken.assemblyline.ALRecipeLoader;
-import com.builtbroken.assemblyline.api.coding.IArmbot;
+import com.builtbroken.assemblyline.api.IArmbot;
 import com.builtbroken.assemblyline.api.coding.IProgram;
 import com.builtbroken.assemblyline.api.coding.ProgramHelper;
 import com.builtbroken.assemblyline.machine.TileEntityAssembly;
