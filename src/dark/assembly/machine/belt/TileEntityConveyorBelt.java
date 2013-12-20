@@ -20,7 +20,6 @@ import cpw.mods.fml.common.network.Player;
 import dark.api.al.IBelt;
 import dark.assembly.ALRecipeLoader;
 import dark.assembly.machine.TileEntityAssembly;
-import dark.machines.DarkMain;
 
 /** Conveyer belt TileEntity that allows entities of all kinds to be moved
  * 
@@ -76,8 +75,6 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IBelt,
             {
                 this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "mods.assemblyline.conveyor", 0.5f, 0.7f, true);
             }
-            if (!DarkMain.zeroAnimation)
-            {
                 this.wheelRotation = (40 + this.wheelRotation) % 360;
 
                 float wheelRotPct = wheelRotation / 360f;
@@ -99,7 +96,6 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IBelt,
                     if (this.animFrame > MAX_SLANT_FRAME)
                         this.animFrame = MAX_SLANT_FRAME;
                 }
-            }
         }
 
     }

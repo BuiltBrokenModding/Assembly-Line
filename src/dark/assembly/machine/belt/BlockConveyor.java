@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
 import com.builtbroken.common.Pair;
-import com.dark.prefab.tile.network.NetworkItemSupply;
+import com.dark.tilenetwork.prefab.NetworkItemSupply;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -24,7 +24,6 @@ import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.client.render.RenderConveyorBelt;
 import dark.assembly.machine.BlockAssembly;
 import dark.assembly.machine.belt.TileEntityConveyorBelt.SlantType;
-import dark.machines.DarkMain;
 
 public class BlockConveyor extends BlockAssembly
 {
@@ -276,7 +275,7 @@ public class BlockConveyor extends BlockAssembly
     @Override
     public int getRenderType()
     {
-        return DarkMain.zeroRendering ? 0 : BlockRenderingHandler.BLOCK_RENDER_ID;
+        return BlockRenderingHandler.BLOCK_RENDER_ID;
     }
 
     @Override

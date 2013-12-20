@@ -5,16 +5,16 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.dark.prefab.tile.network.NetworkSharedPower;
-import com.dark.prefab.tile.network.NetworkUpdateHandler;
-import com.dark.tile.network.INetworkEnergyPart;
-import com.dark.tile.network.INetworkPart;
-
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.block.IElectrical;
 import universalelectricity.core.block.IElectricalStorage;
 import universalelectricity.core.vector.Vector3;
+
+import com.dark.tilenetwork.INetworkEnergyPart;
+import com.dark.tilenetwork.INetworkPart;
+import com.dark.tilenetwork.prefab.NetworkSharedPower;
+import com.dark.tilenetwork.prefab.NetworkUpdateHandler;
 
 public class NetworkAssembly extends NetworkSharedPower
 {

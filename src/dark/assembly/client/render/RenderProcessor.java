@@ -1,5 +1,6 @@
 package dark.assembly.client.render;
 
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeDirection;
@@ -14,10 +15,9 @@ import dark.assembly.AssemblyLine;
 import dark.assembly.client.model.ModelCrusher;
 import dark.assembly.client.model.ModelGrinder;
 import dark.assembly.machine.processor.TileEntityProcessor;
-import dark.machines.client.renders.RenderTileMachine;
 
 @SideOnly(Side.CLIENT)
-public class RenderProcessor extends RenderTileMachine
+public class RenderProcessor extends TileEntitySpecialRenderer
 {
     private ModelCrusher crusherModel;
     private ModelGrinder grinderModel;
@@ -76,14 +76,6 @@ public class RenderProcessor extends RenderTileMachine
         GL11.glPopMatrix();
     }
 
-    @Override
-    public void renderModel(TileEntity tileEntity, double var2, double var4, double var6, float var8)
-    {
-        if (tileEntity instanceof TileEntityProcessor)
-            this.renderAModelAt((TileEntityProcessor) tileEntity, var2, var4, var6, var8);
-    }
-
-    @Override
     public ResourceLocation getTexture(int block, int meta)
     {
         int g = meta / 4;
@@ -96,6 +88,14 @@ public class RenderProcessor extends RenderTileMachine
             return new ResourceLocation(AssemblyLine.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "GrinderBlock.png");
         }
         return null;
+
+    }
+
+    @Override
+    public void renderTileEntityAt(TileEntity tileEntity, double var2, double var4, double var6, float var8)
+    {
+        if (tileEntity instanceof TileEntityProcessor)
+            this.renderAModelAt((TileEntityProcessor) tileEntity, var2, var4, var6, var8);
 
     }
 }

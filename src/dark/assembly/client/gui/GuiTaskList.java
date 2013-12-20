@@ -6,6 +6,8 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
+import com.dark.interfaces.IScroll;
+
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import dark.api.al.coding.IProgram;
@@ -15,7 +17,6 @@ import dark.assembly.armbot.command.TaskEnd;
 import dark.assembly.armbot.command.TaskIdle;
 import dark.assembly.armbot.command.TaskStart;
 import dark.assembly.machine.encoder.TileEntityEncoder;
-import dark.core.interfaces.IScroll;
 
 /** Not a gui itself but a component used to display task as a box inside of a gui
  * 

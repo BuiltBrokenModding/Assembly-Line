@@ -26,7 +26,6 @@ import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.client.render.RenderConveyorBelt;
 import dark.assembly.machine.BlockAssembly;
 import dark.assembly.machine.belt.TileEntityConveyorBelt.SlantType;
-import dark.machines.DarkMain;
 
 /** The block for the actual conveyor belt!
  *
@@ -354,7 +353,7 @@ public class BlockConveyorBelt extends BlockAssembly
     @Override
     public int getRenderType()
     {
-        return DarkMain.zeroRendering ? 0 : BlockRenderingHandler.BLOCK_RENDER_ID;
+        return BlockRenderingHandler.BLOCK_RENDER_ID;
     }
 
     @Override

@@ -5,8 +5,10 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
+import com.dark.prefab.invgui.SlotRestricted;
+
 import dark.assembly.ALRecipeLoader;
-import dark.core.prefab.invgui.SlotRestricted;
 
 public class ContainerEncoder extends Container
 {

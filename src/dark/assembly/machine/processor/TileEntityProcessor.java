@@ -5,17 +5,17 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
 
+import com.dark.interfaces.IInvBox;
 import com.dark.network.PacketHandler;
+import com.dark.prefab.EnergyHelper;
+import com.dark.prefab.TileEntityEnergyMachine;
+import com.dark.prefab.invgui.InvChest;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;
 import dark.api.reciepes.MachineRecipeHandler;
 import dark.api.reciepes.ProcessorType;
 import dark.assembly.machine.processor.BlockProcessor.ProcessorData;
-import dark.core.interfaces.IInvBox;
-import dark.core.prefab.invgui.InvChest;
-import dark.core.prefab.machine.EnergyHelper;
-import dark.core.prefab.machine.TileEntityEnergyMachine;
 
 /** Basic A -> B recipe processor machine designed mainly to handle ore blocks
  * 

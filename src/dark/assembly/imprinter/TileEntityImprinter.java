@@ -23,18 +23,18 @@ import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 import com.builtbroken.common.Pair;
+import com.dark.DarkCore;
 import com.dark.helpers.AutoCraftingManager;
 import com.dark.helpers.AutoCraftingManager.IAutoCrafter;
 import com.dark.network.PacketHandler;
+import com.dark.prefab.TileEntityMulti;
+import com.dark.prefab.invgui.ISlotPickResult;
 import com.google.common.io.ByteArrayDataInput;
 
+import dark.api.al.AutoCraftEvent;
 import dark.api.al.coding.IArmbot;
 import dark.api.al.coding.IArmbotUseable;
 import dark.api.al.coding.args.ArgumentData;
-import dark.api.events.AutoCraftEvent;
-import dark.core.prefab.invgui.ISlotPickResult;
-import dark.core.prefab.machine.TileEntityMulti;
-import dark.machines.DarkMain;
 
 public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInventory, IArmbotUseable, IPacketReceiver, ISlotPickResult, IAutoCrafter
 {
@@ -474,7 +474,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, this.searchInventories);
+        return PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, this, this.searchInventories);
     }
 
     // ///////////////////////////////////////

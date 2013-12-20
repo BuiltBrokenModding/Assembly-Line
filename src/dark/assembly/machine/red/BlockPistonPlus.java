@@ -1,8 +1,10 @@
 package dark.assembly.machine.red;
 
 import net.minecraft.block.material.Material;
-import dark.core.prefab.machine.BlockMachine;
-import dark.machines.DarkMain;
+
+import com.dark.prefab.BlockMachine;
+
+import dark.assembly.AssemblyLine;
 
 /** This will be a piston that can extend from 1 - 20 depending on teir and user settings
  * 
@@ -12,7 +14,7 @@ public class BlockPistonPlus extends BlockMachine
 
     public BlockPistonPlus()
     {
-        super(DarkMain.CONFIGURATION, "DMPiston", Material.piston);
+        super(AssemblyLine.CONFIGURATION, "DMPiston", Material.piston);
     }
 
 }

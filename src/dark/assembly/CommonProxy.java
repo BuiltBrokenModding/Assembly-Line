@@ -9,6 +9,9 @@ import java.util.zip.ZipInputStream;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
+import com.dark.prefab.invgui.ContainerFake;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.IGuiHandler;
 import dark.assembly.imprinter.ContainerImprinter;
@@ -17,7 +20,6 @@ import dark.assembly.machine.encoder.ContainerEncoder;
 import dark.assembly.machine.encoder.TileEntityEncoder;
 import dark.assembly.machine.processor.ContainerProcessor;
 import dark.assembly.machine.processor.TileEntityProcessor;
-import dark.core.prefab.invgui.ContainerFake;
 
 public class CommonProxy implements IGuiHandler
 {

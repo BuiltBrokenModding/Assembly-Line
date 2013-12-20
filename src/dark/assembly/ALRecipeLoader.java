@@ -5,10 +5,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+
+import com.dark.prefab.RecipeLoader;
+
 import cpw.mods.fml.common.registry.GameRegistry;
 import dark.assembly.machine.BlockCrate;
 import dark.assembly.machine.processor.BlockProcessor;
-import dark.core.prefab.RecipeLoader;
 
 public class ALRecipeLoader extends RecipeLoader
 {

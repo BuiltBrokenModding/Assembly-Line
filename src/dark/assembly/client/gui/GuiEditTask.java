@@ -11,15 +11,15 @@ import org.lwjgl.opengl.GL11;
 import universalelectricity.core.vector.Vector2;
 
 import com.dark.DarkCore;
+import com.dark.prefab.invgui.GuiBase;
+import com.dark.prefab.invgui.GuiMessageBox;
+import com.dark.prefab.invgui.IMessageBoxDialog;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import dark.api.al.coding.ITask;
 import dark.api.al.coding.args.ArgumentData;
 import dark.assembly.AssemblyLine;
-import dark.core.prefab.invgui.GuiBase;
-import dark.core.prefab.invgui.GuiMessageBox;
-import dark.core.prefab.invgui.IMessageBoxDialog;
 
 public class GuiEditTask extends GuiBase implements IMessageBoxDialog
 {

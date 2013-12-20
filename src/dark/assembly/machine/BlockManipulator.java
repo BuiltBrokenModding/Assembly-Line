@@ -15,7 +15,6 @@ import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.assembly.CommonProxy;
 import dark.assembly.client.render.BlockRenderingHandler;
 import dark.assembly.client.render.RenderManipulator;
 import dark.assembly.imprinter.prefab.BlockImprintable;
@@ -29,7 +28,6 @@ public class BlockManipulator extends BlockImprintable
     {
         super("manipulator", UniversalElectricity.machine);
         this.setBlockBounds(0, 0, 0, 1, 0.29f, 1);
-        this.guiID = CommonProxy.GUI_MANIPULATOR;
     }
 
     @Override

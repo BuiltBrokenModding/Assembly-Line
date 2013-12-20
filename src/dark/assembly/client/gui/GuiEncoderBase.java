@@ -2,11 +2,13 @@ package dark.assembly.client.gui;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+
+import com.dark.prefab.TileEntityMachine;
+import com.dark.prefab.invgui.ContainerFake;
+import com.dark.prefab.invgui.GuiMachineContainer;
+
 import dark.assembly.AssemblyLine;
 import dark.assembly.CommonProxy;
-import dark.core.prefab.invgui.ContainerFake;
-import dark.core.prefab.machine.TileEntityMachine;
-import dark.machines.client.gui.GuiMachineContainer;
 
 public class GuiEncoderBase extends GuiMachineContainer
 {

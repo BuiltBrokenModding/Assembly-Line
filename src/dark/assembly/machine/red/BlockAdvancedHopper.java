@@ -15,13 +15,13 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.builtbroken.common.Pair;
-import com.dark.IndustryCreativeTab;
+import com.dark.IndustryTabs;
+import com.dark.prefab.BlockMachine;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
 import dark.assembly.client.render.RenderAdvancedHopper;
-import dark.core.prefab.machine.BlockMachine;
 
 /** Block for an advanced version of the vanilla minecraft hopper
  * 
@@ -38,7 +38,7 @@ public class BlockAdvancedHopper extends BlockMachine
     public BlockAdvancedHopper()
     {
         super(AssemblyLine.CONFIGURATION, "DMHopper", Material.iron);
-        this.setCreativeTab(IndustryCreativeTab.tabAutomation());
+        this.setCreativeTab(IndustryTabs.tabAutomation());
         this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
     }
 

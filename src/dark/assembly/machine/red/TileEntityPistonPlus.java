@@ -3,8 +3,9 @@ package dark.assembly.machine.red;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.core.vector.Vector3;
-import dark.core.interfaces.IMultiBlock;
-import dark.core.prefab.machine.TileEntityMachine;
+
+import com.dark.interfaces.IMultiBlock;
+import com.dark.prefab.TileEntityMachine;
 
 public class TileEntityPistonPlus extends TileEntityMachine implements IMultiBlock
 {

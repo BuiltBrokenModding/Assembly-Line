@@ -3,14 +3,15 @@ package dark.assembly.machine.encoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dark.IndustryCreativeTab;
-
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+
+import com.dark.IndustryTabs;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.assembly.AssemblyLine;
@@ -21,7 +22,7 @@ public class ItemDisk extends Item
     {
         super(id);
         this.setUnlocalizedName("disk");
-        this.setCreativeTab(IndustryCreativeTab.tabAutomation());
+        this.setCreativeTab(IndustryTabs.tabAutomation());
         this.setHasSubtypes(true);
     }
 

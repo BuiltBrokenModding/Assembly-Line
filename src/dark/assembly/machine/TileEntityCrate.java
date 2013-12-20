@@ -9,14 +9,14 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.network.IPacketReceiver;
 
+import com.dark.DarkCore;
 import com.dark.interfaces.IExtendedStorage;
 import com.dark.network.PacketHandler;
+import com.dark.prefab.TileEntityInv;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
-import dark.core.prefab.machine.TileEntityInv;
-import dark.machines.DarkMain;
 
 /** Basic single stack inventory
  * 
@@ -223,11 +223,11 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
         ItemStack stack = this.getSampleStack();
         if (stack != null)
         {
-            return PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, true, stack.writeToNBT(new NBTTagCompound()), stack.stackSize);
+            return PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, this, true, stack.writeToNBT(new NBTTagCompound()), stack.stackSize);
         }
         else
         {
-            return PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, false);
+            return PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, this, false);
         }
     }
 

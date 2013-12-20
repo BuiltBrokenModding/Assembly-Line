@@ -6,9 +6,10 @@ import net.minecraft.entity.player.InventoryPlayer;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import com.dark.prefab.invgui.GuiButtonImage;
+import com.dark.prefab.invgui.GuiButtonImage.ButtonIcon;
+
 import dark.assembly.machine.encoder.TileEntityEncoder;
-import dark.core.prefab.invgui.GuiButtonImage;
-import dark.core.prefab.invgui.GuiButtonImage.ButtonIcon;
 
 public class GuiEncoderCoder extends GuiEncoderBase
 {

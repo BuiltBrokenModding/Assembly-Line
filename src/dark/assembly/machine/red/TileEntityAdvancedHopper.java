@@ -2,14 +2,15 @@ package dark.assembly.machine.red;
 
 import java.util.List;
 
-import com.dark.helpers.InvInteractionHelper;
-import com.dark.helpers.ItemWorldHelper;
-
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
+
+import com.dark.helpers.InvInteractionHelper;
+import com.dark.helpers.ItemWorldHelper;
+
 import dark.assembly.imprinter.ItemImprinter;
 import dark.assembly.imprinter.prefab.TileEntityFilterable;
 

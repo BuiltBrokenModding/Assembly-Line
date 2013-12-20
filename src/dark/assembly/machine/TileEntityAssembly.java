@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.dark.prefab.tile.network.NetworkSharedPower;
-import com.dark.prefab.tile.network.NetworkTileEntities;
-import com.dark.tile.network.INetworkEnergyPart;
-import com.dark.tile.network.ITileNetwork;
-
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
-import dark.core.prefab.machine.TileEntityEnergyMachine;
+
+import com.dark.prefab.TileEntityEnergyMachine;
+import com.dark.tilenetwork.INetworkEnergyPart;
+import com.dark.tilenetwork.ITileNetwork;
+import com.dark.tilenetwork.prefab.NetworkSharedPower;
+import com.dark.tilenetwork.prefab.NetworkTileEntities;
 
 /** A class to be inherited by all machines on the assembly line. This class acts as a single peace
  * in a network of similar tiles allowing all to share power from one or more sources
