@@ -2,11 +2,11 @@ package com.builtbroken.assemblyline.api.coding;
 
 import java.util.HashMap;
 
-import com.builtbroken.assemblyline.api.coding.IProcessTask.ProcessReturn;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
+
+import com.builtbroken.assemblyline.api.coding.IProcessTask.ProcessReturn;
 
 /** Basic class to handle a machine like programs for any object that uses the IProgramable
  * interface. Doesn't actually do much then tell the program to function, and stores the programs

@@ -2,11 +2,6 @@ package com.builtbroken.assemblyline.fluid.pipes;
 
 import java.util.List;
 
-import com.builtbroken.assemblyline.ALRecipeLoader;
-import com.builtbroken.assemblyline.FluidPartsMaterial;
-import com.builtbroken.assemblyline.fluid.prefab.TileEntityFluidNetworkTile;
-import com.builtbroken.assemblyline.machine.TileEntityTank;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,6 +15,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import universalelectricity.core.vector.Vector3;
+
+import com.builtbroken.assemblyline.ALRecipeLoader;
+import com.builtbroken.assemblyline.FluidPartsMaterial;
+import com.builtbroken.assemblyline.fluid.prefab.TileEntityFluidNetworkTile;
+import com.builtbroken.assemblyline.machine.TileEntityTank;
 
 public class ItemBlockPipe extends ItemBlock
 {

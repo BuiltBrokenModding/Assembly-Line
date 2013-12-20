@@ -10,7 +10,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 import com.builtbroken.assemblyline.api.fluid.INetworkPipe;
 import com.builtbroken.assemblyline.fluid.network.NetworkPipes;
 import com.builtbroken.assemblyline.fluid.prefab.TileEntityFluidDevice;
-import com.dark.helpers.ConnectionHelper;
+import com.dark.helpers.DarksHelper;
 import com.dark.interfaces.IToolReadOut;
 import com.dark.tilenetwork.ITileConnector;
 
@@ -69,7 +69,7 @@ public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITi
     public void refresh()
     {
         // cleanup
-        this.connected = ConnectionHelper.getSurroundingTileEntities(this);
+        this.connected = DarksHelper.getSurroundingTileEntities(this);
         // read surroundings
         for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
         {

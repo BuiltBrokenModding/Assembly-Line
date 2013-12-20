@@ -7,11 +7,11 @@ import static com.builtbroken.assemblyline.client.model.ModelHelper.setTextureSu
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glTranslated;
+import net.minecraft.tileentity.TileEntity;
+import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.assemblyline.client.model.ModelHelper;
 
-import net.minecraft.tileentity.TileEntity;
-import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

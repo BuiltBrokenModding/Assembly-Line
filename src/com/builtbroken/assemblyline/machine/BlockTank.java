@@ -20,7 +20,7 @@ import com.builtbroken.assemblyline.fluid.pipes.ItemBlockPipe;
 import com.builtbroken.assemblyline.fluid.pipes.TileEntityPipe;
 import com.builtbroken.common.Pair;
 import com.dark.fluid.FluidHelper;
-import com.dark.helpers.ItemWorldHelper;
+import com.dark.helpers.DarksHelper;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -127,7 +127,7 @@ public class BlockTank extends BlockFM
                 }
                 else
                 {
-                    ItemWorldHelper.dropItemStack(world, new Vector3(x, y, z), dropStack, false);
+                    DarksHelper.dropItemStack(world, new Vector3(x, y, z), dropStack, false);
                 }
                 world.setBlockToAir(x, y, z);
             }

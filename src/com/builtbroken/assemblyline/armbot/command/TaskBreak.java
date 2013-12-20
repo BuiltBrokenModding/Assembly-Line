@@ -14,7 +14,7 @@ import com.builtbroken.assemblyline.api.coding.ITask;
 import com.builtbroken.assemblyline.armbot.TaskBaseArmbot;
 import com.builtbroken.assemblyline.armbot.TaskBaseProcess;
 import com.builtbroken.common.Pair;
-import com.dark.helpers.ItemWorldHelper;
+import com.dark.helpers.DarksHelper;
 
 /** Used by arms to break a specific block in a position.
  * 
@@ -51,7 +51,7 @@ public class TaskBreak extends TaskBaseArmbot
 
                 if (!this.keep || items.size() > 1)
                 {
-                    ItemWorldHelper.dropBlockAsItem(location.left(), serachPosition);
+                    DarksHelper.dropBlockAsItem(location.left(), serachPosition);
                 }
                 else
                 {

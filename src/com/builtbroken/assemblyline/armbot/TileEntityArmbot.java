@@ -26,7 +26,7 @@ import com.builtbroken.assemblyline.machine.TileEntityAssembly;
 import com.builtbroken.assemblyline.machine.encoder.ItemDisk;
 import com.builtbroken.common.Pair;
 import com.dark.DarkCore;
-import com.dark.helpers.ItemWorldHelper;
+import com.dark.helpers.DarksHelper;
 import com.dark.helpers.MathHelper;
 import com.dark.interfaces.IMultiBlock;
 import com.dark.network.PacketHandler;
@@ -442,7 +442,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
                 if (object instanceof ItemStack && this.grabbedObject instanceof ItemStack)
                 {
                     Vector3 handPosition = this.getHandPos();
-                    ItemWorldHelper.dropItemStack(worldObj, handPosition, (ItemStack) object, false);
+                    DarksHelper.dropItemStack(worldObj, handPosition, (ItemStack) object, false);
                 }
                 this.grabbedObject = null;
                 return true;

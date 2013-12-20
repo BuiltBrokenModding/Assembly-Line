@@ -2,8 +2,6 @@ package com.builtbroken.assemblyline.machine;
 
 import java.util.Random;
 
-import com.builtbroken.assemblyline.AssemblyLine;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -18,6 +16,9 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.block.IRotatableBlock;
 import universalelectricity.prefab.tile.IRotatable;
+
+import com.builtbroken.assemblyline.AssemblyLine;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

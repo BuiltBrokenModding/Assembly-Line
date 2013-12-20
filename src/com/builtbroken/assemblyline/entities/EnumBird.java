@@ -2,13 +2,14 @@ package com.builtbroken.assemblyline.entities;
 
 import java.awt.Color;
 
-import com.builtbroken.assemblyline.AssemblyLine;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+
+import com.builtbroken.assemblyline.AssemblyLine;
+
 import cpw.mods.fml.common.registry.EntityRegistry;
 
 /** Enum of different birds that can be spawned by an egg or in the world threw normal spawning

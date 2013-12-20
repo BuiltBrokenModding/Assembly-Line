@@ -1,7 +1,5 @@
 package com.builtbroken.assemblyline.item;
 
-import com.builtbroken.assemblyline.entities.EntityFarmEgg;
-
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
 import net.minecraft.dispenser.IBlockSource;
@@ -11,6 +9,8 @@ import net.minecraft.entity.IProjectile;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+
+import com.builtbroken.assemblyline.entities.EntityFarmEgg;
 
 public class BehaviorDispenseEgg extends BehaviorDefaultDispenseItem
 {

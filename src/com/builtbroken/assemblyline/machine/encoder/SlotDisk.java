@@ -1,10 +1,10 @@
 package com.builtbroken.assemblyline.machine.encoder;
 
-import com.builtbroken.assemblyline.ALRecipeLoader;
-
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
+import com.builtbroken.assemblyline.ALRecipeLoader;
 
 public class SlotDisk extends Slot
 {

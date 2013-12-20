@@ -1,9 +1,10 @@
 package com.builtbroken.assemblyline.client;
 
-import com.builtbroken.assemblyline.AssemblyLine;
-
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.event.ForgeSubscribe;
+
+import com.builtbroken.assemblyline.AssemblyLine;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

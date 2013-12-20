@@ -1,9 +1,5 @@
 package com.builtbroken.assemblyline.armbot.command;
 
-import com.builtbroken.assemblyline.api.IArmbot;
-import com.builtbroken.assemblyline.armbot.TaskBaseArmbot;
-import com.builtbroken.assemblyline.armbot.TaskBaseProcess;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemBlock;
@@ -11,6 +7,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.IPlantable;
 import universalelectricity.core.vector.Vector3;
+
+import com.builtbroken.assemblyline.api.IArmbot;
+import com.builtbroken.assemblyline.armbot.TaskBaseArmbot;
+import com.builtbroken.assemblyline.armbot.TaskBaseProcess;
 
 /** Used by arms to break a specific block in a position.
  * 

@@ -1,13 +1,13 @@
 package com.builtbroken.assemblyline.machine;
 
-import com.builtbroken.assemblyline.imprinter.prefab.TileEntityFilterable;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
+import com.builtbroken.assemblyline.imprinter.prefab.TileEntityFilterable;
 
 public class ContainerFilter extends Container
 {

@@ -2,14 +2,14 @@ package com.builtbroken.assemblyline.imprinter.prefab;
 
 import java.util.ArrayList;
 
-import com.builtbroken.assemblyline.api.IFilterable;
-import com.builtbroken.assemblyline.imprinter.ItemImprinter;
-import com.builtbroken.assemblyline.machine.TileEntityAssembly;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.tile.IRotatable;
+
+import com.builtbroken.assemblyline.api.IFilterable;
+import com.builtbroken.assemblyline.imprinter.ItemImprinter;
+import com.builtbroken.assemblyline.machine.TileEntityAssembly;
 
 public abstract class TileEntityFilterable extends TileEntityAssembly implements IRotatable, IFilterable
 {

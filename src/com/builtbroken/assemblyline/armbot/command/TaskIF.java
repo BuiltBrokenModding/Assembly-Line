@@ -3,12 +3,12 @@ package com.builtbroken.assemblyline.armbot.command;
 import java.util.ArrayList;
 import java.util.List;
 
+import universalelectricity.core.vector.Vector2;
+
 import com.builtbroken.assemblyline.api.coding.IProgrammableMachine;
 import com.builtbroken.assemblyline.api.coding.ITask;
 import com.builtbroken.assemblyline.api.coding.args.ArgumentData;
 import com.builtbroken.assemblyline.armbot.TaskBaseLogic;
-
-import universalelectricity.core.vector.Vector2;
 
 /** @author DarkGuardsman */
 public class TaskIF extends TaskBaseLogic

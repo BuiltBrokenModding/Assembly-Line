@@ -2,15 +2,16 @@ package com.builtbroken.assemblyline.client.render;
 
 import java.util.ArrayList;
 
-import com.builtbroken.assemblyline.imprinter.ItemImprinter;
-import com.builtbroken.assemblyline.imprinter.prefab.TileEntityFilterable;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
+
+import com.builtbroken.assemblyline.imprinter.ItemImprinter;
+import com.builtbroken.assemblyline.imprinter.prefab.TileEntityFilterable;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

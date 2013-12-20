@@ -1,12 +1,12 @@
 package com.builtbroken.assemblyline.item;
 
-import com.builtbroken.assemblyline.entities.EntityFarmEgg;
-
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+
+import com.builtbroken.assemblyline.entities.EntityFarmEgg;
 
 public class ItemFarmEgg extends Item
 {

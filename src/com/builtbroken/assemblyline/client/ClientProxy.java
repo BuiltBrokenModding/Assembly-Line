@@ -1,5 +1,14 @@
 package com.builtbroken.assemblyline.client;
 
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.entity.RenderSnowball;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.common.MinecraftForge;
+
 import com.builtbroken.assemblyline.ALRecipeLoader;
 import com.builtbroken.assemblyline.CommonProxy;
 import com.builtbroken.assemblyline.client.gui.GuiEncoderCoder;
@@ -31,14 +40,6 @@ import com.builtbroken.assemblyline.machine.TileEntityTank;
 import com.builtbroken.assemblyline.machine.encoder.TileEntityEncoder;
 import com.builtbroken.assemblyline.machine.processor.TileEntityProcessor;
 
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.entity.RenderSnowball;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;

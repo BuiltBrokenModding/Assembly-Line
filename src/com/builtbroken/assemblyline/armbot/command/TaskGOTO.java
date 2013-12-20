@@ -3,12 +3,12 @@ package com.builtbroken.assemblyline.armbot.command;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.nbt.NBTTagCompound;
+import universalelectricity.core.vector.Vector2;
+
 import com.builtbroken.assemblyline.api.coding.IRedirectTask;
 import com.builtbroken.assemblyline.api.coding.ITask;
 import com.builtbroken.assemblyline.armbot.TaskBase;
-
-import net.minecraft.nbt.NBTTagCompound;
-import universalelectricity.core.vector.Vector2;
 
 /** @author DarkGuardsman */
 public class TaskGOTO extends TaskBase implements IRedirectTask

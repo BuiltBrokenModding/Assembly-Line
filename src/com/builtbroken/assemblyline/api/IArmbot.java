@@ -1,9 +1,9 @@
 package com.builtbroken.assemblyline.api;
 
-import com.builtbroken.assemblyline.api.coding.IProgrammableMachine;
-
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector2;
+
+import com.builtbroken.assemblyline.api.coding.IProgrammableMachine;
 
 /** Should be used to interact with the armbot and not to create a new armbot */
 public interface IArmbot extends Cloneable, IProgrammableMachine
