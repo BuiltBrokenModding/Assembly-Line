@@ -140,7 +140,7 @@ public class AssemblyLine
     public static String LANGUAGE_PATH = DIRECTORY + "languages/";
     public static String SOUND_PATH = DIRECTORY + "audio/";
 
-    @SidedProxy(clientSide = "dark.assembly.client.ClientProxy", serverSide = "dark.assembly.CommonProxy")
+    @SidedProxy(clientSide = "com.builtbroken.assemblyline.client.ClientProxy", serverSide = "com.builtbroken.assemblyline.CommonProxy")
     public static CommonProxy proxy;
 
     @Instance(AssemblyLine.MOD_ID)
