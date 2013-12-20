@@ -12,6 +12,7 @@ import com.dark.prefab.ItemBasic;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.api.ColorCode;
 import dark.machines.CoreMachine;
 
 public class ItemColoredDust extends ItemBasic
@@ -31,7 +32,7 @@ public class ItemColoredDust extends ItemBasic
     @SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack par1ItemStack, int par2)
     {
-        return CoreMachine.dyeColors[par1ItemStack.getItemDamage() % 16].getRGB();
+        return ColorCode.get(par1ItemStack.getItemDamage() % 16).color.getRGB();
     }
 
     @Override
@@ -58,13 +59,13 @@ public class ItemColoredDust extends ItemBasic
     @Override
     public final String getUnlocalizedName(ItemStack par1ItemStack)
     {
-        return this.getUnlocalizedName() + "." + CoreMachine.dyeColorNames[par1ItemStack.getItemDamage()];
+        return this.getUnlocalizedName() + "." + ColorCode.get(par1ItemStack.getItemDamage()).name;
     }
 
     @Override
     public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {
-        for (int i = 0; i < CoreMachine.dyeColorNames.length; i++)
+        for (int i = 0; i < ColorCode.values().length - 1; i++)
         {
             par3List.add(new ItemStack(par1, 1, i));
         }

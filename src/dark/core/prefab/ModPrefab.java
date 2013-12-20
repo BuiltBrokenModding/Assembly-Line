@@ -24,10 +24,7 @@ public abstract class ModPrefab
     public String DOMAIN = this.getDomain();
     public String PREFIX = DOMAIN + ":";
 
-    public String DIRECTORY_NO_SLASH = "assets/" + DOMAIN + "/";
-    public String DIRECTORY = "/" + DIRECTORY_NO_SLASH;
-    public String LANGUAGE_PATH = DIRECTORY + "languages/";
-    public String SOUND_PATH = DIRECTORY + "audio/";
+   
 
     private static Triple<Integer, Integer, Integer> date;
 

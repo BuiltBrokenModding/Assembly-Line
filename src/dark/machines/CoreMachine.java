@@ -22,6 +22,7 @@ import com.dark.IndustryTabs;
 import com.dark.fluid.EnumGas;
 import com.dark.network.PacketDataWatcher;
 import com.dark.network.PacketHandler;
+import com.dark.prefab.BlockMulti;
 import com.dark.prefab.ItemBlockHolder;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -57,7 +58,6 @@ import dark.core.basics.ItemParts.Parts;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.entities.EntityTestCar;
 import dark.core.prefab.entities.ItemVehicleSpawn;
-import dark.core.prefab.machine.BlockMulti;
 import dark.machines.deco.BlockBasalt;
 import dark.machines.deco.BlockColorGlass;
 import dark.machines.deco.BlockColorGlowGlass;
@@ -106,16 +106,11 @@ public class CoreMachine extends ModPrefab
     /** Can over pressure of devices do area damage */
     public static boolean overPressureDamage, zeroRendering, zeroAnimation, zeroGraphics;
 
-    public static BlockMulti blockMulti;
-
     @Instance(MOD_ID)
     private static CoreMachine instance;
 
     public static CoreRecipeLoader recipeLoader;
-
-    public static final String[] dyeColorNames = new String[] { "Black", "Red", "Green", "Brown", "Blue", "Purple", "Cyan", "Silver", "Gray", "Pink", "Lime", "Yellow", "LightBlue", "Magenta", "Orange", "White" };
-    public static final Color[] dyeColors = new Color[] { Color.black, Color.red, Color.green, new Color(139, 69, 19), Color.BLUE, new Color(75, 0, 130), Color.cyan, new Color(192, 192, 192), Color.gray, Color.pink, new Color(0, 255, 0), Color.yellow, new Color(135, 206, 250), Color.magenta, Color.orange, Color.white };
-
+    
     public static CoreMachine getInstance()
     {
         if (instance == null)
@@ -181,7 +176,7 @@ public class CoreMachine extends ModPrefab
         {
             MinecraftForge.EVENT_BUS.register(CoreRecipeLoader.itemMetals);
         }
-        FMLLog.info(" Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
+        FMLLog.info(" Loaded: " + TranslationHelper.loadLanguages(DarkCore.LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
         proxy.init();
     }
 
@@ -197,9 +192,10 @@ public class CoreMachine extends ModPrefab
         }
         if (CoreRecipeLoader.itemMetals instanceof ItemOreDirv)
         {
-            IndustryTabs.tabIndustrial().itemStack = EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.GEARS, 1);
+            IndustryTabs.tabIndustrial().itemStack = EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.GEARS, 1); 
+            CoreRecipeLoader.parseOreNames(CONFIGURATION);
         }
-        MachineRecipeHandler.parseOreNames(CONFIGURATION);
+       
         CONFIGURATION.save();
     }
 
@@ -219,12 +215,7 @@ public class CoreMachine extends ModPrefab
             CoreMachine.zeroRendering = CONFIGURATION.get("Graphics", "DisableAllRendering", false, "Replaces all model renderers with single block forms").getBoolean(false);
             CoreMachine.zeroGraphics = CONFIGURATION.get("Graphics", "DisableAllGraphics", false, "Disables extra effects that models and renders have. Such as particles, and text").getBoolean(false);
         }
-        /* BLOCKS */
-        Block m = CoreRegistry.createNewBlock("DMBlockMulti", CoreMachine.MOD_ID, BlockMulti.class, false);
-        if (m instanceof BlockMulti)
-        {
-            blockMulti = (BlockMulti) m;
-        }
+        /* BLOCKS */       
         CoreRecipeLoader.blockSteamGen = CoreRegistry.createNewBlock("DMBlockSteamMachine", CoreMachine.MOD_ID, BlockSmallSteamGen.class, ItemBlockHolder.class);
         CoreRecipeLoader.blockOre = CoreRegistry.createNewBlock("DMBlockOre", CoreMachine.MOD_ID, BlockOre.class, ItemBlockOre.class);
         CoreRecipeLoader.blockWire = CoreRegistry.createNewBlock("DMBlockWire", CoreMachine.MOD_ID, BlockWire.class, ItemBlockWire.class);
