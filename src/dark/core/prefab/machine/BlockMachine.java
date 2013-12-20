@@ -23,12 +23,12 @@ import com.dark.DarkCore;
 import com.dark.IExtraInfo.IExtraBlockInfo;
 import com.dark.access.AccessUser;
 import com.dark.access.ISpecialAccess;
-import com.dark.tile.network.INetworkPart;
+import com.dark.tilenetwork.INetworkPart;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.interfaces.IBlockActivated;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 
 /** Basic TileEntity Container class designed to be used by generic machines. It is suggested that
  * each mod using this create there own basic block extending this to reduce need to use build data
@@ -54,9 +54,9 @@ public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister iconReg)
     {
-        this.blockIcon = iconReg.registerIcon(DarkMain.getInstance().PREFIX + "machine");
-        this.iconInput = iconReg.registerIcon(DarkMain.getInstance().PREFIX + "machine_input");
-        this.iconOutput = iconReg.registerIcon(DarkMain.getInstance().PREFIX + "machine_output");
+        this.blockIcon = iconReg.registerIcon(CoreMachine.getInstance().PREFIX + "machine");
+        this.iconInput = iconReg.registerIcon(CoreMachine.getInstance().PREFIX + "machine_input");
+        this.iconOutput = iconReg.registerIcon(CoreMachine.getInstance().PREFIX + "machine_output");
     }
 
     @Override
@@ -177,10 +177,6 @@ public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
         if (entity instanceof IBlockActivated && ((IBlockActivated) entity).onActivated(entityPlayer))
         {
             return true;
-        }
-        if (!world.isRemote && guiID != -1)
-        {
-            entityPlayer.openGui(DarkMain.getInstance(), guiID, world, x, y, z);
         }
         return super.onBlockActivated(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ);
     }

@@ -18,7 +18,7 @@ import com.dark.access.AccessUser;
 import com.dark.access.GroupRegistry;
 import com.dark.access.ISpecialAccess;
 import com.dark.access.Nodes;
-import com.dark.prefab.tile.network.NetworkTileEntities;
+import com.dark.tilenetwork.prefab.NetworkTileEntities;
 
 import dark.core.interfaces.IExternalInv;
 import dark.core.interfaces.IInvBox;

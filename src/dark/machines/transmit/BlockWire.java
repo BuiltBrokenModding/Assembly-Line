@@ -21,12 +21,12 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.tile.TileEntityConductor;
 
 import com.builtbroken.common.Pair;
-import com.dark.IndustryCreativeTab;
+import com.dark.IndustryTabs;
+import com.dark.prefab.BlockMachine;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.prefab.machine.BlockMachine;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 import dark.machines.client.renders.RenderBlockWire;
 
 public class BlockWire extends BlockMachine
@@ -42,19 +42,19 @@ public class BlockWire extends BlockMachine
 
     public BlockWire()
     {
-        super(DarkMain.CONFIGURATION, "DMWire", Material.cloth);
+        super(CoreMachine.CONFIGURATION, "DMWire", Material.cloth);
         this.setStepSound(soundClothFootstep);
         this.setResistance(0.2F);
         this.setHardness(0.1f);
         this.setBlockBounds(0.3f, 0.3f, 0.3f, 0.7f, 0.7f, 0.7f);
         Block.setBurnProperties(this.blockID, 30, 60);
-        this.setCreativeTab(IndustryCreativeTab.tabIndustrial());
+        this.setCreativeTab(IndustryTabs.tabIndustrial());
     }
 
     @Override
     public void registerIcons(IconRegister par1IconRegister)
     {
-        this.wireIcon = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + "CopperWire");
+        this.wireIcon = par1IconRegister.registerIcon(CoreMachine.getInstance().PREFIX + "CopperWire");
     }
 
     @Override

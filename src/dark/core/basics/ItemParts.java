@@ -15,7 +15,7 @@ import com.dark.prefab.ItemBasic;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 
 /** A meta data item containing parts of various crafting recipes. These parts do not do anything but
  * allow new crafting recipes to be created.
@@ -25,7 +25,7 @@ public class ItemParts extends ItemBasic implements IExtraItemInfo
 {
     public ItemParts()
     {
-        super(DarkCore.getNextItemId(), "DMParts", DarkMain.CONFIGURATION);
+        super(DarkCore.getNextItemId(), "DMParts", CoreMachine.CONFIGURATION);
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
         this.setMaxStackSize(64);
@@ -60,7 +60,7 @@ public class ItemParts extends ItemBasic implements IExtraItemInfo
         super.registerIcons(iconRegister);
         for (Parts part : Parts.values())
         {
-            part.icon = iconRegister.registerIcon(DarkMain.getInstance().PREFIX + "part." + part.name);
+            part.icon = iconRegister.registerIcon(CoreMachine.getInstance().PREFIX + "part." + part.name);
         }
     }
 

@@ -16,9 +16,9 @@ import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.ore.OreGenReplaceStone;
 import universalelectricity.prefab.ore.OreGenerator;
 
-import com.dark.DarkCore;
 import com.dark.CoreRegistry;
-import com.dark.IndustryCreativeTab;
+import com.dark.DarkCore;
+import com.dark.IndustryTabs;
 import com.dark.fluid.EnumGas;
 import com.dark.network.PacketDataWatcher;
 import com.dark.network.PacketHandler;
@@ -58,7 +58,6 @@ import dark.core.prefab.ModPrefab;
 import dark.core.prefab.entities.EntityTestCar;
 import dark.core.prefab.entities.ItemVehicleSpawn;
 import dark.core.prefab.machine.BlockMulti;
-import dark.core.prefab.machine.TileEntityNBTContainer;
 import dark.machines.deco.BlockBasalt;
 import dark.machines.deco.BlockColorGlass;
 import dark.machines.deco.BlockColorGlowGlass;
@@ -78,9 +77,9 @@ import dark.machines.transmit.BlockWire;
 import dark.machines.transmit.ItemBlockWire;
 
 /** @author HangCow, DarkGuardsman */
-@Mod(modid = DarkMain.MOD_ID, name = DarkMain.MOD_NAME, version = DarkMain.VERSION, dependencies = "after:BuildCraft|Energy", useMetadata = true)
-@NetworkMod(channels = { DarkMain.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
-public class DarkMain extends ModPrefab
+@Mod(modid = CoreMachine.MOD_ID, name = CoreMachine.MOD_NAME, version = CoreMachine.VERSION, dependencies = "after:BuildCraft|Energy", useMetadata = true)
+@NetworkMod(channels = { CoreMachine.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
+public class CoreMachine extends ModPrefab
 {
     // @Mod Prerequisites
     public static final String MAJOR_VERSION = "@MAJOR@";
@@ -98,7 +97,7 @@ public class DarkMain extends ModPrefab
 
     public static final String CHANNEL = DarkCore.CHANNEL;
 
-    @Metadata(DarkMain.MOD_ID)
+    @Metadata(CoreMachine.MOD_ID)
     public static ModMetadata meta;
 
     /** Main config file */
@@ -110,18 +109,18 @@ public class DarkMain extends ModPrefab
     public static BlockMulti blockMulti;
 
     @Instance(MOD_ID)
-    private static DarkMain instance;
+    private static CoreMachine instance;
 
     public static CoreRecipeLoader recipeLoader;
 
     public static final String[] dyeColorNames = new String[] { "Black", "Red", "Green", "Brown", "Blue", "Purple", "Cyan", "Silver", "Gray", "Pink", "Lime", "Yellow", "LightBlue", "Magenta", "Orange", "White" };
     public static final Color[] dyeColors = new Color[] { Color.black, Color.red, Color.green, new Color(139, 69, 19), Color.BLUE, new Color(75, 0, 130), Color.cyan, new Color(192, 192, 192), Color.gray, Color.pink, new Color(0, 255, 0), Color.yellow, new Color(135, 206, 250), Color.magenta, Color.orange, Color.white };
 
-    public static DarkMain getInstance()
+    public static CoreMachine getInstance()
     {
         if (instance == null)
         {
-            instance = new DarkMain();
+            instance = new CoreMachine();
         }
         return instance;
     }
@@ -194,11 +193,11 @@ public class DarkMain extends ModPrefab
         proxy.postInit();
         if (CoreRecipeLoader.itemParts instanceof ItemParts)
         {
-            IndustryCreativeTab.tabMining().itemStack = new ItemStack(CoreRecipeLoader.itemParts.itemID, 1, ItemParts.Parts.MiningIcon.ordinal());
+            IndustryTabs.tabMining().itemStack = new ItemStack(CoreRecipeLoader.itemParts.itemID, 1, ItemParts.Parts.MiningIcon.ordinal());
         }
         if (CoreRecipeLoader.itemMetals instanceof ItemOreDirv)
         {
-            IndustryCreativeTab.tabIndustrial().itemStack = EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.GEARS, 1);
+            IndustryTabs.tabIndustrial().itemStack = EnumMaterial.getStack(EnumMaterial.IRON, EnumOrePart.GEARS, 1);
         }
         MachineRecipeHandler.parseOreNames(CONFIGURATION);
         CONFIGURATION.save();
@@ -214,42 +213,40 @@ public class DarkMain extends ModPrefab
         /* CONFIGS */
         CONFIGURATION.load();
 
-        GameRegistry.registerTileEntity(TileEntityNBTContainer.class, "DMNBTSaveBlock");
-
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
         {
-            DarkMain.zeroAnimation = CONFIGURATION.get("Graphics", "DisableAllAnimation", false, "Disables active animations by any non-active models").getBoolean(false);
-            DarkMain.zeroRendering = CONFIGURATION.get("Graphics", "DisableAllRendering", false, "Replaces all model renderers with single block forms").getBoolean(false);
-            DarkMain.zeroGraphics = CONFIGURATION.get("Graphics", "DisableAllGraphics", false, "Disables extra effects that models and renders have. Such as particles, and text").getBoolean(false);
+            CoreMachine.zeroAnimation = CONFIGURATION.get("Graphics", "DisableAllAnimation", false, "Disables active animations by any non-active models").getBoolean(false);
+            CoreMachine.zeroRendering = CONFIGURATION.get("Graphics", "DisableAllRendering", false, "Replaces all model renderers with single block forms").getBoolean(false);
+            CoreMachine.zeroGraphics = CONFIGURATION.get("Graphics", "DisableAllGraphics", false, "Disables extra effects that models and renders have. Such as particles, and text").getBoolean(false);
         }
         /* BLOCKS */
-        Block m = CoreRegistry.createNewBlock("DMBlockMulti", DarkMain.MOD_ID, BlockMulti.class, false);
+        Block m = CoreRegistry.createNewBlock("DMBlockMulti", CoreMachine.MOD_ID, BlockMulti.class, false);
         if (m instanceof BlockMulti)
         {
             blockMulti = (BlockMulti) m;
         }
-        CoreRecipeLoader.blockSteamGen = CoreRegistry.createNewBlock("DMBlockSteamMachine", DarkMain.MOD_ID, BlockSmallSteamGen.class, ItemBlockHolder.class);
-        CoreRecipeLoader.blockOre = CoreRegistry.createNewBlock("DMBlockOre", DarkMain.MOD_ID, BlockOre.class, ItemBlockOre.class);
-        CoreRecipeLoader.blockWire = CoreRegistry.createNewBlock("DMBlockWire", DarkMain.MOD_ID, BlockWire.class, ItemBlockWire.class);
-        CoreRecipeLoader.blockDebug = CoreRegistry.createNewBlock("DMBlockDebug", DarkMain.MOD_ID, BlockDebug.class, ItemBlockHolder.class);
-        CoreRecipeLoader.blockStainGlass = CoreRegistry.createNewBlock("DMBlockStainedGlass", DarkMain.MOD_ID, BlockColorGlass.class, ItemBlockColored.class);
-        CoreRecipeLoader.blockColorSand = CoreRegistry.createNewBlock("DMBlockColorSand", DarkMain.MOD_ID, BlockColorSand.class, ItemBlockColored.class);
-        CoreRecipeLoader.blockBasalt = CoreRegistry.createNewBlock("DMBlockBasalt", DarkMain.MOD_ID, BlockBasalt.class, ItemBlockColored.class);
-        CoreRecipeLoader.blockGlowGlass = CoreRegistry.createNewBlock("DMBlockGlowGlass", DarkMain.MOD_ID, BlockColorGlowGlass.class, ItemBlockColored.class);
-        CoreRecipeLoader.blockSolar = CoreRegistry.createNewBlock("DMBlockSolar", DarkMain.MOD_ID, BlockSolarPanel.class, ItemBlockHolder.class);
-        CoreRecipeLoader.blockGas = CoreRegistry.createNewBlock("DMBlockGas", DarkMain.MOD_ID, BlockGasOre.class, ItemBlockHolder.class);
-        CoreRecipeLoader.blockBatBox = CoreRegistry.createNewBlock("DMBlockBatBox", DarkMain.MOD_ID, BlockEnergyStorage.class, ItemBlockEnergyStorage.class);
+        CoreRecipeLoader.blockSteamGen = CoreRegistry.createNewBlock("DMBlockSteamMachine", CoreMachine.MOD_ID, BlockSmallSteamGen.class, ItemBlockHolder.class);
+        CoreRecipeLoader.blockOre = CoreRegistry.createNewBlock("DMBlockOre", CoreMachine.MOD_ID, BlockOre.class, ItemBlockOre.class);
+        CoreRecipeLoader.blockWire = CoreRegistry.createNewBlock("DMBlockWire", CoreMachine.MOD_ID, BlockWire.class, ItemBlockWire.class);
+        CoreRecipeLoader.blockDebug = CoreRegistry.createNewBlock("DMBlockDebug", CoreMachine.MOD_ID, BlockDebug.class, ItemBlockHolder.class);
+        CoreRecipeLoader.blockStainGlass = CoreRegistry.createNewBlock("DMBlockStainedGlass", CoreMachine.MOD_ID, BlockColorGlass.class, ItemBlockColored.class);
+        CoreRecipeLoader.blockColorSand = CoreRegistry.createNewBlock("DMBlockColorSand", CoreMachine.MOD_ID, BlockColorSand.class, ItemBlockColored.class);
+        CoreRecipeLoader.blockBasalt = CoreRegistry.createNewBlock("DMBlockBasalt", CoreMachine.MOD_ID, BlockBasalt.class, ItemBlockColored.class);
+        CoreRecipeLoader.blockGlowGlass = CoreRegistry.createNewBlock("DMBlockGlowGlass", CoreMachine.MOD_ID, BlockColorGlowGlass.class, ItemBlockColored.class);
+        CoreRecipeLoader.blockSolar = CoreRegistry.createNewBlock("DMBlockSolar", CoreMachine.MOD_ID, BlockSolarPanel.class, ItemBlockHolder.class);
+        CoreRecipeLoader.blockGas = CoreRegistry.createNewBlock("DMBlockGas", CoreMachine.MOD_ID, BlockGasOre.class, ItemBlockHolder.class);
+        CoreRecipeLoader.blockBatBox = CoreRegistry.createNewBlock("DMBlockBatBox", CoreMachine.MOD_ID, BlockEnergyStorage.class, ItemBlockEnergyStorage.class);
 
         /* ITEMS */
-        CoreRecipeLoader.itemTool = CoreRegistry.createNewItem("DMReadoutTools", DarkMain.MOD_ID, ItemReadoutTools.class, true);
-        CoreRecipeLoader.itemMetals = CoreRegistry.createNewItem("DMOreDirvParts", DarkMain.MOD_ID, ItemOreDirv.class, true);
-        CoreRecipeLoader.battery = CoreRegistry.createNewItem("DMItemBattery", DarkMain.MOD_ID, ItemBattery.class, true);
-        CoreRecipeLoader.wrench = CoreRegistry.createNewItem("DMWrench", DarkMain.MOD_ID, ItemWrench.class, true);
-        CoreRecipeLoader.itemParts = CoreRegistry.createNewItem("DMCraftingParts", DarkMain.MOD_ID, ItemParts.class, true);
-        CoreRecipeLoader.itemGlowingSand = CoreRegistry.createNewItem("DMItemGlowingSand", DarkMain.MOD_ID, ItemColoredDust.class, true);
-        CoreRecipeLoader.itemDiggingTool = CoreRegistry.createNewItem("ItemDiggingTools", DarkMain.MOD_ID, ItemCommonTool.class, true);
-        CoreRecipeLoader.itemVehicleTest = CoreRegistry.createNewItem("ItemVehicleTest", DarkMain.MOD_ID, ItemVehicleSpawn.class, true);
-        CoreRecipeLoader.itemFluidCan = CoreRegistry.createNewItem("ItemFluidCan", DarkMain.MOD_ID, ItemFluidCan.class, true);
+        CoreRecipeLoader.itemTool = CoreRegistry.createNewItem("DMReadoutTools", CoreMachine.MOD_ID, ItemReadoutTools.class, true);
+        CoreRecipeLoader.itemMetals = CoreRegistry.createNewItem("DMOreDirvParts", CoreMachine.MOD_ID, ItemOreDirv.class, true);
+        CoreRecipeLoader.battery = CoreRegistry.createNewItem("DMItemBattery", CoreMachine.MOD_ID, ItemBattery.class, true);
+        CoreRecipeLoader.wrench = CoreRegistry.createNewItem("DMWrench", CoreMachine.MOD_ID, ItemWrench.class, true);
+        CoreRecipeLoader.itemParts = CoreRegistry.createNewItem("DMCraftingParts", CoreMachine.MOD_ID, ItemParts.class, true);
+        CoreRecipeLoader.itemGlowingSand = CoreRegistry.createNewItem("DMItemGlowingSand", CoreMachine.MOD_ID, ItemColoredDust.class, true);
+        CoreRecipeLoader.itemDiggingTool = CoreRegistry.createNewItem("ItemDiggingTools", CoreMachine.MOD_ID, ItemCommonTool.class, true);
+        CoreRecipeLoader.itemVehicleTest = CoreRegistry.createNewItem("ItemVehicleTest", CoreMachine.MOD_ID, ItemVehicleSpawn.class, true);
+        CoreRecipeLoader.itemFluidCan = CoreRegistry.createNewItem("ItemFluidCan", CoreMachine.MOD_ID, ItemFluidCan.class, true);
         //Config saves in post init to allow for other feature to access it
 
     }

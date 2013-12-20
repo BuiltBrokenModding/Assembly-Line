@@ -22,7 +22,7 @@ import cpw.mods.fml.common.network.Player;
 import dark.api.IDisableable;
 import dark.core.interfaces.IExternalInv;
 import dark.core.interfaces.IInvBox;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 
 public abstract class TileEntityMachine extends TileEntityInv implements ISidedInventory, IExternalInv, IDisableable, ISimplePacketReceiver, IRotatable, IExtraTileEntityInfo
 {
@@ -260,7 +260,7 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
     /** NetworkMod channel name */
     public String getChannel()
     {
-        return DarkMain.CHANNEL;
+        return CoreMachine.CHANNEL;
     }
 
     @Override

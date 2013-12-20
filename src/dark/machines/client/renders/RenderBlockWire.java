@@ -15,13 +15,13 @@ import universalelectricity.core.vector.VectorHelper;
 import buildcraft.api.power.IPowerReceptor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 import dark.machines.client.models.ModelCopperWire;
 
 @SideOnly(Side.CLIENT)
 public class RenderBlockWire extends RenderTileMachine
 {
-    private static final ResourceLocation copperWireTexture = new ResourceLocation(DarkMain.getInstance().DOMAIN, "textures/models/copperWire.png");
+    private static final ResourceLocation copperWireTexture = new ResourceLocation(CoreMachine.getInstance().DOMAIN, "textures/models/copperWire.png");
 
     public static final ModelCopperWire model = new ModelCopperWire();
 

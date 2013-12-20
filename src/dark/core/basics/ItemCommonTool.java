@@ -37,7 +37,7 @@ import com.google.common.collect.Multimap;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 
 /** Flexible tool class that uses NBT to store damage and effect rather than metadata. Metadata
  * instead is used to store sub items allowing several different tools to exist within the same item
@@ -54,7 +54,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
 
     public ItemCommonTool()
     {
-        super(DarkMain.CONFIGURATION.getItem("Items", "CommonTools", DarkCore.getNextItemId()).getInt());
+        super(CoreMachine.CONFIGURATION.getItem("Items", "CommonTools", DarkCore.getNextItemId()).getInt());
         this.maxStackSize = 1;
         this.setCreativeTab(CreativeTabs.tabTools);
     }
@@ -434,7 +434,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
     {
         if (itemStack != null)
         {
-            return "item." + DarkMain.getInstance().PREFIX + EnumTool.getFullName(itemStack.getItemDamage());
+            return "item." + CoreMachine.getInstance().PREFIX + EnumTool.getFullName(itemStack.getItemDamage());
         }
         else
         {
@@ -473,7 +473,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
                 {
                     if (tool.enabled)
                     {
-                        mat.toolIcons[tool.ordinal()] = iconRegister.registerIcon(DarkMain.getInstance().PREFIX + "tool." + mat.simpleName + tool.name);
+                        mat.toolIcons[tool.ordinal()] = iconRegister.registerIcon(CoreMachine.getInstance().PREFIX + "tool." + mat.simpleName + tool.name);
                     }
                 }
             }

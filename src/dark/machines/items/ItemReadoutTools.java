@@ -28,7 +28,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.IToolReadOut;
 import dark.api.IToolReadOut.EnumTools;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 
 public class ItemReadoutTools extends ItemBasic
 {
@@ -36,7 +36,7 @@ public class ItemReadoutTools extends ItemBasic
 
     public ItemReadoutTools()
     {
-        super(DarkCore.getNextItemId(), "DMTools", DarkMain.CONFIGURATION);
+        super(DarkCore.getNextItemId(), "DMTools", CoreMachine.CONFIGURATION);
         this.setHasSubtypes(true);
         this.setCreativeTab(CreativeTabs.tabTools);
         this.setMaxStackSize(1);
@@ -47,8 +47,8 @@ public class ItemReadoutTools extends ItemBasic
     @Override
     public void registerIcons(IconRegister iconRegister)
     {
-        this.pipeGuage = iconRegister.registerIcon(DarkMain.getInstance().PREFIX + "readout.PipeGauge");
-        this.multiMeter = iconRegister.registerIcon(DarkMain.getInstance().PREFIX + "readout.multi-Meter");
+        this.pipeGuage = iconRegister.registerIcon(CoreMachine.getInstance().PREFIX + "readout.PipeGauge");
+        this.multiMeter = iconRegister.registerIcon(CoreMachine.getInstance().PREFIX + "readout.multi-Meter");
     }
 
     @SideOnly(Side.CLIENT)

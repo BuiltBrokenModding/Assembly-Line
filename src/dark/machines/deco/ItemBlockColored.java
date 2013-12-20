@@ -3,7 +3,7 @@ package dark.machines.deco;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 
 public class ItemBlockColored extends ItemBlock
 {
@@ -23,7 +23,7 @@ public class ItemBlockColored extends ItemBlock
     @Override
     public String getUnlocalizedName(ItemStack par1ItemStack)
     {
-        return Block.blocksList[this.getBlockID()].getUnlocalizedName() + "." + DarkMain.dyeColorNames[par1ItemStack.getItemDamage()];
+        return Block.blocksList[this.getBlockID()].getUnlocalizedName() + "." + CoreMachine.dyeColorNames[par1ItemStack.getItemDamage()];
     }
 
     @Override

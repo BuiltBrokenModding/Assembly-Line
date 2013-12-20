@@ -22,12 +22,12 @@ import net.minecraftforge.fluids.IFluidBlock;
 import universalelectricity.core.vector.Vector3;
 
 import com.dark.DarkCore;
-import com.dark.IndustryCreativeTab;
+import com.dark.IndustryTabs;
 import com.dark.fluid.EnumGas;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 
 /** Gas that is designed to generate underground in the same way as an ore
  *
@@ -42,9 +42,9 @@ public class BlockGasOre extends Block implements IFluidBlock
 
     public BlockGasOre()
     {
-        super(DarkMain.CONFIGURATION.getBlock("GasBlock", DarkCore.getNextID()).getInt(), gas);
+        super(CoreMachine.CONFIGURATION.getBlock("GasBlock", DarkCore.getNextID()).getInt(), gas);
         this.setUnlocalizedName("DMBlockGas");
-        this.setCreativeTab(IndustryCreativeTab.tabIndustrial());
+        this.setCreativeTab(IndustryTabs.tabIndustrial());
         this.setTickRandomly(true);
     }
 
@@ -147,7 +147,7 @@ public class BlockGasOre extends Block implements IFluidBlock
     @Override
     public void registerIcons(IconRegister par1IconRegister)
     {
-        this.blockIcon = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + "gas");
+        this.blockIcon = par1IconRegister.registerIcon(CoreMachine.getInstance().PREFIX + "gas");
     }
 
     @Override

@@ -11,7 +11,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 
 /** Prefab class to make any block have 16 separate color instances similar to wool block
  * 
@@ -63,7 +63,7 @@ public class BlockColored extends Block
     {
         if (colorized)
         {
-            this.blockIcon = iconReg.registerIcon(DarkMain.getInstance().PREFIX + this.getUnlocalizedName().replace("tile.", ""));
+            this.blockIcon = iconReg.registerIcon(CoreMachine.getInstance().PREFIX + this.getUnlocalizedName().replace("tile.", ""));
         }
         else
         {
@@ -71,7 +71,7 @@ public class BlockColored extends Block
 
             for (int i = 0; i < this.icons.length; ++i)
             {
-                this.icons[i] = iconReg.registerIcon(DarkMain.getInstance().PREFIX + DarkMain.dyeColorNames[~i & 15] + this.getUnlocalizedName().replace("tile.", ""));
+                this.icons[i] = iconReg.registerIcon(CoreMachine.getInstance().PREFIX + CoreMachine.dyeColorNames[~i & 15] + this.getUnlocalizedName().replace("tile.", ""));
             }
         }
     }
@@ -89,7 +89,7 @@ public class BlockColored extends Block
     {
         if (this.colorized)
         {
-            return DarkMain.dyeColors[meta & 15].getRGB();
+            return CoreMachine.dyeColors[meta & 15].getRGB();
         }
         return super.getRenderColor(meta);
     }

@@ -1,5 +1,7 @@
 package dark.core.interfaces;
 
+import com.dark.interfaces.IBlockActivated;
+
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 

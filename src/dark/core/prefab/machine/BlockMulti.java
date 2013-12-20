@@ -23,7 +23,7 @@ import com.dark.IExtraInfo.IExtraBlockInfo;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 
 public class BlockMulti extends BlockContainer implements IExtraBlockInfo
 {
@@ -32,10 +32,10 @@ public class BlockMulti extends BlockContainer implements IExtraBlockInfo
 
     public BlockMulti()
     {
-        super(DarkMain.CONFIGURATION.getBlock("MultiBlock", DarkCore.getNextID()).getInt(), UniversalElectricity.machine);
+        super(CoreMachine.CONFIGURATION.getBlock("MultiBlock", DarkCore.getNextID()).getInt(), UniversalElectricity.machine);
         this.setHardness(0.8F);
         this.setUnlocalizedName("multiBlock");
-        this.setChannel(DarkMain.CHANNEL);
+        this.setChannel(CoreMachine.CHANNEL);
     }
 
     public BlockMulti setChannel(String channel)

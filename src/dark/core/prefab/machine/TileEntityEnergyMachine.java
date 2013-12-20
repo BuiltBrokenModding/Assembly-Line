@@ -16,9 +16,7 @@ import universalelectricity.core.grid.IElectricityNetwork;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 
-import com.dark.ExternalModHandler;
 import com.dark.interfaces.IPowerLess;
-
 
 /** Basic energy tile that can consume power
  * 
@@ -335,7 +333,7 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     @Override
     public boolean runPowerLess()
     {
-        return !runWithoutPower || ExternalModHandler.runPowerLess();
+        return !runWithoutPower;
     }
 
     @Override

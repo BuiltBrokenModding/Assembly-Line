@@ -21,7 +21,7 @@ import cpw.mods.fml.common.network.Player;
 import dark.api.ISentryGun;
 import dark.core.prefab.entities.EntityTileDamage;
 import dark.core.prefab.machine.TileEntityMachine;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 
 /** Prefab tileEntity for creating senty guns that can be of type aimed, mounted, or automated.
  * Contains most of the code for a sentry gun to operate short of aiming and operating logic. This
@@ -295,7 +295,7 @@ public abstract class TileEntitySentry extends TileEntityMachine implements ISen
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, "Desc", this.isRunning, this.rotation);
+        return PacketHandler.instance().getTilePacket(CoreMachine.CHANNEL, this, "Desc", this.isRunning, this.rotation);
     }
 
     @Override

@@ -14,7 +14,7 @@ import com.dark.DarkCore;
 import com.dark.IExtraInfo.IExtraItemInfo;
 import com.dark.prefab.ItemBasic;
 
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 
 public class ItemWrench extends ItemBasic implements IToolWrench, IExtraItemInfo
 {
@@ -22,10 +22,10 @@ public class ItemWrench extends ItemBasic implements IToolWrench, IExtraItemInfo
 
     public ItemWrench()
     {
-        super(DarkCore.getNextItemId(), "wrench", DarkMain.CONFIGURATION);
+        super(DarkCore.getNextItemId(), "wrench", CoreMachine.CONFIGURATION);
         this.setMaxStackSize(1);
         this.setCreativeTab(CreativeTabs.tabTools);
-        this.setTextureName(DarkMain.getInstance().PREFIX + "wrench");
+        this.setTextureName(CoreMachine.getInstance().PREFIX + "wrench");
 
     }
 

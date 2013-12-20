@@ -3,7 +3,7 @@ package dark.core.basics;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import dark.core.basics.BlockOre.OreData;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 
 public class ItemBlockOre extends ItemBlock
 {
@@ -26,7 +26,7 @@ public class ItemBlockOre extends ItemBlock
     {
         if (par1ItemStack != null && par1ItemStack.getItemDamage() < OreData.values().length)
         {
-            return "tile." + DarkMain.getInstance().PREFIX + OreData.values()[par1ItemStack.getItemDamage()].name + "Ore";
+            return "tile." + CoreMachine.getInstance().PREFIX + OreData.values()[par1ItemStack.getItemDamage()].name + "Ore";
         }
         return super.getUnlocalizedName();
     }

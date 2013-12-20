@@ -9,13 +9,13 @@ import com.dark.DarkCore;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 import dark.machines.client.models.ModelSolarPanel;
 
 @SideOnly(Side.CLIENT)
 public class RenderBlockSolarPanel extends RenderTileMachine
 {
-    private static final ResourceLocation solarPanelTexture = new ResourceLocation(DarkMain.getInstance().DOMAIN, DarkCore.MODEL_DIRECTORY + "SolarPanel.png");
+    private static final ResourceLocation solarPanelTexture = new ResourceLocation(CoreMachine.getInstance().DOMAIN, DarkCore.MODEL_DIRECTORY + "SolarPanel.png");
 
     public static final ModelSolarPanel model = new ModelSolarPanel();
 

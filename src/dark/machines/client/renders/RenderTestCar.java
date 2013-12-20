@@ -13,13 +13,13 @@ import com.dark.DarkCore;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.prefab.entities.EntityAdvanced;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 import dark.machines.client.models.ModelTestCar;
 
 @SideOnly(Side.CLIENT)
 public class RenderTestCar extends Render
 {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, DarkCore.MODEL_DIRECTORY + "TestCar.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(CoreMachine.getInstance().DOMAIN, DarkCore.MODEL_DIRECTORY + "TestCar.png");
 
     /** instance of ModelBoat for rendering */
     protected ModelBase modelBoat;

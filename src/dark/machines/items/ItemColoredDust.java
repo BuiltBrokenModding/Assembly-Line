@@ -12,7 +12,7 @@ import com.dark.prefab.ItemBasic;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 
 public class ItemColoredDust extends ItemBasic
 {
@@ -21,7 +21,7 @@ public class ItemColoredDust extends ItemBasic
 
     public ItemColoredDust()
     {
-        super(DarkCore.getNextItemId(), "GlowRefinedSand", DarkMain.CONFIGURATION);
+        super(DarkCore.getNextItemId(), "GlowRefinedSand", CoreMachine.CONFIGURATION);
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
         this.setCreativeTab(CreativeTabs.tabMaterials);
@@ -31,7 +31,7 @@ public class ItemColoredDust extends ItemBasic
     @SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack par1ItemStack, int par2)
     {
-        return DarkMain.dyeColors[par1ItemStack.getItemDamage() % 16].getRGB();
+        return CoreMachine.dyeColors[par1ItemStack.getItemDamage() % 16].getRGB();
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ItemColoredDust extends ItemBasic
     @Override
     public void registerIcons(IconRegister par1IconRegister)
     {
-        this.itemIcon = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + "dust");
+        this.itemIcon = par1IconRegister.registerIcon(CoreMachine.getInstance().PREFIX + "dust");
         this.theIcon = par1IconRegister.registerIcon("glowingPowder_overlay");
     }
 
@@ -58,13 +58,13 @@ public class ItemColoredDust extends ItemBasic
     @Override
     public final String getUnlocalizedName(ItemStack par1ItemStack)
     {
-        return this.getUnlocalizedName() + "." + DarkMain.dyeColorNames[par1ItemStack.getItemDamage()];
+        return this.getUnlocalizedName() + "." + CoreMachine.dyeColorNames[par1ItemStack.getItemDamage()];
     }
 
     @Override
     public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {
-        for (int i = 0; i < DarkMain.dyeColorNames.length; i++)
+        for (int i = 0; i < CoreMachine.dyeColorNames.length; i++)
         {
             par3List.add(new ItemStack(par1, 1, i));
         }

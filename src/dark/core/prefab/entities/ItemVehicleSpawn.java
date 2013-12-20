@@ -14,7 +14,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 import com.dark.DarkCore;
-import com.dark.IndustryCreativeTab;
+import com.dark.IndustryTabs;
 
 
 /** Basic item used to spawn a vehicle
@@ -26,7 +26,7 @@ public class ItemVehicleSpawn extends Item
     {
         super(DarkCore.getNextItemId());
         this.setUnlocalizedName("Vehicle");
-        this.setCreativeTab(IndustryCreativeTab.tabIndustrial());
+        this.setCreativeTab(IndustryTabs.tabIndustrial());
     }
 
     @Override

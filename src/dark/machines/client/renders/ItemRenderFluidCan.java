@@ -14,7 +14,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.machines.CoreRecipeLoader;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 import dark.machines.client.models.ModelSmallFluidCan;
 import dark.machines.items.ItemFluidCan;
 
@@ -23,7 +23,7 @@ public class ItemRenderFluidCan implements IItemRenderer
 {
     public static final ModelSmallFluidCan CAN_MODEL = new ModelSmallFluidCan();
 
-    public static final ResourceLocation CAN_TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, DarkCore.MODEL_DIRECTORY + "FluidCanA.png");
+    public static final ResourceLocation CAN_TEXTURE = new ResourceLocation(CoreMachine.getInstance().DOMAIN, DarkCore.MODEL_DIRECTORY + "FluidCanA.png");
 
     @Override
     public boolean handleRenderType(ItemStack item, ItemRenderType type)

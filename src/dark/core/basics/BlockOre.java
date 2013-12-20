@@ -23,7 +23,7 @@ import com.dark.IExtraInfo.IExtraBlockInfo;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.machines.CoreRecipeLoader;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 
 public class BlockOre extends Block implements IExtraBlockInfo
 {
@@ -31,9 +31,9 @@ public class BlockOre extends Block implements IExtraBlockInfo
 
     public BlockOre()
     {
-        super(DarkMain.CONFIGURATION.getBlock("Ore", DarkCore.getNextID()).getInt(), Material.rock);
+        super(CoreMachine.CONFIGURATION.getBlock("Ore", DarkCore.getNextID()).getInt(), Material.rock);
         this.setCreativeTab(CreativeTabs.tabBlock);
-        this.setUnlocalizedName(DarkMain.getInstance().PREFIX + "Ore");
+        this.setUnlocalizedName(CoreMachine.getInstance().PREFIX + "Ore");
         this.setHardness(2.5f);
         this.setResistance(5.0f);
 
@@ -64,7 +64,7 @@ public class BlockOre extends Block implements IExtraBlockInfo
     {
         for (OreData data : OreData.values())
         {
-            data.oreIcon = par1IconRegister.registerIcon(DarkMain.getInstance().PREFIX + data.name + "Ore");
+            data.oreIcon = par1IconRegister.registerIcon(CoreMachine.getInstance().PREFIX + data.name + "Ore");
         }
     }
 
@@ -123,7 +123,7 @@ public class BlockOre extends Block implements IExtraBlockInfo
             if (this.doWorldGen)
             {
                 ItemStack stack = new ItemStack(CoreRecipeLoader.blockOre, 1, this.ordinal());
-                return (OreGenReplaceStone) new OreGenReplaceStone(this.name, this.name + "Ore", stack, this.maxY, this.ammount, this.branch).enable(DarkMain.getInstance().CONFIGURATION);
+                return (OreGenReplaceStone) new OreGenReplaceStone(this.name, this.name + "Ore", stack, this.maxY, this.ammount, this.branch).enable(CoreMachine.getInstance().CONFIGURATION);
             }
             return null;
         }

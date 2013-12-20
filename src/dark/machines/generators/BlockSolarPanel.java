@@ -12,12 +12,12 @@ import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.core.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
-import com.dark.IndustryCreativeTab;
+import com.dark.IndustryTabs;
+import com.dark.prefab.BlockMachine;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.prefab.machine.BlockMachine;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 import dark.machines.client.renders.BlockRenderingHandler;
 import dark.machines.client.renders.RenderBlockSolarPanel;
 
@@ -30,9 +30,9 @@ public class BlockSolarPanel extends BlockMachine
 
     public BlockSolarPanel()
     {
-        super(DarkMain.CONFIGURATION, "BlockSolarPanel", UniversalElectricity.machine);
+        super(CoreMachine.CONFIGURATION, "BlockSolarPanel", UniversalElectricity.machine);
         this.setBlockBounds(0, 0, 0, 1f, .6f, 1f);
-        this.setCreativeTab(IndustryCreativeTab.tabIndustrial());
+        this.setCreativeTab(IndustryTabs.tabIndustrial());
     }
 
     @Override

@@ -44,7 +44,7 @@ public class PacketManagerEffects implements IPacketManager
                 if (effectName.equalsIgnoreCase("laser"))
                 {
                     System.out.println("Received laser packet");
-                    DarkMain.proxy.renderBeam(world, PacketHandler.readVector3(data), PacketHandler.readVector3(data), new Color(data.readInt(), data.readInt(), data.readInt()), data.readInt());
+                    CoreMachine.proxy.renderBeam(world, PacketHandler.readVector3(data), PacketHandler.readVector3(data), new Color(data.readInt(), data.readInt(), data.readInt()), data.readInt());
                 }
             }
         }

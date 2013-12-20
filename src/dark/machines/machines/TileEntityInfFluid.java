@@ -17,8 +17,8 @@ import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.lang.TextHelper.TextColor;
 import com.dark.fluid.FluidHelper;
+import com.dark.interfaces.IBlockActivated;
 
-import dark.core.interfaces.IBlockActivated;
 
 public class TileEntityInfFluid extends TileEntity implements IFluidHandler, IBlockActivated
 {

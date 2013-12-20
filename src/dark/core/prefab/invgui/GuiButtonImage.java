@@ -11,12 +11,12 @@ import com.dark.DarkCore;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 
 @SideOnly(Side.CLIENT)
 public class GuiButtonImage extends GuiButton
 {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, DarkCore.GUI_DIRECTORY + "gui_button.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(CoreMachine.getInstance().DOMAIN, DarkCore.GUI_DIRECTORY + "gui_button.png");
 
     private ButtonIcon buttonIcon = ButtonIcon.BLANK;
 

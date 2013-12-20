@@ -8,10 +8,10 @@ import net.minecraft.tileentity.TileEntity;
 
 import com.builtbroken.common.Pair;
 import com.dark.CoreRegistry;
+import com.dark.prefab.BlockMachine;
 import com.dark.prefab.ItemBlockHolder;
 
-import dark.core.prefab.machine.BlockMachine;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 
 /** Actual block that is the sentry gun. Mainly a place holder as the sentry guns need something to
  * exist threw that is not an entity. Renders need to still be handled by the respective mod.
@@ -27,7 +27,7 @@ public class BlockSentryGun extends BlockMachine
 
     public BlockSentryGun(int v)
     {
-        super(DarkMain.CONFIGURATION, "DMSentryGun" + v, Material.iron);
+        super(CoreMachine.CONFIGURATION, "DMSentryGun" + v, Material.iron);
         this.setResistance(100);
         this.setHardness(100);
     }
@@ -97,7 +97,7 @@ public class BlockSentryGun extends BlockMachine
                     if (block != null)
                     {
                         CoreRegistry.registredBlocks.put(block, "DMSentryGun" + b);
-                        CoreRegistry.proxy.registerBlock(block, ItemBlockHolder.class, "DMSentryGun" + b, DarkMain.MOD_ID);
+                        CoreRegistry.proxy.registerBlock(block, ItemBlockHolder.class, "DMSentryGun" + b, CoreMachine.MOD_ID);
                         CoreRegistry.finishCreation(block);
                         sentryBlockIds[b] = block.blockID;
                     }

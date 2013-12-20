@@ -15,7 +15,7 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.machines.CoreRecipeLoader;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 import dark.machines.client.models.ModelMachine;
 import dark.machines.client.models.ModelSolarPanel;
 
@@ -32,7 +32,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
         GL11.glPushMatrix();
         if (CoreRecipeLoader.blockSolar != null && block.blockID == CoreRecipeLoader.blockSolar.blockID)
         {
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(DarkMain.getInstance().DOMAIN, DarkCore.MODEL_DIRECTORY + "solarPanel.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(CoreMachine.getInstance().DOMAIN, DarkCore.MODEL_DIRECTORY + "solarPanel.png"));
             GL11.glTranslatef(0.0F, 1.1F, 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
             solarPanelModel.render(0.0625F);

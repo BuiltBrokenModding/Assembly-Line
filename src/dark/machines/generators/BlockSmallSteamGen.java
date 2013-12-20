@@ -16,12 +16,12 @@ import net.minecraftforge.common.Configuration;
 import universalelectricity.core.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
-import com.dark.IndustryCreativeTab;
+import com.dark.IndustryTabs;
+import com.dark.prefab.BlockMachine;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.prefab.machine.BlockMachine;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 import dark.machines.client.renders.BlockRenderingHandler;
 import dark.machines.client.renders.RenderSteamGen;
 
@@ -36,9 +36,9 @@ public class BlockSmallSteamGen extends BlockMachine
 
     public BlockSmallSteamGen()
     {
-        super(DarkMain.CONFIGURATION, "StarterSteamGen", UniversalElectricity.machine);
+        super(CoreMachine.CONFIGURATION, "StarterSteamGen", UniversalElectricity.machine);
         this.setStepSound(soundMetalFootstep);
-        this.setCreativeTab(IndustryCreativeTab.tabIndustrial());
+        this.setCreativeTab(IndustryTabs.tabIndustrial());
     }
 
     @Override

@@ -15,7 +15,7 @@ import dark.core.prefab.invgui.GuiBase;
 import dark.core.prefab.invgui.GuiButtonImage;
 import dark.core.prefab.invgui.GuiButtonImage.ButtonIcon;
 import dark.core.prefab.machine.TileEntityMachine;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 
 /** To be used with all machine that have a gui to allow generic settings and feature all all devices
  *
@@ -23,7 +23,7 @@ import dark.machines.DarkMain;
 public class GuiMachineBase extends GuiBase
 {
 
-    public static final ResourceLocation TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, DarkCore.GUI_DIRECTORY + "gui_grey.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(CoreMachine.getInstance().DOMAIN, DarkCore.GUI_DIRECTORY + "gui_grey.png");
 
     protected static final int MAX_BUTTON_ID = 3;
     protected TileEntityMachine tileEntity;

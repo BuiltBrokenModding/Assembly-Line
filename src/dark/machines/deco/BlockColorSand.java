@@ -9,14 +9,14 @@ import net.minecraft.world.World;
 
 import com.dark.DarkCore;
 
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 
 //TODO fix instant falling sand
 public class BlockColorSand extends BlockColored
 {
     public BlockColorSand()
     {
-        super("colorSand", DarkMain.CONFIGURATION.getBlock("colorSand", DarkCore.getNextID()).getInt(), Material.sand);
+        super("colorSand", CoreMachine.CONFIGURATION.getBlock("colorSand", DarkCore.getNextID()).getInt(), Material.sand);
         this.setCreativeTab(CreativeTabs.tabDecorations);
         this.setHardness(1f);
         this.setResistance(.5f);

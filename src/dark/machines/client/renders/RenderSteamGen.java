@@ -11,7 +11,7 @@ import com.dark.DarkCore;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.prefab.machine.TileEntityMachine;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 import dark.machines.client.models.ModelMachine;
 import dark.machines.client.models.ModelSteamGen;
 import dark.machines.client.models.ModelSteamTurbine;
@@ -22,8 +22,8 @@ public class RenderSteamGen extends RenderTileMachine
     public static final ModelSteamTurbine TURBINE_MODEL = new ModelSteamTurbine();
     public static final ModelSteamGen STEAM_GEN_MODEL = new ModelSteamGen();
 
-    public static final ResourceLocation TURBINE_TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, DarkCore.MODEL_DIRECTORY + "SmallSteamFan.png");
-    public static final ResourceLocation STEAM_GEN_TEXTURE = new ResourceLocation(DarkMain.getInstance().DOMAIN, DarkCore.MODEL_DIRECTORY + "SteamGenerator.png");
+    public static final ResourceLocation TURBINE_TEXTURE = new ResourceLocation(CoreMachine.getInstance().DOMAIN, DarkCore.MODEL_DIRECTORY + "SmallSteamFan.png");
+    public static final ResourceLocation STEAM_GEN_TEXTURE = new ResourceLocation(CoreMachine.getInstance().DOMAIN, DarkCore.MODEL_DIRECTORY + "SteamGenerator.png");
     private static float rot1 = 0;
 
     @Override

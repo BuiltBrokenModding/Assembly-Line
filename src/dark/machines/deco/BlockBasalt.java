@@ -12,7 +12,7 @@ import com.dark.DarkCore;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 
 public class BlockBasalt extends Block
 {
@@ -38,7 +38,7 @@ public class BlockBasalt extends Block
 
     public BlockBasalt()
     {
-        super(DarkMain.CONFIGURATION.getBlock("basalt", DarkCore.getNextID()).getInt(), Material.rock);
+        super(CoreMachine.CONFIGURATION.getBlock("basalt", DarkCore.getNextID()).getInt(), Material.rock);
         this.setCreativeTab(CreativeTabs.tabDecorations);
         this.setHardness(2f);
         this.setResistance(2f);
@@ -86,7 +86,7 @@ public class BlockBasalt extends Block
 
         for (int i = 0; i < BlockBasalt.blockNames.length; ++i)
         {
-            this.icons[i] = iconReg.registerIcon(DarkMain.getInstance().PREFIX + BlockBasalt.blockNames[i]);
+            this.icons[i] = iconReg.registerIcon(CoreMachine.getInstance().PREFIX + BlockBasalt.blockNames[i]);
         }
     }
 

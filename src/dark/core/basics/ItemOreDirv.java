@@ -18,7 +18,7 @@ import com.dark.prefab.ItemBasic;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.api.events.LaserEvent;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 
 /** A series of items that are derived from a basic material
  *
@@ -27,7 +27,7 @@ public class ItemOreDirv extends ItemBasic implements IExtraItemInfo
 {
     public ItemOreDirv()
     {
-        super(DarkCore.getNextItemId(), "Metal_Parts", DarkMain.CONFIGURATION);
+        super(DarkCore.getNextItemId(), "Metal_Parts", CoreMachine.CONFIGURATION);
         this.setHasSubtypes(true);
         this.setCreativeTab(CreativeTabs.tabMaterials);
     }
@@ -37,7 +37,7 @@ public class ItemOreDirv extends ItemBasic implements IExtraItemInfo
     {
         if (itemStack != null)
         {
-            return "item." + DarkMain.getInstance().PREFIX + EnumOrePart.getFullName(itemStack.getItemDamage());
+            return "item." + CoreMachine.getInstance().PREFIX + EnumOrePart.getFullName(itemStack.getItemDamage());
         }
         else
         {
@@ -62,7 +62,7 @@ public class ItemOreDirv extends ItemBasic implements IExtraItemInfo
             {
                 if (mat.shouldCreateItem(part))
                 {
-                    mat.itemIcons[part.ordinal()] = iconRegister.registerIcon(DarkMain.getInstance().PREFIX + mat.simpleName + part.simpleName);
+                    mat.itemIcons[part.ordinal()] = iconRegister.registerIcon(CoreMachine.getInstance().PREFIX + mat.simpleName + part.simpleName);
                 }
             }
         }
