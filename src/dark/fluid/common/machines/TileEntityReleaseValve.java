@@ -1,7 +1,7 @@
 package dark.fluid.common.machines;
 
 import com.dark.helpers.ConnectionHelper;
-import com.dark.tile.network.ITileConnector;
+import com.dark.tilenetwork.ITileConnector;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;

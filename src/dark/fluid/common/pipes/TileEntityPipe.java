@@ -1,7 +1,7 @@
 package dark.fluid.common.pipes;
 
-import com.dark.tile.network.ITileConnector;
-import com.dark.tile.network.ITileNetwork;
+import com.dark.tilenetwork.ITileConnector;
+import com.dark.tilenetwork.ITileNetwork;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;

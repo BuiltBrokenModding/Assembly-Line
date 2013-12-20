@@ -1,6 +1,6 @@
 package dark.mech.common.machines;
 
-import dark.core.prefab.machine.TileEntityEnergyMachine;
+import com.dark.prefab.TileEntityEnergyMachine;
 
 public class TileEntitySteamPiston extends TileEntityEnergyMachine
 {

@@ -1,7 +1,7 @@
 package dark.fluid.common.machines;
 
-import com.dark.tile.network.INetworkPart;
-import com.dark.tile.network.ITileNetwork;
+import com.dark.tilenetwork.INetworkPart;
+import com.dark.tilenetwork.ITileNetwork;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;

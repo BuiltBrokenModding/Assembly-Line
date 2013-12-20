@@ -1,5 +1,7 @@
 package dark.fluid.common;
 
+import com.dark.prefab.RecipeLoader;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -11,7 +13,6 @@ import dark.core.basics.EnumMaterial;
 import dark.core.basics.EnumOrePart;
 import dark.core.basics.ItemParts;
 import dark.core.basics.ItemParts.Parts;
-import dark.core.prefab.RecipeLoader;
 import dark.machines.CoreRecipeLoader;
 
 public class FMRecipeLoader extends RecipeLoader

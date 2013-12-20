@@ -24,8 +24,8 @@ import universalelectricity.core.vector.Vector3;
 
 import com.dark.network.ISimplePacketReceiver;
 import com.dark.network.PacketHandler;
-import com.dark.tile.network.INetworkPart;
-import com.dark.tile.network.ITileNetwork;
+import com.dark.tilenetwork.INetworkPart;
+import com.dark.tilenetwork.ITileNetwork;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;
@@ -35,7 +35,7 @@ import dark.api.FluidMasterList;
 import dark.api.fluid.INetworkFluidPart;
 import dark.core.prefab.tilenetwork.fluid.NetworkFluidTiles;
 import dark.fluid.common.FluidPartsMaterial;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 
 public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements INetworkFluidPart, ISimplePacketReceiver
 {
@@ -429,7 +429,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
         data[7] = this.renderConnection[5];
         data[8] = this.getTank().getCapacity();
         data[9] = this.getTank().writeToNBT(new NBTTagCompound());
-        return PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, data);
+        return PacketHandler.instance().getTilePacket(CoreMachine.CHANNEL, this, data);
     }
 
     public void sendRenderUpdate()
@@ -443,14 +443,14 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
         data[5] = this.renderConnection[3];
         data[6] = this.renderConnection[4];
         data[7] = this.renderConnection[5];
-        PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, data));
+        PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(CoreMachine.CHANNEL, this, data));
     }
 
     public void sendTankUpdate(int index)
     {
         if (this.getTank() != null && index == 0)
         {
-            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, "SingleTank", this.getTank().getCapacity(), this.getTank().writeToNBT(new NBTTagCompound())), this.worldObj, new Vector3(this), 60);
+            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(CoreMachine.CHANNEL, this, "SingleTank", this.getTank().getCapacity(), this.getTank().writeToNBT(new NBTTagCompound())), this.worldObj, new Vector3(this), 60);
         }
     }
 

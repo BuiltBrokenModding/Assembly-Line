@@ -17,7 +17,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 import dark.api.ColorCode;
 import dark.fluid.common.prefab.TileEntityFluidStorage;
-import dark.machines.DarkMain;
+import dark.machines.CoreMachine;
 
 public class TileEntitySink extends TileEntityFluidStorage implements IPacketReceiver
 {
@@ -47,7 +47,7 @@ public class TileEntitySink extends TileEntityFluidStorage implements IPacketRec
         {
             stack = this.getTank().getFluid();
         }
-        return PacketHandler.instance().getTilePacket(DarkMain.CHANNEL, this, stack.writeToNBT(new NBTTagCompound()));
+        return PacketHandler.instance().getTilePacket(CoreMachine.CHANNEL, this, stack.writeToNBT(new NBTTagCompound()));
     }
 
     @Override

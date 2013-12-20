@@ -19,7 +19,7 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 
 import com.builtbroken.common.Pair;
-import com.dark.tile.network.ITileConnector;
+import com.dark.tilenetwork.ITileConnector;
 
 import dark.api.fluid.IDrain;
 import dark.api.fluid.INetworkPipe;

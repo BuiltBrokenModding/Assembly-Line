@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
 import com.builtbroken.common.Pair;
-import com.dark.prefab.tile.network.NetworkTileEntities;
+import com.dark.tilenetwork.prefab.NetworkTileEntities;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

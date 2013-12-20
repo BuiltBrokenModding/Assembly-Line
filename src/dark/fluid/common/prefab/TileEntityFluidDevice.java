@@ -2,8 +2,8 @@ package dark.fluid.common.prefab;
 
 import java.util.Random;
 
-import com.dark.prefab.tile.network.NetworkTileEntities;
-import com.dark.tile.network.ITileConnector;
+import com.dark.tilenetwork.ITileConnector;
+import com.dark.tilenetwork.prefab.NetworkTileEntities;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.ForgeDirection;

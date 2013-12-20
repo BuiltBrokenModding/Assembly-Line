@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dark.fluid.FluidHelper;
-import com.dark.prefab.tile.network.NetworkUpdateHandler;
-import com.dark.tile.network.INetworkPart;
+import com.dark.tilenetwork.INetworkPart;
+import com.dark.tilenetwork.prefab.NetworkUpdateHandler;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;

@@ -4,8 +4,8 @@ import java.util.EnumSet;
 import java.util.Map.Entry;
 
 import com.dark.fluid.FluidHelper;
-import com.dark.prefab.tile.network.NetworkUpdateHandler;
-import com.dark.tile.network.INetworkPart;
+import com.dark.tilenetwork.INetworkPart;
+import com.dark.tilenetwork.prefab.NetworkUpdateHandler;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;

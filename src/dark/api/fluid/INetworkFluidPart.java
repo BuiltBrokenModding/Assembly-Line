@@ -1,6 +1,6 @@
 package dark.api.fluid;
 
-import com.dark.tile.network.INetworkPart;
+import com.dark.tilenetwork.INetworkPart;
 
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
