@@ -18,7 +18,7 @@ import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;
 import com.dark.IndustryTabs;
-import com.dark.helpers.ItemWorldHelper;
+import com.dark.helpers.DarksHelper;
 import com.dark.prefab.BlockMachine;
 
 import dark.machines.CommonProxy;
@@ -101,7 +101,7 @@ public class BlockEnergyStorage extends BlockMachine
             }
             else
             {
-                ItemWorldHelper.dropItemStack(world, new Vector3(x, y, z), batBoxStack, false);
+                DarksHelper.dropItemStack(world, new Vector3(x, y, z), batBoxStack, false);
             }
             world.setBlockToAir(x, y, z);
         }
