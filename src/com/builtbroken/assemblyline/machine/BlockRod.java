@@ -13,13 +13,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
 import com.builtbroken.assemblyline.ALRecipeLoader;
+import com.builtbroken.assemblyline.blocks.BlockHydraulic;
 import com.builtbroken.assemblyline.client.render.BlockRenderHelper;
 import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockRod extends BlockFM
+public class BlockRod extends BlockHydraulic
 {
 
     public BlockRod()

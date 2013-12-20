@@ -11,6 +11,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.builtbroken.assemblyline.ALRecipeLoader;
+import com.builtbroken.assemblyline.blocks.BlockAssembly;
 import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;

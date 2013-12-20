@@ -53,6 +53,7 @@ import com.builtbroken.assemblyline.entities.EnumBird;
 import com.builtbroken.assemblyline.entities.prefab.EntityTestCar;
 import com.builtbroken.assemblyline.entities.prefab.ItemVehicleSpawn;
 import com.builtbroken.assemblyline.fluid.pipes.BlockPipe;
+import com.builtbroken.assemblyline.fluid.pipes.FluidPartsMaterial;
 import com.builtbroken.assemblyline.fluid.pipes.ItemBlockPipe;
 import com.builtbroken.assemblyline.fluid.pump.BlockConstructionPump;
 import com.builtbroken.assemblyline.fluid.pump.BlockDrain;
@@ -118,7 +119,7 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 @ModstatInfo(prefix = "asmline")
-@Mod(modid = AssemblyLine.MOD_ID, name = AssemblyLine.MOD_NAME, version = AssemblyLine.VERSION, dependencies = "required-after:DarkCore", useMetadata = true)
+@Mod(modid = AssemblyLine.MOD_ID, name = AssemblyLine.MOD_NAME, version = AssemblyLine.VERSION, useMetadata = true)
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
 public class AssemblyLine
 {

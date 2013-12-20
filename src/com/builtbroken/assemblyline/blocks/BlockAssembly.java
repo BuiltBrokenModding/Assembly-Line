@@ -1,4 +1,4 @@
-package com.builtbroken.assemblyline.machine;
+package com.builtbroken.assemblyline.blocks;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
@@ -7,6 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.assemblyline.machine.TileEntityAssembly;
 import com.builtbroken.minecraft.IndustryTabs;
 import com.builtbroken.minecraft.prefab.BlockMachine;
 

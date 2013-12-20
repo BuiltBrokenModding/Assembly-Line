@@ -9,9 +9,9 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import com.builtbroken.assemblyline.AssemblyLine;
-import com.builtbroken.assemblyline.FluidPartsMaterial;
 import com.builtbroken.assemblyline.client.model.ModelLargePipe;
 import com.builtbroken.assemblyline.fluid.pipes.EnumPipeType;
+import com.builtbroken.assemblyline.fluid.pipes.FluidPartsMaterial;
 import com.builtbroken.assemblyline.fluid.pipes.TileEntityPipe;
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.DarkCore;

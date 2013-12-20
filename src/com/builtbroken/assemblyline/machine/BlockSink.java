@@ -12,6 +12,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 
+import com.builtbroken.assemblyline.blocks.BlockHydraulic;
 import com.builtbroken.assemblyline.client.render.BlockRenderHelper;
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.fluid.FluidHelper;
@@ -19,7 +20,7 @@ import com.builtbroken.minecraft.fluid.FluidHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockSink extends BlockFM
+public class BlockSink extends BlockHydraulic
 {
     public BlockSink()
     {

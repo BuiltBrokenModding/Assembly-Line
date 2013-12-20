@@ -12,9 +12,9 @@ import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.core.vector.Vector3;
 
+import com.builtbroken.assemblyline.blocks.BlockAssembly;
 import com.builtbroken.assemblyline.client.render.BlockRenderingHandler;
 import com.builtbroken.assemblyline.client.render.RenderArmbot;
-import com.builtbroken.assemblyline.machine.BlockAssembly;
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.interfaces.IMultiBlock;
 

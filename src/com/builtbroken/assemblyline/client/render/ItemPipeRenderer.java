@@ -9,8 +9,8 @@ import org.lwjgl.opengl.GL11;
 
 import com.builtbroken.assemblyline.ALRecipeLoader;
 import com.builtbroken.assemblyline.AssemblyLine;
-import com.builtbroken.assemblyline.FluidPartsMaterial;
 import com.builtbroken.assemblyline.client.model.ModelReleaseValve;
+import com.builtbroken.assemblyline.fluid.pipes.FluidPartsMaterial;
 import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.client.FMLClientHandler;

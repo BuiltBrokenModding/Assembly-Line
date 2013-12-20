@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.CommonProxy;
-import com.builtbroken.assemblyline.machine.BlockAssembly;
+import com.builtbroken.assemblyline.blocks.BlockAssembly;
 import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;

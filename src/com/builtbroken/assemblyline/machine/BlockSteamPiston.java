@@ -9,12 +9,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
+import com.builtbroken.assemblyline.blocks.BlockHydraulic;
 import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockSteamPiston extends BlockFM
+public class BlockSteamPiston extends BlockHydraulic
 {
 
     public BlockSteamPiston()

@@ -18,8 +18,7 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidTankInfo;
 
-import com.builtbroken.assemblyline.FluidPartsMaterial;
-import com.builtbroken.assemblyline.machine.BlockFM;
+import com.builtbroken.assemblyline.blocks.BlockHydraulic;
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.helpers.ColorCode;
 import com.builtbroken.minecraft.helpers.ColorCode.IColorCoded;
@@ -27,7 +26,7 @@ import com.builtbroken.minecraft.helpers.ColorCode.IColorCoded;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockPipe extends BlockFM
+public class BlockPipe extends BlockHydraulic
 {
 
     public static int waterFlowRate = 3000;

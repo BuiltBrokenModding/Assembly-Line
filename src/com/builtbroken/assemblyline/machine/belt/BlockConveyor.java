@@ -15,9 +15,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
+import com.builtbroken.assemblyline.blocks.BlockAssembly;
 import com.builtbroken.assemblyline.client.render.BlockRenderingHandler;
 import com.builtbroken.assemblyline.client.render.RenderConveyorBelt;
-import com.builtbroken.assemblyline.machine.BlockAssembly;
 import com.builtbroken.assemblyline.machine.belt.TileEntityConveyorBelt.SlantType;
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.tilenetwork.prefab.NetworkItemSupply;

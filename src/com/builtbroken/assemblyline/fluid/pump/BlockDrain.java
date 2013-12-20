@@ -16,10 +16,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
 import com.builtbroken.assemblyline.AssemblyLine;
-import com.builtbroken.assemblyline.machine.BlockFM;
+import com.builtbroken.assemblyline.blocks.BlockHydraulic;
 import com.builtbroken.common.Pair;
 
-public class BlockDrain extends BlockFM
+public class BlockDrain extends BlockHydraulic
 {
     private Icon blockIcon;
     private Icon drainIcon;

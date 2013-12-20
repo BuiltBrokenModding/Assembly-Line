@@ -12,6 +12,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import com.builtbroken.assemblyline.blocks.BlockBasalt;
+import com.builtbroken.assemblyline.fluid.pipes.FluidPartsMaterial;
 import com.builtbroken.assemblyline.generators.BlockSolarPanel;
 import com.builtbroken.assemblyline.item.EnumTool;
 import com.builtbroken.assemblyline.item.ItemCommonTool;

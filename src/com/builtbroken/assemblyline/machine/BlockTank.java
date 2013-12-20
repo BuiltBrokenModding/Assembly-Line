@@ -14,8 +14,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import universalelectricity.core.vector.Vector3;
 
-import com.builtbroken.assemblyline.FluidPartsMaterial;
+import com.builtbroken.assemblyline.blocks.BlockHydraulic;
 import com.builtbroken.assemblyline.client.render.BlockRenderHelper;
+import com.builtbroken.assemblyline.fluid.pipes.FluidPartsMaterial;
 import com.builtbroken.assemblyline.fluid.pipes.ItemBlockPipe;
 import com.builtbroken.assemblyline.fluid.pipes.TileEntityPipe;
 import com.builtbroken.common.Pair;
@@ -25,7 +26,7 @@ import com.builtbroken.minecraft.helpers.DarksHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockTank extends BlockFM
+public class BlockTank extends BlockHydraulic
 {
     public static int tankVolume = 16;
 

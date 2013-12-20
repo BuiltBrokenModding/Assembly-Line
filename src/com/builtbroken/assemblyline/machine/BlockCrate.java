@@ -18,6 +18,7 @@ import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
 
 import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.assemblyline.blocks.BlockAssembly;
 import com.builtbroken.assemblyline.client.render.RenderCrate;
 import com.builtbroken.common.Pair;
 

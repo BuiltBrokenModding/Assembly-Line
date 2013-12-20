@@ -16,15 +16,15 @@ import net.minecraft.world.World;
 
 import com.builtbroken.assemblyline.ALRecipeLoader;
 import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.assemblyline.blocks.BlockHydraulic;
 import com.builtbroken.assemblyline.client.render.BlockRenderHelper;
-import com.builtbroken.assemblyline.machine.BlockFM;
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.tilenetwork.prefab.NetworkTileEntities;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockConstructionPump extends BlockFM
+public class BlockConstructionPump extends BlockHydraulic
 {
 
     public BlockConstructionPump()

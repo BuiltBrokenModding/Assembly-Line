@@ -10,8 +10,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 import com.builtbroken.assemblyline.api.IFilterable;
+import com.builtbroken.assemblyline.blocks.BlockAssembly;
 import com.builtbroken.assemblyline.imprinter.ItemImprinter;
-import com.builtbroken.assemblyline.machine.BlockAssembly;
 
 /** Extend this block class if a filter is allowed to be placed inside of this block.
  * 
