@@ -4,34 +4,11 @@
 
 	<property file="build.properties" />
 	<property environment="env" />
-	<property name="file.core" value="Dark-CoreMachine_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
-	<property name="file.fm" value="Dark-FluidMechanics_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
-    	<property name="file.al" value="Dark-AssemblyLine_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
-    	<property name="file.ft" value="Dark-FarmTech_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
-    	<property name="file.gs" value="Dark-GreaterSecurity_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />	   
-	<property name="file.mm" value="Dark-MechanizedMining_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
-	<property name="file.all" value="DarkBoxSet_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.zip" />	
-
+	<property name="file.core" value="CoreMachine_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
 	<target name="build">
-
-       
-        
 		<copy todir="${dir.development}">
 			<fileset dir="../Minecraft Forge Latest/" />
 		</copy>
-        <!-- Download other git repos -->
-		<exec dir="${dir.development}bin" executable="cmd" osfamily="windows">
-			<arg line="GitClone.bat" />
-		</exec>
-		<exec dir="${dir.development}bin" executable="bash" osfamily="unix">
-			<arg line="GitClone.sh" />
-		</exec>
-        <exec dir="${dir.development}bin" executable="cmd" osfamily="windows">
-            <arg line="GitChangeLog.bat" />
-		</exec>
-		<exec dir="${dir.development}bin" executable="bash" osfamily="unix">
-			<arg line="GitChangeLog.sh" />
-		</exec>
 		<copy todir="${dir.mcp}/src/minecraft">
 			
 			<fileset dir="${dir.development}src">
@@ -49,28 +26,7 @@
             <fileset dir="${dir.development}APIs">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
-			</fileset>
-            <fileset dir="${dir.development}downloads/Assembly-Line/src">
-				<exclude name=".git/**"/>
-				<exclude name="**/*.xml"/>
-			</fileset>
-            <fileset dir="${dir.development}downloads/FarmTech/src">
-				<exclude name=".git/**"/>
-				<exclude name="**/*.xml"/>
-			</fileset>
-            <fileset dir="${dir.development}downloads/Fluid-Mechanics/src">
-				<exclude name=".git/**"/>
-				<exclude name="**/*.xml"/>
-			</fileset>
-            <fileset dir="${dir.development}downloads/Greater-Security/src">
-				<exclude name=".git/**"/>
-				<exclude name="**/*.xml"/>
-			</fileset>
- 	   <fileset dir="${dir.development}downloads/MechanizedMining/src">
-				<exclude name=".git/**"/>
-				<exclude name="**/*.xml"/>
-			</fileset>
-			
+			</fileset>			
 		</copy>
 		
 		<!-- Make all directories -->
@@ -102,71 +58,24 @@
 		<!-- Copy compiled files into folders to be zipped -->
 		<copy todir="core">
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/core/" />
-                        <fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/machines/" />
-            		<fileset dir="${dir.mcp}/reobf/minecraft" includes="com/builtbroken/common/" />
-           		<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/api/" />
+            <fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/machines/" />
+            <fileset dir="${dir.mcp}/reobf/minecraft" includes="com/builtbroken/common/" />
+           	<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/api/" />
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="buildcraft/" />
-            		<fileset dir="${dir.mcp}/reobf/minecraft" includes="dan200/" />
-            		<fileset dir="${dir.mcp}/reobf/minecraft" includes="ic2/" />
-            		<fileset dir="${dir.mcp}/reobf/minecraft" includes="org/" />
-            		<fileset dir="${dir.mcp}/reobf/minecraft" includes="themalexpansion/" />
-            		<fileset dir="${dir.mcp}/reobf/minecraft" includes="universalelectricity/" />
-            		<fileset dir="${dir.development}resources" excludes=".git/**" />
+            <fileset dir="${dir.mcp}/reobf/minecraft" includes="dan200/" />
+            <fileset dir="${dir.mcp}/reobf/minecraft" includes="ic2/" />
+            <fileset dir="${dir.mcp}/reobf/minecraft" includes="org/" />
+            <fileset dir="${dir.mcp}/reobf/minecraft" includes="themalexpansion/" />
+            <fileset dir="${dir.mcp}/reobf/minecraft" includes="universalelectricity/" />
+            <fileset dir="${dir.development}resources" excludes=".git/**" />
 		</copy>
-		<copy todir="fm">
-			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/fluid/" />
-			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/mech/" />
-            		<fileset dir="${dir.development}downloads/Fluid-Mechanics/resources" excludes=".git/**" />
-		</copy>
-		<copy todir="al">
-			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/assembly/" />
-            		<fileset dir="${dir.development}downloads/Assembly-Line/resources" excludes=".git/**" />
-		</copy>
-		<copy todir="ft">
-			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/farmtech/" />
-            		<fileset dir="${dir.development}downloads/FarmTech/resources" excludes=".git/**" />
-		</copy>
-		<copy todir="gs">
-			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/security/" />
-            		<fileset dir="${dir.development}downloads/Greater-Security/resources" excludes=".git/**" />
-		</copy>
-		<copy todir="mm">
-			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/mining/" />
-            		<fileset dir="${dir.development}downloads/MechanizedMining/resources" excludes=".git/**" />
-		</copy>
-        
-        <copy todir="gs" file="LICENSE.txt" />
-	<copy todir="mm" file="LICENSE.txt" />
-        <copy todir="ft" file="LICENSE.txt" />
-        <copy todir="al" file="LICENSE.txt" />
-        <copy todir="fm" file="LICENSE.txt" />
-        <copy todir="core" file="LICENSE.txt" />
         <copy todir="output" file="LICENSE.txt" />
         <copy todir="output" file="build.properties" />
 		
 		<!-- OUTPUT LATEST JAR AND ZIP FILES -->
 		<jar destfile="output/${file.core}">
 			<fileset dir="core" />
-		</jar>
-		<jar destfile="output/${file.fm}">
-			<fileset dir="fm" />
-		</jar>
-		<jar destfile="output/${file.mm}">
-			<fileset dir="mm" />
-		</jar>
-		<jar destfile="output/${file.al}">
-			<fileset dir="al" />
-		</jar>
-		<jar destfile="output/${file.ft}">
-			<fileset dir="ft" />
-		</jar>
-		<jar destfile="output/${file.gs}">
-			<fileset dir="gs" />
-		</jar>
-        <zip destfile="${file.all}">
-			<fileset dir="output/" />
-		</zip>		
-		
+		</jar>		
         <copy todir="output" file="${file.all}" />
 	</target>
 </project>
