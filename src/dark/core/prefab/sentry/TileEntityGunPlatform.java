@@ -1,6 +1,6 @@
 package dark.core.prefab.sentry;
 
-import dark.core.prefab.terminal.TileEntityTerminal;
+import com.dark.terminal.TileEntityTerminal;
 
 public class TileEntityGunPlatform extends TileEntityTerminal
 {

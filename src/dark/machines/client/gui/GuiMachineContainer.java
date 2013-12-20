@@ -11,12 +11,13 @@ import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import com.dark.prefab.TileEntityMachine;
+import com.dark.prefab.invgui.GuiButtonImage;
+import com.dark.prefab.invgui.GuiButtonImage.ButtonIcon;
+
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.prefab.invgui.GuiButtonImage;
-import dark.core.prefab.invgui.GuiButtonImage.ButtonIcon;
-import dark.core.prefab.machine.TileEntityMachine;
 
 @SideOnly(Side.CLIENT)
 public abstract class GuiMachineContainer extends GuiContainer

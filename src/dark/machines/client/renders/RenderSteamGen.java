@@ -7,10 +7,10 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import com.dark.DarkCore;
+import com.dark.prefab.TileEntityMachine;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.prefab.machine.TileEntityMachine;
 import dark.machines.CoreMachine;
 import dark.machines.client.models.ModelMachine;
 import dark.machines.client.models.ModelSteamGen;

@@ -2,9 +2,10 @@ package dark.machines.generators;
 
 import java.util.EnumSet;
 
+import com.dark.prefab.TileEntityEnergyMachine;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import dark.core.prefab.machine.TileEntityEnergyMachine;
 
 public class TileEntitySteamPiston extends TileEntityEnergyMachine
 {

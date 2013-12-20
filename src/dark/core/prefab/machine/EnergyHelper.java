@@ -1,5 +1,7 @@
 package dark.core.prefab.machine;
 
+import com.dark.prefab.TileEntityEnergyMachine;
+
 import ic2.api.item.IElectricItemManager;
 import ic2.api.item.ISpecialElectricItem;
 import net.minecraft.item.ItemStack;

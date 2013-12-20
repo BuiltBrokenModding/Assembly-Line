@@ -9,12 +9,12 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import com.dark.DarkCore;
+import com.dark.prefab.TileEntityMachine;
+import com.dark.prefab.invgui.GuiBase;
+import com.dark.prefab.invgui.GuiButtonImage;
+import com.dark.prefab.invgui.GuiButtonImage.ButtonIcon;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import dark.core.prefab.invgui.GuiBase;
-import dark.core.prefab.invgui.GuiButtonImage;
-import dark.core.prefab.invgui.GuiButtonImage.ButtonIcon;
-import dark.core.prefab.machine.TileEntityMachine;
 import dark.machines.CoreMachine;
 
 /** To be used with all machine that have a gui to allow generic settings and feature all all devices

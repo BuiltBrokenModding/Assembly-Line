@@ -15,12 +15,12 @@ import universalelectricity.core.vector.Vector3;
 import com.dark.helpers.MathHelper;
 import com.dark.helpers.RayTraceHelper;
 import com.dark.network.PacketHandler;
+import com.dark.prefab.TileEntityMachine;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;
 import dark.api.ISentryGun;
 import dark.core.prefab.entities.EntityTileDamage;
-import dark.core.prefab.machine.TileEntityMachine;
 import dark.machines.CoreMachine;
 
 /** Prefab tileEntity for creating senty guns that can be of type aimed, mounted, or automated.

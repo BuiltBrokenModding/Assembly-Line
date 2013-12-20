@@ -1,7 +1,8 @@
 package dark.machines.machines;
 
+import com.dark.prefab.TileEntityEnergyMachine;
+
 import net.minecraftforge.common.ForgeDirection;
-import dark.core.prefab.machine.TileEntityEnergyMachine;
 
 public class TileEntityInfLoad extends TileEntityEnergyMachine
 {

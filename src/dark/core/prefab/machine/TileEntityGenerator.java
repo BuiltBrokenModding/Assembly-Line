@@ -1,5 +1,7 @@
 package dark.core.prefab.machine;
 
+import com.dark.prefab.TileEntityEnergyMachine;
+
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityPack;
 
