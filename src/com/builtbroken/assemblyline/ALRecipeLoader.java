@@ -11,11 +11,18 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
+import com.builtbroken.assemblyline.blocks.BlockBasalt;
+import com.builtbroken.assemblyline.generators.BlockSolarPanel;
+import com.builtbroken.assemblyline.item.EnumTool;
+import com.builtbroken.assemblyline.item.ItemCommonTool;
 import com.builtbroken.assemblyline.item.ItemOreDirv;
 import com.builtbroken.assemblyline.item.ItemParts;
+import com.builtbroken.assemblyline.item.ItemReadoutTools;
+import com.builtbroken.assemblyline.item.ItemWrench;
 import com.builtbroken.assemblyline.item.ItemParts.Parts;
 import com.builtbroken.assemblyline.machine.BlockCrate;
 import com.builtbroken.assemblyline.machine.processor.BlockProcessor;
+import com.builtbroken.assemblyline.transmit.BlockWire;
 import com.builtbroken.minecraft.EnumMaterial;
 import com.builtbroken.minecraft.EnumOrePart;
 import com.builtbroken.minecraft.helpers.ColorCode;
@@ -25,13 +32,6 @@ import com.builtbroken.minecraft.recipes.MachineRecipeHandler;
 import com.builtbroken.minecraft.recipes.ProcessorType;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import dark.machines.deco.BlockBasalt;
-import dark.machines.generators.BlockSolarPanel;
-import dark.machines.items.EnumTool;
-import dark.machines.items.ItemCommonTool;
-import dark.machines.items.ItemReadoutTools;
-import dark.machines.items.ItemWrench;
-import dark.machines.transmit.BlockWire;
 
 public class ALRecipeLoader extends RecipeLoader
 {

@@ -10,8 +10,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+import com.builtbroken.assemblyline.generators.ContainerCoalGenerator;
+import com.builtbroken.assemblyline.generators.TileEntitySteamGen;
 import com.builtbroken.assemblyline.imprinter.ContainerImprinter;
 import com.builtbroken.assemblyline.imprinter.TileEntityImprinter;
+import com.builtbroken.assemblyline.machine.ContainerBatteryBox;
+import com.builtbroken.assemblyline.machine.TileEntityBatteryBox;
 import com.builtbroken.assemblyline.machine.encoder.ContainerEncoder;
 import com.builtbroken.assemblyline.machine.encoder.TileEntityEncoder;
 import com.builtbroken.assemblyline.machine.processor.ContainerProcessor;
@@ -20,10 +24,6 @@ import com.builtbroken.minecraft.prefab.invgui.ContainerFake;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.IGuiHandler;
-import dark.machines.generators.ContainerCoalGenerator;
-import dark.machines.generators.TileEntitySteamGen;
-import dark.machines.machines.ContainerBatteryBox;
-import dark.machines.machines.TileEntityBatteryBox;
 
 public class CommonProxy implements IGuiHandler
 {

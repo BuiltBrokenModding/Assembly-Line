@@ -12,8 +12,10 @@ import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.client.model.ModelConveyorBelt;
 import com.builtbroken.assemblyline.client.model.ModelCrusher;
 import com.builtbroken.assemblyline.client.model.ModelGrinder;
+import com.builtbroken.assemblyline.client.model.ModelMachine;
 import com.builtbroken.assemblyline.client.model.ModelManipulator;
 import com.builtbroken.assemblyline.client.model.ModelRejectorPiston;
+import com.builtbroken.assemblyline.client.model.ModelSolarPanel;
 import com.builtbroken.assemblyline.machine.red.BlockAdvancedHopper;
 import com.builtbroken.minecraft.DarkCore;
 
@@ -33,6 +35,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
     private ModelManipulator modelInjector = new ModelManipulator();
     private ModelCrusher modelCrushor = new ModelCrusher();
     private ModelGrinder grinderModel = new ModelGrinder();
+    private static ModelSolarPanel solarPanelModel = new ModelSolarPanel();
 
     @Override
     public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
@@ -99,6 +102,21 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
             this.grinderModel.renderBody(0.0625f);
             this.grinderModel.renderRotation(0.0625f, 0);
             GL11.glPopMatrix();
+        }
+        else if (ALRecipeLoader.blockSolar != null && block.blockID == ALRecipeLoader.blockSolar.blockID)
+        {
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderBlockSolarPanel.TEXTURE);
+            GL11.glTranslatef(0.0F, 1.1F, 0.0F);
+            GL11.glRotatef(180f, 0f, 0f, 1f);
+            solarPanelModel.render(0.0625F);
+        }
+        else if (ALRecipeLoader.blockSteamGen != null && block.blockID == ALRecipeLoader.blockSteamGen.blockID)
+        {
+            ModelMachine model = RenderSteamGen.getModel(metadata);
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderSteamGen.getTexture(metadata));
+            GL11.glTranslatef(0.0F, 1.1F, 0.0F);
+            GL11.glRotatef(180f, 0f, 0f, 1f);
+            model.render(0.0625F);
         }
     }
 

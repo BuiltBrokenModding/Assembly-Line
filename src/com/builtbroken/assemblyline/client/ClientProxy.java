@@ -11,6 +11,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 import com.builtbroken.assemblyline.ALRecipeLoader;
 import com.builtbroken.assemblyline.CommonProxy;
+import com.builtbroken.assemblyline.client.gui.GuiBatteryBox;
 import com.builtbroken.assemblyline.client.gui.GuiEncoderCoder;
 import com.builtbroken.assemblyline.client.gui.GuiEncoderHelp;
 import com.builtbroken.assemblyline.client.gui.GuiEncoderInventory;
@@ -27,13 +28,16 @@ import com.builtbroken.assemblyline.client.render.RenderPump;
 import com.builtbroken.assemblyline.client.render.RenderReleaseValve;
 import com.builtbroken.assemblyline.client.render.RenderSink;
 import com.builtbroken.assemblyline.client.render.RenderTank;
+import com.builtbroken.assemblyline.client.render.RenderTestCar;
 import com.builtbroken.assemblyline.client.render.RenderTurkey;
 import com.builtbroken.assemblyline.entities.EntityFarmEgg;
 import com.builtbroken.assemblyline.entities.EntityTurkey;
+import com.builtbroken.assemblyline.entities.prefab.EntityTestCar;
 import com.builtbroken.assemblyline.fluid.pipes.TileEntityPipe;
 import com.builtbroken.assemblyline.fluid.pump.TileEntityConstructionPump;
 import com.builtbroken.assemblyline.fluid.pump.TileEntityStarterPump;
 import com.builtbroken.assemblyline.imprinter.TileEntityImprinter;
+import com.builtbroken.assemblyline.machine.TileEntityBatteryBox;
 import com.builtbroken.assemblyline.machine.TileEntityReleaseValve;
 import com.builtbroken.assemblyline.machine.TileEntitySink;
 import com.builtbroken.assemblyline.machine.TileEntityTank;
@@ -44,10 +48,6 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.machines.client.gui.GuiBatteryBox;
-import dark.machines.client.renders.RenderTestCar;
-import dark.machines.machines.TileEntityBatteryBox;
-import dark.machines.prefab.entities.EntityTestCar;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy
