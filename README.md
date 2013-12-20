@@ -1,12 +1,13 @@
-## Assembly Line
+## FarmTech
 
 ### Brief
-Assembly Line is a Minecraft mod that brings realistic factory style systems into Minecraft.
+Simple yet open addition to Dark's Core Machine provind advancement and automation in farming
+
+Based off biotech mod created by LiQuiD
 
 ### Project Team
 * Darkguardsman - Lead-Dev
-* Briman0094 - Ex-Dev
-* Calclavia - Ex-Dev
+* LiQuiD(liquidgithub) - Dev
 
 
 ### License
