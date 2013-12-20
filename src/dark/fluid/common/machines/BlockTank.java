@@ -20,8 +20,8 @@ import com.dark.helpers.ItemWorldHelper;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.fluid.client.render.BlockRenderHelper;
-import dark.fluid.common.FluidPartsMaterial;
+import dark.assembly.FluidPartsMaterial;
+import dark.assembly.client.render.BlockRenderHelper;
 import dark.fluid.common.pipes.ItemBlockPipe;
 import dark.fluid.common.pipes.TileEntityPipe;
 

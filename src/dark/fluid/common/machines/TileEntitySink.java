@@ -12,12 +12,12 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import universalelectricity.prefab.network.IPacketReceiver;
 
+import com.dark.DarkCore;
+import com.dark.helpers.ColorCode;
 import com.dark.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 
-import dark.api.ColorCode;
 import dark.fluid.common.prefab.TileEntityFluidStorage;
-import dark.machines.CoreMachine;
 
 public class TileEntitySink extends TileEntityFluidStorage implements IPacketReceiver
 {
@@ -47,7 +47,7 @@ public class TileEntitySink extends TileEntityFluidStorage implements IPacketRec
         {
             stack = this.getTank().getFluid();
         }
-        return PacketHandler.instance().getTilePacket(CoreMachine.CHANNEL, this, stack.writeToNBT(new NBTTagCompound()));
+        return PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, this, stack.writeToNBT(new NBTTagCompound()));
     }
 
     @Override

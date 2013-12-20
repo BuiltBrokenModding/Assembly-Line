@@ -1,7 +1,8 @@
 package dark.fluid.common.pipes;
 
-import dark.api.ColorCode;
-import dark.api.ColorCode.IColoredId;
+import com.dark.helpers.ColorCode;
+import com.dark.helpers.ColorCode.IColoredId;
+
 
 public enum EnumTankTypes implements IColoredId
 {

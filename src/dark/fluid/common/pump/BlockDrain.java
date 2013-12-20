@@ -17,7 +17,7 @@ import net.minecraftforge.common.ForgeDirection;
 
 import com.builtbroken.common.Pair;
 
-import dark.fluid.common.FluidMech;
+import dark.assembly.AssemblyLine;
 import dark.fluid.common.machines.BlockFM;
 
 public class BlockDrain extends BlockFM
@@ -40,9 +40,9 @@ public class BlockDrain extends BlockFM
     @Override
     public void registerIcons(IconRegister par1IconRegister)
     {
-        this.blockIcon = par1IconRegister.registerIcon(FluidMech.instance.PREFIX + "ironMachineSide");
-        this.drainIcon = par1IconRegister.registerIcon(FluidMech.instance.PREFIX + "drain");
-        this.fillIcon = par1IconRegister.registerIcon(FluidMech.instance.PREFIX + "drain2");
+        this.blockIcon = par1IconRegister.registerIcon(AssemblyLine.PREFIX + "ironMachineSide");
+        this.drainIcon = par1IconRegister.registerIcon(AssemblyLine.PREFIX + "drain");
+        this.fillIcon = par1IconRegister.registerIcon(AssemblyLine.PREFIX + "drain2");
     }
 
     @Override

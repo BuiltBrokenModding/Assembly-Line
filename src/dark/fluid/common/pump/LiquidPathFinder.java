@@ -8,13 +8,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.dark.fluid.FluidHelper;
-
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
+
+import com.dark.fluid.FluidHelper;
 
 /** A simpler path Finder used to find drainable or fillable tiles
  * 

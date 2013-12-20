@@ -1,6 +1,7 @@
 package dark.fluid.common.pipes;
 
-import dark.api.ColorCode.IColoredId;
+import com.dark.helpers.ColorCode.IColoredId;
+
 
 public interface IPipeType extends IColoredId
 {

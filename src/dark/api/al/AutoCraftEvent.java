@@ -1,12 +1,12 @@
 package dark.api.al;
 
-import com.dark.helpers.AutoCraftingManager.IAutoCrafter;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.event.Cancelable;
 import net.minecraftforge.event.Event;
 import universalelectricity.core.vector.Vector3;
+
+import com.dark.helpers.AutoCraftingManager.IAutoCrafter;
 
 /** Events called when an automated crafter is working on crafting an item
  * 

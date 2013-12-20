@@ -10,27 +10,22 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
 
 import com.builtbroken.common.Pair;
 import com.dark.tilenetwork.prefab.NetworkTileEntities;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.fluid.client.render.BlockRenderHelper;
-import dark.fluid.common.FMRecipeLoader;
-import dark.fluid.common.FluidMech;
+import dark.assembly.ALRecipeLoader;
+import dark.assembly.AssemblyLine;
+import dark.assembly.client.render.BlockRenderHelper;
 import dark.fluid.common.machines.BlockFM;
 
 public class BlockConstructionPump extends BlockFM
 {
-    Icon inputIcon;
-    Icon outputIcon;
 
     public BlockConstructionPump()
     {
@@ -44,30 +39,7 @@ public class BlockConstructionPump extends BlockFM
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister par1IconRegister)
     {
-        this.blockIcon = par1IconRegister.registerIcon(FluidMech.instance.PREFIX + "ironMachineSide");
-        this.inputIcon = par1IconRegister.registerIcon(FluidMech.instance.PREFIX + "inputMachineSide");
-        this.outputIcon = par1IconRegister.registerIcon(FluidMech.instance.PREFIX + "outputMachineSide");
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
-    {
-        TileEntity entity = world.getBlockTileEntity(x, y, z);
-        ForgeDirection dir = ForgeDirection.getOrientation(side);
-        if (entity instanceof TileEntityConstructionPump)
-        {
-
-            if (dir == ((TileEntityConstructionPump) entity).getFacing(false))
-            {
-                return this.outputIcon;
-            }
-            if (dir == ((TileEntityConstructionPump) entity).getFacing(true))
-            {
-                return this.inputIcon;
-            }
-        }
-        return this.blockIcon;
+        this.blockIcon = par1IconRegister.registerIcon(AssemblyLine.PREFIX + "ironMachineSide");
     }
 
     @Override
@@ -99,7 +71,7 @@ public class BlockConstructionPump extends BlockFM
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
-        return new ItemStack(FMRecipeLoader.blockConPump, 1, 0);
+        return new ItemStack(ALRecipeLoader.blockConPump, 1, 0);
     }
 
     @Override

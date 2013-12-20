@@ -14,10 +14,10 @@ import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;
 import com.dark.fluid.FluidHelper;
+import com.dark.interfaces.IToolReadOut;
 import com.dark.prefab.TileEntityEnergyMachine;
 import com.dark.tilenetwork.ITileConnector;
 
-import dark.api.IToolReadOut;
 import dark.api.fluid.IDrain;
 
 public class TileEntityStarterPump extends TileEntityEnergyMachine implements IToolReadOut, ITileConnector

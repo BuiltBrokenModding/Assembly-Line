@@ -2,13 +2,13 @@ package dark.fluid.common.prefab;
 
 import java.util.Random;
 
-import com.dark.tilenetwork.ITileConnector;
-import com.dark.tilenetwork.prefab.NetworkTileEntities;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
-import dark.api.IToolReadOut;
+
+import com.dark.interfaces.IToolReadOut;
+import com.dark.tilenetwork.ITileConnector;
+import com.dark.tilenetwork.prefab.NetworkTileEntities;
 
 public abstract class TileEntityFluidDevice extends TileEntityAdvanced implements IToolReadOut, ITileConnector
 {

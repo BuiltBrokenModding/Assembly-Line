@@ -1,19 +1,20 @@
 package dark.fluid.common.pipes;
 
-import com.dark.tilenetwork.ITileConnector;
-import com.dark.tilenetwork.ITileNetwork;
-
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
-import dark.api.ColorCode;
-import dark.api.ColorCode.IColorCoded;
+
+import com.dark.helpers.ColorCode;
+import com.dark.helpers.ColorCode.IColorCoded;
+import com.dark.tilenetwork.ITileConnector;
+import com.dark.tilenetwork.ITileNetwork;
+
 import dark.api.fluid.INetworkPipe;
+import dark.assembly.FluidPartsMaterial;
 import dark.core.prefab.tilenetwork.fluid.NetworkPipes;
-import dark.fluid.common.FluidPartsMaterial;
 import dark.fluid.common.prefab.TileEntityFluidNetworkTile;
 
 public class TileEntityPipe extends TileEntityFluidNetworkTile implements IColorCoded, INetworkPipe

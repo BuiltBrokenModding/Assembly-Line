@@ -17,7 +17,7 @@ import com.dark.fluid.FluidHelper;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.fluid.client.render.BlockRenderHelper;
+import dark.assembly.client.render.BlockRenderHelper;
 
 public class BlockSink extends BlockFM
 {

@@ -1,17 +1,18 @@
 package dark.fluid.common.machines;
 
+import net.minecraft.block.material.Material;
+
 import com.dark.IndustryTabs;
 import com.dark.prefab.BlockMachine;
 
-import net.minecraft.block.material.Material;
-import dark.fluid.common.FluidMech;
+import dark.assembly.AssemblyLine;
 
 public abstract class BlockFM extends BlockMachine
 {
 
     public BlockFM(String name, Material material)
     {
-        super(FluidMech.CONFIGURATION, name, material);
+        super(AssemblyLine.CONFIGURATION, name, material);
         this.setCreativeTab(IndustryTabs.tabHydraulic());
     }
 }

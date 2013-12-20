@@ -1,7 +1,5 @@
 package dark.fluid.common.prefab;
 
-import com.dark.fluid.FluidHelper;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
@@ -12,7 +10,9 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import dark.api.ColorCode.IColorCoded;
+
+import com.dark.fluid.FluidHelper;
+import com.dark.helpers.ColorCode.IColorCoded;
 
 public abstract class TileEntityFluidStorage extends TileEntityFluidDevice implements IFluidHandler, IColorCoded
 {

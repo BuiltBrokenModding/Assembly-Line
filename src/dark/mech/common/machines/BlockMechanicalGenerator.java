@@ -16,8 +16,8 @@ import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.fluid.client.render.BlockRenderHelper;
-import dark.fluid.common.FMRecipeLoader;
+import dark.assembly.ALRecipeLoader;
+import dark.assembly.client.render.BlockRenderHelper;
 import dark.fluid.common.machines.BlockFM;
 
 public class BlockMechanicalGenerator extends BlockFM
@@ -40,7 +40,7 @@ public class BlockMechanicalGenerator extends BlockFM
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
 
-        return new ItemStack(FMRecipeLoader.blockGenerator, 1);
+        return new ItemStack(ALRecipeLoader.blockGenerator, 1);
     }
 
     @Override

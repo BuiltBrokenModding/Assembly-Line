@@ -19,12 +19,12 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidTankInfo;
 
 import com.builtbroken.common.Pair;
+import com.dark.helpers.ColorCode;
+import com.dark.helpers.ColorCode.IColorCoded;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.api.ColorCode;
-import dark.api.ColorCode.IColorCoded;
-import dark.fluid.common.FluidPartsMaterial;
+import dark.assembly.FluidPartsMaterial;
 import dark.fluid.common.machines.BlockFM;
 
 public class BlockPipe extends BlockFM

@@ -1,15 +1,16 @@
 package dark.fluid.common.machines;
 
-import com.dark.helpers.ConnectionHelper;
-import com.dark.tilenetwork.ITileConnector;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
-import dark.api.IToolReadOut;
+
+import com.dark.helpers.ConnectionHelper;
+import com.dark.interfaces.IToolReadOut;
+import com.dark.tilenetwork.ITileConnector;
+
 import dark.api.fluid.INetworkPipe;
 import dark.core.prefab.tilenetwork.fluid.NetworkPipes;
 import dark.fluid.common.prefab.TileEntityFluidDevice;

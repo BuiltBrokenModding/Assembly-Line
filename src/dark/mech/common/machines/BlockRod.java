@@ -16,8 +16,8 @@ import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.fluid.client.render.BlockRenderHelper;
-import dark.fluid.common.FMRecipeLoader;
+import dark.assembly.ALRecipeLoader;
+import dark.assembly.client.render.BlockRenderHelper;
 import dark.fluid.common.machines.BlockFM;
 
 public class BlockRod extends BlockFM
@@ -90,7 +90,7 @@ public class BlockRod extends BlockFM
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
-        return new ItemStack(FMRecipeLoader.blockRod, 1, 0);
+        return new ItemStack(ALRecipeLoader.blockRod, 1, 0);
     }
 
     @Override

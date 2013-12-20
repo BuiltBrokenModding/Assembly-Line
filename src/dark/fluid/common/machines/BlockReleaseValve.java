@@ -14,9 +14,10 @@ import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.fluid.common.FMRecipeLoader;
+import dark.assembly.ALRecipeLoader;
+import dark.assembly.machine.BlockAssembly;
 
-public class BlockReleaseValve extends BlockFM
+public class BlockReleaseValve extends BlockAssembly
 {
     public BlockReleaseValve()
     {
@@ -79,7 +80,7 @@ public class BlockReleaseValve extends BlockFM
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
-        return new ItemStack(FMRecipeLoader.blockReleaseValve, 1, 0);
+        return new ItemStack(ALRecipeLoader.blockReleaseValve, 1, 0);
     }
 
     @Override

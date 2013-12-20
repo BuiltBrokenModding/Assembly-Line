@@ -3,13 +3,14 @@ package dark.core.prefab.tilenetwork.fluid;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidHandler;
+
 import com.dark.fluid.FluidHelper;
 import com.dark.tilenetwork.INetworkPart;
 import com.dark.tilenetwork.prefab.NetworkUpdateHandler;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidHandler;
 import dark.api.fluid.INetworkFluidPart;
 
 /** Basically the same as network Fluid tiles class with the only difference being in how it stores

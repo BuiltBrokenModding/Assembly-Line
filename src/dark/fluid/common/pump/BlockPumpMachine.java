@@ -15,8 +15,8 @@ import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.fluid.client.render.BlockRenderHelper;
-import dark.fluid.common.FMRecipeLoader;
+import dark.assembly.ALRecipeLoader;
+import dark.assembly.client.render.BlockRenderHelper;
 import dark.fluid.common.machines.BlockFM;
 
 public class BlockPumpMachine extends BlockFM
@@ -69,7 +69,7 @@ public class BlockPumpMachine extends BlockFM
 
         if (meta < 4)
         {
-            return new ItemStack(FMRecipeLoader.blockPumpMachine, 1, 0);
+            return new ItemStack(ALRecipeLoader.blockPumpMachine, 1, 0);
         }
 
         return null;

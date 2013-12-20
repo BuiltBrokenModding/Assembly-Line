@@ -15,8 +15,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import universalelectricity.core.vector.Vector3;
-import dark.fluid.common.FMRecipeLoader;
-import dark.fluid.common.FluidPartsMaterial;
+import dark.assembly.ALRecipeLoader;
+import dark.assembly.FluidPartsMaterial;
 import dark.fluid.common.machines.TileEntityTank;
 import dark.fluid.common.prefab.TileEntityFluidNetworkTile;
 
@@ -55,7 +55,7 @@ public class ItemBlockPipe extends ItemBlock
         TileEntity entity = vec.getTileEntity(world);
         if (entity instanceof TileEntityTank && ((TileEntityTank) entity).getTankInfo() != null && ((TileEntityTank) entity).getTankInfo()[0] != null)
         {
-            ItemStack itemStack = new ItemStack(FMRecipeLoader.blockTank);
+            ItemStack itemStack = new ItemStack(ALRecipeLoader.blockTank);
             FluidStack stack = ((TileEntityTank) entity).getTankInfo()[0].fluid;
 
             if (itemStack.getTagCompound() == null)
