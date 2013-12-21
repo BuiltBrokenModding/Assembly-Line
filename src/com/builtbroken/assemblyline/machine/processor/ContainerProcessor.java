@@ -1,5 +1,7 @@
 package com.builtbroken.assemblyline.machine.processor;
 
+import universalelectricity.api.item.IElectricalItem;
+import ic2.api.item.IElectricItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -8,11 +10,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.item.ItemStack;
 
-import com.builtbroken.minecraft.prefab.EnergyHelper;
 import com.builtbroken.minecraft.recipes.MachineRecipeHandler;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class ContainerProcessor extends Container
 {
@@ -83,26 +81,6 @@ public class ContainerProcessor extends Container
         this.lastItemBurnTime = this.tileEntity.processingTicks;
     }
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void updateProgressBar(int par1, int par2)
-    {
-        if (par1 == 0)
-        {
-            this.tileEntity.processingTime = par2;
-        }
-
-        if (par1 == 1)
-        {
-            this.tileEntity.setEnergyStored(par2);
-        }
-
-        if (par1 == 2)
-        {
-            this.tileEntity.processingTicks = par2;
-        }
-    }
-
     @Override
     public boolean canInteractWith(EntityPlayer par1EntityPlayer)
     {
@@ -138,7 +116,7 @@ public class ContainerProcessor extends Container
                         return null;
                     }
                 }
-                else if (EnergyHelper.isBatteryItem(slotStack))
+                else if (slotStack.getItem() instanceof IElectricalItem)
                 {
                     if (!this.mergeItemStack(slotStack, tileEntity.slotBatteryCharge, 2, false))
                     {

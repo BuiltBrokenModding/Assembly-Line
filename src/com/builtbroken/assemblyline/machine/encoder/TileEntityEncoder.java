@@ -7,8 +7,7 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
-import universalelectricity.core.vector.Vector2;
-import universalelectricity.prefab.network.PacketManager;
+import universalelectricity.api.vector.Vector2;
 
 import com.builtbroken.assemblyline.api.coding.IProgram;
 import com.builtbroken.assemblyline.api.coding.ITask;
@@ -122,7 +121,7 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
                         if (dis.readBoolean())
                         {
                             Program program = new Program();
-                            program.load(PacketManager.readNBTTagCompound(dis));
+                            program.load(PacketHandler.instance().readNBTTagCompound(dis));
                             this.program = program;
                         }
                         else
@@ -185,7 +184,7 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
         {
             this.program.save(tag);
         }
-        return PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, this, TileEntityEncoder.PROGRAM_PACKET_ID, exists, tag);
+        return PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, TileEntityEncoder.PROGRAM_PACKET_ID, this, exists, tag);
 
     }
 
@@ -195,7 +194,7 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
         {
             if (this.worldObj.isRemote)
             {
-                PacketDispatcher.sendPacketToServer(PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, this, TileEntityEncoder.REMOVE_TASK_PACKET_ID, vec.intX(), vec.intY()));
+                PacketDispatcher.sendPacketToServer(PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, TileEntityEncoder.REMOVE_TASK_PACKET_ID, this, vec.intX(), vec.intY()));
             }
             else
             {
@@ -213,7 +212,7 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
             {
                 NBTTagCompound nbt = new NBTTagCompound();
                 editTask.save(nbt);
-                PacketDispatcher.sendPacketToServer(PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, this, TileEntityEncoder.PROGRAM_CHANGE_PACKET_ID, editTask.getMethodName(), editTask.getCol(), editTask.getRow(), nbt));
+                PacketDispatcher.sendPacketToServer(PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, TileEntityEncoder.PROGRAM_CHANGE_PACKET_ID, this, editTask.getMethodName(), editTask.getCol(), editTask.getRow(), nbt));
             }
             else
             {
@@ -231,7 +230,7 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
             {
                 NBTTagCompound nbt = new NBTTagCompound();
                 editTask.save(nbt);
-                PacketDispatcher.sendPacketToServer(PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, this, TileEntityEncoder.NEW_TASK_PACKET_ID, editTask.getMethodName(), editTask.getCol(), editTask.getRow(), nbt));
+                PacketDispatcher.sendPacketToServer(PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, TileEntityEncoder.NEW_TASK_PACKET_ID, this, editTask.getMethodName(), editTask.getCol(), editTask.getRow(), nbt));
             }
             else
             {

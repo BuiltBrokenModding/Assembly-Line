@@ -10,11 +10,11 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.tile.IRotatable;
+import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.assemblyline.ALRecipeLoader;
 import com.builtbroken.assemblyline.api.IBelt;
+import com.builtbroken.assemblyline.api.IRotatable;
 import com.builtbroken.assemblyline.machine.TileEntityAssembly;
 import com.builtbroken.minecraft.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
@@ -53,7 +53,7 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IBelt,
 
     public TileEntityConveyorBelt()
     {
-        super(.1f);
+        super(1);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IBelt,
     {
         if (this.slantType != SlantType.NONE)
         {
-            return PacketHandler.instance().getTilePacket(this.getChannel(), this, slantPacketID, this.isFunctioning(), this.slantType.ordinal());
+            return PacketHandler.instance().getTilePacket(this.getChannel(), slantPacketID, this, this.isFunctioning(), this.slantType.ordinal());
         }
         return super.getDescriptionPacket();
     }

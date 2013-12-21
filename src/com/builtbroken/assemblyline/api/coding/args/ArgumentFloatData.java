@@ -1,7 +1,7 @@
 package com.builtbroken.assemblyline.api.coding.args;
 
 import net.minecraft.util.MathHelper;
-import universalelectricity.core.electricity.ElectricityDisplay;
+import universalelectricity.api.energy.UnitDisplay;
 
 /** Used to create argument data for the encoder. Should only be used if the value needs to be
  * clearly limited inside the encoder display.
@@ -32,6 +32,6 @@ public class ArgumentFloatData extends ArgumentData
     @Override
     public String warning()
     {
-        return "" + ElectricityDisplay.roundDecimals(min, 2) + " - " + ElectricityDisplay.roundDecimals(max, 2);
+        return "" + UnitDisplay.roundDecimals(min, 2) + " - " + UnitDisplay.roundDecimals(max, 2);
     }
 }

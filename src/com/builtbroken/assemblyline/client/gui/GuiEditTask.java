@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import universalelectricity.core.vector.Vector2;
+import universalelectricity.api.vector.Vector2;
 
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.api.coding.ITask;

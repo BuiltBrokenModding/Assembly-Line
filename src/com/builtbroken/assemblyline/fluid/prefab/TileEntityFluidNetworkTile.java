@@ -20,7 +20,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 
 import org.bouncycastle.util.Arrays;
 
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.assemblyline.api.fluid.FluidMasterList;
 import com.builtbroken.assemblyline.api.fluid.INetworkFluidPart;
@@ -418,39 +418,37 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
     @Override
     public Packet getDescriptionPacket()
     {
-        Object[] data = new Object[10];
-        data[0] = "DescriptionPacket";
-        data[1] = this.subID;
-        data[2] = this.renderConnection[0];
-        data[3] = this.renderConnection[1];
-        data[4] = this.renderConnection[2];
-        data[5] = this.renderConnection[3];
-        data[6] = this.renderConnection[4];
-        data[7] = this.renderConnection[5];
-        data[8] = this.getTank().getCapacity();
-        data[9] = this.getTank().writeToNBT(new NBTTagCompound());
-        return PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, this, data);
+        Object[] data = new Object[9];
+        data[0] = this.subID;
+        data[1] = this.renderConnection[0];
+        data[2] = this.renderConnection[1];
+        data[3] = this.renderConnection[2];
+        data[4] = this.renderConnection[3];
+        data[5] = this.renderConnection[4];
+        data[6] = this.renderConnection[5];
+        data[7] = this.getTank().getCapacity();
+        data[8] = this.getTank().writeToNBT(new NBTTagCompound());
+        return PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, "DescriptionPacket", this, data);
     }
 
     public void sendRenderUpdate()
     {
-        Object[] data = new Object[8];
-        data[0] = "RenderPacket";
-        data[1] = this.subID;
-        data[2] = this.renderConnection[0];
-        data[3] = this.renderConnection[1];
-        data[4] = this.renderConnection[2];
-        data[5] = this.renderConnection[3];
-        data[6] = this.renderConnection[4];
-        data[7] = this.renderConnection[5];
-        PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, this, data));
+        Object[] data = new Object[7];
+        data[0] = this.subID;
+        data[1] = this.renderConnection[0];
+        data[2] = this.renderConnection[1];
+        data[3] = this.renderConnection[2];
+        data[4] = this.renderConnection[3];
+        data[5] = this.renderConnection[4];
+        data[6] = this.renderConnection[5];
+        PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(DarkCore.CHANNEL,"RenderPacket", this, data));
     }
 
     public void sendTankUpdate(int index)
     {
         if (this.getTank() != null && index == 0)
         {
-            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, this, "SingleTank", this.getTank().getCapacity(), this.getTank().writeToNBT(new NBTTagCompound())), this.worldObj, new Vector3(this), 60);
+            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, "SingleTank", this, this.getTank().getCapacity(), this.getTank().writeToNBT(new NBTTagCompound())), this.worldObj, new Vector3(this), 60);
         }
     }
 

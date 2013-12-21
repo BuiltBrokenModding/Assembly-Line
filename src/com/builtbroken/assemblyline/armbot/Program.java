@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import universalelectricity.core.vector.Vector2;
+import universalelectricity.api.vector.Vector2;
 
 import com.builtbroken.assemblyline.api.coding.IProgram;
 import com.builtbroken.assemblyline.api.coding.IProgrammableMachine;

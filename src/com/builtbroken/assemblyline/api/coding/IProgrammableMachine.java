@@ -1,7 +1,7 @@
 package com.builtbroken.assemblyline.api.coding;
 
 import net.minecraft.world.World;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.common.Pair;
 

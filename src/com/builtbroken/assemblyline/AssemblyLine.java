@@ -15,10 +15,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
-import universalelectricity.prefab.TranslationHelper;
-import universalelectricity.prefab.ore.OreGenReplaceStone;
-import universalelectricity.prefab.ore.OreGenerator;
-
 import com.builtbroken.assemblyline.api.coding.TaskRegistry;
 import com.builtbroken.assemblyline.armbot.BlockArmbot;
 import com.builtbroken.assemblyline.armbot.command.TaskBreak;
@@ -45,9 +41,9 @@ import com.builtbroken.assemblyline.blocks.BlockColorGlowGlass;
 import com.builtbroken.assemblyline.blocks.BlockColorSand;
 import com.builtbroken.assemblyline.blocks.BlockGasOre;
 import com.builtbroken.assemblyline.blocks.BlockOre;
+import com.builtbroken.assemblyline.blocks.BlockOre.OreData;
 import com.builtbroken.assemblyline.blocks.GasOreGenerator;
 import com.builtbroken.assemblyline.blocks.ItemBlockColored;
-import com.builtbroken.assemblyline.blocks.BlockOre.OreData;
 import com.builtbroken.assemblyline.entities.EntityFarmEgg;
 import com.builtbroken.assemblyline.entities.EnumBird;
 import com.builtbroken.assemblyline.entities.prefab.EntityTestCar;
@@ -70,9 +66,9 @@ import com.builtbroken.assemblyline.item.ItemCommonTool;
 import com.builtbroken.assemblyline.item.ItemFarmEgg;
 import com.builtbroken.assemblyline.item.ItemOreDirv;
 import com.builtbroken.assemblyline.item.ItemParts;
+import com.builtbroken.assemblyline.item.ItemParts.Parts;
 import com.builtbroken.assemblyline.item.ItemReadoutTools;
 import com.builtbroken.assemblyline.item.ItemWrench;
-import com.builtbroken.assemblyline.item.ItemParts.Parts;
 import com.builtbroken.assemblyline.machine.BlockCrate;
 import com.builtbroken.assemblyline.machine.BlockDebug;
 import com.builtbroken.assemblyline.machine.BlockDetector;
@@ -92,13 +88,14 @@ import com.builtbroken.assemblyline.machine.encoder.BlockEncoder;
 import com.builtbroken.assemblyline.machine.encoder.ItemDisk;
 import com.builtbroken.assemblyline.machine.processor.BlockProcessor;
 import com.builtbroken.assemblyline.machine.red.BlockAdvancedHopper;
-import com.builtbroken.assemblyline.transmit.BlockWire;
-import com.builtbroken.assemblyline.transmit.ItemBlockWire;
+import com.builtbroken.assemblyline.worldgen.OreGenReplaceStone;
+import com.builtbroken.assemblyline.worldgen.OreGenerator;
 import com.builtbroken.minecraft.CoreRegistry;
 import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.EnumMaterial;
 import com.builtbroken.minecraft.EnumOrePart;
 import com.builtbroken.minecraft.IndustryTabs;
+import com.builtbroken.minecraft.TranslationHelper;
 import com.builtbroken.minecraft.fluid.EnumGas;
 import com.builtbroken.minecraft.network.PacketHandler;
 import com.builtbroken.minecraft.prefab.ItemBlockHolder;
@@ -121,7 +118,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 @ModstatInfo(prefix = "asmline")
 @Mod(modid = AssemblyLine.MOD_ID, name = AssemblyLine.MOD_NAME, version = AssemblyLine.VERSION, useMetadata = true)
-@NetworkMod(channels = {DarkCore.CHANNEL}, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
+@NetworkMod(channels = { DarkCore.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class AssemblyLine
 {
 
@@ -293,7 +290,7 @@ public class AssemblyLine
 
         ALRecipeLoader.blockSteamGen = CoreRegistry.createNewBlock("DMBlockSteamMachine", AssemblyLine.MOD_ID, BlockSmallSteamGen.class, ItemBlockHolder.class);
         ALRecipeLoader.blockOre = CoreRegistry.createNewBlock("DMBlockOre", AssemblyLine.MOD_ID, BlockOre.class, ItemBlockOre.class);
-        ALRecipeLoader.blockWire = CoreRegistry.createNewBlock("DMBlockWire", AssemblyLine.MOD_ID, BlockWire.class, ItemBlockWire.class);
+        //ALRecipeLoader.blockWire = CoreRegistry.createNewBlock("DMBlockWire", AssemblyLine.MOD_ID, BlockWire.class, ItemBlockWire.class);
         ALRecipeLoader.blockDebug = CoreRegistry.createNewBlock("DMBlockDebug", AssemblyLine.MOD_ID, BlockDebug.class, ItemBlockHolder.class);
         ALRecipeLoader.blockStainGlass = CoreRegistry.createNewBlock("DMBlockStainedGlass", AssemblyLine.MOD_ID, BlockColorGlass.class, ItemBlockColored.class);
         ALRecipeLoader.blockColorSand = CoreRegistry.createNewBlock("DMBlockColorSand", AssemblyLine.MOD_ID, BlockColorSand.class, ItemBlockColored.class);

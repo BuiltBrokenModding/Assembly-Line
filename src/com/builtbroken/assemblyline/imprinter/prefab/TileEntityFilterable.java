@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.prefab.tile.IRotatable;
 
 import com.builtbroken.assemblyline.api.IFilterable;
+import com.builtbroken.assemblyline.api.IRotatable;
 import com.builtbroken.assemblyline.imprinter.ItemImprinter;
 import com.builtbroken.assemblyline.machine.TileEntityAssembly;
 
@@ -20,16 +20,16 @@ public abstract class TileEntityFilterable extends TileEntityAssembly implements
 
     public TileEntityFilterable()
     {
-        super(0f);
+        super(0);
         this.invSlots = 2;
     }
 
-    public TileEntityFilterable(float wattsPerTick, float maxEnergy)
+    public TileEntityFilterable(long wattsPerTick, long maxEnergy)
     {
         super(wattsPerTick, maxEnergy);
     }
 
-    public TileEntityFilterable(float wattsPerTick)
+    public TileEntityFilterable(long wattsPerTick)
     {
         super(wattsPerTick);
     }

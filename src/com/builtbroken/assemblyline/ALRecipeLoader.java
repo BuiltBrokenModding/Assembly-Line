@@ -18,12 +18,11 @@ import com.builtbroken.assemblyline.item.EnumTool;
 import com.builtbroken.assemblyline.item.ItemCommonTool;
 import com.builtbroken.assemblyline.item.ItemOreDirv;
 import com.builtbroken.assemblyline.item.ItemParts;
+import com.builtbroken.assemblyline.item.ItemParts.Parts;
 import com.builtbroken.assemblyline.item.ItemReadoutTools;
 import com.builtbroken.assemblyline.item.ItemWrench;
-import com.builtbroken.assemblyline.item.ItemParts.Parts;
 import com.builtbroken.assemblyline.machine.BlockCrate;
 import com.builtbroken.assemblyline.machine.processor.BlockProcessor;
-import com.builtbroken.assemblyline.transmit.BlockWire;
 import com.builtbroken.minecraft.EnumMaterial;
 import com.builtbroken.minecraft.EnumOrePart;
 import com.builtbroken.minecraft.helpers.ColorCode;
@@ -227,10 +226,10 @@ public class ALRecipeLoader extends RecipeLoader
         {
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockSolar, 1), "GGG", "SCS", "SWS", 'G', Block.glass, 'W', "copperWire", 'C', circuit, 'S', steel));
         }
-        if (blockWire instanceof BlockWire)
-        {
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 16, 1), "III", "WWW", "III", 'I', Block.cloth, 'W', copper));
-        }
+        //if (blockWire instanceof BlockWire)
+        //{
+        //  GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 16, 1), "III", "WWW", "III", 'I', Block.cloth, 'W', copper));
+        //}
         if (itemDiggingTool instanceof ItemCommonTool)
         {
 

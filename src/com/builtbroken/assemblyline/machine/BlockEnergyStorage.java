@@ -12,9 +12,9 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.UniversalElectricity;
-import universalelectricity.core.block.IConductor;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.UniversalElectricity;
+import universalelectricity.api.energy.IConductor;
+import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.CommonProxy;

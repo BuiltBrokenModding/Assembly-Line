@@ -6,10 +6,14 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagFloat;
+import net.minecraft.nbt.NBTTagLong;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import universalelectricity.core.vector.Vector3;
+import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.assemblyline.ALRecipeLoader;
 
@@ -36,7 +40,15 @@ public class ItemBlockEnergyStorage extends ItemBlock
     {
         if (stack.getTagCompound() != null && stack.getTagCompound().hasKey("wrenched"))
         {
-            list.add("Energy: " + stack.getTagCompound().getFloat("energy"));
+            NBTBase energy = stack.getTagCompound().getTag("energy");
+            if (energy instanceof NBTTagFloat)
+            {
+                list.add("Energy: " + (long) (stack.getTagCompound().getFloat("energy") * 1000));
+            }
+            else if (energy instanceof NBTTagLong)
+            {
+                list.add("Energy: " + stack.getTagCompound().getLong("energy"));
+            }
         }
     }
 
@@ -64,7 +76,16 @@ public class ItemBlockEnergyStorage extends ItemBlock
                 if (entity instanceof TileEntityBatteryBox)
                 {
                     ((TileEntityBatteryBox) entity).getInventory().loadInv(stack.getTagCompound());
-                    ((TileEntityBatteryBox) entity).setEnergyStored(stack.getTagCompound().getFloat("energy"));
+                    NBTBase energy = stack.getTagCompound().getTag("energy");
+                    if (energy instanceof NBTTagFloat)
+                    {
+                        ((TileEntityBatteryBox) entity).setEnergy(ForgeDirection.UNKNOWN, (long) (stack.getTagCompound().getFloat("energy") * 1000));
+                    }
+                    else if (energy instanceof NBTTagLong)
+                    {
+                        ((TileEntityBatteryBox) entity).setEnergy(ForgeDirection.UNKNOWN, stack.getTagCompound().getLong("energy"));
+                    }
+
                 }
             }
         }

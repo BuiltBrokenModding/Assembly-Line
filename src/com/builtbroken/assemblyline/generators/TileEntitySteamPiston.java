@@ -33,7 +33,6 @@ public class TileEntitySteamPiston extends TileEntityEnergyMachine
                 heatTicks++;
             }
             this.wattsOut = this.maxWattOutput * (heatTicks / heatUpTime);
-            this.produceAllSides();
         }
         else
         {
@@ -43,24 +42,6 @@ public class TileEntitySteamPiston extends TileEntityEnergyMachine
             }
         }
 
-    }
-
-    @Override
-    public float getRequest(ForgeDirection direction)
-    {
-        return 0;
-    }
-
-    @Override
-    public float getProvide(ForgeDirection direction)
-    {
-        return this.wattsOut;
-    }
-
-    @Override
-    public boolean consumePower(float watts, boolean doDrain)
-    {
-        return true;
     }
 
     @Override

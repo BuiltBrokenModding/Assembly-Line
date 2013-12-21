@@ -9,8 +9,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import universalelectricity.core.UniversalElectricity;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.UniversalElectricity;
+import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.assemblyline.blocks.BlockAssembly;
 import com.builtbroken.assemblyline.client.render.BlockRenderingHandler;

@@ -1,24 +1,23 @@
 package com.builtbroken.assemblyline.machine;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import universalelectricity.prefab.network.IPacketReceiver;
 
 import com.builtbroken.assemblyline.fluid.prefab.TileEntityFluidStorage;
 import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.helpers.ColorCode;
+import com.builtbroken.minecraft.network.ISimplePacketReceiver;
 import com.builtbroken.minecraft.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntitySink extends TileEntityFluidStorage implements IPacketReceiver
+import cpw.mods.fml.common.network.Player;
+
+public class TileEntitySink extends TileEntityFluidStorage implements ISimplePacketReceiver
 {
     @Override
     public int getTankSize()
@@ -46,22 +45,26 @@ public class TileEntitySink extends TileEntityFluidStorage implements IPacketRec
         {
             stack = this.getTank().getFluid();
         }
-        return PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, this, stack.writeToNBT(new NBTTagCompound()));
+        return PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, "FluidLevel", this, stack.writeToNBT(new NBTTagCompound()));
     }
 
     @Override
-    public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput data)
+    public boolean simplePacket(String id, ByteArrayDataInput data, Player player)
     {
         try
         {
-            this.getTank().setFluid(FluidStack.loadFluidStackFromNBT(PacketHandler.instance().readNBTTagCompound(data)));
+            if (id.equalsIgnoreCase("FluidLevel"))
+            {
+                this.getTank().setFluid(FluidStack.loadFluidStackFromNBT(PacketHandler.instance().readNBTTagCompound(data)));
+                return true;
+            }
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            System.out.println("Fail reading data for fluid sink");
+            return true;
         }
-
+        return false;
     }
 
     @Override

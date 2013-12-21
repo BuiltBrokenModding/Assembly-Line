@@ -10,7 +10,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.assemblyline.api.fluid.IDrain;
 import com.builtbroken.common.Pair;
@@ -23,7 +23,7 @@ public class TileEntityStarterPump extends TileEntityEnergyMachine implements IT
 {
     private int currentWorldEdits, MAX_WORLD_EDITS_PER_PROCESS;
 
-    public float ENERGY_PER_DRAIN = 5;
+    public long ENERGY_PER_DRAIN = 50;
 
     private LiquidPathFinder pathLiquid;
     private Vector3 lastDrainOrigin;
@@ -32,13 +32,13 @@ public class TileEntityStarterPump extends TileEntityEnergyMachine implements IT
 
     public TileEntityStarterPump()
     {
-        this(.01f/*10W/t */, .05f/* 50W/drain */, 5);
+        this(10, 50, 5);
     }
 
     /** @param wattTick - cost in watts per tick to run the tile
      * @param wattDrain - cost in watts to drain or fill one block
      * @param maxEdits - max world edits per update (1/2 second) */
-    public TileEntityStarterPump(float wattTick, float wattDrain, int maxEdits)
+    public TileEntityStarterPump(long wattTick, long wattDrain, int maxEdits)
     {
         //Power calculation for max power (worldEdits  * watts per edit) + (watts per tick * one second)
         super(wattTick, (maxEdits * wattDrain) + (wattTick * 20));

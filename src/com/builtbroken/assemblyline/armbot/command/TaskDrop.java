@@ -1,6 +1,6 @@
 package com.builtbroken.assemblyline.armbot.command;
 
-import universalelectricity.core.vector.Vector2;
+import universalelectricity.api.vector.Vector2;
 
 import com.builtbroken.assemblyline.api.IArmbot;
 import com.builtbroken.assemblyline.armbot.TaskBaseArmbot;

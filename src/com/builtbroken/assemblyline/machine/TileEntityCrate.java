@@ -1,27 +1,25 @@
 package com.builtbroken.assemblyline.machine;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.prefab.network.IPacketReceiver;
 
 import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.interfaces.IExtendedStorage;
+import com.builtbroken.minecraft.network.ISimplePacketReceiver;
 import com.builtbroken.minecraft.network.PacketHandler;
 import com.builtbroken.minecraft.prefab.TileEntityInv;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 
 /** Basic single stack inventory
  * 
  * @author DarkGuardsman */
-public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, IExtendedStorage
+public class TileEntityCrate extends TileEntityInv implements ISimplePacketReceiver, IExtendedStorage
 {
     /* TODO
      * Fix issues with ItemStacks with NBT tags having issues
@@ -193,27 +191,32 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
     }
 
     @Override
-    public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
+    public boolean simplePacket(String id, ByteArrayDataInput data, Player player)
     {
         if (this.worldObj.isRemote)
         {
             try
             {
-                if (dataStream.readBoolean())
+                if (id.equalsIgnoreCase("InventoryItem"))
                 {
-                    this.sampleStack = ItemStack.loadItemStackFromNBT(PacketHandler.instance().readNBTTagCompound(dataStream));
-                    this.sampleStack.stackSize = dataStream.readInt();
-                }
-                else
-                {
-                    this.sampleStack = null;
+                    if (data.readBoolean())
+                    {
+                        this.sampleStack = ItemStack.loadItemStackFromNBT(PacketHandler.instance().readNBTTagCompound(data));
+                        this.sampleStack.stackSize = data.readInt();
+                    }
+                    else
+                    {
+                        this.sampleStack = null;
+                    }
                 }
             }
             catch (Exception e)
             {
                 e.printStackTrace();
+                return true;
             }
         }
+        return false;
     }
 
     @Override
@@ -223,11 +226,11 @@ public class TileEntityCrate extends TileEntityInv implements IPacketReceiver, I
         ItemStack stack = this.getSampleStack();
         if (stack != null)
         {
-            return PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, this, true, stack.writeToNBT(new NBTTagCompound()), stack.stackSize);
+            return PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, "InventoryItem", this, true, stack.writeToNBT(new NBTTagCompound()), stack.stackSize);
         }
         else
         {
-            return PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, this, false);
+            return PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, "InventoryItem", this, false);
         }
     }
 

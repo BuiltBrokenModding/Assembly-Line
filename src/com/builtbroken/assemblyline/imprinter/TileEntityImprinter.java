@@ -11,16 +11,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.vector.Vector3;
-import universalelectricity.core.vector.VectorHelper;
-import universalelectricity.prefab.TranslationHelper;
-import universalelectricity.prefab.network.IPacketReceiver;
-import universalelectricity.prefab.tile.TileEntityAdvanced;
+import universalelectricity.api.vector.Vector3;
+import universalelectricity.api.vector.VectorHelper;
 
 import com.builtbroken.assemblyline.api.AutoCraftEvent;
 import com.builtbroken.assemblyline.api.IArmbot;
@@ -28,14 +23,15 @@ import com.builtbroken.assemblyline.api.IArmbotUseable;
 import com.builtbroken.assemblyline.api.coding.args.ArgumentData;
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.TranslationHelper;
 import com.builtbroken.minecraft.network.PacketHandler;
+import com.builtbroken.minecraft.prefab.TileEntityAdvanced;
 import com.builtbroken.minecraft.prefab.TileEntityMulti;
 import com.builtbroken.minecraft.prefab.invgui.ISlotPickResult;
 import com.builtbroken.minecraft.recipes.AutoCraftingManager;
 import com.builtbroken.minecraft.recipes.AutoCraftingManager.IAutoCrafter;
-import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInventory, IArmbotUseable, IPacketReceiver, ISlotPickResult, IAutoCrafter
+public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInventory, IArmbotUseable, ISlotPickResult, IAutoCrafter
 {
     public static final int IMPRINTER_MATRIX_START = 9;
     public static final int INVENTORY_START = IMPRINTER_MATRIX_START + 3;
@@ -459,21 +455,6 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
         nbt.setTag("Items", var2);
 
         nbt.setBoolean("searchInventories", this.searchInventories);
-    }
-
-    @Override
-    public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
-    {
-        if (this.worldObj.isRemote)
-        {
-            this.searchInventories = dataStream.readBoolean();
-        }
-    }
-
-    @Override
-    public Packet getDescriptionPacket()
-    {
-        return PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, this, this.searchInventories);
     }
 
     // ///////////////////////////////////////

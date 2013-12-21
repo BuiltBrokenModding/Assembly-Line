@@ -15,8 +15,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import universalelectricity.core.vector.Vector3;
-import universalelectricity.core.vector.VectorHelper;
+import universalelectricity.api.vector.Vector3;
+import universalelectricity.api.vector.VectorHelper;
 
 import com.builtbroken.assemblyline.api.fluid.IDrain;
 import com.builtbroken.assemblyline.api.fluid.INetworkPipe;
@@ -34,7 +34,7 @@ public class TileEntityConstructionPump extends TileEntityStarterPump implements
 
     public TileEntityConstructionPump()
     {
-        super(.05f/*50W/t */, .05f/* 5W/drain*/, 30);
+        super(50, 50, 30);
     }
 
     /** Gets the facing direction

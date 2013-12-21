@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
-import universalelectricity.core.vector.Vector2;
+import universalelectricity.api.vector.Vector2;
 
 import com.builtbroken.assemblyline.api.coding.IRedirectTask;
 import com.builtbroken.assemblyline.api.coding.ITask;

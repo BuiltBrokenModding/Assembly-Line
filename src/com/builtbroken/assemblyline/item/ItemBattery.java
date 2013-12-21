@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
-import universalelectricity.core.item.ItemElectric;
+import universalelectricity.api.item.ItemElectric;
 
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.minecraft.DarkCore;
@@ -34,15 +34,15 @@ public class ItemBattery extends ItemElectric implements IExtraItemInfo
     }
 
     @Override
-    public float getVoltage(ItemStack itemStack)
+    public long getVoltage(ItemStack itemStack)
     {
         return 25;
     }
 
     @Override
-    public float getMaxElectricityStored(ItemStack theItem)
+    public long getElectricityCapacity(ItemStack theItem)
     {
-        return 5000;
+        return 5000000;
     }
 
     @Override

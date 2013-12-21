@@ -4,11 +4,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.api.item.IElectricalItem;
 
 import com.builtbroken.assemblyline.machine.processor.BlockProcessor.ProcessorData;
 import com.builtbroken.minecraft.interfaces.IInvBox;
 import com.builtbroken.minecraft.network.PacketHandler;
-import com.builtbroken.minecraft.prefab.EnergyHelper;
 import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 import com.builtbroken.minecraft.prefab.invgui.InvChest;
 import com.builtbroken.minecraft.recipes.MachineRecipeHandler;
@@ -220,13 +220,16 @@ public class TileEntityProcessor extends TileEntityEnergyMachine
     @Override
     public boolean canStore(ItemStack stack, int slot, ForgeDirection side)
     {
-        if (slotInput == slot && MachineRecipeHandler.getProcessorOutput(this.getProcessorData().type, stack) != null)
+        if (stack != null)
         {
-            return true;
-        }
-        if (slotBatteryDrain == slot && EnergyHelper.isBatteryItem(stack))
-        {
-            return true;
+            if (slotInput == slot && MachineRecipeHandler.getProcessorOutput(this.getProcessorData().type, stack) != null)
+            {
+                return true;
+            }
+            if (slotBatteryDrain == slot && stack.getItem() instanceof IElectricalItem)
+            {
+                return true;
+            }
         }
         return false;
     }
@@ -274,7 +277,7 @@ public class TileEntityProcessor extends TileEntityEnergyMachine
     @Override
     public Packet getGUIPacket()
     {
-        return PacketHandler.instance().getTilePacket(this.getChannel(), this, SimplePacketTypes.GUI.name, this.processingTicks, this.processingTime, this.energyStored);
+        return PacketHandler.instance().getTilePacket(this.getChannel(), SimplePacketTypes.GUI.name, this, this.processingTicks, this.processingTime, this.energyStored);
 
     }
 
@@ -291,7 +294,7 @@ public class TileEntityProcessor extends TileEntityEnergyMachine
                     {
                         this.processingTicks = dis.readInt();
                         this.processingTime = dis.readInt();
-                        this.setEnergyStored(dis.readFloat());
+                        this.setEnergy(ForgeDirection.UNKNOWN, dis.readLong());
                         return true;
                     }
                 }

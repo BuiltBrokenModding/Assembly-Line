@@ -8,10 +8,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.tile.IRotatable;
+import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.assemblyline.api.IManipulator;
+import com.builtbroken.assemblyline.api.IRotatable;
 import com.builtbroken.assemblyline.imprinter.ItemImprinter;
 import com.builtbroken.assemblyline.imprinter.prefab.TileEntityFilterable;
 import com.builtbroken.minecraft.helpers.InvInteractionHelper;
@@ -34,7 +34,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
 
     public TileEntityManipulator()
     {
-        super(.01f);
+        super(10);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
         /** output location facing */
         Vector3 outputPosition = new Vector3(this);
         outputPosition.modifyPositionFromSide(this.getDirection().getOpposite());
-        this.consumePower(.001f, true);
+        this.consumePower(1, true);
 
         /** Prevents manipulators from spamming and duping items. */
         if (outputPosition.getTileEntity(this.worldObj) instanceof TileEntityManipulator)
@@ -143,7 +143,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
         /** output location facing */
         Vector3 outputPosition = new Vector3(this).modifyPositionFromSide(this.getDirection());
 
-        this.consumePower(.001f, true);
+        this.consumePower(1, true);
 
         ItemStack itemStack = invHelper().tryGrabFromPosition(inputUp, ForgeDirection.UP, 1);
 
@@ -186,7 +186,7 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketHandler.instance().getTilePacket(this.getChannel(), this, "manipulator", this.functioning, this.isInverted(), this.isSelfPulse(), this.isOutput());
+        return PacketHandler.instance().getTilePacket(this.getChannel(), "manipulator", this, this.functioning, this.isInverted(), this.isSelfPulse(), this.isOutput());
     }
 
     @Override

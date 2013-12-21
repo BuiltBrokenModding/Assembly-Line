@@ -14,9 +14,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.vector.Vector2;
-import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.TranslationHelper;
+import universalelectricity.api.vector.Vector2;
+import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.assemblyline.ALRecipeLoader;
 import com.builtbroken.assemblyline.api.IArmbot;
@@ -26,6 +25,7 @@ import com.builtbroken.assemblyline.machine.TileEntityAssembly;
 import com.builtbroken.assemblyline.machine.encoder.ItemDisk;
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.TranslationHelper;
 import com.builtbroken.minecraft.helpers.DarksHelper;
 import com.builtbroken.minecraft.helpers.MathHelper;
 import com.builtbroken.minecraft.interfaces.IMultiBlock;
@@ -66,7 +66,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
     public TileEntityArmbot()
     {
-        super(.02f);
+        super(20);
         programHelper = new ProgramHelper(this).setMemoryLimit(20);
     }
 
@@ -274,7 +274,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketHandler.instance().getTilePacket(this.getChannel(), this, "armbot", this.functioning, this.rotationYaw, this.rotationPitch);
+        return PacketHandler.instance().getTilePacket(this.getChannel(), "armbot", this, this.functioning, this.rotationYaw, this.rotationPitch);
     }
 
     public void sendRotationPacket()

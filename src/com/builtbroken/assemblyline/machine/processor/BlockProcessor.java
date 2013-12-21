@@ -13,7 +13,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
-import universalelectricity.core.UniversalElectricity;
+import universalelectricity.api.UniversalElectricity;
 
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.CommonProxy;
@@ -103,7 +103,7 @@ public class BlockProcessor extends BlockMachine
         {
             data.enabled = config.get(data.unlocalizedName, "Enabled", true).getBoolean(true);
             data.allowCrafting = config.get(data.unlocalizedName, "CanCraft", true).getBoolean(true);
-            data.wattPerTick = (float) (config.get(data.unlocalizedName, "WattPerTick", data.wattPerTick).getDouble(data.wattPerTick) / 1000);
+            data.wattPerTick = config.get(data.unlocalizedName, "WattPerTick", data.wattPerTick).getInt();
             data.processingTicks = config.get(data.unlocalizedName, "ProcessingTicks", data.processingTicks).getInt();
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
             {
@@ -188,13 +188,13 @@ public class BlockProcessor extends BlockMachine
         //PRESS(ProcessorType.PRESS, "press", 200, 50, 8);
         public ProcessorType type;
         public String unlocalizedName;
-        public float wattPerTick;
+        public long wattPerTick;
         public int processingTicks, startMeta;
         public boolean enabled = true;
         public boolean allowCrafting = true;
         public boolean doAnimation = true;
 
-        private ProcessorData(ProcessorType type, String name, float watts, int ticks, int meta)
+        private ProcessorData(ProcessorType type, String name, long watts, int ticks, int meta)
         {
             this.type = type;
             this.unlocalizedName = name;

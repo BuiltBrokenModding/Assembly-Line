@@ -7,8 +7,7 @@ import java.util.Random;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.electricity.ElectricityPack;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 import com.builtbroken.minecraft.tilenetwork.INetworkEnergyPart;
@@ -35,12 +34,12 @@ public abstract class TileEntityAssembly extends TileEntityEnergyMachine impleme
     /** Random rate by which this tile updates its network connections */
     private int updateTick = 1;
 
-    public TileEntityAssembly(float wattsPerTick)
+    public TileEntityAssembly(long wattsPerTick)
     {
         super(wattsPerTick);
     }
 
-    public TileEntityAssembly(float wattsPerTick, float maxEnergy)
+    public TileEntityAssembly(long wattsPerTick, long maxEnergy)
     {
         super(wattsPerTick, maxEnergy);
     }
@@ -121,15 +120,19 @@ public abstract class TileEntityAssembly extends TileEntityEnergyMachine impleme
     }
 
     @Override
-    public boolean consumePower(float watts, boolean doDrain)
+    public boolean consumePower(long request, boolean doExtract)
     {
-        return ((NetworkSharedPower) this.getTileNetwork()).drainPower(this, watts, doDrain);
+        return ((NetworkSharedPower) this.getTileNetwork()).removePower(this, request, doExtract) >= request;
     }
 
     @Override
-    public float receiveElectricity(ForgeDirection from, ElectricityPack receive, boolean doReceive)
+    public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
     {
-        return this.getTileNetwork().receiveElectricity(this, receive.getWatts(), doReceive);
+        if (this.canConnect(from))
+        {
+            return this.getTileNetwork().addPower(this, receive, doReceive);
+        }
+        return 0;
     }
 
     /** Amount of energy this tile runs on per tick */
@@ -144,43 +147,37 @@ public abstract class TileEntityAssembly extends TileEntityEnergyMachine impleme
     }
 
     @Override
-    public float getRequest(ForgeDirection direction)
-    {
-        return this.getTileNetwork().getNetworkDemand();
-    }
-
-    @Override
     public void togglePowerMode()
     {
         ((NetworkSharedPower) this.getTileNetwork()).setPowerLess(this.runPowerLess());
     }
 
     @Override
-    public float getEnergyStored()
+    public long getEnergyStored()
     {
-        return ((NetworkSharedPower) this.getTileNetwork()).getEnergyStored();
+        return ((NetworkSharedPower) this.getTileNetwork()).getEnergy();
     }
 
     @Override
-    public float getMaxEnergyStored()
+    public long getMaxEnergyStored()
     {
-        return ((NetworkSharedPower) this.getTileNetwork()).getMaxEnergyStored();
+        return ((NetworkSharedPower) this.getTileNetwork()).getEnergyCapacity();
     }
 
     @Override
-    public float getPartEnergy()
+    public long getPartEnergy()
     {
         return this.energyStored;
     }
 
     @Override
-    public float getPartMaxEnergy()
+    public long getPartMaxEnergy()
     {
         return this.MAX_JOULES_STORED;
     }
 
     @Override
-    public void setPartEnergy(float energy)
+    public void setPartEnergy(long energy)
     {
         this.energyStored = energy;
     }

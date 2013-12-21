@@ -13,11 +13,11 @@ import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.block.IRotatableBlock;
-import universalelectricity.prefab.tile.IRotatable;
+import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.assemblyline.api.IRotatable;
+import com.builtbroken.assemblyline.api.IRotatableBlock;
 import com.builtbroken.assemblyline.blocks.BlockAssembly;
 
 import cpw.mods.fml.relauncher.Side;

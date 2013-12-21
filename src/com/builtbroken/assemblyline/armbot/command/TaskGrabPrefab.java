@@ -2,8 +2,8 @@ package com.builtbroken.assemblyline.armbot.command;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.vector.Vector2;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector2;
+import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.assemblyline.api.IArmbot;
 import com.builtbroken.assemblyline.api.IBelt;

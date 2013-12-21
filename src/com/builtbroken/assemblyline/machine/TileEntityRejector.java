@@ -9,7 +9,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.assemblyline.api.IBelt;
 import com.builtbroken.assemblyline.imprinter.prefab.TileEntityFilterable;
@@ -27,7 +27,7 @@ public class TileEntityRejector extends TileEntityFilterable
 
     public TileEntityRejector()
     {
-        super(.1f);
+        super(100);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class TileEntityRejector extends TileEntityFilterable
         entity.motionX = side.offsetX * 0.1;
         entity.motionY += 0.10000000298023224D;
         entity.motionZ = side.offsetZ * 0.1;
-        this.consumePower(.001f, true);
+        this.consumePower(1, true);
 
         if (!this.worldObj.isRemote && tileEntity instanceof IBelt)
         {
@@ -108,7 +108,7 @@ public class TileEntityRejector extends TileEntityFilterable
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketHandler.instance().getTilePacket(this.getChannel(), this, "rejector", this.functioning, this.isInverted(), this.firePiston);
+        return PacketHandler.instance().getTilePacket(this.getChannel(), "rejector", this, this.functioning, this.isInverted(), this.firePiston);
     }
 
     @Override

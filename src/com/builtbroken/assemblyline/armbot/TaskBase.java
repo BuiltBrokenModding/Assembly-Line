@@ -5,7 +5,7 @@ import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import universalelectricity.core.vector.Vector2;
+import universalelectricity.api.vector.Vector2;
 
 import com.builtbroken.assemblyline.api.coding.IProgram;
 import com.builtbroken.assemblyline.api.coding.IProgrammableMachine;

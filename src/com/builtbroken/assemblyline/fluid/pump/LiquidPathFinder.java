@@ -11,8 +11,8 @@ import java.util.Set;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.vector.Vector2;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector2;
+import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.minecraft.fluid.FluidHelper;
 
@@ -139,7 +139,7 @@ public class LiquidPathFinder
     {
         this.runs++;
         Vector3 vec = origin.clone().modifyPositionFromSide(direction);
-        double distance = vec.toVector2().distanceTo(this.Start.toVector2());
+        double distance = vec.toVector2().distance(this.Start.toVector2());
         if (distance <= this.range && this.isValidNode(vec))
         {
             if (this.fill && FluidHelper.drainBlock(world, vec, false) != null || FluidHelper.isFillableFluid(world, vec))

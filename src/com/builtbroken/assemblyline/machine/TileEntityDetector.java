@@ -23,7 +23,7 @@ public class TileEntityDetector extends TileEntityFilterable
 
     public TileEntityDetector()
     {
-        super(.1f);
+        super(100);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class TileEntityDetector extends TileEntityFilterable
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketHandler.instance().getTilePacket(this.getChannel(), this, "detector", this.functioning, this.isInverted());
+        return PacketHandler.instance().getTilePacket(this.getChannel(), "detector", this, this.functioning, this.isInverted());
     }
 
     @Override

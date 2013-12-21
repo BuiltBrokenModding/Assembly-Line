@@ -9,7 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.world.World;
-import universalelectricity.core.UniversalElectricity;
+import universalelectricity.api.UniversalElectricity;
 
 import com.builtbroken.assemblyline.client.render.BlockRenderingHandler;
 import com.builtbroken.assemblyline.client.render.RenderManipulator;

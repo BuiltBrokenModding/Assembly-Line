@@ -5,7 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 
 /** Used to store info on a block mainly used for rendering */
 public class BlockRenderInfo

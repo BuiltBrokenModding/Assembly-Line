@@ -1,7 +1,8 @@
 package com.builtbroken.assemblyline.api;
 
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.vector.Vector2;
+import universalelectricity.api.vector.Vector2;
+import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.assemblyline.api.coding.IProgrammableMachine;
 
@@ -9,7 +10,7 @@ import com.builtbroken.assemblyline.api.coding.IProgrammableMachine;
 public interface IArmbot extends Cloneable, IProgrammableMachine
 {
     /** Location of the hand, or working location of the object */
-    public universalelectricity.core.vector.Vector3 getHandPos();
+    public Vector3 getHandPos();
 
     /** Gets the rotation as a Vector2 (X - Yaw, Y - pitch) */
     public Vector2 getRotation();

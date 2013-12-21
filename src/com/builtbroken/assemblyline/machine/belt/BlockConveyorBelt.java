@@ -16,7 +16,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.UniversalElectricity;
+import universalelectricity.api.UniversalElectricity;
 
 import com.builtbroken.assemblyline.blocks.BlockAssembly;
 import com.builtbroken.assemblyline.client.render.BlockRenderingHandler;

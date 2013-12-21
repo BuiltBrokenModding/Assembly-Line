@@ -14,13 +14,13 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import universalelectricity.core.block.IConductor;
-import universalelectricity.core.block.IElectrical;
-import universalelectricity.core.block.IElectricalStorage;
-import universalelectricity.core.electricity.ElectricityDisplay;
-import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
+import universalelectricity.api.energy.IConductor;
+import universalelectricity.api.energy.IEnergyContainer;
+import universalelectricity.api.energy.IEnergyInterface;
+import universalelectricity.api.energy.UnitDisplay;
 
 import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.common.science.units.ElectricUnit;
 import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.fluid.FluidHelper;
 import com.builtbroken.minecraft.interfaces.IToolReadOut;
@@ -98,9 +98,10 @@ public class ItemReadoutTools extends ItemBasic
 
             if (tool != null)
             {
+                ForgeDirection hitSide = ForgeDirection.getOrientation(side);
                 if (tileEntity instanceof IToolReadOut)
                 {
-                    String output = ((IToolReadOut) tileEntity).getMeterReading(player, ForgeDirection.getOrientation(side), tool);
+                    String output = ((IToolReadOut) tileEntity).getMeterReading(player, hitSide, tool);
                     if (output != null && !output.isEmpty())
                     {
                         if (output.length() > 100)
@@ -119,7 +120,7 @@ public class ItemReadoutTools extends ItemBasic
                         FluidTankInfo[] tanks = ((IFluidHandler) tileEntity).getTankInfo(ForgeDirection.getOrientation(side));
                         if (tanks != null)
                         {
-                            player.sendChatToPlayer(ChatMessageComponent.createFromText("FluidHandler> Side:" + ForgeDirection.getOrientation(side).toString() + " Tanks:" + tanks.length));
+                            player.sendChatToPlayer(ChatMessageComponent.createFromText("FluidHandler> Side:" + hitSide.toString() + " Tanks:" + tanks.length));
                             for (FluidStack stack : FluidHelper.getFluidList(tanks))
                             {
                                 player.sendChatToPlayer(ChatMessageComponent.createFromText("Fluid>" + stack.amount + "mb of " + stack.getFluid().getName()));
@@ -132,47 +133,7 @@ public class ItemReadoutTools extends ItemBasic
                 if (tool == EnumTools.MULTI_METER)
                 {
                     //TODO filter all units threw UE unit helper to created nicer looking output text
-                    player.sendChatToPlayer(ChatMessageComponent.createFromText("Side>" + ForgeDirection.getOrientation(side).toString()));
-                    boolean out = false;
-                    // Output electrical info
-                    if (tileEntity instanceof IElectrical)
-                    {
-                        player.sendChatToPlayer(ChatMessageComponent.createFromText("   Voltage> " + ElectricityDisplay.getDisplay(((IElectrical) tileEntity).getVoltage(), ElectricUnit.VOLTAGE, 2, true)));
-                        if (((IElectrical) tileEntity).getRequest(ForgeDirection.getOrientation(side).getOpposite()) > 0)
-                        {
-                            player.sendChatToPlayer(ChatMessageComponent.createFromText("   RequiredWatts> " + ElectricityDisplay.getDisplay(((IElectrical) tileEntity).getRequest(ForgeDirection.getOrientation(side).getOpposite()), ElectricUnit.JOULES, 2, true)));
-                        }
-                        if (((IElectrical) tileEntity).getProvide(ForgeDirection.getOrientation(side).getOpposite()) > 0)
-                        {
-                            player.sendChatToPlayer(ChatMessageComponent.createFromText("   AvailableWatts> " + ElectricityDisplay.getDisplay(((IElectrical) tileEntity).getProvide(ForgeDirection.getOrientation(side).getOpposite()), ElectricUnit.JOULES, 2, true)));
-                        }
-                        out = true;
-                    }
-                    //Output battery info
-                    if (tileEntity instanceof IElectricalStorage && ((IElectricalStorage) tileEntity).getMaxEnergyStored() > 0)
-                    {
-                        player.sendChatToPlayer(ChatMessageComponent.createFromText("   EnergyStored> " + ElectricityDisplay.getDisplay(((IElectricalStorage) tileEntity).getEnergyStored(), ElectricUnit.JOULES, 2, true) + " out of " + ElectricityDisplay.getDisplay(((IElectricalStorage) tileEntity).getMaxEnergyStored(), ElectricUnit.JOULES, 2, true) + " Max"));
-                        out = true;
-                    }
-                    //Output wire info
-                    if (tileEntity instanceof IConductor)
-                    {
-                        out = true;
-                        player.sendChatToPlayer(ChatMessageComponent.createFromText("   Resistance> " + ElectricityDisplay.getDisplay(((IConductor) tileEntity).getResistance(), ElectricUnit.RESISTANCE, 2, true) + " | " + "AmpMax> " + ElectricityDisplay.getDisplay(((IConductor) tileEntity).getCurrentCapacity(), ElectricUnit.AMPERE, 2, true)));
-
-                        if (((IConductor) tileEntity).getNetwork() != null)
-                        {
-                            player.sendChatToPlayer(ChatMessageComponent.createFromText("   Network>" + ((IConductor) tileEntity).getNetwork().toString()));
-
-                            player.sendChatToPlayer(ChatMessageComponent.createFromText(String.format("   Network>WattRequired> " + (((IConductor) tileEntity).getNetwork().getRequest() != null ? ElectricityDisplay.getDisplay(((IConductor) tileEntity).getNetwork().getRequest().getWatts(), ElectricUnit.WATT, 2, true) : "Error") + " | " + "TotalResistance> " + ElectricityDisplay.getDisplay(((IConductor) tileEntity).getNetwork().getTotalResistance(), ElectricUnit.RESISTANCE, 2, true))));
-                        }
-                    }
-                    //If no ouput was created suggest that the block is not valid for connection
-                    if (!out)
-                    {
-                        player.sendChatToPlayer(ChatMessageComponent.createFromText("   Error failed to connect to block"));
-
-                    }
+                    player.sendChatToPlayer(ChatMessageComponent.createFromText("Multi-Meter is disabled until UE 3.0 is sorted out"));
                 }
             }
 
@@ -180,5 +141,4 @@ public class ItemReadoutTools extends ItemBasic
 
         return false;
     }
-
 }

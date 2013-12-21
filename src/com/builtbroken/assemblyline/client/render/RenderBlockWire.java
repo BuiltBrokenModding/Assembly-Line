@@ -9,10 +9,10 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import universalelectricity.compatibility.Compatibility;
-import universalelectricity.core.block.IConnector;
-import universalelectricity.core.vector.Vector3;
-import universalelectricity.core.vector.VectorHelper;
+import universalelectricity.api.Compatibility;
+import universalelectricity.api.net.IConnector;
+import universalelectricity.api.vector.Vector3;
+import universalelectricity.api.vector.VectorHelper;
 import buildcraft.api.power.IPowerReceptor;
 
 import com.builtbroken.assemblyline.AssemblyLine;
@@ -51,7 +51,7 @@ public class RenderBlockWire extends TileEntitySpecialRenderer
                     renderSide[i] = true;
                 }
             }
-            else if (Compatibility.isIndustrialCraft2Loaded() && ent instanceof IEnergyTile)
+            else if (ent instanceof IEnergyTile)
             {
                 if (ent instanceof IEnergyAcceptor)
                 {
@@ -65,7 +65,7 @@ public class RenderBlockWire extends TileEntitySpecialRenderer
                     renderSide[i] = true;
                 }
             }
-            else if (Compatibility.isBuildcraftLoaded() && ent instanceof IPowerReceptor)
+            else if (ent instanceof IPowerReceptor)
             {
                 renderSide[i] = true;
             }

@@ -7,8 +7,8 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
-import universalelectricity.core.electricity.ElectricityDisplay;
-import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
+import universalelectricity.api.energy.UnitDisplay;
+import universalelectricity.api.energy.UnitDisplay.Unit;
 
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.machine.ContainerBatteryBox;
@@ -39,8 +39,8 @@ public class GuiBatteryBox extends GuiContainer
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
         this.fontRenderer.drawString(this.tileEntity.getInvName(), 65, 6, 4210752);
-        String displayJoules = ElectricityDisplay.getDisplayShort(tileEntity.getEnergyStored(), ElectricUnit.JOULES) + " of";
-        String displayMaxJoules = ElectricityDisplay.getDisplay(tileEntity.getMaxEnergyStored(), ElectricUnit.JOULES);
+        String displayJoules = UnitDisplay.getDisplayShort(tileEntity.getEnergyStored(), Unit.JOULES) + " of";
+        String displayMaxJoules = UnitDisplay.getDisplayShort(tileEntity.getMaxEnergyStored(), Unit.JOULES);
         String displayVoltage = "Voltage: " + (int) (this.tileEntity.getVoltage() * 1000);
 
         this.fontRenderer.drawString(displayJoules, 122 - this.fontRenderer.getStringWidth(displayJoules) / 2, 30, 4210752);

@@ -6,12 +6,11 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import universalelectricity.prefab.TranslationHelper;
-
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.imprinter.ContainerImprinter;
 import com.builtbroken.assemblyline.imprinter.TileEntityImprinter;
 import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.TranslationHelper;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

@@ -3,7 +3,7 @@ package com.builtbroken.assemblyline.api.coding;
 import java.util.HashMap;
 
 import net.minecraft.nbt.NBTTagCompound;
-import universalelectricity.core.vector.Vector2;
+import universalelectricity.api.vector.Vector2;
 
 /** Flow chart style program. Each command in the program needs to have a stored location so it can
  * be saved and loaded with its correct connections. Though the location only need to be a simple

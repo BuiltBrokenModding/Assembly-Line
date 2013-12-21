@@ -4,9 +4,9 @@ import java.util.Random;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 import com.builtbroken.minecraft.interfaces.IToolReadOut;
+import com.builtbroken.minecraft.prefab.TileEntityAdvanced;
 import com.builtbroken.minecraft.tilenetwork.ITileConnector;
 import com.builtbroken.minecraft.tilenetwork.prefab.NetworkTileEntities;
 

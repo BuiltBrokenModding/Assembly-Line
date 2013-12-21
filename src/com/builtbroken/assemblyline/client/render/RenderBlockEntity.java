@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 
 public class RenderBlockEntity extends Render
 {

@@ -9,7 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
-import universalelectricity.core.UniversalElectricity;
+import universalelectricity.api.UniversalElectricity;
 
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.client.render.BlockRenderingHandler;
@@ -24,9 +24,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class BlockSolarPanel extends BlockMachine
 {
     public static int tickRate = 10;
-    public static float wattDay = 0.120f;
-    public static float wattNight = 0.001f;
-    public static float wattStorm = 0.005f;
+    public static long wattDay = 120;
+    public static long wattNight = 1;
+    public static long wattStorm = 5;
 
     public BlockSolarPanel()
     {
@@ -80,9 +80,9 @@ public class BlockSolarPanel extends BlockMachine
     {
         super.loadExtraConfigs(config);
         tickRate = config.get("settings", "PanelUpdateRate", tickRate).getInt();
-        wattDay = (float) (config.get("settings", "WattDayLight", 120).getDouble(120) / 1000);
-        wattNight = (float) (config.get("settings", "WattMoonLight", 1).getDouble(1) / 1000);
-        wattStorm = (float) (config.get("settings", "WattStorm", 6).getDouble(6) / 1000);
+        wattDay = config.get("settings", "WattDayLight", 120).getInt();
+        wattNight = config.get("settings", "WattMoonLight", 1).getInt();
+        wattStorm = config.get("settings", "WattStorm", 6).getInt();
     }
 
     @Override

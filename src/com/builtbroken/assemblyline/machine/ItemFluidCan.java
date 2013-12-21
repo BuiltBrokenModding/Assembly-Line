@@ -11,7 +11,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.ItemFluidContainer;
-import universalelectricity.core.item.ElectricItemHelper;
+import universalelectricity.api.item.ElectricItemHelper;
 
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.minecraft.DarkCore;

@@ -1,6 +1,6 @@
 package com.builtbroken.assemblyline.api;
 
-import universalelectricity.core.vector.Vector2;
+import universalelectricity.api.vector.Vector2;
 
 /** Class used in the creation of servo based object
  * 

@@ -8,48 +8,26 @@ public class TileEntityInfLoad extends TileEntityEnergyMachine
 {
 
     @Override
-    public void updateEntity()
+    public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
     {
-        super.updateEntity();
-
-        if (!this.worldObj.isRemote)
-        {
-            if (this.ticks % 1000 == 0)
-            {
-                this.setEnergyStored(0);
-            }
-        }
+        return receive;
     }
 
     @Override
-    public boolean canUpdate()
-    {
-        return true;
-    }
-
-    @Override
-    public boolean canConnect(ForgeDirection direction)
-    {
-        //TODO add wrench settings to close sides for testing
-        return true;
-    }
-
-    @Override
-    public float getRequest(ForgeDirection direction)
-    {
-        //TODO add config options to change this for testing
-        return 10000;
-    }
-
-    @Override
-    public float getProvide(ForgeDirection direction)
+    public long onExtractEnergy(ForgeDirection from, long request, boolean doExtract)
     {
         return 0;
     }
 
     @Override
-    public float getMaxEnergyStored()
+    public boolean canConnect(ForgeDirection direction)
     {
-        return Integer.MAX_VALUE;
+        return true;
+    }
+
+    @Override
+    public long getMaxEnergyStored()
+    {
+        return Long.MAX_VALUE;
     }
 }

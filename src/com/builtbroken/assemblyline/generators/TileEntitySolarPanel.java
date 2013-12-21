@@ -2,10 +2,10 @@ package com.builtbroken.assemblyline.generators;
 
 import java.util.EnumSet;
 
-import com.builtbroken.assemblyline.machine.TileEntityGenerator;
-
 import micdoodle8.mods.galacticraft.api.world.ISolarLevel;
 import net.minecraftforge.common.ForgeDirection;
+
+import com.builtbroken.assemblyline.machine.TileEntityGenerator;
 
 public class TileEntitySolarPanel extends TileEntityGenerator
 {
@@ -51,7 +51,6 @@ public class TileEntitySolarPanel extends TileEntityGenerator
             {
                 this.setJoulesPerTick(0);
             }
-            this.produceAllSides();
         }
 
     }

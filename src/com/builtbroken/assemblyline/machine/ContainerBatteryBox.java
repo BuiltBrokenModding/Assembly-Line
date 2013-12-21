@@ -5,8 +5,9 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import universalelectricity.core.item.IItemElectric;
-import universalelectricity.prefab.SlotSpecific;
+import universalelectricity.api.item.IElectricalItem;
+
+import com.builtbroken.minecraft.prefab.invgui.SlotSpecific;
 
 public class ContainerBatteryBox extends Container
 {
@@ -16,9 +17,9 @@ public class ContainerBatteryBox extends Container
     {
         this.tileEntity = batteryBox;
         // Top slot for battery output
-        this.addSlotToContainer(new SlotSpecific(batteryBox, 0, 33, 24, IItemElectric.class));
+        this.addSlotToContainer(new SlotSpecific(batteryBox, 0, 33, 24, IElectricalItem.class));
         // Bottom slot for batter input
-        this.addSlotToContainer(new SlotSpecific(batteryBox, 1, 33, 48, IItemElectric.class));
+        this.addSlotToContainer(new SlotSpecific(batteryBox, 1, 33, 48, IElectricalItem.class));
         int var3;
 
         for (var3 = 0; var3 < 3; ++var3)
@@ -57,7 +58,7 @@ public class ContainerBatteryBox extends Container
             {
                 if (this.getSlot(0).isItemValid(itemStack))
                 {
-                    if (((IItemElectric) itemStack.getItem()).getElectricityStored(itemStack) > 0)
+                    if (((IElectricalItem) itemStack.getItem()).getElectricityStored(itemStack) > 0)
                     {
                         if (!this.mergeItemStack(itemStack, 1, 2, false))
                         {

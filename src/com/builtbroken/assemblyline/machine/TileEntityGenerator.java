@@ -1,7 +1,7 @@
 package com.builtbroken.assemblyline.machine;
 
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.electricity.ElectricityPack;
+import universalelectricity.api.electricity.ElectricityPack;
 
 import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 
@@ -15,12 +15,12 @@ public abstract class TileEntityGenerator extends TileEntityEnergyMachine
         super();
     }
 
-    public TileEntityGenerator(float wattsPerTick)
+    public TileEntityGenerator(long wattsPerTick)
     {
         super(wattsPerTick);
     }
 
-    public TileEntityGenerator(float wattsPerTick, float maxEnergy)
+    public TileEntityGenerator(long wattsPerTick, long maxEnergy)
     {
         super(wattsPerTick, maxEnergy);
     }
@@ -38,7 +38,6 @@ public abstract class TileEntityGenerator extends TileEntityEnergyMachine
             if (this.isFunctioning())
             {
                 this.burnTime--;
-                this.produceAllSides();
             }
         }
     }
@@ -57,42 +56,12 @@ public abstract class TileEntityGenerator extends TileEntityEnergyMachine
     /** Called when the burn time is bellow 10 and the machine needs to keep running */
     public abstract void consumeFuel();
 
-    @Override
-    public float getProvide(ForgeDirection direction)
-    {
-        return this.JOULES_PER_TICK;
-    }
-
     /* ********************************************
      * Electricity reception logic -  all of which is set to zero to prevent input from wires
      ***********************************************/
 
     @Override
-    public float receiveElectricity(ForgeDirection from, ElectricityPack receive, boolean doReceive)
-    {
-        return 0;
-    }
-
-    @Override
-    public float receiveElectricity(ElectricityPack receive, boolean doReceive)
-    {
-        return 0;
-    }
-
-    @Override
-    public float receiveElectricity(float energy, boolean doReceive)
-    {
-        return 0;
-    }
-
-    @Override
-    public boolean consumePower(float watts, boolean doDrain)
-    {
-        return true;
-    }
-
-    @Override
-    public float getRequest(ForgeDirection direction)
+    public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
     {
         return 0;
     }

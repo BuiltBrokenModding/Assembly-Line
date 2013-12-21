@@ -2,7 +2,7 @@ package com.builtbroken.assemblyline.machine.red;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.minecraft.interfaces.IMultiBlock;
 import com.builtbroken.minecraft.prefab.TileEntityMachine;

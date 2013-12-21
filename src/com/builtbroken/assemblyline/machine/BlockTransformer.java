@@ -2,7 +2,7 @@ package com.builtbroken.assemblyline.machine;
 
 import net.minecraft.block.material.Material;
 import net.minecraftforge.common.Configuration;
-import universalelectricity.core.UniversalElectricity;
+import universalelectricity.api.UniversalElectricity;
 
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.minecraft.IndustryTabs;

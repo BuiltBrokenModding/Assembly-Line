@@ -8,7 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.assemblyline.api.IBelt;
 import com.builtbroken.assemblyline.machine.TileEntityAssembly;
@@ -40,7 +40,7 @@ public class TileEntityConveyor extends TileEntityEnergyMachine implements IMoti
 
     public TileEntityConveyor()
     {
-        super(0.001f);
+        super(1);
     }
 
     @Override

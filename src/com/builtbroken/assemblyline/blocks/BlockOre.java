@@ -14,10 +14,10 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
-import universalelectricity.prefab.ore.OreGenReplaceStone;
 
 import com.builtbroken.assemblyline.ALRecipeLoader;
 import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.assemblyline.worldgen.OreGenReplaceStone;
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.EnumMaterial;

@@ -3,7 +3,7 @@ package com.builtbroken.assemblyline.armbot.command;
 import java.util.ArrayList;
 import java.util.List;
 
-import universalelectricity.core.vector.Vector2;
+import universalelectricity.api.vector.Vector2;
 
 import com.builtbroken.assemblyline.api.coding.IProgrammableMachine;
 import com.builtbroken.assemblyline.api.coding.ITask;
