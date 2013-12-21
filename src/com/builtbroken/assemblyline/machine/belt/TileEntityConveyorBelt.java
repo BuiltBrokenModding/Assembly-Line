@@ -153,46 +153,6 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IBelt,
         this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
-    /** Is this belt in the front of a conveyor line? Used for rendering. */
-    public boolean getIsFirstBelt()
-    {
-        Vector3 vec = new Vector3(this);
-        TileEntity fBelt = vec.clone().modifyPositionFromSide(this.getDirection()).getTileEntity(this.worldObj);
-        TileEntity bBelt = vec.clone().modifyPositionFromSide(this.getDirection().getOpposite()).getTileEntity(this.worldObj);
-        if (fBelt instanceof TileEntityConveyorBelt && !(bBelt instanceof TileEntityConveyorBelt))
-        {
-            return ((TileEntityConveyorBelt) fBelt).getDirection() == this.getDirection();
-        }
-        return false;
-    }
-
-    /** Is this belt in the middile of two belts? Used for rendering. */
-    public boolean getIsMiddleBelt()
-    {
-
-        Vector3 vec = new Vector3(this);
-        TileEntity fBelt = vec.clone().modifyPositionFromSide(this.getDirection()).getTileEntity(this.worldObj);
-        TileEntity bBelt = vec.clone().modifyPositionFromSide(this.getDirection().getOpposite()).getTileEntity(this.worldObj);
-        if (fBelt instanceof TileEntityConveyorBelt && bBelt instanceof TileEntityConveyorBelt)
-        {
-            return ((TileEntityConveyorBelt) fBelt).getDirection() == this.getDirection() && ((TileEntityConveyorBelt) bBelt).getDirection() == this.getDirection();
-        }
-        return false;
-    }
-
-    /** Is this belt in the back of a conveyor line? Used for rendering. */
-    public boolean getIsLastBelt()
-    {
-        Vector3 vec = new Vector3(this);
-        TileEntity fBelt = vec.clone().modifyPositionFromSide(this.getDirection()).getTileEntity(this.worldObj);
-        TileEntity bBelt = vec.clone().modifyPositionFromSide(this.getDirection().getOpposite()).getTileEntity(this.worldObj);
-        if (bBelt instanceof TileEntityConveyorBelt && !(fBelt instanceof TileEntityConveyorBelt))
-        {
-            return ((TileEntityConveyorBelt) bBelt).getDirection() == this.getDirection().getOpposite();
-        }
-        return false;
-    }
-
     @Override
     public void setDirection(ForgeDirection facingDirection)
     {
@@ -239,7 +199,6 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IBelt,
         {
             this.IgnoreList.add(entity);
         }
-
     }
 
     @Override

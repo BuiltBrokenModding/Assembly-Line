@@ -24,7 +24,6 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 
     private void renderAModelAt(TileEntityConveyorBelt tileEntity, double x, double y, double z, float f)
     {
-        boolean mid = tileEntity.getIsMiddleBelt();
         SlantType slantType = tileEntity.getSlant();
         int face = tileEntity.getDirection().ordinal();
 
@@ -101,7 +100,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
                 bindTexture(name);
                 GL11.glRotatef(180, 0f, 1f, 0f);
                 GL11.glTranslatef(0f, -0.68f, 0f);
-                MODEL.render(0.0625f, (float) Math.toRadians(tileEntity.wheelRotation), tileEntity.getIsLastBelt(), tileEntity.getIsFirstBelt(), false, false);
+                MODEL.render(0.0625f, (float) Math.toRadians(tileEntity.wheelRotation), false, false, false, false);
             }
         }
         else
@@ -123,7 +122,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
             }
             ResourceLocation name = new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "belt/frame" + frame + ".png");
             bindTexture(name);
-            MODEL.render(0.0625F, (float) Math.toRadians(tileEntity.wheelRotation), tileEntity.getIsLastBelt(), tileEntity.getIsFirstBelt(), false, true);
+            MODEL.render(0.0625F, (float) Math.toRadians(tileEntity.wheelRotation), false, false, false, true);
 
         }
 
