@@ -108,8 +108,7 @@ public class ItemOreDirv extends ItemBasic implements IExtraItemInfo
             {
                 if (mat.shouldCreateItem(part))
                 {
-                    //System.out.println(" N: " + mat.getOreName(part) + "  R:" + mat.getOreNameReverse(part));
-                    String B = mat.getOreNameReverse(part);
+                    //System.out.println(" N: " + mat.getOreName(part) + "  R:" + mat.getOreNameReverse(part));                    
                     OreDictionary.registerOre(mat.getOreName(part), mat.getStack(this, part, 1));
                     OreDictionary.registerOre(mat.getOreNameReverse(part), mat.getStack(this, part, 1));
                 }
@@ -122,7 +121,6 @@ public class ItemOreDirv extends ItemBasic implements IExtraItemInfo
     {
         if (event.items != null)
         {
-
             for (int i = 0; i < event.items.size(); i++)
             {
                 if (event.items.get(i).itemID == Block.blockIron.blockID)

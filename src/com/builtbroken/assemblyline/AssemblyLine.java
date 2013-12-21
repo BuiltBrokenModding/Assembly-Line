@@ -152,9 +152,7 @@ public class AssemblyLine
     @Metadata(AssemblyLine.MOD_ID)
     public static ModMetadata meta;
 
-    //public static final String TEXTURE_NAME_PREFIX = "assemblyline:";
-
-    private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US", "nl_NL", "fr_FR", "de_DE", "zh_CN", "pt_BR" };
+    private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US", "de_DE" };
 
     public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "Dark/AssemblyLine.cfg"));
 
@@ -203,7 +201,7 @@ public class AssemblyLine
         this.registerObjects();
         proxy.init();
 
-        FMLog.info("Loaded: " + TranslationHelper.loadLanguages(DarkCore.LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
+        FMLog.info("Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
         IndustryTabs.tabAutomation().setIconItemStack(new ItemStack(ALRecipeLoader.blockConveyorBelt));
         EntityRegistry.registerGlobalEntityID(EntityTestCar.class, "TestCar", EntityRegistry.findGlobalUniqueEntityId());
         EntityRegistry.registerModEntity(EntityTestCar.class, "TestCar", 60, this, 64, 1, true);
