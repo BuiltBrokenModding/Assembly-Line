@@ -100,6 +100,7 @@ import com.builtbroken.minecraft.EnumMaterial;
 import com.builtbroken.minecraft.EnumOrePart;
 import com.builtbroken.minecraft.IndustryTabs;
 import com.builtbroken.minecraft.fluid.EnumGas;
+import com.builtbroken.minecraft.network.PacketHandler;
 import com.builtbroken.minecraft.prefab.ItemBlockHolder;
 
 import cpw.mods.fml.common.FMLLog;
@@ -120,7 +121,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 @ModstatInfo(prefix = "asmline")
 @Mod(modid = AssemblyLine.MOD_ID, name = AssemblyLine.MOD_NAME, version = AssemblyLine.VERSION, useMetadata = true)
-@NetworkMod(clientSideRequired = true, serverSideRequired = false)
+@NetworkMod(channels = {DarkCore.CHANNEL}, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class AssemblyLine
 {
 
