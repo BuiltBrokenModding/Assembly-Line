@@ -88,6 +88,8 @@ import com.builtbroken.assemblyline.machine.encoder.BlockEncoder;
 import com.builtbroken.assemblyline.machine.encoder.ItemDisk;
 import com.builtbroken.assemblyline.machine.processor.BlockProcessor;
 import com.builtbroken.assemblyline.machine.red.BlockAdvancedHopper;
+import com.builtbroken.assemblyline.transmit.BlockWire;
+import com.builtbroken.assemblyline.transmit.ItemBlockWire;
 import com.builtbroken.assemblyline.worldgen.OreGenReplaceStone;
 import com.builtbroken.assemblyline.worldgen.OreGenerator;
 import com.builtbroken.minecraft.CoreRegistry;
@@ -290,7 +292,7 @@ public class AssemblyLine
 
         ALRecipeLoader.blockSteamGen = CoreRegistry.createNewBlock("DMBlockSteamMachine", AssemblyLine.MOD_ID, BlockSmallSteamGen.class, ItemBlockHolder.class);
         ALRecipeLoader.blockOre = CoreRegistry.createNewBlock("DMBlockOre", AssemblyLine.MOD_ID, BlockOre.class, ItemBlockOre.class);
-        //ALRecipeLoader.blockWire = CoreRegistry.createNewBlock("DMBlockWire", AssemblyLine.MOD_ID, BlockWire.class, ItemBlockWire.class);
+        ALRecipeLoader.blockWire = CoreRegistry.createNewBlock("DMBlockWire", AssemblyLine.MOD_ID, BlockWire.class, ItemBlockWire.class);
         ALRecipeLoader.blockDebug = CoreRegistry.createNewBlock("DMBlockDebug", AssemblyLine.MOD_ID, BlockDebug.class, ItemBlockHolder.class);
         ALRecipeLoader.blockStainGlass = CoreRegistry.createNewBlock("DMBlockStainedGlass", AssemblyLine.MOD_ID, BlockColorGlass.class, ItemBlockColored.class);
         ALRecipeLoader.blockColorSand = CoreRegistry.createNewBlock("DMBlockColorSand", AssemblyLine.MOD_ID, BlockColorSand.class, ItemBlockColored.class);
