@@ -14,13 +14,17 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import universalelectricity.api.electricity.IVoltageInput;
+import universalelectricity.api.electricity.IVoltageOutput;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyContainer;
-import universalelectricity.api.energy.IEnergyInterface;
+import universalelectricity.api.energy.IEnergyNetwork;
 import universalelectricity.api.energy.UnitDisplay;
+import universalelectricity.api.energy.UnitDisplay.Unit;
+import buildcraft.api.power.IPowerReceptor;
+import cofh.api.energy.IEnergyStorage;
 
 import com.builtbroken.assemblyline.AssemblyLine;
-import com.builtbroken.common.science.units.ElectricUnit;
 import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.fluid.FluidHelper;
 import com.builtbroken.minecraft.interfaces.IToolReadOut;
@@ -130,10 +134,45 @@ public class ItemReadoutTools extends ItemBasic
                     }
                 }
                 //TODO add shift click support to bring up a easier to read GUI or link to the block and add an on screen gui so the player can toy with a design and be updated
+                //TODO add toggle support to only get one energy system(UE,TE,BC,IC2) readings rather than all or first type read
                 if (tool == EnumTools.MULTI_METER)
                 {
-                    //TODO filter all units threw UE unit helper to created nicer looking output text
-                    player.sendChatToPlayer(ChatMessageComponent.createFromText("Multi-Meter is disabled until UE 3.0 is sorted out"));
+                    if (tileEntity instanceof IVoltageInput && ((IVoltageInput) tileEntity).getVoltageInput(hitSide) > 0)
+                    {
+                        player.sendChatToPlayer(ChatMessageComponent.createFromText("V~In:" + ((IVoltageInput) tileEntity).getVoltageInput(hitSide)));
+                    }
+                    if (tileEntity instanceof IVoltageOutput && ((IVoltageOutput) tileEntity).getVoltageOutput(hitSide) > 0)
+                    {
+                        player.sendChatToPlayer(ChatMessageComponent.createFromText("V~Out:" + ((IVoltageOutput) tileEntity).getVoltageOutput(hitSide)));
+                    }
+                    if (tileEntity instanceof IConductor)
+                    {
+                        IEnergyNetwork network = ((IConductor) tileEntity).getNetwork();
+                        if (network != null)
+                        {
+                            player.sendChatToPlayer(ChatMessageComponent.createFromText("Network:" + network.toString()));
+                            player.sendChatToPlayer(ChatMessageComponent.createFromText("E~In:" + UnitDisplay.getDisplay(network.getRequest(), Unit.JOULES, 2, false)));
+                            player.sendChatToPlayer(ChatMessageComponent.createFromText("E~Out:" + UnitDisplay.getDisplay(network.getLastBuffer(), Unit.JOULES, 2, false)));
+                            player.sendChatToPlayer(ChatMessageComponent.createFromText("E~lost:" + UnitDisplay.getDisplay(network.getEnergyLoss(), Unit.JOULES, 2, false)));
+                        }
+                    }
+                    else if (tileEntity instanceof IEnergyContainer)
+                    {
+                        player.sendChatToPlayer(ChatMessageComponent.createFromText("E~:" + UnitDisplay.getDisplay(((IEnergyContainer) tileEntity).getEnergy(hitSide), Unit.JOULES, 2, false) + "/" + UnitDisplay.getDisplay(((IEnergyContainer) tileEntity).getEnergyCapacity(hitSide), Unit.JOULES, 2, false)));
+                    }
+                    else if (tileEntity instanceof IEnergyStorage)
+                    {
+                        player.sendChatToPlayer(ChatMessageComponent.createFromText("RF~:" + UnitDisplay.getDisplay(((IEnergyStorage) tileEntity).getEnergyStored(), Unit.REDFLUX, 2, true) + "/" + UnitDisplay.getDisplay(((IEnergyStorage) tileEntity).getMaxEnergyStored(), Unit.REDFLUX, 2, true)));
+                    }
+                    else if (tileEntity instanceof IPowerReceptor)
+                    {
+                        //TODO recode for input and output
+                        if (((IPowerReceptor) tileEntity).getPowerReceiver(hitSide) != null)
+                        {
+                            player.sendChatToPlayer(ChatMessageComponent.createFromText("Mj~:" + ((IPowerReceptor) tileEntity).getPowerReceiver(hitSide).getEnergyStored()));
+                        }
+                    }
+                    //TODO add IC2 support
                 }
             }
 

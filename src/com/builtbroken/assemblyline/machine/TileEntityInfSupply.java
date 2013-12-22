@@ -1,11 +1,32 @@
 package com.builtbroken.assemblyline.machine;
 
+import java.util.EnumSet;
+
 import net.minecraftforge.common.ForgeDirection;
 
 import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 
 public class TileEntityInfSupply extends TileEntityEnergyMachine
 {
+    @Override
+    public void updateEntity()
+    {
+        super.updateEntity();
+        this.setJoulesPerTick(10000);
+        this.produce();
+    }
+
+    @Override
+    public EnumSet<ForgeDirection> getOutputDirections()
+    {
+        return EnumSet.allOf(ForgeDirection.class);
+    }
+
+    @Override
+    public EnumSet<ForgeDirection> getInputDirections()
+    {
+        return EnumSet.noneOf(ForgeDirection.class);
+    }
 
     @Override
     public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)

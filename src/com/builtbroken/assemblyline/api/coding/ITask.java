@@ -82,7 +82,9 @@ public interface ITask extends Cloneable, ISaveObj
         public final String name;
         public final Vector2 UV;
 
-        public static final ResourceLocation TEXTURE = new ResourceLocation("dark", "textures/gui/gui_coder_icons.png");
+        /** This is only loaded when assembly line is installed, and only used as a backup if tasks
+         * don't return textures */
+        public static final ResourceLocation TEXTURE = new ResourceLocation("al", "textures/gui/gui_coder_icons.png");
 
         private TaskType(String name, int uu, int vv)
         {

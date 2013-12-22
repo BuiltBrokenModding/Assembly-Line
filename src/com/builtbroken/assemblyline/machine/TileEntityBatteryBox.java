@@ -6,6 +6,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.IEnergyInterface;
 import universalelectricity.api.item.ElectricItemHelper;
 import universalelectricity.api.vector.Vector3;
@@ -25,7 +26,7 @@ public class TileEntityBatteryBox extends TileEntityEnergyMachine
 {
     public TileEntityBatteryBox()
     {
-        super(0, 5000);
+        super(0, 5000000);
         this.invSlots = 2;
         this.hasGUI = true;
     }
@@ -37,40 +38,12 @@ public class TileEntityBatteryBox extends TileEntityEnergyMachine
 
         if (!this.worldObj.isRemote && this.enabled && !this.isDisabled())
         {
-            /** Recharges electric item. */            
-            ElectricItemHelper.chargeItemFromMachine(this, ForgeDirection.UNKNOWN, this.getStackInSlot(0));
+            /** Recharges electric item. */
+            this.setEnergy(ForgeDirection.UNKNOWN, this.getEnergy(ForgeDirection.UNKNOWN) - CompatibilityModule.chargeItem(this.getStackInSlot(0), Math.min(10000, this.getEnergyStored()), true));
             /** Decharge electric item. */
-            ElectricItemHelper.dischargeItemToMachine(this, ForgeDirection.UNKNOWN, this.getStackInSlot(1));
+            this.setEnergy(ForgeDirection.UNKNOWN, this.getEnergy(ForgeDirection.UNKNOWN) + CompatibilityModule.disChargeItem(this.getStackInSlot(1), Math.min(10000, this.getEnergyCapacity(ForgeDirection.UNKNOWN) - this.getEnergyStored()), true));
 
-            ForgeDirection outputDirection = ForgeDirection.getOrientation(this.getBlockMetadata());
-            TileEntity outputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), outputDirection);
-
-            if (outputTile instanceof IEnergyInterface)
-            {
-                long outputWatts = Math.min(this.getEnergyStored(), 10000);
-                if (outputWatts > 0 && ((IEnergyInterface) outputTile).onReceiveEnergy(outputDirection.getOpposite(), outputWatts, false) > 0)
-                {
-                    this.setEnergy(outputDirection, this.getEnergy(outputDirection) - ((IEnergyInterface) outputTile).onReceiveEnergy(outputDirection, outputWatts, true));
-                }
-            }
-            for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
-            {
-                if (direction != outputDirection)
-                {
-                    TileEntity inputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), direction);
-                    long inputLimit = Math.min(this.getEnergyCapacity(direction.getOpposite()) - this.getEnergy(direction.getOpposite()), 10000);
-                    if (inputLimit > 0 && ((IEnergyInterface) inputTile).onExtractEnergy(direction, inputLimit, false) > 0)
-                    {
-                        this.setEnergy(outputDirection, this.getEnergy(outputDirection) + ((IEnergyInterface) inputTile).onExtractEnergy(direction, inputLimit, true));
-                    }
-                }
-            }
-        }
-
-        /** Gradually lose energy. */
-        if (this.ticks % 2000 == 0)
-        {
-            this.consumePower(1, true);
+            this.produce();
         }
     }
 
@@ -84,6 +57,18 @@ public class TileEntityBatteryBox extends TileEntityEnergyMachine
     public EnumSet<ForgeDirection> getOutputDirections()
     {
         return EnumSet.of(ForgeDirection.getOrientation(this.getBlockMetadata()).getOpposite());
+    }
+
+    /** The electrical input direction.
+     * 
+     * @return The direction that electricity is entered into the tile. Return null for no input. By
+     * default you can accept power from all sides. */
+    public EnumSet<ForgeDirection> getInputDirections()
+    {
+        EnumSet<ForgeDirection> et = EnumSet.allOf(ForgeDirection.class);
+        et.remove(ForgeDirection.getOrientation(this.getBlockMetadata()).getOpposite());
+        et.remove(ForgeDirection.UNKNOWN);
+        return et;
     }
 
     @Override

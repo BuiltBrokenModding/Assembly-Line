@@ -17,7 +17,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiEncoderInventory extends GuiEncoderBase
 {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.instance.DOMAIN, DarkCore.GUI_DIRECTORY + "gui_encoder_slot.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.GUI_DIRECTORY + "gui_encoder_slot.png");
 
     public GuiEncoderInventory(InventoryPlayer inventoryPlayer, TileEntityEncoder tileEntity)
     {

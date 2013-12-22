@@ -1,6 +1,10 @@
 package com.builtbroken.assemblyline.transmit;
 
+import net.minecraft.block.Block;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.EnergyNetworkLoader;
@@ -10,17 +14,28 @@ import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
 import universalelectricity.core.net.EnergyNetwork;
 
+import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.helpers.ColorCode;
+import com.builtbroken.minecraft.helpers.ColorCode.IColorCoded;
+import com.builtbroken.minecraft.network.ISimplePacketReceiver;
+import com.builtbroken.minecraft.network.PacketHandler;
 import com.builtbroken.minecraft.prefab.TileEntityAdvanced;
+import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityWire extends TileEntityAdvanced implements IConductor
+import cpw.mods.fml.common.network.Player;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+public class TileEntityWire extends TileEntityAdvanced implements IConductor, ISimplePacketReceiver, IColorCoded
 {
     protected int updateTick = 1;
-    protected ColorCode color = ColorCode.BLACK;
+    protected ColorCode color = ColorCode.UNKOWN;
 
     private IEnergyNetwork network;
 
     public TileEntity[] connections = new TileEntity[6];
+
+    public byte currentAcceptorConnections = 0x00;
 
     @Override
     public void updateEntity()
@@ -36,20 +51,69 @@ public class TileEntityWire extends TileEntityAdvanced implements IConductor
         }
     }
 
+    @Override
+    public void invalidate()
+    {
+        super.invalidate();
+        this.getNetwork().split(this);
+    }
+
     public void refresh()
     {
-        this.connections = new TileEntity[6];
-        for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+        if (!this.worldObj.isRemote)
         {
-            if (this.canConnect(direction.getOpposite()))
+            byte possibleAcceptorConnections = 0x00;
+            this.connections = new TileEntity[6];
+
+            for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
             {
-                TileEntity entity = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), direction);
-                if (CompatibilityModule.isHandler(entity))
+                TileEntity tileEntity = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), side);
+                if (CompatibilityModule.canConnect(tileEntity, side.getOpposite()) && this.canConnect(side))
                 {
-                    this.connections[direction.ordinal()] = entity;
+                    if (tileEntity instanceof IConductor)
+                    {
+                        this.getNetwork().merge(((IConductor) tileEntity).getNetwork());
+                    }
+                    this.connections[side.ordinal()] = tileEntity;
+                    possibleAcceptorConnections |= 1 << side.ordinal();
                 }
             }
+            if (this.currentAcceptorConnections != possibleAcceptorConnections)
+            {
+                this.currentAcceptorConnections = possibleAcceptorConnections;
+                PacketHandler.instance().sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 64);
+                this.getNetwork().reconstruct();
+            }
         }
+    }
+
+    public boolean hasConnectionSide(ForgeDirection side)
+    {
+        return connectionMapContainsSide(this.currentAcceptorConnections, side);
+    }
+
+    public static boolean connectionMapContainsSide(byte connections, ForgeDirection side)
+    {
+        byte tester = (byte) (1 << side.ordinal());
+        return ((connections & tester) > 0);
+    }
+
+    @Override
+    public boolean simplePacket(String id, ByteArrayDataInput data, Player player)
+    {
+        if (id.equalsIgnoreCase("Wire"))
+        {
+            this.currentAcceptorConnections = data.readByte();
+            this.setColor(ColorCode.get(data.readInt()));
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Packet getDescriptionPacket()
+    {
+        return PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, "Wire", this, this.currentAcceptorConnections, this.getColor().ordinal());
     }
 
     @Override
@@ -81,10 +145,7 @@ public class TileEntityWire extends TileEntityAdvanced implements IConductor
     @Override
     public void setNetwork(IEnergyNetwork network)
     {
-        if (network instanceof IEnergyNetwork)
-        {
-            this.network = (EnergyNetwork) network;
-        }
+        this.network = (EnergyNetwork) network;
     }
 
     @Override
@@ -96,9 +157,9 @@ public class TileEntityWire extends TileEntityAdvanced implements IConductor
     @Override
     public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
     {
-        if (this.canConnect(from) && network != null)
+        if (this.canConnect(from) && this.getNetwork() != null)
         {
-            return network.produce(receive);
+            return this.getNetwork().produce(VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), from.getOpposite()), from.getOpposite(), receive, doReceive);
         }
         return 0;
     }
@@ -106,7 +167,6 @@ public class TileEntityWire extends TileEntityAdvanced implements IConductor
     @Override
     public long onExtractEnergy(ForgeDirection from, long extract, boolean doExtract)
     {
-        // TODO Auto-generated method stub
         return 0;
     }
 
@@ -119,7 +179,29 @@ public class TileEntityWire extends TileEntityAdvanced implements IConductor
     @Override
     public long getEnergyCapacitance()
     {
-        return BlockWire.energyMax;
+        return 100000;
     }
 
+    @Override
+    public ColorCode getColor()
+    {
+        return this.color;
+    }
+
+    @Override
+    public boolean setColor(Object obj)
+    {
+        if (ColorCode.get(obj) != null)
+        {
+            this.color = ColorCode.get(obj);
+            return true;
+        }
+        return false;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public AxisAlignedBB getRenderBoundingBox()
+    {
+        return AxisAlignedBB.getAABBPool().getAABB(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
+    }
 }

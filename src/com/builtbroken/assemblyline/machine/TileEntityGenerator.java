@@ -1,7 +1,6 @@
 package com.builtbroken.assemblyline.machine;
 
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.api.electricity.ElectricityPack;
 
 import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 
@@ -38,6 +37,7 @@ public abstract class TileEntityGenerator extends TileEntityEnergyMachine
             if (this.isFunctioning())
             {
                 this.burnTime--;
+                this.produce();
             }
         }
     }

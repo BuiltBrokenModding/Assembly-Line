@@ -1,7 +1,5 @@
 package com.builtbroken.assemblyline.client.render;
 
-import ic2.api.energy.tile.IEnergyAcceptor;
-import ic2.api.energy.tile.IEnergyTile;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -9,14 +7,9 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import universalelectricity.api.Compatibility;
-import universalelectricity.api.net.IConnector;
-import universalelectricity.api.vector.Vector3;
-import universalelectricity.api.vector.VectorHelper;
-import buildcraft.api.power.IPowerReceptor;
-
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.client.model.ModelCopperWire;
+import com.builtbroken.assemblyline.transmit.TileEntityWire;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -37,45 +30,14 @@ public class RenderBlockWire extends TileEntitySpecialRenderer
         GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
         GL11.glScalef(1.0F, -1F, -1F);
 
-        boolean[] renderSide = new boolean[6];
-
-        for (byte i = 0; i < 6; i++)
+        if (tileEntity instanceof TileEntityWire)
         {
-            ForgeDirection dir = ForgeDirection.getOrientation(i);
-            TileEntity ent = VectorHelper.getTileEntityFromSide(tileEntity.worldObj, new Vector3(tileEntity), dir);
-
-            if (ent instanceof IConnector)
+            for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
             {
-                if (((IConnector) ent).canConnect(dir.getOpposite()))
+                if (((TileEntityWire) tileEntity).hasConnectionSide(side))
                 {
-                    renderSide[i] = true;
+                    model.renderSide(side);
                 }
-            }
-            else if (ent instanceof IEnergyTile)
-            {
-                if (ent instanceof IEnergyAcceptor)
-                {
-                    if (((IEnergyAcceptor) ent).acceptsEnergyFrom(tileEntity, dir.getOpposite()))
-                    {
-                        renderSide[i] = true;
-                    }
-                }
-                else
-                {
-                    renderSide[i] = true;
-                }
-            }
-            else if (ent instanceof IPowerReceptor)
-            {
-                renderSide[i] = true;
-            }
-        }
-
-        for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
-        {
-            if (renderSide[side.ordinal()])
-            {
-                model.renderSide(side);
             }
         }
         model.renderSide(ForgeDirection.UNKNOWN);
