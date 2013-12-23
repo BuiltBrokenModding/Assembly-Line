@@ -441,7 +441,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
         data[4] = this.renderConnection[3];
         data[5] = this.renderConnection[4];
         data[6] = this.renderConnection[5];
-        PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(DarkCore.CHANNEL,"RenderPacket", this, data));
+        PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, "RenderPacket", this, data));
     }
 
     public void sendTankUpdate(int index)

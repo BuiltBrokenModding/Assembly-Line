@@ -36,7 +36,7 @@ public class RenderSteamGen extends TileEntitySpecialRenderer
 
         if (model != null)
         {
-            bindTexture(this.getTexture(meta));
+            bindTexture(RenderSteamGen.getTexture(meta));
             rot1 = MathHelper.wrapAngleTo180_float(rot1 + 1);
 
             GL11.glPushMatrix();

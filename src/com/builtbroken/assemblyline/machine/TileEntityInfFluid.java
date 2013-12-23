@@ -19,7 +19,6 @@ import com.builtbroken.common.lang.TextHelper.TextColor;
 import com.builtbroken.minecraft.fluid.FluidHelper;
 import com.builtbroken.minecraft.interfaces.IBlockActivated;
 
-
 public class TileEntityInfFluid extends TileEntity implements IFluidHandler, IBlockActivated
 {
     FluidTank tank = new FluidTank(Integer.MAX_VALUE);

@@ -153,7 +153,7 @@ public class ItemReadoutTools extends ItemBasic
                             player.sendChatToPlayer(ChatMessageComponent.createFromText("Network:" + network.toString()));
                             player.sendChatToPlayer(ChatMessageComponent.createFromText("E~In:" + UnitDisplay.getDisplay(network.getRequest(), Unit.JOULES, 2, false)));
                             player.sendChatToPlayer(ChatMessageComponent.createFromText("E~Out:" + UnitDisplay.getDisplay(network.getLastBuffer(), Unit.JOULES, 2, false)));
-                            player.sendChatToPlayer(ChatMessageComponent.createFromText("R~Ohm:" + UnitDisplay.getDisplay(network.getAverageResistance(), Unit.RESISTANCE, 2, false)));
+                            player.sendChatToPlayer(ChatMessageComponent.createFromText("R~Ohm:" + UnitDisplay.getDisplay(network.getResistance(), Unit.RESISTANCE, 2, false)));
                         }
                     }
                     else if (tileEntity instanceof IEnergyContainer)

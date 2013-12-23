@@ -6,7 +6,6 @@ import net.minecraft.item.ItemStack;
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.blocks.BlockOre.OreData;
 
-
 public class ItemBlockOre extends ItemBlock
 {
 

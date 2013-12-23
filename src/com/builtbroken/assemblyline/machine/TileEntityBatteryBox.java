@@ -64,6 +64,7 @@ public class TileEntityBatteryBox extends TileEntityEnergyMachine
      * 
      * @return The direction that electricity is entered into the tile. Return null for no input. By
      * default you can accept power from all sides. */
+    @Override
     public EnumSet<ForgeDirection> getInputDirections()
     {
         EnumSet<ForgeDirection> et = EnumSet.allOf(ForgeDirection.class);

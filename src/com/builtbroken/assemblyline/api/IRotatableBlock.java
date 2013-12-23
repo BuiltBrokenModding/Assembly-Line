@@ -4,7 +4,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
 /** The interface is applied to Blocks that can rotate.
- *
+ * 
  * @author DarkGuardsman */
 
 public interface IRotatableBlock

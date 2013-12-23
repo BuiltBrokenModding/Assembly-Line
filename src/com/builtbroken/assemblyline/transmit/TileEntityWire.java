@@ -1,10 +1,8 @@
 package com.builtbroken.assemblyline.transmit;
 
-import net.minecraft.block.Block;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.EnergyNetworkLoader;
@@ -145,7 +143,7 @@ public class TileEntityWire extends TileEntityAdvanced implements IConductor, IS
     @Override
     public void setNetwork(IEnergyNetwork network)
     {
-        this.network = (EnergyNetwork) network;
+        this.network = network;
     }
 
     @Override
@@ -187,6 +185,7 @@ public class TileEntityWire extends TileEntityAdvanced implements IConductor, IS
         return false;
     }
 
+    @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox()
     {

@@ -16,9 +16,8 @@ import net.minecraft.world.World;
 import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.IndustryTabs;
 
-
 /** Basic item used to spawn a vehicle
- *
+ * 
  * @author DarkGuardsman */
 public class ItemVehicleSpawn extends Item
 {

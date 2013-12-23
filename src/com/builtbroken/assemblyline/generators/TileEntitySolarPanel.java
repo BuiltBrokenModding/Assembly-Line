@@ -23,7 +23,7 @@ public class TileEntitySolarPanel extends TileEntityGenerator
     @Override
     public void consumeFuel()
     {
-        this.burnTime = BlockSolarPanel.tickRate; 
+        this.burnTime = BlockSolarPanel.tickRate;
         if (!this.worldObj.isRemote && this.ticks % BlockSolarPanel.tickRate == 0)
         {
 
