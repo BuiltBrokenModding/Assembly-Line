@@ -171,18 +171,6 @@ public class TileEntityWire extends TileEntityAdvanced implements IConductor, IS
     }
 
     @Override
-    public long getEnergyLoss()
-    {
-        return 0;
-    }
-
-    @Override
-    public long getEnergyCapacitance()
-    {
-        return 100000;
-    }
-
-    @Override
     public ColorCode getColor()
     {
         return this.color;
@@ -203,5 +191,17 @@ public class TileEntityWire extends TileEntityAdvanced implements IConductor, IS
     public AxisAlignedBB getRenderBoundingBox()
     {
         return AxisAlignedBB.getAABBPool().getAABB(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
+    }
+
+    @Override
+    public float getResistance()
+    {
+        return 0.0000000168f;
+    }
+
+    @Override
+    public long getTransferCapacity()
+    {
+        return 1000000;
     }
 }
