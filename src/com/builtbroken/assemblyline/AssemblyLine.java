@@ -88,6 +88,7 @@ import com.builtbroken.assemblyline.machine.encoder.BlockEncoder;
 import com.builtbroken.assemblyline.machine.encoder.ItemDisk;
 import com.builtbroken.assemblyline.machine.processor.BlockProcessor;
 import com.builtbroken.assemblyline.machine.red.BlockAdvancedHopper;
+import com.builtbroken.assemblyline.multipart.MultipartAL;
 import com.builtbroken.assemblyline.transmit.BlockWire;
 import com.builtbroken.assemblyline.transmit.ItemBlockWire;
 import com.builtbroken.assemblyline.worldgen.OreGenReplaceStone;
@@ -200,6 +201,7 @@ public class AssemblyLine
         DarkCore.instance().Load();
         this.registerObjects();
         proxy.init();
+        MultipartAL.INSTANCE = new MultipartAL();
 
         FMLog.info("Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
         IndustryTabs.tabAutomation().setIconItemStack(new ItemStack(ALRecipeLoader.blockConveyorBelt));
