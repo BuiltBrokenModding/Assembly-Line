@@ -4,13 +4,8 @@ import java.util.EnumSet;
 
 import net.minecraft.inventory.Container;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.CompatibilityModule;
-import universalelectricity.api.energy.IEnergyInterface;
-import universalelectricity.api.item.ElectricItemHelper;
-import universalelectricity.api.vector.Vector3;
-import universalelectricity.api.vector.VectorHelper;
 
 import com.builtbroken.minecraft.network.PacketHandler;
 import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
@@ -26,7 +21,7 @@ public class TileEntityBatteryBox extends TileEntityEnergyMachine
 {
     public TileEntityBatteryBox()
     {
-        super(0, 5000000);
+        super(10000, 5000000);
         this.invSlots = 2;
         this.hasGUI = true;
     }
@@ -41,10 +36,16 @@ public class TileEntityBatteryBox extends TileEntityEnergyMachine
             /** Recharges electric item. */
             this.setEnergy(ForgeDirection.UNKNOWN, this.getEnergy(ForgeDirection.UNKNOWN) - CompatibilityModule.chargeItem(this.getStackInSlot(0), Math.min(10000, this.getEnergyStored()), true));
             /** Decharge electric item. */
-            this.setEnergy(ForgeDirection.UNKNOWN, this.getEnergy(ForgeDirection.UNKNOWN) + CompatibilityModule.disChargeItem(this.getStackInSlot(1), Math.min(10000, this.getEnergyCapacity(ForgeDirection.UNKNOWN) - this.getEnergyStored()), true));
-
+            this.setEnergy(ForgeDirection.UNKNOWN, this.getEnergy(ForgeDirection.UNKNOWN) + CompatibilityModule.dischargeItem(this.getStackInSlot(1), Math.min(10000, this.getEnergyCapacity(ForgeDirection.UNKNOWN) - this.getEnergyStored()), true));
+            /** Output to network, or connected machines */
             this.produce();
         }
+    }
+
+    @Override
+    protected boolean consumePower(long watts, boolean doDrain)
+    {
+        return true;
     }
 
     @Override
@@ -56,7 +57,7 @@ public class TileEntityBatteryBox extends TileEntityEnergyMachine
     @Override
     public EnumSet<ForgeDirection> getOutputDirections()
     {
-        return EnumSet.of(ForgeDirection.getOrientation(this.getBlockMetadata()).getOpposite());
+        return EnumSet.of(ForgeDirection.getOrientation(this.getBlockMetadata()));
     }
 
     /** The electrical input direction.
@@ -66,7 +67,7 @@ public class TileEntityBatteryBox extends TileEntityEnergyMachine
     public EnumSet<ForgeDirection> getInputDirections()
     {
         EnumSet<ForgeDirection> et = EnumSet.allOf(ForgeDirection.class);
-        et.remove(ForgeDirection.getOrientation(this.getBlockMetadata()).getOpposite());
+        et.remove(ForgeDirection.getOrientation(this.getBlockMetadata()));
         et.remove(ForgeDirection.UNKNOWN);
         return et;
     }
