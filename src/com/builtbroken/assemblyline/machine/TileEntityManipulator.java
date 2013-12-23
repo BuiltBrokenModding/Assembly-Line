@@ -271,8 +271,8 @@ public class TileEntityManipulator extends TileEntityFilterable implements IRota
     }
 
     @Override
-    public double getExtraLoad()
+    public int getExtraLoad()
     {
-        return .01;//1J/t or 20J/t
+        return 1;
     }
 }

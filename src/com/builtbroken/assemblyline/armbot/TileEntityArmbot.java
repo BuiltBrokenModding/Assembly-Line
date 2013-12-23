@@ -465,13 +465,13 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     }
 
     @Override
-    public double getWattLoad()
+    public int getWattLoad()
     {
         if (this.hasTask)
         {
-            return .4;//400w
+            return 40;
         }
-        return .03;//30w
+        return 3;
     }
 
     @Override

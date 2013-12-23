@@ -22,7 +22,7 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.network.Player;
 
 /** Conveyer belt TileEntity that allows entities of all kinds to be moved
- * 
+ *
  * @author DarkGuardsman */
 public class TileEntityConveyorBelt extends TileEntityAssembly implements IBelt, IRotatable
 {
@@ -247,9 +247,9 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IBelt,
     }
 
     @Override
-    public double getWattLoad()
+    public int getWattLoad()
     {
-        return 0.05 + (0.01 * this.getAffectedEntities().size());//50w + (10w * loadSize)
+        return 5;
     }
 
 }
