@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.api.item.IElectricalItem;
+import universalelectricity.api.item.IEnergyItem;
 
 import com.builtbroken.assemblyline.machine.processor.BlockProcessor.ProcessorData;
 import com.builtbroken.minecraft.interfaces.IInvBox;
@@ -18,7 +18,7 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.network.Player;
 
 /** Basic A -> B recipe processor machine designed mainly to handle ore blocks
- * 
+ *
  * @author DarkGuardsman */
 public class TileEntityProcessor extends TileEntityEnergyMachine
 {
@@ -226,7 +226,7 @@ public class TileEntityProcessor extends TileEntityEnergyMachine
             {
                 return true;
             }
-            if (slotBatteryDrain == slot && stack.getItem() instanceof IElectricalItem)
+            if (slotBatteryDrain == slot && stack.getItem() instanceof IEnergyItem)
             {
                 return true;
             }

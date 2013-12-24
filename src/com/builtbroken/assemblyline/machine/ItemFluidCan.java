@@ -11,7 +11,6 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.ItemFluidContainer;
-import universalelectricity.api.item.ElectricItemHelper;
 
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.minecraft.DarkCore;
@@ -22,7 +21,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 /** Small fluid can that is designed to store up to one bucket of fluid. Doesn't work like a bucket
  * as it is sealed with a pressure cap. This can is designed to work with tools or machines only.
- * 
+ *
  * @author DarkGuardsman */
 public class ItemFluidCan extends ItemFluidContainer
 {
@@ -79,7 +78,7 @@ public class ItemFluidCan extends ItemFluidContainer
     @Override
     public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {
-        par3List.add(ElectricItemHelper.getUncharged(new ItemStack(this)));
+        par3List.add(new ItemStack(this));
 
         ItemStack waterCan = new ItemStack(this);
         this.fill(waterCan, new FluidStack(FluidRegistry.WATER, FluidContainerRegistry.BUCKET_VOLUME), true);

@@ -15,7 +15,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /** Simple battery to store energy
- * 
+ *
  * @author DarkGuardsman */
 public class ItemBattery extends ItemElectric implements IExtraItemInfo
 {
@@ -40,7 +40,7 @@ public class ItemBattery extends ItemElectric implements IExtraItemInfo
     }
 
     @Override
-    public long getElectricityCapacity(ItemStack theItem)
+    public long getEnergyCapacity(ItemStack theItem)
     {
         return 5000000;
     }

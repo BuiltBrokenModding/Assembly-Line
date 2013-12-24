@@ -1,5 +1,6 @@
 package com.builtbroken.assemblyline.machine.processor;
 
+import universalelectricity.api.item.IEnergyItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -7,7 +8,6 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.item.ItemStack;
-import universalelectricity.api.item.IElectricalItem;
 
 import com.builtbroken.minecraft.recipes.MachineRecipeHandler;
 
@@ -115,7 +115,7 @@ public class ContainerProcessor extends Container
                         return null;
                     }
                 }
-                else if (slotStack.getItem() instanceof IElectricalItem)
+                else if (slotStack.getItem() instanceof IEnergyItem)
                 {
                     if (!this.mergeItemStack(slotStack, tileEntity.slotBatteryCharge, 2, false))
                     {
