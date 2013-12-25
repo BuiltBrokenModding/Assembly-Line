@@ -162,7 +162,7 @@ public class TileEntityWire extends TileEntityAdvanced implements IConductor, IS
     {
         if (this.canConnect(from) && this.getNetwork() != null)
         {
-            return this.getNetwork().produce(VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), from.getOpposite()), from.getOpposite(), receive, doReceive);
+            return this.getNetwork().produce(this, from.getOpposite(), receive, doReceive);
         }
         return 0;
     }
@@ -207,18 +207,6 @@ public class TileEntityWire extends TileEntityAdvanced implements IConductor, IS
     public long getCurrentCapacity()
     {
         return 1000000;
-    }
-
-    @Override
-    public long getSavedBuffer()
-    {
-        return this.saveBuffer;
-    }
-
-    @Override
-    public void setSaveBuffer(long energy)
-    {
-        this.saveBuffer = energy;
     }
 
     /** NBT Data */

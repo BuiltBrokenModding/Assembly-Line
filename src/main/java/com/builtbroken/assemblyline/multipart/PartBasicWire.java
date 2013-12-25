@@ -25,7 +25,7 @@ public class PartBasicWire extends PartAdvanced implements IConductor
     @Override
     public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
     {
-        return this.getNetwork().produce(new Vector3(tile()).modifyPositionFromSide(from).getTileEntity(world()), from.getOpposite(), receive, doReceive);
+        return this.getNetwork().produce(this, from.getOpposite(), receive, doReceive);
     }
 
     @Override
@@ -136,18 +136,6 @@ public class PartBasicWire extends PartAdvanced implements IConductor
     public String getType()
     {
         return "assembly_line_basic_wire";
-    }
-
-    @Override
-    public long getSavedBuffer()
-    {
-        return this.saveBuffer;
-    }
-
-    @Override
-    public void setSaveBuffer(long energy)
-    {
-        this.saveBuffer = energy;
     }
 
     /** NBT Data */
