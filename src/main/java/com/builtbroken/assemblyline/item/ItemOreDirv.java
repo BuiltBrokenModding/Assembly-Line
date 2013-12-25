@@ -8,9 +8,11 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.oredict.OreDictionary;
 
+import com.builtbroken.assemblyline.ALRecipeLoader;
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.EnumMaterial;
@@ -32,6 +34,7 @@ public class ItemOreDirv extends ItemBasic implements IExtraItemInfo
         super(DarkCore.getNextItemId(), "Metal_Parts", AssemblyLine.CONFIGURATION);
         this.setHasSubtypes(true);
         this.setCreativeTab(CreativeTabs.tabMaterials);
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     @Override

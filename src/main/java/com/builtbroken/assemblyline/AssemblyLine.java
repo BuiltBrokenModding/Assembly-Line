@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -191,6 +192,7 @@ public class AssemblyLine
         TaskRegistry.registerCommand(new TaskStart());
         TaskRegistry.registerCommand(new TaskIdle());
 
+        this.registerObjects();
         proxy.preInit();
     }
 
@@ -198,14 +200,10 @@ public class AssemblyLine
     public void init(FMLInitializationEvent event)
     {
         DarkCore.instance().Load();
-        this.registerObjects();
 
         MultipartAL.INSTANCE = new MultipartAL();
 
         FMLog.info("Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
-        IndustryTabs.tabAutomation().setIconItemStack(new ItemStack(ALRecipeLoader.blockConveyorBelt));
-        EntityRegistry.registerGlobalEntityID(EntityTestCar.class, "TestCar", EntityRegistry.findGlobalUniqueEntityId());
-        EntityRegistry.registerModEntity(EntityTestCar.class, "TestCar", 60, this, 64, 1, true);
 
         for (EnumGas gas : EnumGas.values())
         {
@@ -240,15 +238,6 @@ public class AssemblyLine
                 OreDictionary.registerOre(part.name, new ItemStack(ALRecipeLoader.itemParts, 1, part.ordinal()));
             }
         }
-        if (ALRecipeLoader.itemMetals != null)
-        {
-            MinecraftForge.EVENT_BUS.register(ALRecipeLoader.itemMetals);
-        }
-        if (ALRecipeLoader.itemParts != null)
-        {
-            IndustryTabs.tabMining().itemStack = new ItemStack(ALRecipeLoader.itemParts.itemID, 1, ItemParts.Parts.MiningIcon.ordinal());
-        }
-
         proxy.init();
     }
 
@@ -261,6 +250,7 @@ public class AssemblyLine
         CONFIGURATION.save();
     }
 
+    /** Separated method for registering & creating objects */
     public void registerObjects()
     {
 
@@ -270,27 +260,31 @@ public class AssemblyLine
         ALRecipeLoader.blockCrate = (BlockCrate) CoreRegistry.createNewBlock("Crate", AssemblyLine.MOD_ID, BlockCrate.class, ItemBlockCrate.class);
         ALRecipeLoader.blockImprinter = CoreRegistry.createNewBlock("Imprinter", AssemblyLine.MOD_ID, BlockImprinter.class);
         ALRecipeLoader.blockDetector = CoreRegistry.createNewBlock("Detector", AssemblyLine.MOD_ID, BlockDetector.class);
+
         ALRecipeLoader.blockRejector = CoreRegistry.createNewBlock("Rejector", AssemblyLine.MOD_ID, BlockRejector.class);
         ALRecipeLoader.blockEncoder = CoreRegistry.createNewBlock("Encoder", AssemblyLine.MOD_ID, BlockEncoder.class);
         ALRecipeLoader.blockArmbot = CoreRegistry.createNewBlock("Armbot", AssemblyLine.MOD_ID, BlockArmbot.class);
         ALRecipeLoader.blockTurntable = CoreRegistry.createNewBlock("Turntable", AssemblyLine.MOD_ID, BlockTurntable.class);
         ALRecipeLoader.processorMachine = CoreRegistry.createNewBlock("ALBlockProcessor", AssemblyLine.MOD_ID, BlockProcessor.class, ItemBlockHolder.class);
+
         ALRecipeLoader.blockAdvancedHopper = CoreRegistry.createNewBlock("ALBlockHopper", AssemblyLine.MOD_ID, BlockAdvancedHopper.class, ItemBlockHolder.class);
         ALRecipeLoader.blockPipe = CoreRegistry.createNewBlock("FMBlockPipe", AssemblyLine.MOD_ID, BlockPipe.class, ItemBlockPipe.class);
         ALRecipeLoader.blockPumpMachine = CoreRegistry.createNewBlock("FMBlockPump", AssemblyLine.MOD_ID, BlockPumpMachine.class, ItemBlockHolder.class);
         ALRecipeLoader.blockReleaseValve = CoreRegistry.createNewBlock("FMBlockReleaseValve", AssemblyLine.MOD_ID, BlockReleaseValve.class, ItemBlockHolder.class);
         ALRecipeLoader.blockTank = CoreRegistry.createNewBlock("FMBlockTank", AssemblyLine.MOD_ID, BlockTank.class, ItemBlockPipe.class);
+
         ALRecipeLoader.blockSink = CoreRegistry.createNewBlock("FMBlockSink", AssemblyLine.MOD_ID, BlockSink.class, ItemBlockHolder.class);
         ALRecipeLoader.blockDrain = CoreRegistry.createNewBlock("FMBlockDrain", AssemblyLine.MOD_ID, BlockDrain.class, ItemBlockHolder.class);
         ALRecipeLoader.blockConPump = CoreRegistry.createNewBlock("FMBlockConstructionPump", AssemblyLine.MOD_ID, BlockConstructionPump.class, ItemBlockHolder.class);
-
         ALRecipeLoader.blockSteamGen = CoreRegistry.createNewBlock("DMBlockSteamMachine", AssemblyLine.MOD_ID, BlockSmallSteamGen.class, ItemBlockHolder.class);
         ALRecipeLoader.blockOre = CoreRegistry.createNewBlock("DMBlockOre", AssemblyLine.MOD_ID, BlockOre.class, ItemBlockOre.class);
+
         ALRecipeLoader.blockWire = CoreRegistry.createNewBlock("DMBlockWire", AssemblyLine.MOD_ID, BlockWire.class, ItemBlockWire.class);
         ALRecipeLoader.blockDebug = CoreRegistry.createNewBlock("DMBlockDebug", AssemblyLine.MOD_ID, BlockDebug.class, ItemBlockHolder.class);
         ALRecipeLoader.blockStainGlass = CoreRegistry.createNewBlock("DMBlockStainedGlass", AssemblyLine.MOD_ID, BlockColorGlass.class, ItemBlockColored.class);
         ALRecipeLoader.blockColorSand = CoreRegistry.createNewBlock("DMBlockColorSand", AssemblyLine.MOD_ID, BlockColorSand.class, ItemBlockColored.class);
         ALRecipeLoader.blockBasalt = CoreRegistry.createNewBlock("DMBlockBasalt", AssemblyLine.MOD_ID, BlockBasalt.class, ItemBlockColored.class);
+
         ALRecipeLoader.blockGlowGlass = CoreRegistry.createNewBlock("DMBlockGlowGlass", AssemblyLine.MOD_ID, BlockColorGlowGlass.class, ItemBlockColored.class);
         ALRecipeLoader.blockSolar = CoreRegistry.createNewBlock("DMBlockSolar", AssemblyLine.MOD_ID, BlockSolarPanel.class, ItemBlockHolder.class);
         ALRecipeLoader.blockGas = CoreRegistry.createNewBlock("DMBlockGas", AssemblyLine.MOD_ID, BlockGasOre.class, ItemBlockHolder.class);
@@ -302,8 +296,8 @@ public class AssemblyLine
         ALRecipeLoader.wrench = CoreRegistry.createNewItem("DMWrench", AssemblyLine.MOD_ID, ItemWrench.class, true);
         ALRecipeLoader.itemGlowingSand = CoreRegistry.createNewItem("DMItemGlowingSand", AssemblyLine.MOD_ID, ItemColoredDust.class, true);
         ALRecipeLoader.itemDiggingTool = CoreRegistry.createNewItem("ItemDiggingTools", AssemblyLine.MOD_ID, ItemCommonTool.class, true);
-        ALRecipeLoader.itemVehicleTest = CoreRegistry.createNewItem("ItemVehicleTest", AssemblyLine.MOD_ID, ItemVehicleSpawn.class, true);
 
+        ALRecipeLoader.itemVehicleTest = CoreRegistry.createNewItem("ItemVehicleTest", AssemblyLine.MOD_ID, ItemVehicleSpawn.class, true);
         ALRecipeLoader.itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", DarkCore.getNextItemId()).getInt());
         ALRecipeLoader.itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", DarkCore.getNextItemId()).getInt());
         ALRecipeLoader.itemFluidCan = CoreRegistry.createNewItem("ItemFluidCan", AssemblyLine.MOD_ID, ItemFluidCan.class, true);
@@ -313,6 +307,7 @@ public class AssemblyLine
         TileEntityAssembly.refresh_diff = CONFIGURATION.get("TileSettings", "RefreshRandomRange", 9, "n = value of config, 1 + n, random number range from 1 to n that will be added to the lowest refresh value").getInt();
         TileEntityAssembly.refresh_min_rate = CONFIGURATION.get("TileSettings", "RefreshLowestValue", 20, "Lowest value the refresh rate of the tile network will be").getInt();
 
+        //Entities
         if (AssemblyLine.CONFIGURATION.get("Override", "Eggs", true).getBoolean(true))
         {
             Item.itemsList[Item.egg.itemID] = null;
@@ -324,6 +319,9 @@ public class AssemblyLine
             BlockDispenser.dispenseBehaviorRegistry.putObject(Item.egg, new BehaviorDispenseEgg());
         }
 
+        EntityRegistry.registerGlobalEntityID(EntityTestCar.class, "TestCar", EntityRegistry.findGlobalUniqueEntityId());
+        EntityRegistry.registerModEntity(EntityTestCar.class, "TestCar", 60, this, 64, 1, true);
+
         for (EnumBird bird : EnumBird.values())
         {
             if (bird != EnumBird.VANILLA_CHICKEN && CONFIGURATION.get("Entities", "Enable_" + bird.name(), true).getBoolean(true))
@@ -331,16 +329,31 @@ public class AssemblyLine
                 bird.register();
             }
         }
-
+        //Post object creation, normally creative tab icon setup
         if (ALRecipeLoader.blockPipe != null)
         {
             IndustryTabs.tabHydraulic().setIconItemStack(FluidPartsMaterial.IRON.getStack());
         }
-
+        else
+        {
+            IndustryTabs.tabHydraulic().setIconItemStack(new ItemStack(Item.bucketWater));
+        }
         if (ALRecipeLoader.itemMetals != null)
         {
             IndustryTabs.tabIndustrial().itemStack = EnumMaterial.getStack(ALRecipeLoader.itemMetals, EnumMaterial.IRON, EnumOrePart.GEARS, 1);
             ALRecipeLoader.parseOreNames(CONFIGURATION);
+        }
+        else
+        {
+
+        }
+        if (ALRecipeLoader.blockConveyorBelt != null)
+        {
+            IndustryTabs.tabAutomation().setIconItemStack(new ItemStack(ALRecipeLoader.blockConveyorBelt));
+        }
+        else
+        {
+            IndustryTabs.tabAutomation().setIconItemStack(new ItemStack(Block.pistonStickyBase));
         }
 
     }
@@ -348,30 +361,14 @@ public class AssemblyLine
     public void loadModMeta()
     {
         meta.modId = AssemblyLine.MOD_ID;
-        meta.name = AssemblyLine.MOD_NAME; 
+        meta.name = AssemblyLine.MOD_NAME;
         meta.version = AssemblyLine.VERSION;
         meta.description = "Simi Realistic factory system for minecraft bring in conveyor belts, robotic arms, and simple machines";
         meta.url = "http://www.universalelectricity.com/coremachine";
         meta.logoFile = "/al_logo.png";
-       
-        meta.authorList = Arrays.asList(new String[] { "DarkGuardsman"});
-        meta.credits =  
-                "Archadia - Developer"+ 
-                "LiQuiD - Dev of BioTech\n"+
-                "Hangcow - Ex-Dev Greater Security\n"+   
-                "Calclavia - Ex-CoDev of assembly line\n"+
-                "Briman0094 - Ex-CoDev of assembly line\n"+
-                "Elrath18 - Colored Glass, Sand, & Stone\n"+
-                "Doppelgangerous - Researcher\n"+
-                "Freesound.org - Sound effects\n"+
-                "MineMan1(wdtod) - asset creation\n"+
-                "AlphaToOmega - asset creation\n"+
-                "pinksheep - asset creation\n"+
-                "X-wing9 - asset creation\n"+
-                "Azkhare - asset creation\n"+
-                "Vexatos - German Translation\n"+
-                "crafteverywhere - Chinese Translations\n"+
-                "PancakeCandy - French & Dutch Translations\n";
+
+        meta.authorList = Arrays.asList(new String[] { "DarkGuardsman" });
+        meta.credits = "Archadia - Developer" + "LiQuiD - Dev of BioTech\n" + "Hangcow - Ex-Dev Greater Security\n" + "Calclavia - Ex-CoDev of assembly line\n" + "Briman0094 - Ex-CoDev of assembly line\n" + "Elrath18 - Colored Glass, Sand, & Stone\n" + "Doppelgangerous - Researcher\n" + "Freesound.org - Sound effects\n" + "MineMan1(wdtod) - asset creation\n" + "AlphaToOmega - asset creation\n" + "pinksheep - asset creation\n" + "X-wing9 - asset creation\n" + "Azkhare - asset creation\n" + "Vexatos - German Translation\n" + "crafteverywhere - Chinese Translations\n" + "PancakeCandy - French & Dutch Translations\n";
         meta.autogenerated = false;
 
     }
