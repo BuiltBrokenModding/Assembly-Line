@@ -82,6 +82,17 @@ public class ALRecipeLoader extends RecipeLoader
     public static Item itemDiggingTool;
     public static Item itemVehicleTest;
 
+    private static ALRecipeLoader instance;
+
+    public static ALRecipeLoader instance()
+    {
+        if (instance == null)
+        {
+            instance = new ALRecipeLoader();
+        }
+        return instance;
+    }
+
     @Override
     public void loadRecipes()
     {

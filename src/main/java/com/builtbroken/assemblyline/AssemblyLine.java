@@ -148,14 +148,12 @@ public class AssemblyLine
     @Instance(AssemblyLine.MOD_ID)
     public static AssemblyLine instance;
 
-    public static ALRecipeLoader recipeLoader;
-
     @Metadata(AssemblyLine.MOD_ID)
     public static ModMetadata meta;
 
     private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US", "de_DE" };
 
-    public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "Dark/AssemblyLine.cfg"));
+    public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "AssemblyLine.cfg"));
 
     public static Logger FMLog = Logger.getLogger(AssemblyLine.MOD_NAME);
 
@@ -166,14 +164,13 @@ public class AssemblyLine
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
+        CONFIGURATION.load();
         FMLog.setParent(FMLLog.getLogger());
 
         DarkCore.instance().preLoad();
         Modstats.instance().getReporter().registerMod(this);
         MinecraftForge.EVENT_BUS.register(this);
         NetworkRegistry.instance().registerGuiHandler(this, proxy);
-
-        proxy.preInit();
 
         TaskRegistry.registerCommand(new TaskDrop());
         TaskRegistry.registerCommand(new TaskGive());
@@ -193,6 +190,8 @@ public class AssemblyLine
         TaskRegistry.registerCommand(new TaskBreak());
         TaskRegistry.registerCommand(new TaskStart());
         TaskRegistry.registerCommand(new TaskIdle());
+
+        proxy.preInit();
     }
 
     @EventHandler
@@ -200,7 +199,7 @@ public class AssemblyLine
     {
         DarkCore.instance().Load();
         this.registerObjects();
-        proxy.init();
+
         MultipartAL.INSTANCE = new MultipartAL();
 
         FMLog.info("Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
@@ -249,11 +248,8 @@ public class AssemblyLine
         {
             IndustryTabs.tabMining().itemStack = new ItemStack(ALRecipeLoader.itemParts.itemID, 1, ItemParts.Parts.MiningIcon.ordinal());
         }
-        if (ALRecipeLoader.itemMetals != null)
-        {
-            IndustryTabs.tabIndustrial().itemStack = EnumMaterial.getStack(ALRecipeLoader.itemMetals, EnumMaterial.IRON, EnumOrePart.GEARS, 1);
-            ALRecipeLoader.parseOreNames(CONFIGURATION);
-        }
+
+        proxy.init();
     }
 
     @EventHandler
@@ -261,17 +257,13 @@ public class AssemblyLine
     {
         DarkCore.instance().postLoad();
         proxy.postInit();
-        this.loadRecipes();
+        ALRecipeLoader.instance().loadRecipes();
+        CONFIGURATION.save();
     }
 
     public void registerObjects()
     {
 
-        if (recipeLoader == null)
-        {
-            recipeLoader = new ALRecipeLoader();
-        }
-        CONFIGURATION.load();
         /* BLOCKS */
         ALRecipeLoader.blockConveyorBelt = CoreRegistry.createNewBlock("ALBlockConveyor", AssemblyLine.MOD_ID, BlockConveyorBelt.class);
         ALRecipeLoader.blockManipulator = CoreRegistry.createNewBlock("Manipulator", AssemblyLine.MOD_ID, BlockManipulator.class);
@@ -345,27 +337,42 @@ public class AssemblyLine
             IndustryTabs.tabHydraulic().setIconItemStack(FluidPartsMaterial.IRON.getStack());
         }
 
-        CONFIGURATION.save();
+        if (ALRecipeLoader.itemMetals != null)
+        {
+            IndustryTabs.tabIndustrial().itemStack = EnumMaterial.getStack(ALRecipeLoader.itemMetals, EnumMaterial.IRON, EnumOrePart.GEARS, 1);
+            ALRecipeLoader.parseOreNames(CONFIGURATION);
+        }
+
     }
 
     public void loadModMeta()
     {
         meta.modId = AssemblyLine.MOD_ID;
-        meta.name = AssemblyLine.MOD_NAME;
+        meta.name = AssemblyLine.MOD_NAME; 
+        meta.version = AssemblyLine.VERSION;
         meta.description = "Simi Realistic factory system for minecraft bring in conveyor belts, robotic arms, and simple machines";
-
         meta.url = "http://www.universalelectricity.com/coremachine";
-
         meta.logoFile = "/al_logo.png";
-        meta.version = VERSION;
-        meta.authorList = Arrays.asList(new String[] { "DarkGuardsman", "Briman", "Calclavia" });
-        meta.credits = "Please see the website.";
+       
+        meta.authorList = Arrays.asList(new String[] { "DarkGuardsman"});
+        meta.credits =  
+                "Archadia - Developer"+ 
+                "LiQuiD - Dev of BioTech\n"+
+                "Hangcow - Ex-Dev Greater Security\n"+   
+                "Calclavia - Ex-CoDev of assembly line\n"+
+                "Briman0094 - Ex-CoDev of assembly line\n"+
+                "Elrath18 - Colored Glass, Sand, & Stone\n"+
+                "Doppelgangerous - Researcher\n"+
+                "Freesound.org - Sound effects\n"+
+                "MineMan1(wdtod) - asset creation\n"+
+                "AlphaToOmega - asset creation\n"+
+                "pinksheep - asset creation\n"+
+                "X-wing9 - asset creation\n"+
+                "Azkhare - asset creation\n"+
+                "Vexatos - German Translation\n"+
+                "crafteverywhere - Chinese Translations\n"+
+                "PancakeCandy - French & Dutch Translations\n";
         meta.autogenerated = false;
 
-    }
-
-    public void loadRecipes()
-    {
-        recipeLoader.loadRecipes();
     }
 }
