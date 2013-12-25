@@ -160,7 +160,10 @@ public class ItemReadoutTools extends ItemBasic
                     }
                     else if (tileEntity instanceof IEnergyContainer)
                     {
-                        player.sendChatToPlayer(ChatMessageComponent.createFromText("E~:" + UnitDisplay.getDisplay(((IEnergyContainer) tileEntity).getEnergy(hitSide), Unit.JOULES, 2, false) + "/" + UnitDisplay.getDisplay(((IEnergyContainer) tileEntity).getEnergyCapacity(hitSide), Unit.JOULES, 2, false)));
+                        if (((IEnergyContainer) tileEntity).getEnergyCapacity(hitSide) > 0)
+                        {
+                            player.sendChatToPlayer(ChatMessageComponent.createFromText("E~:" + UnitDisplay.getDisplay(((IEnergyContainer) tileEntity).getEnergy(hitSide), Unit.JOULES, 2, false) + "/" + UnitDisplay.getDisplay(((IEnergyContainer) tileEntity).getEnergyCapacity(hitSide), Unit.JOULES, 2, false)));
+                        }
                         if (tileEntity instanceof TileEntityEnergyMachine)
                         {
                             if (tileEntity instanceof TileEntityGenerator)
@@ -174,16 +177,16 @@ public class ItemReadoutTools extends ItemBasic
                             }
                         }
                     }
-                    else if (tileEntity instanceof IEnergyStorage)
+                    else if (tileEntity instanceof IEnergyStorage && ((IEnergyStorage) tileEntity).getMaxEnergyStored() > 0)
                     {
                         player.sendChatToPlayer(ChatMessageComponent.createFromText("RF~:" + UnitDisplay.getDisplay(((IEnergyStorage) tileEntity).getEnergyStored(), Unit.REDFLUX, 2, true) + "/" + UnitDisplay.getDisplay(((IEnergyStorage) tileEntity).getMaxEnergyStored(), Unit.REDFLUX, 2, true)));
                     }
-                    else if (tileEntity instanceof IPowerReceptor)
+                    else if (tileEntity instanceof IPowerReceptor && ((IPowerReceptor) tileEntity).getPowerReceiver(hitSide) != null && ((IPowerReceptor) tileEntity).getPowerReceiver(hitSide).getMaxEnergyStored() > 0)
                     {
                         //TODO recode for input and output
                         if (((IPowerReceptor) tileEntity).getPowerReceiver(hitSide) != null)
                         {
-                            player.sendChatToPlayer(ChatMessageComponent.createFromText("Mj~:" + ((IPowerReceptor) tileEntity).getPowerReceiver(hitSide).getEnergyStored()));
+                            player.sendChatToPlayer(ChatMessageComponent.createFromText("Mj~:" + UnitDisplay.getDisplay(((IPowerReceptor) tileEntity).getPowerReceiver(hitSide).getEnergyStored(), Unit.MINECRAFT_JOULES, 2, true) + "/" + UnitDisplay.getDisplay(((IPowerReceptor) tileEntity).getPowerReceiver(hitSide).getMaxEnergyStored(), Unit.MINECRAFT_JOULES, 2, true)));
                         }
                     }
                     //TODO add IC2 support
