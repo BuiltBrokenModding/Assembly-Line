@@ -1,6 +1,5 @@
 package com.builtbroken.assemblyline.item;
 
-import universalelectricity.api.vector.Vector3;
 import ic2.api.tile.IWrenchable;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -11,6 +10,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
+import universalelectricity.api.vector.Vector3;
 import buildcraft.api.tools.IToolWrench;
 
 import com.builtbroken.assemblyline.AssemblyLine;
@@ -33,7 +33,7 @@ public class ItemWrench extends ItemBasic implements IToolWrench, IExtraItemInfo
     }
 
     @Override
-    public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
+    public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
     {
         TileEntity tile = world.getBlockTileEntity(x, y, z);
         Block block = Block.blocksList[world.getBlockId(x, y, z)];
@@ -58,19 +58,14 @@ public class ItemWrench extends ItemBasic implements IToolWrench, IExtraItemInfo
             else if (((IWrenchable) tile).wrenchCanRemove(player))
             {
                 ItemStack output = ((IWrenchable) tile).getWrenchDrop(player);
-                if(output != null)
+                if (output != null)
                 {
                     world.setBlockToAir(x, y, z);
-                    DarksHelper.dropItemStack(world, new Vector3(x,y,z), output, false);
+                    DarksHelper.dropItemStack(world, new Vector3(x, y, z), output, false);
                 }
             }
+            return true;
         }
-        return false;
-    }
-
-    @Override
-    public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
-    {
         return false;
     }
 

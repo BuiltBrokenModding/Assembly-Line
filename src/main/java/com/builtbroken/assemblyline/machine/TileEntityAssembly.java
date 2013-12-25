@@ -166,6 +166,18 @@ public abstract class TileEntityAssembly extends TileEntityEnergyMachine impleme
     }
 
     @Override
+    public long getEnergy(ForgeDirection from)
+    {
+        return this.getEnergyStored();
+    }
+
+    @Override
+    public long getEnergyCapacity(ForgeDirection from)
+    {
+        return this.getMaxEnergyStored();
+    }
+
+    @Override
     public long getPartEnergy()
     {
         return this.energyStored;

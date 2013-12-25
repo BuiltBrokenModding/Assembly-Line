@@ -1,5 +1,6 @@
 package com.builtbroken.assemblyline.multipart;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.CompatibilityModule;
@@ -17,6 +18,8 @@ public class PartBasicWire extends PartAdvanced implements IConductor
     private IEnergyNetwork network;
 
     protected Object[] connections = new Object[6];
+
+    private long saveBuffer = 0;
 
     /** Universal Electricity conductor functions. */
     @Override
@@ -124,7 +127,7 @@ public class PartBasicWire extends PartAdvanced implements IConductor
     }
 
     @Override
-    public long getTransferCapacity()
+    public long getCurrentCapacity()
     {
         return 100000;
     }
@@ -133,5 +136,33 @@ public class PartBasicWire extends PartAdvanced implements IConductor
     public String getType()
     {
         return "assembly_line_basic_wire";
+    }
+
+    @Override
+    public long getSavedBuffer()
+    {
+        return this.saveBuffer;
+    }
+
+    @Override
+    public void setSaveBuffer(long energy)
+    {
+        this.saveBuffer = energy;
+    }
+
+    /** NBT Data */
+    @Override
+    public void load(NBTTagCompound nbt)
+    {
+        super.load(nbt);
+        this.saveBuffer = nbt.getLong("saveBuffer");
+    }
+
+    /** Writes a tile entity to NBT. */
+    @Override
+    public void save(NBTTagCompound nbt)
+    {
+        super.save(nbt);
+        nbt.setLong("saveBuffer", this.saveBuffer);
     }
 }

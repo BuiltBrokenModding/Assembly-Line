@@ -1,16 +1,19 @@
 package com.builtbroken.assemblyline.transmit;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.CompatibilityModule;
+import universalelectricity.api.UniversalClass;
 import universalelectricity.api.energy.EnergyNetworkLoader;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
 
+import com.builtbroken.assemblyline.machine.belt.TileEntityConveyor.SlantType;
 import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.helpers.ColorCode;
 import com.builtbroken.minecraft.helpers.ColorCode.IColorCoded;
@@ -23,6 +26,7 @@ import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+@UniversalClass
 public class TileEntityWire extends TileEntityAdvanced implements IConductor, ISimplePacketReceiver, IColorCoded
 {
     protected int updateTick = 1;
@@ -33,6 +37,8 @@ public class TileEntityWire extends TileEntityAdvanced implements IConductor, IS
     public TileEntity[] connections = new TileEntity[6];
 
     public byte currentAcceptorConnections = 0x00;
+
+    private long saveBuffer = 0;
 
     @Override
     public void updateEntity()
@@ -198,8 +204,36 @@ public class TileEntityWire extends TileEntityAdvanced implements IConductor, IS
     }
 
     @Override
-    public long getTransferCapacity()
+    public long getCurrentCapacity()
     {
         return 1000000;
+    }
+
+    @Override
+    public long getSavedBuffer()
+    {
+        return this.saveBuffer;
+    }
+
+    @Override
+    public void setSaveBuffer(long energy)
+    {
+        this.saveBuffer = energy;
+    }
+
+    /** NBT Data */
+    @Override
+    public void readFromNBT(NBTTagCompound nbt)
+    {
+        super.readFromNBT(nbt);
+        this.saveBuffer = nbt.getLong("saveBuffer");
+    }
+
+    /** Writes a tile entity to NBT. */
+    @Override
+    public void writeToNBT(NBTTagCompound nbt)
+    {
+        super.writeToNBT(nbt);
+        nbt.setLong("saveBuffer", this.saveBuffer);
     }
 }
