@@ -15,6 +15,14 @@
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
+            <fileset dir="${dir.development}APIs">
+				<exclude name=".git/**"/>
+				<exclude name="**/*.xml"/>
+			</fileset>
+             <fileset dir="${dir.development}Universal-Electricity/src">
+				<exclude name=".git/**"/>
+				<exclude name="**/*.xml"/>
+			</fileset>
              <fileset dir="${dir.development}Built-Broken-Lib/src">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
@@ -23,10 +31,10 @@
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
-            <fileset dir="${dir.development}APIs">
+              <fileset dir="${dir.development}CoreLibrary/dependencies">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
-			</fileset>			
+			</fileset>            			
 		</copy>
 		
 		<!-- Make all directories -->
