@@ -379,26 +379,22 @@ public class ALRecipeLoader extends RecipeLoader
 
     public static void parseOreNames(Configuration config)
     {
-        if (config.get("Ore", "processOreDictionary", true, "Scans the ore dictionary and adds other mods ore to the machine recipes").getBoolean(true))
+        if (config.get("Ore", "processOreDictionary", true, "Scans the ore dictionary and adds recipes for other mod's items").getBoolean(true))
         {
             for (EnumMaterial mat : EnumMaterial.values())
-            {                //Ingots
-                List<ItemStack> ingots = OreDictionary.getOres("ingot" + mat.simpleName);
-                ingots.addAll(OreDictionary.getOres(mat.simpleName + "ingot"));
-                //plate
-                List<ItemStack> plates = OreDictionary.getOres("plate" + mat.simpleName);
-                plates.addAll(OreDictionary.getOres(mat.simpleName + "plate"));
-                //ore
+            {
+                List<ItemStack> ingots = OreDictionary.getOres(mat.getOreName(EnumOrePart.INGOTS));
+                List<ItemStack> plates = OreDictionary.getOres(mat.getOreName(EnumOrePart.PLATES));
+                List<ItemStack> dusts = OreDictionary.getOres(mat.getOreName(EnumOrePart.DUST));
                 List<ItemStack> ores = OreDictionary.getOres("ore" + mat.simpleName);
-                ores.addAll(OreDictionary.getOres(mat.simpleName + "ore"));
-                //dust
-                List<ItemStack> dusts = OreDictionary.getOres("dust" + mat.simpleName);
-                dusts.addAll(OreDictionary.getOres(mat.simpleName + "dust"));
-                for (ItemStack du : dusts)
+                if (config.get("Ore", "OverrideDustSmelthing", true, "Forces all mods to use the same ingot for dust smelting").getBoolean(true))
                 {
-                    if (mat.shouldCreateItem(EnumOrePart.INGOTS) && config.get("Ore", "OverrideDustSmelthing", true, "Overrides other mods dust smelting so the ingots smelt as the same item.").getBoolean(true))
+                    for (ItemStack du : dusts)
                     {
-                        FurnaceRecipes.smelting().addSmelting(du.itemID, du.getItemDamage(), mat.getStack(itemMetals, EnumOrePart.INGOTS, 1), 0.6f);
+                        if (mat.shouldCreateItem(EnumOrePart.INGOTS))
+                        {
+                            FurnaceRecipes.smelting().addSmelting(du.itemID, du.getItemDamage(), mat.getStack(itemMetals, EnumOrePart.INGOTS, 1), 0.6f);
+                        }
                     }
                 }
 
@@ -414,7 +410,7 @@ public class ALRecipeLoader extends RecipeLoader
                         MachineRecipeHandler.newAltProcessorOutput(ProcessorType.CRUSHER, ing, mat.getStack(itemMetals, EnumOrePart.SCRAPS, 1));
                         MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, ing, mat.getStack(itemMetals, EnumOrePart.SCRAPS, 1));
                     }
-                    if (mat.shouldCreateItem(EnumOrePart.INGOTS))
+                    if (mat.shouldCreateItem(EnumOrePart.INGOTS) && config.get("Ore", "AddIngotConversionRecipe", true, "Creates a recipe to convert other mods ingots into AL ingots").getBoolean(true))
                     {
                         GameRegistry.addShapelessRecipe(mat.getStack(itemMetals, EnumOrePart.INGOTS, 1), new Object[] { ing });
                     }
@@ -435,14 +431,6 @@ public class ALRecipeLoader extends RecipeLoader
                         MachineRecipeHandler.newAltProcessorOutput(ProcessorType.CRUSHER, pla, mat.getStack(itemMetals, EnumOrePart.SCRAPS, 1));
 
                     }
-                    if (mat.shouldCreateItem(EnumOrePart.PLATES))
-                    {
-                        GameRegistry.addShapelessRecipe(mat.getStack(itemMetals, EnumOrePart.PLATES, 1), new Object[] { pla });
-                        if (config.get("Ore", "OverridePlateCrafting", true, "Overrides other mods metal plate crafting. As well creates new recipes for mod ingots without plate crafting.").getBoolean(true))
-                        {
-                            GameRegistry.addShapelessRecipe(mat.getStack(itemMetals, EnumOrePart.INGOTS, 4), new Object[] { pla });
-                        }
-                    }
                 }
                 for (ItemStack ore : ores)
                 {
@@ -454,7 +442,7 @@ public class ALRecipeLoader extends RecipeLoader
                     {
                         MachineRecipeHandler.newProcessorRecipe(ProcessorType.GRINDER, ore, mat.getStack(itemMetals, EnumOrePart.DUST, 1), 1, 3);
                     }
-                    if (mat.shouldCreateItem(EnumOrePart.INGOTS) && config.get("Ore", "OverrideOreSmelthing", true, "Overrides other mods smelting recipes for ingots").getBoolean(true))
+                    if (mat.shouldCreateItem(EnumOrePart.INGOTS) && config.get("Ore", "OverrideOreSmelthing", true, "Forces other mods ores to smelt as one ingot").getBoolean(true))
                     {
                         FurnaceRecipes.smelting().addSmelting(ore.itemID, ore.getItemDamage(), mat.getStack(itemMetals, EnumOrePart.INGOTS, 1), 0.6f);
                     }
