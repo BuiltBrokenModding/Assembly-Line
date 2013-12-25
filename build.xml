@@ -15,11 +15,11 @@
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
-             <fileset dir="${dir.development}Built-Broken-Lib">
+             <fileset dir="${dir.development}Built-Broken-Lib/src">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
-              <fileset dir="${dir.development}CoreLibrary">
+              <fileset dir="${dir.development}CoreLibrary/src">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>

@@ -1,9 +1,0 @@
-The Core Machine
-
-Idea
-    This originally started as a library for all my mods to share to cut down on code. As well provide a group API, and classes to work out of. The design now is to work it into a mod that provides very basic machine, item, and ore support. That way all my mods will have what they need in order to be used by the player. However, after 1.7 i plan to rework this back into a lib that will simpley be downloaded by each mod during run time. That way i remove the need for the core mod. As for the machines, ores, and items they will most likely become a mod of there own. 
-    
-Reason
-    Mainly i was running into so many issues with each mod having the same Lib files inside it. So my options were either make a lib downloader, make a coremod, or make a mod core. Since make a mod core is simplier i decided to go with that. Though i plan to later make a lib downloader to support both my own libs, and other mods libs. 
-    
-    
