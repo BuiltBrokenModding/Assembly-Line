@@ -76,7 +76,8 @@
             <fileset dir="${dir.mcp}/reobf/minecraft" includes="cofh/" />
             <fileset dir="${dir.mcp}/reobf/minecraft" includes="dan200/" />
             <fileset dir="${dir.mcp}/reobf/minecraft" includes="ic2/" />
-            <fileset dir="${dir.mcp}/reobf/minecraft" includes="universalelectricity/" />
+            <fileset dir="${dir.mcp}/reobf/minecraft" includes="universalelectricity/api/" />
+			<fileset dir="${dir.mcp}/reobf/minecraft" includes="universalelectricity/compatibility/" />
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="micdoodle8/" />
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="mffs/" />
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="org/modstats/" />
