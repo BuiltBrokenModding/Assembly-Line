@@ -110,10 +110,8 @@ public class ItemOreDirv extends ItemBasic implements IExtraItemInfo
             for (EnumOrePart part : EnumOrePart.values())
             {
                 if (mat.shouldCreateItem(part))
-                {
-                    //System.out.println(" N: " + mat.getOreName(part) + "  R:" + mat.getOreNameReverse(part));                    
+                {                    
                     OreDictionary.registerOre(mat.getOreName(part), mat.getStack(this, part, 1));
-                    OreDictionary.registerOre(mat.getOreNameReverse(part), mat.getStack(this, part, 1));
                 }
             }
         }
