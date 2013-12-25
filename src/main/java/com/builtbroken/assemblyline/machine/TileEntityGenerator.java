@@ -1,14 +1,15 @@
 package com.builtbroken.assemblyline.machine;
 
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.api.CompatibilityModule;
+import universalelectricity.api.vector.Vector3;
+import universalelectricity.api.vector.VectorHelper;
 
 import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 
 public abstract class TileEntityGenerator extends TileEntityEnergyMachine
 {
-    /** Run time left */
-    protected int burnTime = 0;
-
     public TileEntityGenerator()
     {
         super();
@@ -33,10 +34,35 @@ public abstract class TileEntityGenerator extends TileEntityEnergyMachine
             this.consumeFuel();
             if (this.isFunctioning())
             {
-                this.burnTime--;
                 this.produce();
             }
         }
+    }
+
+    @Override
+    protected void produce()
+    {
+        for (ForgeDirection direction : this.getOutputDirections())
+        {
+            if (direction != ForgeDirection.UNKNOWN)
+            {
+                TileEntity entity = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), direction);
+                if (CompatibilityModule.canConnect(entity, direction.getOpposite()))
+                {
+                    CompatibilityModule.receiveEnergy(entity, direction.getOpposite(), this.JOULES_PER_TICK, true);
+                }
+            }
+        }
+    }
+
+    @Override
+    public long onExtractEnergy(ForgeDirection from, long receive, boolean doReceive)
+    {
+        if (this.canConnect(from) && this.getOutputDirections().contains(from))
+        {
+            return Math.min(receive, this.JOULES_PER_TICK);
+        }
+        return 0;
     }
 
     @Override
@@ -45,10 +71,8 @@ public abstract class TileEntityGenerator extends TileEntityEnergyMachine
         return this.enabled && !this.isDisabled() && this.hasFuel();
     }
 
-    public boolean hasFuel()
-    {
-        return burnTime > 0;
-    }
+    /** Does this generator have fuel time left to burn */
+    public abstract boolean hasFuel();
 
     /** Called each tick to handle anything fuel related */
     public abstract void consumeFuel();
@@ -59,6 +83,18 @@ public abstract class TileEntityGenerator extends TileEntityEnergyMachine
 
     @Override
     public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
+    {
+        return 0;
+    }
+
+    @Override
+    public long getEnergy(ForgeDirection from)
+    {
+        return 0;
+    }
+
+    @Override
+    public long getEnergyCapacity(ForgeDirection from)
     {
         return 0;
     }

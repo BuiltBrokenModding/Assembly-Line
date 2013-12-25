@@ -11,7 +11,7 @@ public class TileEntitySolarPanel extends TileEntityGenerator
 {
     public TileEntitySolarPanel()
     {
-        super(0);
+        super();
     }
 
     @Override
@@ -29,10 +29,9 @@ public class TileEntitySolarPanel extends TileEntityGenerator
     @Override
     public void consumeFuel()
     {
-        this.burnTime = BlockSolarPanel.tickRate;
         if (!this.worldObj.isRemote && this.ticks % BlockSolarPanel.tickRate == 0)
         {
-
+            this.setJoulesPerSecound(0);
             if (this.worldObj.canBlockSeeTheSky(xCoord, yCoord + 1, zCoord) && !this.worldObj.provider.hasNoSky)
             {
                 if (this.worldObj.isDaytime())
@@ -40,37 +39,19 @@ public class TileEntitySolarPanel extends TileEntityGenerator
                     this.setJoulesPerTick(BlockSolarPanel.wattDay);
                     if (this.worldObj.isThundering() || this.worldObj.isRaining())
                     {
-                        this.setJoulesPerTick(BlockSolarPanel.wattStorm);
+                        this.setJoulesPerSecound(BlockSolarPanel.wattStorm);
                     }
                 }
                 else
-                {
-                    this.setJoulesPerTick(BlockSolarPanel.wattNight);
-                    if (this.worldObj.isThundering() || this.worldObj.isRaining())
+                {                    
+                    if (!this.worldObj.isThundering() && !this.worldObj.isRaining())
                     {
-                        this.setJoulesPerTick(0);
+                        this.setJoulesPerTick(BlockSolarPanel.wattNight);
                     }
                 }
-                this.setJoulesPerTick(this.JOULES_PER_TICK + this.JOULES_PER_TICK * (this.worldObj.provider instanceof ISolarLevel ? (int) ((ISolarLevel) this.worldObj.provider).getSolarEnergyMultiplier() : 0));
-            }
-            else
-            {
-                this.setJoulesPerTick(0);
-            }
+                this.setJoulesPerSecound(this.JOULES_PER_TICK + this.JOULES_PER_TICK * (this.worldObj.provider instanceof ISolarLevel ? (int) ((ISolarLevel) this.worldObj.provider).getSolarEnergyMultiplier() : 0));
+            }            
         }
-
-    }
-
-    @Override
-    public long getEnergy(ForgeDirection from)
-    {
-        return 0;
-    }
-
-    @Override
-    public long getEnergyCapacity(ForgeDirection from)
-    {
-        return 0;
-    }
+    }  
 
 }
