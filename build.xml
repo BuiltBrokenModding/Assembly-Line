@@ -89,7 +89,6 @@
 		<!-- OUTPUT LATEST JAR AND ZIP FILES -->
 		<jar destfile="output/${file.core}">
 			<fileset dir="core" />
-		</jar>		
-        <copy todir="output" file="${file.all}" />
+		</jar>
 	</target>
 </project>
