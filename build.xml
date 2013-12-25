@@ -4,7 +4,7 @@
 
 	<property file="build.properties" />
 	<property environment="env" />
-	<property name="file.core" value="AssemblyLine_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
+	<property name="file.core" value="[Unstable]AssemblyLine_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
 	<target name="build">
 		<copy todir="${dir.development}">
 			<fileset dir="../Minecraft Forge Latest/" />
