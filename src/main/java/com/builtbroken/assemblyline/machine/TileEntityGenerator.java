@@ -30,10 +30,7 @@ public abstract class TileEntityGenerator extends TileEntityEnergyMachine
         super.updateEntity();
         if (!this.worldObj.isRemote && this.enabled)
         {
-            if (this.burnTime <= 0)
-            {
-                this.consumeFuel();
-            }
+            this.consumeFuel();
             if (this.isFunctioning())
             {
                 this.burnTime--;
@@ -53,7 +50,7 @@ public abstract class TileEntityGenerator extends TileEntityEnergyMachine
         return burnTime > 0;
     }
 
-    /** Called when the burn time is bellow 10 and the machine needs to keep running */
+    /** Called each tick to handle anything fuel related */
     public abstract void consumeFuel();
 
     /* ********************************************

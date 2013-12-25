@@ -25,11 +25,13 @@ import buildcraft.api.power.IPowerReceptor;
 import cofh.api.energy.IEnergyStorage;
 
 import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.assemblyline.machine.TileEntityGenerator;
 import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.fluid.FluidHelper;
 import com.builtbroken.minecraft.interfaces.IToolReadOut;
 import com.builtbroken.minecraft.interfaces.IToolReadOut.EnumTools;
 import com.builtbroken.minecraft.prefab.ItemBasic;
+import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -159,6 +161,18 @@ public class ItemReadoutTools extends ItemBasic
                     else if (tileEntity instanceof IEnergyContainer)
                     {
                         player.sendChatToPlayer(ChatMessageComponent.createFromText("E~:" + UnitDisplay.getDisplay(((IEnergyContainer) tileEntity).getEnergy(hitSide), Unit.JOULES, 2, false) + "/" + UnitDisplay.getDisplay(((IEnergyContainer) tileEntity).getEnergyCapacity(hitSide), Unit.JOULES, 2, false)));
+                        if (tileEntity instanceof TileEntityEnergyMachine)
+                        {
+                            if (tileEntity instanceof TileEntityGenerator)
+                            {
+                                player.sendChatToPlayer(ChatMessageComponent.createFromText("E~Out:" + UnitDisplay.getDisplay(((TileEntityEnergyMachine) tileEntity).getJoulesPerTick(), Unit.JOULES, 2, true) + "/tick"));
+                            }
+                            else
+                            {
+                                player.sendChatToPlayer(ChatMessageComponent.createFromText("E~In:" + UnitDisplay.getDisplay(((TileEntityEnergyMachine) tileEntity).getJoulesPerTick(), Unit.JOULES, 2, true) + "/tick"));
+
+                            }
+                        }
                     }
                     else if (tileEntity instanceof IEnergyStorage)
                     {

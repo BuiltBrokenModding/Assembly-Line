@@ -11,13 +11,19 @@ public class TileEntitySolarPanel extends TileEntityGenerator
 {
     public TileEntitySolarPanel()
     {
-        super(0, 1);
+        super(0);
     }
 
     @Override
     public EnumSet<ForgeDirection> getOutputDirections()
     {
         return EnumSet.of(ForgeDirection.DOWN);
+    }
+
+    @Override
+    public boolean hasFuel()
+    {
+        return this.JOULES_PER_TICK > 0;
     }
 
     @Override
@@ -54,4 +60,17 @@ public class TileEntitySolarPanel extends TileEntityGenerator
         }
 
     }
+
+    @Override
+    public long getEnergy(ForgeDirection from)
+    {
+        return 0;
+    }
+
+    @Override
+    public long getEnergyCapacity(ForgeDirection from)
+    {
+        return 0;
+    }
+
 }
