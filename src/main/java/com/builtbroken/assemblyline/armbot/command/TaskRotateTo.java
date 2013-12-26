@@ -26,7 +26,12 @@ public class TaskRotateTo extends TaskBaseArmbot
 
     public TaskRotateTo(int yaw, int pitch)
     {
-        super("RotateTo");
+        this("RotateTo", yaw, pitch);
+    }
+
+    public TaskRotateTo(String string, int yaw, int pitch)
+    {
+        super(string);
         this.args.add(new ArgumentIntData("yaw", yaw, 360, 0));
         this.args.add(new ArgumentIntData("pitch", pitch, 360, 0));
         this.UV = new Vector2(100, 80);
@@ -52,7 +57,7 @@ public class TaskRotateTo extends TaskBaseArmbot
             ((IArmbot) this.program.getMachine()).moveArmTo(this.targetRotationYaw, this.targetRotationPitch);
             int deltaYaw = Math.abs(((IArmbot) this.program.getMachine()).getRotation().intY() - this.targetRotationPitch);
             int deltaPitch = Math.abs(((IArmbot) this.program.getMachine()).getRotation().intX() - this.targetRotationYaw);
-            return deltaYaw > 0 && deltaPitch > 0 ? ProcessReturn.CONTINUE : ProcessReturn.DONE;
+            return deltaYaw != 0 && deltaPitch != 0 ? ProcessReturn.CONTINUE : ProcessReturn.DONE;
         }
         return ProcessReturn.GENERAL_ERROR;
     }

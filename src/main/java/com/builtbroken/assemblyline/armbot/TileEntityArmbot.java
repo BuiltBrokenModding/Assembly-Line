@@ -21,7 +21,9 @@ import com.builtbroken.assemblyline.ALRecipeLoader;
 import com.builtbroken.assemblyline.api.IArmbot;
 import com.builtbroken.assemblyline.api.coding.IProgram;
 import com.builtbroken.assemblyline.api.coding.ProgramHelper;
+import com.builtbroken.assemblyline.armbot.command.TaskDrop;
 import com.builtbroken.assemblyline.armbot.command.TaskGOTO;
+import com.builtbroken.assemblyline.armbot.command.TaskGrabItem;
 import com.builtbroken.assemblyline.armbot.command.TaskReturn;
 import com.builtbroken.assemblyline.armbot.command.TaskRotateBy;
 import com.builtbroken.assemblyline.armbot.command.TaskRotateTo;
@@ -69,9 +71,11 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
         super(20);
         programHelper = new ProgramHelper(this).setMemoryLimit(20);
         Program program = new Program();
-        program.setTaskAt(0, 0, new TaskRotateTo(90, 0));
-        program.setTaskAt(0, 1, new TaskReturn());
-        program.setTaskAt(0, 2, new TaskGOTO(0, 0));
+        program.setTaskAt(0, 0, new TaskDrop());
+        program.setTaskAt(0, 1, new TaskRotateTo(180, 0));
+        program.setTaskAt(0, 2, new TaskGrabItem());
+        program.setTaskAt(0, 3, new TaskReturn());
+        program.setTaskAt(0, 4, new TaskGOTO(0, 0));
         programHelper.setProgram(program);
     }
 

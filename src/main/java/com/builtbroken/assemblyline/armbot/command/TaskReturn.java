@@ -1,36 +1,12 @@
 package com.builtbroken.assemblyline.armbot.command;
 
-import com.builtbroken.assemblyline.armbot.TaskBaseArmbot;
 import com.builtbroken.assemblyline.armbot.TaskBaseProcess;
 
-public class TaskReturn extends TaskBaseArmbot
+public class TaskReturn extends TaskRotateTo
 {
-    public static final float IDLE_ROTATION_PITCH = 0;
-    public static final float IDLE_ROTATION_YAW = 0;
-
-    private TaskRotateTo rotateToCommand;
-
     public TaskReturn()
     {
-        super("Return");
-    }
-
-    @Override
-    public ProcessReturn onUpdate()
-    {
-        if (this.rotateToCommand == null)
-        {
-            this.rotateToCommand = new TaskRotateTo(0, 0);
-            this.rotateToCommand.setProgram(this.program);
-            this.rotateToCommand.onMethodCalled();
-        }
-        return this.rotateToCommand.onUpdate();
-    }
-
-    @Override
-    public void terminated()
-    {
-        this.rotateToCommand.terminated();
+        super("Return", 0, 0);
     }
 
     @Override
