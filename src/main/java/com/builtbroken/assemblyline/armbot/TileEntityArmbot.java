@@ -41,7 +41,7 @@ import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
 import dan200.computer.api.IPeripheral;
 
-public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IArmbot, IPeripheral
+public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IArmbot
 {
     protected final float ROTATION_SPEED = 2.0f;
 
@@ -78,6 +78,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     @Override
     public void updateEntity()
     {
+        System.out.println("Armbot update");
         super.updateEntity();
         Vector3 handPosition = this.getHandPos();
         if (this.location == null || !this.location.left().equals(this.worldObj) || this.xCoord != this.location.right().intX() || this.yCoord != this.location.right().intY() || this.zCoord != this.location.right().intZ())
@@ -105,6 +106,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
         if (this.isFunctioning())
         {
+            System.out.println("Is functioning");
             if (!this.worldObj.isRemote)
             {
                 this.updateLogic();
@@ -121,6 +123,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
     public void updateLogic()
     {
+        System.out.println("Armbot updating logic");
         if (this.programHelper == null)
         {
             this.programHelper = new ProgramHelper(this);
@@ -361,48 +364,6 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     {
         this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, 0, 0, 3);
         this.worldObj.setBlock(this.xCoord, this.yCoord + 1, this.zCoord, 0, 0, 3);
-    }
-
-    @Override
-    public String getType()
-    {
-        return "Armbot";
-    }
-
-    @Override
-    public String[] getMethodNames()
-    {
-        return new String[] { "rotateBy", "rotateTo", "grab", "drop", "reset", "isWorking", "touchingEntity", "use", "fire", "return", "clear", "isHolding" };
-    }
-
-    @Override
-    public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
-    {
-        return null;
-    }
-
-    @Override
-    public boolean canAttachToSide(int side)
-    {
-        return side != ForgeDirection.UP.ordinal();
-    }
-
-    @Override
-    public void attach(IComputerAccess computer)
-    {
-        synchronized (connectedComputers)
-        {
-            connectedComputers.add(computer);
-        }
-    }
-
-    @Override
-    public void detach(IComputerAccess computer)
-    {
-        synchronized (connectedComputers)
-        {
-            connectedComputers.remove(computer);
-        }
     }
 
     @Override
