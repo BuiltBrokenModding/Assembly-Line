@@ -347,10 +347,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     @Override
     public void onCreate(Vector3 placedPosition)
     {
-        if (DarkCore.multiBlock instanceof BlockMulti)
-        {
-            DarkCore.multiBlock.makeFakeBlock(this.worldObj, Vector3.translate(placedPosition, new Vector3(0, 1, 0)), placedPosition);
-        }
+        DarkCore.multiBlock.makeFakeBlock(this.worldObj, Vector3.translate(placedPosition, new Vector3(0, 1, 0)), new Vector3(this));
     }
 
     @Override
@@ -363,7 +360,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     @Override
     public String getType()
     {
-        return "ArmBot";
+        return "Armbot";
     }
 
     @Override

@@ -6,16 +6,20 @@ import java.util.Set;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.Vector3;
 
+import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.blocks.BlockAssembly;
 import com.builtbroken.assemblyline.client.render.BlockRenderingHandler;
 import com.builtbroken.assemblyline.client.render.RenderArmbot;
 import com.builtbroken.common.Pair;
+import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.interfaces.IMultiBlock;
 
 import cpw.mods.fml.relauncher.Side;
@@ -26,6 +30,7 @@ public class BlockArmbot extends BlockAssembly
     public BlockArmbot()
     {
         super("armbot", UniversalElectricity.machine);
+        DarkCore.requestMultiBlock(AssemblyLine.MOD_ID);
     }
 
     @Override
@@ -65,6 +70,12 @@ public class BlockArmbot extends BlockAssembly
         this.dropBlockAsItem_do(world, x, y, z, new ItemStack(this));
 
         super.breakBlock(world, x, y, z, par5, par6);
+    }
+
+    @Override
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+    {
+        return new ItemStack(this);
     }
 
     @Override
