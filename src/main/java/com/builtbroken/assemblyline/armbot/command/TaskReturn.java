@@ -23,7 +23,6 @@ public class TaskReturn extends TaskBaseArmbot
             this.rotateToCommand = new TaskRotateTo(0, 0);
             this.rotateToCommand.onMethodCalled();
         }
-
         return this.rotateToCommand.onUpdate();
     }
 

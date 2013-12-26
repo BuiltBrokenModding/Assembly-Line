@@ -23,7 +23,7 @@ public class Program implements IProgram
     protected HashMap<Vector2, ITask> tasks = new HashMap();
     protected HashMap<String, Object> varables = new HashMap();
     protected int width = 0, hight = 0;
-    boolean started = false, editing = false;
+    boolean editing = false;
 
     @Override
     public void init(IProgrammableMachine machine)
@@ -75,10 +75,15 @@ public class Program implements IProgram
     @Override
     public ITask getNextTask()
     {
-        if (!started)
+        if (this.currentTask != null)
         {
-            this.currentTask = this.getTaskAt(currentPos.intX(), currentPos.intY());
-            this.currentPos.add(new Vector2(1, 0));
+            this.currentTask.reset();
+        }
+        this.currentTask = this.getTaskAt(currentPos.intX(), currentPos.intY());
+        this.currentPos.add(new Vector2(0, 1));
+        if (this.currentTask != null)
+        {
+            this.currentTask.refresh();
         }
         return this.currentTask;
     }

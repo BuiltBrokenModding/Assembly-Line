@@ -48,7 +48,7 @@ public class ProgramHelper
             }
             if (this.currentTask != null)
             {
-                System.out.println("[ProgramHelper]Updating task:"+this.currentTask.toString());
+                System.out.println("[ProgramHelper]Updating task:" + this.currentTask.toString());
                 if (!this.hasTaskBeenCalled)
                 {
                     System.out.println("[ProgramHelper]First task update");
@@ -86,24 +86,13 @@ public class ProgramHelper
         return re;
     }
 
+    /** Gets the next task from the program */
     public void nextTask()
     {
         System.out.println("[ProgramHelper]Getting next task");
         this.hasTaskBeenCalled = false;
         this.nextTask = false;
-        //Tell old task to clear itself
-        if (this.currentTask != null)
-        {
-            this.currentTask.reset();
-        }
-        //Set the new task as the current
         this.currentTask = program.getNextTask();
-        //tell the new task to refresh and be ready
-        if (this.currentTask != null)
-        {
-            this.currentTask.refresh();
-        }
-
     }
 
     public ProgramHelper setMemoryLimit(int varableLimit)
