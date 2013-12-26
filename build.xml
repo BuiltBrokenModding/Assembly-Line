@@ -83,8 +83,7 @@
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="org/modstats/" />
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="icbm/" />
             <fileset dir="${dir.development}resources" excludes=".git/**" />
-			<fileset dir="${dir.mcp}" includes="resources/" />
-			<fileset dir="${dir.mcp}" includes="CoreLibrary/resources/" />
+			<fileset dir="${dir.development}CoreLibrary/resources" excludes=".git/**" />
 		</copy>
         <copy todir="output" file="LICENSE.txt" />
         <copy todir="output" file="build.properties" />
