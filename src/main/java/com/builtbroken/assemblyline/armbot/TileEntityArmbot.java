@@ -47,11 +47,11 @@ import dan200.computer.api.IPeripheral;
 
 public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IArmbot
 {
-    protected final float ROTATION_SPEED = 2.0f;
+    protected int ROTATION_SPEED = 2;
 
     /** The rotation of the arms. In Degrees. */
-    protected float rotationPitch = 0, rotationYaw = 0;
-    protected float actualPitch = 0, actualYaw = 0;
+    protected int rotationPitch = 0, rotationYaw = 0;
+    protected int actualPitch = 0, actualYaw = 0;
 
     protected boolean spawnEntity = false;
 
@@ -154,7 +154,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
             this.actualYaw += speedYaw;
 
-            this.rotationYaw = MathHelper.clampAngleTo360(this.rotationYaw);
+            this.rotationYaw = (int) MathHelper.clampAngleTo360(this.rotationYaw);
 
             if (this.ticks % 5 == 0 && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
             {
@@ -162,7 +162,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
                 this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "mods.assemblyline.conveyor", 0.4f, 1.7f, true);
             }
 
-            if (Math.abs(this.actualYaw - this.rotationYaw) < this.ROTATION_SPEED + 0.1f)
+            if (Math.abs(this.actualYaw - this.rotationYaw) < this.ROTATION_SPEED)
             {
                 this.actualYaw = this.rotationYaw;
             }
@@ -187,26 +187,21 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
             this.actualPitch += speedPitch;
 
-            this.rotationPitch = MathHelper.clampAngle(this.rotationPitch, 0, 60);
+            this.rotationPitch = (int) MathHelper.clampAngle(this.rotationPitch, 0, 60);
 
             if (this.ticks % 4 == 0 && this.worldObj.isRemote)
             {
                 this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "mods.assemblyline.conveyor", 2f, 2.5f, true);
             }
 
-            if (Math.abs(this.actualPitch - this.rotationPitch) < this.ROTATION_SPEED + 0.1f)
+            if (Math.abs(this.actualPitch - this.rotationPitch) < this.ROTATION_SPEED)
             {
                 this.actualPitch = this.rotationPitch;
             }
-
-            for (Entity e : (ArrayList<Entity>) this.worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord + 2, this.zCoord, this.xCoord + 1, this.yCoord + 3, this.zCoord + 1)))
-            {
-                e.rotationPitch = this.actualPitch;
-            }
         }
 
-        this.rotationYaw = MathHelper.clampAngleTo360(this.rotationYaw);
-        this.rotationPitch = MathHelper.clampAngle(this.rotationPitch, 0, 60);
+        this.rotationYaw = (int) MathHelper.clampAngleTo360(this.rotationYaw);
+        this.rotationPitch = (int) MathHelper.clampAngle(this.rotationPitch, 0, 60);
     }
 
     @Override
@@ -261,8 +256,10 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     {
         super.readFromNBT(nbt);
 
-        this.rotationYaw = nbt.getFloat("yaw");
-        this.rotationPitch = nbt.getFloat("pitch");
+        this.rotationYaw = nbt.getInteger("armYaw");
+        this.rotationPitch = nbt.getInteger("armPitch");
+        this.actualYaw = nbt.getInteger("armYawActual");
+        this.actualPitch = nbt.getInteger("armPitchActual");
 
         if (nbt.hasKey("grabbedEntity"))
         {
@@ -289,8 +286,10 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     {
         super.writeToNBT(nbt);
 
-        nbt.setFloat("yaw", this.rotationYaw);
-        nbt.setFloat("pitch", this.rotationPitch);
+        nbt.setInteger("armYaw", this.rotationYaw);
+        nbt.setInteger("armPitch", this.rotationPitch);
+        nbt.setInteger("armYawActual", this.actualYaw);
+        nbt.setInteger("armPitchActual", this.actualPitch);
 
         if (this.grabbedObject instanceof Entity)
         {
@@ -331,16 +330,16 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
                 if (id.equalsIgnoreCase("armbot"))
                 {
                     this.functioning = dis.readBoolean();
-                    this.rotationYaw = dis.readFloat();
-                    this.rotationPitch = dis.readFloat();
+                    this.rotationYaw = dis.readInt();
+                    this.rotationPitch = dis.readInt();
                     return true;
                 }
                 else if (id.equalsIgnoreCase("arbotRotation"))
                 {
-                    this.rotationYaw = dis.readFloat();
-                    this.rotationPitch = dis.readFloat();
-                    this.actualYaw = dis.readFloat();
-                    this.actualPitch = dis.readFloat();
+                    this.rotationYaw = dis.readInt();
+                    this.rotationPitch = dis.readInt();
+                    this.actualYaw = dis.readInt();
+                    this.actualPitch = dis.readInt();
                     return true;
                 }
             }
@@ -459,8 +458,8 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     {
         if (!this.worldObj.isRemote)
         {
-            this.actualYaw = yaw;
-            this.actualPitch = pitch;
+            this.actualYaw = (int) yaw;
+            this.actualPitch = (int) pitch;
         }
 
     }
@@ -470,8 +469,8 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     {
         if (!this.worldObj.isRemote)
         {
-            this.rotationYaw = yaw;
-            this.rotationPitch = pitch;
+            this.rotationYaw = (int) yaw;
+            this.rotationPitch = (int) pitch;
             return true;
         }
         return false;

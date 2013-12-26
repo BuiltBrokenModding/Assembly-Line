@@ -12,7 +12,7 @@ import com.builtbroken.assemblyline.armbot.TaskBaseProcess;
 import com.builtbroken.common.science.units.UnitHelper;
 import com.builtbroken.minecraft.helpers.MathHelper;
 
-/** Rotates the armbot to a specific direction. If not specified, it will turn right.
+/** Rotates the armbot to a specific direction.
  * 
  * @author DarkGuardsman */
 public class TaskRotateTo extends TaskBaseArmbot
@@ -55,9 +55,9 @@ public class TaskRotateTo extends TaskBaseArmbot
         if (super.onUpdate() == ProcessReturn.CONTINUE)
         {
             ((IArmbot) this.program.getMachine()).moveArmTo(this.targetRotationYaw, this.targetRotationPitch);
-            int deltaYaw = Math.abs(((IArmbot) this.program.getMachine()).getRotation().intY() - this.targetRotationPitch);
-            int deltaPitch = Math.abs(((IArmbot) this.program.getMachine()).getRotation().intX() - this.targetRotationYaw);
-            return deltaYaw != 0 && deltaPitch != 0 ? ProcessReturn.CONTINUE : ProcessReturn.DONE;
+            int deltaYaw = (int) MathHelper.shortestAngleTo360(((IArmbot) this.program.getMachine()).getRotation().intX(), this.targetRotationYaw);
+            int deltaPitch = (int) MathHelper.shortestAngleTo360(((IArmbot) this.program.getMachine()).getRotation().intY(), this.targetRotationPitch);
+            return deltaYaw == 0 && deltaPitch == 0 ? ProcessReturn.CONTINUE : ProcessReturn.DONE;
         }
         return ProcessReturn.GENERAL_ERROR;
     }
