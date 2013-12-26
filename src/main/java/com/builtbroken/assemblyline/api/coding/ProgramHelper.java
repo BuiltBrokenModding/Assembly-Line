@@ -47,7 +47,6 @@ public class ProgramHelper
             }
             if (this.currentTask != null)
             {
-                System.out.println("[ProgramHelper]Updating task:" + this.currentTask.toString());
                 if (!this.hasTaskBeenCalled)
                 {
                     this.hasTaskBeenCalled = true;

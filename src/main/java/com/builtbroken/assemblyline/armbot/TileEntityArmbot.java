@@ -104,8 +104,6 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
             float preYaw = this.targetYaw, prePitch = this.targetPitch;
             if (!this.worldObj.isRemote && this.ticks % 10 == 0)
             {
-                System.out.println("ArmbotTargetRotation Yaw:" + this.targetYaw + " Pitch:" + this.targetPitch);
-                System.out.println("ArmbotActualRotation Yaw:" + this.actualYaw + " Pitch:" + this.actualPitch);
                 this.programHelper.onUpdate(this.worldObj, new Vector3(this));
                 if (this.targetYaw != preYaw || this.targetPitch != prePitch)
                 {
