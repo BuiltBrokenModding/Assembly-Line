@@ -311,8 +311,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
         }
         else
         {
-            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(this.getChannel(), "armbotItem", this, false, ((ItemStack) this.grabbedObject).writeToNBT(new NBTTagCompound())), worldObj, new Vector3(this), 64);
-
+            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(this.getChannel(), "armbotItem", this, false), worldObj, new Vector3(this), 64);
         }
     }
 
@@ -410,11 +409,10 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
             {
                 Vector3 handPosition = this.getHandPos();
                 DarksHelper.dropItemStack(worldObj, handPosition, (ItemStack) this.getHeldObject(), false);
-                this.sendGrabItemToClient();
             }
             this.grabbedObject = null;
+            this.sendGrabItemToClient();
             return true;
-
         }
         return false;
     }
