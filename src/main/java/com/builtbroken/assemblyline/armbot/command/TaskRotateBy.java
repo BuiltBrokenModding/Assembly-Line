@@ -30,6 +30,13 @@ public class TaskRotateBy extends TaskBaseArmbot
         this.UV = new Vector2(80, 80);
     }
 
+    public TaskRotateBy(float yaw, float pitch)
+    {
+        this();
+        this.setArg("yaw", yaw);
+        this.setArg("pitch", pitch);
+    }
+
     @Override
     public ProcessReturn onMethodCalled()
     {

@@ -21,6 +21,8 @@ import com.builtbroken.assemblyline.ALRecipeLoader;
 import com.builtbroken.assemblyline.api.IArmbot;
 import com.builtbroken.assemblyline.api.coding.IProgram;
 import com.builtbroken.assemblyline.api.coding.ProgramHelper;
+import com.builtbroken.assemblyline.armbot.command.TaskReturn;
+import com.builtbroken.assemblyline.armbot.command.TaskRotateBy;
 import com.builtbroken.assemblyline.machine.TileEntityAssembly;
 import com.builtbroken.assemblyline.machine.encoder.ItemDisk;
 import com.builtbroken.common.Pair;
@@ -30,7 +32,6 @@ import com.builtbroken.minecraft.helpers.DarksHelper;
 import com.builtbroken.minecraft.helpers.MathHelper;
 import com.builtbroken.minecraft.interfaces.IMultiBlock;
 import com.builtbroken.minecraft.network.PacketHandler;
-import com.builtbroken.minecraft.prefab.BlockMulti;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -68,6 +69,10 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     {
         super(20);
         programHelper = new ProgramHelper(this).setMemoryLimit(20);
+        Program program = new Program();
+        program.setTaskAt(0, 0, new TaskRotateBy(90, 0));
+        program.setTaskAt(0, 1, new TaskReturn());
+        programHelper.setProgram(program);
     }
 
     @Override
@@ -102,6 +107,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
         {
             if (!this.worldObj.isRemote)
             {
+                this.updateLogic();
                 float preYaw = this.rotationYaw, prePitch = this.rotationPitch;
                 this.updateLogic();
                 if (this.rotationYaw != preYaw || this.rotationPitch != prePitch)
