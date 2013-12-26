@@ -17,7 +17,7 @@ import com.builtbroken.minecraft.tilenetwork.prefab.NetworkTileEntities;
 
 /** A class to be inherited by all machines on the assembly line. This class acts as a single peace
  * in a network of similar tiles allowing all to share power from one or more sources
- *
+ * 
  * @author DarkGuardsman */
 public abstract class TileEntityAssembly extends TileEntityEnergyMachine implements INetworkEnergyPart
 {
@@ -47,11 +47,7 @@ public abstract class TileEntityAssembly extends TileEntityEnergyMachine impleme
     @Override
     public void invalidate()
     {
-        NetworkTileEntities.invalidate(this);
-        if (this.getTileNetwork() != null)
-        {
-            this.getTileNetwork().splitNetwork(this);
-        }
+        this.getTileNetwork().splitNetwork(this);
         super.invalidate();
     }
 
@@ -103,7 +99,7 @@ public abstract class TileEntityAssembly extends TileEntityEnergyMachine impleme
     @Override
     public NetworkAssembly getTileNetwork()
     {
-        if (this.assemblyNetwork == null)
+        if (!(this.assemblyNetwork instanceof NetworkAssembly))
         {
             this.assemblyNetwork = new NetworkAssembly(this);
         }
@@ -141,6 +137,7 @@ public abstract class TileEntityAssembly extends TileEntityEnergyMachine impleme
         return 1;//1J/t or 20J/t
     }
 
+    /** Conditional load that may not be consumed per tick */
     public int getExtraLoad()
     {
         return 1;//1J/t or 20J/t

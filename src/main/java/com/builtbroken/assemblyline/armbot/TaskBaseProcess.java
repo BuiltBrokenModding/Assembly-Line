@@ -26,7 +26,6 @@ public abstract class TaskBaseProcess extends TaskBase implements IProcessTask
         {
             return ProcessReturn.CONTINUE;
         }
-
         return ProcessReturn.GENERAL_ERROR;
     }
 

@@ -22,19 +22,17 @@ public class TaskRotateBy extends TaskBaseArmbot
 
     private TaskRotateTo rotateToCommand;
 
-    public TaskRotateBy()
+    public TaskRotateBy(int yaw, int pitch)
     {
         super("RotateBy");
-        this.args.add(new ArgumentIntData("yaw", 0, 360, 0));
-        this.args.add(new ArgumentIntData("pitch", 0, 360, 0));
+        this.args.add(new ArgumentIntData("yaw", yaw, 360, 0));
+        this.args.add(new ArgumentIntData("pitch", pitch, 360, 0));
         this.UV = new Vector2(80, 80);
     }
 
-    public TaskRotateBy(float yaw, float pitch)
+    public TaskRotateBy()
     {
-        this();
-        this.setArg("yaw", yaw);
-        this.setArg("pitch", pitch);
+        this(0, 0);
     }
 
     @Override
@@ -42,10 +40,8 @@ public class TaskRotateBy extends TaskBaseArmbot
     {
         if (super.onMethodCalled() == ProcessReturn.CONTINUE)
         {
-
             this.targetRotationYaw = (int) MathHelper.clampAngleTo360((float) (((IArmbot) this.program.getMachine()).getRotation().x + UnitHelper.tryToParseInt(this.getArg("yaw"))));
-            this.targetRotationYaw = (int) MathHelper.clampAngleTo360((float) (((IArmbot) this.program.getMachine()).getRotation().x + UnitHelper.tryToParseInt(this.getArg("pitch"))));
-
+            this.targetRotationPitch = (int) MathHelper.clampAngleTo360((float) (((IArmbot) this.program.getMachine()).getRotation().x + UnitHelper.tryToParseInt(this.getArg("pitch"))));
             return ProcessReturn.CONTINUE;
         }
         return ProcessReturn.GENERAL_ERROR;
@@ -57,6 +53,7 @@ public class TaskRotateBy extends TaskBaseArmbot
         if (this.rotateToCommand == null)
         {
             this.rotateToCommand = new TaskRotateTo(this.targetRotationYaw, this.targetRotationPitch);
+            this.rotateToCommand.setProgram(this.program);
             this.rotateToCommand.onMethodCalled();
         }
 

@@ -21,6 +21,7 @@ import com.builtbroken.assemblyline.ALRecipeLoader;
 import com.builtbroken.assemblyline.api.IArmbot;
 import com.builtbroken.assemblyline.api.coding.IProgram;
 import com.builtbroken.assemblyline.api.coding.ProgramHelper;
+import com.builtbroken.assemblyline.armbot.command.TaskGOTO;
 import com.builtbroken.assemblyline.armbot.command.TaskReturn;
 import com.builtbroken.assemblyline.armbot.command.TaskRotateBy;
 import com.builtbroken.assemblyline.machine.TileEntityAssembly;
@@ -49,20 +50,17 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     protected float rotationPitch = 0, rotationYaw = 0;
     protected float actualPitch = 0, actualYaw = 0;
 
-    protected boolean hasTask = false;
     protected boolean spawnEntity = false;
 
     protected String displayText = "";
 
     /** An entity that the Armbot is grabbed onto. Entity Items are held separately. */
     protected Object grabbedObject = null;
-
-    protected List<IComputerAccess> connectedComputers = new ArrayList<IComputerAccess>();
-
+    /** Helper class that does all the logic for the armbot's program */
     protected ProgramHelper programHelper;
-
+    /** Cached location of the armbot to feed to program tasks */
     protected Pair<World, Vector3> location;
-
+    /** Var used by the armbot renderer */
     public EntityItem renderEntityItem;
 
     public TileEntityArmbot()
@@ -72,13 +70,15 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
         Program program = new Program();
         program.setTaskAt(0, 0, new TaskRotateBy(90, 0));
         program.setTaskAt(0, 1, new TaskReturn());
+        program.setTaskAt(0, 1, new TaskGOTO(0, 0));
         programHelper.setProgram(program);
     }
+
+    /************************************ Armbot logic update methods *************************************/
 
     @Override
     public void updateEntity()
     {
-        System.out.println("Armbot update");
         super.updateEntity();
         Vector3 handPosition = this.getHandPos();
         if (this.location == null || !this.location.left().equals(this.worldObj) || this.xCoord != this.location.right().intX() || this.yCoord != this.location.right().intY() || this.zCoord != this.location.right().intZ())
@@ -106,12 +106,10 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
         if (this.isFunctioning())
         {
-            System.out.println("Is functioning");
             if (!this.worldObj.isRemote)
             {
-                this.updateLogic();
+                this.programHelper.onUpdate(this.worldObj, new Vector3(this));
                 float preYaw = this.rotationYaw, prePitch = this.rotationPitch;
-                this.updateLogic();
                 if (this.rotationYaw != preYaw || this.rotationPitch != prePitch)
                 {
                     this.sendRotationPacket();
@@ -119,16 +117,6 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
             }
             this.updateRotation();
         }
-    }
-
-    public void updateLogic()
-    {
-        System.out.println("Armbot updating logic");
-        if (this.programHelper == null)
-        {
-            this.programHelper = new ProgramHelper(this);
-        }
-        this.programHelper.onUpdate(this.worldObj, new Vector3(this));
     }
 
     public void updateRotation()
@@ -227,6 +215,41 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
         return this.displayText;
     }
 
+    @Override
+    public boolean onActivated(EntityPlayer player)
+    {
+        ItemStack containingStack = this.getStackInSlot(0);
+
+        if (containingStack != null)
+        {
+            if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+            {
+                EntityItem dropStack = new EntityItem(this.worldObj, player.posX, player.posY, player.posZ, containingStack);
+                dropStack.delayBeforeCanPickup = 0;
+                this.worldObj.spawnEntityInWorld(dropStack);
+            }
+
+            this.setInventorySlotContents(0, null);
+            return true;
+        }
+        else
+        {
+            if (player.getCurrentEquippedItem() != null)
+            {
+                if (player.getCurrentEquippedItem().getItem() instanceof ItemDisk)
+                {
+                    this.setInventorySlotContents(0, player.getCurrentEquippedItem());
+                    player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /************************************ Save and load code *************************************/
+
     /** NBT Data */
     @Override
     public void readFromNBT(NBTTagCompound nbt)
@@ -280,6 +303,8 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
     }
 
+    /************************************ Network Packet code *************************************/
+
     @Override
     public Packet getDescriptionPacket()
     {
@@ -320,38 +345,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
         return false;
     }
 
-    @Override
-    public boolean onActivated(EntityPlayer player)
-    {
-        ItemStack containingStack = this.getStackInSlot(0);
-
-        if (containingStack != null)
-        {
-            if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-            {
-                EntityItem dropStack = new EntityItem(this.worldObj, player.posX, player.posY, player.posZ, containingStack);
-                dropStack.delayBeforeCanPickup = 0;
-                this.worldObj.spawnEntityInWorld(dropStack);
-            }
-
-            this.setInventorySlotContents(0, null);
-            return true;
-        }
-        else
-        {
-            if (player.getCurrentEquippedItem() != null)
-            {
-                if (player.getCurrentEquippedItem().getItem() instanceof ItemDisk)
-                {
-                    this.setInventorySlotContents(0, player.getCurrentEquippedItem());
-                    player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
+    /************************************ Multi Block code *************************************/
 
     @Override
     public void onCreate(Vector3 placedPosition)
@@ -366,6 +360,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
         this.worldObj.setBlock(this.xCoord, this.yCoord + 1, this.zCoord, 0, 0, 3);
     }
 
+    /************************************ Armbot API methods *************************************/
     @Override
     public Object getGrabbedObject()
     {
@@ -414,28 +409,6 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
         }
         return false;
-    }
-
-    @Override
-    public boolean canConnect(ForgeDirection direction)
-    {
-        return direction == ForgeDirection.DOWN;
-    }
-
-    @Override
-    public boolean isInvNameLocalized()
-    {
-        return false;
-    }
-
-    @Override
-    public int getWattLoad()
-    {
-        if (this.hasTask)
-        {
-            return 40;
-        }
-        return 3;
     }
 
     @Override
