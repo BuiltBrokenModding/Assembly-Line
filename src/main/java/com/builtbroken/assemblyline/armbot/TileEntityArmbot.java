@@ -107,7 +107,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
                 this.programHelper.onUpdate(this.worldObj, new Vector3(this));
                 if (this.targetYaw != preYaw || this.targetPitch != prePitch)
                 {
-                    this.sendRotationPacket();
+                    PacketHandler.instance().sendPacketToClients(this.getDescriptionPacket(), worldObj, new Vector3(this).translate(new Vector3(.5f, 1f, .5f)), 64);
                 }
             }
             this.updateRotation();
@@ -302,11 +302,6 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
         return PacketHandler.instance().getTilePacket(this.getChannel(), "armbot", this, this.functioning, this.targetYaw, this.targetPitch, this.actualYaw, this.actualPitch);
     }
 
-    public void sendRotationPacket()
-    {
-        PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(this.getChannel(), "arbotRotation", this, this.targetYaw, this.targetPitch, this.actualYaw, this.actualPitch), worldObj, new Vector3(this).translate(new Vector3(.5f, 1f, .5f)), 40);
-    }
-
     @Override
     public boolean simplePacket(String id, ByteArrayDataInput dis, Player player)
     {
@@ -317,14 +312,6 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
                 if (id.equalsIgnoreCase("armbot"))
                 {
                     this.functioning = dis.readBoolean();
-                    this.targetYaw = dis.readInt();
-                    this.targetPitch = dis.readInt();
-                    this.actualYaw = dis.readInt();
-                    this.actualPitch = dis.readInt();
-                    return true;
-                }
-                else if (id.equalsIgnoreCase("arbotRotation"))
-                {
                     this.targetYaw = dis.readInt();
                     this.targetPitch = dis.readInt();
                     this.actualYaw = dis.readInt();
