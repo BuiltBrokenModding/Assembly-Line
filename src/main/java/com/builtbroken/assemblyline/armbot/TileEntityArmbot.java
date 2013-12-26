@@ -63,9 +63,11 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
         super(20);
         programHelper = new ProgramHelper(this).setMemoryLimit(20);
         Program program = new Program();
-        program.setTaskAt(0, 0, new TaskRotateTo(180, 0));
-        program.setTaskAt(0, 1, new TaskReturn());
-        program.setTaskAt(0, 2, new TaskGOTO(0, 0));
+        program.setTaskAt(0, 0, new TaskDrop());
+        program.setTaskAt(0, 1, new TaskRotateTo(180, 0));
+        program.setTaskAt(0, 2, new TaskGrabItem());
+        program.setTaskAt(0, 3, new TaskReturn());
+        program.setTaskAt(0, 4, new TaskGOTO(0, 0));
         programHelper.setProgram(program);
     }
 
@@ -255,6 +257,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
             if (entity != null)
             {
                 this.grabbedObject = entity;
+                this.spawnEntity = true;
             }
         }
         else if (nbt.hasKey("grabbedItem"))
@@ -287,9 +290,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
         }
         else if (this.grabbedObject instanceof ItemStack)
         {
-            NBTTagCompound itemTag = new NBTTagCompound();
-            ((Entity) this.grabbedObject).writeToNBT(itemTag);
-            nbt.setCompoundTag("grabbedItem", itemTag);
+            nbt.setCompoundTag("grabbedItem", ((ItemStack) this.grabbedObject).writeToNBT(new NBTTagCompound()));
         }
 
     }
@@ -300,6 +301,19 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     public Packet getDescriptionPacket()
     {
         return PacketHandler.instance().getTilePacket(this.getChannel(), "armbot", this, this.functioning, this.targetYaw, this.targetPitch, this.actualYaw, this.actualPitch);
+    }
+
+    public void sendGrabItemToClient()
+    {
+        if (this.grabbedObject instanceof ItemStack)
+        {
+            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(this.getChannel(), "armbotItem", this, true, ((ItemStack) this.grabbedObject).writeToNBT(new NBTTagCompound())), worldObj, new Vector3(this), 64);
+        }
+        else
+        {
+            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(this.getChannel(), "armbotItem", this, false, ((ItemStack) this.grabbedObject).writeToNBT(new NBTTagCompound())), worldObj, new Vector3(this), 64);
+
+        }
     }
 
     @Override
@@ -317,6 +331,17 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
                     this.actualYaw = dis.readInt();
                     this.actualPitch = dis.readInt();
                     return true;
+                }
+                else if (id.equalsIgnoreCase("armbotItem"))
+                {
+                    if (dis.readBoolean())
+                    {
+                        this.grabbedObject = ItemStack.loadItemStackFromNBT(PacketHandler.instance().readNBTTagCompound(dis));
+                    }
+                    else
+                    {
+                        this.grabbedObject = null;
+                    }
                 }
             }
         }
@@ -352,21 +377,26 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     @Override
     public boolean grab(Object entity)
     {
-        if (entity instanceof ItemStack)
+        if (this.getGrabbedObject() != null)
         {
-            this.grabbedObject = entity;
-            return true;
-        }
-        else if (entity instanceof EntityItem)
-        {
-            this.grabbedObject = ((EntityItem) entity).getEntityItem();
-            ((EntityItem) entity).setDead();
-            return true;
-        }
-        else if (entity instanceof Entity)
-        {
-            this.grabbedObject = entity;
-            return true;
+            if (entity instanceof ItemStack)
+            {
+                this.grabbedObject = entity;
+                this.sendGrabItemToClient();
+                return true;
+            }
+            else if (entity instanceof EntityItem)
+            {
+                this.grabbedObject = ((EntityItem) entity).getEntityItem();
+                ((EntityItem) entity).setDead();
+                this.sendGrabItemToClient();
+                return true;
+            }
+            else if (entity instanceof Entity)
+            {
+                this.grabbedObject = entity;
+                return true;
+            }
         }
         return false;
     }
@@ -384,6 +414,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
                 {
                     Vector3 handPosition = this.getHandPos();
                     DarksHelper.dropItemStack(worldObj, handPosition, (ItemStack) object, false);
+                    this.sendGrabItemToClient();
                 }
                 this.grabbedObject = null;
                 return true;

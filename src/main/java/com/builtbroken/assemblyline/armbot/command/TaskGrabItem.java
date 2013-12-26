@@ -60,12 +60,14 @@ public class TaskGrabItem extends TaskGrabPrefab
                 {
                     if (stack == null || item.getEntityItem().isItemEqual(stack))
                     {
-                        ((IArmbot) this.program.getMachine()).grab(item);
-                        if (this.belt != null)
+                        if (((IArmbot) this.program.getMachine()).grab(item))
                         {
-                            belt.ignoreEntity(item);
+                            if (this.belt != null)
+                            {
+                                belt.ignoreEntity(item);
+                            }
+                            return ProcessReturn.DONE;
                         }
-                        return ProcessReturn.DONE;
                     }
                 }
             }
