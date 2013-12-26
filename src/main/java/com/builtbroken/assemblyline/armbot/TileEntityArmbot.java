@@ -102,7 +102,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
         if (this.isFunctioning())
         {
             float preYaw = this.targetYaw, prePitch = this.targetPitch;
-            if (!this.worldObj.isRemote && this.ticks % 10 == 0)
+            if (!this.worldObj.isRemote && this.ticks % 5 == 0)
             {
                 this.programHelper.onUpdate(this.worldObj, new Vector3(this));
                 if (this.targetYaw != preYaw || this.targetPitch != prePitch)
@@ -299,12 +299,12 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketHandler.instance().getTilePacket(this.getChannel(), "armbot", this, this.functioning, this.targetYaw, this.targetPitch);
+        return PacketHandler.instance().getTilePacket(this.getChannel(), "armbot", this, this.functioning, this.targetYaw, this.targetPitch, this.actualYaw, this.actualPitch);
     }
 
     public void sendRotationPacket()
     {
-        PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getPacket(this.getChannel(), "arbotRotation", this.targetYaw, this.targetPitch, this.actualYaw, this.actualPitch), worldObj, new Vector3(this).translate(new Vector3(.5f, 1f, .5f)), 40);
+        PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(this.getChannel(), "arbotRotation", this, this.targetYaw, this.targetPitch, this.actualYaw, this.actualPitch), worldObj, new Vector3(this).translate(new Vector3(.5f, 1f, .5f)), 40);
     }
 
     @Override
@@ -319,6 +319,8 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
                     this.functioning = dis.readBoolean();
                     this.targetYaw = dis.readInt();
                     this.targetPitch = dis.readInt();
+                    this.actualYaw = dis.readInt();
+                    this.actualPitch = dis.readInt();
                     return true;
                 }
                 else if (id.equalsIgnoreCase("arbotRotation"))
