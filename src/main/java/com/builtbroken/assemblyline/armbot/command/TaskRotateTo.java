@@ -55,9 +55,7 @@ public class TaskRotateTo extends TaskBaseArmbot
         if (super.onUpdate() == ProcessReturn.CONTINUE)
         {
             ((IArmbot) this.program.getMachine()).moveArmTo(this.targetRotationYaw, this.targetRotationPitch);
-            int deltaYaw = (int) MathHelper.shortestAngleTo360(((IArmbot) this.program.getMachine()).getRotation().intX(), this.targetRotationYaw);
-            int deltaPitch = (int) MathHelper.shortestAngleTo360(((IArmbot) this.program.getMachine()).getRotation().intY(), this.targetRotationPitch);
-            return deltaYaw == 0 && deltaPitch == 0 ? ProcessReturn.CONTINUE : ProcessReturn.DONE;
+            return ((IArmbot) this.program.getMachine()).getRotation().intX() != this.targetRotationYaw || ((IArmbot) this.program.getMachine()).getRotation().intY() != this.targetRotationPitch ? ProcessReturn.CONTINUE : ProcessReturn.DONE;
         }
         return ProcessReturn.GENERAL_ERROR;
     }

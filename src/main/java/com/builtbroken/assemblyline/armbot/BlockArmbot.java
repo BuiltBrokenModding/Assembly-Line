@@ -6,7 +6,6 @@ import java.util.Set;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
@@ -49,7 +48,7 @@ public class BlockArmbot extends BlockAssembly
     {
         TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-        if (tileEntity != null && tileEntity instanceof IMultiBlock)
+        if (tileEntity instanceof IMultiBlock)
         {
             return ((IMultiBlock) tileEntity).onActivated(player);
         }
@@ -62,9 +61,10 @@ public class BlockArmbot extends BlockAssembly
     {
         TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-        if (tileEntity != null && tileEntity instanceof IMultiBlock)
+        if (tileEntity instanceof TileEntityArmbot)
         {
-            ((IMultiBlock) tileEntity).onDestroy(tileEntity);
+            ((TileEntityArmbot) tileEntity).onDestroy(tileEntity);
+            ((TileEntityArmbot) tileEntity).drop("all");
         }
 
         this.dropBlockAsItem_do(world, x, y, z, new ItemStack(this));
