@@ -17,23 +17,19 @@ import com.builtbroken.minecraft.helpers.MathHelper;
  * @author DarkGuardsman */
 public class TaskRotateTo extends TaskBaseArmbot
 {
-    int targetRotationYaw = 0, targetRotationPitch = 0, currentRotationYaw, currentRotationPitch;
+    int targetRotationYaw = 0, targetRotationPitch = 0;
 
     public TaskRotateTo()
     {
-        super("RotateTo");
-        this.args.add(new ArgumentIntData("yaw", 0, 360, 0));
-        this.args.add(new ArgumentIntData("pitch", 0, 360, 0));
-        this.UV = new Vector2(100, 80);
+        this(0, 0);
     }
 
     public TaskRotateTo(int yaw, int pitch)
     {
-        this();
-        this.targetRotationYaw = yaw;
-        this.targetRotationPitch = pitch;
-        this.setArg("yaw", yaw);
-        this.setArg("pitch", pitch);
+        super("RotateTo");
+        this.args.add(new ArgumentIntData("yaw", yaw, 360, 0));
+        this.args.add(new ArgumentIntData("pitch", pitch, 360, 0));
+        this.UV = new Vector2(100, 80);
     }
 
     @Override
@@ -54,8 +50,9 @@ public class TaskRotateTo extends TaskBaseArmbot
         if (super.onUpdate() == ProcessReturn.CONTINUE)
         {
             ((IArmbot) this.program.getMachine()).moveArmTo(this.targetRotationYaw, this.targetRotationPitch);
-
-            return Math.abs(((IArmbot) this.program.getMachine()).getRotation().y - this.targetRotationPitch) > 0 && Math.abs(((IArmbot) this.program.getMachine()).getRotation().x - this.targetRotationYaw) > 0 ? ProcessReturn.CONTINUE : ProcessReturn.DONE;
+            int deltaYaw = Math.abs(((IArmbot) this.program.getMachine()).getRotation().intY() - this.targetRotationPitch);
+            int deltaPitch = Math.abs(((IArmbot) this.program.getMachine()).getRotation().intX() - this.targetRotationYaw);
+            return deltaYaw > 0 && deltaPitch > 0 ? ProcessReturn.CONTINUE : ProcessReturn.DONE;
         }
         return ProcessReturn.GENERAL_ERROR;
     }
@@ -63,7 +60,7 @@ public class TaskRotateTo extends TaskBaseArmbot
     @Override
     public String toString()
     {
-        return super.toString() + " " + Float.toString(this.targetRotationYaw) + " " + Float.toString(this.targetRotationPitch);
+        return super.toString() + " Yaw:" + Integer.toString(this.targetRotationYaw) + " Pitch:" + Integer.toString(this.targetRotationPitch);
     }
 
     @Override

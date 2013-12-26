@@ -81,7 +81,7 @@ public class TaskRotateBy extends TaskBaseArmbot
     @Override
     public String toString()
     {
-        return super.toString() + " " + Float.toString(this.deltaYaw) + " " + Float.toString(this.deltaPitch);
+        return super.toString() + " Yaw:" + Integer.toString(this.targetRotationYaw) + " Pitch:" + Integer.toString(this.targetRotationPitch);
     }
 
     @Override

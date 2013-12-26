@@ -24,6 +24,7 @@ import com.builtbroken.assemblyline.api.coding.ProgramHelper;
 import com.builtbroken.assemblyline.armbot.command.TaskGOTO;
 import com.builtbroken.assemblyline.armbot.command.TaskReturn;
 import com.builtbroken.assemblyline.armbot.command.TaskRotateBy;
+import com.builtbroken.assemblyline.armbot.command.TaskRotateTo;
 import com.builtbroken.assemblyline.machine.TileEntityAssembly;
 import com.builtbroken.assemblyline.machine.encoder.ItemDisk;
 import com.builtbroken.common.Pair;
@@ -68,9 +69,9 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
         super(20);
         programHelper = new ProgramHelper(this).setMemoryLimit(20);
         Program program = new Program();
-        program.setTaskAt(0, 0, new TaskRotateBy(90, 0));
+        program.setTaskAt(0, 0, new TaskRotateTo(90, 0));
         program.setTaskAt(0, 1, new TaskReturn());
-        program.setTaskAt(0, 1, new TaskGOTO(0, 0));
+        program.setTaskAt(0, 2, new TaskGOTO(0, 0));
         programHelper.setProgram(program);
     }
 
@@ -106,10 +107,10 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
         if (this.isFunctioning())
         {
-            if (!this.worldObj.isRemote)
+            float preYaw = this.rotationYaw, prePitch = this.rotationPitch;
+            if (!this.worldObj.isRemote && this.ticks % 3 == 0)
             {
                 this.programHelper.onUpdate(this.worldObj, new Vector3(this));
-                float preYaw = this.rotationYaw, prePitch = this.rotationPitch;
                 if (this.rotationYaw != preYaw || this.rotationPitch != prePitch)
                 {
                     this.sendRotationPacket();
@@ -313,7 +314,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
     public void sendRotationPacket()
     {
-        PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getPacket(this.getChannel(), "arbotRotation", this.rotationYaw, this.rotationPitch), worldObj, new Vector3(this).translate(new Vector3(.5f, 1f, .5f)), 40);
+        PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getPacket(this.getChannel(), "arbotRotation", this.rotationYaw, this.rotationPitch, this.actualYaw, this.actualPitch), worldObj, new Vector3(this).translate(new Vector3(.5f, 1f, .5f)), 40);
     }
 
     @Override
@@ -334,6 +335,8 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
                 {
                     this.rotationYaw = dis.readFloat();
                     this.rotationPitch = dis.readFloat();
+                    this.actualYaw = dis.readFloat();
+                    this.actualPitch = dis.readFloat();
                     return true;
                 }
             }

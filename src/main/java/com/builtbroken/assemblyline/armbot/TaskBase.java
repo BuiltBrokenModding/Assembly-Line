@@ -183,7 +183,7 @@ public abstract class TaskBase implements ITask
     @Override
     public String toString()
     {
-        return "COMMAND[" + super.toString() + "]:" + this.methodName;
+        return "Task[" + this.methodName + "]:";
     }
 
     @Override

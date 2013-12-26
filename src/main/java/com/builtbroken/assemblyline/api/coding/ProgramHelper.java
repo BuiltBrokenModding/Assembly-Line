@@ -47,13 +47,13 @@ public class ProgramHelper
             }
             if (this.currentTask != null)
             {
+                System.out.println("[ProgramHelper]Updating task:" + this.currentTask.toString());
                 if (!this.hasTaskBeenCalled)
                 {
                     this.hasTaskBeenCalled = true;
                     if (this.currentTask instanceof IProcessTask)
                     {
                         re = ((IProcessTask) this.currentTask).onMethodCalled();
-                        System.out.println("[ProgramHelper]OnCall:" + re.toString());
                         if (re == ProcessReturn.DONE)
                         {
                             this.nextTask = true;

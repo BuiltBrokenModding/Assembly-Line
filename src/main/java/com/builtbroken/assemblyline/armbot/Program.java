@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import universalelectricity.api.vector.Vector2;
 
+import com.builtbroken.assemblyline.api.coding.ILogicTask;
 import com.builtbroken.assemblyline.api.coding.IProgram;
 import com.builtbroken.assemblyline.api.coding.IProgrammableMachine;
 import com.builtbroken.assemblyline.api.coding.ITask;
@@ -84,6 +85,14 @@ public class Program implements IProgram
         if (this.currentTask != null)
         {
             this.currentTask.refresh();
+        }
+        if (this.currentTask instanceof ILogicTask)
+        {
+            if (((ILogicTask) this.currentTask).getExitPoint() != null)
+            {
+                this.currentTask = ((ILogicTask) this.currentTask).getExitPoint();
+                this.currentPos = new Vector2(this.currentTask.getCol(), this.currentTask.getRow() + 1);
+            }
         }
         return this.currentTask;
     }

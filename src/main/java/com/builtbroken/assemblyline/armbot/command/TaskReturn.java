@@ -21,6 +21,7 @@ public class TaskReturn extends TaskBaseArmbot
         if (this.rotateToCommand == null)
         {
             this.rotateToCommand = new TaskRotateTo(0, 0);
+            this.rotateToCommand.setProgram(this.program);
             this.rotateToCommand.onMethodCalled();
         }
         return this.rotateToCommand.onUpdate();
@@ -30,12 +31,6 @@ public class TaskReturn extends TaskBaseArmbot
     public void terminated()
     {
         this.rotateToCommand.terminated();
-    }
-
-    @Override
-    public String toString()
-    {
-        return "RETURN";
     }
 
     @Override
