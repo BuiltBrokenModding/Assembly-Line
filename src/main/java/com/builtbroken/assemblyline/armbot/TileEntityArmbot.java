@@ -126,7 +126,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
     public void updateRotation()
     {
-        if (Math.abs(this.actualYaw - this.rotationYaw) > 0.001f)
+        if (Math.abs(this.actualYaw - this.rotationYaw) > 1)
         {
             float speedYaw;
             if (this.actualYaw > this.rotationYaw)
@@ -156,24 +156,14 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
             this.rotationYaw = (int) MathHelper.clampAngleTo360(this.rotationYaw);
 
-            if (this.ticks % 5 == 0 && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
-            {
-                // sound is 0.25 seconds long (20 ticks/second)
-                this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "mods.assemblyline.conveyor", 0.4f, 1.7f, true);
-            }
-
             if (Math.abs(this.actualYaw - this.rotationYaw) < this.ROTATION_SPEED)
             {
                 this.actualYaw = this.rotationYaw;
             }
-
-            for (Entity e : (ArrayList<Entity>) this.worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord + 2, this.zCoord, this.xCoord + 1, this.yCoord + 3, this.zCoord + 1)))
-            {
-                e.rotationYaw = this.actualYaw;
-            }
+            this.playRotationSound();
         }
 
-        if (Math.abs(this.actualPitch - this.rotationPitch) > 0.001f)
+        if (Math.abs(this.actualPitch - this.rotationPitch) > 1)
         {
             float speedPitch;
             if (this.actualPitch > this.rotationPitch)
@@ -189,19 +179,23 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
             this.rotationPitch = (int) MathHelper.clampAngle(this.rotationPitch, 0, 60);
 
-            if (this.ticks % 4 == 0 && this.worldObj.isRemote)
-            {
-                this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "mods.assemblyline.conveyor", 2f, 2.5f, true);
-            }
-
             if (Math.abs(this.actualPitch - this.rotationPitch) < this.ROTATION_SPEED)
             {
                 this.actualPitch = this.rotationPitch;
             }
+            this.playRotationSound();
         }
 
         this.rotationYaw = (int) MathHelper.clampAngleTo360(this.rotationYaw);
         this.rotationPitch = (int) MathHelper.clampAngle(this.rotationPitch, 0, 60);
+    }
+
+    public void playRotationSound()
+    {
+        if (this.ticks % 5 == 0 && this.worldObj.isRemote)
+        {
+            this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "mods.assemblyline.conveyor", 2f, 2.5f, true);
+        }
     }
 
     @Override
