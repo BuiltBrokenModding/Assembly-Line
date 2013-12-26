@@ -19,7 +19,7 @@ public class TaskDrop extends TaskBaseArmbot
     {
         if (super.onUpdate() == ProcessReturn.CONTINUE)
         {
-            ((IArmbot) this.program.getMachine()).drop("all");
+            ((IArmbot) this.program.getMachine()).dropHeldObject();
         }
         return ProcessReturn.DONE;
     }

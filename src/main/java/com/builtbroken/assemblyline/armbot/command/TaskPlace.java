@@ -36,7 +36,7 @@ public class TaskPlace extends TaskBaseArmbot
 
             if (block == null && ticks >= this.PLACE_TIME)
             {
-                Object entity = ((IArmbot) this.program.getMachine()).getGrabbedObject();
+                Object entity = ((IArmbot) this.program.getMachine()).getHeldObject();
                 ItemStack itemStack = null;
                 if (entity instanceof EntityItem)
                 {

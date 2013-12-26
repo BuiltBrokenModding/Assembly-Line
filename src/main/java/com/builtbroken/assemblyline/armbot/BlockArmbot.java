@@ -64,7 +64,7 @@ public class BlockArmbot extends BlockAssembly
         if (tileEntity instanceof TileEntityArmbot)
         {
             ((TileEntityArmbot) tileEntity).onDestroy(tileEntity);
-            ((TileEntityArmbot) tileEntity).drop("all");
+            ((TileEntityArmbot) tileEntity).dropHeldObject();
         }
 
         this.dropBlockAsItem_do(world, x, y, z, new ItemStack(this));

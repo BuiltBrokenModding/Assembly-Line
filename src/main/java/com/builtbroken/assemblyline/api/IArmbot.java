@@ -16,12 +16,12 @@ public interface IArmbot extends Cloneable, IProgrammableMachine
     public Vector2 getRotation();
 
     /** Forces the rotation to the two angles */
-    public void setRotation(float yaw, float pitch);
+    public void setRotation(int yaw, int pitch);
 
     /** Ask the armbot to rotate to face the given direction. Some bots may not support all angles
      * 
      * @return true if the bot will comply. May return false if it can't */
-    public boolean moveArmTo(float yaw, float pitch);
+    public boolean moveArmTo(int yaw, int pitch);
 
     /** Ask the armbot to rotate to face the given direction. Some bots may not support up and down
      * 
@@ -29,22 +29,20 @@ public interface IArmbot extends Cloneable, IProgrammableMachine
      * @return true if the bot will comply. May return false if it can't */
     public boolean moveTo(ForgeDirection direction);
 
+    /** Object currently held. In some cases this can be a list or array but is suggest to only be
+     * one object */
+    public Object getHeldObject();
+
     /** Adds an entity to the Armbot's grab list. Entity or ItemStack
      * 
      * @entity - object to grab, can be anything though is suggest to be an entity or itemstack
      * @return - true if the bot has grabbed the object */
-    public boolean grab(Object entity);
+    public boolean grabObject(Object entity);
 
-    /** Drops an object. Does except strings with "All" resulting in dropping everything.
-     * 
-     * @entity - can be anything though entity and itemstack are the main supported types
-     * @return - true if the bot dropped the item */
-    public boolean drop(Object object);
+    /** Drops the current held object. Use getGrabbedObject to make sure this is the object to drop. */
+    public boolean dropHeldObject();
 
     /** Same as deleting the object */
     public boolean clear(Object object);
 
-    /** Object currently held. In some cases this can be a list or array but is suggest to only be
-     * one object */
-    public Object getGrabbedObject();
 }

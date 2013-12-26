@@ -60,7 +60,7 @@ public class TaskTake extends TaskBaseArmbot
         {
             TileEntity targetTile = ((IArmbot) this.program.getMachine()).getHandPos().getTileEntity(this.program.getMachine().getLocation().left());
 
-            if (targetTile != null && ((IArmbot) this.program.getMachine()).getGrabbedObject() instanceof ItemStack)
+            if (targetTile != null && ((IArmbot) this.program.getMachine()).getHeldObject() instanceof ItemStack)
             {
                 ForgeDirection direction = MathHelper.getFacingDirectionFromAngle(((IArmbot) this.program.getMachine()).getRotation().x);
                 List<ItemStack> stacks = new ArrayList<ItemStack>();
@@ -69,8 +69,8 @@ public class TaskTake extends TaskBaseArmbot
                     stacks.add(stack);
                 }
                 InvInteractionHelper invEx = new InvInteractionHelper(this.program.getMachine().getLocation().left(), this.program.getMachine().getLocation().right(), stacks, false);
-                ((IArmbot) this.program.getMachine()).grab(invEx.tryGrabFromPosition(new Vector3(targetTile), direction, this.stack != null ? stack.stackSize : 1));
-                return ((IArmbot) this.program.getMachine()).getGrabbedObject() != null ? ProcessReturn.DONE : ProcessReturn.CONTINUE;
+                ((IArmbot) this.program.getMachine()).grabObject(invEx.tryGrabFromPosition(new Vector3(targetTile), direction, this.stack != null ? stack.stackSize : 1));
+                return ((IArmbot) this.program.getMachine()).getHeldObject() != null ? ProcessReturn.DONE : ProcessReturn.CONTINUE;
 
             }
             return ProcessReturn.CONTINUE;

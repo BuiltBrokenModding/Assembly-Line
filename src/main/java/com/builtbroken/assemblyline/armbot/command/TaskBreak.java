@@ -55,7 +55,7 @@ public class TaskBreak extends TaskBaseArmbot
                 }
                 else
                 {
-                    ((IArmbot) this.program.getMachine()).grab(new EntityItem(location.left(), serachPosition.intX() + 0.5D, serachPosition.intY() + 0.5D, serachPosition.intZ() + 0.5D, items.get(0)));
+                    ((IArmbot) this.program.getMachine()).grabObject(new EntityItem(location.left(), serachPosition.intX() + 0.5D, serachPosition.intY() + 0.5D, serachPosition.intZ() + 0.5D, items.get(0)));
                 }
 
                 location.left().setBlock(serachPosition.intX(), serachPosition.intY(), serachPosition.intZ(), 0, 0, 3);

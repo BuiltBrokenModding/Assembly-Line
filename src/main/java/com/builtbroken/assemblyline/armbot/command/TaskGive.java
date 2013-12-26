@@ -62,10 +62,10 @@ public class TaskGive extends TaskBaseArmbot
         {
             TileEntity targetTile = ((IArmbot) this.program.getMachine()).getHandPos().getTileEntity(this.program.getMachine().getLocation().left());
 
-            if (targetTile != null && ((IArmbot) this.program.getMachine()).getGrabbedObject() instanceof ItemStack)
+            if (targetTile != null && ((IArmbot) this.program.getMachine()).getHeldObject() instanceof ItemStack)
             {
                 ForgeDirection direction = MathHelper.getFacingDirectionFromAngle((float) ((IArmbot) this.program.getMachine()).getRotation().x);
-                ItemStack itemStack = (ItemStack) ((IArmbot) this.program.getMachine()).getGrabbedObject();
+                ItemStack itemStack = (ItemStack) ((IArmbot) this.program.getMachine()).getHeldObject();
                 List<ItemStack> stacks = new ArrayList<ItemStack>();
                 if (this.stack != null)
                 {
@@ -75,7 +75,7 @@ public class TaskGive extends TaskBaseArmbot
                 ItemStack insertStack = invEx.tryPlaceInPosition(itemStack, new Vector3(targetTile), direction.getOpposite());
                 if (((IArmbot) this.program.getMachine()).clear(itemStack))
                 {
-                    ((IArmbot) this.program.getMachine()).grab(insertStack);
+                    ((IArmbot) this.program.getMachine()).grabObject(insertStack);
                 }
             }
             return ProcessReturn.CONTINUE;

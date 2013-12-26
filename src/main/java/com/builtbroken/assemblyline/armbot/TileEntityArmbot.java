@@ -369,15 +369,15 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 
     /************************************ Armbot API methods *************************************/
     @Override
-    public Object getGrabbedObject()
+    public Object getHeldObject()
     {
         return this.grabbedObject;
     }
 
     @Override
-    public boolean grab(Object entity)
+    public boolean grabObject(Object entity)
     {
-        if (this.getGrabbedObject() != null)
+        if (this.getHeldObject() == null)
         {
             if (entity instanceof ItemStack)
             {
@@ -402,23 +402,18 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     }
 
     @Override
-    public boolean drop(Object object)
+    public boolean dropHeldObject()
     {
-        if (object != null)
+        if (this.getHeldObject() != null)
         {
-            boolean drop = object instanceof String && ((String) object).equalsIgnoreCase("all");
-
-            if (object.equals(this.grabbedObject) || drop)
+            if (this.getHeldObject() instanceof ItemStack)
             {
-                if (object instanceof ItemStack && this.grabbedObject instanceof ItemStack)
-                {
-                    Vector3 handPosition = this.getHandPos();
-                    DarksHelper.dropItemStack(worldObj, handPosition, (ItemStack) object, false);
-                    this.sendGrabItemToClient();
-                }
-                this.grabbedObject = null;
-                return true;
+                Vector3 handPosition = this.getHandPos();
+                DarksHelper.dropItemStack(worldObj, handPosition, (ItemStack) this.getHeldObject(), false);
+                this.sendGrabItemToClient();
             }
+            this.grabbedObject = null;
+            return true;
 
         }
         return false;
@@ -461,23 +456,22 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     }
 
     @Override
-    public void setRotation(float yaw, float pitch)
+    public void setRotation(int yaw, int pitch)
     {
         if (!this.worldObj.isRemote)
         {
-            this.actualYaw = (int) yaw;
-            this.actualPitch = (int) pitch;
+            this.actualYaw = yaw;
+            this.actualPitch = pitch;
         }
-
     }
 
     @Override
-    public boolean moveArmTo(float yaw, float pitch)
+    public boolean moveArmTo(int yaw, int pitch)
     {
         if (!this.worldObj.isRemote)
         {
-            this.targetYaw = (int) yaw;
-            this.targetPitch = (int) pitch;
+            this.targetYaw = yaw;
+            this.targetPitch = pitch;
             return true;
         }
         return false;

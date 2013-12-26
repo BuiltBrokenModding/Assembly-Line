@@ -50,7 +50,7 @@ public abstract class TaskGrabPrefab extends TaskBaseArmbot
     {
         super.onUpdate();
 
-        if (((IArmbot) this.program.getMachine()).getGrabbedObject() != null)
+        if (((IArmbot) this.program.getMachine()).getHeldObject() != null)
         {
             return ProcessReturn.DONE;
         }

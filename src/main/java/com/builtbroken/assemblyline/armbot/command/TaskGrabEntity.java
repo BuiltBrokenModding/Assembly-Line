@@ -62,7 +62,7 @@ public class TaskGrabEntity extends TaskGrabPrefab
     {
         if (super.onUpdate() == ProcessReturn.CONTINUE)
         {
-            if (((IArmbot) this.program.getMachine()).getGrabbedObject() != null)
+            if (((IArmbot) this.program.getMachine()).getHeldObject() != null)
             {
                 return ProcessReturn.DONE;
             }
@@ -75,7 +75,7 @@ public class TaskGrabEntity extends TaskGrabPrefab
                 {
                     if ((entity != null && !(entity instanceof EntityArrow) && !(entity instanceof EntityPlayer) && (!(entity instanceof EntityAgeable) || (entity instanceof EntityAgeable && child == ((EntityAgeable) entity).isChild()))))
                     {
-                        ((IArmbot) this.program.getMachine()).grab(entity);
+                        ((IArmbot) this.program.getMachine()).grabObject(entity);
                         if (this.belt != null)
                         {
                             belt.ignoreEntity(entity);

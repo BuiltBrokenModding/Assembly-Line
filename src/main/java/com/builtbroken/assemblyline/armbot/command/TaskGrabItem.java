@@ -48,7 +48,7 @@ public class TaskGrabItem extends TaskGrabPrefab
     {
         if (super.onUpdate() == ProcessReturn.CONTINUE)
         {
-            if (((IArmbot) this.program.getMachine()).getGrabbedObject() != null)
+            if (((IArmbot) this.program.getMachine()).getHeldObject() != null)
             {
                 return ProcessReturn.DONE;
             }
@@ -60,7 +60,7 @@ public class TaskGrabItem extends TaskGrabPrefab
                 {
                     if (stack == null || item.getEntityItem().isItemEqual(stack))
                     {
-                        if (((IArmbot) this.program.getMachine()).grab(item))
+                        if (((IArmbot) this.program.getMachine()).grabObject(item))
                         {
                             if (this.belt != null)
                             {

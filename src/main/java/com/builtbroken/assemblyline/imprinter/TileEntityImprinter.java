@@ -391,7 +391,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
             AutoCraftEvent.PreCraft event = new AutoCraftEvent.PreCraft(this.worldObj, new Vector3(this), this, this.imprinterMatrix[craftingOutputSlot]);
             if (!event.isCanceled())
             {
-                armbot.grab(this.imprinterMatrix[craftingOutputSlot].copy());
+                armbot.grabObject(this.imprinterMatrix[craftingOutputSlot].copy());
                 this.onPickUpFromSlot(null, 2, this.imprinterMatrix[craftingOutputSlot]);
                 this.imprinterMatrix[craftingOutputSlot] = null;
                 return true;

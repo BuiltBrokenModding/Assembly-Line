@@ -67,9 +67,9 @@ public class RenderArmbot extends TileEntitySpecialRenderer
             TextureManager renderEngine = Minecraft.getMinecraft().renderEngine;
 
             // Items don't move right, so we render them manually. Client side this can only be one object so the bot should return its preferred render item client side
-            if (((TileEntityArmbot) tileEntity).getGrabbedObject() instanceof ItemStack)
+            if (((TileEntityArmbot) tileEntity).getHeldObject() instanceof ItemStack)
             {
-                ItemStack itemStack = (ItemStack) ((TileEntityArmbot) tileEntity).getGrabbedObject();
+                ItemStack itemStack = (ItemStack) ((TileEntityArmbot) tileEntity).getHeldObject();
                 if (((TileEntityArmbot) tileEntity).renderEntityItem == null)
                 {
                     ((TileEntityArmbot) tileEntity).renderEntityItem = new EntityItem(tileEntity.worldObj, 0, 0, 0, itemStack);

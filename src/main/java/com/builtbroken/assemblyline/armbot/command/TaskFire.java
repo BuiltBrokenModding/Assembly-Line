@@ -85,10 +85,10 @@ public class TaskFire extends TaskBaseArmbot
             {
                 this.finalVelocity = new Vector3(0, 0, 0);
             }
-            if (((IArmbot) this.program.getMachine()).getGrabbedObject() != null)
+            if (((IArmbot) this.program.getMachine()).getHeldObject() != null)
             {
                 Entity held = null;
-                Object obj = ((IArmbot) this.program.getMachine()).getGrabbedObject();
+                Object obj = ((IArmbot) this.program.getMachine()).getHeldObject();
                 Pair<World, Vector3> location = this.program.getMachine().getLocation();
                 if (obj instanceof Entity)
                 {
@@ -110,7 +110,7 @@ public class TaskFire extends TaskBaseArmbot
                         }
                         else
                         {
-                            ((IArmbot) this.program.getMachine()).drop("all");
+                            ((IArmbot) this.program.getMachine()).dropHeldObject();
                             if (!location.left().isRemote)
                             {
                                 location.left().removeEntity(held);
@@ -141,7 +141,7 @@ public class TaskFire extends TaskBaseArmbot
                     }
                     else
                     {
-                        ((IArmbot) this.program.getMachine()).drop("all");
+                        ((IArmbot) this.program.getMachine()).dropHeldObject();
                         held.motionX = this.finalVelocity.x;
                         held.motionY = this.finalVelocity.y;
                         held.motionZ = this.finalVelocity.z;
