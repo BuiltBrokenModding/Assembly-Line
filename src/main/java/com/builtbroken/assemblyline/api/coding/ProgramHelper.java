@@ -41,17 +41,14 @@ public class ProgramHelper
         ProcessReturn re = ProcessReturn.DONE;
         if (program != null)
         {
-            System.out.println("[ProgramHelper]UpdateTickDebug");
             if (this.currentTask == null || this.nextTask)
             {
                 this.nextTask();
             }
             if (this.currentTask != null)
             {
-                System.out.println("[ProgramHelper]Updating task:" + this.currentTask.toString());
                 if (!this.hasTaskBeenCalled)
                 {
-                    System.out.println("[ProgramHelper]First task update");
                     this.hasTaskBeenCalled = true;
                     if (this.currentTask instanceof IProcessTask)
                     {
@@ -79,7 +76,6 @@ public class ProgramHelper
                 {
                     re = ProcessReturn.CONTINUE;
                 }
-                System.out.println("[ProgramHelper]OnUpdate:" + re.toString());
                 return re;
             }
         }
@@ -89,7 +85,6 @@ public class ProgramHelper
     /** Gets the next task from the program */
     public void nextTask()
     {
-        System.out.println("[ProgramHelper]Getting next task");
         this.hasTaskBeenCalled = false;
         this.nextTask = false;
         this.currentTask = program.getNextTask();
