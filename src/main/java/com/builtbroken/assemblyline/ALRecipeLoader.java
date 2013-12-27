@@ -195,19 +195,15 @@ public class ALRecipeLoader
                 if (mat.shouldCreateItem(EnumOrePart.TUBE))
                 {
                     GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.TUBE, 6), "I", "I", "I", 'I', mat.getOreName(EnumOrePart.INGOTS) ));
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.TUBE, 6), "I", "I", "I", 'I', mat.getOreNameReverse(EnumOrePart.INGOTS) ));
                     GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.TUBE, 1), "I", 'I', mat.getOreName(EnumOrePart.ROD) ));
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.TUBE, 1), "I", 'I', mat.getOreNameReverse(EnumOrePart.ROD) ));
                 }
                 if (mat.shouldCreateItem(EnumOrePart.ROD))
                 {
                     GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.ROD, 4), "I", "I", 'I', mat.getOreName(EnumOrePart.ROD) ));
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.ROD, 4),  "I", "I", 'I', mat.getOreNameReverse(EnumOrePart.ROD) ));
                 }
                 if (mat.shouldCreateItem(EnumOrePart.PLATES))
                 {
                     GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.PLATES, 1), "II", "II", 'I', mat.getOreName(EnumOrePart.INGOTS) ));
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.PLATES, 1), "II", "II", 'I', mat.getOreNameReverse(EnumOrePart.INGOTS) ));
                 }
                 if (mat.shouldCreateItem(EnumOrePart.GEARS))
                 {
