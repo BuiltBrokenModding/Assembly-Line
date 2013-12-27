@@ -23,6 +23,7 @@ import com.builtbroken.assemblyline.item.ItemReadoutTools;
 import com.builtbroken.assemblyline.item.ItemWrench;
 import com.builtbroken.assemblyline.machine.BlockCrate;
 import com.builtbroken.assemblyline.machine.processor.BlockProcessor;
+import com.builtbroken.assemblyline.transmit.BlockWire;
 import com.builtbroken.minecraft.EnumMaterial;
 import com.builtbroken.minecraft.EnumOrePart;
 import com.builtbroken.minecraft.RecipeNames;
@@ -235,10 +236,10 @@ public class ALRecipeLoader
         {
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockSolar, 1), "GGG", "SCS", "SWS", 'G', Block.glass, 'W', "copperWire", 'C', RecipeNames.BASIC_CIRCUIT.name, 'S', RecipeNames.INGOT_STEEL.name));
         }
-        //if (blockWire instanceof BlockWire)
-        //{
-        //  GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 16, 1), "III", "WWW", "III", 'I', Block.cloth, 'W', copper));
-        //}
+        if (blockWire != null)
+        {
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 16, 1), "III", "WWW", "III", 'I', Block.cloth, 'W', RecipeNames.INGOT_COPPER));
+        }
         if (itemDiggingTool instanceof ItemCommonTool)
         {
 
