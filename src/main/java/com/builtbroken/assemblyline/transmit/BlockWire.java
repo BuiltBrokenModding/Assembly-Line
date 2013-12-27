@@ -22,6 +22,7 @@ import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.client.render.RenderBlockWire;
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.IndustryTabs;
+import com.builtbroken.minecraft.RecipeNames;
 import com.builtbroken.minecraft.prefab.BlockMachine;
 
 import cpw.mods.fml.relauncher.Side;
@@ -286,7 +287,6 @@ public class BlockWire extends BlockMachine
     @Override
     public void loadOreNames()
     {
-        OreDictionary.registerOre("copperwire", new ItemStack(this, 1, 0));
-        OreDictionary.registerOre("wirecopper", new ItemStack(this, 1, 0));
+        OreDictionary.registerOre(RecipeNames.COPPER_WIRE.name, new ItemStack(this, 1, 0));
     }
 }
