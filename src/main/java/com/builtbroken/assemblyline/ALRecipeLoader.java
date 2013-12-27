@@ -102,8 +102,8 @@ public class ALRecipeLoader
             GameRegistry.addRecipe(new ShapedOreRecipe(blockConPump, "@G@", "GPG", "@G@", '@', RecipeNames.PLATE_STEEL.name, 'P', blockPumpMachine, 'G', EnumMaterial.STEEL.getOreName(EnumOrePart.GEARS)));
         if (blockDrain != null)
             GameRegistry.addRecipe(new ShapelessOreRecipe(blockDrain, Block.dispenser, Parts.Valve.name));
-        if (blockDrain != null)
-            GameRegistry.addRecipe(new ShapelessOreRecipe(blockReleaseValve, "RGR", "TVT", "RGR", 'G', EnumMaterial.IRON.getOreName(EnumOrePart.GEARS), 'Y', EnumMaterial.IRON.getOreName(EnumOrePart.TUBE), 'V', Parts.Valve.name, 'R', Item.redstone));
+        if (blockReleaseValve != null)
+            GameRegistry.addRecipe(new ShapedOreRecipe(blockReleaseValve, "RGR", "TVT", "RGR", 'G', EnumMaterial.IRON.getOreName(EnumOrePart.GEARS), 'T', EnumMaterial.IRON.getOreName(EnumOrePart.TUBE), 'V', Parts.Valve.name, 'R', Item.redstone));
         // sink
         //GameRegistry.addRecipe(new ItemStack(blockSink, 1), new Object[] { "I I", "SIS", "SPS", 'P', new ItemStack(blockPipe, 1), 'I', Item.ingotIron, 'S', Block.stone });
 
@@ -114,7 +114,7 @@ public class ALRecipeLoader
             // slime steal
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 4, Parts.GasSeal.ordinal()), " # ", "#S#", " # ", '#', Parts.Seal.name, 'S', Item.slimeBall));
             // part valve
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.Tank.ordinal()), "PLP", 'P', EnumMaterial.IRON.getOreName(EnumOrePart.TUBE), 'L', Block.lever ));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.Valve.ordinal()), "PLP", 'P', EnumMaterial.IRON.getOreName(EnumOrePart.TUBE), 'L', Block.lever ));
             //Basic Circuit
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.CircuitBasic.ordinal()), "!#!", "#@#", "!#!", '@', RecipeNames.PLATE_COPPER.name, '#', Block.glass, '!', RecipeNames.COPPER_WIRE.name));
             //Advanced Circuit
@@ -199,7 +199,7 @@ public class ALRecipeLoader
                 }
                 if (mat.shouldCreateItem(EnumOrePart.ROD))
                 {
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.ROD, 4), "I", "I", 'I', mat.getOreName(EnumOrePart.ROD) ));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.ROD, 4), "I", "I", 'I', mat.getOreName(EnumOrePart.INGOTS) ));
                 }
                 if (mat.shouldCreateItem(EnumOrePart.PLATES))
                 {
@@ -214,8 +214,8 @@ public class ALRecipeLoader
         }
         if (itemTool != null)
         {
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTool, 1, EnumTools.PIPE_GUAGE.ordinal()), "TVT", " T ", 'T', "ironTube", 'V', "valvePart"));
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTool, 1, EnumTools.MULTI_METER.ordinal()), "PGP", "WCW", "PRP", 'P', Block.planks, 'G', Block.glass, 'C', RecipeNames.BASIC_CIRCUIT.name, 'W', RecipeNames.COPPER_WIRE.name, 'R', RecipeNames.COIL_COPPER.name));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTool, 1, EnumTools.PIPE_GUAGE.ordinal()), "TVT", " T ", 'T', EnumMaterial.IRON.getOreName(EnumOrePart.TUBE), 'V', Parts.Valve.name));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTool, 1, EnumTools.MULTI_METER.ordinal()), "PGP", "WCW", "PRP", 'P', Block.planks, 'G', Block.glass, 'C', RecipeNames.BASIC_CIRCUIT.name, 'R', RecipeNames.COPPER_WIRE.name, 'W', RecipeNames.COIL_COPPER.name));
         }
         if (wrench != null)
         {
@@ -227,7 +227,7 @@ public class ALRecipeLoader
         }
         if (blockWire != null)
         {
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 16, 1), "III", "WWW", "III", 'I', Block.cloth, 'W', RecipeNames.INGOT_COPPER.name));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 16, 0), "III", "WWW", "III", 'I', Block.cloth, 'W', EnumMaterial.COPPER.getOreName(EnumOrePart.INGOTS)));
         }
         if (itemDiggingTool != null)
         {
@@ -344,14 +344,14 @@ public class ALRecipeLoader
             GameRegistry.addRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.STONE.getMeta()), "SXS", "X X", "SXS", 'S', Block.stone, 'X', Block.glass);
             GameRegistry.addRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.IRON.getMeta()), "IXI", "X X", "IXI", 'I', Item.ingotIron, 'X', Block.glass);
 
-            GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.TIN.getMeta()), "IXI", "X X", "IXI", 'I', EnumMaterial.TIN.getOreName(EnumOrePart.INGOTS), 'X', Block.glass));
-            GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.COPPER.getMeta()), "IXI", "X X", "IXI", 'I', EnumMaterial.COPPER.getOreName(EnumOrePart.INGOTS), 'X', Block.glass));
-            GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.BRONZE.getMeta()), "IXI", "X X", "IXI", 'I', EnumMaterial.BRONZE.getOreName(EnumOrePart.INGOTS), 'X', Block.glass));
-            GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.GOLD.getMeta()), "IXI", "X X", "IXI", 'I', EnumMaterial.GOLD.getOreName(EnumOrePart.INGOTS), 'X', Block.glass));
-            GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.STEEL.getMeta()), "IXI", "X X", "IXI", 'I', EnumMaterial.STEEL.getOreName(EnumOrePart.INGOTS), 'X', Block.glass));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.TIN.getMeta()), "IXI", "X X", "IXI", 'I', EnumMaterial.TIN.getOreName(EnumOrePart.INGOTS), 'X', Block.glass));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.COPPER.getMeta()), "IXI", "X X", "IXI", 'I', EnumMaterial.COPPER.getOreName(EnumOrePart.INGOTS), 'X', Block.glass));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.BRONZE.getMeta()), "IXI", "X X", "IXI", 'I', EnumMaterial.BRONZE.getOreName(EnumOrePart.INGOTS), 'X', Block.glass));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.GOLD.getMeta()), "IXI", "X X", "IXI", 'I', Item.ingotGold, 'X', Block.glass));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.STEEL.getMeta()), "IXI", "X X", "IXI", 'I', EnumMaterial.STEEL.getOreName(EnumOrePart.INGOTS), 'X', Block.glass));
 
-            GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.OBBY.getMeta()), "IXI", "XEX", "IXI", 'I', Block.obsidian, 'X', Block.glass, 'E', Item.enderPearl));
-            GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.HELL.getMeta()), "IXI", "XBX", "IXI", 'I', Block.obsidian, 'X', Block.netherBrick, 'B', Item.blazePowder));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.OBBY.getMeta()), "IXI", "XEX", "IXI", 'I', Block.obsidian, 'X', Block.glass, 'E', Item.enderPearl));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.HELL.getMeta()), "IXI", "XBX", "IXI", 'I', Block.obsidian, 'X', Block.netherBrick, 'B', Item.blazePowder));
         }
     }
 
