@@ -13,17 +13,11 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import com.builtbroken.assemblyline.blocks.BlockBasalt;
 import com.builtbroken.assemblyline.fluid.pipes.FluidPartsMaterial;
-import com.builtbroken.assemblyline.generators.BlockSolarPanel;
 import com.builtbroken.assemblyline.item.EnumTool;
-import com.builtbroken.assemblyline.item.ItemCommonTool;
 import com.builtbroken.assemblyline.item.ItemOreDirv;
-import com.builtbroken.assemblyline.item.ItemParts;
 import com.builtbroken.assemblyline.item.ItemParts.Parts;
-import com.builtbroken.assemblyline.item.ItemReadoutTools;
-import com.builtbroken.assemblyline.item.ItemWrench;
 import com.builtbroken.assemblyline.machine.BlockCrate;
 import com.builtbroken.assemblyline.machine.processor.BlockProcessor;
-import com.builtbroken.assemblyline.transmit.BlockWire;
 import com.builtbroken.minecraft.EnumMaterial;
 import com.builtbroken.minecraft.EnumOrePart;
 import com.builtbroken.minecraft.RecipeNames;
@@ -102,26 +96,25 @@ public class ALRecipeLoader
         this.registerPipes();
         this.registerTanks();
 
-        // pump
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockPumpMachine, 1, 0), new Object[] { "C@C", "BMB", "@X@", '@', RecipeNames.PLATE_STEEL.name, 'X', new ItemStack(blockPipe, 1), 'B', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 'C', RecipeNames.BASIC_CIRCUIT.name, 'M', "motor" }));
-        // construction pump
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConPump, 1, 0), new Object[] { "@C@", "BMB", "@@@", '@', RecipeNames.PLATE_STEEL.name, 'B', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 'C', RecipeNames.ADVANCED_CIRCUIT.name, 'M', RecipeNames.MOTOR.name }));
-        // Drain
-        GameRegistry.addRecipe(new ItemStack(blockDrain, 1, 0), new Object[] { "IGI", "SVS", " P ", 'I', Item.ingotIron, 'G', Block.dispenser, 'S', Block.stone, 'P', new ItemStack(blockPipe, 1), 'V', new ItemStack(itemParts, 1, Parts.Valve.ordinal()) });
-
-        // release valve
-        GameRegistry.addRecipe(new ItemStack(blockReleaseValve, 1), new Object[] { "RPR", "PVP", "RPR", 'P', new ItemStack(blockPipe, 1), 'V', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 'R', Item.redstone });
+        if (blockPumpMachine != null)
+            GameRegistry.addRecipe(new ShapedOreRecipe(blockPumpMachine, "IGI", "VMV", "IGI", 'G', EnumMaterial.IRON.getOreName(EnumOrePart.GEARS), 'I', RecipeNames.PLATE_IRON.name, 'V', Parts.Valve.name, 'M', "motor"));
+        if (blockConPump != null)
+            GameRegistry.addRecipe(new ShapedOreRecipe(blockConPump, "@G@", "GPG", "@G@", '@', RecipeNames.PLATE_STEEL.name, 'P', blockPumpMachine, 'G', EnumMaterial.STEEL.getOreName(EnumOrePart.GEARS)));
+        if (blockDrain != null)
+            GameRegistry.addRecipe(new ShapelessOreRecipe(blockDrain, Block.dispenser, Parts.Valve.name));
+        if (blockDrain != null)
+            GameRegistry.addRecipe(new ShapelessOreRecipe(blockReleaseValve, "RGR", "TVT", "RGR", 'G', EnumMaterial.IRON.getOreName(EnumOrePart.GEARS), 'Y', EnumMaterial.IRON.getOreName(EnumOrePart.TUBE), 'V', Parts.Valve.name, 'R', Item.redstone));
         // sink
         //GameRegistry.addRecipe(new ItemStack(blockSink, 1), new Object[] { "I I", "SIS", "SPS", 'P', new ItemStack(blockPipe, 1), 'I', Item.ingotIron, 'S', Block.stone });
 
-        if (itemParts instanceof ItemParts)
+        if (itemParts != null)
         {
             // seal
             GameRegistry.addRecipe(new ItemStack(itemParts, 16, Parts.Seal.ordinal()), new Object[] { "LL", "LL", 'L', Item.leather });
             // slime steal
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 4, Parts.GasSeal.ordinal()), " # ", "#S#", " # ", '#', Parts.Seal.name, 'S', Item.slimeBall));
             // part valve
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.Tank.ordinal()), new Object[] { "PLP", 'P', "ironPipe", 'L', Block.lever }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.Tank.ordinal()), "PLP", 'P', EnumMaterial.IRON.getOreName(EnumOrePart.TUBE), 'L', Block.lever ));
             //Basic Circuit
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.CircuitBasic.ordinal()), "!#!", "#@#", "!#!", '@', RecipeNames.PLATE_COPPER.name, '#', Block.glass, '!', RecipeNames.COPPER_WIRE.name));
             //Advanced Circuit
@@ -133,11 +126,11 @@ public class ALRecipeLoader
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.Tank.ordinal()), " # ", "# #", " # ", '#', RecipeNames.INGOT_BRONZE.name));
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.Tank.ordinal()), " # ", "# #", " # ", '#', RecipeNames.INGOT_STEEL.name));
             //Motor
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.Motor.ordinal()), new Object[] { "@!@", "!#!", "@!@", '!', RecipeNames.INGOT_STEEL.name, '#', Item.ingotIron, '@', Parts.COIL.name }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.Motor.ordinal()), "@!@", "!#!", "@!@", '!', RecipeNames.INGOT_STEEL.name, '#', Item.ingotIron, '@', Parts.COIL.name ));
             //Laser Diode
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 4, Parts.LASER.ordinal()), new Object[] { " G ", "!S!", " C ", '!', RecipeNames.COPPER_WIRE.name, 'G', Block.glass, 'S', Block.sand, 'C', RecipeNames.BASIC_CIRCUIT.name }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 4, Parts.LASER.ordinal()), " G ", "!S!", " C ", '!', RecipeNames.COPPER_WIRE.name, 'G', Block.glass, 'S', Block.sand, 'C', RecipeNames.BASIC_CIRCUIT.name ));
             //Coil
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 8, Parts.COIL.ordinal()), new Object[] { "WWW", "W W", "WWW", 'W', RecipeNames.COPPER_WIRE.name }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 8, Parts.COIL.ordinal()), "WWW", "W W", "WWW", 'W', RecipeNames.COPPER_WIRE.name ));
 
         }
         if (itemMetals instanceof ItemOreDirv)
@@ -165,10 +158,10 @@ public class ALRecipeLoader
             MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, Block.blockGold, EnumMaterial.getStack(itemMetals, EnumMaterial.GOLD, EnumOrePart.SCRAPS, 8));
             MachineRecipeHandler.newProcessorRecipe(ProcessorType.CRUSHER, Block.oreGold, EnumMaterial.getStack(itemMetals, EnumMaterial.GOLD, EnumOrePart.RUBBLE, 1));
             //Dust recipes
-            GameRegistry.addShapelessRecipe(EnumMaterial.getStack(itemMetals, EnumMaterial.STEEL, EnumOrePart.DUST, 1), new Object[] { EnumMaterial.getStack(itemMetals, EnumMaterial.IRON, EnumOrePart.DUST, 1), new ItemStack(Item.coal, 1, 0), new ItemStack(Item.coal, 1, 0) });
-            GameRegistry.addShapelessRecipe(EnumMaterial.getStack(itemMetals, EnumMaterial.STEEL, EnumOrePart.DUST, 1), new Object[] { EnumMaterial.getStack(itemMetals, EnumMaterial.IRON, EnumOrePart.DUST, 1), new ItemStack(Item.coal, 1, 1), new ItemStack(Item.coal, 1, 1) });
-            GameRegistry.addShapelessRecipe(EnumMaterial.getStack(itemMetals, EnumMaterial.STEEL, EnumOrePart.DUST, 1), new Object[] { EnumMaterial.getStack(itemMetals, EnumMaterial.IRON, EnumOrePart.DUST, 1), new ItemStack(Item.coal, 1, 1), new ItemStack(Item.coal, 1, 0) });
-            GameRegistry.addShapelessRecipe(EnumMaterial.getStack(itemMetals, EnumMaterial.BRONZE, EnumOrePart.DUST, 4), new Object[] { EnumMaterial.getStack(itemMetals, EnumMaterial.COPPER, EnumOrePart.DUST, 1), EnumMaterial.getStack(itemMetals, EnumMaterial.COPPER, EnumOrePart.DUST, 1), EnumMaterial.getStack(itemMetals, EnumMaterial.COPPER, EnumOrePart.DUST, 1), EnumMaterial.getStack(itemMetals, EnumMaterial.TIN, EnumOrePart.DUST, 1) });
+            GameRegistry.addShapelessRecipe(EnumMaterial.getStack(itemMetals, EnumMaterial.STEEL, EnumOrePart.DUST, 1), EnumMaterial.getStack(itemMetals, EnumMaterial.IRON, EnumOrePart.DUST, 1), new ItemStack(Item.coal, 1, 0), new ItemStack(Item.coal, 1, 0) );
+            GameRegistry.addShapelessRecipe(EnumMaterial.getStack(itemMetals, EnumMaterial.STEEL, EnumOrePart.DUST, 1), EnumMaterial.getStack(itemMetals, EnumMaterial.IRON, EnumOrePart.DUST, 1), new ItemStack(Item.coal, 1, 1), new ItemStack(Item.coal, 1, 1) );
+            GameRegistry.addShapelessRecipe(EnumMaterial.getStack(itemMetals, EnumMaterial.STEEL, EnumOrePart.DUST, 1), EnumMaterial.getStack(itemMetals, EnumMaterial.IRON, EnumOrePart.DUST, 1), new ItemStack(Item.coal, 1, 1), new ItemStack(Item.coal, 1, 0) );
+            GameRegistry.addShapelessRecipe(EnumMaterial.getStack(itemMetals, EnumMaterial.BRONZE, EnumOrePart.DUST, 4), EnumMaterial.getStack(itemMetals, EnumMaterial.COPPER, EnumOrePart.DUST, 1), EnumMaterial.getStack(itemMetals, EnumMaterial.COPPER, EnumOrePart.DUST, 1), EnumMaterial.getStack(itemMetals, EnumMaterial.COPPER, EnumOrePart.DUST, 1), EnumMaterial.getStack(itemMetals, EnumMaterial.TIN, EnumOrePart.DUST, 1) );
 
             //Ore material recipe loop
             for (EnumMaterial mat : EnumMaterial.values())
@@ -201,46 +194,46 @@ public class ALRecipeLoader
                 }
                 if (mat.shouldCreateItem(EnumOrePart.TUBE))
                 {
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.TUBE, 6), new Object[] { "I", "I", "I", 'I', mat.getOreName(EnumOrePart.INGOTS) }));
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.TUBE, 6), new Object[] { "I", "I", "I", 'I', mat.getOreNameReverse(EnumOrePart.INGOTS) }));
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.TUBE, 1), new Object[] { "I", 'I', mat.getOreName(EnumOrePart.ROD) }));
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.TUBE, 1), new Object[] { "I", 'I', mat.getOreNameReverse(EnumOrePart.ROD) }));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.TUBE, 6), "I", "I", "I", 'I', mat.getOreName(EnumOrePart.INGOTS) ));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.TUBE, 6), "I", "I", "I", 'I', mat.getOreNameReverse(EnumOrePart.INGOTS) ));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.TUBE, 1), "I", 'I', mat.getOreName(EnumOrePart.ROD) ));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.TUBE, 1), "I", 'I', mat.getOreNameReverse(EnumOrePart.ROD) ));
                 }
                 if (mat.shouldCreateItem(EnumOrePart.ROD))
                 {
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.ROD, 4), new Object[] { "I", "I", 'I', mat.getOreName(EnumOrePart.ROD) }));
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.ROD, 4), new Object[] { "I", "I", 'I', mat.getOreNameReverse(EnumOrePart.ROD) }));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.ROD, 4), "I", "I", 'I', mat.getOreName(EnumOrePart.ROD) ));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.ROD, 4),  "I", "I", 'I', mat.getOreNameReverse(EnumOrePart.ROD) ));
                 }
                 if (mat.shouldCreateItem(EnumOrePart.PLATES))
                 {
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.PLATES, 1), new Object[] { "II", "II", 'I', mat.getOreName(EnumOrePart.INGOTS) }));
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.PLATES, 1), new Object[] { "II", "II", 'I', mat.getOreNameReverse(EnumOrePart.INGOTS) }));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.PLATES, 1), "II", "II", 'I', mat.getOreName(EnumOrePart.INGOTS) ));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.PLATES, 1), "II", "II", 'I', mat.getOreNameReverse(EnumOrePart.INGOTS) ));
                 }
                 if (mat.shouldCreateItem(EnumOrePart.GEARS))
                 {
-                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.GEARS, 4), new Object[] { " I ", "IRI", " I ", 'I', mat.getOreName(EnumOrePart.INGOTS), 'R', mat.shouldCreateItem(EnumOrePart.ROD) ? mat.getOreName(EnumOrePart.ROD) : Item.stick }));
+                    GameRegistry.addRecipe(new ShapedOreRecipe(mat.getStack(itemMetals, EnumOrePart.GEARS, 4), " I ", "IRI", " I ", 'I', mat.getOreName(EnumOrePart.INGOTS), 'R', mat.shouldCreateItem(EnumOrePart.ROD) ? mat.getOreName(EnumOrePart.ROD) : Item.stick ));
                 }
 
             }
         }
-        if (itemTool instanceof ItemReadoutTools)
+        if (itemTool != null)
         {
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTool, 1, EnumTools.PIPE_GUAGE.ordinal()), "TVT", " T ", 'T', "ironTube", 'V', "valvePart"));
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTool, 1, EnumTools.MULTI_METER.ordinal()), "PGP", "WCW", "PRP", 'P', Block.planks, 'G', Block.glass, 'C', RecipeNames.BASIC_CIRCUIT.name, 'W', RecipeNames.COPPER_WIRE.name, 'R', RecipeNames.COIL_COPPER.name));
         }
-        if (wrench instanceof ItemWrench)
+        if (wrench != null)
         {
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(wrench, 1), "S S", " S ", " S ", 'S', RecipeNames.INGOT_STEEL.name));
+            GameRegistry.addRecipe(new ShapedOreRecipe(wrench, "S S", " S ", " S ", 'S', RecipeNames.INGOT_STEEL.name));
         }
-        if (blockSolar instanceof BlockSolarPanel)
+        if (blockSolar != null)
         {
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockSolar, 1), "GGG", "SCS", "SWS", 'G', Block.glass, 'W', "copperWire", 'C', RecipeNames.BASIC_CIRCUIT.name, 'S', RecipeNames.INGOT_STEEL.name));
+            GameRegistry.addRecipe(new ShapedOreRecipe(blockSolar, "GGG", "SCS", "SWS", 'G', Block.glass, 'W', "copperWire", 'C', RecipeNames.BASIC_CIRCUIT.name, 'S', RecipeNames.INGOT_STEEL.name));
         }
         if (blockWire != null)
         {
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 16, 1), "III", "WWW", "III", 'I', Block.cloth, 'W', RecipeNames.INGOT_COPPER.name));
         }
-        if (itemDiggingTool instanceof ItemCommonTool)
+        if (itemDiggingTool != null)
         {
 
             for (EnumMaterial mat : EnumMaterial.values())
@@ -282,8 +275,8 @@ public class ALRecipeLoader
                 }
                 if (blockColorSand != null)
                 {
-                    GameRegistry.addShapelessRecipe(new ItemStack(itemGlowingSand, 1, code.ordinal()), new Object[] { new ItemStack(blockColorSand.blockID, 1, code.ordinal()), Item.redstone });
-                    GameRegistry.addShapelessRecipe(new ItemStack(itemGlowingSand, 1, code.ordinal()), new Object[] { new ItemStack(blockColorSand.blockID, 1, code.ordinal()), Item.glowstone });
+                    GameRegistry.addShapelessRecipe(new ItemStack(itemGlowingSand, 1, code.ordinal()), new ItemStack(blockColorSand.blockID, 1, code.ordinal()), Item.redstone);
+                    GameRegistry.addShapelessRecipe(new ItemStack(itemGlowingSand, 1, code.ordinal()), new ItemStack(blockColorSand.blockID, 1, code.ordinal()), Item.glowstone);
                     MachineRecipeHandler.banProcessingOfItem(new ItemStack(itemGlowingSand, 1, code.ordinal()));
                 }
             }
@@ -291,20 +284,20 @@ public class ALRecipeLoader
             // Colored Sand //
             if (blockColorSand != null)
             {
-                GameRegistry.addRecipe(new ItemStack(blockColorSand, 8, code.ordinal()), new Object[] { "SSS", "SDS", "SSS", 'S', Block.sand, 'D', new ItemStack(Item.dyePowder, 1, code.ordinal()) });
+                GameRegistry.addRecipe(new ItemStack(blockColorSand, 8, code.ordinal()), "SSS", "SDS", "SSS", 'S', Block.sand, 'D', new ItemStack(Item.dyePowder, 1, code.ordinal()));
 
             }
         }
         // Extra Block //
         if (blockBasalt != null)
         {
-            GameRegistry.addShapelessRecipe(new ItemStack(blockBasalt, 1, BlockBasalt.block.COBBLE.ordinal()), new Object[] { new ItemStack(blockBasalt, 1, BlockBasalt.block.STONE.ordinal()) });
-            GameRegistry.addShapelessRecipe(new ItemStack(blockBasalt, 1, BlockBasalt.block.MOSSY.ordinal()), new Object[] { new ItemStack(blockBasalt, 1, BlockBasalt.block.BRICK.ordinal()), Block.vine });
-            GameRegistry.addShapelessRecipe(new ItemStack(blockBasalt, 2, BlockBasalt.block.CRACKED.ordinal()), new Object[] { new ItemStack(blockBasalt, 1, BlockBasalt.block.BRICK.ordinal()), new ItemStack(blockBasalt, 1, BlockBasalt.block.BRICK.ordinal()) });
-            GameRegistry.addRecipe(new ItemStack(blockBasalt, 4, BlockBasalt.block.BRICK.ordinal()), new Object[] { "SS", "SS", 'S', new ItemStack(blockBasalt, 1, BlockBasalt.block.STONE.ordinal()) });
-            GameRegistry.addRecipe(new ItemStack(blockBasalt, 8, BlockBasalt.block.CHISILED.ordinal()), new Object[] { "SSS", "S S", "SSS", 'S', new ItemStack(blockBasalt, 1, BlockBasalt.block.STONE.ordinal()) });
+            GameRegistry.addShapelessRecipe(new ItemStack(blockBasalt, 1, BlockBasalt.block.COBBLE.ordinal()), new ItemStack(blockBasalt, 1, BlockBasalt.block.STONE.ordinal()));
+            GameRegistry.addShapelessRecipe(new ItemStack(blockBasalt, 1, BlockBasalt.block.MOSSY.ordinal()), new ItemStack(blockBasalt, 1, BlockBasalt.block.BRICK.ordinal()), Block.vine);
+            GameRegistry.addShapelessRecipe(new ItemStack(blockBasalt, 2, BlockBasalt.block.CRACKED.ordinal()), new ItemStack(blockBasalt, 1, BlockBasalt.block.BRICK.ordinal()), new ItemStack(blockBasalt, 1, BlockBasalt.block.BRICK.ordinal()));
+            GameRegistry.addRecipe(new ItemStack(blockBasalt, 4, BlockBasalt.block.BRICK.ordinal()), "SS", "SS", 'S', new ItemStack(blockBasalt, 1, BlockBasalt.block.STONE.ordinal()));
+            GameRegistry.addRecipe(new ItemStack(blockBasalt, 8, BlockBasalt.block.CHISILED.ordinal()), "SSS", "S S", "SSS", 'S', new ItemStack(blockBasalt, 1, BlockBasalt.block.STONE.ordinal()));
 
-            GameRegistry.addShapelessRecipe(new ItemStack(blockBasalt, 2, BlockBasalt.block.COBBLE.ordinal()), new Object[] { Block.cobblestone, new ItemStack(blockBasalt, 1, BlockBasalt.block.STONE.ordinal()) });
+            GameRegistry.addShapelessRecipe(new ItemStack(blockBasalt, 2, BlockBasalt.block.COBBLE.ordinal()), Block.cobblestone, new ItemStack(blockBasalt, 1, BlockBasalt.block.STONE.ordinal()));
             GameRegistry.addSmelting(Block.stone.blockID, new ItemStack(blockBasalt, 1, BlockBasalt.block.STONE.ordinal()), 1f);
         }
     }
@@ -312,68 +305,85 @@ public class ALRecipeLoader
     private void createUERecipes()
     {
         // Armbot
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockArmbot, new Object[] { "II ", "SIS", "MCM", 'S', RecipeNames.PLATE_STEEL.name, 'C', RecipeNames.ADVANCED_CIRCUIT.name, 'I', RecipeNames.INGOT_STEEL.name, 'M', RecipeNames.MOTOR.name }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockArmbot, "II ", "SIS", "MCM", 'S', RecipeNames.PLATE_STEEL.name, 'C', RecipeNames.ADVANCED_CIRCUIT.name, 'I', RecipeNames.INGOT_STEEL.name, 'M', RecipeNames.MOTOR.name));
         // Disk
-        GameRegistry.addRecipe(new ShapedOreRecipe(itemDisk, new Object[] { "III", "ICI", "III", 'I', itemImprint, 'C', RecipeNames.ADVANCED_CIRCUIT.name }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(itemDisk, "III", "ICI", "III", 'I', itemImprint, 'C', RecipeNames.ADVANCED_CIRCUIT.name));
         // Encoder
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockEncoder, new Object[] { "SIS", "SCS", "SSS", 'I', itemImprint, 'S', RecipeNames.INGOT_STEEL.name, 'C', RecipeNames.ADVANCED_CIRCUIT.name }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockEncoder, "SIS", "SCS", "SSS", 'I', itemImprint, 'S', RecipeNames.INGOT_STEEL.name, 'C', RecipeNames.ADVANCED_CIRCUIT.name));
         // Detector
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, new Object[] { "SES", "SCS", "S S", 'S', RecipeNames.INGOT_STEEL.name, 'C', RecipeNames.BASIC_CIRCUIT.name, 'E', Item.eyeOfEnder }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, "SES", "SCS", "S S", 'S', RecipeNames.INGOT_STEEL.name, 'C', RecipeNames.BASIC_CIRCUIT.name, 'E', Item.eyeOfEnder));
         // Conveyor Belt
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 10), new Object[] { "III", "WMW", 'I', RecipeNames.INGOT_STEEL.name, 'W', Block.planks, 'M', RecipeNames.MOTOR.name }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 10), "III", "WMW", 'I', RecipeNames.INGOT_STEEL.name, 'W', Block.planks, 'M', RecipeNames.MOTOR.name));
         // Rejector
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockRejector, new Object[] { "CPC", "@R@", '@', RecipeNames.INGOT_STEEL.name, 'R', Item.redstone, 'P', Block.pistonBase, 'C', RecipeNames.BASIC_CIRCUIT.name }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockRejector, "CPC", "@R@", '@', RecipeNames.INGOT_STEEL.name, 'R', Item.redstone, 'P', Block.pistonBase, 'C', RecipeNames.BASIC_CIRCUIT.name));
         // Turntable
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, new Object[] { "IMI", " P ", 'M', RecipeNames.MOTOR.name, 'P', Block.pistonBase, 'I', RecipeNames.INGOT_STEEL.name }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, "IMI", " P ", 'M', RecipeNames.MOTOR.name, 'P', Block.pistonBase, 'I', RecipeNames.INGOT_STEEL.name));
         // Manipulator
-        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockManipulator, 2), new Object[] { Block.dispenser, RecipeNames.BASIC_CIRCUIT.name }));
+        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockManipulator, 2), Block.dispenser, RecipeNames.BASIC_CIRCUIT.name));
         if (processorMachine instanceof BlockProcessor)
         {
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(processorMachine, 1, BlockProcessor.ProcessorData.GRINDER.startMeta), new Object[] { "SSS", "PMP", "SCS", 'M', RecipeNames.MOTOR.name, 'P', RecipeNames.PLATE_STEEL.name, 'S', RecipeNames.INGOT_STEEL.name, 'C', RecipeNames.BASIC_CIRCUIT.name }));
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(processorMachine, 1, BlockProcessor.ProcessorData.CRUSHER.startMeta), new Object[] { "SPS", "RPR", "SCS", 'R', Block.pistonBase, 'P', RecipeNames.PLATE_STEEL.name, 'S', RecipeNames.INGOT_STEEL.name, 'C', RecipeNames.BASIC_CIRCUIT.name }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(processorMachine, 1, BlockProcessor.ProcessorData.GRINDER.startMeta), "SSS", "PMP", "SCS", 'M', RecipeNames.MOTOR.name, 'P', RecipeNames.PLATE_STEEL.name, 'S', RecipeNames.INGOT_STEEL.name, 'C', RecipeNames.BASIC_CIRCUIT.name));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(processorMachine, 1, BlockProcessor.ProcessorData.CRUSHER.startMeta), "SPS", "RPR", "SCS", 'R', Block.pistonBase, 'P', RecipeNames.PLATE_STEEL.name, 'S', RecipeNames.INGOT_STEEL.name, 'C', RecipeNames.BASIC_CIRCUIT.name));
         }
     }
 
     private void createStandardRecipes()
     {
         // Imprint
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemImprint, 2), new Object[] { "RPI", 'P', Item.paper, 'R', Item.redstone, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemImprint, 2), "RPI", 'P', Item.paper, 'R', Item.redstone, 'I', new ItemStack(Item.dyePowder, 1, 0)));
         // Imprinter
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockImprinter, new Object[] { "SIS", "SPS", "WCW", 'S', Item.ingotIron, 'C', Block.chest, 'W', Block.workbench, 'P', Block.pistonBase, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockImprinter, "SIS", "SPS", "WCW", 'S', Item.ingotIron, 'C', Block.chest, 'W', Block.workbench, 'P', Block.pistonBase, 'I', new ItemStack(Item.dyePowder, 1, 0)));
         // Crate
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 0), new Object[] { "TST", "S S", "TST", 'S', Item.ingotIron, 'T', Block.planks }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 1), new Object[] { "TST", "SCS", "TST", 'C', new ItemStack(blockCrate, 1, 0), 'S', RecipeNames.INGOT_STEEL.name, 'T', Block.wood }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 2), new Object[] { "TST", "SCS", "TST", 'C', new ItemStack(blockCrate, 1, 1), 'S', RecipeNames.PLATE_STEEL.name, 'T', Block.wood }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 0), "TST", "S S", "TST", 'S', Item.ingotIron, 'T', Block.planks));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 1), "TST", "SCS", "TST", 'C', new ItemStack(blockCrate, 1, 0), 'S', RecipeNames.INGOT_STEEL.name, 'T', Block.wood));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 2), "TST", "SCS", "TST", 'C', new ItemStack(blockCrate, 1, 1), 'S', RecipeNames.PLATE_STEEL.name, 'T', Block.wood));
     }
 
     public void registerTanks()
     {
-        GameRegistry.addRecipe(new ItemStack(blockPumpMachine, 1, 0), new Object[] { "IXI", "X X", "IXI", 'I', Item.ingotIron, 'X', Block.glass });
+        if (blockTank != null)
+        {
+            GameRegistry.addRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.GLASS.getMeta()), "SXS", "X X", "SXS", 's', Item.silk, 'X', Block.glass);
+            GameRegistry.addRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.WOOD.getMeta()), "LXL", "X X", "LXL", 'L', Block.wood, 'X', Block.glass);
+            GameRegistry.addRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.STONE.getMeta()), "SXS", "X X", "SXS", 'S', Block.stone, 'X', Block.glass);
+            GameRegistry.addRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.IRON.getMeta()), "IXI", "X X", "IXI", 'I', Item.ingotIron, 'X', Block.glass);
+
+            GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.TIN.getMeta()), "IXI", "X X", "IXI", 'I', EnumMaterial.TIN.getOreName(EnumOrePart.INGOTS), 'X', Block.glass));
+            GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.COPPER.getMeta()), "IXI", "X X", "IXI", 'I', EnumMaterial.COPPER.getOreName(EnumOrePart.INGOTS), 'X', Block.glass));
+            GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.BRONZE.getMeta()), "IXI", "X X", "IXI", 'I', EnumMaterial.BRONZE.getOreName(EnumOrePart.INGOTS), 'X', Block.glass));
+            GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.GOLD.getMeta()), "IXI", "X X", "IXI", 'I', EnumMaterial.GOLD.getOreName(EnumOrePart.INGOTS), 'X', Block.glass));
+            GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.STEEL.getMeta()), "IXI", "X X", "IXI", 'I', EnumMaterial.STEEL.getOreName(EnumOrePart.INGOTS), 'X', Block.glass));
+
+            GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.OBBY.getMeta()), "IXI", "XEX", "IXI", 'I', Block.obsidian, 'X', Block.glass, 'E', Item.enderPearl));
+            GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.HELL.getMeta()), "IXI", "XBX", "IXI", 'I', Block.obsidian, 'X', Block.netherBrick, 'B', Item.blazePowder));
+        }
     }
 
     public void registerPipes()
     {
-        //TODO re-add leather seal recipes
-        GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.IRON.getStack(2), new Object[] { EnumMaterial.IRON.getOreName(EnumOrePart.TUBE), Item.leather }));
-        GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.GOLD.getStack(2), new Object[] { EnumMaterial.GOLD.getOreName(EnumOrePart.TUBE), Item.leather }));
-        GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.TIN.getStack(2), new Object[] { EnumMaterial.TIN.getOreName(EnumOrePart.TUBE), Item.leather }));
-        GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.COPPER.getStack(2), new Object[] { EnumMaterial.COPPER.getOreName(EnumOrePart.TUBE), Item.leather }));
-        GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.BRONZE.getStack(2), new Object[] { EnumMaterial.BRONZE.getOreName(EnumOrePart.TUBE), Item.leather }));
-        GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.STEEL.getStack(2), new Object[] { EnumMaterial.STEEL.getOreName(EnumOrePart.TUBE), Item.leather }));
-
-        GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.OBBY.getStack(2), new Object[] { EnumMaterial.OBBY.getOreName(EnumOrePart.TUBE), Block.netherBrick, Block.netherBrick }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(FluidPartsMaterial.HELL.getStack(4), new Object[] { "OOO", "BNB", "OOO", 'N', Block.netherBrick, 'B', Item.blazeRod, 'O', Block.obsidian }));
-
-        for (FluidPartsMaterial mat : FluidPartsMaterial.values())
+        if (blockPipe != null)
         {
-            for (ColorCode color : ColorCode.values())
+            //TODO re-add leather seal recipes
+            GameRegistry.addRecipe(FluidPartsMaterial.WOOD.getStack(2), "LLL", "WWW", "LLL", 'W', Block.planks, 'L', Block.wood);
+            GameRegistry.addRecipe(FluidPartsMaterial.STONE.getStack(2), "SSS", "CCC", "SSS", 'S', Block.stone, 'C', Block.cobblestone);
+            GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.IRON.getStack(2), EnumMaterial.IRON.getOreName(EnumOrePart.TUBE), Parts.Seal.name));
+            GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.GOLD.getStack(2), EnumMaterial.GOLD.getOreName(EnumOrePart.TUBE), Parts.Seal.name));
+            GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.TIN.getStack(2), EnumMaterial.TIN.getOreName(EnumOrePart.TUBE), Parts.Seal.name));
+            GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.COPPER.getStack(2), EnumMaterial.COPPER.getOreName(EnumOrePart.TUBE), Parts.Seal.name));
+            GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.BRONZE.getStack(2), EnumMaterial.BRONZE.getOreName(EnumOrePart.TUBE), Parts.Seal.name));
+            GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.STEEL.getStack(2), EnumMaterial.STEEL.getOreName(EnumOrePart.TUBE), Parts.Seal.name));
+            GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.OBBY.getStack(2), new Object[] { EnumMaterial.OBBY.getOreName(EnumOrePart.TUBE), Block.netherBrick, Block.netherBrick }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(FluidPartsMaterial.HELL.getStack(4), new Object[] { "OOO", "BNB", "OOO", 'N', Block.netherBrick, 'B', Item.blazeRod, 'O', Block.obsidian }));
+
+            for (FluidPartsMaterial mat : FluidPartsMaterial.values())
             {
-                GameRegistry.addRecipe(mat.getStack(color), new Object[] { " X ", "XIX", " X ", 'I', new ItemStack(Item.dyePowder, 1, color.ordinal()), 'X', blockPipe });
-                GameRegistry.addShapelessRecipe(mat.getStack(), new Object[] { mat.getStack(color) });
+                for (ColorCode color : ColorCode.values())
+                {
+                    GameRegistry.addRecipe(mat.getStack(color), new Object[] { " X ", "XIX", " X ", 'I', new ItemStack(Item.dyePowder, 1, color.ordinal()), 'X', blockPipe });
+                    GameRegistry.addShapelessRecipe(mat.getStack(), new Object[] { mat.getStack(color) });
+                }
             }
-
         }
-
     }
 
     public static void parseOreNames(Configuration config)

@@ -133,6 +133,16 @@ public enum FluidPartsMaterial
         return new ItemStack(ALRecipeLoader.blockPipe, s, (this.ordinal() * spacing) + color.ordinal() + 1);
     }
 
+    public int getMeta(int typeID)
+    {
+        return (this.ordinal() * spacing) + typeID;
+    }
+
+    public int getMeta()
+    {
+        return this.getMeta(0);
+    }
+
     public static int getDropItemMeta(World world, int x, int y, int z)
     {
         int meta = world.getBlockMetadata(x, y, z);
