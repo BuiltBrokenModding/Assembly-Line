@@ -11,7 +11,7 @@ import codechicken.multipart.TMultiPart;
 public class ItemWire extends ItemMultipartBase
 {
 
-    public ItemWire(int id)
+    public ItemWire()
     {
         super("wire");
         this.setHasSubtypes(true);
@@ -21,7 +21,7 @@ public class ItemWire extends ItemMultipartBase
     @Override
     public TMultiPart newPart(ItemStack itemStack, EntityPlayer player, World world, BlockCoord pos, int side, Vector3 hit)
     {
-        return (PartBasicWire) MultiPartRegistry.createPart("resonant_induction_flat_wire", false);
+        return (PartBasicWire) MultiPartRegistry.createPart("assembly_line_basic_wire", false);
     }
 
     @Override

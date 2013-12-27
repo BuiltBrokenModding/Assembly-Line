@@ -89,6 +89,7 @@ import com.builtbroken.assemblyline.machine.encoder.BlockEncoder;
 import com.builtbroken.assemblyline.machine.encoder.ItemDisk;
 import com.builtbroken.assemblyline.machine.processor.BlockProcessor;
 import com.builtbroken.assemblyline.machine.red.BlockAdvancedHopper;
+import com.builtbroken.assemblyline.multipart.ItemWire;
 import com.builtbroken.assemblyline.multipart.MultipartAL;
 import com.builtbroken.assemblyline.transmit.BlockWire;
 import com.builtbroken.assemblyline.transmit.ItemBlockWire;
@@ -302,7 +303,9 @@ public class AssemblyLine
         ALRecipeLoader.itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", DarkCore.getNextItemId()).getInt());
         ALRecipeLoader.itemFluidCan = CoreRegistry.createNewItem("ItemFluidCan", AssemblyLine.MOD_ID, ItemFluidCan.class, true);
         ALRecipeLoader.itemParts = CoreRegistry.createNewItem("DMCraftingParts", AssemblyLine.MOD_ID, ItemParts.class, true);
+        
         ALRecipeLoader.itemMetals = CoreRegistry.createNewItem("DMOreDirvParts", AssemblyLine.MOD_ID, ItemOreDirv.class, true);
+        ALRecipeLoader.itemMPWire = CoreRegistry.createNewItem("DMMPWire", AssemblyLine.MOD_ID, ItemWire.class, true);
 
         TileEntityAssembly.refresh_diff = CONFIGURATION.get("TileSettings", "RefreshRandomRange", 9, "n = value of config, 1 + n, random number range from 1 to n that will be added to the lowest refresh value").getInt();
         TileEntityAssembly.refresh_min_rate = CONFIGURATION.get("TileSettings", "RefreshLowestValue", 20, "Lowest value the refresh rate of the tile network will be").getInt();

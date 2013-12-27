@@ -19,8 +19,6 @@ public class PartBasicWire extends PartAdvanced implements IConductor
 
     protected Object[] connections = new Object[6];
 
-    private long saveBuffer = 0;
-
     /** Universal Electricity conductor functions. */
     @Override
     public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
@@ -143,7 +141,8 @@ public class PartBasicWire extends PartAdvanced implements IConductor
     public void load(NBTTagCompound nbt)
     {
         super.load(nbt);
-        this.saveBuffer = nbt.getLong("saveBuffer");
+        if (nbt.hasKey("saveBuffer"))
+            this.getNetwork().setBufferFor(this, nbt.getLong("saveBuffer"));
     }
 
     /** Writes a tile entity to NBT. */
@@ -151,6 +150,8 @@ public class PartBasicWire extends PartAdvanced implements IConductor
     public void save(NBTTagCompound nbt)
     {
         super.save(nbt);
-        nbt.setLong("saveBuffer", this.saveBuffer);
+        if (this.getNetwork().getBufferOf(this) > 0)
+            nbt.setLong("saveBuffer", this.getNetwork().getBufferOf(this));
     }
+
 }

@@ -38,8 +38,6 @@ public class TileEntityWire extends TileEntityAdvanced implements IConductor, IS
 
     public byte currentAcceptorConnections = 0x00;
 
-    private long saveBuffer = 0;
-
     @Override
     public void updateEntity()
     {
@@ -214,7 +212,8 @@ public class TileEntityWire extends TileEntityAdvanced implements IConductor, IS
     public void readFromNBT(NBTTagCompound nbt)
     {
         super.readFromNBT(nbt);
-        this.saveBuffer = nbt.getLong("saveBuffer");
+        if (nbt.hasKey("saveBuffer"))
+            this.getNetwork().setBufferFor(this, nbt.getLong("saveBuffer"));
     }
 
     /** Writes a tile entity to NBT. */
@@ -222,6 +221,7 @@ public class TileEntityWire extends TileEntityAdvanced implements IConductor, IS
     public void writeToNBT(NBTTagCompound nbt)
     {
         super.writeToNBT(nbt);
-        nbt.setLong("saveBuffer", this.saveBuffer);
+        if (this.getNetwork().getBufferOf(this) > 0)
+            nbt.setLong("saveBuffer", this.getNetwork().getBufferOf(this));
     }
 }
