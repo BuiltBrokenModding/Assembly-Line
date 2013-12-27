@@ -107,11 +107,15 @@ public class ItemOreDirv extends ItemBasic implements IExtraItemInfo
     {
         for (EnumMaterial mat : EnumMaterial.values())
         {
+            //System.out.println("  [OrenameDebug]Mat:" + mat.simpleName);
             for (EnumOrePart part : EnumOrePart.values())
             {
                 if (mat.shouldCreateItem(part))
-                {                    
-                    OreDictionary.registerOre(mat.getOreName(part), mat.getStack(this, part, 1));
+                {
+                    String name = mat.getOreName(part);
+                    ItemStack stack = mat.getStack(this, part, 1);
+                    //System.out.println("    [OrenameDebug]Name:" + name + " Stack:" + stack.toString());
+                    OreDictionary.registerOre(name, stack);
                 }
             }
         }
