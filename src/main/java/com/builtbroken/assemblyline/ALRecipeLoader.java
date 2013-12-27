@@ -25,15 +25,15 @@ import com.builtbroken.assemblyline.machine.BlockCrate;
 import com.builtbroken.assemblyline.machine.processor.BlockProcessor;
 import com.builtbroken.minecraft.EnumMaterial;
 import com.builtbroken.minecraft.EnumOrePart;
+import com.builtbroken.minecraft.RecipeNames;
 import com.builtbroken.minecraft.helpers.ColorCode;
 import com.builtbroken.minecraft.interfaces.IToolReadOut.EnumTools;
-import com.builtbroken.minecraft.prefab.RecipeLoader;
 import com.builtbroken.minecraft.recipes.MachineRecipeHandler;
 import com.builtbroken.minecraft.recipes.ProcessorType;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class ALRecipeLoader extends RecipeLoader
+public class ALRecipeLoader
 {
 
     public static Block blockConveyorBelt;
@@ -93,10 +93,8 @@ public class ALRecipeLoader extends RecipeLoader
         return instance;
     }
 
-    @Override
     public void loadRecipes()
     {
-        super.loadRecipes();
         this.createStandardRecipes();
         this.createUERecipes();
 
@@ -104,9 +102,9 @@ public class ALRecipeLoader extends RecipeLoader
         this.registerTanks();
 
         // pump
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockPumpMachine, 1, 0), new Object[] { "C@C", "BMB", "@X@", '@', steelPlate, 'X', new ItemStack(blockPipe, 1), 'B', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 'C', circuit, 'M', "motor" }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockPumpMachine, 1, 0), new Object[] { "C@C", "BMB", "@X@", '@', RecipeNames.PLATE_STEEL, 'X', new ItemStack(blockPipe, 1), 'B', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 'C', RecipeNames.BASIC_CIRCUIT, 'M', "motor" }));
         // construction pump
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConPump, 1, 0), new Object[] { "@C@", "BMB", "@@@", '@', steelPlate, 'B', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 'C', "advancedCircuit", 'M', "motor" }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConPump, 1, 0), new Object[] { "@C@", "BMB", "@@@", '@', RecipeNames.PLATE_STEEL, 'B', new ItemStack(itemParts, 1, Parts.Valve.ordinal()), 'C', RecipeNames.ADVANCED_CIRCUIT, 'M', RecipeNames.MOTOR }));
         // Drain
         GameRegistry.addRecipe(new ItemStack(blockDrain, 1, 0), new Object[] { "IGI", "SVS", " P ", 'I', Item.ingotIron, 'G', Block.dispenser, 'S', Block.stone, 'P', new ItemStack(blockPipe, 1), 'V', new ItemStack(itemParts, 1, Parts.Valve.ordinal()) });
 
@@ -118,27 +116,27 @@ public class ALRecipeLoader extends RecipeLoader
         if (itemParts instanceof ItemParts)
         {
             // seal
-            GameRegistry.addRecipe(this.setStackSize(new ItemStack(itemParts, 1, Parts.Seal.ordinal()), 16), new Object[] { "LL", "LL", 'L', Item.leather });
+            GameRegistry.addRecipe(new ItemStack(itemParts, 16, Parts.Seal.ordinal()), new Object[] { "LL", "LL", 'L', Item.leather });
             // slime steal
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 4, Parts.GasSeal.ordinal()), " # ", "#S#", " # ", '#', Parts.Seal.name, 'S', Item.slimeBall));
             // part valve
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.Tank.ordinal()), new Object[] { "PLP", 'P', "ironPipe", 'L', Block.lever }));
             //Basic Circuit
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.CircuitBasic.ordinal()), "!#!", "#@#", "!#!", '@', copperPlate, '#', Block.glass, '!', "copperWire"));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.CircuitBasic.ordinal()), "!#!", "#@#", "!#!", '@', RecipeNames.PLATE_COPPER, '#', Block.glass, '!', RecipeNames.COPPER_WIRE));
             //Advanced Circuit
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.CircuitAdvanced.ordinal()), "!#!", "#@#", "!#!", '@', copperPlate, '#', Item.redstone, '!', "copperWire"));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.CircuitAdvanced.ordinal()), "!#!", "#@#", "!#!", '@', RecipeNames.PLATE_COPPER, '#', Item.redstone, '!', RecipeNames.COPPER_WIRE));
             //Elite Circuit
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.CircuitElite.ordinal()), "!#!", "#@#", "!#!", '@', "plateGold", '#', Item.redstone, '!', "copperWire"));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.CircuitElite.ordinal()), "!#!", "#@#", "!#!", '@', RecipeNames.PLATE_GOLD, '#', Item.redstone, '!', RecipeNames.COPPER_WIRE));
 
             // unfinished tank
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.Tank.ordinal()), " # ", "# #", " # ", '#', bronze));
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.Tank.ordinal()), " # ", "# #", " # ", '#', steel));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.Tank.ordinal()), " # ", "# #", " # ", '#', RecipeNames.INGOT_BRONZE));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.Tank.ordinal()), " # ", "# #", " # ", '#', RecipeNames.INGOT_STEEL));
             //Motor
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.Motor.ordinal()), new Object[] { "@!@", "!#!", "@!@", '!', steel, '#', Item.ingotIron, '@', new ItemStack(itemParts, 8, Parts.COIL.ordinal()) }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, Parts.Motor.ordinal()), new Object[] { "@!@", "!#!", "@!@", '!', RecipeNames.INGOT_STEEL, '#', Item.ingotIron, '@', Parts.COIL.name }));
             //Laser Diode
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 4, Parts.LASER.ordinal()), new Object[] { " G ", "!S!", " C ", '!', "copperWire", 'G', Block.glass, 'S', Block.sand, 'C', RecipeLoader.circuit }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 4, Parts.LASER.ordinal()), new Object[] { " G ", "!S!", " C ", '!', RecipeNames.COPPER_WIRE, 'G', Block.glass, 'S', Block.sand, 'C', RecipeNames.BASIC_CIRCUIT }));
             //Coil
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 8, Parts.COIL.ordinal()), new Object[] { "WWW", "W W", "WWW", 'W', "copperWire" }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 8, Parts.COIL.ordinal()), new Object[] { "WWW", "W W", "WWW", 'W', RecipeNames.COPPER_WIRE }));
 
         }
         if (itemMetals instanceof ItemOreDirv)
@@ -227,15 +225,15 @@ public class ALRecipeLoader extends RecipeLoader
         if (itemTool instanceof ItemReadoutTools)
         {
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTool, 1, EnumTools.PIPE_GUAGE.ordinal()), "TVT", " T ", 'T', "ironTube", 'V', "valvePart"));
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTool, 1, EnumTools.MULTI_METER.ordinal()), "PGP", "WCW", "PRP", 'P', Block.planks, 'G', Block.glass, 'C', circuit, 'W', "copperWire", 'R', "CopperCoil"));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTool, 1, EnumTools.MULTI_METER.ordinal()), "PGP", "WCW", "PRP", 'P', Block.planks, 'G', Block.glass, 'C', RecipeNames.BASIC_CIRCUIT, 'W', RecipeNames.COPPER_WIRE, 'R', RecipeNames.COIL_COPPER));
         }
         if (wrench instanceof ItemWrench)
         {
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(wrench, 1), "S S", " S ", " S ", 'S', steel));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(wrench, 1), "S S", " S ", " S ", 'S', RecipeNames.INGOT_STEEL));
         }
         if (blockSolar instanceof BlockSolarPanel)
         {
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockSolar, 1), "GGG", "SCS", "SWS", 'G', Block.glass, 'W', "copperWire", 'C', circuit, 'S', steel));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockSolar, 1), "GGG", "SCS", "SWS", 'G', Block.glass, 'W', "copperWire", 'C', RecipeNames.BASIC_CIRCUIT, 'S', RecipeNames.INGOT_STEEL));
         }
         //if (blockWire instanceof BlockWire)
         //{
@@ -313,25 +311,25 @@ public class ALRecipeLoader extends RecipeLoader
     private void createUERecipes()
     {
         // Armbot
-        //GameRegistry.addRecipe(new ShapedOreRecipe(blockArmbot, new Object[] { "II ", "SIS", "MCM", 'S', RecipeLoader.steelPlate, 'C', RecipeLoader.circuit2, 'I', RecipeLoader.steel, 'M', RecipeLoader.motor }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockArmbot, new Object[] { "II ", "SIS", "MCM", 'S', RecipeNames.PLATE_STEEL, 'C', RecipeNames.ADVANCED_CIRCUIT, 'I', RecipeNames.INGOT_STEEL, 'M', RecipeNames.MOTOR }));
         // Disk
-        GameRegistry.addRecipe(new ShapedOreRecipe(itemDisk, new Object[] { "III", "ICI", "III", 'I', itemImprint, 'C', RecipeLoader.circuit2 }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(itemDisk, new Object[] { "III", "ICI", "III", 'I', itemImprint, 'C', RecipeNames.ADVANCED_CIRCUIT }));
         // Encoder
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockEncoder, new Object[] { "SIS", "SCS", "SSS", 'I', itemImprint, 'S', RecipeLoader.steel, 'C', RecipeLoader.circuit2 }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockEncoder, new Object[] { "SIS", "SCS", "SSS", 'I', itemImprint, 'S', RecipeNames.INGOT_STEEL, 'C', RecipeNames.ADVANCED_CIRCUIT }));
         // Detector
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, new Object[] { "SES", "SCS", "S S", 'S', RecipeLoader.steel, 'C', RecipeLoader.circuit, 'E', Item.eyeOfEnder }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, new Object[] { "SES", "SCS", "S S", 'S', RecipeNames.INGOT_STEEL, 'C', RecipeNames.BASIC_CIRCUIT, 'E', Item.eyeOfEnder }));
         // Conveyor Belt
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 10), new Object[] { "III", "WMW", 'I', RecipeLoader.steel, 'W', Block.planks, 'M', RecipeLoader.motor }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 10), new Object[] { "III", "WMW", 'I', RecipeNames.INGOT_STEEL, 'W', Block.planks, 'M', RecipeNames.MOTOR }));
         // Rejector
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockRejector, new Object[] { "CPC", "@R@", '@', steel, 'R', Item.redstone, 'P', Block.pistonBase, 'C', RecipeLoader.circuit }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockRejector, new Object[] { "CPC", "@R@", '@', RecipeNames.INGOT_STEEL, 'R', Item.redstone, 'P', Block.pistonBase, 'C', RecipeNames.BASIC_CIRCUIT }));
         // Turntable
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, new Object[] { "IMI", " P ", 'M', RecipeLoader.motor, 'P', Block.pistonBase, 'I', RecipeLoader.steel }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, new Object[] { "IMI", " P ", 'M', RecipeNames.MOTOR, 'P', Block.pistonBase, 'I', RecipeNames.INGOT_STEEL }));
         // Manipulator
-        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockManipulator, 2), new Object[] { Block.dispenser, RecipeLoader.circuit }));
+        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockManipulator, 2), new Object[] { Block.dispenser, RecipeNames.BASIC_CIRCUIT }));
         if (processorMachine instanceof BlockProcessor)
         {
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(processorMachine, 1, BlockProcessor.ProcessorData.GRINDER.startMeta), new Object[] { "SSS", "PMP", "SCS", 'M', motor, 'P', steelPlate, 'S', steel, 'C', circuit }));
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(processorMachine, 1, BlockProcessor.ProcessorData.CRUSHER.startMeta), new Object[] { "SPS", "RPR", "SCS", 'R', Block.pistonBase, 'P', steelPlate, 'S', steel, 'C', circuit }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(processorMachine, 1, BlockProcessor.ProcessorData.GRINDER.startMeta), new Object[] { "SSS", "PMP", "SCS", 'M', RecipeNames.MOTOR, 'P', RecipeNames.PLATE_STEEL, 'S', RecipeNames.INGOT_STEEL, 'C', RecipeNames.BASIC_CIRCUIT }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(processorMachine, 1, BlockProcessor.ProcessorData.CRUSHER.startMeta), new Object[] { "SPS", "RPR", "SCS", 'R', Block.pistonBase, 'P', RecipeNames.PLATE_STEEL, 'S', RecipeNames.INGOT_STEEL, 'C', RecipeNames.BASIC_CIRCUIT }));
         }
     }
 
@@ -343,8 +341,8 @@ public class ALRecipeLoader extends RecipeLoader
         GameRegistry.addRecipe(new ShapedOreRecipe(blockImprinter, new Object[] { "SIS", "SPS", "WCW", 'S', Item.ingotIron, 'C', Block.chest, 'W', Block.workbench, 'P', Block.pistonBase, 'I', new ItemStack(Item.dyePowder, 1, 0) }));
         // Crate
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 0), new Object[] { "TST", "S S", "TST", 'S', Item.ingotIron, 'T', Block.planks }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 1), new Object[] { "TST", "SCS", "TST", 'C', new ItemStack(blockCrate, 1, 0), 'S', RecipeLoader.steel, 'T', Block.wood }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 2), new Object[] { "TST", "SCS", "TST", 'C', new ItemStack(blockCrate, 1, 1), 'S', RecipeLoader.steelPlate, 'T', Block.wood }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 1), new Object[] { "TST", "SCS", "TST", 'C', new ItemStack(blockCrate, 1, 0), 'S', RecipeNames.INGOT_STEEL, 'T', Block.wood }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 2), new Object[] { "TST", "SCS", "TST", 'C', new ItemStack(blockCrate, 1, 1), 'S', RecipeNames.PLATE_STEEL, 'T', Block.wood }));
     }
 
     public void registerTanks()
