@@ -238,7 +238,7 @@ public class ALRecipeLoader
         }
         if (blockWire != null)
         {
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 16, 1), "III", "WWW", "III", 'I', Block.cloth, 'W', RecipeNames.INGOT_COPPER));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 16, 1), "III", "WWW", "III", 'I', Block.cloth, 'W', RecipeNames.INGOT_COPPER.name));
         }
         if (itemDiggingTool instanceof ItemCommonTool)
         {
