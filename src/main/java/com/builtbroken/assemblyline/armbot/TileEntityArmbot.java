@@ -39,7 +39,7 @@ import cpw.mods.fml.relauncher.Side;
 
 public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IArmbot
 {
-    protected int ROTATION_SPEED = 2;
+    protected int ROTATION_SPEED = 6;
 
     /** The rotation of the arms. In Degrees. */
     protected int targetPitch = 0, targetYaw = 0;

@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.client.model.ModelAdvancedHopper;
-import com.builtbroken.assemblyline.machine.red.TileEntityAdvancedHopper;
+import com.builtbroken.assemblyline.redstone.TileEntityAdvancedHopper;
 import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.relauncher.Side;

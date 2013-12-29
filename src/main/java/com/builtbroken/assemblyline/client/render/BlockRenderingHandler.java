@@ -16,7 +16,7 @@ import com.builtbroken.assemblyline.client.model.ModelMachine;
 import com.builtbroken.assemblyline.client.model.ModelManipulator;
 import com.builtbroken.assemblyline.client.model.ModelRejectorPiston;
 import com.builtbroken.assemblyline.client.model.ModelSolarPanel;
-import com.builtbroken.assemblyline.machine.red.BlockAdvancedHopper;
+import com.builtbroken.assemblyline.redstone.BlockAdvancedHopper;
 import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.client.FMLClientHandler;
