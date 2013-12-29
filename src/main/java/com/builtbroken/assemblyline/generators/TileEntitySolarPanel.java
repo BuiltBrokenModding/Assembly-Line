@@ -43,15 +43,15 @@ public class TileEntitySolarPanel extends TileEntityGenerator
                     }
                 }
                 else
-                {                    
+                {
                     if (!this.worldObj.isThundering() && !this.worldObj.isRaining())
                     {
                         this.setJoulesPerTick(BlockSolarPanel.wattNight);
                     }
                 }
                 this.setJoulesPerSecound(this.JOULES_PER_TICK + this.JOULES_PER_TICK * (this.worldObj.provider instanceof ISolarLevel ? (int) ((ISolarLevel) this.worldObj.provider).getSolarEnergyMultiplier() : 0));
-            }            
+            }
         }
-    }  
+    }
 
 }

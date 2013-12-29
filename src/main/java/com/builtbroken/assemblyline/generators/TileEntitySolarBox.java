@@ -17,7 +17,7 @@ public class TileEntitySolarBox extends TileEntityGenerator
     public void consumeFuel()
     {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

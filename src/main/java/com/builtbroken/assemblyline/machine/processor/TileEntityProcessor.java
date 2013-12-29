@@ -18,7 +18,7 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.network.Player;
 
 /** Basic A -> B recipe processor machine designed mainly to handle ore blocks
- *
+ * 
  * @author DarkGuardsman */
 public class TileEntityProcessor extends TileEntityEnergyMachine
 {

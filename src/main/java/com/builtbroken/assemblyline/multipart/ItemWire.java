@@ -21,7 +21,7 @@ public class ItemWire extends ItemMultipartBase
     @Override
     public TMultiPart newPart(ItemStack itemStack, EntityPlayer player, World world, BlockCoord pos, int side, Vector3 hit)
     {
-        return (PartBasicWire) MultiPartRegistry.createPart("assembly_line_basic_wire", false);
+        return MultiPartRegistry.createPart("assembly_line_basic_wire", false);
     }
 
     @Override

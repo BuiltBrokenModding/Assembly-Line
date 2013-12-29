@@ -13,7 +13,6 @@ import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 import com.builtbroken.minecraft.tilenetwork.INetworkEnergyPart;
 import com.builtbroken.minecraft.tilenetwork.ITileNetwork;
 import com.builtbroken.minecraft.tilenetwork.prefab.NetworkSharedPower;
-import com.builtbroken.minecraft.tilenetwork.prefab.NetworkTileEntities;
 
 /** A class to be inherited by all machines on the assembly line. This class acts as a single peace
  * in a network of similar tiles allowing all to share power from one or more sources

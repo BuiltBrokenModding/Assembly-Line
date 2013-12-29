@@ -76,7 +76,7 @@ public class ALRecipeLoader
     public static Item itemDiggingTool;
     public static Item itemVehicleTest;
     public static Item itemMPWire;
-    
+
     private static ALRecipeLoader instance;
 
     public static final String COPPER_WIRE = "wireCopper";

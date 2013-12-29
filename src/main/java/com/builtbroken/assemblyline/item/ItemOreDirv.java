@@ -12,7 +12,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.oredict.OreDictionary;
 
-import com.builtbroken.assemblyline.ALRecipeLoader;
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.EnumMaterial;

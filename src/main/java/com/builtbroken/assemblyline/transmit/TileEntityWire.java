@@ -13,7 +13,6 @@ import universalelectricity.api.energy.IEnergyNetwork;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
 
-import com.builtbroken.assemblyline.machine.belt.TileEntityConveyor.SlantType;
 import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.helpers.ColorCode;
 import com.builtbroken.minecraft.helpers.ColorCode.IColorCoded;

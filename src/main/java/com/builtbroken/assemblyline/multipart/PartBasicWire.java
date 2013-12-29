@@ -10,7 +10,6 @@ import universalelectricity.api.energy.IEnergyNetwork;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
 
-
 //@UniversalClass
 public class PartBasicWire extends PartAdvanced implements IConductor
 {
