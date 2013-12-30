@@ -20,9 +20,9 @@ import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.assemblyline.ALRecipeLoader;
 import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.assemblyline.IndustryTabs;
 import com.builtbroken.assemblyline.client.render.RenderBlockWire;
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.IndustryTabs;
 import com.builtbroken.minecraft.prefab.BlockMachine;
 
 import cpw.mods.fml.relauncher.Side;

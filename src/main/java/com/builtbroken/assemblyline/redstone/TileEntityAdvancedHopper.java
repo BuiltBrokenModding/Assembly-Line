@@ -10,7 +10,7 @@ import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.assemblyline.imprinter.ItemImprinter;
 import com.builtbroken.assemblyline.imprinter.prefab.TileEntityFilterable;
-import com.builtbroken.minecraft.helpers.DarksHelper;
+import com.builtbroken.minecraft.helpers.HelperMethods;
 import com.builtbroken.minecraft.helpers.InvInteractionHelper;
 
 /** Advanced version of the hopper with features such as redstone control, sorting, filtering, and
@@ -58,7 +58,7 @@ public class TileEntityAdvancedHopper extends TileEntityFilterable
     public void grabItems()
     {
         Vector3 inputPos = this.getThisPos().clone().modifyPositionFromSide(ForgeDirection.UP);
-        List<EntityItem> itemsInBound = DarksHelper.getEntitiesInDirection(worldObj, this.getThisPos(), ForgeDirection.UP);
+        List<EntityItem> itemsInBound = HelperMethods.getEntitiesInDirection(worldObj, this.getThisPos(), ForgeDirection.UP);
         ItemStack itemStack = invHelper().tryGrabFromPosition(inputPos, ForgeDirection.UP, 1);
         if (itemStack != null)
         {

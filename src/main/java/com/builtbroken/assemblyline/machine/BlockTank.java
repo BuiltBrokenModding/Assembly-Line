@@ -21,7 +21,7 @@ import com.builtbroken.assemblyline.fluid.pipes.ItemBlockPipe;
 import com.builtbroken.assemblyline.fluid.pipes.TileEntityPipe;
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.fluid.FluidHelper;
-import com.builtbroken.minecraft.helpers.DarksHelper;
+import com.builtbroken.minecraft.helpers.HelperMethods;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -128,7 +128,7 @@ public class BlockTank extends BlockHydraulic
                 }
                 else
                 {
-                    DarksHelper.dropItemStack(world, new Vector3(x, y, z), dropStack, false);
+                    HelperMethods.dropItemStack(world, new Vector3(x, y, z), dropStack, false);
                 }
                 world.setBlockToAir(x, y, z);
             }

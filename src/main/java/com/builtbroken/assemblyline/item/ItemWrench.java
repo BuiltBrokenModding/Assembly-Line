@@ -16,7 +16,7 @@ import buildcraft.api.tools.IToolWrench;
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.IExtraInfo.IExtraItemInfo;
-import com.builtbroken.minecraft.helpers.DarksHelper;
+import com.builtbroken.minecraft.helpers.HelperMethods;
 import com.builtbroken.minecraft.prefab.ItemBasic;
 
 public class ItemWrench extends ItemBasic implements IToolWrench, IExtraItemInfo
@@ -61,7 +61,7 @@ public class ItemWrench extends ItemBasic implements IToolWrench, IExtraItemInfo
                 if (output != null)
                 {
                     world.setBlockToAir(x, y, z);
-                    DarksHelper.dropItemStack(world, new Vector3(x, y, z), output, false);
+                    HelperMethods.dropItemStack(world, new Vector3(x, y, z), output, false);
                 }
             }
             return true;

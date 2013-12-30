@@ -11,7 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
 import com.builtbroken.assemblyline.AssemblyLine;
-import com.builtbroken.minecraft.IndustryTabs;
+import com.builtbroken.assemblyline.IndustryTabs;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

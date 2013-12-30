@@ -14,8 +14,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 
 import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.assemblyline.IndustryTabs;
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.IndustryTabs;
 import com.builtbroken.minecraft.prefab.BlockMachine;
 
 import cpw.mods.fml.relauncher.Side;

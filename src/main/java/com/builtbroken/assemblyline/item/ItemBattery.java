@@ -7,9 +7,9 @@ import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.api.item.ItemElectric;
 
 import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.assemblyline.IndustryTabs;
 import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.IExtraInfo.IExtraItemInfo;
-import com.builtbroken.minecraft.IndustryTabs;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

@@ -19,7 +19,7 @@ import universalelectricity.api.vector.Vector3;
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.IExtraInfo.IExtraItemInfo;
-import com.builtbroken.minecraft.helpers.DarksHelper;
+import com.builtbroken.minecraft.helpers.HelperMethods;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -76,7 +76,7 @@ public class ItemFarmFood extends Item implements IExtraItemInfo
             {
                 if (!player.inventory.addItemStackToInventory(re))
                 {
-                    DarksHelper.dropItemStack(player.worldObj, new Vector3(player), re, true);
+                    HelperMethods.dropItemStack(player.worldObj, new Vector3(player), re, true);
                 }
             }
         }

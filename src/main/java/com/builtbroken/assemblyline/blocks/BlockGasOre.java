@@ -22,8 +22,8 @@ import net.minecraftforge.fluids.IFluidBlock;
 import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.assemblyline.IndustryTabs;
 import com.builtbroken.minecraft.DarkCore;
-import com.builtbroken.minecraft.IndustryTabs;
 import com.builtbroken.minecraft.fluid.EnumGas;
 
 import cpw.mods.fml.relauncher.Side;

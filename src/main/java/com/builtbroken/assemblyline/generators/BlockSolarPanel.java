@@ -12,10 +12,10 @@ import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.api.UniversalElectricity;
 
 import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.assemblyline.IndustryTabs;
 import com.builtbroken.assemblyline.client.render.BlockRenderingHandler;
 import com.builtbroken.assemblyline.client.render.RenderBlockSolarPanel;
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.IndustryTabs;
 import com.builtbroken.minecraft.prefab.BlockMachine;
 
 import cpw.mods.fml.relauncher.Side;

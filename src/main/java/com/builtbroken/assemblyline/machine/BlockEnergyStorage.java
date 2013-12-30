@@ -18,9 +18,9 @@ import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.CommonProxy;
+import com.builtbroken.assemblyline.IndustryTabs;
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.IndustryTabs;
-import com.builtbroken.minecraft.helpers.DarksHelper;
+import com.builtbroken.minecraft.helpers.HelperMethods;
 import com.builtbroken.minecraft.prefab.BlockMachine;
 
 /** Block for energy storage devices
@@ -100,7 +100,7 @@ public class BlockEnergyStorage extends BlockMachine
             }
             else
             {
-                DarksHelper.dropItemStack(world, new Vector3(x, y, z), batBoxStack, false);
+                HelperMethods.dropItemStack(world, new Vector3(x, y, z), batBoxStack, false);
             }
             world.setBlockToAir(x, y, z);
         }

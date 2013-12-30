@@ -99,7 +99,6 @@ import com.builtbroken.minecraft.CoreRegistry;
 import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.EnumMaterial;
 import com.builtbroken.minecraft.EnumOrePart;
-import com.builtbroken.minecraft.IndustryTabs;
 import com.builtbroken.minecraft.TranslationHelper;
 import com.builtbroken.minecraft.fluid.EnumGas;
 import com.builtbroken.minecraft.network.PacketHandler;

@@ -7,8 +7,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.assemblyline.IndustryTabs;
 import com.builtbroken.assemblyline.machine.TileEntityAssembly;
-import com.builtbroken.minecraft.IndustryTabs;
 import com.builtbroken.minecraft.prefab.BlockMachine;
 
 public class BlockAssembly extends BlockMachine

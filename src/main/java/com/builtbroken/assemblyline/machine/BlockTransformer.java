@@ -5,7 +5,7 @@ import net.minecraftforge.common.Configuration;
 import universalelectricity.api.UniversalElectricity;
 
 import com.builtbroken.assemblyline.AssemblyLine;
-import com.builtbroken.minecraft.IndustryTabs;
+import com.builtbroken.assemblyline.IndustryTabs;
 import com.builtbroken.minecraft.prefab.BlockMachine;
 
 public class BlockTransformer extends BlockMachine

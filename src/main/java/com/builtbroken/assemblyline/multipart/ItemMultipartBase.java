@@ -3,8 +3,8 @@ package com.builtbroken.assemblyline.multipart;
 import codechicken.multipart.JItemMultiPart;
 
 import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.assemblyline.IndustryTabs;
 import com.builtbroken.minecraft.DarkCore;
-import com.builtbroken.minecraft.IndustryTabs;
 
 public abstract class ItemMultipartBase extends JItemMultiPart
 {

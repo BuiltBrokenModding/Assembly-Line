@@ -17,10 +17,10 @@ import universalelectricity.api.UniversalElectricity;
 
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.CommonProxy;
+import com.builtbroken.assemblyline.IndustryTabs;
 import com.builtbroken.assemblyline.client.render.BlockRenderingHandler;
 import com.builtbroken.assemblyline.client.render.RenderProcessor;
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.IndustryTabs;
 import com.builtbroken.minecraft.prefab.BlockMachine;
 import com.builtbroken.minecraft.recipes.ProcessorType;
 

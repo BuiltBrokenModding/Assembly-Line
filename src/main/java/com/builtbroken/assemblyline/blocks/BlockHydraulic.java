@@ -3,7 +3,7 @@ package com.builtbroken.assemblyline.blocks;
 import net.minecraft.block.material.Material;
 
 import com.builtbroken.assemblyline.AssemblyLine;
-import com.builtbroken.minecraft.IndustryTabs;
+import com.builtbroken.assemblyline.IndustryTabs;
 import com.builtbroken.minecraft.prefab.BlockMachine;
 
 public abstract class BlockHydraulic extends BlockMachine
