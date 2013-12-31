@@ -10,6 +10,7 @@ import universalelectricity.api.vector.Vector3;
 import com.builtbroken.assemblyline.api.fluid.INetworkPipe;
 import com.builtbroken.assemblyline.fluid.network.NetworkPipes;
 import com.builtbroken.assemblyline.fluid.prefab.TileEntityFluidNetworkTile;
+import com.builtbroken.minecraft.fluid.FluidHelper;
 import com.builtbroken.minecraft.helpers.ColorCode;
 import com.builtbroken.minecraft.helpers.ColorCode.IColorCoded;
 import com.builtbroken.minecraft.tilenetwork.ITileConnector;
@@ -164,7 +165,14 @@ public class TileEntityPipe extends TileEntityFluidNetworkTile implements IColor
     {
         if (damageAllowed)
         {
-            worldObj.setBlockMetadataWithNotify(xCoord, yCoord, yCoord, 0, 0);
+            if (this.tank.getFluid() != null && this.tank.getFluid() != null)
+            {
+                this.getTileNetwork().drainNetworkTank(this.worldObj, FluidHelper.fillBlock(this.worldObj, new Vector3(this), this.tank.getFluid(), true), true);
+            }
+            else
+            {
+                worldObj.setBlockMetadataWithNotify(xCoord, yCoord, yCoord, 0, 0);
+            }
             return true;
         }
         return false;
@@ -173,7 +181,10 @@ public class TileEntityPipe extends TileEntityFluidNetworkTile implements IColor
     @Override
     public void sendTankUpdate(int index)
     {
-        //TODO only send tank update for pipes that need to visually render the fluid, eg glass, stone, wood
+        if (this.getBlockMetadata() == FluidPartsMaterial.WOOD.ordinal() || this.getBlockMetadata() == FluidPartsMaterial.STONE.ordinal())
+        {
+            super.sendTankUpdate(index);
+        }
     }
 
     @Override

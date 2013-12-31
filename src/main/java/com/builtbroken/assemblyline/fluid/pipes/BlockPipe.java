@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import universalelectricity.api.vector.Vector3;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -20,6 +22,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 
 import com.builtbroken.assemblyline.blocks.BlockHydraulic;
 import com.builtbroken.common.Pair;
+import com.builtbroken.minecraft.fluid.FluidHelper;
 import com.builtbroken.minecraft.helpers.ColorCode;
 import com.builtbroken.minecraft.helpers.ColorCode.IColorCoded;
 
@@ -128,23 +131,16 @@ public class BlockPipe extends BlockHydraulic
     public void breakBlock(World world, int x, int y, int z, int par5, int par6)
     {
         TileEntity entity = world.getBlockTileEntity(x, y, z);
-        super.breakBlock(world, x, y, z, par5, par6);
-
         if (entity instanceof TileEntityPipe)
         {
             FluidTankInfo tank = ((TileEntityPipe) entity).getTankInfo()[0];
             if (tank != null && tank.fluid != null && tank.fluid.getFluid() != null && tank.fluid.amount > 0)
             {
-                if (tank.fluid.getFluid().getName().equalsIgnoreCase("water"))
-                {
-                    world.setBlock(x, y, z, Block.waterStill.blockID);
-                }
-                if (tank.fluid.getFluid().getName().equalsIgnoreCase("lava"))
-                {
-                    world.setBlock(x, y, z, Block.lavaStill.blockID);
-                }
+                ((TileEntityPipe) entity).getTileNetwork().drainNetworkTank(world, FluidHelper.fillBlock(world, new Vector3(x, y, z), tank.fluid, true), true);
             }
         }
+        super.breakBlock(world, x, y, z, par5, par6);
+
     }
 
     @Override
