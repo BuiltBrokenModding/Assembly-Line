@@ -73,7 +73,7 @@ public class ItemPipeRenderer implements IItemRenderer
         FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderPipe.getTexture(FluidPartsMaterial.STEEL, 0));
         if (!equ)
         {
-            GL11.glTranslatef(1F, -0.5F, 1F);
+            GL11.glTranslatef(0F, -1F, 0F);
             RenderPipe.render(FluidPartsMaterial.IRON, 0, new boolean[] { false, false, false, false, true, true });
         }
         else
@@ -82,15 +82,6 @@ public class ItemPipeRenderer implements IItemRenderer
             RenderPipe.render(FluidPartsMaterial.IRON, 0, new boolean[] { false, false, true, true, false, false });
         }
         FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "ReleaseValve.png"));
-
-        if (!equ)
-        {
-            GL11.glTranslatef(0, -2.0F, 0);
-        }
-        else
-        {
-            GL11.glTranslatef(0, -2.0F, 0);
-        }
         valve.render();
         GL11.glPopMatrix();
     }

@@ -12,12 +12,13 @@ import net.minecraft.world.World;
 
 import com.builtbroken.assemblyline.ALRecipeLoader;
 import com.builtbroken.assemblyline.blocks.BlockAssembly;
+import com.builtbroken.assemblyline.blocks.BlockHydraulic;
 import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockReleaseValve extends BlockAssembly
+public class BlockReleaseValve extends BlockHydraulic
 {
     public BlockReleaseValve()
     {
