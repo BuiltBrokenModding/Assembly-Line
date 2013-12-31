@@ -48,7 +48,7 @@ public class RenderPipe extends TileEntitySpecialRenderer
         }
         else
         {
-            this.render(FluidPartsMaterial.STONE, 0, new boolean[6]);
+            this.render(mat, 0, new boolean[6]);
         }
         GL11.glPopMatrix();
 

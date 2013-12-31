@@ -40,11 +40,20 @@ public class TileEntityPipe extends TileEntityFluidNetworkTile implements IColor
     @Override
     public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)
     {
-        super.validateConnectionSide(tileEntity, side);
-
+        int meta = new Vector3(this).getBlockMetadata(this.worldObj);
+        if (meta < FluidPartsMaterial.values().length)
+        {
+            FluidPartsMaterial pipeMat = FluidPartsMaterial.values()[meta];
+            if (pipeMat == FluidPartsMaterial.WOOD || pipeMat == FluidPartsMaterial.STONE)
+            {
+                if (side == ForgeDirection.UP)
+                {
+                    return;
+                }
+            }
+        }
         if (tileEntity instanceof TileEntityPipe)
         {
-            int meta = new Vector3(this).getBlockMetadata(this.worldObj);
             int metaOther = new Vector3(tileEntity).getBlockMetadata(this.worldObj);
             if (meta < FluidPartsMaterial.values().length && metaOther < FluidPartsMaterial.values().length)
             {
@@ -133,7 +142,7 @@ public class TileEntityPipe extends TileEntityFluidNetworkTile implements IColor
     }
 
     /** Calculates flow rate based on viscosity & temp of the fluid as all other factors are know
-     * 
+     *
      * @param fluid - fluidStack
      * @param temp = tempature of the fluid
      * @param pressure - pressure difference of were the fluid is flowing too.
