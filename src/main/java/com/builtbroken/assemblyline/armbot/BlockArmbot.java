@@ -11,7 +11,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import universalelectricity.api.UniversalElectricity;
-import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.blocks.BlockAssembly;
@@ -19,7 +18,9 @@ import com.builtbroken.assemblyline.client.render.BlockRenderingHandler;
 import com.builtbroken.assemblyline.client.render.RenderArmbot;
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.interfaces.IBlockActivated;
 import com.builtbroken.minecraft.interfaces.IMultiBlock;
+import com.builtbroken.minecraft.interfaces.IRotatable;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -33,13 +34,19 @@ public class BlockArmbot extends BlockAssembly
     }
 
     @Override
+    public boolean canBlockStay(World world, int x, int y, int z)
+    {
+        return world.getBlockMaterial(x, y - 1, z).isSolid();
+    }
+
+    @Override
     public void onBlockAdded(World world, int x, int y, int z)
     {
         TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-        if (tileEntity != null && tileEntity instanceof IMultiBlock)
+        if (tileEntity instanceof IMultiBlock)
         {
-            ((IMultiBlock) tileEntity).onCreate(new Vector3(x, y, z));
+            DarkCore.multiBlock.createMultiBlockStructure((IMultiBlock) tileEntity);
         }
     }
 
@@ -48,9 +55,9 @@ public class BlockArmbot extends BlockAssembly
     {
         TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-        if (tileEntity instanceof IMultiBlock)
+        if (tileEntity instanceof IBlockActivated)
         {
-            return ((IMultiBlock) tileEntity).onActivated(player);
+            return ((IBlockActivated) tileEntity).onActivated(player);
         }
 
         return false;
@@ -63,12 +70,10 @@ public class BlockArmbot extends BlockAssembly
 
         if (tileEntity instanceof TileEntityArmbot)
         {
-            ((TileEntityArmbot) tileEntity).onDestroy(tileEntity);
             ((TileEntityArmbot) tileEntity).dropHeldObject();
+            DarkCore.multiBlock.destroyMultiBlockStructure((TileEntityArmbot) tileEntity);
         }
-
         this.dropBlockAsItem_do(world, x, y, z, new ItemStack(this));
-
         super.breakBlock(world, x, y, z, par5, par6);
     }
 
@@ -115,11 +120,4 @@ public class BlockArmbot extends BlockAssembly
     {
         return false;
     }
-
-    @Override
-    public boolean canProvidePower()
-    {
-        return true;
-    }
-
 }

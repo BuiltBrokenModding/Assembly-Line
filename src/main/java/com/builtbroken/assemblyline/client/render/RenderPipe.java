@@ -31,7 +31,7 @@ public class RenderPipe extends TileEntitySpecialRenderer
     public static ModelOpenTrough MODEL_TROUGH_PIPE = new ModelOpenTrough();
     private static HashMap<Pair<FluidPartsMaterial, Integer>, ResourceLocation> TEXTURES = new HashMap<Pair<FluidPartsMaterial, Integer>, ResourceLocation>();
     public static ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "pipes/Pipe.png");
-   
+
     @Override
     public void renderTileEntityAt(TileEntity te, double d, double d1, double d2, float f)
     {
@@ -47,12 +47,12 @@ public class RenderPipe extends TileEntitySpecialRenderer
             boolean[] sides = ((TileEntityPipe) te).renderConnection;
             if (mat == FluidPartsMaterial.WOOD || mat == FluidPartsMaterial.STONE)
             {
-                //FluidStack liquid = ((TileEntityPipe) te).getTank().getFluid();
+                FluidStack liquid = ((TileEntityPipe) te).getTank().getFluid();
                 int cap = ((TileEntityPipe) te).getTankInfo()[0].capacity;
-                FluidStack liquid = new FluidStack(FluidRegistry.WATER, cap);
-                float per = Math.max(1, (float) liquid.amount / (float) (cap));
+                //FluidStack liquid = new FluidStack(FluidRegistry.WATER, cap);
                 if (liquid != null && liquid.amount > 100)
                 {
+                    float per = Math.max(1, (float) liquid.amount / (float) (cap));
                     int[] displayList = RenderFluidHelper.getFluidDisplayLists(liquid, te.worldObj, false);
                     bindTexture(RenderFluidHelper.getFluidSheet(liquid));
 

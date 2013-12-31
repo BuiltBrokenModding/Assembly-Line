@@ -11,10 +11,10 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.assemblyline.api.IManipulator;
-import com.builtbroken.assemblyline.api.IRotatable;
 import com.builtbroken.assemblyline.imprinter.ItemImprinter;
 import com.builtbroken.assemblyline.imprinter.prefab.TileEntityFilterable;
 import com.builtbroken.minecraft.helpers.InvInteractionHelper;
+import com.builtbroken.minecraft.interfaces.IRotatable;
 import com.builtbroken.minecraft.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 

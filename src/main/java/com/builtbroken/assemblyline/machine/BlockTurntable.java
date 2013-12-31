@@ -16,9 +16,9 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.assemblyline.AssemblyLine;
-import com.builtbroken.assemblyline.api.IRotatable;
-import com.builtbroken.assemblyline.api.IRotatableBlock;
 import com.builtbroken.assemblyline.blocks.BlockAssembly;
+import com.builtbroken.minecraft.interfaces.IRotatable;
+import com.builtbroken.minecraft.interfaces.IRotatableBlock;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

@@ -93,8 +93,6 @@ import com.builtbroken.assemblyline.multipart.MultipartAL;
 import com.builtbroken.assemblyline.redstone.BlockAdvancedHopper;
 import com.builtbroken.assemblyline.transmit.BlockWire;
 import com.builtbroken.assemblyline.transmit.ItemBlockWire;
-import com.builtbroken.assemblyline.worldgen.OreGenReplaceStone;
-import com.builtbroken.assemblyline.worldgen.OreGenerator;
 import com.builtbroken.minecraft.CoreRegistry;
 import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.EnumMaterial;
@@ -103,6 +101,8 @@ import com.builtbroken.minecraft.TranslationHelper;
 import com.builtbroken.minecraft.fluid.EnumGas;
 import com.builtbroken.minecraft.network.PacketHandler;
 import com.builtbroken.minecraft.prefab.ItemBlockHolder;
+import com.builtbroken.minecraft.worldgen.OreGenReplaceStone;
+import com.builtbroken.minecraft.worldgen.OreGenerator;
 
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;

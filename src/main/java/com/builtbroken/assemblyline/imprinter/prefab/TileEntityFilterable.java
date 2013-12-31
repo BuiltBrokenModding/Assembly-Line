@@ -7,9 +7,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 
 import com.builtbroken.assemblyline.api.IFilterable;
-import com.builtbroken.assemblyline.api.IRotatable;
 import com.builtbroken.assemblyline.imprinter.ItemImprinter;
 import com.builtbroken.assemblyline.machine.TileEntityAssembly;
+import com.builtbroken.minecraft.interfaces.IRotatable;
 
 public abstract class TileEntityFilterable extends TileEntityAssembly implements IRotatable, IFilterable
 {

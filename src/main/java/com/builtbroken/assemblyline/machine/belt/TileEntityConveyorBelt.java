@@ -14,8 +14,8 @@ import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.assemblyline.ALRecipeLoader;
 import com.builtbroken.assemblyline.api.IBelt;
-import com.builtbroken.assemblyline.api.IRotatable;
 import com.builtbroken.assemblyline.machine.TileEntityAssembly;
+import com.builtbroken.minecraft.interfaces.IRotatable;
 import com.builtbroken.minecraft.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 

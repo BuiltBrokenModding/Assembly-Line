@@ -7,7 +7,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector2;
@@ -25,10 +24,10 @@ import com.builtbroken.assemblyline.armbot.command.TaskRotateTo;
 import com.builtbroken.assemblyline.machine.TileEntityAssembly;
 import com.builtbroken.assemblyline.machine.encoder.ItemDisk;
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.TranslationHelper;
 import com.builtbroken.minecraft.helpers.HelperMethods;
 import com.builtbroken.minecraft.helpers.MathHelper;
+import com.builtbroken.minecraft.interfaces.IBlockActivated;
 import com.builtbroken.minecraft.interfaces.IMultiBlock;
 import com.builtbroken.minecraft.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
@@ -37,7 +36,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 
-public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IArmbot
+public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IArmbot, IBlockActivated
 {
     protected int ROTATION_SPEED = 6;
 
@@ -354,16 +353,9 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     /************************************ Multi Block code *************************************/
 
     @Override
-    public void onCreate(Vector3 placedPosition)
+    public Vector3[] getMultiBlockVectors()
     {
-        DarkCore.multiBlock.makeFakeBlock(this.worldObj, Vector3.translate(placedPosition, new Vector3(0, 1, 0)), new Vector3(this));
-    }
-
-    @Override
-    public void onDestroy(TileEntity callingBlock)
-    {
-        this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, 0, 0, 3);
-        this.worldObj.setBlock(this.xCoord, this.yCoord + 1, this.zCoord, 0, 0, 3);
+        return new Vector3[] { new Vector3(this).translate(0, 1, 0) };
     }
 
     /************************************ Armbot API methods *************************************/
@@ -545,4 +537,5 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     {
         return this.location;
     }
+
 }

@@ -6,7 +6,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.api.vector.Vector3;
 
-import com.builtbroken.assemblyline.api.IRotatable;
+import com.builtbroken.minecraft.interfaces.IRotatable;
 
 /** Interface to make or use the TileEntityDrain. This is mostly a dummy interface to help the
  * construction pump use the TileEntity as the center of drain location
