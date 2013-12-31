@@ -55,7 +55,7 @@ public class ItemPipeRenderer implements IItemRenderer
         FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderPipe.getTexture(item.getItemDamage()));
         if (!equ)
         {
-            GL11.glTranslatef(0.5F, -0.5F, 0.5F);
+            GL11.glTranslatef(0F, -1F, 0F);
             RenderPipe.render(item.getItemDamage(), new boolean[] { false, false, false, false, true, true });
         }
         else
@@ -73,7 +73,7 @@ public class ItemPipeRenderer implements IItemRenderer
         FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderPipe.getTexture(FluidPartsMaterial.STEEL, 0));
         if (!equ)
         {
-            GL11.glTranslatef(0.5F, -0.5F, 0.5F);
+            GL11.glTranslatef(1F, -0.5F, 1F);
             RenderPipe.render(FluidPartsMaterial.IRON, 0, new boolean[] { false, false, false, false, true, true });
         }
         else
