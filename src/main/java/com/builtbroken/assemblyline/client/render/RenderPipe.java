@@ -5,6 +5,9 @@ import java.util.HashMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
@@ -14,6 +17,7 @@ import com.builtbroken.assemblyline.client.model.ModelOpenTrough;
 import com.builtbroken.assemblyline.fluid.pipes.EnumPipeType;
 import com.builtbroken.assemblyline.fluid.pipes.FluidPartsMaterial;
 import com.builtbroken.assemblyline.fluid.pipes.TileEntityPipe;
+import com.builtbroken.assemblyline.machine.TileEntityTank;
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.DarkCore;
 
@@ -27,30 +31,131 @@ public class RenderPipe extends TileEntitySpecialRenderer
     public static ModelOpenTrough MODEL_TROUGH_PIPE = new ModelOpenTrough();
     private static HashMap<Pair<FluidPartsMaterial, Integer>, ResourceLocation> TEXTURES = new HashMap<Pair<FluidPartsMaterial, Integer>, ResourceLocation>();
     public static ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "pipes/Pipe.png");
-
+   
     @Override
     public void renderTileEntityAt(TileEntity te, double d, double d1, double d2, float f)
     {
         // Texture file
-        GL11.glPushMatrix();
-        GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
-        GL11.glScalef(1.0F, -1F, -1F);
 
         FluidPartsMaterial mat = FluidPartsMaterial.IRON;
         if (te.getBlockMetadata() < FluidPartsMaterial.values().length)
         {
             mat = FluidPartsMaterial.values()[te.getBlockMetadata()];
         }
-        bindTexture(RenderPipe.getTexture(mat, 0));
         if (te instanceof TileEntityPipe)
         {
-            this.render(mat, ((TileEntityPipe) te).getSubID(), ((TileEntityPipe) te).renderConnection);
+            boolean[] sides = ((TileEntityPipe) te).renderConnection;
+            if (mat == FluidPartsMaterial.WOOD || mat == FluidPartsMaterial.STONE)
+            {
+                //FluidStack liquid = ((TileEntityPipe) te).getTank().getFluid();
+                int cap = ((TileEntityPipe) te).getTankInfo()[0].capacity;
+                FluidStack liquid = new FluidStack(FluidRegistry.WATER, cap);
+                float per = Math.max(1, (float) liquid.amount / (float) (cap));
+                if (liquid != null && liquid.amount > 100)
+                {
+                    int[] displayList = RenderFluidHelper.getFluidDisplayLists(liquid, te.worldObj, false);
+                    bindTexture(RenderFluidHelper.getFluidSheet(liquid));
+
+                    GL11.glPushMatrix();
+                    GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+                    GL11.glEnable(GL11.GL_CULL_FACE);
+                    GL11.glDisable(GL11.GL_LIGHTING);
+                    GL11.glEnable(GL11.GL_BLEND);
+                    GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+                    GL11.glTranslatef((float) d + 0.3F, (float) d1 + 0.1F, (float) d2 + 0.3F);
+                    GL11.glScalef(0.4F, 0.4F, 0.4F);
+
+                    GL11.glCallList(displayList[(int) (per * (RenderFluidHelper.DISPLAY_STAGES - 1))]);
+
+                    GL11.glPopAttrib();
+                    GL11.glPopMatrix();
+                    if (sides[4])
+                    {
+                        GL11.glPushMatrix();
+                        GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+                        GL11.glEnable(GL11.GL_CULL_FACE);
+                        GL11.glDisable(GL11.GL_LIGHTING);
+                        GL11.glEnable(GL11.GL_BLEND);
+                        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+                        GL11.glTranslatef((float) d + 0F, (float) d1 + 0.1F, (float) d2 + 0.3F);
+                        GL11.glScalef(0.3F, 0.4F, 0.4F);
+
+                        GL11.glCallList(displayList[(int) (per * (RenderFluidHelper.DISPLAY_STAGES - 1))]);
+
+                        GL11.glPopAttrib();
+                        GL11.glPopMatrix();
+                    }
+                    if (sides[5])
+                    {
+                        GL11.glPushMatrix();
+                        GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+                        GL11.glEnable(GL11.GL_CULL_FACE);
+                        GL11.glDisable(GL11.GL_LIGHTING);
+                        GL11.glEnable(GL11.GL_BLEND);
+                        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+                        GL11.glTranslatef((float) d + 0.7F, (float) d1 + 0.1F, (float) d2 + 0.3F);
+                        GL11.glScalef(0.3F, 0.4F, 0.4F);
+
+                        GL11.glCallList(displayList[(int) (per * (RenderFluidHelper.DISPLAY_STAGES - 1))]);
+
+                        GL11.glPopAttrib();
+                        GL11.glPopMatrix();
+                    }
+
+                    if (sides[2])
+                    {
+                        GL11.glPushMatrix();
+                        GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+                        GL11.glEnable(GL11.GL_CULL_FACE);
+                        GL11.glDisable(GL11.GL_LIGHTING);
+                        GL11.glEnable(GL11.GL_BLEND);
+                        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+                        GL11.glTranslatef((float) d + 0.3F, (float) d1 + 0.1F, (float) d2 + 0F);
+                        GL11.glScalef(0.4F, 0.4F, 0.3F);
+
+                        GL11.glCallList(displayList[(int) (per * (RenderFluidHelper.DISPLAY_STAGES - 1))]);
+
+                        GL11.glPopAttrib();
+                        GL11.glPopMatrix();
+                    }
+                    if (sides[3])
+                    {
+                        GL11.glPushMatrix();
+                        GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+                        GL11.glEnable(GL11.GL_CULL_FACE);
+                        GL11.glDisable(GL11.GL_LIGHTING);
+                        GL11.glEnable(GL11.GL_BLEND);
+                        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+                        GL11.glTranslatef((float) d + 0.3F, (float) d1 + 0.1F, (float) d2 + 0.7F);
+                        GL11.glScalef(0.4F, 0.4F, 0.3F);
+
+                        GL11.glCallList(displayList[(int) (per * (RenderFluidHelper.DISPLAY_STAGES - 1))]);
+
+                        GL11.glPopAttrib();
+                        GL11.glPopMatrix();
+                    }
+                }
+            }
+            GL11.glPushMatrix();
+            GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
+            GL11.glScalef(1.0F, -1F, -1F);
+            bindTexture(RenderPipe.getTexture(mat, 0));
+            this.render(mat, ((TileEntityPipe) te).getSubID(), sides);
+            GL11.glPopMatrix();
         }
         else
         {
+            GL11.glPushMatrix();
+            GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
+            GL11.glScalef(1.0F, -1F, -1F);
             this.render(mat, 0, new boolean[6]);
+            GL11.glPopMatrix();
         }
-        GL11.glPopMatrix();
 
     }
 
