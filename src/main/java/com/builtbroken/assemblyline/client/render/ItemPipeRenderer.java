@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 
 import org.lwjgl.opengl.GL11;
 
@@ -37,52 +38,43 @@ public class ItemPipeRenderer implements IItemRenderer
     @Override
     public void renderItem(ItemRenderType type, ItemStack item, Object... data)
     {
-        if (item.itemID == ALRecipeLoader.blockPipe.blockID)
-        {
-            this.renderPipeItem((RenderBlocks) data[0], item, type == ItemRenderType.EQUIPPED);
-        }
-        if (item.itemID == ALRecipeLoader.blockReleaseValve.blockID)
-        {
-            this.renderReleaseValve((RenderBlocks) data[0], type == ItemRenderType.EQUIPPED);
-        }
-
-    }
-
-    public void renderPipeItem(RenderBlocks renderer, ItemStack item, boolean equ)
-    {
         GL11.glPushMatrix();
         GL11.glRotatef(180f, 0f, 0f, 1f);
         FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderPipe.getTexture(item.getItemDamage()));
-        if (!equ)
+        int meta = item.getItemDamage();
+        if (ALRecipeLoader.blockReleaseValve != null && item.itemID == ALRecipeLoader.blockReleaseValve.blockID)
+        {
+            meta = FluidPartsMaterial.IRON.getMeta();
+        }
+        if (type == ItemRenderType.ENTITY)
+        {
+            GL11.glTranslatef(-.5F, -1F, -.5F);
+            RenderPipe.render(meta, new boolean[] { false, false, false, false, true, true });
+        }
+        else if (type == ItemRenderType.INVENTORY)
         {
             GL11.glTranslatef(0F, -1F, 0F);
-            RenderPipe.render(item.getItemDamage(), new boolean[] { false, false, false, false, true, true });
+            RenderPipe.render(meta, new boolean[] { false, false, false, false, true, true });
+        }
+        else if (type == ItemRenderType.EQUIPPED)
+        {
+            GL11.glTranslatef(-1F, -1.2F, 0.5F);
+            RenderPipe.render(meta, new boolean[] { false, false, true, true, false, false });
+        }
+        else if (type == ItemRenderType.EQUIPPED_FIRST_PERSON)
+        {
+            GL11.glTranslatef(-2F, -1.5F, 0.2F);
+            RenderPipe.render(meta, new boolean[] { false, false, true, true, false, false });
         }
         else
         {
-            GL11.glTranslatef(0.5F, -0.5F, 0.5F);
             RenderPipe.render(item.getItemDamage(), new boolean[] { false, false, true, true, false, false });
         }
-        GL11.glPopMatrix();
-    }
-
-    public void renderReleaseValve(RenderBlocks renderer, boolean equ)
-    {
-        GL11.glPushMatrix();
-        GL11.glRotatef(180f, 0f, 0f, 1f);
-        FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderPipe.getTexture(FluidPartsMaterial.STEEL, 0));
-        if (!equ)
+        if (ALRecipeLoader.blockReleaseValve != null && item.itemID == ALRecipeLoader.blockReleaseValve.blockID)
         {
-            GL11.glTranslatef(0F, -1F, 0F);
-            RenderPipe.render(FluidPartsMaterial.IRON, 0, new boolean[] { false, false, false, false, true, true });
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "ReleaseValve.png"));
+            valve.render();
         }
-        else
-        {
-            GL11.glTranslatef(0.5F, -0.5F, 0.5F);
-            RenderPipe.render(FluidPartsMaterial.IRON, 0, new boolean[] { false, false, true, true, false, false });
-        }
-        FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "ReleaseValve.png"));
-        valve.render();
         GL11.glPopMatrix();
     }
 }
