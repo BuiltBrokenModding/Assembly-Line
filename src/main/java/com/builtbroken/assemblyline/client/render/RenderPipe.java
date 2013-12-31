@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.client.model.ModelLargePipe;
+import com.builtbroken.assemblyline.client.model.ModelOpenTrough;
 import com.builtbroken.assemblyline.fluid.pipes.EnumPipeType;
 import com.builtbroken.assemblyline.fluid.pipes.FluidPartsMaterial;
 import com.builtbroken.assemblyline.fluid.pipes.TileEntityPipe;
@@ -22,14 +23,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderPipe extends TileEntitySpecialRenderer
 {
-    public ModelLargePipe SixPipe;
+    public static ModelLargePipe MODEL_PIPE = new ModelLargePipe();
+    public static ModelOpenTrough MODEL_TROUGH_PIPE = new ModelOpenTrough();
     private static HashMap<Pair<FluidPartsMaterial, Integer>, ResourceLocation> TEXTURES = new HashMap<Pair<FluidPartsMaterial, Integer>, ResourceLocation>();
     public static ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "pipes/Pipe.png");
-
-    public RenderPipe()
-    {
-        SixPipe = new ModelLargePipe();
-    }
 
     @Override
     public void renderTileEntityAt(TileEntity te, double d, double d1, double d2, float f)
@@ -44,7 +41,7 @@ public class RenderPipe extends TileEntitySpecialRenderer
         {
             mat = FluidPartsMaterial.values()[te.getBlockMetadata()];
         }
-
+        bindTexture(RenderPipe.getTexture(mat, 0));
         if (te instanceof TileEntityPipe)
         {
             this.render(mat, ((TileEntityPipe) te).getSubID(), ((TileEntityPipe) te).renderConnection);
@@ -76,34 +73,30 @@ public class RenderPipe extends TileEntitySpecialRenderer
         return TEXTURE;
     }
 
-    public void render(FluidPartsMaterial mat, int pipeID, boolean[] side)
+    public static ResourceLocation getTexture(int meta)
     {
-        bindTexture(RenderPipe.getTexture(mat, pipeID));
-        if (side[0])
+        return getTexture(FluidPartsMaterial.getFromItemMeta(meta), FluidPartsMaterial.getType(meta));
+    }
+
+    public static void render(FluidPartsMaterial mat, int pipeID, boolean[] side)
+    {
+        if (mat == FluidPartsMaterial.WOOD)
         {
-            SixPipe.renderBottom();
+            MODEL_TROUGH_PIPE.render(side, false);
         }
-        if (side[1])
+        else if (mat == FluidPartsMaterial.STONE)
         {
-            SixPipe.renderTop();
+            MODEL_TROUGH_PIPE.render(side, true);
         }
-        if (side[3])
+        else
         {
-            SixPipe.renderFront();
+            MODEL_PIPE.render(side);
         }
-        if (side[2])
-        {
-            SixPipe.renderBack();
-        }
-        if (side[5])
-        {
-            SixPipe.renderRight();
-        }
-        if (side[4])
-        {
-            SixPipe.renderLeft();
-        }
-        SixPipe.renderMiddle();
+    }
+
+    public static void render(int meta, boolean[] bs)
+    {
+        render(FluidPartsMaterial.getFromItemMeta(meta), FluidPartsMaterial.getType(meta), bs);
     }
 
 }

@@ -21,7 +21,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemPipeRenderer implements IItemRenderer
 {
     private ModelReleaseValve valve = new ModelReleaseValve();
-    private RenderPipe pipe = new RenderPipe();
 
     @Override
     public boolean handleRenderType(ItemStack item, ItemRenderType type)
@@ -44,55 +43,46 @@ public class ItemPipeRenderer implements IItemRenderer
         }
         if (item.itemID == ALRecipeLoader.blockReleaseValve.blockID)
         {
-            this.renderReleaseValve((RenderBlocks) data[0], item.getItemDamage(), type == ItemRenderType.EQUIPPED);
+            this.renderReleaseValve((RenderBlocks) data[0], type == ItemRenderType.EQUIPPED);
         }
 
     }
 
     public void renderPipeItem(RenderBlocks renderer, ItemStack item, boolean equ)
     {
-
         GL11.glPushMatrix();
-
-        FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderPipe.getTexture(FluidPartsMaterial.getFromItemMeta(item.getItemDamage()), item.getItemDamage() % FluidPartsMaterial.spacing));
+        GL11.glRotatef(180f, 0f, 0f, 1f);
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderPipe.getTexture(item.getItemDamage()));
         if (!equ)
         {
             GL11.glTranslatef(0.5F, -0.5F, 0.5F);
-            pipe.SixPipe.renderRight();
-            pipe.SixPipe.renderLeft();
-            pipe.SixPipe.renderMiddle();
+            RenderPipe.render(item.getItemDamage(), new boolean[] { false, false, false, false, true, true });
         }
         else
         {
             GL11.glTranslatef(0.5F, -0.5F, 0.5F);
-            pipe.SixPipe.renderFront();
-            pipe.SixPipe.renderBack();
-            pipe.SixPipe.renderMiddle();
+            RenderPipe.render(item.getItemDamage(), new boolean[] { false, false, true, true, false, false });
         }
-
         GL11.glPopMatrix();
     }
 
-    public void renderReleaseValve(RenderBlocks renderer, int meta, boolean equ)
+    public void renderReleaseValve(RenderBlocks renderer, boolean equ)
     {
         GL11.glPushMatrix();
+        GL11.glRotatef(180f, 0f, 0f, 1f);
         FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderPipe.getTexture(FluidPartsMaterial.STEEL, 0));
         if (!equ)
         {
             GL11.glTranslatef(0.5F, -0.5F, 0.5F);
-            pipe.SixPipe.renderRight();
-            pipe.SixPipe.renderLeft();
-            pipe.SixPipe.renderMiddle();
+            RenderPipe.render(FluidPartsMaterial.IRON, 0, new boolean[] { false, false, false, false, true, true });
         }
         else
         {
             GL11.glTranslatef(0.5F, -0.5F, 0.5F);
-            pipe.SixPipe.renderFront();
-            pipe.SixPipe.renderBack();
-            pipe.SixPipe.renderMiddle();
+            RenderPipe.render(FluidPartsMaterial.IRON, 0, new boolean[] { false, false, true, true, false, false });
         }
         FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "ReleaseValve.png"));
-        GL11.glRotatef(180f, 0f, 0f, 1f);
+
         if (!equ)
         {
             GL11.glTranslatef(0, -2.0F, 0);
@@ -104,5 +94,4 @@ public class ItemPipeRenderer implements IItemRenderer
         valve.render();
         GL11.glPopMatrix();
     }
-
 }

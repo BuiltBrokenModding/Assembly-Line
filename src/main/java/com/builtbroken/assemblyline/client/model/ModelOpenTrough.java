@@ -10,7 +10,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-public class ModelOpenPipe extends ModelBase
+public class ModelOpenTrough extends ModelBase
 {
     //fields
     ModelRenderer base;
@@ -51,7 +51,7 @@ public class ModelOpenPipe extends ModelBase
     ModelRenderer cornerFrontLeft;
     ModelRenderer cornerFrontRight;
 
-    public ModelOpenPipe()
+    public ModelOpenTrough()
     {
         textureWidth = 128;
         textureHeight = 128;
@@ -280,9 +280,22 @@ public class ModelOpenPipe extends ModelBase
         setRotation(cornerFrontRight, 0F, 0F, 0F);
     }
 
-    public void renderMiddle(boolean corners)
+    public void render(boolean[] side, boolean stone)
     {
-        base.render(0.0625F);
+        if (side != null)
+        {
+            renderMiddle(!side[0], stone);
+            renderBack(side[2] ? PipeType.NORMAL : stone ? PipeType.SOLID : PipeType.MID_CAP);
+            renderFront(side[3] ? PipeType.NORMAL : stone ? PipeType.SOLID : PipeType.MID_CAP);
+            renderRight(side[4] ? PipeType.NORMAL : stone ? PipeType.SOLID : PipeType.MID_CAP);
+            renderLeft(side[5] ? PipeType.NORMAL : stone ? PipeType.SOLID : PipeType.MID_CAP);
+        }
+    }
+
+    public void renderMiddle(boolean bottom, boolean corners)
+    {
+        if (bottom)
+            base.render(0.0625F);
         centerA.render(0.0625F);
         centerB.render(0.0625F);
         centerC.render(0.0625F);
@@ -310,6 +323,7 @@ public class ModelOpenPipe extends ModelBase
                 if (type == PipeType.SOLID)
                 {
                     leftDoorB.render(0.0625F);
+                    leftDoorC.render(0.0625F);
                 }
             }
         }
@@ -333,6 +347,7 @@ public class ModelOpenPipe extends ModelBase
                 if (type == PipeType.SOLID)
                 {
                     rightDoorB.render(0.0625F);
+                    rightDoorC.render(0.0625F);
                 }
             }
         }
@@ -356,6 +371,7 @@ public class ModelOpenPipe extends ModelBase
                 if (type == PipeType.SOLID)
                 {
                     backDoorB.render(0.0625F);
+                    backDoorC.render(0.0625F);
                 }
             }
         }
@@ -379,6 +395,7 @@ public class ModelOpenPipe extends ModelBase
                 if (type == PipeType.SOLID)
                 {
                     frontDoorB.render(0.0625F);
+                    frontDoorC.render(0.0625F);
                 }
             }
         }
