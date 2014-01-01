@@ -155,6 +155,7 @@ public class ModelLargePipe extends ModelBase
         FrontConnect.mirror = true;
         setRotation(FrontConnect, 0F, 0F, 0F);
     }
+
     public void render(boolean[] side)
     {
         if (side[0])
@@ -183,6 +184,7 @@ public class ModelLargePipe extends ModelBase
         }
         renderMiddle();
     }
+
     public void renderMiddle()
     {
         Mid.render(0.0625F);

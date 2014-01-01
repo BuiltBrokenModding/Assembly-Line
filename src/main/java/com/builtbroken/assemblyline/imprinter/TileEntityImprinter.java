@@ -4,17 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
-import universalelectricity.api.vector.VectorHelper;
 
 import com.builtbroken.assemblyline.api.AutoCraftEvent;
 import com.builtbroken.assemblyline.api.IArmbot;
@@ -23,7 +19,6 @@ import com.builtbroken.assemblyline.api.coding.args.ArgumentData;
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.TranslationHelper;
 import com.builtbroken.minecraft.prefab.TileEntityAdvanced;
-import com.builtbroken.minecraft.prefab.TileEntityMulti;
 import com.builtbroken.minecraft.prefab.invgui.ISlotPickResult;
 import com.builtbroken.minecraft.recipes.AutoCraftingManager;
 import com.builtbroken.minecraft.recipes.AutoCraftingManager.IAutoCrafter;
@@ -342,42 +337,6 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
                 }
             }
         }
-    }
-
-    /** Gets all valid inventories that imprinter can use for resources */
-    private IInventory[] getAvaliableInventories()
-    {
-        IInventory[] inventories = new IInventory[6];
-
-        if (this.searchInventories)
-        {
-            for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
-            {
-                TileEntity tileEntity = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), direction);
-
-                if (tileEntity != null)
-                {
-                    if (tileEntity instanceof TileEntityMulti)
-                    {
-                        Vector3 mainBlockPosition = ((TileEntityMulti) tileEntity).mainBlockPosition;
-
-                        if (mainBlockPosition != null)
-                        {
-                            if (mainBlockPosition.getTileEntity(this.worldObj) instanceof IInventory)
-                            {
-                                inventories[direction.ordinal()] = ((IInventory) mainBlockPosition.getTileEntity(this.worldObj));
-                            }
-                        }
-                    }
-                    else if (tileEntity instanceof IInventory && !(tileEntity instanceof TileEntityImprinter))
-                    {
-                        inventories[direction.ordinal()] = ((IInventory) tileEntity);
-                    }
-                }
-            }
-        }
-
-        return inventories;
     }
 
     /** Tries to let the Armbot craft an item. */

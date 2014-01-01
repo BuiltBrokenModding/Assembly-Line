@@ -88,7 +88,6 @@ import com.builtbroken.assemblyline.machine.belt.BlockConveyorBelt;
 import com.builtbroken.assemblyline.machine.encoder.BlockEncoder;
 import com.builtbroken.assemblyline.machine.encoder.ItemDisk;
 import com.builtbroken.assemblyline.machine.processor.BlockProcessor;
-import com.builtbroken.assemblyline.multipart.ItemWire;
 import com.builtbroken.assemblyline.multipart.MultipartAL;
 import com.builtbroken.assemblyline.redstone.BlockAdvancedHopper;
 import com.builtbroken.assemblyline.transmit.BlockWire;

@@ -5,8 +5,6 @@ import java.util.HashMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
@@ -17,7 +15,6 @@ import com.builtbroken.assemblyline.client.model.ModelOpenTrough;
 import com.builtbroken.assemblyline.fluid.pipes.EnumPipeType;
 import com.builtbroken.assemblyline.fluid.pipes.FluidPartsMaterial;
 import com.builtbroken.assemblyline.fluid.pipes.TileEntityPipe;
-import com.builtbroken.assemblyline.machine.TileEntityTank;
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.DarkCore;
 
@@ -145,7 +142,7 @@ public class RenderPipe extends TileEntitySpecialRenderer
             GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
             GL11.glScalef(1.0F, -1F, -1F);
             bindTexture(RenderPipe.getTexture(mat, 0));
-            this.render(mat, ((TileEntityPipe) te).getSubID(), sides);
+            RenderPipe.render(mat, ((TileEntityPipe) te).getSubID(), sides);
             GL11.glPopMatrix();
         }
         else
@@ -153,7 +150,7 @@ public class RenderPipe extends TileEntitySpecialRenderer
             GL11.glPushMatrix();
             GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
             GL11.glScalef(1.0F, -1F, -1F);
-            this.render(mat, 0, new boolean[6]);
+            RenderPipe.render(mat, 0, new boolean[6]);
             GL11.glPopMatrix();
         }
 

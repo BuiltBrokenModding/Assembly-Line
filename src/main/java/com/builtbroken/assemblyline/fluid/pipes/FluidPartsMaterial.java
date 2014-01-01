@@ -14,11 +14,11 @@ import com.builtbroken.minecraft.helpers.ColorCode;
 
 /** Enum to hold info about each pipe material. Values are by default and some can change with pipe
  * upgrades.
- *
+ * 
  * @Note unsupportedFluids should only be used by filters. All pipes should allow all fluid types.
  * However, pipes that can't support the fluid should have an effect. Eg no gas support should cause
  * the pipe to leak. No molten support should cause the pipe to take damage.
- *
+ * 
  * @author DarkGuardsman */
 public enum FluidPartsMaterial
 {

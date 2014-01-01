@@ -20,7 +20,6 @@ import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.interfaces.IBlockActivated;
 import com.builtbroken.minecraft.interfaces.IMultiBlock;
-import com.builtbroken.minecraft.interfaces.IRotatable;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
