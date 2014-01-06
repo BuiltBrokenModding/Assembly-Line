@@ -63,6 +63,8 @@ public class ALRecipeLoader
     public static Block blockGlowGlass;
     public static Block blockSteamGen, blockSolar, blockBatBox;
     public static Block blockGas;
+    public static Block frackingPipe;
+    public static Block laserSentry = null;
 
     public static Item itemImprint;
     public static Item itemDisk;

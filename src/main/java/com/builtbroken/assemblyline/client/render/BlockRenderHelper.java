@@ -69,6 +69,21 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
             conPump.renderMotor(0.0725F);
 
         }
+        else if (ALRecipeLoader.frackingPipe != null && block.blockID == ALRecipeLoader.frackingPipe.blockID)
+        {
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderFrackingPipe.TEXTURE);
+            GL11.glTranslatef(0, 1F, 0);
+            GL11.glScalef(1.0F, -1F, -1F);
+            RenderFrackingPipe.model.renderAll();
+        }
+        else if (ALRecipeLoader.laserSentry != null && block.blockID == ALRecipeLoader.laserSentry.blockID)
+        {
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderMiningLaser.TEXTURE);
+            GL11.glTranslatef(0, 1.7F, 0);
+            GL11.glScalef(1.0F, -1F, -1F);
+            GL11.glRotatef(180, 0, 1, 0);
+            RenderMiningLaser.model.renderAll();
+        }
         GL11.glPopMatrix();
     }
 

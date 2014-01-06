@@ -108,10 +108,10 @@ public enum EnumTool
 
     public static Icon getToolIcon(int metadata)
     {
-        int mat = getToolMatFromMeta(metadata).ordinal();
-        int tool = getToolFromMeta(metadata).ordinal();
-        if (mat < EnumMaterial.values().length)
+        if (metadata < EnumMaterial.values().length)
         {
+            int mat = getToolMatFromMeta(metadata).ordinal();
+            int tool = getToolFromMeta(metadata).ordinal();
             if (EnumTool.values()[tool].toolIcons == null)
             {
                 EnumTool.values()[tool].toolIcons = new Icon[EnumMaterial.values().length];
