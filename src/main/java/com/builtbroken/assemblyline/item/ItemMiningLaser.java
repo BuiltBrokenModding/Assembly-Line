@@ -251,7 +251,7 @@ public class ItemMiningLaser extends ItemElectric implements IExtraItemInfo
         this.blockRange = config.get("Laser", "Range", this.blockRange).getInt(this.blockRange);
         this.firingDelay = config.get("Laser", "Delay", this.firingDelay).getInt(this.firingDelay);
         this.damageToEntities = (float) config.get("Laser", "Damage", this.damageToEntities).getDouble(this.damageToEntities);
-        this.batterySize = (long) (config.get("Energy", "BatteryCap", this.batterySize).getInt());
+        this.batterySize = (config.get("Energy", "BatteryCap", this.batterySize).getInt());
         this.wattPerShot = (float) (config.get("Energy", "FiringCost", this.wattPerShot * 1000).getDouble(this.wattPerShot * 1000) / 1000);
         this.setFire = config.get("Laser", "SetFire", true, "Set plants, and wood on fire").getBoolean(true);
         this.createLava = config.get("Laser", "MakeLava", true, "Turn some blocks into lava like obby").getBoolean(true);

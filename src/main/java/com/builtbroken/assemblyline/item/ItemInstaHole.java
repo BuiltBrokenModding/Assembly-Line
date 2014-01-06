@@ -11,7 +11,7 @@ import com.builtbroken.minecraft.DarkCore;
 
 /** Creative mod tool to quickly create a large hole in the ground. Is designed only for debug
  * testing of ore generation.
- *
+ * 
  * @author DarkGuardsman */
 public class ItemInstaHole extends Item
 {

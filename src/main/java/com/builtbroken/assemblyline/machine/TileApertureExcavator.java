@@ -90,8 +90,6 @@ public class TileApertureExcavator extends TileEntityEnergyMachine
         }
     }
 
-   
-
     private void dropItems(ItemStack item)
     {
         if (item != null)
