@@ -8,7 +8,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import com.builtbroken.assemblyline.api.fluid.INetworkFluidPart;
-import com.builtbroken.minecraft.fluid.FluidHelper;
+import com.builtbroken.minecraft.FluidHelper;
 import com.builtbroken.minecraft.tilenetwork.INetworkPart;
 import com.builtbroken.minecraft.tilenetwork.prefab.NetworkUpdateHandler;
 

@@ -16,7 +16,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.common.lang.TextHelper.TextColor;
-import com.builtbroken.minecraft.fluid.FluidHelper;
+import com.builtbroken.minecraft.FluidHelper;
 import com.builtbroken.minecraft.interfaces.IBlockActivated;
 
 public class TileEntityInfFluid extends TileEntity implements IFluidHandler, IBlockActivated

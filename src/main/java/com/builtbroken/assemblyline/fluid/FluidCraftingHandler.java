@@ -1,4 +1,4 @@
-package com.builtbroken.assemblyline.fluid.network;
+package com.builtbroken.assemblyline.fluid;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,9 +12,10 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import com.builtbroken.assemblyline.fluid.network.FluidRecipeInfo.SimpleFluidRecipe;
+import com.builtbroken.assemblyline.fluid.network.IFluidRecipeCrafter;
 import com.builtbroken.common.Pair;
 import com.builtbroken.common.Triple;
-import com.builtbroken.minecraft.fluid.FluidHelper;
+import com.builtbroken.minecraft.FluidHelper;
 
 /** Handles all kinds of process involving mixing Fluids with other fluids and/or Items, Blocks,
  * ItemStack, or Liquids

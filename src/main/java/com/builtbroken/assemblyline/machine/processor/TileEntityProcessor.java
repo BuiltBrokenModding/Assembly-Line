@@ -5,10 +5,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.item.IEnergyItem;
+import calclavia.lib.network.PacketHandler;
 
 import com.builtbroken.assemblyline.machine.processor.BlockProcessor.ProcessorData;
 import com.builtbroken.minecraft.interfaces.IInvBox;
-import com.builtbroken.minecraft.network.PacketHandler;
 import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 import com.builtbroken.minecraft.prefab.invgui.InvChest;
 import com.builtbroken.minecraft.recipes.MachineRecipeHandler;

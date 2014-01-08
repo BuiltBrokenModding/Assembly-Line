@@ -11,7 +11,6 @@ import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.client.model.ModelMachine;
 import com.builtbroken.assemblyline.client.model.ModelSteamGen;
 import com.builtbroken.assemblyline.client.model.ModelSteamTurbine;
-import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.prefab.TileEntityMachine;
 
 import cpw.mods.fml.relauncher.Side;
@@ -23,8 +22,8 @@ public class RenderSteamGen extends TileEntitySpecialRenderer
     public static final ModelSteamTurbine TURBINE_MODEL = new ModelSteamTurbine();
     public static final ModelSteamGen STEAM_GEN_MODEL = new ModelSteamGen();
 
-    public static final ResourceLocation TURBINE_TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "SmallSteamFan.png");
-    public static final ResourceLocation STEAM_GEN_TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "SteamGenerator.png");
+    public static final ResourceLocation TURBINE_TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "SmallSteamFan.png");
+    public static final ResourceLocation STEAM_GEN_TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "SteamGenerator.png");
     private static float rot1 = 0;
 
     @Override

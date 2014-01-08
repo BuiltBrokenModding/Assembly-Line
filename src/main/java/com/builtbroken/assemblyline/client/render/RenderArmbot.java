@@ -19,7 +19,6 @@ import universalelectricity.api.vector.Vector3;
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.armbot.TileEntityArmbot;
 import com.builtbroken.assemblyline.client.model.ModelArmbot;
-import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -49,7 +48,7 @@ public class RenderArmbot extends TileEntitySpecialRenderer
                     }
                 }
             }
-            ResourceLocation name = new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + TEXTURE);
+            ResourceLocation name = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + TEXTURE);
             bindTexture(name);
 
             GL11.glPushMatrix();

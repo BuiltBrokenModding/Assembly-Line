@@ -4,11 +4,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
+import calclavia.lib.network.PacketHandler;
 
-import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.assemblyline.network.ISimplePacketReceiver;
 import com.builtbroken.minecraft.interfaces.IExtendedStorage;
-import com.builtbroken.minecraft.network.ISimplePacketReceiver;
-import com.builtbroken.minecraft.network.PacketHandler;
 import com.builtbroken.minecraft.prefab.TileEntityInv;
 import com.google.common.io.ByteArrayDataInput;
 
@@ -226,11 +226,11 @@ public class TileEntityCrate extends TileEntityInv implements ISimplePacketRecei
         ItemStack stack = this.getSampleStack();
         if (stack != null)
         {
-            return PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, "InventoryItem", this, true, stack.writeToNBT(new NBTTagCompound()), stack.stackSize);
+            return PacketHandler.instance().getTilePacket(AssemblyLine.CHANNEL, "InventoryItem", this, true, stack.writeToNBT(new NBTTagCompound()), stack.stackSize);
         }
         else
         {
-            return PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, "InventoryItem", this, false);
+            return PacketHandler.instance().getTilePacket(AssemblyLine.CHANNEL, "InventoryItem", this, false);
         }
     }
 

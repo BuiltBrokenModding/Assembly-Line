@@ -8,7 +8,6 @@ import org.lwjgl.opengl.GL11;
 
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.client.model.ModelSink;
-import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -19,7 +18,7 @@ public class RenderSink extends TileEntitySpecialRenderer
     int type = 0;
     private ModelSink model;
 
-    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "Sink.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "Sink.png");
 
     public RenderSink()
     {

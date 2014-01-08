@@ -8,7 +8,6 @@ import org.lwjgl.opengl.GL11;
 
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.client.model.ModelFurnace;
-import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -18,7 +17,7 @@ public class RenderFurnace extends TileEntitySpecialRenderer
 {
     int type = 0;
     private ModelFurnace model;
-    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "Furnace.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "Furnace.png");
 
     public RenderFurnace()
     {

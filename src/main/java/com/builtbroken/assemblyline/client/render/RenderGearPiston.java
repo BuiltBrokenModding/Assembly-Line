@@ -8,7 +8,6 @@ import org.lwjgl.opengl.GL11;
 
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.client.model.ModelGearPiston;
-import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -17,7 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderGearPiston extends TileEntitySpecialRenderer
 {
     private ModelGearPiston model;
-    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "GearShaftPiston.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "GearShaftPiston.png");
 
     public RenderGearPiston()
     {

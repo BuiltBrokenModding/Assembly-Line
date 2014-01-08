@@ -14,6 +14,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
+import calclavia.lib.ore.OreGenReplaceStone;
 
 import com.builtbroken.assemblyline.ALRecipeLoader;
 import com.builtbroken.assemblyline.AssemblyLine;
@@ -21,7 +22,6 @@ import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.EnumMaterial;
 import com.builtbroken.minecraft.IExtraInfo.IExtraBlockInfo;
-import com.builtbroken.minecraft.worldgen.OreGenReplaceStone;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

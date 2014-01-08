@@ -11,7 +11,6 @@ import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.client.model.ModelCrusher;
 import com.builtbroken.assemblyline.client.model.ModelGrinder;
 import com.builtbroken.assemblyline.machine.processor.TileEntityProcessor;
-import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -81,11 +80,11 @@ public class RenderProcessor extends TileEntitySpecialRenderer
         int g = meta / 4;
         if (g == 0)
         {
-            return new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "CrusherBlock.png");
+            return new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "CrusherBlock.png");
         }
         else if (g == 1)
         {
-            return new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "GrinderBlock.png");
+            return new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "GrinderBlock.png");
         }
         return null;
 

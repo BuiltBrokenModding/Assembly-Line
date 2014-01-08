@@ -27,7 +27,7 @@ import cofh.api.energy.IEnergyStorage;
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.machine.TileEntityGenerator;
 import com.builtbroken.minecraft.DarkCore;
-import com.builtbroken.minecraft.fluid.FluidHelper;
+import com.builtbroken.minecraft.FluidHelper;
 import com.builtbroken.minecraft.interfaces.IToolReadOut;
 import com.builtbroken.minecraft.interfaces.IToolReadOut.EnumTools;
 import com.builtbroken.minecraft.prefab.ItemBasic;

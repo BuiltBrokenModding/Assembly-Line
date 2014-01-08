@@ -20,7 +20,7 @@ import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.assemblyline.blocks.BlockHydraulic;
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.fluid.FluidHelper;
+import com.builtbroken.minecraft.FluidHelper;
 import com.builtbroken.minecraft.helpers.ColorCode;
 import com.builtbroken.minecraft.helpers.ColorCode.IColorCoded;
 

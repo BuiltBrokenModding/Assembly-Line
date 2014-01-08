@@ -12,12 +12,12 @@ import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
+import calclavia.lib.network.PacketHandler;
 
-import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.assemblyline.network.ISimplePacketReceiver;
 import com.builtbroken.minecraft.helpers.ColorCode;
 import com.builtbroken.minecraft.helpers.ColorCode.IColorCoded;
-import com.builtbroken.minecraft.network.ISimplePacketReceiver;
-import com.builtbroken.minecraft.network.PacketHandler;
 import com.builtbroken.minecraft.prefab.TileEntityAdvanced;
 import com.google.common.io.ByteArrayDataInput;
 
@@ -113,7 +113,7 @@ public class TileEntityWire extends TileEntityAdvanced implements IConductor, IS
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, "Wire", this, this.currentAcceptorConnections, this.getColor().ordinal());
+        return PacketHandler.instance().getTilePacket(AssemblyLine.CHANNEL, "Wire", this, this.currentAcceptorConnections, this.getColor().ordinal());
     }
 
     @Override

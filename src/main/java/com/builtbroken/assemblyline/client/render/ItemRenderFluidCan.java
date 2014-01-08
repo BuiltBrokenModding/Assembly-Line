@@ -12,7 +12,6 @@ import com.builtbroken.assemblyline.ALRecipeLoader;
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.client.model.ModelSmallFluidCan;
 import com.builtbroken.assemblyline.machine.ItemFluidCan;
-import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -23,7 +22,7 @@ public class ItemRenderFluidCan implements IItemRenderer
 {
     public static final ModelSmallFluidCan CAN_MODEL = new ModelSmallFluidCan();
 
-    public static final ResourceLocation CAN_TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "FluidCanA.png");
+    public static final ResourceLocation CAN_TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "FluidCanA.png");
 
     @Override
     public boolean handleRenderType(ItemStack item, ItemRenderType type)

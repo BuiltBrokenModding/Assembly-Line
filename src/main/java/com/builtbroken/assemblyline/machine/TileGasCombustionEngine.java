@@ -8,8 +8,8 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
-import com.builtbroken.minecraft.fluid.EnumGas;
-import com.builtbroken.minecraft.fluid.GasTank;
+import com.builtbroken.assemblyline.fluid.EnumGas;
+import com.builtbroken.assemblyline.fluid.GasTank;
 import com.builtbroken.minecraft.prefab.TileEntityAdvanced;
 import com.builtbroken.minecraft.tilenetwork.ITileConnector.Connection;
 

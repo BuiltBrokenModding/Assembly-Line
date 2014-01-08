@@ -9,14 +9,13 @@ import org.lwjgl.opengl.GL11;
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.client.model.ModelLaserTile;
 import com.builtbroken.assemblyline.machine.TileLaserSentry;
-import com.builtbroken.minecraft.DarkCore;
 
 /** @author Darkguardsman */
 public class RenderMiningLaser extends TileEntitySpecialRenderer
 {
 
     public static final ModelLaserTile model = new ModelLaserTile();
-    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "LaserTile.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "LaserTile.png");
 
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double d, double d1, double d2, float f)

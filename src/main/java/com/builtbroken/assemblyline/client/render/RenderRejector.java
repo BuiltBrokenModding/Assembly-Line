@@ -8,7 +8,6 @@ import org.lwjgl.opengl.GL11;
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.client.model.ModelRejectorPiston;
 import com.builtbroken.assemblyline.machine.TileEntityRejector;
-import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -28,7 +27,7 @@ public class RenderRejector extends RenderImprintable
         {
             pos = 8;
         }
-        ResourceLocation name = new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "rejector.png");
+        ResourceLocation name = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "rejector.png");
         bindTexture(name);
         GL11.glPushMatrix();
         GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);

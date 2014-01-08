@@ -9,7 +9,6 @@ import org.lwjgl.opengl.GL11;
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.imprinter.ContainerImprinter;
 import com.builtbroken.assemblyline.imprinter.TileEntityImprinter;
-import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.TranslationHelper;
 
 import cpw.mods.fml.relauncher.Side;
@@ -42,7 +41,7 @@ public class GuiImprinter extends GuiContainer
     @Override
     protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
     {
-        this.mc.renderEngine.bindTexture(new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.GUI_DIRECTORY + "gui_imprinter.png"));
+        this.mc.renderEngine.bindTexture(new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.GUI_DIRECTORY + "gui_imprinter.png"));
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.containerWidth = (this.width - this.xSize) / 2;
         this.containerHeight = (this.height - this.ySize) / 2;

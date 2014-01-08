@@ -8,14 +8,13 @@ import org.lwjgl.opengl.GL11;
 
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.client.model.ModelFrackingPipe;
-import com.builtbroken.minecraft.DarkCore;
 
 /** @author Archadia */
 public class RenderFrackingPipe extends TileEntitySpecialRenderer
 {
 
     public static final ModelFrackingPipe model = new ModelFrackingPipe();
-    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "frackingpipe.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "frackingpipe.png");
 
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double d, double d1, double d2, float f)

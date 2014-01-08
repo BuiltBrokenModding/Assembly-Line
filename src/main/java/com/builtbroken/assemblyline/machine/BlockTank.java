@@ -20,7 +20,7 @@ import com.builtbroken.assemblyline.fluid.pipes.FluidPartsMaterial;
 import com.builtbroken.assemblyline.fluid.pipes.ItemBlockPipe;
 import com.builtbroken.assemblyline.fluid.pipes.TileEntityPipe;
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.fluid.FluidHelper;
+import com.builtbroken.minecraft.FluidHelper;
 import com.builtbroken.minecraft.helpers.HelperMethods;
 
 import cpw.mods.fml.relauncher.Side;

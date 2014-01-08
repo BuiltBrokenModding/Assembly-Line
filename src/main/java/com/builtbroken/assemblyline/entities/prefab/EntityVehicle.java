@@ -12,10 +12,8 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
+import com.builtbroken.assemblyline.network.ISimplePacketReceiver;
 import com.builtbroken.minecraft.interfaces.IControlReceiver;
-import com.builtbroken.minecraft.network.ISimplePacketReceiver;
-import com.builtbroken.minecraft.network.PacketManagerEntity;
-import com.builtbroken.minecraft.network.PacketManagerKeyEvent;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -38,7 +36,7 @@ public abstract class EntityVehicle extends EntityAdvanced implements IControlRe
         this.ignoreFrustumCheck = true;
         this.isImmuneToFire = true;
         this.yOffset = 0.45f;
-        PacketManagerKeyEvent.instance().register(this);
+        //PacketManagerKeyEvent.instance().register(this);
     }
 
     public EntityVehicle(World world, double xx, double yy, double zz)
@@ -205,7 +203,7 @@ public abstract class EntityVehicle extends EntityAdvanced implements IControlRe
             if (ticks % 5 == 0)
             {
                 if (worldObj.isRemote)
-                    PacketManagerEntity.sendEntityUpdatePacket(this, this.worldObj.isRemote, "Desc", this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch, this.motionX, this.motionY, this.motionZ);
+                   // PacketManagerEntity.sendEntityUpdatePacket(this, this.worldObj.isRemote, "Desc", this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch, this.motionX, this.motionY, this.motionZ);
 
                 if (!this.worldObj.isRemote)
                 {

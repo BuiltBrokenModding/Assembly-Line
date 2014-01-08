@@ -9,7 +9,6 @@ import org.lwjgl.opengl.GL11;
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.client.model.ModelPump;
 import com.builtbroken.assemblyline.fluid.pump.TileEntityStarterPump;
-import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -19,7 +18,7 @@ public class RenderPump extends TileEntitySpecialRenderer
 {
     int type = 0;
     private ModelPump model;
-    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "pumps/WaterPump.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "pumps/WaterPump.png");
 
     public RenderPump()
     {

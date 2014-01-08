@@ -7,12 +7,12 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import calclavia.lib.network.PacketHandler;
 
+import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.fluid.prefab.TileEntityFluidStorage;
-import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.assemblyline.network.ISimplePacketReceiver;
 import com.builtbroken.minecraft.helpers.ColorCode;
-import com.builtbroken.minecraft.network.ISimplePacketReceiver;
-import com.builtbroken.minecraft.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;
@@ -45,7 +45,7 @@ public class TileEntitySink extends TileEntityFluidStorage implements ISimplePac
         {
             stack = this.getTank().getFluid();
         }
-        return PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, "FluidLevel", this, stack.writeToNBT(new NBTTagCompound()));
+        return PacketHandler.instance().getTilePacket(AssemblyLine.CHANNEL, "FluidLevel", this, stack.writeToNBT(new NBTTagCompound()));
     }
 
     @Override

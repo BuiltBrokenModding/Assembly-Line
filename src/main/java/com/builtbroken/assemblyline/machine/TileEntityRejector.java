@@ -10,10 +10,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.network.PacketHandler;
 
 import com.builtbroken.assemblyline.api.IBelt;
 import com.builtbroken.assemblyline.imprinter.prefab.TileEntityFilterable;
-import com.builtbroken.minecraft.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;
@@ -35,7 +35,7 @@ public class TileEntityRejector extends TileEntityFilterable
     {
         super.updateEntity();
         /** Has to update a bit faster than a conveyer belt */
-        if (this.ticks % 5 == 0 && !this.isDisabled())
+        if (this.ticks % 5 == 0)
         {
             this.firePiston = false;
 

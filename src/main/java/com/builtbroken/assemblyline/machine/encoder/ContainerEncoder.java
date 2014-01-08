@@ -6,8 +6,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-import com.builtbroken.assemblyline.ALRecipeLoader;
-import com.builtbroken.minecraft.prefab.invgui.SlotRestricted;
+import com.builtbroken.minecraft.prefab.invgui.SlotSpecific;
 
 public class ContainerEncoder extends Container
 {
@@ -21,7 +20,7 @@ public class ContainerEncoder extends Container
         this.tileEntity = encoder;
 
         // Disk
-        this.addSlotToContainer(new SlotRestricted(encoder, 0, 80, 24 + Y_OFFSET, new ItemStack(ALRecipeLoader.itemDisk)));
+        this.addSlotToContainer(new SlotSpecific(encoder, 0, 80, 24 + Y_OFFSET, ItemDisk.class));
 
         int row;
 

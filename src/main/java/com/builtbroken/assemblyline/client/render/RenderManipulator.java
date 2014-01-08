@@ -8,7 +8,6 @@ import org.lwjgl.opengl.GL11;
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.client.model.ModelManipulator;
 import com.builtbroken.assemblyline.machine.TileEntityManipulator;
-import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -28,12 +27,12 @@ public class RenderManipulator extends RenderImprintable
 
         if (tileEntity.isOutput())
         {
-            ResourceLocation name = new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "manipulator1.png");
+            ResourceLocation name = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "manipulator1.png");
             bindTexture(name);
         }
         else
         {
-            ResourceLocation name = new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "manipulator2.png");
+            ResourceLocation name = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "manipulator2.png");
             bindTexture(name);
         }
 

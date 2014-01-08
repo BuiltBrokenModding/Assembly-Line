@@ -6,8 +6,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.CompatibilityModule;
+import calclavia.lib.network.PacketHandler;
 
-import com.builtbroken.minecraft.network.PacketHandler;
 import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 import com.google.common.io.ByteArrayDataInput;
 
@@ -31,7 +31,7 @@ public class TileEntityBatteryBox extends TileEntityEnergyMachine
     {
         super.updateEntity();
 
-        if (!this.worldObj.isRemote && this.enabled && !this.isDisabled())
+        if (!this.worldObj.isRemote && this.enabled)
         {
             /** Recharges electric item. */
             this.setEnergy(ForgeDirection.UNKNOWN, this.getEnergy(ForgeDirection.UNKNOWN) - CompatibilityModule.chargeItem(this.getStackInSlot(0), Math.min(10000, this.getEnergyStored()), true));

@@ -13,7 +13,6 @@ import universalelectricity.api.vector.Vector2;
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.api.coding.ITask;
 import com.builtbroken.assemblyline.api.coding.args.ArgumentData;
-import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.prefab.invgui.GuiBase;
 import com.builtbroken.minecraft.prefab.invgui.GuiMessageBox;
 import com.builtbroken.minecraft.prefab.invgui.IMessageBoxDialog;
@@ -23,7 +22,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 
 public class GuiEditTask extends GuiBase implements IMessageBoxDialog
 {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.GUI_DIRECTORY + "gui_task_edit.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.GUI_DIRECTORY + "gui_task_edit.png");
 
     protected GuiEncoderCoder gui;
     protected ITask task, editTask;

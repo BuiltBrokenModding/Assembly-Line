@@ -14,7 +14,6 @@ import com.builtbroken.assemblyline.client.model.ModelGearRod;
 import com.builtbroken.assemblyline.client.model.ModelGenerator;
 import com.builtbroken.assemblyline.client.model.ModelPump;
 import com.builtbroken.assemblyline.client.model.ModelSink;
-import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
@@ -42,7 +41,7 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
             GL11.glTranslatef(0.0F, 1.1F, 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
 
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "pumps/WaterPump.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "pumps/WaterPump.png"));
             modelPump.render(0.0725F);
             modelPump.renderMotion(0.0725F, 0);
         }
@@ -50,21 +49,21 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
         {
             GL11.glTranslatef(0.0F, .8F, 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "Sink.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "Sink.png"));
             sink.render(0.0565F);
         }
         else if (ALRecipeLoader.blockRod != null && block.blockID == ALRecipeLoader.blockRod.blockID)
         {
             GL11.glTranslatef(0.0F, 1.5F, 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "mechanical/GearRod.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "mechanical/GearRod.png"));
             modelRod.render(0.0825F, 0);
         }
         else if (ALRecipeLoader.blockConPump != null && block.blockID == ALRecipeLoader.blockConPump.blockID && metadata < 4)
         {
             GL11.glTranslatef(0.0F, 1.2F, 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "ConstructionPump.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "ConstructionPump.png"));
             conPump.render(0.0725F);
             conPump.renderMotor(0.0725F);
 

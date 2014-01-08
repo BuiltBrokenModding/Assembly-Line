@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 import com.builtbroken.assemblyline.blocks.BlockHydraulic;
 import com.builtbroken.assemblyline.client.render.BlockRenderHelper;
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.fluid.FluidHelper;
+import com.builtbroken.minecraft.FluidHelper;
 import com.builtbroken.minecraft.prefab.TileEntityAdvanced;
 
 import cpw.mods.fml.relauncher.Side;

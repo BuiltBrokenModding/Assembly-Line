@@ -21,14 +21,14 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import org.bouncycastle.util.Arrays;
 
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.network.PacketHandler;
 
+import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.api.fluid.FluidMasterList;
 import com.builtbroken.assemblyline.api.fluid.INetworkFluidPart;
 import com.builtbroken.assemblyline.fluid.network.NetworkFluidTiles;
 import com.builtbroken.assemblyline.fluid.pipes.FluidPartsMaterial;
-import com.builtbroken.minecraft.DarkCore;
-import com.builtbroken.minecraft.network.ISimplePacketReceiver;
-import com.builtbroken.minecraft.network.PacketHandler;
+import com.builtbroken.assemblyline.network.ISimplePacketReceiver;
 import com.builtbroken.minecraft.tilenetwork.INetworkPart;
 import com.builtbroken.minecraft.tilenetwork.ITileNetwork;
 import com.google.common.io.ByteArrayDataInput;
@@ -382,7 +382,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
                     this.renderConnection[4] = data.readBoolean();
                     this.renderConnection[5] = data.readBoolean();
                     this.tank = new FluidTank(data.readInt());
-                    this.getTank().readFromNBT(PacketHandler.instance().readNBTTagCompound(data));
+                    this.getTank().readFromNBT(PacketHandler.readNBTTagCompound(data));
                     this.internalTanksInfo[0] = this.getTank().getInfo();
                     return true;
                 }
@@ -400,7 +400,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
                 else if (id.equalsIgnoreCase("SingleTank"))
                 {
                     this.tank = new FluidTank(data.readInt());
-                    this.getTank().readFromNBT(PacketHandler.instance().readNBTTagCompound(data));
+                    this.getTank().readFromNBT(PacketHandler.readNBTTagCompound(data));
                     this.internalTanksInfo[0] = this.getTank().getInfo();
                     return true;
                 }
@@ -428,7 +428,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
         data[6] = this.renderConnection[5];
         data[7] = this.getTank().getCapacity();
         data[8] = this.getTank().writeToNBT(new NBTTagCompound());
-        return PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, "DescriptionPacket", this, data);
+        return AssemblyLine.getTilePacket().getPacket(this, "DescriptionPacket", data);
     }
 
     public void sendRenderUpdate()
@@ -441,14 +441,14 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
         data[4] = this.renderConnection[3];
         data[5] = this.renderConnection[4];
         data[6] = this.renderConnection[5];
-        PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, "RenderPacket", this, data));
+        PacketHandler.sendPacketToClients(AssemblyLine.getTilePacket().getPacket(this, "RenderPacket", data));
     }
 
     public void sendTankUpdate(int index)
     {
         if (this.getTank() != null && index == 0)
         {
-            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, "SingleTank", this, this.getTank().getCapacity(), this.getTank().writeToNBT(new NBTTagCompound())), this.worldObj, new Vector3(this), 60);
+            PacketHandler.sendPacketToClients(AssemblyLine.getTilePacket().getPacket(this, "SingleTank", this.getTank().getCapacity(), this.getTank().writeToNBT(new NBTTagCompound())), this.worldObj, new Vector3(this), 60);
         }
     }
 

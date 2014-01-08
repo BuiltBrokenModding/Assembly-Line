@@ -9,7 +9,6 @@ import org.lwjgl.opengl.GL11;
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.client.model.ModelAdvancedHopper;
 import com.builtbroken.assemblyline.redstone.TileEntityAdvancedHopper;
-import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -18,7 +17,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderAdvancedHopper extends RenderImprintable
 {
     private static final ModelAdvancedHopper MODEL = new ModelAdvancedHopper();
-    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "AdvancedHopper.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "AdvancedHopper.png");
 
     private void renderAModelAt(TileEntityAdvancedHopper tileEntity, double x, double y, double z, float f)
     {

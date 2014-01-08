@@ -9,7 +9,6 @@ import org.lwjgl.opengl.GL11;
 
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.client.model.ModelMiningLaserGun;
-import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -20,7 +19,7 @@ public class RenderMiningLaserGun implements IItemRenderer
 {
 
     private static final ModelMiningLaserGun MODEL = new ModelMiningLaserGun();
-    private static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "LaserGun.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "LaserGun.png");
 
     @Override
     public boolean handleRenderType(ItemStack item, ItemRenderType type)

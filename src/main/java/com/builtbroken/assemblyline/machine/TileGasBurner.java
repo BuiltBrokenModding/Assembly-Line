@@ -6,7 +6,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
-import com.builtbroken.minecraft.fluid.GasTank;
+import com.builtbroken.assemblyline.fluid.GasTank;
 import com.builtbroken.minecraft.prefab.TileEntityMachine;
 
 /** @author Archadia */

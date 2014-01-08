@@ -11,8 +11,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.network.PacketHandler;
 
 import com.builtbroken.assemblyline.ALRecipeLoader;
+import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.api.IArmbot;
 import com.builtbroken.assemblyline.api.coding.IProgram;
 import com.builtbroken.assemblyline.api.coding.ProgramHelper;
@@ -29,7 +31,6 @@ import com.builtbroken.minecraft.helpers.HelperMethods;
 import com.builtbroken.minecraft.helpers.MathHelper;
 import com.builtbroken.minecraft.interfaces.IBlockActivated;
 import com.builtbroken.minecraft.interfaces.IMultiBlock;
-import com.builtbroken.minecraft.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -108,7 +109,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
                 this.programHelper.onUpdate(this.worldObj, new Vector3(this));
                 if (this.targetYaw != preYaw || this.targetPitch != prePitch)
                 {
-                    PacketHandler.instance().sendPacketToClients(this.getDescriptionPacket(), worldObj, new Vector3(this).translate(new Vector3(.5f, 1f, .5f)), 64);
+                    PacketHandler.sendPacketToClients(this.getDescriptionPacket(), worldObj, new Vector3(this).translate(new Vector3(.5f, 1f, .5f)), 64);
                 }
             }
             this.updateRotation();
@@ -299,18 +300,18 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketHandler.instance().getTilePacket(this.getChannel(), "armbot", this, this.functioning, this.targetYaw, this.targetPitch, this.actualYaw, this.actualPitch);
+        return AssemblyLine.getTilePacket().getPacket(this, "armbot", this.functioning, this.targetYaw, this.targetPitch, this.actualYaw, this.actualPitch);
     }
 
     public void sendGrabItemToClient()
     {
         if (this.grabbedObject instanceof ItemStack)
         {
-            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(this.getChannel(), "armbotItem", this, true, ((ItemStack) this.grabbedObject).writeToNBT(new NBTTagCompound())), worldObj, new Vector3(this), 64);
+            PacketHandler.sendPacketToClients(AssemblyLine.getTilePacket().getPacket(this, "armbotItem", true, ((ItemStack) this.grabbedObject).writeToNBT(new NBTTagCompound())), worldObj, new Vector3(this), 64);
         }
         else
         {
-            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(this.getChannel(), "armbotItem", this, false), worldObj, new Vector3(this), 64);
+            PacketHandler.sendPacketToClients(AssemblyLine.getTilePacket().getPacket(this, "armbotItem", false), worldObj, new Vector3(this), 64);
         }
     }
 
@@ -334,7 +335,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
                 {
                     if (dis.readBoolean())
                     {
-                        this.grabbedObject = ItemStack.loadItemStackFromNBT(PacketHandler.instance().readNBTTagCompound(dis));
+                        this.grabbedObject = ItemStack.loadItemStackFromNBT(PacketHandler.readNBTTagCompound(dis));
                     }
                     else
                     {
@@ -537,5 +538,4 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     {
         return this.location;
     }
-
 }

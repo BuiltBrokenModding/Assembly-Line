@@ -9,11 +9,11 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.network.PacketHandler;
 
 import com.builtbroken.minecraft.CoreRegistry;
 import com.builtbroken.minecraft.LaserEvent;
 import com.builtbroken.minecraft.helpers.RayTraceHelper;
-import com.builtbroken.minecraft.network.PacketHandler;
 import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 import com.google.common.io.ByteArrayDataInput;
 

@@ -10,7 +10,7 @@ import universalelectricity.api.vector.Vector3;
 import com.builtbroken.assemblyline.api.fluid.INetworkPipe;
 import com.builtbroken.assemblyline.fluid.network.NetworkPipes;
 import com.builtbroken.assemblyline.fluid.prefab.TileEntityFluidNetworkTile;
-import com.builtbroken.minecraft.fluid.FluidHelper;
+import com.builtbroken.minecraft.FluidHelper;
 import com.builtbroken.minecraft.helpers.ColorCode;
 import com.builtbroken.minecraft.helpers.ColorCode.IColorCoded;
 import com.builtbroken.minecraft.tilenetwork.ITileConnector;

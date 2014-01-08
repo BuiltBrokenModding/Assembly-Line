@@ -10,7 +10,6 @@ import org.lwjgl.opengl.GL11;
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.machine.processor.ContainerProcessor;
 import com.builtbroken.assemblyline.machine.processor.TileEntityProcessor;
-import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -18,7 +17,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiProcessor extends GuiContainer
 {
-    private static final ResourceLocation gui_texture = new ResourceLocation(AssemblyLine.instance.PREFIX + DarkCore.GUI_DIRECTORY + "processor.png");
+    private static final ResourceLocation gui_texture = new ResourceLocation(AssemblyLine.instance.PREFIX + AssemblyLine.GUI_DIRECTORY + "processor.png");
     private TileEntityProcessor tileEntity;
 
     public GuiProcessor(InventoryPlayer par1InventoryPlayer, TileEntityProcessor par2TileEntityFurnace)

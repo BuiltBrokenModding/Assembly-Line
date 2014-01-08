@@ -13,7 +13,6 @@ import universalelectricity.api.energy.UnitDisplay.Unit;
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.machine.ContainerBatteryBox;
 import com.builtbroken.assemblyline.machine.TileEntityBatteryBox;
-import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -21,7 +20,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiBatteryBox extends GuiContainer
 {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.GUI_DIRECTORY + "battery_box.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.GUI_DIRECTORY + "battery_box.png");
 
     private TileEntityBatteryBox tileEntity;
 

@@ -16,6 +16,10 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
+import calclavia.lib.network.PacketHandler;
+import calclavia.lib.ore.OreGenReplaceStone;
+import calclavia.lib.ore.OreGenerator;
+
 import com.builtbroken.assemblyline.api.coding.TaskRegistry;
 import com.builtbroken.assemblyline.armbot.BlockArmbot;
 import com.builtbroken.assemblyline.armbot.command.TaskBreak;
@@ -49,6 +53,7 @@ import com.builtbroken.assemblyline.entities.EntityFarmEgg;
 import com.builtbroken.assemblyline.entities.EnumBird;
 import com.builtbroken.assemblyline.entities.prefab.EntityTestCar;
 import com.builtbroken.assemblyline.entities.prefab.ItemVehicleSpawn;
+import com.builtbroken.assemblyline.fluid.EnumGas;
 import com.builtbroken.assemblyline.fluid.pipes.BlockPipe;
 import com.builtbroken.assemblyline.fluid.pipes.FluidPartsMaterial;
 import com.builtbroken.assemblyline.fluid.pipes.ItemBlockPipe;
@@ -88,6 +93,7 @@ import com.builtbroken.assemblyline.machine.belt.BlockConveyorBelt;
 import com.builtbroken.assemblyline.machine.encoder.BlockEncoder;
 import com.builtbroken.assemblyline.machine.encoder.ItemDisk;
 import com.builtbroken.assemblyline.machine.processor.BlockProcessor;
+import com.builtbroken.assemblyline.network.PacketIDTile;
 import com.builtbroken.assemblyline.redstone.BlockAdvancedHopper;
 import com.builtbroken.assemblyline.transmit.BlockWire;
 import com.builtbroken.assemblyline.transmit.ItemBlockWire;
@@ -95,12 +101,13 @@ import com.builtbroken.minecraft.CoreRegistry;
 import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.EnumMaterial;
 import com.builtbroken.minecraft.EnumOrePart;
+import com.builtbroken.minecraft.FluidHelper;
+import com.builtbroken.minecraft.LaserEntityDamageSource;
 import com.builtbroken.minecraft.TranslationHelper;
-import com.builtbroken.minecraft.fluid.EnumGas;
-import com.builtbroken.minecraft.network.PacketHandler;
+import com.builtbroken.minecraft.helpers.PlayerKeyHandler;
 import com.builtbroken.minecraft.prefab.ItemBlockHolder;
-import com.builtbroken.minecraft.worldgen.OreGenReplaceStone;
-import com.builtbroken.minecraft.worldgen.OreGenerator;
+import com.builtbroken.minecraft.save.SaveManager;
+import com.builtbroken.minecraft.tilenetwork.prefab.NetworkUpdateHandler;
 
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -117,12 +124,20 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.TickRegistry;
+import cpw.mods.fml.relauncher.Side;
 
 @ModstatInfo(prefix = "asmline")
 @Mod(modid = AssemblyLine.MOD_ID, name = AssemblyLine.MOD_NAME, version = AssemblyLine.VERSION, useMetadata = true)
-@NetworkMod(channels = { DarkCore.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
+@NetworkMod(channels = { AssemblyLine.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class AssemblyLine
 {
+    public static final String TEXTURE_DIRECTORY = "textures/";
+    public static final String BLOCK_DIRECTORY = TEXTURE_DIRECTORY + "blocks/";
+    public static final String ITEM_DIRECTORY = TEXTURE_DIRECTORY + "items/";
+    public static final String MODEL_DIRECTORY = TEXTURE_DIRECTORY + "models/";
+    public static final String GUI_DIRECTORY = TEXTURE_DIRECTORY + "gui/";
+    public static final String CHANNEL = "ALChannel";
 
     public static final String MAJOR_VERSION = "@MAJOR@";
     public static final String MINOR_VERSION = "@MINOR@";
@@ -160,6 +175,17 @@ public class AssemblyLine
 
     public static int entitiesIds = 60;
 
+    private static PacketIDTile tilePacket;
+
+    public static PacketIDTile getTilePacket()
+    {
+        if (tilePacket == null)
+        {
+            tilePacket = new PacketIDTile(AssemblyLine.CHANNEL);
+        }
+        return tilePacket;
+    }
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
@@ -169,6 +195,11 @@ public class AssemblyLine
         DarkCore.instance().preLoad();
         Modstats.instance().getReporter().registerMod(this);
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new FluidHelper());
+        MinecraftForge.EVENT_BUS.register(SaveManager.instance());
+        TickRegistry.registerTickHandler(NetworkUpdateHandler.instance(), Side.SERVER);
+        TickRegistry.registerScheduledTickHandler(new PlayerKeyHandler(AssemblyLine.CHANNEL), Side.CLIENT);
+        MinecraftForge.EVENT_BUS.register(new LaserEntityDamageSource(null));
         NetworkRegistry.instance().registerGuiHandler(this, proxy);
 
         TaskRegistry.registerCommand(new TaskDrop());

@@ -10,7 +10,6 @@ import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.client.model.ModelLargePipe;
 import com.builtbroken.assemblyline.client.model.ModelReleaseValve;
 import com.builtbroken.assemblyline.machine.TileEntityReleaseValve;
-import com.builtbroken.minecraft.DarkCore;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -22,7 +21,7 @@ public class RenderReleaseValve extends TileEntitySpecialRenderer
     private ModelReleaseValve valve;
     private TileEntity[] ents = new TileEntity[6];
 
-    public static final ResourceLocation VALVE_TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, DarkCore.MODEL_DIRECTORY + "ReleaseValve.png");
+    public static final ResourceLocation VALVE_TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "ReleaseValve.png");
 
     public RenderReleaseValve()
     {

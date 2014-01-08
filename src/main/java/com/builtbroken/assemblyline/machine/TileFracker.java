@@ -11,9 +11,9 @@ import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.assemblyline.ALRecipeLoader;
-import com.builtbroken.minecraft.fluid.EnumGas;
-import com.builtbroken.minecraft.fluid.FluidHelper;
-import com.builtbroken.minecraft.fluid.GasTank;
+import com.builtbroken.assemblyline.fluid.EnumGas;
+import com.builtbroken.assemblyline.fluid.GasTank;
+import com.builtbroken.minecraft.FluidHelper;
 import com.builtbroken.minecraft.interfaces.IBlockActivated;
 import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 

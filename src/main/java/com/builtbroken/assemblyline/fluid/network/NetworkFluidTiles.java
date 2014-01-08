@@ -14,7 +14,8 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import com.builtbroken.assemblyline.api.fluid.INetworkFluidPart;
-import com.builtbroken.minecraft.fluid.FluidHelper;
+import com.builtbroken.assemblyline.fluid.FluidCraftingHandler;
+import com.builtbroken.minecraft.FluidHelper;
 import com.builtbroken.minecraft.tilenetwork.INetworkPart;
 import com.builtbroken.minecraft.tilenetwork.ITileNetwork;
 import com.builtbroken.minecraft.tilenetwork.prefab.NetworkTileEntities;

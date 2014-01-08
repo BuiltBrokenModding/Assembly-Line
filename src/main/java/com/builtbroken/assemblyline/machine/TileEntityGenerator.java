@@ -68,7 +68,7 @@ public abstract class TileEntityGenerator extends TileEntityEnergyMachine
     @Override
     public boolean canFunction()
     {
-        return this.enabled && !this.isDisabled() && this.hasFuel();
+        return this.enabled && this.hasFuel();
     }
 
     /** Does this generator have fuel time left to burn */
