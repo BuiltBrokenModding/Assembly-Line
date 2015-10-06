@@ -69,7 +69,8 @@ minecraft {
 
 dependencies 
 {
-  
+    compile "dev.builtbroken.voltzengine:VoltzEngine:1.7.10-0.6.1+:deobf-dev"
+}  
 
 //configure([compileJava, compileTestJava]) {
 //    options.compilerArgs += ['-Xlint:all', '-Xlint:-path']
