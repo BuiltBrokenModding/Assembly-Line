@@ -20,22 +20,16 @@ plugins {
   id 'com.matthewprenger.cursegradle' version '1.0.1'
   id 'net.saliman.cobertura' version '2.2.5'
   id 'com.github.kt3k.coveralls' version '2.0.1'
-  id "com.github.johnrengelman.shadow" version "1.2.2"
+  //id "com.github.johnrengelman.shadow" version "1.2.2"
 }
 
 
-apply from: 'https://raw.githubusercontent.com/BuiltBrokenModding/BuiltBrokenScripts/buildScripts/index.gradle'
+apply from: 'https://raw.githubusercontent.com/BuiltBrokenModding/BuiltBrokenScripts/buildScripts/index/index.gradle'
 apply plugin: 'forge'
 apply plugin: 'curseforge'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'jacoco'
 apply from: 'https://raw.githubusercontent.com/BuiltBrokenModding/BuiltBrokenScripts/buildScripts/scripts/forge/deps.gradle'
-
-println "Current Minecraft version = " + minecraft.apiVersion
-println archivesBaseName
-
-def currentJvm = org.gradle.internal.jvm.Jvm.current()
-println "Current Java version = " + currentJvm
 
 processResources {
     // this will ensure that this task is redone when the versions change.
@@ -60,17 +54,20 @@ processResources {
 	}
 }
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
-
 minecraft {    
-    replace "required-after:VoltzEngine", "required-after:VoltzEngine" + voltz_engine_version
+    replace "required-after:VoltzEngine", "required-after:VoltzEngine@[$voltz_engine_version,)"
 }
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 dependencies 
 {
-    compile "dev.builtbroken.voltzengine:VoltzEngine:1.7.10-0.6.2+:deobf-dev"
-}  
+    if (project.hasProperty("bambooshortPlanName") && project.getProperty("bambooshortPlanName") == "BBM-Dev")
+    compile "dev.builtbroken.voltzengine:VoltzEngine:1.7.10-$voltz_engine_version+:deobf-dev"
+    else 
+    compile "com.builtbroken.voltzengine:VoltzEngine:1.7.10-$voltz_engine_version+:deobf"
+}
 
 //configure([compileJava, compileTestJava]) {
 //    options.compilerArgs += ['-Xlint:all', '-Xlint:-path']
@@ -83,5 +80,3 @@ jacocoTestReport {
         html.enabled = true
     }
 }
-
-file("VoltzEngine.txt").text = version;
