@@ -4,18 +4,17 @@ import com.builtbroken.assemblyline.content.armbot.TileArmbot;
 import com.builtbroken.assemblyline.content.belt.TileBelt;
 import com.builtbroken.assemblyline.content.ejector.TileEjector;
 import com.builtbroken.assemblyline.content.manipulator.TileManipulator;
-import com.builtbroken.mc.api.explosive.IExplosiveHandler;
+import com.builtbroken.assemblyline.content.rail.BlockRail;
+import com.builtbroken.assemblyline.content.rail.ItemBlockRail;
+import com.builtbroken.mc.core.Engine;
 import com.builtbroken.mc.lib.mod.AbstractMod;
-import com.builtbroken.mc.lib.mod.AbstractProxy;
 import com.builtbroken.mc.lib.mod.ModCreativeTab;
-import com.builtbroken.mc.lib.world.explosive.ExplosiveItemUtility;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.block.Block;
-import net.minecraft.item.ItemStack;
 
 /**
  * Created by DarkGuardsman on 8/31/2015.
@@ -38,7 +37,7 @@ public class AssemblyLine extends AbstractMod
     @Mod.Instance(DOMAIN)
     public static AssemblyLine INSTANCE;
 
-    @SidedProxy(clientSide = "com.builtbroken.assemblyline.ClientProxy", serverSide = "com.builtbroken.assemblyline.CommonProxy")
+    @SidedProxy(clientSide = "com.builtbroken.assemblyline.client.ClientProxy", serverSide = "com.builtbroken.assemblyline.server.ServerProxy")
     public static CommonProxy proxy;
 
     public final ModCreativeTab CREATIVE_TAB;
@@ -48,9 +47,16 @@ public class AssemblyLine extends AbstractMod
     public static Block blockEjector;
     public static Block blockManipulator;
 
+    /** Simple robotic arm that only handles items, NOT A COPY FROM FACTORIO */
+    public static Block blockInserter;
+
+    public static Block blockRail;
+    public static Block blockPowerRail;
+
     public AssemblyLine()
     {
-        super(DOMAIN); CREATIVE_TAB = new ModCreativeTab("ICBM");
+        super(DOMAIN);
+        CREATIVE_TAB = new ModCreativeTab("ICBM");
         manager.setTab(CREATIVE_TAB);
     }
 
@@ -58,10 +64,14 @@ public class AssemblyLine extends AbstractMod
     public void preInit(FMLPreInitializationEvent event)
     {
         super.preInit(event);
-        blockArmbot = getManager().newBlock("alArmbot", TileArmbot.class);
-        blockBelt = getManager().newBlock("alBelt", TileBelt.class);
-        blockEjector = getManager().newBlock("alEjector", TileEjector.class);
-        blockManipulator = getManager().newBlock("alManipulator", TileManipulator.class);
+        if (Engine.runningAsDev)
+        {
+            blockArmbot = getManager().newBlock("alArmbot", TileArmbot.class);
+            blockBelt = getManager().newBlock("alBelt", TileBelt.class);
+            blockEjector = getManager().newBlock("alEjector", TileEjector.class);
+            blockManipulator = getManager().newBlock("alManipulator", TileManipulator.class);
+        }
+        blockRail = manager.newBlock("cartTransportRail", BlockRail.class, ItemBlockRail.class);
     }
 
     @Mod.EventHandler
