@@ -1,5 +1,6 @@
 package com.builtbroken.assemblyline;
 
+import com.builtbroken.assemblyline.client.ALCreativeTab;
 import com.builtbroken.assemblyline.content.armbot.TileArmbot;
 import com.builtbroken.assemblyline.content.belt.TileBelt;
 import com.builtbroken.assemblyline.content.ejector.TileEjector;
@@ -56,7 +57,7 @@ public class AssemblyLine extends AbstractMod
     public AssemblyLine()
     {
         super(DOMAIN);
-        CREATIVE_TAB = new ModCreativeTab("ICBM");
+        CREATIVE_TAB = new ALCreativeTab();
         manager.setTab(CREATIVE_TAB);
     }
 

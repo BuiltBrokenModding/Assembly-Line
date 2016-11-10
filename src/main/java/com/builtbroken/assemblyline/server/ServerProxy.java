@@ -2,6 +2,7 @@ package com.builtbroken.assemblyline.server;
 
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.CommonProxy;
+import com.builtbroken.assemblyline.content.inserter.TileInsertArm;
 import com.builtbroken.assemblyline.content.rail.powered.TilePowerRail;
 
 /**
@@ -15,5 +16,6 @@ public class ServerProxy extends CommonProxy
     {
         super.preInit();
         AssemblyLine.blockPowerRail = AssemblyLine.INSTANCE.getManager().newBlock("cartPowerRail", TilePowerRail.class);
+        AssemblyLine.blockInserter = AssemblyLine.INSTANCE.getManager().newBlock("insertArm", TileInsertArm.class);
     }
 }
