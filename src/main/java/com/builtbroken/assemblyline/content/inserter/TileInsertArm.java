@@ -5,6 +5,8 @@ import com.builtbroken.mc.api.automation.IAutomatedCrafter;
 import com.builtbroken.mc.api.automation.IAutomation;
 import com.builtbroken.mc.api.tile.multiblock.IMultiTile;
 import com.builtbroken.mc.api.tile.multiblock.IMultiTileHost;
+import com.builtbroken.mc.core.Engine;
+import com.builtbroken.mc.core.network.IPacketIDReceiver;
 import com.builtbroken.mc.core.registry.implement.IPostInit;
 import com.builtbroken.mc.lib.transform.region.Cube;
 import com.builtbroken.mc.lib.transform.rotation.EulerAngle;
@@ -19,6 +21,7 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -34,10 +37,11 @@ import java.util.Map;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 11/9/2016.
  */
-public class TileInsertArm extends TileModuleMachine implements IAutomation, IMultiTileHost, IPostInit
+public class TileInsertArm extends TileModuleMachine implements IAutomation, IMultiTileHost, IPostInit, IPacketIDReceiver
 {
-    public static final float rotationSpeed = 360 / 60; //Angle / ticks
-    protected static final ForgeDirection[] rotations = new ForgeDirection[]{ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.WEST, ForgeDirection.WEST};
+    /** Speed at which the arm rotates in degrees per tick */
+    public static final float rotationSpeed = 1f;
+    /** Multi-block cache */
     public static final HashMap<IPos3D, String> tileMapCache = new HashMap();
 
     static
@@ -46,9 +50,6 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     }
 
     //Facing directions is output direction
-    /** Direction to take items from */
-    protected ForgeDirection inputDirection = facing.getOpposite();
-
     /** Rotation of the base of the arm */
     protected EulerAngle rotation = new EulerAngle(0, 0);
 
@@ -58,7 +59,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     /** Are we destroying the structure */
     private boolean _destroyingStructure = false;
 
-    protected static final Cube blockBounds = new Cube(0, 0, 0, 1, .2, 1);
+    protected static final Cube blockBounds = new Cube(0, 0, 0, 1, .3, 1);
 
     public TileInsertArm()
     {
@@ -85,24 +86,27 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     public void update()
     {
         super.update();
-        if (hasPower())
+        if (isServer())
         {
-            if (isFacingInput() && getHeldItem() == null)
+            if (hasPower())
             {
-                takeItem();
-            }
-            else if (isFacingOutput())
-            {
-                insertItem();
+                if (isFacingInput() && getHeldItem() == null)
+                {
+                    takeItem();
+                }
+                else if (isFacingOutput() && getHeldItem() != null)
+                {
+                    insertItem();
+                }
+                else
+                {
+                    updateRotation();
+                }
             }
             else
             {
-                updateRotation();
+                dropItem();
             }
-        }
-        else
-        {
-            dropItem();
         }
     }
 
@@ -111,30 +115,43 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     {
         if (isServer())
         {
-            if (facing == ForgeDirection.NORTH)
+            if (getDirection() == ForgeDirection.NORTH)
             {
                 facing = ForgeDirection.EAST;
             }
-            else if (facing == ForgeDirection.EAST)
+            else if (getDirection() == ForgeDirection.EAST)
             {
                 facing = ForgeDirection.SOUTH;
             }
-            else if (facing == ForgeDirection.SOUTH)
+            else if (getDirection() == ForgeDirection.SOUTH)
             {
                 facing = ForgeDirection.WEST;
             }
-            else if (facing == ForgeDirection.WEST)
+            else if (getDirection() == ForgeDirection.WEST)
             {
                 facing = ForgeDirection.NORTH;
             }
             if (isServer())
             {
-                player.addChatComponentMessage(new ChatComponentText("Rotation set to " + facing.toString().toLowerCase()));
+                player.addChatComponentMessage(new ChatComponentText("Rotation set to " + getDirection().toString().toLowerCase()));
             }
-            inputDirection = facing.getOpposite();
             sendDescPacket();
         }
         return true;
+    }
+
+    @Override
+    protected boolean onPlayerRightClick(EntityPlayer player, int side, Pos hit)
+    {
+        if (Engine.runningAsDev && player.getHeldItem() != null && player.getHeldItem().getItem() == Items.stick)
+        {
+            if (isServer())
+            {
+                player.addChatComponentMessage(new ChatComponentText("Output: " + getDirection() + " R: " + rotation));
+            }
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -142,7 +159,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
      */
     protected void updateRotation()
     {
-        int desiredRotation = getRotation(getHeldItem() == null ? inputDirection : facing);
+        int desiredRotation = getRotation(getHeldItem() == null ? getDirection().getOpposite() : getDirection());
         rotation.moveYaw(desiredRotation, rotationSpeed, 1);
         sendDescPacket();
     }
@@ -155,7 +172,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
         TileEntity input = findInput();
         if (input instanceof IInventory)
         {
-            setHeldItem(InventoryUtility.takeTopItemFromInventory((IInventory) input, inputDirection.getOpposite().ordinal(), insertAmount));
+            setHeldItem(InventoryUtility.takeTopItemFromInventory((IInventory) input, getDirection().ordinal(), insertAmount));
         }
     }
 
@@ -168,14 +185,14 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
         if (output instanceof IAutomatedCrafter)
         {
             //TODO add rendered error responses when items can be stored (Ex. invalid filter, no room)
-            if (((IAutomatedCrafter) output).canStore(getHeldItem(), facing.getOpposite()))
+            if (((IAutomatedCrafter) output).canStore(getHeldItem(), getDirection().getOpposite()))
             {
                 setHeldItem(((IAutomatedCrafter) output).insertRequiredItem(getHeldItem(), this));
             }
         }
         else if (output instanceof IInventory)
         {
-            setHeldItem(InventoryUtility.putStackInInventory((IInventory) output, getHeldItem(), facing.getOpposite().ordinal(), false));
+            setHeldItem(InventoryUtility.putStackInInventory((IInventory) output, getHeldItem(), getDirection().getOpposite().ordinal(), false));
         }
     }
 
@@ -208,7 +225,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
      */
     protected boolean isFacingInput()
     {
-        return isFacing(inputDirection);
+        return isFacing(getDirection().getOpposite());
     }
 
     /**
@@ -219,7 +236,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
      */
     protected boolean isFacingOutput()
     {
-        return isFacing(facing);
+        return isFacing(getDirection());
     }
 
     /**
@@ -283,7 +300,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
      */
     protected TileEntity findInput()
     {
-        return toLocation().add(getDirection()).getTileEntity();
+        return toLocation().add(getDirection().getOpposite()).getTileEntity();
     }
 
     /**
@@ -306,7 +323,6 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
         {
             ByteBufUtils.writeItemStack(buf, getHeldItem());
         }
-        buf.writeInt(inputDirection.ordinal());
     }
 
     @Override
@@ -394,6 +410,12 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
 
     @Override
     public Cube getBlockBounds()
+    {
+        return blockBounds;
+    }
+
+    @Override
+    public Cube getSelectBounds()
     {
         return blockBounds;
     }
