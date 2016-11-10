@@ -6,6 +6,7 @@ import com.builtbroken.mc.api.automation.IAutomation;
 import com.builtbroken.mc.api.tile.multiblock.IMultiTile;
 import com.builtbroken.mc.api.tile.multiblock.IMultiTileHost;
 import com.builtbroken.mc.core.registry.implement.IPostInit;
+import com.builtbroken.mc.lib.transform.region.Cube;
 import com.builtbroken.mc.lib.transform.rotation.EulerAngle;
 import com.builtbroken.mc.lib.transform.vector.Location;
 import com.builtbroken.mc.lib.transform.vector.Pos;
@@ -57,10 +58,15 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     /** Are we destroying the structure */
     private boolean _destroyingStructure = false;
 
+    protected static final Cube blockBounds = new Cube(0, 0, 0, 1, .2, 1);
+
     public TileInsertArm()
     {
         super("tileInsertArm", Material.iron);
         this.addInventoryModule(1);
+        this.hardness = 1;
+        this.resistance = 1;
+        this.renderTileEntity = true;
     }
 
     @Override
@@ -384,5 +390,11 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
             map.put(center.add(entry.getKey()), entry.getValue());
         }
         return map;
+    }
+
+    @Override
+    public Cube getBlockBounds()
+    {
+        return blockBounds;
     }
 }
