@@ -39,8 +39,9 @@ import java.util.Map;
  */
 public class TileInsertArm extends TileModuleMachine implements IAutomation, IMultiTileHost, IPostInit, IPacketIDReceiver
 {
+    public static final int MAX_SPEED_UPGRADES = 18;
     /** Speed at which the arm rotates in degrees per tick */
-    public static final float rotationSpeed = 1f;
+    public static final float DEFAULT_SPEED = 1f;
     /** Multi-block cache */
     public static final HashMap<IPos3D, String> tileMapCache = new HashMap();
 
@@ -64,7 +65,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     public TileInsertArm()
     {
         super("tileInsertArm", Material.iron);
-        this.addInventoryModule(1);
+        this.addInventoryModule(2);
         this.hardness = 1;
         this.resistance = 1;
         this.renderTileEntity = true;
@@ -143,13 +144,44 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     @Override
     protected boolean onPlayerRightClick(EntityPlayer player, int side, Pos hit)
     {
-        if (Engine.runningAsDev && player.getHeldItem() != null && player.getHeldItem().getItem() == Items.stick)
+        if (player.getHeldItem() != null)
         {
-            if (isServer())
+            if (Engine.runningAsDev && player.getHeldItem().getItem() == Items.stick)
             {
-                player.addChatComponentMessage(new ChatComponentText("Output: " + getDirection() + " R: " + rotation));
+                if (isServer())
+                {
+                    player.addChatComponentMessage(new ChatComponentText("Output: " + getDirection() + " R: " + rotation));
+                }
+                return true;
             }
-            return true;
+            else if (player.getHeldItem().getItem() == Items.redstone)
+            {
+                if (isServer())
+                {
+                    ItemStack stack = getStackInSlot(1);
+                    if (stack == null)
+                    {
+                        stack = new ItemStack(Items.redstone);
+                        setInventorySlotContents(1, stack);
+                        player.addChatComponentMessage(new ChatComponentText("Upgrades: " + getSpeedUpdates()));
+                        player.inventory.decrStackSize(player.inventory.currentItem, 1);
+                        player.inventoryContainer.detectAndSendChanges();
+                    }
+                    else if (stack.stackSize < MAX_SPEED_UPGRADES)
+                    {
+                        stack.stackSize += 1;
+                        setInventorySlotContents(1, stack);
+                        player.addChatComponentMessage(new ChatComponentText("Upgrades: " + getSpeedUpdates()));
+                        player.inventory.decrStackSize(player.inventory.currentItem, 1);
+                        player.inventoryContainer.detectAndSendChanges();
+                    }
+                    else
+                    {
+                        player.addChatComponentMessage(new ChatComponentText("Max updates of " + MAX_SPEED_UPGRADES + " has been reached"));
+                    }
+                }
+                return true;
+            }
         }
         return false;
     }
@@ -160,7 +192,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     protected void updateRotation()
     {
         int desiredRotation = getRotation(getHeldItem() == null ? getDirection().getOpposite() : getDirection());
-        rotation.moveYaw(desiredRotation, rotationSpeed, 1);
+        rotation.moveYaw(desiredRotation, DEFAULT_SPEED + DEFAULT_SPEED * getSpeedUpdates(), 1);
         sendDescPacket();
     }
 
@@ -294,6 +326,17 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     }
 
     /**
+     * Number of installed speed upgrades
+     *
+     * @return # upgrades
+     */
+    protected int getSpeedUpdates()
+    {
+        ItemStack stack = getStackInSlot(1);
+        return stack != null ? stack.stackSize : 0;
+    }
+
+    /**
      * Finds the input tile
      *
      * @return the tile
@@ -323,6 +366,12 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
         {
             ByteBufUtils.writeItemStack(buf, getHeldItem());
         }
+    }
+
+    @Override
+    public void onInventoryChanged(int slot, ItemStack prev, ItemStack item)
+    {
+        sendDescPacket();
     }
 
     @Override
