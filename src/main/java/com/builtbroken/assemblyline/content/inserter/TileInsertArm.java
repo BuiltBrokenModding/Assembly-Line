@@ -91,11 +91,14 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
         {
             if (hasPower())
             {
-                if (isFacingInput() && getHeldItem() == null)
+                boolean facingInput = isFacingInput();
+                boolean facingOutput = isFacingOutput();
+                boolean hasItem = getHeldItem() != null;
+                if (facingInput && !hasItem)
                 {
                     takeItem();
                 }
-                else if (isFacingOutput() && getHeldItem() != null)
+                else if (facingOutput && hasItem)
                 {
                     insertItem();
                 }
@@ -128,7 +131,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
             {
                 facing = ForgeDirection.WEST;
             }
-            else if (getDirection() == ForgeDirection.WEST)
+            else
             {
                 facing = ForgeDirection.NORTH;
             }
@@ -193,6 +196,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     {
         int desiredRotation = getRotation(getHeldItem() == null ? getDirection().getOpposite() : getDirection());
         rotation.moveYaw(desiredRotation, DEFAULT_SPEED + DEFAULT_SPEED * getSpeedUpdates(), 1);
+        rotation.clampTo360();
         sendDescPacket();
     }
 
@@ -201,10 +205,40 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
      */
     protected void takeItem()
     {
-        TileEntity input = findInput();
-        if (input instanceof IInventory)
+        if (getHeldItem() == null)
         {
-            setHeldItem(InventoryUtility.takeTopItemFromInventory((IInventory) input, getDirection().ordinal(), insertAmount));
+            TileEntity input = findInput();
+            if (input instanceof IAutomatedCrafter)
+            {
+                final int[] slots = ((IAutomatedCrafter) input).getCraftingOutputSlots(this, getDirection());
+                for (int index = 0; index < slots.length; index++)
+                {
+                    final ItemStack stack = ((IAutomatedCrafter) input).getInventory().getStackInSlot(slots[index]);
+                    if (stack != null)
+                    {
+                        if (((IAutomatedCrafter) input).canRemove(stack, slots[index], getDirection()))
+                        {
+                            final ItemStack take = stack.copy();
+                            take.stackSize = 1;
+                            setHeldItem(take);
+
+                            stack.stackSize--;
+                            if (stack.stackSize <= 0)
+                            {
+                                ((IAutomatedCrafter) input).getInventory().setInventorySlotContents(slots[index], null);
+                            }
+                            else
+                            {
+                                ((IAutomatedCrafter) input).getInventory().setInventorySlotContents(slots[index], stack);
+                            }
+                        }
+                    }
+                }
+            }
+            else if (input instanceof IInventory)
+            {
+                setHeldItem(InventoryUtility.takeTopItemFromInventory((IInventory) input, getDirection().ordinal(), insertAmount));
+            }
         }
     }
 
@@ -213,18 +247,37 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
      */
     protected void insertItem()
     {
-        TileEntity output = findOutput();
-        if (output instanceof IAutomatedCrafter)
+        if (getHeldItem() != null)
         {
-            //TODO add rendered error responses when items can be stored (Ex. invalid filter, no room)
-            if (((IAutomatedCrafter) output).canStore(getHeldItem(), getDirection().getOpposite()))
+            TileEntity output = findOutput();
+            if (output instanceof IAutomatedCrafter)
             {
-                setHeldItem(((IAutomatedCrafter) output).insertRequiredItem(getHeldItem(), this));
+                int[] slots = ((IAutomatedCrafter) output).getCraftingInputSlots(this, getDirection().getOpposite());
+                ItemStack heldItem = getHeldItem();
+                final ForgeDirection side = getDirection();
+                for (int index = 0; index < slots.length; index++)
+                {
+                    final int slot = slots[index];
+                    //TODO add rendered error responses when items can be stored (Ex. invalid filter, no room)
+                    if (((IAutomatedCrafter) output).canStore(heldItem, slot, side))
+                    {
+                        heldItem = ((IAutomatedCrafter) output).insertRequiredItem(heldItem, slot, this, side);
+                        if (heldItem == null || heldItem.stackSize <= 0)
+                        {
+                            setHeldItem(null);
+                            break;
+                        }
+                        else
+                        {
+                            setHeldItem(heldItem);
+                        }
+                    }
+                }
             }
-        }
-        else if (output instanceof IInventory)
-        {
-            setHeldItem(InventoryUtility.putStackInInventory((IInventory) output, getHeldItem(), getDirection().getOpposite().ordinal(), false));
+            else if (output instanceof IInventory)
+            {
+                setHeldItem(InventoryUtility.putStackInInventory((IInventory) output, getHeldItem(), getDirection().getOpposite().ordinal(), false));
+            }
         }
     }
 
@@ -296,9 +349,9 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
             case SOUTH:
                 return 180;
             case EAST:
-                return 90;
-            case WEST:
                 return -90;
+            case WEST:
+                return 90;
             default:
                 return 0;
         }
