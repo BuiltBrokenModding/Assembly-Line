@@ -396,7 +396,12 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
      */
     protected TileEntity findInput()
     {
-        return toLocation().add(getDirection().getOpposite()).getTileEntity();
+        TileEntity tile = toLocation().add(getDirection().getOpposite()).getTileEntity();
+        if(tile instanceof IMultiTile)
+        {
+            return (TileEntity) ((IMultiTile) tile).getHost();
+        }
+        return tile;
     }
 
     /**
@@ -406,7 +411,12 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
      */
     protected TileEntity findOutput()
     {
-        return toLocation().add(getDirection()).getTileEntity();
+        TileEntity tile = toLocation().add(getDirection()).getTileEntity();
+        if(tile instanceof IMultiTile)
+        {
+            return (TileEntity) ((IMultiTile) tile).getHost();
+        }
+        return tile;
     }
 
     @Override
