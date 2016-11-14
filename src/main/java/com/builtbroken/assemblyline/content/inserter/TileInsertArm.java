@@ -1,5 +1,7 @@
 package com.builtbroken.assemblyline.content.inserter;
 
+import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.assemblyline.content.parts.ALParts;
 import com.builtbroken.jlib.data.vector.IPos3D;
 import com.builtbroken.mc.api.automation.IAutomatedCrafter;
 import com.builtbroken.mc.api.automation.IAutomation;
@@ -7,7 +9,8 @@ import com.builtbroken.mc.api.tile.multiblock.IMultiTile;
 import com.builtbroken.mc.api.tile.multiblock.IMultiTileHost;
 import com.builtbroken.mc.core.Engine;
 import com.builtbroken.mc.core.network.IPacketIDReceiver;
-import com.builtbroken.mc.core.registry.implement.IPostInit;
+import com.builtbroken.mc.core.registry.implement.IRecipeContainer;
+import com.builtbroken.mc.lib.helper.recipe.OreNames;
 import com.builtbroken.mc.lib.transform.region.Cube;
 import com.builtbroken.mc.lib.transform.rotation.EulerAngle;
 import com.builtbroken.mc.lib.transform.vector.Location;
@@ -24,11 +27,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,7 +43,7 @@ import java.util.Map;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 11/9/2016.
  */
-public class TileInsertArm extends TileModuleMachine implements IAutomation, IMultiTileHost, IPostInit, IPacketIDReceiver
+public class TileInsertArm extends TileModuleMachine implements IAutomation, IMultiTileHost, IPacketIDReceiver, IRecipeContainer
 {
     public static final int MAX_SPEED_UPGRADES = 18;
     /** Speed at which the arm rotates in degrees per tick */
@@ -72,9 +78,9 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     }
 
     @Override
-    public void onPostInit()
+    public void genRecipes(final List<IRecipe> recipes)
     {
-        //TODO add recipe
+        recipes.add(newShapedRecipe(AssemblyLine.blockInserter, "HW", "AW", "CW", 'H', ALParts.ROBOTIC_HAND.toStack(), 'A', ALParts.ROBOTIC_ARM_ASSEMBLY.toStack(), 'C', ALParts.ROBOTIC_BASE.toStack(), 'W', OreNames.WIRE_COPPER));
     }
 
     @Override
@@ -121,19 +127,19 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
         {
             if (getDirection() == ForgeDirection.NORTH)
             {
-                facing = ForgeDirection.EAST;
+                setFacing(ForgeDirection.EAST);
             }
             else if (getDirection() == ForgeDirection.EAST)
             {
-                facing = ForgeDirection.SOUTH;
+                setFacing(ForgeDirection.SOUTH);
             }
             else if (getDirection() == ForgeDirection.SOUTH)
             {
-                facing = ForgeDirection.WEST;
+                setFacing(ForgeDirection.WEST);
             }
             else
             {
-                facing = ForgeDirection.NORTH;
+                setFacing(ForgeDirection.NORTH);
             }
             if (isServer())
             {
@@ -397,7 +403,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     protected TileEntity findInput()
     {
         TileEntity tile = toLocation().add(getDirection().getOpposite()).getTileEntity();
-        if(tile instanceof IMultiTile)
+        if (tile instanceof IMultiTile)
         {
             return (TileEntity) ((IMultiTile) tile).getHost();
         }
@@ -412,7 +418,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     protected TileEntity findOutput()
     {
         TileEntity tile = toLocation().add(getDirection()).getTileEntity();
-        if(tile instanceof IMultiTile)
+        if (tile instanceof IMultiTile)
         {
             return (TileEntity) ((IMultiTile) tile).getHost();
         }
@@ -429,6 +435,20 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
         {
             ByteBufUtils.writeItemStack(buf, getHeldItem());
         }
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbt)
+    {
+        super.readFromNBT(nbt);
+        rotation.readFromNBT(nbt.getCompoundTag("rotation"));
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt)
+    {
+        super.writeToNBT(nbt);
+        nbt.setTag("rotation", rotation.writeNBT(new NBTTagCompound()));
     }
 
     @Override
@@ -530,5 +550,11 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     public Cube getSelectBounds()
     {
         return blockBounds;
+    }
+
+    @Override
+    public boolean useMetaForFacing()
+    {
+        return true;
     }
 }

@@ -92,21 +92,21 @@ public class TileInsertArmClient extends TileInsertArm implements ISimpleItemRen
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int meta)
     {
-        if (side == 1 && facing != null)
+        if (side == 1 && getFacing() != null)
         {
-            if (facing == ForgeDirection.NORTH)
+            if (getFacing() == ForgeDirection.NORTH)
             {
                 return arrow[0];
             }
-            else if (facing == ForgeDirection.EAST)
+            else if (getFacing() == ForgeDirection.EAST)
             {
                 return arrow[3];
             }
-            else if (facing == ForgeDirection.SOUTH)
+            else if (getFacing() == ForgeDirection.SOUTH)
             {
                 return arrow[1];
             }
-            else if (facing == ForgeDirection.WEST)
+            else if (getFacing() == ForgeDirection.WEST)
             {
                 return arrow[2];
             }
