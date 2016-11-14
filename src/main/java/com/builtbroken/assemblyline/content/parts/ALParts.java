@@ -1,5 +1,6 @@
 package com.builtbroken.assemblyline.content.parts;
 
+import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.mc.core.Engine;
 import com.builtbroken.mc.core.content.parts.CraftingParts;
 import com.builtbroken.mc.core.content.resources.items.ItemSheetMetal;
@@ -47,7 +48,7 @@ public enum ALParts
     /** Generates a stack for the part */
     public ItemStack toStack()
     {
-        return new ItemStack(Engine.itemCraftingParts, 1, ordinal());
+        return new ItemStack(AssemblyLine.itemParts, 1, ordinal());
     }
 
     /**
@@ -79,11 +80,13 @@ public enum ALParts
             casingItem = OreNames.INGOT_IRON;
         }
 
+        SIMPLE_LOGIC_BOX.recipes.add(new ShapedOreRecipe(ROBOTIC_BASE.toStack(), "IWI", "CTC", "IWI", 'W', OreNames.WIRE_COPPER, 'I', casingItem, 'T', UniversalRecipe.CIRCUIT_T2.get(), 'C', UniversalRecipe.CIRCUIT_T1.get()));
+
         ROBOTIC_BASE.recipes.add(new ShapedOreRecipe(ROBOTIC_BASE.toStack(), "IMI", "CLC", "III", 'M', CraftingParts.STEPPER_MOTOR.toStack(), 'I', casingItem, 'C', UniversalRecipe.CIRCUIT_T2.get()));
 
         ROBOTIC_ARM.recipes.add(new ShapedOreRecipe(ROBOTIC_ARM.toStack(), "IRI", "WRW", "IRI", 'R', OreNames.ROD_IRON, 'I', casingItem, 'W', OreNames.WIRE_COPPER));
 
-        ROBOTIC_ARM_ASSEMBLY.recipes.add(new ShapedOreRecipe(ROBOTIC_ARM_ASSEMBLY.toStack(), "MI ", "AI  ", "MAW", 'R', OreNames.ROD_IRON, 'I', casingItem, 'M', CraftingParts.STEPPER_MOTOR.toStack(), 'W', OreNames.WIRE_COPPER));
+        ROBOTIC_ARM_ASSEMBLY.recipes.add(new ShapedOreRecipe(ROBOTIC_ARM_ASSEMBLY.toStack(), "MI ", "AI ", "MAW", 'R', OreNames.ROD_IRON, 'I', casingItem, 'M', CraftingParts.STEPPER_MOTOR.toStack(), 'W', OreNames.WIRE_COPPER));
 
         ROBOTIC_HAND.recipes.add(new ShapedOreRecipe(ROBOTIC_HAND.toStack(), "RRR", "MMM", "CIC", 'R', OreNames.ROD_IRON, 'I', casingItem, 'M', CraftingParts.STEPPER_MOTOR.toStack(), 'C', UniversalRecipe.CIRCUIT_T2.get()));
     }

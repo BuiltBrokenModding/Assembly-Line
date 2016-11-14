@@ -1,0 +1,7 @@
+itemGroup.AL=Assembly Line
+
+item.assemblyLine:craftingPart.armBase.name=Robotic Arm Base
+item.assemblyLine:craftingPart.roboticArm.name=Robotic Arm Frame
+item.assemblyLine:craftingPart.armAssembly.name=Robotic Arm Assembly
+item.assemblyLine:craftingPart.handAssembly.name=Robotic Hand Assembly
+item.assemblyLine:craftingPart.simpleLogicBox.name=Simple Logic Box
