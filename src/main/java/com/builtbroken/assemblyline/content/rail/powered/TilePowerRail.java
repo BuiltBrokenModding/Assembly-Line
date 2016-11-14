@@ -1,5 +1,7 @@
 package com.builtbroken.assemblyline.content.rail.powered;
 
+import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.assemblyline.content.parts.ALParts;
 import com.builtbroken.assemblyline.content.rail.BlockRail;
 import com.builtbroken.jlib.type.Pair;
 import com.builtbroken.mc.api.rails.IRailInventoryTile;
@@ -7,7 +9,11 @@ import com.builtbroken.mc.api.rails.ITransportCart;
 import com.builtbroken.mc.api.rails.ITransportCartHasItem;
 import com.builtbroken.mc.api.rails.ITransportRail;
 import com.builtbroken.mc.core.Engine;
+import com.builtbroken.mc.core.content.parts.CraftingParts;
 import com.builtbroken.mc.core.network.IPacketIDReceiver;
+import com.builtbroken.mc.core.registry.implement.IRecipeContainer;
+import com.builtbroken.mc.lib.helper.recipe.OreNames;
+import com.builtbroken.mc.lib.helper.recipe.UniversalRecipe;
 import com.builtbroken.mc.lib.transform.region.Cube;
 import com.builtbroken.mc.lib.transform.vector.Location;
 import com.builtbroken.mc.lib.transform.vector.Pos;
@@ -19,10 +25,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
@@ -49,7 +57,7 @@ import java.util.List;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 10/29/2016.
  */
-public class TilePowerRail extends TileModuleMachine implements ITransportRail, IPacketIDReceiver
+public class TilePowerRail extends TileModuleMachine implements ITransportRail, IPacketIDReceiver, IRecipeContainer
 {
     //TODO C type rails need to show a stair case symbol to show it moving up or down
     //TODO D type needs to have a redstone upgrade
@@ -98,6 +106,45 @@ public class TilePowerRail extends TileModuleMachine implements ITransportRail, 
         super("cartPowerRail", Material.iron);
         this.bounds = new Cube(0, 0, 0, 1, .4, 1);
         this.itemBlock = ItemBlockPowerRail.class;
+    }
+
+    @Override
+    public void genRecipes(List<IRecipe> recipes)
+    {
+        recipes.add(newShapedRecipe(new ItemStack(AssemblyLine.blockPowerRail, 1, PoweredRails.POWERED.ordinal()),
+                "RPR", "MLM", "PCP",
+                'R', OreNames.ROD_IRON,
+                'M', CraftingParts.MOTOR.toStack(),
+                'C', UniversalRecipe.CIRCUIT_T1.get(),
+                'L', AssemblyLine.blockRail,
+                'P', OreNames.PLATE_IRON));
+        recipes.add(newShapedRecipe(new ItemStack(AssemblyLine.blockPowerRail, 1, PoweredRails.ROTATION.ordinal()),
+                "RPR", "RMR", "WLW",
+                'R', OreNames.ROD_IRON,
+                'M', CraftingParts.STEPPER_MOTOR.toStack(),
+                'L', new ItemStack(AssemblyLine.blockPowerRail, 1, PoweredRails.POWERED.ordinal()),
+                'P', OreNames.PLATE_IRON,
+                'W', OreNames.WIRE_COPPER));
+        recipes.add(newShapedRecipe(new ItemStack(AssemblyLine.blockPowerRail, 1, PoweredRails.STOP.ordinal()),
+                "RPR", "QCQ", "WLW",
+                'R', ALParts.ROBOTIC_HAND.toStack(),
+                'L', new ItemStack(AssemblyLine.blockPowerRail, 1, PoweredRails.POWERED.ordinal()),
+                'Q', OreNames.QUARTZ,
+                'C', UniversalRecipe.CIRCUIT_T1.get(),
+                'P', Blocks.stone_pressure_plate,
+                'W', OreNames.REDSTONE));
+        recipes.add(newShapedRecipe(new ItemStack(AssemblyLine.blockPowerRail, 1, PoweredRails.LOADER.ordinal()),
+                "RPR", "TCT", "WLW",
+                'R', AssemblyLine.blockInserter,
+                'L', new ItemStack(AssemblyLine.blockPowerRail, 1, PoweredRails.STOP.ordinal()),
+                'T', UniversalRecipe.CIRCUIT_T2.get(),
+                'C', UniversalRecipe.CIRCUIT_T3.get(),
+                'P', OreNames.PLATE_IRON,
+                'W', OreNames.REDSTONE));
+        recipes.add(newShapelessRecipe(new ItemStack(AssemblyLine.blockPowerRail, 1, PoweredRails.UNLOADER.ordinal()),
+                new ItemStack(AssemblyLine.blockPowerRail, 1, PoweredRails.LOADER.ordinal())));
+        recipes.add(newShapelessRecipe(new ItemStack(AssemblyLine.blockPowerRail, 1, PoweredRails.LOADER.ordinal()),
+                new ItemStack(AssemblyLine.blockPowerRail, 1, PoweredRails.UNLOADER.ordinal())));
     }
 
     @Override

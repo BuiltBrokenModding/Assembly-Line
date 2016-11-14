@@ -1,7 +1,20 @@
 itemGroup.AL=Assembly Line
 
-item.assemblyLine:craftingPart.armBase.name=Robotic Arm Base
-item.assemblyLine:craftingPart.roboticArm.name=Robotic Arm Frame
-item.assemblyLine:craftingPart.armAssembly.name=Robotic Arm Assembly
-item.assemblyLine:craftingPart.handAssembly.name=Robotic Hand Assembly
-item.assemblyLine:craftingPart.simpleLogicBox.name=Simple Logic Box
+item.assemblyline:craftingPart.armBase.name=Robotic Arm Base
+item.assemblyline:craftingPart.roboticArm.name=Robotic Arm Frame
+item.assemblyline:craftingPart.armAssembly.name=Robotic Arm Assembly
+item.assemblyline:craftingPart.handAssembly.name=Robotic Hand Assembly
+item.assemblyline:craftingPart.simpleLogicBox.name=Simple Logic Box
+
+tile.assemblyline:tileInsertArm.name=Inserter
+
+tile.assemblyline:transportRail.name=Transport Rail
+
+tile.assemblyline:cartPowerRail.rotation.name=Rotation Rail
+tile.assemblyline:cartPowerRail.powered.name=Powered Rail
+tile.assemblyline:cartPowerRail.stop.name=Stop Rail
+tile.assemblyline:cartPowerRail.orientation.name=Orientation Rail
+tile.assemblyline:cartPowerRail.loader.name=Loading Rail
+tile.assemblyline:cartPowerRail.unloader.name=Unloading Rail
+tile.assemblyline:cartPowerRail.extender.name=Extention Rail
+tile.assemblyline:cartPowerRail.splitter.name=Splitter Rail

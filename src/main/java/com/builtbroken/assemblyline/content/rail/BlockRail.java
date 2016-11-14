@@ -4,6 +4,8 @@ import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.mc.api.rails.ITransportCart;
 import com.builtbroken.mc.api.rails.ITransportRailBlock;
 import com.builtbroken.mc.core.Engine;
+import com.builtbroken.mc.core.registry.implement.IRecipeContainer;
+import com.builtbroken.mc.lib.helper.recipe.OreNames;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -12,6 +14,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
@@ -27,7 +30,7 @@ import java.util.List;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 10/29/2016.
  */
-public class BlockRail extends Block implements ITransportRailBlock
+public class BlockRail extends Block implements ITransportRailBlock, IRecipeContainer
 {
     public static final float RAIL_HEIGHT = 0.4f;
 
@@ -35,9 +38,15 @@ public class BlockRail extends Block implements ITransportRailBlock
     public BlockRail()
     {
         super(Material.iron);
-        this.setBlockName(AssemblyLine.PREFIX + "transportMissileRail");
+        this.setBlockName(AssemblyLine.PREFIX + "transportRail");
         this.setHardness(5);
         this.setResistance(5);
+    }
+
+    @Override
+    public void genRecipes(List<IRecipe> recipes)
+    {
+        recipes.add(newShapedRecipe(this, "RRR", "WPW", "RRR", 'R', OreNames.ROD_IRON, 'W', OreNames.WIRE_IRON, 'P', OreNames.PLATE_IRON));
     }
 
     //TODO implement connections

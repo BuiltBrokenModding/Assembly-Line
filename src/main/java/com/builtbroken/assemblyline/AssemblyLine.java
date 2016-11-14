@@ -18,6 +18,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 /**
  * Created by DarkGuardsman on 8/31/2015.
@@ -92,6 +93,7 @@ public class AssemblyLine extends AbstractMod
     public void init(FMLInitializationEvent event)
     {
         super.init(event);
+        CREATIVE_TAB.itemStack = new ItemStack(blockInserter);
     }
 
     @Mod.EventHandler
