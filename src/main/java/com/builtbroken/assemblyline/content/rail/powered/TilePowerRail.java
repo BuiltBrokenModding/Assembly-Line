@@ -15,7 +15,6 @@ import com.builtbroken.mc.core.registry.implement.IRecipeContainer;
 import com.builtbroken.mc.lib.helper.recipe.OreNames;
 import com.builtbroken.mc.lib.helper.recipe.UniversalRecipe;
 import com.builtbroken.mc.lib.transform.region.Cube;
-import com.builtbroken.mc.lib.transform.vector.Location;
 import com.builtbroken.mc.lib.transform.vector.Pos;
 import com.builtbroken.mc.prefab.inventory.InventoryUtility;
 import com.builtbroken.mc.prefab.tile.Tile;
@@ -258,12 +257,22 @@ public class TilePowerRail extends TileModuleMachine implements ITransportRail, 
 
                     if (!worldObj.isRemote)
                     {
-                        final Pair<ItemStack, Integer> stack = takeItemFromTile((ITransportCartHasItem) cart);
-                        if (stack != null && stack.left() != null && stack.left().stackSize >= 0)
+                        final Pair<ItemStack, Integer> slotData = takeItemFromTile((ITransportCartHasItem) cart);
+                        if (slotData != null && slotData.left() != null && slotData.left().stackSize >= 0)
                         {
-                            IRailInventoryTile tile = getLoadTile();
-                            ItemStack left = ((ITransportCartHasItem) cart).setTransportedItem(InventoryUtility.copyStack(stack.left(), 1));
-                            tile.getInventory().setInventorySlotContents(stack.right(), left);
+                            TileEntity tile = getLoadTile();
+                            if (tile instanceof IInventory)
+                            {
+                                ItemStack left = ((ITransportCartHasItem) cart).setTransportedItem(slotData.left());
+                                if (left == null || left.stackSize <= 0)
+                                {
+                                    ((IInventory) tile).setInventorySlotContents(slotData.right(), null);
+                                }
+                                else
+                                {
+                                    ((IInventory) tile).setInventorySlotContents(slotData.right(), left);
+                                }
+                            }
                         }
                     }
                     //Else nothing happened
@@ -323,21 +332,21 @@ public class TilePowerRail extends TileModuleMachine implements ITransportRail, 
      */
     public ItemStack storeItemInTile(ItemStack stack)
     {
-        final IRailInventoryTile tile = getLoadTile();
-        if (tile != null)
+        final TileEntity tile = getLoadTile();
+        if (tile instanceof IRailInventoryTile)
         {
             //Check if we can globally store the item
-            if (tile.canStore(stack, getLoadingDirection().getOpposite()))
+            if (((IRailInventoryTile) tile).canStore(stack, getLoadingDirection().getOpposite()))
             {
-                final int[] slots = tile.getSlotsToLoad(stack, getLoadingDirection().getOpposite());
-                final int stackLimit = tile.getInventory().getInventoryStackLimit();
-                final IInventory inventory = tile.getInventory();
+                final int[] slots = ((IRailInventoryTile) tile).getSlotsToLoad(stack, getLoadingDirection().getOpposite());
+                final int stackLimit = ((IRailInventoryTile) tile).getInventory().getInventoryStackLimit();
+                final IInventory inventory = ((IRailInventoryTile) tile).getInventory();
 
                 for (int index = 0; index < slots.length; index++)
                 {
                     final int slot = slots[index];
                     //Check if we can store the exact item
-                    if (tile.canStore(stack, slot, getLoadingDirection().getOpposite()))
+                    if (((IRailInventoryTile) tile).canStore(stack, slot, getLoadingDirection().getOpposite()))
                     {
                         final ItemStack slotStack = inventory.getStackInSlot(slot);
                         if (slotStack == null)
@@ -369,6 +378,10 @@ public class TilePowerRail extends TileModuleMachine implements ITransportRail, 
                 }
             }
         }
+        else if (tile instanceof IInventory)
+        {
+            return InventoryUtility.putStackInInventory((IInventory) tile, stack, getLoadingDirection().getOpposite().ordinal(), false);
+        }
         return stack;
     }
 
@@ -381,17 +394,17 @@ public class TilePowerRail extends TileModuleMachine implements ITransportRail, 
      */
     public Pair<ItemStack, Integer> takeItemFromTile(ITransportCartHasItem cart)
     {
-        final IRailInventoryTile tile = getLoadTile();
-        if (tile != null)
+        final TileEntity tile = getLoadTile();
+        if (tile instanceof IRailInventoryTile)
         {
-            int[] slots = tile.getSlotsToUnload(getLoadingDirection().getOpposite());
-            final IInventory inventory = tile.getInventory();
+            int[] slots = ((IRailInventoryTile) tile).getSlotsToUnload(getLoadingDirection().getOpposite());
+            final IInventory inventory = ((IRailInventoryTile) tile).getInventory();
 
             for (int index = 0; index < slots.length; index++)
             {
                 final int slot = slots[index];
                 final ItemStack slotStack = inventory.getStackInSlot(slot);
-                if (slotStack != null && tile.canRemove(slotStack, getLoadingDirection().getOpposite()))
+                if (slotStack != null && ((IRailInventoryTile) tile).canRemove(slotStack, getLoadingDirection().getOpposite()))
                 {
                     if (cart.canAcceptItemForTransport(slotStack))
                     {
@@ -399,6 +412,10 @@ public class TilePowerRail extends TileModuleMachine implements ITransportRail, 
                     }
                 }
             }
+        }
+        else if (tile instanceof IInventory)
+        {
+            return InventoryUtility.findFirstItemInInventory((IInventory) tile, getLoadingDirection().getOpposite().ordinal(), 64, cart.getInventoryFilter());
         }
         return null;
     }
@@ -409,15 +426,9 @@ public class TilePowerRail extends TileModuleMachine implements ITransportRail, 
      *
      * @return
      */
-    public IRailInventoryTile getLoadTile()
+    public TileEntity getLoadTile()
     {
-        Location location = toLocation().add(getLoadingDirection());
-        TileEntity tile = location.getTileEntity();
-        if (tile instanceof IRailInventoryTile)
-        {
-            return (IRailInventoryTile) tile;
-        }
-        return null;
+        return toLocation().add(getLoadingDirection()).getTileEntity();
     }
 
     @Override
