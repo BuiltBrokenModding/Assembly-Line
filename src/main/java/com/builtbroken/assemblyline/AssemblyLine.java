@@ -8,6 +8,8 @@ import com.builtbroken.assemblyline.content.manipulator.TileManipulator;
 import com.builtbroken.assemblyline.content.parts.ItemCraftingParts;
 import com.builtbroken.assemblyline.content.rail.BlockRail;
 import com.builtbroken.assemblyline.content.rail.ItemBlockRail;
+import com.builtbroken.assemblyline.content.rail.carts.EntityCart;
+import com.builtbroken.assemblyline.content.rail.carts.ItemCart;
 import com.builtbroken.mc.core.Engine;
 import com.builtbroken.mc.lib.mod.AbstractMod;
 import com.builtbroken.mc.lib.mod.ModCreativeTab;
@@ -16,6 +18,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -55,6 +58,9 @@ public class AssemblyLine extends AbstractMod
     public static Block blockPowerRail;
 
     public static Item itemParts;
+    public static Item itemCart;
+
+    public static int ENTITY_ID_PREFIX = 70;
 
     public AssemblyLine()
     {
@@ -76,6 +82,7 @@ public class AssemblyLine extends AbstractMod
         Engine.requestCraftingParts();
 
         itemParts = getManager().newItem("alCraftingParts", new ItemCraftingParts());
+        itemCart = getManager().newItem("alCarts", new ItemCart());
 
         if (Engine.runningAsDev)
         {
@@ -94,6 +101,9 @@ public class AssemblyLine extends AbstractMod
     {
         super.init(event);
         CREATIVE_TAB.itemStack = new ItemStack(blockInserter);
+
+        EntityRegistry.registerGlobalEntityID(EntityCart.class, "ALTransportCart", EntityRegistry.findGlobalUniqueEntityId());
+        EntityRegistry.registerModEntity(EntityCart.class, "ALTransportCart", ENTITY_ID_PREFIX, this, 500, 1, true);
     }
 
     @Mod.EventHandler

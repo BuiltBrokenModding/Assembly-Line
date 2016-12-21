@@ -23,5 +23,7 @@ public class ALCreativeTab extends ModCreativeTab
         add(list, AssemblyLine.blockInserter);
         add(list, AssemblyLine.blockRail);
         add(list, AssemblyLine.blockPowerRail);
+        add(list, AssemblyLine.itemCart);
+        add(list, AssemblyLine.itemParts);
     }
 }
