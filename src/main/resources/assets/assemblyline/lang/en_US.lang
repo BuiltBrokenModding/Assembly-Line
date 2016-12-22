@@ -5,6 +5,7 @@ item.assemblyline:craftingPart.roboticArm.name=Robotic Arm Frame
 item.assemblyline:craftingPart.armAssembly.name=Robotic Arm Assembly
 item.assemblyline:craftingPart.handAssembly.name=Robotic Hand Assembly
 item.assemblyline:craftingPart.simpleLogicBox.name=Simple Logic Box
+item.assemblyline:transportRailCart.name=Transport Rail Cart
 
 tile.assemblyline:tileInsertArm.name=Inserter
 
