@@ -6,9 +6,12 @@ import com.builtbroken.mc.prefab.entity.cart.EntityAbstractCart;
 import com.builtbroken.mc.prefab.inventory.ExternalInventory;
 import com.builtbroken.mc.prefab.inventory.filters.IInventoryFilter;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Cart for all transport rail carts for assembly line
@@ -130,5 +133,25 @@ public class EntityCart extends EntityAbstractCart implements ITransportCartHasC
     public IInventoryFilter getInventoryFilter()
     {
         return null;
+    }
+
+    @Override
+    public boolean canStore(ItemStack stack, ForgeDirection side)
+    {
+        return true;
+    }
+
+    @Override
+    public boolean interactFirst(EntityPlayer player)
+    {
+        if (getInventory() != null)
+        {
+            if (!world().isRemote)
+            {
+                player.addChatComponentMessage(new ChatComponentText("Items: " + getInventory().getContainedItems().size()));
+            }
+            return true;
+        }
+        return false;
     }
 }

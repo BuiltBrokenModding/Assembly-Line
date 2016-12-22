@@ -1,6 +1,9 @@
 package com.builtbroken.assemblyline.content.rail.carts;
 
 import com.builtbroken.mc.prefab.entity.cart.EntityAbstractCart;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.IIcon;
 
 /**
  * List of cart types that are supported by {@link EntityAbstractCart}
@@ -11,24 +14,42 @@ import com.builtbroken.mc.prefab.entity.cart.EntityAbstractCart;
 public enum CartTypes
 {
     /** Cart with nothing */
-    EMPTY(0.7f, 0.7f, 0),
+    EMPTY(null, 0.7f, 0.7f, 0),
     /** Cart with chest */
-    CHEST(0.7f, 0.7f, 27),
+    CHEST("chest", 0.7f, 0.7f, 27),
     /** Cart with single slot that can take large stacks or blocks placed onto it. Visually rendering said blocks */
-    STACK(0.7f, 0.7f, 1),
+    STACK("stack", 0.7f, 0.7f, 1),
     /** Assembly Line Crate */
-    CRATE(0.7f, 0.7f, 15),
-    /** JABBA https://mods.curse.com/mc-mods/minecraft/jabba  */
-    JABBA_BARREL(0.7f, 0.7f, 16);
+    CRATE("crate", 0.7f, 0.7f, 15),
+    /** JABBA https://mods.curse.com/mc-mods/minecraft/jabba */
+    JABBA_BARREL("jabba", 0.7f, 0.7f, 16);
 
+    //Entity Data
     public final float width;
     public final float length;
+
+    //Cart data
     public int inventorySize;
 
-    CartTypes(float width, float length, int slots)
+    //Client data
+    @SideOnly(Side.CLIENT)
+    public IIcon icon;
+    public final String subName;
+
+    CartTypes(String name, float width, float length, int slots)
     {
         this.width = width;
         this.length = length;
         this.inventorySize = slots;
+        this.subName = name;
+    }
+
+    public static CartTypes get(int itemDamage)
+    {
+        if (itemDamage > 0 && itemDamage < values().length)
+        {
+            return values()[itemDamage];
+        }
+        return EMPTY;
     }
 }

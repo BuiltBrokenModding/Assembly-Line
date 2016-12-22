@@ -252,7 +252,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
             }
             else if (input instanceof IInventory)
             {
-                setHeldItem(InventoryUtility.takeTopItemFromInventory((IInventory) input, getDirection().ordinal(), insertAmount));
+                setHeldItem(InventoryUtility.pullStack(input, getDirection().ordinal(), insertAmount));
             }
         }
     }
@@ -291,7 +291,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
             }
             else if (output instanceof IInventory)
             {
-                setHeldItem(InventoryUtility.putStackInInventory((IInventory) output, getHeldItem(), getDirection().getOpposite().ordinal(), false));
+                setHeldItem(InventoryUtility.insertStack(output, getHeldItem(), getDirection().getOpposite().ordinal(), false));
             }
         }
     }

@@ -4,10 +4,8 @@ import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.content.parts.ALParts;
 import com.builtbroken.assemblyline.content.rail.BlockRail;
 import com.builtbroken.jlib.type.Pair;
-import com.builtbroken.mc.api.rails.IRailInventoryTile;
-import com.builtbroken.mc.api.rails.ITransportCart;
-import com.builtbroken.mc.api.rails.ITransportCartHasItem;
-import com.builtbroken.mc.api.rails.ITransportRail;
+import com.builtbroken.mc.api.rails.*;
+import com.builtbroken.mc.api.tile.node.IExternalInventory;
 import com.builtbroken.mc.core.Engine;
 import com.builtbroken.mc.core.content.parts.CraftingParts;
 import com.builtbroken.mc.core.network.IPacketIDReceiver;
@@ -17,6 +15,7 @@ import com.builtbroken.mc.lib.helper.recipe.UniversalRecipe;
 import com.builtbroken.mc.lib.transform.region.Cube;
 import com.builtbroken.mc.lib.transform.vector.Pos;
 import com.builtbroken.mc.prefab.inventory.InventoryUtility;
+import com.builtbroken.mc.prefab.inventory.filters.IInventoryFilter;
 import com.builtbroken.mc.prefab.tile.Tile;
 import com.builtbroken.mc.prefab.tile.TileModuleMachine;
 import io.netty.buffer.ByteBuf;
@@ -248,7 +247,47 @@ public class TilePowerRail extends TileModuleMachine implements ITransportRail, 
         }
         else if (isLoaderRail())
         {
-            if (cart instanceof ITransportCartHasItem)
+            //TODO implement max item movement per tick
+            //Large inventory
+            if (cart instanceof ITransportCartHasCargo)
+            {
+                IExternalInventory inventory = ((ITransportCartHasCargo) cart).getInventory();
+                if (inventory != null && !inventory.isFull())
+                {
+                    cart.setMotion(0, 0, 0);
+                    cart.recenterCartOnRail(this, true);
+
+                    if (!worldObj.isRemote)
+                    {
+                        final Pair<ItemStack, Integer> slotData = takeItemFromTile((ITransportCartCargo) cart);
+                        if (slotData != null && slotData.left() != null && slotData.left().stackSize >= 0)
+                        {
+                            TileEntity tile = getLoadTile();
+                            if (tile instanceof IInventory)
+                            {
+                                ItemStack left = InventoryUtility.putStackInInventory(inventory, slotData.left(), false);
+                                if (left == null || left.stackSize <= 0)
+                                {
+                                    ((IInventory) tile).setInventorySlotContents(slotData.right(), null);
+                                }
+                                else
+                                {
+                                    ((IInventory) tile).setInventorySlotContents(slotData.right(), left);
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    //TODO trigger redstone 3 ticks
+                    handlePush(cart);
+                    cart.recenterCartOnRail(this, false);
+                    return;
+                }
+            }
+            //Single item inventory
+            else if (cart instanceof ITransportCartHasItem)
             {
                 if (((ITransportCartHasItem) cart).getTransportedItem() == null)
                 {
@@ -288,7 +327,51 @@ public class TilePowerRail extends TileModuleMachine implements ITransportRail, 
         }
         else if (isUnloadRail())
         {
-            if (cart instanceof ITransportCartHasItem)
+            //Large cargo cart
+            if (cart instanceof ITransportCartHasCargo)
+            {
+                IExternalInventory inventory = ((ITransportCartHasCargo) cart).getInventory();
+                if (inventory != null && !inventory.isEmpty())
+                {
+                    //Get slots with items
+                    List<Integer> slotsWithItems = inventory.getFilledSlots();
+
+                    //Only stop cart if it is not empty
+                    if (!slotsWithItems.isEmpty())
+                    {
+                        cart.setMotion(0, 0, 0);
+                        cart.recenterCartOnRail(this, true);
+
+                        //TODO add a movement per tick limit
+                        if (!worldObj.isRemote)
+                        {
+                            for (int slot : slotsWithItems)
+                            {
+                                final ItemStack prev = inventory.getStackInSlot(slot).copy();
+                                ItemStack stack = storeItemInTile(inventory.getStackInSlot(slot).copy());
+
+                                if (stack == null || stack.stackSize <= 0)
+                                {
+                                    inventory.setInventorySlotContents(slot, null);
+                                }
+                                else if (!InventoryUtility.stacksMatchExact(prev, stack))
+                                {
+                                    inventory.setInventorySlotContents(slot, stack);
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    //TODO trigger redstone 3 ticks
+                    handlePush(cart);
+                    cart.recenterCartOnRail(this, false);
+                    return;
+                }
+            }
+            //Single item cart
+            else if (cart instanceof ITransportCartHasItem)
             {
                 if (((ITransportCartHasItem) cart).getTransportedItem() != null)
                 {
@@ -392,7 +475,7 @@ public class TilePowerRail extends TileModuleMachine implements ITransportRail, 
      *
      * @return the item
      */
-    public Pair<ItemStack, Integer> takeItemFromTile(ITransportCartHasItem cart)
+    public Pair<ItemStack, Integer> takeItemFromTile(ITransportCartCargo cart)
     {
         final TileEntity tile = getLoadTile();
         if (tile instanceof IRailInventoryTile)
@@ -416,6 +499,41 @@ public class TilePowerRail extends TileModuleMachine implements ITransportRail, 
         else if (tile instanceof IInventory)
         {
             return InventoryUtility.findFirstItemInInventory((IInventory) tile, getLoadingDirection().getOpposite().ordinal(), 64, cart.getInventoryFilter());
+        }
+        return null;
+    }
+
+    /**
+     * Modified version of the above method designed for cargo carts that
+     * require items per slot.
+     *
+     * @param filter - slot based filter, used to filter global and per slot
+     * @return item & slot pair
+     */
+    public Pair<ItemStack, Integer> takeItemFromTile(IInventoryFilter filter)
+    {
+        final TileEntity tile = getLoadTile();
+        if (tile instanceof IRailInventoryTile)
+        {
+            int[] slots = ((IRailInventoryTile) tile).getSlotsToUnload(getLoadingDirection().getOpposite());
+            final IInventory inventory = ((IRailInventoryTile) tile).getInventory();
+
+            for (int index = 0; index < slots.length; index++)
+            {
+                final int slot = slots[index];
+                final ItemStack slotStack = inventory.getStackInSlot(slot);
+                if (slotStack != null && ((IRailInventoryTile) tile).canRemove(slotStack, getLoadingDirection().getOpposite()))
+                {
+                    if (filter.isStackInFilter(slotStack))
+                    {
+                        return new Pair(slotStack, slot);
+                    }
+                }
+            }
+        }
+        else if (tile instanceof IInventory)
+        {
+            return InventoryUtility.findFirstItemInInventory((IInventory) tile, getLoadingDirection().getOpposite().ordinal(), 64, filter);
         }
         return null;
     }
