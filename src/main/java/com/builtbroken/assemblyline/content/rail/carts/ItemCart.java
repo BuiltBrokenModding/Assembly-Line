@@ -145,7 +145,7 @@ public class ItemCart extends ItemAbstract implements IRecipeContainer, IRegistr
     @Override
     public void genRecipes(List<IRecipe> recipes)
     {
-        recipes.add(newShapedRecipe(new ItemStack(this, 1, CartTypes.EMPTY.ordinal()), "COC", "RTR", "GSG", 'S', OreNames.ROD_STEEL, 'G', OreNames.GEAR_STEEL, 'C', UniversalRecipe.CIRCUIT_T1.get(), 'O', UniversalRecipe.CIRCUIT_T2.get(), 'R', CraftingParts.DC_MOTOR, 'T', OreNames.PLATE_STEEL));
+        recipes.add(newShapedRecipe(new ItemStack(this, 1, CartTypes.EMPTY.ordinal()), "COC", "RTR", "GSG", 'S', OreNames.ROD_STEEL, 'G', OreNames.GEAR_STEEL, 'C', UniversalRecipe.CIRCUIT_T1.get(), 'O', UniversalRecipe.CIRCUIT_T2.get(), 'R', CraftingParts.DC_MOTOR.oreName, 'T', OreNames.PLATE_STEEL));
         recipes.add(newShapelessRecipe(new ItemStack(this, 1, CartTypes.CHEST.ordinal()), Blocks.chest, new ItemStack(this, 1, CartTypes.EMPTY.ordinal())));
         recipes.add(newShapelessRecipe(new ItemStack(this, 1, CartTypes.STACK.ordinal()), Blocks.wooden_pressure_plate, new ItemStack(this, 1, CartTypes.EMPTY.ordinal())));
     }
