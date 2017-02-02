@@ -17,7 +17,7 @@ import com.builtbroken.mc.lib.transform.vector.Pos;
 import com.builtbroken.mc.prefab.inventory.InventoryUtility;
 import com.builtbroken.mc.prefab.inventory.filters.IInventoryFilter;
 import com.builtbroken.mc.prefab.tile.Tile;
-import com.builtbroken.mc.prefab.tile.TileModuleMachine;
+import com.builtbroken.mc.prefab.tile.TileModuleMachineBase;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -55,7 +55,7 @@ import java.util.List;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 10/29/2016.
  */
-public class TilePowerRail extends TileModuleMachine implements ITransportRail, IPacketIDReceiver, IRecipeContainer
+public class TilePowerRail extends TileModuleMachineBase implements ITransportRail, IPacketIDReceiver, IRecipeContainer
 {
     //TODO C type rails need to show a stair case symbol to show it moving up or down
     //TODO D type needs to have a redstone upgrade

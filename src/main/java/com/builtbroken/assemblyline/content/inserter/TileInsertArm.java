@@ -18,6 +18,7 @@ import com.builtbroken.mc.lib.transform.vector.Pos;
 import com.builtbroken.mc.prefab.inventory.InventoryUtility;
 import com.builtbroken.mc.prefab.tile.Tile;
 import com.builtbroken.mc.prefab.tile.TileModuleMachine;
+import com.builtbroken.mc.prefab.tile.module.TileModuleInventory;
 import com.builtbroken.mc.prefab.tile.multiblock.EnumMultiblock;
 import com.builtbroken.mc.prefab.tile.multiblock.MultiBlockHelper;
 import cpw.mods.fml.common.network.ByteBufUtils;
@@ -71,10 +72,15 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     public TileInsertArm()
     {
         super("tileInsertArm", Material.iron);
-        this.addInventoryModule(2);
         this.hardness = 1;
         this.resistance = 1;
         this.renderTileEntity = true;
+    }
+
+    @Override
+    protected IInventory createInventory()
+    {
+        return new TileModuleInventory(this, 2);
     }
 
     @Override
