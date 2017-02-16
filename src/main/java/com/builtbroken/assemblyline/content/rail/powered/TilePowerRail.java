@@ -205,7 +205,7 @@ public class TilePowerRail extends TileModuleMachineBase implements ITransportRa
         {
             if (ticks % 5 == 0)
             {
-                final Pos delta = new Pos(this).add(0.5).sub(cart.x(), cart.y(), cart.z());
+                final Pos delta = new Pos((TileEntity)this).add(0.5).sub(cart.x(), cart.y(), cart.z());
                 boolean stop = true;
                 // Moving negative <--- -0.5 -0.4 -0.3 -0.2 -0.1 [0] 0.1 0.2 0.3 0.4 0.5 <- coming into station
                 // Moving positive <--- 0.5 0.4 0.3 0.2 0.1 [0] -0.1 -0.2 -0.3 -0.4 -0.5 <- coming into station
