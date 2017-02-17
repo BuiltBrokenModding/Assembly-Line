@@ -54,7 +54,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
 
     static
     {
-        tileMapCache.put(new Pos(0, 1, 0), EnumMultiblock.TILE.getName());
+        tileMapCache.put(new Pos(0, 1, 0), EnumMultiblock.TILE.getTileName());
     }
 
     //Facing directions is output direction
