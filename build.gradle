@@ -45,7 +45,7 @@ processResources {
 		expand 'version': project.version, 'mcversion': project.minecraft.version
 		// replace version and MCVersion
 	}
-    
+
 
 	// copy everything else, thats not text
 	from(sourceSets.main.resources.srcDirs) {
@@ -54,18 +54,18 @@ processResources {
 	}
 }
 
-minecraft {    
+minecraft {
     replace "required-after:VoltzEngine", "required-after:VoltzEngine@[$voltz_engine_version,)"
 }
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-dependencies 
+dependencies
 {
     if (project.hasProperty("bambooshortPlanName") && project.getProperty("bambooshortPlanName") == "BBM-Dev")
     compile "dev.builtbroken.voltzengine:VoltzEngine:1.7.10-$voltz_engine_version+:deobf-dev"
-    else 
+    else
     compile "com.builtbroken.voltzengine:VoltzEngine:1.7.10-$voltz_engine_version+:deobf"
 }
 
@@ -79,4 +79,23 @@ jacocoTestReport {
         xml.enabled = true // coveralls plugin depends on xml format report
         html.enabled = true
     }
+}
+
+task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
+    filePath = "changelog.html"
+    untaggedName = "Current release ${project.version}"
+    fromCommit = startGitRev
+    toRef =  "HEAD"
+    templateContent = """
+{{#tags}}
+<h1> Highly untested and may break world</h1>
+  <h3>{{name}}</h3>
+  <ul>
+    {{#commits}}
+    <li> <a href="https://github.com/BuiltBrokenModding/VoltzEngine/commit/{{hash}}" target=_blank> {{{message}}}</a>
+</li>
+    {{/commits}}
+  </ul>
+{{/tags}}
+"""
 }
