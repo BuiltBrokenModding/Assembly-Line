@@ -47,14 +47,6 @@ processResources {
         // replace version and MCVersion
     }
 
-<<<<<<< HEAD
-		expand 'version': project.version, 'mcversion': project.minecraft.version
-		// replace version and MCVersion
-	}
-
-=======
->>>>>>> f2a78108f42a1fd818de5e31e71a501eff9528b1
-
     // copy everything else, thats not text
     from(sourceSets.main.resources.srcDirs) {
         exclude '**/*.info'
