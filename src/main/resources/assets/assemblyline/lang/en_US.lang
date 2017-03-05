@@ -5,6 +5,7 @@ item.assemblyline:craftingPart.roboticArm.name=Robotic Arm Frame
 item.assemblyline:craftingPart.armAssembly.name=Robotic Arm Assembly
 item.assemblyline:craftingPart.handAssembly.name=Robotic Hand Assembly
 item.assemblyline:craftingPart.simpleLogicBox.name=Simple Logic Box
+item.assemblyline:transportRailCart.name=Transport Rail Cart
 
 tile.assemblyline:tileInsertArm.name=Inserter
 
@@ -18,3 +19,9 @@ tile.assemblyline:cartPowerRail.loader.name=Loading Rail
 tile.assemblyline:cartPowerRail.unloader.name=Unloading Rail
 tile.assemblyline:cartPowerRail.extender.name=Extention Rail
 tile.assemblyline:cartPowerRail.splitter.name=Splitter Rail
+
+item.assemblyline:transportRailCart.name=Transport Cart
+item.assemblyline:transportRailCart.chest.name=Chest Cart
+item.assemblyline:transportRailCart.stack.name=Open Cart
+item.assemblyline:transportRailCart.crate.name=Crate Cart
+item.assemblyline:transportRailCart.jabba.name=Jabba Barrel Cart

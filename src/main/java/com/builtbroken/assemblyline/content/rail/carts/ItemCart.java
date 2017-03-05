@@ -3,22 +3,28 @@ package com.builtbroken.assemblyline.content.rail.carts;
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.mc.api.rails.ITransportRail;
 import com.builtbroken.mc.api.rails.ITransportRailBlock;
+import com.builtbroken.mc.core.content.parts.CraftingParts;
 import com.builtbroken.mc.core.registry.implement.IRecipeContainer;
+import com.builtbroken.mc.core.registry.implement.IRegistryInit;
 import com.builtbroken.mc.lib.helper.recipe.OreNames;
 import com.builtbroken.mc.lib.helper.recipe.UniversalRecipe;
 import com.builtbroken.mc.prefab.entity.cart.EntityAbstractCart;
+import com.builtbroken.mc.prefab.items.ItemAbstract;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.List;
 
@@ -28,7 +34,7 @@ import java.util.List;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 10/29/2016.
  */
-public class ItemCart extends Item implements IRecipeContainer
+public class ItemCart extends ItemAbstract implements IRecipeContainer, IRegistryInit
 {
     public ItemCart()
     {
@@ -36,12 +42,6 @@ public class ItemCart extends Item implements IRecipeContainer
         this.setUnlocalizedName(AssemblyLine.PREFIX + "transportRailCart");
         this.setTextureName(AssemblyLine.PREFIX + "transportRailCart");
         this.setHasSubtypes(true);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean p_77624_4_)
-    {
-        list.add("Size: " + CartTypes.values()[stack.getItemDamage()]);
     }
 
     @Override
@@ -134,19 +134,68 @@ public class ItemCart extends Item implements IRecipeContainer
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item p_150895_1_, CreativeTabs p_150895_2_, List p_150895_3_)
+    public void getSubItems(Item item, CreativeTabs tab, List items)
     {
         for (int i = 0; i < CartTypes.values().length; i++)
         {
-            p_150895_3_.add(new ItemStack(p_150895_1_, 1, i));
+            items.add(new ItemStack(item, 1, i));
         }
     }
 
     @Override
     public void genRecipes(List<IRecipe> recipes)
     {
-        recipes.add(newShapedRecipe(new ItemStack(this, 1, 0), "SCS", "RTR", 'S', OreNames.ROD_IRON, 'C', UniversalRecipe.CIRCUIT_T1.get(), 'R', OreNames.REDSTONE, 'T', Items.minecart));
-        recipes.add(newShapedRecipe(new ItemStack(this, 1, 1), "RTR", 'R', OreNames.PLATE_IRON, 'T', new ItemStack(this, 1, 0)));
-        recipes.add(newShapedRecipe(new ItemStack(this, 1, 2), "RRR", "RTR", "RRR", 'R', OreNames.PLATE_IRON, 'T', new ItemStack(this, 1, 0)));
+        recipes.add(newShapedRecipe(new ItemStack(this, 1, CartTypes.EMPTY.ordinal()), "COC", "RTR", "GSG", 'S', OreNames.ROD_STEEL, 'G', OreNames.GEAR_STEEL, 'C', UniversalRecipe.CIRCUIT_T1.get(), 'O', UniversalRecipe.CIRCUIT_T2.get(), 'R', CraftingParts.DC_MOTOR.oreName, 'T', OreNames.PLATE_STEEL));
+        recipes.add(newShapelessRecipe(new ItemStack(this, 1, CartTypes.CHEST.ordinal()), Blocks.chest, new ItemStack(this, 1, CartTypes.EMPTY.ordinal())));
+        recipes.add(newShapelessRecipe(new ItemStack(this, 1, CartTypes.STACK.ordinal()), Blocks.wooden_pressure_plate, new ItemStack(this, 1, CartTypes.EMPTY.ordinal())));
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IIcon getIconFromDamage(int meta)
+    {
+        CartTypes type = CartTypes.get(meta);
+        if (type.icon != null)
+        {
+            return type.icon;
+        }
+        return this.itemIcon;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IIconRegister reg)
+    {
+        this.itemIcon = reg.registerIcon(this.getIconString());
+        for (CartTypes type : CartTypes.values())
+        {
+            if (type.subName != null)
+            {
+                type.icon = reg.registerIcon(this.getIconString() + "." + type.subName);
+            }
+        }
+    }
+
+    @Override
+    public String getUnlocalizedName(ItemStack stack)
+    {
+        CartTypes type = CartTypes.get(stack.getItemDamage());
+        if (type.subName != null)
+        {
+            return super.getUnlocalizedName() + "." + type.subName;
+        }
+        return super.getUnlocalizedName();
+    }
+
+    @Override
+    public void onRegistered()
+    {
+        OreDictionary.registerOre("alTransportCart", new ItemStack(this, 1, 0));
+    }
+
+    @Override
+    public void onClientRegistered()
+    {
+
     }
 }

@@ -1,14 +1,19 @@
 package com.builtbroken.assemblyline.content.rail.carts;
 
 import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.assemblyline.content.rail.carts.Gui.ContainerChestCart;
+import com.builtbroken.assemblyline.content.rail.carts.Gui.GuiChestCart;
 import com.builtbroken.mc.api.rails.ITransportCartHasCargo;
+import com.builtbroken.mc.api.tile.IGuiTile;
 import com.builtbroken.mc.prefab.entity.cart.EntityAbstractCart;
 import com.builtbroken.mc.prefab.inventory.ExternalInventory;
 import com.builtbroken.mc.prefab.inventory.filters.IInventoryFilter;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Cart for all transport rail carts for assembly line
@@ -16,7 +21,7 @@ import net.minecraft.world.World;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 12/21/2016.
  */
-public class EntityCart extends EntityAbstractCart implements ITransportCartHasCargo
+public class EntityCart extends EntityAbstractCart implements ITransportCartHasCargo, IGuiTile
 {
     /** Internal var for cart type, never access directly */
     private CartTypes _cartType = CartTypes.EMPTY;
@@ -129,6 +134,46 @@ public class EntityCart extends EntityAbstractCart implements ITransportCartHasC
     @Override
     public IInventoryFilter getInventoryFilter()
     {
+        return null;
+    }
+
+    @Override
+    public boolean canStore(ItemStack stack, ForgeDirection side)
+    {
+        return true;
+    }
+
+    @Override
+    public boolean interactFirst(EntityPlayer player)
+    {
+        if (getInventory() != null)
+        {
+            if (!world().isRemote)
+            {
+                player.openGui(AssemblyLine.INSTANCE, 10001, world(), getEntityId(), 0, 0);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Object getServerGuiElement(int ID, EntityPlayer player)
+    {
+        if (getType() == CartTypes.CHEST)
+        {
+            return new ContainerChestCart(player, getInventory());
+        }
+        return null;
+    }
+
+    @Override
+    public Object getClientGuiElement(int ID, EntityPlayer player)
+    {
+        if (getType() == CartTypes.CHEST)
+        {
+            return new GuiChestCart(player, getInventory());
+        }
         return null;
     }
 }

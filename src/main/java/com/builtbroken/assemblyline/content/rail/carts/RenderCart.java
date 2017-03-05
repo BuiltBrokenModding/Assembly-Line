@@ -150,7 +150,9 @@ public class RenderCart extends Render
             }
             else
             {
-                RenderUtility.renderCube(AxisAlignedBB.getBoundingBox(0, 0, 0, .8, .8, .8), Blocks.planks);
+                GL11.glScalef(0.5f, 0.5f, 0.5f);
+                GL11.glTranslated(-0.5, .3, -0.5);
+                RenderUtility.renderCube(AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, 1), Blocks.planks);
             }
             GL11.glPopMatrix();
         }

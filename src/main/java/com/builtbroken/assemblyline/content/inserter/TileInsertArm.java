@@ -18,6 +18,7 @@ import com.builtbroken.mc.lib.transform.vector.Pos;
 import com.builtbroken.mc.prefab.inventory.InventoryUtility;
 import com.builtbroken.mc.prefab.tile.Tile;
 import com.builtbroken.mc.prefab.tile.TileModuleMachine;
+import com.builtbroken.mc.prefab.tile.module.TileModuleInventory;
 import com.builtbroken.mc.prefab.tile.multiblock.EnumMultiblock;
 import com.builtbroken.mc.prefab.tile.multiblock.MultiBlockHelper;
 import cpw.mods.fml.common.network.ByteBufUtils;
@@ -53,7 +54,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
 
     static
     {
-        tileMapCache.put(new Pos(0, 1, 0), EnumMultiblock.TILE.getName());
+        tileMapCache.put(new Pos(0, 1, 0), EnumMultiblock.TILE.getTileName());
     }
 
     //Facing directions is output direction
@@ -71,10 +72,15 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     public TileInsertArm()
     {
         super("tileInsertArm", Material.iron);
-        this.addInventoryModule(2);
         this.hardness = 1;
         this.resistance = 1;
         this.renderTileEntity = true;
+    }
+
+    @Override
+    protected IInventory createInventory()
+    {
+        return new TileModuleInventory(this, 2);
     }
 
     @Override
@@ -252,7 +258,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
             }
             else if (input instanceof IInventory)
             {
-                setHeldItem(InventoryUtility.takeTopItemFromInventory((IInventory) input, getDirection().ordinal(), insertAmount));
+                setHeldItem(InventoryUtility.pullStack(input, getDirection().ordinal(), insertAmount));
             }
         }
     }
@@ -291,7 +297,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
             }
             else if (output instanceof IInventory)
             {
-                setHeldItem(InventoryUtility.putStackInInventory((IInventory) output, getHeldItem(), getDirection().getOpposite().ordinal(), false));
+                setHeldItem(InventoryUtility.insertStack(output, getHeldItem(), getDirection().getOpposite().ordinal(), false));
             }
         }
     }
@@ -474,7 +480,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     {
         if (tileMulti instanceof TileEntity)
         {
-            if (tileMapCache.containsKey(new Pos(this).sub(new Pos((TileEntity) tileMulti))))
+            if (tileMapCache.containsKey(new Pos((TileEntity)this).sub(new Pos((TileEntity) tileMulti))))
             {
                 tileMulti.setHost(this);
             }
@@ -486,7 +492,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     {
         if (!_destroyingStructure && tileMulti instanceof TileEntity)
         {
-            Pos pos = new Pos((TileEntity) tileMulti).sub(new Pos(this));
+            Pos pos = new Pos((TileEntity) tileMulti).sub(new Pos((TileEntity)this));
 
             if (tileMapCache.containsKey(pos))
             {
@@ -537,7 +543,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     public HashMap<IPos3D, String> getLayoutOfMultiBlock()
     {
         HashMap<IPos3D, String> map = new HashMap();
-        Pos center = new Pos(this);
+        Pos center = new Pos((TileEntity)this);
         for (Map.Entry<IPos3D, String> entry : tileMapCache.entrySet())
         {
             map.put(center.add(entry.getKey()), entry.getValue());
