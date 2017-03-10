@@ -181,15 +181,15 @@ public class TilePowerRail extends TileModuleMachineBase implements ITransportRa
             //TODO lerp rotation to provide a transition
             if (rotateToAngle)
             {
-                cart.setRotation(rotateYaw, 0);
+                cart.setCartRotation(rotateYaw, 0);
             }
             else if (rotateClockwise)
             {
-                cart.setRotation(rotateYaw + rotateYaw, 0);
+                cart.setCartRotation(rotateYaw + rotateYaw, 0);
             }
             else
             {
-                cart.setRotation(rotateYaw - rotateYaw, 0);
+                cart.setCartRotation(rotateYaw - rotateYaw, 0);
             }
             handlePush(cart);
         }
@@ -234,7 +234,7 @@ public class TilePowerRail extends TileModuleMachineBase implements ITransportRa
                 {
                     if (stop)
                     {
-                        cart.setMotion(0, 0, 0);
+                        cart.setCartMotion(0, 0, 0);
                         cart.recenterCartOnRail(this, true);
                     }
                 }
@@ -254,7 +254,7 @@ public class TilePowerRail extends TileModuleMachineBase implements ITransportRa
                 IExternalInventory inventory = ((ITransportCartHasCargo) cart).getInventory();
                 if (inventory != null && !inventory.isFull())
                 {
-                    cart.setMotion(0, 0, 0);
+                    cart.setCartMotion(0, 0, 0);
                     cart.recenterCartOnRail(this, true);
 
                     if (!worldObj.isRemote)
@@ -291,7 +291,7 @@ public class TilePowerRail extends TileModuleMachineBase implements ITransportRa
             {
                 if (((ITransportCartHasItem) cart).getTransportedItem() == null)
                 {
-                    cart.setMotion(0, 0, 0);
+                    cart.setCartMotion(0, 0, 0);
                     cart.recenterCartOnRail(this, true);
 
                     if (!worldObj.isRemote)
@@ -339,7 +339,7 @@ public class TilePowerRail extends TileModuleMachineBase implements ITransportRa
                     //Only stop cart if it is not empty
                     if (!slotsWithItems.isEmpty())
                     {
-                        cart.setMotion(0, 0, 0);
+                        cart.setCartMotion(0, 0, 0);
                         cart.recenterCartOnRail(this, true);
 
                         //TODO add a movement per tick limit
@@ -375,7 +375,7 @@ public class TilePowerRail extends TileModuleMachineBase implements ITransportRa
             {
                 if (((ITransportCartHasItem) cart).getTransportedItem() != null)
                 {
-                    cart.setMotion(0, 0, 0);
+                    cart.setCartMotion(0, 0, 0);
                     cart.recenterCartOnRail(this, true);
 
                     if (!worldObj.isRemote)
@@ -801,7 +801,7 @@ public class TilePowerRail extends TileModuleMachineBase implements ITransportRa
         {
             cart.recenterCartOnRail(this, false);
             Pos pos = new Pos(facingDirection).multiply(cart.getDesiredPushVelocity());
-            cart.setMotion(pos.x(), pos.y(), pos.z());
+            cart.setCartMotion(pos.x(), pos.y(), pos.z());
         }
     }
 
