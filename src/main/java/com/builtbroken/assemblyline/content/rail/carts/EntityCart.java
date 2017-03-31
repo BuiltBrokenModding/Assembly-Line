@@ -7,7 +7,7 @@ import com.builtbroken.mc.api.rails.ITransportCartHasCargo;
 import com.builtbroken.mc.api.tile.IGuiTile;
 import com.builtbroken.mc.prefab.entity.cart.EntityAbstractCart;
 import com.builtbroken.mc.prefab.inventory.ExternalInventory;
-import com.builtbroken.mc.prefab.inventory.filters.IInventoryFilter;
+import com.builtbroken.mc.api.IInventoryFilter;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

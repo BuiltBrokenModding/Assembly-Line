@@ -2,7 +2,7 @@ package com.builtbroken.assemblyline.content.rail.powered;
 
 import com.builtbroken.mc.api.rails.ITransportCartHasCargo;
 import com.builtbroken.mc.prefab.inventory.InventoryUtility;
-import com.builtbroken.mc.prefab.inventory.filters.IInventoryFilter;
+import com.builtbroken.mc.api.IInventoryFilter;
 import net.minecraft.item.ItemStack;
 
 /**

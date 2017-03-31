@@ -1,9 +1,8 @@
 package com.builtbroken.assemblyline.content.manipulator;
 
 import com.builtbroken.assemblyline.content.belt.TileBelt;
-import com.builtbroken.mc.lib.transform.vector.Pos;
+import com.builtbroken.mc.imp.transform.vector.Pos;
 import com.builtbroken.mc.prefab.tile.Tile;
-import net.minecraft.block.material.Material;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.tileentity.TileEntity;
