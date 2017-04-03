@@ -4,7 +4,7 @@ import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.content.rail.carts.Gui.ContainerChestCart;
 import com.builtbroken.assemblyline.content.rail.carts.Gui.GuiChestCart;
 import com.builtbroken.mc.api.rails.ITransportCartHasCargo;
-import com.builtbroken.mc.api.tile.IGuiTile;
+import com.builtbroken.mc.api.tile.access.IGuiTile;
 import com.builtbroken.mc.prefab.entity.cart.EntityAbstractCart;
 import com.builtbroken.mc.prefab.inventory.ExternalInventory;
 import com.builtbroken.mc.api.IInventoryFilter;
