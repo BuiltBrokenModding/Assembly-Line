@@ -26,7 +26,7 @@ import net.minecraft.item.ItemStack;
 /**
  * Created by DarkGuardsman on 8/31/2015.
  */
-@Mod(modid = AssemblyLine.DOMAIN, name = AssemblyLine.NAME, version = AssemblyLine.VERSION, dependencies = "required-after:VoltzEngine")
+@Mod(modid = AssemblyLine.DOMAIN, name = AssemblyLine.NAME, version = AssemblyLine.VERSION, dependencies = "required-after:voltzengine")
 public class AssemblyLine extends AbstractMod
 {
     //Meta

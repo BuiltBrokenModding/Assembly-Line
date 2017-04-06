@@ -55,7 +55,7 @@ processResources {
 }
 
 minecraft {
-    replace "required-after:VoltzEngine", "required-after:VoltzEngine@[$voltz_engine_version,)"
+    replace "required-after:voltzengine", "required-after:voltzengine@[$voltz_engine_version,)"
 }
 
 sourceCompatibility = 1.8
