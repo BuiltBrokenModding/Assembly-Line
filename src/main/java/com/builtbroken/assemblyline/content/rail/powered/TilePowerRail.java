@@ -776,7 +776,7 @@ public class TilePowerRail extends TileModuleMachineBase implements ITransportRa
     public void setFacingDirection(ForgeDirection facingDirection)
     {
         this.facingDirection = facingDirection;
-        if (world() != null && isServer())
+        if (oldWorld() != null && isServer())
         {
             sendDescPacket();
         }
@@ -842,7 +842,7 @@ public class TilePowerRail extends TileModuleMachineBase implements ITransportRa
                 }
                 else
                 {
-                    world().markBlockRangeForRenderUpdate(xi(), yi(), zi(), xi(), yi(), zi());
+                    oldWorld().markBlockRangeForRenderUpdate(xi(), yi(), zi(), xi(), yi(), zi());
                 }
             }
         }
@@ -943,7 +943,7 @@ public class TilePowerRail extends TileModuleMachineBase implements ITransportRa
                     }
                 }
             }
-            world().markBlockRangeForRenderUpdate(xi(), yi(), zi(), xi(), yi(), zi());
+            oldWorld().markBlockRangeForRenderUpdate(xi(), yi(), zi(), xi(), yi(), zi());
         }
         return true;
     }
@@ -1009,9 +1009,9 @@ public class TilePowerRail extends TileModuleMachineBase implements ITransportRa
     @Override
     public Cube getCollisionBounds()
     {
-        if (world() != null)
+        if (oldWorld() != null)
         {
-            final int meta = world().getBlockMetadata(xi(), yi(), zi());
+            final int meta = oldWorld().getBlockMetadata(xi(), yi(), zi());
             final ForgeDirection dir = ForgeDirection.getOrientation(meta);
             switch (dir)
             {

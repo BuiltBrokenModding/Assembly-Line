@@ -21,7 +21,7 @@ public class TileManipulator extends TileBelt
     protected void moveItemToNextBlock()
     {
         Pos pos = toPos().add(facingDirection);
-        TileEntity tile = pos.getTileEntity(world());
+        TileEntity tile = pos.getTileEntity(oldWorld());
 
         if (tile instanceof ISidedInventory)
         {

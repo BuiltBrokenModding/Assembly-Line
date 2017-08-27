@@ -220,6 +220,6 @@ public class TilePowerRailClient extends TilePowerRail
         {
             rotateClockwise = buf.readBoolean();
         }
-        world().markBlockRangeForRenderUpdate(xi(), yi(), zi(), xi(), yi(), zi());
+        oldWorld().markBlockRangeForRenderUpdate(xi(), yi(), zi(), xi(), yi(), zi());
     }
 }

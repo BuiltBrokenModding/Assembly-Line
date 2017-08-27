@@ -4,6 +4,7 @@ import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.jlib.helpers.MathHelper;
 import com.builtbroken.mc.client.SharedAssets;
 import com.builtbroken.mc.core.Engine;
+import com.builtbroken.mc.lib.Holiday;
 import com.builtbroken.mc.lib.helper.MathUtility;
 import com.builtbroken.mc.lib.render.RenderItemOverlayUtility;
 import com.builtbroken.mc.lib.render.RenderUtility;
@@ -100,7 +101,7 @@ public class RenderCart extends Render
             GL11.glPushMatrix();
             if (cart.getType() == CartTypes.CHEST)
             {
-                if (Engine.XMAS)
+                if (Holiday.isXMAS())
                 {
                     this.bindTexture(xmasChestTexture);
                 }
@@ -126,7 +127,7 @@ public class RenderCart extends Render
                         {
                             /** see if {@link net.minecraftforge.client.ForgeHooksClient#renderEntityItem(EntityItem, ItemStack, float, float, Random, TextureManager, RenderBlocks, int)}
                              *                  will work much better */
-                            EntityItem fakeItem = new EntityItem(cart.world());
+                            EntityItem fakeItem = new EntityItem(cart.oldWorld());
                             fakeItem.setPosition(cart.x(), cart.y() + 0.5, cart.z());
                             renderer.renderItem(IItemRenderer.ItemRenderType.ENTITY, stack, RenderBlocks.getInstance(), fakeItem);
 

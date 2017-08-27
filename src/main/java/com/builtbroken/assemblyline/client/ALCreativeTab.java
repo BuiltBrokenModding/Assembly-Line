@@ -1,7 +1,7 @@
 package com.builtbroken.assemblyline.client;
 
 import com.builtbroken.assemblyline.AssemblyLine;
-import com.builtbroken.mc.lib.mod.ModCreativeTab;
+import com.builtbroken.mc.framework.mod.ModCreativeTab;
 
 import java.util.List;
 

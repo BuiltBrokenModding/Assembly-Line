@@ -148,9 +148,9 @@ public class EntityCart extends EntityAbstractCart implements ITransportCartHasC
     {
         if (getInventory() != null)
         {
-            if (!world().isRemote)
+            if (!oldWorld().isRemote)
             {
-                player.openGui(AssemblyLine.INSTANCE, 10001, world(), getEntityId(), 0, 0);
+                player.openGui(AssemblyLine.INSTANCE, 10001, oldWorld(), getEntityId(), 0, 0);
             }
             return true;
         }

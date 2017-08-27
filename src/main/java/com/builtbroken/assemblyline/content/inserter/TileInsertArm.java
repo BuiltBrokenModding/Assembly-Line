@@ -99,7 +99,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     public void firstTick()
     {
         super.firstTick();
-        MultiBlockHelper.buildMultiBlock(world(), this, true);
+        MultiBlockHelper.buildMultiBlock(oldWorld(), this, true);
         facing = ForgeDirection.getOrientation(getMetadata());
         markRender();
     }
@@ -469,7 +469,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     @Override
     public void onInventoryChanged(int slot, ItemStack prev, ItemStack item)
     {
-        if(world() != null)
+        if(oldWorld() != null)
         {
             sendDescPacket();
         }

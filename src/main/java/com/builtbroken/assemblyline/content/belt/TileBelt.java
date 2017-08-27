@@ -72,7 +72,7 @@ public class TileBelt extends Tile implements IPacketIDReceiver
     protected void moveItemToNextBlock()
     {
         Pos pos = toPos().add(facingDirection);
-        TileEntity tile = pos.getTileEntity(world());
+        TileEntity tile = pos.getTileEntity(oldWorld());
 
         if (tile instanceof TileBelt)
         {
@@ -86,9 +86,9 @@ public class TileBelt extends Tile implements IPacketIDReceiver
             }
         }
         //TODO check if the block doesn't have a collision box in the area we want to drop an item
-        else if (pos.isAirBlock(world()))
+        else if (pos.isAirBlock(oldWorld()))
         {
-            InventoryUtility.dropItemStack(world(), pos.add(0.5), stackOnBelt);
+            InventoryUtility.dropItemStack(oldWorld(), pos.add(0.5), stackOnBelt);
             setItemOnBelt(null);
         }
     }
@@ -109,7 +109,7 @@ public class TileBelt extends Tile implements IPacketIDReceiver
     public void firstTick()
     {
         super.firstTick();
-        this.placementSide = ForgeDirection.getOrientation(world().getBlockMetadata(xi(), yi(), zi()));
+        this.placementSide = ForgeDirection.getOrientation(oldWorld().getBlockMetadata(xi(), yi(), zi()));
     }
 
     @Override
@@ -143,8 +143,8 @@ public class TileBelt extends Tile implements IPacketIDReceiver
         {
             if (side != placementSide)
             {
-                world().setBlockMetadataWithNotify(xi(), yi(), zi(), side.ordinal(), 3);
-                this.placementSide = ForgeDirection.getOrientation(world().getBlockMetadata(xi(), yi(), zi()));
+                oldWorld().setBlockMetadataWithNotify(xi(), yi(), zi(), side.ordinal(), 3);
+                this.placementSide = ForgeDirection.getOrientation(oldWorld().getBlockMetadata(xi(), yi(), zi()));
             }
         } else
         {
