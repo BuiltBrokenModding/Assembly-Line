@@ -32,7 +32,7 @@ import org.lwjgl.opengl.GL11;
 public class TileInsertArmClient extends TileInsertArm implements ISimpleItemRenderer
 {
 
-    private static IModelCustom model = EngineModelLoader.loadModel(new ResourceLocation(AssemblyLine.DOMAIN, References.MODEL_PATH + "Armbot.tcn"));
+    private static IModelCustom model = EngineModelLoader.loadModel(new ResourceLocation(AssemblyLine.DOMAIN, References.MODEL_PATH + "bot.arm.classic.tcn"));
     private static ResourceLocation texture = new ResourceLocation(AssemblyLine.DOMAIN, "textures/models/metal.png");
     private ItemStack renderStack;
 

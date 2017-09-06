@@ -1,10 +1,6 @@
 package com.builtbroken.assemblyline;
 
 import com.builtbroken.assemblyline.client.ALCreativeTab;
-import com.builtbroken.assemblyline.content.armbot.TileArmbot;
-import com.builtbroken.assemblyline.content.belt.TileBelt;
-import com.builtbroken.assemblyline.content.ejector.TileEjector;
-import com.builtbroken.assemblyline.content.manipulator.TileManipulator;
 import com.builtbroken.assemblyline.content.parts.ItemCraftingParts;
 import com.builtbroken.assemblyline.content.rail.BlockRail;
 import com.builtbroken.assemblyline.content.rail.ItemBlockRail;
@@ -13,6 +9,8 @@ import com.builtbroken.assemblyline.content.rail.carts.ItemCart;
 import com.builtbroken.mc.core.Engine;
 import com.builtbroken.mc.framework.mod.AbstractMod;
 import com.builtbroken.mc.framework.mod.ModCreativeTab;
+import com.builtbroken.mc.prefab.inventory.InventoryUtility;
+import com.builtbroken.mc.seven.framework.block.BlockBase;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -49,13 +47,10 @@ public class AssemblyLine extends AbstractMod
 
     public final ModCreativeTab CREATIVE_TAB;
 
-    public static Block blockArmbot;
-    public static Block blockBelt;
-    public static Block blockEjector;
-    public static Block blockManipulator;
     public static Block blockInserter;
     public static Block blockRail;
     public static Block blockPowerRail;
+    public static BlockBase simpleBelt;
 
     public static Item itemParts;
     public static Item itemCart;
@@ -84,14 +79,6 @@ public class AssemblyLine extends AbstractMod
         itemParts = getManager().newItem("alCraftingParts", new ItemCraftingParts());
         itemCart = getManager().newItem("alCarts", new ItemCart());
 
-        if (Engine.runningAsDev)
-        {
-            blockArmbot = getManager().newBlock("alArmbot", TileArmbot.class);
-            blockBelt = getManager().newBlock("alBelt", TileBelt.class);
-            blockEjector = getManager().newBlock("alEjector", TileEjector.class);
-            blockManipulator = getManager().newBlock("alManipulator", TileManipulator.class);
-        }
-
         //Some content is registered in the proxy
         blockRail = manager.newBlock("cartTransportRail", BlockRail.class, ItemBlockRail.class);
     }
@@ -101,6 +88,12 @@ public class AssemblyLine extends AbstractMod
     {
         super.init(event);
         CREATIVE_TAB.itemStack = new ItemStack(blockInserter);
+
+        Block block = InventoryUtility.getBlock("assemblyline:beltSimple");
+        if (block instanceof BlockBase)
+        {
+            simpleBelt = (BlockBase) block;
+        }
 
         EntityRegistry.registerGlobalEntityID(EntityCart.class, "ALTransportCart", EntityRegistry.findGlobalUniqueEntityId());
         EntityRegistry.registerModEntity(EntityCart.class, "ALTransportCart", ENTITY_ID_PREFIX, this, 500, 1, true);

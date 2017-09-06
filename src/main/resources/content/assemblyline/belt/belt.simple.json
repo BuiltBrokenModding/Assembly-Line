@@ -1,0 +1,200 @@
+{
+  "author": {
+    "name": "assemblyline"
+  },
+  "loadCondition": "devMode",
+  "block": {
+    "name": "belt.simple",
+    "id": "beltSimple",
+    "mod": "assemblyline",
+    "material": "iron",
+    "renderType": -1,
+    "isOpaque": false,
+    "renderAsNormalBlock": false,
+    "tileEntity": {
+      "id": "beltSimple",
+      "class": "com.builtbroken.assemblyline.content.belt.gen.TileEntityWrappedSimpleBelt"
+    },
+    "blockBounds": {
+      "min": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "max": {
+        "x": 1,
+        "y": 0.3,
+        "z": 1
+      }
+    },
+    "listeners": [
+      "rotation"
+    ],
+    "_comment": "TODO implement settings",
+    "settings": [
+      {
+        "key": "tick.rate",
+        "type": "int",
+        "value": 1,
+        "min": 1,
+        "max": 100,
+        "configKey": "tick_rate",
+        "config": true,
+        "description": "How often the belt updates when looking for entities to move. Increasing this will result in choppy movement of belts."
+      },
+      {
+        "key": "belt.speed",
+        "type": "float",
+        "value": 0.05,
+        "min": 0.01,
+        "max": 0.05,
+        "configKey": "belt_speed",
+        "config": true,
+        "description": "Speed of the belt in meters per game update (20 updates in a second)"
+      },
+      {
+        "key": "flat.belt.frames",
+        "type": "int",
+        "value": 14,
+        "description": "Number of frames to use when rendering textures"
+      },
+      {
+        "key": "slanted.belt.frames",
+        "type": "int",
+        "value": 24,
+        "description": "Number of frames to use when rendering textures"
+      }
+    ]
+  },
+  "render": {
+    "contentID": "assemblyline:beltSimple",
+    "type": "tile",
+    "tileClass": "com.builtbroken.assemblyline.content.belt.gen.TileEntityWrappedSimpleBelt",
+    "states": [
+      {
+        "id": "base",
+        "renderType": "model",
+        "modelID": "assemblyline:belt.simple.flat",
+        "textureID": "assemblyline:belt.simple.flat.0"
+      },
+      {
+        "id": "item",
+        "renderType": "model",
+        "parent": "base"
+      },
+      {
+        "id": "tile",
+        "renderType": "model",
+        "parent": "base",
+        "offset": {
+          "y": 0.5
+        }
+      },
+      {
+        "id": "flat",
+        "renderType": "model",
+        "parent": "tile"
+      },
+      {
+        "id": "incline",
+        "renderType": "model",
+        "parent": "base",
+        "modelID": "assemblyline:belt.simple.incline",
+        "textureID": "assemblyline:belt.simple.incline.0"
+      },
+      {
+        "id": "decline",
+        "renderType": "model",
+        "parent": "base",
+        "modelID": "assemblyline:belt.simple.incline",
+        "textureID": "assemblyline:belt.simple.incline.0"
+      },
+      {
+        "forEach": {
+          "values": [
+            {
+              "type": "flat",
+              "end": 13
+            },
+            {
+              "type": "incline",
+              "end": 23
+            },
+            {
+              "type": "decline",
+              "end": 23
+            }
+          ],
+          "forEach": {
+            "values": [
+              {
+                "dir": "north",
+                "yaw": 0
+              },
+              {
+                "dir": "east",
+                "yaw": 0
+              },
+              {
+                "dir": "south",
+                "yaw": 0
+              },
+              {
+                "dir": "west",
+                "yaw": 0
+              }
+            ],
+            "for": {
+              "start": 0,
+              "end": "%end%",
+              "id": "frame",
+              "data": {
+                "id": "%type%.%dir%.%frame%",
+                "textureID": "assemblyline:belt.simple.%type%.%frame%",
+                "renderType": "model",
+                "parent": "%type%",
+                "rotation": {
+                  "yaw": "%yaw%"
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "texture:1": {
+    "for": {
+      "start": 0,
+      "end": 13,
+      "state": {
+        "key": "assemblyline:belt.simple.flat.%number%",
+        "domain": "assemblyline",
+        "name": "belt/frame%number%",
+        "type": "model"
+      }
+    }
+  },
+  "texture:2": {
+    "for": {
+      "start": 0,
+      "end": 23,
+      "state": {
+        "key": "assemblyline:belt.simple.incline.%number%",
+        "domain": "assemblyline",
+        "name": "slantedbelt/frame%number%",
+        "type": "model"
+      }
+    }
+  },
+  "model": {
+    "key": "assemblyline:belt.simple.flat",
+    "domain": "assemblyline",
+    "name": "belt.simple.tcn"
+  },
+  "model:2": {
+    "key": "assemblyline:belt.simple.incline",
+    "domain": "assemblyline",
+    "name": "belt.simple.incline.tcn"
+  }
+}
