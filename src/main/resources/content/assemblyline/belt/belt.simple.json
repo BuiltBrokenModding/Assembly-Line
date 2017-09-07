@@ -133,15 +133,15 @@
               },
               {
                 "dir": "east",
-                "yaw": 0
+                "yaw": -90
               },
               {
                 "dir": "south",
-                "yaw": 0
+                "yaw": 180
               },
               {
                 "dir": "west",
-                "yaw": 0
+                "yaw": 90
               }
             ],
             "for": {

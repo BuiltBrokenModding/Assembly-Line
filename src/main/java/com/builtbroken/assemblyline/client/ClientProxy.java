@@ -18,6 +18,8 @@ import net.minecraft.client.Minecraft;
  */
 public class ClientProxy extends CommonProxy
 {
+    long lastAnimationUpdate = 0L;
+
     @Override
     public void preInit()
     {
@@ -31,7 +33,6 @@ public class ClientProxy extends CommonProxy
     public void init()
     {
         RenderingRegistry.registerEntityRenderingHandler(EntityCart.class, new RenderCart());
-
     }
 
     @SubscribeEvent
@@ -39,16 +40,31 @@ public class ClientProxy extends CommonProxy
     {
         if (AssemblyLine.simpleBelt != null && Minecraft.getMinecraft() != null && Minecraft.getMinecraft().theWorld != null && !Minecraft.getMinecraft().isGamePaused())
         {
-            TileSimpleBelt.FRAME_FLAT++;
-            TileSimpleBelt.FRAME_SLANTED++;
+            if (System.currentTimeMillis() - lastAnimationUpdate >= 50)
+            {
+                lastAnimationUpdate = System.currentTimeMillis();
+                TileSimpleBelt.FRAME_FLAT++;
+                TileSimpleBelt.FRAME_SLANTED++;
 
-            if (TileSimpleBelt.FRAME_FLAT >= AssemblyLine.simpleBelt.data.getSettingAsInt("flat.belt.frames"))
-            {
-                TileSimpleBelt.FRAME_FLAT = 0;
-            }
-            if (TileSimpleBelt.FRAME_SLANTED >= AssemblyLine.simpleBelt.data.getSettingAsInt("slanted.belt.frames"))
-            {
-                TileSimpleBelt.FRAME_SLANTED = 0;
+                int frames = AssemblyLine.simpleBelt.data.getSettingAsInt("flat.belt.frames");
+                if (frames == 0)
+                {
+                    frames = 14;
+                }
+                if (TileSimpleBelt.FRAME_FLAT >= frames)
+                {
+                    TileSimpleBelt.FRAME_FLAT = 0;
+                }
+
+                frames = AssemblyLine.simpleBelt.data.getSettingAsInt("slanted.belt.frames");
+                if (frames == 0)
+                {
+                    frames = 24;
+                }
+                if (TileSimpleBelt.FRAME_SLANTED >= frames)
+                {
+                    TileSimpleBelt.FRAME_SLANTED = 0;
+                }
             }
         }
     }
