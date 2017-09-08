@@ -20,7 +20,13 @@ public class ClientProxy extends CommonProxy
 {
     /** Amount of time to delay between switching animation frames (in milliseconds) */
     public static int BELT_ANIMATION_UPDATE_TIME = 100;
+    public static int BELT_ANIMATION_UPDATE_TIME_2 = 100;
+
+    public static int FLAT_BELT_FRAMES = 14;
+    public static int SLANTED_BELT_FRAMES = 24;
+
     long lastAnimationUpdate = 0L;
+    long lastAnimationUpdate_2 = 0L;
 
     @Override
     public void preInit()
@@ -34,11 +40,31 @@ public class ClientProxy extends CommonProxy
     @Override
     public void init()
     {
+        super.init();
         RenderingRegistry.registerEntityRenderingHandler(EntityCart.class, new RenderCart());
+    }
+
+    @Override
+    public void postInit()
+    {
+        super.postInit();
+
+        int frames = AssemblyLine.simpleBelt.data.getSettingAsInt("flat.belt.frames");
+        if (frames > 0)
+        {
+            FLAT_BELT_FRAMES = frames;
+        }
+
+        frames = AssemblyLine.simpleBelt.data.getSettingAsInt("slanted.belt.frames");
+        if (frames > 0)
+        {
+            SLANTED_BELT_FRAMES = 24;
+        }
 
         //The belt animation should match the speed, speed is how many meters to move per ticks
         //      it can also be thought of as how far does the belt rotate a tick
         BELT_ANIMATION_UPDATE_TIME = (int) (TileSimpleBelt.beltSpeed * 20 * 50);
+        BELT_ANIMATION_UPDATE_TIME_2 = (int) Math.floor(BELT_ANIMATION_UPDATE_TIME * ((float) FLAT_BELT_FRAMES / (float) SLANTED_BELT_FRAMES));
     }
 
     @SubscribeEvent
@@ -50,24 +76,18 @@ public class ClientProxy extends CommonProxy
             {
                 lastAnimationUpdate = System.currentTimeMillis();
                 TileSimpleBelt.FRAME_FLAT++;
-                TileSimpleBelt.FRAME_SLANTED++;
 
-                int frames = AssemblyLine.simpleBelt.data.getSettingAsInt("flat.belt.frames");
-                if (frames == 0)
-                {
-                    frames = 14;
-                }
-                if (TileSimpleBelt.FRAME_FLAT >= frames)
+                if (TileSimpleBelt.FRAME_FLAT >= FLAT_BELT_FRAMES)
                 {
                     TileSimpleBelt.FRAME_FLAT = 0;
                 }
+            }
 
-                frames = AssemblyLine.simpleBelt.data.getSettingAsInt("slanted.belt.frames");
-                if (frames == 0)
-                {
-                    frames = 24;
-                }
-                if (TileSimpleBelt.FRAME_SLANTED >= frames)
+            if (System.currentTimeMillis() - lastAnimationUpdate_2 >= BELT_ANIMATION_UPDATE_TIME_2)
+            {
+                lastAnimationUpdate_2 = System.currentTimeMillis();
+                TileSimpleBelt.FRAME_SLANTED++;
+                if (TileSimpleBelt.FRAME_SLANTED >= SLANTED_BELT_FRAMES)
                 {
                     TileSimpleBelt.FRAME_SLANTED = 0;
                 }

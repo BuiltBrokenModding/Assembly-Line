@@ -2,7 +2,6 @@
   "author": {
     "name": "assemblyline"
   },
-  "loadCondition": "devMode",
   "block": {
     "name": "belt.simple",
     "id": "beltSimple",
@@ -91,22 +90,48 @@
         }
       },
       {
+        "id": "belt.simple.flat",
+        "modelID": "assemblyline:belt.simple.flat",
+        "renderType": "model",
+        "parent": "tile",
+        "renderOnlyParts": false,
+        "parts": [
+          "c1",
+          "c2",
+          "c3",
+          "c4",
+          "BottomBelt",
+          "TopBelt"
+        ]
+      },
+      {
+        "id": "belt.simple.incline",
+        "modelID": "assemblyline:belt.simple.incline",
+        "textureID": "assemblyline:belt.simple.incline.0",
+        "renderType": "model",
+        "parent": "tile"
+      },
+      {
+        "id": "belt.simple.decline",
+        "modelID": "assemblyline:belt.simple.decline",
+        "textureID": "assemblyline:belt.simple.decline.0",
+        "renderType": "model",
+        "parent": "tile"
+      },
+      {
         "forEach": {
           "values": [
             {
               "type": "flat",
-              "end": 13,
-              "modelID": "assemblyline:belt.simple.flat"
+              "end": 13
             },
             {
               "type": "incline",
-              "end": 23,
-              "modelID": "assemblyline:belt.simple.incline"
+              "end": 23
             },
             {
               "type": "decline",
-              "end": 23,
-              "modelID": "assemblyline:belt.simple.incline"
+              "end": 23
             }
           ],
           "forEach": {
@@ -135,21 +160,12 @@
               "data": {
                 "id": "%type%.%dir%.%frame%",
                 "textureID": "assemblyline:belt.simple.%type%.%frame%",
-                "modelID": "%modelID%",
                 "renderType": "model",
-                "parent": "tile",
+                "parent": "belt.simple.%type%",
+                "combineRotations": true,
                 "rotation": {
                   "yaw": "%yaw%"
-                },
-                "renderOnlyParts":false,
-                "parts": [
-                  "c1",
-                  "c2",
-                  "c3",
-                  "c4",
-                  "BottomBelt",
-                  "TopBelt"
-                ]
+                }
               }
             }
           }
@@ -161,7 +177,7 @@
     "for": {
       "start": 0,
       "end": 13,
-      "state": {
+      "data": {
         "key": "assemblyline:belt.simple.flat.%number%",
         "domain": "assemblyline",
         "name": "belt/frame%number%",
@@ -173,7 +189,7 @@
     "for": {
       "start": 0,
       "end": 23,
-      "state": {
+      "data": {
         "key": "assemblyline:belt.simple.incline.%number%",
         "domain": "assemblyline",
         "name": "slantedbelt/frame%number%",
@@ -181,7 +197,19 @@
       }
     }
   },
-  "model": {
+  "texture:3": {
+    "for": {
+      "start": 0,
+      "end": 23,
+      "data": {
+        "key": "assemblyline:belt.simple.decline.%number%",
+        "domain": "assemblyline",
+        "name": "slantedbelt/frame%number%",
+        "type": "model"
+      }
+    }
+  },
+  "model:1": {
     "key": "assemblyline:belt.simple.flat",
     "domain": "assemblyline",
     "name": "belt.simple.tcn"
@@ -190,5 +218,10 @@
     "key": "assemblyline:belt.simple.incline",
     "domain": "assemblyline",
     "name": "belt.simple.incline.tcn"
+  },
+  "model:3": {
+    "key": "assemblyline:belt.simple.decline",
+    "domain": "assemblyline",
+    "name": "belt.simple.decline.tcn"
   }
 }
