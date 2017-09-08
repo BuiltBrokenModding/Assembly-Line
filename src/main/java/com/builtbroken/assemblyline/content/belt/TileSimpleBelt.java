@@ -109,8 +109,39 @@ public class TileSimpleBelt extends TileNode implements IRotation, IBoundListene
     {
         if (entity != null)
         {
+            double delta_x = x() - entity.posX;
+            double delta_z = z() - entity.posZ;
+            double delta_y = z() - entity.posZ;
+
+            double flatDeltaX = Math.abs(delta_x);
+            double flatDeltaZ = Math.abs(delta_z);
+
+            //To far away from belt, most likely only part of the entity is over the belt
+            if (flatDeltaX > 0.5 || flatDeltaZ > 0.5)
+            {
+                return; //TODO spin entity for lolz
+            }
+
+            //Move entity forward
             Pos force = forceVector();
             entity.moveEntity(force.x(), force.y(), force.z());
+
+            //Move entity towards center of belt
+            ForgeDirection direction = getDirection();
+            if (direction == ForgeDirection.NORTH || direction == ForgeDirection.SOUTH)
+            {
+                if (flatDeltaX > 0.1)
+                {
+                    entity.moveEntity(delta_x > 0 ? beltSpeed : -beltSpeed, 0, 0);
+                }
+            }
+            else
+            {
+                if (flatDeltaZ > 0.1)
+                {
+                    entity.moveEntity(0, 0, delta_z > 0 ? beltSpeed : -beltSpeed);
+                }
+            }
         }
     }
 
