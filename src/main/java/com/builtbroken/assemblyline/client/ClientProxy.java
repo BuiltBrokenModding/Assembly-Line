@@ -18,6 +18,8 @@ import net.minecraft.client.Minecraft;
  */
 public class ClientProxy extends CommonProxy
 {
+    /** Amount of time to delay between switching animation frames (in milliseconds) */
+    public static int BELT_ANIMATION_UPDATE_TIME = 100;
     long lastAnimationUpdate = 0L;
 
     @Override
@@ -33,6 +35,10 @@ public class ClientProxy extends CommonProxy
     public void init()
     {
         RenderingRegistry.registerEntityRenderingHandler(EntityCart.class, new RenderCart());
+
+        //The belt animation should match the speed, speed is how many meters to move per ticks
+        //      it can also be thought of as how far does the belt rotate a tick
+        BELT_ANIMATION_UPDATE_TIME = (int) (TileSimpleBelt.beltSpeed * 20 * 50);
     }
 
     @SubscribeEvent
@@ -40,7 +46,7 @@ public class ClientProxy extends CommonProxy
     {
         if (AssemblyLine.simpleBelt != null && Minecraft.getMinecraft() != null && Minecraft.getMinecraft().theWorld != null && !Minecraft.getMinecraft().isGamePaused())
         {
-            if (System.currentTimeMillis() - lastAnimationUpdate >= 50)
+            if (System.currentTimeMillis() - lastAnimationUpdate >= BELT_ANIMATION_UPDATE_TIME)
             {
                 lastAnimationUpdate = System.currentTimeMillis();
                 TileSimpleBelt.FRAME_FLAT++;
