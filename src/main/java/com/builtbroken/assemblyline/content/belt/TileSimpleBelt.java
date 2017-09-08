@@ -222,7 +222,7 @@ public class TileSimpleBelt extends TileNode implements IRotation, IBoundListene
         if (collisionBounds == null)
         {
             //TODO change based on state
-            collisionBounds = AxisAlignedBB.getBoundingBox(xi(), yi(), zi(), xi() + 1, yi() + 0.3, zi() + 1);
+            collisionBounds = AxisAlignedBB.getBoundingBox(xi(), yi(), zi(), xi() + 1, yi() + 0.32, zi() + 1);
         }
         return collisionBounds;
     }

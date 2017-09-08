@@ -91,38 +91,22 @@
         }
       },
       {
-        "id": "flat",
-        "renderType": "model",
-        "parent": "tile"
-      },
-      {
-        "id": "incline",
-        "renderType": "model",
-        "parent": "base",
-        "modelID": "assemblyline:belt.simple.incline",
-        "textureID": "assemblyline:belt.simple.incline.0"
-      },
-      {
-        "id": "decline",
-        "renderType": "model",
-        "parent": "base",
-        "modelID": "assemblyline:belt.simple.incline",
-        "textureID": "assemblyline:belt.simple.incline.0"
-      },
-      {
         "forEach": {
           "values": [
             {
               "type": "flat",
-              "end": 13
+              "end": 13,
+              "modelID": "assemblyline:belt.simple.flat"
             },
             {
               "type": "incline",
-              "end": 23
+              "end": 23,
+              "modelID": "assemblyline:belt.simple.incline"
             },
             {
               "type": "decline",
-              "end": 23
+              "end": 23,
+              "modelID": "assemblyline:belt.simple.incline"
             }
           ],
           "forEach": {
@@ -151,11 +135,21 @@
               "data": {
                 "id": "%type%.%dir%.%frame%",
                 "textureID": "assemblyline:belt.simple.%type%.%frame%",
+                "modelID": "%modelID%",
                 "renderType": "model",
-                "parent": "%type%",
+                "parent": "tile",
                 "rotation": {
                   "yaw": "%yaw%"
-                }
+                },
+                "renderOnlyParts":false,
+                "parts": [
+                  "c1",
+                  "c2",
+                  "c3",
+                  "c4",
+                  "BottomBelt",
+                  "TopBelt"
+                ]
               }
             }
           }
