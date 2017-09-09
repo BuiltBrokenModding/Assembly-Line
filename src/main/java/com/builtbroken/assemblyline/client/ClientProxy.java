@@ -48,7 +48,11 @@ public class ClientProxy extends CommonProxy
     public void postInit()
     {
         super.postInit();
+        loadSettings();
+    }
 
+    public void loadSettings()
+    {
         int frames = AssemblyLine.simpleBelt.data.getSettingAsInt("flat.belt.frames");
         if (frames > 0)
         {
