@@ -48,7 +48,9 @@ public class TileSimpleBelt extends TileNode implements IRotation, IRotatable, I
     protected ConnectionState connectionState = ConnectionState.BASE;
 
     /** Entity ignore list */
-    protected List<Entity> ignoreList = new ArrayList();
+    public List<Entity> ignoreList = new ArrayList();
+    /** Items detected last tick, can be used to get what is on the belt */
+    public List<EntityItem> items = new ArrayList();
 
     //Cached data based on state
     protected Pos _forceToApply;
@@ -102,22 +104,26 @@ public class TileSimpleBelt extends TileNode implements IRotation, IRotatable, I
             back = canBeltConnect(pos.add(rotation.getOpposite()).add(0, 1, 0).getTileEntity(world().unwrap()));
         }
 
+        //Belt on both sides
         if (front && back)
         {
             connectionState = ConnectionState.MIDDLE;
         }
+        //Belt in front but not back
         else if (front)
         {
-            connectionState = ConnectionState.FRONT;
+            connectionState = ConnectionState.BACK;
         }
+        //Belt behind but not in front
         else if (back)
         {
-            connectionState = ConnectionState.BACK;
+            connectionState = ConnectionState.FRONT;
         }
         else
         {
             connectionState = ConnectionState.BASE;
         }
+        syncToClient = true;
     }
 
     /**
@@ -154,6 +160,7 @@ public class TileSimpleBelt extends TileNode implements IRotation, IRotatable, I
                 updateConnections();
             }
 
+            //Fire update client packet
             if (syncToClient)
             {
                 syncToClient = false;
@@ -167,19 +174,61 @@ public class TileSimpleBelt extends TileNode implements IRotation, IRotatable, I
             //Create bounds if null
             if (searchBounds == null)
             {
-                searchBounds = AxisAlignedBB.getBoundingBox(xi(), yi(), zi(), xi() + 1, yi() + 1, zi() + 1);
+                if (beltState == BeltState.FLAT)
+                {
+                    searchBounds = AxisAlignedBB.getBoundingBox(xi(), yi(), zi(), xi() + 1, yi() + 1, zi() + 1);
+                }
+                else
+                {
+                    searchBounds = AxisAlignedBB.getBoundingBox(xi(), yi(), zi(), xi() + 1, yi() + 1.4, zi() + 1);
+                }
             }
 
-            //Move entities
-            List<Entity> list = world().unwrap().getEntitiesWithinAABB(Entity.class, searchBounds);
+            final List<Entity> list = world().unwrap().getEntitiesWithinAABB(Entity.class, searchBounds);
             if (list != null && !list.isEmpty())
             {
+                boolean playerSneakingNear = false;
+
+                //Refresh cache data
+                items.clear();
+
+                //Loop entities
                 for (Entity entity : list)
                 {
+                    //Move entities
                     if (!shouldIgnore(entity))
                     {
                         applyMovement(entity);
                     }
+
+                    //Look for sneaking players
+                    if (entity instanceof EntityPlayer)
+                    {
+                        if (entity.isSneaking())
+                        {
+                            playerSneakingNear = true;
+                        }
+                    }
+
+                    //Collect items
+                    if (entity instanceof EntityItem)
+                    {
+                        items.add((EntityItem) entity);
+                    }
+                }
+
+                //Update items
+                for (EntityItem entity : items)
+                {
+                    if (playerSneakingNear)
+                    {
+                        entity.delayBeforeCanPickup = 0;
+                    }
+                    else
+                    {
+                        entity.delayBeforeCanPickup = 20;
+                    }
+                    entity.lifespan += tickRate();
                 }
 
                 //Clean up list
@@ -339,12 +388,6 @@ public class TileSimpleBelt extends TileNode implements IRotation, IRotatable, I
                     pushEntity(entity, 0, 0, delta_z > 0 ? beltSpeed : -beltSpeed);
                 }
             }
-
-            if (entity instanceof EntityItem)
-            {
-                ((EntityItem) entity).delayBeforeCanPickup = 20;
-                ((EntityItem) entity).lifespan += tickRate();
-            }
         }
     }
 
@@ -352,7 +395,10 @@ public class TileSimpleBelt extends TileNode implements IRotation, IRotatable, I
     {
         if (entity instanceof EntityPlayer)
         {
-            entity.moveEntity(x, y, z);
+            if (!entity.isSneaking())
+            {
+                entity.addVelocity(x, y, z);
+            }
         }
         else
         {
@@ -521,13 +567,13 @@ public class TileSimpleBelt extends TileNode implements IRotation, IRotatable, I
     {
         if (beltState == BeltState.INCLINE)
         {
-            return "incline." + getDirection().name().toLowerCase() + "." + FRAME_SLANTED;
+            return "incline." + getDirection().name().toLowerCase() + "." + connectionState.name().toLowerCase() + "." + FRAME_SLANTED;
         }
         else if (beltState == BeltState.DECLINE)
         {
-            return "decline." + getDirection().name().toLowerCase() + "." + FRAME_SLANTED;
+            return "decline." + getDirection().name().toLowerCase() + "." + connectionState.name().toLowerCase() + "." + FRAME_SLANTED;
         }
-        return "flat." + getDirection().name().toLowerCase() + "." + FRAME_FLAT;
+        return "flat." + getDirection().name().toLowerCase() + "." + connectionState.name().toLowerCase() + "." + FRAME_FLAT;
     }
 
     @Override
