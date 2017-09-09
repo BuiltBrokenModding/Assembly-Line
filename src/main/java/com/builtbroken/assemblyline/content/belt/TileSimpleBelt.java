@@ -471,6 +471,24 @@ public class TileSimpleBelt extends TileNode implements IRotation, IRotatable, I
     }
 
     @Override
+    public void load(NBTTagCompound nbt)
+    {
+        super.load(nbt);
+        if (nbt.hasKey("beltType"))
+        {
+            setState(nbt.getByte("beltType"), -1);
+        }
+    }
+
+    @Override
+    public NBTTagCompound save(NBTTagCompound nbt)
+    {
+        super.save(nbt);
+        nbt.setByte("beltType", (byte) beltState.ordinal());
+        return nbt;
+    }
+
+    @Override
     public void setDirection(ForgeDirection direction)
     {
         getHost().setMetaValue(direction.ordinal());
