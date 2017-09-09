@@ -18,6 +18,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
@@ -438,6 +439,10 @@ public class TileSimpleBelt extends TileNode implements IRotation, IRotatable, I
     @Override
     public AxisAlignedBB getSelectedBounds()
     {
+        if (beltState != BeltState.FLAT)
+        {
+            return AxisAlignedBB.getBoundingBox(xi(), yi(), zi(), xi() + 1, yi() + 1, zi() + 1); //TODO cache
+        }
         return getCollisionBounds();
     }
 
@@ -446,10 +451,68 @@ public class TileSimpleBelt extends TileNode implements IRotation, IRotatable, I
     {
         if (collisionBounds == null)
         {
-            //TODO change based on state
-            collisionBounds = AxisAlignedBB.getBoundingBox(xi(), yi(), zi(), xi() + 1, yi() + 0.32, zi() + 1);
+            if (beltState != BeltState.FLAT)
+            {
+                collisionBounds = AxisAlignedBB.getBoundingBox(xi(), yi(), zi(), xi() + 1, yi() + .5, zi() + 1);
+            }
+            else
+            {
+                collisionBounds = AxisAlignedBB.getBoundingBox(xi(), yi(), zi(), xi() + 1, yi() + 0.32, zi() + 1);
+            }
         }
         return collisionBounds;
+    }
+
+    @Override
+    public void addCollisionBoxesToList(AxisAlignedBB aabb, List list, Entity entity)
+    {
+        if (beltState != BeltState.FLAT)
+        {
+            ForgeDirection direction = getDirection();
+            if (beltState != BeltState.INCLINE)
+            {
+                direction = direction.getOpposite();
+            }
+            switch (direction)
+            {
+                case SOUTH:
+                    list.add(AxisAlignedBB.getBoundingBox(xi(), yi() + 0.5, zi() + 0.5,
+                            xi() + 1, yi() + 1, zi() + 1));
+                    if (entity instanceof EntityItem)
+                    {
+                        list.add(AxisAlignedBB.getBoundingBox(xi(), yi() + 0.5, zi() + 0.25,
+                                xi() + 1, yi() + 0.75, zi() + 0.5));
+                    }
+                    break;
+                case NORTH:
+                    list.add(AxisAlignedBB.getBoundingBox(xi(), yi() + 0.5, zi(),
+                            xi() + 1, yi() + 1, zi() + 0.5));
+                    if (entity instanceof EntityItem)
+                    {
+                        list.add(AxisAlignedBB.getBoundingBox(xi(), yi() + 0.5, zi() + 0.5,
+                                xi() + 1, yi() + 0.75, zi() + 0.75));
+                    }
+                    break;
+                case EAST:
+                    list.add(AxisAlignedBB.getBoundingBox(xi() + 0.5, yi() + 0.5, zi(),
+                            xi() + 1, yi() + 1, zi() + 1));
+                    if (entity instanceof EntityItem)
+                    {
+                        list.add(AxisAlignedBB.getBoundingBox(xi() + 0.25, yi() + 0.5, zi(),
+                                xi() + 0.5, yi() + 0.75, zi() + 1));
+                    }
+                    break;
+                case WEST:
+                    list.add(AxisAlignedBB.getBoundingBox(xi(), yi() + 0.5, zi(),
+                            xi() + 0.5, yi() + 1, zi() + 1));
+                    if (entity instanceof EntityItem)
+                    {
+                        list.add(AxisAlignedBB.getBoundingBox(xi() + 0.5, yi() + 0.5, zi(),
+                                xi() + +0.75, yi() + 0.75, zi() + 1));
+                    }
+                    break;
+            }
+        }
     }
 
     @Override
