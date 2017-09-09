@@ -224,22 +224,33 @@ public class TileSimpleBelt extends TileNode implements IRotation, IRotatable, I
                     back = b;
                 }
 
+                else if (rotation == ForgeDirection.EAST)
+                {
+                    front = left;
+                    back = right;
+                }
+                else if (rotation == ForgeDirection.WEST)
+                {
+                    front = right;
+                    back = left;
+                }
+
                 if (back)
                 {
                     beltState = BeltState.INCLINE;
-                    syncToClient = true;
+                    updateState();
                     player.addChatComponentMessage(new ChatComponentText("Setting belt to incline, dir: " + rotation));
                 }
                 else if (front)
                 {
                     beltState = BeltState.DECLINE;
-                    syncToClient = true;
+                    updateState();
                     player.addChatComponentMessage(new ChatComponentText("Setting belt to decline, dir: " + rotation));
                 }
                 else
                 {
                     beltState = BeltState.FLAT;
-                    syncToClient = true;
+                    updateState();
                     player.addChatComponentMessage(new ChatComponentText("Setting belt to flat, dir: " + rotation));
                 }
             }
@@ -411,6 +422,7 @@ public class TileSimpleBelt extends TileNode implements IRotation, IRotatable, I
         _forceToApply = null;
         searchBounds = null;
         syncToClient = true;
+        updateConnections = true;
     }
 
     @Override
@@ -492,6 +504,7 @@ public class TileSimpleBelt extends TileNode implements IRotation, IRotatable, I
     public void setDirection(ForgeDirection direction)
     {
         getHost().setMetaValue(direction.ordinal());
+        updateState();
     }
 
     public enum BeltState
