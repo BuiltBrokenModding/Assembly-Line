@@ -68,7 +68,6 @@ public class AssemblyLine extends AbstractMod
     public void preInit(FMLPreInitializationEvent event)
     {
         super.preInit(event);
-        Engine.requestOres();
         Engine.requestResources();
         Engine.requestSheetMetalContent();
         Engine.requestMultiBlock();
