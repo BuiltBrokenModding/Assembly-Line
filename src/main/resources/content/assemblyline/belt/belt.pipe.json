@@ -1,0 +1,45 @@
+{
+  "author": {
+    "name": "assemblyline"
+  },
+  "block": {
+    "name": "belt.belt",
+    "id": "beltPipe",
+    "mod": "assemblyline",
+    "material": "iron",
+    "renderType": 0,
+    "isOpaque": false,
+    "renderAsNormalBlock": false,
+    "tileEntity": {
+      "id": "beltPipe",
+      "class": "com.builtbroken.assemblyline.content.belt.gen.TileEntityWrappedPipeBelt"
+    },
+    "blockBounds": {
+      "min": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "max": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      }
+    },
+    "listeners": [
+      "rotation"
+    ]
+  },
+  "render": {
+    "contentID": "assemblyline:beltPipe",
+    "type": "tile",
+    "tileClass": "com.builtbroken.assemblyline.content.belt.gen.TileEntityWrappedPipeBelt",
+    "states": [
+      {
+        "id": "item",
+        "renderType": "item",
+        "textureID": "assemblyline:belt.pipe"
+      }
+    ]
+  }
+}

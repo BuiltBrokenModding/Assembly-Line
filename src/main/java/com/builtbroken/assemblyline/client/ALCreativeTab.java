@@ -2,6 +2,7 @@ package com.builtbroken.assemblyline.client;
 
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.mc.framework.mod.ModCreativeTab;
+import com.builtbroken.mc.prefab.inventory.InventoryUtility;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class ALCreativeTab extends ModCreativeTab
         add(list, AssemblyLine.blockRail);
         add(list, AssemblyLine.blockPowerRail);
         add(list, AssemblyLine.simpleBelt);
+        add(list, InventoryUtility.getBlock("assemblyline:beltPipe"));
         add(list, AssemblyLine.itemCart);
         add(list, AssemblyLine.itemParts);
     }
