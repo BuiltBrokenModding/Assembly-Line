@@ -7,7 +7,7 @@
     "id": "beltPipe",
     "mod": "assemblyline",
     "material": "iron",
-    "renderType": 0,
+    "renderTypeName": "pipeBeltRender",
     "isOpaque": false,
     "renderAsNormalBlock": false,
     "tileEntity": {

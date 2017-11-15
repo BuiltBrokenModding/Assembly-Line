@@ -3,6 +3,7 @@ package com.builtbroken.assemblyline.client;
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.CommonProxy;
 import com.builtbroken.assemblyline.content.belt.TileSimpleBelt;
+import com.builtbroken.assemblyline.content.belt.pipe.ISBR_Belt;
 import com.builtbroken.assemblyline.content.inserter.TileInsertArmClient;
 import com.builtbroken.assemblyline.content.rail.carts.EntityCart;
 import com.builtbroken.assemblyline.content.rail.carts.RenderCart;
@@ -35,6 +36,12 @@ public class ClientProxy extends CommonProxy
         FMLCommonHandler.instance().bus().register(this);
         AssemblyLine.blockPowerRail = AssemblyLine.INSTANCE.getManager().newBlock("cartPowerRail", TilePowerRailClient.class);
         AssemblyLine.blockInserter = AssemblyLine.INSTANCE.getManager().newBlock("insertArm", TileInsertArmClient.class);
+    }
+
+    @Override
+    public void loadJsonContentHandlers()
+    {
+        RenderingRegistry.registerBlockHandler(new ISBR_Belt());
     }
 
     @Override
