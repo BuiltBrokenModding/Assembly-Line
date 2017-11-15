@@ -26,9 +26,11 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
 {
     //TODO fixed sided slots for inventory
     /** Cached state map of direction to input sides & slots */
-    public static BeltSlotState[][] inputStates;
+    public static BeltSlotState[][][] inputStates;
     /** Cached state map of direction to output sides & slots */
-    public static BeltSlotState[][] outputStates;
+    public static BeltSlotState[][][] outputStates;
+
+    public static int[] centerSlots = new int[]{2};
 
     //Main inventory
     IInventory inventory;
@@ -51,7 +53,7 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
     public void update(long ticks)
     {
         super.update(ticks);
-        if (isServer() && ticks % 40 == 0)
+        if (isServer() && ticks % 20 == 0)
         {
             //Inventory movement
             //1. Push items from output to tiles
@@ -78,7 +80,7 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
                 }
             }
 
-            int[] centerSlots = new int[]{2};
+            int[] centerSlots = getCenterSlots();
 
             //Center to output
             if (states != null)
@@ -185,9 +187,9 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
     @Override
     public ForgeDirection getDirection()
     {
-        if (_direction != null)
+        if (_direction == null)
         {
-            _direction = ForgeDirection.getOrientation(getHost().getHostMeta());
+            _direction = ForgeDirection.getOrientation(world().unwrap().getBlockMetadata(xi(), yi(), zi()));
         }
         return _direction;
     }
@@ -258,7 +260,7 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
     {
         if (type != BeltType.T_SECTION && type != BeltType.INTERSECTION)
         {
-            return inputStates[type.ordinal()];
+            return inputStates[type.ordinal()][getDirection().ordinal()];
         }
         return null;
     }
@@ -267,25 +269,25 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
     {
         if (type != BeltType.T_SECTION && type != BeltType.INTERSECTION)
         {
-            return outputStates[type.ordinal()];
+            return outputStates[type.ordinal()][getDirection().ordinal()];
         }
         return null;
     }
 
+    public int[] getCenterSlots()
+    {
+        return centerSlots;
+    }
+
     static
     {
-        inputStates = new BeltSlotState[3][];
-        outputStates = new BeltSlotState[3][];
+        inputStates = new BeltSlotState[3][6][];
+        outputStates = new BeltSlotState[3][6][];
         ForgeDirection[] rotations = new ForgeDirection[]{ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.EAST, ForgeDirection.WEST};
         for (ForgeDirection direction : rotations)
         {
-            inputStates[BeltType.NORMAL.ordinal()] = new BeltSlotState[]{new BeltSlotState(0, direction)};
-            outputStates[BeltType.NORMAL.ordinal()] = new BeltSlotState[]{new BeltSlotState(1, direction.getOpposite())};
-
-            inputStates[BeltType.LEFT_ELBOW.ordinal()] = new BeltSlotState[]{new BeltSlotState(0, direction)};
-
-
-            inputStates[BeltType.RIGHT_ELBOW.ordinal()] = new BeltSlotState[]{new BeltSlotState(0, direction)};
+            inputStates[BeltType.NORMAL.ordinal()][direction.ordinal()] = new BeltSlotState[]{new BeltSlotState(0, direction)};
+            outputStates[BeltType.NORMAL.ordinal()][direction.ordinal()] = new BeltSlotState[]{new BeltSlotState(1, direction.getOpposite())};
 
             ForgeDirection turn;
             switch (direction)
@@ -304,8 +306,11 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
                     break;
             }
 
-            outputStates[BeltType.LEFT_ELBOW.ordinal()] = new BeltSlotState[]{new BeltSlotState(1, turn.getOpposite())};
-            outputStates[BeltType.RIGHT_ELBOW.ordinal()] = new BeltSlotState[]{new BeltSlotState(1, turn)};
+            inputStates[BeltType.LEFT_ELBOW.ordinal()][direction.ordinal()] = new BeltSlotState[]{new BeltSlotState(0, direction)};
+            outputStates[BeltType.LEFT_ELBOW.ordinal()][direction.ordinal()] = new BeltSlotState[]{new BeltSlotState(1, turn.getOpposite())};
+
+            inputStates[BeltType.RIGHT_ELBOW.ordinal()][direction.ordinal()] = new BeltSlotState[]{new BeltSlotState(0, direction)};
+            outputStates[BeltType.RIGHT_ELBOW.ordinal()][direction.ordinal()] = new BeltSlotState[]{new BeltSlotState(1, turn)};
         }
     }
 }

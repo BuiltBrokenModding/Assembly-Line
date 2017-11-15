@@ -10,6 +10,8 @@
     "renderTypeName": "pipeBeltRender",
     "isOpaque": false,
     "renderAsNormalBlock": false,
+    "useAllRenderPasses": true,
+    "hasAlphaTextures": true,
     "tileEntity": {
       "id": "beltPipe",
       "class": "com.builtbroken.assemblyline.content.belt.gen.TileEntityWrappedPipeBelt"
@@ -39,7 +41,45 @@
         "id": "item",
         "renderType": "item",
         "textureID": "assemblyline:belt.pipe"
+      },
+      {
+        "id": "block.1",
+        "renderType": "block",
+        "side:0": "assemblyline:belt.pipe.frame",
+        "side:1": "assemblyline:belt.pipe.top",
+        "side:2": "assemblyline:belt.pipe.body",
+        "side:3": "assemblyline:belt.pipe.glass"
+      },
+      {
+        "id": "block",
+        "renderType": "block",
+        "top": "assemblyline:belt.pipe.top",
+        "sides": "assemblyline:belt.pipe.body"
       }
     ]
+  },
+  "texture": {
+    "key": "assemblyline:belt.pipe.frame",
+    "domain": "assemblyline",
+    "name": "belt.pipe.frame",
+    "type": "block"
+  },
+  "texture:1": {
+    "key": "assemblyline:belt.pipe.top",
+    "domain": "assemblyline",
+    "name": "belt.pipe.top",
+    "type": "block"
+  },
+  "texture:2": {
+    "key": "assemblyline:belt.pipe.body",
+    "domain": "assemblyline",
+    "name": "belt.pipe.body",
+    "type": "block"
+  },
+  "texture:3": {
+    "key": "assemblyline:belt.pipe.glass",
+    "domain": "assemblyline",
+    "name": "belt.pipe.glass",
+    "type": "block"
   }
 }
