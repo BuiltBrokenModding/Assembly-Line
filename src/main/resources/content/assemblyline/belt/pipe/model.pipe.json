@@ -1,5 +1,5 @@
 {
-  "model": {
+  "blockModel": {
     "modelID": "assemblyline:belt.pipe.simple",
     "generateRotations": true,
     "rotations": [
@@ -22,5 +22,10 @@
         }
       }
     ]
+  },
+  "_comment": {
+    "id": "tile.north",
+    "renderType": "block3D",
+    "model": "assemblyline:belt.pipe.strait.north"
   }
 }

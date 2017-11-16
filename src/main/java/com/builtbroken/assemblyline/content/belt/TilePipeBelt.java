@@ -5,15 +5,22 @@ import com.builtbroken.assemblyline.content.belt.pipe.BeltType;
 import com.builtbroken.assemblyline.content.belt.pipe.data.BeltSlotState;
 import com.builtbroken.assemblyline.content.belt.pipe.data.BeltState;
 import com.builtbroken.jlib.type.Pair;
+import com.builtbroken.mc.api.data.IPacket;
 import com.builtbroken.mc.api.tile.access.IRotation;
 import com.builtbroken.mc.api.tile.provider.IInventoryProvider;
 import com.builtbroken.mc.codegen.annotations.TileWrapped;
+import com.builtbroken.mc.core.network.packet.PacketType;
 import com.builtbroken.mc.framework.logic.TileNode;
 import com.builtbroken.mc.lib.helper.BlockUtility;
+import com.builtbroken.mc.prefab.inventory.BasicInventory;
 import com.builtbroken.mc.prefab.inventory.ExternalInventory;
 import com.builtbroken.mc.prefab.inventory.InventoryUtility;
+import cpw.mods.fml.common.network.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -22,8 +29,9 @@ import net.minecraftforge.common.util.ForgeDirection;
  * Created by Dark(DarkGuardsman, Robert) on 11/14/2017.
  */
 @TileWrapped(className = ".gen.TileEntityWrappedPipeBelt", wrappers = "inventory")
-public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvider<IInventory>
+public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvider<ExternalInventory>
 {
+    public static final int PACKET_INVENTORY = 1;
     //TODO fixed sided slots for inventory
     /** Cached state map of direction to input sides & slots */
     public static BeltSlotState[][][] inputStates;
@@ -33,16 +41,20 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
     public static int[] centerSlots = new int[]{2};
 
     //Main inventory
-    IInventory inventory;
+    ExternalInventory inventory;
 
     //Cached facing direction
     private ForgeDirection _direction;
 
     //Type of belt
-    private BeltType type = BeltType.NORMAL;
+    public BeltType type = BeltType.NORMAL;
 
     //Belt states, used for filters and inverting belt directions
     private BeltState[] beltStates = new BeltState[4];
+
+    private boolean sendInvToClient = true;
+
+    public BasicInventory renderInventory;
 
     public TilePipeBelt()
     {
@@ -53,52 +65,122 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
     public void update(long ticks)
     {
         super.update(ticks);
-        if (isServer() && ticks % 20 == 0)
+        if (isServer())
         {
-            //Inventory movement
-            //1. Push items from output to tiles
-            //2. Move center slots to outputs (sorting)
-            //3. Move inputs to center (round-robin)
-            //4. Pull items into inputs from tiles
 
-
-            //Push outputs to next belt or machine
-            BeltSlotState[] states = getOutputs();
-            if (states != null)
+            if (ticks % 20 == 0)
             {
-                for (BeltSlotState slotState : states)
+                //Inventory movement
+                //1. Push items from output to tiles
+                //2. Move center slots to outputs (sorting)
+                //3. Move inputs to center (round-robin)
+                //4. Pull items into inputs from tiles
+
+
+                //Push outputs to next belt or machine
+                BeltSlotState[] states = getOutputs();
+                if (states != null)
                 {
-                    if (slotState != null)
+                    for (BeltSlotState slotState : states)
                     {
-                        ItemStack stack = getInventory().getStackInSlot(slotState.slotID);
-                        if (stack != null)
+                        if (slotState != null)
                         {
-                            stack = InventoryUtility.insertStack(toLocation().add(slotState.side), stack, slotState.side.ordinal(), false);
-                            getInventory().setInventorySlotContents(slotState.slotID, stack);
+                            ItemStack stack = getInventory().getStackInSlot(slotState.slotID);
+                            if (stack != null)
+                            {
+                                stack = InventoryUtility.insertStack(toLocation().add(slotState.side), stack, slotState.side.ordinal(), false);
+                                getInventory().setInventorySlotContents(slotState.slotID, stack);
+                            }
                         }
                     }
                 }
-            }
 
-            int[] centerSlots = getCenterSlots();
+                int[] centerSlots = getCenterSlots();
 
-            //Center to output
-            if (states != null)
-            {
-                for (BeltSlotState slotState : states)
+                //Center to output
+                if (states != null)
                 {
-                    if (slotState != null)
+                    for (BeltSlotState slotState : states)
                     {
-                        if (getInventory().getStackInSlot(slotState.slotID) == null)
+                        if (slotState != null)
                         {
-                            for (int centerSlot : centerSlots)
+                            if (getInventory().getStackInSlot(slotState.slotID) == null)
                             {
-                                ItemStack stackToMove = getInventory().getStackInSlot(centerSlot);
-                                if (stackToMove != null) //TODO apply filter for sorting
+                                for (int centerSlot : centerSlots)
                                 {
-                                    getInventory().setInventorySlotContents(slotState.slotID, stackToMove);
-                                    getInventory().setInventorySlotContents(centerSlot, null);
-                                    break;
+                                    ItemStack stackToMove = getInventory().getStackInSlot(centerSlot);
+                                    if (stackToMove != null) //TODO apply filter for sorting
+                                    {
+                                        getInventory().setInventorySlotContents(slotState.slotID, stackToMove);
+                                        getInventory().setInventorySlotContents(centerSlot, null);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //TODO round robin to ensure each belt has a chance to move to center
+                //TODO store inputs as list object with current index
+                //TODO only move index forward if we moved an item
+                //Index will be used to note starting point for loop
+                //Example: 0 1 2 (moved item) next tick > 1 2 0 (moved item) > 2 0 1
+
+                //Input to center
+                states = getInputs();
+                if (states != null)
+                {
+                    for (BeltSlotState slotState : states)
+                    {
+                        if (slotState != null)
+                        {
+                            ItemStack stackToMove = getInventory().getStackInSlot(slotState.slotID);
+                            if (stackToMove != null)
+                            {
+                                for (int centerSlot : centerSlots)
+                                {
+                                    if (getInventory().getStackInSlot(centerSlot) == null)
+                                    {
+                                        getInventory().setInventorySlotContents(centerSlot, stackToMove);
+                                        getInventory().setInventorySlotContents(slotState.slotID, null);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //Pull items from machines
+                if (states != null)
+                {
+                    for (BeltSlotState slotState : states)
+                    {
+                        if (slotState != null)
+                        {
+                            ItemStack currentItem = getInventory().getStackInSlot(slotState.slotID);
+                            if (currentItem == null)
+                            {
+                                //Get inventory
+                                IInventory tileInv = null;
+                                TileEntity tile = toLocation().add(slotState.side).getTileEntity();
+                                if (tile instanceof IInventory)
+                                {
+                                    tileInv = (IInventory) tile;
+                                }
+
+                                //Has inventory try to find item
+                                if (tileInv != null)
+                                {
+                                    BeltState beltState = getStateForSide(slotState.side);
+                                    Pair<ItemStack, Integer> slotData = InventoryUtility.findFirstItemInInventory(tileInv,
+                                            slotState.side.getOpposite().ordinal(), getItemsToPullPerCycle(), beltState != null ? beltState.filter : null);
+                                    if (slotData != null)
+                                    {
+                                        ItemStack inputStack = tileInv.decrStackSize(slotData.right(), slotData.left().stackSize);
+                                        getInventory().setInventorySlotContents(slotState.slotID, inputStack);
+                                    }
                                 }
                             }
                         }
@@ -106,70 +188,10 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
                 }
             }
 
-            //TODO round robin to ensure each belt has a chance to move to center
-            //TODO store inputs as list object with current index
-            //TODO only move index forward if we moved an item
-            //Index will be used to note starting point for loop
-            //Example: 0 1 2 (moved item) next tick > 1 2 0 (moved item) > 2 0 1
-
-            //Input to center
-            states = getInputs();
-            if (states != null)
+            if (sendInvToClient) //TODO add settings to control packet update times
             {
-                for (BeltSlotState slotState : states)
-                {
-                    if (slotState != null)
-                    {
-                        ItemStack stackToMove = getInventory().getStackInSlot(slotState.slotID);
-                        if (stackToMove != null)
-                        {
-                            for (int centerSlot : centerSlots)
-                            {
-                                if (getInventory().getStackInSlot(centerSlot) == null)
-                                {
-                                    getInventory().setInventorySlotContents(centerSlot, stackToMove);
-                                    getInventory().setInventorySlotContents(slotState.slotID, null);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            //Pull items from machines
-            if (states != null)
-            {
-                for (BeltSlotState slotState : states)
-                {
-                    if (slotState != null)
-                    {
-                        ItemStack currentItem = getInventory().getStackInSlot(slotState.slotID);
-                        if (currentItem == null)
-                        {
-                            //Get inventory
-                            IInventory tileInv = null;
-                            TileEntity tile = toLocation().add(slotState.side).getTileEntity();
-                            if (tile instanceof IInventory)
-                            {
-                                tileInv = (IInventory) tile;
-                            }
-
-                            //Has inventory try to find item
-                            if (tileInv != null)
-                            {
-                                BeltState beltState = getStateForSide(slotState.side);
-                                Pair<ItemStack, Integer> slotData = InventoryUtility.findFirstItemInInventory(tileInv,
-                                        slotState.side.getOpposite().ordinal(), getItemsToPullPerCycle(), beltState != null ? beltState.filter : null);
-                                if (slotData != null)
-                                {
-                                    ItemStack inputStack = tileInv.decrStackSize(slotData.right(), slotData.left().stackSize);
-                                    getInventory().setInventorySlotContents(slotState.slotID, inputStack);
-                                }
-                            }
-                        }
-                    }
-                }
+                sendInvToClient = false;
+                sendInventoryPacket();
             }
         }
     }
@@ -195,7 +217,7 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
     }
 
     @Override
-    public IInventory getInventory()
+    public ExternalInventory getInventory()
     {
         if (inventory == null)
         {
@@ -252,7 +274,7 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
     {
         if (isServer())
         {
-            //TODO sent packet to client
+            sendInvToClient = true;
         }
     }
 
@@ -277,6 +299,61 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
     public int[] getCenterSlots()
     {
         return centerSlots;
+    }
+
+    @Override
+    public void readDescPacket(ByteBuf buf)
+    {
+        super.readDescPacket(buf);
+        type = BeltType.values()[buf.readInt()];
+        readInvPacket(buf);
+    }
+
+
+    @Override
+    public void writeDescPacket(ByteBuf buf)
+    {
+        super.writeDescPacket(buf);
+        buf.writeInt(type.ordinal());
+        writeInvPacket(buf);
+    }
+
+    public void readInvPacket(ByteBuf buf)
+    {
+        int size = buf.readInt();
+        if(renderInventory == null || renderInventory.getSizeInventory() != size)
+        {
+            renderInventory = new BasicInventory(size);
+        }
+        renderInventory.load(ByteBufUtils.readTag(buf));
+    }
+
+    public void writeInvPacket(ByteBuf buf)
+    {
+        buf.writeInt(getInventory().getSizeInventory());
+        ByteBufUtils.writeTag(buf, getInventory().save(new NBTTagCompound()));
+    }
+
+    public void sendInventoryPacket()
+    {
+        IPacket packet = getHost().getPacketForData(PACKET_INVENTORY);
+        writeInvPacket(packet.data());
+        getHost().sendPacketToClient(packet, 64);
+    }
+
+    @Override
+    public boolean read(ByteBuf buf, int id, EntityPlayer player, PacketType type)
+    {
+        if (!super.read(buf, id, player, type))
+        {
+            if (id == PACKET_INVENTORY)
+            {
+                readInvPacket(buf);
+                return true;
+            }
+            return false;
+        }
+        return true;
     }
 
     static

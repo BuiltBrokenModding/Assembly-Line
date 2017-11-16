@@ -29,7 +29,8 @@
       }
     },
     "listeners": [
-      "rotation"
+      "rotation",
+      "beltPipeRender"
     ]
   }
 }

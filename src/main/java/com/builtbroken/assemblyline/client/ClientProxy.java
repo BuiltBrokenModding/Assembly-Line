@@ -4,10 +4,12 @@ import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.CommonProxy;
 import com.builtbroken.assemblyline.content.belt.TileSimpleBelt;
 import com.builtbroken.assemblyline.content.belt.pipe.ISBR_Belt;
+import com.builtbroken.assemblyline.content.belt.pipe.TilePipeRenderListener;
 import com.builtbroken.assemblyline.content.inserter.TileInsertArmClient;
 import com.builtbroken.assemblyline.content.rail.carts.EntityCart;
 import com.builtbroken.assemblyline.content.rail.carts.RenderCart;
 import com.builtbroken.assemblyline.content.rail.powered.TilePowerRailClient;
+import com.builtbroken.mc.seven.framework.block.json.JsonBlockListenerProcessor;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -42,6 +44,7 @@ public class ClientProxy extends CommonProxy
     public void loadJsonContentHandlers()
     {
         RenderingRegistry.registerBlockHandler(new ISBR_Belt());
+        JsonBlockListenerProcessor.addBuilder(new TilePipeRenderListener.Builder());
     }
 
     @Override

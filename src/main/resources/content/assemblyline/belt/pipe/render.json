@@ -22,11 +22,6 @@
         "renderType": "block",
         "top": "assemblyline:belt.pipe.top",
         "sides": "assemblyline:belt.pipe.body"
-      },
-      {
-        "id": "tile.north",
-        "renderType": "block3D",
-        "model":"assemblyline:belt.pipe.strait.north"
       }
     ]
   }
