@@ -2,6 +2,7 @@ package com.builtbroken.assemblyline.content.belt;
 
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.content.belt.pipe.BeltType;
+import com.builtbroken.assemblyline.content.belt.pipe.PipeInventory;
 import com.builtbroken.assemblyline.content.belt.pipe.data.BeltSlotState;
 import com.builtbroken.assemblyline.content.belt.pipe.data.BeltState;
 import com.builtbroken.jlib.type.Pair;
@@ -13,7 +14,6 @@ import com.builtbroken.mc.core.network.packet.PacketType;
 import com.builtbroken.mc.framework.logic.TileNode;
 import com.builtbroken.mc.lib.helper.BlockUtility;
 import com.builtbroken.mc.prefab.inventory.BasicInventory;
-import com.builtbroken.mc.prefab.inventory.ExternalInventory;
 import com.builtbroken.mc.prefab.inventory.InventoryUtility;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
@@ -28,8 +28,8 @@ import net.minecraftforge.common.util.ForgeDirection;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 11/14/2017.
  */
-@TileWrapped(className = ".gen.TileEntityWrappedPipeBelt", wrappers = "inventory")
-public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvider<ExternalInventory>
+@TileWrapped(className = ".gen.TileEntityWrappedPipeBelt", wrappers = "ExternalInventory")
+public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvider<PipeInventory>
 {
     public static final int PACKET_INVENTORY = 1;
     //TODO fixed sided slots for inventory
@@ -41,7 +41,7 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
     public static int[] centerSlots = new int[]{2};
 
     //Main inventory
-    ExternalInventory inventory;
+    PipeInventory inventory;
 
     //Cached facing direction
     private ForgeDirection _direction;
@@ -53,6 +53,7 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
     private BeltState[] beltStates = new BeltState[4];
 
     private boolean sendInvToClient = true;
+    private boolean pullItems = false;
 
     public BasicInventory renderInventory;
 
@@ -67,7 +68,6 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
         super.update(ticks);
         if (isServer())
         {
-
             if (ticks % 20 == 0)
             {
                 //Inventory movement
@@ -153,7 +153,7 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
                 }
 
                 //Pull items from machines
-                if (states != null)
+                if (states != null && pullItems)
                 {
                     for (BeltSlotState slotState : states)
                     {
@@ -217,22 +217,13 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
     }
 
     @Override
-    public ExternalInventory getInventory()
+    public PipeInventory getInventory()
     {
         if (inventory == null)
         {
-            inventory = new ExternalInventory(this, getInventorySize());
+            inventory = new PipeInventory(this);
         }
         return inventory;
-    }
-
-    protected int getInventorySize()
-    {
-        if (type == BeltType.BUFFER)
-        {
-            return 2; //TODO + buffer size
-        }
-        return type != null ? type.inventorySize : 0;
     }
 
     @Override
