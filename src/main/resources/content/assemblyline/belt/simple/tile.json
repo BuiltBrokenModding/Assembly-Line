@@ -1,0 +1,33 @@
+{
+  "author": {
+    "name": "assemblyline"
+  },
+  "block": {
+    "name": "belt.simple",
+    "id": "beltSimple",
+    "mod": "assemblyline",
+    "material": "iron",
+    "renderType": -1,
+    "isOpaque": false,
+    "renderAsNormalBlock": false,
+    "tileEntity": {
+      "id": "beltSimple",
+      "class": "com.builtbroken.assemblyline.content.belt.gen.TileEntityWrappedSimpleBelt"
+    },
+    "blockBounds": {
+      "min": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "max": {
+        "x": 1,
+        "y": 0.3,
+        "z": 1
+      }
+    },
+    "listeners": [
+      "rotation"
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "settings": [
+    {
+      "key": "tick.rate",
+      "type": "int",
+      "value": 1,
+      "min": 1,
+      "max": 100,
+      "configKey": "tick_rate",
+      "config": true,
+      "description": "How often the belt updates when looking for entities to move. Increasing this will result in choppy movement of belts."
+    },
+    {
+      "key": "belt.speed",
+      "type": "float",
+      "value": 0.05,
+      "min": 0.01,
+      "max": 0.05,
+      "configKey": "belt_speed",
+      "config": true,
+      "description": "Speed of the belt in meters per game update (20 updates in a second)"
+    },
+    {
+      "key": "flat.belt.frames",
+      "type": "int",
+      "value": 14,
+      "description": "Number of frames to use when rendering textures"
+    },
+    {
+      "key": "slanted.belt.frames",
+      "type": "int",
+      "value": 24,
+      "description": "Number of frames to use when rendering textures"
+    }
+  ]
+}

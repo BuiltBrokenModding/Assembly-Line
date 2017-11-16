@@ -1,0 +1,26 @@
+{
+  "texture": {
+    "key": "assemblyline:belt.pipe.frame",
+    "domain": "assemblyline",
+    "name": "belt.pipe.frame",
+    "type": "block"
+  },
+  "texture:1": {
+    "key": "assemblyline:belt.pipe.top",
+    "domain": "assemblyline",
+    "name": "belt.pipe.top",
+    "type": "block"
+  },
+  "texture:2": {
+    "key": "assemblyline:belt.pipe.body",
+    "domain": "assemblyline",
+    "name": "belt.pipe.body",
+    "type": "block"
+  },
+  "texture:3": {
+    "key": "assemblyline:belt.pipe.glass",
+    "domain": "assemblyline",
+    "name": "belt.pipe.glass",
+    "type": "block"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "render": {
+    "contentID": "assemblyline:beltPipe",
+    "type": "tile",
+    "tileClass": "com.builtbroken.assemblyline.content.belt.gen.TileEntityWrappedPipeBelt",
+    "states": [
+      {
+        "id": "item",
+        "renderType": "item",
+        "textureID": "assemblyline:belt.pipe"
+      },
+      {
+        "id": "block.1",
+        "renderType": "block",
+        "side:0": "assemblyline:belt.pipe.frame",
+        "side:1": "assemblyline:belt.pipe.top",
+        "side:2": "assemblyline:belt.pipe.body",
+        "side:3": "assemblyline:belt.pipe.glass"
+      },
+      {
+        "id": "block",
+        "renderType": "block",
+        "top": "assemblyline:belt.pipe.top",
+        "sides": "assemblyline:belt.pipe.body"
+      },
+      {
+        "id": "tile.north",
+        "renderType": "block3D",
+        "model":"assemblyline:belt.pipe.strait.north"
+      }
+    ]
+  }
+}
