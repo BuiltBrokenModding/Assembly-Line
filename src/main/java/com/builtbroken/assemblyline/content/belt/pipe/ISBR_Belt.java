@@ -1,5 +1,7 @@
 package com.builtbroken.assemblyline.content.belt.pipe;
 
+import com.builtbroken.assemblyline.content.belt.TilePipeBelt;
+import com.builtbroken.mc.api.tile.node.ITileNodeHost;
 import com.builtbroken.mc.client.json.ClientDataHandler;
 import com.builtbroken.mc.data.Direction;
 import com.builtbroken.mc.lib.render.RenderUtility;
@@ -8,6 +10,7 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.event.RenderWorldEvent;
@@ -39,10 +42,25 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
     @Override
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
     {
+        boolean rendered = false;
         final double p = 1.0 / 16.0;
         renderer.setRenderAllFaces(true);
-        Direction direction = world != null ? Direction.getOrientation(world.getBlockMetadata(x, y, z)) : Direction.EAST;
 
+        //Get data from tile
+        Direction direction = world != null ? Direction.getOrientation(world.getBlockMetadata(x, y, z)) : Direction.EAST;
+        boolean renderTop = true;
+
+        if (world != null)
+        {
+            TileEntity tile = world.getTileEntity(x, y, z);
+            if (tile instanceof ITileNodeHost && ((ITileNodeHost) tile).getTileNode() instanceof TilePipeBelt)
+            {
+                TilePipeBelt belt = (TilePipeBelt) ((ITileNodeHost) tile).getTileNode();
+                renderTop = belt.renderTop;
+            }
+        }
+
+        //Rotate textures
         int prevUVTop = renderer.uvRotateTop;
         switch (direction)
         {
@@ -62,8 +80,14 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
 
         if (direction == Direction.WEST || direction == Direction.EAST)
         {
-            if(pass == 0)
+            if (pass == 0)
             {
+                //Base
+                bounds(renderer,
+                        0, 0, p * 5,
+                        1, p * 5, p * 6);
+                renderBlock(renderer, block, x, y, z, null);
+
                 //Lower bars
                 bounds(renderer,
                         0, p * 4, p * 4,
@@ -75,68 +99,66 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
                         1, p * 2, p);
                 renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
-                //Upper bars
-                bounds(renderer,
-                        0, p * 10, p * 4,
-                        1, p * 2, p);
-                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+                if (renderTop)
+                {
+                    //Upper bars
+                    bounds(renderer,
+                            0, p * 10, p * 4,
+                            1, p * 2, p);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
-                bounds(renderer,
-                        0, p * 10, 1 - p * 5,
-                        1, p * 2, p);
-                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+                    bounds(renderer,
+                            0, p * 10, 1 - p * 5,
+                            1, p * 2, p);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
-                //Top bars
-                bounds(renderer,
-                        0, p * 11, p * 5,
-                        1, p * 2, p);
-                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+                    //Top bars
+                    bounds(renderer,
+                            0, p * 11, p * 5,
+                            1, p * 2, p);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
-                bounds(renderer,
-                        0, p * 11, 1 - p * 6,
-                        1, p * 2, p);
-                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+                    bounds(renderer,
+                            0, p * 11, 1 - p * 6,
+                            1, p * 2, p);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
-                //Base
-                bounds(renderer,
-                        0, 0, p * 5,
-                        1, p * 5, p * 6);
-                renderBlock(renderer, block, x, y, z, null);
+                    //End caps top
+                    bounds(renderer,
+                            0, p * 12, p * 6,
+                            p, p, p * 4);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
+                    bounds(renderer,
+                            p * 15, p * 12, p * 6,
+                            p, p, p * 4);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
-                //End caps top
-                bounds(renderer,
-                        0, p * 12, p * 6,
-                        p, p, p * 4);
-                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+                    //End caps sides
+                    bounds(renderer,
+                            0, p * 6, p * 4,
+                            p, p * 4, p);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
-                bounds(renderer,
-                        p * 15, p * 12, p * 6,
-                        p, p, p * 4);
-                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+                    bounds(renderer,
+                            0, p * 6, 1 - p * 5,
+                            p, p * 4, p);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
-                //End caps sides
-                bounds(renderer,
-                        0, p * 6, p * 4,
-                        p, p * 4, p);
-                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+                    bounds(renderer,
+                            1 - p, p * 6, p * 4,
+                            p, p * 4, p);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
-                bounds(renderer,
-                        0, p * 6, 1 - p * 5,
-                        p, p * 4, p);
-                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+                    bounds(renderer,
+                            1 - p, p * 6, 1 - p * 5,
+                            p, p * 4, p);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+                }
 
-                bounds(renderer,
-                        1 - p, p * 6, p * 4,
-                        p, p * 4, p);
-                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
-
-                bounds(renderer,
-                        1 - p, p * 6, 1 - p * 5,
-                        p, p * 4, p);
-                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+                rendered = true;
             }
-            else
+            else if (renderTop)
             {
                 //Glass Top
                 bounds(renderer,
@@ -154,12 +176,20 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
                         p, p * 6, 1 - p * 5,
                         p * 14, p * 4, p);
                 renderBlock(renderer, block, x, y, z, block.getIcon(3, 1));
+
+                rendered = true;
             }
         }
         else
         {
-            if(pass == 0)
+            if (pass == 0)
             {
+                //Base
+                bounds(renderer,
+                        p * 5, 0, 0,
+                        p * 6, p * 5, 1);
+                renderBlock(renderer, block, x, y, z, null);
+
                 //Lower bars
                 bounds(renderer,
                         p * 4, p * 4, 0,
@@ -171,67 +201,66 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
                         p, p * 2, 1);
                 renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
-                //Upper bars
-                bounds(renderer,
-                        p * 4, p * 10, 0,
-                        p, p * 2, 1);
-                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+                if (renderTop)
+                {
+                    //Upper bars
+                    bounds(renderer,
+                            p * 4, p * 10, 0,
+                            p, p * 2, 1);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
-                bounds(renderer,
-                        1 - p * 5, p * 10, 0,
-                        p, p * 2, 1);
-                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+                    bounds(renderer,
+                            1 - p * 5, p * 10, 0,
+                            p, p * 2, 1);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
-                //Top bars
-                bounds(renderer,
-                        p * 5, p * 11, 0,
-                        p, p * 2, 1);
-                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+                    //Top bars
+                    bounds(renderer,
+                            p * 5, p * 11, 0,
+                            p, p * 2, 1);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
-                bounds(renderer,
-                        1 - p * 6, p * 11, 0,
-                        p, p * 2, 1);
-                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+                    bounds(renderer,
+                            1 - p * 6, p * 11, 0,
+                            p, p * 2, 1);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
-                //Base
-                bounds(renderer,
-                        p * 5, 0, 0,
-                        p * 6, p * 5, 1);
-                renderBlock(renderer, block, x, y, z, null);
+                    //End caps top
+                    bounds(renderer,
+                            p * 6, p * 12, 0,
+                            p * 4, p, p);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
-                //End caps
-                bounds(renderer,
-                        p * 6, p * 12, 0,
-                        p * 4, p, p);
-                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+                    bounds(renderer,
+                            p * 6, p * 12, p * 15,
+                            p * 4, p, p);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
-                bounds(renderer,
-                        p * 6, p * 12, p * 15,
-                        p * 4, p, p);
-                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+                    //End caps sides
+                    bounds(renderer,
+                            p * 4, p * 6, 0,
+                            p, p * 4, p);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
-                //End caps sides
-                bounds(renderer,
-                        p * 4, p * 6, 0,
-                        p, p * 4, p);
-                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+                    bounds(renderer,
+                            1 - p * 5, p * 6, 0,
+                            p, p * 4, p);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
-                bounds(renderer,
-                        1 - p * 5, p * 6, 0,
-                        p, p * 4, p);
-                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+                    bounds(renderer,
+                            p * 4, p * 6, 1 - p,
+                            p, p * 4, p);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
-                bounds(renderer,
-                        p * 4, p * 6, 1 - p,
-                        p, p * 4, p);
-                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+                    bounds(renderer,
+                            1 - p * 5, p * 6, 1 - p,
+                            p, p * 4, p);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+                }
 
-                bounds(renderer,
-                        1 - p * 5, p * 6, 1 - p,
-                        p, p * 4, p);
-                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+                rendered = true;
             }
-            else
+            else if (renderTop)
             {
                 //Glass Top
                 bounds(renderer,
@@ -249,12 +278,14 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
                         1 - p * 5, p * 6, p,
                         p, p * 4, p * 14);
                 renderBlock(renderer, block, x, y, z, block.getIcon(3, 1));
+
+                rendered = true;
             }
         }
 
         renderer.uvRotateTop = prevUVTop;
         renderer.setRenderAllFaces(false);
-        return true;
+        return rendered;
     }
 
     protected void bounds(RenderBlocks renderer, double x, double y, double z, double xx, double yy, double zz)

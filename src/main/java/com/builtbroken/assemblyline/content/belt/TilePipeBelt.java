@@ -5,18 +5,24 @@ import com.builtbroken.assemblyline.content.belt.pipe.BeltType;
 import com.builtbroken.assemblyline.content.belt.pipe.PipeInventory;
 import com.builtbroken.assemblyline.content.belt.pipe.data.BeltSlotState;
 import com.builtbroken.assemblyline.content.belt.pipe.data.BeltState;
+import com.builtbroken.assemblyline.content.belt.pipe.gui.ContainerPipeBelt;
+import com.builtbroken.assemblyline.content.belt.pipe.gui.GuiPipeBelt;
 import com.builtbroken.jlib.type.Pair;
 import com.builtbroken.mc.api.data.IPacket;
-import com.builtbroken.mc.api.tile.access.IRotation;
+import com.builtbroken.mc.api.tile.IRotatable;
+import com.builtbroken.mc.api.tile.access.IGuiTile;
 import com.builtbroken.mc.api.tile.provider.IInventoryProvider;
 import com.builtbroken.mc.codegen.annotations.TileWrapped;
 import com.builtbroken.mc.core.network.packet.PacketType;
+import com.builtbroken.mc.framework.block.imp.IWrenchListener;
 import com.builtbroken.mc.framework.logic.TileNode;
+import com.builtbroken.mc.imp.transform.vector.Location;
 import com.builtbroken.mc.lib.helper.BlockUtility;
 import com.builtbroken.mc.prefab.inventory.BasicInventory;
 import com.builtbroken.mc.prefab.inventory.InventoryUtility;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -29,9 +35,15 @@ import net.minecraftforge.common.util.ForgeDirection;
  * Created by Dark(DarkGuardsman, Robert) on 11/14/2017.
  */
 @TileWrapped(className = ".gen.TileEntityWrappedPipeBelt", wrappers = "ExternalInventory")
-public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvider<PipeInventory>
+public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProvider<PipeInventory>, IGuiTile, IWrenchListener
 {
     public static final int PACKET_INVENTORY = 1;
+    public static final int PACKET_GUI_BUTTON = 2;
+
+    public static final int BUTTON_ITEM_PULL = 0;
+    public static final int BUTTON_RENDER_TOP = 1;
+    public static final int BUTTON_ITEM_EJECT = 2;
+
     //TODO fixed sided slots for inventory
     /** Cached state map of direction to input sides & slots */
     public static BeltSlotState[][][] inputStates;
@@ -52,8 +64,16 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
     //Belt states, used for filters and inverting belt directions
     private BeltState[] beltStates = new BeltState[4];
 
+    //Send inventory update to client
     private boolean sendInvToClient = true;
-    private boolean pullItems = false;
+    /** Should pipe suck items out of machines from connected inputs */
+    public boolean pullItems = false;
+    /** Should outputs dump items on the ground if no connections */
+    public boolean shouldEjectItems = false;
+    /** Should pipe render with its cage top */
+    public boolean renderTop = true;
+    /** Should the pipe trigger a re-render */
+    public boolean shouldUpdateRender = false;
 
     public BasicInventory renderInventory;
 
@@ -85,10 +105,37 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
                     {
                         if (slotState != null)
                         {
+                            //Get output position
+                            final Location outputLocation = toLocation().add(slotState.side);
+
+                            //Get stack in slot
                             ItemStack stack = getInventory().getStackInSlot(slotState.slotID);
                             if (stack != null)
                             {
-                                stack = InventoryUtility.insertStack(toLocation().add(slotState.side), stack, slotState.side.ordinal(), false);
+                                //Drop
+                                if (outputLocation.isAirBlock())
+                                {
+                                    if (shouldEjectItems) //TODO allow each connection to be customized
+                                    {
+                                        final Location ejectPosition = toLocation().add(slotState.side, 0.6f);
+                                        EntityItem entityItem = InventoryUtility.dropItemStack(ejectPosition, stack);
+                                        if (entityItem != null)
+                                        {
+                                            //Clear item
+                                            stack = null;
+
+                                            //Add some speed just for animation reasons
+                                            entityItem.motionX = slotState.side.offsetX * 0.1f;
+                                            entityItem.motionY = slotState.side.offsetY * 0.1f;
+                                            entityItem.motionZ = slotState.side.offsetZ * 0.1f;
+                                        }
+                                    }
+                                }
+                                //Push into tile
+                                else
+                                {
+                                    stack = InventoryUtility.insertStack(outputLocation, stack, slotState.side.getOpposite().ordinal(), false);
+                                }
                                 getInventory().setInventorySlotContents(slotState.slotID, stack);
                             }
                         }
@@ -193,7 +240,53 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
                 sendInvToClient = false;
                 sendInventoryPacket();
             }
+
+            if (shouldUpdateRender)
+            {
+                sendDescPacket();
+                shouldUpdateRender = false;
+            }
         }
+        else
+        {
+            if (shouldUpdateRender)
+            {
+                world().unwrap().markBlocksDirtyVertical(xi(), zi(), yi(), yi());
+                shouldUpdateRender = false;
+            }
+        }
+    }
+
+    @Override
+    public boolean onPlayerRightClickWrench(EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+    {
+        if (isServer())
+        {
+            if (player.isSneaking())
+            {
+                setDirection(getDirection().getOpposite());
+            }
+            else
+            {
+                switch (getDirection())
+                {
+                    case NORTH:
+                        setDirection(ForgeDirection.EAST);
+                        break;
+                    case EAST:
+                        setDirection(ForgeDirection.SOUTH);
+                        break;
+                    case SOUTH:
+                        setDirection(ForgeDirection.WEST);
+                        break;
+                    case WEST:
+                    default:
+                        setDirection(ForgeDirection.NORTH);
+                        break;
+                }
+            }
+        }
+        return true;
     }
 
     public int getItemsToPullPerCycle()
@@ -217,6 +310,17 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
     }
 
     @Override
+    public void setDirection(ForgeDirection direction)
+    {
+        if (direction != null && direction != getDirection()
+                && direction.ordinal() >= 2 && direction.ordinal() < 6)
+        {
+            _direction = null;
+            getHost().setMetaValue(direction.ordinal());
+        }
+    }
+
+    @Override
     public PipeInventory getInventory()
     {
         if (inventory == null)
@@ -236,7 +340,7 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
             {
                 if (state != null && slot == state.slotID)
                 {
-                    return state.side.getOpposite() == side;
+                    return state.side == side;
                 }
             }
         }
@@ -253,7 +357,7 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
             {
                 if (state != null && slot == state.slotID)
                 {
-                    return state.side.getOpposite() == side;
+                    return state.side == side;
                 }
             }
         }
@@ -297,6 +401,10 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
     {
         super.readDescPacket(buf);
         type = BeltType.values()[buf.readInt()];
+        shouldUpdateRender = buf.readBoolean();
+        shouldEjectItems = buf.readBoolean();
+        pullItems = buf.readBoolean();
+        renderTop = buf.readBoolean();
         readInvPacket(buf);
     }
 
@@ -306,13 +414,17 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
     {
         super.writeDescPacket(buf);
         buf.writeInt(type.ordinal());
+        buf.writeBoolean(shouldUpdateRender);
+        buf.writeBoolean(shouldEjectItems);
+        buf.writeBoolean(pullItems);
+        buf.writeBoolean(renderTop);
         writeInvPacket(buf);
     }
 
     public void readInvPacket(ByteBuf buf)
     {
         int size = buf.readInt();
-        if(renderInventory == null || renderInventory.getSizeInventory() != size)
+        if (renderInventory == null || renderInventory.getSizeInventory() != size)
         {
             renderInventory = new BasicInventory(size);
         }
@@ -332,6 +444,14 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
         getHost().sendPacketToClient(packet, 64);
     }
 
+    public void sendButtonEvent(int id, boolean checked)
+    {
+        IPacket packet = getHost().getPacketForData(PACKET_GUI_BUTTON);
+        packet.data().writeInt(id);
+        packet.data().writeBoolean(checked);
+        getHost().sendPacketToServer(packet);
+    }
+
     @Override
     public boolean read(ByteBuf buf, int id, EntityPlayer player, PacketType type)
     {
@@ -342,9 +462,41 @@ public class TilePipeBelt extends TileNode implements IRotation, IInventoryProvi
                 readInvPacket(buf);
                 return true;
             }
+            else if (id == PACKET_GUI_BUTTON)
+            {
+                int buttonID = buf.readInt();
+                boolean enabled = buf.readBoolean();
+
+                if (buttonID == BUTTON_ITEM_PULL)
+                {
+                    this.pullItems = enabled;
+                }
+                else if (buttonID == BUTTON_RENDER_TOP)
+                {
+                    this.renderTop = enabled;
+                }
+                else if (buttonID == BUTTON_ITEM_EJECT)
+                {
+                    this.shouldEjectItems = enabled;
+                }
+                sendDescPacket();
+                return true;
+            }
             return false;
         }
         return true;
+    }
+
+    @Override
+    public Object getServerGuiElement(int ID, EntityPlayer player)
+    {
+        return new ContainerPipeBelt(player, this);
+    }
+
+    @Override
+    public Object getClientGuiElement(int ID, EntityPlayer player)
+    {
+        return new GuiPipeBelt(player, this);
     }
 
     static

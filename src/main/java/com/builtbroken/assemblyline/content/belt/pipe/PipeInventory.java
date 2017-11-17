@@ -53,14 +53,14 @@ public class PipeInventory extends BasicInventory implements IExternalInventory,
                 ArrayList<Integer> list = new ArrayList();
                 for(BeltSlotState state : host.getInputs())
                 {
-                    if(state != null && state.side.getOpposite().ordinal() == accessSide)
+                    if(state != null && state.side.ordinal() == side)
                     {
                         list.add(state.slotID);
                     }
                 }
                 for(BeltSlotState state : host.getOutputs())
                 {
-                    if(state != null && state.side.getOpposite().ordinal() == accessSide)
+                    if(state != null && state.side.ordinal() == side)
                     {
                         list.add(state.slotID);
                     }

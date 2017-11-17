@@ -25,3 +25,11 @@ item.assemblyline:transportRailCart.chest.name=Chest Cart
 item.assemblyline:transportRailCart.stack.name=Open Cart
 item.assemblyline:transportRailCart.crate.name=Crate Cart
 item.assemblyline:transportRailCart.jabba.name=Jabba Barrel Cart
+
+tile.assemblyline:belt.simple.name=Conveyor Belt
+
+tile.assemblyline:belt.pipe.name=Conveyor Tube
+tile.assemblyline:belt.pipe.gui=Conveyor Tube Controls
+tile.assemblyline:belt.pipe.gui.button.item.pull=Pull Items
+tile.assemblyline:belt.pipe.gui.button.item.eject=Drop Items
+tile.assemblyline:belt.pipe.gui.button.render=Remove tube casing

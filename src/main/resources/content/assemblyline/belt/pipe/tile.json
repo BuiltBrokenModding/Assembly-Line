@@ -3,7 +3,7 @@
     "name": "assemblyline"
   },
   "block": {
-    "name": "belt.belt",
+    "name": "belt.pipe",
     "id": "beltPipe",
     "mod": "assemblyline",
     "material": "iron",
