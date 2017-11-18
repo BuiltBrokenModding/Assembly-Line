@@ -53,7 +53,7 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     public static int[] centerSlots = new int[]{2};
 
     //Main inventory
-    PipeInventory inventory;
+    private PipeInventory inventory;
 
     //Cached facing direction
     private ForgeDirection _direction;
@@ -484,6 +484,37 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         packet.data().writeInt(id);
         packet.data().writeBoolean(checked);
         getHost().sendPacketToServer(packet);
+    }
+
+    @Override
+    public void load(NBTTagCompound nbt)
+    {
+        super.load(nbt);
+        if (nbt.hasKey("inventory"))
+        {
+            getInventory().load(nbt.getCompoundTag("inventory"));
+        }
+        pullItems = nbt.getBoolean("pullItems");
+        shouldEjectItems = nbt.getBoolean("ejectItems");
+        renderTop = nbt.getBoolean("renderTubeTop");
+        type = BeltType.get(nbt.getInteger("beltType"));
+    }
+
+    @Override
+    public NBTTagCompound save(NBTTagCompound nbt)
+    {
+        super.save(nbt);
+        if (!getInventory().isEmpty())
+        {
+            NBTTagCompound invSave = new NBTTagCompound();
+            getInventory().save(invSave);
+            nbt.setTag("inventory", invSave);
+        }
+        nbt.setBoolean("pullItems", pullItems);
+        nbt.setBoolean("ejectItems", shouldEjectItems);
+        nbt.setBoolean("renderTubeTop", renderTop);
+        nbt.setInteger("beltType", type != null ? type.ordinal() : 0);
+        return nbt;
     }
 
     @Override
