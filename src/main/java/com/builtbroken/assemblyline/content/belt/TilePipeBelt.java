@@ -401,10 +401,7 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     @Override
     public void onInventoryChanged(int slot, ItemStack prev, ItemStack item)
     {
-        if (isServer())
-        {
-            sendInvToClient = true;
-        }
+        sendInvToClient = true;
     }
 
     public BeltSlotState[] getInputs()
@@ -453,6 +450,22 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         buf.writeBoolean(pullItems);
         buf.writeBoolean(renderTop);
         writeInvPacket(buf);
+    }
+
+    @Override
+    protected void writeGuiPacket(EntityPlayer player, ByteBuf buf)
+    {
+        buf.writeBoolean(shouldEjectItems);
+        buf.writeBoolean(pullItems);
+        buf.writeBoolean(renderTop);
+    }
+
+    @Override
+    protected void readGuiPacket(EntityPlayer player, ByteBuf buf)
+    {
+        shouldEjectItems = buf.readBoolean();
+        pullItems = buf.readBoolean();
+        renderTop = buf.readBoolean();
     }
 
     public void readInvPacket(ByteBuf buf)
