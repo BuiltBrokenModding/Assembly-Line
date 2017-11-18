@@ -21,4 +21,14 @@ public enum BeltType
     {
         this.inventorySize = inventorySize;
     }
+
+    public static BeltType get(int i)
+    {
+        if(i >= 0 && i < values().length)
+        {
+            return values()[i];
+        }
+        return NORMAL;
+    }
+
 }
