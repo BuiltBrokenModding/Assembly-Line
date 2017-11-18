@@ -31,7 +31,7 @@ public class GuiPipeBelt extends GuiContainerBase<TilePipeBelt>
         int y = guiTop;
         enableItemPullButton = add(new GuiButtonCheck(TilePipeBelt.BUTTON_ITEM_PULL, x + 10, y + 45, 1, host.pullItems));
         enableItemEjectButton = add(new GuiButtonCheck(TilePipeBelt.BUTTON_ITEM_EJECT, x + 10, y + 57, 1, host.shouldEjectItems));
-        renderTopButton = add(new GuiButtonCheck(TilePipeBelt.BUTTON_RENDER_TOP, x + 10, y + 69, 1, host.renderTop));
+        renderTopButton = add(new GuiButtonCheck(TilePipeBelt.BUTTON_RENDER_TOP, x + 10, y + 69, 1, !host.renderTop));
     }
 
     @Override
@@ -39,7 +39,7 @@ public class GuiPipeBelt extends GuiContainerBase<TilePipeBelt>
     {
         super.updateScreen();
         enableItemPullButton.setChecked(host.pullItems);
-        renderTopButton.setChecked(host.renderTop);
+        renderTopButton.setChecked(!host.renderTop);
         enableItemEjectButton.setChecked(host.shouldEjectItems);
     }
 
@@ -54,7 +54,7 @@ public class GuiPipeBelt extends GuiContainerBase<TilePipeBelt>
         else if (button == renderTopButton)
         {
             renderTopButton.setChecked(!renderTopButton.isChecked());
-            host.sendButtonEvent(button.id, renderTopButton.isChecked());
+            host.sendButtonEvent(button.id, !renderTopButton.isChecked());
         }
         else if (button == enableItemEjectButton)
         {
