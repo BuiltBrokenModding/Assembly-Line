@@ -5,7 +5,7 @@
     "tileClass": "com.builtbroken.assemblyline.content.belt.gen.TileEntityWrappedPipeBelt",
     "states": [
       {
-        "id": "item",
+        "id": "item.inventory",
         "renderType": "item",
         "textureID": "assemblyline:belt.pipe"
       },

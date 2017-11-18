@@ -22,5 +22,11 @@
     "domain": "assemblyline",
     "name": "belt.pipe.glass",
     "type": "block"
+  },
+  "texture:3": {
+    "key": "assemblyline:belt.pipe",
+    "domain": "assemblyline",
+    "name": "belt.pipe",
+    "type": "item"
   }
 }

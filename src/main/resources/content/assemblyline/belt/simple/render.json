@@ -11,9 +11,9 @@
         "textureID": "assemblyline:belt.simple.flat.0"
       },
       {
-        "id": "item",
-        "renderType": "model",
-        "parent": "base"
+        "id": "item.inventory",
+        "renderType": "item",
+        "textureID": "assemblyline:belt.simple"
       },
       {
         "id": "tile",

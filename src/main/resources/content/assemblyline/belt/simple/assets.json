@@ -60,5 +60,11 @@
     "key": "assemblyline:belt.simple.decline",
     "domain": "assemblyline",
     "name": "belt/simple/decline.tcn"
+  },
+  "texture:6": {
+    "key": "assemblyline:belt.simple",
+    "domain": "assemblyline",
+    "name": "belt.simple",
+    "type": "item"
   }
 }
