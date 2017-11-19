@@ -1,6 +1,7 @@
-package com.builtbroken.assemblyline.content.belt.pipe;
+package com.builtbroken.assemblyline.content.belt.pipe.listener;
 
 import com.builtbroken.assemblyline.content.belt.TilePipeBelt;
+import com.builtbroken.assemblyline.content.belt.pipe.BeltType;
 import com.builtbroken.mc.api.tile.node.ITileNode;
 import com.builtbroken.mc.api.tile.node.ITileNodeHost;
 import com.builtbroken.mc.framework.block.imp.IBlockListener;
@@ -59,6 +60,10 @@ public class TilePipeRenderListener extends TileListener implements IBlockListen
                 GL11.glPushMatrix();
                 GL11.glTranslated(xx, yy, zz);
 
+                //Always render center as slot 2 unless center is a buffer chest
+                renderItemAtPosition(0.5, 0.5, 0.5, belt.renderInventory.getStackInSlot(2));
+
+                //TODO optimize to use an object set to detail slots to render positions
                 if (belt.type == BeltType.NORMAL)
                 {
                     if (belt.getDirection() == ForgeDirection.WEST)
@@ -81,7 +86,52 @@ public class TilePipeRenderListener extends TileListener implements IBlockListen
                         renderItemAtPosition(0.5, 0.5, 0.2, belt.renderInventory.getStackInSlot(1));
                         renderItemAtPosition(0.5, 0.5, 0.8, belt.renderInventory.getStackInSlot(0));
                     }
-                    renderItemAtPosition(0.5, 0.5, 0.5, belt.renderInventory.getStackInSlot(2));
+                }
+                else if (belt.type == BeltType.LEFT_ELBOW)
+                {
+                    if (belt.getDirection() == ForgeDirection.WEST)
+                    {
+                        renderItemAtPosition(0.5, 0.5, 0.2, belt.renderInventory.getStackInSlot(1));
+                        renderItemAtPosition(0.8, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
+                    }
+                    else if (belt.getDirection() == ForgeDirection.EAST)
+                    {
+                        renderItemAtPosition(0.2, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
+                        renderItemAtPosition(0.5, 0.5, 0.8, belt.renderInventory.getStackInSlot(1));
+                    }
+                    else if (belt.getDirection() == ForgeDirection.NORTH)
+                    {
+                        renderItemAtPosition(0.8, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
+                        renderItemAtPosition(0.5, 0.5, 0.8, belt.renderInventory.getStackInSlot(0));
+                    }
+                    else if (belt.getDirection() == ForgeDirection.SOUTH)
+                    {
+                        renderItemAtPosition(0.5, 0.5, 0.2, belt.renderInventory.getStackInSlot(0));
+                        renderItemAtPosition(0.2, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
+                    }
+                }
+                else if (belt.type == BeltType.RIGHT_ELBOW)
+                {
+                    if (belt.getDirection() == ForgeDirection.WEST)
+                    {
+                        renderItemAtPosition(0.5, 0.5, 0.8, belt.renderInventory.getStackInSlot(1));
+                        renderItemAtPosition(0.8, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
+                    }
+                    else if (belt.getDirection() == ForgeDirection.EAST)
+                    {
+                        renderItemAtPosition(0.2, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
+                        renderItemAtPosition(0.5, 0.5, 0.2, belt.renderInventory.getStackInSlot(1));
+                    }
+                    else if (belt.getDirection() == ForgeDirection.NORTH)
+                    {
+                        renderItemAtPosition(0.2, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
+                        renderItemAtPosition(0.5, 0.5, 0.8, belt.renderInventory.getStackInSlot(0));
+                    }
+                    else if (belt.getDirection() == ForgeDirection.SOUTH)
+                    {
+                        renderItemAtPosition(0.5, 0.5, 0.2, belt.renderInventory.getStackInSlot(0));
+                        renderItemAtPosition(0.8, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
+                    }
                 }
 
                 GL11.glPopMatrix();

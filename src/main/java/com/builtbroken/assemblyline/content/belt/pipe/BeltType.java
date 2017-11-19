@@ -12,8 +12,10 @@ public enum BeltType
     T_SECTION(4),
     //4 way belt with dynamic inputs and outputs
     INTERSECTION(5),
-    //Normal 1 to 1 strait belt, with chest buffer in center
-    BUFFER(-1);
+    //Splitter for use with double belt
+    Y_SECTION(5),
+    //Two belts in one block, both act independent of each other
+    DOUBLE(6);
 
     public final int inventorySize;
 

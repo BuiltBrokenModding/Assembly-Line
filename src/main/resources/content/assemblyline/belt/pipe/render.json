@@ -10,6 +10,31 @@
         "textureID": "assemblyline:belt.pipe"
       },
       {
+        "id": "item.inventory.normal",
+        "renderType": "item",
+        "textureID": "assemblyline:belt.pipe"
+      },
+      {
+        "id": "item.inventory.elbow.left",
+        "renderType": "item",
+        "texture": "assemblyline:belt.pipe.left"
+      },
+      {
+        "id": "item.inventory.elbow.right",
+        "renderType": "item",
+        "texture": "assemblyline:belt.pipe.right"
+      },
+      {
+        "id": "item.inventory.junction",
+        "renderType": "item",
+        "texture": "assemblyline:belt.pipe.junction"
+      },
+      {
+        "id": "item.inventory.intersection",
+        "renderType": "item",
+        "texture": "assemblyline:belt.pipe.intersection"
+      },
+      {
         "id": "block.1",
         "renderType": "block",
         "side:0": "assemblyline:belt.pipe.frame",

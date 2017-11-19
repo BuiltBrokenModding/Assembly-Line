@@ -3,7 +3,7 @@
     "name": "assemblyline"
   },
   "block": {
-    "name": "belt.pipe",
+    "name": "belt.pipe.${metaLocalization}",
     "id": "beltPipe",
     "mod": "assemblyline",
     "material": "iron",
@@ -30,7 +30,30 @@
     },
     "listeners": [
       "rotation",
-      "beltPipeRender"
+      "beltPipeRender",
+      "beltPipePlacement"
+    ],
+    "subtypes": [
+      {
+        "id": "normal",
+        "meta": 0
+      },
+      {
+        "id": "elbow.left",
+        "meta": 1
+      },
+      {
+        "id": "elbow.right",
+        "meta": 2
+      },
+      {
+        "id": "junction",
+        "meta": 3
+      },
+      {
+        "id": "intersection",
+        "meta": 4
+      }
     ]
   }
 }

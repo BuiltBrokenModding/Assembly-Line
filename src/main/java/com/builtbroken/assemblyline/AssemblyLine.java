@@ -1,6 +1,7 @@
 package com.builtbroken.assemblyline;
 
 import com.builtbroken.assemblyline.client.ALCreativeTab;
+import com.builtbroken.assemblyline.content.belt.pipe.listener.TilePipePlacementListener;
 import com.builtbroken.assemblyline.content.parts.ItemCraftingParts;
 import com.builtbroken.assemblyline.content.rail.BlockRail;
 import com.builtbroken.assemblyline.content.rail.ItemBlockRail;
@@ -11,6 +12,7 @@ import com.builtbroken.mc.framework.mod.AbstractMod;
 import com.builtbroken.mc.framework.mod.ModCreativeTab;
 import com.builtbroken.mc.prefab.inventory.InventoryUtility;
 import com.builtbroken.mc.seven.framework.block.BlockBase;
+import com.builtbroken.mc.seven.framework.block.json.JsonBlockListenerProcessor;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -62,6 +64,13 @@ public class AssemblyLine extends AbstractMod
         super(DOMAIN);
         CREATIVE_TAB = new ALCreativeTab();
         manager.setTab(CREATIVE_TAB);
+    }
+
+    @Override
+    public void loadJsonContentHandlers()
+    {
+        super.loadJsonContentHandlers();
+        JsonBlockListenerProcessor.addBuilder(new TilePipePlacementListener.Builder());
     }
 
     @Mod.EventHandler

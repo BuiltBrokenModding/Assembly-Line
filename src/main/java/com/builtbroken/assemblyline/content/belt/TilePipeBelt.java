@@ -604,11 +604,11 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
                     break;
             }
 
-            inputStates[BeltType.LEFT_ELBOW.ordinal()][direction.ordinal()] = new BeltSlotState[]{new BeltSlotState(0, direction)};
-            outputStates[BeltType.LEFT_ELBOW.ordinal()][direction.ordinal()] = new BeltSlotState[]{new BeltSlotState(1, turn.getOpposite())};
+            outputStates[BeltType.LEFT_ELBOW.ordinal()][direction.ordinal()] = new BeltSlotState[]{new BeltSlotState(0, direction.getOpposite())};
+            inputStates[BeltType.LEFT_ELBOW.ordinal()][direction.ordinal()] = new BeltSlotState[]{new BeltSlotState(1, turn)};
 
-            inputStates[BeltType.RIGHT_ELBOW.ordinal()][direction.ordinal()] = new BeltSlotState[]{new BeltSlotState(0, direction)};
-            outputStates[BeltType.RIGHT_ELBOW.ordinal()][direction.ordinal()] = new BeltSlotState[]{new BeltSlotState(1, turn)};
+            outputStates[BeltType.RIGHT_ELBOW.ordinal()][direction.ordinal()] = new BeltSlotState[]{new BeltSlotState(0, direction.getOpposite())};
+            inputStates[BeltType.RIGHT_ELBOW.ordinal()][direction.ordinal()] = new BeltSlotState[]{new BeltSlotState(1, turn)};
         }
     }
 }

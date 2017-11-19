@@ -29,6 +29,12 @@ item.assemblyline:transportRailCart.jabba.name=Jabba Barrel Cart
 tile.assemblyline:belt.simple.name=Conveyor Belt
 
 tile.assemblyline:belt.pipe.name=Conveyor Tube
+tile.assemblyline:belt.pipe.normal.name=Conveyor Tube
+tile.assemblyline:belt.pipe.elbow.left.name=Left Elbow Conveyor Tube
+tile.assemblyline:belt.pipe.elbow.right.name=Right Elbow Conveyor Tube
+tile.assemblyline:belt.pipe.junction.name=Junction Conveyor Tube
+tile.assemblyline:belt.pipe.intersection.name=Intersection Conveyor Tube
+
 tile.assemblyline:belt.pipe.gui=Conveyor Tube Controls
 tile.assemblyline:belt.pipe.gui.button.item.pull=Pull Items
 tile.assemblyline:belt.pipe.gui.button.item.eject=Drop Items

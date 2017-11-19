@@ -4,7 +4,7 @@ import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.CommonProxy;
 import com.builtbroken.assemblyline.content.belt.TileSimpleBelt;
 import com.builtbroken.assemblyline.content.belt.pipe.ISBR_Belt;
-import com.builtbroken.assemblyline.content.belt.pipe.TilePipeRenderListener;
+import com.builtbroken.assemblyline.content.belt.pipe.listener.TilePipeRenderListener;
 import com.builtbroken.assemblyline.content.inserter.TileInsertArmClient;
 import com.builtbroken.assemblyline.content.rail.carts.EntityCart;
 import com.builtbroken.assemblyline.content.rail.carts.RenderCart;

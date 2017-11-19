@@ -23,7 +23,7 @@ import net.minecraftforge.common.MinecraftForge;
 public class ISBR_Belt implements ISimpleBlockRenderingHandler
 {
     public final static int ID = RenderingRegistry.getNextAvailableRenderId();
-
+    public final static double pixel = 1.0 / 16.0;
 
     private int pass = 0;
 
@@ -43,12 +43,13 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
     {
         boolean rendered = false;
-        final double p = 1.0 / 16.0;
+
         renderer.setRenderAllFaces(true);
 
         //Get data from tile
         Direction direction = world != null ? Direction.getOrientation(world.getBlockMetadata(x, y, z)) : Direction.EAST;
         boolean renderTop = true;
+        BeltType type = BeltType.NORMAL;
 
         if (world != null)
         {
@@ -57,6 +58,7 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
             {
                 TilePipeBelt belt = (TilePipeBelt) ((ITileNodeHost) tile).getTileNode();
                 renderTop = belt.renderTop;
+                type = belt.type;
             }
         }
 
@@ -78,106 +80,296 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
                 break;
         }
 
+        if (type == BeltType.NORMAL)
+        {
+            rendered = renderNormalBelt(x, y, z, block, renderer, direction, renderTop);
+        }
+        else if (type == BeltType.LEFT_ELBOW)
+        {
+            rendered = renderLeftElbow(x, y, z, block, renderer, direction, renderTop);
+        }
+        else if (type == BeltType.RIGHT_ELBOW)
+        {
+            rendered = renderRightElbow(x, y, z, block, renderer, direction, renderTop);
+        }
+
+        renderer.uvRotateTop = prevUVTop;
+        renderer.setRenderAllFaces(false);
+        return rendered;
+    }
+
+    //TODO convert to JSON, as this is all repeat with data
+    protected boolean renderLeftElbow(int x, int y, int z, Block block, RenderBlocks renderer, Direction direction, boolean renderTop)
+    {
+        if (direction == Direction.WEST)
+        {
+            if (pass == 0)
+            {
+                //Base facing
+                bounds(renderer,
+                        pixel * 5, 0, pixel * 5,
+                        pixel * 11, pixel * 5, pixel * 6);
+                renderBlock(renderer, block, x, y, z, null);
+
+                //Base input
+                renderer.uvRotateTop = 3;
+                bounds(renderer,
+                        pixel * 5, 0, 0,
+                        pixel * 6, pixel * 5, pixel * 5);
+                renderBlock(renderer, block, x, y, z, null);
+
+                return true;
+            }
+        }
+        else if (direction == Direction.EAST)
+        {
+            if (pass == 0)
+            {
+                //Base facing
+                bounds(renderer,
+                        0, 0, pixel * 5,
+                        pixel * 11, pixel * 5, pixel * 6);
+                renderBlock(renderer, block, x, y, z, null);
+
+                //Base input
+                renderer.uvRotateTop = 0;
+                bounds(renderer,
+                        pixel * 5, 0, pixel * 11,
+                        pixel * 6, pixel * 5, pixel * 5);
+                renderBlock(renderer, block, x, y, z, null);
+
+                return true;
+            }
+        }
+        else if (direction == Direction.NORTH)
+        {
+            if (pass == 0)
+            {
+                //Base
+                bounds(renderer,
+                        pixel * 5, 0, pixel * 5,
+                        pixel * 6, pixel * 5, pixel * 11);
+                renderBlock(renderer, block, x, y, z, null);
+
+                renderer.uvRotateTop = 2;
+                bounds(renderer,
+                        pixel * 11, 0, pixel * 5,
+                        pixel * 5, pixel * 5, pixel * 6);
+                renderBlock(renderer, block, x, y, z, null);
+                return true;
+            }
+        }
+        else if (direction == Direction.SOUTH)
+        {
+            if (pass == 0)
+            {
+                //Base
+                bounds(renderer,
+                        pixel * 5, 0, 0,
+                        pixel * 6, pixel * 5, pixel * 11);
+                renderBlock(renderer, block, x, y, z, null);
+
+                //Base input
+
+
+                //Base input
+                renderer.uvRotateTop = 1;
+                bounds(renderer,
+                        0, 0, pixel * 5,
+                        pixel * 5, pixel * 5, pixel * 6);
+                renderBlock(renderer, block, x, y, z, null);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //TODO convert to JSON, as this is all repeat with data
+    protected boolean renderRightElbow(int x, int y, int z, Block block, RenderBlocks renderer, Direction direction, boolean renderTop)
+    {
+        if (direction == Direction.WEST)
+        {
+            if (pass == 0)
+            {
+                //Base facing
+                bounds(renderer,
+                        pixel * 5, 0, pixel * 5,
+                        pixel * 11, pixel * 5, pixel * 6);
+                renderBlock(renderer, block, x, y, z, null);
+
+                //Base input
+                renderer.uvRotateTop = 0;
+                bounds(renderer,
+                        pixel * 5, 0, pixel * 11,
+                        pixel * 6, pixel * 5, pixel * 5);
+                renderBlock(renderer, block, x, y, z, null);
+                return true;
+            }
+        }
+        else if (direction == Direction.EAST)
+        {
+            if (pass == 0)
+            {
+                //Base facing
+                bounds(renderer,
+                        0, 0, pixel * 5,
+                        pixel * 11, pixel * 5, pixel * 6);
+                renderBlock(renderer, block, x, y, z, null);
+
+
+                //Base input
+                renderer.uvRotateTop = 3;
+                bounds(renderer,
+                        pixel * 5, 0, 0,
+                        pixel * 6, pixel * 5, pixel * 5);
+                renderBlock(renderer, block, x, y, z, null);
+                return true;
+            }
+        }
+        else if (direction == Direction.NORTH)
+        {
+            if (pass == 0)
+            {
+                //Base
+                bounds(renderer,
+                        pixel * 5, 0, pixel * 5,
+                        pixel * 6, pixel * 5, pixel * 11);
+                renderBlock(renderer, block, x, y, z, null);
+
+                //Base input
+                renderer.uvRotateTop = 1;
+                bounds(renderer,
+                        0, 0, pixel * 5,
+                        pixel * 5, pixel * 5, pixel * 6);
+                renderBlock(renderer, block, x, y, z, null);
+                return true;
+            }
+        }
+        else if (direction == Direction.SOUTH)
+        {
+            if (pass == 0)
+            {
+                //Base
+                bounds(renderer,
+                        pixel * 5, 0, 0,
+                        pixel * 6, pixel * 5, pixel * 11);
+                renderBlock(renderer, block, x, y, z, null);
+
+                //Base input
+                renderer.uvRotateTop = 2;
+                bounds(renderer,
+                        pixel * 11, 0, pixel * 5,
+                        pixel * 5, pixel * 5, pixel * 6);
+                renderBlock(renderer, block, x, y, z, null);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //TODO convert to JSON, as this is all repeat with data
+    protected boolean renderNormalBelt(int x, int y, int z, Block block, RenderBlocks renderer, Direction direction, boolean renderTop)
+    {
         if (direction == Direction.WEST || direction == Direction.EAST)
         {
             if (pass == 0)
             {
                 //Base
                 bounds(renderer,
-                        0, 0, p * 5,
-                        1, p * 5, p * 6);
+                        0, 0, pixel * 5,
+                        1, pixel * 5, pixel * 6);
                 renderBlock(renderer, block, x, y, z, null);
 
                 //Lower bars
                 bounds(renderer,
-                        0, p * 4, p * 4,
-                        1, p * 2, p);
+                        0, pixel * 4, pixel * 4,
+                        1, pixel * 2, pixel);
                 renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
                 bounds(renderer,
-                        0, p * 4, 1 - p * 5,
-                        1, p * 2, p);
+                        0, pixel * 4, 1 - pixel * 5,
+                        1, pixel * 2, pixel);
                 renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
                 if (renderTop)
                 {
                     //Upper bars
                     bounds(renderer,
-                            0, p * 10, p * 4,
-                            1, p * 2, p);
+                            0, pixel * 10, pixel * 4,
+                            1, pixel * 2, pixel);
                     renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
                     bounds(renderer,
-                            0, p * 10, 1 - p * 5,
-                            1, p * 2, p);
+                            0, pixel * 10, 1 - pixel * 5,
+                            1, pixel * 2, pixel);
                     renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
                     //Top bars
                     bounds(renderer,
-                            0, p * 11, p * 5,
-                            1, p * 2, p);
+                            0, pixel * 11, pixel * 5,
+                            1, pixel * 2, pixel);
                     renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
                     bounds(renderer,
-                            0, p * 11, 1 - p * 6,
-                            1, p * 2, p);
+                            0, pixel * 11, 1 - pixel * 6,
+                            1, pixel * 2, pixel);
                     renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
                     //End caps top
                     bounds(renderer,
-                            0, p * 12, p * 6,
-                            p, p, p * 4);
+                            0, pixel * 12, pixel * 6,
+                            pixel, pixel, pixel * 4);
                     renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
                     bounds(renderer,
-                            p * 15, p * 12, p * 6,
-                            p, p, p * 4);
+                            pixel * 15, pixel * 12, pixel * 6,
+                            pixel, pixel, pixel * 4);
                     renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
                     //End caps sides
                     bounds(renderer,
-                            0, p * 6, p * 4,
-                            p, p * 4, p);
+                            0, pixel * 6, pixel * 4,
+                            pixel, pixel * 4, pixel);
                     renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
                     bounds(renderer,
-                            0, p * 6, 1 - p * 5,
-                            p, p * 4, p);
+                            0, pixel * 6, 1 - pixel * 5,
+                            pixel, pixel * 4, pixel);
                     renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
                     bounds(renderer,
-                            1 - p, p * 6, p * 4,
-                            p, p * 4, p);
+                            1 - pixel, pixel * 6, pixel * 4,
+                            pixel, pixel * 4, pixel);
                     renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
                     bounds(renderer,
-                            1 - p, p * 6, 1 - p * 5,
-                            p, p * 4, p);
+                            1 - pixel, pixel * 6, 1 - pixel * 5,
+                            pixel, pixel * 4, pixel);
                     renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
                 }
 
-                rendered = true;
+                return true;
             }
             else if (renderTop)
             {
                 //Glass Top
                 bounds(renderer,
-                        p, p * 12, p * 6,
-                        1 - p * 2, p, p * 4);
+                        pixel, pixel * 12, pixel * 6,
+                        1 - pixel * 2, pixel, pixel * 4);
                 renderBlock(renderer, block, x, y, z, block.getIcon(3, 1));
 
                 //Glass walls
                 bounds(renderer,
-                        p, p * 6, p * 4,
-                        p * 14, p * 4, p);
+                        pixel, pixel * 6, pixel * 4,
+                        pixel * 14, pixel * 4, pixel);
                 renderBlock(renderer, block, x, y, z, block.getIcon(3, 1));
 
                 bounds(renderer,
-                        p, p * 6, 1 - p * 5,
-                        p * 14, p * 4, p);
+                        pixel, pixel * 6, 1 - pixel * 5,
+                        pixel * 14, pixel * 4, pixel);
                 renderBlock(renderer, block, x, y, z, block.getIcon(3, 1));
 
-                rendered = true;
+                return true;
             }
         }
         else
@@ -186,106 +378,103 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
             {
                 //Base
                 bounds(renderer,
-                        p * 5, 0, 0,
-                        p * 6, p * 5, 1);
+                        pixel * 5, 0, 0,
+                        pixel * 6, pixel * 5, 1);
                 renderBlock(renderer, block, x, y, z, null);
 
                 //Lower bars
                 bounds(renderer,
-                        p * 4, p * 4, 0,
-                        p, p * 2, 1);
+                        pixel * 4, pixel * 4, 0,
+                        pixel, pixel * 2, 1);
                 renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
                 bounds(renderer,
-                        1 - p * 5, p * 4, 0,
-                        p, p * 2, 1);
+                        1 - pixel * 5, pixel * 4, 0,
+                        pixel, pixel * 2, 1);
                 renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
                 if (renderTop)
                 {
                     //Upper bars
                     bounds(renderer,
-                            p * 4, p * 10, 0,
-                            p, p * 2, 1);
+                            pixel * 4, pixel * 10, 0,
+                            pixel, pixel * 2, 1);
                     renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
                     bounds(renderer,
-                            1 - p * 5, p * 10, 0,
-                            p, p * 2, 1);
+                            1 - pixel * 5, pixel * 10, 0,
+                            pixel, pixel * 2, 1);
                     renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
                     //Top bars
                     bounds(renderer,
-                            p * 5, p * 11, 0,
-                            p, p * 2, 1);
+                            pixel * 5, pixel * 11, 0,
+                            pixel, pixel * 2, 1);
                     renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
                     bounds(renderer,
-                            1 - p * 6, p * 11, 0,
-                            p, p * 2, 1);
+                            1 - pixel * 6, pixel * 11, 0,
+                            pixel, pixel * 2, 1);
                     renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
                     //End caps top
                     bounds(renderer,
-                            p * 6, p * 12, 0,
-                            p * 4, p, p);
+                            pixel * 6, pixel * 12, 0,
+                            pixel * 4, pixel, pixel);
                     renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
                     bounds(renderer,
-                            p * 6, p * 12, p * 15,
-                            p * 4, p, p);
+                            pixel * 6, pixel * 12, pixel * 15,
+                            pixel * 4, pixel, pixel);
                     renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
                     //End caps sides
                     bounds(renderer,
-                            p * 4, p * 6, 0,
-                            p, p * 4, p);
+                            pixel * 4, pixel * 6, 0,
+                            pixel, pixel * 4, pixel);
                     renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
                     bounds(renderer,
-                            1 - p * 5, p * 6, 0,
-                            p, p * 4, p);
+                            1 - pixel * 5, pixel * 6, 0,
+                            pixel, pixel * 4, pixel);
                     renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
                     bounds(renderer,
-                            p * 4, p * 6, 1 - p,
-                            p, p * 4, p);
+                            pixel * 4, pixel * 6, 1 - pixel,
+                            pixel, pixel * 4, pixel);
                     renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
                     bounds(renderer,
-                            1 - p * 5, p * 6, 1 - p,
-                            p, p * 4, p);
+                            1 - pixel * 5, pixel * 6, 1 - pixel,
+                            pixel, pixel * 4, pixel);
                     renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
                 }
 
-                rendered = true;
+                return true;
             }
             else if (renderTop)
             {
                 //Glass Top
                 bounds(renderer,
-                        p * 6, p * 12, p,
-                        p * 4, p, 1 - p * 2);
+                        pixel * 6, pixel * 12, pixel,
+                        pixel * 4, pixel, 1 - pixel * 2);
                 renderBlock(renderer, block, x, y, z, block.getIcon(3, 1));
 
                 //Glass walls
                 bounds(renderer,
-                        p * 4, p * 6, p,
-                        p, p * 4, p * 14);
+                        pixel * 4, pixel * 6, pixel,
+                        pixel, pixel * 4, pixel * 14);
                 renderBlock(renderer, block, x, y, z, block.getIcon(3, 1));
 
                 bounds(renderer,
-                        1 - p * 5, p * 6, p,
-                        p, p * 4, p * 14);
+                        1 - pixel * 5, pixel * 6, pixel,
+                        pixel, pixel * 4, pixel * 14);
                 renderBlock(renderer, block, x, y, z, block.getIcon(3, 1));
 
-                rendered = true;
+                return true;
             }
         }
-
-        renderer.uvRotateTop = prevUVTop;
-        renderer.setRenderAllFaces(false);
-        return rendered;
+        return false;
     }
 
     protected void bounds(RenderBlocks renderer, double x, double y, double z, double xx, double yy, double zz)
