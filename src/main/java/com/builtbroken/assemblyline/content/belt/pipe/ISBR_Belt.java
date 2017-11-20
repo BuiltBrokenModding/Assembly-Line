@@ -352,22 +352,23 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
             }
             else if (renderTop)
             {
+                IIcon icon = block.getIcon(0, 15);
                 //Glass Top
                 bounds(renderer,
                         pixel, pixel * 12, pixel * 6,
                         1 - pixel * 2, pixel, pixel * 4);
-                renderBlock(renderer, block, x, y, z, block.getIcon(3, 1));
+                renderBlock(renderer, block, x, y, z, icon);
 
                 //Glass walls
                 bounds(renderer,
                         pixel, pixel * 6, pixel * 4,
                         pixel * 14, pixel * 4, pixel);
-                renderBlock(renderer, block, x, y, z, block.getIcon(3, 1));
+                renderBlock(renderer, block, x, y, z, icon);
 
                 bounds(renderer,
                         pixel, pixel * 6, 1 - pixel * 5,
                         pixel * 14, pixel * 4, pixel);
-                renderBlock(renderer, block, x, y, z, block.getIcon(3, 1));
+                renderBlock(renderer, block, x, y, z, icon);
 
                 return true;
             }
@@ -454,22 +455,23 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
             }
             else if (renderTop)
             {
+                IIcon icon = block.getIcon(0, 15);
                 //Glass Top
                 bounds(renderer,
                         pixel * 6, pixel * 12, pixel,
                         pixel * 4, pixel, 1 - pixel * 2);
-                renderBlock(renderer, block, x, y, z, block.getIcon(3, 1));
+                renderBlock(renderer, block, x, y, z, icon);
 
                 //Glass walls
                 bounds(renderer,
                         pixel * 4, pixel * 6, pixel,
                         pixel, pixel * 4, pixel * 14);
-                renderBlock(renderer, block, x, y, z, block.getIcon(3, 1));
+                renderBlock(renderer, block, x, y, z, icon);
 
                 bounds(renderer,
                         1 - pixel * 5, pixel * 6, pixel,
                         pixel, pixel * 4, pixel * 14);
-                renderBlock(renderer, block, x, y, z, block.getIcon(3, 1));
+                renderBlock(renderer, block, x, y, z, icon);
 
                 return true;
             }

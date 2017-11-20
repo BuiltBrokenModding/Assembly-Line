@@ -35,18 +35,22 @@
         "texture": "assemblyline:belt.pipe.intersection"
       },
       {
+        "id": "block.15",
+        "renderType": "block",
+        "texture": "assemblyline:belt.pipe.glass"
+      },
+      {
         "id": "block.1",
         "renderType": "block",
         "side:0": "assemblyline:belt.pipe.frame",
         "side:1": "assemblyline:belt.pipe.top",
-        "side:2": "assemblyline:belt.pipe.body",
-        "side:3": "assemblyline:belt.pipe.glass"
+        "side:2": "assemblyline:belt.pipe.body"
       },
       {
         "id": "block",
         "renderType": "block",
-        "top": "assemblyline:belt.pipe.top",
-        "sides": "assemblyline:belt.pipe.body"
+        "texture": "assemblyline:belt.pipe.body",
+        "top": "assemblyline:belt.pipe.top"
       }
     ]
   }
