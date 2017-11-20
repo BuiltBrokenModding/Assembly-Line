@@ -111,12 +111,186 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
                         pixel * 11, pixel * 5, pixel * 6);
                 renderBlock(renderer, block, x, y, z, null);
 
+                //Lower bars
+                bounds(renderer,
+                        pixel * 4, pixel * 4, 0,
+                        pixel, pixel * 2, pixel * 12);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                bounds(renderer,
+                        1 - pixel * 5, pixel * 4, 0,
+                        pixel, pixel * 2, pixel * 5);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                //Lower bars
+                bounds(renderer,
+                        pixel * 12, pixel * 4, pixel * 4,
+                        pixel * 4, pixel * 2, pixel);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                bounds(renderer,
+                        pixel * 5, pixel * 4, pixel * 11,
+                        pixel * 11, pixel * 2, pixel);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
                 //Base input
                 renderer.uvRotateTop = 3;
                 bounds(renderer,
                         pixel * 5, 0, 0,
                         pixel * 6, pixel * 5, pixel * 5);
                 renderBlock(renderer, block, x, y, z, null);
+
+
+                if (renderTop)
+                {
+                    //End caps top Output
+                    bounds(renderer,
+                            pixel * 15, pixel * 12, pixel * 6,
+                            pixel, pixel, pixel * 4);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            pixel * 10, pixel * 12, pixel * 6,
+                            pixel, pixel, pixel * 4);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //End caps top Input
+                    bounds(renderer,
+                            pixel * 6, pixel * 12, 0,
+                            pixel * 4, pixel, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            pixel * 6, pixel * 12, pixel * 5,
+                            pixel * 4, pixel, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //End caps sides Output
+                    bounds(renderer,
+                            pixel * 15, pixel * 6, pixel * 4,
+                            pixel, pixel * 4, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            pixel * 15, pixel * 6, 1 - pixel * 5,
+                            pixel, pixel * 4, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //End caps sides Output
+                    bounds(renderer,
+                            pixel * 4, pixel * 6, 0,
+                            pixel, pixel * 4, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            1 - pixel * 5, pixel * 6, 0,
+                            pixel, pixel * 4, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //Inside corner
+                    bounds(renderer,
+                            pixel * 11, pixel * 6, pixel * 4,
+                            pixel, pixel * 4, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //Outside corner
+                    bounds(renderer,
+                            pixel * 4, pixel * 6, pixel * 11,
+                            pixel, pixel * 4, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+
+                    //Upper Bars
+                    bounds(renderer,
+                            pixel * 4, pixel * 10, 0,
+                            pixel, pixel * 2, pixel * 12);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            1 - pixel * 5, pixel * 10, 0,
+                            pixel, pixel * 2, pixel * 5);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //Upper Bars
+                    bounds(renderer,
+                            pixel * 12, pixel * 10, pixel * 4,
+                            pixel * 4, pixel * 2, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            pixel * 5, pixel * 10, pixel * 11,
+                            pixel * 11, pixel * 2, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //Top Bars Input
+                    bounds(renderer,
+                            pixel * 5, pixel * 11, 0,
+                            pixel, pixel * 2, pixel * 11);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            1 - pixel * 6, pixel * 11, 0,
+                            pixel, pixel * 2, pixel * 5);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //Top Bars Input
+                    bounds(renderer,
+                            pixel * 10, pixel * 11, pixel * 5,
+                            pixel * 6, pixel * 2, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            pixel * 5, pixel * 11, pixel * 10,
+                            pixel * 11, pixel * 2, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+                }
+
+                return true;
+            }
+            else if (renderTop)
+            {
+                IIcon icon = block.getIcon(0, 15);
+                //Glass Top Output
+                bounds(renderer,
+                        pixel * 11, pixel * 12, pixel * 6,
+                        pixel * 4, pixel, pixel * 4);
+                renderBlock(renderer, block, x, y, z, icon);
+
+                //Glass Top Center
+                bounds(renderer,
+                        pixel * 6, pixel * 12, pixel * 6,
+                        pixel * 4, pixel, pixel * 4);
+                renderBlock(renderer, block, x, y, z, icon);
+
+                //Glass Top Input
+                bounds(renderer,
+                        pixel * 6, pixel * 12, pixel,
+                        pixel * 4, pixel, pixel * 4);
+                renderBlock(renderer, block, x, y, z, icon);
+
+                //Glass walls Output
+                bounds(renderer,
+                        pixel * 5, pixel * 6, pixel * 11,
+                        pixel * 10, pixel * 4, pixel);
+                renderBlock(renderer, block, x, y, z, icon);
+
+                //Glass walls Output
+                bounds(renderer,
+                        pixel * 12, pixel * 6, pixel * 4,
+                        pixel * 3, pixel * 4, pixel);
+                renderBlock(renderer, block, x, y, z, icon);
+
+                //Glass walls Input
+                bounds(renderer,
+                        pixel * 4, pixel * 6, pixel,
+                        pixel, pixel * 4, pixel * 10);
+                renderBlock(renderer, block, x, y, z, icon);
+
+                //Glass walls Input Small
+                bounds(renderer,
+                        pixel * 11, pixel * 6, pixel,
+                        pixel, pixel * 4, pixel * 3);
+                renderBlock(renderer, block, x, y, z, icon);
 
                 return true;
             }
@@ -131,12 +305,184 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
                         pixel * 11, pixel * 5, pixel * 6);
                 renderBlock(renderer, block, x, y, z, null);
 
+                //Lower bars
+                bounds(renderer,
+                        pixel * 4, pixel * 4, pixel * 11,
+                        pixel, pixel * 2, pixel * 5);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                bounds(renderer,
+                        1 - pixel * 5, pixel * 4, pixel * 4,
+                        pixel, pixel * 2, pixel * 12);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                //Lower bars
+                bounds(renderer,
+                        0, pixel * 4, pixel * 4,
+                        pixel * 11, pixel * 2, pixel);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                bounds(renderer,
+                        0, pixel * 4, pixel * 11,
+                        pixel * 4, pixel * 2, pixel);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
                 //Base input
                 renderer.uvRotateTop = 0;
                 bounds(renderer,
                         pixel * 5, 0, pixel * 11,
                         pixel * 6, pixel * 5, pixel * 5);
                 renderBlock(renderer, block, x, y, z, null);
+
+                if (renderTop)
+                {
+                    //End caps top Output
+                    bounds(renderer,
+                            0, pixel * 12, pixel * 6,
+                            pixel, pixel, pixel * 4);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            pixel * 5, pixel * 12, pixel * 6,
+                            pixel, pixel, pixel * 4);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //End caps top Input
+                    bounds(renderer,
+                            pixel * 6, pixel * 12, pixel * 15,
+                            pixel * 4, pixel, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            pixel * 6, pixel * 12, pixel * 10,
+                            pixel * 4, pixel, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //End caps sides Output
+                    bounds(renderer,
+                            0, pixel * 6, pixel * 4,
+                            pixel, pixel * 4, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            0, pixel * 6, 1 - pixel * 5,
+                            pixel, pixel * 4, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //End caps sides Output
+                    bounds(renderer,
+                            pixel * 4, pixel * 6, pixel * 15,
+                            pixel, pixel * 4, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            1 - pixel * 5, pixel * 6, pixel * 15,
+                            pixel, pixel * 4, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //Inside corner
+                    bounds(renderer,
+                            pixel * 11, pixel * 6, pixel * 4,
+                            pixel, pixel * 4, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //Outside corner
+                    bounds(renderer,
+                            pixel * 4, pixel * 6, pixel * 11,
+                            pixel, pixel * 4, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //Upper bars
+                    bounds(renderer,
+                            pixel * 4, pixel * 10, pixel * 11,
+                            pixel, pixel * 2, pixel * 5);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            1 - pixel * 5, pixel * 10, pixel * 4,
+                            pixel, pixel * 2, pixel * 12);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //Upper bars
+                    bounds(renderer,
+                            0, pixel * 10, pixel * 4,
+                            pixel * 11, pixel * 2, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            0, pixel * 10, pixel * 11,
+                            pixel * 4, pixel * 2, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //Top bars Input
+                    bounds(renderer,
+                            pixel * 5, pixel * 11, pixel * 11,
+                            pixel, pixel * 2, pixel * 5);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            1 - pixel * 6, pixel * 11, pixel * 5,
+                            pixel, pixel * 2, pixel * 11);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //Top bars Output
+                    bounds(renderer,
+                            0, pixel * 11, pixel * 5,
+                            pixel * 10, pixel * 2, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            0, pixel * 11, pixel * 10,
+                            pixel * 6, pixel * 2, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+                }
+
+                return true;
+            }
+            else if (renderTop)
+            {
+                IIcon icon = block.getIcon(0, 15);
+                //Glass Top Output
+                bounds(renderer,
+                        pixel, pixel * 12, pixel * 6,
+                        pixel * 4, pixel, pixel * 4);
+                renderBlock(renderer, block, x, y, z, icon);
+
+                //Glass Top Center
+                bounds(renderer,
+                        pixel * 6, pixel * 12, pixel * 6,
+                        pixel * 4, pixel, pixel * 4);
+                renderBlock(renderer, block, x, y, z, icon);
+
+                //Glass Top Input
+                bounds(renderer,
+                        pixel * 6, pixel * 12, pixel * 11,
+                        pixel * 4, pixel, pixel * 4);
+                renderBlock(renderer, block, x, y, z, icon);
+
+                //Glass walls Output
+                bounds(renderer,
+                        pixel, pixel * 6, pixel * 4,
+                        pixel * 10, pixel * 4, pixel);
+                renderBlock(renderer, block, x, y, z, icon);
+
+                //Glass walls Output Small
+                bounds(renderer,
+                        pixel, pixel * 6, pixel * 11,
+                        pixel * 3, pixel * 4, pixel);
+                renderBlock(renderer, block, x, y, z, icon);
+
+                //Glass walls Input
+                bounds(renderer,
+                        pixel * 11, pixel * 6, pixel * 5,
+                        pixel, pixel * 4, pixel * 10);
+                renderBlock(renderer, block, x, y, z, icon);
+
+                //Glass walls Input Small
+                bounds(renderer,
+                        pixel * 4, pixel * 6, pixel * 12,
+                        pixel, pixel * 4, pixel * 3);
+                renderBlock(renderer, block, x, y, z, icon);
 
                 return true;
             }
@@ -151,11 +497,184 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
                         pixel * 6, pixel * 5, pixel * 11);
                 renderBlock(renderer, block, x, y, z, null);
 
+                //Lower bars
+                bounds(renderer,
+                        pixel * 4, pixel * 4, pixel * 4,
+                        pixel, pixel * 2, pixel * 12);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                bounds(renderer,
+                        1 - pixel * 5, pixel * 4, pixel * 11,
+                        pixel, pixel * 2, pixel * 5);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                //Lower bars
+                bounds(renderer,
+                        pixel * 5, pixel * 4, pixel * 4,
+                        pixel * 11, pixel * 2, pixel);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                bounds(renderer,
+                        pixel * 12, pixel * 4, pixel * 11,
+                        pixel * 4, pixel * 2, pixel);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
                 renderer.uvRotateTop = 2;
                 bounds(renderer,
                         pixel * 11, 0, pixel * 5,
                         pixel * 5, pixel * 5, pixel * 6);
                 renderBlock(renderer, block, x, y, z, null);
+
+                if (renderTop)
+                {
+                    //End caps top Output
+                    bounds(renderer,
+                            pixel * 15, pixel * 12, pixel * 6,
+                            pixel, pixel, pixel * 4);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            pixel * 10, pixel * 12, pixel * 6,
+                            pixel, pixel, pixel * 4);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //End caps top Input
+                    bounds(renderer,
+                            pixel * 6, pixel * 12, pixel * 15,
+                            pixel * 4, pixel, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            pixel * 6, pixel * 12, pixel * 10,
+                            pixel * 4, pixel, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //End caps sides Input
+                    bounds(renderer,
+                            pixel * 15, pixel * 6, pixel * 4,
+                            pixel, pixel * 4, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            pixel * 15, pixel * 6, 1 - pixel * 5,
+                            pixel, pixel * 4, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //End caps sides Output
+                    bounds(renderer,
+                            pixel * 4, pixel * 6, pixel * 15,
+                            pixel, pixel * 4, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            1 - pixel * 5, pixel * 6, pixel * 15,
+                            pixel, pixel * 4, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //Outside corner
+                    bounds(renderer,
+                            pixel * 4, pixel * 6, pixel * 4,
+                            pixel, pixel * 4, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //Inside corner
+                    bounds(renderer,
+                            pixel * 11, pixel * 6, pixel * 11,
+                            pixel, pixel * 4, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+
+                    //Upper bars
+                    bounds(renderer,
+                            pixel * 4, pixel * 10, pixel * 4,
+                            pixel, pixel * 2, pixel * 12);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            1 - pixel * 5, pixel * 10, pixel * 11,
+                            pixel, pixel * 2, pixel * 5);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //Upper bars
+                    bounds(renderer,
+                            pixel * 5, pixel * 10, pixel * 4,
+                            pixel * 11, pixel * 2, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            pixel * 12, pixel * 10, pixel * 11,
+                            pixel * 4, pixel * 2, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //Upper bars
+                    bounds(renderer,
+                            pixel * 5, pixel * 11, pixel * 5,
+                            pixel, pixel * 2, pixel * 11);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            pixel * 10, pixel * 11, pixel * 10,
+                            pixel, pixel * 2, pixel * 6);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //Upper bars
+                    bounds(renderer,
+                            pixel * 5, pixel * 11, pixel * 5,
+                            pixel * 11, pixel * 2, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            pixel * 11, pixel * 11, pixel * 10,
+                            pixel * 5, pixel * 2, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+                }
+                return true;
+            }
+            else if (renderTop)
+            {
+                IIcon icon = block.getIcon(0, 15);
+                //Glass Top Input
+                bounds(renderer,
+                        pixel * 11, pixel * 12, pixel * 6,
+                        pixel * 4, pixel, pixel * 4);
+                renderBlock(renderer, block, x, y, z, icon);
+
+                //Glass Top Center
+                bounds(renderer,
+                        pixel * 6, pixel * 12, pixel * 6,
+                        pixel * 4, pixel, pixel * 4);
+                renderBlock(renderer, block, x, y, z, icon);
+
+                //Glass Top Output
+                bounds(renderer,
+                        pixel * 6, pixel * 12, pixel * 11,
+                        pixel * 4, pixel, pixel * 4);
+                renderBlock(renderer, block, x, y, z, icon);
+
+                //Glass walls Input
+                bounds(renderer,
+                        pixel * 5, pixel * 6, pixel * 4,
+                        pixel * 10, pixel * 4, pixel);
+                renderBlock(renderer, block, x, y, z, icon);
+
+                //Glass walls Input Small
+                bounds(renderer,
+                        pixel * 12, pixel * 6, pixel * 11,
+                        pixel * 3, pixel * 4, pixel);
+                renderBlock(renderer, block, x, y, z, icon);
+
+                //Glass walls Output
+                bounds(renderer,
+                        pixel * 4, pixel * 6, pixel * 5,
+                        pixel, pixel * 4, pixel * 10);
+                renderBlock(renderer, block, x, y, z, icon);
+
+                //Glass walls Output Small
+                bounds(renderer,
+                        pixel * 11, pixel * 6, pixel * 12,
+                        pixel, pixel * 4, pixel * 3);
+                renderBlock(renderer, block, x, y, z, icon);
+
                 return true;
             }
         }
@@ -169,8 +688,27 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
                         pixel * 6, pixel * 5, pixel * 11);
                 renderBlock(renderer, block, x, y, z, null);
 
-                //Base input
+                //Lower bars
+                bounds(renderer,
+                        pixel * 4, pixel * 4, 0,
+                        pixel, pixel * 2, pixel * 5);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
+                bounds(renderer,
+                        1 - pixel * 5, pixel * 4, 0,
+                        pixel, pixel * 2, pixel * 12);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                //Lower bars
+                bounds(renderer,
+                        0, pixel * 4, pixel * 4,
+                        pixel * 4, pixel * 2, pixel);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                bounds(renderer,
+                        0, pixel * 4, pixel * 11,
+                        pixel * 11, pixel * 2, pixel);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
                 //Base input
                 renderer.uvRotateTop = 1;
@@ -178,6 +716,156 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
                         0, 0, pixel * 5,
                         pixel * 5, pixel * 5, pixel * 6);
                 renderBlock(renderer, block, x, y, z, null);
+
+                if (renderTop)
+                {
+                    //End caps top Output
+                    bounds(renderer,
+                            0, pixel * 12, pixel * 6,
+                            pixel, pixel, pixel * 4);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            pixel * 5, pixel * 12, pixel * 6,
+                            pixel, pixel, pixel * 4);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //End caps top Input
+                    bounds(renderer,
+                            pixel * 6, pixel * 12, 0,
+                            pixel * 4, pixel, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            pixel * 6, pixel * 12, pixel * 5,
+                            pixel * 4, pixel, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //End caps sides Output
+                    bounds(renderer,
+                            0, pixel * 6, pixel * 4,
+                            pixel, pixel * 4, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            0, pixel * 6, 1 - pixel * 5,
+                            pixel, pixel * 4, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //End caps sides Output
+                    bounds(renderer,
+                            pixel * 4, pixel * 6, 0,
+                            pixel, pixel * 4, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            1 - pixel * 5, pixel * 6, 0,
+                            pixel, pixel * 4, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //Inside corner
+                    bounds(renderer,
+                            pixel * 4, pixel * 6, pixel * 4,
+                            pixel, pixel * 4, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //Outside corner
+                    bounds(renderer,
+                            pixel * 11, pixel * 6, pixel * 11,
+                            pixel, pixel * 4, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //Upper bars
+                    bounds(renderer,
+                            pixel * 4, pixel * 10, 0,
+                            pixel, pixel * 2, pixel * 5);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            1 - pixel * 5, pixel * 10, 0,
+                            pixel, pixel * 2, pixel * 12);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //Upper bars
+                    bounds(renderer,
+                            0, pixel * 10, pixel * 4,
+                            pixel * 4, pixel * 2, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            0, pixel * 10, pixel * 11,
+                            pixel * 11, pixel * 2, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //Top bars
+                    bounds(renderer,
+                            pixel * 5, pixel * 11, 0,
+                            pixel, pixel * 2, pixel * 5);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            pixel * 10, pixel * 11, 0,
+                            pixel, pixel * 2, pixel * 11);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    //Top bars
+                    bounds(renderer,
+                            0, pixel * 11, pixel * 5,
+                            pixel * 6, pixel * 2, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                    bounds(renderer,
+                            0, pixel * 11, pixel * 10,
+                            pixel * 10, pixel * 2, pixel);
+                    renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+                }
+                return true;
+            }
+            else if (renderTop)
+            {
+                IIcon icon = block.getIcon(0, 15);
+                //Glass Top Input
+                bounds(renderer,
+                        pixel, pixel * 12, pixel * 6,
+                        pixel * 4, pixel, pixel * 4);
+                renderBlock(renderer, block, x, y, z, icon);
+
+                //Glass Top Center
+                bounds(renderer,
+                        pixel * 6, pixel * 12, pixel * 6,
+                        pixel * 4, pixel, pixel * 4);
+                renderBlock(renderer, block, x, y, z, icon);
+
+                //Glass Top Output
+                bounds(renderer,
+                        pixel * 6, pixel * 12, pixel * 1,
+                        pixel * 4, pixel, pixel * 4);
+                renderBlock(renderer, block, x, y, z, icon);
+
+                //Glass walls Input
+                bounds(renderer,
+                        pixel, pixel * 6, pixel * 11,
+                        pixel * 10, pixel * 4, pixel);
+                renderBlock(renderer, block, x, y, z, icon);
+
+                //Glass walls Input Small
+                bounds(renderer,
+                        pixel, pixel * 6, pixel * 4,
+                        pixel * 3, pixel * 4, pixel);
+                renderBlock(renderer, block, x, y, z, icon);
+
+                //Glass walls Output
+                bounds(renderer,
+                        pixel * 11, pixel * 6, pixel,
+                        pixel, pixel * 4, pixel * 10);
+                renderBlock(renderer, block, x, y, z, icon);
+
+                //Glass walls Output Small
+                bounds(renderer,
+                        pixel * 4, pixel * 6, pixel,
+                        pixel, pixel * 4, pixel * 3);
+                renderBlock(renderer, block, x, y, z, icon);
+
                 return true;
             }
         }
@@ -197,6 +885,28 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
                         pixel * 11, pixel * 5, pixel * 6);
                 renderBlock(renderer, block, x, y, z, null);
 
+                //Lower bars input
+                bounds(renderer,
+                        pixel * 4, pixel * 4, pixel * 4,
+                        pixel, pixel * 2, pixel * 12);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                bounds(renderer,
+                        1 - pixel * 5, pixel * 4, pixel * 11,
+                        pixel, pixel * 2, pixel * 5);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                //Lower bars input
+                bounds(renderer,
+                        pixel * 12, pixel * 4, pixel * 11,
+                        pixel * 4, pixel * 2, pixel);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                bounds(renderer,
+                        pixel * 5, pixel * 4, pixel * 4,
+                        pixel * 11, pixel * 2, pixel);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
                 //Base input
                 renderer.uvRotateTop = 0;
                 bounds(renderer,
@@ -216,6 +926,27 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
                         pixel * 11, pixel * 5, pixel * 6);
                 renderBlock(renderer, block, x, y, z, null);
 
+                //Lower bars input
+                bounds(renderer,
+                        pixel * 4, pixel * 4, 0,
+                        pixel, pixel * 2, pixel * 5);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                bounds(renderer,
+                        1 - pixel * 5, pixel * 4, 0,
+                        pixel, pixel * 2, pixel * 12);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                //Lower bars input
+                bounds(renderer,
+                        0, pixel * 4, pixel * 11,
+                        pixel * 11, pixel * 2, pixel);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                bounds(renderer,
+                        0, pixel * 4, pixel * 4,
+                        pixel * 4, pixel * 2, pixel);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
                 //Base input
                 renderer.uvRotateTop = 3;
@@ -236,6 +967,28 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
                         pixel * 6, pixel * 5, pixel * 11);
                 renderBlock(renderer, block, x, y, z, null);
 
+                //Lower bars output
+                bounds(renderer,
+                        pixel * 4, pixel * 4, pixel * 11,
+                        pixel, pixel * 2, pixel * 5);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                bounds(renderer,
+                        1 - pixel * 5, pixel * 4, pixel * 4,
+                        pixel, pixel * 2, pixel * 12);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                //Lower bars input
+                bounds(renderer,
+                        0, pixel * 4, pixel * 11,
+                        pixel * 4, pixel * 2, pixel);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                bounds(renderer,
+                        0, pixel * 4, pixel * 4,
+                        pixel * 11, pixel * 2, pixel);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
                 //Base input
                 renderer.uvRotateTop = 1;
                 bounds(renderer,
@@ -254,6 +1007,28 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
                         pixel * 5, 0, 0,
                         pixel * 6, pixel * 5, pixel * 11);
                 renderBlock(renderer, block, x, y, z, null);
+
+                //Lower bars output
+                bounds(renderer,
+                        pixel * 4, pixel * 4, 0,
+                        pixel, pixel * 2, pixel * 12);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                bounds(renderer,
+                        1 - pixel * 5, pixel * 4, 0,
+                        pixel, pixel * 2, pixel * 5);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                //Lower bars input
+                bounds(renderer,
+                        pixel * 12, pixel * 4, pixel * 4,
+                        pixel * 4, pixel * 2, pixel);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                bounds(renderer,
+                        pixel * 5, pixel * 4, pixel * 11,
+                        pixel * 11, pixel * 2, pixel);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
 
                 //Base input
                 renderer.uvRotateTop = 2;
