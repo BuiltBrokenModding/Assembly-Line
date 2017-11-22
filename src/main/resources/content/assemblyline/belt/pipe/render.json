@@ -3,6 +3,7 @@
     "contentID": "assemblyline:beltPipe",
     "type": "tile",
     "tileClass": "com.builtbroken.assemblyline.content.belt.gen.TileEntityWrappedPipeBelt",
+    "spriteIndexForItems": 1,
     "states": [
       {
         "id": "item.inventory",
@@ -17,34 +18,35 @@
       {
         "id": "item.inventory.elbow.left",
         "renderType": "item",
-        "texture": "assemblyline:belt.pipe.left"
+        "textureID": "assemblyline:belt.pipe.left"
       },
       {
         "id": "item.inventory.elbow.right",
         "renderType": "item",
-        "texture": "assemblyline:belt.pipe.right"
+        "textureID": "assemblyline:belt.pipe.right"
       },
       {
         "id": "item.inventory.junction",
         "renderType": "item",
-        "texture": "assemblyline:belt.pipe.junction"
+        "textureID": "assemblyline:belt.pipe.junction"
       },
       {
         "id": "item.inventory.intersection",
         "renderType": "item",
-        "texture": "assemblyline:belt.pipe.intersection"
+        "textureID": "assemblyline:belt.pipe.intersection"
       },
       {
         "id": "block.15",
         "renderType": "block",
-        "texture": "assemblyline:belt.pipe.glass"
+        "textureID": "assemblyline:belt.pipe.glass"
       },
       {
         "id": "block.1",
         "renderType": "block",
         "side:0": "assemblyline:belt.pipe.frame",
         "side:1": "assemblyline:belt.pipe.top",
-        "side:2": "assemblyline:belt.pipe.body"
+        "side:2": "assemblyline:belt.pipe.body",
+        "side:3": "assemblyline:belt.pipe.top.inverse"
       },
       {
         "id": "block",
