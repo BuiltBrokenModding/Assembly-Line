@@ -36,22 +36,27 @@
     "subtypes": [
       {
         "id": "normal",
+        "name" :"normal",
         "meta": 0
       },
       {
         "id": "elbow.left",
+        "name" :"elbow.left",
         "meta": 1
       },
       {
         "id": "elbow.right",
+        "name":"elbow.right",
         "meta": 2
       },
       {
         "id": "junction",
+        "name":"junction",
         "meta": 3
       },
       {
         "id": "intersection",
+        "name":"intersection",
         "meta": 4
       }
     ]
