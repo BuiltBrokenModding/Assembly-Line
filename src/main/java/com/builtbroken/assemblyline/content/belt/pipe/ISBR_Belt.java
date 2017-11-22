@@ -92,6 +92,197 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
         {
             rendered = renderRightElbow(x, y, z, block, renderer, direction, renderTop);
         }
+        else if (type == BeltType.JUNCTION)
+        {
+            if (direction == Direction.WEST)
+            {
+                if (pass == 0)
+                {
+                    //Base facing
+                    bounds(renderer,
+                            pixel * 5, 0, pixel * 5,
+                            pixel * 11, pixel * 5, pixel * 6);
+                    renderBlock(renderer, block, x, y, z, null);
+
+                    //Base input
+                    renderer.uvRotateTop = 3;
+                    bounds(renderer,
+                            pixel * 5, 0, 0,
+                            pixel * 6, pixel * 5, pixel * 5);
+                    renderBlock(renderer, block, x, y, z, null);
+
+                    //Base input
+                    renderer.uvRotateTop = 0;
+                    bounds(renderer,
+                            pixel * 5, 0, pixel * 11,
+                            pixel * 6, pixel * 5, pixel * 5);
+                    renderBlock(renderer, block, x, y, z, null);
+
+                    rendered = true;
+                }
+            }
+            else if (direction == Direction.EAST)
+            {
+                if (pass == 0)
+                {
+                    //Base facing
+                    bounds(renderer,
+                            0, 0, pixel * 5,
+                            pixel * 11, pixel * 5, pixel * 6);
+                    renderBlock(renderer, block, x, y, z, null);
+
+                    //Base input
+                    renderer.uvRotateTop = 3;
+                    bounds(renderer,
+                            pixel * 5, 0, 0,
+                            pixel * 6, pixel * 5, pixel * 5);
+                    renderBlock(renderer, block, x, y, z, null);
+
+                    //Base input
+                    renderer.uvRotateTop = 0;
+                    bounds(renderer,
+                            pixel * 5, 0, pixel * 11,
+                            pixel * 6, pixel * 5, pixel * 5);
+                    renderBlock(renderer, block, x, y, z, null);
+
+                    rendered = true;
+                }
+            }
+            else if (direction == Direction.NORTH)
+            {
+                if (pass == 0)
+                {
+                    //Base facing
+                    bounds(renderer,
+                            pixel * 5, 0, pixel * 5,
+                            pixel * 6, pixel * 5, pixel * 11);
+                    renderBlock(renderer, block, x, y, z, null);
+
+                    //Base input
+                    renderer.uvRotateTop = 1;
+                    bounds(renderer,
+                            0, 0, pixel * 5,
+                            pixel * 5, pixel * 5, pixel * 6);
+                    renderBlock(renderer, block, x, y, z, null);
+
+                    //Base input
+                    renderer.uvRotateTop = 2;
+                    bounds(renderer,
+                            pixel * 11, 0, pixel * 5,
+                            pixel * 5, pixel * 5, pixel * 6);
+                    renderBlock(renderer, block, x, y, z, null);
+
+                    rendered = true;
+                }
+            }
+            else if (direction == Direction.SOUTH)
+            {
+                if (pass == 0)
+                {
+                    //Base facing
+                    bounds(renderer,
+                            pixel * 5, 0, 0,
+                            pixel * 6, pixel * 5, pixel * 11);
+                    renderBlock(renderer, block, x, y, z, null);
+
+                    //Base input
+                    renderer.uvRotateTop = 1;
+                    bounds(renderer,
+                            0, 0, pixel * 5,
+                            pixel * 5, pixel * 5, pixel * 6);
+                    renderBlock(renderer, block, x, y, z, null);
+
+                    //Base input
+                    renderer.uvRotateTop = 2;
+                    bounds(renderer,
+                            pixel * 11, 0, pixel * 5,
+                            pixel * 5, pixel * 5, pixel * 6);
+                    renderBlock(renderer, block, x, y, z, null);
+
+                    rendered = true;
+                }
+            }
+        }
+        else if (type == BeltType.INTERSECTION)
+        {
+            if (pass == 0)
+            {
+                BlockWrapper wrapper = new BlockWrapper(block);
+                wrapper.setIcon(Direction.UP, block.getIcon(3, 1));
+
+                //Center
+                bounds(renderer,
+                        pixel * 5, 0, pixel * 5,
+                        pixel * 6, pixel * 5, pixel * 6);
+                renderBlock(renderer, wrapper, x, y, z, null);
+
+                //North
+                renderer.uvRotateTop = 3;
+                if (direction == Direction.NORTH)
+                {
+                    renderer.uvRotateTop = 0;
+                    wrapper.setIcon(Direction.UP, block.getIcon(1, 0));
+                }
+                else
+                {
+                    wrapper.setIcon(Direction.UP, block.getIcon(3, 1));
+                }
+                bounds(renderer,
+                        pixel * 5, 0, 0,
+                        pixel * 6, pixel * 5, pixel * 5);
+                renderBlock(renderer, wrapper, x, y, z, null);
+
+                //South
+                renderer.uvRotateTop = 0;
+                if (direction == Direction.SOUTH)
+                {
+                    renderer.uvRotateTop = 3;
+                    wrapper.setIcon(Direction.UP, block.getIcon(1, 0));
+                }
+                else
+                {
+                    wrapper.setIcon(Direction.UP, block.getIcon(3, 1));
+                }
+                bounds(renderer,
+                        pixel * 5, 0, pixel * 11,
+                        pixel * 6, pixel * 5, pixel * 5);
+                renderBlock(renderer, wrapper, x, y, z, null);
+
+                //West
+                renderer.uvRotateTop = 1;
+                if (direction == Direction.EAST)
+                {
+                    renderer.uvRotateTop = 2;
+                    wrapper.setIcon(Direction.UP, block.getIcon(1, 0));
+                }
+                else
+                {
+                    wrapper.setIcon(Direction.UP, block.getIcon(3, 1));
+                }
+                bounds(renderer,
+                        0, 0, pixel * 5,
+                        pixel * 5, pixel * 5, pixel * 6);
+                renderBlock(renderer, wrapper, x, y, z, null);
+
+                //East
+                renderer.uvRotateTop = 2;
+                if (direction == Direction.WEST)
+                {
+                    renderer.uvRotateTop = 1;
+                    wrapper.setIcon(Direction.UP, block.getIcon(1, 0));
+                }
+                else
+                {
+                    wrapper.setIcon(Direction.UP, block.getIcon(3, 1));
+                }
+                bounds(renderer,
+                        pixel * 11, 0, pixel * 5,
+                        pixel * 5, pixel * 5, pixel * 6);
+                renderBlock(renderer, wrapper, x, y, z, null);
+
+                rendered = true;
+            }
+        }
 
         renderer.uvRotateTop = prevUVTop;
         renderer.setRenderAllFaces(false);

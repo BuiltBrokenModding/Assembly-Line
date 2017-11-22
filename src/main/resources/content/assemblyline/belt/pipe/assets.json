@@ -11,6 +11,12 @@
     "name": "belt.pipe.top",
     "type": "block"
   },
+  "texture:1B": {
+    "key": "assemblyline:belt.pipe.top.inverse",
+    "domain": "assemblyline",
+    "name": "belt.pipe.top.inverse",
+    "type": "block"
+  },
   "texture:2": {
     "key": "assemblyline:belt.pipe.body",
     "domain": "assemblyline",
