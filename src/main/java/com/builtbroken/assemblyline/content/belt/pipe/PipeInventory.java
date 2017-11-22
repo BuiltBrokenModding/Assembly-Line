@@ -1,7 +1,7 @@
 package com.builtbroken.assemblyline.content.belt.pipe;
 
 import com.builtbroken.assemblyline.content.belt.TilePipeBelt;
-import com.builtbroken.assemblyline.content.belt.pipe.data.BeltSlotState;
+import com.builtbroken.assemblyline.content.belt.pipe.data.BeltSideState;
 import com.builtbroken.mc.api.tile.node.IExternalInventory;
 import com.builtbroken.mc.prefab.inventory.BasicInventory;
 import net.minecraft.entity.player.EntityPlayer;
@@ -51,14 +51,7 @@ public class PipeInventory extends BasicInventory implements IExternalInventory,
             for(int side = 0; side < 6; side++)
             {
                 ArrayList<Integer> list = new ArrayList();
-                for(BeltSlotState state : host.getInputs())
-                {
-                    if(state != null && state.side.ordinal() == side)
-                    {
-                        list.add(state.slotID);
-                    }
-                }
-                for(BeltSlotState state : host.getOutputs())
+                for(BeltSideState state : host.getBeltStates())
                 {
                     if(state != null && state.side.ordinal() == side)
                     {

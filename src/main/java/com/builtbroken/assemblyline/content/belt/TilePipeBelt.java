@@ -3,8 +3,8 @@ package com.builtbroken.assemblyline.content.belt;
 import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.content.belt.pipe.BeltType;
 import com.builtbroken.assemblyline.content.belt.pipe.PipeInventory;
-import com.builtbroken.assemblyline.content.belt.pipe.data.BeltSlotState;
-import com.builtbroken.assemblyline.content.belt.pipe.data.BeltState;
+import com.builtbroken.assemblyline.content.belt.pipe.data.BeltSideState;
+import com.builtbroken.assemblyline.content.belt.pipe.data.BeltSideStateIterator;
 import com.builtbroken.assemblyline.content.belt.pipe.gui.ContainerPipeBelt;
 import com.builtbroken.assemblyline.content.belt.pipe.gui.GuiPipeBelt;
 import com.builtbroken.jlib.type.Pair;
@@ -17,9 +17,9 @@ import com.builtbroken.mc.core.network.packet.PacketType;
 import com.builtbroken.mc.framework.block.imp.IWrenchListener;
 import com.builtbroken.mc.framework.logic.TileNode;
 import com.builtbroken.mc.imp.transform.vector.Location;
-import com.builtbroken.mc.lib.helper.BlockUtility;
 import com.builtbroken.mc.prefab.inventory.BasicInventory;
 import com.builtbroken.mc.prefab.inventory.InventoryUtility;
+import com.google.common.collect.ImmutableList;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.item.EntityItem;
@@ -30,6 +30,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 11/14/2017.
@@ -37,6 +41,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 @TileWrapped(className = ".gen.TileEntityWrappedPipeBelt", wrappers = "ExternalInventory")
 public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProvider<PipeInventory>, IGuiTile, IWrenchListener
 {
+    //============================================================
+    //==================== Constants =============================
+    //============================================================
     public static final int PACKET_INVENTORY = 1;
     public static final int PACKET_GUI_BUTTON = 2;
 
@@ -44,13 +51,14 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     public static final int BUTTON_RENDER_TOP = 1;
     public static final int BUTTON_ITEM_EJECT = 2;
 
-    //TODO fixed sided slots for inventory
     /** Cached state map of direction to input sides & slots */
-    public static BeltSlotState[][][] inputStates;
-    /** Cached state map of direction to output sides & slots */
-    public static BeltSlotState[][][] outputStates;
+    public static List<BeltSideState>[/* belt type */][/* rotation */] cachedBeltStates;
 
     public static int[] centerSlots = new int[]{2};
+
+    public static final List<BeltSideState> EMPTY_LIST = ImmutableList.of();
+
+    //============================================================
 
     //Main inventory
     private PipeInventory inventory;
@@ -60,9 +68,6 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
 
     //Type of belt
     public BeltType type = BeltType.NORMAL;
-
-    //Belt states, used for filters and inverting belt directions
-    private BeltState[] beltStates = new BeltState[4];
 
     //Send inventory update to client
     private boolean sendInvToClient = true;
@@ -77,9 +82,14 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
 
     public BasicInventory renderInventory;
 
+    private BeltSideStateIterator inputIterator;
+    private BeltSideStateIterator outputIterator;
+
     public TilePipeBelt()
     {
         super("pipeBelt", AssemblyLine.DOMAIN);
+        inputIterator = new BeltSideStateIterator(this, false);
+        outputIterator = new BeltSideStateIterator(this, true);
     }
 
     @Override
@@ -132,11 +142,12 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     protected void exportItems()
     {
         //Push outputs to next belt or machine
-        BeltSlotState[] states = getOutputs();
-        if (states != null)
+        Iterator<BeltSideState> states = beltOutputIterator();
+        if (states != null && centerSlots != null)
         {
-            for (BeltSlotState slotState : states)
+            while (states.hasNext())
             {
+                BeltSideState slotState = states.next();
                 if (slotState != null)
                 {
                     //Get output position
@@ -184,14 +195,15 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
      */
     protected void centerToOutput()
     {
-        int[] centerSlots = getCenterSlots();
-        BeltSlotState[] states = getOutputs();
+        int[] centerSlots = getCenterSlots(); //TODO change to inventory
 
         //Center to output
-        if (states != null)
+        Iterator<BeltSideState> states = beltOutputIterator();
+        if (states != null && centerSlots != null)
         {
-            for (BeltSlotState slotState : states)
+            while (states.hasNext())
             {
+                BeltSideState slotState = states.next();
                 if (slotState != null)
                 {
                     if (getInventory().getStackInSlot(slotState.slotID) == null)
@@ -212,6 +224,7 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         }
     }
 
+
     /**
      * Pushes input slots to center. Does round robin
      * logic and sorting to ensure correct order of
@@ -225,11 +238,12 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         //Index will be used to note starting point for loop
         //Example: 0 1 2 (moved item) next tick > 1 2 0 (moved item) > 2 0 1
 
-        BeltSlotState[] states = getInputs();
+        Iterator<BeltSideState> states = beltInputIterator();
         if (states != null)
         {
-            for (BeltSlotState slotState : states)
+            while (states.hasNext())
             {
+                BeltSideState slotState = states.next();
                 if (slotState != null)
                 {
                     ItemStack stackToMove = getInventory().getStackInSlot(slotState.slotID);
@@ -255,34 +269,37 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
      */
     protected void importItems()
     {
-        BeltSlotState[] states = getInputs();
-        if (states != null && pullItems)
+        if (pullItems)
         {
-            for (BeltSlotState slotState : states)
+            Iterator<BeltSideState> states = beltInputIterator();
+            if (states != null)
             {
-                if (slotState != null)
+                while (states.hasNext())
                 {
-                    ItemStack currentItem = getInventory().getStackInSlot(slotState.slotID);
-                    if (currentItem == null)
+                    BeltSideState slotState = states.next();
+                    if (slotState != null)
                     {
-                        //Get inventory
-                        IInventory tileInv = null;
-                        TileEntity tile = toLocation().add(slotState.side).getTileEntity();
-                        if (tile instanceof IInventory)
+                        ItemStack currentItem = getInventory().getStackInSlot(slotState.slotID);
+                        if (currentItem == null)
                         {
-                            tileInv = (IInventory) tile;
-                        }
-
-                        //Has inventory try to find item
-                        if (tileInv != null)
-                        {
-                            BeltState beltState = getStateForSide(slotState.side);
-                            Pair<ItemStack, Integer> slotData = InventoryUtility.findFirstItemInInventory(tileInv,
-                                    slotState.side.getOpposite().ordinal(), getItemsToPullPerCycle(), beltState != null ? beltState.filter : null);
-                            if (slotData != null)
+                            //Get inventory
+                            IInventory tileInv = null;
+                            TileEntity tile = toLocation().add(slotState.side).getTileEntity();
+                            if (tile instanceof IInventory)
                             {
-                                ItemStack inputStack = tileInv.decrStackSize(slotData.right(), slotData.left().stackSize);
-                                getInventory().setInventorySlotContents(slotState.slotID, inputStack);
+                                tileInv = (IInventory) tile;
+                            }
+
+                            //Has inventory try to find item
+                            if (tileInv != null)
+                            {
+                                Pair<ItemStack, Integer> slotData = InventoryUtility.findFirstItemInInventory(tileInv,
+                                        slotState.side.getOpposite().ordinal(), getItemsToPullPerCycle(), slotState.filter);
+                                if (slotData != null)
+                                {
+                                    ItemStack inputStack = tileInv.decrStackSize(slotData.right(), slotData.left().stackSize);
+                                    getInventory().setInventorySlotContents(slotState.slotID, inputStack);
+                                }
                             }
                         }
                     }
@@ -328,11 +345,6 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         return 1;
     }
 
-    public BeltState getStateForSide(ForgeDirection direction)
-    {
-        return beltStates[BlockUtility.directionToRotation(direction)];
-    }
-
     @Override
     public ForgeDirection getDirection()
     {
@@ -367,11 +379,12 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     @Override
     public boolean canStore(ItemStack stack, int slot, ForgeDirection side)
     {
-        BeltSlotState[] states = getInputs();
+        Iterator<BeltSideState> states = beltInputIterator();
         if (states != null)
         {
-            for (BeltSlotState state : states)
+            while (states.hasNext())
             {
+                BeltSideState state = states.next();
                 if (state != null && slot == state.slotID)
                 {
                     return state.side == side;
@@ -384,11 +397,12 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     @Override
     public boolean canRemove(ItemStack stack, int slot, ForgeDirection side)
     {
-        BeltSlotState[] states = getOutputs();
+        Iterator<BeltSideState> states = beltOutputIterator();
         if (states != null)
         {
-            for (BeltSlotState state : states)
+            while (states.hasNext())
             {
+                BeltSideState state = states.next();
                 if (state != null && slot == state.slotID)
                 {
                     return state.side == side;
@@ -404,22 +418,23 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         sendInvToClient = true;
     }
 
-    public BeltSlotState[] getInputs()
+    public Iterator<BeltSideState> beltInputIterator()
     {
-        if (type != BeltType.T_SECTION && type != BeltType.INTERSECTION)
-        {
-            return inputStates[type.ordinal()][getDirection().ordinal()];
-        }
-        return null;
+        return inputIterator;
     }
 
-    public BeltSlotState[] getOutputs()
+    public Iterator<BeltSideState> beltOutputIterator()
     {
-        if (type != BeltType.T_SECTION && type != BeltType.INTERSECTION)
+        return outputIterator;
+    }
+
+    public List<BeltSideState> getBeltStates()
+    {
+        if (type != BeltType.JUNCTION && type != BeltType.INTERSECTION)
         {
-            return outputStates[type.ordinal()][getDirection().ordinal()];
+            return cachedBeltStates[type.ordinal()][getDirection().ordinal()];
         }
-        return null;
+        return EMPTY_LIST;
     }
 
     public int[] getCenterSlots()
@@ -579,14 +594,22 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
 
     static
     {
-        inputStates = new BeltSlotState[3][6][];
-        outputStates = new BeltSlotState[3][6][];
+        generateBeltStates();
+    }
+
+    public static void generateBeltStates()
+    {
+        cachedBeltStates = new ArrayList[3][6];
         ForgeDirection[] rotations = new ForgeDirection[]{ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.EAST, ForgeDirection.WEST};
         for (ForgeDirection direction : rotations)
         {
-            inputStates[BeltType.NORMAL.ordinal()][direction.ordinal()] = new BeltSlotState[]{new BeltSlotState(0, direction)};
-            outputStates[BeltType.NORMAL.ordinal()][direction.ordinal()] = new BeltSlotState[]{new BeltSlotState(1, direction.getOpposite())};
+            //Generate cached state for normal belt for side
+            List<BeltSideState> normalBeltState = new ArrayList();
+            normalBeltState.add(new BeltSideState(0, direction, false, false));
+            normalBeltState.add(new BeltSideState(1, direction.getOpposite(), false, true));
+            cachedBeltStates[BeltType.NORMAL.ordinal()][direction.ordinal()] = normalBeltState;
 
+            //Get rotation
             ForgeDirection turn;
             switch (direction)
             {
@@ -604,11 +627,24 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
                     break;
             }
 
-            outputStates[BeltType.LEFT_ELBOW.ordinal()][direction.ordinal()] = new BeltSlotState[]{new BeltSlotState(0, direction.getOpposite())};
-            inputStates[BeltType.LEFT_ELBOW.ordinal()][direction.ordinal()] = new BeltSlotState[]{new BeltSlotState(1, turn)};
+            //Generate left elbow
+            List<BeltSideState> leftBeltState = new ArrayList();
+            leftBeltState.add(new BeltSideState(0, direction.getOpposite(), false, true));
+            leftBeltState.add(new BeltSideState(1, turn, false, false));
+            cachedBeltStates[BeltType.LEFT_ELBOW.ordinal()][direction.ordinal()] = leftBeltState;
 
-            outputStates[BeltType.RIGHT_ELBOW.ordinal()][direction.ordinal()] = new BeltSlotState[]{new BeltSlotState(0, direction.getOpposite())};
-            inputStates[BeltType.RIGHT_ELBOW.ordinal()][direction.ordinal()] = new BeltSlotState[]{new BeltSlotState(1, turn)};
+            //Generate right elbow
+            List<BeltSideState> rightBeltState = new ArrayList();
+            rightBeltState.add(new BeltSideState(0, direction.getOpposite(), false, true));
+            rightBeltState.add(new BeltSideState(1, turn, false, false));
+            cachedBeltStates[BeltType.RIGHT_ELBOW.ordinal()][direction.ordinal()] = rightBeltState;
+
+            //Generate junction
+            List<BeltSideState> junctionBeltState = new ArrayList();
+            junctionBeltState.add(new BeltSideState(0, direction.getOpposite(), false, true));
+            junctionBeltState.add(new BeltSideState(1, turn, false, false));
+            junctionBeltState.add(new BeltSideState(3, turn.getOpposite(), false, false));
+            cachedBeltStates[BeltType.JUNCTION.ordinal()][direction.ordinal()] = junctionBeltState;
         }
     }
 }
