@@ -1,6 +1,7 @@
 package com.builtbroken.assemblyline.content.belt;
 
 import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.assemblyline.content.belt.gen.TileEntityWrappedPipeBelt;
 import com.builtbroken.assemblyline.content.belt.pipe.BeltType;
 import com.builtbroken.assemblyline.content.belt.pipe.PipeInventory;
 import com.builtbroken.assemblyline.content.belt.pipe.data.BeltSideState;
@@ -80,6 +81,11 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     /** Should the pipe trigger a re-render */
     public boolean shouldUpdateRender = false;
 
+    /** Time in ticks until next movement */
+    public int movementTimer = 20;
+    /** Time to set movement timer each time an item is moved */
+    public int movementDelay = 20;
+
     public BasicInventory renderInventory;
 
     private BeltSideStateIterator inputIterator;
@@ -98,7 +104,13 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         super.update(ticks);
         if (isServer())
         {
-            if (ticks % 20 == 0)
+            if (movementTimer > 0)
+            {
+                movementTimer--;
+            }
+
+            //Only moves items if there has been a chance in inventory
+            if (movementTimer <= 0 && ticks % 3 == 0)
             {
                 //Inventory movement
                 //1. OUTPUT:                    Push items from output to tiles
@@ -132,6 +144,16 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
                 shouldUpdateRender = false;
             }
         }
+    }
+
+    /**
+     * @param fromSlot slot, or -1 to note external
+     * @param toSlot   slot, or -1 to note external
+     * @param stack    stack moved
+     */
+    protected void onItemMoved(int fromSlot, int toSlot, ItemStack stack)
+    {
+        movementTimer = movementDelay;
     }
 
     /**
@@ -182,6 +204,9 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
                             stack = InventoryUtility.insertStack(outputLocation, stack, slotState.side.getOpposite().ordinal(), false);
                         }
                         getInventory().setInventorySlotContents(slotState.slotID, stack);
+
+                        //Fire event
+                        onItemMoved(slotState.slotID, -1, stack);
                     }
                 }
             }
@@ -215,6 +240,9 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
                             {
                                 getInventory().setInventorySlotContents(slotState.slotID, stackToMove);
                                 getInventory().setInventorySlotContents(centerSlot, null);
+
+                                //Fire event
+                                onItemMoved(centerSlot, slotState.slotID, stackToMove);
                                 break;
                             }
                         }
@@ -255,6 +283,9 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
                             {
                                 getInventory().setInventorySlotContents(centerSlot, stackToMove);
                                 getInventory().setInventorySlotContents(slotState.slotID, null);
+
+                                //Fire event
+                                onItemMoved(slotState.slotID, centerSlot, stackToMove);
                                 break;
                             }
                         }
@@ -269,37 +300,37 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
      */
     protected void importItems()
     {
-        if (pullItems)
+        Iterator<BeltSideState> states = beltInputIterator();
+        if (states != null)
         {
-            Iterator<BeltSideState> states = beltInputIterator();
-            if (states != null)
+            while (states.hasNext())
             {
-                while (states.hasNext())
+                BeltSideState slotState = states.next();
+                if (slotState != null)
                 {
-                    BeltSideState slotState = states.next();
-                    if (slotState != null)
+                    ItemStack currentItem = getInventory().getStackInSlot(slotState.slotID);
+                    if (currentItem == null)
                     {
-                        ItemStack currentItem = getInventory().getStackInSlot(slotState.slotID);
-                        if (currentItem == null)
+                        //Get inventory
+                        IInventory tileInv = null;
+                        TileEntity tile = toLocation().add(slotState.side).getTileEntity();
+                        if (tile instanceof IInventory)
                         {
-                            //Get inventory
-                            IInventory tileInv = null;
-                            TileEntity tile = toLocation().add(slotState.side).getTileEntity();
-                            if (tile instanceof IInventory)
-                            {
-                                tileInv = (IInventory) tile;
-                            }
+                            tileInv = (IInventory) tile;
+                        }
 
-                            //Has inventory try to find item
-                            if (tileInv != null)
+                        //Has inventory try to find item
+                        if (tileInv != null && (tile instanceof TileEntityWrappedPipeBelt || pullItems))
+                        {
+                            Pair<ItemStack, Integer> slotData = InventoryUtility.findFirstItemInInventory(tileInv,
+                                    slotState.side.getOpposite().ordinal(), getItemsToPullPerCycle(), slotState.filter);
+                            if (slotData != null)
                             {
-                                Pair<ItemStack, Integer> slotData = InventoryUtility.findFirstItemInInventory(tileInv,
-                                        slotState.side.getOpposite().ordinal(), getItemsToPullPerCycle(), slotState.filter);
-                                if (slotData != null)
-                                {
-                                    ItemStack inputStack = tileInv.decrStackSize(slotData.right(), slotData.left().stackSize);
-                                    getInventory().setInventorySlotContents(slotState.slotID, inputStack);
-                                }
+                                ItemStack inputStack = tileInv.decrStackSize(slotData.right(), slotData.left().stackSize);
+                                getInventory().setInventorySlotContents(slotState.slotID, inputStack);
+
+                                //Fire event
+                                onItemMoved(-1, slotState.slotID, inputStack);
                             }
                         }
                     }
@@ -379,16 +410,11 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     @Override
     public boolean canStore(ItemStack stack, int slot, ForgeDirection side)
     {
-        Iterator<BeltSideState> states = beltInputIterator();
-        if (states != null)
+        for (BeltSideState state : beltInputIterator())
         {
-            while (states.hasNext())
+            if (state != null && slot == state.slotID)
             {
-                BeltSideState state = states.next();
-                if (state != null && slot == state.slotID)
-                {
-                    return state.side == side;
-                }
+                return state.side == side;
             }
         }
         return false;
@@ -397,16 +423,11 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     @Override
     public boolean canRemove(ItemStack stack, int slot, ForgeDirection side)
     {
-        Iterator<BeltSideState> states = beltOutputIterator();
-        if (states != null)
+        for (BeltSideState state : beltOutputIterator())
         {
-            while (states.hasNext())
+            if (state != null && slot == state.slotID)
             {
-                BeltSideState state = states.next();
-                if (state != null && slot == state.slotID)
-                {
-                    return state.side == side;
-                }
+                return state.side == side;
             }
         }
         return false;
@@ -415,7 +436,22 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     @Override
     public void onInventoryChanged(int slot, ItemStack prev, ItemStack item)
     {
-        sendInvToClient = true;
+        if (world() != null)
+        {
+            sendInvToClient = true;
+            for (BeltSideState state : beltInputIterator())
+            {
+                if (state.slotID == slot)
+                {
+
+                    if (movementDelay > 10)
+                    {
+                        // movementDelay = 10;
+                    }
+                }
+                break;
+            }
+        }
     }
 
     public BeltSideStateIterator beltInputIterator()
