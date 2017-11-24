@@ -418,14 +418,14 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         sendInvToClient = true;
     }
 
-    public Iterator<BeltSideState> beltInputIterator()
+    public BeltSideStateIterator beltInputIterator()
     {
-        return inputIterator;
+        return inputIterator.reset(); //Not thread safe
     }
 
-    public Iterator<BeltSideState> beltOutputIterator()
+    public BeltSideStateIterator beltOutputIterator()
     {
-        return outputIterator;
+        return outputIterator.reset(); //Not thread safe
     }
 
     public List<BeltSideState> getBeltStates()
