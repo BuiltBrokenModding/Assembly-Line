@@ -42,6 +42,9 @@ public class TilePipeRenderListener extends TileListener implements IBlockListen
     @Override
     public void renderDynamic(TileEntity tile, double xx, double yy, double zz, float f)
     {
+        final double spaceFromEdge = 5.4 / 32f;
+        final double n = spaceFromEdge;
+        final double n2 = 1 - spaceFromEdge;
         //Update fake item for rendering
         entityItem.worldObj = tile.getWorldObj();
         entityItem.posX = tile.xCoord + 0.5;
@@ -68,69 +71,69 @@ public class TilePipeRenderListener extends TileListener implements IBlockListen
                 {
                     if (belt.getDirection() == ForgeDirection.WEST)
                     {
-                        renderItemAtPosition(0.2, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
-                        renderItemAtPosition(0.8, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
+                        renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
+                        renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
                     }
                     else if (belt.getDirection() == ForgeDirection.EAST)
                     {
-                        renderItemAtPosition(0.2, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
-                        renderItemAtPosition(0.8, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
+                        renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
+                        renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
                     }
                     else if (belt.getDirection() == ForgeDirection.NORTH)
                     {
-                        renderItemAtPosition(0.5, 0.5, 0.2, belt.renderInventory.getStackInSlot(0));
-                        renderItemAtPosition(0.5, 0.5, 0.8, belt.renderInventory.getStackInSlot(1));
+                        renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(0));
+                        renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(1));
                     }
                     else if (belt.getDirection() == ForgeDirection.SOUTH)
                     {
-                        renderItemAtPosition(0.5, 0.5, 0.2, belt.renderInventory.getStackInSlot(1));
-                        renderItemAtPosition(0.5, 0.5, 0.8, belt.renderInventory.getStackInSlot(0));
+                        renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(1));
+                        renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(0));
                     }
                 }
                 else if (belt.type == BeltType.LEFT_ELBOW)
                 {
                     if (belt.getDirection() == ForgeDirection.WEST)
                     {
-                        renderItemAtPosition(0.5, 0.5, 0.2, belt.renderInventory.getStackInSlot(1));
-                        renderItemAtPosition(0.8, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
+                        renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(1));
+                        renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
                     }
                     else if (belt.getDirection() == ForgeDirection.EAST)
                     {
-                        renderItemAtPosition(0.2, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
-                        renderItemAtPosition(0.5, 0.5, 0.8, belt.renderInventory.getStackInSlot(1));
+                        renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
+                        renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(1));
                     }
                     else if (belt.getDirection() == ForgeDirection.NORTH)
                     {
-                        renderItemAtPosition(0.8, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
-                        renderItemAtPosition(0.5, 0.5, 0.8, belt.renderInventory.getStackInSlot(0));
+                        renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
+                        renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(0));
                     }
                     else if (belt.getDirection() == ForgeDirection.SOUTH)
                     {
-                        renderItemAtPosition(0.5, 0.5, 0.2, belt.renderInventory.getStackInSlot(0));
-                        renderItemAtPosition(0.2, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
+                        renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(0));
+                        renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
                     }
                 }
                 else if (belt.type == BeltType.RIGHT_ELBOW)
                 {
                     if (belt.getDirection() == ForgeDirection.WEST)
                     {
-                        renderItemAtPosition(0.5, 0.5, 0.8, belt.renderInventory.getStackInSlot(1));
-                        renderItemAtPosition(0.8, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
+                        renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(1));
+                        renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
                     }
                     else if (belt.getDirection() == ForgeDirection.EAST)
                     {
-                        renderItemAtPosition(0.2, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
-                        renderItemAtPosition(0.5, 0.5, 0.2, belt.renderInventory.getStackInSlot(1));
+                        renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
+                        renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(1));
                     }
                     else if (belt.getDirection() == ForgeDirection.NORTH)
                     {
-                        renderItemAtPosition(0.2, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
-                        renderItemAtPosition(0.5, 0.5, 0.8, belt.renderInventory.getStackInSlot(0));
+                        renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
+                        renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(0));
                     }
                     else if (belt.getDirection() == ForgeDirection.SOUTH)
                     {
-                        renderItemAtPosition(0.5, 0.5, 0.2, belt.renderInventory.getStackInSlot(0));
-                        renderItemAtPosition(0.8, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
+                        renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(0));
+                        renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
                     }
                 }
 
@@ -148,7 +151,8 @@ public class TilePipeRenderListener extends TileListener implements IBlockListen
 
             //Translate
             GL11.glTranslated(xx, yy, zz);
-            GL11.glScalef(0.8f, 0.8f, 0.8f);
+            final float scale = 1f;
+            GL11.glScalef(scale, scale, scale);
 
             try
             {
