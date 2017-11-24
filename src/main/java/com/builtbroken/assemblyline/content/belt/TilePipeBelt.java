@@ -599,7 +599,7 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
 
     public static void generateBeltStates()
     {
-        cachedBeltStates = new ArrayList[3][6];
+        cachedBeltStates = new ArrayList[BeltType.values().length][6];
         ForgeDirection[] rotations = new ForgeDirection[]{ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.EAST, ForgeDirection.WEST};
         for (ForgeDirection direction : rotations)
         {
