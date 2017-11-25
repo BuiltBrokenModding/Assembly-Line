@@ -110,7 +110,7 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
             }
 
             //Only moves items if there has been a chance in inventory
-            if (movementTimer <= 0 && ticks % 3 == 0)
+            if (movementTimer <= 0)
             {
                 //Inventory movement
                 //1. OUTPUT:                    Push items from output to tiles
@@ -153,7 +153,7 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
      */
     protected void onItemMoved(int fromSlot, int toSlot, ItemStack stack)
     {
-        movementTimer = movementDelay;
+        movementTimer = movementDelay + world().unwrap().rand.nextInt(5);
     }
 
     /**
@@ -436,22 +436,7 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     @Override
     public void onInventoryChanged(int slot, ItemStack prev, ItemStack item)
     {
-        if (world() != null)
-        {
-            sendInvToClient = true;
-            for (BeltSideState state : beltInputIterator())
-            {
-                if (state.slotID == slot)
-                {
-
-                    if (movementDelay > 10)
-                    {
-                        // movementDelay = 10;
-                    }
-                }
-                break;
-            }
-        }
+        sendInvToClient = true;
     }
 
     public BeltSideStateIterator beltInputIterator()
