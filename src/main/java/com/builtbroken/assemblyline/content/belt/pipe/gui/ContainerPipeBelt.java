@@ -1,6 +1,7 @@
 package com.builtbroken.assemblyline.content.belt.pipe.gui;
 
 import com.builtbroken.assemblyline.content.belt.TilePipeBelt;
+import com.builtbroken.assemblyline.content.belt.pipe.BeltType;
 import com.builtbroken.mc.prefab.gui.ContainerBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -15,9 +16,20 @@ public class ContainerPipeBelt extends ContainerBase<TilePipeBelt>
     {
         super(player, node);
         int x = 30;
-        addSlotToContainer(new Slot(node.getInventory(), 0, x + 10, 20));
-        addSlotToContainer(new Slot(node.getInventory(), 2, x + 50, 20));
-        addSlotToContainer(new Slot(node.getInventory(), 1, x + 90, 20));
+        if(node.type == BeltType.NORMAL || node.type == BeltType.LEFT_ELBOW || node.type == BeltType.RIGHT_ELBOW)
+        {
+            addSlotToContainer(new Slot(node.getInventory(), 0, x + 10, 20));
+            addSlotToContainer(new Slot(node.getInventory(), 2, x + 50, 20));
+            addSlotToContainer(new Slot(node.getInventory(), 1, x + 90, 20));
+        }
+        else
+        {
+            addSlotToContainer(new Slot(node.getInventory(), 1, x + 10, 20));
+            addSlotToContainer(new Slot(node.getInventory(), 2, x + 50, 20));
+            addSlotToContainer(new Slot(node.getInventory(), 3, x + 90, 20));
+
+            addSlotToContainer(new Slot(node.getInventory(), 0, x + 50, 40));
+        }
 
         addPlayerInventory(player);
     }

@@ -451,7 +451,7 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
 
     public List<BeltSideState> getBeltStates()
     {
-        if (type != BeltType.JUNCTION && type != BeltType.INTERSECTION)
+        if (cachedBeltStates[type.ordinal()] != null)
         {
             return cachedBeltStates[type.ordinal()][getDirection().ordinal()];
         }
@@ -657,7 +657,7 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
             //Generate right elbow
             List<BeltSideState> rightBeltState = new ArrayList();
             rightBeltState.add(new BeltSideState(0, direction.getOpposite(), false, true));
-            rightBeltState.add(new BeltSideState(1, turn, false, false));
+            rightBeltState.add(new BeltSideState(1, turn.getOpposite(), false, false));
             cachedBeltStates[BeltType.RIGHT_ELBOW.ordinal()][direction.ordinal()] = rightBeltState;
 
             //Generate junction
@@ -666,6 +666,15 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
             junctionBeltState.add(new BeltSideState(1, turn, false, false));
             junctionBeltState.add(new BeltSideState(3, turn.getOpposite(), false, false));
             cachedBeltStates[BeltType.JUNCTION.ordinal()][direction.ordinal()] = junctionBeltState;
+
+
+            //Generate junction
+            List<BeltSideState> intersectionBeltState = new ArrayList();
+            intersectionBeltState.add(new BeltSideState(0, direction.getOpposite(), false, true));
+            intersectionBeltState.add(new BeltSideState(1, turn, false, false));
+            intersectionBeltState.add(new BeltSideState(3, turn.getOpposite(), false, false));
+            intersectionBeltState.add(new BeltSideState(4, direction, false, false));
+            cachedBeltStates[BeltType.INTERSECTION.ordinal()][direction.ordinal()] = intersectionBeltState;
         }
     }
 }

@@ -217,14 +217,14 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
                 renderBlock(renderer, wrapper, x, y, z, null);
 
                 //North
-                renderer.uvRotateTop = 3;
-                if (direction == Direction.NORTH)
+                if (direction == Direction.SOUTH)
                 {
                     renderer.uvRotateTop = 0;
                     wrapper.setIcon(Direction.UP, block.getIcon(1, 0));
                 }
                 else
                 {
+                    renderer.uvRotateTop = 3;
                     wrapper.setIcon(Direction.UP, block.getIcon(3, 1));
                 }
                 bounds(renderer,
@@ -233,14 +233,14 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
                 renderBlock(renderer, wrapper, x, y, z, null);
 
                 //South
-                renderer.uvRotateTop = 0;
-                if (direction == Direction.SOUTH)
+                if (direction == Direction.NORTH)
                 {
                     renderer.uvRotateTop = 3;
                     wrapper.setIcon(Direction.UP, block.getIcon(1, 0));
                 }
                 else
                 {
+                    renderer.uvRotateTop = 0;
                     wrapper.setIcon(Direction.UP, block.getIcon(3, 1));
                 }
                 bounds(renderer,
@@ -249,7 +249,6 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
                 renderBlock(renderer, wrapper, x, y, z, null);
 
                 //West
-                renderer.uvRotateTop = 1;
                 if (direction == Direction.EAST)
                 {
                     renderer.uvRotateTop = 2;
@@ -257,6 +256,7 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
                 }
                 else
                 {
+                    renderer.uvRotateTop = 1;
                     wrapper.setIcon(Direction.UP, block.getIcon(3, 1));
                 }
                 bounds(renderer,
@@ -265,7 +265,6 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
                 renderBlock(renderer, wrapper, x, y, z, null);
 
                 //East
-                renderer.uvRotateTop = 2;
                 if (direction == Direction.WEST)
                 {
                     renderer.uvRotateTop = 1;
@@ -273,6 +272,7 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
                 }
                 else
                 {
+                    renderer.uvRotateTop = 2;
                     wrapper.setIcon(Direction.UP, block.getIcon(3, 1));
                 }
                 bounds(renderer,
