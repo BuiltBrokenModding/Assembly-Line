@@ -12,29 +12,42 @@ import net.minecraft.inventory.Slot;
  */
 public class ContainerPipeBelt extends ContainerBase<TilePipeBelt>
 {
-    public ContainerPipeBelt(EntityPlayer player, TilePipeBelt node)
+    protected final int id;
+
+    public ContainerPipeBelt(EntityPlayer player, TilePipeBelt node, int id)
     {
         super(player, node);
+        this.id = id;
+
         int x = 30;
-        if(node.type == BeltType.NORMAL || node.type == BeltType.LEFT_ELBOW || node.type == BeltType.RIGHT_ELBOW)
+
+        if (id == GuiPipeBelt.GUI_MAIN)
         {
-            addSlotToContainer(new Slot(node.getInventory(), 0, x + 10, 20));
-            addSlotToContainer(new Slot(node.getInventory(), 2, x + 50, 20));
-            addSlotToContainer(new Slot(node.getInventory(), 1, x + 90, 20));
-        }
-        else
-        {
-            addSlotToContainer(new Slot(node.getInventory(), 1, x + 10, 20));
-            addSlotToContainer(new Slot(node.getInventory(), 2, x + 50, 20));
-            addSlotToContainer(new Slot(node.getInventory(), 3, x + 90, 20));
-            if(node.type == BeltType.INTERSECTION)
+            if (node.type == BeltType.NORMAL || node.type == BeltType.LEFT_ELBOW || node.type == BeltType.RIGHT_ELBOW)
             {
-                addSlotToContainer(new Slot(node.getInventory(), 4, x + 120, 20));
+                addSlotToContainer(new Slot(node.getInventory(), 0, x + 10, 20));
+                addSlotToContainer(new Slot(node.getInventory(), 2, x + 50, 20));
+                addSlotToContainer(new Slot(node.getInventory(), 1, x + 90, 20));
+            }
+            else if (node.type == BeltType.JUNCTION)
+            {
+                addSlotToContainer(new Slot(node.getInventory(), 1, x + 10, 20));
+                addSlotToContainer(new Slot(node.getInventory(), 2, x + 50, 20));
+                addSlotToContainer(new Slot(node.getInventory(), 3, x + 90, 20));
+
+                addSlotToContainer(new Slot(node.getInventory(), 0, x + 50, 40));
+            }
+            else if (node.type == BeltType.INTERSECTION || node.type == BeltType.JUNCTION)
+            {
+                addSlotToContainer(new Slot(node.getInventory(), 1, x + 30, 40));
+                addSlotToContainer(new Slot(node.getInventory(), 2, x + 50, 40));
+                addSlotToContainer(new Slot(node.getInventory(), 3, x + 70, 40));
+                addSlotToContainer(new Slot(node.getInventory(), 4, x + 50, 20));
+
+                addSlotToContainer(new Slot(node.getInventory(), 0, x + 50, 60));
             }
 
-            addSlotToContainer(new Slot(node.getInventory(), 0, x + 50, 40));
+            addPlayerInventory(player);
         }
-
-        addPlayerInventory(player);
     }
 }

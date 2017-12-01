@@ -4,6 +4,7 @@ import com.builtbroken.assemblyline.AssemblyLine;
 import com.builtbroken.assemblyline.content.belt.gen.TileEntityWrappedPipeBelt;
 import com.builtbroken.assemblyline.content.belt.pipe.BeltType;
 import com.builtbroken.assemblyline.content.belt.pipe.PipeInventory;
+import com.builtbroken.assemblyline.content.belt.pipe.data.BeltInventoryFilter;
 import com.builtbroken.assemblyline.content.belt.pipe.data.BeltSideState;
 import com.builtbroken.assemblyline.content.belt.pipe.data.BeltSideStateIterator;
 import com.builtbroken.assemblyline.content.belt.pipe.gui.ContainerPipeBelt;
@@ -29,6 +30,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -48,10 +50,11 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     //============================================================
     public static final int PACKET_INVENTORY = 1;
     public static final int PACKET_GUI_BUTTON = 2;
+    public static final int PACKET_GUI_OPEN = 3;
 
-    public static final int BUTTON_ITEM_PULL = 0;
-    public static final int BUTTON_RENDER_TOP = 1;
-    public static final int BUTTON_ITEM_EJECT = 2;
+    public static final int BUTTON_ITEM_PULL = 20;
+    public static final int BUTTON_RENDER_TOP = 21;
+    public static final int BUTTON_ITEM_EJECT = 22;
 
     /** Cached state map of direction to input sides & slots */
     public static List<BeltSideState>[/* belt type */][/* rotation */] cachedBeltStates;
@@ -88,6 +91,8 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     public int movementDelay = 20;
 
     public BasicInventory renderInventory;
+
+    protected List<BeltSideState> localBeltState;
 
     private BeltSideStateIterator inputIterator;
     private BeltSideStateIterator outputIterator;
@@ -211,7 +216,7 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
                         }
 
                         //Fire events, if stack changed
-                        if(!InventoryUtility.stacksMatchExact(stack, prev))
+                        if (!InventoryUtility.stacksMatchExact(stack, prev))
                         {
                             getInventory().setInventorySlotContents(slotState.slotID, stack);
                             onItemMoved(slotState.slotID, -1, stack);
@@ -460,11 +465,20 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
 
     public List<BeltSideState> getBeltStates()
     {
+        if (localBeltState != null)
+        {
+            return localBeltState;
+        }
         if (cachedBeltStates[type.ordinal()] != null)
         {
             return cachedBeltStates[type.ordinal()][getDirection().ordinal()];
         }
         return EMPTY_LIST;
+    }
+
+    public boolean hasSortingUpgrade()
+    {
+        return false;
     }
 
     public int[] getCenterSlots()
@@ -544,18 +558,101 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         getHost().sendPacketToServer(packet);
     }
 
+    protected void setLocalBeltState()
+    {
+        this.localBeltState = null;
+
+        List<BeltSideState> localBeltState = new ArrayList();
+        for (BeltSideState sideState : getBeltStates())
+        {
+            localBeltState.add(sideState.copy(true));
+        }
+        this.localBeltState = localBeltState;
+    }
+
+    public void setOutputForSide(int slotID, boolean output)
+    {
+        if (type == BeltType.INTERSECTION || type == BeltType.JUNCTION)
+        {
+            if (localBeltState == null)
+            {
+                setLocalBeltState();
+            }
+            for (BeltSideState state : getBeltStates())
+            {
+                if (state.slotID == slotID)
+                {
+                    state.output = output;
+                    break;
+                }
+            }
+        }
+    }
+
+    public BeltInventoryFilter getFilterForSide(int slotID)
+    {
+        if (localBeltState != null)
+        {
+            for (BeltSideState state : getBeltStates())
+            {
+                if (state.slotID == slotID)
+                {
+                    return state.filter;
+                }
+            }
+        }
+        return null;
+    }
+
+    public void enableFilterSide(int slotID)
+    {
+        if (type == BeltType.INTERSECTION || type == BeltType.JUNCTION)
+        {
+            if (localBeltState == null)
+            {
+                setLocalBeltState();
+            }
+            for (BeltSideState state : getBeltStates())
+            {
+                if (state.slotID == slotID)
+                {
+                    state.filter = new BeltInventoryFilter();
+                    break;
+                }
+            }
+        }
+    }
+
     @Override
     public void load(NBTTagCompound nbt)
     {
         super.load(nbt);
+        type = BeltType.get(nbt.getInteger("beltType"));
         if (nbt.hasKey("inventory"))
         {
             getInventory().load(nbt.getCompoundTag("inventory"));
         }
+        if (nbt.hasKey("beltStates"))
+        {
+            setLocalBeltState();
+            NBTTagList list = nbt.getTagList("beltStates", 10);
+            for (int i = 0; i < list.tagCount(); i++)
+            {
+                NBTTagCompound tag = list.getCompoundTagAt(i);
+                int slotID = tag.getInteger("id");
+                for (BeltSideState state : getBeltStates()) //TODO improve O(n^2)
+                {
+                    if (state.slotID == slotID)
+                    {
+                        state.load(tag);
+                        break;
+                    }
+                }
+            }
+        }
         pullItems = nbt.getBoolean("pullItems");
         shouldEjectItems = nbt.getBoolean("ejectItems");
         renderTop = nbt.getBoolean("renderTubeTop");
-        type = BeltType.get(nbt.getInteger("beltType"));
     }
 
     @Override
@@ -567,6 +664,18 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
             NBTTagCompound invSave = new NBTTagCompound();
             getInventory().save(invSave);
             nbt.setTag("inventory", invSave);
+        }
+        if (localBeltState != null)
+        {
+            NBTTagList list = new NBTTagList();
+            for (BeltSideState sideState : localBeltState)
+            {
+                NBTTagCompound tag = new NBTTagCompound();
+                sideState.save(tag);
+                tag.setInteger("id", sideState.slotID);
+                list.appendTag(tag);
+            }
+            nbt.setTag("beltStates", list);
         }
         nbt.setBoolean("pullItems", pullItems);
         nbt.setBoolean("ejectItems", shouldEjectItems);
@@ -580,7 +689,12 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     {
         if (!super.read(buf, id, player, type))
         {
-            if (id == PACKET_INVENTORY)
+            if (isServer() && id == PACKET_GUI_OPEN)
+            {
+                openGui(player, buf.readInt());
+                return true;
+            }
+            else if (id == PACKET_INVENTORY)
             {
                 readInvPacket(buf);
                 return true;
@@ -613,13 +727,24 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player)
     {
-        return new ContainerPipeBelt(player, this);
+        return new ContainerPipeBelt(player, this, ID);
     }
 
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player)
     {
-        return new GuiPipeBelt(player, this);
+        return new GuiPipeBelt(player, this, ID);
+    }
+
+    @Override
+    public boolean openGui(EntityPlayer player, int requestedID)
+    {
+        if (requestedID >= 0 && requestedID < 3)
+        {
+            player.openGui(AssemblyLine.INSTANCE, requestedID, world().unwrap(), xi(), yi(), zi());
+            return true;
+        }
+        return false;
     }
 
     static

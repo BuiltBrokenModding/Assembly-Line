@@ -1,6 +1,5 @@
 package com.builtbroken.assemblyline.content.belt.pipe.data;
 
-import com.builtbroken.mc.api.IInventoryFilter;
 import com.builtbroken.mc.api.ISave;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -22,7 +21,7 @@ public class BeltSideState implements ISave
     /** Is state setup to output items from the belt */
     public boolean output;
     /** Filter to use for allowing items into this side, only works for input */
-    public IInventoryFilter filter; //TODO implement simple filter object
+    public BeltInventoryFilter filter; //TODO implement simple filter object
 
 
     public BeltSideState(int slot, ForgeDirection side, boolean canBeConfigured, boolean output)
@@ -41,12 +40,20 @@ public class BeltSideState implements ISave
         {
             output = tag.getBoolean("output");
         }
+
+        //TODO load filter
     }
 
     @Override
     public NBTTagCompound save(NBTTagCompound tag)
     {
         tag.setBoolean("output", output);
+        //TODO save filter
         return tag;
+    }
+
+    public BeltSideState copy(boolean b)
+    {
+        return new BeltSideState(slotID, side, b, output);
     }
 }
