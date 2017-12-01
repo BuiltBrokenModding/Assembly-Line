@@ -14,6 +14,7 @@ import com.builtbroken.mc.api.tile.IRotatable;
 import com.builtbroken.mc.api.tile.access.IGuiTile;
 import com.builtbroken.mc.api.tile.provider.IInventoryProvider;
 import com.builtbroken.mc.codegen.annotations.TileWrapped;
+import com.builtbroken.mc.core.Engine;
 import com.builtbroken.mc.core.network.packet.PacketType;
 import com.builtbroken.mc.framework.block.imp.IWrenchListener;
 import com.builtbroken.mc.framework.logic.TileNode;
@@ -154,6 +155,10 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     protected void onItemMoved(int fromSlot, int toSlot, ItemStack stack)
     {
         movementTimer = movementDelay + world().unwrap().rand.nextInt(5);
+        if (Engine.runningAsDev)
+        {
+            //System.out.println("TilePipeBelt#OnItemMoved(" + fromSlot + ", " + toSlot + ", " + stack + ")");
+        }
     }
 
     /**
@@ -179,6 +184,7 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
                     ItemStack stack = getInventory().getStackInSlot(slotState.slotID);
                     if (stack != null)
                     {
+                        ItemStack prev = stack.copy();
                         //Drop
                         if (outputLocation.isAirBlock())
                         {
@@ -203,10 +209,13 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
                         {
                             stack = InventoryUtility.insertStack(outputLocation, stack, slotState.side.getOpposite().ordinal(), false);
                         }
-                        getInventory().setInventorySlotContents(slotState.slotID, stack);
 
-                        //Fire event
-                        onItemMoved(slotState.slotID, -1, stack);
+                        //Fire events, if stack changed
+                        if(!InventoryUtility.stacksMatchExact(stack, prev))
+                        {
+                            getInventory().setInventorySlotContents(slotState.slotID, stack);
+                            onItemMoved(slotState.slotID, -1, stack);
+                        }
                     }
                 }
             }

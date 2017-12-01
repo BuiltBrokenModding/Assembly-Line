@@ -27,6 +27,10 @@ public class ContainerPipeBelt extends ContainerBase<TilePipeBelt>
             addSlotToContainer(new Slot(node.getInventory(), 1, x + 10, 20));
             addSlotToContainer(new Slot(node.getInventory(), 2, x + 50, 20));
             addSlotToContainer(new Slot(node.getInventory(), 3, x + 90, 20));
+            if(node.type == BeltType.INTERSECTION)
+            {
+                addSlotToContainer(new Slot(node.getInventory(), 4, x + 120, 20));
+            }
 
             addSlotToContainer(new Slot(node.getInventory(), 0, x + 50, 40));
         }

@@ -35,6 +35,12 @@ public class PipeInventory extends BasicInventory implements IExternalInventory,
     }
 
     @Override
+    public int getSizeInventory()
+    {
+        return host.type.inventorySize;
+    }
+
+    @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack)
     {
         return i < this.getSizeInventory();
