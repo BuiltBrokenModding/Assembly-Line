@@ -56,6 +56,10 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     public static final int BUTTON_RENDER_TOP = 21;
     public static final int BUTTON_ITEM_EJECT = 22;
 
+    public static int GUI_MAIN = 0;
+    public static int GUI_SETTINGS = 1;
+    public static int GUI_UPGRADES = 2;
+
     /** Cached state map of direction to input sides & slots */
     public static List<BeltSideState>[/* belt type */][/* rotation */] cachedBeltStates;
 

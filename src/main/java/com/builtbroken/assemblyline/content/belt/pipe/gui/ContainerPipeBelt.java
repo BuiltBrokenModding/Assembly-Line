@@ -21,7 +21,7 @@ public class ContainerPipeBelt extends ContainerBase<TilePipeBelt>
 
         int x = 30;
 
-        if (id == GuiPipeBelt.GUI_MAIN)
+        if (id == TilePipeBelt.GUI_MAIN)
         {
             if (node.type == BeltType.NORMAL || node.type == BeltType.LEFT_ELBOW || node.type == BeltType.RIGHT_ELBOW)
             {

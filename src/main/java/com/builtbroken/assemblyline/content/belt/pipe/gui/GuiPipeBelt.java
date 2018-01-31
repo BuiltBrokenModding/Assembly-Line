@@ -20,9 +20,6 @@ public class GuiPipeBelt extends GuiContainerBase<TilePipeBelt>
 {
     public static final ResourceLocation GUI_BUTTONS = new ResourceLocation(AssemblyLine.DOMAIN, "textures/gui/gui.buttons.32pix.png");
 
-    public static int GUI_MAIN = 0;
-    public static int GUI_SETTINGS = 1;
-    public static int GUI_UPGRADES = 2;
 
     private GuiImageButton mainWindowButton;
     private GuiImageButton upgradeWindowButton;
@@ -52,19 +49,19 @@ public class GuiPipeBelt extends GuiContainerBase<TilePipeBelt>
         int y = guiTop + 10;
 
         //Menu Tabs
-        mainWindowButton = addButton(GuiImageButton.newButton18(GUI_MAIN, x, y, 0, 0).setTexture(GUI_BUTTONS));
-        upgradeWindowButton = addButton(GuiImageButton.newButton18(GUI_UPGRADES, x, y + 19, 7, 0).setTexture(GUI_BUTTONS));
-        settingsWindowButton = addButton(GuiImageButton.newButton18(GUI_SETTINGS, x, y + 19 * 2, 5, 0).setTexture(GUI_BUTTONS));
+        mainWindowButton = addButton(GuiImageButton.newButton18(TilePipeBelt.GUI_MAIN, x, y, 0, 0).setTexture(GUI_BUTTONS));
+        upgradeWindowButton = addButton(GuiImageButton.newButton18(TilePipeBelt.GUI_UPGRADES, x, y + 19, 7, 0).setTexture(GUI_BUTTONS));
+        settingsWindowButton = addButton(GuiImageButton.newButton18(TilePipeBelt.GUI_SETTINGS, x, y + 19 * 2, 5, 0).setTexture(GUI_BUTTONS));
 
         //Power buttons
         onButton = (GuiButton2) add(GuiButton9px.newOnButton(10, x, y - 10).setEnabled(false));
         offButton = (GuiButton2) add(GuiButton9px.newOffButton(11, x + 9, y - 10).setEnabled(false));
 
-        if (id == GUI_MAIN)
+        if (id == TilePipeBelt.GUI_MAIN)
         {
             mainWindowButton.disable();
         }
-        else if (id == GUI_SETTINGS)
+        else if (id == TilePipeBelt.GUI_SETTINGS)
         {
             settingsWindowButton.disable();
 
@@ -74,7 +71,7 @@ public class GuiPipeBelt extends GuiContainerBase<TilePipeBelt>
             enableItemEjectButton = add(new GuiButtonCheck(TilePipeBelt.BUTTON_ITEM_EJECT, x + 10, y + 57, 1, host.shouldEjectItems));
             renderTopButton = add(new GuiButtonCheck(TilePipeBelt.BUTTON_RENDER_TOP, x + 10, y + 69, 1, !host.renderTop));
         }
-        else if (id == GUI_UPGRADES)
+        else if (id == TilePipeBelt.GUI_UPGRADES)
         {
             upgradeWindowButton.disable();
         }
@@ -84,7 +81,7 @@ public class GuiPipeBelt extends GuiContainerBase<TilePipeBelt>
     public void updateScreen()
     {
         super.updateScreen();
-        if (id == GUI_SETTINGS)
+        if (id == TilePipeBelt.GUI_SETTINGS)
         {
             enableItemPullButton.setChecked(host.pullItems);
             renderTopButton.setChecked(!host.renderTop);
@@ -97,17 +94,17 @@ public class GuiPipeBelt extends GuiContainerBase<TilePipeBelt>
     {
         if (button == mainWindowButton)
         {
-            host.sendPacketToServer(host.getPacketForData(TilePipeBelt.PACKET_GUI_OPEN, GUI_MAIN));
+            host.sendPacketToServer(host.getPacketForData(TilePipeBelt.PACKET_GUI_OPEN, TilePipeBelt.GUI_MAIN));
         }
         else if (button == upgradeWindowButton)
         {
-            host.sendPacketToServer(host.getPacketForData(TilePipeBelt.PACKET_GUI_OPEN, GUI_UPGRADES));
+            host.sendPacketToServer(host.getPacketForData(TilePipeBelt.PACKET_GUI_OPEN, TilePipeBelt.GUI_UPGRADES));
         }
         else if (button == settingsWindowButton)
         {
-            host.sendPacketToServer(host.getPacketForData(TilePipeBelt.PACKET_GUI_OPEN, GUI_SETTINGS));
+            host.sendPacketToServer(host.getPacketForData(TilePipeBelt.PACKET_GUI_OPEN, TilePipeBelt.GUI_SETTINGS));
         }
-        else if (id == GUI_SETTINGS)
+        else if (id == TilePipeBelt.GUI_SETTINGS)
         {
             if (button == enableItemPullButton)
             {
@@ -134,7 +131,7 @@ public class GuiPipeBelt extends GuiContainerBase<TilePipeBelt>
         final String tileName = "tile." + AssemblyLine.PREFIX + "belt.pipe.gui";
         drawStringCentered(LanguageUtility.getLocal(tileName), xSize / 2, 5);
 
-        if (id == GUI_SETTINGS)
+        if (id == TilePipeBelt.GUI_SETTINGS)
         {
             drawString(LanguageUtility.getLocal(tileName + ".button.item.pull"), 23, 46);
             drawString(LanguageUtility.getLocal(tileName + ".button.item.eject"), 23, 58);
