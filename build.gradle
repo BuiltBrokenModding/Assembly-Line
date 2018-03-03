@@ -9,10 +9,14 @@ buildscript {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
+        maven {
+             url "https://plugins.gradle.org/m2/"
+       }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
         classpath 'org.ajoberstar:gradle-git:0.10.1'
+        classpath "org.ajoberstar:grgit:2.1.0"
     }
 }
 
@@ -30,6 +34,7 @@ apply plugin: 'forge'
 apply plugin: 'curseforge'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'jacoco'
+apply plugin: "org.ajoberstar.grgit"
 apply from: 'https://raw.githubusercontent.com/BuiltBrokenModding/BuiltBrokenScripts/buildScripts/scripts/forge/deps.gradle'
 
 processResources {
