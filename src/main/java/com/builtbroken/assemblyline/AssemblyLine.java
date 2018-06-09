@@ -53,6 +53,7 @@ public class AssemblyLine extends AbstractMod
     public static Block blockRail;
     public static Block blockPowerRail;
     public static BlockBase simpleBelt;
+    public static Block pipeBelt;
 
     public static Item itemParts;
     public static Item itemCart;
@@ -102,6 +103,7 @@ public class AssemblyLine extends AbstractMod
         {
             simpleBelt = (BlockBase) block;
         }
+        pipeBelt = InventoryUtility.getBlock(PREFIX + "beltPipe");
 
         EntityRegistry.registerGlobalEntityID(EntityCart.class, "ALTransportCart", EntityRegistry.findGlobalUniqueEntityId());
         EntityRegistry.registerModEntity(EntityCart.class, "ALTransportCart", ENTITY_ID_PREFIX, this, 500, 1, true);

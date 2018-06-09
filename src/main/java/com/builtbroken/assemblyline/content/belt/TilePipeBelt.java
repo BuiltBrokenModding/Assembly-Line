@@ -45,7 +45,7 @@ import java.util.List;
  * Created by Dark(DarkGuardsman, Robert) on 11/14/2017.
  */
 @TileWrapped(className = ".gen.TileEntityWrappedPipeBelt", wrappers = "ExternalInventory")
-public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProvider<PipeInventory>, IGuiTile, IWrenchListener, IInserterAccess
+public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProvider<PipeInventory>, IGuiTile, IWrenchListener, IInserterAccess, IAdjustableConnections, IBlockStackListener
 {
     //============================================================
     //==================== Constants =============================
@@ -156,6 +156,12 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
                 shouldUpdateRender = false;
             }
         }
+    }
+
+    @Override
+    public ItemStack toStack()
+    {
+        return new ItemStack(AssemblyLine.pipeBelt, 1, type.ordinal());
     }
 
     //<editor-fold desc="player interaction">
