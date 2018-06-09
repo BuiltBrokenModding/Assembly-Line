@@ -158,6 +158,43 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         }
     }
 
+    //<editor-fold desc="player interaction">
+    @Override
+    public boolean onPlayerRightClickWrench(EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+    {
+        if (isServer())
+        {
+            if (player.isSneaking())
+            {
+                setDirection(getDirection().getOpposite());
+            }
+            else
+            {
+                switch (getDirection())
+                {
+                    case NORTH:
+                        setDirection(ForgeDirection.EAST);
+                        break;
+                    case EAST:
+                        setDirection(ForgeDirection.SOUTH);
+                        break;
+                    case SOUTH:
+                        setDirection(ForgeDirection.WEST);
+                        break;
+                    case WEST:
+                    default:
+                        setDirection(ForgeDirection.NORTH);
+                        break;
+                }
+            }
+        }
+        return true;
+    }
+
+    // </editor-folder>
+
+    //<editor-fold desc="item movement">
+
     /**
      * @param fromSlot slot, or -1 to note external
      * @param toSlot   slot, or -1 to note external
@@ -359,64 +396,19 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         }
     }
 
-    @Override
-    public boolean onPlayerRightClickWrench(EntityPlayer player, int side, float hitX, float hitY, float hitZ)
-    {
-        if (isServer())
-        {
-            if (player.isSneaking())
-            {
-                setDirection(getDirection().getOpposite());
-            }
-            else
-            {
-                switch (getDirection())
-                {
-                    case NORTH:
-                        setDirection(ForgeDirection.EAST);
-                        break;
-                    case EAST:
-                        setDirection(ForgeDirection.SOUTH);
-                        break;
-                    case SOUTH:
-                        setDirection(ForgeDirection.WEST);
-                        break;
-                    case WEST:
-                    default:
-                        setDirection(ForgeDirection.NORTH);
-                        break;
-                }
-            }
-        }
-        return true;
-    }
 
     public int getItemsToPullPerCycle()
     {
         return 1;
     }
 
-    @Override
-    public ForgeDirection getDirection()
+    public int[] getCenterSlots()
     {
-        if (_direction == null)
-        {
-            _direction = ForgeDirection.getOrientation(world().unwrap().getBlockMetadata(xi(), yi(), zi()));
-        }
-        return _direction;
+        return centerSlots;
     }
+    // </editor-folder> item movement
 
-    @Override
-    public void setDirection(ForgeDirection direction)
-    {
-        if (direction != null && direction != getDirection()
-                && direction.ordinal() >= 2 && direction.ordinal() < 6)
-        {
-            _direction = null;
-            getHost().setMetaValue(direction.ordinal());
-        }
-    }
-
+    //<editor-fold desc="inventory">
     @Override
     public PipeInventory getInventory()
     {
@@ -453,6 +445,15 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         return false;
     }
 
+    @Override
+    public void onInventoryChanged(int slot, ItemStack prev, ItemStack item)
+    {
+        sendInvToClient = true;
+    }
+
+    //</editor-fold>
+
+    //<editor-fold desc="inserter">
     @Override
     public ItemStack takeInserterItem(EulerAngle angle, ForgeDirection side, int count, boolean remove)
     {
@@ -579,11 +580,9 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         return insertStack;
     }
 
-    @Override
-    public void onInventoryChanged(int slot, ItemStack prev, ItemStack item)
-    {
-        sendInvToClient = true;
-    }
+    //</editor-fold> end inserter
+
+    //<editor-fold desc="belt data and accessors">
 
     public BeltSideStateIterator beltInputIterator()
     {
@@ -611,83 +610,6 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     public boolean hasSortingUpgrade()
     {
         return false;
-    }
-
-    public int[] getCenterSlots()
-    {
-        return centerSlots;
-    }
-
-    @Override
-    public void readDescPacket(ByteBuf buf)
-    {
-        super.readDescPacket(buf);
-        type = BeltType.values()[buf.readInt()];
-        shouldUpdateRender = buf.readBoolean();
-        shouldEjectItems = buf.readBoolean();
-        pullItems = buf.readBoolean();
-        renderTop = buf.readBoolean();
-        readInvPacket(buf);
-    }
-
-
-    @Override
-    public void writeDescPacket(ByteBuf buf)
-    {
-        super.writeDescPacket(buf);
-        buf.writeInt(type.ordinal());
-        buf.writeBoolean(shouldUpdateRender);
-        buf.writeBoolean(shouldEjectItems);
-        buf.writeBoolean(pullItems);
-        buf.writeBoolean(renderTop);
-        writeInvPacket(buf);
-    }
-
-    @Override
-    protected void writeGuiPacket(EntityPlayer player, ByteBuf buf)
-    {
-        buf.writeBoolean(shouldEjectItems);
-        buf.writeBoolean(pullItems);
-        buf.writeBoolean(renderTop);
-    }
-
-    @Override
-    protected void readGuiPacket(EntityPlayer player, ByteBuf buf)
-    {
-        shouldEjectItems = buf.readBoolean();
-        pullItems = buf.readBoolean();
-        renderTop = buf.readBoolean();
-    }
-
-    public void readInvPacket(ByteBuf buf)
-    {
-        int size = buf.readInt();
-        if (renderInventory == null || renderInventory.getSizeInventory() != size)
-        {
-            renderInventory = new BasicInventory(size);
-        }
-        renderInventory.load(ByteBufUtils.readTag(buf));
-    }
-
-    public void writeInvPacket(ByteBuf buf)
-    {
-        buf.writeInt(getInventory().getSizeInventory());
-        ByteBufUtils.writeTag(buf, getInventory().save(new NBTTagCompound()));
-    }
-
-    public void sendInventoryPacket()
-    {
-        IPacket packet = getHost().getPacketForData(PACKET_INVENTORY);
-        writeInvPacket(packet.data());
-        getHost().sendPacketToClient(packet, 64);
-    }
-
-    public void sendButtonEvent(int id, boolean checked)
-    {
-        IPacket packet = getHost().getPacketForData(PACKET_GUI_BUTTON);
-        packet.data().writeInt(id);
-        packet.data().writeBoolean(checked);
-        getHost().sendPacketToServer(packet);
     }
 
     protected void setLocalBeltState()
@@ -756,6 +678,30 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     }
 
     @Override
+    public ForgeDirection getDirection()
+    {
+        if (_direction == null)
+        {
+            _direction = ForgeDirection.getOrientation(world().unwrap().getBlockMetadata(xi(), yi(), zi()));
+        }
+        return _direction;
+    }
+
+    @Override
+    public void setDirection(ForgeDirection direction)
+    {
+        if (direction != null && direction != getDirection()
+                && direction.ordinal() >= 2 && direction.ordinal() < 6)
+        {
+            _direction = null;
+            getHost().setMetaValue(direction.ordinal());
+        }
+    }
+
+    //</editor-fold> end belt data and accessors
+
+    //<editor-fold desc="save load">
+    @Override
     public void load(NBTTagCompound nbt)
     {
         super.load(nbt);
@@ -816,6 +762,34 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         return nbt;
     }
 
+    //</editor-fold>
+
+    //<editor-fold desc="gui">
+    @Override
+    public Object getServerGuiElement(int ID, EntityPlayer player)
+    {
+        return new ContainerPipeBelt(player, this, ID);
+    }
+
+    @Override
+    public Object getClientGuiElement(int ID, EntityPlayer player)
+    {
+        return new GuiPipeBelt(player, this, ID);
+    }
+
+    @Override
+    public boolean openGui(EntityPlayer player, int requestedID)
+    {
+        if (requestedID >= 0 && requestedID < 3)
+        {
+            player.openGui(AssemblyLine.INSTANCE, requestedID, world().unwrap(), xi(), yi(), zi());
+            return true;
+        }
+        return false;
+    }
+    //</editor-fold"> end gui
+
+    //<editor-fold desc="packet">
     @Override
     public boolean read(ByteBuf buf, int id, EntityPlayer player, PacketType type)
     {
@@ -857,27 +831,78 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     }
 
     @Override
-    public Object getServerGuiElement(int ID, EntityPlayer player)
+    public void readDescPacket(ByteBuf buf)
     {
-        return new ContainerPipeBelt(player, this, ID);
+        super.readDescPacket(buf);
+        type = BeltType.values()[buf.readInt()];
+        shouldUpdateRender = buf.readBoolean();
+        shouldEjectItems = buf.readBoolean();
+        pullItems = buf.readBoolean();
+        renderTop = buf.readBoolean();
+        readInvPacket(buf);
     }
 
     @Override
-    public Object getClientGuiElement(int ID, EntityPlayer player)
+    public void writeDescPacket(ByteBuf buf)
     {
-        return new GuiPipeBelt(player, this, ID);
+        super.writeDescPacket(buf);
+        buf.writeInt(type.ordinal());
+        buf.writeBoolean(shouldUpdateRender);
+        buf.writeBoolean(shouldEjectItems);
+        buf.writeBoolean(pullItems);
+        buf.writeBoolean(renderTop);
+        writeInvPacket(buf);
     }
 
     @Override
-    public boolean openGui(EntityPlayer player, int requestedID)
+    protected void writeGuiPacket(EntityPlayer player, ByteBuf buf)
     {
-        if (requestedID >= 0 && requestedID < 3)
+        buf.writeBoolean(shouldEjectItems);
+        buf.writeBoolean(pullItems);
+        buf.writeBoolean(renderTop);
+    }
+
+    @Override
+    protected void readGuiPacket(EntityPlayer player, ByteBuf buf)
+    {
+        shouldEjectItems = buf.readBoolean();
+        pullItems = buf.readBoolean();
+        renderTop = buf.readBoolean();
+    }
+
+    public void readInvPacket(ByteBuf buf)
+    {
+        int size = buf.readInt();
+        if (renderInventory == null || renderInventory.getSizeInventory() != size)
         {
-            player.openGui(AssemblyLine.INSTANCE, requestedID, world().unwrap(), xi(), yi(), zi());
-            return true;
+            renderInventory = new BasicInventory(size);
         }
-        return false;
+        renderInventory.load(ByteBufUtils.readTag(buf));
     }
+
+    public void writeInvPacket(ByteBuf buf)
+    {
+        buf.writeInt(getInventory().getSizeInventory());
+        ByteBufUtils.writeTag(buf, getInventory().save(new NBTTagCompound()));
+    }
+
+
+    public void sendInventoryPacket()
+    {
+        IPacket packet = getHost().getPacketForData(PACKET_INVENTORY);
+        writeInvPacket(packet.data());
+        getHost().sendPacketToClient(packet, 64);
+    }
+
+    public void sendButtonEvent(int id, boolean checked)
+    {
+        IPacket packet = getHost().getPacketForData(PACKET_GUI_BUTTON);
+        packet.data().writeInt(id);
+        packet.data().writeBoolean(checked);
+        getHost().sendPacketToServer(packet);
+    }
+
+    //</editor-fold> end packet
 
     static
     {
