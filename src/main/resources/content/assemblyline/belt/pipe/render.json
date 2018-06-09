@@ -8,47 +8,47 @@
       {
         "id": "item.inventory",
         "renderType": "item",
-        "textureID": "assemblyline:belt.pipe"
+        "textureID": "assemblyline:belt/belt.pipe"
       },
       {
         "id": "item.inventory.normal",
         "renderType": "item",
-        "textureID": "assemblyline:belt.pipe"
+        "textureID": "assemblyline:belt/belt.pipe"
       },
       {
         "id": "item.inventory.elbow.left",
         "renderType": "item",
-        "textureID": "assemblyline:belt.pipe.left"
+        "textureID": "assemblyline:belt/belt.pipe.left"
       },
       {
         "id": "item.inventory.elbow.right",
         "renderType": "item",
-        "textureID": "assemblyline:belt.pipe.right"
+        "textureID": "assemblyline:belt/belt.pipe.right"
       },
       {
         "id": "item.inventory.junction",
         "renderType": "item",
-        "textureID": "assemblyline:belt.pipe.junction"
+        "textureID": "assemblyline:belt/belt.pipe.junction"
       },
       {
         "id": "item.inventory.intersection",
         "renderType": "item",
-        "textureID": "assemblyline:belt.pipe.intersection"
+        "textureID": "assemblyline:belt/belt.pipe.intersection"
       },
       {
         "id": "item.inventory.splitter",
         "renderType": "item",
-        "textureID": "assemblyline:belt.pipe.splitter"
+        "textureID": "assemblyline:belt/belt.pipe.splitter"
       },
       {
         "id": "item.inventory.end",
         "renderType": "item",
-        "textureID": "assemblyline:belt.pipe.end"
+        "textureID": "assemblyline:belt/belt.pipe.end"
       },
       {
         "id": "block.15",
         "renderType": "block",
-        "textureID": "assemblyline:belt.pipe.glass"
+        "textureID": "assemblyline:belt/belt.pipe.glass"
       },
       {
         "id": "block.1",

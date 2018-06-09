@@ -30,7 +30,7 @@ public enum BeltType
     //Splitter for use with double belt
     //Default will take a single input and split over a double
     //Can be reversed to merge a double into the same pipe
-    /* 5 */SPLITTER(5),
+    /* 5 */Y_SECTION(5),
 
     //Two belts in one block
     //both act independent of each other
