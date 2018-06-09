@@ -1,26 +1,29 @@
 package com.builtbroken.assemblyline.content.inserter;
 
 import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.assemblyline.api.IInserterAccess;
 import com.builtbroken.assemblyline.content.parts.ALParts;
 import com.builtbroken.jlib.data.vector.IPos3D;
 import com.builtbroken.mc.api.automation.IAutomatedCrafter;
 import com.builtbroken.mc.api.automation.IAutomation;
 import com.builtbroken.mc.api.tile.multiblock.IMultiTile;
 import com.builtbroken.mc.api.tile.multiblock.IMultiTileHost;
+import com.builtbroken.mc.api.tile.node.ITileNodeHost;
+import com.builtbroken.mc.api.tile.provider.IInventoryProvider;
 import com.builtbroken.mc.core.Engine;
 import com.builtbroken.mc.core.network.IPacketIDReceiver;
 import com.builtbroken.mc.core.registry.implement.IRecipeContainer;
-import com.builtbroken.mc.lib.helper.recipe.OreNames;
+import com.builtbroken.mc.framework.multiblock.EnumMultiblock;
+import com.builtbroken.mc.framework.multiblock.MultiBlockHelper;
 import com.builtbroken.mc.imp.transform.region.Cube;
 import com.builtbroken.mc.imp.transform.rotation.EulerAngle;
 import com.builtbroken.mc.imp.transform.vector.Location;
 import com.builtbroken.mc.imp.transform.vector.Pos;
+import com.builtbroken.mc.lib.helper.recipe.OreNames;
 import com.builtbroken.mc.prefab.inventory.InventoryUtility;
 import com.builtbroken.mc.prefab.tile.Tile;
 import com.builtbroken.mc.prefab.tile.TileModuleMachine;
 import com.builtbroken.mc.prefab.tile.module.TileModuleInventory;
-import com.builtbroken.mc.framework.multiblock.EnumMultiblock;
-import com.builtbroken.mc.framework.multiblock.MultiBlockHelper;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.material.Material;
@@ -228,8 +231,12 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     {
         if (getHeldItem() == null)
         {
-            TileEntity input = findInput();
-            if (input instanceof IAutomatedCrafter)
+            Object input = findInput();
+            if (input instanceof IInserterAccess)
+            {
+                setHeldItem(((IInserterAccess) input).takeInserterItem(rotation, getDirection(), insertAmount, true));
+            }
+            else if (input instanceof IAutomatedCrafter)
             {
                 final int[] slots = ((IAutomatedCrafter) input).getCraftingOutputSlots(this, getDirection());
                 for (int index = 0; index < slots.length; index++)
@@ -256,9 +263,13 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
                     }
                 }
             }
-            else if (input instanceof IInventory)
+            else
             {
-                setHeldItem(InventoryUtility.pullStack(input, getDirection().ordinal(), insertAmount));
+                IInventory inventory = toInventory(input);
+                if (inventory != null)
+                {
+                    setHeldItem(InventoryUtility.takeTopItemFromInventory(inventory, getDirection().ordinal(), insertAmount));
+                }
             }
         }
     }
@@ -270,8 +281,12 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     {
         if (getHeldItem() != null)
         {
-            TileEntity output = findOutput();
-            if (output instanceof IAutomatedCrafter)
+            Object output = findOutput();
+            if (output instanceof IInserterAccess)
+            {
+                setHeldItem(((IInserterAccess) output).giveInserterItem(rotation, getDirection().getOpposite(), getHeldItem(), true));
+            }
+            else if (output instanceof IAutomatedCrafter)
             {
                 int[] slots = ((IAutomatedCrafter) output).getCraftingInputSlots(this, getDirection().getOpposite());
                 ItemStack heldItem = getHeldItem();
@@ -295,11 +310,28 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
                     }
                 }
             }
-            else if (output instanceof IInventory)
+            else
             {
-                setHeldItem(InventoryUtility.insertStack(output, getHeldItem(), getDirection().getOpposite().ordinal(), false));
+                IInventory inventory = toInventory(output);
+                if (inventory != null)
+                {
+                    setHeldItem(InventoryUtility.putStackInInventory(inventory, getHeldItem(), getDirection().getOpposite().ordinal(), false));
+                }
             }
         }
+    }
+
+    private IInventory toInventory(Object object)
+    {
+        if (object instanceof IInventory)
+        {
+            return (IInventory) object;
+        }
+        else if (object instanceof IInventoryProvider)
+        {
+            return ((IInventoryProvider) object).getInventory();
+        }
+        return null;
     }
 
     /**
@@ -415,12 +447,17 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
      *
      * @return the tile
      */
-    protected TileEntity findInput()
+    protected Object findInput()
     {
-        TileEntity tile = toLocation().add(getDirection().getOpposite()).getTileEntity();
+        Object tile = toLocation().add(getDirection().getOpposite()).getTileEntity();
         if (tile instanceof IMultiTile)
         {
-            return (TileEntity) ((IMultiTile) tile).getHost();
+            tile = (TileEntity) ((IMultiTile) tile).getHost();
+        }
+
+        if (tile instanceof ITileNodeHost)
+        {
+            tile = ((ITileNodeHost) tile).getTileNode();
         }
         return tile;
     }
@@ -430,12 +467,17 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
      *
      * @return the tile
      */
-    protected TileEntity findOutput()
+    protected Object findOutput()
     {
-        TileEntity tile = toLocation().add(getDirection()).getTileEntity();
+        Object tile = toLocation().add(getDirection()).getTileEntity();
         if (tile instanceof IMultiTile)
         {
-            return (TileEntity) ((IMultiTile) tile).getHost();
+            tile = (TileEntity) ((IMultiTile) tile).getHost();
+        }
+
+        if (tile instanceof ITileNodeHost)
+        {
+            tile = ((ITileNodeHost) tile).getTileNode();
         }
         return tile;
     }
@@ -469,7 +511,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     @Override
     public void onInventoryChanged(int slot, ItemStack prev, ItemStack item)
     {
-        if(oldWorld() != null)
+        if (oldWorld() != null)
         {
             sendDescPacket();
         }
@@ -480,7 +522,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     {
         if (tileMulti instanceof TileEntity)
         {
-            if (tileMapCache.containsKey(new Pos((TileEntity)this).sub(new Pos((TileEntity) tileMulti))))
+            if (tileMapCache.containsKey(new Pos((TileEntity) this).sub(new Pos((TileEntity) tileMulti))))
             {
                 tileMulti.setHost(this);
             }
@@ -492,7 +534,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     {
         if (!_destroyingStructure && tileMulti instanceof TileEntity)
         {
-            Pos pos = new Pos((TileEntity) tileMulti).sub(new Pos((TileEntity)this));
+            Pos pos = new Pos((TileEntity) tileMulti).sub(new Pos((TileEntity) this));
 
             if (tileMapCache.containsKey(pos))
             {
@@ -543,7 +585,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     public HashMap<IPos3D, String> getLayoutOfMultiBlock()
     {
         HashMap<IPos3D, String> map = new HashMap();
-        Pos center = new Pos((TileEntity)this);
+        Pos center = new Pos((TileEntity) this);
         for (Map.Entry<IPos3D, String> entry : tileMapCache.entrySet())
         {
             map.put(center.add(entry.getKey()), entry.getValue());

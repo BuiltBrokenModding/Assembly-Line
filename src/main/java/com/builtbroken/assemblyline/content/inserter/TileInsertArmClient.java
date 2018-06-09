@@ -83,7 +83,7 @@ public class TileInsertArmClient extends TileInsertArm implements ISimpleItemRen
     {
         renderAngle.lerp(rotation, deltaTime);
 
-        //Render launcher
+        //Render inserter
         GL11.glPushMatrix();
         GL11.glTranslatef(pos.xf() + 0.5f, pos.yf() + 0.4f, pos.zf() + 0.5f);
         GL11.glRotated(renderAngle.yaw(), 0, 1, 0);
@@ -91,12 +91,18 @@ public class TileInsertArmClient extends TileInsertArm implements ISimpleItemRen
         model.renderAllExcept("Base", "BaseTop");
         GL11.glPopMatrix();
 
+        //-----------------------------
+        //Render item in hand
         GL11.glPushMatrix();
+        GL11.glTranslated(pos.xf() + 0.5f, pos.yf() + 0.2f, pos.zf() + 0.5f);
+
+        //Setup world position
         double x = renderAngle.x() * 1.15;
         double z = renderAngle.z() * 1.15;
-        GL11.glTranslated(pos.xf() + 0.5f, pos.yf() + 0.2f, pos.zf() + 0.5f);
-        GL11.glRotatef((float) renderAngle.yaw() + 90f, 0.0F, 1.0F, 0.0F);
         FakeItemRender.setWorldPosition(worldObj, xi() + 0.5 + x, yi() + 0.5, zi() + 0.5 + z);
+
+        //Render actual item with rotation
+        GL11.glRotatef((float) renderAngle.yaw() + 90f, 0.0F, 1.0F, 0.0F);
         FakeItemRender.renderItemAtPosition(1, 0, 0, renderStack);
         GL11.glPopMatrix();
     }
