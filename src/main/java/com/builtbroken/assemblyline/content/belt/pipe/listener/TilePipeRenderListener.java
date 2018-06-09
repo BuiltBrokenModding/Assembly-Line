@@ -1,5 +1,6 @@
 package com.builtbroken.assemblyline.content.belt.pipe.listener;
 
+import com.builtbroken.assemblyline.client.FakeItemRender;
 import com.builtbroken.assemblyline.content.belt.TilePipeBelt;
 import com.builtbroken.assemblyline.content.belt.pipe.BeltType;
 import com.builtbroken.mc.api.tile.node.ITileNode;
@@ -10,10 +11,6 @@ import com.builtbroken.mc.framework.block.imp.ITileEventListenerBuilder;
 import com.builtbroken.mc.seven.framework.block.listeners.TileListener;
 import com.builtbroken.mc.seven.framework.block.listeners.client.ITileRenderListener;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
@@ -29,15 +26,7 @@ import java.util.List;
  */
 public class TilePipeRenderListener extends TileListener implements IBlockListener, ITileRenderListener
 {
-    private final RenderItem renderItem = new RenderItem()
-    {
-        @Override
-        public boolean shouldBob()
-        {
-            return false;
-        }
-    };
-    private final EntityItem entityItem = new EntityItem(null);
+
 
     @Override
     public void renderDynamic(TileEntity tile, double xx, double yy, double zz, float f)
@@ -46,10 +35,7 @@ public class TilePipeRenderListener extends TileListener implements IBlockListen
         final double n = spaceFromEdge;
         final double n2 = 1 - spaceFromEdge;
         //Update fake item for rendering
-        entityItem.worldObj = tile.getWorldObj();
-        entityItem.posX = tile.xCoord + 0.5;
-        entityItem.posY = tile.yCoord + 0.5;
-        entityItem.posZ = tile.zCoord + 0.5;
+        FakeItemRender.setWorldPosition(tile.getWorldObj(), tile.xCoord + 0.5, tile.yCoord + 0.5, tile.zCoord + 0.5);
 
         //Get node
         ITileNode node = tile instanceof ITileNodeHost ? ((ITileNodeHost) tile).getTileNode() : null;
@@ -64,161 +50,124 @@ public class TilePipeRenderListener extends TileListener implements IBlockListen
                 GL11.glTranslated(xx, yy, zz);
 
                 //Always render center as slot 2 unless center is a buffer chest
-                renderItemAtPosition(0.5, 0.5, 0.5, belt.renderInventory.getStackInSlot(2));
+                FakeItemRender.renderItemAtPosition(0.5, 0.5, 0.5, belt.renderInventory.getStackInSlot(2));
 
                 //TODO optimize to use an object set to detail slots to render positions
                 if (belt.type == BeltType.NORMAL)
                 {
                     if (belt.getDirection() == ForgeDirection.WEST)
                     {
-                        renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
-                        renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
+                        FakeItemRender.renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
+                        FakeItemRender.renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
                     }
                     else if (belt.getDirection() == ForgeDirection.EAST)
                     {
-                        renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
-                        renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
+                        FakeItemRender.renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
+                        FakeItemRender.renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
                     }
                     else if (belt.getDirection() == ForgeDirection.NORTH)
                     {
-                        renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(0));
-                        renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(1));
+                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(0));
+                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(1));
                     }
                     else if (belt.getDirection() == ForgeDirection.SOUTH)
                     {
-                        renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(1));
-                        renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(0));
+                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(1));
+                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(0));
                     }
                 }
                 else if (belt.type == BeltType.LEFT_ELBOW)
                 {
                     if (belt.getDirection() == ForgeDirection.WEST)
                     {
-                        renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(1));
-                        renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
+                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(1));
+                        FakeItemRender.renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
                     }
                     else if (belt.getDirection() == ForgeDirection.EAST)
                     {
-                        renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
-                        renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(1));
+                        FakeItemRender.renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
+                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(1));
                     }
                     else if (belt.getDirection() == ForgeDirection.NORTH)
                     {
-                        renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
-                        renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(0));
+                        FakeItemRender.renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
+                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(0));
                     }
                     else if (belt.getDirection() == ForgeDirection.SOUTH)
                     {
-                        renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(0));
-                        renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
+                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(0));
+                        FakeItemRender.renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
                     }
                 }
                 else if (belt.type == BeltType.RIGHT_ELBOW)
                 {
                     if (belt.getDirection() == ForgeDirection.WEST)
                     {
-                        renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(1));
-                        renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
+                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(1));
+                        FakeItemRender.renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
                     }
                     else if (belt.getDirection() == ForgeDirection.EAST)
                     {
-                        renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
-                        renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(1));
+                        FakeItemRender.renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
+                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(1));
                     }
                     else if (belt.getDirection() == ForgeDirection.NORTH)
                     {
-                        renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
-                        renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(0));
+                        FakeItemRender.renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
+                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(0));
                     }
                     else if (belt.getDirection() == ForgeDirection.SOUTH)
                     {
-                        renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(0));
-                        renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
+                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(0));
+                        FakeItemRender.renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(1));
                     }
                 }
                 else if (belt.type == BeltType.JUNCTION || belt.type == BeltType.INTERSECTION)
                 {
                     if (belt.getDirection() == ForgeDirection.WEST)
                     {
-                        renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(1)); //left
-                        renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(0)); //output
-                        renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(3)); //right
+                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(1)); //left
+                        FakeItemRender.renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(0)); //output
+                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(3)); //right
                         if (belt.type == BeltType.INTERSECTION)
                         {
-                            renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(4)); //input
+                            FakeItemRender.renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(4)); //input
                         }
                     }
                     else if (belt.getDirection() == ForgeDirection.EAST)
                     {
-                        renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(3)); //right
-                        renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(0)); //output
-                        renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(1)); //left
+                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(3)); //right
+                        FakeItemRender.renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(0)); //output
+                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(1)); //left
                         if (belt.type == BeltType.INTERSECTION)
                         {
-                            renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(4)); //input
+                            FakeItemRender.renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(4)); //input
                         }
                     }
                     else if (belt.getDirection() == ForgeDirection.NORTH)
                     {
-                        renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(1)); //left
-                        renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(0)); //output
-                        renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(3)); //right
+                        FakeItemRender.renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(1)); //left
+                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(0)); //output
+                        FakeItemRender.renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(3)); //right
                         if (belt.type == BeltType.INTERSECTION)
                         {
-                            renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(4)); //input
+                            FakeItemRender.renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(4)); //input
                         }
                     }
                     else if (belt.getDirection() == ForgeDirection.SOUTH)
                     {
-                        renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(3)); //right
-                        renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(0)); //output
-                        renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(1)); //left
+                        FakeItemRender.renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(3)); //right
+                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(0)); //output
+                        FakeItemRender.renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(1)); //left
                         if (belt.type == BeltType.INTERSECTION)
                         {
-                            renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(4)); //input
+                            FakeItemRender.renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(4)); //input
                         }
                     }
                 }
 
                 GL11.glPopMatrix();
             }
-        }
-    }
-
-    protected void renderItemAtPosition(double xx, double yy, double zz, ItemStack item)
-    {
-        if (item != null)
-        {
-            //Start
-            GL11.glPushMatrix();
-
-            //Translate
-            GL11.glTranslated(xx, yy, zz);
-            final float scale = 1f;
-            GL11.glScalef(scale, scale, scale);
-
-            try
-            {
-                //Fix missing render manager
-                renderItem.setRenderManager(RenderManager.instance);
-
-                entityItem.setEntityItemStack(item);
-                entityItem.hoverStart = 0.0F;
-
-                //Adjustment data per item
-                double xAdjust = 0;
-                double zAdjust = 0;
-
-                //Render item using RenderItem class to save time
-                renderItem.doRender(entityItem, xAdjust, 0, zAdjust, 0, 0);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-            //End
-            GL11.glPopMatrix();
         }
     }
 
