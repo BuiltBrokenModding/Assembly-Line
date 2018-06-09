@@ -12,11 +12,16 @@ If this is a problem, use exact build numbers to track changes. As each build lo
 ## 5.0.5
 ### Runtime Changes
 * Added: Item render for inserter arm
+* Added: Ability to insert items into pipe belt with inserter from several sides.
+         Previous only supported inserting from back in the same way pipes worked.
+* Added: Improved inserter handling for node based tiles
 
 * Fixed: Crash getting collision box for rail block (actual fix in VoltzEngine)
 
 ### Development Changes
-Abstract belt pipe item render code into helper class. Allows any machine to render fake items in the world.
+* Added: IInserterAccess to allow controling how robotic arms add and remove items.
+* Abstracted: belt pipe item render code into helper class. Allows any machine to render fake items in the world.
+
 
 ## 5.0.4
 ### Runtime Changes

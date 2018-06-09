@@ -36,6 +36,16 @@
         "textureID": "assemblyline:belt.pipe.intersection"
       },
       {
+        "id": "item.inventory.splitter",
+        "renderType": "item",
+        "textureID": "assemblyline:belt.pipe.splitter"
+      },
+      {
+        "id": "item.inventory.end",
+        "renderType": "item",
+        "textureID": "assemblyline:belt.pipe.end"
+      },
+      {
         "id": "block.15",
         "renderType": "block",
         "textureID": "assemblyline:belt.pipe.glass"

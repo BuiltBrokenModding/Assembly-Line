@@ -58,6 +58,16 @@
         "id": "intersection",
         "name":"intersection",
         "meta": 4
+      },
+      {
+        "id": "splitter",
+        "name":"splitter",
+        "meta": 5
+      },
+      {
+        "id": "end",
+        "name":"end",
+        "meta": 7
       }
     ]
   }
