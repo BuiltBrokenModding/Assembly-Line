@@ -1,6 +1,7 @@
 package com.builtbroken.assemblyline.content.belt;
 
 import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.assemblyline.api.IInserterAccess;
 import com.builtbroken.assemblyline.content.belt.gen.TileEntityWrappedPipeBelt;
 import com.builtbroken.assemblyline.content.belt.pipe.BeltType;
 import com.builtbroken.assemblyline.content.belt.pipe.PipeInventory;
@@ -19,6 +20,7 @@ import com.builtbroken.mc.core.Engine;
 import com.builtbroken.mc.core.network.packet.PacketType;
 import com.builtbroken.mc.framework.block.imp.IWrenchListener;
 import com.builtbroken.mc.framework.logic.TileNode;
+import com.builtbroken.mc.imp.transform.rotation.EulerAngle;
 import com.builtbroken.mc.imp.transform.vector.Location;
 import com.builtbroken.mc.prefab.inventory.BasicInventory;
 import com.builtbroken.mc.prefab.inventory.InventoryUtility;
@@ -43,7 +45,7 @@ import java.util.List;
  * Created by Dark(DarkGuardsman, Robert) on 11/14/2017.
  */
 @TileWrapped(className = ".gen.TileEntityWrappedPipeBelt", wrappers = "ExternalInventory")
-public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProvider<PipeInventory>, IGuiTile, IWrenchListener
+public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProvider<PipeInventory>, IGuiTile, IWrenchListener, IInserterAccess
 {
     //============================================================
     //==================== Constants =============================
@@ -449,6 +451,132 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
             }
         }
         return false;
+    }
+
+    @Override
+    public ItemStack takeInserterItem(EulerAngle angle, ForgeDirection side, int count, boolean remove)
+    {
+        //TODO get item based on angle/position
+
+        //Allow output side priority
+        for (BeltSideState state : beltOutputIterator())
+        {
+            if (state != null && state.side == side)
+            {
+                if (getInventory().getStackInSlot(state.slotID) != null)
+                {
+                    return getItemForRemoval(state.slotID, count, remove);
+                }
+                return null;
+            }
+        }
+
+        if (!renderTop && (type == BeltType.NORMAL || type == BeltType.RIGHT_ELBOW || type == BeltType.LEFT_ELBOW))
+        {
+            final int slot = getCenterSlots()[0];
+            if (getInventory().getStackInSlot(slot) != null)
+            {
+                boolean armNS = side == ForgeDirection.NORTH || side == ForgeDirection.SOUTH;
+                boolean beltEW = getDirection() == ForgeDirection.WEST || getDirection() == ForgeDirection.EAST;
+                if (armNS)
+                {
+                    if (beltEW)
+                    {
+                        return getItemForRemoval(slot, count, remove);
+                    }
+                    return null;
+                }
+                else if (!beltEW)
+                {
+                    return getItemForRemoval(slot, count, remove);
+                }
+                return null;
+            }
+        }
+        return null;
+    }
+
+    private ItemStack getItemForRemoval(int slot, int count, boolean remove)
+    {
+        ItemStack stack = getInventory().getStackInSlot(slot);
+        if (remove)
+        {
+            int removeCount = Math.min(stack.stackSize, count);
+            if (remove)
+            {
+                return getInventory().decrStackSize(slot, removeCount);
+            }
+            else
+            {
+                stack = stack.copy();
+                stack.stackSize = removeCount;
+                return stack;
+            }
+        }
+        return stack;
+    }
+
+    @Override
+    public ItemStack giveInserterItem(EulerAngle angle, ForgeDirection side, ItemStack stack, boolean doInsert)
+    {
+        //Allow input side priority
+        for (BeltSideState state : beltInputIterator())
+        {
+            if (state != null && state.side == side)
+            {
+                if (getInventory().getStackInSlot(state.slotID) != null)
+                {
+                    return getItemAfterInsert(state.slotID, stack, doInsert);
+                }
+                return null;
+            }
+        }
+
+        if (!renderTop && (type == BeltType.NORMAL || type == BeltType.RIGHT_ELBOW || type == BeltType.LEFT_ELBOW))
+        {
+            final int slot = getCenterSlots()[0];
+            if (getInventory().getStackInSlot(slot) == null) //We can only have 1 item, so do a null check
+            {
+                boolean armNS = side == ForgeDirection.NORTH || side == ForgeDirection.SOUTH;
+                boolean beltEW = getDirection() == ForgeDirection.WEST || getDirection() == ForgeDirection.EAST;
+                if (armNS)
+                {
+                    if (beltEW)
+                    {
+                        return getItemAfterInsert(slot, stack, doInsert);
+                    }
+                    return null;
+                }
+                else if (!beltEW)
+                {
+                    return getItemAfterInsert(slot, stack, doInsert);
+                }
+                return null;
+            }
+        }
+
+        return stack;
+    }
+
+    private ItemStack getItemAfterInsert(int slot, ItemStack insertStack, boolean doInsert)
+    {
+        ItemStack slotStack = getInventory().getStackInSlot(slot);
+        if (slotStack == null) //At the moment the inventory can only handle 1 stack size, so might as well null check
+        {
+            ItemStack stack = insertStack.copy();
+            ItemStack newSlotStack = stack.splitStack(1);
+            if (doInsert)
+            {
+                getInventory().setInventorySlotContents(slot, newSlotStack);
+            }
+
+            if(stack.stackSize <= 0)
+            {
+                return null;
+            }
+            return stack;
+        }
+        return insertStack;
     }
 
     @Override
