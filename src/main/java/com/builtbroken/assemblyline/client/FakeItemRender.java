@@ -22,7 +22,6 @@ public class FakeItemRender
         }
     };
     private static final EntityItem entityItem = new EntityItem(null);
-
     /**
      * Sets the world position of the fake item
      * <p>
@@ -71,12 +70,8 @@ public class FakeItemRender
                 entityItem.setEntityItemStack(item);
                 entityItem.hoverStart = 0.0F;
 
-                //Adjustment data per item
-                double xAdjust = 0;
-                double zAdjust = 0;
-
                 //Render item using RenderItem class to save time
-                renderItem.doRender(entityItem, xAdjust, 0, zAdjust, 0, 0);
+                renderItem.doRender(entityItem, 0, 0, 0, 0, 0);
             }
             catch (Exception e)
             {

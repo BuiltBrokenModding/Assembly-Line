@@ -1,12 +1,14 @@
 package com.builtbroken.assemblyline.content.inserter;
 
 import com.builtbroken.assemblyline.AssemblyLine;
+import com.builtbroken.assemblyline.client.FakeItemRender;
 import com.builtbroken.assemblyline.content.rail.powered.TilePowerRailClient;
 import com.builtbroken.mc.api.items.ISimpleItemRenderer;
 import com.builtbroken.mc.core.References;
-import com.builtbroken.mc.lib.render.model.loader.EngineModelLoader;
 import com.builtbroken.mc.imp.transform.region.Cube;
+import com.builtbroken.mc.imp.transform.rotation.EulerAngle;
 import com.builtbroken.mc.imp.transform.vector.Pos;
+import com.builtbroken.mc.lib.render.model.loader.EngineModelLoader;
 import com.builtbroken.mc.prefab.tile.Tile;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.ByteBufUtils;
@@ -31,10 +33,10 @@ import org.lwjgl.opengl.GL11;
  */
 public class TileInsertArmClient extends TileInsertArm implements ISimpleItemRenderer
 {
-
     private static IModelCustom model = EngineModelLoader.loadModel(new ResourceLocation(AssemblyLine.DOMAIN, References.MODEL_PATH + "bot.arm.classic.tcn"));
     private static ResourceLocation texture = new ResourceLocation(AssemblyLine.DOMAIN, "textures/models/metal.png");
     private ItemStack renderStack;
+    private EulerAngle renderAngle = new EulerAngle(0,0,0);
 
     private static IIcon[] arrow;
 
@@ -77,14 +79,25 @@ public class TileInsertArmClient extends TileInsertArm implements ISimpleItemRen
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void renderDynamic(Pos pos, float frame, int pass)
+    public void renderDynamic(Pos pos, float deltaTime, int pass)
     {
+        renderAngle.lerp(rotation, deltaTime);
+
         //Render launcher
         GL11.glPushMatrix();
         GL11.glTranslatef(pos.xf() + 0.5f, pos.yf() + 0.4f, pos.zf() + 0.5f);
-        GL11.glRotated(rotation.yaw(), 0, 1, 0);
+        GL11.glRotated(renderAngle.yaw(), 0, 1, 0);
         FMLClientHandler.instance().getClient().renderEngine.bindTexture(texture);
         model.renderAllExcept("Base", "BaseTop");
+        GL11.glPopMatrix();
+
+        GL11.glPushMatrix();
+        double x = renderAngle.x() * 1.15;
+        double z = renderAngle.z() * 1.15;
+        GL11.glTranslated(pos.xf() + 0.5f, pos.yf() + 0.2f, pos.zf() + 0.5f);
+        GL11.glRotatef((float) renderAngle.yaw() + 90f, 0.0F, 1.0F, 0.0F);
+        FakeItemRender.setWorldPosition(worldObj, xi() + 0.5 + x, yi() + 0.5, zi() + 0.5 + z);
+        FakeItemRender.renderItemAtPosition(1, 0, 0, renderStack);
         GL11.glPopMatrix();
     }
 
