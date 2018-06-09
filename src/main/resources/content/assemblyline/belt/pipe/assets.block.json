@@ -28,35 +28,5 @@
     "domain": "assemblyline",
     "name": "belt.pipe.glass",
     "type": "block"
-  },
-  "texture:4": {
-    "key": "assemblyline:belt.pipe",
-    "domain": "assemblyline",
-    "name": "belt.pipe",
-    "type": "item"
-  },
-  "texture:5": {
-    "key": "assemblyline:belt.pipe.left",
-    "domain": "assemblyline",
-    "name": "belt.pipe.left",
-    "type": "item"
-  },
-  "texture:6": {
-    "key": "assemblyline:belt.pipe.right",
-    "domain": "assemblyline",
-    "name": "belt.pipe.right",
-    "type": "item"
-  },
-  "texture:7": {
-    "key": "assemblyline:belt.pipe.junction",
-    "domain": "assemblyline",
-    "name": "belt.pipe.junction",
-    "type": "item"
-  },
-  "texture:8": {
-    "key": "assemblyline:belt.pipe.intersection",
-    "domain": "assemblyline",
-    "name": "belt.pipe.intersection",
-    "type": "item"
   }
 }
