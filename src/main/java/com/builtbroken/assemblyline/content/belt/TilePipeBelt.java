@@ -12,12 +12,16 @@ import com.builtbroken.assemblyline.content.belt.pipe.gui.ContainerPipeBelt;
 import com.builtbroken.assemblyline.content.belt.pipe.gui.GuiPipeBelt;
 import com.builtbroken.jlib.type.Pair;
 import com.builtbroken.mc.api.data.IPacket;
+import com.builtbroken.mc.api.tile.ConnectionType;
 import com.builtbroken.mc.api.tile.IRotatable;
 import com.builtbroken.mc.api.tile.access.IGuiTile;
+import com.builtbroken.mc.api.tile.connection.ConnectionColor;
+import com.builtbroken.mc.api.tile.connection.IAdjustableConnections;
 import com.builtbroken.mc.api.tile.provider.IInventoryProvider;
 import com.builtbroken.mc.codegen.annotations.TileWrapped;
 import com.builtbroken.mc.core.Engine;
 import com.builtbroken.mc.core.network.packet.PacketType;
+import com.builtbroken.mc.framework.block.imp.IBlockStackListener;
 import com.builtbroken.mc.framework.block.imp.IWrenchListener;
 import com.builtbroken.mc.framework.logic.TileNode;
 import com.builtbroken.mc.imp.transform.rotation.EulerAngle;
@@ -34,6 +38,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.ArrayList;
@@ -195,6 +200,31 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
             }
         }
         return true;
+    }
+
+    @Override
+    public boolean onToolUsed(ItemStack stack, EntityPlayer player, ConnectionColor color, ConnectionType connectionType, ForgeDirection side, float hitX, float hitY, float hitZ)
+    {
+        if (connectionType == ConnectionType.INVENTORY)
+        {
+            if (type == BeltType.JUNCTION)
+            {
+                if (isServer())
+                {
+                    for (BeltSideState state : getBeltStates())
+                    {
+                        if (state.side == side) //TODO replace with trace system that will detect of face clicked
+                        {
+                            setOutputForSide(state, !state.output);
+                            player.addChatComponentMessage(new ChatComponentText("Side set to output: " + state.output));
+                            return true;
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     // </editor-folder>
@@ -577,7 +607,7 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
                 getInventory().setInventorySlotContents(slot, newSlotStack);
             }
 
-            if(stack.stackSize <= 0)
+            if (stack.stackSize <= 0)
             {
                 return null;
             }
@@ -642,11 +672,17 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
             {
                 if (state.slotID == slotID)
                 {
-                    state.output = output;
+                    setOutputForSide(state, output);
                     break;
                 }
             }
         }
+    }
+
+    public void setOutputForSide(BeltSideState state, boolean output)
+    {
+        state.output = output;
+        shouldUpdateRender = true;
     }
 
     public BeltInventoryFilter getFilterForSide(int slotID)
