@@ -25,10 +25,18 @@ public class BeltSideStateIterator implements Iterator<BeltSideState>, Iterable<
     @Override
     public boolean hasNext()
     {
+        if(belt == null || belt.getBeltStates() == null || belt.getBeltStates().size() == 0)
+        {
+            return false;
+        }
+
+        //Find next
         while ((peek() == null || peek().output != output) && nextIndex < belt.getBeltStates().size())
         {
             nextIndex = nextIndex + 1;
         }
+
+        //Check next
         BeltSideState state = peek();
         return state != null && state.output == output;
     }
