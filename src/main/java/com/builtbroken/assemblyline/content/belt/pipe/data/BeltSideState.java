@@ -1,7 +1,6 @@
 package com.builtbroken.assemblyline.content.belt.pipe.data;
 
-import com.builtbroken.mc.api.ISave;
-import net.minecraft.nbt.NBTTagCompound;
+import com.builtbroken.mc.data.Direction;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
@@ -10,50 +9,23 @@ import net.minecraftforge.common.util.ForgeDirection;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 11/14/2017.
  */
-public class BeltSideState implements ISave
+public class BeltSideState
 {
     /** Inventory slot this represents */
     public final int slotID;
     /** Side of the block, point away from the tile */
     public final ForgeDirection side;
-    /** Can the state be modified */
-    public final boolean canBeConfigured;
+    /** Side of the block, point away from the tile */
+    public final Direction direction;
     /** Is state setup to output items from the belt */
-    public boolean output;
-    /** Filter to use for allowing items into this side, only works for input */
-    public BeltInventoryFilter filter; //TODO implement simple filter object
+    public final boolean output;
 
 
-    public BeltSideState(int slot, ForgeDirection side, boolean canBeConfigured, boolean output)
+    public BeltSideState(int slot, Direction side, boolean output)
     {
         this.slotID = slot;
-        this.side = side;
-        this.canBeConfigured = canBeConfigured;
+        this.side = ForgeDirection.getOrientation(side.ordinal());
+        this.direction = side;
         this.output = output;
-    }
-
-    @Override
-    public void load(NBTTagCompound tag)
-    {
-        //Prevent loading to avoid mistakes
-        if (canBeConfigured)
-        {
-            output = tag.getBoolean("output");
-        }
-
-        //TODO load filter
-    }
-
-    @Override
-    public NBTTagCompound save(NBTTagCompound tag)
-    {
-        tag.setBoolean("output", output);
-        //TODO save filter
-        return tag;
-    }
-
-    public BeltSideState copy(boolean b)
-    {
-        return new BeltSideState(slotID, side, b, output);
     }
 }

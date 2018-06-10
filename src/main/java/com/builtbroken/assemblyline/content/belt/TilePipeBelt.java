@@ -6,6 +6,7 @@ import com.builtbroken.assemblyline.content.belt.gen.TileEntityWrappedPipeBelt;
 import com.builtbroken.assemblyline.content.belt.pipe.BeltType;
 import com.builtbroken.assemblyline.content.belt.pipe.PipeInventory;
 import com.builtbroken.assemblyline.content.belt.pipe.data.BeltInventoryFilter;
+import com.builtbroken.assemblyline.content.belt.pipe.data.BeltSideData;
 import com.builtbroken.assemblyline.content.belt.pipe.data.BeltSideState;
 import com.builtbroken.assemblyline.content.belt.pipe.data.BeltSideStateIterator;
 import com.builtbroken.assemblyline.content.belt.pipe.gui.ContainerPipeBelt;
@@ -29,7 +30,6 @@ import com.builtbroken.mc.imp.transform.rotation.EulerAngle;
 import com.builtbroken.mc.imp.transform.vector.Location;
 import com.builtbroken.mc.prefab.inventory.BasicInventory;
 import com.builtbroken.mc.prefab.inventory.InventoryUtility;
-import com.google.common.collect.ImmutableList;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.item.EntityItem;
@@ -42,9 +42,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
@@ -68,14 +67,13 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     public static int GUI_SETTINGS = 1;
     public static int GUI_UPGRADES = 2;
 
+    public static final String NBT_BELT_SIDE_DATA = "beltSideData";
+
     /** Cached state map of direction to input sides & slots */
-    public static List<BeltSideState>[/* belt type */][/* rotation */] cachedBeltStates; //TODO change over to hashmap like object
+    public static HashMap<Direction, BeltSideState>[/* belt type */][/* rotation */] cachedBeltStates; //TODO change over to hashmap like object
 
     public static int[] centerSlots = new int[]{2};
     public static int[] centerEndSlots = new int[]{1}; //TODO move to enum
-
-
-    public static final List<BeltSideState> EMPTY_LIST = ImmutableList.of();
 
     //============================================================
 
@@ -106,10 +104,10 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
 
     public BasicInventory renderInventory;
 
-    protected List<BeltSideState> localBeltState; //TODO change over to hashmap
-
     private BeltSideStateIterator inputIterator;
     private BeltSideStateIterator outputIterator;
+
+    private BeltSideData[] beltSideData;
 
     public TilePipeBelt()
     {
@@ -214,14 +212,12 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
             {
                 if (isServer())
                 {
-                    for (BeltSideState state : getBeltStates())
+                    Direction direction = Direction.getOrientation(side.ordinal());
+                    if (getBeltStateMap().containsKey(direction)) //TODO replace with trace system that will detect of face clicked
                     {
-                        if (state.side == side) //TODO replace with trace system that will detect of face clicked
-                        {
-                            setOutputForSide(state.side.ordinal(), !state.output);
-                            player.addChatComponentMessage(new ChatComponentText("Side set to output: " + state.output));
-                            return true;
-                        }
+                        setOutputForSide(side.ordinal(), !canOutputForSide(direction));
+                        player.addChatComponentMessage(new ChatComponentText("Side set to output: " + canOutputForSide(direction)));
+                        return true;
                     }
                 }
                 return true;
@@ -419,7 +415,7 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
                         if (tileInv != null && (tile instanceof TileEntityWrappedPipeBelt || pullItems))
                         {
                             Pair<ItemStack, Integer> slotData = InventoryUtility.findFirstItemInInventory(tileInv,
-                                    slotState.side.getOpposite().ordinal(), getItemsToPullPerCycle(), slotState.filter);
+                                    slotState.side.getOpposite().ordinal(), getItemsToPullPerCycle(), getFilterForSide(slotState.side.ordinal()));
                             if (slotData != null)
                             {
                                 ItemStack inputStack = tileInv.decrStackSize(slotData.right(), slotData.left().stackSize);
@@ -650,17 +646,13 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         return outputIterator.reset(); //Not thread safe
     }
 
-    public List<BeltSideState> getBeltStates() //TODO change over to hashmap
+    public HashMap<Direction, BeltSideState> getBeltStateMap()
     {
-        if (localBeltState != null)
-        {
-            return localBeltState;
-        }
         if (cachedBeltStates[type.ordinal()] != null)
         {
             return cachedBeltStates[type.ordinal()][getDirection().ordinal()];
         }
-        return EMPTY_LIST;
+        return new HashMap();
     }
 
     public boolean hasSortingUpgrade()
@@ -670,76 +662,60 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
 
     protected void setLocalBeltState()
     {
-        this.localBeltState = null;
-
-        List<BeltSideState> localBeltState = new ArrayList();
-        for (BeltSideState sideState : getBeltStates())
+        beltSideData = new BeltSideData[6];
+        for (Direction direction : Direction.DIRECTIONS)
         {
-            localBeltState.add(sideState.copy(true));
+            BeltSideState state = getBeltStateMap().get(direction);
+            if (state != null)
+            {
+                beltSideData[direction.ordinal()] = new BeltSideData(state.output);
+            }
         }
-        this.localBeltState = localBeltState;
     }
 
-    public void setOutputForSide(int side, boolean output)
+    public BeltSideData getBeltSideData(int side)
     {
-        if (localBeltState == null)
+        if (beltSideData == null)
         {
             setLocalBeltState();
         }
-        for (BeltSideState sideState : getBeltStates())
+        return beltSideData[side];
+    }
+
+
+    public void setOutputForSide(int side, boolean output)
+    {
+        BeltSideData data = getBeltSideData(side);
+        if (data != null)
         {
-            if (sideState.side.ordinal() == side)
-            {
-                sideState.output = output;
-            }
+            data.output = output;
+            shouldUpdateRender = true;
         }
-        shouldUpdateRender = true;
     }
 
     public boolean canOutputForSide(Direction direction)
     {
-        for (BeltSideState state : beltOutputIterator())
+        BeltSideData data = getBeltSideData(direction.ordinal());
+        if (data != null)
         {
-            if (state.side.ordinal() == direction.ordinal())
-            {
-                return state.output;
-            }
+            return data.output;
+        }
+        BeltSideState state = getBeltStateMap().get(direction);
+        if(state != null)
+        {
+            return state.output;
         }
         return false;
     }
 
-    public BeltInventoryFilter getFilterForSide(int slotID)
+    public BeltInventoryFilter getFilterForSide(int side)
     {
-        if (localBeltState != null)
+        BeltSideData data = getBeltSideData(side);
+        if (data != null)
         {
-            for (BeltSideState state : getBeltStates())
-            {
-                if (state.slotID == slotID)
-                {
-                    return state.filter;
-                }
-            }
+            return data.filter;
         }
         return null;
-    }
-
-    public void enableFilterSide(int slotID)
-    {
-        if (type == BeltType.INTERSECTION || type == BeltType.JUNCTION)
-        {
-            if (localBeltState == null)
-            {
-                setLocalBeltState();
-            }
-            for (BeltSideState state : getBeltStates())
-            {
-                if (state.slotID == slotID)
-                {
-                    state.filter = new BeltInventoryFilter();
-                    break;
-                }
-            }
-        }
     }
 
     @Override
@@ -777,11 +753,11 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         }
         if (nbt.hasKey("beltStates"))
         {
-            loadBeltStates(nbt.getTagList("beltStates", 10));
+            loadBeltStates(nbt.getTagList(NBT_BELT_SIDE_DATA, 10));
         }
         else
         {
-            localBeltState = null;
+            beltSideData = null;
         }
         pullItems = nbt.getBoolean("pullItems");
         shouldEjectItems = nbt.getBoolean("ejectItems");
@@ -794,15 +770,11 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         for (int i = 0; i < list.tagCount(); i++)
         {
             NBTTagCompound tag = list.getCompoundTagAt(i);
-            int slotID = tag.getInteger("id");
-            for (BeltSideState state : getBeltStates()) //TODO improve O(n^2)
-            {
-                if (state.slotID == slotID)
-                {
-                    state.load(tag);
-                    break;
-                }
-            }
+            int index = tag.getInteger("side");
+
+            beltSideData[index] = new BeltSideData(tag.getBoolean("output"));
+            beltSideData[index].enabled = tag.getBoolean("enabled");
+            //TODO load filter
         }
     }
 
@@ -816,9 +788,9 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
             getInventory().save(invSave);
             nbt.setTag("inventory", invSave);
         }
-        if (localBeltState != null)
+        if (beltSideData != null)
         {
-            nbt.setTag("beltStates", saveBeltState());
+            nbt.setTag(NBT_BELT_SIDE_DATA, saveBeltState());
         }
         nbt.setBoolean("pullItems", pullItems);
         nbt.setBoolean("ejectItems", shouldEjectItems);
@@ -830,12 +802,19 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     protected NBTTagList saveBeltState()
     {
         NBTTagList list = new NBTTagList();
-        for (BeltSideState sideState : localBeltState)
+        for (Direction direction : Direction.DIRECTIONS)
         {
-            NBTTagCompound tag = new NBTTagCompound();
-            sideState.save(tag);
-            tag.setInteger("id", sideState.slotID);
-            list.appendTag(tag);
+            BeltSideData data = beltSideData[direction.ordinal()];
+            if (data != null)
+            {
+                NBTTagCompound tag = new NBTTagCompound();
+
+                tag.setInteger("side", direction.ordinal());
+                tag.setBoolean("output", data.output);
+                tag.setBoolean("enabled", data.enabled);
+
+                list.appendTag(tag);
+            }
         }
         return list;
     }
@@ -934,8 +913,8 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         buf.writeBoolean(pullItems);
         buf.writeBoolean(renderTop);
         writeInvPacket(buf);
-        buf.writeBoolean(localBeltState != null);
-        if (localBeltState != null)
+        buf.writeBoolean(beltSideData != null);
+        if (beltSideData != null)
         {
             NBTTagCompound tag = new NBTTagCompound();
             tag.setTag("beltStates", saveBeltState());
@@ -1000,65 +979,65 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
 
     public static void generateBeltStates()
     {
-        cachedBeltStates = new ArrayList[BeltType.values().length][6];
-        ForgeDirection[] rotations = new ForgeDirection[]{ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.EAST, ForgeDirection.WEST};
-        for (ForgeDirection direction : rotations)
+        cachedBeltStates = new HashMap[BeltType.values().length][6];
+        Direction[] rotations = new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST};
+        for (Direction direction : rotations)
         {
             //Generate cached state for normal belt for side
-            List<BeltSideState> normalBeltState = new ArrayList();
-            normalBeltState.add(new BeltSideState(0, direction, false, false));
-            normalBeltState.add(new BeltSideState(1, direction.getOpposite(), false, true));
+            HashMap<Direction, BeltSideState> normalBeltState = new HashMap();
+            normalBeltState.put(direction, new BeltSideState(0, direction, false));
+            normalBeltState.put(direction.getOpposite(), new BeltSideState(1, direction.getOpposite(), true));
             cachedBeltStates[BeltType.NORMAL.ordinal()][direction.ordinal()] = normalBeltState;
 
             //Generate cached state for end belt for side
-            List<BeltSideState> endBeltState = new ArrayList();
-            endBeltState.add(new BeltSideState(0, direction.getOpposite(), false, true));
+            HashMap<Direction, BeltSideState> endBeltState = new HashMap();
+            endBeltState.put(direction.getOpposite(), new BeltSideState(0, direction.getOpposite(), true));
             cachedBeltStates[BeltType.END_CAP.ordinal()][direction.ordinal()] = endBeltState;
 
             //Get rotation
-            ForgeDirection turn;
+            Direction turn;
             switch (direction)
             {
                 case NORTH:
-                    turn = ForgeDirection.EAST;
+                    turn = Direction.EAST;
                     break;
                 case SOUTH:
-                    turn = ForgeDirection.WEST;
+                    turn = Direction.WEST;
                     break;
                 case EAST:
-                    turn = ForgeDirection.SOUTH;
+                    turn = Direction.SOUTH;
                     break;
                 default:
-                    turn = ForgeDirection.NORTH;
+                    turn = Direction.NORTH;
                     break;
             }
 
             //Generate left elbow
-            List<BeltSideState> leftBeltState = new ArrayList();
-            leftBeltState.add(new BeltSideState(0, direction.getOpposite(), false, true));
-            leftBeltState.add(new BeltSideState(1, turn, false, false));
+            HashMap<Direction, BeltSideState> leftBeltState = new HashMap();
+            leftBeltState.put(direction.getOpposite(), new BeltSideState(0, direction.getOpposite(), true));
+            leftBeltState.put(direction, new BeltSideState(1, turn, false));
             cachedBeltStates[BeltType.LEFT_ELBOW.ordinal()][direction.ordinal()] = leftBeltState;
 
             //Generate right elbow
-            List<BeltSideState> rightBeltState = new ArrayList();
-            rightBeltState.add(new BeltSideState(0, direction.getOpposite(), false, true));
-            rightBeltState.add(new BeltSideState(1, turn.getOpposite(), false, false));
+            HashMap<Direction, BeltSideState> rightBeltState = new HashMap();
+            rightBeltState.put(direction.getOpposite(), new BeltSideState(0, direction.getOpposite(), true));
+            rightBeltState.put(direction, new BeltSideState(1, turn.getOpposite(), false));
             cachedBeltStates[BeltType.RIGHT_ELBOW.ordinal()][direction.ordinal()] = rightBeltState;
 
             //Generate junction
-            List<BeltSideState> junctionBeltState = new ArrayList();
-            junctionBeltState.add(new BeltSideState(0, direction.getOpposite(), false, true));
-            junctionBeltState.add(new BeltSideState(1, turn, false, false));
-            junctionBeltState.add(new BeltSideState(3, turn.getOpposite(), false, false));
+            HashMap<Direction, BeltSideState> junctionBeltState = new HashMap();
+            junctionBeltState.put(direction.getOpposite(), new BeltSideState(0, direction.getOpposite(), true));
+            junctionBeltState.put(turn, new BeltSideState(1, turn, false));
+            junctionBeltState.put(turn.getOpposite(), new BeltSideState(3, turn.getOpposite(), false));
             cachedBeltStates[BeltType.JUNCTION.ordinal()][direction.ordinal()] = junctionBeltState;
 
 
             //Generate junction
-            List<BeltSideState> intersectionBeltState = new ArrayList();
-            intersectionBeltState.add(new BeltSideState(0, direction.getOpposite(), false, true));
-            intersectionBeltState.add(new BeltSideState(1, turn, false, false));
-            intersectionBeltState.add(new BeltSideState(3, turn.getOpposite(), false, false));
-            intersectionBeltState.add(new BeltSideState(4, direction, false, false));
+            HashMap<Direction, BeltSideState> intersectionBeltState = new HashMap();
+            intersectionBeltState.put(direction.getOpposite(), new BeltSideState(0, direction.getOpposite(), true));
+            intersectionBeltState.put(turn, new BeltSideState(1, turn, false));
+            intersectionBeltState.put(turn.getOpposite(), new BeltSideState(3, turn.getOpposite(), false));
+            intersectionBeltState.put(direction, new BeltSideState(4, direction, false));
             cachedBeltStates[BeltType.INTERSECTION.ordinal()][direction.ordinal()] = intersectionBeltState;
         }
     }

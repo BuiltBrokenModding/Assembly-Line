@@ -1,6 +1,7 @@
 package com.builtbroken.assemblyline.content.belt.pipe.data;
 
 import com.builtbroken.assemblyline.content.belt.TilePipeBelt;
+import com.builtbroken.mc.data.Direction;
 
 import java.util.Iterator;
 
@@ -25,20 +26,20 @@ public class BeltSideStateIterator implements Iterator<BeltSideState>, Iterable<
     @Override
     public boolean hasNext()
     {
-        if(belt == null || belt.getBeltStates() == null || belt.getBeltStates().size() == 0)
+        if (belt == null || belt.getBeltStateMap() == null || belt.getBeltStateMap().isEmpty())
         {
             return false;
         }
 
         //Find next
-        while ((peek() == null || peek().output != output) && nextIndex < belt.getBeltStates().size())
+        while ((peek() == null || belt.canOutputForSide(peek().direction) != output) && nextIndex < Direction.DIRECTIONS.length)
         {
             nextIndex = nextIndex + 1;
         }
 
         //Check next
         BeltSideState state = peek();
-        return state != null && state.output == output;
+        return state != null && belt.canOutputForSide(state.direction) == output;
     }
 
     @Override
@@ -75,9 +76,9 @@ public class BeltSideStateIterator implements Iterator<BeltSideState>, Iterable<
      */
     protected BeltSideState get(int index)
     {
-        if (index >= 0 && index < belt.getBeltStates().size())
+        if (index >= 0 && index < Direction.DIRECTIONS.length)
         {
-            return belt.getBeltStates().get(index);
+            return belt.getBeltStateMap().get(Direction.getOrientation(index));
         }
         return null;
     }

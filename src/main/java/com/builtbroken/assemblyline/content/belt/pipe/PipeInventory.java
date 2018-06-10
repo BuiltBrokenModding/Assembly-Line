@@ -57,7 +57,7 @@ public class PipeInventory extends BasicInventory implements IExternalInventory,
             for(int side = 0; side < 6; side++)
             {
                 ArrayList<Integer> list = new ArrayList();
-                for(BeltSideState state : host.getBeltStates())
+                for(BeltSideState state : host.getBeltStateMap().values())
                 {
                     if(state != null && state.side.ordinal() == side)
                     {
