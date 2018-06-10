@@ -50,7 +50,7 @@ public class TilePipeRenderListener extends TileListener implements IBlockListen
                 GL11.glTranslated(xx, yy, zz);
 
                 //Always render center as slot 2 unless center is a buffer chest
-                FakeItemRender.renderItemAtPosition(0.5, 0.5, 0.5, belt.renderInventory.getStackInSlot(2));
+                FakeItemRender.renderItemAtPosition(0.5, 0.5, 0.5, belt.renderInventory.getStackInSlot(belt.getCenterSlots()[0]));
 
                 //TODO optimize to use an object set to detail slots to render positions
                 if (belt.type == BeltType.NORMAL)
@@ -74,6 +74,25 @@ public class TilePipeRenderListener extends TileListener implements IBlockListen
                     {
                         FakeItemRender.renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(1));
                         FakeItemRender.renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(0));
+                    }
+                }
+                else  if (belt.type == BeltType.END_CAP)
+                {
+                    if (belt.getDirection() == ForgeDirection.WEST)
+                    {
+                        FakeItemRender.renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
+                    }
+                    else if (belt.getDirection() == ForgeDirection.EAST)
+                    {
+                        FakeItemRender.renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(0));
+                    }
+                    else if (belt.getDirection() == ForgeDirection.NORTH)
+                    {
+                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(0));
+                    }
+                    else if (belt.getDirection() == ForgeDirection.SOUTH)
+                    {
+                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(0));
                     }
                 }
                 else if (belt.type == BeltType.LEFT_ELBOW)

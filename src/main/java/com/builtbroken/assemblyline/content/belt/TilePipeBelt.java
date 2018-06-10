@@ -21,6 +21,7 @@ import com.builtbroken.mc.api.tile.provider.IInventoryProvider;
 import com.builtbroken.mc.codegen.annotations.TileWrapped;
 import com.builtbroken.mc.core.Engine;
 import com.builtbroken.mc.core.network.packet.PacketType;
+import com.builtbroken.mc.data.Direction;
 import com.builtbroken.mc.framework.block.imp.IBlockStackListener;
 import com.builtbroken.mc.framework.block.imp.IWrenchListener;
 import com.builtbroken.mc.framework.logic.TileNode;
@@ -71,6 +72,8 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     public static List<BeltSideState>[/* belt type */][/* rotation */] cachedBeltStates;
 
     public static int[] centerSlots = new int[]{2};
+    public static int[] centerEndSlots = new int[]{1}; //TODO move to enum
+
 
     public static final List<BeltSideState> EMPTY_LIST = ImmutableList.of();
 
@@ -440,6 +443,10 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
 
     public int[] getCenterSlots()
     {
+        if (type == BeltType.END_CAP)
+        {
+            return centerEndSlots;
+        }
         return centerSlots;
     }
     // </editor-folder> item movement
@@ -508,26 +515,33 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
             }
         }
 
-        if (!renderTop && (type == BeltType.NORMAL || type == BeltType.RIGHT_ELBOW || type == BeltType.LEFT_ELBOW))
+        if (!renderTop)
         {
             final int slot = getCenterSlots()[0];
             if (getInventory().getStackInSlot(slot) != null)
             {
-                boolean armNS = side == ForgeDirection.NORTH || side == ForgeDirection.SOUTH;
-                boolean beltEW = getDirection() == ForgeDirection.WEST || getDirection() == ForgeDirection.EAST;
-                if (armNS)
+                if(type == BeltType.NORMAL || type == BeltType.RIGHT_ELBOW || type == BeltType.LEFT_ELBOW)
                 {
-                    if (beltEW)
+                    boolean armNS = side == ForgeDirection.NORTH || side == ForgeDirection.SOUTH;
+                    boolean beltEW = getDirection() == ForgeDirection.WEST || getDirection() == ForgeDirection.EAST;
+                    if (armNS)
+                    {
+                        if (beltEW)
+                        {
+                            return getItemForRemoval(slot, count, remove);
+                        }
+                        return null;
+                    }
+                    else if (!beltEW)
                     {
                         return getItemForRemoval(slot, count, remove);
                     }
                     return null;
                 }
-                else if (!beltEW)
+                else if (type == BeltType.END_CAP)
                 {
                     return getItemForRemoval(slot, count, remove);
                 }
-                return null;
             }
         }
         return null;
@@ -569,29 +583,35 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
             }
         }
 
-        if (!renderTop && (type == BeltType.NORMAL || type == BeltType.RIGHT_ELBOW || type == BeltType.LEFT_ELBOW))
+        if (!renderTop)
         {
             final int slot = getCenterSlots()[0];
             if (getInventory().getStackInSlot(slot) == null) //We can only have 1 item, so do a null check
             {
-                boolean armNS = side == ForgeDirection.NORTH || side == ForgeDirection.SOUTH;
-                boolean beltEW = getDirection() == ForgeDirection.WEST || getDirection() == ForgeDirection.EAST;
-                if (armNS)
+                if (type == BeltType.NORMAL || type == BeltType.RIGHT_ELBOW || type == BeltType.LEFT_ELBOW)
                 {
-                    if (beltEW)
+                    boolean armNS = side == ForgeDirection.NORTH || side == ForgeDirection.SOUTH;
+                    boolean beltEW = getDirection() == ForgeDirection.WEST || getDirection() == ForgeDirection.EAST;
+                    if (armNS)
+                    {
+                        if (beltEW)
+                        {
+                            return getItemAfterInsert(slot, stack, doInsert);
+                        }
+                        return null;
+                    }
+                    else if (!beltEW)
                     {
                         return getItemAfterInsert(slot, stack, doInsert);
                     }
                     return null;
                 }
-                else if (!beltEW)
+                else if (type == BeltType.END_CAP)
                 {
                     return getItemAfterInsert(slot, stack, doInsert);
                 }
-                return null;
             }
         }
-
         return stack;
     }
 
@@ -683,6 +703,18 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     {
         state.output = output;
         shouldUpdateRender = true;
+    }
+
+    public boolean canOutputForSide(Direction direction)
+    {
+        for (BeltSideState state : outputIterator)
+        {
+            if (state.side.ordinal() == direction.ordinal())
+            {
+                return state.output;
+            }
+        }
+        return false;
     }
 
     public BeltInventoryFilter getFilterForSide(int slotID)
@@ -962,6 +994,11 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
             normalBeltState.add(new BeltSideState(0, direction, false, false));
             normalBeltState.add(new BeltSideState(1, direction.getOpposite(), false, true));
             cachedBeltStates[BeltType.NORMAL.ordinal()][direction.ordinal()] = normalBeltState;
+
+            //Generate cached state for end belt for side
+            List<BeltSideState> endBeltState = new ArrayList();
+            endBeltState.add(new BeltSideState(0, direction.getOpposite(), false, true));
+            cachedBeltStates[BeltType.END_CAP.ordinal()][direction.ordinal()] = endBeltState;
 
             //Get rotation
             ForgeDirection turn;
