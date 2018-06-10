@@ -145,9 +145,9 @@ public class TilePipeRenderListener extends TileListener implements IBlockListen
                 {
                     if (belt.getDirection() == ForgeDirection.WEST)
                     {
-                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(1)); //left
+                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(3)); //left
                         FakeItemRender.renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(0)); //output
-                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(3)); //right
+                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(1)); //right
                         if (belt.type == BeltType.INTERSECTION)
                         {
                             FakeItemRender.renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(4)); //input
@@ -155,9 +155,9 @@ public class TilePipeRenderListener extends TileListener implements IBlockListen
                     }
                     else if (belt.getDirection() == ForgeDirection.EAST)
                     {
-                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(3)); //right
+                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(1)); //right
                         FakeItemRender.renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(0)); //output
-                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(1)); //left
+                        FakeItemRender.renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(3)); //left
                         if (belt.type == BeltType.INTERSECTION)
                         {
                             FakeItemRender.renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(4)); //input
@@ -165,9 +165,9 @@ public class TilePipeRenderListener extends TileListener implements IBlockListen
                     }
                     else if (belt.getDirection() == ForgeDirection.NORTH)
                     {
-                        FakeItemRender.renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(1)); //left
+                        FakeItemRender.renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(3)); //left
                         FakeItemRender.renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(0)); //output
-                        FakeItemRender.renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(3)); //right
+                        FakeItemRender.renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(1)); //right
                         if (belt.type == BeltType.INTERSECTION)
                         {
                             FakeItemRender.renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(4)); //input
@@ -175,9 +175,9 @@ public class TilePipeRenderListener extends TileListener implements IBlockListen
                     }
                     else if (belt.getDirection() == ForgeDirection.SOUTH)
                     {
-                        FakeItemRender.renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(3)); //right
+                        FakeItemRender.renderItemAtPosition(n, 0.5, 0.5, belt.renderInventory.getStackInSlot(1)); //right
                         FakeItemRender.renderItemAtPosition(0.5, 0.5, n, belt.renderInventory.getStackInSlot(0)); //output
-                        FakeItemRender.renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(1)); //left
+                        FakeItemRender.renderItemAtPosition(n2, 0.5, 0.5, belt.renderInventory.getStackInSlot(3)); //left
                         if (belt.type == BeltType.INTERSECTION)
                         {
                             FakeItemRender.renderItemAtPosition(0.5, 0.5, n2, belt.renderInventory.getStackInSlot(4)); //input
