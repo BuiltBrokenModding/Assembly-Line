@@ -68,6 +68,15 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     public static int GUI_UPGRADES = 2;
 
     public static final String NBT_BELT_SIDE_DATA = "beltSideData";
+    public static final String NBT_BELT_SIDE_DATA_INDEX = "side";
+    public static final String NBT_BELT_SIDE_DATA_OUTPUT = "output";
+    public static final String NBT_BELT_SIDE_DATA_ENABLE = "enabled";
+
+    public static final String NBT_INVENTORY = "inventory";
+    public static final String NBT_BELT_TYPE =  "beltType";
+    public static final String NBT_PULL_ITEMS = "pullItems";
+    public static final String NBT_EJECT_ITEMS = "ejectItems";
+    public static final String NBT_RENDER_TOP = "renderTubeTop";
 
     /** Cached state map of direction to input sides & slots */
     public static HashMap<Direction, BeltSideState>[/* belt type */][/* rotation */] cachedBeltStates; //TODO change over to hashmap like object
@@ -746,12 +755,12 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     public void load(NBTTagCompound nbt)
     {
         super.load(nbt);
-        type = BeltType.get(nbt.getInteger("beltType"));
-        if (nbt.hasKey("inventory"))
+        type = BeltType.get(nbt.getInteger(NBT_BELT_TYPE));
+        if (nbt.hasKey(NBT_INVENTORY))
         {
-            getInventory().load(nbt.getCompoundTag("inventory"));
+            getInventory().load(nbt.getCompoundTag(NBT_INVENTORY));
         }
-        if (nbt.hasKey("beltStates"))
+        if (nbt.hasKey(NBT_BELT_SIDE_DATA))
         {
             loadBeltStates(nbt.getTagList(NBT_BELT_SIDE_DATA, 10));
         }
@@ -759,9 +768,9 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         {
             beltSideData = null;
         }
-        pullItems = nbt.getBoolean("pullItems");
-        shouldEjectItems = nbt.getBoolean("ejectItems");
-        renderTop = nbt.getBoolean("renderTubeTop");
+        pullItems = nbt.getBoolean(NBT_PULL_ITEMS);
+        shouldEjectItems = nbt.getBoolean(NBT_EJECT_ITEMS);
+        renderTop = nbt.getBoolean(NBT_RENDER_TOP);
     }
 
     protected void loadBeltStates(NBTTagList list)
@@ -770,10 +779,10 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         for (int i = 0; i < list.tagCount(); i++)
         {
             NBTTagCompound tag = list.getCompoundTagAt(i);
-            int index = tag.getInteger("side");
+            int index = tag.getInteger(NBT_BELT_SIDE_DATA_INDEX);
 
-            beltSideData[index] = new BeltSideData(tag.getBoolean("output"));
-            beltSideData[index].enabled = tag.getBoolean("enabled");
+            beltSideData[index] = new BeltSideData(tag.getBoolean(NBT_BELT_SIDE_DATA_OUTPUT));
+            beltSideData[index].enabled = tag.getBoolean(NBT_BELT_SIDE_DATA_ENABLE);
             //TODO load filter
         }
     }
@@ -786,16 +795,16 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         {
             NBTTagCompound invSave = new NBTTagCompound();
             getInventory().save(invSave);
-            nbt.setTag("inventory", invSave);
+            nbt.setTag(NBT_INVENTORY, invSave);
         }
         if (beltSideData != null)
         {
             nbt.setTag(NBT_BELT_SIDE_DATA, saveBeltState());
         }
-        nbt.setBoolean("pullItems", pullItems);
-        nbt.setBoolean("ejectItems", shouldEjectItems);
-        nbt.setBoolean("renderTubeTop", renderTop);
-        nbt.setInteger("beltType", type != null ? type.ordinal() : 0);
+        nbt.setBoolean(NBT_PULL_ITEMS, pullItems);
+        nbt.setBoolean(NBT_EJECT_ITEMS, shouldEjectItems);
+        nbt.setBoolean(NBT_RENDER_TOP, renderTop);
+        nbt.setInteger(NBT_BELT_TYPE, type != null ? type.ordinal() : 0);
         return nbt;
     }
 
@@ -809,9 +818,9 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
             {
                 NBTTagCompound tag = new NBTTagCompound();
 
-                tag.setInteger("side", direction.ordinal());
-                tag.setBoolean("output", data.output);
-                tag.setBoolean("enabled", data.enabled);
+                tag.setInteger(NBT_BELT_SIDE_DATA_INDEX, direction.ordinal());
+                tag.setBoolean(NBT_BELT_SIDE_DATA_OUTPUT, data.output);
+                tag.setBoolean(NBT_BELT_SIDE_DATA_ENABLE, data.enabled);
 
                 list.appendTag(tag);
             }
