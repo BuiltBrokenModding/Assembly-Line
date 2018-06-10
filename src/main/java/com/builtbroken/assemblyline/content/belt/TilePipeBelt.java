@@ -775,7 +775,7 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
 
     protected void loadBeltStates(NBTTagList list)
     {
-        setLocalBeltState();
+        beltSideData = new BeltSideData[6];
         for (int i = 0; i < list.tagCount(); i++)
         {
             NBTTagCompound tag = list.getCompoundTagAt(i);
