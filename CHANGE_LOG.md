@@ -9,6 +9,20 @@ If this is a problem, use exact build numbers to track changes. As each build lo
 
 ### Development Changes
 
+## 5.0.6
+### Runtime Changes
+* Added: simple model for end cap pipe belt
+* Added: logic for end cap pipe belt
+* Added: logic to change input/output of junction and intersection pipe belts
+* Fixed: crash due to empty belt state list
+* Fixed: crash loading pipe belt with local state data
+
+### Development Changes
+* Rewrote: pipe belt state list to use a hashmap
+* Rewrote: pipe belt state to seperate global from local data
+* Moved: pipe belt NBT keys to state final fields
+
+
 ## 5.0.5 - 6/9/2018
 ### Runtime Changes
 * Added: Item render for inserter arm
