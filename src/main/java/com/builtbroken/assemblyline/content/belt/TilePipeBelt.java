@@ -707,7 +707,7 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
 
     public boolean canOutputForSide(Direction direction)
     {
-        for (BeltSideState state : outputIterator)
+        for (BeltSideState state : beltOutputIterator())
         {
             if (state.side.ordinal() == direction.ordinal())
             {
