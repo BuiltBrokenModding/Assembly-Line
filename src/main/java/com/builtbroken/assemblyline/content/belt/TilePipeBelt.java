@@ -69,7 +69,7 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     public static int GUI_UPGRADES = 2;
 
     /** Cached state map of direction to input sides & slots */
-    public static List<BeltSideState>[/* belt type */][/* rotation */] cachedBeltStates;
+    public static List<BeltSideState>[/* belt type */][/* rotation */] cachedBeltStates; //TODO change over to hashmap like object
 
     public static int[] centerSlots = new int[]{2};
     public static int[] centerEndSlots = new int[]{1}; //TODO move to enum
@@ -106,7 +106,7 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
 
     public BasicInventory renderInventory;
 
-    protected List<BeltSideState> localBeltState;
+    protected List<BeltSideState> localBeltState; //TODO change over to hashmap
 
     private BeltSideStateIterator inputIterator;
     private BeltSideStateIterator outputIterator;
@@ -218,7 +218,7 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
                     {
                         if (state.side == side) //TODO replace with trace system that will detect of face clicked
                         {
-                            setOutputForSide(state, !state.output);
+                            setOutputForSide(state.side.ordinal(), !state.output);
                             player.addChatComponentMessage(new ChatComponentText("Side set to output: " + state.output));
                             return true;
                         }
@@ -520,7 +520,7 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
             final int slot = getCenterSlots()[0];
             if (getInventory().getStackInSlot(slot) != null)
             {
-                if(type == BeltType.NORMAL || type == BeltType.RIGHT_ELBOW || type == BeltType.LEFT_ELBOW)
+                if (type == BeltType.NORMAL || type == BeltType.RIGHT_ELBOW || type == BeltType.LEFT_ELBOW)
                 {
                     boolean armNS = side == ForgeDirection.NORTH || side == ForgeDirection.SOUTH;
                     boolean beltEW = getDirection() == ForgeDirection.WEST || getDirection() == ForgeDirection.EAST;
@@ -650,7 +650,7 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         return outputIterator.reset(); //Not thread safe
     }
 
-    public List<BeltSideState> getBeltStates()
+    public List<BeltSideState> getBeltStates() //TODO change over to hashmap
     {
         if (localBeltState != null)
         {
@@ -680,28 +680,19 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         this.localBeltState = localBeltState;
     }
 
-    public void setOutputForSide(int slotID, boolean output)
+    public void setOutputForSide(int side, boolean output)
     {
-        if (type == BeltType.INTERSECTION || type == BeltType.JUNCTION)
+        if (localBeltState == null)
         {
-            if (localBeltState == null)
+            setLocalBeltState();
+        }
+        for (BeltSideState sideState : getBeltStates())
+        {
+            if (sideState.side.ordinal() == side)
             {
-                setLocalBeltState();
-            }
-            for (BeltSideState state : getBeltStates())
-            {
-                if (state.slotID == slotID)
-                {
-                    setOutputForSide(state, output);
-                    break;
-                }
+                sideState.output = output;
             }
         }
-    }
-
-    public void setOutputForSide(BeltSideState state, boolean output)
-    {
-        state.output = output;
         shouldUpdateRender = true;
     }
 
@@ -786,25 +777,33 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         }
         if (nbt.hasKey("beltStates"))
         {
-            setLocalBeltState();
-            NBTTagList list = nbt.getTagList("beltStates", 10);
-            for (int i = 0; i < list.tagCount(); i++)
-            {
-                NBTTagCompound tag = list.getCompoundTagAt(i);
-                int slotID = tag.getInteger("id");
-                for (BeltSideState state : getBeltStates()) //TODO improve O(n^2)
-                {
-                    if (state.slotID == slotID)
-                    {
-                        state.load(tag);
-                        break;
-                    }
-                }
-            }
+            loadBeltStates(nbt.getTagList("beltStates", 10));
+        }
+        else
+        {
+            localBeltState = null;
         }
         pullItems = nbt.getBoolean("pullItems");
         shouldEjectItems = nbt.getBoolean("ejectItems");
         renderTop = nbt.getBoolean("renderTubeTop");
+    }
+
+    protected void loadBeltStates(NBTTagList list)
+    {
+        setLocalBeltState();
+        for (int i = 0; i < list.tagCount(); i++)
+        {
+            NBTTagCompound tag = list.getCompoundTagAt(i);
+            int slotID = tag.getInteger("id");
+            for (BeltSideState state : getBeltStates()) //TODO improve O(n^2)
+            {
+                if (state.slotID == slotID)
+                {
+                    state.load(tag);
+                    break;
+                }
+            }
+        }
     }
 
     @Override
@@ -819,21 +818,26 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         }
         if (localBeltState != null)
         {
-            NBTTagList list = new NBTTagList();
-            for (BeltSideState sideState : localBeltState)
-            {
-                NBTTagCompound tag = new NBTTagCompound();
-                sideState.save(tag);
-                tag.setInteger("id", sideState.slotID);
-                list.appendTag(tag);
-            }
-            nbt.setTag("beltStates", list);
+            nbt.setTag("beltStates", saveBeltState());
         }
         nbt.setBoolean("pullItems", pullItems);
         nbt.setBoolean("ejectItems", shouldEjectItems);
         nbt.setBoolean("renderTubeTop", renderTop);
         nbt.setInteger("beltType", type != null ? type.ordinal() : 0);
         return nbt;
+    }
+
+    protected NBTTagList saveBeltState()
+    {
+        NBTTagList list = new NBTTagList();
+        for (BeltSideState sideState : localBeltState)
+        {
+            NBTTagCompound tag = new NBTTagCompound();
+            sideState.save(tag);
+            tag.setInteger("id", sideState.slotID);
+            list.appendTag(tag);
+        }
+        return list;
     }
 
     //</editor-fold>
@@ -914,6 +918,10 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         pullItems = buf.readBoolean();
         renderTop = buf.readBoolean();
         readInvPacket(buf);
+        if (buf.readBoolean())
+        {
+            loadBeltStates(ByteBufUtils.readTag(buf).getTagList("beltStates", 10));
+        }
     }
 
     @Override
@@ -926,6 +934,13 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
         buf.writeBoolean(pullItems);
         buf.writeBoolean(renderTop);
         writeInvPacket(buf);
+        buf.writeBoolean(localBeltState != null);
+        if (localBeltState != null)
+        {
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setTag("beltStates", saveBeltState());
+            ByteBufUtils.writeTag(buf, tag);
+        }
     }
 
     @Override
