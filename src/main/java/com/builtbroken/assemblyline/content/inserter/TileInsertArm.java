@@ -143,7 +143,12 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
     @Override
     protected void setRotationOnPlacement(EntityLivingBase entityLiving, ItemStack itemStack)
     {
-        this.setFacing(ForgeDirection.getOrientation(BlockUtility.determineRotation(entityLiving.rotationYaw)));
+        //Set facing direction
+        ForgeDirection facing = ForgeDirection.getOrientation(BlockUtility.determineRotation(entityLiving.rotationYaw));
+        this.setFacing(facing.getOpposite());
+
+        //Set rotation
+        rotation.setYaw(getRotation(facing));
     }
 
     @Override
