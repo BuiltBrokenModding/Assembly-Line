@@ -28,6 +28,7 @@ import com.builtbroken.mc.prefab.tile.module.TileModuleInventory;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -36,6 +37,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -462,7 +464,8 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
      */
     protected Object findInput()
     {
-        Object tile = toLocation().add(getDirection().getOpposite()).getTileEntity();
+        Location location = toLocation().add(getDirection().getOpposite());
+        Object tile = location.getTileEntity();
         if (tile instanceof IMultiTile)
         {
             tile = (TileEntity) ((IMultiTile) tile).getHost();
@@ -471,6 +474,18 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
         if (tile instanceof ITileNodeHost)
         {
             tile = ((ITileNodeHost) tile).getTileNode();
+        }
+
+        if (tile == null)
+        {
+            List entities = getEntitiesNearHand(location);
+            for (Object entity : entities)
+            {
+                if (entity instanceof IInventory)
+                {
+                    return entity;
+                }
+            }
         }
         return tile;
     }
@@ -482,7 +497,8 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
      */
     protected Object findOutput()
     {
-        Object tile = toLocation().add(getDirection()).getTileEntity();
+        Location location = toLocation().add(getDirection());
+        Object tile = location.getTileEntity();
         if (tile instanceof IMultiTile)
         {
             tile = (TileEntity) ((IMultiTile) tile).getHost();
@@ -492,7 +508,28 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
         {
             tile = ((ITileNodeHost) tile).getTileNode();
         }
+
+        if (tile == null)
+        {
+            List entities = getEntitiesNearHand(location);
+            for (Object entity : entities)
+            {
+                if (entity instanceof IInventory)
+                {
+                    return entity;
+                }
+            }
+        }
         return tile;
+    }
+
+    protected List getEntitiesNearHand(Location location)
+    {
+        AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(
+                location.x(), location.y(), location.z(),
+                location.x() + 1, location.y() + 1, location.z() + 1);
+
+        return worldObj.getEntitiesWithinAABB(Entity.class, bounds);
     }
 
     @Override
