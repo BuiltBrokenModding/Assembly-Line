@@ -11,6 +11,7 @@ If this is a problem, use exact build numbers to track changes. As each build lo
 ## 5.0.7
 ### Runtime Changes
 * Added: ability to switch end cap input/output state
+* Added: geometry to end caps for lower edge bars
 * Fixed: end cap arrow rendering wrong direction
 * Fixed: items getting destroyed in end cap
             minor issue caused by end cap using wrong slot ID (2 rather than 1)

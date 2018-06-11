@@ -64,7 +64,6 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
         }
 
         //Rotate textures
-        int prevUVTop = renderer.uvRotateTop;
         switch (direction)
         {
             case NORTH:
@@ -105,8 +104,7 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
         {
             rendered = renderEnd(belt, x, y, z, block, renderer, direction, renderTop);
         }
-
-        renderer.uvRotateTop = prevUVTop;
+        reset(renderer);
         renderer.setRenderAllFaces(false);
         return rendered;
     }
@@ -323,6 +321,24 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
                         pixel * 5, 0, 0,
                         pixel * 6, pixel * 5, pixel * 5);
                 renderBlock(renderer, wrapper, x, y, z, null);
+                reset(renderer);
+
+                //Lower bars
+                bounds(renderer,
+                        pixel * 4, pixel * 4, 0,
+                        pixel, pixel * 2, pixel * 11);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                bounds(renderer,
+                        1 - pixel * 5, pixel * 4, 0,
+                        pixel, pixel * 2, pixel * 11);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                //lower back bar
+                bounds(renderer,
+                        pixel * 5, pixel * 4, pixel * 11,
+                        pixel * 6, pixel * 2, pixel);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
             }
 
             //South
@@ -342,6 +358,24 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
                         pixel * 5, 0, pixel * 11,
                         pixel * 6, pixel * 5, pixel * 5);
                 renderBlock(renderer, wrapper, x, y, z, null);
+                reset(renderer);
+
+                //Lower bars
+                bounds(renderer,
+                        pixel * 4, pixel * 4, pixel * 5,
+                        pixel, pixel * 2, pixel * 11);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                bounds(renderer,
+                        1 - pixel * 5, pixel * 4, pixel * 5,
+                        pixel, pixel * 2, pixel * 11);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                //lower back bar
+                bounds(renderer,
+                        pixel * 5, pixel * 4, pixel * 4,
+                        pixel * 6, pixel * 2, pixel);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
             }
 
             //West
@@ -361,6 +395,24 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
                         0, 0, pixel * 5,
                         pixel * 5, pixel * 5, pixel * 6);
                 renderBlock(renderer, wrapper, x, y, z, null);
+                reset(renderer);
+
+                //Lower bars
+                bounds(renderer,
+                        0, pixel * 4, pixel * 4,
+                        pixel * 11, pixel * 2, pixel);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                bounds(renderer,
+                        0, pixel * 4, 1 - pixel * 5,
+                        pixel * 11, pixel * 2, pixel);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                //Lower back bar
+                bounds(renderer,
+                        1 - pixel * 5, pixel * 4, pixel * 5,
+                        pixel, pixel * 2, pixel * 6);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
             }
 
             //East
@@ -380,6 +432,24 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
                         pixel * 11, 0, pixel * 5,
                         pixel * 5, pixel * 5, pixel * 6);
                 renderBlock(renderer, wrapper, x, y, z, null);
+                reset(renderer);
+
+                //Lower bars
+                bounds(renderer,
+                        pixel * 5, pixel * 4, pixel * 4,
+                        pixel * 11, pixel * 2, pixel);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                bounds(renderer,
+                        pixel * 5, pixel * 4, 1 - pixel * 5,
+                        pixel * 11, pixel * 2, pixel);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
+
+                //Lower back bar
+                bounds(renderer,
+                        pixel * 4, pixel * 4, pixel * 5,
+                        pixel, pixel * 2, pixel * 6);
+                renderBlock(renderer, block, x, y, z, block.getIcon(0, 1));
             }
 
             return true;
@@ -1566,6 +1636,16 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
     public boolean shouldRender3DInInventory(int modelId)
     {
         return false;
+    }
+
+    /**
+     * Called to reset settings applied in previous steps
+     *
+     * @param renderer
+     */
+    protected void reset(RenderBlocks renderer)
+    {
+        renderer.uvRotateTop = 0;
     }
 
     @Override
