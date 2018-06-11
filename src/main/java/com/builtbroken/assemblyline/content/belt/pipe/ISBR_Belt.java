@@ -309,7 +309,7 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
             //North
             if (direction == Direction.SOUTH)
             {
-                if (belt != null && !belt.canOutputForSide(direction.getOpposite()))
+                if (belt != null && belt.canOutputForSide(direction.getOpposite()))
                 {
                     renderer.uvRotateTop = 0;
                     wrapper.setIcon(Direction.UP, block.getIcon(1, 0));
@@ -328,7 +328,7 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
             //South
             if (direction == Direction.NORTH)
             {
-                if (belt != null && !belt.canOutputForSide(direction.getOpposite()))
+                if (belt != null && belt.canOutputForSide(direction.getOpposite()))
                 {
                     renderer.uvRotateTop = 3;
                     wrapper.setIcon(Direction.UP, block.getIcon(1, 0));
@@ -347,7 +347,7 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
             //West
             if (direction == Direction.EAST)
             {
-                if (belt != null && !belt.canOutputForSide(direction.getOpposite()))
+                if (belt != null && belt.canOutputForSide(direction.getOpposite()))
                 {
                     renderer.uvRotateTop = 2;
                     wrapper.setIcon(Direction.UP, block.getIcon(1, 0));
@@ -366,7 +366,7 @@ public class ISBR_Belt implements ISimpleBlockRenderingHandler
             //East
             if (direction == Direction.WEST)
             {
-                if (belt != null && !belt.canOutputForSide(direction.getOpposite()))
+                if (belt != null && belt.canOutputForSide(direction.getOpposite()))
                 {
                     renderer.uvRotateTop = 1;
                     wrapper.setIcon(Direction.UP, block.getIcon(1, 0));
