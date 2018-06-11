@@ -555,7 +555,7 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     private ItemStack getItemForRemoval(int slot, int count, boolean remove)
     {
         ItemStack stack = getInventory().getStackInSlot(slot);
-        if (remove)
+        if (stack != null)
         {
             int removeCount = Math.min(stack.stackSize, count);
             if (remove)

@@ -35,6 +35,7 @@ import java.util.List;
 @TileWrapped(className = ".gen.TileEntityWrappedSimpleBelt")
 public class TileSimpleBelt extends TileNode implements IRotation, IRotatable, IBoundListener, IJsonRenderStateProvider, IChangeListener, IWrenchListener
 {
+    public static final String NBT_BELT_TYPE = "beltType";
     //Settings
     public static float beltSpeed = 0.05f;
 
@@ -134,13 +135,10 @@ public class TileSimpleBelt extends TileNode implements IRotation, IRotatable, I
      */
     protected boolean canBeltConnect(TileEntity tile)
     {
-        if (tile != null)
+        if (tile instanceof ITileNodeHost && ((ITileNodeHost) tile).getTileNode() instanceof TileSimpleBelt)
         {
-            if (tile instanceof ITileNodeHost && ((ITileNodeHost) tile).getTileNode() instanceof TileSimpleBelt)
-            {
-                TileSimpleBelt node = (TileSimpleBelt) ((ITileNodeHost) tile).getTileNode();
-                return node.getDirection() == getDirection() || node.getDirection() == getDirection().getOpposite();
-            }
+            TileSimpleBelt node = (TileSimpleBelt) ((ITileNodeHost) tile).getTileNode();
+            return node.getDirection() == getDirection() || node.getDirection() == getDirection().getOpposite();
         }
         return false;
     }
@@ -595,9 +593,9 @@ public class TileSimpleBelt extends TileNode implements IRotation, IRotatable, I
     public void load(NBTTagCompound nbt)
     {
         super.load(nbt);
-        if (nbt.hasKey("beltType"))
+        if (nbt.hasKey(NBT_BELT_TYPE))
         {
-            setState(nbt.getByte("beltType"), -1);
+            setState(nbt.getByte(NBT_BELT_TYPE), -1);
         }
     }
 
@@ -605,7 +603,7 @@ public class TileSimpleBelt extends TileNode implements IRotation, IRotatable, I
     public NBTTagCompound save(NBTTagCompound nbt)
     {
         super.save(nbt);
-        nbt.setByte("beltType", (byte) beltState.ordinal());
+        nbt.setByte(NBT_BELT_TYPE, (byte) beltState.ordinal());
         return nbt;
     }
 
