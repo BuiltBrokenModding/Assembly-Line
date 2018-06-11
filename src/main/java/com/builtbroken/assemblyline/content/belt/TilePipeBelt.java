@@ -217,7 +217,7 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     {
         if (connectionType == ConnectionType.INVENTORY)
         {
-            if (type == BeltType.JUNCTION || type == BeltType.INTERSECTION)
+            if (type == BeltType.JUNCTION || type == BeltType.INTERSECTION || type == BeltType.END_CAP) //TODO add support for all belts (let the user do what they want :P )
             {
                 if (isServer())
                 {
