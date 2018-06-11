@@ -12,11 +12,17 @@ If this is a problem, use exact build numbers to track changes. As each build lo
 ### Runtime Changes
 * Added: ability to switch end cap input/output state
 * Added: geometry to end caps for lower edge bars
+
+* Changed: inserter to output towards player when placed
+
 * Fixed: end cap arrow rendering wrong direction
 * Fixed: items getting destroyed in end cap
             minor issue caused by end cap using wrong slot ID (2 rather than 1)
             Another patch will be added to prevent issues like this
 * Fixed: inserter setting with up or down rotation when placed
+* Fixed: inserter being off by a few degrees when told to face a side
+* Fixed: inserter facing wrong direction when first placed
+* Fixed: visual rotation snap when loading world or placing inserter
 
 ### Development Changes
 

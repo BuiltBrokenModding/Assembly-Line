@@ -81,7 +81,14 @@ public class TileInsertArmClient extends TileInsertArm implements ISimpleItemRen
     @SideOnly(Side.CLIENT)
     public void renderDynamic(Pos pos, float deltaTime, int pass)
     {
-        renderAngle.lerp(rotation, deltaTime).clampTo360();
+        if(ticks < 2)
+        {
+            renderAngle.set(rotation);
+        }
+        else
+        {
+            renderAngle.lerp(rotation, deltaTime).clampTo360();
+        }
         float yaw = (float)renderAngle.yaw();
 
         //Render inserter
