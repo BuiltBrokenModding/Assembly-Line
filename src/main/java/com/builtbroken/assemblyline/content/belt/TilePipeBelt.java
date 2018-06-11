@@ -262,7 +262,7 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     {
         //Push outputs to next belt or machine
         Iterator<BeltSideState> states = beltOutputIterator();
-        if (states != null && centerSlots != null)
+        if (states != null && getCenterSlots() != null)
         {
             while (states.hasNext())
             {
@@ -378,7 +378,7 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
                     ItemStack stackToMove = getInventory().getStackInSlot(slotState.slotID);
                     if (stackToMove != null)
                     {
-                        for (int centerSlot : centerSlots)
+                        for (int centerSlot : getCenterSlots())
                         {
                             if (getInventory().getStackInSlot(centerSlot) == null)
                             {

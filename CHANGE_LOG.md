@@ -6,6 +6,15 @@ If this is a problem, use exact build numbers to track changes. As each build lo
 # Versions
 ## 5.0.#
 ### Runtime Changes
+### Development Changes
+
+## 5.0.7
+### Runtime Changes
+* Added: ability to switch end cap input/output state
+* Fixed: end cap arrow rendering wrong direction
+* Fixed: items getting destroyed in end cap
+            minor issue caused by end cap using wrong slot ID (2 rather than 1)
+            Another patch will be added to prevent issues like this
 
 ### Development Changes
 
@@ -16,6 +25,7 @@ If this is a problem, use exact build numbers to track changes. As each build lo
 * Added: logic to change input/output of junction and intersection pipe belts
 * Fixed: crash due to empty belt state list
 * Fixed: crash loading pipe belt with local state data
+
 
 ### Development Changes
 * Rewrote: pipe belt state list to use a hashmap
