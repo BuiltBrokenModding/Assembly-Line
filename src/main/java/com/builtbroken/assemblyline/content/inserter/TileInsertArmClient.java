@@ -81,12 +81,13 @@ public class TileInsertArmClient extends TileInsertArm implements ISimpleItemRen
     @SideOnly(Side.CLIENT)
     public void renderDynamic(Pos pos, float deltaTime, int pass)
     {
-        renderAngle.lerp(rotation, deltaTime);
+        renderAngle.lerp(rotation, deltaTime).clampTo360();
+        float yaw = (float)renderAngle.yaw();
 
         //Render inserter
         GL11.glPushMatrix();
         GL11.glTranslatef(pos.xf() + 0.5f, pos.yf() + 0.4f, pos.zf() + 0.5f);
-        GL11.glRotated(renderAngle.yaw(), 0, 1, 0);
+        GL11.glRotated(yaw, 0, 1, 0);
         FMLClientHandler.instance().getClient().renderEngine.bindTexture(texture);
         model.renderAllExcept("Base", "BaseTop");
         GL11.glPopMatrix();
@@ -102,7 +103,8 @@ public class TileInsertArmClient extends TileInsertArm implements ISimpleItemRen
         FakeItemRender.setWorldPosition(worldObj, xi() + 0.5 + x, yi() + 0.5, zi() + 0.5 + z);
 
         //Render actual item with rotation
-        GL11.glRotatef((float) renderAngle.yaw() + 90f, 0.0F, 1.0F, 0.0F);
+        yaw += 90f;
+        GL11.glRotatef(yaw, 0.0F, 1.0F, 0.0F);
         FakeItemRender.renderItemAtPosition(1, 0, 0, renderStack);
         GL11.glPopMatrix();
     }

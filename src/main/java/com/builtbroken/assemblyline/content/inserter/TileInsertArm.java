@@ -394,7 +394,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
      */
     protected boolean isFacing(ForgeDirection dir)
     {
-        return rotation.isYawWithin(getRotation(dir), 3);
+        return rotation.isYawWithin(getRotation(dir), 0.001);
     }
 
     /**
