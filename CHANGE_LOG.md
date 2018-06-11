@@ -16,6 +16,7 @@ If this is a problem, use exact build numbers to track changes. As each build lo
 * Fixed: items getting destroyed in end cap
             minor issue caused by end cap using wrong slot ID (2 rather than 1)
             Another patch will be added to prevent issues like this
+* Fixed: inserter setting with up or down rotation when placed
 
 ### Development Changes
 

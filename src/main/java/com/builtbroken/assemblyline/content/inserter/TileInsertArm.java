@@ -19,6 +19,7 @@ import com.builtbroken.mc.imp.transform.region.Cube;
 import com.builtbroken.mc.imp.transform.rotation.EulerAngle;
 import com.builtbroken.mc.imp.transform.vector.Location;
 import com.builtbroken.mc.imp.transform.vector.Pos;
+import com.builtbroken.mc.lib.helper.BlockUtility;
 import com.builtbroken.mc.lib.helper.recipe.OreNames;
 import com.builtbroken.mc.prefab.inventory.InventoryUtility;
 import com.builtbroken.mc.prefab.tile.Tile;
@@ -27,6 +28,7 @@ import com.builtbroken.mc.prefab.tile.module.TileModuleInventory;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
@@ -136,6 +138,12 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
                 dropItem();
             }
         }
+    }
+
+    @Override
+    protected void setRotationOnPlacement(EntityLivingBase entityLiving, ItemStack itemStack)
+    {
+        this.setFacing(ForgeDirection.getOrientation(BlockUtility.determineRotation(entityLiving.rotationYaw)));
     }
 
     @Override
