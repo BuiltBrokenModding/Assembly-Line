@@ -79,7 +79,7 @@ public class TileInsertArmClient extends TileInsertArm implements ISimpleItemRen
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void renderDynamic(Pos pos, float deltaTime, int pass)
+    public void renderDynamic(Pos pos, float deltaFrame, int pass)
     {
         if(ticks < 2)
         {
@@ -87,7 +87,7 @@ public class TileInsertArmClient extends TileInsertArm implements ISimpleItemRen
         }
         else
         {
-            renderAngle.lerp(rotation, deltaTime).clampTo360();
+            renderAngle.lerp(rotation, deltaFrame).clampTo360();
         }
         float yaw = (float)renderAngle.yaw();
 

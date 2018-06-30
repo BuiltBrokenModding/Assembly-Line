@@ -967,15 +967,15 @@ public class TilePipeBelt extends TileNode implements IRotatable, IInventoryProv
     public void sendInventoryPacket()
     {
         IPacket packet = getHost().getPacketForData(PACKET_INVENTORY);
-        writeInvPacket(packet.data());
+        packet.addWriter(byteBuf -> writeInvPacket(byteBuf));
         getHost().sendPacketToClient(packet, 64);
     }
 
     public void sendButtonEvent(int id, boolean checked)
     {
         IPacket packet = getHost().getPacketForData(PACKET_GUI_BUTTON);
-        packet.data().writeInt(id);
-        packet.data().writeBoolean(checked);
+        packet.add(id);
+        packet.add(checked);
         getHost().sendPacketToServer(packet);
     }
 

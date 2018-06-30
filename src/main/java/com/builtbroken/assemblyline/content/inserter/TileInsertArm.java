@@ -309,7 +309,7 @@ public class TileInsertArm extends TileModuleMachine implements IAutomation, IMu
                 for (int index = 0; index < slots.length; index++)
                 {
                     final int slot = slots[index];
-                    //TODO add rendered error responses when items can be stored (Ex. invalid filter, no room)
+                    //TODO add rendered error responses when items cant be stored (Ex. invalid filter, no room)
                     if (((IAutomatedCrafter) output).canStore(heldItem, slot, side))
                     {
                         heldItem = ((IAutomatedCrafter) output).insertRequiredItem(heldItem, slot, this, side);
