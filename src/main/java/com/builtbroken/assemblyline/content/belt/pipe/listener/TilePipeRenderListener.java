@@ -26,8 +26,6 @@ import java.util.List;
  */
 public class TilePipeRenderListener extends TileListener implements IBlockListener, ITileRenderListener
 {
-
-
     @Override
     public void renderDynamic(TileEntity tile, double xx, double yy, double zz, float f)
     {

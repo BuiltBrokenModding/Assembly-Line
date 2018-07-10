@@ -2,6 +2,7 @@ package com.builtbroken.assemblyline;
 
 import com.builtbroken.assemblyline.client.ALCreativeTab;
 import com.builtbroken.assemblyline.content.belt.pipe.listener.TilePipePlacementListener;
+import com.builtbroken.assemblyline.content.belt.pipe.listener.TilePipeStackListener;
 import com.builtbroken.assemblyline.content.parts.ItemCraftingParts;
 import com.builtbroken.assemblyline.content.rail.BlockRail;
 import com.builtbroken.assemblyline.content.rail.ItemBlockRail;
@@ -72,6 +73,7 @@ public class AssemblyLine extends AbstractMod
     {
         super.loadJsonContentHandlers();
         JsonBlockListenerProcessor.addBuilder(new TilePipePlacementListener.Builder());
+        JsonBlockListenerProcessor.addBuilder(new TilePipeStackListener.Builder());
     }
 
     @Mod.EventHandler

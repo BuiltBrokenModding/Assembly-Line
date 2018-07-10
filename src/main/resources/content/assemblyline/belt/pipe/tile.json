@@ -30,38 +30,40 @@
     },
     "listeners": [
       "rotation",
+      "inventoryBreak",
+      "beltPipeStack",
       "beltPipeRender",
       "beltPipePlacement"
     ],
     "subtypes": [
       {
         "id": "normal",
-        "name" :"normal",
+        "name": "normal",
         "meta": 0
       },
       {
         "id": "elbow.left",
-        "name" :"elbow.left",
+        "name": "elbow.left",
         "meta": 1
       },
       {
         "id": "elbow.right",
-        "name":"elbow.right",
+        "name": "elbow.right",
         "meta": 2
       },
       {
         "id": "junction",
-        "name":"junction",
+        "name": "junction",
         "meta": 3
       },
       {
         "id": "intersection",
-        "name":"intersection",
+        "name": "intersection",
         "meta": 4
       },
       {
         "id": "end",
-        "name":"end",
+        "name": "end",
         "meta": 7
       }
     ]
